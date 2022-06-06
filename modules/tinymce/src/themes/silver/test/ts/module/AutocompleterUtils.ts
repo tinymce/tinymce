@@ -84,23 +84,31 @@ const pAssertAutocompleterStructure = async (structure: AutocompleterStructure) 
         classes: [ arr.has('tox-autocompleter') ],
         children: [
           s.element('div', {
-            classes: [ arr.has('tox-menu'), arr.has(`tox-collection--${structure.type}`), arr.has('tox-collection') ],
-            children: Arr.map(structure.groups, (group) => s.element('div', {
-              classes: [ arr.has('tox-collection__group') ],
-              children: Arr.map(group, (d) => {
-                if (structure.type === 'list') {
-                  if (Type.isFunction(d)) {
-                    return d(s, str, arr);
-                  } else if (structure.hasIcons) {
-                    return structWithTitleAndIconAndText(d)(s, str, arr);
-                  } else {
-                    return structWithTitleAndText(d)(s, str, arr);
-                  }
-                } else {
-                  return structWithTitleAndIcon(d)(s, str, arr);
-                }
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-menu'), arr.has(`tox-collection--${structure.type}`), arr.has('tox-collection') ],
+                styles: {
+                  // TINY-6476: Ensure the menu is positioned not the wrapper
+                  position: str.is('absolute')
+                },
+                children: Arr.map(structure.groups, (group) => s.element('div', {
+                  classes: [ arr.has('tox-collection__group') ],
+                  children: Arr.map(group, (d) => {
+                    if (structure.type === 'list') {
+                      if (Type.isFunction(d)) {
+                        return d(s, str, arr);
+                      } else if (structure.hasIcons) {
+                        return structWithTitleAndIconAndText(d)(s, str, arr);
+                      } else {
+                        return structWithTitleAndText(d)(s, str, arr);
+                      }
+                    } else {
+                      return structWithTitleAndIcon(d)(s, str, arr);
+                    }
+                  })
+                }))
               })
-            }))
+            ]
           })
         ]
       })),

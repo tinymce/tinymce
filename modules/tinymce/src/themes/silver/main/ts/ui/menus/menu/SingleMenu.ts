@@ -1,4 +1,4 @@
-import { AlloyEvents, FocusManagers, ItemTypes, Keying, MenuTypes, TieredMenu, TieredMenuTypes } from '@ephox/alloy';
+import { AlloyEvents, InlineViewTypes, ItemTypes, Keying, TieredMenu, TieredMenuTypes } from '@ephox/alloy';
 import { InlineContent, Menu as BridgeMenu, Toolbar } from '@ephox/bridge';
 import { Arr, Obj, Optional, Optionals } from '@ephox/katamari';
 
@@ -190,36 +190,30 @@ export const createPartialMenu = (
 export const createTieredDataFrom = (partialMenu: TieredMenuTypes.PartialMenuSpec) =>
   TieredMenu.singleData(partialMenu.value, partialMenu);
 
-export const createMenuFrom = (
+export const createInlineMenuFrom = (
   partialMenu: PartialMenuSpec,
   columns: number | 'auto',
   focusMode: FocusMode,
   presets: Toolbar.PresetTypes
-): MenuTypes.MenuSpec => {
-  const focusManager = focusMode === FocusMode.ContentFocus ? FocusManagers.highlights() : FocusManagers.dom();
-
+): InlineViewTypes.InlineMenuSpec => {
   const movement = deriveMenuMovement(columns, presets);
   const menuMarkers = getMenuMarkers(presets);
 
   return {
-    dom: partialMenu.dom,
-    components: partialMenu.components,
-    items: partialMenu.items,
-    value: partialMenu.value,
-    markers: {
-      selectedItem: menuMarkers.selectedItem,
-      item: menuMarkers.item
-    },
-    movement,
-    fakeFocus: focusMode === FocusMode.ContentFocus,
-    focusManager,
-
-    menuBehaviours: SimpleBehaviours.unnamedEvents(columns !== 'auto' ? [ ] : [
-      AlloyEvents.runOnAttached((comp, _se) => {
-        detectSize(comp, 4, menuMarkers.item).each(({ numColumns, numRows }) => {
-          Keying.setGridSize(comp, numRows, numColumns);
-        });
-      })
-    ])
+    data: createTieredDataFrom({
+      ...partialMenu,
+      movement,
+      menuBehaviours: SimpleBehaviours.unnamedEvents(columns !== 'auto' ? [ ] : [
+        AlloyEvents.runOnAttached((comp, _se) => {
+          detectSize(comp, 4, menuMarkers.item).each(({ numColumns, numRows }) => {
+            Keying.setGridSize(comp, numRows, numColumns);
+          });
+        })
+      ])
+    }),
+    menu: {
+      markers: getMenuMarkers(presets),
+      fakeFocus: focusMode === FocusMode.ContentFocus
+    }
   };
 };
