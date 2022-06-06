@@ -93,6 +93,51 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
     }
   });
 
+  it('TINY-7719: if the copy has multiple tags in it, it should be preserved (pre)', async () => {
+    const editor = hook.editor();
+
+    const pTestPreTag = async (tagName: string) => {
+      editor.setContent(
+        `<${tagName}>abc</${tagName}>` +
+        '<p>other kind of tag</p>' +
+        `<${tagName}>same tag</${tagName}>`
+      );
+      await pCopyAndPaste(
+        editor,
+        { startPath: [ 0, 0 ], soffset: 0, finishPath: [ 1, 0 ], foffset: 5 },
+        { startPath: [ 2, 0 ], soffset: 1, finishPath: [ 2, 0 ], foffset: 3 }
+      );
+      TinyAssertions.assertContent(editor,
+        `<${tagName}>abc</${tagName}>\n` +
+        '<p>other kind of tag</p>\n' +
+        `<${tagName}>s</${tagName}>\n` +
+        `<${tagName}>abc</${tagName}>\n` +
+        '<p>other</p>\n' +
+        `<${tagName}>e tag</${tagName}>`
+      );
+      await pCopyAndPaste(
+        editor,
+        { startPath: [ 2, 0 ], soffset: 0, finishPath: [ 3, 0 ], foffset: 3 },
+        { startPath: [ 5, 0 ], soffset: 1, finishPath: [ 5, 0 ], foffset: 3 }
+      );
+      TinyAssertions.assertContent(editor,
+        `<${tagName}>abc</${tagName}>\n` +
+        '<p>other kind of tag</p>\n' +
+        `<${tagName}>s</${tagName}>\n` +
+        `<${tagName}>abc</${tagName}>\n` +
+        '<p>other</p>\n' +
+        `<${tagName}>e</${tagName}>\n` +
+        `<${tagName}>s</${tagName}>\n` +
+        `<${tagName}>abc</${tagName}>\n` +
+        `<${tagName}>ag</${tagName}>`
+      );
+    };
+
+    for (const tagName of [ 'pre' ]) {
+      await pTestPreTag(tagName);
+    }
+  });
+
   it('TINY-7719: Wrapped elements are preserved in copy and paste (inline elements)', async () => {
     const editor = hook.editor();
 

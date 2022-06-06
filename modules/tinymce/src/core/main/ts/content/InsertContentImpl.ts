@@ -29,8 +29,10 @@ const shouldFlatten = (fragment: AstNode, parentNode: Element) => {
 
   const isAFlattenableTag = Arr.contains(wrappedElements, currentNode.name);
   const isPastingInTheSameTag = currentNode.name === parentNode.tagName.toLowerCase();
+  // TINY-7719: last children is the bookmarkHtml attached by the function insertHtmlAtCaret
+  const isCopingOnlyOneTag = fragment.firstChild === fragment.lastChild.prev;
 
-  return isAFlattenableTag && isPastingInTheSameTag;
+  return isCopingOnlyOneTag && isAFlattenableTag && isPastingInTheSameTag;
 };
 
 const isTableCell = NodeType.isTableCell;
