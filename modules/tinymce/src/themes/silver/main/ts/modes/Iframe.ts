@@ -100,7 +100,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     OuterContainer.setSidebar(
       outerContainer,
       rawUiConfig.sidebar,
-      Options.getSidebarShow(editor).fold(() => undefined, (value) => value.toLowerCase())
+      Options.getSidebarShow(editor)
     );
 
     setupEvents(editor, uiComponents);

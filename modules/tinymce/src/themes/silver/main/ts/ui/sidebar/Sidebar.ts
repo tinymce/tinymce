@@ -101,7 +101,8 @@ const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSi
     Replacing.set(slider, [ makeSidebar(panelConfigs) ]);
 
     // Show the default sidebar
-    if (Type.isString(showSidebar) && Obj.has(panelConfigs, showSidebar)) {
+    const configKey = Optional.from(showSidebar).map((value) => value.toLowerCase()).getOrUndefined();
+    if (Type.isString(showSidebar) && Obj.has(panelConfigs, configKey)) {
       Composing.getCurrent(slider).each((slotContainer) => {
         SlotContainer.showSlot(slotContainer, showSidebar);
         Sliding.immediateGrow(slider);
