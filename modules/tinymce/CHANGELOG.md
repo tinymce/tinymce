@@ -66,6 +66,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added background and additional spacing for the text labeled buttons in the toolbar to improve visual clarity #TINY-8617
 - Toolbar split buttons with text used an incorrect width on touch devices #TINY-8647
 
+### Added
+- Added `iframeTemplateCallback` to the `getIframeHtml` function
+
 ## 6.0.1 - 2022-03-23
 
 ### Fixed
