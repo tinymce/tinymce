@@ -10,12 +10,11 @@ import * as UrlPatterns from './UrlPatterns';
 
 export type DataToHtmlCallback = (data: MediaData) => string;
 
-const getIframeHtml = (data: MediaData, iframeTemplateCallback: DataToHtmlCallback): string => {
+const getIframeHtml = (data: MediaData, iframeTemplateCallback: DataToHtmlCallback | undefined): string => {
   if (iframeTemplateCallback) {
     return iframeTemplateCallback(data);
   } else {
     const allowFullscreen = data.allowfullscreen ? ' allowFullscreen="1"' : '';
-
     return '<iframe src="' + data.source + '" width="' + data.width + '" height="' + data.height + '"' + allowFullscreen + '></iframe>';
   }
 };
@@ -32,7 +31,7 @@ const getFlashHtml = (data: MediaData): string => {
   return html;
 };
 
-const getAudioHtml = (data: MediaData, audioTemplateCallback: DataToHtmlCallback): string => {
+const getAudioHtml = (data: MediaData, audioTemplateCallback: DataToHtmlCallback | undefined): string => {
   if (audioTemplateCallback) {
     return audioTemplateCallback(data);
   } else {
@@ -48,7 +47,7 @@ const getAudioHtml = (data: MediaData, audioTemplateCallback: DataToHtmlCallback
   }
 };
 
-const getVideoHtml = (data: MediaData, videoTemplateCallback: DataToHtmlCallback): string => {
+const getVideoHtml = (data: MediaData, videoTemplateCallback: DataToHtmlCallback | undefined): string => {
   if (videoTemplateCallback) {
     return videoTemplateCallback(data);
   } else {

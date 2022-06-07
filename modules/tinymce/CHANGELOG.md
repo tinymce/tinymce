@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `sidebar_show` option to show the specified sidebar on initialization #TINY-8710
 - New `newline_behavior` option to control what happens when the enter key is pressed or using commands such as `mceInsertNewLine` #TINY-8458
 - New `removeAttributeFilter` and `removeNodeFilter` functions to the `DomParser` and DOM `Serializer` APIs #TINY-7847
+- New `iframe_template_callback` option in the `media` plugin. Patch provided by Namstel #TINY-8684
 
 ### Changed
 - Toggling fullscreen mode with the `fullscreen` plugin now also fires the `ResizeEditor` event #TINY-8701
@@ -65,9 +66,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Multiple inline toolbars were shown if focused too quickly #TINY-8503
 - Added background and additional spacing for the text labeled buttons in the toolbar to improve visual clarity #TINY-8617
 - Toolbar split buttons with text used an incorrect width on touch devices #TINY-8647
-
-### Added
-- Added `iframeTemplateCallback` to the `getIframeHtml` function
 
 ## 6.0.1 - 2022-03-23
 

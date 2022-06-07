@@ -21,6 +21,10 @@ const register = (editor: Editor): void => {
     processor: 'function'
   });
 
+  registerOption('iframe_template_callback', {
+    processor: 'function'
+  });
+
   registerOption('media_live_embeds', {
     processor: 'boolean',
     default: true
