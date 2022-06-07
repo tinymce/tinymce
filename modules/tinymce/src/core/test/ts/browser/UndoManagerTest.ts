@@ -613,7 +613,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     assert.equal(changeEventCounter, 0, 'No events should be detected');
   });
 
-  context('dispatchIfChanged', () => {
+  context('dispatchChange', () => {
     const initialContent = '<p>some inital content</p>';
     const manualModifiedLevel = 'a modified last level';
 
@@ -642,7 +642,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
       currentChangeEvent = undefined;
     });
 
-    it('TINY-8641: Dispatch change and set editor dirty if the current content and the undoManager history are inconsistent', () => {
+    it('TINY-8641: Dispatch change with current editor status as level and current undoManager layer as lastLevel', () => {
       const editor = hook.editor();
 
       editor.resetContent(initialContent);
@@ -650,45 +650,28 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
       editor.on('change', onChange);
 
       assert.equal(changeEventCounter, 0, 'No events should be detected at start');
-      editor.undoManager.dispatchIfChanged();
-      assert.equal(changeEventCounter, 0, 'No events should be detected if content is consistent with the undoManager history');
 
       Arr.last(editor.undoManager.data).each((lastLevel) => {
         lastLevel.content = manualModifiedLevel;
       });
 
-      assert.isFalse(editor.isDirty(), 'Editor should not be dirty before dispatchIfChanged');
-      editor.undoManager.dispatchIfChanged();
+      assert.isFalse(editor.isDirty(), 'Editor should not be dirty before dispatchChange');
+      editor.undoManager.dispatchChange();
       assertChangeEvent(currentChangeEvent, initialContent, manualModifiedLevel);
-      assert.equal(changeEventCounter, 1, '1 event should be detected if the content is not consistent with the undoManager history');
-      assert.isTrue(editor.isDirty(), 'Editor should be dirty after dispatchIfChanged');
+      assert.equal(changeEventCounter, 1, '1 event should be detected');
+      assert.isTrue(editor.isDirty(), 'Editor should be dirty after dispatchChange');
 
       Arr.range(3, () => {
-        editor.undoManager.dispatchIfChanged();
+        editor.undoManager.dispatchChange();
         assertChangeEvent(currentChangeEvent, initialContent, manualModifiedLevel);
       });
 
-      assert.equal(changeEventCounter, 4, 'it should continue to call change till the editor and last level are different');
-
-      editor.undoManager.add();
-      assert.equal(changeEventCounter, 5, 'add should trigger a change as well');
-
-      Arr.last(editor.undoManager.data).fold(
-        () => assert.fail('add did not add a layer with the editor content'),
-        (lastLevel) => {
-          assert.equal(editor.getContent(), lastLevel.content, 'add should add a last layer with the editor content');
-        }
-      );
-
-      Arr.range(3, () => {
-        editor.undoManager.dispatchIfChanged();
-      });
-      assert.equal(changeEventCounter, 5, 'it should not continue to trigger change becuase now editor content and last layer are the same');
+      assert.equal(changeEventCounter, 4, 'it should continue to call change');
 
       editor.off('change', onChange);
     });
 
-    it('TINY-8641: dispatchIfChanged should always fire on empty stack with current content as level and lastLevel', () => {
+    it('TINY-8641: dispatchChange should always fire on empty stack with current content as level and lastLevel', () => {
       const editor = hook.editor();
       editor.resetContent(initialContent);
       editor.on('change', onChange);
@@ -697,31 +680,10 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
       assert.lengthOf(editor.undoManager.data, 0, 'undo manager should be empty after clear');
 
       Arr.range(3, (n) => {
-        editor.undoManager.dispatchIfChanged();
-        assert.equal(changeEventCounter, n + 1, 'change should be called each time the dispatchIfChanged is called');
+        editor.undoManager.dispatchChange();
+        assert.equal(changeEventCounter, n + 1, 'change should be called each time the dispatchChange is called');
         assertChangeEvent(currentChangeEvent, initialContent, undefined);
       });
-      editor.off('change', onChange);
-    });
-
-    it('TINY-8641: dispatchIfChanged should not be dispatch change after an undo', () => {
-      const editor = hook.editor();
-      editor.setContent(initialContent);
-      Arr.range(3, (n) => {
-        editor.setContent(editor.getContent() + `\n${n}`);
-        editor.undoManager.add();
-      });
-
-      editor.on('change', onChange);
-
-      assert.equal(changeEventCounter, 0, 'No events should be detected at start');
-      editor.undoManager.dispatchIfChanged();
-      assert.equal(changeEventCounter, 0, 'No events should be detected if content is consistent with the undoManager history');
-
-      editor.undoManager.undo();
-      assert.equal(changeEventCounter, 0, 'after an undo no change events should be dispatch');
-      editor.undoManager.dispatchIfChanged();
-      assert.equal(changeEventCounter, 0, 'after an undo dispatchIfChanged should no dispatch any events');
       editor.off('change', onChange);
     });
   });

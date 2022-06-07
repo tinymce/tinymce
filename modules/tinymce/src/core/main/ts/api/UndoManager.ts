@@ -52,11 +52,11 @@ const UndoManager = (editor: Editor): UndoManager => {
     },
 
     /**
-     * Dispatch a change event if the content in last layer of the undoManager and the current editor content are different
+     * Dispatch a change event with current editor status as level and current undoManager layer as lastLevel
      *
-     * @method dispatchIfChanged
+     * @method dispatchChange
      */
-    dispatchIfChanged: (): void => {
+    dispatchChange: (): void => {
       const data = undoManager.data;
       const currentLevel = Levels.createFromEditor(editor);
 
@@ -70,11 +70,8 @@ const UndoManager = (editor: Editor): UndoManager => {
 
       Arr.get(data, index.get()).fold(
         () => dispatchEvent(undefined),
-        (lastLevel) => {
-          if (!Levels.isEq(lastLevel, currentLevel)) {
-            dispatchEvent(lastLevel);
-          }
-        });
+        (lastLevel) => dispatchEvent(lastLevel)
+      );
     },
 
     /**

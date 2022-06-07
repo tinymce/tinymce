@@ -20,7 +20,7 @@ export interface UndoManager {
   data: UndoLevel[];
   typing: boolean;
   add: (level?: UndoLevel, event?: EditorEvent<any>) => UndoLevel;
-  dispatchIfChanged: () => void;
+  dispatchChange: () => void;
   beforeChange: () => void;
   undo: () => UndoLevel;
   redo: () => UndoLevel;

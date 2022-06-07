@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `removeAttributeFilter` and `removeNodeFilter` functions to the `DomParser` and DOM `Serializer` APIs #TINY-7847
 - New `iframe_template_callback` option in the `media` plugin. Patch provided by Namstel #TINY-8684
 - New `editor.undoManager.fireIfChanged` API to fire change event only if the last undoManager content layer is diffrent from the current editor
-- New `dispatchIfChanged` UndoManager API to fire the `change` event if the last UndoManager content layer is different from the current editor content #TINY-8641
+- New `dispatchChange` UndoManager API to fire the `change` with current editor status as level and current undoManager layer as lastLevel #TINY-8641
 
 ### Improved
 - Clearer focus states for buttons while navigating with keyboard #TINY-8557
