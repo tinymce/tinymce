@@ -32,7 +32,7 @@ const DomSerializer = (settings: DomSerializerSettings, editor?: Editor): DomSer
      * @method {String} name Comma separated list of nodes to collect.
      * @param {Function} callback Callback function to execute once it has collected nodes.
      * @example
-     * parser.addNodeFilter('p,h1', (nodes, name) => {
+     * serializer.addNodeFilter('p,h1', (nodes, name) => {
      *   for (let i = 0; i < nodes.length; i++) {
      *     console.log(nodes[i].name);
      *   }
@@ -41,15 +41,15 @@ const DomSerializer = (settings: DomSerializerSettings, editor?: Editor): DomSer
     addNodeFilter: domSerializer.addNodeFilter,
 
     /**
-     * Adds a attribute filter function to the parser used by the serializer, the parser will
+     * Adds an attribute filter function to the parser used by the serializer, the parser will
      * collect nodes that has the specified attributes
      * and then execute the callback once it has finished parsing the document.
      *
      * @method addAttributeFilter
-     * @method {String} name Comma separated list of nodes to collect.
+     * @method {String} name Comma separated list of attributes to collect.
      * @param {Function} callback Callback function to execute once it has collected nodes.
      * @example
-     * parser.addAttributeFilter('src,href', (nodes, name) => {
+     * serializer.addAttributeFilter('src,href', (nodes, name) => {
      *   for (let i = 0; i < nodes.length; i++) {
      *     console.log(nodes[i].name);
      *   }
@@ -105,7 +105,45 @@ const DomSerializer = (settings: DomSerializerSettings, editor?: Editor): DomSer
 
     getNodeFilters: domSerializer.getNodeFilters,
 
-    getAttributeFilters: domSerializer.getAttributeFilters
+    getAttributeFilters: domSerializer.getAttributeFilters,
+
+    /**
+     * Removes a node filter function or removes all filter functions from the parser used by the serializer for the node names provided.
+     *
+     * @method removeNodeFilter
+     * @param {String} name Comma separated list of nodes names to remove filters for.
+     * @param {Function} callback Optional callback function to only remove a specific callback.
+     * @example
+     * // Remove a single filter
+     * serializer.removeNodeFilter('p,h1', (nodes, name) => {
+     *   for (var i = 0; i < nodes.length; i++) {
+     *     console.log(nodes[i].name);
+     *   }
+     * });
+     *
+     * // Remove all filters
+     * serializer.removeNodeFilter('p,h1');
+     */
+    removeNodeFilter: domSerializer.removeNodeFilter,
+
+    /**
+     * Removes an attribute filter function or removes all filter functions from the parser used by the serializer for the attribute names provided.
+     *
+     * @method removeAttributeFilter
+     * @param {String} name Comma separated list of attributes names to remove filters for.
+     * @param {Function} callback Optional callback function to only remove a specific callback.
+     * @example
+     * // Remove a single filter
+     * serializer.removeAttributeFilter('src,href', (nodes, name) => {
+     *   for (let i = 0; i < nodes.length; i++) {
+     *     console.log(nodes[i].name);
+     *   }
+     * });
+     *
+     * // Remove all filters
+     * serializer.removeAttributeFilter('src,href');
+     */
+    removeAttributeFilter: domSerializer.removeAttributeFilter
   };
 };
 

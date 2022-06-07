@@ -1,5 +1,5 @@
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
 
@@ -318,6 +318,31 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     assert.deepEqual(result.args, { value: 1 }, 'Parser args');
   });
 
+  it('TINY-7847: removeNodeFilter', () => {
+    const parser = DomParser({});
+    const numFilters = parser.getNodeFilters().length;
+    let called = false;
+
+    const filter = (_nodes: AstNode[]) => {
+      called = true;
+    };
+    parser.addNodeFilter('th,td', filter);
+    parser.addNodeFilter('th,td', Fun.noop);
+
+    assert.lengthOf(parser.getNodeFilters(), numFilters + 2, 'Before removing filters');
+    parser.removeNodeFilter('th', filter);
+    assert.lengthOf(parser.getNodeFilters(), numFilters + 2, 'After removing the first th node filter');
+    assert.lengthOf(parser.getNodeFilters()[numFilters].callbacks, 1, 'th node callbacks');
+    parser.removeNodeFilter('th', Fun.noop);
+    assert.lengthOf(parser.getNodeFilters(), numFilters + 1, 'After removing the second th node filter');
+    parser.removeNodeFilter('th,td');
+    assert.lengthOf(parser.getNodeFilters(), numFilters, 'After removing all th and td node filters');
+
+    // Ensure that after being removed the filters aren't called
+    parser.parse('<table><tr><th></th><td></td></tr></table>');
+    assert.isFalse(called);
+  });
+
   it('addAttributeFilter', () => {
     let result;
 
@@ -359,6 +384,31 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     assert.equal(results.href.nodes[0].attr('href'), '1.gif', 'Parser filter result node(0) attr');
     assert.equal(results.href.nodes[1].name, 'a', 'Parser filter result node(1) name');
     assert.equal(results.href.nodes[1].attr('href'), '2.gif', 'Parser filter result node(1) attr');
+  });
+
+  it('TINY-7847: removeAttributeFilter', () => {
+    const parser = DomParser({});
+    const numFilters = parser.getAttributeFilters().length;
+    let called = false;
+
+    const filter = (_nodes: AstNode[]) => {
+      called = true;
+    };
+    parser.addAttributeFilter('controls,poster', filter);
+    parser.addAttributeFilter('controls,poster', Fun.noop);
+
+    assert.lengthOf(parser.getAttributeFilters(), numFilters + 2, 'Before removing filters');
+    parser.removeAttributeFilter('controls', filter);
+    assert.lengthOf(parser.getAttributeFilters(), numFilters + 2, 'After removing the first controls attribute filter');
+    assert.lengthOf(parser.getAttributeFilters()[numFilters].callbacks, 1, 'controls attribute node callbacks');
+    parser.removeAttributeFilter('controls', Fun.noop);
+    assert.lengthOf(parser.getAttributeFilters(), numFilters + 1, 'After removing the second controls attribute filter');
+    parser.removeAttributeFilter('controls,poster');
+    assert.lengthOf(parser.getAttributeFilters(), numFilters, 'After removing all controls and poster attribute filter');
+
+    // Ensure that after being removed the filters aren't called
+    parser.parse('<video controls poster="about:blank"></video>');
+    assert.isFalse(called);
   });
 
   it('Fix orphan LI elements', () => {
