@@ -442,7 +442,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
    * Removes a node filter function or removes all filter functions from the parser for the node names provided.
    *
    * @method removeNodeFilter
-   * @param {String} name Comma separated list of nodes names to remove filters for.
+   * @param {String} name Comma separated list of node names to remove filters for.
    * @param {Function} callback Optional callback function to only remove a specific callback.
    * @example
    * // Remove a single filter
@@ -479,7 +479,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
    * Removes an attribute filter function or removes all filter functions from the parser for the attribute names provided.
    *
    * @method removeAttributeFilter
-   * @param {String} name Comma separated list of attributes names to remove filters for.
+   * @param {String} name Comma separated list of attribute names to remove filters for.
    * @param {Function} callback Optional callback function to only remove a specific callback.
    * @example
    * // Remove a single filter
