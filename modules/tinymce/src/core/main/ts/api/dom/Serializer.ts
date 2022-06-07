@@ -29,7 +29,7 @@ const DomSerializer = (settings: DomSerializerSettings, editor?: Editor): DomSer
      * and then execute the callback once it has finished parsing the document.
      *
      * @method addNodeFilter
-     * @method {String} name Comma separated list of nodes to collect.
+     * @param {String} name Comma separated list of nodes to collect.
      * @param {Function} callback Callback function to execute once it has collected nodes.
      * @example
      * serializer.addNodeFilter('p,h1', (nodes, name) => {
@@ -46,7 +46,7 @@ const DomSerializer = (settings: DomSerializerSettings, editor?: Editor): DomSer
      * and then execute the callback once it has finished parsing the document.
      *
      * @method addAttributeFilter
-     * @method {String} name Comma separated list of attributes to collect.
+     * @param {String} name Comma separated list of attributes to collect.
      * @param {Function} callback Callback function to execute once it has collected nodes.
      * @example
      * serializer.addAttributeFilter('src,href', (nodes, name) => {
