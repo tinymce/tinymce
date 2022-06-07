@@ -62,5 +62,7 @@
 @z-index-menu: 1150;
 
 // Responsive breakpoints
+@breakpoint-sm-value: 767px;
 @breakpoint-md: ~"only screen and (min-width:1000px)";
-@breakpoint-sm: ~"only screen and (max-width:767px)";
+@breakpoint-sm: ~"only screen and (max-width:" @breakpoint-sm-value ~")";
+@breakpoint-lt-sm: ~"only screen and (min-width:" @breakpoint-sm-value + 1px ~")";
