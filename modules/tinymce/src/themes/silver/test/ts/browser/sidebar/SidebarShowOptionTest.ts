@@ -39,6 +39,8 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
   };
 
   const assertNotAnimating = () => UiFinder.notExists(SugarBody.body(), '.tox-sidebar--sliding-growing');
+  const assertSidebarOpen = () => UiFinder.exists(SugarBody.body(), '.tox-sidebar--sliding-open');
+  const assertSidebarClosed = () => UiFinder.notExists(SugarBody.body(), '.tox-sidebar--sliding-open');
 
   beforeEach(() => {
     store.clear();
@@ -49,6 +51,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
       ...settingsFactory(store)
     });
     store.assertEq('Asserting initial show of sidebars', []);
+    assertSidebarClosed();
     McEditor.remove(editor);
   });
 
@@ -58,6 +61,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
       sidebar_show: 'sidebarone'
     });
     assertNotAnimating();
+    assertSidebarOpen();
     store.assertEq('Asserting initial show of sidebars', [
       {
         name: 'sidebarone:show',
@@ -73,6 +77,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
       sidebar_show: 'sidebartwo'
     });
     assertNotAnimating();
+    assertSidebarOpen();
     store.assertEq('Asserting initial show of sidebars', [
       {
         name: 'sidebartwo:show',
@@ -87,6 +92,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
       ...settingsFactory(store)
     });
     store.assertEq('Asserting initial show of sidebars', []);
+    assertSidebarClosed();
     McEditor.remove(editor);
   });
 });
