@@ -58,6 +58,13 @@ const cClick = (): Chain<SugarElement<Element>, SugarElement<Element>> =>
 const pClickOn = (selector: string): Promise<{}> =>
   pActionOn(selector, 'click');
 
+const pClick = (elem: SugarElement<Element>): Promise<{}> => {
+  const id = Id.generate('');
+  Attribute.set(elem, BedrockIdAttribute, id);
+  const selector = `[${BedrockIdAttribute}="${id}"]`;
+  return pClickOn(selector);
+};
+
 const pUpOn = (selector: string): Promise<{}> =>
   pActionOn(selector, 'up');
 
@@ -76,6 +83,7 @@ export {
   BedrockIdAttribute,
 
   pClickOn,
+  pClick,
   pUpOn,
   pDownOn,
   pMoveToOn
