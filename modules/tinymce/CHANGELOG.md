@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Added
 - New `sidebar_show` option to show the specified sidebar on initialization #TINY-8710
+- New `newline_behavior` option to control what happens when the enter key is pressed or using commands such as `mceInsertNewLine` #TINY-8458
 - New `transparent` property for `iframe` dialog component #TINY-8534
 
 ### Changed
@@ -16,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `end_container_on_empty_block` option can now take a string of blocks to split when pressing Enter twice #TINY-6559
 - The default value for `end_container_on_empty_block` option has been changed to `'blockquote'` #TINY-6559
 - Custom elements are now treated as non-empty elements via the schema #TINY-4784
+- The autocompleter menu element is now positioned instead of the wrapper #TINY-6476
 
 ### Fixed
 - Selecting all content with a single image in the content was inconsistent for the keyboard shortcut and menu item #TINY-4550

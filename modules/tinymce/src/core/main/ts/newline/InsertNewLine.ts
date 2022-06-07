@@ -1,6 +1,7 @@
 import { Fun, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
+import { getNewlineBehavior } from '../api/Options';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import { execDeleteCommand } from '../delete/DeleteUtils';
 import { fireFakeBeforeInputEvent, fireFakeInputEvent } from '../keyboard/FakeInputEvents';
@@ -9,43 +10,46 @@ import * as InsertBr from './InsertBr';
 import * as NewLineAction from './NewLineAction';
 
 const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
-  NewLineAction.getAction(editor, evt).fold(
-    () => {
-      if (!editor.selection.isCollapsed()) {
-        execDeleteCommand(editor);
+  const insertBreak = (breakType: (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => void, fakeEvent: string) => () => {
+    if (!editor.selection.isCollapsed()) {
+      execDeleteCommand(editor);
+    }
+    if (Type.isNonNullable(evt)) {
+      const event = fireFakeBeforeInputEvent(editor, fakeEvent);
+      if (event.isDefaultPrevented()) {
+        return;
       }
-      if (Type.isNonNullable(evt)) {
-        const event = fireFakeBeforeInputEvent(editor, 'insertLineBreak');
-        if (event.isDefaultPrevented()) {
-          return;
-        }
-      }
+    }
 
-      InsertBr.insert(editor, evt);
+    breakType(editor, evt);
 
-      if (Type.isNonNullable(evt)) {
-        fireFakeInputEvent(editor, 'insertLineBreak');
-      }
-    },
-    () => {
-      if (!editor.selection.isCollapsed()) {
-        execDeleteCommand(editor);
-      }
-      if (Type.isNonNullable(evt)) {
-        const event = fireFakeBeforeInputEvent(editor, 'insertParagraph');
-        if (event.isDefaultPrevented()) {
-          return;
-        }
-      }
+    if (Type.isNonNullable(evt)) {
+      fireFakeInputEvent(editor, fakeEvent);
+    }
+  };
 
-      InsertBlock.insert(editor, evt);
+  const lineBreak = insertBreak(InsertBr.insert, 'insertLineBreak');
 
-      if (Type.isNonNullable(evt)) {
-        fireFakeInputEvent(editor, 'insertParagraph');
-      }
-    },
-    Fun.noop
-  );
+  const blockBreak = insertBreak(InsertBlock.insert, 'insertParagraph');
+
+  const logicalAction = NewLineAction.getAction(editor, evt);
+
+  switch (getNewlineBehavior(editor)) {
+    case 'linebreak':
+      logicalAction.fold(lineBreak, lineBreak, Fun.noop);
+      break;
+    case 'block':
+      logicalAction.fold(blockBreak, blockBreak, Fun.noop);
+      break;
+    case 'invert':
+      logicalAction.fold(blockBreak, lineBreak, Fun.noop);
+      break;
+    // implied by the options processor, unnecessary
+    // case 'default':
+    default:
+      logicalAction.fold(lineBreak, blockBreak, Fun.noop);
+      break;
+  }
 };
 
 export {
