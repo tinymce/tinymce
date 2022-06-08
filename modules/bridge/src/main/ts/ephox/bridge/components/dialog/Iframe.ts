@@ -12,7 +12,7 @@ export interface IframeSpec extends FormComponentWithLabelSpec {
 export interface Iframe extends FormComponentWithLabel {
   type: 'iframe';
   sandboxed: boolean;
-  transparent?: boolean;
+  transparent: boolean;
 }
 
 const iframeFields = formComponentWithLabelFields.concat([
