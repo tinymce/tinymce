@@ -64,7 +64,7 @@ const splitCols = (grid: Structs.RowCells[], index: number, comparator: CompElm,
       let offset = 0;
       const substitute = substitution();
 
-      while (comparator(prevCell.element, row.cells[index + offset].element)) {
+      while (row.cells.length > index + offset && comparator(prevCell.element, row.cells[index + offset].element)) {
         GridRow.mutateCell(row, index + offset, Structs.elementnew(substitute, true, row.cells[index + offset].isLocked));
         offset++;
       }
