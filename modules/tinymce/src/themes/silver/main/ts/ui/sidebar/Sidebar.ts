@@ -104,7 +104,7 @@ const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSi
     const configKey = showSidebar?.toLowerCase();
     if (Type.isString(showSidebar) && Obj.has(panelConfigs, configKey)) {
       Composing.getCurrent(slider).each((slotContainer) => {
-        SlotContainer.showSlot(slotContainer, showSidebar);
+        SlotContainer.showSlot(slotContainer, configKey);
         Sliding.immediateGrow(slider);
         // TINY-8710: Remove the width as since the skins/styles won't have loaded yet, so it's going to be incorrect
         Css.remove(slider.element, 'width');
