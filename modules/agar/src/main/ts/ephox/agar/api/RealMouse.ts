@@ -58,12 +58,12 @@ const cClick = (): Chain<SugarElement<Element>, SugarElement<Element>> =>
 const pClickOn = (selector: string): Promise<{}> =>
   pActionOn(selector, 'click');
 
-const pClick = (elem: SugarElement<Element>): Promise<{}> => {
+const pClick = async (elem: SugarElement<Element>): Promise<{}> => {
   const id = Id.generate('');
   Attribute.set(elem, BedrockIdAttribute, id);
   const selector = `[${BedrockIdAttribute}="${id}"]`;
   try {
-    return pClickOn(selector);
+    return await pClickOn(selector);
   } finally {
     Attribute.remove(elem, BedrockIdAttribute);
   }
