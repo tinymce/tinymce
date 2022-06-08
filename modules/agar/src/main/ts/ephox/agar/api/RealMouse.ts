@@ -62,7 +62,9 @@ const pClick = (elem: SugarElement<Element>): Promise<{}> => {
   const id = Id.generate('');
   Attribute.set(elem, BedrockIdAttribute, id);
   const selector = `[${BedrockIdAttribute}="${id}"]`;
-  return pClickOn(selector);
+  return pClickOn(selector).finally(() => {
+    Attribute.remove(elem, BedrockIdAttribute);
+  });
 };
 
 const pUpOn = (selector: string): Promise<{}> =>
