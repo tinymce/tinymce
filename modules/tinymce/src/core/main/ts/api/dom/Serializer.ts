@@ -115,11 +115,7 @@ const DomSerializer = (settings: DomSerializerSettings, editor?: Editor): DomSer
      * @param {Function} callback Optional callback function to only remove a specific callback.
      * @example
      * // Remove a single filter
-     * serializer.removeNodeFilter('p,h1', (nodes, name) => {
-     *   for (var i = 0; i < nodes.length; i++) {
-     *     console.log(nodes[i].name);
-     *   }
-     * });
+     * serializer.removeNodeFilter('p,h1', someCallback);
      *
      * // Remove all filters
      * serializer.removeNodeFilter('p,h1');
@@ -134,11 +130,7 @@ const DomSerializer = (settings: DomSerializerSettings, editor?: Editor): DomSer
      * @param {Function} callback Optional callback function to only remove a specific callback.
      * @example
      * // Remove a single filter
-     * serializer.removeAttributeFilter('src,href', (nodes, name) => {
-     *   for (let i = 0; i < nodes.length; i++) {
-     *     console.log(nodes[i].name);
-     *   }
-     * });
+     * serializer.removeAttributeFilter('src,href', someCallback);
      *
      * // Remove all filters
      * serializer.removeAttributeFilter('src,href');

@@ -15,7 +15,7 @@ export interface FilterRegistry<C extends Function> {
   readonly removeFilter: (name: string, callback?: C) => void;
 }
 
-export const FilterRegistry = <C extends Function>(): FilterRegistry<C> => {
+export const create = <C extends Function>(): FilterRegistry<C> => {
   const filters: Record<string, Filter<C>> = {};
 
   const addFilter = (name: string, callback: C): void => {

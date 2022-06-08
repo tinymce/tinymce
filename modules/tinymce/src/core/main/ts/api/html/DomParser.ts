@@ -4,7 +4,7 @@ import createDompurify, { Config, DOMPurifyI } from 'dompurify';
 
 import * as NodeType from '../../dom/NodeType';
 import * as FilterNode from '../../html/FilterNode';
-import { FilterRegistry, Filter as BaseFilter } from '../../html/FilterRegistry';
+import * as FilterRegistry from '../../html/FilterRegistry';
 import { cleanInvalidNodes } from '../../html/InvalidNodes';
 import * as LegacyFilter from '../../html/LegacyFilter';
 import * as ParserFilters from '../../html/ParserFilters';
@@ -46,7 +46,7 @@ export interface ParserArgs {
 
 export type ParserFilterCallback = (nodes: AstNode[], name: string, args: ParserArgs) => void;
 
-export interface ParserFilter extends BaseFilter<ParserFilterCallback> {}
+export interface ParserFilter extends FilterRegistry.Filter<ParserFilterCallback> {}
 
 export interface DomParserSettings {
   allow_html_data_urls?: boolean;
@@ -390,8 +390,8 @@ const getRootBlockName = (settings: DomParserSettings, args: ParserArgs) => {
 };
 
 const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomParser => {
-  const nodeFilterRegistry = FilterRegistry<ParserFilterCallback>();
-  const attributeFilterRegistry = FilterRegistry<ParserFilterCallback>();
+  const nodeFilterRegistry = FilterRegistry.create<ParserFilterCallback>();
+  const attributeFilterRegistry = FilterRegistry.create<ParserFilterCallback>();
 
   // Apply setting defaults
   const defaultedSettings = {
@@ -446,11 +446,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
    * @param {Function} callback Optional callback function to only remove a specific callback.
    * @example
    * // Remove a single filter
-   * parser.removeNodeFilter('p,h1', (nodes, name) => {
-   *   for (var i = 0; i < nodes.length; i++) {
-   *     console.log(nodes[i].name);
-   *   }
-   * });
+   * parser.removeNodeFilter('p,h1', someCallback);
    *
    * // Remove all filters
    * parser.removeNodeFilter('p,h1');
@@ -483,11 +479,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
    * @param {Function} callback Optional callback function to only remove a specific callback.
    * @example
    * // Remove a single filter
-   * parser.removeAttributeFilter('src,href', (nodes, name) => {
-   *   for (let i = 0; i < nodes.length; i++) {
-   *     console.log(nodes[i].name);
-   *   }
-   * });
+   * parser.removeAttributeFilter('src,href', someCallback);
    *
    * // Remove all filters
    * parser.removeAttributeFilter('src,href');
