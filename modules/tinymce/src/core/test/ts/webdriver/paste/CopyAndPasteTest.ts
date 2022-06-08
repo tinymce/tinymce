@@ -12,19 +12,21 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
     statusbar: false
   }, []);
 
+  const pClickEditMenu = async (editor: Editor, item: string): Promise<void> => {
+    TinyUiActions.clickOnMenu(editor, 'button:contains("Edit")');
+    await TinyUiActions.pWaitForUi(editor, '*[role="menu"]');
+    await RealMouse.pClickOn(`div[title=${item}]`);
+  };
+
   const pCopyAndPaste = async (editor: Editor, source: Cursors.CursorPath, target: Cursors.CursorPath): Promise<void> => {
     TinySelections.setSelection(editor, source.startPath, source.soffset, source.finishPath, source.foffset);
     // at the moment: RealClipboard.pCopy('iframe => body'), doesn't work in with all browser (see https://github.com/webdriverio/webdriverio/issues/622)
     // chrome, chrome-headless, firefox-headless -> it doesn't work
     // firefox -> it works
-    TinyUiActions.clickOnMenu(editor, 'button:contains("Edit")');
-    await TinyUiActions.pWaitForUi(editor, '*[role="menu"]');
-    await RealMouse.pClickOn('div[title="Copy"]');
+    await pClickEditMenu(editor, 'Copy');
     TinySelections.setSelection(editor, target.startPath, target.soffset, target.finishPath, target.foffset);
     if (PlatformDetection.detect().browser.isSafari()) {
-      TinyUiActions.clickOnMenu(editor, 'button:contains("Edit")');
-      await TinyUiActions.pWaitForUi(editor, '*[role="menu"]');
-      await RealMouse.pClickOn('div[title="Paste"]');
+      await pClickEditMenu(editor, 'Paste');
     } else {
       await RealClipboard.pPaste('iframe => body');
     }
