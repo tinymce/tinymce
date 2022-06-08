@@ -25,12 +25,12 @@ import * as InsertList from './InsertList';
 const wrappedElements = [ 'pre' ];
 
 const shouldPasteContentOnly = (fragment: AstNode, parentNode: Element) => {
-  const currentNode = fragment.firstChild;
+  const firstNode = fragment.firstChild;
 
-  const isAFlattenableTag = Arr.contains(wrappedElements, currentNode.name);
-  const isPastingInTheSameTag = currentNode.name === parentNode.tagName.toLowerCase();
+  const isAFlattenableTag = Arr.contains(wrappedElements, firstNode.name);
+  const isPastingInTheSameTag = firstNode.name === parentNode.tagName.toLowerCase();
   const lastNode = fragment.lastChild.attr('data-mce-type') === 'bookmark' ? fragment.lastChild.prev : fragment.lastChild;
-  const isCopingOnlyOneTag = currentNode === lastNode;
+  const isCopingOnlyOneTag = firstNode === lastNode;
 
   return isCopingOnlyOneTag && isAFlattenableTag && isPastingInTheSameTag;
 };
