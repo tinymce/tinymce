@@ -498,6 +498,9 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
   editor.dispatch('NewBlock', { newBlock });
 };
 
+const fakeEventName = 'insertParagraph';
+
 export {
-  insert
+  insert,
+  fakeEventName
 };

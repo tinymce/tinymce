@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Added
 - New `sidebar_show` option to show the specified sidebar on initialization #TINY-8710
-- New `newline_behavior` option to control what happens when the enter key is pressed or using commands such as `mceInsertNewLine` #TINY-8458
+- New `newline_behavior` option to control what happens when the enter key is pressed or the `mceInsertNewLine` command is used #TINY-8458
 - New `transparent` property for `iframe` dialog component #TINY-8534
 - New `removeAttributeFilter` and `removeNodeFilter` functions to the `DomParser` and DOM `Serializer` APIs #TINY-7847
 - New `iframe_template_callback` option in the `media` plugin. Patch provided by Namstel #TINY-8684
