@@ -1,4 +1,4 @@
-import { Arr, Cell } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
 
 import * as ErrorReporter from '../ErrorReporter';
@@ -6,8 +6,6 @@ import { BlobInfoImagePair, ImageScanner } from '../file/ImageScanner';
 import { Uploader } from '../file/Uploader';
 import { UploadStatus } from '../file/UploadStatus';
 import * as Rtc from '../Rtc';
-import * as Levels from '../undo/Levels';
-import { UndoLevel } from '../undo/UndoManagerTypes';
 import Editor from './Editor';
 import Env from './Env';
 import { BlobCache, BlobInfo } from './file/BlobCache';
@@ -38,37 +36,11 @@ interface EditorUpload {
   destroy: () => void;
 }
 
-const UploadChangeHandler = (editor: Editor) => {
-  const lastChangedLevel = Cell<UndoLevel>(null);
-
-  editor.on('change AddUndo', (e) => {
-    lastChangedLevel.set({ ...e.level });
-  });
-
-  const fireIfChanged = () => {
-    const data = editor.undoManager.data;
-    Arr.last(data).filter((level) => {
-      return !Levels.isEq(lastChangedLevel.get(), level);
-    }).each((level) => {
-      editor.setDirty(true);
-      editor.dispatch('change', {
-        level,
-        lastLevel: Arr.get(data, data.length - 2).getOrNull()
-      });
-    });
-  };
-
-  return {
-    fireIfChanged
-  };
-};
-
 const EditorUpload = (editor: Editor): EditorUpload => {
   const blobCache = BlobCache();
   let uploader: Uploader, imageScanner: ImageScanner;
   const uploadStatus = UploadStatus();
   const urlFilters: Array<(img: HTMLImageElement) => boolean> = [];
-  const changeHandler = UploadChangeHandler(editor);
 
   const aliveGuard = <T, R> (callback?: (result: T) => R) => {
     return (result: T) => {
@@ -140,6 +112,7 @@ const EditorUpload = (editor: Editor): EditorUpload => {
       const blobInfos = Arr.map(imageInfos, (imageInfo) => imageInfo.blobInfo);
 
       return uploader.upload(blobInfos, openNotification(editor)).then(aliveGuard((result) => {
+        let shouldDispatchChange = false;
         const imagesToRemove: HTMLImageElement[] = [];
 
         const filteredResult: UploadResult[] = Arr.map(result, (uploadInfo, index) => {
@@ -148,6 +121,9 @@ const EditorUpload = (editor: Editor): EditorUpload => {
           let removed = false;
 
           if (uploadInfo.status && Options.shouldReplaceBlobUris(editor)) {
+            if (uploadInfo.url && !image.src.includes(uploadInfo.url)) {
+              shouldDispatchChange = true;
+            }
             blobCache.removeByUri(image.src);
             if (Rtc.isRtc(editor)) {
               // RTC handles replacing the image URL through callback events
@@ -173,17 +149,20 @@ const EditorUpload = (editor: Editor): EditorUpload => {
           };
         });
 
-        if (filteredResult.length > 0) {
-          changeHandler.fireIfChanged();
-        }
-
         if (imagesToRemove.length > 0 && !Rtc.isRtc(editor)) {
           editor.undoManager.transact(() => {
             Arr.each(imagesToRemove, (element) => {
               editor.dom.remove(element);
+              if (blobCache.getByUri(element.src)) {
+                shouldDispatchChange = true;
+              }
               blobCache.removeByUri(element.src);
             });
           });
+        }
+
+        if (shouldDispatchChange) {
+          editor.undoManager.dispatchChange();
         }
 
         return filteredResult;
