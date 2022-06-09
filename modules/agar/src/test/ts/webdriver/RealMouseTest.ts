@@ -1,7 +1,7 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { after, Assert, before, describe, it, UnitTest } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Attribute, Class, Css, DomEvent, Html, Insert, Remove, SugarElement } from '@ephox/sugar';
+import { Attribute, Class, Css, DomEvent, EventUnbinder, Html, Insert, Remove, SugarElement } from '@ephox/sugar';
 
 import * as Assertions from 'ephox/agar/api/Assertions';
 import { Chain } from 'ephox/agar/api/Chain';
@@ -80,61 +80,73 @@ UnitTest.asynctest('RealMouseTest', (success, failure) => {
   }, failure);
 });
 
-UnitTest.promiseTest('RealMouseTest promise based variant', async () => {
-
+describe('RealMouseTest promise based variant', () => {
   const detection = PlatformDetection.detect();
 
   // Safari fails to hover on mousemove
   if (detection.browser.isSafari()) {
-    return Promise.resolve();
+    return;
   }
 
-  const style = document.createElement('style');
-  style.innerHTML = 'button[data-test]:hover { background-color: blue; color: white; } button.other { background-color: blue; color: white; } button';
-  document.head.appendChild(style);
+  let binder: EventUnbinder;
+  let container: SugarElement<HTMLDivElement>;
+  let count: Cell<number>;
+  let button: SugarElement<HTMLButtonElement>;
+  let other: SugarElement<HTMLButtonElement>;
 
-  const container = SugarElement.fromTag('div');
-  const button = SugarElement.fromTag('button');
-  Attribute.set(button, 'data-test', 'true');
-  Html.set(button, 'hover-button');
-  Insert.append(container, button);
+  before(() => {
 
-  const other = SugarElement.fromTag('button');
-  Class.add(other, 'other');
-  Html.set(other, 'other-button');
-  Insert.append(container, other);
+    const style = document.createElement('style');
+    style.innerHTML = 'button[data-test]:hover { background-color: blue; color: white; } button.other { background-color: blue; color: white; } button';
+    document.head.appendChild(style);
 
-  const normal = SugarElement.fromTag('button');
-  Html.set(normal, 'Normal');
-  Insert.append(container, normal);
+    container = SugarElement.fromTag('div');
+    button = SugarElement.fromTag('button');
+    Attribute.set(button, 'data-test', 'true');
+    Html.set(button, 'hover-button');
+    Insert.append(container, button);
 
-  Insert.append(SugarElement.fromDom(document.body), container);
+    other = SugarElement.fromTag('button');
+    Class.add(other, 'other');
+    Html.set(other, 'other-button');
+    Insert.append(container, other);
 
-  const clickMe = SugarElement.fromTag('button');
-  Class.add(clickMe, 'click-me');
-  Html.set(clickMe, 'Click me!');
-  Insert.append(container, clickMe);
+    const normal = SugarElement.fromTag('button');
+    Html.set(normal, 'Normal');
+    Insert.append(container, normal);
 
-  const count = Cell(0);
-  // add a MouseUp handler
-  const binder = DomEvent.bind(clickMe, 'mouseup', () => {
-    count.set(count.get() + 1);
+    Insert.append(SugarElement.fromDom(document.body), container);
+
+    const clickMe = SugarElement.fromTag('button');
+    Class.add(clickMe, 'click-me');
+    Html.set(clickMe, 'Click me!');
+    Insert.append(container, clickMe);
+
+    count = Cell(0);
+    // add a MouseUp handler
+    binder = DomEvent.bind(clickMe, 'mouseup', () => {
+      count.set(count.get() + 1);
+    });
   });
 
-  try {
+  it('Should find buttons with same background color after hovering', async () => {
 
     await RealMouse.pMoveToOn('.other');
     await RealMouse.pMoveToOn('button[data-test]');
     const testButton = UiFinder.findIn(container, 'button[data-test]').getOrDie();
     Assert.eq('After hovering', Css.get(other, 'background-color'), Css.get(testButton, 'background-color'));
+  });
+
+  it('Should find click-me button, click on it and cleanup bedrock attribute', async () => {
     const clickMeTestButton = UiFinder.findIn(container, '.click-me').getOrDie();
     await RealMouse.pClick(clickMeTestButton);
     Assertions.assertEq('mouseup event has fired', 1, count.get());
     Assertions.assertEq(`button doesn't have ${RealMouse.BedrockIdAttribute} attribute`, false, Attribute.has(button, RealMouse.BedrockIdAttribute));
-  } finally {
+  });
+
+  after(() => {
     binder.unbind();
     Remove.remove(container);
-  }
-
+  });
 });
 
