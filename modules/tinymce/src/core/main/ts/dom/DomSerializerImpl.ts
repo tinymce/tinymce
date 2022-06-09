@@ -4,7 +4,7 @@ import { SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import * as Events from '../api/Events';
-import DomParser, { DomParserSettings, ParserArgs, ParserFilter } from '../api/html/DomParser';
+import DomParser, { DomParserSettings, ParserArgs, ParserFilter, ParserFilterCallback } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
 import Schema, { SchemaSettings } from '../api/html/Schema';
 import HtmlSerializer, { HtmlSerializerSettings } from '../api/html/Serializer';
@@ -23,10 +23,12 @@ interface DomSerializerSettings extends DomParserSettings, WriterSettings, Schem
 
 interface DomSerializerImpl {
   schema: Schema;
-  addNodeFilter: (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void) => void;
-  addAttributeFilter: (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void) => void;
+  addNodeFilter: (name: string, callback: ParserFilterCallback) => void;
+  addAttributeFilter: (name: string, callback: ParserFilterCallback) => void;
   getNodeFilters: () => ParserFilter[];
   getAttributeFilters: () => ParserFilter[];
+  removeNodeFilter: (name: string, callback?: ParserFilterCallback) => void;
+  removeAttributeFilter: (name: string, callback?: ParserFilterCallback) => void;
   serialize: {
     (node: Element, parserArgs: { format: 'tree' } & ParserArgs): AstNode;
     (node: Element, parserArgs?: ParserArgs): string;
@@ -112,7 +114,9 @@ const DomSerializerImpl = (settings: DomSerializerSettings, editor: Editor): Dom
     addTempAttr: Fun.curry(addTempAttr, htmlParser, tempAttrs),
     getTempAttrs: Fun.constant(tempAttrs),
     getNodeFilters: htmlParser.getNodeFilters,
-    getAttributeFilters: htmlParser.getAttributeFilters
+    getAttributeFilters: htmlParser.getAttributeFilters,
+    removeNodeFilter: htmlParser.removeNodeFilter,
+    removeAttributeFilter: htmlParser.removeAttributeFilter
   };
 };
 
