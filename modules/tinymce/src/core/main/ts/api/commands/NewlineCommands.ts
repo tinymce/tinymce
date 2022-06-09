@@ -1,12 +1,12 @@
-import * as InsertBlock from '../../newline/InsertBlock';
-import * as InsertBr from '../../newline/InsertBr';
+import { blockbreak } from '../../newline/InsertBlock';
+import { linebreak } from '../../newline/InsertBr';
 import * as InsertNewLine from '../../newline/InsertNewLine';
 import Editor from '../Editor';
 
 export const registerCommands = (editor: Editor): void => {
   editor.editorCommands.addCommands({
     insertParagraph: () => {
-      InsertNewLine.insertBreak(InsertBlock, editor);
+      InsertNewLine.insertBreak(blockbreak, editor);
     },
 
     mceInsertNewLine: (_command, _ui, value) => {
@@ -14,7 +14,7 @@ export const registerCommands = (editor: Editor): void => {
     },
 
     InsertLineBreak: (_command, _ui, _value) => {
-      InsertNewLine.insertBreak(InsertBr, editor);
+      InsertNewLine.insertBreak(linebreak, editor);
     }
   });
 };

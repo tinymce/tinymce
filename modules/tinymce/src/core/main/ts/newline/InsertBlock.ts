@@ -500,7 +500,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
 
 const fakeEventName = 'insertParagraph';
 
-export {
+export const blockbreak = {
   insert,
   fakeEventName
 };

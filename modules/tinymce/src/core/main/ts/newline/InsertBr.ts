@@ -167,7 +167,7 @@ const insert = (editor: Editor, evt?) => {
 
 const fakeEventName = 'insertLineBreak';
 
-export {
+export const linebreak = {
   insert,
   fakeEventName
 };
