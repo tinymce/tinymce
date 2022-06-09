@@ -48,7 +48,7 @@ const directListWrappers = (commonAnchorContainer: SugarElement<Node>) => {
 const getWrapElements = (rootNode: SugarElement<Node>, rng: Range) => {
   const commonAnchorContainer = SugarElement.fromDom(rng.commonAncestorContainer);
   const parents = Parents.parentsAndSelf(commonAnchorContainer, rootNode);
-  const wrapElements = Arr.filter(parents, (elm) => ElementType.isInline(elm) || ElementType.isHeading(elm));
+  const wrapElements = Arr.filter(parents, ElementType.isWrapElement);
   const listWrappers = getFullySelectedListWrappers(parents, rng);
   const allWrappers = wrapElements.concat(listWrappers.length ? listWrappers : directListWrappers(commonAnchorContainer));
   return Arr.map(allWrappers, Replication.shallow);

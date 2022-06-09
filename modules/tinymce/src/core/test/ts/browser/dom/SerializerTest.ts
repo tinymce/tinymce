@@ -800,4 +800,24 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(lastAttributeFilter.name, 'data-something', 'Should be the last registered filter attribute name');
     assert.equal(lastAttributeFilter.callbacks[0], attrFilter, 'Should be the last registered attribute filter function');
   });
+
+  it('TINY-7847: removeNodeFilter/removeAttributeFilter', () => {
+    const ser = DomSerializer({ });
+    const nodeFilter = Fun.noop;
+    const attrFilter = Fun.noop;
+    const numNodeFilters = ser.getNodeFilters().length;
+    const numAttrFilters = ser.getAttributeFilters().length;
+
+    ser.addNodeFilter('some-tag', nodeFilter);
+    ser.addAttributeFilter('data-something', attrFilter);
+
+    assert.lengthOf(ser.getNodeFilters(), numNodeFilters + 1, 'Number of node filters');
+    assert.lengthOf(ser.getAttributeFilters(), numAttrFilters + 1, 'Number of attribute filters');
+
+    ser.removeNodeFilter('some-tag', nodeFilter);
+    ser.removeAttributeFilter('data-something', attrFilter);
+
+    assert.lengthOf(ser.getNodeFilters(), numNodeFilters, 'Number of node filters');
+    assert.lengthOf(ser.getAttributeFilters(), numAttrFilters, 'Number of attribute filters');
+  });
 });

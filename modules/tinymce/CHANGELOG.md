@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Added
 - New `sidebar_show` option to show the specified sidebar on initialization #TINY-8710
+- New `newline_behavior` option to control what happens when the enter key is pressed or using commands such as `mceInsertNewLine` #TINY-8458
+- New `transparent` property for `iframe` dialog component #TINY-8534
+- New `removeAttributeFilter` and `removeNodeFilter` functions to the `DomParser` and DOM `Serializer` APIs #TINY-7847
+- New `iframe_template_callback` option in the `media` plugin. Patch provided by Namstel #TINY-8684
 
 ### Changed
 - Toggling fullscreen mode with the `fullscreen` plugin now also fires the `ResizeEditor` event #TINY-8701
@@ -15,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `end_container_on_empty_block` option can now take a string of blocks to split when pressing Enter twice #TINY-6559
 - The default value for `end_container_on_empty_block` option has been changed to `'blockquote'` #TINY-6559
 - Custom elements are now treated as non-empty elements via the schema #TINY-4784
+- The autocompleter menu element is now positioned instead of the wrapper #TINY-6476
 
 ### Fixed
 - Selecting all content with a single image in the content was inconsistent for the keyboard shortcut and menu item #TINY-4550
@@ -40,9 +45,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Copying columns in tables could sometimes result in an invalid copy #TINY-8040
 - The URL detection used for `autolink` and smart paste didn't work if a path segment contained valid characters such as `!` and `:` #TINY-8069
 - Cutting content to the clipboard while selecting between the parent list and a nested list would not always set the list style to `none` on the parent list #TINY-8078
+- The autocompleter would not trigger at the start of nested list items #TINY-8759
 - Some option values for the `template` plugin weren't escaped properly when doing replacement lookups via a `RegExp` #TINY-7433
 - Copy events were not dispatched in readonly mode #TINY-6800
 - Using Ctrl+Shift+Home/End (Cmd+Shift+Up/Down on Mac) would not expand the selection when a `contenteditable="false"` element was at the edge of content #TINY-7795
+- `<pre>` tags were not preserved when copying and pasting content #TINY-7719
+- Preview and Insert Template dialogs display the correct content background color when using dark skins #TINY-8534
 - Fixed incorrect word breaks in menu dropdowns with scrollbar #TINY-8572
 
 ## 6.0.3 - 2022-05-25

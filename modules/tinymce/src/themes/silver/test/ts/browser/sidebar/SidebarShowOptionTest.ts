@@ -29,16 +29,18 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
           icon: 'comment',
           onShow: logEvent('sidebarone:show'),
         });
-        ed.ui.registry.addSidebar('sidebartwo', {
+        ed.ui.registry.addSidebar('SideBarTwo', {
           tooltip: 'side bar one',
           icon: 'comment',
-          onShow: logEvent('sidebartwo:show'),
+          onShow: logEvent('SideBarTwo:show'),
         });
       }
     };
   };
 
   const assertNotAnimating = () => UiFinder.notExists(SugarBody.body(), '.tox-sidebar--sliding-growing');
+  const assertSidebarOpen = () => UiFinder.exists(SugarBody.body(), '.tox-sidebar--sliding-open');
+  const assertSidebarClosed = () => UiFinder.notExists(SugarBody.body(), '.tox-sidebar--sliding-open');
 
   beforeEach(() => {
     store.clear();
@@ -49,6 +51,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
       ...settingsFactory(store)
     });
     store.assertEq('Asserting initial show of sidebars', []);
+    assertSidebarClosed();
     McEditor.remove(editor);
   });
 
@@ -58,6 +61,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
       sidebar_show: 'sidebarone'
     });
     assertNotAnimating();
+    assertSidebarOpen();
     store.assertEq('Asserting initial show of sidebars', [
       {
         name: 'sidebarone:show',
@@ -70,12 +74,29 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
   it('TINY-8710: Show a different sidebar on init', async () => {
     const editor = await McEditor.pFromSettings<Editor>({
       ...settingsFactory(store),
-      sidebar_show: 'sidebartwo'
+      sidebar_show: 'SideBarTwo'
     });
     assertNotAnimating();
+    assertSidebarOpen();
     store.assertEq('Asserting initial show of sidebars', [
       {
-        name: 'sidebartwo:show',
+        name: 'SideBarTwo:show',
+        index: 1
+      }
+    ]);
+    McEditor.remove(editor);
+  });
+
+  it('TINY-8710: Name should be case-insensitive', async () => {
+    const editor = await McEditor.pFromSettings<Editor>({
+      ...settingsFactory(store),
+      sidebar_show: 'sideBartwo'
+    });
+    assertNotAnimating();
+    assertSidebarOpen();
+    store.assertEq('Asserting initial show of sidebars', [
+      {
+        name: 'SideBarTwo:show',
         index: 1
       }
     ]);
@@ -87,6 +108,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
       ...settingsFactory(store)
     });
     store.assertEq('Asserting initial show of sidebars', []);
+    assertSidebarClosed();
     McEditor.remove(editor);
   });
 });

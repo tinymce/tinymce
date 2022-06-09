@@ -605,6 +605,117 @@ describe('PasteColumnOperationsTest', () => {
     )
   );
 
+  it('TINY-8040: Paste a column into the middle of a large colspan with no cell at the end', () =>
+    Assertions.checkPaste(
+      'Paste a column into the middle of a large colspan',
+
+      (
+        '<table>' +
+          '<thead>' +
+            '<tr><td>H1</td><td>H2</td><td>H3</td><td>H4</td><td>H5</td><td>X</td><td>H6</td><td>H7</td><td>H8</td><td>H9</td><td>H0</td></tr>' +
+          '</thead>' +
+          '<tbody>' +
+            '<tr><td>A1</td><td colspan="4">A2</td><td>?</td><td colspan="5">?</td></tr>' +
+          '</tbody>' +
+        '</table>'
+      ),
+
+      (
+        '<table>' +
+          '<thead>' +
+            '<tr><td>H1</td><td>H2</td><td>H3</td><td>H4</td><td>H5</td><td>H6</td><td>H7</td><td>H8</td><td>H9</td><td>H0</td></tr>' +
+          '</thead>' +
+          '<tbody>' +
+            '<tr><td>A1</td><td colspan="9">A2</td></tr>' +
+          '</tbody>' +
+        '</table>'
+      ),
+
+      (
+        '<tr>' +
+          '<td>X</td>' +
+        '</tr>' +
+        '<tr></tr>'
+      ),
+
+      TableOperations.pasteColsBefore, 0, 0, 5
+    )
+  );
+
+  it('TINY-8040: Paste a column into the middle of a large colspan with no cell at the start', () =>
+    Assertions.checkPaste(
+      'Paste a column into the middle of a large colspan',
+
+      (
+        '<table>' +
+          '<thead>' +
+            '<tr><td>H1</td><td>H2</td><td>H3</td><td>H4</td><td>H5</td><td>X</td><td>H6</td><td>H7</td><td>H8</td><td>H9</td><td>H0</td></tr>' +
+          '</thead>' +
+          '<tbody>' +
+            '<tr><td colspan="5">A2</td><td>?</td><td colspan="4">?</td><td>A3</td></tr>' +
+          '</tbody>' +
+        '</table>'
+      ),
+
+      (
+        '<table>' +
+          '<thead>' +
+            '<tr><td>H1</td><td>H2</td><td>H3</td><td>H4</td><td>H5</td><td>H6</td><td>H7</td><td>H8</td><td>H9</td><td>H0</td></tr>' +
+          '</thead>' +
+          '<tbody>' +
+            '<tr><td colspan="9">A2</td><td>A3</td></tr>' +
+          '</tbody>' +
+        '</table>'
+      ),
+
+      (
+        '<tr>' +
+          '<td>X</td>' +
+        '</tr>' +
+        '<tr></tr>'
+      ),
+
+      TableOperations.pasteColsBefore, 0, 0, 5
+    )
+  );
+
+  it('TINY-8040: Paste a column into the middle of a large colspan with no cell at the start or end', () =>
+    Assertions.checkPaste(
+      'Paste a column into the middle of a large colspan',
+
+      (
+        '<table>' +
+          '<thead>' +
+            '<tr><td>H1</td><td>H2</td><td>H3</td><td>H4</td><td>H5</td><td>X</td><td>H6</td><td>H7</td><td>H8</td><td>H9</td><td>H0</td></tr>' +
+          '</thead>' +
+          '<tbody>' +
+            '<tr><td colspan="5">A2</td><td>?</td><td colspan="5">?</td></tr>' +
+          '</tbody>' +
+        '</table>'
+      ),
+
+      (
+        '<table>' +
+          '<thead>' +
+            '<tr><td>H1</td><td>H2</td><td>H3</td><td>H4</td><td>H5</td><td>H6</td><td>H7</td><td>H8</td><td>H9</td><td>H0</td></tr>' +
+          '</thead>' +
+          '<tbody>' +
+            '<tr><td colspan="10">A2</td></tr>' +
+          '</tbody>' +
+        '</table>'
+      ),
+
+      (
+        '<tr>' +
+          '<td>X</td>' +
+        '</tr>' +
+        '<tr></tr>'
+      ),
+
+      TableOperations.pasteColsBefore, 0, 0, 5
+    )
+  );
+
   /*
   TINY-6910
   TODO: Need a way to test multi-cell selections - will require something like Asserstions.pasteMultiple or Assertions.checkPaste should be changed to take an array
