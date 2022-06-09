@@ -51,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Using Ctrl+Shift+Home/End (Cmd+Shift+Up/Down on Mac) would not expand the selection when a `contenteditable="false"` element was at the edge of content #TINY-7795
 - `<pre>` tags were not preserved when copying and pasting content #TINY-7719
 - Preview and Insert Template dialogs display the correct content background color when using dark skins #TINY-8534
+- `InsertLineBreak` command did not replace selected content #TINY-8458
 
 ## 6.0.3 - 2022-05-25
 
