@@ -129,8 +129,10 @@ describe('RealMouseTest promise based variant', () => {
   });
 
   after(() => {
-    binder.unbind();
-    Remove.remove(container);
+    binder?.unbind();
+    if (container) {
+      Remove.remove(container);
+    }
   });
 
   it('Should find buttons with same background color after hovering', async () => {
