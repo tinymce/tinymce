@@ -12,7 +12,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `transparent` property for `iframe` dialog component #TINY-8534
 - New `removeAttributeFilter` and `removeNodeFilter` functions to the `DomParser` and DOM `Serializer` APIs #TINY-7847
 - New `iframe_template_callback` option in the `media` plugin. Patch provided by Namstel #TINY-8684
-- New `editor.undoManager.fireIfChanged` API to fire change event only if the last undoManager content layer is diffrent from the current editor
 - New `dispatchChange` UndoManager API to fire the `change` with current editor status as level and current undoManager layer as lastLevel #TINY-8641
 
 ### Improved
