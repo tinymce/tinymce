@@ -4,6 +4,7 @@ import createDompurify, { Config, DOMPurifyI } from 'dompurify';
 
 import * as NodeType from '../../dom/NodeType';
 import * as FilterNode from '../../html/FilterNode';
+import * as FilterRegistry from '../../html/FilterRegistry';
 import { cleanInvalidNodes } from '../../html/InvalidNodes';
 import * as LegacyFilter from '../../html/LegacyFilter';
 import * as ParserFilters from '../../html/ParserFilters';
@@ -28,7 +29,7 @@ import Schema, { getTextRootBlockElements, SchemaRegExpMap } from './Schema';
  * @version 3.4
  */
 
-const makeMap = Tools.makeMap, each = Tools.each, explode = Tools.explode, extend = Tools.extend;
+const makeMap = Tools.makeMap, extend = Tools.extend;
 
 export interface ParserArgs {
   getInner?: boolean | number;
@@ -45,10 +46,7 @@ export interface ParserArgs {
 
 export type ParserFilterCallback = (nodes: AstNode[], name: string, args: ParserArgs) => void;
 
-export interface ParserFilter {
-  name: string;
-  callbacks: ParserFilterCallback[];
-}
+export interface ParserFilter extends FilterRegistry.Filter<ParserFilterCallback> {}
 
 export interface DomParserSettings {
   allow_html_data_urls?: boolean;
@@ -73,10 +71,12 @@ export interface DomParserSettings {
 
 interface DomParser {
   schema: Schema;
-  addAttributeFilter: (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void) => void;
+  addAttributeFilter: (name: string, callback: ParserFilterCallback) => void;
   getAttributeFilters: () => ParserFilter[];
-  addNodeFilter: (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void) => void;
+  removeAttributeFilter: (name: string, callback?: ParserFilterCallback) => void;
+  addNodeFilter: (name: string, callback: ParserFilterCallback) => void;
   getNodeFilters: () => ParserFilter[];
+  removeNodeFilter: (name: string, callback?: ParserFilterCallback) => void;
   parse: (html: string, args?: ParserArgs) => AstNode;
 }
 
@@ -390,8 +390,8 @@ const getRootBlockName = (settings: DomParserSettings, args: ParserArgs) => {
 };
 
 const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomParser => {
-  const nodeFilters: Record<string, ParserFilterCallback[]> = {};
-  const attributeFilters: ParserFilter[] = [];
+  const nodeFilterRegistry = FilterRegistry.create<ParserFilterCallback>();
+  const attributeFilterRegistry = FilterRegistry.create<ParserFilterCallback>();
 
   // Apply setting defaults
   const defaultedSettings = {
@@ -434,36 +434,31 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
    *   }
    * });
    */
-  const addNodeFilter = (name: string, callback: ParserFilterCallback) => {
-    each(explode(name), (name) => {
-      let list = nodeFilters[name];
+  const addNodeFilter = nodeFilterRegistry.addFilter;
 
-      if (!list) {
-        nodeFilters[name] = list = [];
-      }
-
-      list.push(callback);
-    });
-  };
-
-  const getNodeFilters = (): ParserFilter[] => {
-    const out = [];
-
-    for (const name in nodeFilters) {
-      if (Obj.has(nodeFilters, name)) {
-        out.push({ name, callbacks: nodeFilters[name] });
-      }
-    }
-
-    return out;
-  };
+  const getNodeFilters = nodeFilterRegistry.getFilters;
 
   /**
-   * Adds a attribute filter function to the parser, the parser will collect nodes that has the specified attributes
+   * Removes a node filter function or removes all filter functions from the parser for the node names provided.
+   *
+   * @method removeNodeFilter
+   * @param {String} name Comma separated list of node names to remove filters for.
+   * @param {Function} callback Optional callback function to only remove a specific callback.
+   * @example
+   * // Remove a single filter
+   * parser.removeNodeFilter('p,h1', someCallback);
+   *
+   * // Remove all filters
+   * parser.removeNodeFilter('p,h1');
+   */
+  const removeNodeFilter = nodeFilterRegistry.removeFilter;
+
+  /**
+   * Adds an attribute filter function to the parser, the parser will collect nodes that has the specified attributes
    * and then execute the callback once it has finished parsing the document.
    *
    * @method addAttributeFilter
-   * @param {String} name Comma separated list of nodes to collect.
+   * @param {String} name Comma separated list of attributes to collect.
    * @param {Function} callback Callback function to execute once it has collected nodes.
    * @example
    * parser.addAttributeFilter('src,href', (nodes, name) => {
@@ -472,22 +467,24 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
    *   }
    * });
    */
-  const addAttributeFilter = (name: string, callback: ParserFilterCallback) => {
-    each(explode(name), (name) => {
-      let i;
+  const addAttributeFilter = attributeFilterRegistry.addFilter;
 
-      for (i = 0; i < attributeFilters.length; i++) {
-        if (attributeFilters[i].name === name) {
-          attributeFilters[i].callbacks.push(callback);
-          return;
-        }
-      }
+  const getAttributeFilters = attributeFilterRegistry.getFilters;
 
-      attributeFilters.push({ name, callbacks: [ callback ] });
-    });
-  };
-
-  const getAttributeFilters = (): ParserFilter[] => [].concat(attributeFilters);
+  /**
+   * Removes an attribute filter function or removes all filter functions from the parser for the attribute names provided.
+   *
+   * @method removeAttributeFilter
+   * @param {String} name Comma separated list of attribute names to remove filters for.
+   * @param {Function} callback Optional callback function to only remove a specific callback.
+   * @example
+   * // Remove a single filter
+   * parser.removeAttributeFilter('src,href', someCallback);
+   *
+   * // Remove all filters
+   * parser.removeAttributeFilter('src,href');
+   */
+  const removeAttributeFilter = attributeFilterRegistry.removeFilter;
 
   const findInvalidChildren = (node: AstNode, invalidChildren: AstNode[]): void => {
     // Check if the node is a valid child of the parent node. If the child is
@@ -580,9 +577,8 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     const invalidFinder = validate ? (node: AstNode) => findInvalidChildren(node, invalidChildren) : Fun.noop;
 
     // Set up attribute and node matching
-    const nodeFilters = getNodeFilters();
     const matches: FilterNode.FilterMatches = { nodes: {}, attributes: {}};
-    const matchFinder = (node: AstNode) => FilterNode.matchNode(nodeFilters, attributeFilters, node, matches);
+    const matchFinder = (node: AstNode) => FilterNode.matchNode(getNodeFilters(), getAttributeFilters(), node, matches);
 
     // Walk the dom, apply all of the above things
     walkTree(rootNode, [ whitespacePre, matchFinder ], [ whitespacePost, invalidFinder ]);
@@ -619,8 +615,10 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     schema,
     addAttributeFilter,
     getAttributeFilters,
+    removeAttributeFilter,
     addNodeFilter,
     getNodeFilters,
+    removeNodeFilter,
     parse
   };
 

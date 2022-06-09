@@ -25,6 +25,7 @@ import {
 } from '../positioning/mode/Anchoring';
 import * as VerticalDir from '../positioning/mode/VerticalDir';
 import * as FormTypes from '../ui/types/FormTypes';
+import * as InlineViewTypes from '../ui/types/InlineViewTypes';
 import * as ItemTypes from '../ui/types/ItemTypes'; // not sure if this is the right thing to expose, but we use it a lot?
 import * as MenuTypes from '../ui/types/MenuTypes';
 import * as SliderTypes from '../ui/types/SliderTypes';
@@ -257,6 +258,7 @@ export {
   // types
   TieredMenuTypes,
   MenuTypes,
+  InlineViewTypes,
   SlotContainerTypes,
   SliderTypes,
   FormTypes,

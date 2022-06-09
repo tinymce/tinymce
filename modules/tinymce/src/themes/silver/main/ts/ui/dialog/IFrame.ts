@@ -34,11 +34,13 @@ const getDynamicSource = (initialData: Optional<string>): IFrameSourcing => {
 
 const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstageProviders, initialData: Optional<string>) => {
   const isSandbox = spec.sandboxed;
+  const isTransparent = spec.transparent;
+  const baseClass = 'tox-dialog__iframe';
 
   const attributes = {
     ...spec.label.map<{ title?: string }>((title) => ({ title })).getOr({}),
     ...initialData.map((html) => ({ srcdoc: html })).getOr({}),
-    ...isSandbox ? { sandbox: 'allow-scripts allow-same-origin' } : { }
+    ...isSandbox ? { sandbox: 'allow-scripts allow-same-origin' } : { },
   };
 
   const sourcing = getDynamicSource(initialData);
@@ -51,7 +53,8 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstagePr
       uid: newSpec.uid,
       dom: {
         tag: 'iframe',
-        attributes
+        attributes,
+        classes: (isTransparent ? [ baseClass ] : [ baseClass, `${baseClass}--opaque` ])
       },
       behaviours: Behaviour.derive([
         Tabstopping.config({ }),
