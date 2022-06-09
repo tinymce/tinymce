@@ -1,5 +1,4 @@
 import { Fun, Optional, Type } from '@ephox/katamari';
-import { DomExtract } from '@ephox/phoenix';
 import { SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
@@ -23,9 +22,14 @@ const getContentFromBody = (editor: Editor, args: GetContentArgs, body: HTMLElem
   if (args.format === 'raw') {
     content = Tools.trim(TrimHtml.trimExternal(editor.serializer, body.innerHTML));
   } else if (args.format === 'text') {
-    content = DomExtract.toText(SugarElement.fromDom(editor.getBody()));
-    content = Zwsp.trim(content);
-    content = content === '\n' ? '' : content;
+    content = body.innerHTML.replace(/<br data-mce-bogus="1">/g, '\uFEFF');
+    const parseBody = document.createElement('body');
+    parseBody.setAttribute('style', 'position:fixed;left:400%;top:0px');
+    const root = document.getElementsByTagName('html').item(0);
+    root.appendChild(parseBody);
+    parseBody.innerHTML = content;
+    content = Zwsp.trim(parseBody.innerText.replace(/\uFEFF/g, ''));
+    root.removeChild(parseBody);
   } else if (args.format === 'tree') {
     content = editor.serializer.serialize(body, args);
   } else {
