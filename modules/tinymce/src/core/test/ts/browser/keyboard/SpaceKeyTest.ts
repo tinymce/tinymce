@@ -109,5 +109,13 @@ describe('browser.tinymce.core.keyboard.SpaceKeyTest', () => {
       editor.selection.setContent(' ');
       TinyAssertions.assertContent(editor, '<p><span class="filler">s&nbsp;</span><span style="display: block;" contenteditable="false">a</span></p>');
     });
+
+    it('TINY-8588: Add one space before a block inside a strong', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>s<strong><span contenteditable="false" style="display: block;">a</span></strong></p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 1);
+      editor.selection.setContent(' ');
+      TinyAssertions.assertContent(editor, '<p>s&nbsp;<strong><span style="display: block;" contenteditable="false">a</span></strong></p>');
+    });
   });
 });
