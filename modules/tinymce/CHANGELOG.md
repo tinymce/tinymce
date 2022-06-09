@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Added
 - New `sidebar_show` option to show the specified sidebar on initialization #TINY-8710
 - New `newline_behavior` option to control what happens when the enter key is pressed or using commands such as `mceInsertNewLine` #TINY-8458
+- New `transparent` property for `iframe` dialog component #TINY-8534
 - New `removeAttributeFilter` and `removeNodeFilter` functions to the `DomParser` and DOM `Serializer` APIs #TINY-7847
 - New `iframe_template_callback` option in the `media` plugin. Patch provided by Namstel #TINY-8684
 
@@ -48,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Some option values for the `template` plugin weren't escaped properly when doing replacement lookups via a `RegExp` #TINY-7433
 - Copy events were not dispatched in readonly mode #TINY-6800
 - Using Ctrl+Shift+Home/End (Cmd+Shift+Up/Down on Mac) would not expand the selection when a `contenteditable="false"` element was at the edge of content #TINY-7795
+- Preview and Insert Template dialogs display the correct content background color when using dark skins #TINY-8534
 
 ## 6.0.3 - 2022-05-25
 
