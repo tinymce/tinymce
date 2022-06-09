@@ -68,7 +68,7 @@ const moveEndPoint = (dom: DOMUtils, rng: Range, node: Node, start: boolean): vo
   );
 
   do {
-    if (NodeType.isText(node) && Tools.trim(node.nodeValue).length !== 0) {
+    if (NodeType.isText(node) && node.nodeValue.length !== 0) {
       if (start) {
         rng.setStart(node, 0);
       } else {
