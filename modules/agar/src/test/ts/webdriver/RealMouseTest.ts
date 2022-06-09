@@ -1,7 +1,7 @@
 import { after, Assert, before, describe, it, UnitTest } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Attribute, Class, Css, DomEvent, EventUnbinder, Html, Insert, Remove, SugarElement } from '@ephox/sugar';
+import { Attribute, Class, Css, DomEvent, EventUnbinder, Html, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 
 import * as Assertions from 'ephox/agar/api/Assertions';
 import { Chain } from 'ephox/agar/api/Chain';
@@ -83,18 +83,18 @@ UnitTest.asynctest('RealMouseTest', (success, failure) => {
 describe('RealMouseTest promise based variant', () => {
   const detection = PlatformDetection.detect();
 
-  // Safari fails to hover on mousemove
-  if (detection.browser.isSafari()) {
-    return;
-  }
-
   let binder: EventUnbinder;
   let container: SugarElement<HTMLDivElement>;
-  let count: Cell<number>;
+  const count = Cell(0);
   let button: SugarElement<HTMLButtonElement>;
   let other: SugarElement<HTMLButtonElement>;
 
-  before(() => {
+  before(function () {
+
+    // Safari fails to hover on mousemove
+    if (detection.browser.isSafari()) {
+      this.skip();
+    }
 
     const style = document.createElement('style');
     style.innerHTML = 'button[data-test]:hover { background-color: blue; color: white; } button.other { background-color: blue; color: white; } button';
@@ -115,18 +115,22 @@ describe('RealMouseTest promise based variant', () => {
     Html.set(normal, 'Normal');
     Insert.append(container, normal);
 
-    Insert.append(SugarElement.fromDom(document.body), container);
+    Insert.append(SugarBody.body(), container);
 
     const clickMe = SugarElement.fromTag('button');
     Class.add(clickMe, 'click-me');
     Html.set(clickMe, 'Click me!');
     Insert.append(container, clickMe);
 
-    count = Cell(0);
     // add a MouseUp handler
     binder = DomEvent.bind(clickMe, 'mouseup', () => {
       count.set(count.get() + 1);
     });
+  });
+
+  after(() => {
+    binder.unbind();
+    Remove.remove(container);
   });
 
   it('Should find buttons with same background color after hovering', async () => {
@@ -144,9 +148,5 @@ describe('RealMouseTest promise based variant', () => {
     Assertions.assertEq(`button doesn't have ${RealMouse.BedrockIdAttribute} attribute`, false, Attribute.has(button, RealMouse.BedrockIdAttribute));
   });
 
-  after(() => {
-    binder.unbind();
-    Remove.remove(container);
-  });
 });
 
