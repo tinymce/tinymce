@@ -18,25 +18,24 @@ describe('ReconcileTest', () => {
   };
 
   // TBA: test for updating styles and attributes
-  it('TINY-8736: Override value of element according to the definition', () => {
-    const component = SugarElement.fromHtml<HTMLInputElement>('<textarea>1234</textarea>');
+  it('TINY-8736: Override the value of element according to the definition', () => {
+    const component = SugarElement.fromHtml<HTMLTextAreaElement>('<textarea></textarea>');
     const definition = {
       ...elementDefinition,
       value: Optional.from('abc')
     };
     const newDom = reconcileToDom(definition, component);
-    assert.equal((newDom.dom as HTMLInputElement).value, 'abc');
+    assert.equal((newDom.dom as HTMLTextAreaElement).value, 'abc');
   });
 
-  it('TINY-8736: Default value of element to empty string if value is not specified in the definition', () => {
-    const component = SugarElement.fromHtml<HTMLInputElement>('<textarea>hi</textarea/>');
+  it('TINY-8736: Default the value of element to empty string if not defined in the definition', () => {
+    const component = SugarElement.fromHtml<HTMLTextAreaElement>('<textarea>hi</textarea/>');
     const newDom = reconcileToDom(elementDefinition, component);
-    assert.equal((newDom.dom as HTMLInputElement).value, '');
+    assert.equal((newDom.dom as HTMLTextAreaElement).value, '');
   });
 
-  it('TINY-8736: Default the modified value of element to empty string if value is not specified in the definition', () => {
+  it('TINY-8736: Default the modified value of element to empty string if not defined in the definition', () => {
     const component = SugarElement.fromHtml<HTMLTextAreaElement>('<textarea>How</textarea>');
-    component.dom.value = 'hello';
     const newDom = reconcileToDom(elementDefinition, component);
     assert.equal((newDom.dom as HTMLTextAreaElement).value, '');
   });
