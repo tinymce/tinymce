@@ -33,4 +33,11 @@ describe('ReconcileTest', () => {
     const newDom = reconcileToDom(elementDefinition, component);
     assert.equal((newDom.dom as HTMLTextAreaElement).value, '');
   });
+
+  it('TINY-8736: Should not update value of a non togglable element', () => {
+    const component = SugarElement.fromHtml<HTMLDivElement>('<div>wow</div>');
+    assert.equal((component.dom as any).value, undefined);
+    const newDom = reconcileToDom(elementDefinition, component);
+    assert.equal((newDom.dom as any).value, undefined);
+  });
 });
