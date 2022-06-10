@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 - The `fakeFocus` property for `InlineView` menus was not respected.
+- The value of togglable elements was not reset if its config was not specified in the definition
 
 ## 10.0.0 - 2022-03-03
 
