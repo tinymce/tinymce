@@ -33,10 +33,4 @@ describe('ReconcileTest', () => {
     const newDom = reconcileToDom(elementDefinition, component);
     assert.equal((newDom.dom as HTMLTextAreaElement).value, '');
   });
-
-  it('TINY-8736: Default the modified value of element to empty string if not defined in the definition', () => {
-    const component = SugarElement.fromHtml<HTMLTextAreaElement>('<textarea>How</textarea>');
-    const newDom = reconcileToDom(elementDefinition, component);
-    assert.equal((newDom.dom as HTMLTextAreaElement).value, '');
-  });
 });
