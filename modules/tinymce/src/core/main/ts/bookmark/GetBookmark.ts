@@ -4,6 +4,7 @@ import DOMUtils from '../api/dom/DOMUtils';
 import EditorSelection from '../api/dom/Selection';
 import Tools from '../api/util/Tools';
 import * as CaretContainer from '../caret/CaretContainer';
+import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as NodeType from '../dom/NodeType';
 import { rangeInsertNode } from '../selection/RangeInsertNode';
@@ -86,24 +87,34 @@ const findIndex = (dom: DOMUtils, name: string, element: Element) => {
   return count;
 };
 
+const moveEndPointComment = (container: Node, offset: number, rng: Range, start: boolean) => {
+  CaretFinder.firstPositionIn(container.parentElement).each((pos: CaretPosition) => {
+    const node = pos.getNode();
+    rng['set' + (start ? 'Start' : 'End')](node, offset);
+  });
+};
+
 const moveEndPoint = (rng: Range, start: boolean) => {
-  let container, offset, childNodes;
+  let container, offset;
   const prefix = start ? 'start' : 'end';
 
   container = rng[prefix + 'Container'];
   offset = rng[prefix + 'Offset'];
 
+  // normalizeTableCellSelection
   if (NodeType.isElement(container) && container.nodeName === 'TR') {
-    childNodes = container.childNodes;
+    const childNodes = container.childNodes;
     container = childNodes[Math.min(start ? offset : offset - 1, childNodes.length - 1)];
     if (container) {
       offset = start ? 0 : container.childNodes.length;
       rng['set' + (start ? 'Start' : 'End')](container, offset);
     }
+  } else if (container.nodeName === '#comment') {
+    moveEndPointComment(container, offset, rng, start);
   }
 };
 
-const normalizeTableCellSelection = (rng: Range) => {
+const normalizeInvalidSelection = (rng: Range) => {
   moveEndPoint(rng, true);
   moveEndPoint(rng, false);
 
@@ -192,7 +203,7 @@ const getPersistentBookmark = (selection: EditorSelection, filled: boolean): IdB
   }
 
   // W3C method
-  const rng2 = normalizeTableCellSelection(rng.cloneRange());
+  const rng2 = normalizeInvalidSelection(rng.cloneRange());
 
   // Insert end marker
   if (!collapsed) {
@@ -201,7 +212,7 @@ const getPersistentBookmark = (selection: EditorSelection, filled: boolean): IdB
     rangeInsertNode(dom, rng2, endBookmarkNode);
   }
 
-  rng = normalizeTableCellSelection(rng);
+  rng = normalizeInvalidSelection(rng);
   rng.collapse(true);
   const startBookmarkNode = createBookmarkSpan(dom, id + '_start', filled);
   rangeInsertNode(dom, rng, startBookmarkNode);
