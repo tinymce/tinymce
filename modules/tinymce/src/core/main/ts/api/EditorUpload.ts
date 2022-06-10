@@ -112,8 +112,8 @@ const EditorUpload = (editor: Editor): EditorUpload => {
       const blobInfos = Arr.map(imageInfos, (imageInfo) => imageInfo.blobInfo);
 
       return uploader.upload(blobInfos, openNotification(editor)).then(aliveGuard((result) => {
-        let shouldDispatchChange = false;
         const imagesToRemove: HTMLImageElement[] = [];
+        let shouldDispatchChange = false;
 
         const filteredResult: UploadResult[] = Arr.map(result, (uploadInfo, index) => {
           const blobInfo = imageInfos[index].blobInfo;
@@ -153,9 +153,6 @@ const EditorUpload = (editor: Editor): EditorUpload => {
           editor.undoManager.transact(() => {
             Arr.each(imagesToRemove, (element) => {
               editor.dom.remove(element);
-              if (blobCache.getByUri(element.src)) {
-                shouldDispatchChange = true;
-              }
               blobCache.removeByUri(element.src);
             });
           });
