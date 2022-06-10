@@ -22,6 +22,19 @@ import * as SelectionUtils from '../selection/SelectionUtils';
 import { InsertContentDetails } from './ContentTypes';
 import * as InsertList from './InsertList';
 
+const wrappedElements = [ 'pre' ];
+
+const shouldPasteContentOnly = (fragment: AstNode, parentNode: Element) => {
+  const firstNode = fragment.firstChild;
+
+  const isAFlattenableTag = Arr.contains(wrappedElements, firstNode.name);
+  const isPastingInTheSameTag = firstNode.name === parentNode.tagName.toLowerCase();
+  const lastNode = fragment.lastChild.attr('data-mce-type') === 'bookmark' ? fragment.lastChild.prev : fragment.lastChild;
+  const isCopingOnlyOneTag = firstNode === lastNode;
+
+  return isCopingOnlyOneTag && isAFlattenableTag && isPastingInTheSameTag;
+};
+
 const isTableCell = NodeType.isTableCell;
 
 const isTableCellContentSelected = (dom: DOMUtils, rng: Range, cell: Node | null): boolean => {
@@ -245,6 +258,10 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
     rng = InsertList.insertAtCaret(serializer, dom, selection.getRng(), fragment);
     selection.setRng(rng);
     return value;
+  }
+
+  if (details.paste === true && shouldPasteContentOnly(fragment, parentNode)) {
+    fragment.firstChild.unwrap();
   }
 
   markFragmentElements(fragment);

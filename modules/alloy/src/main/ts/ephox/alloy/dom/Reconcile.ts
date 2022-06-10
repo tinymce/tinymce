@@ -56,9 +56,11 @@ const reconcileToDom = (definition: DomDefinitionDetail, obsoleted: SugarElement
 
   const updateValue = () => {
     const valueElement = obsoleted as SugarElement<HTMLInputElement | HTMLTextAreaElement>;
-    definition.value
-      .filter((value) => value !== Value.get(valueElement))
-      .each((value) => Value.set(valueElement, value));
+    const value = definition.value.getOrUndefined();
+    if (value !== Value.get(valueElement)) {
+      // TINY-8736: Value.set throws an error in case the value is undefined
+      Value.set(valueElement, value ?? '');
+    }
   };
 
   updateAttrs();

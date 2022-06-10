@@ -21,6 +21,10 @@ const register = (editor: Editor): void => {
     processor: 'function'
   });
 
+  registerOption('iframe_template_callback', {
+    processor: 'function'
+  });
+
   registerOption('media_live_embeds', {
     processor: 'boolean',
     default: true
@@ -53,6 +57,7 @@ const register = (editor: Editor): void => {
 
 const getAudioTemplateCallback = option<DataToHtmlCallback>('audio_template_callback');
 const getVideoTemplateCallback = option<DataToHtmlCallback>('video_template_callback');
+const getIframeTemplateCallback = option<DataToHtmlCallback>('iframe_template_callback');
 const hasLiveEmbeds = option<boolean>('media_live_embeds');
 const shouldFilterHtml = option<boolean>('media_filter_html');
 const getUrlResolver = option<MediaResolver>('media_url_resolver');
@@ -64,6 +69,7 @@ export {
   register,
   getAudioTemplateCallback,
   getVideoTemplateCallback,
+  getIframeTemplateCallback,
   hasLiveEmbeds,
   shouldFilterHtml,
   getUrlResolver,
