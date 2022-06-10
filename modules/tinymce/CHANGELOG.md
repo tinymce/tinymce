@@ -43,8 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Some option values for the `template` plugin weren't escaped properly when doing replacement lookups via a `RegExp` #TINY-7433
 - Copy events were not dispatched in readonly mode #TINY-6800
 - Using Ctrl+Shift+Home/End (Cmd+Shift+Up/Down on Mac) would not expand the selection when a `contenteditable="false"` element was at the edge of content #TINY-7795
-- Delete operations could behave incorrectly if the selection contained
-a `contenteditable="false"` element located at the edge of content #TINY-8729
+- Delete operations could behave incorrectly if the selection contains a `contenteditable="false"` element located at the edge of content #TINY-8729
 
 ## 6.0.3 - 2022-05-25
 
