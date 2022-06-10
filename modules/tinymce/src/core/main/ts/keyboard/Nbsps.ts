@@ -68,6 +68,7 @@ const isBeforeCefBlock = (root: SugarElement, pos: CaretPosition) => {
   const isNextCefBlock = isSiblingCefBlock(root.dom, 'next');
   return pos.isAtEnd() && (isNextCefBlock(pos.container()) || isNextCefBlock(nextPos.container()));
 };
+
 const isAfterCefBlock = (root: SugarElement, pos: CaretPosition) => {
   const prevPos = CaretFinder.prevPosition(root.dom, pos).getOr(pos);
   const isPrevCefBlock = isSiblingCefBlock(root.dom, 'prev2');
