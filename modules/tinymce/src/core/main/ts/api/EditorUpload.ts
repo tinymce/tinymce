@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Strings } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
 
 import * as ErrorReporter from '../ErrorReporter';
@@ -121,7 +121,7 @@ const EditorUpload = (editor: Editor): EditorUpload => {
           let removed = false;
 
           if (uploadInfo.status && Options.shouldReplaceBlobUris(editor)) {
-            if (uploadInfo.url && !image.src.includes(uploadInfo.url)) {
+            if (uploadInfo.url && !Strings.contains(image.src, uploadInfo.url)) {
               shouldDispatchChange = true;
             }
             blobCache.removeByUri(image.src);
