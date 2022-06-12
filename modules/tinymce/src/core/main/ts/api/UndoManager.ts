@@ -60,7 +60,7 @@ const UndoManager = (editor: Editor): UndoManager => {
       const data = undoManager.data;
       const currentLevel = Levels.createFromEditor(editor);
 
-      const dispatchEvent = (lastLevel: UndoLevel) => {
+      const dispatchEvent = (lastLevel: UndoLevel | undefined) => {
         editor.setDirty(true);
         editor.dispatch('change', {
           level: currentLevel,
