@@ -358,8 +358,8 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
       callCount++;
 
       if (callCount === 2) {
-        // Note: This is 1 as only the removal of the image triggers the addition of an undo level and a change event
-        assertEventsLength(1);
+        // Note: This is 2 as the removal of the image also triggers the addition of an undo level and a change event
+        assertEventsLength(2);
 
         // This is in exact since the status of the image can be pending or failed meaning it should try again
         assert.isAtLeast(uploadCount, 1, 'Should at least be one.');
