@@ -226,8 +226,13 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
 
   it('TINY-7817: bookmark should be insert correclty even if the selection is on a comment', bookmarkTest((editor) => {
     const outsideButton: SugarElement<HTMLButtonElement> = SugarElement.fromHtml('<button id="getBookmarkButton">Get Bookmark</button>');
+    const getMockContent = (bookmark: string): string => '<div>' +
+      '<!-- Whatever -->' +
+      bookmark +
+      '<img src="https://en.wikipedia.org/wiki/Bear#/media/File:Ursidae-01.jpg" width="1200" height="300" data-mce-src="https://en.wikipedia.org/wiki/Bear#/media/File:Ursidae-01.jpg">' +
+    '</div>';
 
-    editor.resetContent('<div><!-- Whatever --> <img src="https://en.wikipedia.org/wiki/Bear#/media/File:Ursidae-01.jpg" width="1200" height="300"></div>');
+    editor.resetContent(getMockContent(' '));
     editor.addCommand('getBookmarkProxyCommand', () => {
       editor.selection.getBookmark();
     });
@@ -241,11 +246,8 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
 
     assert.equal(
       editor.getBody().innerHTML,
-      '<div>' +
-        '<!-- Whatever -->' +
-        '<span data-mce-type="bookmark" id="mce_1_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow: hidden; line-height: 0px;"></span> ' +
-        '<img src="https://en.wikipedia.org/wiki/Bear#/media/File:Ursidae-01.jpg" width="1200" height="300" data-mce-src="https://en.wikipedia.org/wiki/Bear#/media/File:Ursidae-01.jpg">' +
-      '</div>',
-      'Editor should now contain the bookmark in the correct position');
+      getMockContent('<span data-mce-type="bookmark" id="mce_1_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow: hidden; line-height: 0px;"></span> '),
+      'Editor should now contain the bookmark in the correct position'
+    );
   }));
 });
