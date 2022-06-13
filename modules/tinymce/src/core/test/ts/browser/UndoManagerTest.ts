@@ -618,7 +618,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     const manualModifiedLevel = 'a modified last level';
 
     const assertChangeEvent = (
-      eventContent: { level: string | undefined; lastLevel: string | undefined },
+      eventContent: { level: string; lastLevel: string | undefined },
       expectedLevel: string | undefined,
       expectedLastlevel: string | undefined
     ) => {
