@@ -225,7 +225,7 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
   }));
 
   it('TINY-7817: bookmark should be insert correclty even if the selection is on a comment', bookmarkTest((editor) => {
-    const outsideButton: SugarElement<HTMLButtonElement> = SugarElement.fromHtml('<button id="buttonToClick">Button</button>');
+    const outsideButton: SugarElement<HTMLButtonElement> = SugarElement.fromHtml('<button id="getBookmarkButton">Get Bookmark</button>');
 
     editor.resetContent('<div><!-- Whatever --> <img src="https://en.wikipedia.org/wiki/Bear#/media/File:Ursidae-01.jpg" width="1200" height="300"></div>');
     editor.addCommand('getBookmarkProxyCommand', () => {
@@ -233,7 +233,7 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
     });
     Insert.append(SugarBody.body(), outsideButton);
 
-    document.getElementById('buttonToClick').addEventListener('click', () => {
+    document.getElementById('getBookmarkButton').addEventListener('click', () => {
       editor.execCommand('getBookmarkProxyCommand');
     });
 
