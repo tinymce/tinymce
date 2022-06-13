@@ -87,7 +87,7 @@ const findIndex = (dom: DOMUtils, name: string, element: Element) => {
   return count;
 };
 
-const moveEndPointComment = (container: Node, offset: number, rng: Range, start: boolean) => {
+const moveEndPointComment = (container: Node, offset: number, rng: Range, start: boolean): void => {
   CaretFinder.firstPositionIn(container.parentElement).each((pos: CaretPosition) => {
     const node = pos.getNode();
     rng['set' + (start ? 'Start' : 'End')](node, offset);
