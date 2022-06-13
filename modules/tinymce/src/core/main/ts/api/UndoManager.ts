@@ -57,21 +57,11 @@ const UndoManager = (editor: Editor): UndoManager => {
      * @method dispatchChange
      */
     dispatchChange: (): void => {
-      const data = undoManager.data;
-      const currentLevel = Levels.createFromEditor(editor);
-
-      const dispatchEvent = (lastLevel: UndoLevel | undefined) => {
-        editor.setDirty(true);
-        editor.dispatch('change', {
-          level: currentLevel,
-          lastLevel
-        });
-      };
-
-      Arr.get(data, index.get()).fold(
-        () => dispatchEvent(undefined),
-        (lastLevel) => dispatchEvent(lastLevel)
-      );
+      editor.setDirty(true);
+      editor.dispatch('change', {
+        level: Levels.createFromEditor(editor),
+        lastLevel: Arr.get(undoManager.data, index.get()).getOrUndefined()
+      });
     },
 
     /**
