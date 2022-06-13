@@ -149,7 +149,8 @@ const EditorUpload = (editor: Editor): EditorUpload => {
           };
         });
 
-        if (shouldDispatchChange || Arr.exists(imagesToRemove, (element) => !!blobCache.getByUri(element.src))) {
+        const isRemovingAnImage = Arr.exists(imagesToRemove, (element) => !!blobCache.getByUri(element.src));
+        if (shouldDispatchChange || isRemovingAnImage) {
           editor.undoManager.dispatchChange();
         }
 
