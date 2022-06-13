@@ -101,7 +101,7 @@ const moveEndPoint = (rng: Range, start: boolean) => {
   container = rng[prefix + 'Container'];
   offset = rng[prefix + 'Offset'];
 
-  // normalizeTableCellSelection
+  // normalize Table Cell selection
   if (NodeType.isElement(container) && container.nodeName === 'TR') {
     const childNodes = container.childNodes;
     container = childNodes[Math.min(start ? offset : offset - 1, childNodes.length - 1)];
