@@ -1,6 +1,6 @@
 {
   "name": "@ephox/katamari",
-  "version": "9.0.1",
+  "version": "9.0.2-alpha.1",
   "description": "Basic data type library",
   "repository": {
     "type": "git",
