@@ -1,7 +1,7 @@
 import { Assertions, Cursors } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Hierarchy, Html, Remove, Replication, SelectorFilter, SugarElement } from '@ephox/sugar';
+import { Hierarchy, Html, Remove, Replication, SelectorFilter, SugarElement, Insert, SugarBody } from '@ephox/sugar';
 import { McEditor, TinyAssertions, TinyDom, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -222,5 +222,34 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
     resolveBookmark(editor, bookmark);
     assertApproxRawContent(editor, '<p>abc</p>');
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
+  }));
+
+  it('TINY-7817: bookmark should be insert correclty even if the selection is on a comment', bookmarkTest((editor) => {
+    const outsideButton: SugarElement<HTMLButtonElement> = SugarElement.fromHtml('<button id="buttonToClick">Button</button>');
+    const resetButton: SugarElement<HTMLButtonElement> = SugarElement.fromHtml('<button id="resetButtonToClick">Reset Button</button>');
+
+    editor.resetContent('');
+    editor.addCommand('getBookmarkProxyCommand', () => {
+      editor.selection.getBookmark();
+    });
+    Insert.append(SugarBody.body(), outsideButton);
+    Insert.append(SugarBody.body(), resetButton);
+    document.getElementById('buttonToClick').addEventListener('click', () => {
+      editor.execCommand('getBookmarkProxyCommand');
+    });
+    document.getElementById('resetButtonToClick').addEventListener('click', () => {
+      editor.resetContent('<div><!-- Whatever --> <img src="https://en.wikipedia.org/wiki/Bear#/media/File:Ursidae-01.jpg" width="1200" height="300"></div>');
+    });
+    resetButton.dom.click();
+    outsideButton.dom.click();
+
+    assert.equal(
+      editor.getBody().innerHTML,
+      '<div>' +
+        '<!-- Whatever -->' +
+        '<span data-mce-type="bookmark" id="mce_1_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow: hidden; line-height: 0px;"></span> ' +
+        '<img src="https://en.wikipedia.org/wiki/Bear#/media/File:Ursidae-01.jpg" width="1200" height="300" data-mce-src="https://en.wikipedia.org/wiki/Bear#/media/File:Ursidae-01.jpg">' +
+      '</div>',
+      'Editor should now contain the bookmark in the correct position');
   }));
 });
