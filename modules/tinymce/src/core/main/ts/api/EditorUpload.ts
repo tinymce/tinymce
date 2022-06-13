@@ -149,6 +149,10 @@ const EditorUpload = (editor: Editor): EditorUpload => {
           };
         });
 
+        if (shouldDispatchChange) {
+          editor.undoManager.dispatchChange();
+        }
+
         if (imagesToRemove.length > 0 && !Rtc.isRtc(editor)) {
           editor.undoManager.transact(() => {
             Arr.each(imagesToRemove, (element) => {
@@ -156,10 +160,6 @@ const EditorUpload = (editor: Editor): EditorUpload => {
               blobCache.removeByUri(element.src);
             });
           });
-        }
-
-        if (shouldDispatchChange) {
-          editor.undoManager.dispatchChange();
         }
 
         return filteredResult;
