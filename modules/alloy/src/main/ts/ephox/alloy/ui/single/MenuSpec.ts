@@ -1,16 +1,18 @@
-import { Optional } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
+import { Compare, SelectorFilter } from '@ephox/sugar';
 
 import { Composing } from '../../api/behaviour/Composing';
 import { Highlighting } from '../../api/behaviour/Highlighting';
 import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
+import { Toggling } from '../../api/behaviour/Toggling';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import * as ItemEvents from '../../menu/util/ItemEvents';
 import * as MenuEvents from '../../menu/util/MenuEvents';
-import { MenuDetail, MenuItemHoverEvent, MenuSpec } from '../types/MenuTypes';
+import { MenuDetail, MenuItemHoverEvent, MenuItemToggledEvent, MenuSpec } from '../types/MenuTypes';
 
 const make: CompositeSketchFactory<MenuDetail, MenuSpec> = (detail, components, _spec, _externals) => ({
   uid: detail.uid,
@@ -58,6 +60,23 @@ const make: CompositeSketchFactory<MenuDetail, MenuSpec> = (detail, components, 
     AlloyEvents.run<MenuItemHoverEvent>(ItemEvents.hover(), (menu, simulatedEvent) => {
       const item = simulatedEvent.event.item;
       Highlighting.highlight(menu, item);
+    }),
+
+    // Enforce only a single radio menu item is toggled by finding any other toggled
+    // radio menu items and untoggling them when a certain item is toggled
+    AlloyEvents.run<MenuItemToggledEvent>(ItemEvents.toggled(), (menu, simulatedEvent) => {
+      const { item, state } = simulatedEvent.event;
+      if (state) {
+        // TODO: TINY-8812 - This ideally should be done in a way such that a menu can have multiple radio groups.
+        const checkedRadioItems = SelectorFilter.descendants(menu.element, '[role="menuitemradio"][aria-checked="true"]');
+        Arr.each(checkedRadioItems, (ele) => {
+          if (!Compare.eq(ele, item.element)) {
+            menu.getSystem().getByDom(ele).each((c) => {
+              Toggling.off(c);
+            });
+          }
+        });
+      }
     })
   ]),
   components,

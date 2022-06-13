@@ -6,9 +6,11 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Disabling } from 'ephox/alloy/api/behaviour/Disabling';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
 import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
 import * as ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
+import { TogglingConfigSpec } from 'ephox/alloy/behaviour/toggling/TogglingTypes';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
 import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 import { PartialMenuSpec, TieredMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
@@ -16,6 +18,31 @@ import { PartialMenuSpec, TieredMenuSpec } from 'ephox/alloy/ui/types/TieredMenu
 interface MenuState {
   readonly menuUid: string;
 }
+
+interface ItemData {
+  value: string;
+  meta: any;
+}
+
+interface WidgetItem {
+  type: 'widget';
+  widget: SketchSpec;
+  data: ItemData;
+}
+
+interface NormalItem {
+  type: 'item';
+  data: ItemData;
+  hasSubmenu?: boolean;
+  toggling?: Partial<TogglingConfigSpec> & { exclusive?: boolean };
+}
+
+interface SeparatorItem {
+  type: 'separator';
+  text: string;
+}
+
+export type TestItem = WidgetItem | NormalItem | SeparatorItem;
 
 const renderMenu = (spec: { value: string; text?: string; items: ItemSpec[] }): PartialMenuSpec => ({
   dom: {
@@ -31,39 +58,59 @@ const renderMenu = (spec: { value: string; text?: string; items: ItemSpec[] }): 
   ]
 });
 
-const renderItem = (spec: { type: any; widget?: any; data: { value: string; meta: any }; hasSubmenu?: boolean}): ItemSpec => spec.type === 'widget' ? {
-  type: 'widget',
-  data: spec.data,
-  dom: {
-    tag: 'li',
-    attributes: {
-      'data-value': spec.data.value
-    },
-    classes: [ 'item-widget' ]
-  },
-  components: [
-    ItemWidget.parts.widget(spec.widget)
-  ]
-} : {
-  type: spec.type,
-  data: spec.data,
-  hasSubmenu: spec.hasSubmenu,
-  dom: {
-    tag: 'li',
-    attributes: {
-      'data-value': spec.data.value,
-      'data-test-id': 'item-' + spec.data.value,
-      'aria-disabled': spec.data.meta.disabled === true ? true : false
-    },
-    classes: [ ],
-    innerHtml: spec.data.meta.text
-  },
-  components: [ ],
-  itemBehaviours: Behaviour.derive([
-    Disabling.config({
-      disabled: () => spec.data.meta.disabled
-    })
-  ])
+const renderItem = (spec: TestItem): ItemSpec => {
+  switch (spec.type) {
+    case 'widget':
+      return {
+        type: 'widget',
+        data: spec.data,
+        dom: {
+          tag: 'li',
+          attributes: {
+            'data-value': spec.data.value
+          },
+          classes: [ 'item-widget' ]
+        },
+        components: [
+          ItemWidget.parts.widget(spec.widget)
+        ]
+      };
+
+    case 'separator':
+      return {
+        type: spec.type,
+        dom: {
+          tag: 'li',
+          classes: [ ],
+          innerHtml: spec.text
+        },
+        components: []
+      };
+
+    case 'item':
+      return {
+        type: spec.type,
+        data: spec.data,
+        hasSubmenu: spec.hasSubmenu,
+        dom: {
+          tag: 'li',
+          attributes: {
+            'data-value': spec.data.value,
+            'data-test-id': 'item-' + spec.data.value,
+            'aria-disabled': spec.data.meta.disabled === true ? true : false
+          },
+          classes: [ ],
+          innerHtml: spec.data.meta.text
+        },
+        components: [ ],
+        toggling: spec.toggling,
+        itemBehaviours: Behaviour.derive([
+          Disabling.config({
+            disabled: () => spec.data.meta.disabled
+          })
+        ])
+      };
+  }
 };
 
 const part = (store: TestStore): Partial<TieredMenuSpec> => ({

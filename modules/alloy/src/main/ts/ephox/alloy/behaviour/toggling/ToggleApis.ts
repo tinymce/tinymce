@@ -18,25 +18,28 @@ const updateClass = (component: AlloyComponent, toggleConfig: TogglingConfig, to
   });
 };
 
+const set = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState, state: boolean): void => {
+  const initialState = toggleState.get();
+
+  toggleState.set(state);
+  updateClass(component, toggleConfig, toggleState);
+  updateAriaState(component, toggleConfig, toggleState);
+
+  if (initialState !== state) {
+    toggleConfig.onToggled(component, state);
+  }
+};
+
 const toggle = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState): void => {
   set(component, toggleConfig, toggleState, !toggleState.get());
 };
 
 const on = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState): void => {
-  toggleState.set(true);
-  updateClass(component, toggleConfig, toggleState);
-  updateAriaState(component, toggleConfig, toggleState);
+  set(component, toggleConfig, toggleState, true);
 };
 
 const off = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState): void => {
-  toggleState.set(false);
-  updateClass(component, toggleConfig, toggleState);
-  updateAriaState(component, toggleConfig, toggleState);
-};
-
-const set = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState, state: boolean): void => {
-  const action = state ? on : off;
-  action(component, toggleConfig, toggleState);
+  set(component, toggleConfig, toggleState, false);
 };
 
 const isOn = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState): boolean =>

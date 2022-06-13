@@ -1,4 +1,5 @@
 import { FieldProcessor, FieldSchema } from '@ephox/boulder';
+import { Obj, Type } from '@ephox/katamari';
 
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
@@ -16,13 +17,20 @@ import * as ButtonBase from '../../ui/common/ButtonBase';
 import { NormalItemDetail } from '../../ui/types/ItemTypes';
 import * as ItemEvents from '../util/ItemEvents';
 
+type ItemRole = 'menuitem' | 'menuitemcheckbox' | 'menuitemradio';
+
+const getItemRole = (detail: NormalItemDetail): ItemRole =>
+  detail.toggling
+    .map((toggling) => toggling.exclusive ? 'menuitemradio' : 'menuitemcheckbox')
+    .getOr('menuitem');
+
 const builder = (detail: NormalItemDetail): AlloySpec => ({
   dom: detail.dom,
   domModification: {
     // INVESTIGATE: If more efficient, destructure attributes out
     ...detail.domModification,
     attributes: {
-      'role': detail.toggling.isSome() ? 'menuitemcheckbox' : 'menuitem',
+      'role': getItemRole(detail),
       ...detail.domModification.attributes,
       'aria-haspopup': detail.hasSubmenu,
       ...(detail.hasSubmenu ? { 'aria-expanded': false } : {})
@@ -37,7 +45,13 @@ const builder = (detail: NormalItemDetail): AlloySpec => ({
         aria: {
           mode: 'checked'
         },
-        ...tConfig
+        ...Obj.filter(tConfig as { [K in keyof TogglingConfigSpec]: TogglingConfigSpec[K] }, (_value, name) => name !== 'exclusive'),
+        onToggled: (component, state) => {
+          if (Type.isFunction(tConfig.onToggled)) {
+            tConfig.onToggled(component, state);
+          }
+          ItemEvents.onToggled(component, state);
+        }
       })),
       Focusing.config({
         ignore: detail.ignoreFocus,

@@ -24,7 +24,7 @@ export const handleError = (error: StructureSchema.SchemaError<any>): Optional<I
   return Optional.none();
 };
 
-export const createHorizontalPartialMenuWithAlloyItems = (value: string, _hasIcons: boolean, items, _columns: Toolbar.ColumnTypes, _presets: Toolbar.PresetTypes): PartialMenuSpec => {
+export const createHorizontalPartialMenuWithAlloyItems = (value: string, _hasIcons: boolean, items: ItemTypes.ItemSpec[], _columns: Toolbar.ColumnTypes, _presets: Toolbar.PresetTypes): PartialMenuSpec => {
   const structure = forHorizontalCollection(items);
   return {
     value,
@@ -35,7 +35,7 @@ export const createHorizontalPartialMenuWithAlloyItems = (value: string, _hasIco
 };
 
 // TODO: Potentially make this private again.
-export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean, items, columns: Toolbar.ColumnTypes, presets: Toolbar.PresetTypes): PartialMenuSpec => {
+export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean, items: ItemTypes.ItemSpec[], columns: Toolbar.ColumnTypes, presets: Toolbar.PresetTypes): PartialMenuSpec => {
   if (presets === 'color') {
     const structure = forSwatch(columns);
     return {

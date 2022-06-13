@@ -96,6 +96,11 @@ export interface MenuSpec extends CompositeSketchSpec {
 
 export interface MenuSketcher extends CompositeSketch<MenuSpec> { }
 
+export interface MenuItemToggledEvent extends CustomEvent {
+  readonly item: AlloyComponent;
+  readonly state: boolean;
+}
+
 export interface MenuItemHoverEvent extends CustomEvent {
   readonly item: AlloyComponent;
 }
