@@ -238,16 +238,20 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
     });
     Insert.append(SugarBody.body(), outsideButton);
 
-    document.getElementById('getBookmarkButton').addEventListener('click', () => {
+    const clickHandler = (): void => {
       editor.execCommand('getBookmarkProxyCommand');
-    });
+    };
+    outsideButton.dom.addEventListener('click', clickHandler);
 
     outsideButton.dom.click();
+    outsideButton.dom.removeEventListener('click', clickHandler);
 
     assert.equal(
       editor.getBody().innerHTML,
       getMockContent('<span data-mce-type="bookmark" id="mce_1_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow: hidden; line-height: 0px;"></span> '),
       'Editor should now contain the bookmark in the correct position'
     );
+
+    Remove.remove(outsideButton);
   }));
 });
