@@ -7,7 +7,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import {
-  Bookmark, IdBookmark, isIdBookmark, isIndexBookmark, isPathBookmark, isRangeBookmark, isStringPathBookmark
+  Bookmark, isIdBookmark, isIndexBookmark, isPathBookmark, isRangeBookmark, isStringPathBookmark
 } from 'tinymce/core/bookmark/BookmarkTypes';
 import * as GetBookmark from 'tinymce/core/bookmark/GetBookmark';
 import * as ResolveBookmark from 'tinymce/core/bookmark/ResolveBookmark';
@@ -225,10 +225,7 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
   }));
 
   describe('TINY-7817', () => {
-    const hook = TinyHooks.bddSetup<Editor>({
-      menubar: false,
-      toolbar: false,
-      statusbar: false,
+    const hook = TinyHooks.bddSetupLight<Editor>({
       base_url: '/project/tinymce/js/tinymce'
     }, [], false);
 
@@ -244,12 +241,10 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
 
     it('TINY-7817: bookmark should be insert correclty even if the selection is on a comment', () => {
       const editor = hook.editor();
-      const getMockContent = (bookmark?: string): string => `<div><!-- Whatever -->${bookmark ?? ''} <img></div>`;
-      let bookmarkId: string;
 
-      editor.resetContent(getMockContent());
+      editor.resetContent('<div><!-- Whatever --> <img></div>');
       editor.addCommand('getBookmarkProxyCommand', () => {
-        bookmarkId = (editor.selection.getBookmark() as IdBookmark).id;
+        editor.selection.getBookmark();
       });
 
       const clickHandler = (): void => {
@@ -259,23 +254,17 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
 
       outsideButton.dom.click();
       outsideButton.dom.removeEventListener('click', clickHandler);
-
-      assert.equal(
-        editor.getBody().innerHTML,
-        getMockContent(`<span data-mce-type="bookmark" id="${bookmarkId}_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow: hidden; line-height: 0px;"></span>`),
-        'Editor should now contain the bookmark in the correct position'
-      );
-      editor.resetContent();
+      TinyAssertions.assertContentPresence(editor, {
+        '[data-mce-type="bookmark"]': 1
+      });
     });
 
     it('TINY-7817: bookmark should be insert correclty even if the selection is on a comment and next element is also a comment', () => {
       const editor = hook.editor();
-      const getMockContent = (bookmark?: string): string => `<div><!-- Whatever --><!-- second comment -->${bookmark ?? ''} <img></div>`;
-      let bookmarkId: string;
 
-      editor.resetContent(getMockContent());
+      editor.resetContent('<div><!-- Whatever --><!-- second comment --> <img></div>');
       editor.addCommand('getBookmarkProxyCommand', () => {
-        bookmarkId = (editor.selection.getBookmark() as IdBookmark).id;
+        editor.selection.getBookmark();
       });
 
       const clickHandler = (): void => {
@@ -286,12 +275,9 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
       outsideButton.dom.click();
       outsideButton.dom.removeEventListener('click', clickHandler);
 
-      assert.equal(
-        editor.getBody().innerHTML,
-        getMockContent(`<span data-mce-type="bookmark" id="${bookmarkId}_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow: hidden; line-height: 0px;"></span>`),
-        'Editor should now contain the bookmark in the correct position'
-      );
-      editor.resetContent('');
+      TinyAssertions.assertContentPresence(editor, {
+        '[data-mce-type="bookmark"]': 1
+      });
     });
   });
 });
