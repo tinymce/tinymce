@@ -1,13 +1,13 @@
 import { Assertions, Cursors } from '@ephox/agar';
-import { after, before, context, describe, it } from '@ephox/bedrock-client';
+import { after, before, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Hierarchy, Html, Remove, Replication, SelectorFilter, SugarElement, Insert, SugarBody } from '@ephox/sugar';
-import { McEditor, TinyAssertions, TinyDom, TinySelections } from '@ephox/wrap-mcagar';
+import { McEditor, TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import {
-  Bookmark, isIdBookmark, isIndexBookmark, isPathBookmark, isRangeBookmark, isStringPathBookmark
+  Bookmark, IdBookmark, isIdBookmark, isIndexBookmark, isPathBookmark, isRangeBookmark, isStringPathBookmark
 } from 'tinymce/core/bookmark/BookmarkTypes';
 import * as GetBookmark from 'tinymce/core/bookmark/GetBookmark';
 import * as ResolveBookmark from 'tinymce/core/bookmark/ResolveBookmark';
@@ -224,7 +224,14 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
   }));
 
-  context('TINY-7817', () => {
+  describe('TINY-7817', () => {
+    const hook = TinyHooks.bddSetup<Editor>({
+      menubar: false,
+      toolbar: false,
+      statusbar: false,
+      base_url: '/project/tinymce/js/tinymce'
+    }, [], false);
+
     const outsideButton: SugarElement<HTMLButtonElement> = SugarElement.fromHtml('<button id="getBookmarkButton">Get Bookmark</button>');
 
     before(() => {
@@ -235,12 +242,14 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
       Remove.remove(outsideButton);
     });
 
-    it('TINY-7817: bookmark should be insert correclty even if the selection is on a comment', bookmarkTest((editor) => {
+    it('TINY-7817: bookmark should be insert correclty even if the selection is on a comment', () => {
+      const editor = hook.editor();
       const getMockContent = (bookmark?: string): string => `<div><!-- Whatever -->${bookmark ?? ''} <img></div>`;
+      let bookmarkId: string;
 
       editor.resetContent(getMockContent());
       editor.addCommand('getBookmarkProxyCommand', () => {
-        editor.selection.getBookmark();
+        bookmarkId = (editor.selection.getBookmark() as IdBookmark).id;
       });
 
       const clickHandler = (): void => {
@@ -253,17 +262,20 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
 
       assert.equal(
         editor.getBody().innerHTML,
-        getMockContent('<span data-mce-type="bookmark" id="mce_1_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow: hidden; line-height: 0px;"></span>'),
+        getMockContent(`<span data-mce-type="bookmark" id="${bookmarkId}_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow: hidden; line-height: 0px;"></span>`),
         'Editor should now contain the bookmark in the correct position'
       );
-    }));
+      editor.resetContent();
+    });
 
-    it('TINY-7817: bookmark should be insert correclty even if the selection is on a comment and next element is also a comment', bookmarkTest((editor) => {
+    it('TINY-7817: bookmark should be insert correclty even if the selection is on a comment and next element is also a comment', () => {
+      const editor = hook.editor();
       const getMockContent = (bookmark?: string): string => `<div><!-- Whatever --><!-- second comment -->${bookmark ?? ''} <img></div>`;
+      let bookmarkId: string;
 
       editor.resetContent(getMockContent());
       editor.addCommand('getBookmarkProxyCommand', () => {
-        editor.selection.getBookmark();
+        bookmarkId = (editor.selection.getBookmark() as IdBookmark).id;
       });
 
       const clickHandler = (): void => {
@@ -276,9 +288,10 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
 
       assert.equal(
         editor.getBody().innerHTML,
-        getMockContent('<span data-mce-type="bookmark" id="mce_1_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow: hidden; line-height: 0px;"></span>'),
+        getMockContent(`<span data-mce-type="bookmark" id="${bookmarkId}_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow: hidden; line-height: 0px;"></span>`),
         'Editor should now contain the bookmark in the correct position'
       );
-    }));
+      editor.resetContent('');
+    });
   });
 });
