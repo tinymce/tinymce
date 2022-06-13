@@ -618,20 +618,22 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     const manualModifiedLevel = 'a modified last level';
 
     const assertChangeEvent = (
-      event: { level: string; lastLevel: string },
+      eventContent: { level: string | undefined; lastLevel: string | undefined },
       expectedLevel: string | undefined,
       expectedLastlevel: string | undefined
     ) => {
-      assert.equal(event.level, expectedLevel, 'Level has not the expected content');
-      assert.equal(event.lastLevel, expectedLastlevel, 'Last level has not the expected content');
+      assert.deepEqual(eventContent, {
+        level: expectedLevel,
+        lastLevel: expectedLastlevel
+      }, 'the level or the last level have not the expected content');
     };
 
     let changeEventCounter: number;
-    let currentChangeEvent: { level: string; lastLevel: string };
+    let currentChangeEvent: { level: string; lastLevel: string } | undefined;
 
     const onChange = (e: EditorEvent<{
       level: UndoLevel;
-      lastLevel: UndoLevel;
+      lastLevel: UndoLevel | undefined;
     }>) => {
       changeEventCounter++;
       currentChangeEvent = { level: e.level?.content, lastLevel: e.lastLevel?.content };
