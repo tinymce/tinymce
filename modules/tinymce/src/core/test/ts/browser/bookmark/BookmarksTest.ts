@@ -225,10 +225,10 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
   }));
 
   it('TINY-7817: bookmark should be insert correclty even if the selection is on a comment', bookmarkTest((editor) => {
-    const getMockContent = (bookmark: string): string => `<div><!-- Whatever -->${bookmark}<img></div>`;
+    const getMockContent = (bookmark?: string): string => `<div><!-- Whatever -->${bookmark ?? ''} <img></div>`;
     const outsideButton: SugarElement<HTMLButtonElement> = SugarElement.fromHtml('<button id="getBookmarkButton">Get Bookmark</button>');
 
-    editor.resetContent(getMockContent(' '));
+    editor.resetContent(getMockContent());
     editor.addCommand('getBookmarkProxyCommand', () => {
       editor.selection.getBookmark();
     });
@@ -244,7 +244,7 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
 
     assert.equal(
       editor.getBody().innerHTML,
-      getMockContent('<span data-mce-type="bookmark" id="mce_1_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow: hidden; line-height: 0px;"></span> '),
+      getMockContent('<span data-mce-type="bookmark" id="mce_1_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow: hidden; line-height: 0px;"></span>'),
       'Editor should now contain the bookmark in the correct position'
     );
 
