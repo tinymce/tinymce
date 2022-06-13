@@ -615,7 +615,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
   context('dispatchChange', () => {
     const initialContent = '<p>some inital content</p>';
-    const manualModifiedLevel = 'a modified last level';
+    const manualModifiedLevelContent = 'a modified last level';
 
     const assertChangeEvent = (
       eventContent: { levelContent: string; lastLevelContent: string | undefined },
@@ -654,18 +654,18 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
       assert.equal(changeEventCounter, 0, 'No events should be detected at start');
 
       Arr.last(editor.undoManager.data).each((lastLevel) => {
-        lastLevel.content = manualModifiedLevel;
+        lastLevel.content = manualModifiedLevelContent;
       });
 
       assert.isFalse(editor.isDirty(), 'Editor should not be dirty before dispatchChange');
       editor.undoManager.dispatchChange();
-      assertChangeEvent(currentChangeEvent, initialContent, manualModifiedLevel);
+      assertChangeEvent(currentChangeEvent, initialContent, manualModifiedLevelContent);
       assert.equal(changeEventCounter, 1, '1 event should be detected');
       assert.isTrue(editor.isDirty(), 'Editor should be dirty after dispatchChange');
 
       Arr.range(3, () => {
         editor.undoManager.dispatchChange();
-        assertChangeEvent(currentChangeEvent, initialContent, manualModifiedLevel);
+        assertChangeEvent(currentChangeEvent, initialContent, manualModifiedLevelContent);
       });
 
       assert.equal(changeEventCounter, 4, 'it should continue to call change');
