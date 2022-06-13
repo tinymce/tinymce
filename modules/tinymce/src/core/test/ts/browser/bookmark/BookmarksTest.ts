@@ -1,5 +1,5 @@
 import { Assertions, Cursors } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { after, before, context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Hierarchy, Html, Remove, Replication, SelectorFilter, SugarElement, Insert, SugarBody } from '@ephox/sugar';
 import { McEditor, TinyAssertions, TinyDom, TinySelections } from '@ephox/wrap-mcagar';
@@ -224,57 +224,61 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
   }));
 
-  it('TINY-7817: bookmark should be insert correclty even if the selection is on a comment', bookmarkTest((editor) => {
-    const getMockContent = (bookmark?: string): string => `<div><!-- Whatever -->${bookmark ?? ''} <img></div>`;
+  context('TINY-7817', () => {
     const outsideButton: SugarElement<HTMLButtonElement> = SugarElement.fromHtml('<button id="getBookmarkButton">Get Bookmark</button>');
 
-    editor.resetContent(getMockContent());
-    editor.addCommand('getBookmarkProxyCommand', () => {
-      editor.selection.getBookmark();
+    before(() => {
+      Insert.append(SugarBody.body(), outsideButton);
     });
-    Insert.append(SugarBody.body(), outsideButton);
 
-    const clickHandler = (): void => {
-      editor.execCommand('getBookmarkProxyCommand');
-    };
-    outsideButton.dom.addEventListener('click', clickHandler);
-
-    outsideButton.dom.click();
-    outsideButton.dom.removeEventListener('click', clickHandler);
-
-    assert.equal(
-      editor.getBody().innerHTML,
-      getMockContent('<span data-mce-type="bookmark" id="mce_1_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow: hidden; line-height: 0px;"></span>'),
-      'Editor should now contain the bookmark in the correct position'
-    );
-
-    Remove.remove(outsideButton);
-  }));
-
-  it('TINY-7817: bookmark should be insert correclty even if the selection is on a comment and next element is also a comment', bookmarkTest((editor) => {
-    const getMockContent = (bookmark?: string): string => `<div><!-- Whatever --><!-- second comment -->${bookmark ?? ''} <img></div>`;
-    const outsideButton: SugarElement<HTMLButtonElement> = SugarElement.fromHtml('<button id="getBookmarkButton">Get Bookmark</button>');
-
-    editor.resetContent(getMockContent());
-    editor.addCommand('getBookmarkProxyCommand', () => {
-      editor.selection.getBookmark();
+    after(() => {
+      Remove.remove(outsideButton);
     });
-    Insert.append(SugarBody.body(), outsideButton);
 
-    const clickHandler = (): void => {
-      editor.execCommand('getBookmarkProxyCommand');
-    };
-    outsideButton.dom.addEventListener('click', clickHandler);
+    it('TINY-7817: bookmark should be insert correclty even if the selection is on a comment', bookmarkTest((editor) => {
+      const getMockContent = (bookmark?: string): string => `<div><!-- Whatever -->${bookmark ?? ''} <img></div>`;
 
-    outsideButton.dom.click();
-    outsideButton.dom.removeEventListener('click', clickHandler);
+      editor.resetContent(getMockContent());
+      editor.addCommand('getBookmarkProxyCommand', () => {
+        editor.selection.getBookmark();
+      });
 
-    assert.equal(
-      editor.getBody().innerHTML,
-      getMockContent('<span data-mce-type="bookmark" id="mce_1_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow: hidden; line-height: 0px;"></span>'),
-      'Editor should now contain the bookmark in the correct position'
-    );
+      const clickHandler = (): void => {
+        editor.execCommand('getBookmarkProxyCommand');
+      };
+      outsideButton.dom.addEventListener('click', clickHandler);
 
-    Remove.remove(outsideButton);
-  }));
+      outsideButton.dom.click();
+      outsideButton.dom.removeEventListener('click', clickHandler);
+
+      assert.equal(
+        editor.getBody().innerHTML,
+        getMockContent('<span data-mce-type="bookmark" id="mce_1_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow: hidden; line-height: 0px;"></span>'),
+        'Editor should now contain the bookmark in the correct position'
+      );
+    }));
+
+    it('TINY-7817: bookmark should be insert correclty even if the selection is on a comment and next element is also a comment', bookmarkTest((editor) => {
+      const getMockContent = (bookmark?: string): string => `<div><!-- Whatever --><!-- second comment -->${bookmark ?? ''} <img></div>`;
+
+      editor.resetContent(getMockContent());
+      editor.addCommand('getBookmarkProxyCommand', () => {
+        editor.selection.getBookmark();
+      });
+
+      const clickHandler = (): void => {
+        editor.execCommand('getBookmarkProxyCommand');
+      };
+      outsideButton.dom.addEventListener('click', clickHandler);
+
+      outsideButton.dom.click();
+      outsideButton.dom.removeEventListener('click', clickHandler);
+
+      assert.equal(
+        editor.getBody().innerHTML,
+        getMockContent('<span data-mce-type="bookmark" id="mce_1_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow: hidden; line-height: 0px;"></span>'),
+        'Editor should now contain the bookmark in the correct position'
+      );
+    }));
+  });
 });
