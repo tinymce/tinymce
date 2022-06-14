@@ -58,21 +58,15 @@ const isAtLineBoundary = (root: SugarElement, pos: CaretPosition) => (
 const isCefBlock = (node?: Node) =>
   Type.isNonNullable(node) && NodeType.isContentEditableFalse(node) && isBlockLike(node);
 
-const isSiblingCefBlock = (root: Element, direction: 'next' | 'prev2') => (container: Node) =>
-  isCefBlock(new DomTreeWalker(container, root)[direction]());
+const isSiblingCefBlock = (root: Element) => (container: Node) =>
+  isCefBlock(new DomTreeWalker(container, root).next());
 
 // Check the next/previous element in case it is a cef and the next/previous caret position then would skip it, then check
 // the next next/previous caret position ( for example in case the next element is a strong, containing a cef ).
 const isBeforeCefBlock = (root: SugarElement, pos: CaretPosition) => {
   const nextPos = CaretFinder.nextPosition(root.dom, pos).getOr(pos);
-  const isNextCefBlock = isSiblingCefBlock(root.dom, 'next');
+  const isNextCefBlock = isSiblingCefBlock(root.dom);
   return pos.isAtEnd() && (isNextCefBlock(pos.container()) || isNextCefBlock(nextPos.container()));
-};
-
-const isAfterCefBlock = (root: SugarElement, pos: CaretPosition) => {
-  const prevPos = CaretFinder.prevPosition(root.dom, pos).getOr(pos);
-  const isPrevCefBlock = isSiblingCefBlock(root.dom, 'prev2');
-  return pos.isAtStart() && (isPrevCefBlock(pos.container()) || isPrevCefBlock(prevPos.container()));
 };
 
 const needsToHaveNbsp = (root: SugarElement, pos: CaretPosition) => {
@@ -87,7 +81,7 @@ const needsToBeNbspLeft = (root: SugarElement, pos: CaretPosition) => {
   if (isInPre(pos)) {
     return false;
   } else {
-    return isAtStartOfBlock(root, pos) || isBeforeBlock(root, pos) || isAfterBr(root, pos) || hasSpaceBefore(root, pos) || isAfterCefBlock(root, pos);
+    return isAtStartOfBlock(root, pos) || isBeforeBlock(root, pos) || isAfterBr(root, pos) || hasSpaceBefore(root, pos);
   }
 };
 
