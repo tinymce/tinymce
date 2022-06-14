@@ -165,7 +165,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
     editor.on('SetSelectionRange', (e) => {
       // If the range is set inside a short ended element, then move it
       // to the side as IE for example will try to add content inside
-      e.range = normalizeVoidElementSelection(e.range);
+      e.range = normalizeVoidAndCommentElementSelection(e.range);
 
       const rng = setElementSelection(e.range, e.forward);
       if (rng) {
@@ -202,15 +202,16 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
   const isRangeInCaretContainer = (rng: Range) =>
     isWithinCaretContainer(rng.startContainer) || isWithinCaretContainer(rng.endContainer);
 
-  const normalizeVoidElementSelection = (rng: Range) => {
+  const normalizeVoidAndCommentElementSelection = (rng: Range) => {
     const voidElements = editor.schema.getVoidElements();
     const newRng = dom.createRng();
     const startContainer = rng.startContainer;
     const startOffset = rng.startOffset;
     const endContainer = rng.endContainer;
     const endOffset = rng.endOffset;
+    const isToNormalize = (node: Node): boolean => NodeType.isComment(node) || Obj.has(voidElements, node.nodeName.toLowerCase());
 
-    if (Obj.has(voidElements, startContainer.nodeName.toLowerCase())) {
+    if (isToNormalize(startContainer)) {
       if (startOffset === 0) {
         newRng.setStartBefore(startContainer);
       } else {
@@ -220,7 +221,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
       newRng.setStart(startContainer, startOffset);
     }
 
-    if (Obj.has(voidElements, endContainer.nodeName.toLowerCase())) {
+    if (isToNormalize(endContainer)) {
       if (endOffset === 0) {
         newRng.setEndBefore(endContainer);
       } else {
