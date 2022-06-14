@@ -142,7 +142,7 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
     );
   });
 
-  context('cef is at the start/end of the content and covered with the selection', () => {
+  context('cef block is at the start/end of the content and covered with the selection', () => {
     Arr.each([ Keys.delete, Keys.backspace ], (ks) => {
       it('TINY-8729: should delete selected content when cef block is at the start', () => {
         const editor = hook.editor();
@@ -172,6 +172,39 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
         TinyAssertions.assertContent(editor, '');
       });
     });
+  });
 
+  context('inline cef is at the start/end of the content and covered with the selection', () => {
+    Arr.each([ Keys.delete, Keys.backspace ], (ks) => {
+      it('TINY-8729: should delete selected content when inline cef is at the start', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><span contenteditable="false">CEF</span>abc</p>');
+        // actual content: <p>&#xFEFF<span contenteditable="false">CEF</span>abc</p>
+        TinySelections.setSelection(editor, [ 0 ], 0, [ 0, 2 ], 2);
+        TinyContentActions.keystroke(editor, ks());
+        TinyAssertions.assertCursor(editor, [ 0 ], 0);
+        TinyAssertions.assertContent(editor, '<p>c</p>');
+      });
+
+      it('TINY-8729: should delete selected content when inline cef is at the end', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>abc<span contenteditable="false">CEF</span></p>');
+        // actual content: <p>&#xFEFF<span contenteditable="false">CEF</span>abc</p>
+        TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0 ], 2);
+        TinyContentActions.keystroke(editor, ks());
+        TinyAssertions.assertCursor(editor, [ 0 ], 1);
+        TinyAssertions.assertContent(editor, '<p>a</p>');
+      });
+
+      it('TINY-8729: should delete selected content when inline cef is at the start and at the end', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><span contenteditable="false">CEF</span>abc<span contenteditable="false">CEF</span></p>');
+        // actual content: <p>&#xFEFF<span contenteditable="false">CEF</span>abc<span contenteditable="false">CEF</span></p>
+        TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 4);
+        TinyContentActions.keystroke(editor, ks());
+        TinyAssertions.assertCursor(editor, [ 0 ], 0);
+        TinyAssertions.assertContent(editor, '');
+      });
+    });
   });
 });
