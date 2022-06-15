@@ -207,4 +207,18 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
       });
     });
   });
+
+  context('Cleaning up after rng.deleteContens call', () => {
+    Arr.each([ Keys.backspace, Keys.delete ], (ks) => {
+      it('TINY-8729: should clean up empty nodes and padd empty block with bogus br', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><strong>W</strong>elcom<strong>e</strong></p><p contenteditable="false">CEF</p>');
+        TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ ], 2);
+        TinyContentActions.keystroke(editor, ks());
+        // it should remove empty  <p><strong></strong></p> nodes
+        TinyAssertions.assertRawContent(editor, '<p><br data-mce-bogus="1"></p>');
+        TinyAssertions.assertCursor(editor, [ 0 ], 0);
+      });
+    });
+  });
 });
