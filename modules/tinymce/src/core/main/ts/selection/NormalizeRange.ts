@@ -97,6 +97,10 @@ const findTextNodeRelative = (dom: DOMUtils, isAfterNode: boolean, collapsed: bo
     lastInlineElement = node;
   }
 
+  if (NodeType.isComment(lastInlineElement)) {
+    return Optional.none();
+  }
+
   // Only fetch the last inline element when in caret mode for now
   if (collapsed && lastInlineElement) {
     return Optional.some(CaretPosition(lastInlineElement, 0));

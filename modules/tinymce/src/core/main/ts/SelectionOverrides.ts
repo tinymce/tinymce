@@ -209,9 +209,8 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
     const startOffset = rng.startOffset;
     const endContainer = rng.endContainer;
     const endOffset = rng.endOffset;
-    const isToNormalize = (node: Node): boolean => NodeType.isComment(node) || Obj.has(voidElements, node.nodeName.toLowerCase());
 
-    if (isToNormalize(startContainer)) {
+    if (Obj.has(voidElements, startContainer.nodeName.toLowerCase())) {
       if (startOffset === 0) {
         newRng.setStartBefore(startContainer);
       } else {
@@ -221,7 +220,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
       newRng.setStart(startContainer, startOffset);
     }
 
-    if (isToNormalize(endContainer)) {
+    if (Obj.has(voidElements, endContainer.nodeName.toLowerCase())) {
       if (endOffset === 0) {
         newRng.setEndBefore(endContainer);
       } else {

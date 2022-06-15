@@ -229,6 +229,12 @@ describe('browser.tinymce.core.selection.NormalizeRangeTest', () => {
       const range = normalizeRange([], 3, [], 3);
       assertRangeNone(range);
     });
+
+    it('Should not normalize into comment', () => {
+      setHtml('<p><!-- some comment -->some test<img /></p>');
+      const range = normalizeRange([ 0, 0 ], 0, [ 0, 0 ], 0);
+      assertRangeNone(range);
+    });
   });
 
   context('Normalize caret positions', () => {
