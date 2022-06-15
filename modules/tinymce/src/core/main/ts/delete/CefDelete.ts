@@ -6,7 +6,6 @@ import CaretPosition from '../caret/CaretPosition';
 import * as CefUtils from '../dom/CefUtils';
 import * as NodeType from '../dom/NodeType';
 import { isCefAtEdgeSelected } from '../keyboard/CefUtils';
-import { deleteRng } from '../textpatterns/utils/Utils';
 import * as CefDeleteAction from './CefDeleteAction';
 import * as DeleteElement from './DeleteElement';
 import * as DeleteUtils from './DeleteUtils';
@@ -82,7 +81,7 @@ const backspaceDeleteRange = (editor: Editor, forward: boolean): Optional<() => 
 
   if (isCefAtEdgeSelected(editor)) {
     return Optional.some(() => {
-      deleteRng(editor.dom, editor.selection.getRng(), (elm) => elm === editor.getBody());
+      DeleteUtils.deleteRangeContents(editor, editor.selection.getRng(), SugarElement.fromDom(editor.getBody()));
     });
   }
   return Optional.none();
