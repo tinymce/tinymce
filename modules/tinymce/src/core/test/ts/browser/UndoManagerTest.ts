@@ -616,6 +616,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
   context('dispatchChange', () => {
     const initialContent = '<p>some inital content</p>';
     const manualModifiedLevelContent = 'a modified last level';
+    let editor: Editor;
 
     const assertChangeEvent = (
       eventContent: { levelContent: string; lastLevelContent: string | undefined },
@@ -642,15 +643,13 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     beforeEach(() => {
       changeEventCounter = 0;
       currentChangeEvent = undefined;
+
+      editor = hook.editor();
+      editor.resetContent(initialContent);
+      editor.on('change', onChange);
     });
 
     it('TINY-8641: Dispatch change with current editor status as level and current undoManager layer as lastLevel', () => {
-      const editor = hook.editor();
-
-      editor.resetContent(initialContent);
-
-      editor.on('change', onChange);
-
       assert.equal(changeEventCounter, 0, 'No events should be detected at start');
 
       Arr.last(editor.undoManager.data).each((lastLevel) => {
@@ -674,10 +673,6 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     });
 
     it('TINY-8641: dispatchChange should always fire on empty stack with current content as level and lastLevel', () => {
-      const editor = hook.editor();
-      editor.resetContent(initialContent);
-      editor.on('change', onChange);
-
       editor.undoManager.clear();
       assert.lengthOf(editor.undoManager.data, 0, 'undo manager should be empty after clear');
 
