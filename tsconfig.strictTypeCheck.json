@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "strict": true,
     "noEmit": true,
     "strictNullChecks": true
   },
