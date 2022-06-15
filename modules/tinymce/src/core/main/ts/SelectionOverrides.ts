@@ -165,7 +165,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
     editor.on('SetSelectionRange', (e) => {
       // If the range is set inside a short ended element, then move it
       // to the side as IE for example will try to add content inside
-      e.range = normalizeVoidAndCommentElementSelection(e.range);
+      e.range = normalizeVoidElementSelection(e.range);
 
       const rng = setElementSelection(e.range, e.forward);
       if (rng) {
@@ -202,7 +202,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
   const isRangeInCaretContainer = (rng: Range) =>
     isWithinCaretContainer(rng.startContainer) || isWithinCaretContainer(rng.endContainer);
 
-  const normalizeVoidAndCommentElementSelection = (rng: Range) => {
+  const normalizeVoidElementSelection = (rng: Range) => {
     const voidElements = editor.schema.getVoidElements();
     const newRng = dom.createRng();
     const startContainer = rng.startContainer;
