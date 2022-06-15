@@ -1,17 +1,15 @@
 import Editor from 'tinymce/core/api/Editor';
 
-import * as Actions from '../core/Actions';
-import * as Options from './Options';
+import * as Dialog from '../ui/Dialog';
 
 const register = (editor: Editor): void => {
-  editor.addCommand('mceLink', () => {
-    if (Options.useQuickLink(editor)) {
-      // Taken from ContextEditorEvents in silver. Find a better way.
+  editor.addCommand('mceLink', (_ui) => {
+    if (_ui) {
+      Dialog.open(editor);
+    } else {
       editor.dispatch('contexttoolbar-show', {
         toolbarKey: 'quicklink'
       });
-    } else {
-      Actions.openDialog(editor)();
     }
   });
 };

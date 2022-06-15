@@ -8,10 +8,11 @@ import * as Actions from '../core/Actions';
 import * as Utils from '../core/Utils';
 
 const setupButtons = (editor: Editor): void => {
+
   editor.ui.registry.addToggleButton('link', {
     icon: 'link',
     tooltip: 'Insert/edit link',
-    onAction: Actions.openDialog(editor),
+    onAction: () => editor.execCommand('mceLink', true),
     onSetup: Actions.toggleActiveState(editor)
   });
 
@@ -42,7 +43,7 @@ const setupMenuItems = (editor: Editor): void => {
     icon: 'link',
     text: 'Link...',
     shortcut: 'Meta+K',
-    onAction: Actions.openDialog(editor)
+    onAction: () => editor.execCommand('mceLink', true)
   });
 
   editor.ui.registry.addMenuItem('unlink', {

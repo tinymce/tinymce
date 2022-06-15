@@ -34,7 +34,7 @@ describe('browser.tinymce.plugins.link.SelectedTextLinkTest', () => {
   });
 
   const pOpenDialog = async (editor: Editor, textToDisplayVisible: boolean = true) => {
-    editor.execCommand('mcelink');
+    editor.execCommand('mcelink', true);
     await TinyUiActions.pWaitForDialog(editor);
     const existence = textToDisplayVisible ? UiFinder.exists : UiFinder.notExists;
     existence(SugarBody.body(), '.tox-label:contains("Text to display")');

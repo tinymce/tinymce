@@ -27,7 +27,7 @@ describe('browser.tinymce.plugins.link.QuickLinkTest', () => {
   });
 
   const pOpenQuickLink = async (editor: Editor) => {
-    editor.execCommand('mceLink');
+    editor.execCommand('mceLink', false);
     // tests were erroneously allowed to pass when the quick link dialog would
     // open and very quickly close because this was happening at superhuman
     // speeds. So I'm slowing it down.

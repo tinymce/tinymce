@@ -27,7 +27,7 @@ describe('browser.tinymce.plugins.link.UpdateLinkTest', () => {
     const editor = hook.editor();
     editor.setContent('<p><a href="http://tinymce.com" class="shouldbekept" title="shouldalsobekept">tiny</a></p>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
-    editor.execCommand('mcelink');
+    editor.execCommand('mcelink', true);
     await TinyUiActions.pWaitForDialog(editor);
     TestLinkUi.assertDialogContents({
       href: 'http://tinymce.com',
@@ -48,7 +48,7 @@ describe('browser.tinymce.plugins.link.UpdateLinkTest', () => {
     const editor = hook.editor();
     editor.setContent('<p><a href="http://tinymce.com" class="shouldbekept" title="shouldnotbekept">tiny</a></p>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
-    editor.execCommand('mcelink');
+    editor.execCommand('mcelink', true);
     await TinyUiActions.pWaitForDialog(editor);
     TestLinkUi.assertDialogContents({
       href: 'http://tinymce.com',
@@ -70,7 +70,7 @@ describe('browser.tinymce.plugins.link.UpdateLinkTest', () => {
     const editor = hook.editor();
     editor.setContent('<p><a href="https://tinymce.com" title="shouldbekept">tiny</a></p>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
-    editor.execCommand('mceLink');
+    editor.execCommand('mceLink', true);
     await TinyUiActions.pWaitForDialog(editor);
     FocusTools.setActiveValue(SugarDocument.getDocument(), 'javascript:alert(1)');
     TinyUiActions.submitDialog(editor);

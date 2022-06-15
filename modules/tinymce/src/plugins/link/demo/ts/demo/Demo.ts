@@ -5,6 +5,16 @@ tinymce.init({
   plugins: 'link code',
   toolbar: 'link code',
   menubar: 'view insert tools custom',
+  init_instance_callback: (editor) => {
+    editor.on('BeforeExecCommand', (evt) => {
+      // eslint-disable-next-line no-console
+      console.log(evt);
+    });
+    editor.on('ExecCommand', (evt) => {
+      // eslint-disable-next-line no-console
+      console.log(evt);
+    });
+  },
   link_quicklink: true,
   link_list: [
     { title: 'My page 1', value: 'https://www.tiny.cloud' },
