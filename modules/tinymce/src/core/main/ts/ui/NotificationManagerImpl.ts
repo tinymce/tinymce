@@ -1,5 +1,5 @@
 export const NotificationManagerImpl = () => {
-  const unimplemented = () => {
+  const unimplemented = (value?) => {
     throw new Error('Theme did not provide a NotificationManager implementation.');
   };
 

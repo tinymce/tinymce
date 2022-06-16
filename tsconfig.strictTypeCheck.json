@@ -2,9 +2,9 @@
   "extends": "./modules/tinymce/tsconfig.json",
   "compilerOptions": {
     "strict": true,
-    "noEmit": true,
+    "noEmit": true
   },
   "include": [
-    "modules/tinymce/src/core/test/ts/atomic/util"
+    "modules/tinymce/src/core/main/ts/ui"
   ]
 }
