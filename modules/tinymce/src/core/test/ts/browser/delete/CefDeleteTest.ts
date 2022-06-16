@@ -226,7 +226,7 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
         TinyAssertions.assertCursor(editor, [ 0 ], 0);
       });
 
-      it(`TINY-8729-4: should delete selected content and padd empty list item with bogus br when ${label} is pressed`, () => {
+      it(`TINY-8729: should delete selected content and padd empty list item with bogus br when ${label} is pressed`, () => {
         const editor = hook.editor();
         editor.setContent('<ul><li><span contenteditable="false">CEF</span></li></ul>');
         // actual content: <ul><li>&#xFEFF<span contenteditable="false">CEF</span></li></ul>
