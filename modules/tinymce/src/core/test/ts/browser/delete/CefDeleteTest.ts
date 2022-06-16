@@ -5,6 +5,12 @@ import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@
 
 import Editor from 'tinymce/core/api/Editor';
 
+const applyForDeleteAndBackspace = (fn: (pair: {label: string; key: () => number}) => void) =>
+  Arr.each([
+    { label: 'Delete', key: Keys.delete },
+    { label: 'Backspace', key: Keys.backspace }
+  ], fn);
+
 describe('browser.tinymce.core.delete.CefDeleteTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
@@ -143,65 +149,65 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
   });
 
   context('cef block is at the start/end of the content and covered with the selection', () => {
-    Arr.each([ Keys.delete, Keys.backspace ], (ks) => {
-      it('TINY-8729: should delete selected content when cef block is at the start', () => {
+    applyForDeleteAndBackspace(({ label, key }) => {
+      it(`TINY-8729: should delete selected content when cef block is at the start and ${label} is pressed`, () => {
         const editor = hook.editor();
         editor.setContent('<p contenteditable="false">CEF</p><p>abc</p>');
         // actual content: <p data-mce-caret="before"></p><p contenteditable="false">CEF</p><p>abc</p>
         TinySelections.setSelection(editor, [ 0 ], 0, [ 2, 0 ], 2);
-        TinyContentActions.keystroke(editor, ks());
+        TinyContentActions.keystroke(editor, key());
         TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
         TinyAssertions.assertContent(editor, '<p>c</p>');
       });
 
-      it('TINY-8729: should delete selected content when cef block is at the end', () => {
+      it(`TINY-8729: should delete selected content when cef block is at the end and ${label} is pressed`, () => {
         const editor = hook.editor();
         editor.setContent('<p>abc</p><p contenteditable="false">CEF</p>');
         TinySelections.setSelection(editor, [ 0, 0 ], 1, [], 2);
-        TinyContentActions.keystroke(editor, ks());
+        TinyContentActions.keystroke(editor, key());
         TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
         TinyAssertions.assertContent(editor, '<p>a</p>');
       });
 
-      it('TINY-8729: should delete selected content when cef block is at the start and at the end', () => {
+      it(`TINY-8729: should delete selected content when cef block is at the start and at the end after ${label} is pressed`, () => {
         const editor = hook.editor();
         editor.setContent('<p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p>');
         // actual content: <p data-mce-caret="before"></p><p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p>
         TinySelections.setSelection(editor, [ 0 ], 0, [], 4);
-        TinyContentActions.keystroke(editor, ks());
+        TinyContentActions.keystroke(editor, key());
         TinyAssertions.assertContent(editor, '');
       });
     });
   });
 
   context('inline cef is at the start/end of the content and covered with the selection', () => {
-    Arr.each([ Keys.delete, Keys.backspace ], (ks) => {
-      it('TINY-8729: should delete selected content when inline cef is at the start', () => {
+    applyForDeleteAndBackspace(({ label, key }) => {
+      it(`TINY-8729: should delete selected content when inline cef is at the start and ${label} is pressed`, () => {
         const editor = hook.editor();
         editor.setContent('<p><span contenteditable="false">CEF</span>abc</p>');
         // actual content: <p>&#xFEFF<span contenteditable="false">CEF</span>abc</p>
         TinySelections.setSelection(editor, [ 0 ], 0, [ 0, 2 ], 2);
-        TinyContentActions.keystroke(editor, ks());
+        TinyContentActions.keystroke(editor, key());
         TinyAssertions.assertCursor(editor, [ 0 ], 0);
         TinyAssertions.assertContent(editor, '<p>c</p>');
       });
 
-      it('TINY-8729: should delete selected content when inline cef is at the end', () => {
+      it(`TINY-8729: should delete selected content when inline cef is at the end and ${label} is pressed`, () => {
         const editor = hook.editor();
         editor.setContent('<p>abc<span contenteditable="false">CEF</span></p>');
         // actual content: <p>&#xFEFF<span contenteditable="false">CEF</span>abc</p>
         TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0 ], 2);
-        TinyContentActions.keystroke(editor, ks());
+        TinyContentActions.keystroke(editor, key());
         TinyAssertions.assertCursor(editor, [ 0 ], 1);
         TinyAssertions.assertContent(editor, '<p>a</p>');
       });
 
-      it('TINY-8729: should delete selected content when inline cef is at the start and at the end', () => {
+      it(`TINY-8729: should delete selected content when inline cef is at the start and at the end after ${label} is pressed`, () => {
         const editor = hook.editor();
         editor.setContent('<p><span contenteditable="false">CEF</span>abc<span contenteditable="false">CEF</span></p>');
         // actual content: <p>&#xFEFF<span contenteditable="false">CEF</span>abc<span contenteditable="false">CEF</span></p>
         TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 4);
-        TinyContentActions.keystroke(editor, ks());
+        TinyContentActions.keystroke(editor, key());
         TinyAssertions.assertCursor(editor, [ 0 ], 0);
         TinyAssertions.assertContent(editor, '');
       });
@@ -209,15 +215,25 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
   });
 
   context('Cleaning up after rng.deleteContens call', () => {
-    Arr.each([ Keys.backspace, Keys.delete ], (ks) => {
-      it('TINY-8729: should clean up empty nodes and padd empty block with bogus br', () => {
+    applyForDeleteAndBackspace(({ label, key }) => {
+      it(`TINY-8729: should clean up empty nodes and padd empty block with bogus br when ${label} is pressed`, () => {
         const editor = hook.editor();
         editor.setContent('<p><strong>W</strong>elcom<strong>e</strong></p><p contenteditable="false">CEF</p>');
         TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ ], 2);
-        TinyContentActions.keystroke(editor, ks());
+        TinyContentActions.keystroke(editor, key());
         // it should remove empty  <p><strong></strong></p> nodes
         TinyAssertions.assertRawContent(editor, '<p><br data-mce-bogus="1"></p>');
         TinyAssertions.assertCursor(editor, [ 0 ], 0);
+      });
+
+      it(`TINY-8729-4: should delete selected content and padd empty list item with bogus br when ${label} is pressed`, () => {
+        const editor = hook.editor();
+        editor.setContent('<ul><li><span contenteditable="false">CEF</span></li></ul>');
+        // actual content: <ul><li>&#xFEFF<span contenteditable="false">CEF</span></li></ul>
+        TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0 ], 2);
+        TinyContentActions.keystroke(editor, key());
+        TinyAssertions.assertRawContent(editor, '<ul><li><br data-mce-bogus="1"></li></ul>');
+        TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
       });
     });
   });
