@@ -81,7 +81,11 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
     styles['border-style'] = data.borderstyle;
   }
 
-  attrs.style = dom.serializeStyle({ ...Options.getDefaultStyles(editor), ...styles });
+  const fullStyleAttribute = { ...Options.getDefaultStyles(editor), ...styles };
+  if (dom.getAttrib(tableElm, 'width') && !Options.shouldStyleWithCss(editor)) {
+    delete fullStyleAttribute.width;
+  }
+  attrs.style = dom.serializeStyle(fullStyleAttribute);
   dom.setAttribs(tableElm, { ...Options.getDefaultAttributes(editor), ...attrs });
 
 };

@@ -51,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The autocompleter would not trigger at the start of nested list items #TINY-8759
 - Some option values for the `template` plugin weren't escaped properly when doing replacement lookups via a `RegExp` #TINY-7433
 - Copy events were not dispatched in readonly mode #TINY-6800
+- Changing table properties with the `table_style_by_css` option set to false would sometimes reset table width #TINY-8758
 - Using Ctrl+Shift+Home/End (Cmd+Shift+Up/Down on Mac) would not expand the selection when a `contenteditable="false"` element was at the edge of content #TINY-7795
 - `<pre>` tags were not preserved when copying and pasting content #TINY-7719
 - Preview and Insert Template dialogs display the correct content background color when using dark skins #TINY-8534
