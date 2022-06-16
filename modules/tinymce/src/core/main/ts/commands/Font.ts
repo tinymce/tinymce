@@ -46,8 +46,10 @@ export const fontNameAction = (editor: Editor, value: string): void => {
   editor.nodeChanged();
 };
 
-export const fontNameQuery = (editor: Editor): string => mapRange(editor, (elm: SugarElement<Element>) =>
-  FontInfo.getFontFamily(editor.getBody(), elm.dom)
+export const fontNameQuery = (editor: Editor): string => mapRange(editor, (elm: SugarElement<Element>) => {
+    const fontFamily = FontInfo.getFontFamily(editor.getBody(), elm.dom);
+    return fontFamily ? (fontFamily.split(',').length ? fontFamily.split(',')[0] : fontFamily) : fontFamily
+  }
 ).getOr('');
 
 export const fontSizeAction = (editor: Editor, value: string): void => {
