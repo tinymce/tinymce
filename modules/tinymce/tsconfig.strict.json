@@ -1,10 +1,10 @@
 {
-  "extends": "./modules/tinymce/tsconfig.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "strict": true,
     "noEmit": true
   },
   "include": [
-    "modules/tinymce/src/core/main/ts/ui"
+    "src/core/main/ts/ui"
   ]
 }
