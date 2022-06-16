@@ -229,6 +229,12 @@ describe('browser.tinymce.core.selection.NormalizeRangeTest', () => {
       const range = normalizeRange([], 3, [], 3);
       assertRangeNone(range);
     });
+
+    it('Should not normalize caret into previous inline element if it is a comment', () => {
+      setHtml('<p><!-- a comment -->b</p>');
+      const range = normalizeRange([ 0, 1 ], 0, [ 0, 1 ], 0);
+      assertRangeNone(range);
+    });
   });
 
   context('Normalize caret positions', () => {
@@ -296,12 +302,6 @@ describe('browser.tinymce.core.selection.NormalizeRangeTest', () => {
       setHtml('<p><i><b></b></i><br /></p>');
       const range = normalizeRange([ 0 ], 1, [ 0 ], 1);
       assertRange(viewBlock.get(), range, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0);
-    });
-
-    it('Should normalize into next element after comment', () => {
-      setHtml('<div><!-- some comment -->some text<img /></div>');
-      const range = normalizeRange([], 0, [], 0);
-      assertRange(viewBlock.get(), range, [ 0, 1 ], 0, [ 0, 1 ], 0);
     });
   });
 
