@@ -1,9 +1,10 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "./modules/tinymce/tsconfig.json",
   "compilerOptions": {
     "strict": true,
-    "noEmit": true,
-    "strictNullChecks": true
+    "noEmit": true
   },
-  "include": []
+  "include": [
+    "modules/tinymce/src/core/test/ts/atomic/util"
+  ]
 }
