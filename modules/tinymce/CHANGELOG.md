@@ -56,6 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Preview and Insert Template dialogs display the correct content background color when using dark skins #TINY-8534
 - Fixed incorrect word breaks in menu dropdowns with scrollbar #TINY-8572
 - The `InsertLineBreak` command did not replace selected content #TINY-8458
+- Delete operations could behave incorrectly if the selection contains a `contenteditable="false"` element located at the edge of content #TINY-8729
 
 ## 6.0.3 - 2022-05-25
 
