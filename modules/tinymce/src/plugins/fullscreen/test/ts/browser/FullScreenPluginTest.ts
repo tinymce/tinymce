@@ -131,7 +131,7 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
         assertApiAndEvents(editor, true);
         firedEvents = [];
         assertPageState(editor, true);
-        editor.execCommand('mceLink');
+        editor.execCommand('mceLink', true);
         await pWaitForDialog(editor, 'Insert/Edit Link');
         closeOnlyWindow(editor);
         assertPageState(editor, true);
@@ -147,7 +147,7 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
         assertApiAndEvents(editor, true);
         firedEvents = [];
         assertPageState(editor, true);
-        editor.execCommand('mceLink');
+        editor.execCommand('mceLink', true);
         await pWaitForDialog(editor, 'Insert/Edit Link');
         closeOnlyWindow(editor);
         assertPageState(editor, true);
