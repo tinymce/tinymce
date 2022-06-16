@@ -6,18 +6,42 @@ import { AnnotationsRegistry, AnnotatorSettings } from './AnnotationsRegistry';
 import * as Markings from './Markings';
 
 const setup = (editor: Editor, registry: AnnotationsRegistry): void => {
-  const identifyParserNode = (span: AstNode): Optional<AnnotatorSettings> => Optional.from(span.attr(Markings.dataAnnotation())).bind(registry.lookup);
+  const dataAnnotation = Markings.dataAnnotation();
+  const identifyParserNode = (node: AstNode): Optional<AnnotatorSettings> =>
+    Optional.from(node.attr(dataAnnotation)).bind(registry.lookup);
+
+  const removeDirectAnnotation = (node: AstNode) => {
+    node.attr(Markings.dataAnnotationId(), null);
+    node.attr(Markings.dataAnnotation(), null);
+    node.attr(Markings.dataAnnotationActive(), null);
+
+    const customAttrNames = Optional.from(node.attr(Markings.dataAnnotationAttributes())).map((names) => names.split(',')).getOr([]);
+    const customClasses = Optional.from(node.attr(Markings.dataAnnotationClasses())).map((names) => names.split(',')).getOr([]);
+    Arr.each(customAttrNames, (name) => node.attr(name, null));
+
+    const classList = new Set(node.attr('class')?.split(' ') ?? []);
+    Arr.each([ Markings.annotation() ].concat(customClasses), (clazz) => classList.delete(clazz));
+    const newClassList = Array.from(classList.values());
+    node.attr('class', newClassList.length > 0 ? newClassList.join(' ') : null);
+
+    node.attr(Markings.dataAnnotationClasses(), null);
+    node.attr(Markings.dataAnnotationAttributes(), null);
+  };
 
   editor.serializer.addTempAttr(Markings.dataAnnotationActive());
-  // TODO: May need something for blocks as well
-  editor.serializer.addNodeFilter('span', (spans) => {
-    Arr.each(spans, (span) => {
-      identifyParserNode(span).each((settings) => {
+
+  editor.serializer.addAttributeFilter(dataAnnotation, (nodes) => {
+    for (const node of nodes) {
+      identifyParserNode(node).each((settings) => {
         if (settings.persistent === false) {
-          span.unwrap();
+          if (node.name === 'span') {
+            node.unwrap();
+          } else {
+            removeDirectAnnotation(node);
+          }
         }
       });
-    });
+    }
   });
 };
 
