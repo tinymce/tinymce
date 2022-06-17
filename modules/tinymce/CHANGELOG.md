@@ -58,7 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed incorrect word breaks in menu dropdowns with scrollbar #TINY-8572
 - The `InsertLineBreak` command did not replace selected content #TINY-8458
 - Delete operations could behave incorrectly if the selection contains a `contenteditable="false"` element located at the edge of content #TINY-8729
-- `uploadImages` no longer triggers two `change` events if there is an error on upload #TINY-8641
+- `uploadImages` no longer triggers two `change` events if there is a removal of images on upload #TINY-8641
 
 ## 6.0.3 - 2022-05-25
 
