@@ -391,6 +391,65 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     ]);
   });
 
+  it('TINY-8641: 2 successful upload simultaneous should trigger 1 change', () => {
+    const editor = hook.editor();
+    setInitialContent(editor, `<div>
+      ${imageHtml(testBlobDataUri)}
+      ${imageHtml(testBlobDataUri + 'someFakeString')}
+    </div>`);
+
+    editor.options.set('images_upload_handler', (data: BlobInfo) => {
+      return Promise.resolve(data.id() + '.png');
+    });
+
+    assertEventsLength(0);
+    return editor.uploadImages().then(() => assertEventsLength(1));
+  });
+
+  it('TINY-8641: 1 successful upload and 1 fail upload simultaneous should trigger 1 change', () => {
+    const editor = hook.editor();
+    let firstUploadDone = false;
+    setInitialContent(editor, `<div>
+      ${imageHtml(testBlobDataUri)}
+      ${imageHtml(testBlobDataUri + 'someFakeString')}
+    </div>`);
+
+    editor.options.set('images_upload_handler', (data: BlobInfo) => {
+      if (!firstUploadDone) {
+        firstUploadDone = true;
+        return Promise.resolve(data.id() + '.png');
+      } else {
+        return Promise.reject({ message: 'Error', remove: true });
+      }
+    });
+
+    assertEventsLength(0);
+    return editor.uploadImages().then(() => assertEventsLength(1));
+  });
+
+  it('TINY-8641: multiple successful upload and multiple fail upload simultaneous should trigger 1 change', () => {
+    const editor = hook.editor();
+    let successfulUploadsCounter = 0;
+    setInitialContent(editor, `<div>
+      ${imageHtml(testBlobDataUri)}
+      ${imageHtml(testBlobDataUri + 'someFakeString1')}
+      ${imageHtml(testBlobDataUri + 'someFakeString2')}
+      ${imageHtml(testBlobDataUri + 'someFakeString3')}
+    </div>`);
+
+    editor.options.set('images_upload_handler', (data: BlobInfo) => {
+      successfulUploadsCounter++;
+      if (successfulUploadsCounter < 2) {
+        return Promise.resolve(data.id() + '.png');
+      } else {
+        return Promise.reject({ message: 'Error', remove: true });
+      }
+    });
+
+    assertEventsLength(0);
+    return editor.uploadImages().then(() => assertEventsLength(1));
+  });
+
   it(`TBA: Don't upload transparent image`, () => {
     const editor = hook.editor();
     let uploadCount = 0;

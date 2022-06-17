@@ -149,7 +149,7 @@ const EditorUpload = (editor: Editor): EditorUpload => {
           };
         });
 
-        if (shouldDispatchChange) {
+        if (shouldDispatchChange && imagesToRemove.length === 0 && !Rtc.isRtc(editor)) {
           editor.undoManager.dispatchChange();
         }
 
