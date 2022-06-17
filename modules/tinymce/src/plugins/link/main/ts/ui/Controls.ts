@@ -8,7 +8,6 @@ import * as Actions from '../core/Actions';
 import * as Utils from '../core/Utils';
 
 const setupButtons = (editor: Editor): void => {
-
   editor.ui.registry.addToggleButton('link', {
     icon: 'link',
     tooltip: 'Insert/edit link',
