@@ -1,7 +1,7 @@
-import { Assertions, Cursors } from '@ephox/agar';
-import { after, before, context, describe, it } from '@ephox/bedrock-client';
+import { Assertions, Cursors, Mouse } from '@ephox/agar';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Hierarchy, Html, Remove, Replication, SelectorFilter, SugarElement, Insert, SugarBody } from '@ephox/sugar';
+import { Hierarchy, Html, Remove, Replication, SelectorFilter, SugarElement, Insert, SugarBody, DomEvent } from '@ephox/sugar';
 import { McEditor, TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -225,33 +225,36 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
   }));
 
   context('Get bookmark should work if the first element of the content is a comment', () => {
-    const hook = TinyHooks.bddSetupLight<Editor>({
-      base_url: '/project/tinymce/js/tinymce'
-    }, [], false);
-
     const outsideButton: SugarElement<HTMLButtonElement> = SugarElement.fromHtml('<button id="getBookmarkButton">Get Bookmark</button>');
+    const setupElement = () => {
+      const element = SugarElement.fromTag('textarea');
+      Insert.append(SugarBody.body(), outsideButton);
+
+      return {
+        element,
+        teardown: () => Remove.remove(outsideButton)
+      };
+    };
+
+    const hook = TinyHooks.bddSetupFromElement<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      menubar: false,
+      toolbar: false,
+      statusbar: false,
+    }, setupElement, []);
+
     const setSelectionToCommentAndTriggerGetBookmark = (editor: Editor, content: string) => {
       editor.resetContent(content);
       editor.addCommand('getBookmarkProxyCommand', () => {
         editor.selection.getBookmark();
       });
 
-      const clickHandler = (): void => {
+      const binding = DomEvent.bind(outsideButton, 'click', () => {
         editor.execCommand('getBookmarkProxyCommand');
-      };
-      outsideButton.dom.addEventListener('click', clickHandler);
-
-      outsideButton.dom.click();
-      outsideButton.dom.removeEventListener('click', clickHandler);
+      });
+      Mouse.click(outsideButton);
+      binding.unbind();
     };
-
-    before(() => {
-      Insert.append(SugarBody.body(), outsideButton);
-    });
-
-    after(() => {
-      Remove.remove(outsideButton);
-    });
 
     it('TINY-7817: bookmark should be insert correclty even if the first element of content is a comment', () => {
       const editor = hook.editor();
