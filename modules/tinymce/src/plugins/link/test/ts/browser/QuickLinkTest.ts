@@ -30,7 +30,7 @@ describe('browser.tinymce.plugins.link.QuickLinkTest', () => {
   });
 
   const pOpenQuickLink = async (editor: Editor) => {
-    editor.execCommand('mceLink', false);
+    editor.execCommand('mceLink');
     // tests were erroneously allowed to pass when the quick link dialog would
     // open and very quickly close because this was happening at superhuman
     // speeds. So I'm slowing it down.
@@ -163,12 +163,12 @@ describe('browser.tinymce.plugins.link.QuickLinkTest', () => {
   it('TINY-8057: Checking that mceLink command can open Quicklink and dialog', async () => {
     const editor = hook.editor();
     editor.setContent('');
-    editor.execCommand('mcelink', true);
+    editor.execCommand('mcelink', false, true);
     await TinyUiActions.pWaitForDialog(editor);
     TinyUiActions.closeDialog(editor);
-    editor.execCommand('mcelink', false);
+    editor.execCommand('mcelink');
     // Waiting for Quicklink dialog as in pOpenQuickLink
-    await Waiter.pWait(1000);
+    await Waiter.pWait(100);
     await FocusTools.pTryOnSelector('Selector should be in context form input', doc, '.tox-toolbar input');
   });
 

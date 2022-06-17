@@ -18,7 +18,7 @@ describe('browser.tinymce.plugins.link.SelectedLinkTest', () => {
     const editor = hook.editor();
     editor.setContent('<p><a href="http://tinymce.com">tiny</a></p>');
     TinySelections.setCursor(editor, [ 0 ], 1);
-    editor.execCommand('mcelink', true);
+    editor.execCommand('mcelink');
     await TinyUiActions.pWaitForDialog(editor);
     TestLinkUi.assertDialogContents({
       href: '',

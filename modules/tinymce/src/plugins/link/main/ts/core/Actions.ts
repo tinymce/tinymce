@@ -30,6 +30,10 @@ const gotoLink = (editor: Editor, a: HTMLAnchorElement | null): void => {
   }
 };
 
+const openDialog = (editor: Editor) => (): void => {
+  editor.execCommand('mceLink', false, true);
+};
+
 const gotoSelectedLink = (editor: Editor) => (): void => {
   gotoLink(editor, getSelectedLink(editor));
 };
@@ -79,6 +83,7 @@ const toggleUnlinkState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanc
 };
 
 export {
+  openDialog,
   gotoSelectedLink,
   setupGotoLinks,
   toggleActiveState,
