@@ -141,7 +141,7 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
     '</audio>' +
     '</div>';
   const pageEmbedHtml = '<div class="tiny-pageembed" contenteditable="false">' +
-    '<iframe src="custom/file.pdf" width="350px" height="260px" scrolling="no"></iframe>' +
+    '<iframe src="about:blank" width="350px" height="260px" scrolling="no"></iframe>' +
     '</div>';
 
   Arr.each([

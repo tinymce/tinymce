@@ -1,5 +1,5 @@
 import { Cursors, Waiter } from '@ephox/agar';
-import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
+import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
@@ -220,7 +220,7 @@ describe('browser.tinymce.core.annotate.AnnotateBlocksTest', () => {
     '</div>');
   const pageEmbedHtml = (withAnnotation: boolean) => (
     `<div class="tiny-pageembed" contenteditable="false"${withAnnotation ? ' ' + expectedBlockAnnotationAttrs() : ''}>` +
-    '<iframe src="custom/file.pdf" width="350px" height="260px" scrolling="no"></iframe>' +
+    '<iframe src="about:blank" width="350px" height="260px" scrolling="no"></iframe>' +
     '</div>'
   );
 
@@ -636,6 +636,14 @@ describe('browser.tinymce.core.annotate.AnnotateBlocksTest', () => {
   });
 
   context('nested annotation', () => {
+    before(function () {
+      // TODO: <Jira> Safari appears to have a bug where an annotation cannot be applied to the caption text when it is a collapsed selection
+      // Instead the annotation is applied to the nearest paragaraph which is incorrect
+      if (platform.browser.isSafari()) {
+        this.skip();
+      }
+    });
+
     it('TINY-8698: should be able to annotate both figure and caption text', () => {
       const editor = hook.editor();
       editor.setContent(`<p>Before</p>${figureImageHtml(false)}<p>After</p>`);
@@ -650,7 +658,7 @@ describe('browser.tinymce.core.annotate.AnnotateBlocksTest', () => {
 
       testApplyAnnotationOnSelection(
         editor,
-        () => TinySelections.setCursor(editor, [ 1, 1, 0 ], 0),
+        () => TinySelections.setCursor(editor, [ 1, 1, 0 ], 1),
         [
           '<p>Before</p>',
           `<figure class="image" contenteditable="false" ${expectedBlockAnnotationAttrs(1)}>${imageHtml}<figcaption><span ${expectedSpanAnnotationAttrs(2)}>Caption</span></figcaption></figure>`,
