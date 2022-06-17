@@ -63,7 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `InsertLineBreak` command did not replace selected content #TINY-8458
 - Delete operations could behave incorrectly if the selection contains a `contenteditable="false"` element located at the edge of content #TINY-8729
 - `uploadImages` no longer triggers two `change` events if there is a removal of images on upload #TINY-8641
-- The selection is not moved over a comment on `editor.focus()` if the first element is a comment #TINY-7817
+- The selection is not moved over a comment by `editor.selection.normalize()` if the first element is a comment #TINY-7817
 
 ## 6.0.3 - 2022-05-25
 
