@@ -149,11 +149,12 @@ const EditorUpload = (editor: Editor): EditorUpload => {
           };
         });
 
-        if (shouldDispatchChange && imagesToRemove.length === 0 && !Rtc.isRtc(editor)) {
+        const shouldRemoveImages = imagesToRemove.length > 0 && !Rtc.isRtc(editor);
+        if (shouldDispatchChange && !shouldRemoveImages) {
           editor.undoManager.dispatchChange();
         }
 
-        if (imagesToRemove.length > 0 && !Rtc.isRtc(editor)) {
+        if (shouldRemoveImages) {
           editor.undoManager.transact(() => {
             Arr.each(imagesToRemove, (element) => {
               editor.dom.remove(element);
