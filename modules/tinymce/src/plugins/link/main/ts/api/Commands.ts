@@ -4,7 +4,7 @@ import * as Dialog from '../ui/Dialog';
 import * as Options from './Options';
 
 const register = (editor: Editor): void => {
-  editor.addCommand('mceLink', (ui, dialog?: boolean ) => {
+  editor.addCommand('mceLink', (_ui, dialog?: boolean ) => {
     if (dialog || !Options.useQuickLink(editor)) {
       Dialog.open(editor);
     } else {
