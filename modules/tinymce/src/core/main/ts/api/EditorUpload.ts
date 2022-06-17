@@ -149,18 +149,15 @@ const EditorUpload = (editor: Editor): EditorUpload => {
           };
         });
 
-        const shouldRemoveImages = imagesToRemove.length > 0 && !Rtc.isRtc(editor);
-        if (shouldDispatchChange && !shouldRemoveImages) {
-          editor.undoManager.dispatchChange();
-        }
-
-        if (shouldRemoveImages) {
+        if (imagesToRemove.length > 0 && !Rtc.isRtc(editor)) {
           editor.undoManager.transact(() => {
             Arr.each(imagesToRemove, (element) => {
               editor.dom.remove(element);
               blobCache.removeByUri(element.src);
             });
           });
+        } else if (shouldDispatchChange) {
+          editor.undoManager.dispatchChange();
         }
 
         return filteredResult;
