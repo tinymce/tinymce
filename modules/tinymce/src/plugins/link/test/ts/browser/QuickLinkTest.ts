@@ -163,22 +163,19 @@ describe('browser.tinymce.plugins.link.QuickLinkTest', () => {
   it('TINY-8057: Checking that mceLink command can open Quicklink and dialog', async () => {
     const editor = hook.editor();
     editor.setContent('');
-    editor.execCommand('mcelink', false, true);
+    editor.execCommand('mcelink', false, { dialog: true });
     await TinyUiActions.pWaitForDialog(editor);
     TinyUiActions.closeDialog(editor);
     editor.execCommand('mcelink');
-    // Waiting for Quicklink dialog as in pOpenQuickLink
-    await Waiter.pWait(100);
+    await TinyUiActions.pWaitForPopup(editor, '.tox-pop .tox-toolbar');
     await FocusTools.pTryOnSelector('Selector should be in context form input', doc, '.tox-toolbar input');
   });
 
   it('TINY-8057: Checking Quicklink opens with keyboard shortcut', async () => {
     const editor = hook.editor();
     editor.setContent('<p>blah blah blah</p>');
-    TinyUiActions.keystroke(editor, 0x001E, metaKey); // Meta+K
     TinyUiActions.keystroke(editor, 'k'.charCodeAt(0), metaKey);
-    // Waiting for Quicklink dialog as in pOpenQuickLink
-    await Waiter.pWait(100);
+    await TinyUiActions.pWaitForPopup(editor, '.tox-pop .tox-toolbar');
     await FocusTools.pTryOnSelector('Selector should be in context form input', doc, '.tox-toolbar input');
   });
 });

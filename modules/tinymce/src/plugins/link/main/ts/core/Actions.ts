@@ -31,7 +31,7 @@ const gotoLink = (editor: Editor, a: HTMLAnchorElement | null): void => {
 };
 
 const openDialog = (editor: Editor) => (): void => {
-  editor.execCommand('mceLink', false, true);
+  editor.execCommand('mceLink', false, { dialog: true });
 };
 
 const gotoSelectedLink = (editor: Editor) => (): void => {
