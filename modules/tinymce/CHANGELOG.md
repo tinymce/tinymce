@@ -24,7 +24,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The default value for `end_container_on_empty_block` option has been changed to `'blockquote'` #TINY-6559
 - Custom elements are now treated as non-empty elements via the schema #TINY-4784
 - The autocompleter menu element is now positioned instead of the wrapper #TINY-6476
-- `uploadImages` no longer triggers two `change` events if there is an error on upload #TINY-8641
 
 ### Fixed
 - Selecting all content with a single image in the content was inconsistent for the keyboard shortcut and menu item #TINY-4550
@@ -59,6 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed incorrect word breaks in menu dropdowns with scrollbar #TINY-8572
 - The `InsertLineBreak` command did not replace selected content #TINY-8458
 - Delete operations could behave incorrectly if the selection contains a `contenteditable="false"` element located at the edge of content #TINY-8729
+- `uploadImages` no longer triggers two `change` events if there is an error on upload #TINY-8641
 
 ## 6.0.3 - 2022-05-25
 
