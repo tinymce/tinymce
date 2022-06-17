@@ -243,7 +243,7 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
       statusbar: false,
     }, setupElement, []);
 
-    const setSelectionToCommentAndTriggerGetBookmark = (editor: Editor, content: string) => {
+    const setContentAndTriggerGetBookmark = (editor: Editor, content: string) => {
       editor.resetContent(content);
       editor.addCommand('getBookmarkProxyCommand', () => {
         editor.selection.getBookmark();
@@ -258,7 +258,7 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
 
     it('TINY-7817: bookmark should be inserted correctly even if the first element of content is a comment', () => {
       const editor = hook.editor();
-      setSelectionToCommentAndTriggerGetBookmark(editor, '<div><!-- Whatever --> <img></div>');
+      setContentAndTriggerGetBookmark(editor, '<div><!-- Whatever --> <img></div>');
       TinyAssertions.assertContentPresence(editor, {
         '[data-mce-type="bookmark"]': 1
       });
@@ -266,7 +266,7 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
 
     it('TINY-7817: bookmark should be inserted correctly even if the first element of content is a comment and next element is also a comment', () => {
       const editor = hook.editor();
-      setSelectionToCommentAndTriggerGetBookmark(editor, '<div><!-- Whatever --><!-- second comment --> <img></div>');
+      setContentAndTriggerGetBookmark(editor, '<div><!-- Whatever --><!-- second comment --> <img></div>');
       TinyAssertions.assertContentPresence(editor, {
         '[data-mce-type="bookmark"]': 1
       });
