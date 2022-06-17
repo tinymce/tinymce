@@ -176,7 +176,7 @@ describe('browser.tinymce.plugins.link.QuickLinkTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>blah blah blah</p>');
     TinyUiActions.keystroke(editor, 0x001E, metaKey); // Meta+K
-    TinyUiActions.keystroke(editor, 75, metaKey); // Meta+K
+    TinyUiActions.keystroke(editor, 'k'.charCodeAt(0), metaKey);
     // Waiting for Quicklink dialog as in pOpenQuickLink
     await Waiter.pWait(100);
     await FocusTools.pTryOnSelector('Selector should be in context form input', doc, '.tox-toolbar input');
