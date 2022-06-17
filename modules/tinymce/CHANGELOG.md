@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Improved
 - Clearer focus states for buttons while navigating with keyboard #TINY-8557
-- `mceLink` command can now take the value `{ dialog: true }` to always open the link dialog #TINY-8057
+- The `mceLink` command can now take the value `{ dialog: true }` to always open the link dialog #TINY-8057
 
 ### Changed
 - Toggling fullscreen mode with the `fullscreen` plugin now also fires the `ResizeEditor` event #TINY-8701
