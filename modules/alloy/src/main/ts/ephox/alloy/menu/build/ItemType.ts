@@ -24,6 +24,20 @@ const getItemRole = (detail: NormalItemDetail): ItemRole =>
     .map((toggling) => toggling.exclusive ? 'menuitemradio' : 'menuitemcheckbox')
     .getOr('menuitem');
 
+const getTogglingSpec = (tConfig: Partial<TogglingConfigSpec> & { exclusive?: boolean }): TogglingConfigSpec => ({
+  aria: {
+    mode: 'checked'
+  },
+  // Filter out the additional properties
+  ...Obj.filter(tConfig as { [K in keyof TogglingConfigSpec]: TogglingConfigSpec[K] }, (_value, name) => name !== 'exclusive'),
+  onToggled: (component, state) => {
+    if (Type.isFunction(tConfig.onToggled)) {
+      tConfig.onToggled(component, state);
+    }
+    ItemEvents.onToggled(component, state);
+  }
+});
+
 const builder = (detail: NormalItemDetail): AlloySpec => ({
   dom: detail.dom,
   domModification: {
@@ -41,18 +55,7 @@ const builder = (detail: NormalItemDetail): AlloySpec => ({
     detail.itemBehaviours,
     [
       // Investigate, is the Toggling.revoke still necessary here?
-      detail.toggling.fold(Toggling.revoke, (tConfig: TogglingConfigSpec) => Toggling.config({
-        aria: {
-          mode: 'checked'
-        },
-        ...Obj.filter(tConfig as { [K in keyof TogglingConfigSpec]: TogglingConfigSpec[K] }, (_value, name) => name !== 'exclusive'),
-        onToggled: (component, state) => {
-          if (Type.isFunction(tConfig.onToggled)) {
-            tConfig.onToggled(component, state);
-          }
-          ItemEvents.onToggled(component, state);
-        }
-      })),
+      detail.toggling.fold(Toggling.revoke, (tConfig) => Toggling.config(getTogglingSpec(tConfig))),
       Focusing.config({
         ignore: detail.ignoreFocus,
         // Rationale: because nothing is focusable, when you click

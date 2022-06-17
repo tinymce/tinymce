@@ -61,14 +61,14 @@ describe('MenuRadioTest', () => {
     AlloyTriggers.dispatch(hook.component(), target, SystemEvents.focusItem());
   };
 
-  const itemStructure = (focused: boolean, checked: boolean): ApproxStructure.Builder<StructAssert> => (s, str, arr) =>
+  const itemStructure = (expected: { focused: boolean; checked: boolean }): ApproxStructure.Builder<StructAssert> => (s, str, arr) =>
     s.element('li', {
       classes: [
-        focused ? arr.has('selected-item') : arr.not('selected-item'),
-        checked ? arr.has('checked') : arr.not('checked'),
+        expected.focused ? arr.has('selected-item') : arr.not('selected-item'),
+        expected.checked ? arr.has('checked') : arr.not('checked'),
       ],
       attrs: {
-        'aria-checked': str.is(String(checked)),
+        'aria-checked': str.is(String(expected.checked)),
         'role': str.is('menuitemradio')
       }
     });
@@ -88,8 +88,8 @@ describe('MenuRadioTest', () => {
           arr.has('test-menu')
         ],
         children: [
-          itemStructure(true, false)(s, str, arr),
-          itemStructure(false, false)(s, str, arr)
+          itemStructure({ focused: true, checked: false })(s, str, arr),
+          itemStructure({ focused: false, checked: false })(s, str, arr)
         ]
       })),
       component.element
@@ -111,8 +111,8 @@ describe('MenuRadioTest', () => {
           arr.has('test-menu')
         ],
         children: [
-          itemStructure(false, false)(s, str, arr),
-          itemStructure(true, false)(s, str, arr)
+          itemStructure({ focused: false, checked: false })(s, str, arr),
+          itemStructure({ focused: true, checked: false })(s, str, arr)
         ]
       })),
       component.element
@@ -137,8 +137,8 @@ describe('MenuRadioTest', () => {
           arr.has('test-menu')
         ],
         children: [
-          itemStructure(true, true)(s, str, arr),
-          itemStructure(false, false)(s, str, arr)
+          itemStructure({ focused: true, checked: true })(s, str, arr),
+          itemStructure({ focused: false, checked: false })(s, str, arr)
         ]
       })),
       component.element
@@ -154,8 +154,8 @@ describe('MenuRadioTest', () => {
           arr.has('test-menu')
         ],
         children: [
-          itemStructure(true, false)(s, str, arr),
-          itemStructure(false, true)(s, str, arr)
+          itemStructure({ focused: true, checked: false })(s, str, arr),
+          itemStructure({ focused: false, checked: true })(s, str, arr)
         ]
       })),
       component.element
