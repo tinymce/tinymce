@@ -653,19 +653,13 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
       Arr.last(editor.undoManager.data).each((lastLevel) => {
         lastLevel.content = manualModifiedLevelContent;
       });
-
       assert.isFalse(editor.isDirty(), 'Editor should not be dirty before dispatchChange');
+
       editor.undoManager.dispatchChange();
+
       assertChangeEvent(currentChangeEvent, initialContent, manualModifiedLevelContent);
       assert.equal(changeEventCounter, 1, '1 event should be detected');
       assert.isTrue(editor.isDirty(), 'Editor should be dirty after dispatchChange');
-
-      Arr.range(3, () => {
-        editor.undoManager.dispatchChange();
-        assertChangeEvent(currentChangeEvent, initialContent, manualModifiedLevelContent);
-      });
-
-      assert.equal(changeEventCounter, 4, 'it should continue to call change');
 
       editor.off('change', onChange);
     });
@@ -674,11 +668,10 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
       editor.undoManager.clear();
       assert.lengthOf(editor.undoManager.data, 0, 'undo manager should be empty after clear');
 
-      Arr.range(3, (n) => {
-        editor.undoManager.dispatchChange();
-        assert.equal(changeEventCounter, n + 1, 'change should be called each time the dispatchChange is called');
-        assertChangeEvent(currentChangeEvent, initialContent, undefined);
-      });
+      editor.undoManager.dispatchChange();
+
+      assertChangeEvent(currentChangeEvent, initialContent, undefined);
+
       editor.off('change', onChange);
     });
   });
