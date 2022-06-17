@@ -140,15 +140,16 @@ describe('browser.tinymce.core.annotate.AnnotateBlocksTest', () => {
     editor: Editor,
     expectedHtml: string[],
     expectedSelection: Cursors.CursorPath,
-    expectedCounts: AnnotationCount
+    expectedCounts: AnnotationCount,
+    expectedId: number = 1
   ): void =>
     testApplyAnnotationOnSelection(
       editor,
       () => editor.execCommand('SelectAll'),
       [
-        `<p><span ${expectedSpanAnnotationAttrs()}>Before</span></p>`,
+        `<p><span ${expectedSpanAnnotationAttrs(expectedId)}>Before</span></p>`,
         ...expectedHtml,
-        `<p><span ${expectedSpanAnnotationAttrs()}>After</span></p>`
+        `<p><span ${expectedSpanAnnotationAttrs(expectedId)}>After</span></p>`
       ],
       expectedSelection,
       expectedCounts
@@ -432,8 +433,33 @@ describe('browser.tinymce.core.annotate.AnnotateBlocksTest', () => {
           selectionPath([], 0, [], 3),
           { span: isRootBlock ? 2 : 3, block: isRootBlock ? 1 : 0 }
         );
-        // assertGetAll(editor, { 'test-uid-1': isRootBlock ? [ 'span', selector, 'span' ] : [ 'span', 'span', 'span', 'span', 'span' ] });
         assertGetAll(editor, { 'test-uid-1': isRootBlock ? [ 'span', selector, 'span' ] : [ 'span', 'span', 'span' ] });
+      });
+
+      it('TINY-8698: should be able to apply ranged annotation after direct selection block annotation', () => {
+        const editor = hook.editor();
+
+        if (!isRootBlock) {
+          return;
+        }
+
+        testDirectSelectionAnnotation(
+          editor,
+          selector,
+          [ scenario.expectedDirectHtml ],
+          scenario.expectedDirectSelection,
+          { span: isRootBlock ? 0 : 1, block: isRootBlock ? 2 : 0 }
+        );
+        assertGetAll(editor, { 'test-uid-1': isRootBlock ? [ selector ] : [ 'span' ] });
+
+        testAllContentSelectionAnnotation(
+          editor,
+          [ scenario.expectedDirectHtml ],
+          selectionPath([], 0, [], 3),
+          { span: 2, block: 1 },
+          2
+        );
+        assertGetAll(editor, { 'test-uid-1': [ selector ], 'test-uid-2': [ 'span', 'span' ] });
       });
 
       it('TINY-8698: should be able to remove annotation and other annotations of the same id when it is directly selected', () => {

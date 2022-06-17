@@ -29,15 +29,18 @@ const applyWordGrab = (editor: Editor, rng: Range): void => {
 
 const applyAnnotation = (
   elem: SugarElement<Element>,
-  { uid = Id.generate('mce-annotation'), ...data },
-  annotationName: string, decorate: Decorator,
+  masterUId: string,
+  data: DecoratorData,
+  annotationName: string,
+  decorate: Decorator,
   directAnnotation: boolean
 ): void => {
+  const { uid = masterUId, ...otherData } = data;
   Class.add(elem, Markings.annotation());
   Attribute.set(elem, `${Markings.dataAnnotationId()}`, uid);
   Attribute.set(elem, `${Markings.dataAnnotation()}`, annotationName);
 
-  const { attributes = {}, classes = [] } = decorate(uid, data);
+  const { attributes = {}, classes = [] } = decorate(uid, otherData);
   Attribute.setAll(elem, attributes);
   Classes.add(elem, classes);
 
@@ -66,18 +69,18 @@ const removeDirectAnnotation = (elem: SugarElement<Element>) => {
   Attribute.remove(elem, `${Markings.dataAnnotationAttributes()}`);
 };
 
-const makeAnnotation = (eDoc: Document, data, annotationName: string, decorate: Decorator): SugarElement => {
+const makeAnnotation = (eDoc: Document, uid: string, data: DecoratorData, annotationName: string, decorate: Decorator): SugarElement => {
   const master = SugarElement.fromTag('span', eDoc);
-  applyAnnotation(master, data, annotationName, decorate, false);
+  applyAnnotation(master, uid, data, annotationName, decorate, false);
   return master;
 };
 
-const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: Decorator, data): any[] => {
+const annotate = (editor: Editor, rng: Range, uid: string, annotationName: string, decorate: Decorator, data: DecoratorData): any[] => {
   // Setup all the wrappers that are going to be used.
   const newWrappers = [];
 
   // Setup the spans for the comments
-  const master = makeAnnotation(editor.getDoc(), data, annotationName, decorate);
+  const master = makeAnnotation(editor.getDoc(), uid, data, annotationName, decorate);
 
   // Set the current wrapping element
   const wrapper = Singleton.value<SugarElement<any>>();
@@ -115,7 +118,7 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
 
       case ChildContext.ValidBlock: {
         finishWrapper();
-        applyAnnotation(elem, data, annotationName, decorate, true);
+        applyAnnotation(elem, uid, data, annotationName, decorate, true);
         break;
       }
 
@@ -152,6 +155,7 @@ const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorS
     const selection = editor.selection;
     const initialRng = selection.getRng();
     const hasFakeSelection = TableCellSelection.getCellsFromEditor(editor).length > 0;
+    const masterUid = Id.generate('mce-annotation');
 
     if (initialRng.collapsed && !hasFakeSelection) {
       applyWordGrab(editor, initialRng);
@@ -160,7 +164,7 @@ const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorS
     // Even after applying word grab, we could not find a selection. Therefore,
     // just make a wrapper and insert it at the current cursor
     if (selection.getRng().collapsed && !hasFakeSelection) {
-      const wrapper = makeAnnotation(editor.getDoc(), data, name, settings.decorate);
+      const wrapper = makeAnnotation(editor.getDoc(), masterUid, data, name, settings.decorate);
       // Put something visible in the marker
       Html.set(wrapper, Unicode.nbsp);
       selection.getRng().insertNode(wrapper.dom);
@@ -171,7 +175,7 @@ const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorS
       // to stop an empty paragraph splitting into two paragraphs. Probably a better way exists.
       SelectionUtils.preserve(selection, false, () => {
         SelectionUtils.runOnRanges(editor, (selectionRng) => {
-          annotate(editor, selectionRng, name, settings.decorate, data);
+          annotate(editor, selectionRng, masterUid, name, settings.decorate, data);
         });
       });
     }

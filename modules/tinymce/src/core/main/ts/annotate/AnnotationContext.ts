@@ -19,10 +19,6 @@ export const enum ChildContext {
   ValidBlock = 'valid-block'
 }
 
-// TODO: Need to come up with way to make it so this can be specified dynamically
-// - could add something to annotator API so direct blocks can be registered
-// - could also have ephemeral data-mce-annotatable attributes that plugins can use to indicate the block element can be directly annotated
-// - could have editor option that can be overidden
 const validBlocks = [
   // Codesample plugin
   'pre[class*=language-][contenteditable="false"]',
@@ -33,8 +29,9 @@ const validBlocks = [
   // Pageembed plugin
   'div.tiny-pageembed',
   // Tableofcontents plugin
-  // TODO: This will not always work as class can be specified via tableofcontents_class option
-  'div.mce-toc'
+  'div.mce-toc',
+  // TODO: Change to what is finalised in table of contenst plugin
+  'div[data-mce-toc]'
 ];
 
 const isZeroWidth = (elem: SugarElement<Node>): boolean =>

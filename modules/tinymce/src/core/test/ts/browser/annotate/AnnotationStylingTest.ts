@@ -13,7 +13,6 @@ interface Outline {
   readonly width: string;
 }
 
-// TODO: Should move test to the comment repo
 describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
@@ -57,8 +56,14 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
     style: 'solid'
   };
 
+  const commentActiveOutline: Outline = {
+    color: 'rgb(255, 225, 104)', // #ffe168
+    width: '3px',
+    style: 'solid'
+  };
+
   const noBackgroundColor = 'rgba(0, 0, 0, 0)';
-  const commentBackgroundColor = 'rgb(255, 240, 183)'; // #fff0b7
+  const commentBackgroundColor = 'rgb(255, 232, 157)'; // #ffe89d
   const commentActiveBackgroundColor = 'rgb(255, 225, 104)'; // #ffe168
   const inlineBoundaryBackgroundColor = 'rgb(180, 215, 255)'; // #b4d7ff
 
@@ -100,9 +105,11 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
     Class.add(TinyDom.body(editor), 'tox-comments-visible');
   });
 
-  const imageHtml = '<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="600" height="400"></p>';
+  const imageHtml = '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="600" height="400">';
+  const audioHtml = '<audio src="custom/audio.mp3" controls="controls"></audio>';
+  const videoHtml = '<video controls="controls" width="300" height="150"><source src="custom/video.mp4" type="video/mp4"></video>';
   const figureImageHtml = '<figure class="image" contenteditable="false">' +
-    '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="600" height="400">' +
+    imageHtml +
     '<figcaption contenteditable="true">Caption</figcaption>' +
     '</figure>';
   const codesampleHtml = `<pre class="language-markup" contenteditable="false">test</pre>`;
@@ -113,12 +120,12 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
     '</span>';
   const audioMediaHtml =
     `<span class="mce-preview-object" contenteditable="false" data-mce-object="audio">` +
-    '<audio src="custom/audio.mp3" controls="controls"></audio>' +
+    audioHtml +
     '<span class="mce-shim"></span>' +
     '</span>';
   const videoMediaHtml =
     `<span class="mce-preview-object" contenteditable="false" data-mce-object="video">` +
-    '<video controls="controls" width="300" height="150"><source src="custom/video.mp4" type="video/mp4"></video>' +
+    videoHtml +
     '<span class="mce-shim"></span>' +
     '</span>';
   const tocHtml = '<div class="mce-toc" contenteditable="false">' +
@@ -145,13 +152,15 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
     '</div>';
 
   Arr.each([
-    { label: 'image', name: 'img', html: imageHtml },
+    { label: 'image', name: 'img', html: `<p>${imageHtml}</p>` },
+    { label: 'audio', name: 'audio', html: `<p>${audioHtml}</p>` },
+    { label: 'video', name: 'video', html: `<p>${videoHtml}</p>` },
     { label: 'image with caption', name: 'img', outlineSelector: 'figure.image', html: figureImageHtml },
     { label: 'codesample', name: 'pre', html: codesampleHtml, backgroundColor: 'rgb(245, 242, 240)' },
     { label: 'table of contents', name: 'div.mce-toc', html: tocHtml },
-    { label: 'iframe (YouTube video)', name: 'iframe', outlineSelector: 'span.mce-preview-object', html: iframeMediaHtml },
-    { label: 'audio', name: 'audio', outlineSelector: 'span.mce-preview-object', html: audioMediaHtml },
-    { label: 'video', name: 'video', outlineSelector: 'span.mce-preview-object', html: videoMediaHtml },
+    { label: 'media iframe (YouTube video)', name: 'iframe', outlineSelector: 'span.mce-preview-object', html: iframeMediaHtml },
+    { label: 'media audio', name: 'audio', outlineSelector: 'span.mce-preview-object', html: audioMediaHtml },
+    { label: 'media video', name: 'video', outlineSelector: 'span.mce-preview-object', html: videoMediaHtml },
     { label: 'mediaembed iframe (YouTube video)', name: 'iframe', outlineSelector: 'div[data-ephox-embed-iri]', html: iframeMediaEmbedHtml },
     { label: 'mediaembed video', name: 'video', outlineSelector: 'div[data-ephox-embed-iri]', html: videoMediaEmbedHtml },
     { label: 'mediaembed audio', name: 'audio', outlineSelector: 'div[data-ephox-embed-iri]', html: audioMediaEmbedHtml },
@@ -243,6 +252,32 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
       await pAssertStyling(editor, 'span[data-mce-selected]', inlineBoundaryBackgroundColor, noOutline);
       await pAssertStyling(editor, 'span:not([data-mce-selected])', commentActiveBackgroundColor, noOutline);
+    });
+  });
+
+  context('text and block comments', () => {
+    it('TINY-8698: should have blue background on commented text when it is selected and yellow background or outline for other related comments', async () => {
+      const editor = hook.editor();
+      editor.setContent(`<p>one two</p><p>${imageHtml}</p>${figureImageHtml}<p>three four</p>`);
+      TinySelections.setSelection(editor, [ 0, 0 ], 4, [], 4);
+      editor.annotator.annotate('test-comment', {});
+      TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
+      await pAssertStyling(editor, 'span[data-mce-selected]:contains("two")', inlineBoundaryBackgroundColor, noOutline);
+      await pAssertStyling(editor, 'span:not([data-mce-selected]):contains("three four")', commentActiveBackgroundColor, noOutline);
+      await pAssertStyling(editor, 'span img', noBackgroundColor, commentActiveOutline);
+      await pAssertStyling(editor, 'figure', noBackgroundColor, commentActiveOutline);
+    });
+
+    it('TINY-8698: should have blue outline on commented block when it is selected and yellow background or outline for other related comments', async () => {
+      const editor = hook.editor();
+      editor.setContent(`<p>one two</p><p>${imageHtml}</p>${figureImageHtml}<p>three four</p>`);
+      TinySelections.setSelection(editor, [ 0, 0 ], 4, [], 4);
+      editor.annotator.annotate('test-comment', {});
+      TinySelections.select(editor, 'figure', []);
+      await pAssertStyling(editor, 'span:contains("two")', commentBackgroundColor, noOutline);
+      await pAssertStyling(editor, 'span:contains("three four")', commentBackgroundColor, noOutline);
+      await pAssertStyling(editor, 'span img', noBackgroundColor, commentActiveOutline);
+      await pAssertStyling(editor, 'figure', noBackgroundColor, selectedOutline);
     });
   });
 

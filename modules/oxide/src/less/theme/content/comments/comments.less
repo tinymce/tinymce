@@ -2,15 +2,38 @@
 // Comments
 //
 
-@document-comment-background-color: #fff0b7;
-@document-comment-active-background-color: #ffe168;
-@document-comment-outline-color: #ffe89d;
+@document-comment-color: #ffe89d;
+@document-comment-active-color: #ffe168;
+@document-comment-background-color: @document-comment-color;
+@document-comment-active-background-color: @document-comment-active-color;
+@document-comment-outline-color: @document-comment-color;
+@document-comment-active-outline-color: @document-comment-active-color;
 
 .tox-comments-visible {
-  .tox-comment[contenteditable="false"]:not([data-mce-selected]),
-  span.tox-comment img:not([data-mce-selected]),
-  span.tox-comment span.mce-preview-object:not([data-mce-selected]) {
-    outline: 3px solid @document-comment-outline-color;
+  .tox-comment[contenteditable="false"],
+  span.tox-comment img,
+  span.tox-comment > audio,
+  span.tox-comment > video,
+  span.tox-comment span.mce-preview-object {
+    &:not([data-mce-selected]) {
+      outline: 3px solid @document-comment-outline-color;
+    }
+  }
+
+  .tox-comment[contenteditable="false"][data-mce-annotation-active="true"] {
+    &:not([data-mce-selected]) {
+      outline: 3px solid @document-comment-active-outline-color;
+    }
+  }
+
+  span.tox-comment[data-mce-annotation-active="true"] {
+    & img,
+    & > audio,
+    & > video {
+      &:not([data-mce-selected]) {
+        outline: 3px solid @document-comment-active-outline-color;
+      }
+    }
   }
 
   span.tox-comment:not([data-mce-selected]) {
