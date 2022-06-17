@@ -224,7 +224,7 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
   }));
 
-  context('Get bookmark should work if selection is on a comment', () => {
+  context('Get bookmark should work if the first element of the content is a comment', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       base_url: '/project/tinymce/js/tinymce'
     }, [], false);
@@ -253,7 +253,7 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
       Remove.remove(outsideButton);
     });
 
-    it('TINY-7817: bookmark should be insert correclty even if the selection is on a comment', () => {
+    it('TINY-7817: bookmark should be insert correclty even if the first element of content is a comment', () => {
       const editor = hook.editor();
       setSelectionToCommentAndTriggerGetBookmark(editor, '<div><!-- Whatever --> <img></div>');
       TinyAssertions.assertContentPresence(editor, {
@@ -261,7 +261,7 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
       });
     });
 
-    it('TINY-7817: bookmark should be insert correclty even if the selection is on a comment and next element is also a comment', () => {
+    it('TINY-7817: bookmark should be insert correclty even if the first element of content is a comment and next element is also a comment', () => {
       const editor = hook.editor();
       setSelectionToCommentAndTriggerGetBookmark(editor, '<div><!-- Whatever --><!-- second comment --> <img></div>');
       TinyAssertions.assertContentPresence(editor, {
