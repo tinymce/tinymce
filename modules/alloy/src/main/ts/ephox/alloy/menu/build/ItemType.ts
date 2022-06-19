@@ -28,7 +28,7 @@ const getTogglingSpec = (tConfig: Partial<TogglingConfigSpec> & { exclusive?: bo
   aria: {
     mode: 'checked'
   },
-  // Filter out the additional properties
+  // Filter out the additional properties that are not in Toggling Behaviour's configuration (e.g. exclusive)
   ...Obj.filter(tConfig as { [K in keyof TogglingConfigSpec]: TogglingConfigSpec[K] }, (_value, name) => name !== 'exclusive'),
   onToggled: (component, state) => {
     if (Type.isFunction(tConfig.onToggled)) {

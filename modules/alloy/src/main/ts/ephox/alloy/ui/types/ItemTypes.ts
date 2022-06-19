@@ -56,7 +56,6 @@ export interface NormalItemSpec {
   data: ItemDataTuple;
   components?: AlloySpec[];
   dom: RawDomSchema;
-  // INVESTIGATE: this might not be right
   toggling?: Partial<TogglingConfigSpec> & { exclusive?: boolean };
   itemBehaviours?: AlloyBehaviourRecord;
   ignoreFocus?: boolean;
@@ -69,7 +68,6 @@ export interface NormalItemDetail extends ItemDetail {
   data: ItemDataTuple;
   components: AlloySpec[];
   dom: RawDomSchema;
-  // INVESTIGATE: this might not be right
   toggling: Optional<Partial<TogglingConfigSpec> & { exclusive?: boolean }>;
   itemBehaviours: SketchBehaviours;
   ignoreFocus?: boolean;
