@@ -448,9 +448,9 @@ describe('browser.tinymce.core.annotate.AnnotateBlocksTest', () => {
           selector,
           [ scenario.expectedDirectHtml ],
           scenario.expectedDirectSelection,
-          { span: isRootBlock ? 0 : 1, block: isRootBlock ? 2 : 0 }
+          { span: 0, block: 2 }
         );
-        assertGetAll(editor, { 'test-uid-1': isRootBlock ? [ selector ] : [ 'span' ] });
+        assertGetAll(editor, { 'test-uid-1': [ selector ] });
 
         testAllContentSelectionAnnotation(
           editor,
