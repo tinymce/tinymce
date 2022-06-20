@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Links would open when using alt+enter (option+enter on Mac) even when `preventDefault()` is called on the keydown event #TINY-8661
 - Spaces would not be added correctly on some browsers when before or after a contenteditable block element #TINY-8588
 - Images were not showing as selected when selecting images alongside other content #TINY-5947
+- Images that used a Data URI were corrupted when the data wasn't base64 encoded #TINY-8337
 - Notifications would not properly reposition when toggling fullscreen mode #TINY-8701
 - Dialogs will not exceed the window height on smaller screens #TINY-8146
 - Some types on functions in the `tinymce.dom.TreeWalker` class missed that it could return undefined #TINY-8592

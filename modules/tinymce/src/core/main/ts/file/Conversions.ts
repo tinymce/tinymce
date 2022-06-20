@@ -10,6 +10,7 @@ import { Optional, Strings } from '@ephox/katamari';
 interface DataUriResult {
   readonly type: string | undefined;
   readonly data: string;
+  readonly base64Encoded: boolean;
 }
 
 const blobUriToBlob = (url: string): Promise<Blob> =>
@@ -17,30 +18,39 @@ const blobUriToBlob = (url: string): Promise<Blob> =>
     .then((res) => res.ok ? res.blob() : Promise.reject())
     .catch(() => Promise.reject(`Cannot convert ${url} to Blob. Resource might not exist or is inaccessible.`));
 
-const parseDataUri = (uri: string): DataUriResult => {
-  let type: string | undefined;
-
-  const uriParts = decodeURIComponent(uri).split(',');
-
-  const matches = /data:([^;]+)/.exec(uriParts[0]);
-  if (matches) {
-    type = matches[1];
-  }
-
-  return {
-    type,
-    data: uriParts[1]
-  };
+const extractBase64Data = (data: string): string => {
+  const matches = /([a-z0-9+\/=\s]+)/i.exec(data);
+  return matches ? matches[1] : '';
 };
 
-const buildBlob = (type: string, data: string): Optional<Blob> => {
-  let str: string;
+const parseDataUri = (uri: string): Optional<DataUriResult> => {
+  const [ type, ...rest ] = uri.split(',');
+  const data = rest.join(',');
 
-  // Might throw error if data isn't proper base64
-  try {
-    str = atob(data);
-  } catch (e) {
+  const matches = /data:([^/]+\/[^;]+)(;.+)?/.exec(type);
+  if (matches) {
+    const base64Encoded = matches[2] === ';base64';
+    const extractedData = base64Encoded ? extractBase64Data(data) : decodeURIComponent(data);
+    return Optional.some({
+      type: matches[1],
+      data: extractedData,
+      base64Encoded
+    });
+  } else {
     return Optional.none();
+  }
+};
+
+const buildBlob = (type: string, data: string, base64Encoded: boolean = true): Optional<Blob> => {
+  let str = data;
+
+  if (base64Encoded) {
+    // Might throw error if data isn't proper base64
+    try {
+      str = atob(data);
+    } catch (e) {
+      return Optional.none();
+    }
   }
 
   const arr = new Uint8Array(str.length);
@@ -53,13 +63,13 @@ const buildBlob = (type: string, data: string): Optional<Blob> => {
 };
 
 const dataUriToBlob = (uri: string): Promise<Blob> => {
-  return new Promise((resolve) => {
-    const { type, data } = parseDataUri(uri);
-
-    buildBlob(type, data).fold(
-      () => resolve(new Blob([])), // TODO: Consider rejecting here instead
-      resolve
-    );
+  return new Promise((resolve, reject) => {
+    parseDataUri(uri)
+      .bind(({ type, data, base64Encoded }) => buildBlob(type, data, base64Encoded))
+      .fold(
+        () => reject('Invalid data URI'),
+        resolve
+      );
   });
 };
 
