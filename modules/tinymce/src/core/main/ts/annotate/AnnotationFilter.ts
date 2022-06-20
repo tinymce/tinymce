@@ -19,9 +19,8 @@ const setup = (editor: Editor, registry: AnnotationsRegistry): void => {
     const customClasses = Optional.from(node.attr(Markings.dataAnnotationClasses())).map((names) => names.split(',')).getOr([]);
     Arr.each(customAttrNames, (name) => node.attr(name, null));
 
-    const classList = new Set(node.attr('class')?.split(' ') ?? []);
-    Arr.each([ Markings.annotation() ].concat(customClasses), (clazz) => classList.delete(clazz));
-    const newClassList = Array.from(classList.values());
+    const classList = node.attr('class')?.split(' ') ?? [];
+    const newClassList = Arr.difference(classList, [ Markings.annotation() ].concat(customClasses));
     node.attr('class', newClassList.length > 0 ? newClassList.join(' ') : null);
 
     node.attr(Markings.dataAnnotationClasses(), null);

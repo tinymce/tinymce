@@ -57,14 +57,14 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
   };
 
   const commentActiveOutline: Outline = {
-    color: 'rgb(255, 225, 104)', // #ffe168
+    color: 'rgb(254, 214, 53)', // #fed635
     width: '3px',
     style: 'solid'
   };
 
   const noBackgroundColor = 'rgba(0, 0, 0, 0)';
   const commentBackgroundColor = 'rgb(255, 232, 157)'; // #ffe89d
-  const commentActiveBackgroundColor = 'rgb(255, 225, 104)'; // #ffe168
+  const commentActiveBackgroundColor = 'rgb(254, 214, 53)'; // #fed635
   const inlineBoundaryBackgroundColor = 'rgb(180, 215, 255)'; // #b4d7ff
 
   const getOutline = (elm: SugarElement<Element>): Outline => {
@@ -205,6 +205,14 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
         TinySelections.setCursor(editor, [ 0, 0 ], 1);
         selectElm(editor);
         await pAssertStyling(editor, selector, backgroundColor, selectedOutline);
+      });
+
+      it('TINY-8698: should have active yellow outline when there are several related comments but the element is not selected', async () => {
+        const editor = hook.editor();
+        editor.execCommand('SelectAll');
+        editor.annotator.annotate('test-comment', {});
+        TinySelections.setCursor(editor, [ 0, 0 ], 1);
+        await pAssertStyling(editor, selector, backgroundColor, commentActiveOutline);
       });
     });
   });
