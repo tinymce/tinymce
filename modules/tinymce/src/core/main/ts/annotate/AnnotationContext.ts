@@ -30,7 +30,6 @@ const validBlocks = [
   'div.tiny-pageembed',
   // Tableofcontents plugin
   'div.mce-toc',
-  // TODO: Change to what is finalised in table of contenst plugin
   'div[data-mce-toc]'
 ];
 

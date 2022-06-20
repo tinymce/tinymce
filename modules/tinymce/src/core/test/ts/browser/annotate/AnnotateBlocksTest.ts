@@ -182,7 +182,7 @@ describe('browser.tinymce.core.annotate.AnnotateBlocksTest', () => {
   const codesampleHtml = (withAnnotation: boolean) =>
     `<pre class="language-markup" contenteditable="false"${withAnnotation ? ' ' + expectedBlockAnnotationAttrs() : ''}>test</pre>`;
   const tocHtml = (withAnnotation: boolean) => (
-    `<div class="mce-toc" contenteditable="false"${withAnnotation ? ' ' + expectedBlockAnnotationAttrs() : ''}>` +
+    `<div class="mce-toc" contenteditable="false" data-mce-toc="true"${withAnnotation ? ' ' + expectedBlockAnnotationAttrs() : ''}>` +
     '<h2 contenteditable="true">Table of Contents</h2>' +
     '<ul>' +
     `<li><a href="#mcetoc_1">Heading</a>${platform.browser.isFirefox() ? '<br>' : ''}</li>` +
@@ -663,7 +663,7 @@ describe('browser.tinymce.core.annotate.AnnotateBlocksTest', () => {
 
   context('nested annotation', () => {
     before(function () {
-      // TODO: <Jira> Safari appears to have a bug where an annotation cannot be applied to the caption text when it is a collapsed selection
+      // TODO: TINY-8820 Safari appears to have a bug where an annotation cannot be applied to the caption text when it is a collapsed selection
       // Instead the annotation is applied to the nearest paragaraph which is incorrect
       if (platform.browser.isSafari()) {
         this.skip();
