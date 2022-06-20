@@ -1,4 +1,3 @@
-import { Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { McEditor } from '@ephox/wrap-mcagar';
@@ -27,9 +26,7 @@ describe('browser.tinymce.themes.silver.editor.header.StickyHeaderInitialPlaceme
         const isToolbarTop = test.location === ToolbarLocation.top;
         await StickyUtils.pAssertHeaderDocked(isToolbarTop);
       }
-      await Waiter.pTryUntil('should have correct classes', () => {
-        StickyUtils.assertEditorClasses(test.expectDocked);
-      });
+      StickyUtils.assertEditorClasses(test.expectDocked);
       McEditor.remove(editor);
     });
   });
