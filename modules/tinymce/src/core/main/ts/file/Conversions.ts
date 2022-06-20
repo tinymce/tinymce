@@ -1,4 +1,4 @@
-import { Optional } from '@ephox/katamari';
+import { Optional, Strings } from '@ephox/katamari';
 
 /**
  * Converts blob/uris back and forth.
@@ -64,23 +64,25 @@ const dataUriToBlob = (uri: string): Promise<Blob> => {
 };
 
 const uriToBlob = (url: string): Promise<Blob> => {
-  if (url.indexOf('blob:') === 0) {
+  if (Strings.startsWith(url, 'blob:')) {
     return blobUriToBlob(url);
-  }
-
-  if (url.indexOf('data:') === 0) {
+  } else if (Strings.startsWith(url, 'data:')) {
     return dataUriToBlob(url);
+  } else {
+    return Promise.reject('Unknown URI format');
   }
-
-  return null;
 };
 
 const blobToDataUri = (blob: Blob): Promise<string> => {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
     reader.onloadend = () => {
       resolve(reader.result as string);
+    };
+
+    reader.onerror = () => {
+      reject(reader.error.message);
     };
 
     reader.readAsDataURL(blob);

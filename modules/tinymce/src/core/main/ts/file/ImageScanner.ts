@@ -1,4 +1,4 @@
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Strings } from '@ephox/katamari';
 
 import Env from '../api/Env';
 import { BlobCache, BlobInfo } from '../api/file/BlobCache';
@@ -27,35 +27,31 @@ export const uniqueId = (prefix?: string): string => {
   return (prefix || 'blobid') + (count++);
 };
 
-const imageToBlobInfo = (blobCache: BlobCache, img: HTMLImageElement, resolve, reject) => {
+const imageToBlobInfo = (blobCache: BlobCache, img: HTMLImageElement): Promise<BlobInfoImagePair> => {
   let base64, blobInfo;
 
   if (img.src.indexOf('blob:') === 0) {
     blobInfo = blobCache.getByUri(img.src);
 
     if (blobInfo) {
-      resolve({
+      return Promise.resolve({
         image: img,
         blobInfo
       });
     } else {
-      Conversions.uriToBlob(img.src).then((blob) => {
-        Conversions.blobToDataUri(blob).then((dataUri) => {
+      return Conversions.uriToBlob(img.src).then((blob) => {
+        return Conversions.blobToDataUri(blob).then((dataUri) => {
           base64 = Conversions.parseDataUri(dataUri).data;
           blobInfo = blobCache.create(uniqueId(), blob, base64);
           blobCache.add(blobInfo);
 
-          resolve({
+          return {
             image: img,
             blobInfo
-          });
+          };
         });
-      }, (err) => {
-        reject(err);
       });
     }
-
-    return;
   }
 
   const { data, type } = Conversions.parseDataUri(img.src);
@@ -63,21 +59,19 @@ const imageToBlobInfo = (blobCache: BlobCache, img: HTMLImageElement, resolve, r
   blobInfo = blobCache.getByData(base64, type);
 
   if (blobInfo) {
-    resolve({
+    return Promise.resolve({
       image: img,
       blobInfo
     });
   } else {
-    Conversions.uriToBlob(img.src).then((blob) => {
+    return Conversions.uriToBlob(img.src).then((blob) => {
       blobInfo = blobCache.create(uniqueId(), blob, base64);
       blobCache.add(blobInfo);
 
-      resolve({
+      return {
         image: img,
         blobInfo
-      });
-    }, (err) => {
-      reject(err);
+      };
     });
   }
 };
@@ -89,11 +83,7 @@ const getAllImages = (elm: HTMLElement): HTMLImageElement[] => {
 export const ImageScanner = (uploadStatus: UploadStatus, blobCache: BlobCache): ImageScanner => {
   const cachedPromises: Record<string, Promise<BlobInfoImagePair>> = {};
 
-  const findAll = (elm: HTMLElement, predicate?: (img: HTMLImageElement) => boolean) => {
-    if (!predicate) {
-      predicate = Fun.always;
-    }
-
+  const findAll = (elm: HTMLElement, predicate: (img: HTMLImageElement) => boolean = Fun.always) => {
     const images = Arr.filter(getAllImages(elm), (img) => {
       const src = img.src;
 
@@ -109,11 +99,11 @@ export const ImageScanner = (uploadStatus: UploadStatus, blobCache: BlobCache): 
         return false;
       }
 
-      if (src.indexOf('blob:') === 0) {
+      if (Strings.startsWith(src, 'blob:')) {
         return !uploadStatus.isUploaded(src) && predicate(img);
       }
 
-      if (src.indexOf('data:') === 0) {
+      if (Strings.startsWith(src, 'data:')) {
         return predicate(img);
       }
 
@@ -137,15 +127,14 @@ export const ImageScanner = (uploadStatus: UploadStatus, blobCache: BlobCache): 
         });
       }
 
-      const newPromise = new Promise<BlobInfoImagePair>((resolve, reject) => {
-        imageToBlobInfo(blobCache, img, resolve, reject);
-      }).then((result) => {
-        delete cachedPromises[result.image.src];
-        return result;
-      }).catch((error) => {
-        delete cachedPromises[img.src];
-        return error;
-      });
+      const newPromise = imageToBlobInfo(blobCache, img)
+        .then((result) => {
+          delete cachedPromises[result.image.src];
+          return result;
+        }).catch((error) => {
+          delete cachedPromises[img.src];
+          return error;
+        });
 
       cachedPromises[img.src] = newPromise;
 
