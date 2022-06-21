@@ -2,23 +2,19 @@
 // Menubar
 //
 
+@menubar-background: repeating-linear-gradient(@menubar-row-separator-color 0px 1px, transparent 1px @_menubar-height) center top @_menubar-height e("/") 100% calc(100% - @_menubar-height) no-repeat;
 @menubar-background-color: @background-color;
 @menubar-padding-x: @toolbar-group-padding-x;
+@menubar-separator-color: transparent;
 @menubar-row-separator-color: transparent;
 
 // private variables
 @_menubar-height: @menubar-select-height + (@menubar-select-spacing-y * 2) + 1px;
-@_menubar-background-image: repeating-linear-gradient(@menubar-row-separator-color 0px 1px, transparent 1px @_menubar-height);
-@_menubar-background-position: center top @_menubar-height;
-@_menubar-background-size: 100% calc(100% - @_menubar-height);
 
 .tox {
   .tox-menubar {
+    background: @menubar-background;
     background-color: @menubar-background-color;
-    background-image: @_menubar-background-image;
-    background-position: @_menubar-background-position;
-    background-repeat: no-repeat;
-    background-size: @_menubar-background-size;
     display: flex;
     flex: 0 0 auto;
     flex-shrink: 0;
