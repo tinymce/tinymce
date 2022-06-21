@@ -107,7 +107,7 @@ describe('browser.tinymce.core.dom.ScrollIntoViewTest', () => {
       const editor = hook.editor();
       await pSetContent(editor, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>');
       scrollIntoView(editor, 'div:nth-child(2)', false);
-      assertScrollPosition(editor, 0, 668);
+      assertScrollPosition(editor, 0, 667);
     });
 
     it('Scroll to element align to top', async () => {
@@ -137,7 +137,7 @@ describe('browser.tinymce.core.dom.ScrollIntoViewTest', () => {
       await pSetContent(editor, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 600px">a</div>');
       TinySelections.setCursor(editor, [ 2, 0 ], 0);
       editor.selection.scrollIntoView();
-      assertScrollPosition(editor, 0, 690);
+      assertScrollPosition(editor, 0, 689);
     });
   });
 
@@ -146,7 +146,7 @@ describe('browser.tinymce.core.dom.ScrollIntoViewTest', () => {
       const editor = hook.editor();
       await pSetContent(editor, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>');
       scrollElementIntoView(editor, 'div:nth-child(2)', false);
-      assertScrollPosition(editor, 0, 668);
+      assertScrollPosition(editor, 0, 667);
     });
 
     it('Scroll to element align to top', async () => {
@@ -167,7 +167,7 @@ describe('browser.tinymce.core.dom.ScrollIntoViewTest', () => {
       scrollRangeIntoView(editor, [ 0, 0 ], 0);
       assertApproxScrollPosition(editor, 0, 0);
       scrollRangeIntoView(editor, [ 2, 0 ], 0);
-      assertApproxScrollPosition(editor, 0, 690);
+      assertApproxScrollPosition(editor, 0, 689);
     });
   });
 
