@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `transparent` property for `iframe` dialog component #TINY-8534
 - New `removeAttributeFilter` and `removeNodeFilter` functions to the `DomParser` and DOM `Serializer` APIs #TINY-7847
 - New `iframe_template_callback` option in the `media` plugin. Patch provided by Namstel #TINY-8684
+- New `dispatchChange` UndoManager API to fire the `change` with current editor status as level and current undoManager layer as lastLevel #TINY-8641
 
 ### Improved
 - Clearer focus states for buttons while navigating with keyboard #TINY-8557
@@ -61,6 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed incorrect word breaks in menu dropdowns with scrollbar #TINY-8572
 - The `InsertLineBreak` command did not replace selected content #TINY-8458
 - Delete operations could behave incorrectly if the selection contains a `contenteditable="false"` element located at the edge of content #TINY-8729
+- `uploadImages` no longer triggers two `change` events if there is a removal of images on upload #TINY-8641
 
 ## 6.0.3 - 2022-05-25
 
