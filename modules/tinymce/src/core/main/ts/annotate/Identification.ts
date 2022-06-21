@@ -45,27 +45,21 @@ const identify = (editor: Editor, annotationName: Optional<string>): Optional<{ 
 
 const isAnnotation = (elem: any): boolean => SugarNode.isElement(elem) && Class.has(elem, Markings.annotation());
 
-const offscreenSelectionClass = 'mce-offscreen-selection';
-const hasOffscreenSelection = (body: SugarElement<Element>) =>
-  SelectorExists.descendant(body, `div.${offscreenSelectionClass}`);
-
-const isOffscreenSelectionElement = (elem: SugarElement<Node>) =>
-  Traverse.parent(elem).exists((parent) => Class.has(parent, offscreenSelectionClass));
+const isBogusElement = (elem: SugarElement<Node>, root: SugarElement<Node>) =>
+  Attribute.has(elem, 'data-mce-bogus') || SelectorExists.ancestor(elem, '[data-mce-bogus="all"]', isRoot(root));
 
 const findMarkers = (editor: Editor, uid: string): Array<SugarElement<Element>> => {
   const body = SugarElement.fromDom(editor.getBody());
   const descendants = SelectorFilter.descendants(body, `[${Markings.dataAnnotationId()}="${uid}"]`);
-  const offscreenSelection = hasOffscreenSelection(body);
-  return offscreenSelection ? Arr.filter(descendants, (descendant) => !isOffscreenSelectionElement(descendant)) : descendants;
+  return Arr.filter(descendants, (descendant) => !isBogusElement(descendant, body));
 };
 
 const findAll = (editor: Editor, name: string): Record<string, SugarElement[]> => {
   const body = SugarElement.fromDom(editor.getBody());
   const markers = SelectorFilter.descendants(body, `[${Markings.dataAnnotation()}="${name}"]`);
   const directory: Record<string, SugarElement[]> = {};
-  const offscreenSelection = hasOffscreenSelection(body);
   Arr.each(markers, (m) => {
-    if (!offscreenSelection || !isOffscreenSelectionElement(m)) {
+    if (!isBogusElement(m, body)) {
       const uid = Attribute.get(m, Markings.dataAnnotationId());
       const nodesAlready = Obj.get(directory, uid).getOr([]);
       directory[uid] = nodesAlready.concat([ m ]);
