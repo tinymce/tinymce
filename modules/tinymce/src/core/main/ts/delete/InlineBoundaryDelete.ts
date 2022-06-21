@@ -112,7 +112,7 @@ const backspaceDeleteCollapsed = (editor: Editor, caret: Cell<Text>, forward: bo
     });
 };
 
-const backspaceDelete = (editor: Editor, caret: Cell<Text>, forward?: boolean): Optional<() => void> => {
+const backspaceDelete = (editor: Editor, caret: Cell<Text>, forward: boolean): Optional<() => void> => {
   if (editor.selection.isCollapsed() && Options.isInlineBoundariesEnabled(editor)) {
     const from = CaretPosition.fromRangeStart(editor.selection.getRng());
     return backspaceDeleteCollapsed(editor, caret, forward, from);

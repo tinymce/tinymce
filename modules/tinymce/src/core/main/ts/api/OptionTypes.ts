@@ -249,10 +249,21 @@ export interface EditorOptions extends NormalizedEditorOptions {
   content_css: string[];
   contextmenu: string[];
   font_css: string[];
+  font_size_classes: string;
+  font_size_legacy_values: string;
+  font_size_style_values: string;
   forced_root_block: string;
   forced_root_block_attrs: Record<string, string>;
+  images_file_types: string;
+  inline_boundaries_selector: string;
+  language: string;
+  language_url: string;
+  model: string;
   noneditable_regexp: RegExp[];
-  object_resizing?: string;
-  preview_styles?: string;
-  text_patterns?: Pattern[];
+  object_resizing: string;
+  preview_styles: string;
+  text_patterns: Pattern[];
+  visual: boolean;
+  visual_anchor_class: string;
+  visual_table_class: string;
 }

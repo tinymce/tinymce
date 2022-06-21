@@ -58,7 +58,7 @@ const moveStart = (dom: DOMUtils, selection: EditorSelection, rng: Range) => {
  * @param {Boolean} inc (Optional) Include the current node in checking. Defaults to false.
  * @return {Node} Next or previous node or undefined if it wasn't found.
  */
-const getNonWhiteSpaceSibling = (node: Node, next?: boolean, inc?: boolean) => {
+const getNonWhiteSpaceSibling = (node: Node | null, next?: boolean, inc?: boolean) => {
   if (node) {
     const nextName = next ? 'nextSibling' : 'previousSibling';
 
@@ -124,12 +124,12 @@ const replaceVars = (value: FormatAttrOrStyleValue, vars?: FormatVars): string =
  * @param {String/Node} str2 Node or string to compare.
  * @return {Boolean} True/false if they match.
  */
-const isEq = (str1, str2) => {
+const isEq = (str1: Node | string, str2: Node | string) => {
   str1 = str1 || '';
   str2 = str2 || '';
 
-  str1 = '' + (str1.nodeName || str1);
-  str2 = '' + (str2.nodeName || str2);
+  str1 = '' + ((str1 as Node).nodeName || str1);
+  str2 = '' + ((str2 as Node).nodeName || str2);
 
   return str1.toLowerCase() === str2.toLowerCase();
 };
@@ -157,10 +157,10 @@ const getStyle = (dom: DOMUtils, node: Node, name: string) => {
   return normalizeStyleValue(dom.getStyle(node, name), name);
 };
 
-const getTextDecoration = (dom: DOMUtils, node: Node): string => {
-  let decoration;
+const getTextDecoration = (dom: DOMUtils, node: Node): string | undefined => {
+  let decoration: string | undefined;
 
-  dom.getParent(node, (n) => {
+  dom.getParent(node, (n): boolean => {
     decoration = dom.getStyle(n, 'text-decoration');
     return decoration && decoration !== 'none';
   });

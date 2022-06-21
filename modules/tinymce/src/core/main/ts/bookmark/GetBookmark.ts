@@ -17,10 +17,8 @@ type TrimFn = (s: string) => string;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 
 const getNormalizedTextOffset = (trim: TrimFn, container: Text, offset: number): number => {
-  let node, trimmedOffset;
-
-  trimmedOffset = trim(container.data.slice(0, offset)).length;
-  for (node = container.previousSibling; node && NodeType.isText(node); node = node.previousSibling) {
+  let trimmedOffset = trim(container.data.slice(0, offset)).length;
+  for (let node = container.previousSibling; node && NodeType.isText(node); node = node.previousSibling) {
     trimmedOffset += trim(node.data).length;
   }
 
@@ -31,13 +29,13 @@ const getPoint = (dom: DOMUtils, trim: TrimFn, normalized: boolean, rng: Range, 
   let container = rng[start ? 'startContainer' : 'endContainer'];
   let offset = rng[start ? 'startOffset' : 'endOffset'];
   const point: number[] = [];
-  let childNodes, after = 0;
   const root = dom.getRoot();
 
   if (NodeType.isText(container)) {
     point.push(normalized ? getNormalizedTextOffset(trim, container, offset) : offset);
   } else {
-    childNodes = container.childNodes;
+    let after = 0;
+    const childNodes = container.childNodes;
 
     if (offset >= childNodes.length && childNodes.length) {
       after = 1;
@@ -212,7 +210,7 @@ const getPersistentBookmark = (selection: EditorSelection, filled: boolean): IdB
   return { id, forward };
 };
 
-const getBookmark = (selection: EditorSelection, type: number, normalized: boolean): Bookmark => {
+const getBookmark = (selection: EditorSelection, type?: number, normalized: boolean = false): Bookmark => {
   if (type === 2) {
     return getOffsetBookmark(Zwsp.trim, normalized, selection);
   } else if (type === 3) {

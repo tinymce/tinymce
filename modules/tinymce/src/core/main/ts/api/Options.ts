@@ -28,7 +28,7 @@ const isRegExp = (x: unknown): x is RegExp => Type.is(x, RegExp);
 const option = <K extends keyof EditorOptions>(name: K) => (editor: Editor) =>
   editor.options.get(name);
 
-const stringOrObjectProcessor = (value: string) =>
+const stringOrObjectProcessor = (value: unknown) =>
   Type.isString(value) || Type.isObject(value);
 
 const bodyOptionProcessor = (editor: Editor, defaultValue: string = '') => (value: unknown) => {

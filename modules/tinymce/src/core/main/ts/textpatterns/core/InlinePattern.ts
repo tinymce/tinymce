@@ -89,7 +89,7 @@ const findPatternStart = (dom: DOMUtils, pattern: InlinePattern, node: Node, off
       if (requireGap) {
         if (startRange.endContainer === spot.container && startRange.endOffset === spot.offset) {
           return Optional.none();
-        } else if (spot.offset === 0 && startRange.endContainer.textContent.length === startRange.endOffset) {
+        } else if (spot.offset === 0 && startRange.endContainer.textContent?.length === startRange.endOffset) {
           return Optional.none();
         }
       }
@@ -123,7 +123,7 @@ const findPattern = (editor: Editor, block: Node, details: PatternDetails): Opti
     } else {
       // Find any nested patterns, making sure not to process the current pattern again
       const resultsOpt = findPatternsRec(editor, details.remainingPatterns, spot.container, spot.offset, block);
-      const results = resultsOpt.getOr({ matches: [], position: spot });
+      const results = resultsOpt.getOrThunk((): SearchResults => ({ matches: [], position: spot }));
       const pos = results.position;
 
       // Find the start of the matched pattern
@@ -233,7 +233,7 @@ const addMarkers = (dom: DOMUtils, matches: InlinePatternMatch[]): InlinePattern
       ...match,
       endMarker
     }]);
-  }, []);
+  }, [] as Array<InlinePatternMatch & { endMarker: Marker }>);
 
   // Add start markers
   return Arr.foldr(matchesWithEnds, (acc, match) => {
@@ -243,12 +243,12 @@ const addMarkers = (dom: DOMUtils, matches: InlinePatternMatch[]): InlinePattern
       ...match,
       startMarker
     }]);
-  }, []);
+  }, [] as InlinePatternMatchWithMarkers[]);
 };
 
 const findPatterns = (editor: Editor, patterns: InlinePattern[], space: boolean): InlinePatternMatch[] => {
   const rng = editor.selection.getRng();
-  if (rng.collapsed === false) {
+  if (!rng.collapsed) {
     return [];
   }
 

@@ -5,7 +5,7 @@ import Editor from '../api/Editor';
 import { isPathBookmark } from '../bookmark/BookmarkTypes';
 import * as TrimHtml from '../dom/TrimHtml';
 import * as Fragments from './Fragments';
-import { UndoLevel, UndoLevelType } from './UndoManagerTypes';
+import { CompleteUndoLevel, FragmentedUndoLevel, NewUndoLevel, UndoLevel, UndoLevelType } from './UndoManagerTypes';
 
 // We need to create a temporary document instead of using the global document since
 // innerHTML on a detached element will still make http requests to the images
@@ -15,7 +15,7 @@ const hasIframes = (html: string) => {
   return html.indexOf('</iframe>') !== -1;
 };
 
-const createFragmentedLevel = (fragments: string[]): UndoLevel => {
+const createFragmentedLevel = (fragments: string[]): FragmentedUndoLevel => {
   return {
     type: UndoLevelType.Fragmented,
     fragments,
@@ -25,7 +25,7 @@ const createFragmentedLevel = (fragments: string[]): UndoLevel => {
   };
 };
 
-const createCompleteLevel = (content: string): UndoLevel => {
+const createCompleteLevel = (content: string): CompleteUndoLevel => {
   return {
     type: UndoLevelType.Complete,
     fragments: null,
@@ -35,7 +35,7 @@ const createCompleteLevel = (content: string): UndoLevel => {
   };
 };
 
-const createFromEditor = (editor: Editor): UndoLevel => {
+const createFromEditor = (editor: Editor): NewUndoLevel => {
   const fragments = Fragments.read(editor.getBody());
   const trimmedFragments = Arr.bind(fragments, (html) => {
     const trimmed = TrimHtml.trimInternal(editor.serializer, html);
@@ -46,7 +46,7 @@ const createFromEditor = (editor: Editor): UndoLevel => {
   return hasIframes(content) ? createFragmentedLevel(trimmedFragments) : createCompleteLevel(content);
 };
 
-const applyToEditor = (editor: Editor, level: UndoLevel, before: boolean) => {
+const applyToEditor = (editor: Editor, level: UndoLevel, before: boolean): void => {
   const bookmark = before ? level.beforeBookmark : level.bookmark;
 
   if (level.type === UndoLevelType.Fragmented) {
@@ -62,26 +62,30 @@ const applyToEditor = (editor: Editor, level: UndoLevel, before: boolean) => {
     });
   }
 
-  editor.selection.moveToBookmark(bookmark);
+  if (bookmark) {
+    editor.selection.moveToBookmark(bookmark);
+  }
 };
 
-const getLevelContent = (level: UndoLevel): string => {
+const getLevelContent = (level: NewUndoLevel): string => {
   return level.type === UndoLevelType.Fragmented ? level.fragments.join('') : level.content;
 };
 
-const getCleanLevelContent = (level: UndoLevel): string => {
+const getCleanLevelContent = (level: NewUndoLevel): string => {
   const elm = SugarElement.fromTag('body', lazyTempDocument());
   Html.set(elm, getLevelContent(level));
   Arr.each(SelectorFilter.descendants(elm, '*[data-mce-bogus]'), Remove.unwrap);
   return Html.get(elm);
 };
 
-const hasEqualContent = (level1: UndoLevel, level2: UndoLevel): boolean => getLevelContent(level1) === getLevelContent(level2);
+const hasEqualContent = (level1: NewUndoLevel, level2: NewUndoLevel): boolean =>
+  getLevelContent(level1) === getLevelContent(level2);
 
-const hasEqualCleanedContent = (level1: UndoLevel, level2: UndoLevel): boolean => getCleanLevelContent(level1) === getCleanLevelContent(level2);
+const hasEqualCleanedContent = (level1: NewUndoLevel, level2: NewUndoLevel): boolean =>
+  getCleanLevelContent(level1) === getCleanLevelContent(level2);
 
 // Most of the time the contents is equal so it's faster to first check that using strings then fallback to a cleaned dom comparison
-const isEq = (level1: UndoLevel, level2: UndoLevel): boolean => {
+const isEq = (level1: NewUndoLevel, level2: NewUndoLevel): boolean => {
   if (!level1 || !level2) {
     return false;
   } else if (hasEqualContent(level1, level2)) {

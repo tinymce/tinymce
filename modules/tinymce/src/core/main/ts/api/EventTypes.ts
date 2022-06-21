@@ -39,15 +39,15 @@ export interface ObjectResizeEvent { target: HTMLElement; width: number; height:
 
 export interface ObjectSelectedEvent { target: Node; targetClone?: Node }
 
-export interface ScrollIntoViewEvent { elm: HTMLElement; alignToTop: boolean }
+export interface ScrollIntoViewEvent { elm: HTMLElement; alignToTop: boolean | undefined }
 
-export interface SetSelectionRangeEvent { range: Range; forward: boolean }
+export interface SetSelectionRangeEvent { range: Range; forward: boolean | undefined }
 
 export interface ShowCaretEvent { target: Node; direction: number; before: boolean }
 
 export interface SwitchModeEvent { mode: string }
 
-export interface AddUndoEvent { level: UndoLevel; lastLevel: UndoLevel; originalEvent: Event }
+export interface AddUndoEvent { level: UndoLevel; lastLevel: UndoLevel | undefined; originalEvent: Event | undefined }
 export interface UndoRedoEvent { level: UndoLevel }
 
 export interface WindowEvent<T extends Dialog.DialogData> { dialog: InstanceApi<T> }

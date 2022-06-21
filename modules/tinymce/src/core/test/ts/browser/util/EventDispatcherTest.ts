@@ -339,8 +339,12 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
       dispatcher.off('run', func2);
       dispatcher.on('run', func3);
     };
-    const func2 = () => logs.push('func2');
-    const func3 = () => logs.push('func3');
+    const func2 = () => {
+      logs.push('func2');
+    };
+    const func3 = () => {
+      logs.push('func3');
+    };
 
     dispatcher.on('run', func1);
     dispatcher.on('run', func2);

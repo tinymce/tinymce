@@ -3,7 +3,7 @@ import { Arr, Type } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
 
-export const addVisualInternal = (editor: Editor, elm?: HTMLElement) => {
+export const addVisualInternal = (editor: Editor, elm?: HTMLElement): void => {
   const dom = editor.dom;
   const scope = Type.isNonNullable(elm) ? elm : editor.getBody();
 

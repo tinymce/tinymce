@@ -33,7 +33,7 @@ const loadLanguage = (scriptLoader: ScriptLoader, editor: Editor) => {
   const languageCode = Options.getLanguageCode(editor);
   const languageUrl = Options.getLanguageUrl(editor);
 
-  if (I18n.hasCode(languageCode) === false && languageCode !== 'en') {
+  if (!I18n.hasCode(languageCode) && languageCode !== 'en') {
     const url = Strings.isNotEmpty(languageUrl) ? languageUrl : `${editor.editorManager.baseURL}/langs/${languageCode}.js`;
 
     scriptLoader.add(url).catch(() => {
