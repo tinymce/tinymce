@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "noImplicitReturns": true,
     "strict": true,
     "noEmit": true
   },
