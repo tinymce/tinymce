@@ -333,7 +333,7 @@ const register = (editor: Editor) => {
 
   registerOption('inline_boundaries_selector', {
     processor: 'string',
-    default: 'a[href],code,.mce-annotation'
+    default: 'a[href],code,span.mce-annotation'
   });
 
   registerOption('object_resizing', {
