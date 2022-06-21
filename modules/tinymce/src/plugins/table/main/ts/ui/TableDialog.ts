@@ -44,10 +44,10 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
 
   styles.height = Utils.addPxSuffix(data.height);
 
-  if (dom.getAttrib(tableElm, 'width') && !Options.shouldStyleWithCss(editor)) {
-    attrs.width = Utils.removePxSuffix(data.width);
-  } else {
+  if (Options.shouldStyleWithCss(editor)) {
     styles.width = Utils.addPxSuffix(data.width);
+  } else if (dom.getAttrib(tableElm, 'width')) {
+    attrs.width = Utils.removePxSuffix(data.width);
   }
 
   if (Options.shouldStyleWithCss(editor)) {
@@ -81,11 +81,7 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
     styles['border-style'] = data.borderstyle;
   }
 
-  const fullStyleAttribute = { ...Options.getDefaultStyles(editor), ...styles };
-  if (dom.getAttrib(tableElm, 'width') && !Options.shouldStyleWithCss(editor)) {
-    delete fullStyleAttribute.width;
-  }
-  attrs.style = dom.serializeStyle(fullStyleAttribute);
+  attrs.style = dom.serializeStyle({ ...Options.getDefaultStyles(editor), ...styles });
   dom.setAttribs(tableElm, { ...Options.getDefaultAttributes(editor), ...attrs });
 
 };

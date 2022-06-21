@@ -18,18 +18,38 @@ const defaultCellBorderStyles = Arr.map([ 'Solid', 'Dotted', 'Dashed', 'Double',
   return { title: type, value: type.toLowerCase() };
 });
 
+const stylesAvailableAsAttributes = [ 'width' ];
+
+const getPixelForcedWidth = (editor: Editor) => {
+  // Determine the inner size of the parent block element where the table will be inserted
+  const dom = editor.dom;
+  const parentBlock = dom.getParent<HTMLElement>(editor.selection.getStart(), dom.isBlock) ?? editor.getBody();
+  return Width.getInner(SugarElement.fromDom(parentBlock)) + 'px';
+};
+
 // Note: This is also contained in the core Options.ts file
 const determineDefaultStyles = (editor: Editor, defaultStyles: Record<string, string>): Record<string, string> => {
-  if (isPixelsForced(editor)) {
-    // Determine the inner size of the parent block element where the table will be inserted
-    const dom = editor.dom;
-    const parentBlock = dom.getParent<HTMLElement>(editor.selection.getStart(), dom.isBlock) ?? editor.getBody();
-    const contentWidth = Width.getInner(SugarElement.fromDom(parentBlock));
-    return { ...defaultStyles, width: contentWidth + 'px' };
-  } else if (isResponsiveForced(editor)) {
-    return Obj.filter(defaultStyles, (_value, key) => key !== 'width');
+  if (isResponsiveForced(editor) || !shouldStyleWithCss(editor)) {
+    return Obj.filter(defaultStyles, (_value, key) => !Arr.contains(stylesAvailableAsAttributes, key));
+  } else if (isPixelsForced(editor)) {
+    return { ...defaultStyles, width: getPixelForcedWidth(editor) };
   } else {
     return defaultStyles;
+  }
+};
+
+// Note: This is also contained in the core Options.ts file
+const determineDefaultAttributes = (editor: Editor, defaultAttributes: Record<string, string>): Record<string, string> => {
+  const defaultStyles = editor.options.get('table_default_styles');
+
+  if (editor.options.isSet('table_default_styles')) {
+    return defaultAttributes;
+  } else if (shouldStyleWithCss(editor)) {
+    return defaultAttributes;
+  } else if (isPixelsForced(editor)) {
+    return { ...defaultAttributes, ...Obj.filter(defaultStyles, (_value, key) => Arr.contains(stylesAvailableAsAttributes, key)), width: getPixelForcedWidth(editor) };
+  } else {
+    return { ...defaultAttributes, ...Obj.filter(defaultStyles, (_value, key) => Arr.contains(stylesAvailableAsAttributes, key)) };
   }
 };
 
@@ -117,7 +137,6 @@ const register = (editor: Editor): void => {
 const getTableSizingMode = option('table_sizing_mode');
 const getTableBorderWidths = option<UserListItem[]>('table_border_widths');
 const getTableBorderStyles = option<UserListValue[]>('table_border_styles');
-const getDefaultAttributes = option('table_default_attributes');
 const hasAdvancedCellTab = option<boolean>('table_cell_advtab');
 const hasAdvancedRowTab = option<boolean>('table_row_advtab');
 const hasAdvancedTableTab = option<boolean>('table_advtab');
@@ -142,6 +161,13 @@ const getDefaultStyles = (editor: Editor): Record<string, string> => {
   const options = editor.options;
   const defaultStyles = options.get('table_default_styles');
   return options.isSet('table_default_styles') ? defaultStyles : determineDefaultStyles(editor, defaultStyles);
+};
+
+const getDefaultAttributes = (editor: Editor): Record<string, string> => {
+  // Note: The we don't rely on the default here as we need to dynamically lookup the widths based on the current editor state
+  const options = editor.options;
+  const defaultStyles = options.get('table_default_attributes');
+  return options.isSet('table_default_attributes') ? defaultStyles : determineDefaultAttributes(editor, defaultStyles);
 };
 
 export {
