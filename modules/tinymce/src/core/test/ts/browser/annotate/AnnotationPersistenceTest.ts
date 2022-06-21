@@ -56,8 +56,7 @@ describe('browser.tinymce.core.annotate.AnnotationPersistenceTest', () => {
 
   const setupSingleSpanAnnotation = (editor: Editor) => {
     // '<p>This is the only p|ar|agraph</p>'
-    editor.setContent('<p>This is the only paragraph <em>here</em></p>');
-    editor.undoManager.add();
+    editor.resetContent('<p>This is the only paragraph <em>here</em></p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 'This is the only p'.length, [ 0, 0 ], 'This is the only par'.length);
     annotate(editor, 'test-annotation', 'test-uid', { anything: 'one-paragraph' });
     assertMarkings(editor, 1, 0);
@@ -77,8 +76,7 @@ describe('browser.tinymce.core.annotate.AnnotationPersistenceTest', () => {
   };
 
   const setupSingleBlockAnnotation = (editor: Editor) => {
-    editor.setContent(`<pre class="language-markup" contenteditable="false">test</pre>`);
-    editor.undoManager.add();
+    editor.resetContent(`<pre class="language-markup" contenteditable="false">test</pre>`);
     TinySelections.select(editor, 'pre', []);
     annotate(editor, 'test-annotation', 'test-uid', { anything: 'one-block' });
     assertMarkings(editor, 0, 2); // Extra one for offscreen selection

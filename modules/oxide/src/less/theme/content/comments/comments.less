@@ -8,6 +8,7 @@
 @document-comment-active-background-color: @document-comment-active-color;
 @document-comment-outline-color: @document-comment-color;
 @document-comment-active-outline-color: @document-comment-active-color;
+@document-comment-outline-width: @object-block-selected-outline-width;
 
 .tox-comments-visible {
   .tox-comment[contenteditable="false"],
@@ -16,13 +17,13 @@
   span.tox-comment > video,
   span.tox-comment span.mce-preview-object {
     &:not([data-mce-selected]) {
-      outline: 3px solid @document-comment-outline-color;
+      outline: @document-comment-outline-width solid @document-comment-outline-color;
     }
   }
 
   .tox-comment[contenteditable="false"][data-mce-annotation-active="true"] {
     &:not([data-mce-selected]) {
-      outline: 3px solid @document-comment-active-outline-color;
+      outline: @document-comment-outline-width solid @document-comment-active-outline-color;
     }
   }
 
@@ -32,7 +33,7 @@
     & > video,
     & span.mce-preview-object {
       &:not([data-mce-selected]) {
-        outline: 3px solid @document-comment-active-outline-color;
+        outline: @document-comment-outline-width solid @document-comment-active-outline-color;
       }
     }
   }

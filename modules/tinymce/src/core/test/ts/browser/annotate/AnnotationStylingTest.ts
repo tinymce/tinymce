@@ -32,6 +32,11 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
     }
   }, [], true);
 
+  before(() => {
+    const editor = hook.editor();
+    Class.add(TinyDom.body(editor), 'tox-comments-visible');
+  });
+
   const noOutline: Outline = {
     color: 'rgb(0, 0, 0)',
     width: '0px',
@@ -99,11 +104,6 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
         Arr.each(children, (e) => assert.deepEqual(getOutline(e), isFigCaption(e) ? emptyFigCaptionOutline : noOutline, 'child should not have outline'));
       }
     });
-
-  before(() => {
-    const editor = hook.editor();
-    Class.add(TinyDom.body(editor), 'tox-comments-visible');
-  });
 
   const imageHtml = '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="600" height="400">';
   const audioHtml = '<audio src="custom/audio.mp3" controls="controls"></audio>';
