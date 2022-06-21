@@ -58,4 +58,28 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     TableTestUtils.assertDialogValues(getExpectedData(2), false, generalSelectors);
     await TableTestUtils.pClickDialogButton(editor, false);
   });
+
+  it('TINY-8758: Default width should be added as attribute, not style', async () => {
+    const getExpectedData = (borderWidth: number, width: string) => ({
+      width,
+      height: '',
+      cellspacing: '',
+      cellpadding: '',
+      border: borderWidth + 'px',
+      caption: false,
+      align: ''
+    });
+
+    const editor = hook.editor();
+    editor.setContent('<table style="border-collapse: collapse;" border="1px"><tbody><tr><td>&nbsp;</td></tr></tbody></table>');
+    setCursor(editor);
+    await TableTestUtils.pOpenTableDialog(editor);
+    TableTestUtils.assertDialogValues(getExpectedData(1, ''), false, generalSelectors);
+    TableTestUtils.setDialogValues({ border: '2px' }, false, generalSelectors);
+    await TableTestUtils.pClickDialogButton(editor, true);
+    TinyAssertions.assertContent(editor, '<table style="border-collapse: collapse;" border="2px" width="100%"><tbody><tr><td>&nbsp;</td></tr></tbody></table>');
+    await TableTestUtils.pOpenTableDialog(editor);
+    TableTestUtils.assertDialogValues(getExpectedData(2, '100%'), false, generalSelectors);
+    await TableTestUtils.pClickDialogButton(editor, false);
+  });
 });
