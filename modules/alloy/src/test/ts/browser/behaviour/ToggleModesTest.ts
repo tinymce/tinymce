@@ -50,7 +50,7 @@ UnitTest.test('Browser Test: behaviour.ToggleModesTest', () => {
     );
   });
 
-  Logger.sync('Checking role=menuitemcheck and tag=li', () => {
+  Logger.sync('Checking role=menuitemcheckbox and tag=li', () => {
     const menuitem = GuiFactory.build({
       dom: {
         tag: 'li',
@@ -61,6 +61,26 @@ UnitTest.test('Browser Test: behaviour.ToggleModesTest', () => {
     Assertions.assertStructure(
       'Menu Item Checkbox should have aria-checked role',
       ApproxStructure.build((s, str, _arr) => s.element('li', {
+        attrs: {
+          'aria-checked': str.is('true'),
+          'aria-pressed': str.none()
+        }
+      })),
+      menuitem.element
+    );
+  });
+
+  Logger.sync('Checking role=menuitemradio and tag=div', () => {
+    const menuitem = GuiFactory.build({
+      dom: {
+        tag: 'div',
+        attributes: { role: 'menuitemradio' }
+      }
+    });
+    ToggleModes.updateAuto(menuitem, notUsed, true);
+    Assertions.assertStructure(
+      'Menu Item Radio should have aria-checked role',
+      ApproxStructure.build((s, str, _arr) => s.element('div', {
         attrs: {
           'aria-checked': str.is('true'),
           'aria-pressed': str.none()
