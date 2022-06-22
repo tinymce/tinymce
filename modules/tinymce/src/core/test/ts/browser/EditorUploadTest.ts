@@ -359,8 +359,8 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
       callCount++;
 
       if (callCount === 2) {
-        // Note: This is 2 as the removal of the image also triggers the addition of an undo level and a change event
-        assertEventsLength(2);
+        // Note: This is 1 as only the removal of the image triggers the addition of an undo level and a change event
+        assertEventsLength(1);
 
         // This is in exact since the status of the image can be pending or failed meaning it should try again
         assert.isAtLeast(uploadCount, 1, 'Should at least be one.');
@@ -390,6 +390,65 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
       editor.uploadImages().then(uploadDone),
       editor.uploadImages().then(uploadDone)
     ]);
+  });
+
+  it('TINY-8641: 2 successful upload simultaneous should trigger 1 change', () => {
+    const editor = hook.editor();
+    setInitialContent(editor, `<div>
+      ${imageHtml(testBlobDataUri)}
+      ${imageHtml(testBlobDataUri + 'someFakeString')}
+    </div>`);
+
+    editor.options.set('images_upload_handler', (data: BlobInfo) => {
+      return Promise.resolve(data.id() + '.png');
+    });
+
+    assertEventsLength(0);
+    return editor.uploadImages().then(() => assertEventsLength(1));
+  });
+
+  it('TINY-8641: 1 successful upload and 1 fail upload simultaneous should trigger 1 change', () => {
+    const editor = hook.editor();
+    let firstUploadDone = false;
+    setInitialContent(editor, `<div>
+      ${imageHtml(testBlobDataUri)}
+      ${imageHtml(testBlobDataUri + 'someFakeString')}
+    </div>`);
+
+    editor.options.set('images_upload_handler', (data: BlobInfo) => {
+      if (!firstUploadDone) {
+        firstUploadDone = true;
+        return Promise.resolve(data.id() + '.png');
+      } else {
+        return Promise.reject({ message: 'Error', remove: true });
+      }
+    });
+
+    assertEventsLength(0);
+    return editor.uploadImages().then(() => assertEventsLength(1));
+  });
+
+  it('TINY-8641: multiple successful upload and multiple fail upload simultaneous should trigger 1 change', () => {
+    const editor = hook.editor();
+    let successfulUploadsCounter = 0;
+    setInitialContent(editor, `<div>
+      ${imageHtml(testBlobDataUri)}
+      ${imageHtml(testBlobDataUri + 'someFakeString1')}
+      ${imageHtml(testBlobDataUri + 'someFakeString2')}
+      ${imageHtml(testBlobDataUri + 'someFakeString3')}
+    </div>`);
+
+    editor.options.set('images_upload_handler', (data: BlobInfo) => {
+      successfulUploadsCounter++;
+      if (successfulUploadsCounter < 2) {
+        return Promise.resolve(data.id() + '.png');
+      } else {
+        return Promise.reject({ message: 'Error', remove: true });
+      }
+    });
+
+    assertEventsLength(0);
+    return editor.uploadImages().then(() => assertEventsLength(1));
   });
 
   it(`TBA: Don't upload transparent image`, () => {
