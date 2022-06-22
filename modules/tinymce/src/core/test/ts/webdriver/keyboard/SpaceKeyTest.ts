@@ -1,5 +1,6 @@
 import { RealKeys } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -9,6 +10,8 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
   }, []);
+
+  const isChromium = PlatformDetection.detect().browser.isChromium();
 
   beforeEach(() => {
     hook.editor().focus();
@@ -20,7 +23,11 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
       editor.setContent('<p>s<span style="display: block;" contenteditable="false">a</span></p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
-      TinyAssertions.assertContent(editor, '<p>s&nbsp;<span style="display: block;" contenteditable="false">a</span></p>');
+      if (isChromium) { // Split due to normalization issue. See TINY-8833
+        TinyAssertions.assertContent(editor, '<p>s&nbsp;<span style="display: block;" contenteditable="false">a</span></p>');
+      } else {
+        TinyAssertions.assertContent(editor, '<p>s <span style="display: block;" contenteditable="false">a</span></p>');
+      }
     });
 
     it('TINY-8588: Add two spaces just before a block', async () => {
@@ -37,7 +44,11 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
       editor.setContent('<p><span class="filler">s</span><span style="display: block;" contenteditable="false">a</span></p>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
-      TinyAssertions.assertContent(editor, '<p><span class="filler">s&nbsp;</span><span style="display: block;" contenteditable="false">a</span></p>');
+      if (isChromium) { // Split due to normalization issue. See TINY-8833
+        TinyAssertions.assertContent(editor, '<p><span class="filler">s&nbsp;</span><span style="display: block;" contenteditable="false">a</span></p>');
+      } else {
+        TinyAssertions.assertContent(editor, '<p><span class="filler">s </span><span style="display: block;" contenteditable="false">a</span></p>');
+      }
     });
 
     it('TINY-8588: Add one space before a block inside a strong', async () => {
@@ -45,7 +56,11 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
       editor.setContent('<p>s<strong><span contenteditable="false" style="display: block;">a</span></strong></p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
-      TinyAssertions.assertContent(editor, '<p>s&nbsp;<strong><span style="display: block;" contenteditable="false">a</span></strong></p>');
+      if (isChromium) { // Split in results due to TINY-2999
+        TinyAssertions.assertContent(editor, '<p>s&nbsp;<strong><span style="display: block;" contenteditable="false">a</span></strong></p>');
+      } else {
+        TinyAssertions.assertContent(editor, '<p>s <strong><span style="display: block;" contenteditable="false">a</span></strong></p>');
+      }
     });
   });
 });
