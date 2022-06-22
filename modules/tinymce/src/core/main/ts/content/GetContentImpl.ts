@@ -1,4 +1,4 @@
-import { Fun, Optional, Type } from '@ephox/katamari';
+import { Fun, Optional, Type, Unicode } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
@@ -22,13 +22,16 @@ const getContentFromBody = (editor: Editor, args: GetContentArgs, body: HTMLElem
   if (args.format === 'raw') {
     content = Tools.trim(TrimHtml.trimExternal(editor.serializer, body.innerHTML));
   } else if (args.format === 'text') {
-    content = body.innerHTML.replace(/<br data-mce-bogus="1">/g, '\uFEFF');
-    const parseBody = document.createElement('body');
-    parseBody.setAttribute('style', 'position:fixed;left:400%;top:0px');
-    const root = document.getElementsByTagName('html').item(0);
+    const doc = editor.getDoc();
+    content = body.innerHTML.replace(/<br data-mce-bogus="1">/g, Unicode.zeroWidth);
+    const parseBody = doc.createElement('body');
+    parseBody.style.position = 'fixed';
+    parseBody.style.left = '-9999999px';
+    parseBody.style.top = '0px';
+    const root = doc.documentElement;
     root.appendChild(parseBody);
     parseBody.innerHTML = content;
-    content = Zwsp.trim(parseBody.innerText.replace(/\uFEFF/g, ''));
+    content = Zwsp.trim(Unicode.removeZwsp(parseBody.innerText));
     root.removeChild(parseBody);
   } else if (args.format === 'tree') {
     content = editor.serializer.serialize(body, args);
