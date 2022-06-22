@@ -6,7 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-## Added
+
+
+## 6.1.0 (TBD)
+
+### Added
 - New `sidebar_show` option to show the specified sidebar on initialization #TINY-8710
 - New `newline_behavior` option to control what happens when the enter key is pressed or the `mceInsertNewLine` command is used #TINY-8458
 - New `transparent` property for `iframe` dialog component #TINY-8534
