@@ -1,4 +1,4 @@
-import { Arr, Cell, Strings, Type } from '@ephox/katamari';
+import { Arr, Strings, Type } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
 
 import * as ErrorReporter from '../ErrorReporter';
