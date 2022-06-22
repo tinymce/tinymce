@@ -11,7 +11,9 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, []);
 
-  const isChromium = PlatformDetection.detect().browser.isChromium();
+  const detect = PlatformDetection.detect().browser;
+  const isChromium = detect.isChromium();
+  const isSafari = detect.isSafari();
 
   beforeEach(() => {
     hook.editor().focus();
@@ -23,7 +25,7 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
       editor.setContent('<p>s<span style="display: block;" contenteditable="false">a</span></p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
-      if (isChromium) { // Split due to normalization issue. See TINY-8833
+      if (isChromium || isSafari) { // Split due to normalization issue. See TINY-8833
         TinyAssertions.assertContent(editor, '<p>s&nbsp;<span style="display: block;" contenteditable="false">a</span></p>');
       } else {
         TinyAssertions.assertContent(editor, '<p>s <span style="display: block;" contenteditable="false">a</span></p>');
@@ -36,7 +38,11 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
       await RealKeys.pSendKeysOn('iframe => body p', [ RealKeys.text(' ') ]);
       await RealKeys.pSendKeysOn('iframe => body p', [ RealKeys.text(' ') ]);
-      TinyAssertions.assertContent(editor, '<p>s&nbsp;&nbsp;<span style="display: block;" contenteditable="false">a</span></p>');
+      if (isChromium || !isSafari) { // Split due to normalization issue. See TINY-8833
+        TinyAssertions.assertContent(editor, '<p>s&nbsp;&nbsp;<span style="display: block;" contenteditable="false">a</span></p>');
+      } else {
+        TinyAssertions.assertContent(editor, '<p>s &nbsp;<span style="display: block;" contenteditable="false">a</span></p>');
+      }
     });
 
     it('TINY-8588: Add one space before a block while in a span', async () => {
@@ -44,7 +50,7 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
       editor.setContent('<p><span class="filler">s</span><span style="display: block;" contenteditable="false">a</span></p>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
-      if (isChromium) { // Split due to normalization issue. See TINY-8833
+      if (isChromium || isSafari) { // Split due to normalization issue. See TINY-8833
         TinyAssertions.assertContent(editor, '<p><span class="filler">s&nbsp;</span><span style="display: block;" contenteditable="false">a</span></p>');
       } else {
         TinyAssertions.assertContent(editor, '<p><span class="filler">s </span><span style="display: block;" contenteditable="false">a</span></p>');
@@ -56,7 +62,7 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
       editor.setContent('<p>s<strong><span contenteditable="false" style="display: block;">a</span></strong></p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
-      if (isChromium) { // Split in results due to TINY-2999
+      if (isChromium || isSafari) { // Split in results due to TINY-2999
         TinyAssertions.assertContent(editor, '<p>s&nbsp;<strong><span style="display: block;" contenteditable="false">a</span></strong></p>');
       } else {
         TinyAssertions.assertContent(editor, '<p>s <strong><span style="display: block;" contenteditable="false">a</span></strong></p>');
