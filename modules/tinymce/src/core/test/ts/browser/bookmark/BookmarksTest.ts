@@ -228,11 +228,16 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
     const outsideButton: SugarElement<HTMLButtonElement> = SugarElement.fromHtml('<button id="getBookmarkButton">Get Bookmark</button>');
     const setupElement = () => {
       const element = SugarElement.fromTag('textarea');
+
+      Insert.append(SugarBody.body(), element);
       Insert.append(SugarBody.body(), outsideButton);
 
       return {
         element,
-        teardown: () => Remove.remove(outsideButton)
+        teardown: () => {
+          Remove.remove(element);
+          Remove.remove(outsideButton);
+        }
       };
     };
 
