@@ -4,6 +4,7 @@ import { Css, PredicateFilter, SugarElement, SugarNode } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
+import { SchemaMap } from '../api/html/Schema';
 import * as Options from '../api/Options';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import Tools from '../api/util/Tools';
@@ -20,29 +21,25 @@ import * as NewLineUtils from './NewLineUtils';
 const trimZwsp = (fragment: DocumentFragment) => {
   Arr.each(PredicateFilter.descendants(SugarElement.fromDom(fragment), SugarNode.isText), (text) => {
     const rawNode = text.dom;
-    rawNode.nodeValue = Zwsp.trim(rawNode.nodeValue);
+    rawNode.nodeValue = Zwsp.trim(rawNode.data);
   });
 };
 
-const isEmptyAnchor = (dom: DOMUtils, elm: Element) => {
+const isEmptyAnchor = (dom: DOMUtils, elm: Node): boolean => {
   return elm && elm.nodeName === 'A' && dom.isEmpty(elm);
 };
 
-const isTableCell = (node) => {
-  return node && /^(TD|TH|CAPTION)$/.test(node.nodeName);
-};
-
-const emptyBlock = (elm) => {
+const emptyBlock = (elm: Element) => {
   elm.innerHTML = '<br data-mce-bogus="1">';
 };
 
-const containerAndSiblingName = (container, nodeName) => {
+const containerAndSiblingName = (container: Node, nodeName: string) => {
   return container.nodeName === nodeName || (container.previousSibling && container.previousSibling.nodeName === nodeName);
 };
 
 // Returns true if the block can be split into two blocks or not
-const canSplitBlock = (dom, node) => {
-  return node &&
+const canSplitBlock = (dom: DOMUtils, node: Node | null): boolean => {
+  return Type.isNonNullable(node) &&
     dom.isBlock(node) &&
     !/^(TD|TH|CAPTION|FORM)$/.test(node.nodeName) &&
     !/^(fixed|absolute)/i.test(node.style.position) &&
@@ -50,41 +47,40 @@ const canSplitBlock = (dom, node) => {
 };
 
 // Remove the first empty inline element of the block so this: <p><b><em></em></b>x</p> becomes this: <p>x</p>
-const trimInlineElementsOnLeftSideOfBlock = (dom, nonEmptyElementsMap, block) => {
-  let node = block;
+const trimInlineElementsOnLeftSideOfBlock = (dom: DOMUtils, nonEmptyElementsMap: SchemaMap, block: Element) => {
   const firstChilds = [];
-  let i;
 
-  if (!node) {
+  if (!block) {
     return;
   }
 
   // Find inner most first child ex: <p><i><b>*</b></i></p>
-  while ((node = node.firstChild)) {
-    if (dom.isBlock(node)) {
+  let currentNode: Node | null = block;
+  while ((currentNode = currentNode.firstChild)) {
+    if (dom.isBlock(currentNode)) {
       return;
     }
 
-    if (NodeType.isElement(node) && !nonEmptyElementsMap[node.nodeName.toLowerCase()]) {
-      firstChilds.push(node);
+    if (NodeType.isElement(currentNode) && !nonEmptyElementsMap[currentNode.nodeName.toLowerCase()]) {
+      firstChilds.push(currentNode);
     }
   }
 
-  i = firstChilds.length;
+  let i = firstChilds.length;
   while (i--) {
-    node = firstChilds[i];
-    if (!node.hasChildNodes() || (node.firstChild === node.lastChild && node.firstChild.nodeValue === '')) {
-      dom.remove(node);
+    currentNode = firstChilds[i];
+    if (!currentNode.hasChildNodes() || (currentNode.firstChild === currentNode.lastChild && currentNode.firstChild?.nodeValue === '')) {
+      dom.remove(currentNode);
     } else {
-      if (isEmptyAnchor(dom, node)) {
-        dom.remove(node);
+      if (isEmptyAnchor(dom, currentNode)) {
+        dom.remove(currentNode);
       }
     }
   }
 };
 
-const normalizeZwspOffset = (start, container, offset) => {
-  if (NodeType.isText(container) === false) {
+const normalizeZwspOffset = (start: boolean, container: Node, offset: number) => {
+  if (!NodeType.isText(container)) {
     return offset;
   } else if (start) {
     return offset === 1 && container.data.charAt(offset - 1) === Zwsp.ZWSP ? 0 : offset;
@@ -93,7 +89,7 @@ const normalizeZwspOffset = (start, container, offset) => {
   }
 };
 
-const includeZwspInRange = (rng) => {
+const includeZwspInRange = (rng: Range) => {
   const newRng = rng.cloneRange();
   newRng.setStart(rng.startContainer, normalizeZwspOffset(true, rng.startContainer, rng.startOffset));
   newRng.setEnd(rng.endContainer, normalizeZwspOffset(false, rng.endContainer, rng.endOffset));
@@ -101,31 +97,15 @@ const includeZwspInRange = (rng) => {
 };
 
 // Trims any linebreaks at the beginning of node user for example when pressing enter in a PRE element
-const trimLeadingLineBreaks = (node) => {
+const trimLeadingLineBreaks = (node: Node) => {
+  let currentNode: Node | null = node;
   do {
-    if (NodeType.isText(node)) {
-      node.nodeValue = node.nodeValue.replace(/^[\r\n]+/, '');
+    if (NodeType.isText(currentNode)) {
+      currentNode.data = currentNode.data.replace(/^[\r\n]+/, '');
     }
 
-    node = node.firstChild;
-  } while (node);
-};
-
-const getEditableRoot = (dom, node) => {
-  const root = dom.getRoot();
-  let parent, editableRoot;
-
-  // Get all parents until we hit a non editable parent or the root
-  parent = node;
-  while (parent !== root && dom.getContentEditable(parent) !== 'false') {
-    if (dom.getContentEditable(parent) === 'true') {
-      editableRoot = parent;
-    }
-
-    parent = parent.parentNode;
-  }
-
-  return parent !== root ? editableRoot : root;
+    currentNode = currentNode.firstChild;
+  } while (currentNode);
 };
 
 const applyAttributes = (editor: Editor, node: Element, forcedRootBlockAttrs: Record<string, string>) => {
@@ -155,7 +135,7 @@ const applyAttributes = (editor: Editor, node: Element, forcedRootBlockAttrs: Re
   dom.setAttribs(node, remainingAttrs);
 };
 
-const setForcedBlockAttrs = (editor: Editor, node) => {
+const setForcedBlockAttrs = (editor: Editor, node: Element) => {
   const forcedRootBlockName = Options.getForcedRootBlock(editor);
 
   if (forcedRootBlockName.toLowerCase() === node.tagName.toLowerCase()) {
@@ -165,23 +145,24 @@ const setForcedBlockAttrs = (editor: Editor, node) => {
 };
 
 // Wraps any text nodes or inline elements in the specified forced root block name
-const wrapSelfAndSiblingsInDefaultBlock = (editor: Editor, newBlockName: string, rng, container, offset) => {
-  let newBlock, parentBlock, startNode, node, next, rootBlockName;
-  const dom = editor.dom, editableRoot = getEditableRoot(dom, container);
+const wrapSelfAndSiblingsInDefaultBlock = (editor: Editor, newBlockName: string, rng: Range, container: Node, offset: number) => {
+  const dom = editor.dom;
+  const editableRoot = NewLineUtils.getEditableRoot(dom, container);
 
   // Not in a block element or in a table cell or caption
-  parentBlock = dom.getParent(container, dom.isBlock);
+  let parentBlock = dom.getParent(container, dom.isBlock);
   if (!parentBlock || !canSplitBlock(dom, parentBlock)) {
     parentBlock = parentBlock || editableRoot;
 
-    if (parentBlock === editor.getBody() || isTableCell(parentBlock)) {
+    let rootBlockName: string;
+    if (parentBlock === editor.getBody() || NodeType.isTableCellOrCaption(parentBlock)) {
       rootBlockName = parentBlock.nodeName.toLowerCase();
     } else {
       rootBlockName = parentBlock.parentNode.nodeName.toLowerCase();
     }
 
     if (!parentBlock.hasChildNodes()) {
-      newBlock = dom.create(newBlockName);
+      const newBlock = dom.create(newBlockName);
       setForcedBlockAttrs(editor, newBlock);
       parentBlock.appendChild(newBlock);
       rng.setStart(newBlock, 0);
@@ -190,26 +171,29 @@ const wrapSelfAndSiblingsInDefaultBlock = (editor: Editor, newBlockName: string,
     }
 
     // Find parent that is the first child of parentBlock
-    node = container;
-    while (node.parentNode !== parentBlock) {
+    let node: Node | null = container;
+    while (node && node.parentNode !== parentBlock) {
       node = node.parentNode;
     }
 
     // Loop left to find start node start wrapping at
+    let startNode: Node | undefined;
     while (node && !dom.isBlock(node)) {
       startNode = node;
       node = node.previousSibling;
     }
 
     if (startNode && editor.schema.isValidChild(rootBlockName, newBlockName.toLowerCase())) {
-      newBlock = dom.create(newBlockName);
+      // This should never be null since we check it above
+      const startNodeParent = startNode.parentNode as Node;
+      const newBlock = dom.create(newBlockName);
       setForcedBlockAttrs(editor, newBlock);
-      startNode.parentNode.insertBefore(newBlock, startNode);
+      startNodeParent.insertBefore(newBlock, startNode);
 
       // Start wrapping until we hit a block
       node = startNode;
       while (node && !dom.isBlock(node)) {
-        next = node.nextSibling;
+        const next: Node | null = node.nextSibling;
         newBlock.appendChild(node);
         node = next;
       }
@@ -225,13 +209,13 @@ const wrapSelfAndSiblingsInDefaultBlock = (editor: Editor, newBlockName: string,
 
 // Adds a BR at the end of blocks that only contains an IMG or INPUT since
 // these might be floated and then they won't expand the block
-const addBrToBlockIfNeeded = (dom, block) => {
+const addBrToBlockIfNeeded = (dom: DOMUtils, block: Node) => {
   // IE will render the blocks correctly other browsers needs a BR
   block.normalize(); // Remove empty text nodes that got left behind by the extract
 
   // Check if the block is empty or contains a floated last child
   const lastChild = block.lastChild;
-  if (!lastChild || (/^(left|right)$/gi.test(dom.getStyle(lastChild, 'float', true)))) {
+  if (!lastChild || (/^(left|right)$/gi.test(dom.getStyle(lastChild, 'float', true) ?? ''))) {
     dom.add(block, 'br');
   }
 };
@@ -247,7 +231,7 @@ const shouldEndContainer = (editor: Editor, container: Node | undefined) => {
   }
 };
 
-const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
+const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   let tmpRng, container, offset, parentBlock;
   let newBlock, fragment, containerBlock, parentBlockName, isAfterLastNodeInContainer;
   const dom = editor.dom;
@@ -257,7 +241,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
 
   // Creates a new block element by cloning the current one or creating a new one if the name is specified
   // This function will also copy any text formatting from the parent block and add it to the new one
-  const createNewBlock = (name?) => {
+  const createNewBlock = (name?: string) => {
     let node = container, block, clonedNode, caretNode;
     const textInlineElements = schema.getTextInlineElements();
 
@@ -407,7 +391,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
   }
 
   // Get editable root node, normally the body element but sometimes a div or span
-  const editableRoot = getEditableRoot(dom, container);
+  const editableRoot = NewLineUtils.getEditableRoot(dom, container);
 
   // If there is no editable root then enter is done inside a contentEditable false element
   if (!editableRoot) {

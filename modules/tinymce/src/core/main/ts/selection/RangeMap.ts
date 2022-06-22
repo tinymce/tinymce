@@ -7,9 +7,9 @@ import * as NodeType from '../dom/NodeType';
 
 const findFirstCaretElement = (editor: Editor): Optional<Node> =>
   CaretFinder.firstPositionIn(editor.getBody())
-    .map((caret) => {
+    .bind((caret) => {
       const container = caret.container();
-      return NodeType.isText(container) ? container.parentNode : container;
+      return Optional.from(NodeType.isText(container) ? container.parentNode : container);
     });
 
 const getCaretElement = (editor: Editor): Optional<Node> =>

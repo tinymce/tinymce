@@ -3,7 +3,7 @@ import Tools from '../api/util/Tools';
 import * as NodeType from '../dom/NodeType';
 import { Format, Formats, FormatVars } from './FormatTypes';
 
-const get = (editor: Editor) => {
+const get = (editor: Editor): Formats => {
   const dom = editor.dom;
   const schemaType = editor.schema.type;
 
@@ -51,7 +51,7 @@ const get = (editor: Editor) => {
           marginLeft: '0px',
           marginRight: 'auto',
         },
-        onformat: (table: Element) => {
+        onformat: (table: Node) => {
           // Remove conflicting float style
           dom.setStyle(table, 'float', null);
         },
@@ -127,7 +127,7 @@ const get = (editor: Editor) => {
           marginRight: '0px',
           marginLeft: 'auto',
         },
-        onformat: (table: Element) => {
+        onformat: (table: Node) => {
           // Remove conflicting float style
           dom.setStyle(table, 'float', null);
         },
@@ -183,11 +183,11 @@ const get = (editor: Editor) => {
 
     link: {
       inline: 'a', selector: 'a', remove: 'all', split: true, deep: true,
-      onmatch: (node, _fmt, _itemName) => {
+      onmatch: (node: Node, _fmt: Format, _itemName: string) => {
         return NodeType.isElement(node) && node.hasAttribute('href');
       },
 
-      onformat: (elm, _fmt, vars?: FormatVars) => {
+      onformat: (elm: Node, _fmt: Format, vars?: FormatVars) => {
         Tools.each(vars, (value, key) => {
           dom.setAttrib(elm, key, value);
         });

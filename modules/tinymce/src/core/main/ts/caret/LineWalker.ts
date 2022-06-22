@@ -29,8 +29,9 @@ type PosPredicate = (rect1: GeomClientRect, rect2: GeomClientRect) => boolean;
 type RectPredicate = (rect: GeomClientRect) => boolean;
 
 const findUntil = (direction: VDirection, root: Node, predicateFn: (node: Node) => boolean, node: Node): void => {
-  while ((node = CaretUtils.findNode(node, direction, CaretCandidate.isEditableCaretCandidate, root))) {
-    if (predicateFn(node)) {
+  let currentNode: Node | null = node;
+  while ((currentNode = CaretUtils.findNode(currentNode, direction, CaretCandidate.isEditableCaretCandidate, root))) {
+    if (predicateFn(currentNode)) {
       return;
     }
   }
@@ -40,7 +41,7 @@ const walkUntil = (direction: VDirection, isAboveFn: PosPredicate, isBeflowFn: P
   let line = 0;
   const result: LineNodeClientRect[] = [];
 
-  const add = (node: Node) => {
+  const add = (node: Node): boolean => {
 
     let clientRects = Dimensions.getClientRects([ node ]);
     if (direction === -1) {
@@ -49,11 +50,11 @@ const walkUntil = (direction: VDirection, isAboveFn: PosPredicate, isBeflowFn: P
 
     for (let i = 0; i < clientRects.length; i++) {
       const clientRect = clientRects[i] as LineNodeClientRect;
-      if (isBeflowFn(clientRect, targetClientRect)) {
+      if (isBeflowFn(clientRect, targetClientRect as ClientRect)) {
         continue;
       }
 
-      if (result.length > 0 && isAboveFn(clientRect, ArrUtils.last(result))) {
+      if (result.length > 0 && isAboveFn(clientRect, ArrUtils.last(result) as LineClientRect)) {
         line++;
       }
 
@@ -65,6 +66,8 @@ const walkUntil = (direction: VDirection, isAboveFn: PosPredicate, isBeflowFn: P
 
       result.push(clientRect);
     }
+
+    return false;
   };
 
   const targetClientRect = ArrUtils.last(caretPosition.getClientRects());
@@ -73,8 +76,10 @@ const walkUntil = (direction: VDirection, isAboveFn: PosPredicate, isBeflowFn: P
   }
 
   const node = caretPosition.getNode();
-  add(node);
-  findUntil(direction, root, add, node);
+  if (node) {
+    add(node);
+    findUntil(direction, root, add, node);
+  }
 
   return result;
 };
@@ -96,16 +101,18 @@ const positionsUntil = (direction: VDirection, root: Node, predicateFn: RectPred
   let walkFn: (caretPosition: CaretPosition | null) => CaretPosition | null;
   let isBelowFn: PosPredicate;
   let isAboveFn: PosPredicate;
-  let caretPosition: CaretPosition;
+  let caretPosition: CaretPosition | null;
   const result: LinePosClientRect[] = [];
   let line = 0;
 
-  const getClientRect = (caretPosition: CaretPosition) => {
-    if (direction === 1) {
-      return ArrUtils.last(caretPosition.getClientRects());
+  const getClientRect = (caretPosition: CaretPosition): ClientRect => {
+    // TODO: Are we really guaranteed that we're get at least 1 client rect back?
+    // Also should this really be returning the last item for both directions?
+    if (direction === VDirection.Down) {
+      return ArrUtils.last(caretPosition.getClientRects()) as ClientRect;
+    } else {
+      return ArrUtils.last(caretPosition.getClientRects()) as ClientRect;
     }
-
-    return ArrUtils.last(caretPosition.getClientRects());
   };
 
   if (direction === 1) {
@@ -133,7 +140,7 @@ const positionsUntil = (direction: VDirection, root: Node, predicateFn: RectPred
       continue;
     }
 
-    if (result.length > 0 && isBelowFn(rect, ArrUtils.last(result))) {
+    if (result.length > 0 && isBelowFn(rect, ArrUtils.last(result) as LineClientRect)) {
       line++;
     }
 

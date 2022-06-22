@@ -16,7 +16,7 @@ const getCellsFromElementOrRanges = (ranges: Range[], element: SugarElement): Su
   return selectedCells.length > 0 ? selectedCells : getCellsFromRanges(ranges);
 };
 
-const getCellsFromEditor = (editor: Editor) =>
+const getCellsFromEditor = (editor: Editor): SugarElement<HTMLTableCellElement>[] =>
   getCellsFromElementOrRanges(MultiRange.getRanges(editor.selection.getSel()), SugarElement.fromDom(editor.getBody()));
 
 const getClosestTable = (cell: SugarElement<Node>, isRoot: (e: SugarElement<Node>) => boolean): Optional<SugarElement<HTMLTableElement>> =>

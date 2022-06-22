@@ -15,13 +15,17 @@ type DoneFn = () => void;
 type FallbackFn = (html: string, done: DoneFn) => void;
 
 const setHtml5Clipboard = (clipboardData: DataTransfer | null, html: string, text: string): boolean => {
-  try {
-    clipboardData.clearData();
-    clipboardData.setData('text/html', html);
-    clipboardData.setData('text/plain', text);
-    clipboardData.setData(InternalHtml.internalHtmlMime(), html);
-    return true;
-  } catch (e) {
+  if (clipboardData) {
+    try {
+      clipboardData.clearData();
+      clipboardData.setData('text/html', html);
+      clipboardData.setData('text/plain', text);
+      clipboardData.setData(InternalHtml.internalHtmlMime(), html);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  } else {
     return false;
   }
 };

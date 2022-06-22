@@ -62,7 +62,7 @@ const smartInsertContent = (editor: Editor, html: string): void => {
     insertImage,
     pasteHtml
   ], (action) => {
-    return action(editor, html, pasteHtml) !== true;
+    return !action(editor, html, pasteHtml);
   });
 };
 

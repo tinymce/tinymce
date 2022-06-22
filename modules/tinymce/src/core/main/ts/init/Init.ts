@@ -48,7 +48,7 @@ const trimLegacyPrefix = (name: string) => {
 };
 
 const initPlugins = (editor: Editor) => {
-  const initializedPlugins = [];
+  const initializedPlugins: string[] = [];
 
   Arr.each(Options.getPlugins(editor), (name) => {
     initPlugin(editor, initializedPlugins, trimLegacyPrefix(name));
@@ -96,7 +96,8 @@ const initModel = (editor: Editor) => {
 
 const renderFromLoadedTheme = (editor: Editor) => {
   // Render UI
-  return editor.theme.renderUI();
+  const render = editor.theme.renderUI;
+  return render ? render() : renderThemeFalse(editor);
 };
 
 const renderFromThemeFunc = (editor: Editor) => {
@@ -117,10 +118,10 @@ const renderFromThemeFunc = (editor: Editor) => {
   return info;
 };
 
-const createThemeFalseResult = (element: HTMLElement) => {
+const createThemeFalseResult = (element: HTMLElement | null, iframe?: HTMLElement) => {
   return {
     editorContainer: element,
-    iframeContainer: element,
+    iframeContainer: iframe,
     api: {}
   };
 };
@@ -130,7 +131,7 @@ const renderThemeFalseIframe = (targetElement: Element) => {
 
   DOM.insertAfter(iframeContainer, targetElement);
 
-  return createThemeFalseResult(iframeContainer);
+  return createThemeFalseResult(iframeContainer, iframeContainer);
 };
 
 const renderThemeFalse = (editor: Editor) => {
@@ -166,7 +167,7 @@ const augmentEditorUiApi = (editor: Editor, api: Partial<EditorUiApi>) => {
   editor.ui = { ...editor.ui, ...uiApiFacade };
 };
 
-const init = (editor: Editor) => {
+const init = (editor: Editor): void => {
   editor.dispatch('ScriptsLoaded');
 
   initIcons(editor);
@@ -175,18 +176,17 @@ const init = (editor: Editor) => {
   initPlugins(editor);
   const renderInfo = renderThemeUi(editor);
   augmentEditorUiApi(editor, Optional.from(renderInfo.api).getOr({}));
-  const boxInfo = {
-    editorContainer: renderInfo.editorContainer,
-    iframeContainer: renderInfo.iframeContainer
-  };
-  editor.editorContainer = boxInfo.editorContainer ? boxInfo.editorContainer : null;
+  editor.editorContainer = renderInfo.editorContainer;
   appendContentCssFromSettings(editor);
 
   // Content editable mode ends here
   if (editor.inline) {
-    return InitContentBody.initContentBody(editor);
+    InitContentBody.initContentBody(editor);
   } else {
-    return InitIframe.init(editor, boxInfo);
+    InitIframe.init(editor, {
+      editorContainer: renderInfo.editorContainer,
+      iframeContainer: renderInfo.iframeContainer as HTMLElement
+    });
   }
 };
 

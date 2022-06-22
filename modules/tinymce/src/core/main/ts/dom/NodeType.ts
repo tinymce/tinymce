@@ -100,6 +100,7 @@ const isContentEditableTrue = hasContentEditableState('true');
 const isContentEditableFalse = hasContentEditableState('false');
 
 const isTableCell = matchNodeNames<HTMLTableCellElement>([ 'td', 'th' ]);
+const isTableCellOrCaption = matchNodeNames<HTMLTableCellElement>([ 'td', 'th', 'caption' ]);
 const isMedia = matchNodeNames<HTMLElement>([ 'video', 'audio', 'object', 'embed' ]);
 
 export {
@@ -116,6 +117,7 @@ export {
   isContentEditableFalse,
   isMedia,
   isTableCell,
+  isTableCellOrCaption,
   isRestrictedNode,
   matchNodeNames,
   hasPropValue,

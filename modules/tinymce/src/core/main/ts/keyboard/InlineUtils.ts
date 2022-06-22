@@ -10,7 +10,7 @@ import * as CaretUtils from '../caret/CaretUtils';
 import * as NodeType from '../dom/NodeType';
 import * as Bidi from '../text/Bidi';
 
-const isInlineTarget = (editor: Editor, elm: Element): elm is Element =>
+const isInlineTarget = (editor: Editor, elm: Node): elm is Element =>
   Selectors.is(SugarElement.fromDom(elm), Options.getInlineBoundarySelector(editor));
 
 const isRtl = (element: Node): boolean =>
@@ -30,7 +30,7 @@ const hasSameParentBlock = (rootNode: Node, node1: Node, node2: Node): boolean =
   return Type.isNonNullable(block1) && block1 === block2;
 };
 
-const isAtZwsp = (pos: CaretPosition) =>
+const isAtZwsp = (pos: CaretPosition): boolean =>
   CaretContainer.isBeforeInline(pos) || CaretContainer.isAfterInline(pos);
 
 const normalizePosition = (forward: boolean, pos: CaretPosition): CaretPosition => {

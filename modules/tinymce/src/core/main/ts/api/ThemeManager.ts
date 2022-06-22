@@ -4,17 +4,19 @@ import { NotificationManagerImpl } from './NotificationManager';
 import { EditorUiApi } from './ui/Ui';
 import { WindowManagerImpl } from './WindowManager';
 
+export interface RenderResult {
+  iframeContainer?: HTMLElement;
+  editorContainer: HTMLElement;
+  api?: Partial<EditorUiApi>;
+}
+
 export interface Theme {
   ui?: any;
   inline?: any;
   execCommand?: (command: string, ui?: boolean, value?: any) => boolean;
   destroy?: () => void;
   init?: (editor: Editor, url: string) => void;
-  renderUI?: () => {
-    iframeContainer?: HTMLIFrameElement;
-    editorContainer: HTMLElement;
-    api?: Partial<EditorUiApi>;
-  };
+  renderUI?: () => RenderResult;
   getNotificationManagerImpl?: () => NotificationManagerImpl;
   getWindowManagerImpl?: () => WindowManagerImpl;
 }

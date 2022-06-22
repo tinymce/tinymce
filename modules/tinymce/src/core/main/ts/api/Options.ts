@@ -79,7 +79,8 @@ const register = (editor: Editor) => {
   });
 
   registerOption('language_load', {
-    processor: 'boolean'
+    processor: 'boolean',
+    default: true
   });
 
   registerOption('inline', {
@@ -217,11 +218,6 @@ const register = (editor: Editor) => {
   });
 
   registerOption('images_upload_url', {
-    processor: 'string',
-    default: ''
-  });
-
-  registerOption('images_upload_base_path', {
     processor: 'string',
     default: ''
   });

@@ -3,7 +3,7 @@ import * as NodeType from '../dom/NodeType';
 import * as RangeNodes from './RangeNodes';
 import { RangeLikeObject } from './RangeTypes';
 
-const walk = (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: Node[]) => void) => {
+const walk = (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: Node[]) => void): void => {
   const startOffset = rng.startOffset;
   const startContainer = RangeNodes.getNode(rng.startContainer, startOffset);
   const endOffset = rng.endOffset;
@@ -32,7 +32,7 @@ const walk = (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: Node[]) => 
     return nodes;
   };
 
-  const collectSiblings = (node: Node | undefined, name: string, endNode?: Node) => {
+  const collectSiblings = (node: Node | null, name: 'nextSibling' | 'previousSibling', endNode?: Node | null) => {
     const siblings = [];
 
     for (; node && node !== endNode; node = node[name]) {
@@ -48,7 +48,7 @@ const walk = (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: Node[]) => 
   const walkBoundary = (startNode: Node, endNode: Node, next?: boolean) => {
     const siblingName = next ? 'nextSibling' : 'previousSibling';
 
-    for (let node = startNode, parent = node.parentNode; node && node !== endNode; node = parent) {
+    for (let node: Node | null = startNode, parent = node.parentNode; node && node !== endNode; node = parent) {
       parent = node.parentNode;
       const siblings = collectSiblings(node === startNode ? node : node[siblingName], siblingName);
 

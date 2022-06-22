@@ -4,6 +4,7 @@ import * as ErrorReporter from '../ErrorReporter';
 import * as FocusController from '../focus/FocusController';
 import AddOnManager from './AddOnManager';
 import DOMUtils from './dom/DOMUtils';
+import { EventUtilsEvent } from './dom/EventUtils';
 import Editor from './Editor';
 import Env from './Env';
 import { EditorManagerEventMap } from './EventTypes';
@@ -32,9 +33,9 @@ const DOM = DOMUtils.DOM;
 const each = Tools.each;
 let boundGlobalEvents = false;
 let beforeUnloadDelegate: (e: BeforeUnloadEvent) => any;
-let editors = [];
+let editors: Editor[] = [];
 
-const globalEventDelegate = (e) => {
+const globalEventDelegate = (e: EventUtilsEvent<UIEvent | Event>): void => {
   const type = e.type;
   each(EditorManager.get(), (editor) => {
     switch (type) {
@@ -42,7 +43,7 @@ const globalEventDelegate = (e) => {
         editor.dispatch('ScrollWindow', e);
         break;
       case 'resize':
-        editor.dispatch('ResizeWindow', e);
+        editor.dispatch('ResizeWindow', e as EventUtilsEvent<UIEvent>);
         break;
     }
   });
@@ -83,17 +84,14 @@ const removeEditorFromList = (targetEditor: Editor) => {
   return oldEditors.length !== editors.length;
 };
 
-const purgeDestroyedEditor = (editor: Editor) => {
+const purgeDestroyedEditor = (editor: Editor | null): void => {
   // User has manually destroyed the editor lets clean up the mess
   if (editor && editor.initialized && !(editor.getContainer() || editor.getBody()).parentNode) {
     removeEditorFromList(editor);
     editor.unbindAllNativeEvents();
     editor.destroy(true);
     editor.removed = true;
-    editor = null;
   }
-
-  return editor;
 };
 
 interface EditorManager extends Observable<EditorManagerEventMap> {
@@ -101,8 +99,8 @@ interface EditorManager extends Observable<EditorManagerEventMap> {
   majorVersion: string;
   minorVersion: string;
   releaseDate: string;
-  activeEditor: Editor;
-  focusedEditor: Editor;
+  activeEditor: Editor | null;
+  focusedEditor: Editor | null;
   baseURI: URI;
   baseURL: string;
   documentBaseURL: string;
@@ -114,11 +112,13 @@ interface EditorManager extends Observable<EditorManagerEventMap> {
   createEditor (this: EditorManager, id: string, options: RawEditorOptions): Editor;
   execCommand (this: EditorManager, cmd: string, ui: boolean, value: any): boolean;
   get (this: EditorManager): Editor[];
-  get (this: EditorManager, id: number | string): Editor;
+  get (this: EditorManager, id: number | string): Editor | null;
   init (this: EditorManager, options: RawEditorOptions): Promise<Editor[]>;
   overrideDefaults (this: EditorManager, defaultOptions: Partial<RawEditorOptions>): void;
   remove (this: EditorManager): void;
-  remove (this: EditorManager, selector: string | Editor): Editor | void;
+  // eslint-disable-next-line @typescript-eslint/unified-signatures
+  remove (this: EditorManager, selector: string): void;
+  remove (this: EditorManager, editor: Editor): Editor | null;
   setActive (this: EditorManager, editor: Editor): void;
   setup (this: EditorManager): void;
   translate: (text: Untranslated) => TranslatedString;
@@ -288,7 +288,7 @@ const EditorManager: EditorManager = {
     }
 
     const suffix = defaultOptions.suffix;
-    if (defaultOptions.suffix) {
+    if (suffix) {
       this.suffix = suffix;
     }
 
@@ -325,7 +325,7 @@ const EditorManager: EditorManager = {
    */
   init(options: RawEditorOptions) {
     const self: EditorManager = this;
-    let result;
+    let result: Editor[] | undefined;
 
     const invalidInlineTargets = Tools.makeMap(
       'area base basefont br col frame hr img input isindex link meta param embed source wbr track ' +
@@ -378,13 +378,13 @@ const EditorManager: EditorManager = {
       }
     };
 
-    let provideResults = (editors) => {
+    let provideResults = (editors: Editor[]) => {
       result = editors;
     };
 
     const initEditors = () => {
       let initCount = 0;
-      const editors = [];
+      const editors: Editor[] = [];
       let targets: HTMLElement[];
 
       const createEditor = (id: string, options: RawEditorOptions, targetElm: HTMLElement) => {
@@ -463,7 +463,7 @@ const EditorManager: EditorManager = {
    * });
    */
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-  get(id?: number | string) {
+  get(id?: number | string): any {
     if (arguments.length === 0) {
       return editors.slice(0);
     } else if (Type.isString(id)) {
@@ -555,13 +555,13 @@ const EditorManager: EditorManager = {
    * @param {tinymce.Editor/String/Object} [selector] CSS selector or editor instance to remove.
    * @return {tinymce.Editor} The editor that got passed in will be return if it was found otherwise null.
    */
-  remove(selector?: string | Editor) {
+  remove(selector?: string | Editor): any {
     const self = this;
-    let i, editor;
+    let editor: Editor | null;
 
     // Remove all editors
     if (!selector) {
-      for (i = editors.length - 1; i >= 0; i--) {
+      for (let i = editors.length - 1; i >= 0; i--) {
         self.remove(editors[i]);
       }
 

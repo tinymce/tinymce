@@ -79,13 +79,13 @@ export const setup = (editor: Editor): void => {
   // first time, and after that it's value is stored.
   const getAutocompleters: () => Autocompleters.AutocompleterDatabase = Thunk.cached(() => Autocompleters.register(editor));
 
-  const doLookup = (fetchOptions?: Record<string, any>): Optional<AutocompleteLookupInfo> =>
+  const doLookup = (fetchOptions: Record<string, any> | undefined): Optional<AutocompleteLookupInfo> =>
     activeAutocompleter.get().map(
       (ac) => getContext(editor.dom, editor.selection.getRng(), ac.triggerChar)
         .bind((newContext) => lookupWithContext(editor, getAutocompleters, newContext, fetchOptions))
     ).getOrThunk(() => lookup(editor, getAutocompleters));
 
-  const load = (fetchOptions?: Record<string, any>) => {
+  const load = (fetchOptions: Record<string, any> | undefined) => {
     doLookup(fetchOptions).fold(
       cancelIfNecessary,
       (lookupInfo) => {
@@ -124,7 +124,7 @@ export const setup = (editor: Editor): void => {
   };
 
   editor.addCommand('mceAutocompleterReload', (_ui, value: AutocompleterReloadArgs) => {
-    const fetchOptions: Record<string, any> = Type.isObject(value) ? value.fetchOptions : {};
+    const fetchOptions = Type.isObject(value) ? value.fetchOptions : {};
     load(fetchOptions);
   });
 
