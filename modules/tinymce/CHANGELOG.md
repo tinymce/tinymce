@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Clearer focus states for buttons while navigating with keyboard #TINY-8557
 - Support annotating certain block elements directly when using the editor annotator API #TINY-8698
 - The `mceLink` command can now take the value `{ dialog: true }` to always open the link dialog #TINY-8057
+- All help dialog links to `https://www.tiny.cloud` now include `rel="noopener"` to avoid potential security issues #TINY-8834
 
 ### Changed
 - Toggling fullscreen mode with the `fullscreen` plugin now also fires the `ResizeEditor` event #TINY-8701
