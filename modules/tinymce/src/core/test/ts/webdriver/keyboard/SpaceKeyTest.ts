@@ -36,8 +36,8 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
       const editor = hook.editor();
       editor.setContent('<p>s<span style="display: block;" contenteditable="false">a</span></p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
-      await RealKeys.pSendKeysOn('iframe => body p', [ RealKeys.text(' ') ]);
-      await RealKeys.pSendKeysOn('iframe => body p', [ RealKeys.text(' ') ]);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
       if (isChromium || !isSafari) { // Split due to normalization issue. See TINY-8833
         TinyAssertions.assertContent(editor, '<p>s&nbsp;&nbsp;<span style="display: block;" contenteditable="false">a</span></p>');
       } else {
