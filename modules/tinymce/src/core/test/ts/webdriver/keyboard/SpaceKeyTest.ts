@@ -14,6 +14,7 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
   const detect = PlatformDetection.detect().browser;
   const isChromium = detect.isChromium();
   const isSafari = detect.isSafari();
+  const isFirefox = detect.isFirefox();
 
   beforeEach(() => {
     hook.editor().focus();
@@ -38,10 +39,12 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
-      if (isChromium || !isSafari) { // Split due to normalization issue. See TINY-8833
-        TinyAssertions.assertContent(editor, '<p>s&nbsp;&nbsp;<span style="display: block;" contenteditable="false">a</span></p>');
-      } else {
+      if (isSafari) { // Split due to normalization issue. See TINY-8833
         TinyAssertions.assertContent(editor, '<p>s &nbsp;<span style="display: block;" contenteditable="false">a</span></p>');
+      } else if (isFirefox) { // Split due to normalization issue. See TINY-8833
+        TinyAssertions.assertContent(editor, '<p>s&nbsp; <span style="display: block;" contenteditable="false">a</span></p>');
+      } else {
+        TinyAssertions.assertContent(editor, '<p>s&nbsp;&nbsp;<span style="display: block;" contenteditable="false">a</span></p>');
       }
     });
 
