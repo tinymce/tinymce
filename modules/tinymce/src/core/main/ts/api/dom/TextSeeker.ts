@@ -64,7 +64,7 @@ const TextSeeker = (dom: DOMUtils, isBoundary?: (node: Node) => boolean): TextSe
    * @return {Object} An object containing the matched text node and offset. If no match is found, null will be returned.
    */
   const backwards = (node: Node, offset: number, process: TextProcessCallback, root?: Node) => {
-    const walker = TextWalker(node, root, isBlockBoundary);
+    const walker = TextWalker(node, root ?? dom.getRoot(), isBlockBoundary);
     return walk(node, offset, () => walker.prev().map((prev) => ({ container: prev, offset: prev.length })), process).getOrNull();
   };
 
@@ -79,7 +79,7 @@ const TextSeeker = (dom: DOMUtils, isBoundary?: (node: Node) => boolean): TextSe
    * @return {Object} An object containing the matched text node and offset. If no match is found, null will be returned.
    */
   const forwards = (node: Node, offset: number, process: TextProcessCallback, root?: Node) => {
-    const walker = TextWalker(node, root, isBlockBoundary);
+    const walker = TextWalker(node, root ?? dom.getRoot(), isBlockBoundary);
     return walk(node, offset, () => walker.next().map((next) => ({ container: next, offset: 0 })), process).getOrNull();
   };
 

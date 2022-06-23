@@ -54,7 +54,8 @@ const appendStyle = (editor: Editor, text: string) => {
   });
 };
 
-const getRootName = (editor: Editor): string => editor.inline ? editor.getElement().nodeName.toLowerCase() : undefined;
+const getRootName = (editor: Editor): string | undefined =>
+  editor.inline ? editor.getElement().nodeName.toLowerCase() : undefined;
 
 const removeUndefined = <T>(obj: T): T => Obj.filter(obj as Record<string, unknown>, (v) => Type.isUndefined(v) === false) as T;
 
@@ -129,13 +130,13 @@ const createParser = (editor: Editor): DomParser => {
 
   // Convert src and href into data-mce-src, data-mce-href and data-mce-style
   parser.addAttributeFilter('src,href,style,tabindex', (nodes, name) => {
-    let i = nodes.length, node: AstNode, value: string;
     const dom = editor.dom;
     const internalName = 'data-mce-' + name;
 
+    let i = nodes.length;
     while (i--) {
-      node = nodes[i];
-      value = node.attr(name);
+      const node = nodes[i];
+      let value: string | null | undefined = node.attr(name);
 
       // Add internal attribute if we need to we don't on a refresh of the document
       if (value && !node.attr(internalName)) {
@@ -184,7 +185,7 @@ const createParser = (editor: Editor): DomParser => {
         const node = nodes[i];
         node.type = 8;
         node.name = '#comment';
-        node.value = '[CDATA[' + editor.dom.encode(node.value) + ']]';
+        node.value = '[CDATA[' + editor.dom.encode(node.value ?? '') + ']]';
       }
     });
   }
@@ -209,7 +210,7 @@ const autoFocus = (editor: Editor) => {
   const autoFocus = Options.getAutoFocus(editor);
   if (autoFocus) {
     Delay.setEditorTimeout(editor, () => {
-      let focusEditor;
+      let focusEditor: Editor | null;
 
       if (autoFocus === true) {
         focusEditor = editor;
@@ -217,7 +218,7 @@ const autoFocus = (editor: Editor) => {
         focusEditor = editor.editorManager.get(autoFocus);
       }
 
-      if (!focusEditor.destroyed) {
+      if (focusEditor && !focusEditor.destroyed) {
         focusEditor.focus();
       }
     }, 100);

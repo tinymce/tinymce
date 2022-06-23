@@ -26,7 +26,7 @@ const createBlobInfo = (blobCache: BlobCache, blob: Blob, base64: string) => {
   return blobInfo;
 };
 
-export const dataUriToBlobInfo = (blobCache: BlobCache, dataUri: string, base64Only: boolean = false) => {
+export const dataUriToBlobInfo = (blobCache: BlobCache, dataUri: string, base64Only: boolean = false): Optional<BlobInfo> => {
   return processDataUri(dataUri, base64Only, (base64, type) =>
     Optional.from(blobCache.getByData(base64, type)).orThunk(() =>
       Conversions.buildBlob(type, base64).map((blob) =>

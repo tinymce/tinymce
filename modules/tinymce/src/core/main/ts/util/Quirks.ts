@@ -292,6 +292,8 @@ const Quirks = (editor: Editor): Quirks => {
         applyAttributes();
         e.preventDefault();
         return false;
+      } else {
+        return true;
       }
     });
 
@@ -321,6 +323,7 @@ const Quirks = (editor: Editor): Quirks => {
           }
         }
       }
+      return true;
     });
   };
 

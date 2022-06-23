@@ -94,7 +94,7 @@ const trimInternal = (serializer: DomSerializer, html: string): string => {
   const voidElements = schema.getVoidElements();
 
   // Remove all bogus elements marked with "all"
-  let matches: RegExpExecArray;
+  let matches: RegExpExecArray | null;
   while ((matches = bogusAllRegExp.exec(content))) {
     const index = bogusAllRegExp.lastIndex;
     const matchLength = matches[0].length;

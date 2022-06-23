@@ -12,7 +12,7 @@ import * as MergeText from './MergeText';
 const needsReposition = (pos: CaretPosition, elm: Node): boolean => {
   const container = pos.container();
   const offset = pos.offset();
-  return CaretPosition.isTextPosition(pos) === false && container === elm.parentNode && offset > CaretPosition.before(elm).offset();
+  return !CaretPosition.isTextPosition(pos) && container === elm.parentNode && offset > CaretPosition.before(elm).offset();
 };
 
 const reposition = (elm: Node, pos: CaretPosition): CaretPosition =>

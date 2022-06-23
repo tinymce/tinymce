@@ -34,10 +34,6 @@ const isAtZwsp = (pos: CaretPosition): boolean =>
   CaretContainer.isBeforeInline(pos) || CaretContainer.isAfterInline(pos);
 
 const normalizePosition = (forward: boolean, pos: CaretPosition): CaretPosition => {
-  if (!pos) {
-    return pos;
-  }
-
   const container = pos.container(), offset = pos.offset();
 
   if (forward) {

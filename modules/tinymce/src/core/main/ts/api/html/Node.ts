@@ -15,7 +15,7 @@ const typeLookup: Record<string, number> = {
 };
 
 // Walks the tree left/right
-const walk = (node: AstNode, root: AstNode | null, prev?: boolean): AstNode => {
+const walk = (node: AstNode, root: AstNode | null, prev?: boolean): AstNode | null | undefined => {
   const startName = prev ? 'lastChild' : 'firstChild';
   const siblingName = prev ? 'prev' : 'next';
 
@@ -41,17 +41,21 @@ const walk = (node: AstNode, root: AstNode | null, prev?: boolean): AstNode => {
       }
     }
   }
+
+  return undefined;
 };
 
 const isEmptyTextNode = (node: AstNode) => {
+  const text = node.value ?? '';
+
   // Non whitespace content
-  if (!isWhitespaceText(node.value)) {
+  if (!isWhitespaceText(text)) {
     return false;
   }
 
   // Parent is not a span and only spaces or is a span but has styles
   const parentNode = node.parent;
-  if (parentNode && (parentNode.name !== 'span' || parentNode.attr('style')) && /^[ ]+$/.test(node.value)) {
+  if (parentNode && (parentNode.name !== 'span' || parentNode.attr('style')) && /^[ ]+$/.test(text)) {
     return false;
   }
 
@@ -109,11 +113,11 @@ class AstNode {
   public type: number;
   public attributes?: Attributes;
   public value?: string;
-  public parent?: AstNode;
-  public firstChild?: AstNode;
-  public lastChild?: AstNode;
-  public next?: AstNode;
-  public prev?: AstNode;
+  public parent?: AstNode | null;
+  public firstChild?: AstNode | null;
+  public lastChild?: AstNode | null;
+  public next?: AstNode | null;
+  public prev?: AstNode | null;
   public raw?: boolean;
 
   /**
@@ -129,7 +133,7 @@ class AstNode {
     this.type = type;
 
     if (type === 1) {
-      this.attributes = [] as Attributes;
+      this.attributes = [] as unknown as Attributes;
       (this.attributes as any).map = {}; // Should be considered internal
     }
   }
@@ -169,9 +173,9 @@ class AstNode {
    * someNode.attr('name', null); // Removes an attribute
    */
   public attr(name: string, value: string | null | undefined): AstNode | undefined;
-  public attr(name: Record<string, string | null | undefined>): AstNode | undefined;
+  public attr(name: Record<string, string | null | undefined> | undefined): AstNode | undefined;
   public attr(name: string): string | undefined;
-  public attr(name: string | Record<string, string | null | undefined>, value?: string | null | undefined): string | AstNode | undefined {
+  public attr(name?: string | Record<string, string | null | undefined>, value?: string | null | undefined): string | AstNode | undefined {
     const self = this;
 
     if (!Type.isString(name)) {
@@ -225,6 +229,8 @@ class AstNode {
 
       return attrs.map[name];
     }
+
+    return undefined;
   }
 
   /**
@@ -243,7 +249,7 @@ class AstNode {
 
     // Clone element attributes
     if (selfAttrs) {
-      const cloneAttrs = [] as Attributes;
+      const cloneAttrs = [] as unknown as Attributes;
       (cloneAttrs as any).map = {};
 
       for (let i = 0, l = selfAttrs.length; i < l; i++) {
@@ -274,8 +280,10 @@ class AstNode {
   public wrap(wrapper: AstNode): AstNode {
     const self = this;
 
-    self.parent.insert(wrapper, self);
-    wrapper.append(self);
+    if (self.parent) {
+      self.parent.insert(wrapper, self);
+      wrapper.append(self);
+    }
 
     return self;
   }
@@ -317,7 +325,7 @@ class AstNode {
         if (next) {
           next.prev = null;
         }
-      } else {
+      } else if (prev) {
         prev.next = next;
       }
 
@@ -327,7 +335,7 @@ class AstNode {
         if (prev) {
           prev.next = null;
         }
-      } else {
+      } else if (next) {
         next.prev = prev;
       }
 
@@ -389,7 +397,7 @@ class AstNode {
     if (before) {
       if (refNode === parent.firstChild) {
         parent.firstChild = node;
-      } else {
+      } else if (refNode.prev) {
         refNode.prev.next = node;
       }
 
@@ -399,7 +407,7 @@ class AstNode {
     } else {
       if (refNode === parent.lastChild) {
         parent.lastChild = node;
-      } else {
+      } else if (refNode.next) {
         refNode.next.prev = node;
       }
 
@@ -464,7 +472,7 @@ class AstNode {
       const nodes = [];
 
       // Collect the children
-      for (let node = self.firstChild; node; node = walk(node, self)) {
+      for (let node: AstNode | null | undefined = self.firstChild; node; node = walk(node, self)) {
         nodes.push(node);
       }
 
@@ -529,7 +537,7 @@ class AstNode {
         }
 
         // Keep whitespace preserve elements
-        if (node.type === 3 && node.parent && whitespace[node.parent.name] && isWhitespaceText(node.value)) {
+        if (node.type === 3 && node.parent && whitespace[node.parent.name] && isWhitespaceText(node.value ?? '')) {
           return false;
         }
 
@@ -550,7 +558,7 @@ class AstNode {
    * @param {Boolean} prev Optional previous node state defaults to false.
    * @return {tinymce.html.Node} Node that is next to or previous of the current node.
    */
-  public walk(prev?: boolean): AstNode {
+  public walk(prev?: boolean): AstNode | null | undefined {
     return walk(this, null, prev);
   }
 }

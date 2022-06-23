@@ -16,7 +16,7 @@ const deleteRangeMergeBlocks = (rootNode: SugarElement<Node>, selection: EditorS
     DeleteUtils.getParentBlock(rootNode, SugarElement.fromDom(rng.startContainer)),
     DeleteUtils.getParentBlock(rootNode, SugarElement.fromDom(rng.endContainer)),
     (block1, block2) => {
-      if (Compare.eq(block1, block2) === false) {
+      if (!Compare.eq(block1, block2)) {
         return Optional.some(() => {
           rng.deleteContents();
 

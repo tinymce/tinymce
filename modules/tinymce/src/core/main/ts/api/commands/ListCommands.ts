@@ -13,7 +13,7 @@ const registerExecCommands = (editor: Editor): void => {
         const listParent = listElm.parentNode;
 
         // If list is within a text block then split that block
-        if (/^(H[1-6]|P|ADDRESS|PRE)$/.test(listParent.nodeName)) {
+        if (listParent && /^(H[1-6]|P|ADDRESS|PRE)$/.test(listParent.nodeName)) {
           const bm = editor.selection.getBookmark();
           editor.dom.split(listParent, listElm);
           editor.selection.moveToBookmark(bm);

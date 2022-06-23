@@ -16,12 +16,13 @@ const isBlockLike = NodeType.matchStyleValues('display', 'block table table-cell
 const isCaretContainer = CaretContainer.isCaretContainer;
 const isCaretContainerBlock = CaretContainer.isCaretContainerBlock;
 const isElement = NodeType.isElement;
+const isText = NodeType.isText;
 const isCaretCandidate = CaretCandidate.isCaretCandidate;
 const isForwards = (direction: HDirection): boolean => direction > 0;
 const isBackwards = (direction: HDirection): boolean => direction < 0;
 
-const skipCaretContainers = (walk: (shallow?: boolean) => Node | null, shallow?: boolean): Node | null => {
-  let node: Node | null;
+const skipCaretContainers = (walk: (shallow?: boolean) => Node | null | undefined, shallow?: boolean): Node | null => {
+  let node: Node | null | undefined;
 
   while ((node = walk(shallow))) {
     if (!isCaretContainerBlock(node)) {
@@ -32,36 +33,37 @@ const skipCaretContainers = (walk: (shallow?: boolean) => Node | null, shallow?:
   return null;
 };
 
-const findNode = (node: Node, direction: number, predicateFn: (node: Node) => boolean, rootNode: Node, shallow?: boolean): Node | null => {
+const findNode = (node: Node, direction: number, predicateFn: (node: Node | null) => boolean, rootNode: Node, shallow?: boolean): Node | null => {
   const walker = new DomTreeWalker(node, rootNode);
   const isCefOrCaretContainer = isContentEditableFalse(node) || isCaretContainerBlock(node);
 
+  let tempNode: Node | null;
   if (isBackwards(direction)) {
     if (isCefOrCaretContainer) {
-      node = skipCaretContainers(walker.prev.bind(walker), true);
-      if (predicateFn(node)) {
-        return node;
+      tempNode = skipCaretContainers(walker.prev.bind(walker), true);
+      if (predicateFn(tempNode)) {
+        return tempNode;
       }
     }
 
-    while ((node = skipCaretContainers(walker.prev.bind(walker), shallow))) {
-      if (predicateFn(node)) {
-        return node;
+    while ((tempNode = skipCaretContainers(walker.prev.bind(walker), shallow))) {
+      if (predicateFn(tempNode)) {
+        return tempNode;
       }
     }
   }
 
   if (isForwards(direction)) {
     if (isCefOrCaretContainer) {
-      node = skipCaretContainers(walker.next.bind(walker), true);
-      if (predicateFn(node)) {
-        return node;
+      tempNode = skipCaretContainers(walker.next.bind(walker), true);
+      if (predicateFn(tempNode)) {
+        return tempNode;
       }
     }
 
-    while ((node = skipCaretContainers(walker.next.bind(walker), shallow))) {
-      if (predicateFn(node)) {
-        return node;
+    while ((tempNode = skipCaretContainers(walker.next.bind(walker), shallow))) {
+      if (predicateFn(tempNode)) {
+        return tempNode;
       }
     }
   }
@@ -111,7 +113,8 @@ const getChildNodeAtRelativeOffset = (relativeOffset: number, caretPosition: Car
 };
 
 const beforeAfter = (before: boolean, node: Node): Range => {
-  const range = node.ownerDocument.createRange();
+  const doc = node.ownerDocument ?? document;
+  const range = doc.createRange();
 
   if (before) {
     range.setStartBefore(node);
@@ -130,15 +133,16 @@ const isNodesInSameBlock = (root: Node, node1: Node, node2: Node): boolean =>
 const lean = (left: boolean, root: Node, node: Node): Node | null => {
   const siblingName = left ? 'previousSibling' : 'nextSibling';
 
-  while (node && node !== root) {
-    let sibling = node[siblingName];
+  let tempNode: Node | null = node;
+  while (tempNode && tempNode !== root) {
+    let sibling = tempNode[siblingName];
 
-    if (isCaretContainer(sibling)) {
+    if (sibling && isCaretContainer(sibling)) {
       sibling = sibling[siblingName];
     }
 
     if (isContentEditableFalse(sibling) || isMedia(sibling)) {
-      if (isNodesInSameBlock(root, sibling, node)) {
+      if (isNodesInSameBlock(root, sibling, tempNode)) {
         return sibling;
       }
 
@@ -149,7 +153,7 @@ const lean = (left: boolean, root: Node, node: Node): Node | null => {
       break;
     }
 
-    node = node.parentNode;
+    tempNode = tempNode.parentNode;
   }
 
   return null;
@@ -159,31 +163,27 @@ const before: (node: Node) => Range = Fun.curry(beforeAfter, true);
 const after: (node: Node) => Range = Fun.curry(beforeAfter, false);
 
 const normalizeRange = (direction: number, root: Node, range: Range): Range => {
-  let node: Node;
+  let node: Node | null;
   const leanLeft = Fun.curry(lean, true, root);
   const leanRight = Fun.curry(lean, false, root);
 
-  let container = range.startContainer;
+  const container = range.startContainer;
   const offset = range.startOffset;
 
   if (CaretContainer.isCaretContainerBlock(container)) {
-    if (!isElement(container)) {
-      container = container.parentNode;
-    }
+    const block = isText(container) ? container.parentNode as Element : container;
 
-    // TODO: The `isCaretContainerBlock` function already asserts container is an element, so
-    //       the above isElement check likely isn't needed which would remove the need for the cast.
-    const location = (container as Element).getAttribute('data-mce-caret');
+    const location = block.getAttribute('data-mce-caret');
 
     if (location === 'before') {
-      node = container.nextSibling;
+      node = block.nextSibling;
       if (isFakeCaretTarget(node)) {
         return before(node);
       }
     }
 
     if (location === 'after') {
-      node = container.previousSibling;
+      node = block.previousSibling;
       if (isFakeCaretTarget(node)) {
         return after(node);
       }
@@ -286,14 +286,15 @@ const getElementFromPosition = (pos: CaretPosition): Optional<SugarElement> =>
 const getElementFromPrevPosition = (pos: CaretPosition): Optional<SugarElement> =>
   Optional.from(pos.getNode(true)).map(SugarElement.fromDom);
 
-const getVisualCaretPosition = (walkFn: (pos: CaretPosition) => CaretPosition | null, caretPosition: CaretPosition): CaretPosition => {
-  while ((caretPosition = walkFn(caretPosition))) {
-    if (caretPosition.isVisible()) {
-      return caretPosition;
+const getVisualCaretPosition = (walkFn: (pos: CaretPosition) => CaretPosition | null, caretPosition: CaretPosition): CaretPosition | null => {
+  let pos: CaretPosition | null = caretPosition;
+  while ((pos = walkFn(pos))) {
+    if (pos.isVisible()) {
+      return pos;
     }
   }
 
-  return caretPosition;
+  return pos;
 };
 
 const isMoveInsideSameBlock = (from: CaretPosition, to: CaretPosition): boolean => {

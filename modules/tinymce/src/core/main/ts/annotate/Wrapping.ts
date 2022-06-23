@@ -55,7 +55,7 @@ const applyAnnotation = (
   }
 };
 
-const removeDirectAnnotation = (elem: SugarElement<Element>) => {
+const removeDirectAnnotation = (elem: SugarElement<Element>): void => {
   Class.remove(elem, Markings.annotation());
   Attribute.remove(elem, `${Markings.dataAnnotationId()}`);
   Attribute.remove(elem, `${Markings.dataAnnotation()}`);

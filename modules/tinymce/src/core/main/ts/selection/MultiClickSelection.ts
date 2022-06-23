@@ -65,12 +65,12 @@ const findClosestBlockRange = (startRng: Range, rootNode: Node): Range => {
   return rng;
 };
 
-const onTripleClickSelect = (editor: Editor) => {
+const onTripleClickSelect = (editor: Editor): void => {
   const rng = findClosestBlockRange(editor.selection.getRng(), editor.getBody());
   editor.selection.setRng(RangeNormalizer.normalize(rng));
 };
 
-const setup = (editor: Editor) => {
+const setup = (editor: Editor): void => {
   editor.on('mousedown', (e) => {
     if (e.detail >= 3) {
       e.preventDefault();

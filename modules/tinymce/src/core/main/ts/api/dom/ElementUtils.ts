@@ -1,4 +1,4 @@
-import { Obj } from '@ephox/katamari';
+import { Obj, Type } from '@ephox/katamari';
 
 import * as Bookmarks from '../../bookmark/Bookmarks';
 import Tools from '../util/Tools';
@@ -27,7 +27,7 @@ const ElementUtils = (dom: DOMUtils): ElementUtils => {
    * @param {Node} node2 Second node to compare with.
    * @return {Boolean} True/false if the nodes are the same or not.
    */
-  const compare = (node1, node2) => {
+  const compare = (node1: Node, node2: Node) => {
     // Not the same name
     if (node1.nodeName !== node2.nodeName) {
       return false;
@@ -40,10 +40,10 @@ const ElementUtils = (dom: DOMUtils): ElementUtils => {
      * @param {Node} node Node to get attributes from.
      * @return {Object} Name/value object with attributes and attribute values.
      */
-    const getAttribs = (node) => {
-      const attribs = {};
+    const getAttribs = (node: Node) => {
+      const attribs: Record<string, string> = {};
 
-      each(dom.getAttribs(node), (attr: Attr) => {
+      each(dom.getAttribs(node), (attr) => {
         const name = attr.nodeName.toLowerCase();
 
         // Don't compare internal attributes or style
@@ -63,16 +63,14 @@ const ElementUtils = (dom: DOMUtils): ElementUtils => {
      * @param {Object} obj2 Second object to compare.
      * @return {Boolean} True/false if the objects matches or not.
      */
-    const compareObjects = (obj1, obj2) => {
-      let value, name;
-
-      for (name in obj1) {
+    const compareObjects = (obj1: Record<string, string>, obj2: Record<string, string>) => {
+      for (const name in obj1) {
         // Obj1 has item obj2 doesn't have
         if (Obj.has(obj1, name)) {
-          value = obj2[name];
+          const value = obj2[name];
 
           // Obj2 doesn't have obj1 item
-          if (typeof value === 'undefined') {
+          if (Type.isUndefined(value)) {
             return false;
           }
 
@@ -87,7 +85,7 @@ const ElementUtils = (dom: DOMUtils): ElementUtils => {
       }
 
       // Check if obj 2 has something obj 1 doesn't have
-      for (name in obj2) {
+      for (const name in obj2) {
         // Obj2 has item obj1 doesn't have
         if (Obj.has(obj2, name)) {
           return false;

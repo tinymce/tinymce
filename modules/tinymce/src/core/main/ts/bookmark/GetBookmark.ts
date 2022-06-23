@@ -26,8 +26,8 @@ const getNormalizedTextOffset = (trim: TrimFn, container: Text, offset: number):
 };
 
 const getPoint = (dom: DOMUtils, trim: TrimFn, normalized: boolean, rng: Range, start: boolean) => {
-  let container = rng[start ? 'startContainer' : 'endContainer'];
-  let offset = rng[start ? 'startOffset' : 'endOffset'];
+  const container = start ? rng.startContainer : rng.endContainer;
+  let offset = start ? rng.startOffset : rng.endOffset;
   const point: number[] = [];
   const root = dom.getRoot();
 
@@ -45,8 +45,8 @@ const getPoint = (dom: DOMUtils, trim: TrimFn, normalized: boolean, rng: Range, 
     point.push(dom.nodeIndex(childNodes[offset], normalized) + after);
   }
 
-  for (; container && container !== root; container = container.parentNode) {
-    point.push(dom.nodeIndex(container, normalized));
+  for (let node: Node | null = container; node && node !== root; node = node.parentNode) {
+    point.push(dom.nodeIndex(node, normalized));
   }
 
   return point;
@@ -72,24 +72,20 @@ const findIndex = (dom: DOMUtils, name: string, element: Element) => {
   Tools.each(dom.select(name), (node) => {
     if (node.getAttribute('data-mce-bogus') === 'all') {
       return;
-    }
-
-    if (node === element) {
+    } else if (node === element) {
       return false;
+    } else {
+      count++;
+      return;
     }
-
-    count++;
   });
 
   return count;
 };
 
 const moveEndPoint = (rng: Range, start: boolean) => {
-  let container, offset;
-  const prefix = start ? 'start' : 'end';
-
-  container = rng[prefix + 'Container'];
-  offset = rng[prefix + 'Offset'];
+  let container = start ? rng.startContainer : rng.endContainer;
+  let offset = start ? rng.startOffset : rng.endOffset;
 
   // normalize Table Cell selection
   if (NodeType.isElement(container) && container.nodeName === 'TR') {
@@ -97,7 +93,11 @@ const moveEndPoint = (rng: Range, start: boolean) => {
     container = childNodes[Math.min(start ? offset : offset - 1, childNodes.length - 1)];
     if (container) {
       offset = start ? 0 : container.childNodes.length;
-      rng['set' + (start ? 'Start' : 'End')](container, offset);
+      if (start) {
+        rng.setStart(container, offset);
+      } else {
+        rng.setEnd(container, offset);
+      }
     }
   }
 };
@@ -109,9 +109,7 @@ const normalizeTableCellSelection = (rng: Range) => {
   return rng;
 };
 
-const findSibling = (node: Node, offset: number): Element => {
-  let sibling;
-
+const findSibling = (node: Node, offset: number): Element | undefined => {
   if (NodeType.isElement(node)) {
     node = RangeNodes.getNode(node, offset);
     if (isContentEditableFalse(node)) {
@@ -121,10 +119,10 @@ const findSibling = (node: Node, offset: number): Element => {
 
   if (CaretContainer.isCaretContainer(node)) {
     if (NodeType.isText(node) && CaretContainer.isCaretContainerBlock(node)) {
-      node = node.parentNode;
+      node = node.parentNode as Element;
     }
 
-    sibling = node.previousSibling;
+    let sibling = node.previousSibling;
     if (isContentEditableFalse(sibling)) {
       return sibling;
     }
@@ -134,6 +132,8 @@ const findSibling = (node: Node, offset: number): Element => {
       return sibling;
     }
   }
+
+  return undefined;
 };
 
 const findAdjacentContentEditableFalseElm = (rng: Range) => {
@@ -142,16 +142,16 @@ const findAdjacentContentEditableFalseElm = (rng: Range) => {
 
 const getOffsetBookmark = (trim: TrimFn, normalized: boolean, selection: EditorSelection): IndexBookmark | PathBookmark => {
   const element = selection.getNode();
-  let name = element ? element.nodeName : null;
   const rng = selection.getRng();
 
-  if (isContentEditableFalse(element) || name === 'IMG') {
+  if (element.nodeName === 'IMG' || isContentEditableFalse(element)) {
+    const name = element.nodeName;
     return { name, index: findIndex(selection.dom, name, element) };
   }
 
   const sibling = findAdjacentContentEditableFalseElm(rng);
   if (sibling) {
-    name = sibling.tagName;
+    const name = sibling.tagName;
     return { name, index: findIndex(selection.dom, name, sibling) };
   }
 

@@ -101,7 +101,7 @@ const getBoundingClientRect = (item: Element | Range): GeomClientRect => {
   }
 
   if (isZeroRect(clientRect) && isRange(item)) {
-    return getBoundingClientRectWebKitText(item);
+    return getBoundingClientRectWebKitText(item) ?? clientRect;
   }
 
   return clientRect;
