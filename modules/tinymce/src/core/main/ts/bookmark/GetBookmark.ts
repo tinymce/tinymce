@@ -87,14 +87,15 @@ const findIndex = (dom: DOMUtils, name: string, element: Element) => {
 };
 
 const moveEndPoint = (rng: Range, start: boolean) => {
-  let container, offset, childNodes;
+  let container, offset;
   const prefix = start ? 'start' : 'end';
 
   container = rng[prefix + 'Container'];
   offset = rng[prefix + 'Offset'];
 
+  // normalize Table Cell selection
   if (NodeType.isElement(container) && container.nodeName === 'TR') {
-    childNodes = container.childNodes;
+    const childNodes = container.childNodes;
     container = childNodes[Math.min(start ? offset : offset - 1, childNodes.length - 1)];
     if (container) {
       offset = start ? 0 : container.childNodes.length;

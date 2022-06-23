@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Links would open when using alt+enter (option+enter on Mac) even when `preventDefault()` is called on the keydown event #TINY-8661
 - Spaces would not be added correctly on some browsers when before or after a contenteditable block element #TINY-8588
 - Images were not showing as selected when selecting images alongside other content #TINY-5947
+- Images that used a Data URI were corrupted when the data wasn't base64 encoded #TINY-8337
 - Notifications would not properly reposition when toggling fullscreen mode #TINY-8701
 - Dialogs will not exceed the window height on smaller screens #TINY-8146
 - Some types on functions in the `tinymce.dom.TreeWalker` class missed that it could return undefined #TINY-8592
@@ -67,6 +68,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `InsertLineBreak` command did not replace selected content #TINY-8458
 - Delete operations could behave incorrectly if the selection contains a `contenteditable="false"` element located at the edge of content #TINY-8729
 - `uploadImages` no longer triggers two `change` events if there is a removal of images on upload #TINY-8641
+- The selection is no longer incorrectly moved inside a comment by the `editor.selection.normalize()` API #TINY-7817
 
 ## 6.0.3 - 2022-05-25
 

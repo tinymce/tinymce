@@ -1,5 +1,6 @@
 import { afterEach, before, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
+import { TinyAssertions } from '@ephox/mcagar';
 import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -11,11 +12,11 @@ import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as Conversions from 'tinymce/core/file/Conversions';
 
-const assertResult = (editor: Editor, title: string, uploadUri: string, uploadedBlobInfo: BlobInfo, result: UploadResult[]) => {
+const assertResult = (editor: Editor, title: string, uploadUri: string, uploadedBlobInfo: BlobInfo, result: UploadResult[], ext: string = '.png') => {
   const firstResult = result[0];
   assert.lengthOf(result, 1, title);
   assert.isTrue(firstResult.status, title);
-  assert.include(firstResult.element.src, uploadedBlobInfo.id() + '.png', title);
+  assert.include(firstResult.element.src, uploadedBlobInfo.id() + ext, title);
   assert.equal(uploadUri, firstResult.uploadUri, title);
   assert.equal(uploadedBlobInfo.id(), firstResult.blobInfo.id(), title);
   assert.equal(uploadedBlobInfo.name(), firstResult.blobInfo.name(), title);
@@ -564,5 +565,50 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     });
 
     return editor.uploadImages().then(uploadDone);
+  });
+
+  it('TINY-8337: Images with a data URI that does not use base64 encoding are uploaded correctly and not corrupted', () => {
+    const editor = hook.editor();
+    const svg = `<svg xmlns='http://www.w3.org/2000/svg' height='100' width='100'><circle cx='50' cy='50' r='40' stroke='black' stroke-width='3' fill='red'></svg>`;
+    let uploadedBlobInfo: BlobInfo, uploadUri: string;
+
+    setInitialContent(editor, imageHtml('data:image/svg+xml,' + encodeURIComponent(svg)));
+
+    editor.options.set('images_upload_handler', (data: BlobInfo) => {
+      uploadedBlobInfo = data;
+      uploadUri = data.id() + '.svg';
+      return Promise.resolve(uploadUri);
+    });
+
+    assertEventsLength(0);
+    return editor.uploadImages().then((firstResult) => {
+      assert.equal(uploadedBlobInfo.base64(), btoa(svg), 'base64 data is correctly encoded');
+      assert.isAbove(uploadedBlobInfo.blob().size, 100, 'Blob data should not be empty');
+      assertResult(editor, 'Upload the images', uploadUri, uploadedBlobInfo, firstResult, '.svg');
+      assertEventsLength(1);
+      return editor.uploadImages().then((secondResult) => {
+        assert.lengthOf(secondResult, 0, 'Upload the images');
+      });
+    });
+  });
+
+  it('TINY-8337: Images with a data URI that are not base64 encoded are not processed if filtered out', () => {
+    const editor = hook.editor();
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100"><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="blue"></svg>`;
+    const dataUri = 'data:image/svg+xml,' + encodeURIComponent(svg);
+
+    editor.editorUpload.addFilter((img) => img.src !== dataUri);
+
+    setInitialContent(editor, imageHtml(dataUri));
+
+    editor.options.set('images_upload_handler', () => {
+      return Promise.reject('Should not be called');
+    });
+
+    assertEventsLength(0);
+    return editor.uploadImages().then(() => {
+      assertEventsLength(0);
+      TinyAssertions.assertContent(editor, `<p><img src="${dataUri}"></p>`);
+    });
   });
 });

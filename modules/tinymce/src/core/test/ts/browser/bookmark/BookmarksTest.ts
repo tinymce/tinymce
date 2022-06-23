@@ -1,8 +1,8 @@
-import { Assertions, Cursors } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { Assertions, Cursors, Mouse } from '@ephox/agar';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Hierarchy, Html, Remove, Replication, SelectorFilter, SugarElement } from '@ephox/sugar';
-import { McEditor, TinyAssertions, TinyDom, TinySelections } from '@ephox/wrap-mcagar';
+import { Hierarchy, Html, Remove, Replication, SelectorFilter, SugarElement, Insert, SugarBody, DomEvent } from '@ephox/sugar';
+import { McEditor, TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -223,4 +223,58 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
     assertApproxRawContent(editor, '<p>abc</p>');
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
   }));
+
+  context('Get bookmark should work if the first element of the content is a comment', () => {
+    const outsideButton: SugarElement<HTMLButtonElement> = SugarElement.fromHtml('<button id="getBookmarkButton">Get Bookmark</button>');
+    const setupElement = () => {
+      const element = SugarElement.fromTag('textarea');
+
+      Insert.append(SugarBody.body(), element);
+      Insert.append(SugarBody.body(), outsideButton);
+
+      return {
+        element,
+        teardown: () => {
+          Remove.remove(element);
+          Remove.remove(outsideButton);
+        }
+      };
+    };
+
+    const hook = TinyHooks.bddSetupFromElement<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      menubar: false,
+      toolbar: false,
+      statusbar: false,
+    }, setupElement, []);
+
+    const setContentAndTriggerGetBookmark = (editor: Editor, content: string) => {
+      editor.resetContent(content);
+      editor.addCommand('getBookmarkProxyCommand', () => {
+        editor.selection.getBookmark();
+      });
+
+      const binding = DomEvent.bind(outsideButton, 'click', () => {
+        editor.execCommand('getBookmarkProxyCommand');
+      });
+      Mouse.click(outsideButton);
+      binding.unbind();
+    };
+
+    it('TINY-7817: bookmark should be inserted correctly even if the first element of content is a comment', () => {
+      const editor = hook.editor();
+      setContentAndTriggerGetBookmark(editor, '<div><!-- Whatever --> <img></div>');
+      TinyAssertions.assertContentPresence(editor, {
+        '[data-mce-type="bookmark"]': 1
+      });
+    });
+
+    it('TINY-7817: bookmark should be inserted correctly even if the first element of content is a comment and next element is also a comment', () => {
+      const editor = hook.editor();
+      setContentAndTriggerGetBookmark(editor, '<div><!-- Whatever --><!-- second comment --> <img></div>');
+      TinyAssertions.assertContentPresence(editor, {
+        '[data-mce-type="bookmark"]': 1
+      });
+    });
+  });
 });

@@ -1,4 +1,4 @@
-import { Arr, Strings } from '@ephox/katamari';
+import { Arr, Strings, Type } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
 
 import * as ErrorReporter from '../ErrorReporter';
@@ -181,27 +181,28 @@ const EditorUpload = (editor: Editor): EditorUpload => {
     }
 
     return imageScanner.findAll(editor.getBody(), isValidDataUriImage).then(aliveGuard((result) => {
-      result = Arr.filter(result, (resultItem) => {
+      const filteredResult = Arr.filter(result, (resultItem): resultItem is BlobInfoImagePair => {
         // ImageScanner internally converts images that it finds, but it may fail to do so if image source is inaccessible.
         // In such case resultItem will contain appropriate text error message, instead of image data.
-        if (typeof resultItem === 'string') {
+        if (Type.isString(resultItem)) {
           ErrorReporter.displayError(editor, resultItem);
           return false;
+        } else {
+          return true;
         }
-        return true;
       });
 
       if (Rtc.isRtc(editor)) {
         // RTC is set up so that image sources are only ever blob
       } else {
-        Arr.each(result, (resultItem) => {
+        Arr.each(filteredResult, (resultItem) => {
           replaceUrlInUndoStack(resultItem.image.src, resultItem.blobInfo.blobUri());
           resultItem.image.src = resultItem.blobInfo.blobUri();
           resultItem.image.removeAttribute('data-mce-src');
         });
       }
 
-      return result;
+      return filteredResult;
     }));
   };
 
