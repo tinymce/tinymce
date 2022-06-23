@@ -15,17 +15,38 @@ const option: {
   editor.options.get(name);
 
 // Note: This is also contained in the table plugin Options.ts file
+const stylesAvailableAsAttributes = [ 'width' ];
+
+const getPixelForcedWidth = (editor: Editor) => {
+  // Determine the inner size of the parent block element where the table will be inserted
+  const dom = editor.dom;
+  const parentBlock = dom.getParent<HTMLElement>(editor.selection.getStart(), dom.isBlock) ?? editor.getBody();
+  return Width.getInner(SugarElement.fromDom(parentBlock)) + 'px';
+};
+
+// Note: This is also contained in the table plugin Options.ts file
 const determineDefaultTableStyles = (editor: Editor, defaultStyles: Record<string, string>): Record<string, string> => {
-  if (isTablePixelsForced(editor)) {
-    // Determine the inner size of the parent block element where the table will be inserted
-    const dom = editor.dom;
-    const parentBlock = dom.getParent<HTMLElement>(editor.selection.getStart(), dom.isBlock) ?? editor.getBody();
-    const contentWidth = Width.getInner(SugarElement.fromDom(parentBlock));
-    return { ...defaultStyles, width: contentWidth + 'px' };
-  } else if (isTableResponsiveForced(editor)) {
-    return Obj.filter(defaultStyles, (_value, key) => key !== 'width');
+  if (isTableResponsiveForced(editor) || !shouldStyleWithCss(editor)) {
+    return Obj.filter(defaultStyles, (_value, key) => !Arr.contains(stylesAvailableAsAttributes, key));
+  } else if (isTablePixelsForced(editor)) {
+    return { ...defaultStyles, width: getPixelForcedWidth(editor) };
   } else {
     return defaultStyles;
+  }
+};
+
+// Note: This is also contained in the table plugin Options.ts file
+const determineDefaultTableAttributes = (editor: Editor, defaultAttributes: Record<string, string>): Record<string, string> => {
+  const defaultStyles = editor.options.get('table_default_styles');
+
+  if (editor.options.isSet('table_default_styles')) {
+    return defaultAttributes;
+  } else if (shouldStyleWithCss(editor)) {
+    return defaultAttributes;
+  } else if (isTablePixelsForced(editor)) {
+    return { ...defaultAttributes, ...Obj.filter(defaultStyles, (_value, key) => Arr.contains(stylesAvailableAsAttributes, key)), width: getPixelForcedWidth(editor) };
+  } else {
+    return { ...defaultAttributes, ...Obj.filter(defaultStyles, (_value, key) => Arr.contains(stylesAvailableAsAttributes, key)) };
   }
 };
 
@@ -115,7 +136,14 @@ const isTableResponsiveForced = (editor: Editor): boolean =>
 
 const hasTableResizeBars = option<boolean>('table_resize_bars');
 
-const getTableDefaultAttributes = option<Record<string, string>>('table_default_attributes');
+const shouldStyleWithCss = option<boolean>('table_style_by_css');
+
+const getTableDefaultAttributes = (editor: Editor): Record<string, string> => {
+  // Note: The we don't rely on the default here as we need to dynamically lookup the widths based on the current editor state
+  const options = editor.options;
+  const defaultStyles = options.get('table_default_attributes');
+  return options.isSet('table_default_attributes') ? defaultStyles : determineDefaultTableAttributes(editor, defaultStyles);
+};
 
 const getTableDefaultStyles = (editor: Editor): Record<string, string> => {
   // Note: The we don't rely on the default here as we need to dynamically lookup the widths based on the current editor state
