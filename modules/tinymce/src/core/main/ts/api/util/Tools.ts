@@ -83,17 +83,15 @@ const is = (obj: any, type?: string): boolean => {
  * @param {Object} map Optional map to add items to.
  * @return {Object} Name/value map of items.
  */
-const makeMap = (items: ArrayLike<string> | string | undefined, delim?: string | RegExp, map?: Record<string, {}>): Record<string, {}> => {
+const makeMap = (items: ArrayLike<string> | string | undefined, delim?: string | RegExp, map: Record<string, {}> = {}): Record<string, {}> => {
   const resolvedItems = Type.isString(items) ? items.split(delim || ',') : (items || []);
-
-  const newMap: Record<string, {}> = map ?? {};
 
   let i = resolvedItems.length;
   while (i--) {
-    newMap[resolvedItems[i]] = {};
+    map[resolvedItems[i]] = {};
   }
 
-  return newMap;
+  return map;
 };
 
 /**
