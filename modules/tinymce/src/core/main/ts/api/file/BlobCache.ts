@@ -3,7 +3,10 @@ import { Arr, Fun, Type } from '@ephox/katamari';
 import * as Uuid from '../../util/Uuid';
 
 export interface BlobCache {
-  create: (o: string | BlobInfoData, blob?: Blob, base64?: string, name?: string, filename?: string) => BlobInfo;
+  create: {
+    (o: BlobInfoData): BlobInfo;
+    (id: string, blob: Blob, base64: string, name?: string, filename?: string): BlobInfo;
+  };
   add: (blobInfo: BlobInfo) => void;
   get: (id: string) => BlobInfo | undefined;
   getByUri: (blobUri: string) => BlobInfo | undefined;

@@ -100,15 +100,17 @@ const createBlobInfo = (editor: Editor, blobCache: BlobCache, file: File, base64
 };
 
 const pasteImage = (editor: Editor, imageItem: FileResult): void => {
-  const { data: base64, type } = Conversions.parseDataUri(imageItem.uri);
-  const file = imageItem.file;
+  Conversions.parseDataUri(imageItem.uri).each(({ data, type, base64Encoded }) => {
+    const base64 = base64Encoded ? data : btoa(data);
+    const file = imageItem.file;
 
-  // TODO: Move the bulk of the cache logic to EditorUpload
-  const blobCache = editor.editorUpload.blobCache;
-  const existingBlobInfo = blobCache.getByData(base64, type);
-  const blobInfo = existingBlobInfo ?? createBlobInfo(editor, blobCache, file, base64);
+    // TODO: Move the bulk of the cache logic to EditorUpload
+    const blobCache = editor.editorUpload.blobCache;
+    const existingBlobInfo = blobCache.getByData(base64, type);
+    const blobInfo = existingBlobInfo ?? createBlobInfo(editor, blobCache, file, base64);
 
-  pasteHtml(editor, `<img src="${blobInfo.blobUri()}">`, false);
+    pasteHtml(editor, `<img src="${blobInfo.blobUri()}">`, false);
+  });
 };
 
 const isClipboardEvent = (event: Event): event is ClipboardEvent =>
