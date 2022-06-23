@@ -86,7 +86,7 @@ const is = (obj: any, type?: string): boolean => {
 const makeMap = (items: ArrayLike<string> | string | undefined, delim?: string | RegExp, map?: Record<string, {}>): Record<string, {}> => {
   const resolvedItems = Type.isString(items) ? items.split(delim || ',') : (items || []);
 
-  const newMap: Record<string, {}> = map ? { ...map } : {};
+  const newMap: Record<string, {}> = map ?? {};
 
   let i = resolvedItems.length;
   while (i--) {
