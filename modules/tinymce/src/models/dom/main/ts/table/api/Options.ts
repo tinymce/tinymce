@@ -26,7 +26,7 @@ const getPixelForcedWidth = (editor: Editor) => {
 
 // Note: This is also contained in the table plugin Options.ts file
 const determineDefaultTableStyles = (editor: Editor, defaultStyles: Record<string, string>): Record<string, string> => {
-  if (isTableResponsiveForced(editor) || !shouldStyleWithCss(editor)) {
+  if (isTableResponsiveForced(editor) || shouldStyleWithCss(editor) === false) {
     return Obj.filter(defaultStyles, (_value, key) => !Arr.contains(stylesAvailableAsAttributes, key));
   } else if (isTablePixelsForced(editor)) {
     return { ...defaultStyles, width: getPixelForcedWidth(editor) };
