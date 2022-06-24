@@ -5,7 +5,6 @@ import DOMUtils from '../api/dom/DOMUtils';
 import EditorSelection from '../api/dom/Selection';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
-import Tools from '../api/util/Tools';
 import { IdBookmark, IndexBookmark } from '../bookmark/BookmarkTypes';
 import * as GetBookmark from '../bookmark/GetBookmark';
 import * as NodeType from '../dom/NodeType';
@@ -68,7 +67,7 @@ const moveEndPoint = (dom: DOMUtils, rng: Range, node: Node, start: boolean): vo
   );
 
   do {
-    if (NodeType.isText(node) && Tools.trim(node.nodeValue).length !== 0) {
+    if (NodeType.isText(node) && node.nodeValue.length !== 0) {
       if (start) {
         rng.setStart(node, 0);
       } else {
