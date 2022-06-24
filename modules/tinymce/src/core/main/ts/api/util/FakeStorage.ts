@@ -1,4 +1,4 @@
-// Simple stub of localstorage for IE11 with strict security settings #TINY-1782
+// Simple stub of localstorage with strict security settings #TINY-1782
 export const create = (): Storage => (() => {
   let data: Record<string, string> = {};
   let keys: string[] = [];

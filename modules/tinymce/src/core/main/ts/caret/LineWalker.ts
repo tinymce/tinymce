@@ -96,6 +96,11 @@ const upUntil: (root: Node, predicateFn: RectPredicate, caretPosition: CaretPosi
 const downUntil: (root: Node, predicateFn: RectPredicate, caretPosition: CaretPosition) => LineNodeClientRect[] =
   Fun.curry(walkUntil, VDirection.Down, ClientRect.isBelow, ClientRect.isAbove);
 
+const getLastClientRect = (caretPosition: CaretPosition): ClientRect => {
+  // ASSUMPTION: There should always be at least one client rect here
+  return ArrUtils.last(caretPosition.getClientRects()) as ClientRect;
+};
+
 const positionsUntil = (direction: VDirection, root: Node, predicateFn: RectPredicate, node: Node): LinePosClientRect[] => {
   const caretWalker = CaretWalker(root);
   let walkFn: (caretPosition: CaretPosition | null) => CaretPosition | null;
@@ -104,16 +109,6 @@ const positionsUntil = (direction: VDirection, root: Node, predicateFn: RectPred
   let caretPosition: CaretPosition | null;
   const result: LinePosClientRect[] = [];
   let line = 0;
-
-  const getClientRect = (caretPosition: CaretPosition): ClientRect => {
-    // TODO: Are we really guaranteed that we're get at least 1 client rect back?
-    // Also should this really be returning the last item for both directions?
-    if (direction === VDirection.Down) {
-      return ArrUtils.last(caretPosition.getClientRects()) as ClientRect;
-    } else {
-      return ArrUtils.last(caretPosition.getClientRects()) as ClientRect;
-    }
-  };
 
   if (direction === 1) {
     walkFn = caretWalker.next;
@@ -127,14 +122,14 @@ const positionsUntil = (direction: VDirection, root: Node, predicateFn: RectPred
     caretPosition = CaretPosition.before(node);
   }
 
-  const targetClientRect = getClientRect(caretPosition);
+  const targetClientRect = getLastClientRect(caretPosition);
 
   do {
     if (!caretPosition.isVisible()) {
       continue;
     }
 
-    const rect = getClientRect(caretPosition);
+    const rect = getLastClientRect(caretPosition);
 
     if (isAboveFn(rect, targetClientRect)) {
       continue;
