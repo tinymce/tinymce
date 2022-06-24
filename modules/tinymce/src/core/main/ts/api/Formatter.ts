@@ -3,7 +3,7 @@ import { Cell, Fun } from '@ephox/katamari';
 import * as CaretFormat from '../fmt/CaretFormat';
 import * as FormatChanged from '../fmt/FormatChanged';
 import { FormatRegistry } from '../fmt/FormatRegistry';
-import { Format, FormatVars } from '../fmt/FormatTypes';
+import { ApplyFormat, Format, FormatVars } from '../fmt/FormatTypes';
 import * as Preview from '../fmt/Preview';
 import * as FormatShortcuts from '../keyboard/FormatShortcuts';
 import * as Rtc from '../Rtc';
@@ -36,15 +36,19 @@ interface Formatter extends FormatRegistry {
   matchNode: (node: Node, name: string, vars?: FormatVars, similar?: boolean) => Format | undefined;
   canApply: (name: string) => boolean;
   formatChanged: (names: string, callback: FormatChanged.FormatChangeCallback, similar?: boolean, vars?: FormatVars) => { unbind: () => void };
-  getCssText: (format: string | Format) => string;
+  getCssText: (format: string | ApplyFormat) => string;
 }
 
 const Formatter = (editor: Editor): Formatter => {
   const formats = FormatRegistry(editor);
-  const formatChangeState = Cell(null);
+  const formatChangeState = Cell<FormatChanged.RegisteredFormats>({});
 
   FormatShortcuts.setup(editor);
   CaretFormat.setup(editor);
+
+  if (!Rtc.isRtc(editor)) {
+    FormatChanged.setup(formatChangeState, editor);
+  }
 
   return {
     /**
@@ -181,7 +185,8 @@ const Formatter = (editor: Editor): Formatter => {
      * @param {Boolean} similar True/false state if the match should handle similar or exact formats.
      * @param {Object} vars Restrict the format being watched to only match if the variables applied are equal to vars.
      */
-    formatChanged: (formats: string, callback: FormatChanged.FormatChangeCallback, similar?: boolean, vars?: FormatVars) => Rtc.formatChanged(editor, formatChangeState, formats, callback, similar, vars),
+    formatChanged: (formats: string, callback: FormatChanged.FormatChangeCallback, similar?: boolean, vars?: FormatVars) =>
+      Rtc.formatChanged(editor, formatChangeState, formats, callback, similar, vars),
 
     /**
      * Returns a preview css text for the specified format.

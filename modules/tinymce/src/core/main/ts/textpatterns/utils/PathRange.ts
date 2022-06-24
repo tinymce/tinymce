@@ -1,4 +1,4 @@
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Optional, Type } from '@ephox/katamari';
 
 import * as NodeType from '../../dom/NodeType';
 
@@ -35,14 +35,18 @@ const generatePathRange = (root: Node, startNode: Node, startOffset: number, end
 const resolvePath = (root: Node, path: number[]): Optional<{ node: Node; offset: number }> => {
   const nodePath = path.slice();
   const offset = nodePath.pop();
-  const resolvedNode = Arr.foldl(nodePath, (optNode: Optional<Node>, index: number) => optNode.bind((node) => Optional.from(node.childNodes[index])), Optional.some(root));
-  return resolvedNode.bind((node) => {
-    if (NodeType.isText(node) && (offset < 0 || offset > node.data.length)) {
-      return Optional.none();
-    } else {
-      return Optional.some({ node, offset });
-    }
-  });
+  if (!Type.isNumber(offset)) {
+    return Optional.none();
+  } else {
+    const resolvedNode = Arr.foldl(nodePath, (optNode: Optional<Node>, index: number) => optNode.bind((node) => Optional.from(node.childNodes[index])), Optional.some(root));
+    return resolvedNode.bind((node) => {
+      if (NodeType.isText(node) && (offset < 0 || offset > node.data.length)) {
+        return Optional.none();
+      } else {
+        return Optional.some({ node, offset });
+      }
+    });
+  }
 };
 
 const resolvePathRange = (root: Node, range: PathRange): Optional<Range> => resolvePath(root, range.start)

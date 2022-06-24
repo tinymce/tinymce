@@ -1,4 +1,4 @@
-import { Obj } from '@ephox/katamari';
+import { Obj, Type } from '@ephox/katamari';
 
 import { isWhitespaceText } from '../../text/Whitespace';
 import { SchemaMap } from './Schema';
@@ -168,15 +168,14 @@ class AstNode {
    * console.log(someNode.attr('name')); // Gets an attribute
    * someNode.attr('name', null); // Removes an attribute
    */
-  public attr(name: string, value: string | null): AstNode | undefined;
-  public attr(name: Record<string, string | null>): AstNode | undefined;
+  public attr(name: string, value: string | null | undefined): AstNode | undefined;
+  public attr(name: Record<string, string | null | undefined>): AstNode | undefined;
   public attr(name: string): string | undefined;
-  public attr(name: string | Record<string, string | null>, value?: string | null): string | AstNode | undefined {
+  public attr(name: string | Record<string, string | null | undefined>, value?: string | null | undefined): string | AstNode | undefined {
     const self = this;
-    let attrs: Attributes;
 
-    if (typeof name !== 'string') {
-      if (name !== undefined && name !== null) {
+    if (!Type.isString(name)) {
+      if (Type.isNonNullable(name)) {
         Obj.each(name, (value, key) => {
           self.attr(key, value);
         });
@@ -185,7 +184,8 @@ class AstNode {
       return self;
     }
 
-    if ((attrs = self.attributes)) {
+    const attrs = self.attributes;
+    if (attrs) {
       if (value !== undefined) {
         // Remove attribute
         if (value === null) {
@@ -239,10 +239,10 @@ class AstNode {
   public clone(): AstNode {
     const self = this;
     const clone = new AstNode(self.name, self.type);
-    let selfAttrs: Attributes;
+    const selfAttrs = self.attributes;
 
     // Clone element attributes
-    if ((selfAttrs = self.attributes)) {
+    if (selfAttrs) {
       const cloneAttrs = [] as Attributes;
       (cloneAttrs as any).map = {};
 

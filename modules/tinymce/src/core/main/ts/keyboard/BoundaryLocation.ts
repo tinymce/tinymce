@@ -9,16 +9,16 @@ import * as InlineUtils from './InlineUtils';
 
 export interface LocationAdt {
   fold: <T> (
-    before: (element: Node) => T,
-    start: (element: Node) => T,
-    end: (element: Node) => T,
-    after: (element: Node) => T
+    before: (element: Element) => T,
+    start: (element: Element) => T,
+    end: (element: Element) => T,
+    after: (element: Element) => T
   ) => T;
   match: <T> (branches: {
-    before: (element: Node) => T;
-    start: (element: Node) => T;
-    end: (element: Node) => T;
-    after: (element: Node) => T;
+    before: (element: Element) => T;
+    start: (element: Element) => T;
+    end: (element: Element) => T;
+    after: (element: Element) => T;
   }) => T;
   log: (label: string) => void;
 }
@@ -79,7 +79,7 @@ const after = (isInlineTarget: (node: Node) => boolean, rootNode: Node, pos: Car
   );
 };
 
-const isValidLocation = (location: LocationAdt) => InlineUtils.isRtl(getElement(location)) === false;
+const isValidLocation = (location: LocationAdt) => !InlineUtils.isRtl(getElement(location));
 
 const readLocation = (isInlineTarget: (node: Node) => boolean, rootNode: Node, pos: CaretPosition): Optional<LocationAdt> => {
   const location = LazyEvaluator.evaluateUntil([

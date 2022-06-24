@@ -4,7 +4,7 @@ import { FormatVars } from './FormatTypes';
 import * as MatchFormat from './MatchFormat';
 import * as RemoveFormat from './RemoveFormat';
 
-const toggle = (editor: Editor, name: string, vars: FormatVars, node: Node) => {
+const toggle = (editor: Editor, name: string, vars?: FormatVars, node?: Node) => {
   const fmt = editor.formatter.get(name);
 
   if (MatchFormat.match(editor, name, vars, node) && (!('toggle' in fmt[0]) || fmt[0].toggle)) {

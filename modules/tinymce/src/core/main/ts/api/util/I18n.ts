@@ -15,7 +15,7 @@ type Primitive = string | number | boolean | Record<string | number, any> | Func
 
 export type TokenisedString = [ string, ...Primitive[] ];
 
-export type Untranslated = Primitive | TokenisedString | RawString;
+export type Untranslated = Primitive | TokenisedString | RawString | null | undefined;
 
 export type TranslatedString = string;
 

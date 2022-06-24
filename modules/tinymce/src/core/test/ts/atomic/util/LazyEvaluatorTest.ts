@@ -6,7 +6,7 @@ import * as LazyEvaluator from 'tinymce/core/util/LazyEvaluator';
 
 describe('atomic.tinymce.core.util.LazyEvaluatorTest', () => {
   it('evaluateUntil', () => {
-    const operations = [
+    const operations: Array<(a: number, b: string) => Optional<number>> = [
       (a, b) => {
         return a === 1 && b === 'a' ? Optional.some(1) : Optional.none();
       },
@@ -19,8 +19,8 @@ describe('atomic.tinymce.core.util.LazyEvaluatorTest', () => {
     ];
 
     assert.isTrue(LazyEvaluator.evaluateUntil(operations, [ 123, 'x' ]).isNone(), 'Should return none');
-    assert.equal(LazyEvaluator.evaluateUntil(operations, [ 1, 'a' ]).getOrDie(1), 1, 'Should return first item');
-    assert.equal(LazyEvaluator.evaluateUntil(operations, [ 2, 'b' ]).getOrDie(2), 2, 'Should return second item');
-    assert.equal(LazyEvaluator.evaluateUntil(operations, [ 3, 'c' ]).getOrDie(3), 3, 'Should return third item');
+    assert.equal(LazyEvaluator.evaluateUntil(operations, [ 1, 'a' ]).getOrDie('1'), 1, 'Should return first item');
+    assert.equal(LazyEvaluator.evaluateUntil(operations, [ 2, 'b' ]).getOrDie('2'), 2, 'Should return second item');
+    assert.equal(LazyEvaluator.evaluateUntil(operations, [ 3, 'c' ]).getOrDie('3'), 3, 'Should return third item');
   });
 });

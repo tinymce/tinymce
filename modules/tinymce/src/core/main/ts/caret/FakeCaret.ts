@@ -75,7 +75,7 @@ const trimInlineCaretContainers = (root: HTMLElement): void => {
       const data = sibling.data;
 
       if (data.length === 1) {
-        sibling.parentNode.removeChild(sibling);
+        sibling.parentNode?.removeChild(sibling);
       } else {
         sibling.deleteData(data.length - 1, 1);
       }
@@ -86,7 +86,7 @@ const trimInlineCaretContainers = (root: HTMLElement): void => {
       const data = sibling.data;
 
       if (data.length === 1) {
-        sibling.parentNode.removeChild(sibling);
+        sibling.parentNode?.removeChild(sibling);
       } else {
         sibling.deleteData(0, 1);
       }
@@ -219,8 +219,8 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
 
 export const isFakeCaretTableBrowser = (): boolean => Env.browser.isFirefox();
 
-export const isInlineFakeCaretTarget = (node: Node): node is HTMLElement =>
+export const isInlineFakeCaretTarget = (node: Node | undefined | null): node is HTMLElement =>
   isContentEditableFalse(node) || isMedia(node);
 
-export const isFakeCaretTarget = (node: Node): node is HTMLElement =>
+export const isFakeCaretTarget = (node: Node | undefined | null): node is HTMLElement =>
   isInlineFakeCaretTarget(node) || (NodeType.isTable(node) && isFakeCaretTableBrowser());

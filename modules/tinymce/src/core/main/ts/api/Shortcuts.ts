@@ -25,7 +25,7 @@ import Tools from './util/Tools';
 
 const each = Tools.each, explode = Tools.explode;
 
-const keyCodeLookup = {
+const keyCodeLookup: Record<string, number> = {
   f1: 112,
   f2: 113,
   f3: 114,
@@ -40,7 +40,9 @@ const keyCodeLookup = {
   f12: 123
 };
 
-const modifierNames = Tools.makeMap('alt,ctrl,shift,meta,access');
+type ModifierMap = Record<'alt' | 'ctrl' | 'shift' | 'meta' | 'access', {}>;
+
+const modifierNames = Tools.makeMap('alt,ctrl,shift,meta,access') as ModifierMap;
 
 interface Shortcut {
   id: string;
@@ -53,7 +55,7 @@ interface Shortcut {
   charCode: number;
   subpatterns: Shortcut[];
   desc: string;
-  cmdFunc: () => void;
+  func: () => void;
   scope: any;
 }
 
@@ -65,14 +67,17 @@ export interface ShortcutsConstructor {
 
 type CommandFunc = string | [string, boolean, any] | (() => void);
 
+const isModifier = (key: string): key is keyof ModifierMap =>
+  key in modifierNames;
+
 const parseShortcut = (pattern: string): Shortcut => {
   let key;
-  const shortcut: any = {};
+  const shortcut = {} as Shortcut;
   const isMac = Env.os.isMacOS() || Env.os.isiOS();
 
   // Parse modifiers and keys ctrl+alt+b for example
   each(explode(pattern.toLowerCase(), '+'), (value) => {
-    if (value in modifierNames) {
+    if (isModifier(value)) {
       shortcut[value] = true;
     } else {
       // Allow numeric keycodes like ctrl+219 for ctrl+[
@@ -123,7 +128,7 @@ const parseShortcut = (pattern: string): Shortcut => {
 class Shortcuts {
   private readonly editor: Editor;
   private readonly shortcuts: Record<string, Shortcut> = {};
-  private pendingPatterns = [];
+  private pendingPatterns: Shortcut[] = [];
 
   public constructor(editor: Editor) {
     this.editor = editor;
@@ -166,7 +171,7 @@ class Shortcuts {
    * @param {Object} scope Optional scope to execute the function in.
    * @return {Boolean} true/false state if the shortcut was added or not.
    */
-  public add(pattern: string, desc: string, cmdFunc: CommandFunc, scope?: any): boolean {
+  public add(pattern: string, desc: string | null, cmdFunc: CommandFunc, scope?: any): boolean {
     const self = this;
     const func = self.normalizeCommandFunc(cmdFunc);
 
@@ -213,7 +218,7 @@ class Shortcuts {
     }
   }
 
-  private createShortcut(pattern: string, desc?: string, cmdFunc?: () => void, scope?): Shortcut {
+  private createShortcut(pattern: string, desc?: string | null, cmdFunc?: () => void, scope?: any): Shortcut {
     const shortcuts = Tools.map(explode(pattern, '>'), parseShortcut);
     shortcuts[shortcuts.length - 1] = Tools.extend(shortcuts[shortcuts.length - 1], {
       func: cmdFunc,
@@ -255,7 +260,7 @@ class Shortcuts {
     return false;
   }
 
-  private executeShortcutAction(shortcut) {
+  private executeShortcutAction(shortcut: Shortcut) {
     return shortcut.func ? shortcut.func.call(shortcut.scope) : null;
   }
 }

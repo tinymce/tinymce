@@ -1,5 +1,7 @@
-export default () => {
-  const unimplemented = () => {
+import { WindowManagerImpl } from '../api/WindowManager';
+
+export default (): WindowManagerImpl => {
+  const unimplemented = (): never => {
     throw new Error('Theme did not provide a WindowManager implementation.');
   };
 
@@ -8,8 +10,6 @@ export default () => {
     openUrl: unimplemented,
     alert: unimplemented,
     confirm: unimplemented,
-    close: unimplemented,
-    getParams: unimplemented,
-    setParams: unimplemented
+    close: unimplemented
   };
 };

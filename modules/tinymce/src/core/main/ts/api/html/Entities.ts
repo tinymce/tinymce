@@ -9,7 +9,7 @@ interface Entities {
   encodeAllRaw: (text: string) => string;
   encodeNumeric: (text: string, attr?: boolean) => string;
   encodeNamed: (text: string, attr?: boolean, entities?: EntitiesMap) => string;
-  getEncodeFunc: (name: string, entities?: EntitiesMap | string) => (text: string, attr?: boolean) => string;
+  getEncodeFunc: (name: string, entities?: string) => (text: string, attr?: boolean) => string;
   decode: (text: string) => string;
 }
 
@@ -27,7 +27,7 @@ const attrsCharsRegExp = /[&<>\"\u0060\u007E-\uD7FF\uE000-\uFFEF]|[\uD800-\uDBFF
 const textCharsRegExp = /[<>&\u007E-\uD7FF\uE000-\uFFEF]|[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
 const rawCharsRegExp = /[<>&\"\']/g;
 const entityRegExp = /&#([a-z0-9]+);?|&([a-z0-9]+);/gi;
-const asciiMap = {
+const asciiMap: Record<number, string> = {
   128: '\u20AC', 130: '\u201A', 131: '\u0192', 132: '\u201E', 133: '\u2026', 134: '\u2020',
   135: '\u2021', 136: '\u02C6', 137: '\u2030', 138: '\u0160', 139: '\u2039', 140: '\u0152',
   142: '\u017D', 145: '\u2018', 146: '\u2019', 147: '\u201C', 148: '\u201D', 149: '\u2022',
@@ -36,7 +36,7 @@ const asciiMap = {
 };
 
 // Raw entities
-const baseEntities = {
+const baseEntities: EntitiesMap = {
   '\"': '&quot;', // Needs to be escaped since the YUI compressor would otherwise break the code
   '\'': '&#39;',
   '<': '&lt;',
@@ -46,7 +46,7 @@ const baseEntities = {
 };
 
 // Reverse lookup table for raw entities
-const reverseEntities = {
+const reverseEntities: EntitiesMap = {
   '&lt;': '<',
   '&gt;': '>',
   '&amp;': '&',
@@ -63,27 +63,28 @@ const nativeDecode = (text: string): string => {
 };
 
 // Build a two way lookup table for the entities
-const buildEntitiesLookup = (items, radix?: number) => {
-  let i, chr, entity;
-  const lookup = {};
+const buildEntitiesLookup = (items: string | undefined, radix?: number): EntitiesMap | undefined => {
+  const lookup: Record<string, string> = {};
 
   if (items) {
-    items = items.split(',');
+    const itemList = items.split(',');
     radix = radix || 10;
 
     // Build entities lookup table
-    for (i = 0; i < items.length; i += 2) {
-      chr = String.fromCharCode(parseInt(items[i], radix));
+    for (let i = 0; i < itemList.length; i += 2) {
+      const chr = String.fromCharCode(parseInt(itemList[i], radix));
 
       // Only add non base entities
       if (!baseEntities[chr]) {
-        entity = '&' + items[i + 1] + ';';
+        const entity = '&' + itemList[i + 1] + ';';
         lookup[chr] = entity;
         lookup[entity] = chr;
       }
     }
 
     return lookup;
+  } else {
+    return undefined;
   }
 };
 
@@ -113,7 +114,7 @@ const namedEntities = buildEntitiesLookup(
   'rfloor,8p9,lang,8pa,rang,9ea,loz,9j0,spades,9j3,clubs,9j5,hearts,9j6,diams,ai,OElig,aj,oelig,b0,' +
   'Scaron,b1,scaron,bo,Yuml,m6,circ,ms,tilde,802,ensp,803,emsp,809,thinsp,80c,zwnj,80d,zwj,80e,lrm,' +
   '80f,rlm,80j,ndash,80k,mdash,80o,lsquo,80p,rsquo,80q,sbquo,80s,ldquo,80t,rdquo,80u,bdquo,810,dagger,' +
-  '811,Dagger,81g,permil,81p,lsaquo,81q,rsaquo,85c,euro', 32);
+  '811,Dagger,81g,permil,81p,lsaquo,81q,rsaquo,85c,euro', 32) as EntitiesMap;
 
 /**
  * Encodes the specified string using raw entities. This means only the required XML base entities will be encoded.
@@ -169,10 +170,10 @@ const encodeNumeric = (text: string, attr?: boolean): string => text.replace(att
  * @return {String} Entity encoded text.
  */
 const encodeNamed = (text: string, attr?: boolean, entities?: EntitiesMap): string => {
-  entities = entities || namedEntities;
+  const resolveEntities = entities || namedEntities;
 
   return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, (chr) => {
-    return baseEntities[chr] || entities[chr] || chr;
+    return baseEntities[chr] || resolveEntities[chr] || chr;
   });
 };
 
@@ -184,7 +185,7 @@ const encodeNamed = (text: string, attr?: boolean, entities?: EntitiesMap): stri
  * @param {String} entities Optional parameter with entities to use instead of the built in set.
  * @return {Function} Encode function to be used.
  */
-const getEncodeFunc = (name: string, entities?: EntitiesMap | string) => {
+const getEncodeFunc = (name: string, entities?: string): (text: string, attr?: boolean, entities?: EntitiesMap) => string => {
   const entitiesMap = buildEntitiesLookup(entities) || namedEntities;
 
   const encodeNamedAndNumeric = (text: string, attr?: boolean): string => text.replace(attr ? attrsCharsRegExp : textCharsRegExp, (chr) => {
@@ -204,7 +205,7 @@ const getEncodeFunc = (name: string, entities?: EntitiesMap | string) => {
     return '&#' + chr.charCodeAt(0) + ';';
   });
 
-  const encodeCustomNamed = (text: string, attr) => {
+  const encodeCustomNamed = (text: string, attr?: boolean) => {
     return encodeNamed(text, attr, entitiesMap);
   };
 

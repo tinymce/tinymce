@@ -24,7 +24,7 @@ const matchesUnInheritedFormatSelector = (ed: Editor, node: Node, name: string) 
   return false;
 };
 
-const matchParents = (editor: Editor, node: Node, name: string, vars: FormatVars, similar?: boolean): boolean => {
+const matchParents = (editor: Editor, node: Node, name: string, vars?: FormatVars, similar?: boolean): boolean => {
   const root = editor.dom.getRoot();
 
   if (node === root) {
@@ -32,16 +32,16 @@ const matchParents = (editor: Editor, node: Node, name: string, vars: FormatVars
   }
 
   // Find first node with similar format settings
-  node = editor.dom.getParent(node, (node) => {
-    if (matchesUnInheritedFormatSelector(editor, node, name)) {
+  const matchedNode = editor.dom.getParent(node, (elm) => {
+    if (matchesUnInheritedFormatSelector(editor, elm, name)) {
       return true;
     }
 
-    return node.parentNode === root || !!matchNode(editor, node, name, vars, true);
+    return elm.parentNode === root || !!matchNode(editor, elm, name, vars, true);
   });
 
   // Do an exact check on the similar format element
-  return !!matchNode(editor, node, name, vars, similar);
+  return !!matchNode(editor, matchedNode, name, vars, similar);
 };
 
 const matchName = (dom: DOMUtils, node: Node, format: Format): boolean => {
@@ -63,7 +63,7 @@ const matchName = (dom: DOMUtils, node: Node, format: Format): boolean => {
   return false;
 };
 
-const matchItems = (dom: DOMUtils, node: Node, format: Format, itemName: string, similar: boolean, vars: FormatVars): boolean => {
+const matchItems = (dom: DOMUtils, node: Node, format: Format, itemName: 'attributes' | 'styles', similar?: boolean, vars?: FormatVars): boolean => {
   const items = format[itemName];
 
   // Custom match
@@ -77,7 +77,7 @@ const matchItems = (dom: DOMUtils, node: Node, format: Format, itemName: string,
     // Non indexed object
     if (Type.isUndefined(items.length)) {
       for (const key in items) {
-        if (Obj.has(items, key)) {
+        if (Obj.has(items as Record<string, unknown>, key)) {
           const value = itemName === 'attributes' ? dom.getAttrib(node, key) : FormatUtils.getStyle(dom, node, key);
           const expectedValue = FormatUtils.replaceVars(items[key], vars);
           const isEmptyValue = Type.isNullable(value) || Strings.isEmpty(value);
@@ -108,7 +108,7 @@ const matchItems = (dom: DOMUtils, node: Node, format: Format, itemName: string,
   return true;
 };
 
-const matchNode = (ed: Editor, node: Node, name: string, vars?: FormatVars, similar?: boolean): Format | undefined => {
+const matchNode = (ed: Editor, node: Node | null, name: string, vars?: FormatVars, similar?: boolean): Format | undefined => {
   const formatList = ed.formatter.get(name);
   const dom = ed.dom;
 
@@ -135,7 +135,7 @@ const matchNode = (ed: Editor, node: Node, name: string, vars?: FormatVars, simi
   }
 };
 
-const match = (editor: Editor, name: string, vars: FormatVars, node?: Node, similar?: boolean): boolean => {
+const match = (editor: Editor, name: string, vars?: FormatVars, node?: Node, similar?: boolean): boolean => {
   // Check specified node
   if (node) {
     return matchParents(editor, node, name, vars, similar);
@@ -158,7 +158,7 @@ const match = (editor: Editor, name: string, vars: FormatVars, node?: Node, simi
   return false;
 };
 
-const matchAll = (editor: Editor, names: string[], vars: FormatVars) => {
+const matchAll = (editor: Editor, names: string[], vars?: FormatVars) => {
   const matchedFormatNames: string[] = [];
   const checkedMap: Record<string, boolean> = {};
 
