@@ -184,7 +184,7 @@ const resolve = (n: string, o: any = window): any => {
  * const arr = tinymce.explode('a, b,   c');
  */
 const explode = (s: string | string[], d?: string | RegExp): string[] => {
-  if (Type.isNullable(s) || Type.isArray(s)) {
+  if (Type.isArray(s)) {
     return s;
   } else if (s === '') {
     return [];

@@ -441,8 +441,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * // Alerts the currently selected elements node name
    * alert(tinymce.activeEditor.selection.getNode().nodeName);
    */
-  // TODO: Investigate if this type is correct
-  const getNode = (): Element => ElementSelection.getNode(editor.getBody(), getRng()) as Element;
+  const getNode = (): Element => ElementSelection.getNode(editor.getBody(), getRng());
 
   const getSelectedBlocks = (startElm?: Element, endElm?: Element) =>
     ElementSelection.getSelectedBlocks(dom, getRng(), startElm, endElm);

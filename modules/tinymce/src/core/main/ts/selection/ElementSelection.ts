@@ -40,7 +40,7 @@ const skipEmptyTextNodes = (node: Node | null, forwards: boolean): Node | null =
   return node || orig;
 };
 
-const getNode = (root: Element, rng: Range | undefined): Node | null => {
+const getNode = (root: Element, rng: Range | undefined): Element => {
   // Range maybe lost after the editor is made visible again
   if (!rng) {
     return root;
@@ -50,14 +50,14 @@ const getNode = (root: Element, rng: Range | undefined): Node | null => {
   let endContainer: Node | null = rng.endContainer;
   const startOffset = rng.startOffset;
   const endOffset = rng.endOffset;
-  let elm = rng.commonAncestorContainer;
+  let node = rng.commonAncestorContainer;
 
   // Handle selection a image or other control like element such as anchors
   if (!rng.collapsed) {
     if (startContainer === endContainer) {
       if (endOffset - startOffset < 2) {
         if (startContainer.hasChildNodes()) {
-          elm = startContainer.childNodes[startOffset];
+          node = startContainer.childNodes[startOffset];
         }
       }
     }
@@ -82,16 +82,13 @@ const getNode = (root: Element, rng: Range | undefined): Node | null => {
       }
 
       if (startContainer && startContainer === endContainer) {
-        return startContainer;
+        node = startContainer;
       }
     }
   }
 
-  if (NodeType.isText(elm)) {
-    return elm.parentNode;
-  }
-
-  return elm;
+  const elm = NodeType.isText(node) ? node.parentNode : node;
+  return NodeType.isElement(elm) ? elm : root;
 };
 
 const getSelectedBlocks = (dom: DOMUtils, rng: Range, startElm?: Element, endElm?: Element): Element[] => {
@@ -106,7 +103,7 @@ const getSelectedBlocks = (dom: DOMUtils, rng: Range, startElm?: Element, endElm
   }
 
   if (start && end && start !== end) {
-    let node: Node | undefined = start;
+    let node: Node | null | undefined = start;
 
     const walker = new DomTreeWalker(start, root);
     while ((node = walker.next()) && node !== end) {
