@@ -123,7 +123,7 @@ const findPattern = (editor: Editor, block: Node, details: PatternDetails): Opti
     } else {
       // Find any nested patterns, making sure not to process the current pattern again
       const resultsOpt = findPatternsRec(editor, details.remainingPatterns, spot.container, spot.offset, block);
-      const results = resultsOpt.getOrThunk((): SearchResults => ({ matches: [], position: spot }));
+      const results: SearchResults = resultsOpt.getOr({ matches: [], position: spot });
       const pos = results.position;
 
       // Find the start of the matched pattern
