@@ -14,12 +14,12 @@ import * as PageUpDownKeys from './PageUpDownKeys';
 import * as SpaceKey from './SpaceKey';
 import * as TabKey from './TabKey';
 
-const setup = (editor: Editor): Cell<Text> => {
+const setup = (editor: Editor): Cell<Text | null> => {
   editor.addShortcut('Meta+P', '', 'mcePrint');
   Autocompleter.setup(editor);
 
   if (Rtc.isRtc(editor)) {
-    return Cell(null);
+    return Cell<Text | null>(null);
   } else {
     const caret = BoundarySelection.setupSelectedState(editor);
 

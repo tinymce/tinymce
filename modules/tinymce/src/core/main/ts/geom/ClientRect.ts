@@ -134,8 +134,8 @@ const distanceToRectEdgeFromXY = <T extends ClientRect>(rect: T, x: number, y: n
   return Math.sqrt((x - cx) * (x - cx) + (y - cy) * (y - cy));
 };
 
-const overlapX = <T extends ClientRect>(r1: T, r2: T) => Math.max(0, Math.min(r1.right, r2.right) - Math.max(r1.left, r2.left));
-const overlapY = <T extends ClientRect>(r1: T, r2: T) => Math.max(0, Math.min(r1.bottom, r2.bottom) - Math.max(r1.top, r2.top));
+const overlapX = <T extends ClientRect>(r1: T, r2: T): number => Math.max(0, Math.min(r1.right, r2.right) - Math.max(r1.left, r2.left));
+const overlapY = <T extends ClientRect>(r1: T, r2: T): number => Math.max(0, Math.min(r1.bottom, r2.bottom) - Math.max(r1.top, r2.top));
 
 export {
   clone,

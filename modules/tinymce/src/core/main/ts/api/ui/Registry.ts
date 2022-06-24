@@ -5,7 +5,7 @@ import { Registry } from '@ephox/bridge';
  *
  * @class tinymce.editor.ui.Registry
  */
-const registry = () => {
+const registry = (): Registry.Registry => {
   const bridge = Registry.create();
 
   return {

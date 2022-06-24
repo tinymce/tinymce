@@ -33,7 +33,7 @@ export interface UploadFailure {
 type ProgressFn = (percent: number) => void;
 export type UploadHandler = (blobInfo: BlobInfo, progress: ProgressFn) => Promise<string>;
 
-type ResolveFn<T> = (result?: T | Promise<T>) => void;
+type ResolveFn<T> = (result: T | Promise<T>) => void;
 
 export interface UploadResult {
   url: string;
@@ -42,14 +42,21 @@ export interface UploadResult {
   error?: UploadFailure;
 }
 
+export interface UploaderSettings {
+  url: string;
+  basePath: string;
+  credentials: boolean;
+  handler?: UploadHandler;
+}
+
 export interface Uploader {
   upload (blobInfos: BlobInfo[], openNotification?: () => NotificationApi): Promise<UploadResult[]>;
 }
 
-export const Uploader = (uploadStatus: UploadStatus, settings): Uploader => {
+export const Uploader = (uploadStatus: UploadStatus, settings: UploaderSettings): Uploader => {
   const pendingPromises: Record<string, ResolveFn<UploadResult>[]> = {};
 
-  const pathJoin = (path1, path2) => {
+  const pathJoin = (path1: string | undefined, path2: string) => {
     if (path1) {
       return path1.replace(/\/$/, '') + '/' + path2.replace(/^\//, '');
     }
@@ -92,6 +99,8 @@ export const Uploader = (uploadStatus: UploadStatus, settings): Uploader => {
 
       xhr.send(formData);
     });
+
+  const uploadHandler = Type.isFunction(settings.handler) ? settings.handler : defaultHandler;
 
   const noUpload = (): Promise<UploadResult[]> =>
     new Promise((resolve) => {
@@ -165,12 +174,12 @@ export const Uploader = (uploadStatus: UploadStatus, settings): Uploader => {
           failure(Type.isString(err) ? { message: err } : err);
         });
       } catch (ex) {
-        resolve(handlerFailure(blobInfo, ex));
+        resolve(handlerFailure(blobInfo, ex as Error));
       }
     });
   };
 
-  const isDefaultHandler = (handler) =>
+  const isDefaultHandler = (handler: UploadHandler) =>
     handler === defaultHandler;
 
   const pendingUploadBlobInfo = (blobInfo: BlobInfo): Promise<UploadResult> => {
@@ -189,16 +198,12 @@ export const Uploader = (uploadStatus: UploadStatus, settings): Uploader => {
 
     return Promise.all(Tools.map(blobInfos, (blobInfo: BlobInfo) =>
       uploadStatus.isPending(blobInfo.blobUri()) ?
-        pendingUploadBlobInfo(blobInfo) : uploadBlobInfo(blobInfo, settings.handler, openNotification)
+        pendingUploadBlobInfo(blobInfo) : uploadBlobInfo(blobInfo, uploadHandler, openNotification)
     ));
   };
 
   const upload = (blobInfos: BlobInfo[], openNotification?: () => NotificationApi) =>
-    (!settings.url && isDefaultHandler(settings.handler)) ? noUpload() : uploadBlobs(blobInfos, openNotification);
-
-  if (Type.isFunction(settings.handler) === false) {
-    settings.handler = defaultHandler;
-  }
+    (!settings.url && isDefaultHandler(uploadHandler)) ? noUpload() : uploadBlobs(blobInfos, openNotification);
 
   return {
     upload

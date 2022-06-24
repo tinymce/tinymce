@@ -33,7 +33,7 @@ export type PastePreProcessFn = (editor: Editor, args: PastePreProcessEvent) => 
 export type PastePostProcessFn = (editor: Editor, args: PastePostProcessEvent) => void;
 
 export type URLConverter = (url: string, name: string, elm?: HTMLElement) => string;
-export type URLConverterCallback = (url: string, node: Node, on_save: boolean, name: string) => string;
+export type URLConverterCallback = (url: string, node: Node | string | undefined, on_save: boolean, name: string) => string;
 
 export interface ToolbarGroup {
   name?: string;
@@ -246,19 +246,30 @@ export interface NormalizedEditorOptions extends BaseEditorOptions {
 }
 
 export interface EditorOptions extends NormalizedEditorOptions {
+  br_newline_selector: string;
   content_css: string[];
   contextmenu: string[];
+  document_base_url: string;
+  editable_class: string;
   font_css: string[];
   font_size_classes: string;
   font_size_legacy_values: string;
   font_size_style_values: string;
   forced_root_block: string;
   forced_root_block_attrs: Record<string, string>;
+  iframe_attrs: Record<string, string>;
   images_file_types: string;
+  images_upload_base_path: string;
+  images_upload_credentials: boolean;
+  images_upload_url: string;
+  inline: boolean;
   inline_boundaries_selector: string;
   language: string;
+  language_load: boolean;
   language_url: string;
   model: string;
+  no_newline_selector: string;
+  noneditable_class: string;
   noneditable_regexp: RegExp[];
   object_resizing: string;
   preview_styles: string;

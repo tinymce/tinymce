@@ -21,12 +21,12 @@ const getSpecifiedFontProp = (propName: string, rootElm: Element, elm: HTMLEleme
   return TransformFind.closest(SugarElement.fromDom(elm), (elm) => getProperty(elm), isRoot);
 };
 
-const round = (number: number, precision: number) => {
+const round = (number: number, precision: number): number => {
   const factor = Math.pow(10, precision);
   return Math.round(number * factor) / factor;
 };
 
-const toPt = (fontSize: string, precision?: number) => {
+const toPt = (fontSize: string, precision?: number): string => {
   if (/[0-9.]+px$/.test(fontSize)) {
     // Round to the nearest 0.5
     return round(parseInt(fontSize, 10) * 72 / 96, precision || 0) + 'pt';

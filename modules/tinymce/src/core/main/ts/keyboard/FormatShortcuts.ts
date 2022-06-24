@@ -1,6 +1,6 @@
 import Editor from '../api/Editor';
 
-const setup = (editor: Editor) => {
+const setup = (editor: Editor): void => {
   // Add some inline shortcuts
   editor.addShortcut('meta+b', '', 'Bold');
   editor.addShortcut('meta+i', '', 'Italic');

@@ -150,7 +150,7 @@ const getLineEndPoint = (editor: Editor, forward: boolean): Optional<CaretPositi
   }
 };
 
-const moveToLineEndPoint = (editor: Editor, forward: boolean, isElementPosition: (pos: CaretPosition) => boolean) =>
+const moveToLineEndPoint = (editor: Editor, forward: boolean, isElementPosition: (pos: CaretPosition) => boolean): boolean =>
   getLineEndPoint(editor, forward).filter(isElementPosition).exists((pos) => {
     editor.selection.setRng(pos.toRange());
     return true;

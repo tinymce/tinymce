@@ -1,4 +1,4 @@
-import { Arr, Fun, Obj, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Optionals, Type } from '@ephox/katamari';
 import { Compare, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
@@ -11,7 +11,7 @@ import * as GetBookmark from '../bookmark/GetBookmark';
 import * as NodeType from '../dom/NodeType';
 import * as TableCellSelection from './TableCellSelection';
 
-const getStartNode = (rng) => {
+const getStartNode = (rng: Range) => {
   const sc = rng.startContainer, so = rng.startOffset;
   if (NodeType.isText(sc)) {
     return so === 0 ? Optional.some(SugarElement.fromDom(sc)) : Optional.none();
@@ -20,7 +20,7 @@ const getStartNode = (rng) => {
   }
 };
 
-const getEndNode = (rng) => {
+const getEndNode = (rng: Range) => {
   const ec = rng.endContainer, eo = rng.endOffset;
   if (NodeType.isText(ec)) {
     return eo === ec.data.length ? Optional.some(SugarElement.fromDom(ec)) : Optional.none();
@@ -29,7 +29,7 @@ const getEndNode = (rng) => {
   }
 };
 
-const getFirstChildren = (node) => {
+const getFirstChildren = (node: SugarElement<Node>): SugarElement<Node>[] => {
   return Traverse.firstChild(node).fold(
     Fun.constant([ node ]),
     (child) => {
@@ -38,7 +38,7 @@ const getFirstChildren = (node) => {
   );
 };
 
-const getLastChildren = (node) => {
+const getLastChildren = (node: SugarElement<Node>): SugarElement<Node>[] => {
   return Traverse.lastChild(node).fold(
     Fun.constant([ node ]),
     (child) => {
@@ -53,7 +53,7 @@ const getLastChildren = (node) => {
   );
 };
 
-const hasAllContentsSelected = (elm, rng) => {
+const hasAllContentsSelected = (elm: SugarElement<Node>, rng: Range): boolean => {
   return Optionals.lift2(getStartNode(rng), getEndNode(rng), (startNode, endNode) => {
     const start = Arr.find(getFirstChildren(elm), Fun.curry(Compare.eq, startNode));
     const end = Arr.find(getLastChildren(elm), Fun.curry(Compare.eq, endNode));
@@ -62,37 +62,39 @@ const hasAllContentsSelected = (elm, rng) => {
 };
 
 const moveEndPoint = (dom: DOMUtils, rng: Range, node: Node, start: boolean): void => {
-  const root = node, walker = new DomTreeWalker(node, root);
+  const root = node;
+  const walker = new DomTreeWalker(node, root);
   const moveCaretBeforeOnEnterElementsMap = Obj.filter(dom.schema.getMoveCaretBeforeOnEnterElements(), (_, name) =>
     !Arr.contains([ 'td', 'th', 'table' ], name.toLowerCase())
   );
 
+  let currentNode: Node | undefined = node;
   do {
-    if (NodeType.isText(node) && Tools.trim(node.nodeValue).length !== 0) {
+    if (NodeType.isText(currentNode) && Tools.trim(currentNode.data).length !== 0) {
       if (start) {
-        rng.setStart(node, 0);
+        rng.setStart(currentNode, 0);
       } else {
-        rng.setEnd(node, node.nodeValue.length);
+        rng.setEnd(currentNode, currentNode.data.length);
       }
 
       return;
     }
 
     // BR/IMG/INPUT elements but not table cells
-    if (moveCaretBeforeOnEnterElementsMap[node.nodeName]) {
+    if (moveCaretBeforeOnEnterElementsMap[currentNode.nodeName]) {
       if (start) {
-        rng.setStartBefore(node);
+        rng.setStartBefore(currentNode);
       } else {
-        if (node.nodeName === 'BR') {
-          rng.setEndBefore(node);
+        if (currentNode.nodeName === 'BR') {
+          rng.setEndBefore(currentNode);
         } else {
-          rng.setEndAfter(node);
+          rng.setEndAfter(currentNode);
         }
       }
 
       return;
     }
-  } while ((node = (start ? walker.next() : walker.prev())));
+  } while ((currentNode = (start ? walker.next() : walker.prev())));
 
   // Failed to find any text node or other suitable location then move to the root of body
   if (root.nodeName === 'BODY') {
@@ -104,12 +106,12 @@ const moveEndPoint = (dom: DOMUtils, rng: Range, node: Node, start: boolean): vo
   }
 };
 
-const hasAnyRanges = (editor: Editor) => {
+const hasAnyRanges = (editor: Editor): boolean => {
   const sel = editor.selection.getSel();
-  return sel && sel.rangeCount > 0;
+  return Type.isNonNullable(sel) && sel.rangeCount > 0;
 };
 
-const runOnRanges = (editor: Editor, executor: (rng: Range, fake: boolean) => void) => {
+const runOnRanges = (editor: Editor, executor: (rng: Range, fake: boolean) => void): void => {
   // Check to see if a fake selection is active. If so then we are simulating a multi range
   // selection so we should return a range for each selected node.
   // Note: Currently tables are the only thing supported for fake selections.
@@ -127,7 +129,7 @@ const runOnRanges = (editor: Editor, executor: (rng: Range, fake: boolean) => vo
   }
 };
 
-const preserve = (selection: EditorSelection, fillBookmark: boolean, executor: (bookmark: IdBookmark | IndexBookmark) => void) => {
+const preserve = (selection: EditorSelection, fillBookmark: boolean, executor: (bookmark: IdBookmark | IndexBookmark) => void): void => {
   const bookmark = GetBookmark.getPersistentBookmark(selection, fillBookmark);
   executor(bookmark);
   selection.moveToBookmark(bookmark);

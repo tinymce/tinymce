@@ -131,9 +131,9 @@ const move = (editor: Editor, forward: boolean, mover: (editor: Editor, forward:
       .map((table) => mover(editor, forward, table, td))
     ).getOr(false);
 
-const moveH = (editor: Editor, forward: boolean) => move(editor, forward, navigateHorizontally);
+const moveH = (editor: Editor, forward: boolean): boolean => move(editor, forward, navigateHorizontally);
 
-const moveV = (editor: Editor, forward: boolean) => move(editor, forward, navigateVertically);
+const moveV = (editor: Editor, forward: boolean): boolean => move(editor, forward, navigateVertically);
 
 const getCellFirstCursorPosition = (cell: SugarElement<Node>): Range => {
   const selection = SimSelection.exact(cell, 0, cell, 0);

@@ -70,7 +70,7 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
    */
   const load = (url: string): Promise<void> =>
     new Promise((success, failure) => {
-      let link: HTMLLinkElement;
+      let link: HTMLLinkElement | null;
 
       const urlWithSuffix = Tools._addCacheSuffix(url);
 
@@ -117,7 +117,7 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
           while (i--) {
             const styleSheet = styleSheets[i];
             const owner = styleSheet.ownerNode;
-            if (owner && (owner as Element).id === link.id) {
+            if (owner && link && (owner as Element).id === link.id) {
               passed();
               return true;
             }
@@ -192,9 +192,9 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
       const parts = Arr.partition(results, (r) => r.status === 'fulfilled');
 
       if (parts.fail.length > 0) {
-        return Promise.reject(Arr.map(parts.fail, (result: PromiseRejectedResult) => result.reason));
+        return Promise.reject(Arr.map(parts.fail as PromiseRejectedResult[], (result) => result.reason));
       } else {
-        return Arr.map(parts.pass, (result: PromiseFulfilledResult<string>) => result.value);
+        return Arr.map(parts.pass as PromiseFulfilledResult<string>[], (result) => result.value);
       }
     });
   };

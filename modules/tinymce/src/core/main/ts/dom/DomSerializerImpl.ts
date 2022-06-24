@@ -53,7 +53,7 @@ const addTempAttr = (htmlParser: DomParser, tempAttrs: string[], name: string): 
   }
 };
 
-const postProcess = (editor: Editor, args: ParserArgs, content: string): string => {
+const postProcess = (editor: Editor | undefined, args: ParserArgs, content: string): string => {
   if (!args.no_events && editor) {
     const outArgs = Events.firePostProcess(editor, { ...args, content });
     return outArgs.content;
@@ -80,12 +80,12 @@ const serializeNode = (settings: HtmlSerializerSettings, schema: Schema, node: A
   return htmlSerializer.serialize(node);
 };
 
-const toHtml = (editor: Editor, settings: HtmlSerializerSettings, schema: Schema, rootNode: AstNode, args: ParserArgs): string => {
+const toHtml = (editor: Editor | undefined, settings: HtmlSerializerSettings, schema: Schema, rootNode: AstNode, args: ParserArgs): string => {
   const content = serializeNode(settings, schema, rootNode);
   return postProcess(editor, args, content);
 };
 
-const DomSerializerImpl = (settings: DomSerializerSettings, editor: Editor): DomSerializerImpl => {
+const DomSerializerImpl = (settings: DomSerializerSettings, editor?: Editor): DomSerializerImpl => {
   const tempAttrs = [ 'data-mce-selected' ];
 
   const dom = editor && editor.dom ? editor.dom : DOMUtils.DOM;

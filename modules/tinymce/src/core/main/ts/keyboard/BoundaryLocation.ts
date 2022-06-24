@@ -92,28 +92,28 @@ const readLocation = (isInlineTarget: (node: Node) => boolean, rootNode: Node, p
   return location.filter(isValidLocation);
 };
 
-const getElement = (location: LocationAdt) => location.fold(
+const getElement = (location: LocationAdt): Element => location.fold(
   Fun.identity, // Before
   Fun.identity, // Start
   Fun.identity, // End
   Fun.identity  // After
 );
 
-const getName = (location: LocationAdt) => location.fold(
+const getName = (location: LocationAdt): string => location.fold(
   Fun.constant('before'), // Before
   Fun.constant('start'),  // Start
   Fun.constant('end'),    // End
   Fun.constant('after')   // After
 );
 
-const outside = (location: LocationAdt) => location.fold(
+const outside = (location: LocationAdt): LocationAdt => location.fold(
   Location.before, // Before
   Location.before, // Start
   Location.after,  // End
   Location.after   // After
 );
 
-const inside = (location: LocationAdt) => location.fold(
+const inside = (location: LocationAdt): LocationAdt => location.fold(
   Location.start, // Before
   Location.start, // Start
   Location.end,   // End

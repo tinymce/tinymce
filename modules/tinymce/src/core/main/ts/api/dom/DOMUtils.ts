@@ -35,20 +35,20 @@ const grep = Tools.grep;
 
 interface AttrHooks {
   style: {
-    set (elm: Element, value: string | {} | null): void;
-    get (elm: Element): string;
+    set (elm: HTMLElement, value: string | {} | null): void;
+    get (elm: HTMLElement): string;
   };
   href?: {
-    set (elm: Element, value: string | null, name: string): void;
-    get (elm: Element, name: string): string;
+    set (elm: HTMLElement, value: string | null, name: string): void;
+    get (elm: HTMLElement, name: string): string;
   };
   src?: {
-    set (elm: Element, value: string | null, name: string): void;
-    get (elm: Element, name: string): string;
+    set (elm: HTMLElement, value: string | null, name: string): void;
+    get (elm: HTMLElement, name: string): string;
   };
   [key: string]: {
-    set (elm: Element, value: string | {} | null, name: string): void;
-    get: (elm: Element, name: string) => string;
+    set (elm: HTMLElement, value: string | {} | null, name: string): void;
+    get (elm: HTMLElement, name: string): string;
   };
 }
 
@@ -62,13 +62,13 @@ const legacySetAttribute = (elm: SugarElement<Element>, name: string, value: str
   }
 };
 
-const setupAttrHooks = (styles: Styles, settings: Partial<DOMUtilsSettings>, getContext): AttrHooks => {
-  const keepValues: boolean = settings.keep_values;
+const setupAttrHooks = (styles: Styles, settings: Partial<DOMUtilsSettings>, getContext: () => any): AttrHooks => {
+  const keepValues = settings.keep_values;
   const keepUrlHook = {
-    set: (elm: Element, value: string | null, name: string) => {
+    set: (elm: HTMLElement, value: string | null, name: string) => {
       const sugarElm = SugarElement.fromDom(elm);
       if (Type.isFunction(settings.url_converter) && Type.isNonNullable(value)) {
-        value = settings.url_converter.call(settings.url_converter_scope || getContext(), value, name, elm[0]);
+        value = settings.url_converter.call(settings.url_converter_scope || getContext(), value, name, elm);
       }
 
       const internalName = 'data-mce-' + name;
@@ -76,7 +76,7 @@ const setupAttrHooks = (styles: Styles, settings: Partial<DOMUtilsSettings>, get
       legacySetAttribute(sugarElm, name, value);
     },
 
-    get: (elm: Element, name: string) => {
+    get: (elm: HTMLElement, name: string) => {
       const sugarElm = SugarElement.fromDom(elm);
       return Attribute.get(sugarElm, 'data-mce-' + name) || Attribute.get(sugarElm, name);
     }
@@ -200,7 +200,7 @@ interface DOMUtils {
   };
   getParents: {
     <K extends keyof HTMLElementTagNameMap>(elm: string | Node, selector: K, root?: Node, collect?: boolean): Array<HTMLElementTagNameMap[K]>;
-    <T extends HTMLElement>(node: string | Node, selector: (node: HTMLElement) => node is T, root?: Node): T[];
+    <T extends HTMLElement>(node: string | Node, selector: (node: HTMLElement) => node is T, root?: Node, collect?: boolean): T[];
     <T extends Element = Element>(elm: string | Node, selector?: string | ((node: HTMLElement) => boolean | void), root?: Node, collect?: boolean): T[];
   };
   get: (elm: string | Node) => HTMLElement | null;
@@ -526,19 +526,18 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     });
   };
 
-  const getParents = (elm: string | Node, selector?: string | ((node: HTMLElement) => boolean | void), root?: Node, collect?: boolean): Element[] => {
+  const getParents = (elm: string | Node, selector?: string | ((node: HTMLElement) => boolean | void), root?: Node, collect?: boolean): Element[] | null => {
     const result: Element[] = [];
-    let selectorVal;
 
     let node = get(elm);
     collect = collect === undefined;
 
     // Default root on inline mode
-    root = root || (getRoot().nodeName !== 'BODY' ? getRoot().parentNode : null);
+    const resolvedRoot = root || (getRoot().nodeName !== 'BODY' ? getRoot().parentNode : null);
 
     // Wrap node name as func
     if (Type.isString(selector)) {
-      selectorVal = selector;
+      const selectorVal = selector;
 
       if (selector === '*') {
         selector = NodeType.isElement;
@@ -549,7 +548,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
 
     while (node) {
       // TODO: Remove nullable check once TINY-6599 is complete
-      if (node === root || Type.isNullable(node.nodeType) || NodeType.isDocument(node) || NodeType.isDocumentFragment(node)) {
+      if (node === resolvedRoot || Type.isNullable(node.nodeType) || NodeType.isDocument(node) || NodeType.isDocumentFragment(node)) {
         break;
       }
 
@@ -567,7 +566,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return collect ? result : null;
   };
 
-  const getParent = (node: string | Node, selector?: string | ((node: HTMLElement) => boolean | void), root?: Node): Element => {
+  const getParent = (node: string | Node, selector?: string | ((node: HTMLElement) => boolean | void), root?: Node): Element | null => {
     const parents = getParents(node, selector, root, false);
     return parents && parents.length > 0 ? parents[0] : null;
   };

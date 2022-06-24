@@ -1,15 +1,17 @@
 import * as NodeType from '../dom/NodeType';
 
 const CARET_ID = '_mce_caret';
-const isCaretNode = (node: Node) => NodeType.isElement(node) && node.id === CARET_ID;
+const isCaretNode = (node: Node): node is Element =>
+  NodeType.isElement(node) && node.id === CARET_ID;
 
-const getParentCaretContainer = (body: Node, node: Node) => {
-  while (node && node !== body) {
-    if ((node as Element).id === CARET_ID) {
-      return node;
+const getParentCaretContainer = (body: Node, node: Node): Element | null => {
+  let currentNode: Node | null = node;
+  while (currentNode && currentNode !== body) {
+    if (isCaretNode(currentNode)) {
+      return currentNode;
     }
 
-    node = node.parentNode as Element;
+    currentNode = currentNode.parentNode;
   }
 
   return null;

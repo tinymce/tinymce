@@ -5,7 +5,7 @@ export type RemoveFormat = RemoveBlockFormat | RemoveInlineFormat | RemoveSelect
 export type Format = ApplyFormat | RemoveFormat;
 export type Formats = Record<string, Format | Format[]>;
 
-export type FormatAttrOrStyleValue = string | ((vars?: FormatVars) => string);
+export type FormatAttrOrStyleValue = string | ((vars?: FormatVars) => string | null);
 export type FormatVars = Record<string, string | null >;
 
 // Largely derived from the docs and src/core/main/ts/fmt/DefaultFormats.ts

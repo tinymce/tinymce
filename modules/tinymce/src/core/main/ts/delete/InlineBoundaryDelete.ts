@@ -34,12 +34,12 @@ const hasOnlyTwoOrLessPositionsLeft = (elm: Node): boolean =>
       return CaretFinder.nextPosition(elm, normalizedFirstPos).forall((pos) => pos.isEqual(normalizedLastPos));
     }).getOr(true);
 
-const setCaretLocation = (editor: Editor, caret: Cell<Text>) => (location: BoundaryLocation.LocationAdt): Optional<() => void> =>
+const setCaretLocation = (editor: Editor, caret: Cell<Text | null>) => (location: BoundaryLocation.LocationAdt): Optional<() => void> =>
   BoundaryCaret.renderCaret(caret, location).map((pos) =>
     () => BoundarySelection.setCaretPosition(editor, pos)
   );
 
-const deleteFromTo = (editor: Editor, caret: Cell<Text>, from: CaretPosition, to: CaretPosition): void => {
+const deleteFromTo = (editor: Editor, caret: Cell<Text | null>, from: CaretPosition, to: CaretPosition): void => {
   const rootNode = editor.getBody();
   const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
 
@@ -61,7 +61,7 @@ const rescope = (rootNode: Node, node: Node): Node => {
   return parentBlock ? parentBlock : rootNode;
 };
 
-const backspaceDeleteCollapsed = (editor: Editor, caret: Cell<Text>, forward: boolean, from: CaretPosition): Optional<() => void> => {
+const backspaceDeleteCollapsed = (editor: Editor, caret: Cell<Text | null>, forward: boolean, from: CaretPosition): Optional<() => void> => {
   const rootNode = rescope(editor.getBody(), from.container());
   const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
   const fromLocation = BoundaryLocation.readLocation(isInlineTarget, rootNode, from);
@@ -112,7 +112,7 @@ const backspaceDeleteCollapsed = (editor: Editor, caret: Cell<Text>, forward: bo
     });
 };
 
-const backspaceDelete = (editor: Editor, caret: Cell<Text>, forward: boolean): Optional<() => void> => {
+const backspaceDelete = (editor: Editor, caret: Cell<Text | null>, forward: boolean): Optional<() => void> => {
   if (editor.selection.isCollapsed() && Options.isInlineBoundariesEnabled(editor)) {
     const from = CaretPosition.fromRangeStart(editor.selection.getRng());
     return backspaceDeleteCollapsed(editor, caret, forward, from);

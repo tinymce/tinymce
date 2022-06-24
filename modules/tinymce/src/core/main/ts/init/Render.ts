@@ -148,7 +148,7 @@ const getStyleSheetLoader = (element: SugarElement<Element>, editor: Editor): St
     referrerPolicy: Options.getReferrerPolicy(editor)
   });
 
-const render = (editor: Editor) => {
+const render = (editor: Editor): void => {
   const id = editor.id;
 
   // The user might have bundled multiple language packs so we need to switch the active code to the user specified language

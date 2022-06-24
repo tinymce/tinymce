@@ -31,7 +31,7 @@ const uniqueId = PasteUtils.createIdGenerator('mceclip');
 const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText: boolean): void => {
   const args = ProcessFilters.process(editor, content, internal);
 
-  if (args.cancelled === false) {
+  if (!args.cancelled) {
     SmartPaste.insertContent(editor, args.content, pasteAsText);
   }
 };
@@ -60,7 +60,7 @@ const pasteText = (editor: Editor, text: string): void => {
 /*
  * Gets various content types out of a datatransfer object.
  */
-const getDataTransferItems = (dataTransfer: DataTransfer | undefined): ClipboardContents => {
+const getDataTransferItems = (dataTransfer: DataTransfer | null): ClipboardContents => {
   const items: ClipboardContents = {};
 
   if (dataTransfer && dataTransfer.types) {
@@ -83,9 +83,9 @@ const hasContentType = (clipboardContent: ClipboardContents, mimeType: string): 
 const hasHtmlOrText = (content: ClipboardContents): boolean =>
   hasContentType(content, 'text/html') || hasContentType(content, 'text/plain');
 
-const extractFilename = (editor: Editor, str: string): string | null => {
+const extractFilename = (editor: Editor, str: string): string | undefined => {
   const m = str.match(/([\s\S]+?)(?:\.[a-z0-9.]+)$/i);
-  return Type.isNonNullable(m) ? editor.dom.encode(m[1]) : null;
+  return Type.isNonNullable(m) ? editor.dom.encode(m[1]) : undefined;
 };
 
 const createBlobInfo = (editor: Editor, blobCache: BlobCache, file: File, base64: string): BlobInfo => {
@@ -130,7 +130,7 @@ const isImage = (editor: Editor) => {
 
 const getImagesFromDataTransfer = (editor: Editor, dataTransfer: DataTransfer): File[] => {
   const items = dataTransfer.items ? Arr.bind(Arr.from(dataTransfer.items), (item) => {
-    return item.kind === 'file' ? [ item.getAsFile() ] : [];
+    return item.kind === 'file' ? [ item.getAsFile() as File ] : [];
   }) : [];
   const files = dataTransfer.files ? Arr.from(dataTransfer.files) : [];
   return Arr.filter(items.length > 0 ? items : files, isImage(editor));

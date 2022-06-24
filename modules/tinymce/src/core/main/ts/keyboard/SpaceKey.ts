@@ -20,9 +20,9 @@ const executeKeydownOverride = (editor: Editor, evt: KeyboardEvent) => {
   });
 };
 
-const setup = (editor: Editor) => {
+const setup = (editor: Editor): void => {
   editor.on('keydown', (evt: EditorEvent<KeyboardEvent>) => {
-    if (evt.isDefaultPrevented() === false) {
+    if (!evt.isDefaultPrevented()) {
       executeKeydownOverride(editor, evt);
     }
   });

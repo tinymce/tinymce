@@ -10,7 +10,7 @@ import { PasteBin } from './PasteBin';
 import * as PrePostProcess from './PrePostProcess';
 import * as Quirks from './Quirks';
 
-const setup = (editor: Editor) => {
+const setup = (editor: Editor): void => {
   const draggingInternallyState = Cell(false);
   const pasteFormat = Cell(Options.isPasteAsTextEnabled(editor) ? 'text' : 'html');
   const pasteBin = PasteBin(editor);

@@ -40,7 +40,7 @@ interface CallbackGroup {
 const hasVars = (value: CallbackWithVars | CallbackWithoutVars): value is CallbackWithVars =>
   Obj.has(value as CallbackWithVars, 'vars');
 
-const setup = (registeredFormatListeners: Cell<RegisteredFormats>, editor: Editor) => {
+const setup = (registeredFormatListeners: Cell<RegisteredFormats>, editor: Editor): void => {
   registeredFormatListeners.set({});
 
   editor.on('NodeChange', (e) => {

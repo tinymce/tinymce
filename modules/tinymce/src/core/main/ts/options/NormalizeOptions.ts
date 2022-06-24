@@ -79,9 +79,10 @@ const getExternalPlugins = (overrideOptions: RawEditorOptions, options: RawEdito
   }
 };
 
-const combinePlugins = (forcedPlugins: string[], plugins: string[]): string[] => {
-  return [].concat(normalizePlugins(forcedPlugins)).concat(normalizePlugins(plugins));
-};
+const combinePlugins = (forcedPlugins: string[], plugins: string[]): string[] => [
+  ...normalizePlugins(forcedPlugins),
+  ...normalizePlugins(plugins)
+];
 
 const getPlatformPlugins = (isMobileDevice: boolean, sectionResult: SectionResult, desktopPlugins: string[], mobilePlugins: string[]): string[] => {
   // is a mobile device with any mobile options

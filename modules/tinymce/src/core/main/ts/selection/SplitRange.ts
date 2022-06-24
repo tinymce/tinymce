@@ -13,14 +13,15 @@ const split = (rng: RangeLikeObject): RangeLikeObject => {
 
   // Handle single text node
   if (startContainer === endContainer && NodeType.isText(startContainer)) {
-    if (startOffset > 0 && startOffset < startContainer.nodeValue.length) {
+    if (startOffset > 0 && startOffset < startContainer.data.length) {
       endContainer = splitText(startContainer, startOffset);
-      startContainer = endContainer.previousSibling;
+      startContainer = endContainer.previousSibling as Text;
 
       if (endOffset > startOffset) {
         endOffset = endOffset - startOffset;
-        startContainer = endContainer = splitText(endContainer as Text, endOffset).previousSibling;
-        endOffset = endContainer.nodeValue.length;
+        const newContainer = splitText(endContainer as Text, endOffset).previousSibling as Text;
+        startContainer = endContainer = newContainer;
+        endOffset = newContainer.data.length;
         startOffset = 0;
       } else {
         endOffset = 0;
@@ -28,15 +29,16 @@ const split = (rng: RangeLikeObject): RangeLikeObject => {
     }
   } else {
     // Split startContainer text node if needed
-    if (NodeType.isText(startContainer) && startOffset > 0 && startOffset < startContainer.nodeValue.length) {
+    if (NodeType.isText(startContainer) && startOffset > 0 && startOffset < startContainer.data.length) {
       startContainer = splitText(startContainer, startOffset);
       startOffset = 0;
     }
 
     // Split endContainer text node if needed
-    if (NodeType.isText(endContainer) && endOffset > 0 && endOffset < endContainer.nodeValue.length) {
-      endContainer = splitText(endContainer, endOffset).previousSibling;
-      endOffset = endContainer.nodeValue.length;
+    if (NodeType.isText(endContainer) && endOffset > 0 && endOffset < endContainer.data.length) {
+      const newContainer = splitText(endContainer, endOffset).previousSibling as Text;
+      endContainer = newContainer;
+      endOffset = newContainer.data.length;
     }
   }
 

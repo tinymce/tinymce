@@ -29,6 +29,10 @@ export interface SetContentEvent extends BeforeSetContentEvent {
   content: string;
 }
 
+export interface SaveContentEvent extends GetContentEvent {
+  save: boolean;
+}
+
 export interface NewBlockEvent { newBlock: Element }
 
 export interface NodeChangeEvent { element: Element; parents: Node[]; selectionChange?: boolean; initial?: boolean }
@@ -86,10 +90,10 @@ export interface TableModifiedEvent extends TableEventData {
 }
 
 export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
-  'activate': { relatedTarget: Editor };
+  'activate': { relatedTarget: Editor | null };
   'deactivate': { relatedTarget: Editor };
-  'focus': { blurredEditor: Editor };
-  'blur': { focusedEditor: Editor };
+  'focus': { blurredEditor: Editor | null };
+  'blur': { focusedEditor: Editor | null };
   'resize': UIEvent;
   'scroll': UIEvent;
   'detach': { };
@@ -100,7 +104,7 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'ObjectResized': ObjectResizeEvent;
   'ObjectResizeStart': ObjectResizeEvent;
   'SwitchMode': SwitchModeEvent;
-  'ScrollWindow': UIEvent;
+  'ScrollWindow': Event;
   'ResizeWindow': UIEvent;
   'SkinLoaded': { };
   'SkinLoadError': LoadErrorEvent;
@@ -125,7 +129,9 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'GetContent': GetContentEvent;
   'BeforeSetContent': BeforeSetContentEvent;
   'SetContent': SetContentEvent;
-  'LoadContent': { };
+  'SaveContent': SaveContentEvent;
+  'RawSaveContent': SaveContentEvent;
+  'LoadContent': { load: boolean; element: HTMLElement };
   'PreviewFormats': { };
   'AfterPreviewFormats': { };
   'ScriptsLoaded': { };

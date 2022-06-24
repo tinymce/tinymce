@@ -5,7 +5,7 @@ import Schema from '../api/html/Schema';
 import Tools from '../api/util/Tools';
 import { hasOnlyChild, isEmpty } from './ParserUtils';
 
-const removeOrUnwrapInvalidNode = (node: AstNode, schema: Schema, originalNodeParent: AstNode = node.parent) => {
+const removeOrUnwrapInvalidNode = (node: AstNode, schema: Schema, originalNodeParent: AstNode | undefined = node.parent) => {
   if (schema.getSpecialElements()[node.name]) {
     node.empty().remove();
   } else {
@@ -13,7 +13,7 @@ const removeOrUnwrapInvalidNode = (node: AstNode, schema: Schema, originalNodePa
     // if not, remove or unwrap them too
     const children = node.children();
     for (const childNode of children) {
-      if (!schema.isValidChild(originalNodeParent.name, childNode.name)) {
+      if (originalNodeParent && !schema.isValidChild(originalNodeParent.name, childNode.name)) {
         removeOrUnwrapInvalidNode(childNode, schema, originalNodeParent);
       }
     }
@@ -125,7 +125,7 @@ const cleanInvalidNodes = (nodes: AstNode[], schema: Schema, onCreate: (newNode:
         }
 
         sibling = node.next;
-        if (sibling && (sibling.name === 'ul' || sibling.name === 'ol')) {
+        if (sibling && (sibling.name === 'ul' || sibling.name === 'ol') && sibling.firstChild) {
           sibling.insert(node, sibling.firstChild, true);
           continue;
         }

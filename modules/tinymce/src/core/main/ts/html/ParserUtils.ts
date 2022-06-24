@@ -1,4 +1,4 @@
-import { Unicode } from '@ephox/katamari';
+import { Type, Unicode } from '@ephox/katamari';
 
 import { DomParserSettings, ParserArgs } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
@@ -13,21 +13,23 @@ const paddEmptyNode = (settings: DomParserSettings, args: ParserArgs, blockEleme
 };
 
 const isPaddedWithNbsp = (node: AstNode): boolean =>
-  hasOnlyChild(node, '#text') && node.firstChild.value === Unicode.nbsp;
+  hasOnlyChild(node, '#text') && node?.firstChild?.value === Unicode.nbsp;
 
-const hasOnlyChild = (node: AstNode, name: string): boolean =>
-  node && node.firstChild && node.firstChild === node.lastChild && node.firstChild.name === name;
+const hasOnlyChild = (node: AstNode, name: string): boolean => {
+  const firstChild = node?.firstChild;
+  return Type.isNonNullable(firstChild) && firstChild === node.lastChild && firstChild.name === name;
+};
 
 const isPadded = (schema: Schema, node: AstNode): boolean => {
   const rule = schema.getElementRule(node.name);
-  return rule && rule.paddEmpty;
+  return rule?.paddEmpty === true;
 };
 
 const isEmpty = (schema: Schema, nonEmptyElements: SchemaMap, whitespaceElements: SchemaMap, node: AstNode): boolean =>
   node.isEmpty(nonEmptyElements, whitespaceElements, (node) => isPadded(schema, node));
 
 const isLineBreakNode = (node: AstNode | undefined, blockElements: SchemaMap): boolean =>
-  node && (node.name in blockElements || node.name === 'br');
+  Type.isNonNullable(node) && (node.name in blockElements || node.name === 'br');
 
 export {
   paddEmptyNode,

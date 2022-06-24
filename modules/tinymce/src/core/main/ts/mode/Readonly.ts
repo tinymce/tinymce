@@ -54,7 +54,7 @@ const restoreFakeSelection = (editor: Editor) => {
   editor.selection.setRng(editor.selection.getRng());
 };
 
-const toggleReadOnly = (editor: Editor, state: boolean) => {
+const toggleReadOnly = (editor: Editor, state: boolean): void => {
   const body = SugarElement.fromDom(editor.getBody());
 
   toggleClass(body, 'mce-content-readonly', state);
@@ -81,7 +81,7 @@ const toggleReadOnly = (editor: Editor, state: boolean) => {
   }
 };
 
-const isReadOnly = (editor: Editor) => editor.readonly;
+const isReadOnly = (editor: Editor): boolean => editor.readonly;
 
 const registerFilters = (editor: Editor) => {
   editor.parser.addAttributeFilter('contenteditable', (nodes) => {
@@ -104,7 +104,7 @@ const registerFilters = (editor: Editor) => {
   editor.serializer.addTempAttr(internalContentEditableAttr);
 };
 
-const registerReadOnlyContentFilters = (editor: Editor) => {
+const registerReadOnlyContentFilters = (editor: Editor): void => {
   if (editor.serializer) {
     registerFilters(editor);
   } else {
@@ -128,7 +128,7 @@ const getAnchorHrefOpt = (editor: Editor, elm: SugarElement<Node>): Optional<str
   return SelectorFind.closest<HTMLAnchorElement>(elm, 'a', isRoot).bind((a) => Attribute.getOpt(a, 'href'));
 };
 
-const processReadonlyEvents = (editor: Editor, e: Event) => {
+const processReadonlyEvents = (editor: Editor, e: Event): void => {
   /*
     If an event is a click event on or within an anchor, and the CMD/CTRL key is
     not held, then we want to prevent default behaviour and either:
@@ -153,7 +153,7 @@ const processReadonlyEvents = (editor: Editor, e: Event) => {
   }
 };
 
-const registerReadOnlySelectionBlockers = (editor: Editor) => {
+const registerReadOnlySelectionBlockers = (editor: Editor): void => {
   editor.on('ShowCaret', (e) => {
     if (isReadOnly(editor)) {
       e.preventDefault();

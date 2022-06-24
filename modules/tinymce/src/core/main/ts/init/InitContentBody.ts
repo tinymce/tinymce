@@ -463,7 +463,7 @@ const contentBodyLoaded = (editor: Editor): void => {
   });
 };
 
-const initContentBody = (editor: Editor, skipWrite?: boolean) => {
+const initContentBody = (editor: Editor, skipWrite?: boolean): void => {
   // Restore visibility on target element
   if (!editor.inline) {
     editor.getElement().style.visibility = editor.orgVisibility;
@@ -471,7 +471,7 @@ const initContentBody = (editor: Editor, skipWrite?: boolean) => {
 
   // Setup iframe body
   if (!skipWrite && !editor.inline) {
-    const iframe = editor.iframeElement;
+    const iframe = editor.iframeElement as HTMLIFrameElement;
     const binder = DomEvent.bind(SugarElement.fromDom(iframe), 'load', () => {
       binder.unbind();
 

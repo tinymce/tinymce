@@ -18,7 +18,7 @@ export interface DomTreeWalkerConstructor {
 
 class DomTreeWalker {
   private readonly rootNode: Node;
-  private node: Node | undefined;
+  private node: Node | null | undefined;
 
   public constructor(startNode: Node, rootNode: Node) {
     this.node = startNode;
@@ -38,7 +38,7 @@ class DomTreeWalker {
    * @method current
    * @return {Node/undefined} Current node where the walker is, or undefined if the walker has reached the end.
    */
-  public current(): Node | undefined {
+  public current(): Node | null | undefined {
     return this.node;
   }
 
@@ -48,7 +48,7 @@ class DomTreeWalker {
    * @method next
    * @return {Node/undefined} Current node where the walker is after moving to the next node, or undefined if the walker has reached the end.
    */
-  public next(shallow?: boolean): Node | undefined {
+  public next(shallow?: boolean): Node | null | undefined {
     this.node = this.findSibling(this.node, 'firstChild', 'nextSibling', shallow);
     return this.node;
   }
@@ -59,19 +59,17 @@ class DomTreeWalker {
    * @method prev
    * @return {Node/undefined} Current node where the walker is after moving to the previous node, or undefined if the walker has reached the end.
    */
-  public prev(shallow?: boolean): Node | undefined {
+  public prev(shallow?: boolean): Node | null | undefined {
     this.node = this.findSibling(this.node, 'lastChild', 'previousSibling', shallow);
     return this.node;
   }
 
-  public prev2(shallow?: boolean): Node | undefined {
+  public prev2(shallow?: boolean): Node | null | undefined {
     this.node = this.findPreviousNode(this.node, shallow);
     return this.node;
   }
 
-  private findSibling(node: Node, startName: 'firstChild' | 'lastChild', siblingName: 'nextSibling' | 'previousSibling', shallow?: boolean): Node | undefined {
-    let sibling: Node, parent: Node;
-
+  private findSibling(node: Node | null | undefined, startName: 'firstChild' | 'lastChild', siblingName: 'nextSibling' | 'previousSibling', shallow?: boolean): Node | null | undefined {
     if (node) {
       // Walk into nodes if it has a start
       if (!shallow && node[startName]) {
@@ -80,13 +78,13 @@ class DomTreeWalker {
 
       // Return the sibling if it has one
       if (node !== this.rootNode) {
-        sibling = node[siblingName];
+        let sibling = node[siblingName];
         if (sibling) {
           return sibling;
         }
 
         // Walk up the parents to look for siblings
-        for (parent = node.parentNode; parent && parent !== this.rootNode; parent = parent.parentNode) {
+        for (let parent = node.parentNode; parent && parent !== this.rootNode; parent = parent.parentNode) {
           sibling = parent[siblingName];
           if (sibling) {
             return sibling;
@@ -94,13 +92,13 @@ class DomTreeWalker {
         }
       }
     }
+
+    return undefined;
   }
 
-  private findPreviousNode(node: Node | undefined, shallow?: boolean): Node | undefined {
-    let sibling: Node, parent: Node, child: Node;
-
+  private findPreviousNode(node: Node | null | undefined, shallow?: boolean): Node | undefined {
     if (node) {
-      sibling = node.previousSibling;
+      const sibling = node.previousSibling;
       if (this.rootNode && sibling === this.rootNode) {
         return;
       }
@@ -108,7 +106,7 @@ class DomTreeWalker {
       if (sibling) {
         if (!shallow) {
           // Walk down to the most distant child
-          for (child = sibling.lastChild; child; child = child.lastChild) {
+          for (let child = sibling.lastChild; child; child = child.lastChild) {
             if (!child.lastChild) {
               return child;
             }
@@ -118,11 +116,13 @@ class DomTreeWalker {
         return sibling;
       }
 
-      parent = node.parentNode;
+      const parent = node.parentNode;
       if (parent && parent !== this.rootNode) {
         return parent;
       }
     }
+
+    return undefined;
   }
 }
 
