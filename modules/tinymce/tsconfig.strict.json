@@ -1,10 +1,34 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "noImplicitReturns": true,
     "strict": true,
     "noEmit": true
   },
   "include": [
-    "src/core/main/ts/ui"
+    "src/core/main/ts/alien/Spot.ts",
+    "src/core/main/ts/alien/TextDescent.ts",
+    "src/core/main/ts/api/html/Entities.ts",
+    "src/core/main/ts/api/html/Schema.ts",
+    "src/core/main/ts/api/util/EventDispatcher.ts",
+    "src/core/main/ts/api/util/I18n.ts",
+    "src/core/main/ts/api/util/Tools.ts",
+    "src/core/main/ts/api/Env.ts",
+    "src/core/main/ts/bookmark/BookmarkTypes.ts",
+    "src/core/main/ts/dom/NodeType.ts",
+    "src/core/main/ts/events/EventUtils.ts",
+    "src/core/main/ts/text/",
+    "src/core/main/ts/textpatterns/core/Pattern.ts",
+    "src/core/main/ts/textpatterns/core/PatternTypes.ts",
+    "src/core/main/ts/textpatterns/utils/PathRange.ts",
+    "src/core/main/ts/undo/Diff.ts",
+    "src/core/main/ts/undo/Fragments.ts",
+    "src/core/main/ts/undo/Locks.ts",
+    "src/core/main/ts/undo/TypingState.ts",
+    "src/core/main/ts/undo/UndoManagerTypes.ts",
+    "src/core/main/ts/util/ArrUtils.ts",
+    "src/core/main/ts/util/LazyEvaluator.ts",
+    "src/core/main/ts/util/Predicate.ts",
+    "src/core/main/ts/util/Uuid.ts",
   ]
 }

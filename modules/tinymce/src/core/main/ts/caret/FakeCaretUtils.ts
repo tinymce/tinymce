@@ -9,7 +9,7 @@ import { isInlineFakeCaretTarget } from './FakeCaret';
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 
-const showCaret = (direction: number, editor: Editor, node: Element, before: boolean, scrollIntoView: boolean): Optional<Range> =>
+const showCaret = (direction: number, editor: Editor, node: HTMLElement, before: boolean, scrollIntoView: boolean): Optional<Range> =>
   // TODO: Figure out a better way to handle this dependency
   Optional.from(editor._selectionOverrides.showCaret(direction, node, before, scrollIntoView));
 

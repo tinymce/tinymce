@@ -40,7 +40,7 @@ interface Writer {
 }
 
 const Writer = (settings?: WriterSettings): Writer => {
-  const html = [];
+  const html: string[] = [];
 
   settings = settings || {};
   const indent = settings.indent;

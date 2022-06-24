@@ -24,7 +24,7 @@ interface CallbackWithoutVars {
 
 interface CallbackWithVars {
   readonly state: Cell<boolean>;
-  readonly similar: boolean;
+  readonly similar: boolean | undefined;
   readonly vars: FormatVars;
   readonly callback: FormatChangeCallback;
 }
@@ -60,7 +60,7 @@ const setup = (registeredFormatListeners: Cell<RegisteredFormats>, editor: Edito
 const fallbackElement = (editor: Editor): Element =>
   editor.selection.getStart();
 
-const matchingNode = (editor: Editor, parents: Element[], format: string, similar: boolean, vars?: FormatVars): Optional<Element> => {
+const matchingNode = (editor: Editor, parents: Element[], format: string, similar?: boolean, vars?: FormatVars): Optional<Element> => {
   const isMatchingNode = (node: Element) => {
     const matchingFormat = editor.formatter.matchNode(node, format, vars ?? {}, similar);
     return !Type.isUndefined(matchingFormat);
@@ -125,12 +125,12 @@ const addListeners = (
     const group = Obj.get(formatChangeItems, format).getOrThunk(() => {
       const base: CallbackGroup = {
         withSimilar: {
-          state: Cell(false),
+          state: Cell<boolean>(false),
           similar: true,
           callbacks: []
         },
         withoutSimilar: {
-          state: Cell(false),
+          state: Cell<boolean>(false),
           similar: false,
           callbacks: []
         },
@@ -189,13 +189,9 @@ const formatChangedInternal = (
   registeredFormatListeners: Cell<RegisteredFormats>,
   formats: string,
   callback: FormatChangeCallback,
-  similar: boolean,
-  vars: FormatVars
+  similar?: boolean,
+  vars?: FormatVars
 ): UnbindFormatChanged => {
-  if (registeredFormatListeners.get() === null) {
-    setup(registeredFormatListeners, editor);
-  }
-
   addListeners(editor, registeredFormatListeners, formats, callback, similar, vars);
 
   return {
@@ -204,5 +200,6 @@ const formatChangedInternal = (
 };
 
 export {
+  setup,
   formatChangedInternal
 };

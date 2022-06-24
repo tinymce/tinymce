@@ -1,11 +1,12 @@
 import { Transformations } from '@ephox/acid';
-import { Obj, Optionals } from '@ephox/katamari';
+import { Type } from '@ephox/katamari';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import Schema from '../api/html/Schema';
 import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';
+import { ApplyFormat, BlockFormat, FormatAttrOrStyleValue, InlineFormat, SelectorFormat } from './FormatTypes';
 
 /**
  * Internal class for generating previews styles for formats.
@@ -20,11 +21,11 @@ import Tools from '../api/util/Tools';
 const each = Tools.each;
 const dom = DOMUtils.DOM;
 
-const parsedSelectorToHtml = (ancestry, editor: Editor) => {
-  let elm, item, fragment;
+const parsedSelectorToHtml = (ancestry, editor: Editor): HTMLElement => {
+  let elm, item;
   const schema = editor && editor.schema || Schema({});
 
-  const decorate = (elm, item) => {
+  const decorate = (elm: Element, item) => {
     if (item.classes.length) {
       dom.addClass(elm, item.classes.join(' '));
     }
@@ -32,7 +33,7 @@ const parsedSelectorToHtml = (ancestry, editor: Editor) => {
   };
 
   const createElement = (sItem) => {
-    item = typeof sItem === 'string' ? {
+    item = Type.isString(sItem) ? {
       name: sItem,
       classes: [],
       attrs: {}
@@ -43,8 +44,8 @@ const parsedSelectorToHtml = (ancestry, editor: Editor) => {
     return elm;
   };
 
-  const getRequiredParent = (elm, candidate) => {
-    const name = typeof elm !== 'string' ? elm.nodeName.toLowerCase() : elm;
+  const getRequiredParent = (elm: Node | string, candidate: string) => {
+    const name = !Type.isString(elm) ? elm.nodeName.toLowerCase() : elm;
     const elmRule = schema.getElementRule(name);
     const parentsRequired = elmRule && elmRule.parentsRequired;
 
@@ -97,15 +98,14 @@ const parsedSelectorToHtml = (ancestry, editor: Editor) => {
     return wrapInHtml(parent, ancestry, parentCandidate && parentCandidate.siblings);
   };
 
+  const fragment = dom.create('div');
   if (ancestry && ancestry.length) {
     item = ancestry[0];
     elm = createElement(item);
-    fragment = dom.create('div');
     fragment.appendChild(wrapInHtml(elm, ancestry.slice(1), item.siblings));
-    return fragment;
-  } else {
-    return '';
   }
+
+  return fragment;
 };
 
 const selectorToHtml = (selector: string, editor?: Editor) => {
@@ -156,8 +156,8 @@ const parseSelectorItem = (item) => {
   return obj;
 };
 
-const parseSelector = (selector: string) => {
-  if (!selector || typeof selector !== 'string') {
+const parseSelector = (selector: string | undefined) => {
+  if (!Type.isString(selector)) {
     return [];
   }
 
@@ -180,8 +180,7 @@ const parseSelector = (selector: string) => {
   }).reverse();
 };
 
-const getCssText = (editor: Editor, format: any) => {
-  let name, previewFrag;
+const getCssText = (editor: Editor, format: string | ApplyFormat): string => {
   let previewCss = '', parentFontSize;
 
   let previewStyles = Options.getPreviewStyles(editor);
@@ -192,39 +191,40 @@ const getCssText = (editor: Editor, format: any) => {
   }
 
   // Removes any variables since these can't be previewed
-  const removeVars = (val): string => {
-    return val.replace(/%(\w+)/g, '');
+  const removeVars = (val: FormatAttrOrStyleValue): string => {
+    return Type.isString(val) ? val.replace(/%(\w+)/g, '') : '';
   };
 
   // Create block/inline element to use for preview
-  if (typeof format === 'string') {
-    format = editor.formatter.get(format);
-    if (!format) {
-      return;
+  if (Type.isString(format)) {
+    const formats = editor.formatter.get(format);
+    if (!formats) {
+      return '';
     }
 
-    format = format[0];
+    format = formats[0] as ApplyFormat;
   }
 
   // Format specific preview override
   // TODO: This should probably be further reduced by the previewStyles option
   if ('preview' in format) {
-    const previewOpt = Obj.get(format, 'preview');
-    if (Optionals.is(previewOpt, false)) {
+    const preview = format.preview;
+    if (preview === false) {
       return '';
     } else {
-      previewStyles = previewOpt.getOr(previewStyles);
+      previewStyles = preview || previewStyles;
     }
   }
 
-  name = format.block || format.inline || 'span';
+  let name = (format as BlockFormat).block || (format as InlineFormat).inline || 'span';
 
-  const items = parseSelector(format.selector);
+  let previewFrag: HTMLElement;
+  const items = parseSelector((format as SelectorFormat).selector);
   if (items.length) {
     if (!items[0].name) { // e.g. something like ul > .someClass was provided
       items[0].name = name;
     }
-    name = format.selector;
+    name = (format as SelectorFormat).selector;
     previewFrag = parsedSelectorToHtml(items, editor);
   } else {
     previewFrag = parsedSelectorToHtml([ name ], editor);
@@ -233,7 +233,7 @@ const getCssText = (editor: Editor, format: any) => {
   const previewElm = dom.select(name, previewFrag)[0] || previewFrag.firstChild;
 
   // Add format styles to preview element
-  each(format.styles, (value, name: string) => {
+  each(format.styles, (value, name) => {
     const newValue = removeVars(value);
 
     if (newValue) {
@@ -242,7 +242,7 @@ const getCssText = (editor: Editor, format: any) => {
   });
 
   // Add attributes to preview element
-  each(format.attributes, (value, name: string) => {
+  each(format.attributes, (value, name) => {
     const newValue = removeVars(value);
 
     if (newValue) {

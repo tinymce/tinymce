@@ -4,7 +4,7 @@ import { Bookmark } from './BookmarkTypes';
 import * as GetBookmark from './GetBookmark';
 import * as ResolveBookmark from './ResolveBookmark';
 
-const getBookmark = (selection: EditorSelection, type: number, normalized: boolean): Bookmark => {
+const getBookmark = (selection: EditorSelection, type?: number, normalized?: boolean): Bookmark => {
   return GetBookmark.getBookmark(selection, type, normalized);
 };
 

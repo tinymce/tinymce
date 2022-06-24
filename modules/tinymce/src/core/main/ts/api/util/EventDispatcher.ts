@@ -85,7 +85,7 @@ const nativeEvents = Tools.makeMap(
 );
 
 interface Binding<T, K extends string> {
-  func: (event: EditorEvent<MappedEvent<T, K>>) => void;
+  func: (event: EditorEvent<MappedEvent<T, K>>) => void | boolean;
   removed: boolean;
   once?: true;
 }
@@ -201,14 +201,14 @@ class EventDispatcher<T> {
    *   // Callback logic
    * });
    */
-  public on <K extends string>(name: K, callback: false | ((event: EditorEvent<MappedEvent<T, K>>) => void), prepend?: boolean, extra?: {}): this {
+  public on <K extends string>(name: K, callback: false | ((event: EditorEvent<MappedEvent<T, K>>) => void | boolean), prepend?: boolean, extra?: {}): this {
     if (callback === false) {
       callback = Fun.never;
     }
 
     if (callback) {
-      const wrappedCallback = {
-        func: callback,
+      const wrappedCallback: Binding<T, string> = {
+        func: callback as (event: EditorEvent<MappedEvent<T, string>>) => void | boolean,
         removed: false
       };
 
@@ -333,7 +333,8 @@ class EventDispatcher<T> {
    */
   public has(name: string): boolean {
     name = name.toLowerCase();
-    return !(!this.bindings[name] || this.bindings[name].length === 0);
+    const binding = this.bindings[name];
+    return !(!binding || binding.length === 0);
   }
 }
 

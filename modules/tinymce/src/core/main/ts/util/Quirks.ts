@@ -4,6 +4,7 @@ import Editor from '../api/Editor';
 import Env from '../api/Env';
 import * as Options from '../api/Options';
 import Delay from '../api/util/Delay';
+import { EditorEvent } from '../api/util/EventDispatcher';
 import Tools from '../api/util/Tools';
 import VK from '../api/util/VK';
 import * as CaretContainer from '../caret/CaretContainer';
@@ -33,9 +34,9 @@ const Quirks = (editor: Editor): Quirks => {
   /**
    * Executes a command with a specific state this can be to enable/disable browser editing features.
    */
-  const setEditorCommandState = (cmd, state) => {
+  const setEditorCommandState = (cmd: string, state: string | boolean) => {
     try {
-      editor.getDoc().execCommand(cmd, false, state);
+      editor.getDoc().execCommand(cmd, false, String(state));
     } catch (ex) {
       // Ignore
     }
@@ -48,7 +49,7 @@ const Quirks = (editor: Editor): Quirks => {
    * @param {Event} e Event object.
    * @return {Boolean} true/false if the event is prevented or not.
    */
-  const isDefaultPrevented = (e) => {
+  const isDefaultPrevented = (e: EditorEvent<unknown>) => {
     return e.isDefaultPrevented();
   };
 
@@ -65,14 +66,14 @@ const Quirks = (editor: Editor): Quirks => {
    * [<h1></h1>]
    */
   const emptyEditorWhenDeleting = () => {
-    const serializeRng = (rng) => {
+    const serializeRng = (rng: Range) => {
       const body = dom.create('body');
       const contents = rng.cloneContents();
       body.appendChild(contents);
       return selection.serializer.serialize(body, { format: 'html' });
     };
 
-    const allContentsSelected = (rng) => {
+    const allContentsSelected = (rng: Range) => {
       const selection = serializeRng(rng);
 
       const allRng = dom.createRng();
@@ -287,7 +288,7 @@ const Quirks = (editor: Editor): Quirks => {
 
       if (!isDefaultPrevented(e) && (e.keyCode === 8 || e.keyCode === 46) && isSelectionAcrossElements()) {
         applyAttributes = getAttributeApplyFunction();
-        editor.getDoc().execCommand('delete', false, null);
+        editor.getDoc().execCommand('delete', false);
         applyAttributes();
         e.preventDefault();
         return false;
@@ -295,10 +296,8 @@ const Quirks = (editor: Editor): Quirks => {
     });
 
     dom.bind(editor.getDoc(), 'cut', (e) => {
-      let applyAttributes;
-
       if (!isDefaultPrevented(e) && isSelectionAcrossElements()) {
-        applyAttributes = getAttributeApplyFunction();
+        const applyAttributes = getAttributeApplyFunction();
 
         Delay.setEditorTimeout(editor, () => {
           applyAttributes();
@@ -358,9 +357,9 @@ const Quirks = (editor: Editor): Quirks => {
       }
 
       // Is the cursor at the beginning of a blockquote?
-      if (parent.tagName === 'BLOCKQUOTE') {
+      if (parent.nodeName === 'BLOCKQUOTE') {
         // Remove the blockquote
-        editor.formatter.toggle('blockquote', null, parent);
+        editor.formatter.toggle('blockquote', undefined, parent);
 
         // Move the caret to the beginning of container
         rng = dom.createRng();
@@ -404,12 +403,12 @@ const Quirks = (editor: Editor): Quirks => {
   const addBrAfterLastLinks = () => {
     const fixLinks = () => {
       each(dom.select('a'), (node) => {
-        let parentNode: Node = node.parentNode;
+        let parentNode: Node | null = node.parentNode;
         const root = dom.getRoot();
 
-        if (parentNode.lastChild === node) {
+        if (parentNode?.lastChild === node) {
           while (parentNode && !dom.isBlock(parentNode)) {
-            if (parentNode.parentNode.lastChild !== parentNode || parentNode === root) {
+            if (parentNode.parentNode?.lastChild !== parentNode || parentNode === root) {
               return;
             }
 

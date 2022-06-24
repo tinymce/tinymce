@@ -77,7 +77,7 @@ const getEditingHost = (node: Node, rootNode: HTMLElement): HTMLElement => {
     .getOr(rootNode);
 };
 
-const getParentBlock = (node: Node, rootNode?: Node): Node | null => {
+const getParentBlock = (node: Node | null, rootNode?: Node): Node | null => {
   while (node && node !== rootNode) {
     if (isBlockLike(node)) {
       return node;

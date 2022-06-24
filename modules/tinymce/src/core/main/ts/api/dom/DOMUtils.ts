@@ -126,7 +126,7 @@ const updateInternalStyleAttr = (styles: Styles, elm: SugarElement<Element>) => 
   legacySetAttribute(elm, internalStyleName, value);
 };
 
-const findNodeIndex = (node: Node, normalized?: boolean) => {
+const findNodeIndex = (node: Node | null, normalized?: boolean) => {
   let idx = 0, lastNodeType, nodeType;
 
   if (node) {
@@ -134,8 +134,8 @@ const findNodeIndex = (node: Node, normalized?: boolean) => {
       nodeType = node.nodeType;
 
       // Normalize text nodes
-      if (normalized && nodeType === 3) {
-        if (nodeType === lastNodeType || !node.nodeValue.length) {
+      if (normalized && NodeType.isText(node)) {
+        if (nodeType === lastNodeType || !node.data.length) {
           continue;
         }
       }
@@ -181,7 +181,10 @@ interface DOMUtils {
   events: EventUtils;
   root: Node;
 
-  isBlock: (node: string | Node) => boolean;
+  isBlock: {
+    (node: Node): node is HTMLElement;
+    (node: string): boolean;
+  };
   clone: (node: Node, deep: boolean) => Node;
   getRoot: () => HTMLElement;
   getViewPort: (argWin?: Window) => GeomRect;
@@ -1159,7 +1162,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     styles,
     schema,
     events,
-    isBlock,
+    isBlock: isBlock as DOMUtils['isBlock'],
 
     root: null,
 

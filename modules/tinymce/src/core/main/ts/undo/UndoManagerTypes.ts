@@ -8,27 +8,40 @@ export const enum UndoLevelType {
   Complete = 'complete'
 }
 
-export interface UndoLevel {
+interface BaseUndoLevel {
   type: UndoLevelType;
-  fragments: string[];
-  content: string;
-  bookmark: Bookmark;
-  beforeBookmark: Bookmark;
+  bookmark: Bookmark | null;
+  beforeBookmark: Bookmark | null;
 }
+
+export interface FragmentedUndoLevel extends BaseUndoLevel {
+  type: UndoLevelType.Fragmented;
+  fragments: string[];
+  content: '';
+}
+
+export interface CompleteUndoLevel extends BaseUndoLevel {
+  type: UndoLevelType.Complete;
+  fragments: null;
+  content: string;
+}
+
+export type NewUndoLevel = CompleteUndoLevel | FragmentedUndoLevel;
+export type UndoLevel = NewUndoLevel & { bookmark: Bookmark };
 
 export interface UndoManager {
   data: UndoLevel[];
   typing: boolean;
-  add: (level?: UndoLevel, event?: EditorEvent<any>) => UndoLevel;
+  add: (level?: Partial<UndoLevel>, event?: EditorEvent<any>) => UndoLevel | null;
   dispatchChange: () => void;
   beforeChange: () => void;
-  undo: () => UndoLevel;
-  redo: () => UndoLevel;
+  undo: () => UndoLevel | undefined;
+  redo: () => UndoLevel | undefined;
   clear: () => void;
   reset: () => void;
   hasUndo: () => boolean;
   hasRedo: () => boolean;
-  transact: (callback: () => void) => UndoLevel;
+  transact: (callback: () => void) => UndoLevel | null;
   ignore: (callback: () => void) => void;
   extra: (callback1: () => void, callback2: () => void) => void;
 }

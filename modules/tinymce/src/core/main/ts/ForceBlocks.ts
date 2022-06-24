@@ -19,7 +19,7 @@ import * as EditorFocus from './focus/EditorFocus';
 const isBlockElement = (blockElements: SchemaMap, node: Node) =>
   Obj.has(blockElements, node.nodeName);
 
-const isValidTarget = (blockElements, node) => {
+const isValidTarget = (blockElements: SchemaMap, node: Node) => {
   if (NodeType.isText(node)) {
     return true;
   } else if (NodeType.isElement(node)) {
@@ -29,7 +29,7 @@ const isValidTarget = (blockElements, node) => {
   }
 };
 
-const hasBlockParent = (blockElements, root, node) => {
+const hasBlockParent = (blockElements: SchemaMap, root: Node, node: Node) => {
   return Arr.exists(Parents.parents(SugarElement.fromDom(node), SugarElement.fromDom(root)), (elm) => {
     return isBlockElement(blockElements, elm.dom);
   });
@@ -37,11 +37,11 @@ const hasBlockParent = (blockElements, root, node) => {
 
 // const is
 
-const shouldRemoveTextNode = (blockElements, node) => {
+const shouldRemoveTextNode = (blockElements: SchemaMap, node: Node) => {
   if (NodeType.isText(node)) {
-    if (node.nodeValue.length === 0) {
+    if (node.data.length === 0) {
       return true;
-    } else if (/^\s+$/.test(node.nodeValue) && (!node.nextSibling || isBlockElement(blockElements, node.nextSibling))) {
+    } else if (/^\s+$/.test(node.data) && (!node.nextSibling || isBlockElement(blockElements, node.nextSibling))) {
       return true;
     }
   }
@@ -52,30 +52,29 @@ const shouldRemoveTextNode = (blockElements, node) => {
 const addRootBlocks = (editor: Editor) => {
   const dom = editor.dom, selection = editor.selection;
   const schema = editor.schema, blockElements = schema.getBlockElements();
-  let node: Node = selection.getStart();
+  const startNode = selection.getStart();
   const rootNode = editor.getBody();
-  let rootBlockNode: Node, tempNode: Node, wrapped: boolean;
+  let rootBlockNode: Node | undefined | null;
+  let tempNode: Node;
+  let wrapped = false;
 
   const forcedRootBlock = Options.getForcedRootBlock(editor);
-  if (!node || !NodeType.isElement(node)) {
+  if (!startNode || !NodeType.isElement(startNode)) {
     return;
   }
 
   const rootNodeName = rootNode.nodeName.toLowerCase();
-  if (!schema.isValidChild(rootNodeName, forcedRootBlock.toLowerCase()) || hasBlockParent(blockElements, rootNode, node)) {
+  if (!schema.isValidChild(rootNodeName, forcedRootBlock.toLowerCase()) || hasBlockParent(blockElements, rootNode, startNode)) {
     return;
   }
 
   // Get current selection
   const rng = selection.getRng();
-  const startContainer = rng.startContainer;
-  const startOffset = rng.startOffset;
-  const endContainer = rng.endContainer;
-  const endOffset = rng.endOffset;
+  const { startContainer, startOffset, endContainer, endOffset } = rng;
   const restoreSelection = EditorFocus.hasFocus(editor);
 
   // Wrap non block elements and text nodes
-  node = rootNode.firstChild;
+  let node = rootNode.firstChild;
   while (node) {
     if (isValidTarget(blockElements, node)) {
       // Remove empty text nodes and nodes containing only whitespace
@@ -88,7 +87,7 @@ const addRootBlocks = (editor: Editor) => {
 
       if (!rootBlockNode) {
         rootBlockNode = dom.create(forcedRootBlock, Options.getForcedRootBlockAttrs(editor));
-        node.parentNode.insertBefore(rootBlockNode, node);
+        rootNode.insertBefore(rootBlockNode, node);
         wrapped = true;
       }
 
@@ -109,7 +108,7 @@ const addRootBlocks = (editor: Editor) => {
   }
 };
 
-const setup = (editor: Editor) => {
+const setup = (editor: Editor): void => {
   editor.on('NodeChange', Fun.curry(addRootBlocks, editor));
 };
 

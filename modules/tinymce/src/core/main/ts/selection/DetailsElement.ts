@@ -2,7 +2,7 @@ import { Arr, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 
-const preventSummaryToggle = (editor: Editor) => {
+const preventSummaryToggle = (editor: Editor): void => {
   editor.on('click', (e) => {
     if (editor.dom.getParent(e.target, 'details')) {
       e.preventDefault();
@@ -11,7 +11,7 @@ const preventSummaryToggle = (editor: Editor) => {
 };
 
 // Forces the details element to always be open within the editor
-const filterDetails = (editor: Editor) => {
+const filterDetails = (editor: Editor): void => {
   editor.parser.addNodeFilter('details', (elms) => {
     Arr.each(elms, (details) => {
       details.attr('data-mce-open', details.attr('open'));
@@ -28,7 +28,7 @@ const filterDetails = (editor: Editor) => {
   });
 };
 
-const setup = (editor: Editor) => {
+const setup = (editor: Editor): void => {
   preventSummaryToggle(editor);
   filterDetails(editor);
 };

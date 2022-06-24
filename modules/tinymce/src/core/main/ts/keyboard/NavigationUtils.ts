@@ -26,7 +26,7 @@ const renderRangeCaretOpt = (editor: Editor, range: Range, scrollIntoView: boole
   Optional.some(FakeCaretUtils.renderRangeCaret(editor, range, scrollIntoView));
 
 const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, isBefore: (caretPosition: CaretPosition) => boolean,
-                          isAfter: (caretPosition: CaretPosition) => boolean, isElement: (node: Node) => node is Element): Optional<Range> => {
+                          isAfter: (caretPosition: CaretPosition) => boolean, isElement: (node: Node) => node is HTMLElement): Optional<Range> => {
   const forwards = direction === HDirection.Forwards;
   const caretWalker = CaretWalker(editor.getBody());
   const getNextPosFn = Fun.curry(CaretUtils.getVisualCaretPosition, forwards ? caretWalker.next : caretWalker.prev);
@@ -55,14 +55,14 @@ const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, i
   }
 
   if (isBeforeFn(nextCaretPosition)) {
-    return FakeCaretUtils.showCaret(direction, editor, nextCaretPosition.getNode(!forwards) as Element, forwards, false);
+    return FakeCaretUtils.showCaret(direction, editor, nextCaretPosition.getNode(!forwards) as HTMLElement, forwards, false);
   }
 
   // Peek ahead for handling of ab|c<span cE=false> -> abc|<span cE=false>
   const peekCaretPosition = getNextPosFn(nextCaretPosition);
   if (peekCaretPosition && isBeforeFn(peekCaretPosition)) {
     if (CaretUtils.isMoveInsideSameBlock(nextCaretPosition, peekCaretPosition)) {
-      return FakeCaretUtils.showCaret(direction, editor, peekCaretPosition.getNode(!forwards) as Element, forwards, false);
+      return FakeCaretUtils.showCaret(direction, editor, peekCaretPosition.getNode(!forwards) as HTMLElement, forwards, false);
     }
   }
 
@@ -74,7 +74,7 @@ const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, i
 };
 
 const moveVertically = (editor: Editor, direction: LineWalker.VDirection, range: Range, isBefore: (caretPosition: CaretPosition) => boolean,
-                        isAfter: (caretPosition: CaretPosition) => boolean, isElement: (node: Node) => node is Element): Optional<Range> => {
+                        isAfter: (caretPosition: CaretPosition) => boolean, isElement: (node: Node) => node is HTMLElement): Optional<Range> => {
   const caretPosition = CaretUtils.getNormalizedRangeEndPoint(direction, editor.getBody(), range);
   const caretClientRect = ArrUtils.last(caretPosition.getClientRects());
   const forwards = direction === LineWalker.VDirection.Down;
