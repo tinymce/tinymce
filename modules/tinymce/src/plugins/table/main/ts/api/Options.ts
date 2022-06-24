@@ -1,4 +1,4 @@
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { SugarElement, Width } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -18,7 +18,8 @@ const defaultCellBorderStyles = Arr.map([ 'Solid', 'Dotted', 'Dashed', 'Double',
   return { title: type, value: type.toLowerCase() };
 });
 
-const stylesAvailableAsAttributes = [ 'width' ];
+// Note: This is also contained in the core Options.ts file
+const defaultWidth = '100%';
 
 const getPixelForcedWidth = (editor: Editor) => {
   // Determine the inner size of the parent block element where the table will be inserted
@@ -30,26 +31,22 @@ const getPixelForcedWidth = (editor: Editor) => {
 // Note: This is also contained in the core Options.ts file
 const determineDefaultStyles = (editor: Editor, defaultStyles: Record<string, string>): Record<string, string> => {
   if (isResponsiveForced(editor) || !shouldStyleWithCss(editor)) {
-    return Obj.filter(defaultStyles, (_value, key) => !Arr.contains(stylesAvailableAsAttributes, key));
+    return defaultStyles;
   } else if (isPixelsForced(editor)) {
     return { ...defaultStyles, width: getPixelForcedWidth(editor) };
   } else {
-    return defaultStyles;
+    return { ...defaultStyles, width: defaultWidth };
   }
 };
 
 // Note: This is also contained in the core Options.ts file
 const determineDefaultAttributes = (editor: Editor, defaultAttributes: Record<string, string>): Record<string, string> => {
-  const defaultStyles = editor.options.get('table_default_styles');
-
-  if (editor.options.isSet('table_default_styles')) {
-    return defaultAttributes;
-  } else if (shouldStyleWithCss(editor)) {
+  if (isResponsiveForced(editor) || shouldStyleWithCss(editor)) {
     return defaultAttributes;
   } else if (isPixelsForced(editor)) {
-    return { ...defaultAttributes, ...Obj.filter(defaultStyles, (_value, key) => Arr.contains(stylesAvailableAsAttributes, key)), width: getPixelForcedWidth(editor) };
+    return { ...defaultAttributes, width: getPixelForcedWidth(editor) };
   } else {
-    return { ...defaultAttributes, ...Obj.filter(defaultStyles, (_value, key) => Arr.contains(stylesAvailableAsAttributes, key)) };
+    return { ...defaultAttributes, width: defaultWidth };
   }
 };
 
@@ -96,11 +93,6 @@ const register = (editor: Editor): void => {
     processor: 'boolean',
     // Table grid relies on hover, which isn't available on touch devices so use the dialog instead
     default: !Env.deviceType.isTouch()
-  });
-
-  registerOption('table_style_by_css', {
-    processor: 'boolean',
-    default: true
   });
 
   registerOption('table_cell_class_list', {
