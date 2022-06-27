@@ -1,7 +1,8 @@
-import { Cell, Singleton } from '@ephox/katamari';
+import { Arr, Cell, Singleton } from '@ephox/katamari';
 
 import { Bookmark } from '../bookmark/BookmarkTypes';
 import * as Rtc from '../Rtc';
+import * as Levels from '../undo/Levels';
 import { addKeyboardShortcuts, registerEvents } from '../undo/Setup';
 import { Index, Locks, UndoLevel, UndoManager } from '../undo/UndoManagerTypes';
 import Editor from './Editor';
@@ -48,6 +49,19 @@ const UndoManager = (editor: Editor): UndoManager => {
      */
     add: (level?: UndoLevel, event?: Event): UndoLevel => {
       return Rtc.addUndoLevel(editor, undoManager, index, locks, beforeBookmark, level, event);
+    },
+
+    /**
+     * Dispatch a change event with current editor status as level and current undoManager layer as lastLevel
+     *
+     * @method dispatchChange
+     */
+    dispatchChange: (): void => {
+      editor.setDirty(true);
+      editor.dispatch('change', {
+        level: Levels.createFromEditor(editor),
+        lastLevel: Arr.get(undoManager.data, index.get()).getOrUndefined()
+      });
     },
 
     /**

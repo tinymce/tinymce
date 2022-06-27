@@ -14,6 +14,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { SplitDropdown } from 'ephox/alloy/api/ui/SplitDropdown';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
+import { TestItem } from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 
 UnitTest.asynctest('SplitDropdown List', (success, failure) => {
@@ -102,7 +103,7 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
         },
 
         fetch: () => {
-          const future = Future.pure([
+          const future = Future.pure<TestItem[]>([
             { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' }}},
             { type: 'item', data: { value: 'beta', meta: { text: 'Beta' }}}
           ]);

@@ -5,9 +5,6 @@ const appendClickRemove = (link: HTMLAnchorElement, evt: MouseEvent): void => {
 };
 
 const open = (url: string): void => {
-  // Chrome and Webkit has implemented noopener and works correctly with/without popup blocker
-  // Firefox has it implemented noopener but when the popup blocker is activated it doesn't work
-  // Edge has only implemented noreferrer and it seems to remove opener as well
   const link = document.createElement('a');
   link.target = '_blank';
   link.href = url;

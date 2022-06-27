@@ -1,12 +1,10 @@
-import { Arr, Optional, Type, Unicode } from '@ephox/katamari';
+import { Arr, Type, Unicode } from '@ephox/katamari';
 
 import Env from '../api/Env';
 import DomParser, { DomParserSettings } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
 import Tools from '../api/util/Tools';
-import * as Conversions from '../file/Conversions';
-import { uniqueId } from '../file/ImageScanner';
-import { parseDataUri } from './Base64Uris';
+import { dataUriToBlobInfo } from '../file/BlobCacheUtils';
 import { isEmpty, paddEmptyNode } from './ParserUtils';
 
 const isBogusImage = (img: AstNode): boolean =>
@@ -24,15 +22,7 @@ const registerBase64ImageFilter = (parser: DomParser, settings: DomParserSetting
       return;
     }
 
-    parseDataUri(inputSrc).bind(({ type, data }) =>
-      Optional.from(blobCache.getByData(data, type)).orThunk(() =>
-        Conversions.buildBlob(type, data).map((blob) => {
-          const blobInfo = blobCache.create(uniqueId(), blob, data);
-          blobCache.add(blobInfo);
-          return blobInfo;
-        })
-      )
-    ).each((blobInfo) => {
+    dataUriToBlobInfo(blobCache, inputSrc, true).each((blobInfo) => {
       img.attr('src', blobInfo.blobUri());
     });
   };

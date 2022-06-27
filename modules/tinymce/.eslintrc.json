@@ -4,11 +4,11 @@
   },
   "overrides": [
     {
-      "files": [ "src/**/main/**/*.ts" ],
+      "files": [ "src/**/main/**/*.ts", "src/**/test/**/*.ts" ],
       "rules": {
         "@tinymce/no-implicit-dom-globals": [
           "error", {
-            "allowed": [ "fetch", "requestAnimationFrame", "InputEvent" ],
+            "allowed": [ "btoa", "fetch", "requestAnimationFrame", "InputEvent" ],
             "appendDefaults": true
           }
         ]

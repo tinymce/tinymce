@@ -1,11 +1,12 @@
 import { describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { McEditor, TinyAssertions, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import { AnnotatorSettings } from 'tinymce/core/api/Annotator';
 import Editor from 'tinymce/core/api/Editor';
 
-import { annotate } from '../../module/test/AnnotationAsserts';
+import { annotate, assertMarkings } from '../../module/test/AnnotationAsserts';
 
 describe('browser.tinymce.core.annotate.AnnotationPersistenceTest', () => {
 
@@ -30,7 +31,7 @@ describe('browser.tinymce.core.annotate.AnnotationPersistenceTest', () => {
       attributes: {
         'data-test-anything': data.anything
       },
-      classes: [ ]
+      classes: [ 'test-class' ]
     })
   };
 
@@ -39,7 +40,7 @@ describe('browser.tinymce.core.annotate.AnnotationPersistenceTest', () => {
       attributes: {
         'data-test-anything': data.anything
       },
-      classes: [ ]
+      classes: [ 'test-class' ]
     })
   };
 
@@ -49,59 +50,80 @@ describe('browser.tinymce.core.annotate.AnnotationPersistenceTest', () => {
       attributes: {
         'data-test-anything': data.anything
       },
-      classes: [ ]
+      classes: [ 'test-class' ]
     })
   };
 
-  const setupSingleAnnotation = (editor: Editor) => {
+  const setupSingleSpanAnnotation = (editor: Editor) => {
     // '<p>This is the only p|ar|agraph</p>'
-    editor.setContent('<p>This is the only paragraph <em>here</em></p>');
-    editor.undoManager.add();
+    editor.resetContent('<p>This is the only paragraph <em>here</em></p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 'This is the only p'.length, [ 0, 0 ], 'This is the only par'.length);
     annotate(editor, 'test-annotation', 'test-uid', { anything: 'one-paragraph' });
+    assertMarkings(editor, 1, 0);
     TinyAssertions.assertContentPresence(editor, {
-      '.mce-annotation': 1,
       'p:contains("This is the only paragraph here")': 1
     });
     editor.execCommand('undo');
+    assertMarkings(editor, 0, 0);
     TinyAssertions.assertContentPresence(editor, {
-      '.mce-annotation': 0,
       'p:contains("This is the only paragraph here")': 1
     });
     editor.execCommand('redo');
+    assertMarkings(editor, 1, 0);
     TinyAssertions.assertContentPresence(editor, {
-      '.mce-annotation': 1,
       'p:contains("This is the only paragraph here")': 1
     });
   };
 
-  const contentContains = (editor: Editor, pattern: string, isContained: boolean) => {
+  const setupSingleBlockAnnotation = (editor: Editor) => {
+    editor.resetContent(`<pre class="language-markup" contenteditable="false">test</pre>`);
+    TinySelections.select(editor, 'pre', []);
+    annotate(editor, 'test-annotation', 'test-uid', { anything: 'one-block' });
+    assertMarkings(editor, 0, 2); // Extra one for offscreen selection
+    editor.execCommand('undo');
+    assertMarkings(editor, 0, 0);
+    editor.execCommand('redo');
+    assertMarkings(editor, 0, 2);
+  };
+
+  const contentContains = (editor: Editor, patterns: string[], isContained: boolean) => {
     const content = editor.getContent();
     if (isContained) {
-      assert.include(content, pattern, 'editor.getContent() should contain: ' + pattern);
+      Arr.each(patterns, (pattern) => {
+        assert.include(content, pattern, 'editor.getContent() should contain: ' + pattern);
+      });
     } else {
-      assert.notInclude(content, pattern, 'editor.getContent() should not contain: ' + pattern);
+      Arr.each(patterns, (pattern) => {
+        assert.notInclude(content, pattern, 'editor.getContent() should not contain: ' + pattern);
+      });
     }
   };
 
   it('testing configuration with persistence', () => {
     return runTinyWithSettings(settingsWithPersistence, (ed) => {
-      setupSingleAnnotation(ed);
-      contentContains(ed, 'mce-annotation', true);
+      setupSingleSpanAnnotation(ed);
+      contentContains(ed, [ 'mce-annotation', 'test-class', 'one-paragraph' ], true);
+      setupSingleBlockAnnotation(ed);
+      contentContains(ed, [ 'mce-annotation', 'language-markup', 'test-class', 'one-block' ], true);
     });
   });
 
   it('testing configuration with *no* persistence', () => {
     return runTinyWithSettings(settingsWithoutPersistence, (ed) => {
-      setupSingleAnnotation(ed);
-      contentContains(ed, 'mce-annotation', false);
+      setupSingleSpanAnnotation(ed);
+      contentContains(ed, [ 'mce-annotation', 'test-class', 'one-paragraph' ], false);
+      setupSingleBlockAnnotation(ed);
+      contentContains(ed, [ 'mce-annotation', 'test-class', 'one-block' ], false);
+      contentContains(ed, [ 'language-markup' ], true);
     });
   });
 
   it('testing configuration with default persistence', () => {
     return runTinyWithSettings(settingsWithDefaultPersistence, (ed) => {
-      setupSingleAnnotation(ed);
-      contentContains(ed, 'mce-annotation', true);
+      setupSingleSpanAnnotation(ed);
+      contentContains(ed, [ 'mce-annotation', 'test-class', 'one-paragraph' ], true);
+      setupSingleBlockAnnotation(ed);
+      contentContains(ed, [ 'mce-annotation', 'language-markup', 'test-class', 'one-block' ], true);
     });
   });
 });

@@ -16,6 +16,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as DropdownAssertions from 'ephox/alloy/test/dropdown/DropdownAssertions';
+import { TestItem } from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
@@ -79,7 +80,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
         },
 
         fetch: () => {
-          const future = Future.pure([
+          const future = Future.pure<TestItem[]>([
             { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' }}},
             { type: 'item', data: { value: 'beta', meta: { text: 'Beta' }}},
             { type: 'item', data: { value: 'gamma', meta: { text: 'Gamma' }}},

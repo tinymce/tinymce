@@ -32,7 +32,8 @@ const tagAttributes: Record<string, string[]> = {
 const roleAttributes: Record<string, string[]> = {
   button: [ 'aria-pressed' ],
   listbox: [ 'aria-pressed', 'aria-expanded' ],
-  menuitemcheckbox: [ 'aria-checked' ]
+  menuitemcheckbox: [ 'aria-checked' ],
+  menuitemradio: [ 'aria-checked' ]
 };
 
 const detectFromTag = (component: AlloyComponent): Optional<string[]> => {
