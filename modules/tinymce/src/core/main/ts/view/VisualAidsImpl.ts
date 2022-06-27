@@ -7,10 +7,6 @@ export const addVisualInternal = (editor: Editor, elm?: HTMLElement): void => {
   const dom = editor.dom;
   const scope = Type.isNonNullable(elm) ? elm : editor.getBody();
 
-  if (Type.isUndefined(editor.hasVisual)) {
-    editor.hasVisual = Options.isVisualAidsEnabled(editor);
-  }
-
   Arr.each(dom.select('table,a', scope), (matchedElm) => {
     switch (matchedElm.nodeName) {
       case 'TABLE':

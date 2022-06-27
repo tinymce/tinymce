@@ -13,7 +13,7 @@ const outdentDlItem = (editor: Editor, item: SugarElement<Node>): void => {
   if (isDescriptionDetail(item)) {
     Replication.mutate(item, 'dt');
   } else if (isDescriptionTerm(item)) {
-    Traverse.parent(item).each((dl) => SplitList.splitList(editor, dl.dom, item.dom));
+    Traverse.parentElement(item).each((dl) => SplitList.splitList(editor, dl.dom, item.dom));
   }
 };
 

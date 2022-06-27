@@ -252,14 +252,15 @@ const transferChildren = (parent: AstNode, nativeParent: Node, specialElements: 
 const walkTree = (root: AstNode, preprocessors: WalkerCallback[], postprocessors: WalkerCallback[]) => {
   const traverseOrder: AstNode[] = [];
 
-  for (let node = root, lastNode = node; Type.isNonNullable(node); lastNode = node, node = node.walk()) {
-    Arr.each(preprocessors, (preprocess) => preprocess(node));
+  for (let node: AstNode | null | undefined = root, lastNode = node; node; lastNode = node, node = node.walk()) {
+    const tempNode = node;
+    Arr.each(preprocessors, (preprocess) => preprocess(tempNode));
 
-    if (Type.isNullable(node.parent) && node !== root) {
+    if (Type.isNullable(tempNode.parent) && tempNode !== root) {
       // The node has been detached, so rewind a little and don't add it to our traversal
       node = lastNode;
     } else {
-      traverseOrder.push(node);
+      traverseOrder.push(tempNode);
     }
   }
 
@@ -297,7 +298,7 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
   };
 
   const isTextRootBlockEmpty = (node: AstNode) => {
-    let tempNode: AstNode | undefined = node;
+    let tempNode: AstNode | null | undefined = node;
     while (Type.isNonNullable(tempNode)) {
       if (tempNode.name in textRootBlockElements) {
         return isEmpty(schema, nonEmptyElements, whitespaceElements, tempNode);

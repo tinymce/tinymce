@@ -20,7 +20,7 @@ const isAtomicInline = NodeType.matchNodeNames([ 'img', 'input', 'textarea', 'hr
 const isTable = NodeType.matchNodeNames([ 'table' ]);
 const isCaretContainer = CaretContainer.isCaretContainer;
 
-const isCaretCandidate = (node: Node | null): node is Text | Element => {
+const isCaretCandidate = (node: Node | null | undefined): node is Text | Element => {
   if (isCaretContainer(node)) {
     return false;
   }
@@ -33,10 +33,10 @@ const isCaretCandidate = (node: Node | null): node is Text | Element => {
 };
 
 // UI components on IE is marked with contenteditable=false and unselectable=true so lets not handle those as real content editables
-const isUnselectable = (node: Node | null): boolean =>
+const isUnselectable = (node: Node | null | undefined): boolean =>
   NodeType.isElement(node) && node.getAttribute('unselectable') === 'true';
 
-const isNonUiContentEditableFalse = (node: Node | null): node is HTMLElement =>
+const isNonUiContentEditableFalse = (node: Node | null | undefined): node is HTMLElement =>
   !isUnselectable(node) && isContentEditableFalse(node);
 
 const isInEditable = (node: Node, root?: Node): boolean => {
@@ -66,7 +66,7 @@ const isAtomicContentEditableFalse = (node: Node): boolean => {
 const isAtomic = (node: Node): boolean =>
   isAtomicInline(node) || isAtomicContentEditableFalse(node);
 
-const isEditableCaretCandidate = (node: Node | null, root?: Node): boolean =>
+const isEditableCaretCandidate = (node: Node | null, root?: Node): node is NonNullable<Node> =>
   isCaretCandidate(node) && isInEditable(node, root);
 
 export {

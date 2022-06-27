@@ -45,9 +45,9 @@ const deleteContentInsideCell = (editor: Editor, cell: SugarElement<HTMLTableCel
 
   if (isFirstCellInSelection) {
     insideTableRng.setStart(rng.startContainer, rng.startOffset);
-    insideTableRng.setEndAfter(cell.dom.lastChild);
+    insideTableRng.setEndAfter(cell.dom.lastChild as Node);
   } else {
-    insideTableRng.setStartBefore(cell.dom.firstChild);
+    insideTableRng.setStartBefore(cell.dom.firstChild as Node);
     insideTableRng.setEnd(rng.endContainer, rng.endOffset);
   }
 
@@ -191,9 +191,10 @@ const deleteBetweenCells = (
   fromCell: SugarElement<HTMLTableCellElement>,
   from: CaretPosition
 ): Optional<() => void> =>
+  // TODO: TINY-8865 - This may not be safe to cast as Node below and alternative solutions need to be looked into
   CaretFinder.navigate(forward, editor.getBody(), from)
     .bind(
-      (to) => getParentCell(rootElm, SugarElement.fromDom(to.getNode()))
+      (to) => getParentCell(rootElm, SugarElement.fromDom(to.getNode() as Node))
         .bind((toCell) => Compare.eq(toCell, fromCell) ? Optional.none() : Optional.some(Fun.noop))
     );
 
@@ -215,7 +216,8 @@ const emptyCaretCaption = (editor: Editor, elm: SugarElement<Node>): Optional<()
   emptyElement(editor, elm);
 
 const validateCaretCaption = (rootElm: SugarElement<Node>, fromCaption: SugarElement<HTMLTableCaptionElement>, to: CaretPosition): Optional<() => void> =>
-  getParentCaption(rootElm, SugarElement.fromDom(to.getNode()))
+  // TODO: TINY-8865 - This may not be safe to cast as Node below and alternative solutions need to be looked into
+  getParentCaption(rootElm, SugarElement.fromDom(to.getNode() as Node))
     .fold(
       () => Optional.some(Fun.noop),
       (toCaption) => Optionals.someIf(!Compare.eq(toCaption, fromCaption), Fun.noop)

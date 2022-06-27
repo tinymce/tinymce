@@ -43,7 +43,7 @@ const isBogusBr = (dom: DOMUtils, node: Node): node is HTMLBRElement => {
   return dom.isBlock(node.nextSibling) && !isBr(node.previousSibling);
 };
 
-const isEmpty = (dom: DOMUtils, elm: Node, keepBookmarks?: boolean): boolean => {
+const isEmpty = (dom: DOMUtils, elm: Element, keepBookmarks?: boolean): boolean => {
   const empty = dom.isEmpty(elm);
 
   if (keepBookmarks && dom.select('span[data-mce-type=bookmark]', elm).length > 0) {

@@ -41,17 +41,14 @@ const getNextSiblingCaretPosition = (elm: Node): Optional<CaretPosition> => {
 };
 
 const findCaretPositionBackwardsFromElm = (rootElement: Node, elm: Node): Optional<CaretPosition> => {
-  const startPosition = CaretPosition.before(elm.previousSibling ? elm.previousSibling : elm.parentNode);
-  return CaretFinder.prevPosition(rootElement, startPosition).fold(
-    () => CaretFinder.nextPosition(rootElement, CaretPosition.after(elm)),
-    Optional.some
-  );
+  return Optional.from(elm.previousSibling ? elm.previousSibling : elm.parentNode)
+    .bind((node) => CaretFinder.prevPosition(rootElement, CaretPosition.before(node)))
+    .orThunk(() => CaretFinder.nextPosition(rootElement, CaretPosition.after(elm)));
 };
 
 const findCaretPositionForwardsFromElm = (rootElement: Node, elm: Node): Optional<CaretPosition> =>
-  CaretFinder.nextPosition(rootElement, CaretPosition.after(elm)).fold(
-    () => CaretFinder.prevPosition(rootElement, CaretPosition.before(elm)),
-    Optional.some
+  CaretFinder.nextPosition(rootElement, CaretPosition.after(elm)).orThunk(
+    () => CaretFinder.prevPosition(rootElement, CaretPosition.before(elm))
   );
 
 const findCaretPositionBackwards = (rootElement: Node, elm: Node): Optional<CaretPosition> =>
@@ -86,7 +83,7 @@ const eqRawNode = (rawNode: Node) => (elm: SugarElement<Node>): boolean =>
 const isBlock = (editor: Editor, elm: SugarElement<Node>): boolean =>
   elm && Obj.has(editor.schema.getBlockElements(), SugarNode.name(elm));
 
-const paddEmptyBlock = (elm: SugarElement): Optional<CaretPosition> => {
+const paddEmptyBlock = (elm: SugarElement<Node>): Optional<CaretPosition> => {
   if (Empty.isEmpty(elm)) {
     const br = SugarElement.fromHtml('<br data-mce-bogus="1">');
     Remove.empty(elm);
@@ -97,7 +94,7 @@ const paddEmptyBlock = (elm: SugarElement): Optional<CaretPosition> => {
   }
 };
 
-const deleteNormalized = (elm: SugarElement, afterDeletePosOpt: Optional<CaretPosition>, normalizeWhitespace?: boolean): Optional<CaretPosition> => {
+const deleteNormalized = (elm: SugarElement<Node>, afterDeletePosOpt: Optional<CaretPosition>, normalizeWhitespace?: boolean): Optional<CaretPosition> => {
   const prevTextOpt = Traverse.prevSibling(elm).filter(SugarNode.isText);
   const nextTextOpt = Traverse.nextSibling(elm).filter(SugarNode.isText);
 
@@ -121,10 +118,10 @@ const deleteNormalized = (elm: SugarElement, afterDeletePosOpt: Optional<CaretPo
   });
 };
 
-const isInlineElement = (editor: Editor, element: SugarElement): boolean =>
+const isInlineElement = (editor: Editor, element: SugarElement<Node>): boolean =>
   Obj.has(editor.schema.getTextInlineElements(), SugarNode.name(element));
 
-const deleteElement = (editor: Editor, forward: boolean, elm: SugarElement, moveCaret: boolean = true): void => {
+const deleteElement = (editor: Editor, forward: boolean, elm: SugarElement<Node>, moveCaret: boolean = true): void => {
   const afterDeletePos = findCaretPosOutsideElmAfterDelete(forward, editor.getBody(), elm.dom);
   const parentBlock = PredicateFind.ancestor(elm, Fun.curry(isBlock, editor), eqRawNode(editor.getBody()));
   const normalizedAfterDeletePos = deleteNormalized(elm, afterDeletePos, isInlineElement(editor, elm));

@@ -155,7 +155,7 @@ const backspaceDeleteFromListToListCaret = (editor: Editor, isForward: boolean):
   const li = dom.getParent(selection.getStart(), 'LI', root) as HTMLLIElement;
 
   if (li) {
-    const ul = li.parentNode;
+    const ul = li.parentElement;
     if (ul === editor.getBody() && NodeType.isEmpty(dom, ul)) {
       return true;
     }

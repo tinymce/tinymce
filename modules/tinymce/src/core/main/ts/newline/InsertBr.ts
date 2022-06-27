@@ -61,7 +61,7 @@ const insertBrAtCaret = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
   let container = rng.startContainer;
 
   // Resolve node index
-  if (container.nodeType === 1 && container.hasChildNodes()) {
+  if (NodeType.isElement(container) && container.hasChildNodes()) {
     const isAfterLastNodeInContainer = offset > container.childNodes.length - 1;
 
     container = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;

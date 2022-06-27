@@ -97,19 +97,19 @@ const isInSameBlock = (caretPosition1: CaretPosition, caretPosition2: CaretPosit
 const isInSameEditingHost = (caretPosition1: CaretPosition, caretPosition2: CaretPosition, rootNode: HTMLElement): boolean =>
   getEditingHost(caretPosition1.container(), rootNode) === getEditingHost(caretPosition2.container(), rootNode);
 
-const getChildNodeAtRelativeOffset = (relativeOffset: number, caretPosition: CaretPosition): Node | null => {
+const getChildNodeAtRelativeOffset = (relativeOffset: number, caretPosition: CaretPosition): Optional<Node> => {
   if (!caretPosition) {
-    return null;
+    return Optional.none();
   }
 
   const container = caretPosition.container();
   const offset = caretPosition.offset();
 
   if (!isElement(container)) {
-    return null;
+    return Optional.none();
   }
 
-  return container.childNodes[offset + relativeOffset];
+  return Optional.from(container.childNodes[offset + relativeOffset]);
 };
 
 const beforeAfter = (before: boolean, node: Node): Range => {
@@ -268,16 +268,11 @@ const normalizeRange = (direction: number, root: Node, range: Range): Range => {
 };
 
 const getRelativeCefElm = (forward: boolean, caretPosition: CaretPosition): Optional<HTMLElement> =>
-  Optional.from(getChildNodeAtRelativeOffset(forward ? 0 : -1, caretPosition)).filter(isContentEditableFalse);
+  getChildNodeAtRelativeOffset(forward ? 0 : -1, caretPosition).filter(isContentEditableFalse);
 
 const getNormalizedRangeEndPoint = (direction: number, root: Node, range: Range): CaretPosition => {
   const normalizedRange = normalizeRange(direction, root, range);
-
-  if (direction === -1) {
-    return CaretPosition.fromRangeStart(normalizedRange);
-  }
-
-  return CaretPosition.fromRangeEnd(normalizedRange);
+  return direction === -1 ? CaretPosition.fromRangeStart(normalizedRange) : CaretPosition.fromRangeEnd(normalizedRange);
 };
 
 const getElementFromPosition = (pos: CaretPosition): Optional<SugarElement> =>

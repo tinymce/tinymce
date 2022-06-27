@@ -28,7 +28,7 @@ const isPadded = (schema: Schema, node: AstNode): boolean => {
 const isEmpty = (schema: Schema, nonEmptyElements: SchemaMap, whitespaceElements: SchemaMap, node: AstNode): boolean =>
   node.isEmpty(nonEmptyElements, whitespaceElements, (node) => isPadded(schema, node));
 
-const isLineBreakNode = (node: AstNode | undefined, blockElements: SchemaMap): boolean =>
+const isLineBreakNode = (node: AstNode | null | undefined, blockElements: SchemaMap): boolean =>
   Type.isNonNullable(node) && (node.name in blockElements || node.name === 'br');
 
 export {

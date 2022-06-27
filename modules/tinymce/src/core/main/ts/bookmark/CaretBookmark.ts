@@ -28,7 +28,7 @@ const isText = NodeType.isText;
 const isBogus = NodeType.isBogus;
 const nodeIndex = DOMUtils.nodeIndex;
 
-const normalizedParent = (node: Node): Node => {
+const normalizedParent = (node: Node): Node | null => {
   const parentNode = node.parentNode;
 
   if (isBogus(parentNode)) {
@@ -38,7 +38,7 @@ const normalizedParent = (node: Node): Node => {
   return parentNode;
 };
 
-const getChildNodes = (node: Node): Node[] => {
+const getChildNodes = (node: Node | null): Node[] => {
   if (!node) {
     return [];
   }
@@ -51,22 +51,23 @@ const getChildNodes = (node: Node): Node[] => {
     }
 
     return result;
-  }, []);
+  }, [] as Node[]);
 };
 
 const normalizedTextOffset = (node: Node, offset: number): number => {
-  while ((node = node.previousSibling)) {
-    if (!isText(node)) {
+  let tempNode: Node | null = node;
+  while ((tempNode = tempNode.previousSibling)) {
+    if (!isText(tempNode)) {
       break;
     }
 
-    offset += node.data.length;
+    offset += tempNode.data.length;
   }
 
   return offset;
 };
 
-const equal = (a) => (b) => a === b;
+const equal = <T>(a: T) => (b: T) => a === b;
 
 const normalizedNodeIndex = (node: Node): number => {
   let nodes: Node[], index: number;
@@ -88,43 +89,35 @@ const normalizedNodeIndex = (node: Node): number => {
   return index - numTextFragments;
 };
 
-const createPathItem = (node) => {
-  let name;
-
-  if (isText(node)) {
-    name = 'text()';
-  } else {
-    name = node.nodeName.toLowerCase();
-  }
-
+const createPathItem = (node: Node) => {
+  const name = isText(node) ? 'text()' : node.nodeName.toLowerCase();
   return name + '[' + normalizedNodeIndex(node) + ']';
 };
 
-const parentsUntil = (root: Node, node: Node, predicate?): Node[] => {
-  const parents = [];
+const parentsUntil = (root: Node, node: Node, predicate?: (node: Node) => boolean): Node[] => {
+  const parents: Node[] = [];
 
-  for (node = node.parentNode; node !== root; node = node.parentNode) {
-    if (predicate && predicate(node)) {
+  for (let tempNode = node.parentNode; tempNode && tempNode !== root; tempNode = tempNode.parentNode) {
+    if (predicate && predicate(tempNode)) {
       break;
     }
 
-    parents.push(node);
+    parents.push(tempNode);
   }
 
   return parents;
 };
 
 const create = (root: Node, caretPosition: CaretPosition): string => {
-  let container, offset, path = [],
-    outputOffset, childNodes, parents;
+  let path: string[] = [];
+  let container = caretPosition.container();
+  let offset = caretPosition.offset();
 
-  container = caretPosition.container();
-  offset = caretPosition.offset();
-
+  let outputOffset: number | 'before' | 'after';
   if (isText(container)) {
     outputOffset = normalizedTextOffset(container, offset);
   } else {
-    childNodes = container.childNodes;
+    const childNodes = container.childNodes;
     if (offset >= childNodes.length) {
       outputOffset = 'after';
       offset = childNodes.length - 1;
@@ -136,7 +129,7 @@ const create = (root: Node, caretPosition: CaretPosition): string => {
   }
 
   path.push(createPathItem(container));
-  parents = parentsUntil(root, container);
+  let parents = parentsUntil(root, container);
   parents = ArrUtils.filter(parents, Fun.not(NodeType.isBogus));
   path = path.concat(ArrUtils.map(parents, (node) => {
     return createPathItem(node);
@@ -145,7 +138,7 @@ const create = (root: Node, caretPosition: CaretPosition): string => {
   return path.reverse().join('/') + ',' + outputOffset;
 };
 
-const resolvePathItem = (node: Node, name: string, index: number): Node => {
+const resolvePathItem = (node: Node | null, name: string, index: number): Node => {
   let nodes = getChildNodes(node);
 
   nodes = ArrUtils.filter(nodes, (node, index) => {
@@ -157,10 +150,11 @@ const resolvePathItem = (node: Node, name: string, index: number): Node => {
 };
 
 const findTextPosition = (container: Node, offset: number): CaretPosition => {
-  let node = container, targetOffset = 0, dataLen;
+  let node = container;
+  let targetOffset = 0;
 
   while (isText(node)) {
-    dataLen = node.data.length;
+    const dataLen = node.data.length;
 
     if (offset >= targetOffset && offset <= targetOffset + dataLen) {
       container = node;
@@ -185,18 +179,16 @@ const findTextPosition = (container: Node, offset: number): CaretPosition => {
   return CaretPosition(container, offset);
 };
 
-const resolve = (root: Node, path: string): CaretPosition | null => {
-  let offset;
-
+const resolve = (root: Node, path: string | null | undefined): CaretPosition | null => {
   if (!path) {
     return null;
   }
 
   const parts = path.split(',');
   const paths = parts[0].split('/');
-  offset = parts.length > 1 ? parts[1] : 'before';
+  const offset = parts.length > 1 ? parts[1] : 'before';
 
-  const container = ArrUtils.reduce(paths, (result, value) => {
+  const container = ArrUtils.reduce<string, Node | null>(paths, (result, value) => {
     const match = /([\w\-\(\)]+)\[([0-9]+)\]/.exec(value);
     if (!match) {
       return null;
@@ -213,14 +205,15 @@ const resolve = (root: Node, path: string): CaretPosition | null => {
     return null;
   }
 
-  if (!isText(container)) {
+  if (!isText(container) && container.parentNode) {
+    let nodeOffset: number;
     if (offset === 'after') {
-      offset = nodeIndex(container) + 1;
+      nodeOffset = nodeIndex(container) + 1;
     } else {
-      offset = nodeIndex(container);
+      nodeOffset = nodeIndex(container);
     }
 
-    return CaretPosition(container.parentNode, offset);
+    return CaretPosition(container.parentNode, nodeOffset);
   }
 
   return findTextPosition(container, parseInt(offset, 10));

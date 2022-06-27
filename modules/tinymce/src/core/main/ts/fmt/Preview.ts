@@ -200,8 +200,8 @@ const getCssText = (editor: Editor, format: string | ApplyFormat): string => {
     return Type.isString(val) ? val.replace(/%(\w+)/g, '') : '';
   };
 
-  const getComputedStyle = (name: string, elm?: Node): string => {
-    return dom.getStyle(elm ?? editor.getBody(), name, true) ?? '';
+  const getComputedStyle = (name: string, elm?: Element): string => {
+    return dom.getStyle(elm ?? editor.getBody(), name, true);
   };
 
   // Create block/inline element to use for preview
@@ -239,7 +239,7 @@ const getCssText = (editor: Editor, format: string | ApplyFormat): string => {
     previewFrag = parsedSelectorToHtml([ name ], editor);
   }
 
-  const previewElm = dom.select(name, previewFrag)[0] || previewFrag.firstChild;
+  const previewElm = dom.select(name, previewFrag)[0] || previewFrag.firstChild as Element;
 
   // Add format styles to preview element
   each(format.styles, (value, name) => {
@@ -278,7 +278,7 @@ const getCssText = (editor: Editor, format: string | ApplyFormat): string => {
   const rawParentFontSize = getComputedStyle('fontSize');
   const parentFontSize = /px$/.test(rawParentFontSize) ? parseInt(rawParentFontSize, 10) : 0;
 
-  each(previewStyles.split(' '), (name: string) => {
+  each(previewStyles.split(' '), (name) => {
     let value = getComputedStyle(name, previewElm);
 
     // If background is transparent then check if the body has a background color we can use

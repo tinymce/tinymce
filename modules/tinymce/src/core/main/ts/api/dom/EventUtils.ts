@@ -266,7 +266,7 @@ class EventUtils {
   public unbind(target: any): this;
   public unbind(target: any, names?: string, callback?: EventUtilsCallback<any>): this {
     // Don't bind to text nodes or comments
-    if (!target || target.nodeType === 3 || target.nodeType === 8) {
+    if (!target || NodeType.isText(target) || NodeType.isComment(target)) {
       return this;
     }
 
@@ -400,10 +400,8 @@ class EventUtils {
    * @return {EventUtils} Event utils instance.
    */
   public clean(target: any): this {
-    let i, children;
-
     // Don't bind to text nodes or comments
-    if (!target || target.nodeType === 3 || target.nodeType === 8) {
+    if (!target || NodeType.isText(target) || NodeType.isComment(target)) {
       return this;
     }
 
@@ -421,8 +419,8 @@ class EventUtils {
     if (target && target.getElementsByTagName) {
       this.unbind(target);
 
-      children = target.getElementsByTagName('*');
-      i = children.length;
+      const children = target.getElementsByTagName('*');
+      let i = children.length;
       while (i--) {
         target = children[i];
 

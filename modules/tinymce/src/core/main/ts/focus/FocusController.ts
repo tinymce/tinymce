@@ -7,14 +7,15 @@ import EditorManager from '../api/EditorManager';
 import FocusManager from '../api/FocusManager';
 import * as Options from '../api/Options';
 import Delay from '../api/util/Delay';
+import * as NodeType from '../dom/NodeType';
 import * as SelectionRestore from '../selection/SelectionRestore';
 
 let documentFocusInHandler: ((e: FocusEvent) => void) | null;
 const DOM = DOMUtils.DOM;
 
-const isEditorUIElement = (elm: Element): boolean => {
+const isEditorUIElement = (elm: Node): boolean => {
   // Since this can be overridden by third party we need to use the API reference here
-  return FocusManager.isEditorUIElement(elm);
+  return NodeType.isElement(elm) && FocusManager.isEditorUIElement(elm);
 };
 
 const isEditorContentAreaElement = (elm: Element): boolean => {

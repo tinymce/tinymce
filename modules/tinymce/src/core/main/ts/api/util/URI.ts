@@ -145,8 +145,8 @@ class URI {
   public host: string | undefined;
   public port: string | undefined;
   public relative: string | undefined;
-  public path: string | undefined;
-  public directory: string | undefined;
+  public path: string = '';
+  public directory: string = '';
   public file: string | undefined;
   public query: string | undefined;
   public anchor: string | undefined;
@@ -182,9 +182,8 @@ class URI {
 
     // Relative path http:// or protocol relative //path
     if (!/^[\w\-]*:?\/\//.test(url)) {
-      const baseUrl = baseUri ? baseUri.path : new URI(document.location.href).directory as string;
-      // eslint-disable-next-line eqeqeq
-      if (baseUri && baseUri.protocol == '') {
+      const baseUrl = baseUri ? baseUri.path : new URI(document.location.href).directory;
+      if (baseUri?.protocol === '') {
         url = '//mce_host' + self.toAbsPath(baseUrl, url);
       } else {
         const match = /([^#?]*)([#?]?.*)/.exec(url);
@@ -269,8 +268,6 @@ class URI {
    * const url = new tinymce.util.URI('http://www.site.com/dir/').toRelative('http://www.site.com/dir/somedir/somefile.htm');
    */
   public toRelative(uri: string): string {
-    let output;
-
     if (uri === './') {
       return uri;
     }
@@ -290,7 +287,7 @@ class URI {
       return tu;
     }
 
-    output = this.toRelPath(this.path, relativeUri.path);
+    let output = this.toRelPath(this.path, relativeUri.path);
 
     // Add query
     if (relativeUri.query) {

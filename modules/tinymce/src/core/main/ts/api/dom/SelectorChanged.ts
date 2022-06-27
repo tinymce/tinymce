@@ -3,7 +3,7 @@ import { Arr, Obj, Optional } from '@ephox/katamari';
 import Editor from '../Editor';
 import DOMUtils from './DOMUtils';
 
-type SelectorChangedCallback = (active: boolean, args: { node: Node; selector: String; parents: Element[] }) => void;
+type SelectorChangedCallback = (active: boolean, args: { node: Node; selector: String; parents: Node[] }) => void;
 
 interface SelectorChanged {
   selectorChangedWithUnbind: (selector: string, callback: SelectorChangedCallback) => { unbind: () => void };
@@ -28,7 +28,7 @@ export default (dom: DOMUtils, editor: Editor): SelectorChanged => {
   const findMatchingNode = (selector: string, nodes: Node[]): Optional<Node> =>
     Arr.find(nodes, (node) => dom.is(node, selector));
 
-  const getParents = (elem: Element): Element[] =>
+  const getParents = (elem: Element): Node[] =>
     dom.getParents(elem, undefined, dom.getRoot());
 
   const setup = (): void => {

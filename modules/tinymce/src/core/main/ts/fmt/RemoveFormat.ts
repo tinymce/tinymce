@@ -222,9 +222,9 @@ const removeFormatInternal = (ed: Editor, format: Format, vars?: FormatVars, nod
     // Remove styles
     each(format.styles as any, (value: FormatAttrOrStyleValue | string, name: string | number) => {
       const { name: styleName, value: styleValue } = processFormatAttrOrStyle(name, value, vars);
-      const normalizedStyleValue = styleValue ? normalizeStyleValue(styleValue, styleName) : styleValue;
+      const normalizedStyleValue = normalizeStyleValue(styleValue, styleName);
 
-      if (format.remove_similar || Type.isNull(styleValue) || !compareNode || isEq(FormatUtils.getStyle(dom, compareNode, styleName), normalizedStyleValue)) {
+      if (format.remove_similar || Type.isNull(styleValue) || !NodeType.isElement(compareNode) || isEq(FormatUtils.getStyle(dom, compareNode, styleName), normalizedStyleValue)) {
         dom.setStyle(elm, styleName, '');
       }
 
@@ -241,7 +241,7 @@ const removeFormatInternal = (ed: Editor, format: Format, vars?: FormatVars, nod
     each(format.attributes as any, (value: FormatAttrOrStyleValue | string, name: string | number) => {
       const { name: attrName, value: attrValue } = processFormatAttrOrStyle(name, value, vars);
 
-      if (format.remove_similar || Type.isNull(attrValue) || !compareNode || isEq(dom.getAttrib(compareNode, attrName), attrValue)) {
+      if (format.remove_similar || Type.isNull(attrValue) || !NodeType.isElement(compareNode) || isEq(dom.getAttrib(compareNode, attrName), attrValue)) {
         // Keep internal classes
         if (attrName === 'class') {
           const currentValue = dom.getAttrib(elm, attrName);
@@ -287,7 +287,7 @@ const removeFormatInternal = (ed: Editor, format: Format, vars?: FormatVars, nod
     each(format.classes, (value) => {
       value = FormatUtils.replaceVars(value, vars);
 
-      if (!compareNode || dom.hasClass(compareNode, value)) {
+      if (!NodeType.isElement(compareNode) || dom.hasClass(compareNode, value)) {
         dom.removeClass(elm, value);
       }
     });
@@ -340,7 +340,7 @@ const findFormatRoot = (editor: Editor, container: Node, name: string, vars?: Fo
     // Find format root
     Arr.each(FormatUtils.getParents(editor.dom, container.parentNode).reverse(), (parent) => {
       // Find format root element
-      if (!formatRoot && parent.id !== '_start' && parent.id !== '_end') {
+      if (!formatRoot && NodeType.isElement(parent) && parent.id !== '_start' && parent.id !== '_end') {
         // Is the node matching the format we are looking for
         const format = MatchFormat.matchNode(editor, parent, name, vars, similar);
         if (format && format.split !== false) {
@@ -376,7 +376,6 @@ const wrapAndSplit = (
   format: Format,
   vars?: FormatVars
 ) => {
-  let clone: Node | null;
   let lastClone: Node | undefined;
   let firstClone: Node | undefined;
   const dom = editor.dom;
@@ -386,7 +385,7 @@ const wrapAndSplit = (
     const formatRootParent = formatRoot.parentNode;
 
     for (let parent = container.parentNode; parent && parent !== formatRootParent; parent = parent.parentNode) {
-      clone = dom.clone(parent, false);
+      let clone: Node | null = dom.clone(parent, false);
 
       for (let i = 0; i < formatList.length; i++) {
         clone = removeFormatFromClone(editor, formatList[i], vars, clone);
@@ -411,7 +410,7 @@ const wrapAndSplit = (
 
     // Never split block elements if the format is mixed
     if (split && (!format.mixed || !dom.isBlock(formatRoot))) {
-      container = dom.split(formatRoot, container);
+      container = dom.split(formatRoot, container) ?? container;
     }
 
     // Wrap container in cloned formats

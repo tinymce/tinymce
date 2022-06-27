@@ -9,17 +9,17 @@ import * as BoundaryLocation from './BoundaryLocation';
 import * as InlineUtils from './InlineUtils';
 import { needsToHaveNbsp } from './Nbsps';
 
-const insertSpaceOrNbspAtPosition = (root: SugarElement, pos: CaretPosition): Optional<CaretPosition> =>
+const insertSpaceOrNbspAtPosition = (root: SugarElement<Node>, pos: CaretPosition): Optional<CaretPosition> =>
   needsToHaveNbsp(root, pos) ? insertNbspAtPosition(pos) : insertSpaceAtPosition(pos);
 
-const locationToCaretPosition = (root: SugarElement) => (location: BoundaryLocation.LocationAdt) => location.fold(
+const locationToCaretPosition = (root: SugarElement<Node>) => (location: BoundaryLocation.LocationAdt) => location.fold(
   (element) => CaretFinder.prevPosition(root.dom, CaretPosition.before(element)),
   (element) => CaretFinder.firstPositionIn(element),
   (element) => CaretFinder.lastPositionIn(element),
   (element) => CaretFinder.nextPosition(root.dom, CaretPosition.after(element))
 );
 
-const insertInlineBoundarySpaceOrNbsp = (root: SugarElement, pos: CaretPosition) => (checkPos: CaretPosition) =>
+const insertInlineBoundarySpaceOrNbsp = (root: SugarElement<Node>, pos: CaretPosition) => (checkPos: CaretPosition) =>
   needsToHaveNbsp(root, checkPos) ? insertNbspAtPosition(pos) : insertSpaceAtPosition(pos);
 
 const setSelection = (editor: Editor) => (pos: CaretPosition) => {

@@ -1,13 +1,14 @@
 import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 
+import { AddOnConstructor } from '../api/AddOnManager';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import IconManager from '../api/IconManager';
-import ModelManager from '../api/ModelManager';
+import ModelManager, { Model } from '../api/ModelManager';
 import * as Options from '../api/Options';
 import { ThemeInitFunc } from '../api/OptionTypes';
 import PluginManager from '../api/PluginManager';
-import ThemeManager from '../api/ThemeManager';
+import ThemeManager, { Theme } from '../api/ThemeManager';
 import { EditorUiApi } from '../api/ui/Ui';
 import Tools from '../api/util/Tools';
 import * as ErrorReporter from '../ErrorReporter';
@@ -76,7 +77,7 @@ const initTheme = (editor: Editor) => {
   const theme = Options.getTheme(editor);
 
   if (Type.isString(theme)) {
-    const Theme = ThemeManager.get(theme);
+    const Theme = ThemeManager.get(theme) as AddOnConstructor<Theme>;
     editor.theme = Theme(editor, ThemeManager.urls[theme]) || {};
 
     if (Type.isFunction(editor.theme.init)) {
@@ -90,7 +91,7 @@ const initTheme = (editor: Editor) => {
 
 const initModel = (editor: Editor) => {
   const model = Options.getModel(editor);
-  const Model = ModelManager.get(model);
+  const Model = ModelManager.get(model) as AddOnConstructor<Model>;
   editor.model = Model(editor, ModelManager.urls[model]);
 };
 
@@ -176,7 +177,7 @@ const init = (editor: Editor): void => {
   initPlugins(editor);
   const renderInfo = renderThemeUi(editor);
   augmentEditorUiApi(editor, Optional.from(renderInfo.api).getOr({}));
-  editor.editorContainer = renderInfo.editorContainer;
+  editor.editorContainer = renderInfo.editorContainer as HTMLElement;
   appendContentCssFromSettings(editor);
 
   // Content editable mode ends here
