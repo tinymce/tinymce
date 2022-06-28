@@ -49,7 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `InsertLineBreak` command did not replace selected content. #TINY-8458
 - If selected content straddled a parent and nested list, cutting the selection did not always set the list style to `'none'` on the parent list. #TINY-8078
 - Delete operations could behave incorrectly if the selection contains a `contenteditable="false"` element located at the edge of content. #TINY-8729
-- Spaces were not added correctly on some browsers when the insertion point was immediately before or after a `contenteditable` block element. #TINY-8588
+- Spaces were not added correctly on some browsers when the insertion point was immediately before or after a `contenteditable="false"` block element. #TINY-8588
 - Images that used a Data URI were corrupted when the data wasn't base64 encoded. #TINY-8337
 - `uploadImages` no longer triggers two change events if there is a removal of images on upload. #TINY-8641
 - Preview and Insert Template dialogs now display the correct content background color when using dark skins. #TINY-8534
