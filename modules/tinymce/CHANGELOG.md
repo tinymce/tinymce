@@ -39,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Links opened when Alt+Enter or Option+Return was typed even when `preventDefault()` was called on the keydown event. #TINY-8661
 - Inconsistent visual behavior between choosing Edit -> Select All and typing Ctrl+A or Cmd+A when a document contained an image. #TINY-4550
 - Ctrl+Shift+Home/End or Cmd+Shift+Up-arrow/Down-arrow did not expand the selection to a `contenteditable="false"` element if the element was at the beginning or end of a document. #TINY-7795
-- Triple-clicking did not select the paragraph in Google Chrome in some circumstances. #TINY-8215
+- Triple-clicking did not select a paragraph in Google Chrome in some circumstances. #TINY-8215
 - Images were not showing as selected when selected along with other content. #TINY-5947
 - Selection direction was not stored or restored when getting or setting selection bookmarks. #TINY-8599
 - When text within an inline boundary element was selected and the right-arrow key was pressed, the insertion point incorrectly moved to the left. #TINY-8601
