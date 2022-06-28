@@ -31,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Link menu and toolbar buttons now always execute the mceLink command. #TINY-8057
 
 ### Fixed
-- Inconsistent visual behavior between choosing Edit -> Select All and typing Ctrl-A or ⌘-A when a document contained an image. #TINY-4550
+- Inconsistent visual behavior between choosing Edit -> Select All and typing Ctrl+A or Cmd+A when a document contained an image. #TINY-4550
 - Links opened when Alt-Return or Option-Return was typed even when `preventDefault()` was called on the keydown event. #TINY-8661
 - Spaces were not added correctly on some browsers when the insertion point was immediately before or after a `contenteditable` block element. #TINY-8588
 - Images were not showing as selected when selected along with other content. #TINY-5947
@@ -58,11 +58,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Autocompleter was not triggered at the start of empty nested list items within non-empty list items. #TINY-8759
 - Some template plugin option values were not escaped properly when doing replacement lookups with Regular Expressions. #TINY-7433
 - Copy events were not dispatched in readonly mode. #TINY-6800
-- Ctrl-Shift-Home/End or ⌘-Shift-Up-arrow/Down-arrow did not expand the selection to a `contenteditable=”false”` element if the element was at the beginning or end of a document. #TINY-7795
+- Ctrl+Shift+Home/End or Cmd+Shift+Up-arrow/Down-arrow did not expand the selection to a `contenteditable=”false”` element if the element was at the beginning or end of a document. #TINY-7795
 - `<pre>` tags were not preserved when copying and pasting. #TINY-7719
 - Preview and Insert Template dialogs now display the correct content background color when using dark skins. #TINY-8534
-- Fixed incorrect word breaks in {productname} menus when the menu presented with a scrollbar. #TINY-8572
-- The InsertLineBreak command did not replace selected content. #TINY-8458
+- Fixed incorrect word breaks in menus when the menu presented with a scrollbar. #TINY-8572
+- The `InsertLineBreak` command did not replace selected content. #TINY-8458
 - Delete operations could behave incorrectly if the selection contains a `contenteditable="false"` element located at the edge of content. #TINY-8729
 - `uploadImages` no longer triggers two change events if there is a removal of images on upload. #TINY-8641
 - The selection is no longer incorrectly moved inside a comment by the `editor.selection.normalize()` API. #TINY-7817
