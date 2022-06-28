@@ -158,8 +158,8 @@ const getDefaultStyles = (editor: Editor): Record<string, string> => {
 const getDefaultAttributes = (editor: Editor): Record<string, string> => {
   // Note: The we don't rely on the default here as we need to dynamically lookup the widths based on the current editor state
   const options = editor.options;
-  const defaultStyles = options.get('table_default_attributes');
-  return options.isSet('table_default_attributes') ? defaultStyles : determineDefaultAttributes(editor, defaultStyles);
+  const defaultAttributes = options.get('table_default_attributes');
+  return options.isSet('table_default_attributes') ? defaultAttributes : determineDefaultAttributes(editor, defaultAttributes);
 };
 
 export {
