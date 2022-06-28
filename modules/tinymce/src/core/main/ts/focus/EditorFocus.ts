@@ -44,9 +44,11 @@ const focusBody = (body: HTMLElement & { setActive?: VoidFunction }) => {
     try {
       body.setActive();
     } catch (ex) {
+      body.scrollIntoView();
       body.focus();
     }
   } else {
+    body.scrollIntoView();
     body.focus();
   }
 };

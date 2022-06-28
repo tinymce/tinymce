@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- The editor focused via the `auto_focus` option was not scrolled into the viewport #TINY-8785
+
 ## 6.1.0 - 2022-06-29
 
 ### Added
