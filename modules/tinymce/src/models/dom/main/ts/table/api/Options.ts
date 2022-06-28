@@ -141,15 +141,15 @@ const shouldStyleWithCss = option<boolean>('table_style_by_css');
 const getTableDefaultAttributes = (editor: Editor): Record<string, string> => {
   // Note: The we don't rely on the default here as we need to dynamically lookup the widths based on the current editor state
   const options = editor.options;
-  const defaultStyles = options.get('table_default_attributes');
-  return options.isSet('table_default_attributes') ? defaultStyles : determineDefaultTableAttributes(editor, defaultStyles);
+  const defaultAttributes = options.get('table_default_attributes');
+  return options.isSet('table_default_attributes') ? defaultAttributes : determineDefaultTableAttributes(editor, defaultAttributes);
 };
 
 const getTableDefaultStyles = (editor: Editor): Record<string, string> => {
   // Note: The we don't rely on the default here as we need to dynamically lookup the widths based on the current editor state
   const options = editor.options;
-  const defaultAttributes = options.get('table_default_styles');
-  return options.isSet('table_default_styles') ? defaultAttributes : determineDefaultTableStyles(editor, defaultAttributes);
+  const defaultStyles = options.get('table_default_styles');
+  return options.isSet('table_default_styles') ? defaultStyles : determineDefaultTableStyles(editor, defaultStyles);
 };
 
 const tableUseColumnGroup = option<boolean>('table_use_colgroups');
