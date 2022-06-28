@@ -33,7 +33,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
 
   const setCursor = (editor: Editor) => TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
 
-  it('TINY-8758: width should be retained when changing border.', async () => {
+  it('TINY-8758: width should be retained when changing the border width', async () => {
     const getExpectedData = (borderWidth: number) => ({
       width: '60%',
       height: '',

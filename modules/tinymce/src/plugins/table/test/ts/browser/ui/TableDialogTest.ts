@@ -367,7 +367,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     editor.options.unset('table_appearance_options');
   });
 
-  it('TINY-8758: width should be retained when changing border.', async () => {
+  it('TINY-8758: width should be retained when changing the border width', async () => {
     const getExpectedData = (borderWidth: number) => ({
       width: '60%',
       height: '',
