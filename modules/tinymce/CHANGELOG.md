@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `dispatchChange` function added to the UndoManager API to fire the change with current editor status as level and current undoManager layer as lastLevel. #TINY-8641
 
 ### Improved
-- Clearer focus states for buttons while navigating with keyboard. #TINY-8557
+- Clearer focus states for buttons while navigating with a keyboard. #TINY-8557
 - Support annotating certain block elements directly when using the editor's Annotator API. #TINY-8698
 - The `mceLink` command can now take the value `{ dialog: true }` to always open the link dialog. #TINY-8057
 - All help dialog links to `https://www.tiny.cloud` now include `rel="noopener"` to avoid potential security issues. #TINY-8834
