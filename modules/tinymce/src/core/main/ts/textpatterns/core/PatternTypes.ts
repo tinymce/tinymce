@@ -51,8 +51,22 @@ export type BlockPattern = BlockFormatPattern | BlockCmdPattern;
 
 export type Pattern = InlinePattern | BlockPattern;
 
-export interface PatternSet {
+export interface DynamicPatternContext {
+  text: string; // the string from the start of the block to the cursor
+  allowTrailingSpaces: boolean; // whether or not to provide text patterns that have trailing spaces
+  block: Node; // the parent block node
+}
+
+export type DynamicPatternsLookup = (ctx: DynamicPatternContext) => Pattern[];
+
+// NOTE: A PatternSet should be looked up from the Options *each* time that text_patterns are
+// processed, so that text_patterns respond to changes in options. This is required for some
+// complex integrations and plugins.
+export interface InlinePatternSet {
   readonly inlinePatterns: InlinePattern[];
+  readonly dynamicPatternsLookup: DynamicPatternsLookup;
+}
+export interface PatternSet extends InlinePatternSet {
   readonly blockPatterns: BlockPattern[];
 }
 
