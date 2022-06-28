@@ -2,6 +2,7 @@ import { Arr, Obj, Strings, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import * as Pattern from '../textpatterns/core/Pattern';
+import * as PatternTypes from '../textpatterns/core/PatternTypes';
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
 import { EditorOptions } from './OptionTypes';
@@ -736,6 +737,21 @@ const register = (editor: Editor) => {
     ]
   });
 
+  registerOption('text_patterns_lookup', {
+    processor: (value) => {
+      if (Type.isFunction(value)) {
+        return {
+          // This (ctx => value(ctx)) isn't ETA reduced so that it compiles
+          value: Pattern.fromRawPatternsLookup((ctx) => value(ctx)),
+          valid: true,
+        };
+      } else {
+        return { valid: false, message: 'Must be a single function' };
+      }
+    },
+    default: (_ctx: PatternTypes.DynamicPatternContext): PatternTypes.Pattern[] => [ ]
+  });
+
   registerOption('noneditable_class', {
     processor: 'string',
     default: 'mceNonEditable'
@@ -861,9 +877,12 @@ const isPasteAsTextEnabled = option('paste_as_text');
 const getPasteTabSpaces = option('paste_tab_spaces');
 const shouldAllowHtmlDataUrls = option('allow_html_data_urls');
 const getTextPatterns = option('text_patterns');
+const getTextPatternsLookup = option('text_patterns_lookup');
 const getNonEditableClass = option('noneditable_class');
 const getEditableClass = option('editable_class');
 const getNonEditableRegExps = option('noneditable_regexp');
+
+const hasTextPatternsLookup = (editor: Editor) => editor.options.isSet('text_patterns_lookup');
 
 const getFontStyleValues = (editor: Editor): string[] =>
   Tools.explode(editor.options.get('font_size_style_values'));
@@ -968,6 +987,8 @@ export {
   shouldAllowHtmlDataUrls,
   getAllowedImageFileTypes,
   getTextPatterns,
+  getTextPatternsLookup,
+  hasTextPatternsLookup,
   getNonEditableClass,
   getNonEditableRegExps,
   getEditableClass,
