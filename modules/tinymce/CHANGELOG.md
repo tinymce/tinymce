@@ -32,20 +32,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Inconsistent visual behavior between choosing Edit -> Select All and typing Ctrl+A or Cmd+A when a document contained an image. #TINY-4550
-- Links opened when Alt-Return or Option-Return was typed even when `preventDefault()` was called on the keydown event. #TINY-8661
+- Links opened when Alt+Return or Option+Return was typed even when `preventDefault()` was called on the keydown event. #TINY-8661
 - Spaces were not added correctly on some browsers when the insertion point was immediately before or after a `contenteditable` block element. #TINY-8588
 - Images were not showing as selected when selected along with other content. #TINY-5947
 - Images that used a Data URI were corrupted when the data wasn't base64 encoded. #TINY-8337
 - Notifications did not properly reposition when toggling fullscreen mode. #TINY-8701
 - Dialogs no longer exceed window height on smaller screens. #TINY-8146
-- Some function types in the `tinymce.dom.TreeWalker` class missed that it could return `undefined`. #TINY-8592
-- In some cases pressing the backspace key would incorrectly step into tables rather than remain outside. #TINY-8592
+- Some function types in the TreeWalker API missed that it could return `undefined`. #TINY-8592
+- In some cases pressing the Backspace or Delete key would incorrectly step into tables rather than remain outside. #TINY-8592
 - Text alignments, such as flush left and centered, could not be applied to `<pre>` elements. #TINY-7715
-- Nuget packages for .NET and .NET Core now copies TinyMCE into `/wwwroot/lib/` when TinyMCE is installed into a project. #TINY-8611
-- UI components, such as dialogs, would in some cases cause the esc keyup event to incorrectly trigger inside the editor. #TINY-7005
-- Selection direction was not stored/restored when getting/setting selection bookmarks. #TINY-8599
+- Nuget packages for .NET and .NET Core are now configured to copy TinyMCE into `/wwwroot/lib/` when TinyMCE is installed into a project. #TINY-8611
+- UI components, such as dialogs, would in some cases cause the Esc keyup event to incorrectly trigger inside the editor. #TINY-7005
+- Selection direction was not stored or restored when getting or setting selection bookmarks. #TINY-8599
 - In some versions of Safari, the `editor.selection.isForward()` API could throw an exception due to an invalid selection. #TINY-8686
-- The InsertParagraph or `mceInsertNewLine` commands did not delete the current selection like the native command does. #TINY-8606
+- The `InsertParagraph` or `mceInsertNewLine` commands did not delete the current selection like the native command does. #TINY-8606
 - Triple-clicking did not select the paragraph in Google Chrome in some circumstances. #TINY-8215
 - When text within an inline boundary element was selected and the right-arrow key was pressed, the insertion point incorrectly moved to the left. #TINY-8601
 - Indenting or outdenting list items inside a block element that was inside another list item did not work. #TINY-7209
@@ -54,9 +54,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pasting columns in tables could, in some circumstances, result in an invalid table. #TINY-8040
 - Copying columns in tables could sometimes result in an invalid copy. #TINY-8040
 - The URL detection used for autolink and smart paste did not work if a path segment contained valid characters such as `!` and `:`. #TINY-8069
-- If selected content straddled a parent and nested list, cutting the selection did not always set the list style to none on the parent list. #TINY-8078
+- If selected content straddled a parent and nested list, cutting the selection did not always set the list style to `'none'` on the parent list. #TINY-8078
 - Autocompleter was not triggered at the start of empty nested list items within non-empty list items. #TINY-8759
-- Some template plugin option values were not escaped properly when doing replacement lookups with Regular Expressions. #TINY-7433
+- Some Template plugin option values were not escaped properly when doing replacement lookups with Regular Expressions. #TINY-7433
 - Copy events were not dispatched in readonly mode. #TINY-6800
 - Ctrl+Shift+Home/End or Cmd+Shift+Up-arrow/Down-arrow did not expand the selection to a `contenteditable=”false”` element if the element was at the beginning or end of a document. #TINY-7795
 - `<pre>` tags were not preserved when copying and pasting. #TINY-7719
