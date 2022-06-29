@@ -1481,7 +1481,7 @@ Full documentation for the version 5 features and changes is available at https:
 - Fixed styleselect not updating the displayed item as the cursor moved. #AP-388
 - Fixed preview iframe not expanding to the dialog size. #AP-252
 - Fixed 'meta' shortcuts not translated into platform-specific text. #AP-270
-- Fixed tabbed dialogs (Charmap and Emoticons) shrinking when no search results returned
+- Fixed tabbed dialogs (Charmap and Emoticons) shrinking when no search results returned.
 - Fixed a bug where alert banner icons were not retrieved from icon pack. #AP-330
 - Fixed component styles to flex so they fill large dialogs. #AP-252
 - Fixed editor flashing unstyled during load (still in progress). #AP-349
