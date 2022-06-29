@@ -28,6 +28,7 @@ const setupAutoFocus = (id: string) => {
   return new Promise((resolve) => {
     Global.tinymce.init({
       selector: 'textarea',
+      base_url: '/project/tinymce/js/tinymce/',
       toolbar: '',
       menubar: false,
       statusbar: false,
