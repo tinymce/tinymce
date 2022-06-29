@@ -5,11 +5,16 @@ import DOMUtils from '../api/dom/DOMUtils';
 import EditorSelection from '../api/dom/Selection';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
+import * as Bookmarks from '../bookmark/Bookmarks';
 import * as NodeType from '../dom/NodeType';
 import * as Whitespace from '../text/Whitespace';
+import { isCaretNode } from './FormatContainer';
 import { BlockFormat, Format, FormatAttrOrStyleValue, FormatVars, InlineFormat, MixedFormat, SelectorFormat } from './FormatTypes';
 
 const isNode = (node: any): node is Node => !!(node).nodeType;
+
+const isElementNode = (node: Node): node is Element =>
+  NodeType.isElement(node) && !Bookmarks.isBookmarkNode(node) && !isCaretNode(node) && !NodeType.isBogus(node);
 
 const isInlineBlock = (node: Node): boolean => {
   return node && /^(IMG)$/.test(node.nodeName);
@@ -98,6 +103,15 @@ const isWhiteSpaceNode = (node: Node | null, allowSpaces: boolean = false): bool
 const isEmptyTextNode = (node: Node | null): boolean => {
   return Type.isNonNullable(node) && NodeType.isText(node) && node.length === 0;
 };
+
+// A noneditable element is wrappable if it:
+// - has a specific data attribute to indicate that it can be wrapped
+// - has no editable descendants - removing formats in the editable region can result in the wrapped noneditable being split which is undesirable
+const isWrappableNoneditable = (dom: DOMUtils, node: Node): boolean =>
+  isElementNode(node) &&
+  dom.getContentEditable(node) === 'false' &&
+  dom.getAttrib(node, 'data-mce-cef-wrappable') === 'true' &&
+  dom.select('[contenteditable="true"]', node).length === 0;
 
 /**
  * Replaces variables in the value. The variable format is %var.
@@ -241,6 +255,7 @@ const shouldExpandToSelector = (format: Format): boolean =>
 
 export {
   isNode,
+  isElementNode,
   isInlineBlock,
   moveStart,
   getNonWhiteSpaceSibling,
@@ -248,6 +263,7 @@ export {
   isValid,
   isWhiteSpaceNode,
   isEmptyTextNode,
+  isWrappableNoneditable,
   replaceVars,
   isEq,
   normalizeStyleValue,

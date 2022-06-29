@@ -200,6 +200,11 @@ const removeFormatInternal = (ed: Editor, format: Format, vars?: FormatVars, nod
     return removeResult.keep();
   }
 
+  // Check if node is noneditable and can have the format removed from it
+  if (!format.ceFalseOverride && node && dom.getContentEditableParent(node) === 'false') {
+    return removeResult.keep();
+  }
+
   // "matchName" will made sure we're dealing with an element, so cast as one
   const elm = node as Element;
 
@@ -623,18 +628,23 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
     return;
   }
 
-  if (dom.getContentEditable(selection.getNode()) === 'false') {
-    node = selection.getNode();
+  const selectedNode = selection.getNode();
+  if (dom.getContentEditable(selectedNode) === 'false') {
+    node = selectedNode;
+    let formatRemoved = false;
     for (let i = 0; i < formatList.length; i++) {
       if (formatList[i].ceFalseOverride) {
-        if (removeFormat(ed, formatList[i], vars, node, node)) {
+        formatRemoved = removeFormat(ed, formatList[i], vars, node, node);
+        if (formatRemoved) {
           break;
         }
       }
     }
 
-    Events.fireFormatRemove(ed, name, node, vars);
-    return;
+    if (formatRemoved) {
+      Events.fireFormatRemove(ed, name, node, vars);
+      return;
+    }
   }
 
   if (!selection.isCollapsed() || !FormatUtils.isInlineFormat(format) || TableCellSelection.getCellsFromEditor(ed).length) {

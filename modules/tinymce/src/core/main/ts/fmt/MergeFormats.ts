@@ -12,7 +12,7 @@ const each = Tools.each;
 
 const mergeTextDecorationsAndColor = (dom: DOMUtils, format: ApplyFormat, vars: FormatVars | undefined, node: Node): void => {
   const processTextDecorationsAndColor = (n: Node) => {
-    if (NodeType.isElement(n) && NodeType.isElement(n.parentNode)) {
+    if (NodeType.isElement(n) && NodeType.isElement(n.parentNode) && dom.getContentEditable(n.parentNode) !== 'false' && dom.getContentEditable(n) !== 'false') {
       const textDecoration = FormatUtils.getTextDecoration(dom, n.parentNode);
       if (dom.getStyle(n, 'color') && textDecoration) {
         dom.setStyle(n, 'text-decoration', textDecoration);

@@ -72,10 +72,10 @@ const mergeSiblings = (dom: DOMUtils, format: ApplyFormat, vars: FormatVars | un
 const clearChildStyles = (dom: DOMUtils, format: ApplyFormat, node: Node): void => {
   if (format.clear_child_styles) {
     const selector = format.links ? '*:not(a)' : '*';
-    each(dom.select(selector, node), (node) => {
-      if (isElementNode(node)) {
-        each(format.styles, (value, name: string) => {
-          dom.setStyle(node, name, '');
+    each(dom.select(selector, node), (childNode) => {
+      if (isElementNode(childNode) && dom.getContentEditableParent(childNode) !== 'false') {
+        each(format.styles, (_value, name: string) => {
+          dom.setStyle(childNode, name, '');
         });
       }
     });
