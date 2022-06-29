@@ -1648,7 +1648,7 @@ Initial list of features and changes is available at https://www.tiny.cloud/docs
 - Fixed a bug where it wasn't possible to move the caret out of a table on IE11 and Firefox. #TINY-1682
 - Fixed a bug where merging empty blocks didn't work as expected, sometimes causing content to be deleted. #TINY-1781
 - Fixed a bug where the Textcolor Plugin didn't show the correct current color. #TINY-1810
-- Fixed a bug where clear formatting with a collapsed selection would sometimes clear formatting from more content than expected.. #TINY-1813 #TINY-1821
+- Fixed a bug where clear formatting with a collapsed selection would sometimes clear formatting from more content than expected. #TINY-1813 #TINY-1821
 - Fixed a bug with the Table Plugin where it wasn't possible to keyboard navigate to the caption. #TINY-1818
 
 ## 4.8.2 - 2018-08-09
