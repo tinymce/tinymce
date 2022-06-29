@@ -1,10 +1,10 @@
 import { describe, it, before, afterEach } from '@ephox/bedrock-client';
-import { Global } from '@ephox/katamari';
 import { Insert, SugarBody, SugarElement } from '@ephox/sugar';
+import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { ScriptLoader } from 'tinymce/core/api/PublicApi';
+import { EditorManager } from 'tinymce/core/api/PublicApi';
 
 const isInViewport = (editor: Editor) => {
   const containerRect = editor.getContentAreaContainer().getBoundingClientRect();
@@ -13,9 +13,9 @@ const isInViewport = (editor: Editor) => {
   return top > 0 && top + innerRect.height < window.innerHeight;
 };
 
-const setupAutoFocus = (id: string) => {
+const setupEditorAutoFocus = (id: string) => {
   return new Promise((resolve) => {
-    Global.tinymce.init({
+    EditorManager.init({
       selector: 'textarea',
       base_url: '/project/tinymce/js/tinymce/',
       toolbar: '',
@@ -31,8 +31,8 @@ const setupAutoFocus = (id: string) => {
 };
 
 const testEditorAutoFocus = async (id: string) => {
-  await setupAutoFocus(id);
-  const editor = Global.tinymce.EditorManager.get(id);
+  await setupEditorAutoFocus(id);
+  const editor = EditorManager.get(id);
   assert.isTrue(editor.hasFocus());
   assert.isTrue(isInViewport(editor));
 };
@@ -44,12 +44,10 @@ describe('browser.tinymce.core.EditorAutoFocusTest', () => {
     <textarea id="mce_1">Editor_1</textarea>
     <textarea id="mce_2">Editor_2</textarea>
   </div>`));
-    const scriptLoader = new ScriptLoader();
-    // return scriptLoader.loadScript('http://localhost:3000/js/tinymce/tinymce.js');
-    return scriptLoader.loadScript('/project/tinymce/js/tinymce/tinymce.js');
+    TinyHooks.bddSetupLight({}); // it puts tinymce to global scope as a side effect
   });
 
-  afterEach(() => Global.tinymce.remove());
+  afterEach(() => EditorManager.remove());
 
   it('TINY-8785: it should autofocus the first editor', async () => {
     await testEditorAutoFocus('mce_0');
