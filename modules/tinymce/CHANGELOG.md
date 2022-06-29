@@ -1460,7 +1460,7 @@ Full documentation for the version 5 features and changes is available at https:
 ### Fixed
 - Fixed bugs with editor width jumping when resizing and the iframe not resizing to smaller than 150px in height. #AP-324
 - Fixed mobile theme bug that prevented the editor from loading. #AP-404
-- Fixed long toolbar groups extending outside of the editor instead of wrapping
+- Fixed long toolbar groups extending outside of the editor instead of wrapping.
 - Fixed dialog titles so they are now proper case. #AP-384
 - Fixed color picker default to be #000000 instead of #ff00ff. #AP-216
 - Fixed "match case" option on the Find and Replace dialog is no longer selected by default. #AP-298
