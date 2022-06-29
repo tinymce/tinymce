@@ -1,6 +1,6 @@
 {
   "name": "@tinymce/oxide-icons-default",
-  "version": "2.0.2-alpha.1",
+  "version": "2.0.2",
   "description": "The default icon pack for TinyMCE",
   "repository": {
     "type": "git",
