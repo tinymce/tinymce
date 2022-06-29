@@ -6,67 +6,67 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-## Added
-- New `sidebar_show` option to show the specified sidebar on initialization #TINY-8710
-- New `newline_behavior` option to control what happens when the enter key is pressed or the `mceInsertNewLine` command is used #TINY-8458
-- New `transparent` property for `iframe` dialog component #TINY-8534
-- New `removeAttributeFilter` and `removeNodeFilter` functions to the `DomParser` and DOM `Serializer` APIs #TINY-7847
-- New `iframe_template_callback` option in the `media` plugin. Patch provided by Namstel #TINY-8684
-- New `dispatchChange` UndoManager API to fire the `change` with current editor status as level and current undoManager layer as lastLevel #TINY-8641
+### Added
+- New `sidebar_show` option to show the specified sidebar on initialization. #TINY-8710
+- New `newline_behavior` option controls what happens when the Return or Enter key is pressed or the `mceInsertNewLine` command is used. #TINY-8458
+- New `iframe_template_callback` option in the Media plugin. Patch provided by Namstel. #TINY-8684
+- New `transparent` property for `iframe` dialog component. #TINY-8534
+- New `removeAttributeFilter` and `removeNodeFilter` functions added to the DomParser and DOM Serializer APIs. #TINY-7847
+- New `dispatchChange` function added to the UndoManager API to fire the change with current editor status as level and current undoManager layer as lastLevel. #TINY-8641
 
 ### Improved
-- Clearer focus states for buttons while navigating with keyboard #TINY-8557
-- Support annotating certain block elements directly when using the editor annotator API #TINY-8698
-- The `mceLink` command can now take the value `{ dialog: true }` to always open the link dialog #TINY-8057
-- All help dialog links to `https://www.tiny.cloud` now include `rel="noopener"` to avoid potential security issues #TINY-8834
+- Clearer focus states for buttons while navigating with a keyboard. #TINY-8557
+- Support annotating certain block elements directly when using the editor's Annotation API. #TINY-8698
+- The `mceLink` command can now take the value `{ dialog: true }` to always open the link dialog. #TINY-8057
+- All help dialog links to `https://www.tiny.cloud` now include `rel="noopener"` to avoid potential security issues. #TINY-8834
 
 ### Changed
-- Toggling fullscreen mode with the `fullscreen` plugin now also fires the `ResizeEditor` event #TINY-8701
-- Getting the text content of the editor now returns newlines instead of an empty string if more than one empty paragraph exists #TINY-8578
-- The `end_container_on_empty_block` option can now take a string of blocks to split when pressing Enter twice #TINY-6559
-- The default value for `end_container_on_empty_block` option has been changed to `'blockquote'` #TINY-6559
-- Custom elements are now treated as non-empty elements via the schema #TINY-4784
-- The autocompleter menu element is now positioned instead of the wrapper #TINY-6476
-- Choice menu items will now use the `menuitemradio` aria role to better reflect that only a single item can be active #TINY-8602
-- `Link` menu and toolbar buttons now always execute the `mceLink` command #TINY-8057
+- The `end_container_on_empty_block` option can now take a string of blocks, allowing the exiting of a blockquote element by pressing Enter or Return twice. #TINY-6559
+- The default value for `end_container_on_empty_block` option has been changed to `'blockquote'`. #TINY-6559
+- Link menu and toolbar buttons now always execute the `mceLink` command. #TINY-8057
+- Toggling fullscreen mode when using the Fullscreen plugin now also fires the `ResizeEditor` event. #TINY-8701
+- Getting the editor's text content now returns newlines instead of an empty string if more than one empty paragraph exists. #TINY-8578
+- Custom elements are now treated as non-empty elements by the schema. #TINY-4784
+- The autocompleter's menu HTML element is now positioned instead of the wrapper. #TINY-6476
+- Choice menu items will now use the `'menuitemradio'` aria role to better reflect that only a single item can be active. #TINY-8602
 
 ### Fixed
-- Selecting all content with a single image in the content was inconsistent for the keyboard shortcut and menu item #TINY-4550
-- Links would open when using alt+enter (option+enter on Mac) even when `preventDefault()` is called on the keydown event #TINY-8661
-- Spaces would not be added correctly on some browsers when before or after a contenteditable block element #TINY-8588
-- Images were not showing as selected when selecting images alongside other content #TINY-5947
-- Images that used a Data URI were corrupted when the data wasn't base64 encoded #TINY-8337
-- Notifications would not properly reposition when toggling fullscreen mode #TINY-8701
-- Dialogs will not exceed the window height on smaller screens #TINY-8146
-- Some types on functions in the `tinymce.dom.TreeWalker` class missed that it could return undefined #TINY-8592
-- In some cases pressing the backspace key would incorrectly step into tables rather than remain outside #TINY-8592
-- Text alignment could not be applied to `pre` elements #TINY-7715
-- Nuget packages for .NET and .NET Core now copy TinyMCE into `/wwwroot/lib/` in the projects TinyMCE is installed in #TINY-8611
-- UI components, such as dialogs, would in some cases cause the `esc` keyup event to incorrectly trigger inside the editor #TINY-7005
-- Selection direction was not stored/restored when getting/setting selection bookmarks #TINY-8599
-- An exception could be thrown for the `editor.selection.isForward()` API due to an invalid selection on some versions of Safari #TINY-8686
-- The `InsertParagraph` or `mceInsertNewLine` commands did not delete the current selection like the native command used to #TINY-8606
-- When triple clicking the selection was incorrectly collapsed in the Chrome browser when clicking around nested noneditable content #TINY-8215
-- When pressing the right arrow key, the caret incorrectly moved before any selected inline boundary element #TINY-8601
-- Indenting or outdenting list items inside a block element that was inside another list item would not work #TINY-7209
-- Switching between unordered and ordered lists would incorrectly alter any parent element that contained that list #TINY-8068
-- Custom elements on blank lines would be removed during serialization #TINY-4784
-- Pasting columns in tables could sometimes result in an invalid table #TINY-8040
-- Copying columns in tables could sometimes result in an invalid copy #TINY-8040
-- The URL detection used for `autolink` and smart paste didn't work if a path segment contained valid characters such as `!` and `:` #TINY-8069
-- Cutting content to the clipboard while selecting between the parent list and a nested list would not always set the list style to `none` on the parent list #TINY-8078
-- The autocompleter would not trigger at the start of nested list items #TINY-8759
-- Some option values for the `template` plugin weren't escaped properly when doing replacement lookups via a `RegExp` #TINY-7433
-- Copy events were not dispatched in readonly mode #TINY-6800
-- Changing table properties with the `table_style_by_css` option set to false would sometimes reset table width #TINY-8758
-- Using Ctrl+Shift+Home/End (Cmd+Shift+Up/Down on Mac) would not expand the selection when a `contenteditable="false"` element was at the edge of content #TINY-7795
-- `<pre>` tags were not preserved when copying and pasting content #TINY-7719
-- Preview and Insert Template dialogs display the correct content background color when using dark skins #TINY-8534
-- Fixed incorrect word breaks in menu dropdowns with scrollbar #TINY-8572
-- The `InsertLineBreak` command did not replace selected content #TINY-8458
-- Delete operations could behave incorrectly if the selection contains a `contenteditable="false"` element located at the edge of content #TINY-8729
-- `uploadImages` no longer triggers two `change` events if there is a removal of images on upload #TINY-8641
-- The selection is no longer incorrectly moved inside a comment by the `editor.selection.normalize()` API #TINY-7817
+- Some Template plugin option values were not escaped properly when doing replacement lookups with Regular Expressions. #TINY-7433
+- Copy events were not dispatched in readonly mode. #TINY-6800
+- `<pre>` tags were not preserved when copying and pasting. #TINY-7719
+- The URL detection used for autolink and smart paste did not work if a path segment contained valid characters such as `!` and `:`. #TINY-8069
+- In some cases pressing the Backspace or Delete key would incorrectly step into tables rather than remain outside. #TINY-8592
+- Links opened when Alt+Enter or Option+Return was typed even when `preventDefault()` was called on the keydown event. #TINY-8661
+- Inconsistent visual behavior between choosing Edit -> Select All and typing Ctrl+A or Cmd+A when a document contained an image. #TINY-4550
+- Ctrl+Shift+Home/End or Cmd+Shift+Up-arrow/Down-arrow did not expand the selection to a `contenteditable="false"` element if the element was at the beginning or end of a document. #TINY-7795
+- Triple-clicking did not select a paragraph in Google Chrome in some circumstances. #TINY-8215
+- Images were not showing as selected when selected along with other content. #TINY-5947
+- Selection direction was not stored or restored when getting or setting selection bookmarks. #TINY-8599
+- When text within an inline boundary element was selected and the right-arrow key was pressed, the insertion point incorrectly moved to the left. #TINY-8601
+- In some versions of Safari, the `editor.selection.isForward()` API could throw an exception due to an invalid selection. #TINY-8686
+- The selection is no longer incorrectly moved inside a comment by the `editor.selection.normalize()` API. #TINY-7817
+- The `InsertParagraph` or `mceInsertNewLine` commands did not delete the current selection like the native command does. #TINY-8606
+- The `InsertLineBreak` command did not replace selected content. #TINY-8458
+- If selected content straddled a parent and nested list, cutting the selection did not always set the list style to `'none'` on the parent list. #TINY-8078
+- Delete operations could behave incorrectly if the selection contains a `contenteditable="false"` element located at the edge of content. #TINY-8729
+- Spaces were not added correctly on some browsers when the insertion point was immediately before or after a `contenteditable="false"` block element. #TINY-8588
+- Images that used a Data URI were corrupted when the data wasn't base64 encoded. #TINY-8337
+- `uploadImages` no longer triggers two change events if there is a removal of images on upload. #TINY-8641
+- Preview and Insert Template dialogs now display the correct content background color when using dark skins. #TINY-8534
+- Dialogs no longer exceed window height on smaller screens. #TINY-8146
+- UI components, such as dialogs, would in some cases cause the Esc keyup event to incorrectly trigger inside the editor. #TINY-7005
+- Fixed incorrect word breaks in menus when the menu presented with a scrollbar. #TINY-8572
+- Notifications did not properly reposition when toggling fullscreen mode. #TINY-8701
+- Text alignments, such as flush left and centered, could not be applied to `<pre>` elements. #TINY-7715
+- Indenting or outdenting list items inside a block element that was inside another list item did not work. #TINY-7209
+- Changing the list type of a list within another block element altered the parent element that contained that list. #TINY-8068
+- Pasting columns in tables could, in some circumstances, result in an invalid table. #TINY-8040
+- Copying columns in tables could sometimes result in an invalid copy. #TINY-8040
+- Changing table properties with the `table_style_by_css` option set to `false` would sometimes reset the table width. #TINY-8758
+- Custom elements added to otherwise blank lines were removed during serialization. #TINY-4784
+- The editor's autocompleter was not triggered at the start of nested list items. #TINY-8759
+- Some function types in the TreeWalker API missed that it could return `undefined`. #TINY-8592
+- Nuget packages for .NET and .NET Core are now configured to copy TinyMCE into `/wwwroot/lib/` when TinyMCE is installed into a project. #TINY-8611
 
 ## 6.0.3 - 2022-05-25
 
