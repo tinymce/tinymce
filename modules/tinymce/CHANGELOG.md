@@ -198,7 +198,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `editor.selection.getContent()` API did not respect the `no_events` argument. #TINY-8018
 - The `editor.annotator.remove` API did not keep selection when removing the annotation. #TINY-8195
 - The `GetContent` event was not fired when getting `tree` or `text` formats using the `editor.selection.getContent()` API. #TINY-8018
-- The `beforeinput` and `input` events would sometimes not fire as expected when deleting content #TINY-8168. #TINY-8329
+- The `beforeinput` and `input` events would sometimes not fire as expected when deleting content #TINY-8168 #TINY-8329
 - The `table` plugin would sometimes not correctly handle headers in the `tfoot` section. #TINY-8104
 - The `silver` theme UI was incorrectly rendered before plugins had initialized. #TINY-8288
 - The aria labels for the color picker dialog were not translated. #TINY-8381
@@ -213,7 +213,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed various color and contrast issues for the dark skins. #TINY-8527
 
 ### Removed
-- Removed support for Microsoft Internet Explorer 11 #TINY-8194. #TINY-8241
+- Removed support for Microsoft Internet Explorer 11 #TINY-8194 #TINY-8241
 - Removed support for Microsoft Word from the opensource paste functionality. #TINY-7493
 - Removed support for the `plugins` option allowing a mixture of a string array and of space separated strings. #TINY-8399
 - Removed support for the deprecated `false` value for the `forced_root_block` option. #TINY-8260
@@ -237,7 +237,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the style field from the `image` plugin dialog advanced tab. #TINY-3422
 - Removed the `paste_filter_drop` option as native drag and drop handling is no longer supported. #TINY-8511
 - Removed the legacy `mobile` theme. #TINY-7832
-- Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520. #TINY-8326
+- Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520 #TINY-8326
 - Removed the deprecated `Color`, `JSON`, `JSONP` and `JSONRequest`. #TINY-8162
 - Removed the deprecated `XHR` API. #TINY-8164
 - Removed the deprecated `setIconStroke` Split Toolbar Button API. #TINY-8162
@@ -314,7 +314,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Clicking in a table cell, with a non-editable element in an adjacent cell, incorrectly caused the non-editable element to be selected. #TINY-7736
 - Split toolbar buttons incorrectly had nested `tabindex="-1"` attributes. #TINY-7879
 - Fixed notifications rendering in the wrong place initially and when the page was scrolled. #TINY-7894
-- Fixed an exception getting thrown when the number of `col` elements didn't match the number of columns in a table #TINY-7041. #TINY-8011
+- Fixed an exception getting thrown when the number of `col` elements didn't match the number of columns in a table #TINY-7041 #TINY-8011
 - The table selection state could become incorrect after selecting a noneditable table cell. #TINY-8053
 - As of Mozilla Firefox 91, toggling fullscreen mode with `toolbar_sticky` enabled would cause the toolbar to disappear. #TINY-7873
 - Fixed URLs not cleaned correctly in some cases in the `link` and `image` plugins. #TINY-7998
@@ -327,7 +327,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pasting images would throw an exception if the clipboard `items` were not files (for example, screenshots taken from gnome-software). Patch contributed by cedric-anne. #TINY-8079
 
 ### Deprecated
-- Several APIs have been deprecated. See the release notes section for information #TINY-8023. #TINY-8063
+- Several APIs have been deprecated. See the release notes section for information #TINY-8023 #TINY-8063
 - Several Editor settings have been deprecated. See the release notes section for information. #TINY-8086
 - The Table of Contents and Image Tools plugins will be classified as Premium plugins in the next major release. #TINY-8087
 - Word support in the `paste` plugin has been deprecated and will be removed in the next major release. #TINY-8087
@@ -500,7 +500,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 5.7.0 - 2021-02-10
 
 ### Added
-- Added IPv6 address support to the URI API. Patch contributed by dev7355608. #GH-4409
+- Added IPv6 address support to the URI API. Patch contributed by dev7355608 #GH-4409
 - Added new `structure` and `style` properties to the `TableModified` event to indicate what kinds of modifications were made. #TINY-6643
 - Added `video` and `audio` live embed support for the `media` plugin. #TINY-6229
 - Added the ability to resize `video` and `iframe` media elements. #TINY-6229
@@ -809,7 +809,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed possible uncaught exception when a `style` attribute is removed using a content filter on `setContent`. #TINY-4742
 - Fixed the table selection not functioning correctly in Microsoft Edge 44 or higher. #TINY-3862
 - Fixed the table resize handles not functioning correctly in Microsoft Edge 44 or higher. #TINY-4160
-- Fixed the floating toolbar drawer disconnecting from the toolbar when adding content in inline mode #TINY-4725. #TINY-4765
+- Fixed the floating toolbar drawer disconnecting from the toolbar when adding content in inline mode #TINY-4725 #TINY-4765
 - Fixed `readonly` mode not returning the appropriate boolean value. #TINY-3948
 - Fixed the `forced_root_block_attrs` setting not applying attributes to new blocks consistently. #TINY-4564
 - Fixed the editor incorrectly stealing focus during initialization in Microsoft Internet Explorer. #TINY-4697
@@ -870,7 +870,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed `file_picker_callback` functionality for Image, Link and Media plugins. #TINY-4163
 - Fixed issue where floating toolbar drawer sometimes would break if the editor is resized while the drawer is open. #TINY-4439
 - Fixed incorrect `external_plugins` loading error message. #TINY-4503
-- Fixed resize handler was not hidden for ARIA purposes. Patch contributed by Parent5446. #GH-5195
+- Fixed resize handler was not hidden for ARIA purposes. Patch contributed by Parent5446 #GH-5195
 - Fixed an issue where content could be lost if a misspelled word was selected and spellchecking was disabled. #TINY-3899
 - Fixed validation errors in the CSS where certain properties had the wrong default value. #TINY-4491
 - Fixed an issue where forced root block attributes were not applied when removing a list. #TINY-4272
@@ -970,7 +970,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `table_grid`. #TINY-4075
   - `resize`. #TINY-4157
   - `object_resizing`. #TINY-4157
-- Changed toolbars and context toolbars to sidescroll on mobile #TINY-3894. #TINY-4107
+- Changed toolbars and context toolbars to sidescroll on mobile #TINY-3894 #TINY-4107
 - Changed context menus to render as horizontal menus on touch devices. #TINY-4107
 - Changed the editor to use the `VisualViewport` API of the browser where possible. #TINY-4078
 - Changed visualblocks toolbar button icon and renamed `paragraph` icon to `visualchars`. #TINY-4074
