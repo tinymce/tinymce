@@ -500,7 +500,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 5.7.0 - 2021-02-10
 
 ### Added
-- Added IPv6 address support to the URI API. Patch contributed by dev7355608 #GH-4409
+- Added IPv6 address support to the URI API. Patch contributed by dev7355608. #GH-4409
 - Added new `structure` and `style` properties to the `TableModified` event to indicate what kinds of modifications were made. #TINY-6643
 - Added `video` and `audio` live embed support for the `media` plugin. #TINY-6229
 - Added the ability to resize `video` and `iframe` media elements. #TINY-6229
