@@ -429,7 +429,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The type signature on the `formatter.matchNode` API had the wrong return type (was `boolean` but should have been `Formatter | undefined`). #TINY-6149
 - The `formatter.formatChanged` API would ignore the `similar` parameter if another callback had already been registered for the same format. #TINY-7713
 - The `formatter.formatChanged` API would sometimes not run the callback the first time the format was removed. #TINY-7713
-- Base64 encoded images with spaces or line breaks in the data URI were not displayed correctly. Patch contributed by RoboBurned
+- Base64 encoded images with spaces or line breaks in the data URI were not displayed correctly. Patch contributed by RoboBurned.
 
 ### Deprecated
 - The `bbcode`, `fullpage`, `legacyoutput`, and `spellchecker` plugins have been deprecated and marked for removal in the next major release. #TINY-7260
@@ -454,7 +454,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added the `PAGE_UP` and `PAGE_DOWN` key code constants to the `VK` API. #TINY-4612
 - The editor resize handle can now be controlled using the keyboard. #TINY-4823
-- Added a new `fixed_toolbar_container_target` setting which renders the toolbar in the specified `HTMLElement`. Patch contributed by pvrobays
+- Added a new `fixed_toolbar_container_target` setting which renders the toolbar in the specified `HTMLElement`. Patch contributed by pvrobays.
 
 ### Improved
 - The `inline_boundaries` feature now supports the `home`, `end`, `pageup`, and `pagedown` keys. #TINY-4612
@@ -1492,9 +1492,9 @@ Full documentation for the version 5 features and changes is available at https:
 
 ## 5.0.0-preview-1 - 2018-10-01
 
-Developer preview 1
+Developer preview 1.
 
-Initial list of features and changes is available at https://www.tiny.cloud/docs/tinymce/5/release-notes/release-notes50/
+Initial list of features and changes is available at https://www.tiny.cloud/docs/tinymce/5/release-notes/release-notes50/.
 
 ## 4.9.11 - 2020-07-13
 
