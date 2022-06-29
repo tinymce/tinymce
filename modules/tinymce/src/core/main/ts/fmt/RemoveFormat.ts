@@ -86,7 +86,7 @@ const normalizeTableSelection = (node: Node, start: boolean): Node => {
   const childNode = node[prop];
   if (isTableCellOrRow(node) && childNode) {
     if (node.nodeName === 'TR') {
-      return childNode?.[prop] || childNode;
+      return childNode[prop] || childNode;
     } else {
       return childNode;
     }

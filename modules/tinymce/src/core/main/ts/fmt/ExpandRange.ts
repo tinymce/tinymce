@@ -201,7 +201,7 @@ const findParentContainer = (
     }
 
     // Walk left/right
-    for (let sibling = parent?.[siblingName]; sibling; sibling = sibling[siblingName]) {
+    for (let sibling = parent[siblingName]; sibling; sibling = sibling[siblingName]) {
       // Allow spaces if not at the edge of a block element, as the spaces won't have been collapsed
       const allowSpaces = NodeType.isText(sibling) && !isAtBlockBoundary(dom, root, sibling, siblingName);
       if (!isBookmarkNode(sibling) && !isBogusBr(sibling) && !isWhiteSpaceNode(sibling, allowSpaces)) {
@@ -210,7 +210,7 @@ const findParentContainer = (
     }
 
     // Check if we can move up are we at root level or body level
-    if (parent === root || parent?.parentNode === root) {
+    if (parent === root || parent.parentNode === root) {
       container = parent;
       break;
     }
