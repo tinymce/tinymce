@@ -1,4 +1,4 @@
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { SugarElement, Width } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -19,17 +19,34 @@ const defaultCellBorderStyles = Arr.map([ 'Solid', 'Dotted', 'Dashed', 'Double',
 });
 
 // Note: This is also contained in the core Options.ts file
+const defaultWidth = '100%';
+
+const getPixelForcedWidth = (editor: Editor) => {
+  // Determine the inner size of the parent block element where the table will be inserted
+  const dom = editor.dom;
+  const parentBlock = dom.getParent<HTMLElement>(editor.selection.getStart(), dom.isBlock) ?? editor.getBody();
+  return Width.getInner(SugarElement.fromDom(parentBlock)) + 'px';
+};
+
+// Note: This is also contained in the core Options.ts file
 const determineDefaultStyles = (editor: Editor, defaultStyles: Record<string, string>): Record<string, string> => {
-  if (isPixelsForced(editor)) {
-    // Determine the inner size of the parent block element where the table will be inserted
-    const dom = editor.dom;
-    const parentBlock = dom.getParent<HTMLElement>(editor.selection.getStart(), dom.isBlock) ?? editor.getBody();
-    const contentWidth = Width.getInner(SugarElement.fromDom(parentBlock));
-    return { ...defaultStyles, width: contentWidth + 'px' };
-  } else if (isResponsiveForced(editor)) {
-    return Obj.filter(defaultStyles, (_value, key) => key !== 'width');
-  } else {
+  if (isResponsiveForced(editor) || !shouldStyleWithCss(editor)) {
     return defaultStyles;
+  } else if (isPixelsForced(editor)) {
+    return { ...defaultStyles, width: getPixelForcedWidth(editor) };
+  } else {
+    return { ...defaultStyles, width: defaultWidth };
+  }
+};
+
+// Note: This is also contained in the core Options.ts file
+const determineDefaultAttributes = (editor: Editor, defaultAttributes: Record<string, string>): Record<string, string> => {
+  if (isResponsiveForced(editor) || shouldStyleWithCss(editor)) {
+    return defaultAttributes;
+  } else if (isPixelsForced(editor)) {
+    return { ...defaultAttributes, width: getPixelForcedWidth(editor) };
+  } else {
+    return { ...defaultAttributes, width: defaultWidth };
   }
 };
 
@@ -78,11 +95,6 @@ const register = (editor: Editor): void => {
     default: !Env.deviceType.isTouch()
   });
 
-  registerOption('table_style_by_css', {
-    processor: 'boolean',
-    default: true
-  });
-
   registerOption('table_cell_class_list', {
     processor: 'object[]',
     default: []
@@ -117,7 +129,6 @@ const register = (editor: Editor): void => {
 const getTableSizingMode = option('table_sizing_mode');
 const getTableBorderWidths = option<UserListItem[]>('table_border_widths');
 const getTableBorderStyles = option<UserListValue[]>('table_border_styles');
-const getDefaultAttributes = option('table_default_attributes');
 const hasAdvancedCellTab = option<boolean>('table_cell_advtab');
 const hasAdvancedRowTab = option<boolean>('table_row_advtab');
 const hasAdvancedTableTab = option<boolean>('table_advtab');
@@ -142,6 +153,13 @@ const getDefaultStyles = (editor: Editor): Record<string, string> => {
   const options = editor.options;
   const defaultStyles = options.get('table_default_styles');
   return options.isSet('table_default_styles') ? defaultStyles : determineDefaultStyles(editor, defaultStyles);
+};
+
+const getDefaultAttributes = (editor: Editor): Record<string, string> => {
+  // Note: The we don't rely on the default here as we need to dynamically lookup the widths based on the current editor state
+  const options = editor.options;
+  const defaultAttributes = options.get('table_default_attributes');
+  return options.isSet('table_default_attributes') ? defaultAttributes : determineDefaultAttributes(editor, defaultAttributes);
 };
 
 export {

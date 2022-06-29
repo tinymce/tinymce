@@ -62,6 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changing the list type of a list within another block element altered the parent element that contained that list. #TINY-8068
 - Pasting columns in tables could, in some circumstances, result in an invalid table. #TINY-8040
 - Copying columns in tables could sometimes result in an invalid copy. #TINY-8040
+- Changing table properties with the `table_style_by_css` option set to `false` would sometimes reset the table width. #TINY-8758
 - Custom elements added to otherwise blank lines were removed during serialization. #TINY-4784
 - The editor's autocompleter was not triggered at the start of nested list items. #TINY-8759
 - Some function types in the TreeWalker API missed that it could return `undefined`. #TINY-8592
