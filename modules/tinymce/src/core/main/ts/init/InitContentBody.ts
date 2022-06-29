@@ -219,6 +219,7 @@ const autoFocus = (editor: Editor) => {
 
       if (!focusEditor.destroyed) {
         focusEditor.focus();
+        focusEditor.getBody().scrollIntoView();
       }
     }, 100);
   }
