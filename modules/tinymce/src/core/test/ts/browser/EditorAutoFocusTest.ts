@@ -13,17 +13,6 @@ const isInViewport = (editor: Editor) => {
   return top > 0 && top + innerRect.height < window.innerHeight;
 };
 
-before(() => {
-  Insert.append(SugarBody.body(), SugarElement.fromHtml(`<div>
-    <textarea id="mce_0">Editor_0</textarea>
-    <textarea id="mce_1">Editor_1</textarea>
-    <textarea id="mce_2">Editor_2</textarea>
-  </div>`));
-  const scriptLoader = new ScriptLoader();
-  // return scriptLoader.loadScript('http://localhost:3000/js/tinymce/tinymce.js');
-  return scriptLoader.loadScript('/project/tinymce/js/tinymce/tinymce.js');
-});
-
 const setupAutoFocus = (id: string) => {
   return new Promise((resolve) => {
     Global.tinymce.init({
@@ -46,12 +35,21 @@ const testEditorAutoFocus = async (id: string) => {
   const editor = Global.tinymce.EditorManager.get(id);
   assert.isTrue(editor.hasFocus());
   assert.isTrue(isInViewport(editor));
-
 };
 
-afterEach(() => Global.tinymce.remove());
-
 describe('browser.tinymce.core.EditorAutoFocusTest', () => {
+  before(() => {
+    Insert.append(SugarBody.body(), SugarElement.fromHtml(`<div>
+    <textarea id="mce_0">Editor_0</textarea>
+    <textarea id="mce_1">Editor_1</textarea>
+    <textarea id="mce_2">Editor_2</textarea>
+  </div>`));
+    const scriptLoader = new ScriptLoader();
+    // return scriptLoader.loadScript('http://localhost:3000/js/tinymce/tinymce.js');
+    return scriptLoader.loadScript('/project/tinymce/js/tinymce/tinymce.js');
+  });
+
+  afterEach(() => Global.tinymce.remove());
 
   it('TINY-8785: it should autofocus the first editor', async () => {
     await testEditorAutoFocus('mce_0');
