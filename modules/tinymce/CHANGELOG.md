@@ -1416,7 +1416,7 @@ Full documentation for the version 5 features and changes is available at https:
 - Added width and height placeholder text to image and media dialog dimensions input. #AP-296
 - Added the ability to keyboard navigate through menus, toolbars, sidebar and the status bar sequentially. #AP-381
 - Added translation capability back to the editor's UI. #AP-282
-- Added `label` component type for dialogs to group components under a label
+- Added `label` component type for dialogs to group components under a label.
 
 ### Changed
 - Changed the editor resize handle so that it should be disabled when the autoresize plugin is turned on. #AP-424
