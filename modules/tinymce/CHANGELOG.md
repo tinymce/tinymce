@@ -63,7 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pasting columns in tables could, in some circumstances, result in an invalid table. #TINY-8040
 - Copying columns in tables could sometimes result in an invalid copy. #TINY-8040
 - Custom elements added to otherwise blank lines were removed during serialization. #TINY-4784
-- Autocompleter was not triggered at the start of empty nested list items within non-empty list items. #TINY-8759
+- The editor's autocompleter was not triggered at the start of nested list items. #TINY-8759
 - Some function types in the TreeWalker API missed that it could return `undefined`. #TINY-8592
 - Nuget packages for .NET and .NET Core are now configured to copy TinyMCE into `/wwwroot/lib/` when TinyMCE is installed into a project. #TINY-8611
 
