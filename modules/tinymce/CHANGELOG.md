@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 6.1.0 - 2022-06-29
+
 ### Added
 - New `sidebar_show` option to show the specified sidebar on initialization. #TINY-8710
 - New `newline_behavior` option controls what happens when the Return or Enter key is pressed or the `mceInsertNewLine` command is used. #TINY-8458

@@ -6,9 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 7.1.0 - 2022-06-29
+
 ### Added
 - Added `detail` property to emulated mouse events settings.
-- Added `pClick` to the `RealMouse` API. 
+- Added `pClick` to the `RealMouse` API.
 
 ## 7.0.0 - 2022-03-03
 
