@@ -1,10 +1,10 @@
 import { describe, it, before, afterEach } from '@ephox/bedrock-client';
 import { Insert, SugarBody, SugarElement } from '@ephox/sugar';
-import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
+import 'tinymce';
 import Editor from 'tinymce/core/api/Editor';
-import { EditorManager } from 'tinymce/core/api/PublicApi';
+import EditorManager from 'tinymce/core/api/EditorManager';
 
 const isInViewport = (editor: Editor) => {
   const containerRect = editor.getContentAreaContainer().getBoundingClientRect();
@@ -44,7 +44,6 @@ describe('browser.tinymce.core.EditorAutoFocusTest', () => {
     <textarea id="mce_1">Editor_1</textarea>
     <textarea id="mce_2">Editor_2</textarea>
   </div>`));
-    TinyHooks.bddSetupLight({}); // it puts tinymce to global scope as a side effect
   });
 
   afterEach(() => {
@@ -55,11 +54,11 @@ describe('browser.tinymce.core.EditorAutoFocusTest', () => {
     await testEditorAutoFocus('mce_0');
   });
 
-  it('TINY-8785: it should autofocus the second editor', async () => {
+  it('TINY-8785: should autofocus the second editor', async () => {
     await testEditorAutoFocus('mce_1');
   });
 
-  it('TINY-8785: it should autofocus the third editor', async () => {
+  it('TINY-8785: should autofocus the third editor', async () => {
     await testEditorAutoFocus('mce_2');
   });
 });
