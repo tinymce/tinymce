@@ -47,9 +47,11 @@ describe('browser.tinymce.core.EditorAutoFocusTest', () => {
     TinyHooks.bddSetupLight({}); // it puts tinymce to global scope as a side effect
   });
 
-  afterEach(() => EditorManager.remove());
+  afterEach(() => {
+    EditorManager.remove();
+  });
 
-  it('TINY-8785: it should autofocus the first editor', async () => {
+  it('TINY-8785: should autofocus the first editor', async () => {
     await testEditorAutoFocus('mce_0');
   });
 
