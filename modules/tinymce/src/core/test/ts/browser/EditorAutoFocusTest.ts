@@ -1,5 +1,5 @@
-import { describe, it, before, afterEach } from '@ephox/bedrock-client';
-import { Insert, SugarBody, SugarElement } from '@ephox/sugar';
+import { describe, it, before, afterEach, after } from '@ephox/bedrock-client';
+import { Insert, Remove, Selectors, SugarBody, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import 'tinymce';
@@ -39,11 +39,15 @@ describe('browser.tinymce.core.EditorAutoFocusTest', () => {
   };
 
   before(() => {
-    Insert.append(SugarBody.body(), SugarElement.fromHtml(`<div>
+    Insert.append(SugarBody.body(), SugarElement.fromHtml(`<div id="abc">
     <textarea id="mce_0">Editor_0</textarea>
     <textarea id="mce_1">Editor_1</textarea>
     <textarea id="mce_2">Editor_2</textarea>
   </div>`));
+  });
+
+  after(() => {
+    Selectors.one('#abc').each(Remove.remove);
   });
 
   afterEach(() => {
