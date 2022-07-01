@@ -143,7 +143,29 @@ const registerTextColorButton = (editor: Editor, name: string, format: ColorForm
     columns: Options.getColorCols(editor),
     fetch: getFetch(Options.getColors(editor), Options.hasCustomColors(editor)),
     onAction: (_splitButtonApi) => {
-      applyColor(editor, format, lastColor.get(), Fun.noop);
+      const isColorCurrentlyActive = editor.formatter.match(
+        name === 'forecolor' ? name : 'hilitecolor',
+        { value: lastColor.get() },
+        undefined,
+        false
+      );
+      if (isColorCurrentlyActive && appliedColorStacks[format].length > 0) {
+        applyColor(editor, format, 'remove', (newColor) => {
+          lastColor.set(newColor || editor.getParam(`default_textcolor_${format}`) || fallbackColors[format]);
+
+          Events.fireTextColorChange(editor, {
+            name,
+            color: newColor
+          });
+        });
+      } else {
+        applyColor(editor, format, lastColor.get(), (newColor) => {
+          Events.fireTextColorChange(editor, {
+            name,
+            color: newColor
+          });
+        });
+      }
     },
     onItemAction: (_splitButtonApi, value) => {
       applyColor(editor, format, value, (newColor) => {
