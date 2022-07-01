@@ -169,7 +169,7 @@ const registerTextColorButton = (editor: Editor, name: string, format: ColorForm
     },
     onItemAction: (_splitButtonApi, value) => {
       applyColor(editor, format, value, (newColor) => {
-        lastColor.set(newColor);
+        lastColor.set(newColor || editor.getParam(`default_textcolor_${format}`) || fallbackColors[format]);
 
         Events.fireTextColorChange(editor, {
           name,
@@ -275,8 +275,8 @@ const colorPickerDialog = (editor: Editor) => (callback: ColorInputCallback, val
 
 const register = (editor: Editor) => {
   registerCommands(editor);
-  const lastForeColor = Cell(fallbackColor);
-  const lastBackColor = Cell(fallbackColor);
+  const lastForeColor = Cell(editor.getParam('default_textcolor_forecolor') || fallbackColors.forecolor);
+  const lastBackColor = Cell(editor.getParam('default_textcolor_hilitecolor') || fallbackColors.hilitecolor);
   registerTextColorButton(editor, 'forecolor', 'forecolor', 'Text color', lastForeColor);
   registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background color', lastBackColor);
 
