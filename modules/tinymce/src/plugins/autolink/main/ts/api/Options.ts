@@ -31,9 +31,11 @@ const register = (editor: Editor): void => {
 const getAutoLinkPattern = option<RegExp>('autolink_pattern');
 const getDefaultLinkTarget = option<string>('link_default_target');
 const getDefaultLinkProtocol = option<string>('link_default_protocol');
+const allowUnsafeLinkTarget = option<boolean>('allow_unsafe_link_target');
 
 export {
   register,
+  allowUnsafeLinkTarget,
   getAutoLinkPattern,
   getDefaultLinkTarget,
   getDefaultLinkProtocol

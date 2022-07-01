@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- The Autolink plugin did not work when the text nodes in the content were fragmented #TINY-3723
+
 ## 6.1.0 - 2022-06-29
 
 ### Added
