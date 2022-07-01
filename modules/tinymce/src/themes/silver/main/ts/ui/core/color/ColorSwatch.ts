@@ -84,6 +84,15 @@ const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemSpec[] => {
   ] : [ remove ];
 };
 
+interface AppliedColorStacks {
+  [key: string]: string[];
+}
+
+const appliedColorStacks: AppliedColorStacks = {
+  forecolor: [],
+  hilitecolor: []
+};
+
 const applyColor = (editor: Editor, format, value, onChoice: (v: string) => void) => {
   if (value === 'custom') {
     const dialog = colorPickerDialog(editor);
@@ -96,9 +105,13 @@ const applyColor = (editor: Editor, format, value, onChoice: (v: string) => void
     }, fallbackColor);
   } else if (value === 'remove') {
     onChoice('');
-    editor.execCommand('mceRemoveTextcolor', format);
+    while (appliedColorStacks[format].length) {
+      appliedColorStacks[format].pop();
+      editor.execCommand('mceRemoveTextcolor', format);
+    }
   } else {
     onChoice(value);
+    appliedColorStacks[format].push(value);
     editor.execCommand('mceApplyTextcolor', format, value);
   }
 };
