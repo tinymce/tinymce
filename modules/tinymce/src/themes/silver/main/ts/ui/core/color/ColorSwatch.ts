@@ -15,7 +15,14 @@ export interface ColorSwatchDialogData {
 
 type ColorFormat = 'forecolor' | 'hilitecolor';
 
-const fallbackColor = '#000000';
+interface FallbackColors {
+  [key: string]: string;
+}
+
+const fallbackColors: FallbackColors = {
+  forecolor: '#000000',
+  hilitecolor: '#FBEEB8'
+};
 
 const getCurrentColor = (editor: Editor, format: ColorFormat): Optional<string> => {
   let color: string | undefined;
