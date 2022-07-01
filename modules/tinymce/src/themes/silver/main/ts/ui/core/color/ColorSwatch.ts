@@ -102,7 +102,7 @@ const applyColor = (editor: Editor, format, value, onChoice: (v: string) => void
         editor.execCommand('mceApplyTextcolor', format, color);
         onChoice(color);
       });
-    }, fallbackColor);
+    }, fallbackColors[format]);
   } else if (value === 'remove') {
     onChoice('');
     while (appliedColorStacks[format].length) {
