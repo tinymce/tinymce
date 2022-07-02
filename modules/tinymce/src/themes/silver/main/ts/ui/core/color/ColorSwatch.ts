@@ -159,6 +159,10 @@ const registerTextColorButton = (editor: Editor, name: string, format: ColorForm
           });
         });
       } else {
+        if (!lastColor.get()) {
+          lastColor.set(editor.getParam(`default_textcolor_${format}`) || fallbackColors[format]);
+        }
+
         applyColor(editor, format, lastColor.get(), (newColor) => {
           Events.fireTextColorChange(editor, {
             name,
@@ -275,8 +279,8 @@ const colorPickerDialog = (editor: Editor) => (callback: ColorInputCallback, val
 
 const register = (editor: Editor) => {
   registerCommands(editor);
-  const lastForeColor = Cell(editor.getParam('default_textcolor_forecolor') || fallbackColors.forecolor);
-  const lastBackColor = Cell(editor.getParam('default_textcolor_hilitecolor') || fallbackColors.hilitecolor);
+  const lastForeColor = Cell('');
+  const lastBackColor = Cell('');
   registerTextColorButton(editor, 'forecolor', 'forecolor', 'Text color', lastForeColor);
   registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background color', lastBackColor);
 
