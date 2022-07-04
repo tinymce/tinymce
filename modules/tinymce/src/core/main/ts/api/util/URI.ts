@@ -9,8 +9,11 @@ import Tools from './Tools';
  */
 
 const each = Tools.each, trim = Tools.trim;
-const queryParts = 'source protocol authority userInfo user password host port relative path directory file query anchor'.split(' ');
-const DEFAULT_PORTS = {
+const queryParts = [
+  'source', 'protocol', 'authority', 'userInfo', 'user', 'password', 'host',
+  'port', 'relative', 'path', 'directory', 'file', 'query', 'anchor'
+] as const;
+const DEFAULT_PORTS: Record<string, number> = {
   ftp: 21,
   http: 80,
   https: 443,
@@ -57,7 +60,7 @@ const decodeUri = (encodedUri: string) => {
   }
 };
 
-export const isInvalidUri = (settings: SafeUriOptions, uri: string, tagName?: string) => {
+export const isInvalidUri = (settings: SafeUriOptions, uri: string, tagName?: string): boolean => {
   const decodedUri = decodeUri(uri);
 
   if (settings.allow_script_urls) {
@@ -76,7 +79,7 @@ export const isInvalidUri = (settings: SafeUriOptions, uri: string, tagName?: st
 
 class URI {
 
-  public static parseDataUri(uri: string): { type: string; data: string} {
+  public static parseDataUri(uri: string): { type: string | undefined; data: string} {
     let type;
 
     const uriComponents = decodeURIComponent(uri).split(',');
@@ -113,11 +116,11 @@ class URI {
   }
 
   public static getDocumentBaseUrl(loc: { protocol: string; host?: string; href?: string; pathname?: string }): string {
-    let baseUrl;
+    let baseUrl: string;
 
     // Pass applewebdata:// and other non web protocols though
     if (loc.protocol.indexOf('http') !== 0 && loc.protocol !== 'file:') {
-      baseUrl = loc.href;
+      baseUrl = loc.href ?? '';
     } else {
       baseUrl = loc.protocol + '//' + loc.host + loc.pathname;
     }
@@ -133,20 +136,20 @@ class URI {
     return baseUrl;
   }
 
-  public source: string;
-  public protocol: string;
-  public authority: string;
-  public userInfo: string;
-  public user: string;
-  public password: string;
-  public host: string;
-  public port: string;
-  public relative: string;
-  public path: string;
-  public directory: string;
-  public file: string;
-  public query: string;
-  public anchor: string;
+  public source!: string;
+  public protocol: string | undefined;
+  public authority: string | undefined;
+  public userInfo: string | undefined;
+  public user: string | undefined;
+  public password: string | undefined;
+  public host: string | undefined;
+  public port: string | undefined;
+  public relative: string | undefined;
+  public path: string | undefined;
+  public directory: string | undefined;
+  public file: string | undefined;
+  public query: string | undefined;
+  public anchor: string | undefined;
   public settings: URISettings;
 
   /**
@@ -157,10 +160,10 @@ class URI {
    * @param {String} url URI string to parse.
    * @param {Object} settings Optional settings object.
    */
-  public constructor(url: string, settings?: URISettings) {
+  public constructor(url: string, settings: URISettings = {}) {
     url = trim(url);
-    this.settings = settings || {};
-    const baseUri: URI = this.settings.base_uri;
+    this.settings = settings;
+    const baseUri = settings.base_uri;
     const self = this;
 
     // Strange app protocol that isn't http/https or local anchor
@@ -179,13 +182,15 @@ class URI {
 
     // Relative path http:// or protocol relative //path
     if (!/^[\w\-]*:?\/\//.test(url)) {
-      const baseUrl = this.settings.base_uri ? this.settings.base_uri.path : new URI(document.location.href).directory;
+      const baseUrl = baseUri ? baseUri.path : new URI(document.location.href).directory as string;
       // eslint-disable-next-line eqeqeq
-      if (this.settings.base_uri && this.settings.base_uri.protocol == '') {
+      if (baseUri && baseUri.protocol == '') {
         url = '//mce_host' + self.toAbsPath(baseUrl, url);
       } else {
         const match = /([^#?]*)([#?]?.*)/.exec(url);
-        url = ((baseUri && baseUri.protocol) || 'http') + '://mce_host' + self.toAbsPath(baseUrl, match[1]) + match[2];
+        if (match) {
+          url = ((baseUri && baseUri.protocol) || 'http') + '://mce_host' + self.toAbsPath(baseUrl, match[1]) + match[2];
+        }
       }
     }
 
@@ -194,16 +199,18 @@ class URI {
 
     const urlMatch = /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@\/]*):?([^:@\/]*))?@)?(\[[a-zA-Z0-9:.%]+\]|[^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/.exec(url);
 
-    each(queryParts, (v, i) => {
-      let part = urlMatch[i];
+    if (urlMatch) {
+      each(queryParts, (v, i) => {
+        let part = urlMatch[i];
 
-      // Zope 3 workaround, they use @@something
-      if (part) {
-        part = part.replace(/\(mce_at\)/g, '@@');
-      }
+        // Zope 3 workaround, they use @@something
+        if (part) {
+          part = part.replace(/\(mce_at\)/g, '@@');
+        }
 
-      self[v] = part;
-    });
+        self[v] = part;
+      });
+    }
 
     if (baseUri) {
       if (!self.protocol) {
@@ -236,13 +243,15 @@ class URI {
    * @method setPath
    * @param {String} path Path string to set.
    */
-  public setPath(path: string) {
+  public setPath(path: string): void {
     const pathMatch = /^(.*?)\/?(\w+)?$/.exec(path);
 
     // Update path parts
-    this.path = pathMatch[0];
-    this.directory = pathMatch[1];
-    this.file = pathMatch[2];
+    if (pathMatch) {
+      this.path = pathMatch[0];
+      this.directory = pathMatch[1];
+      this.file = pathMatch[2];
+    }
 
     // Rebuild source
     this.source = '';
@@ -330,7 +339,7 @@ class URI {
         return true;
       }
 
-      const defaultPort = DEFAULT_PORTS[this.protocol];
+      const defaultPort = this.protocol ? DEFAULT_PORTS[this.protocol] : null;
       // eslint-disable-next-line eqeqeq
       if (defaultPort && ((this.port || defaultPort) == (uri.port || defaultPort))) {
         return true;
@@ -399,24 +408,24 @@ class URI {
    * @param {String} path Relative path to convert into an absolute path.
    */
   public toAbsPath(base: string, path: string): string {
-    let i, nb = 0, o = [], outPath;
+    let nb = 0;
 
     // Split paths
     const tr = /\/$/.test(path) ? '/' : '';
-    let normalizedBase = base.split('/');
+    const normalizedBase = base.split('/');
     const normalizedPath = path.split('/');
 
     // Remove empty chunks
+    const baseParts: string[] = [];
     each(normalizedBase, (k) => {
       if (k) {
-        o.push(k);
+        baseParts.push(k);
       }
     });
 
-    normalizedBase = o;
-
     // Merge relURLParts chunks
-    for (i = normalizedPath.length - 1, o = []; i >= 0; i--) {
+    const pathParts: string[] = [];
+    for (let i = normalizedPath.length - 1; i >= 0; i--) {
       // Ignore empty or .
       if (normalizedPath[i].length === 0 || normalizedPath[i] === '.') {
         continue;
@@ -434,16 +443,17 @@ class URI {
         continue;
       }
 
-      o.push(normalizedPath[i]);
+      pathParts.push(normalizedPath[i]);
     }
 
-    i = normalizedBase.length - nb;
+    const i = baseParts.length - nb;
 
     // If /a/b/c or /
+    let outPath: string;
     if (i <= 0) {
-      outPath = Arr.reverse(o).join('/');
+      outPath = Arr.reverse(pathParts).join('/');
     } else {
-      outPath = normalizedBase.slice(0, i).join('/') + '/' + Arr.reverse(o).join('/');
+      outPath = baseParts.slice(0, i).join('/') + '/' + Arr.reverse(pathParts).join('/');
     }
 
     // Add front / if it's needed

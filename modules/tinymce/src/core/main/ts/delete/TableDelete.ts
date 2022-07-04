@@ -276,7 +276,7 @@ const deleteCaret = (editor: Editor, forward: boolean, startElm: SugarElement<No
   );
 };
 
-const backspaceDelete = (editor: Editor, forward?: boolean): Optional<() => void> => {
+const backspaceDelete = (editor: Editor, forward: boolean): Optional<() => void> => {
   const startElm = SugarElement.fromDom(editor.selection.getStart(true));
   const cells = TableCellSelection.getCellsFromEditor(editor);
 

@@ -16,12 +16,12 @@ import { isContent, isNbsp } from '../text/CharType';
 
 const isInMiddleOfText = (pos: CaretPosition) => CaretPosition.isTextPosition(pos) && !pos.isAtStart() && !pos.isAtEnd();
 
-const getClosestBlock = (root: SugarElement, pos: CaretPosition): SugarElement => {
+const getClosestBlock = (root: SugarElement<Node>, pos: CaretPosition): SugarElement<Node> => {
   const parentBlocks = Arr.filter(Parents.parentsAndSelf(SugarElement.fromDom(pos.container()), root), ElementType.isBlock);
   return Arr.head(parentBlocks).getOr(root);
 };
 
-const hasSpaceBefore = (root: SugarElement, pos: CaretPosition): boolean => {
+const hasSpaceBefore = (root: SugarElement<Node>, pos: CaretPosition): boolean => {
   if (isInMiddleOfText(pos)) {
     return isAfterSpace(pos);
   } else {
@@ -29,7 +29,7 @@ const hasSpaceBefore = (root: SugarElement, pos: CaretPosition): boolean => {
   }
 };
 
-const hasSpaceAfter = (root: SugarElement, pos: CaretPosition): boolean => {
+const hasSpaceAfter = (root: SugarElement<Node>, pos: CaretPosition): boolean => {
   if (isInMiddleOfText(pos)) {
     return isBeforeSpace(pos);
   } else {
@@ -41,12 +41,12 @@ const isPreValue = (value: string) => Arr.contains([ 'pre', 'pre-wrap' ], value)
 
 const isInPre = (pos: CaretPosition) => getElementFromPosition(pos)
   .bind((elm) => PredicateFind.closest(elm, SugarNode.isElement))
-  .exists((elm: SugarElement<Element>) => isPreValue(Css.get(elm, 'white-space')));
+  .exists((elm) => isPreValue(Css.get(elm, 'white-space')));
 
-const isAtBeginningOfBody = (root: SugarElement, pos: CaretPosition) => CaretFinder.prevPosition(root.dom, pos).isNone();
-const isAtEndOfBody = (root: SugarElement, pos: CaretPosition) => CaretFinder.nextPosition(root.dom, pos).isNone();
+const isAtBeginningOfBody = (root: SugarElement<Node>, pos: CaretPosition) => CaretFinder.prevPosition(root.dom, pos).isNone();
+const isAtEndOfBody = (root: SugarElement<Node>, pos: CaretPosition) => CaretFinder.nextPosition(root.dom, pos).isNone();
 
-const isAtLineBoundary = (root: SugarElement, pos: CaretPosition) => (
+const isAtLineBoundary = (root: SugarElement<Node>, pos: CaretPosition): boolean => (
   isAtBeginningOfBody(root, pos) ||
     isAtEndOfBody(root, pos) ||
     isAtStartOfBlock(root, pos) ||
@@ -55,21 +55,21 @@ const isAtLineBoundary = (root: SugarElement, pos: CaretPosition) => (
     isBeforeBr(root, pos)
 );
 
-const isCefBlock = (node?: Node) =>
+const isCefBlock = (node: Node | null | undefined): node is HTMLElement =>
   Type.isNonNullable(node) && NodeType.isContentEditableFalse(node) && isBlockLike(node);
 
-const isSiblingCefBlock = (root: Element) => (container: Node) =>
+const isSiblingCefBlock = (root: Node) => (container: Node): boolean =>
   isCefBlock(new DomTreeWalker(container, root).next());
 
 // Check the next/previous element in case it is a cef and the next/previous caret position then would skip it, then check
 // the next next/previous caret position ( for example in case the next element is a strong, containing a cef ).
-const isBeforeCefBlock = (root: SugarElement, pos: CaretPosition) => {
+const isBeforeCefBlock = (root: SugarElement<Node>, pos: CaretPosition): boolean => {
   const nextPos = CaretFinder.nextPosition(root.dom, pos).getOr(pos);
   const isNextCefBlock = isSiblingCefBlock(root.dom);
   return pos.isAtEnd() && (isNextCefBlock(pos.container()) || isNextCefBlock(nextPos.container()));
 };
 
-const needsToHaveNbsp = (root: SugarElement, pos: CaretPosition) => {
+const needsToHaveNbsp = (root: SugarElement<Node>, pos: CaretPosition): boolean => {
   if (isInPre(pos)) {
     return false;
   } else {
@@ -77,7 +77,7 @@ const needsToHaveNbsp = (root: SugarElement, pos: CaretPosition) => {
   }
 };
 
-const needsToBeNbspLeft = (root: SugarElement, pos: CaretPosition) => {
+const needsToBeNbspLeft = (root: SugarElement<Node>, pos: CaretPosition): boolean => {
   if (isInPre(pos)) {
     return false;
   } else {
@@ -96,7 +96,7 @@ const leanRight = (pos: CaretPosition): CaretPosition => {
   }
 };
 
-const needsToBeNbspRight = (root: SugarElement, pos: CaretPosition) => {
+const needsToBeNbspRight = (root: SugarElement<Node>, pos: CaretPosition): boolean => {
   if (isInPre(pos)) {
     return false;
   } else {
@@ -104,11 +104,13 @@ const needsToBeNbspRight = (root: SugarElement, pos: CaretPosition) => {
   }
 };
 
-const needsToBeNbsp = (root: SugarElement, pos: CaretPosition) => needsToBeNbspLeft(root, pos) || needsToBeNbspRight(root, leanRight(pos));
+const needsToBeNbsp = (root: SugarElement<Node>, pos: CaretPosition): boolean =>
+  needsToBeNbspLeft(root, pos) || needsToBeNbspRight(root, leanRight(pos));
 
-const isNbspAt = (text: string, offset: number) => isNbsp(text.charAt(offset));
+const isNbspAt = (text: string, offset: number): boolean =>
+  isNbsp(text.charAt(offset));
 
-const hasNbsp = (pos: CaretPosition) => {
+const hasNbsp = (pos: CaretPosition): boolean => {
   const container = pos.container();
   return NodeType.isText(container) && Strings.contains(container.data, Unicode.nbsp);
 };
@@ -124,7 +126,7 @@ const normalizeNbspMiddle = (text: string): string => {
   }).join('');
 };
 
-const normalizeNbspAtStart = (root: SugarElement, node: Text): boolean => {
+const normalizeNbspAtStart = (root: SugarElement<Node>, node: Text): boolean => {
   const text = node.data;
   const firstPos = CaretPosition(node, 0);
 
@@ -147,7 +149,7 @@ const normalizeNbspInMiddleOfTextNode = (node: Text): boolean => {
   }
 };
 
-const normalizeNbspAtEnd = (root: SugarElement, node: Text): boolean => {
+const normalizeNbspAtEnd = (root: SugarElement<Node>, node: Text): boolean => {
   const text = node.data;
   const lastPos = CaretPosition(node, text.length - 1);
   if (isNbspAt(text, text.length - 1) && !needsToBeNbsp(root, lastPos)) {
@@ -158,13 +160,13 @@ const normalizeNbspAtEnd = (root: SugarElement, node: Text): boolean => {
   }
 };
 
-const normalizeNbsps = (root: SugarElement, pos: CaretPosition): Optional<CaretPosition> => Optional.some(pos).filter(hasNbsp).bind((pos) => {
+const normalizeNbsps = (root: SugarElement<Node>, pos: CaretPosition): Optional<CaretPosition> => Optional.some(pos).filter(hasNbsp).bind((pos) => {
   const container = pos.container() as Text;
   const normalized = normalizeNbspAtStart(root, container) || normalizeNbspInMiddleOfTextNode(container) || normalizeNbspAtEnd(root, container);
   return normalized ? Optional.some(pos) : Optional.none();
 });
 
-const normalizeNbspsInEditor = (editor: Editor) => {
+const normalizeNbspsInEditor = (editor: Editor): void => {
   const root = SugarElement.fromDom(editor.getBody());
 
   if (editor.selection.isCollapsed()) {

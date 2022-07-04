@@ -137,6 +137,7 @@ const last = <T>(collection: ArrayLike<T>): T | undefined =>
   collection[collection.length - 1];
 
 export {
+  isArrayLike,
   isArray,
   toArray,
   each,

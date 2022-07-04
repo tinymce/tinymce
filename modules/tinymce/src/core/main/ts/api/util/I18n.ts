@@ -36,7 +36,7 @@ const getData = (): Record<string, Record<string, string>> => Obj.map(data, (val
  * @method setCode
  * @param {String} newCode Current language code.
  */
-const setCode = (newCode: string) => {
+const setCode = (newCode: string): void => {
   if (newCode) {
     currentCode.set(newCode);
   }
@@ -58,7 +58,7 @@ const getCode = (): string => currentCode.get();
  * @param {String} code Language code like sv_SE.
  * @param {Object} items Name/value object where key is english and value is the translation.
  */
-const add = (code: string, items: Record<string, string>) => {
+const add = (code: string, items: Record<string, string>): void => {
   let langData = data[code];
 
   if (!langData) {
@@ -135,7 +135,7 @@ const translate = (text: Untranslated): TranslatedString => {
  * @method isRtl
  * @return {Boolean} True if the current language pack is rtl.
  */
-const isRtl = () => getLanguageData()
+const isRtl = (): boolean => getLanguageData()
   .bind((items) => Obj.get(items, '_dir'))
   .exists((dir) => dir === 'rtl');
 
@@ -146,7 +146,7 @@ const isRtl = () => getLanguageData()
  * @param {String} code Code to check for.
  * @return {Boolean} True if the current language pack for the specified code exists.
  */
-const hasCode = (code: string) => Obj.has(data, code);
+const hasCode = (code: string): boolean => Obj.has(data, code);
 
 interface I18n {
   getData: () => Record<string, Record<string, string>>;

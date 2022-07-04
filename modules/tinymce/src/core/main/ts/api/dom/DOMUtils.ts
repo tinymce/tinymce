@@ -147,6 +147,12 @@ const findNodeIndex = (node: Node | null, normalized?: boolean) => {
   return idx;
 };
 
+export interface SetAttribEvent {
+  attrElm: HTMLElement;
+  attrName: string;
+  attrValue: string | boolean | number | null;
+}
+
 export interface DOMUtilsSettings {
   schema: Schema;
   url_converter: URLConverter;
@@ -154,9 +160,9 @@ export interface DOMUtilsSettings {
   ownEvents: boolean;
   keep_values: boolean;
   update_styles: boolean;
-  root_element: HTMLElement;
+  root_element: HTMLElement | null;
   collect: Function;
-  onSetAttrib: Function;
+  onSetAttrib: (event: SetAttribEvent) => void;
   contentCssCors: boolean;
   referrerPolicy: ReferrerPolicy;
 }
@@ -182,7 +188,7 @@ interface DOMUtils {
   root: Node;
 
   isBlock: {
-    (node: Node): node is HTMLElement;
+    (node: Node | null): node is HTMLElement;
     (node: string): boolean;
   };
   clone: (node: Node, deep: boolean) => Node;
@@ -331,7 +337,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
    * @param {Node/String} node Element/Node to check.
    * @return {Boolean} True/False state if the node is a block element or not.
    */
-  const isBlock = (node: string | Node) => {
+  const isBlock = (node: string | Node | null) => {
     if (Type.isString(node)) {
       return Obj.has(blockElementsMap, node);
     } else {
@@ -376,23 +382,21 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     run(elm, (e) => {
       if (NodeType.isElement(e)) {
         const $elm = SugarElement.fromDom(e);
-        if (value === '') {
-          value = null;
-        }
+        const val = value === '' ? null : value;
 
         const originalValue = Attribute.get($elm, name);
         const hook = attrHooks[name];
         if (hook && hook.set) {
-          hook.set($elm.dom, value, name);
+          hook.set($elm.dom, val, name);
         } else {
-          legacySetAttribute($elm, name, value);
+          legacySetAttribute($elm, name, val);
         }
 
-        if (originalValue !== value && settings.onSetAttrib) {
+        if (originalValue !== val && settings.onSetAttrib) {
           settings.onSetAttrib({
-            attrElm: $elm,
+            attrElm: $elm.dom,
             attrName: name,
-            attrValue: value
+            attrValue: val
           });
         }
       }

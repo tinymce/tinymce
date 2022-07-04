@@ -32,7 +32,7 @@ export type FilePickerValidationCallback = (info: { type: string; url: string },
 export type PastePreProcessFn = (editor: Editor, args: PastePreProcessEvent) => void;
 export type PastePostProcessFn = (editor: Editor, args: PastePostProcessEvent) => void;
 
-export type URLConverter = (url: string, name: string, elm?: HTMLElement) => string;
+export type URLConverter = (url: string, name: string, elm?: string | HTMLElement) => string;
 export type URLConverterCallback = (url: string, node: Node | string | undefined, on_save: boolean, name: string) => string;
 
 export interface ToolbarGroup {
@@ -262,6 +262,8 @@ export interface EditorOptions extends NormalizedEditorOptions {
   images_upload_base_path: string;
   images_upload_credentials: boolean;
   images_upload_url: string;
+  indent_use_margin: boolean;
+  indentation: string;
   inline: boolean;
   inline_boundaries_selector: string;
   language: string;
@@ -273,6 +275,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   noneditable_regexp: RegExp[];
   object_resizing: string;
   preview_styles: string;
+  readonly: boolean;
   text_patterns: Pattern[];
   visual: boolean;
   visual_anchor_class: string;

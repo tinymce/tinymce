@@ -34,7 +34,7 @@ const getBlockPosition = (rootNode: Node, pos: CaretPosition): Optional<BlockPos
 };
 
 const isDifferentBlocks = (blockBoundary: BlockBoundary): boolean =>
-  Compare.eq(blockBoundary.from.block, blockBoundary.to.block) === false;
+  !Compare.eq(blockBoundary.from.block, blockBoundary.to.block);
 
 const hasSameParent = (blockBoundary: BlockBoundary): boolean =>
   Traverse.parent(blockBoundary.from.block).bind((parent1) =>
@@ -45,7 +45,7 @@ const isEditable = (blockBoundary: BlockBoundary): boolean =>
   NodeType.isContentEditableFalse(blockBoundary.from.block.dom) === false && NodeType.isContentEditableFalse(blockBoundary.to.block.dom) === false;
 
 const skipLastBr = (rootNode: Node, forward: boolean, blockPosition: BlockPosition): BlockPosition => {
-  if (NodeType.isBr(blockPosition.position.getNode()) && Empty.isEmpty(blockPosition.block) === false) {
+  if (NodeType.isBr(blockPosition.position.getNode()) && !Empty.isEmpty(blockPosition.block)) {
     return CaretFinder.positionIn(false, blockPosition.block.dom).bind((lastPositionInBlock) => {
       if (lastPositionInBlock.isEqual(blockPosition.position)) {
         return CaretFinder.fromPosition(forward, rootNode, lastPositionInBlock).bind((to) => getBlockPosition(rootNode, to));

@@ -45,7 +45,7 @@ const bodyOptionProcessor = (editor: Editor, defaultValue: string = '') => (valu
   }
 };
 
-const register = (editor: Editor) => {
+const register = (editor: Editor): void => {
   const registerOption = editor.options.register;
 
   registerOption('id', {

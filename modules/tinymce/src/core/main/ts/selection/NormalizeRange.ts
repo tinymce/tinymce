@@ -34,7 +34,7 @@ const hasBrBeforeAfter = (dom: DOMUtils, node: Node, left: boolean) => {
   if (parentNode) {
     const walker = new DomTreeWalker(node, dom.getParent(parentNode, dom.isBlock) || dom.getRoot());
 
-    let currentNode: Node | undefined;
+    let currentNode: Node | null | undefined;
     while ((currentNode = walker[left ? 'prev' : 'next']())) {
       if (NodeType.isBr(currentNode)) {
         return true;
@@ -68,7 +68,7 @@ const findTextNodeRelative = (dom: DOMUtils, isAfterNode: boolean, collapsed: bo
   const nonEmptyElementsMap = dom.schema.getNonEmptyElements();
   const parentNode = startNode.parentNode;
   let lastInlineElement: Node | undefined;
-  let node: Node | undefined;
+  let node: Node | null | undefined;
 
   if (!parentNode) {
     return Optional.none();
@@ -121,7 +121,7 @@ const findTextNodeRelative = (dom: DOMUtils, isAfterNode: boolean, collapsed: bo
 
 const normalizeEndPoint = (dom: DOMUtils, collapsed: boolean, start: boolean, rng: Range): Optional<CaretPosition> => {
   const body = dom.getRoot();
-  let node: Node | undefined;
+  let node: Node | null | undefined;
   let normalized = false;
 
   let container: Node | null = start ? rng.startContainer : rng.endContainer;

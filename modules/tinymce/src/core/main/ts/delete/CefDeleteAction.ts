@@ -39,7 +39,7 @@ const DeleteAction: {
 ]);
 
 const isAtContentEditableBlockCaret = (forward: boolean, from: CaretPosition): boolean => {
-  const elm = from.getNode(forward === false);
+  const elm = from.getNode(!forward);
   const caretLocation = forward ? 'after' : 'before';
   return NodeType.isElement(elm) && elm.getAttribute('data-mce-caret') === caretLocation;
 };
@@ -54,7 +54,7 @@ const isDeleteFromCefDifferentBlocks = (root: Node, forward: boolean, from: Care
 };
 
 const deleteEmptyBlockOrMoveToCef = (root: Node, forward: boolean, from: CaretPosition, to: CaretPosition): Optional<DeleteActionAdt> => {
-  const toCefElm = to.getNode(forward === false);
+  const toCefElm = to.getNode(!forward);
   return DeleteUtils.getParentBlock(SugarElement.fromDom(root), SugarElement.fromDom(from.getNode())).map((blockElm) =>
     Empty.isEmpty(blockElm) ? DeleteAction.remove(blockElm.dom) : DeleteAction.moveToElement(toCefElm)
   ).orThunk(() => Optional.some(DeleteAction.moveToElement(toCefElm)));
@@ -68,11 +68,11 @@ const findCefPosition = (root: Node, forward: boolean, from: CaretPosition): Opt
       return Optional.none();
     } else if (forward && NodeType.isContentEditableFalse(to.getNode())) {
       return deleteEmptyBlockOrMoveToCef(root, forward, from, to);
-    } else if (forward === false && NodeType.isContentEditableFalse(to.getNode(true))) {
+    } else if (!forward && NodeType.isContentEditableFalse(to.getNode(true))) {
       return deleteEmptyBlockOrMoveToCef(root, forward, from, to);
     } else if (forward && isAfterContentEditableFalse(from)) {
       return Optional.some(DeleteAction.moveToPosition(to));
-    } else if (forward === false && isBeforeContentEditableFalse(from)) {
+    } else if (!forward && isBeforeContentEditableFalse(from)) {
       return Optional.some(DeleteAction.moveToPosition(to));
     } else {
       return Optional.none();
@@ -82,7 +82,7 @@ const findCefPosition = (root: Node, forward: boolean, from: CaretPosition): Opt
 const getContentEditableBlockAction = (forward: boolean, elm: Node): Optional<DeleteActionAdt> => {
   if (forward && NodeType.isContentEditableFalse(elm.nextSibling)) {
     return Optional.some(DeleteAction.moveToElement(elm.nextSibling));
-  } else if (forward === false && NodeType.isContentEditableFalse(elm.previousSibling)) {
+  } else if (!forward && NodeType.isContentEditableFalse(elm.previousSibling)) {
     return Optional.some(DeleteAction.moveToElement(elm.previousSibling));
   } else {
     return Optional.none();
@@ -104,7 +104,7 @@ const skipMoveToActionFromInlineCefToContent = (root: Node, from: CaretPosition,
 
 const getContentEditableAction = (root: Node, forward: boolean, from: CaretPosition): Optional<DeleteActionAdt> => {
   if (isAtContentEditableBlockCaret(forward, from)) {
-    return getContentEditableBlockAction(forward, from.getNode(forward === false))
+    return getContentEditableBlockAction(forward, from.getNode(!forward))
       .fold(
         () => findCefPosition(root, forward, from),
         Optional.some
@@ -121,11 +121,11 @@ const read = (root: Node, forward: boolean, rng: Range): Optional<DeleteActionAd
   const from = CaretPosition.fromRangeStart(normalizedRange);
   const rootElement = SugarElement.fromDom(root);
 
-  if (forward === false && isAfterContentEditableFalse(from)) {
+  if (!forward && isAfterContentEditableFalse(from)) {
     return Optional.some(DeleteAction.remove(from.getNode(true)));
   } else if (forward && isBeforeContentEditableFalse(from)) {
     return Optional.some(DeleteAction.remove(from.getNode()));
-  } else if (forward === false && isBeforeContentEditableFalse(from) && isAfterBr(rootElement, from)) {
+  } else if (!forward && isBeforeContentEditableFalse(from) && isAfterBr(rootElement, from)) {
     return findPreviousBr(rootElement, from).map((br) => DeleteAction.remove(br.getNode()));
   } else if (forward && isAfterContentEditableFalse(from) && isBeforeBr(rootElement, from)) {
     return findNextBr(rootElement, from).map((br) => DeleteAction.remove(br.getNode()));
