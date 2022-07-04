@@ -13,13 +13,13 @@ import * as Bidi from '../text/Bidi';
 const isInlineTarget = (editor: Editor, elm: Node): elm is Element =>
   Selectors.is(SugarElement.fromDom(elm), Options.getInlineBoundarySelector(editor));
 
-const isRtl = (element: Node): boolean =>
+const isRtl = (element: Element): boolean =>
   DOMUtils.DOM.getStyle(element, 'direction', true) === 'rtl' || Bidi.hasStrongRtl(element.textContent ?? '');
 
-const findInlineParents = (isInlineTarget: (elem: Element) => boolean, rootNode: Node, pos: CaretPosition): Element[] =>
+const findInlineParents = (isInlineTarget: (elem: Element) => boolean, rootNode: Node, pos: CaretPosition): Node[] =>
   Arr.filter(DOMUtils.DOM.getParents(pos.container(), '*', rootNode), isInlineTarget);
 
-const findRootInline = (isInlineTarget: (elem: Element) => boolean, rootNode: Node, pos: CaretPosition): Optional<Element> => {
+const findRootInline = (isInlineTarget: (elem: Element) => boolean, rootNode: Node, pos: CaretPosition): Optional<Node> => {
   const parents = findInlineParents(isInlineTarget, rootNode, pos);
   return Optional.from(parents[parents.length - 1]);
 };

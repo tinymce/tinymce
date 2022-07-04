@@ -128,9 +128,8 @@ const findBlockEndPoint = (editor: Editor, formatList: Format[], container: Node
   // Expand to first wrappable block element or any block element
   if (!node) {
     const scopeRoot = dom.getParent(container, 'LI,TD,TH') ?? root;
-    const start = NodeType.isText(container) ? container.parentNode : container;
     node = dom.getParent(
-      start ?? container,
+      NodeType.isText(container) ? container.parentNode : container,
       // Fixes #6183 where it would expand to editable parent element in inline mode
       (node) => node !== root && isTextBlock(editor, node),
       scopeRoot

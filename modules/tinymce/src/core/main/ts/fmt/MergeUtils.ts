@@ -96,12 +96,12 @@ const processChildElements = (node: Node, filter: (element: Element) => boolean,
 };
 
 const unwrapEmptySpan = (dom: DOMUtils, node: Node) => {
-  if (node.nodeName === 'SPAN' && dom.getAttribs(node).length === 0) {
+  if (node.nodeName === 'SPAN' && dom.getAttribs(node as HTMLSpanElement).length === 0) {
     dom.remove(node, true);
   }
 };
 
-const hasStyle = (dom: DOMUtils, name: string) => (node: Node): boolean =>
+const hasStyle = (dom: DOMUtils, name: string) => (node: Element): boolean =>
   !!(node && FormatUtils.getStyle(dom, node, name));
 
 const applyStyle = (dom: DOMUtils, name: string, value: string | null) => (node: Element): void => {

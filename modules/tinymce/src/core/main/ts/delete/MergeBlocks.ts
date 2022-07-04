@@ -78,9 +78,9 @@ const findInsertionPoint = (toBlock: SugarElement<Element>, block: SugarElement<
 const getInsertionPoint = (fromBlock: SugarElement<Element>, toBlock: SugarElement<Element>): Optional<SugarElement> =>
   Compare.contains(toBlock, fromBlock) ? findInsertionPoint(toBlock, fromBlock) : Optional.none();
 
-const trimBr = (first: boolean, block: SugarElement) => {
+const trimBr = (first: boolean, block: SugarElement<Element>) => {
   CaretFinder.positionIn(first, block.dom)
-    .map((position) => position.getNode())
+    .bind((position) => Optional.from(position.getNode()))
     .map(SugarElement.fromDom)
     .filter(ElementType.isBr)
     .each(Remove.remove);

@@ -32,7 +32,7 @@ export type FilePickerValidationCallback = (info: { type: string; url: string },
 export type PastePreProcessFn = (editor: Editor, args: PastePreProcessEvent) => void;
 export type PastePostProcessFn = (editor: Editor, args: PastePostProcessEvent) => void;
 
-export type URLConverter = (url: string, name: string, elm?: string | HTMLElement) => string;
+export type URLConverter = (url: string, name: string, elm?: string | Element) => string;
 export type URLConverterCallback = (url: string, node: Node | string | undefined, on_save: boolean, name: string) => string;
 
 export interface ToolbarGroup {

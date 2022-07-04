@@ -64,8 +64,9 @@ const matchName = (dom: DOMUtils, node: Node | null | undefined, format: Format)
   return false;
 };
 
-const matchItems = (dom: DOMUtils, node: Node, format: Format, itemName: 'attributes' | 'styles', similar?: boolean, vars?: FormatVars): boolean => {
+const matchItems = (dom: DOMUtils, node: Element, format: Format, itemName: 'attributes' | 'styles', similar?: boolean, vars?: FormatVars): boolean => {
   const items = format[itemName];
+  const matchAttributes = itemName === 'attributes';
 
   // Custom match
   if (Type.isFunction(format.onmatch)) {
@@ -79,7 +80,7 @@ const matchItems = (dom: DOMUtils, node: Node, format: Format, itemName: 'attrib
     if (!ArrUtils.isArrayLike(items)) {
       for (const key in items) {
         if (Obj.has(items, key)) {
-          const value = itemName === 'attributes' ? dom.getAttrib(node, key) : FormatUtils.getStyle(dom, node, key);
+          const value = matchAttributes ? dom.getAttrib(node, key) : FormatUtils.getStyle(dom, node, key);
           const expectedValue = FormatUtils.replaceVars(items[key], vars);
           const isEmptyValue = Type.isNullable(value) || Strings.isEmpty(value);
 
@@ -99,7 +100,7 @@ const matchItems = (dom: DOMUtils, node: Node, format: Format, itemName: 'attrib
     } else {
       // Only one match needed for indexed arrays
       for (let i = 0; i < items.length; i++) {
-        if (itemName === 'attributes' ? dom.getAttrib(node, items[i]) : FormatUtils.getStyle(dom, node, items[i])) {
+        if (matchAttributes ? dom.getAttrib(node, items[i]) : FormatUtils.getStyle(dom, node, items[i])) {
           return true;
         }
       }
@@ -113,7 +114,7 @@ const matchNode = (ed: Editor, node: Node | null, name: string, vars?: FormatVar
   const formatList = ed.formatter.get(name);
   const dom = ed.dom;
 
-  if (formatList && node) {
+  if (formatList && NodeType.isElement(node)) {
     // Check each format in list
     for (let i = 0; i < formatList.length; i++) {
       const format = formatList[i];

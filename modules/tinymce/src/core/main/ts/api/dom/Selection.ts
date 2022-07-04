@@ -81,12 +81,12 @@ interface EditorSelection {
   selectorChanged: (selector: string, callback: (active: boolean, args: {
     node: Node;
     selector: String;
-    parents: Element[];
+    parents: Node[];
   }) => void) => EditorSelection;
   selectorChangedWithUnbind: (selector: string, callback: (active: boolean, args: {
     node: Node;
     selector: String;
-    parents: Element[];
+    parents: Node[];
   }) => void) => { unbind: () => void };
   getScrollContainer: () => HTMLElement | undefined;
   scrollIntoView: (elm?: HTMLElement, alignToTop?: boolean) => void;
@@ -500,7 +500,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * @param {String} selector CSS selector to check for.
    * @param {Function} callback Callback with state and args when the selector is matches or not.
    */
-  const selectorChanged = (selector: string, callback: (active: boolean, args: { node: Node; selector: String; parents: Element[] }) => void) => {
+  const selectorChanged = (selector: string, callback: (active: boolean, args: { node: Node; selector: String; parents: Node[] }) => void) => {
     selectorChangedWithUnbind(selector, callback);
     return exports;
   };

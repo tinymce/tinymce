@@ -68,7 +68,7 @@ const walk = (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: Node[]) => 
   }
 
   // Find common ancestor and end points
-  const ancestor = dom.findCommonAncestor(startContainer, endContainer);
+  const ancestor = dom.findCommonAncestor(startContainer, endContainer) ?? dom.getRoot();
 
   // Process left side
   if (dom.isChildOf(startContainer, endContainer)) {

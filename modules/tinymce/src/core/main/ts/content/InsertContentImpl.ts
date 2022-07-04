@@ -80,7 +80,7 @@ const reduceInlineTextElements = (editor: Editor, merge: boolean | undefined): v
     Tools.each(dom.select('*[data-mce-fragment]'), (node) => {
       const isInline = Type.isNonNullable(textInlineElements[node.nodeName.toLowerCase()]);
       if (isInline && StyleUtils.hasInheritableStyles(dom, node)) {
-        for (let parentNode = node.parentNode; Type.isNonNullable(parentNode) && parentNode !== root; parentNode = parentNode.parentNode) {
+        for (let parentNode = node.parentElement; Type.isNonNullable(parentNode) && parentNode !== root; parentNode = parentNode.parentElement) {
           // Check if the parent has a style conflict that would prevent the child node from being safely removed,
           // even if a exact node match could be found further up the tree
           const styleConflict = StyleUtils.hasStyleConflict(dom, node, parentNode);
@@ -206,7 +206,6 @@ const deleteSelectedContent = (editor: Editor): void => {
 };
 
 export const insertHtmlAtCaret = (editor: Editor, value: string, details: InsertContentDetails): string => {
-  let rng, node;
   const selection = editor.selection;
   const dom = editor.dom;
 
@@ -228,7 +227,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
   value = value.replace(/\{\$caret\}/, bookmarkHtml);
 
   // If selection is at <body>|<p></p> then move it into <body><p>|</p>
-  rng = selection.getRng();
+  let rng: Range | null = selection.getRng();
   const caretElement = rng.startContainer;
   const body = editor.getBody();
   if (caretElement === body && selection.isCollapsed()) {
@@ -245,7 +244,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
     deleteSelectedContent(editor);
   }
 
-  let parentNode = selection.getNode();
+  const parentNode = selection.getNode();
 
   // Parse the fragment within the context of the parent node
   const parserArgs: ParserArgs = { context: parentNode.nodeName.toLowerCase(), data: details.data, insert: true };
@@ -267,7 +266,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
   markFragmentElements(fragment);
 
   // Move the caret to a more suitable location
-  node = fragment.lastChild;
+  let node = fragment.lastChild;
   if (node && node.attr('id') === 'mce_marker') {
     const marker = node;
 
@@ -293,20 +292,21 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
 
     // Insert bookmark node and get the parent
     editor.selection.setContent(bookmarkHtml);
-    parentNode = selection.getNode();
+    let parentNode: Node | null = selection.getNode();
+    let tempNode: Node | null;
     const rootNode = editor.getBody();
 
     // Opera will return the document node when selection is in root
     if (NodeType.isDocument(parentNode)) {
-      parentNode = node = rootNode;
+      parentNode = tempNode = rootNode;
     } else {
-      node = parentNode;
+      tempNode = parentNode;
     }
 
     // Find the ancestor just before the root element
-    while (node !== rootNode) {
-      parentNode = node;
-      node = node.parentNode;
+    while (tempNode && tempNode !== rootNode) {
+      parentNode = tempNode;
+      tempNode = tempNode.parentNode;
     }
 
     // Get the outer/inner HTML depending on if we are in the root and parser and serialize that
@@ -319,7 +319,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
       }
     }
     const toExtract = fragment.children();
-    const parent = fragment.parent?.name;
+    const parent = fragment.parent?.name ?? root.name;
     fragment.unwrap();
     const invalidChildren = Arr.filter(toExtract, (node) => !editor.schema.isValidChild(parent, node.name));
     cleanInvalidNodes(invalidChildren, editor.schema);

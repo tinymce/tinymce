@@ -12,7 +12,7 @@ import Editor from './Editor';
  */
 
 export type EditorCommandCallback = (ui: boolean, value: any) => void;
-export type EditorCommandsCallback = (command: string, ui: boolean, value: any) => void;
+export type EditorCommandsCallback = (command: string, ui: boolean, value?: any) => void;
 
 interface Commands {
   state: Record<string, (command: string) => boolean>;
@@ -49,7 +49,7 @@ class EditorCommands {
    * @param {Object} args Optional arguments object.
    * @return {Boolean} true or false if the command was supported or not.
    */
-  public execCommand(command: string, ui?: boolean, value?: any, args?: ExecCommandArgs): boolean {
+  public execCommand(command: string, ui: boolean = false, value?: any, args?: ExecCommandArgs): boolean {
     const editor = this.editor;
     const lowerCaseCommand = command.toLowerCase();
     const skipFocus = args?.skip_focus;

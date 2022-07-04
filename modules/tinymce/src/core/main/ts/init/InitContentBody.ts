@@ -408,7 +408,7 @@ const contentBodyLoaded = (editor: Editor): void => {
     url_converter_scope: editor,
     update_styles: true,
     root_element: editor.inline ? editor.getBody() : null,
-    collect: () => editor.inline,
+    collect: editor.inline,
     schema: editor.schema,
     contentCssCors: Options.shouldUseContentCssCors(editor),
     referrerPolicy: Options.getReferrerPolicy(editor),
@@ -467,7 +467,7 @@ const contentBodyLoaded = (editor: Editor): void => {
 const initContentBody = (editor: Editor, skipWrite?: boolean): void => {
   // Restore visibility on target element
   if (!editor.inline) {
-    editor.getElement().style.visibility = editor.orgVisibility;
+    editor.getElement().style.visibility = editor.orgVisibility as string;
   }
 
   // Setup iframe body
@@ -477,12 +477,12 @@ const initContentBody = (editor: Editor, skipWrite?: boolean): void => {
       binder.unbind();
 
       // Reset the content document, since using srcdoc will change the document
-      editor.contentDocument = iframe.contentDocument;
+      editor.contentDocument = iframe.contentDocument as Document;
 
       // Continue to init the editor
       contentBodyLoaded(editor);
     });
-    iframe.srcdoc = editor.iframeHTML;
+    iframe.srcdoc = editor.iframeHTML as string;
   } else {
     contentBodyLoaded(editor);
   }

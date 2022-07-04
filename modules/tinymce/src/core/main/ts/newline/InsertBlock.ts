@@ -217,7 +217,7 @@ const addBrToBlockIfNeeded = (dom: DOMUtils, block: Node) => {
 
   // Check if the block is empty or contains a floated last child
   const lastChild = block.lastChild;
-  if (!lastChild || (/^(left|right)$/gi.test(dom.getStyle(lastChild, 'float', true) ?? ''))) {
+  if (!lastChild || NodeType.isElement(lastChild) && (/^(left|right)$/gi.test(dom.getStyle(lastChild, 'float', true)))) {
     dom.add(block, 'br');
   }
 };
@@ -365,7 +365,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     // Split the current container block element if enter is pressed inside an empty inner block element
     if (shouldEndContainer(editor, containerBlock) && canSplitBlock(dom, containerBlock) && dom.isEmpty(parentBlock)) {
       // Split container block for example a BLOCKQUOTE at the current blockParent location for example a P
-      block = dom.split(containerBlock, parentBlock);
+      block = dom.split(containerBlock, parentBlock) as Element;
     } else {
       dom.insertAfter(block, parentBlock);
     }

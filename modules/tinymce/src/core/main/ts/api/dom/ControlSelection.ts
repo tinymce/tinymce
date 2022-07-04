@@ -77,10 +77,10 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
   let startScrollWidth: number;
   let startScrollHeight: number;
 
-  const isImage = (elm: Node | undefined) =>
+  const isImage = (elm: Element | undefined) =>
     Type.isNonNullable(elm) && (NodeType.isImg(elm) || dom.is(elm, 'figure.image'));
 
-  const isMedia = (elm: Node) =>
+  const isMedia = (elm: Element) =>
     NodeType.isMedia(elm) || dom.hasClass(elm, 'mce-preview-object');
 
   const isEventOnImageOutsideRange = (evt: EditorEvent<PointerEvent> | EditorEvent<TouchEvent>, range: Range) => {
@@ -101,11 +101,11 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
   };
 
   const getResizeTargets = (elm: HTMLElement): HTMLElement[] => {
-    if (dom.is(elm, 'figure.image')) {
-      return [ elm.querySelector('img') as HTMLImageElement ];
-    } else if (dom.hasClass(elm, 'mce-preview-object') && Type.isNonNullable(elm.firstElementChild)) {
+    if (dom.hasClass(elm, 'mce-preview-object') && Type.isNonNullable(elm.firstElementChild)) {
       // When resizing a preview object we need to resize both the original element and the wrapper span
       return [ elm, elm.firstElementChild as HTMLElement ];
+    } else if (dom.is(elm, 'figure.image')) {
+      return [ elm.querySelector('img') as HTMLImageElement ];
     } else {
       return [ elm ];
     }
@@ -293,8 +293,6 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
 
     if (isResizable(targetElm) && !e.isDefaultPrevented()) {
       Obj.each(resizeHandles, (handle, name) => {
-        let handleElm;
-
         const startDrag = (e: MouseEvent) => {
           // Note: We're guaranteed to have at least one target here
           const target = getResizeTargets(selectedElm)[0];
@@ -357,7 +355,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
         };
 
         // Get existing or render resize handle
-        handleElm = dom.get('mceResizeHandle' + name);
+        let handleElm = dom.get('mceResizeHandle' + name);
         if (handleElm) {
           dom.remove(handleElm);
         }

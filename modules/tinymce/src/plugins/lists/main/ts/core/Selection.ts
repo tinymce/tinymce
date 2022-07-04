@@ -52,7 +52,7 @@ const getSelectedListItems = (editor: Editor): Array<HTMLLIElement | HTMLElement
 const getSelectedDlItems = (editor: Editor): HTMLElement[] =>
   Arr.filter(getSelectedListItems(editor), NodeType.isDlItemNode);
 
-const getClosestEditingHost = (editor: Editor, elm: Node): HTMLElement => {
+const getClosestEditingHost = (editor: Editor, elm: Element): HTMLElement => {
   const parentTableCell = editor.dom.getParents<HTMLTableCellElement>(elm, 'TD,TH');
   return parentTableCell.length > 0 ? parentTableCell[0] : editor.getBody();
 };
@@ -67,7 +67,7 @@ const getClosestListHost = (editor: Editor, elm: Node): HTMLElement => {
   return parentBlock.getOr(editor.getBody());
 };
 
-const findLastParentListNode = (editor: Editor, elm: Node): Optional<HTMLOListElement | HTMLUListElement> => {
+const findLastParentListNode = (editor: Editor, elm: Element): Optional<HTMLOListElement | HTMLUListElement> => {
   const parentLists = editor.dom.getParents<HTMLOListElement | HTMLUListElement>(elm, 'ol,ul', getClosestListHost(editor, elm));
   return Arr.last(parentLists);
 };

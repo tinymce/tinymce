@@ -10,7 +10,7 @@ import { Dialog } from './ui/Ui';
 import { NativeEventMap } from './util/EventDispatcher';
 import { InstanceApi } from './WindowManager';
 
-export interface ExecCommandEvent { command: string; ui?: boolean; value?: any }
+export interface ExecCommandEvent { command: string; ui: boolean; value?: any }
 
 export interface BeforeGetContentEvent extends GetContentArgs {
   selection?: boolean;

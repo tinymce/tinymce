@@ -137,7 +137,8 @@ const removeCaretContainer = (editor: Editor, node: Node | null, moveCaret: bool
 };
 
 const insertCaretContainerNode = (editor: Editor, caretContainer: Node, formatNode: Node) => {
-  const dom = editor.dom, block = dom.getParent(formatNode, Fun.curry(FormatUtils.isTextBlock, editor));
+  const dom = editor.dom;
+  const block = dom.getParent(formatNode, Fun.curry(FormatUtils.isTextBlock, editor));
 
   if (block && dom.isEmpty(block)) {
     // Replace formatNode with caretContainer when removing format from empty block like <p><b>|</b></p>
@@ -166,7 +167,7 @@ const insertFormatNodesIntoCaretContainer = (formatNodes: Node[], caretContainer
   return appendNode(innerMostFormatNode, doc.createTextNode(ZWSP));
 };
 
-const cleanFormatNode = (editor: Editor, caretContainer: Node, formatNode: Node, name: string, vars?: FormatVars, similar?: boolean): Optional<Node> => {
+const cleanFormatNode = (editor: Editor, caretContainer: Node, formatNode: Element, name: string, vars?: FormatVars, similar?: boolean): Optional<Node> => {
   const formatter = editor.formatter;
   const dom = editor.dom;
 
@@ -179,7 +180,7 @@ const cleanFormatNode = (editor: Editor, caretContainer: Node, formatNode: Node,
   // If more than one format is present, then there's additional formats that should be retained. So clone the node,
   // remove the format and then return cleaned format node
   if (uniqueFormats.length > 0) {
-    const clonedFormatNode = formatNode.cloneNode(false);
+    const clonedFormatNode = formatNode.cloneNode(false) as Element;
     dom.add(caretContainer, clonedFormatNode);
     formatter.remove(name, vars, clonedFormatNode, similar);
     dom.remove(clonedFormatNode);
@@ -269,10 +270,10 @@ const removeCaretFormat = (editor: Editor, name: string, vars?: FormatVars, simi
   }
 
   const parents: Node[] = [];
-  let formatNode: Node | undefined;
+  let formatNode: Element | undefined;
   while (node) {
     if (MatchFormat.matchNode(editor, node, name, vars, similar)) {
-      formatNode = node;
+      formatNode = node as Element;
       break;
     }
 
@@ -355,7 +356,7 @@ const replaceWithCaretFormat = (targetNode: Node, formatNodes: Node[]): CaretPos
   return CaretPosition(innerMost, 0);
 };
 
-const isFormatElement = (editor: Editor, element: SugarElement<Element>): boolean => {
+const isFormatElement = (editor: Editor, element: SugarElement<Node>): boolean => {
   const inlineElements = editor.schema.getTextInlineElements();
   return Obj.has(inlineElements, SugarNode.name(element)) && !isCaretNode(element.dom) && !NodeType.isBogus(element.dom);
 };

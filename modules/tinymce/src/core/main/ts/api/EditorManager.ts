@@ -14,7 +14,13 @@ import Observable from './util/Observable';
 import Tools from './util/Tools';
 import URI from './util/URI';
 
-declare const window: Window & { tinymce: any; tinyMCEPreInit: any };
+interface PreInit {
+  suffix: string;
+  baseURL: string;
+  base?: string;
+}
+
+declare const window: Window & { tinymce?: PreInit; tinyMCEPreInit?: PreInit };
 
 // NOTE: the class tag is commented out for the include in `modules/tinymce/tools/docs/tinymce.js`
 /**
@@ -131,11 +137,11 @@ const isQuirksMode = document.compatMode !== 'CSS1Compat';
 const EditorManager: EditorManager = {
   ...Observable,
 
-  baseURI: null,
-  baseURL: null,
+  baseURI: null as any,
+  baseURL: null as any,
   defaultOptions: {},
-  documentBaseURL: null,
-  suffix: null,
+  documentBaseURL: null as any,
+  suffix: null as any,
 
   /**
    * Major version of TinyMCE build.
@@ -182,11 +188,12 @@ const EditorManager: EditorManager = {
   focusedEditor: null,
 
   setup() {
-    const self: EditorManager = this;
-    let baseURL, documentBaseURL, suffix = '';
+    const self = this;
+    let baseURL = '';
+    let suffix = '';
 
     // Get base URL for the current document
-    documentBaseURL = URI.getDocumentBaseUrl(document.location);
+    let documentBaseURL = URI.getDocumentBaseUrl(document.location);
 
     // Check if the URL is a document based format like: http://site/dir/file and file:///
     // leave other formats like applewebdata://... intact

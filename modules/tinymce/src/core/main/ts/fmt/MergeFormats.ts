@@ -1,6 +1,7 @@
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import Tools from '../api/util/Tools';
+import * as NodeType from '../dom/NodeType';
 import { ApplyFormat, FormatVars } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 import * as MatchFormat from './MatchFormat';
@@ -11,7 +12,7 @@ const each = Tools.each;
 
 const mergeTextDecorationsAndColor = (dom: DOMUtils, format: ApplyFormat, vars: FormatVars | undefined, node: Node): void => {
   const processTextDecorationsAndColor = (n: Node) => {
-    if (n.nodeType === 1 && n.parentNode && n.parentNode.nodeType === 1) {
+    if (NodeType.isElement(n) && NodeType.isElement(n.parentNode)) {
       const textDecoration = FormatUtils.getTextDecoration(dom, n.parentNode);
       if (dom.getStyle(n, 'color') && textDecoration) {
         dom.setStyle(n, 'text-decoration', textDecoration);

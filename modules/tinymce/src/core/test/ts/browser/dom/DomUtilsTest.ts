@@ -253,9 +253,10 @@ describe('browser.tinymce.core.dom.DOMUtilsTest', () => {
     assert.equal(DOM.getAttrib('test', 'src'), '&<>"123&<>"src');
     assert.equal(DOM.getAttrib('test', 'href'), '&<>"abc&<>"href');
 
-    assert.equal(DOM.getAttrib(document, 'test'), '');
-    assert.equal(DOM.getAttrib(document, 'test', ''), '');
-    assert.equal(DOM.getAttrib(document, 'test', 'x'), 'x');
+    const nonElement = document as unknown as Element;
+    assert.equal(DOM.getAttrib(nonElement, 'test'), '');
+    assert.equal(DOM.getAttrib(nonElement, 'test', ''), '');
+    assert.equal(DOM.getAttrib(nonElement, 'test', 'x'), 'x');
 
     DOM.remove('test');
   });

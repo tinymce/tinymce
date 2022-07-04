@@ -1,6 +1,7 @@
 import { Obj, Type } from '@ephox/katamari';
 
 import * as Bookmarks from '../../bookmark/Bookmarks';
+import * as NodeType from '../../dom/NodeType';
 import Tools from '../util/Tools';
 import DOMUtils from './DOMUtils';
 
@@ -28,8 +29,8 @@ const ElementUtils = (dom: DOMUtils): ElementUtils => {
    * @return {Boolean} True/false if the nodes are the same or not.
    */
   const compare = (node1: Node, node2: Node) => {
-    // Not the same name
-    if (node1.nodeName !== node2.nodeName) {
+    // Not the same name or type
+    if (node1.nodeName !== node2.nodeName || node1.nodeType !== node2.nodeType) {
       return false;
     }
 
@@ -40,7 +41,7 @@ const ElementUtils = (dom: DOMUtils): ElementUtils => {
      * @param {Node} node Node to get attributes from.
      * @return {Object} Name/value object with attributes and attribute values.
      */
-    const getAttribs = (node: Node) => {
+    const getAttribs = (node: Element) => {
       const attribs: Record<string, string> = {};
 
       each(dom.getAttribs(node), (attr) => {
@@ -95,14 +96,16 @@ const ElementUtils = (dom: DOMUtils): ElementUtils => {
       return true;
     };
 
-    // Attribs are not the same
-    if (!compareObjects(getAttribs(node1), getAttribs(node2))) {
-      return false;
-    }
+    if (NodeType.isElement(node1) && NodeType.isElement(node2)) {
+      // Attribs are not the same
+      if (!compareObjects(getAttribs(node1), getAttribs(node2))) {
+        return false;
+      }
 
-    // Styles are not the same
-    if (!compareObjects(dom.parseStyle(dom.getAttrib(node1, 'style')), dom.parseStyle(dom.getAttrib(node2, 'style')))) {
-      return false;
+      // Styles are not the same
+      if (!compareObjects(dom.parseStyle(dom.getAttrib(node1, 'style')), dom.parseStyle(dom.getAttrib(node2, 'style')))) {
+        return false;
+      }
     }
 
     return !Bookmarks.isBookmarkNode(node1) && !Bookmarks.isBookmarkNode(node2);

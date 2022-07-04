@@ -140,44 +140,52 @@ const isEq = (str1: Node | string | null | undefined, str2: Node | string | null
   return str1.toLowerCase() === str2.toLowerCase();
 };
 
-const normalizeStyleValue = (value: string | number, name: string): string => {
-  let strValue = String(value);
+const normalizeStyleValue = (value: string | number | null | undefined, name: string): string | null => {
+  if (Type.isNullable(value)) {
+    return null;
+  } else {
+    let strValue = String(value);
 
-  // Force the format to hex
-  if (name === 'color' || name === 'backgroundColor') {
-    strValue = Transformations.rgbaToHexString(strValue);
+    // Force the format to hex
+    if (name === 'color' || name === 'backgroundColor') {
+      strValue = Transformations.rgbaToHexString(strValue);
+    }
+
+    // Opera will return bold as 700
+    if (name === 'fontWeight' && value === 700) {
+      strValue = 'bold';
+    }
+
+    // Normalize fontFamily so "'Font name', Font" becomes: "Font name,Font"
+    if (name === 'fontFamily') {
+      strValue = strValue.replace(/[\'\"]/g, '').replace(/,\s+/g, ',');
+    }
+
+    return strValue;
   }
-
-  // Opera will return bold as 700
-  if (name === 'fontWeight' && value === 700) {
-    strValue = 'bold';
-  }
-
-  // Normalize fontFamily so "'Font name', Font" becomes: "Font name,Font"
-  if (name === 'fontFamily') {
-    strValue = strValue.replace(/[\'\"]/g, '').replace(/,\s+/g, ',');
-  }
-
-  return strValue;
 };
 
-const getStyle = (dom: DOMUtils, node: Node, name: string): string | undefined => {
+const getStyle = (dom: DOMUtils, node: Element, name: string): string | null => {
   const style = dom.getStyle(node, name);
-  return style ? normalizeStyleValue(style, name) : style;
+  return normalizeStyleValue(style, name);
 };
 
 const getTextDecoration = (dom: DOMUtils, node: Node): string | undefined => {
   let decoration: string | undefined;
 
   dom.getParent(node, (n): boolean => {
-    decoration = dom.getStyle(n, 'text-decoration');
-    return !!decoration && decoration !== 'none';
+    if (NodeType.isElement(n)) {
+      decoration = dom.getStyle(n, 'text-decoration');
+      return !!decoration && decoration !== 'none';
+    } else {
+      return false;
+    }
   });
 
   return decoration;
 };
 
-const getParents = (dom: DOMUtils, node: Node, selector?: string): Element[] => {
+const getParents = (dom: DOMUtils, node: Node, selector?: string): Node[] => {
   return dom.getParents(node, selector, dom.getRoot());
 };
 
@@ -225,8 +233,8 @@ const isSelectorFormat = (format: Format): format is SelectorFormat =>
 const isInlineFormat = (format: Format): format is InlineFormat =>
   Obj.hasNonNullableKey(format as any, 'inline');
 
-const isMixedFormat = (format: Format): format is MixedFormat =>
-  isSelectorFormat(format) && isInlineFormat(format) && Optionals.is(Obj.get(format as any, 'mixed'), true);
+const isMixedFormat = (format: any): format is MixedFormat =>
+  isSelectorFormat(format) && isInlineFormat(format) && Optionals.is(Obj.get(format, 'mixed'), true);
 
 const shouldExpandToSelector = (format: Format): boolean =>
   isSelectorFormat(format) && format.expand !== false && !isInlineFormat(format);

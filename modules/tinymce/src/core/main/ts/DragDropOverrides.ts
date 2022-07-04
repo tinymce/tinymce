@@ -35,8 +35,8 @@ interface State {
   ghost: HTMLElement;
 }
 
-const isContentEditableFalse = NodeType.isContentEditableFalse,
-  isContentEditableTrue = NodeType.isContentEditableTrue;
+const isContentEditableFalse = NodeType.isContentEditableFalse;
+const isContentEditable = Predicate.or(isContentEditableFalse, NodeType.isContentEditableTrue) as (node: Node) => node is HTMLElement;
 
 const isDraggable = (rootElm: HTMLElement, elm: HTMLElement) =>
   isContentEditableFalse(elm) && elm !== rootElm;
@@ -138,7 +138,7 @@ const applyRelPos = (state: State, position: MousePosition.PagePosition) => ({
 
 const start = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<MouseEvent>) => {
   if (isLeftMouseButtonPressed(e)) {
-    const ceElm = Arr.find<HTMLElement>(editor.dom.getParents(e.target as HTMLElement), Predicate.or(isContentEditableFalse, isContentEditableTrue)).getOr(null);
+    const ceElm = Arr.find(editor.dom.getParents(e.target as Node), isContentEditable).getOr(null);
 
     if (Type.isNonNullable(ceElm) && isDraggable(editor.getBody(), ceElm)) {
       const elmPos = editor.dom.getPos(ceElm);
@@ -200,7 +200,7 @@ const getRawTarget = (selection: EditorSelection): Node | null => {
   if (Type.isNonNullable(sel)) {
     const rng = sel.getRangeAt(0);
     const startContainer = rng.startContainer;
-    return startContainer.nodeType === 3 ? startContainer.parentNode : startContainer;
+    return NodeType.isText(startContainer) ? startContainer.parentNode : startContainer;
   } else {
     return null;
   }

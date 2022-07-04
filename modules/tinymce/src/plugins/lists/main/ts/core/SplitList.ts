@@ -7,7 +7,7 @@ import { createTextBlock } from './TextBlock';
 
 const DOM = DOMUtils.DOM;
 
-const splitList = (editor: Editor, list: Node, li: Node): void => {
+const splitList = (editor: Editor, list: Element, li: Element): void => {
   const removeAndKeepBookmarks = (targetNode: Node) => {
     Tools.each(bookmarks, (node) => {
       targetNode.parentNode.insertBefore(node, li.parentNode);
@@ -36,8 +36,9 @@ const splitList = (editor: Editor, list: Node, li: Node): void => {
 
   DOM.insertAfter(newBlock, list);
 
-  if (NodeType.isEmpty(editor.dom, li.parentNode)) {
-    removeAndKeepBookmarks(li.parentNode);
+  const parent = li.parentElement;
+  if (NodeType.isEmpty(editor.dom, parent)) {
+    removeAndKeepBookmarks(parent);
   }
 
   DOM.remove(li);

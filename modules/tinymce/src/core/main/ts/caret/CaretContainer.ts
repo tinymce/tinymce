@@ -13,7 +13,7 @@ import { CaretPosition } from './CaretPosition';
 const isElement = NodeType.isElement;
 const isText = NodeType.isText;
 
-const isCaretContainerBlock = (node: Node | null): node is Text | Element => {
+const isCaretContainerBlock = (node: Node | null | undefined): node is Text | Element => {
   if (isText(node)) {
     node = node.parentNode;
   }
@@ -21,10 +21,10 @@ const isCaretContainerBlock = (node: Node | null): node is Text | Element => {
   return isElement(node) && node.hasAttribute('data-mce-caret');
 };
 
-const isCaretContainerInline = (node: Node | null): node is Text =>
+const isCaretContainerInline = (node: Node | null | undefined): node is Text =>
   isText(node) && Zwsp.isZwsp(node.data);
 
-const isCaretContainer = (node: Node | null): boolean =>
+const isCaretContainer = (node: Node | null | undefined): boolean =>
   isCaretContainerBlock(node) || isCaretContainerInline(node);
 
 const hasContent = (node: Node): boolean =>

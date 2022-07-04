@@ -16,9 +16,9 @@ interface MarkerInfo {
   readonly cleanup: () => void;
 }
 
-type ScrollFunc = (doc: SugarElement, scrollTop: number, marker: MarkerInfo, alignToTop?: boolean) => void;
+type ScrollFunc = (doc: SugarElement<Document>, scrollTop: number, marker: MarkerInfo, alignToTop?: boolean) => void;
 
-const excludeFromDescend = (element: SugarElement) => SugarNode.name(element) === 'textarea';
+const excludeFromDescend = (element: SugarElement<Node>) => SugarNode.name(element) === 'textarea';
 
 const fireScrollIntoViewEvent = (editor: Editor, data: ScrollIntoViewEvent): boolean => {
   const scrollEvent = editor.dispatch('ScrollIntoView', data);
