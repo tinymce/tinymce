@@ -100,7 +100,7 @@ interface AddOnManager<T> {
   items: AddOnConstructor<T>[];
   urls: Record<string, string>;
   lookup: Record<string, { instance: AddOnConstructor<T> }>;
-  get: (name: string) => AddOnConstructor<T>;
+  get: (name: string) => AddOnConstructor<T> | undefined;
   requireLangPack: (name: string, languages: string) => void;
   add: (id: string, addOn: AddOnConstructor<T>) => AddOnConstructor<T>;
   remove: (name: string) => void;

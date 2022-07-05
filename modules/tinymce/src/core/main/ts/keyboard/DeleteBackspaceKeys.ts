@@ -16,7 +16,7 @@ import * as TableDelete from '../delete/TableDelete';
 import { fireFakeBeforeInputEvent, fireFakeInputEvent } from './FakeInputEvents';
 import * as MatchKeys from './MatchKeys';
 
-const executeKeydownOverride = (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) => {
+const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: KeyboardEvent) => {
   const inputType = evt.keyCode === VK.BACKSPACE ? 'deleteContentBackward' : 'deleteContentForward';
 
   MatchKeys.executeWithDelayedAction([
@@ -57,15 +57,15 @@ const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent) => {
   ], evt);
 };
 
-const setup = (editor: Editor, caret: Cell<Text>) => {
+const setup = (editor: Editor, caret: Cell<Text | null>): void => {
   editor.on('keydown', (evt: EditorEvent<KeyboardEvent>) => {
-    if (evt.isDefaultPrevented() === false) {
+    if (!evt.isDefaultPrevented()) {
       executeKeydownOverride(editor, caret, evt);
     }
   });
 
   editor.on('keyup', (evt: EditorEvent<KeyboardEvent>) => {
-    if (evt.isDefaultPrevented() === false) {
+    if (!evt.isDefaultPrevented()) {
       executeKeyupOverride(editor, evt);
     }
   });

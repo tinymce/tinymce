@@ -1,53 +1,62 @@
 import { Fun, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
+import { getNewlineBehavior } from '../api/Options';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import { execDeleteCommand } from '../delete/DeleteUtils';
 import { fireFakeBeforeInputEvent, fireFakeInputEvent } from '../keyboard/FakeInputEvents';
-import * as InsertBlock from './InsertBlock';
-import * as InsertBr from './InsertBr';
+import { blockbreak } from './InsertBlock';
+import { linebreak } from './InsertBr';
 import * as NewLineAction from './NewLineAction';
 
-const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
-  NewLineAction.getAction(editor, evt).fold(
-    () => {
-      if (!editor.selection.isCollapsed()) {
-        execDeleteCommand(editor);
-      }
-      if (Type.isNonNullable(evt)) {
-        const event = fireFakeBeforeInputEvent(editor, 'insertLineBreak');
-        if (event.isDefaultPrevented()) {
-          return;
-        }
-      }
+interface BreakType {
+  readonly insert: (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => void;
+  readonly fakeEventName: string;
+}
 
-      InsertBr.insert(editor, evt);
+const insertBreak = (breakType: BreakType, editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
+  if (!editor.selection.isCollapsed()) {
+    execDeleteCommand(editor);
+  }
+  if (Type.isNonNullable(evt)) {
+    const event = fireFakeBeforeInputEvent(editor, breakType.fakeEventName);
+    if (event.isDefaultPrevented()) {
+      return;
+    }
+  }
 
-      if (Type.isNonNullable(evt)) {
-        fireFakeInputEvent(editor, 'insertLineBreak');
-      }
-    },
-    () => {
-      if (!editor.selection.isCollapsed()) {
-        execDeleteCommand(editor);
-      }
-      if (Type.isNonNullable(evt)) {
-        const event = fireFakeBeforeInputEvent(editor, 'insertParagraph');
-        if (event.isDefaultPrevented()) {
-          return;
-        }
-      }
+  breakType.insert(editor, evt);
 
-      InsertBlock.insert(editor, evt);
+  if (Type.isNonNullable(evt)) {
+    fireFakeInputEvent(editor, breakType.fakeEventName);
+  }
+};
 
-      if (Type.isNonNullable(evt)) {
-        fireFakeInputEvent(editor, 'insertParagraph');
-      }
-    },
-    Fun.noop
-  );
+const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
+  const br = () => insertBreak(linebreak, editor, evt);
+  const block = () => insertBreak(blockbreak, editor, evt);
+
+  const logicalAction = NewLineAction.getAction(editor, evt);
+
+  switch (getNewlineBehavior(editor)) {
+    case 'linebreak':
+      logicalAction.fold(br, br, Fun.noop);
+      break;
+    case 'block':
+      logicalAction.fold(block, block, Fun.noop);
+      break;
+    case 'invert':
+      logicalAction.fold(block, br, Fun.noop);
+      break;
+    // implied by the options processor, unnecessary
+    // case 'default':
+    default:
+      logicalAction.fold(br, block, Fun.noop);
+      break;
+  }
 };
 
 export {
-  insert
+  insert,
+  insertBreak
 };

@@ -13,7 +13,7 @@ import EditorSelection from './Selection';
 
 interface ControlSelection {
   isResizable: (elm: Element) => boolean;
-  showResizeRect: (elm: Element) => void;
+  showResizeRect: (elm: HTMLElement) => void;
   hideResizeRect: () => void;
   updateResizeRect: (evt: EditorEvent<any>) => void;
   destroy: () => void;
@@ -77,10 +77,10 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
   let startScrollWidth: number;
   let startScrollHeight: number;
 
-  const isImage = (elm: Node | undefined) =>
+  const isImage = (elm: Element | undefined) =>
     Type.isNonNullable(elm) && (NodeType.isImg(elm) || dom.is(elm, 'figure.image'));
 
-  const isMedia = (elm: Node) =>
+  const isMedia = (elm: Element) =>
     NodeType.isMedia(elm) || dom.hasClass(elm, 'mce-preview-object');
 
   const isEventOnImageOutsideRange = (evt: EditorEvent<PointerEvent> | EditorEvent<TouchEvent>, range: Range) => {
@@ -101,11 +101,11 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
   };
 
   const getResizeTargets = (elm: HTMLElement): HTMLElement[] => {
-    if (dom.is(elm, 'figure.image')) {
-      return [ elm.querySelector('img') ];
-    } else if (dom.hasClass(elm, 'mce-preview-object') && Type.isNonNullable(elm.firstElementChild)) {
+    if (dom.hasClass(elm, 'mce-preview-object') && Type.isNonNullable(elm.firstElementChild)) {
       // When resizing a preview object we need to resize both the original element and the wrapper span
       return [ elm, elm.firstElementChild as HTMLElement ];
+    } else if (dom.is(elm, 'figure.image')) {
+      return [ elm.querySelector('img') as HTMLImageElement ];
     } else {
       return [ elm ];
     }
@@ -126,7 +126,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
       return false;
     }
 
-    if (dom.hasClass(elm, 'mce-preview-object')) {
+    if (dom.hasClass(elm, 'mce-preview-object') && Type.isNonNullable(elm.firstElementChild)) {
       return Selectors.is(SugarElement.fromDom(elm.firstElementChild), selector);
     } else {
       return Selectors.is(SugarElement.fromDom(elm), selector);
@@ -141,7 +141,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     }
   };
 
-  const setSizeProp = (element: HTMLElement, name: string, value: number | undefined) => {
+  const setSizeProp = (element: HTMLElement, name: 'width' | 'height', value: number | undefined) => {
     if (Type.isNonNullable(value)) {
       // Resize by using style or attribute
       const targets = getResizeTargets(element);
@@ -293,8 +293,6 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
 
     if (isResizable(targetElm) && !e.isDefaultPrevented()) {
       Obj.each(resizeHandles, (handle, name) => {
-        let handleElm;
-
         const startDrag = (e: MouseEvent) => {
           // Note: We're guaranteed to have at least one target here
           const target = getResizeTargets(selectedElm)[0];
@@ -357,7 +355,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
         };
 
         // Get existing or render resize handle
-        handleElm = dom.get('mceResizeHandle' + name);
+        let handleElm = dom.get('mceResizeHandle' + name);
         if (handleElm) {
           dom.remove(handleElm);
         }
@@ -408,8 +406,8 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     });
   };
 
-  const isChildOrEqual = (node: Node | undefined, parent: Node): boolean =>
-    Type.isNonNullable(node) && dom.isChildOf(node, parent);
+  const isChildOrEqual = (node: Node, parent: Node): boolean =>
+    dom.isChildOf(node, parent);
 
   const updateResizeRect = (e: EditorEvent<unknown>) => {
     // Ignore all events while resizing, if the editor instance is composing or the editor was removed
@@ -430,7 +428,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
       img.removeAttribute(elementSelectionAttr);
     });
 
-    if (isChildOrEqual(controlElm, rootElement)) {
+    if (Type.isNonNullable(controlElm) && isChildOrEqual(controlElm, rootElement)) {
       disableGeckoResize();
       const startElm = selection.getStart(true);
 
@@ -466,7 +464,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
   editor.on('init', () => {
     disableGeckoResize();
 
-    editor.on('NodeChange ResizeEditor ResizeWindow ResizeContent drop FullscreenStateChanged', updateResizeRect);
+    editor.on('NodeChange ResizeEditor ResizeWindow ResizeContent drop', updateResizeRect);
 
     // Update resize rect while typing in a table
     editor.on('keyup compositionend', (e) => {
@@ -487,7 +485,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
 
   const destroy = () => {
     throttledShowResizeRect.cancel();
-    selectedElm = selectedElmGhost = resizeBackdrop = null;
+    selectedElm = selectedElmGhost = resizeBackdrop = null as any;
   };
 
   return {

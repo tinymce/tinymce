@@ -71,7 +71,7 @@ const findPatterns = (editor: Editor, patterns: BlockPattern[]): BlockPatternMat
     return block !== null && matchesForcedRootBlock;
   }).bind((block) => {
     // Get the block text
-    const blockText = block.textContent;
+    const blockText = block.textContent ?? '';
 
     // Find the pattern
     const matchedPattern = findPattern(patterns, blockText);

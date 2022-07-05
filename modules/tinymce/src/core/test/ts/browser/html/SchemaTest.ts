@@ -1,5 +1,5 @@
-import { describe, it } from '@ephox/bedrock-client';
-import { Arr, Obj } from '@ephox/katamari';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { Arr, Obj, Type } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import Schema from 'tinymce/core/api/html/Schema';
@@ -281,10 +281,10 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
   it('getTextInlineElements', () => {
     const schema = Schema();
     assert.deepEqual(schema.getTextInlineElements(), {
-      B: {}, CITE: {}, CODE: {}, DFN: {}, EM: {}, FONT: {}, I: {}, MARK: {}, Q: {},
-      SAMP: {}, SPAN: {}, STRIKE: {}, STRONG: {}, SUB: {}, SUP: {}, U: {}, VAR: {},
-      b: {}, cite: {}, code: {}, dfn: {}, em: {}, font: {}, i: {}, mark: {}, q: {},
-      samp: {}, span: {}, strike: {}, strong: {}, sub: {}, sup: {}, u: {}, var: {}
+      B: {}, CITE: {}, CODE: {}, DFN: {}, EM: {}, FONT: {}, I: {}, MARK: {}, Q: {}, SAMP: {},
+      SPAN: {}, S: {}, STRIKE: {}, STRONG: {}, SUB: {}, SUP: {}, U: {}, VAR: {},
+      b: {}, cite: {}, code: {}, dfn: {}, em: {}, font: {}, i: {}, mark: {}, q: {}, samp: {},
+      span: {}, s: {}, strike: {}, strong: {}, sub: {}, sup: {}, u: {}, var: {}
     });
   });
 
@@ -488,6 +488,54 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
         classC: {},
         classD: {}
       }
+    });
+  });
+
+  context('custom elements', () => {
+    it('TBA: custom elements are added as element rules and copy the span/div rules', () => {
+      const schema = Schema({
+        custom_elements: '~foo-bar,bar-foo'
+      });
+
+      const inlineRule = schema.getElementRule('foo-bar');
+      const spanRule = schema.getElementRule('span');
+      assert.deepEqual(inlineRule.attributes, spanRule.attributes, 'inline custom element rules should be copied from the span rules');
+      assert.deepEqual(inlineRule.attributesOrder, spanRule.attributesOrder, 'inline custom element rules should be copied from the span rules');
+      assert.deepEqual(schema.children['foo-bar'], schema.children.span);
+
+      const blockRule = schema.getElementRule('bar-foo');
+      const divRule = schema.getElementRule('div');
+      assert.deepEqual(blockRule.attributes, divRule.attributes, 'block custom element rules should be copied from the div rules');
+      assert.deepEqual(blockRule.attributesOrder, divRule.attributesOrder, 'block custom element rules should be copied from the div rules');
+      assert.deepEqual(schema.children['bar-foo'], schema.children.div);
+    });
+
+    it('TINY-4784: custom elements should be added to the non-empty elements list by default', () => {
+      const schema = Schema({
+        custom_elements: '~foo-bar,bar-foo'
+      });
+
+      assert.hasAnyKeys(schema.getNonEmptyElements(), [ 'foo-bar', 'FOO-BAR', 'bar-foo', 'BAR-FOO' ]);
+    });
+  });
+
+  context('paddInEmptyBlock', () => {
+    it('TINY-8639: default behaviour', () => {
+      const schema = Schema({});
+      const rules = Obj.mapToArray(schema.getTextInlineElements(), (_value, name) => schema.getElementRule(name.toLowerCase()));
+      assert.isTrue(rules.length > 0 && Arr.forall(rules, (rule) => Type.isUndefined(rule.paddInEmptyBlock)));
+    });
+
+    it('TINY-8639: padd_empty_block_inline_children: false', () => {
+      const schema = Schema({ padd_empty_block_inline_children: false });
+      const rules = Obj.mapToArray(schema.getTextInlineElements(), (_value, name) => schema.getElementRule(name.toLowerCase()));
+      assert.isTrue(rules.length > 0 && Arr.forall(rules, (rule) => Type.isUndefined(rule.paddInEmptyBlock)));
+    });
+
+    it('TINY-8639: padd_empty_block_inline_children: true', () => {
+      const schema = Schema({ padd_empty_block_inline_children: true });
+      const rules = Obj.mapToArray(schema.getTextInlineElements(), (_value, name) => schema.getElementRule(name.toLowerCase()));
+      assert.isTrue(rules.length > 0 && Arr.forall(rules, (rule) => rule.paddInEmptyBlock === true));
     });
   });
 });

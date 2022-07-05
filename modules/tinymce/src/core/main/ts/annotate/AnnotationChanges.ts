@@ -58,11 +58,11 @@ const setup = (editor: Editor, registry: AnnotationsRegistry): AnnotationChanges
   };
 
   const toggleActiveAttr = (uid: string, state: boolean) => {
-    Arr.each(Identification.findMarkers(editor, uid), (span) => {
+    Arr.each(Identification.findMarkers(editor, uid), (elem) => {
       if (state) {
-        Attribute.set(span, Markings.dataAnnotationActive(), 'true');
+        Attribute.set(elem, Markings.dataAnnotationActive(), 'true');
       } else {
-        Attribute.remove(span, Markings.dataAnnotationActive());
+        Attribute.remove(elem, Markings.dataAnnotationActive());
       }
     });
   };

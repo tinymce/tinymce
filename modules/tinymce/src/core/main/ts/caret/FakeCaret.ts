@@ -75,7 +75,7 @@ const trimInlineCaretContainers = (root: HTMLElement): void => {
       const data = sibling.data;
 
       if (data.length === 1) {
-        sibling.parentNode.removeChild(sibling);
+        sibling.parentNode?.removeChild(sibling);
       } else {
         sibling.deleteData(data.length - 1, 1);
       }
@@ -86,7 +86,7 @@ const trimInlineCaretContainers = (root: HTMLElement): void => {
       const data = sibling.data;
 
       if (data.length === 1) {
-        sibling.parentNode.removeChild(sibling);
+        sibling.parentNode?.removeChild(sibling);
       } else {
         sibling.deleteData(0, 1);
       }
@@ -111,9 +111,10 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
     }
 
     if (isBlock(element)) {
-      caretContainerNode = CaretContainer.insertBlock(caretBlock, element, before);
+      const caretContainer = CaretContainer.insertBlock(caretBlock, element, before);
       const clientRect = getAbsoluteClientRect(root, element, before);
-      dom.setStyle(caretContainerNode, 'top', clientRect.top);
+      dom.setStyle(caretContainer, 'top', clientRect.top);
+      caretContainerNode = caretContainer;
 
       const caret = dom.create('div', { 'class': 'mce-visual-caret', 'data-mce-bogus': 'all' });
       dom.setStyles(caret, { ...clientRect });
@@ -126,8 +127,8 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
       startBlink();
 
       rng = element.ownerDocument.createRange();
-      rng.setStart(caretContainerNode, 0);
-      rng.setEnd(caretContainerNode, 0);
+      rng.setStart(caretContainer, 0);
+      rng.setEnd(caretContainer, 0);
     } else {
       caretContainerNode = CaretContainer.insertInline(element, before);
       rng = element.ownerDocument.createRange();
@@ -219,8 +220,8 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
 
 export const isFakeCaretTableBrowser = (): boolean => Env.browser.isFirefox();
 
-export const isInlineFakeCaretTarget = (node: Node): node is HTMLElement =>
+export const isInlineFakeCaretTarget = (node: Node | undefined | null): node is HTMLElement =>
   isContentEditableFalse(node) || isMedia(node);
 
-export const isFakeCaretTarget = (node: Node): node is HTMLElement =>
+export const isFakeCaretTarget = (node: Node | undefined | null): node is HTMLElement =>
   isInlineFakeCaretTarget(node) || (NodeType.isTable(node) && isFakeCaretTableBrowser());

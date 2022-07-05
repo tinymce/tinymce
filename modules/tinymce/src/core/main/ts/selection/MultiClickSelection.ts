@@ -35,7 +35,8 @@ const findEdgeCaretCandidate = (startNode: Node, scope: Node, forward: boolean):
 
 const findClosestBlockRange = (startRng: Range, rootNode: Node): Range => {
   const startPos = CaretPosition.fromRangeStart(startRng);
-  const clickNode = startPos.getNode();
+  // TODO: TINY-8865 - This may not be safe to cast as Node and alternative solutions need to be looked into
+  const clickNode = startPos.getNode() as Node;
   const scope = getClosestScope(clickNode, rootNode);
   const startNode = findEdgeCaretCandidate(clickNode, scope, false);
   const endNode = findEdgeCaretCandidate(clickNode, scope, true);
@@ -65,12 +66,12 @@ const findClosestBlockRange = (startRng: Range, rootNode: Node): Range => {
   return rng;
 };
 
-const onTripleClickSelect = (editor: Editor) => {
+const onTripleClickSelect = (editor: Editor): void => {
   const rng = findClosestBlockRange(editor.selection.getRng(), editor.getBody());
   editor.selection.setRng(RangeNormalizer.normalize(rng));
 };
 
-const setup = (editor: Editor) => {
+const setup = (editor: Editor): void => {
   editor.on('mousedown', (e) => {
     if (e.detail >= 3) {
       e.preventDefault();

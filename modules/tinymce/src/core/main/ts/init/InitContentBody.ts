@@ -54,7 +54,8 @@ const appendStyle = (editor: Editor, text: string) => {
   });
 };
 
-const getRootName = (editor: Editor): string => editor.inline ? editor.getElement().nodeName.toLowerCase() : undefined;
+const getRootName = (editor: Editor): string | undefined =>
+  editor.inline ? editor.getElement().nodeName.toLowerCase() : undefined;
 
 const removeUndefined = <T>(obj: T): T => Obj.filter(obj as Record<string, unknown>, (v) => Type.isUndefined(v) === false) as T;
 
@@ -97,7 +98,8 @@ const mkSchemaSettings = (editor: Editor): SchemaSettings => {
     valid_classes: getOption('valid_classes'),
     valid_elements: getOption('valid_elements'),
     valid_styles: getOption('valid_styles'),
-    verify_html: getOption('verify_html')
+    verify_html: getOption('verify_html'),
+    padd_empty_block_inline_children: getOption('format_empty_lines')
   });
 };
 
@@ -128,13 +130,13 @@ const createParser = (editor: Editor): DomParser => {
 
   // Convert src and href into data-mce-src, data-mce-href and data-mce-style
   parser.addAttributeFilter('src,href,style,tabindex', (nodes, name) => {
-    let i = nodes.length, node: AstNode, value: string;
     const dom = editor.dom;
     const internalName = 'data-mce-' + name;
 
+    let i = nodes.length;
     while (i--) {
-      node = nodes[i];
-      value = node.attr(name);
+      const node = nodes[i];
+      let value: string | null | undefined = node.attr(name);
 
       // Add internal attribute if we need to we don't on a refresh of the document
       if (value && !node.attr(internalName)) {
@@ -183,7 +185,7 @@ const createParser = (editor: Editor): DomParser => {
         const node = nodes[i];
         node.type = 8;
         node.name = '#comment';
-        node.value = '[CDATA[' + editor.dom.encode(node.value) + ']]';
+        node.value = '[CDATA[' + editor.dom.encode(node.value ?? '') + ']]';
       }
     });
   }
@@ -208,7 +210,7 @@ const autoFocus = (editor: Editor) => {
   const autoFocus = Options.getAutoFocus(editor);
   if (autoFocus) {
     Delay.setEditorTimeout(editor, () => {
-      let focusEditor;
+      let focusEditor: Editor | null;
 
       if (autoFocus === true) {
         focusEditor = editor;
@@ -216,7 +218,7 @@ const autoFocus = (editor: Editor) => {
         focusEditor = editor.editorManager.get(autoFocus);
       }
 
-      if (!focusEditor.destroyed) {
+      if (focusEditor && !focusEditor.destroyed) {
         focusEditor.focus();
       }
     }, 100);
@@ -406,7 +408,7 @@ const contentBodyLoaded = (editor: Editor): void => {
     url_converter_scope: editor,
     update_styles: true,
     root_element: editor.inline ? editor.getBody() : null,
-    collect: () => editor.inline,
+    collect: editor.inline,
     schema: editor.schema,
     contentCssCors: Options.shouldUseContentCssCors(editor),
     referrerPolicy: Options.getReferrerPolicy(editor),
@@ -462,25 +464,25 @@ const contentBodyLoaded = (editor: Editor): void => {
   });
 };
 
-const initContentBody = (editor: Editor, skipWrite?: boolean) => {
+const initContentBody = (editor: Editor, skipWrite?: boolean): void => {
   // Restore visibility on target element
   if (!editor.inline) {
-    editor.getElement().style.visibility = editor.orgVisibility;
+    editor.getElement().style.visibility = editor.orgVisibility as string;
   }
 
   // Setup iframe body
   if (!skipWrite && !editor.inline) {
-    const iframe = editor.iframeElement;
+    const iframe = editor.iframeElement as HTMLIFrameElement;
     const binder = DomEvent.bind(SugarElement.fromDom(iframe), 'load', () => {
       binder.unbind();
 
       // Reset the content document, since using srcdoc will change the document
-      editor.contentDocument = iframe.contentDocument;
+      editor.contentDocument = iframe.contentDocument as Document;
 
       // Continue to init the editor
       contentBodyLoaded(editor);
     });
-    iframe.srcdoc = editor.iframeHTML;
+    iframe.srcdoc = editor.iframeHTML as string;
   } else {
     contentBodyLoaded(editor);
   }

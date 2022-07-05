@@ -84,30 +84,5 @@ describe('browser.tinymce.core.keyboard.SpaceKeyTest', () => {
       TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 3, [ 0, 1, 0 ], 3);
       TinyAssertions.assertContent(editor, '<p>a<a href="#">b &nbsp;</a>c</p>');
     });
-
-    it('TINY-8588: Add one space just before a block', () => {
-      const editor = hook.editor();
-      editor.setContent('<p>s<span style="display: block;" contenteditable="false">a</span></p>');
-      TinySelections.setCursor(editor, [ 0, 0 ], 1);
-      editor.selection.setContent(' ');
-      TinyAssertions.assertContent(editor, '<p>s&nbsp;<span style="display: block;" contenteditable="false">a</span></p>');
-    });
-
-    it('TINY-8588: Add two spaces just before a block', () => {
-      const editor = hook.editor();
-      editor.setContent('<p>s<span style="display: block;" contenteditable="false">a</span></p>');
-      TinySelections.setCursor(editor, [ 0, 0 ], 1);
-      editor.selection.setContent(' ');
-      editor.selection.setContent(' ');
-      TinyAssertions.assertContent(editor, '<p>s &nbsp;<span style="display: block;" contenteditable="false">a</span></p>');
-    });
-
-    it('TINY-8588: Add one space before a block while in a span', () => {
-      const editor = hook.editor();
-      editor.setContent('<p><span class="filler">s</span><span style="display: block;" contenteditable="false">a</span></p>');
-      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
-      editor.selection.setContent(' ');
-      TinyAssertions.assertContent(editor, '<p><span class="filler">s&nbsp;</span><span style="display: block;" contenteditable="false">a</span></p>');
-    });
   });
 });

@@ -1,4 +1,4 @@
-import { Arr, Id, Singleton, Unicode } from '@ephox/katamari';
+import { Arr, Id, Obj, Singleton, Unicode } from '@ephox/katamari';
 import { Attribute, Class, Classes, Html, Insert, Replication, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
@@ -16,7 +16,7 @@ export type Decorator = (
   uid: string,
   data: DecoratorData
 ) => {
-  attributes?: { };
+  attributes?: {};
   classes?: string[];
 };
 
@@ -27,27 +27,63 @@ const applyWordGrab = (editor: Editor, rng: Range): void => {
   editor.selection.setRng(rng);
 };
 
-const makeAnnotation = (eDoc: Document, { uid = Id.generate('mce-annotation'), ...data }, annotationName: string, decorate: Decorator): SugarElement => {
-  const master = SugarElement.fromTag('span', eDoc);
-  Class.add(master, Markings.annotation());
-  Attribute.set(master, `${Markings.dataAnnotationId()}`, uid);
-  Attribute.set(master, `${Markings.dataAnnotation()}`, annotationName);
+const applyAnnotation = (
+  elem: SugarElement<Element>,
+  masterUId: string,
+  data: DecoratorData,
+  annotationName: string,
+  decorate: Decorator,
+  directAnnotation: boolean
+): void => {
+  const { uid = masterUId, ...otherData } = data;
+  Class.add(elem, Markings.annotation());
+  Attribute.set(elem, `${Markings.dataAnnotationId()}`, uid);
+  Attribute.set(elem, `${Markings.dataAnnotation()}`, annotationName);
 
-  const { attributes = { }, classes = [ ] } = decorate(uid, data);
-  Attribute.setAll(master, attributes);
-  Classes.add(master, classes);
+  const { attributes = {}, classes = [] } = decorate(uid, otherData);
+  Attribute.setAll(elem, attributes);
+  Classes.add(elem, classes);
+
+  if (directAnnotation) {
+    if (classes.length > 0) {
+      Attribute.set(elem, `${Markings.dataAnnotationClasses()}`, classes.join(','));
+    }
+    const attributeNames = Obj.keys(attributes);
+    if (attributeNames.length > 0) {
+      Attribute.set(elem, `${Markings.dataAnnotationAttributes()}`, attributeNames.join(','));
+    }
+  }
+};
+
+const removeDirectAnnotation = (elem: SugarElement<Element>): void => {
+  Class.remove(elem, Markings.annotation());
+  Attribute.remove(elem, `${Markings.dataAnnotationId()}`);
+  Attribute.remove(elem, `${Markings.dataAnnotation()}`);
+  Attribute.remove(elem, `${Markings.dataAnnotationActive()}`);
+
+  const customAttrNames = Attribute.getOpt(elem, `${Markings.dataAnnotationAttributes()}`).map((names) => names.split(',')).getOr([]);
+  const customClasses = Attribute.getOpt(elem, `${Markings.dataAnnotationClasses()}`).map((names) => names.split(',')).getOr([]);
+  Arr.each(customAttrNames, (name) => Attribute.remove(elem, name));
+  Classes.remove(elem, customClasses);
+  Attribute.remove(elem, `${Markings.dataAnnotationClasses()}`);
+  Attribute.remove(elem, `${Markings.dataAnnotationAttributes()}`);
+};
+
+const makeAnnotation = (eDoc: Document, uid: string, data: DecoratorData, annotationName: string, decorate: Decorator): SugarElement<HTMLSpanElement> => {
+  const master = SugarElement.fromTag('span', eDoc);
+  applyAnnotation(master, uid, data, annotationName, decorate, false);
   return master;
 };
 
-const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: Decorator, data): any[] => {
+const annotate = (editor: Editor, rng: Range, uid: string, annotationName: string, decorate: Decorator, data: DecoratorData): SugarElement<HTMLSpanElement>[] => {
   // Setup all the wrappers that are going to be used.
-  const newWrappers = [ ];
+  const newWrappers: SugarElement<HTMLSpanElement>[] = [];
 
   // Setup the spans for the comments
-  const master = makeAnnotation(editor.getDoc(), data, annotationName, decorate);
+  const master = makeAnnotation(editor.getDoc(), uid, data, annotationName, decorate);
 
   // Set the current wrapping element
-  const wrapper = Singleton.value<SugarElement<any>>();
+  const wrapper = Singleton.value<SugarElement<HTMLSpanElement>>();
 
   // Clear the current wrapping element, so that subsequent calls to
   // getOrOpenWrapper spawns a new one.
@@ -56,7 +92,7 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
   };
 
   // Get the existing wrapper, or spawn a new one.
-  const getOrOpenWrapper = (): SugarElement<any> =>
+  const getOrOpenWrapper = (): SugarElement<HTMLSpanElement> =>
     wrapper.get().getOrThunk(() => {
       const nu = Replication.shallow(master);
       newWrappers.push(nu);
@@ -64,11 +100,11 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
       return nu;
     });
 
-  const processElements = (elems) => {
+  const processElements = (elems: SugarElement<Node>[]) => {
     Arr.each(elems, processElement);
   };
 
-  const processElement = (elem) => {
+  const processElement = (elem: SugarElement<Node>) => {
     const ctx = context(editor, elem, 'span', SugarNode.name(elem));
 
     switch (ctx) {
@@ -77,6 +113,12 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
         const children = Traverse.children(elem);
         processElements(children);
         finishWrapper();
+        break;
+      }
+
+      case ChildContext.ValidBlock: {
+        finishWrapper();
+        applyAnnotation(elem as SugarElement<Element>, uid, data, annotationName, decorate, true);
         break;
       }
 
@@ -95,7 +137,7 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
     }
   };
 
-  const processNodes = (nodes) => {
+  const processNodes = (nodes: Node[]) => {
     const elems = Arr.map(nodes, SugarElement.fromDom);
     processElements(elems);
   };
@@ -108,11 +150,12 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
   return newWrappers;
 };
 
-const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorSettings, data: { }): void => {
+const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorSettings, data: {}): void => {
   editor.undoManager.transact(() => {
     const selection = editor.selection;
     const initialRng = selection.getRng();
     const hasFakeSelection = TableCellSelection.getCellsFromEditor(editor).length > 0;
+    const masterUid = Id.generate('mce-annotation');
 
     if (initialRng.collapsed && !hasFakeSelection) {
       applyWordGrab(editor, initialRng);
@@ -121,7 +164,7 @@ const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorS
     // Even after applying word grab, we could not find a selection. Therefore,
     // just make a wrapper and insert it at the current cursor
     if (selection.getRng().collapsed && !hasFakeSelection) {
-      const wrapper = makeAnnotation(editor.getDoc(), data, name, settings.decorate);
+      const wrapper = makeAnnotation(editor.getDoc(), masterUid, data, name, settings.decorate);
       // Put something visible in the marker
       Html.set(wrapper, Unicode.nbsp);
       selection.getRng().insertNode(wrapper.dom);
@@ -132,7 +175,7 @@ const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorS
       // to stop an empty paragraph splitting into two paragraphs. Probably a better way exists.
       SelectionUtils.preserve(selection, false, () => {
         SelectionUtils.runOnRanges(editor, (selectionRng) => {
-          annotate(editor, selectionRng, name, settings.decorate, data);
+          annotate(editor, selectionRng, masterUid, name, settings.decorate, data);
         });
       });
     }
@@ -140,5 +183,6 @@ const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorS
 };
 
 export {
+  removeDirectAnnotation,
   annotateWithBookmark
 };

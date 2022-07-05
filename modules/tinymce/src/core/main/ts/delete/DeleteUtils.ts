@@ -1,11 +1,13 @@
-import { Optional, Optionals } from '@ephox/katamari';
-import { Compare, PredicateFind, SugarElement } from '@ephox/sugar';
+import { Arr, Optional, Optionals } from '@ephox/katamari';
+import { Compare, PredicateFind, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import { isListItem, isTextBlock } from '../dom/ElementType';
+import * as Empty from '../dom/Empty';
+import * as PaddingBr from '../dom/PaddingBr';
 import * as InlineUtils from '../keyboard/InlineUtils';
 
 const execCommandIgnoreInputEvents = (editor: Editor, command: string) => {
@@ -16,12 +18,14 @@ const execCommandIgnoreInputEvents = (editor: Editor, command: string) => {
   editor.off('beforeinput input', inputBlocker);
 };
 
-const execDeleteCommand = (editor: Editor) => execCommandIgnoreInputEvents(editor, 'Delete');
+const execDeleteCommand = (editor: Editor): void =>
+  execCommandIgnoreInputEvents(editor, 'Delete');
 
-const execForwardDeleteCommand = (editor: Editor) => execCommandIgnoreInputEvents(editor, 'ForwardDelete');
+const execForwardDeleteCommand = (editor: Editor): void =>
+  execCommandIgnoreInputEvents(editor, 'ForwardDelete');
 
 const isBeforeRoot = (rootNode: SugarElement<Node>) => (elm: SugarElement<Node>): boolean =>
-  Compare.eq(rootNode, SugarElement.fromDom(elm.dom.parentNode));
+  Optionals.is(Traverse.parent(elm), rootNode, Compare.eq);
 
 const isTextBlockOrListItem = (element: SugarElement<Node>): element is SugarElement<Element> =>
   isTextBlock(element) || isListItem(element);
@@ -67,7 +71,35 @@ const willDeleteLastPositionInElement = (forward: boolean, fromPos: CaretPositio
       }
     }).getOr(true);
 
+const freefallRtl = (root: SugarElement<Node>): Optional<SugarElement<Node>> => {
+  const child = SugarNode.isComment(root) ? Traverse.prevSibling(root) : Traverse.lastChild(root);
+  return child.bind(freefallRtl).orThunk(() => Optional.some(root));
+};
+
+const deleteRangeContents = (editor: Editor, rng: Range, root: SugarElement<HTMLElement>, moveSelection: boolean = true): void => {
+  rng.deleteContents();
+  // Pad the last block node
+  const lastNode = freefallRtl(root).getOr(root);
+  const lastBlock = SugarElement.fromDom(editor.dom.getParent(lastNode.dom, editor.dom.isBlock) || root.dom);
+  if (Empty.isEmpty(lastBlock)) {
+    PaddingBr.fillWithPaddingBr(lastBlock);
+    if (moveSelection) {
+      editor.selection.setCursorLocation(lastBlock.dom, 0);
+    }
+  }
+  // Clean up any additional leftover nodes. If the last block wasn't a direct child, then we also need to clean up siblings
+  if (!Compare.eq(root, lastBlock)) {
+    const additionalCleanupNodes = Optionals.is(Traverse.parent(lastBlock), root) ? [] : Traverse.siblings(lastBlock);
+    Arr.each(additionalCleanupNodes.concat(Traverse.children(root)), (node) => {
+      if (!Compare.eq(node, lastBlock) && !Compare.contains(node, lastBlock) && Empty.isEmpty(node)) {
+        Remove.remove(node);
+      }
+    });
+  }
+};
+
 export {
+  deleteRangeContents,
   execDeleteCommand,
   execForwardDeleteCommand,
   getParentBlock,

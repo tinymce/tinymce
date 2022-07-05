@@ -9,7 +9,7 @@ With more than 350M+ downloads every year, we’re also one of the most trusted 
 You can access a [full featured demo of TinyMCE](https://www.tiny.cloud/docs/tinymce/6/premium-full-featured/) in the docs on the TinyMCE website.
 
 <p align="center">
-  <img alt="Screenshot of the TinyMCE Editor" src="https://www.tiny.cloud/storage/github-readme-images/tinymce-editor.png"\>
+  <img alt="Screenshot of the TinyMCE Editor" src="https://www.tiny.cloud/storage/github-readme-images/tinymce-editor-6x.png"\>
 </p>
 
 ## Get started with TinyMCE

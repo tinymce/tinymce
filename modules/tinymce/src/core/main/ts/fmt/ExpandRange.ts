@@ -24,7 +24,7 @@ const isBogusBr = (node: Node) => {
 
 // Expands the node to the closes contentEditable false element if it exists
 const findParentContentEditable = (dom: DOMUtils, node: Node) => {
-  let parent = node;
+  let parent: Node | null = node;
 
   while (parent) {
     if (NodeType.isElement(parent) && dom.getContentEditable(parent)) {
@@ -64,7 +64,7 @@ const findWordEndPoint = (
   let lastTextNode: Text;
   const rootNode = dom.getParent(container, dom.isBlock) || body;
 
-  const walk = (container: Node, offset: number, pred: (start: boolean, node: Text, offset?: number) => number) => {
+  const walk = (container: Node, offset: number, pred: (start: boolean, node: Text, offset: number) => number) => {
     const textSeeker = TextSeeker(dom);
     const walker = start ? textSeeker.backwards : textSeeker.forwards;
     return Optional.from(walker(container, offset, (text, textOffset) => {
@@ -90,8 +90,9 @@ const findWordEndPoint = (
 };
 
 const findSelectorEndPoint = (dom: DOMUtils, formatList: Format[], rng: Range, container: Node, siblingName: Sibling) => {
-  if (NodeType.isText(container) && Strings.isEmpty(container.data) && container[siblingName]) {
-    container = container[siblingName];
+  const sibling = container[siblingName];
+  if (NodeType.isText(container) && Strings.isEmpty(container.data) && sibling) {
+    container = sibling;
   }
 
   const parents = getParents(dom, container);
@@ -126,7 +127,7 @@ const findBlockEndPoint = (editor: Editor, formatList: Format[], container: Node
 
   // Expand to first wrappable block element or any block element
   if (!node) {
-    const scopeRoot = dom.getParent(container, 'LI,TD,TH');
+    const scopeRoot = dom.getParent(container, 'LI,TD,TH') ?? root;
     node = dom.getParent(
       NodeType.isText(container) ? container.parentNode : container,
       // Fixes #6183 where it would expand to editable parent element in inline mode
@@ -144,7 +145,7 @@ const findBlockEndPoint = (editor: Editor, formatList: Format[], container: Node
   if (!node) {
     node = container;
 
-    while (node[siblingName] && !dom.isBlock(node[siblingName])) {
+    while (node && node[siblingName] && !dom.isBlock(node[siblingName])) {
       node = node[siblingName];
 
       // Break on BR but include it will be removed later on
@@ -160,7 +161,7 @@ const findBlockEndPoint = (editor: Editor, formatList: Format[], container: Node
 
 // We're at the edge if the parent is a block and there's no next sibling. Alternatively,
 // if we reach the root or can't walk further we also consider it to be a boundary.
-const isAtBlockBoundary = (dom: DOMUtils, root: Node, container: Node, siblingName: Sibling) => {
+const isAtBlockBoundary = (dom: DOMUtils, root: Node, container: Node, siblingName: Sibling): boolean => {
   const parent = container.parentNode;
   if (Type.isNonNullable(container[siblingName])) {
     return false;
@@ -180,7 +181,7 @@ const findParentContainer = (
   offset: number,
   start: boolean
 ) => {
-  let parent = container;
+  let parent: Node | null = container;
 
   const siblingName = start ? 'previousSibling' : 'nextSibling';
   const root = dom.getRoot();
@@ -192,8 +193,7 @@ const findParentContainer = (
     }
   }
 
-  /* eslint no-constant-condition:0 */
-  while (true) {
+  while (parent) {
     // Stop expanding on block elements
     if (!formatList[0].block_expand && dom.isBlock(parent)) {
       return parent;
@@ -239,7 +239,7 @@ const expandRng = (editor: Editor, rng: Range, formatList: Format[], includeTrai
   if (NodeType.isElement(endContainer) && endContainer.hasChildNodes()) {
     endContainer = RangeNodes.getNode(endContainer, rng.collapsed ? endOffset : endOffset - 1);
     if (NodeType.isText(endContainer)) {
-      endOffset = endContainer.nodeValue.length;
+      endOffset = endContainer.data.length;
     }
   }
 
@@ -249,7 +249,7 @@ const expandRng = (editor: Editor, rng: Range, formatList: Format[], includeTrai
 
   // Exclude bookmark nodes if possible
   if (isSelfOrParentBookmark(startContainer)) {
-    startContainer = isBookmarkNode(startContainer) ? startContainer : startContainer.parentNode;
+    startContainer = isBookmarkNode(startContainer) ? startContainer : startContainer.parentNode as Node;
     if (rng.collapsed) {
       startContainer = startContainer.previousSibling || startContainer;
     } else {
@@ -262,7 +262,7 @@ const expandRng = (editor: Editor, rng: Range, formatList: Format[], includeTrai
   }
 
   if (isSelfOrParentBookmark(endContainer)) {
-    endContainer = isBookmarkNode(endContainer) ? endContainer : endContainer.parentNode;
+    endContainer = isBookmarkNode(endContainer) ? endContainer : endContainer.parentNode as Node;
     if (rng.collapsed) {
       endContainer = endContainer.nextSibling || endContainer;
     } else {
@@ -306,7 +306,7 @@ const expandRng = (editor: Editor, rng: Range, formatList: Format[], includeTrai
       startContainer = findParentContainer(dom, formatList, startContainer, startOffset, true);
     }
 
-    if (!FormatUtils.isInlineFormat(format) || (!NodeType.isText(endContainer) || endOffset === endContainer.nodeValue.length)) {
+    if (!FormatUtils.isInlineFormat(format) || (!NodeType.isText(endContainer) || endOffset === endContainer.data.length)) {
       endContainer = findParentContainer(dom, formatList, endContainer, endOffset, false);
     }
   }
@@ -337,13 +337,13 @@ const expandRng = (editor: Editor, rng: Range, formatList: Format[], includeTrai
   }
 
   // Setup index for startContainer
-  if (NodeType.isElement(startContainer)) {
+  if (NodeType.isElement(startContainer) && startContainer.parentNode) {
     startOffset = dom.nodeIndex(startContainer);
     startContainer = startContainer.parentNode;
   }
 
   // Setup index for endContainer
-  if (NodeType.isElement(endContainer)) {
+  if (NodeType.isElement(endContainer) && endContainer.parentNode) {
     endOffset = dom.nodeIndex(endContainer) + 1;
     endContainer = endContainer.parentNode;
   }

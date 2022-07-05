@@ -4,6 +4,7 @@ import createDompurify, { Config, DOMPurifyI } from 'dompurify';
 
 import * as NodeType from '../../dom/NodeType';
 import * as FilterNode from '../../html/FilterNode';
+import * as FilterRegistry from '../../html/FilterRegistry';
 import { cleanInvalidNodes } from '../../html/InvalidNodes';
 import * as LegacyFilter from '../../html/LegacyFilter';
 import * as ParserFilters from '../../html/ParserFilters';
@@ -12,7 +13,7 @@ import { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
 import * as URI from '../util/URI';
 import AstNode from './Node';
-import Schema, { SchemaRegExpMap } from './Schema';
+import Schema, { getTextRootBlockElements, SchemaRegExpMap } from './Schema';
 
 /**
  * @summary
@@ -28,7 +29,7 @@ import Schema, { SchemaRegExpMap } from './Schema';
  * @version 3.4
  */
 
-const makeMap = Tools.makeMap, each = Tools.each, explode = Tools.explode, extend = Tools.extend;
+const makeMap = Tools.makeMap, extend = Tools.extend;
 
 export interface ParserArgs {
   getInner?: boolean | number;
@@ -45,10 +46,7 @@ export interface ParserArgs {
 
 export type ParserFilterCallback = (nodes: AstNode[], name: string, args: ParserArgs) => void;
 
-export interface ParserFilter {
-  name: string;
-  callbacks: ParserFilterCallback[];
-}
+export interface ParserFilter extends FilterRegistry.Filter<ParserFilterCallback> {}
 
 export interface DomParserSettings {
   allow_html_data_urls?: boolean;
@@ -73,10 +71,12 @@ export interface DomParserSettings {
 
 interface DomParser {
   schema: Schema;
-  addAttributeFilter: (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void) => void;
+  addAttributeFilter: (name: string, callback: ParserFilterCallback) => void;
   getAttributeFilters: () => ParserFilter[];
-  addNodeFilter: (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void) => void;
+  removeAttributeFilter: (name: string, callback?: ParserFilterCallback) => void;
+  addNodeFilter: (name: string, callback: ParserFilterCallback) => void;
   getNodeFilters: () => ParserFilter[];
+  removeNodeFilter: (name: string, callback?: ParserFilterCallback) => void;
   parse: (html: string, args?: ParserArgs) => AstNode;
 }
 
@@ -121,7 +121,7 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
   // We use this to add new tags to the allow-list as we parse, if we notice that a tag has been banned but it's still in the schema
   purify.addHook('uponSanitizeElement', (ele, evt) => {
     // Pad conditional comments if they aren't allowed
-    if (ele.nodeType === NodeTypes.COMMENT && !settings.allow_conditional_comments && /^\[if/i.test(ele.nodeValue)) {
+    if (ele.nodeType === NodeTypes.COMMENT && !settings.allow_conditional_comments && /^\[if/i.test(ele.nodeValue ?? '')) {
       ele.nodeValue = ' ' + ele.nodeValue;
     }
 
@@ -158,7 +158,7 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
     }
 
     // Validate the element using the attribute rules
-    if (validate && !isInternalElement) {
+    if (validate && rule && !isInternalElement) {
       // Fix the attributes for the element, unwrapping it if we have to
       Arr.each(rule.attributesForced ?? [], (attr) => {
         Attribute.set(element, attr.name, attr.value === '{$uid}' ? `mce_${uid++}` : attr.value);
@@ -252,14 +252,15 @@ const transferChildren = (parent: AstNode, nativeParent: Node, specialElements: 
 const walkTree = (root: AstNode, preprocessors: WalkerCallback[], postprocessors: WalkerCallback[]) => {
   const traverseOrder: AstNode[] = [];
 
-  for (let node = root, lastNode = node; Type.isNonNullable(node); lastNode = node, node = node.walk()) {
-    Arr.each(preprocessors, (preprocess) => preprocess(node));
+  for (let node: AstNode | null | undefined = root, lastNode = node; node; lastNode = node, node = node.walk()) {
+    const tempNode = node;
+    Arr.each(preprocessors, (preprocess) => preprocess(tempNode));
 
-    if (Type.isNullable(node.parent) && node !== root) {
+    if (Type.isNullable(tempNode.parent) && tempNode !== root) {
       // The node has been detached, so rewind a little and don't add it to our traversal
       node = lastNode;
     } else {
-      traverseOrder.push(node);
+      traverseOrder.push(tempNode);
     }
   }
 
@@ -279,17 +280,30 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
   const nonEmptyElements = schema.getNonEmptyElements();
   const whitespaceElements = schema.getWhitespaceElements();
   const blockElements: Record<string, string> = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
+  const textRootBlockElements = getTextRootBlockElements(schema);
   const allWhiteSpaceRegExp = /[ \t\r\n]+/g;
   const startWhiteSpaceRegExp = /^[ \t\r\n]+/;
   const endWhiteSpaceRegExp = /[ \t\r\n]+$/;
 
   const hasWhitespaceParent = (node: AstNode) => {
-    node = node.parent;
-    while (Type.isNonNullable(node)) {
-      if (node.name in whitespaceElements) {
+    let tempNode = node.parent;
+    while (Type.isNonNullable(tempNode)) {
+      if (tempNode.name in whitespaceElements) {
         return true;
       } else {
-        node = node.parent;
+        tempNode = tempNode.parent;
+      }
+    }
+    return false;
+  };
+
+  const isTextRootBlockEmpty = (node: AstNode) => {
+    let tempNode: AstNode | null | undefined = node;
+    while (Type.isNonNullable(tempNode)) {
+      if (tempNode.name in textRootBlockElements) {
+        return isEmpty(schema, nonEmptyElements, whitespaceElements, tempNode);
+      } else {
+        tempNode = tempNode.parent;
       }
     }
     return false;
@@ -297,20 +311,20 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
 
   const isAtEdgeOfBlock = (node: AstNode, start: boolean): boolean => {
     const neighbour = start ? node.prev : node.next;
-    if (Type.isNonNullable(neighbour)) {
+    if (Type.isNonNullable(neighbour) || Type.isNullable(node.parent)) {
       return false;
     }
 
     // Make sure our parent is actually a block, and also make sure it isn't a temporary "context" element
     // that we're probably going to unwrap as soon as we insert this content into the editor
-    return node.parent.name in blockElements && (node.parent !== root || args.isRootContent);
+    return node.parent.name in blockElements && (node.parent !== root || args.isRootContent === true);
   };
 
   const preprocess = (node: AstNode) => {
     if (node.type === 3) {
       // Remove leading whitespace here, so that all whitespace in nodes to the left of us has already been fixed
       if (!hasWhitespaceParent(node)) {
-        let text = node.value;
+        let text = node.value ?? '';
         text = text.replace(allWhiteSpaceRegExp, ' ');
 
         if (isLineBreakNode(node.prev, blockElements) || isAtEdgeOfBlock(node, true)) {
@@ -332,7 +346,10 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
       const elementRule = schema.getElementRule(node.name);
       if (validate && elementRule) {
         const isNodeEmpty = isEmpty(schema, nonEmptyElements, whitespaceElements, node);
-        if (elementRule.removeEmpty && isNodeEmpty) {
+
+        if (elementRule.paddInEmptyBlock && isNodeEmpty && isTextRootBlockEmpty(node)) {
+          paddEmptyNode(settings, args, blockElements, node);
+        } else if (elementRule.removeEmpty && isNodeEmpty) {
           if (blockElements[node.name]) {
             node.remove();
           } else {
@@ -345,8 +362,8 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
     } else if (node.type === 3) {
       // Removing trailing whitespace here, so that all whitespace in nodes to the right of us has already been fixed
       if (!hasWhitespaceParent(node)) {
-        let text = node.value;
-        if (blockElements[node.next?.name] || isAtEdgeOfBlock(node, false)) {
+        let text = node.value ?? '';
+        if (node.next && blockElements[node.next.name] || isAtEdgeOfBlock(node, false)) {
           text = text.replace(endWhiteSpaceRegExp, '');
         }
 
@@ -374,8 +391,8 @@ const getRootBlockName = (settings: DomParserSettings, args: ParserArgs) => {
 };
 
 const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomParser => {
-  const nodeFilters: Record<string, ParserFilterCallback[]> = {};
-  const attributeFilters: ParserFilter[] = [];
+  const nodeFilterRegistry = FilterRegistry.create<ParserFilterCallback>();
+  const attributeFilterRegistry = FilterRegistry.create<ParserFilterCallback>();
 
   // Apply setting defaults
   const defaultedSettings = {
@@ -387,7 +404,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
   const parser = new DOMParser();
   const purify = setupPurify(defaultedSettings, schema);
 
-  const parseAndSanitizeWithContext = (html: string, rootName: string, format: string = 'html') => {
+  const parseAndSanitizeWithContext = (html: string, rootName: string, format: string = 'html'): Element => {
     const mimeType = format === 'xhtml' ? 'application/xhtml+xml' : 'text/html';
     // Determine the root element to wrap the HTML in when parsing. If we're dealing with a
     // special element then we need to wrap it so the internal content is handled appropriately.
@@ -401,7 +418,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     purify.sanitize(body, getPurifyConfig(defaultedSettings, mimeType));
     purify.removed = [];
 
-    return isSpecialRoot ? body.firstChild : body;
+    return isSpecialRoot ? body.firstChild as Element : body;
   };
 
   /**
@@ -418,36 +435,31 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
    *   }
    * });
    */
-  const addNodeFilter = (name: string, callback: ParserFilterCallback) => {
-    each(explode(name), (name) => {
-      let list = nodeFilters[name];
+  const addNodeFilter = nodeFilterRegistry.addFilter;
 
-      if (!list) {
-        nodeFilters[name] = list = [];
-      }
-
-      list.push(callback);
-    });
-  };
-
-  const getNodeFilters = (): ParserFilter[] => {
-    const out = [];
-
-    for (const name in nodeFilters) {
-      if (Obj.has(nodeFilters, name)) {
-        out.push({ name, callbacks: nodeFilters[name] });
-      }
-    }
-
-    return out;
-  };
+  const getNodeFilters = nodeFilterRegistry.getFilters;
 
   /**
-   * Adds a attribute filter function to the parser, the parser will collect nodes that has the specified attributes
+   * Removes a node filter function or removes all filter functions from the parser for the node names provided.
+   *
+   * @method removeNodeFilter
+   * @param {String} name Comma separated list of node names to remove filters for.
+   * @param {Function} callback Optional callback function to only remove a specific callback.
+   * @example
+   * // Remove a single filter
+   * parser.removeNodeFilter('p,h1', someCallback);
+   *
+   * // Remove all filters
+   * parser.removeNodeFilter('p,h1');
+   */
+  const removeNodeFilter = nodeFilterRegistry.removeFilter;
+
+  /**
+   * Adds an attribute filter function to the parser, the parser will collect nodes that has the specified attributes
    * and then execute the callback once it has finished parsing the document.
    *
    * @method addAttributeFilter
-   * @param {String} name Comma separated list of nodes to collect.
+   * @param {String} name Comma separated list of attributes to collect.
    * @param {Function} callback Callback function to execute once it has collected nodes.
    * @example
    * parser.addAttributeFilter('src,href', (nodes, name) => {
@@ -456,22 +468,24 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
    *   }
    * });
    */
-  const addAttributeFilter = (name: string, callback: ParserFilterCallback) => {
-    each(explode(name), (name) => {
-      let i;
+  const addAttributeFilter = attributeFilterRegistry.addFilter;
 
-      for (i = 0; i < attributeFilters.length; i++) {
-        if (attributeFilters[i].name === name) {
-          attributeFilters[i].callbacks.push(callback);
-          return;
-        }
-      }
+  const getAttributeFilters = attributeFilterRegistry.getFilters;
 
-      attributeFilters.push({ name, callbacks: [ callback ] });
-    });
-  };
-
-  const getAttributeFilters = (): ParserFilter[] => [].concat(attributeFilters);
+  /**
+   * Removes an attribute filter function or removes all filter functions from the parser for the attribute names provided.
+   *
+   * @method removeAttributeFilter
+   * @param {String} name Comma separated list of attribute names to remove filters for.
+   * @param {Function} callback Optional callback function to only remove a specific callback.
+   * @example
+   * // Remove a single filter
+   * parser.removeAttributeFilter('src,href', someCallback);
+   *
+   * // Remove all filters
+   * parser.removeAttributeFilter('src,href');
+   */
+  const removeAttributeFilter = attributeFilterRegistry.removeFilter;
 
   const findInvalidChildren = (node: AstNode, invalidChildren: AstNode[]): void => {
     // Check if the node is a valid child of the parent node. If the child is
@@ -495,12 +509,12 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
       if (rootBlock) {
         node = rootBlock.firstChild;
         if (node && node.type === 3) {
-          node.value = node.value.replace(startWhiteSpaceRegExp, '');
+          node.value = node.value?.replace(startWhiteSpaceRegExp, '');
         }
 
         node = rootBlock.lastChild;
         if (node && node.type === 3) {
-          node.value = node.value.replace(endWhiteSpaceRegExp, '');
+          node.value = node.value?.replace(endWhiteSpaceRegExp, '');
         }
       }
     };
@@ -564,9 +578,8 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     const invalidFinder = validate ? (node: AstNode) => findInvalidChildren(node, invalidChildren) : Fun.noop;
 
     // Set up attribute and node matching
-    const nodeFilters = getNodeFilters();
     const matches: FilterNode.FilterMatches = { nodes: {}, attributes: {}};
-    const matchFinder = (node: AstNode) => FilterNode.matchNode(nodeFilters, attributeFilters, node, matches);
+    const matchFinder = (node: AstNode) => FilterNode.matchNode(getNodeFilters(), getAttributeFilters(), node, matches);
 
     // Walk the dom, apply all of the above things
     walkTree(rootNode, [ whitespacePre, matchFinder ], [ whitespacePost, invalidFinder ]);
@@ -603,8 +616,10 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     schema,
     addAttributeFilter,
     getAttributeFilters,
+    removeAttributeFilter,
     addNodeFilter,
     getNodeFilters,
+    removeNodeFilter,
     parse
   };
 

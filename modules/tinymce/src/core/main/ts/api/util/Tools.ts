@@ -1,13 +1,14 @@
-import { Obj } from '@ephox/katamari';
+import { Obj, Type } from '@ephox/katamari';
 
 import * as ArrUtils from '../../util/ArrUtils';
 import Env from '../Env';
 
 type ArrayCallback<T, R> = ArrUtils.ArrayCallback<T, R>;
 type ObjCallback<T, R> = ArrUtils.ObjCallback<T, R>;
+type WalkCallback<T> = (this: any, o: T, i: string, n: keyof T | undefined) => boolean | void;
 
 interface Tools {
-  is: (obj: any, type: string) => boolean;
+  is: (obj: any, type?: string) => boolean;
   isArray: <T>(arr: any) => arr is Array<T>;
   inArray: <T>(arr: ArrayLike<T>, value: T) => number;
   grep: {
@@ -17,7 +18,7 @@ interface Tools {
   trim: (str: string | null | undefined) => string;
   toArray: <T>(obj: ArrayLike<T>) => T[];
   hasOwn: (obj: any, name: string) => boolean;
-  makeMap: <T>(items: ArrayLike<T> | string, delim?: string | RegExp, map?: Record<string, T | string>) => Record<string, T | string>;
+  makeMap: (items: ArrayLike<string> | string | undefined, delim?: string | RegExp, map?: Record<string, {}>) => Record<string, {}>;
   each: {
     <T>(arr: ArrayLike<T> | null | undefined, cb: ArrayCallback<T, void | boolean>, scope?: any): boolean;
     <T>(obj: Record<string, T> | null | undefined, cb: ObjCallback<T, void | boolean>, scope?: any): boolean;
@@ -27,9 +28,9 @@ interface Tools {
     <T, R>(obj: Record<string, T> | null | undefined, cb: ObjCallback<T, R>): R[];
   };
   extend: (obj: Object, ext: Object, ...objs: Object[]) => any;
-  walk: <T = any>(obj: T, f: Function, n?: keyof T, scope?: any) => void;
+  walk: <T extends Record<string, any>>(obj: T, f: WalkCallback<T>, n?: keyof T, scope?: any) => void;
   resolve: (path: string, o?: Object) => any;
-  explode: (s: string, d?: string | RegExp) => string[];
+  explode: (s: string | string[], d?: string | RegExp) => string[];
   _addCacheSuffix: (url: string) => string;
 }
 
@@ -49,8 +50,8 @@ interface Tools {
  */
 const whiteSpaceRegExp = /^\s*|\s*$/g;
 
-const trim = (str) => {
-  return (str === null || str === undefined) ? '' : ('' + str).replace(whiteSpaceRegExp, '');
+const trim = (str: string | null | undefined): string => {
+  return Type.isNullable(str) ? '' : ('' + str).replace(whiteSpaceRegExp, '');
 };
 
 /**
@@ -61,7 +62,7 @@ const trim = (str) => {
  * @param {String} type Optional type to check for.
  * @return {Boolean} true/false if the object is of the specified type.
  */
-const is = (obj: any, type: string) => {
+const is = (obj: any, type?: string): boolean => {
   if (!type) {
     return obj !== undefined;
   }
@@ -82,21 +83,12 @@ const is = (obj: any, type: string) => {
  * @param {Object} map Optional map to add items to.
  * @return {Object} Name/value map of items.
  */
-const makeMap = (items, delim?, map?) => {
-  let i;
+const makeMap = (items: ArrayLike<string> | string | undefined, delim?: string | RegExp, map: Record<string, {}> = {}): Record<string, {}> => {
+  const resolvedItems = Type.isString(items) ? items.split(delim || ',') : (items || []);
 
-  items = items || [];
-  delim = delim || ',';
-
-  if (typeof items === 'string') {
-    items = items.split(delim);
-  }
-
-  map = map || {};
-
-  i = items.length;
+  let i = resolvedItems.length;
   while (i--) {
-    map[items[i]] = {};
+    map[resolvedItems[i]] = {};
   }
 
   return map;
@@ -114,7 +106,7 @@ const makeMap = (items, delim?, map?) => {
  */
 const hasOwnProperty = Obj.has;
 
-const extend = (obj, ...exts: any[]) => {
+const extend = (obj: any, ...exts: any[]): any => {
   for (let i = 0; i < exts.length; i++) {
     const ext = exts[i];
     for (const name in ext) {
@@ -138,7 +130,7 @@ const extend = (obj, ...exts: any[]) => {
  * @param {String} n Optional name of collection inside the objects to walk for example childNodes.
  * @param {String} s Optional scope to execute the function in.
  */
-const walk = function (o, f, n?, s?) {
+const walk = function <T extends Record<string, any>>(this: any, o: T, f: WalkCallback<T>, n?: keyof T, s?: any): void {
   s = s || this;
 
   if (o) {
@@ -146,12 +138,13 @@ const walk = function (o, f, n?, s?) {
       o = o[n];
     }
 
-    ArrUtils.each(o, (o, i) => {
+    ArrUtils.each<T>(o, (o, i) => {
       if (f.call(s, o, i, n) === false) {
         return false;
+      } else {
+        walk(o, f, n, s);
+        return true;
       }
-
-      walk(o, f, n, s);
     });
   }
 };
@@ -167,14 +160,10 @@ const walk = function (o, f, n?, s?) {
  * // Resolve a path into an object reference
  * const obj = tinymce.resolve('a.b.c.d');
  */
-const resolve = (n, o?) => {
-  let i, l;
-
-  o = o || window;
-
-  n = n.split('.');
-  for (i = 0, l = n.length; i < l; i++) {
-    o = o[n[i]];
+const resolve = (n: string, o: any = window): any => {
+  const path = n.split('.');
+  for (let i = 0, l = path.length; i < l; i++) {
+    o = o[path[i]];
 
     if (!o) {
       break;
@@ -194,15 +183,17 @@ const resolve = (n, o?) => {
  * // Split a string into an array with a,b,c
  * const arr = tinymce.explode('a, b,   c');
  */
-const explode = (s, d?) => {
-  if (!s || is(s, 'array')) {
+const explode = (s: string | string[], d?: string | RegExp): string[] => {
+  if (Type.isArray(s)) {
     return s;
+  } else if (s === '') {
+    return [];
+  } else {
+    return ArrUtils.map(s.split(d || ','), trim);
   }
-
-  return ArrUtils.map(s.split(d || ','), trim);
 };
 
-const _addCacheSuffix = (url) => {
+const _addCacheSuffix = (url: string): string => {
   const cacheSuffix = Env.cacheSuffix;
 
   if (cacheSuffix) {

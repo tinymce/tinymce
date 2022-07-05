@@ -44,10 +44,10 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
 
   styles.height = Utils.addPxSuffix(data.height);
 
-  if (dom.getAttrib(tableElm, 'width') && !Options.shouldStyleWithCss(editor)) {
-    attrs.width = Utils.removePxSuffix(data.width);
-  } else {
+  if (Options.shouldStyleWithCss(editor)) {
     styles.width = Utils.addPxSuffix(data.width);
+  } else if (dom.getAttrib(tableElm, 'width')) {
+    attrs.width = Utils.removePxSuffix(data.width);
   }
 
   if (Options.shouldStyleWithCss(editor)) {
@@ -119,11 +119,7 @@ const onSubmitTableForm = (editor: Editor, tableElm: HTMLTableElement | undefine
         editor.execCommand('mceTableToggleCaption');
       }
 
-      if (data.align === '') {
-        Styles.unApplyAlign(editor, tableElm);
-      } else {
-        Styles.applyAlign(editor, tableElm, data.align);
-      }
+      Styles.setAlign(editor, tableElm, data.align);
     }
 
     editor.focus();

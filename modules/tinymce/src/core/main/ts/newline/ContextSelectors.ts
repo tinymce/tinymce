@@ -10,11 +10,11 @@ const matchesSelector = (editor: Editor, selector: string) => {
   }).isSome();
 };
 
-const shouldInsertBr = (editor: Editor) => {
+const shouldInsertBr = (editor: Editor): boolean => {
   return matchesSelector(editor, Options.getBrNewLineSelector(editor));
 };
 
-const shouldBlockNewLine = (editor: Editor) => {
+const shouldBlockNewLine = (editor: Editor): boolean => {
   return matchesSelector(editor, Options.getNoNewLineSelector(editor));
 };
 

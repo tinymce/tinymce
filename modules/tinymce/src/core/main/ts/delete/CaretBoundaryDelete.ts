@@ -13,14 +13,14 @@ import * as InlineUtils from '../keyboard/InlineUtils';
 const isBeforeBoundary = (pos: CaretPosition) => isBeforeContentEditableFalse(pos) || isBeforeMedia(pos);
 const isAfterBoundary = (pos: CaretPosition) => isAfterContentEditableFalse(pos) || isAfterMedia(pos);
 
-const trimEmptyTextNode = (dom: DOMUtils, node: Node): void => {
+const trimEmptyTextNode = (dom: DOMUtils, node: Node | undefined): void => {
   if (NodeType.isText(node) && node.data.length === 0) {
     dom.remove(node);
   }
 };
 
-const deleteContentAndShowCaret = (editor: Editor, range: Range, node: Node, direction: HDirection, forward: boolean, peekCaretPosition: CaretPosition): void => {
-  FakeCaretUtils.showCaret(direction, editor, peekCaretPosition.getNode(!forward) as Element, forward, true).each((caretRange) => {
+const deleteContentAndShowCaret = (editor: Editor, range: Range, node: Node | undefined, direction: HDirection, forward: boolean, peekCaretPosition: CaretPosition): void => {
+  FakeCaretUtils.showCaret(direction, editor, peekCaretPosition.getNode(!forward) as HTMLElement, forward, true).each((caretRange) => {
     // Delete the selected content
     if (range.collapsed) {
       const deleteRange = range.cloneRange();
@@ -54,17 +54,18 @@ const deleteBoundaryText = (editor: Editor, forward: boolean): Optional<() => vo
 
   // Get the next caret position. ie where it'll be after the delete
   const caretPosition = CaretUtils.getNormalizedRangeEndPoint(direction, editor.getBody(), range);
-  const nextCaretPosition = InlineUtils.normalizePosition(forward, getNextPosFn(caretPosition));
-  if (!nextCaretPosition || !CaretUtils.isMoveInsideSameBlock(caretPosition, nextCaretPosition)) {
+  const nextCaretPosition = getNextPosFn(caretPosition);
+  const normalizedNextCaretPosition = nextCaretPosition ? InlineUtils.normalizePosition(forward, nextCaretPosition) : nextCaretPosition;
+  if (!normalizedNextCaretPosition || !CaretUtils.isMoveInsideSameBlock(caretPosition, normalizedNextCaretPosition)) {
     return Optional.none();
-  } else if (isBeforeFn(nextCaretPosition)) {
-    return Optional.some(() => deleteContentAndShowCaret(editor, range, caretPosition.getNode(), direction, forward, nextCaretPosition));
+  } else if (isBeforeFn(normalizedNextCaretPosition)) {
+    return Optional.some(() => deleteContentAndShowCaret(editor, range, caretPosition.getNode(), direction, forward, normalizedNextCaretPosition));
   }
 
   // Peek ahead and see if the next element is a cef/media element
-  const peekCaretPosition = getNextPosFn(nextCaretPosition);
+  const peekCaretPosition = getNextPosFn(normalizedNextCaretPosition);
   if (peekCaretPosition && isBeforeFn(peekCaretPosition)) {
-    if (CaretUtils.isMoveInsideSameBlock(nextCaretPosition, peekCaretPosition)) {
+    if (CaretUtils.isMoveInsideSameBlock(normalizedNextCaretPosition, peekCaretPosition)) {
       return Optional.some(() => deleteContentAndShowCaret(editor, range, caretPosition.getNode(), direction, forward, peekCaretPosition));
     }
   }

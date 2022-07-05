@@ -6,7 +6,7 @@ import * as NodeType from './NodeType';
 const DOM = DOMUtils.DOM;
 
 const normalizeList = (dom: DOMUtils, list: HTMLUListElement | HTMLOListElement): void => {
-  const parentNode = list.parentNode;
+  const parentNode = list.parentElement;
 
   // Move UL/OL to previous LI if it's the only child of a LI
   if (parentNode.nodeName === 'LI' && parentNode.firstChild === list) {
@@ -31,7 +31,7 @@ const normalizeList = (dom: DOMUtils, list: HTMLUListElement | HTMLOListElement)
   }
 };
 
-const normalizeLists = (dom: DOMUtils, element: Node): void => {
+const normalizeLists = (dom: DOMUtils, element: Element): void => {
   const lists = Tools.grep(dom.select<HTMLUListElement | HTMLOListElement>('ol,ul', element));
   Tools.each(lists, (list) => {
     normalizeList(dom, list);

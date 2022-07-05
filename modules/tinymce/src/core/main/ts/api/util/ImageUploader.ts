@@ -18,7 +18,7 @@ export const openNotification = (editor: Editor) => (): NotificationApi => edito
   progressBar: true
 });
 
-export const createUploader = (editor: Editor, uploadStatus: UploadStatus) =>
+export const createUploader = (editor: Editor, uploadStatus: UploadStatus): Uploader.Uploader =>
   Uploader.Uploader(uploadStatus, {
     url: Options.getImageUploadUrl(editor),
     basePath: Options.getImageUploadBasePath(editor),

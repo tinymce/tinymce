@@ -15,7 +15,8 @@ const renderChoiceItem = (
   useText: boolean,
   presets: Toolbar.PresetItemTypes,
   onItemValueHandler: (itemValue: string) => void,
-  isSelected: boolean, itemResponse: ItemResponse,
+  isSelected: boolean,
+  itemResponse: ItemResponse,
   providersBackstage: UiFactoryBackstageProviders,
   renderIcons: boolean = true
 ) => {
@@ -61,7 +62,8 @@ const renderChoiceItem = (
       toggling: {
         toggleClass: ItemClasses.tickedClass,
         toggleOnExecute: false,
-        selected: spec.active
+        selected: spec.active,
+        exclusive: true
       }
     }
   );

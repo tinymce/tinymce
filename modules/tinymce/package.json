@@ -1,6 +1,6 @@
 {
   "name": "tinymce",
-  "version": "6.1.0",
+  "version": "6.2.0",
   "private": true,
   "repository": {
     "type": "git",
@@ -23,7 +23,7 @@
     "silver-test-manual": "grunt bedrock-manual:silver"
   },
   "dependencies": {
-    "dompurify": "^2.3.6",
+    "dompurify": "^2.3.8",
     "prismjs": "^1.27.0",
     "tslib": "^2.0.0"
   }

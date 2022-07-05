@@ -1,12 +1,13 @@
 import { Keys } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { LegacyUnit, TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { AddUndoEvent } from 'tinymce/core/api/EventTypes';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { UndoLevel } from 'tinymce/core/undo/UndoManagerTypes';
 
 import * as HtmlUtils from '../module/test/HtmlUtils';
@@ -611,4 +612,68 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
     assert.equal(changeEventCounter, 0, 'No events should be detected');
   });
+
+  context('dispatchChange', () => {
+    const initialContent = '<p>some inital content</p>';
+    const manualModifiedLevelContent = 'a modified last level';
+    let editor: Editor;
+
+    const assertChangeEvent = (
+      event: { level: UndoLevel; lastLevel: UndoLevel | undefined } | undefined,
+      expectedLevelContent: string | undefined,
+      expectedLastlevelContent: string | undefined
+    ) => {
+      assert.equal(event?.level?.content, expectedLevelContent, 'Level has not the expected content');
+      assert.equal(event?.lastLevel?.content, expectedLastlevelContent, 'Last level has not the expected content');
+    };
+
+    let changeEventCounter: number;
+    let currentChangeEvent: { level: UndoLevel; lastLevel: UndoLevel | undefined } | undefined;
+
+    const onChange = (e: EditorEvent<{
+      level: UndoLevel;
+      lastLevel: UndoLevel | undefined;
+    }>) => {
+      changeEventCounter++;
+      currentChangeEvent = e;
+    };
+
+    beforeEach(() => {
+      changeEventCounter = 0;
+      currentChangeEvent = undefined;
+
+      editor = hook.editor();
+      editor.resetContent(initialContent);
+      editor.on('change', onChange);
+    });
+
+    it('TINY-8641: Dispatch change with current editor status as level and current undoManager layer as lastLevel', () => {
+      assert.equal(changeEventCounter, 0, 'No events should be detected at start');
+
+      Arr.last(editor.undoManager.data).each((lastLevel) => {
+        lastLevel.content = manualModifiedLevelContent;
+      });
+      assert.isFalse(editor.isDirty(), 'Editor should not be dirty before dispatchChange');
+
+      editor.undoManager.dispatchChange();
+
+      assertChangeEvent(currentChangeEvent, initialContent, manualModifiedLevelContent);
+      assert.equal(changeEventCounter, 1, '1 event should be detected');
+      assert.isTrue(editor.isDirty(), 'Editor should be dirty after dispatchChange');
+
+      editor.off('change', onChange);
+    });
+
+    it('TINY-8641: dispatchChange should always fire on empty stack with current content as level and lastLevel', () => {
+      editor.undoManager.clear();
+      assert.lengthOf(editor.undoManager.data, 0, 'undo manager should be empty after clear');
+
+      editor.undoManager.dispatchChange();
+
+      assertChangeEvent(currentChangeEvent, initialContent, undefined);
+
+      editor.off('change', onChange);
+    });
+  });
+
 });

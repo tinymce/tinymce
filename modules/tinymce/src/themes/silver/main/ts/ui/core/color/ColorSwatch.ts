@@ -1,5 +1,5 @@
 import { HexColour, RgbaColour } from '@ephox/acid';
-import { Cell, Fun, Optional, Strings } from '@ephox/katamari';
+import { Cell, Fun, Optional, Strings, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
@@ -17,13 +17,16 @@ type ColorFormat = 'forecolor' | 'hilitecolor';
 
 const fallbackColor = '#000000';
 
+const hasStyleApi = (node: Node): node is (Node & ElementCSSInlineStyle) =>
+  Type.isNonNullable((node as HTMLElement).style);
+
 const getCurrentColor = (editor: Editor, format: ColorFormat): Optional<string> => {
   let color: string | undefined;
 
   editor.dom.getParents(editor.selection.getStart(), (elm) => {
-    let value;
+    const value = hasStyleApi(elm) ? elm.style[format === 'forecolor' ? 'color' : 'background-color'] : null;
 
-    if ((value = elm.style[format === 'forecolor' ? 'color' : 'background-color'])) {
+    if (value) {
       color = color ? color : value;
     }
   });

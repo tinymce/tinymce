@@ -40,7 +40,7 @@ const scanLeft = (node: Text, offset: number, rootNode: Node): Optional<Spot.Spo
   if (!NodeType.isText(node)) {
     return Optional.none();
   }
-  const text = node.textContent;
+  const text = node.data;
   if (offset >= 0 && offset <= text.length) {
     return Optional.some(Spot.point(node, offset));
   } else {
@@ -56,7 +56,7 @@ const scanRight = (node: Text, offset: number, rootNode: Node): Optional<Spot.Sp
   if (!NodeType.isText(node)) {
     return Optional.none();
   }
-  const text = node.textContent;
+  const text = node.data;
   if (offset <= text.length) {
     return Optional.some(Spot.point(node, offset));
   } else {
@@ -65,12 +65,12 @@ const scanRight = (node: Text, offset: number, rootNode: Node): Optional<Spot.Sp
   }
 };
 
-const repeatLeft = (dom: DOMUtils, node: Node, offset: number, process: ProcessCallback, rootNode: Node): Optional<Spot.SpotPoint<Text>> => {
+const repeatLeft = (dom: DOMUtils, node: Node, offset: number, process: ProcessCallback, rootNode?: Node): Optional<Spot.SpotPoint<Text>> => {
   const search = TextSeeker(dom, isBoundary(dom));
   return Optional.from(search.backwards(node, offset, process, rootNode));
 };
 
-const repeatRight = (dom: DOMUtils, node: Node, offset: number, process: ProcessCallback, rootNode: Node): Optional<Spot.SpotPoint<Text>> => {
+const repeatRight = (dom: DOMUtils, node: Node, offset: number, process: ProcessCallback, rootNode?: Node): Optional<Spot.SpotPoint<Text>> => {
   const search = TextSeeker(dom, isBoundary(dom));
   return Optional.from(search.forwards(node, offset, process, rootNode));
 };

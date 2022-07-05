@@ -5,6 +5,7 @@ import Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
 import * as CefUtils from '../dom/CefUtils';
 import * as NodeType from '../dom/NodeType';
+import { isCefAtEdgeSelected } from '../keyboard/CefUtils';
 import * as CefDeleteAction from './CefDeleteAction';
 import * as DeleteElement from './DeleteElement';
 import * as DeleteUtils from './DeleteUtils';
@@ -26,7 +27,7 @@ const moveToPosition = (editor: Editor) => (pos: CaretPosition): boolean => {
   return true;
 };
 
-const getAncestorCe = (editor: Editor, node: Node): Optional<Node> =>
+const getAncestorCe = (editor: Editor, node: Node | null): Optional<Node> =>
   Optional.from(CefUtils.getContentEditableRoot(editor.getBody(), node));
 
 const backspaceDeleteCaret = (editor: Editor, forward: boolean): Optional<() => void> => {
@@ -76,6 +77,12 @@ const backspaceDeleteRange = (editor: Editor, forward: boolean): Optional<() => 
         }),
       () => Optional.some(Fun.noop)
     );
+  }
+
+  if (isCefAtEdgeSelected(editor)) {
+    return Optional.some(() => {
+      DeleteUtils.deleteRangeContents(editor, editor.selection.getRng(), SugarElement.fromDom(editor.getBody()));
+    });
   }
   return Optional.none();
 };

@@ -9,16 +9,16 @@ import * as InlineUtils from './InlineUtils';
 
 export interface LocationAdt {
   fold: <T> (
-    before: (element: Node) => T,
-    start: (element: Node) => T,
-    end: (element: Node) => T,
-    after: (element: Node) => T
+    before: (element: Element) => T,
+    start: (element: Element) => T,
+    end: (element: Element) => T,
+    after: (element: Element) => T
   ) => T;
   match: <T> (branches: {
-    before: (element: Node) => T;
-    start: (element: Node) => T;
-    end: (element: Node) => T;
-    after: (element: Node) => T;
+    before: (element: Element) => T;
+    start: (element: Element) => T;
+    end: (element: Element) => T;
+    after: (element: Element) => T;
   }) => T;
   log: (label: string) => void;
 }
@@ -79,7 +79,7 @@ const after = (isInlineTarget: (node: Node) => boolean, rootNode: Node, pos: Car
   );
 };
 
-const isValidLocation = (location: LocationAdt) => InlineUtils.isRtl(getElement(location)) === false;
+const isValidLocation = (location: LocationAdt) => !InlineUtils.isRtl(getElement(location));
 
 const readLocation = (isInlineTarget: (node: Node) => boolean, rootNode: Node, pos: CaretPosition): Optional<LocationAdt> => {
   const location = LazyEvaluator.evaluateUntil([
@@ -92,28 +92,28 @@ const readLocation = (isInlineTarget: (node: Node) => boolean, rootNode: Node, p
   return location.filter(isValidLocation);
 };
 
-const getElement = (location: LocationAdt) => location.fold(
+const getElement = (location: LocationAdt): Element => location.fold(
   Fun.identity, // Before
   Fun.identity, // Start
   Fun.identity, // End
   Fun.identity  // After
 );
 
-const getName = (location: LocationAdt) => location.fold(
+const getName = (location: LocationAdt): string => location.fold(
   Fun.constant('before'), // Before
   Fun.constant('start'),  // Start
   Fun.constant('end'),    // End
   Fun.constant('after')   // After
 );
 
-const outside = (location: LocationAdt) => location.fold(
+const outside = (location: LocationAdt): LocationAdt => location.fold(
   Location.before, // Before
   Location.before, // Start
   Location.after,  // End
   Location.after   // After
 );
 
-const inside = (location: LocationAdt) => location.fold(
+const inside = (location: LocationAdt): LocationAdt => location.fold(
   Location.start, // Before
   Location.start, // Start
   Location.end,   // End

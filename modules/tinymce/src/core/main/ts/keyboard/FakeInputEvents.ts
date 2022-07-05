@@ -1,8 +1,7 @@
 import { Fun } from '@ephox/katamari';
 
-import { EditorEvent } from 'tinymce/src/core/main/ts/api/PublicApi';
-
 import Editor from '../api/Editor';
+import { EditorEvent } from '../api/util/EventDispatcher';
 import { clone } from '../events/EventUtils';
 
 interface SpecificsInput {

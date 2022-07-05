@@ -65,10 +65,11 @@ const innerText = (html: string): string => {
 
     // Walk all children
     if (!(node.name in schema.getVoidElements())) {
-      if ((node = node.firstChild)) {
+      let currentNode = node.firstChild;
+      if (currentNode) {
         do {
-          walk(node);
-        } while ((node = node.next));
+          walk(currentNode);
+        } while ((currentNode = currentNode.next));
       }
     }
 

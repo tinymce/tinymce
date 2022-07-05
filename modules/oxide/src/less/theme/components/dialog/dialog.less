@@ -408,6 +408,13 @@
     }
   }
 
+  // Allow iframes to have consistent BG with Editor iframe
+  .tox-dialog__iframe {
+    &.tox-dialog__iframe--opaque {
+      background: @edit-area-iframe-background-color;
+    }
+  }
+
   // Make popups in a dialog appear over other dialog (urlinput, colorinput etc)
   .tox-dialog__popups {
     position: absolute;

@@ -1,4 +1,4 @@
-import { AddEventsBehaviour, AlloyEvents, Behaviour, GuiFactory, Highlighting, InlineView, ItemTypes, Menu, SystemEvents } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, Behaviour, GuiFactory, Highlighting, InlineView, ItemTypes, SystemEvents } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
 import { Arr, Cell, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
@@ -12,7 +12,7 @@ import * as AutocompleteTagReader from './autocomplete/AutocompleteTagReader';
 import { UiFactoryBackstageShared } from './backstage/Backstage';
 import ItemResponse from './ui/menus/item/ItemResponse';
 import { createPartialMenuWithAlloyItems } from './ui/menus/menu/MenuUtils';
-import { createAutocompleteItems, createMenuFrom, FocusMode } from './ui/menus/menu/SingleMenu';
+import { createAutocompleteItems, createInlineMenuFrom, FocusMode } from './ui/menus/menu/SingleMenu';
 
 const getAutocompleterRange = (dom: DOMUtils, initRange: Range): Optional<Range> => {
   return AutocompleteTagReader.detect(SugarElement.fromDom(initRange.startContainer)).map((elm) => {
@@ -52,6 +52,13 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     }
   };
 
+  const getMenu = () => InlineView.getContent(autocompleter).bind((tmenu) => {
+    // The autocompleter menu will be the first child component of the tiered menu.
+    // Unfortunately a memento can't be used to do this lookup because the component
+    // id is changed while generating the tiered menu.
+    return Arr.get(tmenu.components(), 0);
+  });
+
   const cancelIfNecessary = () => editor.execCommand('mceAutocompleterClose');
 
   const getCombinedItems = (matches: AutocompleteLookupData[]): ItemTypes.ItemSpec[] => {
@@ -90,28 +97,26 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     AutocompleteTagReader.findIn(SugarElement.fromDom(editor.getBody())).each((element) => {
       // Display the autocompleter menu
       const columns: InlineContent.ColumnTypes = Arr.findMap(lookupData, (ld) => Optional.from(ld.columns)).getOr(1);
-      InlineView.showAt(
+      InlineView.showMenuAt(
         autocompleter,
-        Menu.sketch(
-          createMenuFrom(
-            createPartialMenuWithAlloyItems('autocompleter-value', true, items, columns, 'normal'),
-            columns,
-            FocusMode.ContentFocus,
-            // Use the constant.
-            'normal'
-          )
-        ),
         {
           anchor: {
             type: 'node',
             root: SugarElement.fromDom(editor.getBody()),
             node: Optional.from(element)
           }
-        }
+        },
+        createInlineMenuFrom(
+          createPartialMenuWithAlloyItems('autocompleter-value', true, items, columns, 'normal'),
+          columns,
+          FocusMode.ContentFocus,
+          // Use the constant.
+          'normal'
+        )
       );
-
-      InlineView.getContent(autocompleter).each(Highlighting.highlightFirst);
     });
+
+    getMenu().each(Highlighting.highlightFirst);
   };
 
   const updateDisplay = (lookupData: AutocompleteLookupData[]) => {
@@ -145,7 +150,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     isMenuOpen,
     isActive,
     isProcessingAction: processingAction.get,
-    getView: () => InlineView.getContent(autocompleter)
+    getMenu
   };
 
   AutocompleterEditorEvents.setup(autocompleterUiApi, editor);

@@ -2,8 +2,8 @@ import { Optional } from '@ephox/katamari';
 import { SugarElement, Traverse } from '@ephox/sugar';
 
 export interface Navigation {
-  view: (doc: SugarElement<Document>) => Optional<SugarElement<Element>>;
-  owner: (elem: SugarElement<Node>) => SugarElement<Document>;
+  readonly view: (doc: SugarElement<Document>) => Optional<SugarElement<Element>>;
+  readonly owner: (elem: SugarElement<Node>) => SugarElement<Document>;
 }
 
 const view = (doc: SugarElement<Document>): Optional<SugarElement<Element>> => {

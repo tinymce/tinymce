@@ -13,7 +13,7 @@ import * as MediaDelete from './MediaDelete';
 import * as Outdent from './Outdent';
 import * as TableDelete from './TableDelete';
 
-const findAction = (editor: Editor, caret: Cell<Text>, forward: boolean) =>
+const findAction = (editor: Editor, caret: Cell<Text | null>, forward: boolean) =>
   Arr.findMap([
     Outdent.backspaceDelete,
     CefDelete.backspaceDelete,
@@ -27,7 +27,7 @@ const findAction = (editor: Editor, caret: Cell<Text>, forward: boolean) =>
     InlineFormatDelete.backspaceDelete,
   ], (item) => item(editor, forward));
 
-const deleteCommand = (editor: Editor, caret: Cell<Text>): void => {
+const deleteCommand = (editor: Editor, caret: Cell<Text | null>): void => {
   const result = findAction(editor, caret, false);
 
   result.fold(
@@ -39,7 +39,7 @@ const deleteCommand = (editor: Editor, caret: Cell<Text>): void => {
   );
 };
 
-const forwardDeleteCommand = (editor: Editor, caret: Cell<Text>): void => {
+const forwardDeleteCommand = (editor: Editor, caret: Cell<Text | null>): void => {
   const result = findAction(editor, caret, true);
 
   result.fold(
@@ -48,7 +48,7 @@ const forwardDeleteCommand = (editor: Editor, caret: Cell<Text>): void => {
   );
 };
 
-const setup = (editor: Editor, caret: Cell<Text>): void => {
+const setup = (editor: Editor, caret: Cell<Text | null>): void => {
   editor.addCommand('delete', () => {
     deleteCommand(editor, caret);
   });

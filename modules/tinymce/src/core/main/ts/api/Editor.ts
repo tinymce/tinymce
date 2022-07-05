@@ -17,6 +17,7 @@ import AddOnManager from './AddOnManager';
 import Annotator from './Annotator';
 import * as Commands from './commands/Commands';
 import DOMUtils from './dom/DOMUtils';
+import { EventUtilsCallback } from './dom/EventUtils';
 import ScriptLoader from './dom/ScriptLoader';
 import EditorSelection from './dom/Selection';
 import DomSerializer from './dom/Serializer';
@@ -26,6 +27,7 @@ import EditorObservable from './EditorObservable';
 import { BuiltInOptionType, BuiltInOptionTypeMap, Options as EditorOptions, create as createOptions } from './EditorOptions';
 import EditorUpload, { UploadResult } from './EditorUpload';
 import Env from './Env';
+import { SaveContentEvent } from './EventTypes';
 import Formatter from './Formatter';
 import DomParser from './html/DomParser';
 import AstNode from './html/Node';
@@ -178,67 +180,69 @@ class Editor implements EditorObservable {
   public editorCommands: EditorCommands;
   public suffix: string;
   public editorManager: EditorManager;
+  public hidden: boolean;
   public inline: boolean;
+  public hasVisual: boolean;
 
   public isNotDirty: boolean = false;
 
   // Arguments set later, for example by InitContentBody.ts
-  public annotator: Annotator;
-  public bodyElement: HTMLElement;
+  // Note that these may technically be undefined up until PreInit (or similar) has fired,
+  // however the types are aimed at an initialised editor for ease of use.
+  public annotator!: Annotator;
+  public bodyElement: HTMLElement | undefined;
   public bookmark: any; // Note: Intentionally any so as to not expose Optional
-  public composing: boolean;
-  public container: HTMLElement;
-  public contentAreaContainer: HTMLElement;
-  public contentDocument: Document;
-  public contentWindow: Window;
-  public delegates: Record<string, (event: any) => void>;
-  public destroyed: boolean;
-  public dom: DOMUtils;
-  public editorContainer: HTMLElement;
-  public editorUpload: EditorUpload;
-  public eventRoot?: Element;
-  public formatter: Formatter;
-  public formElement: HTMLElement;
-  public formEventDelegate: (e: Event) => void;
-  public hasHiddenInput: boolean;
-  public hasVisual: boolean;
-  public hidden: boolean;
-  public iframeElement: HTMLIFrameElement | null;
-  public iframeHTML: string;
-  public initialized: boolean;
-  public notificationManager: NotificationManager;
-  public orgDisplay: string;
-  public orgVisibility: string;
-  public parser: DomParser;
-  public quirks: Quirks;
-  public readonly: boolean;
-  public removed: boolean;
-  public schema: Schema;
-  public selection: EditorSelection;
-  public serializer: DomSerializer;
-  public startContent: string;
-  public targetElm: HTMLElement;
-  public theme: Theme;
-  public model: Model;
-  public undoManager: UndoManager;
-  public windowManager: WindowManager;
-  public _beforeUnload: () => void;
-  public _eventDispatcher: EventDispatcher<NativeEventMap>;
-  public _nodeChangeDispatcher: NodeChange;
-  public _pendingNativeEvents: string[];
-  public _selectionOverrides: SelectionOverrides;
-  public _skinLoaded: boolean;
+  public composing: boolean = false;
+  public container!: HTMLElement;
+  public contentAreaContainer!: HTMLElement;
+  public contentDocument!: Document;
+  public contentWindow!: Window;
+  public delegates: Record<string, EventUtilsCallback<any>> | undefined;
+  public destroyed: boolean = false;
+  public dom!: DOMUtils;
+  public editorContainer!: HTMLElement;
+  public editorUpload!: EditorUpload;
+  public eventRoot: Element | undefined;
+  public formatter!: Formatter;
+  public formElement: HTMLElement | undefined;
+  public formEventDelegate: ((e: Event) => void) | undefined;
+  public hasHiddenInput: boolean = false;
+  public iframeElement: HTMLIFrameElement | null = null;
+  public iframeHTML: string | undefined;
+  public initialized: boolean = false;
+  public notificationManager!: NotificationManager;
+  public orgDisplay!: string;
+  public orgVisibility: string | undefined;
+  public parser!: DomParser;
+  public quirks!: Quirks;
+  public readonly: boolean = false;
+  public removed: boolean = false;
+  public schema!: Schema;
+  public selection!: EditorSelection;
+  public serializer!: DomSerializer;
+  public startContent: string = '';
+  public targetElm!: HTMLElement;
+  public theme!: Theme;
+  public model!: Model;
+  public undoManager!: UndoManager;
+  public windowManager!: WindowManager;
+  public _beforeUnload: (() => void) | undefined;
+  public _eventDispatcher: EventDispatcher<NativeEventMap> | undefined;
+  public _nodeChangeDispatcher!: NodeChange;
+  public _pendingNativeEvents: string[] = [];
+  public _selectionOverrides!: SelectionOverrides;
+  public _skinLoaded: boolean = false;
 
   // EditorObservable patches
-  public bindPendingEventDelegates: EditorObservable['bindPendingEventDelegates'];
-  public toggleNativeEvent: EditorObservable['toggleNativeEvent'];
-  public unbindAllNativeEvents: EditorObservable['unbindAllNativeEvents'];
-  public fire: EditorObservable['fire'];
-  public dispatch: EditorObservable['dispatch'];
-  public on: EditorObservable['on'];
-  public off: EditorObservable['off'];
-  public once: EditorObservable['once'];
-  public hasEventListeners: EditorObservable['hasEventListeners'];
+  public bindPendingEventDelegates!: EditorObservable['bindPendingEventDelegates'];
+  public toggleNativeEvent!: EditorObservable['toggleNativeEvent'];
+  public unbindAllNativeEvents!: EditorObservable['unbindAllNativeEvents'];
+  public fire!: EditorObservable['fire'];
+  public dispatch!: EditorObservable['dispatch'];
+  public on!: EditorObservable['on'];
+  public off!: EditorObservable['off'];
+  public once!: EditorObservable['once'];
+  public hasEventListeners!: EditorObservable['hasEventListeners'];
 
   /**
    * Constructs a editor instance by id.
@@ -297,6 +301,7 @@ class Editor implements EditorObservable {
     });
     this.baseURI = this.baseUri;
     this.inline = Options.isInline(self);
+    this.hasVisual = Options.isVisualAidsEnabled(self);
 
     this.shortcuts = new Shortcuts(this);
     this.editorCommands = new EditorCommands(this);
@@ -309,7 +314,7 @@ class Editor implements EditorObservable {
 
     this.ui = {
       registry: registry(),
-      styleSheetLoader: undefined,
+      styleSheetLoader: undefined as any,
       show: Fun.noop,
       hide: Fun.noop,
       setEnabled: Fun.noop,
@@ -331,7 +336,7 @@ class Editor implements EditorObservable {
    *
    * @method render
    */
-  public render() {
+  public render(): void {
     Render.render(this);
   }
 
@@ -342,7 +347,7 @@ class Editor implements EditorObservable {
    * @method focus
    * @param {Boolean} skipFocus Skip DOM focus. Just set is as the active editor.
    */
-  public focus(skipFocus?: boolean) {
+  public focus(skipFocus?: boolean): void {
     this.execCommand('mceFocus', false, skipFocus);
   }
 
@@ -434,7 +439,7 @@ class Editor implements EditorObservable {
    * @method nodeChanged
    * @param {Object} args Optional args to pass to NodeChange event handlers.
    */
-  public nodeChanged(args?: any) {
+  public nodeChanged(args?: any): void {
     this._nodeChangeDispatcher.nodeChanged(args);
   }
 
@@ -459,7 +464,7 @@ class Editor implements EditorObservable {
    *   }
    * });
    */
-  public addCommand(name: string, callback: EditorCommandCallback, scope?: object) {
+  public addCommand(name: string, callback: EditorCommandCallback, scope?: object): void {
     /**
      * Callback function that gets called when a command is executed.
      *
@@ -480,7 +485,7 @@ class Editor implements EditorObservable {
    * @param {Function} callback Function to execute when the command state retrieval occurs.
    * @param {Object} scope Optional scope to execute the function in.
    */
-  public addQueryStateHandler(name: string, callback: () => boolean, scope?: any) {
+  public addQueryStateHandler(name: string, callback: () => boolean, scope?: any): void {
     /**
      * Callback function that gets called when a queryCommandState is executed.
      *
@@ -499,7 +504,7 @@ class Editor implements EditorObservable {
    * @param {Function} callback Function to execute when the command value retrieval occurs.
    * @param {Object} scope Optional scope to execute the function in.
    */
-  public addQueryValueHandler(name: string, callback: () => string, scope?: any) {
+  public addQueryValueHandler(name: string, callback: () => string, scope?: any): void {
     /**
      * Callback function that gets called when a queryCommandValue is executed.
      *
@@ -534,7 +539,7 @@ class Editor implements EditorObservable {
    *   editor.execCommand('mceInsertContent', false, 'Hello, World!');
    * });
    */
-  public addShortcut(pattern: string, desc: string, cmdFunc: string | [string, boolean, any] | (() => void), scope?: any) {
+  public addShortcut(pattern: string, desc: string, cmdFunc: string | [string, boolean, any] | (() => void), scope?: any): void {
     this.shortcuts.add(pattern, desc, cmdFunc, scope);
   }
 
@@ -591,7 +596,7 @@ class Editor implements EditorObservable {
    *
    * @method show
    */
-  public show() {
+  public show(): void {
     const self = this;
 
     if (self.hidden) {
@@ -614,7 +619,7 @@ class Editor implements EditorObservable {
    *
    * @method hide
    */
-  public hide() {
+  public hide(): void {
     const self = this;
 
     if (!self.hidden) {
@@ -644,7 +649,7 @@ class Editor implements EditorObservable {
    * @method isHidden
    * @return {Boolean} True/false if the editor is hidden or not.
    */
-  public isHidden() {
+  public isHidden(): boolean {
     return this.hidden;
   }
 
@@ -666,7 +671,7 @@ class Editor implements EditorObservable {
    * // Show progress after 3 seconds
    * tinymce.activeEditor.setProgressState(true, 3000);
    */
-  public setProgressState(state: boolean, time?: number) {
+  public setProgressState(state: boolean, time?: number): void {
     this.dispatch('ProgressState', { state, time });
   }
 
@@ -679,30 +684,34 @@ class Editor implements EditorObservable {
    * @param {Object} args Optional content object, this gets passed around through the whole load process.
    * @return {String} HTML string that got set into the editor.
    */
-  public load(args?: any): string {
+  public load(args: Partial<EditorContent.SetContentArgs> = {}): string {
     const self = this;
-    let elm = self.getElement(), html;
+    const elm = self.getElement();
 
     if (self.removed) {
       return '';
     }
 
     if (elm) {
-      args = args || {};
-      args.load = true;
+      const loadArgs: Partial<EditorContent.SetContentArgs> & { load: boolean } = {
+        ...args,
+        load: true
+      };
 
       const value = NodeType.isTextareaOrInput(elm) ? elm.value : elm.innerHTML;
 
-      html = self.setContent(value, args);
-      args.element = elm;
+      const html = self.setContent(value, loadArgs);
 
-      if (!args.no_events) {
-        self.dispatch('LoadContent', args);
+      if (!loadArgs.no_events) {
+        self.dispatch('LoadContent', {
+          ...loadArgs,
+          element: elm
+        });
       }
 
-      args.element = elm = null;
-
       return html;
+    } else {
+      return '';
     }
   }
 
@@ -715,30 +724,33 @@ class Editor implements EditorObservable {
    * @param {Object} args Optional content object, this gets passed around through the whole save process.
    * @return {String} HTML string that got set into the textarea/div.
    */
-  public save(args?: any): string {
+  public save(args: Partial<EditorContent.GetContentArgs> = {}): string {
     const self = this;
-    let elm = self.getElement(), html, form: HTMLFormElement;
+    let elm: HTMLElement | null = self.getElement();
 
     if (!elm || !self.initialized || self.removed) {
-      return;
+      return '';
     }
 
-    args = args || {};
-    args.save = true;
+    const getArgs: Partial<EditorContent.GetContentArgs> = {
+      ...args,
+      save: true,
+      element: elm
+    };
 
-    args.element = elm;
-    html = args.content = self.getContent(args);
+    let html = self.getContent(getArgs);
 
-    if (!args.no_events) {
-      self.dispatch('SaveContent', args);
+    const saveArgs = { ...getArgs, content: html } as SaveContentEvent;
+    if (!saveArgs.no_events) {
+      self.dispatch('SaveContent', saveArgs);
     }
 
     // Always run this internal event
-    if (args.format === 'raw') {
-      self.dispatch('RawSaveContent', args);
+    if (saveArgs.format === 'raw') {
+      self.dispatch('RawSaveContent', saveArgs);
     }
 
-    html = args.content;
+    html = saveArgs.content;
 
     if (!NodeType.isTextareaOrInput(elm)) {
       if (args.is_removing || !self.inline) {
@@ -746,21 +758,24 @@ class Editor implements EditorObservable {
       }
 
       // Update hidden form element
-      if ((form = DOM.getParent(self.id, 'form'))) {
+      const form = DOM.getParent(self.id, 'form');
+      if (form) {
         each(form.elements, (elm) => {
           if ((elm as any).name === self.id) {
             (elm as any).value = html;
             return false;
+          } else {
+            return true;
           }
         });
       }
     } else {
-      (elm as any).value = html;
+      elm.value = html;
     }
 
-    args.element = elm = null;
+    saveArgs.element = getArgs.element = elm = null;
 
-    if (args.set_dirty !== false) {
+    if (saveArgs.set_dirty !== false) {
       self.setDirty(false);
     }
 
@@ -824,7 +839,7 @@ class Editor implements EditorObservable {
    * @param {String} content Content to insert.
    * @param {Object} args Optional args to pass to insert call.
    */
-  public insertContent(content: string, args?: any) {
+  public insertContent(content: string, args?: any): void {
     if (args) {
       content = extend({ content }, args);
     }
@@ -839,7 +854,7 @@ class Editor implements EditorObservable {
    * @method resetContent
    * @param {String} initialContent An optional string to use as the initial content of the editor.
    */
-  public resetContent(initialContent?: string) {
+  public resetContent(initialContent?: string): void {
     // Set the editor content
     if (initialContent === undefined) {
       // editor.startContent is generated by using the `raw` format, so we should set it the same way
@@ -869,7 +884,7 @@ class Editor implements EditorObservable {
    *   alert("You must save your contents.");
    * }
    */
-  public isDirty() {
+  public isDirty(): boolean {
     return !this.isNotDirty;
   }
 
@@ -889,7 +904,7 @@ class Editor implements EditorObservable {
    *   editor.setDirty(false); // Force not dirty state
    * }
    */
-  public setDirty(state: boolean) {
+  public setDirty(state: boolean): void {
     const oldState = !this.isNotDirty;
 
     this.isNotDirty = !state;
@@ -910,7 +925,7 @@ class Editor implements EditorObservable {
     const self = this;
 
     if (!self.container) {
-      self.container = DOM.get(self.editorContainer || self.id + '_parent');
+      self.container = self.editorContainer || DOM.get(self.id + '_parent') as HTMLElement;
     }
 
     return self.container;
@@ -935,7 +950,7 @@ class Editor implements EditorObservable {
    */
   public getElement(): HTMLElement {
     if (!this.targetElm) {
-      this.targetElm = DOM.get(this.id);
+      this.targetElm = DOM.get(this.id) as HTMLElement;
     }
 
     return this.targetElm;
@@ -949,13 +964,12 @@ class Editor implements EditorObservable {
    */
   public getWin(): Window {
     const self = this;
-    let elm;
 
     if (!self.contentWindow) {
-      elm = self.iframeElement;
+      const elm = self.iframeElement;
 
       if (elm) {
-        self.contentWindow = elm.contentWindow;
+        self.contentWindow = elm.contentWindow as Window;
       }
     }
 
@@ -970,10 +984,9 @@ class Editor implements EditorObservable {
    */
   public getDoc(): Document {
     const self = this;
-    let win;
 
     if (!self.contentDocument) {
-      win = self.getWin();
+      const win = self.getWin();
 
       if (win) {
         self.contentDocument = win.document;
@@ -992,7 +1005,7 @@ class Editor implements EditorObservable {
    */
   public getBody(): HTMLElement {
     const doc = this.getDoc();
-    return this.bodyElement || (doc ? doc.body : null);
+    return this.bodyElement ?? doc?.body ?? null;
   }
 
   /**
@@ -1006,7 +1019,7 @@ class Editor implements EditorObservable {
    * @param {String/HTMLElement} elm Tag name or HTML DOM element depending on HTML or DOM insert.
    * @return {String} Converted URL string.
    */
-  public convertURL(url: string, name: string, elm?): string {
+  public convertURL(url: string, name: string, elm?: string | Element): string {
     const self = this, getOption = self.options.get;
 
     // Use callback instead
@@ -1015,8 +1028,14 @@ class Editor implements EditorObservable {
       return urlConverterCallback.call(self, url, elm, true, name);
     }
 
-    // Don't convert link href since thats the CSS files that gets loaded into the editor also skip local file URLs
-    if (!getOption('convert_urls') || (elm && elm.nodeName === 'LINK') || url.indexOf('file:') === 0 || url.length === 0) {
+    // Don't convert link href since that's the CSS files that gets loaded into the editor also skip local file URLs
+    if (
+      !getOption('convert_urls') ||
+      elm === 'link' ||
+      (Type.isObject(elm) && (elm as HTMLElement).nodeName === 'LINK') ||
+      url.indexOf('file:') === 0 ||
+      url.length === 0
+    ) {
       return url;
     }
 
@@ -1037,7 +1056,7 @@ class Editor implements EditorObservable {
    * @method addVisual
    * @param {Element} elm Optional root element to loop though to find tables, etc that needs the visual aid.
    */
-  public addVisual(elm?: HTMLElement) {
+  public addVisual(elm?: HTMLElement): void {
     VisualAids.addVisual(this, elm);
   }
 
@@ -1046,7 +1065,7 @@ class Editor implements EditorObservable {
    *
    * @method remove
    */
-  public remove() {
+  public remove(): void {
     EditorRemove.remove(this);
   }
 
@@ -1058,7 +1077,7 @@ class Editor implements EditorObservable {
    * @method destroy
    * @param {Boolean} automatic Optional state if the destroy is an automatic destroy or user called one.
    */
-  public destroy(automatic?: boolean) {
+  public destroy(automatic?: boolean): void {
     EditorRemove.destroy(this, automatic);
   }
 

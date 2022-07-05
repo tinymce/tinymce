@@ -1,4 +1,4 @@
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Optional, Strings } from '@ephox/katamari';
 import { Attribute, Compare, Insert, InsertAll, Replication, SelectorFilter, SugarElement } from '@ephox/sugar';
 
 export interface TableModel {
@@ -34,8 +34,7 @@ const cellPosition = (x: number, y: number): CellPosition => ({
 });
 
 const getSpan = (td: SugarElement<HTMLTableCellElement>, key: string) => {
-  const value = parseInt(Attribute.get(td, key), 10);
-  return isNaN(value) ? 1 : value;
+  return Attribute.getOpt(td, key).bind(Strings.toInt).getOr(1);
 };
 
 const fillout = (table: TableModel, x: number, y: number, tr: SugarElement<HTMLTableRowElement>, td: SugarElement<HTMLTableCellElement>) => {
@@ -138,7 +137,7 @@ const modelRowsToDomRows = (table: TableModel) => {
   });
 };
 
-const fromDom = (tableElm: SugarElement<HTMLTableElement>) => {
+const fromDom = (tableElm: SugarElement<HTMLTableElement>): TableModel => {
   const table = tableModel(Replication.shallow(tableElm), 0, []);
 
   Arr.each(SelectorFilter.descendants<HTMLTableRowElement>(tableElm, 'tr'), (tr, y) => {
@@ -150,11 +149,11 @@ const fromDom = (tableElm: SugarElement<HTMLTableElement>) => {
   return tableModel(table.element, getWidth(table.rows), table.rows);
 };
 
-const toDom = (table: TableModel) => {
+const toDom = (table: TableModel): SugarElement<HTMLTableElement> => {
   return createDomTable(table, modelRowsToDomRows(table));
 };
 
-const subsection = (table: TableModel, startElement: SugarElement<unknown>, endElement: SugarElement<unknown>) => {
+const subsection = (table: TableModel, startElement: SugarElement<Node>, endElement: SugarElement<Node>): Optional<TableModel> => {
   return findElementPos(table, startElement).bind((startPos) => {
     return findElementPos(table, endElement).map((endPos) => {
       return subTable(table, startPos, endPos);

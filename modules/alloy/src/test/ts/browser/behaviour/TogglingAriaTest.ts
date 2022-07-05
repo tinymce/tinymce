@@ -10,7 +10,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('TogglingAriaTest', (success, failure) => {
 
-  GuiSetup.setup((_store, _doc, _body) => GuiFactory.build(
+  GuiSetup.setup((store, _doc, _body) => GuiFactory.build(
     Container.sketch({
       dom: {
         tag: 'div',
@@ -26,11 +26,12 @@ UnitTest.asynctest('TogglingAriaTest', (success, failure) => {
           selected: true,
           aria: {
             mode: 'pressed'
-          }
+          },
+          onToggled: store.adder('toggled')
         })
       ])
     })
-  ), (_doc, _body, _gui, component, _store) => {
+  ), (_doc, _body, _gui, component, store) => {
 
     const testIsSelected = (label: string) => Step.sync(() => {
       Assertions.assertStructure(
@@ -84,10 +85,12 @@ UnitTest.asynctest('TogglingAriaTest', (success, failure) => {
 
     return [
       testIsSelected('Initial'),
+      store.sAssertEq('Should have a toggled event as the item starts as selected', [ 'toggled' ]),
 
       sToggle,
       testNotSelected('selected > toggle'),
       assertIsSelected('selected > toggle', false),
+      store.sAssertEq('Should have another toggled event after toggling off', [ 'toggled', 'toggled' ]),
 
       sToggle,
       testIsSelected('selected > toggle, toggle'),

@@ -1,5 +1,5 @@
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
-import { Attribute, Compare, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { Attribute, Compare, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import * as CaretFinder from '../caret/CaretFinder';
@@ -12,14 +12,10 @@ import * as PaddingBr from '../dom/PaddingBr';
 import * as Parents from '../dom/Parents';
 import * as TableCellSelection from '../selection/TableCellSelection';
 import * as DeleteElement from './DeleteElement';
+import { deleteRangeContents } from './DeleteUtils';
 import * as TableDeleteAction from './TableDeleteAction';
 
 type OutsideTableDetails = TableDeleteAction.OutsideTableDetails;
-
-const freefallRtl = (root: SugarElement<Node>): Optional<SugarElement<Node>> => {
-  const child = SugarNode.isComment(root) ? Traverse.prevSibling(root) : Traverse.lastChild(root);
-  return child.bind(freefallRtl).orThunk(() => Optional.some(root));
-};
 
 // Reset the contenteditable state and fill the content with a padding br
 const cleanCells = (cells: SugarElement<HTMLTableCellElement>[]): void =>
@@ -49,9 +45,9 @@ const deleteContentInsideCell = (editor: Editor, cell: SugarElement<HTMLTableCel
 
   if (isFirstCellInSelection) {
     insideTableRng.setStart(rng.startContainer, rng.startOffset);
-    insideTableRng.setEndAfter(cell.dom.lastChild);
+    insideTableRng.setEndAfter(cell.dom.lastChild as Node);
   } else {
-    insideTableRng.setStartBefore(cell.dom.firstChild);
+    insideTableRng.setStartBefore(cell.dom.firstChild as Node);
     insideTableRng.setEnd(rng.endContainer, rng.endOffset);
   }
 
@@ -150,25 +146,7 @@ const emptyMultiTableCells = (
 // Delete the contents of a range inside a cell. Runs on tables that are a single cell or partial selections that need to be cleaned up.
 const deleteCellContents = (editor: Editor, rng: Range, cell: SugarElement<HTMLTableCellElement>, moveSelection: boolean = true): Optional<() => void> =>
   Optional.some(() => {
-    rng.deleteContents();
-    // Pad the last block node
-    const lastNode = freefallRtl(cell).getOr(cell);
-    const lastBlock = SugarElement.fromDom(editor.dom.getParent(lastNode.dom, editor.dom.isBlock));
-    if (Empty.isEmpty(lastBlock)) {
-      PaddingBr.fillWithPaddingBr(lastBlock);
-      if (moveSelection) {
-        editor.selection.setCursorLocation(lastBlock.dom, 0);
-      }
-    }
-    // Clean up any additional leftover nodes. If the last block wasn't a direct child, then we also need to clean up siblings
-    if (!Compare.eq(cell, lastBlock)) {
-      const additionalCleanupNodes = Optionals.is(Traverse.parent(lastBlock), cell) ? [] : Traverse.siblings(lastBlock);
-      Arr.each(additionalCleanupNodes.concat(Traverse.children(cell)), (node) => {
-        if (!Compare.eq(node, lastBlock) && !Compare.contains(node, lastBlock) && Empty.isEmpty(node)) {
-          Remove.remove(node);
-        }
-      });
-    }
+    deleteRangeContents(editor, rng, cell, moveSelection);
   });
 
 const deleteTableElement = (editor: Editor, table: SugarElement<HTMLTableElement>): Optional<() => void> =>
@@ -213,9 +191,10 @@ const deleteBetweenCells = (
   fromCell: SugarElement<HTMLTableCellElement>,
   from: CaretPosition
 ): Optional<() => void> =>
+  // TODO: TINY-8865 - This may not be safe to cast as Node below and alternative solutions need to be looked into
   CaretFinder.navigate(forward, editor.getBody(), from)
     .bind(
-      (to) => getParentCell(rootElm, SugarElement.fromDom(to.getNode()))
+      (to) => getParentCell(rootElm, SugarElement.fromDom(to.getNode() as Node))
         .bind((toCell) => Compare.eq(toCell, fromCell) ? Optional.none() : Optional.some(Fun.noop))
     );
 
@@ -237,7 +216,8 @@ const emptyCaretCaption = (editor: Editor, elm: SugarElement<Node>): Optional<()
   emptyElement(editor, elm);
 
 const validateCaretCaption = (rootElm: SugarElement<Node>, fromCaption: SugarElement<HTMLTableCaptionElement>, to: CaretPosition): Optional<() => void> =>
-  getParentCaption(rootElm, SugarElement.fromDom(to.getNode()))
+  // TODO: TINY-8865 - This may not be safe to cast as Node below and alternative solutions need to be looked into
+  getParentCaption(rootElm, SugarElement.fromDom(to.getNode() as Node))
     .fold(
       () => Optional.some(Fun.noop),
       (toCaption) => Optionals.someIf(!Compare.eq(toCaption, fromCaption), Fun.noop)
@@ -298,7 +278,7 @@ const deleteCaret = (editor: Editor, forward: boolean, startElm: SugarElement<No
   );
 };
 
-const backspaceDelete = (editor: Editor, forward?: boolean): Optional<() => void> => {
+const backspaceDelete = (editor: Editor, forward: boolean): Optional<() => void> => {
   const startElm = SugarElement.fromDom(editor.selection.getStart(true));
   const cells = TableCellSelection.getCellsFromEditor(editor);
 

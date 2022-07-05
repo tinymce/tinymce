@@ -8,6 +8,7 @@ export default [
   FieldSchema.defaulted('selected', false),
   FieldSchema.option('toggleClass'),
   FieldSchema.defaulted('toggleOnExecute', true),
+  Fields.onHandler('onToggled'),
 
   FieldSchema.defaultedOf('aria', {
     mode: 'none'
