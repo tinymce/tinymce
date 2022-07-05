@@ -12,7 +12,8 @@ const insertInlinePos = (pos: CaretPosition, before: boolean) => {
   if (NodeType.isText(pos.container())) {
     return CaretContainerInline.insertInline(before, pos.container());
   } else {
-    return CaretContainerInline.insertInline(before, pos.getNode());
+    // TODO: TINY-8865 - This may not be safe to cast as Node and alternative solutions need to be looked into
+    return CaretContainerInline.insertInline(before, pos.getNode() as Node);
   }
 };
 

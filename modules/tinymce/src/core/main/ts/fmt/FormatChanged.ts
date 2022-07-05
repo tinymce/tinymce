@@ -82,7 +82,7 @@ const matchingNode = (editor: Editor, parents: Element[], format: string, simila
 
 const getParents = (editor: Editor, elm?: Element): Element[] => {
   const element = elm ?? fallbackElement(editor);
-  return Arr.filter(FormatUtils.getParents(editor.dom, element), (node) =>
+  return Arr.filter(FormatUtils.getParents(editor.dom, element), (node): node is Element =>
     NodeType.isElement(node) && !NodeType.isBogus(node)
   );
 };

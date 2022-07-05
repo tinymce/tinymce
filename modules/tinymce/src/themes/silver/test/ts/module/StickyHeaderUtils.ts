@@ -84,7 +84,7 @@ const expectedEditorHidden = (s: ApproxStructure.StructApi, str: ApproxStructure
   })
 ];
 
-const expectedInFullView = (s, str, arr): StructAssert[] => [
+const expectedInFullView = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] => [
   s.element('div', {
     classes: [
       arr.has('tox-editor-header'),

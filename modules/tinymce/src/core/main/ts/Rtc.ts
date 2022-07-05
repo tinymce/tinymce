@@ -399,7 +399,7 @@ export const matchAllFormats = (
 
 export const matchNodeFormat = (
   editor: Editor,
-  node: Node,
+  node: Node | null,
   name: string,
   vars?: FormatVars,
   similar?: boolean): Format | undefined => getRtcInstanceWithError(editor).formatter.matchNode(node, name, vars, similar);
@@ -416,7 +416,7 @@ export const applyFormat = (
   editor: Editor,
   name: string,
   vars?: FormatVars,
-  node?: Node | RangeLikeObject
+  node?: Node | RangeLikeObject | null
 ): void => {
   getRtcInstanceWithError(editor).formatter.apply(name, vars, node);
 };

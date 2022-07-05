@@ -8,10 +8,10 @@ import * as MultiRange from './MultiRange';
 const getCellsFromRanges = (ranges: Range[]): SugarElement<HTMLTableCellElement>[] =>
   Arr.filter(MultiRange.getSelectedNodes(ranges), ElementType.isTableCell);
 
-const getCellsFromElement = (elm: SugarElement): SugarElement<HTMLTableCellElement>[] =>
+const getCellsFromElement = (elm: SugarElement<Element>): SugarElement<HTMLTableCellElement>[] =>
   SelectorFilter.descendants<HTMLTableCellElement>(elm, 'td[data-mce-selected],th[data-mce-selected]');
 
-const getCellsFromElementOrRanges = (ranges: Range[], element: SugarElement): SugarElement<HTMLTableCellElement>[] => {
+const getCellsFromElementOrRanges = (ranges: Range[], element: SugarElement<Element>): SugarElement<HTMLTableCellElement>[] => {
   const selectedCells = getCellsFromElement(element);
   return selectedCells.length > 0 ? selectedCells : getCellsFromRanges(ranges);
 };

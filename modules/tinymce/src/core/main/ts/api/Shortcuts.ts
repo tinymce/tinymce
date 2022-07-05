@@ -71,7 +71,6 @@ const isModifier = (key: string): key is keyof ModifierMap =>
   key in modifierNames;
 
 const parseShortcut = (pattern: string): Shortcut => {
-  let key;
   const shortcut = {} as Shortcut;
   const isMac = Env.os.isMacOS() || Env.os.isiOS();
 
@@ -91,7 +90,8 @@ const parseShortcut = (pattern: string): Shortcut => {
   });
 
   // Generate unique id for modifier combination and set default state for unused modifiers
-  const id = [ shortcut.keyCode ];
+  const id: Array<string | number> = [ shortcut.keyCode ];
+  let key: keyof ModifierMap;
   for (key in modifierNames) {
     if (shortcut[key]) {
       id.push(key);
@@ -143,8 +143,6 @@ class Shortcuts {
             if (e.type === 'keydown') {
               self.executeShortcutAction(shortcut);
             }
-
-            return true;
           }
         });
 

@@ -33,7 +33,7 @@ const isElementNode = (node: Node): node is Element => {
 
 const canFormatBR = (editor: Editor, format: ApplyFormat, node: HTMLBRElement, parentName: string) => {
   // TINY-6483: Can format 'br' if it is contained in a valid empty block and an inline format is being applied
-  if (Options.canFormatEmptyLines(editor) && FormatUtils.isInlineFormat(format)) {
+  if (Options.canFormatEmptyLines(editor) && FormatUtils.isInlineFormat(format) && node.parentNode) {
     const validBRParentElements = getTextRootBlockElements(editor.schema);
     // If a caret node is present, the format should apply to that, not the br (applicable to collapsed selections)
     const hasCaretNodeSibling = PredicateExists.sibling(SugarElement.fromDom(node), (sibling) => isCaretNode(sibling.dom));
@@ -43,7 +43,7 @@ const canFormatBR = (editor: Editor, format: ApplyFormat, node: HTMLBRElement, p
   }
 };
 
-const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | RangeLikeObject) => {
+const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | RangeLikeObject | null): void => {
   const formatList = ed.formatter.get(name) as ApplyFormat[];
   const format = formatList[0];
   const isCollapsed = !node && ed.selection.isCollapsed();
@@ -74,10 +74,10 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
     });
 
     each(fmt.classes, (value) => {
-      value = FormatUtils.replaceVars(value, vars);
+      const newValue = FormatUtils.replaceVars(value, vars);
 
-      if (!dom.hasClass(elm, value)) {
-        dom.addClass(elm, value);
+      if (!dom.hasClass(elm, newValue)) {
+        dom.addClass(elm, newValue);
       }
     });
   };
@@ -93,7 +93,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
 
       // Check collapsed state if it exists
       if (Type.isNonNullable(format.collapsed) && format.collapsed !== isCollapsed) {
-        return;
+        return true;
       }
 
       if (dom.is(node, format.selector) && !isCaretNode(node)) {
@@ -101,6 +101,8 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
         found = true;
         return false;
       }
+
+      return true;
     });
 
     return found;
@@ -121,7 +123,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
     let contentEditable = true;
 
     // Setup wrapper element
-    const wrapName = (format as InlineFormat).inline || (format as BlockFormat).block;
+    const wrapName: string | undefined = (format as InlineFormat).inline || (format as BlockFormat).block;
     const wrapElm = createWrapElement(wrapName);
 
     RangeWalk.walk(dom, rng, (nodes) => {
@@ -133,7 +135,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
         let hasContentEditableState = false;
         let lastContentEditable = contentEditable;
         const nodeName = node.nodeName.toLowerCase();
-        const parentNode = node.parentNode;
+        const parentNode = node.parentNode as Node;
         const parentName = parentNode.nodeName.toLowerCase();
 
         // Node has a contentEditable value
@@ -189,6 +191,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
         // Is it valid to wrap this item
         // TODO: Break this if up, too complex
         if (contentEditable && !hasContentEditableState && FormatUtils.isValid(ed, wrapName, nodeName) && FormatUtils.isValid(ed, parentName, wrapName) &&
+          Type.isNonNullable(wrapElm) &&
           !(!nodeSpecific && NodeType.isText(node) && Zwsp.isZwsp(node.data)) &&
           !isCaretNode(node) &&
           (!FormatUtils.isInlineFormat(format) || !dom.isBlock(node))
@@ -197,7 +200,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
           if (!currentWrapElm) {
             // Wrap the node
             currentWrapElm = dom.clone(wrapElm, false) as Element;
-            node.parentNode.insertBefore(currentWrapElm, node);
+            parentNode.insertBefore(currentWrapElm, node);
             newWrappers.push(currentWrapElm);
           }
 

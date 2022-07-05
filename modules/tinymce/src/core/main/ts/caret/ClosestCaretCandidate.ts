@@ -101,7 +101,7 @@ const closestChildCaretCandidateNodeRect = (children: ChildNode[], clientX: numb
 };
 
 const traverseUp = (rootElm: SugarElement<Node>, scope: SugarElement<Element>, clientX: number, clientY: number): Optional<NodeClientRect> => {
-  const helper = (scope: SugarElement<Element>, prevScope: Optional<SugarElement<Element>>) => {
+  const helper = (scope: SugarElement<Element>, prevScope: Optional<SugarElement<Element>>): Optional<NodeClientRect> => {
     return prevScope.fold(
       () => closestChildCaretCandidateNodeRect(Arr.from(scope.dom.childNodes), clientX, clientY),
       (prevScope) => {

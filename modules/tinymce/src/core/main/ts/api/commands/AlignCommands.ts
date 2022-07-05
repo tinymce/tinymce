@@ -34,7 +34,7 @@ const registerExecCommands = (editor: Editor): void => {
 const registerQueryStateCommands = (editor: Editor): void => {
   const alignStates = (name: string) => () => {
     const selection = editor.selection;
-    const nodes = selection.isCollapsed() ? [ editor.dom.getParent(selection.getNode(), editor.dom.isBlock) ] : selection.getSelectedBlocks();
+    const nodes: Array<Element | null> = selection.isCollapsed() ? [ editor.dom.getParent(selection.getNode(), editor.dom.isBlock) ] : selection.getSelectedBlocks();
     return Arr.exists(nodes, (node) => Type.isNonNullable(editor.formatter.matchNode(node, name)));
   };
 

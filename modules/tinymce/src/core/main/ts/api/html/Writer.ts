@@ -59,10 +59,8 @@ const Writer = (settings?: WriterSettings): Writer => {
      * @param {Boolean} empty Optional empty state if the tag should serialize as a void element. For example: `<img />`
      */
     start: (name: string, attrs?: Attributes, empty?: boolean) => {
-      let i, l, attr, value;
-
       if (indent && indentBefore[name] && html.length > 0) {
-        value = html[html.length - 1];
+        const value = html[html.length - 1];
 
         if (value.length > 0 && value !== '\n') {
           html.push('\n');
@@ -72,8 +70,8 @@ const Writer = (settings?: WriterSettings): Writer => {
       html.push('<', name);
 
       if (attrs) {
-        for (i = 0, l = attrs.length; i < l; i++) {
-          attr = attrs[i];
+        for (let i = 0, l = attrs.length; i < l; i++) {
+          const attr = attrs[i];
           html.push(' ', attr.name, '="', encode(attr.value, true), '"');
         }
       }
@@ -85,7 +83,7 @@ const Writer = (settings?: WriterSettings): Writer => {
       }
 
       if (empty && indent && indentAfter[name] && html.length > 0) {
-        value = html[html.length - 1];
+        const value = html[html.length - 1];
 
         if (value.length > 0 && value !== '\n') {
           html.push('\n');

@@ -55,7 +55,7 @@ const applyAnnotation = (
   }
 };
 
-const removeDirectAnnotation = (elem: SugarElement<Element>) => {
+const removeDirectAnnotation = (elem: SugarElement<Element>): void => {
   Class.remove(elem, Markings.annotation());
   Attribute.remove(elem, `${Markings.dataAnnotationId()}`);
   Attribute.remove(elem, `${Markings.dataAnnotation()}`);
@@ -69,21 +69,21 @@ const removeDirectAnnotation = (elem: SugarElement<Element>) => {
   Attribute.remove(elem, `${Markings.dataAnnotationAttributes()}`);
 };
 
-const makeAnnotation = (eDoc: Document, uid: string, data: DecoratorData, annotationName: string, decorate: Decorator): SugarElement => {
+const makeAnnotation = (eDoc: Document, uid: string, data: DecoratorData, annotationName: string, decorate: Decorator): SugarElement<HTMLSpanElement> => {
   const master = SugarElement.fromTag('span', eDoc);
   applyAnnotation(master, uid, data, annotationName, decorate, false);
   return master;
 };
 
-const annotate = (editor: Editor, rng: Range, uid: string, annotationName: string, decorate: Decorator, data: DecoratorData): any[] => {
+const annotate = (editor: Editor, rng: Range, uid: string, annotationName: string, decorate: Decorator, data: DecoratorData): SugarElement<HTMLSpanElement>[] => {
   // Setup all the wrappers that are going to be used.
-  const newWrappers = [];
+  const newWrappers: SugarElement<HTMLSpanElement>[] = [];
 
   // Setup the spans for the comments
   const master = makeAnnotation(editor.getDoc(), uid, data, annotationName, decorate);
 
   // Set the current wrapping element
-  const wrapper = Singleton.value<SugarElement<any>>();
+  const wrapper = Singleton.value<SugarElement<HTMLSpanElement>>();
 
   // Clear the current wrapping element, so that subsequent calls to
   // getOrOpenWrapper spawns a new one.
@@ -92,7 +92,7 @@ const annotate = (editor: Editor, rng: Range, uid: string, annotationName: strin
   };
 
   // Get the existing wrapper, or spawn a new one.
-  const getOrOpenWrapper = (): SugarElement<any> =>
+  const getOrOpenWrapper = (): SugarElement<HTMLSpanElement> =>
     wrapper.get().getOrThunk(() => {
       const nu = Replication.shallow(master);
       newWrappers.push(nu);
@@ -100,11 +100,11 @@ const annotate = (editor: Editor, rng: Range, uid: string, annotationName: strin
       return nu;
     });
 
-  const processElements = (elems) => {
+  const processElements = (elems: SugarElement<Node>[]) => {
     Arr.each(elems, processElement);
   };
 
-  const processElement = (elem) => {
+  const processElement = (elem: SugarElement<Node>) => {
     const ctx = context(editor, elem, 'span', SugarNode.name(elem));
 
     switch (ctx) {
@@ -118,7 +118,7 @@ const annotate = (editor: Editor, rng: Range, uid: string, annotationName: strin
 
       case ChildContext.ValidBlock: {
         finishWrapper();
-        applyAnnotation(elem, uid, data, annotationName, decorate, true);
+        applyAnnotation(elem as SugarElement<Element>, uid, data, annotationName, decorate, true);
         break;
       }
 
@@ -137,7 +137,7 @@ const annotate = (editor: Editor, rng: Range, uid: string, annotationName: strin
     }
   };
 
-  const processNodes = (nodes) => {
+  const processNodes = (nodes: Node[]) => {
     const elems = Arr.map(nodes, SugarElement.fromDom);
     processElements(elems);
   };

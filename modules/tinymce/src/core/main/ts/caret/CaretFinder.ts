@@ -63,7 +63,7 @@ const navigate = (forward: boolean, root: Node, from: CaretPosition): Optional<C
 
 const navigateIgnore = (
   forward: boolean,
-  root: Element,
+  root: Node,
   from: CaretPosition,
   ignoreFilter: (pos: CaretPosition) => boolean
 ): Optional<CaretPosition> => navigate(forward, root, from)

@@ -5,11 +5,10 @@ import { BlobCache, BlobInfoData } from 'tinymce/core/api/file/BlobCache';
 
 describe('browser.tinymce.core.file.BlobCacheTest', () => {
   const uriToBlob = (base64: string, type: string) => {
-    let i;
     const str = atob(base64);
     const arr = new Uint8Array(str.length);
 
-    for (i = 0; i < arr.length; i++) {
+    for (let i = 0; i < arr.length; i++) {
       arr[i] = str.charCodeAt(i);
     }
     return new Blob([ arr ], { type });

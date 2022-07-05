@@ -1,4 +1,4 @@
-import { Optional } from '@ephox/katamari';
+import { Optional, Type } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
@@ -9,11 +9,15 @@ import * as NodeType from '../dom/NodeType';
 import * as InlineUtils from '../keyboard/InlineUtils';
 import * as DeleteElement from './DeleteElement';
 
-const deleteElement = (editor: Editor, forward: boolean, element: Node): Optional<() => void> => {
-  return Optional.some(() => {
-    editor._selectionOverrides.hideFakeCaret();
-    DeleteElement.deleteElement(editor, forward, SugarElement.fromDom(element));
-  });
+const deleteElement = (editor: Editor, forward: boolean, element: Node | undefined): Optional<() => void> => {
+  if (Type.isNonNullable(element)) {
+    return Optional.some(() => {
+      editor._selectionOverrides.hideFakeCaret();
+      DeleteElement.deleteElement(editor, forward, SugarElement.fromDom(element));
+    });
+  } else {
+    return Optional.none();
+  }
 };
 
 const deleteCaret = (editor: Editor, forward: boolean): Optional<() => void> => {
@@ -26,7 +30,7 @@ const deleteCaret = (editor: Editor, forward: boolean): Optional<() => void> => 
   } else {
     return Optional.from(InlineUtils.normalizePosition(forward, fromPos))
       .filter((pos) => isNearMedia(pos) && CaretUtils.isMoveInsideSameBlock(fromPos, pos))
-      .map((pos) => () => deleteElement(editor, forward, pos.getNode(!forward)));
+      .bind((pos) => deleteElement(editor, forward, pos.getNode(!forward)));
   }
 };
 

@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Strings } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
@@ -75,7 +75,7 @@ const isVisuallyEmpty = (dom: DOMUtils, rootElm: Element, forcedRootBlock: strin
 const setup = (editor: Editor): void => {
   const dom = editor.dom;
   const rootBlock = Options.getForcedRootBlock(editor);
-  const placeholder = Options.getPlaceholder(editor);
+  const placeholder = Options.getPlaceholder(editor) ?? '';
 
   const updatePlaceholder = (e: EditorEvent<unknown>, initial?: boolean) => {
     if (isNonTypingKeyboardEvent(e)) {
@@ -102,7 +102,7 @@ const setup = (editor: Editor): void => {
     }
   };
 
-  if (placeholder) {
+  if (Strings.isNotEmpty(placeholder)) {
     editor.on('init', (e) => {
       // Setup the initial state
       updatePlaceholder(e, true);

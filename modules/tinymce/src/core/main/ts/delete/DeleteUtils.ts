@@ -18,12 +18,14 @@ const execCommandIgnoreInputEvents = (editor: Editor, command: string) => {
   editor.off('beforeinput input', inputBlocker);
 };
 
-const execDeleteCommand = (editor: Editor) => execCommandIgnoreInputEvents(editor, 'Delete');
+const execDeleteCommand = (editor: Editor): void =>
+  execCommandIgnoreInputEvents(editor, 'Delete');
 
-const execForwardDeleteCommand = (editor: Editor) => execCommandIgnoreInputEvents(editor, 'ForwardDelete');
+const execForwardDeleteCommand = (editor: Editor): void =>
+  execCommandIgnoreInputEvents(editor, 'ForwardDelete');
 
 const isBeforeRoot = (rootNode: SugarElement<Node>) => (elm: SugarElement<Node>): boolean =>
-  Compare.eq(rootNode, SugarElement.fromDom(elm.dom.parentNode));
+  Optionals.is(Traverse.parent(elm), rootNode, Compare.eq);
 
 const isTextBlockOrListItem = (element: SugarElement<Node>): element is SugarElement<Element> =>
   isTextBlock(element) || isListItem(element);
@@ -78,7 +80,7 @@ const deleteRangeContents = (editor: Editor, rng: Range, root: SugarElement<HTML
   rng.deleteContents();
   // Pad the last block node
   const lastNode = freefallRtl(root).getOr(root);
-  const lastBlock = SugarElement.fromDom(editor.dom.getParent(lastNode.dom, editor.dom.isBlock));
+  const lastBlock = SugarElement.fromDom(editor.dom.getParent(lastNode.dom, editor.dom.isBlock) || root.dom);
   if (Empty.isEmpty(lastBlock)) {
     PaddingBr.fillWithPaddingBr(lastBlock);
     if (moveSelection) {

@@ -25,7 +25,7 @@ export const FormatRegistry = (editor: Editor): FormatRegistry => {
 
   const has = (name: string): boolean => Obj.has(formats, name);
 
-  const register = (name: string | Formats, format?: Format | Format[]) => {
+  const register = (name: string | Formats | undefined, format?: Format | Format[]) => {
     if (name) {
       if (!Type.isString(name)) {
         Obj.each(name, (format, name) => {
@@ -34,7 +34,7 @@ export const FormatRegistry = (editor: Editor): FormatRegistry => {
       } else {
         // Force format into array and add it to internal collection
         if (!Type.isArray(format)) {
-          format = [ format ];
+          format = [ format as Format ];
         }
 
         Arr.each(format, (format) => {

@@ -101,7 +101,7 @@ const getBoundingClientRect = (item: Element | Range): GeomClientRect => {
   }
 
   if (isZeroRect(clientRect) && isRange(item)) {
-    return getBoundingClientRectWebKitText(item);
+    return getBoundingClientRectWebKitText(item) ?? clientRect;
   }
 
   return clientRect;
@@ -380,7 +380,8 @@ CaretPosition.fromRangeEnd = (range: Range) => CaretPosition(range.endContainer,
  * @param {Node} node Node to get caret position from.
  * @return {tinymce.caret.CaretPosition} Caret position from the node.
  */
-CaretPosition.after = (node: Node) => CaretPosition(node.parentNode, nodeIndex(node) + 1);
+// TODO: TINY-8865 - This may not be safe to cast as Node and alternative solutions need to be looked into
+CaretPosition.after = (node: Node) => CaretPosition(node.parentNode as Node, nodeIndex(node) + 1);
 
 /**
  * Creates a caret position from a node and places the offset before it.
@@ -389,7 +390,8 @@ CaretPosition.after = (node: Node) => CaretPosition(node.parentNode, nodeIndex(n
  * @param {Node} node Node to get caret position from.
  * @return {tinymce.caret.CaretPosition} Caret position from the node.
  */
-CaretPosition.before = (node: Node) => CaretPosition(node.parentNode, nodeIndex(node));
+// TODO: TINY-8865 - This may not be safe to cast as Node and alternative solutions need to be looked into
+CaretPosition.before = (node: Node) => CaretPosition(node.parentNode as Node, nodeIndex(node));
 
 CaretPosition.isAbove = (pos1: CaretPosition, pos2: CaretPosition): boolean =>
   Optionals.lift2(Arr.head(pos2.getClientRects()), Arr.last(pos1.getClientRects()), ClientRect.isAbove).getOr(false);

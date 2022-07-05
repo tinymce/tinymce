@@ -12,11 +12,12 @@ import * as SelectionBookmark from '../selection/SelectionBookmark';
 import * as FocusController from './FocusController';
 
 const getContentEditableHost = (editor: Editor, node: Node): HTMLElement | null =>
-  editor.dom.getParent(node, (node) => editor.dom.getContentEditable(node) === 'true');
+  editor.dom.getParent(node, (node): node is HTMLElement => editor.dom.getContentEditable(node) === 'true');
 
-const getCollapsedNode = (rng: Range): Optional<SugarElement<Node>> => rng.collapsed ? Optional.from(RangeNodes.getNode(rng.startContainer, rng.startOffset)).map(SugarElement.fromDom) : Optional.none();
+const getCollapsedNode = (rng: Range): Optional<SugarElement<Node>> =>
+  rng.collapsed ? Optional.from(RangeNodes.getNode(rng.startContainer, rng.startOffset)).map(SugarElement.fromDom) : Optional.none();
 
-const getFocusInElement = (root: SugarElement<any>, rng: Range): Optional<SugarElement<any>> => getCollapsedNode(rng).bind((node) => {
+const getFocusInElement = (root: SugarElement<Node>, rng: Range): Optional<SugarElement<Node>> => getCollapsedNode(rng).bind((node) => {
   if (ElementType.isTableSection(node)) {
     return Optional.some(node);
   } else if (!Compare.contains(root, node)) {
@@ -31,7 +32,7 @@ const normalizeSelection = (editor: Editor, rng: Range): void => {
     return CaretFinder.firstPositionIn(elm.dom);
   }).fold(
     () => {
-      editor.selection.normalize(); return;
+      editor.selection.normalize();
     },
     (caretPos: CaretPosition) => editor.selection.setRng(caretPos.toRange())
   );
@@ -51,7 +52,7 @@ const focusBody = (body: HTMLElement & { setActive?: VoidFunction }) => {
   }
 };
 
-const hasElementFocus = (elm: SugarElement): boolean => Focus.hasFocus(elm) || Focus.search(elm).isSome();
+const hasElementFocus = (elm: SugarElement<Element>): boolean => Focus.hasFocus(elm) || Focus.search(elm).isSome();
 
 const hasIframeFocus = (editor: Editor): boolean =>
   Type.isNonNullable(editor.iframeElement) && Focus.hasFocus(SugarElement.fromDom(editor.iframeElement));

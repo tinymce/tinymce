@@ -18,6 +18,7 @@ const getParentCaretContainer = (body: Node, node: Node): Element | null => {
 };
 
 export {
+  CARET_ID,
   isCaretNode,
   getParentCaretContainer
 };
