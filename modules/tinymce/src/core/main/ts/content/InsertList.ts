@@ -1,4 +1,4 @@
-import { Arr, Unicode } from '@ephox/katamari';
+import { Arr, Type, Unicode } from '@ephox/katamari';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import AstNode from '../api/html/Node';
@@ -17,7 +17,7 @@ import * as NodeType from '../dom/NodeType';
  */
 
 const hasOnlyOneChild = (node: AstNode): boolean => {
-  return node.firstChild && node.firstChild === node.lastChild;
+  return Type.isNonNullable(node.firstChild) && node.firstChild === node.lastChild;
 };
 
 const isPaddingNode = (node: AstNode): boolean => {
@@ -26,12 +26,12 @@ const isPaddingNode = (node: AstNode): boolean => {
 
 const isPaddedEmptyBlock = (schema: Schema, node: AstNode): boolean => {
   const blockElements = schema.getBlockElements();
-  return blockElements[node.name] && hasOnlyOneChild(node) && isPaddingNode(node.firstChild);
+  return blockElements[node.name] && hasOnlyOneChild(node) && isPaddingNode(node.firstChild as AstNode);
 };
 
-const isEmptyFragmentElement = (schema: Schema, node: AstNode | undefined): boolean => {
+const isEmptyFragmentElement = (schema: Schema, node: AstNode | null | undefined): boolean => {
   const nonEmptyElements = schema.getNonEmptyElements();
-  return node && (node.isEmpty(nonEmptyElements) || isPaddedEmptyBlock(schema, node));
+  return Type.isNonNullable(node) && (node.isEmpty(nonEmptyElements) || isPaddedEmptyBlock(schema, node));
 };
 
 const isListFragment = (schema: Schema, fragment: AstNode): boolean => {
@@ -50,7 +50,7 @@ const isListFragment = (schema: Schema, fragment: AstNode): boolean => {
 
   // Skip last child if it's an empty block
   if (isEmptyFragmentElement(schema, lastChild)) {
-    lastChild = lastChild.prev;
+    lastChild = lastChild?.prev;
   }
 
   if (!firstChild || firstChild !== lastChild) {
@@ -66,11 +66,11 @@ const cleanupDomFragment = (domFragment: DocumentFragment): DocumentFragment => 
 
   // TODO: remove the meta tag from paste logic
   if (firstChild && firstChild.nodeName === 'META') {
-    firstChild.parentNode.removeChild(firstChild);
+    firstChild.parentNode?.removeChild(firstChild);
   }
 
   if (lastChild && (lastChild as Element).id === 'mce_marker') {
-    lastChild.parentNode.removeChild(lastChild);
+    lastChild.parentNode?.removeChild(lastChild);
   }
 
   return domFragment;
@@ -83,8 +83,8 @@ const toDomFragment = (dom: DOMUtils, serializer: HtmlSerializer, fragment: AstN
   return cleanupDomFragment(domFragment);
 };
 
-const listItems = (elm: Node): HTMLLIElement[] => {
-  return Arr.filter(elm.childNodes, (child): child is HTMLLIElement => {
+const listItems = (elm: Node | null): HTMLLIElement[] => {
+  return Arr.filter(elm?.childNodes ?? [], (child): child is HTMLLIElement => {
     return child.nodeName === 'LI';
   });
 };
@@ -94,7 +94,7 @@ const isPadding = (node: Node): boolean => {
 };
 
 const isListItemPadded = (node: Node): boolean => {
-  return node && node.firstChild && node.firstChild === node.lastChild && isPadding(node.firstChild);
+  return Type.isNonNullable(node?.firstChild) && node.firstChild === node.lastChild && isPadding(node.firstChild);
 };
 
 const isEmptyOrPadded = (elm: Node): boolean => {
@@ -143,36 +143,40 @@ const findLastOf = (node: Node, rootNode: Node): Range | null => {
   return newCaretPos ? newCaretPos.toRange() : null;
 };
 
-const insertMiddle = (target: Node, elms: Node[], rootNode: Node, rng: Range): Range => {
+const insertMiddle = (target: Node, elms: Node[], rootNode: Node, rng: Range): Range | null => {
   const parts = getSplit(target, rng);
   const parentElm = target.parentNode;
 
-  parentElm.insertBefore(parts[0], target);
-  Tools.each(elms, (li) => {
-    parentElm.insertBefore(li, target);
-  });
-  parentElm.insertBefore(parts[1], target);
-  parentElm.removeChild(target);
+  if (parentElm) {
+    parentElm.insertBefore(parts[0], target);
+    Tools.each(elms, (li) => {
+      parentElm.insertBefore(li, target);
+    });
+    parentElm.insertBefore(parts[1], target);
+    parentElm.removeChild(target);
+  }
 
   return findLastOf(elms[elms.length - 1], rootNode);
 };
 
-const insertBefore = (target: Node, elms: Node[], rootNode: Node): Range => {
+const insertBefore = (target: Node, elms: Node[], rootNode: Node): Range | null => {
   const parentElm = target.parentNode;
 
-  Tools.each(elms, (elm) => {
-    parentElm.insertBefore(elm, target);
-  });
+  if (parentElm) {
+    Tools.each(elms, (elm) => {
+      parentElm.insertBefore(elm, target);
+    });
+  }
 
   return findFirstIn(target, rootNode);
 };
 
-const insertAfter = (target: Node, elms: Node[], rootNode: Node, dom: DOMUtils): Range => {
+const insertAfter = (target: Node, elms: Node[], rootNode: Node, dom: DOMUtils): Range | null => {
   dom.insertAfter(elms.reverse(), target);
   return findLastOf(elms[0], rootNode);
 };
 
-const insertAtCaret = (serializer: HtmlSerializer, dom: DOMUtils, rng: Range, fragment: AstNode): Range => {
+const insertAtCaret = (serializer: HtmlSerializer, dom: DOMUtils, rng: Range, fragment: AstNode): Range | null => {
   const domFragment = toDomFragment(dom, serializer, fragment);
   const liTarget = getParentLi(dom, rng.startContainer);
   const liElms = trimListItems(listItems(domFragment.firstChild));
@@ -183,17 +187,20 @@ const insertAtCaret = (serializer: HtmlSerializer, dom: DOMUtils, rng: Range, fr
     const caretPos = CaretPosition.fromRangeStart(rng);
     const caretWalker = CaretWalker(dom.getRoot());
     const newPos = location === BEGINNING ? caretWalker.prev(caretPos) : caretWalker.next(caretPos);
+    const newPosNode = newPos?.getNode();
 
-    return newPos ? getParentLi(dom, newPos.getNode()) !== liTarget : true;
+    return newPosNode ? getParentLi(dom, newPosNode) !== liTarget : true;
   };
 
-  if (isAt(BEGINNING)) {
+  if (!liTarget) {
+    return null;
+  } else if (isAt(BEGINNING)) {
     return insertBefore(liTarget, liElms, rootNode);
   } else if (isAt(END)) {
     return insertAfter(liTarget, liElms, rootNode, dom);
+  } else {
+    return insertMiddle(liTarget, liElms, rootNode, rng);
   }
-
-  return insertMiddle(liTarget, liElms, rootNode, rng);
 };
 
 export {

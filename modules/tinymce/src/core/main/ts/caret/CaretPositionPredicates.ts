@@ -23,7 +23,7 @@ const isEmptyText = (pos: CaretPosition): boolean => {
 };
 
 const matchesElementPosition = (before: boolean, predicate: (node: Node) => boolean) => (pos: CaretPosition): boolean =>
-  Optional.from(getChildNodeAtRelativeOffset(before ? 0 : -1, pos)).filter(predicate).isSome();
+  getChildNodeAtRelativeOffset(before ? 0 : -1, pos).filter(predicate).isSome();
 
 const isImageBlock = (node: Node): boolean =>
   NodeType.isImg(node) && Css.get(SugarElement.fromDom(node), 'display') === 'block';

@@ -129,8 +129,8 @@ class NodeChange {
    * @private
    * @return {Boolean} True if the element path is the same false if it's not.
    */
-  private isSameElementPath(startElm: Node) {
-    let i;
+  private isSameElementPath(startElm: Element) {
+    let i: number;
     const editor = this.editor;
 
     const currentPath = Arr.reverse(editor.dom.getParents(startElm, Fun.always, editor.getBody()));

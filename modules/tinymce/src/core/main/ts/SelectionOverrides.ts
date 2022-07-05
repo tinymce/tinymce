@@ -37,7 +37,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
   const elementSelectionAttr = 'data-mce-selected';
   let selectedElement: Element | null;
 
-  const isFakeSelectionElement = (node: Node | null) =>
+  const isFakeSelectionElement = (node: Element | null) =>
     Type.isNonNullable(node) && dom.hasClass(node, 'mce-offscreen-selection');
 
   // Note: isChildOf will return true if node === rootNode, so we need an additional check for that
@@ -174,17 +174,18 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
       }
     });
 
-    const isPasteBin = (node: Element): boolean => node.id === 'mcepastebin';
+    const isPasteBin = (node: Node | null): boolean =>
+      NodeType.isElement(node) && node.id === 'mcepastebin';
 
     editor.on('AfterSetSelectionRange', (e) => {
       const rng = e.range;
-      const parentNode = rng.startContainer.parentNode;
+      const parent = rng.startContainer.parentElement;
 
-      if (!isRangeInCaretContainer(rng) && !isPasteBin(parentNode as Element)) {
+      if (!isRangeInCaretContainer(rng) && !isPasteBin(parent)) {
         hideFakeCaret();
       }
 
-      if (!isFakeSelectionElement(parentNode)) {
+      if (!isFakeSelectionElement(parent)) {
         removeElementSelection();
       }
     });

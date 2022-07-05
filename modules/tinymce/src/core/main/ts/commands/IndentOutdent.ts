@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Strings } from '@ephox/katamari';
 import { Css, PredicateFind, SugarElement, SugarElements, Traverse } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
@@ -7,29 +7,30 @@ import * as Options from '../api/Options';
 import { isList, isListItem, isTable } from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 
+type IndentStyle = 'margin-left' | 'margin-right' | 'padding-left' | 'padding-right';
+
 const isEditable = (target: SugarElement<Node>): boolean =>
   PredicateFind.closest(target, (elm) => NodeType.isContentEditableTrue(elm.dom) || NodeType.isContentEditableFalse(elm.dom))
     .exists((elm) => NodeType.isContentEditableTrue(elm.dom));
 
-const parseIndentValue = (value: string): number => {
-  const number = parseInt(value, 10);
-  return isNaN(number) ? 0 : number;
-};
+const parseIndentValue = (value: string | undefined): number =>
+  Strings.toInt(value ?? '').getOr(0);
 
-const getIndentStyleName = (useMargin: boolean, element: SugarElement<HTMLElement>): string => {
+const getIndentStyleName = (useMargin: boolean, element: SugarElement<HTMLElement>): IndentStyle => {
   const indentStyleName = useMargin || isTable(element) ? 'margin' : 'padding';
   const suffix = Css.get(element, 'direction') === 'rtl' ? '-right' : '-left';
-  return indentStyleName + suffix;
+  return indentStyleName + suffix as IndentStyle;
 };
 
 const indentElement = (dom: DOMUtils, command: string, useMargin: boolean, value: number, unit: string, element: HTMLElement): void => {
   const indentStyleName = getIndentStyleName(useMargin, SugarElement.fromDom(element));
+  const parsedValue = parseIndentValue(dom.getStyle(element, indentStyleName));
 
   if (command === 'outdent') {
-    const styleValue = Math.max(0, parseIndentValue(element.style[indentStyleName]) - value);
+    const styleValue = Math.max(0, parsedValue - value);
     dom.setStyle(element, indentStyleName, styleValue ? styleValue + unit : '');
   } else {
-    const styleValue = parseIndentValue(element.style[indentStyleName]) + value + unit;
+    const styleValue = (parsedValue + value) + unit;
     dom.setStyle(element, indentStyleName, styleValue);
   }
 };
@@ -61,8 +62,8 @@ const getBlocksToIndent = (editor: Editor): SugarElement<HTMLElement>[] =>
 const handle = (editor: Editor, command: string): void => {
   const { dom } = editor;
   const indentation = Options.getIndentation(editor);
-  const indentUnit = /[a-z%]+$/i.exec(indentation)[0];
-  const indentValue = parseInt(indentation, 10);
+  const indentUnit = /[a-z%]+$/i.exec(indentation)?.[0] ?? 'px';
+  const indentValue = parseIndentValue(indentation);
   const useMargin = Options.shouldIndentUseMargin(editor);
 
   Arr.each(getBlocksToIndent(editor), (block) => {

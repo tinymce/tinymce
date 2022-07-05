@@ -20,9 +20,9 @@ const CreateIconManager = (): IconManager => {
   const get = (id: string) => {
     if (lookup[id]) {
       return lookup[id];
+    } else {
+      return { icons: {}};
     }
-
-    return { icons: {}};
   };
 
   const has = (id: string) => Obj.has(lookup, id);

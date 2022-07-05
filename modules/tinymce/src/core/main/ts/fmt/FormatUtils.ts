@@ -15,7 +15,7 @@ const isInlineBlock = (node: Node): boolean => {
   return node && /^(IMG)$/.test(node.nodeName);
 };
 
-const moveStart = (dom: DOMUtils, selection: EditorSelection, rng: Range) => {
+const moveStart = (dom: DOMUtils, selection: EditorSelection, rng: Range): void => {
   const offset = rng.startOffset;
   let container = rng.startContainer;
 
@@ -28,13 +28,14 @@ const moveStart = (dom: DOMUtils, selection: EditorSelection, rng: Range) => {
   // Move startContainer/startOffset in to a suitable node
   if (NodeType.isElement(container)) {
     const nodes = container.childNodes;
+    const root = dom.getRoot();
     let walker: DomTreeWalker;
     if (offset < nodes.length) {
       container = nodes[offset];
-      walker = new DomTreeWalker(container, dom.getParent(container, dom.isBlock));
+      walker = new DomTreeWalker(container, dom.getParent(container, dom.isBlock) ?? root);
     } else {
       container = nodes[nodes.length - 1];
-      walker = new DomTreeWalker(container, dom.getParent(container, dom.isBlock));
+      walker = new DomTreeWalker(container, dom.getParent(container, dom.isBlock) ?? root);
       walker.next(true);
     }
 
@@ -58,7 +59,7 @@ const moveStart = (dom: DOMUtils, selection: EditorSelection, rng: Range) => {
  * @param {Boolean} inc (Optional) Include the current node in checking. Defaults to false.
  * @return {Node} Next or previous node or undefined if it wasn't found.
  */
-const getNonWhiteSpaceSibling = (node: Node | null, next?: boolean, inc?: boolean) => {
+const getNonWhiteSpaceSibling = (node: Node | null, next?: boolean, inc?: boolean): Node | undefined => {
   if (node) {
     const nextName = next ? 'nextSibling' : 'previousSibling';
 
@@ -68,9 +69,11 @@ const getNonWhiteSpaceSibling = (node: Node | null, next?: boolean, inc?: boolea
       }
     }
   }
+
+  return undefined;
 };
 
-const isTextBlock = (editor: Editor, name: string | Node) => {
+const isTextBlock = (editor: Editor, name: string | Node): boolean => {
   if (isNode(name)) {
     name = name.nodeName;
   }
@@ -78,11 +81,11 @@ const isTextBlock = (editor: Editor, name: string | Node) => {
   return !!editor.schema.getTextBlockElements()[name.toLowerCase()];
 };
 
-const isValid = (ed: Editor, parent: string, child: string) => {
+const isValid = (ed: Editor, parent: string, child: string): boolean => {
   return ed.schema.isValidChild(parent, child);
 };
 
-const isWhiteSpaceNode = (node: Node | null, allowSpaces: boolean = false) => {
+const isWhiteSpaceNode = (node: Node | null, allowSpaces: boolean = false): boolean => {
   if (Type.isNonNullable(node) && NodeType.isText(node)) {
     // If spaces are allowed, treat them as a non-breaking space
     const data = allowSpaces ? node.data.replace(/ /g, '\u00a0') : node.data;
@@ -92,7 +95,7 @@ const isWhiteSpaceNode = (node: Node | null, allowSpaces: boolean = false) => {
   }
 };
 
-const isEmptyTextNode = (node: Node | null) => {
+const isEmptyTextNode = (node: Node | null): boolean => {
   return Type.isNonNullable(node) && NodeType.isText(node) && node.length === 0;
 };
 
@@ -104,9 +107,12 @@ const isEmptyTextNode = (node: Node | null) => {
  * @param {Object} vars Name/value array with variables to replace.
  * @return {String} New value with replaced variables.
  */
-const replaceVars = (value: FormatAttrOrStyleValue, vars?: FormatVars): string => {
+const replaceVars: {
+  (value: string, vars?: FormatVars): string;
+  (value: FormatAttrOrStyleValue, vars?: FormatVars): string | null;
+} = (value: FormatAttrOrStyleValue, vars?: FormatVars): any => {
   if (Type.isFunction(value)) {
-    value = value(vars);
+    return value(vars);
   } else if (Type.isNonNullable(vars)) {
     value = value.replace(/%(\w+)/g, (str, name) => {
       return vars[name] || str;
@@ -124,7 +130,7 @@ const replaceVars = (value: FormatAttrOrStyleValue, vars?: FormatVars): string =
  * @param {String/Node} str2 Node or string to compare.
  * @return {Boolean} True/false if they match.
  */
-const isEq = (str1: Node | string, str2: Node | string) => {
+const isEq = (str1: Node | string | null | undefined, str2: Node | string | null | undefined): boolean => {
   str1 = str1 || '';
   str2 = str2 || '';
 
@@ -134,67 +140,84 @@ const isEq = (str1: Node | string, str2: Node | string) => {
   return str1.toLowerCase() === str2.toLowerCase();
 };
 
-const normalizeStyleValue = (value, name: string) => {
-  // Force the format to hex
-  if (name === 'color' || name === 'backgroundColor') {
-    value = Transformations.rgbaToHexString(value);
-  }
+const normalizeStyleValue = (value: string | number | null | undefined, name: string): string | null => {
+  if (Type.isNullable(value)) {
+    return null;
+  } else {
+    let strValue = String(value);
 
-  // Opera will return bold as 700
-  if (name === 'fontWeight' && value === 700) {
-    value = 'bold';
-  }
+    // Force the format to hex
+    if (name === 'color' || name === 'backgroundColor') {
+      strValue = Transformations.rgbaToHexString(strValue);
+    }
 
-  // Normalize fontFamily so "'Font name', Font" becomes: "Font name,Font"
-  if (name === 'fontFamily') {
-    value = value.replace(/[\'\"]/g, '').replace(/,\s+/g, ',');
-  }
+    // Opera will return bold as 700
+    if (name === 'fontWeight' && value === 700) {
+      strValue = 'bold';
+    }
 
-  return '' + value;
+    // Normalize fontFamily so "'Font name', Font" becomes: "Font name,Font"
+    if (name === 'fontFamily') {
+      strValue = strValue.replace(/[\'\"]/g, '').replace(/,\s+/g, ',');
+    }
+
+    return strValue;
+  }
 };
 
-const getStyle = (dom: DOMUtils, node: Node, name: string) => {
-  return normalizeStyleValue(dom.getStyle(node, name), name);
+const getStyle = (dom: DOMUtils, node: Element, name: string): string | null => {
+  const style = dom.getStyle(node, name);
+  return normalizeStyleValue(style, name);
 };
 
 const getTextDecoration = (dom: DOMUtils, node: Node): string | undefined => {
   let decoration: string | undefined;
 
   dom.getParent(node, (n): boolean => {
-    decoration = dom.getStyle(n, 'text-decoration');
-    return decoration && decoration !== 'none';
+    if (NodeType.isElement(n)) {
+      decoration = dom.getStyle(n, 'text-decoration');
+      return !!decoration && decoration !== 'none';
+    } else {
+      return false;
+    }
   });
 
   return decoration;
 };
 
-const getParents = (dom: DOMUtils, node: Node, selector?: string) => {
+const getParents = (dom: DOMUtils, node: Node, selector?: string): Node[] => {
   return dom.getParents(node, selector, dom.getRoot());
+};
+
+const isFormatPredicate = (editor: Editor, formatName: string, predicate: (format: Format) => boolean): boolean => {
+  const formats = editor.formatter.get(formatName);
+  return Type.isNonNullable(formats) && Arr.exists(formats, predicate);
 };
 
 const isVariableFormatName = (editor: Editor, formatName: string): boolean => {
   const hasVariableValues = (format: Format) => {
-    const isVariableValue = (val: string): boolean => val.length > 1 && val.charAt(0) === '%';
+    const isVariableValue = (val: FormatAttrOrStyleValue): boolean => Type.isFunction(val) || val.length > 1 && val.charAt(0) === '%';
     return Arr.exists([ 'styles', 'attributes' ], (key: 'styles' | 'attributes') =>
       Obj.get(format, key).exists((field) => {
         const fieldValues = Type.isArray(field) ? field : Obj.values(field);
         return Arr.exists(fieldValues, isVariableValue);
       }));
   };
-  return Arr.exists(editor.formatter.get(formatName), hasVariableValues);
+
+  return isFormatPredicate(editor, formatName, hasVariableValues);
 };
 
 /**
  * Checks if the two formats are similar based on the format type, attributes, styles and classes
  */
-const areSimilarFormats = (editor: Editor, formatName: string, otherFormatName: string) => {
+const areSimilarFormats = (editor: Editor, formatName: string, otherFormatName: string): boolean => {
   // Note: MatchFormat.matchNode() uses these parameters to check if a format matches a node
   // Therefore, these are ideal to check if two formats are similar
   const validKeys = [ 'inline', 'block', 'selector', 'attributes', 'styles', 'classes' ];
   const filterObj = (format: Record<string, any>) => Obj.filter(format, (_, key) => Arr.exists(validKeys, (validKey) => validKey === key));
-  return Arr.exists(editor.formatter.get(formatName), (fmt1) => {
+  return isFormatPredicate(editor, formatName, (fmt1) => {
     const filteredFmt1 = filterObj(fmt1);
-    return Arr.exists(editor.formatter.get(otherFormatName), (fmt2) => {
+    return isFormatPredicate(editor, otherFormatName, (fmt2) => {
       const filteredFmt2 = filterObj(fmt2);
       return Obj.equal(filteredFmt1, filteredFmt2);
     });
@@ -210,10 +233,10 @@ const isSelectorFormat = (format: Format): format is SelectorFormat =>
 const isInlineFormat = (format: Format): format is InlineFormat =>
   Obj.hasNonNullableKey(format as any, 'inline');
 
-const isMixedFormat = (format: Format): format is MixedFormat =>
-  isSelectorFormat(format) && isInlineFormat(format) && Optionals.is(Obj.get(format as any, 'mixed'), true);
+const isMixedFormat = (format: any): format is MixedFormat =>
+  isSelectorFormat(format) && isInlineFormat(format) && Optionals.is(Obj.get(format, 'mixed'), true);
 
-const shouldExpandToSelector = (format: Format) =>
+const shouldExpandToSelector = (format: Format): boolean =>
   isSelectorFormat(format) && format.expand !== false && !isInlineFormat(format);
 
 export {

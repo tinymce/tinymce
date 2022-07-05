@@ -5,7 +5,7 @@ import Schema from '../api/html/Schema';
 import Tools from '../api/util/Tools';
 import { hasOnlyChild, isEmpty } from './ParserUtils';
 
-const removeOrUnwrapInvalidNode = (node: AstNode, schema: Schema, originalNodeParent: AstNode | undefined = node.parent) => {
+const removeOrUnwrapInvalidNode = (node: AstNode, schema: Schema, originalNodeParent: AstNode | null | undefined = node.parent) => {
   if (schema.getSpecialElements()[node.name]) {
     node.empty().remove();
   } else {
@@ -31,7 +31,7 @@ const cleanInvalidNodes = (nodes: AstNode[], schema: Schema, onCreate: (newNode:
 
   for (let ni = 0; ni < nodes.length; ni++) {
     const node = nodes[ni];
-    let parent: AstNode | undefined;
+    let parent: AstNode | null | undefined;
     let newParent: AstNode | undefined;
     let tempNode: AstNode | undefined;
 

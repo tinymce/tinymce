@@ -7,9 +7,11 @@ export const registerCommands = (editor: Editor): void => {
       let counter = 0;
 
       editor.dom.getParent(editor.selection.getNode(), (node) => {
-        if (node.nodeType === 1 && counter++ === value) {
+        if (NodeType.isElement(node) && counter++ === value) {
           editor.selection.select(node);
           return false;
+        } else {
+          return true;
         }
       }, editor.getBody());
     },

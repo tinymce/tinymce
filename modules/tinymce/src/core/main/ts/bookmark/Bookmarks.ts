@@ -14,7 +14,7 @@ const moveToBookmark = (selection: EditorSelection, bookmark: Bookmark): void =>
   });
 };
 
-const isBookmarkNode = (node: Node): boolean => {
+const isBookmarkNode = (node: Node | null): boolean => {
   return NodeType.isElement(node) && node.tagName === 'SPAN' && node.getAttribute('data-mce-type') === 'bookmark';
 };
 

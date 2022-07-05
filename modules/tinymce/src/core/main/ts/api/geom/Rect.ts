@@ -87,10 +87,8 @@ const relativePosition = (rect: GeomRect, targetRect: GeomRect, rel: string): Ge
  * @param {Array} rels Array of relative positions to test against.
  */
 const findBestRelativePosition = (rect: GeomRect, targetRect: GeomRect, constrainRect: GeomRect, rels: string[]): string | null => {
-  let pos, i;
-
-  for (i = 0; i < rels.length; i++) {
-    pos = relativePosition(rect, targetRect, rels[i]);
+  for (let i = 0; i < rels.length; i++) {
+    const pos = relativePosition(rect, targetRect, rels[i]);
 
     if (pos.x >= constrainRect.x && pos.x + pos.w <= constrainRect.w + constrainRect.x &&
       pos.y >= constrainRect.y && pos.y + pos.h <= constrainRect.h + constrainRect.y) {

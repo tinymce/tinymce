@@ -21,7 +21,6 @@ const firstNonWhiteSpaceNodeSibling = (node: Node | null): Node | null => {
 };
 
 const moveToCaretPosition = (editor: Editor, root: Node): void => {
-  let node, lastNode = root;
   const dom = editor.dom;
   const moveCaretBeforeOnEnterElementsMap = editor.schema.getMoveCaretBeforeOnEnterElements();
 
@@ -42,6 +41,8 @@ const moveToCaretPosition = (editor: Editor, root: Node): void => {
 
   if (root.hasChildNodes()) {
     const walker = new DomTreeWalker(root, root);
+    let lastNode = root;
+    let node: Node | null | undefined;
 
     while ((node = walker.current())) {
       if (NodeType.isText(node)) {

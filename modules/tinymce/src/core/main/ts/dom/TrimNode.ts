@@ -60,7 +60,7 @@ const trimNode = <T extends Node>(dom: DOMUtils, node: T, root?: Node): T => {
   if (NodeType.isElement(node)) {
     const currentChildren = node.childNodes;
     if (currentChildren.length === 1 && isBookmarkNode(currentChildren[0])) {
-      node.parentNode.insertBefore(currentChildren[0], node);
+      node.parentNode?.insertBefore(currentChildren[0], node);
     }
   }
 

@@ -8,15 +8,17 @@ const legacyPropNames: Record<string, string> = {
   'font-family': 'face'
 };
 
+const isFont = SugarNode.isTag('font');
+
 const getSpecifiedFontProp = (propName: string, rootElm: Element, elm: HTMLElement): Optional<string> => {
-  const getProperty = (elm: SugarElement) => Css.getRaw(elm, propName).orThunk(() => {
-    if (SugarNode.name(elm) === 'font') {
+  const getProperty = (elm: SugarElement<Node>) => Css.getRaw(elm, propName).orThunk(() => {
+    if (isFont(elm)) {
       return Obj.get(legacyPropNames, propName).bind((legacyPropName) => Attribute.getOpt(elm, legacyPropName));
     } else {
       return Optional.none();
     }
   });
-  const isRoot = (elm: SugarElement) => Compare.eq(SugarElement.fromDom(rootElm), elm);
+  const isRoot = (elm: SugarElement<Node>) => Compare.eq(SugarElement.fromDom(rootElm), elm);
 
   return TransformFind.closest(SugarElement.fromDom(elm), (elm) => getProperty(elm), isRoot);
 };

@@ -19,7 +19,7 @@ interface ListDetail {
   readonly 'list-item-attributes'?: Record<string, string>;
 }
 
-const updateListStyle = (dom: DOMUtils, el: Node, detail: ListDetail): void => {
+const updateListStyle = (dom: DOMUtils, el: Element, detail: ListDetail): void => {
   const type = detail['list-style-type'] ? detail['list-style-type'] : null;
   dom.setStyle(el, 'list-style-type', type);
 };
@@ -190,7 +190,7 @@ const isValidLists = (list1: Node | undefined, list2: Node | undefined): boolean
   return list1 && list2 && NodeType.isListNode(list1) && list1.nodeName === list2.nodeName;
 };
 
-const hasSameListStyle = (dom: DOMUtils, list1: Node, list2: Node): boolean => {
+const hasSameListStyle = (dom: DOMUtils, list1: Element, list2: Element): boolean => {
   const targetStyle = dom.getStyle(list1, 'list-style-type', true);
   const style = dom.getStyle(list2, 'list-style-type', true);
   return targetStyle === style;
@@ -204,7 +204,7 @@ const shouldMerge = (dom: DOMUtils, list1: Node | undefined, list2: Node | undef
   return isValidLists(list1, list2) &&
     // Note: isValidLists will ensure list1 and list2 are a HTMLElement. Unfortunately TypeScript doesn't
     // support type guards on multiple variables. See https://github.com/microsoft/TypeScript/issues/26916
-    hasSameListStyle(dom, list1, list2) &&
+    hasSameListStyle(dom, list1 as HTMLElement, list2 as HTMLElement) &&
     hasSameClasses(list1 as HTMLElement, list2 as HTMLElement);
 };
 

@@ -36,7 +36,7 @@ const validBlocks = [
 const isZeroWidth = (elem: SugarElement<Node>): boolean =>
   SugarNode.isText(elem) && SugarText.get(elem) === ZWSP;
 
-const context = (editor: Editor, elem: SugarElement, wrapName: string, nodeName: string): ChildContext => Traverse.parent(elem).fold(
+const context = (editor: Editor, elem: SugarElement<Node>, wrapName: string, nodeName: string): ChildContext => Traverse.parent(elem).fold(
   () => ChildContext.Skipping,
 
   (parent) => {

@@ -70,7 +70,7 @@ interface EditorSelection {
   isCollapsed: () => boolean;
   isForward: () => boolean;
   setNode: (elm: Element) => Element;
-  getNode: () => Element;
+  getNode: () => HTMLElement;
   getSel: () => Selection | null;
   setRng: (rng: Range, forward?: boolean) => void;
   getRng: () => Range;
@@ -81,12 +81,12 @@ interface EditorSelection {
   selectorChanged: (selector: string, callback: (active: boolean, args: {
     node: Node;
     selector: String;
-    parents: Element[];
+    parents: Node[];
   }) => void) => EditorSelection;
   selectorChangedWithUnbind: (selector: string, callback: (active: boolean, args: {
     node: Node;
     selector: String;
-    parents: Element[];
+    parents: Node[];
   }) => void) => { unbind: () => void };
   getScrollContainer: () => HTMLElement | undefined;
   scrollIntoView: (elm?: HTMLElement, alignToTop?: boolean) => void;
@@ -301,7 +301,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
 
     const doc = win.document;
 
-    if (editor.bookmark !== undefined && EditorFocus.hasFocus(editor) === false) {
+    if (Type.isNonNullable(editor.bookmark) && !EditorFocus.hasFocus(editor)) {
       const bookmark = SelectionBookmark.getRng(editor);
 
       if (bookmark.isSome()) {
@@ -331,7 +331,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     }
 
     // If range is at start of document then move it to start of body
-    if (rng.startContainer.nodeType === 9 && rng.collapsed) {
+    if (NodeType.isDocument(rng.startContainer) && rng.collapsed) {
       const elm = dom.getRoot();
       rng.setStart(elm, 0);
       rng.setEnd(elm, 0);
@@ -441,7 +441,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * // Alerts the currently selected elements node name
    * alert(tinymce.activeEditor.selection.getNode().nodeName);
    */
-  const getNode = (): Element => ElementSelection.getNode(editor.getBody(), getRng());
+  const getNode = (): HTMLElement => ElementSelection.getNode(editor.getBody(), getRng());
 
   const getSelectedBlocks = (startElm?: Element, endElm?: Element) =>
     ElementSelection.getSelectedBlocks(dom, getRng(), startElm, endElm);
@@ -500,7 +500,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * @param {String} selector CSS selector to check for.
    * @param {Function} callback Callback with state and args when the selector is matches or not.
    */
-  const selectorChanged = (selector: string, callback: (active: boolean, args: { node: Node; selector: String; parents: Element[] }) => void) => {
+  const selectorChanged = (selector: string, callback: (active: boolean, args: { node: Node; selector: String; parents: Node[] }) => void) => {
     selectorChangedWithUnbind(selector, callback);
     return exports;
   };

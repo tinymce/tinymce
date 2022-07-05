@@ -68,7 +68,7 @@ const moveEndPoint = (dom: DOMUtils, rng: Range, node: Node, start: boolean): vo
     !Arr.contains([ 'td', 'th', 'table' ], name.toLowerCase())
   );
 
-  let currentNode: Node | undefined = node;
+  let currentNode: Node | null | undefined = node;
   do {
     if (NodeType.isText(currentNode) && Tools.trim(currentNode.data).length !== 0) {
       if (start) {

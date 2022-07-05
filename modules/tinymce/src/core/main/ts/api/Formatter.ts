@@ -27,13 +27,13 @@ import Editor from './Editor';
  */
 
 interface Formatter extends FormatRegistry {
-  apply: (name: string, vars?: FormatVars, node?: Node | RangeLikeObject) => void;
+  apply: (name: string, vars?: FormatVars, node?: Node | RangeLikeObject | null) => void;
   remove: (name: string, vars?: FormatVars, node?: Node | Range, similar?: boolean) => void;
   toggle: (name: string, vars?: FormatVars, node?: Node) => void;
   match: (name: string, vars?: FormatVars, node?: Node, similar?: boolean) => boolean;
   closest: (names: string[]) => string | null;
   matchAll: (names: string[], vars?: FormatVars) => string[];
-  matchNode: (node: Node, name: string, vars?: FormatVars, similar?: boolean) => Format | undefined;
+  matchNode: (node: Node | null, name: string, vars?: FormatVars, similar?: boolean) => Format | undefined;
   canApply: (name: string) => boolean;
   formatChanged: (names: string, callback: FormatChanged.FormatChangeCallback, similar?: boolean, vars?: FormatVars) => { unbind: () => void };
   getCssText: (format: string | ApplyFormat) => string;

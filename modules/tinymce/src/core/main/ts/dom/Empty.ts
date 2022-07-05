@@ -13,7 +13,7 @@ const hasWhitespacePreserveParent = (node: Node, rootNode: Node): boolean => {
 };
 
 const isWhitespace = (node: Node, rootNode: Node): boolean => {
-  return NodeType.isText(node) && isWhitespaceText(node.data) && hasWhitespacePreserveParent(node, rootNode) === false;
+  return NodeType.isText(node) && isWhitespaceText(node.data) && !hasWhitespacePreserveParent(node, rootNode);
 };
 
 const isNamedAnchor = (node: Node): boolean => {
@@ -21,7 +21,7 @@ const isNamedAnchor = (node: Node): boolean => {
 };
 
 const isContent = (node: Node, rootNode: Node): boolean => {
-  return (CaretCandidate.isCaretCandidate(node) && isWhitespace(node, rootNode) === false) || isNamedAnchor(node) || isBookmark(node);
+  return (CaretCandidate.isCaretCandidate(node) && !isWhitespace(node, rootNode)) || isNamedAnchor(node) || isBookmark(node);
 };
 
 const isBookmark = NodeType.hasAttribute('data-mce-bookmark');
@@ -34,7 +34,7 @@ const isEmptyNode = (targetNode: Node, skipBogus: boolean): boolean => {
   if (isContent(targetNode, targetNode)) {
     return false;
   } else {
-    let node: Node | undefined = targetNode.firstChild;
+    let node: Node | null | undefined = targetNode.firstChild;
     if (!node) {
       return true;
     }

@@ -318,8 +318,8 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
         }
       };
 
-      const isValid = (name: string, elemName: string): boolean => {
-        if (!invalidStyles) {
+      const isValid = (name: string, elemName: string | undefined): boolean => {
+        if (!invalidStyles || !elemName) {
           return true;
         }
 

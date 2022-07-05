@@ -85,12 +85,11 @@ const Quirks = (editor: Editor): Quirks => {
 
     editor.on('keydown', (e) => {
       const keyCode = e.keyCode;
-      let isCollapsed, body;
 
       // Empty the editor if it's needed for example backspace at <p><b>|</b></p>
       if (!isDefaultPrevented(e) && (keyCode === DELETE || keyCode === BACKSPACE)) {
-        isCollapsed = editor.selection.isCollapsed();
-        body = editor.getBody();
+        const isCollapsed = editor.selection.isCollapsed();
+        const body = editor.getBody();
 
         // Selection is collapsed but the editor isn't empty
         if (isCollapsed && !dom.isEmpty(body)) {
@@ -263,7 +262,7 @@ const Quirks = (editor: Editor): Quirks => {
    */
   const removeStylesWhenDeletingAcrossBlockElements = () => {
     const getAttributeApplyFunction = () => {
-      const template = dom.getAttribs(selection.getStart().cloneNode(false));
+      const template = dom.getAttribs(selection.getStart().cloneNode(false) as Element);
 
       return () => {
         const target = selection.getStart();
@@ -292,6 +291,8 @@ const Quirks = (editor: Editor): Quirks => {
         applyAttributes();
         e.preventDefault();
         return false;
+      } else {
+        return true;
       }
     });
 
@@ -321,6 +322,7 @@ const Quirks = (editor: Editor): Quirks => {
           }
         }
       }
+      return true;
     });
   };
 
@@ -336,23 +338,21 @@ const Quirks = (editor: Editor): Quirks => {
   const removeBlockQuoteOnBackSpace = () => {
     // Add block quote deletion handler
     editor.on('keydown', (e) => {
-      let rng, parent;
-
       if (isDefaultPrevented(e) || e.keyCode !== VK.BACKSPACE) {
         return;
       }
 
-      rng = selection.getRng();
+      let rng = selection.getRng();
       const container = rng.startContainer;
       const offset = rng.startOffset;
       const root = dom.getRoot();
-      parent = container;
+      let parent = container;
 
       if (!rng.collapsed || offset !== 0) {
         return;
       }
 
-      while (parent && parent.parentNode && parent.parentNode.firstChild === parent && parent.parentNode !== root) {
+      while (parent.parentNode && parent.parentNode.firstChild === parent && parent.parentNode !== root) {
         parent = parent.parentNode;
       }
 

@@ -42,7 +42,7 @@ const EditorUpload = (editor: Editor): EditorUpload => {
   const uploadStatus = UploadStatus();
   const urlFilters: Array<(img: HTMLImageElement) => boolean> = [];
 
-  const aliveGuard = <T, R> (callback?: (result: T) => R) => {
+  const aliveGuard = <T, R> (callback: (result: T) => R) => {
     return (result: T) => {
       if (editor.selection) {
         return callback(result);
@@ -116,8 +116,7 @@ const EditorUpload = (editor: Editor): EditorUpload => {
         let shouldDispatchChange = false;
 
         const filteredResult: UploadResult[] = Arr.map(result, (uploadInfo, index) => {
-          const blobInfo = imageInfos[index].blobInfo;
-          const image = imageInfos[index].image;
+          const { blobInfo, image } = imageInfos[index];
           let removed = false;
 
           if (uploadInfo.status && Options.shouldReplaceBlobUris(editor)) {
@@ -132,7 +131,7 @@ const EditorUpload = (editor: Editor): EditorUpload => {
             }
           } else if (uploadInfo.error) {
             if (uploadInfo.error.remove) {
-              replaceUrlInUndoStack(image.getAttribute('src'), Env.transparentSrc);
+              replaceUrlInUndoStack(image.src, Env.transparentSrc);
               imagesToRemove.push(image);
               removed = true;
             }
@@ -209,7 +208,7 @@ const EditorUpload = (editor: Editor): EditorUpload => {
   const destroy = () => {
     blobCache.destroy();
     uploadStatus.destroy();
-    imageScanner = uploader = null;
+    imageScanner = uploader = null as any;
   };
 
   const replaceBlobUris = (content: string) => {
@@ -223,9 +222,9 @@ const EditorUpload = (editor: Editor): EditorUpload => {
       let blobInfo = blobCache.getByUri(blobUri);
 
       if (!blobInfo) {
-        blobInfo = Arr.foldl(editor.editorManager.get(), (result, editor) => {
+        blobInfo = Arr.foldl(editor.editorManager.get(), (result: BlobInfo | undefined, editor: Editor) => {
           return result || editor.editorUpload && editor.editorUpload.blobCache.getByUri(blobUri);
-        }, null);
+        }, undefined);
       }
 
       if (blobInfo) {
@@ -262,7 +261,7 @@ const EditorUpload = (editor: Editor): EditorUpload => {
       Arr.each(images, (img) => {
         const src = img.attr('src');
 
-        if (blobCache.getByUri(src)) {
+        if (!src || blobCache.getByUri(src)) {
           return;
         }
 
