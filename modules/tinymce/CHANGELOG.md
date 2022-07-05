@@ -7,7 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Fixed
-
 - The Autolink plugin did not work when the text nodes in the content were fragmented #TINY-3723
 - Fixed various incorrect types on public APIs found while enabling TypeScript strict mode #TINY-8806
 - The editor focused via the `auto_focus` option was not scrolled into the viewport #TINY-8785
