@@ -22,6 +22,7 @@ import CaretPosition from '../caret/CaretPosition';
 import * as Placeholder from '../content/Placeholder';
 import * as DeleteCommands from '../delete/DeleteCommands';
 import * as NodeType from '../dom/NodeType';
+import { scrollElementIntoView } from '../dom/ScrollIntoView';
 import * as TouchEvents from '../events/TouchEvents';
 import * as ForceBlocks from '../ForceBlocks';
 import * as NonEditableFilter from '../html/NonEditableFilter';
@@ -220,7 +221,7 @@ const autoFocus = (editor: Editor) => {
 
       if (focusEditor && !focusEditor.destroyed) {
         focusEditor.focus();
-        focusEditor.getBody().scrollIntoView();
+        scrollElementIntoView(focusEditor, focusEditor.selection.getNode());
       }
     }, 100);
   }
