@@ -97,11 +97,16 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       identifyMenus(editor, rawUiConfig)
     );
 
+    const sidebarShow = Options.getSidebarShow(editor)?.toLowerCase();
     OuterContainer.setSidebar(
       outerContainer,
       rawUiConfig.sidebar,
-      Options.getSidebarShow(editor)
+      sidebarShow
     );
+    // Make sure any listeners of ToggleSidebar are notified if sidebar is open
+    if (OuterContainer.whichSidebar(outerContainer) === sidebarShow) {
+      editor.dispatch('ToggleSidebar');
+    }
 
     setupEvents(editor, uiComponents);
   });

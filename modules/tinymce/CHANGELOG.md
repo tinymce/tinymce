@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- When a sidebar was opened using the `sidebar_show` option, its associated toggle button was not highlighted #TINY-8873
+
 ## 6.1.0 - 2022-06-29
 
 ### Added
