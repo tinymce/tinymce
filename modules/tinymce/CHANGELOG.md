@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- New `default_textcolor_forecolor` and `default_textcolor_hilitecolor` params added.
+
+### Changed
+- Clicking "Remove Color" will reset to default foreground/background color.
+- Default text background color is now "Light Yellow."
+
 ## 6.1.0 - 2022-06-29
 
 ### Added
