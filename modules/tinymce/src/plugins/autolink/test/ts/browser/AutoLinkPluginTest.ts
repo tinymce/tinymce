@@ -14,7 +14,8 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     plugins: 'autolink',
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
-    inline_boundaries: false
+    inline_boundaries: false,
+    allow_unsafe_link_target: true
   }, [ Plugin ], true);
 
   const typeUrl = (editor: Editor, url: string): string => {
@@ -136,6 +137,26 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
       typeUrl(editor, 'http://www.domain.com'),
       '<p><a href="http://www.domain.com" target="_self">http://www.domain.com</a>&nbsp;</p>'
     );
+    editor.options.unset('link_default_target');
+  });
+
+  it(`TBA: link_default_target='_blank'`, () => {
+    const editor = hook.editor();
+    editor.options.set('link_default_target', '_blank');
+    editor.options.set('allow_unsafe_link_target', false);
+    LegacyUnit.equal(
+      typeUrl(editor, 'http://www.domain.com'),
+      '<p><a href="http://www.domain.com" target="_blank" rel="noopener">http://www.domain.com</a>&nbsp;</p>',
+      'With allow_unsafe_link_target=false'
+    );
+
+    editor.options.set('allow_unsafe_link_target', true);
+    LegacyUnit.equal(
+      typeUrl(editor, 'http://www.domain.com'),
+      '<p><a href="http://www.domain.com" target="_blank">http://www.domain.com</a>&nbsp;</p>',
+      'With allow_unsafe_link_target=true'
+    );
+
     editor.options.unset('link_default_target');
   });
 

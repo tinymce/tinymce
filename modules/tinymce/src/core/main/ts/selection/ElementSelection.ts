@@ -40,7 +40,7 @@ const skipEmptyTextNodes = (node: Node | null, forwards: boolean): Node | null =
   return node || orig;
 };
 
-const getNode = (root: Element, rng: Range | undefined): Element => {
+const getNode = (root: HTMLElement, rng: Range | undefined): HTMLElement => {
   // Range maybe lost after the editor is made visible again
   if (!rng) {
     return root;
@@ -120,7 +120,7 @@ const getSelectedBlocks = (dom: DOMUtils, rng: Range, startElm?: Element, endElm
   return selectedBlocks;
 };
 
-const select = (dom: DOMUtils, node: Node | null, content?: boolean) =>
+const select = (dom: DOMUtils, node: Node | null, content?: boolean): Optional<Range> =>
   Optional.from(node).bind((node) =>
     Optional.from(node.parentNode).map((parent) => {
       const idx = dom.nodeIndex(node);

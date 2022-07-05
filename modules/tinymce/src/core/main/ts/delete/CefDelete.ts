@@ -27,7 +27,7 @@ const moveToPosition = (editor: Editor) => (pos: CaretPosition): boolean => {
   return true;
 };
 
-const getAncestorCe = (editor: Editor, node: Node): Optional<Node> =>
+const getAncestorCe = (editor: Editor, node: Node | null): Optional<Node> =>
   Optional.from(CefUtils.getContentEditableRoot(editor.getBody(), node));
 
 const backspaceDeleteCaret = (editor: Editor, forward: boolean): Optional<() => void> => {

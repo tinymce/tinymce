@@ -49,7 +49,9 @@ const setupEvents = (editor: Editor, uiComponents: RenderUiComponents) => {
     }
   };
 
-  const scroll = (e: EventUtilsEvent<Event>) => Events.fireScrollContent(editor, e);
+  const scroll = (e: EventUtilsEvent<Event>) => {
+    Events.fireScrollContent(editor, e);
+  };
 
   dom.bind(contentWindow, 'resize', resizeWindow);
   dom.bind(contentWindow, 'scroll', scroll);

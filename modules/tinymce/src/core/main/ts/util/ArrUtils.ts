@@ -112,9 +112,7 @@ const reduce: {
 };
 
 const findIndex = <T>(array: ArrayLike<T>, predicate: ArrayCallback<T, boolean>, thisArg?: any): number => {
-  let i, l;
-
-  for (i = 0, l = array.length; i < l; i++) {
+  for (let i = 0, l = array.length; i < l; i++) {
     if (predicate.call(thisArg, array[i], i, array)) {
       return i;
     }
@@ -137,6 +135,7 @@ const last = <T>(collection: ArrayLike<T>): T | undefined =>
   collection[collection.length - 1];
 
 export {
+  isArrayLike,
   isArray,
   toArray,
   each,

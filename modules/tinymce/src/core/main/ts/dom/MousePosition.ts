@@ -25,8 +25,8 @@ const getAbsolutePosition = (elm: HTMLElement): Position => {
   const win = doc.defaultView;
 
   return {
-    top: clientRect.top + win.pageYOffset - docElem.clientTop,
-    left: clientRect.left + win.pageXOffset - docElem.clientLeft
+    top: clientRect.top + (win?.scrollY ?? 0) - docElem.clientTop,
+    left: clientRect.left + (win?.scrollX ?? 0) - docElem.clientLeft
   };
 };
 

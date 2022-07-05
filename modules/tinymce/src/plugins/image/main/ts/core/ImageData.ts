@@ -148,8 +148,8 @@ const setBorderStyle = (image: HTMLElement, value: string): void => {
 const getBorderStyle = (image: HTMLElement): string =>
   getStyle(image, 'borderStyle');
 
-const isFigure = (elm: Node): elm is HTMLElement =>
-  elm.nodeName === 'FIGURE';
+const isFigure = (elm: Node | null): elm is HTMLElement =>
+  Type.isNonNullable(elm) && elm.nodeName === 'FIGURE';
 
 const isImage = (elm: Node): elm is HTMLImageElement =>
   elm.nodeName === 'IMG';

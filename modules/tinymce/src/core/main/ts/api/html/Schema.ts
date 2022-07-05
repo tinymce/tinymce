@@ -1023,7 +1023,6 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
    * @return {Boolean} True/false if the element and attribute is valid.
    */
   const isValid = (name: string, attr?: string): boolean => {
-    let attrPatterns, i;
     const rule = getElementRule(name);
 
     // Check if it's a valid element
@@ -1035,9 +1034,9 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
         }
 
         // Check if attribute matches a regexp pattern
-        attrPatterns = rule.attributePatterns;
+        const attrPatterns = rule.attributePatterns;
         if (attrPatterns) {
-          i = attrPatterns.length;
+          let i = attrPatterns.length;
           while (i--) {
             if (attrPatterns[i].pattern.test(attr)) {
               return true;

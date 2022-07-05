@@ -53,7 +53,7 @@ const get = (editor: Editor): Formats => {
         },
         onformat: (table: Node) => {
           // Remove conflicting float style
-          dom.setStyle(table, 'float', null);
+          dom.setStyle(table as HTMLTableElement, 'float', null);
         },
         preview: 'font-family font-size'
       }
@@ -129,7 +129,7 @@ const get = (editor: Editor): Formats => {
         },
         onformat: (table: Node) => {
           // Remove conflicting float style
-          dom.setStyle(table, 'float', null);
+          dom.setStyle(table as HTMLTableElement, 'float', null);
         },
         preview: 'font-family font-size'
       }
@@ -189,7 +189,7 @@ const get = (editor: Editor): Formats => {
 
       onformat: (elm: Node, _fmt: Format, vars?: FormatVars) => {
         Tools.each(vars, (value, key) => {
-          dom.setAttrib(elm, key, value);
+          dom.setAttrib(elm as HTMLAnchorElement, key, value);
         });
       }
     },

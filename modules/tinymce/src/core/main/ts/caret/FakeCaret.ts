@@ -111,9 +111,10 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
     }
 
     if (isBlock(element)) {
-      caretContainerNode = CaretContainer.insertBlock(caretBlock, element, before);
+      const caretContainer = CaretContainer.insertBlock(caretBlock, element, before);
       const clientRect = getAbsoluteClientRect(root, element, before);
-      dom.setStyle(caretContainerNode, 'top', clientRect.top);
+      dom.setStyle(caretContainer, 'top', clientRect.top);
+      caretContainerNode = caretContainer;
 
       const caret = dom.create('div', { 'class': 'mce-visual-caret', 'data-mce-bogus': 'all' });
       dom.setStyles(caret, { ...clientRect });
@@ -126,8 +127,8 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
       startBlink();
 
       rng = element.ownerDocument.createRange();
-      rng.setStart(caretContainerNode, 0);
-      rng.setEnd(caretContainerNode, 0);
+      rng.setStart(caretContainer, 0);
+      rng.setEnd(caretContainer, 0);
     } else {
       caretContainerNode = CaretContainer.insertInline(element, before);
       rng = element.ownerDocument.createRange();

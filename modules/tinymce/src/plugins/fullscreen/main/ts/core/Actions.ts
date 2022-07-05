@@ -101,7 +101,7 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | nul
   const iframe = editor.iframeElement;
   const iframeStyle = iframe.style;
 
-  const handleClasses = (handler: (elm: string | Node | Node[], cls: string) => void) => {
+  const handleClasses = (handler: (elm: string | Element | Element[], cls: string) => void) => {
     handler(body, 'tox-fullscreen');
     handler(documentElement, 'tox-fullscreen');
     handler(editorContainer, 'tox-fullscreen');

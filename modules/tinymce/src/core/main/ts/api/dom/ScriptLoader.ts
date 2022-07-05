@@ -60,7 +60,7 @@ class ScriptLoader {
     this.settings = settings;
   }
 
-  public _setReferrerPolicy(referrerPolicy: ReferrerPolicy) {
+  public _setReferrerPolicy(referrerPolicy: ReferrerPolicy): void {
     this.settings.referrerPolicy = referrerPolicy;
   }
 
@@ -74,7 +74,7 @@ class ScriptLoader {
   public loadScript(url: string): Promise<void> {
     return new Promise((resolve, reject) => {
       const dom = DOM;
-      let elm: HTMLScriptElement;
+      let elm: HTMLScriptElement | null;
 
       const cleanup = () => {
         dom.remove(id);
@@ -138,7 +138,7 @@ class ScriptLoader {
    * @method markDone
    * @param {String} url Absolute URL to the script to mark as loaded.
    */
-  public markDone(url: string) {
+  public markDone(url: string): void {
     this.states[url] = LOADED;
   }
 
@@ -176,7 +176,7 @@ class ScriptLoader {
     return this.add(url);
   }
 
-  public remove(url: string) {
+  public remove(url: string): void {
     delete this.states[url];
     delete this.scriptLoadedCallbacks[url];
   }
@@ -243,6 +243,8 @@ class ScriptLoader {
           if (queue.length > 0) {
             self.queue = [];
             return load(queue).then(processResults);
+          } else {
+            return Promise.resolve();
           }
         }, () => {
           self.states[url] = FAILED;

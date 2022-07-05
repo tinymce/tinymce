@@ -17,6 +17,7 @@ import AddOnManager from './AddOnManager';
 import Annotator from './Annotator';
 import * as Commands from './commands/Commands';
 import DOMUtils from './dom/DOMUtils';
+import { EventUtilsCallback } from './dom/EventUtils';
 import ScriptLoader from './dom/ScriptLoader';
 import EditorSelection from './dom/Selection';
 import DomSerializer from './dom/Serializer';
@@ -179,67 +180,69 @@ class Editor implements EditorObservable {
   public editorCommands: EditorCommands;
   public suffix: string;
   public editorManager: EditorManager;
+  public hidden: boolean;
   public inline: boolean;
+  public hasVisual: boolean;
 
   public isNotDirty: boolean = false;
 
   // Arguments set later, for example by InitContentBody.ts
-  public annotator: Annotator;
-  public bodyElement: HTMLElement;
+  // Note that these may technically be undefined up until PreInit (or similar) has fired,
+  // however the types are aimed at an initialised editor for ease of use.
+  public annotator!: Annotator;
+  public bodyElement: HTMLElement | undefined;
   public bookmark: any; // Note: Intentionally any so as to not expose Optional
-  public composing: boolean;
-  public container: HTMLElement;
-  public contentAreaContainer: HTMLElement;
-  public contentDocument: Document;
-  public contentWindow: Window;
-  public delegates: Record<string, (event: any) => void>;
-  public destroyed: boolean;
-  public dom: DOMUtils;
-  public editorContainer: HTMLElement;
-  public editorUpload: EditorUpload;
-  public eventRoot?: Element;
-  public formatter: Formatter;
-  public formElement: HTMLElement;
-  public formEventDelegate: (e: Event) => void;
-  public hasHiddenInput: boolean;
-  public hasVisual: boolean;
-  public hidden: boolean;
-  public iframeElement: HTMLIFrameElement | null;
-  public iframeHTML: string;
-  public initialized: boolean;
-  public notificationManager: NotificationManager;
-  public orgDisplay: string;
-  public orgVisibility: string;
-  public parser: DomParser;
-  public quirks: Quirks;
-  public readonly: boolean;
-  public removed: boolean;
-  public schema: Schema;
-  public selection: EditorSelection;
-  public serializer: DomSerializer;
-  public startContent: string;
-  public targetElm: HTMLElement;
-  public theme: Theme;
-  public model: Model;
-  public undoManager: UndoManager;
-  public windowManager: WindowManager;
-  public _beforeUnload: () => void;
-  public _eventDispatcher: EventDispatcher<NativeEventMap>;
-  public _nodeChangeDispatcher: NodeChange;
-  public _pendingNativeEvents: string[];
-  public _selectionOverrides: SelectionOverrides;
+  public composing: boolean = false;
+  public container!: HTMLElement;
+  public contentAreaContainer!: HTMLElement;
+  public contentDocument!: Document;
+  public contentWindow!: Window;
+  public delegates: Record<string, EventUtilsCallback<any>> | undefined;
+  public destroyed: boolean = false;
+  public dom!: DOMUtils;
+  public editorContainer!: HTMLElement;
+  public editorUpload!: EditorUpload;
+  public eventRoot: Element | undefined;
+  public formatter!: Formatter;
+  public formElement: HTMLElement | undefined;
+  public formEventDelegate: ((e: Event) => void) | undefined;
+  public hasHiddenInput: boolean = false;
+  public iframeElement: HTMLIFrameElement | null = null;
+  public iframeHTML: string | undefined;
+  public initialized: boolean = false;
+  public notificationManager!: NotificationManager;
+  public orgDisplay!: string;
+  public orgVisibility: string | undefined;
+  public parser!: DomParser;
+  public quirks!: Quirks;
+  public readonly: boolean = false;
+  public removed: boolean = false;
+  public schema!: Schema;
+  public selection!: EditorSelection;
+  public serializer!: DomSerializer;
+  public startContent: string = '';
+  public targetElm!: HTMLElement;
+  public theme!: Theme;
+  public model!: Model;
+  public undoManager!: UndoManager;
+  public windowManager!: WindowManager;
+  public _beforeUnload: (() => void) | undefined;
+  public _eventDispatcher: EventDispatcher<NativeEventMap> | undefined;
+  public _nodeChangeDispatcher!: NodeChange;
+  public _pendingNativeEvents: string[] = [];
+  public _selectionOverrides!: SelectionOverrides;
   public _skinLoaded: boolean = false;
 
   // EditorObservable patches
-  public bindPendingEventDelegates: EditorObservable['bindPendingEventDelegates'];
-  public toggleNativeEvent: EditorObservable['toggleNativeEvent'];
-  public unbindAllNativeEvents: EditorObservable['unbindAllNativeEvents'];
-  public fire: EditorObservable['fire'];
-  public dispatch: EditorObservable['dispatch'];
-  public on: EditorObservable['on'];
-  public off: EditorObservable['off'];
-  public once: EditorObservable['once'];
-  public hasEventListeners: EditorObservable['hasEventListeners'];
+  public bindPendingEventDelegates!: EditorObservable['bindPendingEventDelegates'];
+  public toggleNativeEvent!: EditorObservable['toggleNativeEvent'];
+  public unbindAllNativeEvents!: EditorObservable['unbindAllNativeEvents'];
+  public fire!: EditorObservable['fire'];
+  public dispatch!: EditorObservable['dispatch'];
+  public on!: EditorObservable['on'];
+  public off!: EditorObservable['off'];
+  public once!: EditorObservable['once'];
+  public hasEventListeners!: EditorObservable['hasEventListeners'];
 
   /**
    * Constructs a editor instance by id.
@@ -298,6 +301,7 @@ class Editor implements EditorObservable {
     });
     this.baseURI = this.baseUri;
     this.inline = Options.isInline(self);
+    this.hasVisual = Options.isVisualAidsEnabled(self);
 
     this.shortcuts = new Shortcuts(this);
     this.editorCommands = new EditorCommands(this);
@@ -310,7 +314,7 @@ class Editor implements EditorObservable {
 
     this.ui = {
       registry: registry(),
-      styleSheetLoader: undefined,
+      styleSheetLoader: undefined as any,
       show: Fun.noop,
       hide: Fun.noop,
       setEnabled: Fun.noop,
@@ -921,7 +925,7 @@ class Editor implements EditorObservable {
     const self = this;
 
     if (!self.container) {
-      self.container = DOM.get(self.editorContainer || self.id + '_parent');
+      self.container = self.editorContainer || DOM.get(self.id + '_parent') as HTMLElement;
     }
 
     return self.container;
@@ -946,7 +950,7 @@ class Editor implements EditorObservable {
    */
   public getElement(): HTMLElement {
     if (!this.targetElm) {
-      this.targetElm = DOM.get(this.id);
+      this.targetElm = DOM.get(this.id) as HTMLElement;
     }
 
     return this.targetElm;
@@ -960,13 +964,12 @@ class Editor implements EditorObservable {
    */
   public getWin(): Window {
     const self = this;
-    let elm;
 
     if (!self.contentWindow) {
-      elm = self.iframeElement;
+      const elm = self.iframeElement;
 
       if (elm) {
-        self.contentWindow = elm.contentWindow;
+        self.contentWindow = elm.contentWindow as Window;
       }
     }
 
@@ -981,10 +984,9 @@ class Editor implements EditorObservable {
    */
   public getDoc(): Document {
     const self = this;
-    let win;
 
     if (!self.contentDocument) {
-      win = self.getWin();
+      const win = self.getWin();
 
       if (win) {
         self.contentDocument = win.document;
@@ -1003,7 +1005,7 @@ class Editor implements EditorObservable {
    */
   public getBody(): HTMLElement {
     const doc = this.getDoc();
-    return this.bodyElement || (doc ? doc.body : null);
+    return this.bodyElement ?? doc?.body ?? null;
   }
 
   /**
@@ -1017,7 +1019,7 @@ class Editor implements EditorObservable {
    * @param {String/HTMLElement} elm Tag name or HTML DOM element depending on HTML or DOM insert.
    * @return {String} Converted URL string.
    */
-  public convertURL(url: string, name: string, elm?: string | HTMLElement): string {
+  public convertURL(url: string, name: string, elm?: string | Element): string {
     const self = this, getOption = self.options.get;
 
     // Use callback instead

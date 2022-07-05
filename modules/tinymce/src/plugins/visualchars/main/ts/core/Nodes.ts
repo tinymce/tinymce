@@ -26,10 +26,10 @@ const filterDescendants = <T extends Node>(scope: SugarElement<Node>, predicate:
   return result;
 };
 
-const findParentElm = (elm: Node, rootElm: Node): Node | undefined => {
+const findParentElm = (elm: Node, rootElm: Element): Element | undefined => {
   while (elm.parentNode) {
     if (elm.parentNode === rootElm) {
-      return elm;
+      return rootElm;
     }
     elm = elm.parentNode;
   }

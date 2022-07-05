@@ -37,7 +37,7 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
         node.attr(internalName, null);
       } else {
         // No internal attribute found then convert the value we have in the DOM
-        value = node.attr(name);
+        value = node.attr(name) as string;
 
         if (name === 'style') {
           value = dom.serializeStyle(dom.parseStyle(value), node.name);
@@ -58,7 +58,7 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
       let value = node.attr('class');
 
       if (value) {
-        value = node.attr('class').replace(/(?:^|\s)mce-item-\w+(?!\S)/g, '');
+        value = value.replace(/(?:^|\s)mce-item-\w+(?!\S)/g, '');
         node.attr('class', value.length > 0 ? value : null);
       }
     }
@@ -72,7 +72,7 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
 
       if (node.attr('data-mce-type') === 'bookmark' && !args.cleanup) {
         // We maybe dealing with a "filled" bookmark. If so just remove the node, otherwise unwrap it
-        const hasChildren = Optional.from(node.firstChild).exists((firstChild) => !Zwsp.isZwsp(firstChild.value));
+        const hasChildren = Optional.from(node.firstChild).exists((firstChild) => !Zwsp.isZwsp(firstChild.value ?? ''));
         if (hasChildren) {
           node.unwrap();
         } else {
@@ -88,7 +88,7 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
       const node = nodes[i].firstChild;
 
       if (node) {
-        node.value = Entities.decode(node.value);
+        node.value = Entities.decode(node.value ?? '');
       }
     }
   });
@@ -107,7 +107,8 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
     let i = nodes.length;
     while (i--) {
       const node = nodes[i];
-      const value = node.firstChild ? node.firstChild.value : '';
+      const firstChild = node.firstChild;
+      const value = firstChild?.value ?? '';
 
       if (name === 'script') {
         // Remove mce- prefix from script elements and remove default type since the user specified
@@ -117,12 +118,12 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
           node.attr('type', type === 'mce-no/type' ? null : type.replace(/^mce\-/, ''));
         }
 
-        if (settings.element_format === 'xhtml' && value.length > 0) {
-          node.firstChild.value = '// <![CDATA[\n' + trim(value) + '\n// ]]>';
+        if (settings.element_format === 'xhtml' && firstChild && value.length > 0) {
+          firstChild.value = '// <![CDATA[\n' + trim(value) + '\n// ]]>';
         }
       } else {
-        if (settings.element_format === 'xhtml' && value.length > 0) {
-          node.firstChild.value = '<!--\n' + trim(value) + '\n-->';
+        if (settings.element_format === 'xhtml' && firstChild && value.length > 0) {
+          firstChild.value = '<!--\n' + trim(value) + '\n-->';
         }
       }
     }
@@ -134,15 +135,16 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
     while (i--) {
       const node = nodes[i];
 
-      if (settings.preserve_cdata && node.value.indexOf('[CDATA[') === 0) {
+      const value = node.value;
+      if (settings.preserve_cdata && value?.indexOf('[CDATA[') === 0) {
         node.name = '#cdata';
         node.type = 4;
-        node.value = dom.decode(node.value.replace(/^\[CDATA\[|\]\]$/g, ''));
-      } else if (node.value.indexOf('mce:protected ') === 0) {
+        node.value = dom.decode(value.replace(/^\[CDATA\[|\]\]$/g, ''));
+      } else if (value?.indexOf('mce:protected ') === 0) {
         node.name = '#text';
         node.type = 3;
         node.raw = true;
-        node.value = unescape(node.value).substr(14);
+        node.value = unescape(value).substr(14);
       }
     }
   });
@@ -199,8 +201,8 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
  * Example of what happens: <body>text</body> becomes <body>text<br><br></body>
  */
 const trimTrailingBr = (rootNode: AstNode): void => {
-  const isBr = (node: AstNode): boolean => {
-    return node && node.name === 'br';
+  const isBr = (node: AstNode | null | undefined): node is AstNode => {
+    return node?.name === 'br';
   };
 
   const brNode1 = rootNode.lastChild;

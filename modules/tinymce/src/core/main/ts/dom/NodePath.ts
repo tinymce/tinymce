@@ -10,8 +10,8 @@ import DOMUtils from '../api/dom/DOMUtils';
 const create = (rootNode: Node, targetNode: Node, normalized?: boolean): number[] => {
   const path: number[] = [];
 
-  for (; targetNode && targetNode !== rootNode; targetNode = targetNode.parentNode) {
-    path.push(DOMUtils.nodeIndex(targetNode, normalized));
+  for (let node: Node | null = targetNode; node && node !== rootNode; node = node.parentNode) {
+    path.push(DOMUtils.nodeIndex(node, normalized));
   }
 
   return path;

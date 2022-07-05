@@ -1,6 +1,7 @@
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import Tools from '../api/util/Tools';
+import * as NodeType from '../dom/NodeType';
 import { ApplyFormat, FormatVars } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 import * as MatchFormat from './MatchFormat';
@@ -9,9 +10,9 @@ import * as RemoveFormat from './RemoveFormat';
 
 const each = Tools.each;
 
-const mergeTextDecorationsAndColor = (dom: DOMUtils, format: ApplyFormat, vars: FormatVars, node: Node) => {
+const mergeTextDecorationsAndColor = (dom: DOMUtils, format: ApplyFormat, vars: FormatVars | undefined, node: Node): void => {
   const processTextDecorationsAndColor = (n: Node) => {
-    if (n.nodeType === 1 && n.parentNode && n.parentNode.nodeType === 1) {
+    if (NodeType.isElement(n) && NodeType.isElement(n.parentNode)) {
       const textDecoration = FormatUtils.getTextDecoration(dom, n.parentNode);
       if (dom.getStyle(n, 'color') && textDecoration) {
         dom.setStyle(n, 'text-decoration', textDecoration);
@@ -28,7 +29,7 @@ const mergeTextDecorationsAndColor = (dom: DOMUtils, format: ApplyFormat, vars: 
   }
 };
 
-const mergeBackgroundColorAndFontSize = (dom: DOMUtils, format: ApplyFormat, vars: FormatVars, node: Node) => {
+const mergeBackgroundColorAndFontSize = (dom: DOMUtils, format: ApplyFormat, vars: FormatVars | undefined, node: Node): void => {
   // nodes with font-size should have their own background color as well to fit the line-height (see TINY-882)
   if (format.styles && format.styles.backgroundColor) {
     processChildElements(node,
@@ -38,7 +39,7 @@ const mergeBackgroundColorAndFontSize = (dom: DOMUtils, format: ApplyFormat, var
   }
 };
 
-const mergeSubSup = (dom: DOMUtils, format: ApplyFormat, vars: FormatVars, node: Node) => {
+const mergeSubSup = (dom: DOMUtils, format: ApplyFormat, vars: FormatVars | undefined, node: Node): void => {
   // Remove font size on all children of a sub/sup and remove the inverse element
   if (FormatUtils.isInlineFormat(format) && (format.inline === 'sub' || format.inline === 'sup')) {
     processChildElements(node,
@@ -50,7 +51,7 @@ const mergeSubSup = (dom: DOMUtils, format: ApplyFormat, vars: FormatVars, node:
   }
 };
 
-const mergeWithChildren = (editor: Editor, formatList: ApplyFormat[], vars: FormatVars, node: Node) => {
+const mergeWithChildren = (editor: Editor, formatList: ApplyFormat[], vars: FormatVars | undefined, node: Node): void => {
   // Remove/merge children
   each(formatList, (format) => {
     // Merge all children of similar type will move styles from child to parent
@@ -58,11 +59,9 @@ const mergeWithChildren = (editor: Editor, formatList: ApplyFormat[], vars: Form
     // will become: <span style="color:red"><b><span style="font-size:10px">text</span></b></span>
     if (FormatUtils.isInlineFormat(format)) {
       each(editor.dom.select(format.inline, node), (child) => {
-        if (!isElementNode(child)) {
-          return;
+        if (isElementNode(child)) {
+          RemoveFormat.removeFormat(editor, format, vars, child, format.exact ? child : null);
         }
-
-        RemoveFormat.removeFormat(editor, format, vars, child, format.exact ? child : null);
       });
     }
 
@@ -70,20 +69,23 @@ const mergeWithChildren = (editor: Editor, formatList: ApplyFormat[], vars: Form
   });
 };
 
-const mergeWithParents = (editor: Editor, format: ApplyFormat, name: string, vars: FormatVars, node: Node) => {
+const mergeWithParents = (editor: Editor, format: ApplyFormat, name: string, vars: FormatVars | undefined, node: Node): void => {
   // Remove format if direct parent already has the same format
-  if (MatchFormat.matchNode(editor, node.parentNode, name, vars)) {
+  const parentNode = node.parentNode;
+  if (MatchFormat.matchNode(editor, parentNode, name, vars)) {
     if (RemoveFormat.removeFormat(editor, format, vars, node)) {
       return;
     }
   }
 
   // Remove format if any ancestor already has the same format
-  if (format.merge_with_parents) {
-    editor.dom.getParent(node.parentNode, (parent) => {
+  if (format.merge_with_parents && parentNode) {
+    editor.dom.getParent(parentNode, (parent) => {
       if (MatchFormat.matchNode(editor, parent, name, vars)) {
         RemoveFormat.removeFormat(editor, format, vars, node);
         return true;
+      } else {
+        return false;
       }
     });
   }

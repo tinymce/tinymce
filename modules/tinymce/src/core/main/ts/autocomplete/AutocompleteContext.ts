@@ -16,7 +16,7 @@ const stripTriggerChar = (text: string, triggerCh: string) => text.substring(tri
 
 const findChar = (text: string, index: number, ch: string): Optional<number> => {
   // Identify the `char` in, and start the text from that point forward. If there is ever any whitespace, fail
-  let i;
+  let i: number;
 
   for (i = index - 1; i >= 0; i--) {
     const char = text.charAt(i);

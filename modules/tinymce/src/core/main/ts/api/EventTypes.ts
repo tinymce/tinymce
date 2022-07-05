@@ -3,13 +3,14 @@ import { GetContentArgs, SetContentArgs } from '../content/ContentTypes';
 import { FormatVars } from '../fmt/FormatTypes';
 import { RangeLikeObject } from '../selection/RangeTypes';
 import { UndoLevel } from '../undo/UndoManagerTypes';
+import { SetAttribEvent } from './dom/DOMUtils';
 import Editor from './Editor';
 import { ParserArgs } from './html/DomParser';
 import { Dialog } from './ui/Ui';
 import { NativeEventMap } from './util/EventDispatcher';
 import { InstanceApi } from './WindowManager';
 
-export interface ExecCommandEvent { command: string; ui?: boolean; value?: any }
+export interface ExecCommandEvent { command: string; ui: boolean; value?: any }
 
 export interface BeforeGetContentEvent extends GetContentArgs {
   selection?: boolean;
@@ -37,7 +38,7 @@ export interface NewBlockEvent { newBlock: Element }
 
 export interface NodeChangeEvent { element: Element; parents: Node[]; selectionChange?: boolean; initial?: boolean }
 
-export interface FormatEvent { format: string; vars?: FormatVars; node?: Node | RangeLikeObject }
+export interface FormatEvent { format: string; vars?: FormatVars; node?: Node | RangeLikeObject | null }
 
 export interface ObjectResizeEvent { target: HTMLElement; width: number; height: number; origin: string }
 
@@ -163,6 +164,7 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'TableModified': TableModifiedEvent;
   'NewRow': NewTableRowEvent;
   'NewCell': NewTableCellEvent;
+  'SetAttrib': SetAttribEvent;
 }
 
 export interface EditorManagerEventMap {
