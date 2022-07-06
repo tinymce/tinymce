@@ -12,6 +12,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
+import { TestItem } from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 
@@ -44,15 +45,15 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoReopeningTest', (succ
 
             fetch: (input) => {
               const text = Value.get(input.element).toLowerCase();
-              const future = Future.pure([
+              const future = Future.pure<TestItem[]>([
                 { type: 'item', data: { value: text + '1', meta: { text: Strings.capitalize(text) + '1' }}},
                 { type: 'item', data: { value: text + '2', meta: { text: Strings.capitalize(text) + '2' }}}
               ]);
 
               return future.map((f) => {
                 // TODO: Test this.
-                const items = text === 'no-data' ? [
-                  { type: 'separator', data: { value: '', meta: { text: 'No data' }}}
+                const items: TestItem[] = text === 'no-data' ? [
+                  { type: 'separator', text: 'No data' }
                 ] : f;
 
                 const menu = TestDropdownMenu.renderMenu({

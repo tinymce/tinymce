@@ -3,7 +3,7 @@ import { Optional } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import * as NodeType from '../dom/NodeType';
 
-const trimEmptyTextNode = (dom: DOMUtils, node: Node) => {
+const trimEmptyTextNode = (dom: DOMUtils, node: Node | null) => {
   if (NodeType.isText(node) && node.data.length === 0) {
     dom.remove(node);
   }

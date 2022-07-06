@@ -1,6 +1,6 @@
-const or = (...args: any[]) => {
+const or = <T>(...args: Array<(x: T) => boolean>) => {
 
-  return (x) => {
+  return (x: T): boolean => {
     for (let i = 0; i < args.length; i++) {
       if (args[i](x)) {
         return true;
@@ -11,8 +11,8 @@ const or = (...args: any[]) => {
   };
 };
 
-const and = (...args: any[]) => {
-  return (x) => {
+const and = <T>(...args: Array<(x: T) => boolean>) => {
+  return (x: T): boolean => {
     for (let i = 0; i < args.length; i++) {
       if (!args[i](x)) {
         return false;

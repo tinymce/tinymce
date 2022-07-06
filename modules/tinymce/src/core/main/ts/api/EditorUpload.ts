@@ -1,4 +1,4 @@
-import { Arr, Cell } from '@ephox/katamari';
+import { Arr, Strings, Type } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
 
 import * as ErrorReporter from '../ErrorReporter';
@@ -6,8 +6,6 @@ import { BlobInfoImagePair, ImageScanner } from '../file/ImageScanner';
 import { Uploader } from '../file/Uploader';
 import { UploadStatus } from '../file/UploadStatus';
 import * as Rtc from '../Rtc';
-import * as Levels from '../undo/Levels';
-import { UndoLevel } from '../undo/UndoManagerTypes';
 import Editor from './Editor';
 import Env from './Env';
 import { BlobCache, BlobInfo } from './file/BlobCache';
@@ -38,39 +36,13 @@ interface EditorUpload {
   destroy: () => void;
 }
 
-const UploadChangeHandler = (editor: Editor) => {
-  const lastChangedLevel = Cell<UndoLevel>(null);
-
-  editor.on('change AddUndo', (e) => {
-    lastChangedLevel.set({ ...e.level });
-  });
-
-  const fireIfChanged = () => {
-    const data = editor.undoManager.data;
-    Arr.last(data).filter((level) => {
-      return !Levels.isEq(lastChangedLevel.get(), level);
-    }).each((level) => {
-      editor.setDirty(true);
-      editor.dispatch('change', {
-        level,
-        lastLevel: Arr.get(data, data.length - 2).getOrNull()
-      });
-    });
-  };
-
-  return {
-    fireIfChanged
-  };
-};
-
 const EditorUpload = (editor: Editor): EditorUpload => {
   const blobCache = BlobCache();
   let uploader: Uploader, imageScanner: ImageScanner;
   const uploadStatus = UploadStatus();
   const urlFilters: Array<(img: HTMLImageElement) => boolean> = [];
-  const changeHandler = UploadChangeHandler(editor);
 
-  const aliveGuard = <T, R> (callback?: (result: T) => R) => {
+  const aliveGuard = <T, R> (callback: (result: T) => R) => {
     return (result: T) => {
       if (editor.selection) {
         return callback(result);
@@ -141,13 +113,16 @@ const EditorUpload = (editor: Editor): EditorUpload => {
 
       return uploader.upload(blobInfos, openNotification(editor)).then(aliveGuard((result) => {
         const imagesToRemove: HTMLImageElement[] = [];
+        let shouldDispatchChange = false;
 
         const filteredResult: UploadResult[] = Arr.map(result, (uploadInfo, index) => {
-          const blobInfo = imageInfos[index].blobInfo;
-          const image = imageInfos[index].image;
+          const { blobInfo, image } = imageInfos[index];
           let removed = false;
 
           if (uploadInfo.status && Options.shouldReplaceBlobUris(editor)) {
+            if (uploadInfo.url && !Strings.contains(image.src, uploadInfo.url)) {
+              shouldDispatchChange = true;
+            }
             blobCache.removeByUri(image.src);
             if (Rtc.isRtc(editor)) {
               // RTC handles replacing the image URL through callback events
@@ -156,7 +131,7 @@ const EditorUpload = (editor: Editor): EditorUpload => {
             }
           } else if (uploadInfo.error) {
             if (uploadInfo.error.remove) {
-              replaceUrlInUndoStack(image.getAttribute('src'), Env.transparentSrc);
+              replaceUrlInUndoStack(image.src, Env.transparentSrc);
               imagesToRemove.push(image);
               removed = true;
             }
@@ -173,10 +148,6 @@ const EditorUpload = (editor: Editor): EditorUpload => {
           };
         });
 
-        if (filteredResult.length > 0) {
-          changeHandler.fireIfChanged();
-        }
-
         if (imagesToRemove.length > 0 && !Rtc.isRtc(editor)) {
           editor.undoManager.transact(() => {
             Arr.each(imagesToRemove, (element) => {
@@ -184,6 +155,8 @@ const EditorUpload = (editor: Editor): EditorUpload => {
               blobCache.removeByUri(element.src);
             });
           });
+        } else if (shouldDispatchChange) {
+          editor.undoManager.dispatchChange();
         }
 
         return filteredResult;
@@ -207,34 +180,35 @@ const EditorUpload = (editor: Editor): EditorUpload => {
     }
 
     return imageScanner.findAll(editor.getBody(), isValidDataUriImage).then(aliveGuard((result) => {
-      result = Arr.filter(result, (resultItem) => {
+      const filteredResult = Arr.filter(result, (resultItem): resultItem is BlobInfoImagePair => {
         // ImageScanner internally converts images that it finds, but it may fail to do so if image source is inaccessible.
         // In such case resultItem will contain appropriate text error message, instead of image data.
-        if (typeof resultItem === 'string') {
+        if (Type.isString(resultItem)) {
           ErrorReporter.displayError(editor, resultItem);
           return false;
+        } else {
+          return true;
         }
-        return true;
       });
 
       if (Rtc.isRtc(editor)) {
         // RTC is set up so that image sources are only ever blob
       } else {
-        Arr.each(result, (resultItem) => {
+        Arr.each(filteredResult, (resultItem) => {
           replaceUrlInUndoStack(resultItem.image.src, resultItem.blobInfo.blobUri());
           resultItem.image.src = resultItem.blobInfo.blobUri();
           resultItem.image.removeAttribute('data-mce-src');
         });
       }
 
-      return result;
+      return filteredResult;
     }));
   };
 
   const destroy = () => {
     blobCache.destroy();
     uploadStatus.destroy();
-    imageScanner = uploader = null;
+    imageScanner = uploader = null as any;
   };
 
   const replaceBlobUris = (content: string) => {
@@ -248,9 +222,9 @@ const EditorUpload = (editor: Editor): EditorUpload => {
       let blobInfo = blobCache.getByUri(blobUri);
 
       if (!blobInfo) {
-        blobInfo = Arr.foldl(editor.editorManager.get(), (result, editor) => {
+        blobInfo = Arr.foldl(editor.editorManager.get(), (result: BlobInfo | undefined, editor: Editor) => {
           return result || editor.editorUpload && editor.editorUpload.blobCache.getByUri(blobUri);
-        }, null);
+        }, undefined);
       }
 
       if (blobInfo) {
@@ -287,7 +261,7 @@ const EditorUpload = (editor: Editor): EditorUpload => {
       Arr.each(images, (img) => {
         const src = img.attr('src');
 
-        if (blobCache.getByUri(src)) {
+        if (!src || blobCache.getByUri(src)) {
           return;
         }
 

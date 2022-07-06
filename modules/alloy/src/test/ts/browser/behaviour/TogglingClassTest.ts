@@ -10,7 +10,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('TogglingClassTest', (success, failure) => {
 
-  GuiSetup.setup((_store, _doc, _body) => GuiFactory.build(
+  GuiSetup.setup((store, _doc, _body) => GuiFactory.build(
     Container.sketch({
       dom: {
         tag: 'div',
@@ -23,15 +23,16 @@ UnitTest.asynctest('TogglingClassTest', (success, failure) => {
       },
       containerBehaviours: Behaviour.derive([
         Toggling.config({
-          selected: true,
+          selected: false,
           toggleClass: 'test-selected',
           aria: {
             mode: 'pressed'
-          }
+          },
+          onToggled: store.adder('toggled')
         })
       ])
     })
-  ), (_doc, _body, _gui, component, _store) => {
+  ), (_doc, _body, _gui, component, store) => {
 
     const testIsSelected = (label: string) => Step.sync(() => {
       Assertions.assertStructure(
@@ -92,22 +93,23 @@ UnitTest.asynctest('TogglingClassTest', (success, failure) => {
     });
 
     return [
-      testIsSelected('Initial'),
+      testNotSelected('Initial'),
+      store.sAssertEq('Should not have a toggled event since the item is not selected', []),
 
       sToggle,
-      testNotSelected('selected > toggle'),
-      assertIsSelected('selected > toggle', false),
-
-      sToggle,
-      testIsSelected('selected > toggle, toggle'),
-      assertIsSelected('selected > toggle, toggle', true),
+      testIsSelected('selected > toggle'),
+      assertIsSelected('selected > toggle', true),
+      store.sAssertEq('Should have a toggled event after toggling on', [ 'toggled' ]),
 
       sDeselect,
       testNotSelected('selected > toggle, toggle, deselect'),
       assertIsSelected('selected > toggle, toggle, deselect', false),
+      store.sAssertEq('Should have a toggled event after toggling off', [ 'toggled', 'toggled' ]),
+
       sDeselect,
       testNotSelected('selected > toggle, toggle, deselect, deselect'),
       assertIsSelected('selected > toggle, toggle, deselect, deselect', false),
+      store.sAssertEq('No additional toggle events should have fired', [ 'toggled', 'toggled' ]),
 
       sSelect,
       testIsSelected('selected > toggle, toggle, deselect, deselect, select'),

@@ -1,38 +1,40 @@
+import { Type } from '@ephox/katamari';
+
 import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
 import * as NewLineUtils from './NewLineUtils';
 
-const hasFirstChild = (elm, name) => {
+const hasFirstChild = (elm: Node, name: string) => {
   return elm.firstChild && elm.firstChild.nodeName === name;
 };
 
-const isFirstChild = (elm: HTMLElement) => {
+const isFirstChild = (elm: Node) => {
   return elm.parentNode?.firstChild === elm;
 };
 
-const hasParent = (elm, parentName) => {
-  return elm && elm.parentNode && elm.parentNode.nodeName === parentName;
+const hasParent = (elm: Node | null, parentName: string): boolean => {
+  const parentNode = elm?.parentNode;
+  return Type.isNonNullable(parentNode) && parentNode.nodeName === parentName;
 };
 
-const isListBlock = (elm) => {
-  return elm && /^(OL|UL|LI)$/.test(elm.nodeName);
+const isListBlock = (elm: Node | null): elm is HTMLElement => {
+  return Type.isNonNullable(elm) && /^(OL|UL|LI)$/.test(elm.nodeName);
 };
 
-const isNestedList = (elm) => {
+const isListItem = (elm: Node | null): elm is HTMLElement => {
+  return Type.isNonNullable(elm) && /^(LI|DT|DD)$/.test(elm.nodeName);
+};
+
+const isNestedList = (elm: Element) => {
   return isListBlock(elm) && isListBlock(elm.parentNode);
 };
 
-const getContainerBlock = (containerBlock) => {
+const getContainerBlock = (containerBlock: Element): Element => {
   const containerBlockParent = containerBlock.parentNode;
-
-  if (/^(LI|DT|DD)$/.test(containerBlockParent.nodeName)) {
-    return containerBlockParent;
-  }
-
-  return containerBlock;
+  return isListItem(containerBlockParent) ? containerBlockParent : containerBlock;
 };
 
-const isFirstOrLastLi = (containerBlock, parentBlock, first) => {
+const isFirstOrLastLi = (containerBlock: Element, parentBlock: Element, first: boolean) => {
   let node = containerBlock[first ? 'firstChild' : 'lastChild'];
 
   // Find first/last element since there might be whitespace there
@@ -48,11 +50,12 @@ const isFirstOrLastLi = (containerBlock, parentBlock, first) => {
 };
 
 // Inserts a block or br before/after or in the middle of a split list of the LI is empty
-const insert = (editor: Editor, createNewBlock, containerBlock, parentBlock, newBlockName: string) => {
+const insert = (editor: Editor, createNewBlock: (name: string) => Element, containerBlock: Element, parentBlock: Element, newBlockName: string): void => {
   const dom = editor.dom;
   const rng = editor.selection.getRng();
+  const containerParent = containerBlock.parentNode;
 
-  if (containerBlock === editor.getBody()) {
+  if (containerBlock === editor.getBody() || !containerParent) {
     return;
   }
 
@@ -85,7 +88,7 @@ const insert = (editor: Editor, createNewBlock, containerBlock, parentBlock, new
       newBlock.appendChild(containerBlock);
     } else {
       // First LI in list then remove LI and add text block before list
-      containerBlock.parentNode.insertBefore(newBlock, containerBlock);
+      containerParent.insertBefore(newBlock, containerBlock);
     }
     dom.remove(parentBlock);
   } else if (isFirstOrLastLi(containerBlock, parentBlock, false)) {
@@ -102,7 +105,7 @@ const insert = (editor: Editor, createNewBlock, containerBlock, parentBlock, new
     const fragment = tmpRng.extractContents();
 
     if (newBlockName === 'LI' && hasFirstChild(fragment, 'LI')) {
-      newBlock = fragment.firstChild;
+      newBlock = fragment.firstChild as HTMLLIElement;
       dom.insertAfter(fragment, containerBlock);
     } else {
       dom.insertAfter(fragment, containerBlock);

@@ -76,7 +76,7 @@ const getTableFragment = (rootNode: SugarElement<Node>, selectedTableCells: Suga
 const getSelectionFragment = (rootNode: SugarElement<Node>, ranges: Range[]) =>
   ranges.length > 0 && ranges[0].collapsed ? emptyFragment() : getFragmentFromRange(rootNode, ranges[0]);
 
-const read = (rootNode: SugarElement<Node>, ranges: Range[]) => {
+const read = (rootNode: SugarElement<Element>, ranges: Range[]): SugarElement<Node> => {
   const selectedCells = TableCellSelection.getCellsFromElementOrRanges(ranges, rootNode);
   return selectedCells.length > 0 ? getTableFragment(rootNode, selectedCells) : getSelectionFragment(rootNode, ranges);
 };

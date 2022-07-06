@@ -9,10 +9,12 @@ import { blockbreak } from './InsertBlock';
 import { linebreak } from './InsertBr';
 import * as NewLineAction from './NewLineAction';
 
-const insertBreak = (breakType: {
-  insert: (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => void;
-  fakeEventName: string;
-}, editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
+interface BreakType {
+  readonly insert: (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => void;
+  readonly fakeEventName: string;
+}
+
+const insertBreak = (breakType: BreakType, editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   if (!editor.selection.isCollapsed()) {
     execDeleteCommand(editor);
   }
@@ -30,7 +32,7 @@ const insertBreak = (breakType: {
   }
 };
 
-const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
+const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   const br = () => insertBreak(linebreak, editor, evt);
   const block = () => insertBreak(blockbreak, editor, evt);
 

@@ -42,7 +42,7 @@ const splitTextBlock = (editor: Editor, figure: HTMLElement): HTMLElement => {
   );
 
   if (textBlock) {
-    return dom.split(textBlock, figure);
+    return dom.split(textBlock, figure) ?? figure;
   } else {
     return figure;
   }
@@ -77,7 +77,7 @@ const syncSrcAttr = (editor: Editor, image: HTMLElement): void => {
 
 const deleteImage = (editor: Editor, image: HTMLElement | null): void => {
   if (image) {
-    const elm = editor.dom.is(image.parentNode, 'figure.image') ? image.parentNode : image;
+    const elm = editor.dom.is<HTMLElement>(image.parentNode, 'figure.image') ? image.parentNode : image;
 
     editor.dom.remove(elm);
     editor.focus();
@@ -93,16 +93,18 @@ const deleteImage = (editor: Editor, image: HTMLElement | null): void => {
 const writeImageDataToSelection = (editor: Editor, data: ImageData) => {
   const image = getSelectedImage(editor);
 
-  write((css) => normalizeCss(editor, css), data, image);
-  syncSrcAttr(editor, image);
+  if (image) {
+    write((css) => normalizeCss(editor, css), data, image);
+    syncSrcAttr(editor, image);
 
-  if (isFigure(image.parentNode)) {
-    const figure = image.parentNode;
-    splitTextBlock(editor, figure);
-    editor.selection.select(image.parentNode);
-  } else {
-    editor.selection.select(image);
-    Utils.waitLoadImage(editor, data, image);
+    if (isFigure(image.parentNode)) {
+      const figure = image.parentNode;
+      splitTextBlock(editor, figure);
+      editor.selection.select(image.parentNode);
+    } else {
+      editor.selection.select(image);
+      Utils.waitLoadImage(editor, data, image);
+    }
   }
 };
 

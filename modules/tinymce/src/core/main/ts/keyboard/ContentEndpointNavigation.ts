@@ -7,16 +7,16 @@ import CaretPosition from '../caret/CaretPosition';
 import { isAtFirstLine, isAtLastLine } from '../caret/LineReader';
 import * as ElementType from '../dom/ElementType';
 
-const isTarget = (node: SugarElement) => Arr.contains([ 'figcaption' ], SugarNode.name(node));
+const isTarget = (node: SugarElement<Node>) => Arr.contains([ 'figcaption' ], SugarNode.name(node));
 
-const rangeBefore = (target: SugarElement) => {
+const rangeBefore = (target: SugarElement<Node>) => {
   const rng = document.createRange();
   rng.setStartBefore(target.dom);
   rng.setEndBefore(target.dom);
   return rng;
 };
 
-const insertElement = (root: SugarElement, elm: SugarElement, forward: boolean) => {
+const insertElement = (root: SugarElement<HTMLElement>, elm: SugarElement<Element>, forward: boolean) => {
   if (forward) {
     Insert.append(root, elm);
   } else {
@@ -24,7 +24,7 @@ const insertElement = (root: SugarElement, elm: SugarElement, forward: boolean) 
   }
 };
 
-const insertEmptyLine = (root: SugarElement, forward: boolean, blockName: string, attrs: Record<string, string>) => {
+const insertEmptyLine = (root: SugarElement<HTMLElement>, forward: boolean, blockName: string, attrs: Record<string, string>) => {
   const block = SugarElement.fromTag(blockName);
   const br = SugarElement.fromTag('br');
 
@@ -35,12 +35,13 @@ const insertEmptyLine = (root: SugarElement, forward: boolean, blockName: string
   return rangeBefore(br);
 };
 
-const getClosestTargetBlock = (pos: CaretPosition, root: SugarElement) => {
+const getClosestTargetBlock = (pos: CaretPosition, root: SugarElement<HTMLElement>) => {
   const isRoot = Fun.curry(Compare.eq, root);
   return PredicateFind.closest(SugarElement.fromDom(pos.container()), ElementType.isBlock, isRoot).filter(isTarget);
 };
 
-const isAtFirstOrLastLine = (root: SugarElement, forward: boolean, pos: CaretPosition) => forward ? isAtLastLine(root.dom, pos) : isAtFirstLine(root.dom, pos);
+const isAtFirstOrLastLine = (root: SugarElement<HTMLElement>, forward: boolean, pos: CaretPosition) =>
+  forward ? isAtLastLine(root.dom, pos) : isAtFirstLine(root.dom, pos);
 
 const moveCaretToNewEmptyLine = (editor: Editor, forward: boolean) => {
   const root = SugarElement.fromDom(editor.getBody());
@@ -59,7 +60,7 @@ const moveCaretToNewEmptyLine = (editor: Editor, forward: boolean) => {
   });
 };
 
-const moveV = (editor: Editor, forward: boolean) => {
+const moveV = (editor: Editor, forward: boolean): boolean => {
   if (editor.selection.isCollapsed()) {
     return moveCaretToNewEmptyLine(editor, forward);
   } else {

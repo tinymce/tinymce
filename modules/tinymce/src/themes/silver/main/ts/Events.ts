@@ -51,7 +51,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
   };
 
   // Window events
-  const onWindowScroll = (evt: UIEvent) => broadcastEvent(SystemEvents.windowScroll(), DomEvent.fromRawEvent(evt));
+  const onWindowScroll = (evt: Event) => broadcastEvent(SystemEvents.windowScroll(), DomEvent.fromRawEvent(evt));
   const onWindowResize = (evt: UIEvent) => {
     broadcastOn(Channels.repositionPopups(), {});
     broadcastEvent(SystemEvents.windowResize(), DomEvent.fromRawEvent(evt));

@@ -4,12 +4,13 @@ import { Compare, SugarElement, TransformFind } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
+import * as ArrUtils from '../util/ArrUtils';
 import { Format, FormatVars } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 
 const isEq = FormatUtils.isEq;
 
-const matchesUnInheritedFormatSelector = (ed: Editor, node: Node, name: string) => {
+const matchesUnInheritedFormatSelector = (ed: Editor, node: Node, name: string): boolean => {
   const formatList = ed.formatter.get(name);
 
   if (formatList) {
@@ -24,7 +25,7 @@ const matchesUnInheritedFormatSelector = (ed: Editor, node: Node, name: string) 
   return false;
 };
 
-const matchParents = (editor: Editor, node: Node, name: string, vars: FormatVars, similar?: boolean): boolean => {
+const matchParents = (editor: Editor, node: Node, name: string, vars?: FormatVars, similar?: boolean): boolean => {
   const root = editor.dom.getRoot();
 
   if (node === root) {
@@ -32,19 +33,19 @@ const matchParents = (editor: Editor, node: Node, name: string, vars: FormatVars
   }
 
   // Find first node with similar format settings
-  node = editor.dom.getParent(node, (node) => {
-    if (matchesUnInheritedFormatSelector(editor, node, name)) {
+  const matchedNode = editor.dom.getParent(node, (elm) => {
+    if (matchesUnInheritedFormatSelector(editor, elm, name)) {
       return true;
     }
 
-    return node.parentNode === root || !!matchNode(editor, node, name, vars, true);
+    return elm.parentNode === root || !!matchNode(editor, elm, name, vars, true);
   });
 
   // Do an exact check on the similar format element
-  return !!matchNode(editor, node, name, vars, similar);
+  return !!matchNode(editor, matchedNode, name, vars, similar);
 };
 
-const matchName = (dom: DOMUtils, node: Node, format: Format): boolean => {
+const matchName = (dom: DOMUtils, node: Node | null | undefined, format: Format): boolean => {
   // Check for inline match
   if (FormatUtils.isInlineFormat(format) && isEq(node, format.inline)) {
     return true;
@@ -63,8 +64,9 @@ const matchName = (dom: DOMUtils, node: Node, format: Format): boolean => {
   return false;
 };
 
-const matchItems = (dom: DOMUtils, node: Node, format: Format, itemName: string, similar: boolean, vars: FormatVars): boolean => {
+const matchItems = (dom: DOMUtils, node: Element, format: Format, itemName: 'attributes' | 'styles', similar?: boolean, vars?: FormatVars): boolean => {
   const items = format[itemName];
+  const matchAttributes = itemName === 'attributes';
 
   // Custom match
   if (Type.isFunction(format.onmatch)) {
@@ -75,10 +77,10 @@ const matchItems = (dom: DOMUtils, node: Node, format: Format, itemName: string,
   // Check all items
   if (items) {
     // Non indexed object
-    if (Type.isUndefined(items.length)) {
+    if (!ArrUtils.isArrayLike(items)) {
       for (const key in items) {
         if (Obj.has(items, key)) {
-          const value = itemName === 'attributes' ? dom.getAttrib(node, key) : FormatUtils.getStyle(dom, node, key);
+          const value = matchAttributes ? dom.getAttrib(node, key) : FormatUtils.getStyle(dom, node, key);
           const expectedValue = FormatUtils.replaceVars(items[key], vars);
           const isEmptyValue = Type.isNullable(value) || Strings.isEmpty(value);
 
@@ -98,7 +100,7 @@ const matchItems = (dom: DOMUtils, node: Node, format: Format, itemName: string,
     } else {
       // Only one match needed for indexed arrays
       for (let i = 0; i < items.length; i++) {
-        if (itemName === 'attributes' ? dom.getAttrib(node, items[i]) : FormatUtils.getStyle(dom, node, items[i])) {
+        if (matchAttributes ? dom.getAttrib(node, items[i]) : FormatUtils.getStyle(dom, node, items[i])) {
           return true;
         }
       }
@@ -108,11 +110,11 @@ const matchItems = (dom: DOMUtils, node: Node, format: Format, itemName: string,
   return true;
 };
 
-const matchNode = (ed: Editor, node: Node, name: string, vars?: FormatVars, similar?: boolean): Format | undefined => {
+const matchNode = (ed: Editor, node: Node | null, name: string, vars?: FormatVars, similar?: boolean): Format | undefined => {
   const formatList = ed.formatter.get(name);
   const dom = ed.dom;
 
-  if (formatList && node) {
+  if (formatList && NodeType.isElement(node)) {
     // Check each format in list
     for (let i = 0; i < formatList.length; i++) {
       const format = formatList[i];
@@ -133,9 +135,11 @@ const matchNode = (ed: Editor, node: Node, name: string, vars?: FormatVars, simi
       }
     }
   }
+
+  return undefined;
 };
 
-const match = (editor: Editor, name: string, vars: FormatVars, node?: Node, similar?: boolean): boolean => {
+const match = (editor: Editor, name: string, vars?: FormatVars, node?: Node, similar?: boolean): boolean => {
   // Check specified node
   if (node) {
     return matchParents(editor, node, name, vars, similar);
@@ -158,7 +162,7 @@ const match = (editor: Editor, name: string, vars: FormatVars, node?: Node, simi
   return false;
 };
 
-const matchAll = (editor: Editor, names: string[], vars: FormatVars) => {
+const matchAll = (editor: Editor, names: string[], vars?: FormatVars): string[] => {
   const matchedFormatNames: string[] = [];
   const checkedMap: Record<string, boolean> = {};
 
@@ -186,7 +190,7 @@ const closest = (editor: Editor, names: string[]): string | null => {
   ).getOrNull();
 };
 
-const canApply = (editor: Editor, name: string) => {
+const canApply = (editor: Editor, name: string): boolean => {
   const formatList = editor.formatter.get(name);
   const dom = editor.dom;
 
@@ -216,7 +220,7 @@ const canApply = (editor: Editor, name: string) => {
 /**
  *  Get all of the format names present on the specified node
  */
-const matchAllOnNode = (editor: Editor, node: Node, formatNames: string[]) =>
+const matchAllOnNode = (editor: Editor, node: Node, formatNames: string[]): string[] =>
   Arr.foldl(formatNames, (acc, name) => {
     const matchSimilar = FormatUtils.isVariableFormatName(editor, name);
     if (editor.formatter.matchNode(node, name, {}, matchSimilar)) {

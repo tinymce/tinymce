@@ -13,7 +13,7 @@ import { CaretPosition } from './CaretPosition';
 const isElement = NodeType.isElement;
 const isText = NodeType.isText;
 
-const isCaretContainerBlock = (node: Node | null): node is Element => {
+const isCaretContainerBlock = (node: Node | null | undefined): node is Text | Element => {
   if (isText(node)) {
     node = node.parentNode;
   }
@@ -21,17 +21,17 @@ const isCaretContainerBlock = (node: Node | null): node is Element => {
   return isElement(node) && node.hasAttribute('data-mce-caret');
 };
 
-const isCaretContainerInline = (node: Node | null): node is Text =>
+const isCaretContainerInline = (node: Node | null | undefined): node is Text =>
   isText(node) && Zwsp.isZwsp(node.data);
 
-const isCaretContainer = (node: Node | null): boolean =>
+const isCaretContainer = (node: Node | null | undefined): boolean =>
   isCaretContainerBlock(node) || isCaretContainerInline(node);
 
 const hasContent = (node: Node): boolean =>
   node.firstChild !== node.lastChild || !NodeType.isBr(node.firstChild);
 
 const insertInline = (node: Node, before: boolean): Node => {
-  const doc = node.ownerDocument;
+  const doc = node.ownerDocument ?? document;
   const textNode = doc.createTextNode(Zwsp.ZWSP);
   const parentNode = node.parentNode;
 
@@ -49,9 +49,9 @@ const insertInline = (node: Node, before: boolean): Node => {
     }
 
     if (node.nextSibling) {
-      parentNode.insertBefore(textNode, node.nextSibling);
+      parentNode?.insertBefore(textNode, node.nextSibling);
     } else {
-      parentNode.appendChild(textNode);
+      parentNode?.appendChild(textNode);
     }
   } else {
     const sibling = node.previousSibling;
@@ -65,7 +65,7 @@ const insertInline = (node: Node, before: boolean): Node => {
       }
     }
 
-    parentNode.insertBefore(textNode, node);
+    parentNode?.insertBefore(textNode, node);
   }
 
   return textNode;
@@ -122,7 +122,7 @@ const createBogusBr = (): Element => {
 };
 
 const insertBlock = (blockName: string, node: Node, before: boolean): HTMLElement => {
-  const doc = node.ownerDocument;
+  const doc = node.ownerDocument ?? document;
   const blockNode = doc.createElement(blockName);
   blockNode.setAttribute('data-mce-caret', before ? 'before' : 'after');
   blockNode.setAttribute('data-mce-bogus', 'all');
@@ -131,12 +131,12 @@ const insertBlock = (blockName: string, node: Node, before: boolean): HTMLElemen
 
   if (!before) {
     if (node.nextSibling) {
-      parentNode.insertBefore(blockNode, node.nextSibling);
+      parentNode?.insertBefore(blockNode, node.nextSibling);
     } else {
-      parentNode.appendChild(blockNode);
+      parentNode?.appendChild(blockNode);
     }
   } else {
-    parentNode.insertBefore(blockNode, node);
+    parentNode?.insertBefore(blockNode, node);
   }
 
   return blockNode;
@@ -152,7 +152,7 @@ const trimBogusBr = (elm: Element): void => {
   const brs = elm.getElementsByTagName('br');
   const lastBr = brs[brs.length - 1];
   if (NodeType.isBogus(lastBr)) {
-    lastBr.parentNode.removeChild(lastBr);
+    lastBr.parentNode?.removeChild(lastBr);
   }
 };
 

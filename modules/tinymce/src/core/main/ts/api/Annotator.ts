@@ -1,11 +1,11 @@
 import { Arr, Obj, Optional } from '@ephox/katamari';
-import { Remove } from '@ephox/sugar';
+import { Remove, SugarElement, SugarNode } from '@ephox/sugar';
 
 import * as AnnotationChanges from '../annotate/AnnotationChanges';
 import * as AnnotationFilter from '../annotate/AnnotationFilter';
 import { create } from '../annotate/AnnotationsRegistry';
 import { findAll, identify } from '../annotate/Identification';
-import { annotateWithBookmark, Decorator, DecoratorData } from '../annotate/Wrapping';
+import { annotateWithBookmark, Decorator, DecoratorData, removeDirectAnnotation } from '../annotate/Wrapping';
 import Editor from './Editor';
 
 export type AnnotationListenerApi = AnnotationChanges.AnnotationListener;
@@ -34,6 +34,17 @@ const Annotator = (editor: Editor): Annotator => {
   const registry = create();
   AnnotationFilter.setup(editor, registry);
   const changes = AnnotationChanges.setup(editor, registry);
+
+  const isSpan = SugarNode.isTag('span');
+  const removeAnnotations = (elements: SugarElement<Element>[]) => {
+    Arr.each(elements, (element) => {
+      if (isSpan(element)) {
+        Remove.unwrap(element);
+      } else {
+        removeDirectAnnotation(element);
+      }
+    });
+  };
 
   return {
     /**
@@ -83,7 +94,7 @@ const Annotator = (editor: Editor): Annotator => {
     remove: (name: string): void => {
       const bookmark = editor.selection.getBookmark();
       identify(editor, Optional.some(name)).each(({ elements }) => {
-        Arr.each(elements, Remove.unwrap);
+        removeAnnotations(elements);
       });
       editor.selection.moveToBookmark(bookmark);
     },
@@ -96,7 +107,9 @@ const Annotator = (editor: Editor): Annotator => {
      */
     removeAll: (name: string): void => {
       const bookmark = editor.selection.getBookmark();
-      Obj.each(findAll(editor, name), (spans, _) => Arr.each(spans, Remove.unwrap));
+      Obj.each(findAll(editor, name), (elements, _) => {
+        removeAnnotations(elements);
+      });
       editor.selection.moveToBookmark(bookmark);
     },
 

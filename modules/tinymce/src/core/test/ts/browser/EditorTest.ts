@@ -290,14 +290,14 @@ describe('browser.tinymce.core.EditorTest', () => {
     editor.addCommand('CustomCommand2', callback);
 
     editor.execCommand('CustomCommand1', false, 'value');
-    assert.isFalse(lastArgs[0], 'addCommand');
-    assert.equal( lastArgs[1], 'value', 'addCommand');
-    assert.strictEqual(lastScope, scope, 'addCommand');
+    assert.isFalse(lastArgs[0], 'ui');
+    assert.equal(lastArgs[1], 'value', 'value');
+    assert.strictEqual(lastScope, scope, 'scope');
 
     editor.execCommand('CustomCommand2');
-    assert.isUndefined(lastArgs[0], 'addCommand');
-    assert.isUndefined(lastArgs[1], 'addCommand');
-    assert.strictEqual(lastScope, editor, 'addCommand');
+    assert.isFalse(lastArgs[0], 'ui');
+    assert.isUndefined(lastArgs[1], 'value');
+    assert.strictEqual(lastScope, editor, 'scope');
   });
 
   it('TBA: addQueryStateHandler', () => {

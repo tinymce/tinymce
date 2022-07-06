@@ -192,7 +192,7 @@ const handleMultiTable = (cellRng: Optional<TableCellRng>, selectionDetails: Sel
       }
     });
 
-const getActionFromRange = (root: SugarElement, rng: Range): Optional<DeleteActionAdt> => {
+const getActionFromRange = (root: SugarElement<Node>, rng: Range): Optional<DeleteActionAdt> => {
   const isRoot = TableDeleteUtils.isRootFromElement(root);
   const optCellRng = getCellRng(rng, isRoot);
   const selectionDetails = TableDeleteUtils.getTableDetailsFromRange(rng, isRoot);

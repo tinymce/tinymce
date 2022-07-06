@@ -9,7 +9,7 @@ import * as Nodes from './Nodes';
 const isWrappedNbsp = (node: Node): node is HTMLSpanElement =>
   node.nodeName.toLowerCase() === 'span' && (node as HTMLSpanElement).classList.contains('mce-nbsp-wrap');
 
-const show = (editor: Editor, rootElm: Node): void => {
+const show = (editor: Editor, rootElm: Element): void => {
   const nodeList = Nodes.filterDescendants(SugarElement.fromDom(rootElm), Nodes.isMatch);
 
   Arr.each(nodeList, (n) => {
@@ -30,7 +30,7 @@ const show = (editor: Editor, rootElm: Node): void => {
   });
 };
 
-const hide = (editor: Editor, rootElm: Node): void => {
+const hide = (editor: Editor, rootElm: Element): void => {
   const nodeList = editor.dom.select(Data.selector, rootElm);
 
   Arr.each(nodeList, (node) => {

@@ -36,15 +36,15 @@ export interface WindowParams {
 interface WindowManager {
   open: <T>(config: Dialog.DialogSpec<T>, params?: WindowParams) => Dialog.DialogInstanceApi<T>;
   openUrl: (config: Dialog.UrlDialogSpec) => Dialog.UrlDialogInstanceApi;
-  alert: (message: string, callback?: () => void, scope?) => void;
-  confirm: (message: string, callback?: (state: boolean) => void, scope?) => void;
+  alert: (message: string, callback?: () => void, scope?: any) => void;
+  confirm: (message: string, callback?: (state: boolean) => void, scope?: any) => void;
   close: () => void;
 }
 
 export type InstanceApi<T> = Dialog.UrlDialogInstanceApi | Dialog.DialogInstanceApi<T>;
 
 export interface WindowManagerImpl {
-  open: <T>(config: Dialog.DialogSpec<T>, params: WindowParams, closeWindow: (dialog: Dialog.DialogInstanceApi<T>) => void) => Dialog.DialogInstanceApi<T>;
+  open: <T>(config: Dialog.DialogSpec<T>, params: WindowParams | undefined, closeWindow: (dialog: Dialog.DialogInstanceApi<T>) => void) => Dialog.DialogInstanceApi<T>;
   openUrl: (config: Dialog.UrlDialogSpec, closeWindow: (dialog: Dialog.UrlDialogInstanceApi) => void) => Dialog.UrlDialogInstanceApi;
   alert: (message: string, callback: () => void) => void;
   confirm: (message: string, callback: (state: boolean) => void) => void;
@@ -59,8 +59,8 @@ const WindowManager = (editor: Editor): WindowManager => {
     return theme && theme.getWindowManagerImpl ? theme.getWindowManagerImpl() : WindowManagerImpl();
   };
 
-  const funcBind = (scope, f) => {
-    return (...args: any[]) => {
+  const funcBind = <T extends (...args: any) => any>(scope: any, f: T | undefined) => {
+    return (...args: Parameters<T>) => {
       return f ? f.apply(scope, args) : undefined;
     };
   };
@@ -107,20 +107,20 @@ const WindowManager = (editor: Editor): WindowManager => {
     return dialog;
   };
 
-  const open = <T>(args, params?: WindowParams): Dialog.DialogInstanceApi<T> => {
+  const open = <T>(args: Dialog.DialogSpec<T>, params?: WindowParams): Dialog.DialogInstanceApi<T> => {
     return storeSelectionAndOpenDialog(() => getImplementation().open<T>(args, params, closeDialog));
   };
 
-  const openUrl = (args): Dialog.UrlDialogInstanceApi => {
+  const openUrl = (args: Dialog.UrlDialogSpec): Dialog.UrlDialogInstanceApi => {
     return storeSelectionAndOpenDialog(() => getImplementation().openUrl(args, closeDialog));
   };
 
-  const alert = (message, callback?: () => void, scope?) => {
+  const alert = (message: string, callback?: () => void, scope?: any) => {
     const windowManagerImpl = getImplementation();
     windowManagerImpl.alert(message, funcBind(scope ? scope : windowManagerImpl, callback));
   };
 
-  const confirm = (message, callback?: (state: boolean) => void, scope?) => {
+  const confirm = (message: string, callback?: (state: boolean) => void, scope?: any) => {
     const windowManagerImpl = getImplementation();
     windowManagerImpl.confirm(message, funcBind(scope ? scope : windowManagerImpl, callback));
   };

@@ -10,6 +10,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
 import { InlineView } from 'ephox/alloy/api/ui/InlineView';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
+import { TestItem } from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
@@ -210,7 +211,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
               menu: TestDropdownMenu.part(store)
             },
             fetch: () => {
-              const future = Future.pure([
+              const future = Future.pure<TestItem[]>([
                 { type: 'item', data: { value: optionPrefix.toLowerCase() + '-1', meta: { text: optionPrefix + '-1' }}},
                 { type: 'item', data: { value: optionPrefix.toLowerCase() + '-2' + buttonText, meta: { text: optionPrefix + '-2' }}}
               ]);

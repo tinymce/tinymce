@@ -33,7 +33,7 @@ const getTextContent = (editor: Editor): string =>
     const text = getInnerText(bin);
 
     // textContent will not strip leading/trailing spaces since it doesn't consider how it'll render
-    const nonRenderedText = Zwsp.trim(bin.textContent);
+    const nonRenderedText = Zwsp.trim(bin.textContent ?? '');
     editor.dom.remove(bin);
 
     if (isCollapsibleWhitespace(nonRenderedText, 0) || isCollapsibleWhitespace(nonRenderedText, nonRenderedText.length - 1)) {

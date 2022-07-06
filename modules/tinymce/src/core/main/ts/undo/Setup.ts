@@ -19,12 +19,12 @@ const shouldIgnoreCommand = (cmd: string): boolean => {
   }
 };
 
-export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: Locks) => {
+export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: Locks): void => {
   const isFirstTypedCharacter = Cell(false);
 
-  const addNonTypingUndoLevel = (e?) => {
+  const addNonTypingUndoLevel = (e?: EditorEvent<any>) => {
     setTyping(undoManager, false, locks);
-    undoManager.add({} as UndoLevel, e);
+    undoManager.add({}, e);
   };
 
   // Add initial undo level when the editor is initialized
@@ -77,8 +77,8 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
     }
 
     // Fire a TypingUndo event on the first character entered
-    if (isFirstTypedCharacter.get() && undoManager.typing && Levels.isEq(Levels.createFromEditor(editor), undoManager.data[0]) === false) {
-      if (editor.isDirty() === false) {
+    if (isFirstTypedCharacter.get() && undoManager.typing && !Levels.isEq(Levels.createFromEditor(editor), undoManager.data[0])) {
+      if (!editor.isDirty()) {
         editor.setDirty(true);
       }
 
@@ -142,7 +142,7 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
   });
 };
 
-export const addKeyboardShortcuts = (editor: Editor) => {
+export const addKeyboardShortcuts = (editor: Editor): void => {
   editor.addShortcut('meta+z', '', 'Undo');
   editor.addShortcut('meta+y,meta+shift+z', '', 'Redo');
 };

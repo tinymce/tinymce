@@ -52,7 +52,7 @@ const isTableSection = lazyLookup(tableSections);
 const isTableCell = lazyLookup<HTMLTableCellElement>(tableCells);
 const isWsPreserveElement = lazyLookup(wsElements);
 const isWrapBlockElement = lazyLookup(wrapBlockElements);
-const isWrapElement = (node: SugarElement<Node>) => isWrapBlockElement(node) || isInline(node);
+const isWrapElement = (node: SugarElement<Node>): boolean => isWrapBlockElement(node) || isInline(node);
 
 export {
   isBlock,

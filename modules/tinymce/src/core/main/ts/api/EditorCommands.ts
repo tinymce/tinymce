@@ -12,7 +12,7 @@ import Editor from './Editor';
  */
 
 export type EditorCommandCallback = (ui: boolean, value: any) => void;
-export type EditorCommandsCallback = (command: string, ui: boolean, value: any) => void;
+export type EditorCommandsCallback = (command: string, ui: boolean, value?: any) => void;
 
 interface Commands {
   state: Record<string, (command: string) => boolean>;
@@ -43,13 +43,13 @@ class EditorCommands {
    * the tinymce command identifiers documentation.
    *
    * @method execCommand
-   * @param {String} cmd Command name to execute, for example mceLink or Bold.
+   * @param {String} command Command name to execute, for example mceLink or Bold.
    * @param {Boolean} ui Specifies if a UI (dialog) should be presented or not.
-   * @param {{Object/Array/String/Number/Boolean} value Optional command value, this can be anything.
+   * @param {Object/Array/String/Number/Boolean} value Optional command value, this can be anything.
    * @param {Object} args Optional arguments object.
    * @return {Boolean} true or false if the command was supported or not.
    */
-  public execCommand(command: string, ui?: boolean, value?: any, args?: ExecCommandArgs): boolean {
+  public execCommand(command: string, ui: boolean = false, value?: any, args?: ExecCommandArgs): boolean {
     const editor = this.editor;
     const lowerCaseCommand = command.toLowerCase();
     const skipFocus = args?.skip_focus;
@@ -106,7 +106,7 @@ class EditorCommands {
    * Returns a command specific value, for example the current font size.
    *
    * @method queryCommandValue
-   * @param {String} cmd Command to query value from.
+   * @param {String} command Command to query value from.
    * @return {String} Command value, for example the current font size or an empty string (`""`) if the query command is not found.
    */
   public queryCommandValue(command: string): string {
@@ -132,7 +132,7 @@ class EditorCommands {
    */
   public addCommands<K extends keyof Commands>(commandList: Commands[K], type: K): void;
   public addCommands(commandList: Record<string, EditorCommandsCallback>): void;
-  public addCommands(commandList: Commands[keyof Commands], type: 'exec' | 'state' | 'value' = 'exec') {
+  public addCommands(commandList: Commands[keyof Commands], type: 'exec' | 'state' | 'value' = 'exec'): void {
     const commands = this.commands;
 
     Obj.each(commandList, (callback, command) => {
@@ -142,7 +142,7 @@ class EditorCommands {
     });
   }
 
-  public addCommand(command: string, callback: EditorCommandCallback, scope?: any) {
+  public addCommand(command: string, callback: EditorCommandCallback, scope?: any): void {
     const lowerCaseCommand = command.toLowerCase();
     this.commands.exec[lowerCaseCommand] = (_command, ui, value) => callback.call(scope ?? this.editor, ui, value);
   }
@@ -158,20 +158,20 @@ class EditorCommands {
     const lowerCaseCommand = command.toLowerCase();
     if (this.commands.exec[lowerCaseCommand]) {
       return true;
+    } else {
+      return false;
     }
-
-    return false;
   }
 
   /**
    * Adds a custom query state command to the editor. This function can also be used to override existing commands.
    *
    * @method addQueryStateHandler
-   * @param {String} name Command name to add/override.
+   * @param {String} command Command name to add/override.
    * @param {Function} callback Function to execute when the command state retrieval occurs.
    * @param {Object} scope Optional scope to execute the function in.
    */
-  public addQueryStateHandler(command: string, callback: () => boolean, scope?: any) {
+  public addQueryStateHandler(command: string, callback: () => boolean, scope?: any): void {
     this.commands.state[command.toLowerCase()] = () => callback.call(scope ?? this.editor);
   }
 
@@ -180,11 +180,11 @@ class EditorCommands {
    * The command that you add can be executed with queryCommandValue function.
    *
    * @method addQueryValueHandler
-   * @param {String} name Command name to add/override.
+   * @param {String} command Command name to add/override.
    * @param {Function} callback Function to execute when the command value retrieval occurs.
    * @param {Object} scope Optional scope to execute the function in.
    */
-  public addQueryValueHandler(command: string, callback: () => string, scope?: any) {
+  public addQueryValueHandler(command: string, callback: () => string, scope?: any): void {
     this.commands.value[command.toLowerCase()] = () => callback.call(scope ?? this.editor);
   }
 }

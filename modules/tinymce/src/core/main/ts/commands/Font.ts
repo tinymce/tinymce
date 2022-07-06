@@ -15,7 +15,7 @@ const fromFontSizeNumber = (editor: Editor, value: string): string => {
       const fontSizes = Options.getFontStyleValues(editor);
       const fontClasses = Options.getFontSizeClasses(editor);
 
-      if (fontClasses) {
+      if (fontClasses.length > 0) {
         return fontClasses[fontSizeNumber - 1] || value;
       } else {
         return fontSizes[fontSizeNumber - 1] || value;

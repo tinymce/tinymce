@@ -27,7 +27,7 @@ const switchToMode = (editor: Editor, activeMode: Cell<string>, availableModes: 
   Events.fireSwitchMode(editor, mode);
 };
 
-const setMode = (editor: Editor, availableModes: Record<string, EditorModeApi>, activeMode: Cell<string>, mode: string) => {
+const setMode = (editor: Editor, availableModes: Record<string, EditorModeApi>, activeMode: Cell<string>, mode: string): void => {
   if (mode === activeMode.get()) {
     return;
   } else if (!Obj.has(availableModes, mode)) {

@@ -11,7 +11,7 @@ import EditorSelection from './Selection';
  */
 
 interface BookmarkManager {
-  getBookmark: (type: number, normalized?: boolean) => Bookmark;
+  getBookmark: (type?: number, normalized?: boolean) => Bookmark;
   moveToBookmark: (bookmark: Bookmark) => void;
 }
 

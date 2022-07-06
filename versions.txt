@@ -1,6 +1,2 @@
 # List of packages to bump:
 # Format: [package_name]@[new_version]
-
-alloy@10.1.0
-agar@7.1.0
-polaris@6.0.2

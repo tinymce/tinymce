@@ -4,6 +4,7 @@ import Editor from './api/Editor';
 import * as Options from './api/Options';
 import Delay from './api/util/Delay';
 import * as RangeCompare from './selection/RangeCompare';
+import { RangeLikeObject } from './selection/RangeTypes';
 import { hasAnyRanges } from './selection/SelectionUtils';
 
 /**
@@ -19,7 +20,7 @@ class NodeChange {
 
   public constructor(editor: Editor) {
     this.editor = editor;
-    let lastRng;
+    let lastRng: RangeLikeObject | undefined;
     const self = this;
 
     // Gecko doesn't support the "selectionchange" event
@@ -88,14 +89,14 @@ class NodeChange {
    * @method nodeChanged
    * @param {Object} args Optional args to pass to NodeChange event handlers.
    */
-  public nodeChanged(args?) {
+  public nodeChanged(args: Record<string, any> = {}): void {
     const selection = this.editor.selection;
-    let node, parents, root;
+    let node: Element | undefined;
 
     // Fix for bug #1896577 it seems that this can not be fired while the editor is loading
     if (this.editor.initialized && selection && !Options.shouldDisableNodeChange(this.editor) && !this.editor.mode.isReadOnly()) {
       // Get start node
-      root = this.editor.getBody();
+      const root = this.editor.getBody();
       node = selection.getStart(true) || root;
 
       // Make sure the node is within the editor root or is the editor root
@@ -104,20 +105,21 @@ class NodeChange {
       }
 
       // Get parents and add them to object
-      parents = [];
+      const parents: Node[] = [];
       this.editor.dom.getParent(node, (node) => {
         if (node === root) {
           return true;
+        } else {
+          parents.push(node);
+          return false;
         }
-
-        parents.push(node);
       });
 
-      args = args || {};
-      args.element = node;
-      args.parents = parents;
-
-      this.editor.dispatch('NodeChange', args);
+      this.editor.dispatch('NodeChange', {
+        ...args,
+        element: node,
+        parents
+      });
     }
   }
 
@@ -127,8 +129,8 @@ class NodeChange {
    * @private
    * @return {Boolean} True if the element path is the same false if it's not.
    */
-  private isSameElementPath(startElm: Node) {
-    let i;
+  private isSameElementPath(startElm: Element) {
+    let i: number;
     const editor = this.editor;
 
     const currentPath = Arr.reverse(editor.dom.getParents(startElm, Fun.always, editor.getBody()));

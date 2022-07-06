@@ -1,13 +1,14 @@
 import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 
+import { AddOnConstructor } from '../api/AddOnManager';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import IconManager from '../api/IconManager';
-import ModelManager from '../api/ModelManager';
+import ModelManager, { Model } from '../api/ModelManager';
 import * as Options from '../api/Options';
 import { ThemeInitFunc } from '../api/OptionTypes';
 import PluginManager from '../api/PluginManager';
-import ThemeManager from '../api/ThemeManager';
+import ThemeManager, { Theme } from '../api/ThemeManager';
 import { EditorUiApi } from '../api/ui/Ui';
 import Tools from '../api/util/Tools';
 import * as ErrorReporter from '../ErrorReporter';
@@ -48,7 +49,7 @@ const trimLegacyPrefix = (name: string) => {
 };
 
 const initPlugins = (editor: Editor) => {
-  const initializedPlugins = [];
+  const initializedPlugins: string[] = [];
 
   Arr.each(Options.getPlugins(editor), (name) => {
     initPlugin(editor, initializedPlugins, trimLegacyPrefix(name));
@@ -76,7 +77,7 @@ const initTheme = (editor: Editor) => {
   const theme = Options.getTheme(editor);
 
   if (Type.isString(theme)) {
-    const Theme = ThemeManager.get(theme);
+    const Theme = ThemeManager.get(theme) as AddOnConstructor<Theme>;
     editor.theme = Theme(editor, ThemeManager.urls[theme]) || {};
 
     if (Type.isFunction(editor.theme.init)) {
@@ -90,13 +91,14 @@ const initTheme = (editor: Editor) => {
 
 const initModel = (editor: Editor) => {
   const model = Options.getModel(editor);
-  const Model = ModelManager.get(model);
+  const Model = ModelManager.get(model) as AddOnConstructor<Model>;
   editor.model = Model(editor, ModelManager.urls[model]);
 };
 
 const renderFromLoadedTheme = (editor: Editor) => {
   // Render UI
-  return editor.theme.renderUI();
+  const render = editor.theme.renderUI;
+  return render ? render() : renderThemeFalse(editor);
 };
 
 const renderFromThemeFunc = (editor: Editor) => {
@@ -117,10 +119,10 @@ const renderFromThemeFunc = (editor: Editor) => {
   return info;
 };
 
-const createThemeFalseResult = (element: HTMLElement) => {
+const createThemeFalseResult = (element: HTMLElement | null, iframe?: HTMLElement) => {
   return {
     editorContainer: element,
-    iframeContainer: element,
+    iframeContainer: iframe,
     api: {}
   };
 };
@@ -130,7 +132,7 @@ const renderThemeFalseIframe = (targetElement: Element) => {
 
   DOM.insertAfter(iframeContainer, targetElement);
 
-  return createThemeFalseResult(iframeContainer);
+  return createThemeFalseResult(iframeContainer, iframeContainer);
 };
 
 const renderThemeFalse = (editor: Editor) => {
@@ -166,7 +168,7 @@ const augmentEditorUiApi = (editor: Editor, api: Partial<EditorUiApi>) => {
   editor.ui = { ...editor.ui, ...uiApiFacade };
 };
 
-const init = (editor: Editor) => {
+const init = (editor: Editor): void => {
   editor.dispatch('ScriptsLoaded');
 
   initIcons(editor);
@@ -175,18 +177,17 @@ const init = (editor: Editor) => {
   initPlugins(editor);
   const renderInfo = renderThemeUi(editor);
   augmentEditorUiApi(editor, Optional.from(renderInfo.api).getOr({}));
-  const boxInfo = {
-    editorContainer: renderInfo.editorContainer,
-    iframeContainer: renderInfo.iframeContainer
-  };
-  editor.editorContainer = boxInfo.editorContainer ? boxInfo.editorContainer : null;
+  editor.editorContainer = renderInfo.editorContainer as HTMLElement;
   appendContentCssFromSettings(editor);
 
   // Content editable mode ends here
   if (editor.inline) {
-    return InitContentBody.initContentBody(editor);
+    InitContentBody.initContentBody(editor);
   } else {
-    return InitIframe.init(editor, boxInfo);
+    InitIframe.init(editor, {
+      editorContainer: renderInfo.editorContainer,
+      iframeContainer: renderInfo.iframeContainer as HTMLElement
+    });
   }
 };
 

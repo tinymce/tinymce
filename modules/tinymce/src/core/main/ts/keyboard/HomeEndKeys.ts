@@ -8,7 +8,7 @@ import * as CefNavigation from './CefNavigation';
 import * as MatchKeys from './MatchKeys';
 import * as MediaNavigation from './MediaNavigation';
 
-const executeKeydownOverride = (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) => {
+const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: KeyboardEvent) => {
   const isMac = Env.os.isMacOS() || Env.os.isiOS();
 
   MatchKeys.execute([
@@ -27,9 +27,9 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text>, evt: Keyboard
   });
 };
 
-const setup = (editor: Editor, caret: Cell<Text>) => {
+const setup = (editor: Editor, caret: Cell<Text | null>): void => {
   editor.on('keydown', (evt) => {
-    if (evt.isDefaultPrevented() === false) {
+    if (!evt.isDefaultPrevented()) {
       executeKeydownOverride(editor, caret, evt);
     }
   });

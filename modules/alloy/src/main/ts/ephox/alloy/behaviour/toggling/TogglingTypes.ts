@@ -26,6 +26,7 @@ export interface TogglingConfig extends Behaviour.BehaviourConfigDetail {
   aria: AriaTogglingConfig;
   toggleOnExecute: boolean;
   selected: boolean;
+  onToggled: (component: AlloyComponent, state: boolean) => void;
 }
 
 export interface TogglingConfigSpec extends Behaviour.BehaviourConfigSpec {
@@ -36,6 +37,7 @@ export interface TogglingConfigSpec extends Behaviour.BehaviourConfigSpec {
   };
   toggleOnExecute?: boolean;
   selected?: boolean;
+  onToggled?: (component: AlloyComponent, state: boolean) => void;
 }
 
 export type TogglingMode = 'expanded' | 'pressed' | 'checked' | 'toggled' | 'selected' | 'none';

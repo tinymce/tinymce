@@ -1,4 +1,4 @@
-import { Obj, Strings, Type } from '@ephox/katamari';
+import { Fun, Obj, Strings, Type } from '@ephox/katamari';
 
 import Editor from './Editor';
 import { EditorOptions, NormalizedEditorOptions } from './OptionTypes';
@@ -117,7 +117,7 @@ export interface Options {
    * @return {Object} An option value, the registered default if not set, or undefined if not registered.
    */
   get: {
-    <K extends keyof EditorOptions>(name: K): EditorOptions[K] | undefined;
+    <K extends keyof EditorOptions>(name: K): EditorOptions[K];
     <T>(name: string): T | undefined;
   };
 
@@ -181,6 +181,8 @@ const getBuiltInProcessor = <K extends BuiltInOptionType>(type: K): Processor<Bu
         return (val) => Type.isArrayOf(val, Type.isObject);
       case 'regexp':
         return (val) => Type.is(val, RegExp);
+      default:
+        return Fun.always;
     }
   })() as SimpleProcessor | Processor<BuiltInOptionTypeMap[K]>;
 

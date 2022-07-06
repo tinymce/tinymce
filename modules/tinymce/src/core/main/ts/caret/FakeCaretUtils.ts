@@ -1,15 +1,12 @@
 import { Optional } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
-import * as NodeType from '../dom/NodeType';
+import * as CefUtils from '../dom/CefUtils';
 import CaretPosition from './CaretPosition';
 import * as CaretUtils from './CaretUtils';
 import { isInlineFakeCaretTarget } from './FakeCaret';
 
-const isContentEditableTrue = NodeType.isContentEditableTrue;
-const isContentEditableFalse = NodeType.isContentEditableFalse;
-
-const showCaret = (direction: number, editor: Editor, node: Element, before: boolean, scrollIntoView: boolean): Optional<Range> =>
+const showCaret = (direction: number, editor: Editor, node: HTMLElement, before: boolean, scrollIntoView: boolean): Optional<Range> =>
   // TODO: Figure out a better way to handle this dependency
   Optional.from(editor._selectionOverrides.showCaret(direction, node, before, scrollIntoView));
 
@@ -44,7 +41,7 @@ const renderCaretAtRange = (editor: Editor, range: Range, scrollIntoView: boolea
   }
 
   // TODO: Should render caret before/after depending on where you click on the page forces after now
-  const ceRoot = editor.dom.getParent(caretPosition.getNode(), (node) => isContentEditableFalse(node) || isContentEditableTrue(node));
+  const ceRoot = CefUtils.getContentEditableRoot(editor.dom.getRoot(), caretPosition.getNode());
   if (isInlineFakeCaretTarget(ceRoot)) {
     return showCaret(1, editor, ceRoot, false, scrollIntoView);
   }

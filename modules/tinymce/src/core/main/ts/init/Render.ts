@@ -33,7 +33,7 @@ const loadLanguage = (scriptLoader: ScriptLoader, editor: Editor) => {
   const languageCode = Options.getLanguageCode(editor);
   const languageUrl = Options.getLanguageUrl(editor);
 
-  if (I18n.hasCode(languageCode) === false && languageCode !== 'en') {
+  if (!I18n.hasCode(languageCode) && languageCode !== 'en') {
     const url = Strings.isNotEmpty(languageUrl) ? languageUrl : `${editor.editorManager.baseURL}/langs/${languageCode}.js`;
 
     scriptLoader.add(url).catch(() => {
@@ -148,7 +148,7 @@ const getStyleSheetLoader = (element: SugarElement<Element>, editor: Editor): St
     referrerPolicy: Options.getReferrerPolicy(editor)
   });
 
-const render = (editor: Editor) => {
+const render = (editor: Editor): void => {
   const id = editor.id;
 
   // The user might have bundled multiple language packs so we need to switch the active code to the user specified language

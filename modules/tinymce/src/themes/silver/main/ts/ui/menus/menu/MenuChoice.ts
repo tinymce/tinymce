@@ -1,3 +1,4 @@
+import { ItemTypes } from '@ephox/alloy';
 import { Menu as BridgeMenu, Toolbar } from '@ephox/bridge';
 import { Arr, Optional, Optionals } from '@ephox/katamari';
 
@@ -34,13 +35,14 @@ export const createChoiceItems = (
   itemResponse: ItemResponse,
   select: (value: string) => boolean,
   providersBackstage: UiFactoryBackstageProviders
-) => Optionals.cat(
+): ItemTypes.ItemSpec[] => Optionals.cat(
   Arr.map(items, (item) => {
     if (item.type === 'choiceitem') {
       return BridgeMenu.createChoiceMenuItem(item).fold(
         MenuUtils.handleError,
         (d: BridgeMenu.ChoiceMenuItem) => Optional.some(renderChoiceItem(
-          d, columns === 1,
+          d,
+          columns === 1,
           itemPresets,
           onItemValueHandler,
           select(item.value),

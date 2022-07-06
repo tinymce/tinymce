@@ -4,31 +4,32 @@ import { SugarElement } from '@ephox/sugar';
 import { TinyAssertions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
+import * as Markings from 'tinymce/core/annotate/Markings';
 import Editor from 'tinymce/core/api/Editor';
 
-const annotate = (editor: Editor, name: string, uid: string, data: { }) => {
+const annotate = (editor: Editor, name: string, uid: string, data: {}) => {
   editor.annotator.annotate(name, {
     uid,
     ...data
   });
 };
 
-const sAnnotate = <T> (editor: Editor, name: string, uid: string, data: { }): Step<T, T> =>
+const sAnnotate = <T>(editor: Editor, name: string, uid: string, data: {}): Step<T, T> =>
   Step.sync(() => annotate(editor, name, uid, data));
 
 // This will result in an attribute order-insensitive HTML assertion
 const assertHtmlContent = (editor: Editor, children: string[], allowExtras?: boolean) => {
   TinyAssertions.assertContentStructure(editor,
     ApproxStructure.build((s, _str, _arr) => s.element('body', {
-      children: Arr.map(children, ApproxStructure.fromHtml).concat(allowExtras ? [ s.theRest() ] : [ ])
+      children: Arr.map(children, ApproxStructure.fromHtml).concat(allowExtras ? [ s.theRest() ] : [])
     }))
   );
 };
 
-const sAssertHtmlContent = <T> (editor: Editor, children: string[], allowExtras?: boolean): Step<T, T> =>
+const sAssertHtmlContent = <T>(editor: Editor, children: string[], allowExtras?: boolean): Step<T, T> =>
   Step.sync(() => assertHtmlContent(editor, children, allowExtras));
 
-const assertMarker = (editor: Editor, expected: { uid: string; name: string}, nodes: Element[]) => {
+const assertMarker = (editor: Editor, expected: { uid: string; name: string }, nodes: Element[]) => {
   const { uid, name } = expected;
   Arr.each(nodes, (node) => {
     Assertions.assertEq('Wrapper must be in content', true, editor.getBody().contains(node));
@@ -59,6 +60,29 @@ const assertGetAll = (editor: Editor, expected: Record<string, number>, name: st
 const sAssertGetAll = (editor: Editor, expected: Record<string, number>, name: string) =>
   Step.sync(() => assertGetAll(editor, expected, name));
 
+const assertMarkings = (editor: Editor, expectedSpanAnnotations: number, expectedBlockAnnotations: number) => {
+  const annotation = Markings.annotation();
+  const dataAnnotation = Markings.dataAnnotation();
+  const dataAnnotationId = Markings.dataAnnotationId();
+  // Not checking active as this is not applied synchonously
+  // const dataAnnotationActive = Markings.dataAnnotationActive();
+  const dataAnnotationClasses = Markings.dataAnnotationClasses();
+  const dataAnnotationAttributes = Markings.dataAnnotationAttributes();
+
+  const expectedTotalCount = expectedSpanAnnotations + expectedBlockAnnotations;
+
+  TinyAssertions.assertContentPresence(editor, {
+    [`.${annotation}`]: expectedTotalCount,
+    [`[${dataAnnotation}]`]: expectedTotalCount,
+    [`[${dataAnnotationId}]`]: expectedTotalCount,
+    [`span.${annotation}`]: expectedSpanAnnotations,
+    [`span[${dataAnnotation}]`]: expectedSpanAnnotations,
+    [`span[${dataAnnotationId}]`]: expectedSpanAnnotations,
+    [`[${dataAnnotationClasses}]`]: expectedBlockAnnotations,
+    [`[${dataAnnotationAttributes}]`]: expectedBlockAnnotations
+  });
+};
+
 export {
   sAnnotate,
   sAssertHtmlContent,
@@ -66,5 +90,6 @@ export {
   assertMarker,
   annotate,
   assertHtmlContent,
-  assertGetAll
+  assertGetAll,
+  assertMarkings
 };

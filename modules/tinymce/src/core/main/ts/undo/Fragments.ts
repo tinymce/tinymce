@@ -44,7 +44,7 @@ const insertAt = (elm: Element, html: string, index: number) => {
   const fragment = createFragment(html);
   if (elm.hasChildNodes() && index < elm.childNodes.length) {
     const target = elm.childNodes[index];
-    target.parentNode.insertBefore(fragment, target);
+    elm.insertBefore(fragment, target);
   } else {
     elm.appendChild(fragment);
   }
@@ -53,11 +53,11 @@ const insertAt = (elm: Element, html: string, index: number) => {
 const removeAt = (elm: Element, index: number) => {
   if (elm.hasChildNodes() && index < elm.childNodes.length) {
     const target = elm.childNodes[index];
-    target.parentNode.removeChild(target);
+    elm.removeChild(target);
   }
 };
 
-const applyDiff = (diff, elm: Element) => {
+const applyDiff = (diff: Diff.Diff<string>[], elm: Element) => {
   let index = 0;
   Arr.each(diff, (action) => {
     if (action[0] === Diff.KEEP) {

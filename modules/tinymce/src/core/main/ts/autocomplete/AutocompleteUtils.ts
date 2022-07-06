@@ -1,6 +1,12 @@
-export const isValidTextRange = (rng: Range): boolean => rng.collapsed && rng.startContainer.nodeType === 3;
+import * as NodeType from '../dom/NodeType';
+import * as Zwsp from '../text/Zwsp';
+
+export const isValidTextRange = (rng: Range): boolean =>
+  rng.collapsed && NodeType.isText(rng.startContainer);
 
 // Normalize the text by replacing non-breaking spaces with regular spaces and stripping zero-width spaces (fake carets).
-export const getText = (rng: Range) => rng.toString().replace(/\u00A0/g, ' ').replace(/\uFEFF/g, '');
+export const getText = (rng: Range): string =>
+  Zwsp.trim(rng.toString().replace(/\u00A0/g, ' '));
 
-export const isWhitespace = (chr: string) => chr !== '' && ' \u00a0\f\n\r\t\v'.indexOf(chr) !== -1;
+export const isWhitespace = (chr: string): boolean =>
+  chr !== '' && ' \u00a0\f\n\r\t\v'.indexOf(chr) !== -1;
