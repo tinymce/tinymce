@@ -220,6 +220,7 @@ const autoFocus = (editor: Editor) => {
 
       if (focusEditor && !focusEditor.destroyed) {
         focusEditor.focus();
+        focusEditor.selection.scrollIntoView();
       }
     }, 100);
   }
