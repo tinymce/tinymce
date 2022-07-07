@@ -275,7 +275,7 @@ const closeHandler = (state: ImageDialogState) => (): void => {
 };
 
 const makeDialogBody = (info: ImageDialogInfo): DialogType.TabPanelSpec | DialogType.PanelSpec => {
-  if (info.hasAdvTab || info.hasUploadUrl || info.hasUploadHandler) {
+  if (info.hasAdvTab || (info.hasUploadUrl && info.hasUploadTab) || info.hasUploadHandler) {
     const tabPanel: DialogType.TabPanelSpec = {
       type: 'tabpanel',
       tabs: Arr.flatten([
