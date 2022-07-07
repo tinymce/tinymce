@@ -3,6 +3,7 @@ import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wr
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import { ZWSP } from 'tinymce/src/core/main/ts/text/Zwsp';
 
 import * as KeyUtils from '../module/test/KeyUtils';
 
@@ -602,5 +603,15 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 5);
     editor.formatter.remove('blockquote');
     TinyAssertions.assertContent(editor, '<p>test test</p>');
+  });
+
+  it('TINY-8755: Non-internal attributes are no longer removed', () => {
+    const editor = hook.editor();
+    // eslint-disable-next-line max-len
+    editor.setContent('<p><strong>bold<span data-field-type="TEXT"><span class="my-class-1"></span><span class="my-class-2"><span style="display: flex; align-items: flex-start;" data-mce-style="display: flex; align-items: flex-start;"><span class="my-class-3">' + ZWSP + '</span></span></span></span>text</strong></p>', { format: 'raw' });
+    TinySelections.setSelection(editor, [ 0, 0, 0 ], 2, [ 0, 0, 2 ], 2);
+    editor.formatter.remove('bold');
+    // eslint-disable-next-line max-len
+    TinyAssertions.assertContent(editor, '<p><strong>bo</strong>ld<span data-field-type="TEXT"><span class="my-class-1"></span><span class="my-class-2"><span style="display: flex; align-items: flex-start;" data-mce-style="display: flex; align-items: flex-start;"><span class="my-class-3"></span></span></span></span>te<strong>xt</strong></p>', { format: 'raw' });
   });
 });
