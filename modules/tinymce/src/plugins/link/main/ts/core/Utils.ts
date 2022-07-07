@@ -68,13 +68,13 @@ const applyRelTargetRules = (rel: string, isUnsafe: boolean): string => {
 const trimCaretContainers = (text: string): string =>
   text.replace(/\uFEFF/g, '');
 
-const getAnchorElement = (editor: Editor, selectedElm?: Element): HTMLAnchorElement | null => {
+const getAnchorElement = (editor: Editor, selectedElm?: Element): Optional<HTMLAnchorElement> => {
   selectedElm = selectedElm || editor.selection.getNode();
   if (isImageFigure(selectedElm)) {
     // for an image contained in a figure we look for a link inside the selected element
-    return editor.dom.select<HTMLAnchorElement>('a[href]', selectedElm)[0];
+    return Optional.from(editor.dom.select<HTMLAnchorElement>('a[href]', selectedElm)[0]);
   } else {
-    return editor.dom.getParent<HTMLAnchorElement>(selectedElm, 'a[href]');
+    return Optional.from(editor.dom.getParent<HTMLAnchorElement>(selectedElm, 'a[href]'));
   }
 };
 
@@ -117,8 +117,8 @@ const getLinkAttrs = (data: LinkDialogOutput): LinkAttrs => {
 
 const handleExternalTargets = (href: string, assumeExternalTargets: AssumeExternalTargets): string => {
   if ((assumeExternalTargets === AssumeExternalTargets.ALWAYS_HTTP
-        || assumeExternalTargets === AssumeExternalTargets.ALWAYS_HTTPS)
-      && !hasProtocol(href)) {
+    || assumeExternalTargets === AssumeExternalTargets.ALWAYS_HTTPS)
+    && !hasProtocol(href)) {
     return assumeExternalTargets + '://' + href;
   }
   return href;

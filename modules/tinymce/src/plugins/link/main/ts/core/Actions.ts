@@ -1,3 +1,5 @@
+import { Optional, Optionals } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
 import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
@@ -64,7 +66,7 @@ const toggleState = (editor: Editor, toggler: (e: NodeChangeEvent) => void): () 
 };
 
 const toggleActiveState = (editor: Editor) => (api: Toolbar.ToolbarToggleButtonInstanceApi | Menu.ToggleMenuItemInstanceApi): () => void => {
-  const updateState = () => api.setActive(!editor.mode.isReadOnly() && Utils.getAnchorElement(editor, editor.selection.getNode()) !== null);
+  const updateState = () => api.setActive(!editor.mode.isReadOnly() && Utils.getAnchorElement(editor, editor.selection.getNode()).isSome());
   updateState();
   return toggleState(editor, updateState);
 };
