@@ -9,6 +9,49 @@ import * as NodeType from '../dom/NodeType';
 import * as Whitespace from '../text/Whitespace';
 import { BlockFormat, Format, FormatAttrOrStyleValue, FormatVars, InlineFormat, MixedFormat, SelectorFormat } from './FormatTypes';
 
+const internalAttributesPrefixes = [
+  'data-ephox-',
+  'data-mce-',
+  'data-alloy-',
+  'data-snooker-',
+  '_',
+  'aria-'
+];
+
+const internalDataValues = [
+  'data-id',
+  'data-emoticon',
+  'data-collection-item-value',
+  'data-bedrockid',
+  'data-longpress-destination',
+  'data-longpress-state',
+  'data-precloak-visibility',
+  'data-transitioning-destination',
+  'data-transitioning-state',
+  'data-initial-z-index',
+  'data-column',
+  'data-row',
+  'data-initial-top',
+  'data-initial-left',
+  'data-value',
+  'data-drag-left',
+  'data-drag-top',
+  'data-converted-paragraph',
+  'data-tab-interval',
+  'data-list-level',
+  'data-border-margin',
+  'data-text-indent-alt',
+  'data-ms-equation',
+  'data-image-src',
+  'data-pdfprint-id',
+  'data-app-key',
+  'data-zoom-factor',
+  'data-image-id',
+  'data-image-type',
+  'data-name',
+  'data-gramm_editor'
+];
+
 const isNode = (node: any): node is Node => !!(node).nodeType;
 
 const isInlineBlock = (node: Node): boolean => {
@@ -216,6 +259,9 @@ const isMixedFormat = (format: Format): format is MixedFormat =>
 const shouldExpandToSelector = (format: Format) =>
   isSelectorFormat(format) && format.expand !== false && !isInlineFormat(format);
 
+const attributeIsInternal = (attributeName: string): boolean =>
+  Arr.find(internalAttributesPrefixes, (value) => attributeName.indexOf(value) === 0).isSome() || Arr.contains(internalDataValues, attributeName);
+
 export {
   isNode,
   isInlineBlock,
@@ -237,5 +283,6 @@ export {
   isInlineFormat,
   isBlockFormat,
   isMixedFormat,
-  shouldExpandToSelector
+  shouldExpandToSelector,
+  attributeIsInternal
 };

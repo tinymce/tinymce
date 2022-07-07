@@ -1,6 +1,7 @@
 import { Obj } from '@ephox/katamari';
 
 import * as Bookmarks from '../../bookmark/Bookmarks';
+import { attributeIsInternal } from '../../fmt/FormatUtils';
 import Tools from '../util/Tools';
 import DOMUtils from './DOMUtils';
 
@@ -47,7 +48,7 @@ const ElementUtils = (dom: DOMUtils): ElementUtils => {
         const name = attr.nodeName.toLowerCase();
 
         // Don't compare internal attributes or style
-        if (name.indexOf('_') !== 0 && name !== 'style' && name.indexOf('data-') !== 0) {
+        if (name !== 'style' && !attributeIsInternal(name)) {
           attribs[name] = dom.getAttrib(node, name);
         }
       });
