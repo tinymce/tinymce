@@ -78,8 +78,8 @@ const getAnchorElement = (editor: Editor, selectedElm?: Element): Optional<HTMLA
   }
 };
 
-const getAnchorText = (selection: EditorSelection, anchorElm: HTMLAnchorElement): string => {
-  const text = anchorElm ? (anchorElm.innerText || anchorElm.textContent) : selection.getContent({ format: 'text' });
+const getAnchorText = (selection: EditorSelection, anchorElm: Optional<HTMLAnchorElement>): string => {
+  const text = anchorElm.fold(() => selection.getContent({ format: 'text' }), (anchorElm) => (anchorElm.innerText || anchorElm.textContent));
   return trimCaretContainers(text);
 };
 
@@ -179,12 +179,12 @@ const linkDomMutation = (editor: Editor, attachState: AttachState, data: LinkDia
       attachState.attach();
     }
 
-    if (anchorElm) {
-      editor.focus();
-      updateLink(editor, anchorElm, data.text, linkAttrs);
-    } else {
+    anchorElm.fold(() => {
       createLink(editor, selectedElm, data.text, linkAttrs);
-    }
+    }, (elm) => {
+      editor.focus();
+      updateLink(editor, elm, data.text, linkAttrs);
+    });
   });
 };
 

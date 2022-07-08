@@ -20,7 +20,7 @@ const nonEmptyAttr = (dom: DOMUtils, elem: string | Element, name: string): Opti
 const extractFromAnchor = (editor: Editor, anchor: HTMLAnchorElement): LinkDialogInfo['anchor'] => {
   const dom = editor.dom;
   const onlyText = Utils.isOnlyTextSelected(editor);
-  const text: Optional<string> = onlyText ? Optional.some(Utils.getAnchorText(editor.selection, anchor)) : Optional.none();
+  const text: Optional<string> = onlyText ? Optional.some(Utils.getAnchorText(editor.selection, Optional.from(anchor))) : Optional.none();
   const url: Optional<string> = anchor ? Optional.some(dom.getAttrib(anchor, 'href')) : Optional.none();
   const target: Optional<string> = anchor ? Optional.from(dom.getAttrib(anchor, 'target')) : Optional.none();
   const rel = nonEmptyAttr(dom, anchor, 'rel');
