@@ -7,7 +7,7 @@
 
 let count = 0;
 
-const seed = () => {
+const seed = (): string => {
   const rnd = () => {
     return Math.round(Math.random() * 0xFFFFFFFF).toString(36);
   };
@@ -16,7 +16,7 @@ const seed = () => {
   return 's' + now.toString(36) + rnd() + rnd() + rnd();
 };
 
-const uuid = (prefix) => {
+const uuid = (prefix: string): string => {
   return prefix + (count++) + seed();
 };
 

@@ -29,7 +29,7 @@ const registerExecCommands = (editor: Editor): void => {
     },
 
     mceFocus: (_command, _ui, value?: boolean) => {
-      EditorFocus.focus(editor, value);
+      EditorFocus.focus(editor, value === true);
     },
 
     mceToggleVisualAid: () => {

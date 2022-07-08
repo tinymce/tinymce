@@ -10,8 +10,10 @@ const startsWithCaretContainer = (node: Node): boolean =>
 const endsWithCaretContainer = (node: Node): boolean =>
   isText(node) && node.data[node.data.length - 1] === Zwsp.ZWSP;
 
-const createZwsp = (node: Node): Text =>
-  node.ownerDocument.createTextNode(Zwsp.ZWSP);
+const createZwsp = (node: Node): Text => {
+  const doc = node.ownerDocument ?? document;
+  return doc.createTextNode(Zwsp.ZWSP);
+};
 
 const insertBefore = (node: Node): Text => {
   if (isText(node.previousSibling)) {
@@ -30,7 +32,7 @@ const insertBefore = (node: Node): Text => {
     }
   } else {
     const newNode = createZwsp(node);
-    node.parentNode.insertBefore(newNode, node);
+    node.parentNode?.insertBefore(newNode, node);
     return newNode;
   }
 };
@@ -53,9 +55,9 @@ const insertAfter = (node: Node): Text => {
   } else {
     const newNode = createZwsp(node);
     if (node.nextSibling) {
-      node.parentNode.insertBefore(newNode, node.nextSibling);
+      node.parentNode?.insertBefore(newNode, node.nextSibling);
     } else {
-      node.parentNode.appendChild(newNode);
+      node.parentNode?.appendChild(newNode);
     }
     return newNode;
   }

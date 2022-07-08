@@ -28,7 +28,7 @@ const isRegExp = (x: unknown): x is RegExp => Type.is(x, RegExp);
 const option = <K extends keyof EditorOptions>(name: K) => (editor: Editor) =>
   editor.options.get(name);
 
-const stringOrObjectProcessor = (value: string) =>
+const stringOrObjectProcessor = (value: unknown) =>
   Type.isString(value) || Type.isObject(value);
 
 const bodyOptionProcessor = (editor: Editor, defaultValue: string = '') => (value: unknown) => {
@@ -45,7 +45,7 @@ const bodyOptionProcessor = (editor: Editor, defaultValue: string = '') => (valu
   }
 };
 
-const register = (editor: Editor) => {
+const register = (editor: Editor): void => {
   const registerOption = editor.options.register;
 
   registerOption('id', {
@@ -79,7 +79,8 @@ const register = (editor: Editor) => {
   });
 
   registerOption('language_load', {
-    processor: 'boolean'
+    processor: 'boolean',
+    default: true
   });
 
   registerOption('inline', {
@@ -137,6 +138,14 @@ const register = (editor: Editor) => {
   registerOption('forced_root_block_attrs', {
     processor: 'object',
     default: {}
+  });
+
+  registerOption('newline_behavior', {
+    processor: (value) => {
+      const valid = Arr.contains([ 'block', 'linebreak', 'invert', 'default' ], value);
+      return valid ? { value, valid } : { valid: false, message: 'Must be one of: block, linebreak, invert or default.' };
+    },
+    default: 'default'
   });
 
   registerOption('br_newline_selector', {
@@ -209,11 +218,6 @@ const register = (editor: Editor) => {
   });
 
   registerOption('images_upload_url', {
-    processor: 'string',
-    default: ''
-  });
-
-  registerOption('images_upload_base_path', {
     processor: 'string',
     default: ''
   });
@@ -325,7 +329,7 @@ const register = (editor: Editor) => {
 
   registerOption('inline_boundaries_selector', {
     processor: 'string',
-    default: 'a[href],code,.mce-annotation'
+    default: 'a[href],code,span.mce-annotation'
   });
 
   registerOption('object_resizing', {
@@ -780,6 +784,7 @@ const getContentSecurityPolicy = option('content_security_policy');
 const shouldPutBrInPre = option('br_in_pre');
 const getForcedRootBlock = option('forced_root_block');
 const getForcedRootBlockAttrs = option('forced_root_block_attrs');
+const getNewlineBehavior = option('newline_behavior');
 const getBrNewLineSelector = option('br_newline_selector');
 const getNoNewLineSelector = option('no_newline_selector');
 const shouldKeepStyles = option('keep_styles');
@@ -882,6 +887,7 @@ export {
   shouldPutBrInPre,
   getForcedRootBlock,
   getForcedRootBlockAttrs,
+  getNewlineBehavior,
   getBrNewLineSelector,
   getNoNewLineSelector,
   shouldKeepStyles,

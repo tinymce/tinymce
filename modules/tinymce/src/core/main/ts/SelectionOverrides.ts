@@ -1,4 +1,4 @@
-import { Arr, Obj, Unicode } from '@ephox/katamari';
+import { Arr, Obj, Type, Unicode } from '@ephox/katamari';
 import { Attribute, Compare, Css, Focus, Insert, InsertAll, Remove, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from './api/Editor';
@@ -20,8 +20,8 @@ import * as Rtc from './Rtc';
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 
 interface SelectionOverrides {
-  showCaret: (direction: number, node: Element, before: boolean, scrollIntoView?: boolean) => Range | null;
-  showBlockCaretContainer: (blockCaretContainer: Element) => void;
+  showCaret: (direction: number, node: HTMLElement, before: boolean, scrollIntoView?: boolean) => Range | null;
+  showBlockCaretContainer: (blockCaretContainer: HTMLElement) => void;
   hideFakeCaret: () => void;
   destroy: () => void;
 }
@@ -30,15 +30,16 @@ const getContentEditableRoot = (editor: Editor, node: Node) => CefUtils.getConte
 
 const SelectionOverrides = (editor: Editor): SelectionOverrides => {
   const selection = editor.selection, dom = editor.dom;
-  const isBlock = dom.isBlock as (node: Node) => node is HTMLElement;
 
   const rootNode = editor.getBody();
-  const fakeCaret = FakeCaret(editor, rootNode, isBlock, () => EditorFocus.hasFocus(editor));
+  const fakeCaret = FakeCaret(editor, rootNode, dom.isBlock, () => EditorFocus.hasFocus(editor));
   const realSelectionId = 'sel-' + dom.uniqueId();
   const elementSelectionAttr = 'data-mce-selected';
-  let selectedElement;
+  let selectedElement: Element | null;
 
-  const isFakeSelectionElement = (node: Node) => dom.hasClass(node, 'mce-offscreen-selection');
+  const isFakeSelectionElement = (node: Element | null) =>
+    Type.isNonNullable(node) && dom.hasClass(node, 'mce-offscreen-selection');
+
   // Note: isChildOf will return true if node === rootNode, so we need an additional check for that
   const isFakeSelectionTargetElement = (node: Node): node is HTMLElement =>
     node !== rootNode && (isContentEditableFalse(node) || NodeType.isMedia(node)) && dom.isChildOf(node, rootNode);
@@ -49,7 +50,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
     }
   };
 
-  const showCaret = (direction: number, node: HTMLElement, before: boolean, scrollIntoView: boolean = true): Range => {
+  const showCaret = (direction: number, node: HTMLElement, before: boolean, scrollIntoView: boolean = true): Range | null => {
     const e = editor.dispatch('ShowCaret', {
       target: node,
       direction,
@@ -108,7 +109,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
         return;
       }
 
-      if (EditorView.isXYInContentArea(editor, e.clientX, e.clientY) === false) {
+      if (!EditorView.isXYInContentArea(editor, e.clientX, e.clientY)) {
         return;
       }
 
@@ -173,17 +174,18 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
       }
     });
 
-    const isPasteBin = (node: Element): boolean => node.id === 'mcepastebin';
+    const isPasteBin = (node: Node | null): boolean =>
+      NodeType.isElement(node) && node.id === 'mcepastebin';
 
     editor.on('AfterSetSelectionRange', (e) => {
       const rng = e.range;
-      const parentNode = rng.startContainer.parentNode;
+      const parent = rng.startContainer.parentElement;
 
-      if (!isRangeInCaretContainer(rng) && !isPasteBin(parentNode as Element)) {
+      if (!isRangeInCaretContainer(rng) && !isPasteBin(parent)) {
         hideFakeCaret();
       }
 
-      if (!isFakeSelectionElement(parentNode)) {
+      if (!isFakeSelectionElement(parent)) {
         removeElementSelection();
       }
     });
@@ -250,8 +252,8 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
       SugarElement.fromDom(targetClone),
       SugarElement.fromText(Unicode.nbsp, doc)
     ]);
-    newRange.setStart(realSelectionContainer.dom.firstChild, 1);
-    newRange.setEnd(realSelectionContainer.dom.lastChild, 0);
+    newRange.setStart(realSelectionContainer.dom.firstChild as Text, 1);
+    newRange.setEnd(realSelectionContainer.dom.lastChild as Text, 0);
 
     Css.setAll(realSelectionContainer, {
       top: dom.getPos(node, editor.getBody()).y + 'px'
@@ -259,8 +261,10 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
 
     Focus.focus(realSelectionContainer);
     const sel = selection.getSel();
-    sel.removeAllRanges();
-    sel.addRange(newRange);
+    if (sel) {
+      sel.removeAllRanges();
+      sel.addRange(newRange);
+    }
 
     return newRange;
   };
@@ -279,7 +283,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
     // But data-mce-selected can be values other than 1 so keep existing value if
     // node has one, and remove data-mce-selected from everything else
     const nodeElm = SugarElement.fromDom(elm);
-    Arr.each(SelectorFilter.descendants(SugarElement.fromDom(editor.getBody()), '*[data-mce-selected]'), (elm) => {
+    Arr.each(SelectorFilter.descendants(SugarElement.fromDom(editor.getBody()), `*[${elementSelectionAttr}]`), (elm) => {
       if (!Compare.eq(nodeElm, elm)) {
         Attribute.remove(elm, elementSelectionAttr);
       }
@@ -318,18 +322,18 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
       return null;
     }
 
-    let startContainer = range.startContainer;
+    let startContainer: Node | null = range.startContainer;
     let startOffset = range.startOffset;
     const endOffset = range.endOffset;
 
     // Normalizes <span cE=false>[</span>] to [<span cE=false></span>]
-    if (startContainer.nodeType === 3 && startOffset === 0 && isContentEditableFalse(startContainer.parentNode)) {
+    if (NodeType.isText(startContainer) && startOffset === 0 && isContentEditableFalse(startContainer.parentNode)) {
       startContainer = startContainer.parentNode;
       startOffset = dom.nodeIndex(startContainer);
       startContainer = startContainer.parentNode;
     }
 
-    if (startContainer.nodeType !== 1) {
+    if (!NodeType.isElement(startContainer)) {
       return null;
     }
 

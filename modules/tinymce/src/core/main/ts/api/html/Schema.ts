@@ -1,10 +1,22 @@
-import { Arr, Fun, Obj } from '@ephox/katamari';
+import { Arr, Fun, Obj, Type } from '@ephox/katamari';
 
 import Tools from '../util/Tools';
 
 export type SchemaType = 'html4' | 'html5' | 'html5-strict';
 
-export interface SchemaSettings {
+interface ElementSettings {
+  block_elements?: string;
+  boolean_attributes?: string;
+  move_caret_before_on_enter_elements?: string;
+  non_empty_elements?: string;
+  self_closing_elements?: string;
+  text_block_elements?: string;
+  text_inline_elements?: string;
+  void_elements?: string;
+  whitespace_elements?: string;
+}
+
+export interface SchemaSettings extends ElementSettings {
   custom_elements?: string;
   extended_valid_elements?: string;
   invalid_elements?: string;
@@ -15,6 +27,7 @@ export interface SchemaSettings {
   valid_elements?: string;
   valid_styles?: string | Record<string, string>;
   verify_html?: boolean;
+  padd_empty_block_inline_children?: boolean;
 }
 
 export interface Attribute {
@@ -29,12 +42,8 @@ export interface DefaultAttribute {
   value: string;
 }
 
-export interface AttributePattern {
-  defaultValue?: string;
-  forcedValue?: string;
+export interface AttributePattern extends Attribute {
   pattern: RegExp;
-  required?: boolean;
-  validValues?: Record<string, {}>;
 }
 
 export interface ElementRule {
@@ -47,6 +56,7 @@ export interface ElementRule {
   paddEmpty?: boolean;
   removeEmpty?: boolean;
   removeEmptyAttrs?: boolean;
+  paddInEmptyBlock?: boolean;
 }
 
 export interface SchemaElement extends ElementRule {
@@ -108,13 +118,28 @@ interface SchemaLookupTable {
  * }
  */
 
-const mapCache: Record<string, SchemaLookupTable> = {}, dummyObj = {};
+const lookupCache: Record<string, SchemaLookupTable> = {};
+const mapCache: Record<string, SchemaMap> = {};
+const dummyObj = {};
 const makeMap = Tools.makeMap, each = Tools.each, extend = Tools.extend, explode = Tools.explode, inArray = Tools.inArray;
 
-const split = (items: string, delim?: string): string[] => {
+const split = (items: string | undefined, delim?: string): string[] => {
   items = Tools.trim(items);
   return items ? items.split(delim || ' ') : [];
 };
+
+const createMap = (defaultValue: string, extendWith: SchemaMap = {}): SchemaMap => {
+  const value = makeMap(defaultValue, ' ', makeMap(defaultValue.toUpperCase(), ' '));
+  return extend(value, extendWith);
+};
+
+// A curated list using the textBlockElements map and parts of the blockElements map from the schema
+// TODO: TINY-8728 Investigate if the extras can be added directly to the default text block elements
+export const getTextRootBlockElements = (schema: Schema): SchemaMap =>
+  createMap(
+    'td th li dt dd figcaption caption details summary',
+    schema.getTextBlockElements()
+  );
 
 /**
  * Builds a schema lookup table
@@ -125,8 +150,8 @@ const split = (items: string, delim?: string): string[] => {
  */
 const compileSchema = (type: SchemaType): SchemaLookupTable => {
   const schema: SchemaLookupTable = {};
-  let globalAttributes, blockContent;
-  let phrasingContent, flowContent, html4BlockContent, html4PhrasingContent;
+  let globalAttributes: string, blockContent: string;
+  let phrasingContent: string, flowContent: string | undefined;
 
   const add = (name: string, attributes: string = '', children: string = '') => {
     const childNames = split(children);
@@ -157,8 +182,8 @@ const compileSchema = (type: SchemaType): SchemaLookupTable => {
   };
 
   // Use cached schema
-  if (mapCache[type]) {
-    return mapCache[type];
+  if (lookupCache[type]) {
+    return lookupCache[type];
   }
 
   // Attributes present on all elements
@@ -196,14 +221,14 @@ const compileSchema = (type: SchemaType): SchemaLookupTable => {
   if (type !== 'html5-strict') {
     globalAttributes += ' xml:lang';
 
-    html4PhrasingContent = 'acronym applet basefont big font strike tt';
+    const html4PhrasingContent = 'acronym applet basefont big font strike tt';
     phrasingContent = [ phrasingContent, html4PhrasingContent ].join(' ');
 
     each(split(html4PhrasingContent), (name) => {
       add(name, '', phrasingContent);
     });
 
-    html4BlockContent = 'center dir isindex noframes';
+    const html4BlockContent = 'center dir isindex noframes';
     blockContent = [ blockContent, html4BlockContent ].join(' ');
 
     // Flow content elements from the HTML5 spec (block+inline)
@@ -377,18 +402,19 @@ const compileSchema = (type: SchemaType): SchemaLookupTable => {
   // TODO: Handle transparent elements
   // a ins del canvas map
 
-  mapCache[type] = schema;
+  lookupCache[type] = schema;
 
   return schema;
 };
 
-const compileElementMap = (value: string | Record<string, string>, mode?: string ) => {
-  let styles;
-
+const compileElementMap: {
+  (value: string | Record<string, string> | undefined, mode: 'map'): Record<string, SchemaMap> | undefined;
+  (value: string | Record<string, string> | undefined): Record<string, string[]> | undefined;
+} = (value: string | Record<string, string> | undefined, mode?: string) => {
   if (value) {
-    styles = {};
+    const styles: Record<string, any> = {};
 
-    if (typeof value === 'string') {
+    if (Type.isString(value)) {
       value = {
         '*': value
       };
@@ -398,40 +424,40 @@ const compileElementMap = (value: string | Record<string, string>, mode?: string
     each(value, (value, key) => {
       styles[key] = styles[key.toUpperCase()] = mode === 'map' ? makeMap(value, /[, ]/) : explode(value, /[, ]/);
     });
-  }
 
-  return styles;
+    return styles;
+  } else {
+    return undefined;
+  }
 };
 
-const Schema = (settings?: SchemaSettings): Schema => {
+const Schema = (settings: SchemaSettings = {}): Schema => {
   const elements: Record<string, SchemaElement> = {};
-  const children: Record<string, {}> = {};
-  let patternElements = [];
-  const customElementsMap = {}, specialElements = {} as SchemaRegExpMap;
+  const children: Record<string, SchemaMap> = {};
+  let patternElements: Array<SchemaElement & { pattern: RegExp }> = [];
+  const customElementsMap: SchemaMap = {};
+  const specialElements: SchemaRegExpMap = {};
 
   // Creates an lookup table map object for the specified option or the default value
-  const createLookupTable = (option: string, defaultValue?: string, extendWith?: SchemaMap): SchemaMap => {
-    let value = settings[option];
+  const createLookupTable = (option: keyof ElementSettings, defaultValue: string, extendWith?: SchemaMap): SchemaMap => {
+    const value = settings[option];
 
     if (!value) {
       // Get cached default map or make it if needed
-      value = mapCache[option];
+      let newValue = mapCache[option];
 
-      if (!value) {
-        value = makeMap(defaultValue, ' ', makeMap(defaultValue.toUpperCase(), ' '));
-        value = extend(value, extendWith);
-
-        mapCache[option] = value;
+      if (!newValue) {
+        newValue = createMap(defaultValue, extendWith);
+        mapCache[option] = newValue;
       }
+
+      return newValue;
     } else {
       // Create custom map
-      value = makeMap(value, /[, ]/, makeMap(value.toUpperCase(), /[, ]/));
+      return makeMap(value, /[, ]/, makeMap(value.toUpperCase(), /[, ]/));
     }
-
-    return value;
   };
 
-  settings = settings || {};
   const schemaType = settings.schema ?? 'html5';
   const schemaItems = compileSchema(schemaType);
 
@@ -464,7 +490,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
   const blockElementsMap = createLookupTable('block_elements', 'hr table tbody thead tfoot ' +
     'th tr td li ol ul caption dl dt dd noscript menu isindex option ' +
     'datalist select optgroup figcaption details summary', textBlockElementsMap);
-  const textInlineElementsMap = createLookupTable('text_inline_elements', 'span strong b em i font strike u var cite ' +
+  const textInlineElementsMap = createLookupTable('text_inline_elements', 'span strong b em i font s strike u var cite ' +
     'dfn code mark q sup sub samp');
 
   // See https://html.spec.whatwg.org/multipage/parsing.html#parsing-html-fragments
@@ -477,42 +503,42 @@ const Schema = (settings?: SchemaSettings): Schema => {
 
   // Parses the specified valid_elements string and adds to the current rules
   // This function is a bit hard to read since it's heavily optimized for speed
-  const addValidElements = (validElements: string) => {
-    let ei, el, ai, al, matches, element, attr, attrData, elementName, attrName, attrType, attributes, attributesOrder,
-      prefix, outputName, globalAttributes, globalAttributesOrder, value;
-    const elementRuleRegExp = /^([#+\-])?([^\[!\/]+)(?:\/([^\[!]+))?(?:(!?)\[([^\]]+)])?$/,
-      attrRuleRegExp = /^([!\-])?(\w+[\\:]:\w+|[^=~<]+)?(?:([=~<])(.*))?$/,
-      hasPatternsRegExp = /[*?+]/;
+  const addValidElements = (validElements: string | undefined) => {
+    const elementRuleRegExp = /^([#+\-])?([^\[!\/]+)(?:\/([^\[!]+))?(?:(!?)\[([^\]]+)])?$/;
+    const attrRuleRegExp = /^([!\-])?(\w+[\\:]:\w+|[^=~<]+)?(?:([=~<])(.*))?$/;
+    const hasPatternsRegExp = /[*?+]/;
 
     if (validElements) {
       // Split valid elements into an array with rules
       const validElementsArr = split(validElements, ',');
 
+      let globalAttributes: Record<string, Attribute> | undefined;
+      let globalAttributesOrder: string[] | undefined;
       if (elements['@']) {
         globalAttributes = elements['@'].attributes;
         globalAttributesOrder = elements['@'].attributesOrder;
       }
 
       // Loop all rules
-      for (ei = 0, el = validElementsArr.length; ei < el; ei++) {
+      for (let ei = 0, el = validElementsArr.length; ei < el; ei++) {
         // Parse element rule
-        matches = elementRuleRegExp.exec(validElementsArr[ei]);
+        let matches = elementRuleRegExp.exec(validElementsArr[ei]);
         if (matches) {
           // Setup local names for matches
-          prefix = matches[1];
-          elementName = matches[2];
-          outputName = matches[3];
-          attrData = matches[5];
+          const prefix = matches[1];
+          const elementName = matches[2];
+          const outputName = matches[3];
+          const attrData = matches[5];
 
           // Create new attributes and attributesOrder
-          attributes = {};
-          attributesOrder = [];
+          const attributes: Record<string, Attribute> = {};
+          const attributesOrder: string[] = [];
 
           // Create the new element
-          element = {
+          const element = {
             attributes,
             attributesOrder
-          };
+          } as SchemaElement;
 
           // Padd empty elements prefix
           if (prefix === '#') {
@@ -534,20 +560,22 @@ const Schema = (settings?: SchemaSettings): Schema => {
               attributes[key] = value;
             });
 
-            attributesOrder.push.apply(attributesOrder, globalAttributesOrder);
+            if (globalAttributesOrder) {
+              attributesOrder.push(...globalAttributesOrder);
+            }
           }
 
           // Attributes defined
           if (attrData) {
-            attrData = split(attrData, '|');
-            for (ai = 0, al = attrData.length; ai < al; ai++) {
-              matches = attrRuleRegExp.exec(attrData[ai]);
+            const attrDatas = split(attrData, '|');
+            for (let ai = 0, al = attrDatas.length; ai < al; ai++) {
+              matches = attrRuleRegExp.exec(attrDatas[ai]);
               if (matches) {
-                attr = {};
-                attrType = matches[1];
-                attrName = matches[2].replace(/[\\:]:/g, ':');
-                prefix = matches[3];
-                value = matches[4];
+                const attr: Attribute = {};
+                const attrType = matches[1];
+                const attrName = matches[2].replace(/[\\:]:/g, ':');
+                const attrPrefix = matches[3];
+                const value = matches[4];
 
                 // Required
                 if (attrType === '!') {
@@ -564,32 +592,33 @@ const Schema = (settings?: SchemaSettings): Schema => {
                 }
 
                 // Default value
-                if (prefix) {
+                if (attrPrefix) {
                   // Default value
-                  if (prefix === '=') {
+                  if (attrPrefix === '=') {
                     element.attributesDefault = element.attributesDefault || [];
                     element.attributesDefault.push({ name: attrName, value });
                     attr.defaultValue = value;
                   }
 
                   // Forced value
-                  if (prefix === '~') {
+                  if (attrPrefix === '~') {
                     element.attributesForced = element.attributesForced || [];
                     element.attributesForced.push({ name: attrName, value });
                     attr.forcedValue = value;
                   }
 
                   // Required values
-                  if (prefix === '<') {
+                  if (attrPrefix === '<') {
                     attr.validValues = makeMap(value, '?');
                   }
                 }
 
                 // Check for attribute patterns
                 if (hasPatternsRegExp.test(attrName)) {
+                  const attrPattern = attr as AttributePattern;
                   element.attributePatterns = element.attributePatterns || [];
-                  attr.pattern = patternToRegExp(attrName);
-                  element.attributePatterns.push(attr);
+                  attrPattern.pattern = patternToRegExp(attrName);
+                  element.attributePatterns.push(attrPattern);
                 } else {
                   // Add attribute to order list if it doesn't already exist
                   if (!attributes[attrName]) {
@@ -616,8 +645,9 @@ const Schema = (settings?: SchemaSettings): Schema => {
 
           // Add pattern or exact element
           if (hasPatternsRegExp.test(elementName)) {
-            element.pattern = patternToRegExp(elementName);
-            patternElements.push(element);
+            const patternElement = element as (SchemaElement & { pattern: RegExp });
+            patternElement.pattern = patternToRegExp(elementName);
+            patternElements.push(patternElement);
           } else {
             elements[elementName] = element;
           }
@@ -642,65 +672,72 @@ const Schema = (settings?: SchemaSettings): Schema => {
   };
 
   // Adds custom non HTML elements to the schema
-  const addCustomElements = (customElements: string) => {
+  const addCustomElements = (customElements: string | undefined) => {
     const customElementRegExp = /^(~)?(.+)$/;
 
     if (customElements) {
       // Flush cached items since we are altering the default maps
-      mapCache.text_block_elements = mapCache.block_elements = null;
+      delete mapCache.text_block_elements;
+      delete mapCache.block_elements;
 
       each(split(customElements, ','), (rule) => {
-        const matches = customElementRegExp.exec(rule),
-          inline = matches[1] === '~',
-          cloneName = inline ? 'span' : 'div',
-          name = matches[2];
+        const matches = customElementRegExp.exec(rule);
+        if (matches) {
+          const inline = matches[1] === '~';
+          const cloneName = inline ? 'span' : 'div';
+          const name = matches[2];
 
-        children[name] = children[cloneName];
-        customElementsMap[name] = cloneName;
+          children[name] = children[cloneName];
+          customElementsMap[name] = cloneName;
 
-        // If it's not marked as inline then add it to valid block elements
-        if (!inline) {
-          blockElementsMap[name.toUpperCase()] = {};
-          blockElementsMap[name] = {};
-        }
+          // Treat all custom elements as being non-empty by default
+          nonEmptyElementsMap[name.toUpperCase()] = {};
+          nonEmptyElementsMap[name] = {};
 
-        // Add elements clone if needed
-        if (!elements[name]) {
-          let customRule = elements[cloneName];
-
-          customRule = extend({}, customRule);
-          delete customRule.removeEmptyAttrs;
-          delete customRule.removeEmpty;
-
-          elements[name] = customRule;
-        }
-
-        // Add custom elements at span/div positions
-        each(children, (element, elmName) => {
-          if (element[cloneName]) {
-            children[elmName] = element = extend({}, children[elmName]);
-            element[name] = element[cloneName];
+          // If it's not marked as inline then add it to valid block elements
+          if (!inline) {
+            blockElementsMap[name.toUpperCase()] = {};
+            blockElementsMap[name] = {};
           }
-        });
+
+          // Add elements clone if needed
+          if (!elements[name]) {
+            let customRule = elements[cloneName];
+
+            customRule = extend({}, customRule);
+            delete customRule.removeEmptyAttrs;
+            delete customRule.removeEmpty;
+
+            elements[name] = customRule;
+          }
+
+          // Add custom elements at span/div positions
+          each(children, (element, elmName) => {
+            if (element[cloneName]) {
+              children[elmName] = element = extend({}, children[elmName]);
+              element[name] = element[cloneName];
+            }
+          });
+        }
       });
     }
   };
 
   // Adds valid children to the schema object
-  const addValidChildren = (validChildren) => {
+  const addValidChildren = (validChildren: string | undefined) => {
     // see: https://html.spec.whatwg.org/#valid-custom-element-name
     const childRuleRegExp = /^([+\-]?)([A-Za-z0-9_\-.\u00b7\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u037d\u037f-\u1fff\u200c-\u200d\u203f-\u2040\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd]+)\[([^\]]+)]$/; // from w3c's custom grammar (above)
 
     // Invalidate the schema cache if the schema is mutated
-    mapCache[schemaType] = null;
+    delete lookupCache[schemaType];
 
     if (validChildren) {
       each(split(validChildren, ','), (rule) => {
         const matches = childRuleRegExp.exec(rule);
-        let parent, prefix;
 
         if (matches) {
-          prefix = matches[1];
+          const prefix = matches[1];
+          let parent: SchemaMap;
 
           // Add/remove items from default
           if (prefix) {
@@ -723,8 +760,8 @@ const Schema = (settings?: SchemaSettings): Schema => {
     }
   };
 
-  const getElementRule = (name: string): ElementRule => {
-    let element = elements[name], i;
+  const getElementRule = (name: string): SchemaElement | undefined => {
+    const element = elements[name];
 
     // Exact match found
     if (element) {
@@ -732,14 +769,16 @@ const Schema = (settings?: SchemaSettings): Schema => {
     }
 
     // No exact match then try the patterns
-    i = patternElements.length;
+    let i = patternElements.length;
     while (i--) {
-      element = patternElements[i];
+      const patternElement = patternElements[i];
 
-      if (element.pattern.test(name)) {
-        return element;
+      if (patternElement.pattern.test(name)) {
+        return patternElement;
       }
     }
+
+    return undefined;
   };
 
   if (!settings.valid_elements) {
@@ -762,8 +801,20 @@ const Schema = (settings?: SchemaSettings): Schema => {
     // Add default alt attribute for images, removed since alt="" is treated as presentational.
     // elements.img.attributesDefault = [{name: 'alt', value: ''}];
 
+    // By default,
+    // - padd the text inline element if it is empty and also a child of an empty root block
+    // - in all other cases, remove the text inline element if it is empty
+    each(textInlineElementsMap, (_val, name) => {
+      if (elements[name]) {
+        if (settings.padd_empty_block_inline_children) {
+          elements[name].paddInEmptyBlock = true;
+        }
+        elements[name].removeEmpty = true;
+      }
+    });
+
     // Remove these if they are empty by default
-    each(split('ol ul sub sup blockquote span font a table tbody strong em b i'), (name) => {
+    each(split('ol ul blockquote a table tbody'), (name) => {
       if (elements[name]) {
         elements[name].removeEmpty = true;
       }
@@ -972,7 +1023,6 @@ const Schema = (settings?: SchemaSettings): Schema => {
    * @return {Boolean} True/false if the element and attribute is valid.
    */
   const isValid = (name: string, attr?: string): boolean => {
-    let attrPatterns, i;
     const rule = getElementRule(name);
 
     // Check if it's a valid element
@@ -984,9 +1034,9 @@ const Schema = (settings?: SchemaSettings): Schema => {
         }
 
         // Check if attribute matches a regexp pattern
-        attrPatterns = rule.attributePatterns;
+        const attrPatterns = rule.attributePatterns;
         if (attrPatterns) {
-          i = attrPatterns.length;
+          let i = attrPatterns.length;
           while (i--) {
             if (attrPatterns[i].pattern.test(attr)) {
               return true;

@@ -10,17 +10,28 @@ interface Observable<T> {
   hasEventListeners (name: string): boolean;
 }
 
+interface ParentObservable<T> extends Observable<T> {
+  parent?: () => ParentObservable<T>;
+}
+
+interface ObservableObject {
+  _eventDispatcher?: EventDispatcher<any>;
+  toggleNativeEvent?: (name: string, state: boolean) => void;
+  removed?: boolean;
+  parent?: () => ParentObservable<any> | undefined;
+}
+
 /**
  * This mixin adds event binding logic to classes. Adapts the EventDispatcher class.
  *
  * @mixin tinymce.util.Observable
  */
 
-const getEventDispatcher = (obj): EventDispatcher<any> => {
+const getEventDispatcher = (obj: ObservableObject): EventDispatcher<any> => {
   if (!obj._eventDispatcher) {
     obj._eventDispatcher = new EventDispatcher({
       scope: obj,
-      toggleEvent: (name, state) => {
+      toggleEvent: (name: string, state: boolean) => {
         if (EventDispatcher.isNative(name) && obj.toggleNativeEvent) {
           obj.toggleNativeEvent(name, state);
         }
@@ -63,7 +74,7 @@ const Observable: Observable<any> = {
    * @example
    * instance.dispatch('event', {...});
    */
-  dispatch<K extends string, U extends MappedEvent<any, K>>(name: K, args?: U, bubble?: boolean) {
+  dispatch<K extends string, U extends MappedEvent<any, K>>(this: ObservableObject, name: K, args?: U, bubble?: boolean) {
     const self = this;
 
     // Prevent all events except the remove/detach event after the instance has been removed
@@ -78,7 +89,7 @@ const Observable: Observable<any> = {
       let parent = self.parent();
       while (parent && !dispatcherArgs.isPropagationStopped()) {
         parent.dispatch(name, dispatcherArgs, false);
-        parent = parent.parent();
+        parent = parent.parent ? parent.parent() : undefined;
       }
     }
 
@@ -99,7 +110,7 @@ const Observable: Observable<any> = {
    *   // Callback logic
    * });
    */
-  on(name, callback, prepend?) {
+  on(this: ObservableObject, name, callback, prepend?) {
     return getEventDispatcher(this).on(name, callback, prepend);
   },
 
@@ -121,7 +132,7 @@ const Observable: Observable<any> = {
    * // Unbind all events
    * instance.off();
    */
-  off(name?, callback?) {
+  off(this: ObservableObject, name?, callback?) {
     return getEventDispatcher(this).off(name, callback);
   },
 
@@ -134,7 +145,7 @@ const Observable: Observable<any> = {
    * @param {Function} callback Callback to bind only once.
    * @return {Object} Current class instance.
    */
-  once(name, callback) {
+  once(this: ObservableObject, name, callback) {
     return getEventDispatcher(this).once(name, callback);
   },
 
@@ -145,7 +156,7 @@ const Observable: Observable<any> = {
    * @param {String} name Name of the event to check for.
    * @return {Boolean} true/false if the event exists or not.
    */
-  hasEventListeners(name) {
+  hasEventListeners(this: ObservableObject, name) {
     return getEventDispatcher(this).has(name);
   }
 };

@@ -8,7 +8,7 @@ interface Resource {
 
 const awaiter = (resolveCb: (data: any) => void, rejectCb: (err?: any) => void, timeout = 1000) => {
   let done = false;
-  let timer = null;
+  let timer: number | null = null;
   const complete = <T extends any[]>(completer: (...args: T) => void) => (...args: T) => {
     if (!done) {
       done = true;

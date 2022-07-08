@@ -3,7 +3,6 @@ import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
 import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 import VK from 'tinymce/core/api/util/VK';
 
-import * as Dialog from '../ui/Dialog';
 import * as OpenUrl from './OpenUrl';
 import * as Utils from './Utils';
 
@@ -32,7 +31,7 @@ const gotoLink = (editor: Editor, a: HTMLAnchorElement | null): void => {
 };
 
 const openDialog = (editor: Editor) => (): void => {
-  Dialog.open(editor);
+  editor.execCommand('mceLink', false, { dialog: true });
 };
 
 const gotoSelectedLink = (editor: Editor) => (): void => {
@@ -49,10 +48,12 @@ const setupGotoLinks = (editor: Editor): void => {
   });
 
   editor.on('keydown', (e) => {
-    const link = getSelectedLink(editor);
-    if (link && e.keyCode === 13 && hasOnlyAltModifier(e)) {
-      e.preventDefault();
-      gotoLink(editor, link);
+    if (!e.isDefaultPrevented() && e.keyCode === 13 && hasOnlyAltModifier(e)) {
+      const link = getSelectedLink(editor);
+      if (link) {
+        e.preventDefault();
+        gotoLink(editor, link);
+      }
     }
   });
 };

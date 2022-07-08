@@ -1,7 +1,8 @@
 import { FocusTools, Keys, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it, before, after } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
-import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions, TinyContentActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
@@ -17,6 +18,8 @@ describe('browser.tinymce.plugins.link.QuickLinkTest', () => {
   }, [ Plugin ], true);
 
   const doc = SugarDocument.getDocument();
+
+  const metaKey = PlatformDetection.detect().os.isMacOS() ? { metaKey: true } : { ctrlKey: true };
 
   before(() => {
     TestLinkUi.clearHistory();
@@ -155,5 +158,28 @@ describe('browser.tinymce.plugins.link.QuickLinkTest', () => {
       'a[href="http://tiny.cloud/7"]': 1,
       'a:contains("Word")': 1
     });
+  });
+
+  it('TINY-8057: Checking that mceLink command can open Quicklink and dialog', async () => {
+    const editor = hook.editor();
+    editor.setContent('');
+    editor.execCommand('mcelink', false, { dialog: true });
+    await TinyUiActions.pWaitForDialog(editor);
+    TinyUiActions.closeDialog(editor);
+    editor.execCommand('mcelink');
+    await TinyUiActions.pWaitForPopup(editor, '.tox-pop .tox-toolbar');
+    await FocusTools.pTryOnSelector('Selector should be in context form input', doc, '.tox-toolbar input');
+    TinyUiActions.keydown(editor, Keys.enter());
+    UiFinder.notExists(SugarBody.body(), '.tox-pop__dialog');
+  });
+
+  it('TINY-8057: Checking Quicklink opens with keyboard shortcut', async () => {
+    const editor = hook.editor();
+    editor.setContent('');
+    TinyContentActions.keystroke(editor, 'K'.charCodeAt(0), metaKey);
+    await TinyUiActions.pWaitForPopup(editor, '.tox-pop__dialog .tox-toolbar');
+    await FocusTools.pTryOnSelector('Selector should be in context form input', doc, '.tox-toolbar input');
+    TinyUiActions.keydown(editor, Keys.enter());
+    UiFinder.notExists(SugarBody.body(), '.tox-pop__dialog');
   });
 });

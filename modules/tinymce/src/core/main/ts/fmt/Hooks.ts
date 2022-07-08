@@ -1,8 +1,8 @@
+import { Arr, Obj } from '@ephox/katamari';
 import { InsertAll, Remove, SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
-import * as ArrUtils from '../util/ArrUtils';
 
 /**
  * Internal class for overriding formatting.
@@ -11,11 +11,13 @@ import * as ArrUtils from '../util/ArrUtils';
  * @class tinymce.fmt.Hooks
  */
 
-const postProcessHooks: Record<string, Array<(editor: Editor) => void>> = {};
-const filter = ArrUtils.filter;
-const each = ArrUtils.each;
+type Hook = (editor: Editor) => void;
 
-const addPostProcessHook = (name, hook) => {
+const postProcessHooks: Record<string, Hook[]> = {};
+
+const isPre = NodeType.matchNodeNames<HTMLPreElement>([ 'pre' ]);
+
+const addPostProcessHook = (name: string, hook: Hook): void => {
   const hooks = postProcessHooks[name];
 
   if (!hooks) {
@@ -25,21 +27,23 @@ const addPostProcessHook = (name, hook) => {
   postProcessHooks[name].push(hook);
 };
 
-const postProcess = (name: string, editor: Editor) => {
-  each(postProcessHooks[name], (hook) => {
-    hook(editor);
-  });
+const postProcess = (name: string, editor: Editor): void => {
+  if (Obj.has(postProcessHooks, name)) {
+    Arr.each(postProcessHooks[name], (hook) => {
+      hook(editor);
+    });
+  }
 };
 
-addPostProcessHook('pre', (editor: Editor) => {
+addPostProcessHook('pre', (editor) => {
   const rng = editor.selection.getRng();
-  let blocks;
 
-  const hasPreSibling = (pre) => {
-    return isPre(pre.previousSibling) && ArrUtils.indexOf(blocks, pre.previousSibling) !== -1;
+  const hasPreSibling = (blocks: Element[]) => (pre: HTMLPreElement) => {
+    const prev = pre.previousSibling;
+    return isPre(prev) && Arr.contains(blocks, prev);
   };
 
-  const joinPre = (pre1, pre2) => {
+  const joinPre = (pre1: HTMLPreElement, pre2: HTMLPreElement) => {
     const sPre2 = SugarElement.fromDom(pre2);
     const doc = Traverse.documentOrOwner(sPre2).dom;
     Remove.remove(sPre2);
@@ -50,13 +54,12 @@ addPostProcessHook('pre', (editor: Editor) => {
     ]);
   };
 
-  const isPre = NodeType.matchNodeNames([ 'pre' ]);
-
   if (!rng.collapsed) {
-    blocks = editor.selection.getSelectedBlocks();
+    const blocks = editor.selection.getSelectedBlocks();
 
-    each(filter(filter(blocks, isPre), hasPreSibling), (pre) => {
-      joinPre(pre.previousSibling, pre);
+    const preBlocks = Arr.filter(Arr.filter(blocks, isPre), hasPreSibling(blocks));
+    Arr.each(preBlocks, (pre) => {
+      joinPre(pre.previousSibling as HTMLPreElement, pre);
     });
   }
 });

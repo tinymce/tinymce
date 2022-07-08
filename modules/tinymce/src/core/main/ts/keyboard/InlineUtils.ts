@@ -1,4 +1,4 @@
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional, Type } from '@ephox/katamari';
 import { Selectors, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
@@ -10,34 +10,30 @@ import * as CaretUtils from '../caret/CaretUtils';
 import * as NodeType from '../dom/NodeType';
 import * as Bidi from '../text/Bidi';
 
-const isInlineTarget = (editor: Editor, elm: Node): boolean =>
+const isInlineTarget = (editor: Editor, elm: Node): elm is Element =>
   Selectors.is(SugarElement.fromDom(elm), Options.getInlineBoundarySelector(editor));
 
-const isRtl = (element: Node) =>
-  DOMUtils.DOM.getStyle(element, 'direction', true) === 'rtl' || Bidi.hasStrongRtl(element.textContent);
+const isRtl = (element: Element): boolean =>
+  DOMUtils.DOM.getStyle(element, 'direction', true) === 'rtl' || Bidi.hasStrongRtl(element.textContent ?? '');
 
-const findInlineParents = (isInlineTarget: (node: Node) => boolean, rootNode: Node, pos: CaretPosition) =>
+const findInlineParents = (isInlineTarget: (elem: Element) => boolean, rootNode: Node, pos: CaretPosition): Node[] =>
   Arr.filter(DOMUtils.DOM.getParents(pos.container(), '*', rootNode), isInlineTarget);
 
-const findRootInline = (isInlineTarget: (node: Node) => boolean, rootNode: Node, pos: CaretPosition) => {
+const findRootInline = (isInlineTarget: (elem: Element) => boolean, rootNode: Node, pos: CaretPosition): Optional<Node> => {
   const parents = findInlineParents(isInlineTarget, rootNode, pos);
   return Optional.from(parents[parents.length - 1]);
 };
 
-const hasSameParentBlock = (rootNode: Node, node1: Node, node2: Node) => {
+const hasSameParentBlock = (rootNode: Node, node1: Node, node2: Node): boolean => {
   const block1 = CaretUtils.getParentBlock(node1, rootNode);
   const block2 = CaretUtils.getParentBlock(node2, rootNode);
-  return block1 && block1 === block2;
+  return Type.isNonNullable(block1) && block1 === block2;
 };
 
-const isAtZwsp = (pos: CaretPosition) =>
+const isAtZwsp = (pos: CaretPosition): boolean =>
   CaretContainer.isBeforeInline(pos) || CaretContainer.isAfterInline(pos);
 
 const normalizePosition = (forward: boolean, pos: CaretPosition): CaretPosition => {
-  if (!pos) {
-    return pos;
-  }
-
   const container = pos.container(), offset = pos.offset();
 
   if (forward) {

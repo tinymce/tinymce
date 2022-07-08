@@ -220,11 +220,8 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
 
     const newData = {
       align: 'center',
-      height: '',
       type: 'body',
-      backgroundcolor: '',
       bordercolor: 'red',
-      borderstyle: ''
     };
 
     const newHtml =
@@ -239,6 +236,120 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
       '<td>d</td>' +
       '</tr>' +
       '</tbody>' +
+      '</table>';
+
+    const editor = hook.editor();
+    editor.setContent(initialHtml);
+    TinySelections.select(editor, 'tr:nth-child(2) td:nth-child(2)', [ 0 ]);
+    await TableTestUtils.pOpenTableDialog(editor);
+    TableTestUtils.assertDialogValues(initialData, true, generalSelectors);
+    TableTestUtils.setDialogValues(newData, true, generalSelectors);
+    await TableTestUtils.pClickDialogButton(editor, true);
+    TinyAssertions.assertContent(editor, newHtml);
+    assertEvents();
+  });
+
+  it('TINY-8625: Table row properties dialog updates multiple rows, but does not override unchanged values', async () => {
+    const initialHtml =
+      '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
+        '<tbody>' +
+          '<tr style="height: 20px; border-color: blue;">' +
+            '<td data-mce-selected="1">a</td>' +
+            '<td data-mce-selected="1">b</td>' +
+          '</tr>' +
+          '<tr style="height: 20px; border-color: red;">' +
+            '<td data-mce-selected="1">c</td>' +
+            '<td data-mce-selected="1">d</td>' +
+          '</tr>' +
+        '</tbody>' +
+      '</table>';
+
+    const initialData = {
+      align: '',
+      height: '20px',
+      type: 'body',
+      backgroundcolor: '',
+      bordercolor: '',
+      borderstyle: ''
+    };
+
+    const newData = {
+      align: 'center',
+      height: '30px',
+      type: 'body',
+      backgroundcolor: 'red'
+    };
+
+    const newHtml =
+      '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
+        '<tbody>' +
+          '<tr style="height: 30px; text-align: center; border-color: blue; background-color: red;">' +
+            '<td>a</td>' +
+            '<td>b</td>' +
+          '</tr>' +
+          '<tr style="height: 30px; text-align: center; border-color: red; background-color: red;">' +
+            '<td>c</td>' +
+            '<td>d</td>' +
+          '</tr>' +
+        '</tbody>' +
+      '</table>';
+
+    const editor = hook.editor();
+    editor.setContent(initialHtml);
+    TinySelections.select(editor, 'tr:nth-child(2) td:nth-child(2)', [ 0 ]);
+    await TableTestUtils.pOpenTableDialog(editor);
+    TableTestUtils.assertDialogValues(initialData, true, generalSelectors);
+    TableTestUtils.setDialogValues(newData, true, generalSelectors);
+    await TableTestUtils.pClickDialogButton(editor, true);
+    TinyAssertions.assertContent(editor, newHtml);
+    assertEvents();
+  });
+
+  it('TINY-8625: Table row properties dialog updates multiple rows and allows resetting values', async () => {
+    const initialHtml =
+      '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
+        '<tbody>' +
+          '<tr style="height: 20px; text-align: center; border-color: blue; border-style: dotted; background-color: red;">' +
+            '<td data-mce-selected="1">a</td>' +
+            '<td data-mce-selected="1">b</td>' +
+          '</tr>' +
+          '<tr style="height: 20px; text-align: center; border-color: blue; border-style: dotted; background-color: red;">' +
+            '<td data-mce-selected="1">c</td>' +
+            '<td data-mce-selected="1">d</td>' +
+          '</tr>' +
+        '</tbody>' +
+      '</table>';
+
+    const initialData = {
+      align: 'center',
+      height: '20px',
+      type: 'body',
+      backgroundcolor: 'red',
+      bordercolor: 'blue',
+      borderstyle: 'dotted'
+    };
+
+    const newData = {
+      align: '',
+      height: '',
+      type: 'body',
+      backgroundcolor: '',
+      bordercolor: '',
+      borderstyle: ''
+    };
+
+    const newHtml =
+      '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
+        '<tbody>' +
+          '<tr>' +
+            '<td>a</td>' +
+            '<td>b</td>' +
+          '</tr>' +
+          '<tr>' +
+            '<td>c</td>' +
+            '<td>d</td>' +
+          '</tr>' +
+        '</tbody>' +
       '</table>';
 
     const editor = hook.editor();

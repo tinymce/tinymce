@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 11.0.3 - 2022-06-29
+
+### Fixed
+- Copying one or more columns with a cell with colspan which starts outside of the selected area will no longer result in a copy with one or more cells missing.
+- Pasting a column into a table with a colspan cell will no longer result in missing cells.
+
 ## 11.0.2 - 2022-03-18
 
 ### Fixed

@@ -1,5 +1,5 @@
-import { Arr } from '@ephox/katamari';
-import { Compare, Remove, SugarElement } from '@ephox/sugar';
+import { Arr, Optionals } from '@ephox/katamari';
+import { Compare, PredicateFind, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
@@ -37,7 +37,8 @@ const findNextCaretContainer = (editor: Editor, rng: Range, isForward: boolean, 
     }
   }
 
-  while ((node = walker[isForward ? 'next' : 'prev2']())) {
+  const walkFn = isForward ? walker.next.bind(walker) : walker.prev2.bind(walker);
+  while ((node = walkFn())) {
     if (node.nodeName === 'LI' && !node.hasChildNodes()) {
       return node;
     }
@@ -150,11 +151,11 @@ const mergeBackward = (editor: Editor, rng: Range, fromLi: HTMLLIElement, toLi: 
 const backspaceDeleteFromListToListCaret = (editor: Editor, isForward: boolean): boolean => {
   const dom = editor.dom, selection = editor.selection;
   const selectionStartElm = selection.getStart();
-  const root = Selection.getClosestListRootElm(editor, selectionStartElm);
+  const root = Selection.getClosestEditingHost(editor, selectionStartElm);
   const li = dom.getParent(selection.getStart(), 'LI', root) as HTMLLIElement;
 
   if (li) {
-    const ul = li.parentNode;
+    const ul = li.parentElement;
     if (ul === editor.getBody() && NodeType.isEmpty(dom, ul)) {
       return true;
     }
@@ -202,7 +203,7 @@ const removeBlock = (dom: DOMUtils, block: Element, root: Node): void => {
 const backspaceDeleteIntoListCaret = (editor: Editor, isForward: boolean): boolean => {
   const dom = editor.dom;
   const selectionStartElm = editor.selection.getStart();
-  const root = Selection.getClosestListRootElm(editor, selectionStartElm);
+  const root = Selection.getClosestEditingHost(editor, selectionStartElm);
   const block = dom.getParent(selectionStartElm, dom.isBlock, root);
 
   if (block && dom.isEmpty(block)) {
@@ -210,6 +211,15 @@ const backspaceDeleteIntoListCaret = (editor: Editor, isForward: boolean): boole
     const otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward, root), 'LI', root);
 
     if (otherLi) {
+      const findValidElement = (element: SugarElement<Node>) => Arr.contains([ 'td', 'th', 'caption' ], SugarNode.name(element));
+      const findRoot = (node: SugarElement<Node>) => node.dom === root;
+      const otherLiCell = PredicateFind.closest(SugarElement.fromDom(otherLi), findValidElement, findRoot);
+      const caretCell = PredicateFind.closest(SugarElement.fromDom(rng.startContainer), findValidElement, findRoot);
+
+      if (!Optionals.equals(otherLiCell, caretCell, Compare.eq)) {
+        return false;
+      }
+
       editor.undoManager.transact(() => {
         removeBlock(dom, block, root);
         ToggleList.mergeWithAdjacentLists(dom, otherLi.parentNode as Element);
@@ -228,12 +238,16 @@ const backspaceDeleteCaret = (editor: Editor, isForward: boolean): boolean => {
   return backspaceDeleteFromListToListCaret(editor, isForward) || backspaceDeleteIntoListCaret(editor, isForward);
 };
 
-const backspaceDeleteRange = (editor: Editor): boolean => {
+const hasListSelection = (editor: Editor) => {
   const selectionStartElm = editor.selection.getStart();
-  const root = Selection.getClosestListRootElm(editor, selectionStartElm);
+  const root = Selection.getClosestEditingHost(editor, selectionStartElm);
   const startListParent = editor.dom.getParent(selectionStartElm, 'LI,DT,DD', root);
 
-  if (startListParent || Selection.getSelectedListItems(editor).length > 0) {
+  return startListParent || Selection.getSelectedListItems(editor).length > 0;
+};
+
+const backspaceDeleteRange = (editor: Editor): boolean => {
+  if (hasListSelection(editor)) {
     editor.undoManager.transact(() => {
       editor.execCommand('Delete');
       NormalizeLists.normalizeLists(editor.dom, editor.getBody());
@@ -250,6 +264,13 @@ const backspaceDelete = (editor: Editor, isForward: boolean): boolean => {
 };
 
 const setup = (editor: Editor): void => {
+  editor.on('ExecCommand', (e) => {
+    const cmd = e.command.toLowerCase();
+    if ((cmd === 'delete' || cmd === 'forwarddelete') && hasListSelection(editor)) {
+      NormalizeLists.normalizeLists(editor.dom, editor.getBody());
+    }
+  });
+
   editor.on('keydown', (e) => {
     if (e.keyCode === VK.BACKSPACE) {
       if (backspaceDelete(editor, false)) {

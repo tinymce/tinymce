@@ -61,11 +61,12 @@ const splitCols = (grid: Structs.RowCells[], index: number, comparator: CompElm,
   if (index > 0 && index < grid[0].cells.length) {
     Arr.each(grid, (row) => {
       const prevCell = row.cells[index - 1];
-      const current = row.cells[index];
-      const isToReplace = comparator(current.element, prevCell.element);
+      let offset = 0;
+      const substitute = substitution();
 
-      if (isToReplace) {
-        GridRow.mutateCell(row, index, Structs.elementnew(substitution(), true, current.isLocked));
+      while (row.cells.length > index + offset && comparator(prevCell.element, row.cells[index + offset].element)) {
+        GridRow.mutateCell(row, index + offset, Structs.elementnew(substitute, true, row.cells[index + offset].isLocked));
+        offset++;
       }
     });
   }

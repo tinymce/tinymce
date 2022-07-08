@@ -35,6 +35,8 @@
 @toolbar-separator-color: @border-color;
 @toolbar-padding-y: 0px;
 @toolbar-padding-x: 0px;
+@toolbar-button-bespoke-background-color: transparent;
+@toolbar-button-bespoke-spacing-x: @toolbar-button-spacing-x;
 @toolbar-separator-distance: 0;
 @color-tint: #207ab7;
 @panel-border-radius: 3px;
@@ -170,5 +172,9 @@
   .tox-statusbar__resize-handle {
     padding-bottom: 0;
     padding-right: 0;
+  }
+
+  .tox-button::before {
+    display: none;
   }
 }

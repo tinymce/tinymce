@@ -64,8 +64,9 @@ const clone = <T extends PartialEvent>(originalEvent: T, data?: T): T => {
   }
 
   // The composed path can't be cloned, so delegate instead
-  if (Type.isNonNullable(event.composedPath)) {
-    event.composedPath = () => originalEvent.composedPath();
+  if (Type.isNonNullable(originalEvent.composedPath)) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    event.composedPath = () => originalEvent.composedPath!();
   }
 
   return event as T;

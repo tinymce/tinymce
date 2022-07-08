@@ -131,7 +131,7 @@ UnitTest.asynctest('Flow Keying Skip Element Test', (success, failure) => {
       store.sAssertEq('Check that execute has fired on the right target', [ 'item.execute: one' ]),
       store.sClear,
 
-      Keyboard.sKeydown(doc, Keys.escape(), {}),
+      Keyboard.sKeyup(doc, Keys.escape(), {}),
       store.sAssertEq('Check that escape handler has fired', [ 'flow.onEscape' ]),
 
       GuiSetup.mTeardownKeyLogger(body, [ ])

@@ -667,14 +667,17 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   it('Custom elements', () => {
     const ser = DomSerializer({
       custom_elements: 'custom1,~custom2',
-      valid_elements: 'custom1,custom2'
+      valid_elements: 'custom1,custom2,#p'
     });
 
     document.createElement('custom1');
     document.createElement('custom2');
 
     DOM.setHTML('test', '<p><custom1>c1</custom1><custom2>c2</custom2></p>');
-    assert.equal(ser.serialize(DOM.get('test')), '<custom1>c1</custom1><custom2>c2</custom2>');
+    assert.equal(ser.serialize(DOM.get('test')), '<custom1>c1</custom1><p><custom2>c2</custom2></p>');
+
+    DOM.setHTML('test', '<custom1></custom1><p><custom2></custom2></p>');
+    assert.equal(ser.serialize(DOM.get('test')), '<custom1></custom1><p><custom2></custom2></p>');
   });
 
   it('Remove internal classes', () => {
@@ -796,5 +799,25 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(lastNodeFilter.callbacks[0], nodeFilter, 'Should be the last registered node filter function');
     assert.equal(lastAttributeFilter.name, 'data-something', 'Should be the last registered filter attribute name');
     assert.equal(lastAttributeFilter.callbacks[0], attrFilter, 'Should be the last registered attribute filter function');
+  });
+
+  it('TINY-7847: removeNodeFilter/removeAttributeFilter', () => {
+    const ser = DomSerializer({ });
+    const nodeFilter = Fun.noop;
+    const attrFilter = Fun.noop;
+    const numNodeFilters = ser.getNodeFilters().length;
+    const numAttrFilters = ser.getAttributeFilters().length;
+
+    ser.addNodeFilter('some-tag', nodeFilter);
+    ser.addAttributeFilter('data-something', attrFilter);
+
+    assert.lengthOf(ser.getNodeFilters(), numNodeFilters + 1, 'Number of node filters');
+    assert.lengthOf(ser.getAttributeFilters(), numAttrFilters + 1, 'Number of attribute filters');
+
+    ser.removeNodeFilter('some-tag', nodeFilter);
+    ser.removeAttributeFilter('data-something', attrFilter);
+
+    assert.lengthOf(ser.getNodeFilters(), numNodeFilters, 'Number of node filters');
+    assert.lengthOf(ser.getAttributeFilters(), numAttrFilters, 'Number of attribute filters');
   });
 });

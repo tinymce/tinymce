@@ -26,7 +26,7 @@ const isFarEnough = (touch: Touch, data: TouchHistoryData): boolean => {
   return distX > SIGNIFICANT_MOVE || distY > SIGNIFICANT_MOVE;
 };
 
-const setup = (editor: Editor) => {
+const setup = (editor: Editor): void => {
   const startData = Singleton.value<TouchHistoryData>();
   const longpressFired = Cell<boolean>(false);
 

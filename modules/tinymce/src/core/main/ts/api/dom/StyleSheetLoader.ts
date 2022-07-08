@@ -62,15 +62,15 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
     }));
 
   /**
-   * Loads the specified CSS file and calls the `success` callback if successfully loaded, otherwise calls `failure`.
+   * Loads the specified CSS file and returns a Promise that will resolve when the stylesheet is loaded successfully or reject if it failed to load.
    *
    * @method load
    * @param {String} url Url to be loaded.
-   * @return {Promise} A promise that will resolve when the stylesheet is loaded successfully or reject if it failed to load.
+   * @return {Promise} A Promise that will resolve or reject when the stylesheet is loaded.
    */
   const load = (url: string): Promise<void> =>
     new Promise((success, failure) => {
-      let link: HTMLLinkElement;
+      let link: HTMLLinkElement | null;
 
       const urlWithSuffix = Tools._addCacheSuffix(url);
 
@@ -117,7 +117,7 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
           while (i--) {
             const styleSheet = styleSheets[i];
             const owner = styleSheet.ownerNode;
-            if (owner && (owner as Element).id === link.id) {
+            if (owner && link && (owner as Element).id === link.id) {
               passed();
               return true;
             }
@@ -180,11 +180,11 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
     });
 
   /**
-   * Loads the specified CSS files and calls the `success` callback if successfully loaded, otherwise calls `failure`.
+   * Loads the specified CSS files and returns a Promise that is resolved when all stylesheets are loaded or rejected if any failed to load.
    *
    * @method loadAll
    * @param {Array} urls URLs to be loaded.
-   * @return {Promise} A promise that is resolved when all stylesheets are loaded or rejected if any failed to load.
+   * @return {Promise} A Promise that will resolve or reject when all stylesheets are loaded.
    */
   const loadAll = (urls: string[]) => {
     const loadedUrls = Promise.allSettled(Arr.map(urls, (url) => load(url).then(Fun.constant(url))));
@@ -192,9 +192,9 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
       const parts = Arr.partition(results, (r) => r.status === 'fulfilled');
 
       if (parts.fail.length > 0) {
-        return Promise.reject(Arr.map(parts.fail, (result: PromiseRejectedResult) => result.reason));
+        return Promise.reject(Arr.map(parts.fail as PromiseRejectedResult[], (result) => result.reason));
       } else {
-        return Arr.map(parts.pass, (result: PromiseFulfilledResult<string>) => result.value);
+        return Arr.map(parts.pass as PromiseFulfilledResult<string>[], (result) => result.value);
       }
     });
   };

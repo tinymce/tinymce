@@ -2,7 +2,7 @@ import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Focus, SugarElement } from '@ephox/sugar';
 
 import * as EditorView from '../EditorView';
-import { NotificationManagerImpl } from '../ui/NotificationManagerImpl';
+import NotificationManagerImpl from '../ui/NotificationManagerImpl';
 import Editor from './Editor';
 import * as Options from './Options';
 
@@ -86,10 +86,10 @@ const NotificationManager = (editor: Editor): NotificationManager => {
     });
   };
 
-  const open = (spec: NotificationSpec, fireEvent: boolean = true) => {
+  const open = (spec: NotificationSpec, fireEvent: boolean = true): NotificationApi => {
     // Never open notification if editor has been removed.
     if (editor.removed || !EditorView.isEditorAttachedToDom(editor)) {
-      return;
+      return {} as NotificationApi;
     }
 
     // fire event to allow notification spec to be mutated before display

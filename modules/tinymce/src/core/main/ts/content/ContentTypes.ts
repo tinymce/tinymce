@@ -20,6 +20,8 @@ export interface SetContentArgs {
   no_events?: boolean;
   no_selection?: boolean;
   paste?: boolean;
+  load?: boolean;
+  initial?: boolean;
 }
 
 export interface SetContentResult {

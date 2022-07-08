@@ -4,7 +4,7 @@ import {
 } from '@ephox/alloy';
 import { StructureSchema } from '@ephox/boulder';
 import { Sidebar as BridgeSidebar } from '@ephox/bridge';
-import { Arr, Cell, Fun, Id, Obj, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Cell, Fun, Id, Obj, Optional, Optionals, Type } from '@ephox/katamari';
 import { Css, Width } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -94,9 +94,23 @@ const makeSidebar = (panelConfigs: SidebarConfig) => SlotContainer.sketch((parts
   ])
 }));
 
-const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig) => {
+const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSidebar: string | undefined) => {
   const optSlider = Composing.getCurrent(sidebar);
-  optSlider.each((slider) => Replacing.set(slider, [ makeSidebar(panelConfigs) ]));
+
+  optSlider.each((slider) => {
+    Replacing.set(slider, [ makeSidebar(panelConfigs) ]);
+
+    // Show the default sidebar
+    const configKey = showSidebar?.toLowerCase();
+    if (Type.isString(showSidebar) && Obj.has(panelConfigs, configKey)) {
+      Composing.getCurrent(slider).each((slotContainer) => {
+        SlotContainer.showSlot(slotContainer, configKey);
+        Sliding.immediateGrow(slider);
+        // TINY-8710: Remove the width as since the skins/styles won't have loaded yet, so it's going to be incorrect
+        Css.remove(slider.element, 'width');
+      });
+    }
+  });
 };
 
 const toggleSidebar = (sidebar: AlloyComponent, name: string) => {

@@ -1,4 +1,4 @@
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 
 interface KeyPatternBase {
   shiftKey?: boolean;
@@ -23,17 +23,15 @@ const baseKeyPattern = {
   keyCode: 0
 };
 
-const defaultPatterns = (patterns: KeyPattern[]): KeyPattern[] =>
+const defaultPatterns = (patterns: KeyPattern[]): Required<KeyPattern>[] =>
   Arr.map(patterns, (pattern) => ({
     ...baseKeyPattern,
-    action: Fun.noop,
     ...pattern
   }));
 
-const defaultDelayedPatterns = (patterns: KeyPatternDelayed[]): KeyPatternDelayed[] =>
+const defaultDelayedPatterns = (patterns: KeyPatternDelayed[]): Required<KeyPatternDelayed>[] =>
   Arr.map(patterns, (pattern) => ({
     ...baseKeyPattern,
-    action: () => Optional.none(),
     ...pattern
   }));
 
@@ -45,15 +43,15 @@ const matchesEvent = <T extends KeyPatternBase>(pattern: T, evt: KeyboardEvent) 
   evt.metaKey === pattern.metaKey
 );
 
-const match = (patterns: KeyPattern[], evt: KeyboardEvent) =>
+const match = (patterns: KeyPattern[], evt: KeyboardEvent): Required<KeyPattern>[] =>
   Arr.bind(defaultPatterns(patterns), (pattern) => matchesEvent(pattern, evt) ? [ pattern ] : [ ]);
 
-const matchDelayed = (patterns: KeyPatternDelayed[], evt: KeyboardEvent) =>
+const matchDelayed = (patterns: KeyPatternDelayed[], evt: KeyboardEvent): Required<KeyPatternDelayed>[] =>
   Arr.bind(defaultDelayedPatterns(patterns), (pattern) => matchesEvent(pattern, evt) ? [ pattern ] : [ ]);
 
 const action = <T extends (...args: any[]) => any>(f: T, ...x: Parameters<T>) => (): ReturnType<T> => f.apply(null, x);
 
-const execute = (patterns: KeyPattern[], evt: KeyboardEvent): Optional<KeyPattern> =>
+const execute = (patterns: KeyPattern[], evt: KeyboardEvent): Optional<Required<KeyPattern>> =>
   Arr.find(match(patterns, evt), (pattern) => pattern.action());
 
 const executeWithDelayedAction = (patterns: KeyPatternDelayed[], evt: KeyboardEvent): Optional<() => void> =>

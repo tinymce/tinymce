@@ -45,6 +45,7 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
                       arr.has('tox-collection__item--active')
                     ],
                     attrs: {
+                      role: str.is('menuitemradio'),
                       title: str.is('Default')
                     },
                     children: [
@@ -59,6 +60,7 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
                       arr.has('tox-collection__item')
                     ],
                     attrs: {
+                      role: str.is('menuitemradio'),
                       title: str.is('Circle')
                     },
                     children: [
@@ -73,6 +75,7 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
                       arr.has('tox-collection__item')
                     ],
                     attrs: {
+                      role: str.is('menuitemradio'),
                       title: str.is('Square')
                     },
                     children: [
@@ -115,6 +118,7 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
                       arr.has('tox-collection__item--active')
                     ],
                     attrs: {
+                      role: str.is('menuitemradio'),
                       title: str.is('Default')
                     },
                     children: [
@@ -129,6 +133,7 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
                       arr.has('tox-collection__item')
                     ],
                     attrs: {
+                      role: str.is('menuitemradio'),
                       title: str.is('Lower Alpha')
                     },
                     children: [
@@ -143,6 +148,7 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
                       arr.has('tox-collection__item')
                     ],
                     attrs: {
+                      role: str.is('menuitemradio'),
                       title: str.is('Lower Greek')
                     },
                     children: [
@@ -163,6 +169,7 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
                       arr.has('tox-collection__item')
                     ],
                     attrs: {
+                      role: str.is('menuitemradio'),
                       title: str.is('Lower Roman')
                     },
                     children: [
@@ -177,6 +184,7 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
                       arr.has('tox-collection__item')
                     ],
                     attrs: {
+                      role: str.is('menuitemradio'),
                       title: str.is('Upper Alpha')
                     },
                     children: [
@@ -191,6 +199,7 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
                       arr.has('tox-collection__item')
                     ],
                     attrs: {
+                      role: str.is('menuitemradio'),
                       title: str.is('Upper Roman')
                     },
                     children: [
@@ -213,13 +222,13 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
     const editor = hook.editor();
     await pClickOnSplitBtnFor(editor, 'Numbered list');
     assertNumListStructure();
-    TinyUiActions.keydown(editor, Keys.escape());
+    TinyUiActions.keyup(editor, Keys.escape());
   });
 
   it('Check bullet list toolbar button structure', async () => {
     const editor = hook.editor();
     await pClickOnSplitBtnFor(editor, 'Bullet list');
     assertBullListStructure();
-    TinyUiActions.keydown(editor, Keys.escape());
+    TinyUiActions.keyup(editor, Keys.escape());
   });
 });

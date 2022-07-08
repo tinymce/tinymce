@@ -14,7 +14,7 @@ const TextWalker = (startNode: Node, rootNode: Node, isBoundary: (node: Node) =>
   const walker = new DomTreeWalker(startNode, rootNode);
 
   const walk = (direction: 'next' | 'prev' | 'prev2'): Optional<Text> => {
-    let next: Node;
+    let next: Node | null | undefined;
     do {
       next = walker[direction]();
     } while (next && !NodeType.isText(next) && !isBoundary(next));

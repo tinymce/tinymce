@@ -10,6 +10,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
+import { TestItem } from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
@@ -40,7 +41,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
             },
 
             fetch: () => {
-              const items = [
+              const items: TestItem[] = [
                 { type: 'item', data: { value: '1', meta: { text: '1' }}},
                 { type: 'item', data: { value: '2', meta: { text: '2' }}}
               ];
@@ -86,7 +87,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
       FocusTools.sSetFocus('Focusing typeahead', gui.element, 'input'),
       Keyboard.sKeydown(doc, Keys.down(), { }),
       steps.sWaitForMenu('Down to activate menu'),
-      Keyboard.sKeydown(doc, Keys.escape(), {}),
+      Keyboard.sKeyup(doc, Keys.escape(), {}),
       steps.sWaitForNoMenu('Esc to close menu'),
       Keyboard.sKeydown(doc, Keys.escape(), {}),
 

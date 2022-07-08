@@ -11,7 +11,7 @@ describe('browser.tinymce.plugins.link.DefaultLinkTargetTest', () => {
     plugins: 'link',
     toolbar: 'link',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin ]);
+  }, [ Plugin ], true);
 
   before(() => {
     TestLinkUi.clearHistory();

@@ -16,6 +16,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as DropdownAssertions from 'ephox/alloy/test/dropdown/DropdownAssertions';
+import { TestItem } from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
@@ -79,7 +80,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
         },
 
         fetch: () => {
-          const future = Future.pure([
+          const future = Future.pure<TestItem[]>([
             { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' }}},
             { type: 'item', data: { value: 'beta', meta: { text: 'Beta' }}},
             { type: 'item', data: { value: 'gamma', meta: { text: 'Gamma' }}},
@@ -166,7 +167,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
       store.sAssertEq('Checking sandbox is getting event', [ 'received made-up-event' ]),
       store.sClear,
 
-      Keyboard.sKeydown(doc, Keys.escape(), { }),
+      Keyboard.sKeyup(doc, Keys.escape(), { }),
       Waiter.sTryUntil(
         'Waiting for menu to disappear',
         FocusTools.sTryOnSelector('Focus should be back on button', doc, 'button')
@@ -223,7 +224,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
       store.sAssertEq('after executing item: alpha', [ 'dropdown.menu.execute: alpha' ]),
       store.sClear,
 
-      Keyboard.sKeydown(doc, Keys.escape(), {}),
+      Keyboard.sKeyup(doc, Keys.escape(), {}),
       FocusTools.sTryOnSelector(
         'Focus should have moved back to the dropdown',
         doc,

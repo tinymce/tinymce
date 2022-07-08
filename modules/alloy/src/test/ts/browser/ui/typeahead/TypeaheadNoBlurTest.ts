@@ -10,6 +10,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
+import { TestItem } from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
@@ -44,7 +45,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
             },
 
             fetch: (_input) => {
-              const future = Future.pure([
+              const future = Future.pure<TestItem[]>([
                 { type: 'item', data: { value: 'choice1', meta: { text: 'choice1' }}},
                 { type: 'item', data: { value: 'choice2', meta: { text: 'choice2' }}}
               ]);
@@ -108,7 +109,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
       Step.sync(() => {
         Focus.focus(typeahead.element);
       }),
-      Keyboard.sKeydown(doc, Keys.escape(), { }),
+      Keyboard.sKeyup(doc, Keys.escape(), { }),
       steps.sWaitForNoMenu('Escape should still dismiss regardless of setting'),
 
       Logger.t(

@@ -10,7 +10,7 @@ const deleteCaret = (editor: Editor, forward: boolean): Optional<() => void> => 
   const fromPos = CaretPosition.fromRangeStart(editor.selection.getRng());
   return CaretFinder.fromPosition(forward, editor.getBody(), fromPos)
     .filter((pos) => forward ? isBeforeImageBlock(pos) : isAfterImageBlock(pos))
-    .bind((pos) => Optional.from(getChildNodeAtRelativeOffset(forward ? 0 : -1, pos)))
+    .bind((pos) => getChildNodeAtRelativeOffset(forward ? 0 : -1, pos))
     .map((elm) => () => editor.selection.select(elm));
 };
 

@@ -66,13 +66,13 @@ const bookmarkToNativeRng = (bookmark: SimRange): Optional<Range> => {
   }
 };
 
-const store = (editor: Editor) => {
+const store = (editor: Editor): void => {
   const newBookmark = shouldStore(editor) ? getBookmark(SugarElement.fromDom(editor.getBody())) : Optional.none<SimRange>();
 
   editor.bookmark = newBookmark.isSome() ? newBookmark : editor.bookmark;
 };
 
-const storeNative = (editor: Editor, rng: Range) => {
+const storeNative = (editor: Editor, rng: Range): void => {
   const root = SugarElement.fromDom(editor.getBody());
   const range = shouldStore(editor) ? Optional.from(rng) : Optional.none<Range>();
 
@@ -83,14 +83,14 @@ const storeNative = (editor: Editor, rng: Range) => {
 };
 
 const getRng = (editor: Editor): Optional<Range> => {
-  const bookmark = editor.bookmark ? editor.bookmark : Optional.none<SimRange>();
+  const bookmark: Optional<SimRange> = editor.bookmark ? editor.bookmark : Optional.none();
 
   return bookmark
     .bind((x) => validate(SugarElement.fromDom(editor.getBody()), x))
     .bind(bookmarkToNativeRng);
 };
 
-const restore = (editor: Editor) => {
+const restore = (editor: Editor): void => {
   getRng(editor).each((rng) => editor.selection.setRng(rng));
 };
 

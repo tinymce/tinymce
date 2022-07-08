@@ -10,6 +10,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { TieredData, tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
+import { TestItem } from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
@@ -23,7 +24,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
     const sink = Sinks.relativeSink();
 
     const fetch = (_input: AlloyComponent): Future<Optional<TieredData>> => {
-      const future = Future.pure([
+      const future = Future.pure<TestItem[]>([
         { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' }}},
         { type: 'item', data: { value: 'beta', meta: { text: 'Beta' }}},
         { type: 'item', data: { value: 'gamma', meta: { text: 'Gamma' }}}
@@ -110,7 +111,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
         steps.sTriggerInputEvent('Simulate typing to show menu with "al"'),
         steps.sWaitForMenu('"Typing" should activate menu'),
         steps.sAssertValue('Checking non-matching typeahead menu not changing value', 'al'),
-        Keyboard.sKeydown(doc, Keys.escape(), { }),
+        Keyboard.sKeyup(doc, Keys.escape(), { }),
         steps.sWaitForNoMenu('Pressing escape should dismiss menu'),
 
         FocusTools.sSetActiveValue(doc, 'Al'),
@@ -119,7 +120,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
 
         steps.sAssertValue('Should change to "Alpha" with it selected over', 'Alpha'),
         steps.sAssertTextSelection('Selects Over Al|pha|', 'Al'.length, 'Alpha'.length),
-        Keyboard.sKeydown(doc, Keys.escape(), { }),
+        Keyboard.sKeyup(doc, Keys.escape(), { }),
         steps.sWaitForNoMenu('Pressing escape should dismiss menu for end of this part of test')
       ];
     };
@@ -135,7 +136,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
         steps.sTriggerInputEvent('Simulate typing to show menu with "al"'),
         steps.sWaitForMenu('"Typing" should activate menu'),
         steps.sAssertValue('Checking non-matching typeahead menu not changing value', 'al'),
-        Keyboard.sKeydown(doc, Keys.escape(), { }),
+        Keyboard.sKeyup(doc, Keys.escape(), { }),
         steps.sWaitForNoMenu('Pressing escape should dismiss menu'),
 
         FocusTools.sSetActiveValue(doc, 'Al'),

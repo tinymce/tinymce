@@ -1,4 +1,4 @@
-import { Arr, Fun, Optionals, Unicode } from '@ephox/katamari';
+import { Arr, Fun, Optionals, Type, Unicode } from '@ephox/katamari';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import * as NodeType from '../dom/NodeType';
@@ -26,14 +26,14 @@ const isElement = NodeType.isElement;
 const isCaretCandidate = CaretCandidate.isCaretCandidate;
 const isBlock = NodeType.matchStyleValues('display', 'block table');
 const isFloated = NodeType.matchStyleValues('float', 'left right');
-const isValidElementCaretCandidate = Predicate.and(isElement, isCaretCandidate, Fun.not(isFloated)) as (node: Node) => node is Element;
+const isValidElementCaretCandidate = Predicate.and(isElement, isCaretCandidate, Fun.not(isFloated)) as (node: Node | undefined) => node is Element;
 const isNotPre = Fun.not(NodeType.matchStyleValues('white-space', 'pre pre-line pre-wrap'));
 const isText = NodeType.isText;
 const isBr = NodeType.isBr;
 const nodeIndex = DOMUtils.nodeIndex;
 const resolveIndex = RangeNodes.getNodeUnsafe;
-const createRange = (doc: Document): Range => 'createRange' in doc ? doc.createRange() : DOMUtils.DOM.createRng();
-const isWhiteSpace = (chr: string): boolean => chr && /[\r\n\t ]/.test(chr);
+const createRange = (doc: Document | null): Range => doc ? doc.createRange() : DOMUtils.DOM.createRng();
+const isWhiteSpace = (chr: string | undefined): boolean => Type.isString(chr) && /[\r\n\t ]/.test(chr);
 const isRange = (rng: any): rng is Range => !!rng.setStart && !!rng.setEnd;
 
 const isHiddenWhiteSpaceRange = (range: Range): boolean => {
@@ -57,7 +57,7 @@ const getBrClientRect = (brNode: Element): GeomClientRect => {
   const doc = brNode.ownerDocument;
   const rng = createRange(doc);
   const nbsp = doc.createTextNode(Unicode.nbsp);
-  const parentNode = brNode.parentNode;
+  const parentNode = brNode.parentNode as Node;
 
   parentNode.insertBefore(nbsp, brNode);
   rng.setStart(nbsp, 0);
@@ -101,7 +101,7 @@ const getBoundingClientRect = (item: Element | Range): GeomClientRect => {
   }
 
   if (isZeroRect(clientRect) && isRange(item)) {
-    return getBoundingClientRectWebKitText(item);
+    return getBoundingClientRectWebKitText(item) ?? clientRect;
   }
 
   return clientRect;
@@ -132,12 +132,12 @@ const getCaretPositionClientRects = (caretPosition: CaretPosition): GeomClientRe
     clientRects.push(clientRect);
   };
 
-  const addCharacterOffset = (container: Text, offset: number) => {
+  const addCharacterOffset = (container: Text, offset: number): void => {
     const range = createRange(container.ownerDocument);
 
     if (offset < container.data.length) {
       if (ExtendingChar.isExtendingChar(container.data[offset])) {
-        return clientRects;
+        return;
       }
 
       // WebKit returns two client rects for a position after an extending
@@ -148,7 +148,7 @@ const getCaretPositionClientRects = (caretPosition: CaretPosition): GeomClientRe
 
         if (!isHiddenWhiteSpaceRange(range)) {
           addUniqueAndValidRect(collapseAndInflateWidth(getBoundingClientRect(range), false));
-          return clientRects;
+          return;
         }
       }
     }
@@ -380,7 +380,8 @@ CaretPosition.fromRangeEnd = (range: Range) => CaretPosition(range.endContainer,
  * @param {Node} node Node to get caret position from.
  * @return {tinymce.caret.CaretPosition} Caret position from the node.
  */
-CaretPosition.after = (node: Node) => CaretPosition(node.parentNode, nodeIndex(node) + 1);
+// TODO: TINY-8865 - This may not be safe to cast as Node and alternative solutions need to be looked into
+CaretPosition.after = (node: Node) => CaretPosition(node.parentNode as Node, nodeIndex(node) + 1);
 
 /**
  * Creates a caret position from a node and places the offset before it.
@@ -389,7 +390,8 @@ CaretPosition.after = (node: Node) => CaretPosition(node.parentNode, nodeIndex(n
  * @param {Node} node Node to get caret position from.
  * @return {tinymce.caret.CaretPosition} Caret position from the node.
  */
-CaretPosition.before = (node: Node) => CaretPosition(node.parentNode, nodeIndex(node));
+// TODO: TINY-8865 - This may not be safe to cast as Node and alternative solutions need to be looked into
+CaretPosition.before = (node: Node) => CaretPosition(node.parentNode as Node, nodeIndex(node));
 
 CaretPosition.isAbove = (pos1: CaretPosition, pos2: CaretPosition): boolean =>
   Optionals.lift2(Arr.head(pos2.getClientRects()), Arr.last(pos1.getClientRects()), ClientRect.isAbove).getOr(false);
@@ -400,6 +402,6 @@ CaretPosition.isBelow = (pos1: CaretPosition, pos2: CaretPosition): boolean =>
 CaretPosition.isAtStart = (pos: CaretPosition) => pos ? pos.isAtStart() : false;
 CaretPosition.isAtEnd = (pos: CaretPosition) => pos ? pos.isAtEnd() : false;
 CaretPosition.isTextPosition = (pos: CaretPosition) => pos ? NodeType.isText(pos.container()) : false;
-CaretPosition.isElementPosition = (pos: CaretPosition) => CaretPosition.isTextPosition(pos) === false;
+CaretPosition.isElementPosition = (pos: CaretPosition) => !CaretPosition.isTextPosition(pos);
 
 export default CaretPosition;

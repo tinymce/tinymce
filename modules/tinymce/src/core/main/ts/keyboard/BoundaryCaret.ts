@@ -12,16 +12,17 @@ const insertInlinePos = (pos: CaretPosition, before: boolean) => {
   if (NodeType.isText(pos.container())) {
     return CaretContainerInline.insertInline(before, pos.container());
   } else {
-    return CaretContainerInline.insertInline(before, pos.getNode());
+    // TODO: TINY-8865 - This may not be safe to cast as Node and alternative solutions need to be looked into
+    return CaretContainerInline.insertInline(before, pos.getNode() as Node);
   }
 };
 
-const isPosCaretContainer = (pos: CaretPosition, caret: Cell<Text>) => {
+const isPosCaretContainer = (pos: CaretPosition, caret: Cell<Text | null>) => {
   const caretNode = caret.get();
   return caretNode && pos.container() === caretNode && CaretContainer.isCaretContainerInline(caretNode);
 };
 
-const renderCaret = (caret: Cell<Text>, location: LocationAdt) =>
+const renderCaret = (caret: Cell<Text | null>, location: LocationAdt): Optional<CaretPosition> =>
   location.fold(
     (element) => { // Before
       CaretContainerRemove.remove(caret.get());
@@ -37,7 +38,8 @@ const renderCaret = (caret: Cell<Text>, location: LocationAdt) =>
           caret.set(text);
           return CaretPosition(text, 1);
         } else {
-          return CaretPosition(caret.get(), 1);
+          const node = caret.get() as Text;
+          return CaretPosition(node, 1);
         }
       }),
     (element) => // End
@@ -48,7 +50,8 @@ const renderCaret = (caret: Cell<Text>, location: LocationAdt) =>
           caret.set(text);
           return CaretPosition(text, text.length - 1);
         } else {
-          return CaretPosition(caret.get(), caret.get().length - 1);
+          const node = caret.get() as Text;
+          return CaretPosition(node, node.length - 1);
         }
       }),
     (element) => { // After

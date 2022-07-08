@@ -3,13 +3,14 @@ import { GetContentArgs, SetContentArgs } from '../content/ContentTypes';
 import { FormatVars } from '../fmt/FormatTypes';
 import { RangeLikeObject } from '../selection/RangeTypes';
 import { UndoLevel } from '../undo/UndoManagerTypes';
+import { SetAttribEvent } from './dom/DOMUtils';
 import Editor from './Editor';
 import { ParserArgs } from './html/DomParser';
 import { Dialog } from './ui/Ui';
 import { NativeEventMap } from './util/EventDispatcher';
 import { InstanceApi } from './WindowManager';
 
-export interface ExecCommandEvent { command: string; ui?: boolean; value?: any }
+export interface ExecCommandEvent { command: string; ui: boolean; value?: any }
 
 export interface BeforeGetContentEvent extends GetContentArgs {
   selection?: boolean;
@@ -29,25 +30,29 @@ export interface SetContentEvent extends BeforeSetContentEvent {
   content: string;
 }
 
+export interface SaveContentEvent extends GetContentEvent {
+  save: boolean;
+}
+
 export interface NewBlockEvent { newBlock: Element }
 
 export interface NodeChangeEvent { element: Element; parents: Node[]; selectionChange?: boolean; initial?: boolean }
 
-export interface FormatEvent { format: string; vars?: FormatVars; node?: Node | RangeLikeObject }
+export interface FormatEvent { format: string; vars?: FormatVars; node?: Node | RangeLikeObject | null }
 
 export interface ObjectResizeEvent { target: HTMLElement; width: number; height: number; origin: string }
 
 export interface ObjectSelectedEvent { target: Node; targetClone?: Node }
 
-export interface ScrollIntoViewEvent { elm: HTMLElement; alignToTop: boolean }
+export interface ScrollIntoViewEvent { elm: HTMLElement; alignToTop: boolean | undefined }
 
-export interface SetSelectionRangeEvent { range: Range; forward: boolean }
+export interface SetSelectionRangeEvent { range: Range; forward: boolean | undefined }
 
 export interface ShowCaretEvent { target: Node; direction: number; before: boolean }
 
 export interface SwitchModeEvent { mode: string }
 
-export interface AddUndoEvent { level: UndoLevel; lastLevel: UndoLevel; originalEvent: Event }
+export interface AddUndoEvent { level: UndoLevel; lastLevel: UndoLevel | undefined; originalEvent: Event | undefined }
 export interface UndoRedoEvent { level: UndoLevel }
 
 export interface WindowEvent<T extends Dialog.DialogData> { dialog: InstanceApi<T> }
@@ -86,10 +91,10 @@ export interface TableModifiedEvent extends TableEventData {
 }
 
 export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
-  'activate': { relatedTarget: Editor };
+  'activate': { relatedTarget: Editor | null };
   'deactivate': { relatedTarget: Editor };
-  'focus': { blurredEditor: Editor };
-  'blur': { focusedEditor: Editor };
+  'focus': { blurredEditor: Editor | null };
+  'blur': { focusedEditor: Editor | null };
   'resize': UIEvent;
   'scroll': UIEvent;
   'detach': { };
@@ -100,7 +105,7 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'ObjectResized': ObjectResizeEvent;
   'ObjectResizeStart': ObjectResizeEvent;
   'SwitchMode': SwitchModeEvent;
-  'ScrollWindow': UIEvent;
+  'ScrollWindow': Event;
   'ResizeWindow': UIEvent;
   'SkinLoaded': { };
   'SkinLoadError': LoadErrorEvent;
@@ -125,7 +130,9 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'GetContent': GetContentEvent;
   'BeforeSetContent': BeforeSetContentEvent;
   'SetContent': SetContentEvent;
-  'LoadContent': { };
+  'SaveContent': SaveContentEvent;
+  'RawSaveContent': SaveContentEvent;
+  'LoadContent': { load: boolean; element: HTMLElement };
   'PreviewFormats': { };
   'AfterPreviewFormats': { };
   'ScriptsLoaded': { };
@@ -157,6 +164,7 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'TableModified': TableModifiedEvent;
   'NewRow': NewTableRowEvent;
   'NewCell': NewTableCellEvent;
+  'SetAttrib': SetAttribEvent;
 }
 
 export interface EditorManagerEventMap {

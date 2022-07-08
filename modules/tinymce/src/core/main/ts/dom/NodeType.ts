@@ -32,11 +32,14 @@ const matchStyleValues = (name: string, values: string): (node: NullableNode) =>
 
   return (node: NullableNode) => {
     if (isElement(node)) {
-      for (let i = 0; i < items.length; i++) {
-        const computed = node.ownerDocument.defaultView.getComputedStyle(node, null);
-        const cssValue = computed ? computed.getPropertyValue(name) : null;
-        if (cssValue === items[i]) {
-          return true;
+      const win: Window | null = node.ownerDocument.defaultView;
+      if (win) {
+        for (let i = 0; i < items.length; i++) {
+          const computed = win.getComputedStyle(node, null);
+          const cssValue = computed ? computed.getPropertyValue(name) : null;
+          if (cssValue === items[i]) {
+            return true;
+          }
         }
       }
     }
@@ -97,6 +100,7 @@ const isContentEditableTrue = hasContentEditableState('true');
 const isContentEditableFalse = hasContentEditableState('false');
 
 const isTableCell = matchNodeNames<HTMLTableCellElement>([ 'td', 'th' ]);
+const isTableCellOrCaption = matchNodeNames<HTMLTableCellElement>([ 'td', 'th', 'caption' ]);
 const isMedia = matchNodeNames<HTMLElement>([ 'video', 'audio', 'object', 'embed' ]);
 
 export {
@@ -113,6 +117,7 @@ export {
   isContentEditableFalse,
   isMedia,
   isTableCell,
+  isTableCellOrCaption,
   isRestrictedNode,
   matchNodeNames,
   hasPropValue,

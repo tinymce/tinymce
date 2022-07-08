@@ -84,7 +84,7 @@ const expectedEditorHidden = (s: ApproxStructure.StructApi, str: ApproxStructure
   })
 ];
 
-const expectedInFullView = (s, str, arr): StructAssert[] => [
+const expectedInFullView = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] => [
   s.element('div', {
     classes: [
       arr.has('tox-editor-header'),
@@ -205,7 +205,7 @@ const pCloseMenus = (numOpenedMenus: number) => {
       assert.isTrue(Focus.search(menuElem).isSome(), 'Assert menu item is focused');
     });
     const focusedElem = Focus.active(SugarDocument.getDocument()).getOrDie('Could not find active menu item');
-    Keyboard.keydown(Keys.escape(), { }, focusedElem);
+    Keyboard.keyup(Keys.escape(), { }, focusedElem);
     await Waiter.pTryUntil('Wait for menu to be closed', () => {
       assert.isFalse(SugarBody.inBody(menuElem), 'Assert menu has been closed');
     });

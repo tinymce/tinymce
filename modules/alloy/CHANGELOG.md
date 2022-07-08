@@ -6,6 +6,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 10.1.0 - 2022-06-29
+
+### Added
+- Added new `immediateGrow` API to the `Sliding` behaviour #TINY-8710
+- Added new `onToggled` callback property to the `Toggling` behaviour configuration #TINY-8602
+
+### Improved
+- Toggleable menu items can now be configured as `exclusive` and alloy will ensure only 1 exclusive item is toggled in the menu #TINY-8602
+
+### Changed
+- Changed tabbing behavior escape key handling to run from `keydown` to `keyup` to prevent unwanted key event propagation #TINY-7005
+
+### Fixed
+- The `fakeFocus` property for `InlineView` menus was not respected.
+- The value of togglable elements was not reset if its config was not specified in the definition #TINY-8763
+
 ## 10.0.0 - 2022-03-03
 
 ### Added

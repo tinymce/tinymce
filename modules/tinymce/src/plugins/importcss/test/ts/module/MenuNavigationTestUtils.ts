@@ -36,7 +36,7 @@ const pProcessNavigation = async (doc: SugarElement<Document>, navigation: Navig
         await pAssertFocusOnItem(doc, si);
       }
 
-      Keyboard.activeKeydown(doc, Keys.escape());
+      Keyboard.activeKeyup(doc, Keys.escape());
     } else {
       // Should do nothing
       Keyboard.activeKeydown(doc, Keys.right());

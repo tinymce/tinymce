@@ -1,12 +1,10 @@
-import { Arr, Optional, Type, Unicode } from '@ephox/katamari';
+import { Arr, Type, Unicode } from '@ephox/katamari';
 
 import Env from '../api/Env';
 import DomParser, { DomParserSettings } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
 import Tools from '../api/util/Tools';
-import * as Conversions from '../file/Conversions';
-import { uniqueId } from '../file/ImageScanner';
-import { parseDataUri } from './Base64Uris';
+import { dataUriToBlobInfo } from '../file/BlobCacheUtils';
 import { isEmpty, paddEmptyNode } from './ParserUtils';
 
 const isBogusImage = (img: AstNode): boolean =>
@@ -17,27 +15,19 @@ const isInternalImageSource = (img: AstNode): boolean =>
 
 const registerBase64ImageFilter = (parser: DomParser, settings: DomParserSettings): void => {
   const { blob_cache: blobCache } = settings;
-  const processImage = (img: AstNode): void => {
-    const inputSrc = img.attr('src');
-
-    if (isInternalImageSource(img) || isBogusImage(img)) {
-      return;
-    }
-
-    parseDataUri(inputSrc).bind(({ type, data }) =>
-      Optional.from(blobCache.getByData(data, type)).orThunk(() =>
-        Conversions.buildBlob(type, data).map((blob) => {
-          const blobInfo = blobCache.create(uniqueId(), blob, data);
-          blobCache.add(blobInfo);
-          return blobInfo;
-        })
-      )
-    ).each((blobInfo) => {
-      img.attr('src', blobInfo.blobUri());
-    });
-  };
-
   if (blobCache) {
+    const processImage = (img: AstNode): void => {
+      const inputSrc = img.attr('src');
+
+      if (isInternalImageSource(img) || isBogusImage(img) || Type.isNullable(inputSrc)) {
+        return;
+      }
+
+      dataUriToBlobInfo(blobCache, inputSrc, true).each((blobInfo) => {
+        img.attr('src', blobInfo.blobUri());
+      });
+    };
+
     parser.addAttributeFilter('src', (nodes) => Arr.each(nodes, processImage));
   }
 };
@@ -59,10 +49,10 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
 
       // Must loop forwards since it will otherwise remove all brs in <p>a<br><br><br></p>
       for (let i = 0, l = nodes.length; i < l; i++) {
-        let node = nodes[i];
+        let node: AstNode | null = nodes[i];
         let parent = node.parent;
 
-        if (blockElements[node.parent.name] && node === parent.lastChild) {
+        if (parent && blockElements[parent.name] && node === parent.lastChild) {
           // Loop all nodes to the left of the current node and check for other BR elements
           // excluding bookmarks since they are invisible
           let prev = node.prev;
@@ -130,7 +120,7 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
       return parts.concat([ 'noopener' ]).sort().join(' ');
     };
 
-    const addNoOpener = (rel: string) => {
+    const addNoOpener = (rel: string | undefined) => {
       const newRel = rel ? Tools.trim(rel) : '';
       if (!/\b(noopener)\b/g.test(newRel)) {
         return appendRel(newRel);
@@ -161,11 +151,11 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
 
           // Move children after current node
           sibling = node.lastChild;
-          do {
+          while (sibling && parent) {
             prevSibling = sibling.prev;
             parent.insert(sibling, node);
             sibling = prevSibling;
-          } while (sibling);
+          }
         }
       }
     });
@@ -179,7 +169,7 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
         node = nodes[i];
         parentNode = node.parent;
 
-        if (parentNode.name === 'ul' || parentNode.name === 'ol') {
+        if (parentNode && (parentNode.name === 'ul' || parentNode.name === 'ol')) {
           if (node.prev && node.prev.name === 'li') {
             node.prev.append(node);
           } else {
@@ -192,15 +182,16 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
     });
   }
 
-  if (settings.validate && schema.getValidClasses()) {
+  const validClasses = schema.getValidClasses();
+  if (settings.validate && validClasses) {
     parser.addAttributeFilter('class', (nodes) => {
-      const validClasses = schema.getValidClasses();
 
       let i = nodes.length;
       while (i--) {
         const node = nodes[i];
-        const classList = node.attr('class').split(' ');
-        let classValue = '';
+        const clazz = node.attr('class') ?? '';
+        const classList = Tools.explode(clazz, ' ');
+        let classValue: string | null = '';
 
         for (let ci = 0; ci < classList.length; ci++) {
           const className = classList[ci];

@@ -7,12 +7,20 @@
 
 const KEEP = 0, INSERT = 1, DELETE = 2;
 
-const diff = (left, right) => {
+interface Snake {
+  readonly start: number;
+  readonly end: number;
+  readonly diag: number;
+}
+
+export type Diff<T> = [ 0 | 1 | 2, T ];
+
+const diff = <T>(left: T[], right: T[]): Diff<T>[] => {
   const size = left.length + right.length + 2;
   const vDown = new Array(size);
   const vUp = new Array(size);
 
-  const snake = (start, end, diag) => {
+  const snake = (start: number, end: number, diag: number): Snake => {
     return {
       start,
       end,
@@ -20,7 +28,7 @@ const diff = (left, right) => {
     };
   };
 
-  const buildScript = (start1, end1, start2, end2, script) => {
+  const buildScript = (start1: number, end1: number, start2: number, end2: number, script: Diff<T>[]) => {
     const middle = getMiddleSnake(start1, end1, start2, end2);
 
     if (middle === null || middle.start === end1 && middle.diag === end1 - end2 ||
@@ -51,7 +59,7 @@ const diff = (left, right) => {
     }
   };
 
-  const buildSnake = (start, diag, end1, end2) => {
+  const buildSnake = (start: number, diag: number, end1: number, end2: number): Snake => {
     let end = start;
     while (end - diag < end2 && end < end1 && left[end] === right[end - diag]) {
       ++end;
@@ -59,7 +67,7 @@ const diff = (left, right) => {
     return snake(start, end, diag);
   };
 
-  const getMiddleSnake = (start1, end1, start2, end2) => {
+  const getMiddleSnake = (start1: number, end1: number, start2: number, end2: number): Snake | null => {
     // Myers Algorithm
     // Initialisations
     const m = end1 - start1;
@@ -73,7 +81,7 @@ const diff = (left, right) => {
     const offset = (sum % 2 === 0 ? sum : sum + 1) / 2;
     vDown[1 + offset] = start1;
     vUp[1 + offset] = end1 + 1;
-    let d, k, i, x, y;
+    let d: number, k: number, i: number, x: number, y: number;
 
     for (d = 0; d <= offset; ++d) {
       // Down
@@ -126,9 +134,11 @@ const diff = (left, right) => {
         }
       }
     }
+
+    return null;
   };
 
-  const script = [];
+  const script: Diff<T>[] = [];
   buildScript(0, left.length, 0, right.length, script);
   return script;
 };

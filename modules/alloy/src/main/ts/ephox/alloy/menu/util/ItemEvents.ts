@@ -7,6 +7,7 @@ import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 
 const hoverEvent = 'alloy.item-hover';
 const focusEvent = 'alloy.item-focus';
+const toggledEvent = 'alloy.item-toggled';
 
 const onHover = (item: AlloyComponent): void => {
   // Firstly, check that the focus isn't already inside the item. This
@@ -26,12 +27,19 @@ const onFocus = (item: AlloyComponent): void => {
   AlloyTriggers.emitWith(item, focusEvent, { item });
 };
 
+const onToggled = (item: AlloyComponent, state: boolean): void => {
+  AlloyTriggers.emitWith(item, toggledEvent, { item, state });
+};
+
 const hover = Fun.constant(hoverEvent);
 const focus = Fun.constant(focusEvent);
+const toggled = Fun.constant(toggledEvent);
 
 export {
   hover,
   focus,
+  toggled,
   onHover,
-  onFocus
+  onFocus,
+  onToggled
 };

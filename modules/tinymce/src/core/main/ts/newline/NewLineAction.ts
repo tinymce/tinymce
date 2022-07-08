@@ -2,27 +2,46 @@ import { Adt, Arr, Optional } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
+import { EditorEvent } from '../api/util/EventDispatcher';
 import * as LazyEvaluator from '../util/LazyEvaluator';
 import * as ContextSelectors from './ContextSelectors';
 import * as NewLineUtils from './NewLineUtils';
 
-const newLineAction = Adt.generate([
+export interface NewLineActionAdt {
+  fold: <T> (
+    br: VoidFunction,
+    block: VoidFunction,
+    none: VoidFunction,
+  ) => T;
+  match: <T> (branches: {
+    br: VoidFunction;
+    block: VoidFunction;
+    none: VoidFunction;
+  }) => T;
+  log: (label: string) => void;
+}
+
+const newLineAction: {
+  br: () => NewLineActionAdt;
+  block: () => NewLineActionAdt;
+  none: () => NewLineActionAdt;
+} = Adt.generate([
   { br: [ ] },
   { block: [ ] },
   { none: [ ] }
 ]);
 
-const shouldBlockNewLine = (editor: Editor, _shiftKey) => {
+const shouldBlockNewLine = (editor: Editor, _shiftKey: boolean) => {
   return ContextSelectors.shouldBlockNewLine(editor);
 };
 
-const inListBlock = (requiredState) => {
-  return (editor: Editor, _shiftKey) => {
+const inListBlock = (requiredState: boolean) => {
+  return (editor: Editor, _shiftKey: boolean) => {
     return NewLineUtils.isListItemParentBlock(editor) === requiredState;
   };
 };
 
-const inBlock = (blockName: string, requiredState: boolean) => (editor: Editor, _shiftKey) => {
+const inBlock = (blockName: string, requiredState: boolean) => (editor: Editor, _shiftKey: boolean) => {
   const state = NewLineUtils.getParentBlockName(editor) === blockName.toUpperCase();
   return state === requiredState;
 };
@@ -30,17 +49,17 @@ const inBlock = (blockName: string, requiredState: boolean) => (editor: Editor, 
 const inPreBlock = (requiredState: boolean) => inBlock('pre', requiredState);
 const inSummaryBlock = () => inBlock('summary', true);
 
-const shouldPutBrInPre = (requiredState) => {
-  return (editor: Editor, _shiftKey) => {
+const shouldPutBrInPre = (requiredState: boolean) => {
+  return (editor: Editor, _shiftKey: boolean) => {
     return Options.shouldPutBrInPre(editor) === requiredState;
   };
 };
 
-const inBrContext = (editor: Editor, _shiftKey) => {
+const inBrContext = (editor: Editor, _shiftKey: boolean) => {
   return ContextSelectors.shouldInsertBr(editor);
 };
 
-const hasShiftKey = (_editor: Editor, shiftKey) => {
+const hasShiftKey = (_editor: Editor, shiftKey: boolean) => {
   return shiftKey;
 };
 
@@ -51,8 +70,8 @@ const canInsertIntoEditableRoot = (editor: Editor) => {
   return rootEditable && editor.schema.isValidChild(rootEditable.nodeName, forcedRootBlock);
 };
 
-const match = (predicates, action) => {
-  return (editor: Editor, shiftKey) => {
+const match = (predicates: Array<(editor: Editor, shiftKey: boolean) => boolean>, action: NewLineActionAdt) => {
+  return (editor: Editor, shiftKey: boolean) => {
     const isMatch = Arr.foldl(predicates, (res, p) => {
       return res && p(editor, shiftKey);
     }, true);
@@ -61,7 +80,7 @@ const match = (predicates, action) => {
   };
 };
 
-const getAction = (editor: Editor, evt?) => {
+const getAction = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): NewLineActionAdt => {
   return LazyEvaluator.evaluateUntil([
     match([ shouldBlockNewLine ], newLineAction.none()),
     match([ inSummaryBlock() ], newLineAction.br()),
