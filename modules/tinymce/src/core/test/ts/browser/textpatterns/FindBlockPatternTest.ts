@@ -28,10 +28,10 @@ describe('browser.tinymce.core.textpatterns.FindBlockPatternTest', () => {
         { start: '**', end: '**', format: 'bold' },
         { start: '#', format: 'h1' },
         { start: '##', format: 'h2' },
-        { start: '###', format: 'h3' },
+        { start: '###', format: 'h3' }
       ],
       base_url: '/project/tinymce/js/tinymce'
-    }, [ ]);
+    }, []);
 
     const getPatternSet = getPatternSetFor(hook);
 
@@ -67,7 +67,7 @@ describe('browser.tinymce.core.textpatterns.FindBlockPatternTest', () => {
       const matches = BlockPattern.findPatterns(editor, getPatternSet());
       assert.deepEqual(
         matches,
-        [ ],
+        [],
         'Checking block pattern matches do not match for incorrect block tag type'
       );
     });
@@ -82,14 +82,96 @@ describe('browser.tinymce.core.textpatterns.FindBlockPatternTest', () => {
         { start: '##', format: 'h2' },
         { start: '###', format: 'h3' },
       ],
+      text_patterns_lookup: (_ctx) => {
+        // const parentTag = ctx.block.nodeName.toLowerCase();
+        return [
+          { start: '####', format: 'h4' },
+          { start: 'TBA', cmd: 'mceInsertContent', value: 'To be announced' }
+        ];
+      },
       base_url: '/project/tinymce/js/tinymce'
-    }, [ ]);
+    }, []);
 
     const getPatternSet = getPatternSetFor(hook);
 
-    it.skip('TBA: # Triggers dynamic match when block tag matches forced_root_block', () => {
-      // eslint-disable-next-line no-console
-      console.log('PatternSet: ', { getPatternSet: getPatternSet() });
+    it('TBA: Match a heading format', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>#### wow</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 0);
+      const matches = BlockPattern.findPatterns(editor, getPatternSet());
+      assert.deepEqual(
+        matches,
+        [
+          {
+            pattern: {
+              type: 'block-format',
+              start: '####',
+              format: 'h4'
+            },
+            range: {
+              start: [ 0, 0 ],
+              end: [ 0, 0 ]
+            }
+          }
+        ],
+        'Checking block pattern matches do not match for incorrect block tag type'
+      );
+    });
+
+    it('TBA: Match a text pattern command', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><b>TBA Bold heading</b></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
+      const matches = BlockPattern.findPatterns(editor, getPatternSet());
+      assert.deepEqual(
+        matches,
+        [
+          {
+            pattern: {
+              type: 'block-command',
+              start: 'TBA',
+              cmd: 'mceInsertContent',
+              value: 'To be announced'
+            },
+            range: {
+              start: [ 0, 0 ],
+              end: [ 0, 0 ]
+            }
+          }
+        ],
+        'Checking block pattern matches do not match for incorrect block tag type'
+      );
+    });
+
+    it('TBA: Match a heading inside a block tag that is wrapped by another block tag that does not match forced_root_block', () => {
+      const editor = hook.editor();
+      editor.setContent('<div><p>#### New heading type</p></div>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 5);
+      const patterns = getPatternSet();
+      const matches = BlockPattern.findPatterns(editor, patterns);
+      assert.deepEqual(matches, [
+        {
+          pattern: {
+            type: 'block-format',
+            start: '####',
+            format: 'h4'
+          },
+          range: {
+            start: [ 0, 0, 0 ],
+            end: [ 0, 0, 0 ]
+          }
+        }
+      ],
+      'Checking block pattern matches do not match for incorrect block tag type'
+      );
+    });
+
+    it('TBA: Does not trigger a match if the block tag does not match forced_root_block', () => {
+      const editor = hook.editor();
+      editor.setContent('<div>#### New heading type</div>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 4);
+      const matches = BlockPattern.findPatterns(editor, getPatternSet());
+      assert.deepEqual(matches, []);
     });
   });
 });
