@@ -68,7 +68,7 @@ describe('browser.tinymce.core.textpatterns.FindBlockPatternTest', () => {
       assert.deepEqual(
         matches,
         [],
-        'Checking block pattern matches do not match for incorrect block tag type'
+        'Checking block pattern matches - do not match for incorrect block tag type'
       );
     });
   });
@@ -97,7 +97,7 @@ describe('browser.tinymce.core.textpatterns.FindBlockPatternTest', () => {
     it('TBA: Match a heading format', () => {
       const editor = hook.editor();
       editor.setContent('<p>#### wow</p>');
-      TinySelections.setCursor(editor, [ 0, 0 ], 0);
+      TinySelections.setCursor(editor, [ 0, 0 ], 4);
       const matches = BlockPattern.findPatterns(editor, getPatternSet());
       assert.deepEqual(
         matches,
@@ -114,14 +114,14 @@ describe('browser.tinymce.core.textpatterns.FindBlockPatternTest', () => {
             }
           }
         ],
-        'Checking block pattern matches do not match for incorrect block tag type'
+        'Checking block pattern matches'
       );
     });
 
-    it('TBA: Match a text pattern command', () => {
+    it('TBA: Match a command pattern', () => {
       const editor = hook.editor();
       editor.setContent('<p><b>TBA Bold heading</b></p>');
-      TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 3);
       const matches = BlockPattern.findPatterns(editor, getPatternSet());
       assert.deepEqual(
         matches,
@@ -139,14 +139,14 @@ describe('browser.tinymce.core.textpatterns.FindBlockPatternTest', () => {
             }
           }
         ],
-        'Checking block pattern matches do not match for incorrect block tag type'
+        'Checking block pattern matches'
       );
     });
 
-    it('TBA: Match a heading inside a block tag that is wrapped by another block tag that does not match forced_root_block', () => {
+    it('TBA: Match a heading where its parent block is inside another block tag that does not match forced_root_block', () => {
       const editor = hook.editor();
       editor.setContent('<div><p>#### New heading type</p></div>');
-      TinySelections.setCursor(editor, [ 0, 0, 0 ], 5);
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 4);
       const patterns = getPatternSet();
       const matches = BlockPattern.findPatterns(editor, patterns);
       assert.deepEqual(matches, [
@@ -162,7 +162,7 @@ describe('browser.tinymce.core.textpatterns.FindBlockPatternTest', () => {
           }
         }
       ],
-      'Checking block pattern matches do not match for incorrect block tag type'
+      'Checking block pattern matches'
       );
     });
 
@@ -171,7 +171,7 @@ describe('browser.tinymce.core.textpatterns.FindBlockPatternTest', () => {
       editor.setContent('<div>#### New heading type</div>');
       TinySelections.setCursor(editor, [ 0, 0 ], 4);
       const matches = BlockPattern.findPatterns(editor, getPatternSet());
-      assert.deepEqual(matches, []);
+      assert.deepEqual(matches, [], 'Checking block pattern matches do not match for incorrect block tag type');
     });
   });
 });
