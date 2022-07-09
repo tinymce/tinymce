@@ -98,7 +98,7 @@ const setupContextToolbars = (editor: Editor): void => {
     predicate: (node) => !!Utils.getAnchorElement(editor, node) && Options.hasContextToolbar(editor),
     initValue: () => {
       const elm = Utils.getAnchorElement(editor);
-      return elm.fold(Fun.constant(''), (elm) => Utils.getHref(elm));
+      return elm.fold(Fun.constant(''), Utils.getHref);
     },
     commands: [
       {
