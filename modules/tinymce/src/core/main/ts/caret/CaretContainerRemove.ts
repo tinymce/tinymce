@@ -72,7 +72,7 @@ const removeElementCaretContainer = (caretContainer: Node, pos: CaretPosition): 
 const removeAndReposition = (container: Node, pos: CaretPosition): CaretPosition =>
   CaretPosition.isTextPosition(pos) ? removeTextCaretContainer(container, pos) : removeElementCaretContainer(container, pos);
 
-const remove = (caretContainerNode: Node): void => {
+const remove = (caretContainerNode: Node | null): void => {
   if (isElement(caretContainerNode) && CaretContainer.isCaretContainer(caretContainerNode)) {
     if (CaretContainer.hasContent(caretContainerNode)) {
       caretContainerNode.removeAttribute('data-mce-caret');

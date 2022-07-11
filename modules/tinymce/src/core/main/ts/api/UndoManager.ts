@@ -47,7 +47,7 @@ const UndoManager = (editor: Editor): UndoManager => {
      * @param {DOMEvent} event Optional event responsible for the creation of the undo level.
      * @return {Object} Undo level that got added or null it a level wasn't needed.
      */
-    add: (level?: UndoLevel, event?: Event): UndoLevel => {
+    add: (level?: Partial<UndoLevel>, event?: Event): UndoLevel | null => {
       return Rtc.addUndoLevel(editor, undoManager, index, locks, beforeBookmark, level, event);
     },
 
@@ -70,7 +70,7 @@ const UndoManager = (editor: Editor): UndoManager => {
      * @method undo
      * @return {Object} Undo level or null if no undo was performed.
      */
-    undo: (): UndoLevel => {
+    undo: (): UndoLevel | undefined => {
       return Rtc.undo(editor, undoManager, locks, index);
     },
 
@@ -80,7 +80,7 @@ const UndoManager = (editor: Editor): UndoManager => {
      * @method redo
      * @return {Object} Redo level or null if no redo was performed.
      */
-    redo: (): UndoLevel => {
+    redo: (): UndoLevel | undefined => {
       return Rtc.redo(editor, index, undoManager.data);
     },
 
@@ -132,7 +132,7 @@ const UndoManager = (editor: Editor): UndoManager => {
      * @param {Function} callback Function that gets executed and has dom manipulation logic in it.
      * @return {Object} Undo level that got added or null it a level wasn't needed.
      */
-    transact: (callback: () => void): UndoLevel => {
+    transact: (callback: () => void): UndoLevel | null => {
       return Rtc.transact(editor, undoManager, locks, callback);
     },
 

@@ -3,7 +3,7 @@ import { Throttler } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import * as FakeCaretUtils from '../caret/FakeCaretUtils';
 
-const setup = (editor: Editor) => {
+const setup = (editor: Editor): void => {
   const renderFocusCaret = Throttler.first(() => {
     // AP-24 Added the second condition in this if because of a race condition with setting focus on the PowerPaste
     // remove/keep formatting dialog on paste in IE11. Without this, because we paste twice on IE11, focus ends up set

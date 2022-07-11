@@ -28,7 +28,7 @@ const getTableCaptionDeltaY = (elm: SugarElement<Node>) => {
 
 const hasChild = (elm: Element, child: Node) => elm.children && Arr.contains(elm.children, child);
 
-const getPos = (body: HTMLElement, elm: HTMLElement | null, rootElm?: Node): { x: number; y: number } => {
+const getPos = (body: HTMLElement, elm: Element | null, rootElm?: Node): { x: number; y: number } => {
   let x = 0, y = 0;
   const doc = body.ownerDocument;
 
@@ -48,7 +48,7 @@ const getPos = (body: HTMLElement, elm: HTMLElement | null, rootElm?: Node): { x
       return { x, y };
     }
 
-    let offsetParent: Element = elm;
+    let offsetParent: Element | null = elm;
     while (offsetParent && offsetParent !== rootElm && offsetParent.nodeType && !hasChild(offsetParent, rootElm)) {
       const castOffsetParent = offsetParent as HTMLElement;
       x += castOffsetParent.offsetLeft || 0;

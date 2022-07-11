@@ -366,4 +366,52 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     await TableTestUtils.pClickDialogButton(editor, false);
     editor.options.unset('table_appearance_options');
   });
+
+  it('TINY-8758: width should be retained when changing the border width', async () => {
+    const getExpectedData = (borderWidth: number) => ({
+      width: '60%',
+      height: '',
+      cellspacing: '',
+      cellpadding: '',
+      border: borderWidth + 'px',
+      caption: false,
+      align: ''
+    });
+
+    const editor = hook.editor();
+    editor.setContent('<table style="border-collapse: collapse;" border="1px" width="60%"><tbody><tr><td>&nbsp;</td></tr></tbody></table>');
+    setCursor(editor);
+    await TableTestUtils.pOpenTableDialog(editor);
+    TableTestUtils.assertDialogValues(getExpectedData(1), false, generalSelectors);
+    TableTestUtils.setDialogValues({ border: '2px' }, false, generalSelectors);
+    await TableTestUtils.pClickDialogButton(editor, true);
+    TinyAssertions.assertContent(editor, '<table style="border-collapse: collapse; width: 60%; border-width: 2px;" border="1" width="60%"><tbody><tr><td style="border-width: 2px;">&nbsp;</td></tr></tbody></table>');
+    await TableTestUtils.pOpenTableDialog(editor);
+    TableTestUtils.assertDialogValues(getExpectedData(2), false, generalSelectors);
+    await TableTestUtils.pClickDialogButton(editor, false);
+  });
+
+  it('TINY-8758: Default width should be added as style', async () => {
+    const getExpectedData = (borderWidth: number, width: string) => ({
+      width,
+      height: '',
+      cellspacing: '',
+      cellpadding: '',
+      border: borderWidth + 'px',
+      caption: false,
+      align: ''
+    });
+
+    const editor = hook.editor();
+    editor.setContent('<table style="border-collapse: collapse;" border="1px"><tbody><tr><td>&nbsp;</td></tr></tbody></table>');
+    setCursor(editor);
+    await TableTestUtils.pOpenTableDialog(editor);
+    TableTestUtils.assertDialogValues(getExpectedData(1, ''), false, generalSelectors);
+    TableTestUtils.setDialogValues({ border: '2px' }, false, generalSelectors);
+    await TableTestUtils.pClickDialogButton(editor, true);
+    TinyAssertions.assertContent(editor, '<table style="border-collapse: collapse; border-width: 2px;" border="1"><tbody><tr><td style="border-width: 2px;">&nbsp;</td></tr></tbody></table>');
+    await TableTestUtils.pOpenTableDialog(editor);
+    TableTestUtils.assertDialogValues(getExpectedData(2, ''), false, generalSelectors);
+    await TableTestUtils.pClickDialogButton(editor, false);
+  });
 });

@@ -1,6 +1,6 @@
 {
   "name": "@ephox/jax",
-  "version": "7.0.2-alpha.1",
+  "version": "7.0.3",
   "description": "AJAX library",
   "repository": {
     "type": "git",
@@ -22,7 +22,7 @@
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "MIT",
   "dependencies": {
-    "@ephox/katamari": "^9.0.2-alpha.1",
+    "@ephox/katamari": "^9.0.3",
     "tslib": "^2.0.0"
   },
   "files": [

@@ -39,7 +39,7 @@ const isAttachedToDom = (node: Node): boolean => {
   return !!(node && node.ownerDocument) && Compare.contains(SugarElement.fromDom(node.ownerDocument), SugarElement.fromDom(node));
 };
 
-const isValidRange = (rng: Range) => {
+const isValidRange = (rng: Range | undefined | null): rng is Range => {
   if (!rng) {
     return false;
   } else {
@@ -70,7 +70,7 @@ interface EditorSelection {
   isCollapsed: () => boolean;
   isForward: () => boolean;
   setNode: (elm: Element) => Element;
-  getNode: () => Element;
+  getNode: () => HTMLElement;
   getSel: () => Selection | null;
   setRng: (rng: Range, forward?: boolean) => void;
   getRng: () => Range;
@@ -81,14 +81,14 @@ interface EditorSelection {
   selectorChanged: (selector: string, callback: (active: boolean, args: {
     node: Node;
     selector: String;
-    parents: Element[];
+    parents: Node[];
   }) => void) => EditorSelection;
   selectorChangedWithUnbind: (selector: string, callback: (active: boolean, args: {
     node: Node;
     selector: String;
-    parents: Element[];
+    parents: Node[];
   }) => void) => { unbind: () => void };
-  getScrollContainer: () => HTMLElement;
+  getScrollContainer: () => HTMLElement | undefined;
   scrollIntoView: (elm?: HTMLElement, alignToTop?: boolean) => void;
   placeCaretAt: (clientX: number, clientY: number) => void;
   getBoundingClientRect: () => ClientRect | DOMRect;
@@ -284,9 +284,9 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * @see http://www.dotvoid.com/2001/03/using-the-range-object-in-mozilla/
    */
   const getRng = (): Range => {
-    let selection, rng, elm;
+    let rng: Range | undefined;
 
-    const tryCompareBoundaryPoints = (how, sourceRange, destinationRange) => {
+    const tryCompareBoundaryPoints = (how: number, sourceRange: Range, destinationRange: Range) => {
       try {
         return sourceRange.compareBoundaryPoints(how, destinationRange);
       } catch (ex) {
@@ -301,7 +301,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
 
     const doc = win.document;
 
-    if (editor.bookmark !== undefined && EditorFocus.hasFocus(editor) === false) {
+    if (Type.isNonNullable(editor.bookmark) && !EditorFocus.hasFocus(editor)) {
       const bookmark = SelectionBookmark.getRng(editor);
 
       if (bookmark.isSome()) {
@@ -310,11 +310,12 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     }
 
     try {
-      if ((selection = getSel()) && !NodeType.isRestrictedNode(selection.anchorNode)) {
+      const selection = getSel();
+      if (selection && !NodeType.isRestrictedNode(selection.anchorNode)) {
         if (selection.rangeCount > 0) {
           rng = selection.getRangeAt(0);
         } else {
-          rng = selection.createRange ? selection.createRange() : doc.createRange();
+          rng = doc.createRange();
         }
 
         rng = EventProcessRanges.processRanges(editor, [ rng ])[0];
@@ -330,8 +331,8 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     }
 
     // If range is at start of document then move it to start of body
-    if (rng.setStart && rng.startContainer.nodeType === 9 && rng.collapsed) {
-      elm = dom.getRoot();
+    if (NodeType.isDocument(rng.startContainer) && rng.collapsed) {
+      const elm = dom.getRoot();
       rng.setStart(elm, 0);
       rng.setEnd(elm, 0);
     }
@@ -358,9 +359,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * @param {Range} rng Range to select.
    * @param {Boolean} forward Optional boolean if the selection is forwards or backwards.
    */
-  const setRng = (rng: Range, forward?: boolean) => {
-    let node;
-
+  const setRng = (rng: Range | undefined, forward?: boolean) => {
     if (!isValidRange(rng)) {
       return;
     }
@@ -391,11 +390,11 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     }
 
     // WebKit edge case selecting images works better using setBaseAndExtent when the image is floated
-    if (!rng.collapsed && rng.startContainer === rng.endContainer && sel.setBaseAndExtent) {
+    if (!rng.collapsed && rng.startContainer === rng.endContainer && sel?.setBaseAndExtent) {
       if (rng.endOffset - rng.startOffset < 2) {
         if (rng.startContainer.hasChildNodes()) {
-          node = rng.startContainer.childNodes[rng.startOffset];
-          if (node && node.tagName === 'IMG') {
+          const node = rng.startContainer.childNodes[rng.startOffset];
+          if (node && node.nodeName === 'IMG') {
             sel.setBaseAndExtent(
               rng.startContainer,
               rng.startOffset,
@@ -442,9 +441,9 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * // Alerts the currently selected elements node name
    * alert(tinymce.activeEditor.selection.getNode().nodeName);
    */
-  const getNode = (): Element => ElementSelection.getNode(editor.getBody(), getRng());
+  const getNode = (): HTMLElement => ElementSelection.getNode(editor.getBody(), getRng());
 
-  const getSelectedBlocks = (startElm: Element, endElm: Element) =>
+  const getSelectedBlocks = (startElm?: Element, endElm?: Element) =>
     ElementSelection.getSelectedBlocks(dom, getRng(), startElm, endElm);
 
   const isForward = (): boolean => {
@@ -501,12 +500,12 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * @param {String} selector CSS selector to check for.
    * @param {Function} callback Callback with state and args when the selector is matches or not.
    */
-  const selectorChanged = (selector: string, callback: (active: boolean, args: { node: Node; selector: String; parents: Element[] }) => void) => {
+  const selectorChanged = (selector: string, callback: (active: boolean, args: { node: Node; selector: String; parents: Node[] }) => void) => {
     selectorChangedWithUnbind(selector, callback);
     return exports;
   };
 
-  const getScrollContainer = (): HTMLElement => {
+  const getScrollContainer = (): HTMLElement | undefined => {
     let scrollContainer;
     let node = dom.getRoot();
 
@@ -539,13 +538,11 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
   };
 
   const destroy = () => {
-    win = selectedRange = explicitRange = null;
+    (win as any) = selectedRange = explicitRange = null;
     controlSelection.destroy();
   };
 
-  const exports: EditorSelection = {
-    bookmarkManager: null,
-    controlSelection: null,
+  const exports = {
     dom,
     win,
     serializer,
@@ -575,7 +572,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     placeCaretAt,
     getBoundingClientRect,
     destroy
-  };
+  } as EditorSelection;
 
   const bookmarkManager = BookmarkManager(exports);
   const controlSelection = ControlSelection(exports, editor);

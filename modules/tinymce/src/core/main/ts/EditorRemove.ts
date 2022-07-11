@@ -1,8 +1,13 @@
-import { Optional } from '@ephox/katamari';
+import { Optional, Type } from '@ephox/katamari';
 
 import DOMUtils from './api/dom/DOMUtils';
+import EditorSelection from './api/dom/Selection';
 import Editor from './api/Editor';
 import * as Events from './api/Events';
+
+type Nullable<T> = {
+  [P in keyof T]: T[P] | null;
+};
 
 const DOM = DOMUtils.DOM;
 
@@ -13,21 +18,24 @@ const restoreOriginalStyles = (editor: Editor) => {
 const safeDestroy = (x: any) => Optional.from(x).each((x) => x.destroy());
 
 const clearDomReferences = (editor: Editor) => {
-  editor.contentAreaContainer = editor.formElement = editor.container = editor.editorContainer = null;
-  editor.bodyElement = editor.contentDocument = editor.contentWindow = null;
-  editor.iframeElement = editor.targetElm = null;
+  const ed = editor as Nullable<Editor>;
+  ed.contentAreaContainer = ed.formElement = ed.container = ed.editorContainer = null;
+  ed.bodyElement = ed.contentDocument = ed.contentWindow = null;
+  ed.iframeElement = ed.targetElm = null;
 
-  if (editor.selection) {
-    editor.selection = editor.selection.win = editor.selection.dom = editor.selection.dom.doc = null;
+  const selection = editor.selection as Nullable<EditorSelection>;
+  if (selection) {
+    const dom = selection.dom as Nullable<DOMUtils>;
+    ed.selection = selection.win = selection.dom = dom.doc = null;
   }
 };
 
 const restoreForm = (editor: Editor) => {
-  const form = editor.formElement as any;
+  const form = editor.formElement as HTMLFormElement & { _mceOldSubmit?: VoidFunction };
   if (form) {
     if (form._mceOldSubmit) {
       form.submit = form._mceOldSubmit;
-      form._mceOldSubmit = null;
+      delete form._mceOldSubmit;
     }
 
     DOM.unbind(form, 'submit reset', editor.formEventDelegate);
@@ -46,7 +54,7 @@ const remove = (editor: Editor): void => {
     editor.unbindAllNativeEvents();
 
     // Remove any hidden input
-    if (editor.hasHiddenInput && element) {
+    if (editor.hasHiddenInput && Type.isNonNullable(element?.nextSibling)) {
       DOM.remove(element.nextSibling);
     }
 

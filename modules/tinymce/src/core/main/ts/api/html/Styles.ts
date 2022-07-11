@@ -19,7 +19,7 @@
 import { Obj, Unicode } from '@ephox/katamari';
 
 import { URLConverter } from '../OptionTypes';
-import Schema from './Schema';
+import Schema, { SchemaMap } from './Schema';
 
 export type StyleMap = Record<string, string | number>;
 
@@ -31,23 +31,20 @@ export interface StylesSettings {
 }
 
 interface Styles {
-  parse: (css: string) => Record<string, string>;
+  parse: (css: string | undefined) => Record<string, string>;
   serialize: (styles: StyleMap, elementName?: string) => string;
 }
 
-const Styles = (settings?: StylesSettings, schema?: Schema): Styles => {
+const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
   /* jshint maxlen:255 */
   /* eslint max-len:0 */
   const urlOrStrRegExp = /(?:url(?:(?:\(\s*\"([^\"]+)\"\s*\))|(?:\(\s*\'([^\']+)\'\s*\))|(?:\(\s*([^)\s]+)\s*\))))|(?:\'([^\']+)\')|(?:\"([^\"]+)\")/gi;
   const styleRegExp = /\s*([^:]+):\s*([^;]+);?/g;
   const trimRightRegExp = /\s+$/;
-  let i;
-  const encodingLookup = {};
-  let validStyles;
-  let invalidStyles;
+  const encodingLookup: Record<string, string> = {};
+  let validStyles: Record<string, string[]> | undefined;
+  let invalidStyles: Record<string, SchemaMap> | undefined;
   const invisibleChar = Unicode.zeroWidth;
-
-  settings = settings || {};
 
   if (schema) {
     validStyles = schema.getValidStyles();
@@ -55,7 +52,7 @@ const Styles = (settings?: StylesSettings, schema?: Schema): Styles => {
   }
 
   const encodingItems = (`\\" \\' \\; \\: ; : ` + invisibleChar).split(' ');
-  for (i = 0; i < encodingItems.length; i++) {
+  for (let i = 0; i < encodingItems.length; i++) {
     encodingLookup[encodingItems[i]] = invisibleChar + i;
     encodingLookup[invisibleChar + i] = encodingItems[i];
   }
@@ -70,13 +67,13 @@ const Styles = (settings?: StylesSettings, schema?: Schema): Styles => {
      * @param {String} css Style value to parse. For example: `border:1px solid red;`
      * @return {Object} Object representation of that style. For example: `{ border: '1px solid red' }`
      */
-    parse: (css: string): Record<string, string> => {
-      const styles: any = {};
-      let matches, name, value, isEncoded;
+    parse: (css: string | undefined): Record<string, string> => {
+      const styles: Record<string, string> = {};
+      let isEncoded = false;
       const urlConverter = settings.url_converter;
       const urlConverterScope = settings.url_converter_scope || self;
 
-      const compress = (prefix, suffix, noJoin?) => {
+      const compress = (prefix: string, suffix: string, noJoin?: boolean) => {
         const top = styles[prefix + '-top' + suffix];
         if (!top) {
           return;
@@ -98,7 +95,7 @@ const Styles = (settings?: StylesSettings, schema?: Schema): Styles => {
         }
 
         const box = [ top, right, bottom, left ];
-        i = box.length - 1;
+        let i = box.length - 1;
         while (i--) {
           if (box[i] !== box[i + 1]) {
             break;
@@ -119,22 +116,22 @@ const Styles = (settings?: StylesSettings, schema?: Schema): Styles => {
       /**
        * Checks if the specific style can be compressed in other words if all border-width are equal.
        */
-      const canCompress = (key) => {
-        let value = styles[key], i;
+      const canCompress = (key: string) => {
+        const value = styles[key];
 
         if (!value) {
           return;
         }
 
-        value = value.split(' ');
-        i = value.length;
+        const values = value.split(' ');
+        let i = values.length;
         while (i--) {
-          if (value[i] !== value[0]) {
+          if (values[i] !== values[0]) {
             return false;
           }
         }
 
-        styles[key] = value[0];
+        styles[key] = values[0];
 
         return true;
       };
@@ -142,7 +139,7 @@ const Styles = (settings?: StylesSettings, schema?: Schema): Styles => {
       /**
        * Compresses multiple styles into one style.
        */
-      const compress2 = (target, a, b, c) => {
+      const compress2 = (target: string, a: string, b: string, c: string) => {
         if (!canCompress(a)) {
           return;
         }
@@ -163,7 +160,7 @@ const Styles = (settings?: StylesSettings, schema?: Schema): Styles => {
       };
 
       // Encodes the specified string by replacing all \" \' ; : with _<num>
-      const encode = (str) => {
+      const encode = (str: string): string => {
         isEncoded = true;
 
         return encodingLookup[str];
@@ -185,15 +182,15 @@ const Styles = (settings?: StylesSettings, schema?: Schema): Styles => {
         return str;
       };
 
-      const decodeSingleHexSequence = (escSeq) => {
+      const decodeSingleHexSequence = (escSeq: string) => {
         return String.fromCharCode(parseInt(escSeq.slice(1), 16));
       };
 
-      const decodeHexSequences = (value) => {
+      const decodeHexSequences = (value: string) => {
         return value.replace(/\\[0-9a-f]+/gi, decodeSingleHexSequence);
       };
 
-      const processUrl = (match, url, url2, url3, str, str2) => {
+      const processUrl = (match: string, url?: string, url2?: string, url3?: string, str?: string, str2?: string) => {
         str = str || str2;
 
         if (str) {
@@ -203,7 +200,7 @@ const Styles = (settings?: StylesSettings, schema?: Schema): Styles => {
           return `'` + str.replace(/\'/g, `\\'`) + `'`;
         }
 
-        url = decode(url || url2 || url3);
+        url = decode(url || url2 || url3 || '');
 
         if (!settings.allow_script_urls) {
           const scriptUrl = url.replace(/[\s\r\n]+/g, '');
@@ -235,10 +232,11 @@ const Styles = (settings?: StylesSettings, schema?: Schema): Styles => {
         });
 
         // Parse styles
+        let matches: RegExpExecArray | null;
         while ((matches = styleRegExp.exec(css))) {
           styleRegExp.lastIndex = matches.index + matches[0].length;
-          name = matches[1].replace(trimRightRegExp, '').toLowerCase();
-          value = matches[2].replace(trimRightRegExp, '');
+          let name = matches[1].replace(trimRightRegExp, '').toLowerCase();
+          let value = matches[2].replace(trimRightRegExp, '');
 
           if (name && value) {
             // Decode escaped sequences like \65 -> e
@@ -304,10 +302,10 @@ const Styles = (settings?: StylesSettings, schema?: Schema): Styles => {
     serialize: (styles: StyleMap, elementName?: string): string => {
       let css = '';
 
-      const serializeStyles = (name: string) => {
+      const serializeStyles = (name: string, validStyleList: Record<string, string[]>) => {
         let value;
 
-        const styleList = validStyles[name];
+        const styleList = validStyleList[name];
         if (styleList) {
           for (let i = 0, l = styleList.length; i < l; i++) {
             name = styleList[i];
@@ -320,25 +318,29 @@ const Styles = (settings?: StylesSettings, schema?: Schema): Styles => {
         }
       };
 
-      const isValid = (name: string, elementName: string): boolean => {
+      const isValid = (name: string, elemName: string | undefined): boolean => {
+        if (!invalidStyles || !elemName) {
+          return true;
+        }
+
         let styleMap = invalidStyles['*'];
         if (styleMap && styleMap[name]) {
           return false;
         }
 
-        styleMap = invalidStyles[elementName];
+        styleMap = invalidStyles[elemName];
         return !(styleMap && styleMap[name]);
       };
 
       // Serialize styles according to schema
       if (elementName && validStyles) {
         // Serialize global styles and element specific styles
-        serializeStyles('*');
-        serializeStyles(elementName);
+        serializeStyles('*', validStyles);
+        serializeStyles(elementName, validStyles);
       } else {
         // Output the styles in the order they are inside the object
         Obj.each(styles, (value, name) => {
-          if (value && (!invalidStyles || isValid(name, elementName))) {
+          if (value && isValid(name, elementName)) {
             css += (css.length > 0 ? ' ' : '') + name + ': ' + value + ';';
           }
         });

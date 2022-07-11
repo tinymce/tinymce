@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Strings } from '@ephox/katamari';
 
 import DomParser, { DomParserSettings } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
@@ -29,7 +29,9 @@ const addFontToSpansFilter = (domParser: DomParser, styles: Styles, fontSizes: s
       }
 
       if (size) {
-        props['font-size'] = fontSizes[parseInt(node.attr('size'), 10) - 1];
+        Strings.toInt(size).each((num) => {
+          props['font-size'] = fontSizes[num - 1];
+        });
       }
 
       node.name = 'span';
@@ -61,7 +63,7 @@ const addFilters = (domParser: DomParser, settings: DomParserSettings, schema: S
   const styles = Styles();
 
   if (settings.convert_fonts_to_spans) {
-    addFontToSpansFilter(domParser, styles, Tools.explode(settings.font_size_legacy_values));
+    addFontToSpansFilter(domParser, styles, Tools.explode(settings.font_size_legacy_values ?? ''));
   }
 
   addStrikeFilter(domParser, schema, styles);

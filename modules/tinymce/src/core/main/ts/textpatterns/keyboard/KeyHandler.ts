@@ -70,7 +70,7 @@ const checkKeyEvent = <T>(codes: T[], event: KeyboardEvent, predicate: (code: T,
 
 const checkKeyCode = (codes: number[], event: KeyboardEvent): boolean =>
   checkKeyEvent(codes, event, (code, event) => {
-    return code === event.keyCode && VK.modifierPressed(event) === false;
+    return code === event.keyCode && !VK.modifierPressed(event);
   });
 
 const checkCharCode = (chars: string[], event: KeyboardEvent): boolean =>

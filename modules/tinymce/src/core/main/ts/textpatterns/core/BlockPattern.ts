@@ -74,7 +74,7 @@ const findPatterns = (editor: Editor, patternSet: PatternSet): BlockPatternMatch
     return block !== null && matchesForcedRootBlock;
   }).bind((block) => {
     // Get the block text
-    const blockText = block.textContent;
+    const blockText = block.textContent ?? '';
 
     // TINY-8781: TODO: text_patterns should announce their changes for accessibility
     const extraPatterns = patternSet.dynamicPatternsLookup({

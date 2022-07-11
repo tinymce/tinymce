@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 10.1.0 - 2022-06-29
+
 ### Added
 - Added new `immediateGrow` API to the `Sliding` behaviour #TINY-8710
 - Added new `onToggled` callback property to the `Toggling` behaviour configuration #TINY-8602

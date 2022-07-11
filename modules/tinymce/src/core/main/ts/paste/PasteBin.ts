@@ -1,4 +1,4 @@
-import { Arr, Cell } from '@ephox/katamari';
+import { Arr, Cell, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -76,7 +76,7 @@ const getEl = (editor: Editor): HTMLElement | null =>
   editor.dom.get('mcepastebin');
 
 const isPasteBin = (elm: Node | null): elm is HTMLElement =>
-  elm && (elm as HTMLElement).id === 'mcepastebin';
+  Type.isNonNullable(elm) && (elm as HTMLElement).id === 'mcepastebin';
 
 /*
  * Returns the contents of the paste bin as a HTML string.
@@ -118,7 +118,7 @@ const isDefaultPasteBinContent = (content: string): boolean =>
   content === pasteBinDefaultContent;
 
 const PasteBin = (editor: Editor): PasteBin => {
-  const lastRng = Cell(null);
+  const lastRng = Cell<Range | null>(null);
 
   return {
     create: () => create(editor, lastRng),

@@ -2,6 +2,7 @@ import { Obj } from '@ephox/katamari';
 
 import { isReadOnly, processReadonlyEvents } from '../mode/Readonly';
 import DOMUtils from './dom/DOMUtils';
+import { EventUtilsCallback } from './dom/EventUtils';
 import Editor from './Editor';
 import { EditorEventMap } from './EventTypes';
 import * as Options from './Options';
@@ -17,7 +18,7 @@ import Tools from './util/Tools';
  */
 
 const DOM = DOMUtils.DOM;
-let customEventRootDelegates;
+let customEventRootDelegates: Record<string, EventUtilsCallback<any>> | null;
 
 /**
  * Returns the event target for the specified event. Some events fire
@@ -73,8 +74,6 @@ const fireEvent = (editor: Editor, eventName: string, e: Event) => {
  * @param {String} eventName Name of the event for example "click".
  */
 const bindEventDelegate = (editor: Editor, eventName: string) => {
-  let delegate;
-
   if (!editor.delegates) {
     editor.delegates = {};
   }
@@ -105,7 +104,7 @@ const bindEventDelegate = (editor: Editor, eventName: string) => {
       return;
     }
 
-    delegate = (e) => {
+    const delegate: EventUtilsCallback<any> = (e) => {
       const target = e.target;
       const editors = editor.editorManager.get();
       let i = editors.length;
@@ -122,7 +121,7 @@ const bindEventDelegate = (editor: Editor, eventName: string) => {
     customEventRootDelegates[eventName] = delegate;
     DOM.bind(eventRootElm, eventName, delegate);
   } else {
-    delegate = (e) => {
+    const delegate: EventUtilsCallback<any> = (e) => {
       fireEvent(editor, eventName, e);
     };
 
@@ -133,7 +132,7 @@ const bindEventDelegate = (editor: Editor, eventName: string) => {
 
 interface EditorObservable extends Observable<EditorEventMap> {
   bindPendingEventDelegates (this: Editor): void;
-  toggleNativeEvent (this: Editor, name: string, state: boolean);
+  toggleNativeEvent (this: Editor, name: string, state: boolean): void;
   unbindAllNativeEvents (this: Editor): void;
 }
 
@@ -182,7 +181,7 @@ const EditorObservable: EditorObservable = {
           self._pendingNativeEvents.push(name);
         }
       }
-    } else if (self.initialized) {
+    } else if (self.initialized && self.delegates) {
       self.dom.unbind(getEventTarget(self, name), name, self.delegates[name]);
       delete self.delegates[name];
     }

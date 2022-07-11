@@ -7,6 +7,11 @@ import * as Options from '../api/Options';
 import { TranslatedString } from '../api/util/I18n';
 import * as InitContentBody from './InitContentBody';
 
+interface BoxInfo {
+  readonly editorContainer: HTMLElement | null;
+  readonly iframeContainer: HTMLElement;
+}
+
 const DOM = DOMUtils.DOM;
 
 const createIframeElement = (id: string, title: TranslatedString, customAttrs: {}, tabindex: Optional<number>) => {
@@ -56,7 +61,7 @@ const getIframeHtml = (editor: Editor) => {
   return iframeHTML;
 };
 
-const createIframe = (editor: Editor, boxInfo) => {
+const createIframe = (editor: Editor, boxInfo: BoxInfo) => {
   const iframeTitle = editor.translate('Rich Text Area');
   const tabindex = Attribute.getOpt(SugarElement.fromDom(editor.getElement()), 'tabindex').bind(Strings.toInt);
   const ifr = createIframeElement(editor.id, iframeTitle, Options.getIframeAttrs(editor), tabindex).dom;
@@ -72,11 +77,11 @@ const createIframe = (editor: Editor, boxInfo) => {
   DOM.add(boxInfo.iframeContainer, ifr);
 };
 
-const init = (editor: Editor, boxInfo) => {
+const init = (editor: Editor, boxInfo: BoxInfo): void => {
   createIframe(editor, boxInfo);
 
   if (boxInfo.editorContainer) {
-    DOM.get(boxInfo.editorContainer).style.display = editor.orgDisplay;
+    boxInfo.editorContainer.style.display = editor.orgDisplay;
     editor.hidden = DOM.isHidden(boxInfo.editorContainer);
   }
 

@@ -1,4 +1,4 @@
-import { Arr, Singleton, Throttler } from '@ephox/katamari';
+import { Arr, Singleton, Throttler, Type } from '@ephox/katamari';
 
 import DOMUtils from './api/dom/DOMUtils';
 import { EventUtilsEvent } from './api/dom/EventUtils';
@@ -35,18 +35,20 @@ interface State {
   ghost: HTMLElement;
 }
 
-const isContentEditableFalse = NodeType.isContentEditableFalse,
-  isContentEditableTrue = NodeType.isContentEditableTrue;
+const isContentEditableFalse = NodeType.isContentEditableFalse;
+const isContentEditable = Predicate.or(isContentEditableFalse, NodeType.isContentEditableTrue) as (node: Node) => node is HTMLElement;
 
 const isDraggable = (rootElm: HTMLElement, elm: HTMLElement) =>
   isContentEditableFalse(elm) && elm !== rootElm;
 
-const isValidDropTarget = (editor: Editor, targetElement: Node, dragElement: Node) => {
-  if (targetElement === dragElement || editor.dom.isChildOf(targetElement, dragElement)) {
+const isValidDropTarget = (editor: Editor, targetElement: Node | null, dragElement: Node) => {
+  if (Type.isNullable(targetElement)) {
     return false;
+  } else if (targetElement === dragElement || editor.dom.isChildOf(targetElement, dragElement)) {
+    return false;
+  } else {
+    return !isContentEditableFalse(targetElement);
   }
-
-  return !isContentEditableFalse(targetElement);
 };
 
 const cloneElement = (elm: HTMLElement) => {
@@ -136,9 +138,9 @@ const applyRelPos = (state: State, position: MousePosition.PagePosition) => ({
 
 const start = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<MouseEvent>) => {
   if (isLeftMouseButtonPressed(e)) {
-    const ceElm = Arr.find(editor.dom.getParents(e.target as HTMLElement), Predicate.or(isContentEditableFalse, isContentEditableTrue)).getOr(null);
+    const ceElm = Arr.find(editor.dom.getParents(e.target as Node), isContentEditable).getOr(null);
 
-    if (isDraggable(editor.getBody(), ceElm)) {
+    if (Type.isNonNullable(ceElm) && isDraggable(editor.getBody(), ceElm)) {
       const elmPos = editor.dom.getPos(ceElm);
       const bodyElm = editor.getBody();
       const docElm = editor.getDoc().documentElement;
@@ -193,10 +195,15 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
 };
 
 // Returns the raw element instead of the fake cE=false element
-const getRawTarget = (selection: EditorSelection) => {
-  const rng = selection.getSel().getRangeAt(0);
-  const startContainer = rng.startContainer;
-  return startContainer.nodeType === 3 ? startContainer.parentNode : startContainer;
+const getRawTarget = (selection: EditorSelection): Node | null => {
+  const sel = selection.getSel();
+  if (Type.isNonNullable(sel)) {
+    const rng = sel.getRangeAt(0);
+    const startContainer = rng.startContainer;
+    return NodeType.isText(startContainer) ? startContainer.parentNode : startContainer;
+  } else {
+    return null;
+  }
 };
 
 const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<MouseEvent>) => {
@@ -322,7 +329,7 @@ const blockUnsupportedFileDrop = (editor: Editor) => {
   });
 };
 
-const init = (editor: Editor) => {
+const init = (editor: Editor): void => {
   bindFakeDragEvents(editor);
 
   if (Options.shouldBlockUnsupportedDrop(editor)) {

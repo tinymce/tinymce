@@ -38,7 +38,7 @@ const registerExecCommands = (editor: Editor): void => {
     },
 
     'Lang': (command, _ui, lang: ContentLanguage) => {
-      toggleFormat(command, { value: lang.code, customValue: lang.customCode });
+      toggleFormat(command, { value: lang.code, customValue: lang.customCode ?? null });
     },
 
     'RemoveFormat': (command) => {

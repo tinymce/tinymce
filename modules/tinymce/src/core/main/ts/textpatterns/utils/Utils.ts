@@ -4,7 +4,7 @@ import DOMUtils from '../../api/dom/DOMUtils';
 import Editor from '../../api/Editor';
 import * as NodeType from '../../dom/NodeType';
 
-const cleanEmptyNodes = (dom: DOMUtils, node: Node, isRoot: (e: Node) => boolean): void => {
+const cleanEmptyNodes = (dom: DOMUtils, node: Node | null, isRoot: (e: Node) => boolean): void => {
   // Recursively walk up the tree while we have a parent and the node is empty. If the node is empty, then remove it.
   if (node && dom.isEmpty(node) && !isRoot(node)) {
     const parent = node.parentNode;

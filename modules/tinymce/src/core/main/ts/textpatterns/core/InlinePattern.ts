@@ -93,7 +93,7 @@ const findPatternStart = (dom: DOMUtils, pattern: InlinePattern, node: Node, off
       if (requireGap) {
         if (startRange.endContainer === spot.container && startRange.endOffset === spot.offset) {
           return Optional.none();
-        } else if (spot.offset === 0 && startRange.endContainer.textContent.length === startRange.endOffset) {
+        } else if (spot.offset === 0 && startRange.endContainer.textContent?.length === startRange.endOffset) {
           return Optional.none();
         }
       }
@@ -178,7 +178,7 @@ const findPatternsRec = (editor: Editor, patternSet: InlinePatternSet, node: Nod
       ...dynamicPatterns,
       ...patternSet.inlinePatterns,
     ];
-    
+
     for (let i = 0; i < patterns.length; i++) {
       const pattern = patterns[i];
       // If the text does not end with the same string as the pattern, then we can exit
@@ -262,7 +262,7 @@ const addMarkers = (dom: DOMUtils, matches: InlinePatternMatch[]): InlinePattern
       ...match,
       endMarker
     }]);
-  }, []);
+  }, [] as Array<InlinePatternMatch & { endMarker: Marker }>);
 
   // Add start markers
   return Arr.foldr(matchesWithEnds, (acc, match) => {
@@ -272,12 +272,12 @@ const addMarkers = (dom: DOMUtils, matches: InlinePatternMatch[]): InlinePattern
       ...match,
       startMarker
     }]);
-  }, []);
+  }, [] as InlinePatternMatchWithMarkers[]);
 };
 
 const findPatterns = (editor: Editor, patternSet: InlinePatternSet, space: boolean): InlinePatternMatch[] => {
   const rng = editor.selection.getRng();
-  if (rng.collapsed === false) {
+  if (!rng.collapsed) {
     return [];
   }
 

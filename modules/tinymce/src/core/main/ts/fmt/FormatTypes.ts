@@ -5,8 +5,8 @@ export type RemoveFormat = RemoveBlockFormat | RemoveInlineFormat | RemoveSelect
 export type Format = ApplyFormat | RemoveFormat;
 export type Formats = Record<string, Format | Format[]>;
 
-export type FormatAttrOrStyleValue = string | ((vars?: FormatVars) => string);
-export type FormatVars = Record<string, string | null >;
+export type FormatAttrOrStyleValue = string | ((vars?: FormatVars) => string | null);
+export type FormatVars = Record<string, string | null>;
 
 // Largely derived from the docs and src/core/main/ts/fmt/DefaultFormats.ts
 export interface BaseFormat<T> {
@@ -51,7 +51,7 @@ export interface CommonFormat<T> extends BaseFormat<T> {
   preview?: string | false;
 
   // These are only used when applying formats
-  onformat?: (elm: Node, fmt: T, vars?: FormatVars, node?: Node | RangeLikeObject) => void;
+  onformat?: (elm: Node, fmt: T, vars?: FormatVars, node?: Node | RangeLikeObject | null) => void;
   clear_child_styles?: boolean;
   merge_siblings?: boolean;
   merge_with_parents?: boolean;

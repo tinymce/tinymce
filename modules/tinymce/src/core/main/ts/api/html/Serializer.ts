@@ -20,10 +20,9 @@ interface HtmlSerializer {
  * tinymce.html.Serializer().serialize(tinymce.html.DomParser().parse('<p>text</p>'));
  */
 
-const HtmlSerializer = (settings?: HtmlSerializerSettings, schema = Schema()): HtmlSerializer => {
+const HtmlSerializer = (settings: HtmlSerializerSettings = {}, schema: Schema = Schema()): HtmlSerializer => {
   const writer = Writer(settings);
 
-  settings = settings || {};
   settings.validate = 'validate' in settings ? settings.validate : true;
 
   /**
@@ -41,12 +40,12 @@ const HtmlSerializer = (settings?: HtmlSerializerSettings, schema = Schema()): H
     const handlers: Record<number, (node: AstNode) => void> = {
       // #text
       3: (node) => {
-        writer.text(node.value, node.raw);
+        writer.text(node.value ?? '', node.raw);
       },
 
       // #comment
       8: (node) => {
-        writer.comment(node.value);
+        writer.comment(node.value ?? '');
       },
 
       // Processing instruction
@@ -56,20 +55,21 @@ const HtmlSerializer = (settings?: HtmlSerializerSettings, schema = Schema()): H
 
       // Doctype
       10: (node) => {
-        writer.doctype(node.value);
+        writer.doctype(node.value ?? '');
       },
 
       // CDATA
       4: (node) => {
-        writer.cdata(node.value);
+        writer.cdata(node.value ?? '');
       },
 
       // Document fragment
       11: (node) => {
-        if ((node = node.firstChild)) {
+        let tempNode: AstNode | null | undefined = node;
+        if ((tempNode = tempNode.firstChild)) {
           do {
-            walk(node);
-          } while ((node = node.next));
+            walk(tempNode);
+          } while ((tempNode = tempNode.next));
         }
       }
     };
@@ -86,13 +86,13 @@ const HtmlSerializer = (settings?: HtmlSerializerSettings, schema = Schema()): H
 
         // Sort attributes
         if (validate && attrs && attrs.length > 1) {
-          const sortedAttrs = [] as Attributes;
+          const sortedAttrs = [] as unknown as Attributes;
           (sortedAttrs as any).map = {};
 
           const elementRule = schema.getElementRule(node.name);
           if (elementRule) {
             for (let i = 0, l = elementRule.attributesOrder.length; i < l; i++) {
-              const attrName = elementRule.attributesOrder[i];
+              const attrName: string = elementRule.attributesOrder[i];
 
               if (attrName in attrs.map) {
                 const attrValue = attrs.map[attrName];
@@ -102,7 +102,7 @@ const HtmlSerializer = (settings?: HtmlSerializerSettings, schema = Schema()): H
             }
 
             for (let i = 0, l = attrs.length; i < l; i++) {
-              const attrName = attrs[i].name;
+              const attrName: string = attrs[i].name;
 
               if (!(attrName in sortedAttrs.map)) {
                 const attrValue = attrs.map[attrName];
@@ -123,7 +123,7 @@ const HtmlSerializer = (settings?: HtmlSerializerSettings, schema = Schema()): H
             // Pre and textarea elements treat the first newline character as optional and will omit it. As such, if the content starts
             // with a newline we need to add in an additional newline to prevent the current newline in the value being treated as optional
             // See https://html.spec.whatwg.org/multipage/syntax.html#element-restrictions
-            if ((name === 'pre' || name === 'textarea') && child.type === 3 && child.value[0] === '\n') {
+            if ((name === 'pre' || name === 'textarea') && child.type === 3 && child.value?.[0] === '\n') {
               writer.text('\n', true);
             }
 

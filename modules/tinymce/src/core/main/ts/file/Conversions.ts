@@ -8,7 +8,7 @@ import { Optional, Strings } from '@ephox/katamari';
  */
 
 interface DataUriResult {
-  readonly type: string | undefined;
+  readonly type: string;
   readonly data: string;
   readonly base64Encoded: boolean;
 }
@@ -92,7 +92,7 @@ const blobToDataUri = (blob: Blob): Promise<string> => {
     };
 
     reader.onerror = () => {
-      reject(reader.error.message);
+      reject(reader.error?.message);
     };
 
     reader.readAsDataURL(blob);

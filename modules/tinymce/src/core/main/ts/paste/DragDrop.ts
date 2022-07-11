@@ -95,7 +95,7 @@ const setup = (editor: Editor, draggingInternallyState: Cell<boolean>): void => 
   });
 
   editor.on('dragover dragend', (e) => {
-    if (Options.shouldPasteDataImages(editor) && draggingInternallyState.get() === false) {
+    if (Options.shouldPasteDataImages(editor) && !draggingInternallyState.get()) {
       e.preventDefault();
       setFocusedRange(editor, getCaretRangeFromEvent(editor, e));
     }

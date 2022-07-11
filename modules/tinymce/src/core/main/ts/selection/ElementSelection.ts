@@ -12,7 +12,7 @@ const getEndpointElement = (
   start: boolean,
   real: boolean,
   resolve: (elm: SugarElement<Node>, offset: number) => number
-) => {
+): Element => {
   const container = start ? rng.startContainer : rng.endContainer;
   const offset = start ? rng.startOffset : rng.endOffset;
 
@@ -24,13 +24,13 @@ const getEndpointElement = (
     .getOr(root);
 };
 
-const getStart = (root: Element, rng: Range, real?: boolean): Element =>
+const getStart = (root: Element, rng: Range, real: boolean = false): Element =>
   getEndpointElement(root, rng, true, real, (elm, offset) => Math.min(Traverse.childNodesCount(elm), offset));
 
-const getEnd = (root: Element, rng: Range, real?: boolean): Element =>
+const getEnd = (root: Element, rng: Range, real: boolean = false): Element =>
   getEndpointElement(root, rng, false, real, (elm, offset) => offset > 0 ? offset - 1 : offset);
 
-const skipEmptyTextNodes = (node: Node, forwards: boolean) => {
+const skipEmptyTextNodes = (node: Node | null, forwards: boolean): Node | null => {
   const orig = node;
 
   while (node && NodeType.isText(node) && node.length === 0) {
@@ -40,26 +40,24 @@ const skipEmptyTextNodes = (node: Node, forwards: boolean) => {
   return node || orig;
 };
 
-const getNode = (root: Element, rng: Range): Element => {
-  let elm, startContainer, endContainer;
-
+const getNode = (root: HTMLElement, rng: Range | undefined): HTMLElement => {
   // Range maybe lost after the editor is made visible again
   if (!rng) {
     return root;
   }
 
-  startContainer = rng.startContainer;
-  endContainer = rng.endContainer;
+  let startContainer: Node | null = rng.startContainer;
+  let endContainer: Node | null = rng.endContainer;
   const startOffset = rng.startOffset;
   const endOffset = rng.endOffset;
-  elm = rng.commonAncestorContainer;
+  let node = rng.commonAncestorContainer;
 
   // Handle selection a image or other control like element such as anchors
   if (!rng.collapsed) {
     if (startContainer === endContainer) {
       if (endOffset - startOffset < 2) {
         if (startContainer.hasChildNodes()) {
-          elm = startContainer.childNodes[startOffset];
+          node = startContainer.childNodes[startOffset];
         }
       }
     }
@@ -70,8 +68,8 @@ const getNode = (root: Element, rng: Range): Element => {
 
     // Handle cases where the selection is immediately wrapped around a node and return that node instead of it's parent.
     // This happens when you double click an underlined word in FireFox.
-    if (startContainer.nodeType === 3 && endContainer.nodeType === 3) {
-      if ((startContainer as Text).length === startOffset) {
+    if (NodeType.isText(startContainer) && NodeType.isText(endContainer)) {
+      if (startContainer.length === startOffset) {
         startContainer = skipEmptyTextNodes(startContainer.nextSibling, true);
       } else {
         startContainer = startContainer.parentNode;
@@ -84,63 +82,62 @@ const getNode = (root: Element, rng: Range): Element => {
       }
 
       if (startContainer && startContainer === endContainer) {
-        return startContainer;
+        node = startContainer;
       }
     }
   }
 
-  if (elm && elm.nodeType === 3) {
-    return elm.parentNode;
-  }
-
-  return elm;
+  const elm = NodeType.isText(node) ? node.parentNode : node;
+  return NodeType.isElement(elm) ? elm : root;
 };
 
 const getSelectedBlocks = (dom: DOMUtils, rng: Range, startElm?: Element, endElm?: Element): Element[] => {
-  let node;
-  const selectedBlocks = [];
+  const selectedBlocks: Element[] = [];
 
   const root = dom.getRoot();
-  startElm = dom.getParent(startElm || getStart(root, rng, rng.collapsed), dom.isBlock);
-  endElm = dom.getParent(endElm || getEnd(root, rng, rng.collapsed), dom.isBlock);
+  const start = dom.getParent(startElm || getStart(root, rng, rng.collapsed), dom.isBlock);
+  const end = dom.getParent(endElm || getEnd(root, rng, rng.collapsed), dom.isBlock);
 
-  if (startElm && startElm !== root) {
-    selectedBlocks.push(startElm);
+  if (start && start !== root) {
+    selectedBlocks.push(start);
   }
 
-  if (startElm && endElm && startElm !== endElm) {
-    node = startElm;
+  if (start && end && start !== end) {
+    let node: Node | null | undefined = start;
 
-    const walker = new DomTreeWalker(startElm, root);
-    while ((node = walker.next()) && node !== endElm) {
+    const walker = new DomTreeWalker(start, root);
+    while ((node = walker.next()) && node !== end) {
       if (dom.isBlock(node)) {
         selectedBlocks.push(node);
       }
     }
   }
 
-  if (endElm && startElm !== endElm && endElm !== root) {
-    selectedBlocks.push(endElm);
+  if (end && start !== end && end !== root) {
+    selectedBlocks.push(end);
   }
 
   return selectedBlocks;
 };
 
-const select = (dom, node: Node, content?: boolean) => Optional.from(node).map((node) => {
-  const idx = dom.nodeIndex(node);
-  const rng = dom.createRng();
+const select = (dom: DOMUtils, node: Node | null, content?: boolean): Optional<Range> =>
+  Optional.from(node).bind((node) =>
+    Optional.from(node.parentNode).map((parent) => {
+      const idx = dom.nodeIndex(node);
+      const rng = dom.createRng();
 
-  rng.setStart(node.parentNode, idx);
-  rng.setEnd(node.parentNode, idx + 1);
+      rng.setStart(parent, idx);
+      rng.setEnd(parent, idx + 1);
 
-  // Find first/last text node or BR element
-  if (content) {
-    moveEndPoint(dom, rng, node, true);
-    moveEndPoint(dom, rng, node, false);
-  }
+      // Find first/last text node or BR element
+      if (content) {
+        moveEndPoint(dom, rng, node, true);
+        moveEndPoint(dom, rng, node, false);
+      }
 
-  return rng;
-});
+      return rng;
+    })
+  );
 
 export {
   getStart,

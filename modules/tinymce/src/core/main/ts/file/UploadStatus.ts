@@ -16,11 +16,16 @@ export interface UploadStatus {
   readonly destroy: () => void;
 }
 
+interface BlobStatus {
+  readonly status: number;
+  readonly resultUri: string | null;
+}
+
 export const UploadStatus = (): UploadStatus => {
   const PENDING = 1, UPLOADED = 2;
-  let blobUriStatuses = {};
+  let blobUriStatuses: Record<string, BlobStatus> = {};
 
-  const createStatus = (status: number, resultUri: string) => {
+  const createStatus = (status: number, resultUri: string | null): BlobStatus => {
     return {
       status,
       resultUri

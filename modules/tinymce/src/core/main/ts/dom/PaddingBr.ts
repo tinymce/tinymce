@@ -5,7 +5,7 @@ import * as ElementType from './ElementType';
 
 const getLastChildren = (elm: SugarElement<Node>): SugarElement<Node>[] => {
   const children: SugarElement<Node>[] = [];
-  let rawNode = elm.dom;
+  let rawNode: Node | null = elm.dom;
 
   while (rawNode) {
     children.push(SugarElement.fromDom(rawNode));

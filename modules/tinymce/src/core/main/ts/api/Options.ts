@@ -29,7 +29,7 @@ const isRegExp = (x: unknown): x is RegExp => Type.is(x, RegExp);
 const option = <K extends keyof EditorOptions>(name: K) => (editor: Editor) =>
   editor.options.get(name);
 
-const stringOrObjectProcessor = (value: string) =>
+const stringOrObjectProcessor = (value: unknown) =>
   Type.isString(value) || Type.isObject(value);
 
 const bodyOptionProcessor = (editor: Editor, defaultValue: string = '') => (value: unknown) => {
@@ -46,7 +46,7 @@ const bodyOptionProcessor = (editor: Editor, defaultValue: string = '') => (valu
   }
 };
 
-const register = (editor: Editor) => {
+const register = (editor: Editor): void => {
   const registerOption = editor.options.register;
 
   registerOption('id', {
@@ -80,7 +80,8 @@ const register = (editor: Editor) => {
   });
 
   registerOption('language_load', {
-    processor: 'boolean'
+    processor: 'boolean',
+    default: true
   });
 
   registerOption('inline', {
@@ -218,11 +219,6 @@ const register = (editor: Editor) => {
   });
 
   registerOption('images_upload_url', {
-    processor: 'string',
-    default: ''
-  });
-
-  registerOption('images_upload_base_path', {
     processor: 'string',
     default: ''
   });

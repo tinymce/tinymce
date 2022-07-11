@@ -40,7 +40,7 @@ export const BlobCache = (): BlobCache => {
   let cache: BlobInfo[] = [];
 
   const mimeToExt = (mime: string) => {
-    const mimes = {
+    const mimes: Record<string, string> = {
       'image/jpeg': 'jpg',
       'image/jpg': 'jpg',
       'image/gif': 'gif',
@@ -64,8 +64,8 @@ export const BlobCache = (): BlobCache => {
         id,
         name,
         filename,
-        blob,
-        base64
+        blob: blob as Blob,
+        base64: base64 as string
       });
     } else if (Type.isObject(o)) {
       return toBlobInfo(o);
