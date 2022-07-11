@@ -83,14 +83,14 @@ const findPatterns = (editor: Editor, patternSet: PatternSet): BlockPatternMatch
       // Block patterns do not allow trailing spaces currently. This is related to TINY-8779
       allowTrailingSpaces: false
     });
-    const combinedPatterns = [
-      ...patternSet.blockPatterns,
-      ...extraPatterns
-    ];
-    const patterns = getBlockPatterns(combinedPatterns);
+    // search in the dynamic patterns first
+    const patterns = getBlockPatterns(extraPatterns);
+    const matchedPattern = findPattern(patterns, blockText).orThunk(() => {
+      // Search in the static patterns
+      const patterns = getBlockPatterns(patternSet.blockPatterns);
+      return findPattern(patterns, blockText);
+    });
 
-    // Find the pattern
-    const matchedPattern = findPattern(patterns, blockText);
     return matchedPattern.map((pattern) => {
       if (Tools.trim(blockText).length === pattern.start.length) {
         return [];

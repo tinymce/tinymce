@@ -337,7 +337,7 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
             {
               start: '*', end: '*', format: 'bold'
             }
-          ]
+          ];
         } else if (parentTag === 'div' && ctx.text === 'replace-me') {
           return [
             {
@@ -345,7 +345,7 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
             }
           ];
         } else {
-          return [ ];
+          return [];
         }
       },
       base_url: '/project/tinymce/js/tinymce'
@@ -433,7 +433,7 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
             }
           }
         ]
-      )
+      );
     });
   });
 });
