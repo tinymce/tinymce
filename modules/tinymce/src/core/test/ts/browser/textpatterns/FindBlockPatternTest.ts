@@ -35,7 +35,7 @@ describe('browser.tinymce.core.textpatterns.FindBlockPatternTest', () => {
 
     const getPatternSet = getPatternSetFor(hook);
 
-    it('TBA: # triggers heading match when block tag matches forced_root_block', () => {
+    it('TINY-8778: # triggers heading match when block tag matches forced_root_block', () => {
       const editor = hook.editor();
       // For block patterns to execute, the block tag must be the same as the
       // forced root block. We aren't sure why this constraint exists.
@@ -66,7 +66,7 @@ describe('browser.tinymce.core.textpatterns.FindBlockPatternTest', () => {
       assert.deepEqual(matches, []);
     });
 
-    it('TBA: # does not trigger heading match when block tag does not match forced_root_block', () => {
+    it('TINY-8778: # does not trigger heading match when block tag does not match forced_root_block', () => {
       const editor = hook.editor();
       // For block patterns to execute, the block tag must be the same as the
       // forced root block. We aren't sure why this constraint exists.
@@ -103,7 +103,7 @@ describe('browser.tinymce.core.textpatterns.FindBlockPatternTest', () => {
 
     const getPatternSet = getPatternSetFor(hook);
 
-    it('TBA: Match a heading format which is extending the existing text patterns', () => {
+    it('TINY-8778: Match a heading format which is extending the existing text patterns', () => {
       const editor = hook.editor();
       editor.setContent('<p>#### wow</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 4);
@@ -127,7 +127,7 @@ describe('browser.tinymce.core.textpatterns.FindBlockPatternTest', () => {
       );
     });
 
-    it('TBA: Match a command pattern', () => {
+    it('TINY-8778: Match a command pattern', () => {
       const editor = hook.editor();
       editor.setContent('<p><b>TBA Bold heading</b></p>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 3);
@@ -152,7 +152,7 @@ describe('browser.tinymce.core.textpatterns.FindBlockPatternTest', () => {
       );
     });
 
-    it('TBA: Match a heading where its block tag matches forced_root_block but its parent block does not', () => {
+    it('TINY-8778: Match a heading where its block tag matches forced_root_block but its parent block does not', () => {
       const editor = hook.editor();
       editor.setContent('<div><p>#### New heading type</p></div>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 4);
@@ -175,7 +175,7 @@ describe('browser.tinymce.core.textpatterns.FindBlockPatternTest', () => {
       );
     });
 
-    it('TBA: Does not trigger a match if the block tag does not match forced_root_block', () => {
+    it('TINY-8778: Does not trigger a match if the block tag does not match forced_root_block', () => {
       const editor = hook.editor();
       editor.setContent('<div>#### New heading type</div>');
       TinySelections.setCursor(editor, [ 0, 0 ], 4);
@@ -183,7 +183,7 @@ describe('browser.tinymce.core.textpatterns.FindBlockPatternTest', () => {
       assert.deepEqual(matches, [], 'Checking block pattern matches do not match for incorrect block tag type');
     });
 
-    it('TBA: Lookup patterns take precendence over block patterns', () => {
+    it('TINY-8778: Lookup patterns take precendence over block patterns', () => {
       const editor = hook.editor();
       editor.setContent('<p>### is a new heading</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 4);
