@@ -83,112 +83,112 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
 
     const getInlinePatternSet = getInlinePatternSetFor(hook);
 
-    it('TBA: Run on text without pattern returns no matching patterns', () => {
+    it('TINY-8778: Run on text without pattern returns no matching patterns', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, 'text', [ 0 ], 4);
       const matches = getInlinePattern(editor, getInlinePatternSet());
       assertPatterns(matches, []);
     });
 
-    it('TBA: Run on range that is not on a text node without pattern returns no match', () => {
+    it('TINY-8778: Run on range that is not on a text node without pattern returns no match', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, '<p>text</p>', [ 0 ], 1);
       const matches = getInlinePattern(editor, getInlinePatternSet());
       assertPatterns(matches, []);
     });
 
-    it('TBA: Run on range that is not on a text node with pattern returns a match', () => {
+    it('TINY-8778: Run on range that is not on a text node with pattern returns a match', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, '<p>*a*</p>', [ 0 ], 1);
       const matches = getInlinePattern(editor, getInlinePatternSet());
       assertSimpleMatch(matches, '*', '*', [ 'italic' ], { start: [ 0, 0, 0 ], end: [ 0, 0, 1 ] }, { start: [ 0, 0, 2 ], end: [ 0, 0, 3 ] });
     });
 
-    it('TBA: inline * pattern with no gap to matching token returns no match', () => {
+    it('TINY-8778: inline * pattern with no gap to matching token returns no match', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, '*x***', [ 0 ], 5);
       const matches = getInlinePattern(editor, getInlinePatternSet());
       assertPatterns(matches, []);
     });
 
-    it('TBA: inline * with uncollapsed range returns no match', () => {
+    it('TINY-8778: inline * with uncollapsed range returns no match', () => {
       const editor = hook.editor();
       setContentAndSelection(editor, '*x*&nbsp;', [ 0 ], 3, [ 0 ], 4);
       const matches = getInlinePattern(editor, getInlinePatternSet(), true);
       assertPatterns(matches, []);
     });
 
-    it('TBA: inline * pattern end without content returns no match', () => {
+    it('TINY-8778: inline * pattern end without content returns no match', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, '**', [ 0 ], 2);
       const matches = getInlinePattern(editor, getInlinePatternSet());
       assertPatterns(matches, []);
     });
 
-    it('TBA: inline * and ** end pattern without start pattern no match', () => {
+    it('TINY-8778: inline * and ** end pattern without start pattern no match', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, '***', [ 0 ], 3);
       const matches = getInlinePattern(editor, getInlinePatternSet());
       assertPatterns(matches, []);
     });
 
-    it('TBA: cursor in middle of pattern returns no match', () => {
+    it('TINY-8778: cursor in middle of pattern returns no match', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, '*** x***', [ 0 ], 4);
       const matches = getInlinePattern(editor, getInlinePatternSet(), true);
       assertPatterns(matches, []);
     });
 
-    it('TBA: inline * without content before or after', () => {
+    it('TINY-8778: inline * without content before or after', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, '*x*', [ 0 ], 3);
       const matches = getInlinePattern(editor, getInlinePatternSet());
       assertSimpleMatch(matches, '*', '*', [ 'italic' ], { start: [ 0, 0 ], end: [ 0, 1 ] }, { start: [ 0, 2 ], end: [ 0, 3 ] });
     });
 
-    it('TBA: inline * with content before', () => {
+    it('TINY-8778: inline * with content before', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, 'a *x*', [ 0 ], 5);
       const matches = getInlinePattern(editor, getInlinePatternSet());
       assertSimpleMatch(matches, '*', '*', [ 'italic' ], { start: [ 0, 2 ], end: [ 0, 3 ] }, { start: [ 0, 4 ], end: [ 0, 5 ] });
     });
 
-    it('TBA: inline * with content before and after', () => {
+    it('TINY-8778: inline * with content before and after', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, 'a *x* b', [ 0 ], 5);
       const matches = getInlinePattern(editor, getInlinePatternSet());
       assertSimpleMatch(matches, '*', '*', [ 'italic' ], { start: [ 0, 2 ], end: [ 0, 3 ] }, { start: [ 0, 4 ], end: [ 0, 5 ] });
     });
 
-    it('TBA: inline * with content before and after, with space', () => {
+    it('TINY-8778: inline * with content before and after, with space', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, '***x* **', [ 0 ], 6);
       const matches = getInlinePattern(editor, getInlinePatternSet(), true);
       assertSimpleMatch(matches, '*', '*', [ 'italic' ], { start: [ 0, 2 ], end: [ 0, 3 ] }, { start: [ 0, 4 ], end: [ 0, 5 ] });
     });
 
-    it('TBA: inline ** without content before or after', () => {
+    it('TINY-8778: inline ** without content before or after', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, '**x**', [ 0 ], 5);
       const matches = getInlinePattern(editor, getInlinePatternSet());
       assertSimpleMatch(matches, '**', '**', [ 'bold' ], { start: [ 0, 0 ], end: [ 0, 2 ] }, { start: [ 0, 3 ], end: [ 0, 5 ] });
     });
 
-    it('TBA: inline ** with content before', () => {
+    it('TINY-8778: inline ** with content before', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, 'a **x**', [ 0 ], 7);
       const matches = getInlinePattern(editor, getInlinePatternSet());
       assertSimpleMatch(matches, '**', '**', [ 'bold' ], { start: [ 0, 2 ], end: [ 0, 4 ] }, { start: [ 0, 5 ], end: [ 0, 7 ] });
     });
 
-    it('TBA: inline ** with content before and after', () => {
+    it('TINY-8778: inline ** with content before and after', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, 'a **x** b', [ 0 ], 7);
       const matches = getInlinePattern(editor, getInlinePatternSet());
       assertSimpleMatch(matches, '**', '**', [ 'bold' ], { start: [ 0, 2 ], end: [ 0, 4 ] }, { start: [ 0, 5 ], end: [ 0, 7 ] });
     });
 
-    it('TBA: inline * and ** without content before or after', () => {
+    it('TINY-8778: inline * and ** without content before or after', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, '***x***', [ 0 ], 7);
       const matches = getInlinePattern(editor, getInlinePatternSet());
@@ -198,7 +198,7 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
       ]);
     });
 
-    it('TBA: inline * and ** with content before', () => {
+    it('TINY-8778: inline * and ** with content before', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, 'a ***x***', [ 0 ], 9);
       const matches = getInlinePattern(editor, getInlinePatternSet());
@@ -208,7 +208,7 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
       ]);
     });
 
-    it('TBA: inline * and ** with content before and after', () => {
+    it('TINY-8778: inline * and ** with content before and after', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, 'a ***x*** b', [ 0 ], 9);
       const matches = getInlinePattern(editor, getInlinePatternSet());
@@ -226,21 +226,21 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
         dynamicPatternsLookup: () => []
       };
 
-      it('TBA: force only ** pattern and test return on not existing *** pattern', () => {
+      it('TINY-8778: force only ** pattern and test return on not existing *** pattern', () => {
         const editor = hook.editor();
         setContentAndCursor(editor, '***x***', [ 0 ], 7);
         const matches = getInlinePattern(editor, inlinePatternSet);
         assertSimpleMatch(matches, '**', '**', [ 'bold' ], { start: [ 0, 1 ], end: [ 0, 3 ] }, { start: [ 0, 5 ], end: [ 0, 7 ] });
       });
 
-      it('TBA: force only ** pattern with leading content and test return on not existing *** pattern', () => {
+      it('TINY-8778: force only ** pattern with leading content and test return on not existing *** pattern', () => {
         const editor = hook.editor();
         setContentAndCursor(editor, 'y ***x***', [ 0 ], 9);
         const matches = getInlinePattern(editor, inlinePatternSet);
         assertSimpleMatch(matches, '**', '**', [ 'bold' ], { start: [ 0, 3 ], end: [ 0, 5 ] }, { start: [ 0, 7 ], end: [ 0, 9 ] });
       });
 
-      it('TBA: force only ** pattern with trailing ** text and test return on not existing *** pattern', () => {
+      it('TINY-8778: force only ** pattern with trailing ** text and test return on not existing *** pattern', () => {
         const editor = hook.editor();
         setContentAndCursor(editor, 'y ***x*** **', [ 0 ], 9);
         const matches = getInlinePattern(editor, inlinePatternSet);
@@ -248,7 +248,7 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
       });
     });
 
-    it('TBA: Check match when input pattern has an empty start value', () => {
+    it('TINY-8778: Check match when input pattern has an empty start value', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, 'brb', [ 0 ], 3);
       const matches = getInlinePattern(editor, getInlinePatternSet());
@@ -257,7 +257,7 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
       ]);
     });
 
-    it('TBA: Check match when input pattern has an empty end value', () => {
+    it('TINY-8778: Check match when input pattern has an empty end value', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, 'irl', [ 0 ], 3);
       const matches = getInlinePattern(editor, getInlinePatternSet());
@@ -266,7 +266,7 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
       ]);
     });
 
-    it('TBA: Check match when input pattern uses replacement syntax', () => {
+    it('TINY-8778: Check match when input pattern uses replacement syntax', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, 'asap', [ 0 ], 4);
       const matches = getInlinePattern(editor, getInlinePatternSet());
@@ -275,7 +275,7 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
       ]);
     });
 
-    it('TBA: Check nested match', () => {
+    it('TINY-8778: Check nested match', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, 'Bring those reports ***asap***!', [ 0 ], 31);
       const matches = getInlinePattern(editor, getInlinePatternSet(), true);
@@ -286,7 +286,7 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
       ]);
     });
 
-    it('TBA: Check that a pattern will be matched across tag boundaries', () => {
+    it('TINY-8778: Check that a pattern will be matched across tag boundaries', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, '<span>*text</span><span>*</span>', [ 1, 0 ], 1);
       const matches = getInlinePattern(editor, getInlinePatternSet());
@@ -295,7 +295,7 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
       ]);
     });
 
-    it('TBA: Check that a pattern will be matched across tag boundaries 2', () => {
+    it('TINY-8778: Check that a pattern will be matched across tag boundaries 2', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, '<span>**text*</span><span>*</span>', [ 1, 0 ], 1);
       const matches = getInlinePattern(editor, getInlinePatternSet());
@@ -304,14 +304,14 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
       ]);
     });
 
-    it('TBA: Check that a pattern will not be matched across block boundaries', () => {
+    it('TINY-8778: Check that a pattern will not be matched across block boundaries', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, '<p>*text</p><p>*</p>', [ 1, 0 ], 1);
       const matches = getInlinePattern(editor, getInlinePatternSet());
       assertPatterns(matches, []);
     });
 
-    it('TBA: Check that a pattern will not be matched across block boundaries 2', () => {
+    it('TINY-8778: Check that a pattern will not be matched across block boundaries 2', () => {
       const editor = hook.editor();
       setContentAndCursor(editor, '<p>*text</p><span>*</span>', [ 1, 0 ], 1);
       const matches = getInlinePattern(editor, getInlinePatternSet());
@@ -353,7 +353,7 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
 
     const getInlinePatternSet = getInlinePatternSetFor(hook);
 
-    it('TBA: Code Pattern only runs on with code blocks', () => {
+    it('TINY-8778: Code Pattern only runs on with code blocks', () => {
       const editor = hook.editor();
       editor.setContent('<pre>`const`</pre>');
       TinySelections.setCursor(editor, [ 0, 0 ], '`const`'.length);
@@ -366,7 +366,7 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
       );
     });
 
-    it('TBA: Code Pattern does not run with paragraph blocks', () => {
+    it('TINY-8778: Code Pattern does not run with paragraph blocks', () => {
       const editor = hook.editor();
       editor.setContent('<p>`const`</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], '`const`'.length);
@@ -374,7 +374,7 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
       assertPatterns(matches, []);
     });
 
-    it('TBA: Inline patterns still work when lookup defined', () => {
+    it('TINY-8778: Inline patterns still work when lookup defined', () => {
       const editor = hook.editor();
       editor.setContent('<pre>*const*</pre>');
       TinySelections.setCursor(editor, [ 0, 0 ], '*const*'.length);
@@ -387,7 +387,7 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
       );
     });
 
-    it('TBA: Inline pattern lookups take precedence over inline patterns', () => {
+    it('TINY-8778: Inline pattern lookups take precedence over inline patterns', () => {
       const editor = hook.editor();
       editor.setContent('<p>*const*</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], '*const*'.length);
@@ -400,7 +400,7 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
       );
     });
 
-    it('TBA: Inline pattern lookups based on non-matching context text', () => {
+    it('TINY-8778: Inline pattern lookups based on non-matching context text', () => {
       const editor = hook.editor();
       editor.setContent('<div>keep-me</div>');
       TinySelections.setCursor(editor, [ 0, 0 ], 'keep-me'.length);
@@ -408,7 +408,7 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
       assertPatterns(matches, []);
     });
 
-    it('TBA: Inline pattern lookups based on matching context text', () => {
+    it('TINY-8778: Inline pattern lookups based on matching context text', () => {
       const editor = hook.editor();
       editor.setContent('<div>replace-me</div>');
       TinySelections.setCursor(editor, [ 0, 0 ], 'replace-me'.length);
