@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `removeAttributeFilter` and `removeNodeFilter` functions to the `DomParser` and DOM `Serializer` APIs #TINY-7847
 - New `iframe_template_callback` option in the `media` plugin. Patch provided by Namstel #TINY-8684
 - New `dispatchChange` UndoManager API to fire the `change` with current editor status as level and current undoManager layer as lastLevel #TINY-8641
+- New `text_patterns_lookup` option to provide additional text patterns dynamically #TINY-8778
 
 ### Improved
 - Clearer focus states for buttons while navigating with keyboard #TINY-8557
