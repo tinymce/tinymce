@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- New `text_patterns_lookup` option to provide additional text patterns dynamically #TINY-8778
+
 ### Fixed
 - The Autolink plugin did not work when the text nodes in the content were fragmented #TINY-3723
 - Fixed various incorrect types on public APIs found while enabling TypeScript strict mode #TINY-8806
