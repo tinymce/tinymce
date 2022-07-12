@@ -79,7 +79,10 @@ const getAnchorElement = (editor: Editor, selectedElm?: Element): Optional<HTMLA
 };
 
 const getAnchorText = (selection: EditorSelection, anchorElm: Optional<HTMLAnchorElement>): string => {
-  const text = anchorElm.fold(() => selection.getContent({ format: 'text' }), (anchorElm) => (anchorElm.innerText || anchorElm.textContent));
+  const text = anchorElm.fold(
+    () => selection.getContent({ format: 'text' }),
+    (anchorElm) => anchorElm.innerText || anchorElm.textContent
+  );
   return trimCaretContainers(text);
 };
 
