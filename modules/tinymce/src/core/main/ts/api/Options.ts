@@ -878,7 +878,7 @@ const getNonEditableClass = option('noneditable_class');
 const getEditableClass = option('editable_class');
 const getNonEditableRegExps = option('noneditable_regexp');
 
-const hasTextPatternsLookup = (editor: Editor) => editor.options.isSet('text_patterns_lookup');
+const hasTextPatternsLookup = (editor: Editor): boolean => editor.options.isSet('text_patterns_lookup');
 
 const getFontStyleValues = (editor: Editor): string[] =>
   Tools.explode(editor.options.get('font_size_style_values'));
