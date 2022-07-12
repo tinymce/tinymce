@@ -1,7 +1,5 @@
-import { UiFinder } from '@ephox/agar';
 import { describe, it, before, after } from '@ephox/bedrock-client';
-import { Class, SugarBody } from '@ephox/sugar';
-import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
@@ -29,7 +27,7 @@ describe('browser.tinymce.plugins.link.SelectedImageFigureTest', () => {
       <figure class="image"><img src="https://www.w3schools.com/w3css/img_lights.jpg" alt="" width="600" height="400">
         <figcaption>Caption</figcaption>
       </figure>
-`);
+    `);
     TinySelections.select(editor, 'figure', []);
     await TinyUiActions.pWaitForUi(editor, '[title="Insert/edit link"]:not(.tox-tbtn--enabled)');
   });
@@ -40,7 +38,7 @@ describe('browser.tinymce.plugins.link.SelectedImageFigureTest', () => {
       <figure class="image"><img src="https://www.w3schools.com/w3css/img_lights.jpg" alt="" width="600" height="400">
         <figcaption><a href="http://tiny.cloud">Caption</a></figcaption>
       </figure>
-`);
+    `);
     TinySelections.select(editor, 'figure', []);
     await TinyUiActions.pWaitForUi(editor, '[title="Insert/edit link"].tox-tbtn--enabled');
   });

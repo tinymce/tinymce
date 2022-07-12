@@ -182,12 +182,14 @@ const linkDomMutation = (editor: Editor, attachState: AttachState, data: LinkDia
       attachState.attach();
     }
 
-    anchorElm.fold(() => {
-      createLink(editor, selectedElm, data.text, linkAttrs);
-    }, (elm) => {
-      editor.focus();
-      updateLink(editor, elm, data.text, linkAttrs);
-    });
+    anchorElm.fold(
+      () => {
+        createLink(editor, selectedElm, data.text, linkAttrs);
+      },
+      (elm) => {
+        editor.focus();
+        updateLink(editor, elm, data.text, linkAttrs);
+      });
   });
 };
 
