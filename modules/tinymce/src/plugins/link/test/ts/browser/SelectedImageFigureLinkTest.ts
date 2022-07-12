@@ -44,9 +44,7 @@ describe('browser.tinymce.plugins.link.SelectedImageFigureTest', () => {
       </figure>
 `);
     TinySelections.select(editor, 'figure', []);
-    await UiFinder.pWaitForState('link toolbar button is active', SugarBody.body(), '[title="Insert/edit link"]', (elm) => {
-      return Class.has(elm, 'tox-tbtn--enabled');
-    });
+    await TinyUiActions.pWaitForUi(editor, '[title="Insert/edit link"].tox-tbtn--enabled');
   });
 
 });
