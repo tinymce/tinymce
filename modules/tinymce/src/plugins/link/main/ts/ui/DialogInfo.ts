@@ -21,11 +21,11 @@ const extractFromAnchor = (editor: Editor, anchor: Optional<HTMLAnchorElement>):
   const dom = editor.dom;
   const onlyText = Utils.isOnlyTextSelected(editor);
   const text: Optional<string> = onlyText ? Optional.some(Utils.getAnchorText(editor.selection, anchor)) : Optional.none();
-  const url: Optional<string> = anchor.bind((anchor) => Optional.from(dom.getAttrib(anchor, 'href')));
-  const target: Optional<string> = anchor.bind((anchor) => Optional.from(dom.getAttrib(anchor, 'target')));
-  const rel = anchor.bind((anchor) => nonEmptyAttr(dom, anchor, 'rel'));
-  const linkClass = anchor.bind((anchor) => nonEmptyAttr(dom, anchor, 'class'));
-  const title = anchor.bind((anchor) => nonEmptyAttr(dom, anchor, 'title'));
+  const url: Optional<string> = anchor.bind((anchorElm) => Optional.from(dom.getAttrib(anchorElm, 'href')));
+  const target: Optional<string> = anchor.bind((anchorElm) => Optional.from(dom.getAttrib(anchorElm, 'target')));
+  const rel = anchor.bind((anchorElm) => nonEmptyAttr(dom, anchorElm, 'rel'));
+  const linkClass = anchor.bind((anchorElm) => nonEmptyAttr(dom, anchorElm, 'class'));
+  const title = anchor.bind((anchorElm) => nonEmptyAttr(dom, anchorElm, 'title'));
 
   return {
     url,
