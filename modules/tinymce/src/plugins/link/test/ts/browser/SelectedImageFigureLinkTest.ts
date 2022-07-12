@@ -31,9 +31,7 @@ describe('browser.tinymce.plugins.link.SelectedImageFigureTest', () => {
       </figure>
 `);
     TinySelections.select(editor, 'figure', []);
-    await UiFinder.pWaitForState('link toolbar button is NOT active', SugarBody.body(), '[title="Insert/edit link"]', (elm) => {
-      return !Class.has(elm, 'tox-tbtn--enabled');
-    });
+    await TinyUiActions.pWaitForUi(editor, '[title="Insert/edit link"]:not(.tox-tbtn--enabled)');
   });
 
   it('TINY-8832: link button should be highlighted when there is a link in a figure element', async () => {
