@@ -21,25 +21,21 @@ describe('browser.tinymce.plugins.link.SelectedImageFigureTest', () => {
     TestLinkUi.clearHistory();
   });
 
-  it('TINY-8832: link button should not be highlighted when there is no link in a figure element', async () => {
+  it('TINY-8832: link button should NOT be highlighted when there is no link in a figure element', async () => {
     const editor = hook.editor();
     editor.setContent(`
-      <figure class="image"><img src="https://www.w3schools.com/w3css/img_lights.jpg" alt="" width="600" height="400">
+      <figure class="image no-link"><img src="https://www.w3schools.com/w3css/img_lights.jpg" alt="" width="600" height="400">
         <figcaption>Caption</figcaption>
       </figure>
-    `);
-    TinySelections.select(editor, 'figure', []);
-    await TinyUiActions.pWaitForUi(editor, '[title="Insert/edit link"]:not(.tox-tbtn--enabled)');
-  });
-
-  it('TINY-8832: link button should be highlighted when there is a link in a figure element', async () => {
-    const editor = hook.editor();
-    editor.setContent(`
-      <figure class="image"><img src="https://www.w3schools.com/w3css/img_lights.jpg" alt="" width="600" height="400">
+      <figure class="image has-link"><img src="https://www.w3schools.com/w3css/img_lights.jpg" alt="" width="600" height="400">
         <figcaption><a href="http://tiny.cloud">Caption</a></figcaption>
       </figure>
     `);
-    TinySelections.select(editor, 'figure', []);
+
+    TinySelections.select(editor, 'figure.no-link', []);
+    await TinyUiActions.pWaitForUi(editor, '[title="Insert/edit link"]:not(.tox-tbtn--enabled)');
+
+    TinySelections.select(editor, 'figure.has-link', []);
     await TinyUiActions.pWaitForUi(editor, '[title="Insert/edit link"].tox-tbtn--enabled');
   });
 
