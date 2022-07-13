@@ -1,8 +1,14 @@
 import { Strings, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Options from '../api/Options';
+
+interface ParseResult {
+  readonly rng: Range;
+  readonly url: string;
+}
 
 const rangeEqualsBracketOrSpace = (rangeString: string): boolean =>
   /^[(\[{ \u00a0]$/.test(rangeString);
@@ -12,15 +18,6 @@ const isTextNode = (node: Node): node is Text =>
 
 const isElement = (node: Node): node is Element =>
   node.nodeType === 1;
-
-const handleBracket = (editor: Editor): void =>
-  parseCurrentLine(editor, -1);
-
-const handleSpacebar = (editor: Editor): void =>
-  parseCurrentLine(editor, 0);
-
-const handleEnter = (editor: Editor): void =>
-  parseCurrentLine(editor, -1);
 
 const scopeIndex = (container: Node, index: number): number => {
   if (index < 0) {
@@ -62,10 +59,9 @@ const hasProtocol = (url: string): boolean =>
 const isPunctuation = (char: string) =>
   /[?!,.;:]/.test(char);
 
-const parseCurrentLine = (editor: Editor, endOffset: number): void => {
+const parseCurrentLine = (editor: Editor, endOffset: number): ParseResult | null => {
   let end, endContainer, text, prev, len, rngText;
   const autoLinkPattern = Options.getAutoLinkPattern(editor);
-  const defaultLinkTarget = Options.getDefaultLinkTarget(editor);
 
   // Never create a link when we are inside a link
   if (editor.dom.getParent(editor.selection.getNode(), 'a[href]') !== null) {
@@ -163,49 +159,74 @@ const parseCurrentLine = (editor: Editor, endOffset: number): void => {
       url = 'mailto:' + url;
     }
 
-    editor.undoManager.transact(() => {
-      const bookmark = editor.selection.getBookmark();
-      editor.selection.setRng(rng);
+    return { rng, url };
+  } else {
+    return null;
+  }
+};
 
-      // Needs to be a native createlink command since this is executed in a keypress event handler
-      // so the pending character that is to be inserted needs to be inserted after the link. That will not
-      // happen if we use the formatter create link version. Since we're using the native command
-      // then we also need to ensure the exec command events are fired for backwards compatibility.
-      const command = 'createlink';
-      const args = { command, ui: false, value: url };
-      const beforeExecEvent = editor.dispatch('BeforeExecCommand', args);
-      if (!beforeExecEvent.isDefaultPrevented()) {
-        editor.getDoc().execCommand(command, false, url);
-        editor.dispatch('ExecCommand', args);
+const convertToLink = (editor: Editor, result: ParseResult) => {
+  const defaultLinkTarget = Options.getDefaultLinkTarget(editor);
+  const { rng, url } = result;
 
-        if (Type.isString(defaultLinkTarget)) {
-          editor.dom.setAttrib(editor.selection.getNode(), 'target', defaultLinkTarget);
-        }
+  editor.undoManager.transact(() => {
+    const bookmark = editor.selection.getBookmark();
+    editor.selection.setRng(rng);
+
+    // Needs to be a native createlink command since this is executed in a keypress event handler
+    // so the pending character that is to be inserted needs to be inserted after the link. That will not
+    // happen if we use the formatter create link version. Since we're using the native command
+    // then we also need to ensure the exec command events are fired for backwards compatibility.
+    const command = 'createlink';
+    const args = { command, ui: false, value: url };
+    const beforeExecEvent = editor.dispatch('BeforeExecCommand', args);
+    if (!beforeExecEvent.isDefaultPrevented()) {
+      editor.getDoc().execCommand(command, false, url);
+      editor.dispatch('ExecCommand', args);
+
+      if (Type.isString(defaultLinkTarget)) {
+        editor.dom.setAttrib(editor.selection.getNode(), 'target', defaultLinkTarget);
       }
+    }
 
-      editor.selection.moveToBookmark(bookmark);
-      editor.nodeChanged();
-    });
+    editor.selection.moveToBookmark(bookmark);
+    editor.nodeChanged();
+  });
+};
+
+const handleSpacebar = (editor: Editor): void => {
+  const result = parseCurrentLine(editor, 0);
+  if (Type.isNonNullable(result)) {
+    convertToLink(editor, result);
+  }
+};
+
+const handleBracket = handleSpacebar;
+
+const handleEnter = (editor: Editor, e: EditorEvent<KeyboardEvent>): void => {
+  const result = parseCurrentLine(editor, -1);
+  if (Type.isNonNullable(result)) {
+    // If we have a match then we need to take over the enter behaviour to ensure the undo stack
+    // allows undoing just the URL change without undoing the enter
+    e.preventDefault();
+    editor.execCommand('mceInsertNewLine');
+    convertToLink(editor, result);
   }
 };
 
 const setup = (editor: Editor): void => {
   editor.on('keydown', (e) => {
-    if (e.keyCode === 13) {
-      return handleEnter(editor);
-    }
-  });
-
-  editor.on('keypress', (e) => {
-    // One of the closing bracket keys: ), ] or }
-    if (e.keyCode === 41 || e.keyCode === 93 || e.keyCode === 125) {
-      return handleBracket(editor);
+    if (e.keyCode === 13 && !e.isDefaultPrevented()) {
+      handleEnter(editor, e);
     }
   });
 
   editor.on('keyup', (e) => {
     if (e.keyCode === 32) {
-      return handleSpacebar(editor);
+      handleSpacebar(editor);
+    // One of the closing bracket keys: ), ] or }
+    } else if (e.keyCode === 48 && e.shiftKey || e.keyCode === 221) {
+      handleBracket(editor);
     }
   });
 };
