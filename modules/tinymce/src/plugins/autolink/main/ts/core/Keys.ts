@@ -63,7 +63,7 @@ const isPunctuation = (char: string) =>
   /[?!,.;:]/.test(char);
 
 const parseCurrentLine = (editor: Editor, endOffset: number): void => {
-  let end, endContainer, bookmark, text, prev, len, rngText;
+  let end, endContainer, text, prev, len, rngText;
   const autoLinkPattern = Options.getAutoLinkPattern(editor);
   const defaultLinkTarget = Options.getDefaultLinkTarget(editor);
 
@@ -163,21 +163,29 @@ const parseCurrentLine = (editor: Editor, endOffset: number): void => {
       url = 'mailto:' + url;
     }
 
-    bookmark = editor.selection.getBookmark();
+    editor.undoManager.transact(() => {
+      const bookmark = editor.selection.getBookmark();
+      editor.selection.setRng(rng);
 
-    editor.selection.setRng(rng);
+      // Needs to be a native createlink command since this is executed in a keypress event handler
+      // so the pending character that is to be inserted needs to be inserted after the link. That will not
+      // happen if we use the formatter create link version. Since we're using the native command
+      // then we also need to ensure the exec command events are fired for backwards compatibility.
+      const command = 'createlink';
+      const args = { command, ui: false, value: url };
+      const beforeExecEvent = editor.dispatch('BeforeExecCommand', args);
+      if (!beforeExecEvent.isDefaultPrevented()) {
+        editor.getDoc().execCommand(command, false, url);
+        editor.dispatch('ExecCommand', args);
 
-    // Needs to be a native createlink command since this is executed in a keypress event handler
-    // so the pending character that is to be inserted needs to be inserted after the link. That will not
-    // happen if we use the formatter create link version.
-    editor.getDoc().execCommand('createlink', false, url);
+        if (Type.isString(defaultLinkTarget)) {
+          editor.dom.setAttrib(editor.selection.getNode(), 'target', defaultLinkTarget);
+        }
+      }
 
-    if (Type.isString(defaultLinkTarget)) {
-      editor.dom.setAttrib(editor.selection.getNode(), 'target', defaultLinkTarget);
-    }
-
-    editor.selection.moveToBookmark(bookmark);
-    editor.nodeChanged();
+      editor.selection.moveToBookmark(bookmark);
+      editor.nodeChanged();
+    });
   }
 };
 
