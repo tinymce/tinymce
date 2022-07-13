@@ -89,6 +89,15 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   Attachment.attachSystem(uiRoot, uiComponents.uiMothership);
 
   editor.on('PostRender', () => {
+    // Set the sidebar before the toolbar and menubar
+    // - each sidebar has an associated toggle toolbar button that needs to check the
+    //   sidebar that is set to determine its active state on setup
+    OuterContainer.setSidebar(
+      outerContainer,
+      rawUiConfig.sidebar,
+      Options.getSidebarShow(editor)
+    );
+
     setToolbar(editor, uiComponents, rawUiConfig, backstage);
     lastToolbarWidth.set(editor.getWin().innerWidth);
 
@@ -96,17 +105,6 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       outerContainer,
       identifyMenus(editor, rawUiConfig)
     );
-
-    const sidebarShow = Options.getSidebarShow(editor)?.toLowerCase();
-    OuterContainer.setSidebar(
-      outerContainer,
-      rawUiConfig.sidebar,
-      sidebarShow
-    );
-    // Make sure any listeners of ToggleSidebar are notified if sidebar is open
-    if (OuterContainer.whichSidebar(outerContainer) === sidebarShow) {
-      editor.dispatch('ToggleSidebar');
-    }
 
     setupEvents(editor, uiComponents);
   });
