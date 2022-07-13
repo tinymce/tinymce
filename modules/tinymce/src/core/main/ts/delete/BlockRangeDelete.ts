@@ -6,6 +6,7 @@ import Editor from '../api/Editor';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';
+import { isContentEditableFalse } from '../dom/NodeType';
 import * as DeleteUtils from './DeleteUtils';
 import * as MergeBlocks from './MergeBlocks';
 
@@ -17,6 +18,9 @@ const deleteRangeMergeBlocks = (rootNode: SugarElement<Node>, selection: EditorS
     DeleteUtils.getParentBlock(rootNode, SugarElement.fromDom(rng.endContainer)),
     (block1, block2) => {
       if (!Compare.eq(block1, block2)) {
+        if (isContentEditableFalse(block1.dom) || isContentEditableFalse(block2.dom)) {
+          return Optional.some(Fun.noop);
+        }
         return Optional.some(() => {
           rng.deleteContents();
 
