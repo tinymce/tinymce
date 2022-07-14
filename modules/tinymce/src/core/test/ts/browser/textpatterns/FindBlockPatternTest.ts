@@ -1,27 +1,14 @@
-import { describe, it } from '@ephox/bedrock-client';
-import { Thunk } from '@ephox/katamari';
+import { describe, it, context } from '@ephox/bedrock-client';
 import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import * as Options from 'tinymce/core/api/Options';
 import * as BlockPattern from 'tinymce/core/textpatterns/core/BlockPattern';
-import * as Pattern from 'tinymce/core/textpatterns/core/Pattern';
-import { PatternSet } from 'tinymce/core/textpatterns/core/PatternTypes';
+import { getPatternSetFor } from '../../module/test/TextPatternsUtils';
 
-const getPatternSetFor = (hook: TinyHooks.Hook<Editor>) => Thunk.cached((): PatternSet => {
-  const editor = hook.editor();
-  const rawPatterns = Options.getTextPatterns(editor);
-  const dynamicPatternsLookup = Options.getTextPatternsLookup(editor);
-  return Pattern.createPatternSet(
-    Pattern.fromRawPatterns(rawPatterns),
-    dynamicPatternsLookup
-  );
-});
+describe('atomic.tinymce.textpatterns.FindBlockPatternTest', () => {
 
-describe('browser.tinymce.core.textpatterns.FindBlockPatternTest', () => {
-
-  describe('no text_patterns_lookup', () => {
+  context('no text_patterns_lookup', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       text_patterns: [
         { start: '*', end: '*', format: 'italic' },
@@ -34,8 +21,8 @@ describe('browser.tinymce.core.textpatterns.FindBlockPatternTest', () => {
     }, []);
 
     const getPatternSet = getPatternSetFor(hook);
-
-    it('TINY-8778: # triggers heading match when block tag matches forced_root_block', () => {
+    // TODO: This may not be the expected behaviour, depending on the decisions that being made in https://ephocks.atlassian.net/browse/TINY-4303
+    it('TBA: # triggers heading match when block tag matches forced_root_block', () => {
       const editor = hook.editor();
       // For block patterns to execute, the block tag must be the same as the
       // forced root block. We aren't sure why this constraint exists.
@@ -58,7 +45,7 @@ describe('browser.tinymce.core.textpatterns.FindBlockPatternTest', () => {
       );
     });
 
-    it('* does not trigger a match', () => {
+    it('TINY-8778: * does not trigger a match', () => {
       const editor = hook.editor();
       editor.setContent('<p>* No match');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
@@ -66,7 +53,8 @@ describe('browser.tinymce.core.textpatterns.FindBlockPatternTest', () => {
       assert.deepEqual(matches, []);
     });
 
-    it('TINY-8778: # does not trigger heading match when block tag does not match forced_root_block', () => {
+    // TODO: This may not be the expected behaviour, depending on the decisions that being made in https://ephocks.atlassian.net/browse/TINY-4303
+    it('TBA: # does not trigger heading match when block tag does not match forced_root_block', () => {
       const editor = hook.editor();
       // For block patterns to execute, the block tag must be the same as the
       // forced root block. We aren't sure why this constraint exists.
@@ -81,7 +69,7 @@ describe('browser.tinymce.core.textpatterns.FindBlockPatternTest', () => {
     });
   });
 
-  describe('with text_patterns_lookup', () => {
+  context('with text_patterns_lookup', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       text_patterns: [
         { start: '*', end: '*', format: 'italic' },
@@ -152,6 +140,7 @@ describe('browser.tinymce.core.textpatterns.FindBlockPatternTest', () => {
       );
     });
 
+    // TODO: This maybe need to be fixed, depending on the decisions that being made in https://ephocks.atlassian.net/browse/TINY-4303
     it('TINY-8778: Match a heading where its block tag matches forced_root_block but its parent block does not', () => {
       const editor = hook.editor();
       editor.setContent('<div><p>#### New heading type</p></div>');
@@ -175,7 +164,8 @@ describe('browser.tinymce.core.textpatterns.FindBlockPatternTest', () => {
       );
     });
 
-    it('TINY-8778: Does not trigger a match if the block tag does not match forced_root_block', () => {
+    // TODO: This may not be the expected behaviour, depending on the decisions that being made in https://ephocks.atlassian.net/browse/TINY-4303
+    it('TBA: Does not trigger a match if the block tag does not match forced_root_block', () => {
       const editor = hook.editor();
       editor.setContent('<div>#### New heading type</div>');
       TinySelections.setCursor(editor, [ 0, 0 ], 4);

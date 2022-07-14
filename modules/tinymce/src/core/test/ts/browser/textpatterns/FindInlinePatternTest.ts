@@ -1,32 +1,21 @@
-import { describe, it } from '@ephox/bedrock-client';
-import { Obj, Thunk } from '@ephox/katamari';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { Obj } from '@ephox/katamari';
 import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import * as Options from 'tinymce/core/api/Options';
 import * as InlinePattern from 'tinymce/core/textpatterns/core/InlinePattern';
-import * as Pattern from 'tinymce/core/textpatterns/core/Pattern';
 import { InlinePattern as InlinePatternType, InlinePatternMatch, InlinePatternSet } from 'tinymce/core/textpatterns/core/PatternTypes';
 import { PathRange } from 'tinymce/core/textpatterns/utils/PathRange';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
+
+import { getPatternSetFor } from '../../module/test/TextPatternsUtils';
 
 interface ExpectedPatternMatch {
   readonly pattern: Partial<InlinePatternType>;
   readonly startRng: PathRange;
   readonly endRng: PathRange;
 }
-
-const getInlinePatternSetFor = (hook: TinyHooks.Hook<Editor>) => Thunk.cached((): InlinePatternSet => {
-  const editor = hook.editor();
-  const rawPatterns = Options.getTextPatterns(editor);
-  const dynamicPatternsLookup = Options.getTextPatternsLookup(editor);
-  const { blockPatterns, ...inlinePatternSet } = Pattern.createPatternSet(
-    Pattern.fromRawPatterns(rawPatterns),
-    dynamicPatternsLookup
-  );
-  return inlinePatternSet;
-});
 
 const getInlinePattern = (editor: Editor, patternSet: InlinePatternSet, space: boolean = false) =>
   InlinePattern.findPatterns(editor, patternSet, space);
@@ -65,9 +54,9 @@ const setContentAndSelection = (editor: Editor, content: string, startPath: numb
 const assertSimpleMatch = (actualMatches: InlinePatternMatch[], matchStart: string, matchEnd: string, formats: string[], startRng: PathRange, endRng: PathRange) =>
   assertPatterns(actualMatches, [{ pattern: { start: matchStart, end: matchEnd, format: formats }, startRng, endRng }]);
 
-describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
+describe('browser.tinymce.textpatterns.FindInlinePatternTest', () => {
 
-  describe('no text_patterns_lookup', () => {
+  context('no text_patterns_lookup', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       plugins: 'lists',
       text_patterns: [
@@ -81,7 +70,7 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
       base_url: '/project/tinymce/js/tinymce'
     }, [ ListsPlugin ]);
 
-    const getInlinePatternSet = getInlinePatternSetFor(hook);
+    const getInlinePatternSet = getPatternSetFor(hook);
 
     it('TINY-8778: Run on text without pattern returns no matching patterns', () => {
       const editor = hook.editor();
@@ -218,7 +207,7 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
       ]);
     });
 
-    describe('with just a single ** -> bold inline-format pattern', () => {
+    context('with just a single ** -> bold inline-format pattern', () => {
       const inlinePatternSet: InlinePatternSet = {
         inlinePatterns: [
           { type: 'inline-format', start: '**', end: '**', format: [ 'bold' ] }
@@ -319,7 +308,7 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
     });
   });
 
-  describe('with text_patterns_lookup', () => {
+  context('with text_patterns_lookup', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       text_patterns: [
         { start: '*', end: '*', format: 'italic' }
@@ -351,7 +340,7 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
       base_url: '/project/tinymce/js/tinymce'
     }, []);
 
-    const getInlinePatternSet = getInlinePatternSetFor(hook);
+    const getInlinePatternSet = getPatternSetFor(hook);
 
     it('TINY-8778: Code Pattern only runs on with code blocks', () => {
       const editor = hook.editor();
