@@ -42,8 +42,6 @@ const setup = (editor: Editor): void => {
     const hasPatterns = patternSet.inlinePatterns.length > 0 || hasDynamicPatterns();
 
     if (!isSelectionCollapsed && hasPatterns) {
-      // Passing through just the part of PatternSet that is relevant for inline
-      // patterns.
       KeyHandler.handleInlineKey(editor, patternSet);
     }
   };

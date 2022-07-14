@@ -67,8 +67,6 @@ const findPatterns = (editor: Editor, patternSet: PatternSet): BlockPatternMatch
   const rng = editor.selection.getRng();
 
   return Utils.getParentBlock(editor, rng).filter((block) => {
-    // INVESTIGATE: Why do we only want to continue processing block patterns
-    // if the block tag is the same as the forced root block tag?
     const forcedRootBlock = Options.getForcedRootBlock(editor);
     const matchesForcedRootBlock = dom.is(block, forcedRootBlock);
     return block !== null && matchesForcedRootBlock;
