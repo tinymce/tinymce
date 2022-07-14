@@ -40,15 +40,7 @@ const setup = (editor: Editor): void => {
     const hasPatterns = patternSet.inlinePatterns.length > 0 || hasDynamicPatterns();
 
     if (hasPatterns) {
-      // Passing through just the part of PatternSet that is relevant for inline
-      // patterns.
-      KeyHandler.handleInlineKey(
-        editor,
-        {
-          inlinePatterns: patternSet.inlinePatterns,
-          dynamicPatternsLookup: patternSet.dynamicPatternsLookup
-        }
-      );
+      KeyHandler.handleInlineKey(editor, patternSet);
     }
   };
 
