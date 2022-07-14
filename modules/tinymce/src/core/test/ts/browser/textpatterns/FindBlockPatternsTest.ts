@@ -6,7 +6,9 @@ import Editor from 'tinymce/core/api/Editor';
 import * as BlockPattern from 'tinymce/core/textpatterns/core/BlockPattern';
 import { getPatternSetFor } from '../../module/test/TextPatternsUtils';
 
-describe('atomic.tinymce.textpatterns.FindBlockPatternTest', () => {
+// Same as modules/tinymce/src/core/test/ts/atomic/textpatterns/FindBlockPatternsTest.ts
+// but uses DOM and includes tests for text_patterns_lookup
+describe('atomic.tinymce.textpatterns.FindBlockPatternsTest', () => {
 
   context('no text_patterns_lookup', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
