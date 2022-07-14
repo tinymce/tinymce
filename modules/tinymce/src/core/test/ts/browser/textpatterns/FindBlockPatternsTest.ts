@@ -1,9 +1,10 @@
-import { describe, it, context } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as BlockPattern from 'tinymce/core/textpatterns/core/BlockPattern';
+
 import { getPatternSetFor } from '../../module/test/TextPatternsUtils';
 
 // Same as modules/tinymce/src/core/test/ts/atomic/textpatterns/FindBlockPatternsTest.ts

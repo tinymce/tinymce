@@ -116,7 +116,7 @@ const fromRawPatterns = (patterns: RawPattern[]): Pattern[] => {
   return normalized.values;
 };
 
-const fromRawPatternsLookup = (lookupFn: (ctx: any) => RawPattern[]): DynamicPatternsLookup => {
+const fromRawPatternsLookup = (lookupFn: (ctx: DynamicPatternContext) => RawPattern[]): DynamicPatternsLookup => {
   return (ctx: DynamicPatternContext) => {
     const rawPatterns = lookupFn({
       text: ctx.text,
