@@ -1,9 +1,8 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { CellLocation, CellNavigation, TableLookup } from '@ephox/snooker';
-import { Attribute, Compare, ContentEditable, CursorPosition, Insert, SimSelection, SugarElement, SugarNode, WindowSelection } from '@ephox/sugar';
+import { Compare, ContentEditable, CursorPosition, Insert, SimSelection, SugarElement, SugarNode, WindowSelection } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
-import * as Options from '../api/Options';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import { isFakeCaretTableBrowser } from '../caret/FakeCaret';
@@ -14,6 +13,7 @@ import {
 } from '../caret/LineReader';
 import { findClosestPositionInAboveCell, findClosestPositionInBelowCell } from '../caret/TableCells';
 import * as NodeType from '../dom/NodeType';
+import * as ForceBlocks from '../ForceBlocks';
 import * as NavigationUtils from './NavigationUtils';
 
 type PositionsUntilFn = (scope: HTMLElement, start: CaretPosition) => LineInfo;
@@ -70,26 +70,13 @@ const getClosestBelowPosition = (root: HTMLElement, table: HTMLElement, start: C
 
 const getTable = (previous: boolean, pos: CaretPosition): Optional<HTMLElement> => {
   const node = pos.getNode(previous);
-  return NodeType.isElement(node) && node.nodeName === 'TABLE' ? Optional.some(node) : Optional.none();
+  return NodeType.isTable(node) ? Optional.some(node) : Optional.none();
 };
 
 const renderBlock = (down: boolean, editor: Editor, table: HTMLElement) => {
-  const forcedRootBlock = Options.getForcedRootBlock(editor);
-
   editor.undoManager.transact(() => {
-    const element = SugarElement.fromTag(forcedRootBlock);
-    Attribute.setAll(element, Options.getForcedRootBlockAttrs(editor));
-    Insert.append(element, SugarElement.fromTag('br'));
-
-    if (down) {
-      Insert.after(SugarElement.fromDom(table), element);
-    } else {
-      Insert.before(SugarElement.fromDom(table), element);
-    }
-
-    const rng = editor.dom.createRng();
-    rng.setStart(element.dom, 0);
-    rng.setEnd(element.dom, 0);
+    const insertFn = down ? Insert.after : Insert.before;
+    const rng = ForceBlocks.insertEmptyLine(editor, SugarElement.fromDom(table), insertFn);
     NavigationUtils.moveToRange(editor, rng);
   });
 };

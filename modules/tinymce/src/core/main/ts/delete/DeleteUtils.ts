@@ -36,16 +36,9 @@ const getParentBlock = (rootNode: SugarElement<Node>, elm: SugarElement<Node>): 
   }
 };
 
-const placeCaretInEmptyBody = (editor: Editor): void => {
-  const body = editor.getBody();
-  const node = body.firstChild && editor.dom.isBlock(body.firstChild) ? body.firstChild : body;
-  editor.selection.setCursorLocation(node, 0);
-};
-
-const paddEmptyBody = (editor: Editor): void => {
+const paddEmptyBody = (editor: Editor, moveSelection: boolean = true): void => {
   if (editor.dom.isEmpty(editor.getBody())) {
-    editor.setContent('');
-    placeCaretInEmptyBody(editor);
+    editor.setContent('', { no_selection: !moveSelection });
   }
 };
 
@@ -78,8 +71,11 @@ const deleteRangeContents = (editor: Editor, rng: Range, root: SugarElement<HTML
   rng.deleteContents();
   // Pad the last block node
   const lastNode = freefallRtl(root).getOr(root);
-  const lastBlock = SugarElement.fromDom(editor.dom.getParent(lastNode.dom, editor.dom.isBlock));
-  if (Empty.isEmpty(lastBlock)) {
+  const lastBlock = SugarElement.fromDom(editor.dom.getParent(lastNode.dom, editor.dom.isBlock) ?? root.dom);
+  // If the block is the editor body then we need to insert the root block as well
+  if (lastBlock.dom === editor.getBody()) {
+    paddEmptyBody(editor, moveSelection);
+  } else if (Empty.isEmpty(lastBlock)) {
     PaddingBr.fillWithPaddingBr(lastBlock);
     if (moveSelection) {
       editor.selection.setCursorLocation(lastBlock.dom, 0);
