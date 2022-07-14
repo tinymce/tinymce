@@ -91,13 +91,11 @@ describe('browser.tinymce.core.textpatterns.FindBlockPatternTest', () => {
         { start: '###', format: 'h3' },
         { start: '' }
       ],
-      text_patterns_lookup: (_ctx) => {
-        return [
-          { start: '####', format: 'h4' },
-          { start: 'TBA', cmd: 'mceInsertContent', value: 'To be announced' },
-          { start: '###', cmd: 'mceInsertContent', value: 'h3 heading' }
-        ];
-      },
+      text_patterns_lookup: (_ctx) => [
+        { start: '####', format: 'h4' },
+        { start: 'TBA', cmd: 'mceInsertContent', value: 'To be announced' },
+        { start: '###', cmd: 'mceInsertContent', value: 'h3 heading' }
+      ],
       base_url: '/project/tinymce/js/tinymce'
     }, []);
 
