@@ -9,6 +9,8 @@ const setup = (editor: Editor): void => {
   const charCodes = [ ',', '.', ';', ':', '!', '?' ];
   const keyCodes = [ 32 ];
 
+  const isSelectionCollapsed = editor.selection.isCollapsed();
+
   // This is a thunk so that they reflect changes in the underlying options each time they are requested.
   const getPatternSet = () => Pattern.createPatternSet(
     Options.getTextPatterns(editor),
@@ -27,7 +29,7 @@ const setup = (editor: Editor): void => {
         patternSet.blockPatterns.length > 0 ||
         hasDynamicPatterns();
 
-      if (hasPatterns && KeyHandler.handleEnter(editor, patternSet)) {
+      if (!isSelectionCollapsed && hasPatterns && KeyHandler.handleEnter(editor, patternSet)) {
         e.preventDefault();
       }
     }
@@ -39,7 +41,7 @@ const setup = (editor: Editor): void => {
     // Do not process anything if we don't have any inline patterns or dynamic lookup defined
     const hasPatterns = patternSet.inlinePatterns.length > 0 || hasDynamicPatterns();
 
-    if (hasPatterns) {
+    if (!isSelectionCollapsed && hasPatterns) {
       // Passing through just the part of PatternSet that is relevant for inline
       // patterns.
       KeyHandler.handleInlineKey(

@@ -9,11 +9,6 @@ import { InlinePatternSet, PatternSet } from '../core/PatternTypes';
 import * as Utils from '../utils/Utils';
 
 const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
-  // Skip checking when the selection isn't collapsed
-  if (!editor.selection.isCollapsed()) {
-    return false;
-  }
-
   // Find any matches
   const inlineMatches = InlinePattern.findPatterns(editor, patternSet, false);
   const blockMatches = BlockPattern.findPatterns(editor, patternSet);
