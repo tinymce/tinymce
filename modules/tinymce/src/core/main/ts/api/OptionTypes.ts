@@ -192,6 +192,7 @@ interface BaseEditorOptions {
   table_tab_navigation?: boolean;
   target?: HTMLElement;
   text_patterns?: RawPattern[] | false;
+  text_patterns_lookup?: DynamicPatternsLookup;
   theme?: string | ThemeInitFunc | false;
   theme_url?: string;
   toolbar?: boolean | string | string[] | Array<ToolbarGroup>;
@@ -277,7 +278,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   preview_styles: string;
   readonly: boolean;
   text_patterns: Pattern[];
-  text_patterns_lookup?: DynamicPatternsLookup;
+  text_patterns_lookup: DynamicPatternsLookup;
   visual: boolean;
   visual_anchor_class: string;
   visual_table_class: string;

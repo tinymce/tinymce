@@ -52,9 +52,9 @@ export type BlockPattern = BlockFormatPattern | BlockCmdPattern;
 export type Pattern = InlinePattern | BlockPattern;
 
 export interface DynamicPatternContext {
-  text: string; // the string from the start of the block to the cursor
-  allowTrailingSpaces: boolean; // whether or not to provide text patterns that have trailing spaces
-  block: Node; // the parent block node
+  readonly text: string; // the string from the start of the block to the cursor
+  readonly allowTrailingSpaces: boolean; // whether or not to provide text patterns that have trailing spaces
+  readonly block: Node; // the parent block node
 }
 
 export type DynamicPatternsLookup = (ctx: DynamicPatternContext) => Pattern[];
