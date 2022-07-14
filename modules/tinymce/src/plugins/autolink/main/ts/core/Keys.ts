@@ -209,7 +209,7 @@ const handleEnter = (editor: Editor, e: EditorEvent<KeyboardEvent>): void => {
     // If we have a match then we need to take over the enter behaviour to ensure the undo stack
     // allows undoing just the URL change without undoing the enter
     e.preventDefault();
-    editor.execCommand('mceInsertNewLine');
+    editor.execCommand('mceInsertNewLine', false, e);
     convertToLink(editor, result);
   }
 };
