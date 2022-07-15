@@ -58,6 +58,7 @@ export interface DynamicPatternContext {
 }
 
 export type DynamicPatternsLookup = (ctx: DynamicPatternContext) => Pattern[];
+export type RawDynamicPatternsLookup = (ctx: DynamicPatternContext) => RawPattern[];
 
 // NOTE: A PatternSet should be looked up from the Options *each* time that text_patterns are
 // processed, so that text_patterns respond to changes in options. This is required for some

@@ -24,6 +24,7 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
     }, []);
 
     const getPatternSet = getPatternSetFor(hook);
+
     // TODO: This may not be the expected behaviour, depending on the decisions that being made in TINY-4303
     it('TBA: # triggers heading match when block tag matches forced_root_block', () => {
       const editor = hook.editor();

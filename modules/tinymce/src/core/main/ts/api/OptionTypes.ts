@@ -1,5 +1,5 @@
 import { UploadHandler } from '../file/Uploader';
-import { DynamicPatternsLookup, Pattern, RawPattern } from '../textpatterns/core/PatternTypes';
+import { Pattern, RawDynamicPatternsLookup, RawPattern } from '../textpatterns/core/PatternTypes';
 import Editor from './Editor';
 import { PastePostProcessEvent, PastePreProcessEvent } from './EventTypes';
 import { Formats } from './fmt/Format';
@@ -192,7 +192,7 @@ interface BaseEditorOptions {
   table_tab_navigation?: boolean;
   target?: HTMLElement;
   text_patterns?: RawPattern[] | false;
-  text_patterns_lookup?: DynamicPatternsLookup;
+  text_patterns_lookup?: RawDynamicPatternsLookup;
   theme?: string | ThemeInitFunc | false;
   theme_url?: string;
   toolbar?: boolean | string | string[] | Array<ToolbarGroup>;
@@ -278,7 +278,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   preview_styles: string;
   readonly: boolean;
   text_patterns: Pattern[];
-  text_patterns_lookup: DynamicPatternsLookup;
+  text_patterns_lookup: RawDynamicPatternsLookup;
   visual: boolean;
   visual_anchor_class: string;
   visual_table_class: string;
