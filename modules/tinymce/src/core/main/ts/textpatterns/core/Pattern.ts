@@ -119,7 +119,6 @@ const fromRawPatterns = (patterns: RawPattern[]): Pattern[] => {
 const fromRawPatternsLookup = (lookupFn: (ctx: DynamicPatternContext) => RawPattern[]): DynamicPatternsLookup => {
   return (ctx: DynamicPatternContext) => {
     const rawPatterns = lookupFn(ctx);
-
     return fromRawPatterns(rawPatterns);
   };
 };
