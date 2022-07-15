@@ -16,23 +16,36 @@ const trimEmptyContents = (editor: Editor, html: string): string => {
   return html.replace(emptyRegExp, '');
 };
 
+const bogusAllRegExp = /<(\w+) [^>]*data-mce-bogus="(all|1)"[^>]*>/g;
+
+const getPlainTextContent = (editor: Editor, body: HTMLElement) => {
+  let content: Content;
+
+  const doc = editor.getDoc();
+  content = body.innerHTML.replace(bogusAllRegExp, Unicode.zeroWidth);
+
+  const parseBody = doc.createElement('body');
+  parseBody.style.position = 'fixed';
+  parseBody.style.left = '-9999999px';
+  parseBody.style.top = '0px';
+
+  const root = doc.documentElement;
+  root.appendChild(parseBody);
+  parseBody.innerHTML = content;
+
+  content = Zwsp.trim(Unicode.removeZwsp(parseBody.innerText));
+  root.removeChild(parseBody);
+
+  return content;
+};
+
 const getContentFromBody = (editor: Editor, args: GetContentArgs, body: HTMLElement): Content => {
   let content: Content;
 
   if (args.format === 'raw') {
     content = Tools.trim(TrimHtml.trimExternal(editor.serializer, body.innerHTML));
   } else if (args.format === 'text') {
-    const doc = editor.getDoc();
-    content = body.innerHTML.replace(/<br data-mce-bogus="1">/g, Unicode.zeroWidth);
-    const parseBody = doc.createElement('body');
-    parseBody.style.position = 'fixed';
-    parseBody.style.left = '-9999999px';
-    parseBody.style.top = '0px';
-    const root = doc.documentElement;
-    root.appendChild(parseBody);
-    parseBody.innerHTML = content;
-    content = Zwsp.trim(Unicode.removeZwsp(parseBody.innerText));
-    root.removeChild(parseBody);
+    content = getPlainTextContent(editor, body);
   } else if (args.format === 'tree') {
     content = editor.serializer.serialize(body, args);
   } else {
