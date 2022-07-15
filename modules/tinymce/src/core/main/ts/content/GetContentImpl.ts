@@ -1,11 +1,11 @@
-import { Fun, Optional, Type, Unicode } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { Arr, Fun, Optional, Type, Unicode } from '@ephox/katamari';
+import { Attribute, Css, Html, Insert, Remove, SelectorFilter, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import AstNode from '../api/html/Node';
 import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';
-import { isWsPreserveElement } from '../dom/ElementType';
+import * as ElementType from '../dom/ElementType';
 import * as TrimHtml from '../dom/TrimHtml';
 import * as Zwsp from '../text/Zwsp';
 import { Content, GetContentArgs } from './ContentTypes';
@@ -16,25 +16,40 @@ const trimEmptyContents = (editor: Editor, html: string): string => {
   return html.replace(emptyRegExp, '');
 };
 
-const bogusAllRegExp = /<(\w+) [^>]*data-mce-bogus="(all|1)"[^>]*>/g;
-
 const getPlainTextContent = (editor: Editor, body: HTMLElement) => {
-  let content: Content;
-
   const doc = editor.getDoc();
-  content = body.innerHTML.replace(bogusAllRegExp, Unicode.zeroWidth);
+  const dos = SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getBody()));
 
-  const parseBody = doc.createElement('body');
-  parseBody.style.position = 'fixed';
-  parseBody.style.left = '-9999999px';
-  parseBody.style.top = '0px';
+  const offscreenDiv = SugarElement.fromTag('div', doc);
+  Attribute.set(offscreenDiv, 'data-mce-bogus', 'all');
+  Css.setAll(offscreenDiv, {
+    position: 'fixed',
+    left: '-9999999px',
+    top: '0'
+  });
+  Html.set(offscreenDiv, body.innerHTML);
 
-  const root = doc.documentElement;
-  root.appendChild(parseBody);
-  parseBody.innerHTML = content;
+  // Cleanup bogus elements
+  const bogusElements = SelectorFilter.descendants(offscreenDiv, '[data-mce-bogus]');
+  Arr.each(bogusElements, (elem) => {
+    const bogusValue = Attribute.get(elem, 'data-mce-bogus');
+    if (bogusValue === 'all') {
+      Remove.remove(elem);
+    } else if (ElementType.isBr(elem)) {
+      // Need to keep bogus padding brs represented as a zero-width space so that they aren't collapsed by the browser
+      Insert.before(elem, SugarElement.fromText(Unicode.zeroWidth));
+      Remove.remove(elem);
+    } else {
+      Remove.unwrap(elem);
+    }
+  });
 
-  content = Zwsp.trim(Unicode.removeZwsp(parseBody.innerText));
-  root.removeChild(parseBody);
+  // Append the wrapper element so that the browser will evaluate styles when getting the `innerText`
+  const root = SugarShadowDom.getContentContainer(dos);
+  Insert.append(root, offscreenDiv);
+
+  const content = Zwsp.trim(offscreenDiv.dom.innerText);
+  Remove.remove(offscreenDiv);
 
   return content;
 };
@@ -53,7 +68,7 @@ const getContentFromBody = (editor: Editor, args: GetContentArgs, body: HTMLElem
   }
 
   // Trim if not using a whitespace preserve format/element
-  const shouldTrim = args.format !== 'text' && !isWsPreserveElement(SugarElement.fromDom(body));
+  const shouldTrim = args.format !== 'text' && !ElementType.isWsPreserveElement(SugarElement.fromDom(body));
   return shouldTrim && Type.isString(content) ? Tools.trim(content) : content;
 };
 

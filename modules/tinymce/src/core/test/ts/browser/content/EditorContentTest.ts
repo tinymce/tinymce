@@ -56,9 +56,9 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
     assert.isTrue(isExpectedTypes);
   };
 
-  const testGetTextContent = (content: string, expected: string) => {
+  const testGetTextContent = (content: string, expected: string, format: 'html' | 'raw' = 'html') => {
     const editor = hook.editor();
-    editor.setContent(content);
+    editor.setContent(content, { format });
     TinyAssertions.assertContent(editor, expected, { format: 'text' });
     assertEventsFiredInOrder();
     assertEventsContentType();
@@ -100,6 +100,8 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
   it('TINY-8578: getContent text, repeating two empty lines in divs', () => testGetTextContent('<div><p></p><p></p></div><div><p></p><p></p></div>', '\n\n\n\n\n\n'));
 
   it('TINY-8578: getContent text, two empty lines', () => testGetTextContent('<p></p><p></p>', '\n\n'));
+
+  it('TINY-8578: getContent text with bogus element', () => testGetTextContent(`<p data-mce-bogus="all">content</p><p></p>`, '', 'raw'));
 
   it('TINY-6281: getContent text with empty editor', () => testGetTextContent('', ''));
 
