@@ -146,7 +146,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
           contentEditable = contentEditableValue === 'true';
           // Unless the noneditable element is wrappable, we don't want to wrap the container, only it's editable children
           hasContentEditableState = true;
-          isWrappableNoneditableElm = FormatUtils.isWrappableNoneditable(dom, node);
+          isWrappableNoneditableElm = FormatUtils.isWrappableNoneditable(ed, node);
         }
 
         const isMatchingWrappingBlock = isWrappingBlockFormat && MatchFormat.matchNode(ed, node, name, vars);
@@ -315,7 +315,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
       }
     }
 
-    if (formatApplied || !FormatUtils.isWrappableNoneditable(dom, node)) {
+    if (formatApplied || !FormatUtils.isWrappableNoneditable(ed, node)) {
       Events.fireFormatApply(ed, name, selectedNode, vars);
       return;
     }

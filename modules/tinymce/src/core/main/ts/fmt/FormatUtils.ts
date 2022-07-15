@@ -1,10 +1,12 @@
 import { Transformations } from '@ephox/acid';
 import { Arr, Obj, Optionals, Type } from '@ephox/katamari';
+import { Selectors, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import EditorSelection from '../api/dom/Selection';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
+import * as Options from '../api/Options';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as NodeType from '../dom/NodeType';
 import * as Whitespace from '../text/Whitespace';
@@ -104,14 +106,24 @@ const isEmptyTextNode = (node: Node | null): boolean => {
   return Type.isNonNullable(node) && NodeType.isText(node) && node.length === 0;
 };
 
+const isWrapNoneditableTarget = (editor: Editor, node: Node): boolean => {
+  const selectors = [ '[data-mce-cef-wrappable]' ].concat(Options.getWrapNoneditableSelectors(editor)).join(',');
+  return Selectors.is(SugarElement.fromDom(node), selectors);
+};
+
 // A noneditable element is wrappable if it:
-// - has a specific data attribute to indicate that it can be wrapped
+// - is valid target (has data-mce-cef-wrappable attribute or matches selector from option)
 // - has no editable descendants - removing formats in the editable region can result in the wrapped noneditable being split which is undesirable
-const isWrappableNoneditable = (dom: DOMUtils, node: Node): boolean =>
-  isElementNode(node) &&
-  dom.getContentEditable(node) === 'false' &&
-  dom.getAttrib(node, 'data-mce-cef-wrappable') === 'true' &&
-  dom.select('[contenteditable="true"]', node).length === 0;
+const isWrappableNoneditable = (editor: Editor, node: Node): boolean => {
+  const dom = editor.dom;
+
+  return (
+    isElementNode(node) &&
+    dom.getContentEditable(node) === 'false' &&
+    isWrapNoneditableTarget(editor, node) &&
+    dom.select('[contenteditable="true"]', node).length === 0
+  );
+};
 
 /**
  * Replaces variables in the value. The variable format is %var.

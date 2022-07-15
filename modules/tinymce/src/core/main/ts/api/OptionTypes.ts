@@ -109,6 +109,7 @@ interface BaseEditorOptions {
   forced_root_block?: string;
   forced_root_block_attrs?: Record<string, string>;
   formats?: Formats;
+  format_wrap_noneditable_selectors?: string[];
   height?: number | string;
   hidden_input?: boolean;
   icons?: string;

@@ -1,4 +1,4 @@
-import { context, describe, it } from '@ephox/bedrock-client';
+import { after, before, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Type } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
@@ -76,6 +76,16 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
   };
 
   context('noneditable inline elements', () => {
+    before(() => {
+      const editor = hook.editor();
+      editor.options.set('format_wrap_noneditable_selectors', [ 'span[data-wrappable="true"]' ]);
+    });
+
+    after(() => {
+      const editor = hook.editor();
+      editor.options.unset('format_wrap_noneditable_selectors');
+    });
+
     const selectNoneditableSpan = (editor: Editor) =>
       TinySelections.select(editor, 'span[contenteditable="false"]', []);
 
@@ -89,11 +99,11 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
         Arr.each([
           {
             label: 'wrappable noneditable span',
-            noneditableHtml: '<span contenteditable="false" data-mce-cef-wrappable="true">second</span>'
+            noneditableHtml: '<span contenteditable="false" data-wrappable="true">second</span>'
           },
           {
             label: 'wrappable noneditable span with inner format',
-            noneditableHtml: `<span contenteditable="false" data-mce-cef-wrappable="true">s<${format.html}>eco</${format.tag}>nd</span>`
+            noneditableHtml: `<span contenteditable="false" data-wrappable="true">s<${format.html}>eco</${format.tag}>nd</span>`
           },
         ], (scenario) => {
           const { label, noneditableHtml } = scenario;
@@ -438,20 +448,30 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
   });
 
   context('noneditable blocks', () => {
+    before(() => {
+      const editor = hook.editor();
+      editor.options.set('format_wrap_noneditable_selectors', [ 'p[data-wrappable="true"]' ]);
+    });
+
+    after(() => {
+      const editor = hook.editor();
+      editor.options.unset('format_wrap_noneditable_selectors');
+    });
+
     const toggleBlockquote = toggleCustomFormat('blockquote');
     const pTest = pTestFormat(toggleBlockquote);
     const selectCEF = (editor: Editor) => TinySelections.select(editor, 'p[contenteditable="false"]', []);
 
     it('TINY-8842: select noneditable, toggle wrapper format, select noneditable, toggle wrapper format', async () => {
       const editor = hook.editor();
-      editor.setContent(`<p>before</p><p contenteditable="false" data-mce-cef-wrappable="true">noneditable</p><p>after</p>`);
+      editor.setContent(`<p>before</p><p contenteditable="false" data-wrappable="true">noneditable</p><p>after</p>`);
       await pTest(editor, [
         {
           select: selectCEF,
           expectedHtml: [
             '<p>before</p>',
             '<blockquote>',
-            '<p contenteditable="false" data-mce-cef-wrappable="true">noneditable</p>',
+            '<p contenteditable="false" data-wrappable="true">noneditable</p>',
             '</blockquote>',
             '<p>after</p>'
           ].join('\n')
@@ -460,7 +480,7 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
           select: selectCEF,
           expectedHtml: [
             '<p>before</p>',
-            '<p contenteditable="false" data-mce-cef-wrappable="true">noneditable</p>',
+            '<p contenteditable="false" data-wrappable="true">noneditable</p>',
             '<p>after</p>'
           ].join('\n')
         },
