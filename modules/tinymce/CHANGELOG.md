@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The editor focused via the `auto_focus` option was not scrolled into the viewport #TINY-8785
 - Selecting a figure with `class="image"` would incorrectly highlight the link toolbar button #TINY-8832
 
+## 6.1.1 - TBA
+
+### Fixed
+- An exception was thrown when deleting all content if the start or end of the document had a `contenteditable="false"` element #TINY-8877
+- When a sidebar was opened using the `sidebar_show` option, its associated toggle button was not highlighted #TINY-8873
+
 ## 6.1.0 - 2022-06-29
 
 ### Added

@@ -3,7 +3,7 @@ import { TestHelpers } from '@ephox/alloy';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Sidebar } from '@ephox/bridge';
 import { SugarBody, SugarElement, Traverse } from '@ephox/sugar';
-import { McEditor } from '@ephox/wrap-mcagar';
+import { McEditor, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -23,6 +23,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
 
     return {
       base_url: '/project/tinymce/js/tinymce',
+      toolbar: 'sidebarone sidebartwo',
       setup: (ed) => {
         ed.ui.registry.addSidebar('sidebarone', {
           tooltip: 'side bar one',
@@ -30,7 +31,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
           onShow: logEvent('sidebarone:show'),
         });
         ed.ui.registry.addSidebar('SideBarTwo', {
-          tooltip: 'side bar one',
+          tooltip: 'side bar two',
           icon: 'comment',
           onShow: logEvent('SideBarTwo:show'),
         });
@@ -41,6 +42,13 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
   const assertNotAnimating = () => UiFinder.notExists(SugarBody.body(), '.tox-sidebar--sliding-growing');
   const assertSidebarOpen = () => UiFinder.exists(SugarBody.body(), '.tox-sidebar--sliding-open');
   const assertSidebarClosed = () => UiFinder.notExists(SugarBody.body(), '.tox-sidebar--sliding-open');
+  const pAssertToolbarActiveStates = async (editor: Editor, states: [ boolean, boolean ]) => {
+    const pAssertToolbarButtonState = (editor: Editor, selector: string, active: boolean) =>
+      TinyUiActions.pWaitForUi(editor, `button[aria-label="${selector}"][aria-pressed="${active}"]`);
+
+    await pAssertToolbarButtonState(editor, 'side bar one', states[0]);
+    await pAssertToolbarButtonState(editor, 'side bar two', states[1]);
+  };
 
   beforeEach(() => {
     store.clear();
@@ -52,6 +60,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
     });
     store.assertEq('Asserting initial show of sidebars', []);
     assertSidebarClosed();
+    await pAssertToolbarActiveStates(editor, [ false, false ]);
     McEditor.remove(editor);
   });
 
@@ -62,6 +71,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
     });
     assertNotAnimating();
     assertSidebarOpen();
+    await pAssertToolbarActiveStates(editor, [ true, false ]);
     store.assertEq('Asserting initial show of sidebars', [
       {
         name: 'sidebarone:show',
@@ -78,6 +88,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
     });
     assertNotAnimating();
     assertSidebarOpen();
+    await pAssertToolbarActiveStates(editor, [ false, true ]);
     store.assertEq('Asserting initial show of sidebars', [
       {
         name: 'SideBarTwo:show',
@@ -105,10 +116,12 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
 
   it('TINY-8710: Show no sidebar if the name does not exist', async () => {
     const editor = await McEditor.pFromSettings<Editor>({
-      ...settingsFactory(store)
+      ...settingsFactory(store),
+      sidebar_show: 'noexistsidebar'
     });
     store.assertEq('Asserting initial show of sidebars', []);
     assertSidebarClosed();
+    await pAssertToolbarActiveStates(editor, [ false, false ]);
     McEditor.remove(editor);
   });
 });
