@@ -19,7 +19,7 @@ const setup = (editor: Editor): void => {
   const hasDynamicPatterns = () => Options.hasTextPatternsLookup(editor);
 
   editor.on('keydown', (e) => {
-    if (e.keyCode === 13 && !VK.modifierPressed(e)) {
+    if (e.keyCode === 13 && !VK.modifierPressed(e) && editor.selection.isCollapsed()) {
       const patternSet = getPatternSet();
       // Do not process anything if we don't have any inline patterns, block patterns,
       // or dynamic lookup defined
@@ -27,7 +27,7 @@ const setup = (editor: Editor): void => {
         patternSet.blockPatterns.length > 0 ||
         hasDynamicPatterns();
 
-      if (editor.selection.isCollapsed() && hasPatterns && KeyHandler.handleEnter(editor, patternSet)) {
+      if (hasPatterns && KeyHandler.handleEnter(editor, patternSet)) {
         e.preventDefault();
       }
     }
