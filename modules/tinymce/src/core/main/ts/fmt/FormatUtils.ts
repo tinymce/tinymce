@@ -1,5 +1,5 @@
 import { Transformations } from '@ephox/acid';
-import { Arr, Obj, Optionals, Type } from '@ephox/katamari';
+import { Arr, Obj, Optionals, Strings, Type } from '@ephox/katamari';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import EditorSelection from '../api/dom/Selection';
@@ -14,8 +14,7 @@ const internalAttributesPrefixes = [
   'data-mce-',
   'data-alloy-',
   'data-snooker-',
-  '_',
-  'aria-'
+  '_'
 ];
 
 const internalDataValues = [
@@ -283,7 +282,7 @@ const shouldExpandToSelector = (format: Format): boolean =>
   isSelectorFormat(format) && format.expand !== false && !isInlineFormat(format);
 
 const attributeIsInternal = (attributeName: string): boolean =>
-  Arr.find(internalAttributesPrefixes, (value) => attributeName.indexOf(value) === 0).isSome() || Arr.contains(internalDataValues, attributeName);
+  Arr.find(internalAttributesPrefixes, (value) => Strings.startsWith(attributeName, value)).isSome() || Arr.contains(internalDataValues, attributeName);
 
 export {
   isNode,
