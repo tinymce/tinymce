@@ -7,9 +7,9 @@ import * as BlockPattern from 'tinymce/core/textpatterns/core/BlockPattern';
 
 import { getPatternSetFor } from '../../module/test/TextPatternsUtils';
 
-// Same as modules/tinymce/src/core/test/ts/atomic/textpatterns/FindBlockPatternsTest.ts
+// Similar to modules/tinymce/src/core/test/ts/atomic/textpatterns/FindBlockPatternsTest.ts
 // but uses DOM and includes tests for text_patterns_lookup
-describe('atomic.tinymce.textpatterns.FindBlockPatternsTest', () => {
+describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
 
   context('no text_patterns_lookup', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
@@ -24,7 +24,7 @@ describe('atomic.tinymce.textpatterns.FindBlockPatternsTest', () => {
     }, []);
 
     const getPatternSet = getPatternSetFor(hook);
-    // TODO: This may not be the expected behaviour, depending on the decisions that being made in https://ephocks.atlassian.net/browse/TINY-4303
+    // TODO: This may not be the expected behaviour, depending on the decisions that being made in TINY-4303
     it('TBA: # triggers heading match when block tag matches forced_root_block', () => {
       const editor = hook.editor();
       // For block patterns to execute, the block tag must be the same as the
@@ -56,7 +56,7 @@ describe('atomic.tinymce.textpatterns.FindBlockPatternsTest', () => {
       assert.deepEqual(matches, []);
     });
 
-    // TODO: This may not be the expected behaviour, depending on the decisions that being made in https://ephocks.atlassian.net/browse/TINY-4303
+    // TODO: This may not be the expected behaviour, depending on the decisions that being made in TINY-4303
     it('TBA: # does not trigger heading match when block tag does not match forced_root_block', () => {
       const editor = hook.editor();
       // For block patterns to execute, the block tag must be the same as the
@@ -141,7 +141,7 @@ describe('atomic.tinymce.textpatterns.FindBlockPatternsTest', () => {
       );
     });
 
-    // TODO: This maybe need to be fixed, depending on the decisions that being made in https://ephocks.atlassian.net/browse/TINY-4303
+    // TODO: This maybe need to be fixed, depending on the decisions that being made in TINY-4303
     it('TINY-8778: Match a heading where its block tag matches forced_root_block but its parent block does not', () => {
       const editor = hook.editor();
       editor.setContent('<div><p>#### New heading type</p></div>');
@@ -165,7 +165,7 @@ describe('atomic.tinymce.textpatterns.FindBlockPatternsTest', () => {
       );
     });
 
-    // TODO: This may not be the expected behaviour, depending on the decisions that being made in https://ephocks.atlassian.net/browse/TINY-4303
+    // TODO: This may not be the expected behaviour, depending on the decisions that being made in TINY-4303
     it('TBA: Does not trigger a match if the block tag does not match forced_root_block', () => {
       const editor = hook.editor();
       editor.setContent('<div>#### New heading type</div>');
