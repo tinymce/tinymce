@@ -13,6 +13,7 @@ import CaretPosition from '../caret/CaretPosition';
 import { CaretWalker } from '../caret/CaretWalker';
 import * as TableDelete from '../delete/TableDelete';
 import * as CefUtils from '../dom/CefUtils';
+import * as ElementType from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as FilterNode from '../html/FilterNode';
@@ -22,17 +23,17 @@ import * as SelectionUtils from '../selection/SelectionUtils';
 import { InsertContentDetails } from './ContentTypes';
 import * as InsertList from './InsertList';
 
-const wrappedElements = [ 'pre' ];
+const shouldPasteContentOnly = (dom: DOMUtils, fragment: AstNode, parentNode: Element) => {
+  const firstNode = fragment.firstChild as AstNode;
+  const lastNode = fragment.lastChild as AstNode;
 
-const shouldPasteContentOnly = (fragment: AstNode, parentNode: Element) => {
-  const firstNode = fragment.firstChild;
-
-  const isAFlattenableTag = Arr.contains(wrappedElements, firstNode.name);
+  const isWrappedElement = ElementType.isWrapElement(SugarElement.fromTag(firstNode.name));
   const isPastingInTheSameTag = firstNode.name === parentNode.tagName.toLowerCase();
-  const lastNode = fragment.lastChild.attr('data-mce-type') === 'bookmark' ? fragment.lastChild.prev : fragment.lastChild;
-  const isCopingOnlyOneTag = firstNode === lastNode;
+  const last = lastNode.attr('data-mce-type') === 'bookmark' ? lastNode.prev : lastNode;
+  const isCopyingOnlyOneTag = firstNode === last;
+  const isContentEditableTrue = dom.getContentEditable(parentNode) !== 'false';
 
-  return isCopingOnlyOneTag && isAFlattenableTag && isPastingInTheSameTag;
+  return isCopyingOnlyOneTag && isWrappedElement && isPastingInTheSameTag && isContentEditableTrue;
 };
 
 const isTableCell = NodeType.isTableCell;
@@ -260,8 +261,8 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
     return value;
   }
 
-  if (details.paste === true && shouldPasteContentOnly(fragment, parentNode)) {
-    fragment.firstChild.unwrap();
+  if (details.paste === true && shouldPasteContentOnly(dom, fragment, parentNode)) {
+    fragment.firstChild?.unwrap();
   }
 
   markFragmentElements(fragment);
