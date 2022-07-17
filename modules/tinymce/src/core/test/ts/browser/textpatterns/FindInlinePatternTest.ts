@@ -11,50 +11,49 @@ import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 
 import { getPatternSetFor } from '../../module/test/TextPatternsUtils';
 
-interface ExpectedPatternMatch {
-  readonly pattern: Partial<InlinePatternType>;
-  readonly startRng: PathRange;
-  readonly endRng: PathRange;
-}
-
-const getInlinePattern = (editor: Editor, patternSet: InlinePatternSet, space: boolean = false) =>
-  InlinePattern.findPatterns(editor, patternSet, space);
-
-const assertPatterns = (actualMatches: InlinePatternMatch[], expectedMatches: ExpectedPatternMatch[]) => {
-  assert.lengthOf(actualMatches, expectedMatches.length, 'Pattern count does not match');
-  for (let i = 0; i < expectedMatches.length; i++) {
-    const expected = expectedMatches[i];
-    const actual = actualMatches[i];
-    const pattern = actual.pattern;
-    Obj.each(expected.pattern, (value, key) => {
-      if (Obj.has<any, string>(pattern, key)) {
-        assert.deepEqual(pattern[key], value, 'Pattern ' + (i + 1) + ' property `' + key + '` is not equal');
-      } else {
-        assert.fail('Pattern ' + (i + 1) + ' property `' + key + '` is missing');
-      }
-    });
-    // prepend a 0 because we always add a root node
-    assert.deepEqual(actual.startRng.start, [ 0 ].concat(expected.startRng.start), 'start range - start path does not match');
-    assert.deepEqual(actual.startRng.end, [ 0 ].concat(expected.startRng.end), 'start range - end path does not match');
-    assert.deepEqual(actual.endRng.start, [ 0 ].concat(expected.endRng.start), 'end range - start path does not match');
-    assert.deepEqual(actual.endRng.end, [ 0 ].concat(expected.endRng.end), 'end range - end path does not match');
-  }
-};
-
-const setContentAndCursor = (editor: Editor, content: string, elementPath: number[], offset: number) => {
-  editor.setContent(`<div>${content}</div>`, { format: 'raw' });
-  TinySelections.setCursor(editor, [ 0 ].concat(elementPath), offset);
-};
-
-const setContentAndSelection = (editor: Editor, content: string, startPath: number[], soffset: number, finishPath: number[], foffset: number) => {
-  editor.setContent(`<div>${content}</div>`, { format: 'raw' });
-  TinySelections.setSelection(editor, [ 0 ].concat(startPath), soffset, [ 0 ].concat(finishPath), foffset);
-};
-
-const assertSimpleMatch = (actualMatches: InlinePatternMatch[], matchStart: string, matchEnd: string, formats: string[], startRng: PathRange, endRng: PathRange) =>
-  assertPatterns(actualMatches, [{ pattern: { start: matchStart, end: matchEnd, format: formats }, startRng, endRng }]);
-
 describe('browser.tinymce.textpatterns.FindInlinePatternTest', () => {
+  interface ExpectedPatternMatch {
+    readonly pattern: Partial<InlinePatternType>;
+    readonly startRng: PathRange;
+    readonly endRng: PathRange;
+  }
+
+  const getInlinePattern = (editor: Editor, patternSet: InlinePatternSet, space: boolean = false) =>
+    InlinePattern.findPatterns(editor, patternSet, space);
+
+  const assertPatterns = (actualMatches: InlinePatternMatch[], expectedMatches: ExpectedPatternMatch[]) => {
+    assert.lengthOf(actualMatches, expectedMatches.length, 'Pattern count does not match');
+    for (let i = 0; i < expectedMatches.length; i++) {
+      const expected = expectedMatches[i];
+      const actual = actualMatches[i];
+      const pattern = actual.pattern;
+      Obj.each(expected.pattern, (value, key) => {
+        if (Obj.has<any, string>(pattern, key)) {
+          assert.deepEqual(pattern[key], value, 'Pattern ' + (i + 1) + ' property `' + key + '` is not equal');
+        } else {
+          assert.fail('Pattern ' + (i + 1) + ' property `' + key + '` is missing');
+        }
+      });
+      // prepend a 0 because we always add a root node
+      assert.deepEqual(actual.startRng.start, [ 0 ].concat(expected.startRng.start), 'start range - start path does not match');
+      assert.deepEqual(actual.startRng.end, [ 0 ].concat(expected.startRng.end), 'start range - end path does not match');
+      assert.deepEqual(actual.endRng.start, [ 0 ].concat(expected.endRng.start), 'end range - start path does not match');
+      assert.deepEqual(actual.endRng.end, [ 0 ].concat(expected.endRng.end), 'end range - end path does not match');
+    }
+  };
+
+  const setContentAndCursor = (editor: Editor, content: string, elementPath: number[], offset: number) => {
+    editor.setContent(`<div>${content}</div>`, { format: 'raw' });
+    TinySelections.setCursor(editor, [ 0 ].concat(elementPath), offset);
+  };
+
+  const setContentAndSelection = (editor: Editor, content: string, startPath: number[], soffset: number, finishPath: number[], foffset: number) => {
+    editor.setContent(`<div>${content}</div>`, { format: 'raw' });
+    TinySelections.setSelection(editor, [ 0 ].concat(startPath), soffset, [ 0 ].concat(finishPath), foffset);
+  };
+
+  const assertSimpleMatch = (actualMatches: InlinePatternMatch[], matchStart: string, matchEnd: string, formats: string[], startRng: PathRange, endRng: PathRange) =>
+    assertPatterns(actualMatches, [{ pattern: { start: matchStart, end: matchEnd, format: formats }, startRng, endRng }]);
 
   context('no text_patterns_lookup', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
