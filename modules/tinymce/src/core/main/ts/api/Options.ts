@@ -737,8 +737,7 @@ const register = (editor: Editor): void => {
     processor: (value) => {
       if (Type.isFunction(value)) {
         return {
-          // This (ctx => value(ctx)) isn't ETA reduced so that it compiles
-          value: Pattern.fromRawPatternsLookup((ctx) => value(ctx)),
+          value: Pattern.fromRawPatternsLookup(value as PatternTypes.RawDynamicPatternsLookup),
           valid: true,
         };
       } else {
