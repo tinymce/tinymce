@@ -9,9 +9,9 @@ import { InlinePatternSet, PatternSet } from '../core/PatternTypes';
 import * as Utils from '../utils/Utils';
 
 const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
-  // TINY-8779: mceInsertNewLine calls normalize() which alters the structure of the body content,
-  // in which text nodes of a paragraph are merged into one. This makes the range of any matching patterns become invalid
-  // as the text nodes are no longer existed after normalization. So do a normalize() prior finding any matches
+  // TINY-8779: The applying text pattern logic throws a range error because it attempts to set the range to a non-existing text node.
+  // The undoManager.extra() stores the content as a string and then set it back via setContent() which results in the fragmented text nodes being merged.
+  // So call normalize() to merge fragmented text nodes before finding matching patterns
   editor.getBody().normalize();
 
   // Find any matches

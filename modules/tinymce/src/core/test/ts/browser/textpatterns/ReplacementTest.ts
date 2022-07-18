@@ -3,7 +3,6 @@ import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { InsertAll, Remove, SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -153,9 +152,7 @@ describe('browser.tinymce.core.textpatterns.ReplacementTest', () => {
     TinyContentActions.keystroke(editor, Keys.enter());
   });
 
-  context('TINY-8779: Matches text nodes in a paragraph', () => {
-    let editor: Editor;
-
+  context('Matches text nodes in a paragraph', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       text_patterns: [
         { start: 'one_error', replacement: 'no_error' }
@@ -165,25 +162,21 @@ describe('browser.tinymce.core.textpatterns.ReplacementTest', () => {
     }, [ ]);
 
     const setCursorAndPressEnterAndAssert = (editor: Editor, texts: string[], expected: string) => {
+      editor.setContent('<p></p>');
       const targetParagraph = editor.dom.select('p')[0];
       Arr.each(texts, (t) => targetParagraph.appendChild(document.createTextNode(t)));
       editor.focus();
       TinySelections.setCursor(editor, [ 0, 2 ], 6);
       TinyContentActions.keystroke(editor, Keys.enter());
-      assert.equal(editor.getContent(), expected);
+      TinyAssertions.assertContent(editor, expected);
     };
 
-    beforeEach(() => {
-      editor = hook.editor();
-      editor.setContent('<p></p>');
-    });
-
     it('Pattern matches the second text node', () => {
-      setCursorAndPressEnterAndAssert(editor, [ 'one', '_error', ' for sure' ], '<p><br>no_error</p><p>for sure</p>');
+      setCursorAndPressEnterAndAssert(hook.editor(), [ 'one', '_error', ' for sure' ], '<p><br>no_error</p><p>for sure</p>');
     });
 
     it('Pattern matches the last text node', () => {
-      setCursorAndPressEnterAndAssert(editor, [ 'one', '_error' ], '<p><br>no_error</p><p>&nbsp;</p>');
+      setCursorAndPressEnterAndAssert(hook.editor(), [ 'one', '_error' ], '<p><br>no_error</p><p>&nbsp;</p>');
     });
   });
 });
