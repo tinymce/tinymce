@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - An exception was thrown when deleting all content if the start or end of the document had a `contenteditable="false"` element #TINY-8877
 - When a sidebar was opened using the `sidebar_show` option, its associated toggle button was not highlighted #TINY-8873
+- The `autolink` plugin when converting a URL to a link did not fire an `ExecCommand` event, nor did it create an undo level #TINY-8896
 
 ## 6.1.0 - 2022-06-29
 
