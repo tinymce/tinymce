@@ -123,7 +123,7 @@ const ElementUtils = (editor: Editor): ElementUtils => {
   };
 
   const isAttributeInternal = (attributeName: string): boolean =>
-    Arr.find(internalAttributesPrefixes, (value) => Strings.startsWith(attributeName, value)).isSome() || internalAttributes.has(attributeName);
+    Arr.exists(internalAttributesPrefixes, (value) => Strings.startsWith(attributeName, value)) || internalAttributes.has(attributeName);
 
   return {
     compare,
