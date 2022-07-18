@@ -9,6 +9,11 @@ import { InlinePatternSet, PatternSet } from '../core/PatternTypes';
 import * as Utils from '../utils/Utils';
 
 const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
+  // TINY-8779: mceInsertNewLine calls normalize() which alters the structure of the body content,
+  // in which text nodes of a paragraph are merged into one. This makes the range of any matching patterns become invalid
+  // as the text nodes are no longer existed after normalization. So do a normalize() prior finding any matches
+  editor.getBody().normalize();
+
   // Find any matches
   const inlineMatches = InlinePattern.findPatterns(editor, patternSet, false);
   const blockMatches = BlockPattern.findPatterns(editor, patternSet);
