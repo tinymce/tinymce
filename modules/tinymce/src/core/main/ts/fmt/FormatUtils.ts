@@ -1,5 +1,5 @@
 import { Transformations } from '@ephox/acid';
-import { Arr, Obj, Optionals, Strings, Type } from '@ephox/katamari';
+import { Arr, Obj, Optionals, Type } from '@ephox/katamari';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import EditorSelection from '../api/dom/Selection';
@@ -8,48 +8,6 @@ import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
 import * as Whitespace from '../text/Whitespace';
 import { BlockFormat, Format, FormatAttrOrStyleValue, FormatVars, InlineFormat, MixedFormat, SelectorFormat } from './FormatTypes';
-
-const internalAttributesPrefixes = [
-  'data-ephox-',
-  'data-mce-',
-  'data-alloy-',
-  'data-snooker-',
-  '_'
-];
-
-const internalDataValues = [
-  'data-id',
-  'data-emoticon',
-  'data-collection-item-value',
-  'data-bedrockid',
-  'data-longpress-destination',
-  'data-longpress-state',
-  'data-precloak-visibility',
-  'data-transitioning-destination',
-  'data-transitioning-state',
-  'data-initial-z-index',
-  'data-column',
-  'data-row',
-  'data-initial-top',
-  'data-initial-left',
-  'data-value',
-  'data-drag-left',
-  'data-drag-top',
-  'data-converted-paragraph',
-  'data-tab-interval',
-  'data-list-level',
-  'data-border-margin',
-  'data-text-indent-alt',
-  'data-ms-equation',
-  'data-image-src',
-  'data-pdfprint-id',
-  'data-app-key',
-  'data-zoom-factor',
-  'data-image-id',
-  'data-image-type',
-  'data-name',
-  'data-gramm_editor'
-];
 
 const isNode = (node: any): node is Node => !!(node).nodeType;
 
@@ -281,9 +239,6 @@ const isMixedFormat = (format: any): format is MixedFormat =>
 const shouldExpandToSelector = (format: Format): boolean =>
   isSelectorFormat(format) && format.expand !== false && !isInlineFormat(format);
 
-const attributeIsInternal = (attributeName: string): boolean =>
-  Arr.find(internalAttributesPrefixes, (value) => Strings.startsWith(attributeName, value)).isSome() || Arr.contains(internalDataValues, attributeName);
-
 export {
   isNode,
   isInlineBlock,
@@ -305,6 +260,5 @@ export {
   isInlineFormat,
   isBlockFormat,
   isMixedFormat,
-  shouldExpandToSelector,
-  attributeIsInternal
+  shouldExpandToSelector
 };

@@ -8,6 +8,7 @@ import * as Events from '../api/Events';
 import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
+import ElementUtils from '../dom/ElementUtils';
 import * as NodeType from '../dom/NodeType';
 import { RangeLikeObject } from '../selection/RangeTypes';
 import * as RangeWalk from '../selection/RangeWalk';
@@ -194,6 +195,7 @@ const processFormatAttrOrStyle = (name: string | number, value: FormatAttrOrStyl
 const removeFormatInternal = (ed: Editor, format: Format, vars?: FormatVars, node?: Node, compareNode?: Node | null): RemoveFormatAdt => {
   let stylesModified = false;
   const dom = ed.dom;
+  const elementUtils = ElementUtils(ed);
 
   // Check if node matches format
   if (node && !MatchFormat.matchName(dom, node, format) && !isColorFormatAndAnchor(node, format)) {
@@ -296,7 +298,7 @@ const removeFormatInternal = (ed: Editor, format: Format, vars?: FormatVars, nod
     const attrs = dom.getAttribs(elm);
     for (let i = 0; i < attrs.length; i++) {
       const attrName = attrs[i].nodeName;
-      if (!FormatUtils.attributeIsInternal(attrName)) {
+      if (!elementUtils.attributeIsInternal(attrName)) {
         return removeResult.keep();
       }
     }
@@ -421,7 +423,7 @@ const wrapAndSplit = (
       // After splitting the nodes may match with other siblings so we need to attempt to merge them
       // Note: We can't use MergeFormats, as that'd create a circular dependency
       if (FormatUtils.isInlineFormat(format)) {
-        mergeSiblings(dom, format, vars, lastClone);
+        mergeSiblings(editor, format, vars, lastClone);
       }
     }
   }
