@@ -153,7 +153,7 @@ describe('browser.tinymce.core.textpatterns.ReplacementTest', () => {
     TinyContentActions.keystroke(editor, Keys.enter());
   });
 
-  context('TINY-8779: Matches text nodes nodes in a paragraph', () => {
+  context('TINY-8779: Matches text nodes in a paragraph', () => {
     let editor: Editor;
 
     const hook = TinyHooks.bddSetupLight<Editor>({
