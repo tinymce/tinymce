@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed various incorrect types on public APIs found while enabling TypeScript strict mode #TINY-8806
 - The editor focused via the `auto_focus` option was not scrolled into the viewport #TINY-8785
 - Selecting a figure with `class="image"` would incorrectly highlight the link toolbar button #TINY-8832
-- The text pattern logic threw an error when there were two or more text nodes in a paragraph #TINY-8779
+- The text pattern logic threw an error when there were fragmented text nodes in a paragraph #TINY-8779
 
 ## 6.1.1 - TBA
 
