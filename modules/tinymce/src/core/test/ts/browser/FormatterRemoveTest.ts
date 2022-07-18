@@ -3,7 +3,7 @@ import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wr
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { ZWSP } from 'tinymce/src/core/main/ts/text/Zwsp';
+import { ZWSP } from 'tinymce/core/text/Zwsp';
 
 import * as KeyUtils from '../module/test/KeyUtils';
 

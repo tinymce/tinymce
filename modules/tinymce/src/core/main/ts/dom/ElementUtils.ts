@@ -24,7 +24,7 @@ const each = Tools.each;
 
 export interface ElementUtils {
   readonly compare: (node1: Node, node2: Node) => boolean;
-  readonly attributeIsInternal: (attribute: string) => boolean;
+  readonly isAttributeInternal: (attribute: string) => boolean;
 }
 
 const ElementUtils = (editor: Editor): ElementUtils => {
@@ -59,7 +59,7 @@ const ElementUtils = (editor: Editor): ElementUtils => {
         const name = attr.nodeName.toLowerCase();
 
         // Don't compare internal attributes or style
-        if (name !== 'style' && !attributeIsInternal(name)) {
+        if (name !== 'style' && !isAttributeInternal(name)) {
           attribs[name] = dom.getAttrib(node, name);
         }
       });
@@ -122,12 +122,12 @@ const ElementUtils = (editor: Editor): ElementUtils => {
     return !Bookmarks.isBookmarkNode(node1) && !Bookmarks.isBookmarkNode(node2);
   };
 
-  const attributeIsInternal = (attributeName: string): boolean =>
+  const isAttributeInternal = (attributeName: string): boolean =>
     Arr.find(internalAttributesPrefixes, (value) => Strings.startsWith(attributeName, value)).isSome() || internalAttributes.has(attributeName);
 
   return {
     compare,
-    attributeIsInternal
+    isAttributeInternal
   };
 };
 

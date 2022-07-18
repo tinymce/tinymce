@@ -298,7 +298,7 @@ const removeFormatInternal = (ed: Editor, format: Format, vars?: FormatVars, nod
     const attrs = dom.getAttribs(elm);
     for (let i = 0; i < attrs.length; i++) {
       const attrName = attrs[i].nodeName;
-      if (!elementUtils.attributeIsInternal(attrName)) {
+      if (!elementUtils.isAttributeInternal(attrName)) {
         return removeResult.keep();
       }
     }
