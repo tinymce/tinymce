@@ -30,6 +30,7 @@ export interface ElementUtils {
 const ElementUtils = (editor: Editor): ElementUtils => {
   const dom = editor.dom;
   const internalAttributes = new Set<string>(editor.serializer.getTempAttrs());
+
   /**
    * Compares two nodes and checks if it's attributes and styles matches.
    * This doesn't compare classes as items since their order is significant.
