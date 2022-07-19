@@ -14,6 +14,7 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
   // So call normalize() to merge fragmented text nodes before finding matching patterns
   // And because of an issue on safari https://bugs.webkit.org/show_bug.cgi?id=230594
   // we use bookmark to restore the selection after normalize()
+  // TODO: Revisit this block of code after TINY-8909 is completed
   const bookmark = editor.selection.getBookmark(2, true);
   editor.getBody().normalize();
   editor.selection.moveToBookmark(bookmark);
