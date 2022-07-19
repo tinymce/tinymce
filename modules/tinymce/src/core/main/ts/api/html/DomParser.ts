@@ -115,6 +115,7 @@ const getPurifyConfig = (settings: DomParserSettings, mimeType: string): Config 
 
 const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI => {
   const purify = createDompurify();
+  const specialElements = schema.getSpecialElements();
   const validate = settings.validate;
   let uid = 0;
 
@@ -133,6 +134,7 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
 
     // Construct the sugar element wrapper
     const element = SugarElement.fromDom(ele);
+    const lcTagName = tagName.toLowerCase();
 
     // Determine if we're dealing with an internal attribute
     const isInternalElement = Attribute.has(element, internalElementAttr);
@@ -149,9 +151,14 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
     }
 
     // Determine if the schema allows the element and either add it or remove it
-    const rule = schema.getElementRule(tagName.toLowerCase());
+    const rule = schema.getElementRule(lcTagName);
     if (validate && !rule) {
-      Remove.unwrap(element);
+      // If a special element is invalid, then remove the entire element instead of unwrapping
+      if (Obj.has(specialElements, lcTagName)) {
+        Remove.remove(element);
+      } else {
+        Remove.unwrap(element);
+      }
       return;
     } else {
       evt.allowedTags[tagName] = true;
@@ -182,7 +189,7 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
       }
 
       // Change the node name if the schema says to
-      if (rule.outputName && rule.outputName !== tagName.toLowerCase()) {
+      if (rule.outputName && rule.outputName !== lcTagName) {
         Replication.mutate(element, rule.outputName as keyof HTMLElementTagNameMap);
       }
     }
