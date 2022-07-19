@@ -9,10 +9,14 @@ import { InlinePatternSet, PatternSet } from '../core/PatternTypes';
 import * as Utils from '../utils/Utils';
 
 const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
-  // TINY-8779: The applying text pattern logic throws a range error because it attempts to set the range to a non-existing text node.
-  // The undoManager.extra() stores the content as a string and then set it back via setContent() which results in the fragmented text nodes being merged.
+  // TINY-8779: The undoManager.extra() stores the content as a string and then set it back via setContent() which results in the fragmented text nodes being merged.
+  // This causes a range error when the applying text pattern logic attempting to resolve the range to one of the fragmented text nodes that is no longer existed.
   // So call normalize() to merge fragmented text nodes before finding matching patterns
+  // And because of an issue on safari https://bugs.webkit.org/show_bug.cgi?id=230594
+  // we use bookmark to restore the selection after normalize()
+  const bookmark = editor.selection.getBookmark(2, true);
   editor.getBody().normalize();
+  editor.selection.moveToBookmark(bookmark);
 
   // Find any matches
   const inlineMatches = InlinePattern.findPatterns(editor, patternSet, false);

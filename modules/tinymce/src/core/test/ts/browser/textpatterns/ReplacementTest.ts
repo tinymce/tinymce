@@ -155,28 +155,64 @@ describe('browser.tinymce.core.textpatterns.ReplacementTest', () => {
   context('Matches text nodes in a paragraph', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       text_patterns: [
-        { start: 'one_error', replacement: 'no_error' }
+        { start: 'text_pattern', replacement: 'wow' }
       ],
       indent: false,
       base_url: '/project/tinymce/js/tinymce'
     }, [ ]);
 
-    const setCursorAndPressEnterAndAssert = (editor: Editor, texts: string[], expected: string) => {
+    const assertContentAfterPressEnter = (editor: Editor, nodes: Node[], cursorPaths: number[], offset: number, expected: string) => {
       editor.setContent('<p></p>');
       const targetParagraph = editor.dom.select('p')[0];
-      Arr.each(texts, (t) => targetParagraph.appendChild(document.createTextNode(t)));
+      Arr.each(nodes, (t) => targetParagraph.appendChild(t));
       editor.focus();
-      TinySelections.setCursor(editor, [ 0, 2 ], 6);
+      TinySelections.setCursor(editor, cursorPaths, offset);
       TinyContentActions.keystroke(editor, Keys.enter());
       TinyAssertions.assertContent(editor, expected);
     };
 
     it('Pattern matches the second text node', () => {
-      setCursorAndPressEnterAndAssert(hook.editor(), [ 'one', '_error', ' for sure' ], '<p><br>no_error</p><p>for sure</p>');
+      const nodes = [
+        document.createTextNode('text'),
+        document.createTextNode('_pattern'),
+        document.createTextNode(' for sure')
+      ];
+      assertContentAfterPressEnter(hook.editor(), nodes, [ 0, 2 ], 8, '<p><br>wow</p><p>for sure</p>');
     });
 
     it('Pattern matches the last text node', () => {
-      setCursorAndPressEnterAndAssert(hook.editor(), [ 'one', '_error' ], '<p><br>no_error</p><p>&nbsp;</p>');
+      const nodes = [
+        document.createTextNode('text'),
+        document.createTextNode('_pattern')
+      ];
+      assertContentAfterPressEnter(hook.editor(), nodes, [ 0, 2 ], 8, '<p><br>wow</p><p>&nbsp;</p>');
+    });
+
+    it('Have a <strong> amongst text nodes', () => {
+      const strongNode = document.createElement('strong');
+      strongNode.innerHTML = 'element';
+      const nodes = [
+        document.createTextNode('first '),
+        strongNode,
+        document.createTextNode(' text_pattern'),
+        document.createTextNode(' is big')
+      ];
+      assertContentAfterPressEnter(hook.editor(), nodes, [ 0, 3 ], 13, '<p><br>first <strong>element</strong> no_error</p><p>is big</p>');
+    });
+
+    it('Add an <em> node', () => {
+      const strongNode = document.createElement('strong');
+      strongNode.innerHTML = 'element';
+      const italicNode = document.createElement('i');
+      italicNode.innerHTML = 'italic';
+      const nodes = [
+        document.createTextNode('first '),
+        strongNode,
+        document.createTextNode(' text_pattern'),
+        italicNode,
+        document.createTextNode(' is big')
+      ];
+      assertContentAfterPressEnter(hook.editor(), nodes, [ 0, 3 ], 13, '<p><br>first <strong>element</strong> no_error</p><p><em>italic</em> is big</p>');
     });
   });
 });
