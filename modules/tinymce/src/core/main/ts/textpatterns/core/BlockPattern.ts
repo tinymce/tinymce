@@ -8,7 +8,8 @@ import * as Options from '../../api/Options';
 import Tools from '../../api/util/Tools';
 import { generatePathRange, resolvePathRange } from '../utils/PathRange';
 import * as Utils from '../utils/Utils';
-import { BlockPattern, BlockPatternMatch, Pattern } from './PatternTypes';
+import { getBlockPatterns } from './Pattern';
+import { BlockPattern, BlockPatternMatch, Pattern, PatternSet } from './PatternTypes';
 
 const stripPattern = (dom: DOMUtils, block: Node, pattern: BlockPattern): void => {
   // The pattern could be across fragmented text nodes, so we need to find the end
@@ -61,7 +62,7 @@ const findPattern = <P extends Pattern>(patterns: P[], text: string): Optional<P
   return Arr.find(patterns, (pattern) => text.indexOf(pattern.start) === 0 || nuText.indexOf(pattern.start) === 0);
 };
 
-const findPatterns = (editor: Editor, patterns: BlockPattern[]): BlockPatternMatch[] => {
+const findPatterns = (editor: Editor, patternSet: PatternSet): BlockPatternMatch[] => {
   const dom = editor.dom;
   const rng = editor.selection.getRng();
 
@@ -73,8 +74,21 @@ const findPatterns = (editor: Editor, patterns: BlockPattern[]): BlockPatternMat
     // Get the block text
     const blockText = block.textContent ?? '';
 
-    // Find the pattern
-    const matchedPattern = findPattern(patterns, blockText);
+    // TINY-8781: TODO: text_patterns should announce their changes for accessibility
+    const extraPatterns = patternSet.dynamicPatternsLookup({
+      text: blockText,
+      block,
+      // Block patterns do not allow trailing spaces currently. This is related to TINY-8779
+      allowTrailingSpaces: false
+    });
+    // search in the dynamic patterns first
+    const patterns = getBlockPatterns(extraPatterns);
+    const matchedPattern = findPattern(patterns, blockText).orThunk(() => {
+      // Search in the static patterns
+      const patterns = getBlockPatterns(patternSet.blockPatterns);
+      return findPattern(patterns, blockText);
+    });
+
     return matchedPattern.map((pattern) => {
       if (Tools.trim(blockText).length === pattern.start.length) {
         return [];

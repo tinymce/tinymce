@@ -1,9 +1,10 @@
 import { Strings } from '@ephox/katamari';
 
 import DOMUtils from '../api/dom/DOMUtils';
-import ElementUtils from '../api/dom/ElementUtils';
+import Editor from '../api/Editor';
 import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
+import ElementUtils from '../dom/ElementUtils';
 import * as NodeType from '../dom/NodeType';
 import { isCaretNode } from './FormatContainer';
 import { ApplyFormat, FormatVars } from './FormatTypes';
@@ -28,8 +29,8 @@ const findElementSibling = (node: Node, siblingName: 'nextSibling' | 'previousSi
   return node;
 };
 
-const mergeSiblingsNodes = (dom: DOMUtils, prev: Node | undefined, next: Node | undefined) => {
-  const elementUtils = ElementUtils(dom);
+const mergeSiblingsNodes = (editor: Editor, prev: Node | undefined, next: Node | undefined) => {
+  const elementUtils = ElementUtils(editor);
 
   // Check if next/prev exists and that they are elements
   if (prev && next) {
@@ -46,7 +47,7 @@ const mergeSiblingsNodes = (dom: DOMUtils, prev: Node | undefined, next: Node | 
         prevSibling.appendChild(tmpSibling);
       }
 
-      dom.remove(nextSibling);
+      editor.dom.remove(nextSibling);
 
       Tools.each(Tools.grep(nextSibling.childNodes), (node) => {
         prevSibling.appendChild(node);
@@ -59,13 +60,13 @@ const mergeSiblingsNodes = (dom: DOMUtils, prev: Node | undefined, next: Node | 
   return next;
 };
 
-const mergeSiblings = (dom: DOMUtils, format: ApplyFormat, vars: FormatVars | undefined, node: Node): void => {
+const mergeSiblings = (editor: Editor, format: ApplyFormat, vars: FormatVars | undefined, node: Node): void => {
   // Merge next and previous siblings if they are similar <b>text</b><b>text</b> becomes <b>texttext</b>
   if (node && format.merge_siblings !== false) {
     // Previous sibling
-    const newNode = mergeSiblingsNodes(dom, FormatUtils.getNonWhiteSpaceSibling(node), node) ?? node;
+    const newNode = mergeSiblingsNodes(editor, FormatUtils.getNonWhiteSpaceSibling(node), node) ?? node;
     // Next sibling
-    mergeSiblingsNodes(dom, newNode, FormatUtils.getNonWhiteSpaceSibling(newNode, true));
+    mergeSiblingsNodes(editor, newNode, FormatUtils.getNonWhiteSpaceSibling(newNode, true));
   }
 };
 

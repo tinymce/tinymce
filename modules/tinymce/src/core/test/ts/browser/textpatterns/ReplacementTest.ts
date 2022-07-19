@@ -1,6 +1,7 @@
-import { Assertions } from '@ephox/agar';
+import { Assertions, Keys } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
+import { InsertAll, Remove, SugarElement } from '@ephox/sugar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -126,5 +127,27 @@ describe('browser.tinymce.core.textpatterns.ReplacementTest', () => {
     const editor = hook.editor();
     Utils.setContentAndPressEnter(editor, '<span data-mce-spelling="invalid">#</span>*brb<span data-mce-spelling="invalid">*</span>', 3, [ 0 ]);
     assertContentAndCursor(editor, '<h1><em>be right back</em></h1><p>&nbsp;|</p>');
+  });
+
+  // Skipping until TINY-8779 is completed.
+  it.skip('TINY-8779: Apply replacement pattern with spaces before pressing enter', () => {
+    const editor = hook.editor();
+    editor.setContent('<p></p>');
+
+    // This test case requires very specific text node setup, so we manipulate
+    // the nodes themselves. Importantly
+    // a) the selection must be from the paragraph node, not the text nodes
+    // b) the non-breaking space must be a separate text node
+    const paragraph = SugarElement.fromDom(editor.getBody().childNodes[0]);
+    Remove.empty(paragraph);
+    InsertAll.append(paragraph, [
+      SugarElement.fromText('trailing_space'),
+      SugarElement.fromText('\u00A0')
+    ]);
+
+    editor.focus();
+    TinySelections.setCursor(editor, [ 0 ], 2);
+    // This function throws an error here due to the bug identified in TINY-8779
+    TinyContentActions.keystroke(editor, Keys.enter());
   });
 });
