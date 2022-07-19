@@ -96,7 +96,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
   it('Toggle OFF - Inline element with data attribute', () => {
     const editor = hook.editor();
     editor.formatter.register('format', { inline: 'b' });
-    editor.getBody().innerHTML = '<p><b data-x="1">1</b></p>';
+    editor.getBody().innerHTML = '<p><b data-mce-x="1">1</b></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('b')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('b')[0].firstChild, 1);
@@ -623,13 +623,13 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.register('format', {
       inline: 'b'
     });
-    editor.getBody().innerHTML = '<p><b data-x="1">1234</b>5678</p>';
+    editor.getBody().innerHTML = '<p><b data-mce-x="1">1234</b>5678</p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].lastChild, 0);
     rng.setEnd(editor.dom.select('p')[0].lastChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    assert.equal(getContent(editor), '<p><b data-x="1">12345678</b></p>', 'Inline element merged with left sibling');
+    assert.equal(getContent(editor), '<p><b data-mce-x="1">12345678</b></p>', 'Inline element merged with left sibling');
   });
 
   it(`Don't merge siblings with whitespace between 1`, () => {

@@ -287,7 +287,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
         MergeFormats.mergeBackgroundColorAndFontSize(dom, format, vars, node);
         MergeFormats.mergeTextDecorationsAndColor(dom, format, vars, node);
         MergeFormats.mergeSubSup(dom, format, vars, node);
-        MergeFormats.mergeSiblings(dom, format, vars, node);
+        MergeFormats.mergeSiblings(ed, format, vars, node);
       }
     });
   };
