@@ -109,7 +109,7 @@ interface BaseEditorOptions {
   forced_root_block?: string;
   forced_root_block_attrs?: Record<string, string>;
   formats?: Formats;
-  format_wrap_noneditable_selectors?: string[];
+  format_noneditable_selector?: string;
   height?: number | string;
   hidden_input?: boolean;
   icons?: string;
@@ -259,6 +259,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   font_size_style_values: string;
   forced_root_block: string;
   forced_root_block_attrs: Record<string, string>;
+  format_noneditable_selector: string;
   iframe_attrs: Record<string, string>;
   images_file_types: string;
   images_upload_base_path: string;

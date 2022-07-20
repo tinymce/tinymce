@@ -381,9 +381,9 @@ const register = (editor: Editor): void => {
     default: false
   });
 
-  registerOption('format_wrap_noneditable_selectors', {
-    processor: 'string[]',
-    default: []
+  registerOption('format_noneditable_selector', {
+    processor: 'string',
+    default: ''
   });
 
   registerOption('preview_styles', {
@@ -842,7 +842,7 @@ const isInlineBoundariesEnabled = option('inline_boundaries');
 const getFormats = option('formats');
 const getPreviewStyles = option('preview_styles');
 const canFormatEmptyLines = option('format_empty_lines');
-const getWrapNoneditableSelectors = option('format_wrap_noneditable_selectors');
+const getFormatNoneditableSelector = option('format_noneditable_selector');
 const getCustomUiSelector = option('custom_ui_selector');
 const isInline = option('inline');
 const hasHiddenInput = option('hidden_input');
@@ -949,7 +949,7 @@ export {
   getFormats,
   getPreviewStyles,
   canFormatEmptyLines,
-  getWrapNoneditableSelectors,
+  getFormatNoneditableSelector,
   getCustomUiSelector,
   getThemeUrl,
   getModelUrl,

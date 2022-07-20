@@ -118,10 +118,6 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
     const newWrappers: Element[] = [];
     let contentEditable = true;
 
-    const isWrappingBlockFormat = FormatUtils.isBlockFormat(format) && format.wrapper;
-    const isNonWrappingBlockFormat = FormatUtils.isBlockFormat(format) && !format.wrapper;
-    const isWrapNameFormat = FormatUtils.isInlineFormat(format) || FormatUtils.isBlockFormat(format);
-
     // Setup wrapper element
     const wrapName: string | undefined = (format as InlineFormat).inline || (format as BlockFormat).block;
     const wrapElm = createWrapElement(wrapName);
@@ -148,19 +144,30 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
           hasContentEditableState = true;
           isWrappableNoneditableElm = FormatUtils.isWrappableNoneditable(ed, node);
         }
-
-        const isMatchingWrappingBlock = isWrappingBlockFormat && MatchFormat.matchNode(ed, node, name, vars);
-
         const isEditableDescendant = contentEditable && !hasContentEditableState;
-        const isValidBlockFormatForNode = isNonWrappingBlockFormat && FormatUtils.isTextBlock(ed, nodeName) && FormatUtils.isValid(ed, parentName, wrapName);
-        const canRenameBlock = isEditableDescendant && isValidBlockFormatForNode;
 
-        const isValidWrapNode = isWrapNameFormat && FormatUtils.isValid(ed, wrapName, nodeName) && FormatUtils.isValid(ed, parentName, wrapName);
-        // If it is not node specific, it means that it was not passed into 'formatter.apply` and is withiin the editor selection
-        const isZwsp = !nodeSpecific && NodeType.isText(node) && Zwsp.isZwsp(node.data);
-        const isCaret = isCaretNode(node);
-        const isCorrectFormatForNode = !FormatUtils.isInlineFormat(format) || !dom.isBlock(node);
-        const canWrapNode = (isEditableDescendant || isWrappableNoneditableElm) && isValidWrapNode && !isZwsp && !isCaret && isCorrectFormatForNode;
+        const isMatchingWrappingBlock = () =>
+          FormatUtils.isWrappingBlockFormat(format) && MatchFormat.matchNode(ed, node, name, vars);
+
+        const canRenameBlock = () => {
+          const isValidBlockFormatForNode =
+            FormatUtils.isNonWrappingBlockFormat(format) &&
+            FormatUtils.isTextBlock(ed, nodeName) &&
+            FormatUtils.isValid(ed, parentName, wrapName);
+          return isEditableDescendant && isValidBlockFormatForNode;
+        };
+
+        const canWrapNode = () => {
+          const isValidWrapNode =
+            FormatUtils.isValid(ed, wrapName, nodeName) &&
+            FormatUtils.isValid(ed, parentName, wrapName) &&
+            Type.isNonNullable(wrapElm);
+          // If it is not node specific, it means that it was not passed into 'formatter.apply` and is withiin the editor selection
+          const isZwsp = !nodeSpecific && NodeType.isText(node) && Zwsp.isZwsp(node.data);
+          const isCaret = isCaretNode(node);
+          const isCorrectFormatForNode = !FormatUtils.isInlineFormat(format) || !dom.isBlock(node);
+          return (isEditableDescendant || isWrappableNoneditableElm) && isValidWrapNode && !isZwsp && !isCaret && isCorrectFormatForNode;
+        };
 
         // Stop wrapping on br elements except when valid
         if (NodeType.isBr(node) && !canFormatBR(ed, format, node, parentName)) {
@@ -172,12 +179,12 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
           return;
         }
 
-        if (isMatchingWrappingBlock) {
+        if (isMatchingWrappingBlock()) {
           currentWrapElm = null;
           return;
         }
 
-        if (canRenameBlock) {
+        if (canRenameBlock()) {
           const elm = dom.rename(node as Element, wrapName);
           setElementFormat(elm);
           newWrappers.push(elm);
@@ -200,7 +207,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
           }
         }
 
-        if (canWrapNode) {
+        if (canWrapNode()) {
           // Start wrapping
           if (!currentWrapElm) {
             // Wrap the node

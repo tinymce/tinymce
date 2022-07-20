@@ -1,5 +1,5 @@
 import { Transformations } from '@ephox/acid';
-import { Arr, Obj, Optionals, Type } from '@ephox/katamari';
+import { Arr, Obj, Optionals, Strings, Type } from '@ephox/katamari';
 import { Selectors, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
@@ -107,8 +107,10 @@ const isEmptyTextNode = (node: Node | null): boolean => {
 };
 
 const isWrapNoneditableTarget = (editor: Editor, node: Node): boolean => {
-  const selectors = [ '[data-mce-cef-wrappable]' ].concat(Options.getWrapNoneditableSelectors(editor)).join(',');
-  return Selectors.is(SugarElement.fromDom(node), selectors);
+  const baseDataSelector = '[data-mce-cef-wrappable]';
+  const formatNoneditableSelector = Options.getFormatNoneditableSelector(editor);
+  const selector = Strings.isEmpty(formatNoneditableSelector) ? baseDataSelector : `${baseDataSelector},${formatNoneditableSelector}`;
+  return Selectors.is(SugarElement.fromDom(node), selector);
 };
 
 // A noneditable element is wrappable if it:
@@ -253,6 +255,12 @@ const areSimilarFormats = (editor: Editor, formatName: string, otherFormatName: 
 const isBlockFormat = (format: Format): format is BlockFormat =>
   Obj.hasNonNullableKey(format as any, 'block');
 
+const isWrappingBlockFormat = (format: Format): format is BlockFormat =>
+  isBlockFormat(format) && format.wrapper;
+
+const isNonWrappingBlockFormat = (format: Format): format is BlockFormat =>
+  isBlockFormat(format) && !format.wrapper;
+
 const isSelectorFormat = (format: Format): format is SelectorFormat =>
   Obj.hasNonNullableKey(format as any, 'selector');
 
@@ -287,6 +295,8 @@ export {
   isSelectorFormat,
   isInlineFormat,
   isBlockFormat,
+  isWrappingBlockFormat,
+  isNonWrappingBlockFormat,
   isMixedFormat,
   shouldExpandToSelector
 };

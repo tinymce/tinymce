@@ -78,12 +78,12 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
   context('noneditable inline elements', () => {
     before(() => {
       const editor = hook.editor();
-      editor.options.set('format_wrap_noneditable_selectors', [ 'span[data-wrappable="true"]' ]);
+      editor.options.set('format_noneditable_selector', 'span[data-wrappable="true"]');
     });
 
     after(() => {
       const editor = hook.editor();
-      editor.options.unset('format_wrap_noneditable_selectors');
+      editor.options.unset('format_noneditable_selector');
     });
 
     const selectNoneditableSpan = (editor: Editor) =>
@@ -450,12 +450,12 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
   context('noneditable blocks', () => {
     before(() => {
       const editor = hook.editor();
-      editor.options.set('format_wrap_noneditable_selectors', [ 'p[data-wrappable="true"]' ]);
+      editor.options.set('format_noneditable_selector', 'p[data-wrappable="true"]');
     });
 
     after(() => {
       const editor = hook.editor();
-      editor.options.unset('format_wrap_noneditable_selectors');
+      editor.options.unset('format_noneditable_selector');
     });
 
     const toggleBlockquote = toggleCustomFormat('blockquote');
