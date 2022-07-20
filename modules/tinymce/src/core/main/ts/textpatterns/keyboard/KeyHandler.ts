@@ -9,19 +9,11 @@ import { InlinePatternSet, PatternSet } from '../core/PatternTypes';
 import * as Utils from '../utils/Utils';
 
 const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
-  // TINY-8779: The undoManager.extra() stores the content as a string and then set it back via setContent() which results in the fragmented text nodes being merged.
-  // This causes a range error when the applying text pattern logic attempting to resolve the range to one of the fragmented text nodes that is no longer existed.
-  // So call normalize() to merge fragmented text nodes before finding matching patterns
-  // And because of an issue on safari https://bugs.webkit.org/show_bug.cgi?id=230594
-  // we use bookmark to restore the selection after normalize()
-  // TODO: Revisit this block of code after TINY-8909 is completed
-  const bookmark = editor.selection.getBookmark(2, true);
-  editor.getBody().normalize();
-  editor.selection.moveToBookmark(bookmark);
-
   // Find any matches
-  const inlineMatches = InlinePattern.findPatterns(editor, patternSet, false);
-  const blockMatches = BlockPattern.findPatterns(editor, patternSet);
+  // IMPORTANT: We need to get normalized match results since undoing and redoing the editor state
+  // via undoManager.extra() will result in the DOM being normalized.
+  const inlineMatches = InlinePattern.findPatterns(editor, patternSet, true, false);
+  const blockMatches = BlockPattern.findPatterns(editor, patternSet, true);
   if (blockMatches.length > 0 || inlineMatches.length > 0) {
     editor.undoManager.add();
     editor.undoManager.extra(
@@ -56,7 +48,7 @@ const handleInlineKey = (
   editor: Editor,
   patternSet: InlinePatternSet
 ): void => {
-  const inlineMatches = InlinePattern.findPatterns(editor, patternSet, true);
+  const inlineMatches = InlinePattern.findPatterns(editor, patternSet, false, true);
   if (inlineMatches.length > 0) {
     editor.undoManager.transact(() => {
       InlinePattern.applyMatches(editor, inlineMatches);

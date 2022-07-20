@@ -1,7 +1,6 @@
 import { Assertions, Keys } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
-import { InsertAll, Remove, SugarElement } from '@ephox/sugar';
+import { Html, InsertAll, Remove, SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -15,7 +14,8 @@ describe('browser.tinymce.core.textpatterns.ReplacementTest', () => {
       { start: 'heading', replacement: '<h1>My Heading</h1>' },
       { start: 'complex pattern', replacement: '<h1>Text</h1><p>More text</p>' },
       { start: '*', end: '*', format: 'italic' },
-      { start: '#', format: 'h1' }
+      { start: '#', format: 'h1' },
+      { start: 'text_pattern', replacement: 'wow' }
     ],
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
@@ -130,89 +130,61 @@ describe('browser.tinymce.core.textpatterns.ReplacementTest', () => {
     assertContentAndCursor(editor, '<h1><em>be right back</em></h1><p>&nbsp;|</p>');
   });
 
-  // Skipping until TINY-8779 is completed.
-  it.skip('TINY-8779: Apply replacement pattern with spaces before pressing enter', () => {
-    const editor = hook.editor();
-    editor.setContent('<p></p>');
-
-    // This test case requires very specific text node setup, so we manipulate
-    // the nodes themselves. Importantly
-    // a) the selection must be from the paragraph node, not the text nodes
-    // b) the non-breaking space must be a separate text node
-    const paragraph = SugarElement.fromDom(editor.getBody().childNodes[0]);
-    Remove.empty(paragraph);
-    InsertAll.append(paragraph, [
-      SugarElement.fromText('trailing_space'),
-      SugarElement.fromText('\u00A0')
-    ]);
-
-    editor.focus();
-    TinySelections.setCursor(editor, [ 0 ], 2);
-    // This function throws an error here due to the bug identified in TINY-8779
-    TinyContentActions.keystroke(editor, Keys.enter());
-  });
-
-  context('Matches text nodes in a paragraph', () => {
-    const hook = TinyHooks.bddSetupLight<Editor>({
-      text_patterns: [
-        { start: 'text_pattern', replacement: 'wow' }
-      ],
-      indent: false,
-      base_url: '/project/tinymce/js/tinymce'
-    }, [ ]);
-
-    const assertContentAfterPressEnter = (editor: Editor, nodes: Node[], cursorPaths: number[], offset: number, expected: string) => {
+  context('Fragmented text nodes in a paragraph', () => {
+    const testFragmentedText = (editor: Editor, pressKey: () => void, getNodes: () => SugarElement<Node>[], elementPath: number[], offset: number, expected: string) => {
       editor.setContent('<p></p>');
-      const targetParagraph = editor.dom.select('p')[0];
-      Arr.each(nodes, (t) => targetParagraph.appendChild(t));
+      const paragraph = SugarElement.fromDom(editor.dom.select('p')[0]);
+      Remove.empty(paragraph);
+      InsertAll.append(paragraph, getNodes());
       editor.focus();
-      TinySelections.setCursor(editor, cursorPaths, offset);
-      TinyContentActions.keystroke(editor, Keys.enter());
+      TinySelections.setCursor(editor, elementPath, offset);
+      pressKey();
       TinyAssertions.assertContent(editor, expected);
     };
 
-    it('Pattern matches the second text node', () => {
-      const nodes = [
-        document.createTextNode('text'),
-        document.createTextNode('_pattern'),
-        document.createTextNode(' for sure')
+    const testEnterOnFragmentedText = (editor: Editor, getNodes: () => SugarElement<Node>[], elementPath: number[], offset: number, expected: string) =>
+      testFragmentedText(editor, () => TinyContentActions.keystroke(editor, Keys.enter()), getNodes, elementPath, offset, expected);
+
+    const testSpaceOnFragmentedText = (editor: Editor, getNodes: () => SugarElement<Node>[], elementPath: number[], offset: number, expected: string) =>
+      testFragmentedText(editor, () => {
+        TinyContentActions.keydown(editor, Keys.space());
+        editor.execCommand('mceInsertContent', false, ' ');
+        TinyContentActions.keyup(editor, Keys.space());
+      }, getNodes, elementPath, offset, expected);
+
+    it('TINY-8779: Pattern matches when found in the middle text node', () => {
+      const getNodes = () => [
+        SugarElement.fromText('text'),
+        SugarElement.fromText('_pattern'),
+        SugarElement.fromText(' for sure')
       ];
-      assertContentAfterPressEnter(hook.editor(), nodes, [ 0, 2 ], 8, '<p><br>wow</p><p>for sure</p>');
+      testEnterOnFragmentedText(hook.editor(), getNodes, [ 0, 1 ], 8, '<p>wow</p><p>for sure</p>');
+      testSpaceOnFragmentedText(hook.editor(), getNodes, [ 0, 1 ], 8, '<p>wow&nbsp; for sure</p>');
     });
 
-    it('Pattern matches the last text node', () => {
-      const nodes = [
-        document.createTextNode('text'),
-        document.createTextNode('_pattern')
+    it('TINY-8779: Pattern matches when found in the last text node', () => {
+      const getNodes = () => [
+        SugarElement.fromText('text'),
+        SugarElement.fromText('_pattern')
       ];
-      assertContentAfterPressEnter(hook.editor(), nodes, [ 0, 2 ], 8, '<p><br>wow</p><p>&nbsp;</p>');
+      testEnterOnFragmentedText(hook.editor(), getNodes, [ 0, 1 ], 8, '<p>wow</p><p>&nbsp;</p>');
+      testSpaceOnFragmentedText(hook.editor(), getNodes, [ 0, 1 ], 8, '<p>wow&nbsp;</p>');
     });
 
-    it('Have a <strong> amongst text nodes', () => {
-      const strongNode = document.createElement('strong');
-      strongNode.innerHTML = 'element';
-      const nodes = [
-        document.createTextNode('first '),
-        strongNode,
-        document.createTextNode(' text_pattern'),
-        document.createTextNode(' is big')
-      ];
-      assertContentAfterPressEnter(hook.editor(), nodes, [ 0, 3 ], 13, '<p><br>first <strong>element</strong> no_error</p><p>is big</p>');
-    });
-
-    it('Add an <em> node', () => {
-      const strongNode = document.createElement('strong');
-      strongNode.innerHTML = 'element';
-      const italicNode = document.createElement('i');
-      italicNode.innerHTML = 'italic';
-      const nodes = [
-        document.createTextNode('first '),
-        strongNode,
-        document.createTextNode(' text_pattern'),
-        italicNode,
-        document.createTextNode(' is big')
-      ];
-      assertContentAfterPressEnter(hook.editor(), nodes, [ 0, 3 ], 13, '<p><br>first <strong>element</strong> no_error</p><p><em>italic</em> is big</p>');
+    it('TINY-8779: Pattern matches with an inline element amongst text nodes', () => {
+      const getNodes = () => {
+        const strongNode = SugarElement.fromTag('strong');
+        Html.set(strongNode, 'element');
+        return [
+          SugarElement.fromText('first'),
+          SugarElement.fromText(' '),
+          strongNode,
+          SugarElement.fromText(' text_pattern'),
+          SugarElement.fromText(' is big')
+        ];
+      };
+      testEnterOnFragmentedText(hook.editor(), getNodes, [ 0, 3 ], 13, '<p>first <strong>element</strong> wow</p><p>is big</p>');
+      testSpaceOnFragmentedText(hook.editor(), getNodes, [ 0, 3 ], 13, '<p>first <strong>element</strong> wow&nbsp; is big</p>');
     });
   });
 });

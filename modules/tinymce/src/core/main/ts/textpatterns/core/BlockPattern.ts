@@ -62,7 +62,7 @@ const findPattern = <P extends Pattern>(patterns: P[], text: string): Optional<P
   return Arr.find(patterns, (pattern) => text.indexOf(pattern.start) === 0 || nuText.indexOf(pattern.start) === 0);
 };
 
-const findPatterns = (editor: Editor, patternSet: PatternSet): BlockPatternMatch[] => {
+const findPatterns = (editor: Editor, patternSet: PatternSet, normalizedMatches: boolean): BlockPatternMatch[] => {
   const dom = editor.dom;
   const rng = editor.selection.getRng();
 
@@ -77,9 +77,7 @@ const findPatterns = (editor: Editor, patternSet: PatternSet): BlockPatternMatch
     // TINY-8781: TODO: text_patterns should announce their changes for accessibility
     const extraPatterns = patternSet.dynamicPatternsLookup({
       text: blockText,
-      block,
-      // Block patterns do not allow trailing spaces currently. This is related to TINY-8779
-      allowTrailingSpaces: false
+      block
     });
     // search in the dynamic patterns first
     const patterns = getBlockPatterns(extraPatterns);
@@ -96,7 +94,7 @@ const findPatterns = (editor: Editor, patternSet: PatternSet): BlockPatternMatch
 
       return [{
         pattern,
-        range: generatePathRange(dom.getRoot(), block, 0, block, 0)
+        range: generatePathRange(dom, dom.getRoot(), block, 0, block, 0, normalizedMatches)
       }];
     });
   }).getOr([]);
