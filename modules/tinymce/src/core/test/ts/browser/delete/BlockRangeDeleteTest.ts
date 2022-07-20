@@ -1,6 +1,5 @@
 import { ApproxStructure } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -8,7 +7,6 @@ import Editor from 'tinymce/core/api/Editor';
 import * as BlockRangeDelete from 'tinymce/core/delete/BlockRangeDelete';
 
 describe('browser.tinymce.core.delete.BlockRangeDeleteTest', () => {
-  const isFirefox = PlatformDetection.detect().browser.isFirefox();
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     indent: false
@@ -161,26 +159,4 @@ describe('browser.tinymce.core.delete.BlockRangeDeleteTest', () => {
     TinyAssertions.assertContent(editor, '<table><tbody><tr><td><p>&nbsp;</p></td></tr></tbody></table>');
     TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 0);
   });
-
-  it('Delete from cef to non cef block should not merge', () => {
-    if (isFirefox) {
-      const editor = hook.editor();
-      editor.setContent('<p contenteditable="false">CEF</p><p>Second line</p>');
-      TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 1, 0 ], 6);
-      doDelete(editor);
-      TinyAssertions.assertContent(editor, '<p contenteditable="false">CEF</p><p>Second line</p>');
-      TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 1, 0 ], 6);
-    }
-  });
-  it('Delete from non cef to cef block should not merge', () => {
-    if (isFirefox) {
-      const editor = hook.editor();
-      editor.setContent('<p>First line</p><p contenteditable="false">CEF</p>');
-      TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 1, 0 ], 2);
-      doDelete(editor);
-      TinyAssertions.assertContent(editor, '<p>First line</p><p contenteditable="false">CEF</p>');
-      TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 1, 0 ], 2);
-    }
-  });
-
 });

@@ -33,9 +33,14 @@
 
   *[contentEditable=false] {
     cursor: default;
+    user-select: none;
   }
 
   *[contentEditable=true] {
     cursor: text;
+  }
+
+  *[contentEditable=false] *[contentEditable=true] {
+    user-select: text;
   }
 }
