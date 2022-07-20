@@ -214,7 +214,7 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
     });
   });
 
-  context('Cleaning up after rng.deleteContens call', () => {
+  context('Cleaning up after rng.deleteContents call', () => {
     applyForDeleteAndBackspace(({ label, key }) => {
       it(`TINY-8729: should clean up empty nodes and padd empty block with bogus br when ${label} is pressed`, () => {
         const editor = hook.editor();
@@ -234,6 +234,15 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
         TinyContentActions.keystroke(editor, key());
         TinyAssertions.assertRawContent(editor, '<ul><li><br data-mce-bogus="1"></li></ul>');
         TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
+      });
+
+      it(`TINY-8877: should delete when all content is selected and add back the forced root block when ${label} is pressed`, () => {
+        const editor = hook.editor();
+        editor.setContent('<p contenteditable="false">CEF</p><p>Second line</p><p contenteditable="false">CEF</p>');
+        editor.execCommand('SelectAll');
+        TinyContentActions.keystroke(editor, key());
+        TinyAssertions.assertRawContent(editor, '<p><br data-mce-bogus="1"></p>');
+        TinyAssertions.assertCursor(editor, [ 0 ], 0);
       });
     });
   });

@@ -68,18 +68,21 @@ const applyRelTargetRules = (rel: string, isUnsafe: boolean): string => {
 const trimCaretContainers = (text: string): string =>
   text.replace(/\uFEFF/g, '');
 
-const getAnchorElement = (editor: Editor, selectedElm?: Element): HTMLAnchorElement | null => {
+const getAnchorElement = (editor: Editor, selectedElm?: Element): Optional<HTMLAnchorElement> => {
   selectedElm = selectedElm || editor.selection.getNode();
   if (isImageFigure(selectedElm)) {
     // for an image contained in a figure we look for a link inside the selected element
-    return editor.dom.select<HTMLAnchorElement>('a[href]', selectedElm)[0];
+    return Optional.from(editor.dom.select<HTMLAnchorElement>('a[href]', selectedElm)[0]);
   } else {
-    return editor.dom.getParent<HTMLAnchorElement>(selectedElm, 'a[href]');
+    return Optional.from(editor.dom.getParent<HTMLAnchorElement>(selectedElm, 'a[href]'));
   }
 };
 
-const getAnchorText = (selection: EditorSelection, anchorElm: HTMLAnchorElement): string => {
-  const text = anchorElm ? (anchorElm.innerText || anchorElm.textContent) : selection.getContent({ format: 'text' });
+const getAnchorText = (selection: EditorSelection, anchorElm: Optional<HTMLAnchorElement>): string => {
+  const text = anchorElm.fold(
+    () => selection.getContent({ format: 'text' }),
+    (anchorElm) => anchorElm.innerText || anchorElm.textContent
+  );
   return trimCaretContainers(text);
 };
 
@@ -179,12 +182,14 @@ const linkDomMutation = (editor: Editor, attachState: AttachState, data: LinkDia
       attachState.attach();
     }
 
-    if (anchorElm) {
-      editor.focus();
-      updateLink(editor, anchorElm, data.text, linkAttrs);
-    } else {
-      createLink(editor, selectedElm, data.text, linkAttrs);
-    }
+    anchorElm.fold(
+      () => {
+        createLink(editor, selectedElm, data.text, linkAttrs);
+      },
+      (elm) => {
+        editor.focus();
+        updateLink(editor, elm, data.text, linkAttrs);
+      });
   });
 };
 

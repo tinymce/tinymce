@@ -7,12 +7,16 @@ import Editor from '../../api/Editor';
 import { createMarker, Marker, rangeFromMarker, removeMarker } from '../utils/Marker';
 import { generatePathRange, generatePathRangeFromRange } from '../utils/PathRange';
 import * as Utils from '../utils/Utils';
-import { InlinePattern, InlinePatternMatch } from './PatternTypes';
+import { getInlinePatterns } from './Pattern';
+import { InlinePattern, InlinePatternMatch, InlinePatternSet } from './PatternTypes';
 
 interface PatternDetails {
   readonly pattern: InlinePattern;
-  readonly remainingPatterns: InlinePattern[];
+  readonly remainingPatternSet: InlinePatternSet;
   readonly position: Spot.SpotPoint<Text>;
+  // This allows us to allow trailing spaces for <space> triggered patterns, but not
+  // for <enter> trigger patterns, due to TINY-8779
+  readonly allowTrailingSpaces: boolean;
 }
 
 interface SearchResults {
@@ -122,7 +126,7 @@ const findPattern = (editor: Editor, block: Node, details: PatternDetails): Opti
       });
     } else {
       // Find any nested patterns, making sure not to process the current pattern again
-      const resultsOpt = findPatternsRec(editor, details.remainingPatterns, spot.container, spot.offset, block);
+      const resultsOpt = findPatternsRec(editor, details.remainingPatternSet, spot.container, spot.offset, block, details.allowTrailingSpaces);
       const results: SearchResults = resultsOpt.getOr({ matches: [], position: spot });
       const pos = results.position;
 
@@ -150,7 +154,7 @@ const findPattern = (editor: Editor, block: Node, details: PatternDetails): Opti
 // 3. Patterns will not extend outside of the root element
 // 4. All pattern ends must be directly before the cursor (represented by node + offset)
 // 5. Only text nodes matter
-const findPatternsRec = (editor: Editor, patterns: InlinePattern[], node: Node, offset: number, block: Node): Optional<SearchResults> => {
+const findPatternsRec = (editor: Editor, patternSet: InlinePatternSet, node: Node, offset: number, block: Node, space: boolean): Optional<SearchResults> => {
   const dom = editor.dom;
 
   return TextSearch.textBefore(node, offset, dom.getRoot()).bind((endSpot) => {
@@ -159,8 +163,27 @@ const findPatternsRec = (editor: Editor, patterns: InlinePattern[], node: Node, 
     rng.setEnd(node, offset);
     const text = rng.toString();
 
+    // TINY-8781: TODO: text_patterns should announce their changes for accessibility
+    const extraPatterns = patternSet.dynamicPatternsLookup({
+      text,
+      block,
+      // TINY-8779: When triggering inline patterns via space, we allow trailing spaces, because
+      // inline patterns are triggered via a space keyup, so spaces might be present.
+      // When triggering inline patterns via enter, we don't allow trailing spaces due to TINY-8779
+      allowTrailingSpaces: space
+    });
+    const dynamicPatterns = getInlinePatterns(extraPatterns);
+    // Dynamic patterns take precedence over static patterns
+    const patterns = [
+      ...dynamicPatterns,
+      ...patternSet.inlinePatterns,
+    ];
+
     for (let i = 0; i < patterns.length; i++) {
       const pattern = patterns[i];
+      // If the text does not end with the same string as the pattern, then we can exit
+      // early, because this pattern isn't going to match this text. This saves us doing more
+      // expensive matching calls.
       if (!Strings.endsWith(text, pattern.end)) {
         continue;
       }
@@ -172,8 +195,14 @@ const findPatternsRec = (editor: Editor, patterns: InlinePattern[], node: Node, 
       // Try to find the current pattern
       const result = findPattern(editor, block, {
         pattern,
-        remainingPatterns: patternsWithoutCurrent,
-        position: endSpot
+        remainingPatternSet: {
+          ...patternSet,
+          inlinePatterns: patternsWithoutCurrent
+        },
+        position: endSpot,
+        // space tells us whether it's triggered by <space> or <enter>, so
+        // we use that value for allowTrailingSpaces
+        allowTrailingSpaces: space
       });
 
       // If a match was found then return that
@@ -246,7 +275,7 @@ const addMarkers = (dom: DOMUtils, matches: InlinePatternMatch[]): InlinePattern
   }, [] as InlinePatternMatchWithMarkers[]);
 };
 
-const findPatterns = (editor: Editor, patterns: InlinePattern[], space: boolean): InlinePatternMatch[] => {
+const findPatterns = (editor: Editor, patternSet: InlinePatternSet, space: boolean): InlinePatternMatch[] => {
   const rng = editor.selection.getRng();
   if (!rng.collapsed) {
     return [];
@@ -254,7 +283,7 @@ const findPatterns = (editor: Editor, patterns: InlinePattern[], space: boolean)
 
   return Utils.getParentBlock(editor, rng).bind((block) => {
     const offset = Math.max(0, rng.startOffset - (space ? 1 : 0));
-    return findPatternsRec(editor, patterns, rng.startContainer, offset, block);
+    return findPatternsRec(editor, patternSet, rng.startContainer, offset, block, space);
   }).fold(() => [], (result) => result.matches);
 };
 

@@ -68,7 +68,7 @@ const setupContextToolbars = (editor: Editor): void => {
 
   const onSetupLink = (buttonApi: InlineContent.ContextFormButtonInstanceApi) => {
     const node = editor.selection.getNode();
-    buttonApi.setEnabled(Utils.getAnchorElement(editor, node) !== null);
+    buttonApi.setEnabled(Utils.getAnchorElement(editor, node).isSome());
     return Fun.noop;
   };
 
@@ -79,7 +79,7 @@ const setupContextToolbars = (editor: Editor): void => {
   const getLinkText = (value: string) => {
     const anchor = Utils.getAnchorElement(editor);
     const onlyText = Utils.isOnlyTextSelected(editor);
-    if (!anchor && onlyText) {
+    if (anchor.isNone() && onlyText) {
       const text = Utils.getAnchorText(editor.selection, anchor);
       return Optional.some(text.length > 0 ? text : value);
     } else {
@@ -98,7 +98,7 @@ const setupContextToolbars = (editor: Editor): void => {
     predicate: (node) => !!Utils.getAnchorElement(editor, node) && Options.hasContextToolbar(editor),
     initValue: () => {
       const elm = Utils.getAnchorElement(editor);
-      return !!elm ? Utils.getHref(elm) : '';
+      return elm.fold(Fun.constant(''), Utils.getHref);
     },
     commands: [
       {

@@ -47,7 +47,7 @@ const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Dialog.Dial
 };
 
 const collectData = (editor: Editor): Promise<LinkDialogInfo> => {
-  const anchorNode: HTMLAnchorElement = Utils.getAnchorElement(editor);
+  const anchorNode = Utils.getAnchorElement(editor);
   return DialogInfo.collect(editor, anchorNode);
 };
 

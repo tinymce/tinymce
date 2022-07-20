@@ -1,6 +1,6 @@
 import { Arr, Result, Results, Type } from '@ephox/katamari';
 
-import { BlockPattern, InlineCmdPattern, InlinePattern, Pattern, PatternError, PatternSet, RawPattern } from './PatternTypes';
+import { BlockPattern, DynamicPatternContext, DynamicPatternsLookup, InlineCmdPattern, InlinePattern, Pattern, PatternError, PatternSet, RawDynamicPatternsLookup, RawPattern } from './PatternTypes';
 
 const isInlinePattern = (pattern: Pattern): pattern is InlinePattern =>
   pattern.type === 'inline-command' || pattern.type === 'inline-format';
@@ -103,9 +103,10 @@ const getBlockPatterns = (patterns: Pattern[]): BlockPattern[] =>
 const getInlinePatterns = (patterns: Pattern[]): InlinePattern[] =>
   Arr.filter(patterns, isInlinePattern);
 
-const createPatternSet = (patterns: Pattern[]): PatternSet => ({
+const createPatternSet = (patterns: Pattern[], dynamicPatternsLookup: DynamicPatternsLookup): PatternSet => ({
   inlinePatterns: getInlinePatterns(patterns),
-  blockPatterns: getBlockPatterns(patterns)
+  blockPatterns: getBlockPatterns(patterns),
+  dynamicPatternsLookup
 });
 
 const fromRawPatterns = (patterns: RawPattern[]): Pattern[] => {
@@ -115,10 +116,18 @@ const fromRawPatterns = (patterns: RawPattern[]): Pattern[] => {
   return normalized.values;
 };
 
+const fromRawPatternsLookup = (lookupFn: RawDynamicPatternsLookup): DynamicPatternsLookup => {
+  return (ctx: DynamicPatternContext) => {
+    const rawPatterns = lookupFn(ctx);
+    return fromRawPatterns(rawPatterns);
+  };
+};
+
 export {
   normalizePattern,
   createPatternSet,
   getBlockPatterns,
   getInlinePatterns,
-  fromRawPatterns
+  fromRawPatterns,
+  fromRawPatternsLookup
 };

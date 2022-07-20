@@ -1,8 +1,11 @@
 import { ApproxStructure, Keys, StructAssert } from '@ephox/agar';
-import { Unicode } from '@ephox/katamari';
-import { TinyContentActions, TinySelections } from '@ephox/wrap-mcagar';
+import { Thunk, Unicode } from '@ephox/katamari';
+import { TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
+import * as Options from 'tinymce/core/api/Options';
+import * as Pattern from 'tinymce/core/textpatterns/core/Pattern';
+import { PatternSet } from 'tinymce/core/textpatterns/core/PatternTypes';
 
 const setContentAndFireKeystroke = (key: number) => {
   return (editor: Editor, content: string, offset = content.length, elementPath = [ 0, 0 ], wrapInP = true) => {
@@ -108,6 +111,16 @@ const forcedRootBlockStructHelper = (tag: string, content: string) => {
 
 const setContentAndPressEnter = setContentAndFireKeystroke(Keys.enter());
 
+const getPatternSetFor = (hook: TinyHooks.Hook<Editor>) => Thunk.cached((): PatternSet => {
+  const editor = hook.editor();
+  const rawPatterns = Options.getTextPatterns(editor);
+  const dynamicPatternsLookup = Options.getTextPatternsLookup(editor);
+  return Pattern.createPatternSet(
+    Pattern.fromRawPatterns(rawPatterns),
+    dynamicPatternsLookup
+  );
+});
+
 export {
   setContentAndPressSpace,
   setContentAndPressEnter,
@@ -116,5 +129,6 @@ export {
   inlineBlockStructHelper,
   blockStructHelper,
   forcedRootBlockInlineStructHelper,
-  forcedRootBlockStructHelper
+  forcedRootBlockStructHelper,
+  getPatternSetFor
 };
