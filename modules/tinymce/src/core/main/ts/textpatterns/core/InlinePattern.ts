@@ -166,18 +166,7 @@ const findPatternsRec = (
     rng.setStart(block, 0);
     rng.setEnd(node, offset);
     const text = rng.toString();
-
-    // TINY-8781: TODO: text_patterns should announce their changes for accessibility
-    const extraPatterns = patternSet.dynamicPatternsLookup({
-      text,
-      block
-    });
-    const dynamicPatterns = getInlinePatterns(extraPatterns);
-    // Dynamic patterns take precedence over static patterns
-    const patterns = [
-      ...dynamicPatterns,
-      ...patternSet.inlinePatterns,
-    ];
+    const patterns = patternSet.inlinePatterns;
 
     for (let i = 0; i < patterns.length; i++) {
       const pattern = patterns[i];
