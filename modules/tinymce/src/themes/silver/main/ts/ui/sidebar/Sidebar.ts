@@ -30,6 +30,7 @@ const setup = (editor: Editor) => {
         buttonApi.setActive(isActive());
       },
       onSetup: (buttonApi) => {
+        buttonApi.setActive(isActive());
         const handleToggle = () => buttonApi.setActive(isActive());
         editor.on('ToggleSidebar', handleToggle);
         return () => {

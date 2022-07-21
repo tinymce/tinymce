@@ -150,6 +150,4 @@ describe('browser.tinymce.core.textpatterns.ReplacementTest', () => {
     // This function throws an error here due to the bug identified in TINY-8779
     TinyContentActions.keystroke(editor, Keys.enter());
   });
-
-
 });

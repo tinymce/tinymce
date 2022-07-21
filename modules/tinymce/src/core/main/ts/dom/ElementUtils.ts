@@ -1,9 +1,17 @@
-import { Obj, Type } from '@ephox/katamari';
+import { Arr, Obj, Strings, Type } from '@ephox/katamari';
 
-import * as Bookmarks from '../../bookmark/Bookmarks';
-import * as NodeType from '../../dom/NodeType';
-import Tools from '../util/Tools';
-import DOMUtils from './DOMUtils';
+import Editor from '../api/Editor';
+import Tools from '../api/util/Tools';
+import * as Bookmarks from '../bookmark/Bookmarks';
+import * as NodeType from './NodeType';
+
+const internalAttributesPrefixes = [
+  'data-ephox-',
+  'data-mce-',
+  'data-alloy-',
+  'data-snooker-',
+  '_'
+];
 
 /**
  * Utility class for various element specific functions.
@@ -16,9 +24,13 @@ const each = Tools.each;
 
 export interface ElementUtils {
   readonly compare: (node1: Node, node2: Node) => boolean;
+  readonly isAttributeInternal: (attribute: string) => boolean;
 }
 
-const ElementUtils = (dom: DOMUtils): ElementUtils => {
+const ElementUtils = (editor: Editor): ElementUtils => {
+  const dom = editor.dom;
+  const internalAttributes = new Set<string>(editor.serializer.getTempAttrs());
+
   /**
    * Compares two nodes and checks if it's attributes and styles matches.
    * This doesn't compare classes as items since their order is significant.
@@ -48,7 +60,7 @@ const ElementUtils = (dom: DOMUtils): ElementUtils => {
         const name = attr.nodeName.toLowerCase();
 
         // Don't compare internal attributes or style
-        if (name.indexOf('_') !== 0 && name !== 'style' && name.indexOf('data-') !== 0) {
+        if (name !== 'style' && !isAttributeInternal(name)) {
           attribs[name] = dom.getAttrib(node, name);
         }
       });
@@ -111,8 +123,12 @@ const ElementUtils = (dom: DOMUtils): ElementUtils => {
     return !Bookmarks.isBookmarkNode(node1) && !Bookmarks.isBookmarkNode(node2);
   };
 
+  const isAttributeInternal = (attributeName: string): boolean =>
+    Arr.exists(internalAttributesPrefixes, (value) => Strings.startsWith(attributeName, value)) || internalAttributes.has(attributeName);
+
   return {
-    compare
+    compare,
+    isAttributeInternal
   };
 };
 

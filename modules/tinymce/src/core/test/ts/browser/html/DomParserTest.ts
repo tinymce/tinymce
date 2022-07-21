@@ -1285,6 +1285,19 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     );
   });
 
+  it('TINY-8780: Invalid special elements are removed entirely instead of being unwrapped', () => {
+    const parser = DomParser({ forced_root_block: 'p' }, Schema({ invalid_elements: 'script,style,iframe,textarea,div' }));
+    const html = '<script>var x = 1;</script>' +
+      '<style>.red-text { color: red; }</style>' +
+      '<iframe src="about:blank">content</iframe>' +
+      '<textarea>content</textarea>' +
+      '<p>paragraph</p>' +
+      '<div>div</div>';
+
+    const serializedHtml = serializer.serialize(parser.parse(html));
+    assert.equal(serializedHtml, '<p>paragraph</p><p>div</p>');
+  });
+
   context('validate: false', () => {
     it('invalid elements and attributes should not be removed', () => {
       const parser = DomParser({ validate: false }, Schema({ valid_elements: 'span[id]' }));

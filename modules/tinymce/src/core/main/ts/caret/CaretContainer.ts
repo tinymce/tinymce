@@ -1,4 +1,5 @@
 import * as NodeType from '../dom/NodeType';
+import * as PaddingBr from '../dom/PaddingBr';
 import * as Zwsp from '../text/Zwsp';
 import { CaretPosition } from './CaretPosition';
 
@@ -115,18 +116,12 @@ const isAfterInline = (pos: CaretPosition): boolean => {
   return container.data.charAt(pos.offset() - 1) === Zwsp.ZWSP || pos.isAtEnd() && isCaretContainerInline(container.nextSibling);
 };
 
-const createBogusBr = (): Element => {
-  const br = document.createElement('br');
-  br.setAttribute('data-mce-bogus', '1');
-  return br;
-};
-
 const insertBlock = (blockName: string, node: Node, before: boolean): HTMLElement => {
   const doc = node.ownerDocument ?? document;
   const blockNode = doc.createElement(blockName);
   blockNode.setAttribute('data-mce-caret', before ? 'before' : 'after');
   blockNode.setAttribute('data-mce-bogus', 'all');
-  blockNode.appendChild(createBogusBr());
+  blockNode.appendChild(PaddingBr.createPaddingBr().dom);
   const parentNode = node.parentNode;
 
   if (!before) {
