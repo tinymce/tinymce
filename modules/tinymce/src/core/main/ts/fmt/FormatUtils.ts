@@ -22,7 +22,7 @@ const isInlineBlock = (node: Node): boolean => {
   return node && /^(IMG)$/.test(node.nodeName);
 };
 
-const isContentEditable = (elm: HTMLElement): boolean =>
+const isEditable = (elm: HTMLElement): boolean =>
   elm.isContentEditable === true;
 
 const moveStart = (dom: DOMUtils, selection: EditorSelection, rng: Range): void => {
@@ -280,7 +280,7 @@ export {
   isNode,
   isElementNode,
   isInlineBlock,
-  isContentEditable,
+  isEditable,
   moveStart,
   getNonWhiteSpaceSibling,
   isTextBlock,

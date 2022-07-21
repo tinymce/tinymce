@@ -14,7 +14,7 @@ const each = Tools.each;
 
 const mergeTextDecorationsAndColor = (dom: DOMUtils, format: ApplyFormat, vars: FormatVars | undefined, node: Node): void => {
   const processTextDecorationsAndColor = (n: Node) => {
-    if (NodeType.isElement(n) && NodeType.isElement(n.parentNode) && FormatUtils.isContentEditable(n)) {
+    if (NodeType.isElement(n) && NodeType.isElement(n.parentNode) && FormatUtils.isEditable(n)) {
       const parentTextDecoration = FormatUtils.getTextDecoration(dom, n.parentNode);
       if (dom.getStyle(n, 'color') && parentTextDecoration) {
         dom.setStyle(n, 'text-decoration', parentTextDecoration);
@@ -34,8 +34,9 @@ const mergeTextDecorationsAndColor = (dom: DOMUtils, format: ApplyFormat, vars: 
 const mergeBackgroundColorAndFontSize = (dom: DOMUtils, format: ApplyFormat, vars: FormatVars | undefined, node: Node): void => {
   // nodes with font-size should have their own background color as well to fit the line-height (see TINY-882)
   if (format.styles && format.styles.backgroundColor) {
+    const hasFontSize = hasStyle(dom, 'fontSize');
     processChildElements(node,
-      (elm) => hasStyle(dom, 'fontSize')(elm) && FormatUtils.isContentEditable(elm),
+      (elm) => hasFontSize(elm) && FormatUtils.isEditable(elm),
       applyStyle(dom, 'backgroundColor', FormatUtils.replaceVars(format.styles.backgroundColor, vars))
     );
   }
@@ -44,12 +45,13 @@ const mergeBackgroundColorAndFontSize = (dom: DOMUtils, format: ApplyFormat, var
 const mergeSubSup = (dom: DOMUtils, format: ApplyFormat, vars: FormatVars | undefined, node: Node): void => {
   // Remove font size on all descendants of a sub/sup and remove the inverse elements
   if (FormatUtils.isInlineFormat(format) && (format.inline === 'sub' || format.inline === 'sup')) {
+    const hasFontSize = hasStyle(dom, 'fontSize');
     processChildElements(node,
-      (elm) => hasStyle(dom, 'fontSize')(elm) && FormatUtils.isContentEditable(elm),
+      (elm) => hasFontSize(elm) && FormatUtils.isEditable(elm),
       applyStyle(dom, 'fontSize', '')
     );
 
-    const inverseTagDescendants = Arr.filter(dom.select(format.inline === 'sup' ? 'sub' : 'sup', node), FormatUtils.isContentEditable);
+    const inverseTagDescendants = Arr.filter(dom.select(format.inline === 'sup' ? 'sub' : 'sup', node), FormatUtils.isEditable);
     dom.remove(inverseTagDescendants, true);
   }
 };

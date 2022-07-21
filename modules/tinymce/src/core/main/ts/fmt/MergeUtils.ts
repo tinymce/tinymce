@@ -31,8 +31,8 @@ const findElementSibling = (node: Node, siblingName: 'nextSibling' | 'previousSi
 
 const mergeSiblingsNodes = (editor: Editor, prev: Node | undefined, next: Node | undefined) => {
   const elementUtils = ElementUtils(editor);
-  const isPrevEditable = prev && NodeType.isElement(prev) && FormatUtils.isContentEditable(prev);
-  const isNextEditable = next && NodeType.isElement(next) && FormatUtils.isContentEditable(next);
+  const isPrevEditable = NodeType.isElement(prev) && FormatUtils.isEditable(prev);
+  const isNextEditable = NodeType.isElement(next) && FormatUtils.isEditable(next);
 
   // Check if next/prev exists and that they are elements
   if (isPrevEditable && isNextEditable) {
@@ -77,7 +77,7 @@ const clearChildStyles = (dom: DOMUtils, format: ApplyFormat, node: Node): void 
   if (format.clear_child_styles) {
     const selector = format.links ? '*:not(a)' : '*';
     each(dom.select(selector, node), (childNode) => {
-      if (isElementNode(childNode) && FormatUtils.isContentEditable(childNode)) {
+      if (isElementNode(childNode) && FormatUtils.isEditable(childNode)) {
         each(format.styles, (_value, name: string) => {
           dom.setStyle(childNode, name, '');
         });
