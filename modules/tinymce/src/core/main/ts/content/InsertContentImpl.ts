@@ -13,7 +13,6 @@ import CaretPosition from '../caret/CaretPosition';
 import { CaretWalker } from '../caret/CaretWalker';
 import * as TableDelete from '../delete/TableDelete';
 import * as CefUtils from '../dom/CefUtils';
-import * as ElementType from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as FilterNode from '../html/FilterNode';
@@ -23,14 +22,16 @@ import * as SelectionUtils from '../selection/SelectionUtils';
 import { InsertContentDetails } from './ContentTypes';
 import * as InsertList from './InsertList';
 
+const wrappedElements = [ 'pre' ];
+
 const shouldPasteContentOnly = (dom: DOMUtils, fragment: AstNode, parentNode: Element) => {
   const firstNode = fragment.firstChild as AstNode;
   const lastNode = fragment.lastChild as AstNode;
-
-  const isWrappedElement = ElementType.isWrapElement(SugarElement.fromTag(firstNode.name));
-  const isPastingInTheSameTag = firstNode.name === parentNode.tagName.toLowerCase();
   const last = lastNode.attr('data-mce-type') === 'bookmark' ? lastNode.prev : lastNode;
+
   const isCopyingOnlyOneTag = firstNode === last;
+  const isWrappedElement = Arr.contains(wrappedElements, firstNode.name);
+  const isPastingInTheSameTag = firstNode.name === parentNode.tagName.toLowerCase();
   const isContentEditableTrue = dom.getContentEditable(parentNode) !== 'false';
 
   return isCopyingOnlyOneTag && isWrappedElement && isPastingInTheSameTag && isContentEditableTrue;
