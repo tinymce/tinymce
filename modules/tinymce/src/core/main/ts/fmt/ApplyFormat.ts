@@ -221,6 +221,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
             parentNode.insertBefore(currentWrapElm, node);
             newWrappers.push(currentWrapElm);
           }
+
           // Wrappable noneditable element has been handled so go back to previous state
           if (isWrappableNoneditableElm && hasContentEditableState) {
             contentEditable = lastContentEditable;
