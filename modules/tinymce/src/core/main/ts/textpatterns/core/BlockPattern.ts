@@ -62,35 +62,30 @@ const findPattern = <P extends Pattern>(patterns: P[], text: string): Optional<P
   return Arr.find(patterns, (pattern) => text.indexOf(pattern.start) === 0 || nuText.indexOf(pattern.start) === 0);
 };
 
-const findPatterns = (editor: Editor, patternSet: PatternSet, dynamicPatterns: Pattern[], normalizedMatches: boolean): BlockPatternMatch[] => {
+const findPatterns = (editor: Editor, block: Element, patternSet: PatternSet, dynamicPatterns: Pattern[], normalizedMatches: boolean): BlockPatternMatch[] => {
   const dom = editor.dom;
-  const rng = editor.selection.getRng();
+  const forcedRootBlock = Options.getForcedRootBlock(editor);
+  if (block === null || !dom.is(block, forcedRootBlock)) {
+    return [];
+  }
+  // Get the block text
+  const blockText = block.textContent ?? '';
+  // dynamic patterns take precedence here
+  const patterns = getBlockPatterns(dynamicPatterns);
+  const matchedPattern = findPattern(patterns, blockText).orThunk(() => {
+    const patterns = getBlockPatterns(patternSet.blockPatterns);
+    return findPattern(patterns, blockText);
+  });
 
-  return Utils.getParentBlock(editor, rng).filter((block) => {
-    const forcedRootBlock = Options.getForcedRootBlock(editor);
-    const matchesForcedRootBlock = dom.is(block, forcedRootBlock);
-    return block !== null && matchesForcedRootBlock;
-  }).bind((block) => {
-    // Get the block text
-    const blockText = block.textContent ?? '';
-    // search in the dynamic patterns first
-    const patterns = getBlockPatterns(dynamicPatterns);
-    const matchedPattern = findPattern(patterns, blockText).orThunk(() => {
-      // Search in the static patterns
-      const patterns = getBlockPatterns(patternSet.blockPatterns);
-      return findPattern(patterns, blockText);
-    });
+  return matchedPattern.map((pattern) => {
+    if (Tools.trim(blockText).length === pattern.start.length) {
+      return [];
+    }
 
-    return matchedPattern.map((pattern) => {
-      if (Tools.trim(blockText).length === pattern.start.length) {
-        return [];
-      }
-
-      return [{
-        pattern,
-        range: generatePathRange(dom, dom.getRoot(), block, 0, block, 0, normalizedMatches)
-      }];
-    });
+    return [{
+      pattern,
+      range: generatePathRange(dom, dom.getRoot(), block, 0, block, 0, normalizedMatches)
+    }];
   }).getOr([]);
 };
 

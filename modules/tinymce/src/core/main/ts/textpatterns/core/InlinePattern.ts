@@ -261,22 +261,19 @@ const addMarkers = (dom: DOMUtils, matches: InlinePatternMatch[]): InlinePattern
   }, [] as InlinePatternMatchWithMarkers[]);
 };
 
-const findPatterns = (editor: Editor, patternSet: InlinePatternSet, dynamicPattern: Pattern[], normalizedMatches: boolean, space: boolean): InlinePatternMatch[] => {
+const findPatterns = (editor: Editor, block: Element, patternSet: InlinePatternSet, dynamicPatterns: Pattern[], normalizedMatches: boolean, space: boolean): InlinePatternMatch[] => {
   const rng = editor.selection.getRng();
   if (!rng.collapsed) {
     return [];
   }
-
-  return Utils.getParentBlock(editor, rng).bind((block) => {
-    const offset = Math.max(0, rng.startOffset - (space ? 1 : 0));
-    const extraPatterns = getInlinePatterns(dynamicPattern);
-    const patterns = {
-      ...patternSet,
-      inlinePatterns: extraPatterns.concat(patternSet.inlinePatterns)
-    };
-    // patternSet.inlinePatterns = dynamicPatterns.concat(patternSet.inlinePatterns);
-    return findPatternsRec(editor, patterns, rng.startContainer, offset, block, normalizedMatches);
-  }).fold(() => [], (result) => result.matches);
+  const offset = Math.max(0, rng.startOffset - (space ? 1 : 0));
+  const extraPatterns = getInlinePatterns(dynamicPatterns);
+  const patterns = {
+    ...patternSet,
+    inlinePatterns: extraPatterns.concat(patternSet.inlinePatterns)
+  };
+  // patternSet.inlinePatterns = dynamicPatterns.concat(patternSet.inlinePatterns);
+  return findPatternsRec(editor, patterns, rng.startContainer, offset, block, normalizedMatches).fold(() => [], (result) => result.matches);
 };
 
 const applyMatches = (editor: Editor, matches: InlinePatternMatch[]): void => {
