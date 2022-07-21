@@ -6,6 +6,7 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Options from 'tinymce/core/api/Options';
 import * as Pattern from 'tinymce/core/textpatterns/core/Pattern';
 import { PatternSet } from 'tinymce/core/textpatterns/core/PatternTypes';
+import { getParentBlock, resolveFromDynamicPatterns } from 'tinymce/core/textpatterns/utils/Utils';
 
 const setContentAndFireKeystroke = (key: number) => {
   return (editor: Editor, content: string, offset = content.length, elementPath = [ 0, 0 ], wrapInP = true) => {
@@ -121,6 +122,11 @@ const getPatternSetFor = (hook: TinyHooks.Hook<Editor>) => Thunk.cached((): Patt
   );
 });
 
+const findPatternsWithDynamicPatterns = (editor: Editor, patternSet: PatternSet, callback: any, normalized: boolean = false, allowTrailingSpace: boolean = false) => getParentBlock(editor, editor.selection.getRng()).map((block) => {
+  const dynamicPatterns = resolveFromDynamicPatterns(patternSet, block);
+  return callback(editor, block, patternSet, dynamicPatterns, normalized, allowTrailingSpace);
+}).getOr([]);
+
 export {
   setContentAndPressSpace,
   setContentAndPressEnter,
@@ -130,5 +136,6 @@ export {
   blockStructHelper,
   forcedRootBlockInlineStructHelper,
   forcedRootBlockStructHelper,
-  getPatternSetFor
+  getPatternSetFor,
+  findPatternsWithDynamicPatterns
 };

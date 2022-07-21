@@ -72,9 +72,9 @@ const findPatterns = (editor: Editor, block: Element, patternSet: PatternSet, dy
   const blockText = block.textContent ?? '';
   // dynamic patterns take precedence here
   const patterns = getBlockPatterns(dynamicPatterns);
-  const matchedPattern = findPattern(patterns, blockText).orThunk(() => {
+  const matchedPattern = findPattern(patterns, block.textContent).orThunk(() => {
     const patterns = getBlockPatterns(patternSet.blockPatterns);
-    return findPattern(patterns, blockText);
+    return findPattern(patterns, block.textContent);
   });
 
   return matchedPattern.map((pattern) => {

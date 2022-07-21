@@ -5,21 +5,12 @@ import Editor from '../../api/Editor';
 import VK from '../../api/util/VK';
 import * as BlockPattern from '../core/BlockPattern';
 import * as InlinePattern from '../core/InlinePattern';
-import { Pattern, PatternSet } from '../core/PatternTypes';
+import { PatternSet } from '../core/PatternTypes';
 import * as Utils from '../utils/Utils';
-
-const resolveFromDynamicPatterns = (patternSet: PatternSet, block: Element): Pattern[] => {
-
-  const blockText = block.textContent ?? '';
-  return patternSet.dynamicPatternsLookup({
-    text: blockText,
-    block
-  });
-};
 
 const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
   return Utils.getParentBlock(editor, editor.selection.getRng()).map((block) => {
-    const dynamicPatterns = resolveFromDynamicPatterns(patternSet, block);
+    const dynamicPatterns = Utils.resolveFromDynamicPatterns(patternSet, block);
     // IMPORTANT: We need to get normalized match results since undoing and redoing the editor state
     // via undoManager.extra() will result in the DOM being normalized.
     const inlineMatches = InlinePattern.findPatterns(editor, block, patternSet, dynamicPatterns, true, false);
@@ -60,7 +51,7 @@ const handleInlineKey = (
   patternSet: PatternSet
 ): void => {
   Utils.getParentBlock(editor, editor.selection.getRng()).map((block) => {
-    const dynamicPatterns = resolveFromDynamicPatterns(patternSet, block);
+    const dynamicPatterns = Utils.resolveFromDynamicPatterns(patternSet, block);
     const inlineMatches = InlinePattern.findPatterns(editor, block, patternSet, dynamicPatterns, false, true);
     if (inlineMatches.length > 0) {
       editor.undoManager.transact(() => {
