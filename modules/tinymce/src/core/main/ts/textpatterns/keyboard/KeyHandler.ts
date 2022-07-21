@@ -14,17 +14,17 @@ const resolveFromDynamicPatterns = (editor: Editor, patternSet: PatternSet): Pat
     const blockText = block.textContent ?? '';
     return Optional.from(patternSet.dynamicPatternsLookup({
       text: blockText,
-      block,
-      allowTrailingSpaces: false
+      block
     }));
   }).getOr([]);
 };
 
 const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
   const dynamicPatterns = resolveFromDynamicPatterns(editor, patternSet);
-  // Find any matches
-  const inlineMatches = InlinePattern.findPatterns(editor, patternSet, dynamicPatterns, false);
-  const blockMatches = BlockPattern.findPatterns(editor, patternSet, dynamicPatterns);
+  // IMPORTANT: We need to get normalized match results since undoing and redoing the editor state
+  // via undoManager.extra() will result in the DOM being normalized.
+  const inlineMatches = InlinePattern.findPatterns(editor, patternSet, dynamicPatterns, true, false);
+  const blockMatches = BlockPattern.findPatterns(editor, patternSet, dynamicPatterns, true);
   if (blockMatches.length > 0 || inlineMatches.length > 0) {
     editor.undoManager.add();
     editor.undoManager.extra(
@@ -60,7 +60,7 @@ const handleInlineKey = (
   patternSet: InlinePatternSet
 ): void => {
   const dynamicPatterns = resolveFromDynamicPatterns(editor, patternSet as PatternSet);
-  const inlineMatches = InlinePattern.findPatterns(editor, patternSet, dynamicPatterns, true);
+  const inlineMatches = InlinePattern.findPatterns(editor, patternSet, dynamicPatterns, false, true);
   if (inlineMatches.length > 0) {
     editor.undoManager.transact(() => {
       InlinePattern.applyMatches(editor, inlineMatches);

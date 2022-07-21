@@ -62,7 +62,7 @@ const findPattern = <P extends Pattern>(patterns: P[], text: string): Optional<P
   return Arr.find(patterns, (pattern) => text.indexOf(pattern.start) === 0 || nuText.indexOf(pattern.start) === 0);
 };
 
-const findPatterns = (editor: Editor, patternSet: PatternSet, dynamicPatterns: Pattern[]): BlockPatternMatch[] => {
+const findPatterns = (editor: Editor, patternSet: PatternSet, dynamicPatterns: Pattern[], normalizedMatches: boolean): BlockPatternMatch[] => {
   const dom = editor.dom;
   const rng = editor.selection.getRng();
 
@@ -88,7 +88,7 @@ const findPatterns = (editor: Editor, patternSet: PatternSet, dynamicPatterns: P
 
       return [{
         pattern,
-        range: generatePathRange(dom.getRoot(), block, 0, block, 0)
+        range: generatePathRange(dom, dom.getRoot(), block, 0, block, 0, normalizedMatches)
       }];
     });
   }).getOr([]);
