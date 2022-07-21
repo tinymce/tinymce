@@ -20,10 +20,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Elements with only custom attributes starting with `data-` would sometimes be removed when they shouldn't #TINY-8755
 - Selecting a figure with `class="image"` would incorrectly highlight the link toolbar button #TINY-8832
 - Fixed various issues that occurred when formatting `contenteditable` elements. #TINY-8905
+- The text pattern logic threw an error when there were fragmented text nodes in a paragraph #TINY-8779
 
 ## 6.1.1 - TBA
 
 ### Fixed
+- Invalid special elements were not cleaned up correctly during sanitization #TINY-8780
 - An exception was thrown when deleting all content if the start or end of the document had a `contenteditable="false"` element #TINY-8877
 - When a sidebar was opened using the `sidebar_show` option, its associated toggle button was not highlighted #TINY-8873
 - The `autolink` plugin when converting a URL to a link did not fire an `ExecCommand` event, nor did it create an undo level #TINY-8896

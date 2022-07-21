@@ -10,8 +10,10 @@ import * as Utils from '../utils/Utils';
 
 const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
   // Find any matches
-  const inlineMatches = InlinePattern.findPatterns(editor, patternSet, false);
-  const blockMatches = BlockPattern.findPatterns(editor, patternSet);
+  // IMPORTANT: We need to get normalized match results since undoing and redoing the editor state
+  // via undoManager.extra() will result in the DOM being normalized.
+  const inlineMatches = InlinePattern.findPatterns(editor, patternSet, true, false);
+  const blockMatches = BlockPattern.findPatterns(editor, patternSet, true);
   if (blockMatches.length > 0 || inlineMatches.length > 0) {
     editor.undoManager.add();
     editor.undoManager.extra(
@@ -46,7 +48,7 @@ const handleInlineKey = (
   editor: Editor,
   patternSet: InlinePatternSet
 ): void => {
-  const inlineMatches = InlinePattern.findPatterns(editor, patternSet, true);
+  const inlineMatches = InlinePattern.findPatterns(editor, patternSet, false, true);
   if (inlineMatches.length > 0) {
     editor.undoManager.transact(() => {
       InlinePattern.applyMatches(editor, inlineMatches);
