@@ -5,7 +5,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as InlinePattern from 'tinymce/core/textpatterns/core/InlinePattern';
-import { InlinePattern as InlinePatternType, InlinePatternMatch, InlinePatternSet, PatternSet } from 'tinymce/core/textpatterns/core/PatternTypes';
+import { InlinePattern as InlinePatternType, InlinePatternMatch, PatternSet } from 'tinymce/core/textpatterns/core/PatternTypes';
 import { PathRange } from 'tinymce/core/textpatterns/utils/PathRange';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 
@@ -18,7 +18,8 @@ describe('browser.tinymce.textpatterns.FindInlinePatternTest', () => {
     readonly endRng: PathRange;
   }
 
-  const getInlinePattern = (editor: Editor, patternSet: PatternSet, space: boolean = false, normalized: boolean = false) => findPatternsWithDynamicPatterns(editor, patternSet, InlinePattern.findPatterns, space, normalized);
+  const getInlinePattern = (editor: Editor, patternSet: PatternSet, space: boolean = false, normalized: boolean = false) =>
+    findPatternsWithDynamicPatterns(editor, patternSet, InlinePattern.findPatterns, normalized, space);
 
   const assertPatterns = (actualMatches: InlinePatternMatch[], expectedMatches: ExpectedPatternMatch[]) => {
     assert.lengthOf(actualMatches, expectedMatches.length, 'Pattern count does not match');
@@ -206,7 +207,8 @@ describe('browser.tinymce.textpatterns.FindInlinePatternTest', () => {
     });
 
     context('with just a single ** -> bold inline-format pattern', () => {
-      const inlinePatternSet: InlinePatternSet = {
+      const inlinePatternSet: PatternSet = {
+        blockPatterns: [],
         inlinePatterns: [
           { type: 'inline-format', start: '**', end: '**', format: [ 'bold' ] }
         ],
@@ -223,14 +225,14 @@ describe('browser.tinymce.textpatterns.FindInlinePatternTest', () => {
       it('TINY-8778: force only ** pattern with leading content and test return on not existing *** pattern', () => {
         const editor = hook.editor();
         setContentAndCursor(editor, 'y ***x***', [ 0 ], 9);
-        const matches = getInlinePattern(editor, inlinePatternSet as PatternSet);
+        const matches = getInlinePattern(editor, inlinePatternSet);
         assertSimpleMatch(matches, '**', '**', [ 'bold' ], { start: [ 0, 3 ], end: [ 0, 5 ] }, { start: [ 0, 7 ], end: [ 0, 9 ] });
       });
 
       it('TINY-8778: force only ** pattern with trailing ** text and test return on not existing *** pattern', () => {
         const editor = hook.editor();
         setContentAndCursor(editor, 'y ***x*** **', [ 0 ], 9);
-        const matches = getInlinePattern(editor, inlinePatternSet as PatternSet);
+        const matches = getInlinePattern(editor, inlinePatternSet);
         assertSimpleMatch(matches, '**', '**', [ 'bold' ], { start: [ 0, 3 ], end: [ 0, 5 ] }, { start: [ 0, 7 ], end: [ 0, 9 ] });
       });
     });

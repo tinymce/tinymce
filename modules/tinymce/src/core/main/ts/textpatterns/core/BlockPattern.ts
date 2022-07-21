@@ -8,7 +8,6 @@ import * as Options from '../../api/Options';
 import Tools from '../../api/util/Tools';
 import { generatePathRange, resolvePathRange } from '../utils/PathRange';
 import * as Utils from '../utils/Utils';
-import { getBlockPatterns } from './Pattern';
 import { BlockPattern, BlockPatternMatch, Pattern, PatternSet } from './PatternTypes';
 
 const stripPattern = (dom: DOMUtils, block: Node, pattern: BlockPattern): void => {
@@ -62,22 +61,16 @@ const findPattern = <P extends Pattern>(patterns: P[], text: string): Optional<P
   return Arr.find(patterns, (pattern) => text.indexOf(pattern.start) === 0 || nuText.indexOf(pattern.start) === 0);
 };
 
-const findPatterns = (editor: Editor, block: Element, patternSet: PatternSet, dynamicPatterns: Pattern[], normalizedMatches: boolean): BlockPatternMatch[] => {
+const findPatterns = (editor: Editor, block: Element, patternSet: PatternSet, normalizedMatches: boolean): BlockPatternMatch[] => {
   const dom = editor.dom;
   const forcedRootBlock = Options.getForcedRootBlock(editor);
-  if (block === null || !dom.is(block, forcedRootBlock)) {
+  if (!dom.is(block, forcedRootBlock)) {
     return [];
   }
-  // Get the block text
-  const blockText = block.textContent ?? '';
-  // dynamic patterns take precedence here
-  const patterns = getBlockPatterns(dynamicPatterns);
-  const matchedPattern = findPattern(patterns, block.textContent).orThunk(() => {
-    const patterns = getBlockPatterns(patternSet.blockPatterns);
-    return findPattern(patterns, block.textContent);
-  });
 
-  return matchedPattern.map((pattern) => {
+  // Get the block text and then find a matching pattern
+  const blockText = block.textContent ?? '';
+  return findPattern(patternSet.blockPatterns, blockText).map((pattern) => {
     if (Tools.trim(blockText).length === pattern.start.length) {
       return [];
     }

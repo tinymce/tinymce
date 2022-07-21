@@ -122,10 +122,19 @@ const getPatternSetFor = (hook: TinyHooks.Hook<Editor>) => Thunk.cached((): Patt
   );
 });
 
-const findPatternsWithDynamicPatterns = (editor: Editor, patternSet: PatternSet, callback: any, normalized: boolean = false, allowTrailingSpace: boolean = false) => getParentBlock(editor, editor.selection.getRng()).map((block) => {
-  const dynamicPatterns = resolveFromDynamicPatterns(patternSet, block);
-  return callback(editor, block, patternSet, dynamicPatterns, normalized, allowTrailingSpace);
-}).getOr([]);
+const findPatternsWithDynamicPatterns = <
+  F extends (editor: Editor, block: Element, patternSet: PatternSet, normalized: boolean, allowTrailingSpace?: boolean) => any
+>(
+  editor: Editor,
+  patternSet: PatternSet,
+  callback: F,
+  normalized: boolean,
+  allowTrailingSpace: boolean = false
+): ReturnType<F> =>
+  getParentBlock(editor, editor.selection.getRng()).map((block) => {
+    const dynamicPatternSet = resolveFromDynamicPatterns(patternSet, block);
+    return callback(editor, block, dynamicPatternSet, normalized, allowTrailingSpace);
+  }).getOr([]);
 
 export {
   setContentAndPressSpace,

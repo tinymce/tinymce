@@ -7,12 +7,11 @@ import Editor from '../../api/Editor';
 import { createMarker, Marker, rangeFromMarker, removeMarker } from '../utils/Marker';
 import { generatePathRange, generatePathRangeFromRange } from '../utils/PathRange';
 import * as Utils from '../utils/Utils';
-import { getInlinePatterns } from './Pattern';
-import { InlinePattern, InlinePatternMatch, InlinePatternSet, Pattern } from './PatternTypes';
+import { InlinePattern, InlinePatternMatch, PatternSet } from './PatternTypes';
 
 interface PatternDetails {
   readonly pattern: InlinePattern;
-  readonly remainingPatternSet: InlinePatternSet;
+  readonly remainingPatterns: InlinePattern[];
   readonly position: Spot.SpotPoint<Text>;
 }
 
@@ -123,7 +122,7 @@ const findPattern = (editor: Editor, block: Node, details: PatternDetails, norma
       });
     } else {
       // Find any nested patterns, making sure not to process the current pattern again
-      const resultsOpt = findPatternsRec(editor, details.remainingPatternSet, spot.container, spot.offset, block, normalizedMatches);
+      const resultsOpt = findPatternsRec(editor, details.remainingPatterns, spot.container, spot.offset, block, normalizedMatches);
       const results: SearchResults = resultsOpt.getOr({ matches: [], position: spot });
       const pos = results.position;
 
@@ -153,7 +152,7 @@ const findPattern = (editor: Editor, block: Node, details: PatternDetails, norma
 // 5. Only text nodes matter
 const findPatternsRec = (
   editor: Editor,
-  patternSet: InlinePatternSet,
+  patterns: InlinePattern[],
   node: Node,
   offset: number,
   block: Node,
@@ -166,7 +165,6 @@ const findPatternsRec = (
     rng.setStart(block, 0);
     rng.setEnd(node, offset);
     const text = rng.toString();
-    const patterns = patternSet.inlinePatterns;
 
     for (let i = 0; i < patterns.length; i++) {
       const pattern = patterns[i];
@@ -184,10 +182,7 @@ const findPatternsRec = (
       // Try to find the current pattern
       const result = findPattern(editor, block, {
         pattern,
-        remainingPatternSet: {
-          ...patternSet,
-          inlinePatterns: patternsWithoutCurrent
-        },
+        remainingPatterns: patternsWithoutCurrent,
         position: endSpot
       }, normalizedMatches);
 
@@ -261,19 +256,13 @@ const addMarkers = (dom: DOMUtils, matches: InlinePatternMatch[]): InlinePattern
   }, [] as InlinePatternMatchWithMarkers[]);
 };
 
-const findPatterns = (editor: Editor, block: Element, patternSet: InlinePatternSet, dynamicPatterns: Pattern[], normalizedMatches: boolean, space: boolean): InlinePatternMatch[] => {
+const findPatterns = (editor: Editor, block: Element, patternSet: PatternSet, normalizedMatches: boolean, space: boolean): InlinePatternMatch[] => {
   const rng = editor.selection.getRng();
   if (!rng.collapsed) {
     return [];
   }
   const offset = Math.max(0, rng.startOffset - (space ? 1 : 0));
-  const extraPatterns = getInlinePatterns(dynamicPatterns);
-  const patterns = {
-    ...patternSet,
-    inlinePatterns: extraPatterns.concat(patternSet.inlinePatterns)
-  };
-  // patternSet.inlinePatterns = dynamicPatterns.concat(patternSet.inlinePatterns);
-  return findPatternsRec(editor, patterns, rng.startContainer, offset, block, normalizedMatches).fold(() => [], (result) => result.matches);
+  return findPatternsRec(editor, patternSet.inlinePatterns, rng.startContainer, offset, block, normalizedMatches).fold(() => [], (result) => result.matches);
 };
 
 const applyMatches = (editor: Editor, matches: InlinePatternMatch[]): void => {
