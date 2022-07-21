@@ -490,10 +490,10 @@ const initContentBody = (editor: Editor, skipWrite?: boolean): void => {
     if (Env.browser.isFirefox()) {
       const doc = editor.getDoc();
       doc.open();
-      doc.write(editor.iframeHTML);
+      doc.write(editor.iframeHTML as string);
       doc.close();
     } else {
-      iframe.srcdoc = editor.iframeHTML;
+      iframe.srcdoc = editor.iframeHTML as string;
     }
   } else {
     contentBodyLoaded(editor);
