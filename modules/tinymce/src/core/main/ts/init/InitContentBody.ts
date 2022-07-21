@@ -8,6 +8,7 @@ import DomSerializer, { DomSerializerSettings } from '../api/dom/Serializer';
 import StyleSheetLoader from '../api/dom/StyleSheetLoader';
 import Editor from '../api/Editor';
 import EditorUpload from '../api/EditorUpload';
+import Env from '../api/Env';
 import * as Events from '../api/Events';
 import Formatter from '../api/Formatter';
 import DomParser, { DomParserSettings } from '../api/html/DomParser';
@@ -481,7 +482,17 @@ const initContentBody = (editor: Editor, skipWrite?: boolean) => {
       // Continue to init the editor
       contentBodyLoaded(editor);
     });
-    iframe.srcdoc = editor.iframeHTML;
+
+    // TINY-8916: Firefox has a bug in its srcdoc implementation that prevents cookies being sent so unfortunately we need
+    // to fallback to legacy APIs to load the iframe content. See https://bugzilla.mozilla.org/show_bug.cgi?id=1741489
+    if (Env.browser.isFirefox()) {
+      const doc = editor.getDoc();
+      doc.open();
+      doc.write(editor.iframeHTML);
+      doc.close();
+    } else {
+      iframe.srcdoc = editor.iframeHTML;
+    }
   } else {
     contentBodyLoaded(editor);
   }
