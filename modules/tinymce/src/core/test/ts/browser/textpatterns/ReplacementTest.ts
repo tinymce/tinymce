@@ -187,6 +187,4 @@ describe('browser.tinymce.core.textpatterns.ReplacementTest', () => {
       testSpaceOnFragmentedText(hook.editor(), getNodes, [ 0, 3 ], 13, '<p>first <strong>element</strong> wow&nbsp; is big</p>');
     });
   });
-
-
 });
