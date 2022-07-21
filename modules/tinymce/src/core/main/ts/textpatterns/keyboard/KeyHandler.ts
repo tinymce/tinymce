@@ -1,17 +1,30 @@
-import { Unicode } from '@ephox/katamari';
+import { Optional, Unicode } from '@ephox/katamari';
 
 import { textBefore } from '../../alien/TextSearch';
 import Editor from '../../api/Editor';
 import VK from '../../api/util/VK';
 import * as BlockPattern from '../core/BlockPattern';
 import * as InlinePattern from '../core/InlinePattern';
-import { InlinePatternSet, PatternSet } from '../core/PatternTypes';
+import { InlinePatternSet, Pattern, PatternSet } from '../core/PatternTypes';
 import * as Utils from '../utils/Utils';
 
+const resolveFromDynamicPatterns = (editor: Editor, patternSet: PatternSet): Pattern[] => {
+  const range = editor.selection.getRng();
+  return Utils.getParentBlock(editor, range).bind((block) => {
+    const blockText = block.textContent ?? '';
+    return Optional.from(patternSet.dynamicPatternsLookup({
+      text: blockText,
+      block,
+      allowTrailingSpaces: false
+    }));
+  }).getOr([]);
+};
+
 const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
+  const dynamicPatterns = resolveFromDynamicPatterns(editor, patternSet);
   // Find any matches
-  const inlineMatches = InlinePattern.findPatterns(editor, patternSet, false);
-  const blockMatches = BlockPattern.findPatterns(editor, patternSet);
+  const inlineMatches = InlinePattern.findPatterns(editor, patternSet, dynamicPatterns, false);
+  const blockMatches = BlockPattern.findPatterns(editor, patternSet, dynamicPatterns);
   if (blockMatches.length > 0 || inlineMatches.length > 0) {
     editor.undoManager.add();
     editor.undoManager.extra(
@@ -46,7 +59,8 @@ const handleInlineKey = (
   editor: Editor,
   patternSet: InlinePatternSet
 ): void => {
-  const inlineMatches = InlinePattern.findPatterns(editor, patternSet, true);
+  const dynamicPatterns = resolveFromDynamicPatterns(editor, patternSet as PatternSet);
+  const inlineMatches = InlinePattern.findPatterns(editor, patternSet, dynamicPatterns, true);
   if (inlineMatches.length > 0) {
     editor.undoManager.transact(() => {
       InlinePattern.applyMatches(editor, inlineMatches);

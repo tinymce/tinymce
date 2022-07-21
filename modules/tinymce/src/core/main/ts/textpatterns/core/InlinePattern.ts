@@ -8,7 +8,7 @@ import { createMarker, Marker, rangeFromMarker, removeMarker } from '../utils/Ma
 import { generatePathRange, generatePathRangeFromRange } from '../utils/PathRange';
 import * as Utils from '../utils/Utils';
 import { getInlinePatterns } from './Pattern';
-import { InlinePattern, InlinePatternMatch, InlinePatternSet } from './PatternTypes';
+import { InlinePattern, InlinePatternMatch, InlinePatternSet, Pattern } from './PatternTypes';
 
 interface PatternDetails {
   readonly pattern: InlinePattern;
@@ -260,7 +260,7 @@ const addMarkers = (dom: DOMUtils, matches: InlinePatternMatch[]): InlinePattern
   }, [] as InlinePatternMatchWithMarkers[]);
 };
 
-const findPatterns = (editor: Editor, patternSet: InlinePatternSet, space: boolean): InlinePatternMatch[] => {
+const findPatterns = (editor: Editor, patternSet: InlinePatternSet, dynamicPattern: Pattern[], space: boolean): InlinePatternMatch[] => {
   const rng = editor.selection.getRng();
   if (!rng.collapsed) {
     return [];
@@ -268,19 +268,10 @@ const findPatterns = (editor: Editor, patternSet: InlinePatternSet, space: boole
 
   return Utils.getParentBlock(editor, rng).bind((block) => {
     const offset = Math.max(0, rng.startOffset - (space ? 1 : 0));
-    // TINY-8781: TODO: text_patterns should announce their changes for accessibility
-    const extraPatterns = patternSet.dynamicPatternsLookup({
-      text: block.textContent,
-      block,
-      // TINY-8779: When triggering inline patterns via space, we allow trailing spaces, because
-      // inline patterns are triggered via a space keyup, so spaces might be present.
-      // When triggering inline patterns via enter, we don't allow trailing spaces due to TINY-8779
-      allowTrailingSpaces: space
-    });
-    const dynamicPatterns = getInlinePatterns(extraPatterns);
+    const extraPatterns = getInlinePatterns(dynamicPattern);
     const patterns = {
       ...patternSet,
-      inlinePatterns: dynamicPatterns.concat(patternSet.inlinePatterns)
+      inlinePatterns: extraPatterns.concat(patternSet.inlinePatterns)
     };
     // patternSet.inlinePatterns = dynamicPatterns.concat(patternSet.inlinePatterns);
     return findPatternsRec(editor, patterns, rng.startContainer, offset, block, space);
