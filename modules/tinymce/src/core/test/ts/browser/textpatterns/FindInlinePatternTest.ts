@@ -18,8 +18,8 @@ describe('browser.tinymce.textpatterns.FindInlinePatternTest', () => {
     readonly endRng: PathRange;
   }
 
-  const getInlinePattern = (editor: Editor, patternSet: InlinePatternSet, space: boolean = false) =>
-    InlinePattern.findPatterns(editor, patternSet, space);
+  const getInlinePattern = (editor: Editor, patternSet: InlinePatternSet, space: boolean = false, normalized: boolean = false) =>
+    InlinePattern.findPatterns(editor, patternSet, normalized, space);
 
   const assertPatterns = (actualMatches: InlinePatternMatch[], expectedMatches: ExpectedPatternMatch[]) => {
     assert.lengthOf(actualMatches, expectedMatches.length, 'Pattern count does not match');

@@ -675,7 +675,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
     const parser = DomParser({}, schema);
     const root = parser.parse('<ul><li></li><li> </li><li><br /></li><li>\u00a0</li><li>a</li></ul>', { insert: true });
-    assert.equal(serializer.serialize(root), '<ul><li><br></li><li><br></li><li><br></li><li><br></li><li>a</li></ul>');
+    assert.equal(serializer.serialize(root), '<ul><li><br data-mce-bogus="1"></li><li><br data-mce-bogus="1"></li><li><br></li><li><br data-mce-bogus="1"></li><li>a</li></ul>');
   });
 
   it('Preserve space in inline span', () => {
