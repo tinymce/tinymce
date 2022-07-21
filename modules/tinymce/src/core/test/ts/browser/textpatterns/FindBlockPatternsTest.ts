@@ -5,12 +5,11 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import * as BlockPattern from 'tinymce/core/textpatterns/core/BlockPattern';
 
-import { getPatternSetFor } from '../../module/test/TextPatternsUtils';
+import { getPatternSetFor, findPatternsWithDynamicPatterns } from '../../module/test/TextPatternsUtils';
 
 // Similar to modules/tinymce/src/core/test/ts/atomic/textpatterns/FindBlockPatternsTest.ts
 // but uses DOM and includes tests for text_patterns_lookup
 describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
-
   context('no text_patterns_lookup', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       text_patterns: [
@@ -32,7 +31,7 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
       // forced root block. We aren't sure why this constraint exists.
       editor.setContent('<p># Heading</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], '# Heading'.length);
-      const matches = BlockPattern.findPatterns(editor, getPatternSet(), true);
+      const matches = findPatternsWithDynamicPatterns(editor, getPatternSet(), BlockPattern.findPatterns, true);
       assert.deepEqual(
         matches,
         [
@@ -53,7 +52,7 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
       const editor = hook.editor();
       editor.setContent('<p>* No match');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
-      const matches = BlockPattern.findPatterns(editor, getPatternSet(), true);
+      const matches = findPatternsWithDynamicPatterns(editor, getPatternSet(), BlockPattern.findPatterns, true);
       assert.deepEqual(matches, []);
     });
 
@@ -64,7 +63,7 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
       // forced root block. We aren't sure why this constraint exists.
       editor.setContent('<div># Heading</div>');
       TinySelections.setCursor(editor, [ 0, 0 ], '# Heading'.length);
-      const matches = BlockPattern.findPatterns(editor, getPatternSet(), true);
+      const matches = findPatternsWithDynamicPatterns(editor, getPatternSet(), BlockPattern.findPatterns, true);
       assert.deepEqual(
         matches,
         [],
@@ -97,7 +96,7 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
       const editor = hook.editor();
       editor.setContent('<p>#### wow</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 4);
-      const matches = BlockPattern.findPatterns(editor, getPatternSet(), true);
+      const matches = findPatternsWithDynamicPatterns(editor, getPatternSet(), BlockPattern.findPatterns, true);
       assert.deepEqual(
         matches,
         [
@@ -121,7 +120,7 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
       const editor = hook.editor();
       editor.setContent('<p><b>TBA Bold heading</b></p>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 3);
-      const matches = BlockPattern.findPatterns(editor, getPatternSet(), true);
+      const matches = findPatternsWithDynamicPatterns(editor, getPatternSet(), BlockPattern.findPatterns, true);
       assert.deepEqual(
         matches,
         [
@@ -147,8 +146,7 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
       const editor = hook.editor();
       editor.setContent('<div><p>#### New heading type</p></div>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 4);
-      const patterns = getPatternSet();
-      const matches = BlockPattern.findPatterns(editor, patterns, true);
+      const matches = findPatternsWithDynamicPatterns(editor, getPatternSet(), BlockPattern.findPatterns, true);
       assert.deepEqual(matches, [
         {
           pattern: {
@@ -171,7 +169,7 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
       const editor = hook.editor();
       editor.setContent('<div>#### New heading type</div>');
       TinySelections.setCursor(editor, [ 0, 0 ], 4);
-      const matches = BlockPattern.findPatterns(editor, getPatternSet(), true);
+      const matches = findPatternsWithDynamicPatterns(editor, getPatternSet(), BlockPattern.findPatterns, true);
       assert.deepEqual(matches, [], 'Checking block pattern matches do not match for incorrect block tag type');
     });
 
@@ -179,7 +177,7 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
       const editor = hook.editor();
       editor.setContent('<p>### is a new heading</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 4);
-      const matches = BlockPattern.findPatterns(editor, getPatternSet(), true);
+      const matches = findPatternsWithDynamicPatterns(editor, getPatternSet(), BlockPattern.findPatterns, true);
       assert.deepEqual(matches, [
         {
           pattern: {
