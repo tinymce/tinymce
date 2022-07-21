@@ -62,7 +62,7 @@ const findPattern = <P extends Pattern>(patterns: P[], text: string): Optional<P
   return Arr.find(patterns, (pattern) => text.indexOf(pattern.start) === 0 || nuText.indexOf(pattern.start) === 0);
 };
 
-const findPatterns = (editor: Editor, patternSet: PatternSet, normalizedMatches: boolean): BlockPatternMatch[] => {
+const findPatterns = (editor: Editor, patternSet: PatternSet, dynamicPatterns: Pattern[], normalizedMatches: boolean): BlockPatternMatch[] => {
   const dom = editor.dom;
   const rng = editor.selection.getRng();
 
@@ -73,14 +73,8 @@ const findPatterns = (editor: Editor, patternSet: PatternSet, normalizedMatches:
   }).bind((block) => {
     // Get the block text
     const blockText = block.textContent ?? '';
-
-    // TINY-8781: TODO: text_patterns should announce their changes for accessibility
-    const extraPatterns = patternSet.dynamicPatternsLookup({
-      text: blockText,
-      block
-    });
     // search in the dynamic patterns first
-    const patterns = getBlockPatterns(extraPatterns);
+    const patterns = getBlockPatterns(dynamicPatterns);
     const matchedPattern = findPattern(patterns, blockText).orThunk(() => {
       // Search in the static patterns
       const patterns = getBlockPatterns(patternSet.blockPatterns);
