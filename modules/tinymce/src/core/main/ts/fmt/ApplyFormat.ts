@@ -87,6 +87,11 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
         return false;
       }
 
+      // Check if the node is nonediatble and if the format can override noneditable node
+      if (dom.getContentEditable(node) === 'false' && !format.ceFalseOverride) {
+        return true;
+      }
+
       // Check collapsed state if it exists
       if (Type.isNonNullable(format.collapsed) && format.collapsed !== isCollapsed) {
         return true;
@@ -139,7 +144,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
             FormatUtils.isValid(ed, wrapName, nodeName) &&
             FormatUtils.isValid(ed, parentName, wrapName) &&
             Type.isNonNullable(wrapElm);
-      // If it is not node specific, it means that it was not passed into 'formatter.apply` and is withiin the editor selection
+      // If it is not node specific, it means that it was not passed into 'formatter.apply` and is within the editor selection
       const isZwsp = !nodeSpecific && NodeType.isText(node) && Zwsp.isZwsp(node.data);
       const isCaret = isCaretNode(node);
       const isCorrectFormatForNode = !FormatUtils.isInlineFormat(format) || !dom.isBlock(node);
@@ -309,23 +314,6 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
     });
   };
 
-  const selectedNode = selection.getNode();
-  if (dom.getContentEditable(selectedNode) === 'false') {
-    node = selectedNode;
-    for (let i = 0, l = formatList.length; i < l; i++) {
-      const formatItem = formatList[i];
-      if (formatItem.ceFalseOverride && FormatUtils.isSelectorFormat(formatItem) && dom.is(node, formatItem.selector)) {
-        setElementFormat(node as Element, formatItem);
-        break;
-      }
-    }
-
-    if (!FormatUtils.isWrappableNoneditable(ed, node)) {
-      Events.fireFormatApply(ed, name, selectedNode, vars);
-      return;
-    }
-  }
-
   if (format) {
     if (node) {
       if (FormatUtils.isNode(node)) {
@@ -349,7 +337,9 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
           });
         });
 
-        FormatUtils.moveStart(dom, selection, selection.getRng());
+        if (dom.getContentEditable(selection.getNode()) !== 'false') {
+          FormatUtils.moveStart(dom, selection, selection.getRng());
+        }
         ed.nodeChanged();
       } else {
         CaretFormat.applyCaretFormat(ed, name, vars);

@@ -197,13 +197,13 @@ const removeFormatInternal = (ed: Editor, format: Format, vars?: FormatVars, nod
   const dom = ed.dom;
   const elementUtils = ElementUtils(ed);
 
-  // Check if node matches format
-  if (node && !MatchFormat.matchName(dom, node, format) && !isColorFormatAndAnchor(node, format)) {
+  // Check if node is noneditable and can have the format removed from it
+  if (!format.ceFalseOverride && node && dom.getContentEditableParent(node) === 'false') {
     return removeResult.keep();
   }
 
-  // Check if node is noneditable and can have the format removed from it
-  if (!format.ceFalseOverride && node && dom.getContentEditableParent(node) === 'false') {
+  // Check if node matches format
+  if (node && !MatchFormat.matchName(dom, node, format) && !isColorFormatAndAnchor(node, format)) {
     return removeResult.keep();
   }
 
@@ -439,7 +439,6 @@ const wrapAndSplit = (
 const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range, similar?: boolean): void => {
   const formatList = ed.formatter.get(name) as Format[];
   const format = formatList[0];
-  let contentEditable = true;
   const dom = ed.dom;
   const selection = ed.selection;
 
@@ -458,29 +457,18 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
 
   // Merges the styles for each node
   const process = (node: Node) => {
-    let lastContentEditable = true;
-    let hasContentEditableState = false;
-
-    // Node has a contentEditable value
-    if (NodeType.isElement(node) && dom.getContentEditable(node)) {
-      lastContentEditable = contentEditable;
-      contentEditable = dom.getContentEditable(node) === 'true';
-      hasContentEditableState = true; // We don't want to wrap the container only it's children
-    }
 
     // Grab the children first since the nodelist might be changed
     const children = Arr.from(node.childNodes);
 
     // Process current node
-    if (contentEditable && !hasContentEditableState) {
-      const removed = removeNodeFormat(node);
+    const removed = removeNodeFormat(node);
 
-      // TINY-6567/TINY-7393: Include the parent if using an expanded selector format and no match was found for the current node
-      const currentNodeMatches = removed || Arr.exists(formatList, (f) => MatchFormat.matchName(dom, node, f));
-      const parentNode = node.parentNode;
-      if (!currentNodeMatches && Type.isNonNullable(parentNode) && FormatUtils.shouldExpandToSelector(format)) {
-        removeNodeFormat(parentNode);
-      }
+    // TINY-6567/TINY-7393: Include the parent if using an expanded selector format and no match was found for the current node
+    const currentNodeMatches = removed || Arr.exists(formatList, (f) => MatchFormat.matchName(dom, node, f));
+    const parentNode = node.parentNode;
+    if (!currentNodeMatches && Type.isNonNullable(parentNode) && FormatUtils.shouldExpandToSelector(format)) {
+      removeNodeFormat(parentNode);
     }
 
     // Process the children
@@ -488,10 +476,6 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
       if (children.length) {
         for (let i = 0; i < children.length; i++) {
           process(children[i]);
-        }
-
-        if (hasContentEditableState) {
-          contentEditable = lastContentEditable; // Restore last contentEditable state from stack
         }
       }
     }
@@ -628,25 +612,6 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
 
     Events.fireFormatRemove(ed, name, node, vars);
     return;
-  }
-
-  const selectedNode = selection.getNode();
-  if (dom.getContentEditable(selectedNode) === 'false') {
-    node = selectedNode;
-    let formatRemoved = false;
-    for (let i = 0; i < formatList.length; i++) {
-      if (formatList[i].ceFalseOverride) {
-        formatRemoved = removeFormat(ed, formatList[i], vars, node, node);
-        if (formatRemoved) {
-          break;
-        }
-      }
-    }
-
-    if (formatRemoved) {
-      Events.fireFormatRemove(ed, name, node, vars);
-      return;
-    }
   }
 
   if (!selection.isCollapsed() || !FormatUtils.isInlineFormat(format) || TableCellSelection.getCellsFromEditor(ed).length) {

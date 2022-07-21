@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The editor focused via the `auto_focus` option was not scrolled into the viewport #TINY-8785
 - Elements with only custom attributes starting with `data-` would sometimes be removed when they shouldn't #TINY-8755
 - Selecting a figure with `class="image"` would incorrectly highlight the link toolbar button #TINY-8832
-- Fixed various issues that occurred when formatting `contenteditable` elements #TINY-8905
+- Fixed various issues that occurred when formatting `contenteditable` elements. #TINY-8905
 
 ## 6.1.1 - TBA
 

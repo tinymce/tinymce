@@ -263,7 +263,7 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
               await pTest(editor, [
                 {
                   select: selectNoneditableSpan,
-                  expectedHtml: initialHtml,
+                  expectedHtml: `<p>first ${noneditableBeforeHtml}<span contenteditable="true"><${format.html}>editable</${format.tag}></span>${noneditableAfterHtml} third</p>`,
                   pAssertAfter: pAssertToolbar(false)
                 },
               ]);
