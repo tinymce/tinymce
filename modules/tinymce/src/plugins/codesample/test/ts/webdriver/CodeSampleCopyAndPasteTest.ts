@@ -1,5 +1,6 @@
 import { Keys, RealClipboard } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -26,7 +27,11 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
     editor.dispatch('keyup', getKeyboardEventArgs('keyup'));
   };
 
-  beforeEach(() => {
+  beforeEach(function () {
+    const browser = PlatformDetection.detect().browser;
+    if (browser.isSafari()) {
+      this.skip();
+    }
     hook.editor().setContent('');
   });
 
