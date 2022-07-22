@@ -259,10 +259,10 @@ const isBlockFormat = (format: Format): format is BlockFormat =>
   Obj.hasNonNullableKey(format as any, 'block');
 
 const isWrappingBlockFormat = (format: Format): format is BlockFormat =>
-  isBlockFormat(format) && format.wrapper;
+  isBlockFormat(format) && format.wrapper === true;
 
 const isNonWrappingBlockFormat = (format: Format): format is BlockFormat =>
-  isBlockFormat(format) && !format.wrapper;
+  isBlockFormat(format) && format.wrapper !== true;
 
 const isSelectorFormat = (format: Format): format is SelectorFormat =>
   Obj.hasNonNullableKey(format as any, 'selector');
