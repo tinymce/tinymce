@@ -1,6 +1,6 @@
 import { Keys, RealClipboard } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/fullscreen/Plugin';
@@ -42,6 +42,31 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
       '<p><br></p>' +
       '<pre class="language-markup" contenteditable="false">test content</pre>' +
       '<pre class="language-markup" contenteditable="false">test content</pre>',
+      { format: 'raw' }
+    );
+  });
+
+  it('TINY-8861: coping and pating a piece of code and a text should leave the cursor on the text after paste', async () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<pre class="language-markup" contenteditable="false">test content</pre>' +
+      '<p>test text</p>'
+    );
+
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 2 ], 1);
+
+    await RealClipboard.pCopy('iframe => body');
+    TinySelections.setCursor(editor, [ 2 ], 1);
+
+    await RealClipboard.pPaste('iframe => body');
+    pressEnter(editor);
+
+    TinyAssertions.assertContent(editor,
+      '<pre class="language-markup" contenteditable="false">test content</pre>' +
+      '<p>test text</p>' +
+      '<pre class="language-markup" contenteditable="false">test content</pre>' +
+      '<p>test text</p>' +
+      '<p><br data-mce-bogus="1"></p>',
       { format: 'raw' }
     );
   });
