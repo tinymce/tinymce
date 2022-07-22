@@ -6,6 +6,9 @@ import Tools from 'tinymce/core/api/util/Tools';
 import * as Prism from '../prism/Prism';
 import * as Utils from '../util/Utils';
 
+const isPre = (node: Node): node is HTMLPreElement =>
+  node.nodeName.toLowerCase() === 'pre';
+
 const setup = (editor: Editor): void => {
   editor.on('PreProcess', (e) => {
     const dom = editor.dom;
@@ -46,6 +49,11 @@ const setup = (editor: Editor): void => {
           Prism.get(editor).highlightElement(elm);
           elm.className = Strings.trim(elm.className);
         });
+
+        const endContainer = editor.selection.getRng().endContainer;
+        if (isPre(endContainer)) {
+          editor.selection.select(endContainer);
+        }
       });
     }
   });
