@@ -37,8 +37,6 @@ interface State {
   width: number;
   height: number;
   ghost: HTMLElement;
-  clientX: number;
-  clientY: number;
   intervalId: Optional<number>;
 }
 
@@ -196,8 +194,6 @@ const start = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent
         dragging: false,
         screenX: e.screenX,
         screenY: e.screenY,
-        clientX: e.clientX,
-        clientY: e.clientY,
         maxX: (editor.inline ? bodyElm.scrollWidth : docElm.offsetWidth) - 2,
         maxY: (editor.inline ? bodyElm.scrollHeight : docElm.offsetHeight) - 2,
         relX: e.pageX - elmPos.x,
