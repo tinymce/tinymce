@@ -114,7 +114,7 @@ const moveGhost = (
   maxY: number,
   mouseY: number,
   contentAreaContainer: HTMLElement,
-  body: HTMLElement,
+  win: Window,
   state: Singleton.Value<State>
 ) => {
   let overflowX = 0, overflowY = 0;
@@ -134,41 +134,38 @@ const moveGhost = (
   ghostElm.style.height = (height - overflowY) + 'px';
 
   const clientHeight = contentAreaContainer.clientHeight;
-  const currentTop = body.ownerDocument.defaultView.scrollY;
+  const currentTop = win.scrollY;
 
-  if (state.get().getOr({ dragging: false }).dragging) {
-    if (mouseY + MouseRange >= clientHeight) {
-      const scrollDown = (currentTop: number) => {
-        body.ownerDocument.defaultView.scroll({
-          top: currentTop + ScrollingValue,
-          behavior: 'smooth'
-        });
-      };
-      scrollDown(currentTop);
-      state.set({
-        ...state.get().getOrUndefined(),
-        intervalId: Optional.some(setInterval(() => {
-          const currentTop = body.ownerDocument.defaultView.scrollY;
+  state.on((state) => {
+
+    if (currentTop && state.dragging) {
+      if (mouseY + MouseRange >= clientHeight) {
+        const scrollDown = (currentTop: number) => {
+          win.scroll({
+            top: currentTop + ScrollingValue,
+            behavior: 'smooth'
+          });
+        };
+        scrollDown(currentTop);
+        state.intervalId = Optional.some(setInterval(() => {
+          const currentTop = win.scrollY;
           scrollDown(currentTop);
-        }, IntervalValue))
-      });
-    } else if (mouseY - MouseRange <= 0) {
-      const scrollUp = (currentTop: number) => {
-        body.ownerDocument.defaultView.scroll({
-          top: currentTop - ScrollingValue,
-          behavior: 'smooth'
-        });
-      };
-      scrollUp(currentTop);
-      state.set({
-        ...state.get().getOrUndefined(),
-        intervalId: Optional.some(setInterval(() => {
-          const currentTop = body.ownerDocument.defaultView.scrollY;
+        }, IntervalValue));
+      } else if (mouseY - MouseRange <= 0) {
+        const scrollUp = (currentTop: number) => {
+          win.scroll({
+            top: currentTop - ScrollingValue,
+            behavior: 'smooth'
+          });
+        };
+        scrollUp(currentTop);
+        state.intervalId = Optional.some(setInterval(() => {
+          const currentTop = win.scrollY;
           scrollUp(currentTop);
-        }, IntervalValue))
-      });
+        }, IntervalValue));
+      }
     }
-  }
+  });
 
 };
 
@@ -242,7 +239,7 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
       }
       const targetPos = applyRelPos(state, MousePosition.calc(editor, e));
       appendGhostToBody(state.ghost, editor.getBody());
-      moveGhost(state.ghost, targetPos, state.width, state.height, state.maxX, state.maxY, e.clientY, editor.getContentAreaContainer(), editor.getBody(), state_);
+      moveGhost(state.ghost, targetPos, state.width, state.height, state.maxX, state.maxY, e.clientY, editor.getContentAreaContainer(), editor.getWin(), state_);
       throttledPlaceCaretAt.throttle(e.clientX, e.clientY);
     }
   });
