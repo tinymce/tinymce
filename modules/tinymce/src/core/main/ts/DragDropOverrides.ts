@@ -1,4 +1,4 @@
-import { Arr, Singleton, Throttler, Type } from '@ephox/katamari';
+import { Arr, Optional, Singleton, Throttler, Type } from '@ephox/katamari';
 
 import DOMUtils from './api/dom/DOMUtils';
 import { EventUtilsEvent } from './api/dom/EventUtils';
@@ -21,6 +21,10 @@ import * as Predicate from './util/Predicate';
  * @class tinymce.DragDropOverrides
  */
 
+const ScrollingValue = 32;
+const IntervalValue = 100;
+const MouseRange = 4;
+
 interface State {
   element: HTMLElement;
   dragging: boolean;
@@ -33,6 +37,9 @@ interface State {
   width: number;
   height: number;
   ghost: HTMLElement;
+  clientX: number;
+  clientY: number;
+  intervalId: Optional<number>;
 }
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
@@ -104,7 +111,11 @@ const moveGhost = (
   width: number,
   height: number,
   maxX: number,
-  maxY: number
+  maxY: number,
+  mouseY: number,
+  contentAreaContainer: HTMLElement,
+  body: HTMLElement,
+  state: Singleton.Value<State>
 ) => {
   let overflowX = 0, overflowY = 0;
 
@@ -121,6 +132,44 @@ const moveGhost = (
 
   ghostElm.style.width = (width - overflowX) + 'px';
   ghostElm.style.height = (height - overflowY) + 'px';
+
+  const clientHeight = contentAreaContainer.clientHeight;
+  const currentTop = body.ownerDocument.defaultView.scrollY;
+
+  if (state.get().getOr({ dragging: false }).dragging) {
+    if (mouseY + MouseRange >= clientHeight) {
+      const scrollDown = (currentTop: number) => {
+        body.ownerDocument.defaultView.scroll({
+          top: currentTop + ScrollingValue,
+          behavior: 'smooth'
+        });
+      };
+      scrollDown(currentTop);
+      state.set({
+        ...state.get().getOrUndefined(),
+        intervalId: Optional.some(setInterval(() => {
+          const currentTop = body.ownerDocument.defaultView.scrollY;
+          scrollDown(currentTop);
+        }, IntervalValue))
+      });
+    } else if (mouseY - MouseRange <= 0) {
+      const scrollUp = (currentTop: number) => {
+        body.ownerDocument.defaultView.scroll({
+          top: currentTop - ScrollingValue,
+          behavior: 'smooth'
+        });
+      };
+      scrollUp(currentTop);
+      state.set({
+        ...state.get().getOrUndefined(),
+        intervalId: Optional.some(setInterval(() => {
+          const currentTop = body.ownerDocument.defaultView.scrollY;
+          scrollUp(currentTop);
+        }, IntervalValue))
+      });
+    }
+  }
+
 };
 
 const removeElement = (elm: HTMLElement) => {
@@ -150,13 +199,16 @@ const start = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent
         dragging: false,
         screenX: e.screenX,
         screenY: e.screenY,
+        clientX: e.clientX,
+        clientY: e.clientY,
         maxX: (editor.inline ? bodyElm.scrollWidth : docElm.offsetWidth) - 2,
         maxY: (editor.inline ? bodyElm.scrollHeight : docElm.offsetHeight) - 2,
         relX: e.pageX - elmPos.x,
         relY: e.pageY - elmPos.y,
         width: ceElm.offsetWidth,
         height: ceElm.offsetHeight,
-        ghost: createGhost(editor, ceElm, ceElm.offsetWidth, ceElm.offsetHeight)
+        ghost: createGhost(editor, ceElm, ceElm.offsetWidth, ceElm.offsetHeight),
+        intervalId: Optional.none()
       });
     }
   }
@@ -169,6 +221,7 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
     editor.selection.placeCaretAt(clientX, clientY);
   }, 0);
   editor.on('remove', throttledPlaceCaretAt.cancel);
+  const state_ = state;
 
   return (e: EditorEvent<MouseEvent>) => state.on((state) => {
     const movement = Math.max(Math.abs(e.screenX - state.screenX), Math.abs(e.screenY - state.screenY));
@@ -184,11 +237,12 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
     }
 
     if (state.dragging) {
+      if (state.intervalId.isSome()) {
+        clearInterval(state.intervalId.getOrUndefined());
+      }
       const targetPos = applyRelPos(state, MousePosition.calc(editor, e));
-
       appendGhostToBody(state.ghost, editor.getBody());
-      moveGhost(state.ghost, targetPos, state.width, state.height, state.maxX, state.maxY);
-
+      moveGhost(state.ghost, targetPos, state.width, state.height, state.maxX, state.maxY, e.clientY, editor.getContentAreaContainer(), editor.getBody(), state_);
       throttledPlaceCaretAt.throttle(e.clientX, e.clientY);
     }
   });
@@ -208,6 +262,9 @@ const getRawTarget = (selection: EditorSelection): Node | null => {
 
 const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<MouseEvent>) => {
   state.on((state) => {
+    if (state.intervalId.isSome()) {
+      clearInterval(state.intervalId.getOrUndefined());
+    }
     if (state.dragging) {
       if (isValidDropTarget(editor, getRawTarget(editor.selection), state.element)) {
         const targetClone = cloneElement(state.element);
