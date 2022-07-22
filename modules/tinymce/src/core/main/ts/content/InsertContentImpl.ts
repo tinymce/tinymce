@@ -22,19 +22,20 @@ import * as SelectionUtils from '../selection/SelectionUtils';
 import { InsertContentDetails } from './ContentTypes';
 import * as InsertList from './InsertList';
 
-const wrappedElements = [ 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ];
+const wrappedElements = [ 'pre' ];
 
-const shouldPasteContentOnly = (dom: DOMUtils, fragment: AstNode, parentNode: Element) => {
+const shouldPasteContentOnly = (dom: DOMUtils, fragment: AstNode, parentNode: Element, editor: Editor): boolean => {
   const firstNode = fragment.firstChild as AstNode;
   const lastNode = fragment.lastChild as AstNode;
   const last = lastNode.attr('data-mce-type') === 'bookmark' ? lastNode.prev : lastNode;
 
   const isCopyingOnlyOneTag = firstNode === last;
   const isWrappedElement = Arr.contains(wrappedElements, firstNode.name);
-  const isPastingInTheSameTag = dom.getParent(parentNode, (node) => firstNode.name === node.nodeName.toLowerCase());
-  const isContentEditableTrue = Optional.from(CefUtils.getContentEditableRoot(dom.getRoot(), parentNode)).map(NodeType.isContentEditableTrue).getOr(true);
+  const isPastingInTheSameTag = firstNode.name === parentNode.nodeName.toLowerCase() ? true : dom.getParent(parentNode, (node) => firstNode.name === node.nodeName.toLowerCase()) !== null;
+  const isSameClass = firstNode.attr('class') !== undefined ? firstNode.attr('class') === parentNode.className : parentNode.className === '';
+  const isPastingInContentEditableTrue = Optional.from(CefUtils.getContentEditableRoot(editor.getBody(), parentNode)).map(NodeType.isContentEditableTrue).getOr(true);
 
-  return isCopyingOnlyOneTag && isWrappedElement && isPastingInTheSameTag && isContentEditableTrue;
+  return isCopyingOnlyOneTag && isWrappedElement && isPastingInTheSameTag && isSameClass && isPastingInContentEditableTrue;
 };
 
 const isTableCell = NodeType.isTableCell;
@@ -262,7 +263,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
     return value;
   }
 
-  if (details.paste === true && shouldPasteContentOnly(dom, fragment, parentNode)) {
+  if (details.paste === true && shouldPasteContentOnly(dom, fragment, parentNode, editor)) {
     fragment.firstChild?.unwrap();
   }
 
