@@ -8,21 +8,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - New `text_patterns_lookup` option to provide additional text patterns dynamically #TINY-8778
+- New `format_noneditable_selector` option to specify the `contenteditable="false"` elements that can be wrapped in a format. #TINY-8905
+
+### Improved
+- The formatter can now apply a format to a `contenteditable="false"` element by wrapping it. Configurable using the `format_noneditable_selector` option. #TINY-8905
 
 ### Fixed
 - The Autolink plugin did not work when the text nodes in the content were fragmented #TINY-3723
 - Fixed various incorrect types on public APIs found while enabling TypeScript strict mode #TINY-8806
+- Text returned from `editor.getContent({format: 'text'})` would differ with blank lines between some browsers #TINY-8579
 - The editor focused via the `auto_focus` option was not scrolled into the viewport #TINY-8785
 - Elements with only custom attributes starting with `data-` would sometimes be removed when they shouldn't #TINY-8755
 - Selecting a figure with `class="image"` would incorrectly highlight the link toolbar button #TINY-8832
+- Fixed various issues that occurred when formatting `contenteditable` elements. #TINY-8905
+- The text pattern logic threw an error when there were fragmented text nodes in a paragraph #TINY-8779
 - Dragging a CEF element towards the edges would not cause scrolling #TINY-8874
 
 ## 6.1.1 - TBA
 
 ### Fixed
+- Invalid special elements were not cleaned up correctly during sanitization #TINY-8780
 - An exception was thrown when deleting all content if the start or end of the document had a `contenteditable="false"` element #TINY-8877
 - When a sidebar was opened using the `sidebar_show` option, its associated toggle button was not highlighted #TINY-8873
 - The `autolink` plugin when converting a URL to a link did not fire an `ExecCommand` event, nor did it create an undo level #TINY-8896
+- Worked around a Firefox bug whereby cookies weren't available inside the editor content #TINY-88916
 
 ## 6.1.0 - 2022-06-29
 

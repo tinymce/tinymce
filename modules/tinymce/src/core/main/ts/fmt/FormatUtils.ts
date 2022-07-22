@@ -1,19 +1,29 @@
 import { Transformations } from '@ephox/acid';
-import { Arr, Obj, Optionals, Type } from '@ephox/katamari';
+import { Arr, Obj, Optionals, Strings, Type } from '@ephox/katamari';
+import { Selectors, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import EditorSelection from '../api/dom/Selection';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
+import * as Options from '../api/Options';
+import * as Bookmarks from '../bookmark/Bookmarks';
 import * as NodeType from '../dom/NodeType';
 import * as Whitespace from '../text/Whitespace';
+import { isCaretNode } from './FormatContainer';
 import { BlockFormat, Format, FormatAttrOrStyleValue, FormatVars, InlineFormat, MixedFormat, SelectorFormat } from './FormatTypes';
 
 const isNode = (node: any): node is Node => !!(node).nodeType;
 
+const isElementNode = (node: Node): node is Element =>
+  NodeType.isElement(node) && !Bookmarks.isBookmarkNode(node) && !isCaretNode(node) && !NodeType.isBogus(node);
+
 const isInlineBlock = (node: Node): boolean => {
   return node && /^(IMG)$/.test(node.nodeName);
 };
+
+const isEditable = (elm: HTMLElement): boolean =>
+  elm.isContentEditable === true;
 
 const moveStart = (dom: DOMUtils, selection: EditorSelection, rng: Range): void => {
   const offset = rng.startOffset;
@@ -97,6 +107,27 @@ const isWhiteSpaceNode = (node: Node | null, allowSpaces: boolean = false): bool
 
 const isEmptyTextNode = (node: Node | null): boolean => {
   return Type.isNonNullable(node) && NodeType.isText(node) && node.length === 0;
+};
+
+const isWrapNoneditableTarget = (editor: Editor, node: Node): boolean => {
+  const baseDataSelector = '[data-mce-cef-wrappable]';
+  const formatNoneditableSelector = Options.getFormatNoneditableSelector(editor);
+  const selector = Strings.isEmpty(formatNoneditableSelector) ? baseDataSelector : `${baseDataSelector},${formatNoneditableSelector}`;
+  return Selectors.is(SugarElement.fromDom(node), selector);
+};
+
+// A noneditable element is wrappable if it:
+// - is valid target (has data-mce-cef-wrappable attribute or matches selector from option)
+// - has no editable descendants - removing formats in the editable region can result in the wrapped noneditable being split which is undesirable
+const isWrappableNoneditable = (editor: Editor, node: Node): boolean => {
+  const dom = editor.dom;
+
+  return (
+    isElementNode(node) &&
+    dom.getContentEditable(node) === 'false' &&
+    isWrapNoneditableTarget(editor, node) &&
+    dom.select('[contenteditable="true"]', node).length === 0
+  );
 };
 
 /**
@@ -227,6 +258,12 @@ const areSimilarFormats = (editor: Editor, formatName: string, otherFormatName: 
 const isBlockFormat = (format: Format): format is BlockFormat =>
   Obj.hasNonNullableKey(format as any, 'block');
 
+const isWrappingBlockFormat = (format: Format): format is BlockFormat =>
+  isBlockFormat(format) && format.wrapper === true;
+
+const isNonWrappingBlockFormat = (format: Format): format is BlockFormat =>
+  isBlockFormat(format) && format.wrapper !== true;
+
 const isSelectorFormat = (format: Format): format is SelectorFormat =>
   Obj.hasNonNullableKey(format as any, 'selector');
 
@@ -241,13 +278,16 @@ const shouldExpandToSelector = (format: Format): boolean =>
 
 export {
   isNode,
+  isElementNode,
   isInlineBlock,
+  isEditable,
   moveStart,
   getNonWhiteSpaceSibling,
   isTextBlock,
   isValid,
   isWhiteSpaceNode,
   isEmptyTextNode,
+  isWrappableNoneditable,
   replaceVars,
   isEq,
   normalizeStyleValue,
@@ -259,6 +299,8 @@ export {
   isSelectorFormat,
   isInlineFormat,
   isBlockFormat,
+  isWrappingBlockFormat,
+  isNonWrappingBlockFormat,
   isMixedFormat,
   shouldExpandToSelector
 };
