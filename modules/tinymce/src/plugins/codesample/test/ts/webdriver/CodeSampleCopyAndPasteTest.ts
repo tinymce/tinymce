@@ -1,5 +1,5 @@
 import { Keys, RealClipboard } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -25,6 +25,10 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
     editor.dispatch('input', getInputEventArgs('input'));
     editor.dispatch('keyup', getKeyboardEventArgs('keyup'));
   };
+
+  beforeEach(() => {
+    hook.editor().setContent('');
+  });
 
   it('TINY-8861: press enter after paste a code sample should not add newline inside the code', async () => {
     const editor = hook.editor();
