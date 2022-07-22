@@ -22,7 +22,7 @@ import * as SelectionUtils from '../selection/SelectionUtils';
 import { InsertContentDetails } from './ContentTypes';
 import * as InsertList from './InsertList';
 
-const wrappedElements = [ 'pre' ];
+const wrappedElements = [ 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ];
 
 const shouldPasteContentOnly = (dom: DOMUtils, fragment: AstNode, parentNode: Element) => {
   const firstNode = fragment.firstChild as AstNode;
@@ -31,8 +31,8 @@ const shouldPasteContentOnly = (dom: DOMUtils, fragment: AstNode, parentNode: El
 
   const isCopyingOnlyOneTag = firstNode === last;
   const isWrappedElement = Arr.contains(wrappedElements, firstNode.name);
-  const isPastingInTheSameTag = firstNode.name === parentNode.tagName.toLowerCase();
-  const isContentEditableTrue = dom.getContentEditable(parentNode) !== 'false';
+  const isPastingInTheSameTag = dom.getParent(parentNode, (node) => firstNode.name === node.nodeName.toLowerCase());
+  const isContentEditableTrue = Optional.from(CefUtils.getContentEditableRoot(dom.getRoot(), parentNode)).map(NodeType.isContentEditableTrue).getOr(true);
 
   return isCopyingOnlyOneTag && isWrappedElement && isPastingInTheSameTag && isContentEditableTrue;
 };
