@@ -141,11 +141,11 @@ const moveGhost = (
   // Once a new event triggers I clear the existing interval and set it back to none.
 
   const clientHeight = contentAreaContainer.clientHeight;
+
   // current scroll level
   const currentTop = win.scrollY;
 
   state.on((state) => {
-
     if (state.dragging) {
       // This basically means that the mouse is close to the bottom edge
       // (within MouseRange pixels of the bottom edge)
