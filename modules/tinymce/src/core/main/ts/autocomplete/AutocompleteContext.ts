@@ -14,17 +14,18 @@ export interface AutocompleteContext {
 
 const stripTriggerChar = (text: string, triggerCh: string) => text.substring(triggerCh.length);
 
-const findChar = (text: string, index: number, ch: string): Optional<number> => {
+const findTrigger = (text: string, index: number, ch: string): Optional<number> => {
   // Identify the `char` in, and start the text from that point forward. If there is ever any whitespace, fail
   let i: number;
+  const str = text.substring(0, index);
 
   for (i = index - 1; i >= 0; i--) {
-    const char = text.charAt(i);
+    const char = str.charAt(i);
     if (isWhitespace(char)) {
       return Optional.none();
     }
 
-    if (char === ch) {
+    if (str.includes(ch, i)) {
       break;
     }
   }
@@ -40,7 +41,7 @@ const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number
   const findTriggerChIndex = (element: Text, offset: number, text: string) =>
     // Stop searching by just returning the current offset if whitespace was found (eg Optional.none())
     // and we'll handle the final checks below instead
-    findChar(text, offset, ch).getOr(offset);
+    findTrigger(text, offset, ch).getOr(offset);
 
   const root = dom.getParent(initRange.startContainer, dom.isBlock) || dom.getRoot();
   return TextSearch.repeatLeft(dom, initRange.startContainer, initRange.startOffset, findTriggerChIndex, root).bind((spot) => {
@@ -77,6 +78,6 @@ const getContext = (dom: DOMUtils, initRange: Range, ch: string, minChars: numbe
   );
 
 export {
-  findChar, // Exposed for testing.
+  findTrigger, // Exposed for testing.
   getContext
 };
