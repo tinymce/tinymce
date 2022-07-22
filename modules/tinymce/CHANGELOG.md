@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When a sidebar was opened using the `sidebar_show` option, its associated toggle button was not highlighted #TINY-8873
 - The `autolink` plugin when converting a URL to a link did not fire an `ExecCommand` event, nor did it create an undo level #TINY-8896
 - Worked around a Firefox bug whereby cookies weren't available inside the editor content #TINY-88916
+- The cursor position after pasting a `codesimple` snippet is now in the correct position #TINY-8861
 
 ## 6.1.0 - 2022-06-29
 
