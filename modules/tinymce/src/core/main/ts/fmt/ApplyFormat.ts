@@ -142,8 +142,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
       const nodeName = node.nodeName.toLowerCase();
       const isValidWrapNode =
             FormatUtils.isValid(ed, wrapName, nodeName) &&
-            FormatUtils.isValid(ed, parentName, wrapName) &&
-            Type.isNonNullable(wrapElm);
+            FormatUtils.isValid(ed, parentName, wrapName);
       // If it is not node specific, it means that it was not passed into 'formatter.apply` and is within the editor selection
       const isZwsp = !nodeSpecific && NodeType.isText(node) && Zwsp.isZwsp(node.data);
       const isCaret = isCaretNode(node);
@@ -213,7 +212,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
           }
         }
 
-        if (canWrapNode(node, parentName, isEditableDescendant, isWrappableNoneditableElm)) {
+        if (Type.isNonNullable(wrapElm) && canWrapNode(node, parentName, isEditableDescendant, isWrappableNoneditableElm)) {
           // Start wrapping
           if (!currentWrapElm) {
             // Wrap the node
