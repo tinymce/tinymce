@@ -21,6 +21,7 @@ import * as Predicate from './util/Predicate';
  * @class tinymce.DragDropOverrides
  */
 
+// Arbitrary values needed when scrolling CEF elements
 const ScrollingValue = 32;
 const IntervalValue = 100;
 const MouseRange = 4;
@@ -131,12 +132,23 @@ const moveGhost = (
   ghostElm.style.width = (width - overflowX) + 'px';
   ghostElm.style.height = (height - overflowY) + 'px';
 
+  // Code needed for dragging CEF elements (specifically fixing TINY-8874)
+  // The idea behind the algorithm is that the user will start dragging the
+  // CEF element to the edge of the editor and that would cause scrolling.
+  // The way that happens is that the user will trigger a mousedown event,
+  // then a mousemove event until they reach the edge of the editor. Then
+  // no event triggers. That's when I set an interval to keep scrolling the editor.
+  // Once a new event triggers I clear the existing interval and set it back to none.
+
   const clientHeight = contentAreaContainer.clientHeight;
+  // current scroll level
   const currentTop = win.scrollY;
 
   state.on((state) => {
 
-    if (currentTop && state.dragging) {
+    if (state.dragging) {
+      // This basically means that the mouse is close to the bottom edge
+      // (within MouseRange pixels of the bottom edge)
       if (mouseY + MouseRange >= clientHeight) {
         const scrollDown = (currentTop: number) => {
           win.scroll({
@@ -149,6 +161,8 @@ const moveGhost = (
           const currentTop = win.scrollY;
           scrollDown(currentTop);
         }, IntervalValue));
+        // This basically means that the mouse is close to the top edge
+        // (within MouseRange pixels of the top edge)
       } else if (mouseY - MouseRange <= 0) {
         const scrollUp = (currentTop: number) => {
           win.scroll({
@@ -232,6 +246,7 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
     if (state.dragging) {
       if (state.intervalId.isSome()) {
         clearInterval(state.intervalId.getOrUndefined());
+        state.intervalId = Optional.none();
       }
       const targetPos = applyRelPos(state, MousePosition.calc(editor, e));
       appendGhostToBody(state.ghost, editor.getBody());
@@ -257,6 +272,7 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
   state.on((state) => {
     if (state.intervalId.isSome()) {
       clearInterval(state.intervalId.getOrUndefined());
+      state.intervalId = Optional.none();
     }
     if (state.dragging) {
       if (isValidDropTarget(editor, getRawTarget(editor.selection), state.element)) {
