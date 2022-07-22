@@ -352,6 +352,27 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     TinyAssertions.assertContent(editor, '<pre> <strong> a </strong> </pre>');
   });
 
+  it('TINY-8860: insertAtCaret - insert varying pre blocks', () => {
+    const editor = hook.editor();
+    editor.setContent('<p></p>');
+    editor.focus();
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
+    InsertContent.insertAtCaret(editor, { content: '<pre>abc</pre>', paste: true });
+    TinyAssertions.assertContent(editor, '<pre>abc</pre>');
+    editor.focus();
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
+    InsertContent.insertAtCaret(editor, { content: '<pre><strong>123</strong></pre>', paste: true });
+    TinyAssertions.assertContent(editor, '<pre><strong>123</strong>abc</pre>');
+    editor.focus();
+    TinySelections.setSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
+    InsertContent.insertAtCaret(editor, { content: '<pre>abc</pre>', paste: true });
+    TinyAssertions.assertContent(editor, '<pre><strong>1abc23</strong>abc</pre>');
+    editor.focus();
+    TinySelections.setSelection(editor, [ 0, 0, 0 ], 5, [ 0, 0, 0 ], 5);
+    InsertContent.insertAtCaret(editor, { content: '<pre><em>abc</em></pre>', paste: true });
+    TinyAssertions.assertContent(editor, '<pre><strong>1abc2<em>abc</em>3</strong>abc</pre>');
+  });
+
   it('TINY-6263: insertAtCaret - merge font-size spans', () => {
     const editor = hook.editor();
     editor.setContent('');
