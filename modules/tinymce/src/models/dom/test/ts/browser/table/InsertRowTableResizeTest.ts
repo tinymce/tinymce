@@ -17,7 +17,7 @@ describe('browser.tinymce.models.dom.table.InsertRowTableResizeTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     width: 400,
     base_url: '/project/tinymce/js/tinymce',
-    setup: (editor) => {
+    setup: (editor: Editor) => {
       editor.on('ObjectResized', () => objectResizedCounter++);
     }
   }, [], true);

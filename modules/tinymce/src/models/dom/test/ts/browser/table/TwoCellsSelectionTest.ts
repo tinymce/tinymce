@@ -49,7 +49,7 @@ describe('browser.tinymce.models.dom.table.TwoCellsSelectionTest', () => {
     TinyAssertions.assertContentPresence(editor, {
       'td[data-mce-selected]': 2
     });
-    assert.equal(editor.selection.getSel().rangeCount, 1, 'there should only be 1 selection range');
+    assert.equal(editor.selection.getSel()?.rangeCount, 1, 'there should only be 1 selection range');
   });
 
   it('TINY-3897: Select 2 cells in same row via mouse and merge them together', () => {

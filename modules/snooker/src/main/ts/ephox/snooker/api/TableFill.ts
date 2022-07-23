@@ -1,6 +1,7 @@
 import { Arr, Obj, Optional } from '@ephox/katamari';
 import { Attribute, Compare, Css, CursorPosition, Insert, Replication, SelectorFilter, SugarElement, SugarNode } from '@ephox/sugar';
 
+import { CellElement } from '../util/TableTypes';
 import { CellData, Generators, SimpleGenerators } from './Generators';
 
 const transferableAttributes: Record<string, string[]> = {
@@ -74,7 +75,7 @@ const cloneAppropriateAttributes = <T extends HTMLElement>(original: SugarElemen
   );
 };
 
-const cellOperations = (mutate: <T>(e1: SugarElement<T>, e2: SugarElement<T>) => void, doc: SugarElement<Document>, formatsToClone: Optional<string[]>): Generators => {
+const cellOperations = (mutate: (e1: SugarElement<CellElement>, e2: SugarElement<CellElement>) => void, doc: SugarElement<Document>, formatsToClone: Optional<string[]>): Generators => {
   const cloneCss = <T extends HTMLElement> (prev: CellData, clone: SugarElement<T>) => {
     // inherit the style and width, dont inherit the row height
     Css.copy(prev.element, clone);

@@ -9,8 +9,8 @@ export type TableColumnResizing = 'preservetable' | 'resizetable';
 export type TableHeaderType = 'section' | 'cells' | 'sectionCells' | 'auto';
 
 const option: {
-  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K] | undefined;
-  <T>(name: string): (editor: Editor) => T | undefined;
+  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K];
+  <T>(name: string): (editor: Editor) => T;
 } = (name: string) => (editor: Editor) =>
   editor.options.get(name);
 
