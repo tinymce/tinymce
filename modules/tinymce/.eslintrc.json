@@ -17,7 +17,7 @@
     },
     // Re-enable things that are passing for explicit module boundary types
     {
-      "files": [ "src/core/**/*.ts" ],
+      "files": [ "src/core/**/*.ts", "src/models/**/*.ts" ],
       "rules": {
         "@typescript-eslint/explicit-module-boundary-types": [ "error", { "allowArgumentsExplicitlyTypedAsAny": true }]
       }

@@ -30,7 +30,7 @@ const fireEvents = (editor: Editor, table: SugarElement<HTMLTableElement>): void
 const isPercentage = (width: string): boolean =>
   Type.isString(width) && width.indexOf('%') !== -1;
 
-const insert = (editor: Editor, columns: number, rows: number, colHeaders: number, rowHeaders: number): HTMLTableElement => {
+const insert = (editor: Editor, columns: number, rows: number, colHeaders: number, rowHeaders: number): HTMLTableElement | null => {
   const defaultStyles = Options.getTableDefaultStyles(editor);
   const options: TableRender.RenderOptions = {
     styles: defaultStyles,
@@ -62,7 +62,7 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
     fireEvents(editor, table);
     selectFirstCellInTable(editor, table);
     return table.dom;
-  }).getOr(null);
+  }).getOrNull();
 };
 
 const insertTable = (editor: Editor, rows: number, columns: number, options: Record<string, number> = {}): HTMLTableElement | null => {

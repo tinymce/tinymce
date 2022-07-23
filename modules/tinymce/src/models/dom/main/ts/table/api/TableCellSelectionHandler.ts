@@ -21,7 +21,7 @@ export interface TableCellSelectionHandler {
 }
 
 const hasInternalTarget = (e: Event): boolean =>
-  Class.has(SugarElement.fromDom(e.target as Node), 'ephox-snooker-resizer-bar') === false;
+  !Class.has(SugarElement.fromDom(e.target as Node), 'ephox-snooker-resizer-bar');
 
 export const TableCellSelectionHandler = (editor: Editor, resizeHandler: TableResizeHandler): TableCellSelectionHandler => {
   const cellSelection = Selections(

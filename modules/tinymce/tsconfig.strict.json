@@ -15,5 +15,7 @@
     "src/core/test/ts/module/test/KeyUtils.ts",
     "src/core/test/ts/module/test/PasteStrings.ts",
     "src/core/test/ts/module/test/ViewBlock.ts",
+    "src/models/dom/demo/ts/",
+    "src/models/dom/main/ts/"
   ]
 }

@@ -36,7 +36,7 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
     Mouse.mouseOver(elem);
   };
 
-  const state = Cell(null);
+  const state = Cell<{ h: number; w: number } | null>(null);
 
   const setStateFrom = (editor: Editor, path: number[]) => {
     const element = Hierarchy.follow(TinyDom.body(editor), path).getOrDie('could not find element') as SugarElement<HTMLElement>;
@@ -63,8 +63,11 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
     const height = Height.get(element);
     const width = Width.get(element);
 
-    const changedHeight = state.get().h + change.dh;
-    const changedWidth = state.get().w + change.dw;
+    const currentState = state.get() as { h: number; w: number };
+    assert.isNotNull(currentState);
+
+    const changedHeight = currentState.h + change.dh;
+    const changedWidth = currentState.w + change.dw;
 
     assert.approximately(changedHeight, height, 4, 'height is ' + height + ' but expected ' + changedHeight);
     assert.approximately(changedWidth, width, 4, 'width is ' + width + ' but expected ' + changedWidth);
