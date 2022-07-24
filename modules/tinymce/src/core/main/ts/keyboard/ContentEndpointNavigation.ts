@@ -1,39 +1,13 @@
 import { Arr, Fun } from '@ephox/katamari';
-import { Attribute, Compare, Insert, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
+import { Compare, Insert, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
-import * as Options from '../api/Options';
 import CaretPosition from '../caret/CaretPosition';
 import { isAtFirstLine, isAtLastLine } from '../caret/LineReader';
 import * as ElementType from '../dom/ElementType';
+import * as ForceBlocks from '../ForceBlocks';
 
 const isTarget = (node: SugarElement<Node>) => Arr.contains([ 'figcaption' ], SugarNode.name(node));
-
-const rangeBefore = (target: SugarElement<Node>) => {
-  const rng = document.createRange();
-  rng.setStartBefore(target.dom);
-  rng.setEndBefore(target.dom);
-  return rng;
-};
-
-const insertElement = (root: SugarElement<HTMLElement>, elm: SugarElement<Element>, forward: boolean) => {
-  if (forward) {
-    Insert.append(root, elm);
-  } else {
-    Insert.prepend(root, elm);
-  }
-};
-
-const insertEmptyLine = (root: SugarElement<HTMLElement>, forward: boolean, blockName: string, attrs: Record<string, string>) => {
-  const block = SugarElement.fromTag(blockName);
-  const br = SugarElement.fromTag('br');
-
-  Attribute.setAll(block, attrs);
-  Insert.append(block, br);
-  insertElement(root, block, forward);
-
-  return rangeBefore(br);
-};
 
 const getClosestTargetBlock = (pos: CaretPosition, root: SugarElement<HTMLElement>) => {
   const isRoot = Fun.curry(Compare.eq, root);
@@ -46,12 +20,11 @@ const isAtFirstOrLastLine = (root: SugarElement<HTMLElement>, forward: boolean, 
 const moveCaretToNewEmptyLine = (editor: Editor, forward: boolean) => {
   const root = SugarElement.fromDom(editor.getBody());
   const pos = CaretPosition.fromRangeStart(editor.selection.getRng());
-  const rootBlock = Options.getForcedRootBlock(editor);
-  const rootBlockAttrs = Options.getForcedRootBlockAttrs(editor);
 
   return getClosestTargetBlock(pos, root).exists(() => {
     if (isAtFirstOrLastLine(root, forward, pos)) {
-      const rng = insertEmptyLine(root, forward, rootBlock, rootBlockAttrs);
+      const insertFn = forward ? Insert.append : Insert.prepend;
+      const rng = ForceBlocks.insertEmptyLine(editor, root, insertFn);
       editor.selection.setRng(rng);
       return true;
     } else {

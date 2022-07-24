@@ -675,7 +675,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
     const parser = DomParser({}, schema);
     const root = parser.parse('<ul><li></li><li> </li><li><br /></li><li>\u00a0</li><li>a</li></ul>', { insert: true });
-    assert.equal(serializer.serialize(root), '<ul><li><br></li><li><br></li><li><br></li><li><br></li><li>a</li></ul>');
+    assert.equal(serializer.serialize(root), '<ul><li><br data-mce-bogus="1"></li><li><br data-mce-bogus="1"></li><li><br></li><li><br data-mce-bogus="1"></li><li>a</li></ul>');
   });
 
   it('Preserve space in inline span', () => {
@@ -1283,6 +1283,19 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       '<p>abcd</p>' +
       '<p>abcd</p>'
     );
+  });
+
+  it('TINY-8780: Invalid special elements are removed entirely instead of being unwrapped', () => {
+    const parser = DomParser({ forced_root_block: 'p' }, Schema({ invalid_elements: 'script,style,iframe,textarea,div' }));
+    const html = '<script>var x = 1;</script>' +
+      '<style>.red-text { color: red; }</style>' +
+      '<iframe src="about:blank">content</iframe>' +
+      '<textarea>content</textarea>' +
+      '<p>paragraph</p>' +
+      '<div>div</div>';
+
+    const serializedHtml = serializer.serialize(parser.parse(html));
+    assert.equal(serializedHtml, '<p>paragraph</p><p>div</p>');
   });
 
   context('validate: false', () => {

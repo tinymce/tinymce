@@ -1,9 +1,10 @@
 import { Strings } from '@ephox/katamari';
 
 import DOMUtils from '../api/dom/DOMUtils';
-import ElementUtils from '../api/dom/ElementUtils';
+import Editor from '../api/Editor';
 import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
+import ElementUtils from '../dom/ElementUtils';
 import * as NodeType from '../dom/NodeType';
 import { isCaretNode } from './FormatContainer';
 import { ApplyFormat, FormatVars } from './FormatTypes';
@@ -11,7 +12,7 @@ import * as FormatUtils from './FormatUtils';
 
 const each = Tools.each;
 
-const isElementNode = (node: Node): node is Element =>
+const isElementNode = (node: Node): node is HTMLElement =>
   NodeType.isElement(node) && !Bookmarks.isBookmarkNode(node) && !isCaretNode(node) && !NodeType.isBogus(node);
 
 const findElementSibling = (node: Node, siblingName: 'nextSibling' | 'previousSibling') => {
@@ -28,11 +29,13 @@ const findElementSibling = (node: Node, siblingName: 'nextSibling' | 'previousSi
   return node;
 };
 
-const mergeSiblingsNodes = (dom: DOMUtils, prev: Node | undefined, next: Node | undefined) => {
-  const elementUtils = ElementUtils(dom);
+const mergeSiblingsNodes = (editor: Editor, prev: Node | undefined, next: Node | undefined) => {
+  const elementUtils = ElementUtils(editor);
+  const isPrevEditable = NodeType.isElement(prev) && FormatUtils.isEditable(prev);
+  const isNextEditable = NodeType.isElement(next) && FormatUtils.isEditable(next);
 
   // Check if next/prev exists and that they are elements
-  if (prev && next) {
+  if (isPrevEditable && isNextEditable) {
     // If previous sibling is empty then jump over it
     const prevSibling = findElementSibling(prev, 'previousSibling');
     const nextSibling = findElementSibling(next, 'nextSibling');
@@ -46,7 +49,7 @@ const mergeSiblingsNodes = (dom: DOMUtils, prev: Node | undefined, next: Node | 
         prevSibling.appendChild(tmpSibling);
       }
 
-      dom.remove(nextSibling);
+      editor.dom.remove(nextSibling);
 
       Tools.each(Tools.grep(nextSibling.childNodes), (node) => {
         prevSibling.appendChild(node);
@@ -59,30 +62,31 @@ const mergeSiblingsNodes = (dom: DOMUtils, prev: Node | undefined, next: Node | 
   return next;
 };
 
-const mergeSiblings = (dom: DOMUtils, format: ApplyFormat, vars: FormatVars | undefined, node: Node): void => {
+const mergeSiblings = (editor: Editor, format: ApplyFormat, vars: FormatVars | undefined, node: Node): void => {
   // Merge next and previous siblings if they are similar <b>text</b><b>text</b> becomes <b>texttext</b>
+  // Note: mergeSiblingNodes attempts to not merge sibilings if they are noneditable
   if (node && format.merge_siblings !== false) {
     // Previous sibling
-    const newNode = mergeSiblingsNodes(dom, FormatUtils.getNonWhiteSpaceSibling(node), node) ?? node;
+    const newNode = mergeSiblingsNodes(editor, FormatUtils.getNonWhiteSpaceSibling(node), node) ?? node;
     // Next sibling
-    mergeSiblingsNodes(dom, newNode, FormatUtils.getNonWhiteSpaceSibling(newNode, true));
+    mergeSiblingsNodes(editor, newNode, FormatUtils.getNonWhiteSpaceSibling(newNode, true));
   }
 };
 
 const clearChildStyles = (dom: DOMUtils, format: ApplyFormat, node: Node): void => {
   if (format.clear_child_styles) {
     const selector = format.links ? '*:not(a)' : '*';
-    each(dom.select(selector, node), (node) => {
-      if (isElementNode(node)) {
-        each(format.styles, (value, name: string) => {
-          dom.setStyle(node, name, '');
+    each(dom.select(selector, node), (childNode) => {
+      if (isElementNode(childNode) && FormatUtils.isEditable(childNode)) {
+        each(format.styles, (_value, name: string) => {
+          dom.setStyle(childNode, name, '');
         });
       }
     });
   }
 };
 
-const processChildElements = (node: Node, filter: (element: Element) => boolean, process: (element: Element) => void): void => {
+const processChildElements = (node: Node, filter: (element: HTMLElement) => boolean, process: (element: HTMLElement) => void): void => {
   each(node.childNodes, (node) => {
     if (isElementNode(node)) {
       if (filter(node)) {

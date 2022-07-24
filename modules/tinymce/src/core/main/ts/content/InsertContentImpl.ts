@@ -2,7 +2,6 @@ import { Arr, Optional, Type } from '@ephox/katamari';
 import { Remove, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
-import ElementUtils from '../api/dom/ElementUtils';
 import Editor from '../api/Editor';
 import { ParserArgs } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
@@ -13,6 +12,7 @@ import CaretPosition from '../caret/CaretPosition';
 import { CaretWalker } from '../caret/CaretWalker';
 import * as TableDelete from '../delete/TableDelete';
 import * as CefUtils from '../dom/CefUtils';
+import ElementUtils from '../dom/ElementUtils';
 import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as FilterNode from '../html/FilterNode';
@@ -77,7 +77,7 @@ const reduceInlineTextElements = (editor: Editor, merge: boolean | undefined): v
 
   if (merge) {
     const root = editor.getBody();
-    const elementUtils = ElementUtils(dom);
+    const elementUtils = ElementUtils(editor);
 
     Tools.each(dom.select('*[data-mce-fragment]'), (node) => {
       const isInline = Type.isNonNullable(textInlineElements[node.nodeName.toLowerCase()]);
