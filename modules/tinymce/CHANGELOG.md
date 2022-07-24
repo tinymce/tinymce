@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed various incorrect types on public APIs found while enabling TypeScript strict mode #TINY-8806
 - The editor focused via the `auto_focus` option was not scrolled into the viewport #TINY-8785
 - Selecting a figure with `class="image"` would incorrectly highlight the link toolbar button #TINY-8832
+- Pasting styled `pre` content into a `pre` block now correctly merges content #TINY-8860
 
 ## 6.1.0 - 2022-06-29
 
