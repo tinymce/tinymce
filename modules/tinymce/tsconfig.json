@@ -1,8 +1,6 @@
 {
   "extends": "../../tsconfig.shared.json",
   "compilerOptions": {
-    "noImplicitReturns": true,
-    "strict": true,
     "outDir": "lib",
     "rootDir": "src",
     "baseUrl": ".",
