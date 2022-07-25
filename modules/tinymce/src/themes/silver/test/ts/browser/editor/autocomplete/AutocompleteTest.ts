@@ -34,7 +34,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {
       ed.ui.registry.addAutocompleter('Plus1', {
-        ch: '+',
+        trigger: '+',
         minChars: 0,
         columns: 1,
         fetch: (_pattern, _maxResults) => new Promise((resolve) => {
@@ -54,7 +54,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
       });
 
       ed.ui.registry.addAutocompleter('Colon1', {
-        ch: ':',
+        trigger: ':',
         minChars: 0,
         columns: 2,
         fetch: (_pattern, _maxResults) => new Promise((resolve) => {
@@ -73,7 +73,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
       });
 
       ed.ui.registry.addAutocompleter('Colon2', {
-        ch: ':',
+        trigger: ':',
         minChars: 0,
         columns: 2,
         fetch: (_pattern, _maxResults) => new Promise((resolve) => {
@@ -92,7 +92,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
       });
 
       ed.ui.registry.addAutocompleter('Tilde', {
-        ch: '~',
+        trigger: '~',
         minChars: 0,
         columns: 'auto',
         fetch: (_pattern, _maxResults) => new Promise((resolve) => {
@@ -111,7 +111,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
       });
 
       ed.ui.registry.addAutocompleter('Exclamation', {
-        ch: '!',
+        trigger: '!',
         minChars: 0,
         columns: 1,
         fetch: (_pattern, _maxResults) => new Promise((resolve) => {
@@ -129,7 +129,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
       });
 
       ed.ui.registry.addAutocompleter('Equals', {
-        ch: '=',
+        trigger: '=',
         minChars: 1,
         columns: 'auto',
         matches: (rng, text, _pattern) =>
@@ -153,7 +153,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
       });
 
       ed.ui.registry.addAutocompleter('Asterisk', {
-        ch: '*',
+        trigger: '*',
         minChars: 2,
         columns: 'auto',
         fetch: (_pattern, _maxResults) => new Promise((resolve) => {
@@ -174,7 +174,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
       });
 
       ed.ui.registry.addAutocompleter('Hash with spaces', {
-        ch: '#',
+        trigger: '#',
         minChars: 1,
         columns: 1,
         fetch: (pattern, _maxResults) => {
@@ -201,7 +201,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
       });
 
       ed.ui.registry.addAutocompleter('Card items', {
-        ch: '€',
+        trigger: '€',
         minChars: 1,
         columns: 1,
         highlightOn: [ 'my_text_to_highlight' ],
@@ -263,7 +263,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
         );
       }, 100);
       ed.ui.registry.addAutocompleter('Dollars1', {
-        ch: '$',
+        trigger: '$',
         minChars: 0,
         columns: 1,
         fetch: (_pattern, _maxResults) => new Promise(dollarsFetch.throttle),

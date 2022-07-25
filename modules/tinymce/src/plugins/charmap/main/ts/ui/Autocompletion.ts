@@ -7,7 +7,7 @@ type CharMap = CharMap.CharMap;
 
 const init = (editor: Editor, all: CharMap): void => {
   editor.ui.registry.addAutocompleter('charmap', {
-    ch: ':',
+    trigger: ':',
     columns: 'auto',
     minChars: 2,
     fetch: (pattern, _maxResults) => new Promise((resolve, _reject) => {

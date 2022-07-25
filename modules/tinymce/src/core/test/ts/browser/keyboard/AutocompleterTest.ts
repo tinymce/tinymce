@@ -33,7 +33,7 @@ describe('browser.tinymce.core.keyboard.AutocompleterTest', () => {
       };
 
       ed.ui.registry.addAutocompleter('Plus1', {
-        ch: plusTriggerChar,
+        trigger: plusTriggerChar,
         minChars: 0,
         columns: 1,
         fetch: (_pattern, _maxResults) => new Promise(fetch(plusTriggerChar, 'plus')),
@@ -42,7 +42,7 @@ describe('browser.tinymce.core.keyboard.AutocompleterTest', () => {
 
       const dollarsFetch = Throttler.last(fetch(dollarsTriggerChar, 'dollars'), keyboardThrottleTimer * 3);
       ed.ui.registry.addAutocompleter('Dollars1', {
-        ch: dollarsTriggerChar,
+        trigger: dollarsTriggerChar,
         minChars: 0,
         columns: 1,
         fetch: (_pattern, _maxResults) => new Promise(dollarsFetch.throttle),

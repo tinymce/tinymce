@@ -20,12 +20,12 @@ const register = (editor: Editor): AutocompleterDatabase => {
   ));
 
   const triggerChars = Unique.stringArray(
-    Obj.mapToArray(dataset, (v) => v.ch)
+    Obj.mapToArray(dataset, (v) => v.trigger)
   );
 
   const datasetValues = Obj.values(dataset);
 
-  const lookupByChar = (ch: string): InlineContent.Autocompleter[] => Arr.filter(datasetValues, (dv) => dv.ch === ch);
+  const lookupByChar = (ch: string): InlineContent.Autocompleter[] => Arr.filter(datasetValues, (dv) => dv.trigger === ch);
 
   return {
     dataset,

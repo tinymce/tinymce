@@ -1,5 +1,5 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
-import { Optional, Result } from '@ephox/katamari';
+import { Optional, Result, Obj } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
 import { CardMenuItemSpec } from '../menu/CardMenuItem';
@@ -30,7 +30,8 @@ export interface AutocompleterItem {
 
 export interface AutocompleterSpec {
   type?: 'autocompleter';
-  ch: string;
+  ch?: string; // left temporarily as a fallback for 'trigger' property
+  trigger: string;
   minChars?: number;
   columns?: ColumnTypes;
   matches?: (rng: Range, text: string, pattern: string) => boolean;
@@ -47,7 +48,7 @@ export interface AutocompleterInstanceApi {
 
 export interface Autocompleter {
   type: 'autocompleter';
-  ch: string;
+  trigger: string;
   minChars: number;
   columns: ColumnTypes;
   matches: Optional<(rng: Range, text: string, pattern: string) => boolean>;
@@ -70,7 +71,7 @@ const autocompleterItemSchema = StructureSchema.objOf([
 
 const autocompleterSchema = StructureSchema.objOf([
   ComponentSchema.type,
-  FieldSchema.requiredString('ch'),
+  FieldSchema.requiredString('trigger'),
   FieldSchema.defaultedNumber('minChars', 1),
   ComponentSchema.defaultedColumns(1),
   FieldSchema.defaultedNumber('maxResults', 10),
@@ -87,4 +88,4 @@ export const createAutocompleterItem = (spec: AutocompleterItemSpec): Result<Aut
   StructureSchema.asRaw<AutocompleterItem>('Autocompleter.Item', autocompleterItemSchema, spec);
 
 export const createAutocompleter = (spec: AutocompleterSpec): Result<Autocompleter, StructureSchema.SchemaError<any>> =>
-  StructureSchema.asRaw<Autocompleter>('Autocompleter', autocompleterSchema, spec);
+  StructureSchema.asRaw<Autocompleter>('Autocompleter', autocompleterSchema, { ...spec, trigger: Obj.get(spec, 'trigger').getOr(spec.ch) });
