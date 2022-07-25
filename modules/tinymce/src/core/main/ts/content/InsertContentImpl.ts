@@ -29,9 +29,9 @@ const shouldPasteContentOnly = (dom: DOMUtils, fragment: AstNode, parentNode: El
   const lastNode = fragment.lastChild as AstNode;
   const last = lastNode.attr('data-mce-type') === 'bookmark' ? lastNode.prev : lastNode;
 
-  const isCopyingOnlyOneTag = firstNode === last;
+  const isPastingSingleElement = firstNode === last;
   const isWrappedElement = Arr.contains(mergeableWrappedElements, firstNode.name);
-  if (isCopyingOnlyOneTag && isWrappedElement) {
+  if (isPastingSingleElement && isWrappedElement) {
     const isSameClass = firstNode.attr('class') !== undefined ? firstNode.attr('class') === parentNode.className : parentNode.className === '';
     const isContentEditable = firstNode.attr('contenteditable') !== 'false';
     const isPastingInTheSameBlockTag = dom.getParent(parentNode, dom.isBlock)?.nodeName.toLowerCase() === firstNode.name;
