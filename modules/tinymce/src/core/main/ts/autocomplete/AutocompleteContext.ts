@@ -1,4 +1,4 @@
-import { Optional, Strings } from '@ephox/katamari';
+import { Arr, Optional, Strings } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import * as TextSearch from '../alien/TextSearch';
@@ -37,10 +37,15 @@ const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number
     return Optional.none();
   }
 
-  const findTriggerChIndex = (element: Text, offset: number, text: string) =>
+  const buf = [];
+
+  const findTriggerChIndex = (element: Text, offset: number, text: string) => {
     // Stop searching by just returning the current offset if whitespace was found (eg Optional.none())
     // and we'll handle the final checks below instead
-    findTrigger(text, offset, ch).getOr(offset);
+    buf.push({ text, offset });
+    const res = Arr.foldl(buf, (acc, item) => ({ text: item.text + acc.text, offset: item.offset + acc.offset }), { text: '', offset: 0 });
+    return findTrigger(res.text, res.offset, ch).getOr(offset);
+  };
 
   const root = dom.getParent(initRange.startContainer, dom.isBlock) || dom.getRoot();
   return TextSearch.repeatLeft(dom, initRange.startContainer, initRange.startOffset, findTriggerChIndex, root).bind((spot) => {
