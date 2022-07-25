@@ -68,7 +68,7 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
       '<p>test text</p>'
     );
 
-    TinySelections.setSelection(editor, [], 0, [ ((browser.isFirefox() || browser.isSafari()) ? 1 : 2), 0 ], 9);
+    TinySelections.setSelection(editor, [], 0, [ (browser.isFirefox() ? 1 : 2), 0 ], 9);
 
     await pClickEditMenu(editor, 'Copy');
     TinySelections.setCursor(editor, [ 1 ], 1);
