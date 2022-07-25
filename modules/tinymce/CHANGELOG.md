@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When a sidebar was opened using the `sidebar_show` option, its associated toolbar button was not highlighted. #TINY-8873
 - When converting a URL to a link, the `autolink` plugin did not fire an `ExecCommand` event, nor did it create an undo level. #TINY-8896
 - Worked around a Firefox bug which resulted in cookies not being available inside the editor content. #TINY-8916
-- When pasted, `<pre>` formatted text remained `<pre>` formatted and did not take on the properties of material it was pasted in to. #TINY-8860
+- `<pre>` content pasted into a `<pre>` block that had inline styles or was `noneditable` now merges correctly with the surrounding content. #TINY-8860
 - After a `codesample` was pasted, the insertion point was placed incorrectly. #TINY-8861
 
 ## 6.1.0 - 2022-06-29
