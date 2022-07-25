@@ -51,11 +51,10 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
       '<pre class="language-markup" contenteditable="false" data-mce-highlighted="true">test content</pre>' +
       '<p>test text</p>'
     );
-
-    TinySelections.setSelection(editor, [ 0 ], 0, [ 2 ], 1);
+    TinySelections.setSelection(editor, [], 1, [ 2, 0 ], 9);
 
     await RealClipboard.pCopy('iframe => body');
-    TinySelections.setCursor(editor, [ 2 ], 1);
+    TinySelections.setCursor(editor, [ 1 ], 1);
 
     await RealClipboard.pPaste('iframe => body');
     pressEnter(editor);
