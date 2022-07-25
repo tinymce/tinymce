@@ -1,8 +1,7 @@
-import { Keys, RealClipboard, Keyboard } from '@ephox/agar';
+import { Keys, RealClipboard } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
-import { Focus } from '@ephox/sugar';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/codesample/Plugin';
@@ -16,10 +15,7 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ]);
 
-  const pressEnter = (editor: Editor) => {
-    const focused = Focus.active(TinyDom.document(editor)).getOrDie();
-    Keyboard.keystroke(Keys.enter(), {}, focused);
-  };
+  const pressEnter = (editor: Editor) => TinyContentActions.keystroke(editor, Keys.enter());
 
   beforeEach(function () {
     const browser = PlatformDetection.detect().browser;
