@@ -32,12 +32,11 @@ const shouldPasteContentOnly = (dom: DOMUtils, fragment: AstNode, parentNode: El
   const isPastingSingleElement = firstNode === last;
   const isWrappedElement = Arr.contains(mergeableWrappedElements, firstNode.name);
   if (isPastingSingleElement && isWrappedElement) {
-    const isSameClass = firstNode.attr('class') !== undefined ? firstNode.attr('class') === parentNode.className : parentNode.className === '';
     const isContentEditable = firstNode.attr('contenteditable') !== 'false';
     const isPastingInTheSameBlockTag = dom.getParent(parentNode, dom.isBlock)?.nodeName.toLowerCase() === firstNode.name;
-    const isPastingInContentEditableTrue = Optional.from(CefUtils.getContentEditableRoot(root, parentNode)).forall(NodeType.isContentEditableTrue);
+    const isPastingInContentEditable = Optional.from(CefUtils.getContentEditableRoot(root, parentNode)).forall(NodeType.isContentEditableTrue);
 
-    return isSameClass && isContentEditable && isPastingInTheSameBlockTag && isPastingInContentEditableTrue;
+    return isContentEditable && isPastingInTheSameBlockTag && isPastingInContentEditable;
   } else {
     return false;
   }
