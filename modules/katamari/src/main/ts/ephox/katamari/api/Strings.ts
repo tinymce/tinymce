@@ -38,8 +38,12 @@ export const ensureTrailing = (str: string, suffix: string): string => {
   return endsWith(str, suffix) ? str : StrAppend.addToEnd(str, suffix);
 };
 
-export const contains = (str: string, substr: string): boolean => {
-  return str.indexOf(substr) !== -1;
+export const contains = (str: string, substr: string, start: number = 0, end?: number): boolean => {
+  if (start > 0) {
+    return str.substring(start, end).indexOf(substr) !== -1;
+  } else {
+    return str.indexOf(substr) !== -1;
+  }
 };
 
 export const capitalize = (str: string): string => {

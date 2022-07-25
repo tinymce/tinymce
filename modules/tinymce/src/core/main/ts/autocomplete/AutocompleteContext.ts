@@ -1,4 +1,4 @@
-import { Optional } from '@ephox/katamari';
+import { Optional, Strings } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import * as TextSearch from '../alien/TextSearch';
@@ -17,15 +17,14 @@ const stripTriggerChar = (text: string, triggerCh: string) => text.substring(tri
 const findTrigger = (text: string, index: number, ch: string): Optional<number> => {
   // Identify the `char` in, and start the text from that point forward. If there is ever any whitespace, fail
   let i: number;
-  const str = text.substring(0, index);
 
   for (i = index - 1; i >= 0; i--) {
-    const char = str.charAt(i);
+    const char = text.charAt(i);
     if (isWhitespace(char)) {
       return Optional.none();
     }
 
-    if (str.includes(ch, i)) {
+    if (Strings.contains(text, ch, i, index)) {
       break;
     }
   }

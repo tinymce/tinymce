@@ -52,4 +52,17 @@ describe('atomic.katamari.api.str.ContainsTest', () => {
       (value) => !Strings.contains('', value)
     ));
   });
+
+  it('should handle the start and the end parameters', () => {
+    const check = (expected: boolean, str: string, substr: string, start: number, end?: number) => {
+      const actual = Strings.contains(str, substr, start, end);
+      assert.equal(actual, expected);
+    };
+
+    check(true, 'abc', 'b', 1);
+    check(false, 'abc', 'b', 2);
+    check(true, 'abc', 'b', 0, 2);
+    check(false, 'abc', 'b', 0, 1);
+
+  });
 });
