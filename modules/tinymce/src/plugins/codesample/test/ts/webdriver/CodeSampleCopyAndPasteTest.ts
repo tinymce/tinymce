@@ -47,9 +47,9 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
     await TestUtils.pOpenDialogAndAssertInitial(hook.editor(), 'markup', '');
     TestUtils.setTextareaContent('test content');
     await TestUtils.pSubmitDialog(editor);
-    await RealClipboard.pCopy('iframe => body');
+    await pClickEditMenu(editor, 'Copy');
     pressEnter(editor);
-    await RealClipboard.pPaste('iframe => body');
+    await pPaste(editor);
     pressEnter(editor);
 
     TinyAssertions.assertContent(editor,
@@ -70,7 +70,7 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
 
     TinySelections.setSelection(editor, [], 0, [ ((browser.isFirefox() || browser.isSafari()) ? 1 : 2), 0 ], 9);
 
-    await RealClipboard.pCopy('iframe => body');
+    await pClickEditMenu(editor, 'Copy');
     TinySelections.setCursor(editor, [ 1 ], 1);
 
     await pPaste(editor);
