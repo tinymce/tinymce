@@ -161,11 +161,7 @@ const findPatternsRec = (
   const dom = editor.dom;
 
   return TextSearch.textBefore(node, offset, dom.getRoot()).bind((endSpot) => {
-    const rng = dom.createRng();
-    rng.setStart(block, 0);
-    rng.setEnd(node, offset);
-    const text = rng.toString();
-
+    const text = Utils.getBeforeText(dom, block, node, offset);
     for (let i = 0; i < patterns.length; i++) {
       const pattern = patterns[i];
       // If the text does not end with the same string as the pattern, then we can exit
@@ -256,13 +252,8 @@ const addMarkers = (dom: DOMUtils, matches: InlinePatternMatch[]): InlinePattern
   }, [] as InlinePatternMatchWithMarkers[]);
 };
 
-const findPatterns = (editor: Editor, block: Element, patternSet: PatternSet, normalizedMatches: boolean, space: boolean): InlinePatternMatch[] => {
-  const rng = editor.selection.getRng();
-  if (!rng.collapsed) {
-    return [];
-  }
-  const offset = Math.max(0, rng.startOffset - (space ? 1 : 0));
-  return findPatternsRec(editor, patternSet.inlinePatterns, rng.startContainer, offset, block, normalizedMatches).fold(() => [], (result) => result.matches);
+const findPatterns = (editor: Editor, block: Element, node: Node, offset: number, patternSet: PatternSet, normalizedMatches: boolean): InlinePatternMatch[] => {
+  return findPatternsRec(editor, patternSet.inlinePatterns, node, offset, block, normalizedMatches).fold(() => [], (result) => result.matches);
 };
 
 const applyMatches = (editor: Editor, matches: InlinePatternMatch[]): void => {

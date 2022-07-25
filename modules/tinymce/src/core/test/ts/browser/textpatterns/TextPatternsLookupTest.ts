@@ -1,10 +1,11 @@
-import { Keys } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
-import { TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { DynamicPatternContext } from 'tinymce/core/textpatterns/core/PatternTypes';
+
+import * as Utils from '../../module/test/TextPatternsUtils';
 
 describe('browser.tinymce.textpatterns.TextPatternsLookupTest', () => {
   const store = TestHelpers.TestStore();
@@ -21,27 +22,17 @@ describe('browser.tinymce.textpatterns.TextPatternsLookupTest', () => {
     }
   }, [ ]);
 
-  const setUpContentAndMoveCursor = (editor: Editor, content: string, path: number[], offset: number) => {
-    editor.setContent(`<p>${content}</p>`);
-    editor.focus();
-    TinySelections.setCursor(editor, path, offset);
-  };
-
   beforeEach(() => {
     store.clear();
   });
 
   it('TINY-8778: should only be called once when pressing enter key', () => {
-    const editor = hook.editor();
-    setUpContentAndMoveCursor(hook.editor(), 'brb', [ 0, 0 ], 3 );
-    TinyContentActions.keystroke(editor, Keys.enter());
+    Utils.setContentAndPressSpace(hook.editor(), 'brb');
     store.assertEq('should only be called once', [ 'brb' ]);
   });
 
   it('TINY-8778: should only be called once when pressing space key', () => {
-    const editor = hook.editor();
-    setUpContentAndMoveCursor(hook.editor(), '**brb**', [ 0, 0 ], 7);
-    TinyContentActions.keyup(editor, Keys.space());
+    Utils.setContentAndPressSpace(hook.editor(), '**brb**');
     store.assertEq('should only be called once', [ '**brb**' ]);
   });
 });

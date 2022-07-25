@@ -38,10 +38,9 @@ const deleteRng = (dom: DOMUtils, rng: Range, isRoot: (e: Node) => boolean, clea
 const getParentBlock = (editor: Editor, rng: Range): Optional<Element> =>
   Optional.from(editor.dom.getParent(rng.startContainer, editor.dom.isBlock));
 
-const resolveFromDynamicPatterns = (patternSet: PatternSet, block: Element): PatternSet => {
-  const blockText = block.textContent ?? '';
+const resolveFromDynamicPatterns = (patternSet: PatternSet, block: Element, beforeText: string): PatternSet => {
   const dynamicPatterns = patternSet.dynamicPatternsLookup({
-    text: blockText,
+    text: beforeText,
     block
   });
 
@@ -53,9 +52,17 @@ const resolveFromDynamicPatterns = (patternSet: PatternSet, block: Element): Pat
   };
 };
 
+const getBeforeText = (dom: DOMUtils, block: Node, node: Node, offset: number): string => {
+  const rng = dom.createRng();
+  rng.setStart(block, 0);
+  rng.setEnd(node, offset);
+  return rng.toString();
+};
+
 export {
   cleanEmptyNodes,
   deleteRng,
   getParentBlock,
-  resolveFromDynamicPatterns
+  resolveFromDynamicPatterns,
+  getBeforeText
 };

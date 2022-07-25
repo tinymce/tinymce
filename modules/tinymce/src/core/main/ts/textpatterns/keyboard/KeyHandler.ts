@@ -9,11 +9,13 @@ import { PatternSet } from '../core/PatternTypes';
 import * as Utils from '../utils/Utils';
 
 const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
-  return Utils.getParentBlock(editor, editor.selection.getRng()).map((block) => {
-    const dynamicPatternSet = Utils.resolveFromDynamicPatterns(patternSet, block);
+  const rng = editor.selection.getRng();
+  return Utils.getParentBlock(editor, rng).map((block) => {
+    const offset = Math.max(0, rng.startOffset);
+    const dynamicPatternSet = Utils.resolveFromDynamicPatterns(patternSet, block, block.textContent);
     // IMPORTANT: We need to get normalized match results since undoing and redoing the editor state
     // via undoManager.extra() will result in the DOM being normalized.
-    const inlineMatches = InlinePattern.findPatterns(editor, block, dynamicPatternSet, true, false);
+    const inlineMatches = InlinePattern.findPatterns(editor, block, rng.startContainer, offset, dynamicPatternSet, true);
     const blockMatches = BlockPattern.findPatterns(editor, block, dynamicPatternSet, true);
     if (blockMatches.length > 0 || inlineMatches.length > 0) {
       editor.undoManager.add();
@@ -50,9 +52,12 @@ const handleInlineKey = (
   editor: Editor,
   patternSet: PatternSet
 ): void => {
-  Utils.getParentBlock(editor, editor.selection.getRng()).map((block) => {
-    const dynamicPatternSet = Utils.resolveFromDynamicPatterns(patternSet, block);
-    const inlineMatches = InlinePattern.findPatterns(editor, block, dynamicPatternSet, false, true);
+  const rng = editor.selection.getRng();
+  Utils.getParentBlock(editor, rng).map((block) => {
+    const offset = Math.max(0, rng.startOffset - 1);
+    const beforeText = Utils.getBeforeText(editor.dom, block, rng.startContainer, offset);
+    const dynamicPatternSet = Utils.resolveFromDynamicPatterns(patternSet, block, beforeText);
+    const inlineMatches = InlinePattern.findPatterns(editor, block, rng.startContainer, offset, dynamicPatternSet, false);
     if (inlineMatches.length > 0) {
       editor.undoManager.transact(() => {
         InlinePattern.applyMatches(editor, inlineMatches);

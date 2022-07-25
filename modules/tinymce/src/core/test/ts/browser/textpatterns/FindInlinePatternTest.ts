@@ -7,9 +7,10 @@ import Editor from 'tinymce/core/api/Editor';
 import * as InlinePattern from 'tinymce/core/textpatterns/core/InlinePattern';
 import { InlinePattern as InlinePatternType, InlinePatternMatch, PatternSet } from 'tinymce/core/textpatterns/core/PatternTypes';
 import { PathRange } from 'tinymce/core/textpatterns/utils/PathRange';
+import { getBeforeText, getParentBlock, resolveFromDynamicPatterns } from 'tinymce/core/textpatterns/utils/Utils';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 
-import { findPatternsWithDynamicPatterns, getPatternSetFor } from '../../module/test/TextPatternsUtils';
+import { getPatternSetFor } from '../../module/test/TextPatternsUtils';
 
 describe('browser.tinymce.textpatterns.FindInlinePatternTest', () => {
   interface ExpectedPatternMatch {
@@ -17,9 +18,6 @@ describe('browser.tinymce.textpatterns.FindInlinePatternTest', () => {
     readonly startRng: PathRange;
     readonly endRng: PathRange;
   }
-
-  const getInlinePattern = (editor: Editor, patternSet: PatternSet, space: boolean = false, normalized: boolean = false) =>
-    findPatternsWithDynamicPatterns(editor, patternSet, InlinePattern.findPatterns, normalized, space);
 
   const assertPatterns = (actualMatches: InlinePatternMatch[], expectedMatches: ExpectedPatternMatch[]) => {
     assert.lengthOf(actualMatches, expectedMatches.length, 'Pattern count does not match');
@@ -54,6 +52,14 @@ describe('browser.tinymce.textpatterns.FindInlinePatternTest', () => {
 
   const assertSimpleMatch = (actualMatches: InlinePatternMatch[], matchStart: string, matchEnd: string, formats: string[], startRng: PathRange, endRng: PathRange) =>
     assertPatterns(actualMatches, [{ pattern: { start: matchStart, end: matchEnd, format: formats }, startRng, endRng }]);
+
+  const getInlinePattern = (editor: Editor, patternSet: PatternSet, space: boolean = false, normalized: boolean = false) => getParentBlock(editor, editor.selection.getRng()).map((block) => {
+    const rng = editor.selection.getRng();
+    const offset = Math.max(0, rng.startOffset - (space ? 1 : 0));
+    const beforeText = getBeforeText(editor.dom, block, rng.startContainer, offset);
+    const dynamicPatternSet = resolveFromDynamicPatterns(patternSet, block, beforeText);
+    return InlinePattern.findPatterns(editor, block, rng.startContainer, offset, dynamicPatternSet, normalized);
+  }).getOr([]);
 
   context('no text_patterns_lookup', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
@@ -327,7 +333,7 @@ describe('browser.tinymce.textpatterns.FindInlinePatternTest', () => {
               start: '*', end: '*', format: 'bold'
             }
           ];
-        } else if (parentTag === 'div' && ctx.text === 'replace-me') {
+        } else if (parentTag === 'div' && ctx.text.includes('replace-me')) {
           return [
             {
               start: 'me', replacement: 'you'
@@ -414,6 +420,34 @@ describe('browser.tinymce.textpatterns.FindInlinePatternTest', () => {
             endRng: {
               start: [ 0, 'replace-'.length ],
               end: [ 0, 'replace-me'.length ]
+            },
+            pattern: {
+              type: 'inline-command',
+              cmd: 'mceInsertContent',
+              value: 'you'
+            }
+          }
+        ]
+      );
+    });
+
+    it('TINY-8778: Inline pattern matches text in the middle', () => {
+      const editor = hook.editor();
+      editor.setContent('<div>Should replace-me in the middle of paragraph</div>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 'Should replace-me'.length);
+      const matches = getInlinePattern(editor, getInlinePatternSet(), false);
+      assertPatterns(
+        matches,
+        [
+          {
+            // assertCall prepends an 0
+            startRng: {
+              start: [ 0, 'Should replace-'.length ],
+              end: [ 0, 'Should replace-me'.length ]
+            },
+            endRng: {
+              start: [ 0, 'Should replace-'.length ],
+              end: [ 0, 'Should replace-me'.length ]
             },
             pattern: {
               type: 'inline-command',

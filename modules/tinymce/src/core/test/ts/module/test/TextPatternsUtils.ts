@@ -6,7 +6,6 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Options from 'tinymce/core/api/Options';
 import * as Pattern from 'tinymce/core/textpatterns/core/Pattern';
 import { PatternSet } from 'tinymce/core/textpatterns/core/PatternTypes';
-import { getParentBlock, resolveFromDynamicPatterns } from 'tinymce/core/textpatterns/utils/Utils';
 
 const setContentAndFireKeystroke = (key: number) => {
   return (editor: Editor, content: string, offset = content.length, elementPath = [ 0, 0 ], wrapInP = true) => {
@@ -17,12 +16,12 @@ const setContentAndFireKeystroke = (key: number) => {
   };
 };
 
-const setContentAndPressSpace = (editor: Editor, content: string, offset = content.length, elementPath = [ 0, 0 ]) => {
-  editor.setContent('<p>' + content + '</p>');
+const setContentAndPressSpace = (editor: Editor, content: string, offset = content.length, elementPath = [ 0, 0 ], blockElement = 'p') => {
+  editor.setContent(`<${blockElement}>${content}</${blockElement}>`);
   editor.focus();
   TinySelections.setCursor(editor, elementPath, offset);
   editor.execCommand('mceInsertContent', false, ' ');
-  TinyContentActions.keystroke(editor, Keys.space());
+  TinyContentActions.keyup(editor, Keys.space());
 };
 
 const bodyStruct = (children: StructAssert[]) => {
@@ -122,20 +121,6 @@ const getPatternSetFor = (hook: TinyHooks.Hook<Editor>) => Thunk.cached((): Patt
   );
 });
 
-const findPatternsWithDynamicPatterns = <
-  F extends (editor: Editor, block: Element, patternSet: PatternSet, normalized: boolean, allowTrailingSpace?: boolean) => any
->(
-  editor: Editor,
-  patternSet: PatternSet,
-  callback: F,
-  normalized: boolean,
-  allowTrailingSpace: boolean = false
-): ReturnType<F> =>
-  getParentBlock(editor, editor.selection.getRng()).map((block) => {
-    const dynamicPatternSet = resolveFromDynamicPatterns(patternSet, block);
-    return callback(editor, block, dynamicPatternSet, normalized, allowTrailingSpace);
-  }).getOr([]);
-
 export {
   setContentAndPressSpace,
   setContentAndPressEnter,
@@ -145,6 +130,5 @@ export {
   blockStructHelper,
   forcedRootBlockInlineStructHelper,
   forcedRootBlockStructHelper,
-  getPatternSetFor,
-  findPatternsWithDynamicPatterns
+  getPatternSetFor
 };
