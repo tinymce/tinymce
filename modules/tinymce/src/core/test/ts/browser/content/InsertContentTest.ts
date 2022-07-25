@@ -321,7 +321,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TINY-8860: insertAtCaret - insert pre block on empty p', () => {
     const editor = hook.editor();
     editor.setContent('<p></p>');
-    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
+    TinySelections.setCursor(editor, [ 0 ], 0);
     InsertContent.insertAtCaret(editor, { content: '<pre>abc</pre>', paste: true });
     TinyAssertions.assertContent(editor, '<pre>abc</pre>');
   });
@@ -329,7 +329,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TINY-8860: insertAtCaret - insert styled pre block', () => {
     const editor = hook.editor();
     editor.setContent('<pre>abc</pre>');
-    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
     InsertContent.insertAtCaret(editor, { content: '<pre><strong>123</strong></pre>', paste: true });
     TinyAssertions.assertContent(editor, '<pre>a<strong>123</strong>bc</pre>');
   });
@@ -337,7 +337,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TINY-8860: insertAtCaret - insert plain pre in styled pre block', () => {
     const editor = hook.editor();
     editor.setContent('<pre><strong>123</strong>abc</pre>');
-    TinySelections.setSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
     InsertContent.insertAtCaret(editor, { content: '<pre>abc</pre>', paste: true });
     TinyAssertions.assertContent(editor, '<pre><strong>1abc23</strong>abc</pre>');
   });
@@ -345,7 +345,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TINY-8860: insertAtCaret - insert styled pre in differently styled pre block', () => {
     const editor = hook.editor();
     editor.setContent('<pre><strong>1abc23</strong>abc</pre>');
-    TinySelections.setSelection(editor, [ 0, 0, 0 ], 5, [ 0, 0, 0 ], 5);
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 5);
     InsertContent.insertAtCaret(editor, { content: '<pre><em>abc</em></pre>', paste: true });
     TinyAssertions.assertContent(editor, '<pre><strong>1abc2<em>abc</em>3</strong>abc</pre>');
   });
@@ -358,7 +358,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     TinyAssertions.assertContent(editor, '<pre>a</pre><pre contenteditable="false">123</pre><pre>bc</pre>');
   });
 
-  it('TINY-8860: insertAtCaret - insert pre in cef pre block', () => {
+  it('TINY-8860: insertAtCaret - insert pre over cef pre block', () => {
     const editor = hook.editor();
     editor.setContent('<pre contenteditable="false">abc</pre>');
     TinySelections.setSelection(editor, [], 1, [], 2);
