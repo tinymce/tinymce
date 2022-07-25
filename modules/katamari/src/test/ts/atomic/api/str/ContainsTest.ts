@@ -59,9 +59,13 @@ describe('atomic.katamari.api.str.ContainsTest', () => {
       assert.equal(actual, expected);
     };
 
+    check(true, 'abc', 'b', 0);
     check(true, 'abc', 'b', 1);
     check(false, 'abc', 'b', 2);
+    check(false, 'abc', 'b', 0, 0);
     check(true, 'abc', 'b', 0, 2);
+    check(true, 'abc', 'b', 1, 3);
+    check(false, 'abc', 'b', 2, 3);
     check(false, 'abc', 'b', 0, 1);
 
   });

@@ -1,4 +1,5 @@
 import * as StrAppend from '../str/StrAppend';
+import { Type } from './Main';
 import { Optional } from './Optional';
 
 const checkRange = (str: string, substr: string, start: number): boolean =>
@@ -39,10 +40,10 @@ export const ensureTrailing = (str: string, suffix: string): string => {
 };
 
 export const contains = (str: string, substr: string, start: number = 0, end?: number): boolean => {
-  if (start > 0) {
-    return str.substring(start, end).indexOf(substr) !== -1;
-  } else {
+  if (Type.isUndefined(end) && start === 0) {
     return str.indexOf(substr) !== -1;
+  } else {
+    return str.substring(start, end).indexOf(substr) !== -1;
   }
 };
 
