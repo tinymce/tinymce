@@ -4,14 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 6.1.1 - 2022-07-27
 
 ### Fixed
-- Invalid special elements were not cleaned up correctly during sanitization #TINY-8780
-- An exception was thrown when deleting all content if the start or end of the document had a `contenteditable="false"` element #TINY-8877
-- When a sidebar was opened using the `sidebar_show` option, its associated toggle button was not highlighted #TINY-8873
-- The `autolink` plugin when converting a URL to a link did not fire an `ExecCommand` event, nor did it create an undo level #TINY-8896
-- Worked around a Firefox bug whereby cookies weren't available inside the editor content #TINY-88916
+- Invalid special elements were not cleaned up correctly during sanitization. #TINY-8780
+- An exception was thrown when deleting all content if the start or end of the document had a `contenteditable="false"` element. #TINY-8877
+- When a sidebar was opened using the `sidebar_show` option, its associated toolbar button was not highlighted. #TINY-8873
+- When converting a URL to a link, the `autolink` plugin did not fire an `ExecCommand` event, nor did it create an undo level. #TINY-8896
+- Worked around a Firefox bug which results in cookies not being available inside the editor content. #TINY-8916
+- When pasted, `<pre>` formatted text remained `<pre>` formatted and did not take on the properties of material it was pasted in to. #TINY-8860
+- After a `codesample` was pasted, the insertion point was placed incorrectly. #TINY-8861
 
 ## 6.1.0 - 2022-06-29
 
