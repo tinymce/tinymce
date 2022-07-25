@@ -49,7 +49,7 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
     );
   });
 
-  it('TINY-8861: coping and pating a piece of code and a text should leave the cursor on the text after paste', async () => {
+  it('TINY-8861: copying and pasting a piece of code and a text should leave the cursor on the text after paste', async () => {
     const editor = hook.editor();
     editor.setContent(
       '<pre class="language-markup" contenteditable="false">test content</pre>' +
