@@ -6,9 +6,6 @@ import Tools from 'tinymce/core/api/util/Tools';
 import * as Prism from '../prism/Prism';
 import * as Utils from '../util/Utils';
 
-const isPre = (node: Node): node is HTMLPreElement =>
-  node.nodeName.toLowerCase() === 'pre';
-
 const setup = (editor: Editor): void => {
   editor.on('PreProcess', (e) => {
     const dom = editor.dom;
@@ -18,6 +15,7 @@ const setup = (editor: Editor): void => {
 
       dom.setAttrib(elm, 'class', Strings.trim(dom.getAttrib(elm, 'class')));
       dom.setAttrib(elm, 'contentEditable', null);
+      dom.setAttrib(elm, 'data-mce-highlighted', null);
 
       // Empty the pre element
       let child: Node;
@@ -34,28 +32,36 @@ const setup = (editor: Editor): void => {
   editor.on('SetContent', () => {
     const dom = editor.dom;
     const unprocessedCodeSamples = Tools.grep(dom.select('pre'), (elm) => {
-      return Utils.isCodeSample(elm) && elm.contentEditable !== 'false';
+      return Utils.isCodeSample(elm) && dom.getAttrib(elm, 'data-mce-highlighted') !== 'true';
     });
 
     if (unprocessedCodeSamples.length) {
       editor.undoManager.transact(() => {
         Tools.each(unprocessedCodeSamples, (elm) => {
           Tools.each(dom.select('br', elm), (elm) => {
-            elm.parentNode.replaceChild(editor.getDoc().createTextNode('\n'), elm);
+            dom.replace(editor.getDoc().createTextNode('\n'), elm);
           });
 
-          elm.contentEditable = 'false';
-          elm.innerHTML = dom.encode(elm.textContent);
+          elm.innerHTML = dom.encode(elm.textContent ?? '');
           Prism.get(editor).highlightElement(elm);
+          dom.setAttrib(elm, 'data-mce-highlighted', true);
           elm.className = Strings.trim(elm.className);
         });
-
-        const endContainer = editor.selection.getRng().endContainer;
-        if (isPre(endContainer)) {
-          editor.selection.select(endContainer);
-        }
       });
     }
+  });
+
+  editor.on('PreInit', () => {
+    editor.parser.addNodeFilter('pre', (nodes) => {
+      for (let i = 0, l = nodes.length; i < l; i++) {
+        const node = nodes[i];
+        const isCodeSample = (node.attr('class') ?? '').indexOf('language-') !== -1 ;
+        if (isCodeSample) {
+          node.attr('contenteditable', 'false');
+          node.attr('data-mce-highlighted', 'false');
+        }
+      }
+    });
   });
 };
 

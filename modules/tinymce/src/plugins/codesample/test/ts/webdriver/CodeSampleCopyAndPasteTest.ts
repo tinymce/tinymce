@@ -43,8 +43,8 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
     TinyAssertions.assertContent(editor,
       '<p><br></p>' +
       '<p><br></p>' +
-      '<pre class="language-markup" contenteditable="false">test content</pre>' +
-      '<pre class="language-markup" contenteditable="false">test content</pre>',
+      '<pre class="language-markup" contenteditable="false" data-mce-highlighted="true">test content</pre>' +
+      '<pre class="language-markup" contenteditable="false" data-mce-highlighted="true">test content</pre>',
       { format: 'raw' }
     );
   });
@@ -52,7 +52,7 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
   it('TINY-8861: copying and pasting a piece of code and a text should leave the cursor on the text after paste', async () => {
     const editor = hook.editor();
     editor.setContent(
-      '<pre class="language-markup" contenteditable="false">test content</pre>' +
+      '<pre class="language-markup" contenteditable="false" data-mce-highlighted="true">test content</pre>' +
       '<p>test text</p>'
     );
 
@@ -65,9 +65,9 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
     pressEnter(editor);
 
     TinyAssertions.assertContent(editor,
-      '<pre class="language-markup" contenteditable="false">test content</pre>' +
+      '<pre class="language-markup" contenteditable="false" data-mce-highlighted="true">test content</pre>' +
       '<p>test text</p>' +
-      '<pre class="language-markup" contenteditable="false">test content</pre>' +
+      '<pre class="language-markup" contenteditable="false" data-mce-highlighted="true">test content</pre>' +
       '<p>test text</p>' +
       '<p><br data-mce-bogus="1"></p>',
       { format: 'raw' }
