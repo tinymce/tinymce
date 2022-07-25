@@ -8,20 +8,6 @@ import Plugin from 'tinymce/plugins/codesample/Plugin';
 
 import * as TestUtils from '../module/CodeSampleTestUtils';
 
-const pClickEditMenu = async (editor: Editor, item: string): Promise<void> => {
-  TinyUiActions.clickOnMenu(editor, 'button:contains("Edit")');
-  await TinyUiActions.pWaitForUi(editor, '*[role="menu"]');
-  await RealMouse.pClickOn(`div[title=${item}]`);
-};
-
-const pPaste = async (editor: Editor): Promise<void> => {
-  if (PlatformDetection.detect().browser.isSafari()) {
-    await pClickEditMenu(editor, 'Paste');
-  } else {
-    await RealClipboard.pPaste('iframe => body');
-  }
-};
-
 describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'codesample',
@@ -32,6 +18,20 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
   const pressEnter = (editor: Editor) => TinyContentActions.keystroke(editor, Keys.enter());
 
   const browser = PlatformDetection.detect().browser;
+
+  const pClickEditMenu = async (editor: Editor, item: string): Promise<void> => {
+    TinyUiActions.clickOnMenu(editor, 'button:contains("Edit")');
+    await TinyUiActions.pWaitForUi(editor, '*[role="menu"]');
+    await RealMouse.pClickOn(`div[title=${item}]`);
+  };
+
+  const pPaste = async (editor: Editor): Promise<void> => {
+    if (PlatformDetection.detect().browser.isSafari()) {
+      await pClickEditMenu(editor, 'Paste');
+    } else {
+      await RealClipboard.pPaste('iframe => body');
+    }
+  };
 
   beforeEach(() => {
     hook.editor().setContent('');
