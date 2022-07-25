@@ -33,6 +33,10 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
     }
   };
 
+  const getMockPreString = (content: string) => browser.isFirefox() ?
+    `<pre class="language-markup" data-mce-highlighted="true" contenteditable="false">${content}</pre>` :
+    `<pre class="language-markup" contenteditable="false" data-mce-highlighted="true">${content}</pre>`;
+
   beforeEach(() => {
     hook.editor().setContent('');
   });
@@ -51,8 +55,8 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
     TinyAssertions.assertContent(editor,
       '<p><br></p>' +
       '<p><br></p>' +
-      '<pre class="language-markup" contenteditable="false" data-mce-highlighted="true">test content</pre>' +
-      '<pre class="language-markup" contenteditable="false" data-mce-highlighted="true">test content</pre>',
+      getMockPreString('test content') +
+      getMockPreString('test content'),
       { format: 'raw' }
     );
   });
@@ -73,9 +77,9 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
     pressEnter(editor);
 
     TinyAssertions.assertContent(editor,
-      '<pre class="language-markup" contenteditable="false" data-mce-highlighted="true">test content</pre>' +
+      getMockPreString('test content') +
       '<p>test text</p>' +
-      '<pre class="language-markup" contenteditable="false" data-mce-highlighted="true">test content</pre>' +
+      getMockPreString('test content') +
       '<p>test text</p>' +
       '<p><br data-mce-bogus="1"></p>',
       { format: 'raw' }
