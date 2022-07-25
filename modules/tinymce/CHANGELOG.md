@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - An exception was thrown when deleting all content if the start or end of the document had a `contenteditable="false"` element. #TINY-8877
 - When a sidebar was opened using the `sidebar_show` option, its associated toolbar button was not highlighted. #TINY-8873
 - When converting a URL to a link, the `autolink` plugin did not fire an `ExecCommand` event, nor did it create an undo level. #TINY-8896
-- Worked around a Firefox bug which results in cookies not being available inside the editor content. #TINY-8916
+- Worked around a Firefox bug which resulted in cookies not being available inside the editor content. #TINY-8916
 - When pasted, `<pre>` formatted text remained `<pre>` formatted and did not take on the properties of material it was pasted in to. #TINY-8860
 - After a `codesample` was pasted, the insertion point was placed incorrectly. #TINY-8861
 
