@@ -15,12 +15,11 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
     custom_elements: '~foo-bar'
-  }, []);
+  }, [], true);
 
   it('TBA: insertAtCaret - i inside text, converts to em', () => {
     const editor = hook.editor();
     editor.setContent('<p>1234</p>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
     InsertContent.insertAtCaret(editor, '<i>a</i>');
     TinyAssertions.assertContent(editor, '<p>12<em>a</em>34</p>');
@@ -29,7 +28,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TBA: insertAtCaret - ul at beginning of li', () => {
     const editor = hook.editor();
     editor.setContent('<ul><li>12</li></ul>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0);
     InsertContent.insertAtCaret(editor, { content: '<ul><li>a</li></ul>', paste: true });
     TinyAssertions.assertContent(editor, '<ul><li>a</li><li>12</li></ul>');
@@ -39,7 +37,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TBA: insertAtCaret - ul with multiple items at beginning of li', () => {
     const editor = hook.editor();
     editor.setContent('<ul><li>12</li></ul>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0);
     InsertContent.insertAtCaret(editor, { content: '<ul><li>a</li><li>b</li></ul>', paste: true });
     TinyAssertions.assertContent(editor, '<ul><li>a</li><li>b</li><li>12</li></ul>');
@@ -49,7 +46,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TBA: insertAtCaret - ul at end of li', () => {
     const editor = hook.editor();
     editor.setContent('<ul><li>12</li></ul>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 2, [ 0, 0, 0 ], 2);
     InsertContent.insertAtCaret(editor, { content: '<ul><li>a</li></ul>', paste: true });
     TinyAssertions.assertContent(editor, '<ul><li>12</li><li>a</li></ul>');
@@ -59,7 +55,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TBA: insertAtCaret - ul with multiple items at end of li', () => {
     const editor = hook.editor();
     editor.setContent('<ul><li>12</li></ul>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 2, [ 0, 0, 0 ], 2);
     InsertContent.insertAtCaret(editor, { content: '<ul><li>a</li><li>b</li><li>c</li></ul>', paste: true });
     TinyAssertions.assertContent(editor, '<ul><li>12</li><li>a</li><li>b</li><li>c</li></ul>');
@@ -69,7 +64,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TBA: insertAtCaret - ul with multiple items in middle of li', () => {
     const editor = hook.editor();
     editor.setContent('<ul><li>12</li></ul>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
     InsertContent.insertAtCaret(editor, { content: '<ul><li>a</li><li>b</li></ul>', paste: true });
     TinyAssertions.assertContent(editor, '<ul><li>1</li><li>a</li><li>b</li><li>2</li></ul>');
@@ -79,7 +73,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TBA: insertAtCaret - ul in middle of li with formatting', () => {
     const editor = hook.editor();
     editor.setContent('<ul><li><em><strong>12</strong></em></li></ul>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 1, [ 0, 0, 0, 0, 0 ], 1);
     InsertContent.insertAtCaret(editor, { content: '<ul><li>a</li></ul>', paste: true });
     TinyAssertions.assertContent(editor, '<ul><li><em><strong>1</strong></em></li><li>a</li><li><em><strong>2</strong></em></li></ul>');
@@ -89,7 +82,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TBA: insertAtCaret - ul with trailing empty block in middle of li', () => {
     const editor = hook.editor();
     editor.setContent('<ul><li>a</li><li>d</li></ul>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
     InsertContent.insertAtCaret(editor, { content: '<ul><li>b</li><li>c</li></ul><p>\u00a0</p>', paste: true });
     TinyAssertions.assertContent(editor, '<ul><li>a</li><li>b</li><li>c</li><li>d</li></ul>');
@@ -99,7 +91,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TBA: insertAtCaret - ul at beginning of li with empty end li', () => {
     const editor = hook.editor();
     editor.setContent('<ul><li>12</li></ul>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0);
     InsertContent.insertAtCaret(editor, { content: '<ul><li>a</li><li></li></ul>', paste: true });
     TinyAssertions.assertContent(editor, '<ul><li>a</li><li>12</li></ul>');
@@ -109,7 +100,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TBA: insertAtCaret - merge inline elements', () => {
     const editor = hook.editor();
     editor.setContent('<p><strong><em>abc</em></strong></p>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0, 0, 0 ], 1, [ 0, 0, 0, 0 ], 1);
     InsertContent.insertAtCaret(editor, { content: '<em><strong>123</strong></em>', merge: true });
     TinyAssertions.assertContent(editor, '<p><strong><em>a123bc</em></strong></p>');
@@ -118,7 +108,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TINY-1231: insertAtCaret - list into empty table cell with invalid contents', () => {
     const editor = hook.editor();
     editor.setContent('<table class="mce-item-table"><tbody><tr><td><br></td></tr></tbody></table>', { format: 'raw' });
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 0);
     InsertContent.insertAtCaret(editor, {
       content: '<meta http-equiv="content-type" content="text/html; charset=utf-8"><ul><li>a</li></ul>',
@@ -131,7 +120,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TBA: insertAtCaret - content into single table cell with all content selected', () => {
     const editor = hook.editor();
     editor.setContent('<table class="mce-item-table"><tbody><tr><td>content</td></tr></tbody></table>', { format: 'raw' });
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 7);
     InsertContent.insertAtCaret(editor, { content: 'replace', paste: true });
     TinyAssertions.assertContent(editor, '<table><tbody><tr><td>replace</td></tr></tbody></table>');
@@ -140,7 +128,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TBA: insertAtCaret - empty paragraph pad the empty element with br on insert and nbsp on save', () => {
     const editor = hook.editor();
     editor.setContent('<p>ab</p>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
     InsertContent.insertAtCaret(editor, { content: '<p></p>', merge: true });
     assert.equal(editor.getContent({ format: 'raw' }), '<p>a</p><p><br data-mce-bogus="1"></p><p>b</p>', 'Raw content');
@@ -181,7 +168,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TBA: insertAtCaret - text content at a text node with a trailing nbsp character', () => {
     const editor = hook.editor();
     editor.setContent('<p>abc&nbsp;</p>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 4, [ 0, 0 ], 4);
     InsertContent.insertAtCaret(editor, 'd');
     TinyAssertions.assertContent(editor, '<p>abc d</p>');
@@ -190,7 +176,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TBA: insertAtCaret - html at a text node with a trailing nbsp character', () => {
     const editor = hook.editor();
     editor.setContent('<p>abc&nbsp;</p>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 4, [ 0, 0 ], 4);
     InsertContent.insertAtCaret(editor, '<em>d</em>');
     TinyAssertions.assertContent(editor, '<p>abc <em>d</em></p>');
@@ -199,7 +184,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TBA: insertAtCaret - text in the middle of a text node with nbsp characters', () => {
     const editor = hook.editor();
     editor.setContent('<p>a&nbsp;c</p>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
     InsertContent.insertAtCaret(editor, 'b');
     TinyAssertions.assertContent(editor, '<p>a bc</p>');
@@ -208,7 +192,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TBA: insertAtCaret - html in the middle of a text node with nbsp characters', () => {
     const editor = hook.editor();
     editor.setContent('<p>a&nbsp;c</p>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
     InsertContent.insertAtCaret(editor, '<em>b</em>');
     TinyAssertions.assertContent(editor, '<p>a <em>b</em>c</p>');
@@ -217,7 +200,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TINY-5966:  insertAtCaret - text content at a text node with a leading nbsp character', () => {
     const editor = hook.editor();
     editor.setContent('<p>&nbsp;abc</p>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
     InsertContent.insertAtCaret(editor, 'd');
     TinyAssertions.assertContent(editor, '<p>d abc</p>');
@@ -226,7 +208,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TINY-5966:  insertAtCaret - html at a text node with a leading nbsp character', () => {
     const editor = hook.editor();
     editor.setContent('<p>&nbsp;abc</p>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
     InsertContent.insertAtCaret(editor, '<em>d</em>');
     TinyAssertions.assertContent(editor, '<p><em>d</em> abc</p>');
@@ -235,13 +216,11 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TINY-5966:  insertAtCaret - text content at a text node with a only a nbsp character', () => {
     const editor = hook.editor();
     editor.setContent('<p>&nbsp;</p>', { format: 'raw' });
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
     InsertContent.insertAtCaret(editor, 'a');
     TinyAssertions.assertContent(editor, '<p>\u00a0a</p>');
 
     editor.setContent('<p>&nbsp;</p>', { format: 'raw' });
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
     InsertContent.insertAtCaret(editor, 'a');
     TinyAssertions.assertContent(editor, '<p>a\u00a0</p>');
@@ -250,13 +229,11 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TINY-5966:  insertAtCaret - html at a text node with a only a nbsp character', () => {
     const editor = hook.editor();
     editor.setContent('<p>&nbsp;</p>', { format: 'raw' });
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
     InsertContent.insertAtCaret(editor, '<em>a</em>');
     TinyAssertions.assertContent(editor, '<p>\u00a0<em>a</em></p>');
 
     editor.setContent('<p>&nbsp;</p>', { format: 'raw' });
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
     InsertContent.insertAtCaret(editor, '<em>a</em>');
     TinyAssertions.assertContent(editor, '<p><em>a</em>\u00a0</p>');
@@ -265,7 +242,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TINY-5966:  insertAtCaret - text content at a empty block with leading/trailing spaces', () => {
     const editor = hook.editor();
     editor.setContent('<p></p>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
     InsertContent.insertAtCaret(editor, ' a ');
     TinyAssertions.assertContent(editor, '<p>\u00a0a\u00a0</p>');
@@ -274,7 +250,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TINY-5966:  insertAtCaret - text content at a text node between 2 spaces with leading/trailing spaces', () => {
     const editor = hook.editor();
     editor.setContent('<p>a&nbsp; c</p>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
     InsertContent.insertAtCaret(editor, ' b ');
     TinyAssertions.assertContent(editor, '<p>a\u00a0 b\u00a0 c</p>');
@@ -283,13 +258,11 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TINY-5966:  insertAtCaret - text content at a text node before br', () => {
     const editor = hook.editor();
     editor.setContent('<p>a<br>b</p>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
     InsertContent.insertAtCaret(editor, ' c ');
     TinyAssertions.assertContent(editor, '<p>a c\u00a0<br>b</p>');
 
     editor.setContent('<p>a&nbsp;<br>&nbsp;b</p>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
     InsertContent.insertAtCaret(editor, 'c');
     TinyAssertions.assertContent(editor, '<p>a c<br>\u00a0b</p>');
@@ -298,7 +271,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TINY-5966:  insertAtCaret - html content at a text node before br', () => {
     const editor = hook.editor();
     editor.setContent('<p>a&nbsp;<br>&nbsp;b</p>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
     InsertContent.insertAtCaret(editor, '<em>c</em>');
     TinyAssertions.assertContent(editor, '<p>a <em>c</em><br>\u00a0b</p>');
@@ -307,13 +279,11 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TINY-5966:  insertAtCaret - text content at a text node after br', () => {
     const editor = hook.editor();
     editor.setContent('<p>a<br>b</p>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 2 ], 0, [ 0, 2 ], 0);
     InsertContent.insertAtCaret(editor, ' c ');
     TinyAssertions.assertContent(editor, '<p>a<br>\u00a0c b</p>');
 
     editor.setContent('<p>a&nbsp;<br>&nbsp;b</p>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 2 ], 0, [ 0, 2 ], 0);
     InsertContent.insertAtCaret(editor, 'c');
     TinyAssertions.assertContent(editor, '<p>a\u00a0<br>c b</p>');
@@ -322,7 +292,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TINY-5966:  insertAtCaret - html content at a text node after br', () => {
     const editor = hook.editor();
     editor.setContent('<p>a&nbsp;<br>&nbsp;b</p>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 2 ], 0, [ 0, 2 ], 0);
     InsertContent.insertAtCaret(editor, '<em>c</em>');
     TinyAssertions.assertContent(editor, '<p>a\u00a0<br><em>c</em> b</p>');
@@ -331,13 +300,11 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TINY-5966:  insertAtCaret - text content with spaces in pre', () => {
     const editor = hook.editor();
     editor.setContent('<pre></pre>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
     InsertContent.insertAtCaret(editor, '  a  ');
     TinyAssertions.assertContent(editor, '<pre>  a  </pre>');
 
     editor.setContent('<pre>a b c</pre>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 3);
     InsertContent.insertAtCaret(editor, ' b ');
     TinyAssertions.assertContent(editor, '<pre>a  b  c</pre>');
@@ -346,7 +313,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TINY-5966:  insertAtCaret - html content with spaces in pre', () => {
     const editor = hook.editor();
     editor.setContent('<pre></pre>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
     InsertContent.insertAtCaret(editor, ' <strong> a </strong> ');
     TinyAssertions.assertContent(editor, '<pre> <strong> a </strong> </pre>');
@@ -355,7 +321,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TINY-8860: insertAtCaret - insert pre block on empty p', () => {
     const editor = hook.editor();
     editor.setContent('<p></p>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
     InsertContent.insertAtCaret(editor, { content: '<pre>abc</pre>', paste: true });
     TinyAssertions.assertContent(editor, '<pre>abc</pre>');
@@ -364,16 +329,14 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TINY-8860: insertAtCaret - insert styled pre block', () => {
     const editor = hook.editor();
     editor.setContent('<pre>abc</pre>');
-    editor.focus();
-    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
     InsertContent.insertAtCaret(editor, { content: '<pre><strong>123</strong></pre>', paste: true });
-    TinyAssertions.assertContent(editor, '<pre><strong>123</strong>abc</pre>');
+    TinyAssertions.assertContent(editor, '<pre>a<strong>123</strong>bc</pre>');
   });
 
   it('TINY-8860: insertAtCaret - insert plain pre in styled pre block', () => {
     const editor = hook.editor();
     editor.setContent('<pre><strong>123</strong>abc</pre>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
     InsertContent.insertAtCaret(editor, { content: '<pre>abc</pre>', paste: true });
     TinyAssertions.assertContent(editor, '<pre><strong>1abc23</strong>abc</pre>');
@@ -382,10 +345,25 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
   it('TINY-8860: insertAtCaret - insert styled pre in differently styled pre block', () => {
     const editor = hook.editor();
     editor.setContent('<pre><strong>1abc23</strong>abc</pre>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 5, [ 0, 0, 0 ], 5);
     InsertContent.insertAtCaret(editor, { content: '<pre><em>abc</em></pre>', paste: true });
     TinyAssertions.assertContent(editor, '<pre><strong>1abc2<em>abc</em>3</strong>abc</pre>');
+  });
+
+  it('TINY-8860: insertAtCaret - insert cef pre in pre block', () => {
+    const editor = hook.editor();
+    editor.setContent('<pre>abc</pre>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    InsertContent.insertAtCaret(editor, { content: '<pre contenteditable="false">123</pre>', paste: true });
+    TinyAssertions.assertContent(editor, '<pre>a</pre><pre contenteditable="false">123</pre><pre>bc</pre>');
+  });
+
+  it('TINY-8860: insertAtCaret - insert pre in cef pre block', () => {
+    const editor = hook.editor();
+    editor.setContent('<pre contenteditable="false">abc</pre>');
+    TinySelections.setSelection(editor, [], 1, [], 2);
+    InsertContent.insertAtCaret(editor, { content: '<pre>123</pre>', paste: true });
+    TinyAssertions.assertContent(editor, '<pre>123</pre>');
   });
 
   it('TINY-6263: insertAtCaret - merge font-size spans', () => {
