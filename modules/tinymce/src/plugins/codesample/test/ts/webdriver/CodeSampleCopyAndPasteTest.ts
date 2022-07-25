@@ -1,12 +1,26 @@
-import { Keys, RealClipboard } from '@ephox/agar';
+import { Keys, RealClipboard, RealMouse } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
-import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/codesample/Plugin';
 
 import * as TestUtils from '../module/CodeSampleTestUtils';
+
+const pClickEditMenu = async (editor: Editor, item: string): Promise<void> => {
+  TinyUiActions.clickOnMenu(editor, 'button:contains("Edit")');
+  await TinyUiActions.pWaitForUi(editor, '*[role="menu"]');
+  await RealMouse.pClickOn(`div[title=${item}]`);
+};
+
+const pPaste = async (editor: Editor): Promise<void> => {
+  if (PlatformDetection.detect().browser.isSafari()) {
+    await pClickEditMenu(editor, 'Paste');
+  } else {
+    await RealClipboard.pPaste('iframe => body');
+  }
+};
 
 describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
@@ -17,11 +31,9 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
 
   const pressEnter = (editor: Editor) => TinyContentActions.keystroke(editor, Keys.enter());
 
-  beforeEach(function () {
-    const browser = PlatformDetection.detect().browser;
-    if (browser.isSafari()) {
-      this.skip();
-    }
+  const browser = PlatformDetection.detect().browser;
+
+  beforeEach(() => {
     hook.editor().setContent('');
   });
 
@@ -51,12 +63,13 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
       '<pre class="language-markup" contenteditable="false" data-mce-highlighted="true">test content</pre>' +
       '<p>test text</p>'
     );
-    TinySelections.setSelection(editor, [], 1, [ 2, 0 ], 9);
+
+    TinySelections.setSelection(editor, [], 0, [ (browser.isFirefox() ? 1 : 2), 0 ], 9);
 
     await RealClipboard.pCopy('iframe => body');
     TinySelections.setCursor(editor, [ 1 ], 1);
 
-    await RealClipboard.pPaste('iframe => body');
+    await pPaste(editor);
     pressEnter(editor);
 
     TinyAssertions.assertContent(editor,
