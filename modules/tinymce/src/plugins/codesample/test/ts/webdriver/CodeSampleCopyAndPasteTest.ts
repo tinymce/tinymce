@@ -1,7 +1,8 @@
-import { Keys, RealClipboard } from '@ephox/agar';
+import { Keys, RealClipboard, Keyboard } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { Focus } from '@ephox/sugar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/codesample/Plugin';
@@ -16,15 +17,8 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
   }, [ Plugin ]);
 
   const pressEnter = (editor: Editor) => {
-    const overrides = { keyCode: Keys.enter() };
-
-    const getInputEventArgs = (eventType: string) => ({ ...new window.InputEvent(eventType), ...overrides });
-    const getKeyboardEventArgs = (eventType: string) => ({ ...new window.KeyboardEvent(eventType), ...overrides });
-
-    editor.dispatch('keydown', getKeyboardEventArgs('keydown'));
-    editor.dispatch('beforeinput', getInputEventArgs('beforeinput'));
-    editor.dispatch('input', getInputEventArgs('input'));
-    editor.dispatch('keyup', getKeyboardEventArgs('keyup'));
+    const focused = Focus.active(TinyDom.document(editor)).getOrDie();
+    Keyboard.keystroke(Keys.enter(), {}, focused);
   };
 
   beforeEach(function () {
