@@ -26,7 +26,7 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
   };
 
   const pPaste = async (editor: Editor): Promise<void> => {
-    if (PlatformDetection.detect().browser.isSafari()) {
+    if (browser.isSafari()) {
       await pClickEditMenu(editor, 'Paste');
     } else {
       await RealClipboard.pPaste('iframe => body');
