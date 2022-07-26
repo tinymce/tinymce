@@ -9,6 +9,7 @@ import Plugin from 'tinymce/plugins/codesample/Plugin';
 import * as TestUtils from '../module/CodeSampleTestUtils';
 
 describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () => {
+  const browser = PlatformDetection.detect().browser;
   const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'codesample',
     toolbar: 'codesample',
@@ -16,8 +17,6 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
   }, [ Plugin ]);
 
   const pressEnter = (editor: Editor) => TinyContentActions.keystroke(editor, Keys.enter());
-
-  const browser = PlatformDetection.detect().browser;
 
   const pClickEditMenu = async (editor: Editor, item: string): Promise<void> => {
     TinyUiActions.clickOnMenu(editor, 'button:contains("Edit")');
