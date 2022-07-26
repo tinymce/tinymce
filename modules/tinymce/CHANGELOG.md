@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `autolink` plugin when converting a URL to a link did not fire an `ExecCommand` event, nor did it create an undo level #TINY-8896
 - Worked around a Firefox bug whereby cookies weren't available inside the editor content #TINY-8916
 - `<pre>` content pasted into a `<pre>` block that had inline styles or was `noneditable` now merges correctly with the surrounding content. #TINY-8860
+- The cursor position after pasting or setting content with a `codesample` snippet no longer places the selection inside the non-editable codesample #TINY-8861
 
 ## 6.1.0 - 2022-06-29
 
