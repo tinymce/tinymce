@@ -1,4 +1,4 @@
-Related Ticket: 
+Related Ticket: 
 
 Description of Changes:
 * Placeholder text
