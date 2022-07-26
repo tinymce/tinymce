@@ -25,7 +25,7 @@ export type ThemeInitFunc = (editor: Editor, elm: HTMLElement) => {
 
 export type SetupCallback = (editor: Editor) => void;
 
-export type FilePickerCallback = (callback: Function, value: any, meta: Record<string, any>) => void;
+export type FilePickerCallback = (callback: (value: string, meta?: Record<string, any>) => void, value: string, meta: Record<string, any>) => void;
 export type FilePickerValidationStatus = 'valid' | 'unknown' | 'invalid' | 'none';
 export type FilePickerValidationCallback = (info: { type: string; url: string }, callback: (validation: { status: FilePickerValidationStatus; message: string }) => void) => void;
 

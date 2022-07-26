@@ -35,7 +35,7 @@ interface Writer {
   getContent: () => string;
   pi: (name: string, text?: string) => void;
   reset: () => void;
-  start: (name: string, attrs?: Attributes, empty?: boolean) => void;
+  start: (name: string, attrs?: Attributes | null, empty?: boolean) => void;
   text: (text: string, raw?: boolean) => void;
 }
 
@@ -58,7 +58,7 @@ const Writer = (settings?: WriterSettings): Writer => {
      * @param {Array} attrs Optional array of objects containing an attribute name and value, or undefined if the element has no attributes.
      * @param {Boolean} empty Optional empty state if the tag should serialize as a void element. For example: `<img />`
      */
-    start: (name: string, attrs?: Attributes, empty?: boolean) => {
+    start: (name: string, attrs?: Attributes | null, empty?: boolean) => {
       if (indent && indentBefore[name] && html.length > 0) {
         const value = html[html.length - 1];
 
