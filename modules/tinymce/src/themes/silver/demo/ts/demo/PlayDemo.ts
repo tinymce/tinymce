@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
 import { Fun } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 import ButtonSetupDemo from './ButtonSetupDemo';
 
-declare let tinymce: any;
+declare let tinymce: TinyMCE;
 
-export default () => {
+export default (): void => {
   tinymce.init({
     // TODO: Investigate. Should thisget the styles (e.g. margin) of the div/textarea?
     selector: 'div.tiny-text',
@@ -96,7 +96,7 @@ export default () => {
       // }
     ],
 
-    setup: (ed: Editor) => {
+    setup: (ed) => {
       ButtonSetupDemo.setup(ed);
 
       ed.ui.registry.addButton('MagicButton', {

@@ -31,7 +31,7 @@ describe('headless.tinymce.themes.silver.components.customeditor.CustomEditorSch
       ...base,
       scriptId: 'scriptId',
       scriptUrl: 'scriptUrl',
-      init: (_el) => {
+      init: (_el: HTMLElement) => {
         return {
           setValue: Fun.noop,
           getValue: Fun.constant(''),
@@ -59,7 +59,7 @@ describe('headless.tinymce.themes.silver.components.customeditor.CustomEditorSch
 
     assert.isTrue(StructureSchema.asRaw('.', schema, {
       ...base,
-      init: (_el) => {
+      init: (_el: HTMLElement) => {
         return {
           setValue: Fun.noop,
           getValue: Fun.constant(''),

@@ -9,7 +9,7 @@ import { ToolbarMode } from 'tinymce/themes/silver/api/Options';
 
 import { pCloseMore, pOpenMore } from './MenuUtils';
 
-const pAssertFloatingToolbarPosition = async (editor: Editor, getTop: () => number, expectedLeft: number, expectedRight: number) => {
+const pAssertFloatingToolbarPosition = async (editor: Editor, getTop: () => number, expectedLeft: number, expectedRight: number): Promise<void> => {
   const toolbar = await TinyUiActions.pWaitForUi(editor, '.tox-toolbar__overflow') as SugarElement<HTMLElement>;
   await Waiter.pTryUntil('Wait for toolbar position', () => {
     const top = getTop();
@@ -22,13 +22,13 @@ const pAssertFloatingToolbarPosition = async (editor: Editor, getTop: () => numb
   });
 };
 
-const pAssertFloatingToolbarHeight = async (editor: Editor, expectedHeight: number) => {
+const pAssertFloatingToolbarHeight = async (editor: Editor, expectedHeight: number): Promise<void> => {
   const toolbar = await TinyUiActions.pWaitForUi(editor, '.tox-toolbar__overflow') as SugarElement<HTMLElement>;
   const height = Height.get(toolbar);
   assert.approximately(height, expectedHeight, 1, `Drawer height ${height}px should be ~${expectedHeight}px`);
 };
 
-const pOpenFloatingToolbarAndAssertPosition = async (editor: Editor, getTop: () => number, pActions?: () => Promise<void>) => {
+const pOpenFloatingToolbarAndAssertPosition = async (editor: Editor, getTop: () => number, pActions?: () => Promise<void>): Promise<void> => {
   await pOpenMore(ToolbarMode.floating);
   await pAssertFloatingToolbarPosition(editor, getTop, 105, 531);
   if (Type.isNonNullable(pActions)) {

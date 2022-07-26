@@ -73,7 +73,7 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
       'check iframe is loaded',
       SugarDocument.getDocument(),
       '.tox-dialog .tox-dialog__body iframe',
-      (iframe) => iframe.dom.contentDocument.readyState === 'complete'
+      (iframe) => iframe.dom.contentDocument?.readyState === 'complete'
     );
 
     const input = await FocusTools.pTryOnSelector('focus should be on the input initially', SugarDocument.getDocument(), 'input');

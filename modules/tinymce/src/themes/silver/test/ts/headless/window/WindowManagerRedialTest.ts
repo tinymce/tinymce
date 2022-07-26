@@ -83,7 +83,7 @@ describe('headless.tinymce.themes.silver.window.WindowManagerRedialTest', () => 
     onClose: store.adder('onCloseB'),
     onAction: (dialogApi, actionData) => {
       if (actionData.name === 'Dest.DialogC') {
-        dialogApi.redial(dialogC);
+        dialogApi.redial(dialogC as Dialog.DialogSpec<{}>);
       }
     }
   };

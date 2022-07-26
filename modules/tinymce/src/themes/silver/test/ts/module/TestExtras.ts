@@ -53,7 +53,7 @@ export const TestExtras = (): TestExtras => {
   Class.add(uiMothership.element, 'tox');
 
   const backstage = TestBackstage(sink);
-  const options = {};
+  const options: Record<string, any> = {};
 
   const mockEditor = {
     setContent: (_content) => {},

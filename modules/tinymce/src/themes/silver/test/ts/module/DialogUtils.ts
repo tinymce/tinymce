@@ -10,7 +10,7 @@ import { WindowParams } from 'tinymce/core/api/WindowManager';
 const open = <T>(editor: Editor, spec: Dialog.DialogSpec<T>, params: WindowParams): Dialog.DialogInstanceApi<T> =>
   editor.windowManager.open(spec, params);
 
-const openWithStore = <T>(editor: Editor, spec: Dialog.DialogSpec<T>, params: WindowParams, store: TestHelpers.TestStore) => {
+const openWithStore = <T>(editor: Editor, spec: Dialog.DialogSpec<T>, params: WindowParams, store: TestHelpers.TestStore): Dialog.DialogInstanceApi<T> => {
   const dialogSpec = {
     onSubmit: store.adder('onSubmit'),
     onClose: store.adder('onClose'),
@@ -22,7 +22,7 @@ const openWithStore = <T>(editor: Editor, spec: Dialog.DialogSpec<T>, params: Wi
   return open(editor, dialogSpec, params);
 };
 
-const close = (editor: Editor) => {
+const close = (editor: Editor): void => {
   TinyUiActions.closeDialog(editor);
   UiFinder.notExists(SugarBody.body(), 'div[role=dialog]');
 };

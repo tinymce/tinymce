@@ -42,7 +42,7 @@ describe('atomic.tinymce.themes.silver.components.sizeinput.SizeInputConvertTest
           (unit2Value) => convertUnit(nuSize(unit2Value, unit2), unit1)
         ).getOrNull();
         assert.isNotNull(outValue);
-        assert.approximately(outValue, value, 0.000001);
+        assert.approximately(outValue as number, value, 0.000001);
       }
     ));
   });
