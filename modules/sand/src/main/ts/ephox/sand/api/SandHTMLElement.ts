@@ -10,7 +10,7 @@ const getPrototypeOf = Object.getPrototypeOf;
  * MDN no use on this one, but here's the link anyway:
  * https://developer.mozilla.org/en/docs/Web/API/HTMLElement
  */
-const sandHTMLElement = (scope: Window) => {
+const sandHTMLElement = (scope: Window | undefined) => {
   return Global.getOrDie('HTMLElement', scope) as typeof HTMLElement;
 };
 
