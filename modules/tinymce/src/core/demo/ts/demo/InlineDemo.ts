@@ -1,8 +1,10 @@
-declare let tinymce: any;
+import { RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
 
-export default () => {
+declare let tinymce: TinyMCE;
 
-  const settings = {
+export default (): void => {
+
+  const settings: RawEditorOptions = {
     selector: '.tinymce',
     inline: true,
     content_css: '../../../../js/tinymce/skins/content/default/content.css',

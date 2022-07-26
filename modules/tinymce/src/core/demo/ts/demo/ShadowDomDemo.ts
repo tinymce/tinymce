@@ -1,18 +1,22 @@
-declare let tinymce: any;
+import { Insert, SelectorFind, SugarBody, SugarElement, Value } from '@ephox/sugar';
 
-export default (init: ShadowRootInit) => {
+import { TinyMCE } from 'tinymce/core/api/PublicApi';
 
-  const shadowHost = document.getElementById('shadow-host');
-  shadowHost.tabIndex = 1;
+declare let tinymce: TinyMCE;
 
-  const shadow = shadowHost.attachShadow(init);
+export default (init: ShadowRootInit): void => {
 
-  const node = document.createElement('textarea');
-  node.value = 'here is some content';
-  shadow.appendChild(node);
+  const shadowHost = SelectorFind.descendant<HTMLElement>(SugarBody.body(), '#shadow-host').getOrDie();
+  shadowHost.dom.tabIndex = 1;
+
+  const shadow = SugarElement.fromDom(shadowHost.dom.attachShadow(init));
+
+  const node = SugarElement.fromTag('textarea');
+  Value.set(node, 'here is some content');
+  Insert.append(shadow, node);
 
   tinymce.init({
-    target: node,
+    target: node.dom,
     plugins: 'advlist charmap code codesample emoticons fullscreen image link lists media preview searchreplace table wordcount'
   });
 };
