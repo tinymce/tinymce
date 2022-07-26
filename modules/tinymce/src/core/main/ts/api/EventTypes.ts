@@ -6,6 +6,7 @@ import { UndoLevel } from '../undo/UndoManagerTypes';
 import { SetAttribEvent } from './dom/DOMUtils';
 import Editor from './Editor';
 import { ParserArgs } from './html/DomParser';
+import { NotificationApi, NotificationSpec } from './NotificationManager';
 import { Dialog } from './ui/Ui';
 import { NativeEventMap } from './util/EventDispatcher';
 import { InstanceApi } from './WindowManager';
@@ -52,7 +53,8 @@ export interface ShowCaretEvent { target: Node; direction: number; before: boole
 
 export interface SwitchModeEvent { mode: string }
 
-export interface AddUndoEvent { level: UndoLevel; lastLevel: UndoLevel | undefined; originalEvent: Event | undefined }
+export interface ChangeEvent { level: UndoLevel; lastLevel: UndoLevel | undefined }
+export interface AddUndoEvent extends ChangeEvent { originalEvent: Event | undefined }
 export interface UndoRedoEvent { level: UndoLevel }
 
 export interface WindowEvent<T extends Dialog.DialogData> { dialog: InstanceApi<T> }
@@ -88,6 +90,14 @@ export interface TableEventData {
 }
 export interface TableModifiedEvent extends TableEventData {
   readonly table: HTMLTableElement;
+}
+
+export interface BeforeOpenNotificationEvent {
+  notification: NotificationSpec;
+}
+
+export interface OpenNotificationEvent {
+  notification: NotificationApi;
 }
 
 export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
@@ -145,6 +155,7 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'Undo': UndoRedoEvent;
   'BeforeAddUndo': AddUndoEvent;
   'AddUndo': AddUndoEvent;
+  'change': ChangeEvent;
   'CloseWindow': WindowEvent<any>;
   'OpenWindow': WindowEvent<any>;
   'ProgressState': ProgressStateEvent;
@@ -165,6 +176,11 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'NewRow': NewTableRowEvent;
   'NewCell': NewTableCellEvent;
   'SetAttrib': SetAttribEvent;
+  'hide': { };
+  'show': { };
+  'dirty': { };
+  'BeforeOpenNotification': BeforeOpenNotificationEvent;
+  'OpenNotification': OpenNotificationEvent;
 }
 
 export interface EditorManagerEventMap {

@@ -11,7 +11,7 @@ import Editor from './Editor';
  * @class tinymce.EditorCommands
  */
 
-export type EditorCommandCallback = (ui: boolean, value: any) => void;
+export type EditorCommandCallback<S> = (this: S, ui: boolean, value: any) => void;
 export type EditorCommandsCallback = (command: string, ui: boolean, value?: any) => void;
 
 interface Commands {
@@ -142,7 +142,9 @@ class EditorCommands {
     });
   }
 
-  public addCommand(command: string, callback: EditorCommandCallback, scope?: any): void {
+  public addCommand<S>(command: string, callback: EditorCommandCallback<S>, scope: S): void;
+  public addCommand(command: string, callback: EditorCommandCallback<Editor>): void;
+  public addCommand(command: string, callback: EditorCommandCallback<any>, scope?: any): void {
     const lowerCaseCommand = command.toLowerCase();
     this.commands.exec[lowerCaseCommand] = (_command, ui, value) => callback.call(scope ?? this.editor, ui, value);
   }
@@ -171,7 +173,9 @@ class EditorCommands {
    * @param {Function} callback Function to execute when the command state retrieval occurs.
    * @param {Object} scope Optional scope to execute the function in.
    */
-  public addQueryStateHandler(command: string, callback: () => boolean, scope?: any): void {
+  public addQueryStateHandler<S>(command: string, callback: (this: S) => boolean, scope: S): void;
+  public addQueryStateHandler(command: string, callback: (this: Editor) => boolean): void;
+  public addQueryStateHandler(command: string, callback: (this: any) => boolean, scope?: any): void {
     this.commands.state[command.toLowerCase()] = () => callback.call(scope ?? this.editor);
   }
 
@@ -184,7 +188,9 @@ class EditorCommands {
    * @param {Function} callback Function to execute when the command value retrieval occurs.
    * @param {Object} scope Optional scope to execute the function in.
    */
-  public addQueryValueHandler(command: string, callback: () => string, scope?: any): void {
+  public addQueryValueHandler<S>(command: string, callback: (this: S) => string, scope: S): void;
+  public addQueryValueHandler(command: string, callback: (this: Editor) => string): void;
+  public addQueryValueHandler(command: string, callback: (this: any) => string, scope?: any): void {
     this.commands.value[command.toLowerCase()] = () => callback.call(scope ?? this.editor);
   }
 }

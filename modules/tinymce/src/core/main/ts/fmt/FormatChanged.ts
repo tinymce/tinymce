@@ -8,7 +8,7 @@ import { FormatVars } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 import * as MatchFormat from './MatchFormat';
 
-export type FormatChangeCallback = (state: boolean, data: { node: Node; format: string; parents: any }) => void;
+export type FormatChangeCallback = (state: boolean, data: { node: Node; format: string; parents: Element[] }) => void;
 
 export type RegisteredFormats = Record<string, CallbackGroup>;
 
