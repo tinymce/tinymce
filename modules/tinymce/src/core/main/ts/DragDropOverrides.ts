@@ -209,7 +209,6 @@ const moveGhost = (
       }
     }
   });
-
 };
 
 const removeElement = (elm: HTMLElement) => {
