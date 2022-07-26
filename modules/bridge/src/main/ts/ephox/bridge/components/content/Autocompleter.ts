@@ -1,5 +1,5 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
-import { Optional, Result, Obj } from '@ephox/katamari';
+import { Optional, Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
 import { CardMenuItemSpec } from '../menu/CardMenuItem';
