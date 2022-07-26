@@ -41,4 +41,12 @@ describe('browser.tinymce.plugins.codesample.CodeSampleSanityTest', () => {
     await TestUtils.pCancelDialog(editor);
     TinyAssertions.assertContent(editor, '');
   });
+
+  it('TINY-8861: set content places the cursor in a valid position', () => {
+    const editor = hook.editor();
+
+    editor.setContent('<pre class="language-markup"><code>test content</code></pre>');
+    TinyAssertions.assertCursor(editor, [ 0 ], 0);
+    TinyAssertions.assertContent(editor, '<pre class="language-markup"><code>test content</code></pre>');
+  });
 });
