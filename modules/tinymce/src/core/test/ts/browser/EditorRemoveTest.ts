@@ -66,7 +66,7 @@ describe('browser.tinymce.core.EditorRemoveTest', () => {
   it('remove editor where the body has been removed', async () => {
     const editor = await McEditor.pFromHtml<Editor>('<textarea></textarea>', settings);
     const body = editor.getBody();
-    body.parentNode.removeChild(body);
+    body.parentNode?.removeChild(body);
     McEditor.remove(editor);
   });
 

@@ -19,7 +19,7 @@ describe('Init events order test', () => {
 
   TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    setup: (editor) => {
+    setup: (editor: Editor) => {
       editor.on('preinit addeditor scriptsloaded init visualaid loadcontent beforesetcontent setcontent postrender', addEvent);
     }
   }, []);

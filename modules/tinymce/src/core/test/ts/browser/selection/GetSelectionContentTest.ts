@@ -3,7 +3,7 @@ import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { GetContentEvent } from 'tinymce/core/api/EventTypes';
+import { BeforeGetContentEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { GetSelectionContentArgs } from 'tinymce/core/content/ContentTypes';
 import { getContent } from 'tinymce/core/selection/GetSelectionContent';
@@ -16,13 +16,15 @@ describe('browser.tinymce.selection.GetSelectionContentTest', () => {
   const testDivId = 'testDiv1';
 
   const focusDiv = () => {
-    const input = document.querySelector<HTMLDivElement>('#' + testDivId);
+    const input = document.querySelector('#' + testDivId) as HTMLDivElement;
     input.focus();
   };
 
   const removeTestDiv = () => {
     const input = document.querySelector('#' + testDivId);
-    input.parentNode.removeChild(input);
+    if (input) {
+      input.parentNode?.removeChild(input);
+    }
   };
 
   const addTestDiv = () => {
@@ -42,7 +44,7 @@ describe('browser.tinymce.selection.GetSelectionContentTest', () => {
   };
 
   const assertGetContentOverrideBeforeGetContent = (label: string, editor: Editor, expectedContent: string, args: Partial<GetSelectionContentArgs> = {}) => {
-    const handler = (e: EditorEvent<GetContentEvent>) => {
+    const handler = (e: EditorEvent<BeforeGetContentEvent>) => {
       if (e.selection === true) {
         e.preventDefault();
         e.content = expectedContent;

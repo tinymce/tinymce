@@ -136,7 +136,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
 
   it('TBA: insertAtCaret prevent default of beforeSetContent', () => {
     const editor = hook.editor();
-    let args: EditorEvent<SetContentEvent>;
+    let args: EditorEvent<SetContentEvent> | undefined;
 
     const handler = (e: EditorEvent<SetContentEvent>) => {
       if (e.selection === true) {
@@ -154,12 +154,12 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     editor.on('SetContent', collector);
 
     editor.setContent('<p>a</p>');
-    editor.selection.setCursorLocation(editor.dom.select('p')[0].firstChild, 0);
+    editor.selection.setCursorLocation(editor.dom.select('p')[0].firstChild as Text, 0);
     InsertContent.insertAtCaret(editor, { content: '<p>b</p>', paste: true });
     assert.equal(editor.getContent(), '<h1>c</h1>');
-    assert.equal(args.content, '<h1>b</h1>');
-    assert.equal(args.type, 'setcontent');
-    assert.isTrue(args.paste);
+    assert.equal(args?.content, '<h1>b</h1>');
+    assert.equal(args?.type, 'setcontent');
+    assert.isTrue(args?.paste);
 
     editor.off('BeforeSetContent', handler);
     editor.on('BeforeSetContent', collector);

@@ -41,51 +41,51 @@ describe('browser.tinymce.core.CaretContainerTest', () => {
 
   it('insertInline before element', () => {
     setupHtml('<span contentEditable="false">1</span>');
-    LegacyUnit.equalDom(CaretContainer.insertInline(getRoot().firstChild, true), getRoot().firstChild);
+    LegacyUnit.equalDom(CaretContainer.insertInline(getRoot().firstChild as HTMLSpanElement, true), getRoot().firstChild as Text);
     assert.isTrue(CaretContainer.isCaretContainerInline(getRoot().firstChild));
   });
 
   it('insertInline after element', () => {
     setupHtml('<span contentEditable="false">1</span>');
-    LegacyUnit.equalDom(CaretContainer.insertInline(getRoot().firstChild, false), getRoot().lastChild);
+    LegacyUnit.equalDom(CaretContainer.insertInline(getRoot().firstChild as HTMLSpanElement, false), getRoot().lastChild as Text);
     assert.isTrue(CaretContainer.isCaretContainerInline(getRoot().lastChild));
   });
 
   it('insertInline between elements', () => {
     setupHtml('<span contentEditable="false">1</span><span contentEditable="false">1</span>');
-    LegacyUnit.equalDom(CaretContainer.insertBlock('p', getRoot().lastChild, true), getRoot().childNodes[1]);
+    LegacyUnit.equalDom(CaretContainer.insertBlock('p', getRoot().lastChild as HTMLSpanElement, true), getRoot().childNodes[1]);
     assert.isTrue(CaretContainer.isCaretContainerBlock(getRoot().childNodes[1]));
   });
 
   it('insertInline before element with ZWSP', () => {
     setupHtml('abc' + Zwsp.ZWSP + '<span contentEditable="false">1</span>');
-    LegacyUnit.equalDom(CaretContainer.insertInline(getRoot().lastChild, true), getRoot().childNodes[1]);
+    LegacyUnit.equalDom(CaretContainer.insertInline(getRoot().lastChild as HTMLSpanElement, true), getRoot().childNodes[1]);
     assert.isFalse(CaretContainer.isCaretContainerInline(getRoot().firstChild));
     assert.isTrue(CaretContainer.isCaretContainerInline(getRoot().childNodes[1]));
   });
 
   it('insertInline after element with ZWSP', () => {
     setupHtml('<span contentEditable="false">1</span>' + Zwsp.ZWSP + 'abc');
-    LegacyUnit.equalDom(CaretContainer.insertInline(getRoot().firstChild, false), getRoot().childNodes[1]);
+    LegacyUnit.equalDom(CaretContainer.insertInline(getRoot().firstChild as HTMLSpanElement, false), getRoot().childNodes[1]);
     assert.isFalse(CaretContainer.isCaretContainerInline(getRoot().lastChild));
     assert.isTrue(CaretContainer.isCaretContainerInline(getRoot().childNodes[1]));
   });
 
   it('insertBlock before element', () => {
     setupHtml('<span contentEditable="false">1</span>');
-    LegacyUnit.equalDom(CaretContainer.insertBlock('p', getRoot().firstChild, true), getRoot().firstChild);
+    LegacyUnit.equalDom(CaretContainer.insertBlock('p', getRoot().firstChild as HTMLSpanElement, true), getRoot().firstChild as Element);
     assert.isTrue(CaretContainer.isCaretContainerBlock(getRoot().firstChild));
   });
 
   it('insertBlock after element', () => {
     setupHtml('<span contentEditable="false">1</span>');
-    LegacyUnit.equalDom(CaretContainer.insertBlock('p', getRoot().firstChild, false), getRoot().lastChild);
+    LegacyUnit.equalDom(CaretContainer.insertBlock('p', getRoot().firstChild as HTMLSpanElement, false), getRoot().lastChild as Element);
     assert.isTrue(CaretContainer.isCaretContainerBlock(getRoot().lastChild));
   });
 
   it('insertBlock between elements', () => {
     setupHtml('<span contentEditable="false">1</span><span contentEditable="false">1</span>');
-    LegacyUnit.equalDom(CaretContainer.insertInline(getRoot().lastChild, true), getRoot().childNodes[1]);
+    LegacyUnit.equalDom(CaretContainer.insertInline(getRoot().lastChild as HTMLSpanElement, true), getRoot().childNodes[1]);
     assert.isTrue(CaretContainer.isCaretContainerInline(getRoot().childNodes[1]));
   });
 
@@ -103,7 +103,7 @@ describe('browser.tinymce.core.CaretContainerTest', () => {
 
   it('hasContent', () => {
     setupHtml('<span contentEditable="false">1</span>');
-    const caretContainerBlock = CaretContainer.insertBlock('p', getRoot().firstChild, true);
+    const caretContainerBlock = CaretContainer.insertBlock('p', getRoot().firstChild as HTMLSpanElement, true);
     assert.isFalse(CaretContainer.hasContent(caretContainerBlock));
     caretContainerBlock.insertBefore(document.createTextNode('a'), caretContainerBlock.firstChild);
     assert.isTrue(CaretContainer.hasContent(caretContainerBlock));
@@ -111,7 +111,7 @@ describe('browser.tinymce.core.CaretContainerTest', () => {
 
   it('showCaretContainerBlock', () => {
     setupHtml('<span contentEditable="false">1</span>');
-    const caretContainerBlock = CaretContainer.insertBlock('p', getRoot().firstChild, true) as HTMLElement;
+    const caretContainerBlock = CaretContainer.insertBlock('p', getRoot().firstChild as HTMLSpanElement, true) as HTMLElement;
     caretContainerBlock.insertBefore(document.createTextNode('a'), caretContainerBlock.firstChild);
     CaretContainer.showCaretContainerBlock(caretContainerBlock);
     assert.equal(caretContainerBlock.outerHTML, '<p>a</p>');
@@ -137,27 +137,27 @@ describe('browser.tinymce.core.CaretContainerTest', () => {
 
   it('isBeforeInline', () => {
     setupHtml(Zwsp.ZWSP + 'a');
-    assert.isTrue(CaretContainer.isBeforeInline(CaretPosition(getRoot().firstChild, 0)));
-    assert.isFalse(CaretContainer.isBeforeInline(CaretPosition(getRoot().firstChild, 1)));
+    assert.isTrue(CaretContainer.isBeforeInline(CaretPosition(getRoot().firstChild as Text, 0)));
+    assert.isFalse(CaretContainer.isBeforeInline(CaretPosition(getRoot().firstChild as Text, 1)));
   });
 
   it('isBeforeInline 2', () => {
     setupHtml('a');
     viewBlock.get().insertBefore(document.createTextNode(Zwsp.ZWSP), viewBlock.get().firstChild);
-    assert.isTrue(CaretContainer.isBeforeInline(CaretPosition(getRoot().firstChild, 0)));
-    assert.isFalse(CaretContainer.isBeforeInline(CaretPosition(getRoot().firstChild, 1)));
+    assert.isTrue(CaretContainer.isBeforeInline(CaretPosition(getRoot().firstChild as Text, 0)));
+    assert.isFalse(CaretContainer.isBeforeInline(CaretPosition(getRoot().firstChild as Text, 1)));
   });
 
   it('isAfterInline', () => {
     setupHtml(Zwsp.ZWSP + 'a');
-    assert.isTrue(CaretContainer.isAfterInline(CaretPosition(getRoot().firstChild, 1)));
-    assert.isFalse(CaretContainer.isAfterInline(CaretPosition(getRoot().firstChild, 0)));
+    assert.isTrue(CaretContainer.isAfterInline(CaretPosition(getRoot().firstChild as Text, 1)));
+    assert.isFalse(CaretContainer.isAfterInline(CaretPosition(getRoot().firstChild as Text, 0)));
   });
 
   it('isAfterInline 2', () => {
     setupHtml('a');
     viewBlock.get().insertBefore(document.createTextNode(Zwsp.ZWSP), viewBlock.get().firstChild);
-    assert.isTrue(CaretContainer.isAfterInline(CaretPosition(getRoot().firstChild, 1)));
-    assert.isFalse(CaretContainer.isAfterInline(CaretPosition(getRoot().firstChild, 0)));
+    assert.isTrue(CaretContainer.isAfterInline(CaretPosition(getRoot().firstChild as Text, 1)));
+    assert.isFalse(CaretContainer.isAfterInline(CaretPosition(getRoot().firstChild as Text, 0)));
   });
 });

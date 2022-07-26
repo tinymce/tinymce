@@ -40,7 +40,7 @@ describe('browser.tinymce.core.util.ImageUploaderTest', () => {
     Arr.each(uploadResults, (uploadResult) => {
       assert.isFalse(uploadResult.status, 'Upload result status is false upon failure');
       assert.equal(uploadResult.url, '', 'Url is empty string upon failure');
-      assert.equal(uploadResult.error.message, errorMsg, 'Upload result error message matches failure message');
+      assert.equal(uploadResult.error?.message, errorMsg, 'Upload result error message matches failure message');
     });
   };
 

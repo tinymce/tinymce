@@ -33,10 +33,10 @@ describe('browser.tinymce.core.CaretCandidateTest', () => {
 
   it('isInEditable', () => {
     setupHtml('abc<span contentEditable="true"><b><span contentEditable="false">X</span></b></span>');
-    assert.isFalse(CaretCandidate.isInEditable(SelectorFind.descendant(getRoot(), 'span span').getOrDie().dom.firstChild, getRoot().dom));
+    assert.isFalse(CaretCandidate.isInEditable(SelectorFind.descendant(getRoot(), 'span span').getOrDie().dom.firstChild as Node, getRoot().dom));
     assert.isTrue(CaretCandidate.isInEditable(SelectorFind.descendant(getRoot(), 'span span').getOrDie().dom, getRoot().dom));
     assert.isTrue(CaretCandidate.isInEditable(SelectorFind.descendant(getRoot(), 'span').getOrDie().dom, getRoot().dom));
-    assert.isTrue(CaretCandidate.isInEditable(getRoot().dom.firstChild, getRoot().dom));
+    assert.isTrue(CaretCandidate.isInEditable(getRoot().dom.firstChild as Node, getRoot().dom));
   });
 
   it('isAtomic', () => {

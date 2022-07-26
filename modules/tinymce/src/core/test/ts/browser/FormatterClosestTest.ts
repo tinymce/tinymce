@@ -9,7 +9,7 @@ describe('browser.tinymce.core.FormatterClosestTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [], true);
 
-  const assertClosest = (names: string[], expectedName: string) => {
+  const assertClosest = (names: string[], expectedName: string | null) => {
     const actualName = hook.editor().formatter.closest(names);
     assert.equal(actualName, expectedName, 'Should match expected format name');
   };

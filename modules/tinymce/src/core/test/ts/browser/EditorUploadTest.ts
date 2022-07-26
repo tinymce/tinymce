@@ -37,7 +37,7 @@ const randBlobDataUri = (width: number, height: number) => {
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
   const imageData = ctx.createImageData(width, height);
   imageData.data.set(Arr.range(imageData.data.length, () => random(0, 255)));
   ctx.putImageData(imageData, 0, 0);
@@ -65,7 +65,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     canvas.width = 320;
     canvas.height = 200;
 
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext('2d') as CanvasRenderingContext2D;
     context.fillStyle = '#ff0000';
     context.fillRect(0, 0, 160, 100);
     context.fillStyle = '#00ff00';
@@ -163,7 +163,8 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
   it('TBA: uploadImages (callback)', () => {
     const editor = hook.editor();
-    let uploadedBlobInfo, uploadUri;
+    let uploadedBlobInfo: BlobInfo;
+    let uploadUri: string;
 
     setInitialContent(editor, imageHtml(testBlobDataUri));
 
@@ -185,7 +186,8 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
   it('TBA: uploadImages (promise)', () => {
     const editor = hook.editor();
-    let uploadedBlobInfo, uploadUri;
+    let uploadedBlobInfo: BlobInfo | null;
+    let uploadUri: string;
 
     setInitialContent(editor, imageHtml(testBlobDataUri));
 
@@ -197,7 +199,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
     assertEventsLength(0);
     return editor.uploadImages().then((result) => {
-      assertResult(editor, 'Upload the images', uploadUri, uploadedBlobInfo, result);
+      assertResult(editor, 'Upload the images', uploadUri, uploadedBlobInfo as BlobInfo, result);
       assertEventsLength(1);
     }).then(() => {
       uploadedBlobInfo = null;
@@ -211,12 +213,12 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
   it('TBA: uploadImages retain blob urls after upload', () => {
     const editor = hook.editor();
-    let uploadedBlobInfo;
+    let uploadedBlobInfo: BlobInfo | null;
 
     const assertResultRetainsUrl = (results: UploadResult[]) => {
       assert.isTrue(results[0].status, 'uploadImages retain blob urls after upload');
       assert.isTrue(hasBlobAsSource(results[0].element), 'Not a blob url');
-      assert.equal(editor.getContent(), '<p><img src="' + uploadedBlobInfo.filename() + '"></p>', 'uploadImages retain blob urls after upload');
+      assert.equal(editor.getContent(), '<p><img src="' + uploadedBlobInfo?.filename() + '"></p>', 'uploadImages retain blob urls after upload');
 
       return results;
     };
@@ -244,7 +246,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
   it('TBA: uploadImages reuse filename', () => {
     const editor = hook.editor();
-    let uploadedBlobInfo;
+    let uploadedBlobInfo: BlobInfo;
 
     editor.options.set('images_reuse_filename', true);
     setInitialContent(editor, imageHtml(testBlobDataUri));
@@ -281,7 +283,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     const editor = hook.editor();
     let uploadCount = 0, callCount = 0;
 
-    const uploadDone = (result) => {
+    const uploadDone = (result: UploadResult[]) => {
       callCount++;
       assertEventsLength(1);
 

@@ -27,12 +27,14 @@ describe('browser.tinymce.core.api.dom.RangeUtilsTest', () => {
   it(`don't normalize at anchors`, () => {
     viewBlock.update('a<a href="#">b</a>c');
 
-    const rng1 = createRange(viewBlock.get().firstChild, 1, viewBlock.get().firstChild, 1);
+    const firstChild = viewBlock.get().firstChild as Node;
+    const rng1 = createRange(firstChild, 1, firstChild, 1);
     const rng1Clone = rng1.cloneRange();
     assert.isFalse(RangeUtils(DOM).normalize(rng1));
     assertRange(rng1Clone, rng1);
 
-    const rng2 = createRange(viewBlock.get().lastChild, 0, viewBlock.get().lastChild, 0);
+    const lastChild = viewBlock.get().lastChild as Node;
+    const rng2 = createRange(lastChild, 0, lastChild, 0);
     const rng2Clone = rng2.cloneRange();
     assert.isFalse(RangeUtils(DOM).normalize(rng2));
     assertRange(rng2Clone, rng2);

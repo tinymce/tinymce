@@ -13,7 +13,7 @@ describe('webdriver.tinymce.core.content.PlaceholderTest', () => {
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'undo redo | bold',
     placeholder,
-    setup: (editor) => {
+    setup: (editor: Editor) => {
       editor.on('PlaceholderToggle', () => {
         togglePlaceholderCount.set(togglePlaceholderCount.get() + 1);
       });

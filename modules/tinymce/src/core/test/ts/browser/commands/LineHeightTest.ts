@@ -4,6 +4,8 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import { ChangeEvent, ExecCommandEvent } from 'tinymce/core/api/EventTypes';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 describe('browser.tinymce.core.commands.LineHeightTest', () => {
   const platform = PlatformDetection.detect();
@@ -73,11 +75,11 @@ describe('browser.tinymce.core.commands.LineHeightTest', () => {
   });
 
   it('TINY-7048: LineHeight event order is correct', () => {
-    const events = [];
+    const events: string[] = [];
     const editor = hook.editor();
     editor.setContent('<p>Hello</p>');
-    const logEvents = (e) => {
-      if (e.command?.toLowerCase() !== 'mcefocus') {
+    const logEvents = (e: EditorEvent<ExecCommandEvent | ChangeEvent>) => {
+      if ((e as ExecCommandEvent).command?.toLowerCase() !== 'mcefocus') {
         events.push(e.type.toLowerCase());
       }
     };

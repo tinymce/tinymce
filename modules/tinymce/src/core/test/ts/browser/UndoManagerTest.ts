@@ -133,7 +133,9 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
   it('Events', () => {
     const editor = hook.editor();
-    let add, undo, redo;
+    let add: UndoLevel | undefined;
+    let undo: UndoLevel | undefined;
+    let redo: UndoLevel | undefined;
 
     editor.undoManager.clear();
     editor.setContent('test');
@@ -152,21 +154,21 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
     editor.execCommand('SelectAll');
     editor.execCommand('Bold');
-    assert.ok(!!add.content);
-    assert.ok(!!add.bookmark);
+    assert.ok(!!add?.content);
+    assert.ok(!!add?.bookmark);
 
     editor.undoManager.undo();
-    assert.ok(!!undo.content);
-    assert.ok(!!undo.bookmark);
+    assert.ok(!!undo?.content);
+    assert.ok(!!undo?.bookmark);
 
     editor.undoManager.redo();
-    assert.ok(!!redo.content);
-    assert.ok(!!redo.bookmark);
+    assert.ok(!!redo?.content);
+    assert.ok(!!redo?.bookmark);
   });
 
   it('No undo/redo cmds on Undo/Redo shortcut', () => {
     const editor = hook.editor();
-    const commands = [];
+    const commands: string[] = [];
     let added = false;
 
     editor.undoManager.clear();
@@ -272,7 +274,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
       });
 
       assert.fail('Should never get here!');
-    } catch (ex) {
+    } catch (ex: any) {
       assert.equal(ex.message, 'Test');
     }
 
@@ -311,7 +313,8 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
   it('Exclude internal elements', () => {
     const editor = hook.editor();
-    let count = 0, lastLevel: UndoLevel;
+    let count = 0;
+    let lastLevel: UndoLevel | undefined;
 
     editor.undoManager.clear();
     assert.equal(count, 0);
@@ -332,7 +335,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
     editor.undoManager.add();
     assert.equal(count, 1);
-    assert.equal(HtmlUtils.cleanHtml(lastLevel.content),
+    assert.equal(HtmlUtils.cleanHtml(lastLevel?.content ?? ''),
       'test' +
       '<img src="about:blank">' +
       '<table><tbody><tr><td>x</td></tr></tbody></table>'
@@ -353,7 +356,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
     editor.undoManager.add();
     assert.equal(count, 2);
-    assert.equal(HtmlUtils.cleanHtml(lastLevel.content),
+    assert.equal(HtmlUtils.cleanHtml(lastLevel?.content ?? ''),
       '<span data-mce-bogus="1">x</span>' +
       '<span data-mce-bogus="1"></span>' +
       '<br data-mce-bogus="1">' +
@@ -366,7 +369,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
   it('Undo added when typing and losing focus', () => {
     const editor = hook.editor();
-    let lastLevel: UndoLevel;
+    let lastLevel: UndoLevel | undefined;
 
     editor.on('BeforeAddUndo', (e) => {
       lastLevel = e.level;
@@ -377,9 +380,9 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     LegacyUnit.setSelection(editor, 'p', 4, 'p', 9);
     KeyUtils.type(editor, '\b');
 
-    assert.equal(HtmlUtils.cleanHtml(lastLevel.content), '<p>some text</p>');
+    assert.equal(HtmlUtils.cleanHtml(lastLevel?.content ?? ''), '<p>some text</p>');
     editor.dispatch('blur');
-    assert.equal(HtmlUtils.cleanHtml(lastLevel.content), '<p>some</p>');
+    assert.equal(HtmlUtils.cleanHtml(lastLevel?.content ?? ''), '<p>some</p>');
 
     editor.execCommand('FormatBlock', false, 'h1');
     editor.undoManager.undo();
@@ -388,9 +391,10 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
   it('BeforeAddUndo event', () => {
     const editor = hook.editor();
-    let lastEvt, addUndoEvt: AddUndoEvent;
+    let lastEvt: EditorEvent<AddUndoEvent> | undefined;
+    let addUndoEvt: EditorEvent<AddUndoEvent> | undefined;
 
-    const blockEvent = (e) => {
+    const blockEvent = (e: EditorEvent<{}>) => {
       e.preventDefault();
     };
 
@@ -402,14 +406,14 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     editor.setContent('<p>a</p>');
     editor.undoManager.add();
 
-    assert.equal(lastEvt.lastLevel, undefined);
-    assert.equal(HtmlUtils.cleanHtml(lastEvt.level.content), '<p>a</p>');
+    assert.equal(lastEvt?.lastLevel, undefined);
+    assert.equal(HtmlUtils.cleanHtml(lastEvt?.level.content ?? ''), '<p>a</p>');
 
     editor.setContent('<p>b</p>');
     editor.undoManager.add();
 
-    assert.equal(HtmlUtils.cleanHtml(lastEvt.lastLevel.content), '<p>a</p>');
-    assert.equal(HtmlUtils.cleanHtml(lastEvt.level.content), '<p>b</p>');
+    assert.equal(HtmlUtils.cleanHtml(lastEvt?.lastLevel?.content ?? ''), '<p>a</p>');
+    assert.equal(HtmlUtils.cleanHtml(lastEvt?.level.content ?? ''), '<p>b</p>');
 
     editor.on('BeforeAddUndo', blockEvent);
 
@@ -418,11 +422,11 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     });
 
     editor.setContent('<p>c</p>');
-    editor.undoManager.add(null, { data: 1 });
+    editor.undoManager.add(undefined, { data: 1 });
 
-    assert.equal(HtmlUtils.cleanHtml(lastEvt.lastLevel.content), '<p>b</p>');
-    assert.equal(HtmlUtils.cleanHtml(lastEvt.level.content), '<p>c</p>');
-    assert.equal(lastEvt.originalEvent.data, 1);
+    assert.equal(HtmlUtils.cleanHtml(lastEvt?.lastLevel?.content ?? ''), '<p>b</p>');
+    assert.equal(HtmlUtils.cleanHtml(lastEvt?.level?.content ?? ''), '<p>c</p>');
+    assert.equal((lastEvt?.originalEvent as any)?.data, 1);
     assert.isUndefined(addUndoEvt, 'Event level produced when it should be blocked');
 
     editor.off('BeforeAddUndo', blockEvent);
@@ -527,7 +531,8 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     assert.isTrue(editor.undoManager.typing);
     assert.equal(editor.getContent(), '<p>aB</p>');
     editor.undoManager.transact(() => {
-      (editor.getBody().firstChild.firstChild as Text).data = 'aBC';
+      const p = editor.dom.select('p')[0];
+      (p.firstChild as Text).data = 'aBC';
     });
     assert.isFalse(editor.undoManager.typing);
     assert.lengthOf(editor.undoManager.data, 3);
@@ -621,10 +626,11 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     const assertChangeEvent = (
       event: { level: UndoLevel; lastLevel: UndoLevel | undefined } | undefined,
       expectedLevelContent: string | undefined,
-      expectedLastlevelContent: string | undefined
+      expectedLastLevelContent: string | undefined
     ) => {
       assert.equal(event?.level?.content, expectedLevelContent, 'Level has not the expected content');
-      assert.equal(event?.lastLevel?.content, expectedLastlevelContent, 'Last level has not the expected content');
+      assert.equal(event?.lastLevel?.content, expectedLastLevelContent, 'Last level has not the expected content');
+      assert.isDefined(event?.level.bookmark, 'Level bookmark should not be undefined');
     };
 
     let changeEventCounter: number;

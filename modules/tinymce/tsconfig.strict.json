@@ -7,5 +7,12 @@
   },
   "include": [
     "src/core/main/ts/",
+    "src/core/test/ts/atomic/",
+    "src/core/test/ts/module/test/CaretAsserts.ts",
+    "src/core/test/ts/module/test/ErrorHelpers.ts",
+    "src/core/test/ts/module/test/HtmlUtils.ts",
+    "src/core/test/ts/module/test/KeyUtils.ts",
+    "src/core/test/ts/module/test/PasteStrings.ts",
+    "src/core/test/ts/module/test/ViewBlock.ts",
   ]
 }

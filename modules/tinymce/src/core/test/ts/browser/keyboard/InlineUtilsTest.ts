@@ -35,10 +35,10 @@ describe('browser.tinymce.core.keyboard.InlineUtilsTest', () => {
     textNode.dom.splitText(offset);
   };
 
-  const createFakeEditor = (settings: RawEditorOptions): Editor => {
+  const createFakeEditor = (options: RawEditorOptions): Editor => {
     return {
       options: {
-        get: (name) => settings[name] ?? 'a[href],code,.mce-annotation'
+        get: (name: string) => options[name] ?? 'a[href],code,.mce-annotation'
       }
     } as any;
   };
