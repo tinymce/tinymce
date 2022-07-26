@@ -22,17 +22,24 @@ import * as SelectionUtils from '../selection/SelectionUtils';
 import { InsertContentDetails } from './ContentTypes';
 import * as InsertList from './InsertList';
 
-const wrappedElements = [ 'pre' ];
+const mergeableWrappedElements = [ 'pre' ];
 
-const shouldPasteContentOnly = (fragment: AstNode, parentNode: Element) => {
-  const firstNode = fragment.firstChild;
+const shouldPasteContentOnly = (dom: DOMUtils, fragment: AstNode, parentNode: Element, root: Node): boolean => {
+  const firstNode = fragment.firstChild as AstNode;
+  const lastNode = fragment.lastChild as AstNode;
+  const last = lastNode.attr('data-mce-type') === 'bookmark' ? lastNode.prev : lastNode;
 
-  const isAFlattenableTag = Arr.contains(wrappedElements, firstNode.name);
-  const isPastingInTheSameTag = firstNode.name === parentNode.tagName.toLowerCase();
-  const lastNode = fragment.lastChild.attr('data-mce-type') === 'bookmark' ? fragment.lastChild.prev : fragment.lastChild;
-  const isCopingOnlyOneTag = firstNode === lastNode;
+  const isPastingSingleElement = firstNode === last;
+  const isWrappedElement = Arr.contains(mergeableWrappedElements, firstNode.name);
+  if (isPastingSingleElement && isWrappedElement) {
+    const isContentEditable = firstNode.attr('contenteditable') !== 'false';
+    const isPastingInTheSameBlockTag = dom.getParent(parentNode, dom.isBlock)?.nodeName.toLowerCase() === firstNode.name;
+    const isPastingInContentEditable = Optional.from(CefUtils.getContentEditableRoot(root, parentNode)).forall(NodeType.isContentEditableTrue);
 
-  return isCopingOnlyOneTag && isAFlattenableTag && isPastingInTheSameTag;
+    return isContentEditable && isPastingInTheSameBlockTag && isPastingInContentEditable;
+  } else {
+    return false;
+  }
 };
 
 const isTableCell = NodeType.isTableCell;
@@ -260,8 +267,8 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
     return value;
   }
 
-  if (details.paste === true && shouldPasteContentOnly(fragment, parentNode)) {
-    fragment.firstChild.unwrap();
+  if (details.paste === true && shouldPasteContentOnly(dom, fragment, parentNode, editor.getBody())) {
+    fragment.firstChild?.unwrap();
   }
 
   markFragmentElements(fragment);
