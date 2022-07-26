@@ -112,6 +112,7 @@ const moveGhost = (
   maxX: number,
   maxY: number,
   mouseY: number,
+  mouseX: number,
   contentAreaContainer: HTMLElement,
   win: Window,
   state: Singleton.Value<State>
@@ -141,9 +142,11 @@ const moveGhost = (
   // Once a new event triggers I clear the existing interval and set it back to none.
 
   const clientHeight = contentAreaContainer.clientHeight;
+  const clientWidth = contentAreaContainer.clientWidth;
 
   // current scroll level
   const currentTop = win.scrollY;
+  const currentLeft = win.scrollX;
 
   state.on((state) => {
     if (state.dragging) {
@@ -174,6 +177,34 @@ const moveGhost = (
         state.intervalId = Optional.some(setInterval(() => {
           const currentTop = win.scrollY;
           scrollUp(currentTop);
+        }, IntervalValue));
+        // This basically means that the mouse is close to the right edge
+        // (within MouseRange pixels of the right edge)
+      } else if (mouseX + MouseRange >= clientWidth) {
+        const scrollRight = (currentLeft: number) => {
+          win.scroll({
+            left: currentLeft + ScrollingValue,
+            behavior: 'smooth'
+          });
+        };
+        scrollRight(currentLeft);
+        state.intervalId = Optional.some(setInterval(() => {
+          const currentLeft = win.scrollX;
+          scrollRight(currentLeft);
+        }, IntervalValue));
+        // This basically means that the mouse is close to the left edge
+        // (within MouseRange pixels of the left edge)
+      } else if (mouseX - MouseRange <= 0) {
+        const scrollLeft = (currentLeft: number) => {
+          win.scroll({
+            left: currentLeft - ScrollingValue,
+            behavior: 'smooth'
+          });
+        };
+        scrollLeft(currentLeft);
+        state.intervalId = Optional.some(setInterval(() => {
+          const currentLeft = win.scrollX;
+          scrollLeft(currentLeft);
         }, IntervalValue));
       }
     }
@@ -250,7 +281,7 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
       }
       const targetPos = applyRelPos(state, MousePosition.calc(editor, e));
       appendGhostToBody(state.ghost, editor.getBody());
-      moveGhost(state.ghost, targetPos, state.width, state.height, state.maxX, state.maxY, e.clientY, editor.getContentAreaContainer(), editor.getWin(), state_);
+      moveGhost(state.ghost, targetPos, state.width, state.height, state.maxX, state.maxY, e.clientY, e.clientX, editor.getContentAreaContainer(), editor.getWin(), state_);
       throttledPlaceCaretAt.throttle(e.clientX, e.clientY);
     }
   });
