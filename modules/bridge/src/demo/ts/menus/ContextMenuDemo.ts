@@ -11,7 +11,7 @@ export const registerDemoContextMenus = (): void => {
     update: () => [{
       icon: 'code',
       text: 'Code',
-      onAction: (_api) => {
+      onAction: () => {
         console.log('open source code dialog');
       }
     }]
@@ -21,7 +21,7 @@ export const registerDemoContextMenus = (): void => {
     update: () => [ 'bold', 'italic', {
       icon: 'code',
       text: 'Code',
-      onAction: (_api) => {
+      onAction: () => {
         console.log('open source code dialog');
       }
     }]

@@ -5,13 +5,13 @@ import { DialogManager } from '../../../main/ts/ephox/bridge/api/DialogManager';
 import { Dialog, DialogInstanceApi, DialogSpec } from '../../../main/ts/ephox/bridge/components/dialog/Dialog';
 
 // This is the function that would be implemented in modern theme/silver theme for creating dialogs
-const createDemoApi = <T>(internalStructure: Dialog<T>, initalData: Partial<T>, dataValidator: StructureProcessor): DialogInstanceApi<T> => {
-  const data = Cell(initalData);
+const createDemoApi = <T>(internalStructure: Dialog<T>, initialData: Partial<T>, dataValidator: StructureProcessor): DialogInstanceApi<T> => {
+  const data = Cell(initialData);
 
   // eslint-disable-next-line no-console
   console.log({
     internalStructure,
-    initalData
+    initialData
   });
 
   return {
