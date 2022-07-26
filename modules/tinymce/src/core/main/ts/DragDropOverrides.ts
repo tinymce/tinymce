@@ -335,6 +335,10 @@ const stop = (state: Singleton.Value<State>, editor: Editor) => () => {
     if (state.dragging) {
       editor.dispatch('dragend');
     }
+    if (state.intervalId.isSome()) {
+      clearInterval(state.intervalId.getOrUndefined());
+      state.intervalId = Optional.none();
+    }
   });
   removeDragState(state);
 };
