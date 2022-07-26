@@ -7,9 +7,9 @@ Pre-checks:
 * [ ] Changelog entry added
 * [ ] Tests have been added (if applicable)
 * [ ] Branch prefixed with `feature/`, `hotfix/` or `spike/`
-* [ ] Docs ticket created (if applicable)
 
 Review:
 * [ ] Milestone set
+* [ ] Docs ticket created (if applicable)
 
 GitHub issues (if applicable):
