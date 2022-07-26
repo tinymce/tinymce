@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Type } from '@ephox/katamari';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 
 import * as Data from './Data';
@@ -7,7 +7,7 @@ import * as Html from './Html';
 const isMatch = (n: SugarElement<Node>): n is SugarElement<Text> => {
   const value = SugarNode.value(n);
   return SugarNode.isText(n) &&
-    value !== undefined &&
+    Type.isString(value) &&
     Data.regExp.test(value);
 };
 
@@ -33,6 +33,8 @@ const findParentElm = (elm: Node, rootElm: Element): Element | undefined => {
     }
     elm = elm.parentNode;
   }
+
+  return undefined;
 };
 
 const replaceWithSpans = (text: string): string =>

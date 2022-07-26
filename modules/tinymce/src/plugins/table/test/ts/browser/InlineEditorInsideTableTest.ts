@@ -69,7 +69,7 @@ describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
     it('TINY-6625: mceTableApplyCellStyle', () => {
       const editor = hook.editor();
       editor.execCommand('mceTableApplyCellStyle', false, { 'background-color': 'pink' });
-      const td = editor.getBody().parentElement;
+      const td = editor.getBody().parentElement as HTMLTableCellElement;
       assert.notEqual(td.style.backgroundColor, 'pink');
     });
 

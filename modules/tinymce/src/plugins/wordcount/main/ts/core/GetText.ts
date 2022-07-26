@@ -13,10 +13,11 @@ const getText = (node: Node, schema: Schema): string[] => {
   let txt = '';
   const treeWalker = new DomTreeWalker(node, node);
 
-  while ((node = treeWalker.next())) {
-    if (node.nodeType === 3) {
-      txt += Unicode.removeZwsp((node as Text).data);
-    } else if (isNewline(node) && txt.length) {
+  let tempNode: Node | null | undefined;
+  while ((tempNode = treeWalker.next())) {
+    if (tempNode.nodeType === 3) {
+      txt += Unicode.removeZwsp((tempNode as Text).data);
+    } else if (isNewline(tempNode) && txt.length) {
       textBlocks.push(txt);
       txt = '';
     }

@@ -6,7 +6,7 @@ import * as UrlPatterns from 'tinymce/plugins/media/core/UrlPatterns';
 describe('atomic.tinymce.plugins.media.core.UrlPatternsTest', () => {
   const check = (url: string, expected: string) => {
     const pattern = UrlPatterns.matchPattern(url);
-    assert.equal(pattern.url, expected);
+    assert.equal(pattern?.url, expected);
   };
 
   it('Matches youtube URL without protocol', () => check(

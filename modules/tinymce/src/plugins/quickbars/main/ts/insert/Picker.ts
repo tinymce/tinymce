@@ -22,7 +22,7 @@ const pickFile = (editor: Editor): Promise<File[]> => new Promise((resolve) => {
   const cancelHandler = (e: EditorEvent<{}>) => {
     const cleanup = () => {
       resolve([]);
-      fileInput.parentNode.removeChild(fileInput);
+      fileInput.parentNode?.removeChild(fileInput);
     };
 
     // Android will fire focusin before the input change event

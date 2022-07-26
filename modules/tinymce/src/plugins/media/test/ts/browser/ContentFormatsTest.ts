@@ -104,7 +104,7 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
       '</video>'
     );
 
-    const placeholderElm = editor.getBody().firstChild.firstChild as HTMLImageElement;
+    const placeholderElm = editor.dom.select('img')[0];
     placeholderElm.width = 100;
     placeholderElm.height = 200;
     editor.dispatch('ObjectResized', { target: placeholderElm, width: placeholderElm.width, height: placeholderElm.height, origin: 'corner-se' });

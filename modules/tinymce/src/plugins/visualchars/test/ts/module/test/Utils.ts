@@ -4,7 +4,7 @@ import { TinyAssertions } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-const assertStruct = (editor: Editor, paraStruct: StructAssert[]) =>
+const assertStruct = (editor: Editor, paraStruct: StructAssert[]): void =>
   TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, _str) => s.element('body', {
     children: [
       s.element('p', {
@@ -13,7 +13,7 @@ const assertStruct = (editor: Editor, paraStruct: StructAssert[]) =>
     ]
   })));
 
-const assertSpanStruct = (editor: Editor) => assertStruct(editor, ApproxStructure.build((s, str) => [
+const assertSpanStruct = (editor: Editor): void => assertStruct(editor, ApproxStructure.build((s, str) => [
   s.text(str.is('a')),
   s.element('span', {
     children: [
@@ -28,7 +28,7 @@ const assertSpanStruct = (editor: Editor) => assertStruct(editor, ApproxStructur
   s.text(str.is('b'))
 ]));
 
-const assertNbspStruct = (editor: Editor) => assertStruct(editor, ApproxStructure.build((s, str) => [
+const assertNbspStruct = (editor: Editor): void => assertStruct(editor, ApproxStructure.build((s, str) => [
   s.text(str.is('a')),
   s.text(str.is(Unicode.nbsp)),
   s.text(str.is(Unicode.nbsp)),

@@ -18,14 +18,8 @@ export interface SearchState {
   readonly inSelection: boolean;
 }
 
-const getElmIndex = (elm: Element): string => {
-  const value = elm.getAttribute('data-mce-index');
-
-  if (typeof value === 'number') {
-    return '' + value;
-  }
-
-  return value;
+const getElmIndex = (elm: Element): string | null => {
+  return elm.getAttribute('data-mce-index');
 };
 
 const markAllMatches = (editor: Editor, currentSearchState: Cell<SearchState>, pattern: Pattern, inSelection: boolean): number => {
@@ -46,13 +40,13 @@ const markAllMatches = (editor: Editor, currentSearchState: Cell<SearchState>, p
 };
 
 const unwrap = (node: Node): void => {
-  const parentNode = node.parentNode;
+  const parentNode = node.parentNode as Node;
 
   if (node.firstChild) {
     parentNode.insertBefore(node.firstChild, node);
   }
 
-  node.parentNode.removeChild(node);
+  node.parentNode?.removeChild(node);
 };
 
 const findSpansByIndex = (editor: Editor, index: number): HTMLSpanElement[] => {
@@ -80,8 +74,6 @@ const moveSelection = (editor: Editor, currentSearchState: Cell<SearchState>, fo
   const searchState = currentSearchState.get();
   let testIndex = searchState.index;
   const dom = editor.dom;
-
-  forward = forward !== false;
 
   if (forward) {
     if (testIndex + 1 === searchState.count) {
@@ -114,7 +106,7 @@ const removeNode = (dom: DOMUtils, node: Node): void => {
 
   dom.remove(node);
 
-  if (dom.isEmpty(parent)) {
+  if (parent && dom.isEmpty(parent)) {
     dom.remove(parent);
   }
 };
@@ -183,19 +175,19 @@ const replace = (editor: Editor, currentSearchState: Cell<SearchState>, text: st
   const node = editor.getBody();
   const nodes = Tools.grep(Tools.toArray(node.getElementsByTagName('span')), isMatchSpan);
   for (let i = 0; i < nodes.length; i++) {
-    const nodeIndex = getElmIndex(nodes[i]);
+    const nodeIndex = getElmIndex(nodes[i]) as string;
 
     let matchIndex = currentMatchIndex = parseInt(nodeIndex, 10);
     if (all || matchIndex === searchState.index) {
       if (text.length) {
-        nodes[i].firstChild.nodeValue = text;
+        nodes[i].innerText = text;
         unwrap(nodes[i]);
       } else {
         removeNode(editor.dom, nodes[i]);
       }
 
       while (nodes[++i]) {
-        matchIndex = parseInt(getElmIndex(nodes[i]), 10);
+        matchIndex = parseInt(getElmIndex(nodes[i]) as string, 10);
 
         if (matchIndex === currentMatchIndex) {
           removeNode(editor.dom, nodes[i]);
@@ -229,7 +221,8 @@ const replace = (editor: Editor, currentSearchState: Cell<SearchState>, text: st
 };
 
 const done = (editor: Editor, currentSearchState: Cell<SearchState>, keepEditorSelection?: boolean): Range | undefined => {
-  let startContainer, endContainer;
+  let startContainer: Text | null | undefined;
+  let endContainer: Text | null | undefined;
   const searchState = currentSearchState.get();
 
   const nodes = Tools.toArray(editor.getBody().getElementsByTagName('span'));
@@ -238,11 +231,12 @@ const done = (editor: Editor, currentSearchState: Cell<SearchState>, keepEditorS
 
     if (nodeIndex !== null && nodeIndex.length) {
       if (nodeIndex === searchState.index.toString()) {
+        // Note: The first child of the span node will be the highlighted text node
         if (!startContainer) {
-          startContainer = nodes[i].firstChild;
+          startContainer = nodes[i].firstChild as Text;
         }
 
-        endContainer = nodes[i].firstChild;
+        endContainer = nodes[i].firstChild as Text;
       }
 
       unwrap(nodes[i]);
@@ -267,6 +261,8 @@ const done = (editor: Editor, currentSearchState: Cell<SearchState>, keepEditorS
     }
 
     return rng;
+  } else {
+    return undefined;
   }
 };
 

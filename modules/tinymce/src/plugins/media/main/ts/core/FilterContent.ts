@@ -22,10 +22,12 @@ const setup = (editor: Editor): void => {
       embed: [ 'wmode' ]
     }, (attrs, name) => {
       const rule = schema.getElementRule(name);
-      Arr.each(attrs, (attr) => {
-        rule.attributes[attr] = {};
-        rule.attributesOrder.push(attr);
-      });
+      if (rule) {
+        Arr.each(attrs, (attr) => {
+          rule.attributes[attr] = {};
+          rule.attributesOrder.push(attr);
+        });
+      }
     });
 
     // Converts iframe, video etc into placeholder images
@@ -40,13 +42,13 @@ const setup = (editor: Editor): void => {
           continue;
         }
 
-        const realElmName = node.attr(name);
+        const realElmName = node.attr(name) as string;
         const realElm = new AstNode(realElmName, 1);
 
         // Add width/height to everything but audio
         if (realElmName !== 'audio' && realElmName !== 'script') {
           const className = node.attr('class');
-          if (className && className.indexOf('mce-preview-object') !== -1) {
+          if (className && className.indexOf('mce-preview-object') !== -1 && node.firstChild) {
             realElm.attr({
               width: node.firstChild.attr('width'),
               height: node.firstChild.attr('height')
@@ -64,7 +66,7 @@ const setup = (editor: Editor): void => {
         });
 
         // Unprefix all placeholder attributes
-        const attribs = node.attributes;
+        const attribs = node.attributes ?? [];
         let ai = attribs.length;
         while (ai--) {
           const attrName = attribs[ai].name;
