@@ -40,10 +40,11 @@ export const ensureTrailing = (str: string, suffix: string): string => {
 };
 
 export const contains = (str: string, substr: string, start: number = 0, end?: number): boolean => {
-  if (Type.isUndefined(end)) {
-    return str.indexOf(substr, start) !== -1;
+  const idx = str.indexOf(substr, start);
+  if (idx !== -1) {
+    return Type.isUndefined(end) ? true : idx + substr.length <= end;
   } else {
-    return str.substring(start, end).indexOf(substr) !== -1;
+    return false;
   }
 };
 
