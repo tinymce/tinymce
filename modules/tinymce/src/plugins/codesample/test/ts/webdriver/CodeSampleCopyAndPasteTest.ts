@@ -44,11 +44,12 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
         s.text(str.is('test content'))
       ]
     });
+
   beforeEach(() => {
     hook.editor().setContent('');
   });
 
-  it('TINY-8861: press enter after paste a code sample should not add newline inside the code', async () => {
+  it('TINY-8861: press enter after pasting a code sample should not add a newline inside the code', async () => {
     const editor = hook.editor();
 
     await TestUtils.pOpenDialogAndAssertInitial(hook.editor(), 'markup', '');
@@ -88,7 +89,6 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
         ]
       });
     }));
-
   });
 
   // Safari cannot select the CEF in this scenario, so we can't run the test (and there is no bug)
