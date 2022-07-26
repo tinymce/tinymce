@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Improved
+- The `SugarNode.isHTMLElement` function now ensures the `nodeType` is `1` before checking the prototypes.
+
 ## 9.0.0 - 2022-03-03
 
 ### Added

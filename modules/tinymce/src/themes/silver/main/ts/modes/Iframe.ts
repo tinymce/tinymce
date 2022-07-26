@@ -74,7 +74,7 @@ const setupEvents = (editor: Editor, uiComponents: RenderUiComponents) => {
     dom.unbind(contentWindow, 'scroll', scroll);
 
     // Clean memory for IE
-    contentWindow = null;
+    (contentWindow as any) = null;
   });
 };
 
@@ -134,7 +134,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     editor.dispatch('ToggleSidebar');
   });
 
-  editor.addQueryValueHandler('ToggleSidebar', () => OuterContainer.whichSidebar(outerContainer));
+  editor.addQueryValueHandler('ToggleSidebar', () => OuterContainer.whichSidebar(outerContainer) ?? '');
 
   const toolbarMode = Options.getToolbarMode(editor);
 

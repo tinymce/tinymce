@@ -10,7 +10,14 @@ import * as NestedMenus from '../../menu/NestedMenus';
 import { SingleMenuItemSpec } from '../../menu/SingleMenuTypes';
 import { AnchorType, getAnchorSpec } from '../Coords';
 
-export const initAndShow = (editor: Editor, e: EditorEvent<PointerEvent>, buildMenu: () => string | Array<string | SingleMenuItemSpec>, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, anchorType: AnchorType) => {
+export const initAndShow = (
+  editor: Editor,
+  e: EditorEvent<PointerEvent>,
+  buildMenu: () => string | Array<string | SingleMenuItemSpec>,
+  backstage: UiFactoryBackstage,
+  contextmenu: AlloyComponent,
+  anchorType: AnchorType
+): void => {
   const items = buildMenu();
   const anchorSpec = getAnchorSpec(editor, e, anchorType);
 

@@ -6,11 +6,12 @@ import { renderFooterButton } from '../general/Button';
 import { formCancelEvent, FormCancelEvent, formSubmitEvent, FormSubmitEvent } from '../general/FormEvents';
 import * as Dialogs from './Dialogs';
 
-export interface ConfirmDialogSetup {
-  backstage: UiFactoryBackstage;
+interface ConfirmDialogApi {
+  readonly open: (message: string, callback: (state: boolean) => void) => void;
 }
-export const setup = (extras: ConfirmDialogSetup) => {
-  const sharedBackstage = extras.backstage.shared;
+
+export const setup = (backstage: UiFactoryBackstage): ConfirmDialogApi => {
+  const sharedBackstage = backstage.shared;
   // FIX: Extreme dupe with Alert dialog
   const open = (message: string, callback: (state: boolean) => void) => {
 
@@ -28,7 +29,7 @@ export const setup = (extras: ConfirmDialogSetup) => {
         align: 'end',
         enabled: true,
         icon: Optional.none()
-      }, 'submit', extras.backstage)
+      }, 'submit', backstage)
     );
 
     const footerNo = renderFooterButton({
@@ -39,7 +40,7 @@ export const setup = (extras: ConfirmDialogSetup) => {
       align: 'end',
       enabled: true,
       icon: Optional.none()
-    }, 'cancel', extras.backstage);
+    }, 'cancel', backstage);
 
     const titleSpec = Dialogs.pUntitled();
     const closeSpec = Dialogs.pClose(() => closeDialog(false), sharedBackstage.providers);

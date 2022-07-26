@@ -50,7 +50,7 @@ const getHistory = (fileType: string): string[] => {
   return Obj.get(history, fileType).getOr([]);
 };
 
-const addToHistory = (url: string, fileType: string) => {
+const addToHistory = (url: string, fileType: string): void => {
   if (!isHttpUrl(url)) {
     return;
   }
@@ -61,7 +61,7 @@ const addToHistory = (url: string, fileType: string) => {
   setAllHistory(history);
 };
 
-const clearHistory = () => {
+const clearHistory = (): void => {
   LocalStorage.removeItem(STORAGE_KEY);
 };
 

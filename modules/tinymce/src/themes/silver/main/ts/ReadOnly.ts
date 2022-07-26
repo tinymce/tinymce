@@ -16,7 +16,7 @@ const ReadOnlyDataSchema = StructureSchema.objOf([
   FieldSchema.requiredBoolean('readonly')
 ]);
 
-const broadcastReadonly = (uiComponents: RenderUiComponents, readonly: boolean) => {
+const broadcastReadonly = (uiComponents: RenderUiComponents, readonly: boolean): void => {
   const outerContainer = uiComponents.outerContainer;
   const target = outerContainer.element;
 
@@ -29,7 +29,7 @@ const broadcastReadonly = (uiComponents: RenderUiComponents, readonly: boolean) 
   uiComponents.uiMothership.broadcastOn([ ReadOnlyChannel ], { readonly });
 };
 
-const setupReadonlyModeSwitch = (editor: Editor, uiComponents: RenderUiComponents) => {
+const setupReadonlyModeSwitch = (editor: Editor, uiComponents: RenderUiComponents): void => {
   editor.on('init', () => {
     // Force an update of the ui components disabled states if in readonly mode
     if (editor.mode.isReadOnly()) {

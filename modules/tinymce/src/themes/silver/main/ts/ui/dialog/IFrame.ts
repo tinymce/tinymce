@@ -1,4 +1,4 @@
-import { AlloyComponent, Behaviour, Focusing, FormField, Tabstopping } from '@ephox/alloy';
+import { AlloyComponent, Behaviour, Focusing, FormField, SketchSpec, Tabstopping } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Cell, Optional } from '@ephox/katamari';
 import { Attribute } from '@ephox/sugar';
@@ -9,8 +9,8 @@ import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import * as NavigableObject from '../general/NavigableObject';
 
 interface IFrameSourcing {
-  getValue: (frame: AlloyComponent) => string;
-  setValue: (frame: AlloyComponent, value: string) => void;
+  readonly getValue: (frame: AlloyComponent) => string;
+  readonly setValue: (frame: AlloyComponent, value: string) => void;
 }
 
 type IframeSpec = Omit<Dialog.Iframe, 'type'>;
@@ -32,7 +32,7 @@ const getDynamicSource = (initialData: Optional<string>): IFrameSourcing => {
   };
 };
 
-const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstageProviders, initialData: Optional<string>) => {
+const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstageProviders, initialData: Optional<string>): SketchSpec => {
   const isSandbox = spec.sandboxed;
   const isTransparent = spec.transparent;
   const baseClass = 'tox-dialog__iframe';

@@ -16,6 +16,7 @@
     "src/core/test/ts/module/test/PasteStrings.ts",
     "src/core/test/ts/module/test/ViewBlock.ts",
     "src/models/dom/demo/ts/",
-    "src/models/dom/main/ts/"
+    "src/models/dom/main/ts/",
+    "src/themes/silver/main/ts/"
   ]
 }

@@ -6,10 +6,10 @@ import * as ColorSwatch from '../ui/core/color/ColorSwatch';
 import * as Options from '../ui/core/color/Options';
 
 export interface UiFactoryBackstageForColorInput {
-  colorPicker: (callback: ColorSwatch.ColorInputCallback, value: string) => void;
-  hasCustomColors: () => boolean;
-  getColors: () => Menu.ChoiceMenuItemSpec[];
-  getColorCols: () => number;
+  readonly colorPicker: (callback: ColorSwatch.ColorInputCallback, value: string) => void;
+  readonly hasCustomColors: () => boolean;
+  readonly getColors: () => Menu.ChoiceMenuItemSpec[];
+  readonly getColorCols: () => number;
 }
 
 const colorPicker = (editor: Editor) => (callback: ColorSwatch.ColorInputCallback, value: string) => {

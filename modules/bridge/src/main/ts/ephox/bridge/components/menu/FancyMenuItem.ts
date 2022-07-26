@@ -25,7 +25,7 @@ export interface ColorSwatchMenuItemSpec extends BaseFancyMenuItemSpec<'colorswa
   fancytype: 'colorswatch';
   initData?: {
     allowCustomColors?: boolean;
-    colors: ChoiceMenuItemSpec[];
+    colors?: ChoiceMenuItemSpec[];
   };
 }
 

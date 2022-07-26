@@ -1,4 +1,4 @@
-import { AlloySpec, AlloyTriggers, Behaviour, Input, Keying, Memento } from '@ephox/alloy';
+import { AlloySpec, AlloyTriggers, Behaviour, Input, Keying, Memento, SketchSpec } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
 import { Id, Optional } from '@ephox/katamari';
 
@@ -57,14 +57,15 @@ const buildInitGroups = (ctx: InlineContent.ContextForm, providers: UiFactoryBac
   ];
 };
 
-const renderContextForm = (toolbarType: ToolbarMode, ctx: InlineContent.ContextForm, providers: UiFactoryBackstageProviders) => renderToolbar({
-  type: toolbarType,
-  uid: Id.generate('context-toolbar'),
-  initGroups: buildInitGroups(ctx, providers),
-  onEscape: Optional.none,
-  cyclicKeying: true,
-  providers
-});
+const renderContextForm = (toolbarType: ToolbarMode, ctx: InlineContent.ContextForm, providers: UiFactoryBackstageProviders): SketchSpec =>
+  renderToolbar({
+    type: toolbarType,
+    uid: Id.generate('context-toolbar'),
+    initGroups: buildInitGroups(ctx, providers),
+    onEscape: Optional.none,
+    cyclicKeying: true,
+    providers
+  });
 
 export const ContextForm = {
   renderContextForm,

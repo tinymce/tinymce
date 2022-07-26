@@ -71,23 +71,24 @@ export const renderImagePreview = (spec: ImagePreviewSpec, initialData: Optional
     cachedData.set(translatedData);
 
     const applyFramePositioning = () => {
-      const imageWidth = translatedData.cachedWidth;
-      const imageHeight = translatedData.cachedHeight;
-
-      if (Type.isUndefined(translatedData.zoom)) {
-        const z = zoomToFit(frameComponent.element, imageWidth, imageHeight);
-        // sneaky mutation since we own the object
-        translatedData.zoom = z;
+      const { cachedWidth, cachedHeight, zoom } = translatedData;
+      if (!Type.isUndefined(cachedWidth) && !Type.isUndefined(cachedHeight)) {
+        if (Type.isUndefined(zoom)) {
+          const z = zoomToFit(frameComponent.element, cachedWidth, cachedHeight);
+          // sneaky mutation since we own the object
+          translatedData.zoom = z;
+        }
+        const position = calculateImagePosition(
+          Width.get(frameComponent.element),
+          Height.get(frameComponent.element),
+          cachedWidth,
+          cachedHeight,
+          translatedData.zoom as number
+        );
+        memContainer.getOpt(frameComponent).each((container) => {
+          Css.setAll(container.element, position);
+        });
       }
-      const position = calculateImagePosition(
-        Width.get(frameComponent.element),
-        Height.get(frameComponent.element),
-        imageWidth, imageHeight,
-        translatedData.zoom
-      );
-      memContainer.getOpt(frameComponent).each((container) => {
-        Css.setAll(container.element, position);
-      });
     };
 
     memImage.getOpt(frameComponent).each((imageComponent) => {
@@ -97,9 +98,7 @@ export const renderImagePreview = (spec: ImagePreviewSpec, initialData: Optional
         Class.remove(frameComponent.element, 'tox-imagepreview__loaded');
       }
 
-      if (!Type.isUndefined(translatedData.cachedWidth) && !Type.isUndefined(translatedData.cachedHeight)) {
-        applyFramePositioning();
-      }
+      applyFramePositioning();
 
       Ready.image(img).then((img) => {
         // Ensure the component hasn't been removed while the image was loading

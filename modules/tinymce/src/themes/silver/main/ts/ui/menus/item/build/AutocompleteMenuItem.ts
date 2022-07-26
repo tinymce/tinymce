@@ -17,7 +17,7 @@ type TooltipWorker = (success: (elem: HTMLElement) => void) => void;
 // (yes this is horrible but it is not yet public API)
 const tooltipBehaviour = (
   meta: Record<string, any>, sharedBackstage: UiFactoryBackstageShared
-): Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>[] =>
+): Behaviour.NamedConfiguredBehaviour<any, any, any>[] =>
   Obj.get(meta, 'tooltipWorker')
     .map((tooltipWorker: TooltipWorker) => [
       Tooltipping.config({

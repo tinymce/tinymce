@@ -1,14 +1,18 @@
-import { Arr, Cell, Optional } from '@ephox/katamari';
+import { Cell, Optional } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { BlockFormat, InlineFormat } from 'tinymce/core/api/fmt/Format';
-import { getStyleFormats } from 'tinymce/themes/silver/ui/core/complex/StyleFormat';
 
 import { FormatItem } from '../ui/core/complex/BespokeSelect';
+import { getStyleFormats } from '../ui/core/complex/StyleFormat';
 import * as FormatRegister from '../ui/core/complex/utils/FormatRegister';
 
-export const init = (editor: Editor) => {
-  const isSelectedFor = (format) => () => editor.formatter.match(format);
+export interface UiFactoryBackstageForStyleFormats {
+  readonly getData: () => FormatItem[];
+}
+
+export const init = (editor: Editor): UiFactoryBackstageForStyleFormats => {
+  const isSelectedFor = (format: string) => () => editor.formatter.match(format);
 
   const getPreviewFor: FormatRegister.GetPreviewForType = (format) => () => {
     const fmt = editor.formatter.get(format);
@@ -18,16 +22,9 @@ export const init = (editor: Editor) => {
     }) : Optional.none();
   };
 
-  const flatten = (fmt): string[] => {
-    const subs = fmt.items;
-    return subs !== undefined && subs.length > 0 ? Arr.bind(subs, flatten) : [ fmt.format ];
-  };
-
   const settingsFormats = Cell<FormatItem[]>([ ]);
-  const settingsFlattenedFormats = Cell<string[]>([ ]);
 
   const eventsFormats = Cell<FormatItem[]>([ ]);
-  const eventsFlattenedFormats = Cell<string[]>([ ]);
 
   const replaceSettings = Cell(false);
 
@@ -35,9 +32,6 @@ export const init = (editor: Editor) => {
     const formats = getStyleFormats(editor);
     const enriched = FormatRegister.register(editor, formats, isSelectedFor, getPreviewFor);
     settingsFormats.set(enriched);
-    settingsFlattenedFormats.set(
-      Arr.bind(enriched, flatten)
-    );
   });
 
   editor.on('addStyleModifications', (e) => {
@@ -45,10 +39,6 @@ export const init = (editor: Editor) => {
     const modifications = FormatRegister.register(editor, e.items, isSelectedFor, getPreviewFor);
     eventsFormats.set(modifications);
     replaceSettings.set(e.replace);
-
-    eventsFlattenedFormats.set(
-      Arr.bind(modifications, flatten)
-    );
   });
 
   const getData = () => {
@@ -57,14 +47,7 @@ export const init = (editor: Editor) => {
     return fromSettings.concat(fromEvents);
   };
 
-  const getFlattenedKeys = () => {
-    const fromSettings = replaceSettings.get() ? [ ] : settingsFlattenedFormats.get();
-    const fromEvents = eventsFlattenedFormats.get();
-    return fromSettings.concat(fromEvents);
-  };
-
   return {
-    getData,
-    getFlattenedKeys
+    getData
   };
 };

@@ -1,4 +1,4 @@
-import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
+import { AlloyComponent, AlloyTriggers, SketchSpec } from '@ephox/alloy';
 import { Fun, Optional } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -18,10 +18,14 @@ const getSpec = (editor: Editor): SelectSpec => {
 
   const getPreviewFor = (format: string) => () => {
     const fmt = editor.formatter.get(format);
-    return Optional.some({
-      tag: fmt.length > 0 ? (fmt[0] as InlineFormat).inline || (fmt[0] as BlockFormat).block || 'div' : 'div',
-      styles: editor.dom.parseStyle(editor.formatter.getCssText(format))
-    });
+    if (fmt) {
+      return Optional.some({
+        tag: fmt.length > 0 ? (fmt[0] as InlineFormat).inline || (fmt[0] as BlockFormat).block || 'div' : 'div',
+        styles: editor.dom.parseStyle(editor.formatter.getCssText(format))
+      });
+    } else {
+      return Optional.none();
+    }
   };
 
   const updateSelectMenuText = (comp: AlloyComponent) => {
@@ -49,10 +53,11 @@ const getSpec = (editor: Editor): SelectSpec => {
   };
 };
 
-const createBlocksButton = (editor: Editor, backstage: UiFactoryBackstage) => createSelectButton(editor, backstage, getSpec(editor));
+const createBlocksButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
+  createSelectButton(editor, backstage, getSpec(editor));
 
 // FIX: Test this!
-const createBlocksMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
+const createBlocksMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('blocks', {
     text: 'Blocks',

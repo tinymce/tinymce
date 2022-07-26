@@ -8,7 +8,7 @@ const onSetupUndoRedoState = (editor: Editor, type: 'hasUndo' | 'hasRedo') =>
     api.setEnabled(!editor.mode.isReadOnly() && editor.undoManager[type]());
   });
 
-const registerMenuItems = (editor: Editor) => {
+const registerMenuItems = (editor: Editor): void => {
   editor.ui.registry.addMenuItem('undo', {
     text: 'Undo',
     icon: 'undo',
@@ -28,7 +28,7 @@ const registerMenuItems = (editor: Editor) => {
 
 // Note: The undo/redo buttons are disabled by default here, as they'll be rendered
 // on init generally and it won't have any undo levels at that stage.
-const registerButtons = (editor: Editor) => {
+const registerButtons = (editor: Editor): void => {
   editor.ui.registry.addButton('undo', {
     tooltip: 'Undo',
     icon: 'undo',
@@ -46,7 +46,7 @@ const registerButtons = (editor: Editor) => {
   });
 };
 
-const register = (editor: Editor) => {
+const register = (editor: Editor): void => {
   registerMenuItems(editor);
   registerButtons(editor);
 };

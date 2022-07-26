@@ -28,7 +28,7 @@ const matchTargetWith = (elem: SugarElement<Element>, candidates: ContextType[])
   };
 };
 
-const filterByPositionForStartNode = (toolbars: ContextType[]) => {
+const filterByPositionForStartNode = (toolbars: ContextType[]): ContextType[] => {
   if (toolbars.length <= 1) {
     return toolbars;
   } else {
@@ -52,7 +52,7 @@ const filterByPositionForStartNode = (toolbars: ContextType[]) => {
   }
 };
 
-const filterByPositionForAncestorNode = (toolbars: ContextType[]) => {
+const filterByPositionForAncestorNode = (toolbars: ContextType[]): ContextType[] => {
   if (toolbars.length <= 1) {
     return toolbars;
   } else {

@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+- The `lazyViewport` property incorrectly marked the passed component as optional for the `Docking` behaviour.
+- The `TypeaheadSpec` type did not correctly extend `InputSpec`.
+
 ## 10.1.0 - 2022-06-29
 
 ### Added

@@ -78,14 +78,14 @@ const noFormParts: FormTypes.FormParts = {
   record: Fun.constant([])
 };
 
-const interpretInForm = <T extends Dialog.BodyComponent>(parts: FormTypes.FormParts, spec: T, dialogData: Dialog.DialogData, oldBackstage: UiFactoryBackstage) => {
+const interpretInForm = <T extends Dialog.BodyComponent>(parts: FormTypes.FormParts, spec: T, dialogData: Dialog.DialogData, oldBackstage: UiFactoryBackstage): AlloySpec => {
   // Now, we need to update the backstage to use the parts variant.
   const newBackstage = Merger.deepMerge(
     oldBackstage,
     {
       // Add the interpreter based on the form parts.
       shared: {
-        interpreter: (childSpec) => interpretParts(parts, childSpec, dialogData, newBackstage)
+        interpreter: (childSpec: T) => interpretParts(parts, childSpec, dialogData, newBackstage)
       }
     }
   );
@@ -93,7 +93,7 @@ const interpretInForm = <T extends Dialog.BodyComponent>(parts: FormTypes.FormPa
   return interpretParts(parts, spec, dialogData, newBackstage);
 };
 
-const interpretParts = <T extends Dialog.BodyComponent>(parts: FormTypes.FormParts, spec: T, dialogData: Dialog.DialogData, backstage: UiFactoryBackstage) =>
+const interpretParts = <T extends Dialog.BodyComponent>(parts: FormTypes.FormParts, spec: T, dialogData: Dialog.DialogData, backstage: UiFactoryBackstage): AlloySpec =>
   Obj.get(factories, spec.type).fold(
     () => {
       console.error(`Unknown factory type "${spec.type}", defaulting to container: `, spec);
@@ -102,7 +102,7 @@ const interpretParts = <T extends Dialog.BodyComponent>(parts: FormTypes.FormPar
     (factory) => factory(parts, spec, dialogData, backstage)
   );
 
-const interpretWithoutForm = <T extends Dialog.BodyComponent>(spec: T, dialogData: Dialog.DialogData, backstage: UiFactoryBackstage) =>
+const interpretWithoutForm = <T extends Dialog.BodyComponent>(spec: T, dialogData: Dialog.DialogData, backstage: UiFactoryBackstage): AlloySpec =>
   interpretParts(noFormParts, spec, dialogData, backstage);
 
 export { interpretInForm, interpretWithoutForm };
