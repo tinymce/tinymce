@@ -149,7 +149,7 @@ const blobToDataUri = (blob: Blob): Promise<string> => new Promise((resolve, rej
     resolve(reader.result as string);
   };
   reader.onerror = () => {
-    reject(reader.error.message);
+    reject(reader.error?.message);
   };
   reader.readAsDataURL(blob);
 });

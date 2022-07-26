@@ -1,4 +1,6 @@
-declare let tinymce: any;
+import { TinyMCE } from 'tinymce/core/api/PublicApi';
+
+declare let tinymce: TinyMCE;
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -19,13 +21,13 @@ tinymce.init({
   file_picker_callback: (callback, _value, _meta) => {
     callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text', caption: true });
   },
-  images_upload_handler: (blobInfo, success, _failure, _progress) => {
+  images_upload_handler: (blobInfo, _progress) => new Promise((success) => {
     // eslint-disable-next-line no-console
     console.log(blobInfo);
     setTimeout(() => {
       success('https://www.google.com/logos/google.jpg');
     }, 5000);
-  },
+  }),
   height: 600
 });
 

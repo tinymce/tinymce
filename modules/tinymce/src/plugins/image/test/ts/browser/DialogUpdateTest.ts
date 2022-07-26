@@ -15,7 +15,7 @@ describe('browser.tinymce.plugins.image.DialogUpdateTest', () => {
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
     image_title: true,
-    file_picker_callback: (callback, _value, _meta) => {
+    file_picker_callback: (callback: (url: string, meta: Record<string, any>) => void) => {
       callback('https://www.google.com/logos/google.jpg', { width: '200' });
     }
   }, [ Plugin ]);

@@ -122,7 +122,7 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
   it('TBA: Url inside blank formatting wrapper', () => {
     const editor = hook.editor();
     editor.setContent('<p><br></p>');
-    editor.selection.setCursorLocation(editor.getBody().firstChild, 0);
+    editor.selection.setCursorLocation(editor.getBody().firstChild as HTMLParagraphElement, 0);
     editor.execCommand('Bold');
     // inserting url via typeUrl() results in different behaviour, so lets simply type it in, char by char
     KeyUtils.typeString(editor, 'http://www.domain.com ');
@@ -213,7 +213,7 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
 
   it('TINY-8896: should fire a createlink ExecCommand event when converting a URL to a link', () => {
     const editor = hook.editor();
-    const events = [];
+    const events: string[] = [];
     const logEvent = (e: EditorEvent<ExecCommandEvent>) => {
       events.push(`${e.type.toLowerCase()}-${e.command.toLowerCase()}`);
     };

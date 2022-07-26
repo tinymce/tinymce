@@ -42,8 +42,7 @@ const getDateTime = (editor: Editor, fmt: string, date: Date = new Date()): stri
 
 const updateElement = (editor: Editor, timeElm: HTMLTimeElement, computerTime: string, userTime: string) => {
   const newTimeElm = editor.dom.create('time', { datetime: computerTime }, userTime);
-  timeElm.parentNode.insertBefore(newTimeElm, timeElm);
-  editor.dom.remove(timeElm);
+  editor.dom.replace(newTimeElm, timeElm);
   editor.selection.select(newTimeElm, true);
   editor.selection.collapse(false);
 };

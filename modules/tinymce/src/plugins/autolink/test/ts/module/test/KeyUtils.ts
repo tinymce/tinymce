@@ -1,4 +1,4 @@
-import { Arr, Fun, Obj, Unicode } from '@ephox/katamari';
+import { Arr, Fun, Obj, Type, Unicode } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -15,14 +15,14 @@ const charCodeToKeyCode = (charCode: number): number => {
   return Obj.get(lookup, String.fromCharCode(charCode)).getOr(charCode);
 };
 
-const needsShiftModifier = (charCode: number): boolean => {
+const needsShiftModifier = (charCode: number | undefined): boolean => {
   const lookup: Record<string, boolean> = {
     '(': true, ')': true, '{': true, '}': true, '+': true, '_': true, ':': true, '"': true,
     '<': true, '>': true, '?': true, '!': true, '@': true, '#': true, '$': true, '%': true,
     '^': true, '&': true, '*': true, '|': true
   };
 
-  return Obj.has(lookup, String.fromCharCode(charCode));
+  return Type.isNumber(charCode) && Obj.has(lookup, String.fromCharCode(charCode));
 };
 
 const needsNbsp = (rng: Range, chr: string): boolean => {
@@ -39,9 +39,9 @@ const needsNbsp = (rng: Range, chr: string): boolean => {
 };
 
 const type = (editor: Editor, chr: string | number | Record<string, number | string | boolean>): void => {
-  let keyCode: number;
-  let charCode: number;
-  let evt: Record<string, any>;
+  let keyCode: number | undefined;
+  let charCode: number | undefined;
+  let evt: Record<string, any> | undefined;
   let offset: number;
 
   const fakeEvent = (type: string, evt: Record<string, any>) => {
@@ -130,7 +130,7 @@ const type = (editor: Editor, chr: string | number | Record<string, number | str
         }
       }
 
-      editor.getDoc().execCommand('Delete', false, null);
+      editor.getDoc().execCommand('Delete');
     }
   } else if (typeof chr === 'string') {
     const rng = editor.selection.getRng();

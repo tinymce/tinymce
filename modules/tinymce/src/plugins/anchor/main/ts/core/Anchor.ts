@@ -43,7 +43,7 @@ const createAnchor = (editor: Editor, id: string): void => {
       // Remove any empty named anchors in the selection as they cannot be removed by the formatter since they are cef
       removeEmptyNamedAnchorsInSelection(editor);
       // Format is set up to truncate any partially selected named anchors so that they are not completely removed
-      editor.formatter.remove('namedAnchor', null, null, true);
+      editor.formatter.remove('namedAnchor', undefined, undefined, true);
       // Insert new anchor using the formatter - will wrap selected content in anchor
       editor.formatter.apply('namedAnchor', { value: id });
       // Need to add visual classes to anchors if required

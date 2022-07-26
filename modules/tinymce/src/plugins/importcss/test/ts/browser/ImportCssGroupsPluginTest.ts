@@ -6,6 +6,7 @@ import { McEditor, TinyDom, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
+import { Group } from 'tinymce/plugins/importcss/core/ImportCss';
 import Plugin from 'tinymce/plugins/importcss/Plugin';
 
 import { Navigation, pProcessNavigation } from '../module/MenuNavigationTestUtils';
@@ -81,7 +82,7 @@ describe('browser.tinymce.plugins.importcss.ImportCssGroupsTest', () => {
         { title: 'Other', custom: '.DDD' }
       ],
 
-      importcss_selector_converter: (selector, group) => ({
+      importcss_selector_converter: (selector: string, group: Group & { custom: string }) => ({
         title: selector + group.custom,
         classes: [ 'converted' ],
         inline: 'span'
@@ -111,7 +112,7 @@ describe('browser.tinymce.plugins.importcss.ImportCssGroupsTest', () => {
         {
           title: 'Advanced',
           filter: /.adv/,
-          selector_converter: (selector, group) => {
+          selector_converter: (selector: string, group: Group | null) => {
             // eslint-disable-next-line no-console
             console.log('selector', selector, 'group', group);
             return {
@@ -124,7 +125,7 @@ describe('browser.tinymce.plugins.importcss.ImportCssGroupsTest', () => {
         },
         {
           title: 'Other',
-          selector_converter: (selector, _group) => ({
+          selector_converter: (selector: string, _group: Group | null) => ({
             title: selector + '.OtherGroup',
             selector: 'p',
             classes: selector.split('.')[1]

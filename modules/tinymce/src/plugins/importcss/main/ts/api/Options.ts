@@ -11,8 +11,8 @@ type FileFilter = string | RegExp | ((value: string, imported?: boolean) => bool
 type SelectorFilter = string | RegExp | ((value: string) => boolean) | undefined;
 
 const option: {
-  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K] | undefined;
-  <T>(name: string): (editor: Editor) => T | undefined;
+  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K];
+  <T>(name: string): (editor: Editor) => T;
 } = (name: string) => (editor: Editor) =>
   editor.options.get(name);
 
@@ -56,11 +56,11 @@ const register = (editor: Editor): void => {
 
 const shouldMergeClasses = option<boolean>('importcss_merge_classes');
 const shouldImportExclusive = option<boolean>('importcss_exclusive');
-const getSelectorConverter = option<SelectorConvertor>('importcss_selector_converter');
-const getSelectorFilter = option<SelectorFilter>('importcss_selector_filter');
-const getCssGroups = option<UserDefinedGroup[]>('importcss_groups');
+const getSelectorConverter = option<SelectorConvertor | undefined>('importcss_selector_converter');
+const getSelectorFilter = option<SelectorFilter | undefined>('importcss_selector_filter');
+const getCssGroups = option<UserDefinedGroup[] | undefined>('importcss_groups');
 const shouldAppend = option<boolean>('importcss_append');
-const getFileFilter = option<FileFilter>('importcss_file_filter');
+const getFileFilter = option<FileFilter | undefined>('importcss_file_filter');
 const getSkin = option('skin');
 const getSkinUrl = option('skin_url');
 

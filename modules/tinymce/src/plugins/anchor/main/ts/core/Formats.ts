@@ -1,4 +1,5 @@
 import Editor from 'tinymce/core/api/Editor';
+import { Format } from 'tinymce/core/fmt/FormatTypes';
 
 import * as Utils from './Utils';
 
@@ -12,7 +13,7 @@ const registerFormats = (editor: Editor): void => {
     attributes: {
       id: '%value'
     },
-    onmatch: (node: Node, _fmt, _itemName: string) => {
+    onmatch: (node: Node, _fmt: Format, _itemName: string) => {
       return Utils.isNamedAnchor(node);
     }
   });

@@ -1,5 +1,6 @@
 import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import EditorSelection from 'tinymce/core/api/dom/Selection';
 import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Editor from 'tinymce/core/api/Editor';
@@ -19,17 +20,21 @@ type LinkAttrs = {
   target?: string | null;
 };
 
-const isAnchor = (elm: Node): elm is HTMLAnchorElement => elm && elm.nodeName.toLowerCase() === 'a';
-const isLink = (elm: Node): elm is HTMLAnchorElement => isAnchor(elm) && !!getHref(elm);
+const isAnchor = (elm: Node | null | undefined): elm is HTMLAnchorElement =>
+  Type.isNonNullable(elm) && elm.nodeName.toLowerCase() === 'a';
+
+const isLink = (elm: Node | null | undefined): elm is HTMLAnchorElement =>
+  isAnchor(elm) && !!getHref(elm);
 
 const collectNodesInRange = <T extends Node>(rng: Range, predicate: (node: Node) => node is T): T[] => {
   if (rng.collapsed) {
     return [];
   } else {
     const contents = rng.cloneContents();
-    const walker = new DomTreeWalker(contents.firstChild, contents);
+    const firstChild = contents.firstChild as Node;
+    const walker = new DomTreeWalker(firstChild, contents);
     const elements: T[] = [];
-    let current: Node = contents.firstChild;
+    let current: Node | null | undefined = firstChild;
     do {
       if (predicate(current)) {
         elements.push(current);
@@ -44,11 +49,10 @@ const hasProtocol = (url: string): boolean =>
 
 const getHref = (elm: Element): string => {
   // Returns the real href value not the resolved a.href value
-  const href = elm.getAttribute('data-mce-href');
-  return href ? href : elm.getAttribute('href');
+  return elm.getAttribute('data-mce-href') ?? elm.getAttribute('href') ?? '';
 };
 
-const applyRelTargetRules = (rel: string, isUnsafe: boolean): string => {
+const applyRelTargetRules = (rel: string | null | undefined, isUnsafe: boolean): string => {
   const rules = [ 'noopener' ];
   const rels = rel ? rel.split(/\s+/) : [];
 
@@ -84,7 +88,7 @@ const isInAnchor = (editor: Editor, selectedElm?: Element): boolean =>
 const getAnchorText = (selection: EditorSelection, anchorElm: Optional<HTMLAnchorElement>): string => {
   const text = anchorElm.fold(
     () => selection.getContent({ format: 'text' }),
-    (anchorElm) => anchorElm.innerText || anchorElm.textContent
+    (anchorElm) => anchorElm.innerText || anchorElm.textContent || ''
   );
   return trimCaretContainers(text);
 };
@@ -98,7 +102,8 @@ const hasLinksInSelection = (rng: Range): boolean =>
 const isOnlyTextSelected = (editor: Editor): boolean => {
   // Allow anchor and inline text elements to be in the selection but nothing else
   const inlineTextElements = editor.schema.getTextInlineElements();
-  const isElement = (elm: Node): elm is Element => elm.nodeType === 1 && !isAnchor(elm) && !Obj.has(inlineTextElements, elm.nodeName.toLowerCase());
+  const isElement = (elm: Node): elm is Element =>
+    elm.nodeType === 1 && !isAnchor(elm) && !Obj.has(inlineTextElements, elm.nodeName.toLowerCase());
 
   // Collect all non inline text elements in the range and make sure no elements were found
   const elements = collectNodesInRange(editor.selection.getRng(), isElement);
@@ -106,7 +111,7 @@ const isOnlyTextSelected = (editor: Editor): boolean => {
 };
 
 const isImageFigure = (elm: Element | null): elm is HTMLElement =>
-  elm && elm.nodeName === 'FIGURE' && /\bimage\b/i.test(elm.className);
+  Type.isNonNullable(elm) && elm.nodeName === 'FIGURE' && /\bimage\b/i.test(elm.className);
 
 const getLinkAttrs = (data: LinkDialogOutput): LinkAttrs => {
   const attrs: Array<keyof Omit<LinkAttrs, 'href'>> = [ 'title', 'rel', 'class', 'target' ];
@@ -161,15 +166,16 @@ const updateLink = (editor: Editor, anchorElm: HTMLAnchorElement, text: Optional
 };
 
 const createLink = (editor: Editor, selectedElm: Element, text: Optional<string>, linkAttrs: LinkAttrs): void => {
+  const dom = editor.dom;
   if (isImageFigure(selectedElm)) {
-    linkImageFigure(editor, selectedElm, linkAttrs);
+    linkImageFigure(dom, selectedElm, linkAttrs);
   } else {
     text.fold(
       () => {
         editor.execCommand('mceInsertLink', false, linkAttrs);
       },
       (text) => {
-        editor.insertContent(editor.dom.createHTML('a', linkAttrs, editor.dom.encode(text)));
+        editor.insertContent(dom.createHTML('a', linkAttrs, dom.encode(text)));
       }
     );
   }
@@ -276,17 +282,17 @@ const unlinkImageFigure = (editor: Editor, fig: Element): void => {
   if (img) {
     const a = editor.dom.getParents(img, 'a[href]', fig)[0];
     if (a) {
-      a.parentNode.insertBefore(img, a);
+      a.parentNode?.insertBefore(img, a);
       editor.dom.remove(a);
     }
   }
 };
 
-const linkImageFigure = (editor: Editor, fig: Element, attrs: Record<string, string>) => {
-  const img = editor.dom.select('img', fig)[0];
+const linkImageFigure = (dom: DOMUtils, fig: Element, attrs: Record<string, string | null>) => {
+  const img = dom.select('img', fig)[0];
   if (img) {
-    const a = editor.dom.create('a', attrs);
-    img.parentNode.insertBefore(a, img);
+    const a = dom.create('a', attrs);
+    img.parentNode?.insertBefore(a, img);
     a.appendChild(img);
   }
 };

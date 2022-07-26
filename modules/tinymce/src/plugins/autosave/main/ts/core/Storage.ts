@@ -24,7 +24,7 @@ const isEmpty = (editor: Editor, html?: string): boolean => {
 };
 
 const hasDraft = (editor: Editor): boolean => {
-  const time = parseInt(LocalStorage.getItem(Options.getAutoSavePrefix(editor) + 'time'), 10) || 0;
+  const time = parseInt(LocalStorage.getItem(Options.getAutoSavePrefix(editor) + 'time') ?? '0', 10) || 0;
 
   if (new Date().getTime() - time > Options.getAutoSaveRetention(editor)) {
     removeDraft(editor, false);
@@ -59,7 +59,7 @@ const restoreDraft = (editor: Editor): void => {
   const prefix = Options.getAutoSavePrefix(editor);
 
   if (hasDraft(editor)) {
-    editor.setContent(LocalStorage.getItem(prefix + 'draft'), { format: 'raw' });
+    editor.setContent(LocalStorage.getItem(prefix + 'draft') ?? '', { format: 'raw' });
     Events.fireRestoreDraft(editor);
   }
 };

@@ -33,27 +33,29 @@ export interface ImageDialogInfo {
   readonly prependURL: Optional<string>;
 }
 
+export interface ImageMeta {
+  text?: string;
+  width?: string;
+  height?: string;
+  alt?: string | null;
+  title?: string;
+  class?: string;
+  style?: string;
+  caption?: boolean;
+  vspace?: string;
+  border?: string;
+  hspace?: string;
+  borderstyle?: string;
+  isDecorative?: boolean;
+}
+
 export interface ImageDialogData {
   src: {
     value: string;
-    meta?: {
-      text?: string;
-      width?: string;
-      height?: string;
-      alt?: string;
-      title?: string;
-      class?: string;
-      style?: string;
-      caption?: boolean;
-      vspace?: string;
-      border?: string;
-      hspace?: string;
-      borderstyle?: string;
-      isDecorative?: boolean;
-    };
+    meta?: ImageMeta;
   };
   images: string;
-  alt: string;
+  alt: string | null;
   title: string;
   dimensions: {
     width: string;

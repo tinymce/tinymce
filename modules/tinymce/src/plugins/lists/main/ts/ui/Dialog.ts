@@ -29,7 +29,7 @@ const open = (editor: Editor): void => {
     initialData: {
       start: parseDetail({
         start: editor.dom.getAttrib(currentList, 'start', '1'),
-        listStyleType: Optional.some(editor.dom.getStyle(currentList, 'list-style-type'))
+        listStyleType: Optional.from(editor.dom.getStyle(currentList, 'list-style-type'))
       })
     },
     buttons: [

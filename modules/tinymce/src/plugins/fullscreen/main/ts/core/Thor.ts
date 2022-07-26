@@ -53,7 +53,7 @@ const restoreStyles = (dom: DOMUtils): void => {
   const clobberedEls = SelectorFilter.all('[' + attr + ']');
   Arr.each(clobberedEls, (element) => {
     const restore = Attribute.get(element, attr);
-    if (restore !== 'no-styles') {
+    if (restore && restore !== 'no-styles') {
       Css.setAll(element, dom.parseStyle(restore));
     } else {
       Attribute.remove(element, 'style');

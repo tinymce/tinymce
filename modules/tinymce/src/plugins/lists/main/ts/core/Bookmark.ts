@@ -1,5 +1,6 @@
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
+import * as NodeType from './NodeType';
 import * as Range from './RangeUtils';
 
 const DOM = DOMUtils.DOM;
@@ -29,7 +30,7 @@ const createBookmark = (rng: Range): Bookmark => {
     let container = rng[start ? 'startContainer' : 'endContainer'];
     let offset = rng[start ? 'startOffset' : 'endOffset'];
 
-    if (container.nodeType === 1) {
+    if (NodeType.isElement(container)) {
       const offsetNode = DOM.create('span', { 'data-mce-type': 'bookmark' });
 
       if (container.hasChildNodes()) {
@@ -63,10 +64,9 @@ const createBookmark = (rng: Range): Bookmark => {
 
 const resolveBookmark = (bookmark: Bookmark): Range => {
   const restoreEndPoint = (start?: boolean) => {
-    let node: Node;
-
     const nodeIndex = (container: Node): number => {
-      let node = container.parentNode.firstChild, idx = 0;
+      let node = container.parentNode?.firstChild;
+      let idx = 0;
 
       while (node) {
         if (node === container) {
@@ -74,7 +74,7 @@ const resolveBookmark = (bookmark: Bookmark): Range => {
         }
 
         // Skip data-mce-type=bookmark nodes
-        if (node.nodeType !== 1 || (node as Element).getAttribute('data-mce-type') !== 'bookmark') {
+        if (!NodeType.isElement(node) || node.getAttribute('data-mce-type') !== 'bookmark') {
           idx++;
         }
 
@@ -84,14 +84,15 @@ const resolveBookmark = (bookmark: Bookmark): Range => {
       return -1;
     };
 
-    let container = node = bookmark[start ? 'startContainer' : 'endContainer'];
+    let container: Node | null | undefined = bookmark[start ? 'startContainer' : 'endContainer'];
     let offset = bookmark[start ? 'startOffset' : 'endOffset'];
 
     if (!container) {
       return;
     }
 
-    if (container.nodeType === 1) {
+    if (NodeType.isElement(container) && container.parentNode) {
+      const node = container;
       offset = nodeIndex(container);
       container = container.parentNode;
       DOM.remove(node);
@@ -102,7 +103,7 @@ const resolveBookmark = (bookmark: Bookmark): Range => {
     }
 
     bookmark[start ? 'startContainer' : 'endContainer'] = container;
-    bookmark[start ? 'startOffset' : 'endOffset'] = offset;
+    bookmark[start ? 'startOffset' : 'endOffset'] = offset as number;
   };
 
   restoreEndPoint(true);
@@ -113,7 +114,7 @@ const resolveBookmark = (bookmark: Bookmark): Range => {
   rng.setStart(bookmark.startContainer, bookmark.startOffset);
 
   if (bookmark.endContainer) {
-    rng.setEnd(bookmark.endContainer, bookmark.endOffset);
+    rng.setEnd(bookmark.endContainer, bookmark.endOffset as number);
   }
 
   return Range.normalizeRange(rng);
