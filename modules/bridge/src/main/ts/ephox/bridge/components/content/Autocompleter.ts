@@ -90,4 +90,4 @@ export const createAutocompleterItem = (spec: AutocompleterItemSpec): Result<Aut
 
 export const createAutocompleter = (spec: AutocompleterSpec): Result<Autocompleter, StructureSchema.SchemaError<any>> =>
   // TODO: TINY-8929: Remove 'trigger' fallback to 'ch'
-  StructureSchema.asRaw<Autocompleter>('Autocompleter', autocompleterSchema, { ...spec, trigger: Obj.get(spec, 'trigger').getOr(spec.ch) });
+  StructureSchema.asRaw<Autocompleter>('Autocompleter', autocompleterSchema, { trigger: spec.ch, ...spec });
