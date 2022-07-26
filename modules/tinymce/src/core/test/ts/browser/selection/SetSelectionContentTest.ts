@@ -285,13 +285,13 @@ describe('browser.tinymce.selection.SetSelectionContentTest', () => {
   it('TINY-3254: The SetContent event should contain the cleaned content', () => {
     const editor = hook.editor();
 
-    let lastSetContent: SetContentEvent;
+    let lastSetContent: SetContentEvent | undefined;
     editor.on('SetContent', (e) => {
       lastSetContent = e;
     });
 
     SetSelectionContent.setContent(editor, '<img src="" onload="alert(1)">');
 
-    assert.equal(lastSetContent.content, '<img src="">');
+    assert.equal(lastSetContent?.content, '<img src="">');
   });
 });

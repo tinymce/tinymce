@@ -4,7 +4,7 @@ import { assert } from 'chai';
 import AstNode, { Attributes } from 'tinymce/core/api/html/Node';
 
 describe('browser.tinymce.core.html.NodeTest', () => {
-  const emptyAttributes = [] as Attributes;
+  const emptyAttributes = [] as unknown as Attributes;
 
   it('construction', () => {
     let node;
@@ -20,7 +20,7 @@ describe('browser.tinymce.core.html.NodeTest', () => {
     node = new AstNode('b', 1);
     assert.equal(node.name, 'b');
     assert.equal(node.type, 1);
-    assert.deepEqual(node.attributes, []);
+    assert.deepEqual(node.attributes, emptyAttributes);
 
     node = new AstNode('#pi', 7);
     assert.equal(node.name, '#pi');
@@ -42,11 +42,11 @@ describe('browser.tinymce.core.html.NodeTest', () => {
   it('append inside empty node', () => {
     const root = new AstNode('#frag', 11);
     const node = root.append(new AstNode('b', 1));
-    assert.equal(root.firstChild.parent === root, true);
-    assert.isUndefined(root.firstChild.next);
-    assert.isUndefined(root.firstChild.prev);
-    assert.isUndefined(root.firstChild.firstChild);
-    assert.isUndefined(root.firstChild.lastChild);
+    assert.equal(root.firstChild?.parent === root, true);
+    assert.isUndefined(root.firstChild?.next);
+    assert.isUndefined(root.firstChild?.prev);
+    assert.isUndefined(root.firstChild?.firstChild);
+    assert.isUndefined(root.firstChild?.lastChild);
     assert.equal(node.parent === root, true);
     assert.isUndefined(node.next);
     assert.isUndefined(node.prev);
@@ -58,13 +58,13 @@ describe('browser.tinymce.core.html.NodeTest', () => {
     const root = new AstNode('#frag', 11);
     const node2 = root.append(new AstNode('a', 1));
     const node = root.append(new AstNode('b', 1));
-    assert.strictEqual(root.firstChild.parent, root, 'root.firstChild.parent === root');
+    assert.strictEqual(root.firstChild?.parent, root, 'root.firstChild.parent === root');
     assert.strictEqual(root.firstChild, node2, 'root.firstChild');
     assert.strictEqual(root.lastChild, node, 'root.firstChild');
-    assert.strictEqual(root.firstChild.next, node, 'root.firstChild.next');
-    assert.isUndefined(root.firstChild.prev, 'root.firstChild.prev');
-    assert.isUndefined(root.firstChild.firstChild, 'root.firstChild.firstChild');
-    assert.isUndefined(root.firstChild.lastChild, 'root.firstChild.lastChild');
+    assert.strictEqual(root.firstChild?.next, node, 'root.firstChild.next');
+    assert.isUndefined(root.firstChild?.prev, 'root.firstChild.prev');
+    assert.isUndefined(root.firstChild?.firstChild, 'root.firstChild.firstChild');
+    assert.isUndefined(root.firstChild?.lastChild, 'root.firstChild.lastChild');
     assert.strictEqual(node2.parent, root, 'node2.parent === root');
     assert.strictEqual(node2.next, node, 'node2.next');
     assert.isUndefined(node2.prev, 'node2.prev');
@@ -98,14 +98,16 @@ describe('browser.tinymce.core.html.NodeTest', () => {
 
   it('remove single child', () => {
     const root = new AstNode('#frag', 11);
-    root.append(new AstNode('p', 1));
-    const node = root.firstChild.remove();
+    const p = new AstNode('p', 1);
+    root.append(p);
+
+    const removedNode = p.remove();
     assert.isUndefined(root.firstChild);
     assert.isUndefined(root.lastChild);
-    assert.isNull(node.parent);
-    assert.isNull(node.next);
-    assert.isNull(node.prev);
-    assert.equal(node.name, 'p');
+    assert.isNull(removedNode.parent);
+    assert.isNull(removedNode.next);
+    assert.isNull(removedNode.prev);
+    assert.equal(removedNode.name, 'p');
   });
 
   it('remove middle node', () => {
@@ -240,16 +242,16 @@ describe('browser.tinymce.core.html.NodeTest', () => {
     node.attr('attr1', 'value1');
     assert.equal(node.attr('attr1'), 'value1');
     assert.isUndefined(node.attr('attr2'));
-    assert.deepEqual(node.attributes, [{ name: 'attr1', value: 'value1' }]);
-    assert.deepEqual(node.attributes.map as Record<string, string>, { attr1: 'value1' });
+    assert.deepEqual(node.attributes, [{ name: 'attr1', value: 'value1' }] as unknown as Attributes);
+    assert.deepEqual(node.attributes?.map as Record<string, string>, { attr1: 'value1' });
 
     node = new AstNode('b', 1);
     assert.deepEqual(node.attributes, emptyAttributes);
     node.attr('attr1', 'value1');
     node.attr('attr1', 'valueX');
     assert.equal(node.attr('attr1'), 'valueX');
-    assert.deepEqual(node.attributes, [{ name: 'attr1', value: 'valueX' }]);
-    assert.deepEqual(node.attributes.map as Record<string, string>, { attr1: 'valueX' });
+    assert.deepEqual(node.attributes, [{ name: 'attr1', value: 'valueX' }] as unknown as Attributes);
+    assert.deepEqual(node.attributes?.map as Record<string, string>, { attr1: 'valueX' });
 
     node = new AstNode('b', 1);
     assert.deepEqual(node.attributes, emptyAttributes);
@@ -257,8 +259,8 @@ describe('browser.tinymce.core.html.NodeTest', () => {
     node.attr('attr2', 'value2');
     assert.equal(node.attr('attr1'), 'value1');
     assert.equal(node.attr('attr2'), 'value2');
-    assert.deepEqual(node.attributes, [{ name: 'attr1', value: 'value1' }, { name: 'attr2', value: 'value2' }]);
-    assert.deepEqual(node.attributes.map as Record<string, string>, { attr1: 'value1', attr2: 'value2' });
+    assert.deepEqual(node.attributes, [{ name: 'attr1', value: 'value1' }, { name: 'attr2', value: 'value2' }] as unknown as Attributes);
+    assert.deepEqual(node.attributes?.map as Record<string, string>, { attr1: 'value1', attr2: 'value2' });
 
     node = new AstNode('b', 1);
     assert.deepEqual(node.attributes, emptyAttributes);
@@ -266,17 +268,17 @@ describe('browser.tinymce.core.html.NodeTest', () => {
     node.attr('attr1', null);
     assert.isUndefined(node.attr('attr1'));
     assert.deepEqual(node.attributes, emptyAttributes);
-    assert.deepEqual(node.attributes.map as Record<string, string>, {});
+    assert.deepEqual(node.attributes?.map as Record<string, string>, {});
 
     node = new AstNode('b', 1);
     node.attr({ a: '1', b: '2' });
-    assert.deepEqual(node.attributes, [{ name: 'a', value: '1' }, { name: 'b', value: '2' }]);
-    assert.deepEqual(node.attributes.map as Record<string, string>, { a: '1', b: '2' });
+    assert.deepEqual(node.attributes, [{ name: 'a', value: '1' }, { name: 'b', value: '2' }] as unknown as Attributes);
+    assert.deepEqual(node.attributes?.map as Record<string, string>, { a: '1', b: '2' });
 
     node = new AstNode('b', 1);
-    node.attr(null);
+    node.attr(null as any);
     assert.deepEqual(node.attributes, emptyAttributes);
-    assert.deepEqual(node.attributes.map as Record<string, string>, {});
+    assert.deepEqual(node.attributes?.map as Record<string, string>, {});
   });
 
   it('clone', () => {
@@ -311,8 +313,8 @@ describe('browser.tinymce.core.html.NodeTest', () => {
     clone = node.clone();
     assert.equal(clone.name, 'b');
     assert.equal(clone.type, 1);
-    assert.deepEqual(clone.attributes, [{ name: 'class', value: 'class' }, { name: 'title', value: 'title' }]);
-    assert.deepEqual(clone.attributes.map as Record<string, string>, { class: 'class', title: 'title' });
+    assert.deepEqual(clone.attributes, [{ name: 'class', value: 'class' }, { name: 'title', value: 'title' }] as unknown as Attributes);
+    assert.deepEqual(clone.attributes?.map as Record<string, string>, { class: 'class', title: 'title' });
   });
 
   it('unwrap', () => {
@@ -379,7 +381,7 @@ describe('browser.tinymce.core.html.NodeTest', () => {
     assert.isTrue(node1.isEmpty({ img: 1 }), 'Is empty 5');
 
     root = new AstNode('#frag', 11);
-    node1 = root.append(new AstNode('a', 1)).attr('name', 'x');
+    root.append(new AstNode('a', 1)).attr('name', 'x');
     assert.isFalse(root.isEmpty({ img: 1 }), 'Contains anchor with name attribute.');
 
     const isSpan = (node: AstNode) => {
@@ -387,11 +389,11 @@ describe('browser.tinymce.core.html.NodeTest', () => {
     };
 
     root = new AstNode('#frag', 11);
-    node1 = root.append(new AstNode('span', 1));
+    root.append(new AstNode('span', 1));
     assert.isFalse(root.isEmpty({ img: 1 }, {}, isSpan), 'Should be false since the predicate says true.');
 
     root = new AstNode('#frag', 11);
-    node1 = root.append(new AstNode('b', 1));
+    root.append(new AstNode('b', 1));
     assert.isTrue(root.isEmpty({ img: 1 }, {}, isSpan), 'Should be true since the predicate says false.');
   });
 

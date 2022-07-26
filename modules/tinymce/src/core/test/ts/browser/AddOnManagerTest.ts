@@ -47,7 +47,7 @@ const unpatch = (proto: any, name?: string): void => {
 };
 
 describe('browser.tinymce.core.AddOnManagerTest', () => {
-  let languagePackUrl: string;
+  let languagePackUrl: string | null;
 
   const getLanguagePackUrl = (code: string, languages?: string) => {
     languagePackUrl = null;

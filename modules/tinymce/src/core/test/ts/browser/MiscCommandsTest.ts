@@ -20,19 +20,22 @@ describe('browser.tinymce.core.MiscCommandsTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, []);
 
+  const isTextNode = (node: Node): node is Text =>
+    node.nodeType === 3;
+
   const normalizeRng = (rng: Range) => {
-    if (rng.startContainer.nodeType === 3) {
+    if (isTextNode(rng.startContainer)) {
       if (rng.startOffset === 0) {
         rng.setStartBefore(rng.startContainer);
-      } else if (rng.startOffset >= rng.startContainer.nodeValue.length - 1) {
+      } else if (rng.startOffset >= rng.startContainer.data.length - 1) {
         rng.setStartAfter(rng.startContainer);
       }
     }
 
-    if (rng.endContainer.nodeType === 3) {
+    if (isTextNode(rng.endContainer)) {
       if (rng.endOffset === 0) {
         rng.setEndBefore(rng.endContainer);
-      } else if (rng.endOffset >= rng.endContainer.nodeValue.length - 1) {
+      } else if (rng.endOffset >= rng.endContainer.data.length - 1) {
         rng.setEndAfter(rng.endContainer);
       }
     }
@@ -46,14 +49,14 @@ describe('browser.tinymce.core.MiscCommandsTest', () => {
 
     editor.setContent('<p>123</p>');
     rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('p')[0].firstChild, 1);
-    rng.setEnd(editor.dom.select('p')[0].firstChild, 2);
+    rng.setStart(editor.dom.select('p')[0].firstChild as Text, 1);
+    rng.setEnd(editor.dom.select('p')[0].firstChild as Text, 2);
     editor.selection.setRng(rng);
     editor.execCommand('InsertHorizontalRule');
     assert.equal(editor.getContent(), '<p>1</p><hr><p>3</p>');
     rng = normalizeRng(editor.selection.getRng());
     assert.isTrue(rng.collapsed);
-    Assertions.assertDomEq('Nodes are not equal', SugarElement.fromDom(editor.getBody().lastChild), SugarElement.fromDom(rng.startContainer));
+    Assertions.assertDomEq('Nodes are not equal', SugarElement.fromDom(editor.getBody().lastChild as HTMLParagraphElement), SugarElement.fromDom(rng.startContainer));
     assert.equal(rng.startContainer.nodeName, 'P');
     assert.equal(rng.startOffset, 0);
     assert.equal(rng.endContainer.nodeName, 'P');

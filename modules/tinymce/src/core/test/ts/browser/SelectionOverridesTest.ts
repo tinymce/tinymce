@@ -167,13 +167,13 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
     const rng = document.createRange();
     const firstSpan = editor.dom.select('span[contenteditable=false]')[0];
     const secondSpan = editor.dom.select('span[contenteditable=false]')[1];
-    const p = secondSpan.parentNode;
+    const p = secondSpan.parentNode as HTMLParagraphElement;
     if (firstSpan.previousSibling) {
       p.removeChild(firstSpan.previousSibling);
     }
     p.appendChild(document.createTextNode(Zwsp.ZWSP));
 
-    rng.setEnd(secondSpan.nextSibling, 1);
+    rng.setEnd(secondSpan.nextSibling as Text, 1);
     rng.setStartBefore(firstSpan);
 
     editor.selection.setRng(rng, false);

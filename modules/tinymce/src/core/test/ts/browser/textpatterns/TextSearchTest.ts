@@ -111,11 +111,11 @@ describe('browser.tinymce.core.textpatterns.TextSearchTest', () => {
     editor.setContent('<p>def</p><p>*<a href="#">a</a>bc</p>');
     TinySelections.setCursor(editor, [ 1, 2 ], 2);
 
-    const asteriskNode = editorBody.childNodes[1].firstChild;
-    const anchorNode = asteriskNode.nextSibling.firstChild;
-    const asterisk = repeatLeftUntil(editor, '*');
+    const asteriskNode = editorBody.childNodes[1].firstChild as Text;
+    const anchorNode = asteriskNode.nextSibling?.firstChild as Text;
+    const asterisk = repeatLeftUntil(editor, '*') as Text;
     Assertions.assertDomEq('Repeat left until asterisk found', SugarElement.fromDom(asteriskNode), SugarElement.fromDom(asterisk));
-    const anchor = repeatLeftUntil(editor, 'a');
+    const anchor = repeatLeftUntil(editor, 'a') as Text;
     Assertions.assertDomEq('Repeat left until anchor found', SugarElement.fromDom(anchorNode), SugarElement.fromDom(anchor));
     const boundary = repeatLeftUntil(editor, 'def');
     assert.isNull(boundary, 'Repeat left until block boundary found');
@@ -127,11 +127,11 @@ describe('browser.tinymce.core.textpatterns.TextSearchTest', () => {
     editor.setContent('<p>*<a href="#">a</a>bc</p><p>def</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
 
-    const contentNode = editorBody.childNodes[0].lastChild;
-    const anchorNode = contentNode.previousSibling.firstChild;
-    const asterisk = repeatRightUntil(editor, 'bc');
+    const contentNode = editorBody.childNodes[0].lastChild as Text;
+    const anchorNode = contentNode.previousSibling?.firstChild as Text;
+    const asterisk = repeatRightUntil(editor, 'bc') as Text;
     Assertions.assertDomEq('Repeat right until bc found', SugarElement.fromDom(contentNode), SugarElement.fromDom(asterisk));
-    const anchor = repeatRightUntil(editor, 'a');
+    const anchor = repeatRightUntil(editor, 'a') as Text;
     Assertions.assertDomEq('Repeat right until anchor found', SugarElement.fromDom(anchorNode), SugarElement.fromDom(anchor));
     const boundary = repeatRightUntil(editor, 'def');
     assert.isNull(boundary, 'Repeat right until block boundary found');

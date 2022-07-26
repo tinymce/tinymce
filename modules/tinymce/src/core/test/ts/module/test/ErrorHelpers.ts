@@ -1,9 +1,14 @@
-import { Step, Waiter } from '@ephox/agar';
+import { Waiter } from '@ephox/agar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
-export default () => {
+export interface ErrorHelper {
+  readonly pAssertErrorLogged: (label: string, message: string) => Promise<void>;
+  readonly trackErrors: (editor: Editor, name: string) => void;
+}
+
+export default (): ErrorHelper => {
   const errors: string[] = [];
 
   const handleError = (e: { message: string }) => {
@@ -14,20 +19,12 @@ export default () => {
     editor.on(name, handleError);
   };
 
-  const sAssertErrorLogged = (label: string, message: string) => Waiter.sTryUntil(label,
-    Step.sync(() => {
-      assert.include(errors, message, label);
-    }),
-    10, 1000
-  );
-
   const pAssertErrorLogged = (label: string, message: string) => Waiter.pTryUntil(label, () => {
     assert.include(errors, message, label);
   }, 10, 1000);
 
   return {
     pAssertErrorLogged,
-    sAssertErrorLogged,
     trackErrors
   };
 };

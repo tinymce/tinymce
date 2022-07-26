@@ -16,7 +16,7 @@ const setContentAndFireKeystroke = (key: number) => {
   };
 };
 
-const setContentAndPressSpace = (editor: Editor, content: string, offset = content.length, elementPath = [ 0, 0 ], blockElement = 'p') => {
+const setContentAndPressSpace = (editor: Editor, content: string, offset = content.length, elementPath = [ 0, 0 ], blockElement = 'p'): void => {
   editor.setContent(`<${blockElement}>${content}</${blockElement}>`);
   editor.focus();
   TinySelections.setCursor(editor, elementPath, offset);
@@ -24,7 +24,7 @@ const setContentAndPressSpace = (editor: Editor, content: string, offset = conte
   TinyContentActions.keyup(editor, Keys.space());
 };
 
-const bodyStruct = (children: StructAssert[]) => {
+const bodyStruct = (children: StructAssert[]): StructAssert => {
   return ApproxStructure.build((s, _str) => {
     return s.element('body', {
       children
@@ -32,7 +32,7 @@ const bodyStruct = (children: StructAssert[]) => {
   });
 };
 
-const inlineStructHelper = (tag: string, content: string) => {
+const inlineStructHelper = (tag: string, content: string): StructAssert => {
   return ApproxStructure.build((s, str) => {
     return bodyStruct([
       s.element('p', {
@@ -49,7 +49,7 @@ const inlineStructHelper = (tag: string, content: string) => {
   });
 };
 
-const inlineBlockStructHelper = (tag: string, content: string) => {
+const inlineBlockStructHelper = (tag: string, content: string): StructAssert => {
   return ApproxStructure.build((s, str) => {
     return bodyStruct([
       s.element('p', {
@@ -67,7 +67,7 @@ const inlineBlockStructHelper = (tag: string, content: string) => {
   });
 };
 
-const blockStructHelper = (tag: string, content: string) => {
+const blockStructHelper = (tag: string, content: string): StructAssert => {
   return ApproxStructure.build((s, str) => {
     return bodyStruct([
       s.element(tag, {
@@ -80,7 +80,7 @@ const blockStructHelper = (tag: string, content: string) => {
   });
 };
 
-const forcedRootBlockInlineStructHelper = (tag: string, content: string) => {
+const forcedRootBlockInlineStructHelper = (tag: string, content: string): StructAssert => {
   return ApproxStructure.build((s, str) => {
     return bodyStruct([
       s.element(tag, {
@@ -95,7 +95,7 @@ const forcedRootBlockInlineStructHelper = (tag: string, content: string) => {
   });
 };
 
-const forcedRootBlockStructHelper = (tag: string, content: string) => {
+const forcedRootBlockStructHelper = (tag: string, content: string): StructAssert => {
   return ApproxStructure.build((s, str) => {
     return bodyStruct([
       s.element(tag, {
@@ -111,7 +111,7 @@ const forcedRootBlockStructHelper = (tag: string, content: string) => {
 
 const setContentAndPressEnter = setContentAndFireKeystroke(Keys.enter());
 
-const getPatternSetFor = (hook: TinyHooks.Hook<Editor>) => Thunk.cached((): PatternSet => {
+const getPatternSetFor = (hook: TinyHooks.Hook<Editor>): () => PatternSet => Thunk.cached(() => {
   const editor = hook.editor();
   const rawPatterns = Options.getTextPatterns(editor);
   const dynamicPatternsLookup = Options.getTextPatternsLookup(editor);

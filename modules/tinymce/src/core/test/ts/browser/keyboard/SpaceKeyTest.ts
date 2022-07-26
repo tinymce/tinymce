@@ -17,7 +17,7 @@ describe('browser.tinymce.core.keyboard.SpaceKeyTest', () => {
 
   context('Space key around inline boundary elements', () => {
     it('Press space at beginning of inline boundary inserting nbsp', () => {
-      const inputEvents: Array<{ inputType: string; data: string }> = [];
+      const inputEvents: Array<{ inputType: string; data: string | null }> = [];
       const editor = hook.editor();
       const collect = ({ inputType, data }: InputEvent) => {
         inputEvents.push({ inputType, data });

@@ -6,24 +6,24 @@ import Tools from 'tinymce/core/api/util/Tools';
 
 describe('browser.tinymce.core.geom.RectTest', () => {
   it('relativePosition', () => {
-    const sourceRect = Rect.create(0, 0, 20, 30),
-      targetRect = Rect.create(10, 20, 40, 50),
-      tests = [
-        // Only test a few of them all would be 81
-        [ 'tl-tl', 10, 20, 20, 30 ],
-        [ 'tc-tc', 20, 20, 20, 30 ],
-        [ 'tr-tr', 30, 20, 20, 30 ],
-        [ 'cl-cl', 10, 30, 20, 30 ],
-        [ 'cc-cc', 20, 30, 20, 30 ],
-        [ 'cr-cr', 30, 30, 20, 30 ],
-        [ 'bl-bl', 10, 40, 20, 30 ],
-        [ 'bc-bc', 20, 40, 20, 30 ],
-        [ 'br-br', 30, 40, 20, 30 ],
-        [ 'tr-tl', 50, 20, 20, 30 ],
-        [ 'br-bl', 50, 40, 20, 30 ]
-      ];
+    const sourceRect = Rect.create(0, 0, 20, 30);
+    const targetRect = Rect.create(10, 20, 40, 50);
+    const tests: Array<[ string, number, number, number, number ]> = [
+      // Only test a few of them all would be 81
+      [ 'tl-tl', 10, 20, 20, 30 ],
+      [ 'tc-tc', 20, 20, 20, 30 ],
+      [ 'tr-tr', 30, 20, 20, 30 ],
+      [ 'cl-cl', 10, 30, 20, 30 ],
+      [ 'cc-cc', 20, 30, 20, 30 ],
+      [ 'cr-cr', 30, 30, 20, 30 ],
+      [ 'bl-bl', 10, 40, 20, 30 ],
+      [ 'bc-bc', 20, 40, 20, 30 ],
+      [ 'br-br', 30, 40, 20, 30 ],
+      [ 'tr-tl', 50, 20, 20, 30 ],
+      [ 'br-bl', 50, 40, 20, 30 ]
+    ];
 
-    Tools.each(tests, (item: [ string, number, number, number, number ]) => {
+    Tools.each(tests, (item) => {
       assert.deepEqual(
         Rect.relativePosition(sourceRect, targetRect, item[0]),
         Rect.create(item[1], item[2], item[3], item[4]),
@@ -33,20 +33,20 @@ describe('browser.tinymce.core.geom.RectTest', () => {
   });
 
   it('findBestRelativePosition', () => {
-    const sourceRect = Rect.create(0, 0, 20, 30),
-      targetRect = Rect.create(10, 20, 40, 50),
-      tests = [
-        [[ 'tl-tl' ], 5, 15, 100, 100, 'tl-tl' ],
-        [[ 'tl-tl' ], 20, 30, 100, 100, null ],
-        [[ 'tl-tl', 'tr-tl' ], 20, 20, 100, 100, 'tr-tl' ],
-        [[ 'tl-bl', 'tr-tl', 'bl-tl' ], 10, 20, 40, 100, 'bl-tl' ]
-      ];
+    const sourceRect = Rect.create(0, 0, 20, 30);
+    const targetRect = Rect.create(10, 20, 40, 50);
+    const tests: Array<[ string[], number, number, number, number, string | null ]> = [
+      [[ 'tl-tl' ], 5, 15, 100, 100, 'tl-tl' ],
+      [[ 'tl-tl' ], 20, 30, 100, 100, null ],
+      [[ 'tl-tl', 'tr-tl' ], 20, 20, 100, 100, 'tr-tl' ],
+      [[ 'tl-bl', 'tr-tl', 'bl-tl' ], 10, 20, 40, 100, 'bl-tl' ]
+    ];
 
-    Tools.each(tests, (item: [ string[], number, number, number, number, string ]) => {
+    Tools.each(tests, (item) => {
       assert.equal(
         Rect.findBestRelativePosition(sourceRect, targetRect, Rect.create(item[1], item[2], item[3], item[4]), item[0]),
         item[5],
-        item[5]
+        String(item[5])
       );
     });
   });

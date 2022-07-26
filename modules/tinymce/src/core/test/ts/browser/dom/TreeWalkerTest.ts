@@ -10,7 +10,7 @@ describe('browser.tinymce.core.dom.TreeWalkerTest', () => {
   let nodes: Node[];
 
   before(() => {
-    const all = (node) => {
+    const all = (node: Node) => {
       let list = [ node ];
 
       if (node.hasChildNodes()) {
@@ -63,9 +63,9 @@ describe('browser.tinymce.core.dom.TreeWalkerTest', () => {
   it('next', () => {
     const walker = new DomTreeWalker(nodes[0], viewBlock.get());
 
-    const actualNodes = [ walker.current() ];
+    const actualNodes: Node[] = [ walker.current() as Node ];
     while ((walker.next())) {
-      actualNodes.push(walker.current());
+      actualNodes.push(walker.current() as Node);
     }
 
     assert.isTrue(compareNodeLists(nodes, actualNodes), 'Should be the same');
@@ -73,11 +73,10 @@ describe('browser.tinymce.core.dom.TreeWalkerTest', () => {
 
   it('prev2', () => {
     const walker = new DomTreeWalker(nodes[nodes.length - 1], viewBlock.get());
-    let actualNodes;
 
-    actualNodes = [ walker.current() ];
+    let actualNodes: Node[] = [ walker.current() as Node ];
     while ((walker.prev2())) {
-      actualNodes.push(walker.current());
+      actualNodes.push(walker.current() as Node);
     }
 
     actualNodes = actualNodes.reverse();
@@ -86,11 +85,10 @@ describe('browser.tinymce.core.dom.TreeWalkerTest', () => {
 
   it('prev2(shallow:true)', () => {
     const walker = new DomTreeWalker(nodes[nodes.length - 1], viewBlock.get());
-    let actualNodes;
 
-    actualNodes = [ walker.current() ];
+    let actualNodes: Node[] = [ walker.current() as Node ];
     while ((walker.prev2(true))) {
-      actualNodes.push(walker.current());
+      actualNodes.push(walker.current() as Node);
     }
 
     actualNodes = actualNodes.reverse();

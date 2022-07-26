@@ -40,7 +40,7 @@ const ViewBlock = (): ViewBlock => {
   };
 };
 
-export const bddSetup = (preventDuplicates?: boolean) => {
+export const bddSetup = (preventDuplicates?: boolean): ViewBlock => {
   const viewBlock = ViewBlock();
   let hasFailure = false;
 

@@ -2,7 +2,7 @@ import { after, afterEach, before, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { assert } from 'chai';
 
-import EventUtils from 'tinymce/core/api/dom/EventUtils';
+import EventUtils, { EventUtilsEvent } from 'tinymce/core/api/dom/EventUtils';
 
 describe('browser.tinymce.core.dom.EventUtilsTest', () => {
   const eventUtils = EventUtils.Event;
@@ -21,7 +21,9 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
 
   after(() => {
     const testDiv = document.querySelector('#testDiv');
-    testDiv.parentNode.removeChild(testDiv);
+    if (testDiv) {
+      testDiv.parentNode?.removeChild(testDiv);
+    }
   });
 
   afterEach(() => {
@@ -29,7 +31,7 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
   });
 
   it('unbind all', () => {
-    let result;
+    let result: Record<string, boolean>;
 
     eventUtils.bind(window, 'click', () => {
       result.click = true;
@@ -56,7 +58,7 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
   });
 
   it('unbind event', () => {
-    let result;
+    let result: Record<string, boolean>;
 
     eventUtils.bind(window, 'click', () => {
       result.click = true;
@@ -88,7 +90,7 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
   });
 
   it('unbind callback', () => {
-    let result;
+    let result: Record<string, boolean>;
 
     eventUtils.bind(window, 'click', () => {
       result.click = true;
@@ -117,13 +119,13 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
   });
 
   it('unbind multiple', () => {
+    const result: Record<string, boolean> = {};
     eventUtils.bind(window, 'mouseup mousedown click', (e) => {
       result[e.type] = true;
     });
 
     eventUtils.unbind(window, 'mouseup mousedown');
 
-    const result = {};
     eventUtils.dispatch(window, 'mouseup');
     eventUtils.dispatch(window, 'mousedown');
     eventUtils.dispatch(window, 'click');
@@ -131,11 +133,11 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
   });
 
   it('bind multiple', () => {
+    const result: Record<string, boolean> = {};
     eventUtils.bind(window, 'mouseup mousedown', (e) => {
       result[e.type] = true;
     });
 
-    const result = {};
     eventUtils.dispatch(window, 'mouseup');
     eventUtils.dispatch(window, 'mousedown');
     eventUtils.dispatch(window, 'click');
@@ -143,7 +145,7 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
   });
 
   it('bind/fire bubbling', () => {
-    let result;
+    let result: Record<string, boolean>;
 
     eventUtils.bind(window, 'click', () => {
       result.window = true;
@@ -187,7 +189,7 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
   });
 
   it('bubbling with prevented default', () => {
-    let result;
+    let result: Record<string, boolean>;
 
     eventUtils.bind(window, 'click', (e) => {
       result.window = true;
@@ -223,7 +225,7 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
       result.click3 = true;
     });
 
-    const result = {} as Record<string, any>;
+    const result: Record<string, boolean> = {};
     eventUtils.dispatch(window, 'click');
     assert.deepEqual(result, { click1: true, click2: true });
   });
@@ -242,13 +244,13 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
       e.stopPropagation();
     });
 
-    const result = {} as Record<string, any>;
+    const result: Record<string, boolean> = {};
     eventUtils.dispatch(document.getElementById('inner'), 'click');
     assert.deepEqual(result, { click3: true });
   });
 
   it('clean window', () => {
-    let result;
+    let result: Record<string, boolean>;
 
     eventUtils.bind(window, 'click', () => {
       result.click1 = true;
@@ -277,7 +279,7 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
   });
 
   it('clean document', () => {
-    let result;
+    let result: Record<string, boolean>;
 
     eventUtils.bind(window, 'click', () => {
       result.click1 = true;
@@ -310,7 +312,7 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
   });
 
   it('clean element', () => {
-    let result;
+    let result: Record<string, boolean>;
 
     eventUtils.bind(window, 'click', () => {
       result.click1 = true;
@@ -339,7 +341,7 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
   });
 
   it('mouseenter/mouseleave bind/unbind', () => {
-    let result = {};
+    let result: Record<string, boolean> = {};
 
     eventUtils.bind(document.body, 'mouseenter mouseleave', (e) => {
       result[e.type] = true;
@@ -400,7 +402,7 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
   });
 
   it('event states when event object is fired twice', () => {
-    const result = {};
+    const result: Record<string, boolean> = {};
 
     eventUtils.bind(window, 'keydown', (e) => {
       result[e.type] = true; e.preventDefault(); e.stopPropagation();
@@ -421,9 +423,9 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
   });
 
   it('unbind inside callback', () => {
-    let data;
+    let data: string;
 
-    const append = (value) => {
+    const append = (value: string) => {
       return () => {
         data += value;
       };
@@ -448,17 +450,17 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
   });
 
   it('ready/DOMContentLoaded (domLoaded = true)', () => {
-    let evt;
+    let evt: EventUtilsEvent<any> | undefined;
 
     eventUtils.bind(window, 'ready', (e) => {
       evt = e;
     });
-    assert.equal(evt.type, 'ready');
+    assert.equal(evt?.type, 'ready');
   });
 
   it('ready/DOMContentLoaded (document.readyState check)', () => {
     const doc = document as any;
-    let evt;
+    let evt: EventUtilsEvent<any> | undefined;
 
     try {
       doc.readyState = 'loading';

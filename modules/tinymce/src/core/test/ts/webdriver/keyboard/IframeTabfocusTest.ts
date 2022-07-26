@@ -19,12 +19,14 @@ describe('webdriver.tinymce.core.keyboard.IframeTabfocusTest', () => {
     const inputElem = document.createElement('input');
     inputElem.id = 'inputElem';
     inputElem.tabIndex = 2;
-    container.parentNode.insertBefore(inputElem, container);
+    container.parentNode?.insertBefore(inputElem, container);
   });
 
   after(() => {
     const inputElem = document.getElementById('inputElem');
-    inputElem.parentNode.removeChild(inputElem);
+    if (inputElem) {
+      inputElem.parentNode?.removeChild(inputElem);
+    }
   });
 
   it('TINY-8315: Add an input field outside the editor, focus on the editor, press the tab key and assert focus shifts to the input field', async () => {

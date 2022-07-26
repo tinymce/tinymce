@@ -14,7 +14,7 @@ describe('browser.tinymce.core.init.InitEditorIconTest', () => {
     icons: 'custom',
     icons_url: '/project/tinymce/src/core/test/assets/icons/custom/icons.js',
     base_url: '/project/tinymce/js/tinymce',
-    setup: (editor) => {
+    setup: (editor: Editor) => {
       editor.ui.registry.addIcon('custom-icon', overrideIcon);
     }
   }, []);

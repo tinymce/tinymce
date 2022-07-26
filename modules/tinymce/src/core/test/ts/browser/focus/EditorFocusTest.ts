@@ -30,7 +30,7 @@ describe('browser.tinymce.core.focus.EditorFocusTest', () => {
   };
 
   const selectBody = () => {
-    const sel = document.getSelection();
+    const sel = document.getSelection() as Selection;
     sel.removeAllRanges();
     const rng = document.createRange();
     rng.selectNode(document.body);

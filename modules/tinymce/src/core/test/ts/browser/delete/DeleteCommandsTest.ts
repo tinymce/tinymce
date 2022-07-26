@@ -6,7 +6,7 @@ import Editor from 'tinymce/core/api/Editor';
 import * as DeleteCommands from 'tinymce/core/delete/DeleteCommands';
 
 describe('browser.tinymce.core.delete.DeleteCommandsTest', () => {
-  const caret = Cell<Text>(null);
+  const caret = Cell<Text | null>(null);
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     indent: false
