@@ -7,8 +7,8 @@ import { ListItem } from '../DialogTypes';
 // NOTE: you currently need anchors in the content for this field to appear
 
 const getAnchors = (editor: Editor): Optional<ListItem[]> => {
-  const anchorNodes = editor.dom.select('a:not([href])');
-  const anchors = Arr.bind(anchorNodes, (anchor: HTMLAnchorElement) => {
+  const anchorNodes = editor.dom.select<HTMLAnchorElement>('a:not([href])');
+  const anchors = Arr.bind(anchorNodes, (anchor) => {
     const id = anchor.name || anchor.id;
     return id ? [{ text: id, value: '#' + id }] : [ ];
   });

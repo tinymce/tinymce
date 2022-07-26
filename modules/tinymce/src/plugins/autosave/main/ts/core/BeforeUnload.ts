@@ -6,7 +6,7 @@ import * as Options from '../api/Options';
 
 const setup = (editor: Editor): void => {
   editor.editorManager.on('BeforeUnload', (e) => {
-    let msg: string;
+    let msg: string | undefined;
 
     Tools.each(EditorManager.get(), (editor) => {
       // Store a draft for each editor instance

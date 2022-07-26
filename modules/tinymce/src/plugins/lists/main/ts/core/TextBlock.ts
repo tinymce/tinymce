@@ -9,7 +9,9 @@ const createTextBlock = (editor: Editor, contentNode: Node): DocumentFragment =>
   const fragment = dom.createFragment();
   const blockName = Options.getForcedRootBlock(editor);
   const blockAttrs = Options.getForcedRootBlockAttrs(editor);
-  let node: Node, textBlock: Element, hasContentNode: boolean;
+  let node: Node | null;
+  let textBlock: Element | null;
+  let hasContentNode = false;
 
   textBlock = dom.create(blockName, blockAttrs);
 
@@ -38,7 +40,7 @@ const createTextBlock = (editor: Editor, contentNode: Node): DocumentFragment =>
   }
 
   // BR is needed in empty blocks
-  if (!hasContentNode) {
+  if (!hasContentNode && textBlock) {
     textBlock.appendChild(dom.create('br', { 'data-mce-bogus': '1' }));
   }
 

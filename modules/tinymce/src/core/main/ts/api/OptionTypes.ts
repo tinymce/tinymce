@@ -251,9 +251,14 @@ export interface NormalizedEditorOptions extends BaseEditorOptions {
 }
 
 export interface EditorOptions extends NormalizedEditorOptions {
+  a11y_advanced_options: boolean;
+  allow_unsafe_link_target: boolean;
   anchor_bottom: string;
   anchor_top: string;
+  automatic_uploads: boolean;
   block_formats: string;
+  body_class: string;
+  body_id: string;
   br_newline_selector: string;
   color_cols: number;
   content_css: string[];

@@ -76,6 +76,6 @@ interface LinkUrlMeta {
 }
 
 export interface AttachState {
-  readonly href?: string;
-  readonly attach?: () => void;
+  readonly href: string;
+  readonly attach: () => void;
 }

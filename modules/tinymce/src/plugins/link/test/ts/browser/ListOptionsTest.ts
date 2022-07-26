@@ -5,6 +5,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
+import { UserListItem } from 'tinymce/plugins/link/ui/DialogTypes';
 import { AnchorListOptions } from 'tinymce/plugins/link/ui/sections/AnchorListOptions';
 import { ClassListOptions } from 'tinymce/plugins/link/ui/sections/ClassListOptions';
 import { LinkListOptions } from 'tinymce/plugins/link/ui/sections/LinkListOptions';
@@ -63,7 +64,7 @@ describe('browser.tinymce.plugins.link.ListOptionsTest', () => {
 
   it('TBA: Checking link list generation', async () => {
     const editor = hook.editor();
-    editor.options.set('link_list', (callback) => {
+    editor.options.set('link_list', (callback: (value: UserListItem[]) => void) => {
       callback([
         {
           title: 'Alpha',

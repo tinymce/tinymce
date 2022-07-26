@@ -40,7 +40,7 @@ describe('browser.tinymce.plugins.advlist.AdvlistPluginTest', () => {
       const expectedElm = editor.dom.select(definition.expectedSelection[0])[0];
 
       TinyAssertions.assertContent(editor, definition.expectedContent);
-      LegacyUnit.equalDom(rng.startContainer.parentNode, expectedElm, 'Selection elements should be equal');
+      LegacyUnit.equalDom(rng.startContainer.parentNode as Node, expectedElm, 'Selection elements should be equal');
       assert.equal(rng.startOffset, definition.expectedSelection[1], 'Selection offset should be equal');
     });
   };

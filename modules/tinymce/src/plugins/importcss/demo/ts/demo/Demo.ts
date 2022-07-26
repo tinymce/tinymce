@@ -1,6 +1,8 @@
-declare let tinymce: any;
+import { TinyMCE } from 'tinymce/core/api/PublicApi';
 
-const elm: any = document.querySelector('.tinymce');
+declare let tinymce: TinyMCE;
+
+const elm = document.querySelector('.tinymce') as HTMLTextAreaElement;
 elm.value = 'The format menu should show "red"';
 
 tinymce.init({

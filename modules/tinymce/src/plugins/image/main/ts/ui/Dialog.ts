@@ -12,7 +12,7 @@ import { ListUtils } from '../core/ListUtils';
 import * as Utils from '../core/Utils';
 import { AdvTab } from './AdvTab';
 import { collect } from './DialogInfo';
-import { API, ImageDialogData, ImageDialogInfo, ListValue } from './DialogTypes';
+import { API, ImageDialogData, ImageDialogInfo, ImageMeta, ListValue } from './DialogTypes';
 import { MainTab } from './MainTab';
 import { UploadTab } from './UploadTab';
 
@@ -30,7 +30,7 @@ interface Helpers {
   readonly addToBlobCache: (blobInfo: BlobInfo) => void;
   readonly createBlobCache: (file: File, blobUri: string, dataUrl: string) => BlobInfo;
   readonly alertErr: (message: string) => void;
-  readonly normalizeCss: (cssText: string) => string;
+  readonly normalizeCss: (cssText: string | undefined) => string;
   readonly parseStyle: (cssText: string) => StyleMap;
   readonly serializeStyle: (stylesArg: StyleMap, name?: string) => string;
   readonly uploadImage: (blobInfo: BlobInfo) => Promise<UploadResult>;
@@ -38,7 +38,7 @@ interface Helpers {
 
 interface ImageDialogState {
   prevImage: Optional<ListValue>;
-  prevAlt: string;
+  prevAlt: string | null;
   open: boolean;
 }
 
@@ -73,7 +73,7 @@ const fromImageData = (image: ImageData): ImageDialogData => ({
 
 const toImageData = (data: ImageDialogData, removeEmptyAlt: boolean): ImageData => ({
   src: data.src.value,
-  alt: data.alt.length === 0 && removeEmptyAlt ? null : data.alt,
+  alt: (data.alt === null || data.alt.length === 0) && removeEmptyAlt ? null : data.alt,
   title: data.title,
   width: data.dimensions.width,
   height: data.dimensions.height,
@@ -107,7 +107,7 @@ const addPrependUrl = (info: ImageDialogInfo, api: API) => {
   });
 };
 
-const formFillFromMeta2 = (info: ImageDialogInfo, data: ImageDialogData, meta: ImageDialogData['src']['meta']): void => {
+const formFillFromMeta2 = (info: ImageDialogInfo, data: ImageDialogData, meta: ImageMeta): void => {
   if (info.hasDescription && Type.isString(meta.alt)) {
     data.alt = meta.alt;
   }
@@ -326,7 +326,7 @@ const createBlobCache = (editor: Editor) => (file: File, blobUri: string, dataUr
   editor.editorUpload.blobCache.create({
     blob: file,
     blobUri,
-    name: file.name ? file.name.replace(/\.[^\.]+$/, '') : null,
+    name: file.name?.replace(/\.[^\.]+$/, ''),
     filename: file.name,
     base64: dataUrl.split(',')[ 1 ]
   });
@@ -339,7 +339,7 @@ const alertErr = (editor: Editor) => (message: string): void => {
   editor.windowManager.alert(message);
 };
 
-const normalizeCss = (editor: Editor) => (cssText: string): string =>
+const normalizeCss = (editor: Editor) => (cssText: string | undefined): string =>
   doNormalizeCss(editor, cssText);
 
 const parseStyle = (editor: Editor) => (cssText: string): StyleMap =>
@@ -353,7 +353,7 @@ const uploadImage = (editor: Editor) => (blobInfo: BlobInfo): Promise<UploadResu
     if (results.length === 0) {
       return Promise.reject('Failed to upload image');
     } else if (results[0].status === false) {
-      return Promise.reject(results[0].error.message);
+      return Promise.reject(results[0].error?.message);
     } else {
       return results[0];
     }
