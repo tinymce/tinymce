@@ -83,7 +83,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     assert.approximately(styles, value, diff, `Assert toolbar position - ${position} ${styles}px ~= ${value}px`);
   });
 
-  const pAssertFullscreenPosition = (position: string, value: number, diff = 5) => Waiter.pTryUntil('Wait for toolbar to be positioned', () => {
+  const pAssertFullscreenPosition = (position: 'top' | 'bottom', value: number, diff = 5) => Waiter.pTryUntil('Wait for toolbar to be positioned', () => {
     const ele = UiFinder.findIn(SugarBody.body(), '.tox-pop').getOrDie();
     // The context toolbar is positioned relative to the sink, so the value can change between browsers due to different default styles
     // as such we can't reliably test using the actual top/bottom position, so use the bounding client rect instead.

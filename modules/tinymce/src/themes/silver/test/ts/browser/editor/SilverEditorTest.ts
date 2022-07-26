@@ -11,7 +11,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.SilverEditorTest', () => {
   const os = PlatformDetection.detect().os;
-  const store = Cell([ ]);
+  const store = Cell<string[]>([ ]);
   const hook = TinyHooks.bddSetup<Editor>({
     toolbar: 'custom1 customtoggle1 dropdown1-with-text dropdown1-with-icon splitbutton1-with-text splitbutton2-with-icon',
     menubar: 'menutest',

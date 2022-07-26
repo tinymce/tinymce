@@ -31,7 +31,7 @@ describe('headless.tinymce.themes.silver.window.WindowManagerTest', () => {
     try {
       windowManager.open(conf, {}, Fun.noop);
       assert.fail('This should throw a configuration error');
-    } catch (err) {
+    } catch (err: any) {
       asserter(err);
     }
   };
@@ -264,8 +264,8 @@ describe('headless.tinymce.themes.silver.window.WindowManagerTest', () => {
       dialogBody
     );
 
-    const inputElement: HTMLInputElement = document.querySelector('input.tox-textfield');
-    assert.equal(inputElement.value, conf.initialData.fooname, 'The input value should equal the initial data');
+    const inputElement = document.querySelector('input.tox-textfield') as HTMLInputElement;
+    assert.equal(inputElement.value, conf.initialData?.fooname, 'The input value should equal the initial data');
 
     const nuData = { fooname: 'Bonjour Universe' };
     instanceApi.setData(nuData);
@@ -275,7 +275,7 @@ describe('headless.tinymce.themes.silver.window.WindowManagerTest', () => {
 
     try {
       instanceApi.setData(badData);
-    } catch (error) {
+    } catch (error: any) {
       const message = error.message.split('\n');
       assert.equal('Failed path: (data > fooname)', message[1], 'Calling setData, with invalid data should throw: ');
       assert.equal('Expected type: string but got: object', message[2], 'Calling setData, with invalid data should throw: ');
