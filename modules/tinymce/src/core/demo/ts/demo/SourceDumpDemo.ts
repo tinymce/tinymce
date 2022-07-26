@@ -1,9 +1,13 @@
-declare let tinymce: any;
+import { Checked, SelectorFind, SugarBody, Value } from '@ephox/sugar';
 
-export default () => {
+import { Editor, TinyMCE } from 'tinymce/core/api/PublicApi';
+
+declare let tinymce: TinyMCE;
+
+export default (): void => {
   tinymce.init({
     selector: 'textarea#editor',
-    skin_url: '../../../../js/tinymce/skins/lightgray',
+    skin_url: '../../../../js/tinymce/skins/ui/oxide',
     content_css: '../../../../js/tinymce/skins/content/default/content.css',
     templates: [
       { title: 'Some title 1', description: 'Some desc 1', content: 'My content' },
@@ -24,9 +28,10 @@ export default () => {
     }
   });
 
-  const dumpSource = (editor) => {
-    const textArea = document.getElementById('source') as HTMLTextAreaElement;
-    const raw = document.getElementById('raw') as HTMLInputElement;
-    textArea.value = raw.checked ? editor.getBody().innerHTML : editor.getContent();
+  const dumpSource = (editor: Editor) => {
+    const textarea = SelectorFind.descendant<HTMLTextAreaElement>(SugarBody.body(), '#source').getOrDie();
+    const raw = SelectorFind.descendant<HTMLInputElement>(SugarBody.body(), '#raw').getOrDie();
+    const content = Checked.get(raw) ? editor.getBody().innerHTML : editor.getContent();
+    Value.set(textarea, content);
   };
 };

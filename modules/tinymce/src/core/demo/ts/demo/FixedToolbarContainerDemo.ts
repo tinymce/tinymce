@@ -1,6 +1,8 @@
-declare let tinymce: any;
+import { TinyMCE } from 'tinymce/core/api/PublicApi';
 
-export default () => {
+declare let tinymce: TinyMCE;
+
+export default (): void => {
   tinymce.init({
     selector: '#editor',
     inline: true,
