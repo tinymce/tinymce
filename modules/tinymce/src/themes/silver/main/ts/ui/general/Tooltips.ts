@@ -2,10 +2,12 @@ import { GuiFactory, Tooltipping } from '@ephox/alloy';
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
+type TooltippingBehaviour = ReturnType<typeof Tooltipping['config']>;
+
 // TODO: Consider using this once we fix the delayed attempt to appear after it's gone problem.
 
 // TODO: Make the arrow configurable.
-const upConfig = (item, sharedBackstage: UiFactoryBackstageShared) => Tooltipping.config({
+const upConfig = (item: { text: string }, sharedBackstage: UiFactoryBackstageShared): TooltippingBehaviour => Tooltipping.config({
   delay: 200,
   exclusive: true,
   lazySink: sharedBackstage.getSink,

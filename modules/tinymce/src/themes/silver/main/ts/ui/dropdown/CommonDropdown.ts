@@ -11,7 +11,7 @@ import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
-import { renderLabel, renderReplacableIconFromPack } from '../button/ButtonSlices';
+import { renderLabel, renderReplaceableIconFromPack } from '../button/ButtonSlices';
 import { onControlAttached, onControlDetached, OnDestroy } from '../controls/Controls';
 import * as Icons from '../icons/Icons';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
@@ -29,20 +29,19 @@ export interface UpdateMenuIconEvent extends CustomEvent {
 }
 
 export interface CommonDropdownSpec<T> {
-  uid?: string;
-  text: Optional<string>;
-  icon: Optional<string>;
-  disabled?: boolean;
-  tooltip: Optional<string>;
-  role: Optional<string>;
-  fetch: (comp: AlloyComponent, callback: (tdata: Optional<TieredData>) => void) => void;
-  onSetup: (itemApi: T) => OnDestroy<T>;
-  getApi: (comp: AlloyComponent) => T;
-  columns: Toolbar.ColumnTypes;
-  presets: Toolbar.PresetTypes;
-  classes: string[];
-  dropdownBehaviours: Array<Behaviour.NamedConfiguredBehaviour<
-  Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
+  readonly uid?: string;
+  readonly text: Optional<string>;
+  readonly icon: Optional<string>;
+  readonly disabled?: boolean;
+  readonly tooltip: Optional<string>;
+  readonly role: Optional<string>;
+  readonly fetch: (comp: AlloyComponent, callback: (tdata: Optional<TieredData>) => void) => void;
+  readonly onSetup: (itemApi: T) => OnDestroy<T>;
+  readonly getApi: (comp: AlloyComponent) => T;
+  readonly columns: Toolbar.ColumnTypes;
+  readonly presets: Toolbar.PresetTypes;
+  readonly classes: string[];
+  readonly dropdownBehaviours: Behaviour.NamedConfiguredBehaviour<any, any, any>[];
 }
 
 // TODO: Use renderCommonStructure here.
@@ -56,7 +55,7 @@ const renderCommonDropdown = <T>(
     (text) => Memento.record(renderLabel(text, prefix, sharedBackstage.providers))
   );
   const optMemDisplayIcon = spec.icon.map(
-    (iconName) => Memento.record(renderReplacableIconFromPack(iconName, sharedBackstage.providers.icons))
+    (iconName) => Memento.record(renderReplaceableIconFromPack(iconName, sharedBackstage.providers.icons))
   );
 
   /*
@@ -140,7 +139,7 @@ const renderCommonDropdown = <T>(
           AlloyEvents.run<UpdateMenuIconEvent>(updateMenuIcon, (comp, se) => {
             optMemDisplayIcon.bind((mem) => mem.getOpt(comp)).each((displayIcon) => {
               Replacing.set(displayIcon, [
-                renderReplacableIconFromPack(se.event.icon, sharedBackstage.providers.icons)
+                renderReplaceableIconFromPack(se.event.icon, sharedBackstage.providers.icons)
               ]);
             });
           })

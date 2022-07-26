@@ -1,11 +1,11 @@
-import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
+import { AlloyComponent, AlloyTriggers, SketchSpec } from '@ephox/alloy';
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
-import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
+import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
-import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
+import { createMenuItems, createSelectButton, FormatterFormatItem, PreviewSpec, SelectedFormat, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 
 // A list of fonts that must be in a font family for the font to be recognised as the system stack
@@ -35,7 +35,7 @@ const getSpec = (editor: Editor): SelectSpec => {
   const systemFont = 'System Font';
 
   const getMatchingValue = () => {
-    const getFirstFont = (fontFamily) => fontFamily ? splitFonts(fontFamily)[0] : '';
+    const getFirstFont = (fontFamily: string | undefined) => fontFamily ? splitFonts(fontFamily)[0] : '';
 
     const fontFamily = editor.queryCommandValue('FontName');
     const items = dataset.data;
@@ -54,19 +54,20 @@ const getSpec = (editor: Editor): SelectSpec => {
     return { matchOpt, font: fontFamily };
   };
 
-  const isSelectedFor = (item) => (valueOpt: Optional<{ format: string; title: string }>) => valueOpt.exists((value) => value.format === item);
+  const isSelectedFor = (item: string) => (valueOpt: Optional<SelectedFormat>) =>
+    valueOpt.exists((value) => value.format === item);
 
   const getCurrentValue = () => {
     const { matchOpt } = getMatchingValue();
     return matchOpt;
   };
 
-  const getPreviewFor = (item) => () => Optional.some({
+  const getPreviewFor = (item: string) => () => Optional.some<PreviewSpec>({
     tag: 'div',
     styles: item.indexOf('dings') === -1 ? { 'font-family': item } : { }
   });
 
-  const onAction = (rawItem) => () => {
+  const onAction = (rawItem: FormatterFormatItem) => () => {
     editor.undoManager.transact(() => {
       editor.focus();
       editor.execCommand('FontName', false, rawItem.format);
@@ -98,10 +99,11 @@ const getSpec = (editor: Editor): SelectSpec => {
   };
 };
 
-const createFontFamilyButton = (editor: Editor, backstage: UiFactoryBackstage) => createSelectButton(editor, backstage, getSpec(editor));
+const createFontFamilyButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
+  createSelectButton(editor, backstage, getSpec(editor));
 
 // TODO: Test this!
-const createFontFamilyMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
+const createFontFamilyMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('fontfamily', {
     text: backstage.shared.providers.translate('Fonts'),

@@ -1,4 +1,4 @@
-import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
+import { AlloyComponent, AlloyTriggers, SketchSpec } from '@ephox/alloy';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -9,8 +9,8 @@ import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { onActionToggleFormat } from '../ControlUtils';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
-import { AdvancedSelectDataset, SelectDataset } from './SelectDatasets';
-import { getStyleFormats } from './StyleFormat';
+import { AdvancedSelectDataset, BasicSelectItem, SelectDataset } from './SelectDatasets';
+import { getStyleFormats, isFormatReference, isNestedFormat, StyleFormatType } from './StyleFormat';
 import { findNearest } from './utils/FormatDetection';
 
 const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
@@ -27,9 +27,14 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
   };
 
   const updateSelectMenuText = (comp: AlloyComponent) => {
-    const getFormatItems = (fmt) => {
-      const subs = fmt.items;
-      return subs !== undefined && subs.length > 0 ? Arr.bind(subs, getFormatItems) : [{ title: fmt.title, format: fmt.format }];
+    const getFormatItems = (fmt: StyleFormatType): BasicSelectItem[] => {
+      if (isNestedFormat(fmt)) {
+        return Arr.bind(fmt.items, getFormatItems);
+      } else if (isFormatReference(fmt)) {
+        return [{ title: fmt.title, format: fmt.format }];
+      } else {
+        return [];
+      }
     };
     const flattenedItems = Arr.bind(getStyleFormats(editor), getFormatItems);
     const detectedFormat = findNearest(editor, Fun.constant(flattenedItems));
@@ -54,12 +59,12 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
   } as SelectSpec;
 };
 
-const createStylesButton = (editor: Editor, backstage: UiFactoryBackstage) => {
+const createStylesButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec => {
   const dataset: AdvancedSelectDataset = { type: 'advanced', ...backstage.styles };
   return createSelectButton(editor, backstage, getSpec(editor, dataset));
 };
 
-const createStylesMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
+const createStylesMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
   const dataset: AdvancedSelectDataset = { type: 'advanced', ...backstage.styles };
   const menuItems = createMenuItems(editor, backstage, getSpec(editor, dataset));
   editor.ui.registry.addNestedMenuItem('styles', {

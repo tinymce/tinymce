@@ -4,7 +4,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import { onActionExecCommand, onSetupFormatToggle } from './ControlUtils';
 
-const register = (editor: Editor) => {
+const register = (editor: Editor): void => {
   const alignToolbarButtons = [
     { name: 'alignleft', text: 'Align left', cmd: 'JustifyLeft', icon: 'align-left' },
     { name: 'aligncenter', text: 'Align center', cmd: 'JustifyCenter', icon: 'align-center' },

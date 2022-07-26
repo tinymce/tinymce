@@ -8,7 +8,7 @@ const onSetupOutdentState = (editor: Editor) =>
     api.setEnabled(editor.queryCommandState('outdent'));
   });
 
-const registerButtons = (editor: Editor) => {
+const registerButtons = (editor: Editor): void => {
   editor.ui.registry.addButton('outdent', {
     tooltip: 'Decrease indent',
     icon: 'outdent',
@@ -23,7 +23,7 @@ const registerButtons = (editor: Editor) => {
   });
 };
 
-const register = (editor: Editor) => {
+const register = (editor: Editor): void => {
   registerButtons(editor);
 };
 

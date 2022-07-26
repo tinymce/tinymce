@@ -7,7 +7,7 @@ import { createFontFamilyMenu } from './complex/FontFamilyBespoke';
 import { createFontSizeMenu } from './complex/FontSizeBespoke';
 import { createStylesMenu } from './complex/StylesBespoke';
 
-const register = (editor: Editor, backstage: UiFactoryBackstage) => {
+const register = (editor: Editor, backstage: UiFactoryBackstage): void => {
   createAlignMenu(editor, backstage);
   createFontFamilyMenu(editor, backstage);
   createStylesMenu(editor, backstage);

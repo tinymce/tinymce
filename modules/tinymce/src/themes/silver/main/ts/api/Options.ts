@@ -23,12 +23,12 @@ export enum ToolbarLocation {
 }
 
 const option: {
-  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K] | undefined;
+  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K];
   <T>(name: string): (editor: Editor) => T | undefined;
 } = (name: string) => (editor: Editor) =>
   editor.options.get(name);
 
-const wrapOptional = <T>(fn: (editor: Editor) => T) => (editor: Editor): Optional<T> =>
+const wrapOptional = <T>(fn: (editor: Editor) => T) => (editor: Editor): Optional<NonNullable<T>> =>
   Optional.from(fn(editor));
 
 const register = (editor: Editor): void => {
@@ -361,7 +361,7 @@ const fixedContainerTarget = (editor: Editor): Optional<SugarElement> => {
     return Optional.none();
   }
 
-  const selector = fixedContainerSelector(editor);
+  const selector = fixedContainerSelector(editor) ?? '';
   if (selector.length > 0) {
     // If we have a valid selector
     return SelectorFind.descendant(SugarBody.body(), selector);

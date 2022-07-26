@@ -1,10 +1,10 @@
 import { Obj, Optional, Result } from '@ephox/katamari';
 
-const toValidValues = <T> (values: { [key: string]: Optional<T[keyof T]> }) => {
+const toValidValues = <T>(values: Record<string, Optional<T>>): Result<Record<string, T>, string[]> => {
   const errors: string[] = [];
-  const result: { [key: string]: T[keyof T] } = {};
+  const result: Record<string, T> = {};
 
-  Obj.each(values, (value: Optional<T[keyof T]>, name: string) => {
+  Obj.each(values, (value: Optional<T>, name: string) => {
     value.fold(() => {
       errors.push(name);
     }, (v) => {
@@ -12,8 +12,8 @@ const toValidValues = <T> (values: { [key: string]: Optional<T[keyof T]> }) => {
     });
   });
 
-  return errors.length > 0 ? Result.error<{ [key: string]: T[keyof T] }, string[]>(errors) :
-    Result.value<{ [key: string]: T[keyof T] }, string[]>(result);
+  return errors.length > 0 ? Result.error<Record<string, T>, string[]>(errors) :
+    Result.value<Record<string, T>, string[]>(result);
 };
 
 export {

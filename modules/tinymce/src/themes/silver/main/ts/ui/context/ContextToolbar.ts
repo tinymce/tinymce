@@ -39,7 +39,7 @@ const enum TriggerCause {
 
 const transitionClass = 'tox-pop--transition';
 
-const register = (editor: Editor, registryContextToolbars: Record<string, ContextSpecType>, sink: AlloyComponent, extras: Extras) => {
+const register = (editor: Editor, registryContextToolbars: Record<string, ContextSpecType>, sink: AlloyComponent, extras: Extras): void => {
   const backstage = extras.backstage;
   const sharedBackstage = backstage.shared;
   const isTouch = PlatformDetection.detect().deviceType.isTouch;
@@ -140,7 +140,7 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
   }));
 
   const buildContextToolbarGroups = (allButtons: Record<string, ContextToolbarButtonType>, ctx: InlineContent.ContextToolbarSpec) =>
-    identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items, allowToolbarGroups: false }, extras, Optional.some([ 'form:' ]));
+    identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items, allowToolbarGroups: false }, extras.backstage, Optional.some([ 'form:' ]));
 
   const buildContextFormGroups = (ctx: InlineContent.ContextForm, providers: UiFactoryBackstageProviders) => ContextForm.buildInitGroups(ctx, providers);
 
@@ -241,7 +241,7 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
         }
       );
     }
-  }, 17); // 17ms is used as that's about about 1 frame at 60fps
+  }, 17); // 17ms is used as that's about 1 frame at 60fps
 
   editor.on('init', () => {
     editor.on('remove', close);

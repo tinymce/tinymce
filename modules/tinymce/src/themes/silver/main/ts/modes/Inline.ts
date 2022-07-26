@@ -3,6 +3,7 @@ import { Cell, Singleton } from '@ephox/katamari';
 import { DomEvent, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
 import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 
 import * as Events from '../api/Events';
@@ -27,7 +28,7 @@ const getTargetPosAndBounds = (targetElm: SugarElement, isToolbarTop: boolean) =
 const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader, toolbarPersist: boolean) => {
   const prevPosAndBounds = Cell(getTargetPosAndBounds(targetElm, ui.isPositionedAtTop()));
 
-  const resizeContent = (e) => {
+  const resizeContent = (e: NodeChangeEvent | KeyboardEvent | Event) => {
     const { pos, bounds } = getTargetPosAndBounds(targetElm, ui.isPositionedAtTop());
     const { pos: prevPos, bounds: prevBounds } = prevPosAndBounds.get();
 
@@ -63,7 +64,7 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader, 
 
   // Bind to async load events and trigger a content resize event if the size has changed
   const elementLoad = Singleton.unbindable();
-  elementLoad.set(DomEvent.capture(SugarElement.fromDom(editor.getBody()), 'load', resizeContent));
+  elementLoad.set(DomEvent.capture(SugarElement.fromDom(editor.getBody()), 'load', (e) => resizeContent(e.raw)));
 
   editor.on('remove', () => {
     elementLoad.clear();
@@ -72,7 +73,7 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader, 
 
 const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   const { mothership, uiMothership, outerContainer } = uiComponents;
-  const floatContainer = Cell<AlloyComponent>(null);
+  const floatContainer = Singleton.value<AlloyComponent>();
   const targetElm = SugarElement.fromDom(args.targetNode);
   const ui = InlineHeader(editor, targetElm, uiComponents, backstage, floatContainer);
   const toolbarPersist = isToolbarPersist(editor);
@@ -80,7 +81,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   loadInlineSkin(editor);
 
   const render = () => {
-    if (floatContainer.get()) {
+    if (floatContainer.isSet()) {
       ui.show();
       return;
     }
@@ -123,12 +124,8 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   ReadOnly.setupReadonlyModeSwitch(editor, uiComponents);
 
   const api: Partial<EditorUiApi> = {
-    show: () => {
-      render();
-    },
-    hide: () => {
-      ui.hide();
-    },
+    show: render,
+    hide: ui.hide,
     setEnabled: (state) => {
       ReadOnly.broadcastReadonly(uiComponents, !state);
     },

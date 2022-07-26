@@ -1,6 +1,6 @@
 import { Behaviour, Form as AlloyForm, Keying, Memento, SimpleSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
@@ -47,7 +47,7 @@ const renderBodyPanel = (spec: BodyPanelSpec, dialogData: Dialog.DialogData, bac
       }),
       ComposingConfigs.memento(memForm),
       RepresentingConfigs.memento(memForm, {
-        postprocess: (formValue) => FormValues.toValidValues(formValue).fold(
+        postprocess: (formValue: Record<string, Optional<unknown>>) => FormValues.toValidValues(formValue).fold(
           (err) => {
             // eslint-disable-next-line no-console
             console.error(err);

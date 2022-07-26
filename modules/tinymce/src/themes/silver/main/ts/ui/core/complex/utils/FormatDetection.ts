@@ -4,7 +4,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import { BasicSelectItem } from '../SelectDatasets';
 
-export const findNearest = (editor: Editor, getStyles: () => BasicSelectItem[]) => {
+export const findNearest = (editor: Editor, getStyles: () => BasicSelectItem[]): Optional<BasicSelectItem> => {
   const styles = getStyles();
   const formats = Arr.map(styles, (style) => style.format);
 

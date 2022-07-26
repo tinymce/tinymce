@@ -42,7 +42,7 @@ const getSelectionBounds = (editor: Editor): Bounds => {
 
 const getAnchorElementBounds = (editor: Editor, lastElement: Optional<SugarElement<Element>>): Bounds =>
   lastElement
-    .filter(SugarBody.inBody)
+    .filter((elem): elem is SugarElement<HTMLElement> => SugarBody.inBody(elem) && SugarNode.isHTMLElement(elem))
     .map(Boxes.absolute)
     .getOrThunk(() => getSelectionBounds(editor));
 

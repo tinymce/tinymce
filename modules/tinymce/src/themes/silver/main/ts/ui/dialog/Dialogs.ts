@@ -1,6 +1,6 @@
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Button, Container, DomFactory, Focusing, Keying, ModalDialog,
-  NativeEvents, SystemEvents, Tabstopping
+  NativeEvents, SketchSpec, SystemEvents, Tabstopping
 } from '@ephox/alloy';
 import { Optional, Result } from '@ephox/katamari';
 import { Class, SugarBody } from '@ephox/sugar';
@@ -35,7 +35,7 @@ const defaultHeader = (title: AlloyParts.ConfiguredPart, close: AlloyParts.Confi
   ]
 });
 
-const pClose = (onClose: () => void, providersBackstage: UiFactoryBackstageProviders) => ModalDialog.parts.close(
+const pClose = (onClose: () => void, providersBackstage: UiFactoryBackstageProviders): AlloyParts.ConfiguredPart => ModalDialog.parts.close(
   // Need to find a way to make it clear in the docs whether parts can be sketches
   Button.sketch({
     dom: {
@@ -53,7 +53,7 @@ const pClose = (onClose: () => void, providersBackstage: UiFactoryBackstageProvi
   })
 );
 
-const pUntitled = () => ModalDialog.parts.title({
+const pUntitled = (): AlloyParts.ConfiguredPart => ModalDialog.parts.title({
   dom: {
     tag: 'div',
     classes: [ 'tox-dialog__title' ],
@@ -64,7 +64,7 @@ const pUntitled = () => ModalDialog.parts.title({
   }
 });
 
-const pBodyMessage = (message: string, providersBackstage: UiFactoryBackstageProviders) => ModalDialog.parts.body({
+const pBodyMessage = (message: string, providersBackstage: UiFactoryBackstageProviders): AlloyParts.ConfiguredPart => ModalDialog.parts.body({
   dom: {
     tag: 'div',
     classes: [ 'tox-dialog__body' ]
@@ -84,7 +84,7 @@ const pBodyMessage = (message: string, providersBackstage: UiFactoryBackstagePro
   ]
 });
 
-const pFooter = (buttons: AlloySpec[]) => ModalDialog.parts.footer({
+const pFooter = (buttons: AlloySpec[]): AlloyParts.ConfiguredPart => ModalDialog.parts.footer({
   dom: {
     tag: 'div',
     classes: [ 'tox-dialog__footer' ]
@@ -92,7 +92,7 @@ const pFooter = (buttons: AlloySpec[]) => ModalDialog.parts.footer({
   components: buttons
 });
 
-const pFooterGroup = (startButtons: AlloySpec[], endButtons: AlloySpec[]) => [
+const pFooterGroup = (startButtons: AlloySpec[], endButtons: AlloySpec[]): SketchSpec[] => [
   Container.sketch({
     dom: {
       tag: 'div',
@@ -122,7 +122,7 @@ export interface DialogSpec {
   eventOrder: Record<string, string[]>;
 }
 
-const renderDialog = (spec: DialogSpec) => {
+const renderDialog = (spec: DialogSpec): SketchSpec => {
   const dialogClass = 'tox-dialog';
   const blockerClass = dialogClass + '-wrap';
   const blockerBackdropClass = blockerClass + '__backdrop';

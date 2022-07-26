@@ -40,12 +40,12 @@ export const createChoiceItems = (
     if (item.type === 'choiceitem') {
       return BridgeMenu.createChoiceMenuItem(item).fold(
         MenuUtils.handleError,
-        (d: BridgeMenu.ChoiceMenuItem) => Optional.some(renderChoiceItem(
+        (d) => Optional.some(renderChoiceItem(
           d,
           columns === 1,
           itemPresets,
           onItemValueHandler,
-          select(item.value),
+          select(d.value),
           itemResponse,
           providersBackstage,
           MenuUtils.menuHasIcons(items)

@@ -44,7 +44,7 @@ export const renderColorInput = (
     inputClasses: [ 'tox-textfield' ],
     data: initialData,
 
-    onSetValue: (c) => Invalidating.run(c).get(Fun.noop),
+    onSetValue: (c: AlloyComponent) => Invalidating.run(c).get(Fun.noop),
 
     inputBehaviours: Behaviour.derive([
       Disabling.config({
@@ -93,7 +93,7 @@ export const renderColorInput = (
 
   const pLabel: Optional<AlloySpec> = spec.label.map((label) => renderLabel(label, sharedBackstage.providers));
 
-  const emitSwatchChange = (colorBit, value) => {
+  const emitSwatchChange = (colorBit: AlloyComponent, value: string) => {
     AlloyTriggers.emitWith(colorBit, colorSwatchChangeEvent, {
       value
     });

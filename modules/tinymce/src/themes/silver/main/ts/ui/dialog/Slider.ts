@@ -1,4 +1,4 @@
-import { AlloyTriggers, Behaviour, Focusing, GuiFactory, SimpleSpec, Slider, SliderTypes } from '@ephox/alloy';
+import { AlloyTriggers, Behaviour, Focusing, GuiFactory, SimpleSpec, Slider } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Fun, Optional } from '@ephox/katamari';
 
@@ -62,7 +62,7 @@ export const renderSlider = (spec: SliderSpec, providerBackstage: UiFactoryBacks
       ComposingConfigs.self(),
       Focusing.config({})
     ]),
-    onChoose: (component, thumb, value: SliderTypes.SliderValueX) => {
+    onChoose: (component, thumb, value) => {
       AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name, value } );
     }
   });

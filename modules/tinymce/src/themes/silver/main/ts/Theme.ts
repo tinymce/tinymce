@@ -19,7 +19,7 @@ const registerOptions = (editor: Editor) => {
   ContextMenuOptions.register(editor);
 };
 
-export default () => {
+export default (): void => {
   ThemeManager.add('silver', (editor): Theme => {
     registerOptions(editor);
     const { getUiMothership, backstage, renderUI }: RenderInfo = Render.setup(editor);

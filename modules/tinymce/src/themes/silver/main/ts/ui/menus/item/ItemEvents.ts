@@ -1,30 +1,27 @@
-import { AlloyEvents, AlloyTriggers, SystemEvents } from '@ephox/alloy';
-import { Menu } from '@ephox/bridge';
+import { AlloyEvents, AlloyTriggers, EventFormat, SystemEvents } from '@ephox/alloy';
 
 import { GetApiType, runWithApi } from '../../controls/Controls';
 import ItemResponse from './ItemResponse';
 
-export type GeneralMenuItemInstanceApi = Menu.MenuItemInstanceApi | Menu.ToggleMenuItemInstanceApi | Menu.ChoiceMenuItemInstanceApi;
-export type GeneralMenuItem = Menu.MenuItem | Menu.ToggleMenuItem | Menu.ChoiceMenuItem;
-
 export interface OnMenuItemExecuteType<T> extends GetApiType<T> {
-  onAction: (itemApi: T) => void;
-  triggersSubmenu: boolean;
+  readonly onAction: (itemApi: T) => void;
+  readonly triggersSubmenu: boolean;
 }
 
 // Perform `action` when an item is clicked on, close menus, and stop event
-const onMenuItemExecute = <T>(info: OnMenuItemExecuteType<T>, itemResponse: ItemResponse) => AlloyEvents.runOnExecute((comp, simulatedEvent) => {
-  // If there is an action, run the action
-  runWithApi(info, comp)(info.onAction);
-  if (!info.triggersSubmenu && itemResponse === ItemResponse.CLOSE_ON_EXECUTE) {
-    if (comp.getSystem().isConnected()) {
-      AlloyTriggers.emit(comp, SystemEvents.sandboxClose());
+const onMenuItemExecute = <T>(info: OnMenuItemExecuteType<T>, itemResponse: ItemResponse): AlloyEvents.AlloyEventKeyAndHandler<EventFormat> =>
+  AlloyEvents.runOnExecute((comp, simulatedEvent) => {
+    // If there is an action, run the action
+    runWithApi(info, comp)(info.onAction);
+    if (!info.triggersSubmenu && itemResponse === ItemResponse.CLOSE_ON_EXECUTE) {
+      if (comp.getSystem().isConnected()) {
+        AlloyTriggers.emit(comp, SystemEvents.sandboxClose());
+      }
+      simulatedEvent.stop();
     }
-    simulatedEvent.stop();
-  }
-});
+  });
 
-const menuItemEventOrder = {
+const menuItemEventOrder: Record<string, string[]> = {
   // TODO: use the constants provided by behaviours.
   [SystemEvents.execute()]: [ 'disabling', 'alloy.base.behaviour', 'toggling', 'item-events' ]
 };

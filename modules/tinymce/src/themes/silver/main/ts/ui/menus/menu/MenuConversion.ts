@@ -1,8 +1,19 @@
-import { Objects } from '@ephox/boulder';
 import { Menu } from '@ephox/bridge';
 import { Arr, Id, Merger, Obj, Type } from '@ephox/katamari';
 
 import { SingleMenuItemSpec } from './SingleMenuTypes';
+
+interface ExpandedMenu {
+  readonly menus: Record<string, SingleMenuItemSpec[]>;
+  readonly expansions: Record<string, string>;
+  readonly item: SingleMenuItemSpec;
+}
+
+export interface ExpandedMenus {
+  readonly menus: Record<string, SingleMenuItemSpec[]>;
+  readonly expansions: Record<string, string>;
+  readonly items: SingleMenuItemSpec[];
+}
 
 type MenuItemRegistry = Record<string, Menu.MenuItemSpec | Menu.NestedMenuItemSpec | Menu.ToggleMenuItemSpec>;
 
@@ -33,7 +44,7 @@ const unwrapReferences = (items: Array<string | SingleMenuItemSpec>, menuItems: 
     } else {
       return acc.concat([ item ]);
     }
-  }, []);
+  }, [] as SingleMenuItemSpec[]);
 
   // Remove any trailing separators
   if (realItems.length > 0 && isSeparator(realItems[realItems.length - 1])) {
@@ -43,20 +54,17 @@ const unwrapReferences = (items: Array<string | SingleMenuItemSpec>, menuItems: 
   return realItems;
 };
 
-const getFromExpandingItem = (item: Menu.NestedMenuItemSpec, menuItems: MenuItemRegistry) => {
+const getFromExpandingItem = (item: Menu.NestedMenuItemSpec & { value: string }, menuItems: MenuItemRegistry): ExpandedMenu => {
   const submenuItems = item.getSubmenuItems();
   const rest = expand(submenuItems, menuItems);
 
   const newMenus = Merger.deepMerge(
     rest.menus,
-    Objects.wrap(
-      item.value,
-      rest.items
-    )
+    { [item.value]: rest.items }
   );
   const newExpansions = Merger.deepMerge(
     rest.expansions,
-    Objects.wrap(item.value, item.value)
+    { [item.value]: item.value }
   );
 
   return {
@@ -66,39 +74,35 @@ const getFromExpandingItem = (item: Menu.NestedMenuItemSpec, menuItems: MenuItem
   };
 };
 
-const getFromItem = (item: SingleMenuItemSpec, menuItems: MenuItemRegistry) => isExpandingMenuItem(item) ? getFromExpandingItem(item, menuItems) : {
-  item,
-  menus: { },
-  expansions: { }
-};
-
-const generateValueIfRequired = (item: SingleMenuItemSpec): SingleMenuItemSpec => {
-  // Separators don't have a value, so just return the item
-  if (isSeparator(item)) {
-    return item;
-  } else {
-    // Use the value already in item if it has one.
-    const itemValue = Obj.get<any, string>(item, 'value').getOrThunk(() => Id.generate('generated-menu-item'));
-    return Merger.deepMerge({ value: itemValue }, item);
-  }
+const generateValueIfRequired = (item: Menu.NestedMenuItemSpec): Menu.NestedMenuItemSpec & { value: string } => {
+  // Use the value already in item if it has one.
+  const itemValue = Obj.get<any, string>(item, 'value').getOrThunk(() => Id.generate('generated-menu-item'));
+  return Merger.deepMerge({ value: itemValue }, item);
 };
 
 // Takes items, and consolidates them into its return value
-const expand = (items: string | Array<string | SingleMenuItemSpec>, menuItems: MenuItemRegistry) => {
+const expand = (items: string | Array<string | SingleMenuItemSpec>, menuItems: MenuItemRegistry): ExpandedMenus => {
   const realItems = unwrapReferences(Type.isString(items) ? items.split(' ') : items, menuItems);
   return Arr.foldr(realItems, (acc, item) => {
-    const itemWithValue = generateValueIfRequired(item);
-    const newData = getFromItem(itemWithValue, menuItems);
-    return {
-      menus: Merger.deepMerge(acc.menus, newData.menus),
-      items: [ newData.item ].concat(acc.items),
-      expansions: Merger.deepMerge(acc.expansions, newData.expansions)
-    };
+    if (isExpandingMenuItem(item)) {
+      const itemWithValue = generateValueIfRequired(item);
+      const newData = getFromExpandingItem(itemWithValue, menuItems);
+      return {
+        menus: Merger.deepMerge(acc.menus, newData.menus),
+        items: [ newData.item, ...acc.items ],
+        expansions: Merger.deepMerge(acc.expansions, newData.expansions)
+      };
+    } else {
+      return {
+        ...acc,
+        items: [ item, ...acc.items ]
+      };
+    }
   }, {
     menus: { },
     expansions: { },
     items: [ ]
-  });
+  } as ExpandedMenus);
 };
 
 export {
