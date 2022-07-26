@@ -91,44 +91,47 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
 
   });
 
-  it('TINY-8861: copying and pasting a piece of code and a text should leave the cursor on the text after paste', async () => {
-    const editor = hook.editor();
-    editor.setContent(
-      '<pre class="language-markup" contenteditable="false" data-mce-highlighted="true">test content</pre>' +
+  // Safari cannot select the CEF in this scenario, so we can't run the test (and there is no bug)
+  if (!browser.isSafari()) {
+    it('TINY-8861: copying and pasting a piece of code and a text should leave the cursor on the text after paste', async () => {
+      const editor = hook.editor();
+      editor.setContent(
+        '<pre class="language-markup" contenteditable="false" data-mce-highlighted="true">test content</pre>' +
       '<p>test text</p>'
-    );
+      );
 
-    editor.execCommand('SelectAll');
+      editor.execCommand('SelectAll');
 
-    await pClickEditMenu(editor, 'Copy');
-    TinySelections.setCursor(editor, [ 1 ], 1);
+      await pClickEditMenu(editor, 'Copy');
+      TinySelections.setCursor(editor, [ 1 ], 1);
 
-    await pPaste(editor);
-    pressEnter(editor);
+      await pPaste(editor);
+      pressEnter(editor);
 
-    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
-      const testTextParagraph = s.element('p', {
-        children: [
-          s.text(str.is('test text'))
-        ]
-      });
-      return s.element('body', {
-        children: [
-          getMockPreStructure(s, str),
-          testTextParagraph,
-          getMockPreStructure(s, str),
-          testTextParagraph,
-          s.element('p', {
-            children: [
-              s.element('br', {
-                attrs: {
-                  'data-mce-bogus': str.is('1')
-                }
-              })
-            ]
-          }),
-        ]
-      });
-    }));
-  });
+      TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
+        const testTextParagraph = s.element('p', {
+          children: [
+            s.text(str.is('test text'))
+          ]
+        });
+        return s.element('body', {
+          children: [
+            getMockPreStructure(s, str),
+            testTextParagraph,
+            getMockPreStructure(s, str),
+            testTextParagraph,
+            s.element('p', {
+              children: [
+                s.element('br', {
+                  attrs: {
+                    'data-mce-bogus': str.is('1')
+                  }
+                })
+              ]
+            }),
+          ]
+        });
+      }));
+    });
+  }
 });
