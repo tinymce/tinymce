@@ -1,4 +1,4 @@
-import { Keys, RealClipboard, RealMouse } from '@ephox/agar';
+import { ApproxStructure, Keys, RealClipboard, RealMouse } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -33,10 +33,17 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
     }
   };
 
-  const getMockPreString = (content: string) => browser.isFirefox() ?
-    `<pre class="language-markup" data-mce-highlighted="true" contenteditable="false">${content}</pre>` :
-    `<pre class="language-markup" contenteditable="false" data-mce-highlighted="true">${content}</pre>`;
-
+  const getMockPreStructure = (s, str) =>
+    s.element('pre', {
+      attrs: {
+        'class': str.is('language-markup'),
+        'data-mce-highlighted': str.is('true'),
+        'contenteditable': str.is('false'),
+      },
+      children: [
+        s.text(str.is('test content'))
+      ]
+    });
   beforeEach(() => {
     hook.editor().setContent('');
   });
@@ -52,13 +59,36 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
     await pPaste(editor);
     pressEnter(editor);
 
-    TinyAssertions.assertContent(editor,
-      '<p><br></p>' +
-      '<p><br></p>' +
-      getMockPreString('test content') +
-      getMockPreString('test content'),
-      { format: 'raw' }
-    );
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => {
+      const emptyParagraph = s.element('p', {
+        children: [
+          s.element('br', {})
+        ]
+      });
+      return s.element('body', {
+        children: [
+          emptyParagraph,
+          emptyParagraph,
+          s.element('p', {
+            attrs: {
+              // fake caret
+              'data-mce-caret': str.is('before'),
+              'data-mce-bogus': str.is('all')
+            },
+            children: [
+              s.element('br', {})
+            ]
+          }),
+          getMockPreStructure(s, str),
+          getMockPreStructure(s, str),
+          s.element('div', {
+            // fake caret
+            classes: [ arr.has('mce-visual-caret') ]
+          })
+        ]
+      });
+    }));
+
   });
 
   it('TINY-8861: copying and pasting a piece of code and a text should leave the cursor on the text after paste', async () => {
@@ -68,7 +98,7 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
       '<p>test text</p>'
     );
 
-    TinySelections.setSelection(editor, [], 0, [ (browser.isFirefox() ? 1 : 2), 0 ], 9);
+    editor.execCommand('SelectAll');
 
     await pClickEditMenu(editor, 'Copy');
     TinySelections.setCursor(editor, [ 1 ], 1);
@@ -76,13 +106,29 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
     await pPaste(editor);
     pressEnter(editor);
 
-    TinyAssertions.assertContent(editor,
-      getMockPreString('test content') +
-      '<p>test text</p>' +
-      getMockPreString('test content') +
-      '<p>test text</p>' +
-      '<p><br data-mce-bogus="1"></p>',
-      { format: 'raw' }
-    );
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
+      const testTextParagraph = s.element('p', {
+        children: [
+          s.text(str.is('test text'))
+        ]
+      });
+      return s.element('body', {
+        children: [
+          getMockPreStructure(s, str),
+          testTextParagraph,
+          getMockPreStructure(s, str),
+          testTextParagraph,
+          s.element('p', {
+            children: [
+              s.element('br', {
+                attrs: {
+                  'data-mce-bogus': str.is('1')
+                }
+              })
+            ]
+          }),
+        ]
+      });
+    }));
   });
 });
