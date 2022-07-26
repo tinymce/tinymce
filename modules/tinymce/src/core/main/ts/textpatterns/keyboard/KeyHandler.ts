@@ -12,7 +12,7 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
   const rng = editor.selection.getRng();
   return Utils.getParentBlock(editor, rng).map((block) => {
     const offset = Math.max(0, rng.startOffset);
-    const dynamicPatternSet = Utils.resolveFromDynamicPatterns(patternSet, block, block.textContent);
+    const dynamicPatternSet = Utils.resolveFromDynamicPatterns(patternSet, block, block.textContent ?? '');
     // IMPORTANT: We need to get normalized match results since undoing and redoing the editor state
     // via undoManager.extra() will result in the DOM being normalized.
     const inlineMatches = InlinePattern.findPatterns(editor, block, rng.startContainer, offset, dynamicPatternSet, true);
