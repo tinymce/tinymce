@@ -274,6 +274,26 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
           autocompleteApi.hide();
         }
       });
+
+      ed.ui.registry.addAutocompleter('Multi1', {
+        trigger: '^@@',
+        minChars: 0,
+        columns: 1,
+        fetch: (_pattern, _maxResults) => new Promise((resolve) => {
+          resolve(
+            Arr.map([ 'aA', 'bB', 'cC', 'dD' ], (letter) => ({
+              value: `multi-${letter}`,
+              text: `mu-${letter}`,
+              icon: '^'
+            }))
+          );
+        }),
+        onAction: (autocompleteApi, rng, value) => {
+          ed.selection.setRng(rng);
+          ed.insertContent(value);
+          autocompleteApi.hide();
+        }
+      });
     }
   }, [], true);
 
@@ -711,5 +731,32 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
     },
     choice: (editor) => TinyContentActions.keydown(editor, Keys.enter()),
     assertion: (editor) => TinyAssertions.assertContent(editor, '<p>dollars-a</p>')
+  }));
+
+  it('TINY-8887: Checking multi-char trigger: "^@@" splitted over several text nodes', () => pTestAutocompleter({
+    triggerChar: '^@@',
+    initialContent: '<strong>^</strong>@',
+    additionalContent: '@',
+    cursorPos: {
+      elementPath: [ 0, 1 ],
+      offset: 1
+    },
+    structure: {
+      type: 'list',
+      hasIcons: true,
+      groups: [
+        [
+          { title: 'mu-aA', text: 'mu-aA', icon: '^' },
+          { title: 'mu-bB', text: 'mu-bB', icon: '^' },
+          { title: 'mu-cC', text: 'mu-cC', icon: '^' },
+          { title: 'mu-dD', text: 'mu-dD', icon: '^' }
+        ]
+      ]
+    },
+    choice: (editor) => {
+      TinyContentActions.keydown(editor, Keys.down());
+      TinyContentActions.keydown(editor, Keys.enter());
+    },
+    assertion: (editor) => TinyAssertions.assertContent(editor, '<p>multi-bB</p>')
   }));
 });
