@@ -67,6 +67,7 @@ describe('atomic.katamari.api.str.ContainsTest', () => {
     check(true, 'abc', 'b', 1, 3);
     check(false, 'abc', 'b', 2, 3);
     check(false, 'abc', 'b', 0, 1);
+    check(false, 'abc', 'bc', 1, 2);
 
   });
 });
