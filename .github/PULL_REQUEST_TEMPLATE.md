@@ -10,5 +10,6 @@ Pre-checks:
 
 Review:
 * [ ] Milestone set
+* [ ] Docs ticket created (if applicable)
 
 GitHub issues (if applicable):
