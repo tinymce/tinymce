@@ -99,7 +99,7 @@ const findPatternStart = (dom: DOMUtils, pattern: InlinePattern, node: Node, off
   });
 };
 
-const findPattern = (editor: Editor, block: Node, details: PatternDetails, normalizedMatches: boolean): Optional<SearchResults> => {
+const findPattern = (editor: Editor, block: Element, details: PatternDetails, normalizedMatches: boolean): Optional<SearchResults> => {
   const dom = editor.dom;
   const root = dom.getRoot();
   const pattern = details.pattern;
@@ -155,7 +155,7 @@ const findPatternsRec = (
   patterns: InlinePattern[],
   node: Node,
   offset: number,
-  block: Node,
+  block: Element,
   normalizedMatches: boolean
 ): Optional<SearchResults> => {
   const dom = editor.dom;

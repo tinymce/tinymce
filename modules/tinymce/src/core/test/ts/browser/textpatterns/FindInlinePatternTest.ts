@@ -224,7 +224,7 @@ describe('browser.tinymce.textpatterns.FindInlinePatternTest', () => {
       it('TINY-8778: force only ** pattern and test return on not existing *** pattern', () => {
         const editor = hook.editor();
         setContentAndCursor(editor, '***x***', [ 0 ], 7);
-        const matches = getInlinePattern(editor, inlinePatternSet as PatternSet);
+        const matches = getInlinePattern(editor, inlinePatternSet);
         assertSimpleMatch(matches, '**', '**', [ 'bold' ], { start: [ 0, 1 ], end: [ 0, 3 ] }, { start: [ 0, 5 ], end: [ 0, 7 ] });
       });
 

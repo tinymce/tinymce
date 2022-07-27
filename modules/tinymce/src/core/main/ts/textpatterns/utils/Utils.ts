@@ -52,7 +52,7 @@ const resolveFromDynamicPatterns = (patternSet: PatternSet, block: Element, befo
   };
 };
 
-const getBeforeText = (dom: DOMUtils, block: Node, node: Node, offset: number): string => {
+const getBeforeText = (dom: DOMUtils, block: Element, node: Node, offset: number): string => {
   const rng = dom.createRng();
   rng.setStart(block, 0);
   rng.setEnd(node, offset);
