@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Obj, Strings, Type } from '@ephox/katamari';
+import { Fun, Obj, Strings, Thunk, Type } from '@ephox/katamari';
 
 import { Base64Extract, extractBase64DataUris, restoreDataUris } from '../../html/Base64Uris';
 import Tools from '../util/Tools';
@@ -211,7 +211,8 @@ const checkBogusAttribute = (regExp: RegExp, attrString: string): string | null 
  */
 const SaxParser = (settings?: SaxParserSettings, schema = Schema()): SaxParser => {
   settings = settings || {};
-  const doc = (settings.document ?? document).implementation.createHTMLDocument('parser');
+  const lazyTempDocument = Thunk.cached(() => document.implementation.createHTMLDocument('parser'));
+  const doc = lazyTempDocument();
   const form = doc.createElement('form');
 
   if (settings.fix_self_closing !== false) {

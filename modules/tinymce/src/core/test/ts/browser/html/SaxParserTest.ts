@@ -284,6 +284,20 @@ describe('browser.tinymce.core.html.SaxParserTest', () => {
     parser.parse('<p title="gre>gererg"/>');
     assert.equal(writer.getContent(), '<p title="gre&gt;gererg"></p>', 'Parse elements with quoted > characters.');
     assert.deepEqual(counter.counts, { start: 1, end: 1 }, 'Parse elements with quoted > characters (counts).');
+
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schema);
+    writer.reset();
+    parser.parse('<iframe id="someid" src="test" name="my_iframe"></iframe>');
+    assert.equal(writer.getContent(), '<iframe id="someid" src="test" name="my_iframe"></iframe>', 'Parse iframe elements with name and id attributes.');
+    assert.deepEqual(counter.counts, { start: 1, end: 1 }, 'Parse iframe elements with quoted name and id attributes. (counts).');
+
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schema);
+    writer.reset();
+    parser.parse('<img id="test1" src="test" name="testimage" />');
+    assert.equal(writer.getContent(), '<img id="test1" src="test" name="testimage" />', 'Parse img elements with quoted name and id attributes.');
+    assert.deepEqual(counter.counts, { start: 1 }, 'Parse img elements with quoted name and id attributes. (counts).');
   });
 
   it('Parse style elements', () => {
