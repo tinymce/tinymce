@@ -333,7 +333,8 @@ describe('browser.tinymce.textpatterns.FindInlinePatternTest', () => {
               start: '*', end: '*', format: 'bold'
             }
           ];
-        } else if (parentTag === 'div' && ctx.text.includes('replace-me')) {
+        } else if (parentTag === 'div' && ctx.text.endsWith('replace-me')) {
+
           return [
             {
               start: 'me', replacement: 'you'
@@ -431,7 +432,7 @@ describe('browser.tinymce.textpatterns.FindInlinePatternTest', () => {
       );
     });
 
-    it('TINY-8778: Inline pattern matches text in the middle', () => {
+    it('TINY-8778: Inline pattern matches text in the middle of a pagraph', () => {
       const editor = hook.editor();
       editor.setContent('<div>Should replace-me in the middle of paragraph</div>');
       TinySelections.setCursor(editor, [ 0, 0 ], 'Should replace-me'.length);
@@ -456,6 +457,18 @@ describe('browser.tinymce.textpatterns.FindInlinePatternTest', () => {
             }
           }
         ]
+      );
+    });
+
+    it('TINY-8778: Does not return a match if the text pattern is not at the cursor', () => {
+      const editor = hook.editor();
+      const content = 'Should not match becauce replace-me is not at the cursor';
+      editor.setContent(`<div>${content}</div>`);
+      TinySelections.setCursor(editor, [ 0, 0 ], content.length);
+      const matches = getInlinePattern(editor, getInlinePatternSet(), false);
+      assertPatterns(
+        matches,
+        []
       );
     });
   });
