@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- The `name` and `id` attributes of any `img` or `iframe` elements were incorrectly removed #TINY-8773
+
 ## 5.10.5 - 2022-05-25
 
 ### Fixed
