@@ -211,7 +211,7 @@ const checkBogusAttribute = (regExp: RegExp, attrString: string): string | null 
  */
 const SaxParser = (settings?: SaxParserSettings, schema = Schema()): SaxParser => {
   settings = settings || {};
-  const doc = settings.document ?? document;
+  const doc = (settings.document ?? document).implementation.createHTMLDocument('parser');
   const form = doc.createElement('form');
 
   if (settings.fix_self_closing !== false) {
