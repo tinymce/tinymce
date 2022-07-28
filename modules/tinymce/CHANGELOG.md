@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 6.1.2 - 2022-07-29
+
+### Fixed
+- Reverted the undo level fix in the `autolink` plugin as it caused duplicated content in some edge cases. #TINY-8936
+
 ## 6.1.1 - 2022-07-27
 
 ### Fixed
