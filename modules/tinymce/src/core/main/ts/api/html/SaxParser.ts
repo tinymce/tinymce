@@ -107,6 +107,8 @@ const filteredClobberElements = Tools.makeMap('button,fieldset,form,iframe,img,i
 
 const isValidPrefixAttrName = (name: string): boolean => name.indexOf('data-') === 0 || name.indexOf('aria-') === 0;
 
+const lazyTempDocument = Thunk.cached(() => document.implementation.createHTMLDocument('parser'));
+
 /**
  * Returns the index of the matching end tag for a specific start tag. This can
  * be used to skip all children of a parent element from being processed.
@@ -211,7 +213,6 @@ const checkBogusAttribute = (regExp: RegExp, attrString: string): string | null 
  */
 const SaxParser = (settings?: SaxParserSettings, schema = Schema()): SaxParser => {
   settings = settings || {};
-  const lazyTempDocument = Thunk.cached(() => document.implementation.createHTMLDocument('parser'));
   const doc = lazyTempDocument();
   const form = doc.createElement('form');
 
