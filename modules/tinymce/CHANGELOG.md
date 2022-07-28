@@ -23,6 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed various issues that occurred when formatting `contenteditable` elements. #TINY-8905
 - The text pattern logic threw an error when there were fragmented text nodes in a paragraph #TINY-8779
 
+## 6.1.2 - 2022-07-29
+
+### Fixed
+- Reverted the undo level fix in the `autolink` plugin as it caused duplicated content in some edge cases. #TINY-8936
+
 ## 6.1.1 - 2022-07-27
 
 ### Fixed
