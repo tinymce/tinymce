@@ -290,14 +290,28 @@ describe('browser.tinymce.core.html.SaxParserTest', () => {
     writer.reset();
     parser.parse('<iframe id="someid" src="test" name="my_iframe"></iframe>');
     assert.equal(writer.getContent(), '<iframe id="someid" src="test" name="my_iframe"></iframe>', 'Parse iframe elements with name and id attributes.');
-    assert.deepEqual(counter.counts, { start: 1, end: 1 }, 'Parse iframe elements with quoted name and id attributes. (counts).');
+    assert.deepEqual(counter.counts, { start: 1, end: 1 }, 'Parse iframe elements with name and id attributes. (counts).');
 
     counter = createCounter(writer);
     parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<img id="test1" src="test" name="testimage" />');
     assert.equal(writer.getContent(), '<img id="test1" src="test" name="testimage" />', 'Parse img elements with quoted name and id attributes.');
-    assert.deepEqual(counter.counts, { start: 1 }, 'Parse img elements with quoted name and id attributes. (counts).');
+    assert.deepEqual(counter.counts, { start: 1 }, 'Parse img elements with name and id attributes. (counts).');
+
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schema);
+    writer.reset();
+    parser.parse('<div id="divid" src="test" name="my_div"></div>');
+    assert.equal(writer.getContent(), '<div id="divid" src="test" name="my_div"></div>', 'Parse div elements with name and id attributes.');
+    assert.deepEqual(counter.counts, { start: 1, end: 1 }, 'Parse div elements with name and id attributes. (counts).');
+
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schema);
+    writer.reset();
+    parser.parse('<image id="test2" src="test" name="testimage2"></image');
+    assert.equal(writer.getContent(), '<image id="test2" src="test" name="testimage2"></image>', 'Parse image elements with quoted name and id attributes.');
+    assert.deepEqual(counter.counts, { start: 1, end: 1 }, 'Parse image elements with name and id attributes. (counts).');
   });
 
   it('Parse style elements', () => {
