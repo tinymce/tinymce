@@ -1,7 +1,6 @@
 import { Strings, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Options from '../api/Options';
 
@@ -169,29 +168,27 @@ const convertToLink = (editor: Editor, result: ParseResult) => {
   const defaultLinkTarget = Options.getDefaultLinkTarget(editor);
   const { rng, url } = result;
 
-  editor.undoManager.transact(() => {
-    const bookmark = editor.selection.getBookmark();
-    editor.selection.setRng(rng);
+  const bookmark = editor.selection.getBookmark();
+  editor.selection.setRng(rng);
 
-    // Needs to be a native createlink command since this is executed in a keypress event handler
-    // so the pending character that is to be inserted needs to be inserted after the link. That will not
-    // happen if we use the formatter create link version. Since we're using the native command
-    // then we also need to ensure the exec command events are fired for backwards compatibility.
-    const command = 'createlink';
-    const args = { command, ui: false, value: url };
-    const beforeExecEvent = editor.dispatch('BeforeExecCommand', args);
-    if (!beforeExecEvent.isDefaultPrevented()) {
-      editor.getDoc().execCommand(command, false, url);
-      editor.dispatch('ExecCommand', args);
+  // Needs to be a native createlink command since this is executed in a keypress event handler
+  // so the pending character that is to be inserted needs to be inserted after the link. That will not
+  // happen if we use the formatter create link version. Since we're using the native command
+  // then we also need to ensure the exec command events are fired for backwards compatibility.
+  const command = 'createlink';
+  const args = { command, ui: false, value: url };
+  const beforeExecEvent = editor.dispatch('BeforeExecCommand', args);
+  if (!beforeExecEvent.isDefaultPrevented()) {
+    editor.getDoc().execCommand(command, false, url);
+    editor.dispatch('ExecCommand', args);
 
-      if (Type.isString(defaultLinkTarget)) {
-        editor.dom.setAttrib(editor.selection.getNode(), 'target', defaultLinkTarget);
-      }
+    if (Type.isString(defaultLinkTarget)) {
+      editor.dom.setAttrib(editor.selection.getNode(), 'target', defaultLinkTarget);
     }
+  }
 
-    editor.selection.moveToBookmark(bookmark);
-    editor.nodeChanged();
-  });
+  editor.selection.moveToBookmark(bookmark);
+  editor.nodeChanged();
 };
 
 const handleSpacebar = (editor: Editor): void => {
@@ -203,13 +200,9 @@ const handleSpacebar = (editor: Editor): void => {
 
 const handleBracket = handleSpacebar;
 
-const handleEnter = (editor: Editor, e: EditorEvent<KeyboardEvent>): void => {
+const handleEnter = (editor: Editor): void => {
   const result = parseCurrentLine(editor, -1);
   if (Type.isNonNullable(result)) {
-    // If we have a match then we need to take over the enter behaviour to ensure the undo stack
-    // allows undoing just the URL change without undoing the enter
-    e.preventDefault();
-    editor.execCommand('mceInsertNewLine', false, e);
     convertToLink(editor, result);
   }
 };
@@ -217,7 +210,7 @@ const handleEnter = (editor: Editor, e: EditorEvent<KeyboardEvent>): void => {
 const setup = (editor: Editor): void => {
   editor.on('keydown', (e) => {
     if (e.keyCode === 13 && !e.isDefaultPrevented()) {
-      handleEnter(editor, e);
+      handleEnter(editor);
     }
   });
 

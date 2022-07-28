@@ -201,25 +201,4 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     assert.deepEqual(events, [ 'beforeexeccommand-createlink', 'execcommand-createlink' ], 'The createlink ExecCommand events should have fired');
     editor.off('BeforeExecCommand ExecCommand', logEvent);
   });
-
-  it('TINY-8896: should add an undo level for the link conversion', () => {
-    const editor = hook.editor();
-    assertIsLink(editor, 'http://www.domain.com', 'http://www.domain.com');
-    TinyAssertions.assertCursor(editor, [ 0 ], 2);
-    editor.undoManager.undo();
-    TinyAssertions.assertContent(editor, '<p>http://www.domain.com&nbsp;</p>');
-    TinyAssertions.assertCursor(editor, [ 0, 0 ], 'http://www.domain.com\u00a0'.length);
-
-    typeAnEclipsedURL(editor, 'http://www.domain.com', 'http://www.domain.com');
-    TinyAssertions.assertCursor(editor, [ 0 ], 3);
-    editor.undoManager.undo();
-    TinyAssertions.assertContent(editor, '<p>(http://www.domain.com)</p>');
-    TinyAssertions.assertCursor(editor, [ 0, 0 ], '(http://www.domain.com)'.length);
-
-    typeNewlineURL(editor, 'http://www.domain.com', 'http://www.domain.com');
-    TinyAssertions.assertCursor(editor, [ 1 ], 0);
-    editor.undoManager.undo();
-    TinyAssertions.assertContent(editor, '<p>http://www.domain.com</p><p>&nbsp;</p>');
-    TinyAssertions.assertCursor(editor, [ 1 ], 0);
-  });
 });
