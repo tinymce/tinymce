@@ -305,13 +305,6 @@ describe('browser.tinymce.core.html.SaxParserTest', () => {
     parser.parse('<div id="divid" src="test" name="my_div"></div>');
     assert.equal(writer.getContent(), '<div id="divid" src="test" name="my_div"></div>', 'Parse div elements with name and id attributes.');
     assert.deepEqual(counter.counts, { start: 1, end: 1 }, 'Parse div elements with name and id attributes. (counts).');
-
-    counter = createCounter(writer);
-    parser = SaxParser(counter, schema);
-    writer.reset();
-    parser.parse('<image id="test2" src="test" name="testimage2"></image');
-    assert.equal(writer.getContent(), '<image id="test2" src="test" name="testimage2"></image>', 'Parse image elements with quoted name and id attributes.');
-    assert.deepEqual(counter.counts, { start: 1, end: 1 }, 'Parse image elements with name and id attributes. (counts).');
   });
 
   it('Parse style elements', () => {
