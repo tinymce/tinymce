@@ -3,6 +3,7 @@ import { Fun, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { InlineContent } from 'tinymce/core/api/ui/Ui';
 
+import * as Options from '../api/Options';
 import * as Actions from '../core/Actions';
 import * as Utils from '../core/Utils';
 
@@ -94,7 +95,7 @@ const setupContextToolbars = (editor: Editor): void => {
       onSetup: Actions.toggleActiveState(editor)
     },
     label: 'Link',
-    predicate: (node) => Utils.isInAnchor(editor, node),
+    predicate: (node) => Utils.isInAnchor(editor, node) && Options.hasContextToolbar(editor),
     initValue: () => {
       const elm = Utils.getAnchorElement(editor);
       return elm.fold(Fun.constant(''), Utils.getHref);
