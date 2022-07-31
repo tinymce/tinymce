@@ -14,7 +14,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The formatter can now apply a format to a `contenteditable="false"` element by wrapping it. Configurable using the `format_noneditable_selector` option. #TINY-8905
 
 ### Fixed
-- Fixed a regression where clicking in the editor would always show the link context toolbar when the option `link_context_toolbar` is set to true #TINY-8940
 - The Autolink plugin did not work when the text nodes in the content were fragmented #TINY-3723
 - Fixed various incorrect types on public APIs found while enabling TypeScript strict mode #TINY-8806
 - Text returned from `editor.getContent({format: 'text'})` would differ with blank lines between some browsers #TINY-8579
