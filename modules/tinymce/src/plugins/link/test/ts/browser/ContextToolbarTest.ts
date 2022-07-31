@@ -47,7 +47,7 @@ describe('browser.tinymce.plugins.link.ContextToolbarTest', () => {
     await UiFinder.pWaitForState<HTMLInputElement>('check link content', SugarBody.body(), '.tox-toolbar input', (ele) => ele.dom.value === 'http://www.google.com');
   });
 
-  it('TINY-8940: toolbar doesn\'t show on non link elements', async () => {
+  it('TINY-8940: toolbar doesn\'t show on non link elements', () => {
     const editor = hook.editor();
     editor.options.set('link_context_toolbar', true);
     editor.setContent('<p>google</p>');
