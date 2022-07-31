@@ -3,7 +3,6 @@ import { Fun, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { InlineContent } from 'tinymce/core/api/ui/Ui';
 
-import * as Options from '../api/Options';
 import * as Actions from '../core/Actions';
 import * as Utils from '../core/Utils';
 
@@ -68,7 +67,7 @@ const setupContextToolbars = (editor: Editor): void => {
 
   const onSetupLink = (buttonApi: InlineContent.ContextFormButtonInstanceApi) => {
     const node = editor.selection.getNode();
-    buttonApi.setEnabled(Utils.getAnchorElement(editor, node).isSome());
+    buttonApi.setEnabled(Utils.isInAnchor(editor, node));
     return Fun.noop;
   };
 
@@ -95,7 +94,7 @@ const setupContextToolbars = (editor: Editor): void => {
       onSetup: Actions.toggleActiveState(editor)
     },
     label: 'Link',
-    predicate: (node) => Utils.getAnchorElement(editor, node).isSome() && Options.hasContextToolbar(editor),
+    predicate: (node) => Utils.isInAnchor(editor, node),
     initValue: () => {
       const elm = Utils.getAnchorElement(editor);
       return elm.fold(Fun.constant(''), Utils.getHref);
@@ -109,7 +108,7 @@ const setupContextToolbars = (editor: Editor): void => {
         onSetup: (buttonApi) => {
           const node = editor.selection.getNode();
           // TODO: Make a test for this later.
-          buttonApi.setActive(Utils.getAnchorElement(editor, node).isSome());
+          buttonApi.setActive(Utils.isInAnchor(editor, node));
           return Actions.toggleActiveState(editor)(buttonApi);
         },
         onAction: (formApi) => {
