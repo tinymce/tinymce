@@ -29,10 +29,7 @@ describe('browser.tinymce.plugins.link.ContextToolbarTest', () => {
     const editorBody = TinyDom.body(editor);
     editor.setContent('<a href="http://www.google.com">google</a>');
     Mouse.trueClickOn(editorBody, 'a');
-    // I believe this does not do much, since the toolbar will never be in
-    // in the editor body. The toolbar exists in the .tox-tinymce-aux portal
-    // which exists at the top level.
-    UiFinder.notExists(editorBody, '.tox-toolbar button[aria-label="Link"]');
+    UiFinder.notExists(SugarBody.body(), '.tox-toolbar button[aria-label="Link"]');
     editor.setContent('');
   });
 
