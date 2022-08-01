@@ -41,6 +41,13 @@ interface State {
   intervalId: Optional<number>;
 }
 
+const clearStateInterval = (state: State) => {
+  if (state.intervalId.isSome()) {
+    clearInterval(state.intervalId.getOrUndefined());
+    state.intervalId = Optional.none();
+  }
+};
+
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 const isContentEditable = Predicate.or(isContentEditableFalse, NodeType.isContentEditableTrue) as (node: Node) => node is HTMLElement;
 
@@ -275,10 +282,7 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
 
     if (state.dragging) {
 
-      if (state.intervalId.isSome()) {
-        clearInterval(state.intervalId.getOrUndefined());
-        state.intervalId = Optional.none();
-      }
+      clearStateInterval(state);
 
       const targetPos = applyRelPos(state, MousePosition.calc(editor, e));
       appendGhostToBody(state.ghost, editor.getBody());
@@ -302,10 +306,7 @@ const getRawTarget = (selection: EditorSelection): Node | null => {
 
 const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<MouseEvent>) => {
   state.on((state) => {
-    if (state.intervalId.isSome()) {
-      clearInterval(state.intervalId.getOrUndefined());
-      state.intervalId = Optional.none();
-    }
+    clearStateInterval(state);
     if (state.dragging) {
       if (isValidDropTarget(editor, getRawTarget(editor.selection), state.element)) {
         const targetClone = cloneElement(state.element);
@@ -333,12 +334,9 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
 
 const stop = (state: Singleton.Value<State>, editor: Editor) => () => {
   state.on((state) => {
+    clearStateInterval(state);
     if (state.dragging) {
       editor.dispatch('dragend');
-    }
-    if (state.intervalId.isSome()) {
-      clearInterval(state.intervalId.getOrUndefined());
-      state.intervalId = Optional.none();
     }
   });
   removeDragState(state);
