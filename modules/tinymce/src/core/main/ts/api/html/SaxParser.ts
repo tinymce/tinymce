@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Obj, Strings, Type } from '@ephox/katamari';
+import { Fun, Obj, Strings, Thunk, Type } from '@ephox/katamari';
 
 import { Base64Extract, extractBase64DataUris, restoreDataUris } from '../../html/Base64Uris';
 import Tools from '../util/Tools';
@@ -106,6 +106,8 @@ const enum MatchType {
 const filteredClobberElements = Tools.makeMap('button,fieldset,form,iframe,img,image,input,object,output,select,textarea');
 
 const isValidPrefixAttrName = (name: string): boolean => name.indexOf('data-') === 0 || name.indexOf('aria-') === 0;
+
+const lazyTempDocument = Thunk.cached(() => document.implementation.createHTMLDocument('parser'));
 
 /**
  * Returns the index of the matching end tag for a specific start tag. This can
@@ -211,7 +213,7 @@ const checkBogusAttribute = (regExp: RegExp, attrString: string): string | null 
  */
 const SaxParser = (settings?: SaxParserSettings, schema = Schema()): SaxParser => {
   settings = settings || {};
-  const doc = settings.document ?? document;
+  const doc = lazyTempDocument();
   const form = doc.createElement('form');
 
   if (settings.fix_self_closing !== false) {

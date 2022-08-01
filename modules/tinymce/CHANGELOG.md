@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- The `name` and `id` attributes of some elements were incorrectly removed during serialization #TINY-8773
+
 ## 5.10.5 - 2022-05-25
 
 ### Fixed
