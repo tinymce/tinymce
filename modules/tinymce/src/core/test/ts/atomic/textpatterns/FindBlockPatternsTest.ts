@@ -3,7 +3,6 @@ import { assert } from 'chai';
 
 import * as BlockPattern from 'tinymce/core/textpatterns/core/BlockPattern';
 import * as Pattern from 'tinymce/core/textpatterns/core/Pattern';
-import { sortPatterns } from 'tinymce/core/textpatterns/utils/Utils';
 
 describe('atomic.tinymce.textpatterns.FindBlockPatternsTest', () => {
   it('should find the start of the default patterns', () => {
@@ -28,8 +27,7 @@ describe('atomic.tinymce.textpatterns.FindBlockPatternsTest', () => {
     const defaultPatterns = patternSet.blockPatterns;
 
     const testFindStartPattern = (text: string, expectedPattern: string) => {
-      const actual = BlockPattern.findPattern(sortPatterns(defaultPatterns), text).getOrNull();
-
+      const actual = BlockPattern.findPattern(defaultPatterns, text).getOrNull();
       assert.equal(actual.start, expectedPattern, 'Assert correct pattern');
     };
 
