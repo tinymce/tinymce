@@ -48,7 +48,7 @@ describe('browser.tinymce.plugins.link.ContextToolbarTest', () => {
     editor.options.set('link_context_toolbar', true);
     editor.setContent('<p>google</p>');
     Mouse.trueClickOn(TinyDom.body(editor), 'p');
-    await Waiter.pWait(100);
+    await Waiter.pWait(50);
     UiFinder.notExists(SugarBody.body(), '.tox-pop__dialog .tox-toolbar');
     editor.setContent('');
   });
