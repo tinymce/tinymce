@@ -252,6 +252,13 @@ const partHeader = Composite.partType.optional<OuterContainerSketchDetail, Heade
   ]
 });
 
+const partSPAP = Composite.partType.optional<OuterContainerSketchDetail, HeaderSpec>({
+  name: 'spap',
+  schema: [
+    FieldSchema.required('dom')
+  ]
+});
+
 const partSocket = Composite.partType.optional({
   // factory: Fun.identity,
   name: 'socket',
@@ -294,6 +301,7 @@ export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketch
     partMultipleToolbar,
     partSocket,
     partSidebar,
+    partSPAP,
     partThrobber
   ],
 

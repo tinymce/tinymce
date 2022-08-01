@@ -1,0 +1,33 @@
+//
+// SPAP
+//
+
+@spap-background-color: @background-color;
+@spap-background: url("data:image/svg+xml;charset=utf8,%3Csvg height='@{_spap-height}' viewBox='0 0 40 @{_spap-height}' width='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='@{_spap-divider-height}' width='100' height='1' fill='@{_spap-row-separator-color}'/%3E%3C/svg%3E") left 0 top 0 @spap-background-color;
+
+// private variables
+@_spap-row-separator-color: escape('@{menubar-row-separator-color}');
+@_spap-height: @spap-select-height + (@spap-select-spacing-y * 2) + 1px;
+@_spap-divider-height: @_spap-height - 1px;
+@spap-select-height: @toolbar-button-height;
+@spap-select-spacing-y: @toolbar-button-spacing-y;
+
+.tox {
+  .tox-spap {
+    background: @spap-background;
+    background-color: @spap-background-color;
+    grid-column: 2;
+    grid-row: 1;
+    padding-inline-end: 8px;
+    padding-inline-start: 4px;
+    padding-top: 5px;
+  }
+
+  .tox-spap-link {
+    background: lightblue;
+    border-radius: 5px;
+    font-size: 12px;
+    padding: 5px;
+    white-space: nowrap;
+  }
+}

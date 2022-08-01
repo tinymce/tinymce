@@ -52,6 +52,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
       height: 400,
       width: 650,
       toolbar_sticky: false,
+      promotion: false,
       toolbar_mode: 'wrap'
     }, []);
 

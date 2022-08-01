@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - New `text_patterns_lookup` option to provide additional text patterns dynamically #TINY-8778
+- New SPAP element to editor to promote premium #TINY-8840
 - New `format_noneditable_selector` option to specify the `contenteditable="false"` elements that can be wrapped in a format. #TINY-8905
 
 ### Improved

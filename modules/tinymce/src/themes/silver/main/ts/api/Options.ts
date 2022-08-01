@@ -257,6 +257,11 @@ const register = (editor: Editor): void => {
     default: true
   });
 
+  registerOption('promotion', {
+    processor: 'boolean',
+    default: true
+  });
+
   registerOption('resize', {
     processor: (value) => value === 'both' || Type.isBoolean(value),
     // Editor resize doesn't work on touch devices at this stage
@@ -302,6 +307,12 @@ const useBranding = option('branding');
 const getResize = option('resize');
 const getPasteAsText = option('paste_as_text');
 const getSidebarShow = option('sidebar_show');
+const promotionEnabled = option('promotion');
+
+const hasApiKey = (editor: Editor) => {
+  const key = option('api_key')(editor);
+  return Type.isString(key) && key.length > 0;
+};
 
 const isSkinDisabled = (editor: Editor): boolean =>
   editor.options.get('skin') === false;
@@ -442,6 +453,8 @@ export {
   getFilePickerValidatorHandler,
   useStatusBar,
   useElementPath,
+  promotionEnabled,
+  hasApiKey,
   useBranding,
   getResize,
   getPasteAsText,

@@ -68,6 +68,9 @@ export interface RenderArgs {
   readonly height: string;
 }
 
+const SpapMessage = 'Try Premium!';
+const SpapLink = 'http://tiny.cloud';
+
 const getLazyMothership = (singleton: Singleton.Value<Gui.GuiSystem>) =>
   singleton.get().getOrDie('UI has not been rendered');
 
@@ -155,6 +158,8 @@ const setup = (editor: Editor): RenderInfo => {
     const hasMultipleToolbar = Options.isMultipleToolbars(editor);
     const hasToolbar = Options.isToolbarEnabled(editor);
     const hasMenubar = Options.isMenubarEnabled(editor);
+    const shouldHavePromotion = Options.promotionEnabled(editor) && !Options.hasApiKey(editor);
+    const partSpap = makeSPAP();
 
     const getPartToolbar = () => {
       if (hasMultipleToolbar) {
@@ -166,6 +171,8 @@ const setup = (editor: Editor): RenderInfo => {
       }
     };
 
+    const menuBarCollection = shouldHavePromotion ? [ partSpap, partMenubar ] : [ partMenubar ];
+
     return OuterContainer.parts.header({
       dom: {
         tag: 'div',
@@ -173,12 +180,36 @@ const setup = (editor: Editor): RenderInfo => {
         ...verticalDirAttributes
       },
       components: Arr.flatten<AlloySpec>([
-        hasMenubar ? [ partMenubar ] : [ ],
+        hasMenubar ? menuBarCollection : [ ],
         getPartToolbar(),
         // fixed_toolbar_container anchors to the editable area, else add an anchor bar
         Options.useFixedContainer(editor) ? [ ] : [ memAnchorBar.asSpec() ]
       ]),
       sticky: Options.isStickyToolbar(editor),
+      editor,
+      sharedBackstage: backstage.shared
+    });
+  };
+
+  const makeSPAP = (): AlloyParts.ConfiguredPart => {
+    return OuterContainer.parts.spap({
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-spap' ],
+      },
+      components: [
+        {
+          dom: {
+            tag: 'a',
+            attributes: {
+              href: SpapLink,
+              target: '_blank'
+            },
+            classes: [ 'tox-spap-link' ],
+            innerHtml: SpapMessage
+          }
+        }
+      ],
       editor,
       sharedBackstage: backstage.shared
     });

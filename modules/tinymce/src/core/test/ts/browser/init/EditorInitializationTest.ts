@@ -159,6 +159,9 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
               classes: [ arr.has('tox-editor-header') ],
               children: [
                 s.element('div', {
+                  classes: [ arr.has('tox-spap') ]
+                }),
+                s.element('div', {
                   classes: [ arr.has('tox-menubar') ],
                   attrs: {
                     role: str.is('menubar')
