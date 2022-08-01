@@ -1,3 +1,5 @@
+import { Type } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
 import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
@@ -31,8 +33,8 @@ const styleValueToText = (styleValue: string): string => {
   });
 };
 
-const normalizeStyleValue = (styleValue: string): string =>
-  styleValue === 'default' ? '' : styleValue;
+const normalizeStyleValue = (styleValue: string | undefined): string =>
+  Type.isNullable(styleValue) || styleValue === 'default' ? '' : styleValue;
 
 const isWithinList = (editor: Editor, e: EditorEvent<NodeChangeEvent>, nodeName: ListType): boolean => {
   const tableCellIndex = findIndex(e.parents, ListUtils.isTableCellNode);
@@ -84,14 +86,13 @@ const addSplitButton = (editor: Editor, id: string, tooltip: string, cmd: string
 };
 
 const addButton = (editor: Editor, id: string, tooltip: string, cmd: string, nodeName: ListType, styleValue: string): void => {
-  const value = normalizeStyleValue(styleValue);
   editor.ui.registry.addToggleButton(id, {
     active: false,
     tooltip,
     icon: nodeName === ListType.OrderedList ? 'ordered-list' : 'unordered-list',
     onSetup: makeSetupHandler(editor, nodeName),
     // Need to make sure the button removes rather than applies if a list of the same type is selected
-    onAction: () => editor.queryCommandState(cmd) || value === '' ? editor.execCommand(cmd) : Actions.applyListFormat(editor, nodeName, value)
+    onAction: () => editor.queryCommandState(cmd) || styleValue === '' ? editor.execCommand(cmd) : Actions.applyListFormat(editor, nodeName, styleValue)
   });
 };
 
@@ -99,7 +100,7 @@ const addControl = (editor: Editor, id: string, tooltip: string, cmd: string, no
   if (styles.length > 1) {
     addSplitButton(editor, id, tooltip, cmd, nodeName, styles);
   } else {
-    addButton(editor, id, tooltip, cmd, nodeName, styles[0] || '');
+    addButton(editor, id, tooltip, cmd, nodeName, normalizeStyleValue(styles[0]));
   }
 };
 
