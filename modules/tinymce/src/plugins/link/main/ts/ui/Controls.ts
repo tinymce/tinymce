@@ -95,7 +95,7 @@ const setupContextToolbars = (editor: Editor): void => {
       onSetup: Actions.toggleActiveState(editor)
     },
     label: 'Link',
-    predicate: (node) => Utils.isInAnchor(editor, node) && Options.hasContextToolbar(editor),
+    predicate: (node) => Options.hasContextToolbar(editor) && Utils.isInAnchor(editor, node),
     initValue: () => {
       const elm = Utils.getAnchorElement(editor);
       return elm.fold(Fun.constant(''), Utils.getHref);
