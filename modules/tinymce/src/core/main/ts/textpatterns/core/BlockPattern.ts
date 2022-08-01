@@ -55,19 +55,19 @@ const applyPattern = (editor: Editor, match: BlockPatternMatch): boolean => {
   return true;
 };
 
+const sortPatterns = <P extends Pattern>(patterns: P[]): P[] => Arr.sort(patterns, (a, b) => {
+  if (a.start.length === b.start.length) {
+    return 0;
+  }
+  return a.start.length > b.start.length ? -1 : 1;
+});
+
 // Finds a matching pattern to the specified text
 const findPattern = <P extends Pattern>(patterns: P[], text: string): Optional<P> => {
   const sortedPatterns = sortPatterns(patterns);
   const nuText = text.replace(Unicode.nbsp, ' ');
   return Arr.find(sortedPatterns, (pattern) => text.indexOf(pattern.start) === 0 || nuText.indexOf(pattern.start) === 0);
 };
-
-const sortPatterns = <T extends Pattern>(patterns: T[]): T[] => Arr.sort(patterns, (a, b) => {
-  if (a.start.length === b.start.length) {
-    return 0;
-  }
-  return a.start.length > b.start.length ? -1 : 1;
-});
 
 const findPatterns = (editor: Editor, block: Element, patternSet: PatternSet, normalizedMatches: boolean): BlockPatternMatch[] => {
   const dom = editor.dom;
