@@ -54,10 +54,21 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
     await TestUtils.pOpenDialogAndAssertInitial(hook.editor(), 'markup', '');
     TestUtils.setTextareaContent('test content');
     await TestUtils.pSubmitDialog(editor);
+    TinyAssertions.assertSelection(editor, [], 0, [], 1);
+    TinyAssertions.assertContentPresence(editor, { 'pre[data-mce-selected]': 1 });
+
     await pClickEditMenu(editor, 'Copy');
     pressEnter(editor);
+    TinyAssertions.assertCursor(editor, [ 1 ], 0);
+    TinyAssertions.assertContentPresence(editor, { 'pre[data-mce-selected]': 0 });
+
     await pPaste(editor);
+    TinyAssertions.assertSelection(editor, [], 1, [], 2);
+    TinyAssertions.assertContentPresence(editor, { 'pre[data-mce-selected]': 1 });
+
     pressEnter(editor);
+    TinyAssertions.assertCursor(editor, [ 2 ], 0);
+    TinyAssertions.assertContentPresence(editor, { 'pre[data-mce-selected]': 0 });
 
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => {
       const emptyParagraph = s.element('p', {
@@ -105,7 +116,11 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
       TinySelections.setCursor(editor, [ 1 ], 1);
 
       await pPaste(editor);
+      TinyAssertions.assertCursor(editor, [ 3, 0 ], 'test text'.length);
+      TinyAssertions.assertContentPresence(editor, { 'pre[data-mce-selected]': 0 });
+
       pressEnter(editor);
+      TinyAssertions.assertCursor(editor, [ 4 ], 0);
 
       TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
         const testTextParagraph = s.element('p', {
