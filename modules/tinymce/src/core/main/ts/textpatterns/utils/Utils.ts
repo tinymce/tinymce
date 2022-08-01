@@ -70,5 +70,6 @@ export {
   deleteRng,
   getParentBlock,
   resolveFromDynamicPatterns,
-  getBeforeText
+  getBeforeText,
+  sortPatterns
 };
