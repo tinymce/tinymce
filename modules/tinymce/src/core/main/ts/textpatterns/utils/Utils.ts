@@ -1,10 +1,10 @@
-import { Arr, Optional } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import DOMUtils from '../../api/dom/DOMUtils';
 import Editor from '../../api/Editor';
 import * as NodeType from '../../dom/NodeType';
 import { getBlockPatterns, getInlinePatterns } from '../core/Pattern';
-import { Pattern, PatternSet } from '../core/PatternTypes';
+import { PatternSet } from '../core/PatternTypes';
 
 const cleanEmptyNodes = (dom: DOMUtils, node: Node | null, isRoot: (e: Node) => boolean): void => {
   // Recursively walk up the tree while we have a parent and the node is empty. If the node is empty, then remove it.
@@ -38,13 +38,6 @@ const deleteRng = (dom: DOMUtils, rng: Range, isRoot: (e: Node) => boolean, clea
 const getParentBlock = (editor: Editor, rng: Range): Optional<Element> =>
   Optional.from(editor.dom.getParent(rng.startContainer, editor.dom.isBlock));
 
-const sortPatterns = <T extends Pattern>(patterns: T[]): T[] => Arr.sort(patterns, (a, b) => {
-  if (a.start.length === b.start.length) {
-    return 0;
-  }
-  return a.start.length > b.start.length ? -1 : 1;
-});
-
 const resolveFromDynamicPatterns = (patternSet: PatternSet, block: Element, beforeText: string): PatternSet => {
   const dynamicPatterns = patternSet.dynamicPatternsLookup({
     text: beforeText,
@@ -53,8 +46,8 @@ const resolveFromDynamicPatterns = (patternSet: PatternSet, block: Element, befo
   // dynamic patterns take precedence here
   return {
     ...patternSet,
-    blockPatterns: sortPatterns([ ...getBlockPatterns(dynamicPatterns), ...patternSet.blockPatterns ]),
-    inlinePatterns: [ ...getInlinePatterns(dynamicPatterns), ...patternSet.inlinePatterns ]
+    blockPatterns: getBlockPatterns(dynamicPatterns).concat(patternSet.blockPatterns),
+    inlinePatterns: getInlinePatterns(dynamicPatterns).concat(patternSet.inlinePatterns)
   };
 };
 
