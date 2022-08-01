@@ -88,6 +88,7 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
         { start: '#', format: 'h1' },
         { start: '##', format: 'h2' },
         { start: '###', format: 'h3' },
+        { start: '#####', format: 'h5' },
         { start: '' }
       ],
       text_patterns_lookup: (_ctx) => [
@@ -181,7 +182,7 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
       assert.deepEqual(matches, [], 'Checking block pattern matches do not match for incorrect block tag type');
     });
 
-    it('TINY-8778: Lookup patterns take precedence over block patterns', () => {
+    it('TINY-8778: Lookup patterns take precedence over static patterns', () => {
       const editor = hook.editor();
       editor.setContent('<p>### is a new heading</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 4);
@@ -193,6 +194,26 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
             start: '###',
             cmd: 'mceInsertContent',
             value: 'h3 heading'
+          },
+          range: {
+            start: [ 0, 0 ],
+            end: [ 0, 0 ]
+          }
+        }
+      ]);
+    });
+
+    it('TINY-8778: Match a static pattern instead if it is a better match', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>##### Better matching heading</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], '##### Better matching heading'.length);
+      const matches = findPatternsWithDynamicPatterns(editor, getPatternSet(), true);
+      assert.deepEqual(matches, [
+        {
+          pattern: {
+            type: 'block-format',
+            start: '#####',
+            format: 'h5'
           },
           range: {
             start: [ 0, 0 ],
