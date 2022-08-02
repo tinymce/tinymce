@@ -140,6 +140,7 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
     return EditorManager.init({
       selector: '.tinymce-editor',
       inline: true,
+      promotion: false,
       toolbar_mode: 'wrap'
     });
   };
