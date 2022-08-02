@@ -43,6 +43,7 @@ const resolveFromDynamicPatterns = (patternSet: PatternSet, block: Element, befo
     text: beforeText,
     block
   });
+
   // dynamic patterns take precedence here
   return {
     ...patternSet,
