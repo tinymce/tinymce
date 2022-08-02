@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `text_patterns_lookup` option to provide additional text patterns dynamically #TINY-8778
 
 ### Improved
-- The autocompleter now supports a multiple character trigger #TINY-8887
+- The autocompleter now supports a multiple character trigger using the new `trigger` configuration #TINY-8887
 
 ### Fixed
 - The Autolink plugin did not work when the text nodes in the content were fragmented #TINY-3723

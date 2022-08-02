@@ -37,7 +37,7 @@ const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number
     return Optional.none();
   }
 
-  const buf: Array<{text: string; offset: number}> = [];
+  const buf: Array<{ text: string; offset: number }> = [];
 
   const findTriggerChIndex = (element: Text, offset: number, text: string) => {
     // Stop searching by just returning the current offset if whitespace was found (eg Optional.none())
