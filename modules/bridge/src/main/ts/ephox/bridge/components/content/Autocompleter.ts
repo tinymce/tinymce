@@ -32,7 +32,7 @@ export interface AutocompleterSpec {
   type?: 'autocompleter';
   // TODO: TINY-8929: Remove 'trigger' fallback to 'ch'
   ch?: string;
-  trigger?: string; // TODO: TINY-8929: upgrade to non-optional
+  trigger?: string;
   minChars?: number;
   columns?: ColumnTypes;
   matches?: (rng: Range, text: string, pattern: string) => boolean;

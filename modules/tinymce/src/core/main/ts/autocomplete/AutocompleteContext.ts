@@ -40,10 +40,10 @@ const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number
   const buf: Array<{ text: string; offset: number }> = [];
 
   const findTriggerChIndex = (element: Text, offset: number, text: string) => {
-    // Stop searching by just returning the current offset if whitespace was found (eg Optional.none())
-    // and we'll handle the final checks below instead
     buf.push({ text, offset });
     const res = Arr.foldl(buf, (acc, item) => ({ text: item.text + acc.text, offset: item.offset + acc.offset }), { text: '', offset: 0 });
+    // Stop searching by just returning the current offset if whitespace was found (eg Optional.none())
+    // and we'll handle the final checks below instead
     return findTrigger(res.text, res.offset, ch).getOr(offset);
   };
 
