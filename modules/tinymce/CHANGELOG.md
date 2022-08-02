@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Selecting a figure with `class="image"` would incorrectly highlight the link toolbar button #TINY-8832
 - Fixed various issues that occurred when formatting `contenteditable` elements. #TINY-8905
 - The text pattern logic threw an error when there were fragmented text nodes in a paragraph #TINY-8779
-- Dragging a CEF element towards the edges would not cause scrolling #TINY-8874
+- Dragging a `contentEditable=false` element towards the edges would not cause scrolling #TINY-8874
 
 ## 6.1.1 - TBA
 
