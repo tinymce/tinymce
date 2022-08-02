@@ -12,8 +12,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Improved
 - The formatter can now apply a format to a `contenteditable="false"` element by wrapping it. Configurable using the `format_noneditable_selector` option. #TINY-8905
-
-### Improved
 - The autocompleter now supports a multiple character trigger using the new `trigger` configuration #TINY-8887
 
 ### Fixed
