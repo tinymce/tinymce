@@ -27,7 +27,7 @@ const traverseRec = (nodes: AstNode[], fn: (node: AstNode) => void): void | Void
   }
   Arr.each(nodes, fn);
 
-  const newNodes: AstNode[] = Arr.foldl(nodes, (acc: AstNode[], node) => {
+  const nextNodes: AstNode[] = Arr.foldl(nodes, (acc: AstNode[], node) => {
     if (node.firstChild) {
       acc.push(node.firstChild);
     }
@@ -37,7 +37,7 @@ const traverseRec = (nodes: AstNode[], fn: (node: AstNode) => void): void | Void
     return acc;
   }, []);
 
-  return () => traverseRec(newNodes, fn);
+  return () => traverseRec(nextNodes, fn);
 };
 
 const traverse = trampoline(traverseRec);
