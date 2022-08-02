@@ -9,7 +9,6 @@ import Editor from 'tinymce/core/api/Editor';
 describe('webdriver.tinymce.themes.silver.editor.TabbingTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    promotion: false
   }, []);
 
   it('TINY-3707: Should focus on text editor when tabbing into it', async () => {

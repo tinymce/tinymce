@@ -25,9 +25,6 @@ describe('browser.tinymce.themes.silver.editor.header.HeaderLocationTest', () =>
               classes: [ arr.has('tox-editor-header') ],
               children: [
                 s.element('div', {
-                  classes: [ arr.has('tox-spap') ]
-                }),
-                s.element('div', {
                   classes: [ arr.has('tox-menubar') ]
                 }),
                 s.element('div', {

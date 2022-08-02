@@ -12,6 +12,7 @@ const pFromElement = <T extends EditorType = EditorType>(element: SugarElement<E
   return new Promise((resolve, reject) => {
     const nuSettings: Record<string, any> = {
       toolbar_mode: 'wrap',
+      promotion: false,
       ...settings
     };
 

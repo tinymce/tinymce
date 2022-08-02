@@ -309,11 +309,6 @@ const getPasteAsText = option('paste_as_text');
 const getSidebarShow = option('sidebar_show');
 const promotionEnabled = option('promotion');
 
-const hasApiKey = (editor: Editor) => {
-  const key = option('api_key')(editor);
-  return Type.isString(key) && key.length > 0;
-};
-
 const isSkinDisabled = (editor: Editor): boolean =>
   editor.options.get('skin') === false;
 
@@ -454,7 +449,6 @@ export {
   useStatusBar,
   useElementPath,
   promotionEnabled,
-  hasApiKey,
   useBranding,
   getResize,
   getPasteAsText,

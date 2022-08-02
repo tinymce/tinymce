@@ -17,7 +17,6 @@ describe('browser.tinymce.themes.silver.editor.header.StickyHeaderInitialPlaceme
     it(`Test toolbar initial placement with toolbar_location: ${test.location} and height: ${test.height}`, async () => {
       const editor = await McEditor.pFromSettings<Editor>({
         base_url: '/project/tinymce/js/tinymce',
-        promotion: false,
         height: test.height,
         toolbar_location: test.location,
         toolbar_sticky: true
