@@ -13,17 +13,34 @@ export interface FilterMatches {
   readonly attributes: Record<string, FilterMatch>;
 }
 
-const traverse = (node: AstNode, fn: (node: AstNode) => void): void => {
-  fn(node);
-
-  if (node.firstChild) {
-    traverse(node.firstChild, fn);
+const trampoline = (fn: any) => (...args: any) => {
+  let result = fn(...args);
+  while (typeof result === 'function') {
+    result = result();
   }
-
-  if (node.next) {
-    traverse(node.next, fn);
-  }
+  return result;
 };
+
+const traverseRec = (nodes: AstNode[], fn: (node: AstNode) => void): void | VoidFunction => {
+  if (nodes.length === 0) {
+    return;
+  }
+  Arr.each(nodes, fn);
+
+  const newNodes: AstNode[] = Arr.foldl(nodes, (acc: AstNode[], node) => {
+    if (node.firstChild) {
+      acc.push(node.firstChild);
+    }
+    if (node.next) {
+      acc.push(node.next);
+    }
+    return acc;
+  }, []);
+
+  return () => traverseRec(newNodes, fn);
+};
+
+const traverse = trampoline(traverseRec);
 
 // Test a single node against the current filters, and add it to any match lists if necessary
 const matchNode = (nodeFilters: ParserFilter[], attributeFilters: ParserFilter[], node: AstNode, matches: FilterMatches): void => {
@@ -65,7 +82,7 @@ const findMatchingNodes = (nodeFilters: ParserFilter[], attributeFilters: Parser
   const matches: FilterMatches = { nodes: {}, attributes: {}};
 
   if (node.firstChild) {
-    traverse(node.firstChild, (node) => {
+    traverse([ node.firstChild ], (node: AstNode) => {
       matchNode(nodeFilters, attributeFilters, node, matches);
     });
   }
