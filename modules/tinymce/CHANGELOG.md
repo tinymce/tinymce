@@ -19,6 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Elements with only custom attributes starting with `data-` would sometimes be removed when they shouldn't #TINY-8755
 - Selecting a figure with `class="image"` would incorrectly highlight the link toolbar button #TINY-8832
 
+### Deprecated
+- The autocompleter configuration option `ch` has been deprecated and will be removed in the next major release. Use the `trigger` option instead. #TINY-8887
+
 ## 6.1.1 - TBA
 
 ### Fixed
