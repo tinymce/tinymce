@@ -9,7 +9,7 @@ import { AutocompleterReloadArgs } from '../autocomplete/AutocompleteTypes';
 import * as Rtc from '../Rtc';
 
 interface ActiveAutocompleter {
-  readonly triggerChar: string;
+  readonly trigger: string;
   readonly matchLength: number;
 }
 
@@ -67,7 +67,7 @@ export const setup = (editor: Editor): void => {
 
       // store the element/context
       activeAutocompleter.set({
-        triggerChar: context.triggerChar,
+        trigger: context.trigger,
         matchLength: context.text.length
       });
     }
@@ -81,7 +81,7 @@ export const setup = (editor: Editor): void => {
 
   const doLookup = (fetchOptions: Record<string, any> | undefined): Optional<AutocompleteLookupInfo> =>
     activeAutocompleter.get().map(
-      (ac) => getContext(editor.dom, editor.selection.getRng(), ac.triggerChar)
+      (ac) => getContext(editor.dom, editor.selection.getRng(), ac.trigger)
         .bind((newContext) => lookupWithContext(editor, getAutocompleters, newContext, fetchOptions))
     ).getOrThunk(() => lookup(editor, getAutocompleters));
 
@@ -99,7 +99,7 @@ export const setup = (editor: Editor): void => {
 
             // Ensure the active autocompleter trigger matches, as the old one may have closed
             // and a new one may have opened. If it doesn't match, then do nothing.
-            if (ac.triggerChar === context.triggerChar) {
+            if (ac.trigger === context.trigger) {
               // close if we haven't found any matches in the last 10 chars
               if (context.text.length - ac.matchLength >= 10) {
                 cancelIfNecessary();

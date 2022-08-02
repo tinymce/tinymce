@@ -29,7 +29,7 @@ const isStartOfWord = (dom: DOMUtils) => (rng: Range) => {
   return !isPreviousCharContent(dom, leaf);
 };
 
-const getTriggerContext = (dom: DOMUtils, initRange: Range, database: AutocompleterDatabase): Optional<AutocompleteContext> => Arr.findMap(database.triggerChars, (ch) => getContext(dom, initRange, ch));
+const getTriggerContext = (dom: DOMUtils, initRange: Range, database: AutocompleterDatabase): Optional<AutocompleteContext> => Arr.findMap(database.triggers, (trigger) => getContext(dom, initRange, trigger));
 
 const lookup = (editor: Editor, getDatabase: () => AutocompleterDatabase): Optional<AutocompleteLookupInfo> => {
   const database = getDatabase();
@@ -43,7 +43,7 @@ const lookupWithContext = (editor: Editor, getDatabase: () => AutocompleterDatab
   const rng = editor.selection.getRng();
   const startText = rng.startContainer.nodeValue ?? '';
 
-  const autocompleters = Arr.filter(database.lookupByChar(context.triggerChar), (autocompleter) => context.text.length >= autocompleter.minChars && autocompleter.matches.getOrThunk(() => isStartOfWord(editor.dom))(context.range, startText, context.text));
+  const autocompleters = Arr.filter(database.lookupByTrigger(context.trigger), (autocompleter) => context.text.length >= autocompleter.minChars && autocompleter.matches.getOrThunk(() => isStartOfWord(editor.dom))(context.range, startText, context.text));
 
   if (autocompleters.length === 0) {
     return Optional.none();
