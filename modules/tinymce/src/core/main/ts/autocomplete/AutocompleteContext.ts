@@ -14,9 +14,10 @@ export interface AutocompleteContext {
 
 const stripTriggerChar = (text: string, triggerCh: string) => text.substring(triggerCh.length);
 
-const findTrigger = (text: string, index: number, ch: string): Optional<number> => {
+const findTrigger = (text: string, index: number, trigger: string): Optional<number> => {
   // Identify the `char` in, and start the text from that point forward. If there is ever any whitespace, fail
   let i: number;
+  const firstChar = trigger.charAt(0);
 
   for (i = index - 1; i >= 0; i--) {
     const char = text.charAt(i);
@@ -24,7 +25,7 @@ const findTrigger = (text: string, index: number, ch: string): Optional<number> 
       return Optional.none();
     }
 
-    if (Strings.contains(text, ch, i, index)) {
+    if (firstChar === char && Strings.contains(text, trigger, i, index)) {
       break;
     }
   }
