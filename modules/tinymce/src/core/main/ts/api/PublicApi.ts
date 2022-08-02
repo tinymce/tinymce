@@ -39,6 +39,7 @@ import { EditorOptions, RawEditorOptions } from './OptionTypes';
 import PluginManager, { Plugin } from './PluginManager';
 import Resource from './Resource';
 import Shortcuts from './Shortcuts';
+import * as TextPatterns from './textpatterns/TextPatterns';
 import ThemeManager, { Theme } from './ThemeManager';
 import { tinymce, TinyMCE } from './Tinymce';
 import * as Ui from './ui/Ui';
@@ -129,6 +130,7 @@ export {
   HtmlSerializerSettings,
   Plugin,
   SchemaSettings,
+  TextPatterns,
   Theme,
   Model,
   WriterSettings
