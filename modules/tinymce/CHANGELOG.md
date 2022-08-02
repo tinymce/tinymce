@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Selecting a figure with `class="image"` would incorrectly highlight the link toolbar button #TINY-8832
 - Fixed various issues that occurred when formatting `contenteditable` elements. #TINY-8905
 - The text pattern logic threw an error when there were fragmented text nodes in a paragraph #TINY-8779
+- The content of the `contenteditable="false"` element could be selected with the mouse on Firefox  #TINY-8828
 
 ## 6.1.2 - 2022-07-29
 
