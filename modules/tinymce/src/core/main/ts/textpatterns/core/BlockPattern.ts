@@ -56,10 +56,7 @@ const applyPattern = (editor: Editor, match: BlockPatternMatch): boolean => {
 };
 
 const sortPatterns = <P extends Pattern>(patterns: P[]): P[] => Arr.sort(patterns, (a, b) => {
-  if (a.start.length === b.start.length) {
-    return 0;
-  }
-  return a.start.length > b.start.length ? -1 : 1;
+return b.start.length - a.start.length
 });
 
 // Finds a matching pattern to the specified text
