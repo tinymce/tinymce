@@ -3,6 +3,7 @@ import { CopyCols, CopyRows, Sizes, TableFill, TableLookup, TableConversions } f
 import { Insert, Remove, Replication, SelectorFind, Selectors, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import I18n from 'tinymce/core/api/util/I18n';
 
 import * as InsertTable from '../actions/InsertTable';
 import { AdvancedPasteTableAction, CombinedTargetsTableAction, TableActionResult, TableActions } from '../actions/TableActions';
@@ -99,7 +100,7 @@ const registerCommands = (editor: Editor, actions: TableActions): void => {
         SelectorFind.child(table, 'caption').fold(
           () => {
             const caption = SugarElement.fromTag('caption');
-            Insert.append(caption, SugarElement.fromText('Caption'));
+            Insert.append(caption, SugarElement.fromText(I18n.translate('Caption')));
             Insert.appendAt(table, caption, 0);
             editor.selection.setCursorLocation(caption.dom, 0);
           },
