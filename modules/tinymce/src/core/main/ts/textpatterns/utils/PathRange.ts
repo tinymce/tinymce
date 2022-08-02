@@ -1,5 +1,6 @@
 import { Arr, Optional, Type } from '@ephox/katamari';
 
+import DOMUtils from '../../api/dom/DOMUtils';
 import * as NodeType from '../../dom/NodeType';
 
 export interface PathRange {
@@ -7,28 +8,38 @@ export interface PathRange {
   readonly end: number[];
 }
 
-const generatePath = (root: Node, node: Node, offset: number): number[] => {
+const getNormalizedTextOffset = (container: Text, offset: number): number => {
+  let normalizedOffset = offset;
+  for (let node = container.previousSibling; NodeType.isText(node); node = node.previousSibling) {
+    normalizedOffset += node.data.length;
+  }
+  return normalizedOffset;
+};
+
+const generatePath = (dom: DOMUtils, root: Node, node: Node, offset: number, normalized: boolean): number[] => {
   if (NodeType.isText(node) && (offset < 0 || offset > node.data.length)) {
     return [];
   }
-  const p = [ offset ];
+  const p = normalized && NodeType.isText(node) ? [ getNormalizedTextOffset(node, offset) ] : [ offset ];
   let current: Node = node;
   while (current !== root && current.parentNode) {
-    const parent = current.parentNode;
-    for (let i = 0; i < parent.childNodes.length; i++) {
-      if (parent.childNodes[i] === current) {
-        p.push(i);
-        break;
-      }
-    }
-    current = parent;
+    p.push(dom.nodeIndex(current, normalized));
+    current = current.parentNode;
   }
   return current === root ? p.reverse() : [];
 };
 
-const generatePathRange = (root: Node, startNode: Node, startOffset: number, endNode: Node, endOffset: number): PathRange => {
-  const start = generatePath(root, startNode, startOffset);
-  const end = generatePath(root, endNode, endOffset);
+const generatePathRange = (
+  dom: DOMUtils,
+  root: Node,
+  startNode: Node,
+  startOffset: number,
+  endNode: Node,
+  endOffset: number,
+  normalized: boolean = false
+): PathRange => {
+  const start = generatePath(dom, root, startNode, startOffset, normalized);
+  const end = generatePath(dom, root, endNode, endOffset, normalized);
   return { start, end };
 };
 
@@ -58,8 +69,8 @@ const resolvePathRange = (root: Node, range: PathRange): Optional<Range> => reso
       return rng;
     }));
 
-const generatePathRangeFromRange = (root: Node, range: Range): PathRange =>
-  generatePathRange(root, range.startContainer, range.startOffset, range.endContainer, range.endOffset);
+const generatePathRangeFromRange = (dom: DOMUtils, root: Node, range: Range, normalized: boolean = false): PathRange =>
+  generatePathRange(dom, root, range.startContainer, range.startOffset, range.endContainer, range.endOffset, normalized);
 
 export {
   generatePath,

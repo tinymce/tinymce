@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - New `text_patterns_lookup` option to provide additional text patterns dynamically #TINY-8778
+- New `format_noneditable_selector` option to specify the `contenteditable="false"` elements that can be wrapped in a format. #TINY-8905
+
+### Improved
+- The formatter can now apply a format to a `contenteditable="false"` element by wrapping it. Configurable using the `format_noneditable_selector` option. #TINY-8905
 
 ### Improved
 - The autocompleter now supports a multiple character trigger using the new `trigger` configuration #TINY-8887
@@ -15,20 +19,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - The Autolink plugin did not work when the text nodes in the content were fragmented #TINY-3723
 - Fixed various incorrect types on public APIs found while enabling TypeScript strict mode #TINY-8806
+- Text returned from `editor.getContent({format: 'text'})` would differ with blank lines between some browsers #TINY-8579
 - The editor focused via the `auto_focus` option was not scrolled into the viewport #TINY-8785
 - Elements with only custom attributes starting with `data-` would sometimes be removed when they shouldn't #TINY-8755
 - Selecting a figure with `class="image"` would incorrectly highlight the link toolbar button #TINY-8832
+- Fixed various issues that occurred when formatting `contenteditable` elements. #TINY-8905
+- The text pattern logic threw an error when there were fragmented text nodes in a paragraph #TINY-8779
+- The content of the `contenteditable="false"` element could be selected with the mouse on Firefox  #TINY-8828
 
 ### Deprecated
 - The autocompleter configuration option `ch` has been deprecated and will be removed in the next major release. Use the `trigger` option instead. #TINY-8887
 
-## 6.1.1 - TBA
+## 6.1.2 - 2022-07-29
 
 ### Fixed
-- Invalid special elements were not cleaned up correctly during sanitization #TINY-8780
-- An exception was thrown when deleting all content if the start or end of the document had a `contenteditable="false"` element #TINY-8877
-- When a sidebar was opened using the `sidebar_show` option, its associated toggle button was not highlighted #TINY-8873
-- The `autolink` plugin when converting a URL to a link did not fire an `ExecCommand` event, nor did it create an undo level #TINY-8896
+- Reverted the undo level fix in the `autolink` plugin as it caused duplicated content in some edge cases. #TINY-8936
+
+## 6.1.1 - 2022-07-27
+
+### Fixed
+- Invalid special elements were not cleaned up correctly during sanitization. #TINY-8780
+- An exception was thrown when deleting all content if the start or end of the document had a `contenteditable="false"` element. #TINY-8877
+- When a sidebar was opened using the `sidebar_show` option, its associated toolbar button was not highlighted. #TINY-8873
+- When converting a URL to a link, the `autolink` plugin did not fire an `ExecCommand` event, nor did it create an undo level. #TINY-8896
+- Worked around a Firefox bug which resulted in cookies not being available inside the editor content. #TINY-8916
+- `<pre>` content pasted into a `<pre>` block that had inline styles or was `noneditable` now merges correctly with the surrounding content. #TINY-8860
+- After a `codesample` was pasted, the insertion point was placed incorrectly. #TINY-8861
 
 ## 6.1.0 - 2022-06-29
 
