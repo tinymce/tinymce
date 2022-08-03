@@ -2,7 +2,7 @@ import { Assertions, DragnDrop, Keyboard, Keys, Mouse, UiFinder, Waiter } from '
 import { before, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
-import { TinyDom, TinyHooks, TinyAssertions, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
