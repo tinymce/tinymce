@@ -70,19 +70,21 @@ const findMatchingNodes = (nodeFilters: ParserFilter[], attributeFilters: Parser
 
 // Run all necessary node filters and attribute filters, based on a match set
 const runFilters = (matches: FilterMatches, args: ParserArgs): void => {
-  const run = (matchRecord: Record<string, FilterMatch>) => {
+  const run = (matchRecord: Record<string, FilterMatch>, filteringAttributes: boolean) => {
     Obj.each(matchRecord, (match) => {
-      // Remove already removed children
-      const nodes = Arr.filter(match.nodes, (node) => Type.isNonNullable(node.parent));
+      // Remove already removed children, and nodes that no longer contain the attribute to be matched
+      const nodes = Arr.filter(match.nodes, (node) => Type.isNonNullable(node.parent) && (!filteringAttributes || node.attr(match.filter.name) !== undefined));
 
-      Arr.each(match.filter.callbacks, (callback) => {
-        callback(nodes, match.filter.name, args);
-      });
+      if (nodes.length > 0) {
+        Arr.each(match.filter.callbacks, (callback) => {
+          callback(nodes, match.filter.name, args);
+        });
+      }
     });
   };
 
-  run(matches.nodes);
-  run(matches.attributes);
+  run(matches.nodes, false);
+  run(matches.attributes, true);
 };
 
 const filter = (nodeFilters: ParserFilter[], attributeFilters: ParserFilter[], node: AstNode, args: ParserArgs = {}): void => {

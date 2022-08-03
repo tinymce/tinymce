@@ -1,4 +1,4 @@
-import { context, describe, it } from '@ephox/bedrock-client';
+import { Assert, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
@@ -390,6 +390,17 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     assert.equal(results.href.nodes[0].attr('href'), '1.gif', 'Parser filter result node(0) attr');
     assert.equal(results.href.nodes[1].name, 'a', 'Parser filter result node(1) name');
     assert.equal(results.href.nodes[1].attr('href'), '2.gif', 'Parser filter result node(1) attr');
+  });
+
+  it('TINY-8888: mutating addNodeFilter', () => {
+    const parser = DomParser({});
+    parser.addNodeFilter('img', (nodes) => {
+      Arr.each(nodes, (node) => node.attr('src', null));
+    });
+    parser.addAttributeFilter('src', () => {
+      Assert.fail('second src filter should not run, because src was removed');
+    });
+    parser.parse('<b>a<img src="1.gif" />b<img src="1.gif" />c</b>');
   });
 
   it('TINY-7847: removeAttributeFilter', () => {
