@@ -9,9 +9,12 @@ import * as Selection from '../core/Selection';
 import { Indentation } from '../listmodel/Indentation';
 import { listIndentation } from '../listmodel/ListsIndendation';
 
+const getContentEditableElements = (elements: HTMLElement[]) =>
+  Arr.filter(Arr.map(elements, SugarElement.fromDom), (element) => ContentEditable.get(element));
+
 const selectionIndentation = (editor: Editor, indentation: Indentation): boolean => {
-  const lists = Arr.filter(Arr.map(Selection.getSelectedListRoots(editor), SugarElement.fromDom), (list) => ContentEditable.isEditable(list));
-  const dlItems = Arr.filter(Arr.map(Selection.getSelectedDlItems(editor), SugarElement.fromDom), (list) => ContentEditable.isEditable(list));
+  const lists = getContentEditableElements(Selection.getSelectedListRoots(editor));
+  const dlItems = getContentEditableElements(Selection.getSelectedDlItems(editor));
   let isHandled = false;
 
   if (lists.length || dlItems.length) {
