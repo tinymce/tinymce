@@ -425,6 +425,19 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     parser.parse('<b>a<img src="1.gif" />b</b>');
   });
 
+  it('TINY-8888: mutating addAttributeFilter only removes matching nodes', () => {
+    const parser = DomParser({});
+    parser.addAttributeFilter('src', (nodes) => {
+      nodes[0].attr('src', null);
+    });
+    let ranIdFilter = false;
+    parser.addAttributeFilter('src', () => {
+      ranIdFilter = true;
+    });
+    parser.parse('<b>a<img src="1.gif" />b<img src="1.gif" />c</b>');
+    assert.isTrue(ranIdFilter, 'second filter should run, because only one src attribute was removed');
+  });
+
   it('TINY-7847: removeAttributeFilter', () => {
     const parser = DomParser({});
     const numFilters = parser.getAttributeFilters().length;
