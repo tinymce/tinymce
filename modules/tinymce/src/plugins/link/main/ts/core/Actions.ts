@@ -64,13 +64,13 @@ const toggleState = (editor: Editor, toggler: (e: NodeChangeEvent) => void): () 
 };
 
 const toggleActiveState = (editor: Editor) => (api: Toolbar.ToolbarToggleButtonInstanceApi | Menu.ToggleMenuItemInstanceApi): () => void => {
-  const updateState = () => api.setActive(!editor.mode.isReadOnly() && Utils.getAnchorElement(editor, editor.selection.getNode()).isSome());
+  const updateState = () => api.setActive(!editor.mode.isReadOnly() && Utils.isInAnchor(editor, editor.selection.getNode()));
   updateState();
   return toggleState(editor, updateState);
 };
 
 const toggleEnabledState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi | Menu.MenuItemInstanceApi): () => void => {
-  const updateState = () => api.setEnabled(Utils.getAnchorElement(editor, editor.selection.getNode()).isSome());
+  const updateState = () => api.setEnabled(Utils.isInAnchor(editor, editor.selection.getNode()));
   updateState();
   return toggleState(editor, updateState);
 };
