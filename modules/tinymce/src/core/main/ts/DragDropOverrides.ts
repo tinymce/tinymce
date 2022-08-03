@@ -1,4 +1,4 @@
-import { Arr, Optional, Singleton, Throttler, Type } from '@ephox/katamari';
+import { Arr, Singleton, Throttler, Type } from '@ephox/katamari';
 
 import DOMUtils from './api/dom/DOMUtils';
 import { EventUtilsEvent } from './api/dom/EventUtils';
@@ -22,9 +22,9 @@ import * as Predicate from './util/Predicate';
  */
 
 // Arbitrary values needed when scrolling CEF elements
-const ScrollingValue = 32;
-const IntervalValue = 100;
-const MouseRange = 4;
+const ScrollPixelsPerInterval = 32;
+const ScrollIntervalValue = 100;
+const MouseRangeToTriggerScroll = 4;
 
 interface State {
   element: HTMLElement;
@@ -38,15 +38,8 @@ interface State {
   width: number;
   height: number;
   ghost: HTMLElement;
-  intervalId: Optional<number>;
+  intervalId: Singleton.Revocable<number>;
 }
-
-const clearStateInterval = (state: State) => {
-  if (state.intervalId.isSome()) {
-    clearInterval(state.intervalId.getOrUndefined());
-    state.intervalId = Optional.none();
-  }
-};
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 const isContentEditable = Predicate.or(isContentEditableFalse, NodeType.isContentEditableTrue) as (node: Node) => node is HTMLElement;
@@ -159,60 +152,60 @@ const moveGhost = (
     if (state.dragging) {
       // This basically means that the mouse is close to the bottom edge
       // (within MouseRange pixels of the bottom edge)
-      if (mouseY + MouseRange >= clientHeight) {
+      if (mouseY + MouseRangeToTriggerScroll >= clientHeight) {
         const scrollDown = (currentTop: number) => {
           win.scroll({
-            top: currentTop + ScrollingValue,
+            top: currentTop + ScrollPixelsPerInterval,
             behavior: 'smooth'
           });
         };
         scrollDown(currentTop);
-        state.intervalId = Optional.some(setInterval(() => {
+        state.intervalId.set(setInterval(() => {
           const currentTop = win.scrollY;
           scrollDown(currentTop);
-        }, IntervalValue));
+        }, ScrollIntervalValue));
         // This basically means that the mouse is close to the top edge
         // (within MouseRange pixels of the top edge)
-      } else if (mouseY - MouseRange <= 0) {
+      } else if (mouseY - MouseRangeToTriggerScroll <= 0) {
         const scrollUp = (currentTop: number) => {
           win.scroll({
-            top: currentTop - ScrollingValue,
+            top: currentTop - ScrollPixelsPerInterval,
             behavior: 'smooth'
           });
         };
         scrollUp(currentTop);
-        state.intervalId = Optional.some(setInterval(() => {
+        state.intervalId.set(setInterval(() => {
           const currentTop = win.scrollY;
           scrollUp(currentTop);
-        }, IntervalValue));
+        }, ScrollIntervalValue));
         // This basically means that the mouse is close to the right edge
         // (within MouseRange pixels of the right edge)
-      } else if (mouseX + MouseRange >= clientWidth) {
+      } else if (mouseX + MouseRangeToTriggerScroll >= clientWidth) {
         const scrollRight = (currentLeft: number) => {
           win.scroll({
-            left: currentLeft + ScrollingValue,
+            left: currentLeft + ScrollPixelsPerInterval,
             behavior: 'smooth'
           });
         };
         scrollRight(currentLeft);
-        state.intervalId = Optional.some(setInterval(() => {
+        state.intervalId.set(setInterval(() => {
           const currentLeft = win.scrollX;
           scrollRight(currentLeft);
-        }, IntervalValue));
+        }, ScrollIntervalValue));
         // This basically means that the mouse is close to the left edge
         // (within MouseRange pixels of the left edge)
-      } else if (mouseX - MouseRange <= 0) {
+      } else if (mouseX - MouseRangeToTriggerScroll <= 0) {
         const scrollLeft = (currentLeft: number) => {
           win.scroll({
-            left: currentLeft - ScrollingValue,
+            left: currentLeft - ScrollPixelsPerInterval,
             behavior: 'smooth'
           });
         };
         scrollLeft(currentLeft);
-        state.intervalId = Optional.some(setInterval(() => {
+        state.intervalId.set(setInterval(() => {
           const currentLeft = win.scrollX;
           scrollLeft(currentLeft);
-        }, IntervalValue));
+        }, ScrollIntervalValue));
       }
     }
   });
@@ -252,7 +245,7 @@ const start = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent
         width: ceElm.offsetWidth,
         height: ceElm.offsetHeight,
         ghost: createGhost(editor, ceElm, ceElm.offsetWidth, ceElm.offsetHeight),
-        intervalId: Optional.none()
+        intervalId: Singleton.repeatable()
       });
     }
   }
@@ -281,9 +274,6 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
     }
 
     if (state.dragging) {
-
-      clearStateInterval(state);
-
       const targetPos = applyRelPos(state, MousePosition.calc(editor, e));
       appendGhostToBody(state.ghost, editor.getBody());
       moveGhost(state.ghost, targetPos, state.width, state.height, state.maxX, state.maxY, e.clientY, e.clientX, editor.getContentAreaContainer(), editor.getWin(), state_);
@@ -306,7 +296,9 @@ const getRawTarget = (selection: EditorSelection): Node | null => {
 
 const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<MouseEvent>) => {
   state.on((state) => {
-    clearStateInterval(state);
+    if (state.intervalId.isSet()) {
+      state.intervalId.clear();
+    }
     if (state.dragging) {
       if (isValidDropTarget(editor, getRawTarget(editor.selection), state.element)) {
         const targetClone = cloneElement(state.element);
@@ -334,7 +326,9 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
 
 const stop = (state: Singleton.Value<State>, editor: Editor) => () => {
   state.on((state) => {
-    clearStateInterval(state);
+    if (state.intervalId.isSet()) {
+      state.intervalId.clear();
+    }
     if (state.dragging) {
       editor.dispatch('dragend');
     }
