@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { SugarElement } from '@ephox/sugar';
-import { TinyHooks } from '@ephox/wrap-mcagar';
+import { SelectorFind } from '@ephox/sugar';
+import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -16,7 +16,7 @@ describe('browser.tinymce.themes.silver.editor.header.PromotionTest', () => {
     it('TINY-8840: promotion should not be displayed', () => {
       const editor = hook.editor();
 
-      UiFinder.notExists(SugarElement.fromDom(editor.getContainer()), '.' + promotionClass);
+      UiFinder.notExists(TinyDom.container(editor), '.' + promotionClass);
     });
   });
 
@@ -26,48 +26,39 @@ describe('browser.tinymce.themes.silver.editor.header.PromotionTest', () => {
       promotion: true
     }, []);
 
-    it('TINY-8840: promotion should not be displayed', () => {
+    it('TINY-8840: promotion should be displayed', () => {
       const editor = hook.editor();
 
-      const editorContainer = SugarElement.fromDom(editor.getContainer());
-      UiFinder.exists(editorContainer, '.' + promotionClass);
+      const editorContainer = TinyDom.container(editor);
+      const header = SelectorFind.descendant(editorContainer, '.tox-editor-header').getOrDie();
+      UiFinder.exists(header, '.' + promotionClass);
       Assertions.assertStructure(
-        'Editor structure',
-        ApproxStructure.build((s, str, arr) => s.element('div', {
-          classes: [ arr.has('tox-tinymce') ],
-          children: [
-            s.element('div', {
-              classes: [ arr.has('tox-editor-container') ],
-              children: [
-                s.element('div', {
-                  classes: [ arr.has('tox-editor-header') ],
-                  children: [
-                    s.element('div', {
-                      classes: [ arr.has('tox-promotion') ],
-                      children: [
-                        s.element('a', {
-                          classes: [ arr.has('tox-promotion-link') ],
-                          attrs: {
-                            rel: str.is('noopener'),
-                            target: str.is('_blank'),
-                            href: str.startsWith('http')
-                          }
-                        }),
-                      ]
-                    }),
-                    s.element('div', {}),
-                    s.element('div', {}),
-                    s.element('div', {}),
-                  ]
-                }),
-                s.element('div', {}),
-              ]
-            }),
-            s.element('div', {}),
-            s.element('div', {}),
-          ]
-        })),
-        editorContainer);
+        'Editor header structure',
+        ApproxStructure.build((s, str, arr) =>
+          s.element('div', {
+            classes: [ arr.has('tox-editor-header') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-promotion') ],
+                children: [
+                  s.element('a', {
+                    classes: [ arr.has('tox-promotion-link') ],
+                    attrs: {
+                      rel: str.is('noopener'),
+                      target: str.is('_blank'),
+                      href: str.startsWith('http')
+                    }
+                  }),
+                ]
+              }),
+              s.element('div', {
+                classes: [ arr.has('tox-menubar') ]
+              }),
+              s.theRest(),
+            ]
+          })
+        ),
+        header);
     });
   });
 });
