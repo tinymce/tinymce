@@ -1,4 +1,5 @@
 import { Optional } from '@ephox/katamari';
+import { ContentEditable, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -9,7 +10,7 @@ import { getParentList } from '../core/Selection';
 const open = (editor: Editor): void => {
   // Find the current list and skip opening if the selection isn't in an ordered list
   const currentList = getParentList(editor);
-  if (!isOlNode(currentList)) {
+  if (!isOlNode(currentList) || !ContentEditable.get(SugarElement.fromDom(currentList))) {
     return;
   }
 
