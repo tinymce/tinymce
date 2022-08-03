@@ -78,6 +78,9 @@ const getAnchorElement = (editor: Editor, selectedElm?: Element): Optional<HTMLA
   }
 };
 
+const isInAnchor = (editor: Editor, selectedElm?: Element): boolean =>
+  getAnchorElement(editor, selectedElm).isSome();
+
 const getAnchorText = (selection: EditorSelection, anchorElm: Optional<HTMLAnchorElement>): string => {
   const text = anchorElm.fold(
     () => selection.getContent({ format: 'text' }),
@@ -297,6 +300,7 @@ export {
   getHref,
   isOnlyTextSelected,
   getAnchorElement,
+  isInAnchor,
   getAnchorText,
   applyRelTargetRules,
   hasProtocol

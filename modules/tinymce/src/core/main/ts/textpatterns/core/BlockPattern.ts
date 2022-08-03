@@ -8,7 +8,6 @@ import * as Options from '../../api/Options';
 import Tools from '../../api/util/Tools';
 import { generatePathRange, resolvePathRange } from '../utils/PathRange';
 import * as Utils from '../utils/Utils';
-import { getBlockPatterns } from './Pattern';
 import { BlockPattern, BlockPatternMatch, Pattern, PatternSet } from './PatternTypes';
 
 const stripPattern = (dom: DOMUtils, block: Node, pattern: BlockPattern): void => {
@@ -56,47 +55,34 @@ const applyPattern = (editor: Editor, match: BlockPatternMatch): boolean => {
   return true;
 };
 
+const sortPatterns = <P extends Pattern>(patterns: P[]): P[] =>
+  Arr.sort(patterns, (a, b) => b.start.length - a.start.length);
+
 // Finds a matching pattern to the specified text
 const findPattern = <P extends Pattern>(patterns: P[], text: string): Optional<P> => {
+  const sortedPatterns = sortPatterns(patterns);
   const nuText = text.replace(Unicode.nbsp, ' ');
-  return Arr.find(patterns, (pattern) => text.indexOf(pattern.start) === 0 || nuText.indexOf(pattern.start) === 0);
+  return Arr.find(sortedPatterns, (pattern) => text.indexOf(pattern.start) === 0 || nuText.indexOf(pattern.start) === 0);
 };
 
-const findPatterns = (editor: Editor, patternSet: PatternSet, normalizedMatches: boolean): BlockPatternMatch[] => {
+const findPatterns = (editor: Editor, block: Element, patternSet: PatternSet, normalizedMatches: boolean): BlockPatternMatch[] => {
   const dom = editor.dom;
-  const rng = editor.selection.getRng();
+  const forcedRootBlock = Options.getForcedRootBlock(editor);
+  if (!dom.is(block, forcedRootBlock)) {
+    return [];
+  }
 
-  return Utils.getParentBlock(editor, rng).filter((block) => {
-    const forcedRootBlock = Options.getForcedRootBlock(editor);
-    const matchesForcedRootBlock = dom.is(block, forcedRootBlock);
-    return block !== null && matchesForcedRootBlock;
-  }).bind((block) => {
-    // Get the block text
-    const blockText = block.textContent ?? '';
+  // Get the block text and then find a matching pattern
+  const blockText = block.textContent ?? '';
+  return findPattern(patternSet.blockPatterns, blockText).map((pattern) => {
+    if (Tools.trim(blockText).length === pattern.start.length) {
+      return [];
+    }
 
-    // TINY-8781: TODO: text_patterns should announce their changes for accessibility
-    const extraPatterns = patternSet.dynamicPatternsLookup({
-      text: blockText,
-      block
-    });
-    // search in the dynamic patterns first
-    const patterns = getBlockPatterns(extraPatterns);
-    const matchedPattern = findPattern(patterns, blockText).orThunk(() => {
-      // Search in the static patterns
-      const patterns = getBlockPatterns(patternSet.blockPatterns);
-      return findPattern(patterns, blockText);
-    });
-
-    return matchedPattern.map((pattern) => {
-      if (Tools.trim(blockText).length === pattern.start.length) {
-        return [];
-      }
-
-      return [{
-        pattern,
-        range: generatePathRange(dom, dom.getRoot(), block, 0, block, 0, normalizedMatches)
-      }];
-    });
+    return [{
+      pattern,
+      range: generatePathRange(dom, dom.getRoot(), block, 0, block, 0, normalizedMatches)
+    }];
   }).getOr([]);
 };
 

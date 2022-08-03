@@ -16,12 +16,12 @@ const setContentAndFireKeystroke = (key: number) => {
   };
 };
 
-const setContentAndPressSpace = (editor: Editor, content: string, offset = content.length, elementPath = [ 0, 0 ]) => {
-  editor.setContent('<p>' + content + '</p>');
+const setContentAndPressSpace = (editor: Editor, content: string, offset = content.length, elementPath = [ 0, 0 ], blockElement = 'p') => {
+  editor.setContent(`<${blockElement}>${content}</${blockElement}>`);
   editor.focus();
   TinySelections.setCursor(editor, elementPath, offset);
   editor.execCommand('mceInsertContent', false, ' ');
-  TinyContentActions.keystroke(editor, Keys.space());
+  TinyContentActions.keyup(editor, Keys.space());
 };
 
 const bodyStruct = (children: StructAssert[]) => {

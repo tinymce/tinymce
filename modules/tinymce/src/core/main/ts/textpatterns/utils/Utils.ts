@@ -3,6 +3,8 @@ import { Optional } from '@ephox/katamari';
 import DOMUtils from '../../api/dom/DOMUtils';
 import Editor from '../../api/Editor';
 import * as NodeType from '../../dom/NodeType';
+import { getBlockPatterns, getInlinePatterns } from '../core/Pattern';
+import { PatternSet } from '../core/PatternTypes';
 
 const cleanEmptyNodes = (dom: DOMUtils, node: Node | null, isRoot: (e: Node) => boolean): void => {
   // Recursively walk up the tree while we have a parent and the node is empty. If the node is empty, then remove it.
@@ -36,8 +38,31 @@ const deleteRng = (dom: DOMUtils, rng: Range, isRoot: (e: Node) => boolean, clea
 const getParentBlock = (editor: Editor, rng: Range): Optional<Element> =>
   Optional.from(editor.dom.getParent(rng.startContainer, editor.dom.isBlock));
 
+const resolveFromDynamicPatterns = (patternSet: PatternSet, block: Element, beforeText: string): PatternSet => {
+  const dynamicPatterns = patternSet.dynamicPatternsLookup({
+    text: beforeText,
+    block
+  });
+
+  // dynamic patterns take precedence here
+  return {
+    ...patternSet,
+    blockPatterns: getBlockPatterns(dynamicPatterns).concat(patternSet.blockPatterns),
+    inlinePatterns: getInlinePatterns(dynamicPatterns).concat(patternSet.inlinePatterns)
+  };
+};
+
+const getBeforeText = (dom: DOMUtils, block: Element, node: Node, offset: number): string => {
+  const rng = dom.createRng();
+  rng.setStart(block, 0);
+  rng.setEnd(node, offset);
+  return rng.toString();
+};
+
 export {
   cleanEmptyNodes,
   deleteRng,
-  getParentBlock
+  getParentBlock,
+  resolveFromDynamicPatterns,
+  getBeforeText
 };

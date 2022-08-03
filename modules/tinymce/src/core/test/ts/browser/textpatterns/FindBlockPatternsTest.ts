@@ -4,12 +4,19 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as BlockPattern from 'tinymce/core/textpatterns/core/BlockPattern';
+import { PatternSet } from 'tinymce/core/textpatterns/core/PatternTypes';
+import { getParentBlock, resolveFromDynamicPatterns } from 'tinymce/core/textpatterns/utils/Utils';
 
 import { getPatternSetFor } from '../../module/test/TextPatternsUtils';
 
 // Similar to modules/tinymce/src/core/test/ts/atomic/textpatterns/FindBlockPatternsTest.ts
 // but uses DOM and includes tests for text_patterns_lookup
 describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
+
+  const findPatternsWithDynamicPatterns = (editor: Editor, patternSet: PatternSet, normalizedMatches: boolean) => getParentBlock(editor, editor.selection.getRng()).map((block) => {
+    const dynamicPatternSet = resolveFromDynamicPatterns(patternSet, block, block.textContent ?? '');
+    return BlockPattern.findPatterns(editor, block, dynamicPatternSet, normalizedMatches);
+  }).getOr([]);
 
   context('no text_patterns_lookup', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
@@ -32,7 +39,7 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
       // forced root block. We aren't sure why this constraint exists.
       editor.setContent('<p># Heading</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], '# Heading'.length);
-      const matches = BlockPattern.findPatterns(editor, getPatternSet(), true);
+      const matches = findPatternsWithDynamicPatterns(editor, getPatternSet(), true);
       assert.deepEqual(
         matches,
         [
@@ -53,7 +60,7 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
       const editor = hook.editor();
       editor.setContent('<p>* No match');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
-      const matches = BlockPattern.findPatterns(editor, getPatternSet(), true);
+      const matches = findPatternsWithDynamicPatterns(editor, getPatternSet(), true);
       assert.deepEqual(matches, []);
     });
 
@@ -64,7 +71,7 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
       // forced root block. We aren't sure why this constraint exists.
       editor.setContent('<div># Heading</div>');
       TinySelections.setCursor(editor, [ 0, 0 ], '# Heading'.length);
-      const matches = BlockPattern.findPatterns(editor, getPatternSet(), true);
+      const matches = findPatternsWithDynamicPatterns(editor, getPatternSet(), true);
       assert.deepEqual(
         matches,
         [],
@@ -81,6 +88,7 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
         { start: '#', format: 'h1' },
         { start: '##', format: 'h2' },
         { start: '###', format: 'h3' },
+        { start: '#####', format: 'h5' },
         { start: '' }
       ],
       text_patterns_lookup: (_ctx) => [
@@ -97,7 +105,7 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
       const editor = hook.editor();
       editor.setContent('<p>#### wow</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 4);
-      const matches = BlockPattern.findPatterns(editor, getPatternSet(), true);
+      const matches = findPatternsWithDynamicPatterns(editor, getPatternSet(), true);
       assert.deepEqual(
         matches,
         [
@@ -121,7 +129,7 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
       const editor = hook.editor();
       editor.setContent('<p><b>TBA Bold heading</b></p>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 3);
-      const matches = BlockPattern.findPatterns(editor, getPatternSet(), true);
+      const matches = findPatternsWithDynamicPatterns(editor, getPatternSet(), true);
       assert.deepEqual(
         matches,
         [
@@ -147,8 +155,7 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
       const editor = hook.editor();
       editor.setContent('<div><p>#### New heading type</p></div>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 4);
-      const patterns = getPatternSet();
-      const matches = BlockPattern.findPatterns(editor, patterns, true);
+      const matches = findPatternsWithDynamicPatterns(editor, getPatternSet(), true);
       assert.deepEqual(matches, [
         {
           pattern: {
@@ -171,15 +178,15 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
       const editor = hook.editor();
       editor.setContent('<div>#### New heading type</div>');
       TinySelections.setCursor(editor, [ 0, 0 ], 4);
-      const matches = BlockPattern.findPatterns(editor, getPatternSet(), true);
+      const matches = findPatternsWithDynamicPatterns(editor, getPatternSet(), true);
       assert.deepEqual(matches, [], 'Checking block pattern matches do not match for incorrect block tag type');
     });
 
-    it('TINY-8778: Lookup patterns take precedence over block patterns', () => {
+    it('TINY-8778: Lookup patterns take precedence over static patterns', () => {
       const editor = hook.editor();
       editor.setContent('<p>### is a new heading</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 4);
-      const matches = BlockPattern.findPatterns(editor, getPatternSet(), true);
+      const matches = findPatternsWithDynamicPatterns(editor, getPatternSet(), true);
       assert.deepEqual(matches, [
         {
           pattern: {
@@ -187,6 +194,26 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
             start: '###',
             cmd: 'mceInsertContent',
             value: 'h3 heading'
+          },
+          range: {
+            start: [ 0, 0 ],
+            end: [ 0, 0 ]
+          }
+        }
+      ]);
+    });
+
+    it('TINY-8778: Match a static pattern instead if it is a better match', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>##### Better matching heading</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], '##### Better matching heading'.length);
+      const matches = findPatternsWithDynamicPatterns(editor, getPatternSet(), true);
+      assert.deepEqual(matches, [
+        {
+          pattern: {
+            type: 'block-format',
+            start: '#####',
+            format: 'h5'
           },
           range: {
             start: [ 0, 0 ],

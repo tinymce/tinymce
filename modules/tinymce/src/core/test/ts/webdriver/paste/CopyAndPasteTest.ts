@@ -1,7 +1,6 @@
-import { Cursors, RealClipboard, RealMouse } from '@ephox/agar';
+import { Cursors, RealClipboard } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
-import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -10,26 +9,13 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
     base_url: '/project/tinymce/js/tinymce',
     toolbar: false,
     statusbar: false
-  }, []);
-
-  const pClickEditMenu = async (editor: Editor, item: string): Promise<void> => {
-    TinyUiActions.clickOnMenu(editor, 'button:contains("Edit")');
-    await TinyUiActions.pWaitForUi(editor, '*[role="menu"]');
-    await RealMouse.pClickOn(`div[title=${item}]`);
-  };
+  }, [], true);
 
   const pCopyAndPaste = async (editor: Editor, source: Cursors.CursorPath, target: Cursors.CursorPath): Promise<void> => {
     TinySelections.setSelection(editor, source.startPath, source.soffset, source.finishPath, source.foffset);
-    // at the moment: RealClipboard.pCopy('iframe => body'), doesn't work in with all browser (see https://github.com/webdriverio/webdriverio/issues/622)
-    // chrome, chrome-headless, firefox-headless -> it doesn't work
-    // firefox -> it works
-    await pClickEditMenu(editor, 'Copy');
+    await RealClipboard.pCopy('iframe => body');
     TinySelections.setSelection(editor, target.startPath, target.soffset, target.finishPath, target.foffset);
-    if (PlatformDetection.detect().browser.isSafari()) {
-      await pClickEditMenu(editor, 'Paste');
-    } else {
-      await RealClipboard.pPaste('iframe => body');
-    }
+    await RealClipboard.pPaste('iframe => body');
   };
 
   it('TINY-7719: Wrapped elements are preserved in copy and paste (headings)', async () => {

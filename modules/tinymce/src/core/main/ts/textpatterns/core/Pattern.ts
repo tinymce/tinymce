@@ -8,13 +8,6 @@ const isInlinePattern = (pattern: Pattern): pattern is InlinePattern =>
 const isBlockPattern = (pattern: Pattern): pattern is BlockPattern =>
   pattern.type === 'block-command' || pattern.type === 'block-format';
 
-const sortPatterns = <T extends Pattern>(patterns: T[]): T[] => Arr.sort(patterns, (a, b) => {
-  if (a.start.length === b.start.length) {
-    return 0;
-  }
-  return a.start.length > b.start.length ? -1 : 1;
-});
-
 const normalizePattern = (pattern: RawPattern): Result<Pattern, PatternError> => {
   const err = (message: string) => Result.error({ message, pattern });
   const formatOrCmd = <T> (name: string, onFormat: (formats: string[]) => T, onCommand: (cmd: string, value: any) => T): Result<T, PatternError> => {
@@ -98,7 +91,7 @@ const normalizePattern = (pattern: RawPattern): Result<Pattern, PatternError> =>
 };
 
 const getBlockPatterns = (patterns: Pattern[]): BlockPattern[] =>
-  sortPatterns(Arr.filter(patterns, isBlockPattern));
+  Arr.filter(patterns, isBlockPattern);
 
 const getInlinePatterns = (patterns: Pattern[]): InlinePattern[] =>
   Arr.filter(patterns, isInlinePattern);
