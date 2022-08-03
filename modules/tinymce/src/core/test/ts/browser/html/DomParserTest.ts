@@ -1,4 +1,4 @@
-import { Assert, context, describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
@@ -398,7 +398,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       Arr.each(nodes, (node) => node.attr('src', null));
     });
     parser.addAttributeFilter('src', () => {
-      Assert.fail('second src filter should not run, because src was removed');
+      assert.fail('second src filter should not run, because src was removed');
     });
     parser.parse('<b>a<img src="1.gif" />b</b>');
   });
@@ -409,7 +409,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       Arr.each(nodes, (node) => node.remove());
     });
     parser.addNodeFilter('img', () => {
-      Assert.fail('second img filter should not run, because img was removed');
+      assert.fail('second img filter should not run, because img was removed');
     });
     parser.parse('<b>a<img src="1.gif" />b</b>');
   });
@@ -420,7 +420,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       Arr.each(nodes, (node) => node.attr('src', null));
     });
     parser.addAttributeFilter('src', () => {
-      Assert.fail('second src filter should not run, because src was removed');
+      assert.fail('second src filter should not run, because src was removed');
     });
     parser.parse('<b>a<img src="1.gif" />b</b>');
   });

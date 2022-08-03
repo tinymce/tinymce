@@ -77,13 +77,12 @@ const runFilters = (matches: FilterMatches, args: ParserArgs): void => {
 
       Arr.each(match.filter.callbacks, (callback) => {
         // very very carefully mutate the nodes array based on whether the filter still matches them
-        for (let i = 0; i < nodes.length; i++) {
+        for (let i = nodes.length - 1; i >= 0; i--) {
           const node = nodes[i];
 
           // Remove already removed children, and nodes that no longer match the filter
           if (Type.isNullable(node.parent) || filteringAttributes ? node.attr(match.filter.name) === undefined : node.name !== match.filter.name) {
             nodes.splice(i);
-            i--;
           }
         }
 
