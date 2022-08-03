@@ -28,7 +28,6 @@ describe('atomic.tinymce.textpatterns.FindBlockPatternsTest', () => {
 
     const testFindStartPattern = (text: string, expectedPattern: string) => {
       const actual = BlockPattern.findPattern(defaultPatterns, text).getOrNull();
-
       assert.equal(actual.start, expectedPattern, 'Assert correct pattern');
     };
 

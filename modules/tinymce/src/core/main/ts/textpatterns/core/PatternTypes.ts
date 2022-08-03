@@ -62,12 +62,10 @@ export type RawDynamicPatternsLookup = (ctx: DynamicPatternContext) => RawPatter
 // NOTE: A PatternSet should be looked up from the Options *each* time that text_patterns are
 // processed, so that text_patterns respond to changes in options. This is required for some
 // complex integrations and plugins.
-export interface InlinePatternSet {
+export interface PatternSet {
   readonly inlinePatterns: InlinePattern[];
-  readonly dynamicPatternsLookup: DynamicPatternsLookup;
-}
-export interface PatternSet extends InlinePatternSet {
   readonly blockPatterns: BlockPattern[];
+  readonly dynamicPatternsLookup: DynamicPatternsLookup;
 }
 
 interface PatternMatch<T extends Pattern> {

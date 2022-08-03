@@ -8,7 +8,6 @@ import Editor from 'tinymce/core/api/Editor';
 describe('browser.tinymce.core.delete.CefDeleteNoneditableTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    plugins: 'noneditable'
   }, [], true);
 
   it('TINY-3868: Should not backspace cef inside cef with ranged selection', () => {
@@ -105,7 +104,8 @@ describe('browser.tinymce.core.delete.CefDeleteNoneditableTest', () => {
     );
   });
 
-  it('TINY-3868: Should not backspace cef inside cef with collapsed selection after inner cef', () => {
+  // TODO: TINY-8951: user should not be able to select cef child elements and move the selection inside the cef element
+  it.skip('TINY-3868: Should not backspace cef inside cef with collapsed selection after inner cef', () => {
     const editor = hook.editor();
     editor.setContent('<div class="mceNonEditable"><span class="mceNonEditable">a</span> b</div><p>c</p>');
     TinySelections.select(editor, 'div.mceNonEditable', [ 0 ]);
@@ -136,7 +136,8 @@ describe('browser.tinymce.core.delete.CefDeleteNoneditableTest', () => {
     );
   });
 
-  it('TINY-3868: Should not delete cef inside cef with collapsed selection before inner cef', () => {
+  // TODO: TINY-8951: user should not be able to select cef child elements and move the selection inside the cef element
+  it.skip('TINY-3868: Should not delete cef inside cef with collapsed selection before inner cef', () => {
     const editor = hook.editor();
     editor.setContent('<div class="mceNonEditable"><span class="mceNonEditable">a</span> b</div><p>c</p>');
     TinySelections.select(editor, 'div.mceNonEditable', [ 0 ]);

@@ -22,18 +22,24 @@ import * as SelectionUtils from '../selection/SelectionUtils';
 import { InsertContentDetails } from './ContentTypes';
 import * as InsertList from './InsertList';
 
-const wrappedElements = [ 'pre' ];
+const mergeableWrappedElements = [ 'pre' ];
 
-const shouldPasteContentOnly = (fragment: AstNode, parentNode: Element) => {
+const shouldPasteContentOnly = (dom: DOMUtils, fragment: AstNode, parentNode: Element, root: Node): boolean => {
   const firstNode = fragment.firstChild as AstNode;
   const lastNode = fragment.lastChild as AstNode;
-
-  const isWrappedElement = Arr.contains(wrappedElements, firstNode.name);
-  const isPastingInTheSameTag = firstNode.name === parentNode.tagName.toLowerCase();
   const last = lastNode.attr('data-mce-type') === 'bookmark' ? lastNode.prev : lastNode;
-  const isCopingOnlyOneTag = firstNode === last;
 
-  return isCopingOnlyOneTag && isWrappedElement && isPastingInTheSameTag;
+  const isPastingSingleElement = firstNode === last;
+  const isWrappedElement = Arr.contains(mergeableWrappedElements, firstNode.name);
+  if (isPastingSingleElement && isWrappedElement) {
+    const isContentEditable = firstNode.attr('contenteditable') !== 'false';
+    const isPastingInTheSameBlockTag = dom.getParent(parentNode, dom.isBlock)?.nodeName.toLowerCase() === firstNode.name;
+    const isPastingInContentEditable = Optional.from(CefUtils.getContentEditableRoot(root, parentNode)).forall(NodeType.isContentEditableTrue);
+
+    return isContentEditable && isPastingInTheSameBlockTag && isPastingInContentEditable;
+  } else {
+    return false;
+  }
 };
 
 const isTableCell = NodeType.isTableCell;
@@ -259,7 +265,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
     return value;
   }
 
-  if (details.paste === true && shouldPasteContentOnly(fragment, parentNode)) {
+  if (details.paste === true && shouldPasteContentOnly(dom, fragment, parentNode, editor.getBody())) {
     fragment.firstChild?.unwrap();
   }
 

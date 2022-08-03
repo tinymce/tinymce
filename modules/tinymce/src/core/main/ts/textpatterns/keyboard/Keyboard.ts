@@ -34,13 +34,15 @@ const setup = (editor: Editor): void => {
   }, true);
 
   const handleInlineTrigger = () => {
-    const patternSet = getPatternSet();
+    if (editor.selection.isCollapsed()) {
+      const patternSet = getPatternSet();
 
-    // Do not process anything if we don't have any inline patterns or dynamic lookup defined
-    const hasPatterns = patternSet.inlinePatterns.length > 0 || hasDynamicPatterns();
+      // Do not process anything if we don't have any inline patterns or dynamic lookup defined
+      const hasPatterns = patternSet.inlinePatterns.length > 0 || hasDynamicPatterns();
 
-    if (hasPatterns) {
-      KeyHandler.handleInlineKey(editor, patternSet);
+      if (hasPatterns) {
+        KeyHandler.handleInlineKey(editor, patternSet);
+      }
     }
   };
 
