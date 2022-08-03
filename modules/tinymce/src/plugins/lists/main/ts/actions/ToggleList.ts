@@ -1,4 +1,5 @@
-import { Type } from '@ephox/katamari';
+import { Type, Arr } from '@ephox/katamari';
+import { ContentEditable, SugarElement } from '@ephox/sugar';
 
 import BookmarkManager from 'tinymce/core/api/dom/BookmarkManager';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -289,14 +290,18 @@ const toggleSingleList = (editor: Editor, parentList: HTMLElement | null, listNa
 };
 
 const toggleList = (editor: Editor, listName: 'UL' | 'OL' | 'DL', _detail: ListDetail | null): void => {
-  const parentList = Selection.getParentList(editor);
-  const selectedSubLists = Selection.getSelectedSubLists(editor);
-  const detail = Type.isObject(_detail) ? _detail : {};
+  const parentList = Selection.getParentList(editor) ?? editor.getBody();
 
-  if (selectedSubLists.length > 0) {
-    toggleMultipleLists(editor, parentList, selectedSubLists, listName, detail);
-  } else {
-    toggleSingleList(editor, parentList, listName, detail);
+  if (ContentEditable.get(SugarElement.fromDom(parentList))) {
+    const selectedSubLists = Arr.filter(Selection.getSelectedSubLists(editor),
+      (list) => ContentEditable.get(SugarElement.fromDom(list)));
+
+    const detail = Type.isObject(_detail) ? _detail : {};
+    if (selectedSubLists.length > 0) {
+      toggleMultipleLists(editor, parentList, selectedSubLists, listName, detail);
+    } else {
+      toggleSingleList(editor, parentList, listName, detail);
+    }
   }
 };
 
