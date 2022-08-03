@@ -7,21 +7,21 @@
 
 // private variables
 @_promotion-row-separator-color: escape('@{menubar-row-separator-color}');
-@_promotion-height: @promotion-select-height + (@promotion-select-spacing-y * 2) + 1px;
+@_promotion-height: @_promotion-select-height + (@_promotion-select-spacing-y * 2) + 1px;
 @_promotion-divider-height: @_promotion-height - 1px;
-@promotion-select-height: @toolbar-button-height;
-@promotion-select-spacing-y: @toolbar-button-spacing-y;
+@_promotion-select-height: @menubar-select-height;
+@_promotion-select-spacing-y: @menubar-select-spacing-y;
 
 .tox {
   .tox-promotion {
     background: @promotion-background;
     background-color: @promotion-background-color;
+    cursor: pointer;
     grid-column: 2;
     grid-row: 1;
     padding-inline-end: 8px;
     padding-inline-start: 4px;
     padding-top: 5px;
-    cursor: pointer;
   }
 
   .tox-promotion-link {
