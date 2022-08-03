@@ -84,21 +84,24 @@ const moveToCaretPosition = (editor: Editor, root: Node): void => {
   ScrollIntoView.scrollRangeIntoView(editor, rng);
 };
 
-const getEditableRoot = (dom: DOMUtils, node: Node): HTMLElement => {
+const getEditableRoot = (dom: DOMUtils, node: Node): Optional<HTMLElement> => {
   const root = dom.getRoot();
   let editableRoot: HTMLElement | undefined;
 
   // Get all parents until we hit a non editable parent or the root
   let parent: Node | null = node;
-  while (parent !== root && parent && dom.getContentEditable(parent) !== 'false') {
-    if (dom.getContentEditable(parent) === 'true') {
+  while (parent !== root && parent) {
+    if (dom.getContentEditable(parent) === 'false') {
+      return Optional.none();
+    } else if (dom.getContentEditable(parent) === 'false') {
       editableRoot = parent as HTMLElement;
     }
 
     parent = parent.parentNode;
   }
 
-  return parent !== root && editableRoot ? editableRoot : root;
+  editableRoot = parent !== root && editableRoot ? editableRoot : root;
+  return Optional.some(editableRoot);
 };
 
 const getParentBlock = (editor: Editor): Optional<Element> => {

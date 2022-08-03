@@ -152,7 +152,7 @@ const wrapSelfAndSiblingsInDefaultBlock = (editor: Editor, newBlockName: string,
   // Not in a block element or in a table cell or caption
   let parentBlock = dom.getParent(container, dom.isBlock);
   if (!parentBlock || !canSplitBlock(dom, parentBlock)) {
-    parentBlock = parentBlock || editableRoot;
+    parentBlock = parentBlock || editableRoot.getOr(editor.getBody());
 
     let rootBlockName: string;
     if (parentBlock === editor.getBody() || NodeType.isTableCellOrCaption(parentBlock)) {
@@ -282,7 +282,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
             block.appendChild(clonedNode);
           }
         }
-      } while ((node = node.parentNode) && node !== editableRoot);
+      } while ((node = node.parentNode) && editableRoot.forall((o) => o !== node));
     }
 
     setForcedBlockAttrs(editor, block);
@@ -401,7 +401,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   const editableRoot = NewLineUtils.getEditableRoot(dom, container);
 
   // If there is no editable root then enter is done inside a contentEditable false element
-  if (!editableRoot) {
+  if (editableRoot.isNone()) {
     return;
   }
 
