@@ -392,7 +392,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     assert.equal(results.href.nodes[1].attr('href'), '2.gif', 'Parser filter result node(1) attr');
   });
 
-  it('TINY-8888: mutating addNodeFilter', () => {
+  it('TINY-8888: mutating addNodeFilter -> addAttributeFilter', () => {
     const parser = DomParser({});
     parser.addNodeFilter('img', (nodes) => {
       Arr.each(nodes, (node) => node.attr('src', null));
@@ -400,7 +400,29 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     parser.addAttributeFilter('src', () => {
       Assert.fail('second src filter should not run, because src was removed');
     });
-    parser.parse('<b>a<img src="1.gif" />b<img src="1.gif" />c</b>');
+    parser.parse('<b>a<img src="1.gif" />b</b>');
+  });
+
+  it('TINY-8888: mutating addNodeFilter -> addNodeFilter', () => {
+    const parser = DomParser({});
+    parser.addNodeFilter('img', (nodes) => {
+      Arr.each(nodes, (node) => node.remove());
+    });
+    parser.addNodeFilter('img', () => {
+      Assert.fail('second img filter should not run, because img was removed');
+    });
+    parser.parse('<b>a<img src="1.gif" />b</b>');
+  });
+
+  it('TINY-8888: mutating addAttributeFilter -> addAttributeFilter', () => {
+    const parser = DomParser({});
+    parser.addAttributeFilter('src', (nodes) => {
+      Arr.each(nodes, (node) => node.attr('src', null));
+    });
+    parser.addAttributeFilter('src', () => {
+      Assert.fail('second src filter should not run, because src was removed');
+    });
+    parser.parse('<b>a<img src="1.gif" />b</b>');
   });
 
   it('TINY-7847: removeAttributeFilter', () => {
