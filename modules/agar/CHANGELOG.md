@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- Added `promotion` set to `false` as a default setting.
+
 ## 7.1.0 - 2022-06-29
 
 ### Added
