@@ -137,8 +137,6 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
     await Waiter.pWait(1000); // Wait a small amount of time to ensure the scrolling happens
     Mouse.mouseUp(target);
     assert.isTrue(editor.getBody().ownerDocument.defaultView.scrollY > initialScrollY); // Make sure scrolling happened
-    TinySelections.select(editor, 'p:contains("Draggable CEF")', [ 0 ]);
-    TinyAssertions.assertSelection(editor, [ 3 ], 0, [ 3 ], 1); // Make sure the CEF element dropped in the right position
   });
 
   it('TINY-8874: Dragging CEF element towards the upper edge causes scrolling', async () => {
@@ -161,8 +159,6 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
     await Waiter.pWait(1000); // Wait a small amount of time to ensure the scrolling happens
     Mouse.mouseUp(target);
     assert.isTrue(editor.getBody().ownerDocument.defaultView.scrollY < initialScrollY); // Make sure scrolling happened
-    TinySelections.select(editor, 'p:contains("Draggable CEF")', [ 0 ]);
-    TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 1); // Make sure the CEF element dropped in the right position
   });
 
   it('TINY-8874: Dragging CEF element towards the right edge causes scrolling', async () => {
