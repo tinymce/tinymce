@@ -144,10 +144,6 @@ const moveGhost = (
   const clientHeight = contentAreaContainer.clientHeight;
   const clientWidth = contentAreaContainer.clientWidth;
 
-  // current scroll level
-  const currentTop = win.scrollY;
-  const currentLeft = win.scrollX;
-
   state.on((state) => {
     if (state.dragging) {
       // This basically means that the mouse is close to the bottom edge
@@ -159,7 +155,6 @@ const moveGhost = (
             behavior: 'smooth'
           });
         };
-        scrollDown(currentTop);
         state.intervalId.set(setInterval(() => {
           const currentTop = win.scrollY;
           scrollDown(currentTop);
@@ -173,7 +168,6 @@ const moveGhost = (
             behavior: 'smooth'
           });
         };
-        scrollUp(currentTop);
         state.intervalId.set(setInterval(() => {
           const currentTop = win.scrollY;
           scrollUp(currentTop);
@@ -187,7 +181,6 @@ const moveGhost = (
             behavior: 'smooth'
           });
         };
-        scrollRight(currentLeft);
         state.intervalId.set(setInterval(() => {
           const currentLeft = win.scrollX;
           scrollRight(currentLeft);
@@ -201,7 +194,6 @@ const moveGhost = (
             behavior: 'smooth'
           });
         };
-        scrollLeft(currentLeft);
         state.intervalId.set(setInterval(() => {
           const currentLeft = win.scrollX;
           scrollLeft(currentLeft);
