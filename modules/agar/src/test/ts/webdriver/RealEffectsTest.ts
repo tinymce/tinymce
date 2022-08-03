@@ -15,13 +15,7 @@ import * as UiFinder from 'ephox/agar/api/UiFinder';
 import * as Waiter from 'ephox/agar/api/Waiter';
 
 UnitTest.asynctest('Real Effects Test', (success, failure) => {
-
   const platform = PlatformDetection.detect();
-
-  // the meta key on mac using chromedriver/safaridriver doesn't work (see https://github.com/webdriverio/webdriverio/issues/622)
-  if (platform.browser.isSafari() || (platform.os.isMacOS() && platform.browser.isChromium())) {
-    return success();
-  }
 
   const head = SugarElement.fromDom(document.head);
   const body = SugarElement.fromDom(document.body);
@@ -100,12 +94,14 @@ UnitTest.asynctest('Real Effects Test', (success, failure) => {
     Step.wait(100),
     RealMouse.sMoveToOn('input'),
     sCheckButtonBorder('Checking initial state of button border', 'rgb(0, 0, 0)'),
-
     RealMouse.sMoveToOn('button.test'),
-    Waiter.sTryUntil(
-      'Waiting for hovered state',
-      sCheckButtonBorder('Checking hovered state of button border', 'rgb(255, 255, 255)')
-    )
+    // Safari resets the mouse immediately after the move action so we can't do the assertion
+    ...(platform.browser.isSafari() ? [] : [
+      Waiter.sTryUntil(
+        'Waiting for hovered state',
+        sCheckButtonBorder('Checking hovered state of button border', 'rgb(255, 255, 255)')
+      )
+    ])
   ], () => {
     Remove.remove(container);
     success();
