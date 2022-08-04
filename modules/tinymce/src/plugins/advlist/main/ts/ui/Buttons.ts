@@ -1,5 +1,4 @@
 import { Type } from '@ephox/katamari';
-import { ContentEditable, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
@@ -48,7 +47,7 @@ const isEditableSelection = (editor: Editor, e: EditorEvent<NodeChangeEvent>): b
   const root = editor.getBody();
   let parent: HTMLElement | null = e.element as HTMLElement;
   while (parent !== root && parent) {
-    if (!ContentEditable.get(SugarElement.fromDom(parent))) {
+    if (editor.dom.getContentEditable(parent) === 'false') {
       return false;
     }
     parent = parent.parentElement;

@@ -1,5 +1,5 @@
 import { Arr, Optionals } from '@ephox/katamari';
-import { Compare, ContentEditable, PredicateFind, Remove, SugarElement, SugarNode } from '@ephox/sugar';
+import { Compare, PredicateFind, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
@@ -14,6 +14,7 @@ import * as NodeType from './NodeType';
 import * as NormalizeLists from './NormalizeLists';
 import * as ListRangeUtils from './RangeUtils';
 import * as Selection from './Selection';
+import { isEditableSelection } from './Util';
 
 const findNextCaretContainer = (editor: Editor, rng: Range, isForward: boolean, root: Node): Node | null => {
   let node: Node | null | undefined = rng.startContainer;
@@ -261,20 +262,9 @@ const backspaceDeleteRange = (editor: Editor): boolean => {
   return false;
 };
 
-const isEditableSelection = (node: HTMLElement, root: HTMLElement): boolean => {
-  let parent: HTMLElement | null = node;
-  while (parent !== root && parent) {
-    if (!ContentEditable.get(SugarElement.fromDom(parent))) {
-      return false;
-    }
-    parent = parent.parentElement;
-  }
-  return true;
-};
-
 const backspaceDelete = (editor: Editor, isForward: boolean): boolean => {
   const selection = editor.selection;
-  if (isEditableSelection(selection.getNode(), editor.getBody())) {
+  if (isEditableSelection(editor, selection.getNode())) {
     return selection.isCollapsed() ? backspaceDeleteCaret(editor, isForward) : backspaceDeleteRange(editor);
   } else {
     return false;

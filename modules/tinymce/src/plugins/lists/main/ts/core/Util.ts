@@ -1,5 +1,4 @@
 import { Arr, Fun } from '@ephox/katamari';
-import { ContentEditable, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -8,8 +7,23 @@ import * as NodeType from './NodeType';
 export const isCustomList = (list: HTMLElement): boolean =>
   /\btox\-/.test(list.className);
 
-export const setupHandler = (editor: Editor, listName: string) => (api) =>
+export const isEditableSelection = (editor: Editor, node: Element): boolean => {
+  const root = editor.getBody();
+  let parent: HTMLElement | null = node as HTMLElement;
+  while (parent !== root && parent) {
+    if (editor.dom.getContentEditable(parent) === 'false') {
+      return false;
+    }
+    parent = parent.parentElement;
+  }
+  return true;
+};
+
+export const setupButtonHandler = (editor: Editor, listName: string) => (api) =>
   Fun.compose(listButtonState(editor, api.setEnabled), listState(editor, listName, api.setActive));
+
+export const setupMenuItemHandler = (editor: Editor, listName: string) => (api) =>
+  Fun.compose(listButtonState(editor, api.setEnabled), listState(editor, listName, api.setEnabled));
 
 export const listState = (editor: Editor, listName: string, activate: (active: boolean) => void): () => void => {
   const nodeChangeHandler = (e: { parents: Node[] }) => {
@@ -29,18 +43,7 @@ export const listState = (editor: Editor, listName: string, activate: (active: b
 };
 
 export const listButtonState = (editor: Editor, enable: (state: boolean) => void): () => void => {
-  const isEditableSelection = (node: Element): boolean => {
-    const root = editor.getBody();
-    let parent: HTMLElement | null = node as HTMLElement;
-    while (parent !== root && parent) {
-      if (!ContentEditable.get(SugarElement.fromDom(parent))) {
-        return false;
-      }
-      parent = parent.parentElement;
-    }
-    return true;
-  };
-  const buttonStateHandler = (e: { element: Element }) => enable(isEditableSelection(e.element));
+  const buttonStateHandler = (e: { element: Element }) => enable(isEditableSelection(editor, e.element));
 
   // Set the initial state
   const element = editor.selection.getNode();
