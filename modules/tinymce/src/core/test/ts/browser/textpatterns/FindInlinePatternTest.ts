@@ -5,7 +5,9 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as InlinePattern from 'tinymce/core/textpatterns/core/InlinePattern';
-import { InlinePattern as InlinePatternType, InlinePatternMatch, PatternSet } from 'tinymce/core/textpatterns/core/PatternTypes';
+import {
+  DynamicPatternContext, InlinePattern as InlinePatternType, InlinePatternMatch, PatternSet
+} from 'tinymce/core/textpatterns/core/PatternTypes';
 import { PathRange } from 'tinymce/core/textpatterns/utils/PathRange';
 import { getBeforeText, getParentBlock, resolveFromDynamicPatterns } from 'tinymce/core/textpatterns/utils/Utils';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
@@ -24,9 +26,9 @@ describe('browser.tinymce.textpatterns.FindInlinePatternTest', () => {
     for (let i = 0; i < expectedMatches.length; i++) {
       const expected = expectedMatches[i];
       const actual = actualMatches[i];
-      const pattern = actual.pattern;
+      const pattern = actual.pattern as Record<string, any>;
       Obj.each(expected.pattern, (value, key) => {
-        if (Obj.has<any, string>(pattern, key)) {
+        if (Obj.has(pattern, key)) {
           assert.deepEqual(pattern[key], value, 'Pattern ' + (i + 1) + ' property `' + key + '` is not equal');
         } else {
           assert.fail('Pattern ' + (i + 1) + ' property `' + key + '` is missing');
@@ -319,7 +321,7 @@ describe('browser.tinymce.textpatterns.FindInlinePatternTest', () => {
       text_patterns: [
         { start: '*', end: '*', format: 'italic' }
       ],
-      text_patterns_lookup: (ctx) => {
+      text_patterns_lookup: (ctx: DynamicPatternContext) => {
         const parentTag = ctx.block.nodeName.toLowerCase();
         if (parentTag === 'pre') {
           return [

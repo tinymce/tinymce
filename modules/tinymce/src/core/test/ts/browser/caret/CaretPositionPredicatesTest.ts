@@ -46,14 +46,14 @@ describe('browser.tinymce.core.CaretPositionPredicateTest', () => {
   it('TBA: isEmptyText', () => {
     setupHtml('');
     getRoot().appendChild(document.createTextNode(''));
-    assert.isTrue(isEmptyText(CaretPosition(getRoot().firstChild, 0)));
-    assert.isTrue(isEmptyText(CaretPosition(getRoot().firstChild, 1)));
+    assert.isTrue(isEmptyText(CaretPosition(getRoot().firstChild as Text, 0)));
+    assert.isTrue(isEmptyText(CaretPosition(getRoot().firstChild as Text, 1)));
 
     setupHtml('<span data-mce-type="bookmark">' + ZWSP + '</span>');
-    const span = getRoot().firstChild;
+    const span = getRoot().firstChild as HTMLSpanElement;
     assert.isFalse(isEmptyText(CaretPosition(span, 0)));
     assert.isFalse(isEmptyText(CaretPosition(span, 1)));
-    assert.isTrue(isEmptyText(CaretPosition(span.firstChild, 0)));
-    assert.isTrue(isEmptyText(CaretPosition(span.firstChild, 1)));
+    assert.isTrue(isEmptyText(CaretPosition(span.firstChild as Text, 0)));
+    assert.isTrue(isEmptyText(CaretPosition(span.firstChild as Text, 1)));
   });
 });

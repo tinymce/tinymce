@@ -112,8 +112,8 @@ interface DOMUtils {
     <T extends Node>(elm: T): T;
     (elm: string): HTMLElement | null;
   };
-  getNext: (node: Node, selector: string | ((node: Node) => boolean)) => Node | null;
-  getPrev: (node: Node, selector: string | ((node: Node) => boolean)) => Node | null;
+  getNext: (node: Node | null, selector: string | ((node: Node) => boolean)) => Node | null;
+  getPrev: (node: Node | null, selector: string | ((node: Node) => boolean)) => Node | null;
   select: {
     <K extends keyof HTMLElementTagNameMap>(selector: K, scope?: string | Node): Array<HTMLElementTagNameMap[K]>;
     <T extends HTMLElement = HTMLElement>(selector: string, scope?: string | Node): T[];
@@ -122,12 +122,12 @@ interface DOMUtils {
     <T extends Element>(elm: Node | Node[] | null, selector: string): elm is T;
     (elm: Node | Node[] | null, selector: string): boolean;
   };
-  add: (parentElm: RunArguments, name: string | Element, attrs?: Record<string, string | boolean | number>, html?: string | Node, create?: boolean) => HTMLElement;
+  add: (parentElm: RunArguments, name: string | Element, attrs?: Record<string, string | boolean | number | null>, html?: string | Node | null, create?: boolean) => HTMLElement;
   create: {
-    <K extends keyof HTMLElementTagNameMap>(name: K, attrs?: Record<string, string | boolean | number>, html?: string | Node): HTMLElementTagNameMap[K];
-    (name: string, attrs?: Record<string, string | boolean | number>, html?: string | Node): HTMLElement;
+    <K extends keyof HTMLElementTagNameMap>(name: K, attrs?: Record<string, string | boolean | number | null>, html?: string | Node | null): HTMLElementTagNameMap[K];
+    (name: string, attrs?: Record<string, string | boolean | number | null>, html?: string | Node | null): HTMLElement;
   };
-  createHTML: (name: string, attrs?: Record<string, string>, html?: string) => string;
+  createHTML: (name: string, attrs?: Record<string, string | null>, html?: string) => string;
   createFragment: (html?: string) => DocumentFragment;
   remove: {
     <T extends Node>(node: T | T[], keepChildren?: boolean): typeof node extends Array<any> ? T[] : T;
@@ -573,7 +573,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return parents && parents.length > 0 ? parents[0] : null;
   };
 
-  const _findSib = (node: Node, selector: string | ((node: Node) => boolean), name: 'previousSibling' | 'nextSibling') => {
+  const _findSib = (node: Node | null, selector: string | ((node: Node) => boolean), name: 'previousSibling' | 'nextSibling') => {
     let func = selector;
 
     if (node) {
@@ -595,9 +595,9 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return null;
   };
 
-  const getNext = (node: Node, selector: string | ((node: Node) => boolean)) => _findSib(node, selector, 'nextSibling');
+  const getNext = (node: Node | null, selector: string | ((node: Node) => boolean)) => _findSib(node, selector, 'nextSibling');
 
-  const getPrev = (node: Node, selector: string | ((node: Node) => boolean)) => _findSib(node, selector, 'previousSibling');
+  const getPrev = (node: Node | null, selector: string | ((node: Node) => boolean)) => _findSib(node, selector, 'previousSibling');
 
   const isParentNode = (node: Node): node is ParentNode =>
     Type.isFunction((node as any).querySelectorAll);
@@ -642,7 +642,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     });
   };
 
-  const add = (parentElm: RunArguments, name: string | Element, attrs?: Record<string, string | boolean | number>, html?: string | Node, create?: boolean): HTMLElement =>
+  const add = (parentElm: RunArguments, name: string | Element, attrs?: Record<string, string | boolean | number | null>, html?: string | Node | null, create?: boolean): HTMLElement =>
     run(parentElm, (parentElm) => {
       const newElm = Type.isString(name) ? doc.createElement(name) : name;
 
@@ -661,13 +661,13 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       return !create ? parentElm.appendChild(newElm) : newElm;
     }) as HTMLElement;
 
-  const create = (name: string, attrs?: Record<string, string | boolean | number>, html?: string | Node): HTMLElement =>
+  const create = (name: string, attrs?: Record<string, string | boolean | number | null>, html?: string | Node | null): HTMLElement =>
     add(doc.createElement(name), name, attrs, html, true);
 
   const decode = Entities.decode;
   const encode = Entities.encodeAllRaw;
 
-  const createHTML = (name: string, attrs?: Record<string, string>, html: string = ''): string => {
+  const createHTML = (name: string, attrs?: Record<string, string | null>, html: string = ''): string => {
     let outHtml = '<' + name;
 
     for (const key in attrs) {

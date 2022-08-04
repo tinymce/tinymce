@@ -10,7 +10,7 @@ import { toValidValues } from 'tinymce/themes/silver/ui/general/FormValues';
 import { interpretInForm } from 'tinymce/themes/silver/ui/general/UiFactory';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
-import { setMode } from '../alien/DialogTabHeight';
+import * as DialogTabHeight from '../alien/DialogTabHeight';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { formTabChangeEvent } from '../general/FormEvents';
 import * as NavigableObject from '../general/NavigableObject';
@@ -40,7 +40,7 @@ export const renderTabPanel = (spec: TabPanelSpec, dialogData: Dialog.DialogData
 
   const oldTab = Cell(null);
 
-  const allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>> = Arr.map(spec.tabs, (tab) => {
+  const allTabs: TabbarTypes.TabButtonWithViewSpec[] = Arr.map(spec.tabs, (tab) => {
     return {
       value: tab.name,
       dom: {
@@ -93,7 +93,7 @@ export const renderTabPanel = (spec: TabPanelSpec, dialogData: Dialog.DialogData
   });
 
   // Assign fixed height or variable height to the tabs
-  const tabMode = setMode(allTabs).smartTabHeight;
+  const tabMode = DialogTabHeight.smartMode(allTabs);
 
   return AlloyTabSection.sketch({
     dom: {

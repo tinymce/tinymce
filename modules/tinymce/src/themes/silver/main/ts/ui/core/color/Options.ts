@@ -5,7 +5,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { EditorOptions } from 'tinymce/core/api/OptionTypes';
 import { Menu } from 'tinymce/core/api/ui/Ui';
 
-import ColorCache from './ColorCache';
+import { ColorCache } from './ColorCache';
 
 const colorCache = ColorCache(10);
 
@@ -27,8 +27,8 @@ const mapColors = (colorMap: string[]): Menu.ChoiceMenuItemSpec[] => {
 };
 
 const option: {
-  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K] | undefined;
-  <T>(name: string): (editor: Editor) => T | undefined;
+  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K];
+  <T>(name: string): (editor: Editor) => T;
 } = (name: string) => (editor: Editor) =>
   editor.options.get(name);
 
@@ -94,7 +94,7 @@ const getCurrentColors = (): Menu.ChoiceMenuItemSpec[] => Arr.map(colorCache.sta
   value: color
 }));
 
-const addColor = (color: string) => {
+const addColor = (color: string): void => {
   colorCache.add(color);
 };
 

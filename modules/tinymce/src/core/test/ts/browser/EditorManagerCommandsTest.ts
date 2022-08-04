@@ -3,6 +3,7 @@ import { Arr } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import 'tinymce';
+import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -68,12 +69,12 @@ describe('browser.tinymce.core.EditorManagerCommandsTest', () => {
       selector: 'textarea#ed_1',
       init_instance_callback: (_editor1) => {
         assert.lengthOf(EditorManager.get(), 1);
-        assert.isFalse(EditorManager.get('ed_1').mode.isReadOnly());
+        assert.isFalse(EditorManager.get('ed_1')?.mode.isReadOnly());
         EditorManager.execCommand('mceAddEditor', false, {
           id: 'ed_2',
           options: {
             readonly: true,
-            init_instance_callback: (editor2) => {
+            init_instance_callback: (editor2: Editor) => {
               assert.lengthOf(EditorManager.get(), 2);
               assert.isTrue(editor2.mode.isReadOnly());
               done();

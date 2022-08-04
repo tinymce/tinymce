@@ -35,31 +35,37 @@ const toMenuItems = (targets: LinkTarget[]): BridgeMenu.MenuItemSpec[] =>
 const filterLinkTargets = (type: LinkTargetType, targets: LinkTarget[]): LinkTarget[] =>
   Arr.filter(targets, (target) => target.type === type);
 
-const filteredTargets = (type: LinkTargetType, targets: LinkTarget[]) =>
+const filteredTargets = (type: LinkTargetType, targets: LinkTarget[]): BridgeMenu.MenuItemSpec[] =>
   toMenuItems(filterLinkTargets(type, targets));
 
-const headerTargets = (linkInfo: LinkInformation) => filteredTargets('header', linkInfo.targets);
+const headerTargets = (linkInfo: LinkInformation): BridgeMenu.MenuItemSpec[] =>
+  filteredTargets('header', linkInfo.targets);
 
-const anchorTargets = (linkInfo: LinkInformation) => filteredTargets('anchor', linkInfo.targets);
+const anchorTargets = (linkInfo: LinkInformation): BridgeMenu.MenuItemSpec[] =>
+  filteredTargets('anchor', linkInfo.targets);
 
-const anchorTargetTop = (linkInfo: LinkInformation) => Optional.from(linkInfo.anchorTop).map((url) => staticMenuItem('<top>', url)).toArray();
+const anchorTargetTop = (linkInfo: LinkInformation): BridgeMenu.MenuItemSpec[] =>
+  Optional.from(linkInfo.anchorTop).map((url) => staticMenuItem('<top>', url)).toArray();
 
-const anchorTargetBottom = (linkInfo: LinkInformation) => Optional.from(linkInfo.anchorBottom).map((url) => staticMenuItem('<bottom>', url)).toArray();
+const anchorTargetBottom = (linkInfo: LinkInformation): BridgeMenu.MenuItemSpec[] =>
+  Optional.from(linkInfo.anchorBottom).map((url) => staticMenuItem('<bottom>', url)).toArray();
 
-const historyTargets = (history: string[]) => Arr.map(history, (url) => staticMenuItem(url, url));
+const historyTargets = (history: string[]): BridgeMenu.MenuItemSpec[] =>
+  Arr.map(history, (url) => staticMenuItem(url, url));
 
-const joinMenuLists = (items: BridgeMenu.MenuItemSpec[][]) => {
+const joinMenuLists = (items: BridgeMenu.MenuItemSpec[][]): SingleMenuItemSpec[] => {
   return Arr.foldl(items, (a, b) => {
     const bothEmpty = a.length === 0 || b.length === 0;
     return bothEmpty ? a.concat(b) : a.concat(separator, b);
   }, [] as SingleMenuItemSpec[]);
 };
 
-const filterByQuery = (term: string, menuItems: BridgeMenu.MenuItemSpec[]) => {
+const filterByQuery = (term: string, menuItems: BridgeMenu.MenuItemSpec[]): BridgeMenu.MenuItemSpec[] => {
   const lowerCaseTerm = term.toLowerCase();
   return Arr.filter(menuItems, (item) => {
     const text = item.meta !== undefined && item.meta.text !== undefined ? item.meta.text : item.text;
-    return Strings.contains(text.toLowerCase(), lowerCaseTerm) || Strings.contains(item.value.toLowerCase(), lowerCaseTerm);
+    const value = item.value ?? '';
+    return Strings.contains(text.toLowerCase(), lowerCaseTerm) || Strings.contains(value.toLowerCase(), lowerCaseTerm);
   });
 };
 

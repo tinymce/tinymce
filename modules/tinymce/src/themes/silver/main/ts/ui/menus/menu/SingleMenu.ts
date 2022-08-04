@@ -16,8 +16,6 @@ import { SingleMenuItemSpec } from './SingleMenuTypes';
 
 type PartialMenuSpec = MenuUtils.PartialMenuSpec;
 
-export type ItemChoiceActionHandler = (value: string) => void;
-
 export enum FocusMode { ContentFocus, UiFocus }
 
 const createMenuItemFromBridge = (
@@ -30,11 +28,12 @@ const createMenuItemFromBridge = (
   const providersBackstage = backstage.shared.providers;
   // If we're making a horizontal menu (mobile context menu) we want text OR icons
   // to simplify the UI. We also don't want shortcut text.
-  const parseForHorizontalMenu = (menuitem) => !isHorizontalMenu ? menuitem : ({
+  const parseForHorizontalMenu = <T extends { text: Optional<string>; icon: Optional<string> }>(menuitem: T) => !isHorizontalMenu ? menuitem : ({
     ...menuitem,
     shortcut: Optional.none(),
     icon: menuitem.text.isSome() ? Optional.none() : menuitem.icon
   });
+
   switch (item.type) {
     case 'menuitem':
       return BridgeMenu.createMenuItem(item).fold(
@@ -77,7 +76,8 @@ const createMenuItemFromBridge = (
     case 'fancymenuitem':
       return BridgeMenu.createFancyMenuItem(item).fold(
         MenuUtils.handleError,
-        (d) => MenuItems.fancy(parseForHorizontalMenu(d), backstage)
+        // Fancy menu items don't have shortcuts or icons
+        (d) => MenuItems.fancy(d, backstage)
       );
     default: {
       // eslint-disable-next-line no-console
@@ -95,7 +95,7 @@ export const createAutocompleteItems = (
   itemResponse: ItemResponse,
   sharedBackstage: UiFactoryBackstageShared,
   highlightOn: string[]
-) => {
+): ItemTypes.ItemSpec[] => {
   // Render text and icons if we're using a single column, otherwise only render icons
   const renderText = columns === 1;
   const renderIcons = !renderText || MenuUtils.menuHasIcons(items);
@@ -134,9 +134,9 @@ export const createAutocompleteItems = (
 
         case 'autocompleteitem':
         default:
-          return InlineContent.createAutocompleterItem(item).fold(
+          return InlineContent.createAutocompleterItem(item as InlineContent.AutocompleterItemSpec).fold(
             MenuUtils.handleError,
-            (d: InlineContent.AutocompleterItem) => Optional.some(MenuItems.autocomplete(
+            (d) => Optional.some(MenuItems.autocomplete(
               d,
               matchText,
               renderText,
@@ -187,7 +187,7 @@ export const createPartialMenu = (
   return createPartial(value, hasIcons, alloyItems, 1, 'normal');
 };
 
-export const createTieredDataFrom = (partialMenu: TieredMenuTypes.PartialMenuSpec) =>
+export const createTieredDataFrom = (partialMenu: TieredMenuTypes.PartialMenuSpec & { value: string }): TieredMenuTypes.TieredData =>
   TieredMenu.singleData(partialMenu.value, partialMenu);
 
 export const createInlineMenuFrom = (

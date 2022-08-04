@@ -3,7 +3,7 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Options from '../api/Options';
 
 export interface UiFactoryBackstageForDialog {
-  isDraggableModal: () => boolean;
+  readonly isDraggableModal: () => boolean;
 }
 
 const isDraggableModal = (editor: Editor) => (): boolean => Options.isDraggableModal(editor);

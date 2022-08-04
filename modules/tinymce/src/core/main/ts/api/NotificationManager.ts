@@ -7,7 +7,7 @@ import Editor from './Editor';
 import * as Options from './Options';
 
 export interface NotificationManagerImpl {
-  open: (spec: NotificationSpec, closeCallback?: () => void) => NotificationApi;
+  open: (spec: NotificationSpec, closeCallback: () => void) => NotificationApi;
   close: <T extends NotificationApi>(notification: T) => void;
   getArgs: <T extends NotificationApi>(notification: T) => NotificationSpec;
 }

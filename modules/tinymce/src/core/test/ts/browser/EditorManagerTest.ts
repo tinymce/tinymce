@@ -38,9 +38,9 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
         assert.equal(EditorManager.get(0), EditorManager.activeEditor);
         assert.isNull(EditorManager.get(1));
         assert.isNull(EditorManager.get('noid'));
-        assert.isNull(EditorManager.get(undefined));
+        assert.isNull(EditorManager.get(undefined as any));
         assert.equal(EditorManager.get()[0], EditorManager.activeEditor);
-        assert.equal(EditorManager.get(EditorManager.activeEditor.id), EditorManager.activeEditor);
+        assert.equal(EditorManager.get((EditorManager.activeEditor as Editor).id), EditorManager.activeEditor);
         assert.notEqual(EditorManager.get(), EditorManager.get());
 
         // Trigger save
@@ -55,7 +55,7 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
 
         // Re-init on same id
         EditorManager.init({
-          selector: '#' + EditorManager.activeEditor.id,
+          selector: '#' + (EditorManager.activeEditor as Editor).id,
         });
 
         assert.lengthOf(EditorManager.get(), 1);

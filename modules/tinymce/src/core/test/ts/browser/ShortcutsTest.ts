@@ -18,7 +18,7 @@ describe('browser.tinymce.core.ShortcutsTest', () => {
 
   it('Shortcuts formats', () => {
     const editor = hook.editor();
-    const assertShortcut = (shortcut: string, args, assertState: boolean) => {
+    const assertShortcut = (shortcut: string, args: Partial<KeyboardEvent>, assertState: boolean) => {
       let called = false;
 
       editor.shortcuts.add(shortcut, '', () => {
@@ -32,7 +32,7 @@ describe('browser.tinymce.core.ShortcutsTest', () => {
         metaKey: false
       }, args);
 
-      editor.dispatch('keydown', args);
+      editor.dispatch('keydown', args as KeyboardEvent);
 
       if (assertState) {
         assert.isTrue(called, `Shortcut wasn't called: ` + shortcut);

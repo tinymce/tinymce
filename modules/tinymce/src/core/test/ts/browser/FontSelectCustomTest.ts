@@ -1,6 +1,6 @@
 import { UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { Fun, Strings } from '@ephox/katamari';
+import { Strings } from '@ephox/katamari';
 import { SugarBody, TextContent } from '@ephox/sugar';
 import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -20,9 +20,9 @@ describe('browser.tinymce.core.FontSelectCustomTest', () => {
     font_size_formats: '8pt=1 12pt 12.75pt 13pt 24pt 32pt'
   }, []);
 
-  const assertSelectBoxDisplayValue = (editor, title, expectedValue) => {
+  const assertSelectBoxDisplayValue = (editor: Editor, title: string, expectedValue: string) => {
     const selectBox = UiFinder.findIn(SugarBody.body(), '*[title="' + title + '"]').getOrDie();
-    const value = Fun.compose(Strings.trim, TextContent.get)(selectBox);
+    const value = Strings.trim(TextContent.get(selectBox) ?? '');
     assert.equal(value, expectedValue, 'Should be the expected display value');
   };
 

@@ -1,6 +1,6 @@
 import { AlloySpec, RawDomSchema } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
-import { Fun, Obj, Optional } from '@ephox/katamari';
+import { Fun, Obj, Optional, Type } from '@ephox/katamari';
 
 import I18n from 'tinymce/core/api/util/I18n';
 
@@ -10,21 +10,21 @@ import * as ItemClasses from '../ItemClasses';
 import { renderHtml, renderShortcut, renderStyledText, renderText } from './ItemSlices';
 
 export interface ItemStructure {
-  dom: RawDomSchema;
-  optComponents: Array<Optional<AlloySpec>>;
+  readonly dom: RawDomSchema;
+  readonly optComponents: Array<Optional<AlloySpec>>;
 }
 
 export interface ItemStructureSpec {
-  presets: Toolbar.PresetItemTypes;
-  iconContent: Optional<string>;
-  textContent: Optional<string>;
-  htmlContent: Optional<string>;
-  ariaLabel: Optional<string>;
-  shortcutContent: Optional<string>;
-  checkMark: Optional<AlloySpec>;
-  caret: Optional<AlloySpec>;
-  value?: string;
-  meta?: Record<string, any>;
+  readonly presets: Toolbar.PresetItemTypes;
+  readonly iconContent: Optional<string>;
+  readonly textContent: Optional<string>;
+  readonly htmlContent: Optional<string>;
+  readonly ariaLabel: Optional<string>;
+  readonly shortcutContent: Optional<string>;
+  readonly checkMark: Optional<AlloySpec>;
+  readonly caret: Optional<AlloySpec>;
+  readonly value?: string;
+  readonly meta?: Record<string, any>;
 }
 
 const renderColorStructure = (item: ItemStructureSpec, providerBackstage: UiFactoryBackstageProviders, fallbackIcon: Optional<string>): ItemStructure => {
@@ -35,7 +35,7 @@ const renderColorStructure = (item: ItemStructureSpec, providerBackstage: UiFact
   const itemValue = item.value;
   const iconSvg = item.iconContent.map((name) => Icons.getOr(name, providerBackstage.icons, fallbackIcon));
 
-  const getDom = () => {
+  const getDom = (): RawDomSchema => {
     const common = ItemClasses.colorClass;
     const icon = iconSvg.getOr('');
     const attributes = itemText.map((text) => ({ title: providerBackstage.translate(text) } as Record<string, string>)).getOr({ });
@@ -59,7 +59,7 @@ const renderColorStructure = (item: ItemStructureSpec, providerBackstage: UiFact
         classes: [ ...baseDom.classes, 'tox-swatch--remove' ],
         innerHtml: icon
       };
-    } else {
+    } else if (Type.isNonNullable(itemValue)) {
       return {
         ...baseDom,
         attributes: {
@@ -70,6 +70,8 @@ const renderColorStructure = (item: ItemStructureSpec, providerBackstage: UiFact
           'background-color': itemValue
         }
       };
+    } else {
+      return baseDom;
     }
   };
 

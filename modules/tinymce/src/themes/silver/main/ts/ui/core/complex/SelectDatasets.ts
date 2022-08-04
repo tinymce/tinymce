@@ -2,9 +2,26 @@ import { Arr } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import { SelectData } from './BespokeSelect';
+import { UiFactoryBackstageForStyleFormats } from '../../../backstage/StyleFormatsBackstage';
 
-const process = (rawFormats): Array<{ title: string; format: string}> => Arr.map(rawFormats, (item) => {
+export interface BasicSelectItem {
+  readonly title: string;
+  readonly format: string;
+  readonly icon?: string;
+}
+
+export interface BasicSelectDataset {
+  readonly type: 'basic';
+  readonly data: Array<BasicSelectItem>;
+}
+
+export interface AdvancedSelectDataset extends UiFactoryBackstageForStyleFormats {
+  readonly type: 'advanced';
+}
+
+export type SelectDataset = BasicSelectDataset | AdvancedSelectDataset;
+
+const process = (rawFormats: string[]): BasicSelectItem[] => Arr.map(rawFormats, (item) => {
   let title = item, format = item;
   // Allow text=value block formats
   const values = item.split('=');
@@ -15,23 +32,6 @@ const process = (rawFormats): Array<{ title: string; format: string}> => Arr.map
 
   return { title, format };
 });
-
-export interface BasicSelectItem {
-  title: string;
-  format: string;
-  icon?: string;
-}
-
-export interface BasicSelectDataset {
-  type: 'basic';
-  data: Array<BasicSelectItem>;
-}
-
-export interface AdvancedSelectDataset extends SelectData {
-  type: 'advanced';
-}
-
-export type SelectDataset = BasicSelectDataset | AdvancedSelectDataset;
 
 const buildBasicStaticDataset = (data: Array<BasicSelectItem>): BasicSelectDataset => ({
   type: 'basic',
@@ -48,7 +48,7 @@ const split = (rawFormats: string, delimiter: Delimiter): string[] => {
   }
 };
 
-const buildBasicSettingsDataset = (editor: Editor, settingName: string, delimiter: Delimiter): BasicSelectDataset => {
+const buildBasicSettingsDataset = (editor: Editor, settingName: 'block_formats' | 'font_family_formats' | 'font_size_formats', delimiter: Delimiter): BasicSelectDataset => {
   const rawFormats = editor.options.get(settingName);
   const data = process(split(rawFormats, delimiter));
   return {

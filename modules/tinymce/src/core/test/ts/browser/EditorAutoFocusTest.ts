@@ -6,6 +6,7 @@ import { assert } from 'chai';
 import 'tinymce';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
+import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 
 describe('browser.tinymce.core.EditorAutoFocusTest', () => {
   before(() => {
@@ -32,7 +33,7 @@ describe('browser.tinymce.core.EditorAutoFocusTest', () => {
     return top > 0 && top + 50 < window.innerHeight;
   };
 
-  const pSetupEditorAutoFocus = (id: string, settings) => {
+  const pSetupEditorAutoFocus = (id: string, options: RawEditorOptions) => {
     const height = restOfWindowHeight();
     return new Promise((resolve) => {
       EditorManager.init({
@@ -45,14 +46,14 @@ describe('browser.tinymce.core.EditorAutoFocusTest', () => {
         init_instance_callback: (editor: Editor) => {
           editor.on('focus', resolve);
         },
-        ...settings
+        ...options
       });
     });
   };
 
-  const pTestEditorAutoFocus = async (id: string, settings) => {
-    await pSetupEditorAutoFocus(id, settings);
-    const editor = EditorManager.get(id);
+  const pTestEditorAutoFocus = async (id: string, options: RawEditorOptions) => {
+    await pSetupEditorAutoFocus(id, options);
+    const editor = EditorManager.get(id) as Editor;
     assert.isTrue(editor.hasFocus());
     assert.isTrue(isInViewport(editor));
   };

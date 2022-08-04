@@ -1,6 +1,6 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Composing, CustomEvent, Disabling,
-  FormField as AlloyFormField, Invalidating, Memento, NativeEvents, Representing, SimpleOrSketchSpec, SketchSpec, SystemEvents, Tabstopping, Typeahead as AlloyTypeahead
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Composing, CustomEvent, Disabling, FormField as AlloyFormField,
+  Invalidating, Memento, NativeEvents, Representing, SketchSpec, SimpleSpec, SystemEvents, Tabstopping, Typeahead as AlloyTypeahead
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Arr, Fun, Future, FutureResult, Id, Optional, Result } from '@ephox/katamari';
@@ -60,8 +60,7 @@ export const renderUrlInput = (
   };
 
   // TODO: Make alloy's typeahead only swallow enter and escape if menu is open
-  const pField = AlloyFormField.parts.field({
-    factory: AlloyTypeahead,
+  const typeaheadSpec: Parameters<typeof AlloyTypeahead['sketch']>[0] = {
     ...initialData.map((initialData) => ({ initialData })).getOr({}),
     dismissOnBlur: true,
     inputClasses: [ 'tox-textfield' ],
@@ -72,7 +71,7 @@ export const renderUrlInput = (
     },
     minChars: 0,
     responseTime: 0,
-    fetch: (input: AlloyComponent) => {
+    fetch: (input) => {
       const items = getItems(spec.filetype, input, urlBackstage);
       const tdata = NestedMenus.build(items, ItemResponse.BUBBLE_TO_SANDBOX, backstage, false);
       return Future.pure(tdata);
@@ -85,8 +84,8 @@ export const renderUrlInput = (
       }
     },
 
-    typeaheadBehaviours: Behaviour.derive(Arr.flatten([
-      urlBackstage.getValidationHandler().map(
+    typeaheadBehaviours: Behaviour.derive([
+      ...urlBackstage.getValidationHandler().map(
         (handler) => Invalidating.config({
           getRoot: (comp) => Traverse.parentElement(comp.element),
           invalidClass: 'tox-control-wrap--status-invalid',
@@ -116,31 +115,29 @@ export const renderUrlInput = (
           }
         })
       ).toArray(),
-      [
-        Disabling.config({
-          disabled: () => !spec.enabled || providersBackstage.isDisabled()
-        }),
-        Tabstopping.config({}),
-        AddEventsBehaviour.config('urlinput-events', Arr.flatten([
-          // We want to get fast feedback for the link dialog, but not sure about others
-          spec.filetype === 'file' ? [
-            AlloyEvents.run(NativeEvents.input(), (comp) => {
-              AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name });
-            })
-          ] : [ ],
-          [
-            AlloyEvents.run(NativeEvents.change(), (comp) => {
-              AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name });
-              updateHistory(comp);
-            }),
-            AlloyEvents.run(SystemEvents.postPaste(), (comp) => {
-              AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name });
-              updateHistory(comp);
-            })
-          ]
-        ]))
-      ]
-    ])),
+      Disabling.config({
+        disabled: () => !spec.enabled || providersBackstage.isDisabled()
+      }),
+      Tabstopping.config({}),
+      AddEventsBehaviour.config('urlinput-events', Arr.flatten([
+        // We want to get fast feedback for the link dialog, but not sure about others
+        spec.filetype === 'file' ? [
+          AlloyEvents.run(NativeEvents.input(), (comp) => {
+            AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name });
+          })
+        ] : [ ],
+        [
+          AlloyEvents.run(NativeEvents.change(), (comp) => {
+            AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name });
+            updateHistory(comp);
+          }),
+          AlloyEvents.run(SystemEvents.postPaste(), (comp) => {
+            AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name });
+            updateHistory(comp);
+          })
+        ]
+      ]))
+    ]),
 
     eventOrder: {
       [NativeEvents.input()]: [ 'streaming', 'urlinput-events', 'invalidating' ]
@@ -149,7 +146,7 @@ export const renderUrlInput = (
     model: {
       getDisplayText: (itemData) => itemData.value,
       selectsOver: false,
-      populateFromBrowse: false
+      populateFromBrowser: false
     },
 
     markers: {
@@ -168,12 +165,16 @@ export const renderUrlInput = (
       updateHistory(typeahead);
       AlloyTriggers.emitWith(typeahead, formChangeEvent, { name: spec.name });
     }
+  };
+  const pField = AlloyFormField.parts.field({
+    ...typeaheadSpec,
+    factory: AlloyTypeahead
   });
 
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
   // TODO: Consider a way of merging with Checkbox.
-  const makeIcon = (name, errId: Optional<string>, icon = name, label = name): SimpleOrSketchSpec =>
+  const makeIcon = (name: string, errId: Optional<string>, icon: string = name, label: string = name): SimpleSpec =>
     Icons.render(icon, {
       tag: 'div',
       classes: [ 'tox-icon', 'tox-control-wrap__status-icon-' + name ],

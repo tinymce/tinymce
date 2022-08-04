@@ -63,7 +63,7 @@ export const renderListBox = (spec: ListBoxSpec, backstage: UiFactoryBackstage, 
   const pField = AlloyFormField.parts.field({
     dom: { },
     factory: {
-      sketch: (sketchSpec) => renderCommonDropdown({
+      sketch: (sketchSpec: SketchSpec) => renderCommonDropdown({
         uid: sketchSpec.uid,
         text: initialItem.map((item) => item.text),
         icon: Optional.none(),

@@ -1,6 +1,6 @@
 import { UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { Arr, Fun, Strings } from '@ephox/katamari';
+import { Arr, Strings } from '@ephox/katamari';
 import { SugarBody, TextContent } from '@ephox/sugar';
 import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -25,9 +25,9 @@ describe('browser.tinymce.core.FontSelectTest', () => {
     '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;' // Wordpress
   ];
 
-  const assertSelectBoxDisplayValue = (editor: Editor, title, expectedValue) => {
+  const assertSelectBoxDisplayValue = (editor: Editor, title: string, expectedValue: string) => {
     const selectBox = UiFinder.findIn(SugarBody.body(), '*[title="' + title + '"]').getOrDie();
-    const value = Fun.compose(Strings.trim, TextContent.get)(selectBox);
+    const value = Strings.trim(TextContent.get(selectBox) ?? '');
     assert.equal(value, expectedValue, 'Should be the expected display value');
   };
 

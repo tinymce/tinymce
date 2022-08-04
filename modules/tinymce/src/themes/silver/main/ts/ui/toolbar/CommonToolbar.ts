@@ -1,6 +1,7 @@
 // eslint-disable-next-line max-len
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Boxes, Focusing, Keying, SplitFloatingToolbar as AlloySplitFloatingToolbar,
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Boxes, Focusing, Keying, SketchSpec,
+  SplitFloatingToolbar as AlloySplitFloatingToolbar,
   SplitSlidingToolbar as AlloySplitSlidingToolbar, Tabstopping, Toolbar as AlloyToolbar, ToolbarGroup as AlloyToolbarGroup
 } from '@ephox/alloy';
 import { Arr, Optional, Result } from '@ephox/katamari';
@@ -15,27 +16,29 @@ import { renderIconButtonSpec } from '../general/Button';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
 
 export interface MoreDrawerData {
-  lazyMoreButton: () => AlloyComponent;
-  lazyToolbar: () => AlloyComponent;
-  lazyHeader: () => AlloyComponent;
+  readonly lazyMoreButton: () => AlloyComponent;
+  readonly lazyToolbar: () => AlloyComponent;
+  readonly lazyHeader: () => AlloyComponent;
 }
+
 export interface ToolbarSpec {
-  type: ToolbarMode;
-  uid: string;
-  cyclicKeying: boolean;
-  onEscape: (comp: AlloyComponent) => Optional<boolean>;
-  initGroups: ToolbarGroup[];
-  attributes?: Record<string, string>;
-  providers: UiFactoryBackstageProviders;
+  readonly type: ToolbarMode;
+  readonly uid: string;
+  readonly cyclicKeying: boolean;
+  readonly onEscape: (comp: AlloyComponent) => Optional<boolean>;
+  readonly initGroups: ToolbarGroup[];
+  readonly attributes?: Record<string, string>;
+  readonly providers: UiFactoryBackstageProviders;
 }
+
 export interface MoreDrawerToolbarSpec extends ToolbarSpec {
-  getSink: () => Result<AlloyComponent, string>;
-  moreDrawerData?: MoreDrawerData;
+  readonly getSink: () => Result<AlloyComponent, string>;
+  readonly moreDrawerData: MoreDrawerData;
 }
 
 export interface ToolbarGroup {
-  title: Optional<string>;
-  items: AlloySpec[];
+  readonly title: Optional<string>;
+  readonly items: AlloySpec[];
 }
 
 const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
@@ -66,10 +69,10 @@ const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
   };
 };
 
-const renderToolbarGroup = (toolbarGroup: ToolbarGroup) =>
+const renderToolbarGroup = (toolbarGroup: ToolbarGroup): SketchSpec =>
   AlloyToolbarGroup.sketch(renderToolbarGroupCommon(toolbarGroup));
 
-const getToolbarbehaviours = (toolbarSpec: ToolbarSpec, modeName) => {
+const getToolbarBehaviours = (toolbarSpec: ToolbarSpec, modeName: 'cyclic' | 'acyclic') => {
   const onAttached = AlloyEvents.runOnAttached((component) => {
     const groups = Arr.map(toolbarSpec.initGroups, renderToolbarGroup);
     AlloyToolbar.setGroups(component, groups);
@@ -113,11 +116,11 @@ const renderMoreToolbarCommon = (toolbarSpec: MoreDrawerToolbarSpec) => {
         borderless: false
       }, Optional.none(), toolbarSpec.providers)
     },
-    splitToolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName)
+    splitToolbarBehaviours: getToolbarBehaviours(toolbarSpec, modeName)
   };
 };
 
-const renderFloatingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
+const renderFloatingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec): SketchSpec => {
   const baseSpec = renderMoreToolbarCommon(toolbarSpec);
   const overflowXOffset = 4;
 
@@ -162,7 +165,7 @@ const renderFloatingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
   });
 };
 
-const renderSlidingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
+const renderSlidingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec): SketchSpec => {
   const primary = AlloySplitSlidingToolbar.parts.primary({
     dom: {
       tag: 'div',
@@ -198,7 +201,7 @@ const renderSlidingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
   });
 };
 
-const renderToolbar = (toolbarSpec: ToolbarSpec) => {
+const renderToolbar = (toolbarSpec: ToolbarSpec): SketchSpec => {
   const modeName = toolbarSpec.cyclicKeying ? 'cyclic' : 'acyclic';
 
   return AlloyToolbar.sketch({
@@ -213,7 +216,7 @@ const renderToolbar = (toolbarSpec: ToolbarSpec) => {
       AlloyToolbar.parts.groups({})
     ],
 
-    toolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName)
+    toolbarBehaviours: getToolbarBehaviours(toolbarSpec, modeName)
   });
 };
 

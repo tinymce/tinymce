@@ -7,7 +7,7 @@ import * as MatchKeys from 'tinymce/core/keyboard/MatchKeys';
 type KeyPattern = MatchKeys.KeyPattern;
 
 describe('atomic.tinymce.core.keyboard.MatchKeysTest', () => {
-  const state = Cell([]);
+  const state = Cell<string[]>([]);
 
   const event = (evt: Partial<KeyboardEvent>): KeyboardEvent => {
     return {
@@ -48,7 +48,7 @@ describe('atomic.tinymce.core.keyboard.MatchKeysTest', () => {
     });
   };
 
-  const testExecute = (label: string, patterns: KeyPattern[], event: KeyboardEvent, expectedData: string[], expectedMatch) => {
+  const testExecute = (label: string, patterns: KeyPattern[], event: KeyboardEvent, expectedData: string[], expectedMatch: Required<KeyPattern>) => {
     return it(label, () => {
       state.set([]);
 

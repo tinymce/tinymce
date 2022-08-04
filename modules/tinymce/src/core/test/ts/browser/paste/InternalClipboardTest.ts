@@ -4,11 +4,15 @@ import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import { PastePostProcessEvent, PastePreProcessEvent } from 'tinymce/core/api/EventTypes';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as InternalHtml from 'tinymce/core/paste/InternalHtml';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 
 describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
-  let dataTransfer, lastPreProcessEvent, lastPostProcessEvent;
+  let dataTransfer: DataTransfer | undefined;
+  let lastPreProcessEvent: EditorEvent<PastePreProcessEvent> | undefined;
+  let lastPostProcessEvent: EditorEvent<PastePostProcessEvent> | undefined;
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'table',
@@ -29,8 +33,8 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
   }, [ TablePlugin ]);
 
   const resetProcessEvents = () => {
-    lastPreProcessEvent = null;
-    lastPostProcessEvent = null;
+    lastPreProcessEvent = undefined;
+    lastPostProcessEvent = undefined;
   };
 
   const cutCopyDataTransferEvent = (editor: Editor, type: 'cut' | 'copy') => {
@@ -42,8 +46,8 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
     Clipboard.pasteItems(TinyDom.body(editor), data);
 
   const assertClipboardData = (expectedHtml: string, expectedText: string) => {
-    assert.equal(dataTransfer.getData('text/html'), expectedHtml, 'text/html data should match');
-    assert.equal(dataTransfer.getData('text/plain'), expectedText, 'text/plain data should match');
+    assert.equal(dataTransfer?.getData('text/html'), expectedHtml, 'text/html data should match');
+    assert.equal(dataTransfer?.getData('text/plain'), expectedText, 'text/plain data should match');
   };
 
   const copy = (editor: Editor, html: string, spath: number[], soffset: number, fpath: number[], foffset: number) => {
@@ -178,18 +182,18 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
 
   context('paste', () => {
     const assertLastPreProcessEvent = (expectedData: { internal: boolean; content: string }) => {
-      assert.equal(lastPreProcessEvent.internal, expectedData.internal, 'Internal property should be equal');
-      assert.equal(lastPreProcessEvent.content, expectedData.content, 'Content property should be equal');
+      assert.equal(lastPreProcessEvent?.internal, expectedData.internal, 'Internal property should be equal');
+      assert.equal(lastPreProcessEvent?.content, expectedData.content, 'Content property should be equal');
     };
 
     const assertLastPostProcessEvent = (expectedData: { internal: boolean; content: string }) => {
-      assert.equal(lastPostProcessEvent.internal, expectedData.internal, 'Internal property should be equal');
-      assert.equal(lastPostProcessEvent.node.innerHTML, expectedData.content, 'Content property should be equal');
+      assert.equal(lastPostProcessEvent?.internal, expectedData.internal, 'Internal property should be equal');
+      assert.equal(lastPostProcessEvent?.node.innerHTML, expectedData.content, 'Content property should be equal');
     };
 
     const pWaitForProcessEvents = () => Waiter.pTryUntil('Did not get any events fired', () => {
-      assert.isNotNull(lastPreProcessEvent, 'PastePreProcess event object');
-      assert.isNotNull(lastPostProcessEvent, 'PastePostProcess event object');
+      assert.isDefined(lastPreProcessEvent, 'PastePreProcess event object');
+      assert.isDefined(lastPostProcessEvent, 'PastePostProcess event object');
     });
 
     it('TBA: Paste external content', async () => {

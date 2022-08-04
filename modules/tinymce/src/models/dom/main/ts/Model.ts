@@ -11,6 +11,6 @@ const DomModel = (editor: Editor): Model => {
   };
 };
 
-export default () => {
+export default (): void => {
   ModelManager.add('dom', DomModel);
 };

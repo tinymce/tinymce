@@ -129,7 +129,9 @@ describe('browser.tinymce.core.keyboard.AutocompleterTest', () => {
   it('TINY-8279: mceAutocompleterClose command should fire an AutocompleterEnd event', async () => {
     const editor = hook.editor();
     const events: string[] = [];
-    const collect = (args: EditorEvent<AutocompleterEventArgs>) => events.push(args.type);
+    const collect = (args: EditorEvent<{}>) => {
+      events.push(args.type);
+    };
 
     editor.on('AutocompleterEnd', collect);
     await pOpenAutocompleter(editor, plusTriggerChar);

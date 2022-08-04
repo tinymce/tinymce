@@ -6,6 +6,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as ExpandRange from 'tinymce/core/fmt/ExpandRange';
+import { Format } from 'tinymce/core/fmt/FormatTypes';
 import { RangeLikeObject } from 'tinymce/core/selection/RangeTypes';
 import { ZWSP } from 'tinymce/core/text/Zwsp';
 
@@ -18,7 +19,7 @@ describe('browser.tinymce.core.fmt.ExpandRangeTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [], true);
 
-  const expandRng = (editor: Editor, startPath: number[], startOffset: number, endPath: number[], endOffset: number, format, excludeTrailingSpaces: boolean = false) => {
+  const expandRng = (editor: Editor, startPath: number[], startOffset: number, endPath: number[], endOffset: number, format: Format[], excludeTrailingSpaces: boolean = false) => {
     const startContainer = Hierarchy.follow(TinyDom.body(editor), startPath).getOrDie();
     const endContainer = Hierarchy.follow(TinyDom.body(editor), endPath).getOrDie();
 

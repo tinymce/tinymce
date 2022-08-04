@@ -1,10 +1,10 @@
-import Editor from 'tinymce/core/api/Editor';
+import { TinyMCE } from 'tinymce/core/api/PublicApi';
 
-declare let tinymce: any;
+declare let tinymce: TinyMCE;
 
 tinymce.init({
   selector: 'div.tinymce',
-  setup: (ed: Editor) => {
+  setup: (ed) => {
     ed.on('init', () => {
       const runtimeModel = ed.model;
       // eslint-disable-next-line no-console

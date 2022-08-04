@@ -8,8 +8,8 @@ import Editor from 'tinymce/core/api/Editor';
 export type AnchorType = 'node' | 'selection' | 'point';
 
 interface Position {
-  x: number;
-  y: number;
+  readonly x: number;
+  readonly y: number;
 }
 
 const nu = (x: number, y: number): MakeshiftAnchorSpec => ({
@@ -47,7 +47,7 @@ const transposeContentAreaContainer = (element: HTMLElement, pos: Position) => {
   return transpose(pos, containerPos.x, containerPos.y);
 };
 
-export const getPointAnchor = (editor: Editor, e: MouseEvent | TouchEvent) => {
+export const getPointAnchor = (editor: Editor, e: MouseEvent | TouchEvent): MakeshiftAnchorSpec | SelectionAnchorSpec => {
   // If the contextmenu event is fired via the editor.dispatch() API or some other means, fall back to selection anchor
   if (e.type === 'contextmenu' || e.type === 'longpress') {
     if (editor.inline) {

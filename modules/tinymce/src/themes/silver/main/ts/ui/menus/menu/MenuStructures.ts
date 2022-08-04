@@ -1,7 +1,12 @@
-import { AlloySpec, ItemTypes, Menu as AlloyMenu, RawDomSchema } from '@ephox/alloy';
+import { AlloySpec, ItemTypes, Menu as AlloyMenu, RawDomSchema, SimpleSpec } from '@ephox/alloy';
 import { Arr, Fun, Obj } from '@ephox/katamari';
 
-const chunk = <I>(rowDom: RawDomSchema, numColumns: number) => (items: I[]) => {
+interface StructureSpec extends SimpleSpec {
+  readonly dom: RawDomSchema;
+  readonly components: AlloySpec[];
+}
+
+const chunk = <I>(rowDom: RawDomSchema, numColumns: number) => (items: I[]): Array<{ dom: RawDomSchema; components: I[] }> => {
   const chunks = Arr.chunk(items, numColumns);
   return Arr.map(chunks, (c) => ({
     dom: rowDom,
@@ -9,7 +14,7 @@ const chunk = <I>(rowDom: RawDomSchema, numColumns: number) => (items: I[]) => {
   }));
 };
 
-const forSwatch = (columns: number | 'auto') => ({
+const forSwatch = (columns: number | 'auto'): StructureSpec => ({
   dom: {
     tag: 'div',
     classes: [ 'tox-menu', 'tox-swatches-menu' ]
@@ -35,7 +40,7 @@ const forSwatch = (columns: number | 'auto') => ({
   ]
 });
 
-const forToolbar = (columns: number) => ({
+const forToolbar = (columns: number): StructureSpec => ({
   dom: {
     tag: 'div',
     // TODO: Configurable lg setting?
@@ -56,15 +61,15 @@ const forToolbar = (columns: number) => ({
 
 // NOTE: That type signature isn't quite true.
 const preprocessCollection = (items: ItemTypes.ItemSpec[], isSeparator: (a: ItemTypes.ItemSpec, index: number) => boolean): AlloySpec[] => {
-  const allSplits = [ ];
-  let currentSplit = [ ];
+  const allSplits: ItemTypes.ItemSpec[][] = [ ];
+  let currentSplit: ItemTypes.ItemSpec[] = [ ];
   Arr.each(items, (item, i) => {
     if (isSeparator(item, i)) {
       if (currentSplit.length > 0) {
         allSplits.push(currentSplit);
       }
       currentSplit = [ ];
-      if (Obj.has(item.dom, 'innerHtml') || item.components.length > 0) {
+      if (Obj.has(item.dom, 'innerHtml') || item.components && item.components.length > 0) {
         currentSplit.push(item);
       }
     } else {
@@ -85,7 +90,7 @@ const preprocessCollection = (items: ItemTypes.ItemSpec[], isSeparator: (a: Item
   }));
 };
 
-const forCollection = (columns: number | 'auto', initItems, _hasIcons: boolean = true) => ({
+const forCollection = (columns: number | 'auto', initItems: ItemTypes.ItemSpec[], _hasIcons: boolean = true): StructureSpec => ({
   dom: {
     tag: 'div',
     classes: [ 'tox-menu', 'tox-collection' ].concat(columns === 1 ? [ 'tox-collection--list' ] : [ 'tox-collection--grid' ])
@@ -93,7 +98,7 @@ const forCollection = (columns: number | 'auto', initItems, _hasIcons: boolean =
   components: [
     // TODO: Clean up code and test atomically
     AlloyMenu.parts.items({
-      preprocess: (items) => {
+      preprocess: (items: ItemTypes.ItemSpec[]) => {
         if (columns !== 'auto' && columns > 1) {
           return chunk<AlloySpec>({
             tag: 'div',
@@ -107,7 +112,7 @@ const forCollection = (columns: number | 'auto', initItems, _hasIcons: boolean =
   ]
 });
 
-const forHorizontalCollection = (initItems, _hasIcons: boolean = true) => ({
+const forHorizontalCollection = (initItems: ItemTypes.ItemSpec[], _hasIcons: boolean = true): StructureSpec => ({
   dom: {
     tag: 'div',
     classes: [ 'tox-collection', 'tox-collection--horizontal' ]

@@ -20,7 +20,7 @@ describe('browser.tinymce.core.init.EditorCustomThemeTest', () => {
       iframeContainer.id = 'iframeContainer';
 
       editorContainer.appendChild(iframeContainer);
-      targetnode.parentNode.insertBefore(editorContainer, targetnode);
+      targetnode.parentNode?.insertBefore(editorContainer, targetnode);
 
       if (editor.initialized) {
         editor.dispatch('SkinLoaded');

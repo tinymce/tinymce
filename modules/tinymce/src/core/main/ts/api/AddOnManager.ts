@@ -101,7 +101,7 @@ interface AddOnManager<T> {
   urls: Record<string, string>;
   lookup: Record<string, { instance: AddOnConstructor<T> }>;
   get: (name: string) => AddOnConstructor<T> | undefined;
-  requireLangPack: (name: string, languages: string) => void;
+  requireLangPack: (name: string, languages?: string) => void;
   add: (id: string, addOn: AddOnConstructor<T>) => AddOnConstructor<T>;
   remove: (name: string) => void;
   createUrl: (baseUrl: UrlObject, dep: string | UrlObject) => UrlObject;
@@ -131,7 +131,7 @@ const AddOnManager = <T>(): AddOnManager<T> => {
     return undefined;
   };
 
-  const loadLanguagePack = (name: string, languages: string): void => {
+  const loadLanguagePack = (name: string, languages?: string): void => {
     const language = I18n.getCode();
     const wrappedLanguages = ',' + (languages || '') + ',';
 
@@ -142,7 +142,7 @@ const AddOnManager = <T>(): AddOnManager<T> => {
     ScriptLoader.ScriptLoader.add(urls[ name ] + '/langs/' + language + '.js');
   };
 
-  const requireLangPack = (name: string, languages: string) => {
+  const requireLangPack = (name: string, languages?: string) => {
     if (AddOnManager.languageLoad !== false) {
       if (isLoaded(name)) {
         loadLanguagePack(name, languages);

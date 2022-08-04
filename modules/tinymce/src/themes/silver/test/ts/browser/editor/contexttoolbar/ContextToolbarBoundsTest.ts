@@ -95,7 +95,8 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarBoun
       base_url: '/project/tinymce/js/tinymce',
       ...scenario.options
     });
-    backstage.shared.header.setDockingMode(editor.options.get('toolbar_location'));
+    const toolbarLocation = editor.options.get('toolbar_location') === 'bottom' ? 'bottom' : 'top';
+    backstage.shared.header.setDockingMode(toolbarLocation);
     editor.focus();
     await UiUtils.pWaitForEditorToRender();
     scrollRelativeEditorContainer(editor, scenario.scroll.relativeTop, scenario.scroll.delta);

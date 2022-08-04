@@ -20,15 +20,16 @@ import * as AlertDialog from './AlertDialog';
 import * as ConfirmDialog from './ConfirmDialog';
 
 export interface WindowManagerSetup {
-  backstage: UiFactoryBackstage;
-  editor: Editor;
+  readonly backstage: UiFactoryBackstage;
+  readonly editor: Editor;
 }
 
 type InlineDialogAnchor = HotspotAnchorSpec | MakeshiftAnchorSpec | NodeAnchorSpec | SelectionAnchorSpec;
 
-const validateData = <T extends Dialog.DialogData>(data: T, validator: StructureProcessor) => StructureSchema.getOrDie(StructureSchema.asRaw('data', validator, data));
+const validateData = <T extends Dialog.DialogData>(data: Partial<T>, validator: StructureProcessor) => StructureSchema.getOrDie(StructureSchema.asRaw('data', validator, data));
 
-const isAlertOrConfirmDialog = (target: SugarElement): boolean => SelectorExists.closest(target, '.tox-alert-dialog') || SelectorExists.closest(target, '.tox-confirm-dialog');
+const isAlertOrConfirmDialog = (target: SugarElement<Node>): boolean =>
+  SelectorExists.closest(target, '.tox-alert-dialog') || SelectorExists.closest(target, '.tox-confirm-dialog');
 
 const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, isToolbarLocationTop: boolean): Behaviour.NamedConfiguredBehaviour<any, any>[] => {
   // When using sticky toolbars it already handles the docking behaviours so applying docking would
@@ -56,10 +57,10 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
   const editor = extras.editor;
   const isStickyToolbar = Options.isStickyToolbar(editor);
 
-  const alertDialog = AlertDialog.setup(extras);
-  const confirmDialog = ConfirmDialog.setup(extras);
+  const alertDialog = AlertDialog.setup(backstage);
+  const confirmDialog = ConfirmDialog.setup(backstage);
 
-  const open = <T extends Dialog.DialogData>(config: Dialog.DialogSpec<T>, params: WindowParams, closeWindow: (dialogApi: Dialog.DialogInstanceApi<T>) => void): Dialog.DialogInstanceApi<T> => {
+  const open = <T extends Dialog.DialogData>(config: Dialog.DialogSpec<T>, params: WindowParams | undefined, closeWindow: (dialogApi: Dialog.DialogInstanceApi<T>) => void): Dialog.DialogInstanceApi<T> => {
     if (params !== undefined && params.inline === 'toolbar') {
       return openInlineDialog(config, backstage.shared.anchors.inlineDialog(), closeWindow, params.ariaAttrs);
     } else if (params !== undefined && params.inline === 'cursor') {
@@ -69,7 +70,8 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
     }
   };
 
-  const openUrl = (config: Dialog.UrlDialogSpec, closeWindow: (dialogApi: Dialog.UrlDialogInstanceApi) => void) => openModalUrlDialog(config, closeWindow);
+  const openUrl = (config: Dialog.UrlDialogSpec, closeWindow: (dialogApi: Dialog.UrlDialogInstanceApi) => void) =>
+    openModalUrlDialog(config, closeWindow);
 
   const openModalUrlDialog = (config: Dialog.UrlDialogSpec, closeWindow: (dialogApi: Dialog.UrlDialogInstanceApi) => void) => {
     const factory = (contents: Dialog.UrlDialog): Dialog.UrlDialogInstanceApi => {
@@ -93,7 +95,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
   };
 
   const openModalDialog = <T extends Dialog.DialogData>(config: Dialog.DialogSpec<T>, closeWindow: (dialogApi: Dialog.DialogInstanceApi<T>) => void): Dialog.DialogInstanceApi<T> => {
-    const factory = (contents: Dialog.Dialog<T>, internalInitialData: T, dataValidator: StructureProcessor): Dialog.DialogInstanceApi<T> => {
+    const factory = (contents: Dialog.Dialog<T>, internalInitialData: Partial<T>, dataValidator: StructureProcessor): Dialog.DialogInstanceApi<T> => {
       // We used to validate data here, but it's done by the instanceApi.setData call below.
       const initialData = internalInitialData;
 
@@ -123,8 +125,8 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
     return DialogManager.DialogManager.open<T>(factory, config);
   };
 
-  const openInlineDialog = <T extends Dialog.DialogData>(config: Dialog.DialogSpec<T>, anchor: InlineDialogAnchor, closeWindow: (dialogApi: Dialog.DialogInstanceApi<T>) => void, ariaAttrs): Dialog.DialogInstanceApi<T> => {
-    const factory = (contents: Dialog.Dialog<T>, internalInitialData: T, dataValidator: StructureProcessor): Dialog.DialogInstanceApi<T> => {
+  const openInlineDialog = <T extends Dialog.DialogData>(config: Dialog.DialogSpec<T>, anchor: InlineDialogAnchor, closeWindow: (dialogApi: Dialog.DialogInstanceApi<T>) => void, ariaAttrs: boolean = false): Dialog.DialogInstanceApi<T> => {
+    const factory = (contents: Dialog.Dialog<T>, internalInitialData: Partial<T>, dataValidator: StructureProcessor): Dialog.DialogInstanceApi<T> => {
       const initialData = validateData<T>(internalInitialData, dataValidator);
       const inlineDialog = Singleton.value<AlloyComponent>();
       const isToolbarLocationTop = backstage.shared.header.isPositionedAtTop();
@@ -204,18 +206,14 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
   };
 
   const confirm = (message: string, callback: (state: boolean) => void) => {
-    confirmDialog.open(message, (state) => {
-      callback(state);
-    });
+    confirmDialog.open(message, callback);
   };
 
   const alert = (message: string, callback: () => void) => {
-    alertDialog.open(message, () => {
-      callback();
-    });
+    alertDialog.open(message, callback);
   };
 
-  const close = <T extends Dialog.DialogData>(instanceApi: Dialog.DialogInstanceApi<T>) => {
+  const close = <T extends Dialog.DialogData>(instanceApi: Dialog.DialogInstanceApi<T> | Dialog.UrlDialogInstanceApi) => {
     instanceApi.close();
   };
 

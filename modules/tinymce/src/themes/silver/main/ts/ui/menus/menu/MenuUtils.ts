@@ -7,14 +7,15 @@ import { components as menuComponents, dom as menuDom } from './MenuParts';
 import { forCollection, forHorizontalCollection, forSwatch, forToolbar } from './MenuStructures';
 import { SingleMenuItemSpec } from './SingleMenuTypes';
 
-export const menuHasIcons = (xs: Array<SingleMenuItemSpec | Menu.CardMenuItemSpec | InlineContent.AutocompleterItemSpec>) => Arr.exists(xs, (item) => 'icon' in item && item.icon !== undefined);
-
 export interface PartialMenuSpec {
-  value: string;
-  dom: MenuTypes.MenuSpec['dom'];
-  components: MenuTypes.MenuSpec['components'];
-  items: MenuTypes.MenuSpec['items'];
+  readonly value: string;
+  readonly dom: MenuTypes.MenuSpec['dom'];
+  readonly components: MenuTypes.MenuSpec['components'];
+  readonly items: MenuTypes.MenuSpec['items'];
 }
+
+export const menuHasIcons = (xs: Array<SingleMenuItemSpec | Menu.CardMenuItemSpec | InlineContent.AutocompleterItemSpec>): boolean =>
+  Arr.exists(xs, (item) => 'icon' in item && item.icon !== undefined);
 
 export const handleError = (error: StructureSchema.SchemaError<any>): Optional<ItemTypes.ItemSpec> => {
   // eslint-disable-next-line no-console

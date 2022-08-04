@@ -1,5 +1,5 @@
 import { AlloyComponent, Boxes, Channels, Docking, VerticalDir } from '@ephox/alloy';
-import { Cell, Fun, Optional } from '@ephox/katamari';
+import { Cell, Fun, Optional, Singleton } from '@ephox/katamari';
 import { Attribute, Css, Height, SugarBody, SugarElement, SugarLocation, Traverse, Width } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -13,18 +13,24 @@ import * as EditorSize from '../sizing/EditorSize';
 import * as Utils from '../sizing/Utils';
 
 export interface InlineHeader {
-  isVisible: () => boolean;
-  isPositionedAtTop: () => boolean;
-  show: () => void;
-  hide: () => void;
-  update: (resetDocking?: boolean) => void;
-  updateMode: () => void;
-  repositionPopups: () => void;
+  readonly isVisible: () => boolean;
+  readonly isPositionedAtTop: () => boolean;
+  readonly show: () => void;
+  readonly hide: () => void;
+  readonly update: (resetDocking?: boolean) => void;
+  readonly updateMode: () => void;
+  readonly repositionPopups: () => void;
 }
 
 const { ToolbarLocation, ToolbarMode } = Options;
 
-export const InlineHeader = (editor: Editor, targetElm: SugarElement, uiComponents: RenderUiComponents, backstage: UiFactoryBackstage, floatContainer: Cell<AlloyComponent>): InlineHeader => {
+export const InlineHeader = (
+  editor: Editor,
+  targetElm: SugarElement<HTMLElement>,
+  uiComponents: RenderUiComponents,
+  backstage: UiFactoryBackstage,
+  floatContainer: Singleton.Value<AlloyComponent>
+): InlineHeader => {
   const { uiMothership, outerContainer } = uiComponents;
   const DOM = DOMUtils.DOM;
   const useFixedToolbarContainer = Options.useFixedContainer(editor);
@@ -86,40 +92,45 @@ export const InlineHeader = (editor: Editor, targetElm: SugarElement, uiComponen
 
   const setupMode = (mode: 'top' | 'bottom') => {
     // Update the docking mode
-    const container = floatContainer.get();
-    Docking.setModes(container, [ mode ]);
-    headerBackstage.setDockingMode(mode);
+    floatContainer.on((container) => {
+      Docking.setModes(container, [ mode ]);
+      headerBackstage.setDockingMode(mode);
 
-    // Update the vertical menu direction
-    const verticalDir = isPositionedAtTop() ? VerticalDir.AttributeValue.TopToBottom : VerticalDir.AttributeValue.BottomToTop;
-    Attribute.set(container.element, VerticalDir.Attribute, verticalDir);
+      // Update the vertical menu direction
+      const verticalDir = isPositionedAtTop() ? VerticalDir.AttributeValue.TopToBottom : VerticalDir.AttributeValue.BottomToTop;
+      Attribute.set(container.element, VerticalDir.Attribute, verticalDir);
+    });
   };
 
   const updateChromeWidth = () => {
-    // Update the max width of the inline toolbar
-    const maxWidth = editorMaxWidthOpt.getOrThunk(() => {
-      // No max width, so use the body width, minus the left pos as the maximum
-      const bodyMargin = Utils.parseToInt(Css.get(SugarBody.body(), 'margin-left')).getOr(0);
-      return Width.get(SugarBody.body()) - SugarLocation.absolute(targetElm).left + bodyMargin;
+    floatContainer.on((container) => {
+      // Update the max width of the inline toolbar
+      const maxWidth = editorMaxWidthOpt.getOrThunk(() => {
+        // No max width, so use the body width, minus the left pos as the maximum
+        const bodyMargin = Utils.parseToInt(Css.get(SugarBody.body(), 'margin-left')).getOr(0);
+        return Width.get(SugarBody.body()) - SugarLocation.absolute(targetElm).left + bodyMargin;
+      });
+      Css.set(container.element, 'max-width', maxWidth + 'px');
     });
-    Css.set(floatContainer.get().element, 'max-width', maxWidth + 'px');
   };
 
   const updateChromePosition = () => {
-    const toolbar = OuterContainer.getToolbar(outerContainer);
-    const offset = calcToolbarOffset(toolbar);
+    floatContainer.on((container) => {
+      const toolbar = OuterContainer.getToolbar(outerContainer);
+      const offset = calcToolbarOffset(toolbar);
 
-    // The float container/editor may not have been rendered yet, which will cause it to have a non integer based positions
-    // so we need to round this to account for that.
-    const targetBounds = Boxes.box(targetElm);
-    const top = isPositionedAtTop() ?
-      Math.max(targetBounds.y - Height.get(floatContainer.get().element) + offset, 0) :
-      targetBounds.bottom;
+      // The float container/editor may not have been rendered yet, which will cause it to have a non integer based positions
+      // so we need to round this to account for that.
+      const targetBounds = Boxes.box(targetElm);
+      const top = isPositionedAtTop() ?
+        Math.max(targetBounds.y - Height.get(container.element) + offset, 0) :
+        targetBounds.bottom;
 
-    Css.setAll(outerContainer.element, {
-      position: 'absolute',
-      top: Math.round(top) + 'px',
-      left: Math.round(targetBounds.x) + 'px'
+      Css.setAll(outerContainer.element, {
+        position: 'absolute',
+        top: Math.round(top) + 'px',
+        left: Math.round(targetBounds.x) + 'px'
+      });
     });
   };
 
@@ -156,8 +167,8 @@ export const InlineHeader = (editor: Editor, targetElm: SugarElement, uiComponen
 
     // Docking
     if (isSticky) {
-      const floatContainerComp = floatContainer.get();
-      resetDocking ? Docking.reset(floatContainerComp) : Docking.refresh(floatContainerComp);
+      const action = resetDocking ? Docking.reset : Docking.refresh;
+      floatContainer.on(action);
     }
 
     // Floating toolbar
@@ -171,14 +182,16 @@ export const InlineHeader = (editor: Editor, targetElm: SugarElement, uiComponen
       return;
     }
 
-    const currentMode = headerBackstage.getDockingMode();
-    const newMode = calcMode(floatContainer.get());
-    if (newMode !== currentMode) {
-      setupMode(newMode);
-      if (updateUi) {
-        updateChromeUi(true);
+    floatContainer.on((container) => {
+      const currentMode = headerBackstage.getDockingMode();
+      const newMode = calcMode(container);
+      if (newMode !== currentMode) {
+        setupMode(newMode);
+        if (updateUi) {
+          updateChromeUi(true);
+        }
       }
-    }
+    });
   };
 
   const show = () => {

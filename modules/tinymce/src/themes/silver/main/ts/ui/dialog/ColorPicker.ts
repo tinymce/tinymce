@@ -1,14 +1,14 @@
 import { ColourPicker } from '@ephox/acid';
 import { AlloyComponent, AlloyTriggers, Behaviour, Composing, Form, Memento, NativeEvents, Representing, SimpleSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Optional } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { formActionEvent } from '../general/FormEvents';
 
-const english = {
+const english: Record<string, string> = {
   'colorcustom.rgb.red.label': 'R',
   'colorcustom.rgb.red.description': 'Red component',
   'colorcustom.rgb.green.label': 'G',
@@ -77,7 +77,7 @@ export const renderColorPicker = (_spec: ColorPickerSpec, providerBackstage: UiF
         },
         (comp, newValue) => {
           const pattern = /^#([a-fA-F0-9]{3}(?:[a-fA-F0-9]{3})?)/;
-          const m = pattern.exec(newValue);
+          const valOpt = Optional.from(pattern.exec(newValue)).bind((matches) => Arr.get(matches, 1));
           const picker = memPicker.get(comp);
           const optRgbForm = Composing.getCurrent(picker);
           optRgbForm.fold(() => {
@@ -85,7 +85,7 @@ export const renderColorPicker = (_spec: ColorPickerSpec, providerBackstage: UiF
             console.log('Can not find form');
           }, (rgbForm) => {
             Representing.setValue(rgbForm, {
-              hex: Optional.from(m[1]).getOr('')
+              hex: valOpt.getOr('')
             });
 
             // So not the way to do this.

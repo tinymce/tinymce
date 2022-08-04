@@ -7,7 +7,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.init.InitEditorThemeFunctionIframeTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
-    theme: (editor, target) => {
+    theme: (editor: Editor, target: HTMLElement) => {
       const elm = SugarElement.fromHtml('<div><button>B</button><div></div></div>');
 
       Insert.after(SugarElement.fromDom(target), elm);
@@ -18,7 +18,7 @@ describe('browser.tinymce.core.init.InitEditorThemeFunctionIframeTest', () => {
       };
     },
     base_url: '/project/tinymce/js/tinymce',
-    init_instance_callback: (editor) => {
+    init_instance_callback: (editor: Editor) => {
       editor.dispatch('SkinLoaded');
     }
   }, []);

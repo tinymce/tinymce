@@ -1,9 +1,12 @@
 import { Arr } from '@ephox/katamari';
+import { DomEvent, Html, Insert, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 
-declare let tinymce: any;
+import { TinyMCE } from 'tinymce/core/api/PublicApi';
 
-export default () => {
-  const cmd = (command, value?) => {
+declare let tinymce: TinyMCE;
+
+export default (): void => {
+  const cmd = (command: string, value?: string | number) => {
     return { command, value };
   };
 
@@ -88,13 +91,14 @@ export default () => {
     cmd('mceEditImage')
   ];
 
+  const container = SelectorFind.descendant(SugarBody.body(), '#ephox-ui').getOrDie();
   Arr.each(commands, (cmd) => {
-    const btn = document.createElement('button');
-    btn.innerHTML = cmd.command;
-    btn.onclick = () => {
-      tinymce.activeEditor.execCommand(cmd.command, false, cmd.value);
-    };
-    document.querySelector('#ephox-ui').appendChild(btn);
+    const btn = SugarElement.fromTag('button');
+    Html.set(btn, cmd.command);
+    DomEvent.bind(btn, 'click', () => {
+      tinymce.activeEditor?.execCommand(cmd.command, false, cmd.value);
+    });
+    Insert.append(container, btn);
   });
 
   tinymce.init({

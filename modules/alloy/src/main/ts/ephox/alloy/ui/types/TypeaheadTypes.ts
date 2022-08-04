@@ -6,7 +6,7 @@ import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { CommonDropdownDetail } from './DropdownTypes';
-import { InputDetail } from './InputTypes';
+import { InputDetail, InputSpec } from './InputTypes';
 import { ItemDataTuple } from './ItemTypes';
 import { TieredData, TieredMenuSpec } from './TieredMenuTypes';
 
@@ -43,7 +43,7 @@ export interface TypeaheadData extends ItemDataTuple {
   [key: string]: any;
 }
 
-export interface TypeaheadSpec extends CompositeSketchSpec {
+export interface TypeaheadSpec extends CompositeSketchSpec, InputSpec {
   // TODO: Add everything else.
   uid?: string;
   lazySink?: (comp: AlloyComponent) => Result<AlloyComponent, Error>;
@@ -53,9 +53,6 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
   sandboxClasses?: string[];
   sandboxBehaviours?: AlloyBehaviourRecord;
   getHotspot?: (comp: AlloyComponent) => Optional<AlloyComponent>;
-  inputClasses?: string[];
-  inputAttributes?: { };
-  inputStyles?: { };
 
   minChars?: number;
   responseTime?: number;

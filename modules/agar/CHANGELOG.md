@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Improved
+- Exposed the `ArrayAssert` and `StringAssert` types.
+
 ## 7.1.0 - 2022-06-29
 
 ### Added

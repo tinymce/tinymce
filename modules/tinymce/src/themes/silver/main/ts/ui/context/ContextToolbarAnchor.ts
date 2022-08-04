@@ -8,6 +8,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { getSelectionBounds, isVerticalOverlap } from './ContextToolbarBounds';
 
 type Layout = typeof LayoutInset.north;
+type AnchorLayouts = AnchorSpec['layouts'];
 
 export interface PositionData {
   readonly lastElement: () => Optional<SugarElement<Element>>;
@@ -57,7 +58,7 @@ const shouldUseInsetLayouts = (position: InlineContent.ContextPosition): boolean
  * placement is re-triggered (e.g. not triggered by a reposition) and the current editor selection overlaps with the contextbar,
  * then the anchoring should flip from the previous position to avoid conflicting with the selection.
  */
-const determineInsetLayout = (editor: Editor, contextbar: SugarElement<HTMLElement>, elem: SugarElement<HTMLElement>, data: PositionData, bounds: Bounds) => {
+const determineInsetLayout = (editor: Editor, contextbar: SugarElement<HTMLElement>, elem: SugarElement<Element>, data: PositionData, bounds: Bounds) => {
   const selectionBounds = getSelectionBounds(editor);
   const isSameAnchorElement = data.lastElement().exists((prev) => Compare.eq(elem, prev));
 
@@ -81,9 +82,9 @@ const determineInsetLayout = (editor: Editor, contextbar: SugarElement<HTMLEleme
   }
 };
 
-const getAnchorSpec = (editor: Editor, mobile: boolean, data: PositionData, position: InlineContent.ContextPosition) => {
+const getAnchorSpec = (editor: Editor, mobile: boolean, data: PositionData, position: InlineContent.ContextPosition): AnchorLayouts => {
   // IMPORTANT: We lazily determine the layout here so that we only do the calculations if absolutely necessary
-  const smartInsetLayout = (elem: SugarElement<HTMLElement>): Layout => (anchor, element, bubbles, placee, bounds) => {
+  const smartInsetLayout = (elem: SugarElement<Element>): Layout => (anchor, element, bubbles, placee, bounds) => {
     const layout = determineInsetLayout(editor, placee, elem, data, bounds);
     // Adjust the anchor box to use the passed y bound coords so that we simulate a "docking" type of behaviour
     const newAnchor = {
@@ -98,16 +99,16 @@ const getAnchorSpec = (editor: Editor, mobile: boolean, data: PositionData, posi
     };
   };
 
-  const getInsetLayouts = (elem: SugarElement<HTMLElement>): Layout[] =>
+  const getInsetLayouts = (elem: SugarElement<Element>): Layout[] =>
     shouldUseInsetLayouts(position) ? [ smartInsetLayout(elem) ] : [];
 
   // On desktop we prioritise north-then-south because it's cleaner, but on mobile we prioritise south to try to avoid overlapping with native context toolbars
-  const desktopAnchorSpecLayouts = {
+  const desktopAnchorSpecLayouts: AnchorLayouts = {
     onLtr: (elem) => [ Layout.north, Layout.south, Layout.northeast, Layout.southeast, Layout.northwest, Layout.southwest ].concat(getInsetLayouts(elem)),
     onRtl: (elem) => [ Layout.north, Layout.south, Layout.northwest, Layout.southwest, Layout.northeast, Layout.southeast ].concat(getInsetLayouts(elem))
   };
 
-  const mobileAnchorSpecLayouts = {
+  const mobileAnchorSpecLayouts: AnchorLayouts = {
     onLtr: (elem) => [ Layout.south, Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.north ].concat(getInsetLayouts(elem)),
     onRtl: (elem) => [ Layout.south, Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.north ].concat(getInsetLayouts(elem))
   };

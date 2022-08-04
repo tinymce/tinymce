@@ -5,7 +5,7 @@ import { Toolbar } from 'tinymce/core/api/ui/Ui';
 
 import { FormatterFormatItem } from './complex/BespokeSelect';
 
-const onSetupFormatToggle = (editor: Editor, name: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
+const onSetupFormatToggle = (editor: Editor, name: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi): VoidFunction => {
   const boundCallback = Singleton.unbindable();
 
   const init = () => {
@@ -23,7 +23,7 @@ const onSetupFormatToggle = (editor: Editor, name: string) => (api: Toolbar.Tool
   };
 };
 
-const onSetupEvent = <T>(editor: Editor, event: string, f: (api: T) => void) => (api: T) => {
+const onSetupEvent = <T>(editor: Editor, event: string, f: (api: T) => void) => (api: T): VoidFunction => {
   const handleEvent = () => f(api);
 
   const init = () => {
@@ -40,7 +40,7 @@ const onSetupEvent = <T>(editor: Editor, event: string, f: (api: T) => void) => 
   };
 };
 
-const onActionToggleFormat = (editor: Editor) => (rawItem: FormatterFormatItem) => () => {
+const onActionToggleFormat = (editor: Editor) => (rawItem: FormatterFormatItem) => (): void => {
   editor.undoManager.transact(() => {
     editor.focus();
     editor.execCommand('mceToggleFormat', false, rawItem.format);
@@ -48,7 +48,7 @@ const onActionToggleFormat = (editor: Editor) => (rawItem: FormatterFormatItem) 
 };
 
 const onActionExecCommand = (editor: Editor, command: string) =>
-  () => editor.execCommand(command);
+  (): boolean => editor.execCommand(command);
 
 export {
   onSetupEvent,

@@ -66,7 +66,7 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
   it('TBA: pasteImages should set unique id in blobcache', async () => {
     const editor = hook.editor();
 
-    const hasCachedItem = (name) => !!editor.editorUpload.blobCache.get(name);
+    const hasCachedItem = (name: string) => !!editor.editorUpload.blobCache.get(name);
 
     const event = mockEvent('paste', [
       base64ToBlob(base64ImgSrc, 'image/gif', 'image.gif'),
@@ -79,8 +79,8 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
 
     const cachedBlob1 = editor.editorUpload.blobCache.get('mceclip0');
     const cachedBlob2 = editor.editorUpload.blobCache.get('mceclip1');
-    assert.equal(cachedBlob1.base64(), base64ImgSrc);
-    assert.equal(cachedBlob2.base64(), base64ImgSrc2);
+    assert.equal(cachedBlob1?.base64(), base64ImgSrc);
+    assert.equal(cachedBlob2?.base64(), base64ImgSrc2);
   });
 
   it('TBA: dropImages', async () => {
@@ -123,7 +123,7 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
     assert.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
 
     const blobInfo = editor.editorUpload.blobCache.getByData(base64ImgSrc, 'image/jpeg');
-    assert.equal(blobInfo.filename(), 'image.jfif');
+    assert.equal(blobInfo?.filename(), 'image.jfif');
 
     editor.options.unset('images_reuse_filename');
   });

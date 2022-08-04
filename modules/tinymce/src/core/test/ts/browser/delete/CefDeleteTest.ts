@@ -17,7 +17,7 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
   }, [], true);
 
   const fakeBackspaceKeyOnRange = (editor: Editor) => {
-    editor.getDoc().execCommand('Delete', false, null);
+    editor.getDoc().execCommand('Delete');
     TinyContentActions.keyup(editor, Keys.backspace());
   };
 

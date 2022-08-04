@@ -23,7 +23,7 @@ const categorise = (contextToolbars: Record<string, ContextSpecType>, navigate: 
   const lookupTable: Record<string, ContextType> = { };
 
   const registerForm = (key: string, toolbarSpec: InlineContent.ContextFormSpec) => {
-    const contextForm = StructureSchema.getOrDie(InlineContent.createContextForm(toolbarSpec));
+    const contextForm: InlineContent.ContextForm = StructureSchema.getOrDie(InlineContent.createContextForm(toolbarSpec));
     forms[key] = contextForm;
     contextForm.launch.map((launch) => {
       // Use the original here (pre-boulder), because using as a the spec for toolbar buttons

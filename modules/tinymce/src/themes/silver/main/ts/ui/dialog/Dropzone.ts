@@ -1,6 +1,6 @@
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button, Disabling,
-  FormField as AlloyFormField, GuiFactory, Memento, NativeEvents, Representing, SimpleSpec, SimulatedEvent,
+  FormField as AlloyFormField, GuiFactory, Memento, NativeEvents, Representing, SimpleSpec, SimulatedEvent, SketchSpec,
   SystemEvents, Tabstopping, Toggling
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
@@ -43,7 +43,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
   const onDrop: AlloyEvents.EventRunHandler<EventArgs> = (comp, se) => {
     if (!Disabling.isDisabled(comp)) {
       const transferEvent = se.event.raw as DragEvent;
-      handleFiles(comp, transferEvent.dataTransfer.files);
+      handleFiles(comp, transferEvent.dataTransfer?.files);
     }
   };
 
@@ -52,9 +52,11 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
     handleFiles(component, input.files);
   };
 
-  const handleFiles = (component: AlloyComponent, files: FileList) => {
-    Representing.setValue(component, filterByExtension(files, providersBackstage));
-    AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name });
+  const handleFiles = (component: AlloyComponent, files: FileList | null | undefined) => {
+    if (files) {
+      Representing.setValue(component, filterByExtension(files, providersBackstage));
+      AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name });
+    }
   };
 
   const memInput = Memento.record(
@@ -78,7 +80,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
     }
   );
 
-  const renderField = (s) => ({
+  const renderField = (s: SketchSpec) => ({
     uid: s.uid,
     dom: {
       tag: 'div',

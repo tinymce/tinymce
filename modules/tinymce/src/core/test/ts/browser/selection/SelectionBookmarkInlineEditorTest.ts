@@ -17,7 +17,9 @@ describe('browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest', () 
 
   const removeTestDiv = () => {
     const input = document.querySelector('#' + testDivId);
-    input.parentNode.removeChild(input);
+    if (input) {
+      input.parentNode?.removeChild(input);
+    }
   };
 
   const addTestDiv = () => {
@@ -35,11 +37,11 @@ describe('browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest', () 
   };
 
   const focusDiv = () => {
-    const input = document.querySelector<HTMLDivElement>('#' + testDivId);
+    const input = document.querySelector('#' + testDivId) as HTMLDivElement;
     input.focus();
   };
 
-  const assertPath = (label: string, root: SugarElement, expPath: number[], expOffset: number, actElement: Node, actOffset: number) => {
+  const assertPath = (label: string, root: SugarElement<Node>, expPath: number[], expOffset: number, actElement: Node, actOffset: number) => {
     const expected = Cursors.calculateOne(root, expPath);
     const message = () => {
       const actual = SugarElement.fromDom(actElement);
@@ -129,7 +131,7 @@ describe('browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest', () 
     const editor = hook.editor();
     const modifyRange = (e: EditorEvent<{ range: Range }>) => {
       const newRng = document.createRange();
-      newRng.selectNodeContents(editor.getBody().lastChild);
+      newRng.selectNodeContents(editor.getBody().lastChild as HTMLParagraphElement);
       e.range = newRng;
     };
 
