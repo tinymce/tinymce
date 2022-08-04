@@ -13,7 +13,7 @@ export interface FilterMatches {
   readonly attributes: Record<string, FilterMatch>;
 }
 
-export const traverse = (root: AstNode, fn: (node: AstNode) => void): void => {
+const traverse = (root: AstNode, fn: (node: AstNode) => void): void => {
   let node: AstNode | null | undefined = root.firstChild;
   while (node && node !== root.next) {
     fn(node);
@@ -94,5 +94,6 @@ const filter = (nodeFilters: ParserFilter[], attributeFilters: ParserFilter[], n
 export {
   matchNode,
   runFilters,
-  filter
+  filter,
+  traverse // Exposed for testing.
 };
