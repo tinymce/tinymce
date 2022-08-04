@@ -10,35 +10,35 @@ describe('atomic.tinymce.core.html.FilterNode', () => {
 
     const body = new AstNode('body', 11);
 
-    const Child1 = new AstNode('Child1', 1);
-    body.append(Child1);
-    const Child1Sibling = new AstNode('Child1Sibling', 1);
-    body.append(Child1Sibling);
+    const child1 = new AstNode('child1', 1);
+    body.append(child1);
+    const child1Sibling = new AstNode('child1Sibling', 1);
+    body.append(child1Sibling);
 
-    const Child2 = new AstNode('Child2', 1);
-    Child1.append(Child2);
+    const child2 = new AstNode('child2', 1);
+    child1.append(child2);
 
-    const Child3 = new AstNode('Child3', 1);
-    Child2.append(Child3);
-    const Child3Sibling = new AstNode('Child3Sibling', 1);
-    Child2.append(Child3Sibling);
+    const child3 = new AstNode('child3', 1);
+    child2.append(child3);
+    const child3Sibling = new AstNode('child3Sibling', 1);
+    child2.append(child3Sibling);
 
     const expected = [
-      'Child1',
-      'Child2',
-      'Child3',
-      'Child3Sibling',
-      'Child1Sibling'
+      'child1',
+      'child2',
+      'child3',
+      'child3Sibling',
+      'child1Sibling'
     ];
 
     // TEST STRUCTURE:
     // body
     // |
-    // Child1 --- Child1Sibling
+    // child1 --- child1Sibling
     // |
-    // Child2
+    // child2
     // |
-    // Child3 --- Child3Sibling
+    // child3 --- child3Sibling
 
     traverse(body, (node) => results.push(node.name));
 
