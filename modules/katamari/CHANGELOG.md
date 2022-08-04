@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Improved
+- The `Strings.contains` API now accepts optional `start` and `end` parameters to set the range for searching within the string.
+
 ## 9.0.0 - 2022-03-03
 
 ### Added
