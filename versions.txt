@@ -2,4 +2,5 @@
 # Format: [package_name]@[new_version]
 
 agar@7.2.0
+katamari@9.1.0
 sugar@9.1.0

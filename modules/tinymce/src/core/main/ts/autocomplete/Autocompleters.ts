@@ -6,8 +6,8 @@ import Editor from '../api/Editor';
 
 export interface AutocompleterDatabase {
   dataset: Record<string, InlineContent.Autocompleter>;
-  triggerChars: string[];
-  lookupByChar: (ch: string) => InlineContent.Autocompleter[];
+  triggers: string[];
+  lookupByTrigger: (trigger: string) => InlineContent.Autocompleter[];
 }
 
 const register = (editor: Editor): AutocompleterDatabase => {
@@ -19,18 +19,18 @@ const register = (editor: Editor): AutocompleterDatabase => {
     Fun.identity
   ));
 
-  const triggerChars = Unique.stringArray(
-    Obj.mapToArray(dataset, (v) => v.ch)
+  const triggers = Unique.stringArray(
+    Obj.mapToArray(dataset, (v) => v.trigger)
   );
 
   const datasetValues = Obj.values(dataset);
 
-  const lookupByChar = (ch: string): InlineContent.Autocompleter[] => Arr.filter(datasetValues, (dv) => dv.ch === ch);
+  const lookupByTrigger = (trigger: string): InlineContent.Autocompleter[] => Arr.filter(datasetValues, (dv) => dv.trigger === trigger);
 
   return {
     dataset,
-    triggerChars,
-    lookupByChar
+    triggers,
+    lookupByTrigger
   };
 };
 

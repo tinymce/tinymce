@@ -27,7 +27,7 @@ describe('webdriver.tinymce.themes.silver.editor.AutocompleteDelayedResponseTest
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {
       ed.ui.registry.addAutocompleter('Dollars', {
-        ch: '$',
+        trigger: '$',
         minChars: 0,
         columns: 'auto',
         fetch: (_pattern, _maxResults) => new Promise((resolve) => {

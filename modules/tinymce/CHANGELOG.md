@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Improved
 - The formatter can now apply a format to a `contenteditable="false"` element by wrapping it. Configurable using the `format_noneditable_selector` option. #TINY-8905
+- The autocompleter now supports a multiple character trigger using the new `trigger` configuration #TINY-8887
 
 ### Fixed
 - The Autolink plugin did not work when the text nodes in the content were fragmented #TINY-3723
@@ -24,6 +25,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed various issues that occurred when formatting `contenteditable` elements. #TINY-8905
 - The text pattern logic threw an error when there were fragmented text nodes in a paragraph #TINY-8779
 - The content of the `contenteditable="false"` element could be selected with the mouse on Firefox  #TINY-8828
+
+### Deprecated
+- The autocompleter `ch` configuration property has been deprecated and will be removed in the next major release. Use the `trigger` property instead. #TINY-8887
 
 ## 6.1.2 - 2022-07-29
 
