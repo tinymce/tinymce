@@ -9,51 +9,38 @@ describe('browser.tinymce.core.html.FilterNode', () => {
     const results: string[] = [];
 
     const body = new AstNode('body', 11);
-    const testRootFather = new AstNode('testRootFather', 1);
-    body.append(testRootFather);
-    const testRootFatherSibling = new AstNode('testRootFatherSibling', 1);
-    body.append(testRootFatherSibling);
 
-    const testRoot = new AstNode('testRoot', 1);
-    testRootFather.append(testRoot);
-    const testRootSibling = new AstNode('testRootSibling', 1);
-    testRootFather.append(testRootSibling);
+    const Child1 = new AstNode('Child1', 1);
+    body.append(Child1);
+    const Child1Sibling = new AstNode('Child1Sibling', 1);
+    body.append(Child1Sibling);
 
-    const testRootChild1 = new AstNode('testRootChild1', 1);
-    testRoot.append(testRootChild1);
-    const testRootChild1Sibling = new AstNode('testRootChild1Sibling', 1);
-    testRoot.append(testRootChild1Sibling);
+    const Child2 = new AstNode('Child2', 1);
+    Child1.append(Child2);
 
-    const testRootChild2 = new AstNode('testRootChild2', 1);
-    testRootChild1.append(testRootChild2);
-
-    const testRootChild3 = new AstNode('testRootChild3', 1);
-    testRootChild2.append(testRootChild3);
-    const testRootChild3Sibling = new AstNode('testRootChild3Sibling', 1);
-    testRootChild2.append(testRootChild3Sibling);
+    const Child3 = new AstNode('Child3', 1);
+    Child2.append(Child3);
+    const Child3Sibling = new AstNode('Child3Sibling', 1);
+    Child2.append(Child3Sibling);
 
     const expected = [
-      'testRootChild1',
-      'testRootChild2',
-      'testRootChild3',
-      'testRootChild3Sibling',
-      'testRootChild1Sibling'
+      'Child1',
+      'Child2',
+      'Child3',
+      'Child3Sibling',
+      'Child1Sibling'
     ];
 
     // TEST STRUCTURE:
     // body
     // |
-    // testRootFather --- testRootFatherSibling
+    // Child1 --- Child1Sibling
     // |
-    // testRoot --- testRootSibling
+    // Child2
     // |
-    // testRootChild1 --- testRootChild1Sibling
-    // |
-    // testRootChild2
-    // |
-    // testRootChild3 --- testRootChild3Sibling
+    // Child3 --- Child3Sibling
 
-    traverse(testRoot, (node) => results.push(node.name));
+    traverse(body, (node) => results.push(node.name));
 
     assert.deepEqual(results, expected, 'old result should be identical to new one');
   });
