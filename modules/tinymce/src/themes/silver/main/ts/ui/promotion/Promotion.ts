@@ -1,7 +1,7 @@
 import { AlloySpec, SimpleSpec } from '@ephox/alloy';
 
 // TODO final text and link to be decided in https://ephocks.atlassian.net/browse/TINY-8954
-const promotionMessage = 'Try Premium!';
+const promotionMessage = 'Upgrade';
 const promotionLink = 'http://tiny.cloud';
 
 const renderPromotion = (spec: SimpleSpec): AlloySpec => {
