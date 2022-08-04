@@ -14,10 +14,9 @@ export interface FilterMatches {
 }
 
 const traverse = (root: AstNode, fn: (node: AstNode) => void): void => {
-  let node: AstNode | null | undefined = root.firstChild;
-  while (node && node !== root.next) {
+  let node: AstNode | null | undefined = root;
+  while ((node = node.walk())) {
     fn(node);
-    node = node.walk();
   }
 };
 
