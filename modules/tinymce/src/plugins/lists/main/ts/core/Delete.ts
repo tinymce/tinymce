@@ -1,5 +1,5 @@
 import { Arr, Optionals } from '@ephox/katamari';
-import { Compare, PredicateFind, Remove, SugarElement, SugarNode } from '@ephox/sugar';
+import { Compare, ContentEditable, PredicateFind, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
@@ -261,8 +261,24 @@ const backspaceDeleteRange = (editor: Editor): boolean => {
   return false;
 };
 
+const isEditableSelection = (node: HTMLElement, root: HTMLElement): boolean => {
+  let parent: HTMLElement | null = node;
+  while (parent !== root && parent) {
+    if (!ContentEditable.get(SugarElement.fromDom(parent))) {
+      return false;
+    }
+    parent = parent.parentElement;
+  }
+  return true;
+};
+
 const backspaceDelete = (editor: Editor, isForward: boolean): boolean => {
-  return editor.selection.isCollapsed() ? backspaceDeleteCaret(editor, isForward) : backspaceDeleteRange(editor);
+  const selection = editor.selection;
+  if (isEditableSelection(selection.getNode(), editor.getBody())) {
+    return selection.isCollapsed() ? backspaceDeleteCaret(editor, isForward) : backspaceDeleteRange(editor);
+  } else {
+    return false;
+  }
 };
 
 const setup = (editor: Editor): void => {

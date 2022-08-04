@@ -93,7 +93,7 @@ const getEditableRoot = (dom: DOMUtils, node: Node): Optional<HTMLElement> => {
   while (parent !== root && parent) {
     if (dom.getContentEditable(parent) === 'false') {
       return Optional.none();
-    } else if (dom.getContentEditable(parent) === 'false') {
+    } else if (dom.getContentEditable(parent) === 'true') {
       editableRoot = parent as HTMLElement;
     }
 

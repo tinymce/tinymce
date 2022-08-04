@@ -293,8 +293,7 @@ const toggleList = (editor: Editor, listName: 'UL' | 'OL' | 'DL', _detail: ListD
   const parentList = Selection.getParentList(editor) ?? editor.getBody();
 
   if (ContentEditable.get(SugarElement.fromDom(parentList))) {
-    const selectedSubLists = Arr.filter(Selection.getSelectedSubLists(editor),
-      (list) => ContentEditable.get(SugarElement.fromDom(list)));
+    const selectedSubLists = Arr.filter(Selection.getSelectedSubLists(editor), (list) => ContentEditable.get(SugarElement.fromDom(list)));
 
     const detail = Type.isObject(_detail) ? _detail : {};
     if (selectedSubLists.length > 0) {
