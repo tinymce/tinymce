@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The content of the `contenteditable="false"` element could be selected with the mouse on Firefox  #TINY-8828
 
 ### Deprecated
-- The autocompleter configuration option `ch` has been deprecated and will be removed in the next major release. Use the `trigger` option instead. #TINY-8887
+- The autocompleter `ch` configuration property has been deprecated and will be removed in the next major release. Use the `trigger` property instead. #TINY-8887
 
 ## 6.1.2 - 2022-07-29
 
