@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { ContentEditable, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -7,6 +7,9 @@ import * as NodeType from './NodeType';
 
 export const isCustomList = (list: HTMLElement): boolean =>
   /\btox\-/.test(list.className);
+
+export const setupHandler = (editor: Editor, listName: string) => (api) =>
+  Fun.compose(listButtonState(editor, api.setEnabled), listState(editor, listName, api.setActive));
 
 export const listState = (editor: Editor, listName: string, activate: (active: boolean) => void): () => void => {
   const nodeChangeHandler = (e: { parents: Node[] }) => {

@@ -1,4 +1,5 @@
 import { Type } from '@ephox/katamari';
+import { ContentEditable, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
@@ -43,9 +44,22 @@ const isWithinList = (editor: Editor, e: EditorEvent<NodeChangeEvent>, nodeName:
   return lists.length > 0 && lists[0].nodeName === nodeName;
 };
 
+const isEditableSelection = (editor: Editor, e: EditorEvent<NodeChangeEvent>): boolean => {
+  const root = editor.getBody();
+  let parent: HTMLElement | null = e.element as HTMLElement;
+  while (parent !== root && parent) {
+    if (!ContentEditable.get(SugarElement.fromDom(parent))) {
+      return false;
+    }
+    parent = parent.parentElement;
+  }
+  return true;
+};
+
 const makeSetupHandler = (editor: Editor, nodeName: ListType) => (api: Toolbar.ToolbarSplitButtonInstanceApi | Toolbar.ToolbarToggleButtonInstanceApi) => {
   const nodeChangeHandler = (e: EditorEvent<NodeChangeEvent>) => {
     api.setActive(isWithinList(editor, e, nodeName));
+    api.setEnabled(isEditableSelection(editor, e));
   };
   editor.on('NodeChange', nodeChangeHandler);
 
