@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed various issues that occurred when formatting `contenteditable` elements. #TINY-8905
 - The text pattern logic threw an error when there were fragmented text nodes in a paragraph #TINY-8779
 - The content of the `contenteditable="false"` element could be selected with the mouse on Firefox  #TINY-8828
-- The `traverse` function in `FilterNode` is now not recursive to avoid `Maximum call stack size exceeded` when a large document is pasted in the editor #TINY-6945
+- Parsing large documents no longer throws a `Maximum call stack size exceeded` exception #TINY-6945
 
 ## 6.1.2 - 2022-07-29
 
