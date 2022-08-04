@@ -4,7 +4,7 @@ import { assert } from 'chai';
 import { AstNode } from 'tinymce/core/api/PublicApi';
 import { traverse } from 'tinymce/core/html/FilterNode';
 
-describe('browser.tinymce.core.html.FilterNode', () => {
+describe('atomic.tinymce.core.html.FilterNode', () => {
   it('TINY-6945: new traverse should work like old recursive traverse', () => {
     const results: string[] = [];
 
