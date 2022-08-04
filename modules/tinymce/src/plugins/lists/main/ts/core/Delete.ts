@@ -1,5 +1,5 @@
 import { Arr, Optionals } from '@ephox/katamari';
-import { Compare, ContentEditable, PredicateFind, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { Compare, ContentEditable, PredicateFind, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';

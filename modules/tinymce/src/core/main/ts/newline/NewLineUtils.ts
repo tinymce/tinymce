@@ -87,7 +87,6 @@ const moveToCaretPosition = (editor: Editor, root: Node): void => {
 const getEditableRoot = (dom: DOMUtils, node: Node): Optional<HTMLElement> => {
   const root = dom.getRoot();
   let editableRoot: HTMLElement | undefined;
-
   // Get all parents until we hit a non editable parent or the root
   let parent: Node | null = node;
   while (parent !== root && parent) {
@@ -99,9 +98,7 @@ const getEditableRoot = (dom: DOMUtils, node: Node): Optional<HTMLElement> => {
 
     parent = parent.parentNode;
   }
-
-  editableRoot = parent !== root && editableRoot ? editableRoot : root;
-  return Optional.some(editableRoot);
+  return Optional.some(parent !== root && editableRoot ? editableRoot : root);
 };
 
 const getParentBlock = (editor: Editor): Optional<Element> => {

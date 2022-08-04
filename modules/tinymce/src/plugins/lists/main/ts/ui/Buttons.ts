@@ -1,6 +1,11 @@
+import { Fun } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Util from '../core/Util';
+
+const setupHandler = (editor: Editor, listName: string) => (api) =>
+  Fun.compose(Util.listButtonState(editor, api.setEnabled), Util.listState(editor, listName, api.setActive));
 
 const register = (editor: Editor): void => {
   const exec = (command: string) => () => editor.execCommand(command);
@@ -11,7 +16,7 @@ const register = (editor: Editor): void => {
       active: false,
       tooltip: 'Numbered list',
       onAction: exec('InsertOrderedList'),
-      onSetup: (api) => Util.listState(editor, 'OL', api.setActive)
+      onSetup: setupHandler(editor, 'OL')
     });
 
     editor.ui.registry.addToggleButton('bullist', {
@@ -19,7 +24,7 @@ const register = (editor: Editor): void => {
       active: false,
       tooltip: 'Bullet list',
       onAction: exec('InsertUnorderedList'),
-      onSetup: (api) => Util.listState(editor, 'UL', api.setActive)
+      onSetup: setupHandler(editor, 'UL')
     });
   }
 };
