@@ -1,31 +1,31 @@
-import { Keys } from '@ephox/agar';
+import { RealKeys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 
-describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
+describe('webdriver.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'lists',
     toolbar: 'numlist bullist',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin ]);
+  }, [ Plugin ], true);
 
-  it('TINY-8920: backspace from beginning editable first li in noneditable ol with no change', () => {
+  it('TINY-8920: backspace from beginning editable first LI in noneditable OL with no change', async () => {
     const editor = hook.editor();
     const content = '<ol contenteditable="false">\n' +
       '<li contenteditable="true">editable</li>\n' +
       '<li>noneditable</li>\n' +
     '</ol>';
     editor.setContent(content);
-    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
-    TinyContentActions.keystroke(editor, Keys.backspace());
+    TinySelections.setCursor(editor, [ 1, 0, 0 ], 0); // HTML is fake-caret
+    await RealKeys.pSendKeysOn('iframe => body LI:first-child', [ RealKeys.combo({}, 'backspace') ]);
     TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
     TinyAssertions.assertContent(editor, content);
   });
 
-  it('TINY-8920: backspace from beginning second editable li in noneditable ol with no change', () => {
+  it('TINY-8920: backspace from beginning second editable LI in noneditable OL with no change', async () => {
     const editor = hook.editor();
     const content = '<ol contenteditable="false">\n' +
       '<li contenteditable="true">editable</li>\n' +
@@ -33,26 +33,26 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
       '<li contenteditable="true">editable</li>\n' +
     '</ol>';
     editor.setContent(content);
-    TinySelections.setCursor(editor, [ 0, 2, 0 ], 0);
-    TinyContentActions.keystroke(editor, Keys.backspace());
+    TinySelections.setCursor(editor, [ 1, 2, 0 ], 0); // HTML is fake-caret
+    await RealKeys.pSendKeysOn('iframe => body LI:last-child', [ RealKeys.combo({}, 'backspace') ]);
     TinyAssertions.assertCursor(editor, [ 0, 2, 0 ], 0);
     TinyAssertions.assertContent(editor, content);
   });
 
-  it('TINY-8920: enter from beginning editable first li in noneditable ol with no change', () => {
+  it('TINY-8920: enter from beginning editable first LI in noneditable OL with no change', async () => {
     const editor = hook.editor();
     const content = '<ol contenteditable="false">\n' +
       '<li contenteditable="true">editable</li>\n' +
       '<li>noneditable</li>\n' +
     '</ol>';
     editor.setContent(content);
-    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
-    TinyContentActions.keystroke(editor, Keys.enter());
+    TinySelections.setCursor(editor, [ 1, 0, 0 ], 0); // HTML is fake-caret
+    await RealKeys.pSendKeysOn('iframe => body LI:first-child', [ RealKeys.combo({}, 'enter') ]);
     TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
     TinyAssertions.assertContent(editor, content);
   });
 
-  it('TINY-8920: enter from beginning second editable li in noneditable ol with no change', () => {
+  it('TINY-8920: enter from beginning second editable LI in noneditable OL with no change', async () => {
     const editor = hook.editor();
     const content = '<ol contenteditable="false">\n' +
       '<li contenteditable="true">editable</li>\n' +
@@ -60,36 +60,37 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
       '<li contenteditable="true">editable</li>\n' +
     '</ol>';
     editor.setContent(content);
-    TinySelections.setCursor(editor, [ 0, 2, 0 ], 0);
-    TinyContentActions.keystroke(editor, Keys.enter());
+    TinySelections.setCursor(editor, [ 1, 2, 0 ], 0); // HTML is fake-caret
+    await RealKeys.pSendKeysOn('iframe => body LI:last-child', [ RealKeys.combo({}, 'enter') ]);
     TinyAssertions.assertCursor(editor, [ 0, 2, 0 ], 0);
     TinyAssertions.assertContent(editor, content);
   });
 
-  it('TINY-8920: tab from beginning editable first li in noneditable ol with no change', () => {
+  it('TINY-8920: tab from first editable LI in noneditable OL to second editable LI with no content change', async () => {
     const editor = hook.editor();
     const content = '<ol contenteditable="false">\n' +
       '<li contenteditable="true">editable</li>\n' +
       '<li>noneditable</li>\n' +
+      '<li contenteditable="true">editable</li>\n' +
     '</ol>';
     editor.setContent(content);
-    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
-    TinyContentActions.keystroke(editor, Keys.tab());
+    TinySelections.setCursor(editor, [ 1, 0, 0 ], 0); // HTML is fake-caret
+    await RealKeys.pSendKeysOn('iframe => body LI:first-child', [ RealKeys.combo({}, 'tab') ]);
+    TinyAssertions.assertCursor(editor, [ 0, 2, 0 ], 0);
+    TinyAssertions.assertContent(editor, content);
+  });
+
+  it('TINY-8920: shift-tab from second editable LI in noneditable OL to first editable LI with no content change', async () => {
+    const editor = hook.editor();
+    const content = '<ol contenteditable="false">\n' +
+      '<li contenteditable="true">editable</li>\n' +
+      '<li>noneditable</li>\n' +
+      '<li contenteditable="true">editable</li>\n' +
+    '</ol>';
+    editor.setContent(content);
+    TinySelections.setCursor(editor, [ 1, 2, 0 ], 0); // HTML is fake-caret
+    await RealKeys.pSendKeysOn('iframe => body LI:last-child', [ RealKeys.combo({ shift: true }, 'tab') ]);
     TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
-    TinyAssertions.assertContent(editor, content);
-  });
-
-  it('TINY-8920: tab from beginning second editable li in noneditable ol with no change', () => {
-    const editor = hook.editor();
-    const content = '<ol contenteditable="false">\n' +
-      '<li contenteditable="true">editable</li>\n' +
-      '<li>noneditable</li>\n' +
-      '<li contenteditable="true">editable</li>\n' +
-    '</ol>';
-    editor.setContent(content);
-    TinySelections.setCursor(editor, [ 0, 2, 0 ], 0);
-    TinyContentActions.keystroke(editor, Keys.tab());
-    TinyAssertions.assertCursor(editor, [ 0, 2, 0 ], 0);
     TinyAssertions.assertContent(editor, content);
   });
 });
