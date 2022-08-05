@@ -11,25 +11,23 @@ export const isCustomList = (list: HTMLElement): boolean =>
 export const setupToggleButtonHandler = (editor: Editor, listName: string) => (api): () => void => {
   const toggleButtonHandler = (e: NodeChangeEvent) => {
     api.setActive(inList(e.parents, listName));
-    api.setEnabled(isEditableSelection(editor, e.element))
+    api.setEnabled(isEditableSelection(editor, e.element));
   };
-  const initialNode = editor.selection.getNode();
-  const initial = {
-    parents: editor.dom.getParents(initialNode),
-    element: initialNode
-  };
-  return setNodeChangeHandler(editor, toggleButtonHandler, initial);
+  return setNodeChangeHandler(editor, toggleButtonHandler, getInitial(editor));
 };
 
 export const setupMenuButtonHandler = (editor: Editor, listName: string) => (api): () => void => {
   const menuButtonHandler = (e: NodeChangeEvent) =>
     api.setEnabled(inList(e.parents, listName) && isEditableSelection(editor, e.element));
+  return setNodeChangeHandler(editor, menuButtonHandler, getInitial(editor));
+};
+
+const getInitial = (editor: Editor): NodeChangeEvent => {
   const initialNode = editor.selection.getNode();
-  const initial = {
+  return {
     parents: editor.dom.getParents(initialNode),
     element: initialNode
   };
-  return setNodeChangeHandler(editor, menuButtonHandler, initial);
 };
 
 const setNodeChangeHandler = (editor: Editor, nodeChangeHandler: (e: NodeChangeEvent) => void, initial: NodeChangeEvent): () => void => {
