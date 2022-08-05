@@ -81,7 +81,8 @@ const runFilters = (matches: FilterMatches, args: ParserArgs): void => {
           const node = nodes[i];
 
           // Remove already removed children, and nodes that no longer match the filter
-          if (Type.isNullable(node.parent) || filteringAttributes ? node.attr(match.filter.name) === undefined : node.name !== match.filter.name) {
+          const valueMatches = filteringAttributes ? node.attr(match.filter.name) !== undefined : node.name === match.filter.name;
+          if (!valueMatches || Type.isNullable(node.parent)) {
             nodes.splice(i, 1);
           }
         }
