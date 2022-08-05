@@ -13,15 +13,10 @@ export interface FilterMatches {
   readonly attributes: Record<string, FilterMatch>;
 }
 
-const traverse = (node: AstNode, fn: (node: AstNode) => void): void => {
-  fn(node);
-
-  if (node.firstChild) {
-    traverse(node.firstChild, fn);
-  }
-
-  if (node.next) {
-    traverse(node.next, fn);
+const traverse = (root: AstNode, fn: (node: AstNode) => void): void => {
+  let node: AstNode | null | undefined = root;
+  while ((node = node.walk())) {
+    fn(node);
   }
 };
 
@@ -65,8 +60,8 @@ const findMatchingNodes = (nodeFilters: ParserFilter[], attributeFilters: Parser
   const matches: FilterMatches = { nodes: {}, attributes: {}};
 
   if (node.firstChild) {
-    traverse(node.firstChild, (node) => {
-      matchNode(nodeFilters, attributeFilters, node, matches);
+    traverse(node, (childNode) => {
+      matchNode(nodeFilters, attributeFilters, childNode, matches);
     });
   }
 
@@ -98,5 +93,6 @@ const filter = (nodeFilters: ParserFilter[], attributeFilters: ParserFilter[], n
 export {
   matchNode,
   runFilters,
-  filter
+  filter,
+  traverse // Exposed for testing.
 };
