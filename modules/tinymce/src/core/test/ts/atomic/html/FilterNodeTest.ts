@@ -2,7 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { assert } from 'chai';
 
-import { AstNode } from 'tinymce/core/api/PublicApi';
+import AstNode from 'tinymce/core/api/html/Node';
 import { traverse } from 'tinymce/core/html/FilterNode';
 
 describe('atomic.tinymce.core.html.FilterNode', () => {
