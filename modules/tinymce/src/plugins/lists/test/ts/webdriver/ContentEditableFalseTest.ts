@@ -20,7 +20,7 @@ describe('webdriver.tinymce.plugins.lists.BackspaceDeleteTest', () => {
     '</ol>';
     editor.setContent(content);
     TinySelections.setCursor(editor, [ 1, 0, 0 ], 0); // HTML is fake-caret
-    await RealKeys.pSendKeysOn('iframe => body LI:first-child', [ RealKeys.combo({}, 'backspace') ]);
+    await RealKeys.pSendKeysOn('iframe => body li:first-child', [ RealKeys.combo({}, 'backspace') ]);
     TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
     TinyAssertions.assertContent(editor, content);
   });
@@ -34,7 +34,7 @@ describe('webdriver.tinymce.plugins.lists.BackspaceDeleteTest', () => {
     '</ol>';
     editor.setContent(content);
     TinySelections.setCursor(editor, [ 1, 2, 0 ], 0); // HTML is fake-caret
-    await RealKeys.pSendKeysOn('iframe => body LI:last-child', [ RealKeys.combo({}, 'backspace') ]);
+    await RealKeys.pSendKeysOn('iframe => body li:last-child', [ RealKeys.combo({}, 'backspace') ]);
     TinyAssertions.assertCursor(editor, [ 0, 2, 0 ], 0);
     TinyAssertions.assertContent(editor, content);
   });
@@ -47,7 +47,7 @@ describe('webdriver.tinymce.plugins.lists.BackspaceDeleteTest', () => {
     '</ol>';
     editor.setContent(content);
     TinySelections.setCursor(editor, [ 1, 0, 0 ], 0); // HTML is fake-caret
-    await RealKeys.pSendKeysOn('iframe => body LI:first-child', [ RealKeys.combo({}, 'enter') ]);
+    await RealKeys.pSendKeysOn('iframe => body li:first-child', [ RealKeys.combo({}, 'enter') ]);
     TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
     TinyAssertions.assertContent(editor, content);
   });
@@ -61,7 +61,7 @@ describe('webdriver.tinymce.plugins.lists.BackspaceDeleteTest', () => {
     '</ol>';
     editor.setContent(content);
     TinySelections.setCursor(editor, [ 1, 2, 0 ], 0); // HTML is fake-caret
-    await RealKeys.pSendKeysOn('iframe => body LI:last-child', [ RealKeys.combo({}, 'enter') ]);
+    await RealKeys.pSendKeysOn('iframe => body li:last-child', [ RealKeys.combo({}, 'enter') ]);
     TinyAssertions.assertCursor(editor, [ 0, 2, 0 ], 0);
     TinyAssertions.assertContent(editor, content);
   });
@@ -75,7 +75,7 @@ describe('webdriver.tinymce.plugins.lists.BackspaceDeleteTest', () => {
     '</ol>';
     editor.setContent(content);
     TinySelections.setCursor(editor, [ 1, 0, 0 ], 0); // HTML is fake-caret
-    await RealKeys.pSendKeysOn('iframe => body LI:first-child', [ RealKeys.combo({}, 'tab') ]);
+    await RealKeys.pSendKeysOn('iframe => body li:first-child', [ RealKeys.combo({}, 'tab') ]);
     TinyAssertions.assertCursor(editor, [ 0, 2, 0 ], 0);
     TinyAssertions.assertContent(editor, content);
   });
@@ -89,7 +89,7 @@ describe('webdriver.tinymce.plugins.lists.BackspaceDeleteTest', () => {
     '</ol>';
     editor.setContent(content);
     TinySelections.setCursor(editor, [ 1, 2, 0 ], 0); // HTML is fake-caret
-    await RealKeys.pSendKeysOn('iframe => body LI:last-child', [ RealKeys.combo({ shift: true }, 'tab') ]);
+    await RealKeys.pSendKeysOn('iframe => body li:last-child', [ RealKeys.combo({ shift: true }, 'tab') ]);
     TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
     TinyAssertions.assertContent(editor, content);
   });

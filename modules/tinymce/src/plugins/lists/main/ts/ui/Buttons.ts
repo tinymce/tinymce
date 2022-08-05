@@ -11,7 +11,7 @@ const register = (editor: Editor): void => {
       active: false,
       tooltip: 'Numbered list',
       onAction: exec('InsertOrderedList'),
-      onSetup: Util.setupButtonHandler(editor, 'OL')
+      onSetup: Util.setupToggleButtonHandler(editor, 'OL')
     });
 
     editor.ui.registry.addToggleButton('bullist', {
@@ -19,7 +19,7 @@ const register = (editor: Editor): void => {
       active: false,
       tooltip: 'Bullet list',
       onAction: exec('InsertUnorderedList'),
-      onSetup: Util.setupButtonHandler(editor, 'UL')
+      onSetup: Util.setupToggleButtonHandler(editor, 'UL')
     });
   }
 };

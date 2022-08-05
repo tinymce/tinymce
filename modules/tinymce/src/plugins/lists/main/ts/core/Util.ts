@@ -1,11 +1,48 @@
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
+import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
 
 import * as NodeType from './NodeType';
 
 export const isCustomList = (list: HTMLElement): boolean =>
   /\btox\-/.test(list.className);
+
+export const setupToggleButtonHandler = (editor: Editor, listName: string) => (api): () => void => {
+  const toggleButtonHandler = (e: NodeChangeEvent) => {
+    api.setActive(inList(e.parents, listName));
+    api.setEnabled(isEditableSelection(editor, e.element))
+  };
+  const initialNode = editor.selection.getNode();
+  const initial = {
+    parents: editor.dom.getParents(initialNode),
+    element: initialNode
+  };
+  return setNodeChangeHandler(editor, toggleButtonHandler, initial);
+};
+
+export const setupMenuButtonHandler = (editor: Editor, listName: string) => (api): () => void => {
+  const menuButtonHandler = (e: NodeChangeEvent) =>
+    api.setEnabled(inList(e.parents, listName) && isEditableSelection(editor, e.element));
+  const initialNode = editor.selection.getNode();
+  const initial = {
+    parents: editor.dom.getParents(initialNode),
+    element: initialNode
+  };
+  return setNodeChangeHandler(editor, menuButtonHandler, initial);
+};
+
+const setNodeChangeHandler = (editor: Editor, nodeChangeHandler: (e: NodeChangeEvent) => void, initial: NodeChangeEvent): () => void => {
+  // Set the initial state
+  nodeChangeHandler(initial);
+  editor.on('NodeChange', nodeChangeHandler);
+  return () => editor.off('NodeChange', nodeChangeHandler);
+};
+
+const inList = (parents: Node[], listName: string): boolean =>
+  Arr.findUntil(parents, NodeType.isListNode, NodeType.isTableCellNode)
+    .filter((list: HTMLElement) => list.nodeName === listName && !isCustomList(list))
+    .isSome();
 
 export const isEditableSelection = (editor: Editor, node: Element): boolean => {
   const root = editor.getBody();
@@ -17,39 +54,4 @@ export const isEditableSelection = (editor: Editor, node: Element): boolean => {
     parent = parent.parentElement;
   }
   return true;
-};
-
-export const setupButtonHandler = (editor: Editor, listName: string) => (api) =>
-  Fun.compose(listButtonState(editor, api.setEnabled), listState(editor, listName, api.setActive));
-
-export const setupMenuItemHandler = (editor: Editor, listName: string) => (api) =>
-  Fun.compose(listButtonState(editor, api.setEnabled), listState(editor, listName, api.setEnabled));
-
-export const listState = (editor: Editor, listName: string, activate: (active: boolean) => void): () => void => {
-  const nodeChangeHandler = (e: { parents: Node[] }) => {
-    const inList = Arr.findUntil(e.parents, NodeType.isListNode, NodeType.isTableCellNode)
-      .filter((list: HTMLElement) => list.nodeName === listName && !isCustomList(list))
-      .isSome();
-    activate(inList);
-  };
-
-  // Set the initial state
-  const parents = editor.dom.getParents(editor.selection.getNode());
-  nodeChangeHandler({ parents });
-
-  editor.on('NodeChange', nodeChangeHandler);
-
-  return () => editor.off('NodeChange', nodeChangeHandler);
-};
-
-export const listButtonState = (editor: Editor, enable: (state: boolean) => void): () => void => {
-  const buttonStateHandler = (e: { element: Element }) => enable(isEditableSelection(editor, e.element));
-
-  // Set the initial state
-  const element = editor.selection.getNode();
-  buttonStateHandler({ element });
-
-  editor.on('NodeChange', buttonStateHandler);
-
-  return () => editor.off('NodeChange', buttonStateHandler);
 };
