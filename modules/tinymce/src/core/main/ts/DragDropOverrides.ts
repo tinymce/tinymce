@@ -316,9 +316,7 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
 
 const stop = (state: Singleton.Value<State>, editor: Editor) => () => {
   state.on((state) => {
-    if (state.intervalId.isSet()) {
-      state.intervalId.clear();
-    }
+    state.intervalId.clear();
     if (state.dragging) {
       editor.dispatch('dragend');
     }
