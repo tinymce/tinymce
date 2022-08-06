@@ -13,7 +13,7 @@ describe('browser.tinymce.core.init.InitIframeAriaTextTest', () => {
     const editor = await McEditor.pFromSettings<Editor>({
       base_url: '/project/tinymce/js/tinymce'
     });
-    const iframe = SugarElement.fromDom(editor.iframeElement);
+    const iframe = SugarElement.fromDom(editor.iframeElement as HTMLIFrameElement);
     const iframeBody = TinyDom.body(editor);
     assert.equal(Attribute.get(iframe, 'title'), 'Rich Text Area');
     assert.equal(Attribute.get(iframeBody, 'aria-label'), defaultIframeTitle);
@@ -25,7 +25,7 @@ describe('browser.tinymce.core.init.InitIframeAriaTextTest', () => {
       base_url: '/project/tinymce/js/tinymce',
       iframe_aria_text: customIframeTitle
     });
-    const iframe = SugarElement.fromDom(editor.iframeElement);
+    const iframe = SugarElement.fromDom(editor.iframeElement as HTMLIFrameElement);
     const iframeBody = TinyDom.body(editor);
     assert.equal(Attribute.get(iframe, 'title'), 'Rich Text Area');
     assert.equal(Attribute.get(iframeBody, 'aria-label'), customIframeTitle);

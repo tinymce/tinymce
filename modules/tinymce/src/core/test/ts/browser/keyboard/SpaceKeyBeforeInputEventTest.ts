@@ -4,7 +4,7 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import { pressKeyAction, testBeforeInputEvent } from '../util/BeforeInputEventUtils';
+import { pressKeyAction, testBeforeInputEvent } from '../../module/test/BeforeInputEventUtils';
 
 describe('browser.tinymce.core.delete.SpaceKeyBeforeInputEventTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

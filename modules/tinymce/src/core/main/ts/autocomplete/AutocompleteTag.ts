@@ -24,9 +24,11 @@ const create = (editor: Editor, range: Range): void => {
   }
 };
 
-const detect = (elm: SugarElement<Node>): Optional<SugarElement<Element>> => SelectorFind.closest(elm, autocompleteSelector);
+const detect = (elm: SugarElement<Node>): Optional<SugarElement<Element>> =>
+  SelectorFind.closest(elm, autocompleteSelector);
 
-const findIn = (elm: SugarElement<Element>): Optional<SugarElement> => SelectorFind.descendant(elm, autocompleteSelector);
+const findIn = (elm: SugarElement<Element>): Optional<SugarElement<Element>> =>
+  SelectorFind.descendant(elm, autocompleteSelector);
 
 const remove = (editor: Editor, elm: SugarElement<Element>): void =>
   findIn(elm).each((wrapper) => {

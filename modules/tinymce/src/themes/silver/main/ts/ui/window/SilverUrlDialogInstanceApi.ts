@@ -33,7 +33,7 @@ const getUrlDialogApi = (root: AlloyComponent): Dialog.UrlDialogInstanceApi => {
     });
   };
 
-  const sendMessage = (data) => {
+  const sendMessage = (data: any) => {
     withRoot((root) => {
       root.getSystem().broadcastOn([ bodySendMessageChannel ], data);
     });

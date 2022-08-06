@@ -85,7 +85,7 @@ const hasEqualCleanedContent = (level1: NewUndoLevel, level2: NewUndoLevel): boo
   getCleanLevelContent(level1) === getCleanLevelContent(level2);
 
 // Most of the time the contents is equal so it's faster to first check that using strings then fallback to a cleaned dom comparison
-const isEq = (level1: NewUndoLevel, level2: NewUndoLevel): boolean => {
+const isEq = (level1: NewUndoLevel | undefined, level2: NewUndoLevel | undefined): boolean => {
   if (!level1 || !level2) {
     return false;
   } else if (hasEqualContent(level1, level2)) {

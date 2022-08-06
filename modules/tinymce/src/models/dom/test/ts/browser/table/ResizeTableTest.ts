@@ -125,7 +125,7 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
 
   const assertWidthAfterResize = (width: number | null, widths: WidthMeasurements, approx: boolean = false) => {
     if (approx) {
-      assert.approximately(widths.widthAfter.raw, width, pixelDiffThreshold, `table raw width after resizing is ~${width}`);
+      assert.approximately(widths.widthAfter.raw ?? 0, width ?? 0, pixelDiffThreshold, `table raw width after resizing is ~${width}`);
     } else {
       assert.equal(widths.widthAfter.raw, width, `table raw width after resizing is ${width}`);
     }
@@ -133,10 +133,10 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
 
   const assertEventData = (state: Cell<EditorEvent<ObjectResizeEvent> | null>, expectedEventName: string) => {
     const event = state.get();
-    assert.equal(event.target.nodeName, 'TABLE', 'Should be table element');
-    assert.equal(event.type, expectedEventName, 'Should be expected resize event');
-    assert.typeOf(event.width, 'number', 'Should have width');
-    assert.typeOf(event.height, 'number', 'Should have height');
+    assert.equal(event?.target.nodeName, 'TABLE', 'Should be table element');
+    assert.equal(event?.type, expectedEventName, 'Should be expected resize event');
+    assert.typeOf(event?.width, 'number', 'Should have width');
+    assert.typeOf(event?.height, 'number', 'Should have height');
     assert.lengthOf(tableModifiedEvents, 1, 'Should have a table modified event');
     assert.isFalse(tableModifiedEvents[0].structure, 'Should not have structure modified');
     assert.isTrue(tableModifiedEvents[0].style, 'Should have style modified');
@@ -327,9 +327,11 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
       const firstColWidth = widths.colWidthsAfter[0];
       const lastColWidth = widths.colWidthsAfter[1];
       // Note: Use 96px as the padding + borders are about 14px which adds up to ~110px per cell
-      assert.approximately(firstColWidth.raw, 96, pixelDiffThreshold, `First column raw width ${firstColWidth.raw + firstColWidth.unit} should be ~96px`);
+      const rawFirstColWidth = firstColWidth.raw ?? 0;
+      assert.approximately(rawFirstColWidth, 96, pixelDiffThreshold, `First column raw width ${rawFirstColWidth + String(firstColWidth.unit)} should be ~96px`);
       assert.equal(firstColWidth.unit, 'px', 'First column unit width');
-      assert.approximately(lastColWidth.raw, 96, pixelDiffThreshold, `Last column raw width ${lastColWidth.raw + lastColWidth.unit} should be ~96px`);
+      const rawLastColWidth = lastColWidth.raw ?? 0;
+      assert.approximately(rawLastColWidth, 96, pixelDiffThreshold, `Last column raw width ${rawLastColWidth + String(lastColWidth.unit)} should be ~96px`);
       assert.equal(lastColWidth.unit, 'px', 'Last column unit width');
     });
   });
@@ -365,12 +367,13 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
       assertEventData(lastObjectResizedEvent, 'objectresized');
       const lastColWidth = widths.colWidthsAfter[1];
       // Note: Use 106px as the padding + borders are about 14px
-      assert.approximately(lastColWidth.raw, 106, pixelDiffThreshold, `Last column raw width ${lastColWidth.raw + lastColWidth.unit} should be ~106px`);
+      const rawLastColWidth = lastColWidth.raw ?? 0;
+      assert.approximately(rawLastColWidth, 106, pixelDiffThreshold, `Last column raw width ${rawLastColWidth + String(lastColWidth.unit)} should be ~106px`);
       assert.equal(lastColWidth.unit, 'px', 'Last column unit width');
       const firstColWidthBefore = widths.colWidthsBefore[0];
       const firstColWidthAfter = widths.colWidthsAfter[0];
       // Allow for a 1px variation here due to potential rounding issues
-      assert.approximately(firstColWidthAfter.px, firstColWidthBefore.px, 1, `First column raw width ${firstColWidthBefore.px + firstColWidthBefore.unit} should be unchanged`);
+      assert.approximately(firstColWidthAfter.px, firstColWidthBefore.px, 1, `First column raw width ${firstColWidthBefore.px + String(firstColWidthBefore.unit)} should be unchanged`);
       assert.equal(firstColWidthAfter.unit, 'px', 'First column unit width');
     });
   });
@@ -395,9 +398,11 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
       assertEventData(lastObjectResizedEvent, 'objectresized');
       const firstColWidth = widths.colWidthsAfter[0];
       const lastColWidth = widths.colWidthsAfter[1];
-      assert.approximately(firstColWidth.raw, 95, percentDiffThreshold, `First column raw width ${firstColWidth.raw + firstColWidth.unit} should be ~95%`);
+      const rawFirstColWidth = firstColWidth.raw ?? 0;
+      assert.approximately(rawFirstColWidth, 95, percentDiffThreshold, `First column raw width ${rawFirstColWidth + String(firstColWidth.unit)} should be ~95%`);
       assert.equal(firstColWidth.unit, '%', 'First column unit width');
-      assert.approximately(lastColWidth.raw, 5, percentDiffThreshold, `Last column raw width ${lastColWidth.raw + lastColWidth.unit} should be ~5%`);
+      const rawLastColWidth = lastColWidth.raw ?? 0;
+      assert.approximately(rawLastColWidth, 5, percentDiffThreshold, `Last column raw width ${rawLastColWidth + String(lastColWidth.unit)} should be ~5%`);
       assert.equal(lastColWidth.unit, '%', 'Last column unit width');
     });
   });

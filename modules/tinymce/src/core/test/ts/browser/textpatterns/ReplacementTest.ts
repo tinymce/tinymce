@@ -37,7 +37,7 @@ describe('browser.tinymce.core.textpatterns.ReplacementTest', () => {
     editor.insertContent('|');
     const content = editor.getContent();
     const normalizedContent = normalize ? content.replace(/&nbsp;/g, ' ') : content;
-    Assertions.assertHtml('Checking cursor', afterType, normalizedContent);
+    Assertions.assertHtml('Checking cursor', afterType ?? '', normalizedContent);
   };
 
   it('Apply html replacement pattern on space', () => {

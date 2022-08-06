@@ -29,7 +29,7 @@ describe('browser.tinymce.core.keyboard.BoundaryLocationTest', () => {
     return location;
   };
 
-  const createPosition = (elm, elementPath, offset) => {
+  const createPosition = (elm: SugarElement<Element>, elementPath: number[], offset: number) => {
     const container = Hierarchy.follow(elm, elementPath);
     return CaretPosition(container.getOrDie().dom, offset);
   };

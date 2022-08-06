@@ -6,29 +6,28 @@ import { Dialog } from '@ephox/bridge';
 import { Arr, Fun, Future, Optional, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 
-import { renderFormFieldWith, renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
-
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';
+import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
 import { formChangeEvent, formSubmitEvent } from '../general/FormEvents';
 
 export type Validator = (v: string) => true | string;
 
 export interface TextField {
-  multiline: boolean;
-  name: string;
-  classname: string;
-  flex: boolean;
-  label: Optional<string>;
-  inputMode: Optional<string>;
-  placeholder: Optional<string>;
-  disabled: boolean;
-  validation: Optional<{
-    validator: Validator;
-    validateOnLoad?: boolean;
+  readonly multiline: boolean;
+  readonly name: string;
+  readonly classname: string;
+  readonly flex: boolean;
+  readonly label: Optional<string>;
+  readonly inputMode: Optional<string>;
+  readonly placeholder: Optional<string>;
+  readonly disabled: boolean;
+  readonly validation: Optional<{
+    readonly validator: Validator;
+    readonly validateOnLoad?: boolean;
   }>;
-  maximized: boolean;
-  data: Optional<string>;
+  readonly maximized: boolean;
+  readonly data: Optional<string>;
 }
 
 type InputSpec = Omit<Dialog.Input, 'type'>;
@@ -37,7 +36,7 @@ type TextAreaSpec = Omit<Dialog.TextArea, 'type'>;
 const renderTextField = (spec: TextField, providersBackstage: UiFactoryBackstageProviders) => {
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
-  const baseInputBehaviours = [
+  const baseInputBehaviours: Behaviour.NamedConfiguredBehaviour<any, any, any>[] = [
     Disabling.config({
       disabled: () => spec.disabled || providersBackstage.isDisabled()
     }),
@@ -91,7 +90,7 @@ const renderTextField = (spec: TextField, providersBackstage: UiFactoryBackstage
     inputAttributes,
     inputClasses: [ spec.classname ],
     inputBehaviours: Behaviour.derive(
-      Arr.flatten<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>([
+      Arr.flatten([
         baseInputBehaviours,
         validatingBehaviours
       ])

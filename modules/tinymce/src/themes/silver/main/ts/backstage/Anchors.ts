@@ -6,6 +6,13 @@ import Editor from 'tinymce/core/api/Editor';
 
 import { useFixedContainer } from '../api/Options';
 
+export interface UiFactoryBackstageAnchors {
+  readonly inlineDialog: () => HotspotAnchorSpec | NodeAnchorSpec;
+  readonly banner: () => HotspotAnchorSpec | NodeAnchorSpec;
+  readonly cursor: () => SelectionAnchorSpec;
+  readonly node: (elem: Optional<SugarElement>) => NodeAnchorSpec;
+}
+
 const bubbleAlignments = {
   valignCentre: [],
   alignCentre: [],
@@ -17,7 +24,7 @@ const bubbleAlignments = {
   top: []
 };
 
-const getInlineDialogAnchor = (contentAreaElement: () => SugarElement, lazyAnchorbar: () => AlloyComponent, lazyUseEditableAreaAnchor: () => boolean): () => HotspotAnchorSpec | NodeAnchorSpec => {
+const getInlineDialogAnchor = (contentAreaElement: () => SugarElement<HTMLElement>, lazyAnchorbar: () => AlloyComponent, lazyUseEditableAreaAnchor: () => boolean): () => HotspotAnchorSpec | NodeAnchorSpec => {
   const bubbleSize = 12;
   const overrides = {
     maxHeightFunction: MaxHeight.expandable()
@@ -25,7 +32,7 @@ const getInlineDialogAnchor = (contentAreaElement: () => SugarElement, lazyAncho
 
   const editableAreaAnchor = (): NodeAnchorSpec => ({
     type: 'node',
-    root: SugarShadowDom.getContentContainer(contentAreaElement()),
+    root: SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(contentAreaElement())),
     node: Optional.from(contentAreaElement()),
     bubble: Bubble.nu(bubbleSize, bubbleSize, bubbleAlignments),
     layouts: {
@@ -49,10 +56,10 @@ const getInlineDialogAnchor = (contentAreaElement: () => SugarElement, lazyAncho
   return () => lazyUseEditableAreaAnchor() ? editableAreaAnchor() : standardAnchor();
 };
 
-const getBannerAnchor = (contentAreaElement: () => SugarElement, lazyAnchorbar: () => AlloyComponent, lazyUseEditableAreaAnchor: () => boolean): () => HotspotAnchorSpec | NodeAnchorSpec => {
+const getBannerAnchor = (contentAreaElement: () => SugarElement<HTMLElement>, lazyAnchorbar: () => AlloyComponent, lazyUseEditableAreaAnchor: () => boolean): () => HotspotAnchorSpec | NodeAnchorSpec => {
   const editableAreaAnchor = (): NodeAnchorSpec => ({
     type: 'node',
-    root: SugarShadowDom.getContentContainer(contentAreaElement()),
+    root: SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(contentAreaElement())),
     node: Optional.from(contentAreaElement()),
     layouts: {
       onRtl: () => [ LayoutInset.north ],
@@ -72,7 +79,7 @@ const getBannerAnchor = (contentAreaElement: () => SugarElement, lazyAnchorbar: 
   return () => lazyUseEditableAreaAnchor() ? editableAreaAnchor() : standardAnchor();
 };
 
-const getCursorAnchor = (editor: Editor, bodyElement: () => SugarElement) => (): SelectionAnchorSpec => ({
+const getCursorAnchor = (editor: Editor, bodyElement: () => SugarElement<HTMLElement>) => (): SelectionAnchorSpec => ({
   type: 'selection',
   root: bodyElement(),
   getSelection: () => {
@@ -83,16 +90,16 @@ const getCursorAnchor = (editor: Editor, bodyElement: () => SugarElement) => ():
   }
 });
 
-const getNodeAnchor = (bodyElement) => (element: Optional<SugarElement>): NodeAnchorSpec => ({
+const getNodeAnchor = (bodyElement: () => SugarElement<HTMLElement>) => (element: Optional<SugarElement<HTMLElement>>): NodeAnchorSpec => ({
   type: 'node',
   root: bodyElement(),
   node: element
 });
 
-const getAnchors = (editor: Editor, lazyAnchorbar: () => AlloyComponent, isToolbarTop: () => boolean) => {
-  const useFixedToolbarContainer: boolean = useFixedContainer(editor);
-  const bodyElement = (): SugarElement => SugarElement.fromDom(editor.getBody());
-  const contentAreaElement = (): SugarElement => SugarElement.fromDom(editor.getContentAreaContainer());
+const getAnchors = (editor: Editor, lazyAnchorbar: () => AlloyComponent, isToolbarTop: () => boolean): UiFactoryBackstageAnchors => {
+  const useFixedToolbarContainer = useFixedContainer(editor);
+  const bodyElement = (): SugarElement<HTMLElement> => SugarElement.fromDom(editor.getBody());
+  const contentAreaElement = (): SugarElement<HTMLElement> => SugarElement.fromDom(editor.getContentAreaContainer());
 
   // If using fixed_toolbar_container or if the toolbar is positioned at the bottom
   // of the editor, some things should anchor to the top of the editable area.

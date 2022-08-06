@@ -31,7 +31,7 @@ const isCaretContainer = (node: Node | null | undefined): boolean =>
 const hasContent = (node: Node): boolean =>
   node.firstChild !== node.lastChild || !NodeType.isBr(node.firstChild);
 
-const insertInline = (node: Node, before: boolean): Node => {
+const insertInline = (node: Node, before: boolean): Text => {
   const doc = node.ownerDocument ?? document;
   const textNode = doc.createTextNode(Zwsp.ZWSP);
   const parentNode = node.parentNode;
@@ -84,7 +84,7 @@ const prependInline = (node: Node | null): Node | null => {
   }
 };
 
-const appendInline = (node: Node | null): Node | null => {
+const appendInline = (node: Node | null): Text | null => {
   if (NodeType.isText(node)) {
     const data = node.data;
     if (data.length > 0 && data.charAt(data.length - 1) !== Zwsp.ZWSP) {

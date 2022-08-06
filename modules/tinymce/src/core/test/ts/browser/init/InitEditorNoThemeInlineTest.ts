@@ -11,7 +11,7 @@ describe('browser.tinymce.core.init.InitEditorNoThemeInlineTest', () => {
     theme: false,
     inline: true,
     base_url: '/project/tinymce/js/tinymce',
-    init_instance_callback: (editor) => {
+    init_instance_callback: (editor: Editor) => {
       editor.dispatch('SkinLoaded');
     }
   }, []);

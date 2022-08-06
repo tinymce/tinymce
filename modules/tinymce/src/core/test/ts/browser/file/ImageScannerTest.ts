@@ -16,7 +16,7 @@ describe('browser.tinymce.core.file.ImageScannerTest', () => {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100"><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"></svg>`;
   const encodedSrc = 'data:image/svg+xml,' + encodeURIComponent(svg);
   const invalidBlobUriSrc = 'blob:70BE8432-BA4D-4787-9AB9-86563351FBF7';
-  let blobUriSrc;
+  let blobUriSrc: string | undefined;
 
   before(() => {
     return Conversions.uriToBlob(base64Src).then((blob) => {
@@ -43,7 +43,7 @@ describe('browser.tinymce.core.file.ImageScannerTest', () => {
       const encodedImageResult = result[2] as BlobInfoImagePair;
       assert.typeOf(result[result.length - 1], 'string', 'Last item is not the image, but error message.');
       assert.equal('data:image/gif;base64,' + base64ImageResult.blobInfo.base64(), base64Src);
-      LegacyUnit.equalDom(base64ImageResult.image, viewBlock.get().firstChild);
+      LegacyUnit.equalDom(base64ImageResult.image, viewBlock.get().firstChild as HTMLImageElement);
       assert.equal('data:image/svg+xml;base64,' + encodedImageResult.blobInfo.base64(), 'data:image/svg+xml;base64,' + btoa(svg));
       LegacyUnit.equalDom(encodedImageResult.image, viewBlock.get().childNodes.item(2));
     });
@@ -65,7 +65,7 @@ describe('browser.tinymce.core.file.ImageScannerTest', () => {
       assert.lengthOf(result, 1);
       const firstResult = result[0] as BlobInfoImagePair;
       assert.equal('data:image/gif;base64,' + firstResult.blobInfo.base64(), base64Src);
-      LegacyUnit.equalDom(firstResult.image, viewBlock.get().firstChild);
+      LegacyUnit.equalDom(firstResult.image, viewBlock.get().firstChild as HTMLImageElement);
     });
   });
 });

@@ -1,5 +1,5 @@
 import {
-  AlloyComponent, Behaviour, Container, DomFactory, Memento, MementoRecord, ModalDialog, Reflecting, SimpleSpec, SketchSpec
+  AlloyComponent, AlloyParts, Behaviour, Container, DomFactory, Memento, MementoRecord, ModalDialog, Reflecting, SimpleSpec, SketchSpec
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
@@ -15,7 +15,7 @@ export interface DialogMemButton {
 }
 
 export interface WindowFooterSpec {
-  buttons: Dialog.DialogFooterButton[];
+  readonly buttons: Dialog.DialogFooterButton[];
 }
 
 export interface FooterState {
@@ -30,7 +30,7 @@ const lookup = (compInSystem: AlloyComponent, footerButtons: DialogMemButton[], 
   Arr.find(footerButtons, (button) => button.name === buttonName)
     .bind((memButton) => memButton.memento.getOpt(compInSystem));
 
-const renderComponents = (_data: WindowFooterSpec, state: Optional<FooterState>) => {
+const renderComponents = (_data: WindowFooterSpec, state: Optional<FooterState>): SketchSpec[] => {
   // default group is 'end'
   const footerButtons = state.map((s) => s.footerButtons).getOr([ ]);
   const buttonGroups = Arr.partition(footerButtons, (button) => button.align === 'start');
@@ -82,12 +82,11 @@ const renderFooter = (initSpec: WindowFooterSpec, dialogId: string, backstage: U
   };
 };
 
-const renderInlineFooter = (initSpec: WindowFooterSpec, dialogId: string, backstage: UiFactoryBackstage) =>
+const renderInlineFooter = (initSpec: WindowFooterSpec, dialogId: string, backstage: UiFactoryBackstage): SimpleSpec =>
   renderFooter(initSpec, dialogId, backstage);
 
-const renderModalFooter = (initSpec: WindowFooterSpec, dialogId: string, backstage: UiFactoryBackstage) => ModalDialog.parts.footer(
-  renderFooter(initSpec, dialogId, backstage)
-);
+const renderModalFooter = (initSpec: WindowFooterSpec, dialogId: string, backstage: UiFactoryBackstage): AlloyParts.ConfiguredPart =>
+  ModalDialog.parts.footer(renderFooter(initSpec, dialogId, backstage));
 
 export {
   renderInlineFooter,

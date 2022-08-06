@@ -8,8 +8,11 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
+import { BeforeSetContentEvent, SaveContentEvent, SetContentEvent } from 'tinymce/core/api/EventTypes';
 import PluginManager from 'tinymce/core/api/PluginManager';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import URI from 'tinymce/core/api/util/URI';
+import { UndoLevel } from 'tinymce/core/undo/UndoManagerTypes';
 
 import * as HtmlUtils from '../module/test/HtmlUtils';
 
@@ -30,7 +33,8 @@ describe('browser.tinymce.core.EditorTest', () => {
 
   it('TBA: Event: change', () => {
     const editor = hook.editor();
-    let level, lastLevel;
+    let level: UndoLevel | undefined;
+    let lastLevel: UndoLevel | undefined;
 
     editor.on('change', (e) => {
       level = e.level;
@@ -39,8 +43,8 @@ describe('browser.tinymce.core.EditorTest', () => {
 
     editor.setContent('');
     editor.insertContent('a');
-    assert.equal(level.content.toLowerCase(), '<p>a</p>', 'Event: change');
-    assert.equal(lastLevel.content, editor.undoManager.data[0].content, 'Event: change');
+    assert.equal(level?.content.toLowerCase(), '<p>a</p>', 'Event: change');
+    assert.equal(lastLevel?.content, editor.undoManager.data[0].content, 'Event: change');
 
     editor.off('change');
   });
@@ -168,9 +172,9 @@ describe('browser.tinymce.core.EditorTest', () => {
 
   it('TBA: setContent', () => {
     const editor = hook.editor();
-    let count;
+    let count: number;
 
-    const callback = (e) => {
+    const callback = (e: EditorEvent<SetContentEvent | BeforeSetContentEvent>) => {
       e.content = e.content.replace(/test/, 'X');
       count++;
     };
@@ -214,7 +218,7 @@ describe('browser.tinymce.core.EditorTest', () => {
 
   it('TBA: show/hide/isHidden and events', () => {
     const editor = hook.editor();
-    let lastEvent;
+    let lastEvent: EditorEvent<{}> | undefined;
 
     editor.on('show hide', (e) => {
       lastEvent = e;
@@ -224,24 +228,25 @@ describe('browser.tinymce.core.EditorTest', () => {
 
     editor.hide();
     assert.isTrue(editor.isHidden(), 'After hide isHidden state');
-    assert.equal('hide', lastEvent.type, 'show/hide/isHidden and events');
+    assert.equal(lastEvent?.type, 'hide', 'show/hide/isHidden and events');
 
-    lastEvent = null;
+    lastEvent = undefined;
     editor.hide();
-    assert.isNull(lastEvent, 'show/hide/isHidden and events');
+    assert.isUndefined(lastEvent, 'show/hide/isHidden and events');
 
     editor.show();
     assert.isFalse(editor.isHidden(), 'After show isHidden state');
-    assert.equal(lastEvent.type, 'show', 'show/hide/isHidden and events');
+    assert.equal((lastEvent as unknown as EditorEvent<{}>).type, 'show', 'show/hide/isHidden and events');
 
-    lastEvent = null;
+    lastEvent = undefined;
     editor.show();
-    assert.isNull(lastEvent, 'show/hide/isHidden and events');
+    assert.isUndefined(lastEvent, 'show/hide/isHidden and events');
   });
 
   it('TBA: hide save content and hidden state while saving', () => {
     const editor = hook.editor();
-    let lastEvent, hiddenStateWhileSaving;
+    let lastEvent: EditorEvent<SaveContentEvent> | undefined;
+    let hiddenStateWhileSaving: boolean | undefined;
 
     editor.on('SaveContent', (e) => {
       lastEvent = e;
@@ -253,7 +258,7 @@ describe('browser.tinymce.core.EditorTest', () => {
 
     const elm: any = document.getElementById(editor.id);
     assert.isFalse(hiddenStateWhileSaving, 'False isHidden state while saving');
-    assert.equal(lastEvent.content, '<p>xyz</p>', 'hide save content and hidden state while saving');
+    assert.equal(lastEvent?.content, '<p>xyz</p>', 'hide save content and hidden state while saving');
     assert.equal(elm.value, '<p>xyz</p>', 'hide save content and hidden state while saving');
 
     editor.show();
@@ -278,9 +283,10 @@ describe('browser.tinymce.core.EditorTest', () => {
   it('TBA: addCommand', () => {
     const editor = hook.editor();
     const scope = {};
-    let lastScope, lastArgs;
+    let lastScope: {} | undefined;
+    let lastArgs: IArguments | undefined;
 
-    const callback = function () { // Arrow function cannot be used with 'arguments'.
+    const callback = function (this: {}) { // Arrow function cannot be used with 'arguments'.
       // eslint-disable-next-line
       lastScope = this;
       lastArgs = arguments;
@@ -290,22 +296,23 @@ describe('browser.tinymce.core.EditorTest', () => {
     editor.addCommand('CustomCommand2', callback);
 
     editor.execCommand('CustomCommand1', false, 'value');
-    assert.isFalse(lastArgs[0], 'ui');
-    assert.equal(lastArgs[1], 'value', 'value');
+    assert.isFalse(lastArgs?.[0], 'ui');
+    assert.equal(lastArgs?.[1], 'value', 'value');
     assert.strictEqual(lastScope, scope, 'scope');
 
     editor.execCommand('CustomCommand2');
-    assert.isFalse(lastArgs[0], 'ui');
-    assert.isUndefined(lastArgs[1], 'value');
+    assert.isFalse(lastArgs?.[0], 'ui');
+    assert.isUndefined(lastArgs?.[1], 'value');
     assert.strictEqual(lastScope, editor, 'scope');
   });
 
   it('TBA: addQueryStateHandler', () => {
     const editor = hook.editor();
     const scope = {};
-    let lastScope, currentState;
+    let lastScope: {} | undefined;
+    let currentState: boolean;
 
-    const callback = function () { // Arrow function cannot be used with 'this'.
+    const callback = function (this: {}) { // Arrow function cannot be used with 'this'.
       // eslint-disable-next-line
       lastScope = this;
       return currentState;
@@ -347,9 +354,10 @@ describe('browser.tinymce.core.EditorTest', () => {
   it('TBA: addQueryValueHandler', () => {
     const editor = hook.editor();
     const scope = {};
-    let lastScope, currentValue;
+    let lastScope: {} | undefined;
+    let currentValue: string;
 
-    const callback = function () { // Arrow function cannot be used with 'this'.
+    const callback = function (this: {}) { // Arrow function cannot be used with 'this'.
       // eslint-disable-next-line
       lastScope = this;
       return currentValue;
@@ -369,27 +377,27 @@ describe('browser.tinymce.core.EditorTest', () => {
 
   it('TBA: setDirty/isDirty', () => {
     const editor = hook.editor();
-    let lastArgs = null;
+    let lastArgs: EditorEvent<{}> | undefined;
 
     editor.on('dirty', (e) => {
       lastArgs = e;
     });
 
     editor.setDirty(false);
-    assert.isNull(lastArgs, 'setDirty/isDirty');
+    assert.isUndefined(lastArgs, 'setDirty/isDirty');
     assert.isFalse(editor.isDirty(), 'setDirty/isDirty');
 
     editor.setDirty(true);
-    assert.equal(lastArgs.type, 'dirty', 'setDirty/isDirty');
+    assert.equal(lastArgs?.type, 'dirty', 'setDirty/isDirty');
     assert.isTrue( editor.isDirty(), 'setDirty/isDirty');
 
-    lastArgs = null;
+    lastArgs = undefined;
     editor.setDirty(true);
-    assert.isNull(lastArgs, 'setDirty/isDirty');
+    assert.isUndefined(lastArgs, 'setDirty/isDirty');
     assert.isTrue(editor.isDirty(), 'setDirty/isDirty');
 
     editor.setDirty(false);
-    assert.isNull(lastArgs, 'setDirty/isDirty');
+    assert.isUndefined(lastArgs, 'setDirty/isDirty');
     assert.isFalse(editor.isDirty(), 'setDirty/isDirty');
   });
 
@@ -397,7 +405,7 @@ describe('browser.tinymce.core.EditorTest', () => {
     const editor = hook.editor();
     let clickCount = 0;
 
-    const isDisabled = (selector) => {
+    const isDisabled = (selector: string) => {
       const elm = UiFinder.findIn(SugarBody.body(), selector);
       return elm.forall((elm) => Attribute.has(elm, 'disabled') || Class.has(elm, 'tox-tbtn--disabled'));
     };
@@ -466,7 +474,7 @@ describe('browser.tinymce.core.EditorTest', () => {
     editor.focus();
     assert.isTrue(editor.hasFocus(), 'hasFocus');
 
-    input.parentNode.removeChild(input);
+    input.parentNode?.removeChild(input);
   });
 
   it('TINY-6946: Images should be properly cleaned up if they contain invalid trailing data', () => {

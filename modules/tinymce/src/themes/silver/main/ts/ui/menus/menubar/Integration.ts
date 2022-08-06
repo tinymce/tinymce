@@ -1,8 +1,9 @@
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr, Obj, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
+import { Menu } from 'tinymce/core/api/ui/Ui';
 
-import { getRemovedMenuItems } from '../../../api/Options';
+import * as Options from '../../../api/Options';
 import { MenubarItemSpec } from './SilverMenubar';
 
 interface MenuSpec {
@@ -11,9 +12,9 @@ interface MenuSpec {
 }
 
 export interface MenuRegistry {
-  menuItems: Record<string, any>;
-  menubar: string | boolean;
-  menus: Record<string, MenuSpec>;
+  readonly menuItems: Record<string, Menu.MenuItemSpec | Menu.NestedMenuItemSpec | Menu.ToggleMenuItemSpec>;
+  readonly menubar: string | boolean;
+  readonly menus: Record<string, MenuSpec>;
 }
 
 const defaultMenubar = 'file edit view insert format tools table help';
@@ -29,11 +30,11 @@ const defaultMenus: Record<string, MenuSpec> = {
   help: { title: 'Help', items: 'help' }
 };
 
-const make = (menu: {title: string; items: string[]}, registry: MenuRegistry, editor): MenubarItemSpec => {
-  const removedMenuItems = getRemovedMenuItems(editor).split(/[ ,]/);
+const make = (menu: {title: string; items: string[]}, registry: MenuRegistry, editor: Editor): MenubarItemSpec => {
+  const removedMenuItems = Options.getRemovedMenuItems(editor).split(/[ ,]/);
   return {
     text: menu.title,
-    getItems: () => Arr.bind(menu.items, (i) => {
+    getItems: () => Arr.bind(menu.items, (i): Menu.NestedMenuItemContents[] => {
       const itemName = i.toLowerCase();
       if (itemName.trim().length === 0) {
         return [ ];
@@ -53,10 +54,7 @@ const make = (menu: {title: string; items: string[]}, registry: MenuRegistry, ed
 };
 
 const parseItemsString = (items: string): string[] => {
-  if (typeof items === 'string') {
-    return items.split(' ');
-  }
-  return items;
+  return items.split(' ');
 };
 
 const identifyMenus = (editor: Editor, registry: MenuRegistry): MenubarItemSpec[] => {
@@ -80,7 +78,7 @@ const identifyMenus = (editor: Editor, registry: MenuRegistry): MenubarItemSpec[
 
   return Arr.filter(menus, (menu) => {
     // Filter out menus that have no items, or only separators
-    const isNotSeparator = (item) => item.type !== 'separator';
+    const isNotSeparator = (item: Menu.NestedMenuItemContents) => Type.isString(item) || item.type !== 'separator';
     return menu.getItems().length > 0 && Arr.exists(menu.getItems(), isNotSeparator);
   });
 };

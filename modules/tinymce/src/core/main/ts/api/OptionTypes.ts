@@ -25,7 +25,7 @@ export type ThemeInitFunc = (editor: Editor, elm: HTMLElement) => {
 
 export type SetupCallback = (editor: Editor) => void;
 
-export type FilePickerCallback = (callback: Function, value: any, meta: Record<string, any>) => void;
+export type FilePickerCallback = (callback: (value: string, meta?: Record<string, any>) => void, value: string, meta: Record<string, any>) => void;
 export type FilePickerValidationStatus = 'valid' | 'unknown' | 'invalid' | 'none';
 export type FilePickerValidationCallback = (info: { type: string; url: string }, callback: (validation: { status: FilePickerValidationStatus; message: string }) => void) => void;
 
@@ -41,6 +41,7 @@ export interface ToolbarGroup {
 }
 
 export type ToolbarMode = 'floating' | 'sliding' | 'scrolling' | 'wrap';
+export type ToolbarLocation = 'top' | 'bottom' | 'auto';
 
 interface BaseEditorOptions {
   a11y_advanced_options?: boolean;
@@ -85,6 +86,7 @@ interface BaseEditorOptions {
   directionality?: 'ltr' | 'rtl';
   doctype?: string;
   document_base_url?: string;
+  draggable_modal?: boolean;
   editable_class?: string;
   element_format?: 'xhtml' | 'html';
   elementpath?: boolean;
@@ -206,6 +208,7 @@ interface BaseEditorOptions {
   toolbar7?: string;
   toolbar8?: string;
   toolbar9?: string;
+  toolbar_location?: ToolbarLocation;
   toolbar_mode?: ToolbarMode;
   toolbar_sticky?: boolean;
   toolbar_sticky_offset?: number;
@@ -248,18 +251,27 @@ export interface NormalizedEditorOptions extends BaseEditorOptions {
 }
 
 export interface EditorOptions extends NormalizedEditorOptions {
+  anchor_bottom: string;
+  anchor_top: string;
+  block_formats: string;
   br_newline_selector: string;
+  color_cols: number;
   content_css: string[];
   contextmenu: string[];
+  custom_colors: boolean;
   document_base_url: string;
+  draggable_modal: boolean;
   editable_class: string;
   font_css: string[];
+  font_family_formats: string;
   font_size_classes: string;
+  font_size_formats: string;
   font_size_legacy_values: string;
   font_size_style_values: string;
   forced_root_block: string;
   forced_root_block_attrs: Record<string, string>;
   format_noneditable_selector: string;
+  height: number | string;
   iframe_attrs: Record<string, string>;
   images_file_types: string;
   images_upload_base_path: string;
@@ -272,16 +284,28 @@ export interface EditorOptions extends NormalizedEditorOptions {
   language: string;
   language_load: boolean;
   language_url: string;
+  line_height_formats: string;
+  menu: Record<string, { title: string; items: string }>;
+  menubar: boolean | string;
   model: string;
   no_newline_selector: string;
   noneditable_class: string;
   noneditable_regexp: RegExp[];
   object_resizing: string;
+  paste_as_text: boolean;
   preview_styles: string;
   readonly: boolean;
+  removed_menuitems: string;
+  toolbar: boolean | string | string[] | Array<ToolbarGroup>;
+  toolbar_location: ToolbarLocation;
+  toolbar_mode: ToolbarMode;
+  toolbar_persist: boolean;
+  toolbar_sticky: boolean;
+  toolbar_sticky_offset: number;
   text_patterns: Pattern[];
   text_patterns_lookup: DynamicPatternsLookup;
   visual: boolean;
   visual_anchor_class: string;
   visual_table_class: string;
+  width: number | string;
 }

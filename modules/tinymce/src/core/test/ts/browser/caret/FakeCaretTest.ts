@@ -38,7 +38,7 @@ describe('browser.tinymce.core.caret.FakeCaretTest', () => {
   it('show/hide (before, block)', () => {
     Html.set(getRoot(), '<div>a</div>');
 
-    const rng = fakeCaret.show(true, SelectorFind.descendant(getRoot(), 'div').getOrDie().dom);
+    const rng = fakeCaret.show(true, SelectorFind.descendant(getRoot(), 'div').getOrDie().dom) as Range;
     const fakeCaretElm = Traverse.children(getRoot())[0] as SugarElement<HTMLElement>;
 
     assert.equal(SugarNode.name(fakeCaretElm), 'p');
@@ -52,7 +52,7 @@ describe('browser.tinymce.core.caret.FakeCaretTest', () => {
   it('show/hide (after, block)', () => {
     Html.set(getRoot(), '<div>a</div>');
 
-    const rng = fakeCaret.show(false, SelectorFind.descendant(getRoot(), 'div').getOrDie().dom);
+    const rng = fakeCaret.show(false, SelectorFind.descendant(getRoot(), 'div').getOrDie().dom) as Range;
     const fakeCaretElm = Traverse.children(getRoot())[1] as SugarElement<HTMLElement>;
 
     assert.equal(SugarNode.name(fakeCaretElm), 'p');
@@ -66,7 +66,7 @@ describe('browser.tinymce.core.caret.FakeCaretTest', () => {
   it('show/hide (before, inline)', () => {
     Html.set(getRoot(), '<span>a</span>');
 
-    const rng = fakeCaret.show(true, SelectorFind.descendant(getRoot(), 'span').getOrDie().dom);
+    const rng = fakeCaret.show(true, SelectorFind.descendant(getRoot(), 'span').getOrDie().dom) as Range;
     const fakeCaretText = Traverse.children(getRoot());
 
     assert.equal(SugarNode.name(fakeCaretText[0]), '#text');
@@ -80,7 +80,7 @@ describe('browser.tinymce.core.caret.FakeCaretTest', () => {
   it('show/hide (after, inline)', () => {
     Html.set(getRoot(), '<span>a</span>');
 
-    const rng = fakeCaret.show(false, SelectorFind.descendant(getRoot(), 'span').getOrDie().dom);
+    const rng = fakeCaret.show(false, SelectorFind.descendant(getRoot(), 'span').getOrDie().dom) as Range;
     const fakeCaretText = Traverse.children(getRoot());
 
     assert.equal(SugarNode.name(fakeCaretText[1]), '#text');

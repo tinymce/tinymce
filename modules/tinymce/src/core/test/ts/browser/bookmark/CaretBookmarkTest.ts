@@ -17,6 +17,9 @@ describe('browser.tinymce.core.CaretBookmarkTest', () => {
     return CaretPosition(textNode, offset);
   };
 
+  const getElement = (id: string): HTMLElement =>
+    document.getElementById(id) as HTMLElement;
+
   it('create element index', () => {
     setupHtml('<b></b><i></i><b></b>');
     assert.equal(CaretBookmark.create(getRoot(), CaretPosition.before(getRoot().childNodes[0])), 'b[0],before');
@@ -50,37 +53,37 @@ describe('browser.tinymce.core.CaretBookmarkTest', () => {
 
   it('create br element index', () => {
     setupHtml('<p><br data-mce-bogus="1"></p><p><br></p>');
-    assert.equal(CaretBookmark.create(getRoot(), CaretPosition.before(getRoot().firstChild.firstChild)), 'p[0]/br[0],before');
-    assert.equal(CaretBookmark.create(getRoot(), CaretPosition.before(getRoot().lastChild.firstChild)), 'p[1]/br[0],before');
+    assert.equal(CaretBookmark.create(getRoot(), CaretPosition.before(getRoot().firstChild?.firstChild as Node)), 'p[0]/br[0],before');
+    assert.equal(CaretBookmark.create(getRoot(), CaretPosition.before(getRoot().lastChild?.firstChild as Node)), 'p[1]/br[0],before');
   });
 
   it('create deep element index', () => {
     setupHtml('<p><span>a</span><span><b id="a"></b><b id="b"></b><b id="c"></b></span></p>');
-    assert.equal(CaretBookmark.create(getRoot(), CaretPosition.before(document.getElementById('a'))), 'p[0]/span[1]/b[0],before');
-    assert.equal(CaretBookmark.create(getRoot(), CaretPosition.before(document.getElementById('b'))), 'p[0]/span[1]/b[1],before');
-    assert.equal(CaretBookmark.create(getRoot(), CaretPosition.before(document.getElementById('c'))), 'p[0]/span[1]/b[2],before');
-    assert.equal(CaretBookmark.create(getRoot(), CaretPosition.after(document.getElementById('c'))), 'p[0]/span[1]/b[2],after');
+    assert.equal(CaretBookmark.create(getRoot(), CaretPosition.before(getElement('a'))), 'p[0]/span[1]/b[0],before');
+    assert.equal(CaretBookmark.create(getRoot(), CaretPosition.before(getElement('b'))), 'p[0]/span[1]/b[1],before');
+    assert.equal(CaretBookmark.create(getRoot(), CaretPosition.before(getElement('c'))), 'p[0]/span[1]/b[2],before');
+    assert.equal(CaretBookmark.create(getRoot(), CaretPosition.after(getElement('c'))), 'p[0]/span[1]/b[2],after');
   });
 
   it('create deep text index', () => {
     setupHtml('<p><span>a</span><span id="x">a<b></b>b<b></b>ccc</span></p>');
     assert.equal(
-      CaretBookmark.create(getRoot(), createTextPos(document.getElementById('x').childNodes[0], 0)),
+      CaretBookmark.create(getRoot(), createTextPos(getElement('x').childNodes[0], 0)),
       'p[0]/span[1]/text()[0],0'
     );
     assert.equal(
-      CaretBookmark.create(getRoot(), createTextPos(document.getElementById('x').childNodes[2], 1)),
+      CaretBookmark.create(getRoot(), createTextPos(getElement('x').childNodes[2], 1)),
       'p[0]/span[1]/text()[1],1'
     );
     assert.equal(
-      CaretBookmark.create(getRoot(), createTextPos(document.getElementById('x').childNodes[4], 3)),
+      CaretBookmark.create(getRoot(), createTextPos(getElement('x').childNodes[4], 3)),
       'p[0]/span[1]/text()[2],3'
     );
   });
 
   it('create element index from bogus', () => {
     setupHtml('<b></b><span data-mce-bogus="1"><b></b><span data-mce-bogus="1"><b></b><b></b></span></span>');
-    assert.equal(CaretBookmark.create(getRoot(), CaretPosition.before(getRoot().lastChild.lastChild.childNodes[1])), 'b[3],before');
+    assert.equal(CaretBookmark.create(getRoot(), CaretPosition.before(getRoot().lastChild?.lastChild?.childNodes[1] as Node)), 'b[3],before');
   });
 
   it('resolve element index', () => {
@@ -95,7 +98,7 @@ describe('browser.tinymce.core.CaretBookmarkTest', () => {
     setupHtml('<h-2X>abc</h-2X>');
     CaretAsserts.assertCaretPosition(
       CaretBookmark.resolve(getRoot(), 'h-2X[0]/text()[0],2'),
-      createTextPos(getRoot().childNodes[0].firstChild, 2)
+      createTextPos(getRoot().childNodes[0].firstChild as Text, 2)
     );
   });
 
@@ -103,19 +106,19 @@ describe('browser.tinymce.core.CaretBookmarkTest', () => {
     setupHtml('<p><span>a</span><span><b id="a"></b><b id="b"></b><b id="c"></b></span></p>');
     CaretAsserts.assertCaretPosition(
       CaretBookmark.resolve(getRoot(), 'p[0]/span[1]/b[0],before'),
-      CaretPosition.before(document.getElementById('a'))
+      CaretPosition.before(getElement('a'))
     );
     CaretAsserts.assertCaretPosition(
       CaretBookmark.resolve(getRoot(), 'p[0]/span[1]/b[1],before'),
-      CaretPosition.before(document.getElementById('b'))
+      CaretPosition.before(getElement('b'))
     );
     CaretAsserts.assertCaretPosition(
       CaretBookmark.resolve(getRoot(), 'p[0]/span[1]/b[2],before'),
-      CaretPosition.before(document.getElementById('c'))
+      CaretPosition.before(getElement('c'))
     );
     CaretAsserts.assertCaretPosition(
       CaretBookmark.resolve(getRoot(), 'p[0]/span[1]/b[2],after'),
-      CaretPosition.after(document.getElementById('c'))
+      CaretPosition.after(getElement('c'))
     );
   });
 

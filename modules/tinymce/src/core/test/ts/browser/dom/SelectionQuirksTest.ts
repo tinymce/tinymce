@@ -30,8 +30,8 @@ describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
     editor.setContent('<p>a<img src="about:blank" style="float: right"></p>');
     TinySelections.setSelection(editor, [ 0 ], 1, [ 0 ], 2);
     const selection = editor.selection.getSel();
-    assert.equal(selection.anchorNode.nodeName, 'P', 'Anchor node should be the paragraph not the text node');
-    assert.equal(selection.anchorOffset, 1, 'Anchor offset should be the element index');
+    assert.equal(selection?.anchorNode?.nodeName, 'P', 'Anchor node should be the paragraph not the text node');
+    assert.equal(selection?.anchorOffset, 1, 'Anchor offset should be the element index');
   });
 
   it('Normalize on key events when range is collapsed', () => {

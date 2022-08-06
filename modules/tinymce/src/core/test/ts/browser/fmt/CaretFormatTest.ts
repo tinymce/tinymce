@@ -413,10 +413,10 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
 
   it('getParentCaretContainer', () => {
     const body = SugarElement.fromHtml('<div><span id="_mce_caret">a</span></div>');
-    const caret = SugarElement.fromDom(body.dom.firstChild);
+    const caret = SugarElement.fromDom(body.dom.firstChild as HTMLSpanElement);
 
-    Assertions.assertDomEq('Should be caret element on child', caret, SugarElement.fromDom(getParentCaretContainer(body.dom, caret.dom.firstChild)));
-    Assertions.assertDomEq('Should be caret element on self', caret, SugarElement.fromDom(getParentCaretContainer(body.dom, caret.dom)));
+    Assertions.assertDomEq('Should be caret element on child', caret, SugarElement.fromDom(getParentCaretContainer(body.dom, caret.dom.firstChild as Text) as Element));
+    Assertions.assertDomEq('Should be caret element on self', caret, SugarElement.fromDom(getParentCaretContainer(body.dom, caret.dom) as Element));
     assert.isNull(getParentCaretContainer(body.dom, SugarElement.fromTag('span').dom), 'Should not be caret element');
     assert.isNull(getParentCaretContainer(caret.dom, caret.dom), 'Should not be caret element');
   });
@@ -428,7 +428,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
       SugarElement.fromTag('i').dom
     ];
 
-    const pos = CaretFormat.replaceWithCaretFormat(body.dom.firstChild, formats);
+    const pos = CaretFormat.replaceWithCaretFormat(body.dom.firstChild as HTMLBRElement, formats);
 
     assert.equal(pos.offset(), 0, 'Should be at first offset');
     assert.equal((pos.container() as Text).data, Zwsp.ZWSP, 'Should the zwsp text node');

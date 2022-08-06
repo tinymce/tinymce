@@ -17,9 +17,9 @@ const charCodeToKeyCode = (charCode: number): number => {
 };
 
 const type = (editor: Editor, chr: string | number | Record<string, number | string | boolean>): void => {
-  let keyCode: number;
-  let charCode: number;
-  let evt: Record<string, any>;
+  let keyCode: number | undefined;
+  let charCode: number | undefined;
+  let evt: Record<string, any> | undefined;
   let offset: number;
 
   const fakeEvent = (target: Node, type: string, evt: Record<string, any>) => {
@@ -89,7 +89,7 @@ const type = (editor: Editor, chr: string | number | Record<string, number | str
         }
       }
 
-      editor.getDoc().execCommand('Delete', false, null);
+      editor.getDoc().execCommand('Delete');
     } else if (Type.isString(chr)) {
       const rng = editor.selection.getRng();
 

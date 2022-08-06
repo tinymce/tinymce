@@ -30,7 +30,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         let events: EditorEvent<SetContentEvent | GetContentEvent | BeforeSetContentEvent | BeforeGetContentEvent>[] = [];
         const hook = TinyHooks.bddSetupLight<Editor>({
           base_url: '/project/tinymce/js/tinymce',
-          setup: (editor) => {
+          setup: (editor: Editor) => {
             editor.on('BeforeGetContent GetContent BeforeSetContent SetContent', (e) => {
               events.push(e);
             });

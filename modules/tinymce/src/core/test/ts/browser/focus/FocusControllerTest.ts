@@ -74,7 +74,7 @@ describe('browser.tinymce.core.focus.FocusControllerTest', () => {
       it('isUIElement on editor sibling is false', () => {
         const editor = hook.editor();
         const inputElm = DOMUtils.DOM.create('input', { }, null);
-        editor.getContainer().parentNode.appendChild(inputElm);
+        editor.getContainer().parentNode?.appendChild(inputElm);
         assert.isFalse(FocusController.isUIElement(editor, inputElm), 'Should be false as not sitting inside editor');
         DOMUtils.DOM.remove(inputElm);
       });

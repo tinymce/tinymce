@@ -1,11 +1,15 @@
-declare let tinymce: any;
+import { Class, Insert, SelectorFind, SugarBody, SugarElement, Value } from '@ephox/sugar';
 
-export default () => {
-  const textarea = document.createElement('textarea');
-  textarea.innerHTML = '<p>Bolt</p>';
+import { TinyMCE } from 'tinymce/core/api/PublicApi';
 
-  textarea.classList.add('tinymce');
-  document.querySelector('#ephox-ui').appendChild(textarea);
+declare let tinymce: TinyMCE;
+
+export default (): void => {
+  const textarea = SugarElement.fromTag('textarea');
+  Value.set(textarea, '<p>Bolt</p>');
+  Class.add(textarea, 'tinymce');
+  const container = SelectorFind.descendant(SugarBody.body(), '#ephox-ui').getOrDie();
+  Insert.append(container, textarea);
 
   tinymce.init({
     // imagetools_cors_hosts: ["moxiecode.cachefly.net"],

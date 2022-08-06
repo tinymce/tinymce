@@ -16,7 +16,7 @@ export interface TableResizeHandler {
   readonly show: () => void;
 }
 
-const isTable = (node: Node) => Type.isNonNullable(node) && (node as Element).tagName === 'TABLE';
+const isTable = (node: Node) => Type.isNonNullable(node) && node.nodeName === 'TABLE';
 
 const barResizerPrefix = 'bar-';
 const isResizable = (elm: SugarElement<Element>) => Attribute.get(elm, 'data-mce-resize') !== 'false';

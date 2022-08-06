@@ -25,7 +25,7 @@ describe('browser.tinymce.core.annotate.AnnotationPersistenceTest', () => {
     McEditor.remove(editor);
   };
 
-  const settingsWithPersistence = {
+  const settingsWithPersistence: AnnotatorSettings = {
     persistent: true,
     decorate: (uid, data) => ({
       attributes: {
@@ -35,7 +35,7 @@ describe('browser.tinymce.core.annotate.AnnotationPersistenceTest', () => {
     })
   };
 
-  const settingsWithDefaultPersistence = {
+  const settingsWithDefaultPersistence: AnnotatorSettings = {
     decorate: (uid, data) => ({
       attributes: {
         'data-test-anything': data.anything
@@ -44,7 +44,7 @@ describe('browser.tinymce.core.annotate.AnnotationPersistenceTest', () => {
     })
   };
 
-  const settingsWithoutPersistence = {
+  const settingsWithoutPersistence: AnnotatorSettings = {
     persistent: false,
     decorate: (uid, data) => ({
       attributes: {

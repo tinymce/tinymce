@@ -3,7 +3,7 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import { insertNewLineAction, testBeforeInputEvent } from '../util/BeforeInputEventUtils';
+import { insertNewLineAction, testBeforeInputEvent } from '../../module/test/BeforeInputEventUtils';
 
 describe('browser.tinymce.core.delete.NewlineBeforeInputEventTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

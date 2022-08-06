@@ -29,7 +29,7 @@ describe('browser.tinymce.core.content.EditorContentNotInitializedTest', () => {
 
   const removeBodyElement = (editor: Editor) => {
     const body = editor.getBody();
-    body.parentNode.removeChild(body);
+    body.parentNode?.removeChild(body);
   };
 
   it('set content on editor without initializing it', () => {

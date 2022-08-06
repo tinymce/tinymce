@@ -1,15 +1,19 @@
 /* eslint-disable no-console */
-import Editor from 'tinymce/core/api/Editor';
+import { Global } from '@ephox/katamari';
 
-declare const window: any;
-declare let tinymce: any;
+import { Editor, TinyMCE } from 'tinymce/core/api/PublicApi';
+import CaretPosition from 'tinymce/core/caret/CaretPosition';
 
-export default () => {
+declare const tinymce: TinyMCE;
 
-  const paintClientRect = (rect, color, id) => {
-    const editor: Editor = tinymce.activeEditor;
+export default (): void => {
+
+  const isTextNode = (node: Node): node is Text =>
+    node.nodeType === 3;
+
+  const paintClientRect = (rect: DOMRect, color: string, id: string) => {
+    const editor = tinymce.activeEditor as Editor;
     const dom = editor.dom;
-    let rectDiv: HTMLElement;
     const viewPort = editor.dom.getViewPort();
 
     if (!rect) {
@@ -17,8 +21,7 @@ export default () => {
     }
 
     color = color || 'red';
-    id = id || color;
-    rectDiv = dom.get(id);
+    let rectDiv = dom.get(id || color);
 
     if (!rectDiv) {
       rectDiv = dom.add(editor.getBody(), 'div');
@@ -36,17 +39,17 @@ export default () => {
     });
   };
 
-  const paintClientRects = (rects, color) => {
-    tinymce.util.Tools.each(rects, (rect, index) => {
+  const paintClientRects = (rects: DOMRect[], color: string) => {
+    tinymce.each(rects, (rect, index) => {
       paintClientRect(rect, color, color + index);
     });
   };
 
-  const logPos = (caretPosition) => {
+  const logPos = (caretPosition: CaretPosition) => {
     const container = caretPosition.container(),
       offset = caretPosition.offset();
 
-    if (container.nodeType === 3) {
+    if (isTextNode(container)) {
       if (container.data[offset]) {
         console.log(container.data[offset]);
       } else {
@@ -57,9 +60,9 @@ export default () => {
     }
   };
 
-  window.paintClientRect = paintClientRect;
-  window.paintClientRects = paintClientRects;
-  window.logPos = logPos;
+  Global.paintClientRect = paintClientRect;
+  Global.paintClientRects = paintClientRects;
+  Global.logPos = logPos;
 
   tinymce.init({
     selector: 'textarea.tinymce',
@@ -82,6 +85,4 @@ export default () => {
     plugins: [ 'code' ],
     content_css: '../css/content_editable.css'
   });
-
-  window.tinymce = tinymce;
 };

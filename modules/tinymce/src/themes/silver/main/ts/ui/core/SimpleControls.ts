@@ -3,11 +3,11 @@ import Tools from 'tinymce/core/api/util/Tools';
 
 import { onActionExecCommand, onSetupFormatToggle } from './ControlUtils';
 
-const onActionToggleFormat = (editor: Editor, fmt: string) => () => {
+const onActionToggleFormat = (editor: Editor, fmt: string) => (): void => {
   editor.execCommand('mceToggleFormat', false, fmt);
 };
 
-const registerFormatButtons = (editor: Editor) => {
+const registerFormatButtons = (editor: Editor): void => {
   Tools.each([
     { name: 'bold', text: 'Bold', icon: 'bold' },
     { name: 'italic', text: 'Italic', icon: 'italic' },
@@ -35,7 +35,7 @@ const registerFormatButtons = (editor: Editor) => {
   }
 };
 
-const registerCommandButtons = (editor: Editor) => {
+const registerCommandButtons = (editor: Editor): void => {
   Tools.each([
     { name: 'cut', text: 'Cut', action: 'Cut', icon: 'cut' },
     { name: 'copy', text: 'Copy', action: 'Copy', icon: 'copy' },
@@ -57,7 +57,7 @@ const registerCommandButtons = (editor: Editor) => {
   });
 };
 
-const registerCommandToggleButtons = (editor: Editor) => {
+const registerCommandToggleButtons = (editor: Editor): void => {
   Tools.each([
     { name: 'blockquote', text: 'Blockquote', action: 'mceBlockQuote', icon: 'quote' }
   ], (btn) => {
@@ -70,13 +70,13 @@ const registerCommandToggleButtons = (editor: Editor) => {
   });
 };
 
-const registerButtons = (editor: Editor) => {
+const registerButtons = (editor: Editor): void => {
   registerFormatButtons(editor);
   registerCommandButtons(editor);
   registerCommandToggleButtons(editor);
 };
 
-const registerMenuItems = (editor: Editor) => {
+const registerMenuItems = (editor: Editor): void => {
   Tools.each([
     { name: 'bold', text: 'Bold', action: 'Bold', icon: 'bold', shortcut: 'Meta+B' },
     { name: 'italic', text: 'Italic', action: 'Italic', icon: 'italic', shortcut: 'Meta+I' },
@@ -108,7 +108,7 @@ const registerMenuItems = (editor: Editor) => {
   });
 };
 
-const register = (editor: Editor) => {
+const register = (editor: Editor): void => {
   registerButtons(editor);
   registerMenuItems(editor);
 };

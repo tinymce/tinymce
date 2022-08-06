@@ -5,15 +5,17 @@ import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { TableEventData } from 'tinymce/core/api/EventTypes';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
-type TableModifiedEvent = EditorEvent<TableEventData>;
+interface PartialTableModifiedEvent {
+  readonly type: string;
+  readonly structure: boolean;
+  readonly style: boolean;
+}
 
 interface MergeCellTest {
   readonly before: string;
   readonly after: string;
-  readonly expectedEvents: TableModifiedEvent[];
+  readonly expectedEvents: PartialTableModifiedEvent[];
 }
 
 describe('browser.tinymce.models.dom.table.command.MergeCellCommandTest', () => {
@@ -23,8 +25,8 @@ describe('browser.tinymce.models.dom.table.command.MergeCellCommandTest', () => 
     setup: (ed: Editor) => ed.on('TableModified', logModifiedEvent),
   }, []);
 
-  let modifiedEvents = [];
-  const logModifiedEvent = (event: TableModifiedEvent) => {
+  let modifiedEvents: PartialTableModifiedEvent[] = [];
+  const logModifiedEvent = (event: PartialTableModifiedEvent) => {
     modifiedEvents.push({
       type: event.type,
       structure: event.structure,
@@ -33,7 +35,7 @@ describe('browser.tinymce.models.dom.table.command.MergeCellCommandTest', () => 
   };
 
   const clearEvents = () => modifiedEvents = [];
-  const defaultEvent = { type: 'tablemodified', structure: true, style: false } as TableModifiedEvent;
+  const defaultEvent: PartialTableModifiedEvent = { type: 'tablemodified', structure: true, style: false };
 
   const testMerge = (editor: Editor, test: MergeCellTest) => {
     clearEvents();
@@ -49,7 +51,8 @@ describe('browser.tinymce.models.dom.table.command.MergeCellCommandTest', () => 
     return html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
   };
 
-  const getWidth = (elem: SugarElement<Element>) => Dimension.parse(Css.getRaw(elem, 'width').getOrDie(), [ 'relative' ]).getOrDie().value;
+  const getWidth = (elem: SugarElement<Element>) =>
+    Dimension.parse(Css.getRaw(elem, 'width').getOrDie(), [ 'relative' ]).getOrDie().value;
 
   it('TBA: Should merge all cells into one', () => {
     const editor = hook.editor();

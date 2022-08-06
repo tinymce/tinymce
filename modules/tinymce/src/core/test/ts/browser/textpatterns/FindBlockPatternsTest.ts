@@ -4,7 +4,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as BlockPattern from 'tinymce/core/textpatterns/core/BlockPattern';
-import { PatternSet } from 'tinymce/core/textpatterns/core/PatternTypes';
+import { DynamicPatternContext, PatternSet } from 'tinymce/core/textpatterns/core/PatternTypes';
 import { getParentBlock, resolveFromDynamicPatterns } from 'tinymce/core/textpatterns/utils/Utils';
 
 import { getPatternSetFor } from '../../module/test/TextPatternsUtils';
@@ -91,7 +91,7 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
         { start: '#####', format: 'h5' },
         { start: '' }
       ],
-      text_patterns_lookup: (_ctx) => [
+      text_patterns_lookup: (_ctx: DynamicPatternContext) => [
         { start: '####', format: 'h4' },
         { start: 'TBA', cmd: 'mceInsertContent', value: 'To be announced' },
         { start: '###', cmd: 'mceInsertContent', value: 'h3 heading' }

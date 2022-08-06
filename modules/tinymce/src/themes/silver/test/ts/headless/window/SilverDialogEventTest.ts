@@ -7,8 +7,8 @@ import { Fun, Optional, Result } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 
 import I18n from 'tinymce/core/api/util/I18n';
+import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderDialog } from 'tinymce/themes/silver/ui/window/SilverDialog';
-import { WindowExtra } from 'tinymce/themes/silver/ui/window/SilverDialogCommon';
 
 describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
   const hook = TestHelpers.GuiSetup.bddSetup(() =>
@@ -79,7 +79,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
       {
         redial: () => dialogSpec(store),
         closeWindow: () => store.adder('closeWindow')
-      } as WindowExtra<{}>,
+      },
       {
         shared: {
           getSink: () => Result.value(sink),
@@ -94,7 +94,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
         dialog: {
           isDraggableModal: Fun.never
         }
-      }
+      } as UiFactoryBackstage
     );
 
     dialog = dialogStuff.dialog;

@@ -11,7 +11,7 @@ import * as SimpleControls from './SimpleControls';
 import * as UndoRedo from './UndoRedo';
 import * as VisualAid from './VisualAid';
 
-const setup = (editor: Editor, backstage: UiFactoryBackstage) => {
+const setup = (editor: Editor, backstage: UiFactoryBackstage): void => {
   AlignmentButtons.register(editor);
   SimpleControls.register(editor);
   ComplexControls.register(editor, backstage);

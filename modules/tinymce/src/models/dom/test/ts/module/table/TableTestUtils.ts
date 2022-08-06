@@ -38,7 +38,7 @@ const getRawWidth = (editor: Editor, elm: HTMLElement): string => {
 const getWidths = (editor: Editor, elm: HTMLElement): WidthData => {
   const rawWidth = getRawWidth(editor, elm);
   const pxWidth = editor.dom.getStyle(elm, 'width', true);
-  const unit = rawWidth === '' ? null : /\d+(\.\d+)?(%|px)/.exec(rawWidth)[2];
+  const unit = /\d+(\.\d+)?(%|px)/.exec(rawWidth)?.[2] ?? null;
   return {
     raw: rawWidth === '' ? null : parseFloat(rawWidth),
     px: parseInt(pxWidth, 10),
@@ -53,7 +53,7 @@ const assertWidth = (editor: Editor, elm: HTMLElement, expectedWidth: number | n
   if (expectedWidth === null) {
     assert.isNull(widthData.raw, `${nodeName} width should not be set`);
   } else {
-    assert.approximately(widthData.raw, expectedWidth, 2, `${nodeName} width is ${expectedWidth} ~= ${widthData.raw}`);
+    assert.approximately(widthData.raw ?? -1, expectedWidth, 2, `${nodeName} width is ${expectedWidth} ~= ${widthData.raw}`);
   }
   assert.equal(widthData.unit, expectedUnit, `${nodeName} unit is ${expectedUnit}`);
 };
@@ -146,7 +146,7 @@ const selectWithKeyboard = (editor: Editor, cursorRange: Cursors.CursorPath, key
 const getSelectedCells = (editor: Editor): SugarElement<HTMLTableCellElement>[] =>
   SelectorFilter.descendants(TinyDom.body(editor), 'td[data-mce-selected],th[data-mce-selected]');
 
-const assertSelectedCells = (editor: Editor, expectedSelectedCells: string[], mapper: (cell: SugarElement<HTMLTableCellElement>) => string): void => {
+const assertSelectedCells = (editor: Editor, expectedSelectedCells: string[], mapper: (cell: SugarElement<HTMLTableCellElement>) => string | undefined): void => {
   const selectedCells = Arr.map(getSelectedCells(editor), mapper);
   assert.deepEqual(selectedCells, expectedSelectedCells);
 };
@@ -234,7 +234,7 @@ const insertTable = (editor: Editor, args: Record<string, any>): boolean =>
 
 const makeInsertTable = (editor: Editor, columns: number, rows: number, args: Record<string, any> = {}): SugarElement<HTMLTableElement> => {
   insertTable(editor, { rows, columns, ...args });
-  return SugarElement.fromDom(editor.dom.getParent(editor.selection.getStart(), 'table'));
+  return SugarElement.fromDom(editor.dom.getParent(editor.selection.getStart(), 'table') as HTMLTableElement);
 };
 
 const insertTableTest = (editor: Editor, tableColumns: number, tableRows: number, widths: number[][], withColGroups: boolean): void => {
@@ -244,7 +244,7 @@ const insertTableTest = (editor: Editor, tableColumns: number, tableRows: number
   TinyAssertions.assertCursor(editor, [ 0, withColGroups ? 1 : 0, 0, 0 ], 0);
 };
 
-const assertWidths = (widths: { widthBefore: WidthData; widthAfter: WidthData }) => {
+const assertWidths = (widths: { widthBefore: WidthData; widthAfter: WidthData }): void => {
   if (widths.widthBefore.isPercent) {
     // due to rounding errors we can be off by one pixel for percentage tables
     assert.approximately(

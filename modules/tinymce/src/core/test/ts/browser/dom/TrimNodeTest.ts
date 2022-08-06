@@ -11,7 +11,7 @@ describe('browser.tinymce.core.dom.TrimNodeTest', () => {
     it(label, () => {
       const elm = document.createElement('div');
       elm.innerHTML = inputHtml;
-      TrimNode.trimNode(dom, elm.firstChild);
+      TrimNode.trimNode(dom, elm.firstChild as Node);
 
       const actual = elm.innerHTML;
       assert.equal(actual, expectedTrimmedHtml, 'is correct trimmed html');

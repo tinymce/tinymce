@@ -3,8 +3,8 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import { NormalizedEvent } from 'tinymce/core/events/EventUtils';
 import * as InsertNewLine from 'tinymce/core/newline/InsertNewLine';
-import { NormalizedEvent } from 'tinymce/src/core/main/ts/events/EventUtils';
 
 export const testBeforeInputEvent = (performEditAction: (editor: Editor) => void, eventType: string) =>
   (
@@ -14,7 +14,7 @@ export const testBeforeInputEvent = (performEditAction: (editor: Editor) => void
     setupOffset: number,
     expectedHtml: string,
     cancelBeforeInput: boolean
-  ) => {
+  ): void => {
     const inputEvents: string[] = [];
     const beforeInputEvents: string[] = [];
     const collect = (event: NormalizedEvent<InputEvent, any>) => {
@@ -42,7 +42,8 @@ export const testBeforeInputEvent = (performEditAction: (editor: Editor) => void
     assert.deepEqual(beforeInputEvents, [ eventType ]);
   };
 
-export const pressKeyAction = (key: number) =>
-  (editor: Editor) => TinyContentActions.keydown(editor, key);
+export const pressKeyAction = (key: number) => (editor: Editor): void =>
+  TinyContentActions.keydown(editor, key);
 
-export const insertNewLineAction = (editor: Editor) => InsertNewLine.insert(editor, {} as EditorEvent<KeyboardEvent>);
+export const insertNewLineAction = (editor: Editor): void =>
+  InsertNewLine.insert(editor, {} as EditorEvent<KeyboardEvent>);

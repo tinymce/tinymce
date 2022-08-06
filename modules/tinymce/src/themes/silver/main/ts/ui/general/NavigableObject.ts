@@ -1,13 +1,13 @@
-import { AlloyTriggers, Behaviour, Focusing, NativeEvents, Tabstopping } from '@ephox/alloy';
+import { AlloyComponent, AlloySpec, AlloyTriggers, Behaviour, Focusing, NativeEvents, SimpleSpec, Tabstopping } from '@ephox/alloy';
 import { Fun, Id } from '@ephox/katamari';
-import { Class, SelectorExists } from '@ephox/sugar';
+import { Class, SelectorExists, SugarElement } from '@ephox/sugar';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 
 const beforeObject = Id.generate('alloy-fake-before-tabstop');
 const afterObject = Id.generate('alloy-fake-after-tabstop');
 
-const craftWithClasses = (classes) => {
+const craftWithClasses = (classes: string[]): SimpleSpec => {
   return {
     dom: {
       tag: 'div',
@@ -28,7 +28,7 @@ const craftWithClasses = (classes) => {
   };
 };
 
-const craft = (spec) => {
+const craft = (spec: AlloySpec): SimpleSpec => {
   return {
     dom: {
       tag: 'div',
@@ -46,7 +46,7 @@ const craft = (spec) => {
 };
 
 // TODO: Create an API in alloy to do this.
-const triggerTab = (placeholder, shiftKey) => {
+const triggerTab = (placeholder: AlloyComponent, shiftKey: boolean): void => {
   AlloyTriggers.emitWith(placeholder, NativeEvents.keydown(), {
     raw: {
       which: 9,
@@ -55,7 +55,7 @@ const triggerTab = (placeholder, shiftKey) => {
   });
 };
 
-const onFocus = (container, targetComp) => {
+const onFocus = (container: AlloyComponent, targetComp: AlloyComponent): void => {
   const target = targetComp.element;
   // If focus has shifted naturally to a before object, the tab direction is backwards.
   if (Class.has(target, beforeObject)) {
@@ -65,7 +65,7 @@ const onFocus = (container, targetComp) => {
   }
 };
 
-const isPseudoStop = (element) => {
+const isPseudoStop = (element: SugarElement<Element>): boolean => {
   return SelectorExists.closest(element, [ '.' + beforeObject, '.' + afterObject ].join(','), Fun.never);
 };
 

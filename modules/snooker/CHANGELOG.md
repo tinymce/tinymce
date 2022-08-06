@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+- The `TableFill.cellOperations` function incorrectly declared the mutate element types as generic when they should have been a `CellElement`.
+
 ## 11.0.3 - 2022-06-29
 
 ### Fixed

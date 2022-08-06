@@ -4,6 +4,8 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import { PastePostProcessEvent, PastePreProcessEvent } from 'tinymce/core/api/EventTypes';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as PasteUtils from 'tinymce/core/paste/PasteUtils';
 
 describe('browser.tinymce.core.paste.PasteTest', () => {
@@ -28,7 +30,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
 
   it('TBA: Plain text toggle event', () => {
     const editor = hook.editor();
-    const events = [];
+    const events: Array<{ state: boolean }> = [];
 
     editor.on('PastePlainTextToggle', (e) => {
       events.push({ state: e.state });
@@ -213,7 +215,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
 
   it('TBA: paste pre process text (event)', () => {
     const editor = hook.editor();
-    const callback = (e) => {
+    const callback = (e: EditorEvent<PastePreProcessEvent>) => {
       e.content = 'PRE:' + e.content;
     };
 
@@ -232,7 +234,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
 
   it('TBA: paste pre process html (event)', () => {
     const editor = hook.editor();
-    const callback = (e) => {
+    const callback = (e: EditorEvent<PastePreProcessEvent>) => {
       e.content = 'PRE:' + e.content;
     };
 
@@ -251,7 +253,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
 
   it('TBA: paste post process (event)', () => {
     const editor = hook.editor();
-    const callback = (e) => {
+    const callback = (e: EditorEvent<PastePostProcessEvent>) => {
       e.node.innerHTML += ':POST';
     };
 

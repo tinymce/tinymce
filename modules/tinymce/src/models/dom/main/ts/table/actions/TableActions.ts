@@ -26,7 +26,7 @@ export type AdvancedPasteTableAction = TableAction<RunOperation.TargetPasteRows>
 export type LookupAction = (table: SugarElement<HTMLTableElement>, target: RunOperation.TargetSelection) => string;
 
 type GuardFn = (table: SugarElement<HTMLTableElement>) => boolean;
-type MutateFn = <T>(e1: SugarElement<T>, e2: SugarElement<T>) => void;
+type MutateFn = (e1: SugarElement<HTMLTableCellElement | HTMLTableColElement>, e2: SugarElement<HTMLTableCellElement | HTMLTableColElement>) => void;
 
 export interface TableActions {
   readonly deleteRow: CombinedTargetsTableAction;
@@ -59,10 +59,10 @@ export const TableActions = (editor: Editor, resizeHandler: TableResizeHandler, 
     SugarNode.name(Utils.getBody(editor)) === 'table';
 
   const lastRowGuard = (table: SugarElement<HTMLTableElement>): boolean =>
-    isTableBody(editor) === false || TableGridSize.getGridSize(table).rows > 1;
+    !isTableBody(editor) || TableGridSize.getGridSize(table).rows > 1;
 
   const lastColumnGuard = (table: SugarElement<HTMLTableElement>): boolean =>
-    isTableBody(editor) === false || TableGridSize.getGridSize(table).columns > 1;
+    !isTableBody(editor) || TableGridSize.getGridSize(table).columns > 1;
 
   // Optional.none gives the default cloneFormats.
   const cloneFormats = Options.getTableCloneElements(editor);
@@ -118,7 +118,7 @@ export const TableActions = (editor: Editor, resizeHandler: TableResizeHandler, 
         section: getTableSectionType(table)
       };
       return guard(table) ? operation(table, target, generators, behaviours).bind((result) => {
-        // Update the resize bars after the table opeation
+        // Update the resize bars after the table operation
         resizeHandler.refresh(table.dom);
 
         // INVESTIGATE: Should "noEvents" prevent these from firing as well?

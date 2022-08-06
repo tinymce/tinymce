@@ -5,6 +5,7 @@ import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import { BeforeOpenNotificationEvent, OpenNotificationEvent } from 'tinymce/core/api/EventTypes';
 import { NotificationSpec } from 'tinymce/core/api/NotificationManager';
 
 describe('browser.tinymce.core.NotificationManagerTest', () => {
@@ -13,8 +14,8 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
     { label: 'Shadow Dom Editor', setup: TinyHooks.bddSetupInShadowRoot }
   ], (tester) => {
     context(tester.label, () => {
-      let beforeOpenEvents = [];
-      let openEvents = [];
+      let beforeOpenEvents: BeforeOpenNotificationEvent[] = [];
+      let openEvents: OpenNotificationEvent[] = [];
       const hook = tester.setup<Editor>({
         service_message: 'service notification text',
         add_unload_trigger: false,
@@ -22,7 +23,7 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
         indent: false,
         entities: 'raw',
         base_url: '/project/tinymce/js/tinymce',
-        setup: (editor) => {
+        setup: (editor: Editor) => {
           editor.on('BeforeOpenNotification', (event) => beforeOpenEvents.push(event));
           editor.on('OpenNotification', (event) => openEvents.push(event));
         }
@@ -30,7 +31,7 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
 
       const resetNotifications = () => {
         const editor = hook.editor();
-        const notifications = [].concat(editor.notificationManager.getNotifications());
+        const notifications = [ ...editor.notificationManager.getNotifications() ];
         Arr.each(notifications, (notification) => notification.close());
         beforeOpenEvents = [];
         openEvents = [];

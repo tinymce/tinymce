@@ -19,7 +19,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteCancelTe
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {
       ed.ui.registry.addAutocompleter('Colon', {
-        ch: ':',
+        trigger: ':',
         minChars: 1,
         columns: 'auto',
         fetch: (pattern, _maxResults) => {

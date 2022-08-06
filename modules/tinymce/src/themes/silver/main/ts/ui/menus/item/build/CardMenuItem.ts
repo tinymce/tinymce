@@ -1,4 +1,4 @@
-import { AlloyComponent, AlloySpec, Behaviour, Disabling } from '@ephox/alloy';
+import { AlloyComponent, AlloySpec, Behaviour, Disabling, ItemTypes } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 import { SelectorFilter } from '@ephox/sugar';
@@ -13,11 +13,11 @@ import { replaceText } from './AutocompleteMenuItem';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
 export interface CardExtras {
-  itemBehaviours?: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
+  readonly itemBehaviours?: Behaviour.NamedConfiguredBehaviour<any, any, any>[];
   // Extras specific to cardText components
-  cardText: {
-    matchText?: string;
-    highlightOn: string[];
+  readonly cardText: {
+    readonly matchText?: string;
+    readonly highlightOn: string[];
   };
 }
 
@@ -42,7 +42,7 @@ export const renderCardMenuItem = (
   itemResponse: ItemResponse,
   sharedBackstage: UiFactoryBackstageShared,
   extras: CardExtras
-) => {
+): ItemTypes.ItemSpec => {
   const getApi = (component: AlloyComponent): Menu.CardMenuItemInstanceApi => ({
     isEnabled: () => !Disabling.isDisabled(component),
     setEnabled: (state: boolean) => {

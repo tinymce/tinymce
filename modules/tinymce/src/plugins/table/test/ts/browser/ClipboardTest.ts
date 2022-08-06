@@ -12,7 +12,7 @@ import TablePlugin from 'tinymce/plugins/table/Plugin';
 
 describe('browser.tinymce.plugins.table.ClipboardTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
-    plugins: 'paste table',
+    plugins: 'table',
     indent: false,
     valid_styles: {
       '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'

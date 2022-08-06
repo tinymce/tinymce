@@ -11,7 +11,7 @@ describe('browser.tinymce.core.EditorRemovedApiTest', () => {
     test_callback: Fun.noop
   }, []);
 
-  const tryAccess = (name: string, expectedValue: any) => {
+  const tryAccess = (name: keyof Editor, expectedValue: any) => {
     const editor = hook.editor();
     const result = editor[name]();
     assert.equal(result, expectedValue, 'Should be expected value on a removed editor');

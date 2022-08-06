@@ -34,7 +34,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {
       ed.ui.registry.addAutocompleter('Plus1', {
-        ch: '+',
+        trigger: '+',
         minChars: 0,
         columns: 1,
         fetch: (_pattern, _maxResults) => new Promise((resolve) => {
@@ -54,7 +54,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
       });
 
       ed.ui.registry.addAutocompleter('Colon1', {
-        ch: ':',
+        trigger: ':',
         minChars: 0,
         columns: 2,
         fetch: (_pattern, _maxResults) => new Promise((resolve) => {
@@ -73,7 +73,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
       });
 
       ed.ui.registry.addAutocompleter('Colon2', {
-        ch: ':',
+        trigger: ':',
         minChars: 0,
         columns: 2,
         fetch: (_pattern, _maxResults) => new Promise((resolve) => {
@@ -92,7 +92,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
       });
 
       ed.ui.registry.addAutocompleter('Tilde', {
-        ch: '~',
+        trigger: '~',
         minChars: 0,
         columns: 'auto',
         fetch: (_pattern, _maxResults) => new Promise((resolve) => {
@@ -111,7 +111,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
       });
 
       ed.ui.registry.addAutocompleter('Exclamation', {
-        ch: '!',
+        trigger: '!',
         minChars: 0,
         columns: 1,
         fetch: (_pattern, _maxResults) => new Promise((resolve) => {
@@ -129,7 +129,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
       });
 
       ed.ui.registry.addAutocompleter('Equals', {
-        ch: '=',
+        trigger: '=',
         minChars: 1,
         columns: 'auto',
         matches: (rng, text, _pattern) =>
@@ -153,7 +153,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
       });
 
       ed.ui.registry.addAutocompleter('Asterisk', {
-        ch: '*',
+        trigger: '*',
         minChars: 2,
         columns: 'auto',
         fetch: (_pattern, _maxResults) => new Promise((resolve) => {
@@ -174,7 +174,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
       });
 
       ed.ui.registry.addAutocompleter('Hash with spaces', {
-        ch: '#',
+        trigger: '#',
         minChars: 1,
         columns: 1,
         fetch: (pattern, _maxResults) => {
@@ -201,7 +201,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
       });
 
       ed.ui.registry.addAutocompleter('Card items', {
-        ch: '€',
+        trigger: '€',
         minChars: 1,
         columns: 1,
         highlightOn: [ 'my_text_to_highlight' ],
@@ -263,12 +263,32 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
         );
       }, 100);
       ed.ui.registry.addAutocompleter('Dollars1', {
-        ch: '$',
+        trigger: '$',
         minChars: 0,
         columns: 1,
         fetch: (_pattern, _maxResults) => new Promise(dollarsFetch.throttle),
         onAction: (autocompleteApi, rng, value) => {
           store.adder('dollars:' + value)();
+          ed.selection.setRng(rng);
+          ed.insertContent(value);
+          autocompleteApi.hide();
+        }
+      });
+
+      ed.ui.registry.addAutocompleter('Multi1', {
+        trigger: '^@@',
+        minChars: 0,
+        columns: 1,
+        fetch: (_pattern, _maxResults) => new Promise((resolve) => {
+          resolve(
+            Arr.map([ 'aA', 'bB', 'cC', 'dD' ], (letter) => ({
+              value: `multi-${letter}`,
+              text: `mu-${letter}`,
+              icon: '^'
+            }))
+          );
+        }),
+        onAction: (autocompleteApi, rng, value) => {
           ed.selection.setRng(rng);
           ed.insertContent(value);
           autocompleteApi.hide();
@@ -711,5 +731,32 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
     },
     choice: (editor) => TinyContentActions.keydown(editor, Keys.enter()),
     assertion: (editor) => TinyAssertions.assertContent(editor, '<p>dollars-a</p>')
+  }));
+
+  it('TINY-8887: Checking multi-char trigger: "^@@" splitted over several text nodes', () => pTestAutocompleter({
+    triggerChar: '^@@',
+    initialContent: '<strong>^</strong>@',
+    additionalContent: '@',
+    cursorPos: {
+      elementPath: [ 0, 1 ],
+      offset: 1
+    },
+    structure: {
+      type: 'list',
+      hasIcons: true,
+      groups: [
+        [
+          { title: 'mu-aA', text: 'mu-aA', icon: '^' },
+          { title: 'mu-bB', text: 'mu-bB', icon: '^' },
+          { title: 'mu-cC', text: 'mu-cC', icon: '^' },
+          { title: 'mu-dD', text: 'mu-dD', icon: '^' }
+        ]
+      ]
+    },
+    choice: (editor) => {
+      TinyContentActions.keydown(editor, Keys.down());
+      TinyContentActions.keydown(editor, Keys.enter());
+    },
+    assertion: (editor) => TinyAssertions.assertContent(editor, '<p>multi-bB</p>')
   }));
 });
