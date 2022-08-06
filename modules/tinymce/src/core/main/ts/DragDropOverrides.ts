@@ -38,7 +38,7 @@ interface State {
   width: number;
   height: number;
   ghost: HTMLElement;
-  intervalId: Singleton.Revocable<number>;
+  intervalId: Singleton.Repeatable;
 }
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
@@ -155,10 +155,10 @@ const moveGhost = (
             behavior: 'smooth'
           });
         };
-        state.intervalId.set(setInterval(() => {
+        state.intervalId.set(() => {
           const currentTop = win.scrollY;
           scrollDown(currentTop);
-        }, ScrollIntervalValue));
+        });
         // This basically means that the mouse is close to the top edge
         // (within MouseRange pixels of the top edge)
       } else if (mouseY - MouseRangeToTriggerScroll <= 0) {
@@ -168,10 +168,10 @@ const moveGhost = (
             behavior: 'smooth'
           });
         };
-        state.intervalId.set(setInterval(() => {
+        state.intervalId.set(() => {
           const currentTop = win.scrollY;
           scrollUp(currentTop);
-        }, ScrollIntervalValue));
+        });
         // This basically means that the mouse is close to the right edge
         // (within MouseRange pixels of the right edge)
       } else if (mouseX + MouseRangeToTriggerScroll >= clientWidth) {
@@ -181,10 +181,10 @@ const moveGhost = (
             behavior: 'smooth'
           });
         };
-        state.intervalId.set(setInterval(() => {
+        state.intervalId.set(() => {
           const currentLeft = win.scrollX;
           scrollRight(currentLeft);
-        }, ScrollIntervalValue));
+        });
         // This basically means that the mouse is close to the left edge
         // (within MouseRange pixels of the left edge)
       } else if (mouseX - MouseRangeToTriggerScroll <= 0) {
@@ -194,10 +194,10 @@ const moveGhost = (
             behavior: 'smooth'
           });
         };
-        state.intervalId.set(setInterval(() => {
+        state.intervalId.set(() => {
           const currentLeft = win.scrollX;
           scrollLeft(currentLeft);
-        }, ScrollIntervalValue));
+        });
       }
     }
   });
@@ -237,7 +237,7 @@ const start = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent
         width: ceElm.offsetWidth,
         height: ceElm.offsetHeight,
         ghost: createGhost(editor, ceElm, ceElm.offsetWidth, ceElm.offsetHeight),
-        intervalId: Singleton.repeatable()
+        intervalId: Singleton.repeatable(ScrollIntervalValue)
       });
     }
   }

@@ -199,6 +199,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
     Mouse.mouseMoveTo(SugarElement.fromDom(editor.getBody()), 2, 5); // Move the mouse close to the right edge of the editor to trigger scrolling
     await Waiter.pWait(1500); // Wait a small amount of time to ensure the scrolling happens
     Mouse.mouseUp(target);
+    assert.isTrue(false, 'Debugging');
     assert.isBelow(editor.getBody().ownerDocument.defaultView.scrollX, initialScrollX); // Make sure scrolling happened
   });
 
