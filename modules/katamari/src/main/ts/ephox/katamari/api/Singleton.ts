@@ -16,7 +16,7 @@ export interface Repeatable {
   readonly set: (functionToRepeat: () => void) => void;
 }
 
-export interface Revocable<T> extends Singleton<T> {}
+export interface Revocable<T> extends Singleton<T> { }
 
 export interface Api<T> extends Singleton<T> {
   readonly run: (fn: (data: T) => void) => void;
@@ -26,7 +26,7 @@ export interface Value<T> extends Singleton<T> {
   readonly on: (fn: (data: T) => void) => void;
 }
 
-const singleton = <T>(doRevoke: (data: T) => void): Singleton<T> => {
+const singleton = <T> (doRevoke: (data: T) => void): Singleton<T> => {
   const subject = Cell(Optional.none<T>());
 
   const revoke = (): void => subject.get().each(doRevoke);
@@ -80,21 +80,18 @@ export const repeatable = (delay: number): Repeatable => {
   };
 };
 
-export const destroyable = <
-  T extends {destroy: () => void}
->(): Revocable<T> => singleton<T>((s) => s.destroy());
+export const destroyable = <T extends { destroy: () => void }> (): Revocable<T> => singleton<T>((s) => s.destroy());
 
-export const unbindable = <T extends {unbind: () => void}>(): Revocable<T> =>
-  singleton<T>((s) => s.unbind());
+export const unbindable = <T extends { unbind: () => void }> (): Revocable<T> => singleton<T>((s) => s.unbind());
 
-export const api = <T extends {destroy: () => void}>(): Api<T> => {
+export const api = <T extends { destroy: () => void }> (): Api<T> => {
   const subject = destroyable<T>();
 
   const run = (f: (data: T) => void) => subject.get().each(f);
 
   return {
     ...subject,
-    run,
+    run
   };
 };
 
@@ -105,6 +102,6 @@ export const value = <T>(): Value<T> => {
 
   return {
     ...subject,
-    on,
+    on
   };
 };
