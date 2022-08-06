@@ -9,6 +9,13 @@ interface Singleton<T> {
   readonly set: (value: T) => void;
 }
 
+export interface Repeatable {
+  readonly clear: () => void;
+  readonly isSet: () => boolean;
+  readonly get: () => Optional<number>;
+  readonly set: (functionToRepeat: () => void) => void;
+}
+
 export interface Revocable<T> extends Singleton<T> { }
 
 export interface Api<T> extends Singleton<T> {
@@ -43,6 +50,33 @@ const singleton = <T> (doRevoke: (data: T) => void): Singleton<T> => {
     isSet,
     get,
     set
+  };
+};
+
+export const repeatable = (delay: number): Repeatable => {
+  const intervalId = Cell(Optional.none<number>());
+
+  const revoke = (): void => intervalId.get().each((id) => clearInterval(id));
+
+  const clear = () => {
+    revoke();
+    intervalId.set(Optional.none());
+  };
+
+  const isSet = () => intervalId.get().isSome();
+
+  const get = (): Optional<number> => intervalId.get();
+
+  const set = (functionToRepeat: () => void) => {
+    revoke();
+    intervalId.set(Optional.some(setInterval(functionToRepeat, delay)));
+  };
+
+  return {
+    clear,
+    isSet,
+    get,
+    set,
   };
 };
 
