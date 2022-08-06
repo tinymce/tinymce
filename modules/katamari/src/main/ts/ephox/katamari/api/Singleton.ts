@@ -49,7 +49,7 @@ const singleton = <T> (doRevoke: (data: T) => void): Singleton<T> => {
     clear,
     isSet,
     get,
-    set,
+    set
   };
 };
 
@@ -95,7 +95,7 @@ export const api = <T extends { destroy: () => void }> (): Api<T> => {
   };
 };
 
-export const value = <T>(): Value<T> => {
+export const value = <T> (): Value<T> => {
   const subject = singleton(Fun.noop);
 
   const on = (f: (data: T) => void) => subject.get().each(f);
