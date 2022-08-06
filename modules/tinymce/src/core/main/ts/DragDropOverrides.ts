@@ -288,9 +288,7 @@ const getRawTarget = (selection: EditorSelection): Node | null => {
 
 const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<MouseEvent>) => {
   state.on((state) => {
-    if (state.intervalId.isSet()) {
-      state.intervalId.clear();
-    }
+    state.intervalId.clear();
     if (state.dragging) {
       if (isValidDropTarget(editor, getRawTarget(editor.selection), state.element)) {
         const targetClone = cloneElement(state.element);
