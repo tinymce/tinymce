@@ -282,7 +282,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
             block.appendChild(clonedNode);
           }
         }
-      } while ((node = node.parentNode) && !editableRoot.exists((o) => o === node));
+      } while ((node = node.parentNode) && !Optionals.is(editableRoot, node));
     }
 
     setForcedBlockAttrs(editor, block);

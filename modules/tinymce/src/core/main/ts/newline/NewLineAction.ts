@@ -66,7 +66,7 @@ const hasShiftKey = (_editor: Editor, shiftKey: boolean) => {
 const canInsertIntoEditableRoot = (editor: Editor) => {
   const forcedRootBlock = Options.getForcedRootBlock(editor);
   const rootEditable = NewLineUtils.getEditableRoot(editor.dom, editor.selection.getStart());
-  return rootEditable.map((rE) => editor.schema.isValidChild(rE.nodeName, forcedRootBlock)).getOr(false);
+  return rootEditable.filter((rE) => editor.schema.isValidChild(rE.nodeName, forcedRootBlock)).isSome();
 };
 
 const match = (predicates: Array<(editor: Editor, shiftKey: boolean) => boolean>, action: NewLineActionAdt) => {
