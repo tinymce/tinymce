@@ -6,7 +6,7 @@ import * as Arr from 'ephox/katamari/api/Arr';
 
 describe('atomic.katamari.api.arr.ReverseTest', () => {
   it('unit tests', () => {
-    const check = (expected, input) => {
+    const check = <T>(expected: T[], input: T[]) => {
       assert.deepEqual(Arr.reverse(input), expected);
       assert.deepEqual(Arr.reverse(Object.freeze(input.slice())), expected);
     };

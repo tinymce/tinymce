@@ -50,7 +50,7 @@ describe('atomic.katamari.api.arr.ArrFindTest', () => {
   it('finds a value in the array', () => {
     fc.assert(fc.property(fc.array(fc.integer()), fc.integer(), fc.array(fc.integer()), (prefix, i, suffix) => {
       const arr = prefix.concat([ i ]).concat(suffix);
-      const pred = (x) => x === i;
+      const pred = (x: number) => x === i;
       const result = Arr.find(arr, pred);
       assertSome(result, i);
     }));

@@ -7,9 +7,9 @@ import * as Fun from 'ephox/katamari/api/Fun';
 
 describe('atomic.katamari.api.arr.ForallTest', () => {
   it('unit tests', () => {
-    const isOne = (i) => i === 1;
+    const isOne = (i: number) => i === 1;
 
-    const check = (expected, input, f) => {
+    const check = <T>(expected: boolean, input: T[], f: (x: T, i: number) => boolean) => {
       assert.deepEqual(Arr.forall(input, f), expected);
       assert.deepEqual(Arr.forall(Object.freeze(input.slice()), f), expected);
     };

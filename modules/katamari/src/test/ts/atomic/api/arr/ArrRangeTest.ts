@@ -8,7 +8,7 @@ import * as Fun from 'ephox/katamari/api/Fun';
 describe('atomic.katamari.api.arr.ArrRangeTest', () => {
 
   it('unit tests', () => {
-    const check = (expected, input, f) => {
+    const check = <R>(expected: R[], input: number, f: (i: number) => R) => {
       const actual = Arr.range(input, f);
       assert.deepEqual(actual, expected);
     };

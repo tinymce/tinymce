@@ -6,7 +6,7 @@ describe('browser.katamari.TypeBrowserTest', () => {
   it('Type cross window test', () => new Promise<void>((success, failure) => {
 
     const runTest = (frameEval: (script: string) => any) => {
-      const check = (expected: boolean, method: string, input: string) => {
+      const check = (expected: boolean, method: 'isArray' | 'isString' | 'isNumber' | 'isFunction' | 'isObject' | 'isPlainObject', input: string) => {
         const frameValue = frameEval(input);
         if (expected !== Type[method](frameValue)) {
           const failMessage = `Type method ${method} did not return ${expected} for frame value '${input}'`;

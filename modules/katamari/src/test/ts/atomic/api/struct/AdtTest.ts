@@ -6,7 +6,7 @@ import { Adt } from 'ephox/katamari/api/Adt';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 
-const checkInvalid = (message, f) => {
+const checkInvalid = (message: string, f: () => void) => {
   let error = false;
   try {
     f();
@@ -24,7 +24,7 @@ const checkInvalid = (message, f) => {
   }
 };
 
-const checkInvalidGenerate = (cases, message) => {
+const checkInvalidGenerate = (cases: any, message: string) => {
   checkInvalid('generate() did not throw an error. Input: "' + message + '"', () => {
     Adt.generate(cases);
   });
@@ -64,10 +64,10 @@ describe('atomic.katamari.api.struct.AdtTest', () => {
     const blockStr = 'block';
 
     // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-    const tag = function (target, block) {
-      assert.deepEqual(arguments.length, 2);
-      assert.deepEqual(target, targetStr);
-      assert.deepEqual(block, blockStr);
+    const tag = function (target: string, block: string) {
+      assert.equal(arguments.length, 2);
+      assert.equal(target, targetStr);
+      assert.equal(block, blockStr);
     };
 
     let die = () => {
@@ -143,7 +143,7 @@ describe('atomic.katamari.api.struct.AdtTest', () => {
         const branches = Arr.mapToObject(original, () => Fun.identity);
         subject.match(branches);
         return false;
-      } catch (err) {
+      } catch (err: any) {
         return err.message.indexOf('nothing') > -1;
       }
     }));
@@ -234,7 +234,7 @@ describe('atomic.katamari.api.struct.AdtTest', () => {
           right: Fun.identity
         });
         return false;
-      } catch (err) {
+      } catch (err: any) {
         return err.message.indexOf('nothing') > -1;
       }
     }));

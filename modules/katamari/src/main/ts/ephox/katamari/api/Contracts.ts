@@ -4,12 +4,13 @@ import * as Fun from './Fun';
 import * as Obj from './Obj';
 import * as Type from './Type';
 
-export interface ContractCondition {
-  label: string;
-  validate: (value: any, key: string) => boolean;
+export interface ContractCondition<T> {
+  readonly label: string;
+  readonly validate: (value: T, key: string) => boolean;
 }
 
-type IdentityFn = <T>(obj: T) => T;
+type IdentityFn = <T extends Record<string, any>>(obj: T) => T;
+type IdentityWithConditionFn<V> = <T extends Record<string, V>>(obj: T) => T;
 type HandleFn = (required: string[], keys: string[]) => void;
 
 // Ensure that the object has all required fields. They must be functions.
@@ -21,7 +22,7 @@ const base = (handleUnsupported: HandleFn, required: string[]) => {
 };
 
 // Ensure that the object has all required fields. They must satisy predicates.
-const baseWith = (handleUnsupported: HandleFn, required: string[], pred: ContractCondition): IdentityFn => {
+const baseWith = <V>(handleUnsupported: HandleFn, required: string[], pred: ContractCondition<V>): IdentityFn => {
   if (required.length === 0) {
     throw new Error('You must specify at least one required field.');
   }
@@ -30,7 +31,7 @@ const baseWith = (handleUnsupported: HandleFn, required: string[], pred: Contrac
 
   BagUtils.checkDupes(required);
 
-  return <T>(obj: T) => {
+  return <T extends Record<string, V>>(obj: T) => {
     const keys: string[] = Obj.keys(obj);
 
     // Ensure all required keys are present.
@@ -70,4 +71,5 @@ const allowExtra = Fun.noop;
 
 export const exactly = (required: string[]): IdentityFn => base(handleExact, required);
 export const ensure = (required: string[]): IdentityFn => base(allowExtra, required);
-export const ensureWith = (required: string[], condition: ContractCondition): IdentityFn => baseWith(allowExtra, required, condition);
+export const ensureWith = <V>(required: string[], condition: ContractCondition<V>): IdentityWithConditionFn<V> =>
+  baseWith(allowExtra, required, condition);

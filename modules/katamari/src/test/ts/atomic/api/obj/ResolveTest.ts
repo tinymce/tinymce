@@ -34,7 +34,7 @@ describe('atomic.katamari.api.obj.ResolveTest', () => {
   });
 
   it('resolve', () => {
-    const check = (expected, path, scope) => {
+    const check = (expected: any, path: string, scope: any) => {
       const actual = Resolve.resolve(path, scope);
       assert.deepEqual(actual, expected);
     };

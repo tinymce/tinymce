@@ -6,7 +6,7 @@ import * as Strings from 'ephox/katamari/api/Strings';
 
 describe('atomic.katamari.api.str.EndsWithTest', () => {
   it('Unit tests', () => {
-    const check = (expected, str, suffix) => {
+    const check = (expected: boolean, str: string, suffix: string) => {
       const actual = Strings.endsWith(str, suffix);
       assert.equal(actual, expected);
     };

@@ -8,16 +8,16 @@ import { arbNegativeInteger } from 'ephox/katamari/test/arb/ArbDataTypes';
 
 describe('atomic.katamari.api.arr.IntersperseTest', () => {
   it('unit tests', () => {
-    const check = (expected, input, delimiter) => {
+    const check = <T>(expected: T[], input: T[], delimiter: T) => {
       const actual = Jam.intersperse(input, delimiter);
       assert.deepEqual(actual, expected);
     };
 
-    const checkErr = (expected, input, delimiter) => {
+    const checkErr = (expected: string, input: any, delimiter: number) => {
       try {
         Jam.intersperse(input, delimiter);
-        assert.fail('Excpected exception: ' + expected + ' from input: ' + input + ' with delimiter: ' + delimiter);
-      } catch (e) {
+        assert.fail('Expected exception: ' + expected + ' from input: ' + input + ' with delimiter: ' + delimiter);
+      } catch (e: any) {
         assert.deepEqual(e.message, expected);
       }
     };
