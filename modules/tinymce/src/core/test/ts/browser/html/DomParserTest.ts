@@ -431,10 +431,12 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       nodes[0].attr('src', null);
     });
     let ranIdFilter = false;
-    parser.addAttributeFilter('src', () => {
+    parser.addAttributeFilter('src', (nodes) => {
       ranIdFilter = true;
+      assert.lengthOf(nodes, 1);
+      assert.equal(node[0].attr('src'), '2.gif');
     });
-    parser.parse('<b>a<img src="1.gif" />b<img src="1.gif" />c</b>');
+    parser.parse('<b>a<img src="1.gif" />b<img src="2.gif" />c</b>');
     assert.isTrue(ranIdFilter, 'second filter should run, because only one src attribute was removed');
   });
 
