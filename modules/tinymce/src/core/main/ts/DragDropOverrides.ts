@@ -22,9 +22,9 @@ import * as Predicate from './util/Predicate';
  */
 
 // Arbitrary values needed when scrolling CEF elements
-const ScrollPixelsPerInterval = 32;
-const ScrollIntervalValue = 100;
-const MouseRangeToTriggerScroll = 4;
+const scrollPixelsPerInterval = 32;
+const scrollIntervalValue = 100;
+const mouseRangeToTriggerScroll = 4;
 
 interface State {
   element: HTMLElement;
@@ -148,10 +148,10 @@ const moveGhost = (
     if (state.dragging) {
       // This basically means that the mouse is close to the bottom edge
       // (within MouseRange pixels of the bottom edge)
-      if (mouseY + MouseRangeToTriggerScroll >= clientHeight) {
+      if (mouseY + mouseRangeToTriggerScroll >= clientHeight) {
         const scrollDown = (currentTop: number) => {
           win.scroll({
-            top: currentTop + ScrollPixelsPerInterval,
+            top: currentTop + scrollPixelsPerInterval,
             behavior: 'smooth'
           });
         };
@@ -161,10 +161,10 @@ const moveGhost = (
         });
         // This basically means that the mouse is close to the top edge
         // (within MouseRange pixels of the top edge)
-      } else if (mouseY - MouseRangeToTriggerScroll <= 0) {
+      } else if (mouseY - mouseRangeToTriggerScroll <= 0) {
         const scrollUp = (currentTop: number) => {
           win.scroll({
-            top: currentTop - ScrollPixelsPerInterval,
+            top: currentTop - scrollPixelsPerInterval,
             behavior: 'smooth'
           });
         };
@@ -174,10 +174,10 @@ const moveGhost = (
         });
         // This basically means that the mouse is close to the right edge
         // (within MouseRange pixels of the right edge)
-      } else if (mouseX + MouseRangeToTriggerScroll >= clientWidth) {
+      } else if (mouseX + mouseRangeToTriggerScroll >= clientWidth) {
         const scrollRight = (currentLeft: number) => {
           win.scroll({
-            left: currentLeft + ScrollPixelsPerInterval,
+            left: currentLeft + scrollPixelsPerInterval,
             behavior: 'smooth'
           });
         };
@@ -187,10 +187,10 @@ const moveGhost = (
         });
         // This basically means that the mouse is close to the left edge
         // (within MouseRange pixels of the left edge)
-      } else if (mouseX - MouseRangeToTriggerScroll <= 0) {
+      } else if (mouseX - mouseRangeToTriggerScroll <= 0) {
         const scrollLeft = (currentLeft: number) => {
           win.scroll({
-            left: currentLeft - ScrollPixelsPerInterval,
+            left: currentLeft - scrollPixelsPerInterval,
             behavior: 'smooth'
           });
         };
@@ -237,7 +237,7 @@ const start = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent
         width: ceElm.offsetWidth,
         height: ceElm.offsetHeight,
         ghost: createGhost(editor, ceElm, ceElm.offsetWidth, ceElm.offsetHeight),
-        intervalId: Singleton.repeatable(ScrollIntervalValue)
+        intervalId: Singleton.repeatable(scrollIntervalValue)
       });
     }
   }

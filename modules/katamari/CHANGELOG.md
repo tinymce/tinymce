@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## 9.0.0 - 2022-03-03
 
 ### Added
+- Added a `Repeatable` type to the `Singleton` module
 - Added a new `unique` API to the `Arr` module to remove duplicate elements in an array.
 - Added a new `Type.is` API to check if an object type matches the specified constructor type.
 
