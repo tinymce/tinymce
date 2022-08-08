@@ -6,6 +6,7 @@ import { Optional } from './Optional';
 type ObjKeys<T extends {}> = Extract<keyof T, string>;
 type ObjCallback<T extends {}> = (value: T[keyof T], key: ObjKeys<T>) => void;
 type ObjMorphism<T extends {}, R> = (value: T[keyof T], key: ObjKeys<T>) => R;
+type ObjGuardPredicate<T extends {}, U extends T[keyof T]> = (value: T[keyof T], key: ObjKeys<T>) => value is U;
 type ObjPredicate<T extends {}> = (value: T[keyof T], key: ObjKeys<T>) => boolean;
 
 // There are many variations of Object iteration that are faster than the 'for-in' style:
@@ -59,7 +60,10 @@ export const bifilter = <T extends {}>(obj: T, pred: ObjPredicate<T>): { t: Reco
   return { t, f };
 };
 
-export const filter = <T extends {}>(obj: T, pred: ObjPredicate<T>): Record<string, T[keyof T]> => {
+export const filter: {
+  <T extends {}, U extends T[keyof T]>(obj: T, pred: ObjGuardPredicate<T, U>): Record<string, U>;
+  <T extends {}>(obj: T, pred: ObjPredicate<T>): Record<string, T[keyof T]>;
+} = <T extends {}>(obj: T, pred: ObjPredicate<T>): Record<string, T[keyof T]> => {
   const t: Record<string, T[keyof T]> = {};
   internalFilter(obj, pred, objAcc(t), Fun.noop);
   return t;

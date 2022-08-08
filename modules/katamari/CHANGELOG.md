@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Improved
 - The `Strings.contains` API now accepts optional `start` and `end` parameters to set the range for searching within the string.
 - The `Obj` APIs now use `keyof T` instead of `string` for the object key type.
+- The `Obj.filter` API better handles type guard predicates so the return type matches the type guard.
 
 ## 9.0.0 - 2022-03-03
 
