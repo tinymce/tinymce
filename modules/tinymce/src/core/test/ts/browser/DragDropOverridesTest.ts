@@ -17,10 +17,11 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
     width: 300,
   }, [], true);
 
-  before(() => {
+  before(async () => {
     hook.editor().on('dragend', () => {
       fired.set(true);
     });
+    await Waiter.pWait(200); // Wait a small amount of time before running tests to ensure the events have been bound
   });
 
   beforeEach(() => {
@@ -99,7 +100,6 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
 
   it('TINY-6027: Drag unsupported file into the editor/UI is prevented', async () => {
     const editor = hook.editor();
-    await Waiter.pWait(100); // Wait a small amount of time to ensure the events have been bound
     editor.setContent('<p>Content</p>');
     await DragnDrop.pDropFiles(TinyDom.body(editor), [
       createFile('test.txt', 123, new Blob([ 'content' ], { type: 'text/plain' }))
@@ -122,7 +122,6 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
 
   it('TINY-8874: Dragging CEF element towards the bottom edge causes scrolling', async () => {
     const editor = hook.editor();
-    await Waiter.pWait(200); // Wait a small amount of time to ensure the events have been bound
     editor.setContent(`
       <p contenteditable="false" style="height: 200px; background-color: black; color: white">Draggable CEF</p>
       <p id="separator" style="height: 100px"></p>
@@ -131,39 +130,37 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
     `);
     const target = UiFinder.findIn(TinyDom.body(editor), 'p:contains("Draggable CEF")').getOrDie();
     const dest = UiFinder.findIn(TinyDom.body(editor), '#separator').getOrDie();
-    const initialScrollY = editor.getBody().ownerDocument.defaultView.scrollY;
+    const initialScrollY = editor.getWin().scrollY;
     Mouse.mouseDown(target);
     Mouse.mouseMoveTo(dest, 0, 98); // Move the mouse close to the bottom edge of the editor to trigger scrolling
     await Waiter.pWait(1000); // Wait a small amount of time to ensure the scrolling happens
     Mouse.mouseUp(target);
-    assert.isTrue(editor.getBody().ownerDocument.defaultView.scrollY > initialScrollY); // Make sure scrolling happened
+    assert.isTrue(editor.getWin().scrollY > initialScrollY); // Make sure scrolling happened
   });
 
   it('TINY-8874: Dragging CEF element towards the upper edge causes scrolling', async () => {
     const editor = hook.editor();
-    await Waiter.pWait(200); // Wait a small amount of time to ensure the events have been bound
     editor.setContent(`
       <p>CEF can get dragged before this one</p>
       <p id="hidden" style="height: 300px"></p>
       <p id="separator" style="height: 100px"></p>
       <p contenteditable="false" style="height: 200px; background-color: black; color: white">Draggable CEF</p>
     `);
-    editor.getBody().ownerDocument.defaultView.scroll({
+    editor.getWin().scroll({
       top: 450
     });
     const target = UiFinder.findIn(TinyDom.body(editor), 'p:contains("Draggable CEF")').getOrDie();
     const dest = UiFinder.findIn(TinyDom.body(editor), '#separator').getOrDie();
-    const initialScrollY = editor.getBody().ownerDocument.defaultView.scrollY;
+    const initialScrollY = editor.getWin().scrollY;
     Mouse.mouseDown(target);
     Mouse.mouseMoveTo(dest, 0, 2); // Move the mouse close to the top edge of the editor to trigger scrolling
     await Waiter.pWait(1000); // Wait a small amount of time to ensure the scrolling happens
     Mouse.mouseUp(target);
-    assert.isTrue(editor.getBody().ownerDocument.defaultView.scrollY < initialScrollY); // Make sure scrolling happened
+    assert.isTrue(editor.getWin().scrollY < initialScrollY); // Make sure scrolling happened
   });
 
   it('TINY-8874: Dragging CEF element towards the right edge causes scrolling', async () => {
     const editor = hook.editor();
-    await Waiter.pWait(200); // Wait a small amount of time to ensure the events have been bound
     editor.setContent(`
       <div style="display: flex">
       <p contenteditable="false" style="flex: 0 0 200px; background-color: black; color: white">Draggable CEF</p>
@@ -173,16 +170,15 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       </div>
     `);
     const target = UiFinder.findIn(TinyDom.body(editor), 'p:contains("Draggable CEF")').getOrDie();
-    const initialScrollX = editor.getBody().ownerDocument.defaultView.scrollX;
+    const initialScrollX = editor.getWin().scrollX;
     Mouse.mouseDown(target);
     Mouse.mouseMoveTo(SugarElement.fromDom(editor.getBody()), 298, 5); // Move the mouse close to the right edge of the editor to trigger scrolling
     await Waiter.pWait(1500); // Wait a small amount of time to ensure the scrolling happens
-    assert.isAbove(editor.getBody().ownerDocument.defaultView.scrollX, initialScrollX); // Make sure scrolling happened
+    assert.isAbove(editor.getWin().scrollX, initialScrollX); // Make sure scrolling happened
   });
 
   it('TINY-8874: Dragging CEF element towards the left edge causes scrolling', async () => {
     const editor = hook.editor();
-    await Waiter.pWait(200); // Wait a small amount of time to ensure the events have been bound
     editor.setContent(`
       <div style="display: flex">
       <p class="target" style="margin-right: 16px">CEF can get dragged before this one</p>
@@ -190,16 +186,16 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       <p contenteditable="false" style="flex: 0 0 200px; background-color: black; color: white">Draggable CEF</p>
       </div>
     `);
-    editor.getBody().ownerDocument.defaultView.scroll({
+    editor.getWin().scroll({
       left: 450
     });
     const target = UiFinder.findIn(TinyDom.body(editor), 'p:contains("Draggable CEF")').getOrDie();
-    const initialScrollX = editor.getBody().ownerDocument.defaultView.scrollX;
+    const initialScrollX = editor.getWin().scrollX;
     Mouse.mouseDown(target);
     Mouse.mouseMoveTo(SugarElement.fromDom(editor.getBody()), 2, 5); // Move the mouse close to the right edge of the editor to trigger scrolling
     await Waiter.pWait(1500); // Wait a small amount of time to ensure the scrolling happens
     Mouse.mouseUp(target);
-    assert.isBelow(editor.getBody().ownerDocument.defaultView.scrollX, initialScrollX); // Make sure scrolling happened
+    assert.isBelow(editor.getWin().scrollX, initialScrollX); // Make sure scrolling happened
   });
 
 });
