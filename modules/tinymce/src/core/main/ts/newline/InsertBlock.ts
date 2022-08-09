@@ -10,8 +10,8 @@ import { EditorEvent } from '../api/util/EventDispatcher';
 import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as CaretContainer from '../caret/CaretContainer';
-import * as NodeType from '../dom/NodeType';
 import * as CefUtils from '../dom/CefUtils';
+import * as NodeType from '../dom/NodeType';
 import { isCaretNode } from '../fmt/FormatContainer';
 import * as NormalizeRange from '../selection/NormalizeRange';
 import { isWhitespaceText } from '../text/Whitespace';
@@ -398,6 +398,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     }
   }
 
+  // Return if within non-editable node, no block should be inserted
   if (dom.getContentEditableRoot(container) === 'false') {
     return;
   }
