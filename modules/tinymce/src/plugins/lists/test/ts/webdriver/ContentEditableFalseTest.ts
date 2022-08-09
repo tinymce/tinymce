@@ -5,7 +5,7 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 
-describe('webdriver.tinymce.plugins.lists.BackspaceDeleteTest', () => {
+describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'lists',
     toolbar: 'numlist bullist',
