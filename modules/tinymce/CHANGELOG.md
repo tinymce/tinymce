@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed various incorrect types on public APIs found while enabling TypeScript strict mode #TINY-8806
 - Text returned from `editor.getContent({format: 'text'})` would differ with blank lines between some browsers #TINY-8579
 - The editor focused via the `auto_focus` option was not scrolled into the viewport #TINY-8785
-- Adding spaces just after a `contenteditable="false"` block would not work properly in some situations TINY-8814
+- Adding spaces just after a `contenteditable="false"` block would not work properly in some situations #TINY-8814
 - Elements with only custom attributes starting with `data-` would sometimes be removed when they shouldn't #TINY-8755
 - Selecting a figure with `class="image"` would incorrectly highlight the link toolbar button #TINY-8832
 - Specifying a single, non-default list style for the `advlist_bullet_styles` and `advlist_number_styles` options was not respected. #TINY-8721

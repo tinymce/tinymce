@@ -162,13 +162,13 @@ const normalizeNbspInMiddleOfTextNode = (node: Text): boolean => {
   }
 };
 
-const normalizeNbspAtEnd = (root: SugarElement<Node>, node: Text, makeNbsb: boolean): boolean => {
+const normalizeNbspAtEnd = (root: SugarElement<Node>, node: Text, makeNbsp: boolean): boolean => {
   const text = node.data;
   const lastPos = CaretPosition(node, text.length - 1);
-  if (isNbspAt(text, text.length - 1) && !needsToBeNbsp(root, lastPos) && !makeNbsb) {
+  if (isNbspAt(text, text.length - 1) && !needsToBeNbsp(root, lastPos) && !makeNbsp) {
     node.data = text.slice(0, -1) + ' ';
     return true;
-  } else if (makeNbsb && isWhiteSpaceAt(text, text.length - 1) && needsToBeNbspRight(root, lastPos)) {
+  } else if (makeNbsp && isWhiteSpaceAt(text, text.length - 1) && needsToBeNbspRight(root, lastPos)) {
     node.data = text.slice(0, -1) + Unicode.nbsp;
     return true;
   } else {
@@ -179,7 +179,7 @@ const normalizeNbspAtEnd = (root: SugarElement<Node>, node: Text, makeNbsb: bool
 const normalizeNbsps = (root: SugarElement<Node>, pos: CaretPosition): Optional<CaretPosition> =>
   Optional.some(pos).filter(hasNbsp).fold(
     () => {
-      if (needsToBeNbsp(root, pos) && SugarNode.isText(SugarElement.fromDom(pos.container()))) {
+      if (needsToBeNbsp(root, pos) && NodeType.isText(pos.container())) {
         const container = pos.container() as Text;
         const normalized = normalizeNbspAtStart(root, container, true) || normalizeNbspAtEnd(root, container, true);
         return normalized ? Optional.some(pos) : Optional.none();
