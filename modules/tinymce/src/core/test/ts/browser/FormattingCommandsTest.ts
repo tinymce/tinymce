@@ -343,8 +343,8 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     editor.setContent('<p><a href="#">a</a>b</p>');
 
     const rng = editor.dom.createRng();
-    rng.setStart(editor.getBody().firstChild.lastChild, 0);
-    rng.setEnd(editor.getBody().firstChild.lastChild, 1);
+    rng.setStart(editor.getBody().firstChild?.lastChild as Text, 0);
+    rng.setEnd(editor.getBody().firstChild?.lastChild as Text, 1);
     editor.selection.setRng(rng);
 
     editor.execCommand('mceInsertLink', false, 'link');
@@ -408,7 +408,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     const editor = hook.editor();
     editor.setContent('<table><tbody><tr><td>A</td></tr><tr><td>B</td></tr></tbody></table>');
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('td')[1].firstChild, 0);
+    rng.setStart(editor.dom.select('td')[1].firstChild as Text, 0);
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertLink', false, { href: 'x' });
@@ -521,7 +521,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     assert.equal(editor.getContent(), '<p>test 123 <a href="123">123</a> 123</p>');
 
     editor.setContent('<p><em>test<span id="x">test <strong>123</strong></span><a href="123">123</a> 123</em></p>');
-    editor.selection.select(editor.dom.get('x'));
+    editor.selection.select(editor.dom.get('x') as HTMLSpanElement);
     editor.execCommand('RemoveFormat');
     assert.equal(editor.getContent(), '<p><em>test</em><span id="x">test 123</span><em><a href="123">123</a> 123</em></p>');
 

@@ -29,8 +29,8 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.formatter.register('format', { inline: 'b' });
     editor.getBody().innerHTML = '<p><b>1234</b></p>';
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('b')[0].firstChild, 0);
-    rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
+    rng.setStart(editor.dom.select('b')[0].firstChild as Text, 0);
+    rng.setEnd(editor.dom.select('b')[0].firstChild as Text, 4);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
     assert.equal(getContent(editor), '<p>1234</p>', 'Inline element on selected text');
@@ -41,8 +41,8 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.formatter.register('format', { selector: 'b', remove: 'all' });
     editor.getBody().innerHTML = '<p><b title="text">1234</b></p>';
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('b')[0].firstChild, 0);
-    rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
+    rng.setStart(editor.dom.select('b')[0].firstChild as Text, 0);
+    rng.setEnd(editor.dom.select('b')[0].firstChild as Text, 4);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
     assert.equal(getContent(editor), '<p>1234</p>', 'Inline element on selected text with remove=all');
@@ -65,8 +65,8 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.formatter.register('format', { inline: 'span', styles: { fontWeight: 'bold' }});
     editor.getBody().innerHTML = '<p><span style="font-weight:bold; color:#FF0000"><em>1234</em></span></p>';
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('em')[0].firstChild, 1);
-    rng.setEnd(editor.dom.select('em')[0].firstChild, 3);
+    rng.setStart(editor.dom.select('em')[0].firstChild as Text, 1);
+    rng.setEnd(editor.dom.select('em')[0].firstChild as Text, 3);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
     assert.equal(getContent(editor), '<p><span style="color: #ff0000; font-weight: bold;">' +
@@ -80,8 +80,8 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.formatter.register('format', { inline: 'b' });
     editor.getBody().innerHTML = '<p><b>1234</b></p>';
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('b')[0].firstChild, 2);
-    rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
+    rng.setStart(editor.dom.select('b')[0].firstChild as Text, 2);
+    rng.setEnd(editor.dom.select('b')[0].firstChild as Text, 4);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
     assert.equal(getContent(editor), '<p><b>12</b>34</p>', 'Partially selected inline element text');
@@ -92,8 +92,8 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.formatter.register('format', { inline: 'b' });
     editor.getBody().innerHTML = '<p><b><em><span>1234</span></em></b></p>';
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('span')[0].firstChild, 2);
-    rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
+    rng.setStart(editor.dom.select('span')[0].firstChild as Text, 2);
+    rng.setEnd(editor.dom.select('span')[0].firstChild as Text, 4);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
     assert.equal(getContent(editor), '<p><b><em><span>12</span></em></b><em><span>34</span></em></p>', 'Partially selected inline element text with children');
@@ -104,8 +104,8 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.formatter.register('format', { inline: 'span', styles: { fontWeight: 'bold' }});
     editor.getBody().innerHTML = '<p><span style="font-weight:bold"><em><span style="color:#ff0000;font-weight:bold">1234</span></em></span></p>';
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('span')[1].firstChild, 2);
-    rng.setEnd(editor.dom.select('span')[1].firstChild, 4);
+    rng.setStart(editor.dom.select('span')[1].firstChild as Text, 2);
+    rng.setEnd(editor.dom.select('span')[1].firstChild as Text, 4);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
     assert.equal(getContent(editor), '<p><span style="font-weight: bold;"><em><span style="color: #ff0000; font-weight: bold;">12</span>' +
@@ -142,7 +142,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
       inline: 'span',
       styles: {
         color: (vars) => {
-          return vars.color + '00';
+          return vars?.color + '00';
         }
       },
       exact: true
@@ -213,7 +213,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.getBody().innerHTML = '<p><b><em>x<b>abc</b>y</em></b></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0], 0);
-    rng.setEnd(editor.dom.select('b')[1].firstChild, 3);
+    rng.setEnd(editor.dom.select('b')[1].firstChild as Text, 3);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
     assert.equal(getContent(editor), '<p><em>x</em><em>abc</em><b><em>y</em></b></p>', 'End within start');
@@ -224,8 +224,8 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.formatter.register('format', { block: 'h1' });
     editor.getBody().innerHTML = '<h1>text</h1>';
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('h1')[0].firstChild, 0);
-    rng.setEnd(editor.dom.select('h1')[0].firstChild, 4);
+    rng.setStart(editor.dom.select('h1')[0].firstChild as Text, 0);
+    rng.setEnd(editor.dom.select('h1')[0].firstChild as Text, 4);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
     assert.equal(getContent(editor), '<p>text</p>', 'Remove block format');
@@ -236,8 +236,8 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.formatter.register('format', { block: 'blockquote', wrapper: true });
     editor.getBody().innerHTML = '<blockquote><p>text</p></blockquote>';
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('p')[0].firstChild, 0);
-    rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
+    rng.setStart(editor.dom.select('p')[0].firstChild as Text, 0);
+    rng.setEnd(editor.dom.select('p')[0].firstChild as Text, 4);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
     assert.equal(getContent(editor), '<p>text</p>', 'Remove wrapper block format');
@@ -248,8 +248,8 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.formatter.register('format', { selector: 'span', attributes: [ 'style', 'class' ], remove: 'empty', split: true, expand: false, deep: true });
     const rng = editor.dom.createRng();
     editor.getBody().innerHTML = '<p style="color:#ff0000"><span style="color:#00ff00">text</span></p>';
-    rng.setStart(editor.dom.select('span')[0].firstChild, 1);
-    rng.setEnd(editor.dom.select('span')[0].firstChild, 3);
+    rng.setStart(editor.dom.select('span')[0].firstChild as Text, 1);
+    rng.setEnd(editor.dom.select('span')[0].firstChild as Text, 3);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
     assert.equal(getContent(editor), '<p style="color: #ff0000;"><span style="color: #00ff00;">t</span>ex<span style="color: #00ff00;">t</span></p>', 'Remove span format within block with style');
@@ -260,8 +260,8 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.formatter.register('format', { inline: 'b' });
     const rng = editor.dom.createRng();
     editor.getBody().innerHTML = '<p><b>text</b></p>';
-    rng.setStart(editor.dom.select('b')[0].firstChild, 1);
-    rng.setEnd(editor.dom.select('b')[0].firstChild, 3);
+    rng.setStart(editor.dom.select('b')[0].firstChild as Text, 1);
+    rng.setEnd(editor.dom.select('b')[0].firstChild as Text, 3);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
     assert.equal(getContent(editor), '<p><b>t</b>ex<b>t</b></p>');
@@ -275,8 +275,8 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.formatter.register('format', { block: 'p' });
     const rng = editor.dom.createRng();
     editor.getBody().innerHTML = content;
-    rng.setStart(editor.dom.select('p')[0].firstChild, 4);
-    rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
+    rng.setStart(editor.dom.select('p')[0].firstChild as Text, 4);
+    rng.setEnd(editor.dom.select('p')[0].firstChild as Text, 4);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
     assert.equal(getContent(editor), content);
@@ -357,8 +357,8 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.formatter.register('format', { inline: 'b' });
     editor.setContent('<p>abc</p><p contenteditable="false"><b>def</b></p><p><b>ghj</b></p>');
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('b')[0].firstChild, 0);
-    rng.setEnd(editor.dom.select('b')[1].firstChild, 3);
+    rng.setStart(editor.dom.select('b')[0].firstChild as Text, 0);
+    rng.setEnd(editor.dom.select('b')[1].firstChild as Text, 3);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
     assert.equal(editor.getContent(), '<p>abc</p><p contenteditable="false"><b>def</b></p><p>ghj</p>', 'Text in last paragraph is not bold');

@@ -97,30 +97,34 @@ describe('browser.tinymce.core.fmt.FontInfoTest', () => {
     const iframe = document.createElement('iframe');
     iframe.style.display = 'none';
     document.body.appendChild(iframe);
+    const iframeDoc = iframe.contentDocument as Document;
 
     iframe.addEventListener('load', () => {
-      const fontFamily = FontInfo.getFontFamily(iframe.contentDocument.body, iframe.contentDocument.body.firstChild);
+      const body = iframeDoc.body;
+      const firstChildElement = iframeDoc.body.firstChild as Element;
+      const fontFamily = FontInfo.getFontFamily(body, firstChildElement);
       assert.typeOf(fontFamily, 'string', 'Should always be a string');
-      iframe.parentNode.removeChild(iframe);
+      iframe.parentNode?.removeChild(iframe);
 
       done();
     }, false);
 
-    iframe.contentDocument.open();
-    iframe.contentDocument.write('<html><body><p>a</p></body></html>');
-    iframe.contentDocument.close();
+    iframeDoc.open();
+    iframeDoc.write('<html><body><p>a</p></body></html>');
+    iframeDoc.close();
   });
 
   it('getFontFamily should return a string when run on element in removed iframe', (done) => {
     const iframe = document.createElement('iframe');
     iframe.style.display = 'none';
     document.body.appendChild(iframe);
+    const iframeDoc = iframe.contentDocument as Document;
 
     iframe.addEventListener('load', () => {
-      const body = iframe.contentDocument.body;
-      const firstChildElement = iframe.contentDocument.body.firstChild;
+      const body = iframeDoc.body;
+      const firstChildElement = iframeDoc.body.firstChild as Element;
 
-      iframe.parentNode.removeChild(iframe);
+      iframe.parentNode?.removeChild(iframe);
 
       try {
         const fontFamily = FontInfo.getFontFamily(body, firstChildElement);
@@ -131,9 +135,9 @@ describe('browser.tinymce.core.fmt.FontInfoTest', () => {
       }
     }, false);
 
-    iframe.contentDocument.open();
-    iframe.contentDocument.write('<html><body><p>a</p></body></html>');
-    iframe.contentDocument.close();
+    iframeDoc.open();
+    iframeDoc.write('<html><body><p>a</p></body></html>');
+    iframeDoc.close();
   });
 
   it('comments should always return empty string', () => {

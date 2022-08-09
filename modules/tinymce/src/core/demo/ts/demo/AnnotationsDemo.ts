@@ -1,8 +1,8 @@
 import { Fun } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import { TinyMCE } from 'tinymce/core/api/PublicApi';
 
-declare let tinymce: any;
+declare let tinymce: TinyMCE;
 
 const contentStyles = `
 .mce-annotation { background-color: lightgreen; }
@@ -10,7 +10,7 @@ const contentStyles = `
 [data-mce-annotation="beta"][data-mce-annotation-active] { background-color: yellow; }
 `;
 
-export default () => {
+export default (): void => {
   tinymce.init({
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     selector: 'div.tinymce',
@@ -21,7 +21,7 @@ export default () => {
     height: 400,
     content_style: contentStyles,
 
-    setup: (editor: Editor) => {
+    setup: (editor) => {
       editor.ui.registry.addButton('annotate-alpha', {
         text: 'Annotate',
         onAction: () => {

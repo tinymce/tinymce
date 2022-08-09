@@ -5,25 +5,25 @@ import { createUrlDialog, UrlDialog, UrlDialogInstanceApi, UrlDialogSpec } from 
 import { createDataValidator } from '../core/DialogData';
 
 interface DialogManager {
-  open: <T extends DialogData>(factory: DialogFactory<T>, structure: DialogSpec<T>) => DialogInstanceApi<T>;
-  openUrl: (factory: UrlDialogFactory, structure: UrlDialogSpec) => UrlDialogInstanceApi;
-  redial: <T extends DialogData>(structure: DialogSpec<T>) => DialogInit<T>;
+  readonly open: <T extends DialogData>(factory: DialogFactory<T>, structure: DialogSpec<T>) => DialogInstanceApi<T>;
+  readonly openUrl: (factory: UrlDialogFactory, structure: UrlDialogSpec) => UrlDialogInstanceApi;
+  readonly redial: <T extends DialogData>(structure: DialogSpec<T>) => DialogInit<T>;
 }
 
 export type DialogFactory<T extends DialogData> = (internalDialog: Dialog<T>, initialData: Partial<T>, dataValidator: StructureProcessor) => DialogInstanceApi<T>;
 export type UrlDialogFactory = (internalDialog: UrlDialog) => UrlDialogInstanceApi;
 
 export interface DialogInit<T extends DialogData> {
-  internalDialog: Dialog<T>;
-  initialData: Partial<T>;
-  dataValidator: StructureProcessor;
+  readonly internalDialog: Dialog<T>;
+  readonly initialData: Partial<T>;
+  readonly dataValidator: StructureProcessor;
 }
 
 const extract = <T>(structure: DialogSpec<T>): DialogInit<T> => {
   const internalDialog = StructureSchema.getOrDie(createDialog(structure));
   const dataValidator = createDataValidator<T>(structure);
   // We used to validate data here, but it's done when loading the dialog in tinymce
-  const initialData = structure.initialData;
+  const initialData = structure.initialData ?? {};
   return {
     internalDialog,
     dataValidator,

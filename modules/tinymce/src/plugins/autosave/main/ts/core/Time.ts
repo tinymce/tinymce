@@ -5,8 +5,7 @@ const parse = (timeString: string): number => {
   };
 
   const parsedTime = /^(\d+)([ms]?)$/.exec(timeString);
-
-  return (parsedTime[2] ? multiples[parsedTime[2]] : 1) * parseInt(timeString, 10);
+  return (parsedTime && parsedTime[2] ? multiples[parsedTime[2]] : 1) * parseInt(timeString, 10);
 };
 
 export {

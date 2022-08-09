@@ -10,7 +10,7 @@ import * as Dialog from '../ui/Dialog';
 
 const queryListCommandState = (editor: Editor, listName: string) => (): boolean => {
   const parentList = getParentList(editor);
-  return parentList && parentList.nodeName === listName;
+  return Type.isNonNullable(parentList) && parentList.nodeName === listName;
 };
 
 const registerDialog = (editor: Editor): void => {

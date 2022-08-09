@@ -1,5 +1,7 @@
-const isCodeSample = (elm: Element | null): boolean => {
-  return elm && elm.nodeName === 'PRE' && elm.className.indexOf('language-') !== -1;
+import { Type } from '@ephox/katamari';
+
+const isCodeSample = (elm: Element | null): elm is HTMLPreElement => {
+  return Type.isNonNullable(elm) && elm.nodeName === 'PRE' && elm.className.indexOf('language-') !== -1;
 };
 
 const trimArg = <T>(predicateFn: (a: T) => boolean) => {

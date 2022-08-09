@@ -23,7 +23,7 @@ describe('browser.tinymce.core.init.InitIframeEditorWithTabindexTest', () => {
 
   it('TINY-8315: Check if the iframe element has the right tabindex attribute', () => {
     const editor = hook.editor();
-    const ifr = SugarElement.fromDom(editor.iframeElement);
+    const ifr = SugarElement.fromDom(editor.iframeElement as HTMLIFrameElement);
     assert.equal(Attribute.get(ifr, 'tabindex'), '7', 'Tabindex attribute should have the right value');
   });
 });

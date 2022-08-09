@@ -34,7 +34,7 @@ describe('browser.tinymce.plugins.emoticons.ImageEmojiTest', () => {
       'Wait until dog is the first choice (search should filter)',
       () => {
         const item = UiFinder.findIn(SugarBody.body(), '.tox-collection__item:first').getOrDie();
-        const attr = Attribute.get(item, 'data-collection-item-value');
+        const attr = Attribute.get(item, 'data-collection-item-value') as string;
         const img = SugarElement.fromHtml<HTMLImageElement>(attr);
         const src = Attribute.get(img, 'src');
         assert.equal(src, 'https://twemoji.maxcdn.com/v/13.0.1/72x72/1f436.png', 'Search should show a dog');

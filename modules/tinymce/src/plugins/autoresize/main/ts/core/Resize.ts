@@ -30,7 +30,7 @@ const toggleScrolling = (editor: Editor, state: boolean): void => {
 };
 
 const parseCssValueToInt = (dom: DOMUtils, elm: Element, name: string, computed: boolean): number => {
-  const value = parseInt(dom.getStyle(elm, name, computed), 10);
+  const value = parseInt(dom.getStyle(elm, name, computed) ?? '', 10);
   // The value maybe be an empty string, so in that case treat it as being 0
   return isNaN(value) ? 0 : value;
 };

@@ -5,12 +5,12 @@ import { TinyDom } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-const countNumber = (container: SugarElement<Node>, selector: string) => {
+const countNumber = (container: SugarElement<Node>, selector: string): number => {
   const ts = UiFinder.findAllIn(container, selector);
   return ts.length;
 };
 
-const extractOnlyOne = (container: SugarElement<Node>, selector: string) => {
+const extractOnlyOne = (container: SugarElement<Node>, selector: string): SugarElement<HTMLElement> => {
   const ts = UiFinder.findAllIn<HTMLElement>(container, selector);
   if (ts.length === 1) {
     return ts[0];
@@ -19,7 +19,7 @@ const extractOnlyOne = (container: SugarElement<Node>, selector: string) => {
   }
 };
 
-const resizeToPos = (sx: number, sy: number, dx: number, dy: number, delta: number = 10) => {
+const resizeToPos = (sx: number, sy: number, dx: number, dy: number, delta: number = 10): void => {
   // Simulate moving the mouse, by making a number of movements
   const numMoves = sy === dy ? Math.abs(dx - sx) / delta : Math.abs(dy - sy) / delta;
   // Determine the deltas based on the number of moves to make
@@ -37,13 +37,13 @@ const resizeToPos = (sx: number, sy: number, dx: number, dy: number, delta: numb
   Mouse.mouseUp(blocker);
 };
 
-const scrollRelativeEditor = (editor: Editor, relative: 'top' | 'bottom' = 'top', deltaY: number) => {
+const scrollRelativeEditor = (editor: Editor, relative: 'top' | 'bottom' = 'top', deltaY: number): void => {
   const target = editor.inline ? TinyDom.body(editor) : TinyDom.container(editor);
   target.dom.scrollIntoView(relative === 'top');
   Scroll.to(0, window.pageYOffset + deltaY);
 };
 
-const pWaitForEditorToRender = () =>
+const pWaitForEditorToRender = (): Promise<void> =>
   Waiter.pTryUntil('Editor has rendered', () => UiFinder.exists(SugarBody.body(), '.tox-editor-header'));
 
 export {

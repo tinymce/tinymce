@@ -24,7 +24,7 @@ describe('browser.tinymce.core.dom.TrimHtmlTest', () => {
   });
 
   it('findMatchingEndTagIndex', () => {
-    const testFindMatchingEndTag = (html, startIndex, expectedIndex) => {
+    const testFindMatchingEndTag = (html: string, startIndex: number, expectedIndex: number) => {
       assert.equal(TrimHtml.findMatchingEndTagIndex(Schema({}), html, startIndex), expectedIndex);
     };
 

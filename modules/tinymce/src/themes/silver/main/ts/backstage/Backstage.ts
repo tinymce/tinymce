@@ -1,52 +1,44 @@
-import { AlloyComponent, AlloySpec, HotspotAnchorSpec, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
+import { AlloyComponent, AlloySpec } from '@ephox/alloy';
 import { Dialog, Menu } from '@ephox/bridge';
-import { Cell, Optional, Result } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { Cell, Result } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
-import I18n, { TranslatedString } from 'tinymce/core/api/util/I18n';
+import I18n, { TranslatedString, Untranslated } from 'tinymce/core/api/util/I18n';
 import * as UiFactory from 'tinymce/themes/silver/ui/general/UiFactory';
 
-import { SelectData } from '../ui/core/complex/BespokeSelect';
 import { IconProvider } from '../ui/icons/Icons';
+import { UiFactoryBackstageAnchors } from './Anchors';
 import * as Anchors from './Anchors';
 import { ColorInputBackstage, UiFactoryBackstageForColorInput } from './ColorInputBackstage';
 import { DialogBackstage, UiFactoryBackstageForDialog } from './DialogBackstage';
 import { HeaderBackstage, UiFactoryBackstageForHeader } from './HeaderBackstage';
-import { init as initStyleFormatBackstage } from './StyleFormatsBackstage';
+import { init as initStyleFormatBackstage, UiFactoryBackstageForStyleFormats } from './StyleFormatsBackstage';
 import { UiFactoryBackstageForUrlInput, UrlInputBackstage } from './UrlInputBackstage';
 
 export interface UiFactoryBackstageProviders {
-  icons: IconProvider;
-  menuItems: () => Record<string, Menu.MenuItemSpec | Menu.NestedMenuItemSpec | Menu.ToggleMenuItemSpec>;
-  translate: (any) => TranslatedString;
-  isDisabled: () => boolean;
-  getOption: Editor['options']['get'];
+  readonly icons: IconProvider;
+  readonly menuItems: () => Record<string, Menu.MenuItemSpec | Menu.NestedMenuItemSpec | Menu.ToggleMenuItemSpec>;
+  readonly translate: (text: Untranslated) => TranslatedString;
+  readonly isDisabled: () => boolean;
+  readonly getOption: Editor['options']['get'];
 }
 
-type UiFactoryBackstageForStyleButton = SelectData;
-
 export interface UiFactoryBackstageShared {
-  providers?: UiFactoryBackstageProviders;
-  interpreter?: (spec: Dialog.BodyComponent) => AlloySpec;
-  anchors?: {
-    inlineDialog: () => HotspotAnchorSpec | NodeAnchorSpec;
-    banner: () => HotspotAnchorSpec | NodeAnchorSpec;
-    cursor: () => SelectionAnchorSpec;
-    node: (elem: Optional<SugarElement>) => NodeAnchorSpec;
-  };
-  header?: UiFactoryBackstageForHeader;
-  getSink?: () => Result<AlloyComponent, any>;
+  readonly providers: UiFactoryBackstageProviders;
+  readonly interpreter: (spec: Dialog.BodyComponent) => AlloySpec;
+  readonly anchors: UiFactoryBackstageAnchors;
+  readonly header: UiFactoryBackstageForHeader;
+  readonly getSink: () => Result<AlloyComponent, any>;
 }
 
 export interface UiFactoryBackstage {
-  urlinput?: UiFactoryBackstageForUrlInput;
-  styles?: UiFactoryBackstageForStyleButton;
-  shared?: UiFactoryBackstageShared;
-  colorinput?: UiFactoryBackstageForColorInput;
-  dialog?: UiFactoryBackstageForDialog;
-  isContextMenuOpen?: () => boolean;
-  setContextMenuState?: (state: boolean) => void;
+  readonly urlinput: UiFactoryBackstageForUrlInput;
+  readonly styles: UiFactoryBackstageForStyleFormats;
+  readonly shared: UiFactoryBackstageShared;
+  readonly colorinput: UiFactoryBackstageForColorInput;
+  readonly dialog: UiFactoryBackstageForDialog;
+  readonly isContextMenuOpen: () => boolean;
+  readonly setContextMenuState: (state: boolean) => void;
 }
 
 const init = (lazySink: () => Result<AlloyComponent, string>, editor: Editor, lazyAnchorbar: () => AlloyComponent): UiFactoryBackstage => {

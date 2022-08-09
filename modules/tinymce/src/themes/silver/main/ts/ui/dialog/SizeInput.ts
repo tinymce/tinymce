@@ -1,5 +1,6 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Disabling, FormCoupledInputs as AlloyFormCoupledInputs,
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, CustomEvent, Disabling,
+  FormCoupledInputs as AlloyFormCoupledInputs,
   FormField as AlloyFormField, GuiFactory, Input as AlloyInput, NativeEvents, Representing, SketchSpec, Tabstopping
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
@@ -13,7 +14,7 @@ import * as Icons from '../icons/Icons';
 import { formatSize, makeRatioConverter, noSizeConversion, parseSize, SizeConversion } from '../sizeinput/SizeInputModel';
 
 interface RatioEvent extends CustomEvent {
-  isField1: boolean;
+  readonly isField1: boolean;
 }
 
 type SizeInputSpec = Omit<Dialog.SizeInput, 'type'>;
@@ -47,7 +48,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
     ])
   });
 
-  const formGroup = (components) => ({
+  const formGroup = (components: AlloySpec[]) => ({
     dom: {
       tag: 'div',
       classes: [ 'tox-form__group' ]

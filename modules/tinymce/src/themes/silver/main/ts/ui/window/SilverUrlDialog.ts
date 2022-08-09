@@ -1,4 +1,4 @@
-import { AddEventsBehaviour, AlloyEvents, AlloyParts, Receiving } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyParts, Receiving } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Id, Obj, Optional, Singleton, Type } from '@ephox/katamari';
 import { DomEvent, EventUnbinder, SelectorFind, SugarElement } from '@ephox/sugar';
@@ -9,10 +9,15 @@ import URI from 'tinymce/core/api/util/URI';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { bodySendMessageChannel } from './DialogChannels';
 import { renderIframeBody } from './SilverDialogBody';
-import { DialogSpec, getEventExtras, getHeader, renderModalDialog, WindowExtra } from './SilverDialogCommon';
+import { DialogSpec, getEventExtras, getHeader, renderModalDialog, SharedWindowExtra } from './SilverDialogCommon';
 import { SilverDialogEvents } from './SilverDialogEvents';
 import { renderModalFooter } from './SilverDialogFooter';
 import { getUrlDialogApi } from './SilverUrlDialogInstanceApi';
+
+interface RenderedUrlDialog {
+  readonly dialog: AlloyComponent;
+  readonly instanceApi: Dialog.UrlDialogInstanceApi;
+}
 
 // A list of supported message actions
 const SUPPORTED_MESSAGE_ACTIONS = [ 'insertContent', 'setContent', 'execCommand', 'close', 'block', 'unblock' ];
@@ -45,7 +50,7 @@ const handleMessage = (editor: Editor, api: Dialog.UrlDialogInstanceApi, data: a
   }
 };
 
-const renderUrlDialog = (internalDialog: Dialog.UrlDialog, extra: WindowExtra<unknown>, editor: Editor, backstage: UiFactoryBackstage) => {
+const renderUrlDialog = (internalDialog: Dialog.UrlDialog, extra: SharedWindowExtra, editor: Editor, backstage: UiFactoryBackstage): RenderedUrlDialog => {
   const dialogId = Id.generate('dialog');
   const header = getHeader(internalDialog.title, dialogId, backstage);
   const body = renderIframeBody(internalDialog);
@@ -108,7 +113,9 @@ const renderUrlDialog = (internalDialog: Dialog.UrlDialog, extra: WindowExtra<un
             // Send the message to the iframe via postMessage
             SelectorFind.descendant<HTMLIFrameElement>(comp.element, 'iframe').each((iframeEle) => {
               const iframeWin = iframeEle.dom.contentWindow;
-              iframeWin.postMessage(data, iframeDomain);
+              if (Type.isNonNullable(iframeWin)) {
+                iframeWin.postMessage(data, iframeDomain);
+              }
             });
           }
         }

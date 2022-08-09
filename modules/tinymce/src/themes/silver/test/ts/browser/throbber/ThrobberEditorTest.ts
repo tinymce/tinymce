@@ -72,7 +72,7 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberEditorTest', () => {
 
     it('TINY-7373: should set correct tabindex on iframe when the throbber is disabled', async () => {
       const editor = hook.editor();
-      const iframe = editor.iframeElement;
+      const iframe = editor.iframeElement as HTMLIFrameElement;
       iframe.tabIndex = 1;
       assertTabIndex(editor, '1', '');
       await pToggleThrobber(editor, () => assertTabIndex(editor, '-1', '1'));

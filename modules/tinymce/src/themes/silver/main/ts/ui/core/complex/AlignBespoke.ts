@@ -1,13 +1,12 @@
-import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
+import { AlloyComponent, AlloyTriggers, SketchSpec } from '@ephox/alloy';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
 import { updateMenuIcon } from '../../dropdown/CommonDropdown';
-import { createMenuItems, createSelectButton, FormatItem, FormatterFormatItem, SelectSpec } from './BespokeSelect';
+import { createMenuItems, createSelectButton, FormatterFormatItem, SelectedFormat, SelectSpec } from './BespokeSelect';
 import { buildBasicStaticDataset } from './SelectDatasets';
-import { IsSelectedForType } from './utils/FormatRegister';
 
 const alignMenuItems = [
   { title: 'Left', icon: 'align-left', format: 'alignleft', command: 'JustifyLeft' },
@@ -17,9 +16,9 @@ const alignMenuItems = [
 ];
 
 const getSpec = (editor: Editor): SelectSpec => {
-  const getMatchingValue = (): Optional<Partial<FormatItem>> => Arr.find(alignMenuItems, (item) => editor.formatter.match(item.format));
+  const getMatchingValue = (): Optional<SelectedFormat> => Arr.find(alignMenuItems, (item) => editor.formatter.match(item.format));
 
-  const isSelectedFor: IsSelectedForType = (format: string) => () => editor.formatter.match(format);
+  const isSelectedFor = (format: string) => () => editor.formatter.match(format);
 
   const getPreviewFor = (_format: string) => Optional.none;
 
@@ -52,9 +51,10 @@ const getSpec = (editor: Editor): SelectSpec => {
   };
 };
 
-const createAlignButton = (editor, backstage: UiFactoryBackstage) => createSelectButton(editor, backstage, getSpec(editor));
+const createAlignButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
+  createSelectButton(editor, backstage, getSpec(editor));
 
-const createAlignMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
+const createAlignMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('align', {
     text: backstage.shared.providers.translate('Align'),

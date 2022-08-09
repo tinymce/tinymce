@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Improved
 - The formatter can now apply a format to a `contenteditable="false"` element by wrapping it. Configurable using the `format_noneditable_selector` option. #TINY-8905
+- The autocompleter now supports a multiple character trigger using the new `trigger` configuration #TINY-8887
 
 ### Fixed
 - The Autolink plugin did not work when the text nodes in the content were fragmented #TINY-3723
@@ -21,8 +22,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The editor focused via the `auto_focus` option was not scrolled into the viewport #TINY-8785
 - Elements with only custom attributes starting with `data-` would sometimes be removed when they shouldn't #TINY-8755
 - Selecting a figure with `class="image"` would incorrectly highlight the link toolbar button #TINY-8832
+- Specifying a single, non-default list style for the `advlist_bullet_styles` and `advlist_number_styles` options was not respected. #TINY-8721
 - Fixed various issues that occurred when formatting `contenteditable` elements. #TINY-8905
 - The text pattern logic threw an error when there were fragmented text nodes in a paragraph #TINY-8779
+- Dragging a `contentEditable=false` element towards the edges would not cause scrolling #TINY-8874
+- The content of the `contenteditable="false"` element could be selected with the mouse on Firefox  #TINY-8828
+- Parsing large documents no longer throws a `Maximum call stack size exceeded` exception #TINY-6945
+
+### Deprecated
+- The autocompleter `ch` configuration property has been deprecated and will be removed in the next major release. Use the `trigger` property instead. #TINY-8887
+
 
 ## 6.1.2 - 2022-07-29
 

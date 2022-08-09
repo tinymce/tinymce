@@ -18,7 +18,7 @@ const parseCurrentLine = (editor: Editor, offset: number): ParseResult | null =>
 
   // Never create a link when we are inside a link
   if (dom.getParent(selection.getNode(), 'a[href]') !== null) {
-    return;
+    return null;
   }
 
   const rng = selection.getRng();
@@ -42,7 +42,7 @@ const parseCurrentLine = (editor: Editor, offset: number): ParseResult | null =>
   }, root);
 
   if (!endSpot) {
-    return;
+    return null;
   }
 
   // Walk backwards until we find a boundary or a bracket/space

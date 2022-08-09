@@ -15,7 +15,7 @@ export interface AutocompleterUiApi {
   readonly cancelIfNecessary: () => void;
 }
 
-const setup = (api: AutocompleterUiApi, editor: Editor) => {
+const setup = (api: AutocompleterUiApi, editor: Editor): void => {
   const redirectKeyToItem = (item: AlloyComponent, e: EditorEvent<KeyboardEvent>) => {
     AlloyTriggers.emitWith(item, NativeEvents.keydown(), { raw: e });
   };

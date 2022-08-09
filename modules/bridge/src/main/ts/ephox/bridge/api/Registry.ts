@@ -43,14 +43,16 @@ export interface Registry {
 }
 
 export const create = (): Registry => {
-  const buttons: Record<string, ToolbarButtonSpec | ToolbarMenuButtonSpec | ToolbarSplitButtonSpec | ToolbarToggleButtonSpec> = {};
-  const menuItems: Record<string, MenuItemSpec | ToggleMenuItemSpec> = {};
+  const buttons: Record<string, ToolbarButtonSpec | GroupToolbarButtonSpec | ToolbarMenuButtonSpec | ToolbarSplitButtonSpec | ToolbarToggleButtonSpec> = {};
+  const menuItems: Record<string, MenuItemSpec | NestedMenuItemSpec | ToggleMenuItemSpec> = {};
   const popups: Record<string, AutocompleterSpec> = {};
   const icons: Record<string, string> = {};
   const contextMenus: Record<string, ContextMenuApi> = {};
   const contextToolbars: Record<string, ContextToolbarSpec | ContextFormSpec> = {};
   const sidebars: Record<string, SidebarSpec> = {};
-  const add = (collection, type: string) => (name: string, spec: any): void => collection[name.toLowerCase()] = { ...spec, type };
+  const add = <T, S extends T>(collection: Record<string, T>, type: string) => (name: string, spec: S): void => {
+    collection[name.toLowerCase()] = { ...spec, type };
+  };
   const addIcon = (name: string, svgData: string) => icons[name.toLowerCase()] = svgData;
 
   return {

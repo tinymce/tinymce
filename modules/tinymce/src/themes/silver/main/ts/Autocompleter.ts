@@ -22,7 +22,7 @@ const getAutocompleterRange = (dom: DOMUtils, initRange: Range): Optional<Range>
   });
 };
 
-const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => {
+const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared): void => {
   const processingAction = Cell<boolean>(false);
   const activeState = Cell<boolean>(false);
 

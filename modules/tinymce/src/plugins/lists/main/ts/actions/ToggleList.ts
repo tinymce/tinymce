@@ -24,7 +24,7 @@ const updateListStyle = (dom: DOMUtils, el: Element, detail: ListDetail): void =
   dom.setStyle(el, 'list-style-type', type);
 };
 
-const setAttribs = (elm: Element, attrs: Record<string, string>): void => {
+const setAttribs = (elm: Element, attrs: Record<string, string> | undefined): void => {
   Tools.each(attrs, (value, key) => {
     elm.setAttribute(key, value);
   });
@@ -51,7 +51,7 @@ const getEndPointNode = (editor: Editor, rng: Range, start: Boolean, root: Node)
   const offset = rng[start ? 'startOffset' : 'endOffset'];
 
   // Resolve node index
-  if (container.nodeType === 1) {
+  if (NodeType.isElement(container)) {
     container = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;
   }
 
@@ -60,15 +60,16 @@ const getEndPointNode = (editor: Editor, rng: Range, start: Boolean, root: Node)
   }
 
   while (container.parentNode !== root) {
+    const parent = container.parentNode as Node;
     if (NodeType.isTextBlock(editor, container)) {
       return container;
     }
 
-    if (/^(TD|TH)$/.test(container.parentNode.nodeName)) {
+    if (/^(TD|TH)$/.test(parent.nodeName)) {
       return container;
     }
 
-    container = container.parentNode;
+    container = parent;
   }
 
   return container;
@@ -83,7 +84,7 @@ const getSelectedTextBlocks = (editor: Editor, rng: Range, root: Node): HTMLElem
   let block: HTMLElement | null;
   const siblings = [];
 
-  for (let node = startNode; node; node = node.nextSibling) {
+  for (let node: Node | null = startNode; node; node = node.nextSibling) {
     siblings.push(node);
 
     if (node === endNode) {
@@ -117,7 +118,7 @@ const getSelectedTextBlocks = (editor: Editor, rng: Range, root: Node): HTMLElem
 
     if (!block) {
       block = dom.create('p');
-      node.parentNode.insertBefore(block, node);
+      node.parentNode?.insertBefore(block, node);
       textBlocks.push(block);
     }
 
@@ -156,10 +157,10 @@ const applyList = (editor: Editor, listName: string, detail: ListDetail): void =
   const selectedTextBlocks = getSelectedTextBlocks(editor, rng, root);
 
   Tools.each(selectedTextBlocks, (block) => {
-    let listBlock;
+    let listBlock: HTMLElement;
 
     const sibling = block.previousSibling;
-    const parent = block.parentNode;
+    const parent = block.parentNode as Node;
 
     if (!NodeType.isListItemNode(parent)) {
       if (sibling && NodeType.isListNode(sibling) && sibling.nodeName === listName && hasCompatibleStyle(dom, sibling, detail)) {
@@ -168,7 +169,7 @@ const applyList = (editor: Editor, listName: string, detail: ListDetail): void =
         sibling.appendChild(block);
       } else {
         listBlock = dom.create(listName);
-        block.parentNode.insertBefore(listBlock, block);
+        parent.insertBefore(listBlock, block);
         listBlock.appendChild(block);
         block = dom.rename(block, listItemName) as HTMLElement;
       }
@@ -186,8 +187,8 @@ const applyList = (editor: Editor, listName: string, detail: ListDetail): void =
   editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
 };
 
-const isValidLists = (list1: Node | undefined, list2: Node | undefined): boolean => {
-  return list1 && list2 && NodeType.isListNode(list1) && list1.nodeName === list2.nodeName;
+const isValidLists = (list1: Node | null, list2: Node | null): boolean => {
+  return NodeType.isListNode(list1) && list1.nodeName === list2?.nodeName;
 };
 
 const hasSameListStyle = (dom: DOMUtils, list1: Element, list2: Element): boolean => {
@@ -200,7 +201,7 @@ const hasSameClasses = (elm1: Element, elm2: Element): boolean => {
   return elm1.className === elm2.className;
 };
 
-const shouldMerge = (dom: DOMUtils, list1: Node | undefined, list2: Node | undefined): boolean => {
+const shouldMerge = (dom: DOMUtils, list1: Node | null, list2: Node | null): boolean => {
   return isValidLists(list1, list2) &&
     // Note: isValidLists will ensure list1 and list2 are a HTMLElement. Unfortunately TypeScript doesn't
     // support type guards on multiple variables. See https://github.com/microsoft/TypeScript/issues/26916
@@ -208,25 +209,27 @@ const shouldMerge = (dom: DOMUtils, list1: Node | undefined, list2: Node | undef
     hasSameClasses(list1 as HTMLElement, list2 as HTMLElement);
 };
 
-const mergeWithAdjacentLists = (dom: DOMUtils, listBlock: Element): void => {
-  let sibling: Node | undefined, node: Node | undefined;
+const mergeWithAdjacentLists = (dom: DOMUtils, listBlock: HTMLElement): void => {
+  let node: Node | null;
 
-  sibling = listBlock.nextSibling;
+  let sibling = listBlock.nextSibling;
   if (shouldMerge(dom, listBlock, sibling)) {
-    while ((node = sibling.firstChild)) {
+    const liSibling = sibling as HTMLElement;
+    while ((node = liSibling.firstChild)) {
       listBlock.appendChild(node);
     }
 
-    dom.remove(sibling);
+    dom.remove(liSibling);
   }
 
   sibling = listBlock.previousSibling;
   if (shouldMerge(dom, listBlock, sibling)) {
-    while ((node = sibling.lastChild)) {
+    const liSibling = sibling as HTMLElement;
+    while ((node = liSibling.lastChild)) {
       listBlock.insertBefore(node, listBlock.firstChild);
     }
 
-    dom.remove(sibling);
+    dom.remove(liSibling);
   }
 };
 
@@ -241,7 +244,7 @@ const updateList = (editor: Editor, list: Element, listName: 'UL' | 'OL' | 'DL',
   }
 };
 
-const toggleMultipleLists = (editor: Editor, parentList: HTMLElement, lists: HTMLElement[], listName: 'UL' | 'OL' | 'DL', detail: ListDetail): void => {
+const toggleMultipleLists = (editor: Editor, parentList: HTMLElement | null, lists: HTMLElement[], listName: 'UL' | 'OL' | 'DL', detail: ListDetail): void => {
   const parentIsList = NodeType.isListNode(parentList);
   if (parentIsList && parentList.nodeName === listName && !hasListStyleDetail(detail)) {
     flattenListSelection(editor);
@@ -262,7 +265,7 @@ const hasListStyleDetail = (detail: ListDetail): boolean => {
   return 'list-style-type' in detail;
 };
 
-const toggleSingleList = (editor: Editor, parentList: HTMLElement, listName: 'UL' | 'OL' | 'DL', detail: ListDetail): void => {
+const toggleSingleList = (editor: Editor, parentList: HTMLElement | null, listName: 'UL' | 'OL' | 'DL', detail: ListDetail): void => {
   if (parentList === editor.getBody()) {
     return;
   }
@@ -273,7 +276,7 @@ const toggleSingleList = (editor: Editor, parentList: HTMLElement, listName: 'UL
     } else {
       const bookmark = Bookmark.createBookmark(editor.selection.getRng());
       updateListWithDetails(editor.dom, parentList, detail);
-      const newList = editor.dom.rename(parentList, listName);
+      const newList = editor.dom.rename(parentList, listName) as HTMLElement;
       mergeWithAdjacentLists(editor.dom, newList);
       editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
       applyList(editor, listName, detail);
@@ -288,7 +291,6 @@ const toggleSingleList = (editor: Editor, parentList: HTMLElement, listName: 'UL
 const toggleList = (editor: Editor, listName: 'UL' | 'OL' | 'DL', _detail: ListDetail | null): void => {
   const parentList = Selection.getParentList(editor);
   const selectedSubLists = Selection.getSelectedSubLists(editor);
-
   const detail = Type.isObject(_detail) ? _detail : {};
 
   if (selectedSubLists.length > 0) {

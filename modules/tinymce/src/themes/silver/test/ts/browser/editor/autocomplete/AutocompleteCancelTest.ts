@@ -19,7 +19,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteCancelTe
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {
       ed.ui.registry.addAutocompleter('Colon', {
-        ch: ':',
+        trigger: ':',
         minChars: 1,
         columns: 'auto',
         fetch: (pattern, _maxResults) => {
@@ -41,11 +41,11 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteCancelTe
     }
   }, [], true);
 
-  const expectedSimplePara = (content: string) => (s, str): StructAssert => s.element('p', {
+  const expectedSimplePara = (content: string): ApproxStructure.Builder<StructAssert> => (s, str, _arr) => s.element('p', {
     children: [ s.text(str.is(content), true) ]
   });
 
-  const expectedAutocompletePara = (content: string) => (s, str): StructAssert => s.element('p', {
+  const expectedAutocompletePara = (content: string): ApproxStructure.Builder<StructAssert> => (s, str, _arr) => s.element('p', {
     children: [
       s.element('span', {
         attrs: {
@@ -80,7 +80,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteCancelTe
     setContentAndTrigger(editor, ':a', ':'.charCodeAt(0), template, elementPath);
     await TinyUiActions.pWaitForPopup(editor, '.tox-autocompleter div[role="menu"]');
     await pAssertContent('Check initial content with autocompleter active', editor, (s, str, arr) => {
-      return expected ? expected(s, str, arr) : [ expectedAutocompletePara(':a')(s, str) ];
+      return expected ? expected(s, str, arr) : [ expectedAutocompletePara(':a')(s, str, arr) ];
     });
   };
 
@@ -98,14 +98,14 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteCancelTe
 
   it('Checking escape in menu cancels the autocompleter', () => pTestAutocompleter({
     action: (editor) => TinyContentActions.keydown(editor, Keys.escape()),
-    assertion: (s, str) => [ expectedSimplePara(':a')(s, str) ]
+    assertion: (s, str, arr) => [ expectedSimplePara(':a')(s, str, arr) ]
   }));
 
   it('Checking inserting a new line cancels the autocompleter', () => pTestAutocompleter({
     action: (editor) => insertContentAndTrigger(editor, 'aa'),
     postAction: (editor) => TinyContentActions.keydown(editor, Keys.enter()),
-    assertion: (s, str) => [
-      expectedSimplePara(':aaa')(s, str),
+    assertion: (s, str, arr) => [
+      expectedSimplePara(':aaa')(s, str, arr),
       s.element('p', {})
     ]
   }));
@@ -126,68 +126,68 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteCancelTe
   }));
 
   it('Checking pressing down cancels the autocompleter', () => pTestAutocompleter({
-    setup: (editor) => pTriggerAndAssertInitialContent(editor, '<p></p><p>CONTENT</p><p></p>', [ 1, 0 ], (s, str) => [
+    setup: (editor) => pTriggerAndAssertInitialContent(editor, '<p></p><p>CONTENT</p><p></p>', [ 1, 0 ], (s, str, arr) => [
       s.element('p', {}),
-      expectedAutocompletePara(':a')(s, str),
+      expectedAutocompletePara(':a')(s, str, arr),
       s.element('p', {})
     ]),
     action: (editor) => insertContentAndTrigger(editor, 'aa'),
     postAction: (editor) => TinyContentActions.keydown(editor, Keys.down()),
-    assertion: (s, str) => [
+    assertion: (s, str, arr) => [
       s.element('p', {}),
-      expectedSimplePara(':aaa')(s, str),
+      expectedSimplePara(':aaa')(s, str, arr),
       s.element('p', {})
     ]
   }));
 
   it('Checking pressing up cancels the autocompleter', () => pTestAutocompleter({
-    setup: (editor) => pTriggerAndAssertInitialContent(editor, '<p></p><p>CONTENT</p><p></p>', [ 1, 0 ], (s, str) => [
+    setup: (editor) => pTriggerAndAssertInitialContent(editor, '<p></p><p>CONTENT</p><p></p>', [ 1, 0 ], (s, str, arr) => [
       s.element('p', {}),
-      expectedAutocompletePara(':a')(s, str),
+      expectedAutocompletePara(':a')(s, str, arr),
       s.element('p', {})
     ]),
     action: (editor) => insertContentAndTrigger(editor, 'aa'),
     postAction: (editor) => TinyContentActions.keydown(editor, Keys.up()),
-    assertion: (s, str) => [
+    assertion: (s, str, arr) => [
       s.element('p', {}),
-      expectedSimplePara(':aaa')(s, str),
+      expectedSimplePara(':aaa')(s, str, arr),
       s.element('p', {})
     ]
   }));
 
   it('Checking inserting at least 10 chars after no matches cancels the autocompleter', () => pTestAutocompleter({
     action: (editor) => insertContentAndTrigger(editor, 'aaaaaaaaaa'),
-    assertion: (s, str) => [ expectedSimplePara(':aaaaaaaaaaa')(s, str) ]
+    assertion: (s, str, arr) => [ expectedSimplePara(':aaaaaaaaaaa')(s, str, arr) ]
   }));
 
   it('Checking changing to different node cancels the autocompleter', async () => {
     const editor = hook.editor();
-    await pTriggerAndAssertInitialContent(editor, '<p>CONTENT</p><p>new node</p>', [ 0, 0 ], (s, str) => [
-      expectedAutocompletePara(':a')(s, str),
+    await pTriggerAndAssertInitialContent(editor, '<p>CONTENT</p><p>new node</p>', [ 0, 0 ], (s, str, arr) => [
+      expectedAutocompletePara(':a')(s, str, arr),
       s.element('p', {})
     ]);
     insertContentAndTrigger(editor, 'aa');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
     await pWaitForAutocompleteToClose();
-    await pAssertContent('Check autocompleter was not cancelled', editor, (s, str) => [
-      expectedAutocompletePara(':aaa')(s, str),
+    await pAssertContent('Check autocompleter was not cancelled', editor, (s, str, arr) => [
+      expectedAutocompletePara(':aaa')(s, str, arr),
       s.element('p', {})
     ]);
     TinySelections.setCursor(editor, [ 1, 0 ], 0);
-    await pAssertContent('Check autocompleter was cancelled', editor, (s, str) => [
-      expectedSimplePara(':aaa')(s, str),
+    await pAssertContent('Check autocompleter was cancelled', editor, (s, str, arr) => [
+      expectedSimplePara(':aaa')(s, str, arr),
       s.element('p', {})
     ]);
   });
 
   it('Checking clicking outside cancels the autocompleter', () => pTestAutocompleter({
-    setup: (editor) => pTriggerAndAssertInitialContent(editor, '<p>CONTENT</p><p>new node</p>', [ 0, 0 ], (s, str) => [
-      expectedAutocompletePara(':a')(s, str),
+    setup: (editor) => pTriggerAndAssertInitialContent(editor, '<p>CONTENT</p><p>new node</p>', [ 0, 0 ], (s, str, arr) => [
+      expectedAutocompletePara(':a')(s, str, arr),
       s.element('p', {})
     ]),
     action: (editor) => Mouse.trueClickOn(TinyDom.body(editor), 'p:contains(new node)'),
-    assertion: (s, str) => [
-      expectedSimplePara(':a')(s, str),
+    assertion: (s, str, arr) => [
+      expectedSimplePara(':a')(s, str, arr),
       s.element('p', { })
     ]
   }));

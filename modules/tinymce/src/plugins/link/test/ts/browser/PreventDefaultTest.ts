@@ -14,7 +14,7 @@ describe('browser.tinymce.plugins.link.PreventDefaultTest', () => {
     plugins: 'link',
     toolbar: 'link openlink unlink',
     base_url: '/project/tinymce/js/tinymce',
-    setup: (ed) => {
+    setup: (ed: Editor) => {
       const hasOnlyAltModifier = (e: KeyboardEvent) => {
         return (
           e.altKey === true &&
@@ -24,15 +24,11 @@ describe('browser.tinymce.plugins.link.PreventDefaultTest', () => {
         );
       };
 
-      ed.on(
-        'keydown',
-        (event) => {
-          if (event.keyCode === 13 && hasOnlyAltModifier(event)) {
-            event.preventDefault();
-          }
-        },
-        true
-      );
+      ed.on('keydown', (event) => {
+        if (event.keyCode === 13 && hasOnlyAltModifier(event)) {
+          event.preventDefault();
+        }
+      }, true);
     },
   }, [ Plugin ]);
 

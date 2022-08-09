@@ -42,7 +42,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteInlineTest', () => {
   it('TBA: Backspace at beginning of LI on body UL', () => {
     const editor = hook.editor();
     const body = editor.getBody();
-    editor.selection.setCursorLocation(body.firstChild.firstChild, 0);
+    editor.selection.setCursorLocation(body.firstChild?.firstChild as HTMLUListElement, 0);
     editor.plugins.lists.backspaceDelete();
     assert.lengthOf(editor.dom.select('#lists ul'), 3);
     assert.lengthOf(editor.dom.select('#lists li'), 3);
@@ -51,7 +51,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteInlineTest', () => {
   it('TBA: Delete at end of LI on body UL', () => {
     const editor = hook.editor();
     const body = editor.getBody();
-    editor.selection.setCursorLocation(body.firstChild.firstChild, 1);
+    editor.selection.setCursorLocation(body.firstChild?.firstChild as HTMLUListElement, 1);
     editor.plugins.lists.backspaceDelete(true);
     assert.lengthOf(editor.dom.select('#lists ul'), 3);
     assert.lengthOf(editor.dom.select('#lists li'), 3);

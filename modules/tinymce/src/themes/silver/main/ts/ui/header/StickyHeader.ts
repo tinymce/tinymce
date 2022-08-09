@@ -1,4 +1,4 @@
-import { AlloyComponent, Boxes, Channels, Docking, Focusing, Receiving } from '@ephox/alloy';
+import { AlloyComponent, Behaviour, Boxes, Channels, Docking, Focusing, Receiving } from '@ephox/alloy';
 import { Arr, Optional, Result, Singleton } from '@ephox/katamari';
 import { Class, Classes, Compare, Css, Focus, Height, Scroll, SugarElement, SugarLocation, Traverse, Visibility, Width } from '@ephox/sugar';
 
@@ -18,9 +18,10 @@ const visibility = {
 const editorStickyOnClass = 'tox-tinymce--toolbar-sticky-on';
 const editorStickyOffClass = 'tox-tinymce--toolbar-sticky-off';
 
-const scrollFromBehindHeader = (e: ScrollIntoViewEvent, containerHeader: SugarElement) => {
+const scrollFromBehindHeader = (e: ScrollIntoViewEvent, containerHeader: SugarElement<HTMLElement>) => {
   const doc = Traverse.owner(containerHeader);
-  const viewHeight = doc.dom.defaultView.innerHeight;
+  const win = Traverse.defaultView(containerHeader);
+  const viewHeight = win.dom.innerHeight;
   const scrollPos = Scroll.get(doc);
 
   const markerElement = SugarElement.fromDom(e.elm);
@@ -58,7 +59,7 @@ const updateIframeContentFlow = (header: AlloyComponent): void => {
       (parseInt(Css.get(elm, 'margin-bottom'), 10) || 0) ;
 
   const elm = header.element;
-  Traverse.parent(elm).each((parentElem: SugarElement<HTMLElement>) => {
+  Traverse.parentElement(elm).each((parentElem) => {
     const padding = 'padding-' + Docking.getModes(header)[0];
 
     if (Docking.isDocked(header)) {
@@ -176,7 +177,7 @@ const getIframeBehaviours = () => [
   })
 ];
 
-const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => {
+const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared): Behaviour.NamedConfiguredBehaviour<any, any, any>[] => {
   const focusedElm = Singleton.value<SugarElement>();
   const lazySink = sharedBackstage.getSink;
 

@@ -2,7 +2,7 @@ import { Fun } from '@ephox/katamari';
 
 import I18n from 'tinymce/core/api/util/I18n';
 
-const defaultOptions = {
+const defaultOptions: Record<string, any> = {
   images_file_types: 'jpeg,jpg,jpe,jfi,jif,jfif,png,gif,bmp,webp'
 };
 
@@ -11,5 +11,5 @@ export default {
   menuItems: (): Record<string, any> => ({}),
   translate: I18n.translate,
   isDisabled: Fun.never,
-  getOption: (name: string) => defaultOptions[name]
+  getOption: <T>(name: string): T | undefined => defaultOptions[name]
 };

@@ -25,7 +25,7 @@ describe('Editor Autocompleter Reload test', () => {
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {
       ed.ui.registry.addAutocompleter('Colon', {
-        ch: ':',
+        trigger: ':',
         minChars: 1,
         columns: 1,
         fetch: (pattern, maxResults, meta) => {

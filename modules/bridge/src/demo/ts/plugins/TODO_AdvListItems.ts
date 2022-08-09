@@ -28,7 +28,7 @@ export interface ToolbarSplitButtonApi {
 */
 
 const editor = {
-  on: (_s, _f) => { }
+  on: (_s: string, _f: Function) => { }
 };
 
 export const registerAdvListItems = (): void => {
@@ -40,7 +40,7 @@ export const registerAdvListItems = (): void => {
     // FIX: disabled does not seem to be supported.
     // disabled: false,
     onSetup: (buttonApi: any) => {
-      editor.on('NodeChange', (e) => {
+      editor.on('NodeChange', (e: any) => {
         // Set the active state based on something
         const state = e;
         // FIX: This is missing.

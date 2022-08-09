@@ -18,7 +18,7 @@ describe('browser.tinymce.core.CaretContainerRemoveTest', () => {
   it('remove', () => {
     setupHtml('<span contentEditable="false">1</span>');
 
-    CaretContainer.insertInline(getRoot().firstChild, true);
+    CaretContainer.insertInline(getRoot().firstChild as Node, true);
     assert.isTrue(CaretContainer.isCaretContainerInline(getRoot().firstChild), 'Should be inline container');
 
     CaretContainerRemove.remove(getRoot().firstChild);
@@ -28,10 +28,10 @@ describe('browser.tinymce.core.CaretContainerRemoveTest', () => {
   it('removeAndReposition block in same parent at offset', () => {
     setupHtml('<span contentEditable="false">1</span>');
 
-    CaretContainer.insertBlock('p', getRoot().firstChild, true);
+    CaretContainer.insertBlock('p', getRoot().firstChild as Node, true);
     assert.isTrue(CaretContainer.isCaretContainerBlock(getRoot().firstChild), 'Should be block container');
 
-    const pos = CaretContainerRemove.removeAndReposition(getRoot().firstChild, CaretPosition(getRoot(), 0));
+    const pos = CaretContainerRemove.removeAndReposition(getRoot().firstChild as Node, CaretPosition(getRoot(), 0));
     assert.equal(pos.offset(), 0, 'Should be unchanged offset');
     Assertions.assertDomEq('Should be unchanged container', SugarElement.fromDom(getRoot()), SugarElement.fromDom(pos.container()));
     assert.isFalse(CaretContainer.isCaretContainerBlock(getRoot().firstChild), 'Should not be block container');

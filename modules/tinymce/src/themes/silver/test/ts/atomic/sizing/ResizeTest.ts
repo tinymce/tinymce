@@ -8,7 +8,7 @@ import { getDimensions, ResizeTypes } from 'tinymce/themes/silver/ui/sizing/Resi
 import * as Utils from 'tinymce/themes/silver/ui/sizing/Utils';
 
 const mockEditor = (containerHeight: number, contentAreaHeight: number): Editor => {
-  const options = {
+  const options: Record<string, number> = {
     min_height: 400,
     max_height: 600,
     min_width: 400,
@@ -17,7 +17,7 @@ const mockEditor = (containerHeight: number, contentAreaHeight: number): Editor 
 
   return {
     options: {
-      get: (param) => options[param]
+      get: (param: string) => options[param]
     },
     getContainer: () => ({ offsetHeight: containerHeight }),
     getContentAreaContainer: () => ({ offsetHeight: contentAreaHeight })
@@ -30,7 +30,7 @@ describe('atomic.tinymce.themes.silver.sizing.ResizeTest', () => {
     assert.equal(actual, expected, label);
   };
 
-  const assertDimensions = (label: string, topDelta: number, leftDelta: number, resizeType: ResizeTypes, width, expected) => {
+  const assertDimensions = (label: string, topDelta: number, leftDelta: number, resizeType: ResizeTypes, width: number, expected: { height: number; width?: number }) => {
     const containerHeight = 500; // mid way between min and max in mockEditor
     const chromeHeight = 100; // just need something smaller
     const editor = mockEditor(containerHeight, containerHeight - chromeHeight);

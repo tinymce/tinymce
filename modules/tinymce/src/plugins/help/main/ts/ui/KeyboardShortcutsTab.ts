@@ -10,7 +10,7 @@ export interface ShortcutActionPairType {
   action: string;
 }
 
-const tab = (): Dialog.TabSpec => {
+const tab = (): Dialog.TabSpec & { name: string } => {
   const shortcutList = Arr.map(KeyboardShortcuts.shortcuts, (shortcut: ShortcutActionPairType) => {
     const shortcutText = Arr.map(shortcut.shortcuts, ConvertShortcut.convertText).join(' or ');
     return [ shortcut.action, shortcutText ];

@@ -1,18 +1,22 @@
-declare let tinymce: any;
+import { Insert, SelectorFind, SugarBody, SugarElement, TextContent } from '@ephox/sugar';
 
-export default (init: ShadowRootInit) => {
+import { TinyMCE } from 'tinymce/core/api/PublicApi';
 
-  const shadowHost = document.getElementById('shadow-host');
+declare let tinymce: TinyMCE;
 
-  const shadow = shadowHost.attachShadow(init);
+export default (init: ShadowRootInit): void => {
+
+  const shadowHost = SelectorFind.descendant<HTMLElement>(SugarBody.body(), '#shadow-host').getOrDie();
+
+  const shadow = SugarElement.fromDom(shadowHost.dom.attachShadow(init));
 
   let i = 0;
   const addSection = (): void => {
-    const node = document.createElement('div');
-    node.textContent = 'content section ' + i++;
-    shadow.appendChild(node);
+    const node = SugarElement.fromTag('div');
+    TextContent.set(node, 'content section ' + i++);
+    Insert.append(shadow, node);
     tinymce.init({
-      target: node,
+      target: node.dom,
       inline: true
     });
   };

@@ -4,9 +4,16 @@ import { Cell } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
+import { AnnotationListenerApi } from 'tinymce/core/api/Annotator';
 import Editor from 'tinymce/core/api/Editor';
 
 import { annotate, assertHtmlContent, assertMarker } from '../../module/test/AnnotationAsserts';
+
+interface AnnotationResult {
+  readonly state: boolean;
+  readonly name: string;
+  readonly uid: string | null;
+}
 
 describe('browser.tinymce.core.annotate.AnnotationChangedTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -52,13 +59,14 @@ describe('browser.tinymce.core.annotate.AnnotationChangedTest', () => {
 
         // NOTE: Have to use old function syntax here when accessing "arguments"
         // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-        const listener = function (state, name, obj) {
+        const listener: AnnotationListenerApi = function (state, name, obj) {
           // NOTE: These failures won't stop the tests, but they will stop it before it updates
           // the changes in changes.set
-          if (state === false) {
+          if (!state) {
             assert.lengthOf(arguments, 2, 'Argument count must be "2" (state, name) if state is false');
           } else {
-            const { uid, nodes } = obj;
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            const { uid, nodes } = obj!;
             // In this test, gamma markers span multiple nodes
             if (name === 'gamma') {
               assert.lengthOf(nodes, 2, 'Gamma annotations must have 2 nodes');
@@ -68,7 +76,7 @@ describe('browser.tinymce.core.annotate.AnnotationChangedTest', () => {
 
           changes.set(
             changes.get().concat([
-              { uid: state ? obj.uid : null, name, state }
+              { uid: obj?.uid ?? null, name, state }
             ])
           );
         };
@@ -81,9 +89,9 @@ describe('browser.tinymce.core.annotate.AnnotationChangedTest', () => {
     }
   }, [], true);
 
-  const changes: Cell<Array<{state: boolean; name: string; uid: string}>> = Cell([ ]);
+  const changes = Cell<AnnotationResult[]>([ ]);
 
-  const assertChanges = (message: string, expected: Array<{uid: string; state: boolean; name: string}>) => {
+  const assertChanges = (message: string, expected: AnnotationResult[]) => {
     const cs = changes.get();
     assert.deepEqual(cs, expected, `Checking changes: ${message}`);
   };
@@ -92,7 +100,7 @@ describe('browser.tinymce.core.annotate.AnnotationChangedTest', () => {
     changes.set([ ]);
   };
 
-  const pTestAnnotationEvents = async (label: string, editor: Editor, start: number[], soffset: number, expected: Array<{ uid: string; name: string; state: boolean}>) => {
+  const pTestAnnotationEvents = async (label: string, editor: Editor, start: number[], soffset: number, expected: AnnotationResult[]) => {
     TinySelections.setSelection(editor, start, soffset, start, soffset);
     await Waiter.pTryUntil(label, () => assertChanges('sTestAnnotationEvents.sAssertChanges', expected));
   };

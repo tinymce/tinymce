@@ -24,7 +24,7 @@ const getCompByName = (access: DialogAccess, name: string): Optional<AlloyCompon
   }
 };
 
-const validateData = <T>(access: DialogAccess, data) => {
+const validateData = <T>(access: DialogAccess, data: T) => {
   const root = access.getRoot();
   return Reflecting.getState(root).get().map((dialogState: DialogManager.DialogInit<T>) => StructureSchema.getOrDie(
     StructureSchema.asRaw('data', dialogState.dataValidator, data)
@@ -42,7 +42,7 @@ export interface DialogAccess {
 const getDialogApi = <T extends Dialog.DialogData>(
   access: DialogAccess,
   doRedial: (newConfig: Dialog.DialogSpec<T>) => DialogManager.DialogInit<T>,
-  menuItemStates: Record<string, Cell<Boolean>>
+  menuItemStates: Record<string, Cell<boolean>>
 ): Dialog.DialogInstanceApi<T> => {
   const withRoot = (f: (r: AlloyComponent) => void): void => {
     const root = access.getRoot();
@@ -62,7 +62,7 @@ const getDialogApi = <T extends Dialog.DialogData>(
     };
   };
 
-  const setData = (newData) => {
+  const setData = (newData: Partial<T>) => {
     // Currently, the decision is to ignore setData calls that fire after the dialog is closed
     withRoot((_) => {
       const prevData = instanceApi.getData();
@@ -123,7 +123,7 @@ const getDialogApi = <T extends Dialog.DialogData>(
       root.getSystem().broadcastOn([ `${bodyChannel}-${id}` ], dialogInit.internalDialog);
       root.getSystem().broadcastOn([ `${footerChannel}-${id}` ], dialogInit.internalDialog);
 
-      instanceApi.setData(dialogInit.initialData);
+      instanceApi.setData(dialogInit.initialData as T);
     });
   };
 

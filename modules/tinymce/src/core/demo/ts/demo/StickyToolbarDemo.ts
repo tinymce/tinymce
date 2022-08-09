@@ -1,10 +1,12 @@
 import { SugarElement } from '@ephox/sugar';
 
-declare let tinymce: any;
+import { Editor, RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
 
-export default () => {
+declare let tinymce: TinyMCE;
 
-  const makeSidebar = (ed, name: string, background: string, width: number) => {
+export default (): void => {
+
+  const makeSidebar = (ed: Editor, name: string, background: string, width: number) => {
     ed.ui.registry.addSidebar(name, {
       icon: 'comment',
       tooltip: 'Tooltip for ' + name,
@@ -24,7 +26,7 @@ export default () => {
     });
   };
 
-  const stickySettings = {
+  const stickySettings: RawEditorOptions = {
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     content_css: '../../../../js/tinymce/skins/content/default/content.css',
     images_upload_url: 'd',

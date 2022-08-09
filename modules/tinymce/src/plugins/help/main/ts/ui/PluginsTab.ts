@@ -7,7 +7,7 @@ import I18n from 'tinymce/core/api/util/I18n';
 import * as Options from '../api/Options';
 import * as PluginUrls from '../data/PluginUrls';
 
-const tab = (editor: Editor): Dialog.TabSpec => {
+const tab = (editor: Editor): Dialog.TabSpec & { name: string } => {
   const availablePlugins = () => {
     const premiumPlugins = Arr.filter(PluginUrls.urls, ({ key, type }) => {
       return key !== 'autocorrect' && type === PluginUrls.PluginType.Premium;

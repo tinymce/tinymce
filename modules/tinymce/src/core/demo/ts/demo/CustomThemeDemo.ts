@@ -1,12 +1,17 @@
-declare const tinymce: any;
+import { Class, Insert, SelectorFind, SugarBody, SugarElement, Value } from '@ephox/sugar';
 
-export default () => {
-  const textarea = document.createElement('textarea');
-  textarea.rows = 20;
-  textarea.cols = 80;
-  textarea.innerHTML = '<p>Bolt</p>';
-  textarea.classList.add('tinymce');
-  document.querySelector('#ephox-ui').appendChild(textarea);
+import { TinyMCE } from 'tinymce/core/api/PublicApi';
+
+declare const tinymce: TinyMCE;
+
+export default (): void => {
+  const textarea = SugarElement.fromTag('textarea');
+  textarea.dom.rows = 20;
+  textarea.dom.cols = 80;
+  Value.set(textarea, '<p>Bolt</p>');
+  Class.add(textarea, 'tinymce');
+  const container = SelectorFind.descendant(SugarBody.body(), '#ephox-ui').getOrDie();
+  Insert.append(container, textarea);
 
   tinymce.init({
     selector: 'textarea',
@@ -36,7 +41,7 @@ export default () => {
         });
       });
 
-      editor.on(() => {
+      editor.on('PreInit', () => {
         tinymce.each(dom.select('button', editorContainer), (button) => {
           editor.formatter.formatChanged(dom.getAttrib(button, 'data-mce-command'), (state) => {
             button.style.color = state ? 'red' : '';
@@ -46,8 +51,7 @@ export default () => {
 
       return {
         editorContainer,
-        iframeContainer: editorContainer.lastChild,
-        iframeHeight: target.offsetHeight - editorContainer.firstChild.offsetHeight
+        iframeContainer: editorContainer.lastChild as HTMLElement
       };
     },
     height: 600
