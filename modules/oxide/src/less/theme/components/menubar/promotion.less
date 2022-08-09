@@ -4,6 +4,7 @@
 
 @promotion-background-color: #E8F1F8;
 @promotion-background-hover-color: #B4D7FF;
+@promotion-background-active-color: #D9EDF7;
 @promotion-color: #086BE6;
 
 // private variables
@@ -36,6 +37,10 @@
 
     &:hover {
       background-color: @promotion-background-hover-color;
+    }
+
+    &:focus {
+      background-color: @promotion-background-active-color;
     }
   }
 }
