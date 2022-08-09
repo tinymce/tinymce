@@ -1124,7 +1124,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
 
   const getContentEditableRoot = (node: Node) => {
     const root = getRoot();
-    let editableRoot: string | null;
+    let editableRoot: string | null = null;
     // Get all parents until we hit a non editable parent or the root
     let parent: Node | null = node;
     while (parent !== root && parent) {
