@@ -11,6 +11,7 @@ import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as CaretContainer from '../caret/CaretContainer';
 import * as NodeType from '../dom/NodeType';
+import * as CefUtils from '../dom/CefUtils';
 import { isCaretNode } from '../fmt/FormatContainer';
 import * as NormalizeRange from '../selection/NormalizeRange';
 import { isWhitespaceText } from '../text/Whitespace';
@@ -147,7 +148,7 @@ const setForcedBlockAttrs = (editor: Editor, node: Element) => {
 // Wraps any text nodes or inline elements in the specified forced root block name
 const wrapSelfAndSiblingsInDefaultBlock = (editor: Editor, newBlockName: string, rng: Range, container: Node, offset: number) => {
   const dom = editor.dom;
-  const editableRoot = dom.getContentEditableRoot(container);
+  const editableRoot = CefUtils.getContentEditableRoot(dom.getRoot(), container) as Element;
 
   // Not in a block element or in a table cell or caption
   let parentBlock = dom.getParent(container, dom.isBlock);
@@ -397,13 +398,11 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     }
   }
 
-  // Get editable root node, normally the body element but sometimes a div or span
-  const editableRoot = dom.getContentEditableRoot(container);
-
-  // If there is no editable root then enter is done inside a contentEditable false element
-  if (editableRoot === null) {
+  if (dom.getContentEditableRoot(container) === 'false') {
     return;
   }
+  // Get editable root node, normally the body element but sometimes a div or span
+  const editableRoot = CefUtils.getContentEditableRoot(dom.getRoot(), container);
 
   // Wrap the current node and it's sibling in a default block if it's needed.
   // for example this <td>text|<b>text2</b></td> will become this <td><p>text|<b>text2</p></b></td>

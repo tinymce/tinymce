@@ -27,13 +27,13 @@ const setNodeChangeHandler = (editor: Editor, nodeChangeHandler: (e: NodeChangeE
 export const setupToggleButtonHandler = (editor: Editor, listName: string) => (api): () => void => {
   const toggleButtonHandler = (e: NodeChangeEvent) => {
     api.setActive(inList(e.parents, listName));
-    api.setEnabled(editor.dom.getContentEditableRoot(e.element) !== null);
+    api.setEnabled(editor.dom.getContentEditableRoot(e.element) !== 'false');
   };
   return setNodeChangeHandler(editor, toggleButtonHandler);
 };
 
 export const setupMenuButtonHandler = (editor: Editor, listName: string) => (api): () => void => {
   const menuButtonHandler = (e: NodeChangeEvent) =>
-    api.setEnabled(inList(e.parents, listName) && editor.dom.getContentEditableRoot(e.element) !== null);
+    api.setEnabled(inList(e.parents, listName) && editor.dom.getContentEditableRoot(e.element) !== 'false');
   return setNodeChangeHandler(editor, menuButtonHandler);
 };

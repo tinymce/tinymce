@@ -3,6 +3,7 @@ import { Adt, Arr, Optional } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import { EditorEvent } from '../api/util/EventDispatcher';
+import * as CefUtils from '../dom/CefUtils';
 import * as LazyEvaluator from '../util/LazyEvaluator';
 import * as ContextSelectors from './ContextSelectors';
 import * as NewLineUtils from './NewLineUtils';
@@ -65,8 +66,12 @@ const hasShiftKey = (_editor: Editor, shiftKey: boolean) => {
 
 const canInsertIntoEditableRoot = (editor: Editor) => {
   const forcedRootBlock = Options.getForcedRootBlock(editor);
-  const rootEditable = editor.dom.getContentEditableRoot(editor.selection.getStart());
-  return rootEditable !== null && editor.schema.isValidChild(rootEditable.nodeName, forcedRootBlock);
+  if (editor.dom.getContentEditableRoot(editor.selection.getStart()) === 'false') {
+    return false;
+  } else {
+    const rootEditable = CefUtils.getContentEditableRoot(editor.dom.getRoot(), editor.selection.getStart());
+    return rootEditable !== null && editor.schema.isValidChild(rootEditable.nodeName, forcedRootBlock);
+  }
 };
 
 const match = (predicates: Array<(editor: Editor, shiftKey: boolean) => boolean>, action: NewLineActionAdt) => {

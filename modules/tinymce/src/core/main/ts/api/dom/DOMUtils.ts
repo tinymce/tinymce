@@ -199,7 +199,7 @@ interface DOMUtils {
   dispatch: (target: Node | Window, name: string, evt?: {}) => EventUtils;
   getContentEditable: (node: Node) => string | null;
   getContentEditableParent: (node: Node) => string | null;
-  getContentEditableRoot: (node: Node) => HTMLElement | null;
+  getContentEditableRoot: (node: Node) => string | null;
   destroy: () => void;
   isChildOf: (node: Node, parent: Node) => boolean;
   dumpRng: (r: Range) => string;
@@ -1124,20 +1124,19 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
 
   const getContentEditableRoot = (node: Node) => {
     const root = getRoot();
-    let editableRoot: HTMLElement | undefined;
+    let editableRoot: string | null;
     // Get all parents until we hit a non editable parent or the root
     let parent: Node | null = node;
     while (parent !== root && parent) {
-      if (getContentEditable(parent) === 'false') {
-        // node is within contenteditable="false" element, return null
-        return null;
-      } else if (getContentEditable(parent) === 'true') {
-        editableRoot = parent as HTMLElement;
+      editableRoot = getContentEditable(parent) ?? editableRoot;
+      if (editableRoot === 'false') {
+        // node is within contenteditable="false" element, return false
+        return editableRoot;
       }
       parent = parent.parentNode;
     }
-    // return the ancestor contenteditable="true" or root
-    return parent !== root && editableRoot ? editableRoot : root;
+    // return editableRoot unless parent is root
+    return parent !== root ? editableRoot : null;
   };
 
   const destroy = () => {

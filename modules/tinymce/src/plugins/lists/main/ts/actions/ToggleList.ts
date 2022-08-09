@@ -291,8 +291,8 @@ const toggleSingleList = (editor: Editor, parentList: HTMLElement | null, listNa
 const toggleList = (editor: Editor, listName: 'UL' | 'OL' | 'DL', _detail: ListDetail | null): void => {
   const parentList = Selection.getParentList(editor);
 
-  if (!parentList || editor.dom.getContentEditableRoot(parentList) !== null) {
-    const selectedSubLists = Arr.filter(Selection.getSelectedSubLists(editor), (list) => editor.dom.getContentEditableRoot(list) !== null);
+  if (!parentList || editor.dom.getContentEditableRoot(parentList) !== 'false') {
+    const selectedSubLists = Arr.filter(Selection.getSelectedSubLists(editor), (list) => editor.dom.getContentEditableRoot(list) !== 'false');
 
     const detail = Type.isObject(_detail) ? _detail : {};
     if (selectedSubLists.length > 0) {
