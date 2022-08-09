@@ -1,7 +1,6 @@
 import { Fun, Optional, Unicode } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
-import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import * as ElementType from '../dom/ElementType';
@@ -84,23 +83,6 @@ const moveToCaretPosition = (editor: Editor, root: Node): void => {
   ScrollIntoView.scrollRangeIntoView(editor, rng);
 };
 
-const getEditableRoot = (dom: DOMUtils, node: Node): Optional<HTMLElement> => {
-  const root = dom.getRoot();
-  let editableRoot: HTMLElement | undefined;
-  // Get all parents until we hit a non editable parent or the root
-  let parent: Node | null = node;
-  while (parent !== root && parent) {
-    if (dom.getContentEditable(parent) === 'false') {
-      return Optional.none();
-    } else if (dom.getContentEditable(parent) === 'true') {
-      editableRoot = parent as HTMLElement;
-    }
-
-    parent = parent.parentNode;
-  }
-  return Optional.some(parent !== root && editableRoot ? editableRoot : root);
-};
-
 const getParentBlock = (editor: Editor): Optional<Element> => {
   return Optional.from(editor.dom.getParent(editor.selection.getStart(true), editor.dom.isBlock));
 };
@@ -122,7 +104,6 @@ const isListItemParentBlock = (editor: Editor): boolean => {
 
 export {
   moveToCaretPosition,
-  getEditableRoot,
   getParentBlock,
   getParentBlockName,
   isListItemParentBlock

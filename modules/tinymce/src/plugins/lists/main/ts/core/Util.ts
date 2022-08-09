@@ -13,18 +13,6 @@ const inList = (parents: Node[], listName: string): boolean =>
     .filter((list: HTMLElement) => list.nodeName === listName && !isCustomList(list))
     .isSome();
 
-export const isEditableSelection = (editor: Editor, node: Element): boolean => {
-  const root = editor.getBody();
-  let parent: HTMLElement | null = node as HTMLElement;
-  while (parent !== root && parent) {
-    if (editor.dom.getContentEditable(parent) === 'false') {
-      return false;
-    }
-    parent = parent.parentElement;
-  }
-  return true;
-};
-
 const setNodeChangeHandler = (editor: Editor, nodeChangeHandler: (e: NodeChangeEvent) => void): () => void => {
   const initialNode = editor.selection.getNode();
   // Set the initial state
@@ -39,13 +27,13 @@ const setNodeChangeHandler = (editor: Editor, nodeChangeHandler: (e: NodeChangeE
 export const setupToggleButtonHandler = (editor: Editor, listName: string) => (api): () => void => {
   const toggleButtonHandler = (e: NodeChangeEvent) => {
     api.setActive(inList(e.parents, listName));
-    api.setEnabled(isEditableSelection(editor, e.element));
+    api.setEnabled(editor.dom.getContentEditableRoot(e.element) !== null);
   };
   return setNodeChangeHandler(editor, toggleButtonHandler);
 };
 
 export const setupMenuButtonHandler = (editor: Editor, listName: string) => (api): () => void => {
   const menuButtonHandler = (e: NodeChangeEvent) =>
-    api.setEnabled(inList(e.parents, listName) && isEditableSelection(editor, e.element));
+    api.setEnabled(inList(e.parents, listName) && editor.dom.getContentEditableRoot(e.element) !== null);
   return setNodeChangeHandler(editor, menuButtonHandler);
 };

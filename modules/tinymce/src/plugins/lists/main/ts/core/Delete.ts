@@ -14,7 +14,6 @@ import * as NodeType from './NodeType';
 import * as NormalizeLists from './NormalizeLists';
 import * as ListRangeUtils from './RangeUtils';
 import * as Selection from './Selection';
-import { isEditableSelection } from './Util';
 
 const findNextCaretContainer = (editor: Editor, rng: Range, isForward: boolean, root: Node): Node | null => {
   let node: Node | null | undefined = rng.startContainer;
@@ -264,7 +263,7 @@ const backspaceDeleteRange = (editor: Editor): boolean => {
 
 const backspaceDelete = (editor: Editor, isForward: boolean): boolean => {
   const selection = editor.selection;
-  if (isEditableSelection(editor, selection.getNode())) {
+  if (editor.dom.getContentEditableRoot(selection.getNode()) !== null) {
     return selection.isCollapsed() ? backspaceDeleteCaret(editor, isForward) : backspaceDeleteRange(editor);
   } else {
     return false;

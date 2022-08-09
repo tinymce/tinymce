@@ -147,12 +147,12 @@ const setForcedBlockAttrs = (editor: Editor, node: Element) => {
 // Wraps any text nodes or inline elements in the specified forced root block name
 const wrapSelfAndSiblingsInDefaultBlock = (editor: Editor, newBlockName: string, rng: Range, container: Node, offset: number) => {
   const dom = editor.dom;
-  const editableRoot = NewLineUtils.getEditableRoot(dom, container);
+  const editableRoot = dom.getContentEditableRoot(container);
 
   // Not in a block element or in a table cell or caption
   let parentBlock = dom.getParent(container, dom.isBlock);
   if (!parentBlock || !canSplitBlock(dom, parentBlock)) {
-    parentBlock = parentBlock || editableRoot.getOr(editor.getBody());
+    parentBlock = parentBlock || (editableRoot ?? editor.getBody());
 
     let rootBlockName: string;
     if (parentBlock === editor.getBody() || NodeType.isTableCellOrCaption(parentBlock)) {
@@ -282,7 +282,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
             block.appendChild(clonedNode);
           }
         }
-      } while ((node = node.parentNode) && !Optionals.is(editableRoot, node));
+      } while ((node = node.parentNode) && editableRoot !== node);
     }
 
     setForcedBlockAttrs(editor, block);
@@ -398,10 +398,10 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   }
 
   // Get editable root node, normally the body element but sometimes a div or span
-  const editableRoot = NewLineUtils.getEditableRoot(dom, container);
+  const editableRoot = dom.getContentEditableRoot(container);
 
   // If there is no editable root then enter is done inside a contentEditable false element
-  if (editableRoot.isNone()) {
+  if (editableRoot === null) {
     return;
   }
 

@@ -5,12 +5,11 @@ import Editor from 'tinymce/core/api/Editor';
 import { parseDetail, parseStartValue } from '../core/ListNumbering';
 import { isOlNode } from '../core/NodeType';
 import { getParentList } from '../core/Selection';
-import { isEditableSelection } from '../core/Util';
 
 const open = (editor: Editor): void => {
   // Find the current list and skip opening if the selection isn't in an ordered list
   const currentList = getParentList(editor);
-  if (!isOlNode(currentList) || !isEditableSelection(editor, currentList)) {
+  if (!isOlNode(currentList) || editor.dom.getContentEditableRoot(currentList) === null) {
     return;
   }
 
