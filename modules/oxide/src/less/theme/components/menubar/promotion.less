@@ -2,8 +2,10 @@
 // Promotion
 //
 
-@promotion-background-color: @background-color;
+@promotion-background-color: #E8F1F8;
+@promotion-background-hover-color: #B4D7FF;
 @promotion-background: url("data:image/svg+xml;charset=utf8,%3Csvg height='@{_promotion-height}' viewBox='0 0 40 @{_promotion-height}' width='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='@{_promotion-divider-height}' width='100' height='1' fill='@{_promotion-row-separator-color}'/%3E%3C/svg%3E") left 0 top 0 @promotion-background-color;
+@promotion-color: #086BE6;
 
 // private variables
 @_promotion-row-separator-color: escape('@{menubar-row-separator-color}');
@@ -14,8 +16,6 @@
 
 .tox {
   .tox-promotion {
-    background: @promotion-background;
-    background-color: @promotion-background-color;
     cursor: pointer;
     grid-column: 2;
     grid-row: 1;
@@ -25,10 +25,17 @@
   }
 
   .tox-promotion-link {
-    background: lightblue;
+    background: @promotion-background;
+    background-color: @promotion-background-color;
     border-radius: 5px;
-    font-size: 12px;
-    padding: 5px;
+    color: @promotion-color;
+    display: block;
+    font-size: @menubar-select-font-size;
+    padding: 4px 8px;
     white-space: nowrap;
+
+    &:hover {
+      background-color: @promotion-background-hover-color;
+    }
   }
 }
