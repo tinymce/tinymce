@@ -250,7 +250,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   const createNewBlock = (name?: string): Element => {
     let node: Node | null = container;
     const textInlineElements = schema.getTextInlineElements();
-
+    const editableRoot = CefUtils.getContentEditableRoot(dom.getRoot(), container);
     let block: Element;
     if (name || parentBlockName === 'TABLE' || parentBlockName === 'HR') {
       block = dom.create(name || newBlockName);
@@ -283,7 +283,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
             block.appendChild(clonedNode);
           }
         }
-      } while ((node = node.parentNode) && editableRoot !== node);
+      } while ((node = node.parentNode) && node !== editableRoot);
     }
 
     setForcedBlockAttrs(editor, block);
@@ -402,8 +402,6 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   if (dom.getContentEditableRoot(container) === 'false') {
     return;
   }
-  // Get editable root node, normally the body element but sometimes a div or span
-  const editableRoot = CefUtils.getContentEditableRoot(dom.getRoot(), container);
 
   // Wrap the current node and it's sibling in a default block if it's needed.
   // for example this <td>text|<b>text2</b></td> will become this <td><p>text|<b>text2</p></b></td>

@@ -1125,18 +1125,17 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   const getContentEditableRoot = (node: Node) => {
     const root = getRoot();
     let editableRoot: string | null = null;
-    // Get all parents until we hit a non editable parent or the root
-    let parent: Node | null = node;
-    while (parent !== root && parent) {
-      editableRoot = getContentEditable(parent) ?? editableRoot;
+    for (let tempNode: Node | null = node; tempNode && tempNode !== root; tempNode = tempNode.parentNode) {
+      // editableRoot only updates if tempNode has contenteditable attribute
+      editableRoot = getContentEditable(tempNode) ?? editableRoot;
+
       if (editableRoot === 'false') {
         // node is within contenteditable="false" element, return false
-        return editableRoot;
+        break;
       }
-      parent = parent.parentNode;
     }
-    // return editableRoot unless parent is root
-    return parent !== root ? editableRoot : null;
+
+    return editableRoot;
   };
 
   const destroy = () => {

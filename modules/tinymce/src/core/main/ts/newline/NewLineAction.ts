@@ -66,11 +66,12 @@ const hasShiftKey = (_editor: Editor, shiftKey: boolean) => {
 
 const canInsertIntoEditableRoot = (editor: Editor) => {
   const forcedRootBlock = Options.getForcedRootBlock(editor);
-  if (editor.dom.getContentEditableRoot(editor.selection.getStart()) === 'false') {
+  const root = editor.dom.getRoot();
+  if (editor.dom.getContentEditableRoot(editor.selection.getNode()) === 'false') {
     return false;
   } else {
-    const rootEditable = CefUtils.getContentEditableRoot(editor.dom.getRoot(), editor.selection.getStart());
-    return rootEditable !== null && editor.schema.isValidChild(rootEditable.nodeName, forcedRootBlock);
+    const rootEditable = CefUtils.getContentEditableRoot(root, editor.selection.getStart()) || root;
+    return editor.schema.isValidChild(rootEditable.nodeName, forcedRootBlock);
   }
 };
 
