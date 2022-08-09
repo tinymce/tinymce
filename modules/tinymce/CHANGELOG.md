@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - New `text_patterns_lookup` option to provide additional text patterns dynamically #TINY-8778
 - New `format_noneditable_selector` option to specify the `contenteditable="false"` elements that can be wrapped in a format. #TINY-8905
+- New `getContentEditableRoot` function added to the `DOMUtils` API which retrieves the state of `contenteditable` parent until reaching a `false` value or the root #TINY-8920
 
 ### Improved
 - The formatter can now apply a format to a `contenteditable="false"` element by wrapping it. Configurable using the `format_noneditable_selector` option. #TINY-8905
