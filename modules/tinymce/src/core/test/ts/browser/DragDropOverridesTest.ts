@@ -206,14 +206,12 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       indent: false,
       menubar: false,
       base_url: '/project/tinymce/js/tinymce',
-      height: 300,
-      width: 2000,
-      plugins: [ 'autoresize' ]
+      height: window.innerHeight + 1000,
+      width: window.innerWidth + 1000,
     }, [], true);
 
     it('TINY-8874: Dragging CEF element towards the bottom edge causes scrolling when autoresize is set', async () => {
       const editor = hook.editor();
-      editor.options.set('plugins', [ 'autoresize' ]);
       await Waiter.pWait(500);
       editor.setContent(`
       <p contenteditable="false" style="height: 200px; background-color: black; color: white">Draggable CEF</p>
@@ -239,7 +237,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       <p contenteditable="false" style="height: 200px; background-color: black; color: white">Draggable CEF</p>
     `);
       window.scroll({
-        top: 2000
+        top: window.innerHeight + 2000
       });
       const target = UiFinder.findIn(TinyDom.body(editor), 'p:contains("Draggable CEF")').getOrDie();
       const initialScrollY = window.scrollY;
@@ -264,7 +262,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       const target = UiFinder.findIn(TinyDom.body(editor), 'p:contains("Draggable CEF")').getOrDie();
       const initialScrollX = window.scrollX;
       Mouse.mouseDown(target);
-      Mouse.mouseMoveTo(SugarElement.fromDom(editor.getBody()), window.innerWidth - 4, 12); // Move the mouse close to the right edge of the editor to trigger scrolling
+      Mouse.mouseMoveTo(SugarElement.fromDom(window.document.body), window.innerWidth - 4, 12); // Move the mouse close to the right edge of the editor to trigger scrolling
       await Waiter.pWait(1500); // Wait a small amount of time to ensure the scrolling happens
       assert.isAbove(window.scrollX, initialScrollX); // Make sure scrolling happened
       Mouse.mouseUp(target);
@@ -280,7 +278,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       </div>
     `);
       window.scroll({
-        left: 2000
+        left: window.innerWidth + 2000
       });
       const target = UiFinder.findIn(TinyDom.body(editor), 'p:contains("Draggable CEF")').getOrDie();
       const initialScrollX = window.scrollX;
