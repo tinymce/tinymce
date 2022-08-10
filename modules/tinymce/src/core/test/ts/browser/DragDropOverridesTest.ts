@@ -218,11 +218,11 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       editor.setContent(`
       <p contenteditable="false" style="height: 200px; background-color: black; color: white">Draggable CEF</p>
       <p id="separator" style="height: 100px"></p>
-      <p id="hidden" style="height: 1500px"></p>
+      <p class="hidden" style="height: 1500px"></p>
       <p>CEF can get dragged after this one</p>
     `);
       const target = UiFinder.findIn(TinyDom.body(editor), 'p:contains("Draggable CEF")').getOrDie();
-      const dest = SugarElement.fromDom(window.document.body);
+      const dest = UiFinder.findIn(TinyDom.body(editor), 'p.hidden').getOrDie();
       const initialScrollY = window.scrollY;
       Mouse.mouseDown(target);
       Mouse.mouseMoveTo(dest, 0, window.innerHeight - 2); // Move the mouse close to the bottom edge of the editor to trigger scrolling
@@ -286,7 +286,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       const initialScrollX = window.scrollX;
       const dest = UiFinder.findIn(TinyDom.body(editor), 'p.separator').getOrDie();
       Mouse.mouseDown(target);
-      Mouse.mouseMoveTo(dest, 500, 8); // Move the mouse close to the right edge of the editor to trigger scrolling
+      Mouse.mouseMoveTo(dest, 200, 8); // Move the mouse close to the right edge of the editor to trigger scrolling
       await Waiter.pWait(1500); // Wait a small amount of time to ensure the scrolling happens
       Mouse.mouseUp(target);
       assert.isBelow(window.scrollX, initialScrollX); // Make sure scrolling happened
