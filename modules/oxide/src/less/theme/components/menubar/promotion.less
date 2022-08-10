@@ -5,14 +5,7 @@
 @promotion-background-color: #E8F1F8;
 @promotion-background-hover-color: #B4D7FF;
 @promotion-background-active-color: #D9EDF7;
-@promotion-color: #086BE6;
-
-// private variables
-@_promotion-row-separator-color: escape('@{menubar-row-separator-color}');
-@_promotion-height: @_promotion-select-height + (@_promotion-select-spacing-y * 2) + 1px;
-@_promotion-divider-height: @_promotion-height - 1px;
-@_promotion-select-height: @menubar-select-height;
-@_promotion-select-spacing-y: @menubar-select-spacing-y;
+@promotion-text-color: #086BE6;
 
 .tox {
   .tox-promotion {
@@ -29,7 +22,7 @@
   .tox-promotion-link {
     background-color: @promotion-background-color;
     border-radius: 5px;
-    color: @promotion-color;
+    color: @promotion-text-color;
     display: block;
     font-size: @menubar-select-font-size;
     padding: 4px 8px;
