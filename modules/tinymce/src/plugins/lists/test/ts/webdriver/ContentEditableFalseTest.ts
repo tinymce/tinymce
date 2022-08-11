@@ -13,8 +13,7 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
   }, [ Plugin ], true);
 
   const firstListSelector = 'iframe => body => li:first-child';
-  const secondListSelector = 'iframe => body => li:nth-child(2)';
-  const thirdListSelector = 'iframe => body => li:nth-child(3)';
+  const lastListSelector = 'iframe => body => li:last-child';
 
   const noneditableLiContent = '<ol contenteditable="false">\n' +
     '<li contenteditable="true">editable</li>\n' +
@@ -68,7 +67,7 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: {},
       key: 'backspace',
-      selector: secondListSelector,
+      selector: lastListSelector,
       content: noneditableLiContent,
       startPath: [ 1, 1, 0 ],
       endPath: [ 0, 1, 0 ]
@@ -79,7 +78,7 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: {},
       key: 'backspace',
-      selector: thirdListSelector,
+      selector: lastListSelector,
       content: nestedEditableLiContent,
       startPath: [ 1, 2, 0 ],
       endPath: [ 0, 2, 0 ]
@@ -101,7 +100,7 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: {},
       key: 'enter',
-      selector: secondListSelector,
+      selector: lastListSelector,
       content: noneditableLiContent,
       startPath: [ 1, 1, 0 ],
       endPath: [ 0, 1, 0 ]
@@ -112,7 +111,7 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: {},
       key: 'enter',
-      selector: thirdListSelector,
+      selector: lastListSelector,
       content: nestedEditableLiContent,
       startPath: [ 1, 2, 0 ],
       endPath: [ 0, 2, 0 ]
@@ -134,7 +133,7 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: { shift: true },
       key: 'tab',
-      selector: secondListSelector,
+      selector: lastListSelector,
       content: noneditableLiContent,
       startPath: [ 1, 1, 0 ],
       endPath: [ 0, 0, 0 ]
@@ -145,7 +144,7 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: {},
       key: 'tab',
-      selector: thirdListSelector,
+      selector: lastListSelector,
       content: nestedEditableLiContent,
       startPath: [ 1, 2, 0 ],
       endPath: [ 0, 3, 0 ]
@@ -156,7 +155,7 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: { shift: true },
       key: 'tab',
-      selector: thirdListSelector,
+      selector: lastListSelector,
       content: nestedEditableLiContent,
       startPath: [ 1, 2, 0 ],
       endPath: [ 0, 1, 0 ]
