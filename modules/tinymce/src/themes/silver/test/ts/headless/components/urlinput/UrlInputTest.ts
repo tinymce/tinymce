@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Keyboard, Keys, Mouse, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { AlloyTriggers, Disabling, Focusing, GuiFactory, NativeEvents, Representing, TestHelpers } from '@ephox/alloy';
-import { beforeEach, describe, it } from '@ephox/bedrock-client';
+import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Future, Optional } from '@ephox/katamari';
 import { SelectorFind, SugarDocument, Value } from '@ephox/sugar';
 import { assert } from 'chai';
@@ -77,6 +77,27 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
     // Close the menu
     Keyboard.activeKeydown(doc, Keys.escape());
   };
+
+  const assertTrimSpaces = (inputString: string, expectedOutput: string) =>
+    () => {
+      const input = getInput();
+
+      UiControls.setValue(input.element, inputString);
+
+      assert.equal(Value.get(input.element), expectedOutput, 'Checking Value.get');
+      const repValue = Representing.getValue(input);
+      assert.deepEqual(
+        {
+          value: repValue.value,
+          meta: { text: repValue.meta.text },
+        },
+        {
+          value: expectedOutput,
+          meta: { text: undefined },
+        },
+        'Checking Rep.getValue'
+      );
+    };
 
   beforeEach(() => {
     hook.store().clear();
@@ -202,6 +223,14 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
     store.assertEq('Attach should be in store ... after firing attach', [ 'addToHistory', 'header1.attach' ]);
 
     closeMenu();
+  });
+
+  context('Trim spaces as expected for an URL', () => {
+    it('TINY-8775: Trim a space of it is the only thing in the input', assertTrimSpaces(' ', ''));
+    it('TINY-8775: Trim a space of it is at the start', assertTrimSpaces(' A', 'A'));
+    it('TINY-8775: Trim a space of it is at the end', assertTrimSpaces('A ', 'A'));
+    it('TINY-8775: Do not rim a space of it is in beween letters', assertTrimSpaces('A B', 'A B'));
+    it('TINY-8775: Trim all appropriate spaces', assertTrimSpaces(' A B ', 'A B'));
   });
 
   it('Click urlpicker and assert input state is updated', async () => {
