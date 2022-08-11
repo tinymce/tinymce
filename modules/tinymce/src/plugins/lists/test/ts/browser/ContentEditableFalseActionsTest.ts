@@ -69,7 +69,7 @@ describe('browser.tinymce.plugins.lists.ContentEditableFalseActionsTest', () => 
     editor.execCommand('mceListProps');
     TinyAssertions.assertCursor(editor, [ 0, 2, 0 ], 0);
     TinyAssertions.assertContent(editor, content);
-    editor.execCommand('mceListUpdate', false, { attrs: { contenteditable: "true" } });
+    editor.execCommand('mceListUpdate', false, { attrs: { contenteditable: 'true' }});
     TinyAssertions.assertCursor(editor, [ 0, 2, 0 ], 0);
     TinyAssertions.assertContent(editor, content);
   });
@@ -95,7 +95,7 @@ describe('browser.tinymce.plugins.lists.ContentEditableFalseActionsTest', () => 
     editor.execCommand('InsertDefinitionList');
     TinyAssertions.assertCursor(editor, [ 0, 2, 0 ], 0);
     TinyAssertions.assertContent(editor, content);
-    editor.execCommand('mceListUpdate', false, { attrs: { contenteditable: "true" } });
+    editor.execCommand('mceListUpdate', false, { attrs: { contenteditable: 'true' }});
     TinyAssertions.assertCursor(editor, [ 0, 2, 0 ], 0);
     TinyAssertions.assertContent(editor, content);
   });
