@@ -1,3 +1,4 @@
+import { Toolbar } from '@ephox/bridge';
 import { Arr } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -24,7 +25,7 @@ const setNodeChangeHandler = (editor: Editor, nodeChangeHandler: (e: NodeChangeE
   return () => editor.off('NodeChange', nodeChangeHandler);
 };
 
-export const setupToggleButtonHandler = (editor: Editor, listName: string) => (api): () => void => {
+export const setupToggleButtonHandler = (editor: Editor, listName: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi): () => void => {
   const toggleButtonHandler = (e: NodeChangeEvent) => {
     api.setActive(inList(e.parents, listName));
     api.setEnabled(editor.dom.getContentEditableRoot(e.element) !== 'false');
@@ -32,7 +33,7 @@ export const setupToggleButtonHandler = (editor: Editor, listName: string) => (a
   return setNodeChangeHandler(editor, toggleButtonHandler);
 };
 
-export const setupMenuButtonHandler = (editor: Editor, listName: string) => (api): () => void => {
+export const setupMenuButtonHandler = (editor: Editor, listName: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi): () => void => {
   const menuButtonHandler = (e: NodeChangeEvent) =>
     api.setEnabled(inList(e.parents, listName) && editor.dom.getContentEditableRoot(e.element) !== 'false');
   return setNodeChangeHandler(editor, menuButtonHandler);
