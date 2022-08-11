@@ -11,7 +11,7 @@ interface ListUpdate {
 
 export const updateList = (editor: Editor, update: ListUpdate): void => {
   const parentList = getParentList(editor);
-  if (parentList) {
+  if (parentList && editor.dom.getContentEditableRoot(parentList) !== 'false') {
     editor.undoManager.transact(() => {
       if (Type.isObject(update.styles)) {
         editor.dom.setStyles(parentList, update.styles);
