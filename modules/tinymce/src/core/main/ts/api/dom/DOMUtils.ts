@@ -1862,7 +1862,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     /**
      * Returns the state of the `contenteditable` root parent of a node;
      * `'false'` if any parent has `contenteditable="false"`,
-     * `'true'` if at least one parent `contenteditable="true"` and no `contenteditable="false"`,
+     * `'true'` if at least one parent has `contenteditable="true"` and no `contenteditable="false"`,
      * or `null` if no parent has the `contenteditable` attribute.
      *
      * @method getContentEditableRoot
