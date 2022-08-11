@@ -54,7 +54,7 @@ const internalFilter = <T extends {}>(obj: T, pred: ObjPredicate<T>, onTrue: Obj
 };
 
 export const bifilter = <T extends {}>(obj: T, pred: ObjPredicate<T>): { t: Record<string, T[keyof T]>; f: Record<string, T[keyof T]> } => {
-  const t: Record<string, T[keyof T]> = {} ;
+  const t: Record<string, T[keyof T]> = {};
   const f: Record<string, T[keyof T]> = {};
   internalFilter(obj, pred, objAcc(t), objAcc(f));
   return { t, f };
