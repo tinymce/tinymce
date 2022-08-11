@@ -12,7 +12,7 @@ describe('browser.tinymce.plugins.media.IsCachedResponseTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: [ 'media' ],
     toolbar: 'media',
-    media_url_resolver: (data, resolve, reject) => {
+    media_url_resolver: (data: { url: string }, resolve: (response: { html: string }) => void, reject: (msg: string) => void) => {
       if (data.url === 'test') {
         resolve({
           html: '<div>x</div>' });

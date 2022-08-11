@@ -18,7 +18,7 @@ const getEphoxEmbedData = (node: AstNode): MediaData => {
   const styles = style ? DOM.parseStyle(style) : { };
   return {
     type: 'ephox-embed-iri',
-    source: node.attr('data-ephox-embed-iri'),
+    source: node.attr('data-ephox-embed-iri') as string,
     altsource: '',
     poster: '',
     width: Obj.get(styles, 'max-width').map(trimPx).getOr(''),
@@ -27,12 +27,12 @@ const getEphoxEmbedData = (node: AstNode): MediaData => {
 };
 
 const htmlToData = (html: string, schema?: Schema): MediaData => {
-  let data: any = {};
+  let data = {} as Partial<MediaData>;
 
   const parser = DomParser({ validate: false, forced_root_block: false }, schema);
   const rootNode = parser.parse(html);
 
-  for (let node = rootNode; node; node = node.walk()) {
+  for (let node: AstNode | null | undefined = rootNode; node; node = node.walk()) {
     if (node.type === 1) {
       const name = node.name;
 
@@ -50,7 +50,8 @@ const htmlToData = (html: string, schema?: Schema): MediaData => {
             data.type = name;
           }
 
-          data = Tools.extend(node.attributes.map, data);
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          data = Tools.extend(node.attributes!.map, data);
         }
 
         if (name === 'script') {
@@ -75,11 +76,11 @@ const htmlToData = (html: string, schema?: Schema): MediaData => {
     }
   }
 
-  data.source = data.source || data.src || data.data;
+  data.source = data.source || data.src || '';
   data.altsource = data.altsource || '';
   data.poster = data.poster || '';
 
-  return data;
+  return data as MediaData;
 };
 
 export {

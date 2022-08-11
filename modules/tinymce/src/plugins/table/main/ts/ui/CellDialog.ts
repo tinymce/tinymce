@@ -53,7 +53,7 @@ const updateSimpleProps = (modifier: DomModifier, colModifier: DomModifier, data
   }
 };
 
-const updateAdvancedProps = (modifier: DomModifier, data: CellData, shouldUpdate: (key: string) => boolean): void => {
+const updateAdvancedProps = (modifier: DomModifier, data: Required<CellData>, shouldUpdate: (key: string) => boolean): void => {
   if (shouldUpdate('backgroundcolor')) {
     modifier.setFormat('tablecellbackgroundcolor', data.backgroundcolor);
   }
@@ -79,7 +79,7 @@ const applyStyleData = (editor: Editor, cells: SelectedCell[], data: CellData, w
     updateSimpleProps(modifier, colModifier, data, shouldOverrideCurrentValue);
 
     if (Options.hasAdvancedCellTab(editor)) {
-      updateAdvancedProps(modifier, data, shouldOverrideCurrentValue);
+      updateAdvancedProps(modifier, data as Required<CellData>, shouldOverrideCurrentValue);
     }
 
     // Apply alignment
@@ -101,7 +101,7 @@ const applyStructureData = (editor: Editor, data: CellData): void => {
 };
 
 const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[], oldData: CellData, data: CellData): void => {
-  const modifiedData = Obj.filter(data, (value, key) => oldData[key] !== value);
+  const modifiedData = Obj.filter(data, (value, key) => oldData[key as keyof CellData] !== value);
 
   if (Obj.size(modifiedData) > 0 && cells.length >= 1) {
     // Retrieve the table before the cells are modified as there is a case where cells

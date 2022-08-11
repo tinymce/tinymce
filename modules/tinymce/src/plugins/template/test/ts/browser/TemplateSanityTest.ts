@@ -1,5 +1,6 @@
 import { UiFinder } from '@ephox/agar';
 import { afterEach, beforeEach, describe, it } from '@ephox/bedrock-client';
+import { Type } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -52,8 +53,8 @@ describe('browser.tinymce.plugins.template.TemplateSanityTest', () => {
     });
     await pInsertTemplate(editor, async (dialogEl) => {
       await UiFinder.pWaitForState<HTMLIFrameElement>('iframe is loaded', dialogEl, 'iframe', (elm) => {
-        const iframeDoc = elm.dom.contentDocument || elm.dom.contentWindow.document;
-        return iframeDoc.body.firstChild !== null;
+        const iframeDoc = elm.dom.contentDocument || elm.dom.contentWindow?.document;
+        return Type.isNonNullable(iframeDoc?.body.firstChild);
       });
       UiFinder.exists(dialogEl, 'p:contains("<strong>b</strong>")');
     });

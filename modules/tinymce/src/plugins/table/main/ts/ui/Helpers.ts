@@ -79,11 +79,11 @@ const extractAdvancedStyles = (elm: Node): AdvancedStyles => {
   };
 };
 
-const getSharedValues = <T>(data: T[]): T => {
+const getSharedValues = <T extends Record<string, string>>(data: T[]): T => {
   // TODO surely there's a better way to do this??
   // Mutates baseData to return an object that contains only the values
   // that were the same across all objects in data
-  const baseData = data[0];
+  const baseData: Record<string, string> = data[0];
   const comparisonData = data.slice(1);
 
   Arr.each(comparisonData, (items) => {
@@ -99,7 +99,7 @@ const getSharedValues = <T>(data: T[]): T => {
     });
   });
 
-  return baseData;
+  return baseData as T;
 };
 
 // The extractDataFrom... functions are in this file partly for code reuse and partly so we can test them,
@@ -179,7 +179,7 @@ const extractDataFromTableElement = (editor: Editor, elm: Element, hasAdvTableTa
       return optBorderWidth.getOr('');
     }
     return dom.getAttrib(elm, 'border') || Styles.getTDTHOverallStyle(editor.dom, elm, 'border-width')
-      || Styles.getTDTHOverallStyle(editor.dom, elm, 'border');
+      || Styles.getTDTHOverallStyle(editor.dom, elm, 'border') || '';
   };
 
   const dom = editor.dom;
@@ -195,8 +195,8 @@ const extractDataFromTableElement = (editor: Editor, elm: Element, hasAdvTableTa
   return {
     width: dom.getStyle(elm, 'width') || dom.getAttrib(elm, 'width'),
     height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),
-    cellspacing,
-    cellpadding,
+    cellspacing: cellspacing ?? '',
+    cellpadding: cellpadding ?? '',
     border: getBorder(dom, elm),
     caption: !!dom.select('caption', elm)[0],
     class: dom.getAttrib(elm, 'class', ''),

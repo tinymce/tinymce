@@ -8,8 +8,8 @@ import { ExternalTemplate, TemplateValues } from '../core/Types';
 type TemplateCallback = (callback: (templates: ExternalTemplate[]) => void) => void;
 
 const option: {
-  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K] | undefined;
-  <T>(name: string): (editor: Editor) => T | undefined;
+  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K];
+  <T>(name: string): (editor: Editor) => T;
 } = (name: string) => (editor: Editor) =>
   editor.options.get(name);
 
@@ -40,7 +40,8 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('templates', {
-    processor: (value) => Type.isString(value) || Type.isArrayOf(value, Type.isObject) || Type.isFunction(value)
+    processor: (value) => Type.isString(value) || Type.isArrayOf(value, Type.isObject) || Type.isFunction(value),
+    default: []
   });
 
   registerOption('template_cdate_format', {
@@ -57,8 +58,8 @@ const register = (editor: Editor): void => {
 const getCreationDateClasses = option<string>('template_cdate_classes');
 const getModificationDateClasses = option<string>('template_mdate_classes');
 const getSelectedContentClasses = option<string>('template_selected_content_classes');
-const getPreviewReplaceValues = option<TemplateValues>('template_preview_replace_values');
-const getTemplateReplaceValues = option<TemplateValues>('template_replace_values');
+const getPreviewReplaceValues = option<TemplateValues | undefined>('template_preview_replace_values');
+const getTemplateReplaceValues = option<TemplateValues | undefined>('template_replace_values');
 const getTemplates = option<string | ExternalTemplate[] | TemplateCallback>('templates');
 const getCdateFormat = option<string>('template_cdate_format');
 const getMdateFormat = option<string>('template_mdate_format');

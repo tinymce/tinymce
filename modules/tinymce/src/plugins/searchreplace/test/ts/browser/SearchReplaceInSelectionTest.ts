@@ -47,7 +47,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceInSelectionTest', (
     const editor = hook.editor();
     editor.setContent(scenario.content);
     if (scenario.sel) {
-      TinySelections.setSelection(editor, scenario.sel.sPath, scenario.sel.sOffset, scenario.sel.fPath || scenario.sel.sPath, scenario.sel.fOffset || scenario.sel.fOffset);
+      TinySelections.setSelection(editor, scenario.sel.sPath, scenario.sel.sOffset, scenario.sel.fPath || scenario.sel.sPath, scenario.sel.fOffset || scenario.sel.sOffset);
     }
     const matches = editor.plugins.searchreplace.find(scenario.find, scenario.matchCase || false, scenario.wholeWords || false, true);
     assert.equal(scenario.matches, matches);

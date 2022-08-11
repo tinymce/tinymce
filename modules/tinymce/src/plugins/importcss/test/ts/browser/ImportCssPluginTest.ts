@@ -48,7 +48,7 @@ describe('browser.tinymce.plugins.importcss.ImportCssTest', () => {
               } : {
                 classes: [ arr.has('tox-collection__item-label') ],
                 children: [
-                  s.element((exp as MenuTagDetails).tag, { html: str.is(exp.html) })
+                  s.element(exp.tag, { html: str.is(exp.html) })
                 ]
               })
             ].concat(exp.submenu ? [ s.anything() ] : [ s.element('div', { classes: [ arr.has('tox-collection__item-checkmark') ] }) ])

@@ -1,6 +1,8 @@
-declare let tinymce: any;
+import { RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
 
-const quickbarsClassicConfig = {
+declare let tinymce: TinyMCE;
+
+const quickbarsClassicConfig: RawEditorOptions = {
   selector: 'textarea.tinymce',
   plugins: 'quickbars link code',
   toolbar: 'quickbars code',
@@ -19,7 +21,7 @@ const quickbarsClassicConfig = {
   }
 };
 
-const dfreeHeaderConfig = {
+const dfreeHeaderConfig: RawEditorOptions = {
   selector: '.dfree-header',
   plugins: [ 'quickbars' ],
   toolbar: false,
@@ -28,7 +30,7 @@ const dfreeHeaderConfig = {
   quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote'
 };
 
-const dfreeBodyConfig = {
+const dfreeBodyConfig: RawEditorOptions = {
   selector: '.dfree-body',
   menubar: false,
   inline: true,
