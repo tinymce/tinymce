@@ -6,11 +6,19 @@ import { NestedMenuItemContents } from '../components/menu/NestedMenuItem';
 export type MenuButtonItemTypes = NestedMenuItemContents;
 export type SuccessCallback = (menu: string | MenuButtonItemTypes[]) => void;
 
+// NOTE: FetchContext is an object so that we can add information to it in the future.
+export interface FetchContext {
+  pattern: string;
+}
+
 export interface BaseMenuButtonSpec {
   text?: string;
   tooltip?: string;
   icon?: string;
-  fetch: (success: SuccessCallback) => void;
+  searchable?: boolean;
+  // In order to avoid breaking APIs with pre 6.2 releases, the fetchContext was added
+  // as an additional argument to fetch.
+  fetch: (success: SuccessCallback, fetchContext?: FetchContext) => void;
   onSetup?: (api: BaseMenuButtonInstanceApi) => (api: BaseMenuButtonInstanceApi) => void;
 }
 
@@ -18,7 +26,8 @@ export interface BaseMenuButton {
   text: Optional<string>;
   tooltip: Optional<string>;
   icon: Optional<string>;
-  fetch: (success: SuccessCallback) => void;
+  searchable: boolean;
+  fetch: (success: SuccessCallback, fetchContext: FetchContext) => void;
   onSetup: (api: BaseMenuButtonInstanceApi) => (api: BaseMenuButtonInstanceApi) => void;
 }
 
@@ -33,6 +42,7 @@ export const baseMenuButtonFields = [
   FieldSchema.optionString('text'),
   FieldSchema.optionString('tooltip'),
   FieldSchema.optionString('icon'),
+  FieldSchema.defaultedBoolean('searchable', false),
   FieldSchema.requiredFunction('fetch'),
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop)
 ];

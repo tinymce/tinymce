@@ -18,6 +18,11 @@ const runWithApi = <T>(info: GetApiType<T>, comp: AlloyComponent): (f: OnDestroy
   };
 };
 
+// These handlers are used for providing common onAttached and onDetached handlers.
+// Essentially, the `editorOffCell` is used store the onDestroy function returned
+// by onSetup. The reason onControlAttached doesn't create the cell itself, is because
+// it also has to be passed into onControlDetached. We could make this function return
+// the cell and the onAttachedHandler, but that would provide too much complexity.
 const onControlAttached = <T>(info: OnControlAttachedType<T>, editorOffCell: Cell<OnDestroy<T>>): AlloyEvents.AlloyEventKeyAndHandler<EventFormat> =>
   AlloyEvents.runOnAttached((comp) => {
     const run = runWithApi(info, comp);

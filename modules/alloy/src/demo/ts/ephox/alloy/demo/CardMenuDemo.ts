@@ -11,6 +11,7 @@ import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
+import { HighlightOnOpen } from 'ephox/alloy/ui/types/TieredMenuTypes';
 
 /* eslint-disable no-console */
 
@@ -143,7 +144,7 @@ export default (): void => {
 
     navigateOnHover: false,
 
-    highlightImmediately: true,
+    highlightOnOpen: HighlightOnOpen.HighlightMenuAndItem,
     data: TieredMenu.tieredData(
       'styles',
       {

@@ -9,6 +9,7 @@ import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderCommonDropdown } from '../dropdown/CommonDropdown';
 import ItemResponse from '../menus/item/ItemResponse';
 import * as NestedMenus from '../menus/menu/NestedMenus';
+import { getSearchPattern } from '../menus/menu/searchable/SearchableMenu';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 
 export type MenuButtonSpec = Omit<Toolbar.ToolbarMenuButton, 'type'>;
@@ -45,14 +46,31 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
   text: spec.text,
   icon: spec.icon,
   tooltip: spec.tooltip,
+  searchable: spec.searchable,
   // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
   role,
-  fetch: (_comp, callback) => {
-    spec.fetch((items) => {
-      callback(
-        NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, false)
-      );
-    });
+  fetch: (dropdownComp, callback) => {
+    const fetchContext = {
+      pattern: spec.searchable ? getSearchPattern(dropdownComp) : ''
+    };
+
+    spec.fetch(
+      (items) => {
+        callback(
+          NestedMenus.build(
+            items,
+            ItemResponse.CLOSE_ON_EXECUTE,
+            backstage,
+            {
+              isHorizontalMenu: false,
+              // MenuButtons are the only dropdowns that support searchable (2022-08-16)
+              isSearchable: spec.searchable
+            }
+          )
+        );
+      },
+      fetchContext
+    );
   },
   onSetup: spec.onSetup,
   getApi: getMenuButtonApi,

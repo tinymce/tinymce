@@ -1,4 +1,4 @@
-import { Fun, Obj } from '@ephox/katamari';
+import { Fun, Obj, Optional } from '@ephox/katamari';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { nuState } from '../common/BehaviourState';
@@ -25,10 +25,21 @@ const init = (): CouplingState => {
     }
   };
 
+  const getExisting = (component: AlloyComponent, coupleConfig: CouplingConfig, name: string): Optional<AlloyComponent> => {
+    const available = Obj.keys(coupleConfig.others);
+    if (!available) {
+      throw new Error('Cannot find coupled component: ' + name + '. Known coupled components: ' + JSON.stringify(available, null, 2));
+    } else {
+      // TODO: Likely type error. coupleConfig.others[key] is `() => ((comp: AlloyComponent) => AlloySpec)`, but builder is being treated as a `(comp: AlloyComponent) => AlloySpec`
+      return Obj.get<any, string>(coupled, name);
+    }
+  };
+
   const readState = Fun.constant({ });
 
   return nuState({
     readState,
+    getExisting,
     getOrCreate
   });
 };

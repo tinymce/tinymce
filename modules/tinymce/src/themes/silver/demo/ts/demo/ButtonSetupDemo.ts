@@ -1,4 +1,6 @@
 /* eslint-disable no-console */
+import { Arr } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 
 export default {
@@ -75,6 +77,112 @@ export default {
             console.log('Preview Demo Close');
           }
         });
+      }
+    });
+
+    ed.ui.registry.addMenuButton('MailMerge', {
+      text: 'MailMerge',
+      searchable: true,
+      fetch: (callback, fetchContext) => {
+        const makeMailMerge = (info: { value: string; title?: string}) => ({
+          type: 'menuitem',
+          text: info.title ?? info.value,
+          onAction: () => {
+            console.log('Triggering: ' + info.value);
+          }
+        });
+
+        const makeCategory = (title: string, items: any[]) => ({
+          type: 'nestedmenuitem',
+          text: title,
+          getSubmenuItems: () => items
+        });
+
+        const currentDateMerge = {
+          value: 'Current.Date',
+          title: 'Current date in DD/MM/YYYY format'
+        };
+
+        const tocMerge = {
+          value: 'Campaign.Toc',
+          title: 'Linked table of contents in your campaign'
+        };
+
+        const phoneHomeMerge = { value: 'Phone.Home' };
+        const phoneWorkMerge = { value: 'Phone.Work' };
+
+        const personFirstnameMerge = { value: 'Person.Name.First' };
+        const personSurnameMerge = { value: 'Person.Name.Last' };
+        const personFullnameMerge = { value: 'Person.Name.Full' };
+
+        const personWorkEmail = { value: 'Person.Email.Work' };
+        const personHomeEmail = { value: 'Person.Email.Home' };
+
+        if (!fetchContext || (fetchContext && fetchContext.pattern.length === 0)) {
+          callback([
+            makeMailMerge(currentDateMerge),
+            makeMailMerge(tocMerge),
+            makeCategory(
+              'Phone',
+              [
+                makeMailMerge(phoneHomeMerge),
+                makeMailMerge(phoneWorkMerge)
+              ]
+            ),
+            makeCategory(
+              'Person',
+              [
+                makeMailMerge(personFirstnameMerge),
+                makeMailMerge(personSurnameMerge),
+                makeMailMerge(personFullnameMerge),
+                makeCategory(
+                  'Email',
+                  [
+                    makeMailMerge(personWorkEmail),
+                    makeMailMerge(personHomeEmail)
+                  ]
+                )
+              ]
+            )
+          ] as any);
+        } else {
+          const allMerges: Array<{value: string; title?: string}> = [
+            currentDateMerge,
+            tocMerge,
+            phoneHomeMerge,
+            phoneWorkMerge,
+            personFirstnameMerge,
+            personSurnameMerge,
+            personFullnameMerge,
+            personWorkEmail,
+            personHomeEmail
+          ];
+
+          const matches = Arr.filter(allMerges, (m): boolean => {
+            const valueMatches = m.value.toLowerCase().indexOf(fetchContext.pattern.toLowerCase()) > -1;
+            return valueMatches || (
+              m.title !== undefined && (m.title.toLowerCase().indexOf(fetchContext.pattern.toLowerCase()) > -1)
+            );
+          });
+
+          if (matches.length > 0) {
+            callback(
+              Arr.map(matches, makeMailMerge) as any
+            );
+          } else {
+            callback([
+              {
+                type: 'menuitem',
+                text: 'No Results',
+                enabled: false,
+                onAction: () => {
+                  console.log('No results');
+                }
+              }
+            ]);
+          }
+        }
+
       }
     });
 

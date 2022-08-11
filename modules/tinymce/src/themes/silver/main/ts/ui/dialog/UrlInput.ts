@@ -73,7 +73,15 @@ export const renderUrlInput = (
     responseTime: 0,
     fetch: (input) => {
       const items = getItems(spec.filetype, input, urlBackstage);
-      const tdata = NestedMenus.build(items, ItemResponse.BUBBLE_TO_SANDBOX, backstage, false);
+      const tdata = NestedMenus.build(
+        items,
+        ItemResponse.BUBBLE_TO_SANDBOX,
+        backstage,
+        {
+          isHorizontalMenu: false,
+          isSearchable: false
+        }
+      );
       return Future.pure(tdata);
     },
 

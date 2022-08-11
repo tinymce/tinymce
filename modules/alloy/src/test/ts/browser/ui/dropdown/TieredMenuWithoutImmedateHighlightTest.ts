@@ -12,6 +12,7 @@ import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as MenuEvents from 'ephox/alloy/menu/util/MenuEvents';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
+import { HighlightOnOpen } from 'ephox/alloy/ui/types/TieredMenuTypes';
 
 UnitTest.asynctest('TieredMenuWithoutImmediateHighlightTest', (success, failure) => {
 
@@ -27,7 +28,7 @@ UnitTest.asynctest('TieredMenuWithoutImmediateHighlightTest', (success, failure)
       ],
 
       markers: TestDropdownMenu.markers(),
-      highlightImmediately: false,
+      highlightOnOpen: HighlightOnOpen.HighlightNone,
 
       data: {
         primary: 'menu-a',
