@@ -12,6 +12,8 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ], true);
 
+  const listSelector = 'iframe => body => li';
+
   const noneditableLiContent = '<ol contenteditable="false">\n' +
     '<li contenteditable="true">editable</li>\n' +
     '<li>noneditable</li>\n' +
@@ -53,7 +55,7 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: {},
       key: 'backspace',
-      selector: 'iframe => body => ol li:first-child',
+      selector: listSelector,
       content: noneditableLiContent,
       startPath: [ 1, 0, 0 ],
       endPath: [ 0, 0, 0 ]
@@ -64,7 +66,7 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: {},
       key: 'backspace',
-      selector: 'iframe => body => ol li:last-child',
+      selector: listSelector,
       content: noneditableLiContent,
       startPath: [ 1, 1, 0 ],
       endPath: [ 0, 1, 0 ]
@@ -75,7 +77,7 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: {},
       key: 'backspace',
-      selector: 'iframe => body => ol => ul li:first-child',
+      selector: listSelector,
       content: nestedEditableLiContent,
       startPath: [ 1, 2, 0 ],
       endPath: [ 0, 2, 0 ]
@@ -86,7 +88,7 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: {},
       key: 'enter',
-      selector: 'iframe => body => ol li:first-child',
+      selector: listSelector,
       content: noneditableLiContent,
       startPath: [ 1, 0, 0 ],
       endPath: [ 0, 0, 0 ]
@@ -97,7 +99,7 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: {},
       key: 'enter',
-      selector: 'iframe => body => ol li:last-child',
+      selector: listSelector,
       content: noneditableLiContent,
       startPath: [ 1, 1, 0 ],
       endPath: [ 0, 1, 0 ]
@@ -108,7 +110,7 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: {},
       key: 'enter',
-      selector: 'iframe => body => ol => ul li:first-child',
+      selector: listSelector,
       content: nestedEditableLiContent,
       startPath: [ 1, 2, 0 ],
       endPath: [ 0, 2, 0 ]
@@ -119,7 +121,7 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: {},
       key: 'tab',
-      selector: 'iframe => body => ol li:first-child',
+      selector: listSelector,
       content: noneditableLiContent,
       startPath: [ 1, 0, 0 ],
       endPath: [ 0, 2, 0 ]
@@ -130,7 +132,7 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: { shift: true },
       key: 'tab',
-      selector: 'iframe => body => ol li:last-child',
+      selector: listSelector,
       content: noneditableLiContent,
       startPath: [ 1, 1, 0 ],
       endPath: [ 0, 0, 0 ]
@@ -141,7 +143,7 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: {},
       key: 'tab',
-      selector: 'iframe => body => ol => ul li:first-child',
+      selector: listSelector,
       content: nestedEditableLiContent,
       startPath: [ 1, 2, 0 ],
       endPath: [ 0, 3, 0 ]
@@ -152,7 +154,7 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: { shift: true },
       key: 'tab',
-      selector: 'iframe => body => ol => ul li:nth-child(2)',
+      selector: listSelector,
       content: nestedEditableLiContent,
       startPath: [ 1, 2, 0 ],
       endPath: [ 0, 1, 0 ]
