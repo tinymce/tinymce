@@ -49,84 +49,84 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     TinyAssertions.assertContent(editor, args.content);
   };
 
-  it('TINY-8920: backspace from beginning editable first LI in noneditable OL with no change', async () => {
+  it('TINY-8920: backspace from beginning editable first LI in noneditable OL with no change', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: {},
       key: 'backspace',
       selector: 'iframe => body li:first-child',
       content: noneditableLiContent,
       startPath: [ 1, 0, 0 ],
-      endPath: [ 0, 0, 0]
+      endPath: [ 0, 0, 0 ]
     });
   });
 
-  it('TINY-8920: backspace from beginning second editable LI in noneditable OL with no change', async () => {
+  it('TINY-8920: backspace from beginning second editable LI in noneditable OL with no change', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: {},
       key: 'backspace',
       selector: 'iframe => body li:last-child',
       content: noneditableLiContent,
       startPath: [ 1, 2, 0 ],
-      endPath: [ 0, 2, 0]
+      endPath: [ 0, 2, 0 ]
     });
   });
 
-  it('TINY-8920: backspace from beginning editable first LI in nested noneditable UL with no change', async () => {
+  it('TINY-8920: backspace from beginning editable first LI in nested noneditable UL with no change', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: {},
       key: 'backspace',
       selector: 'iframe => body li:second-child',
       content: nestedEditableLiContent,
       startPath: [ 1, 1, 1, 0 ],
-      endPath: [ 0, 1, 1, 0]
+      endPath: [ 0, 1, 1, 0 ]
     });
   });
 
-  it('TINY-8920: enter from beginning editable first LI in noneditable OL with no change', async () => {
+  it('TINY-8920: enter from beginning editable first LI in noneditable OL with no change', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: {},
       key: 'enter',
       selector: 'iframe => body li:first-child',
       content: noneditableLiContent,
       startPath: [ 1, 0, 0 ],
-      endPath: [ 0, 0, 0]
+      endPath: [ 0, 0, 0 ]
     });
   });
 
-  it('TINY-8920: enter from beginning second editable LI in noneditable OL with no change', async () => {
+  it('TINY-8920: enter from beginning second editable LI in noneditable OL with no change', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: {},
       key: 'enter',
       selector: 'iframe => body li:last-child',
       content: noneditableLiContent,
       startPath: [ 1, 2, 0 ],
-      endPath: [ 0, 2, 0]
+      endPath: [ 0, 2, 0 ]
     });
   });
 
-  it('TINY-8920: enter from beginning editable first LI in nested noneditable UL with no change', async () => {
+  it('TINY-8920: enter from beginning editable first LI in nested noneditable UL with no change', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: {},
       key: 'enter',
       selector: 'iframe => body li:second-child',
       content: nestedEditableLiContent,
       startPath: [ 1, 1, 1, 0 ],
-      endPath: [ 0, 1, 1, 0]
+      endPath: [ 0, 1, 1, 0 ]
     });
   });
 
-  it('TINY-8920: tab from beginning editable first LI in noneditable OL with no change', async () => {
+  it('TINY-8920: tab from beginning editable first LI in noneditable OL with no change', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: {},
       key: 'tab',
       selector: 'iframe => body li:first-child',
       content: noneditableLiContent,
       startPath: [ 1, 0, 0 ],
-      endPath: [ 0, 2, 0]
+      endPath: [ 0, 2, 0 ]
     });
   });
 
-  it('TINY-8920: shift-tab from beginning second editable LI in noneditable OL with no change', async () => {
+  it('TINY-8920: shift-tab from beginning second editable LI in noneditable OL with no change', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: { shift: true },
       key: 'tab',
@@ -137,25 +137,25 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     });
   });
 
-  it('TINY-8920: tab from beginning editable first LI in nested noneditable UL with no change', async () => {
+  it('TINY-8920: tab from beginning editable first LI in nested noneditable UL with no change', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: {},
       key: 'tab',
       selector: 'iframe => body li:second-child',
       content: nestedEditableLiContent,
       startPath: [ 1, 1, 1, 0 ],
-      endPath: [ 0, 1, 2, 0]
+      endPath: [ 0, 1, 2, 0 ]
     });
   });
 
-  it('TINY-8920: shift-tab from beginning editable second LI in nested noneditable UL with no change', async () => {
+  it('TINY-8920: shift-tab from beginning editable second LI in nested noneditable UL with no change', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: { shift: true },
       key: 'tab',
       selector: 'iframe => body li:third-child',
       content: nestedEditableLiContent,
       startPath: [ 1, 1, 2, 0 ],
-      endPath: [ 0, 1, 1, 0]
+      endPath: [ 0, 1, 1, 0 ]
     });
   });
 });
