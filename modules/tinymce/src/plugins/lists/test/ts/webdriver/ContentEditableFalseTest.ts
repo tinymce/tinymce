@@ -66,8 +66,8 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
       key: 'backspace',
       selector: 'iframe => body li:last-child',
       content: noneditableLiContent,
-      startPath: [ 1, 2, 0 ],
-      endPath: [ 0, 2, 0 ]
+      startPath: [ 1, 1, 0 ],
+      endPath: [ 0, 1, 0 ]
     });
   });
 
@@ -77,8 +77,8 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
       key: 'backspace',
       selector: 'iframe => body li:second-child',
       content: nestedEditableLiContent,
-      startPath: [ 1, 1, 1, 0 ],
-      endPath: [ 0, 1, 1, 0 ]
+      startPath: [ 1, 2, 0 ],
+      endPath: [ 0, 2, 0 ]
     });
   });
 
@@ -99,8 +99,8 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
       key: 'enter',
       selector: 'iframe => body li:last-child',
       content: noneditableLiContent,
-      startPath: [ 1, 2, 0 ],
-      endPath: [ 0, 2, 0 ]
+      startPath: [ 1, 1, 0 ],
+      endPath: [ 0, 1, 0 ]
     });
   });
 
@@ -108,10 +108,10 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: {},
       key: 'enter',
-      selector: 'iframe => body li:second-child',
+      selector: 'iframe => body li:nth-child(2)',
       content: nestedEditableLiContent,
-      startPath: [ 1, 1, 1, 0 ],
-      endPath: [ 0, 1, 1, 0 ]
+      startPath: [ 1, 2, 0 ],
+      endPath: [ 0, 2, 0 ]
     });
   });
 
@@ -132,7 +132,7 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
       key: 'tab',
       selector: 'iframe => body li:last-child',
       content: noneditableLiContent,
-      startPath: [ 1, 2, 0 ],
+      startPath: [ 1, 1, 0 ],
       endPath: [ 0, 0, 0 ]
     });
   });
@@ -143,8 +143,8 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
       key: 'tab',
       selector: 'iframe => body li:second-child',
       content: nestedEditableLiContent,
-      startPath: [ 1, 1, 1, 0 ],
-      endPath: [ 0, 1, 2, 0 ]
+      startPath: [ 1, 2, 0 ],
+      endPath: [ 0, 3, 0 ]
     });
   });
 
@@ -152,10 +152,10 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     pPressKeyAtElementOnContentWithoutChange({
       modifiers: { shift: true },
       key: 'tab',
-      selector: 'iframe => body li:third-child',
+      selector: 'iframe => body li:nth-child(3)',
       content: nestedEditableLiContent,
-      startPath: [ 1, 1, 2, 0 ],
-      endPath: [ 0, 1, 1, 0 ]
+      startPath: [ 1, 2, 0 ],
+      endPath: [ 0, 1, 0 ]
     });
   });
 });
