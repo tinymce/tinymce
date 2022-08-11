@@ -4,23 +4,23 @@ import * as fc from 'fast-check';
 
 import * as Arr from 'ephox/katamari/api/Arr';
 
-interface Z<T> {
-  index: number;
-  value: T;
+interface TestResult<T> {
+  readonly index: number;
+  readonly value: T;
 }
 
 describe('atomic.katamari.api.arr.ArrEachTest', () => {
   context('Arr.each', () => {
     it('unit test', () => {
-      const checkLHelper = <T>(expected: Z<T>[], input: ArrayLike<T>) => {
-        const values: Array<Z<T>> = [];
+      const checkLHelper = <T>(expected: TestResult<T>[], input: ArrayLike<T>) => {
+        const values: Array<TestResult<T>> = [];
         Arr.each(input, (x, i) => {
           values.push({ index: i, value: x });
         });
         assert.deepEqual(values, expected);
       };
 
-      const checkL = (expected, input: any[]) => {
+      const checkL = <T>(expected: TestResult<T>[], input: T[]) => {
         checkLHelper(expected, input);
         checkLHelper(expected, Object.freeze(input.slice()));
       };
@@ -49,15 +49,15 @@ describe('atomic.katamari.api.arr.ArrEachTest', () => {
 
   context('Arr.eachr', () => {
     it('unit test', () => {
-      const checkRHelper = <T>(expected: Z<T>[], input: ArrayLike<T>) => {
-        const values: Array<Z<T>> = [];
+      const checkRHelper = <T>(expected: TestResult<T>[], input: ArrayLike<T>) => {
+        const values: Array<TestResult<T>> = [];
         Arr.eachr(input, (x, i) => {
           values.push({ index: i, value: x });
         });
         assert.deepEqual(values, expected);
       };
 
-      const checkR = (expected, input: any[]) => {
+      const checkR = <T>(expected: TestResult<T>[], input: T[]) => {
         checkRHelper(expected, input);
         checkRHelper(expected, Object.freeze(input.slice()));
       };

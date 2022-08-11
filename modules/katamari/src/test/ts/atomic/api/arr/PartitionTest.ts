@@ -7,8 +7,8 @@ import * as Fun from 'ephox/katamari/api/Fun';
 
 describe('atomic.katamari.api.arr.PartitionTest', () => {
   it('unit tests', () => {
-    const check = (input: unknown[], expected) => {
-      const f = (n) => n.indexOf('yes') > -1;
+    const check = (input: string[], expected: { pass: string[]; fail: string[] }) => {
+      const f = (n: string) => n.indexOf('yes') > -1;
       assert.deepEqual(Arr.partition(input, f), expected);
       assert.deepEqual(Arr.partition(Object.freeze(input.slice()), f), expected);
     };
@@ -57,7 +57,7 @@ describe('atomic.katamari.api.arr.PartitionTest', () => {
     fc.assert(fc.property(
       fc.array(fc.integer()),
       (arr) => {
-        const predicate = (x) => x % 3 === 0;
+        const predicate = (x: number) => x % 3 === 0;
         const output = Arr.partition(arr, predicate);
         return Arr.forall(output.fail, (x) => !predicate(x)) && Arr.forall(output.pass, predicate);
       }

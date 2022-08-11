@@ -1,6 +1,6 @@
 export interface Cell<T> {
-  get: () => T;
-  set: (value: T) => void;
+  readonly get: () => T;
+  readonly set: (value: T) => void;
 }
 
 export const Cell = <T>(initial: T): Cell<T> => {

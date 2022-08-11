@@ -31,9 +31,9 @@ describe('atomic.katamari.api.async.LazyValueTest', () => {
   }));
 
   it('map', () => new Promise<void>((resolve, reject) => {
-    const f = (x) => x + 'hello';
+    const f = (x: string) => x + 'hello';
 
-    const lazy = LazyValue.nu((callback) => {
+    const lazy = LazyValue.nu<string>((callback) => {
       setTimeout(() => {
         callback('extra');
       }, 10);

@@ -9,18 +9,18 @@ import * as Obj from 'ephox/katamari/api/Obj';
 describe('atomic.katamari.api.obj.BiFilterTest', () => {
 
   it('unit tests', () => {
-    const even = (x) => x % 2 === 0;
+    const even = (x: number) => x % 2 === 0;
 
-    const check = (trueObj, falseObj, input, f) => {
+    const check = <T>(trueObj: Record<string, T>, falseObj: Record<string, T>, input: Record<string, T>, f: (val: T) => boolean) => {
       const filtered = Obj.bifilter(input, f);
       assert.deepEqual(filtered.t, trueObj);
       assert.deepEqual(filtered.f, falseObj);
     };
 
-    check({}, { a: '1' }, { a: '1' }, even);
-    check({ b: '2' }, {}, { b: '2' }, even);
-    check({ b: '2' }, { a: '1' }, { a: '1', b: '2' }, even);
-    check({ b: '2', d: '4' }, { a: '1', c: '3' }, { a: '1', b: '2', c: '3', d: '4' }, even);
+    check({}, { a: 1 }, { a: 1 }, even);
+    check({ b: 2 }, {}, { b: 2 }, even);
+    check({ b: 2 }, { a: 1 }, { a: 1, b: 2 }, even);
+    check({ b: 2, d: 4 }, { a: 1, c: 3 }, { a: 1, b: 2, c: 3, d: 4 }, even);
   });
 
   it('Check that if the filter always returns false, then everything is in "f"', () => {
@@ -51,10 +51,10 @@ describe('atomic.katamari.api.obj.BiFilterTest', () => {
     fc.assert(fc.property(
       fc.dictionary(fc.asciiString(1, 30), fc.integer()),
       (obj) => {
-        const predicate = (x) => x % 2 === 0;
+        const predicate = (x: number) => x % 2 === 0;
         const output = Obj.bifilter(obj, predicate);
 
-        const matches = (k) => predicate(obj[k]);
+        const matches = (k: string) => predicate(obj[k]);
 
         const falseKeys = Obj.keys(output.f);
         const trueKeys = Obj.keys(output.t);

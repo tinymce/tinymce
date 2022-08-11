@@ -238,11 +238,14 @@ export const reverse = <T>(xs: ArrayLike<T>): T[] => {
 
 export const difference = <T>(a1: ArrayLike<T>, a2: ArrayLike<T>): T[] => filter(a1, (x) => !contains(a2, x));
 
-export const mapToObject = <T extends keyof any, U>(xs: ArrayLike<T>, f: (x: T, i: number) => U): Record<T, U> => {
-  const r = {} as Record<T, U>;
+export const mapToObject: {
+  <T extends string, U>(xs: ArrayLike<T>, f: (x: T, i: number) => U): Record<T, U>;
+  <T, R extends Record<string, any>>(xs: ArrayLike<T>, f: (x: T, i: number) => R[keyof R]): R;
+} = <T, R extends Record<string, any>>(xs: ArrayLike<T>, f: (x: T, i: number) => R[keyof R]): R => {
+  const r = {} as R;
   for (let i = 0, len = xs.length; i < len; i++) {
     const x = xs[i];
-    r[String(x)] = f(x, i);
+    r[String(x) as keyof R] = f(x, i);
   }
   return r;
 };

@@ -4,9 +4,15 @@ import fc from 'fast-check';
 
 import { StringMatch } from 'ephox/katamari/api/StringMatch';
 
+interface Scenario {
+  readonly expected: boolean;
+  readonly input: string;
+  readonly match: StringMatch;
+}
+
 describe('atomic.katamari.api.str.StringMatchTest', () => {
   it('unit tests', () => {
-    const check = (testcase) => {
+    const check = (testcase: Scenario) => {
       assert.equal(StringMatch.matches(testcase.match, testcase.input), testcase.expected);
       assert.equal(StringMatch.matches(
         StringMatch.not(testcase.match),

@@ -8,7 +8,7 @@ import * as Fun from 'ephox/katamari/api/Fun';
 describe('atomic.katamari.api.arr.GroupByTest', () => {
 
   it('unit tests', () => {
-    const check = (input: unknown[], expected) => {
+    const check = <T>(input: T[], expected: T[][]) => {
       const f = Fun.identity;
       assert.deepEqual(Arr.groupBy(input, f), expected);
       assert.deepEqual(Arr.groupBy(Object.freeze(input.slice()), f), expected);

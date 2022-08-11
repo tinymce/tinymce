@@ -54,7 +54,7 @@ describe('atomic.katamari.api.struct.ContractsTest', () => {
       });
 
       assert.fail('Expected failure: ' + expected);
-    } catch (err) {
+    } catch (err: any) {
       assert.equal(err.message, expected);
     }
   });
@@ -69,7 +69,7 @@ describe('atomic.katamari.api.struct.ContractsTest', () => {
       });
 
       assert.fail('Expected failure: ' + expected);
-    } catch (err) {
+    } catch (err: any) {
       assert.equal(err.message, expected);
     }
   });
@@ -85,7 +85,7 @@ describe('atomic.katamari.api.struct.ContractsTest', () => {
       });
 
       assert.fail('Expected failure: ' + expected);
-    } catch (err) {
+    } catch (err: any) {
       assert.equal(err.message, expected);
     }
   });
@@ -112,7 +112,7 @@ describe('atomic.katamari.api.struct.ContractsTest', () => {
       });
 
       assert.fail('Expected failure: ' + expected);
-    } catch (err) {
+    } catch (err: any) {
       assert.equal(err.message, expected);
     }
   });

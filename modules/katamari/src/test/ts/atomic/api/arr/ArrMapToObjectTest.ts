@@ -9,8 +9,8 @@ import * as Unique from 'ephox/katamari/api/Unique';
 describe('atomic.katamari.api.arr.ArrMapToObjectTest', () => {
   it('maps to object', () => {
 
-    const checkToObject = (expected, input: any[], f) => {
-      assert.deepEqual(expected, Arr.mapToObject(input, f));
+    const checkToObject = <T, U>(expected: U, input: T[], f: (x: T) => U[keyof U]) => {
+      assert.deepEqual(expected, Arr.mapToObject<T, U>(input, f));
       assert.deepEqual(expected, Arr.mapToObject(Object.freeze(input.slice()), f));
     };
 
@@ -22,7 +22,7 @@ describe('atomic.katamari.api.arr.ArrMapToObjectTest', () => {
     checkToObject({ 1: 4, 2: 5 }, [ 1, 2 ], (x) => 3 + x);
 
     fc.assert(fc.property(fc.array(fc.asciiString()), (keys) => {
-      const f = (x) => x + '_cat';
+      const f = (x: string) => x + '_cat';
       const inputKeys = Arr.sort(Unique.stringArray(keys));
       const output = Arr.mapToObject(inputKeys, f);
       const outputKeys = Arr.sort(Obj.keys(output));

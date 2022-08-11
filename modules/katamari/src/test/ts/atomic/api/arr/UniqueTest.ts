@@ -9,7 +9,7 @@ describe('atomic.katamari.api.arr.UniqueTest', () => {
   it('unit tests', () => {
     const expected = [ 'three', 'two', 'one' ];
 
-    const check = (input) => {
+    const check = (input: string[]) => {
       assert.deepEqual(Unique.stringArray(input), expected);
     };
 

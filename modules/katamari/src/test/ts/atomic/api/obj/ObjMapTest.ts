@@ -8,20 +8,20 @@ import * as Obj from 'ephox/katamari/api/Obj';
 
 describe('atomic.katamari.api.obj.ObjMapTest', () => {
   it('unit test', () => {
-    const dbl = (x) => x * 2;
+    const dbl = (x: number) => x * 2;
 
-    const addDot = (x) => x + '.';
+    const addDot = (x: string) => x + '.';
 
-    const tupleF = (x, i) => ({
+    const tupleF = (x: string, i: string) => ({
       k: i + 'b',
       v: x + 'b'
     });
 
-    const check = (expected, input, f) => {
+    const check = <T, U>(expected: Record<string, U>, input: Record<string, T>, f: (val: T) => U) => {
       assert.deepEqual(Obj.map(input, f), expected);
     };
 
-    const checkT = (expected, input, f) => {
+    const checkT = <T, R>(expected: Record<string, R>, input: Record<string, T>, f: (val: T, key: string) => { k: string; v: R }) => {
       assert.deepEqual(Obj.tupleMap(input, f), expected);
     };
 
@@ -33,9 +33,9 @@ describe('atomic.katamari.api.obj.ObjMapTest', () => {
     checkT({ ab: 'ab' }, { a: 'a' }, tupleF);
     checkT({ ab: 'ab', bb: 'bb', cb: 'cb' }, { a: 'a', b: 'b', c: 'c' }, tupleF);
 
-    const stringify = (x, i) => i + ' :: ' + x;
+    const stringify = (x: string, i: string) => i + ' :: ' + x;
 
-    const checkMapToArray = (expected, input, f) => {
+    const checkMapToArray = (expected: string[], input: Record<string, string>, f: (x: string, i: string) => string) => {
       assert.deepEqual(Obj.mapToArray(input, f), expected);
     };
 

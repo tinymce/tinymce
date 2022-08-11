@@ -14,7 +14,7 @@ describe('atomic.katamari.api.optional.OptionalsMapFromTest', () => {
   });
 
   it('Optionals.mapFrom === Optionals.map().from()', () => {
-    const f = (x) => x + 1;
+    const f = (x: number) => x + 1;
 
     const check = (input: number | null | undefined) => {
       assertOptional(Optionals.mapFrom(input, f), Optional.from(input).map(f));

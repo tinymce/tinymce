@@ -1,11 +1,6 @@
 {
   "extends": "../../tsconfig.shared.json",
   "compilerOptions": {
-    "strict": false,
-    "noImplicitThis": true,
-    "strictBindCallApply": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
     "outDir": "lib",
     "rootDir": "src",
     "baseUrl": ".",

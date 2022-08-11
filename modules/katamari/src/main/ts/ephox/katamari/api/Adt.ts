@@ -3,9 +3,9 @@ import * as Obj from './Obj';
 import * as Type from './Type';
 
 export interface Adt {
-  fold: <T> (...caseHandlers: ((...data: any[]) => T)[]) => T;
-  match: <T> (branches: { [branch: string]: (...data: any[]) => T }) => T;
-  log: (label: string) => void;
+  readonly fold: <T> (...caseHandlers: ((...data: any[]) => T)[]) => T;
+  readonly match: <T> (branches: { [branch: string]: (...data: any[]) => T }) => T;
+  readonly log: (label: string) => void;
 }
 
 /*

@@ -6,9 +6,9 @@ import * as Fun from 'ephox/katamari/api/Fun';
 
 describe('atomic.katamari.api.fun.FunTest', () => {
   it('unit tests', () => {
-    const add2 = (n) => n + 2;
+    const add2 = (n: number) => n + 2;
 
-    const squared = (n) => n * n;
+    const squared = (n: number) => n * n;
 
     const add2squared = Fun.compose(squared, add2);
 
@@ -31,7 +31,7 @@ describe('atomic.katamari.api.fun.FunTest', () => {
     assert.isFalse(Fun.never());
     assert.isTrue(Fun.always());
 
-    const c = (...args) => args;
+    const c = <T>(...args: T[]): T[] => args;
 
     assert.deepEqual(Fun.curry(c)(), []);
     assert.deepEqual(Fun.curry(c, 'a')(), [ 'a' ]);
@@ -96,7 +96,7 @@ describe('atomic.katamari.api.fun.FunTest', () => {
 
   it('Check curry', () => {
     fc.assert(fc.property(fc.json(), fc.json(), fc.json(), fc.json(), (a, b, c, d) => {
-      const f = (a, b, c, d) => [ a, b, c, d ];
+      const f = (a: string, b: string, c: string, d: string) => [ a, b, c, d ];
 
       assert.deepEqual([ a, b, c, d ], Fun.curry(f, a)(b, c, d));
       assert.deepEqual([ a, b, c, d ], Fun.curry(f, a, b)(c, d));
