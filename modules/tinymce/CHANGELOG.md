@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Selecting a figure with `class="image"` would incorrectly highlight the link toolbar button #TINY-8832
 - Specifying a single, non-default list style for the `advlist_bullet_styles` and `advlist_number_styles` options was not respected. #TINY-8721
 - Fixed various issues that occurred when formatting `contenteditable` elements. #TINY-8905
+- Link url field would sometimes allow users to add spaces when a title was set #TINY-8775
 - The text pattern logic threw an error when there were fragmented text nodes in a paragraph #TINY-8779
 - Dragging a `contentEditable=false` element towards the edges would not cause scrolling #TINY-8874
 - The content of the `contenteditable="false"` element could be selected with the mouse on Firefox  #TINY-8828
