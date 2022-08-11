@@ -69,6 +69,9 @@ describe('browser.tinymce.plugins.lists.ContentEditableFalseActionsTest', () => 
     editor.execCommand('mceListProps');
     TinyAssertions.assertCursor(editor, [ 0, 2, 0 ], 0);
     TinyAssertions.assertContent(editor, content);
+    editor.execCommand('mceListUpdate', false, {attrs: {contenteditable: "true"}});
+    TinyAssertions.assertCursor(editor, [ 0, 2, 0 ], 0);
+    TinyAssertions.assertContent(editor, content);
   });
 
   it('TINY-8920: List commands are disabled in noneditable UL list', () => {
@@ -90,6 +93,9 @@ describe('browser.tinymce.plugins.lists.ContentEditableFalseActionsTest', () => 
     TinyAssertions.assertCursor(editor, [ 0, 2, 0 ], 0);
     TinyAssertions.assertContent(editor, content);
     editor.execCommand('InsertDefinitionList');
+    TinyAssertions.assertCursor(editor, [ 0, 2, 0 ], 0);
+    TinyAssertions.assertContent(editor, content);
+    editor.execCommand('mceListUpdate', false, {attrs: {contenteditable: "true"}});
     TinyAssertions.assertCursor(editor, [ 0, 2, 0 ], 0);
     TinyAssertions.assertContent(editor, content);
   });
