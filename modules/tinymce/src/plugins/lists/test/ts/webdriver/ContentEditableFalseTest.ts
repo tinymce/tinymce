@@ -32,13 +32,13 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
   '</ol>';
 
   interface TempArguments {
-    modifiers: { shift?: boolean },
-    key: string,
-    selector: string,
-    content: string,
-    startPath: number[],
-    endPath: number[]
-  };
+    modifiers: { shift?: boolean };
+    key: string;
+    selector: string;
+    content: string;
+    startPath: number[];
+    endPath: number[];
+  }
 
   const pPressKeyAtElementOnContentWithoutChange = async (args: TempArguments) => {
     const editor = hook.editor();
@@ -133,7 +133,7 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
       selector: 'iframe => body li:last-child',
       content: noneditableLiContent,
       startPath: [ 1, 2, 0 ],
-      endPath: [ 0, 0, 0]
+      endPath: [ 0, 0, 0 ]
     });
   });
 
