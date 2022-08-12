@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.DragDropOverridesTest', () => {
 
-  context('Tests without autoresize', () => {
+  context('Tests when the editor is inside the viewport', () => {
     const fired = Cell(false);
     const hook = TinyHooks.bddSetup<Editor>({
       indent: false,
@@ -135,9 +135,9 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       const initialScrollY = editor.getWin().scrollY;
       Mouse.mouseDown(target);
       Mouse.mouseMoveTo(dest, 0, 98); // Move the mouse close to the bottom edge of the editor to trigger scrolling
-      await Waiter.pWait(1000); // Wait a small amount of time to ensure the scrolling happens
-      Mouse.mouseUp(target);
-      assert.isAbove(editor.getWin().scrollY, initialScrollY); // Make sure scrolling happened
+      await Waiter.pTryUntil('Waiting for the editor to scroll down', () => {
+        assert.isAbove(editor.getWin().scrollY, initialScrollY); // Make sure scrolling happened
+      });
     });
 
     it('TINY-8874: Dragging CEF element towards the upper edge causes scrolling', async () => {
@@ -145,20 +145,22 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       editor.setContent(`
       <p>CEF can get dragged before this one</p>
       <p id="hidden" style="height: 300px"></p>
-      <p id="separator" style="height: 100px"></p>
+      <p class="separator" style="height: 100px"></p>
       <p contenteditable="false" style="height: 200px; background-color: black; color: white">Draggable CEF</p>
     `);
       editor.getWin().scroll({
-        top: 450
+        top: 400,
+        behavior: 'auto'
       });
+      await Waiter.pWait(1500);
       const target = UiFinder.findIn(TinyDom.body(editor), 'p:contains("Draggable CEF")').getOrDie();
-      const dest = UiFinder.findIn(TinyDom.body(editor), '#separator').getOrDie();
       const initialScrollY = editor.getWin().scrollY;
+      const dest = SugarElement.fromDom(editor.getBody());
       Mouse.mouseDown(target);
-      Mouse.mouseMoveTo(dest, 0, 2); // Move the mouse close to the top edge of the editor to trigger scrolling
-      await Waiter.pWait(1000); // Wait a small amount of time to ensure the scrolling happens
-      Mouse.mouseUp(target);
-      assert.isBelow(editor.getWin().scrollY, initialScrollY); // Make sure scrolling happened
+      Mouse.mouseMoveTo(dest, 0, 5); // Move the mouse close to the top edge of the editor to trigger scrolling
+      await Waiter.pTryUntil('Waiting for the editor to scroll up', () => {
+        assert.isBelow(editor.getWin().scrollY, initialScrollY); // Make sure scrolling happened
+      });
     });
 
     it('TINY-8874: Dragging CEF element towards the right edge causes scrolling', async () => {
@@ -175,8 +177,9 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       const initialScrollX = editor.getWin().scrollX;
       Mouse.mouseDown(target);
       Mouse.mouseMoveTo(SugarElement.fromDom(editor.getBody()), 298, 12); // Move the mouse close to the right edge of the editor to trigger scrolling
-      await Waiter.pWait(1500); // Wait a small amount of time to ensure the scrolling happens
-      assert.isAbove(editor.getWin().scrollX, initialScrollX); // Make sure scrolling happened
+      await Waiter.pTryUntil('Waiting for the editor to scroll right', () => {
+        assert.isAbove(editor.getWin().scrollX, initialScrollX); // Make sure scrolling happened
+      });
     });
 
     it('TINY-8874: Dragging CEF element towards the left edge causes scrolling', async () => {
@@ -195,13 +198,13 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       const initialScrollX = editor.getWin().scrollX;
       Mouse.mouseDown(target);
       Mouse.mouseMoveTo(SugarElement.fromDom(editor.getBody()), 2, 9); // Move the mouse close to the right edge of the editor to trigger scrolling
-      await Waiter.pWait(1500); // Wait a small amount of time to ensure the scrolling happens
-      Mouse.mouseUp(target);
-      assert.isBelow(editor.getWin().scrollX, initialScrollX); // Make sure scrolling happened
+      await Waiter.pTryUntil('Waiting for the editor to scroll left', () => {
+        assert.isBelow(editor.getWin().scrollX, initialScrollX); // Make sure scrolling happened
+      });
     });
   });
 
-  context('Tests with autoresize', () => {
+  context('Tests when edges of the editor are outside current viewport', () => {
     const hook = TinyHooks.bddSetup<Editor>({
       indent: false,
       menubar: false,
@@ -209,6 +212,10 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       height: window.innerHeight + 1000,
       width: window.innerWidth + 1000,
     }, [], true);
+
+    before(async () => {
+      await Waiter.pWait(100); // Wait a small amount of time to ensure the events have been bound
+    });
 
     it('TINY-8874: Dragging CEF element towards the bottom edge causes scrolling when autoresize is set', async () => {
       const editor = hook.editor();
@@ -224,8 +231,9 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       const initialScrollY = window.scrollY;
       Mouse.mouseDown(target);
       Mouse.mouseMoveTo(dest, 0, window.innerHeight - 2); // Move the mouse close to the bottom edge of the editor to trigger scrolling
-      await Waiter.pWait(1000); // Wait a small amount of time to ensure the scrolling happens
-      assert.isAbove(window.scrollY, initialScrollY); // Make sure scrolling happened
+      await Waiter.pTryUntil('Waiting for editor to scroll down', () => {
+        assert.isAbove(window.scrollY, initialScrollY); // Make sure scrolling happened
+      });
     });
 
     it('TINY-8874: Dragging CEF element towards the upper edge causes scrolling', async () => {
@@ -244,9 +252,9 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       const dest = UiFinder.findIn(TinyDom.body(editor), 'p.hidden').getOrDie();
       Mouse.mouseDown(target);
       Mouse.mouseMoveTo(dest, 0, 2); // Move the mouse close to the top edge of the editor to trigger scrolling
-      await Waiter.pWait(1000); // Wait a small amount of time to ensure the scrolling happens
-      Mouse.mouseUp(target);
-      assert.isBelow(window.scrollY, initialScrollY); // Make sure scrolling happened
+      await Waiter.pTryUntil('Waiting for editor to scroll up', () => {
+        assert.isBelow(window.scrollY, initialScrollY); // Make sure scrolling happened
+      });
     });
 
     it('TINY-8874: Dragging CEF element towards the right edge causes scrolling', async () => {
@@ -259,13 +267,16 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       <p class="target" style="flex: 0 0 200px; height: 300px">Content</p>
       </div>
     `);
+      window.scroll({
+        top: 0
+      });
       const target = UiFinder.findIn(TinyDom.body(editor), 'p:contains("Draggable CEF")').getOrDie();
       const initialScrollX = window.scrollX;
       Mouse.mouseDown(target);
-      Mouse.mouseMoveTo(SugarElement.fromDom(window.document.body), window.innerWidth - 4, 12); // Move the mouse close to the right edge of the editor to trigger scrolling
-      await Waiter.pWait(1500); // Wait a small amount of time to ensure the scrolling happens
-      assert.isAbove(window.scrollX, initialScrollX); // Make sure scrolling happened
-      Mouse.mouseUp(target);
+      Mouse.mouseMoveTo(TinyDom.body(editor), window.innerWidth - 4, 20); // Move the mouse close to the right edge of the editor to trigger scrolling
+      await Waiter.pTryUntil('Waiting for editor to scroll right', () => {
+        assert.isAbove(window.scrollX, initialScrollX); // Make sure scrolling happened
+      });
     });
 
     it('TINY-8874: Dragging CEF element towards the left edge causes scrolling', async () => {
@@ -285,9 +296,9 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       const dest = UiFinder.findIn(TinyDom.body(editor), 'p.separator').getOrDie();
       Mouse.mouseDown(target);
       Mouse.mouseMoveTo(dest, 200, 8); // Move the mouse close to the right edge of the editor to trigger scrolling
-      await Waiter.pWait(1500); // Wait a small amount of time to ensure the scrolling happens
-      Mouse.mouseUp(target);
-      assert.isBelow(window.scrollX, initialScrollX); // Make sure scrolling happened
+      await Waiter.pTryUntil('Waiting for editor to scroll left', () => {
+        assert.isBelow(window.scrollX, initialScrollX); // Make sure scrolling happened
+      });
     });
 
   });
