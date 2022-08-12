@@ -12,8 +12,8 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ], true);
 
-  const firstListSelector = 'iframe => body => li:first-child';
-  const lastListSelector = 'iframe => body => li:last-child';
+  const firstListSelector = 'iframe => body';
+  const lastListSelector = 'iframe => body';
 
   const noneditableLiContent = '<ol contenteditable="false">\n' +
     '<li contenteditable="true">editable</li>\n' +
