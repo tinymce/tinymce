@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ### Added
-- Added a `Repeatable` type to the `Singleton` module
+- Added a `Repeatable` API to the `Singleton` module to repeat a function at a fixed interval.
 
 ### Improved
 - The `Strings.contains` API now accepts optional `start` and `end` parameters to set the range for searching within the string.
