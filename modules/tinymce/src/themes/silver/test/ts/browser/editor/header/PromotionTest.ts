@@ -6,17 +6,18 @@ import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.header.PromotionTest', () => {
-  const promotionClass = 'tox-promotion';
+  const promotionSelector = '.tox-promotion';
 
   context('promotion turned off', () => {
     const hook = TinyHooks.bddSetup<Editor>({
       base_url: '/project/tinymce/js/tinymce',
+      promotion: false
     }, []);
 
     it('TINY-8840: promotion should not be displayed', () => {
       const editor = hook.editor();
 
-      UiFinder.notExists(TinyDom.container(editor), '.' + promotionClass);
+      UiFinder.notExists(TinyDom.container(editor), promotionSelector);
     });
   });
 
@@ -31,7 +32,7 @@ describe('browser.tinymce.themes.silver.editor.header.PromotionTest', () => {
 
       const editorContainer = TinyDom.container(editor);
       const header = SelectorFind.descendant(editorContainer, '.tox-editor-header').getOrDie();
-      UiFinder.exists(header, '.' + promotionClass);
+      UiFinder.exists(header, promotionSelector);
       Assertions.assertStructure(
         'Editor header structure',
         ApproxStructure.build((s, str, arr) =>
