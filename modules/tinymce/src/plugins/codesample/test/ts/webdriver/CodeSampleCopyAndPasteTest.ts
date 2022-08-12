@@ -1,4 +1,4 @@
-import { ApproxStructure, Keys, RealClipboard, RealMouse } from '@ephox/agar';
+import { ApproxStructure, Keys, RealClipboard, RealMouse, StructAssert } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -32,7 +32,7 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
     }
   };
 
-  const getMockPreStructure = (s, str) =>
+  const getMockPreStructure = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi): StructAssert =>
     s.element('pre', {
       attrs: {
         'class': str.is('language-markup'),

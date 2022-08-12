@@ -31,7 +31,7 @@ describe('browser.tinymce.plugins.link.DialogSectionsTest', () => {
   });
 
   const getStr = (sections: TestSection[]) => {
-    const r = {};
+    const r: Record<string, string> = {};
     Arr.each(sections, (section) => {
       r[section.option.key] = section.option.value.getOr('{ default }');
     });

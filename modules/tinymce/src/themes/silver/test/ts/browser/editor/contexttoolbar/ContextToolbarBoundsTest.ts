@@ -22,7 +22,7 @@ interface TestBounds {
 interface Scenario {
   readonly options: RawEditorOptions;
   readonly position: InlineContent.ContextPosition;
-  readonly scroll?: {
+  readonly scroll: {
     readonly relativeTop: boolean;
     readonly delta: number;
   };

@@ -13,15 +13,10 @@ export interface FilterMatches {
   readonly attributes: Record<string, FilterMatch>;
 }
 
-const traverse = (node: AstNode, fn: (node: AstNode) => void): void => {
-  fn(node);
-
-  if (node.firstChild) {
-    traverse(node.firstChild, fn);
-  }
-
-  if (node.next) {
-    traverse(node.next, fn);
+const traverse = (root: AstNode, fn: (node: AstNode) => void): void => {
+  let node: AstNode | null | undefined = root;
+  while ((node = node.walk())) {
+    fn(node);
   }
 };
 
@@ -65,8 +60,8 @@ const findMatchingNodes = (nodeFilters: ParserFilter[], attributeFilters: Parser
   const matches: FilterMatches = { nodes: {}, attributes: {}};
 
   if (node.firstChild) {
-    traverse(node.firstChild, (node) => {
-      matchNode(nodeFilters, attributeFilters, node, matches);
+    traverse(node, (childNode) => {
+      matchNode(nodeFilters, attributeFilters, childNode, matches);
     });
   }
 
@@ -75,19 +70,32 @@ const findMatchingNodes = (nodeFilters: ParserFilter[], attributeFilters: Parser
 
 // Run all necessary node filters and attribute filters, based on a match set
 const runFilters = (matches: FilterMatches, args: ParserArgs): void => {
-  const run = (matchRecord: Record<string, FilterMatch>) => {
+  const run = (matchRecord: Record<string, FilterMatch>, filteringAttributes: boolean) => {
     Obj.each(matchRecord, (match) => {
-      // Remove already removed children
-      const nodes = Arr.filter(match.nodes, (node) => Type.isNonNullable(node.parent));
+      // in theory we don't need to copy the array, it was created purely for this filtering, but the method is exported so we can't guarantee that
+      const nodes = Arr.from(match.nodes);
 
       Arr.each(match.filter.callbacks, (callback) => {
-        callback(nodes, match.filter.name, args);
+        // very very carefully mutate the nodes array based on whether the filter still matches them
+        for (let i = nodes.length - 1; i >= 0; i--) {
+          const node = nodes[i];
+
+          // Remove already removed children, and nodes that no longer match the filter
+          const valueMatches = filteringAttributes ? node.attr(match.filter.name) !== undefined : node.name === match.filter.name;
+          if (!valueMatches || Type.isNullable(node.parent)) {
+            nodes.splice(i, 1);
+          }
+        }
+
+        if (nodes.length > 0) {
+          callback(nodes, match.filter.name, args);
+        }
       });
     });
   };
 
-  run(matches.nodes);
-  run(matches.attributes);
+  run(matches.nodes, false);
+  run(matches.attributes, true);
 };
 
 const filter = (nodeFilters: ParserFilter[], attributeFilters: ParserFilter[], node: AstNode, args: ParserArgs = {}): void => {
@@ -98,5 +106,6 @@ const filter = (nodeFilters: ParserFilter[], attributeFilters: ParserFilter[], n
 export {
   matchNode,
   runFilters,
-  filter
+  filter,
+  traverse // Exposed for testing.
 };

@@ -314,7 +314,7 @@ export const is = <T>(other: T, comparator: (a: T, b: T) => boolean = Fun.triple
 export const equals: {
   <T, U>(lhs: Maybe<T>, rhs: Maybe<U>, comparator: (lhs: T, rhs: U) => boolean): boolean;
   <T>(lhs: Maybe<T>, rhs: Maybe<T>, comparator?: (lhs: T, rhs: T) => boolean): boolean;
-} = (lhs, rhs, comparator = Fun.tripleEquals) => {
+} = <T>(lhs: Maybe<T>, rhs: Maybe<T>, comparator: (lhs: T, rhs: T) => boolean = Fun.tripleEquals) => {
   if (isJust(lhs) && isJust(rhs)) {
     return comparator(lhs.value, rhs.value);
   } else {

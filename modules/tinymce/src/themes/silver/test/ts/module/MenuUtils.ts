@@ -19,27 +19,27 @@ const getToolbarSelector = (type: ToolbarMode, opening: boolean) => {
   return type === ToolbarMode.sliding ? slidingClass : floatingClass;
 };
 
-const pOpenMenuWithSelector = async (label: string, selector: string) => {
+const pOpenMenuWithSelector = async (label: string, selector: string): Promise<void> => {
   Mouse.clickOn(SugarBody.body(), selector);
   await UiFinder.pWaitForVisible(`Waiting for menu: ${label}`, SugarBody.body(), '[role="menu"]');
 };
 
-const pOpenMore = async (type: ToolbarMode) => {
+const pOpenMore = async (type: ToolbarMode): Promise<void> => {
   Mouse.clickOn(SugarBody.body(), 'button[title="More..."]');
   await UiFinder.pWaitForVisible('Waiting for more drawer to open', SugarBody.body(), getToolbarSelector(type, true));
 };
 
-const pCloseMore = async (type: ToolbarMode) => {
+const pCloseMore = async (type: ToolbarMode): Promise<void> => {
   Mouse.clickOn(SugarBody.body(), 'button[title="More..."]');
   await Waiter.pTryUntil('Waiting for more drawer to close', () => UiFinder.notExists(SugarBody.body(), getToolbarSelector(type, false)));
 };
 
-const pOpenAlignMenu = (label: string) => {
+const pOpenAlignMenu = (label: string): Promise<void> => {
   const selector = 'button[aria-label="Align"]';
   return pOpenMenuWithSelector(label, selector);
 };
 
-const pOpenMenu = (label: string, menuText: string) => {
+const pOpenMenu = (label: string, menuText: string): Promise<void> => {
   const menuTextParts = menuText.indexOf(':') > -1 ? menuText.split(':') : [ menuText ];
   const btnText = menuTextParts[0];
   const pseudo = menuTextParts.length > 1 ? ':' + menuTextParts[1] : '';
@@ -47,12 +47,12 @@ const pOpenMenu = (label: string, menuText: string) => {
   return pOpenMenuWithSelector(label, selector);
 };
 
-const pOpenNestedMenus = (menus: OpenNestedMenus[]) =>
+const pOpenNestedMenus = (menus: OpenNestedMenus[]): Promise<void> =>
   Arr.foldl(menus, (p, menu) => p.then(async () => {
     await pOpenMenuWithSelector(menu.label, menu.selector);
   }), Promise.resolve());
 
-const assertMoreDrawerInViewport = (type: ToolbarMode) => {
+const assertMoreDrawerInViewport = (type: ToolbarMode): void => {
   const toolbar = UiFinder.findIn<HTMLDivElement>(SugarBody.body(), getToolbarSelector(type, true)).getOrDie();
   const winBox = Boxes.win();
   const drawerBox = Boxes.box(toolbar);

@@ -65,7 +65,8 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
               callback([
                 {
                   type: 'choiceitem',
-                  text: 'text'
+                  text: 'text',
+                  value: 'item'
                 }
               ]);
             },

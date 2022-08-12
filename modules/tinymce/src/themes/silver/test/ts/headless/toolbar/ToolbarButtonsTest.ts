@@ -90,7 +90,8 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
               callback([
                 {
                   type: 'choiceitem',
-                  text: 'Item 1'
+                  text: 'Item 1',
+                  value: 'item1'
                 }
               ]);
             },

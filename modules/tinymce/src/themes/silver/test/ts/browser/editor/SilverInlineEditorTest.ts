@@ -13,7 +13,7 @@ import * as UiUtils from '../../module/UiUtils';
 
 describe('browser.tinymce.themes.silver.editor.SilverInlineEditorTest', () => {
   const os = PlatformDetection.detect().os;
-  const store = Cell([ ]);
+  const store = Cell<string[]>([ ]);
   const hook = TinyHooks.bddSetup<Editor>({
     inline: true,
     toolbar: 'custom1 customtoggle1 dropdown1-with-text dropdown1-with-icon splitbutton1-with-text splitbutton2-with-icon',

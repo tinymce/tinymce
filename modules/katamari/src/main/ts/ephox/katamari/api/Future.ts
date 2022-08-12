@@ -1,13 +1,13 @@
 import { LazyValue } from './LazyValue';
 
 export interface Future<T> {
-  map: <U> (mapper: (v: T) => U) => Future<U>;
-  bind: <U> (binder: (v: T) => Future<U>) => Future<U>;
-  anonBind: <U> (thunk: Future<U>) => Future<U>;
-  toLazy: () => LazyValue<T>;
-  toCached: () => Future<T>;
-  toPromise: () => Promise<T>;
-  get: (callback: (v: T) => void) => void;
+  readonly map: <U> (mapper: (v: T) => U) => Future<U>;
+  readonly bind: <U> (binder: (v: T) => Future<U>) => Future<U>;
+  readonly anonBind: <U> (thunk: Future<U>) => Future<U>;
+  readonly toLazy: () => LazyValue<T>;
+  readonly toCached: () => Future<T>;
+  readonly toPromise: () => Promise<T>;
+  readonly get: (callback: (v: T) => void) => void;
 }
 
 const errorReporter = (err: any) => {

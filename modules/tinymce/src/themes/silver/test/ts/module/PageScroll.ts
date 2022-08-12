@@ -8,7 +8,7 @@ import Editor from 'tinymce/core/api/Editor';
 const createScrollDiv = (height: number) =>
   SugarElement.fromHtml<HTMLElement>(`<div style="height: ${height}px;" tabindex="0" class="scroll-div"></div>`);
 
-const setup = (editor: Editor, amount: number) => {
+const setup = (editor: Editor, amount: number): VoidFunction => {
   const target = editor.inline ? TinyDom.body(editor) : TinyDom.container(editor);
 
   const divBefore = createScrollDiv(amount);
@@ -23,7 +23,7 @@ const setup = (editor: Editor, amount: number) => {
   };
 };
 
-const bddSetup = (lazyEditor: () => Editor, amount: number) => {
+const bddSetup = (lazyEditor: () => Editor, amount: number): void => {
   let teardownScroll: () => void = Fun.noop;
   before(() => {
     teardownScroll = setup(lazyEditor(), amount);

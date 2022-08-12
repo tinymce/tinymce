@@ -72,7 +72,7 @@ const dataToHtml = (editor: Editor, dataIn: MediaData): string => {
   const data: MediaData = Tools.extend({}, dataIn);
 
   if (!data.source) {
-    Tools.extend(data, HtmlToData.htmlToData(data.embed, editor.schema));
+    Tools.extend(data, HtmlToData.htmlToData(data.embed ?? '', editor.schema));
     if (!data.source) {
       return '';
     }
@@ -113,7 +113,7 @@ const dataToHtml = (editor: Editor, dataIn: MediaData): string => {
     data.height = data.height || '150';
 
     Tools.each(data, (value, key) => {
-      data[key] = editor.dom.encode('' + value);
+      (data as Record<string, string>)[key] = editor.dom.encode('' + value);
     });
 
     if (data.type === 'iframe') {

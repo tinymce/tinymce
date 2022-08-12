@@ -18,7 +18,7 @@ const setup = (editor: Editor): void => {
       dom.setAttrib(elm, 'data-mce-highlighted', null);
 
       // Empty the pre element
-      let child: Node;
+      let child: Node | null;
       while ((child = elm.firstChild)) {
         elm.removeChild(child);
       }

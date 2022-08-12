@@ -50,7 +50,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ReadonlyToolbarResizeTest
       ), overlord);
     });
 
-  const pAssertToolbarDrawerButtonState = (label: string, f: (s, str, arr) => StructAssert[]) =>
+  const pAssertToolbarDrawerButtonState = (label: string, f: ApproxStructure.Builder<StructAssert[]>) =>
     Waiter.pTryUntil('Waiting for toolbar state', () => {
       const overflow = UiFinder.findIn(SugarBody.body(), '.tox-toolbar__overflow').getOrDie();
       Assertions.assertStructure(label, ApproxStructure.build((s, str, arr) =>

@@ -2,7 +2,7 @@
 import Editor from 'tinymce/core/api/Editor';
 
 export default {
-  setup: (ed: Editor) => {
+  setup: (ed: Editor): void => {
     ed.ui.registry.addButton('basic-button-1', {
       text: 'basic-button-1',
       onAction: () => {

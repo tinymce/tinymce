@@ -16,7 +16,7 @@ const parseJson = (text: string): Optional<ListItem[]> => {
 };
 
 const getLinks = (editor: Editor): Promise<Optional<ListItem[]>> => {
-  const extractor = (item: UserListItem) => editor.convertURL(item.value || item.url, 'href');
+  const extractor = (item: UserListItem) => editor.convertURL(item.value || item.url || '', 'href');
 
   const linkList = Options.getLinkList(editor);
   return new Promise<Optional<UserListItem[]>>((resolve) => {

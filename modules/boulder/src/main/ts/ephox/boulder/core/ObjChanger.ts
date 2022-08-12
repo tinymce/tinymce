@@ -26,7 +26,7 @@ const exclude = <T extends Record<string, any>, F extends Array<keyof T>>(obj: T
   const r = { } as Omit<T, F[number]>;
   Obj.each(obj, (v, k) => {
     if (!Arr.contains(fields, k)) {
-      r[k] = v;
+      r[k as string] = v;
     }
   });
   return r;

@@ -1,4 +1,6 @@
-declare const tinymce: any;
+import { TinyMCE } from 'tinymce/core/api/PublicApi';
+
+declare let tinymce: TinyMCE;
 
 tinymce.init({
   selector: 'textarea.tinymce',

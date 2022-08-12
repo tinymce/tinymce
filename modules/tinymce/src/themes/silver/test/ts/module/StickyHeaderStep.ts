@@ -12,7 +12,7 @@ import * as MenuUtils from './MenuUtils';
 import * as PageScroll from './PageScroll';
 import * as StickyUtils from './StickyHeaderUtils';
 
-const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLocation) => {
+const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLocation): void => {
   const isToolbarTop = toolbarLocation === ToolbarLocation.top;
 
   context('Test editor with toolbar_mode: ' + toolbarMode, () => {

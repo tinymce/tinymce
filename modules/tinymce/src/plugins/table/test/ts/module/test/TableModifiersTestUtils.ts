@@ -18,7 +18,7 @@ interface AssertStyleOptionsWithCheckmarks extends AssertStyleOptions {
   readonly checkMarkEntries: number;
 }
 
-const setEditorContentTableAndSelection = (editor: Editor, rows: number, columns: number) => {
+const setEditorContentTableAndSelection = (editor: Editor, rows: number, columns: number): void => {
   const getSelectionStartEnd = (row: number, column: number) => {
     if (row === 0 && column === 0) {
       return 'data-mce-first-selected="1"';
@@ -48,7 +48,7 @@ const setEditorContentTableAndSelection = (editor: Editor, rows: number, columns
   TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 0);
 };
 
-const assertStructureIsRestoredToDefault = (editor: Editor, rows: number, columns: number) => {
+const assertStructureIsRestoredToDefault = (editor: Editor, rows: number, columns: number): void => {
   TinyAssertions.assertContent(editor,
     '<table>' +
       '<tbody>' +
@@ -80,22 +80,29 @@ const assertStructureHasCustomStyle = (editor: Editor, rows: number, columns: nu
     '</table>');
 };
 
-const closeMenu = (editor: Editor) => {
+const closeMenu = (editor: Editor): void => {
   TinyUiActions.keyup(editor, Keys.escape());
   TinyUiActions.keyup(editor, Keys.escape());
 };
 
-const clickOnButton = (editor: Editor, title: string) => {
+const clickOnButton = (editor: Editor, title: string): void => {
   TinyUiActions.clickOnToolbar(editor, `button[title="${title}"]`);
 };
 
-const pClickOnMenuItem = async (editor: Editor, title: string) => {
+const pClickOnMenuItem = async (editor: Editor, title: string): Promise<void> => {
   TinyUiActions.clickOnMenu(editor, 'span:contains("Table")');
   await TinyUiActions.pWaitForUi(editor, `div[title="${title}"]`);
   TinyUiActions.clickOnUi(editor, `div[title="${title}"]`);
 };
 
-const pAssertMenuPresence = async (editor: Editor, label: string, menuTitle: string, expected: Record<string, number>, container: SugarElement<HTMLElement>, useMenuOrToolbar: 'toolbar' | 'menuitem') => {
+const pAssertMenuPresence = async (
+  editor: Editor,
+  label: string,
+  menuTitle: string,
+  expected: Record<string, number>,
+  container: SugarElement<HTMLElement>,
+  useMenuOrToolbar: 'toolbar' | 'menuitem'
+): Promise<void> => {
   if (useMenuOrToolbar === 'toolbar') {
     clickOnButton(editor, menuTitle);
   } else {
@@ -117,7 +124,7 @@ const pAssertCheckmarkOn = async (editor: Editor, menuTitle: string, itemTitle: 
   await pAssertMenuPresence(editor, 'There should be a checkmark', menuTitle, expected, sugarContainer, useMenuOrToolbar);
 };
 
-const pClickOnSubMenu = async (editor: Editor, menuTitle: string, itemTitle: string, useMenuOrToolbar: 'toolbar' | 'menuitem') => {
+const pClickOnSubMenu = async (editor: Editor, menuTitle: string, itemTitle: string, useMenuOrToolbar: 'toolbar' | 'menuitem'): Promise<void> => {
   if (useMenuOrToolbar === 'toolbar') {
     clickOnButton(editor, menuTitle);
   } else {
@@ -128,7 +135,13 @@ const pClickOnSubMenu = async (editor: Editor, menuTitle: string, itemTitle: str
   closeMenu(editor);
 };
 
-const pAssertNoCheckmarksInMenu = async (editor: Editor, menuTitle: string, expectedFalseCheckmarks: number, container: SugarElement<HTMLElement>, useMenuOrToolbar: 'toolbar' | 'menuitem') => {
+const pAssertNoCheckmarksInMenu = async (
+  editor: Editor,
+  menuTitle: string,
+  expectedFalseCheckmarks: number,
+  container: SugarElement<HTMLElement>,
+  useMenuOrToolbar: 'toolbar' | 'menuitem'
+): Promise<void> => {
   const expected = {
     '.tox-menu': useMenuOrToolbar === 'toolbar' ? 1 : 2,
     '.tox-collection__item[aria-checked="true"]': 0,
@@ -138,7 +151,7 @@ const pAssertNoCheckmarksInMenu = async (editor: Editor, menuTitle: string, expe
   await pAssertMenuPresence(editor, 'Menu should open, but not have any checkmarks', menuTitle, expected, container, useMenuOrToolbar);
 };
 
-const pAssertStyleCanBeToggledWithoutCheckmarks = async (editor: Editor, options: AssertStyleOptions, useMenuOrToolbar: 'toolbar' | 'menuitem') => {
+const pAssertStyleCanBeToggledWithoutCheckmarks = async (editor: Editor, options: AssertStyleOptions, useMenuOrToolbar: 'toolbar' | 'menuitem'): Promise<void> => {
   setEditorContentTableAndSelection(editor, options.columns, options.rows);
 
   await pClickOnSubMenu(editor, options.menuTitle, options.subMenuTitle, useMenuOrToolbar);
@@ -148,7 +161,7 @@ const pAssertStyleCanBeToggledWithoutCheckmarks = async (editor: Editor, options
   assertStructureIsRestoredToDefault(editor, options.columns, options.rows);
 };
 
-const pAssertStyleCanBeToggled = async (editor: Editor, options: AssertStyleOptionsWithCheckmarks, useMenuOrToolbar: 'toolbar' | 'menuitem') => {
+const pAssertStyleCanBeToggled = async (editor: Editor, options: AssertStyleOptionsWithCheckmarks, useMenuOrToolbar: 'toolbar' | 'menuitem'): Promise<void> => {
   const sugarContainer = SugarBody.body();
   setEditorContentTableAndSelection(editor, options.rows, options.columns);
   await pAssertCheckmarkOn(editor, options.menuTitle, options.subMenuRemoveTitle, options.checkMarkEntries, sugarContainer, useMenuOrToolbar);
@@ -162,17 +175,22 @@ const pAssertStyleCanBeToggled = async (editor: Editor, options: AssertStyleOpti
   assertStructureIsRestoredToDefault(editor, options.rows, options.columns);
 };
 
-const pAssertStyleCanBeToggledOnAndOff = async (editor: Editor, options: AssertStyleOptionsWithCheckmarks) => {
+const pAssertStyleCanBeToggledOnAndOff = async (editor: Editor, options: AssertStyleOptionsWithCheckmarks): Promise<void> => {
   await pAssertStyleCanBeToggled(editor, options, 'toolbar');
   await pAssertStyleCanBeToggled(editor, options, 'menuitem');
 };
 
-const pAssertStyleCanBeToggledOnAndOffWithoutCheckmarks = async (editor: Editor, options: AssertStyleOptions) => {
+const pAssertStyleCanBeToggledOnAndOffWithoutCheckmarks = async (editor: Editor, options: AssertStyleOptions): Promise<void> => {
   await pAssertStyleCanBeToggledWithoutCheckmarks(editor, options, 'toolbar');
   await pAssertStyleCanBeToggledWithoutCheckmarks(editor, options, 'menuitem');
 };
 
-const makeCell = (type: string, content: string, scope: 'col' | 'row' | 'none', selectionMode?: 'selected' | 'selectionStart' | 'selectionStartEnd' | 'selectionEnd') => {
+const makeCell = (
+  type: string,
+  content: string,
+  scope: 'col' | 'row' | 'none',
+  selectionMode?: 'selected' | 'selectionStart' | 'selectionStartEnd' | 'selectionEnd'
+): string => {
   const getSelectionAttrs = () => {
     const selectionStart = [ 'selectionStart', 'selectionStartEnd' ];
     const selectionEnd = [ 'selectionEnd', 'selectionStartEnd' ];

@@ -12,7 +12,7 @@ export const UserDefined = 'User Defined';
 export type Char = [ number, string ];
 
 export interface CharMap {
-  name: string;
+  readonly name: string;
   characters: Char[];
 }
 
@@ -390,7 +390,7 @@ const extendCharMap = (editor: Editor, charmap: CharMap[]): CharMap[] => {
   if (userCharMapAppend) {
     const userDefinedGroup = Tools.grep(charmap, (cg) => cg.name === UserDefined);
     if (userDefinedGroup.length) {
-      userDefinedGroup[0].characters = [].concat(userDefinedGroup[0].characters).concat(getCharsFromOption(userCharMapAppend));
+      userDefinedGroup[0].characters = [ ...userDefinedGroup[0].characters, ...getCharsFromOption(userCharMapAppend) ];
       return charmap;
     }
     return charmap.concat({ name: UserDefined, characters: getCharsFromOption(userCharMapAppend) });

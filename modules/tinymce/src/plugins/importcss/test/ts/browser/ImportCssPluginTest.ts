@@ -8,11 +8,18 @@ import Editor from 'tinymce/core/api/Editor';
 import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 import Plugin from 'tinymce/plugins/importcss/Plugin';
 
-interface MenuDetails {
-  readonly tag?: string;
+interface MenuTagDetails {
+  readonly tag: string;
   readonly html: string;
-  readonly submenu: boolean;
+  readonly submenu: false;
 }
+
+interface MenuSubmenuDetails {
+  readonly html: string;
+  readonly submenu: true;
+}
+
+type MenuDetails = MenuTagDetails | MenuSubmenuDetails;
 
 interface Assertion {
   readonly choice: Optional<string>;
@@ -211,7 +218,7 @@ describe('browser.tinymce.plugins.importcss.ImportCssTest', () => {
     {
       content_css: [ '/project/tinymce/src/plugins/importcss/test/css/basic.css' ],
       importcss_append: false,
-      importcss_selector_filter: (sel) => sel.indexOf('p') > -1 || sel.indexOf('inline') > -1
+      importcss_selector_filter: (sel: string) => sel.indexOf('p') > -1 || sel.indexOf('inline') > -1
     }
   ));
 
@@ -267,7 +274,7 @@ describe('browser.tinymce.plugins.importcss.ImportCssTest', () => {
         '/project/tinymce/src/plugins/importcss/test/css/other-adv.css'
       ],
       importcss_append: false,
-      importcss_file_filter: (href) => href.indexOf('adv') > -1
+      importcss_file_filter: (href: string) => href.indexOf('adv') > -1
     }
   ));
 

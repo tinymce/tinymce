@@ -49,7 +49,7 @@ type TargetSetupCallback = (targets: RunOperation.CombinedTargets) => boolean;
 
 export const getSelectionTargets = (editor: Editor): SelectionTargets => {
   const targets = Cell<Optional<RunOperation.CombinedTargets>>(Optional.none());
-  const changeHandlers = Cell([]);
+  const changeHandlers = Cell<Array<() => void>>([]);
   let selectionDetails = Optional.none<ExtractedSelectionDetails>();
 
   const isCaption = SugarNode.isTag('caption');
@@ -108,7 +108,7 @@ export const getSelectionTargets = (editor: Editor): SelectionTargets => {
     selectionDetails = targets.get().bind(getExtractedDetails);
 
     // Trigger change handlers
-    Arr.each(changeHandlers.get(), (handler) => handler());
+    Arr.each(changeHandlers.get(), Fun.call);
   };
 
   const setupHandler = (handler: () => void) => {

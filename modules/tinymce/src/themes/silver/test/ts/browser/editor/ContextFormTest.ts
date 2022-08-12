@@ -20,9 +20,9 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
           onSetup: (buttonApi) => {
             const f = (evt: { active?: boolean; disable?: boolean }) => {
               if (Obj.has(evt, 'disable')) {
-                buttonApi.setEnabled(!evt.disable);
+                buttonApi.setEnabled(!evt.disable as boolean);
               } else if (Obj.has(evt, 'active')) {
-                buttonApi.setActive(evt.active);
+                buttonApi.setActive(evt.active as boolean);
               }
             };
 
@@ -34,7 +34,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
           }
         },
 
-        predicate: (node) => node.nodeName && node.nodeName.toLowerCase() === 'a',
+        predicate: (node) => node.nodeName.toLowerCase() === 'a',
         commands: [
           {
             type: 'contextformbutton',
@@ -69,9 +69,9 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
             onSetup: (buttonApi) => {
               const f = (evt: { active?: boolean; disable?: boolean }) => {
                 if (Obj.has(evt, 'disable')) {
-                  buttonApi.setEnabled(!evt.disable);
+                  buttonApi.setEnabled(!evt.disable as boolean);
                 } else if (Obj.has(evt, 'active')) {
-                  buttonApi.setActive(evt.active);
+                  buttonApi.setActive(evt.active as boolean);
                 }
               };
 

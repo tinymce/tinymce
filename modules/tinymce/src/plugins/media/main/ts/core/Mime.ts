@@ -1,3 +1,5 @@
+import { Obj } from '@ephox/katamari';
+
 const guess = (url: string): string => {
   const mimes: Record<string, string> = {
     mp3: 'audio/mpeg',
@@ -8,10 +10,8 @@ const guess = (url: string): string => {
     ogg: 'video/ogg',
     swf: 'application/x-shockwave-flash'
   };
-  const fileEnd = url.toLowerCase().split('.').pop();
-  const mime = mimes[fileEnd];
-
-  return mime ? mime : '';
+  const fileEnd = url.toLowerCase().split('.').pop() ?? '';
+  return Obj.get(mimes, fileEnd).getOr('');
 };
 
 export {

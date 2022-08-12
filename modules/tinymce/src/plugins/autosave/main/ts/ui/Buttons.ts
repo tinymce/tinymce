@@ -15,21 +15,21 @@ const register = (editor: Editor): void => {
   //       Is it safe to start this process when the plugin is registered?
   Storage.startStoreDraft(editor);
 
+  const onAction = () => {
+    Storage.restoreLastDraft(editor);
+  };
+
   editor.ui.registry.addButton('restoredraft', {
     tooltip: 'Restore last draft',
     icon: 'restore-draft',
-    onAction: () => {
-      Storage.restoreLastDraft(editor);
-    },
+    onAction,
     onSetup: makeSetupHandler(editor)
   });
 
   editor.ui.registry.addMenuItem('restoredraft', {
     text: 'Restore last draft',
     icon: 'restore-draft',
-    onAction: () => {
-      Storage.restoreLastDraft(editor);
-    },
+    onAction,
     onSetup: makeSetupHandler(editor)
   });
 };

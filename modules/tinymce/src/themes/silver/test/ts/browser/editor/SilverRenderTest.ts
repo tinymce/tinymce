@@ -25,7 +25,7 @@ describe('browser.tinymce.themes.silver.editor.SilverRenderTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'test',
     base_url: '/project/tinymce/js/tinymce',
-    setup: (editor) => {
+    setup: (editor: Editor) => {
       editor.on('PostRender init', (e) => {
         initStates[e.type] = getRenderState(editor);
       });

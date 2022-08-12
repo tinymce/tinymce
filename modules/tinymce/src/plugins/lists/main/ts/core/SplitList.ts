@@ -9,9 +9,12 @@ const DOM = DOMUtils.DOM;
 
 const splitList = (editor: Editor, list: Element, li: Element): void => {
   const removeAndKeepBookmarks = (targetNode: Node) => {
-    Tools.each(bookmarks, (node) => {
-      targetNode.parentNode.insertBefore(node, li.parentNode);
-    });
+    const parent = targetNode.parentNode;
+    if (parent) {
+      Tools.each(bookmarks, (node) => {
+        parent.insertBefore(node, li.parentNode);
+      });
+    }
 
     DOM.remove(targetNode);
   };
@@ -37,7 +40,7 @@ const splitList = (editor: Editor, list: Element, li: Element): void => {
   DOM.insertAfter(newBlock, list);
 
   const parent = li.parentElement;
-  if (NodeType.isEmpty(editor.dom, parent)) {
+  if (parent && NodeType.isEmpty(editor.dom, parent)) {
     removeAndKeepBookmarks(parent);
   }
 

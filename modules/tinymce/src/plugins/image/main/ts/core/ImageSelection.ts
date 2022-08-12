@@ -6,7 +6,7 @@ import { SchemaMap } from 'tinymce/core/api/html/Schema';
 import { create, defaultData, ImageData, isFigure, read, write } from './ImageData';
 import * as Utils from './Utils';
 
-const normalizeCss = (editor: Editor, cssText: string): string => {
+const normalizeCss = (editor: Editor, cssText: string | undefined): string => {
   const css = editor.dom.styles.parse(cssText);
   const mergedCss = Utils.mergeMargins(css);
   const compressed = editor.dom.styles.parse(editor.dom.styles.serialize(mergedCss));

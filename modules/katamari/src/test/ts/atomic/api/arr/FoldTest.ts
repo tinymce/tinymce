@@ -7,23 +7,23 @@ import * as Fun from 'ephox/katamari/api/Fun';
 
 describe('atomic.katamari.api.arr.FoldTest', () => {
   it('unit tests', () => {
-    const checkl = (expected, input: any[], f, acc) => {
+    const checkl = <T, A>(expected: A, input: T[], f: (acc: A, x: T, i: number) => A, acc: A) => {
       assert.deepEqual(Arr.foldl(input, f, acc), expected);
       assert.deepEqual(Arr.foldl(Object.freeze(input.slice()), f, acc), expected);
     };
 
-    const checkr = (expected, input, f, acc) => {
+    const checkr = <T, A>(expected: A, input: T[], f: (acc: A, x: T, i: number) => A, acc: A) => {
       assert.deepEqual(Arr.foldr(input, f, acc), expected);
       assert.deepEqual(Arr.foldr(Object.freeze(input.slice()), f, acc), expected);
     };
 
-    checkl(0, [], Fun.noop, 0);
+    checkl(0, [], Fun.die('should not be called'), 0);
     checkl(6, [ 1, 2, 3 ], (acc, x) => acc + x, 0);
     checkl(13, [ 1, 2, 3 ], (acc, x) => acc + x, 7);
     // foldl with cons and [] should reverse the list
     checkl([ 3, 2, 1 ], [ 1, 2, 3 ], (acc, x) => [ x ].concat(acc), []);
 
-    checkr(0, [], Fun.noop, 0);
+    checkr(0, [], Fun.die('should not be called'), 0);
     checkr(6, [ 1, 2, 3 ], (acc, x) => acc + x, 0);
     checkr(13, [ 1, 2, 3 ], (acc, x) => acc + x, 7);
     // foldr with cons and [] should be identity
@@ -33,8 +33,8 @@ describe('atomic.katamari.api.arr.FoldTest', () => {
   it('foldl concat [ ] xs === reverse(xs)', () => {
     fc.assert(fc.property(
       fc.array(fc.integer()),
-      (arr: number[]) => {
-        const output: number[] = Arr.foldl(arr, (b: number[], a: number) => [ a ].concat(b), []);
+      (arr) => {
+        const output = Arr.foldl(arr, (b: number[], a: number) => [ a ].concat(b), []);
         assert.deepEqual(output, Arr.reverse(arr));
       }
     ));
@@ -43,7 +43,7 @@ describe('atomic.katamari.api.arr.FoldTest', () => {
   it('foldr concat [ ] xs === xs', () => {
     fc.assert(fc.property(
       fc.array(fc.integer()),
-      (arr: number[]) => {
+      (arr) => {
         const output = Arr.foldr(arr, (b: number[], a: number) => [ a ].concat(b), []);
         assert.deepEqual(output, arr);
       }

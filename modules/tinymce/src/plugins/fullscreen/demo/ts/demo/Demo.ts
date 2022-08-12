@@ -1,4 +1,6 @@
-declare let tinymce: any;
+import { TinyMCE } from 'tinymce/core/api/PublicApi';
+
+declare let tinymce: TinyMCE;
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -7,6 +9,7 @@ tinymce.init({
   height: 600,
   fullscreen_native: true
 });
+
 tinymce.init({
   selector: 'textarea.tinymce2',
   plugins: 'fullscreen code',

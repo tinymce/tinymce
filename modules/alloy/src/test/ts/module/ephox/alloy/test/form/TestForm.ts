@@ -1,5 +1,5 @@
 import { Assertions, Step } from '@ephox/agar';
-import { Obj } from '@ephox/katamari';
+import { Obj, Optional } from '@ephox/katamari';
 
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
@@ -11,7 +11,7 @@ interface TestForm {
 
 const helper = (component: AlloyComponent): TestForm => {
   const sAssertRep = <T>(expected: Record<string, string>) => Step.sync<T>(() => {
-    const val = Representing.getValue(component);
+    const val: Record<string, Optional<string>> = Representing.getValue(component);
     Assertions.assertEq(
       'Checking form value',
       expected,

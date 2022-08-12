@@ -9,8 +9,8 @@ import { AssumeExternalTargets } from './Types';
 type UserLinkListCallback = (callback: (items: UserListItem[]) => void) => void;
 
 const option: {
-  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K] | undefined;
-  <T>(name: string): (editor: Editor) => T | undefined;
+  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K];
+  <T>(name: string): (editor: Editor) => T;
 } = (name: string) => (editor: Editor) =>
   editor.options.get(name);
 
@@ -86,8 +86,8 @@ const register = (editor: Editor): void => {
 
 const assumeExternalTargets = option<AssumeExternalTargets>('link_assume_external_targets');
 const hasContextToolbar = option<boolean>('link_context_toolbar');
-const getLinkList = option<string | UserListItem[] | UserLinkListCallback>('link_list');
-const getDefaultLinkTarget = option<string>('link_default_target');
+const getLinkList = option<string | UserListItem[] | UserLinkListCallback | undefined>('link_list');
+const getDefaultLinkTarget = option<string | undefined>('link_default_target');
 const getDefaultLinkProtocol = option<string>('link_default_protocol');
 const getTargetList = option<boolean | UserListItem[]>('link_target_list');
 const getRelList = option<UserListItem[]>('link_rel_list');
