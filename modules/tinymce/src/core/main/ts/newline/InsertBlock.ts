@@ -10,7 +10,6 @@ import { EditorEvent } from '../api/util/EventDispatcher';
 import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as CaretContainer from '../caret/CaretContainer';
-import * as CefUtils from '../dom/CefUtils';
 import * as NodeType from '../dom/NodeType';
 import { isCaretNode } from '../fmt/FormatContainer';
 import * as NormalizeRange from '../selection/NormalizeRange';
@@ -148,12 +147,12 @@ const setForcedBlockAttrs = (editor: Editor, node: Element) => {
 // Wraps any text nodes or inline elements in the specified forced root block name
 const wrapSelfAndSiblingsInDefaultBlock = (editor: Editor, newBlockName: string, rng: Range, container: Node, offset: number) => {
   const dom = editor.dom;
-  const editableRoot = CefUtils.getContentEditableRoot(dom.getRoot(), container) as Element;
+  const editableRoot = NewLineUtils.getEditableRoot(dom, container);
 
   // Not in a block element or in a table cell or caption
   let parentBlock = dom.getParent(container, dom.isBlock);
   if (!parentBlock || !canSplitBlock(dom, parentBlock)) {
-    parentBlock = parentBlock || (editableRoot ?? editor.getBody());
+    parentBlock = parentBlock || editableRoot;
 
     let rootBlockName: string;
     if (parentBlock === editor.getBody() || NodeType.isTableCellOrCaption(parentBlock)) {
@@ -250,7 +249,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   const createNewBlock = (name?: string): Element => {
     let node: Node | null = container;
     const textInlineElements = schema.getTextInlineElements();
-    const editableRoot = CefUtils.getContentEditableRoot(dom.getRoot(), container);
+
     let block: Element;
     if (name || parentBlockName === 'TABLE' || parentBlockName === 'HR') {
       block = dom.create(name || newBlockName);
@@ -398,8 +397,11 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     }
   }
 
-  // Return if within non-editable node, no block should be inserted
-  if (dom.getContentEditableRoot(container) === 'false') {
+  // Get editable root node, normally the body element but sometimes a div or span
+  const editableRoot = NewLineUtils.getEditableRoot(dom, container);
+
+  // If there is no editable root then enter is done inside a contentEditable false element
+  if (!editableRoot) {
     return;
   }
 

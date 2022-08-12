@@ -199,7 +199,6 @@ interface DOMUtils {
   dispatch: (target: Node | Window, name: string, evt?: {}) => EventUtils;
   getContentEditable: (node: Node) => string | null;
   getContentEditableParent: (node: Node) => string | null;
-  getContentEditableRoot: (node: Node) => string | null;
   destroy: () => void;
   isChildOf: (node: Node, parent: Node) => boolean;
   dumpRng: (r: Range) => string;
@@ -1122,22 +1121,6 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return state;
   };
 
-  const getContentEditableRoot = (node: Node) => {
-    const root = getRoot();
-    let editableRoot: string | null = null;
-    for (let tempNode: Node | null = node; tempNode && tempNode !== root; tempNode = tempNode.parentNode) {
-      // editableRoot only updates if tempNode has contenteditable attribute
-      editableRoot = getContentEditable(tempNode) ?? editableRoot;
-
-      if (editableRoot === 'false') {
-        // node is within contenteditable="false" element, return false
-        break;
-      }
-    }
-
-    return editableRoot;
-  };
-
   const destroy = () => {
     // Unbind all events bound to window/document by editor instance
     if (boundEvents.length > 0) {
@@ -1841,35 +1824,9 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      */
     dispatch,
 
-    /**
-     * Returns the content editable state of a node.
-     *
-     * @method getContentEditable
-     * @param {Node} node Node to find editable state of.
-     * @return {String} Value of content editable attribute.
-     */
+    // Returns the content editable state of a node
     getContentEditable,
-
-    /**
-     * Returns the content editable state of the first parent of a node with the `contenteditable` attribute.
-     *
-     * @method getContentEditableParent
-     * @param {Node} node Node to find state of editable parent.
-     * @return {String} Value of content editable attribute.
-     */
     getContentEditableParent,
-
-    /**
-     * Returns the state of the `contenteditable` root parent of a node;
-     * `'false'` if any parent has `contenteditable="false"`,
-     * `'true'` if at least one parent has `contenteditable="true"` and no `contenteditable="false"`,
-     * or `null` if no parent has the `contenteditable` attribute.
-     *
-     * @method getContentEditableRoot
-     * @param {Node} node Node to find state of editable root.
-     * @return {String} Value of content editable attribute.
-     */
-    getContentEditableRoot,
 
     /**
      * Destroys all internal references to the DOM to solve memory leak issues.
