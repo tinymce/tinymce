@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+- The new `promotion` option added in TinyMCE 6.2 is set to `false` by default.
+
 ## 8.0.0 - 2022-03-03
 
 ### Added

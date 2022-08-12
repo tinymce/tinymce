@@ -21,7 +21,13 @@
     flex: 0 0 auto;
     flex-shrink: 0;
     flex-wrap: wrap;
+    grid-column: ~"1 / -1";
+    grid-row: 1;
     padding: 0 @menubar-padding-x 0 (@menubar-padding-x + @menubar-select-spacing-x);
+  }
+
+  .tox-promotion + .tox-menubar {
+    grid-column: 1;
   }
 
   // Add a top border when toolbar_location is bottom
