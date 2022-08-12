@@ -24,7 +24,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
     return {
       base_url: '/project/tinymce/js/tinymce',
       toolbar: 'sidebarone sidebartwo',
-      setup: (ed) => {
+      setup: (ed: Editor) => {
         ed.ui.registry.addSidebar('sidebarone', {
           tooltip: 'side bar one',
           icon: 'comment',

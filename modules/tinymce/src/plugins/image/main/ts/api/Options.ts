@@ -8,8 +8,8 @@ import { UserListItem } from '../ui/DialogTypes';
 type UserImageListCallback = (callback: (imageList: UserListItem[]) => void) => void;
 
 const option: {
-  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K] | undefined;
-  <T>(name: string): (editor: Editor) => T | undefined;
+  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K];
+  <T>(name: string): (editor: Editor) => T;
 } = (name: string) => (editor: Editor) =>
   editor.options.get(name);
 
@@ -68,7 +68,7 @@ const hasDimensions = option<boolean>('image_dimensions');
 const hasAdvTab = option<boolean>('image_advtab');
 const hasUploadTab = option<boolean>('image_uploadtab');
 const getPrependUrl = option<string>('image_prepend_url');
-const getClassList = option<UserListItem[]>('image_class_list');
+const getClassList = option<UserListItem[] | undefined>('image_class_list');
 const hasDescription = option<boolean>('image_description');
 const hasImageTitle = option<boolean>('image_title');
 const hasImageCaption = option<boolean>('image_caption');

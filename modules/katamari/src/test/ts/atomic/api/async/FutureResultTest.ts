@@ -66,7 +66,7 @@ describe('atomic.katamari.ap.async.FutureResultTest', () => {
   }))));
 
   it('value mapResult', () => {
-    const f = (x) => x + 3;
+    const f = (x: number) => x + 3;
     return fc.assert(fc.asyncProperty(fc.integer(), (i) => new Promise((resolve, reject) => {
       FutureResult.value(i).mapResult(f).get((ii) => {
         eqAsync('eq', Result.value(f(i)), ii, reject, tResult());
@@ -90,7 +90,7 @@ describe('atomic.katamari.ap.async.FutureResultTest', () => {
   }))));
 
   it('err mapError', () => {
-    const f = (x) => x + 3;
+    const f = (x: number) => x + 3;
     return fc.assert(fc.asyncProperty(fc.integer(), (i) => new Promise((resolve, reject) => {
       FutureResult.error(i).mapError(f).get((ii) => {
         eqAsync('eq', Result.error(f(i)), ii, reject, tResult());
@@ -100,7 +100,7 @@ describe('atomic.katamari.ap.async.FutureResultTest', () => {
   });
 
   it('value bindFuture value', () => fc.assert(fc.asyncProperty(fc.integer(), (i) => new Promise((resolve, reject) => {
-    const f = (x) => x % 4;
+    const f = (x: number) => x % 4;
     FutureResult.value(i).bindFuture((x) => FutureResult.value(f(x))).get((actual) => {
       eqAsync('bind result', Result.value(f(i)), actual, reject, tResult(tNumber));
       resolve();

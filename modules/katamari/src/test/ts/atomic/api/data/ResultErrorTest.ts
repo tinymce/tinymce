@@ -43,7 +43,7 @@ describe('atomic.katamari.api.data.ResultErrorTest', () => {
     assertNone(Result.error(4).toOptional());
   });
 
-  const getErrorOrDie = (res) => res.fold(Fun.identity, Fun.die('Was not an error!'));
+  const getErrorOrDie = <T, E>(res: Result<T, E>): E => res.fold(Fun.identity, Fun.die('Was not an error!'));
 
   it('error.is === false', () => {
     fc.assert(fc.property(fc.integer(), fc.string(), (i, s) => {
@@ -104,7 +104,7 @@ describe('atomic.katamari.api.data.ResultErrorTest', () => {
 
   it('error.mapError(f) === f(error)', () => {
     fc.assert(fc.property(fc.integer(), (i) => {
-      const f = (x) => x % 3;
+      const f = (x: number) => x % 3;
       assertResult(Result.error(i).mapError(f), Result.error(f(i)));
     }));
   });

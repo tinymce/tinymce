@@ -11,7 +11,7 @@ export default (): void => {
   PluginManager.add('lists', (editor) => {
     Options.register(editor);
 
-    if (editor.hasPlugin('rtc', true) === false) {
+    if (!editor.hasPlugin('rtc', true)) {
       Keyboard.setup(editor);
       Commands.register(editor);
     } else {

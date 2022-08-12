@@ -673,6 +673,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
     additionalContent: 'als s',
     structure: {
       type: 'list',
+      hasIcons: false,
       groups: [
         [
           (s, str, arr) => s.element('div', {

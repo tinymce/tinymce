@@ -18,7 +18,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'mysidebar1 mysidebar2 mysidebar3',
-    setup: (editor) => {
+    setup: (editor: Editor) => {
       const logEvent = (name: string) => (api: Sidebar.SidebarInstanceApi) => {
         const index = Traverse.findIndex(SugarElement.fromDom(api.element())).getOr(-1);
         const entry: EventLog = { name, index };

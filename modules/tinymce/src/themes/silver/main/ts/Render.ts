@@ -148,6 +148,8 @@ const setup = (editor: Editor): RenderInfo => {
     const hasMultipleToolbar = Options.isMultipleToolbars(editor);
     const hasToolbar = Options.isToolbarEnabled(editor);
     const hasMenubar = Options.isMenubarEnabled(editor);
+    const shouldHavePromotion = Options.promotionEnabled(editor);
+    const partPromotion = makePromotion();
 
     const getPartToolbar = () => {
       if (hasMultipleToolbar) {
@@ -159,6 +161,8 @@ const setup = (editor: Editor): RenderInfo => {
       }
     };
 
+    const menubarCollection = shouldHavePromotion ? [ partPromotion, partMenubar ] : [ partMenubar ];
+
     return OuterContainer.parts.header({
       dom: {
         tag: 'div',
@@ -166,7 +170,7 @@ const setup = (editor: Editor): RenderInfo => {
         ...verticalDirAttributes
       },
       components: Arr.flatten<AlloySpec>([
-        hasMenubar ? [ partMenubar ] : [ ],
+        hasMenubar ? menubarCollection : [ ],
         getPartToolbar(),
         // fixed_toolbar_container anchors to the editable area, else add an anchor bar
         Options.useFixedContainer(editor) ? [ ] : [ memAnchorBar.asSpec() ]
@@ -174,6 +178,15 @@ const setup = (editor: Editor): RenderInfo => {
       sticky: Options.isStickyToolbar(editor),
       editor,
       sharedBackstage: backstage.shared
+    });
+  };
+
+  const makePromotion = () => {
+    return OuterContainer.parts.promotion({
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-promotion' ],
+      },
     });
   };
 

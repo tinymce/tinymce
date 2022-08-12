@@ -26,7 +26,7 @@ interface NamedItem {
 
 const isNamedItem = (obj: any): obj is NamedItem => Type.isString(obj.type) && Type.isString(obj.name);
 
-const dataProcessors = {
+const dataProcessors: Record<string, StructureProcessor> = {
   checkbox: checkboxDataProcessor,
   colorinput: colorInputDataProcessor,
   colorpicker: colorPickerDataProcessor,

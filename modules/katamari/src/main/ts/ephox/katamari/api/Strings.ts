@@ -9,8 +9,8 @@ const checkRange = (str: string, substr: string, start: number): boolean =>
  * Any template fields of the form ${name} are replaced by the string or number specified as obj["name"]
  * Based on Douglas Crockford's 'supplant' method for template-replace of strings. Uses different template format.
  */
-export const supplant = (str: string, obj: {[key: string]: string | number}): string => {
-  const isStringOrNumber = (a) => {
+export const supplant = (str: string, obj: Record<string, string | number>): string => {
+  const isStringOrNumber = (a: unknown): a is string | number => {
     const t = typeof a;
     return t === 'string' || t === 'number';
   };

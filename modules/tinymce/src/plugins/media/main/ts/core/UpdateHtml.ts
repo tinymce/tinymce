@@ -1,3 +1,5 @@
+import { Type } from '@ephox/katamari';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import AstNode from 'tinymce/core/api/html/Node';
 import Schema from 'tinymce/core/api/html/Schema';
@@ -14,12 +16,19 @@ const addPx = (value: string): string =>
 const updateEphoxEmbed = (data: Partial<MediaData>, node: AstNode) => {
   const style = node.attr('style');
   const styleMap = style ? DOM.parseStyle(style) : { };
-  styleMap['max-width'] = addPx(data.width);
-  styleMap['max-height'] = addPx(data.height);
+  if (Type.isNonNullable(data.width)) {
+    styleMap['max-width'] = addPx(data.width);
+  }
+  if (Type.isNonNullable(data.height)) {
+    styleMap['max-height'] = addPx(data.height);
+  }
   node.attr('style', DOM.serializeStyle(styleMap));
 };
 
-const sources = [ 'source', 'altsource' ];
+const sources = [ 'source', 'altsource' ] as const;
+
+type Source = typeof sources[number];
+type SourceMime = `${Source}mime`;
 
 const updateHtml = (html: string, data: Partial<MediaData>, updateAll?: boolean, schema?: Schema): string => {
   let numSources = 0;
@@ -29,7 +38,7 @@ const updateHtml = (html: string, data: Partial<MediaData>, updateAll?: boolean,
   parser.addNodeFilter('source', (nodes) => numSources = nodes.length);
   const rootNode = parser.parse(html);
 
-  for (let node = rootNode; node; node = node.walk()) {
+  for (let node: AstNode | null | undefined = rootNode; node; node = node.walk()) {
     if (node.type === 1) {
       const name = node.name;
 
@@ -62,7 +71,7 @@ const updateHtml = (html: string, data: Partial<MediaData>, updateAll?: boolean,
                 if (data[sources[index]]) {
                   const source = new AstNode('source', 1);
                   source.attr('src', data[sources[index]]);
-                  source.attr('type', data[sources[index] + 'mime'] || null);
+                  source.attr('type', data[sources[index] + 'mime' as SourceMime] || null);
                   node.append(source);
                 }
               }
@@ -88,7 +97,7 @@ const updateHtml = (html: string, data: Partial<MediaData>, updateAll?: boolean,
             case 'source':
               if (sourceCount < 2) {
                 node.attr('src', data[sources[sourceCount]]);
-                node.attr('type', data[sources[sourceCount] + 'mime'] || null);
+                node.attr('type', data[sources[sourceCount] + 'mime' as SourceMime] || null);
 
                 if (!data[sources[sourceCount]]) {
                   node.remove();

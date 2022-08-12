@@ -13,8 +13,8 @@ export const is = <T>(lhs: Optional<T>, rhs: T, comparator: (a: T, b: T) => bool
  * `Some` (and the values are equal under the comparator) or they're both `None`.
  */
 export const equals: {
-  <A, B>(lhs: Optional<A>, rhs: Optional<B>, comparator: (a: A, b: B) => boolean);
-  <T>(lhs: Optional<T>, rhs: Optional<T>);
+  <A, B>(lhs: Optional<A>, rhs: Optional<B>, comparator: (a: A, b: B) => boolean): boolean;
+  <T>(lhs: Optional<T>, rhs: Optional<T>): boolean;
 } = <A, B>(lhs: Optional<A>, rhs: Optional<B>, comparator: (a: A, b: B) => boolean = Fun.tripleEquals as any): boolean =>
   lift2(lhs, rhs, comparator).getOr(lhs.isNone() && rhs.isNone());
 

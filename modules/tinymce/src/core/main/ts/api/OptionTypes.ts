@@ -5,7 +5,7 @@ import { PastePostProcessEvent, PastePreProcessEvent } from './EventTypes';
 import { Formats } from './fmt/Format';
 import { AllowedFormat } from './fmt/StyleFormat';
 import { SchemaType } from './html/Schema';
-import { EditorUiApi } from './ui/Ui';
+import { EditorUiApi, Toolbar } from './ui/Ui';
 
 export type EntityEncoding = 'named' | 'numeric' | 'raw' | 'named,numeric' | 'named+numeric' | 'numeric,named' | 'numeric+named';
 
@@ -169,6 +169,7 @@ interface BaseEditorOptions {
   placeholder?: string;
   preserve_cdata?: boolean;
   preview_styles?: false | string;
+  promotion?: boolean;
   protect?: RegExp[];
   readonly?: boolean;
   referrer_policy?: ReferrerPolicy;
@@ -208,6 +209,7 @@ interface BaseEditorOptions {
   toolbar7?: string;
   toolbar8?: string;
   toolbar9?: string;
+  toolbar_groups?: Record<string, Toolbar.GroupToolbarButtonSpec>;
   toolbar_location?: ToolbarLocation;
   toolbar_mode?: ToolbarMode;
   toolbar_sticky?: boolean;
@@ -251,9 +253,14 @@ export interface NormalizedEditorOptions extends BaseEditorOptions {
 }
 
 export interface EditorOptions extends NormalizedEditorOptions {
+  a11y_advanced_options: boolean;
+  allow_unsafe_link_target: boolean;
   anchor_bottom: string;
   anchor_top: string;
+  automatic_uploads: boolean;
   block_formats: string;
+  body_class: string;
+  body_id: string;
   br_newline_selector: string;
   color_cols: number;
   content_css: string[];
@@ -294,9 +301,11 @@ export interface EditorOptions extends NormalizedEditorOptions {
   object_resizing: string;
   paste_as_text: boolean;
   preview_styles: string;
+  promotion: boolean;
   readonly: boolean;
   removed_menuitems: string;
   toolbar: boolean | string | string[] | Array<ToolbarGroup>;
+  toolbar_groups: Record<string, Toolbar.GroupToolbarButtonSpec>;
   toolbar_location: ToolbarLocation;
   toolbar_mode: ToolbarMode;
   toolbar_persist: boolean;

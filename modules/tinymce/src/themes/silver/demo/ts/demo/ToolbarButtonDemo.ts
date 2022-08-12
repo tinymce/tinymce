@@ -1,16 +1,16 @@
 /* eslint-disable no-console */
 import { Fun } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import { Editor, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 import * as MockDemo from './MockDemo';
 
-declare let tinymce: any;
+declare let tinymce: TinyMCE;
 
-export default () => {
+export default (): void => {
   const DemoState2 = MockDemo.mockFeatureState();
-  const generateButton = (editor: Editor, buttonType: 'button', name, num) => {
-    const names = [];
+  const generateButton = (editor: Editor, buttonType: 'button', name: string, num: number) => {
+    const names: string[] = [];
 
     for (let i = 0; i <= num; i++) {
       editor.ui.registry.addButton(`${name}-${i}`, {
@@ -40,7 +40,7 @@ export default () => {
       'autosave' // Required to prevent users losing content when they press back
     ],
 
-    setup: (ed: Editor) => {
+    setup: (ed) => {
       ed.on('skinLoaded', () => {
         // Notification fields for equality: type, text, progressBar, timeout
         ed.notificationManager.open({

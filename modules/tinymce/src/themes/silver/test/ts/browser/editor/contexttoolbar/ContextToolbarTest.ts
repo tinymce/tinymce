@@ -16,7 +16,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarTest
         onAction: store.adder('alpha-exec')
       });
       ed.ui.registry.addContextToolbar('test-toolbar', {
-        predicate: (node) => node.nodeName && node.nodeName.toLowerCase() === 'a',
+        predicate: (node) => node.nodeName.toLowerCase() === 'a',
         items: 'alpha'
       });
     }

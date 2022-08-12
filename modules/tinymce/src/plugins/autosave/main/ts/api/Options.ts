@@ -6,8 +6,8 @@ import { EditorOptions } from 'tinymce/core/api/OptionTypes';
 import * as Time from '../core/Time';
 
 const option: {
-  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K] | undefined;
-  <T>(name: string): (editor: Editor) => T | undefined;
+  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K];
+  <T>(name: string): (editor: Editor) => T;
 } = (name: string) => (editor: Editor) =>
   editor.options.get(name);
 

@@ -8,17 +8,17 @@ import * as Obj from 'ephox/katamari/api/Obj';
 
 describe('atomic.katamari.api.obj.ObjFindTest', () => {
   it('ObjFindTest', () => {
-    const checkNone = (input, pred) => {
+    const checkNone = <T>(input: Record<string, T>, pred: (val: T, key: string, obj: Record<string, T>) => boolean) => {
       const actual = Obj.find(input, pred);
-      return actual.isNone();
+      assert.isTrue(actual.isNone());
     };
 
-    const checkObj = (expected, input, pred) => {
+    const checkObj = <T>(expected: T, input: Record<string, T>, pred: (val: T, key: string, obj: Record<string, T>) => boolean) => {
       const actual = Obj.find(input, pred).getOrDie('should have value');
       assert.deepEqual(actual, expected);
     };
 
-    checkNone({}, (v, _k) => {
+    checkNone<number>({}, (v, _k) => {
       return v > 0;
     });
     checkObj(3, { test: 3 }, (_v, k) => {

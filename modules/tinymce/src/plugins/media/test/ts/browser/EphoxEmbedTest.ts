@@ -12,7 +12,7 @@ describe('browser.tinymce.plugins.media.core.EphoxEmbedTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: [ 'media' ],
     toolbar: 'media',
-    media_url_resolver: (data, resolve) => {
+    media_url_resolver: (data: { url: string }, resolve: (response: { html: string }) => void) => {
       resolve({
         html: '<video width="300" height="150" ' +
           'controls="controls">\n<source src="' + data.url + '" />\n</video>'

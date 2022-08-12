@@ -8,20 +8,20 @@ import Editor from 'tinymce/core/api/Editor';
 const dialogSelector = 'div.tox-dialog';
 const toolbarButtonSelector = 'button[aria-label="Insert/edit code sample"]';
 
-const setLanguage = (newLanguage: string) => {
-  const select: HTMLSelectElement = document.querySelector('div[role="dialog"] select');
+const setLanguage = (newLanguage: string): void => {
+  const select = document.querySelector('div[role="dialog"] select') as HTMLSelectElement;
   select.value = newLanguage;
 };
 
-const setTextareaContent = (content: string) => {
-  const textarea: HTMLTextAreaElement = document.querySelector('div[role="dialog"] textarea');
+const setTextareaContent = (content: string): void => {
+  const textarea = document.querySelector('div[role="dialog"] textarea') as HTMLTextAreaElement;
   textarea.value = content;
 };
 
-const assertCodeSampleDialog = (expectedLanguage: string, expectedContent: string) => {
-  const select: HTMLSelectElement = document.querySelector('div[role="dialog"] select');
+const assertCodeSampleDialog = (expectedLanguage: string, expectedContent: string): void => {
+  const select = document.querySelector('div[role="dialog"] select') as HTMLSelectElement;
   assert.equal(select.value, expectedLanguage, 'Asserting language dropdown is ' + expectedLanguage);
-  const textarea: HTMLTextAreaElement = document.querySelector('div[role="dialog"] textarea');
+  const textarea = document.querySelector('div[role="dialog"] textarea') as HTMLTextAreaElement;
   assert.equal(textarea.value, expectedContent, 'Asserting textarea content is ' + expectedContent);
 };
 
@@ -52,23 +52,23 @@ const assertPreText = (container: SugarElement<Node>, selector: string, expected
   assert.equal(text, expected, 'Assert ' + selector + ' has innerText ' + expected);
 };
 
-const pOpenDialogAndAssertInitial = async (editor: Editor, language: string, content: string) => {
+const pOpenDialogAndAssertInitial = async (editor: Editor, language: string, content: string): Promise<void> => {
   TinyUiActions.clickOnToolbar(editor, toolbarButtonSelector);
   await UiFinder.pWaitForVisible('Waited for dialog to be visible', SugarBody.body(), dialogSelector);
   assertCodeSampleDialog(language, content);
 };
 
-const pSubmitDialog = async (editor: Editor) => {
+const pSubmitDialog = async (editor: Editor): Promise<void> => {
   TinyUiActions.submitDialog(editor, dialogSelector);
   await Waiter.pTryUntil('Dialog should close', () => UiFinder.notExists(SugarBody.body(), dialogSelector));
 };
 
-const pCancelDialog = async (editor: Editor) => {
+const pCancelDialog = async (editor: Editor): Promise<void> => {
   TinyUiActions.cancelDialog(editor, dialogSelector);
   await Waiter.pTryUntil('Dialog should close', () => UiFinder.notExists(SugarBody.body(), dialogSelector));
 };
 
-const pAssertEditorContents = async (editorBody: SugarElement<HTMLElement>, language: string, content: string, selector: string) => {
+const pAssertEditorContents = async (editorBody: SugarElement<HTMLElement>, language: string, content: string, selector: string): Promise<void> => {
   /*
    * Since the syntax highlighting wraps tokens in spans which would be annoying to assert, we assert
    * the overall structure of the editor's content, then exact match the textContent of the pre tag

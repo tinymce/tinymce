@@ -18,12 +18,23 @@ interface CollectCallbacks {
   readonly text: (node: Text, section: TextSection) => void;
 }
 
-const isSimpleBoundary = (dom: DOMUtils, node: Node) => dom.isBlock(node) || Obj.has(dom.schema.getVoidElements(), node.nodeName);
-const isContentEditableFalse = (dom: DOMUtils, node: Node) => dom.getContentEditable(node) === 'false';
-const isContentEditableTrueInCef = (dom: DOMUtils, node: Node) => dom.getContentEditable(node) === 'true' && dom.getContentEditableParent(node.parentNode) === 'false';
-const isHidden = (dom: DOMUtils, node: Node) => !dom.isBlock(node) && Obj.has(dom.schema.getWhitespaceElements(), node.nodeName);
-const isBoundary = (dom: DOMUtils, node: Node) => isSimpleBoundary(dom, node) || isContentEditableFalse(dom, node) || isHidden(dom, node) || isContentEditableTrueInCef(dom, node);
-const isText = (node: Node): node is Text => node.nodeType === 3;
+const isSimpleBoundary = (dom: DOMUtils, node: Node) =>
+  dom.isBlock(node) || Obj.has(dom.schema.getVoidElements(), node.nodeName);
+
+const isContentEditableFalse = (dom: DOMUtils, node: Node) =>
+  dom.getContentEditable(node) === 'false';
+
+const isContentEditableTrueInCef = (dom: DOMUtils, node: Node) =>
+  dom.getContentEditable(node) === 'true' && node.parentNode && dom.getContentEditableParent(node.parentNode) === 'false';
+
+const isHidden = (dom: DOMUtils, node: Node) =>
+  !dom.isBlock(node) && Obj.has(dom.schema.getWhitespaceElements(), node.nodeName);
+
+const isBoundary = (dom: DOMUtils, node: Node) =>
+  isSimpleBoundary(dom, node) || isContentEditableFalse(dom, node) || isHidden(dom, node) || isContentEditableTrueInCef(dom, node);
+
+const isText = (node: Node): node is Text =>
+  node.nodeType === 3;
 
 const nuSection = (): TextSection => ({
   sOffset: 0,
@@ -34,7 +45,7 @@ const nuSection = (): TextSection => ({
 const toLeaf = (node: Node, offset: number): Traverse.ElementAndOffset<Node> =>
   Traverse.leaf(SugarElement.fromDom(node), offset);
 
-const walk = (dom: DOMUtils, walkerFn: (shallow?: boolean) => Node, startNode: Node, callbacks: WalkerCallbacks, endNode?: Node, skipStart: boolean = true): void => {
+const walk = (dom: DOMUtils, walkerFn: (shallow?: boolean) => Node | null | undefined, startNode: Node, callbacks: WalkerCallbacks, endNode?: Node, skipStart: boolean = true): void => {
   let next = skipStart ? walkerFn(false) : startNode;
   while (next) {
     // Walk over content editable or hidden elements
@@ -69,7 +80,7 @@ const collectTextToBoundary = (dom: DOMUtils, section: TextSection, node: Node, 
     return;
   }
 
-  const rootBlock = dom.getParent(rootNode, dom.isBlock);
+  const rootBlock = dom.getParent(rootNode, dom.isBlock) ?? dom.getRoot();
   const walker = new DomTreeWalker(node, rootBlock);
   const walkerFn = forwards ? walker.next.bind(walker) : walker.prev.bind(walker);
 

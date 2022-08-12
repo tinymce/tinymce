@@ -10,7 +10,7 @@ describe('browser.tinymce.plugins.media.DataAttributeTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: [ 'media' ],
     toolbar: 'media',
-    media_url_resolver: (data, resolve) => {
+    media_url_resolver: (data: { url: string }, resolve: (response: { html: string }) => void) => {
       resolve({ html: '<div data-ephox-embed-iri="' + data.url + '" style="max-width: 300px; max-height: 150px"></div>' });
     },
     base_url: '/project/tinymce/js/tinymce'

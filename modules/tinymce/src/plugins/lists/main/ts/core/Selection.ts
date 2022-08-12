@@ -1,4 +1,4 @@
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Optional, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import Schema from 'tinymce/core/api/html/Schema';
@@ -9,14 +9,14 @@ import * as NodeType from './NodeType';
 const listNames = [ 'OL', 'UL', 'DL' ];
 const listSelector = listNames.join(',');
 
-const getParentList = (editor: Editor, node?: Node): HTMLElement => {
+const getParentList = (editor: Editor, node?: Node): HTMLElement | null => {
   const selectionStart = node || editor.selection.getStart(true);
 
   return editor.dom.getParent(selectionStart, listSelector, getClosestListHost(editor, selectionStart));
 };
 
-const isParentListSelected = (parentList: HTMLElement, selectedBlocks: Element[]): boolean =>
-  parentList && selectedBlocks.length === 1 && selectedBlocks[0] === parentList;
+const isParentListSelected = (parentList: HTMLElement | null, selectedBlocks: Element[]): boolean =>
+  Type.isNonNullable(parentList) && selectedBlocks.length === 1 && selectedBlocks[0] === parentList;
 
 const findSubLists = (parentList: HTMLElement): HTMLElement[] =>
   Arr.filter(parentList.querySelectorAll(listSelector), NodeType.isListNode);
@@ -26,7 +26,7 @@ const getSelectedSubLists = (editor: Editor): HTMLElement[] => {
   const selectedBlocks = editor.selection.getSelectedBlocks();
 
   if (isParentListSelected(parentList, selectedBlocks)) {
-    return findSubLists(parentList);
+    return findSubLists(parentList as HTMLElement);
   } else {
     return Arr.filter(selectedBlocks, (elm): elm is HTMLElement => {
       return NodeType.isListNode(elm) && parentList !== elm;
@@ -57,7 +57,7 @@ const getClosestEditingHost = (editor: Editor, elm: Element): HTMLElement => {
   return parentTableCell.length > 0 ? parentTableCell[0] : editor.getBody();
 };
 
-const isListHost = (schema: Schema, node: Node) =>
+const isListHost = (schema: Schema, node: Node): boolean =>
   !NodeType.isListNode(node) && !NodeType.isListItemNode(node) && Arr.exists(listNames, (listName) => schema.isValidChild(node.nodeName, listName));
 
 const getClosestListHost = (editor: Editor, elm: Node): HTMLElement => {

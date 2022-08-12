@@ -12,11 +12,7 @@ const pAddAnchor = async (editor: Editor, id: string, useCommand: boolean = fals
 };
 
 const pAssertAnchorPresence = (editor: Editor, numAnchors: number, selector: string = 'a.mce-item-anchor'): Promise<void> => {
-  const expected = {};
-  expected[selector] = numAnchors;
-  return Waiter.pTryUntil('wait for anchor',
-    () => TinyAssertions.assertContentPresence(editor, expected)
-  );
+  return Waiter.pTryUntil('wait for anchor', () => TinyAssertions.assertContentPresence(editor, { [selector]: numAnchors }));
 };
 
 export {

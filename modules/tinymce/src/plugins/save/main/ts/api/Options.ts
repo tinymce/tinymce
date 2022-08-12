@@ -2,8 +2,8 @@ import Editor from 'tinymce/core/api/Editor';
 import { EditorOptions } from 'tinymce/core/api/OptionTypes';
 
 const option: {
-  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K] | undefined;
-  <T>(name: string): (editor: Editor) => T | undefined;
+  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K];
+  <T>(name: string): (editor: Editor) => T;
 } = (name: string) => (editor: Editor) =>
   editor.options.get(name);
 
@@ -25,8 +25,8 @@ const register = (editor: Editor): void => {
 };
 
 const enableWhenDirty = option<boolean>('save_enablewhendirty');
-const getOnSaveCallback = option<(editor: Editor) => void>('save_onsavecallback');
-const getOnCancelCallback = option<(editor: Editor) => void>('save_oncancelcallback');
+const getOnSaveCallback = option<((editor: Editor) => void) | undefined>('save_onsavecallback');
+const getOnCancelCallback = option<((editor: Editor) => void) | undefined>('save_oncancelcallback');
 
 export {
   register,

@@ -53,7 +53,8 @@ describe('headless.tinymce.themes.silver.components.colorpicker.ColorPickerTest'
     return Waiter.pTryUntil('Assert hue of palette matches expected', () => {
       const canvas = UiFinder.findIn<HTMLCanvasElement>(component.element, 'canvas').getOrDie();
       // get 1px square from top right of palette canvas
-      const imageData = canvas.dom.getContext('2d').getImageData(100, 0, 1, 1).data;
+      const canvasContext = canvas.dom.getContext('2d') as CanvasRenderingContext2D;
+      const imageData = canvasContext.getImageData(100, 0, 1, 1).data;
       const rgb = { red: imageData[0], green: imageData[1], blue: imageData[2], alpha: (imageData[3] / 255) * 100 };
       const hsv = HsvColour.fromRgb(rgb);
       assert.equal(hsv.hue, expected);

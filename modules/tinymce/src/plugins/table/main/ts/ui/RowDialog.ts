@@ -27,7 +27,7 @@ const updateSimpleProps = (modifier: DomModifier, data: RowData, shouldUpdate: (
   }
 };
 
-const updateAdvancedProps = (modifier: DomModifier, data: RowData, shouldUpdate: (key: string) => boolean): void => {
+const updateAdvancedProps = (modifier: DomModifier, data: Required<RowData>, shouldUpdate: (key: string) => boolean): void => {
   if (shouldUpdate('backgroundcolor')) {
     modifier.setStyle('background-color', data.backgroundcolor);
   }
@@ -48,7 +48,7 @@ const applyStyleData = (editor: Editor, rows: HTMLTableRowElement[], data: RowDa
     updateSimpleProps(modifier, data, shouldOverrideCurrentValue);
 
     if (Options.hasAdvancedRowTab(editor)) {
-      updateAdvancedProps(modifier, data, shouldOverrideCurrentValue);
+      updateAdvancedProps(modifier, data as Required<RowData>, shouldOverrideCurrentValue);
     }
 
     if (wasChanged('align')) {
@@ -64,7 +64,7 @@ const applyStructureData = (editor: Editor, data: RowData): void => {
 };
 
 const applyRowData = (editor: Editor, rows: HTMLTableRowElement[], oldData: RowData, data: RowData): void => {
-  const modifiedData = Obj.filter(data, (value, key) => oldData[key] !== value);
+  const modifiedData = Obj.filter(data, (value, key) => oldData[key as keyof RowData] !== value);
 
   if (Obj.size(modifiedData) > 0) {
     const typeModified = Obj.has(modifiedData, 'type');

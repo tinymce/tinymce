@@ -27,6 +27,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellDialogStyleWithCssTest', () 
   const assertDialogValues = (data: Record<string, string>) => TableTestUtils.assertDialogValues(data, false, generalSelectors);
 
   const initializeTable = (editor: Editor, table: TableSpec) => {
+    const { cellPaddingAttr, cellPaddingStyle, cellSpacingAttr, cellSpacingStyle } = table;
     const defaultTable = SugarElement.fromHtml<HTMLTableElement>(
       '<table>' +
       '<tbody>' +
@@ -42,17 +43,17 @@ describe('browser.tinymce.plugins.table.ui.TableCellDialogStyleWithCssTest', () 
       '</table>'
     );
 
-    if (Type.isNonNullable(table.cellPaddingAttr)) {
-      Attribute.set(defaultTable, 'cellpadding', table.cellPaddingAttr);
+    if (Type.isNonNullable(cellPaddingAttr)) {
+      Attribute.set(defaultTable, 'cellpadding', cellPaddingAttr);
     }
-    if (Type.isNonNullable(table.cellSpacingAttr)) {
-      Attribute.set(defaultTable, 'cellspacing', table.cellSpacingAttr);
+    if (Type.isNonNullable(cellSpacingAttr)) {
+      Attribute.set(defaultTable, 'cellspacing', cellSpacingAttr);
     }
-    if (Type.isNonNullable(table.cellSpacingStyle)) {
-      Css.set(defaultTable, 'border-spacing', table.cellSpacingStyle);
+    if (Type.isNonNullable(cellSpacingStyle)) {
+      Css.set(defaultTable, 'border-spacing', cellSpacingStyle);
     }
-    if (Type.isNonNullable(table.cellPaddingStyle)) {
-      Arr.each(SelectorFilter.descendants(defaultTable, 'td,th'), (cell) => Css.set(cell, 'padding', table.cellPaddingStyle));
+    if (Type.isNonNullable(cellPaddingStyle)) {
+      Arr.each(SelectorFilter.descendants(defaultTable, 'td,th'), (cell) => Css.set(cell, 'padding', cellPaddingStyle));
     }
 
     editor.setContent(Html.getOuter(defaultTable));
@@ -62,7 +63,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellDialogStyleWithCssTest', () 
   const assertTable = (editor: Editor, spec: TableSpec) => {
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, _arr) => {
       const transformMap = (record: Record<string, undefined | string>) => {
-        const definedOnly = Obj.filter(record, Type.isNonNullable);
+        const definedOnly = Obj.filter(record, Type.isNonNullable) as Record<string, string>;
         return Obj.map(definedOnly, (val) => val !== '' ? str.is(val) : str.none());
       };
       const cell = s.element('td', { styles: transformMap({ padding: spec.cellPaddingStyle }) });

@@ -9,7 +9,7 @@ const normalizeList = (dom: DOMUtils, list: HTMLUListElement | HTMLOListElement)
   const parentNode = list.parentElement;
 
   // Move UL/OL to previous LI if it's the only child of a LI
-  if (parentNode.nodeName === 'LI' && parentNode.firstChild === list) {
+  if (parentNode && parentNode.nodeName === 'LI' && parentNode.firstChild === list) {
     const sibling = parentNode.previousSibling;
     if (sibling && sibling.nodeName === 'LI') {
       sibling.appendChild(list);

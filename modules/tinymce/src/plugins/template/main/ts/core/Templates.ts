@@ -27,7 +27,7 @@ const createTemplateList = (editor: Editor, callback: (templates: ExternalTempla
   };
 };
 
-const replaceTemplateValues = (html: string, templateValues: TemplateValues): string => {
+const replaceTemplateValues = (html: string, templateValues: TemplateValues | undefined): string => {
   Tools.each(templateValues, (v, k) => {
     if (Type.isFunction(v)) {
       v = v(k);
@@ -61,12 +61,12 @@ const insertTemplate = (editor: Editor, _ui: boolean, html: string): void => {
   const sel = editor.selection.getContent();
 
   html = replaceTemplateValues(html, Options.getTemplateReplaceValues(editor));
-  let el = dom.create('div', null, html);
+  let el = dom.create('div', {}, html);
 
   // Find template element within div
   const n = dom.select('.mceTmpl', el);
   if (n && n.length > 0) {
-    el = dom.create('div', null);
+    el = dom.create('div');
     el.appendChild(n[0].cloneNode(true));
   }
 

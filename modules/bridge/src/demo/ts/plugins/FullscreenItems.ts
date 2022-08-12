@@ -1,8 +1,8 @@
 import { getDemoRegistry } from '../buttons/DemoRegistry';
 
 const editor = {
-  on: (_s, _f) => { },
-  off: (_s, _f) => { }
+  on: (_s: string, _f: Function) => { },
+  off: (_s: string, _f: Function) => { }
 };
 
 export const registerFullscreenItems = (): void => {
@@ -10,7 +10,7 @@ export const registerFullscreenItems = (): void => {
     type: 'togglebutton',
     enabled: true,
     onSetup: (buttonApi) => {
-      const f = (e) => {
+      const f = (e: any) => {
         buttonApi.setActive(e.something);
       };
       editor.on('FullscreenStateChanged', f);

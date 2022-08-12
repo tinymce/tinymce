@@ -47,7 +47,7 @@ describe('atomic.katamari.api.arr.FindIndexTest', () => {
 
   it('finds elements that pass the predicate', () => {
     fc.assert(fc.property(fc.array(fc.integer()), (arr) => {
-      const pred = (x) => x % 3 === 0;
+      const pred = (x: number) => x % 3 === 0;
       assert.isTrue(Arr.findIndex(arr, pred).forall((x) => pred(arr[x])));
     }));
   });
@@ -60,14 +60,14 @@ describe('atomic.katamari.api.arr.FindIndexTest', () => {
 
   it('is consistent with find', () => {
     fc.assert(fc.property(fc.array(fc.integer()), (arr) => {
-      const pred = (x) => x % 5 === 0;
+      const pred = (x: number) => x % 5 === 0;
       assertOptional(Arr.findIndex(arr, pred).map((x) => arr[x]), Arr.find(arr, pred));
     }));
   });
 
   it('is consistent with exists', () => {
     fc.assert(fc.property(fc.array(fc.integer()), (arr) => {
-      const pred = (x) => x % 6 === 0;
+      const pred = (x: number) => x % 6 === 0;
       assert.equal(Arr.findIndex(arr, pred).isSome(), Arr.exists(arr, pred));
     }));
   });

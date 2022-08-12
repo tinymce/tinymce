@@ -20,7 +20,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLook
 
       // Setup a container to click to outside the editor
       ed.on('init', () => {
-        const parent = ed.getContentAreaContainer().parentNode;
+        const parent = ed.getContentAreaContainer().parentNode as Node;
         const textarea = document.createElement('textarea');
         textarea.id = 'content-click-area';
         parent.appendChild(textarea);
@@ -48,7 +48,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLook
       ed.ui.registry.addContextToolbar('test-node-toolbar', {
         predicate: (node) => {
           recordNode('node', node);
-          return node.nodeName && node.nodeName.toLowerCase() === 'a';
+          return node.nodeName.toLowerCase() === 'a';
         },
         items: 'node',
         scope: 'node'
@@ -57,7 +57,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLook
         predicate: (node) => {
           recordNode('parent', node);
           const childNode = node.childNodes[0];
-          return childNode && childNode.nodeName && childNode.nodeName.toLowerCase() === 'strong';
+          return childNode && childNode.nodeName.toLowerCase() === 'strong';
         },
         items: 'parentnode',
         scope: 'node'
@@ -65,7 +65,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLook
       ed.ui.registry.addContextToolbar('test-editor-toolbar', {
         predicate: (node) => {
           recordNode('editor', node);
-          return node.nodeName && node.nodeName.toLowerCase() === 'span';
+          return node.nodeName.toLowerCase() === 'span';
         },
         items: 'editor',
         scope: 'editor'
@@ -152,7 +152,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLook
     await UiFinder.pWaitForVisible('Waiting for parent node toolbar to appear', SugarBody.body(), '.tox-tbtn:contains(Parent)');
     assertNames([ 'em', 'strong', 'p' ], [ 'em', 'strong', 'p' ], [ 'em' ]);
     resetNames();
-    SelectorFind.descendant(SugarBody.body(), '#content-click-area').each(Focus.focus);
+    SelectorFind.descendant<HTMLTextAreaElement>(SugarBody.body(), '#content-click-area').each(Focus.focus);
     await Waiter.pTryUntil('Wait for toolbar to hide', () => UiFinder.notExists(SugarBody.body(), '.tox-pop'));
     assertNames([], [], []);
     editor.focus();

@@ -8,6 +8,7 @@ import { ToolbarMode } from '../../api/Options';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { HeaderSpec, renderHeader } from '../header/CommonHeader';
 import SilverMenubar, { MenubarItemSpec, SilverMenubarSpec } from '../menus/menubar/SilverMenubar';
+import { renderPromotion } from '../promotion/Promotion';
 import * as Sidebar from '../sidebar/Sidebar';
 import * as Throbber from '../throbber/Throbber';
 import {
@@ -255,6 +256,16 @@ const partHeader = Composite.partType.optional<OuterContainerSketchDetail, Heade
   ]
 });
 
+const partPromotion = Composite.partType.optional<OuterContainerSketchDetail, HeaderSpec>({
+  factory: {
+    sketch: renderPromotion
+  },
+  name: 'promotion',
+  schema: [
+    FieldSchema.required('dom')
+  ]
+});
+
 const partSocket = Composite.partType.optional({
   // factory: Fun.identity,
   name: 'socket',
@@ -297,6 +308,7 @@ export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketch
     partMultipleToolbar,
     partSocket,
     partSidebar,
+    partPromotion,
     partThrobber
   ],
 

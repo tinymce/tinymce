@@ -411,7 +411,7 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
     LegacyUnit.setSelection(editor, 'tr:nth-child(1) td', 0);
     editor.execCommand('mceTableCopyRow');
 
-    const clipboardRows = FakeClipboard.getRows().getOr([]);
+    const clipboardRows = FakeClipboard.getRows().getOr([] as SugarElement<HTMLTableRowElement>[]);
 
     assert.equal(clipboardRows.length, 1);
     assert.isTrue(SugarNode.isTag('tr')(clipboardRows[0]));

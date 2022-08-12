@@ -41,6 +41,11 @@ describe('HtmlElementTest', () => {
       document.body.appendChild(iframe);
 
       const iframeDoc = iframe.contentDocument;
+      if (iframeDoc === null) {
+        assert.fail('Iframe document is not available');
+        return;
+      }
+
       iframeDoc.open();
       iframeDoc.write('<html><body></body></html>');
       iframeDoc.close();

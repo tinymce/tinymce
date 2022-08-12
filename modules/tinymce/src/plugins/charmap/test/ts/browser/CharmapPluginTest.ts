@@ -96,13 +96,13 @@ describe('browser.tinymce.plugins.charmap.CharMapPluginTest', () => {
 
   it('TBA: Insert character', () => {
     const editor = hook.editor();
-    let lastEvt: EditorEvent<{ chr: string }>;
+    let lastEvt: EditorEvent<{ chr: string }> | undefined;
 
     editor.on('InsertCustomChar', (e) => {
       lastEvt = e;
     });
 
     editor.plugins.charmap.insertChar('A');
-    assert.equal(lastEvt.chr, 'A');
+    assert.equal(lastEvt?.chr, 'A');
   });
 });

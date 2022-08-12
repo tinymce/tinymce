@@ -37,7 +37,7 @@ describe('atomic.tinymce.themes.silver.menus.MenuConversionTest', () => {
     'submenu-2': submenu2
   };
 
-  const expandAndAssertEq = (items: string | Array<Menu.NestedMenuItemContents>, expected) => {
+  const expandAndAssertEq = (items: string | Array<Menu.NestedMenuItemContents>, expected: MenuConversion.ExpandedMenus) => {
     assert.deepEqual(MenuConversion.expand(items, menuItems), expected);
   };
 

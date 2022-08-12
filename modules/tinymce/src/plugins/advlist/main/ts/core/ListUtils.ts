@@ -1,4 +1,4 @@
-import { Optional } from '@ephox/katamari';
+import { Optional, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -7,11 +7,11 @@ const isChildOfBody = (editor: Editor, elm: Node): boolean => {
 };
 
 const isTableCellNode = (node: Node | null): boolean => {
-  return node && /^(TH|TD)$/.test(node.nodeName);
+  return Type.isNonNullable(node) && /^(TH|TD)$/.test(node.nodeName);
 };
 
 const isListNode = (editor: Editor) => (node: Node | null): boolean => {
-  return node && (/^(OL|UL|DL)$/).test(node.nodeName) && isChildOfBody(editor, node);
+  return Type.isNonNullable(node) && (/^(OL|UL|DL)$/).test(node.nodeName) && isChildOfBody(editor, node);
 };
 
 const getSelectedStyleType = (editor: Editor): Optional<string> => {

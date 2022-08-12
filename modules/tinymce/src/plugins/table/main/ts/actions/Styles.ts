@@ -1,25 +1,24 @@
+import { Type } from '@ephox/katamari';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
-const getTDTHOverallStyle = (dom: DOMUtils, elm: Element, name: string): string => {
+const getTDTHOverallStyle = (dom: DOMUtils, elm: Element, name: string): string | undefined => {
   const cells = dom.select('td,th', elm);
   let firstChildStyle: string | undefined;
 
-  const checkChildren = (firstChildStyle: string | undefined, elms: Element[]) => {
-    for (let i = 0; i < elms.length; i++) {
-      const currentStyle = dom.getStyle(elms[i], name);
-      if (typeof firstChildStyle === 'undefined') {
-        firstChildStyle = currentStyle;
-      }
-      if (firstChildStyle !== currentStyle) {
-        return '';
-      }
+  for (let i = 0; i < cells.length; i++) {
+    const currentStyle = dom.getStyle(cells[i], name);
+    if (Type.isUndefined(firstChildStyle)) {
+      firstChildStyle = currentStyle;
     }
-    return firstChildStyle;
-  };
+    if (firstChildStyle !== currentStyle) {
+      return '';
+    }
+  }
 
-  return checkChildren(firstChildStyle, cells);
+  return firstChildStyle;
 };
 
 const setAlign = (editor: Editor, elm: Element, name: string | undefined): void => {

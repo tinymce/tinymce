@@ -12,7 +12,7 @@ describe('browser.tinymce.plugins.media.MediaPluginSanityTest', () => {
     plugins: [ 'media' ],
     toolbar: 'media',
     base_url: '/project/tinymce/js/tinymce',
-    setup: (editor) => {
+    setup: (editor: Editor) => {
       editor.ui.registry.addContextToolbar('test-media', {
         predicate: (node) => editor.dom.is(node, 'span[data-mce-object]'),
         items: 'media'

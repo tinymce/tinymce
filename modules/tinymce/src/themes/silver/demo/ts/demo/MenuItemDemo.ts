@@ -1,14 +1,14 @@
 import { Fun } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 import * as MockDemo from './MockDemo';
 
-declare let tinymce: any;
+declare let tinymce: TinyMCE;
 
 /* eslint-disable no-console */
 
-export default () => {
+export default (): void => {
   const DemoState = MockDemo.mockFeatureState();
   const DemoState2 = MockDemo.mockFeatureState();
 
@@ -26,7 +26,7 @@ export default () => {
       File: [ 'x1', 'x2', 'x3', '|', 't1', '|', 'd1' ]
     },
 
-    setup: (ed: Editor) => {
+    setup: (ed) => {
       ed.ui.registry.addMenuItem('x1', {
         icon: 'drop',
         text: 'Text with icon',

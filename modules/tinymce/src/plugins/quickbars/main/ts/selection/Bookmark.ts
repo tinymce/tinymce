@@ -64,10 +64,9 @@ const create = (dom: DOMUtils, rng: Range): Bookmark => {
  */
 const resolve = (dom: DOMUtils, bookmark: Bookmark): Range => {
   const restoreEndPoint = (start?: boolean) => {
-    let node: Node;
-
     const nodeIndex = (container: Node) => {
-      let node = container.parentNode.firstChild, idx = 0;
+      let node = container.parentNode?.firstChild;
+      let idx = 0;
 
       while (node) {
         if (node === container) {
@@ -85,21 +84,22 @@ const resolve = (dom: DOMUtils, bookmark: Bookmark): Range => {
       return -1;
     };
 
-    let container = node = bookmark[start ? 'startContainer' : 'endContainer'];
+    let container = bookmark[start ? 'startContainer' : 'endContainer'];
     let offset = bookmark[start ? 'startOffset' : 'endOffset'];
 
     if (!container) {
       return;
     }
 
-    if (container.nodeType === 1) {
+    if (container.nodeType === 1 && container.parentNode) {
+      const node = container;
       offset = nodeIndex(container);
       container = container.parentNode;
       dom.remove(node);
     }
 
     bookmark[start ? 'startContainer' : 'endContainer'] = container;
-    bookmark[start ? 'startOffset' : 'endOffset'] = offset;
+    bookmark[start ? 'startOffset' : 'endOffset'] = offset as number;
   };
 
   restoreEndPoint(true);
@@ -110,7 +110,7 @@ const resolve = (dom: DOMUtils, bookmark: Bookmark): Range => {
   rng.setStart(bookmark.startContainer, bookmark.startOffset);
 
   if (bookmark.endContainer) {
-    rng.setEnd(bookmark.endContainer, bookmark.endOffset);
+    rng.setEnd(bookmark.endContainer, bookmark.endOffset as number);
   }
 
   return rng;

@@ -7,9 +7,9 @@ import * as Fun from 'ephox/katamari/api/Fun';
 
 describe('atomic.katamari.api.arr.ArrBindTest', () => {
   it('unit tests', () => {
-    const len = (x) => [ x.length ];
+    const len = (x: unknown[]): number[] => [ x.length ];
 
-    const check = (expected, input: any[], f) => {
+    const check = <T, U>(expected: U[], input: T[][], f: (x: T[]) => U[]) => {
       assert.deepEqual(Arr.bind(input, f), expected);
       assert.deepEqual(Arr.bind(Object.freeze(input.slice()), f), expected);
     };
