@@ -148,6 +148,7 @@ const moveGhost = (
   const outerMouseX = mouseX + contentAreaContainer.getBoundingClientRect().left;
 
   state.on((state) => {
+    state.intervalId.clear();
     if (state.dragging) {
       // This basically means that the mouse is close to the bottom edge
       // (within MouseRange pixels of the bottom edge)
