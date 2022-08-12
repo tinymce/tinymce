@@ -1,5 +1,5 @@
 import { Arr } from '@ephox/katamari';
-import { SugarElement, ContentEditable } from '@ephox/sugar';
+import { SugarElement, ContentEditable, SugarElements } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -9,12 +9,12 @@ import * as Selection from '../core/Selection';
 import { Indentation } from '../listmodel/Indentation';
 import { listIndentation } from '../listmodel/ListsIndendation';
 
-const getContentEditableElements = (elements: HTMLElement[]): SugarElement<HTMLElement>[] =>
-  Arr.filter(Arr.map(elements, SugarElement.fromDom), (element) => ContentEditable.get(element));
+const getEditableElements = (elements: HTMLElement[]): SugarElement<HTMLElement>[] =>
+  Arr.filter(SugarElements.fromDom(elements), ContentEditable.get);
 
 const selectionIndentation = (editor: Editor, indentation: Indentation): boolean => {
-  const lists = getContentEditableElements(Selection.getSelectedListRoots(editor));
-  const dlItems = getContentEditableElements(Selection.getSelectedDlItems(editor));
+  const lists = getEditableElements(Selection.getSelectedListRoots(editor));
+  const dlItems = getEditableElements(Selection.getSelectedDlItems(editor));
   let isHandled = false;
 
   if (lists.length || dlItems.length) {
