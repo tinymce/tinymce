@@ -3,6 +3,7 @@ import { Obj, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
 import { getParentList } from '../core/Selection';
+import { isEditableList } from '../core/Util';
 
 interface ListUpdate {
   readonly attrs?: Record<string, string>;
@@ -11,7 +12,7 @@ interface ListUpdate {
 
 export const updateList = (editor: Editor, update: ListUpdate): void => {
   const parentList = getParentList(editor);
-  if (parentList && editor.dom.getContentEditableRoot(parentList) !== 'false') {
+  if (parentList && isEditableList(editor, parentList)) {
     editor.undoManager.transact(() => {
       if (Type.isObject(update.styles)) {
         editor.dom.setStyles(parentList, update.styles);

@@ -1,4 +1,4 @@
-import { Type } from '@ephox/katamari';
+import { Arr, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
@@ -43,10 +43,14 @@ const isWithinList = (editor: Editor, e: EditorEvent<NodeChangeEvent>, nodeName:
   return lists.length > 0 && lists[0].nodeName === nodeName;
 };
 
+const isEditableList = (editor: Editor, element: Element): boolean =>
+  !(Arr.exists(editor.dom.getParents(element),
+    (node: Node) => editor.dom.getContentEditable(node) === 'false' && [ 'ol', 'ul', 'div' ].includes(node.nodeName.toLowerCase())));
+
 const makeSetupHandler = (editor: Editor, nodeName: ListType) => (api: Toolbar.ToolbarSplitButtonInstanceApi | Toolbar.ToolbarToggleButtonInstanceApi) => {
   const nodeChangeHandler = (e: EditorEvent<NodeChangeEvent>) => {
     api.setActive(isWithinList(editor, e, nodeName));
-    api.setEnabled(editor.dom.getContentEditableRoot(e.element) !== 'false');
+    api.setEnabled(isWithinList(editor, e, nodeName) && isEditableList(editor, e.element));
   };
   editor.on('NodeChange', nodeChangeHandler);
 
