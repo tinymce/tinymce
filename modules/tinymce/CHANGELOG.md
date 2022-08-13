@@ -9,7 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - New `text_patterns_lookup` option to provide additional text patterns dynamically #TINY-8778
 - New `format_noneditable_selector` option to specify the `contenteditable="false"` elements that can be wrapped in a format. #TINY-8905
-- New `getContentEditableRoot` function added to the `DOMUtils` API which retrieves the state of `contenteditable` parent until reaching a `false` value or the root #TINY-8920
 
 ### Improved
 - The formatter can now apply a format to a `contenteditable="false"` element by wrapping it. Configurable using the `format_noneditable_selector` option. #TINY-8905
@@ -29,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The content of the `contenteditable="false"` element could be selected with the mouse on Firefox  #TINY-8828
 - Parsing large documents no longer throws a `Maximum call stack size exceeded` exception #TINY-6945
 - DomParser filter matching was not checked between filters, which could lead to an exception in the parser #TINY-8888
-- Lists with `contenteditable="false"` can no longer be toggled, and `contenteditable="true"` list elements within them can no longer deleted, added, or indented. #TINY-8920
+- Lists with `contenteditable="false"` can no longer be toggled, and `contenteditable="true"` list elements within them can no longer be deleted or indented. #TINY-8920
 
 ### Deprecated
 - The autocompleter `ch` configuration property has been deprecated and will be removed in the next major release. Use the `trigger` property instead. #TINY-8887
