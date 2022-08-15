@@ -25,9 +25,11 @@ const setNodeChangeHandler = (editor: Editor, nodeChangeHandler: (e: NodeChangeE
   return () => editor.off('NodeChange', nodeChangeHandler);
 };
 
-export const isEditableList = (editor: Editor, element: Element): boolean =>
-  !(Arr.exists(editor.dom.getParents(element),
-    (node: Node) => editor.dom.getContentEditable(node) === 'false' && [ 'ol', 'ul', 'div' ].includes(node.nodeName.toLowerCase())));
+// Advlist/core/ListUtils.ts - Duplicated in Advlist plugin
+export const isEditableList = (editor: Editor, element: Element): boolean => {
+  const parentList = editor.dom.getParent(element, 'ol,ul,dl', editor.dom.getRoot());
+  return editor.dom.getContentEditableParent(parentList ?? element) !== 'false';
+};
 
 export const setupToggleButtonHandler = (editor: Editor, listName: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi): () => void => {
   const toggleButtonHandler = (e: NodeChangeEvent) => {

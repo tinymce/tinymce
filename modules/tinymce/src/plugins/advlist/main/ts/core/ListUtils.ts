@@ -20,8 +20,15 @@ const getSelectedStyleType = (editor: Editor): Optional<string> => {
   return Optional.from(style);
 };
 
+// Lists/core/Util.ts - Duplicated in Lists plugin
+const isEditableList = (editor: Editor, element: Element): boolean => {
+  const parentList = editor.dom.getParent(element, 'ol,ul,dl', editor.dom.getRoot());
+  return editor.dom.getContentEditableParent(parentList ?? element) !== 'false';
+};
+
 export {
   isTableCellNode,
   isListNode,
-  getSelectedStyleType
+  getSelectedStyleType,
+  isEditableList
 };
