@@ -22,6 +22,7 @@ import { isCaretNode } from './FormatContainer';
 import { ApplyFormat, BlockFormat, FormatVars, InlineFormat } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 import * as Hooks from './Hooks';
+import * as ListItemFormat from './ListItemFormat';
 import * as MatchFormat from './MatchFormat';
 import * as MergeFormats from './MergeFormats';
 
@@ -39,6 +40,22 @@ const canFormatBR = (editor: Editor, format: ApplyFormat, node: HTMLBRElement, p
   }
 };
 
+const applyStyles = (dom: DOMUtils, elm: Element, format: ApplyFormat, vars: FormatVars | undefined) => {
+  each(format.styles, (value, name) => {
+    dom.setStyle(elm, name, FormatUtils.replaceVars(value, vars));
+  });
+
+  // Needed for the WebKit span spam bug
+  // TODO: Remove this once WebKit/Blink fixes this
+  if (format.styles) {
+    const styleVal = dom.getAttrib(elm, 'style');
+
+    if (styleVal) {
+      dom.setAttrib(elm, 'data-mce-style', styleVal);
+    }
+  }
+};
+
 const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | RangeLikeObject | null): void => {
   const formatList = ed.formatter.get(name) as ApplyFormat[];
   const format = formatList[0];
@@ -51,19 +68,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
       fmt.onformat(elm, fmt as any, vars, node);
     }
 
-    each(fmt.styles, (value, name) => {
-      dom.setStyle(elm, name, FormatUtils.replaceVars(value, vars));
-    });
-
-    // Needed for the WebKit span spam bug
-    // TODO: Remove this once WebKit/Blink fixes this
-    if (fmt.styles) {
-      const styleVal = dom.getAttrib(elm, 'style');
-
-      if (styleVal) {
-        dom.setAttrib(elm, 'data-mce-style', styleVal);
-      }
-    }
+    applyStyles(dom, elm, fmt, vars);
 
     each(fmt.attributes, (value, name) => {
       dom.setAttrib(elm, name, FormatUtils.replaceVars(value, vars));
@@ -348,6 +353,13 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
 
     Hooks.postProcess(name, ed);
   }
+
+  if (!node) {
+    ListItemFormat.getExpandedListItemFormat(ed.formatter, name).each((liFmt) => {
+      Arr.each(ListItemFormat.getFullySelectedListItems(ed.selection), (li) => applyStyles(dom, li, liFmt as ApplyFormat, vars));
+    });
+  }
+
   Events.fireFormatApply(ed, name, node, vars);
 };
 
