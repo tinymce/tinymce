@@ -1,5 +1,6 @@
 import { RealKeys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -12,153 +13,102 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ], true);
 
-  const firstListSelector = 'iframe => body';
-  const lastListSelector = 'iframe => body';
+  const selector = 'iframe => body';
 
-  const noneditableLiContent = '<ol contenteditable="false">\n' +
-    '<li contenteditable="true">editable</li>\n' +
-    '<li>noneditable</li>\n' +
-    '<li contenteditable="true">editable</li>\n' +
-  '</ol>';
-
-  const nestedEditableLiContent = '<ol contenteditable="false">\n' +
-    '<li contenteditable="true">one</li>\n' +
-    '<li>nested\n' +
-    '<ul>\n' +
-      '<li contenteditable="true">two</li>\n' +
-      '<li contenteditable="true">three</li>\n' +
-      '<li contenteditable="true">four</li>\n' +
-    '</ul>\n' +
-    '</li>\n' +
-    '<li>three</li>\n' +
-    '<li>four</li>\n' +
-  '</ol>';
-
-  interface TempArguments {
-    modifiers: { shift?: boolean };
-    key: string;
-    selector: string;
+  interface ListParameters {
+    title: string,
     content: string;
     startPath: number[];
     endPath: number[];
   }
 
-  const pPressKeyAtElementOnContentWithoutChange = async (args: TempArguments) => {
-    const editor = hook.editor();
-    editor.setContent(args.content);
-    TinySelections.setCursor(editor, args.startPath, 0);
-    await RealKeys.pSendKeysOn(args.selector, [ RealKeys.combo(args.modifiers, args.key) ]);
-    TinyAssertions.assertCursor(editor, args.endPath, 0);
-    TinyAssertions.assertContent(editor, args.content);
-  };
+  const listTypes = [ 'ol', 'ul' ];
 
-  it('TINY-8920: backspace from beginning editable first LI in noneditable OL with no change', () => {
-    pPressKeyAtElementOnContentWithoutChange({
-      modifiers: {},
-      key: 'backspace',
-      selector: firstListSelector,
-      content: noneditableLiContent,
-      startPath: [ 1, 0, 0 ],
-      endPath: [ 0, 0, 0 ]
-    });
-  });
+  const listContent =
+  '<li contenteditable="true">editable</li>\n' +
+  '<li>noneditable</li>\n' +
+  '<li contenteditable="true">editable</li>\n';
 
-  it('TINY-8920: backspace from beginning second editable LI in noneditable OL with no change', () => {
-    pPressKeyAtElementOnContentWithoutChange({
-      modifiers: {},
-      key: 'backspace',
-      selector: lastListSelector,
-      content: noneditableLiContent,
+  const nonEditableListContents = (type: string) =>
+  '<' + type + ' contenteditable="false">\n' +
+    listContent +
+  '</' + type + '>';
+
+  const divNestedNonEditableListContents = (type: string) =>
+  '<div contenteditable="true">\n' +
+    '<' + type + ' contenteditable="false">\n' +
+      listContent +
+    '</' + type + '>\n' +
+  '</div>';
+
+  const nestedNonEditableListContents = (type1: string, type2: string) =>
+  '<' + type1 + ' contenteditable="true">\n' +
+    '<li contenteditable="true">one</li>\n' +
+    '<li>nested\n' +
+      '<' + type2 + ' contenteditable="false">\n' +
+        '<li contenteditable="true">two</li>\n' +
+        '<li contenteditable="true">three</li>\n' +
+        '<li contenteditable="true">four</li>\n' +
+      '</' + type2 + '>\n' +
+    '</li>\n' +
+    '<li>three</li>\n' +
+    '<li>four</li>\n' +
+  '</' + type1 + '>';
+
+  const nonEditableList: ListParameters[] = Arr.bind(listTypes, (type: string) => [{
+    title: 'non-editable ' + type + ' list',
+    content: nonEditableListContents(type),
+    startPath: [ 1, 1, 0 ],
+    endPath: [ 0, 1, 0 ]
+  }]);
+
+  const divNestedNonEditableList: ListParameters[] = Arr.bind(listTypes, (type: string) => [{
+    title: 'non-editable div nested ' + type + ' list',
+    content: divNestedNonEditableListContents(type),
+    startPath: [ 0, 2, 0 ],
+    endPath: [ 0, 1, 0 ]
+  }]);
+
+  const nestedNonEditableList: ListParameters[] = Arr.bind(listTypes, (type1: string) =>
+    Arr.bind(listTypes, (type2: string) => [{
+      title: 'non-editable ' + type2 + ' list within editable ' + type1 + 'list',
+      content: nestedNonEditableListContents(type1, type2),
       startPath: [ 1, 1, 0 ],
       endPath: [ 0, 1, 0 ]
-    });
-  });
+  }]));
 
-  it('TINY-8920: backspace from beginning editable first LI in nested noneditable UL with no change', () => {
-    pPressKeyAtElementOnContentWithoutChange({
-      modifiers: {},
-      key: 'backspace',
-      selector: lastListSelector,
-      content: nestedEditableLiContent,
-      startPath: [ 1, 2, 0 ],
-      endPath: [ 0, 2, 0 ]
-    });
-  });
+  const contentCombinations = Arr.flatten([
+    nonEditableList,
+    divNestedNonEditableList,
+    nestedNonEditableList
+  ]);
 
-  it('TINY-8920: enter from beginning editable first LI in noneditable OL with no change', () => {
-    pPressKeyAtElementOnContentWithoutChange({
-      modifiers: {},
-      key: 'enter',
-      selector: firstListSelector,
-      content: noneditableLiContent,
-      startPath: [ 1, 0, 0 ],
-      endPath: [ 0, 0, 0 ]
-    });
-  });
+  interface ListAction {
+    title: string;
+    modifiers: { shift?: boolean };
+    key: string;
+    offset: number;
+  }
 
-  it('TINY-8920: enter from beginning second editable LI in noneditable OL with no change', () => {
-    pPressKeyAtElementOnContentWithoutChange({
-      modifiers: {},
-      key: 'enter',
-      selector: lastListSelector,
-      content: noneditableLiContent,
-      startPath: [ 1, 1, 0 ],
-      endPath: [ 0, 1, 0 ]
-    });
-  });
+  const listActions: ListAction[] = [
+    // TODO include 'enter' key here
+    {title: 'delete', modifiers: {}, key: 'delete', offset: 0},
+    {title: 'tab', modifiers: {}, key: 'tab', offset: 1},
+    {title: 'shift-tab', modifiers: { shift: true }, key: 'tab', offset: -1},
+  ];
 
-  it('TINY-8920: enter from beginning editable first LI in nested noneditable UL with no change', () => {
-    pPressKeyAtElementOnContentWithoutChange({
-      modifiers: {},
-      key: 'enter',
-      selector: lastListSelector,
-      content: nestedEditableLiContent,
-      startPath: [ 1, 2, 0 ],
-      endPath: [ 0, 2, 0 ]
-    });
-  });
-
-  it('TINY-8920: tab from beginning editable first LI in noneditable OL with no change', () => {
-    pPressKeyAtElementOnContentWithoutChange({
-      modifiers: {},
-      key: 'tab',
-      selector: firstListSelector,
-      content: noneditableLiContent,
-      startPath: [ 1, 0, 0 ],
-      endPath: [ 0, 1, 0 ]
-    });
-  });
-
-  it('TINY-8920: shift-tab from beginning second editable LI in noneditable OL with no change', () => {
-    pPressKeyAtElementOnContentWithoutChange({
-      modifiers: { shift: true },
-      key: 'tab',
-      selector: lastListSelector,
-      content: noneditableLiContent,
-      startPath: [ 1, 1, 0 ],
-      endPath: [ 0, 0, 0 ]
-    });
-  });
-
-  it('TINY-8920: tab from beginning editable first LI in nested noneditable UL with no change', () => {
-    pPressKeyAtElementOnContentWithoutChange({
-      modifiers: {},
-      key: 'tab',
-      selector: lastListSelector,
-      content: nestedEditableLiContent,
-      startPath: [ 1, 2, 0 ],
-      endPath: [ 0, 3, 0 ]
-    });
-  });
-
-  it('TINY-8920: shift-tab from beginning editable second LI in nested noneditable UL with no change', () => {
-    pPressKeyAtElementOnContentWithoutChange({
-      modifiers: { shift: true },
-      key: 'tab',
-      selector: lastListSelector,
-      content: nestedEditableLiContent,
-      startPath: [ 1, 2, 0 ],
-      endPath: [ 0, 1, 0 ]
-    });
-  });
+  listActions.forEach((listAction: ListAction) =>
+    contentCombinations.forEach((list: ListParameters) =>
+      it('TINY-8920: Pressing ' + listAction.title + ' key is disabled when in ' + list.title, async () => {
+        // Update end cursor position from pressing tab
+        list.endPath[1] += listAction.offset;
+        const editor = hook.editor();
+        editor.setContent(list.content);
+        TinySelections.setCursor(editor, list.startPath, 0);
+        await RealKeys.pSendKeysOn(selector, [ RealKeys.combo(listAction.modifiers, listAction.key) ]);
+        TinyAssertions.assertCursor(editor, list.endPath, 0);
+        TinyAssertions.assertContent(editor, list.content);
+      })
+    )
+  );
 });
