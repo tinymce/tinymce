@@ -6,18 +6,20 @@ import Editor from 'tinymce/core/api/Editor';
 import { dlIndentation } from '../core/DlIndentation';
 import * as Range from '../core/RangeUtils';
 import * as Selection from '../core/Selection';
-import { isEditableList } from '../core/Util';
+import * as Util from '../core/Util';
 import { Indentation } from '../listmodel/Indentation';
 import { listIndentation } from '../listmodel/ListsIndendation';
 
 const selectionIndentation = (editor: Editor, indentation: Indentation): boolean => {
   const lists = SugarElements.fromDom(Arr.filter(Selection.getSelectedListRoots(editor),
-    (elm: HTMLElement) => isEditableList(editor, elm)));
+    (list: HTMLElement) => Util.isEditableList(editor, list)));
   const dlItems = SugarElements.fromDom(Arr.filter(Selection.getSelectedDlItems(editor),
-    (elm: HTMLElement) => isEditableList(editor, elm)));
+    (list: HTMLElement) => Util.isEditableList(editor, list)));
+
+  const parentList = Selection.getParentList(editor);
   let isHandled = false;
 
-  if (lists.length || dlItems.length) {
+  if (parentList && Util.isEditableList(editor, parentList) && (lists.length || dlItems.length)) {
     const bookmark = editor.selection.getBookmark();
 
     listIndentation(editor, lists, indentation);

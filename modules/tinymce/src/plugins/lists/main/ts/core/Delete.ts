@@ -264,7 +264,7 @@ const backspaceDeleteRange = (editor: Editor): boolean => {
 
 const backspaceDelete = (editor: Editor, isForward: boolean): boolean => {
   const selection = editor.selection;
-  if (isEditableList(editor, editor.selection.getNode())) {
+  if (isEditableList(editor, selection.getNode())) {
     return selection.isCollapsed() ? backspaceDeleteCaret(editor, isForward) : backspaceDeleteRange(editor);
   } else {
     return false;

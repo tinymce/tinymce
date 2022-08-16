@@ -16,10 +16,17 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
   const selector = 'iframe => body';
 
   interface ListParameters {
-    title: string,
-    content: string;
-    startPath: number[];
-    endPath: number[];
+    readonly title: string,
+    readonly content: string;
+    readonly startPath: number[];
+    readonly endPath: number[];
+  }
+
+  interface ListAction {
+    readonly title: string;
+    readonly modifiers: { shift?: boolean };
+    readonly key: string;
+    readonly offset: number;
   }
 
   const listTypes = [ 'ol', 'ul' ];
@@ -82,13 +89,6 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     divNestedNonEditableList,
     nestedNonEditableList
   ]);
-
-  interface ListAction {
-    title: string;
-    modifiers: { shift?: boolean };
-    key: string;
-    offset: number;
-  }
 
   const listActions: ListAction[] = [
     // TODO include 'enter' key here

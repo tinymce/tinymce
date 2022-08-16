@@ -13,10 +13,15 @@ describe('browser.tinymce.plugins.lists.ContentEditableFalseActionsTest', () => 
   }, [ Plugin ], true);
 
   interface ListParameters {
-    title: string,
-    content: string;
-    startPath: number[];
-    endPath: number[];
+    readonly title: string,
+    readonly content: string;
+    readonly startPath: number[];
+    readonly endPath: number[];
+  }
+
+  interface ListAction {
+    readonly title: string;
+    readonly action: (editor: Editor) => any;
   }
 
   const listTypes = [ 'ol', 'ul' ];
@@ -79,11 +84,6 @@ describe('browser.tinymce.plugins.lists.ContentEditableFalseActionsTest', () => 
     divNestedNonEditableList,
     nestedNonEditableList
   ]);
-
-  interface ListAction {
-    title: string;
-    action: (editor: Editor) => any;
-  }
 
   const listActions: ListAction[] = [
     {title: 'Numbered list toolbar button', action: (editor: Editor) => TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Numbered list"]')},
