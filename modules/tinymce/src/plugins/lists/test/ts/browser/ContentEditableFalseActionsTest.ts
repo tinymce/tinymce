@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
@@ -16,7 +16,6 @@ describe('browser.tinymce.plugins.lists.ContentEditableFalseActionsTest', () => 
     readonly title: string,
     readonly content: string;
     readonly startPath: number[];
-    readonly endPath: number[];
   }
 
   interface ListAction {
@@ -27,59 +26,56 @@ describe('browser.tinymce.plugins.lists.ContentEditableFalseActionsTest', () => 
   const listTypes = [ 'ol', 'ul' ];
 
   const listContent =
-  '<li contenteditable="true">editable</li>\n' +
-  '<li>noneditable</li>\n' +
-  '<li contenteditable="true">editable</li>\n';
+    '<li contenteditable="true">editable</li>\n' +
+    '<li>noneditable</li>\n' +
+    '<li contenteditable="true">editable</li>\n' +
+    '<li>noneditable</li>\n' +
+    '<li contenteditable="true">editable</li>\n';
 
-  const nonEditableListContents = (type: string) =>
-  '<' + type + ' contenteditable="false">\n' +
-    listContent +
-  '</' + type + '>';
-
-  const divNestedNonEditableListContents = (type: string) =>
-  '<div contenteditable="true">\n' +
+  const nonEditableListContents = (type: string): string =>
     '<' + type + ' contenteditable="false">\n' +
       listContent +
-    '</' + type + '>\n' +
-  '</div>';
+    '</' + type + '>';
 
-  const nestedNonEditableListContents = (type1: string, type2: string) =>
-  '<' + type1 + ' contenteditable="true">\n' +
-    '<li contenteditable="true">one</li>\n' +
-    '<li>nested\n' +
-      '<' + type2 + ' contenteditable="false">\n' +
-        '<li contenteditable="true">two</li>\n' +
-        '<li contenteditable="true">three</li>\n' +
-        '<li contenteditable="true">four</li>\n' +
-      '</' + type2 + '>\n' +
-    '</li>\n' +
-    '<li>three</li>\n' +
-    '<li>four</li>\n' +
-  '</' + type1 + '>';
+  const divNestedNonEditableListContents = (type: string): string =>
+    '<div contenteditable="true">\n' +
+      '<' + type + ' contenteditable="false">\n' +
+        listContent +
+      '</' + type + '>\n' +
+    '</div>';
+
+  const nestedNonEditableListContents = (type1: string, type2: string): string =>
+    '<div contenteditable="false">\n' +
+      '<' + type1 + '>\n' +
+        '<li>one\n' +
+          '<' + type2 + ' contenteditable="false">\n' +
+            listContent +
+          '</' + type2 + '>\n' +
+        '</li>\n' +
+        '<li>two</li>\n' +
+      '</' + type1 + '>\n' +
+    '</div>';
 
   const nonEditableList: ListParameters[] = Arr.bind(listTypes, (type: string) => [{
     title: 'non-editable ' + type + ' list',
     content: nonEditableListContents(type),
-    startPath: [ 1, 0, 0 ],
-    endPath: [ 0, 0, 0 ]
+    startPath: [ 1, 0 ]
   }]);
 
   const divNestedNonEditableList: ListParameters[] = Arr.bind(listTypes, (type: string) => [{
     title: 'non-editable div nested ' + type + ' list',
     content: divNestedNonEditableListContents(type),
-    startPath: [ 0, 1, 0 ],
-    endPath: [ 0, 0, 0 ]
+    startPath: [ 0, 1, 0 ]
   }]);
 
   const nestedNonEditableList: ListParameters[] = Arr.bind(listTypes, (type1: string) =>
     Arr.bind(listTypes, (type2: string) => [{
       title: 'non-editable ' + type2 + ' list within editable ' + type1 + 'list',
       content: nestedNonEditableListContents(type1, type2),
-      startPath: [ 0, 1, 1, 1 ],
-      endPath: [ 0, 1, 1, 1 ]
+      startPath: [ 1, 0, 0, 1, 0, 0 ]
   }]));
 
-  const contentCombinations = Arr.flatten([
+  const contentCombinations: ListParameters[] = Arr.flatten([
     nonEditableList,
     divNestedNonEditableList,
     nestedNonEditableList
@@ -96,16 +92,15 @@ describe('browser.tinymce.plugins.lists.ContentEditableFalseActionsTest', () => 
     {title: 'mceListUpdate command', action:  (editor: Editor) => editor.execCommand('mceListUpdate', false, { attrs: { contenteditable: 'true' }})}
   ];
 
-  listActions.forEach((listAction: ListAction) =>
-    contentCombinations.forEach((list: ListParameters) =>
+  Arr.each(listActions, (listAction: ListAction) => context(listAction.title, () =>
+    Arr.each(contentCombinations, (list: ListParameters) =>
       it('TINY-8920: ' + listAction.title + ' is disabled when in ' + list.title, () => {
         const editor = hook.editor();
         editor.setContent(list.content);
         TinySelections.setCursor(editor, list.startPath, 0);
         listAction.action(editor);
-        TinyAssertions.assertCursor(editor, list.endPath, 0);
         TinyAssertions.assertContent(editor, list.content);
       })
     )
-  );
+  ));
 });
