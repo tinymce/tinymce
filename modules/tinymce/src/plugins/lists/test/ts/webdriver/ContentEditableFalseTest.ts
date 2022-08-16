@@ -6,24 +6,24 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 
+interface ListParameters {
+  readonly title: string;
+  readonly content: string;
+  readonly startPath: number[];
+  readonly selector: string;
+}
+
+interface ListAction {
+  readonly title: string;
+  readonly keyPress: any[];
+}
+
 describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'lists',
     toolbar: 'numlist bullist',
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ], true);
-
-  interface ListParameters {
-    readonly title: string;
-    readonly content: string;
-    readonly startPath: number[];
-    readonly selector: string;
-  }
-
-  interface ListAction {
-    readonly title: string;
-    readonly keyPress: any[];
-  }
 
   const listTypes = [ 'ol', 'ul' ];
 

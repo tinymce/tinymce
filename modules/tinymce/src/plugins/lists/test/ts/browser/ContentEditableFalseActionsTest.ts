@@ -5,23 +5,23 @@ import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 
+interface ListParameters {
+  readonly title: string;
+  readonly content: string;
+  readonly startPath: number[];
+}
+
+interface ListAction {
+  readonly title: string;
+  readonly action: (editor: Editor) => any;
+}
+
 describe('browser.tinymce.plugins.lists.ContentEditableFalseActionsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'lists',
     toolbar: 'numlist bullist',
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ], true);
-
-  interface ListParameters {
-    readonly title: string;
-    readonly content: string;
-    readonly startPath: number[];
-  }
-
-  interface ListAction {
-    readonly title: string;
-    readonly action: (editor: Editor) => any;
-  }
 
   const listTypes = [ 'ol', 'ul' ];
 
