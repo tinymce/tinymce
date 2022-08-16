@@ -1,4 +1,4 @@
-import { Arr, Optional, Strings, Type, Unicode } from '@ephox/katamari';
+import { Arr, Optional, Optionals, Strings, Type, Unicode } from '@ephox/katamari';
 import { Css, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
@@ -136,14 +136,14 @@ const normalizeNbspMiddle = (text: string): string => {
   }).join('');
 };
 
-const normalizeNbspAtStart = (root: SugarElement<Node>, node: Text, makeNbsb: boolean): boolean => {
+const normalizeNbspAtStart = (root: SugarElement<Node>, node: Text, makeNbsp: boolean): boolean => {
   const text = node.data;
   const firstPos = CaretPosition(node, 0);
 
-  if (isNbspAt(text, 0) && !needsToBeNbsp(root, firstPos) && !makeNbsb) {
+  if (!makeNbsp && isNbspAt(text, 0) && !needsToBeNbsp(root, firstPos)) {
     node.data = ' ' + text.slice(1);
     return true;
-  } else if (isWhiteSpaceAt(text, 0) && needsToBeNbspLeft(root, firstPos) && makeNbsb) {
+  } else if (makeNbsp && isWhiteSpaceAt(text, 0) && needsToBeNbspLeft(root, firstPos)) {
     node.data = Unicode.nbsp + text.slice(1);
     return true;
   } else {
@@ -165,7 +165,7 @@ const normalizeNbspInMiddleOfTextNode = (node: Text): boolean => {
 const normalizeNbspAtEnd = (root: SugarElement<Node>, node: Text, makeNbsp: boolean): boolean => {
   const text = node.data;
   const lastPos = CaretPosition(node, text.length - 1);
-  if (isNbspAt(text, text.length - 1) && !needsToBeNbsp(root, lastPos) && !makeNbsp) {
+  if (!makeNbsp && isNbspAt(text, text.length - 1) && !needsToBeNbsp(root, lastPos)) {
     node.data = text.slice(0, -1) + ' ';
     return true;
   } else if (makeNbsp && isWhiteSpaceAt(text, text.length - 1) && needsToBeNbspRight(root, lastPos)) {
@@ -182,7 +182,7 @@ const normalizeNbsps = (root: SugarElement<Node>, pos: CaretPosition): Optional<
       if (needsToBeNbsp(root, pos) && NodeType.isText(pos.container())) {
         const container = pos.container() as Text;
         const normalized = normalizeNbspAtStart(root, container, true) || normalizeNbspAtEnd(root, container, true);
-        return normalized ? Optional.some(pos) : Optional.none();
+        return Optionals.someIf(normalized, pos);
       } else {
         return Optional.none();
       }
@@ -190,7 +190,7 @@ const normalizeNbsps = (root: SugarElement<Node>, pos: CaretPosition): Optional<
     (pos) => {
       const container = pos.container() as Text;
       const normalized = normalizeNbspAtStart(root, container, false) || normalizeNbspInMiddleOfTextNode(container) || normalizeNbspAtEnd(root, container, false);
-      return normalized ? Optional.some(pos) : Optional.none();
+      return Optionals.someIf(normalized, pos);
     }
   );
 

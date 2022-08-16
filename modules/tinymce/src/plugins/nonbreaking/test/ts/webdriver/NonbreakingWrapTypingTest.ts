@@ -148,7 +148,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () =
                 s.text(str.is(Unicode.nbsp))
               ]
             }),
-            s.text(str.is(Unicode.zeroWidth + 'test\u00a0'))
+            s.text(str.is(Unicode.zeroWidth + 'test' + Unicode.nbsp))
           ].concat(isFirefox ? [ s.element('br', {}) ] : [])
         })
       ]
@@ -189,7 +189,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () =
                 s.text(str.is(Unicode.nbsp))
               ]
             }),
-            s.text(str.is(Unicode.zeroWidth + 'test\u00a0'))
+            s.text(str.is(Unicode.zeroWidth + 'test' + Unicode.nbsp))
           ].concat(isFirefox ? [ s.element('br', {}) ] : [])
         })
       ]
@@ -207,7 +207,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () =
                 s.text(str.is(Unicode.nbsp))
               ]
             }),
-            s.text(str.is(Unicode.zeroWidth + 'test test\u00a0'))
+            s.text(str.is(Unicode.zeroWidth + 'test test' + Unicode.nbsp))
           ].concat(isFirefox ? [ s.element('br', {}) ] : [])
         })
       ]
