@@ -78,7 +78,8 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
       content: nestedNonEditableListContents(type1, type2),
       startPath: [ 1, 0, 0, 1, 0, 0 ],
       selector: 'iframe => body ' + type1 + ' li ' + type2 + ' li'
-  }]));
+    }])
+  );
 
   const contentCombinations: ListParameters[] = Arr.flatten([
     nonEditableList,
@@ -88,9 +89,9 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
 
   const listActions: ListAction[] = [
     // TODO include 'enter' key here
-    {title: 'backspace key', keyPress: [ RealKeys.backspace() ]},
-    {title: 'tab key', keyPress: [ RealKeys.combo({}, 'tab') ]},
-    {title: 'shift and tab keys', keyPress: [ RealKeys.combo({ shift: true }, 'tab') ]},
+    { title: 'backspace key', keyPress: [ RealKeys.backspace() ] },
+    { title: 'tab key', keyPress: [ RealKeys.combo({}, 'tab') ] },
+    { title: 'shift and tab keys', keyPress: [ RealKeys.combo({ shift: true }, 'tab') ] },
   ];
 
   Arr.each(listActions, (listAction: ListAction) => context(listAction.title, () =>

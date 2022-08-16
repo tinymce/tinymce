@@ -13,7 +13,7 @@ describe('browser.tinymce.plugins.lists.ContentEditableFalseActionsTest', () => 
   }, [ Plugin ], true);
 
   interface ListParameters {
-    readonly title: string,
+    readonly title: string;
     readonly content: string;
     readonly startPath: number[];
   }
@@ -73,7 +73,8 @@ describe('browser.tinymce.plugins.lists.ContentEditableFalseActionsTest', () => 
       title: 'non-editable ' + type2 + ' list within editable ' + type1 + 'list',
       content: nestedNonEditableListContents(type1, type2),
       startPath: [ 1, 0, 0, 1, 0, 0 ]
-  }]));
+    }])
+  );
 
   const contentCombinations: ListParameters[] = Arr.flatten([
     nonEditableList,
@@ -82,14 +83,14 @@ describe('browser.tinymce.plugins.lists.ContentEditableFalseActionsTest', () => 
   ]);
 
   const listActions: ListAction[] = [
-    {title: 'Numbered list toolbar button', action: (editor: Editor) => TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Numbered list"]')},
-    {title: 'Bullet list toolbar button', action:  (editor: Editor) => TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Bullet list"]')},
-    {title: 'RemoveList command', action:  (editor: Editor) => editor.execCommand('RemoveList')},
-    {title: 'InsertUnorderedList command', action:  (editor: Editor) => editor.execCommand('InsertUnorderedList')},
-    {title: 'InsertOrderedList command', action:  (editor: Editor) => editor.execCommand('InsertOrderedList')},
-    {title: 'InsertDefinitionList command', action:  (editor: Editor) => editor.execCommand('InsertDefinitionList')},
-    {title: 'mceListProps command', action:  (editor: Editor) => editor.execCommand('mceListProps')},
-    {title: 'mceListUpdate command', action:  (editor: Editor) => editor.execCommand('mceListUpdate', false, { attrs: { contenteditable: 'true' }})}
+    { title: 'Numbered list toolbar button', action: (editor: Editor) => TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Numbered list"]') },
+    { title: 'Bullet list toolbar button', action: (editor: Editor) => TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Bullet list"]') },
+    { title: 'RemoveList command', action: (editor: Editor) => editor.execCommand('RemoveList') },
+    { title: 'InsertUnorderedList command', action: (editor: Editor) => editor.execCommand('InsertUnorderedList') },
+    { title: 'InsertOrderedList command', action: (editor: Editor) => editor.execCommand('InsertOrderedList') },
+    { title: 'InsertDefinitionList command', action: (editor: Editor) => editor.execCommand('InsertDefinitionList') },
+    { title: 'mceListProps command', action: (editor: Editor) => editor.execCommand('mceListProps') },
+    { title: 'mceListUpdate command', action: (editor: Editor) => editor.execCommand('mceListUpdate', false, { attrs: { contenteditable: 'true' }}) }
   ];
 
   Arr.each(listActions, (listAction: ListAction) => context(listAction.title, () =>
