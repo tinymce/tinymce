@@ -70,9 +70,9 @@ describe('webdriver.tinymce.themes.silver.components.urlinput.UrlInputTest', () 
   });
 
   context('Trim spaces as expected for an URL', () => {
-    it('TINY-8775: Trim a space of it is the only thing in the input', assertTrimSpaces([ RealKeys.text(' ') ], ''));
-    it('TINY-8775: Trim a space of it is at the start', assertTrimSpaces([ RealKeys.text(' A') ], 'A'));
-    it('TINY-8775: Trim a space of it is at the end', assertTrimSpaces([ RealKeys.text('A ') ], 'A'));
+    it('TINY-8775: Trim a space if it is the only thing in the input', assertTrimSpaces([ RealKeys.text(' ') ], ''));
+    it('TINY-8775: Trim a space if it is at the start', assertTrimSpaces([ RealKeys.text(' A') ], 'A'));
+    it('TINY-8775: Trim a space if it is at the end', assertTrimSpaces([ RealKeys.text('A ') ], 'A'));
     it('TINY-8775: Trim all appropriate spaces', assertTrimSpaces([ RealKeys.text(' A B '), RealKeys.combo({}, 'arrowLeft'), RealKeys.text(' ') ], 'A B'));
   });
 });
