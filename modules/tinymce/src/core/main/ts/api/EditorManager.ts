@@ -22,19 +22,6 @@ interface PreInit {
 
 declare const window: Window & { tinymce?: PreInit; tinyMCEPreInit?: PreInit };
 
-// NOTE: the class tag is commented out for the include in `modules/tinymce/tools/docs/tinymce.js`
-/**
- * This class used as a factory for manager for tinymce.Editor instances.
- *
- * @example
- * tinymce.EditorManager.init({});
- *
- * /@class tinymce.EditorManager
- * @mixes tinymce.util.Observable
- * @static
- * @private
- */
-
 const DOM = DOMUtils.DOM;
 const each = Tools.each;
 let boundGlobalEvents = false;
