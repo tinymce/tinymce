@@ -93,15 +93,17 @@ describe('browser.tinymce.plugins.lists.ContentEditableFalseActionsTest', () => 
     { title: 'mceListUpdate command', action: (editor: Editor) => editor.execCommand('mceListUpdate', false, { attrs: { contenteditable: 'true' }}) }
   ];
 
-  Arr.each(listActions, (listAction: ListAction) => context(listAction.title, () =>
-    Arr.each(contentCombinations, (list: ListParameters) =>
-      it('TINY-8920: ' + listAction.title + ' is disabled when in ' + list.title, () => {
-        const editor = hook.editor();
-        editor.setContent(list.content);
-        TinySelections.setCursor(editor, list.startPath, 0);
-        listAction.action(editor);
-        TinyAssertions.assertContent(editor, list.content);
-      })
+  Arr.each(listActions, (listAction) =>
+    context(listAction.title, () =>
+      Arr.each(contentCombinations, (list) =>
+        it('TINY-8920: ' + listAction.title + ' is disabled when in ' + list.title, () => {
+          const editor = hook.editor();
+          editor.setContent(list.content);
+          TinySelections.setCursor(editor, list.startPath, 0);
+          listAction.action(editor);
+          TinyAssertions.assertContent(editor, list.content);
+        })
+      )
     )
-  ));
+  );
 });

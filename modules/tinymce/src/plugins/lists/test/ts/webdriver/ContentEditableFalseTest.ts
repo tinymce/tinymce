@@ -94,15 +94,17 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
     { title: 'shift and tab keys', keyPress: [ RealKeys.combo({ shift: true }, 'tab') ] },
   ];
 
-  Arr.each(listActions, (listAction: ListAction) => context(listAction.title, () =>
-    Arr.each(contentCombinations, (list: ListParameters) =>
-      it('TINY-8920: Pressing ' + listAction.title + ' is disabled when in ' + list.title, async () => {
-        const editor = hook.editor();
-        editor.setContent(list.content);
-        TinySelections.setCursor(editor, list.startPath, 0);
-        await RealKeys.pSendKeysOn(list.selector, listAction.keyPress);
-        TinyAssertions.assertContent(editor, list.content);
-      })
+  Arr.each(listActions, (listAction) =>
+    context(listAction.title, () =>
+      Arr.each(contentCombinations, (list) =>
+        it('TINY-8920: Pressing ' + listAction.title + ' is disabled when in ' + list.title, async () => {
+          const editor = hook.editor();
+          editor.setContent(list.content);
+          TinySelections.setCursor(editor, list.startPath, 0);
+          await RealKeys.pSendKeysOn(list.selector, listAction.keyPress);
+          TinyAssertions.assertContent(editor, list.content);
+        })
+      )
     )
-  ));
+  );
 });

@@ -12,9 +12,9 @@ import { listIndentation } from '../listmodel/ListsIndendation';
 
 const selectionIndentation = (editor: Editor, indentation: Indentation): boolean => {
   const lists = SugarElements.fromDom(Arr.filter(Selection.getSelectedListRoots(editor),
-    (list: HTMLElement) => Util.isEditableList(editor, list)));
+    (list) => Util.isEditableList(editor, list)));
   const dlItems = SugarElements.fromDom(Arr.filter(Selection.getSelectedDlItems(editor),
-    (list: HTMLElement) => Util.isEditableList(editor, list)));
+    (list) => Util.isEditableList(editor, list)));
 
   const parentList = Selection.getParentList(editor);
   let isHandled = false;
