@@ -25,6 +25,12 @@ const trimZwsp = (fragment: DocumentFragment) => {
   });
 };
 
+// Lists/core/Util.ts - Duplicated in Lists plugin
+const isEditableList = (editor: Editor, element: Node): boolean => {
+  const parentList = editor.dom.getParent(element, 'ol,ul,dl');
+  return editor.dom.getContentEditableParent(parentList ?? element) !== 'false';
+};
+
 const isEmptyAnchor = (dom: DOMUtils, elm: Node): boolean => {
   return elm && elm.nodeName === 'A' && dom.isEmpty(elm);
 };
@@ -401,7 +407,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   const editableRoot = NewLineUtils.getEditableRoot(dom, container);
 
   // If there is no editable root then enter is done inside a contentEditable false element
-  if (!editableRoot) {
+  if (!editableRoot || !isEditableList(editor, container)) {
     return;
   }
 

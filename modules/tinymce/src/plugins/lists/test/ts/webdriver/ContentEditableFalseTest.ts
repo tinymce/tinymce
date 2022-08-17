@@ -87,8 +87,8 @@ ${listContent}
   ]);
 
   const listActions: ListAction[] = [
-    // TODO include 'enter' key here
     { title: 'backspace key', keyPress: [ RealKeys.backspace() ] },
+    { title: 'enter key', keyPress: [ RealKeys.combo({}, 'enter') ] },
     { title: 'tab key', keyPress: [ RealKeys.combo({}, 'tab') ] },
     { title: 'shift and tab keys', keyPress: [ RealKeys.combo({ shift: true }, 'tab') ] },
   ];
