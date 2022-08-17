@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { SelectorFind, SugarDocument } from '@ephox/sugar';
-import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
@@ -232,29 +232,4 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
     TinyUiActions.keyup(editor, Keys.escape());
   });
 
-  it('TINY-8920: Numbered List toolbar Button is disabled in non-editable OL lists', () => {
-    const editor = hook.editor();
-    const content = '<ol contenteditable="false">\n' +
-      '<li contenteditable="true">editable</li>\n' +
-      '<li>noneditable</li>\n' +
-      '<li contenteditable="true">editable</li>\n' +
-    '</ol>';
-    editor.setContent(content);
-    TinySelections.setCursor(editor, [ 1, 0 ], 0);
-    TinyUiActions.clickOnToolbar(editor, '[aria-label="Numbered List"]');
-    TinyAssertions.assertContent(editor, content);
-  });
-
-  it('TINY-8920: Bullet List toolbar Button is disabled in non-editable UL lists', () => {
-    const editor = hook.editor();
-    const content = '<ul contenteditable="false">\n' +
-      '<li contenteditable="true">editable</li>\n' +
-      '<li>noneditable</li>\n' +
-      '<li contenteditable="true">editable</li>\n' +
-    '</ul>';
-    editor.setContent(content);
-    TinySelections.setCursor(editor, [ 1, 0 ], 0);
-    TinyUiActions.clickOnToolbar(editor, '[aria-label="Bullet List"]');
-    TinyAssertions.assertContent(editor, content);
-  });
 });

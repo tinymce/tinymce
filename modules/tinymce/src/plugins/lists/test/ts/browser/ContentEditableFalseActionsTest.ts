@@ -56,20 +56,20 @@ describe('browser.tinymce.plugins.lists.ContentEditableFalseActionsTest', () => 
       '</' + type1 + '>\n' +
     '</div>';
 
-  const nonEditableList: ListParameters[] = Arr.bind(listTypes, (type: string) => [{
+  const nonEditableList: ListParameters[] = Arr.bind(listTypes, (type) => [{
     title: 'non-editable ' + type + ' list',
     content: nonEditableListContents(type),
     startPath: [ 1, 0 ]
   }]);
 
-  const divNestedNonEditableList: ListParameters[] = Arr.bind(listTypes, (type: string) => [{
+  const divNestedNonEditableList: ListParameters[] = Arr.bind(listTypes, (type) => [{
     title: 'non-editable div nested ' + type + ' list',
     content: divNestedNonEditableListContents(type),
     startPath: [ 0, 1, 0 ]
   }]);
 
-  const nestedNonEditableList: ListParameters[] = Arr.bind(listTypes, (type1: string) =>
-    Arr.bind(listTypes, (type2: string) => [{
+  const nestedNonEditableList: ListParameters[] = Arr.bind(listTypes, (type1) =>
+    Arr.bind(listTypes, (type2) => [{
       title: 'non-editable ' + type2 + ' list within editable ' + type1 + 'list',
       content: nestedNonEditableListContents(type1, type2),
       startPath: [ 1, 0, 0, 1, 0, 0 ]
