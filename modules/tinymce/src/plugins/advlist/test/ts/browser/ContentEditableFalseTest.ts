@@ -74,13 +74,13 @@ describe('browser.tinymce.plugins.advlist.ContentEditableFalseTest', () => {
     divNestedNonEditableList
   ]);
 
-  const pClickToolbarDisabled = (editor: Editor, listType: string) => {
+  const clickToolbarDisabled = (editor: Editor, listType: string) => {
     TinyUiActions.clickOnToolbar(editor, `[aria-label="${listType}"][aria-disabled="true"] > .tox-tbtn`);
   };
 
   const listActions: ListAction[] = [
-    { title: 'Numbered list toolbar button', action: (editor: Editor) => pClickToolbarDisabled(editor, 'Numbered list') },
-    { title: 'Bullet list toolbar button', action: (editor: Editor) => pClickToolbarDisabled(editor, 'Bullet list') }
+    { title: 'Numbered list toolbar button', action: (editor: Editor) => clickToolbarDisabled(editor, 'Numbered list') },
+    { title: 'Bullet list toolbar button', action: (editor: Editor) => clickToolbarDisabled(editor, 'Bullet list') }
   ];
 
   Arr.each(contentCombinations, (listContent) =>

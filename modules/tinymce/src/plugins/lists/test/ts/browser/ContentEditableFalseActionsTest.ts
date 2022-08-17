@@ -81,13 +81,13 @@ ${listContent}
     nestedNonEditableList
   ]);
 
-  const pClickToolbarDisabled = (editor: Editor, listType: string) => {
+  const clickToolbarDisabled = (editor: Editor, listType: string) => {
     TinyUiActions.clickOnToolbar(editor, `button[aria-label="${listType}"][aria-disabled="true"]`);
   };
 
   const listActions: ListAction[] = [
-    { title: 'Numbered list toolbar button', action: (editor: Editor) => pClickToolbarDisabled(editor, 'Numbered list') },
-    { title: 'Bullet list toolbar button', action: (editor: Editor) => pClickToolbarDisabled(editor, 'Bullet list') },
+    { title: 'Numbered list toolbar button', action: (editor: Editor) => clickToolbarDisabled(editor, 'Numbered list') },
+    { title: 'Bullet list toolbar button', action: (editor: Editor) => clickToolbarDisabled(editor, 'Bullet list') },
     { title: 'RemoveList command', action: (editor: Editor) => editor.execCommand('RemoveList') },
     { title: 'InsertUnorderedList command', action: (editor: Editor) => editor.execCommand('InsertUnorderedList') },
     { title: 'InsertOrderedList command', action: (editor: Editor) => editor.execCommand('InsertOrderedList') },
