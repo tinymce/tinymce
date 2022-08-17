@@ -12,7 +12,7 @@ interface ListStyle {
 }
 
 interface ListParameters {
-  readonly title: string;
+  readonly name: string;
   readonly content: string;
   readonly startPath: number[];
 }
@@ -61,13 +61,13 @@ describe('browser.tinymce.plugins.lists.ContentEditableFalseActionsTest', () => 
     '</div>';
 
   const nonEditableList: ListParameters[] = Arr.bind(listTypes, (list) => [{
-    title: 'non-editable ' + list.type + ' ' + list.style + ' list',
+    name: 'non-editable ' + list.type + ' ' + list.style + ' list',
     content: nonEditableListContents(list),
     startPath: [ 0, 0 ]
   }]);
 
   const divNestedNonEditableList: ListParameters[] = Arr.bind(listTypes, (list) => [{
-    title: 'non-editable div nested ' + list.type + ' ' + list.style + ' list',
+    name: 'non-editable div nested ' + list.type + ' ' + list.style + ' list',
     content: divNestedNonEditableListContents(list),
     startPath: [ 0, 0, 0 ]
   }]);
@@ -92,7 +92,7 @@ describe('browser.tinymce.plugins.lists.ContentEditableFalseActionsTest', () => 
   Arr.each(listActions, (listAction) =>
     context(listAction.title, () =>
       Arr.each(randomContentCombinations, (list) =>
-        it('TINY-8920: ' + listAction.title + ' is disabled when in ' + list.title, () => {
+        it('TINY-8920: ' + listAction.title + ' is disabled when in ' + list.name, () => {
           const editor = hook.editor();
           editor.setContent(list.content);
           TinySelections.setCursor(editor, list.startPath, 0);
