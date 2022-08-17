@@ -23,8 +23,7 @@ const getSelectedStyleType = (editor: Editor): Optional<string> => {
 // Lists/core/Util.ts - Duplicated in Lists plugin
 const isEditableList = (editor: Editor, element: Element): boolean => {
   const parentList = editor.dom.getParent(element, 'ol,ul,dl');
-  const editableList = editor.dom.getContentEditable(parentList ?? element) === 'true';
-  return editableList || editor.dom.getContentEditableParent(parentList ?? element) !== 'false';
+  return editor.dom.getContentEditableParent(parentList ?? element) !== 'false';
 };
 
 export {

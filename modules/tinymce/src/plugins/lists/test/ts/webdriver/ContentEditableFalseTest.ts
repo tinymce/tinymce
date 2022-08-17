@@ -27,57 +27,56 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
 
   const listTypes = [ 'ol', 'ul' ];
 
-  const listContent =
-    '<li contenteditable="true">editable</li>\n' +
-    '<li>noneditable</li>\n' +
-    '<li contenteditable="true">editable</li>\n' +
-    '<li>noneditable</li>\n' +
-    '<li contenteditable="true">editable</li>\n';
+  const listContent = `<li contenteditable="true">editable</li>
+<li>noneditable</li>
+<li contenteditable="true">editable</li>
+<li>noneditable</li>
+<li contenteditable="true">editable</li>`;
 
   const nonEditableListContents = (type: string): string =>
-    '<' + type + ' contenteditable="false">\n' +
-      listContent +
-    '</' + type + '>';
+    `<${type} contenteditable="false">
+${listContent}
+</${type}>`;
 
   const divNestedNonEditableListContents = (type: string): string =>
-    '<div contenteditable="true">\n' +
-      '<' + type + ' contenteditable="false">\n' +
-        listContent +
-      '</' + type + '>\n' +
-    '</div>';
+    `<div contenteditable="true">
+<${type} contenteditable="false">
+${listContent}
+</${type}>
+</div>`;
 
   const nestedNonEditableListContents = (type1: string, type2: string): string =>
-    '<div contenteditable="false">\n' +
-      '<' + type1 + '>\n' +
-        '<li>one\n' +
-          '<' + type2 + ' contenteditable="false">\n' +
-            listContent +
-          '</' + type2 + '>\n' +
-        '</li>\n' +
-        '<li>two</li>\n' +
-      '</' + type1 + '>\n' +
-    '</div>';
+    `<div contenteditable="false">
+<${type1}>
+<li>one
+<${type2} contenteditable="false">
+${listContent}
+</${type2}>
+</li>
+<li>two</li>
+</${type1}>
+</div>`;
 
   const nonEditableList: ListParameters[] = Arr.bind(listTypes, (type: string) => [{
-    title: 'non-editable ' + type + ' list',
+    title: `non-editable ${type} list`,
     content: nonEditableListContents(type),
     startPath: [ 1, 0, 0 ],
-    selector: 'iframe => body ' + type + ' li'
+    selector: `iframe => body ${type} li`
   }]);
 
   const divNestedNonEditableList: ListParameters[] = Arr.bind(listTypes, (type: string) => [{
-    title: 'non-editable div nested ' + type + ' list',
+    title: `non-editable div nested ${type} list`,
     content: divNestedNonEditableListContents(type),
     startPath: [ 0, 1, 0 ],
-    selector: 'iframe => body ' + type + ' li'
+    selector: `iframe => body ${type} li`
   }]);
 
   const nestedNonEditableList: ListParameters[] = Arr.bind(listTypes, (type1: string) =>
     Arr.bind(listTypes, (type2: string) => [{
-      title: 'non-editable ' + type2 + ' list within editable ' + type1 + 'list',
+      title: `non-editable ${type2} list within editable ${type1} list`,
       content: nestedNonEditableListContents(type1, type2),
       startPath: [ 1, 0, 0, 1, 0, 0 ],
-      selector: 'iframe => body ' + type1 + ' li ' + type2 + ' li'
+      selector: `iframe => body ${type1} li ${type2} li`
     }])
   );
 
@@ -97,7 +96,7 @@ describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
   Arr.each(listActions, (listAction) =>
     context(listAction.title, () =>
       Arr.each(contentCombinations, (list) =>
-        it('TINY-8920: Pressing ' + listAction.title + ' is disabled when in ' + list.title, async () => {
+        it(`TINY-8920: Pressing ${listAction.title} is disabled when in ${list.title}`, async () => {
           const editor = hook.editor();
           editor.setContent(list.content);
           TinySelections.setCursor(editor, list.startPath, 0);

@@ -1,8 +1,8 @@
-import { Toolbar, Menu } from '@ephox/bridge';
 import { Arr } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
+import { Toolbar, Menu } from 'tinymce/core/api/ui/Ui';
 
 import * as NodeType from './NodeType';
 
@@ -11,8 +11,7 @@ export const isCustomList = (list: HTMLElement): boolean =>
 
 const inList = (parents: Node[], listName: string): boolean =>
   Arr.findUntil(parents, NodeType.isListNode, NodeType.isTableCellNode)
-    .filter((list: HTMLElement) => list.nodeName === listName && !isCustomList(list))
-    .isSome();
+    .exists((list) => list.nodeName === listName && !isCustomList(list));
 
 const setNodeChangeHandler = (editor: Editor, nodeChangeHandler: (e: NodeChangeEvent) => void): () => void => {
   const initialNode = editor.selection.getNode();
@@ -28,8 +27,7 @@ const setNodeChangeHandler = (editor: Editor, nodeChangeHandler: (e: NodeChangeE
 // Advlist/core/ListUtils.ts - Duplicated in Advlist plugin
 export const isEditableList = (editor: Editor, element: Element): boolean => {
   const parentList = editor.dom.getParent(element, 'ol,ul,dl');
-  const editableList = editor.dom.getContentEditable(parentList ?? element) === 'true';
-  return editableList || editor.dom.getContentEditableParent(parentList ?? element) !== 'false';
+  return editor.dom.getContentEditableParent(parentList ?? element) !== 'false';
 };
 
 export const setupToggleButtonHandler = (editor: Editor, listName: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi): () => void => {
