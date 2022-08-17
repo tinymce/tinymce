@@ -12,7 +12,7 @@ interface ListStyle {
 }
 
 interface ListContents {
-  readonly name: string;
+  readonly listName: string;
   readonly content: string;
   readonly startPath: number[];
 }
@@ -61,13 +61,13 @@ describe('browser.tinymce.plugins.lists.ContentEditableFalseActionsTest', () => 
     '</div>';
 
   const nonEditableList: ListContents[] = Arr.bind(listTypes, (list) => [{
-    name: 'non-editable ' + list.type + ' ' + list.style + ' list',
+    listName: 'non-editable ' + list.type + ' ' + list.style + ' list',
     content: nonEditableListContents(list),
     startPath: [ 0, 0 ]
   }]);
 
   const divNestedNonEditableList: ListContents[] = Arr.bind(listTypes, (list) => [{
-    name: 'non-editable div nested ' + list.type + ' ' + list.style + ' list',
+    listName: 'non-editable div nested ' + list.type + ' ' + list.style + ' list',
     content: divNestedNonEditableListContents(list),
     startPath: [ 0, 0, 0 ]
   }]);
@@ -77,22 +77,15 @@ describe('browser.tinymce.plugins.lists.ContentEditableFalseActionsTest', () => 
     divNestedNonEditableList
   ]);
 
-  const randomIndex = (min: number, max: number) => Math.round(Math.random() * (max - min) + min);
-  const randomContents = (acc: ListContents[], contents: ListContents[], num: number): ListContents[] =>
-    num > 0 ? randomContents(Arr.flatten([ acc, [ contents[randomIndex(0, contents.length)] ]]), contents, num - 1) : acc;
-
-  const numContents = 10; // Number of content combinations to be tested
-  const randomContentCombinations = randomContents([], contentCombinations, numContents);
-
   const listActions: ListAction[] = [
     { title: 'Numbered list toolbar button', action: (editor: Editor) => TinyUiActions.clickOnToolbar(editor, '[aria-label="Numbered list"] > .tox-tbtn') },
     { title: 'Bullet list toolbar button', action: (editor: Editor) => TinyUiActions.clickOnToolbar(editor, '[aria-label="Bullet list"] > .tox-tbtn') }
   ];
 
-  Arr.each(listActions, (listAction) =>
+  Arr.each(listActions, (listAction: ListAction) =>
     context(listAction.title, () =>
-      Arr.each(randomContentCombinations, (listContent) =>
-        it('TINY-8920: ' + listAction.title + ' is disabled when in ' + listContent.name, () => {
+      Arr.each(contentCombinations, (listContent: ListContents) =>
+        it('TINY-8920: ' + listAction.title + ' is disabled when in ' + listContent.listName, () => {
           const editor = hook.editor();
           editor.setContent(listContent.content);
           TinySelections.setCursor(editor, listContent.startPath, 0);

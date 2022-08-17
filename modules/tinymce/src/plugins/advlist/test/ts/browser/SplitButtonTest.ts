@@ -231,5 +231,4 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
     assertBullListStructure();
     TinyUiActions.keyup(editor, Keys.escape());
   });
-
 });
