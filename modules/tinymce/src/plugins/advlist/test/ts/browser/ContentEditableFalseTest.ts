@@ -19,7 +19,7 @@ interface ListContents {
 
 interface ListAction {
   readonly title: string;
-  readonly action: (editor: Editor) => any;
+  readonly action: (editor: Editor) => Promise<any>;
 }
 
 describe('browser.tinymce.plugins.advlist.ContentEditableFalseTest', () => {
@@ -74,24 +74,23 @@ describe('browser.tinymce.plugins.advlist.ContentEditableFalseTest', () => {
     divNestedNonEditableList
   ]);
 
-
-  const clickToolbarDisabled = (editor: Editor, listType: string) => {
+  const pClickToolbarDisabled = (editor: Editor, listType: string) => {
     TinyUiActions.clickOnToolbar(editor, `[aria-label="${listType}"] > .tox-tbtn`);
-    TinyUiActions.pWaitForUi(editor, `button[aria-label="${listType}"][aria-pressed="true"][aria-disabled="true"]`);
+    return TinyUiActions.pWaitForUi(editor, `button[aria-label="${listType}"][aria-pressed="true"][aria-disabled="true"]`);
   };
 
   const listActions: ListAction[] = [
-    { title: 'Numbered list toolbar button', action: (editor: Editor) => clickToolbarDisabled(editor, 'Numbered list') },
-    { title: 'Bullet list toolbar button', action: (editor: Editor) => clickToolbarDisabled(editor, 'Bullet list') }
+    { title: 'Numbered list toolbar button', action: (editor: Editor) => pClickToolbarDisabled(editor, 'Numbered list') },
+    { title: 'Bullet list toolbar button', action: (editor: Editor) => pClickToolbarDisabled(editor, 'Bullet list') }
   ];
 
   Arr.each(contentCombinations, (listContent) =>
     Arr.each(listActions, (listAction) =>
-      it(`TINY-8920: Pressing ${listAction.title} is disabled when in ${listContent.listName}`, () => {
+      it(`TINY-8920: Pressing ${listAction.title} is disabled when in ${listContent.listName}`, async () => {
         const editor = hook.editor();
         editor.setContent(listContent.content);
         TinySelections.setCursor(editor, listContent.startPath, 0);
-        listAction.action(editor);
+        await listAction.action(editor);
         TinyAssertions.assertContent(editor, listContent.content);
       })
     )
