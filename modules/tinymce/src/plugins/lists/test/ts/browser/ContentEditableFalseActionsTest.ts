@@ -13,7 +13,7 @@ interface ListParameters {
 
 interface ListAction {
   readonly title: string;
-  readonly action: (editor: Editor) => Promise<any> | boolean;
+  readonly action: (editor: Editor) => any;
 }
 
 describe('browser.tinymce.plugins.lists.ContentEditableFalseActionsTest', () => {
@@ -82,8 +82,7 @@ ${listContent}
   ]);
 
   const pClickToolbarDisabled = (editor: Editor, listType: string) => {
-    TinyUiActions.clickOnToolbar(editor, `button[aria-label="${listType}"]`);
-    return TinyUiActions.pWaitForUi(editor, `button[aria-label="${listType}"][aria-pressed="true"][aria-disabled="true"]`);
+    TinyUiActions.clickOnToolbar(editor, `button[aria-label="${listType}"][aria-disabled="true"]`);
   };
 
   const listActions: ListAction[] = [
@@ -100,11 +99,11 @@ ${listContent}
   Arr.each(listActions, (listAction) =>
     context(listAction.title, () =>
       Arr.each(contentCombinations, (list) =>
-        it(`TINY-8920: Pressing ${listAction.title} is disabled when in ${list.title}`, async () => {
+        it(`TINY-8920: Pressing ${listAction.title} is disabled when in ${list.title}`, () => {
           const editor = hook.editor();
           editor.setContent(list.content);
           TinySelections.setCursor(editor, list.startPath, 0);
-          await listAction.action(editor);
+          listAction.action(editor);
           TinyAssertions.assertContent(editor, list.content);
         })
       )

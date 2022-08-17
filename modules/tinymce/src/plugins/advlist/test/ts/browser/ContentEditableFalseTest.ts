@@ -19,7 +19,7 @@ interface ListContents {
 
 interface ListAction {
   readonly title: string;
-  readonly action: (editor: Editor) => Promise<any>;
+  readonly action: (editor: Editor) => any;
 }
 
 describe('browser.tinymce.plugins.advlist.ContentEditableFalseTest', () => {
@@ -66,7 +66,7 @@ describe('browser.tinymce.plugins.advlist.ContentEditableFalseTest', () => {
   const divNestedNonEditableList: ListContents[] = Arr.bind(listTypes, (list) => [{
     listName: `non-editable div nested ${list.type} ${list.style} list`,
     content: divNestedNonEditableListContents(list),
-    startPath: [ 0, 0, 0 ]
+    startPath: [ 0, 1, 0 ]
   }]);
 
   const contentCombinations: ListContents[] = Arr.flatten([
@@ -75,8 +75,7 @@ describe('browser.tinymce.plugins.advlist.ContentEditableFalseTest', () => {
   ]);
 
   const pClickToolbarDisabled = (editor: Editor, listType: string) => {
-    TinyUiActions.clickOnToolbar(editor, `[aria-label="${listType}"] > .tox-tbtn`);
-    return TinyUiActions.pWaitForUi(editor, `button[aria-label="${listType}"][aria-pressed="true"][aria-disabled="true"]`);
+    TinyUiActions.clickOnToolbar(editor, `[aria-label="${listType}"][aria-disabled="true"] > .tox-tbtn`);
   };
 
   const listActions: ListAction[] = [
@@ -86,11 +85,11 @@ describe('browser.tinymce.plugins.advlist.ContentEditableFalseTest', () => {
 
   Arr.each(contentCombinations, (listContent) =>
     Arr.each(listActions, (listAction) =>
-      it(`TINY-8920: Pressing ${listAction.title} is disabled when in ${listContent.listName}`, async () => {
+      it(`TINY-8920: Pressing ${listAction.title} is disabled when in ${listContent.listName}`, () => {
         const editor = hook.editor();
         editor.setContent(listContent.content);
         TinySelections.setCursor(editor, listContent.startPath, 0);
-        await listAction.action(editor);
+        listAction.action(editor);
         TinyAssertions.assertContent(editor, listContent.content);
       })
     )
