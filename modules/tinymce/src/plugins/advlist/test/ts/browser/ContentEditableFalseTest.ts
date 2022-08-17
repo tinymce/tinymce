@@ -15,7 +15,6 @@ interface ListContents {
   readonly listName: string;
   readonly content: string;
   readonly startPath: number[];
-  readonly endPath: number[];
 }
 
 interface ListAction {
@@ -61,15 +60,13 @@ describe('browser.tinymce.plugins.advlist.ContentEditableFalseTest', () => {
   const nonEditableList: ListContents[] = Arr.bind(listTypes, (list) => [{
     listName: `non-editable ${list.type} ${list.style} list`,
     content: nonEditableListContents(list),
-    startPath: [ 1, 0 ],
-    endPath: [ 0, 0 ]
+    startPath: [ 1, 0 ]
   }]);
 
   const divNestedNonEditableList: ListContents[] = Arr.bind(listTypes, (list) => [{
     listName: `non-editable div nested ${list.type} ${list.style} list`,
     content: divNestedNonEditableListContents(list),
-    startPath: [ 0, 0, 0 ],
-    endPath: [ 0, 0, 0 ]
+    startPath: [ 0, 0, 0 ]
   }]);
 
   const contentCombinations: ListContents[] = Arr.flatten([
@@ -89,7 +86,7 @@ describe('browser.tinymce.plugins.advlist.ContentEditableFalseTest', () => {
         editor.setContent(listContent.content);
         TinySelections.setCursor(editor, listContent.startPath, 0);
         listAction.action(editor);
-        TinyAssertions.assertCursor(editor, listContent.endPath, 0);
+        TinyUiActions.pWaitForUi(editor, 'button[aria-label="${selector}"][aria-pressed="true"][aria-disabled="true"]');
         TinyAssertions.assertContent(editor, listContent.content);
       })
     )
