@@ -1,5 +1,7 @@
+import { UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
+import { SugarBody } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -81,13 +83,14 @@ ${listContent}
     nestedNonEditableList
   ]);
 
-  const clickToolbarDisabled = (editor: Editor, listType: string) => {
+  const checkToolbarDisabled = (editor: Editor, listType: string) => {
+    UiFinder.exists(SugarBody.body(), `button[aria-label="${listType}"][aria-disabled="true"]`);
     TinyUiActions.clickOnToolbar(editor, `button[aria-label="${listType}"][aria-disabled="true"]`);
   };
 
   const listActions: ListAction[] = [
-    { title: 'Numbered list toolbar button', action: (editor: Editor) => clickToolbarDisabled(editor, 'Numbered list') },
-    { title: 'Bullet list toolbar button', action: (editor: Editor) => clickToolbarDisabled(editor, 'Bullet list') },
+    { title: 'Numbered list toolbar button', action: (editor: Editor) => checkToolbarDisabled(editor, 'Numbered list') },
+    { title: 'Bullet list toolbar button', action: (editor: Editor) => checkToolbarDisabled(editor, 'Bullet list') },
     { title: 'RemoveList command', action: (editor: Editor) => editor.execCommand('RemoveList') },
     { title: 'InsertUnorderedList command', action: (editor: Editor) => editor.execCommand('InsertUnorderedList') },
     { title: 'InsertOrderedList command', action: (editor: Editor) => editor.execCommand('InsertOrderedList') },
