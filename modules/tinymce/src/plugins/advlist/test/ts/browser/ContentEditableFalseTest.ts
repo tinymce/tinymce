@@ -74,9 +74,15 @@ describe('browser.tinymce.plugins.advlist.ContentEditableFalseTest', () => {
     divNestedNonEditableList
   ]);
 
+
+  const clickToolbarDisabled = (editor: Editor, listType: string) => {
+    TinyUiActions.clickOnToolbar(editor, `[aria-label="${listType}"] > .tox-tbtn`);
+    TinyUiActions.pWaitForUi(editor, `button[aria-label="${listType}"][aria-pressed="true"][aria-disabled="true"]`);
+  };
+
   const listActions: ListAction[] = [
-    { title: 'Numbered list toolbar button', action: (editor: Editor) => TinyUiActions.clickOnToolbar(editor, '[aria-label="Numbered list"] > .tox-tbtn') },
-    { title: 'Bullet list toolbar button', action: (editor: Editor) => TinyUiActions.clickOnToolbar(editor, '[aria-label="Bullet list"] > .tox-tbtn') }
+    { title: 'Numbered list toolbar button', action: (editor: Editor) => clickToolbarDisabled(editor, 'Numbered list') },
+    { title: 'Bullet list toolbar button', action: (editor: Editor) => clickToolbarDisabled(editor, 'Bullet list') }
   ];
 
   Arr.each(contentCombinations, (listContent) =>
@@ -86,7 +92,6 @@ describe('browser.tinymce.plugins.advlist.ContentEditableFalseTest', () => {
         editor.setContent(listContent.content);
         TinySelections.setCursor(editor, listContent.startPath, 0);
         listAction.action(editor);
-        TinyUiActions.pWaitForUi(editor, 'button[aria-label="${selector}"][aria-pressed="true"][aria-disabled="true"]');
         TinyAssertions.assertContent(editor, listContent.content);
       })
     )
