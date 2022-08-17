@@ -654,9 +654,7 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
     CaretFormat.removeCaretFormat(ed, name, vars, similar);
   }
 
-  if (!node) {
-    removeListStyleFormats(ed, name, vars);
-  }
+  removeListStyleFormats(ed, name, vars);
 
   Events.fireFormatRemove(ed, name, node, vars);
 };
