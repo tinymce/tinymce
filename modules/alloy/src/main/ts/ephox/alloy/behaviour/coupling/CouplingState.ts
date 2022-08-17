@@ -5,8 +5,8 @@ import { nuState } from '../common/BehaviourState';
 import { CouplingConfig, CouplingState } from './CouplingTypes';
 
 // Unfortunately, the Coupling APIs currently throw errors when the coupled name
-// is not recognised. This is because that if the wrong name is used, it is a 
-// non-recoverable error, and the developer should be notified. However, there are 
+// is not recognised. This is because that if the wrong name is used, it is a
+// non-recoverable error, and the developer should be notified. However, there are
 // better ways to do this.
 const init = (): CouplingState => {
   const coupled: Record<string, AlloyComponent> = { };
@@ -15,7 +15,7 @@ const init = (): CouplingState => {
     // These are the situations:
     // 1. If we don't have any coupling configuration of any kind, then Error
     // 2. If we already have a built coupled component, return it
-    // 3. If we haven't already built the coupled component, and we don't recognise its name, 
+    // 3. If we haven't already built the coupled component, and we don't recognise its name,
     // then Error
     // 4. If we haven't already built the coupled component, but we *do* recognise its name
     // then build it and return it.
@@ -40,7 +40,7 @@ const init = (): CouplingState => {
     // These are the situations:
     // 1. If we don't have any coupling configuration of any kind, then Error
     // 2. If we already have a built coupled component, return it
-    // 3. If we haven't already built the coupled component, and we don't recognise its name, 
+    // 3. If we haven't already built the coupled component, and we don't recognise its name,
     // then Error
     // 4. If we haven't already built the coupled component, but we *do* recognise its name
     // then return Optional.none
