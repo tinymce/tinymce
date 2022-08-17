@@ -70,7 +70,7 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
     },
     refetch: (comp) => {
       // Generally, the triggers for a refetch should make it so that the
-      // sandbox is in the DOM, but it's not guranteed, so we still handle the
+      // sandbox has been created, but it's not guaranteed, so we still handle the
       // case where there isn't yet a sandbox.
       const optSandbox = Coupling.getExistingCoupled(comp, 'sandbox');
       return optSandbox.fold(
