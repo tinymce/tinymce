@@ -11,7 +11,7 @@ interface ListStyle {
   readonly style: string;
 }
 
-interface ListParameters {
+interface ListContents {
   readonly name: string;
   readonly content: string;
   readonly startPath: number[];
@@ -60,26 +60,26 @@ describe('browser.tinymce.plugins.lists.ContentEditableFalseActionsTest', () => 
       '</' + list.type + '>\n' +
     '</div>';
 
-  const nonEditableList: ListParameters[] = Arr.bind(listTypes, (list) => [{
+  const nonEditableList: ListContents[] = Arr.bind(listTypes, (list) => [{
     name: 'non-editable ' + list.type + ' ' + list.style + ' list',
     content: nonEditableListContents(list),
     startPath: [ 0, 0 ]
   }]);
 
-  const divNestedNonEditableList: ListParameters[] = Arr.bind(listTypes, (list) => [{
+  const divNestedNonEditableList: ListContents[] = Arr.bind(listTypes, (list) => [{
     name: 'non-editable div nested ' + list.type + ' ' + list.style + ' list',
     content: divNestedNonEditableListContents(list),
     startPath: [ 0, 0, 0 ]
   }]);
 
-  const contentCombinations: ListParameters[] = Arr.flatten([
+  const contentCombinations: ListContents[] = Arr.flatten([
     nonEditableList,
     divNestedNonEditableList
   ]);
 
   const randomIndex = (min: number, max: number) => Math.round(Math.random() * (max - min) + min);
-  const randomContents = (acc: ListParameters[], contents: ListParameters[], num: number): ListParameters[] =>
-    num > 0 ? randomContents([ ...acc, contents[randomIndex(0, contents.length)] ], contents, num - 1) : acc;
+  const randomContents = (acc: ListContents[], contents: ListContents[], num: number): ListContents[] =>
+    num > 0 ? randomContents(Arr.flatten([ acc, [ contents[randomIndex(0, contents.length)] ]]), contents, num - 1) : acc;
 
   const numContents = 10; // Number of content combinations to be tested
   const randomContentCombinations = randomContents([], contentCombinations, numContents);
@@ -91,14 +91,14 @@ describe('browser.tinymce.plugins.lists.ContentEditableFalseActionsTest', () => 
 
   Arr.each(listActions, (listAction) =>
     context(listAction.title, () =>
-      Arr.each(randomContentCombinations, (list) =>
-        it('TINY-8920: ' + listAction.title + ' is disabled when in ' + list.name, () => {
+      Arr.each(randomContentCombinations, (listContent) =>
+        it('TINY-8920: ' + listAction.title + ' is disabled when in ' + listContent.name, () => {
           const editor = hook.editor();
-          editor.setContent(list.content);
-          TinySelections.setCursor(editor, list.startPath, 0);
+          editor.setContent(listContent.content);
+          TinySelections.setCursor(editor, listContent.startPath, 0);
           listAction.action(editor);
-          TinyAssertions.assertCursor(editor, list.startPath, 0);
-          TinyAssertions.assertContent(editor, list.content);
+          TinyAssertions.assertCursor(editor, listContent.startPath, 0);
+          TinyAssertions.assertContent(editor, listContent.content);
         })
       )
     )
