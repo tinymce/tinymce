@@ -177,9 +177,6 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
         'onOpenSubmenu',
         'deprecated:onHighlight: b-alpha',
         'onHighlightItem: b-alpha',
-        'onDehighlightItem: b-alpha',
-        'deprecated:onHighlight: b-alpha',
-        'onHighlightItem: b-alpha',
         'menu.events.focus'
       ]),
 
