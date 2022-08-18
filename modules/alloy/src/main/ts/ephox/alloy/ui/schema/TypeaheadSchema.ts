@@ -148,9 +148,9 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
         // firing so that the typeahead doesn't lose focus. This is the handler
         // for clicking on an item. We need to close the sandbox, update the typeahead
         // to show the item clicked on, and fire an execute.
-        onExecute: (menu: AlloyComponent, item: AlloyComponent): Optional<boolean> => {
+        onExecute: (_menu: AlloyComponent, item: AlloyComponent): Optional<boolean> => {
           // Note: This will only work when the typeahead and menu are in the same system.
-          return menu.getSystem().getByUid(detail.uid).toOptional().map((typeahead): boolean => {
+          return detail.lazyTypeaheadComp.get().map((typeahead): boolean => {
             AlloyTriggers.emitWith(typeahead, TypeaheadEvents.itemExecute(), { item });
             return true;
           });
@@ -160,7 +160,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
           // Hovering is also a user-initiated action, so previewing mode is over.
           // TODO: Have a better API for managing state in between parts.
           detail.previewing.set(false);
-          menu.getSystem().getByUid(detail.uid).each((input) => {
+          detail.lazyTypeaheadComp.get().each((input) => {
             if (detail.model.populateFromBrowse) {
               setValueFromItem(detail.model, input, item);
             }

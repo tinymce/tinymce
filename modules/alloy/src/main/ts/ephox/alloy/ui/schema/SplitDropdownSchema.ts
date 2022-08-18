@@ -135,6 +135,8 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     defaults: (detail) => {
       return {
         onExecute: (tmenu: AlloyComponent, item: AlloyComponent) => {
+          // CAUTION: This won't work if the splitDropdown and the tmenu aren't
+          // in the same mothership. It is just a default, though.
           tmenu.getSystem().getByUid(detail.uid).each((splitDropdown) => {
             detail.onItemExecute(splitDropdown, tmenu, item);
           });
