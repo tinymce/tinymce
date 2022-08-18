@@ -4,7 +4,7 @@ import { Id } from '@ephox/katamari';
 export const searchResultsClass = 'tox-collection--results__js';
 
 // NOTE: this is operating on the the final AlloySpec
-export const augmentWithAriaId = (item: ItemTypes.ItemSpec): ItemTypes.ItemSpec => {
+export const augmentWithAria = (item: ItemTypes.ItemSpec): ItemTypes.ItemSpec => {
   if (item.dom) {
     return {
       ...item,
@@ -12,7 +12,8 @@ export const augmentWithAriaId = (item: ItemTypes.ItemSpec): ItemTypes.ItemSpec 
         ...item.dom,
         attributes: {
           ...item.dom.attributes ?? { },
-          id: Id.generate('aria-item-search-result-id')
+          'id': Id.generate('aria-item-search-result-id'),
+          'aria-selected': 'false'
         }
       }
     };

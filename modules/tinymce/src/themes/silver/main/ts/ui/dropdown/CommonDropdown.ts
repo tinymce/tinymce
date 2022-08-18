@@ -8,6 +8,7 @@ import {
   Dropdown as AlloyDropdown,
   Focusing,
   GuiFactory,
+  Highlighting,
   Keying,
   Memento,
   Replacing,
@@ -249,6 +250,14 @@ const renderCommonDropdown = <T>(
           // focus stays in the search field
           fakeFocus: spec.searchable,
           onHighlightItem: updateAriaOnHighlight,
+          onCollapseMenu: (tmenuComp, itemCompCausingCollapse, nowActiveMenuComp) => {
+            // We want to update ARIA on collapsing as well, because it isn't changing
+            // the highlights. So what we need to do is get the right parameters to
+            // pass to updateAriaOnHighlight
+            Highlighting.getHighlighted(nowActiveMenuComp).each((itemComp) => {
+              updateAriaOnHighlight(tmenuComp, nowActiveMenuComp, itemComp);
+            });
+          },
           onDehighlightItem: updateAriaOnDehighlight
         }
       },

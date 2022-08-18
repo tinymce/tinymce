@@ -4,7 +4,7 @@ import { Arr, Fun, Id, Obj } from '@ephox/katamari';
 import I18n from 'tinymce/core/api/util/I18n';
 
 import { renderMenuSearcher } from './searchable/SearchableMenuField';
-import { augmentWithAriaId, searchResultsClass } from './searchable/SearchableMenus';
+import { augmentWithAria, searchResultsClass } from './searchable/SearchableMenus';
 
 export interface StructureSpec extends SimpleSpec {
   readonly dom: RawDomSchema;
@@ -153,7 +153,7 @@ const forCollectionWithSearchResults = (columns: number | 'auto', initItems: Ite
     components: [
       // For each item, it needs to have an ID, so that we can refer to it
       // by the aria-activedescendant attribute
-      insertItemsPlaceholder(columns, initItems, augmentWithAriaId)
+      insertItemsPlaceholder(columns, initItems, augmentWithAria)
     ]
   };
 };
@@ -203,7 +203,7 @@ const forCollectionWithSearchField = (columns: number | 'auto', initItems: ItemT
         components: [
           // For each item, it needs to have an ID, so that we can refer to it
           // by the aria-activedescendant attribute
-          insertItemsPlaceholder(columns, initItems, augmentWithAriaId)
+          insertItemsPlaceholder(columns, initItems, augmentWithAria)
         ]
       }
     ]
