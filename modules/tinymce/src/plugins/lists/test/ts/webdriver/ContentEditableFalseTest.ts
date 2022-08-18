@@ -87,10 +87,10 @@ ${listContent}
   ]);
 
   const listActions: ListAction[] = [
-    { title: 'backspace key', keyPress: [ RealKeys.backspace() ] },
-    { title: 'enter key', keyPress: [ RealKeys.combo({}, 'enter') ] },
-    { title: 'tab key', keyPress: [ RealKeys.combo({}, 'tab') ] },
-    { title: 'shift and tab keys', keyPress: [ RealKeys.combo({ shift: true }, 'tab') ] },
+    { title: 'backspace key to append to previous list item', keyPress: [ RealKeys.backspace() ] },
+    { title: 'enter key to split into new list item', keyPress: [ RealKeys.combo({}, 'enter') ] },
+    { title: 'tab key to indent list item', keyPress: [ RealKeys.combo({}, 'tab') ] },
+    { title: 'shift and tab keys to outdent list item', keyPress: [ RealKeys.combo({ shift: true }, 'tab') ] },
   ];
 
   Arr.each(listActions, (listAction) =>
