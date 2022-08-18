@@ -25,10 +25,9 @@ const trimZwsp = (fragment: DocumentFragment) => {
   });
 };
 
-// Lists/core/Util.ts - Duplicated in Lists plugin
-const isEditableList = (editor: Editor, element: Node): boolean => {
-  const parentList = editor.dom.getParent(element, 'ol,ul,dl');
-  return editor.dom.getContentEditableParent(parentList ?? element) !== 'false';
+const isEditableList = (editor: Editor, node: Node): boolean => {
+  const parentList = editor.dom.getParent(node, 'ol,ul,dl');
+  return !parentList ? true : editor.dom.getContentEditableParent(parentList) !== 'false';
 };
 
 const isEmptyAnchor = (dom: DOMUtils, elm: Node): boolean => {
