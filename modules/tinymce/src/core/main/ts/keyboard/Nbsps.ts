@@ -176,23 +176,21 @@ const normalizeNbspAtEnd = (root: SugarElement<Node>, node: Text, makeNbsp: bool
   }
 };
 
-const normalizeNbsps = (root: SugarElement<Node>, pos: CaretPosition): Optional<CaretPosition> =>
-  Optional.some(pos).filter(hasNbsp).fold(
-    () => {
-      if (needsToBeNbsp(root, pos) && NodeType.isText(pos.container())) {
-        const container = pos.container() as Text;
-        const normalized = normalizeNbspAtStart(root, container, true) || normalizeNbspAtEnd(root, container, true);
-        return Optionals.someIf(normalized, pos);
-      } else {
-        return Optional.none();
-      }
-    },
-    (pos) => {
+const normalizeNbsps = (root: SugarElement<Node>, pos: CaretPosition): Optional<CaretPosition> => {
+  if (hasNbsp(pos)) {
+    const container = pos.container() as Text;
+    const normalized = normalizeNbspAtStart(root, container, false) || normalizeNbspInMiddleOfTextNode(container) || normalizeNbspAtEnd(root, container, false);
+    return Optionals.someIf(normalized, pos);
+  } else {
+    if (needsToBeNbsp(root, pos) && NodeType.isText(pos.container())) {
       const container = pos.container() as Text;
-      const normalized = normalizeNbspAtStart(root, container, false) || normalizeNbspInMiddleOfTextNode(container) || normalizeNbspAtEnd(root, container, false);
+      const normalized = normalizeNbspAtStart(root, container, true) || normalizeNbspAtEnd(root, container, true);
       return Optionals.someIf(normalized, pos);
+    } else {
+      return Optional.none();
     }
-  );
+  }
+};
 
 const normalizeNbspsInEditor = (editor: Editor): void => {
   const root = SugarElement.fromDom(editor.getBody());
