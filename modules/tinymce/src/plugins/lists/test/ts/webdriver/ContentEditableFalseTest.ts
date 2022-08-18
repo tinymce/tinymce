@@ -85,7 +85,7 @@ ${listContent}
     const editor = hook.editor();
     editor.setContent(list.content);
     TinySelections.setCursor(editor, list.startPath, 0);
-    await RealKeys.pSendKeysOn(list.selector, [ RealKeys.backspace() ]);
+    await RealKeys.pSendKeysOn(list.selector, keyPress);
     TinyAssertions.assertContent(editor, list.content);
   };
 
