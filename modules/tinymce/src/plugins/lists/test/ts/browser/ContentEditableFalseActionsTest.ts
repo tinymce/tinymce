@@ -13,11 +13,6 @@ interface ListParameters {
   readonly startPath: number[];
 }
 
-interface ListAction {
-  readonly title: string;
-  readonly action: (editor: Editor) => any;
-}
-
 describe('browser.tinymce.plugins.lists.ContentEditableFalseActionsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'lists',
@@ -88,28 +83,47 @@ ${listContent}
     TinyUiActions.clickOnToolbar(editor, `button[aria-label="${listType}"][aria-disabled="true"]`);
   };
 
-  const listActions: ListAction[] = [
-    { title: 'Numbered list toolbar button', action: (editor: Editor) => checkToolbarDisabled(editor, 'Numbered list') },
-    { title: 'Bullet list toolbar button', action: (editor: Editor) => checkToolbarDisabled(editor, 'Bullet list') },
-    { title: 'RemoveList command', action: (editor: Editor) => editor.execCommand('RemoveList') },
-    { title: 'InsertUnorderedList command', action: (editor: Editor) => editor.execCommand('InsertUnorderedList') },
-    { title: 'InsertOrderedList command', action: (editor: Editor) => editor.execCommand('InsertOrderedList') },
-    { title: 'InsertDefinitionList command', action: (editor: Editor) => editor.execCommand('InsertDefinitionList') },
-    { title: 'mceListProps command', action: (editor: Editor) => editor.execCommand('mceListProps') },
-    { title: 'mceListUpdate command', action: (editor: Editor) => editor.execCommand('mceListUpdate', false, { attrs: { contenteditable: 'true' }}) }
-  ];
+  const performActionAndAssertNoChange = (list: ListParameters, action: (editor: Editor) => any) => {
+    const editor = hook.editor();
+    editor.setContent(list.content);
+    TinySelections.setCursor(editor, list.startPath, 0);
+    action(editor);
+    TinyAssertions.assertContent(editor, list.content);
+  };
 
-  Arr.each(listActions, (listAction) =>
-    context(listAction.title, () =>
-      Arr.each(contentCombinations, (list) =>
-        it(`TINY-8920: Pressing ${listAction.title} is disabled when in ${list.title}`, () => {
-          const editor = hook.editor();
-          editor.setContent(list.content);
-          TinySelections.setCursor(editor, list.startPath, 0);
-          listAction.action(editor);
-          TinyAssertions.assertContent(editor, list.content);
-        })
-      )
-    )
+  Arr.each(contentCombinations, (list) =>
+    context(list.title, () => {
+      it(`TINY-8920: Pressing Numbered list toolbar button is disabled when in ${list.title}`, () =>
+        performActionAndAssertNoChange(list, (editor: Editor) => checkToolbarDisabled(editor, 'Numbered list'))
+      );
+
+      it(`TINY-8920: Pressing Bullet list toolbar button is disabled when in ${list.title}`, () =>
+        performActionAndAssertNoChange(list, (editor: Editor) => checkToolbarDisabled(editor, 'Bullet list'))
+      );
+
+      it(`TINY-8920: Executing RemoveList command is disabled when in ${list.title}`, () =>
+        performActionAndAssertNoChange(list, (editor: Editor) => editor.execCommand('RemoveList'))
+      );
+
+      it(`TINY-8920: Executing InsertUnorderedList command is disabled when in ${list.title}`, () =>
+        performActionAndAssertNoChange(list, (editor: Editor) => editor.execCommand('InsertUnorderedList'))
+      );
+
+      it(`TINY-8920: Executing InsertOrderedList command is disabled when in ${list.title}`, () =>
+        performActionAndAssertNoChange(list, (editor: Editor) => editor.execCommand('InsertOrderedList'))
+      );
+
+      it(`TINY-8920: Executing InsertDefinitionList command is disabled when in ${list.title}`, () =>
+        performActionAndAssertNoChange(list, (editor: Editor) => editor.execCommand('InsertDefinitionList'))
+      );
+
+      it(`TINY-8920: Executing mceListProps command is disabled when in ${list.title}`, () =>
+        performActionAndAssertNoChange(list, (editor: Editor) => editor.execCommand('mceListProps'))
+      );
+
+      it(`TINY-8920: Executing mceListUpdate command is disabled when in ${list.title}`, () =>
+        performActionAndAssertNoChange(list, (editor: Editor) => editor.execCommand('mceListUpdate', false, { attrs: { contenteditable: 'true' }}))
+      );
+    })
   );
 });

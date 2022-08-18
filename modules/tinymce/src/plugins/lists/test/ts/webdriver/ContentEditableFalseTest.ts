@@ -13,11 +13,6 @@ interface ListParameters {
   readonly selector: string;
 }
 
-interface ListAction {
-  readonly title: string;
-  readonly keyPress: any[];
-}
-
 describe('webdriver.tinymce.plugins.lists.ContentEditableFalseTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'lists',
@@ -86,24 +81,31 @@ ${listContent}
     nestedNonEditableList
   ]);
 
-  const listActions: ListAction[] = [
-    { title: 'backspace key to append to previous list item', keyPress: [ RealKeys.backspace() ] },
-    { title: 'enter key to split into new list item', keyPress: [ RealKeys.combo({}, 'enter') ] },
-    { title: 'tab key to indent list item', keyPress: [ RealKeys.combo({}, 'tab') ] },
-    { title: 'shift and tab keys to outdent list item', keyPress: [ RealKeys.combo({ shift: true }, 'tab') ] },
-  ];
+  const pressKeyInListAndAssertNoChange = async (list: ListParameters, keyPress: any[]) => {
+    const editor = hook.editor();
+    editor.setContent(list.content);
+    TinySelections.setCursor(editor, list.startPath, 0);
+    await RealKeys.pSendKeysOn(list.selector, [ RealKeys.backspace() ]);
+    TinyAssertions.assertContent(editor, list.content);
+  };
 
-  Arr.each(listActions, (listAction) =>
-    context(listAction.title, () =>
-      Arr.each(contentCombinations, (list) =>
-        it(`TINY-8920: Pressing ${listAction.title} is disabled when in ${list.title}`, async () => {
-          const editor = hook.editor();
-          editor.setContent(list.content);
-          TinySelections.setCursor(editor, list.startPath, 0);
-          await RealKeys.pSendKeysOn(list.selector, listAction.keyPress);
-          TinyAssertions.assertContent(editor, list.content);
-        })
-      )
-    )
+  Arr.each(contentCombinations, (list) =>
+    context(list.title, () => {
+      it(`TINY-8920: Pressing backspace key to append to previous list item is disabled when in ${list.title}`, () =>
+        pressKeyInListAndAssertNoChange(list, [ RealKeys.backspace() ])
+      );
+
+      it(`TINY-8920: Pressing enter key to split into new list item is disabled when in ${list.title}`, () =>
+        pressKeyInListAndAssertNoChange(list, [ RealKeys.combo({}, 'enter') ])
+      );
+
+      it(`TINY-8920: Pressing tab key to indent list item is disabled when in ${list.title}`, () =>
+        pressKeyInListAndAssertNoChange(list, [ RealKeys.combo({}, 'tab') ])
+      );
+
+      it(`TINY-8920: Pressing shift and tab keys to outdent list item is disabled when in ${list.title}`, () =>
+        pressKeyInListAndAssertNoChange(list, [ RealKeys.combo({ shift: true }, 'tab') ])
+      );
+    })
   );
 });

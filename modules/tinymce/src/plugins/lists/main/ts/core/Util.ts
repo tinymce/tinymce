@@ -2,18 +2,17 @@ import { Arr } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
-import { Toolbar, Menu } from 'tinymce/core/api/ui/Ui';
 
 import * as NodeType from './NodeType';
 
 export const isCustomList = (list: HTMLElement): boolean =>
   /\btox\-/.test(list.className);
 
-const inList = (parents: Node[], listName: string): boolean =>
+export const inList = (parents: Node[], listName: string): boolean =>
   Arr.findUntil(parents, NodeType.isListNode, NodeType.isTableCellNode)
     .exists((list) => list.nodeName === listName && !isCustomList(list));
 
-const setNodeChangeHandler = (editor: Editor, nodeChangeHandler: (e: NodeChangeEvent) => void): () => void => {
+export const setNodeChangeHandler = (editor: Editor, nodeChangeHandler: (e: NodeChangeEvent) => void): () => void => {
   const initialNode = editor.selection.getNode();
   // Set the initial state
   nodeChangeHandler({
@@ -28,18 +27,4 @@ const setNodeChangeHandler = (editor: Editor, nodeChangeHandler: (e: NodeChangeE
 export const isEditableList = (editor: Editor, element: Element): boolean => {
   const parentList = editor.dom.getParent(element, 'ol,ul,dl');
   return editor.dom.getContentEditableParent(parentList ?? element) !== 'false';
-};
-
-export const setupToggleButtonHandler = (editor: Editor, listName: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi): () => void => {
-  const toggleButtonHandler = (e: NodeChangeEvent) => {
-    api.setActive(inList(e.parents, listName));
-    api.setEnabled(isEditableList(editor, e.element));
-  };
-  return setNodeChangeHandler(editor, toggleButtonHandler);
-};
-
-export const setupMenuButtonHandler = (editor: Editor, listName: string) => (api: Menu.MenuItemInstanceApi): () => void => {
-  const menuButtonHandler = (e: NodeChangeEvent) =>
-    api.setEnabled(inList(e.parents, listName) && isEditableList(editor, e.element));
-  return setNodeChangeHandler(editor, menuButtonHandler);
 };

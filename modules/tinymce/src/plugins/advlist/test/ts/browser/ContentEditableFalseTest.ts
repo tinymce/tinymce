@@ -1,5 +1,5 @@
 import { UiFinder } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -13,15 +13,10 @@ interface ListStyle {
   readonly style: string;
 }
 
-interface ListContents {
-  readonly listName: string;
+interface ListParameters {
+  readonly title: string;
   readonly content: string;
   readonly startPath: number[];
-}
-
-interface ListAction {
-  readonly title: string;
-  readonly action: (editor: Editor) => any;
 }
 
 describe('browser.tinymce.plugins.advlist.ContentEditableFalseTest', () => {
@@ -32,9 +27,6 @@ describe('browser.tinymce.plugins.advlist.ContentEditableFalseTest', () => {
     toolbar: 'numlist bullist',
     base_url: '/project/tinymce/js/tinymce'
   }, [ AdvListPlugin, ListsPlugin ], true);
-
-  const styleAttr = ' style="list-style-type: ';
-  const cefAttr = ';" contenteditable="false">\n';
 
   const orderedListStyles = [ 'lower-alpha', 'lower-greek', 'lower-roman', 'upper-alpha', 'upper-roman' ];
   const numberedListStyles = [ 'circle', 'square' ];
@@ -50,28 +42,30 @@ describe('browser.tinymce.plugins.advlist.ContentEditableFalseTest', () => {
 <li contenteditable="true">editable</li>`;
 
   const nonEditableListContents = (list: ListStyle): string =>
-    `<${list.type}${styleAttr}${list.style}${cefAttr}${listContent}
+    `<${list.type} style="list-style-type: ${list.style};" contenteditable="false">
+${listContent}
 </${list.type}>`;
 
   const divNestedNonEditableListContents = (list: ListStyle): string =>
     `<div contenteditable="true">
-<${list.type}${styleAttr}${list.style}${cefAttr}${listContent}
+<${list.type} style="list-style-type: ${list.style};" contenteditable="false">
+${listContent}
 </${list.type}>
 </div>`;
 
-  const nonEditableList: ListContents[] = Arr.bind(listTypes, (list) => [{
-    listName: `non-editable ${list.type} ${list.style} list`,
+  const nonEditableList: ListParameters[] = Arr.bind(listTypes, (list) => [{
+    title: `non-editable ${list.type} ${list.style} list`,
     content: nonEditableListContents(list),
     startPath: [ 1, 0 ]
   }]);
 
-  const divNestedNonEditableList: ListContents[] = Arr.bind(listTypes, (list) => [{
-    listName: `non-editable div nested ${list.type} ${list.style} list`,
+  const divNestedNonEditableList: ListParameters[] = Arr.bind(listTypes, (list) => [{
+    title: `non-editable div nested ${list.type} ${list.style} list`,
     content: divNestedNonEditableListContents(list),
     startPath: [ 0, 1, 0 ]
   }]);
 
-  const contentCombinations: ListContents[] = Arr.flatten([
+  const contentCombinations: ListParameters[] = Arr.flatten([
     nonEditableList,
     divNestedNonEditableList
   ]);
@@ -81,20 +75,23 @@ describe('browser.tinymce.plugins.advlist.ContentEditableFalseTest', () => {
     TinyUiActions.clickOnToolbar(editor, `[aria-label="${listType}"][aria-disabled="true"] > .tox-tbtn`);
   };
 
-  const listActions: ListAction[] = [
-    { title: 'Numbered list toolbar button', action: (editor: Editor) => checkToolbarDisabled(editor, 'Numbered list') },
-    { title: 'Bullet list toolbar button', action: (editor: Editor) => checkToolbarDisabled(editor, 'Bullet list') }
-  ];
+  const performActionAndAssertNoChange = (list: ListParameters, action: (editor: Editor) => any) => {
+    const editor = hook.editor();
+    editor.setContent(list.content);
+    TinySelections.setCursor(editor, list.startPath, 0);
+    action(editor);
+    TinyAssertions.assertContent(editor, list.content);
+  };
 
-  Arr.each(contentCombinations, (listContent) =>
-    Arr.each(listActions, (listAction) =>
-      it(`TINY-8920: Pressing ${listAction.title} is disabled when in ${listContent.listName}`, () => {
-        const editor = hook.editor();
-        editor.setContent(listContent.content);
-        TinySelections.setCursor(editor, listContent.startPath, 0);
-        listAction.action(editor);
-        TinyAssertions.assertContent(editor, listContent.content);
-      })
-    )
+  Arr.each(contentCombinations, (list) =>
+    context(list.title, () => {
+      it(`TINY-8920: Pressing Numbered list toolbar button is disabled when in ${list.title}`, () =>
+        performActionAndAssertNoChange(list, (editor: Editor) => checkToolbarDisabled(editor, 'Numbered list'))
+      );
+
+      it(`TINY-8920: Pressing Bullet list toolbar button is disabled when in ${list.title}`, () =>
+        performActionAndAssertNoChange(list, (editor: Editor) => checkToolbarDisabled(editor, 'Bullet list'))
+      );
+    })
   );
 });
