@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Step, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, Step, StructAssert, Waiter } from '@ephox/agar';
 import { Arr, Fun, Merger, Obj } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
@@ -151,7 +151,7 @@ const mWaitForNewMenu = (component: AlloyComponent): Step<MenuState, unknown> =>
 
 const assertLazySinkArgs = (expectedTag: string, expectedClass: string, comp: AlloyComponent): void => {
   Assertions.assertStructure(
-    'Lazy sink should get passed the split button',
+    'Lazy sink should get passed the right button',
     ApproxStructure.build((s, _str, arr) => s.element(expectedTag, {
       classes: [ arr.has(expectedClass) ]
     })),
@@ -193,6 +193,20 @@ const getSampleTieredData = (): TieredData => {
   };
 };
 
+// ASSUMPTION: the ApproxStructure.build arguments s, str, arr are always the same
+// so we don't need to pass the originals through to functions.
+const structNotActiveItem = ApproxStructure.build((s, str, arr) => s.element('li', {
+  classes: [ arr.has('item'), arr.not('selected-item') ]
+}));
+
+const structActiveItem = ApproxStructure.build((s, str, arr) => s.element('li', {
+  classes: [ arr.has('item'), arr.has('selected-item') ]
+}));
+
+const itemsHaveActiveStates = (states: boolean[]): StructAssert[] => Arr.map(states, (s) => {
+  return s ? structActiveItem : structNotActiveItem;
+});
+
 const itemMarkers: TieredMenuSpec['markers'] = {
   item: 'item',
   selectedItem: 'selected-item',
@@ -211,5 +225,8 @@ export {
   markers,
   mWaitForNewMenu,
   mStoreMenuUid,
-  getSampleTieredData
+  getSampleTieredData,
+  structNotActiveItem,
+  structActiveItem,
+  itemsHaveActiveStates
 };
