@@ -12,7 +12,6 @@ interface ListUpdate {
 
 export const updateList = (editor: Editor, update: ListUpdate): void => {
   const parentList = getParentList(editor);
-
   if (parentList === null || isWithinNonEditableList(editor, parentList)) {
     return;
   }

@@ -10,9 +10,9 @@ import { Indentation } from '../listmodel/Indentation';
 import { listIndentation } from '../listmodel/ListsIndendation';
 
 const selectionIndentation = (editor: Editor, indentation: Indentation): boolean => {
-  let isHandled = false;
   const lists = SugarElements.fromDom(Selection.getSelectedListRoots(editor));
   const dlItems = SugarElements.fromDom(Selection.getSelectedDlItems(editor));
+  let isHandled = false;
 
   if (lists.length || dlItems.length) {
     const bookmark = editor.selection.getBookmark();
