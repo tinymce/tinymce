@@ -3,6 +3,7 @@ import { Arr } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
 
+import * as Selection from '../core/Selection';
 import * as NodeType from './NodeType';
 
 export const isCustomList = (list: HTMLElement): boolean =>
@@ -24,7 +25,15 @@ export const setNodeChangeHandler = (editor: Editor, nodeChangeHandler: (e: Node
 };
 
 // Advlist/core/ListUtils.ts - Duplicated in Advlist plugin
-export const isEditableList = (editor: Editor, element: Element): boolean => {
+export const isWithinEditable = (editor: Editor, element: Element): boolean =>
+  editor.dom.getContentEditableParent(element) !== 'false';
+
+export const isWithinEditableList = (editor: Editor, element: Element): boolean => {
   const parentList = editor.dom.getParent(element, 'ol,ul,dl');
-  return editor.dom.getContentEditableParent(parentList ?? element) !== 'false';
+  return parentList !== null && isWithinEditable(editor, parentList);
+};
+
+export const selectionIsWithinEditableList = (editor: Editor): boolean => {
+  const parentList = Selection.getParentList(editor);
+  return parentList !== null && isWithinEditable(editor, parentList);
 };

@@ -46,7 +46,7 @@ const isWithinList = (editor: Editor, e: EditorEvent<NodeChangeEvent>, nodeName:
 const makeSetupHandler = (editor: Editor, nodeName: ListType) => (api: Toolbar.ToolbarSplitButtonInstanceApi | Toolbar.ToolbarToggleButtonInstanceApi) => {
   const nodeChangeHandler = (e: EditorEvent<NodeChangeEvent>) => {
     api.setActive(isWithinList(editor, e, nodeName));
-    api.setEnabled(ListUtils.isEditableList(editor, e.element));
+    api.setEnabled(ListUtils.isWithinEditableList(editor, e.element));
   };
   editor.on('NodeChange', nodeChangeHandler);
 

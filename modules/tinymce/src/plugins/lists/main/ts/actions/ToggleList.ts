@@ -1,4 +1,4 @@
-import { Type, Arr } from '@ephox/katamari';
+import { Type } from '@ephox/katamari';
 
 import BookmarkManager from 'tinymce/core/api/dom/BookmarkManager';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -10,7 +10,7 @@ import * as Bookmark from '../core/Bookmark';
 import { listToggleActionFromListName } from '../core/ListAction';
 import * as NodeType from '../core/NodeType';
 import * as Selection from '../core/Selection';
-import { isCustomList, isEditableList } from '../core/Util';
+import { isCustomList, isWithinEditable } from '../core/Util';
 import { flattenListSelection } from './Indendation';
 
 interface ListDetail {
@@ -291,16 +291,19 @@ const toggleSingleList = (editor: Editor, parentList: HTMLElement | null, listNa
 const toggleList = (editor: Editor, listName: 'UL' | 'OL' | 'DL', _detail: ListDetail | null): void => {
   const parentList = Selection.getParentList(editor);
 
-  if (!parentList || isEditableList(editor, parentList)) {
-    const selectedSubLists = Arr.filter(Selection.getSelectedSubLists(editor), (list) => isEditableList(editor, list));
-
-    const detail = Type.isObject(_detail) ? _detail : {};
-    if (selectedSubLists.length > 0) {
-      toggleMultipleLists(editor, parentList, selectedSubLists, listName, detail);
-    } else {
-      toggleSingleList(editor, parentList, listName, detail);
-    }
+  if (parentList !== null && !isWithinEditable(editor, parentList)) {
+    return;
   }
+
+  const selectedSubLists = Selection.getSelectedSubLists(editor);
+
+  const detail = Type.isObject(_detail) ? _detail : {};
+  if (selectedSubLists.length > 0) {
+    toggleMultipleLists(editor, parentList, selectedSubLists, listName, detail);
+  } else {
+    toggleSingleList(editor, parentList, listName, detail);
+  }
+
 };
 
 export {

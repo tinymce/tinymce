@@ -1,4 +1,3 @@
-import { Arr } from '@ephox/katamari';
 import { SugarElements } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -6,20 +5,16 @@ import Editor from 'tinymce/core/api/Editor';
 import { dlIndentation } from '../core/DlIndentation';
 import * as Range from '../core/RangeUtils';
 import * as Selection from '../core/Selection';
-import * as Util from '../core/Util';
+import { selectionIsWithinEditableList } from '../core/Util';
 import { Indentation } from '../listmodel/Indentation';
 import { listIndentation } from '../listmodel/ListsIndendation';
 
 const selectionIndentation = (editor: Editor, indentation: Indentation): boolean => {
-  const lists = SugarElements.fromDom(Arr.filter(Selection.getSelectedListRoots(editor),
-    (list) => Util.isEditableList(editor, list)));
-  const dlItems = SugarElements.fromDom(Arr.filter(Selection.getSelectedDlItems(editor),
-    (list) => Util.isEditableList(editor, list)));
-
-  const parentList = Selection.getParentList(editor);
   let isHandled = false;
+  const lists = SugarElements.fromDom(Selection.getSelectedListRoots(editor));
+  const dlItems = SugarElements.fromDom(Selection.getSelectedDlItems(editor));
 
-  if (parentList && Util.isEditableList(editor, parentList) && (lists.length || dlItems.length)) {
+  if (lists.length || dlItems.length) {
     const bookmark = editor.selection.getBookmark();
 
     listIndentation(editor, lists, indentation);
@@ -34,11 +29,14 @@ const selectionIndentation = (editor: Editor, indentation: Indentation): boolean
   return isHandled;
 };
 
-const indentListSelection = (editor: Editor): boolean => selectionIndentation(editor, Indentation.Indent);
+const handleIndentation = (editor: Editor, indentation: Indentation): boolean =>
+  selectionIsWithinEditableList(editor) ? selectionIndentation(editor, indentation) : false;
 
-const outdentListSelection = (editor: Editor): boolean => selectionIndentation(editor, Indentation.Outdent);
+const indentListSelection = (editor: Editor): boolean => handleIndentation(editor, Indentation.Indent);
 
-const flattenListSelection = (editor: Editor): boolean => selectionIndentation(editor, Indentation.Flatten);
+const outdentListSelection = (editor: Editor): boolean => handleIndentation(editor, Indentation.Outdent);
+
+const flattenListSelection = (editor: Editor): boolean => handleIndentation(editor, Indentation.Flatten);
 
 export {
   indentListSelection,
