@@ -52,34 +52,34 @@ ${listContent}
 </${type1}>
 </div>`;
 
-  const nonEditableList: ListParameters[] = Arr.bind(listTypes, (type: string) => [{
+  const nonEditableList: ListParameters[] = Arr.map(listTypes, (type: string) => ({
     title: `non-editable ${type} list`,
     content: nonEditableListContents(type),
     startPath: [ 1, 0, 0 ],
     selector: `iframe => body ${type} li`
-  }]);
+  }));
 
-  const divNestedNonEditableList: ListParameters[] = Arr.bind(listTypes, (type: string) => [{
+  const divNestedNonEditableList: ListParameters[] = Arr.map(listTypes, (type: string) => ({
     title: `non-editable div nested ${type} list`,
     content: divNestedNonEditableListContents(type),
     startPath: [ 0, 1, 0 ],
     selector: `iframe => body ${type} li`
-  }]);
+  }));
 
   const nestedNonEditableList: ListParameters[] = Arr.bind(listTypes, (type1: string) =>
-    Arr.bind(listTypes, (type2: string) => [{
+    Arr.map(listTypes, (type2: string) => ({
       title: `non-editable ${type2} list within editable ${type1} list`,
       content: nestedNonEditableListContents(type1, type2),
       startPath: [ 1, 0, 0, 1, 0, 0 ],
       selector: `iframe => body ${type1} li ${type2} li`
-    }])
+    }))
   );
 
-  const contentCombinations: ListParameters[] = Arr.flatten([
-    nonEditableList,
-    divNestedNonEditableList,
-    nestedNonEditableList
-  ]);
+  const contentCombinations: ListParameters[] = [
+    ...nonEditableList,
+    ...divNestedNonEditableList,
+    ...nestedNonEditableList
+  ];
 
   const pressKeyInListAndAssertNoChange = async (list: ListParameters, keyPress: any[]) => {
     const editor = hook.editor();

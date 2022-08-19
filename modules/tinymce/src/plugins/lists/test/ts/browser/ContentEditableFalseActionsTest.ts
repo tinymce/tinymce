@@ -52,31 +52,31 @@ ${listContent}
 </${type1}>
 </div>`;
 
-  const nonEditableList: ListParameters[] = Arr.bind(listTypes, (type) => [{
+  const nonEditableList: ListParameters[] = Arr.map(listTypes, (type) => ({
     title: `non-editable ${type} list`,
     content: nonEditableListContents(type),
     startPath: [ 1, 0 ]
-  }]);
+  }));
 
-  const divNestedNonEditableList: ListParameters[] = Arr.bind(listTypes, (type) => [{
+  const divNestedNonEditableList: ListParameters[] = Arr.map(listTypes, (type) => ({
     title: `non-editable div nested ${type} list`,
     content: divNestedNonEditableListContents(type),
     startPath: [ 0, 1, 0 ]
-  }]);
+  }));
 
   const nestedNonEditableList: ListParameters[] = Arr.bind(listTypes, (type1) =>
-    Arr.bind(listTypes, (type2) => [{
+    Arr.map(listTypes, (type2) => ({
       title: `non-editable ${type2} list within editable ${type1} list`,
       content: nestedNonEditableListContents(type1, type2),
       startPath: [ 1, 0, 0, 1, 0, 0 ]
-    }])
+    }))
   );
 
-  const contentCombinations: ListParameters[] = Arr.flatten([
-    nonEditableList,
-    divNestedNonEditableList,
-    nestedNonEditableList
-  ]);
+  const contentCombinations: ListParameters[] = [
+    ...nonEditableList,
+    ...divNestedNonEditableList,
+    ...nestedNonEditableList
+  ];
 
   const checkToolbarDisabled = (editor: Editor, listType: string) => {
     UiFinder.exists(SugarBody.body(), `button[aria-label="${listType}"][aria-disabled="true"]`);

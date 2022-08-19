@@ -31,9 +31,9 @@ describe('browser.tinymce.plugins.advlist.ContentEditableFalseTest', () => {
   const orderedListStyles = [ 'lower-alpha', 'lower-greek', 'lower-roman', 'upper-alpha', 'upper-roman' ];
   const numberedListStyles = [ 'circle', 'square' ];
 
-  const OlListTypes: ListStyle[] = Arr.bind(orderedListStyles, (style) => [{ type: 'ol', style }]);
-  const UlListTypes: ListStyle[] = Arr.bind(numberedListStyles, (style) => [{ type: 'ul', style }]);
-  const listTypes = Arr.flatten([ OlListTypes, UlListTypes ]);
+  const OlListTypes: ListStyle[] = Arr.map(orderedListStyles, (style) => ({ type: 'ol', style }));
+  const UlListTypes: ListStyle[] = Arr.map(numberedListStyles, (style) => ({ type: 'ul', style }));
+  const listTypes = [ ...OlListTypes, ...UlListTypes ];
 
   const listContent = `<li contenteditable="true">editable</li>
 <li>noneditable</li>
@@ -53,22 +53,22 @@ ${listContent}
 </${list.type}>
 </div>`;
 
-  const nonEditableList: ListParameters[] = Arr.bind(listTypes, (list) => [{
+  const nonEditableList: ListParameters[] = Arr.map(listTypes, (list) => ({
     title: `non-editable ${list.type} ${list.style} list`,
     content: nonEditableListContents(list),
     startPath: [ 1, 0 ]
-  }]);
+  }));
 
-  const divNestedNonEditableList: ListParameters[] = Arr.bind(listTypes, (list) => [{
+  const divNestedNonEditableList: ListParameters[] = Arr.map(listTypes, (list) => ({
     title: `non-editable div nested ${list.type} ${list.style} list`,
     content: divNestedNonEditableListContents(list),
     startPath: [ 0, 1, 0 ]
-  }]);
+  }));
 
-  const contentCombinations: ListParameters[] = Arr.flatten([
-    nonEditableList,
-    divNestedNonEditableList
-  ]);
+  const contentCombinations: ListParameters[] = [
+    ...nonEditableList,
+    ...divNestedNonEditableList
+  ];
 
   const checkToolbarDisabled = (editor: Editor, listType: string) => {
     UiFinder.exists(SugarBody.body(), `[aria-label="${listType}"][aria-disabled="true"] > .tox-tbtn`);
