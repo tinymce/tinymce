@@ -29,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The content of the `contenteditable="false"` element could be selected with the mouse on Firefox  #TINY-8828
 - Parsing large documents no longer throws a `Maximum call stack size exceeded` exception #TINY-6945
 - DomParser filter matching was not checked between filters, which could lead to an exception in the parser #TINY-8888
-- Enabling the `Enter` key to insert `line-break` for inline editors
+- Enabling the `Enter` key to insert `line-break` for inline editors when the tag is `p` or `h*`
 
 ### Deprecated
 - The autocompleter `ch` configuration property has been deprecated and will be removed in the next major release. Use the `trigger` property instead. #TINY-8887
