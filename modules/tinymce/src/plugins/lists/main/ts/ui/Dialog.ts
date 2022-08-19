@@ -5,12 +5,12 @@ import Editor from 'tinymce/core/api/Editor';
 import { parseDetail, parseStartValue } from '../core/ListNumbering';
 import { isOlNode } from '../core/NodeType';
 import { getParentList } from '../core/Selection';
-import { isWithinEditableList } from '../core/Util';
+import { isWithinNonEditableList } from '../core/Util';
 
 const open = (editor: Editor): void => {
   // Find the current list and skip opening if the selection isn't in an ordered list
   const currentList = getParentList(editor);
-  if (!isOlNode(currentList) || !isWithinEditableList(editor, currentList)) {
+  if (!isOlNode(currentList) || isWithinNonEditableList(editor, currentList)) {
     return;
   }
 

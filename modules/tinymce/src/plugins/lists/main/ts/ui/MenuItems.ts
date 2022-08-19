@@ -8,7 +8,7 @@ import * as Util from '../core/Util';
 
 const setupMenuButtonHandler = (editor: Editor, listName: string) => (api: Menu.MenuItemInstanceApi): () => void => {
   const menuButtonHandler = (e: NodeChangeEvent) =>
-    api.setEnabled(Util.inList(e.parents, listName) && Util.isWithinEditable(editor, e.element));
+    api.setEnabled(Util.inList(e.parents, listName) && !Util.isWithinNonEditableList(editor, e.element));
   return Util.setNodeChangeHandler(editor, menuButtonHandler);
 };
 

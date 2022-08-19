@@ -5,7 +5,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { dlIndentation } from '../core/DlIndentation';
 import * as Range from '../core/RangeUtils';
 import * as Selection from '../core/Selection';
-import { selectionIsWithinEditableList } from '../core/Util';
+import { selectionIsWithinNonEditableList } from '../core/Util';
 import { Indentation } from '../listmodel/Indentation';
 import { listIndentation } from '../listmodel/ListsIndendation';
 
@@ -30,7 +30,7 @@ const selectionIndentation = (editor: Editor, indentation: Indentation): boolean
 };
 
 const handleIndentation = (editor: Editor, indentation: Indentation): boolean =>
-  selectionIsWithinEditableList(editor) ? selectionIndentation(editor, indentation) : false;
+  !selectionIsWithinNonEditableList(editor) && selectionIndentation(editor, indentation);
 
 const indentListSelection = (editor: Editor): boolean => handleIndentation(editor, Indentation.Indent);
 

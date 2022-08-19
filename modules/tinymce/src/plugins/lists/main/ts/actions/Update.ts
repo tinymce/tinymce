@@ -3,7 +3,7 @@ import { Obj, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
 import { getParentList } from '../core/Selection';
-import { isWithinEditable } from '../core/Util';
+import { isWithinNonEditableList } from '../core/Util';
 
 interface ListUpdate {
   readonly attrs?: Record<string, string>;
@@ -13,7 +13,7 @@ interface ListUpdate {
 export const updateList = (editor: Editor, update: ListUpdate): void => {
   const parentList = getParentList(editor);
 
-  if (parentList === null || !isWithinEditable(editor, parentList)) {
+  if (parentList === null || isWithinNonEditableList(editor, parentList)) {
     return;
   }
 
