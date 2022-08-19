@@ -1,119 +1,14 @@
 import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, UiFinder } from '@ephox/agar';
 import { AlloyTriggers, GuiFactory, NativeEvents, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
-import { Toolbar } from '@ephox/bridge';
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { Attribute, SugarDocument, SugarElement } from '@ephox/sugar';
 
 import { renderMenuButton } from 'tinymce/themes/silver/ui/button/MenuButton';
 
+import { fetchMailMergeData } from '../../module/CommonMailMergeFetch';
 import { structMenuWith, structSearchField, structSearchLeafItem, structSearchParentItem, structSearchResultsWith } from '../../module/CommonMenuTestStructures';
 import * as TestExtras from '../../module/TestExtras';
-
-const fetch = (store: TestHelpers.TestStore): Toolbar.ToolbarMenuButtonSpec['fetch'] => (callback, fetchContext) => {
-  const makeMailMerge = (info: { value: string; title?: string}) => ({
-    type: 'menuitem',
-    text: info.title ?? info.value,
-    onAction: () => {
-      store.adder('Triggering: ' + info.value)();
-    }
-  });
-
-  const makeCategory = (title: string, items: any[]) => ({
-    type: 'nestedmenuitem',
-    text: title,
-    getSubmenuItems: () => items
-  });
-
-  const currentDateMerge = {
-    value: 'Current.Date',
-    title: 'Current date in DD/MM/YYYY format'
-  };
-
-  const tocMerge = {
-    value: 'Campaign.Toc',
-    title: 'Linked table of contents in your campaign'
-  };
-
-  const phoneHomeMerge = { value: 'Phone.Home' };
-  const phoneWorkMerge = { value: 'Phone.Work' };
-
-  const personFirstnameMerge = { value: 'Person.Name.First' };
-  const personSurnameMerge = { value: 'Person.Name.Last' };
-  const personFullnameMerge = { value: 'Person.Name.Full' };
-
-  const personWorkEmail = { value: 'Person.Email.Work' };
-  const personHomeEmail = { value: 'Person.Email.Home' };
-
-  if (!fetchContext || (fetchContext && fetchContext.pattern.length === 0)) {
-    callback([
-      makeMailMerge(currentDateMerge),
-      makeMailMerge(tocMerge),
-      makeCategory(
-        'Phone',
-        [
-          makeMailMerge(phoneHomeMerge),
-          makeMailMerge(phoneWorkMerge)
-        ]
-      ),
-      makeCategory(
-        'Person',
-        [
-          makeMailMerge(personFirstnameMerge),
-          makeMailMerge(personSurnameMerge),
-          makeMailMerge(personFullnameMerge),
-          makeCategory(
-            'Email',
-            [
-              makeMailMerge(personWorkEmail),
-              makeMailMerge(personHomeEmail)
-            ]
-          )
-        ]
-      )
-    ] as any);
-  } else {
-    const allMerges: Array<{value: string; title?: string}> = [
-      currentDateMerge,
-      tocMerge,
-      phoneHomeMerge,
-      phoneWorkMerge,
-      personFirstnameMerge,
-      personSurnameMerge,
-      personFullnameMerge,
-      personWorkEmail,
-      personHomeEmail
-    ];
-
-    const matches = Arr.filter(allMerges, (m): boolean => {
-      const valueMatches = m.value.toLowerCase().indexOf(fetchContext.pattern.toLowerCase()) > -1;
-      return valueMatches || (
-        m.title !== undefined && (m.title.toLowerCase().indexOf(fetchContext.pattern.toLowerCase()) > -1)
-      );
-    });
-
-    if (matches.length > 0) {
-      callback(
-        Arr.map(matches, makeMailMerge) as any
-      );
-    } else {
-      callback([
-        {
-          type: 'menuitem',
-          text: 'No Results',
-          enabled: false,
-          onAction: () => {
-            // eslint-disable-next-line no-console
-            console.log('No results');
-          }
-        }
-      ]);
-    }
-  }
-};
-
-// TODO: These are generic
-
 describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () => {
   const helpers = TestExtras.bddSetup();
 
@@ -137,7 +32,10 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
           tooltip: Optional.none(),
           onSetup: Fun.constant(Fun.noop),
           searchable: true,
-          fetch: fetch(store)
+          fetch: fetchMailMergeData({
+            // If a search pattern is present, collapse into one menu
+            collapseSearchResults: true
+          }, store)
         },
         'prefix',
         helpers.backstage(),
@@ -198,7 +96,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
     // Open the dropdown.
     Mouse.click(menuButtonComp.element);
     // That should focus the search widget
-    FocusTools.pTryOnSelector(
+    await FocusTools.pTryOnSelector(
       'Waiting until the input has focus',
       hook.root(),
       '.tox-menu input'

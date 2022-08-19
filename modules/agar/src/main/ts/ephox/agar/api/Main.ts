@@ -26,6 +26,7 @@ import { Pipeline } from './Pipeline';
 import * as PropertySteps from './PropertySteps';
 import * as RealClipboard from './RealClipboard';
 import { RealKeys } from './RealKeys';
+import { KeyPressAdt } from './RealKeys';
 import * as RealMouse from './RealMouse';
 import { Step } from './Step';
 import * as StepSequence from './StepSequence';
@@ -51,6 +52,7 @@ export {
   GroupStore,
   Guard,
   Keyboard,
+  KeyPressAdt,
   Keys,
   Log,
   Logger,
