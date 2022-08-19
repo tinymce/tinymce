@@ -464,7 +464,9 @@ class Editor implements EditorObservable {
    *   }
    * });
    */
-  public addCommand(name: string, callback: EditorCommandCallback, scope?: object): void {
+  public addCommand<S>(name: string, callback: EditorCommandCallback<S>, scope: S): void;
+  public addCommand(name: string, callback: EditorCommandCallback<Editor>): void;
+  public addCommand(name: string, callback: EditorCommandCallback<any>, scope?: object): void {
     /**
      * Callback function that gets called when a command is executed.
      *
@@ -485,7 +487,9 @@ class Editor implements EditorObservable {
    * @param {Function} callback Function to execute when the command state retrieval occurs.
    * @param {Object} scope Optional scope to execute the function in.
    */
-  public addQueryStateHandler(name: string, callback: () => boolean, scope?: any): void {
+  public addQueryStateHandler<S>(name: string, callback: (this: S) => boolean, scope?: S): void;
+  public addQueryStateHandler(name: string, callback: (this: Editor) => boolean): void;
+  public addQueryStateHandler(name: string, callback: (this: any) => boolean, scope?: any): void {
     /**
      * Callback function that gets called when a queryCommandState is executed.
      *
@@ -504,7 +508,9 @@ class Editor implements EditorObservable {
    * @param {Function} callback Function to execute when the command value retrieval occurs.
    * @param {Object} scope Optional scope to execute the function in.
    */
-  public addQueryValueHandler(name: string, callback: () => string, scope?: any): void {
+  public addQueryValueHandler<S>(name: string, callback: (this: S) => string, scope: S): void;
+  public addQueryValueHandler(name: string, callback: (this: Editor) => string): void;
+  public addQueryValueHandler(name: string, callback: (this: any) => string, scope?: any): void {
     /**
      * Callback function that gets called when a queryCommandValue is executed.
      *

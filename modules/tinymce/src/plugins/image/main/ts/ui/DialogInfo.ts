@@ -9,7 +9,7 @@ import * as Utils from '../core/Utils';
 import { ImageDialogInfo, ListItem } from './DialogTypes';
 
 const collect = (editor: Editor): Promise<ImageDialogInfo> => {
-  const urlListSanitizer = ListUtils.sanitizer((item) => editor.convertURL(item.value || item.url, 'src'));
+  const urlListSanitizer = ListUtils.sanitizer((item) => editor.convertURL(item.value || item.url || '', 'src'));
 
   const futureImageList = new Promise<Optional<ListItem[]>>((completer) => {
     Utils.createImageList(editor, (imageList) => {

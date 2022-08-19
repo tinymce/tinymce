@@ -1,5 +1,6 @@
 import * as StrAppend from '../str/StrAppend';
 import { Optional } from './Optional';
+import * as Type from './Type';
 
 const checkRange = (str: string, substr: string, start: number): boolean =>
   substr === '' || str.length >= substr.length && str.substr(start, start + substr.length) === substr;
@@ -8,8 +9,8 @@ const checkRange = (str: string, substr: string, start: number): boolean =>
  * Any template fields of the form ${name} are replaced by the string or number specified as obj["name"]
  * Based on Douglas Crockford's 'supplant' method for template-replace of strings. Uses different template format.
  */
-export const supplant = (str: string, obj: {[key: string]: string | number}): string => {
-  const isStringOrNumber = (a) => {
+export const supplant = (str: string, obj: Record<string, string | number>): string => {
+  const isStringOrNumber = (a: unknown): a is string | number => {
     const t = typeof a;
     return t === 'string' || t === 'number';
   };
@@ -38,8 +39,13 @@ export const ensureTrailing = (str: string, suffix: string): string => {
   return endsWith(str, suffix) ? str : StrAppend.addToEnd(str, suffix);
 };
 
-export const contains = (str: string, substr: string): boolean => {
-  return str.indexOf(substr) !== -1;
+export const contains = (str: string, substr: string, start: number = 0, end?: number): boolean => {
+  const idx = str.indexOf(substr, start);
+  if (idx !== -1) {
+    return Type.isUndefined(end) ? true : idx + substr.length <= end;
+  } else {
+    return false;
+  }
 };
 
 export const capitalize = (str: string): string => {

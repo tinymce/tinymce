@@ -15,7 +15,7 @@ describe('browser.tinymce.core.init.ContentCssTest', () => {
     skinsBaseUrl = EditorManager.baseURL + '/skins/content';
   });
 
-  const testContentCss = (expectedContentCss: string[], inputContentCss: string[] | string | boolean, inline: boolean = false) => {
+  const testContentCss = (expectedContentCss: string[], inputContentCss: string[] | string | boolean | undefined, inline: boolean = false) => {
     const editor = new Editor('id', {
       content_css: inputContentCss,
       inline

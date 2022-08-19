@@ -23,8 +23,8 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     editor.formatter.register('bold', { inline: 'b' });
     editor.setContent('<p><b>1234</b></p>');
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('b')[0].firstChild, 0);
-    rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
+    rng.setStart(editor.dom.select('b')[0].firstChild as Text, 0);
+    rng.setEnd(editor.dom.select('b')[0].firstChild as Text, 4);
     editor.selection.setRng(rng);
     assert.isTrue(editor.formatter.match('bold'), 'Selected style element text');
   });
@@ -34,8 +34,8 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     editor.formatter.register('color', { inline: 'span', styles: { color: '#ff0000' }});
     editor.setContent('<p><span style="color:#ff0000">1234</span></p>');
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('span')[0].firstChild, 0);
-    rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
+    rng.setStart(editor.dom.select('span')[0].firstChild as Text, 0);
+    rng.setEnd(editor.dom.select('span')[0].firstChild as Text, 4);
     editor.selection.setRng(rng);
     assert.isTrue(editor.formatter.match('color'), 'Selected style element with css styles');
   });
@@ -45,8 +45,8 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     editor.formatter.register('color', { inline: 'span', styles: [ 'color' ] });
     editor.setContent('<p><span style="color:#ff0000">1234</span></p>');
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('span')[0].firstChild, 0);
-    rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
+    rng.setStart(editor.dom.select('span')[0].firstChild as Text, 0);
+    rng.setEnd(editor.dom.select('span')[0].firstChild as Text, 4);
     editor.selection.setRng(rng);
     assert.isTrue(editor.formatter.match('color'), 'Selected style element with css styles');
   });
@@ -56,8 +56,8 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     editor.formatter.register('fontsize', { inline: 'font', attributes: { size: '7' }});
     editor.setContent('<p><font size="7">1234</font></p>');
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('font')[0].firstChild, 0);
-    rng.setEnd(editor.dom.select('font')[0].firstChild, 4);
+    rng.setStart(editor.dom.select('font')[0].firstChild as Text, 0);
+    rng.setEnd(editor.dom.select('font')[0].firstChild as Text, 4);
     editor.selection.setRng(rng);
     assert.isTrue(editor.formatter.match('fontsize'), 'Selected style element with attributes');
   });
@@ -70,8 +70,8 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     ]);
     editor.setContent('<p><strong>1234</strong></p>');
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('strong')[0].firstChild, 0);
-    rng.setEnd(editor.dom.select('strong')[0].firstChild, 4);
+    rng.setStart(editor.dom.select('strong')[0].firstChild as Text, 0);
+    rng.setEnd(editor.dom.select('strong')[0].firstChild as Text, 4);
     editor.selection.setRng(rng);
     assert.isTrue(editor.formatter.match('multiple'), 'Selected style element text multiple formats');
   });
@@ -81,8 +81,8 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     editor.formatter.register('complex', { inline: 'span', styles: { fontWeight: 'bold' }});
     editor.setContent('<p><span style="color:#ff0000; font-weight:bold">1234</span></p>');
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('span')[0].firstChild, 0);
-    rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
+    rng.setStart(editor.dom.select('span')[0].firstChild as Text, 0);
+    rng.setEnd(editor.dom.select('span')[0].firstChild as Text, 4);
     editor.selection.setRng(rng);
     assert.isTrue(editor.formatter.match('complex'), 'Selected complex style element');
   });
@@ -92,8 +92,8 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     editor.formatter.register('bold', { inline: 'b' });
     editor.setContent('<p>1234</p>');
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('p')[0].firstChild, 0);
-    rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
+    rng.setStart(editor.dom.select('p')[0].firstChild as Text, 0);
+    rng.setEnd(editor.dom.select('p')[0].firstChild as Text, 4);
     editor.selection.setRng(rng);
     assert.isFalse(editor.formatter.match('bold'), 'Selected non style element text');
   });
@@ -103,8 +103,8 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     editor.formatter.register('bold', { inline: 'b' });
     editor.setContent('<p><b>1234</b>5678</p>');
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('b')[0].firstChild, 0);
-    rng.setEnd(editor.dom.select('p')[0].lastChild, 4);
+    rng.setStart(editor.dom.select('b')[0].firstChild as Text, 0);
+    rng.setEnd(editor.dom.select('p')[0].lastChild as Text, 4);
     editor.selection.setRng(rng);
     assert.isTrue(editor.formatter.match('bold'), 'Selected partial style element (start)');
   });
@@ -114,8 +114,8 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     editor.formatter.register('bold', { inline: 'b' });
     editor.setContent('<p>1234<b>5678</b></p>');
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('p')[0].firstChild, 0);
-    rng.setEnd(editor.dom.select('b')[0].lastChild, 4);
+    rng.setStart(editor.dom.select('p')[0].firstChild as Text, 0);
+    rng.setEnd(editor.dom.select('b')[0].lastChild as Text, 4);
     editor.selection.setRng(rng);
     assert.isFalse(editor.formatter.match('bold'), 'Selected partial style element (end)');
   });
@@ -125,8 +125,8 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     editor.formatter.register('bold', { inline: 'b' });
     editor.setContent('<p><b><em><span>1234</span></em></b></p>');
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('span')[0].firstChild, 0);
-    rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
+    rng.setStart(editor.dom.select('span')[0].firstChild as Text, 0);
+    rng.setEnd(editor.dom.select('span')[0].firstChild as Text, 4);
     editor.selection.setRng(rng);
     assert.isTrue(editor.formatter.match('bold'), 'Selected element text with parent inline element');
   });
@@ -136,8 +136,8 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     editor.formatter.register('complex', { inline: 'span', styles: { color: '%color' }});
     editor.setContent('<p><span style="color:#ff0000">1234</span></p>');
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('span')[0].firstChild, 0);
-    rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
+    rng.setStart(editor.dom.select('span')[0].firstChild as Text, 0);
+    rng.setEnd(editor.dom.select('span')[0].firstChild as Text, 4);
     editor.selection.setRng(rng);
     assert.isTrue(editor.formatter.match('complex', { color: '#ff0000' }), 'Selected element match with variable');
   });
@@ -148,15 +148,15 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
       inline: 'span',
       styles: {
         color: (vars) => {
-          return vars.color + '00';
+          return vars?.color + '00';
         }
       }
     });
 
     editor.setContent('<p><span style="color:#ff0000">1234</span></p>');
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('span')[0].firstChild, 0);
-    rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
+    rng.setStart(editor.dom.select('span')[0].firstChild as Text, 0);
+    rng.setEnd(editor.dom.select('span')[0].firstChild as Text, 4);
     editor.selection.setRng(rng);
     assert.isTrue(editor.formatter.match('complex', { color: '#ff00' }), 'Selected element match with variable and function');
   });
@@ -234,7 +234,7 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'span',
-      onmatch: (elm) => {
+      onmatch: (elm: Element) => {
         return elm.className === 'x';
       }
     });
@@ -248,7 +248,8 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
 
   it('formatChanged complex format', () => {
     const editor = hook.editor();
-    let newState, newArgs;
+    let newState: boolean | undefined;
+    let newArgs: { node: Node; format: string; parents: Element[] } | undefined;
 
     editor.formatter.register('complex', { inline: 'span', styles: { color: '%color' }});
 
@@ -264,17 +265,17 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     editor.formatter.apply('complex', { color: '#FF0000' });
     editor.nodeChanged();
     assert.isTrue(newState);
-    assert.equal(newArgs.format, 'complex');
-    LegacyUnit.equalDom(newArgs.node, editor.getBody().firstChild.firstChild);
-    assert.lengthOf(newArgs.parents, 2);
+    assert.equal(newArgs?.format, 'complex');
+    LegacyUnit.equalDom(newArgs?.node as Node, editor.getBody().firstChild?.firstChild as Node);
+    assert.lengthOf(newArgs?.parents ?? [], 2);
 
     // Check remove
     editor.formatter.remove('complex', { color: '#FF0000' });
     editor.nodeChanged();
     assert.isFalse(newState);
-    assert.equal(newArgs.format, 'complex');
-    LegacyUnit.equalDom(newArgs.node, editor.getBody().firstChild);
-    assert.lengthOf(newArgs.parents, 1);
+    assert.equal(newArgs?.format, 'complex');
+    LegacyUnit.equalDom(newArgs?.node as Node, editor.getBody().firstChild as Node);
+    assert.lengthOf(newArgs?.parents ?? [], 1);
 
     // Unbind the format change handler
     handler.unbind();
@@ -290,20 +291,20 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     const rng = editor.dom.createRng();
 
     // Check link format matches on link
-    rng.setStart(editor.dom.select('a')[0].firstChild, 1);
-    rng.setEnd(editor.dom.select('a')[0].firstChild, 1);
+    rng.setStart(editor.dom.select('a')[0].firstChild as Text, 1);
+    rng.setEnd(editor.dom.select('a')[0].firstChild as Text, 1);
     editor.selection.setRng(rng);
     assert.isTrue(editor.formatter.match('link'), 'Match on link format');
 
     // Check link format does not match on normal text
-    rng.setStart(editor.dom.select('p')[1].firstChild, 0);
-    rng.setEnd(editor.dom.select('p')[1].firstChild, 4);
+    rng.setStart(editor.dom.select('p')[1].firstChild as Text, 0);
+    rng.setEnd(editor.dom.select('p')[1].firstChild as Text, 4);
     editor.selection.setRng(rng);
     assert.isFalse(editor.formatter.match('link'), 'No match on normal text');
 
     // Check link format does not match on bare anchor
-    rng.setStart(editor.dom.select('a')[1].firstChild, 2);
-    rng.setStart(editor.dom.select('a')[1].firstChild, 2);
+    rng.setStart(editor.dom.select('a')[1].firstChild as Text, 2);
+    rng.setStart(editor.dom.select('a')[1].firstChild as Text, 2);
     editor.selection.setRng(rng);
     assert.isFalse(editor.formatter.match('link'), 'No match on bare anchor');
 

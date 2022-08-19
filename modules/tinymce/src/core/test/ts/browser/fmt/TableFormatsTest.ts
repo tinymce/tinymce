@@ -102,7 +102,7 @@ describe('browser.tinymce.core.table.TableFormatsTest', () => {
   const applyFormat = (editor: Editor, formatName: string, vars: Record<string, string>) => editor.formatter.apply(formatName, vars);
   const removeFormat = (editor: Editor, formatName: string, vars: Record<string, string>) => editor.formatter.remove(formatName, vars);
 
-  Arr.each([
+  Arr.each<{ formatName: string; vars: Record<string, string>; styles: Record<string, string> }>([
     { formatName: 'tablecellbackgroundcolor', vars: { value: 'red' }, styles: { 'background-color': 'red' }},
     { formatName: 'tablecellbordercolor', vars: { value: 'red' }, styles: { 'border-color': 'red' }},
     { formatName: 'tablecellborderstyle', vars: { value: 'dashed' }, styles: { 'border-style': 'dashed' }},

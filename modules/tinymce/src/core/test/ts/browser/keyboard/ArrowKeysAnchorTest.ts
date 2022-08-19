@@ -19,7 +19,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', () => {
 
   const addGeckoBr = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, children: StructAssert[]) => {
     if (PlatformDetection.detect().browser.isFirefox()) {
-      return [].concat(children).concat(s.element('br', { attrs: { 'data-mce-bogus': str.is('1') }}));
+      return [ ...children, s.element('br', { attrs: { 'data-mce-bogus': str.is('1') }}) ];
     } else {
       return children;
     }

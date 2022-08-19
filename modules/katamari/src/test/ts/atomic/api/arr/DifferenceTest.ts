@@ -6,7 +6,7 @@ import * as Arr from 'ephox/katamari/api/Arr';
 
 describe('atomic.katamari.api.arr.DifferenceTest', () => {
   it('unit tests', () => {
-    const check = <T>(expected, a1: T[], a2: T[]) => {
+    const check = <T>(expected: T[], a1: T[], a2: T[]) => {
       const readonlyA1 = Object.freeze(a1.slice());
       const readonlyA2 = Object.freeze(a2.slice());
       assert.deepEqual(Arr.difference(a1, a2), expected);

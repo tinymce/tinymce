@@ -1,7 +1,7 @@
 import {
   AlloyComponent, AlloySpec, Behaviour, Dropdown as AlloyDropdown, Layouts, RawDomSchema, SketchSpec, Tabstopping, Unselecting
 } from '@ephox/alloy';
-import { Toolbar } from '@ephox/bridge';
+import { Menu, Toolbar } from '@ephox/bridge';
 import { Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
@@ -14,14 +14,14 @@ import * as MenuParts from '../menus/menu/MenuParts';
 import { createTieredDataFrom } from '../menus/menu/SingleMenu';
 
 export interface SwatchPanelButtonSpec {
-  dom: RawDomSchema;
-  components: AlloySpec[];
-  fetch: (callback: Function) => void;
-  columns: number;
-  presets: Toolbar.PresetTypes;
-  getHotspot?: (comp: AlloyComponent) => Optional<AlloyComponent>;
-  onItemAction: (comp: AlloyComponent, value: string) => void;
-  layouts?: Layouts;
+  readonly dom: RawDomSchema;
+  readonly components: AlloySpec[];
+  readonly fetch: (callback: (value: Menu.ChoiceMenuItemSpec[]) => void) => void;
+  readonly columns: number;
+  readonly presets: Toolbar.PresetTypes;
+  readonly getHotspot?: (comp: AlloyComponent) => Optional<AlloyComponent>;
+  readonly onItemAction: (comp: AlloyComponent, value: string) => void;
+  readonly layouts?: Layouts;
 }
 
 export const renderPanelButton = (spec: SwatchPanelButtonSpec, sharedBackstage: UiFactoryBackstageShared): SketchSpec => AlloyDropdown.sketch({

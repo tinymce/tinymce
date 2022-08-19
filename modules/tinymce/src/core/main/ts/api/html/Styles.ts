@@ -302,14 +302,12 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
     serialize: (styles: StyleMap, elementName?: string): string => {
       let css = '';
 
-      const serializeStyles = (name: string, validStyleList: Record<string, string[]>) => {
-        let value;
-
-        const styleList = validStyleList[name];
+      const serializeStyles = (elemName: string, validStyleList: Record<string, string[]>) => {
+        const styleList = validStyleList[elemName];
         if (styleList) {
           for (let i = 0, l = styleList.length; i < l; i++) {
-            name = styleList[i];
-            value = styles[name];
+            const name = styleList[i];
+            const value = styles[name];
 
             if (value) {
               css += (css.length > 0 ? ' ' : '') + name + ': ' + value + ';';

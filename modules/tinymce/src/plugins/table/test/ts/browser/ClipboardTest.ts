@@ -12,7 +12,7 @@ import TablePlugin from 'tinymce/plugins/table/Plugin';
 
 describe('browser.tinymce.plugins.table.ClipboardTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
-    plugins: 'paste table',
+    plugins: 'table',
     indent: false,
     valid_styles: {
       '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
@@ -411,7 +411,7 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
     LegacyUnit.setSelection(editor, 'tr:nth-child(1) td', 0);
     editor.execCommand('mceTableCopyRow');
 
-    const clipboardRows = FakeClipboard.getRows().getOr([]);
+    const clipboardRows = FakeClipboard.getRows().getOr([] as SugarElement<HTMLTableRowElement>[]);
 
     assert.equal(clipboardRows.length, 1);
     assert.isTrue(SugarNode.isTag('tr')(clipboardRows[0]));

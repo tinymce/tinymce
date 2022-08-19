@@ -21,6 +21,11 @@ import * as Predicate from './util/Predicate';
  * @class tinymce.DragDropOverrides
  */
 
+// Arbitrary values needed when scrolling CEF elements
+const ScrollPixelsPerInterval = 32;
+const ScrollIntervalValue = 100;
+const MouseRangeToTriggerScroll = 4;
+
 interface State {
   element: HTMLElement;
   dragging: boolean;
@@ -33,6 +38,7 @@ interface State {
   width: number;
   height: number;
   ghost: HTMLElement;
+  intervalId: Singleton.Repeatable;
 }
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
@@ -104,7 +110,12 @@ const moveGhost = (
   width: number,
   height: number,
   maxX: number,
-  maxY: number
+  maxY: number,
+  mouseY: number,
+  mouseX: number,
+  contentAreaContainer: HTMLElement,
+  win: Window,
+  state: Singleton.Value<State>
 ) => {
   let overflowX = 0, overflowY = 0;
 
@@ -121,6 +132,75 @@ const moveGhost = (
 
   ghostElm.style.width = (width - overflowX) + 'px';
   ghostElm.style.height = (height - overflowY) + 'px';
+
+  // Code needed for dragging CEF elements (specifically fixing TINY-8874)
+  // The idea behind the algorithm is that the user will start dragging the
+  // CEF element to the edge of the editor and that would cause scrolling.
+  // The way that happens is that the user will trigger a mousedown event,
+  // then a mousemove event until they reach the edge of the editor. Then
+  // no event triggers. That's when I set an interval to keep scrolling the editor.
+  // Once a new event triggers I clear the existing interval and set it back to none.
+
+  const clientHeight = contentAreaContainer.clientHeight;
+  const clientWidth = contentAreaContainer.clientWidth;
+
+  state.on((state) => {
+    if (state.dragging) {
+      // This basically means that the mouse is close to the bottom edge
+      // (within MouseRange pixels of the bottom edge)
+      if (mouseY + MouseRangeToTriggerScroll >= clientHeight) {
+        const scrollDown = (currentTop: number) => {
+          win.scroll({
+            top: currentTop + ScrollPixelsPerInterval,
+            behavior: 'smooth'
+          });
+        };
+        state.intervalId.set(() => {
+          const currentTop = win.scrollY;
+          scrollDown(currentTop);
+        });
+        // This basically means that the mouse is close to the top edge
+        // (within MouseRange pixels of the top edge)
+      } else if (mouseY - MouseRangeToTriggerScroll <= 0) {
+        const scrollUp = (currentTop: number) => {
+          win.scroll({
+            top: currentTop - ScrollPixelsPerInterval,
+            behavior: 'smooth'
+          });
+        };
+        state.intervalId.set(() => {
+          const currentTop = win.scrollY;
+          scrollUp(currentTop);
+        });
+        // This basically means that the mouse is close to the right edge
+        // (within MouseRange pixels of the right edge)
+      } else if (mouseX + MouseRangeToTriggerScroll >= clientWidth) {
+        const scrollRight = (currentLeft: number) => {
+          win.scroll({
+            left: currentLeft + ScrollPixelsPerInterval,
+            behavior: 'smooth'
+          });
+        };
+        state.intervalId.set(() => {
+          const currentLeft = win.scrollX;
+          scrollRight(currentLeft);
+        });
+        // This basically means that the mouse is close to the left edge
+        // (within MouseRange pixels of the left edge)
+      } else if (mouseX - MouseRangeToTriggerScroll <= 0) {
+        const scrollLeft = (currentLeft: number) => {
+          win.scroll({
+            left: currentLeft - ScrollPixelsPerInterval,
+            behavior: 'smooth'
+          });
+        };
+        state.intervalId.set(() => {
+          const currentLeft = win.scrollX;
+          scrollLeft(currentLeft);
+        });
+      }
+    }
+  });
 };
 
 const removeElement = (elm: HTMLElement) => {
@@ -156,7 +236,8 @@ const start = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent
         relY: e.pageY - elmPos.y,
         width: ceElm.offsetWidth,
         height: ceElm.offsetHeight,
-        ghost: createGhost(editor, ceElm, ceElm.offsetWidth, ceElm.offsetHeight)
+        ghost: createGhost(editor, ceElm, ceElm.offsetWidth, ceElm.offsetHeight),
+        intervalId: Singleton.repeatable(ScrollIntervalValue)
       });
     }
   }
@@ -169,6 +250,7 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
     editor.selection.placeCaretAt(clientX, clientY);
   }, 0);
   editor.on('remove', throttledPlaceCaretAt.cancel);
+  const state_ = state;
 
   return (e: EditorEvent<MouseEvent>) => state.on((state) => {
     const movement = Math.max(Math.abs(e.screenX - state.screenX), Math.abs(e.screenY - state.screenY));
@@ -185,10 +267,8 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
 
     if (state.dragging) {
       const targetPos = applyRelPos(state, MousePosition.calc(editor, e));
-
       appendGhostToBody(state.ghost, editor.getBody());
-      moveGhost(state.ghost, targetPos, state.width, state.height, state.maxX, state.maxY);
-
+      moveGhost(state.ghost, targetPos, state.width, state.height, state.maxX, state.maxY, e.clientY, e.clientX, editor.getContentAreaContainer(), editor.getWin(), state_);
       throttledPlaceCaretAt.throttle(e.clientX, e.clientY);
     }
   });
@@ -208,6 +288,7 @@ const getRawTarget = (selection: EditorSelection): Node | null => {
 
 const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<MouseEvent>) => {
   state.on((state) => {
+    state.intervalId.clear();
     if (state.dragging) {
       if (isValidDropTarget(editor, getRawTarget(editor.selection), state.element)) {
         const targetClone = cloneElement(state.element);
@@ -235,6 +316,7 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
 
 const stop = (state: Singleton.Value<State>, editor: Editor) => () => {
   state.on((state) => {
+    state.intervalId.clear();
     if (state.dragging) {
       editor.dispatch('dragend');
     }

@@ -1,5 +1,5 @@
 import { Boxes, Gui, GuiFactory, InlineView, Layout, MaxHeight, NodeAnchorSpec } from '@ephox/alloy';
-import { Arr, Num, Optional } from '@ephox/katamari';
+import { Arr, Num, Optional, Type } from '@ephox/katamari';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -46,7 +46,7 @@ export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): No
         text: settings.text,
         level: Arr.contains([ 'success', 'error', 'warning', 'warn', 'info' ], settings.type) ? settings.type : undefined,
         progress: settings.progressBar === true,
-        icon: Optional.from(settings.icon),
+        icon: settings.icon,
         closeButton: settings.closeButton,
         onAction: close,
         iconProvider: sharedBackstage.providers.icons,
@@ -68,7 +68,7 @@ export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): No
 
     uiMothership.add(notificationWrapper);
 
-    if (settings.timeout > 0) {
+    if (Type.isNumber(settings.timeout) && settings.timeout > 0) {
       Delay.setEditorTimeout(editor, () => {
         close();
       }, settings.timeout);

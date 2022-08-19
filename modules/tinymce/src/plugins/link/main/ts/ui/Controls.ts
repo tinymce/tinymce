@@ -68,7 +68,7 @@ const setupContextToolbars = (editor: Editor): void => {
 
   const onSetupLink = (buttonApi: InlineContent.ContextFormButtonInstanceApi) => {
     const node = editor.selection.getNode();
-    buttonApi.setEnabled(Utils.getAnchorElement(editor, node) !== null);
+    buttonApi.setEnabled(Utils.isInAnchor(editor, node));
     return Fun.noop;
   };
 
@@ -79,7 +79,7 @@ const setupContextToolbars = (editor: Editor): void => {
   const getLinkText = (value: string) => {
     const anchor = Utils.getAnchorElement(editor);
     const onlyText = Utils.isOnlyTextSelected(editor);
-    if (!anchor && onlyText) {
+    if (anchor.isNone() && onlyText) {
       const text = Utils.getAnchorText(editor.selection, anchor);
       return Optional.some(text.length > 0 ? text : value);
     } else {
@@ -95,10 +95,10 @@ const setupContextToolbars = (editor: Editor): void => {
       onSetup: Actions.toggleActiveState(editor)
     },
     label: 'Link',
-    predicate: (node) => !!Utils.getAnchorElement(editor, node) && Options.hasContextToolbar(editor),
+    predicate: (node) => Options.hasContextToolbar(editor) && Utils.isInAnchor(editor, node),
     initValue: () => {
       const elm = Utils.getAnchorElement(editor);
-      return !!elm ? Utils.getHref(elm) : '';
+      return elm.fold(Fun.constant(''), Utils.getHref);
     },
     commands: [
       {
@@ -109,7 +109,7 @@ const setupContextToolbars = (editor: Editor): void => {
         onSetup: (buttonApi) => {
           const node = editor.selection.getNode();
           // TODO: Make a test for this later.
-          buttonApi.setActive(!!Utils.getAnchorElement(editor, node));
+          buttonApi.setActive(Utils.isInAnchor(editor, node));
           return Actions.toggleActiveState(editor)(buttonApi);
         },
         onAction: (formApi) => {

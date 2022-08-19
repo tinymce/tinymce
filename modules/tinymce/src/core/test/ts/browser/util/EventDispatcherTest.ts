@@ -245,7 +245,7 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
     let dispatcher: EventDispatcher<any>;
 
     dispatcher = new EventDispatcher();
-    dispatcher.on('click', function () {
+    dispatcher.on('click', function (this: EventDispatcher<any>) {
       // eslint-disable-next-line consistent-this
       lastScope = this;
     }).dispatch('click');
@@ -253,7 +253,7 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
 
     const scope = { test: 1 };
     dispatcher = new EventDispatcher({ scope });
-    dispatcher.on('click', function (e) {
+    dispatcher.on('click', function (this: EventDispatcher<any>, e) {
       // eslint-disable-next-line consistent-this
       lastScope = this;
       lastEvent = e;
@@ -297,8 +297,8 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
   });
 
   it('toggleEvent setting', () => {
-    let lastName: string;
-    let lastState: boolean;
+    let lastName: string | undefined;
+    let lastState: boolean | undefined;
 
     const dispatcher = new EventDispatcher({
       toggleEvent: (name, state) => {
@@ -316,14 +316,14 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
     assert.equal(lastName, 'click');
     assert.isTrue(lastState);
 
-    lastName = lastState = null;
+    lastName = lastState = undefined;
     dispatcher.on('click', listenerB);
-    assert.isNull(lastName);
-    assert.isNull(lastState);
+    assert.isUndefined(lastName);
+    assert.isUndefined(lastState);
 
     dispatcher.off('click', listenerA);
-    assert.isNull(lastName);
-    assert.isNull(lastState);
+    assert.isUndefined(lastName);
+    assert.isUndefined(lastState);
 
     dispatcher.off('click', listenerB);
     assert.equal(lastName, 'click');
@@ -332,7 +332,7 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
 
   it('TINY-7436: Callbacks added or removed in an earlier handler do not run while firing the same event', () => {
     const dispatcher = new EventDispatcher();
-    const logs = [];
+    const logs: string[] = [];
 
     const func1 = () => {
       logs.push('func1');

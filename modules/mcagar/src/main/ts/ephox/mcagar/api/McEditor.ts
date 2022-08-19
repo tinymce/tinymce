@@ -12,6 +12,7 @@ const pFromElement = <T extends EditorType = EditorType>(element: SugarElement<E
   return new Promise((resolve, reject) => {
     const nuSettings: Record<string, any> = {
       toolbar_mode: 'wrap',
+      promotion: false,
       ...settings
     };
 
@@ -67,7 +68,7 @@ const pFromElement = <T extends EditorType = EditorType>(element: SugarElement<E
   });
 };
 
-const pFromHtml = <T extends EditorType = EditorType>(html: string | null, settings: Record<string, any>): Promise<T> => {
+const pFromHtml = <T extends EditorType = EditorType>(html: string | null | undefined, settings: Record<string, any>): Promise<T> => {
   const element = html ? SugarElement.fromHtml<Element>(html) : SugarElement.fromTag(settings.inline ? 'div' : 'textarea');
   return pFromElement(element, settings);
 };

@@ -1,4 +1,4 @@
-import { Fun, Optional, Optionals } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -6,9 +6,9 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Prism from '../prism/Prism';
 import * as Utils from '../util/Utils';
 
-const getSelectedCodeSample = (editor: Editor): Optional<Element> => {
+const getSelectedCodeSample = (editor: Editor): Optional<HTMLPreElement> => {
   const node = editor.selection ? editor.selection.getNode() : null;
-  return Optionals.someIf(Utils.isCodeSample(node), node);
+  return Utils.isCodeSample(node) ? Optional.some(node) : Optional.none();
 };
 
 const insertCodeSample = (editor: Editor, language: string, code: string): void => {
@@ -34,7 +34,7 @@ const insertCodeSample = (editor: Editor, language: string, code: string): void 
 
 const getCurrentCode = (editor: Editor): string => {
   const node = getSelectedCodeSample(editor);
-  return node.fold(Fun.constant(''), (n) => n.textContent);
+  return node.bind((n) => Optional.from(n.textContent)).getOr('');
 };
 
 export {

@@ -18,19 +18,22 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, []);
 
+  const isTextNode = (node: Node): node is Text =>
+    node.nodeType === 3;
+
   const normalizeRng = (rng: Range) => {
-    if (rng.startContainer.nodeType === 3) {
+    if (isTextNode(rng.startContainer)) {
       if (rng.startOffset === 0) {
         rng.setStartBefore(rng.startContainer);
-      } else if (rng.startOffset >= rng.startContainer.nodeValue.length - 1) {
+      } else if (rng.startOffset >= rng.startContainer.data.length - 1) {
         rng.setStartAfter(rng.startContainer);
       }
     }
 
-    if (rng.endContainer.nodeType === 3) {
+    if (isTextNode(rng.endContainer)) {
       if (rng.endOffset === 0) {
         rng.setEndBefore(rng.endContainer);
-      } else if (rng.endOffset >= rng.endContainer.nodeValue.length - 1) {
+      } else if (rng.endOffset >= rng.endContainer.data.length - 1) {
         rng.setEndAfter(rng.endContainer);
       }
     }
@@ -43,8 +46,8 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
     editor.setContent('<p>1234</p>');
     editor.focus();
     let rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('p')[0].firstChild, 1);
-    rng.setEnd(editor.dom.select('p')[0].firstChild, 3);
+    rng.setStart(editor.dom.select('p')[0].firstChild as Text, 1);
+    rng.setEnd(editor.dom.select('p')[0].firstChild as Text, 3);
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<p>abc</p>');
     assert.equal(editor.getContent(), '<p>1</p><p>abc</p><p>4</p>');
@@ -74,7 +77,7 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
     editor.setContent('<h1>abc</h1>');
     LegacyUnit.setSelection(editor, 'h1', 3);
     editor.execCommand('mceInsertContent', false, '<hr>');
-    LegacyUnit.equalDom(editor.selection.getNode(), editor.getBody().lastChild);
+    LegacyUnit.equalDom(editor.selection.getNode(), editor.getBody().lastChild as HTMLHeadingElement);
     assert.equal(editor.selection.getNode().nodeName, 'H1');
     assert.equal(editor.getContent(), '<h1>abc</h1><hr><h1>\u00a0</h1>');
   });
@@ -84,7 +87,7 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
     editor.setContent('<h1>abc</h1><p>def</p>');
     LegacyUnit.setSelection(editor, 'h1', 3);
     editor.execCommand('mceInsertContent', false, '<hr>');
-    LegacyUnit.equalDom(editor.selection.getNode(), editor.getBody().lastChild);
+    LegacyUnit.equalDom(editor.selection.getNode(), editor.getBody().lastChild as HTMLParagraphElement);
     assert.equal(editor.selection.getNode().nodeName, 'P');
     assert.equal(editor.getContent(), '<h1>abc</h1><hr><p>def</p>');
   });
@@ -94,7 +97,7 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
     editor.setContent('<h1><strong>abc</strong></h1><p>def</p>');
     LegacyUnit.setSelection(editor, 'strong', 3);
     editor.execCommand('mceInsertContent', false, '<hr>');
-    LegacyUnit.equalDom(editor.selection.getNode(), editor.getBody().lastChild);
+    LegacyUnit.equalDom(editor.selection.getNode(), editor.getBody().lastChild as HTMLParagraphElement);
     assert.equal(editor.selection.getNode().nodeName, 'P');
     assert.equal(editor.getContent(), '<h1><strong>abc</strong></h1><hr><p>def</p>');
   });
@@ -124,8 +127,8 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
 
     editor.setContent('<p>1234</p>');
     rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('p')[0].firstChild, 0);
-    rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
+    rng.setStart(editor.dom.select('p')[0].firstChild as Text, 0);
+    rng.setEnd(editor.dom.select('p')[0].firstChild as Text, 4);
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<p>abc</p>');
     assert.equal(editor.getContent(), '<p>abc</p>');
@@ -135,7 +138,7 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
     assert.equal(rng.startOffset, 1);
     assert.equal(rng.endContainer.nodeName, 'P');
     assert.equal(rng.endOffset, 1);
-    assert.equal(rng.startContainer.innerHTML, 'abc');
+    assert.equal((rng.startContainer as HTMLParagraphElement).innerHTML, 'abc');
   });
 
   it('mceInsertContent - pre in text of pre', () => {
@@ -144,8 +147,8 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
 
     editor.setContent('<pre>1234</pre>');
     rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('pre')[0].firstChild, 1);
-    rng.setEnd(editor.dom.select('pre')[0].firstChild, 3);
+    rng.setStart(editor.dom.select('pre')[0].firstChild as Text, 1);
+    rng.setEnd(editor.dom.select('pre')[0].firstChild as Text, 3);
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<pre>abc</pre>');
     assert.equal(editor.getContent(), '<pre>1</pre><pre>abc</pre><pre>4</pre>');
@@ -155,7 +158,7 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
     assert.equal(rng.startOffset, 1);
     assert.equal(rng.endContainer.nodeName, 'PRE');
     assert.equal(rng.endOffset, 1);
-    assert.equal(rng.startContainer.innerHTML, 'abc');
+    assert.equal((rng.startContainer as HTMLPreElement).innerHTML, 'abc');
   });
 
   it('mceInsertContent - h1 in text of h1', () => {
@@ -164,8 +167,8 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
 
     editor.setContent('<h1>1234</h1>');
     rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('h1')[0].firstChild, 1);
-    rng.setEnd(editor.dom.select('h1')[0].firstChild, 3);
+    rng.setStart(editor.dom.select('h1')[0].firstChild as Text, 1);
+    rng.setEnd(editor.dom.select('h1')[0].firstChild as Text, 3);
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<h1>abc</h1>');
     assert.equal(editor.getContent(), '<h1>1</h1><h1>abc</h1><h1>4</h1>');
@@ -175,7 +178,7 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
     assert.equal(rng.startOffset, 1);
     assert.equal(rng.endContainer.nodeName, 'H1');
     assert.equal(rng.endOffset, 1);
-    assert.equal(rng.startContainer.innerHTML, 'abc');
+    assert.equal((rng.startContainer as HTMLHeadingElement).innerHTML, 'abc');
   });
 
   it('mceInsertContent - li inside li', () => {
@@ -184,8 +187,8 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
 
     editor.setContent('<ul><li>1234</li></ul>');
     rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('li')[0].firstChild, 1);
-    rng.setEnd(editor.dom.select('li')[0].firstChild, 3);
+    rng.setStart(editor.dom.select('li')[0].firstChild as Text, 1);
+    rng.setEnd(editor.dom.select('li')[0].firstChild as Text, 3);
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<li>abc</li>');
     assert.equal(editor.getContent(), '<ul><li>1</li><li>abc</li><li>4</li></ul>');
@@ -195,7 +198,7 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
     assert.equal(rng.startOffset, 1);
     assert.equal(rng.endContainer.nodeName, 'LI');
     assert.equal(rng.endOffset, 1);
-    assert.equal(rng.startContainer.innerHTML, 'abc');
+    assert.equal((rng.startContainer as HTMLLIElement).innerHTML, 'abc');
   });
 
   it('mceInsertContent - p inside empty editor', () => {
@@ -236,8 +239,8 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
 
     editor.getBody().innerHTML = '<p><br></p>';
     rng = editor.dom.createRng();
-    rng.setStart(editor.getBody().firstChild, 0);
-    rng.setEnd(editor.getBody().firstChild, 0);
+    rng.setStart(editor.getBody().firstChild as Text, 0);
+    rng.setEnd(editor.getBody().firstChild as Text, 0);
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, 'abc');
     assert.equal(editor.getBody().innerHTML.toLowerCase(), '<p>abc</p>');
@@ -247,7 +250,7 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
     assert.equal(rng.startOffset, 1);
     assert.equal(rng.endContainer.nodeName, 'P');
     assert.equal(rng.endOffset, 1);
-    assert.equal(rng.startContainer.innerHTML, 'abc');
+    assert.equal((rng.startContainer as HTMLParagraphElement).innerHTML, 'abc');
   });
 
   it('mceInsertContent - image inside p', () => {
@@ -256,8 +259,8 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
 
     editor.setContent('<p>1</p>');
     rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('p')[0].firstChild, 0);
-    rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
+    rng.setStart(editor.dom.select('p')[0].firstChild as Text, 0);
+    rng.setEnd(editor.dom.select('p')[0].firstChild as Text, 1);
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<img src="about:blank" />');
     assert.equal(editor.getContent(), '<p><img src="about:blank"></p>');
@@ -274,8 +277,8 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
     // Convert legacy content
     editor.setContent('<p>1</p>');
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('p')[0].firstChild, 0);
-    rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
+    rng.setStart(editor.dom.select('p')[0].firstChild as Text, 0);
+    rng.setEnd(editor.dom.select('p')[0].firstChild as Text, 1);
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<strike>strike</strike><font size="7">font</font>');
     assert.equal(
@@ -290,14 +293,14 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
 
     editor.setContent('<p>123</p>');
     rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('p')[0].firstChild, 1);
-    rng.setEnd(editor.dom.select('p')[0].firstChild, 2);
+    rng.setStart(editor.dom.select('p')[0].firstChild as Text, 1);
+    rng.setEnd(editor.dom.select('p')[0].firstChild as Text, 2);
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<hr />');
     assert.equal(editor.getContent(), '<p>1</p><hr><p>3</p>');
     rng = normalizeRng(editor.selection.getRng());
     assert.isTrue(rng.collapsed);
-    LegacyUnit.equalDom(rng.startContainer, editor.getBody().lastChild);
+    LegacyUnit.equalDom(rng.startContainer, editor.getBody().lastChild as HTMLParagraphElement);
     assert.equal(rng.startContainer.nodeName, 'P');
     assert.equal(rng.startOffset, 0);
     assert.equal(rng.endContainer.nodeName, 'P');
@@ -324,12 +327,12 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
 
   it('mceInsertContent - invalid insertion with spans on page', () => {
     const editor = hook.editor();
-    const startingContent = '<p>123 testing <em>span later in document</em></p>',
-      insertedContent = '<ul><li>u</li><li>l</li></ul>';
+    const startingContent = '<p>123 testing <em>span later in document</em></p>';
+    const insertedContent = '<ul><li>u</li><li>l</li></ul>';
     editor.setContent(startingContent);
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('p')[0].firstChild, 0);
-    rng.setEnd(editor.dom.select('p')[0].firstChild, 0);
+    rng.setStart(editor.dom.select('p')[0].firstChild as Text, 0);
+    rng.setEnd(editor.dom.select('p')[0].firstChild as Text, 0);
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, insertedContent);
 

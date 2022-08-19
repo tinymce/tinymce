@@ -51,9 +51,21 @@ export type BlockPattern = BlockFormatPattern | BlockCmdPattern;
 
 export type Pattern = InlinePattern | BlockPattern;
 
+export interface DynamicPatternContext {
+  readonly text: string; // the string from the start of the block to the cursor
+  readonly block: Node; // the parent block node
+}
+
+export type DynamicPatternsLookup = (ctx: DynamicPatternContext) => Pattern[];
+export type RawDynamicPatternsLookup = (ctx: DynamicPatternContext) => RawPattern[];
+
+// NOTE: A PatternSet should be looked up from the Options *each* time that text_patterns are
+// processed, so that text_patterns respond to changes in options. This is required for some
+// complex integrations and plugins.
 export interface PatternSet {
   readonly inlinePatterns: InlinePattern[];
   readonly blockPatterns: BlockPattern[];
+  readonly dynamicPatternsLookup: DynamicPatternsLookup;
 }
 
 interface PatternMatch<T extends Pattern> {

@@ -2,10 +2,8 @@ import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, FormField as AlloyFormField, GuiFactory, Memento,
   RawDomSchema, SimpleOrSketchSpec, SketchSpec, Tabstopping
 } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
+import { Dialog, Toolbar } from '@ephox/bridge';
 import { Fun, Merger, Optional } from '@ephox/katamari';
-
-import { formActionEvent, formCancelEvent, formSubmitEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';
@@ -14,18 +12,29 @@ import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderFormField } from '../alien/FieldLabeller';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { renderIconFromPack } from '../button/ButtonSlices';
-import { getFetch, renderMenuButton, StoragedMenuButton } from '../button/MenuButton';
+import { getFetch, renderMenuButton, StoredMenuButton } from '../button/MenuButton';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
+import { formActionEvent, formCancelEvent, formSubmitEvent } from './FormEvents';
+
+type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];
+type AlloyButtonSpec = Parameters<typeof AlloyButton['sketch']>[0];
 
 type ButtonSpec = Omit<Dialog.Button, 'type'>;
 type FooterButtonSpec = Omit<Dialog.DialogFooterNormalButton, 'type'> | Omit<Dialog.DialogFooterMenuButton, 'type'>;
 
 export interface IconButtonWrapper extends Omit<ButtonSpec, 'text'> {
-  tooltip: Optional<string>;
+  readonly tooltip: Optional<string>;
 }
 
-const renderCommonSpec = (spec, actionOpt: Optional<(comp: AlloyComponent) => void>, extraBehaviours = [], dom: RawDomSchema, components: AlloySpec[], providersBackstage: UiFactoryBackstageProviders) => {
+const renderCommonSpec = (
+  spec: ButtonSpec | IconButtonWrapper,
+  actionOpt: Optional<(comp: AlloyComponent) => void>,
+  extraBehaviours: Behaviours = [],
+  dom: RawDomSchema,
+  components: AlloySpec[],
+  providersBackstage: UiFactoryBackstageProviders
+): AlloyButtonSpec => {
   const action = actionOpt.fold(() => ({}), (action) => ({
     action
   }));
@@ -50,7 +59,12 @@ const renderCommonSpec = (spec, actionOpt: Optional<(comp: AlloyComponent) => vo
   return Merger.deepMerge(domFinal, { components });
 };
 
-export const renderIconButtonSpec = (spec: IconButtonWrapper, action: Optional<(comp: AlloyComponent) => void>, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []) => {
+export const renderIconButtonSpec = (
+  spec: IconButtonWrapper,
+  action: Optional<(comp: AlloyComponent) => void>,
+  providersBackstage: UiFactoryBackstageProviders,
+  extraBehaviours: Behaviours = []
+): AlloyButtonSpec => {
   const tooltipAttributes = spec.tooltip.map<{}>((tooltip) => ({
     'aria-label': providersBackstage.translate(tooltip),
     'title': providersBackstage.translate(tooltip)
@@ -67,7 +81,12 @@ export const renderIconButtonSpec = (spec: IconButtonWrapper, action: Optional<(
   return renderCommonSpec(spec, action, extraBehaviours, dom, components, providersBackstage);
 };
 
-export const renderIconButton = (spec: IconButtonWrapper, action: (comp: AlloyComponent) => void, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []): SketchSpec => {
+export const renderIconButton = (
+  spec: IconButtonWrapper,
+  action: (comp: AlloyComponent) => void,
+  providersBackstage: UiFactoryBackstageProviders,
+  extraBehaviours: Behaviours = []
+): SketchSpec => {
   const iconButtonSpec = renderIconButtonSpec(spec, Optional.some(action), providersBackstage, extraBehaviours);
   return AlloyButton.sketch(iconButtonSpec);
 };
@@ -86,7 +105,13 @@ const calculateClassesFromButtonType = (buttonType: 'primary' | 'secondary' | 't
 
 // Maybe the list of extraBehaviours is better than doing a Merger.deepMerge that
 // we do elsewhere? Not sure.
-export const renderButtonSpec = (spec: ButtonSpec, action: Optional<(comp: AlloyComponent) => void>, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = [], extraClasses = []) => {
+export const renderButtonSpec = (
+  spec: ButtonSpec,
+  action: Optional<(comp: AlloyComponent) => void>,
+  providersBackstage: UiFactoryBackstageProviders,
+  extraBehaviours: Behaviours = [],
+  extraClasses: string[] = []
+): AlloyButtonSpec => {
   const translatedText = providersBackstage.translate(spec.text);
 
   const icon = spec.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons));
@@ -114,7 +139,13 @@ export const renderButtonSpec = (spec: ButtonSpec, action: Optional<(comp: Alloy
   return renderCommonSpec(spec, action, extraBehaviours, dom, components, providersBackstage);
 };
 
-export const renderButton = (spec: ButtonSpec, action: (comp: AlloyComponent) => void, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = [], extraClasses = []): SketchSpec => {
+export const renderButton = (
+  spec: ButtonSpec,
+  action: (comp: AlloyComponent) => void,
+  providersBackstage: UiFactoryBackstageProviders,
+  extraBehaviours: Behaviours = [],
+  extraClasses: string[] = []
+): SketchSpec => {
   const buttonSpec = renderButtonSpec(spec, Optional.some(action), providersBackstage, extraBehaviours, extraClasses);
   return AlloyButton.sketch(buttonSpec);
 };
@@ -143,10 +174,11 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
   if (isMenuFooterButtonSpec(spec, buttonType)) {
     const getButton = () => memButton;
 
-    const menuButtonSpec = spec as StoragedMenuButton;
+    const menuButtonSpec = spec as StoredMenuButton;
 
-    const fixedSpec = {
+    const fixedSpec: Toolbar.ToolbarMenuButton = {
       ...spec,
+      type: 'menubutton',
       onSetup: (api) => {
         api.setEnabled(spec.enabled);
         return Fun.noop;
@@ -167,6 +199,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
   } else {
     // eslint-disable-next-line no-console
     console.error('Unknown footer button type: ', buttonType);
+    throw new Error('Unknown footer button type');
   }
 };
 

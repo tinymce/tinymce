@@ -5,7 +5,7 @@ import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import { never, always } from 'ephox/katamari/api/Fun';
 
-const eqc = (x) => (a) => x === a;
+const eqc = <T>(x: T) => (a: T) => x === a;
 const bottom = () => {
   throw new Error('error');
 };

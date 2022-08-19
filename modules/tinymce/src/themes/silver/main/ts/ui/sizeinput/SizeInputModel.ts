@@ -12,7 +12,7 @@ export const nuSize = (value: number, unit: SizeUnit): Size => {
 };
 
 export const formatSize = (size: Size): string => {
-  const unitDec = {
+  const unitDec: Record<string, number> = {
     '': 0,
     'px': 0,
     'pt': 1,

@@ -5,9 +5,9 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Options from '../api/Options';
 
 export interface UiFactoryBackstageForHeader {
-  isPositionedAtTop: () => boolean;
-  getDockingMode: () => 'top' | 'bottom';
-  setDockingMode: (mode: 'top' | 'bottom') => void;
+  readonly isPositionedAtTop: () => boolean;
+  readonly getDockingMode: () => 'top' | 'bottom';
+  readonly setDockingMode: (mode: 'top' | 'bottom') => void;
 }
 
 export const HeaderBackstage = (editor: Editor): UiFactoryBackstageForHeader => {

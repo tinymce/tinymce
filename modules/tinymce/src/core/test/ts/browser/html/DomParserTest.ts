@@ -4,11 +4,17 @@ import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
 
 import Env from 'tinymce/core/api/Env';
-import { BlobCache } from 'tinymce/core/api/file/BlobCache';
-import DomParser from 'tinymce/core/api/html/DomParser';
-import AstNode from 'tinymce/core/api/html/Node';
-import Schema from 'tinymce/core/api/html/Schema';
+import { BlobCache, BlobInfo } from 'tinymce/core/api/file/BlobCache';
+import DomParser, { ParserArgs, ParserFilterCallback } from 'tinymce/core/api/html/DomParser';
+import AstNode, { Attributes } from 'tinymce/core/api/html/Node';
+import Schema, { SchemaElement } from 'tinymce/core/api/html/Schema';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
+
+interface ParseTestResult {
+  readonly nodes: AstNode[];
+  readonly name: string;
+  readonly args: ParserArgs;
+}
 
 describe('browser.tinymce.core.html.DomParserTest', () => {
   const browser = PlatformDetection.detect().browser;
@@ -35,13 +41,13 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     const parser = DomParser({}, schema);
     const root = parser.parse('<B title="title" class="class">test</B>');
     assert.equal(serializer.serialize(root), '<b class="class" title="title">test</b>', 'Inline element');
-    assert.equal(root.firstChild.type, 1, 'Element type');
-    assert.equal(root.firstChild.name, 'b', 'Element name');
+    assert.equal(root.firstChild?.type, 1, 'Element type');
+    assert.equal(root.firstChild?.name, 'b', 'Element name');
     assert.deepEqual(
-      root.firstChild.attributes, [
+      root.firstChild?.attributes, [
         { name: 'title', value: 'title' },
         { name: 'class', value: 'class' },
-      ],
+      ] as unknown as Attributes,
       'Element attributes'
     );
     assert.deepEqual(countNodes(root), { 'body': 1, 'b': 1, '#text': 1 }, 'Element attributes (count)');
@@ -264,7 +270,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
   });
 
   it('addNodeFilter', () => {
-    let result;
+    let result: ParseTestResult | undefined;
 
     const parser = DomParser({}, schema);
     parser.addNodeFilter('#comment', (nodes, name, args) => {
@@ -272,17 +278,17 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     });
     parser.parse('text<!--text1-->text<!--text2-->');
 
-    assert.deepEqual(result.args, {}, 'Parser args');
-    assert.equal(result.name, '#comment', 'Parser filter result name');
-    assert.equal(result.nodes.length, 2, 'Parser filter result node');
-    assert.equal(result.nodes[0].name, '#comment', 'Parser filter result node(0) name');
-    assert.equal(result.nodes[0].value, 'text1', 'Parser filter result node(0) value');
-    assert.equal(result.nodes[1].name, '#comment', 'Parser filter result node(1) name');
-    assert.equal(result.nodes[1].value, 'text2', 'Parser filter result node(1) value');
+    assert.deepEqual(result?.args, {}, 'Parser args');
+    assert.equal(result?.name, '#comment', 'Parser filter result name');
+    assert.equal(result?.nodes.length, 2, 'Parser filter result node');
+    assert.equal(result?.nodes[0].name, '#comment', 'Parser filter result node(0) name');
+    assert.equal(result?.nodes[0].value, 'text1', 'Parser filter result node(0) value');
+    assert.equal(result?.nodes[1].name, '#comment', 'Parser filter result node(1) name');
+    assert.equal(result?.nodes[1].value, 'text2', 'Parser filter result node(1) value');
   });
 
   it('addNodeFilter multiple names', () => {
-    const results = {};
+    const results: Record<string, ParseTestResult> = {};
 
     const parser = DomParser({}, schema);
     parser.addNodeFilter('#comment,#text', (nodes, name, args) => {
@@ -307,7 +313,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
   });
 
   it('addNodeFilter with parser args', () => {
-    let result;
+    let result: ParseTestResult | undefined;
 
     const parser = DomParser({}, schema);
     parser.addNodeFilter('#comment', (nodes, name, args) => {
@@ -315,7 +321,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     });
     parser.parse('text<!--text1-->text<!--text2-->', { value: 1 });
 
-    assert.deepEqual(result.args, { value: 1 }, 'Parser args');
+    assert.deepEqual(result?.args, { value: 1 }, 'Parser args');
   });
 
   it('TINY-7847: removeNodeFilter', () => {
@@ -344,7 +350,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
   });
 
   it('addAttributeFilter', () => {
-    let result;
+    let result: ParseTestResult | undefined;
 
     const parser = DomParser({});
     parser.addAttributeFilter('src', (nodes, name, args) => {
@@ -352,13 +358,13 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     });
     parser.parse('<b>a<img src="1.gif" />b<img src="1.gif" />c</b>');
 
-    assert.deepEqual(result.args, {}, 'Parser args');
-    assert.equal(result.name, 'src', 'Parser filter result name');
-    assert.equal(result.nodes.length, 2, 'Parser filter result node');
-    assert.equal(result.nodes[0].name, 'img', 'Parser filter result node(0) name');
-    assert.equal(result.nodes[0].attr('src'), '1.gif', 'Parser filter result node(0) attr');
-    assert.equal(result.nodes[1].name, 'img', 'Parser filter result node(1) name');
-    assert.equal(result.nodes[1].attr('src'), '1.gif', 'Parser filter result node(1) attr');
+    assert.deepEqual(result?.args, {}, 'Parser args');
+    assert.equal(result?.name, 'src', 'Parser filter result name');
+    assert.equal(result?.nodes.length, 2, 'Parser filter result node');
+    assert.equal(result?.nodes[0].name, 'img', 'Parser filter result node(0) name');
+    assert.equal(result?.nodes[0].attr('src'), '1.gif', 'Parser filter result node(0) attr');
+    assert.equal(result?.nodes[1].name, 'img', 'Parser filter result node(1) name');
+    assert.equal(result?.nodes[1].attr('src'), '1.gif', 'Parser filter result node(1) attr');
   });
 
   it('addAttributeFilter multiple', () => {
@@ -384,6 +390,54 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     assert.equal(results.href.nodes[0].attr('href'), '1.gif', 'Parser filter result node(0) attr');
     assert.equal(results.href.nodes[1].name, 'a', 'Parser filter result node(1) name');
     assert.equal(results.href.nodes[1].attr('href'), '2.gif', 'Parser filter result node(1) attr');
+  });
+
+  it('TINY-8888: mutating addNodeFilter -> addAttributeFilter', () => {
+    const parser = DomParser({});
+    parser.addNodeFilter('img', (nodes) => {
+      Arr.each(nodes, (node) => node.attr('src', null));
+    });
+    parser.addAttributeFilter('src', () => {
+      assert.fail('second src filter should not run, because src was removed');
+    });
+    parser.parse('<b>a<img src="1.gif" />b</b>');
+  });
+
+  it('TINY-8888: mutating addNodeFilter -> addNodeFilter', () => {
+    const parser = DomParser({});
+    parser.addNodeFilter('img', (nodes) => {
+      Arr.each(nodes, (node) => node.remove());
+    });
+    parser.addNodeFilter('img', () => {
+      assert.fail('second img filter should not run, because img was removed');
+    });
+    parser.parse('<b>a<img src="1.gif" />b</b>');
+  });
+
+  it('TINY-8888: mutating addAttributeFilter -> addAttributeFilter', () => {
+    const parser = DomParser({});
+    parser.addAttributeFilter('src', (nodes) => {
+      Arr.each(nodes, (node) => node.attr('src', null));
+    });
+    parser.addAttributeFilter('src', () => {
+      assert.fail('second src filter should not run, because src was removed');
+    });
+    parser.parse('<b>a<img src="1.gif" />b</b>');
+  });
+
+  it('TINY-8888: mutating addAttributeFilter only removes matching nodes', () => {
+    const parser = DomParser({});
+    parser.addAttributeFilter('src', (nodes) => {
+      nodes[0].attr('src', null);
+    });
+    let ranIdFilter = false;
+    parser.addAttributeFilter('src', (nodes) => {
+      ranIdFilter = true;
+      assert.lengthOf(nodes, 1);
+      assert.equal(nodes[0].attr('src'), '2.gif');
+    });
+    parser.parse('<b>a<img src="1.gif" />b<img src="2.gif" />c</b>');
+    assert.isTrue(ranIdFilter, 'second filter should run, because only one src attribute was removed');
   });
 
   it('TINY-7847: removeAttributeFilter', () => {
@@ -675,7 +729,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
     const parser = DomParser({}, schema);
     const root = parser.parse('<ul><li></li><li> </li><li><br /></li><li>\u00a0</li><li>a</li></ul>', { insert: true });
-    assert.equal(serializer.serialize(root), '<ul><li><br></li><li><br></li><li><br></li><li><br></li><li>a</li></ul>');
+    assert.equal(serializer.serialize(root), '<ul><li><br data-mce-bogus="1"></li><li><br data-mce-bogus="1"></li><li><br></li><li><br data-mce-bogus="1"></li><li>a</li></ul>');
   });
 
   it('Preserve space in inline span', () => {
@@ -913,8 +967,8 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
   it('getAttributeFilters/getNodeFilters', () => {
     const parser = DomParser();
-    const cb1 = (_nodes, _name, _args) => {};
-    const cb2 = (_nodes, _name, _args) => {};
+    const cb1: ParserFilterCallback = (_nodes, _name, _args) => {};
+    const cb2: ParserFilterCallback = (_nodes, _name, _args) => {};
 
     parser.addAttributeFilter('attr', cb1);
     parser.addNodeFilter('node', cb2);
@@ -932,7 +986,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     const base64 = 'R0lGODdhDAAMAIABAMzMzP///ywAAAAADAAMAAACFoQfqYeabNyDMkBQb81Uat85nxguUAEAOw==';
     const base64Uri = `data:image/gif;base64,${base64}`;
     const serializedHtml = serializer.serialize(parser.parse(`<p><img src="${base64Uri}" /></p>`));
-    const blobInfo = blobCache.findFirst((bi) => bi.base64() === base64);
+    const blobInfo = blobCache.findFirst((bi) => bi.base64() === base64) as BlobInfo;
     const blobUri = blobInfo.blobUri();
 
     assert.equal(
@@ -1285,6 +1339,19 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     );
   });
 
+  it('TINY-8780: Invalid special elements are removed entirely instead of being unwrapped', () => {
+    const parser = DomParser({ forced_root_block: 'p' }, Schema({ invalid_elements: 'script,style,iframe,textarea,div' }));
+    const html = '<script>var x = 1;</script>' +
+      '<style>.red-text { color: red; }</style>' +
+      '<iframe src="about:blank">content</iframe>' +
+      '<textarea>content</textarea>' +
+      '<p>paragraph</p>' +
+      '<div>div</div>';
+
+    const serializedHtml = serializer.serialize(parser.parse(html));
+    assert.equal(serializedHtml, '<p>paragraph</p><p>div</p>');
+  });
+
   context('validate: false', () => {
     it('invalid elements and attributes should not be removed', () => {
       const parser = DomParser({ validate: false }, Schema({ valid_elements: 'span[id]' }));
@@ -1296,8 +1363,8 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
     it('empty elements should not be removed', () => {
       const customSchema = Schema({ valid_elements: 'span[style],strong' });
-      customSchema.getElementRule('span').removeEmptyAttrs = true;
-      customSchema.getElementRule('strong').removeEmpty = true;
+      (customSchema.getElementRule('span') as SchemaElement).removeEmptyAttrs = true;
+      (customSchema.getElementRule('strong') as SchemaElement).removeEmpty = true;
       const parser = DomParser({ validate: false }, customSchema);
       const html = '<p>Hello world! This should keep empty <strong></strong>elements <span></span>.</p>';
       const serializedHtml = serializer.serialize(parser.parse(html));
@@ -1307,7 +1374,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
     it('empty elements should not be padded', () => {
       const customSchema = Schema({ valid_elements: 'span' });
-      customSchema.getElementRule('span').paddEmpty = true;
+      (customSchema.getElementRule('span') as SchemaElement).paddEmpty = true;
       const parser = DomParser({ validate: false }, customSchema);
       const html = '<p>Hello world! <span></span></p>';
       const serializedHtml = serializer.serialize(parser.parse(html));

@@ -6,7 +6,7 @@ import * as Strings from 'ephox/katamari/api/Strings';
 
 describe('atomic.katamari.api.str.StartsWithTest', () => {
   it('unit tests', () => {
-    const check = (expected, str, prefix) => {
+    const check = (expected: boolean, str: string, prefix: string) => {
       const actual = Strings.startsWith(str, prefix);
       assert.equal(actual, expected);
     };

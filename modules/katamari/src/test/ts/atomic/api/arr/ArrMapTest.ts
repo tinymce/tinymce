@@ -5,13 +5,13 @@ import * as fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 
-const dbl = (x) => x * 2;
+const dbl = (x: number) => x * 2;
 
-const plus3 = (x) => x + 3;
+const plus3 = (x: number) => x + 3;
 
 describe('atomic.katamari.api.arr.ArrMapTest', () => {
   it('unit tests', () => {
-    const checkA = (expected, input, f) => {
+    const checkA = <T, U>(expected: U[], input: T[], f: (x: T, i: number) => U) => {
       assert.deepEqual(Arr.map(input, f), expected);
       assert.deepEqual(Arr.map(Object.freeze(input.slice()), f), expected);
     };

@@ -1,55 +1,36 @@
-import { Dialog } from '@ephox/bridge';
 import { Fun, Future, Obj, Optional, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
+import { FilePickerCallback, FilePickerValidationCallback } from 'tinymce/core/api/OptionTypes';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Options from '../api/Options';
 import { LinkTarget, LinkTargets } from '../ui/core/LinkTargets';
 import { addToHistory, getHistory } from './UrlInputHistory';
 
-type PickerCallback = (value: string, meta: Record<string, any>) => void;
-type Picker = (callback: PickerCallback, value: string, meta: Record<string, any>) => void;
-
 export interface LinkInformation {
-  targets: LinkTarget[];
-  anchorTop?: string;
-  anchorBottom?: string;
+  readonly targets: LinkTarget[];
+  readonly anchorTop?: string;
+  readonly anchorBottom?: string;
 }
-
-export type ValidationStatus = 'valid' | 'unknown' | 'invalid' | 'none';
-
-export interface ValidationResult {
-  status: ValidationStatus;
-  message: string;
-}
-
-export interface UrlValidationQuery {
-  url: string;
-  type: Dialog.UrlInput['filetype'];
-}
-
-export type UrlValidationCallback = (result: ValidationResult) => void;
-
-export type UrlValidationHandler = (info: UrlValidationQuery, callback: UrlValidationCallback) => any;
 
 export interface ApiUrlData {
-  value: string;
-  meta?: Record<string, any>;
+  readonly value: string;
+  readonly meta?: Record<string, any>;
 }
 
 export interface InternalUrlData extends ApiUrlData {
-  fieldname: string;
+  readonly fieldname: string;
 }
 
 export type UrlPicker = (entry: InternalUrlData) => Future<ApiUrlData>;
 
 export interface UiFactoryBackstageForUrlInput {
-  getHistory: (fileType: string) => string[];
-  addToHistory: (url: string, fileType: string) => void;
-  getLinkInformation: () => Optional<LinkInformation>;
-  getValidationHandler: () => Optional<UrlValidationHandler>;
-  getUrlPicker: (filetype: string) => Optional<UrlPicker>;
+  readonly getHistory: (fileType: string) => string[];
+  readonly addToHistory: (url: string, fileType: string) => void;
+  readonly getLinkInformation: () => Optional<LinkInformation>;
+  readonly getValidationHandler: () => Optional<FilePickerValidationCallback>;
+  readonly getUrlPicker: (filetype: string) => Optional<UrlPicker>;
 }
 
 const isTruthy = (value: any) => !!value;
@@ -57,7 +38,7 @@ const isTruthy = (value: any) => !!value;
 const makeMap = (value: string): Record<string, boolean> =>
   Obj.map(Tools.makeMap(value, /[, ]/), isTruthy);
 
-const getPicker = (editor: Editor): Optional<Picker> =>
+const getPicker = (editor: Editor): Optional<FilePickerCallback> =>
   Optional.from(Options.getFilePickerCallback(editor));
 
 const getPickerTypes = (editor: Editor): boolean | Record<string, boolean> => {
@@ -70,7 +51,7 @@ const getPickerTypes = (editor: Editor): boolean | Record<string, boolean> => {
   );
 };
 
-const getPickerSetting = (editor: Editor, filetype: string): Optional<Picker> => {
+const getPickerSetting = (editor: Editor, filetype: string): Optional<FilePickerCallback> => {
   const pickerTypes = getPickerTypes(editor);
   if (Type.isBoolean(pickerTypes)) {
     return pickerTypes ? getPicker(editor) : Optional.none();
@@ -113,11 +94,8 @@ export const getLinkInformation = (editor: Editor): Optional<LinkInformation> =>
     anchorBottom: getTextSetting(Options.getAnchorBottom(editor))
   });
 };
-export const getValidationHandler = (editor: Editor): Optional<UrlValidationHandler> =>
+export const getValidationHandler = (editor: Editor): Optional<FilePickerValidationCallback> =>
   Optional.from(Options.getFilePickerValidatorHandler(editor));
-
-export const getUrlPickerTypes = (editor: Editor): boolean | Record<string, boolean> =>
-  getPickerTypes(editor);
 
 export const UrlInputBackstage = (editor: Editor): UiFactoryBackstageForUrlInput => ({
   getHistory,

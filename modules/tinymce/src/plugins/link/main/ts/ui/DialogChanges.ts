@@ -23,7 +23,7 @@ const findTextByValue = (value: string, catalog: ListItem[]): Optional<ListValue
     }
   });
 
-const getDelta = (persistentText: string, fieldName: string, catalog: ListItem[], data: Partial<LinkDialogData>): Optional<DialogDelta> => {
+const getDelta = (persistentText: string, fieldName: 'link' | 'anchor', catalog: ListItem[], data: Partial<LinkDialogData>): Optional<DialogDelta> => {
   const value = data[fieldName];
   const hasPersistentText = persistentText.length > 0;
   return value !== undefined ? findTextByValue(value, catalog).map((i) => ({
@@ -55,10 +55,10 @@ const init = (initialData: LinkDialogData, linkCatalog: LinkDialogCatalog): Dial
   };
 
   const getTitleFromUrlChange = (url: LinkDialogUrlData): Optional<string> =>
-    Optionals.someIf(persistentData.title.length <= 0, Optional.from(url.meta.title).getOr(''));
+    Optionals.someIf(persistentData.title.length <= 0, Optional.from(url.meta?.title).getOr(''));
 
   const getTextFromUrlChange = (url: LinkDialogUrlData): Optional<string> =>
-    Optionals.someIf(persistentData.text.length <= 0, Optional.from(url.meta.text).getOr(url.value));
+    Optionals.someIf(persistentData.text.length <= 0, Optional.from(url.meta?.text).getOr(url.value));
 
   const onUrlChange = (data: LinkDialogData): Optional<Partial<LinkDialogData>> => {
     const text = getTextFromUrlChange(data.url);
@@ -74,9 +74,9 @@ const init = (initialData: LinkDialogData, linkCatalog: LinkDialogCatalog): Dial
     }
   };
 
-  const onCatalogChange = (data: LinkDialogData, change: { name: string }): Optional<Partial<LinkDialogData>> => {
-    const catalog = findCatalog(linkCatalog, change.name).getOr([ ]);
-    return getDelta(persistentData.text, change.name, catalog, data);
+  const onCatalogChange = (data: LinkDialogData, change: 'link' | 'anchor'): Optional<Partial<LinkDialogData>> => {
+    const catalog = findCatalog(linkCatalog, change).getOr([ ]);
+    return getDelta(persistentData.text, change, catalog, data);
   };
 
   const onChange = (getData: () => LinkDialogData, change: { name: string }): Optional<Partial<LinkDialogData>> => {
@@ -84,7 +84,7 @@ const init = (initialData: LinkDialogData, linkCatalog: LinkDialogCatalog): Dial
     if (name === 'url') {
       return onUrlChange(getData());
     } else if (Arr.contains([ 'anchor', 'link' ], name)) {
-      return onCatalogChange(getData(), change);
+      return onCatalogChange(getData(), name as 'anchor' | 'link');
     } else if (name === 'text' || name === 'title') {
       // Update the persistent text/title state, as a user has input custom text
       persistentData[name] = getData()[name];

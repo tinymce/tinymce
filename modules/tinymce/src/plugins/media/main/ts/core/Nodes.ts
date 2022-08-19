@@ -79,7 +79,7 @@ const createPreviewNode = (editor: Editor, node: AstNode): AstNode => {
 
   retainAttributesAndInnerHtml(editor, node, previewWrapper);
 
-  const styles = editor.dom.parseStyle(node.attr('style'));
+  const styles = editor.dom.parseStyle(node.attr('style') ?? '');
   const previewNode = new AstNode(name, 1);
   setDimensions(node, previewNode, styles);
   previewNode.attr({
@@ -119,7 +119,7 @@ const createPreviewNode = (editor: Editor, node: AstNode): AstNode => {
 const retainAttributesAndInnerHtml = (editor: Editor, sourceNode: AstNode, targetNode: AstNode): void => {
   // Prefix all attributes except internal (data-mce-*), width, height and style since we
   // will add these to the placeholder
-  const attribs = sourceNode.attributes;
+  const attribs = sourceNode.attributes ?? [];
   let ai = attribs.length;
   while (ai--) {
     const attrName = attribs[ai].name;
@@ -148,12 +148,13 @@ const retainAttributesAndInnerHtml = (editor: Editor, sourceNode: AstNode, targe
 
 const isPageEmbedWrapper = (node: AstNode): boolean => {
   const nodeClass = node.attr('class');
-  return nodeClass && /\btiny-pageembed\b/.test(nodeClass);
+  return Type.isString(nodeClass) && /\btiny-pageembed\b/.test(nodeClass);
 };
 
 const isWithinEmbedWrapper = (node: AstNode): boolean => {
-  while ((node = node.parent)) {
-    if (node.attr('data-ephox-embed-iri') || isPageEmbedWrapper(node)) {
+  let tempNode: AstNode | null | undefined = node;
+  while ((tempNode = tempNode.parent)) {
+    if (tempNode.attr('data-ephox-embed-iri') || isPageEmbedWrapper(tempNode)) {
       return true;
     }
   }

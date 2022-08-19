@@ -12,7 +12,7 @@ describe('browser.tinymce.plugins.image.ImageResizeTest', () => {
     plugins: 'image',
     toolbar: 'image',
     base_url: '/project/tinymce/js/tinymce',
-    file_picker_callback: (callback) => {
+    file_picker_callback: (callback: (url: string) => void) => {
       // eslint-disable-next-line no-console
       console.log('file picker pressed');
       callback('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');

@@ -328,7 +328,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
     );
 
     LegacyUnit.setSelection(editor, 'ul li', 1);
-    editor.execCommand('InsertOrderedList', null, { 'list-style-type': 'lower-alpha' });
+    editor.execCommand('InsertOrderedList', false, { 'list-style-type': 'lower-alpha' });
 
     TinyAssertions.assertContent(
       editor,
@@ -356,7 +356,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
     );
 
     LegacyUnit.setSelection(editor, 'p', 1);
-    editor.execCommand('InsertOrderedList', null, { 'list-style-type': 'lower-alpha' });
+    editor.execCommand('InsertOrderedList', false, { 'list-style-type': 'lower-alpha' });
 
     TinyAssertions.assertContent(
       editor,
@@ -762,8 +762,8 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
     );
 
     const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('td')[0].firstChild, 0);
-    rng.setEnd(editor.dom.select('td')[0].firstChild, 0);
+    rng.setStart(editor.dom.select('td')[0].firstChild as Text, 0);
+    rng.setEnd(editor.dom.select('td')[0].firstChild as Text, 0);
     editor.selection.setRng(rng);
 
     editor.execCommand('InsertUnorderedList');

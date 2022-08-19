@@ -5,8 +5,8 @@ import { DataToHtmlCallback } from '../core/DataToHtml';
 import { MediaResolver } from '../core/Service';
 
 const option: {
-  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K] | undefined;
-  <T>(name: string): (editor: Editor) => T | undefined;
+  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K];
+  <T>(name: string): (editor: Editor) => T;
 } = (name: string) => (editor: Editor) =>
   editor.options.get(name);
 
@@ -55,12 +55,12 @@ const register = (editor: Editor): void => {
   });
 };
 
-const getAudioTemplateCallback = option<DataToHtmlCallback>('audio_template_callback');
-const getVideoTemplateCallback = option<DataToHtmlCallback>('video_template_callback');
-const getIframeTemplateCallback = option<DataToHtmlCallback>('iframe_template_callback');
+const getAudioTemplateCallback = option<DataToHtmlCallback | undefined>('audio_template_callback');
+const getVideoTemplateCallback = option<DataToHtmlCallback | undefined>('video_template_callback');
+const getIframeTemplateCallback = option<DataToHtmlCallback | undefined>('iframe_template_callback');
 const hasLiveEmbeds = option<boolean>('media_live_embeds');
 const shouldFilterHtml = option<boolean>('media_filter_html');
-const getUrlResolver = option<MediaResolver>('media_url_resolver');
+const getUrlResolver = option<MediaResolver | undefined>('media_url_resolver');
 const hasAltSource = option<boolean>('media_alt_source');
 const hasPoster = option<boolean>('media_poster');
 const hasDimensions = option<boolean>('media_dimensions');

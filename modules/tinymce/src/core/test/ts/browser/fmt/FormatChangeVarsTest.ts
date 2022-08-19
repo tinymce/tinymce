@@ -11,10 +11,10 @@ describe('browser.tinymce.core.fmt.FormatChangeVarsTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, []);
 
-  const events = {
-    general: [] as boolean[],
-    helvetica: [] as boolean[],
-    comicSans: [] as boolean[]
+  const events: Record<string, boolean[]> = {
+    general: [],
+    helvetica: [],
+    comicSans: []
   };
 
   const generalCleanup = Singleton.unbindable();

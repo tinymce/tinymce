@@ -1,11 +1,11 @@
-import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
+import { AlloyComponent, AlloyTriggers, SketchSpec } from '@ephox/alloy';
 import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
-import { createMenuItems, createSelectButton, FormatterFormatItem, SelectSpec } from './BespokeSelect';
+import { createMenuItems, createSelectButton, FormatterFormatItem, SelectedFormat, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import * as FormatRegister from './utils/FormatRegister';
 
@@ -65,7 +65,7 @@ const getSpec = (editor: Editor): SelectSpec => {
     return { matchOpt, size: fontSize };
   };
 
-  const isSelectedFor = (item: string) => (valueOpt: Optional<{ format: string; title: string }>) => valueOpt.exists((value) => value.format === item);
+  const isSelectedFor = (item: string) => (valueOpt: Optional<SelectedFormat>) => valueOpt.exists((value) => value.format === item);
 
   const getCurrentValue = () => {
     const { matchOpt } = getMatchingValue();
@@ -107,10 +107,11 @@ const getSpec = (editor: Editor): SelectSpec => {
   };
 };
 
-const createFontSizeButton = (editor: Editor, backstage: UiFactoryBackstage) => createSelectButton(editor, backstage, getSpec(editor));
+const createFontSizeButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
+  createSelectButton(editor, backstage, getSpec(editor));
 
 // TODO: Test this!
-const createFontSizeMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
+const createFontSizeMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('fontsize', {
     text: 'Font sizes',

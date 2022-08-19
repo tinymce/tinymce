@@ -2,6 +2,7 @@ import { Arr, Obj, Strings, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import * as Pattern from '../textpatterns/core/Pattern';
+import * as PatternTypes from '../textpatterns/core/PatternTypes';
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
 import { EditorOptions } from './OptionTypes';
@@ -380,6 +381,11 @@ const register = (editor: Editor): void => {
     default: false
   });
 
+  registerOption('format_noneditable_selector', {
+    processor: 'string',
+    default: ''
+  });
+
   registerOption('preview_styles', {
     processor: (value) => {
       const valid = value === false || Type.isString(value);
@@ -732,6 +738,20 @@ const register = (editor: Editor): void => {
     ]
   });
 
+  registerOption('text_patterns_lookup', {
+    processor: (value) => {
+      if (Type.isFunction(value)) {
+        return {
+          value: Pattern.fromRawPatternsLookup(value as PatternTypes.RawDynamicPatternsLookup),
+          valid: true,
+        };
+      } else {
+        return { valid: false, message: 'Must be a single function' };
+      }
+    },
+    default: (_ctx: PatternTypes.DynamicPatternContext): PatternTypes.Pattern[] => [ ]
+  });
+
   registerOption('noneditable_class', {
     processor: 'string',
     default: 'mceNonEditable'
@@ -822,6 +842,7 @@ const isInlineBoundariesEnabled = option('inline_boundaries');
 const getFormats = option('formats');
 const getPreviewStyles = option('preview_styles');
 const canFormatEmptyLines = option('format_empty_lines');
+const getFormatNoneditableSelector = option('format_noneditable_selector');
 const getCustomUiSelector = option('custom_ui_selector');
 const isInline = option('inline');
 const hasHiddenInput = option('hidden_input');
@@ -857,9 +878,13 @@ const isPasteAsTextEnabled = option('paste_as_text');
 const getPasteTabSpaces = option('paste_tab_spaces');
 const shouldAllowHtmlDataUrls = option('allow_html_data_urls');
 const getTextPatterns = option('text_patterns');
+const getTextPatternsLookup = option('text_patterns_lookup');
 const getNonEditableClass = option('noneditable_class');
 const getEditableClass = option('editable_class');
 const getNonEditableRegExps = option('noneditable_regexp');
+
+const hasTextPatternsLookup = (editor: Editor): boolean =>
+  editor.options.isSet('text_patterns_lookup');
 
 const getFontStyleValues = (editor: Editor): string[] =>
   Tools.explode(editor.options.get('font_size_style_values'));
@@ -924,6 +949,7 @@ export {
   getFormats,
   getPreviewStyles,
   canFormatEmptyLines,
+  getFormatNoneditableSelector,
   getCustomUiSelector,
   getThemeUrl,
   getModelUrl,
@@ -964,6 +990,8 @@ export {
   shouldAllowHtmlDataUrls,
   getAllowedImageFileTypes,
   getTextPatterns,
+  getTextPatternsLookup,
+  hasTextPatternsLookup,
   getNonEditableClass,
   getNonEditableRegExps,
   getEditableClass,

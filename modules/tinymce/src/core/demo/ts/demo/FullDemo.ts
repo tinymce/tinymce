@@ -2,13 +2,13 @@
 import { Merger } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
-import { RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
+import { Editor, RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
-export default () => {
+export default (): void => {
 
-  const makeSidebar = (ed, name: string, background: string, width: number) => {
+  const makeSidebar = (ed: Editor, name: string, background: string, width: number) => {
     ed.ui.registry.addSidebar(name, {
       icon: 'comment',
       tooltip: 'Tooltip for ' + name,

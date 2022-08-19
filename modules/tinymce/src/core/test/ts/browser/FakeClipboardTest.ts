@@ -3,7 +3,7 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import FakeClipboard from 'tinymce/core/api/FakeClipboard';
+import FakeClipboard, { FakeClipboardItem } from 'tinymce/core/api/FakeClipboard';
 
 describe('browser.tinymce.core.FakeClipboardTest', () => {
   TinyHooks.bddSetupLight<Editor>({
@@ -38,7 +38,7 @@ describe('browser.tinymce.core.FakeClipboardTest', () => {
     });
     FakeClipboard.write([ item ]);
 
-    const clipboardItems = FakeClipboard.read();
+    const clipboardItems = FakeClipboard.read() as FakeClipboardItem[];
     assert.lengthOf(clipboardItems, 1);
     assert.equal(clipboardItems[0].getType('text'), 'hello');
   });
@@ -49,7 +49,7 @@ describe('browser.tinymce.core.FakeClipboardTest', () => {
       FakeClipboard.FakeClipboardItem({ text: 'item2' }),
     ]);
 
-    const clipboardItems = FakeClipboard.read();
+    const clipboardItems = FakeClipboard.read() as FakeClipboardItem[];
     assert.lengthOf(clipboardItems, 2);
     assert.equal(clipboardItems[0].getType('text'), 'item1');
     assert.equal(clipboardItems[1].getType('text'), 'item2');
@@ -61,7 +61,7 @@ describe('browser.tinymce.core.FakeClipboardTest', () => {
     });
     FakeClipboard.write([ item ]);
 
-    const clipboardItems = FakeClipboard.read();
+    const clipboardItems = FakeClipboard.read() as FakeClipboardItem[];
     assert.lengthOf(clipboardItems, 1);
 
     FakeClipboard.clear();
@@ -77,6 +77,7 @@ describe('browser.tinymce.core.FakeClipboardTest', () => {
       FakeClipboard.FakeClipboardItem({ obj: testObj })
     ]);
 
-    assert.deepEqual(FakeClipboard.read()[0].getType('obj'), testObj);
+    const clipboardItems = FakeClipboard.read() as FakeClipboardItem[];
+    assert.deepEqual(clipboardItems[0].getType('obj'), testObj);
   });
 });

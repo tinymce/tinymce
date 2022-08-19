@@ -7,6 +7,24 @@ import {
 
 import { getUserStyleFormats, shouldMergeStyleFormats } from '../../../api/Options';
 
+export interface NestedStyleFormat {
+  readonly title: string;
+  readonly items: StyleFormatType[];
+}
+
+export type StyleFormatType = Separator | FormatReference | NestedStyleFormat;
+
+interface CustomFormatMapping {
+  readonly customFormats: { name: string; format: StyleFormat }[];
+  readonly formats: StyleFormatType[];
+}
+
+export const isNestedFormat = (format: StyleFormatType): format is NestedStyleFormat =>
+  Obj.hasNonNullableKey(format as NestedStyleFormat, 'items');
+
+export const isFormatReference = (format: StyleFormatType): format is FormatReference =>
+  Obj.hasNonNullableKey(format as FormatReference, 'format');
+
 export const defaultStyleFormats: AllowedFormat[] = [
   {
     title: 'Headings', items: [
@@ -50,44 +68,38 @@ export const defaultStyleFormats: AllowedFormat[] = [
   }
 ];
 
-// Note: Need to cast format below to Record, as Obj.has uses "K keyof T", which doesn't work with aliases
-const isNestedFormat = (format: AllowedFormat): format is NestedFormatting => Obj.has(format as Record<string, any>, 'items');
+// Note: Need to cast format below to expected type, as Obj.has uses "K keyof T", which doesn't work with aliases
+const isNestedFormats = (format: AllowedFormat): format is NestedFormatting => Obj.has(format as NestedFormatting, 'items');
 
-const isBlockFormat = (format: AllowedFormat): format is BlockStyleFormat => Obj.has(format as Record<string, any>, 'block');
+const isBlockFormat = (format: AllowedFormat): format is BlockStyleFormat => Obj.has(format as BlockStyleFormat, 'block');
 
-const isInlineFormat = (format: AllowedFormat): format is InlineStyleFormat => Obj.has(format as Record<string, any>, 'inline');
+const isInlineFormat = (format: AllowedFormat): format is InlineStyleFormat => Obj.has(format as InlineStyleFormat, 'inline');
 
-const isSelectorFormat = (format: AllowedFormat): format is SelectorStyleFormat => Obj.has(format as Record<string, any>, 'selector');
+const isSelectorFormat = (format: AllowedFormat): format is SelectorStyleFormat => Obj.has(format as SelectorStyleFormat, 'selector');
 
-type FormatTypes = Separator | FormatReference | NestedFormatting;
+const mapFormats = (userFormats: AllowedFormat[]): CustomFormatMapping =>
+  Arr.foldl(userFormats, (acc, fmt) => {
+    if (isNestedFormats(fmt)) {
+      // Map the child formats
+      const result = mapFormats(fmt.items);
+      return {
+        customFormats: acc.customFormats.concat(result.customFormats),
+        formats: acc.formats.concat([{ title: fmt.title, items: result.formats }])
+      };
+    } else if (isInlineFormat(fmt) || isBlockFormat(fmt) || isSelectorFormat(fmt)) {
+      // Convert the format to a reference and add the original to the custom formats to be registered
+      const formatName = Type.isString(fmt.name) ? fmt.name : fmt.title.toLowerCase();
+      const formatNameWithPrefix = `custom-${formatName}`;
+      return {
+        customFormats: acc.customFormats.concat([{ name: formatNameWithPrefix, format: fmt }]),
+        formats: acc.formats.concat([{ title: fmt.title, format: formatNameWithPrefix, icon: fmt.icon }])
+      };
+    } else {
+      return { ...acc, formats: acc.formats.concat(fmt) };
+    }
+  }, { customFormats: [], formats: [] } as CustomFormatMapping);
 
-interface CustomFormatMapping {
-  customFormats: { name: string; format: StyleFormat }[];
-  formats: FormatTypes[];
-}
-
-const mapFormats = (userFormats: AllowedFormat[]): CustomFormatMapping => Arr.foldl(userFormats, (acc, fmt) => {
-  if (isNestedFormat(fmt)) {
-    // Map the child formats
-    const result = mapFormats(fmt.items);
-    return {
-      customFormats: acc.customFormats.concat(result.customFormats),
-      formats: acc.formats.concat([{ title: fmt.title, items: result.formats }])
-    };
-  } else if (isInlineFormat(fmt) || isBlockFormat(fmt) || isSelectorFormat(fmt)) {
-    // Convert the format to a reference and add the original to the custom formats to be registered
-    const formatName = Type.isString(fmt.name) ? fmt.name : fmt.title.toLowerCase();
-    const formatNameWithPrefix = `custom-${formatName}`;
-    return {
-      customFormats: acc.customFormats.concat([{ name: formatNameWithPrefix, format: fmt }]),
-      formats: acc.formats.concat([{ title: fmt.title, format: formatNameWithPrefix, icon: fmt.icon }])
-    };
-  } else {
-    return { ...acc, formats: acc.formats.concat(fmt) };
-  }
-}, { customFormats: [], formats: [] });
-
-const registerCustomFormats = (editor: Editor, userFormats: AllowedFormat[]): FormatTypes[] => {
+const registerCustomFormats = (editor: Editor, userFormats: AllowedFormat[]): StyleFormatType[] => {
   const result = mapFormats(userFormats);
 
   const registerFormats = (customFormats: {name: string; format: StyleFormat}[]) => {
@@ -111,7 +123,7 @@ const registerCustomFormats = (editor: Editor, userFormats: AllowedFormat[]): Fo
   return result.formats;
 };
 
-export const getStyleFormats = (editor: Editor): FormatTypes[] => getUserStyleFormats(editor).map((userFormats) => {
+export const getStyleFormats = (editor: Editor): StyleFormatType[] => getUserStyleFormats(editor).map((userFormats) => {
   // Ensure that any custom formats specified by the user are registered with the editor
   const registeredUserFormats = registerCustomFormats(editor, userFormats);
   // Merge the default formats with the custom formats if required

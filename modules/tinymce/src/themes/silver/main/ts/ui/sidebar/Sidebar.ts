@@ -1,5 +1,7 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Composing, CustomEvent, Focusing, Replacing, Sliding, SlotContainer,
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Composing, CustomEvent, Focusing, Replacing, SketchSpec,
+  Sliding,
+  SlotContainer,
   SlotContainerTypes, SystemEvents, Tabstopping
 } from '@ephox/alloy';
 import { StructureSchema } from '@ephox/boulder';
@@ -15,7 +17,7 @@ import { SimpleBehaviours } from '../alien/SimpleBehaviours';
 
 export type SidebarConfig = Record<string, BridgeSidebar.SidebarSpec>;
 
-const setup = (editor: Editor) => {
+const setup = (editor: Editor): void => {
   const { sidebars } = editor.ui.registry.getAll();
 
   // Setup each registered sidebar
@@ -30,6 +32,7 @@ const setup = (editor: Editor) => {
         buttonApi.setActive(isActive());
       },
       onSetup: (buttonApi) => {
+        buttonApi.setActive(isActive());
         const handleToggle = () => buttonApi.setActive(isActive());
         editor.on('ToggleSidebar', handleToggle);
         return () => {
@@ -94,7 +97,7 @@ const makeSidebar = (panelConfigs: SidebarConfig) => SlotContainer.sketch((parts
   ])
 }));
 
-const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSidebar: string | undefined) => {
+const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSidebar: string | undefined): void => {
   const optSlider = Composing.getCurrent(sidebar);
 
   optSlider.each((slider) => {
@@ -102,7 +105,7 @@ const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSi
 
     // Show the default sidebar
     const configKey = showSidebar?.toLowerCase();
-    if (Type.isString(showSidebar) && Obj.has(panelConfigs, configKey)) {
+    if (Type.isString(configKey) && Obj.has(panelConfigs, configKey)) {
       Composing.getCurrent(slider).each((slotContainer) => {
         SlotContainer.showSlot(slotContainer, configKey);
         Sliding.immediateGrow(slider);
@@ -113,7 +116,7 @@ const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSi
   });
 };
 
-const toggleSidebar = (sidebar: AlloyComponent, name: string) => {
+const toggleSidebar = (sidebar: AlloyComponent, name: string): void => {
   const optSlider = Composing.getCurrent(sidebar);
   optSlider.each((slider) => {
     const optSlotContainer = Composing.getCurrent(slider);
@@ -159,7 +162,7 @@ interface FixSizeEvent extends CustomEvent {
 const fixSize = Id.generate('FixSizeEvent');
 const autoSize = Id.generate('AutoSizeEvent');
 
-const renderSidebar = (spec) => ({
+const renderSidebar = (spec: SketchSpec): AlloySpec => ({
   uid: spec.uid,
   dom: {
     tag: 'div',

@@ -1,4 +1,4 @@
-import { AlloyComponent, Behaviour, Focusing, Keying, ModalDialog, Reflecting, SimpleSpec, Tabstopping } from '@ephox/alloy';
+import { AlloyComponent, AlloyParts, Behaviour, Focusing, Keying, ModalDialog, Reflecting, SimpleSpec, Tabstopping } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Fun, Optional } from '@ephox/katamari';
 
@@ -11,8 +11,8 @@ import { bodyChannel } from './DialogChannels';
 
 // TypeScript allows some pretty weird stuff.
 interface WindowBodySpec {
-  body: Dialog.Dialog<unknown>['body'];
-  initialData: Dialog.DialogData;
+  readonly body: Dialog.Dialog<unknown>['body'];
+  readonly initialData: Dialog.DialogData;
 }
 
 // ariaAttrs is being passed through to silver inline dialog
@@ -65,17 +65,15 @@ const renderBody = (spec: WindowBodySpec, dialogId: string, contentId: Optional<
   };
 };
 
-const renderInlineBody = (spec: WindowBodySpec, dialogId: string, contentId: string, backstage: UiFactoryBackstage, ariaAttrs: boolean) =>
+const renderInlineBody = (spec: WindowBodySpec, dialogId: string, contentId: string, backstage: UiFactoryBackstage, ariaAttrs: boolean): SimpleSpec =>
   renderBody(spec, dialogId, Optional.some(contentId), backstage, ariaAttrs);
 
-const renderModalBody = (spec: WindowBodySpec, dialogId: string, backstage: UiFactoryBackstage) => {
+const renderModalBody = (spec: WindowBodySpec, dialogId: string, backstage: UiFactoryBackstage): AlloyParts.ConfiguredPart => {
   const bodySpec = renderBody(spec, dialogId, Optional.none(), backstage, false);
-  return ModalDialog.parts.body(
-    bodySpec
-  );
+  return ModalDialog.parts.body(bodySpec);
 };
 
-const renderIframeBody = (spec: Dialog.UrlDialog) => {
+const renderIframeBody = (spec: Dialog.UrlDialog): AlloyParts.ConfiguredPart => {
   const bodySpec = {
     dom: {
       tag: 'div',
@@ -111,9 +109,7 @@ const renderIframeBody = (spec: Dialog.UrlDialog) => {
     ])
   };
 
-  return ModalDialog.parts.body(
-    bodySpec
-  );
+  return ModalDialog.parts.body(bodySpec);
 };
 
 export {

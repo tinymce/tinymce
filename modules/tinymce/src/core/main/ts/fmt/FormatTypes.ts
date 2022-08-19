@@ -18,7 +18,7 @@ export interface BaseFormat<T> {
   links?: boolean;
   mixed?: boolean;
   block_expand?: boolean;
-  onmatch?: (node: Node, fmt: T, itemName: string) => boolean;
+  onmatch?: (node: Element, fmt: T, itemName: string) => boolean;
 
   // These are only used when removing formats
   remove?: 'none' | 'empty' | 'all';
@@ -51,7 +51,7 @@ export interface CommonFormat<T> extends BaseFormat<T> {
   preview?: string | false;
 
   // These are only used when applying formats
-  onformat?: (elm: Node, fmt: T, vars?: FormatVars, node?: Node | RangeLikeObject | null) => void;
+  onformat?: (elm: Element, fmt: T, vars?: FormatVars, node?: Node | RangeLikeObject | null) => void;
   clear_child_styles?: boolean;
   merge_siblings?: boolean;
   merge_with_parents?: boolean;

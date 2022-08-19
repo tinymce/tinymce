@@ -1,4 +1,4 @@
-import { AlloyComponent, TieredData } from '@ephox/alloy';
+import { AlloyComponent, SketchSpec, TieredData } from '@ephox/alloy';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -11,71 +11,79 @@ import * as NestedMenus from '../../menus/menu/NestedMenus';
 import { ToolbarButtonClasses } from '../../toolbar/button/ButtonClasses';
 import { onSetupEvent } from '../ControlUtils';
 import { SelectDataset } from './SelectDatasets';
+import { NestedStyleFormat } from './StyleFormat';
 import * as FormatRegister from './utils/FormatRegister';
 
 export interface PreviewSpec {
-  tag: string;
-  styles: Record<string, string>;
+  readonly tag: string;
+  readonly styles: Record<string, string>;
 }
 
 export interface FormatterFormatItem {
-  type: 'formatter';
-  title?: string;
-  format: string;
-  icon?: string;
-  isSelected: (value: Optional<any>) => boolean;
-  getStylePreview: () => Optional<PreviewSpec>;
+  readonly type: 'formatter';
+  readonly title: string;
+  readonly format: string;
+  readonly icon?: string;
+  readonly isSelected: (value: Optional<any>) => boolean;
+  readonly getStylePreview: () => Optional<PreviewSpec>;
 }
 
-export interface SubMenuFormatItem {
-  type: 'submenu';
-  title: string;
-  getStyleItems: () => FormatItem[];
+export interface SubMenuFormatItem extends NestedStyleFormat {
+  readonly type: 'submenu';
+  readonly getStyleItems: () => FormatItem[];
 }
 
 export interface SeparatorFormatItem {
-  type: 'separator';
-  title?: string;
+  readonly type: 'separator';
+  readonly title: string;
 }
 
 export type FormatItem = FormatterFormatItem | SubMenuFormatItem | SeparatorFormatItem;
 
-export interface SelectSpec {
-  tooltip: string;
-  text: Optional<string>;
-  icon: Optional<string>;
-  // This is used for determining if an item gets a tick in the menu
-  isSelectedFor: FormatRegister.IsSelectedForType;
-  // This is used to get the current selection value when a menu is opened
-  getCurrentValue: () => Optional<any>;
-  // This is used for rendering individual items with styles
-  getPreviewFor: FormatRegister.GetPreviewForType;
-  // This is used for clicking on the item
-  onAction: (item: FormatterFormatItem) => (api) => void;
-  // This is used to change the menu text
-  updateText: (comp: AlloyComponent) => void;
-  // This is true if items should be hidden if they are not an applicable
-  // format to the current selection
-  shouldHide: boolean;
-  // This determines if an item is applicable
-  isInvalid: (item: FormatterFormatItem) => boolean;
-
-  dataset: SelectDataset;
+export interface SelectedFormat {
+  readonly title: string;
+  readonly format: string;
 }
 
-export interface SelectData {
-  getData: () => FormatItem[];
-  getFlattenedKeys: () => string[];
+export interface SelectSpec {
+  readonly tooltip: string;
+  readonly text: Optional<string>;
+  readonly icon: Optional<string>;
+  // This is used for determining if an item gets a tick in the menu
+  readonly isSelectedFor: FormatRegister.IsSelectedForType;
+  // This is used to get the current selection value when a menu is opened
+  readonly getCurrentValue: () => Optional<SelectedFormat>;
+  // This is used for rendering individual items with styles
+  readonly getPreviewFor: FormatRegister.GetPreviewForType;
+  // This is used for clicking on the item
+  readonly onAction: (item: FormatterFormatItem) => (api: Menu.ToggleMenuItemInstanceApi) => void;
+  // This is used to change the menu text
+  readonly updateText: (comp: AlloyComponent) => void;
+  // This is true if items should be hidden if they are not an applicable
+  // format to the current selection
+  readonly shouldHide: boolean;
+  // This determines if an item is applicable
+  readonly isInvalid: (item: FormatterFormatItem) => boolean;
+
+  readonly dataset: SelectDataset;
 }
 
 interface BespokeSelectApi {
-  getComponent: () => AlloyComponent;
+  readonly getComponent: () => AlloyComponent;
+}
+
+interface BespokeMenuItems {
+  readonly items: {
+    readonly validateItems: (preItems: FormatItem[]) => Menu.NestedMenuItemContents[];
+    readonly getFetch: (backstage: UiFactoryBackstage, getStyleItems: () => FormatItem[]) => (comp: AlloyComponent, callback: (menu: Optional<TieredData>) => void) => void;
+  };
+  readonly getStyleItems: () => FormatItem[];
 }
 
 const enum IrrelevantStyleItemResponse { Hide, Disable }
 
 const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec) => {
-  const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, invalid: boolean, value: Optional<any>): Optional<Menu.NestedMenuItemContents> => {
+  const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, invalid: boolean, value: Optional<SelectedFormat>): Optional<Menu.NestedMenuItemContents> => {
     const translatedText = backstage.shared.providers.translate(rawItem.title);
     if (rawItem.type === 'separator') {
       return Optional.some<Menu.SeparatorMenuItemSpec>({
@@ -110,7 +118,7 @@ const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spe
     }
   };
 
-  const validate = (item: FormatItem, response: IrrelevantStyleItemResponse, value: Optional<any>): Menu.NestedMenuItemContents[] => {
+  const validate = (item: FormatItem, response: IrrelevantStyleItemResponse, value: Optional<SelectedFormat>): Menu.NestedMenuItemContents[] => {
     const invalid = item.type === 'formatter' && spec.isInvalid(item);
 
     // If we are making them disappear based on some setting
@@ -127,7 +135,7 @@ const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spe
     return Arr.bind(preItems, (item) => validate(item, response, value));
   };
 
-  const getFetch = (backstage: UiFactoryBackstage, getStyleItems: () => FormatItem[]) => (comp: AlloyComponent, callback: (menu: Optional<TieredData>) => null) => {
+  const getFetch = (backstage: UiFactoryBackstage, getStyleItems: () => FormatItem[]) => (comp: AlloyComponent, callback: (menu: Optional<TieredData>) => void) => {
     const preItems = getStyleItems();
     const items = validateItems(preItems);
     const menu = NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, false);
@@ -135,20 +143,23 @@ const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spe
   };
 
   return {
-    validateItems, getFetch
+    validateItems,
+    getFetch
   };
 };
 
-const createMenuItems = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec) => {
+const createMenuItems = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec): BespokeMenuItems => {
   const dataset = spec.dataset; // needs to be a var for tsc to understand the ternary
-  const getStyleItems = dataset.type === 'basic' ? () => Arr.map(dataset.data, (d) => FormatRegister.processBasic(d, spec.isSelectedFor, spec.getPreviewFor)) : dataset.getData;
+  const getStyleItems = dataset.type === 'basic' ?
+    () => Arr.map(dataset.data, (d) => FormatRegister.processBasic(d, spec.isSelectedFor, spec.getPreviewFor)) :
+    dataset.getData;
   return {
     items: generateSelectItems(editor, backstage, spec),
     getStyleItems
   };
 };
 
-const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec) => {
+const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec): SketchSpec => {
   const { items, getStyleItems } = createMenuItems(editor, backstage, spec);
 
   const getApi = (comp: AlloyComponent): BespokeSelectApi => ({ getComponent: Fun.constant(comp) });

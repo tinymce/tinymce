@@ -16,9 +16,9 @@ export const resolve = <T>(p: string, scope?: {}): T | undefined => {
 };
 
 /** step :: (JsObj, String) -> JsObj */
-export const step = <T extends Record<string, any>>(o: {}, part: string): T => {
+export const step = <T extends {}, K extends keyof T>(o: T, part: K): T[K] => {
   if (o[part] === undefined || o[part] === null) {
-    o[part] = {};
+    o[part] = {} as T[K];
   }
   return o[part];
 };

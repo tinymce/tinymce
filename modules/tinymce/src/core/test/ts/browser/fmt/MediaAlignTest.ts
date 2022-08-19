@@ -1,4 +1,4 @@
-import { ApproxStructure } from '@ephox/agar';
+import { ApproxStructure, StringAssert } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
@@ -13,7 +13,7 @@ describe('browser.tinymce.core.fmt.MediaAlignTest', () => {
   }, [], true);
 
   const mediaApproxStructure = (tag: string, alignment: Alignment) => {
-    const alignStyles = (str: ApproxStructure.StringApi) => {
+    const alignStyles = (str: ApproxStructure.StringApi): Record<string, StringAssert> => {
       if (alignment === 'left') {
         return { float: str.is('left') };
       } else if (alignment === 'center') {

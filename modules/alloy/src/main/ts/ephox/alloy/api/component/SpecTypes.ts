@@ -41,7 +41,7 @@ export interface ComponentDetail {
   apis?: {};
   behaviours?: AlloyBehaviourRecord;
   domModification?: Partial<DomModification>;
-  eventOrder?: {};
+  eventOrder?: Record<string, string[]>;
 }
 
 export interface ComponentSpec {
@@ -51,7 +51,7 @@ export interface ComponentSpec {
   apis?: {};
   behaviours?: AlloyBehaviourRecord;
   domModification?: Partial<DomModification>;
-  eventOrder?: {};
+  eventOrder?: Record<string, string[]>;
 }
 
 export interface SketchSpec extends ComponentSpec {

@@ -30,7 +30,9 @@ export interface AutocompleterItem {
 
 export interface AutocompleterSpec {
   type?: 'autocompleter';
-  ch: string;
+  // TODO: TINY-8929: Remove 'trigger' fallback to 'ch'
+  ch?: string;
+  trigger?: string;
   minChars?: number;
   columns?: ColumnTypes;
   matches?: (rng: Range, text: string, pattern: string) => boolean;
@@ -47,7 +49,7 @@ export interface AutocompleterInstanceApi {
 
 export interface Autocompleter {
   type: 'autocompleter';
-  ch: string;
+  trigger: string;
   minChars: number;
   columns: ColumnTypes;
   matches: Optional<(rng: Range, text: string, pattern: string) => boolean>;
@@ -70,7 +72,7 @@ const autocompleterItemSchema = StructureSchema.objOf([
 
 const autocompleterSchema = StructureSchema.objOf([
   ComponentSchema.type,
-  FieldSchema.requiredString('ch'),
+  FieldSchema.requiredString('trigger'),
   FieldSchema.defaultedNumber('minChars', 1),
   ComponentSchema.defaultedColumns(1),
   FieldSchema.defaultedNumber('maxResults', 10),
@@ -87,4 +89,5 @@ export const createAutocompleterItem = (spec: AutocompleterItemSpec): Result<Aut
   StructureSchema.asRaw<AutocompleterItem>('Autocompleter.Item', autocompleterItemSchema, spec);
 
 export const createAutocompleter = (spec: AutocompleterSpec): Result<Autocompleter, StructureSchema.SchemaError<any>> =>
-  StructureSchema.asRaw<Autocompleter>('Autocompleter', autocompleterSchema, spec);
+  // TODO: TINY-8929: Remove 'trigger' fallback to 'ch'
+  StructureSchema.asRaw<Autocompleter>('Autocompleter', autocompleterSchema, { trigger: spec.ch, ...spec });

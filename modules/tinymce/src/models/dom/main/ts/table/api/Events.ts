@@ -43,11 +43,11 @@ const fireTableSelectionClear = (editor: Editor): void => {
   editor.dispatch('TableSelectionClear');
 };
 
-const fireObjectResizeStart = (editor: Editor, target: HTMLElement, width: number, height: number, origin: string) => {
+const fireObjectResizeStart = (editor: Editor, target: HTMLElement, width: number, height: number, origin: string): void => {
   editor.dispatch('ObjectResizeStart', { target, width, height, origin });
 };
 
-const fireObjectResized = (editor: Editor, target: HTMLElement, width: number, height: number, origin: string) => {
+const fireObjectResized = (editor: Editor, target: HTMLElement, width: number, height: number, origin: string): void => {
   editor.dispatch('ObjectResized', { target, width, height, origin });
 };
 

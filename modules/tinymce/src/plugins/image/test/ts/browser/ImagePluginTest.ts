@@ -13,7 +13,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
     toolbar: 'image',
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
-    setup: (editor) => {
+    setup: (editor: Editor) => {
       editor.ui.registry.addContextToolbar('test-image', {
         predicate: (node) => node.nodeName.toLowerCase() === 'img',
         items: 'image'

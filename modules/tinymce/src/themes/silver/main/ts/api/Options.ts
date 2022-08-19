@@ -23,12 +23,12 @@ export enum ToolbarLocation {
 }
 
 const option: {
-  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K] | undefined;
+  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K];
   <T>(name: string): (editor: Editor) => T | undefined;
 } = (name: string) => (editor: Editor) =>
   editor.options.get(name);
 
-const wrapOptional = <T>(fn: (editor: Editor) => T) => (editor: Editor): Optional<T> =>
+const wrapOptional = <T>(fn: (editor: Editor) => T) => (editor: Editor): Optional<NonNullable<T>> =>
   Optional.from(fn(editor));
 
 const register = (editor: Editor): void => {
@@ -257,6 +257,11 @@ const register = (editor: Editor): void => {
     default: true
   });
 
+  registerOption('promotion', {
+    processor: 'boolean',
+    default: true
+  });
+
   registerOption('resize', {
     processor: (value) => value === 'both' || Type.isBoolean(value),
     // Editor resize doesn't work on touch devices at this stage
@@ -302,6 +307,7 @@ const useBranding = option('branding');
 const getResize = option('resize');
 const getPasteAsText = option('paste_as_text');
 const getSidebarShow = option('sidebar_show');
+const promotionEnabled = option('promotion');
 
 const isSkinDisabled = (editor: Editor): boolean =>
   editor.options.get('skin') === false;
@@ -361,7 +367,7 @@ const fixedContainerTarget = (editor: Editor): Optional<SugarElement> => {
     return Optional.none();
   }
 
-  const selector = fixedContainerSelector(editor);
+  const selector = fixedContainerSelector(editor) ?? '';
   if (selector.length > 0) {
     // If we have a valid selector
     return SelectorFind.descendant(SugarBody.body(), selector);
@@ -442,6 +448,7 @@ export {
   getFilePickerValidatorHandler,
   useStatusBar,
   useElementPath,
+  promotionEnabled,
   useBranding,
   getResize,
   getPasteAsText,

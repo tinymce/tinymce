@@ -3,12 +3,21 @@ import {
 } from '@ephox/alloy';
 import { Arr, Cell, Optional, Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+import { OtherCells } from '@ephox/snooker';
 import { Compare, Css, SugarElement, SugarPosition, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 interface SnapExtra {
   readonly td: SugarElement<HTMLTableCellElement>;
+}
+
+interface TableSelectionChangeEvent {
+  readonly cells: SugarElement<HTMLTableCellElement>[];
+  readonly start: SugarElement<HTMLTableCellElement>;
+  readonly finish: SugarElement<HTMLTableCellElement>;
+  readonly otherCells: Optional<OtherCells.OtherCells>;
 }
 
 const snapWidth = 40;
@@ -95,10 +104,10 @@ const createSelector = (snaps: DraggingTypes.SnapsConfigSpec<SnapExtra>) => Meme
   })
 );
 
-const setup = (editor: Editor, sink: AlloyComponent) => {
+const setup = (editor: Editor, sink: AlloyComponent): void => {
   const tlTds = Cell<SugarElement<HTMLTableCellElement>[]>([]);
   const brTds = Cell<SugarElement<HTMLTableCellElement>[]>([]);
-  const isVisible = Cell<Boolean>(false);
+  const isVisible = Cell<boolean>(false);
   const startCell = Singleton.value<SugarElement<HTMLTableCellElement>>();
   const finishCell = Singleton.value<SugarElement<HTMLTableCellElement>>();
 
@@ -173,7 +182,7 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
 
   // TODO: Make this work for desktop maybe?
   if (PlatformDetection.detect().deviceType.isTouch()) {
-    editor.on('TableSelectionChange', (e) => {
+    editor.on('TableSelectionChange', (e: EditorEvent<TableSelectionChangeEvent>) => {
       if (!isVisible.get()) {
         Attachment.attach(sink, topLeft);
         Attachment.attach(sink, bottomRight);

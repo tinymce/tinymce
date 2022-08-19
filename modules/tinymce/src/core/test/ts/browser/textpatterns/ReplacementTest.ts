@@ -1,6 +1,7 @@
-import { Assertions } from '@ephox/agar';
-import { beforeEach, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
+import { Assertions, Keys } from '@ephox/agar';
+import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
+import { Html, InsertAll, Remove, SugarElement } from '@ephox/sugar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -13,7 +14,8 @@ describe('browser.tinymce.core.textpatterns.ReplacementTest', () => {
       { start: 'heading', replacement: '<h1>My Heading</h1>' },
       { start: 'complex pattern', replacement: '<h1>Text</h1><p>More text</p>' },
       { start: '*', end: '*', format: 'italic' },
-      { start: '#', format: 'h1' }
+      { start: '#', format: 'h1' },
+      { start: 'text_pattern', replacement: 'wow' }
     ],
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
@@ -35,7 +37,7 @@ describe('browser.tinymce.core.textpatterns.ReplacementTest', () => {
     editor.insertContent('|');
     const content = editor.getContent();
     const normalizedContent = normalize ? content.replace(/&nbsp;/g, ' ') : content;
-    Assertions.assertHtml('Checking cursor', afterType, normalizedContent);
+    Assertions.assertHtml('Checking cursor', afterType ?? '', normalizedContent);
   };
 
   it('Apply html replacement pattern on space', () => {
@@ -126,5 +128,63 @@ describe('browser.tinymce.core.textpatterns.ReplacementTest', () => {
     const editor = hook.editor();
     Utils.setContentAndPressEnter(editor, '<span data-mce-spelling="invalid">#</span>*brb<span data-mce-spelling="invalid">*</span>', 3, [ 0 ]);
     assertContentAndCursor(editor, '<h1><em>be right back</em></h1><p>&nbsp;|</p>');
+  });
+
+  context('Fragmented text nodes in a paragraph', () => {
+    const testFragmentedText = (editor: Editor, pressKey: () => void, getNodes: () => SugarElement<Node>[], elementPath: number[], offset: number, expected: string) => {
+      editor.setContent('<p></p>');
+      const paragraph = SugarElement.fromDom(editor.dom.select('p')[0]);
+      Remove.empty(paragraph);
+      InsertAll.append(paragraph, getNodes());
+      editor.focus();
+      TinySelections.setCursor(editor, elementPath, offset);
+      pressKey();
+      TinyAssertions.assertContent(editor, expected);
+    };
+
+    const testEnterOnFragmentedText = (editor: Editor, getNodes: () => SugarElement<Node>[], elementPath: number[], offset: number, expected: string) =>
+      testFragmentedText(editor, () => TinyContentActions.keystroke(editor, Keys.enter()), getNodes, elementPath, offset, expected);
+
+    const testSpaceOnFragmentedText = (editor: Editor, getNodes: () => SugarElement<Node>[], elementPath: number[], offset: number, expected: string) =>
+      testFragmentedText(editor, () => {
+        TinyContentActions.keydown(editor, Keys.space());
+        editor.execCommand('mceInsertContent', false, ' ');
+        TinyContentActions.keyup(editor, Keys.space());
+      }, getNodes, elementPath, offset, expected);
+
+    it('TINY-8779: Pattern matches when found in the middle text node', () => {
+      const getNodes = () => [
+        SugarElement.fromText('text'),
+        SugarElement.fromText('_pattern'),
+        SugarElement.fromText(' for sure')
+      ];
+      testEnterOnFragmentedText(hook.editor(), getNodes, [ 0, 1 ], 8, '<p>wow</p><p>for sure</p>');
+      testSpaceOnFragmentedText(hook.editor(), getNodes, [ 0, 1 ], 8, '<p>wow&nbsp; for sure</p>');
+    });
+
+    it('TINY-8779: Pattern matches when found in the last text node', () => {
+      const getNodes = () => [
+        SugarElement.fromText('text'),
+        SugarElement.fromText('_pattern')
+      ];
+      testEnterOnFragmentedText(hook.editor(), getNodes, [ 0, 1 ], 8, '<p>wow</p><p>&nbsp;</p>');
+      testSpaceOnFragmentedText(hook.editor(), getNodes, [ 0, 1 ], 8, '<p>wow&nbsp;</p>');
+    });
+
+    it('TINY-8779: Pattern matches with an inline element amongst text nodes', () => {
+      const getNodes = () => {
+        const strongNode = SugarElement.fromTag('strong');
+        Html.set(strongNode, 'element');
+        return [
+          SugarElement.fromText('first'),
+          SugarElement.fromText(' '),
+          strongNode,
+          SugarElement.fromText(' text_pattern'),
+          SugarElement.fromText(' is big')
+        ];
+      };
+      testEnterOnFragmentedText(hook.editor(), getNodes, [ 0, 3 ], 13, '<p>first <strong>element</strong> wow</p><p>is big</p>');
+      testSpaceOnFragmentedText(hook.editor(), getNodes, [ 0, 3 ], 13, '<p>first <strong>element</strong> wow&nbsp; is big</p>');
+    });
   });
 });

@@ -21,10 +21,10 @@ const extractSelected = (cells: SugarElement<HTMLTableCellElement>[]): Optional<
   );
 };
 
-const serializeElements = (editor: Editor, elements: SugarElement[]): string =>
+const serializeElements = (editor: Editor, elements: SugarElement<HTMLElement>[]): string =>
   Arr.map(elements, (elm) => editor.selection.serializer.serialize(elm.dom, {})).join('');
 
-const getTextContent = (elements: SugarElement[]): string =>
+const getTextContent = (elements: SugarElement<HTMLElement>[]): string =>
   Arr.map(elements, (element) => element.dom.innerText).join('');
 
 const registerEvents = (editor: Editor, actions: TableActions): void => {

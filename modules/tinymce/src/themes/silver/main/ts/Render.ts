@@ -21,12 +21,14 @@ import OuterContainer from './ui/general/OuterContainer';
 import * as StaticHeader from './ui/header/StaticHeader';
 import * as StickyHeader from './ui/header/StickyHeader';
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
+import { MenuRegistry } from './ui/menus/menubar/Integration';
 import * as TableSelectorHandles from './ui/selector/TableSelectorHandles';
 import * as Sidebar from './ui/sidebar/Sidebar';
 import * as EditorSize from './ui/sizing/EditorSize';
 import * as Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
 import * as Throbber from './ui/throbber/Throbber';
+import { RenderToolbarConfig } from './ui/toolbar/Integration';
 
 export interface ModeRenderInfo {
   readonly iframeContainer?: HTMLIFrameElement;
@@ -50,16 +52,7 @@ export interface RenderUiComponents {
 
 export type ToolbarConfig = Array<string | Options.ToolbarGroupOption> | string | boolean;
 
-export interface RenderToolbarConfig {
-  readonly toolbar: ToolbarConfig;
-  readonly buttons: Record<string, any>;
-  readonly allowToolbarGroups: boolean;
-}
-
-export interface RenderUiConfig extends RenderToolbarConfig {
-  readonly menuItems: Record<string, any>;
-  readonly menus;
-  readonly menubar;
+export interface RenderUiConfig extends RenderToolbarConfig, MenuRegistry {
   readonly sidebar: Sidebar.SidebarConfig;
 }
 
@@ -155,6 +148,8 @@ const setup = (editor: Editor): RenderInfo => {
     const hasMultipleToolbar = Options.isMultipleToolbars(editor);
     const hasToolbar = Options.isToolbarEnabled(editor);
     const hasMenubar = Options.isMenubarEnabled(editor);
+    const shouldHavePromotion = Options.promotionEnabled(editor);
+    const partPromotion = makePromotion();
 
     const getPartToolbar = () => {
       if (hasMultipleToolbar) {
@@ -166,6 +161,8 @@ const setup = (editor: Editor): RenderInfo => {
       }
     };
 
+    const menubarCollection = shouldHavePromotion ? [ partPromotion, partMenubar ] : [ partMenubar ];
+
     return OuterContainer.parts.header({
       dom: {
         tag: 'div',
@@ -173,7 +170,7 @@ const setup = (editor: Editor): RenderInfo => {
         ...verticalDirAttributes
       },
       components: Arr.flatten<AlloySpec>([
-        hasMenubar ? [ partMenubar ] : [ ],
+        hasMenubar ? menubarCollection : [ ],
         getPartToolbar(),
         // fixed_toolbar_container anchors to the editable area, else add an anchor bar
         Options.useFixedContainer(editor) ? [ ] : [ memAnchorBar.asSpec() ]
@@ -181,6 +178,15 @@ const setup = (editor: Editor): RenderInfo => {
       sticky: Options.isStickyToolbar(editor),
       editor,
       sharedBackstage: backstage.shared
+    });
+  };
+
+  const makePromotion = () => {
+    return OuterContainer.parts.promotion({
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-promotion' ],
+      },
     });
   };
 

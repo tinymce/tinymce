@@ -1,4 +1,4 @@
-import { Disabling, ItemTypes, Toggling } from '@ephox/alloy';
+import { AlloyComponent, Disabling, ItemTypes, Toggling } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Merger, Optional } from '@ephox/katamari';
 
@@ -16,7 +16,7 @@ const renderToggleMenuItem = (
   providersBackstage: UiFactoryBackstageProviders,
   renderIcons: boolean = true
 ): ItemTypes.ItemSpec => {
-  const getApi = (component): Menu.ToggleMenuItemInstanceApi => ({
+  const getApi = (component: AlloyComponent): Menu.ToggleMenuItemInstanceApi => ({
     setActive: (state) => {
       Toggling.set(component, state);
     },

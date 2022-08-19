@@ -7,7 +7,7 @@ import Editor from 'tinymce/core/api/Editor';
 import * as EditorOptions from 'tinymce/core/api/EditorOptions';
 
 describe('browser.tinymce.core.EditorOptionsTest', () => {
-  let processed = [];
+  let processed: unknown[] = [];
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
   }, []);

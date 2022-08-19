@@ -7,8 +7,8 @@ import * as Obj from 'ephox/katamari/api/Obj';
 
 describe('atomic.katamari.api.arr.ObjKeysTest', () => {
   it('unit tests', () => {
-    const check = (expKeys, input) => {
-      const c = (expected, v) => {
+    const check = (expKeys: string[], input: Record<string, unknown>) => {
+      const c = (expected: string[], v: string[]) => {
         v.sort();
         assert.deepEqual(v, expected);
       };

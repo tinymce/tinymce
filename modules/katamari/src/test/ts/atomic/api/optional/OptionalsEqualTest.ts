@@ -52,7 +52,7 @@ describe('atomic.katamari.api.optional.OptionalsEqualTest', () => {
     assert.isTrue(Optionals.equals(Optional.some(5), Optional.some(5)));
     assert.isFalse(Optionals.equals(Optional.some(5.1), Optional.some(5.3)));
 
-    const comparator = (a, b) => Math.round(a) === Math.round(b);
+    const comparator = (a: number, b: number) => Math.round(a) === Math.round(b);
 
     assert.isTrue(Optionals.equals(Optional.some(5.1), Optional.some(5.3), comparator));
     assert.isFalse(Optionals.equals(Optional.some(5.1), Optional.some(5.9), comparator));

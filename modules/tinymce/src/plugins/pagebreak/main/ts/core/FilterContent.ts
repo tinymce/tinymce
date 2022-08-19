@@ -11,7 +11,7 @@ const getPlaceholderHtml = (shouldSplitBlock: boolean): string => {
 };
 
 const setup = (editor: Editor): void => {
-  const separatorHtml = Options.getSeparatorHtml(editor);
+  const separatorHtml: string = Options.getSeparatorHtml(editor);
   const shouldSplitBlock = () => Options.shouldSplitBlock(editor);
 
   const pageBreakSeparatorRegExp = new RegExp(separatorHtml.replace(/[\?\.\*\[\]\(\)\{\}\+\^\$\:]/g, (a) => {
@@ -32,7 +32,7 @@ const setup = (editor: Editor): void => {
         if (className && className.indexOf(pageBreakClass) !== -1) {
           // Replace parent block node if pagebreak_split_block is enabled
           const parentNode = node.parent;
-          if (editor.schema.getBlockElements()[parentNode.name] && shouldSplitBlock()) {
+          if (parentNode && editor.schema.getBlockElements()[parentNode.name] && shouldSplitBlock()) {
             parentNode.type = 3;
             parentNode.value = separatorHtml;
             parentNode.raw = true;

@@ -1,3 +1,5 @@
+import { Id } from '@ephox/katamari';
+
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import { CustomTabSpecs } from '../Plugin';
@@ -8,8 +10,9 @@ export interface Api {
 
 const get = (customTabs: CustomTabSpecs): Api => {
   const addTab = (spec: Dialog.TabSpec): void => {
+    const name = spec.name ?? Id.generate('tab-name');
     const currentCustomTabs = customTabs.get();
-    currentCustomTabs[spec.name] = spec;
+    currentCustomTabs[name] = spec;
     customTabs.set(currentCustomTabs);
   };
 

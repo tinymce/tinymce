@@ -19,6 +19,8 @@ import { deriveCollectionMovement } from '../menus/menu/MenuMovement';
 
 type CollectionSpec = Omit<Dialog.Collection, 'type'>;
 
+type ItemCallback<T extends EventFormat> = (c: AlloyComponent, se: SimulatedEvent<T>, tgt: SugarElement<HTMLElement>, itemValue: string | undefined) => void;
+
 export const renderCollection = (
   spec: CollectionSpec,
   providersBackstage: UiFactoryBackstageProviders,
@@ -27,8 +29,8 @@ export const renderCollection = (
   // DUPE with TextField.
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
-  const runOnItem = <T extends EventFormat>(f: (c: AlloyComponent, se: SimulatedEvent<T>, tgt: SugarElement, itemValue: string) => void) => (comp: AlloyComponent, se: SimulatedEvent<T>) => {
-    SelectorFind.closest(se.event.target, '[data-collection-item-value]').each((target: SugarElement<HTMLElement>) => {
+  const runOnItem = <T extends EventFormat>(f: ItemCallback<T>) => (comp: AlloyComponent, se: SimulatedEvent<T>) => {
+    SelectorFind.closest<HTMLElement>(se.event.target, '[data-collection-item-value]').each((target) => {
       f(comp, se, target, Attribute.get(target, 'data-collection-item-value'));
     });
   };
@@ -43,7 +45,7 @@ export const renderCollection = (
       // Replacing the hyphens and underscores in collection items with spaces
       // to ensure the screen readers pronounce the words correctly.
       // This is only for aria purposes. Emoticon and Special Character names will still use _ and - for autocompletion.
-      const mapItemName = {
+      const mapItemName: Record<string, string> = {
         '_': ' ',
         ' - ': ' ',
         '-': ' '
@@ -99,7 +101,8 @@ export const renderCollection = (
     }))
   ];
 
-  const iterCollectionItems = (comp, applyAttributes) => Arr.map(SelectorFilter.descendants(comp.element, '.tox-collection__item'), applyAttributes);
+  const iterCollectionItems = (comp: AlloyComponent, applyAttributes: (element: SugarElement<Element>) => void) =>
+    Arr.map(SelectorFilter.descendants(comp.element, '.tox-collection__item'), applyAttributes);
 
   const pField = AlloyFormField.parts.field({
     dom: {

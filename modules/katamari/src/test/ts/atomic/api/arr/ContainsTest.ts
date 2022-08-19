@@ -7,7 +7,7 @@ import * as Fun from 'ephox/katamari/api/Fun';
 
 describe('atomic.katamari.api.arr.ContainsTest', () => {
   it('unit test', () => {
-    const check = (expected, input: any[], value) => {
+    const check = <T>(expected: boolean, input: T[], value: T) => {
       assert.deepEqual(Arr.contains(input, value), expected);
       assert.deepEqual(Arr.contains(Object.freeze(input.slice()), value), expected);
     };

@@ -50,12 +50,12 @@ const onSetupToggle = (editor: Editor, formatName: string, formatValue: string) 
 };
 
 export const isListGroup = (item: UserListItem): item is UserListGroup =>
-  Obj.hasNonNullableKey(item as Record<string, any>, 'menu');
+  Obj.hasNonNullableKey(item as UserListGroup, 'menu');
 
 const buildListItems = (items: UserListItem[]): Dialog.ListBoxItemSpec[] =>
   Arr.map(items, (item) => {
     // item.text is not documented - maybe deprecated option we can delete??
-    const text = item.text || item.title;
+    const text = item.text || item.title || '';
     if (isListGroup(item)) {
       return {
         text,

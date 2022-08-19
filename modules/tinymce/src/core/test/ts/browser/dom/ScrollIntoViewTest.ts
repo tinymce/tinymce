@@ -92,7 +92,7 @@ describe('browser.tinymce.core.dom.ScrollIntoViewTest', () => {
   const assertScrollIntoViewEventInfo = (editor: Editor, value: StateAndHandler, expectedElementSelector: string, expectedAlignToTop: boolean) => {
     const state = value.state.get();
     const expectedTarget = SugarElement.fromDom(editor.dom.select(expectedElementSelector)[0]);
-    const actualTarget = SugarElement.fromDom(state.elm);
+    const actualTarget = SugarElement.fromDom(state.elm as HTMLElement);
     Assertions.assertDomEq('Target should be expected element', expectedTarget, actualTarget);
     assert.equal(state.alignToTop, expectedAlignToTop, 'Align to top should be expected value');
     editor.off('ScrollIntoView', value.handler);

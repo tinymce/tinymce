@@ -1,26 +1,10 @@
 {
   "rules": {
-    "@typescript-eslint/explicit-module-boundary-types": "off"
-  },
-  "overrides": [
-    // Expand the default dom globals that are allowed to be accessed implicitly
-    {
-      "files": [ "src/**/main/**/*.ts", "src/**/test/**/*.ts" ],
-      "rules": {
-        "@tinymce/no-implicit-dom-globals": [
-          "error", {
-            "allowed": [ "btoa", "fetch", "requestAnimationFrame", "InputEvent" ],
-            "appendDefaults": true
-          }
-        ]
+    "@tinymce/no-implicit-dom-globals": [
+      "error", {
+        "allowed": [ "btoa", "fetch", "requestAnimationFrame", "InputEvent" ],
+        "appendDefaults": true
       }
-    },
-    // Re-enable things that are passing for explicit module boundary types
-    {
-      "files": [ "src/core/main/**/*.ts" ],
-      "rules": {
-        "@typescript-eslint/explicit-module-boundary-types": [ "error", { "allowArgumentsExplicitlyTypedAsAny": true }]
-      }
-    }
-  ]
+    ]
+  }
 }

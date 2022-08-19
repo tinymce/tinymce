@@ -14,7 +14,7 @@ import * as SystemEvents from '../../api/events/SystemEvents';
 import { TogglingConfigSpec } from '../../behaviour/toggling/TogglingTypes';
 import * as Fields from '../../data/Fields';
 import * as ButtonBase from '../../ui/common/ButtonBase';
-import { NormalItemDetail } from '../../ui/types/ItemTypes';
+import { ItemTogglingConfigSpec, NormalItemDetail } from '../../ui/types/ItemTypes';
 import * as ItemEvents from '../util/ItemEvents';
 
 type ItemRole = 'menuitem' | 'menuitemcheckbox' | 'menuitemradio';
@@ -24,12 +24,12 @@ const getItemRole = (detail: NormalItemDetail): ItemRole =>
     .map((toggling) => toggling.exclusive ? 'menuitemradio' : 'menuitemcheckbox')
     .getOr('menuitem');
 
-const getTogglingSpec = (tConfig: Partial<TogglingConfigSpec> & { exclusive?: boolean }): TogglingConfigSpec => ({
+const getTogglingSpec = (tConfig: Partial<ItemTogglingConfigSpec>): TogglingConfigSpec => ({
   aria: {
     mode: 'checked'
   },
   // Filter out the additional properties that are not in Toggling Behaviour's configuration (e.g. exclusive)
-  ...Obj.filter(tConfig as { [K in keyof TogglingConfigSpec]: TogglingConfigSpec[K] }, (_value, name) => name !== 'exclusive'),
+  ...Obj.filter(tConfig, (_value, name) => name !== 'exclusive'),
   onToggled: (component, state) => {
     if (Type.isFunction(tConfig.onToggled)) {
       tConfig.onToggled(component, state);

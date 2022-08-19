@@ -32,7 +32,7 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
   });
 
   it('target (initialised properly)', (done) => {
-    const elm1 = viewBlock.get().querySelector<HTMLElement>('#elm-1');
+    const elm1 = viewBlock.get().querySelector('#elm-1') as HTMLElement;
 
     EditorManager.init({
       target: elm1,
@@ -58,8 +58,8 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
   });
 
   it('target (selector option takes precedence over target option)', (done) => {
-    const elm1 = document.getElementById('elm-1');
-    const elm2 = document.getElementById('elm-2');
+    const elm1 = document.getElementById('elm-1') as HTMLElement;
+    const elm2 = document.getElementById('elm-2') as HTMLElement;
 
     EditorManager.init({
       selector: '#elm-2',
@@ -81,9 +81,9 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
 
   it('target (each editor should have a different target)', (done) => {
     const maxCount = document.querySelectorAll('.elm-even').length;
-    const elm1 = document.getElementById('elm-1');
+    const elm1 = document.getElementById('elm-1') as HTMLElement;
     let count = 0;
-    const targets = [];
+    const targets: HTMLElement[] = [];
 
     EditorManager.init({
       selector: '.elm-even',
@@ -127,7 +127,7 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
 
   const getSkinCssFilenames = (): string[] => {
     return Arr.bind(SelectorFilter.descendants(SugarElement.fromDom(document), 'link'), (link) => {
-      const href = Attribute.get(link, 'href');
+      const href = Attribute.get(link, 'href') ?? '';
       const fileName = href.split('/').slice(-1).join('');
       const isSkin = href.indexOf('oxide/') > -1;
       return isSkin ? [ fileName ] : [ ];
@@ -140,6 +140,7 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
     return EditorManager.init({
       selector: '.tinymce-editor',
       inline: true,
+      promotion: false,
       toolbar_mode: 'wrap'
     });
   };

@@ -4,7 +4,12 @@ import LocalStorage from 'tinymce/core/api/util/LocalStorage';
 
 const storageName = 'tinymce-custom-colors';
 
-export default (max: number = 10) => {
+export interface ColorCache {
+  readonly add: (key: string) => void;
+  readonly state: () => string[];
+}
+
+export const ColorCache = (max: number = 10): ColorCache => {
   const storageString = LocalStorage.getItem(storageName);
   const localstorage = Type.isString(storageString) ? JSON.parse(storageString) : [];
 

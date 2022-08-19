@@ -3,7 +3,12 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-const Settings = (hook: TinyHooks.Hook<Editor>) => {
+interface Settings {
+  readonly addSettings: (config: Record<string, any>) => void;
+  readonly cleanupSettings: () => void;
+}
+
+const Settings = (hook: TinyHooks.Hook<Editor>): Settings => {
   let settings = new Set<string>();
 
   const addSettings = (config: Record<string, any>) => {

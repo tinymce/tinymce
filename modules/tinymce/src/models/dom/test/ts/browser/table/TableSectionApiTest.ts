@@ -167,7 +167,7 @@ describe('browser.tinymce.models.dom.table.TableSectionApiTest', () => {
 </tbody>
 </table>`;
 
-  let events = [];
+  let events: Array<{ type: string; structure?: boolean; style?: boolean }> = [];
   const logModifiedEvent = (event: EditorEvent<TableModifiedEvent>) => {
     events.push({
       type: event.type,

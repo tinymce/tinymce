@@ -2,13 +2,13 @@ import { Future } from './Future';
 import { Result } from './Result';
 
 export interface FutureResult<A, E> extends Future<Result<A, E>> {
-  toCached: () => FutureResult<A, E>;
-  bindFuture: <B>(f: (value: A) => Future<Result<B, E>>) => FutureResult<B, E>;
-  bindResult: <B>(f: (value: A) => Result<B, E>) => FutureResult<B, E>;
-  mapResult: <B>(f: (value: A) => B) => FutureResult<B, E>;
-  mapError: <B>(f: (error: E) => B) => FutureResult<A, B>;
-  foldResult: <X>(whenError: (error: E) => X, whenValue: (value: A) => X) => Future<X>;
-  withTimeout: (timeout: number, errorThunk: () => E) => FutureResult<A, E>;
+  readonly toCached: () => FutureResult<A, E>;
+  readonly bindFuture: <B>(f: (value: A) => Future<Result<B, E>>) => FutureResult<B, E>;
+  readonly bindResult: <B>(f: (value: A) => Result<B, E>) => FutureResult<B, E>;
+  readonly mapResult: <B>(f: (value: A) => B) => FutureResult<B, E>;
+  readonly mapError: <B>(f: (error: E) => B) => FutureResult<A, B>;
+  readonly foldResult: <X>(whenError: (error: E) => X, whenValue: (value: A) => X) => Future<X>;
+  readonly withTimeout: (timeout: number, errorThunk: () => E) => FutureResult<A, E>;
 }
 
 const wrap = <A = any, E = any> (delegate: Future<Result<A, E>>): FutureResult<A, E> => {

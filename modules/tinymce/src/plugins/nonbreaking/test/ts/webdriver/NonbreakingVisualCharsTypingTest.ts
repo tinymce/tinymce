@@ -15,7 +15,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest
     toolbar: 'nonbreaking visualchars',
     visualchars_default_state: true,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ NonbreakingPlugin, VisualCharsPlugin ]);
+  }, [ NonbreakingPlugin, VisualCharsPlugin ], true);
 
   const detection = PlatformDetection.detect();
 
@@ -37,7 +37,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest
   it('TINY-3647: Click on the nbsp button then type some text, and assert content is correct', async () => {
     const editor = hook.editor();
     clickNbspToolbarButton(editor);
-    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.text('test') ]);
+    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('test') ]);
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('body', {
       children: [
         s.element('p', {
@@ -83,7 +83,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest
     editor.setContent('test');
     TinySelections.setCursor(editor, [ 0, 0 ], 4);
     clickNbspToolbarButton(editor);
-    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.text('test') ]);
+    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('test') ]);
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('body', {
       children: [
         s.element('p', {
@@ -105,7 +105,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest
   it('TINY-3647: Click on the nbsp button then type a space, and assert content is correct', async () => {
     const editor = hook.editor();
     clickNbspToolbarButton(editor);
-    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.text(' ') ]);
+    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('body', {
       children: [
         s.element('p', {
@@ -144,7 +144,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest
         })
       ]
     })));
-    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.text('test ') ]);
+    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('test ') ]);
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('body', {
       children: [
         s.element('p', {
@@ -184,7 +184,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest
         })
       ]
     })));
-    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.text('test ') ]);
+    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('test ') ]);
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('body', {
       children: [
         s.element('p', {
@@ -201,7 +201,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest
         })
       ]
     })));
-    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.text('test ') ]);
+    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('test ') ]);
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('body', {
       children: [
         s.element('p', {

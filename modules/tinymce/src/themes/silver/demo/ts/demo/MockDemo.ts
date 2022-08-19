@@ -1,6 +1,12 @@
-const mockFeatureState = () => {
+interface MockState {
+  readonly get: () => boolean;
+  readonly set: (nu: boolean) => void;
+  readonly toggle: () => boolean;
+}
+
+const mockFeatureState = (): MockState => {
   // Why we need this mock?
-  // Alloy toggle is stateless, it needs somthing to tell it what state it should be
+  // Alloy toggle is stateless, it needs something to tell it what state it should be
 
   let demoState = false;
 
@@ -11,7 +17,7 @@ const mockFeatureState = () => {
   };
 
   const toggle = (): boolean => {
-    const nuState = demoState === true ? false : true;
+    const nuState = !demoState;
     set(nuState);
     return get();
   };

@@ -31,7 +31,7 @@ export interface SilverMenubarDetail extends Sketcher.SingleSketchDetail {
 
 export interface SilverMenubarApis {
   focus: (comp: AlloyComponent) => void;
-  setMenus: (comp: AlloyComponent, groups) => void;
+  setMenus: (comp: AlloyComponent, groups: MenubarItemSpec[]) => void;
 }
 
 export interface SilverMenubarSketch extends Sketcher.SingleSketch<SilverMenubarSpec>, SilverMenubarApis { }

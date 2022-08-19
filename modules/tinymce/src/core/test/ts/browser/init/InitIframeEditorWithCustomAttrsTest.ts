@@ -17,7 +17,7 @@ describe('browser.tinymce.core.init.InitIframeEditorWithCustomAttrsTest', () => 
 
   it('Check if iframe element has the right custom attributes', () => {
     const editor = hook.editor();
-    const ifr = SugarElement.fromDom(editor.iframeElement);
+    const ifr = SugarElement.fromDom(editor.iframeElement as HTMLIFrameElement);
 
     assert.notEqual(Attribute.get(ifr, 'id'), 'x', 'Id should not be the defined x');
     assert.equal(Attribute.get(ifr, 'data-custom1'), 'a', 'Custom attribute should have the right value');

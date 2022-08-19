@@ -8,20 +8,20 @@ import { assertNone, assertSome } from 'ephox/katamari/test/AssertOptional';
 describe('atomic.katamari.api.arr.ArrLastTest', () => {
 
   it('unit tests', () => {
-    const checkNoneHelper = (xs, x) => {
+    const checkNoneHelper = <T>(xs: ReadonlyArray<T>, x: any) => {
       assertNone(Arr.indexOf(xs, x));
     };
 
-    const checkNone = (xs: any[], x) => {
+    const checkNone = <T>(xs: T[], x: any) => {
       checkNoneHelper(xs, x);
       checkNoneHelper(Object.freeze(xs.slice()), x);
     };
 
-    const checkHelper = (expected, xs, x) => {
+    const checkHelper = <T>(expected: number, xs: ReadonlyArray<T>, x: T) => {
       assertSome(Arr.indexOf(xs, x), expected);
     };
 
-    const check = (expected, xs: any[], x) => {
+    const check = <T>(expected: number, xs: T[], x: T) => {
       checkHelper(expected, xs, x);
       checkHelper(expected, Object.freeze(xs.slice()), x);
     };

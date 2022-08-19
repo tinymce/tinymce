@@ -11,9 +11,10 @@ export default (sink?: AlloyComponent): UiFactoryBackstage => {
   // NOTE: Non-sensical anchor
   const hotspotAnchorFn = (): HotspotAnchorSpec => ({
     type: 'hotspot',
-    hotspot: sink
+    hotspot: sink as AlloyComponent
   });
   const headerLocation = Cell<'top' | 'bottom'>('top');
+  const contextMenuState = Cell(false);
 
   return {
     shared: {
@@ -37,7 +38,7 @@ export default (sink?: AlloyComponent): UiFactoryBackstage => {
         getDockingMode: headerLocation.get,
         setDockingMode: headerLocation.set
       },
-      getSink: () => Result.value(sink)
+      getSink: () => sink ? Result.value(sink) : Result.error('No test sink setup')
     },
     urlinput: {
       getHistory: Fun.constant([]),
@@ -46,8 +47,19 @@ export default (sink?: AlloyComponent): UiFactoryBackstage => {
       getValidationHandler: Optional.none,
       getUrlPicker: (_filetype) => Optional.some((entry: ApiUrlData) => Future.pure(entry))
     },
+    styles: {
+      getData: Fun.constant([])
+    },
+    colorinput: {
+      colorPicker: Fun.noop,
+      hasCustomColors: Fun.never,
+      getColors: Fun.constant([]),
+      getColorCols: Fun.constant(5)
+    },
     dialog: {
       isDraggableModal: Fun.never
-    }
+    },
+    setContextMenuState: contextMenuState.set,
+    isContextMenuOpen: contextMenuState.get
   };
 };

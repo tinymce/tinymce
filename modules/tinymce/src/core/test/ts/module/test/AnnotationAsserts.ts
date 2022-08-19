@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Step } from '@ephox/agar';
+import { ApproxStructure, Assertions } from '@ephox/agar';
 import { Arr, Obj } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { TinyAssertions } from '@ephox/wrap-mcagar';
@@ -7,18 +7,15 @@ import { assert } from 'chai';
 import * as Markings from 'tinymce/core/annotate/Markings';
 import Editor from 'tinymce/core/api/Editor';
 
-const annotate = (editor: Editor, name: string, uid: string, data: {}) => {
+const annotate = (editor: Editor, name: string, uid: string, data: {}): void => {
   editor.annotator.annotate(name, {
     uid,
     ...data
   });
 };
 
-const sAnnotate = <T>(editor: Editor, name: string, uid: string, data: {}): Step<T, T> =>
-  Step.sync(() => annotate(editor, name, uid, data));
-
 // This will result in an attribute order-insensitive HTML assertion
-const assertHtmlContent = (editor: Editor, children: string[], allowExtras?: boolean) => {
+const assertHtmlContent = (editor: Editor, children: string[], allowExtras?: boolean): void => {
   TinyAssertions.assertContentStructure(editor,
     ApproxStructure.build((s, _str, _arr) => s.element('body', {
       children: Arr.map(children, ApproxStructure.fromHtml).concat(allowExtras ? [ s.theRest() ] : [])
@@ -26,10 +23,7 @@ const assertHtmlContent = (editor: Editor, children: string[], allowExtras?: boo
   );
 };
 
-const sAssertHtmlContent = <T>(editor: Editor, children: string[], allowExtras?: boolean): Step<T, T> =>
-  Step.sync(() => assertHtmlContent(editor, children, allowExtras));
-
-const assertMarker = (editor: Editor, expected: { uid: string; name: string }, nodes: Element[]) => {
+const assertMarker = (editor: Editor, expected: { uid: string; name: string }, nodes: Element[]): void => {
   const { uid, name } = expected;
   Arr.each(nodes, (node) => {
     Assertions.assertEq('Wrapper must be in content', true, editor.getBody().contains(node));
@@ -46,7 +40,7 @@ const assertMarker = (editor: Editor, expected: { uid: string; name: string }, n
   });
 };
 
-const assertGetAll = (editor: Editor, expected: Record<string, number>, name: string) => {
+const assertGetAll = (editor: Editor, expected: Record<string, number>, name: string): void => {
   const annotations = editor.annotator.getAll(name);
   const keys = Obj.keys(annotations);
   const expectedKeys = Obj.keys(expected);
@@ -57,14 +51,11 @@ const assertGetAll = (editor: Editor, expected: Record<string, number>, name: st
   });
 };
 
-const sAssertGetAll = (editor: Editor, expected: Record<string, number>, name: string) =>
-  Step.sync(() => assertGetAll(editor, expected, name));
-
-const assertMarkings = (editor: Editor, expectedSpanAnnotations: number, expectedBlockAnnotations: number) => {
+const assertMarkings = (editor: Editor, expectedSpanAnnotations: number, expectedBlockAnnotations: number): void => {
   const annotation = Markings.annotation();
   const dataAnnotation = Markings.dataAnnotation();
   const dataAnnotationId = Markings.dataAnnotationId();
-  // Not checking active as this is not applied synchonously
+  // Not checking active as this is not applied synchronously
   // const dataAnnotationActive = Markings.dataAnnotationActive();
   const dataAnnotationClasses = Markings.dataAnnotationClasses();
   const dataAnnotationAttributes = Markings.dataAnnotationAttributes();
@@ -84,9 +75,6 @@ const assertMarkings = (editor: Editor, expectedSpanAnnotations: number, expecte
 };
 
 export {
-  sAnnotate,
-  sAssertHtmlContent,
-  sAssertGetAll,
   assertMarker,
   annotate,
   assertHtmlContent,

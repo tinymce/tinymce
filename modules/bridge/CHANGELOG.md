@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+- The `colors` property was incorrectly marked as required for the `ColorSwatchMenuItemSpec` type.
+
 ## 4.0.2 - 2022-03-22
 
 ### Fixed

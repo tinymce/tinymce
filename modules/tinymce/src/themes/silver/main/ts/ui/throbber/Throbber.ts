@@ -1,4 +1,4 @@
-import { AlloyComponent, AlloySpec, Behaviour, Blocking, Composing, DomFactory, Replacing } from '@ephox/alloy';
+import { AlloyComponent, AlloySpec, Behaviour, Blocking, Composing, DomFactory, Replacing, SketchSpec } from '@ephox/alloy';
 import { Arr, Cell, Optional, Singleton, Type } from '@ephox/katamari';
 import { Attribute, Class, Css, Focus, SugarElement, SugarNode } from '@ephox/sugar';
 
@@ -77,7 +77,7 @@ const toggleThrobber = (editor: Editor, comp: AlloyComponent, state: boolean, pr
   }
 };
 
-const renderThrobber = (spec): AlloySpec => ({
+const renderThrobber = (spec: SketchSpec): AlloySpec => ({
   uid: spec.uid,
   dom: {
     tag: 'div',
@@ -116,7 +116,7 @@ const isPasteBinTarget = (event: EditorEvent<ExecCommandEvent> | EventUtilsEvent
   }
 };
 
-const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBackstage: UiFactoryBackstageShared) => {
+const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBackstage: UiFactoryBackstageShared): void => {
   const throbberState = Cell<boolean>(false);
   const timer = Singleton.value<number>();
 

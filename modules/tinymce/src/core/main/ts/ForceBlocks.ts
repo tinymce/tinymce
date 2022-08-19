@@ -1,11 +1,12 @@
 import { Arr, Fun, Obj } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { Insert, SugarElement } from '@ephox/sugar';
 
 import Editor from './api/Editor';
 import { SchemaMap } from './api/html/Schema';
 import * as Options from './api/Options';
 import * as Bookmarks from './bookmark/Bookmarks';
 import * as NodeType from './dom/NodeType';
+import * as PaddingBr from './dom/PaddingBr';
 import * as Parents from './dom/Parents';
 import * as EditorFocus from './focus/EditorFocus';
 
@@ -49,6 +50,9 @@ const shouldRemoveTextNode = (blockElements: SchemaMap, node: Node) => {
   return false;
 };
 
+const createRootBlock = (editor: Editor): HTMLElement =>
+  editor.dom.create(Options.getForcedRootBlock(editor), Options.getForcedRootBlockAttrs(editor));
+
 const addRootBlocks = (editor: Editor) => {
   const dom = editor.dom, selection = editor.selection;
   const schema = editor.schema, blockElements = schema.getBlockElements();
@@ -86,7 +90,7 @@ const addRootBlocks = (editor: Editor) => {
       }
 
       if (!rootBlockNode) {
-        rootBlockNode = dom.create(forcedRootBlock, Options.getForcedRootBlockAttrs(editor));
+        rootBlockNode = createRootBlock(editor);
         rootNode.insertBefore(rootBlockNode, node);
         wrapped = true;
       }
@@ -108,10 +112,24 @@ const addRootBlocks = (editor: Editor) => {
   }
 };
 
+const insertEmptyLine = (editor: Editor, root: SugarElement<HTMLElement>, insertBlock: (root: SugarElement<HTMLElement>, block: SugarElement<HTMLElement>) => void): Range => {
+  const block = SugarElement.fromDom(createRootBlock(editor));
+  const br = PaddingBr.createPaddingBr();
+
+  Insert.append(block, br);
+  insertBlock(root, block);
+
+  const rng = document.createRange();
+  rng.setStartBefore(br.dom);
+  rng.setEndBefore(br.dom);
+  return rng;
+};
+
 const setup = (editor: Editor): void => {
   editor.on('NodeChange', Fun.curry(addRootBlocks, editor));
 };
 
 export {
+  insertEmptyLine,
   setup
 };

@@ -107,12 +107,12 @@ class EventDispatcher<T> {
     return !!nativeEvents[name.toLowerCase()];
   }
 
-  private readonly settings: Record<string, any>;
-  private readonly scope: {};
+  private readonly settings: EventDispatcherSettings;
+  private readonly scope: any;
   private readonly toggleEvent: (name: string, toggle: boolean) => void;
   private bindings: Bindings<T> = {};
 
-  public constructor(settings?: Record<string, any>) {
+  public constructor(settings?: EventDispatcherSettings) {
     this.settings = settings || {};
     this.scope = this.settings.scope || this;
     this.toggleEvent = this.settings.toggleEvent || Fun.never;

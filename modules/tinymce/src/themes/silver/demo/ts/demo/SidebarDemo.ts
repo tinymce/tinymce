@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
 import { SugarElement } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import { Editor, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 // import ButtonSetupDemo from './ButtonSetupDemo';
-declare let tinymce: any;
+declare let tinymce: TinyMCE;
 
-export default () => {
+export default (): void => {
   const makeSidebar = (ed: Editor, name: string, background: string, width: number) => {
     ed.ui.registry.addSidebar(name, {
       icon: 'comment',
@@ -40,7 +40,7 @@ export default () => {
     // statusbar: false,
     resize: 'both',
 
-    setup: (ed: Editor) => {
+    setup: (ed) => {
       makeSidebar(ed, 'sidebar1', 'green', 200);
       makeSidebar(ed, 'sidebar2', 'red', 300);
       makeSidebar(ed, 'sidebar3', 'blue', 150);

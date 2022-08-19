@@ -7,33 +7,37 @@ import { Arr, Cell, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
-import { StoragedMenuButton, StoragedMenuItem } from '../button/MenuButton';
+import { StoredMenuButton, StoredMenuItem } from '../button/MenuButton';
 import * as Dialogs from '../dialog/Dialogs';
 import { FormBlockEvent, formCancelEvent } from '../general/FormEvents';
 import { dialogChannel } from './DialogChannels';
+import { ExtraListeners } from './SilverDialogEvents';
 import { renderModalHeader } from './SilverDialogHeader';
 
-export interface WindowExtra<T extends Dialog.DialogData> {
-  redial?: (newConfig: Dialog.DialogSpec<T>) => DialogManager.DialogInit<T>;
-  closeWindow: () => void;
+export interface SharedWindowExtra {
+  readonly closeWindow: () => void;
+}
+
+export interface WindowExtra<T extends Dialog.DialogData> extends SharedWindowExtra {
+  readonly redial: (newConfig: Dialog.DialogSpec<T>) => DialogManager.DialogInit<T>;
 }
 
 export interface DialogSpec {
-  id: string;
-  header: AlloySpec;
-  body: AlloyParts.ConfiguredPart;
-  footer: Optional<AlloyParts.ConfiguredPart>;
-  extraClasses: string[];
-  extraStyles: Record<string, string>;
-  extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[];
+  readonly id: string;
+  readonly header: AlloySpec;
+  readonly body: AlloyParts.ConfiguredPart;
+  readonly footer: Optional<AlloyParts.ConfiguredPart>;
+  readonly extraClasses: string[];
+  readonly extraStyles: Record<string, string>;
+  readonly extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[];
 }
 
-const getHeader = (title: string, dialogId: string, backstage: UiFactoryBackstage) => renderModalHeader({
+const getHeader = (title: string, dialogId: string, backstage: UiFactoryBackstage): AlloySpec => renderModalHeader({
   title: backstage.shared.providers.translate(title),
   draggable: backstage.dialog.isDraggableModal()
 }, dialogId, backstage.shared.providers);
 
-const getBusySpec = (message: string, bs: Record<string, Behaviour.ConfiguredBehaviour<any, any, any>>, providers: UiFactoryBackstageProviders) => ({
+const getBusySpec = (message: string, bs: Behaviour.AlloyBehaviourRecord, providers: UiFactoryBackstageProviders): AlloySpec => ({
   dom: {
     tag: 'div',
     classes: [ 'tox-dialog__busy-spinner' ],
@@ -54,7 +58,7 @@ const getBusySpec = (message: string, bs: Record<string, Behaviour.ConfiguredBeh
   }]
 });
 
-const getEventExtras = <T extends Dialog.DialogData>(lazyDialog: () => AlloyComponent, providers: UiFactoryBackstageProviders, extra: WindowExtra<T>) => ({
+const getEventExtras = (lazyDialog: () => AlloyComponent, providers: UiFactoryBackstageProviders, extra: SharedWindowExtra): ExtraListeners => ({
   onClose: () => extra.closeWindow(),
   onBlock: (blockEvent: FormBlockEvent) => {
     ModalDialog.setBusy(lazyDialog(), (_comp, bs) => getBusySpec(blockEvent.message, bs, providers));
@@ -64,8 +68,8 @@ const getEventExtras = <T extends Dialog.DialogData>(lazyDialog: () => AlloyComp
   }
 });
 
-const renderModalDialog = (spec: DialogSpec, initialData, dialogEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[], backstage: UiFactoryBackstage) => {
-  const updateState = (_comp, incoming) => Optional.some(incoming);
+const renderModalDialog = <T>(spec: DialogSpec, initialData: T, dialogEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[], backstage: UiFactoryBackstage): AlloyComponent => {
+  const updateState = (_comp: AlloyComponent, incoming: T) => Optional.some(incoming);
 
   return GuiFactory.build(Dialogs.renderDialog({
     ...spec,
@@ -91,9 +95,9 @@ const renderModalDialog = (spec: DialogSpec, initialData, dialogEvents: AlloyEve
   }));
 };
 
-const mapMenuButtons = (buttons: Dialog.DialogFooterButton[]): (Dialog.DialogFooterButton | StoragedMenuButton)[] => {
-  const mapItems = (button: Dialog.DialogFooterMenuButton): StoragedMenuButton => {
-    const items = Arr.map(button.items, (item: Dialog.DialogFooterToggleMenuItem): StoragedMenuItem => {
+const mapMenuButtons = (buttons: Dialog.DialogFooterButton[]): (Dialog.DialogFooterButton | StoredMenuButton)[] => {
+  const mapItems = (button: Dialog.DialogFooterMenuButton): StoredMenuButton => {
+    const items = Arr.map(button.items, (item: Dialog.DialogFooterToggleMenuItem): StoredMenuItem => {
       const cell = Cell<boolean>(false);
       return {
         ...item,
@@ -106,25 +110,22 @@ const mapMenuButtons = (buttons: Dialog.DialogFooterButton[]): (Dialog.DialogFoo
     };
   };
 
-  return Arr.map(buttons, (button: Dialog.DialogFooterMenuButton) => {
-    if (button.type === 'menu') {
-      return mapItems(button);
-    }
-    return button;
+  return Arr.map(buttons, (button) => {
+    return button.type === 'menu' ? mapItems(button) : button;
   });
 };
 
-const extractCellsToObject = (buttons: (StoragedMenuButton | Dialog.DialogFooterMenuButton | Dialog.DialogFooterNormalButton)[]) =>
+const extractCellsToObject = (buttons: (StoredMenuButton | Dialog.DialogFooterMenuButton | Dialog.DialogFooterNormalButton)[]): Record<string, Cell<boolean>> =>
   Arr.foldl(buttons, (acc, button) => {
     if (button.type === 'menu') {
-      const menuButton = button as StoragedMenuButton;
+      const menuButton = button as StoredMenuButton;
       return Arr.foldl(menuButton.items, (innerAcc, item) => {
         innerAcc[item.name] = item.storage;
         return innerAcc;
       }, acc);
     }
     return acc;
-  }, {});
+  }, {} as Record<string, Cell<boolean>>);
 
 export {
   getBusySpec,

@@ -10,19 +10,20 @@ const isWrappedNbsp = (node: Node): node is HTMLSpanElement =>
   node.nodeName.toLowerCase() === 'span' && (node as HTMLSpanElement).classList.contains('mce-nbsp-wrap');
 
 const show = (editor: Editor, rootElm: Element): void => {
+  const dom = editor.dom;
   const nodeList = Nodes.filterDescendants(SugarElement.fromDom(rootElm), Nodes.isMatch);
 
   Arr.each(nodeList, (n) => {
-    const parent = n.dom.parentNode;
+    const parent = n.dom.parentNode as Node;
     if (isWrappedNbsp(parent)) {
       Class.add(SugarElement.fromDom(parent), Data.nbspClass);
     } else {
-      const withSpans = Nodes.replaceWithSpans(editor.dom.encode(SugarNode.value(n)));
+      const withSpans = Nodes.replaceWithSpans(dom.encode(SugarNode.value(n) ?? ''));
 
-      const div = editor.dom.create('div', null, withSpans);
-      let node: any;
+      const div = dom.create('div', {}, withSpans);
+      let node: Node | null;
       while ((node = div.lastChild)) {
-        editor.dom.insertAfter(node, n.dom);
+        dom.insertAfter(node, n.dom);
       }
 
       editor.dom.remove(n.dom);

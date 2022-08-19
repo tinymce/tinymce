@@ -1,3 +1,5 @@
+import { Type } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
 import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
@@ -31,6 +33,9 @@ const styleValueToText = (styleValue: string): string => {
   });
 };
 
+const normalizeStyleValue = (styleValue: string | undefined): string =>
+  Type.isNullable(styleValue) || styleValue === 'default' ? '' : styleValue;
+
 const isWithinList = (editor: Editor, e: EditorEvent<NodeChangeEvent>, nodeName: ListType): boolean => {
   const tableCellIndex = findIndex(e.parents, ListUtils.isTableCellNode);
   const parents = tableCellIndex !== -1 ? e.parents.slice(0, tableCellIndex) : e.parents;
@@ -57,7 +62,7 @@ const addSplitButton = (editor: Editor, id: string, tooltip: string, cmd: string
       const items = Tools.map(styles, (styleValue): Menu.ChoiceMenuItemSpec => {
         const iconStyle = nodeName === ListType.OrderedList ? 'num' : 'bull';
         const iconName = styleValue === 'disc' || styleValue === 'decimal' ? 'default' : styleValue;
-        const itemValue = styleValue === 'default' ? '' : styleValue;
+        const itemValue = normalizeStyleValue(styleValue);
         const displayText = styleValueToText(styleValue);
         return {
           type: 'choiceitem',
@@ -80,13 +85,14 @@ const addSplitButton = (editor: Editor, id: string, tooltip: string, cmd: string
   });
 };
 
-const addButton = (editor: Editor, id: string, tooltip: string, cmd: string, nodeName: ListType, _styles: string[]): void => {
+const addButton = (editor: Editor, id: string, tooltip: string, cmd: string, nodeName: ListType, styleValue: string): void => {
   editor.ui.registry.addToggleButton(id, {
     active: false,
     tooltip,
     icon: nodeName === ListType.OrderedList ? 'ordered-list' : 'unordered-list',
     onSetup: makeSetupHandler(editor, nodeName),
-    onAction: () => editor.execCommand(cmd)
+    // Need to make sure the button removes rather than applies if a list of the same type is selected
+    onAction: () => editor.queryCommandState(cmd) || styleValue === '' ? editor.execCommand(cmd) : Actions.applyListFormat(editor, nodeName, styleValue)
   });
 };
 
@@ -94,7 +100,7 @@ const addControl = (editor: Editor, id: string, tooltip: string, cmd: string, no
   if (styles.length > 1) {
     addSplitButton(editor, id, tooltip, cmd, nodeName, styles);
   } else {
-    addButton(editor, id, tooltip, cmd, nodeName, styles);
+    addButton(editor, id, tooltip, cmd, nodeName, normalizeStyleValue(styles[0]));
   }
 };
 

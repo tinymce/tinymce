@@ -74,7 +74,7 @@ const setupEvents = (editor: Editor, uiComponents: RenderUiComponents) => {
     dom.unbind(contentWindow, 'scroll', scroll);
 
     // Clean memory for IE
-    contentWindow = null;
+    (contentWindow as any) = null;
   });
 };
 
@@ -91,18 +91,21 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   Attachment.attachSystem(uiRoot, uiComponents.uiMothership);
 
   editor.on('PostRender', () => {
+    // Set the sidebar before the toolbar and menubar
+    // - each sidebar has an associated toggle toolbar button that needs to check the
+    //   sidebar that is set to determine its active state on setup
+    OuterContainer.setSidebar(
+      outerContainer,
+      rawUiConfig.sidebar,
+      Options.getSidebarShow(editor)
+    );
+
     setToolbar(editor, uiComponents, rawUiConfig, backstage);
     lastToolbarWidth.set(editor.getWin().innerWidth);
 
     OuterContainer.setMenubar(
       outerContainer,
       identifyMenus(editor, rawUiConfig)
-    );
-
-    OuterContainer.setSidebar(
-      outerContainer,
-      rawUiConfig.sidebar,
-      Options.getSidebarShow(editor)
     );
 
     setupEvents(editor, uiComponents);
@@ -131,7 +134,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     editor.dispatch('ToggleSidebar');
   });
 
-  editor.addQueryValueHandler('ToggleSidebar', () => OuterContainer.whichSidebar(outerContainer));
+  editor.addQueryValueHandler('ToggleSidebar', () => OuterContainer.whichSidebar(outerContainer) ?? '');
 
   const toolbarMode = Options.getToolbarMode(editor);
 

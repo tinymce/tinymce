@@ -1,7 +1,8 @@
+import { TinyMCE } from 'tinymce/core/api/PublicApi';
 
-declare let tinymce: any;
+declare let tinymce: TinyMCE;
 
-export default () => {
+export default (): void => {
 
   tinymce.init({
     selector: 'textarea.tiny-text',

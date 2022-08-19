@@ -2,7 +2,6 @@ import { Arr, Optional, Type } from '@ephox/katamari';
 import { Remove, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
-import ElementUtils from '../api/dom/ElementUtils';
 import Editor from '../api/Editor';
 import { ParserArgs } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
@@ -13,6 +12,7 @@ import CaretPosition from '../caret/CaretPosition';
 import { CaretWalker } from '../caret/CaretWalker';
 import * as TableDelete from '../delete/TableDelete';
 import * as CefUtils from '../dom/CefUtils';
+import ElementUtils from '../dom/ElementUtils';
 import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as FilterNode from '../html/FilterNode';
@@ -22,18 +22,24 @@ import * as SelectionUtils from '../selection/SelectionUtils';
 import { InsertContentDetails } from './ContentTypes';
 import * as InsertList from './InsertList';
 
-const wrappedElements = [ 'pre' ];
+const mergeableWrappedElements = [ 'pre' ];
 
-const shouldPasteContentOnly = (fragment: AstNode, parentNode: Element) => {
+const shouldPasteContentOnly = (dom: DOMUtils, fragment: AstNode, parentNode: Element, root: Node): boolean => {
   const firstNode = fragment.firstChild as AstNode;
   const lastNode = fragment.lastChild as AstNode;
-
-  const isWrappedElement = Arr.contains(wrappedElements, firstNode.name);
-  const isPastingInTheSameTag = firstNode.name === parentNode.tagName.toLowerCase();
   const last = lastNode.attr('data-mce-type') === 'bookmark' ? lastNode.prev : lastNode;
-  const isCopingOnlyOneTag = firstNode === last;
 
-  return isCopingOnlyOneTag && isWrappedElement && isPastingInTheSameTag;
+  const isPastingSingleElement = firstNode === last;
+  const isWrappedElement = Arr.contains(mergeableWrappedElements, firstNode.name);
+  if (isPastingSingleElement && isWrappedElement) {
+    const isContentEditable = firstNode.attr('contenteditable') !== 'false';
+    const isPastingInTheSameBlockTag = dom.getParent(parentNode, dom.isBlock)?.nodeName.toLowerCase() === firstNode.name;
+    const isPastingInContentEditable = Optional.from(CefUtils.getContentEditableRoot(root, parentNode)).forall(NodeType.isContentEditableTrue);
+
+    return isContentEditable && isPastingInTheSameBlockTag && isPastingInContentEditable;
+  } else {
+    return false;
+  }
 };
 
 const isTableCell = NodeType.isTableCell;
@@ -75,7 +81,7 @@ const reduceInlineTextElements = (editor: Editor, merge: boolean | undefined): v
 
   if (merge) {
     const root = editor.getBody();
-    const elementUtils = ElementUtils(dom);
+    const elementUtils = ElementUtils(editor);
 
     Tools.each(dom.select('*[data-mce-fragment]'), (node) => {
       const isInline = Type.isNonNullable(textInlineElements[node.nodeName.toLowerCase()]);
@@ -259,7 +265,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
     return value;
   }
 
-  if (details.paste === true && shouldPasteContentOnly(fragment, parentNode)) {
+  if (details.paste === true && shouldPasteContentOnly(dom, fragment, parentNode, editor.getBody())) {
     fragment.firstChild?.unwrap();
   }
 

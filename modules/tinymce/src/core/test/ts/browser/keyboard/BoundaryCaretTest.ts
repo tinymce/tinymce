@@ -24,7 +24,7 @@ describe('browser.tinymce.core.keyboard.BoundaryCaretTest', () => {
   const testRenderCaret = (html: string, elementPath: number[], offset: number, expectedHtml: string, expectedPath: number[], expectedOffset: number) => {
     const elm = SugarElement.fromHtml<HTMLDivElement>('<div>' + html + '</div>');
     const location = createLocation(elm, elementPath, offset);
-    const caret = Cell(null);
+    const caret = Cell<Text | null>(null);
 
     assert.isTrue(location.isSome(), 'Should be a valid location: ' + html);
 

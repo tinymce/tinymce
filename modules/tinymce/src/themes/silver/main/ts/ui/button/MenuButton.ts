@@ -13,6 +13,16 @@ import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 
 export type MenuButtonSpec = Omit<Toolbar.ToolbarMenuButton, 'type'>;
 
+type FetchCallback = (success: (items: Menu.NestedMenuItemContents[]) => void) => void;
+
+interface StoredMenuItem extends Dialog.DialogFooterToggleMenuItem {
+  readonly storage: Cell<boolean>;
+}
+
+interface StoredMenuButton extends Omit<Dialog.DialogFooterMenuButton, 'items'> {
+  readonly items: StoredMenuItem[];
+}
+
 const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonInstanceApi => ({
   isEnabled: () => !Disabling.isDisabled(component),
   setEnabled: (state: boolean) => Disabling.set(component, !state),
@@ -56,16 +66,8 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
 prefix,
 backstage.shared);
 
-interface StoragedMenuItem extends Dialog.DialogFooterToggleMenuItem {
-  storage: Cell<boolean>;
-}
-
-interface StoragedMenuButton extends Omit<Dialog.DialogFooterMenuButton, 'items'> {
-  items: StoragedMenuItem[];
-}
-
-const getFetch = (items: StoragedMenuItem[], getButton: () => MementoRecord, backstage: UiFactoryBackstage) => {
-  const getMenuItemAction = (item: StoragedMenuItem) => (api: Menu.ToggleMenuItemInstanceApi) => {
+const getFetch = (items: StoredMenuItem[], getButton: () => MementoRecord, backstage: UiFactoryBackstage): FetchCallback => {
+  const getMenuItemAction = (item: StoredMenuItem) => (api: Menu.ToggleMenuItemInstanceApi) => {
     // Update the menu item state
     const newValue = !api.isActive();
     api.setActive(newValue);
@@ -83,7 +85,7 @@ const getFetch = (items: StoragedMenuItem[], getButton: () => MementoRecord, bac
     });
   };
 
-  const getMenuItemSetup = (item: StoragedMenuItem) => (api: Menu.ToggleMenuItemInstanceApi) => {
+  const getMenuItemSetup = (item: StoredMenuItem) => (api: Menu.ToggleMenuItemInstanceApi) => {
     api.setActive(item.storage.get());
   };
 
@@ -106,6 +108,6 @@ const getFetch = (items: StoragedMenuItem[], getButton: () => MementoRecord, bac
 export {
   renderMenuButton,
   getFetch,
-  StoragedMenuItem,
-  StoragedMenuButton
+  StoredMenuItem,
+  StoredMenuButton
 };

@@ -94,7 +94,7 @@ const assertInputValue = (label: string, selector: string, expected: string | bo
   if (input.dom.type === 'checkbox') {
     assert.equal(input.dom.checked, expected, `The input value for ${label} should be: ${expected}`);
   } else if (Class.has(input, 'tox-listbox')) {
-    assert.equal(Attribute.get(input, 'data-value'), expected, `The input value for ${label} should be: ${expected}`);
+    assert.equal(Attribute.get(input, 'data-value'), String(expected), `The input value for ${label} should be: ${expected}`);
   } else {
     assert.equal(Value.get(input), expected, `The input value for ${label} should be: ${expected}`);
   }
@@ -111,8 +111,13 @@ const setInputValue = (selector: string, value: string | boolean): void => {
   }
 };
 
-const gotoGeneralTab = () => Mouse.clickOn(SugarBody.body(), 'div.tox-tab:contains(General)');
-const gotoAdvancedTab = () => Mouse.clickOn(SugarBody.body(), 'div.tox-tab:contains(Advanced)');
+const gotoGeneralTab = (): void => {
+  Mouse.clickOn(SugarBody.body(), 'div.tox-tab:contains(General)');
+};
+
+const gotoAdvancedTab = (): void => {
+  Mouse.clickOn(SugarBody.body(), 'div.tox-tab:contains(Advanced)');
+};
 
 const setTabInputValues = (data: Record<string, any>, tabSelectors: Record<string, string>): void => {
   Obj.mapToArray(tabSelectors, (value, key) => {
@@ -152,7 +157,7 @@ const assertDialogValues = (data: Record<string, any>, hasAdvanced: boolean, gen
   }
 };
 
-const pInsertTableViaGrid = async (editor: Editor, cols: number, rows: number) => {
+const pInsertTableViaGrid = async (editor: Editor, cols: number, rows: number): Promise<void> => {
   TinyUiActions.clickOnMenu(editor, 'span:contains("Table")');
   await Waiter.pTryUntil('click table menu', () =>
     TinyUiActions.clickOnUi(editor, 'div.tox-menu div.tox-collection__item .tox-collection__item-label:contains("Table")')

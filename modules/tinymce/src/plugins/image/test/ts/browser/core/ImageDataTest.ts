@@ -16,9 +16,9 @@ interface ImageDataExt {
 }
 
 describe('browser.tinymce.plugins.image.core.ImageDataTest', () => {
-  const normalizeCss = (cssText: string) => {
+  const normalizeCss = (cssText: string | undefined) => {
     const css = DOMUtils.DOM.styles.parse(cssText);
-    const newCss = {};
+    const newCss: Record<string, string> = {};
 
     Arr.each(Obj.keys(css).sort(), (key) => {
       newCss[key] = css[key];

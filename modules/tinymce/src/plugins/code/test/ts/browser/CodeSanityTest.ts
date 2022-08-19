@@ -15,12 +15,12 @@ describe('browser.tinymce.plugins.code.CodeSanityTest', () => {
   const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Source code"]';
 
   const setTextareaContent = (content: string) => {
-    const textarea: HTMLTextAreaElement = document.querySelector('div[role="dialog"] textarea');
+    const textarea = document.querySelector('div[role="dialog"] textarea') as HTMLTextAreaElement;
     textarea.value = content;
   };
 
   const assertTextareaContent = (expected: string) => {
-    const textarea: HTMLTextAreaElement = document.querySelector('div[role="dialog"] textarea');
+    const textarea = document.querySelector('div[role="dialog"] textarea') as HTMLTextAreaElement;
     assert.equal(textarea.value, expected, 'Should have correct value');
   };
 

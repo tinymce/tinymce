@@ -34,7 +34,7 @@ const expectedScrollEventBound = (s: ApproxStructure.StructApi, str: ApproxStruc
   })
 ];
 
-const pAssertHeaderDocked = async (assertDockedTop: boolean) => {
+const pAssertHeaderDocked = async (assertDockedTop: boolean): Promise<void> => {
   const header = UiFinder.findIn(SugarBody.body(), '.tox-editor-header').getOrDie();
   await Waiter.pTryUntil(
     'Wait for header structure',
@@ -98,13 +98,13 @@ const expectedInFullView = (s: ApproxStructure.StructApi, str: ApproxStructure.S
   })
 ];
 
-const scrollRelativeEditor = (delta: number, scrollRelativeTop: boolean) => {
+const scrollRelativeEditor = (delta: number, scrollRelativeTop: boolean): void => {
   const container = UiFinder.findIn(SugarBody.body(), '.tox-tinymce').getOrDie();
   container.dom.scrollIntoView(scrollRelativeTop);
   Scroll.to(0, window.pageYOffset + (scrollRelativeTop ? delta : -delta));
 };
 
-const pAssertSinkVisibility = async (label: string, expectedVisibility: 'hidden' | 'visible') => {
+const pAssertSinkVisibility = async (label: string, expectedVisibility: 'hidden' | 'visible'): Promise<void> => {
   const sink = UiFinder.findIn(SugarBody.body(), '.tox-tinymce-aux').getOrDie();
   await Waiter.pTryUntil(`Wait for sink visibility to be ${expectedVisibility}`, () => {
     const visibility = Css.get(sink, 'visibility');
@@ -112,7 +112,7 @@ const pAssertSinkVisibility = async (label: string, expectedVisibility: 'hidden'
   });
 };
 
-const pAssertMenuStructure = (label: string, container: SugarElement<HTMLElement>, position: string) => Waiter.pTryUntil(
+const pAssertMenuStructure = (label: string, container: SugarElement<HTMLElement>, position: string): Promise<void> => Waiter.pTryUntil(
   `Wait until menus become ${position} positioned`,
   () => Assertions.assertStructure(
     label,
@@ -127,7 +127,7 @@ const pAssertMenuStructure = (label: string, container: SugarElement<HTMLElement
 );
 
 // Assume editor height 400
-const pTestMenuScroll = async (top: boolean) => {
+const pTestMenuScroll = async (top: boolean): Promise<void> => {
   const menu = UiFinder.findIn<HTMLElement>(SugarBody.body(), '[role="menu"]').getOrDie();
   await pAssertMenuStructure('Checking the opened menus default positioning', menu, 'absolute');
   scrollRelativeEditor(200, top);
@@ -141,7 +141,7 @@ const pTestMenuScroll = async (top: boolean) => {
   await pAssertMenuStructure('When the editor is in full view, menus and toolbars should not be sticky', menu, 'absolute');
 };
 
-const pAssertEditorContainer = async (isToolbarTop: boolean, expectedPart: ApproxStructure.Builder<StructAssert[]>) => {
+const pAssertEditorContainer = async (isToolbarTop: boolean, expectedPart: ApproxStructure.Builder<StructAssert[]>): Promise<void> => {
   const container = UiFinder.findIn(SugarBody.body(), '.tox-editor-container').getOrDie();
   await Waiter.pTryUntil('Wait for editor structure',
     () => Assertions.assertStructure(
@@ -157,7 +157,7 @@ const pAssertEditorContainer = async (isToolbarTop: boolean, expectedPart: Appro
   );
 };
 
-const pScrollAndAssertStructure = async (isToolbarTop: boolean, scrollYDelta: number, expectedPart: ApproxStructure.Builder<StructAssert[]>) => {
+const pScrollAndAssertStructure = async (isToolbarTop: boolean, scrollYDelta: number, expectedPart: ApproxStructure.Builder<StructAssert[]>): Promise<void> => {
   scrollRelativeEditor(scrollYDelta, isToolbarTop);
   const container = UiFinder.findIn(SugarBody.body(), '.tox-editor-container').getOrDie();
   await Waiter.pTryUntil('Wait until editor docking updated',
@@ -174,7 +174,7 @@ const pScrollAndAssertStructure = async (isToolbarTop: boolean, scrollYDelta: nu
   );
 };
 
-const assertEditorClasses = (docked: boolean) => {
+const assertEditorClasses = (docked: boolean): void => {
   const container = UiFinder.findIn(SugarBody.body(), '.tox-tinymce').getOrDie();
   Assertions.assertStructure('Check root container classes', ApproxStructure.build((s, _str, arr) => s.element('div', {
     classes: [
@@ -184,7 +184,7 @@ const assertEditorClasses = (docked: boolean) => {
   })), container);
 };
 
-const pAssertHeaderPosition = async (toolbarLocation: ToolbarLocation, value: number) => {
+const pAssertHeaderPosition = async (toolbarLocation: ToolbarLocation, value: number): Promise<void> => {
   const isToolbarTop = toolbarLocation === ToolbarLocation.top;
   scrollRelativeEditor(-100, isToolbarTop);
   await Waiter.pWait(100);
@@ -212,7 +212,7 @@ const pCloseMenus = (numOpenedMenus: number) => {
   }), Promise.resolve());
 };
 
-const pOpenMenuAndTestScrolling = async (pOpenMenu: () => Promise<void>, numMenusToClose: number, top: boolean) => {
+const pOpenMenuAndTestScrolling = async (pOpenMenu: () => Promise<void>, numMenusToClose: number, top: boolean): Promise<void> => {
   await pOpenMenu();
   await pTestMenuScroll(top);
   await pCloseMenus(numMenusToClose);
