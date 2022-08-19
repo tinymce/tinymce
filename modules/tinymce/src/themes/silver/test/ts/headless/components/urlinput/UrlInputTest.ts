@@ -72,10 +72,14 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
     return UiFinder.findIn(sink, '[role="menu"]').getOrDie();
   };
 
+  const assertMenuIsClosed = () =>
+    UiFinder.notExists(hook.body(), '.tox-menu');
+
   const closeMenu = () => {
     const doc = hook.root();
-    // Close the menu
+    // Close the menu and verify it did actually close
     Keyboard.activeKeystroke(doc, Keys.escape());
+    assertMenuIsClosed();
   };
 
   beforeEach(() => {
@@ -180,6 +184,7 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
     store.assertEq('nothing in store ... before selecting item', []);
     Keyboard.activeKeydown(doc, Keys.enter());
     assert.equal(Value.get(input.element), '#header', 'Checking Value.get');
+    assertMenuIsClosed();
     const repValue = Representing.getValue(input);
     assert.deepEqual(
       {
@@ -242,6 +247,7 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
 
     Mouse.clickOn(menu, '.tox-collection__item:contains(Header1)');
     assert.equal(Value.get(input.element), '#header', 'Checking Value.get');
+    assertMenuIsClosed();
 
     const repValue = Representing.getValue(input);
     assert.deepEqual(
