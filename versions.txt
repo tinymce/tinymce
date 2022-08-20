@@ -3,5 +3,6 @@
 
 mcagar@8.1.0
 agar@7.2.0
+alloy@10.2.0
 katamari@9.1.0
 sugar@9.1.0

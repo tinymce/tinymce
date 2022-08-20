@@ -146,7 +146,7 @@ export const renderUrlInput = (
     model: {
       getDisplayText: (itemData) => itemData.value,
       selectsOver: false,
-      populateFromBrowser: false
+      populateFromBrowse: false
     },
 
     markers: {
