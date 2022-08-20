@@ -29,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The content of the `contenteditable="false"` element could be selected with the mouse on Firefox  #TINY-8828
 - Parsing large documents no longer throws a `Maximum call stack size exceeded` exception #TINY-6945
 - DomParser filter matching was not checked between filters, which could lead to an exception in the parser #TINY-8888
-- Fix alignment for inline editor with nested formatted elements
+- Fix alignment command with inline editor whenever we have the target element of `h*` or `p` and after applying some text styles.
 
 ### Deprecated
 - The autocompleter `ch` configuration property has been deprecated and will be removed in the next major release. Use the `trigger` property instead. #TINY-8887
