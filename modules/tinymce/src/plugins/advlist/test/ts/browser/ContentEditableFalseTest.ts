@@ -31,9 +31,9 @@ describe('browser.tinymce.plugins.advlist.ContentEditableFalseTest', () => {
   const orderedListStyles = [ 'lower-alpha', 'lower-greek', 'lower-roman', 'upper-alpha', 'upper-roman' ];
   const numberedListStyles = [ 'circle', 'square' ];
 
-  const OlListTypes: ListStyle[] = Arr.map(orderedListStyles, (style) => ({ type: 'ol', style }));
-  const UlListTypes: ListStyle[] = Arr.map(numberedListStyles, (style) => ({ type: 'ul', style }));
-  const listTypes = [ ...OlListTypes, ...UlListTypes ];
+  const olListTypes: ListStyle[] = Arr.map(orderedListStyles, (style) => ({ type: 'ol', style }));
+  const ulListTypes: ListStyle[] = Arr.map(numberedListStyles, (style) => ({ type: 'ul', style }));
+  const listTypes = [ ...olListTypes, ...ulListTypes ];
 
   const listContent = `<li contenteditable="true">editable</li>
 <li>noneditable</li>
