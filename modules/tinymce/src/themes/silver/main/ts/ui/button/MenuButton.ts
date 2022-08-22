@@ -51,7 +51,7 @@ const renderMenuButton = (spec: ToolbarMenuButtonWithoutType, prefix: string, ba
     // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
     role,
     fetch: (dropdownComp, callback) => {
-      const fetchContext = {
+      const fetchContext: Toolbar.MenuButtonFetchContext = {
         pattern: spec.search.isSome() ? getSearchPattern(dropdownComp) : ''
       };
 

@@ -323,7 +323,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
   // but the menu is using fakeFocus, then the actions will operate on the wrong targets.
   // A workaround for that is to stop or cut or redispatch the events in whichever
   // component has the real focus.
-  // TODO: JIRA-....: Introduce proper handling of fakeFocus in TieredMenu
+  // TODO: TINY-9011 Introduce proper handling of fakeFocus in TieredMenu
   const events = AlloyEvents.derive<any>([
     // Set "active-menu" for the menu with focus
     AlloyEvents.run<MenuFocusEvent>(MenuEvents.focus(), (tmenu, simulatedEvent) => {

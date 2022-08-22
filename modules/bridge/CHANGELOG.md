@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+- The `MenuButton` type now takes a `search` field for configuring searchable menus. #TINY-8952
+
 ### Fixed
 - The `colors` property was incorrectly marked as required for the `ColorSwatchMenuItemSpec` type.
 

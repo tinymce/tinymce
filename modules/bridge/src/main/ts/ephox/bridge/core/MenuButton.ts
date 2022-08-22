@@ -7,7 +7,7 @@ export type MenuButtonItemTypes = NestedMenuItemContents;
 export type SuccessCallback = (menu: string | MenuButtonItemTypes[]) => void;
 
 // NOTE: FetchContext is an object so that we can add information to it in the future.
-export interface FetchContext {
+export interface MenuButtonFetchContext {
   pattern: string;
 }
 
@@ -18,7 +18,7 @@ export interface BaseMenuButtonSpec {
   search?: boolean | { placeholder?: string };
   // In order to avoid breaking APIs with pre 6.2 releases, the fetchContext was added
   // as an additional argument to fetch.
-  fetch: (success: SuccessCallback, fetchContext?: FetchContext) => void;
+  fetch: (success: SuccessCallback, fetchContext: MenuButtonFetchContext) => void;
   onSetup?: (api: BaseMenuButtonInstanceApi) => (api: BaseMenuButtonInstanceApi) => void;
 }
 
@@ -27,7 +27,7 @@ export interface BaseMenuButton {
   tooltip: Optional<string>;
   icon: Optional<string>;
   search: Optional<{ placeholder: Optional<string> }>;
-  fetch: (success: SuccessCallback, fetchContext: FetchContext) => void;
+  fetch: (success: SuccessCallback, fetchContext: MenuButtonFetchContext) => void;
   onSetup: (api: BaseMenuButtonInstanceApi) => (api: BaseMenuButtonInstanceApi) => void;
 }
 
