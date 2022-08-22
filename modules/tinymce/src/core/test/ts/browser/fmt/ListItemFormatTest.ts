@@ -254,7 +254,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
     });
 
     context('Remove inline formats from multiple LIs', () => {
-      it('TINY-8961: removing bold to 3 fully selected LIs', () =>
+      it('TINY-8961: removing bold from 3 fully selected LIs', () =>
         testRemoveInlineListFormat({
           format: 'bold',
           input: '<ul><li style="font-weight: bold;"><strong>abc</strong></li><li style="font-weight: bold;"><strong>def</strong></li><li style="font-weight: bold;"><strong>ghj</strong></li></ul>',
@@ -263,7 +263,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
         })
       );
 
-      it('TINY-8961: removing bold from a partially selected start LI and 2 fully selected LIs', () =>
+      it('TINY-8961: removing bold from a partially selected start LI and 2 fully selected LIs should remove bold from all 3 LIs', () =>
         testRemoveInlineListFormat({
           format: 'bold',
           input: '<ul><li style="font-weight: bold;"><strong>abc</strong></li><li style="font-weight: bold;"><strong>def</strong></li><li style="font-weight: bold;"><strong>ghj</strong></li></ul>',
@@ -272,7 +272,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
         })
       );
 
-      it('TINY-8961: removing bold from 2 fully selected LIs and a partially selected end li', () =>
+      it('TINY-8961: removing bold from 2 fully selected LIs and a partially selected end LI should remove bold from all 3 LIs', () =>
         testRemoveInlineListFormat({
           format: 'bold',
           input: '<ul><li style="font-weight: bold;"><strong>abc</strong></li><li style="font-weight: bold;"><strong>def</strong></li><li><strong>ghj</strong></li></ul>',
@@ -281,7 +281,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
         })
       );
 
-      it('TINY-8961: removing bold from a fully selected LI and partially selected start and end LIs', () =>
+      it('TINY-8961: removing bold from a fully selected LI and partially selected start and end LIs should remove bold from all 3 LIs', () =>
         testRemoveInlineListFormat({
           format: 'bold',
           input: '<ul><li><strong>abc</strong></li><li style="font-weight: bold;"><strong>def</strong></li><li><strong>ghj</strong></li></ul>',
