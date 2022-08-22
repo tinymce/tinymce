@@ -105,6 +105,20 @@ const appendGhostToBody = (ghostElm: HTMLElement, bodyElm: HTMLElement) => {
   }
 };
 
+// Helper function needed for scrolling the editor inside moveGhost function
+const scrollEditor = (direction: 'top' | 'left', amount: number) => (win: Window) => () => {
+  const current = direction === 'left' ? win.scrollX : win.scrollY;
+  win.scroll({
+    [direction]: current + amount,
+    behavior: 'smooth',
+  });
+};
+
+const scrollLeft = scrollEditor('left', -scrollPixelsPerInterval);
+const scrollRight = scrollEditor('left', scrollPixelsPerInterval);
+const scrollUp = scrollEditor('top', -scrollPixelsPerInterval);
+const scrollDown = scrollEditor('top', scrollPixelsPerInterval);
+
 const moveGhost = (
   ghostElm: HTMLElement,
   position: MousePosition.PagePosition,
@@ -153,111 +167,39 @@ const moveGhost = (
       // This basically means that the mouse is close to the bottom edge
       // (within MouseRange pixels of the bottom edge)
       if (mouseY + mouseRangeToTriggerScrollInsideEditor >= clientHeight) {
-        const scrollDown = (currentTop: number) => {
-          win.scroll({
-            top: currentTop + scrollPixelsPerInterval,
-            behavior: 'smooth'
-          });
-        };
-        state.intervalId.set(() => {
-          const currentTop = win.scrollY;
-          scrollDown(currentTop);
-        });
+        state.intervalId.set(scrollDown(win));
         // This basically means that the mouse is close to the top edge
         // (within MouseRange pixels)
       } else if (mouseY - mouseRangeToTriggerScrollInsideEditor <= 0) {
-        const scrollUp = (currentTop: number) => {
-          win.scroll({
-            top: currentTop - scrollPixelsPerInterval,
-            behavior: 'smooth'
-          });
-        };
-        state.intervalId.set(() => {
-          const currentTop = win.scrollY;
-          scrollUp(currentTop);
-        });
+        state.intervalId.set(scrollUp(win));
         // This basically means that the mouse is close to the right edge
         // (within MouseRange pixels of the right edge)
       } else if (mouseX + mouseRangeToTriggerScrollInsideEditor >= clientWidth) {
-        const scrollRight = (currentLeft: number) => {
-          win.scroll({
-            left: currentLeft + scrollPixelsPerInterval,
-            behavior: 'smooth'
-          });
-        };
-        state.intervalId.set(() => {
-          const currentLeft = win.scrollX;
-          scrollRight(currentLeft);
-        });
+        state.intervalId.set(scrollRight(win));
         // This basically means that the mouse is close to the left edge
         // (within MouseRange pixels of the left edge)
       } else if (mouseX - mouseRangeToTriggerScrollInsideEditor <= 0) {
-        const scrollLeft = (currentLeft: number) => {
-          win.scroll({
-            left: currentLeft - scrollPixelsPerInterval,
-            behavior: 'smooth'
-          });
-        };
-        state.intervalId.set(() => {
-          const currentLeft = win.scrollX;
-          scrollLeft(currentLeft);
-        });
+        state.intervalId.set(scrollLeft(win));
         // This basically means that the mouse is close to the bottom edge
         // of the page (within MouseRange pixels) when the bottom of
         // the editor is offscreen
       } else if (outerMouseY + mouseRangeToTriggerScrollOutsideEditor >= window.innerHeight) {
-        const scrollDown = (currentTop: number) => {
-          window.scroll({
-            top: currentTop + scrollPixelsPerInterval,
-            behavior: 'smooth'
-          });
-        };
-        state.intervalId.set(() => {
-          const currentTop = window.scrollY;
-          scrollDown(currentTop);
-        });
+        state.intervalId.set(scrollDown(window));
         // This basically means that the mouse is close to the upper edge
         // of the page (within MouseRange pixels) when the top of
         // the editor is offscreen
       } else if (outerMouseY - mouseRangeToTriggerScrollOutsideEditor <= 0) {
-        const scrollUp = (currentTop: number) => {
-          window.scroll({
-            top: currentTop - scrollPixelsPerInterval,
-            behavior: 'smooth'
-          });
-        };
-        state.intervalId.set(() => {
-          const currentTop = window.scrollY;
-          scrollUp(currentTop);
-        });
+        state.intervalId.set(scrollUp(window));
         // This basically means that the mouse is close to the right edge
         // of the page (within MouseRange pixels) when the right edge of
         // the editor is offscreen
       } else if (outerMouseX + mouseRangeToTriggerScrollOutsideEditor >= window.innerWidth) {
-        const scrollRight = (currentLeft: number) => {
-          window.scroll({
-            left: currentLeft + scrollPixelsPerInterval,
-            behavior: 'smooth'
-          });
-        };
-        state.intervalId.set(() => {
-          const currentLeft = window.scrollX;
-          scrollRight(currentLeft);
-        });
+        state.intervalId.set(scrollRight(window));
         // This basically means that the mouse is close to the left edge
         // of the page (within MouseRange pixels) when the left edge of
         // the editor is offscreen
       } else if (outerMouseX - mouseRangeToTriggerScrollOutsideEditor <= 0) {
-        const scrollLeft = (currentLeft: number) => {
-          window.scroll({
-            left: currentLeft - scrollPixelsPerInterval,
-            behavior: 'smooth'
-          });
-        };
-        state.intervalId.set(() => {
-          const currentLeft = window.scrollX;
-          scrollLeft(currentLeft);
-        });
+        state.intervalId.set(scrollLeft(window));
       }
     }
   });
