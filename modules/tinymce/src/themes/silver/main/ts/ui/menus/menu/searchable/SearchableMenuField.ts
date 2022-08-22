@@ -106,7 +106,7 @@ export const renderMenuSearcher = (spec: MenuSearcherSpec): AlloySpec => {
       Input.sketch({
         inputClasses: [ menuSearcherClass, 'tox-textfield' ],
         inputAttributes: {
-          'placeholder': spec.placeholder.getOrThunk(() => spec.i18n('Filter merge tags')),
+          ...(spec.placeholder.map((placeholder) => ({ placeholder })).getOr({ })),
           // This ARIA is based on the algolia example documented in TINY-8952
           'type': 'search',
           'aria-autocomplete': 'list'
