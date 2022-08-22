@@ -32,10 +32,10 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
     TinyAssertions.assertContent(editor, expected);
   };
 
-  context('Apply inline formats to list elements', () => {
+  context('Apply inline formats to LIs', () => {
     const testApplyInlineListFormat = testListFormat((editor, format, vars) => editor.formatter.apply(format, vars));
 
-    context('Apply inline format to single list element', () => {
+    context('Apply inline format to a single LI', () => {
       it('TINY-8961: applying bold to the entire contents of a LI should also apply that bold to the LI', () =>
         testApplyInlineListFormat({
           format: 'bold',
@@ -130,8 +130,8 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
       );
     });
 
-    context('Apply inline formats to multiple list elements', () => {
-      it('TINY-8961: applying bold to 3 fully selected list items', () =>
+    context('Apply inline formats to multiple LIs', () => {
+      it('TINY-8961: applying bold to 3 fully selected LIs should also apply bold to the LIs', () =>
         testApplyInlineListFormat({
           format: 'bold',
           input: '<ul><li>abc</li><li>def</li><li>ghj</li></ul>',
@@ -140,7 +140,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
         })
       );
 
-      it('TINY-8961: applying bold to a partially selected start li and 2 fully selected list items', () =>
+      it('TINY-8961: applying bold to a partially selected start LI and 2 fully selected LIs should also apply bold to the fully selected LIs', () =>
         testApplyInlineListFormat({
           format: 'bold',
           input: '<ul><li>abc</li><li>def</li><li>ghj</li></ul>',
@@ -149,7 +149,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
         })
       );
 
-      it('TINY-8961: applying bold to 2 fully selected list items and a partially selected end li', () =>
+      it('TINY-8961: applying bold to 2 fully selected LIs and a partially selected end LI should also apply bold to the 2 fully selected LIs', () =>
         testApplyInlineListFormat({
           format: 'bold',
           input: '<ul><li>abc</li><li>def</li><li>ghj</li></ul>',
@@ -158,7 +158,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
         })
       );
 
-      it('TINY-8961: applying bold to a fully selected list item and partially selected start and end lis', () =>
+      it('TINY-8961: applying bold to a fully selected LI and partially selected start and end LIs should only apply bold to the fully selected LI', () =>
         testApplyInlineListFormat({
           format: 'bold',
           input: '<ul><li>abc</li><li>def</li><li>ghj</li></ul>',
@@ -169,7 +169,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
     });
 
     context('Apply inline formats at caret', () => {
-      it('TINY-8961: applying bold at caret in middle of word should not apply bold to parent list item', () =>
+      it('TINY-8961: applying bold at caret in middle of word should not apply bold to parent LI', () =>
         testApplyInlineListFormat({
           format: 'bold',
           input: '<ul><li>abc</li></ul>',
@@ -178,7 +178,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
         })
       );
 
-      it('TINY-8961: applying bold at caret at the end of a word should not apply bold to parent list item', () =>
+      it('TINY-8961: applying bold at caret at the end of a word should not apply bold to parent LI', () =>
         testApplyInlineListFormat({
           format: 'bold',
           input: '<ul><li>abc</li></ul>',
@@ -189,7 +189,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
     });
 
     context('Apply inline formats on noneditable lists', () => {
-      it('TINY-8961: applying bold on li elements in a noneditable parent should not get bold styles', () =>
+      it('TINY-8961: applying bold on LIs in a noneditable parent should not get bold styles', () =>
         testApplyInlineListFormat({
           format: 'bold',
           input: '<p>a</p><ul contenteditable="false"><li>b</li><li>c</li></ul><p>d</p>',
@@ -200,10 +200,10 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
     });
   });
 
-  context('Remove inline formats from list elements', () => {
+  context('Remove inline formats from LIs', () => {
     const testRemoveInlineListFormat = testListFormat((editor, format, vars) => editor.formatter.remove(format, vars));
 
-    context('Remove inline formats from single list element', () => {
+    context('Remove inline formats from single LI', () => {
       it('TINY-8961: removing bold from the entire contents of a LI should also remove that bold from the LI', () =>
         testRemoveInlineListFormat({
           format: 'bold',
@@ -253,8 +253,8 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
       );
     });
 
-    context('Remove inline formats from multiple list elements', () => {
-      it('TINY-8961: removing bold to 3 fully selected list items', () =>
+    context('Remove inline formats from multiple LIs', () => {
+      it('TINY-8961: removing bold to 3 fully selected LIs', () =>
         testRemoveInlineListFormat({
           format: 'bold',
           input: '<ul><li style="font-weight: bold;"><strong>abc</strong></li><li style="font-weight: bold;"><strong>def</strong></li><li style="font-weight: bold;"><strong>ghj</strong></li></ul>',
@@ -263,7 +263,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
         })
       );
 
-      it('TINY-8961: removing bold from a partially selected start li and 2 fully selected list items', () =>
+      it('TINY-8961: removing bold from a partially selected start LI and 2 fully selected LIs', () =>
         testRemoveInlineListFormat({
           format: 'bold',
           input: '<ul><li style="font-weight: bold;"><strong>abc</strong></li><li style="font-weight: bold;"><strong>def</strong></li><li style="font-weight: bold;"><strong>ghj</strong></li></ul>',
@@ -272,7 +272,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
         })
       );
 
-      it('TINY-8961: removing bold from 2 fully selected list items and a partially selected end li', () =>
+      it('TINY-8961: removing bold from 2 fully selected LIs and a partially selected end li', () =>
         testRemoveInlineListFormat({
           format: 'bold',
           input: '<ul><li style="font-weight: bold;"><strong>abc</strong></li><li style="font-weight: bold;"><strong>def</strong></li><li><strong>ghj</strong></li></ul>',
@@ -281,7 +281,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
         })
       );
 
-      it('TINY-8961: removing bold from a fully selected list item and partially selected start and end lis', () =>
+      it('TINY-8961: removing bold from a fully selected LI and partially selected start and end LIs', () =>
         testRemoveInlineListFormat({
           format: 'bold',
           input: '<ul><li><strong>abc</strong></li><li style="font-weight: bold;"><strong>def</strong></li><li><strong>ghj</strong></li></ul>',
@@ -292,7 +292,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
     });
 
     context('Removing inline formats at caret', () => {
-      it('TINY-8961: removing bold at caret in middle of word should remove bold from parent list item', () =>
+      it('TINY-8961: removing bold at caret in middle of word should remove bold from parent LI', () =>
         testRemoveInlineListFormat({
           format: 'bold',
           input: '<ul><li style="font-weight: bold"><strong>abc</strong></li></ul>',
@@ -301,7 +301,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
         })
       );
 
-      it('TINY-8961: removing bold at caret at end of word should remove bold from parent list item', () =>
+      it('TINY-8961: removing bold at caret at end of word should remove bold from parent LI', () =>
         testRemoveInlineListFormat({
           format: 'bold',
           input: '<ul><li style="font-weight: bold"><strong>abc</strong></li></ul>',
@@ -312,7 +312,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
     });
 
     context('Remove inline formats on noneditable lists', () => {
-      it('TINY-8961: remove bold on li elements in a noneditable parent should not remove bold styles', () =>
+      it('TINY-8961: remove bold on LI elements in a noneditable parent should not remove bold styles', () =>
         testRemoveInlineListFormat({
           format: 'bold',
           input: '<p><strong>a</strong></p><ul contenteditable="false"><li style="font-weight: bold;">b</li><li style="font-weight: bold;">c</li></ul><p><strong>d</strong></p>',
@@ -323,7 +323,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
     });
 
     context('Remove all formats', () => {
-      it('TINY-8961: remove all formats should only remove the li specific styles on a partially selected li', () =>
+      it('TINY-8961: remove all formats should only remove the LI specific styles on a partially selected LI', () =>
         testRemoveInlineListFormat({
           format: 'removeformat',
           input: '<ul><li style="font-size: 30px; font-weight: bold; color: red; font-style: italic; text-decoration: underline;">abc</li></ul>',
