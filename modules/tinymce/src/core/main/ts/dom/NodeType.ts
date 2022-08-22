@@ -15,19 +15,19 @@ const isRestrictedNode = (node: NullableNode): boolean => !!node && !Object.getP
 const isElement = isNodeType<HTMLElement>(1);
 
 const matchNodeName = <T extends Node>(name: string): (node: NullableNode) => node is T => {
-  const lowercasedName = name.toLowerCase();
+  const lowerCasedName = name.toLowerCase();
 
   return (node: NullableNode): node is T =>
-    Type.isNonNullable(node) && node.nodeName.toLowerCase() === lowercasedName;
+    Type.isNonNullable(node) && node.nodeName.toLowerCase() === lowerCasedName;
 };
 
 const matchNodeNames = <T extends Node>(names: string[]): (node: NullableNode) => node is T => {
-  const lowercasedNames = names.map((s) => s.toLowerCase());
+  const lowerCasedNames = names.map((s) => s.toLowerCase());
 
   return (node: NullableNode): node is T => {
     if (node && node.nodeName) {
       const nodeName = node.nodeName.toLowerCase();
-      return Arr.contains(lowercasedNames, nodeName);
+      return Arr.contains(lowerCasedNames, nodeName);
     }
 
     return false;
