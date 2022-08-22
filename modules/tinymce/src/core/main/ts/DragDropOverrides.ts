@@ -22,9 +22,10 @@ import * as Predicate from './util/Predicate';
  */
 
 // Arbitrary values needed when scrolling CEF elements
-const ScrollPixelsPerInterval = 32;
-const ScrollIntervalValue = 100;
-const MouseRangeToTriggerScroll = 4;
+const scrollPixelsPerInterval = 32;
+const scrollIntervalValue = 100;
+const mouseRangeToTriggerScrollInsideEditor = 8;
+const mouseRangeToTriggerScrollOutsideEditor = 16;
 
 interface State {
   element: HTMLElement;
@@ -104,6 +105,20 @@ const appendGhostToBody = (ghostElm: HTMLElement, bodyElm: HTMLElement) => {
   }
 };
 
+// Helper function needed for scrolling the editor inside moveGhost function
+const scrollEditor = (direction: 'top' | 'left', amount: number) => (win: Window) => () => {
+  const current = direction === 'left' ? win.scrollX : win.scrollY;
+  win.scroll({
+    [direction]: current + amount,
+    behavior: 'smooth',
+  });
+};
+
+const scrollLeft = scrollEditor('left', -scrollPixelsPerInterval);
+const scrollRight = scrollEditor('left', scrollPixelsPerInterval);
+const scrollUp = scrollEditor('top', -scrollPixelsPerInterval);
+const scrollDown = scrollEditor('top', scrollPixelsPerInterval);
+
 const moveGhost = (
   ghostElm: HTMLElement,
   position: MousePosition.PagePosition,
@@ -143,61 +158,48 @@ const moveGhost = (
 
   const clientHeight = contentAreaContainer.clientHeight;
   const clientWidth = contentAreaContainer.clientWidth;
+  const outerMouseY = mouseY + contentAreaContainer.getBoundingClientRect().top;
+  const outerMouseX = mouseX + contentAreaContainer.getBoundingClientRect().left;
 
   state.on((state) => {
+    state.intervalId.clear();
     if (state.dragging) {
       // This basically means that the mouse is close to the bottom edge
       // (within MouseRange pixels of the bottom edge)
-      if (mouseY + MouseRangeToTriggerScroll >= clientHeight) {
-        const scrollDown = (currentTop: number) => {
-          win.scroll({
-            top: currentTop + ScrollPixelsPerInterval,
-            behavior: 'smooth'
-          });
-        };
-        state.intervalId.set(() => {
-          const currentTop = win.scrollY;
-          scrollDown(currentTop);
-        });
+      if (mouseY + mouseRangeToTriggerScrollInsideEditor >= clientHeight) {
+        state.intervalId.set(scrollDown(win));
         // This basically means that the mouse is close to the top edge
-        // (within MouseRange pixels of the top edge)
-      } else if (mouseY - MouseRangeToTriggerScroll <= 0) {
-        const scrollUp = (currentTop: number) => {
-          win.scroll({
-            top: currentTop - ScrollPixelsPerInterval,
-            behavior: 'smooth'
-          });
-        };
-        state.intervalId.set(() => {
-          const currentTop = win.scrollY;
-          scrollUp(currentTop);
-        });
+        // (within MouseRange pixels)
+      } else if (mouseY - mouseRangeToTriggerScrollInsideEditor <= 0) {
+        state.intervalId.set(scrollUp(win));
         // This basically means that the mouse is close to the right edge
         // (within MouseRange pixels of the right edge)
-      } else if (mouseX + MouseRangeToTriggerScroll >= clientWidth) {
-        const scrollRight = (currentLeft: number) => {
-          win.scroll({
-            left: currentLeft + ScrollPixelsPerInterval,
-            behavior: 'smooth'
-          });
-        };
-        state.intervalId.set(() => {
-          const currentLeft = win.scrollX;
-          scrollRight(currentLeft);
-        });
+      } else if (mouseX + mouseRangeToTriggerScrollInsideEditor >= clientWidth) {
+        state.intervalId.set(scrollRight(win));
         // This basically means that the mouse is close to the left edge
         // (within MouseRange pixels of the left edge)
-      } else if (mouseX - MouseRangeToTriggerScroll <= 0) {
-        const scrollLeft = (currentLeft: number) => {
-          win.scroll({
-            left: currentLeft - ScrollPixelsPerInterval,
-            behavior: 'smooth'
-          });
-        };
-        state.intervalId.set(() => {
-          const currentLeft = win.scrollX;
-          scrollLeft(currentLeft);
-        });
+      } else if (mouseX - mouseRangeToTriggerScrollInsideEditor <= 0) {
+        state.intervalId.set(scrollLeft(win));
+        // This basically means that the mouse is close to the bottom edge
+        // of the page (within MouseRange pixels) when the bottom of
+        // the editor is offscreen
+      } else if (outerMouseY + mouseRangeToTriggerScrollOutsideEditor >= window.innerHeight) {
+        state.intervalId.set(scrollDown(window));
+        // This basically means that the mouse is close to the upper edge
+        // of the page (within MouseRange pixels) when the top of
+        // the editor is offscreen
+      } else if (outerMouseY - mouseRangeToTriggerScrollOutsideEditor <= 0) {
+        state.intervalId.set(scrollUp(window));
+        // This basically means that the mouse is close to the right edge
+        // of the page (within MouseRange pixels) when the right edge of
+        // the editor is offscreen
+      } else if (outerMouseX + mouseRangeToTriggerScrollOutsideEditor >= window.innerWidth) {
+        state.intervalId.set(scrollRight(window));
+        // This basically means that the mouse is close to the left edge
+        // of the page (within MouseRange pixels) when the left edge of
+        // the editor is offscreen
+      } else if (outerMouseX - mouseRangeToTriggerScrollOutsideEditor <= 0) {
+        state.intervalId.set(scrollLeft(window));
       }
     }
   });
@@ -237,7 +239,7 @@ const start = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent
         width: ceElm.offsetWidth,
         height: ceElm.offsetHeight,
         ghost: createGhost(editor, ceElm, ceElm.offsetWidth, ceElm.offsetHeight),
-        intervalId: Singleton.repeatable(ScrollIntervalValue)
+        intervalId: Singleton.repeatable(scrollIntervalValue)
       });
     }
   }
@@ -326,6 +328,7 @@ const stop = (state: Singleton.Value<State>, editor: Editor) => () => {
 
 const removeDragState = (state: Singleton.Value<State>) => {
   state.on((state) => {
+    state.intervalId.clear();
     removeElement(state.ghost);
   });
   state.clear();
