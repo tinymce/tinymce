@@ -20,15 +20,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed various incorrect types on public APIs found while enabling TypeScript strict mode #TINY-8806
 - Text returned from `editor.getContent({format: 'text'})` would differ with blank lines between some browsers #TINY-8579
 - The editor focused via the `auto_focus` option was not scrolled into the viewport #TINY-8785
+- Adding spaces just after a `contenteditable="false"` block would not work properly in some situations #TINY-8814
 - Elements with only custom attributes starting with `data-` would sometimes be removed when they shouldn't #TINY-8755
 - Selecting a figure with `class="image"` would incorrectly highlight the link toolbar button #TINY-8832
 - Specifying a single, non-default list style for the `advlist_bullet_styles` and `advlist_number_styles` options was not respected. #TINY-8721
 - Fixed various issues that occurred when formatting `contenteditable` elements. #TINY-8905
+- Spaces could be incorrectly added to urlinput dialog components in certain cases #TINY-8775
 - The text pattern logic threw an error when there were fragmented text nodes in a paragraph #TINY-8779
 - Dragging a `contentEditable=false` element towards the edges would not cause scrolling #TINY-8874
 - The content of the `contenteditable="false"` element could be selected with the mouse on Firefox  #TINY-8828
 - Parsing large documents no longer throws a `Maximum call stack size exceeded` exception #TINY-6945
 - DomParser filter matching was not checked between filters, which could lead to an exception in the parser #TINY-8888
+- Lists with `contenteditable="false"` can no longer be toggled, and `contenteditable="true"` list elements within them can no longer be indented, split into another list element, or appended to the previous list element by deletion. #TINY-8920
 
 ### Deprecated
 - The autocompleter `ch` configuration property has been deprecated and will be removed in the next major release. Use the `trigger` property instead. #TINY-8887

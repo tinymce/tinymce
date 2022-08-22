@@ -65,7 +65,7 @@ export interface TypeaheadSpec extends CompositeSketchSpec, InputSpec {
   model?: {
     getDisplayText?: (itemData: TypeaheadData) => string;
     selectsOver?: boolean;
-    populateFromBrowser?: boolean;
+    populateFromBrowse?: boolean;
   };
 
   parts: {

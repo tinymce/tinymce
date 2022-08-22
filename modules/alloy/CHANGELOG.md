@@ -6,9 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Improved
+- The `GuiSetup` BDD test helpers now provide a way to create a custom `GuiSystem`.
+
 ### Fixed
 - The `lazyViewport` property incorrectly marked the passed component as optional for the `Docking` behaviour.
 - The `TypeaheadSpec` type did not correctly extend `InputSpec`.
+- The `TypeaheadSpec` type had a typo in the `populateFromBrowse` property.
 
 ## 10.1.0 - 2022-06-29
 
