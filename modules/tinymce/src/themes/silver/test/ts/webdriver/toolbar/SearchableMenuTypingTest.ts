@@ -25,7 +25,7 @@ describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () 
 
   // Tags the keyboard-focused element with a selector to allow webdriver effects, and then
   // removes it once the effect has completed.
-  const pSendToActiveElement = async (_doc: SugarElement<Document>, f: (elem: SugarElement<Element>, selector: string) => Promise<unknown>): Promise<void> => {
+  const pSendToActiveElement = (_doc: SugarElement<Document>, f: (elem: SugarElement<Element>, selector: string) => Promise<unknown>): Promise<void> => {
     return Focus.active().fold(
       () => Promise.reject('Could not find the focused element to send events'),
       async (activeElem) => {
