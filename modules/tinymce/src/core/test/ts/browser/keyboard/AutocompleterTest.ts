@@ -6,7 +6,7 @@ import { TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcaga
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/PublicApi';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { AutocompleterEventArgs, AutocompleteLookupData } from 'tinymce/core/autocomplete/AutocompleteTypes';
 
 describe('browser.tinymce.core.keyboard.AutocompleterTest', () => {

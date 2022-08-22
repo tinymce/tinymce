@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
+import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -37,7 +37,7 @@ describe('browser.tinymce.core.ForceBlocksTest', () => {
     editor.getBody().innerHTML = 'abcd';
     LegacyUnit.setSelection(editor, 'body', 2);
     pressArrowKey(editor);
-    assert.equal(editor.getContent(), '<p class="class1">abcd</p>');
+    TinyAssertions.assertContent(editor, '<p class="class1">abcd</p>');
     assert.equal(editor.selection.getNode().nodeName, 'P');
     editor.options.unset('forced_root_block_attrs');
   });

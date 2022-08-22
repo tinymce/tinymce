@@ -1,7 +1,7 @@
 import { Assertions, DragnDrop, Keyboard, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { before, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
-import { SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
+import { SugarBody, SugarLocation } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -172,7 +172,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
     const target = UiFinder.findIn(TinyDom.body(editor), 'p:contains("Draggable CEF")').getOrDie();
     const initialScrollX = editor.getWin().scrollX;
     Mouse.mouseDown(target);
-    Mouse.mouseMoveTo(SugarElement.fromDom(editor.getBody()), 298, 5); // Move the mouse close to the right edge of the editor to trigger scrolling
+    Mouse.mouseMoveTo(TinyDom.body(editor), 298, 5); // Move the mouse close to the right edge of the editor to trigger scrolling
     await Waiter.pWait(1500); // Wait a small amount of time to ensure the scrolling happens
     assert.isAbove(editor.getWin().scrollX, initialScrollX); // Make sure scrolling happened
   });
@@ -192,7 +192,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
     const target = UiFinder.findIn(TinyDom.body(editor), 'p:contains("Draggable CEF")').getOrDie();
     const initialScrollX = editor.getWin().scrollX;
     Mouse.mouseDown(target);
-    Mouse.mouseMoveTo(SugarElement.fromDom(editor.getBody()), 2, 5); // Move the mouse close to the right edge of the editor to trigger scrolling
+    Mouse.mouseMoveTo(TinyDom.body(editor), 2, 5); // Move the mouse close to the right edge of the editor to trigger scrolling
     await Waiter.pWait(1500); // Wait a small amount of time to ensure the scrolling happens
     Mouse.mouseUp(target);
     assert.isBelow(editor.getWin().scrollX, initialScrollX); // Make sure scrolling happened

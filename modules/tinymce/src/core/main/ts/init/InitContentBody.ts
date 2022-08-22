@@ -178,7 +178,7 @@ const createParser = (editor: Editor): DomParser => {
     }
   });
 
-  if (editor.options.get('preserve_cdata')) {
+  if (Options.shouldPreserveCData(editor)) {
     parser.addNodeFilter('#cdata', (nodes: AstNode[]) => {
       let i = nodes.length;
 

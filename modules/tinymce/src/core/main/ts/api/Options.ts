@@ -882,6 +882,7 @@ const getTextPatternsLookup = option('text_patterns_lookup');
 const getNonEditableClass = option('noneditable_class');
 const getEditableClass = option('editable_class');
 const getNonEditableRegExps = option('noneditable_regexp');
+const shouldPreserveCData = option('preserve_cdata');
 
 const hasTextPatternsLookup = (editor: Editor): boolean =>
   editor.options.isSet('text_patterns_lookup');
@@ -995,5 +996,6 @@ export {
   getNonEditableClass,
   getNonEditableRegExps,
   getEditableClass,
-  hasTableTabNavigation
+  hasTableTabNavigation,
+  shouldPreserveCData
 };
