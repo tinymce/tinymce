@@ -56,7 +56,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
     editor.getBody().innerHTML = '<ol><li>a</li><li><br></li><li>b</li></ol>';
     editor.selection.setCursorLocation(editor.dom.select('li:nth-child(2)')[0], 0);
     pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getBody().innerHTML, '<ol><li>a</li><li><br><br></li><li>b</li></ol>');
+    TinyAssertions.assertRawContent(editor, '<ol><li>a</li><li><br><br></li><li>b</li></ol>');
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
@@ -65,7 +65,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
     editor.getBody().innerHTML = '<ol><li><br></li><li>a</li></ol>';
     editor.selection.setCursorLocation(editor.dom.select('li')[0], 0);
     pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getBody().innerHTML, '<ol><li><br><br></li><li>a</li></ol>');
+    TinyAssertions.assertRawContent(editor, '<ol><li><br><br></li><li>a</li></ol>');
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
@@ -74,7 +74,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
     editor.getBody().innerHTML = '<ol><li>a</li><li><br></li></ol>';
     editor.selection.setCursorLocation(editor.dom.select('li')[1], 0);
     pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getBody().innerHTML, '<ol><li>a</li><li><br><br></li></ol>');
+    TinyAssertions.assertRawContent(editor, '<ol><li>a</li><li><br><br></li></ol>');
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 

@@ -2019,7 +2019,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
 
     editor.formatter.apply('fontname', { value: 'verdana' });
 
-    assert.equal(editor.getBody().innerHTML,
+    TinyAssertions.assertRawContent(editor,
       '<p>That is a <span style="font-family: verdana;" data-mce-style="font-family: verdana;"><span class="mce-spellchecker-word" data-mce-bogus="1">misespelled</span></span> text</p>');
 
     assert.equal(getContent(editor),
@@ -2028,7 +2028,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.selection.select(editor.dom.select('span')[0]);
     editor.formatter.remove('fontname', { value: 'verdana' });
 
-    assert.equal(editor.getBody().innerHTML,
+    TinyAssertions.assertRawContent(editor,
       '<p>That is a <span class="mce-spellchecker-word" data-mce-bogus="1">misespelled</span> text</p>');
 
     assert.equal(getContent(editor),
