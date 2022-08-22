@@ -17,9 +17,6 @@ export interface TieredMenuDetail extends SingleSketchDetail {
 
   fakeFocus: boolean;
 
-  // Deprecate. See note in TieredMenu
-  onHighlight: (comp: AlloyComponent, target: AlloyComponent) => void;
-
   onHighlightItem: (tmenuComp: AlloyComponent, menuComp: AlloyComponent, itemComp: AlloyComponent) => void;
   onDehighlightItem: (tmenuComp: AlloyComponent, menuComp: AlloyComponent, itemComp: AlloyComponent) => void;
 
@@ -62,9 +59,6 @@ export interface TieredMenuSpec extends SingleSketchSpec {
   onCollapseMenu?: (comp: AlloyComponent, item: AlloyComponent, activeMenu: AlloyComponent) => void;
   onRepositionMenu?: (comp: AlloyComponent, item: AlloyComponent, triggers: LayeredItemTrigger[]) => void;
   onHover?: (comp: AlloyComponent, item: AlloyComponent) => void;
-  // Deprecate. See note in TieredMenu
-  onHighlight?: (comp: AlloyComponent, target: AlloyComponent) => void;
-
   onHighlightItem?: (tmenuComp: AlloyComponent, menuComp: AlloyComponent, itemComp: AlloyComponent) => void;
   onDehighlightItem?: (tmenuComp: AlloyComponent, menuComp: AlloyComponent, itemComp: AlloyComponent) => void;
 

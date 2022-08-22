@@ -1,4 +1,4 @@
-import { Fun, Obj, Optional } from '@ephox/katamari';
+import { Fun, Future, Obj, Optional } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
@@ -31,41 +31,31 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
     });
   };
 
-  const action = (component: AlloyComponent): void => {
-    const onOpenSync = switchToMenu;
-    DropdownUtils.togglePopup(
+  const togglePopup = (dropdownComp: AlloyComponent, onOpenSync: (c: AlloyComponent) => void, highlightOnOpen: HighlightOnOpen): Future<AlloyComponent> => {
+    return DropdownUtils.togglePopup(
       detail,
       Fun.identity,
-      component,
+      dropdownComp,
       externals,
       onOpenSync,
-      HighlightOnOpen.HighlightMenuAndItem
-    ).get(Fun.noop);
+      highlightOnOpen
+    );
+  };
+
+  const action = (component: AlloyComponent): void => {
+    const onOpenSync = switchToMenu;
+    togglePopup(component, onOpenSync, HighlightOnOpen.HighlightMenuAndItem).get(Fun.noop);
   };
 
   const apis: DropdownApis = {
     expand: (comp) => {
       if (!Toggling.isOn(comp)) {
-        DropdownUtils.togglePopup(
-          detail,
-          Fun.identity,
-          comp,
-          externals,
-          Fun.noop,
-          HighlightOnOpen.HighlightNone
-        ).get(Fun.noop);
+        togglePopup(comp, Fun.noop, HighlightOnOpen.HighlightNone).get(Fun.noop);
       }
     },
     open: (comp) => {
       if (!Toggling.isOn(comp)) {
-        DropdownUtils.togglePopup(
-          detail,
-          Fun.identity,
-          comp,
-          externals,
-          Fun.noop,
-          HighlightOnOpen.HighlightMenuAndItem
-        ).get(Fun.noop);
+        togglePopup(comp, Fun.noop, HighlightOnOpen.HighlightMenuAndItem).get(Fun.noop);
       }
     },
     refetch: (comp) => {
@@ -77,14 +67,9 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
         () => {
           // If we don't have a sandbox, refetch is the same as open,
           // except we return when it is completed.
-          return DropdownUtils.togglePopup(
-            detail,
-            Fun.identity,
-            comp,
-            externals,
-            Fun.noop,
-            HighlightOnOpen.HighlightMenuAndItem
-          ).map(Fun.noop);
+          return togglePopup(comp, Fun.noop, HighlightOnOpen.HighlightMenuAndItem).map(
+            Fun.noop
+          );
         },
         (sandboxComp) => {
           // We are intentionally not preserving the selected items when
@@ -117,7 +102,7 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
     isOpen: Toggling.isOn,
     close: (comp) => {
       if (Toggling.isOn(comp)) {
-        DropdownUtils.togglePopup(detail, Fun.identity, comp, externals, Fun.noop, HighlightOnOpen.HighlightMenuAndItem).get(Fun.noop);
+        togglePopup(comp, Fun.noop, HighlightOnOpen.HighlightMenuAndItem).get(Fun.noop);
       }
     },
     // If we are open, refresh the menus in the tiered menu system

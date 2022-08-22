@@ -57,7 +57,6 @@ const makeTypeahead = (store: TestStore, sinkFromOtherMothership: AlloyComponent
       const future = Future.pure<TestItem[]>(items);
 
       return future.map((f) => {
-        // TODO: Test this.
         const items: TestItem[] = text === 'no-data' ? [
           { type: 'separator', text: 'No data' }
         ] : f;

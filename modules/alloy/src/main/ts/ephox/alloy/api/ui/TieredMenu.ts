@@ -54,14 +54,6 @@ const tieredMenu: TieredMenuSketcher = single<TieredMenuSpecType, TieredMenuDeta
 
     FieldSchema.defaulted('fakeFocus', false),
 
-    // DEPRECATE. I don't think it is used anywhere (2022-08-16). We want
-    // to deprecate this because this onHighlight handler is only passed through
-    // to the single Menu, so it's type is (menuComp, item) and has no reference
-    // to the tieredmenu. It also has a confusing name. Instead, we'll introduce
-    // separate handlers with more descriptive names that pass
-    // to the handler: tieredmenu, menu, and item.
-    Fields.onHandler('onHighlight'),
-
     Fields.onHandler('onHighlightItem'),
     Fields.onHandler('onDehighlightItem'),
     Fields.onHandler('onHover'),

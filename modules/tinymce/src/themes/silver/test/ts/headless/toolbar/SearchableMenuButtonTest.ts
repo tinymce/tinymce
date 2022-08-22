@@ -9,6 +9,7 @@ import { renderMenuButton } from 'tinymce/themes/silver/ui/button/MenuButton';
 import { fetchMailMergeData } from '../../module/CommonMailMergeFetch';
 import { structMenuWith, structSearchField, structSearchLeafItem, structSearchParentItem, structSearchResultsWith } from '../../module/CommonMenuTestStructures';
 import * as TestExtras from '../../module/TestExtras';
+
 describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () => {
   const helpers = TestExtras.bddSetup();
 

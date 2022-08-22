@@ -82,16 +82,6 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
       onOpenSubmenu: store.adderH('onOpenSubmenu'),
       onRepositionMenu: store.adderH('onRepositionMenu'),
 
-      onHighlight: (menuComp, itemComp) => {
-        // Make assertions about the arguments passed in here. To get the most
-        // useful feedback, we'll add errors to store.
-        if (!Class.has(menuComp.element, TestDropdownMenu.markers().menu)) {
-          store.adder('ERROR. First argument to onHighlight was not the menu')();
-        }
-        store.adder(
-          `deprecated:onHighlight: ${Representing.getValue(itemComp).value}`
-        )();
-      },
       onHighlightItem: (tmenuComp, menuComp, itemComp) => {
         // Make assertions about the arguments passed in here. To get the most
         // useful feedback, we'll add errors to store.
@@ -160,7 +150,6 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
       }),
       store.sAssertEq('Focus is fired as soon as the tiered menu is active', [
         'onOpenMenu',
-        'deprecated:onHighlight: a-alpha',
         'onHighlightItem: a-alpha',
         'menu.events.focus'
       ]),
@@ -171,11 +160,9 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
 
       store.sAssertEq('Check events after navigation', [
         'onDehighlightItem: a-alpha',
-        'deprecated:onHighlight: a-beta',
         'onHighlightItem: a-beta',
         'menu.events.focus',
         'onOpenSubmenu',
-        'deprecated:onHighlight: b-alpha',
         'onHighlightItem: b-alpha',
         'menu.events.focus'
       ]),

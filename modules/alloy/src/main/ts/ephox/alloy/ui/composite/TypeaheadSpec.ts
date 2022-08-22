@@ -239,7 +239,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         if (sandboxIsOpen && !detail.previewing.get()) {
           return getActiveMenu(sandbox).bind((activeMenu) =>
             Highlighting.getHighlighted(activeMenu)
-          ).map((item): boolean => {
+          ).map((item) => {
             // And item was selected, so trigger execute and consider the
             // <enter> key 'handled'
             AlloyTriggers.emitWith(comp, TypeaheadEvents.itemExecute(), { item });

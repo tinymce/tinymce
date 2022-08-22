@@ -9,6 +9,7 @@ import { renderMenuButton } from 'tinymce/themes/silver/ui/button/MenuButton';
 import { fetchMailMergeData } from '../../module/CommonMailMergeFetch';
 import { structMenuWith, structSearchField, structSearchLeafItem, structSearchParentItem, structSearchResultsWith } from '../../module/CommonMenuTestStructures';
 import * as TestExtras from '../../module/TestExtras';
+
 describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () => {
   const helpers = TestExtras.bddSetup();
 
@@ -120,7 +121,7 @@ describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () 
     )
   );
 
-  // The <space> key appears to be missing from KeyEffects in bedrock
+  // TINY-9013: The <space> key is missing from KeyEffects in bedrock
   const spaceKey = RealKeys.text('\uE00D');
 
   context('Testing searchable menu key events', () => {

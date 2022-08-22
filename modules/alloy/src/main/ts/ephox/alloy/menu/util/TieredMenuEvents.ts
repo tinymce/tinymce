@@ -16,7 +16,7 @@ export interface OnMenuItemHighlightedEvent extends CustomEvent, OnMenuItemHighl
 
 export interface OnMenuItemDehighlightedEventData {
   readonly menuComp: AlloyComponent;
-   readonly itemComp: AlloyComponent;
+  readonly itemComp: AlloyComponent;
 }
 
 export interface OnMenuItemDehighlightedEvent extends CustomEvent, OnMenuItemDehighlightedEventData { }

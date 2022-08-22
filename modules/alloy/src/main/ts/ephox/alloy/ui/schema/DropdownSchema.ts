@@ -36,8 +36,8 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.external<DropdownDetail, DropdownSpec>({
     schema: [
       Fields.tieredMenuMarkers(),
-      // INVESTIGATE: I believe defining a defaulted field isn't necessary
-      // in external parts, because the post-boulder part spec is not passed
+      // Defining a defaulted field isn't necessary when dealing with
+      // external parts, because the post-boulder part spec is not passed
       // through to any of these functions (defaults, overrides etc.). So all
       // this does is make it a bit clearer what you should expect, but remember
       // that the default value here is irrelevant!

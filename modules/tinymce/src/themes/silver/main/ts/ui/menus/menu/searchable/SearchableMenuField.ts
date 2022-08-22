@@ -156,8 +156,7 @@ export const renderMenuSearcher = (spec: MenuSearcherSpec): AlloySpec => {
           // Up/Down/Left/Right/Enter/Escape/Space. We can divide these into two categories
           //  - events that we don't want to allow the overall menu system to process (left and right and space)
           //  - events that we want to redispatch on the "highlighted item" based on the
-          // current fake focus. I'll fix this comment, but that should give me enough
-          // of a reminder as to what I'm trying to do here.
+          // current fake focus.
           Keying.config({
             mode: 'special',
             onLeft: handleByBrowser,

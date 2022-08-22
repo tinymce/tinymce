@@ -6,7 +6,7 @@ import { NestedMenuItemContents } from '../components/menu/NestedMenuItem';
 export type MenuButtonItemTypes = NestedMenuItemContents;
 export type SuccessCallback = (menu: string | MenuButtonItemTypes[]) => void;
 
-// NOTE: FetchContext is an object so that we can add information to it in the future.
+// NOTE: MenuButtonFetchContext is an object so that we can add information to it in the future.
 export interface MenuButtonFetchContext {
   pattern: string;
 }

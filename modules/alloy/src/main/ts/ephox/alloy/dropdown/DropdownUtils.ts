@@ -75,7 +75,6 @@ const openF = (
     uid: Tagger.generate(''),
     data,
 
-    // Can be (i) nothing, (ii) highlight just the menu, or (iii) highlight menu and item
     highlightOnOpen,
 
     onOpenMenu: (tmenu, menu) => {

@@ -18,11 +18,11 @@ import { TestItem } from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 
 interface TestDatum {
-  code: string;
-  selector: string;
-  label: string;
-  testItem: TestItem;
-  sAssertHasFocus: Step<any, any>;
+  readonly code: string;
+  readonly selector: string;
+  readonly label: string;
+  readonly testItem: TestItem;
+  readonly sAssertHasFocus: Step<any, any>;
 }
 
 UnitTest.asynctest('Dropdown List', (success, failure) => {

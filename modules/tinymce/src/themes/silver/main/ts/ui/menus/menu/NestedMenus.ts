@@ -13,7 +13,7 @@ import { SingleMenuItemSpec } from './SingleMenuTypes';
 export interface NestedMenusSettings {
   readonly isHorizontalMenu: boolean;
   readonly search: Optional<{
-    placeholder: Optional<string>;
+    readonly placeholder: Optional<string>;
   }>;
 }
 

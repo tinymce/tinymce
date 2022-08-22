@@ -63,9 +63,6 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
       // This makes it a difficult handler to use for a tieredmenu, so we are
       // deprecating it.
       onHighlight: (menuComp: AlloyComponent, itemComp: AlloyComponent) => {
-        // (DEPRECATED handler): We'll keep doing this until it is removed.
-        detail.onHighlight(menuComp, itemComp);
-
         // Trigger an internal event so that we can listen to it at the tieredmenu
         // level, and call detail.onHighlightItem handler with tmenu, menu, and item.
         const highlightData: OnMenuItemHighlightedEventData = {
@@ -306,7 +303,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
       // is used to essentially treat the widget like it is the top-level item, so
       // when events originate from *within* the widget, their source is changed to
       // the top-level item. Consider removing EventSource from alloy altogether.
-      return SelectorFind.closest(simulatedEvent.getSource(), '.' + detail.markers.item)
+      return SelectorFind.closest(simulatedEvent.getSource(), `.${detail.markers.item}`)
         .bind((target) => container.getSystem().getByDom(target).toOptional().bind(
           (item: AlloyComponent) => f(container, item).map<boolean>(Fun.always)
         ));

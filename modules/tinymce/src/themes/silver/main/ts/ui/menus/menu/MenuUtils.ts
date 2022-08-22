@@ -25,7 +25,7 @@ export interface UnsearchableMenuLayout {
 
 export interface SearchableMenuLayout {
   readonly menuType: 'searchable';
-  searchMode: SearchMenuWithFieldMode | SearchMenuWithResultsMode;
+  readonly searchMode: SearchMenuWithFieldMode | SearchMenuWithResultsMode;
 }
 
 export const menuHasIcons = (xs: Array<SingleMenuItemSpec | Menu.CardMenuItemSpec | InlineContent.AutocompleterItemSpec>): boolean =>
@@ -52,13 +52,12 @@ export const createHorizontalPartialMenuWithAlloyItems = (value: string, _hasIco
 
 export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean, items: ItemTypes.ItemSpec[], columns: Toolbar.ColumnTypes, menuLayout: MenuLayoutType): PartialMenuSpec => {
   const getNormalStructure = (): StructureSpec => {
-    switch (menuLayout.menuType) {
-      case 'searchable': {
-        return menuLayout.searchMode.searchMode === 'search-with-field'
-          ? forCollectionWithSearchField(columns, items, menuLayout.searchMode)
-          : forCollectionWithSearchResults(columns, items);
-      }
-      default: return forCollection(columns, items);
+    if (menuLayout.menuType !== 'searchable') {
+      return forCollection(columns, items);
+    } else {
+      return menuLayout.searchMode.searchMode === 'search-with-field'
+        ? forCollectionWithSearchField(columns, items, menuLayout.searchMode)
+        : forCollectionWithSearchResults(columns, items);
     }
   };
 

@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import { Toolbar } from '@ephox/bridge';
 import { Arr } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -83,7 +84,7 @@ export default {
     // This fetch function is used for the MailMerge example buttons. The
     // flag passed in determines whether to collapse all the items into a single
     // menu when a search pattern is present.
-    const mailMergeFetch = (collapseIfSearch: boolean) => (callback: any, fetchContext: any) => {
+    const mailMergeFetch = (collapseIfSearch: boolean): Toolbar.ToolbarMenuButton['fetch'] => (callback, fetchContext) => {
       const makeMailMerge = (info: { value: string; title?: string}) => ({
         type: 'menuitem',
         text: info.title ?? info.value,
