@@ -10,7 +10,7 @@ import * as Bookmark from '../core/Bookmark';
 import { listToggleActionFromListName } from '../core/ListAction';
 import * as NodeType from '../core/NodeType';
 import * as Selection from '../core/Selection';
-import { isCustomList } from '../core/Util';
+import { isCustomList, isWithinNonEditableList } from '../core/Util';
 import { flattenListSelection } from './Indendation';
 
 interface ListDetail {
@@ -290,9 +290,12 @@ const toggleSingleList = (editor: Editor, parentList: HTMLElement | null, listNa
 
 const toggleList = (editor: Editor, listName: 'UL' | 'OL' | 'DL', _detail: ListDetail | null): void => {
   const parentList = Selection.getParentList(editor);
+  if (isWithinNonEditableList(editor, parentList)) {
+    return;
+  }
+
   const selectedSubLists = Selection.getSelectedSubLists(editor);
   const detail = Type.isObject(_detail) ? _detail : {};
-
   if (selectedSubLists.length > 0) {
     toggleMultipleLists(editor, parentList, selectedSubLists, listName, detail);
   } else {
