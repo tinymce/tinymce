@@ -1,6 +1,6 @@
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Input, Keying, NativeEvents, NativeSimulatedEvent, Representing } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
-import { Attribute, SelectorFind } from '@ephox/sugar';
+import { Attribute, EventArgs, SelectorFind } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import { selectableClass as usualItemClass } from '../../item/ItemClasses';
@@ -91,6 +91,8 @@ export const renderMenuSearcher = (spec: MenuSearcherSpec): AlloySpec => {
     return Optional.some(true);
   };
 
+  const customSearcherEventsName = 'searcher-events';
+
   return {
     dom: {
       tag: 'div',
@@ -109,7 +111,7 @@ export const renderMenuSearcher = (spec: MenuSearcherSpec): AlloySpec => {
           'aria-autocomplete': 'list'
         },
         inputBehaviours: Behaviour.derive([
-          AddEventsBehaviour.config('searcher-events', [
+          AddEventsBehaviour.config(customSearcherEventsName, [
             // When the user types into the search field, we want to retrigger
             // a fetch on the dropdown. This will be fired from within the
             // dropdown's sandbox, so the dropdown is going to have to listen
@@ -119,6 +121,32 @@ export const renderMenuSearcher = (spec: MenuSearcherSpec): AlloySpec => {
               NativeEvents.input(),
               (inputComp) => {
                 AlloyTriggers.emit(inputComp, refetchTriggerEvent);
+              }
+            ),
+
+            AlloyEvents.run<EventArgs<KeyboardEvent>>(
+              NativeEvents.keydown(),
+              (inputComp, se) => {
+                // The Special Keying config type since TINY-7005 processes the Escape
+                // key on keyup, not keydown. We need to stop the keydown event for this
+                // input, because some browsers (e.g. Chrome) will process a keydown
+                // for Escape inside an input[type=search] by clearing the input value,
+                // and then triggering an "input" event. This "input" event will trigger
+                // a refetch, which if it completes before the keyup is fired for Escape,
+                // will go back to only showing one level of menu. Then, when the escape
+                // keyup is processed by Keying, it will close the single remaining menu.
+                // This has the effect of closing *all* menus that are open when Escape is
+                // pressed instead of the last one. So, instead, we are going to kill the
+                // keydown event, so that it doesn't have the default browser behaviour, and
+                // won't trigger an input (and then Refetch). Then the keyup will still fire
+                // so just one level of the menu will close. This is all based on the underlying
+                // assumption that preventDefault and/or stop on a keydown does not suppress
+                // the related keyup. All of the documentation found so far, suggests it should
+                // only suppress the keypress, not the keyup, but that might not be across all
+                // browsers, or implemented consistently.
+                if (se.event.raw.key === 'Escape') {
+                  se.stop();
+                }
               }
             )
           ]),
@@ -139,7 +167,15 @@ export const renderMenuSearcher = (spec: MenuSearcherSpec): AlloySpec => {
             onUp: handleByHighlightedItem,
             onDown: handleByHighlightedItem
           })
-        ])
+        ]),
+
+        // Because we have customised handling for keydown, and we are configuring
+        // Keying, we need to specify which "behaviour" (custom events or keying) gets to
+        // process the keydown event first. In this situation, we want to stop escape before
+        // anything happens (although it really isn't necessary)
+        eventOrder: {
+          keydown: [ customSearcherEventsName, Keying.name() ]
+        }
       })
     ]
   };

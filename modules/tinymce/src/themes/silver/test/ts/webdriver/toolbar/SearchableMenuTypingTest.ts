@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, FocusTools, KeyPressAdt, Mouse, RealKeys, StructAssert, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, KeyPressAdt, Mouse, RealKeys, StructAssert, UiFinder } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun, Id, Optional } from '@ephox/katamari';
@@ -32,7 +32,6 @@ describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () 
         const tempVal = Id.generate('data-sendkeys-id');
         Attribute.set(activeElem, 'data-sendkeys', tempVal);
         const selector = `${SugarNode.name(activeElem)}[data-sendkeys=${tempVal}]`;
-        console.log('sending selector', selector);
         await f(activeElem, selector);
         Attribute.remove(activeElem, 'data-sendkeys');
       }
@@ -139,8 +138,7 @@ describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () 
       );
 
       // Type "Ph" into the input
-      // await pSendKeysToActiveInput(hook.root(), [ RealKeys.text('P') ]);
-      await Waiter.pWait(100000000);
+      await pSendKeysToActiveInput(hook.root(), [ RealKeys.text('Ph') ]);
       onActiveElement( hook.root(), assertCursorAtEndOfText('Ph') );
       await pAssertTieredMenuStructure('Typing Ph', helpers.sink(), [
         structMenuWith({ selected: true }, [
@@ -345,7 +343,6 @@ describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () 
       ]);
 
       // Now press <escape>. It should collapse the menu.
-      await Waiter.pWait(100000);
       await pSendKeysToActiveInput(hook.root(), [ RealKeys.text('escape') ]);
 
       onActiveElement(
@@ -359,13 +356,11 @@ describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () 
             structSearchLeafItem({ selected: false }),
             structSearchLeafItem({ selected: false }),
             structSearchParentItem({ selected: false, expanded: false }),
-            structSearchParentItem({ selected: true, expanded: true })
+            // The menu is collapsed now, due to the Escape.
+            structSearchParentItem({ selected: true, expanded: false })
           ])
         ])
       ]);
-
-      await Waiter.pWait(10000);
-
     });
   });
 });
