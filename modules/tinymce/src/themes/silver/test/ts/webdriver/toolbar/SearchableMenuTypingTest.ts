@@ -105,7 +105,7 @@ describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () 
           icon: Optional.none(),
           tooltip: Optional.none(),
           onSetup: Fun.constant(Fun.noop),
-          searchable: true,
+          search: Optional.some({ placeholder: Optional.none() }),
           fetch: fetchMailMergeData({
             // To test that <left> and <right> etc. are not being
             // processed by the menu, we need to have menus that can expand / collapse

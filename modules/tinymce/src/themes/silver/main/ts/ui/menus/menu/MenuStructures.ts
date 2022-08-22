@@ -3,6 +3,7 @@ import { Arr, Fun, Id, Obj } from '@ephox/katamari';
 
 import I18n from 'tinymce/core/api/util/I18n';
 
+import { SearchMenuWithFieldMode } from './searchable/SearchableMenu';
 import { renderMenuSearcher } from './searchable/SearchableMenuField';
 import { augmentWithAria, searchResultsClass } from './searchable/SearchableMenus';
 
@@ -159,7 +160,7 @@ const forCollectionWithSearchResults = (columns: number | 'auto', initItems: Ite
 };
 
 // Does a searchable menu *really* support columns !== 1 ?
-const forCollectionWithSearchField = (columns: number | 'auto', initItems: ItemTypes.ItemSpec[], _hasIcons: boolean = true): StructureSpec => {
+const forCollectionWithSearchField = (columns: number | 'auto', initItems: ItemTypes.ItemSpec[], searchField: SearchMenuWithFieldMode): StructureSpec => {
 
   // This connects the search bar with the list box.
   const ariaControlsSearchResults = Id.generate('aria-controls-search-results');
@@ -184,7 +185,8 @@ const forCollectionWithSearchField = (columns: number | 'auto', initItems: ItemT
       // a 'navigation container' that all items would be in. That could be another
       // way to solve the problem. For now, we'll just manually avoid adding the navClass
       renderMenuSearcher({
-        i18n: I18n.translate
+        i18n: I18n.translate,
+        placeholder: searchField.placeholder
       }),
       {
         // We need a separate container for the items, because this is the container

@@ -5,6 +5,7 @@ import { Arr, Optional } from '@ephox/katamari';
 
 import { components as menuComponents, dom as menuDom } from './MenuParts';
 import { forCollection, forCollectionWithSearchField, forCollectionWithSearchResults, forHorizontalCollection, forSwatch, forToolbar, StructureSpec } from './MenuStructures';
+import { SearchMenuWithFieldMode, SearchMenuWithResultsMode } from './searchable/SearchableMenu';
 import { SingleMenuItemSpec } from './SingleMenuTypes';
 
 export interface PartialMenuSpec {
@@ -16,7 +17,16 @@ export interface PartialMenuSpec {
 
 // This is an internal version of the presets, that includes a couple more
 // options which aren't available externally relating to searching
-export type MenuLayoutType = 'color' | 'normal' | 'listpreview' | 'searchable-normal' | 'searchable-normal-results';
+export type MenuLayoutType = UnsearchableMenuLayout | SearchableMenuLayout;
+
+export interface UnsearchableMenuLayout {
+  readonly menuType: 'color' | 'normal' | 'listpreview';
+}
+
+export interface SearchableMenuLayout {
+  readonly menuType: 'searchable';
+  searchMode: SearchMenuWithFieldMode | SearchMenuWithResultsMode;
+}
 
 export const menuHasIcons = (xs: Array<SingleMenuItemSpec | Menu.CardMenuItemSpec | InlineContent.AutocompleterItemSpec>): boolean =>
   Arr.exists(xs, (item) => 'icon' in item && item.icon !== undefined);
@@ -42,14 +52,17 @@ export const createHorizontalPartialMenuWithAlloyItems = (value: string, _hasIco
 
 export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean, items: ItemTypes.ItemSpec[], columns: Toolbar.ColumnTypes, menuLayout: MenuLayoutType): PartialMenuSpec => {
   const getNormalStructure = (): StructureSpec => {
-    switch (menuLayout) {
-      case 'searchable-normal': return forCollectionWithSearchField(columns, items);
-      case 'searchable-normal-results': return forCollectionWithSearchResults(columns, items);
+    switch (menuLayout.menuType) {
+      case 'searchable': {
+        return menuLayout.searchMode.searchMode === 'search-with-field'
+          ? forCollectionWithSearchField(columns, items, menuLayout.searchMode)
+          : forCollectionWithSearchResults(columns, items);
+      }
       default: return forCollection(columns, items);
     }
   };
 
-  if (menuLayout === 'color') {
+  if (menuLayout.menuType === 'color') {
     const structure = forSwatch(columns);
     return {
       value,
@@ -57,7 +70,7 @@ export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean
       components: structure.components,
       items
     };
-  } else if (menuLayout === 'normal' && columns === 'auto') {
+  } else if (menuLayout.menuType === 'normal' && columns === 'auto') {
     const structure = forCollection(columns, items);
     return {
       value,
@@ -65,7 +78,7 @@ export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean
       components: structure.components,
       items
     };
-  } else if (menuLayout === 'normal' || menuLayout === 'searchable-normal' || menuLayout === 'searchable-normal-results') {
+  } else if (menuLayout.menuType === 'normal' || menuLayout.menuType === 'searchable') {
     const structure = getNormalStructure();
     return {
       value,
@@ -73,7 +86,7 @@ export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean
       components: structure.components,
       items
     };
-  } else if (menuLayout === 'listpreview' && columns !== 'auto') {
+  } else if (menuLayout.menuType === 'listpreview' && columns !== 'auto') {
     const structure = forToolbar(columns);
     return {
       value,
@@ -84,7 +97,7 @@ export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean
   } else {
     return {
       value,
-      dom: menuDom(hasIcons, columns, menuLayout),
+      dom: menuDom(hasIcons, columns, menuLayout.menuType),
       components: menuComponents,
       items
     };

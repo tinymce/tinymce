@@ -78,7 +78,7 @@ export const renderListBox = (spec: ListBoxSpec, backstage: UiFactoryBackstage, 
               backstage,
               {
                 isHorizontalMenu: false,
-                isSearchable: false
+                search: Optional.none()
               }
             )
           );

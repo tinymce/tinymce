@@ -144,7 +144,7 @@ const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spe
       backstage,
       {
         isHorizontalMenu: false,
-        isSearchable: false
+        search: Optional.none()
       }
     );
     callback(menu);

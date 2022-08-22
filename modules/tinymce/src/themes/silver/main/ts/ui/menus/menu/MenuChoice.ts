@@ -24,7 +24,9 @@ export const createPartialChoiceMenu = (
   const hasIcons = MenuUtils.menuHasIcons(items);
   const presetItemTypes = presets !== 'color' ? 'normal' : 'color';
   const alloyItems = createChoiceItems(items, onItemValueHandler, columns, presetItemTypes, itemResponse, select, providersBackstage);
-  const menuLayout: MenuUtils.MenuLayoutType = presets;
+  const menuLayout: MenuUtils.MenuLayoutType = {
+    menuType: presets
+  };
   return MenuUtils.createPartialMenuWithAlloyItems(value, hasIcons, alloyItems, columns, menuLayout);
 };
 

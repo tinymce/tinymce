@@ -79,7 +79,7 @@ export const renderUrlInput = (
         backstage,
         {
           isHorizontalMenu: false,
-          isSearchable: false
+          search: Optional.none()
         }
       );
       return Future.pure(tdata);

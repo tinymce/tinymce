@@ -180,7 +180,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
       ...spec,
       type: 'menubutton',
       // Currently, dialog-based menu buttons cannot be searchable.
-      searchable: false,
+      search: Optional.none(),
       onSetup: (api) => {
         api.setEnabled(spec.enabled);
         return Fun.noop;

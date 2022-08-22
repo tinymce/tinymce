@@ -12,8 +12,33 @@ import { SingleMenuItemSpec } from './SingleMenuTypes';
 
 export interface NestedMenusSettings {
   readonly isHorizontalMenu: boolean;
-  readonly isSearchable: boolean;
+  readonly search: Optional<{
+    placeholder: Optional<string>;
+  }>;
 }
+
+const getSearchModeForField = (settings: NestedMenusSettings): MenuSearchMode => {
+  return settings.search.fold<MenuSearchMode>(
+    () => ({ searchMode: 'no-search' }),
+    (searchSettings) => {
+      return {
+        searchMode: 'search-with-field',
+        placeholder: searchSettings.placeholder
+      };
+    }
+  );
+};
+
+const getSearchModeForResults = (settings: NestedMenusSettings): MenuSearchMode => {
+  return settings.search.fold<MenuSearchMode>(
+    () => ({ searchMode: 'no-search' }),
+    (_) => {
+      return {
+        searchMode: 'search-with-results'
+      };
+    }
+  );
+};
 
 const build = (items: string | Array<string | SingleMenuItemSpec>, itemResponse: ItemResponse, backstage: UiFactoryBackstage, settings: NestedMenusSettings): Optional<TieredData> => {
   const primary = Id.generate('primary-menu');
@@ -29,19 +54,19 @@ const build = (items: string | Array<string | SingleMenuItemSpec>, itemResponse:
   }
 
   // Only the main menu has a searchable widget (if it is enabled)
-  const searchMode = settings.isSearchable ? MenuSearchMode.HasSearchField : MenuSearchMode.NoSearch;
+  const mainMenuSearchMode: MenuSearchMode = getSearchModeForField(settings);
   const mainMenu = createPartialMenu(
     primary,
     data.items,
     itemResponse,
     backstage,
     settings.isHorizontalMenu,
-    searchMode
+    mainMenuSearchMode
   );
 
   // The submenus do not have the search field, but will have search results for
   // connecting to the search field via aria-controls
-  const submenuSearchMode = settings.isSearchable ? MenuSearchMode.HasSearchResults : MenuSearchMode.NoSearch;
+  const submenuSearchMode: MenuSearchMode = getSearchModeForResults(settings);
 
   const submenus = Obj.map(
     data.menus, (menuItems, menuName) => createPartialMenu(

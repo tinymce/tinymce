@@ -1,4 +1,5 @@
 import { AlloyComponent, InlineView } from '@ephox/alloy';
+import { Optional } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
@@ -27,7 +28,7 @@ export const initAndShow = (
     backstage,
     {
       isHorizontalMenu: false,
-      isSearchable: false
+      search: Optional.none()
     }
   ).map((menuData) => {
     e.preventDefault();

@@ -108,7 +108,7 @@ const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, back
     {
       // MobileContextMenus are the *only* horizontal menus currently (2022-08-16)
       isHorizontalMenu: true,
-      isSearchable: false
+      search: Optional.none()
     }
   ).map((menuData) => {
     e.preventDefault();

@@ -107,7 +107,13 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared): vo
           }
         },
         createInlineMenuFrom(
-          createPartialMenuWithAlloyItems('autocompleter-value', true, items, columns, 'normal'),
+          createPartialMenuWithAlloyItems(
+            'autocompleter-value',
+            true,
+            items,
+            columns,
+            { menuType: 'normal' }
+          ),
           columns,
           FocusMode.ContentFocus,
           // Use the constant.

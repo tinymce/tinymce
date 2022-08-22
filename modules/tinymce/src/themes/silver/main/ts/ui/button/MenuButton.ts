@@ -12,7 +12,7 @@ import * as NestedMenus from '../menus/menu/NestedMenus';
 import { getSearchPattern } from '../menus/menu/searchable/SearchableMenu';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 
-export type MenuButtonSpec = Omit<Toolbar.ToolbarMenuButton, 'type'>;
+export type ToolbarMenuButtonWithoutType = Omit<Toolbar.ToolbarMenuButton, 'type'>;
 
 type FetchCallback = (success: (items: Menu.NestedMenuItemContents[]) => void) => void;
 
@@ -42,47 +42,49 @@ const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonI
   isActive: () => Class.has(component.element, ToolbarButtonClasses.Ticked)
 });
 
-const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Optional<string>): SketchSpec => renderCommonDropdown({
-  text: spec.text,
-  icon: spec.icon,
-  tooltip: spec.tooltip,
-  searchable: spec.searchable,
-  // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
-  role,
-  fetch: (dropdownComp, callback) => {
-    const fetchContext = {
-      pattern: spec.searchable ? getSearchPattern(dropdownComp) : ''
-    };
+const renderMenuButton = (spec: ToolbarMenuButtonWithoutType, prefix: string, backstage: UiFactoryBackstage, role: Optional<string>): SketchSpec => {
+  return renderCommonDropdown({
+    text: spec.text,
+    icon: spec.icon,
+    tooltip: spec.tooltip,
+    searchable: spec.search.isSome(),
+    // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
+    role,
+    fetch: (dropdownComp, callback) => {
+      const fetchContext = {
+        pattern: spec.search.isSome() ? getSearchPattern(dropdownComp) : ''
+      };
 
-    spec.fetch(
-      (items) => {
-        callback(
-          NestedMenus.build(
-            items,
-            ItemResponse.CLOSE_ON_EXECUTE,
-            backstage,
-            {
-              isHorizontalMenu: false,
-              // MenuButtons are the only dropdowns that support searchable (2022-08-16)
-              isSearchable: spec.searchable
-            }
-          )
-        );
-      },
-      fetchContext
-    );
+      spec.fetch(
+        (items) => {
+          callback(
+            NestedMenus.build(
+              items,
+              ItemResponse.CLOSE_ON_EXECUTE,
+              backstage,
+              {
+                isHorizontalMenu: false,
+                // MenuButtons are the only dropdowns that support searchable (2022-08-16)
+                search: spec.search
+              }
+            )
+          );
+        },
+        fetchContext
+      );
+    },
+    onSetup: spec.onSetup,
+    getApi: getMenuButtonApi,
+    columns: 1,
+    presets: 'normal',
+    classes: [],
+    dropdownBehaviours: [
+      Tabstopping.config({ })
+    ]
   },
-  onSetup: spec.onSetup,
-  getApi: getMenuButtonApi,
-  columns: 1,
-  presets: 'normal',
-  classes: [],
-  dropdownBehaviours: [
-    Tabstopping.config({ })
-  ]
-},
-prefix,
-backstage.shared);
+  prefix,
+  backstage.shared);
+};
 
 const getFetch = (items: StoredMenuItem[], getButton: () => MementoRecord, backstage: UiFactoryBackstage): FetchCallback => {
   const getMenuItemAction = (item: StoredMenuItem) => (api: Menu.ToggleMenuItemInstanceApi) => {

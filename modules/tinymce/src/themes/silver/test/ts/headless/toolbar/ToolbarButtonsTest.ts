@@ -122,7 +122,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
             tooltip: Optional.some('tooltip'),
             icon: Optional.none(),
             text: Optional.some('button4'),
-            searchable: false,
+            search: Optional.none(),
             fetch: (callback) => {
               callback([
                 {

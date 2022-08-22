@@ -31,7 +31,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
           icon: Optional.none(),
           tooltip: Optional.none(),
           onSetup: Fun.constant(Fun.noop),
-          searchable: true,
+          search: Optional.some({ placeholder: Optional.none() }),
           fetch: fetchMailMergeData({
             // If a search pattern is present, collapse into one menu
             collapseSearchResults: true

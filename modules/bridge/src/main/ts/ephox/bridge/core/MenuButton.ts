@@ -1,5 +1,5 @@
-import { FieldSchema } from '@ephox/boulder';
-import { Fun, Optional } from '@ephox/katamari';
+import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
+import { Fun, Optional, Type } from '@ephox/katamari';
 
 import { NestedMenuItemContents } from '../components/menu/NestedMenuItem';
 
@@ -15,7 +15,7 @@ export interface BaseMenuButtonSpec {
   text?: string;
   tooltip?: string;
   icon?: string;
-  searchable?: boolean;
+  search?: boolean | { placeholder?: string };
   // In order to avoid breaking APIs with pre 6.2 releases, the fetchContext was added
   // as an additional argument to fetch.
   fetch: (success: SuccessCallback, fetchContext?: FetchContext) => void;
@@ -26,7 +26,7 @@ export interface BaseMenuButton {
   text: Optional<string>;
   tooltip: Optional<string>;
   icon: Optional<string>;
-  searchable: boolean;
+  search: Optional<{ placeholder: Optional<string> }>;
   fetch: (success: SuccessCallback, fetchContext: FetchContext) => void;
   onSetup: (api: BaseMenuButtonInstanceApi) => (api: BaseMenuButtonInstanceApi) => void;
 }
@@ -42,7 +42,35 @@ export const baseMenuButtonFields = [
   FieldSchema.optionString('text'),
   FieldSchema.optionString('tooltip'),
   FieldSchema.optionString('icon'),
-  FieldSchema.defaultedBoolean('searchable', false),
+
+  FieldSchema.defaultedOf(
+    'search',
+    false,
+
+    // So our boulder validation are:
+    // a) boolean -> we need to map it into an Option
+    // b) object -> we need to map it into a Some
+    StructureSchema.oneOf(
+      [
+        // Unfortunately, due to objOf not checking to see that the
+        // input is an object, the boolean check MUST be first
+        ValueType.boolean,
+        StructureSchema.objOf([
+          FieldSchema.optionString('placeholder')
+        ])
+      ],
+
+      // This function allows you to standardise the output.
+      (x: boolean | { placeholder: Optional<string> }): BaseMenuButton['search'] => {
+        if (Type.isBoolean(x)) {
+          return x ? Optional.some({ placeholder: Optional.none() }) : Optional.none();
+        } else {
+          return Optional.some(x);
+        }
+      }
+    )
+  ),
+
   FieldSchema.requiredFunction('fetch'),
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop)
 ];

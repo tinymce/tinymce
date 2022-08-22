@@ -7,15 +7,31 @@ import { RedirectMenuItemInteractionEvent } from './SearchableMenuEvents';
 import { findWithinMenu, findWithinSandbox, restoreState, saveState, setActiveDescendant } from './SearchableMenuField';
 import { searchResultsClass } from './SearchableMenus';
 
-export enum MenuSearchMode { NoSearch, HasSearchField, HasSearchResults }
+export type MenuSearchMode = NoSearchMode | SearchMenuWithFieldMode | SearchMenuWithResultsMode;
+export interface NoSearchMode {
+  readonly searchMode: 'no-search';
+}
+export interface SearchMenuWithFieldMode {
+  readonly searchMode: 'search-with-field';
+  readonly placeholder: Optional<string>;
+}
+export interface SearchMenuWithResultsMode {
+  readonly searchMode: 'search-with-results';
+}
 
 const identifyMenuLayout = (searchMode: MenuSearchMode): MenuLayoutType => {
-  if (searchMode === MenuSearchMode.HasSearchField) {
-    return 'searchable-normal';
-  } else if (searchMode === MenuSearchMode.HasSearchResults) {
-    return 'searchable-normal-results';
-  } else {
-    return 'normal';
+  switch (searchMode.searchMode) {
+    case 'no-search': {
+      return {
+        menuType: 'normal'
+      };
+    }
+    default: {
+      return {
+        menuType: 'searchable',
+        searchMode
+      };
+    }
   }
 };
 

@@ -188,13 +188,15 @@ export default {
 
     ed.ui.registry.addMenuButton('MailMerge', {
       text: 'MailMerge',
-      searchable: true,
+      search: true,
       fetch: mailMergeFetch(true)
     });
 
     ed.ui.registry.addMenuButton('MailMerge-NoCollapse', {
       text: 'MailMerge-WithMenus',
-      searchable: true,
+      search: {
+        placeholder: 'Change my placeholder text!'
+      },
       fetch: mailMergeFetch(false)
     });
 
