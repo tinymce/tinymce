@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Improved
 - The formatter can now apply a format to a `contenteditable="false"` element by wrapping it. Configurable using the `format_noneditable_selector` option. #TINY-8905
 - The autocompleter now supports a multiple character trigger using the new `trigger` configuration #TINY-8887
-- The formatter will now expand some inline formats like color and font size to list bullets/numbers #TINY-8961
+- The formatter will now apply some inline formats like color and font size to list item elements when the entire item content is selected. #TINY-8961
 
 ### Fixed
 - The Autolink plugin did not work when the text nodes in the content were fragmented #TINY-3723
