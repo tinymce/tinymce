@@ -25,7 +25,7 @@ interface TestDatum {
   readonly sAssertHasFocus: Step<any, any>;
 }
 
-UnitTest.asynctest('Dropdown List', (success, failure) => {
+UnitTest.asynctest('DropdownRefetchTest', (success, failure) => {
 
   const memSink = Memento.record(
     Container.sketch({
