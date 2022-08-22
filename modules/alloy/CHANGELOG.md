@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 
 ### Changed
-- The `highlightImmediately` setting for `TieredMenu` was replaced with the more granular `HighlightOnOpen`. #TINY-8952
+- The `highlightImmediately` setting for `TieredMenu` was replaced with the more granular `highlightOnOpen`. #TINY-8952
 
 ### Fixed
 - The `highlight` `Highlighting` API was not properly skipping dehighlighting the highlighting target. #TINY-8952

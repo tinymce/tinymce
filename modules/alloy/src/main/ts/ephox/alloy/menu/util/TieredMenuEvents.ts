@@ -8,15 +8,15 @@ import { CustomEvent } from '../../events/SimulatedEvent';
 // all of the tiered menu, the active menu, and the item comp
 // when firing their handlers (like onHighlightItem)
 export interface OnMenuItemHighlightedEventData {
-  menuComp: AlloyComponent;
-  itemComp: AlloyComponent;
+  readonly menuComp: AlloyComponent;
+  readonly itemComp: AlloyComponent;
 }
 
 export interface OnMenuItemHighlightedEvent extends CustomEvent, OnMenuItemHighlightedEventData { }
 
 export interface OnMenuItemDehighlightedEventData {
-  menuComp: AlloyComponent;
-  itemComp: AlloyComponent;
+  readonly menuComp: AlloyComponent;
+   readonly itemComp: AlloyComponent;
 }
 
 export interface OnMenuItemDehighlightedEvent extends CustomEvent, OnMenuItemDehighlightedEventData { }

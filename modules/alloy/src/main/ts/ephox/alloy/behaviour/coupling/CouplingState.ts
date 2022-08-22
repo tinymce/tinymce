@@ -5,7 +5,7 @@ import { nuState } from '../common/BehaviourState';
 import { CouplingConfig, CouplingState } from './CouplingTypes';
 
 // Unfortunately, the Coupling APIs currently throw errors when the coupled name
-// is not recognised. This is because that if the wrong name is used, it is a
+// is not recognised. This is because if the wrong name is used, it is a
 // non-recoverable error, and the developer should be notified. However, there are
 // better ways to do this.
 const init = (): CouplingState => {
@@ -20,7 +20,7 @@ const init = (): CouplingState => {
     // 4. If we haven't already built the coupled component, but we *do* recognise its name
     // then build it and return it.
     const available = Obj.keys(coupleConfig.others);
-    if (!available || available.length === 0) {
+    if (available.length === 0) {
       throw new Error('Cannot find any known coupled components');
     } else {
       // TODO: Likely type error. coupleConfig.others[key] is `() => ((comp: AlloyComponent) => AlloySpec)`, but builder is being treated as a `(comp: AlloyComponent) => AlloySpec`
@@ -45,7 +45,7 @@ const init = (): CouplingState => {
     // 4. If we haven't already built the coupled component, but we *do* recognise its name
     // then return Optional.none
     const available = Obj.keys(coupleConfig.others);
-    if (!available || available.length === 0) {
+    if (available.length === 0) {
       throw new Error('Cannot find any known coupled components');
     } else {
       return Obj.get<any, string>(coupled, name).orThunk(() => {
