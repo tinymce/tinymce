@@ -65,6 +65,7 @@ export interface MenuDetail extends CompositeSketchDetail {
   };
 
   onHighlight: (comp: AlloyComponent, target: AlloyComponent) => void;
+  onDehighlight: (comp: AlloyComponent, target: AlloyComponent) => void;
   value: string;
   movement: MenuMovement;
 
@@ -91,6 +92,7 @@ export interface MenuSpec extends CompositeSketchSpec {
   movement?: MenuMovementSpec;
 
   onHighlight?: (comp: AlloyComponent, target: AlloyComponent) => void;
+  onDehighlight?: (comp: AlloyComponent, target: AlloyComponent) => void;
   eventOrder?: Record<string, string[]>;
 }
 

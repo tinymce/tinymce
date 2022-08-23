@@ -2,10 +2,12 @@ import { ApproxStructure, Assertions, Keyboard, Keys, Mouse, Step, StructAssert 
 import { UnitTest } from '@ephox/bedrock-client';
 import { Objects } from '@ephox/boulder';
 import { Arr, Obj } from '@ephox/katamari';
+import { Class } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
+import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
@@ -16,12 +18,14 @@ import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 
 UnitTest.asynctest('TieredMenuTest', (success, failure) => {
 
+  const tmenuClass = 'tiered-menu-decoration';
+
   GuiSetup.setup((store, _doc, _body) => GuiFactory.build(
     TieredMenu.sketch({
       uid: 'uid-test-menu-1',
       dom: {
         tag: 'div',
-        classes: [ 'test-menu' ]
+        classes: [ 'test-menu', tmenuClass ]
       },
       components: [
         Menu.parts.items({ })
@@ -76,30 +80,36 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
       onEscape: store.adderH('onEscape'),
       onOpenMenu: store.adderH('onOpenMenu'),
       onOpenSubmenu: store.adderH('onOpenSubmenu'),
-      onRepositionMenu: store.adderH('onRepositionMenu')
+      onRepositionMenu: store.adderH('onRepositionMenu'),
+
+      onHighlightItem: (tmenuComp, menuComp, itemComp) => {
+        // Make assertions about the arguments passed in here. To get the most
+        // useful feedback, we'll add errors to store.
+        if (!Class.has(tmenuComp.element, tmenuClass)) {
+          store.adder('ERROR. First argument to onHighlightItem was not the tmenu')();
+        }
+        if (!Class.has(menuComp.element, TestDropdownMenu.markers().menu)) {
+          store.adder('ERROR. Second argument to onHighlightItem was not the menu')();
+        }
+        store.adder(
+          `onHighlightItem: ${Representing.getValue(itemComp).value}`
+        )();
+      },
+      onDehighlightItem: (tmenuComp, menuComp, itemComp) => {
+        // Make assertions about the arguments passed in here. To get the most
+        // useful feedback, we'll add errors to store.
+        if (!Class.has(tmenuComp.element, tmenuClass)) {
+          store.adder('ERROR. First argument to onDehighlightItem was not the tmenu')();
+        }
+        if (!Class.has(menuComp.element, TestDropdownMenu.markers().menu)) {
+          store.adder('ERROR. Second argument to onDehighlightItem was not the menu')();
+        }
+        store.adder(
+          `onDehighlightItem: ${Representing.getValue(itemComp).value}`
+        )();
+      },
     })
   ), (doc, _body, _gui, component, store) => {
-    // TODO: Flesh out test.
-    // const cAssertStructure = (label, expected) => {
-    //   return Chain.op((element: SugarElement) => {
-    //     Assertions.assertStructure(label, expected, element);
-    //   });
-    // };
-    //
-    // const cTriggerFocusItem = Chain.op((target: SugarElement) => {
-    //   AlloyTriggers.dispatch(component, target, SystemEvents.focusItem());
-    // });
-    //
-    // const cAssertStore = (label, expected) => {
-    //   return Chain.op(() => {
-    //     store.assertEq(label, expected);
-    //   });
-    // };
-    //
-    // const cClearStore = Chain.op(() => {
-    //   store.clear();
-    // });
-
     const structureMenu = (selected: boolean, itemSelections: boolean[], hasPopups: boolean[], isExpandeds: boolean[], disabled: boolean[]) => (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi) => s.element('ol', {
       classes: [ arr.has('menu'), (selected ? arr.has : arr.not)('selected-menu') ],
       children: Arr.map(itemSelections, (sel, i) => s.element('li', {
@@ -140,10 +150,22 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
       }),
       store.sAssertEq('Focus is fired as soon as the tiered menu is active', [
         'onOpenMenu',
+        'onHighlightItem: a-alpha',
         'menu.events.focus'
       ]),
+
+      store.sClear,
       Keyboard.sKeydown(doc, Keys.down(), { }),
       Keyboard.sKeydown(doc, Keys.right(), { }),
+
+      store.sAssertEq('Check events after navigation', [
+        'onDehighlightItem: a-alpha',
+        'onHighlightItem: a-beta',
+        'menu.events.focus',
+        'onOpenSubmenu',
+        'onHighlightItem: b-alpha',
+        'menu.events.focus'
+      ]),
 
       sAssertMenu(
         'Post expansion of submenu with <right> structure test',

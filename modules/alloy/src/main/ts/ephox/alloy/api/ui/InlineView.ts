@@ -54,7 +54,7 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, placeme
 
     data: menuSpec.data,
     markers: menuSpec.menu.markers,
-    highlightImmediately: menuSpec.menu.highlightImmediately,
+    highlightOnOpen: menuSpec.menu.highlightOnOpen,
     fakeFocus: menuSpec.menu.fakeFocus,
 
     onEscape: () => {

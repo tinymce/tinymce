@@ -4,7 +4,7 @@ import { Id } from '@ephox/katamari';
 import * as Fields from '../../data/Fields';
 import * as TieredMenuSpec from '../../ui/single/TieredMenuSpec';
 import { ItemDataTuple } from '../../ui/types/ItemTypes';
-import { PartialMenuSpec, TieredData, TieredMenuApis, TieredMenuDetail, TieredMenuExtras, TieredMenuRecord, TieredMenuSketcher, TieredMenuSpec as TieredMenuSpecType } from '../../ui/types/TieredMenuTypes';
+import { HighlightOnOpen, PartialMenuSpec, TieredData, TieredMenuApis, TieredMenuDetail, TieredMenuExtras, TieredMenuRecord, TieredMenuSketcher, TieredMenuSpec as TieredMenuSpecType } from '../../ui/types/TieredMenuTypes';
 import { Composing } from '../behaviour/Composing';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
@@ -42,7 +42,9 @@ const tieredMenu: TieredMenuSketcher = single<TieredMenuSpecType, TieredMenuDeta
     Fields.onHandler('onRepositionMenu'),
     Fields.onHandler('onCollapseMenu'),
 
-    FieldSchema.defaulted('highlightImmediately', true),
+    // Ideally, we should validate that this is a valid value, but
+    // this is an number-based enum, so it would just be a number.
+    FieldSchema.defaulted('highlightOnOpen', HighlightOnOpen.HighlightMenuAndItem),
 
     FieldSchema.requiredObjOf('data', [
       FieldSchema.required('primary'),
@@ -51,7 +53,9 @@ const tieredMenu: TieredMenuSketcher = single<TieredMenuSpecType, TieredMenuDeta
     ]),
 
     FieldSchema.defaulted('fakeFocus', false),
-    Fields.onHandler('onHighlight'),
+
+    Fields.onHandler('onHighlightItem'),
+    Fields.onHandler('onDehighlightItem'),
     Fields.onHandler('onHover'),
     Fields.tieredMenuMarkers(),
 
@@ -68,6 +72,9 @@ const tieredMenu: TieredMenuSketcher = single<TieredMenuSpecType, TieredMenuDeta
     collapseMenu: (apis, tmenu) => {
       apis.collapseMenu(tmenu);
     },
+
+    // This will highlight the primary menu AND an item in the primary menu
+    // Do not use just to set the active menu.
     highlightPrimary: (apis, tmenu) => {
       apis.highlightPrimary(tmenu);
     },
