@@ -20,23 +20,17 @@ export interface NestedMenusSettings {
 const getSearchModeForField = (settings: NestedMenusSettings): MenuSearchMode => {
   return settings.search.fold<MenuSearchMode>(
     () => ({ searchMode: 'no-search' }),
-    (searchSettings) => {
-      return {
-        searchMode: 'search-with-field',
-        placeholder: searchSettings.placeholder
-      };
-    }
+    (searchSettings) => ({
+      searchMode: 'search-with-field',
+      placeholder: searchSettings.placeholder
+    })
   );
 };
 
 const getSearchModeForResults = (settings: NestedMenusSettings): MenuSearchMode => {
   return settings.search.fold<MenuSearchMode>(
     () => ({ searchMode: 'no-search' }),
-    (_) => {
-      return {
-        searchMode: 'search-with-results'
-      };
-    }
+    (_) => ({ searchMode: 'search-with-results' })
   );
 };
 

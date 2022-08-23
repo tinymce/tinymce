@@ -37,7 +37,7 @@ UnitTest.asynctest('DropdownRefetchTest', (success, failure) => {
     })
   );
 
-  const resultsStore: Cell<TestItem[]> = Cell([] as TestItem[]);
+  const resultsStore = Cell([] as TestItem[]);
 
   GuiSetup.setup((store, _doc, _body) => {
     // We want two nearly identical dropdowns, because we need to test the
@@ -161,7 +161,7 @@ UnitTest.asynctest('DropdownRefetchTest', (success, failure) => {
     const sTriggerRefetchWith = (dropdown: AlloyComponent, items: TestItem[]): Step<any, any> => Step.async(
       (next) => {
         resultsStore.set(items);
-        Dropdown.refetch(dropdown).get(() => next());
+        Dropdown.refetch(dropdown).get(next);
       }
     );
 

@@ -91,11 +91,9 @@ const handleRedirectToMenuItem = (sandboxComp: AlloyComponent, se: SimulatedEven
 const getActiveMenuItemFrom = (sandboxComp: AlloyComponent): Optional<AlloyComponent> => {
   // Consider moving some of these things into shared APIs. For example, make an extra API
   // for TieredMenu to get the highlighted item.
-  return Sandboxing.getState(sandboxComp).bind(
-    Highlighting.getHighlighted
-  ).bind(
-    Highlighting.getHighlighted
-  );
+  return Sandboxing.getState(sandboxComp)
+    .bind(Highlighting.getHighlighted)
+    .bind(Highlighting.getHighlighted);
 };
 
 const getSearchResults = (activeMenuComp: AlloyComponent): Optional<SugarElement<Element>> => {
@@ -149,11 +147,11 @@ const getSearchPattern = (dropdownComp: AlloyComponent): string => {
   // don't have any search context, so use an empty string. Otherwise, dive into
   // the sandbox, and find the search field's current pattern.
   const optSandboxComp = Coupling.getExistingCoupled(dropdownComp, 'sandbox');
-  return optSandboxComp.bind(
-    findWithinSandbox
-  ).map(saveState).map(
-    (state) => state.fetchPattern
-  ).getOr('');
+  return optSandboxComp
+    .bind(findWithinSandbox)
+    .map(saveState)
+    .map((state) => state.fetchPattern)
+    .getOr('');
 };
 
 export {
