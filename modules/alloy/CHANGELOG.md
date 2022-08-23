@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - The `lazyViewport` property incorrectly marked the passed component as optional for the `Docking` behaviour.
 - The `TypeaheadSpec` type did not correctly extend `InputSpec`.
 - The `TypeaheadSpec` type had a typo in the `populateFromBrowse` property.
-- The `highlight` `Highlighting` API was not properly skipping dehighlighting the highlighting target. #TINY-8952
+- The `Highlighting.highlight` API was not properly skipping the target when dehighlighting existing highlighted items. #TINY-8952
 - The various models in `Typeahead` were not functioning correctly. #TINY-8952
 - The `Typeahead` did not work correctly when its menu was in another mothership. #TINY-8952
 
