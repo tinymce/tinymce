@@ -16,7 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The autocompleter now supports a multiple character trigger using the new `trigger` configuration #TINY-8887
 
 ### Changed
-- `@menubar-row-separator-color` variable now has no effect on the divider between Menubar and Toolbar and only controls the color of the separator lines drawn in multiline Menubar. `@toolbar-separator-color` variable is now exclusively used affects the color of separator between Menubar and Toolbar #TINY-8632
+- The `@menubar-row-separator-color` oxide variable no longer affects the divider between the Menubar and Toolbar and only controls the color of the separator lines drawn in multiline Menubars. #TINY-8632
+- The `@toolbar-separator-color` oxide variable now exclusively affects the color of the separator between the Menubar and Toolbar. #TINY-8632
 
 ### Fixed
 - The Autolink plugin did not work when the text nodes in the content were fragmented #TINY-3723
