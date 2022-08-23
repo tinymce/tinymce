@@ -21,6 +21,11 @@ import * as Sinks from 'ephox/alloy/test/Sinks';
 import { TypeaheadSpec } from 'ephox/alloy/ui/types/TypeaheadTypes';
 
 describe('browser.alloy.ui.typeahead.TypeaheadModelsTest', () => {
+  GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
+    `.selected-item {
+      background-color: #cadbee;
+    }`
+  ]);
 
   const makeTypeahead = (store: TestStore, sink: AlloyComponent, model: TypeaheadSpec['model']): SketchSpec => {
     return Typeahead.sketch({
@@ -101,12 +106,6 @@ describe('browser.alloy.ui.typeahead.TypeaheadModelsTest', () => {
       ]
     });
   };
-
-  GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
-    `.selected-item {
-      background-color: #cadbee;
-    }`
-  ]);
 
   const assertInputState = (label: string, expected: { text: string; selStart: number; selEnd: number }, typeaheadComp: AlloyComponent) => {
     const raw = typeaheadComp.element.dom as HTMLInputElement;

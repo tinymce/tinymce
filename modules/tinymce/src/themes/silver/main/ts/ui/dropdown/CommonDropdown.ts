@@ -1,5 +1,6 @@
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Dropdown as
-AlloyDropdown, Focusing, GuiFactory, Highlighting, Keying, Memento, Replacing, Representing, SimulatedEvent, SketchSpec, TieredData, Unselecting
+import {
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Dropdown as AlloyDropdown, Focusing, GuiFactory, Highlighting,
+  Keying, Memento, Replacing, Representing, SimulatedEvent, SketchSpec, TieredData, Unselecting
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
@@ -15,19 +16,8 @@ import { onControlAttached, onControlDetached, OnDestroy } from '../controls/Con
 import * as Icons from '../icons/Icons';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import * as MenuParts from '../menus/menu/MenuParts';
-import {
-  focusSearchField,
-  handleRedirectToMenuItem,
-  handleRefetchTrigger,
-  updateAriaOnDehighlight,
-  updateAriaOnHighlight
-} from '../menus/menu/searchable/SearchableMenu';
-import {
-  RedirectMenuItemInteractionEvent,
-  redirectMenuItemInteractionEvent,
-  RefetchTriggerEvent,
-  refetchTriggerEvent
-} from '../menus/menu/searchable/SearchableMenuEvents';
+import { focusSearchField, handleRedirectToMenuItem, handleRefetchTrigger, updateAriaOnDehighlight, updateAriaOnHighlight } from '../menus/menu/searchable/SearchableMenu';
+import { RedirectMenuItemInteractionEvent, redirectMenuItemInteractionEvent, RefetchTriggerEvent, refetchTriggerEvent } from '../menus/menu/searchable/SearchableMenuEvents';
 
 export const updateMenuText = Id.generate('update-menu-text');
 export const updateMenuIcon = Id.generate('update-menu-icon');
@@ -111,7 +101,7 @@ const renderCommonDropdown = <T>(
     return Optional.some(true);
   };
 
-  const role = spec.role.fold(() => ({ }), (role) => ({ role }));
+  const role = spec.role.fold(() => ({}), (role) => ({ role }));
 
   const tooltipAttributes = spec.tooltip.fold(
     () => ({}),
@@ -132,7 +122,7 @@ const renderCommonDropdown = <T>(
 
   const memDropdown = Memento.record(
     AlloyDropdown.sketch({
-      ...spec.uid ? { uid: spec.uid } : { },
+      ...spec.uid ? { uid: spec.uid } : {},
       ...role,
       dom: {
         tag: 'button',
@@ -163,8 +153,8 @@ const renderCommonDropdown = <T>(
         ReadOnly.receivingConfig(),
         // INVESTIGATE (TINY-9012): There was a old comment here about something not quite working, and that
         // we can still get the button focused. It was probably related to Unselecting.
-        Unselecting.config({ }),
-        Replacing.config({ }),
+        Unselecting.config({}),
+        Replacing.config({}),
 
         // This is the generic way to make onSetup and onDestroy call as the component is attached /
         // detached from the page/DOM.
@@ -177,7 +167,7 @@ const renderCommonDropdown = <T>(
           // text or the icon.
           AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
             optMemDisplayText.bind((mem) => mem.getOpt(comp)).each((displayText) => {
-              Replacing.set(displayText, [ GuiFactory.text(sharedBackstage.providers.translate(se.event.text)) ] );
+              Replacing.set(displayText, [ GuiFactory.text(sharedBackstage.providers.translate(se.event.text)) ]);
             });
           }),
           AlloyEvents.run<UpdateMenuIconEvent>(updateMenuIcon, (comp, se) => {
