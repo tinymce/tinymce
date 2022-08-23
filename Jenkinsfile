@@ -65,12 +65,12 @@ node("headless-macos") {
     }
 
     def browserPermutations = [
-      [ name: "win10Chrome", os: "windows-10", browser: "chrome", buckets: 1 ],
-      [ name: "win10FF", os: "windows-10", browser: "firefox", buckets: 1 ],
-      [ name: "win10Edge", os: "windows-10", browser: "MicrosoftEdge", buckets: 1 ],
-      [ name: "macSafari", os: "macos", browser: "safari", buckets: 1 ],
-      [ name: "macChrome", os: "macos", browser: "chrome", buckets: 1 ],
-      [ name: "macFirefox", os: "macos", browser: "firefox", buckets: 1 ]
+//      [ name: "win10Chrome", os: "windows-10", browser: "chrome", buckets: 1 ],
+//      [ name: "win10FF", os: "windows-10", browser: "firefox", buckets: 1 ],
+//      [ name: "win10Edge", os: "windows-10", browser: "MicrosoftEdge", buckets: 1 ],
+      [ name: "macSafari", os: "macos-testing", browser: "safari", buckets: 1 ],
+      [ name: "macChrome", os: "macos-testing", browser: "chrome", buckets: 1 ],
+      [ name: "macFirefox", os: "macos-testing", browser: "firefox", buckets: 1 ]
     ]
 
     def cleanAndInstall = {
