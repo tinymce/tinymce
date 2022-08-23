@@ -89,6 +89,8 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
   const getActiveMenu = (sandboxComp: AlloyComponent): Optional<AlloyComponent> =>
     Composing.getCurrent(sandboxComp);
 
+  const typeaheadCustomEvents = 'typeaheadevents';
+
   const behaviours = [
     Focusing.config({ }),
     Representing.config({
@@ -280,12 +282,15 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         }
       }
     }),
-    AddEventsBehaviour.config('typeaheadevents', [
+    AddEventsBehaviour.config(typeaheadCustomEvents, [
       AlloyEvents.runOnAttached((typeaheadComp) => {
         // Set up the reference to the typeahead, so that it can retrieved from
         // the tiered menu part, even if the tieredmenu is in a different
         // system / alloy root / mothership.
         detail.lazyTypeaheadComp.set(Optional.some(typeaheadComp));
+      }),
+      AlloyEvents.runOnDetached((_typeaheadComp) => {
+        detail.lazyTypeaheadComp.set(Optional.none());
       }),
       AlloyEvents.runOnExecute((comp) => {
         const onOpenSync = Fun.noop;
@@ -313,6 +318,17 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
     ] : [ ]))
   ];
 
+  // The order specified here isn't important. Alloy just requires a
+  // deterministic order for the configured behaviours.
+  const eventOrder = {
+    [SystemEvents.detachedFromDom()]: [
+      Representing.name(),
+      Streaming.name(),
+      typeaheadCustomEvents
+    ],
+    ...detail.eventOrder,
+  };
+
   return {
     uid: detail.uid,
     dom: InputBase.dom(Merger.deepMerge(detail, {
@@ -330,7 +346,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         behaviours
       )
     },
-    eventOrder: detail.eventOrder
+    eventOrder
   };
 };
 
