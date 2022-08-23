@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Parsing large documents no longer throws a `Maximum call stack size exceeded` exception #TINY-6945
 - DomParser filter matching was not checked between filters, which could lead to an exception in the parser #TINY-8888
 - Lists with `contenteditable="false"` can no longer be toggled, and `contenteditable="true"` list elements within them can no longer be indented, split into another list element, or appended to the previous list element by deletion. #TINY-8920
+- Removed extra padding for Quick Toolbar in `tinymce-5` skin #TINY-8980
 
 ### Deprecated
 - The autocompleter `ch` configuration property has been deprecated and will be removed in the next major release. Use the `trigger` property instead. #TINY-8887
