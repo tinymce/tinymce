@@ -1,9 +1,9 @@
 import { TestHelpers } from '@ephox/alloy';
-import { Toolbar } from '@ephox/bridge';
+import { Menu, Toolbar } from '@ephox/bridge';
 import { Arr } from '@ephox/katamari';
 
 export const fetchMailMergeData = (settings: { collapseSearchResults: boolean }, store: TestHelpers.TestStore): Toolbar.ToolbarMenuButtonSpec['fetch'] => (callback, fetchContext) => {
-  const makeMailMerge = (info: { value: string; title?: string}) => ({
+  const makeMailMerge = (info: { value: string; title?: string}): Menu.MenuItemSpec => ({
     type: 'menuitem',
     text: info.title ?? info.value,
     onAction: () => {
@@ -11,7 +11,7 @@ export const fetchMailMergeData = (settings: { collapseSearchResults: boolean },
     }
   });
 
-  const makeCategory = (title: string, items: any[]) => ({
+  const makeCategory = (title: string, items: Menu.NestedMenuItemContents[]): Menu.NestedMenuItemSpec => ({
     type: 'nestedmenuitem',
     text: title,
     getSubmenuItems: () => items
@@ -65,7 +65,7 @@ export const fetchMailMergeData = (settings: { collapseSearchResults: boolean },
           )
         ]
       )
-    ] as any);
+    ]);
   } else {
     const allMerges: Array<{value: string; title?: string}> = [
       currentDateMerge,
@@ -88,7 +88,7 @@ export const fetchMailMergeData = (settings: { collapseSearchResults: boolean },
 
     if (matches.length > 0) {
       callback(
-        Arr.map(matches, makeMailMerge) as any
+        Arr.map(matches, makeMailMerge)
       );
     } else {
       callback([

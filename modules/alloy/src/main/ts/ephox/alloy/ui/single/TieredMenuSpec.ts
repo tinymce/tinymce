@@ -73,14 +73,14 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
       },
 
       onDehighlight: (menuComp: AlloyComponent, itemComp: AlloyComponent) => {
-        const dehiglightData: OnMenuItemDehighlightedEventData = {
+        const dehighlightData: OnMenuItemDehighlightedEventData = {
           menuComp,
           itemComp
         };
 
         // Trigger an internal event so that we can listen to it at the tieredmenu
         // level, and call detail.onDehighlightItem handler with tmenu, menu, and item.
-        AlloyTriggers.emitWith(menuComp, onMenuItemDehighlightedEvent, dehiglightData);
+        AlloyTriggers.emitWith(menuComp, onMenuItemDehighlightedEvent, dehighlightData);
       },
 
       // The Menu itself doesn't set the focusManager based on the value of fakeFocus. It only uses

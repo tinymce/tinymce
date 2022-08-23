@@ -20,19 +20,19 @@ import { TestItem } from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 import { TypeaheadSpec } from 'ephox/alloy/ui/types/TypeaheadTypes';
 
-const makeTypeahead = (store: TestStore, sink: AlloyComponent, model: TypeaheadSpec['model']): SketchSpec => {
-  return Typeahead.sketch({
-    inputClasses: [ 'test-typeahead' ],
-    components: [ ],
+describe('browser.alloy.ui.typeahead.TypeaheadModelsTest', () => {
 
-    minChars: 2,
-    model,
-    fetch: (input) => {
-      const text = Value.get(input.element).toLowerCase();
+  const makeTypeahead = (store: TestStore, sink: AlloyComponent, model: TypeaheadSpec['model']): SketchSpec => {
+    return Typeahead.sketch({
+      inputClasses: [ 'test-typeahead' ],
+      components: [ ],
 
-      const items = Arr.map(
-        Array(3),
-        (x, i): TestItem => {
+      minChars: 2,
+      model,
+      fetch: (input) => {
+        const text = Value.get(input.element).toLowerCase();
+
+        const items = Arr.range(3, (i): TestItem => {
           return {
             type: 'item',
             data: {
@@ -42,69 +42,71 @@ const makeTypeahead = (store: TestStore, sink: AlloyComponent, model: TypeaheadS
               }
             }
           };
-        }
-      );
-
-      const future = Future.pure<TestItem[]>(items);
-
-      return future.map((f) => {
-        // TODO: Test this.
-        const items: TestItem[] = text === 'no-data' ? [
-          { type: 'separator', text: 'No data' }
-        ] : f;
-
-        const menu = TestDropdownMenu.renderMenu({
-          value: 'test-menu-value',
-          items: Arr.map(items, TestDropdownMenu.renderItem)
         });
-        return Optional.some(TieredMenu.singleData('tiered-test-menu-name', menu));
-      });
-    },
 
-    initialData: {
-      // . for value, - for text
-      value: 'initial.value',
-      meta: {
-        text: 'initial-value'
+        const future = Future.pure<TestItem[]>(items);
+
+        return future.map((f) => {
+          const items: TestItem[] = text === 'no-data' ? [
+            { type: 'separator', text: 'No data' }
+          ] : f;
+
+          const menu = TestDropdownMenu.renderMenu({
+            value: 'test-menu-value',
+            items: Arr.map(items, TestDropdownMenu.renderItem)
+          });
+          return Optional.some(TieredMenu.singleData('tiered-test-menu-name', menu));
+        });
+      },
+
+      initialData: {
+        // . for value, - for text
+        value: 'initial.value',
+        meta: {
+          text: 'initial-value'
+        }
+      },
+
+      eventOrder: Objects.wrapAll([
+        {
+          key: MenuEvents.focus(),
+          value: [ 'alloy.base.behaviour', 'tiered-menu-test' ]
+        }
+      ]),
+
+      lazySink: (c) => {
+        TestDropdownMenu.assertLazySinkArgs('input', 'test-typeahead', c);
+        return Result.value(sink);
+      },
+
+      parts: {
+        menu: TestDropdownMenu.part(store)
+      },
+
+      markers: {
+        openClass: 'typeahead-open-for-business'
       }
-    },
+    });
+  };
 
-    eventOrder: Objects.wrapAll([
-      {
-        key: MenuEvents.focus(),
-        value: [ 'alloy.base.behaviour', 'tiered-menu-test' ]
-      }
-    ]),
+  const makeTypeaheadContainer = (store: TestStore, sink: AlloyComponent, model: TypeaheadSpec['model']): AlloyComponent => {
+    return GuiFactory.build({
+      dom: {
+        tag: 'div',
+        classes: [ 'overall-test-container' ]
+      },
+      components: [
+        GuiFactory.premade(sink),
+        makeTypeahead(store, sink, model)
+      ]
+    });
+  };
 
-    lazySink: (c) => {
-      TestDropdownMenu.assertLazySinkArgs('input', 'test-typeahead', c);
-      return Result.value(sink);
-    },
-
-    parts: {
-      menu: TestDropdownMenu.part(store)
-    },
-
-    markers: {
-      openClass: 'typeahead-open-for-business'
-    }
-  });
-};
-
-const makeTypeaheadContainer = (store: TestStore, sink: AlloyComponent, model: TypeaheadSpec['model']): AlloyComponent => {
-  return GuiFactory.build({
-    dom: {
-      tag: 'div',
-      classes: [ 'overall-test-container' ]
-    },
-    components: [
-      GuiFactory.premade(sink),
-      makeTypeahead(store, sink, model)
-    ]
-  });
-};
-
-describe('browser.alloy.ui.typeahead.TypeaheadModelsTest', () => {
+  GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
+    `.selected-item {
+      background-color: #cadbee;
+    }`
+  ]);
 
   const assertInputState = (label: string, expected: { text: string; selStart: number; selEnd: number }, typeaheadComp: AlloyComponent) => {
     const raw = typeaheadComp.element.dom as HTMLInputElement;
@@ -126,12 +128,6 @@ describe('browser.alloy.ui.typeahead.TypeaheadModelsTest', () => {
       }
     );
   };
-
-  GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
-    `.selected-item {
-      background-color: #cadbee;
-    }`
-  ]);
 
   const setAndEmit = (typeahead: AlloyComponent, val: string) => {
     Value.set(typeahead.element, val);
@@ -198,7 +194,7 @@ describe('browser.alloy.ui.typeahead.TypeaheadModelsTest', () => {
         })
       );
 
-      it('Basic test', async () => {
+      it('TINY-8952: Basic test', async () => {
         const container = hook.component();
         const typeahead = getTypeaheadOrDie(container);
 
@@ -238,7 +234,7 @@ describe('browser.alloy.ui.typeahead.TypeaheadModelsTest', () => {
         })
       );
 
-      it('Basic test', async () => {
+      it('TINY-8952: Basic test', async () => {
         const container = hook.component();
         const typeahead = getTypeaheadOrDie(container);
 
@@ -281,7 +277,7 @@ describe('browser.alloy.ui.typeahead.TypeaheadModelsTest', () => {
         })
       );
 
-      it('Basic test', async () => {
+      it('TINY-8952: Basic test', async () => {
         const container = hook.component();
         const typeahead = getTypeaheadOrDie(container);
 
@@ -329,7 +325,7 @@ describe('browser.alloy.ui.typeahead.TypeaheadModelsTest', () => {
         })
       );
 
-      it('Basic test', async () => {
+      it('TINY-8952: Basic test', async () => {
         const container = hook.component();
         const typeahead = getTypeaheadOrDie(container);
 

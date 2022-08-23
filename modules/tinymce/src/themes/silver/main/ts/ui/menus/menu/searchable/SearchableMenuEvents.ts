@@ -9,8 +9,8 @@ export interface RefetchTriggerEventData { }
 export interface RefetchTriggerEvent extends CustomEvent, RefetchTriggerEventData { }
 
 export interface RedirectMenuItemInteractionEventData {
-  eventType: string;
-  interactionEvent: EventFormat;
+  readonly eventType: string;
+  readonly interactionEvent: EventFormat;
 }
 
 export interface RedirectMenuItemInteractionEvent extends CustomEvent, RedirectMenuItemInteractionEventData { }

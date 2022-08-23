@@ -41,7 +41,7 @@ const makeComponent = () => (_store: TestStore, _doc: SugarElement<Document>, _b
 describe('browser.alloy.ui.dropdown.TieredMenuWithFakeFocusTest', () => {
   const hook = GuiSetup.bddSetup(makeComponent());
 
-  it('Check highlights on menu items still occur when using fakeFocus', () => {
+  it('TINY-8952: Check highlights on menu items still occur when using fakeFocus', () => {
     const tmenuComp = hook.component();
     const gui = hook.gui();
 

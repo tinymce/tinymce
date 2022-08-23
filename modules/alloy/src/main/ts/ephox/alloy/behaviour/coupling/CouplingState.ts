@@ -22,7 +22,9 @@ const init = (): CouplingState => {
 
   const getOrCreate = (component: AlloyComponent, coupleConfig: CouplingConfig, name: string): AlloyComponent => {
     return lookupCoupled(coupleConfig, name).getOrThunk(() => {
-      // TODO: Likely type error. coupleConfig.others[key] is `() => ((comp: AlloyComponent) => AlloySpec)`, but builder is being treated as a `(comp: AlloyComponent) => AlloySpec`
+      // TODO: TINY-9014 Likely type error. coupleConfig.others[key] is
+      // `() => ((comp: AlloyComponent) => AlloySpec)`,
+      // but builder is being treated as a `(comp: AlloyComponent) => AlloySpec`
       const builder = Obj.get<any, string>(coupleConfig.others, name).getOrDie(
         'No information found for coupled component: ' + name
       );

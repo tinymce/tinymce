@@ -1,22 +1,5 @@
-import {
-  AddEventsBehaviour,
-  AlloyComponent,
-  AlloyEvents,
-  AlloyTriggers,
-  Behaviour,
-  CustomEvent,
-  Dropdown as AlloyDropdown,
-  Focusing,
-  GuiFactory,
-  Highlighting,
-  Keying,
-  Memento,
-  Replacing,
-  Representing,
-  SimulatedEvent,
-  SketchSpec,
-  TieredData,
-  Unselecting
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Dropdown as
+AlloyDropdown, Focusing, GuiFactory, Highlighting, Keying, Memento, Replacing, Representing, SimulatedEvent, SketchSpec, TieredData, Unselecting
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
@@ -104,8 +87,7 @@ const renderCommonDropdown = <T>(
   const onLeftOrRightInMenu = (comp: AlloyComponent, se: SimulatedEvent<EventArgs>) => {
     // The originating dropdown is stored on the sandbox itself. This is just an
     // implementation detail of alloy. We really need to make it a fully-fledged API.
-    // TODO: Make SandboxAPI have a function that just delegates to Representing called
-    // getTriggeringComponent or something?
+    // TODO: TINY-9014 Make SandboxAPI have a function that just delegates to Representing
     const dropdown: AlloyComponent = Representing.getValue(comp);
 
     // Focus the dropdown. Current workaround required to make FlowLayout recognise the current focus.
@@ -120,8 +102,8 @@ const renderCommonDropdown = <T>(
     });
 
     // Because we have just navigated off this open menu, we want to close it.
-    // INVESTIGATE: Is this handling situations where there were no menus to move to?
-    // Does it matter if we still close it when there are no other menus?
+    // INVESTIGATE: TINY-9014: Is this handling situations where there were no menus
+    // to move to? Does it matter if we still close it when there are no other menus?
     AlloyDropdown.close(dropdown);
 
     // The Optional.some(true) tells the keyboard handler that this event was handled,
@@ -208,8 +190,9 @@ const renderCommonDropdown = <T>(
         ])
       ]),
       eventOrder: Merger.deepMerge(toolbarButtonEventOrder, {
-        // INVESTIGATE: Explain why we need the events in this order. Ideally, have a test
-        // that fails when they are in a different order?
+        // INVESTIGATE (TINY-9014): Explain why we need the events in this order.
+        // Ideally, have a test that fails when they are in a different order if order
+        // is important
         mousedown: [ 'focusing', 'alloy.base.behaviour', 'item-type-events', 'normal-dropdown-events' ]
       }),
 
@@ -243,7 +226,6 @@ const renderCommonDropdown = <T>(
       toggleClass: `${prefix}--active`,
 
       parts: {
-        // FIX: hasIcons (2022-08-16 - need to investigate the context of this FIX tag)
         menu: {
           ...MenuParts.part(false, spec.columns, spec.presets),
           // When the menu is "searchable", use fakeFocus so that keyboard

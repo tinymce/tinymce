@@ -22,26 +22,25 @@ import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import { TestItem } from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 
-// This test checks that all of Typeahead's functions work when the sink is in a
-// different mothership.
-const makeTypeahead = (store: TestStore, sinkFromOtherMothership: AlloyComponent): SketchSpec => {
-  return Typeahead.sketch({
-    inputClasses: [ 'test-typeahead' ],
-    components: [ ],
+describe('browser.alloy.ui.typeahead.TypeaheadWithDifferentMothershipsTest', () => {
+  // This test checks that all of Typeahead's functions work when the sink is in a
+  // different mothership.
+  const makeTypeahead = (store: TestStore, sinkFromOtherMothership: AlloyComponent): SketchSpec => {
+    return Typeahead.sketch({
+      inputClasses: [ 'test-typeahead' ],
+      components: [ ],
 
-    minChars: 2,
-    model: {
+      minChars: 2,
+      model: {
       // Enabling populateFromBrowse and selectsOver makes it easier to check it is
       // all wired together properly.
-      selectsOver: false,
-      populateFromBrowse: true
-    },
-    fetch: (input) => {
-      const text = Value.get(input.element).toLowerCase();
+        selectsOver: false,
+        populateFromBrowse: true
+      },
+      fetch: (input) => {
+        const text = Value.get(input.element).toLowerCase();
 
-      const items = Arr.map(
-        Array(3),
-        (x, i): TestItem => {
+        const items = Arr.range(3, (i): TestItem => {
           return {
             type: 'item',
             data: {
@@ -51,55 +50,53 @@ const makeTypeahead = (store: TestStore, sinkFromOtherMothership: AlloyComponent
               }
             }
           };
-        }
-      );
-
-      const future = Future.pure<TestItem[]>(items);
-
-      return future.map((f) => {
-        const items: TestItem[] = text === 'no-data' ? [
-          { type: 'separator', text: 'No data' }
-        ] : f;
-
-        const menu = TestDropdownMenu.renderMenu({
-          value: 'test-menu-value',
-          items: Arr.map(items, TestDropdownMenu.renderItem)
         });
-        return Optional.some(TieredMenu.singleData('tiered-test-menu-name', menu));
-      });
-    },
 
-    initialData: {
+        const future = Future.pure<TestItem[]>(items);
+
+        return future.map((f) => {
+          const items: TestItem[] = text === 'no-data' ? [
+            { type: 'separator', text: 'No data' }
+          ] : f;
+
+          const menu = TestDropdownMenu.renderMenu({
+            value: 'test-menu-value',
+            items: Arr.map(items, TestDropdownMenu.renderItem)
+          });
+          return Optional.some(TieredMenu.singleData('tiered-test-menu-name', menu));
+        });
+      },
+
+      initialData: {
       // . for value, - for text
-      value: 'initial.value',
-      meta: {
-        text: 'initial-value'
+        value: 'initial.value',
+        meta: {
+          text: 'initial-value'
+        }
+      },
+
+      eventOrder: Objects.wrapAll([
+        {
+          key: MenuEvents.focus(),
+          value: [ 'alloy.base.behaviour', 'tiered-menu-test' ]
+        }
+      ]),
+
+      lazySink: (c) => {
+        TestDropdownMenu.assertLazySinkArgs('input', 'test-typeahead', c);
+        return Result.value(sinkFromOtherMothership);
+      },
+
+      parts: {
+        menu: TestDropdownMenu.part(store)
+      },
+
+      markers: {
+        openClass: 'typeahead-open-for-business'
       }
-    },
+    });
+  };
 
-    eventOrder: Objects.wrapAll([
-      {
-        key: MenuEvents.focus(),
-        value: [ 'alloy.base.behaviour', 'tiered-menu-test' ]
-      }
-    ]),
-
-    lazySink: (c) => {
-      TestDropdownMenu.assertLazySinkArgs('input', 'test-typeahead', c);
-      return Result.value(sinkFromOtherMothership);
-    },
-
-    parts: {
-      menu: TestDropdownMenu.part(store)
-    },
-
-    markers: {
-      openClass: 'typeahead-open-for-business'
-    }
-  });
-};
-
-describe('browser.alloy.ui.typeahead.TypeaheadWithDifferentMothershipsTest', () => {
   GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
     `.selected-item {
       background-color: #cadbee;
@@ -123,7 +120,7 @@ describe('browser.alloy.ui.typeahead.TypeaheadWithDifferentMothershipsTest', () 
   });
 
   context('Testing interactions between different motherships', () => {
-    it('Testing hovering on items should populate input field', async () => {
+    it('TINY-8952: Testing hovering on items should populate input field', async () => {
       const typeaheadComp = hook.component();
       Focusing.focus(typeaheadComp);
 
@@ -152,7 +149,7 @@ describe('browser.alloy.ui.typeahead.TypeaheadWithDifferentMothershipsTest', () 
       );
     });
 
-    it('Testing clicking on items should populate input field and close menu', async () => {
+    it('TINY-8952: Testing clicking on items should populate input field and close menu', async () => {
       // Trigger the dropdown on the typeahead.
       const typeaheadComp = hook.component();
       Focusing.focus(typeaheadComp);
@@ -174,7 +171,7 @@ describe('browser.alloy.ui.typeahead.TypeaheadWithDifferentMothershipsTest', () 
       UiFinder.notExists(sink.element, '.menu');
     });
 
-    it('Testing navigating via keyboard to items should populate input field', async () => {
+    it('TINY-8952: Testing navigating via keyboard to items should populate input field', async () => {
       // Trigger the dropdown on the typeahead.
       const typeaheadComp = hook.component();
       Focusing.focus(typeaheadComp);

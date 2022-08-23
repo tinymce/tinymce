@@ -114,11 +114,10 @@ const updateAriaOnHighlight = (tmenuComp: AlloyComponent, menuComp: AlloyCompone
     optActiveResults.each(
       (resultsElem) => {
         // Link aria-controls of the input to the id of the results container.
-        const controlledId = Attribute.get(resultsElem, 'id');
-        // Only set the ARIA attribute if we found a valid ID
-        if (controlledId !== undefined) {
-          Attribute.set(inputComp.element, 'aria-controls', controlledId);
-        }
+        Attribute.getOpt(resultsElem, 'id')
+          .each((controlledId) =>
+            Attribute.set(inputComp.element, 'aria-controls', controlledId)
+          );
       }
     );
   });

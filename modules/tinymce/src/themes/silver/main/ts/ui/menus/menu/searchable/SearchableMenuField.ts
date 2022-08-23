@@ -6,17 +6,22 @@ import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import { selectableClass as usualItemClass } from '../../item/ItemClasses';
 import { redirectMenuItemInteractionEvent, RedirectMenuItemInteractionEventData, refetchTriggerEvent } from './SearchableMenuEvents';
 
-// This is not stored in ItemClasses, because the searcher is not actually
-// contained within items. It isn't part of their navigation, and it
-// isn't maintained by menus. It is just part of the first menu, but
-// not its items.
-const menuSearcherClass = 'tox-menu__searcher';
+export interface MenuSearcherSpec {
+  readonly placeholder: Optional<string>;
+  readonly i18n: UiFactoryBackstageProviders['translate'];
+}
 
 export interface MenuSearcherState {
   readonly fetchPattern: string;
   readonly selectionStart: number;
   readonly selectionEnd: number;
 }
+
+// This is not stored in ItemClasses, because the searcher is not actually
+// contained within items. It isn't part of their navigation, and it
+// isn't maintained by menus. It is just part of the first menu, but
+// not its items.
+const menuSearcherClass = 'tox-menu__searcher';
 
 // Ideally, we'd be using mementos to find it again, but we'd need to pass
 // that memento onto the dropdown, which isn't going to have it. Especially,
@@ -49,18 +54,10 @@ export const saveState = (inputComp: AlloyComponent): MenuSearcherState => {
   };
 };
 
-export interface MenuSearcherSpec {
-  readonly placeholder: Optional<string>;
-  readonly i18n: UiFactoryBackstageProviders['translate'];
-}
-
 // Make sure there is ARIA communicating the currently active item in the results.
 export const setActiveDescendant = (inputComp: AlloyComponent, active: AlloyComponent): void => {
-  const id = Attribute.get(active.element, 'id');
-  // Only set the ARIA attribute if we found a valid id
-  if (id !== undefined) {
-    Attribute.set(inputComp.element, 'aria-activedescendant', id);
-  }
+  Attribute.getOpt(active.element, 'id')
+    .each((id) => Attribute.set(inputComp.element, 'aria-activedescendant', id));
 };
 
 export const renderMenuSearcher = (spec: MenuSearcherSpec): AlloySpec => {

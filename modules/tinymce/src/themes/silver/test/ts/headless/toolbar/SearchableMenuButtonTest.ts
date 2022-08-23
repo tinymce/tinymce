@@ -46,7 +46,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
 
   );
 
-  const assertAriaConsistent = async () => {
+  const pAssertAriaConsistent = async () => {
     // So find the field.
     const inputField: SugarElement<HTMLElement> = await UiFinder.pWaitForVisible(
       'Waiting for search widget to appear (testing aria consistency)',
@@ -91,7 +91,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
     );
   };
 
-  it('Basic key navigation with ARIA', async () => {
+  it('TINY-8952: Basic key navigation with ARIA', async () => {
     const menuButtonComp = hook.component();
 
     // Open the dropdown.
@@ -129,7 +129,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
       }),
       tmenu
     );
-    await assertAriaConsistent();
+    await pAssertAriaConsistent();
 
     // Now, let's press down twice, and see if the down is processed by the menu.
     Keyboard.activeKeystroke(hook.root(), Keys.down(), { });
@@ -153,7 +153,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
       }),
       tmenu
     );
-    await assertAriaConsistent();
+    await pAssertAriaConsistent();
 
     // Now, let's press <right>. The expectation is that it is swallowed by the input
     // so it will do nothing.
@@ -177,7 +177,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
       }),
       tmenu
     );
-    await assertAriaConsistent();
+    await pAssertAriaConsistent();
 
     // Now, let's press <enter>. The expectation is that it should trigger the submenu
     Keyboard.activeKeystroke(hook.root(), Keys.enter(), { });
@@ -208,7 +208,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
       }),
       tmenu
     );
-    await assertAriaConsistent();
+    await pAssertAriaConsistent();
 
     // Now let's press <left> and check that it does nothing (swallowed by input)
     Keyboard.activeKeystroke(hook.root(), Keys.left(), { });
@@ -239,7 +239,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
       }),
       tmenu
     );
-    await assertAriaConsistent();
+    await pAssertAriaConsistent();
 
     // Now let's press <space> and check it does nothing
     Keyboard.activeKeydown(hook.root(), Keys.space(), { });
@@ -270,7 +270,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
       }),
       tmenu
     );
-    await assertAriaConsistent();
+    await pAssertAriaConsistent();
     // Also, make sure <space> didn't close the menu
     UiFinder.exists(hook.body(), '.tox-tiered-menu');
 
@@ -296,7 +296,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
       }),
       tmenu
     );
-    await assertAriaConsistent();
+    await pAssertAriaConsistent();
 
     // Now let's press <down> and ensure that it moves the actve focus down to
     // the fourth item.
@@ -320,7 +320,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
       }),
       tmenu
     );
-    await assertAriaConsistent();
+    await pAssertAriaConsistent();
 
     // Now, press <enter> to open the first submenu for this item
     Keyboard.activeKeystroke(hook.root(), Keys.enter(), { });
@@ -353,7 +353,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
       }),
       tmenu
     );
-    await assertAriaConsistent();
+    await pAssertAriaConsistent();
 
     // Now, press <up> to select last item
     Keyboard.activeKeystroke(hook.root(), Keys.up(), { });
@@ -386,7 +386,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
       }),
       tmenu
     );
-    await assertAriaConsistent();
+    await pAssertAriaConsistent();
 
     // And press <enter> to open the submenu for this last item. We should now
     // have three menus open.
@@ -411,9 +411,8 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
                   structSearchLeafItem({ selected: false }),
                   structSearchLeafItem({ selected: false }),
                   structSearchLeafItem({ selected: false }),
-                  // This expanded=false looks like a bug. The submenu is
-                  // still expanded! But our formatting menus are the same.
-                  // INVESTIGATE
+                  // TINY-9000: this is a general TieredMenu bug.
+                  // It should be aria-expanded: true
                   structSearchParentItem({ selected: true, expanded: false })
                 ]
               })
@@ -431,7 +430,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
       }),
       tmenu
     );
-    await assertAriaConsistent();
+    await pAssertAriaConsistent();
 
     // Now, prepare to do trigger the item with <enter>. Firstly, check the store
     // has no events.
@@ -448,7 +447,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
 
   });
 
-  it('Basic searching', async () => {
+  it('TINY-8952: Basic searching', async () => {
     const menuButtonComp = hook.component();
 
     const updateInputAndEmit = (newValue: string): void => {

@@ -125,7 +125,7 @@ describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () 
   const spaceKey = RealKeys.text('\uE00D');
 
   context('Testing searchable menu key events', () => {
-    it('Cycle through all actions', async () => {
+    it('TINY-8952: Cycle through all actions', async () => {
       // Setup.
       const menuButtonComp = hook.component();
 

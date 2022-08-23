@@ -117,10 +117,10 @@ const extractFields = <T, U>(
   return errors.length > 0 ? SimpleResult.serror(errors) : SimpleResult.svalue(success);
 };
 
-const valueThunk = (getDelegate: (v: any) => StructureProcessor): StructureProcessor => {
-  const extract = (path: string[], val: any) => getDelegate(val).extract(path, val);
+const valueThunk = (getDelegate: () => StructureProcessor): StructureProcessor => {
+  const extract = (path: string[], val: any) => getDelegate().extract(path, val);
 
-  const toString = () => getDelegate(undefined).toString();
+  const toString = () => getDelegate().toString();
 
   return {
     extract,
