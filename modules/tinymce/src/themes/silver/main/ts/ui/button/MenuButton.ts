@@ -12,7 +12,7 @@ import * as NestedMenus from '../menus/menu/NestedMenus';
 import { getSearchPattern } from '../menus/menu/searchable/SearchableMenu';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 
-export type ToolbarMenuButtonWithoutType = Omit<Toolbar.ToolbarMenuButton, 'type'>;
+export type MenuButtonSpec = Omit<Toolbar.ToolbarMenuButton, 'type'>;
 
 type FetchCallback = (success: (items: Menu.NestedMenuItemContents[]) => void) => void;
 
@@ -42,7 +42,7 @@ const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonI
   isActive: () => Class.has(component.element, ToolbarButtonClasses.Ticked)
 });
 
-const renderMenuButton = (spec: ToolbarMenuButtonWithoutType, prefix: string, backstage: UiFactoryBackstage, role: Optional<string>): SketchSpec => {
+const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Optional<string>): SketchSpec => {
   return renderCommonDropdown({
     text: spec.text,
     icon: spec.icon,
