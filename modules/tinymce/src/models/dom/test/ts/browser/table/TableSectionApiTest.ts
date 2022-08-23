@@ -1,7 +1,7 @@
 import { UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Selectors, SugarElement } from '@ephox/sugar';
+import { Selectors } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -207,7 +207,7 @@ describe('browser.tinymce.models.dom.table.TableSectionApiTest', () => {
   const defaultEvents = [ 'tablemodified' ];
   const switchType = (editor: Editor, startContent: string, expectedContent: string, command: string, type: string, expectedEvents: string[] = defaultEvents, selector = 'tr#one td') => {
     editor.setContent(startContent);
-    const row = UiFinder.findIn(SugarElement.fromDom(editor.getBody()), selector).getOrDie();
+    const row = UiFinder.findIn(TinyDom.body(editor), selector).getOrDie();
     editor.selection.select(row.dom);
     clearEvents();
     editor.execCommand(command, false, { type });

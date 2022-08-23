@@ -3,8 +3,8 @@ import { InlineContent } from '@ephox/bridge';
 import { Arr, Cell, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import { DOMUtils } from 'tinymce/core/api/PublicApi';
 import { AutocompleteLookupData } from 'tinymce/core/autocomplete/AutocompleteTypes';
 
 import { AutocompleterEditorEvents, AutocompleterUiApi } from './autocomplete/AutocompleteEditorEvents';

@@ -386,7 +386,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
     editor.execCommand('FormatBlock', false, 'h1');
     editor.undoManager.undo();
-    assert.equal(editor.getContent(), '<p>some</p>');
+    TinyAssertions.assertContent(editor, '<p>some</p>');
   });
 
   it('BeforeAddUndo event', () => {
@@ -441,7 +441,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
     assert.isFalse(editor.isDirty(), 'Dirty state should be false');
     KeyUtils.type(editor, 'b');
-    assert.equal(editor.getContent(), '<p>ab</p>');
+    TinyAssertions.assertContent(editor, '<p>ab</p>');
     assert.isTrue(editor.isDirty(), 'Dirty state should be true');
   });
 
@@ -454,7 +454,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
     assert.isFalse(editor.isDirty(), 'Dirty state should be false');
     KeyUtils.type(editor, { keyCode: 65, charCode: 66, shiftKey: true });
-    assert.equal(editor.getContent(), '<p>aB</p>');
+    TinyAssertions.assertContent(editor, '<p>aB</p>');
     assert.isTrue(editor.isDirty(), 'Dirty state should be true');
   });
 
@@ -467,7 +467,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
     assert.isFalse(editor.isDirty(), 'Dirty state should be false');
     KeyUtils.type(editor, { keyCode: 65, charCode: 66, ctrlKey: true, altKey: true });
-    assert.equal(editor.getContent(), '<p>aB</p>');
+    TinyAssertions.assertContent(editor, '<p>aB</p>');
     assert.isTrue(editor.isDirty(), 'Dirty state should be true');
   });
 
@@ -510,7 +510,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     assert.isFalse(editor.undoManager.typing);
     KeyUtils.type(editor, { keyCode: 66, charCode: 66 });
     assert.isTrue(editor.undoManager.typing);
-    assert.equal(editor.getContent(), '<p>aB</p>');
+    TinyAssertions.assertContent(editor, '<p>aB</p>');
     editor.execCommand('mceInsertContent', false, 'C');
     assert.isFalse(editor.undoManager.typing);
     assert.lengthOf(editor.undoManager.data, 3);
@@ -529,7 +529,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     assert.isFalse(editor.undoManager.typing);
     KeyUtils.type(editor, { keyCode: 66, charCode: 66 });
     assert.isTrue(editor.undoManager.typing);
-    assert.equal(editor.getContent(), '<p>aB</p>');
+    TinyAssertions.assertContent(editor, '<p>aB</p>');
     editor.undoManager.transact(() => {
       const p = editor.dom.select('p')[0];
       (p.firstChild as Text).data = 'aBC';
@@ -556,7 +556,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
     assert.isTrue(editor.undoManager.typing);
     assert.lengthOf(editor.undoManager.data, 0);
-    assert.equal(editor.getContent(), '<p><em><strong>a</strong></em></p>');
+    TinyAssertions.assertContent(editor, '<p><em><strong>a</strong></em></p>');
   });
 
   it('TINY-7373: undo filter for mceFocus is case insensitive', () => {

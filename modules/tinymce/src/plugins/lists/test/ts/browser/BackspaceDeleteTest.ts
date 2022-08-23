@@ -668,8 +668,8 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.plugins.lists.backspaceDelete();
 
-    assert.equal(
-      editor.getContent(),
+    TinyAssertions.assertContent(
+      editor,
       '<ul>' +
         '<li>12</li>' +
         '<li>3</li>' +
