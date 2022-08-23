@@ -349,15 +349,13 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
       } else {
         CaretFormat.applyCaretFormat(ed, name, vars);
       }
+
+      ListItemFormat.getExpandedListItemFormat(ed.formatter, name).each((liFmt) => {
+        Arr.each(ListItemFormat.getFullySelectedListItems(ed.selection), (li) => applyStyles(dom, li, liFmt as ApplyFormat, vars));
+      });
     }
 
     Hooks.postProcess(name, ed);
-  }
-
-  if (!node) {
-    ListItemFormat.getExpandedListItemFormat(ed.formatter, name).each((liFmt) => {
-      Arr.each(ListItemFormat.getFullySelectedListItems(ed.selection), (li) => applyStyles(dom, li, liFmt as ApplyFormat, vars));
-    });
   }
 
   Events.fireFormatApply(ed, name, node, vars);
