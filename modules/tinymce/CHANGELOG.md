@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `text_patterns_lookup` option to provide additional text patterns dynamically #TINY-8778
 - New promotion element has been added to the UI and can be disabled using the new `promotion` option #TINY-8840
 - New `format_noneditable_selector` option to specify the `contenteditable="false"` elements that can be wrapped in a format. #TINY-8905
+- `allow` attribute is now a valid attribute od the `iframe` schema
 
 ### Improved
 - The formatter can now apply a format to a `contenteditable="false"` element by wrapping it. Configurable using the `format_noneditable_selector` option. #TINY-8905
