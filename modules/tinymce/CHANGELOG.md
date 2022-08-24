@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `text_patterns_lookup` option to provide additional text patterns dynamically #TINY-8778
 - New promotion element has been added to the UI and can be disabled using the new `promotion` option #TINY-8840
 - New `format_noneditable_selector` option to specify the `contenteditable="false"` elements that can be wrapped in a format. #TINY-8905
-- `allow` is now a valid attribute for the `iframe` schema. #TINY-8939
+- Added `allow` as a valid attribute for the `iframe` element in the editor schema. #TINY-8939
 - New `search` field in the `MenuButton` that shows a search field at the top of the menu, and refetches items when the search field updates. #TINY-8952
 
 ### Improved
