@@ -3,7 +3,7 @@ import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import { Editor } from 'tinymce/core/api/PublicApi';
+import Editor from 'tinymce/core/api/Editor';
 
 describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemTest', () => {
 

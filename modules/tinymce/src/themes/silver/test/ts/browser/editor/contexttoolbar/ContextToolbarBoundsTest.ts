@@ -1,7 +1,7 @@
 import { Bounds, Boxes } from '@ephox/alloy';
 import { after, before, context, describe, it } from '@ephox/bedrock-client';
 import { InlineContent } from '@ephox/bridge';
-import { Css, Scroll, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
+import { Css, Scroll, SelectorFind, SugarBody } from '@ephox/sugar';
 import { McEditor, TinyDom } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -55,8 +55,8 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarBoun
   });
 
   const getBounds = (editor: Editor): TestBounds => {
-    const container = SugarElement.fromDom(editor.getContainer());
-    const contentAreaContainer = SugarElement.fromDom(editor.getContentAreaContainer());
+    const container = TinyDom.container(editor);
+    const contentAreaContainer = TinyDom.contentAreaContainer(editor);
     const header = SelectorFind.descendant<HTMLElement>(SugarBody.body(), '.tox-editor-header').getOrDie();
 
     return {

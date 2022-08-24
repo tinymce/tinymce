@@ -342,10 +342,10 @@ describe('browser.tinymce.core.fmt.FormatEmptyLineTest', () => {
         rawHtml: true,
         expectedHtml:
           '<p><strong>a</strong></p>\n' +
-          '<ul>\n<li><strong>&nbsp;</strong></li>\n</ul>',
+          '<ul>\n<li style="font-weight: bold;"><strong>&nbsp;</strong></li>\n</ul>',
         expectedRawHtml:
           '<p><strong>a</strong></p>' +
-          '<ul><li><strong><br data-mce-bogus="1"></strong></li></ul>',
+          '<ul><li style="font-weight: bold;" data-mce-style="font-weight: bold;"><strong><br data-mce-bogus="1"></strong></li></ul>',
         select: selectAll,
         apply: toggleInlineStyle('Bold'),
         remove: toggleInlineStyle('Bold')

@@ -8,6 +8,7 @@ import { ExecCommandEvent } from 'tinymce/core/api/EventTypes';
 import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
+import * as Events from '../../api/Events';
 import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 const getBusySpec = (providerBackstage: UiFactoryBackstageProviders) => (_root: AlloyComponent, _behaviours: Behaviour.AlloyBehaviourRecord): AlloySpec => ({
@@ -147,7 +148,7 @@ const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBacksta
     if (state !== throbberState.get()) {
       throbberState.set(state);
       toggleThrobber(editor, lazyThrobber(), state, sharedBackstage.providers);
-      editor.dispatch('AfterProgressState', { state });
+      Events.fireAfterProgressState(editor, state);
     }
   };
 

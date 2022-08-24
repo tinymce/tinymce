@@ -64,6 +64,9 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     unit: 'item',
     defaults: (detail, u) => {
       // Switch this to a common library
+      // The WidgetItemSpec is just because it has uid, and the others don't
+      // for some reason. So there is nothing guaranteeing that `u` is a WidgetItemSpec,
+      // so we should probably rework this code.
       return Obj.has(u as WidgetItemSpec, 'uid') ? u : {
         ...u,
         uid: Tagger.generate('item')
@@ -90,6 +93,10 @@ const schema = Fun.constant([
   SketchBehaviourField('menuBehaviours', [ Highlighting, Representing, Composing, Keying ]),
 
   FieldSchema.defaultedOf('movement', {
+    // When you don't specify movement for a Menu, this is what you get
+    // a "menu" type of movement that moves on tab. If you want finer-grained
+    // control, like disabling moveOnTab, then you need to specify
+    // your entire movement configuration when creating your MenuSpec.
     mode: 'menu',
     moveOnTab: true
   }, StructureSchema.choose(
@@ -114,7 +121,8 @@ const schema = Fun.constant([
 
   FieldSchema.defaulted('fakeFocus', false),
   FieldSchema.defaulted('focusManager', FocusManagers.dom()),
-  Fields.onHandler('onHighlight')
+  Fields.onHandler('onHighlight'),
+  Fields.onHandler('onDehighlight')
 ]);
 
 const name = Fun.constant('menu');

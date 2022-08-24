@@ -1,4 +1,5 @@
 import Editor from 'tinymce/core/api/Editor';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 const fireSkinLoaded = (editor: Editor): void => {
   editor.dispatch('SkinLoaded');
@@ -24,11 +25,23 @@ const fireTextColorChange = (editor: Editor, data: { name: string; color: string
   editor.dispatch('TextColorChange', data);
 };
 
+const fireAfterProgressState = (editor: Editor, state: boolean): void => {
+  editor.dispatch('AfterProgressState', { state });
+};
+
+const fireResolveName = (editor: Editor, node: Node): EditorEvent<{ name: string; target: Node }> =>
+  editor.dispatch('ResolveName', {
+    name: node.nodeName.toLowerCase(),
+    target: node
+  });
+
 export {
   fireSkinLoaded,
   fireSkinLoadError,
   fireResizeEditor,
   fireScrollContent,
   fireResizeContent,
-  fireTextColorChange
+  fireTextColorChange,
+  fireAfterProgressState,
+  fireResolveName
 };

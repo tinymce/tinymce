@@ -2,16 +2,14 @@
 // Menubar
 //
 
+@menubar-background: repeating-linear-gradient(@menubar-row-separator-color 0px 1px, transparent 1px @_menubar-height) center top @_menubar-height e("/") 100% calc(100% - @_menubar-height) no-repeat;
 @menubar-background-color: @background-color;
-@menubar-background: url("data:image/svg+xml;charset=utf8,%3Csvg height='@{_menubar-height}' viewBox='0 0 40 @{_menubar-height}' width='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='@{_menubar-divider-height}' width='100' height='1' fill='@{_menubar-row-separator-color}'/%3E%3C/svg%3E") left 0 top 0 @menubar-background-color;
 @menubar-padding-x: @toolbar-group-padding-x;
 @menubar-separator-color: transparent;
 @menubar-row-separator-color: transparent;
 
 // private variables
-@_menubar-row-separator-color: escape('@{menubar-row-separator-color}');
 @_menubar-height: @menubar-select-height + (@menubar-select-spacing-y * 2) + 1px;
-@_menubar-divider-height: @_menubar-height - 1px;
 
 .tox {
   .tox-menubar {
@@ -28,10 +26,5 @@
 
   .tox-promotion + .tox-menubar {
     grid-column: 1;
-  }
-
-  // Add a top border when toolbar_location is bottom
-  &.tox-tinymce:not(.tox-tinymce-inline) .tox-editor-header:not(:first-child) .tox-menubar {
-    border-top: 1px solid @menubar-separator-color;
   }
 }

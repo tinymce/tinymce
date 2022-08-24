@@ -1,6 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as Hooks from 'tinymce/core/fmt/Hooks';
@@ -20,7 +19,7 @@ describe('browser.tinymce.core.fmt.HooksTest', () => {
       editor.getBody().innerHTML = setupHtml;
       LegacyUnit.setSelection(editor, ...setupSelection);
       Hooks.postProcess('pre', editor);
-      assert.equal(editor.getContent(), expected);
+      TinyAssertions.assertContent(editor, expected);
     };
 
     assertPreHook(

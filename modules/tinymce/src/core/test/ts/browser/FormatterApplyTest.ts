@@ -1505,7 +1505,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     });
     LegacyUnit.setSelection(editor, 'p', 2, 'p', 2);
     editor.formatter.apply('format');
-    assert.equal(editor.getContent(), '<p><b>abc</b></p>');
+    TinyAssertions.assertContent(editor, '<p><b>abc</b></p>');
   });
 
   it('Caret format inside non-ascii single block word', () => {
@@ -1516,7 +1516,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     });
     LegacyUnit.setSelection(editor, 'p', 2, 'p', 2);
     editor.formatter.apply('format');
-    assert.equal(editor.getContent(), '<p><b>noël</b></p>');
+    TinyAssertions.assertContent(editor, '<p><b>noël</b></p>');
   });
 
   it('Caret format inside first block word', () => {
@@ -1527,7 +1527,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     });
     LegacyUnit.setSelection(editor, 'p', 2, 'p', 2);
     editor.formatter.apply('format');
-    assert.equal(editor.getContent(), '<p><b>abc</b> 123</p>');
+    TinyAssertions.assertContent(editor, '<p><b>abc</b> 123</p>');
   });
 
   it('Caret format inside last block word', () => {
@@ -1538,7 +1538,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     });
     LegacyUnit.setSelection(editor, 'p', 5, 'p', 5);
     editor.formatter.apply('format');
-    assert.equal(editor.getContent(), '<p>abc <b>123</b></p>');
+    TinyAssertions.assertContent(editor, '<p>abc <b>123</b></p>');
   });
 
   it('Caret format inside middle block word', () => {
@@ -1549,7 +1549,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     });
     LegacyUnit.setSelection(editor, 'p', 5, 'p', 5);
     editor.formatter.apply('format');
-    assert.equal(editor.getContent(), '<p>abc <b>123</b> 456</p>');
+    TinyAssertions.assertContent(editor, '<p>abc <b>123</b> 456</p>');
   });
 
   it('Caret format on word separated by non breaking space', () => {
@@ -1560,7 +1560,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     });
     LegacyUnit.setSelection(editor, 'p', 1, 'p', 1);
     editor.formatter.apply('format');
-    assert.equal(editor.getContent(), '<p><b>one</b>\u00a0two</p>');
+    TinyAssertions.assertContent(editor, '<p><b>one</b>\u00a0two</p>');
   });
 
   it('Caret format inside single inline wrapped word', () => {
@@ -1571,7 +1571,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     });
     LegacyUnit.setSelection(editor, 'em', 1, 'em', 1);
     editor.formatter.apply('format');
-    assert.equal(editor.getContent(), '<p>abc <b><em>123</em></b> 456</p>');
+    TinyAssertions.assertContent(editor, '<p>abc <b><em>123</em></b> 456</p>');
   });
 
   it('Caret format inside word before similar format', () => {
@@ -1582,7 +1582,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     });
     LegacyUnit.setSelection(editor, 'p', 1, 'p', 1);
     editor.formatter.apply('format');
-    assert.equal(editor.getContent(), '<p><b>abc</b> 123 <b>456</b></p>');
+    TinyAssertions.assertContent(editor, '<p><b>abc</b> 123 <b>456</b></p>');
   });
 
   it('Caret format inside last inline wrapped word', () => {
@@ -1593,7 +1593,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     });
     LegacyUnit.setSelection(editor, 'em', 5, 'em', 5);
     editor.formatter.apply('format');
-    assert.equal(editor.getContent(), '<p>abc <em>abc <b>123</b></em> 456</p>');
+    TinyAssertions.assertContent(editor, '<p>abc <em>abc <b>123</b></em> 456</p>');
   });
 
   it('Caret format before text', () => {
@@ -1605,7 +1605,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 0);
     editor.formatter.apply('format');
     KeyUtils.type(editor, 'b');
-    assert.equal(editor.getContent(), '<p><b>b</b>a</p>');
+    TinyAssertions.assertContent(editor, '<p><b>b</b>a</p>');
   });
 
   it('Caret format after text', () => {
@@ -1617,7 +1617,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     LegacyUnit.setSelection(editor, 'p', 1, 'p', 1);
     editor.formatter.apply('format');
     KeyUtils.type(editor, 'b');
-    assert.equal(editor.getContent(), '<p>a<b>b</b></p>');
+    TinyAssertions.assertContent(editor, '<p>a<b>b</b></p>');
   });
 
   it('Caret format and no key press', () => {
@@ -1628,7 +1628,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     });
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 0);
     editor.formatter.apply('format');
-    assert.equal(editor.getContent(), '<p>a</p>');
+    TinyAssertions.assertContent(editor, '<p>a</p>');
   });
 
   it('Caret format and arrow left', () => {
@@ -1642,7 +1642,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     KeyUtils.type(editor, {
       keyCode: 37
     });
-    assert.equal(editor.getContent(), '<p>a</p>');
+    TinyAssertions.assertContent(editor, '<p>a</p>');
   });
 
   it('Caret format and arrow right', () => {
@@ -1656,7 +1656,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     KeyUtils.type(editor, {
       keyCode: 39
     });
-    assert.equal(editor.getContent(), '<p>a</p>');
+    TinyAssertions.assertContent(editor, '<p>a</p>');
   });
 
   it('Caret format and backspace', () => {
@@ -1673,7 +1673,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
 
     editor.formatter.apply('format');
     KeyUtils.type(editor, '\b');
-    assert.equal(editor.getContent(), '<p>ab</p>');
+    TinyAssertions.assertContent(editor, '<p>ab</p>');
   });
 
   it('Caret format on word in li with word in parent li before it', () => {
@@ -1684,7 +1684,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     });
     LegacyUnit.setSelection(editor, 'ul li li', 1, 'ul li li', 1);
     editor.formatter.apply('format');
-    assert.equal(editor.getContent(), '<ul><li>one<ul><li><b>two</b></li></ul></li></ul>');
+    TinyAssertions.assertContent(editor, '<ul><li>one<ul><li><b>two</b></li></ul></li></ul>');
   });
 
   it('Format caret with multiple formats', () => {
@@ -1709,7 +1709,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     });
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
     editor.formatter.apply('format');
-    assert.equal(editor.getContent(), '<p class="test">a</p>');
+    TinyAssertions.assertContent(editor, '<p class="test">a</p>');
   });
 
   it('format inline on contentEditable: false block', () => {
@@ -1931,7 +1931,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('format');
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
     editor.formatter.apply('format');
-    assert.equal(editor.getContent(), '<p><span style="font-weight: bold;">abc</span></p>');
+    TinyAssertions.assertContent(editor, '<p><span style="font-weight: bold;">abc</span></p>');
   });
 
   it('merge_with_parents', () => {
@@ -1946,7 +1946,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.setContent('<p><span style="color: red">a</span></p>');
     LegacyUnit.setSelection(editor, 'span', 0, 'span', 1);
     editor.formatter.apply('format');
-    assert.equal(editor.getContent(), '<p><span style="color: red; font-weight: bold;">a</span></p>');
+    TinyAssertions.assertContent(editor, '<p><span style="color: red; font-weight: bold;">a</span></p>');
   });
 
   it('Format selection from with end at beginning of block', () => {
@@ -2019,7 +2019,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
 
     editor.formatter.apply('fontname', { value: 'verdana' });
 
-    assert.equal(editor.getBody().innerHTML,
+    TinyAssertions.assertRawContent(editor,
       '<p>That is a <span style="font-family: verdana;" data-mce-style="font-family: verdana;"><span class="mce-spellchecker-word" data-mce-bogus="1">misespelled</span></span> text</p>');
 
     assert.equal(getContent(editor),
@@ -2028,7 +2028,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.selection.select(editor.dom.select('span')[0]);
     editor.formatter.remove('fontname', { value: 'verdana' });
 
-    assert.equal(editor.getBody().innerHTML,
+    TinyAssertions.assertRawContent(editor,
       '<p>That is a <span class="mce-spellchecker-word" data-mce-bogus="1">misespelled</span> text</p>');
 
     assert.equal(getContent(editor),

@@ -87,7 +87,7 @@ describe('browser.tinymce.themes.silver.editor.SilverInlineEditorWidthTest', () 
 
   it('Check max-width is 400px when set via element', testRender({
     setup: (ed: Editor) => {
-      Css.set(SugarElement.fromDom(ed.getElement()), 'width', '400px');
+      Css.set(TinyDom.targetElement(ed), 'width', '400px');
     }
   }, 400));
 
@@ -107,6 +107,6 @@ describe('browser.tinymce.themes.silver.editor.SilverInlineEditorWidthTest', () 
     width: 400
   }, 400, async (editor) => {
     await pOpenMore(ToolbarMode.sliding);
-    assertWidth(SugarElement.fromDom(editor.getContainer()), 400, 300);
+    assertWidth(TinyDom.container(editor), 400, 300);
   }));
 });

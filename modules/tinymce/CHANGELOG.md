@@ -11,10 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New promotion element has been added to the UI and can be disabled using the new `promotion` option #TINY-8840
 - New `format_noneditable_selector` option to specify the `contenteditable="false"` elements that can be wrapped in a format. #TINY-8905
 - `allow` attribute is now a valid attribute od the `iframe` schema
+- New `search` field in the `MenuButton` that shows a search field at the top of the menu, and refetches items when the search field updates. #TINY-8952
 
 ### Improved
 - The formatter can now apply a format to a `contenteditable="false"` element by wrapping it. Configurable using the `format_noneditable_selector` option. #TINY-8905
 - The autocompleter now supports a multiple character trigger using the new `trigger` configuration #TINY-8887
+- The formatter will now apply some inline formats like color and font size to list item elements when the entire item content is selected. #TINY-8961
+
+### Changed
+- The `@menubar-row-separator-color` oxide variable no longer affects the divider between the Menubar and Toolbar and only controls the color of the separator lines drawn in multiline Menubars. #TINY-8632
+- The `@toolbar-separator-color` oxide variable now exclusively affects the color of the separator between the Menubar and Toolbar. #TINY-8632
 
 ### Fixed
 - The Autolink plugin did not work when the text nodes in the content were fragmented #TINY-3723

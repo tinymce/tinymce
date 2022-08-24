@@ -6,13 +6,28 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- Added new `retargetAndDispatchWith` API to `AlloyTriggers` to allow for redispatching of events to different targets. #TINY-8952
+- Added new `refetch` API to `Dropdown` that triggers a fetch and redraw for the dropdown menu. #TINY-8952
+- Added new `onHighlightItem` and `onDehighlightItem` settings to `TieredMenu`. #TINY-8952
+- Added new `getExistingCoupled` API to `Coupling` that gets an existing coupled component, but does not create it if it doesn't already exist. #TINY-8952
+
 ### Improved
 - The `GuiSetup` BDD test helpers now provide a way to create a custom `GuiSystem`.
+
+### Changed
+- The `highlightImmediately` setting for `TieredMenu` was replaced with the more granular `highlightOnOpen`. #TINY-8952
 
 ### Fixed
 - The `lazyViewport` property incorrectly marked the passed component as optional for the `Docking` behaviour.
 - The `TypeaheadSpec` type did not correctly extend `InputSpec`.
 - The `TypeaheadSpec` type had a typo in the `populateFromBrowse` property.
+- The `Highlighting.highlight` API was not properly skipping the target when dehighlighting existing highlighted items. #TINY-8952
+- The various models in `Typeahead` were not functioning correctly. #TINY-8952
+- The `Typeahead` did not work correctly when its menu was in another mothership. #TINY-8952
+
+### Removed
+- The `onHighlight` setting in `TieredMenu` was removed in favour of `onHighlightItem`. #TINY-8952
 
 ## 10.1.0 - 2022-06-29
 

@@ -40,10 +40,23 @@ UnitTest.asynctest('CouplingTest', (success, failure) => {
       }
     ),
 
+    StepUtils.sAssertFailContains(
+      'Testing getExistingCoupled with invalid name: fake',
+      'No information found for coupled component: fake',
+      () => {
+        Coupling.getExistingCoupled(component, 'fake');
+      }
+    ),
+
     Logger.t(
-      'Testing getCoupled with valid name: secondary-1',
+      'Testing getCoupled and getExistingCoupled with valid name: secondary-1',
       Step.sync(() => {
+        const existingSecondary1 = Coupling.getExistingCoupled(component, 'secondary-1');
+        Assertions.assertEq('secondary1 should not exist yet', true, existingSecondary1.isNone());
+
         const secondary1 = Coupling.getCoupled(component, 'secondary-1');
+        const postCreateExistingSecondary1 = Coupling.getExistingCoupled(component, 'secondary-1');
+        Assertions.assertEq('secondary1 should now exist', true, postCreateExistingSecondary1.isSome());
         const button1 = secondary1.element;
         Assertions.assertEq('secondary1 should be a button', 'button', SugarNode.name(button1));
         Attribute.set(button1, 'data-test', 'marked');

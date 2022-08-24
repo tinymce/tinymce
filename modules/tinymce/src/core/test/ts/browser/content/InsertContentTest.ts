@@ -156,7 +156,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     editor.setContent('<p>a</p>');
     editor.selection.setCursorLocation(editor.dom.select('p')[0].firstChild as Text, 0);
     InsertContent.insertAtCaret(editor, { content: '<p>b</p>', paste: true });
-    assert.equal(editor.getContent(), '<h1>c</h1>');
+    TinyAssertions.assertContent(editor, '<h1>c</h1>');
     assert.equal(args?.content, '<h1>b</h1>');
     assert.equal(args?.type, 'setcontent');
     assert.isTrue(args?.paste);

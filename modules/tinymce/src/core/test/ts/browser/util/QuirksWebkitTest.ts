@@ -51,7 +51,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<h1>a<input type="text"></h1><p>b<span style="color:red">c</span></p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('Delete');
-    assert.equal(editor.getContent(), '<h1>a<input type="text">b<span style="color: red;">c</span></h1>');
+    TinyAssertions.assertContent(editor, '<h1>a<input type="text">b<span style="color: red;">c</span></h1>');
     assert.equal(editor.selection.getNode().nodeName, 'H1');
   });
 
@@ -60,7 +60,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<h1>a</h1><p>b<span style="color:red">c</span></p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('Delete');
-    assert.equal(editor.getContent(), '<h1>ab<span style="color: red;">c</span></h1>');
+    TinyAssertions.assertContent(editor, '<h1>ab<span style="color: red;">c</span></h1>');
     assert.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
@@ -69,7 +69,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<h1 contentEditable="false">a</h1><p>b<span style="color:red">c</span></p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('Delete');
-    assert.equal(editor.getContent(), '<h1 contenteditable="false">a</h1><p>b<span style="color: red;">c</span></p>');
+    TinyAssertions.assertContent(editor, '<h1 contenteditable="false">a</h1><p>b<span style="color: red;">c</span></p>');
     assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
@@ -78,7 +78,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<h1>a<br></h1><p>b<span style="color:red">c</span></p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('Delete');
-    assert.equal(editor.getContent(), '<h1>ab<span style="color: red;">c</span></h1>');
+    TinyAssertions.assertContent(editor, '<h1>ab<span style="color: red;">c</span></h1>');
     assert.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
@@ -87,7 +87,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<h1>a<br></h1><p><span style="color:red">b</span></p>';
     LegacyUnit.setSelection(editor, 'span', 0);
     editor.execCommand('Delete');
-    assert.equal(editor.getContent(), '<h1>a<span style="color: red;">b</span></h1>');
+    TinyAssertions.assertContent(editor, '<h1>a<span style="color: red;">b</span></h1>');
     assert.equal(editor.selection.getNode().nodeName, 'H1');
   });
 
@@ -96,7 +96,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<h1>a</h1><p><span style="color:red">b</span></p>';
     LegacyUnit.setSelection(editor, 'span', 0);
     editor.execCommand('Delete');
-    assert.equal(editor.getContent(), '<h1>a<span style="color: red;">b</span></h1>');
+    TinyAssertions.assertContent(editor, '<h1>a<span style="color: red;">b</span></h1>');
     assert.equal(editor.selection.getNode().nodeName, 'H1');
   });
 
@@ -126,7 +126,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<h1>a</h1><p><span style="color:red">b</span></p>';
     LegacyUnit.setSelection(editor, 'h1', 1);
     editor.execCommand('ForwardDelete');
-    assert.equal(editor.getContent(), '<h1>a<span style="color: red;">b</span></h1>');
+    TinyAssertions.assertContent(editor, '<h1>a<span style="color: red;">b</span></h1>');
     assert.equal(editor.selection.getNode().nodeName, 'H1');
   });
 
@@ -135,7 +135,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<h1>a<br></h1><p><span style="color:red">b</span></p>';
     LegacyUnit.setSelection(editor, 'h1', 1);
     editor.execCommand('ForwardDelete');
-    assert.equal(editor.getContent(), '<h1>a<span style="color: red;">b</span></h1>');
+    TinyAssertions.assertContent(editor, '<h1>a<span style="color: red;">b</span></h1>');
     assert.equal(editor.selection.getNode().nodeName, 'H1');
   });
 
@@ -144,7 +144,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<h1>a<br><br></h1><p><span style="color:red">b</span></p>';
     LegacyUnit.setSelection(editor, 'h1', 1);
     editor.execCommand('ForwardDelete');
-    assert.equal(editor.getContent(), '<h1>a</h1><p><span style="color: red;">b</span></p>');
+    TinyAssertions.assertContent(editor, '<h1>a</h1><p><span style="color: red;">b</span></p>');
     assert.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
@@ -153,7 +153,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<h1>a</h1><p><input type="text"><span style="color:red">b</span></p>';
     LegacyUnit.setSelection(editor, 'h1', 1);
     editor.execCommand('ForwardDelete');
-    assert.equal(editor.getContent(), '<h1>a<input type="text"><span style="color: red;">b</span></h1>');
+    TinyAssertions.assertContent(editor, '<h1>a<input type="text"><span style="color: red;">b</span></h1>');
     assert.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
@@ -185,7 +185,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<h1>a</h1><p contentEditable="false">b</p>';
     LegacyUnit.setSelection(editor, 'h1', 1);
     editor.execCommand('ForwardDelete');
-    assert.equal(editor.getContent(), '<h1>a</h1><p contenteditable="false">b</p>');
+    TinyAssertions.assertContent(editor, '<h1>a</h1><p contenteditable="false">b</p>');
   });
 
   it('ForwardDelete from end of H1 into P with style span inside', () => {
@@ -193,7 +193,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<h1>a</h1><p>b<span style="color: #010203">c</span></p>';
     LegacyUnit.setSelection(editor, 'h1', 1);
     editor.execCommand('ForwardDelete');
-    assert.equal(editor.getContent(), '<h1>ab<span style="color: #010203;">c</span></h1>');
+    TinyAssertions.assertContent(editor, '<h1>ab<span style="color: #010203;">c</span></h1>');
     assert.equal(editor.selection.getStart().nodeName, 'H1');
   });
 

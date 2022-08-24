@@ -1,6 +1,6 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Dropdown as AlloyDropdown, Focusing, GuiFactory, Keying,
-  Memento, Replacing, Representing, SimulatedEvent, SketchSpec, TieredData, Unselecting
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Dropdown as AlloyDropdown, Focusing, GuiFactory, Highlighting,
+  Keying, Memento, Replacing, Representing, SimulatedEvent, SketchSpec, TieredData, Unselecting
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
@@ -16,6 +16,8 @@ import { onControlAttached, onControlDetached, OnDestroy } from '../controls/Con
 import * as Icons from '../icons/Icons';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import * as MenuParts from '../menus/menu/MenuParts';
+import { focusSearchField, handleRedirectToMenuItem, handleRefetchTrigger, updateAriaOnDehighlight, updateAriaOnHighlight } from '../menus/menu/searchable/SearchableMenu';
+import { RedirectMenuItemInteractionEvent, redirectMenuItemInteractionEvent, RefetchTriggerEvent, refetchTriggerEvent } from '../menus/menu/searchable/SearchableMenuEvents';
 
 export const updateMenuText = Id.generate('update-menu-text');
 export const updateMenuIcon = Id.generate('update-menu-icon');
@@ -42,6 +44,7 @@ export interface CommonDropdownSpec<T> {
   readonly presets: Toolbar.PresetTypes;
   readonly classes: string[];
   readonly dropdownBehaviours: Behaviour.NamedConfiguredBehaviour<any, any, any>[];
+  readonly searchable?: boolean;
 }
 
 // TODO: Use renderCommonStructure here.
@@ -51,6 +54,11 @@ const renderCommonDropdown = <T>(
   sharedBackstage: UiFactoryBackstageShared
 ): SketchSpec => {
   const editorOffCell = Cell(Fun.noop);
+
+  // We need mementos for display text and display icon because on the events
+  // updateMenuText and updateMenuIcon respectively, their contents are changed
+  // via Replacing. These events are generally emitted by dropdowns that want the
+  // main text and icon to match the current selection (e.g. bespokes like font family)
   const optMemDisplayText = spec.text.map(
     (text) => Memento.record(renderLabel(text, prefix, sharedBackstage.providers))
   );
@@ -67,29 +75,41 @@ const renderCommonDropdown = <T>(
    *   It also needs to close the previous menu
    */
   const onLeftOrRightInMenu = (comp: AlloyComponent, se: SimulatedEvent<EventArgs>) => {
-    // The originating dropdown is stored on the sandbox itself.
+    // The originating dropdown is stored on the sandbox itself. This is just an
+    // implementation detail of alloy. We really need to make it a fully-fledged API.
+    // TODO: TINY-9014 Make SandboxAPI have a function that just delegates to Representing
     const dropdown: AlloyComponent = Representing.getValue(comp);
 
-    // Focus the dropdown. Current workaround required to make flow recognise the current focus
+    // Focus the dropdown. Current workaround required to make FlowLayout recognise the current focus.
+    // The triggering keydown is going to try to move the focus left or
+    // right of the current menu, so it needs to know what the current menu dropdown is. It
+    // can't work it out by the current focus, because the current focus is *in* the menu, so
+    // we help it by moving the focus to the button, so it can work out what the next menu to
+    // the left or right is.
     Focusing.focus(dropdown);
     AlloyTriggers.emitWith(dropdown, 'keydown', {
       raw: se.event.raw
     });
 
-    // Close the dropdown
+    // Because we have just navigated off this open menu, we want to close it.
+    // INVESTIGATE: TINY-9014: Is this handling situations where there were no menus
+    // to move to? Does it matter if we still close it when there are no other menus?
     AlloyDropdown.close(dropdown);
 
+    // The Optional.some(true) tells the keyboard handler that this event was handled,
+    // which will do things like stopPropagation and preventDefault.
     return Optional.some(true);
   };
 
-  const role = spec.role.fold(() => ({ }), (role) => ({ role }));
+  const role = spec.role.fold(() => ({}), (role) => ({ role }));
 
   const tooltipAttributes = spec.tooltip.fold(
     () => ({}),
     (tooltip) => {
       const translatedTooltip = sharedBackstage.providers.translate(tooltip);
       return {
-        'title': translatedTooltip, // TODO: tooltips AP-213
+        // TODO: AP-213 Implement tooltips manually, rather than relying on title
+        'title': translatedTooltip,
         'aria-label': translatedTooltip
       };
     }
@@ -102,7 +122,7 @@ const renderCommonDropdown = <T>(
 
   const memDropdown = Memento.record(
     AlloyDropdown.sketch({
-      ...spec.uid ? { uid: spec.uid } : { },
+      ...spec.uid ? { uid: spec.uid } : {},
       ...role,
       dom: {
         tag: 'button',
@@ -119,21 +139,35 @@ const renderCommonDropdown = <T>(
       matchWidth: true,
       useMinWidth: true,
 
-      // TODO: Not quite working. Can still get the button focused.
+      // When the dropdown opens, if we are in search mode, then we want to
+      // focus our searcher.
+      onOpen: (anchor, dropdownComp, tmenuComp) => {
+        if (spec.searchable) {
+          focusSearchField(tmenuComp);
+        }
+      },
+
       dropdownBehaviours: Behaviour.derive([
         ...spec.dropdownBehaviours,
         DisablingConfigs.button(() => spec.disabled || sharedBackstage.providers.isDisabled()),
         ReadOnly.receivingConfig(),
-        Unselecting.config({ }),
-        Replacing.config({ }),
+        // INVESTIGATE (TINY-9012): There was a old comment here about something not quite working, and that
+        // we can still get the button focused. It was probably related to Unselecting.
+        Unselecting.config({}),
+        Replacing.config({}),
+
+        // This is the generic way to make onSetup and onDestroy call as the component is attached /
+        // detached from the page/DOM.
         AddEventsBehaviour.config('dropdown-events', [
           onControlAttached(spec, editorOffCell),
           onControlDetached(spec, editorOffCell)
         ]),
         AddEventsBehaviour.config('menubutton-update-display-text', [
+          // These handlers are just using Replacing to replace either the menu
+          // text or the icon.
           AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
             optMemDisplayText.bind((mem) => mem.getOpt(comp)).each((displayText) => {
-              Replacing.set(displayText, [ GuiFactory.text(sharedBackstage.providers.translate(se.event.text)) ] );
+              Replacing.set(displayText, [ GuiFactory.text(sharedBackstage.providers.translate(se.event.text)) ]);
             });
           }),
           AlloyEvents.run<UpdateMenuIconEvent>(updateMenuIcon, (comp, se) => {
@@ -146,6 +180,9 @@ const renderCommonDropdown = <T>(
         ])
       ]),
       eventOrder: Merger.deepMerge(toolbarButtonEventOrder, {
+        // INVESTIGATE (TINY-9014): Explain why we need the events in this order.
+        // Ideally, have a test that fails when they are in a different order if order
+        // is important
         mousedown: [ 'focusing', 'alloy.base.behaviour', 'item-type-events', 'normal-dropdown-events' ]
       }),
 
@@ -154,7 +191,24 @@ const renderCommonDropdown = <T>(
           mode: 'special',
           onLeft: onLeftOrRightInMenu,
           onRight: onLeftOrRightInMenu
-        })
+        }),
+
+        AddEventsBehaviour.config('dropdown-sandbox-events', [
+          AlloyEvents.run<RefetchTriggerEvent>(refetchTriggerEvent, (originalSandboxComp, se) => {
+            handleRefetchTrigger(originalSandboxComp);
+            // It's a custom event that no-one else should be listening to, so stop it.
+            se.stop();
+          }),
+
+          AlloyEvents.run<RedirectMenuItemInteractionEvent>(
+            redirectMenuItemInteractionEvent,
+            (sandboxComp, se) => {
+              handleRedirectToMenuItem(sandboxComp, se);
+              // It's a custom event that no-one else should be listening to, so stop it.
+              se.stop();
+            }
+          )
+        ])
       ]),
 
       lazySink: sharedBackstage.getSink,
@@ -162,8 +216,22 @@ const renderCommonDropdown = <T>(
       toggleClass: `${prefix}--active`,
 
       parts: {
-        // FIX: hasIcons
-        menu: MenuParts.part(false, spec.columns, spec.presets)
+        menu: {
+          ...MenuParts.part(false, spec.columns, spec.presets),
+          // When the menu is "searchable", use fakeFocus so that keyboard
+          // focus stays in the search field
+          fakeFocus: spec.searchable,
+          onHighlightItem: updateAriaOnHighlight,
+          onCollapseMenu: (tmenuComp, itemCompCausingCollapse, nowActiveMenuComp) => {
+            // We want to update ARIA on collapsing as well, because it isn't changing
+            // the highlights. So what we need to do is get the right parameters to
+            // pass to updateAriaOnHighlight
+            Highlighting.getHighlighted(nowActiveMenuComp).each((itemComp) => {
+              updateAriaOnHighlight(tmenuComp, nowActiveMenuComp, itemComp);
+            });
+          },
+          onDehighlightItem: updateAriaOnDehighlight
+        }
       },
 
       fetch: (comp) => Future.nu(Fun.curry(spec.fetch, comp))

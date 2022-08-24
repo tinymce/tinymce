@@ -1,5 +1,5 @@
-import { ApproxStructure, Assertions, Step, Waiter } from '@ephox/agar';
-import { Fun, Merger } from '@ephox/katamari';
+import { ApproxStructure, Assertions, Step, StructAssert, Waiter } from '@ephox/agar';
+import { Arr, Fun, Merger, Obj } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -13,7 +13,7 @@ import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { TogglingConfigSpec } from 'ephox/alloy/behaviour/toggling/TogglingTypes';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
 import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
-import { PartialMenuSpec, TieredMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
+import { PartialMenuSpec, TieredData, TieredMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
 
 interface MenuState {
   readonly menuUid: string;
@@ -151,13 +151,61 @@ const mWaitForNewMenu = (component: AlloyComponent): Step<MenuState, unknown> =>
 
 const assertLazySinkArgs = (expectedTag: string, expectedClass: string, comp: AlloyComponent): void => {
   Assertions.assertStructure(
-    'Lazy sink should get passed the split button',
+    'Lazy sink should get passed the right button',
     ApproxStructure.build((s, _str, arr) => s.element(expectedTag, {
       classes: [ arr.has(expectedClass) ]
     })),
     comp.element
   );
 };
+
+const getSampleTieredData = (): TieredData => {
+  /* Menu structure
+
+  all-menus/
+  ├─ menu-a/
+  │  ├─ a-alpha
+  │  ├─ a-beta/
+  │  │  ├─ b-alpha
+  │  ├─ a-gamma
+*/
+  return {
+    primary: 'menu-a',
+    menus: Obj.map({
+      'menu-a': {
+        value: 'menu-a',
+        items: Arr.map([
+          { type: 'item', data: { value: 'a-alpha', meta: { text: 'a-Alpha' }}, hasSubmenu: false },
+          { type: 'item', data: { value: 'a-beta', meta: { text: 'a-Beta' }}, hasSubmenu: true },
+          { type: 'item', data: { value: 'a-gamma', meta: { text: 'a-Gamma' }}, hasSubmenu: false }
+        ], renderItem)
+      },
+      'a-beta': { // menu name should be triggering parent item so TieredMenuSpec path works
+        value: 'menu-b',
+        items: Arr.map([
+          { type: 'item', data: { value: 'b-alpha', meta: { text: 'b-Alpha' }}, hasSubmenu: false }
+        ], renderItem)
+      }
+    }, renderMenu),
+    expansions: {
+      'a-beta': 'a-beta'
+    }
+  };
+};
+
+// ASSUMPTION: the ApproxStructure.build arguments s, str, arr are always the same
+// so we don't need to pass the originals through to functions.
+const structNotActiveItem = ApproxStructure.build((s, str, arr) => s.element('li', {
+  classes: [ arr.has('item'), arr.not('selected-item') ]
+}));
+
+const structActiveItem = ApproxStructure.build((s, str, arr) => s.element('li', {
+  classes: [ arr.has('item'), arr.has('selected-item') ]
+}));
+
+const itemsHaveActiveStates = (states: boolean[]): StructAssert[] => Arr.map(states, (s) => {
+  return s ? structActiveItem : structNotActiveItem;
+});
 
 const itemMarkers: TieredMenuSpec['markers'] = {
   item: 'item',
@@ -176,5 +224,9 @@ export {
   part,
   markers,
   mWaitForNewMenu,
-  mStoreMenuUid
+  mStoreMenuUid,
+  getSampleTieredData,
+  structNotActiveItem,
+  structActiveItem,
+  itemsHaveActiveStates
 };
