@@ -65,8 +65,8 @@ export interface SchemaElement extends ElementRule {
   pattern?: RegExp;
 }
 
-export interface SchemaMap { [name: string]: {} }
-export interface SchemaRegExpMap { [name: string]: RegExp }
+export interface SchemaMap {[name: string]: {}}
+export interface SchemaRegExpMap {[name: string]: RegExp}
 
 interface Schema {
   type: SchemaType;
@@ -366,7 +366,7 @@ const compileSchema = (type: SchemaType): SchemaLookupTable => {
     addAttrs('a', 'download');
     addAttrs('link script img', 'crossorigin');
     addAttrs('img', 'loading');
-    addAttrs('iframe', 'sandbox seamless allowfullscreen loading'); // Excluded: srcdoc
+    addAttrs('iframe', 'sandbox seamless allow allowfullscreen loading'); // Excluded: srcdoc
   }
 
   // Special: iframe, ruby, video, audio, label
@@ -434,7 +434,7 @@ const compileElementMap: {
 const Schema = (settings: SchemaSettings = {}): Schema => {
   const elements: Record<string, SchemaElement> = {};
   const children: Record<string, SchemaMap> = {};
-  let patternElements: Array<SchemaElement & { pattern: RegExp }> = [];
+  let patternElements: Array<SchemaElement & {pattern: RegExp}> = [];
   const customElementsMap: SchemaMap = {};
   const specialElements: SchemaRegExpMap = {};
 
@@ -645,7 +645,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
 
           // Add pattern or exact element
           if (hasPatternsRegExp.test(elementName)) {
-            const patternElement = element as (SchemaElement & { pattern: RegExp });
+            const patternElement = element as (SchemaElement & {pattern: RegExp});
             patternElement.pattern = patternToRegExp(elementName);
             patternElements.push(patternElement);
           } else {
