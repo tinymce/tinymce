@@ -58,7 +58,7 @@ export const Sizers = (): Sizers => {
     const w = Width.get(target);
     const h = Height.get(target);
     const minx = loc.left;
-    const maxx = loc.left + w ;
+    const maxx = loc.left + w;
     const midx = loc.left + w / 2;
 
     const y = loc.top;

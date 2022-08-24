@@ -56,7 +56,7 @@ const isDockedMode = (header: AlloyComponent, mode: 'top' | 'bottom') => Arr.con
 const updateIframeContentFlow = (header: AlloyComponent): void => {
   const getOccupiedHeight = (elm: SugarElement<HTMLElement>) => Height.getOuter(elm) +
       (parseInt(Css.get(elm, 'margin-top'), 10) || 0) +
-      (parseInt(Css.get(elm, 'margin-bottom'), 10) || 0) ;
+      (parseInt(Css.get(elm, 'margin-bottom'), 10) || 0);
 
   const elm = header.element;
   Traverse.parentElement(elm).each((parentElem) => {
