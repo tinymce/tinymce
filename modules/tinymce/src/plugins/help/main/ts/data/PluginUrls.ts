@@ -17,6 +17,7 @@ export interface PluginUrl extends PartialPluginUrl {
   readonly slug: string;
 }
 
+// These lists are automatically sorted when generating the dialog.
 const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'advlist', name: 'Advanced List' },
   { key: 'anchor', name: 'Anchor' },
@@ -56,11 +57,13 @@ const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'casechange', name: 'Case Change', type: PluginType.Premium },
   { key: 'checklist', name: 'Checklist', type: PluginType.Premium },
   { key: 'editimage', name: 'Enhanced Image Editing', type: PluginType.Premium },
+  { key: 'footnotes', name: 'Footnotes', type: PluginType.Premium },
   { key: 'mediaembed', name: 'Enhanced Media Embed', type: PluginType.Premium, slug: 'introduction-to-mediaembed' },
   { key: 'export', name: 'Export', type: PluginType.Premium },
   { key: 'formatpainter', name: 'Format Painter', type: PluginType.Premium },
   { key: 'linkchecker', name: 'Link Checker', type: PluginType.Premium },
   { key: 'mentions', name: 'Mentions', type: PluginType.Premium },
+  { key: 'mergetags', name: 'Merge Tags', type: PluginType.Premium },
   { key: 'pageembed', name: 'Page Embed', type: PluginType.Premium },
   { key: 'permanentpen', name: 'Permanent Pen', type: PluginType.Premium },
   { key: 'powerpaste', name: 'PowerPaste', type: PluginType.Premium, slug: 'introduction-to-powerpaste' },
