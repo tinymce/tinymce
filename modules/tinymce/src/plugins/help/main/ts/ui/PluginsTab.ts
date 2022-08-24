@@ -9,8 +9,8 @@ import * as PluginUrls from '../data/PluginUrls';
 
 const tab = (editor: Editor): Dialog.TabSpec & { name: string } => {
   const availablePlugins = () => {
-    const premiumPlugins = Arr.filter(PluginUrls.urls, ({ key, type }) => {
-      return key !== 'autocorrect' && type === PluginUrls.PluginType.Premium;
+    const premiumPlugins = Arr.filter(PluginUrls.urls, ({ type }) => {
+      return type === PluginUrls.PluginType.Premium;
     });
     const premiumPluginList = Arr.map(premiumPlugins, (plugin) => '<li>' + I18n.translate(plugin.name) + '</li>').join('');
 
