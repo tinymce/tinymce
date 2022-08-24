@@ -38,7 +38,7 @@
     "@ephox/bedrock-server": "^13.3.0",
     "@ephox/oxide-icons-tools": "^3.1.0",
     "@ephox/swag": "^4.5.0",
-    "@tinymce/eslint-plugin": "^2.1.0",
+    "@tinymce/eslint-plugin": "^2.2.0",
     "@tinymce/moxiedoc": "^0.2.1",
     "@types/chai": "^4.3.3",
     "@types/dompurify": "^2.3.3",

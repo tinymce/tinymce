@@ -52,7 +52,7 @@ UnitTest.test('Atomic Test: parts.SchemasTest', () => {
   // checkSuccessWithNone, the non-optional parts are expected, and the optional = None
   // checkSuccessWithSome, the non-optional parts are expected, and the optional is optExpected
 
-  const checkSuccess = (label: string, expected: { external?: { entirety: string } }, parts: PartType.PartTypeAdt[], input: { external?: string }) => {
+  const checkSuccess = (label: string, expected: { external?: { entirety: string }}, parts: PartType.PartTypeAdt[], input: { external?: string }) => {
     const schemas = AlloyParts.schemas(parts);
     const output = StructureSchema.asRawOrDie(
       label,

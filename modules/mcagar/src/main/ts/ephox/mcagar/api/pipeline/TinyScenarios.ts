@@ -5,9 +5,18 @@ import * as fc from 'fast-check';
 import { Editor } from '../../alien/EditorTypes';
 
 type ContentGenerator = fc.Arbitrary<SugarElement<HTMLElement>>;
-interface SelectionExclusions { containers: (container: SugarElement<Node>) => boolean }
-interface ArbScenarioOptions { exclusions: SelectionExclusions }
-interface AsyncPropertyOptions { scenario: ArbScenarioOptions; property: fc.Parameters }
+
+interface SelectionExclusions {
+  readonly containers: (container: SugarElement<Node>) => boolean;
+}
+
+interface ArbScenarioOptions {
+  readonly exclusions: SelectionExclusions;
+}
+
+interface AsyncPropertyOptions {
+  readonly scenario: ArbScenarioOptions; property: fc.Parameters;
+}
 
 interface Scenario {
   readonly input: string;

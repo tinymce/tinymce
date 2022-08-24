@@ -49,14 +49,14 @@ UnitTest.test('api.Extract.(from,all,extract,extractTo)', () => {
 
   //
   // const extract = (universe, child, offset) => {
-  const checkExtract = (expected: {id: string; offset: number}, childId: string, offset: number) => {
+  const checkExtract = (expected: { id: string; offset: number }, childId: string, offset: number) => {
     const child = Finder.get(doc, childId);
     const actual = Extract.extract(doc, child, offset);
     Assert.eq('', expected.id, actual.element.id);
     Assert.eq('', expected.offset, actual.offset);
   };
 
-  const checkExtractTo = (expected: {id: string; offset: number}, childId: string, offset: number, pred: (e: any) => boolean) => {
+  const checkExtractTo = (expected: { id: string; offset: number }, childId: string, offset: number, pred: (e: any) => boolean) => {
     const child = Finder.get(doc, childId);
     const actual = Extract.extractTo(doc, child, offset, pred);
     Assert.eq('', expected.id, actual.element.id);

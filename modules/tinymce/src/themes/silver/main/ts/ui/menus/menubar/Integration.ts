@@ -30,7 +30,7 @@ const defaultMenus: Record<string, MenuSpec> = {
   help: { title: 'Help', items: 'help' }
 };
 
-const make = (menu: {title: string; items: string[]}, registry: MenuRegistry, editor: Editor): MenubarItemSpec => {
+const make = (menu: { title: string; items: string[] }, registry: MenuRegistry, editor: Editor): MenubarItemSpec => {
   const removedMenuItems = Options.getRemovedMenuItems(editor).split(/[ ,]/);
   return {
     text: menu.title,

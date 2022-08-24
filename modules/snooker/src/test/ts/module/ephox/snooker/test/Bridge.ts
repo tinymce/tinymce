@@ -7,7 +7,7 @@ import { TargetMergable } from 'ephox/snooker/model/RunOperation';
 
 // Mock/Stub out helper functions
 
-const targetStub = (selection: { section: number; row: number; column: number}[], bounds: { startRow: number; startCol: number; finishRow: number; finishCol: number}, table: SugarElement<HTMLTableElement>): TargetMergable => {
+const targetStub = (selection: Array<{ section: number; row: number; column: number }>, bounds: { startRow: number; startCol: number; finishRow: number; finishCol: number }, table: SugarElement<HTMLTableElement>): TargetMergable => {
   const cells = Optionals.cat(Arr.map(selection, (path) => {
     return Hierarchy.follow(table, [ path.section, path.row, path.column ]) as Optional<SugarElement<HTMLTableCellElement>>;
   }));

@@ -90,7 +90,11 @@ import I18n from './util/I18n';
  * @class tinymce.AddOnManager
  */
 
-export interface UrlObject { prefix: string; resource: string; suffix: string }
+export interface UrlObject {
+  prefix: string;
+  resource: string;
+  suffix: string;
+}
 
 type WaitState = 'added' | 'loaded';
 
@@ -139,7 +143,7 @@ const AddOnManager = <T>(): AddOnManager<T> => {
       return;
     }
 
-    ScriptLoader.ScriptLoader.add(urls[ name ] + '/langs/' + language + '.js');
+    ScriptLoader.ScriptLoader.add(urls[name] + '/langs/' + language + '.js');
   };
 
   const requireLangPack = (name: string, languages?: string) => {

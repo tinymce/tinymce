@@ -2,7 +2,7 @@ import * as fc from 'fast-check';
 
 import * as WeightedChoice from './WeightedChoice';
 
-export interface Decorator<T> extends WeightedChoice.WeightedItem{
+export interface Decorator<T> extends WeightedChoice.WeightedItem {
   property: string;
   value: fc.Arbitrary<T>;
 }

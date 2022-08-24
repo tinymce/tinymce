@@ -34,7 +34,7 @@ const clearData = (type: string): void => {
 const setRows = (rowsOpt: Optional<SugarElement<RowElement>[]>): void => {
   rowsOpt.fold(
     clearRows,
-    (rows) => setData({ [ tableTypeRow ]: rows })
+    (rows) => setData({ [tableTypeRow]: rows })
   );
 };
 
@@ -47,7 +47,7 @@ const clearRows = (): void =>
 const setColumns = (columnsOpt: Optional<SugarElement<RowElement>[]>): void => {
   columnsOpt.fold(
     clearColumns,
-    (columns) => setData({ [ tableTypeColumn ]: columns })
+    (columns) => setData({ [tableTypeColumn]: columns })
   );
 };
 

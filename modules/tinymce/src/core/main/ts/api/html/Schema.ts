@@ -65,8 +65,13 @@ export interface SchemaElement extends ElementRule {
   pattern?: RegExp;
 }
 
-export interface SchemaMap { [name: string]: {} }
-export interface SchemaRegExpMap { [name: string]: RegExp }
+export interface SchemaMap {
+  [name: string]: {};
+}
+
+export interface SchemaRegExpMap {
+  [name: string]: RegExp;
+}
 
 interface Schema {
   type: SchemaType;

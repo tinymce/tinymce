@@ -170,7 +170,7 @@ const isDocked = (lazyHeader: () => Optional<AlloyComponent>): boolean => lazyHe
 const getIframeBehaviours = () => [
   Receiving.config({
     channels: {
-      [ EditorChannels.toolbarHeightChange() ]: {
+      [EditorChannels.toolbarHeightChange()]: {
         onReceive: updateIframeContentFlow
       }
     }

@@ -27,8 +27,8 @@ export const each = <T extends {}>(obj: T, f: ObjCallback<T>): void => {
   }
 };
 
-export const map = <T extends {}, R>(obj: T, f: ObjMorphism<T, R>): {[k in keyof T]: R} => {
-  return tupleMap<{[k in keyof T]: R}, T>(obj, (x, i) => ({
+export const map = <T extends {}, R>(obj: T, f: ObjMorphism<T, R>): { [k in keyof T]: R } => {
+  return tupleMap<{ [k in keyof T]: R }, T>(obj, (x, i) => ({
     k: i,
     v: f(x, i)
   }));

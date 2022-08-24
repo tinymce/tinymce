@@ -3,7 +3,10 @@ import { Arr, Result } from '@ephox/katamari';
 // An experiment to make a more efficient boulder.
 export type SimpleResult<E, A> = SimpleError<E> | SimpleValue<A>;
 
-export enum SimpleResultType { Error, Value }
+export enum SimpleResultType {
+  Error,
+  Value
+}
 
 export interface SimpleError<E> {
   stype: SimpleResultType.Error;

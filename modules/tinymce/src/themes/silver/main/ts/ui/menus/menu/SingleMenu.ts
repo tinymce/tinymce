@@ -17,7 +17,10 @@ import { SingleMenuItemSpec } from './SingleMenuTypes';
 
 type PartialMenuSpec = MenuUtils.PartialMenuSpec;
 
-export enum FocusMode { ContentFocus, UiFocus }
+export enum FocusMode {
+  ContentFocus,
+  UiFocus
+}
 
 const createMenuItemFromBridge = (
   item: SingleMenuItemSpec,

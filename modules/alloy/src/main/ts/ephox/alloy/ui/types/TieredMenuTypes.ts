@@ -88,7 +88,11 @@ export type PartialMenuSpec = Partial<MenuSpec> & {
 
 export type TieredMenuRecord = Record<string, PartialMenuSpec>;
 
-export enum HighlightOnOpen { HighlightMenuAndItem, HighlightJustMenu, HighlightNone }
+export enum HighlightOnOpen {
+  HighlightMenuAndItem,
+  HighlightJustMenu,
+  HighlightNone
+}
 
 export interface TieredData {
   primary: string;

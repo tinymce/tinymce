@@ -85,7 +85,7 @@ export default {
     // flag passed in determines whether to collapse all the items into a single
     // menu when a search pattern is present.
     const mailMergeFetch = (collapseIfSearch: boolean): Toolbar.ToolbarMenuButton['fetch'] => (callback, fetchContext) => {
-      const makeMailMerge = (info: { value: string; title?: string}) => ({
+      const makeMailMerge = (info: { value: string; title?: string }) => ({
         type: 'menuitem',
         text: info.title ?? info.value,
         onAction: () => {
@@ -148,7 +148,7 @@ export default {
           )
         ] as any);
       } else {
-        const allMerges: Array<{value: string; title?: string}> = [
+        const allMerges: Array<{ value: string; title?: string }> = [
           currentDateMerge,
           tocMerge,
           phoneHomeMerge,
