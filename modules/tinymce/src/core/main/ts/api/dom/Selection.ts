@@ -22,6 +22,7 @@ import AstNode from '../html/Node';
 import BookmarkManager from './BookmarkManager';
 import ControlSelection from './ControlSelection';
 import DOMUtils from './DOMUtils';
+import RangeUtils from './RangeUtils';
 import SelectorChanged from './SelectorChanged';
 import DomSerializer from './Serializer';
 
@@ -93,6 +94,7 @@ interface EditorSelection {
   placeCaretAt: (clientX: number, clientY: number) => void;
   getBoundingClientRect: () => ClientRect | DOMRect;
   destroy: () => void;
+  expand: (options?: { type: 'word' }) => void;
 }
 
 /**
@@ -542,11 +544,15 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     controlSelection.destroy();
   };
 
+  const expand = (options: { type: 'word' } = { type: 'word' }) =>
+    setRng(RangeUtils(editor).expand(getRng(), options));
+
   const exports = {
     dom,
     win,
     serializer,
     editor,
+    expand,
     collapse,
     setCursorLocation,
     getContent,

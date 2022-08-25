@@ -1,5 +1,7 @@
 import { Fun } from '@ephox/katamari';
 
+import { expandRng } from 'tinymce/core/fmt/ExpandRange';
+
 import * as CaretRangeFromPoint from '../../selection/CaretRangeFromPoint';
 import * as NormalizeRange from '../../selection/NormalizeRange';
 import * as RangeCompare from '../../selection/RangeCompare';
@@ -7,12 +9,13 @@ import * as RangeNodes from '../../selection/RangeNodes';
 import { RangeLikeObject } from '../../selection/RangeTypes';
 import * as RangeWalk from '../../selection/RangeWalk';
 import * as SplitRange from '../../selection/SplitRange';
-import DOMUtils from './DOMUtils';
+import Editor from '../Editor';
 
 interface RangeUtils {
   walk: (rng: Range, callback: (nodes: Node[]) => void) => void;
   split: (rng: Range) => RangeLikeObject;
   normalize: (rng: Range) => boolean;
+  expand: (range: Range, options?: { type: 'word' }) => Range;
 }
 
 /**
@@ -20,7 +23,8 @@ interface RangeUtils {
  *
  * @class tinymce.dom.RangeUtils
  */
-const RangeUtils = (dom: DOMUtils): RangeUtils => {
+const RangeUtils = (editor: Editor): RangeUtils => {
+  const dom = editor.dom;
   /**
    * Walks the specified range like object and executes the callback for each sibling collection it finds.
    *
@@ -60,9 +64,31 @@ const RangeUtils = (dom: DOMUtils): RangeUtils => {
     );
   };
 
+  /**
+   * Expands the range of the selection to contain the entire when nothing is selected
+   *
+   * @method expand
+   * @param {Range} range The initial range to work from.
+   * @param {Object} options Optional options provided to the expansion. Defaults to { type: 'word' }
+   * @return {Range} Returns the expanded range.
+   */
+  const expand = (range: Range, options: { type: 'word' } = { type: 'word' }): Range => {
+    if (options.type === 'word') {
+      const rangeLike = expandRng(editor, range, [{ inline: 'span' }]);
+      const newRange = dom.createRng();
+      newRange.setStart(rangeLike.startContainer, rangeLike.startOffset);
+      newRange.setEnd(rangeLike.endContainer, rangeLike.endOffset);
+
+      return newRange;
+    }
+
+    return range;
+  };
+
   return {
     walk,
     split,
+    expand,
     normalize
   };
 };
