@@ -1,0 +1,32 @@
+//
+// Footnotes
+//
+
+sup.mce-footnote a {
+  color: black;
+  text-decoration: none;
+}
+
+div.mce-footnotes {
+  hr {
+    margin-left: 0;
+    margin-right: auto;
+    width: 25%;
+  }
+
+  li > a:first-child {
+    color: black;
+    text-decoration: none;
+  }
+}
+
+@media print {
+  div.mce-footnotes {
+    break-inside: avoid;
+    width: 100%;
+
+    li > a:first-child {
+      display: none;
+    }
+  }
+}
