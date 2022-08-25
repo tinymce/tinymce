@@ -50,7 +50,6 @@ const tab = (editor: Editor): Dialog.TabSpec & { name: string } => {
   const getPluginData = (editor: Editor, key: string): PluginData => Arr.find(PluginUrls.urls, (x) => {
     return x.key === key;
   }).fold(() => {
-    // This is an unknown plugin, so see if there is any metadata, or fallback to its name
     return identifyUnknownPlugin(editor, key);
   }, (x) => {
     // We know this plugin, so use our stored details.
