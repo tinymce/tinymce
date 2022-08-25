@@ -7,8 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- new `expand` function added to `tinymce.selection` which expand the selection around a word #TINY-9001
-- new `expand` function added to `tinymce.dom.RangeUtils` to expand and return a provided range around a word #TINY-9001
+- New `expand` function added to `tinymce.selection` which expand the selection around a word #TINY-9001
+- New `expand` function added to `tinymce.dom.RangeUtils` to expand and return a expanded range around a word #TINY-9001
 
 ## 6.2.0 - 2022-09-08
 

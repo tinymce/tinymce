@@ -1204,6 +1204,14 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 6);
   });
 
+  it('TINY-9001: Expanding a word expands the selection, with a provided option', () => {
+    const editor = hook.editor();
+    editor.setContent('A BCDE F');
+    TinySelections.setCursor(editor, [ 0, 0 ], 4);
+    editor.selection.expand({ type: 'word' });
+    TinyAssertions.assertSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 6);
+  });
+
   /*
   // TODO: Re-implement this test as a separate test if needed by destroying an editor etc
   it('getRng should return null if win.document is not defined or null', () => {

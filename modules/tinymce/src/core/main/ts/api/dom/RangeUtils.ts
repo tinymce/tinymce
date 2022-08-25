@@ -65,7 +65,7 @@ const RangeUtils = (editor: Editor): RangeUtils => {
   };
 
   /**
-   * Expands the range of the selection to contain the entire when nothing is selected
+   * Expands the range of the selection to contain the entire word when the selection is collapsed within the word
    *
    * @method expand
    * @param {Range} range The initial range to work from.
