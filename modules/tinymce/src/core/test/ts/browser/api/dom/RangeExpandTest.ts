@@ -1,6 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Unicode } from '@ephox/katamari';
-import { TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinySelections, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
@@ -35,15 +35,19 @@ describe('browser.tinymce.core.api.dom.RangeExpandTest', () => {
     editor.setContent('');
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 0);
     const startRange = editor.selection.getRng();
-    const endRange = RangeUtils(editor).expand(startRange);
-    compareRanges(startRange, endRange);
+    const endRange = RangeUtils(editor.dom).expand(startRange);
+    const body = editor.getBody();
+    const expectedRange = editor.dom.createRng();
+    expectedRange.setStart(body, 0);
+    expectedRange.setEnd(body, 1);
+    compareRanges(expectedRange, endRange);
   });
 
   it('TINY-9001: The cursor is in between two spaces', () => {
     const editor = hook.editor();
     editor.setContent(textEntry);
     const startRange = makeBaseRange(editor, 4, 4);
-    const endRange = RangeUtils(editor).expand(startRange);
+    const endRange = RangeUtils(editor.dom).expand(startRange);
     compareRanges(startRange, endRange);
   });
 
@@ -51,7 +55,7 @@ describe('browser.tinymce.core.api.dom.RangeExpandTest', () => {
     const editor = hook.editor();
     editor.setContent(textEntry);
     const startRange = makeBaseRange(editor, 5, 5);
-    const endRange = RangeUtils(editor).expand(startRange);
+    const endRange = RangeUtils(editor.dom).expand(startRange);
     compareRanges(makeBaseRange(editor, 5, 6), endRange);
   });
 
@@ -60,7 +64,7 @@ describe('browser.tinymce.core.api.dom.RangeExpandTest', () => {
     const editor = hook.editor();
     editor.setContent(textEntry);
     const startRange = makeBaseRange(editor, 3, 3);
-    const endRange = RangeUtils(editor).expand(startRange);
+    const endRange = RangeUtils(editor.dom).expand(startRange);
     compareRanges(makeBaseRange(editor, 2, 3), endRange);
   });
 
@@ -68,7 +72,7 @@ describe('browser.tinymce.core.api.dom.RangeExpandTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>A B12C D</p>');
     const startRange = makeBaseRange(editor, 4, 4);
-    const endRange = RangeUtils(editor).expand(startRange);
+    const endRange = RangeUtils(editor.dom).expand(startRange);
     compareRanges(makeBaseRange(editor, 2, 6), endRange);
   });
 
@@ -77,7 +81,7 @@ describe('browser.tinymce.core.api.dom.RangeExpandTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>A <span style="display: block">B</span></p>');
     const startRange = makeBaseRange(editor, 2, 2);
-    const endRange = RangeUtils(editor).expand(startRange);
+    const endRange = RangeUtils(editor.dom).expand(startRange);
     compareRanges(makeBaseRange(editor, 2, 2), endRange);
   });
 
@@ -85,7 +89,7 @@ describe('browser.tinymce.core.api.dom.RangeExpandTest', () => {
     const editor = hook.editor();
     editor.setContent('<p><span style="display: block">A</span> B</p>');
     const startRange = makeBaseRange(editor, 0, 0, 1);
-    const endRange = RangeUtils(editor).expand(startRange);
+    const endRange = RangeUtils(editor.dom).expand(startRange);
     compareRanges(makeBaseRange(editor, 0, 0, 1), endRange);
   });
 });

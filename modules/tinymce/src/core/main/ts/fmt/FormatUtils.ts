@@ -7,6 +7,7 @@ import EditorSelection from '../api/dom/Selection';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
+import { Schema } from '../api/PublicApi';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as NodeType from '../dom/NodeType';
 import * as SelectionUtils from '../selection/SelectionUtils';
@@ -120,12 +121,12 @@ const getNonWhiteSpaceSibling = (node: Node | null, next?: boolean, inc?: boolea
   return undefined;
 };
 
-const isTextBlock = (editor: Editor, name: string | Node): boolean => {
+const isTextBlock = (schema: Schema, name: string | Node): boolean => {
   if (isNode(name)) {
     name = name.nodeName;
   }
 
-  return !!editor.schema.getTextBlockElements()[name.toLowerCase()];
+  return !!schema.getTextBlockElements()[name.toLowerCase()];
 };
 
 const isValid = (ed: Editor, parent: string, child: string): boolean => {

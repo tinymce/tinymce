@@ -33,13 +33,13 @@ describe('browser.tinymce.core.api.dom.RangeUtilsTest', () => {
     const firstChild = editor.getBody().firstChild as Node;
     const rng1 = createRange(editor.dom, firstChild, 1, firstChild, 1);
     const rng1Clone = rng1.cloneRange();
-    assert.isFalse(RangeUtils(editor).normalize(rng1));
+    assert.isFalse(RangeUtils(editor.dom).normalize(rng1));
     assertRange(rng1Clone, rng1);
 
     const lastChild = editor.getBody().lastChild as Node;
     const rng2 = createRange(editor.dom, lastChild, 0, lastChild, 0);
     const rng2Clone = rng2.cloneRange();
-    assert.isFalse(RangeUtils(editor).normalize(rng2));
+    assert.isFalse(RangeUtils(editor.dom).normalize(rng2));
     assertRange(rng2Clone, rng2);
   });
 });

@@ -545,7 +545,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
   };
 
   const expand = (options: { type: 'word' } = { type: 'word' }) =>
-    setRng(RangeUtils(editor).expand(getRng(), options));
+    setRng(RangeUtils(editor.dom).expand(getRng(), options));
 
   const exports = {
     dom,
