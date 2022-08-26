@@ -1,7 +1,6 @@
 import { Fun } from '@ephox/katamari';
 
-import { expandRng } from 'tinymce/core/fmt/ExpandRange';
-
+import * as ExpandRange from '../../fmt/ExpandRange';
 import * as CaretRangeFromPoint from '../../selection/CaretRangeFromPoint';
 import * as NormalizeRange from '../../selection/NormalizeRange';
 import * as RangeCompare from '../../selection/RangeCompare';
@@ -73,7 +72,7 @@ const RangeUtils = (dom: DOMUtils): RangeUtils => {
    */
   const expand = (rng: Range, options: { type: 'word' } = { type: 'word' }): Range => {
     if (options.type === 'word') {
-      const rangeLike = expandRng(dom, rng, [{ inline: 'span' }]);
+      const rangeLike = ExpandRange.expandRng(dom, rng, [{ inline: 'span' }]);
       const newRange = dom.createRng();
       newRange.setStart(rangeLike.startContainer, rangeLike.startOffset);
       newRange.setEnd(rangeLike.endContainer, rangeLike.endOffset);

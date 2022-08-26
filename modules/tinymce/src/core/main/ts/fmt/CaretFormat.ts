@@ -298,7 +298,7 @@ const removeCaretFormat = (editor: Editor, name: string, vars?: FormatVars, simi
     rng.collapse(true);
 
     // Expand the range to the closest word and split it at those points
-    let expandedRng = ExpandRange.expandRng(editor.dom, rng, formatList, true);
+    let expandedRng = ExpandRange.expandRng(dom, rng, formatList, true);
     expandedRng = SplitRange.split(expandedRng);
 
     // TODO: Figure out how on earth this works, as it shouldn't since remove format

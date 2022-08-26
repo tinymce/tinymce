@@ -336,7 +336,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
           const rng = dom.createRng();
           rng.setStartBefore(node);
           rng.setEndAfter(node);
-          applyRngStyle(dom, ExpandRange.expandRng(ed.dom, rng, formatList), true);
+          applyRngStyle(dom, ExpandRange.expandRng(dom, rng, formatList), true);
         }
       } else {
         applyRngStyle(dom, node, true);
@@ -348,7 +348,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
 
         SelectionUtils.preserve(selection, true, () => {
           SelectionUtils.runOnRanges(ed, (selectionRng, fake) => {
-            const expandedRng = fake ? selectionRng : ExpandRange.expandRng(ed.dom, selectionRng, formatList);
+            const expandedRng = fake ? selectionRng : ExpandRange.expandRng(dom, selectionRng, formatList);
             applyRngStyle(dom, expandedRng, false);
           });
         });
