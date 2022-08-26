@@ -1,0 +1,17 @@
+@mergetag-prefix-color: #3788EC;
+@mergetag-prefix-background-color: rgba(64, 153, 255, .1);
+
+@mergetag-suffix-color: @mergetag-prefix-color;
+@mergetag-suffix-background-color: @mergetag-prefix-background-color;
+
+.mce-content-body {
+  .mce-mergetag-prefix {
+    background-color: @mergetag-prefix-background-color;
+    color: @mergetag-prefix-color;
+  }
+
+  .mce-mergetag-suffix {
+    background-color: @mergetag-suffix-background-color;
+    color: @mergetag-suffix-color;
+  }
+}
