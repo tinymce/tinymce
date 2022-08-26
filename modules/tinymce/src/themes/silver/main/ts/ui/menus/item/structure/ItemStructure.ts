@@ -82,7 +82,7 @@ const renderColorStructure = (item: ItemStructureSpec, providerBackstage: UiFact
 };
 
 const renderItemDomStructure = (ariaLabel: Optional<string>): RawDomSchema => {
-  const domTitle = ariaLabel.map((label): {attributes?: {title: string}} => ({
+  const domTitle = ariaLabel.map((label): { attributes?: { title: string }} => ({
     attributes: {
       // TODO: AP-213 change this temporary solution to use tooltips, ensure its aria readable still.
       // for icon only implementations we need either a title or aria label to satisfy aria requirements.

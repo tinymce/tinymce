@@ -80,12 +80,12 @@ const matchStartNode = (elem: SugarElement<Element>, nodeCandidates: ContextType
   const nodeMatches = matchTargetWith(elem, nodeCandidates);
 
   if (nodeMatches.contextForms.length > 0) {
-    return Optional.some({ elem, toolbars: [ nodeMatches.contextForms[ 0 ] ] });
+    return Optional.some({ elem, toolbars: [ nodeMatches.contextForms[0] ] });
   } else {
     const editorMatches = matchTargetWith(elem, editorCandidates);
 
     if (editorMatches.contextForms.length > 0) {
-      return Optional.some({ elem, toolbars: [ editorMatches.contextForms[ 0 ] ] });
+      return Optional.some({ elem, toolbars: [ editorMatches.contextForms[0] ] });
     } else if (nodeMatches.contextToolbars.length > 0 || editorMatches.contextToolbars.length > 0) {
       const toolbars = filterByPositionForStartNode(nodeMatches.contextToolbars.concat(editorMatches.contextToolbars));
       return Optional.some({ elem, toolbars });

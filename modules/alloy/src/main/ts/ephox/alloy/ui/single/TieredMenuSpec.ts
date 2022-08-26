@@ -213,7 +213,10 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
       }
     }));
 
-  enum ExpandHighlightDecision { HighlightSubmenu, HighlightParent }
+  enum ExpandHighlightDecision {
+    HighlightSubmenu,
+    HighlightParent
+  }
 
   const buildIfRequired = (container: AlloyComponent, menuName: string, menuPrep: MenuPreparation) => {
     if (menuPrep.type === 'notbuilt') {

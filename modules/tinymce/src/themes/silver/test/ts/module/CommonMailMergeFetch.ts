@@ -3,7 +3,7 @@ import { Menu, Toolbar } from '@ephox/bridge';
 import { Arr } from '@ephox/katamari';
 
 export const fetchMailMergeData = (settings: { collapseSearchResults: boolean }, store: TestHelpers.TestStore): Toolbar.ToolbarMenuButtonSpec['fetch'] => (callback, fetchContext) => {
-  const makeMailMerge = (info: { value: string; title?: string}): Menu.MenuItemSpec => ({
+  const makeMailMerge = (info: { value: string; title?: string }): Menu.MenuItemSpec => ({
     type: 'menuitem',
     text: info.title ?? info.value,
     onAction: () => {
@@ -67,7 +67,7 @@ export const fetchMailMergeData = (settings: { collapseSearchResults: boolean },
       )
     ]);
   } else {
-    const allMerges: Array<{value: string; title?: string}> = [
+    const allMerges: Array<{ value: string; title?: string }> = [
       currentDateMerge,
       tocMerge,
       phoneHomeMerge,

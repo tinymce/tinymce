@@ -11,7 +11,11 @@ import { Dialog } from './ui/Ui';
 import { NativeEventMap } from './util/EventDispatcher';
 import { InstanceApi } from './WindowManager';
 
-export interface ExecCommandEvent { command: string; ui: boolean; value?: any }
+export interface ExecCommandEvent {
+  command: string;
+  ui: boolean;
+  value?: any;
+}
 
 export interface BeforeGetContentEvent extends GetContentArgs {
   selection?: boolean;
@@ -35,42 +39,101 @@ export interface SaveContentEvent extends GetContentEvent {
   save: boolean;
 }
 
-export interface NewBlockEvent { newBlock: Element }
+export interface NewBlockEvent {
+  newBlock: Element;
+}
 
-export interface NodeChangeEvent { element: Element; parents: Node[]; selectionChange?: boolean; initial?: boolean }
+export interface NodeChangeEvent {
+  element: Element;
+  parents: Node[];
+  selectionChange?: boolean;
+  initial?: boolean;
+}
 
-export interface FormatEvent { format: string; vars?: FormatVars; node?: Node | RangeLikeObject | null }
+export interface FormatEvent {
+  format: string;
+  vars?: FormatVars;
+  node?: Node | RangeLikeObject | null;
+}
 
-export interface ObjectResizeEvent { target: HTMLElement; width: number; height: number; origin: string }
+export interface ObjectResizeEvent {
+  target: HTMLElement;
+  width: number;
+  height: number;
+  origin: string;
+}
 
-export interface ObjectSelectedEvent { target: Node; targetClone?: Node }
+export interface ObjectSelectedEvent {
+  target: Node;
+  targetClone?: Node;
+}
 
-export interface ScrollIntoViewEvent { elm: HTMLElement; alignToTop: boolean | undefined }
+export interface ScrollIntoViewEvent {
+  elm: HTMLElement;
+  alignToTop: boolean | undefined;
+}
 
-export interface SetSelectionRangeEvent { range: Range; forward: boolean | undefined }
+export interface SetSelectionRangeEvent {
+  range: Range;
+  forward: boolean | undefined;
+}
 
-export interface ShowCaretEvent { target: Node; direction: number; before: boolean }
+export interface ShowCaretEvent {
+  target: Node;
+  direction: number;
+  before: boolean;
+}
 
-export interface SwitchModeEvent { mode: string }
+export interface SwitchModeEvent {
+  mode: string;
+}
 
-export interface ChangeEvent { level: UndoLevel; lastLevel: UndoLevel | undefined }
-export interface AddUndoEvent extends ChangeEvent { originalEvent: Event | undefined }
-export interface UndoRedoEvent { level: UndoLevel }
+export interface ChangeEvent {
+  level: UndoLevel;
+  lastLevel: UndoLevel | undefined;
+}
 
-export interface WindowEvent<T extends Dialog.DialogData> { dialog: InstanceApi<T> }
+export interface AddUndoEvent extends ChangeEvent {
+  originalEvent: Event | undefined;
+}
 
-export interface ProgressStateEvent { state: boolean; time?: number }
+export interface UndoRedoEvent {
+  level: UndoLevel;
+}
 
-export interface AfterProgressStateEvent { state: boolean }
+export interface WindowEvent<T extends Dialog.DialogData> {
+  dialog: InstanceApi<T>;
+}
 
-export interface PlaceholderToggleEvent { state: boolean }
+export interface ProgressStateEvent {
+  state: boolean;
+  time?: number;
+}
 
-export interface LoadErrorEvent { message: string }
+export interface AfterProgressStateEvent {
+  state: boolean;
+}
 
-export interface PreProcessEvent extends ParserArgs { node: Element }
-export interface PostProcessEvent extends ParserArgs { content: string }
+export interface PlaceholderToggleEvent {
+  state: boolean;
+}
 
-export interface PastePlainTextToggleEvent { state: boolean }
+export interface LoadErrorEvent {
+  message: string;
+}
+
+export interface PreProcessEvent extends ParserArgs {
+  node: Element;
+}
+
+export interface PostProcessEvent extends ParserArgs {
+  content: string;
+}
+
+export interface PastePlainTextToggleEvent {
+  state: boolean;
+}
+
 export interface PastePreProcessEvent {
   content: string;
   readonly internal: boolean;
@@ -81,13 +144,19 @@ export interface PastePostProcessEvent {
   readonly internal: boolean;
 }
 
-export interface NewTableRowEvent { node: HTMLTableRowElement }
-export interface NewTableCellEvent { node: HTMLTableCellElement }
+export interface NewTableRowEvent {
+  node: HTMLTableRowElement;
+}
+
+export interface NewTableCellEvent {
+  node: HTMLTableCellElement;
+}
 
 export interface TableEventData {
   readonly structure: boolean;
   readonly style: boolean;
 }
+
 export interface TableModifiedEvent extends TableEventData {
   readonly table: HTMLTableElement;
 }

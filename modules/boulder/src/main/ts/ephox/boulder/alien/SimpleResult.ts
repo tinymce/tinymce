@@ -3,16 +3,19 @@ import { Arr, Result } from '@ephox/katamari';
 // An experiment to make a more efficient boulder.
 export type SimpleResult<E, A> = SimpleError<E> | SimpleValue<A>;
 
-export enum SimpleResultType { Error, Value }
+export enum SimpleResultType {
+  Error,
+  Value
+}
 
 export interface SimpleError<E> {
-  stype: SimpleResultType.Error;
-  serror: E;
+  readonly stype: SimpleResultType.Error;
+  readonly serror: E;
 }
 
 export interface SimpleValue<A> {
-  stype: SimpleResultType.Value;
-  svalue: A;
+  readonly stype: SimpleResultType.Value;
+  readonly svalue: A;
 }
 
 const fold = <B, E, A>(res: SimpleResult<E, A>, onError: (err: E) => B, onValue: (val: A) => B): B =>

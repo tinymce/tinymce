@@ -241,8 +241,8 @@ const checkMerge = (
   label: string,
   expected: string,
   input: string,
-  selection: {section: number; row: number; column: number}[],
-  bounds: {startRow: number; startCol: number; finishRow: number; finishCol: number}
+  selection: Array<{ section: number; row: number; column: number }>,
+  bounds: { startRow: number; startCol: number; finishRow: number; finishCol: number }
 ): void => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   const expectedDom = SugarElement.fromHtml(expected);

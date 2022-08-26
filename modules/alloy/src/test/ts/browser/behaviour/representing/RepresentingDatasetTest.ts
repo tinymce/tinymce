@@ -40,7 +40,7 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
       ])
     })
   ), (doc, _body, gui, component, _store) => {
-    const sAssertRepValue = (label: string, expected: { value: string; meta: { text: string } }) => Step.sync(() => {
+    const sAssertRepValue = (label: string, expected: { value: string; meta: { text: string }}) => Step.sync(() => {
       const v = Representing.getValue(component);
       Assertions.assertEq(label, expected, v);
     });

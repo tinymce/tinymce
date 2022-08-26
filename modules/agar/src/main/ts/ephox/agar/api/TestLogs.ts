@@ -1,6 +1,10 @@
 import { Arr } from '@ephox/katamari';
 
-export enum TestLogEntryState { Original, Started, Finished }
+export enum TestLogEntryState {
+  Original,
+  Started,
+  Finished
+}
 
 export interface TestLogEntry {
   message: string;

@@ -19,7 +19,7 @@ const boundsArb = (minBounds = 0, maxBounds = 2000): fc.Arbitrary<Boxes.Bounds> 
 
 const boxArb = boundsArb;
 
-const boxAndBoundsArb = (minBounds = 0, maxBounds = 2000): fc.Arbitrary<{ box: Boxes.Bounds; bounds: Boxes.Bounds}> =>
+const boxAndBoundsArb = (minBounds = 0, maxBounds = 2000): fc.Arbitrary<{ box: Boxes.Bounds; bounds: Boxes.Bounds }> =>
   boundsArb(minBounds, maxBounds).chain((bounds) =>
     boxArb(minBounds, maxBounds).map((box) => ({
       box,

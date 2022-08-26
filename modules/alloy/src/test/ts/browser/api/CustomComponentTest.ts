@@ -49,7 +49,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
       ],
       name: 'behaviourB',
       active: {
-        exhibit: (_base, info: { attr: string}) => {
+        exhibit: (_base, info: { attr: string }) => {
           const extra = {
             attributes: {
               'behaviour-b-exhibit': info.attr

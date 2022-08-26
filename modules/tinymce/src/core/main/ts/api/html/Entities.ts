@@ -2,7 +2,9 @@ import { SugarElement } from '@ephox/sugar';
 
 import Tools from '../util/Tools';
 
-export interface EntitiesMap { [name: string]: string }
+export interface EntitiesMap {
+  [name: string]: string;
+}
 
 interface Entities {
   encodeRaw: (text: string, attr?: boolean) => string;

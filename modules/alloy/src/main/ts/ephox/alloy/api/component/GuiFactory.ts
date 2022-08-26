@@ -12,6 +12,11 @@ import * as Component from './Component';
 import { AlloyComponent } from './ComponentApi';
 import { AlloySpec, PremadeSpec, SimpleOrSketchSpec, SketchSpec } from './SpecTypes';
 
+export interface ExternalElement {
+  readonly uid?: string;
+  readonly element: SugarElement<Node>;
+}
+
 const buildSubcomponents = (spec: SimpleOrSketchSpec, obsoleted: Optional<SugarElement<Node>>): AlloyComponent[] => {
   const components = Obj.get(spec, 'components').getOr([ ]);
 
@@ -51,8 +56,6 @@ const text = (textContent: string): PremadeSpec => {
   });
 };
 
-// Rename.
-export interface ExternalElement { uid?: string; element: SugarElement<Node> }
 const external = (spec: ExternalElement): PremadeSpec => {
   const extSpec: { uid: Optional<string>; element: SugarElement<Node> } = StructureSchema.asRawOrDie('external.component', StructureSchema.objOfOnly([
     FieldSchema.required('element'),

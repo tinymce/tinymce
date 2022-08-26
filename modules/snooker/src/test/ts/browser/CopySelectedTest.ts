@@ -538,7 +538,7 @@ UnitTest.test('CopySelectedTest', () => {
     ],
     {
       beforeCopy: {
-        [ LOCKED_COL_ATTR ]: '0',
+        [LOCKED_COL_ATTR]: '0',
         'data-snooker-col-series': 'numbers'
       },
       afterCopy: [ LOCKED_COL_ATTR, 'data-snooker-col-series' ]
@@ -560,7 +560,7 @@ UnitTest.test('CopySelectedTest', () => {
     ],
     {
       beforeCopy: {
-        [ LOCKED_COL_ATTR ]: '0',
+        [LOCKED_COL_ATTR]: '0',
         'data-snooker-col-series': 'numbers'
       },
       afterCopy: [ LOCKED_COL_ATTR, 'data-snooker-col-series' ]

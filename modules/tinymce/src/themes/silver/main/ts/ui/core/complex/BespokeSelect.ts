@@ -80,7 +80,10 @@ interface BespokeMenuItems {
   readonly getStyleItems: () => FormatItem[];
 }
 
-const enum IrrelevantStyleItemResponse { Hide, Disable }
+const enum IrrelevantStyleItemResponse {
+  Hide,
+  Disable
+}
 
 const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec) => {
   const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, invalid: boolean, value: Optional<SelectedFormat>): Optional<Menu.NestedMenuItemContents> => {

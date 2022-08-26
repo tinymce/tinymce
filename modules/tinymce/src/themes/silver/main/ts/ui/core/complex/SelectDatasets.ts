@@ -38,7 +38,10 @@ const buildBasicStaticDataset = (data: Array<BasicSelectItem>): BasicSelectDatas
   data
 });
 
-export enum Delimiter { SemiColon, Space }
+export enum Delimiter {
+  SemiColon,
+  Space
+}
 
 const split = (rawFormats: string, delimiter: Delimiter): string[] => {
   if (delimiter === Delimiter.SemiColon) {
