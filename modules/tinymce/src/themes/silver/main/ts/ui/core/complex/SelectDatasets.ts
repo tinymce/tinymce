@@ -49,6 +49,7 @@ const split = (rawFormats: string, delimiter: Delimiter): string[] => {
 };
 
 const buildBasicSettingsDataset = (editor: Editor, settingName: 'block_formats' | 'font_family_formats' | 'font_size_formats', delimiter: Delimiter): BasicSelectDataset => {
+  // eslint-disable-next-line @tinymce/no-direct-editor-options
   const rawFormats = editor.options.get(settingName);
   const data = process(split(rawFormats, delimiter));
   return {

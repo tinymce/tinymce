@@ -1,5 +1,6 @@
 {
   "rules": {
+    "@tinymce/no-direct-editor-events": "off",
     "@tinymce/no-implicit-dom-globals": [
       "error", {
         "allowed": [ "btoa", "fetch", "requestAnimationFrame", "InputEvent" ],
