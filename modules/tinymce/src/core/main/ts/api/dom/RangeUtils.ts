@@ -63,7 +63,7 @@ const RangeUtils = (dom: DOMUtils): RangeUtils => {
   };
 
   /**
-   * Expands the range of the selection to contain the entire word when the selection is collapsed within the word
+   * Returns an expanded range expanded around the entire word the provided selection was collapsed in.
    *
    * @method expand
    * @param {Range} rng The initial range to work from.

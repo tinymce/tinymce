@@ -544,8 +544,16 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     controlSelection.destroy();
   };
 
+  /**
+   * Expands the range of the selection to contain the entire word when the selection is collapsed within the word
+   *
+   * @method expand
+   * @param {Range} rng The initial range to work from.
+   * @param {Object} options Optional options provided to the expansion. Defaults to { type: 'word' }
+   * @return {Range} Returns the expanded range.
+   */
   const expand = (options: { type: 'word' } = { type: 'word' }) =>
-    setRng(RangeUtils(editor.dom).expand(getRng(), options));
+    setRng(RangeUtils(dom).expand(getRng(), options));
 
   const exports = {
     dom,
