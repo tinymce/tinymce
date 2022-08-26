@@ -13,8 +13,8 @@ import { AlloyComponent } from './ComponentApi';
 import { AlloySpec, PremadeSpec, SimpleOrSketchSpec, SketchSpec } from './SpecTypes';
 
 export interface ExternalElement {
-  uid?: string;
-  element: SugarElement<Node>;
+  readonly uid?: string;
+  readonly element: SugarElement<Node>;
 }
 
 const buildSubcomponents = (spec: SimpleOrSketchSpec, obsoleted: Optional<SugarElement<Node>>): AlloyComponent[] => {

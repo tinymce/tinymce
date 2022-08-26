@@ -9,13 +9,13 @@ export enum SimpleResultType {
 }
 
 export interface SimpleError<E> {
-  stype: SimpleResultType.Error;
-  serror: E;
+  readonly stype: SimpleResultType.Error;
+  readonly serror: E;
 }
 
 export interface SimpleValue<A> {
-  stype: SimpleResultType.Value;
-  svalue: A;
+  readonly stype: SimpleResultType.Value;
+  readonly svalue: A;
 }
 
 const fold = <B, E, A>(res: SimpleResult<E, A>, onError: (err: E) => B, onValue: (val: A) => B): B =>

@@ -15,7 +15,8 @@ interface ArbScenarioOptions {
 }
 
 interface AsyncPropertyOptions {
-  readonly scenario: ArbScenarioOptions; property: fc.Parameters;
+  readonly scenario: ArbScenarioOptions;
+  readonly property: fc.Parameters;
 }
 
 interface Scenario {
@@ -24,10 +25,10 @@ interface Scenario {
 }
 
 export interface TinyScenarios {
-  genScenario: (genContent: ContentGenerator, selectionExclusions: SelectionExclusions) => fc.Arbitrary<Scenario>;
-  arbScenario: (genContent: ContentGenerator, options: ArbScenarioOptions) => fc.Arbitrary<Scenario>;
+  readonly genScenario: (genContent: ContentGenerator, selectionExclusions: SelectionExclusions) => fc.Arbitrary<Scenario>;
+  readonly arbScenario: (genContent: ContentGenerator, options: ArbScenarioOptions) => fc.Arbitrary<Scenario>;
 
-  sAsyncProperty: <T>(label: string, generator: ContentGenerator, step: Step<Scenario, any>, options: AsyncPropertyOptions) => Step<T, T>;
+  readonly sAsyncProperty: <T>(label: string, generator: ContentGenerator, step: Step<Scenario, any>, options: AsyncPropertyOptions) => Step<T, T>;
 }
 
 export const TinyScenarios = (editor: Editor): TinyScenarios => {

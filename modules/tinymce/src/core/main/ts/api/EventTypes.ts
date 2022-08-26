@@ -92,9 +92,11 @@ export interface ChangeEvent {
   level: UndoLevel;
   lastLevel: UndoLevel | undefined;
 }
+
 export interface AddUndoEvent extends ChangeEvent {
   originalEvent: Event | undefined;
 }
+
 export interface UndoRedoEvent {
   level: UndoLevel;
 }
@@ -104,7 +106,8 @@ export interface WindowEvent<T extends Dialog.DialogData> {
 }
 
 export interface ProgressStateEvent {
-  state: boolean; time?: number;
+  state: boolean;
+  time?: number;
 }
 
 export interface AfterProgressStateEvent {
@@ -122,6 +125,7 @@ export interface LoadErrorEvent {
 export interface PreProcessEvent extends ParserArgs {
   node: Element;
 }
+
 export interface PostProcessEvent extends ParserArgs {
   content: string;
 }
@@ -129,6 +133,7 @@ export interface PostProcessEvent extends ParserArgs {
 export interface PastePlainTextToggleEvent {
   state: boolean;
 }
+
 export interface PastePreProcessEvent {
   content: string;
   readonly internal: boolean;
@@ -142,6 +147,7 @@ export interface PastePostProcessEvent {
 export interface NewTableRowEvent {
   node: HTMLTableRowElement;
 }
+
 export interface NewTableCellEvent {
   node: HTMLTableCellElement;
 }
@@ -150,6 +156,7 @@ export interface TableEventData {
   readonly structure: boolean;
   readonly style: boolean;
 }
+
 export interface TableModifiedEvent extends TableEventData {
   readonly table: HTMLTableElement;
 }

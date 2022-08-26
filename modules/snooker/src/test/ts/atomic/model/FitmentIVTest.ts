@@ -11,6 +11,12 @@ interface InvTest {
   readonly test: () => void;
 }
 
+interface Spec {
+  readonly rows: number;
+  readonly cols: number;
+  readonly grid: Structs.ElementNew[][];
+}
+
 UnitTest.test('FitmentIVTest', () => {
   const en = (fakeElement: any, isNew: boolean) =>
     Structs.elementnew(fakeElement as SugarElement<any>, isNew, false);
@@ -173,10 +179,6 @@ UnitTest.test('FitmentIVTest', () => {
         cols: gridSpecB.cols
       }
     };
-
-    interface Spec {
-      rows: number; cols: number; grid: Structs.ElementNew[][];
-    }
 
     const queryliser2000 = (
       result: Result<Structs.RowCells[], string>,
