@@ -16,10 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The formatter can now apply a format to a `contenteditable="false"` element by wrapping it. Configurable using the `format_noneditable_selector` option. #TINY-8905
 - The autocompleter now supports a multiple character trigger using the new `trigger` configuration #TINY-8887
 - The formatter will now apply some inline formats like color and font size to list item elements when the entire item content is selected. #TINY-8961
+- The plugin lists in the Help dialog are now sorted alphabetically. #TINY-9019
 
 ### Changed
 - The `@menubar-row-separator-color` oxide variable no longer affects the divider between the Menubar and Toolbar and only controls the color of the separator lines drawn in multiline Menubars. #TINY-8632
 - The `@toolbar-separator-color` oxide variable now exclusively affects the color of the separator between the Menubar and Toolbar. #TINY-8632
+- The available premium plugins listed in the Help dialog are no longer translated. #TINY-9019
 
 ### Fixed
 - The Autolink plugin did not work when the text nodes in the content were fragmented #TINY-3723
