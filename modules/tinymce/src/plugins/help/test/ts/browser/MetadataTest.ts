@@ -8,7 +8,7 @@ import { selectors } from '../module/Selectors';
 import FakePlugin from '../module/test/FakePlugin';
 import NoMetaFakePlugin from '../module/test/NoMetaFakePlugin';
 
-describe('Browser Test: .MetadataTest', () => {
+describe('browser.tinymce.plugins.help.MetadataTest', () => {
   const hook = TinyHooks.bddSetupLight({
     plugins: 'help fake nometafake',
     toolbar: 'help',

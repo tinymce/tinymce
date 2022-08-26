@@ -1,7 +1,7 @@
-import { Keyboard, Keys, Mouse, UiFinder } from '@ephox/agar';
+import { Keys, Mouse } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { SelectorFilter, SugarBody, SugarDocument, TextContent } from '@ephox/sugar';
+import { SelectorFilter, TextContent } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -12,20 +12,16 @@ import { selectors } from '../module/Selectors';
 import FakePlugin from '../module/test/FakePlugin';
 import NoMetaFakePlugin from '../module/test/NoMetaFakePlugin';
 
-describe('Browser Test: .PluginTabsOrderTest', () => {
+describe('browser.tinymce.plugins.help.PluginTabsOrderTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'help fake nometafake',
     toolbar: 'help',
     base_url: '/project/tinymce/js/tinymce'
   }, [ HelpPlugin, FakePlugin, NoMetaFakePlugin ]);
 
-  const doc = SugarDocument.getDocument();
-  const body = SugarBody.body();
-
-  const pExtractItemsFrom = async (label: string, selector: string): Promise<string[]> => {
-    const list = await UiFinder.pWaitFor(
-      `Could not find list for ${label} defined by selector: ${selector}`,
-      body,
+  const pExtractItemsFrom = async (editor: Editor, selector: string): Promise<string[]> => {
+    const list = await TinyUiActions.pWaitForUi(
+      editor,
       selector
     );
 
@@ -38,9 +34,9 @@ describe('Browser Test: .PluginTabsOrderTest', () => {
 
   const pTestPluginItems = async (label: string, editor: Editor, selector: string): Promise<void> => {
     TinyUiActions.clickOnToolbar(editor, selectors.toolbarHelpButton);
-    const dialog = await UiFinder.pWaitFor('Could not find help dialog', body, selectors.dialog);
+    const dialog = await TinyUiActions.pWaitForUi(editor, selectors.dialog);
     Mouse.clickOn(dialog, selectors.pluginsTab);
-    const rawEntries = await pExtractItemsFrom(label, selector);
+    const rawEntries = await pExtractItemsFrom(editor, selector);
     assert.deepEqual(
       rawEntries,
       Arr.sort(rawEntries, (s1, s2) => s1.localeCompare(s2)),
@@ -48,7 +44,7 @@ describe('Browser Test: .PluginTabsOrderTest', () => {
     );
 
     // Close the dialog after a successful assertion.
-    Keyboard.activeKeystroke(doc, Keys.escape(), { });
+    TinyUiActions.keystroke(editor, Keys.escape(), { });
   };
 
   it('TINY-9019: Installed Plugin Lists are alphabetically ordered', async () => {
