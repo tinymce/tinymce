@@ -12,7 +12,13 @@ describe('browser.tinymce.textpatterns.TextPatternsPublicApiTest', () => {
   const makePlugin = () => {
     PluginManager.add('custom-plugin', (editor) => {
 
-      const replacementLookup: TextPatterns.RawDynamicPatternsLookup = (_ctx: TextPatterns.DynamicPatternContext): TextPatterns.RawPattern[] => {
+      const replacementLookup: TextPatterns.RawDynamicPatternsLookup = (ctx: TextPatterns.DynamicPatternContext): TextPatterns.RawPattern[] => {
+        // Use `setAttribute` on the context's block to ensure it is of type Element
+        ctx.block.setAttribute(
+          'data-textpattern-text',
+          ctx.text
+        );
+
         return [
           // block format
           {
