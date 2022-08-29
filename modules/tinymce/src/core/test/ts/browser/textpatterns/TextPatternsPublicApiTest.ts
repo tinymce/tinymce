@@ -66,8 +66,9 @@ describe('browser.tinymce.textpatterns.TextPatternsPublicApiTest', () => {
               // case match on the types of patterns.
               switch (l.type) {
                 case 'block-command': {
+                  const bp: TextPatterns.BlockPattern = l;
                   const bl: TextPatterns.BlockCmdPattern = l;
-                  return [ `block-command: ${bl.cmd}` ];
+                  return bp === bl ? [ `block-command: ${bl.cmd}` ] : [ ];
                 }
                 case 'block-format': {
                   const bf: TextPatterns.BlockFormatPattern = l;
