@@ -1,7 +1,12 @@
+@mergetag-hover-background-color: rgba(64, 153, 255, .1);
 @mergetag-affix-text-color: #3788EC;
-@mergetag-affix-background-color: rgba(64, 153, 255, .1);
+@mergetag-affix-background-color: @mergetag-hover-background-color;
 
 .mce-content-body {
+  .mce-mergetag:hover {
+    background-color: @mergetag-hover-background-color;
+  }
+
   .mce-mergetag-affix {
     background-color: @mergetag-affix-background-color;
     color: @mergetag-affix-text-color;
