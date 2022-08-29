@@ -1,6 +1,5 @@
 import { AlloySpec, SimpleSpec } from '@ephox/alloy';
 
-// TODO final text and link to be decided in https://ephocks.atlassian.net/browse/TINY-8954
 const promotionMessage = '⚡️Upgrade';
 const promotionLink = 'https://www.tiny.cloud/tinymce-self-hosted-premium-features/?utm_source=TinyMCE&utm_medium=SPAP&utm_campaign=SPAP&utm_id=editorreferral';
 
