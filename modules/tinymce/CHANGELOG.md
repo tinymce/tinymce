@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The autocompleter now supports a multiple character trigger using the new `trigger` configuration #TINY-8887
 - The formatter will now apply some inline formats like color and font size to list item elements when the entire item content is selected. #TINY-8961
 - The plugin lists in the Help dialog are now sorted alphabetically. #TINY-9019
+- Alignment can now be applied to more types of embedded media elements. #TINY-8687
 
 ### Changed
 - The `@menubar-row-separator-color` oxide variable no longer affects the divider between the Menubar and Toolbar and only controls the color of the separator lines drawn in multiline Menubars. #TINY-8632

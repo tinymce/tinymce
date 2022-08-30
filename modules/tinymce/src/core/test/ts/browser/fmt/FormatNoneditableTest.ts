@@ -676,5 +676,15 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
         },
       ]);
     });
+
+    context('noneditable inline elements with selector formats', () => {
+      it('TINY-8687: applying a selector format to an inline element should apply it to the matching parent block', () => {
+        const editor = hook.editor();
+        editor.setContent(`<p>a<span contenteditable="false">CEF</span>b</p>`);
+        TinySelections.select(editor, 'span', []);
+        editor.formatter.apply('alignright');
+        TinyAssertions.assertContent(editor, `<p style="text-align: right;">a<span contenteditable="false">CEF</span>b</p>`);
+      });
+    });
   });
 });
