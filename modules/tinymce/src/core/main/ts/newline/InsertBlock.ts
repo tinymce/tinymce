@@ -25,6 +25,11 @@ const trimZwsp = (fragment: DocumentFragment) => {
   });
 };
 
+const isWithinNonEditableList = (editor: Editor, node: Node): boolean => {
+  const parentList = editor.dom.getParent(node, 'ol,ul,dl');
+  return parentList !== null && editor.dom.getContentEditableParent(parentList) === 'false';
+};
+
 const isEmptyAnchor = (dom: DOMUtils, elm: Node): boolean => {
   return elm && elm.nodeName === 'A' && dom.isEmpty(elm);
 };
@@ -401,7 +406,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   const editableRoot = NewLineUtils.getEditableRoot(dom, container);
 
   // If there is no editable root then enter is done inside a contentEditable false element
-  if (!editableRoot) {
+  if (!editableRoot || isWithinNonEditableList(editor, container)) {
     return;
   }
 

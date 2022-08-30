@@ -1,0 +1,31 @@
+//
+// Footnotes
+//
+
+div.mce-footnotes {
+  hr {
+    margin-inline-end: auto;
+    margin-inline-start: 0;
+    width: 25%;
+  }
+
+  li > a.mce-footnotes-backlink {
+    text-decoration: none;
+  }
+}
+
+@media print {
+  sup.mce-footnote a {
+    color: black;
+    text-decoration: none;
+  }
+
+  div.mce-footnotes {
+    break-inside: avoid;
+    width: 100%; // Prevent hr shrinking in print dialog
+
+    li > a.mce-footnotes-backlink {
+      display: none;
+    }
+  }
+}

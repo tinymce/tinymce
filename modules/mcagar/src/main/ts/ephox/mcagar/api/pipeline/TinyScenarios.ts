@@ -5,9 +5,19 @@ import * as fc from 'fast-check';
 import { Editor } from '../../alien/EditorTypes';
 
 type ContentGenerator = fc.Arbitrary<SugarElement<HTMLElement>>;
-interface SelectionExclusions { containers: (container: SugarElement<Node>) => boolean }
-interface ArbScenarioOptions { exclusions: SelectionExclusions }
-interface AsyncPropertyOptions { scenario: ArbScenarioOptions; property: fc.Parameters }
+
+interface SelectionExclusions {
+  readonly containers: (container: SugarElement<Node>) => boolean;
+}
+
+interface ArbScenarioOptions {
+  readonly exclusions: SelectionExclusions;
+}
+
+interface AsyncPropertyOptions {
+  readonly scenario: ArbScenarioOptions;
+  readonly property: fc.Parameters;
+}
 
 interface Scenario {
   readonly input: string;
@@ -15,10 +25,10 @@ interface Scenario {
 }
 
 export interface TinyScenarios {
-  genScenario: (genContent: ContentGenerator, selectionExclusions: SelectionExclusions) => fc.Arbitrary<Scenario>;
-  arbScenario: (genContent: ContentGenerator, options: ArbScenarioOptions) => fc.Arbitrary<Scenario>;
+  readonly genScenario: (genContent: ContentGenerator, selectionExclusions: SelectionExclusions) => fc.Arbitrary<Scenario>;
+  readonly arbScenario: (genContent: ContentGenerator, options: ArbScenarioOptions) => fc.Arbitrary<Scenario>;
 
-  sAsyncProperty: <T>(label: string, generator: ContentGenerator, step: Step<Scenario, any>, options: AsyncPropertyOptions) => Step<T, T>;
+  readonly sAsyncProperty: <T>(label: string, generator: ContentGenerator, step: Step<Scenario, any>, options: AsyncPropertyOptions) => Step<T, T>;
 }
 
 export const TinyScenarios = (editor: Editor): TinyScenarios => {

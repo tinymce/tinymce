@@ -37,7 +37,7 @@ const composite = <D extends CompositeSketchDetail, S extends CompositeSketchSpe
   return factory(detail, components, specWithUid, subs.externals());
 };
 
-const hasUid = <S>(spec: S): spec is S & {uid: string} => Obj.has(spec as any, 'uid');
+const hasUid = <S>(spec: S): spec is S & { uid: string } => Obj.has(spec as any, 'uid');
 
 const supplyUid = <S>(spec: S): S & { uid: string } => {
   return hasUid(spec) ? spec : {

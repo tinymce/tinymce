@@ -1,5 +1,5 @@
 import { Arr, Num, Optional, Optionals, Result } from '@ephox/katamari';
-import { Class, SelectorFilter, SelectorFind } from '@ephox/sugar';
+import { Class, Compare, SelectorFilter, SelectorFind } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
@@ -11,7 +11,10 @@ import { HighlightingConfig } from './HighlightingTypes';
 const dehighlightAllExcept = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, skip: AlloyComponent[]): void => {
   const highlighted = SelectorFilter.descendants(component.element, '.' + hConfig.highlightClass);
   Arr.each(highlighted, (h) => {
-    if (!Arr.exists(skip, (skipComp) => skipComp.element === h)) {
+    // We don't want to dehighlight anything that should be skipped.
+    // Generally, this is because we are about to highlight that thing.
+    const shouldSkip = Arr.exists(skip, (skipComp) => Compare.eq(skipComp.element, h));
+    if (!shouldSkip) {
       Class.remove(h, hConfig.highlightClass);
       component.getSystem().getByDom(h).each((target) => {
         hConfig.onDehighlight(component, target);
@@ -33,6 +36,19 @@ const dehighlight = (component: AlloyComponent, hConfig: HighlightingConfig, hSt
 };
 
 const highlight = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, target: AlloyComponent): void => {
+  // If asked to highlight something, dehighlight everything else first except
+  // for the new thing we are going to highlight. It's a rare case, but we don't
+  // want to get an onDehighlight, onHighlight for the same item on a highlight call.
+  // We also don't want to call onHighlight if it was already highlighted.
+  //
+  // Note, that there is an important distinction here: highlight is NOT a no-op
+  // if target is already highlighted, because it will still dehighlight everything else.
+  // However, it won't fire any onHighlight or onDehighlight handlers for the already
+  // highlighted item. I'm not sure if this is behaviour we need to maintain, but it is now
+  // tested. A simpler approach might just be to not do anything if it's already highlighted,
+  // but that could leave us in an inconsistent state, where multiple items have highlights
+  // even after a highlight call. This way, highlight validates the highlights in the
+  // component, and ensures there is only one thing highlighted.
   dehighlightAllExcept(component, hConfig, hState, [ target ]);
 
   if (!isHighlighted(component, hConfig, hState, target)) {

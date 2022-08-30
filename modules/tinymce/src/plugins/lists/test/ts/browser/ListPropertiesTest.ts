@@ -6,7 +6,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { ExecCommandEvent } from 'tinymce/core/api/EventTypes';
-import { EditorEvent } from 'tinymce/core/api/PublicApi';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 
 describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {

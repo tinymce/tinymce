@@ -66,7 +66,7 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
     UiFinder.notExists(SugarBody.body(), 'div[role="dialog"]');
   });
 
-  it ('FOAM-11: Image with alt text', async () => {
+  it('FOAM-11: Image with alt text', async () => {
     const editor = hook.editor();
     await pCreateTestOnEmptyEditor(
       editor,

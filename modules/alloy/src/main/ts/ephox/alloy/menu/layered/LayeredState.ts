@@ -9,7 +9,11 @@ export type MenuDirectory = Record<string, string[]>;
 
 // A tuple of (item, menu). This can be used to refresh the menu and position them next to the right
 // triggering items.
-export interface LayeredItemTrigger { triggeringItem: AlloyComponent; triggeredMenu: AlloyComponent; triggeringPath: string[] }
+export interface LayeredItemTrigger {
+  readonly triggeringItem: AlloyComponent;
+  readonly triggeredMenu: AlloyComponent;
+  readonly triggeringPath: string[];
+}
 
 export interface LayeredState {
   setContents: (sPrimary: string, sMenus: Record<string, MenuPreparation>, sExpansions: Record<string, string>, dir: MenuDirectory) => void;

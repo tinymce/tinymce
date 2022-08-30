@@ -53,7 +53,7 @@ export type Pattern = InlinePattern | BlockPattern;
 
 export interface DynamicPatternContext {
   readonly text: string; // the string from the start of the block to the cursor
-  readonly block: Node; // the parent block node
+  readonly block: Element; // the parent block element
 }
 
 export type DynamicPatternsLookup = (ctx: DynamicPatternContext) => Pattern[];

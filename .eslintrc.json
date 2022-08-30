@@ -23,7 +23,6 @@
     "one-var": "off",
     "prefer-rest-params": "off",
     "prefer-spread": "off",
-    "@tinymce/no-unimported-promise": "off",
     "max-len": ["warn", 260]
   }
 }

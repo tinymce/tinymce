@@ -72,7 +72,15 @@ export const renderListBox = (spec: ListBoxSpec, backstage: UiFactoryBackstage, 
         fetch: (comp, callback) => {
           const items = fetchItems(comp, spec.name, spec.items, Representing.getValue(comp));
           callback(
-            NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, false)
+            NestedMenus.build(
+              items,
+              ItemResponse.CLOSE_ON_EXECUTE,
+              backstage,
+              {
+                isHorizontalMenu: false,
+                search: Optional.none()
+              }
+            )
           );
         },
         onSetup: Fun.constant(Fun.noop),

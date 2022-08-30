@@ -34,7 +34,7 @@ const fromHtml = (html: string): RawDomSchema => {
   };
 };
 
-const sketch = <T>(sketcher: { sketch: (spec: { dom: RawDomSchema } & T) => SketchSpec}, html: string, config: T): SketchSpec =>
+const sketch = <T>(sketcher: { sketch: (spec: { dom: RawDomSchema } & T) => SketchSpec }, html: string, config: T): SketchSpec =>
   sketcher.sketch({
     dom: fromHtml(html),
     ...config

@@ -39,7 +39,8 @@ const make: CompositeSketchFactory<MenuDetail, MenuSpec> = (detail, components, 
         // Highlighting for a menu is selecting items inside the menu
         highlightClass: detail.markers.selectedItem,
         itemClass: detail.markers.item,
-        onHighlight: detail.onHighlight
+        onHighlight: detail.onHighlight,
+        onDehighlight: detail.onDehighlight
       }),
       Representing.config({
         store: {

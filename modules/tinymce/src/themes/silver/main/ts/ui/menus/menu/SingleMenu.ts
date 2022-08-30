@@ -12,11 +12,15 @@ import * as MenuItems from '../item/MenuItems';
 import { deriveMenuMovement } from './MenuMovement';
 import { markers as getMenuMarkers } from './MenuParts';
 import * as MenuUtils from './MenuUtils';
+import { identifyMenuLayout, MenuSearchMode } from './searchable/SearchableMenu';
 import { SingleMenuItemSpec } from './SingleMenuTypes';
 
 type PartialMenuSpec = MenuUtils.PartialMenuSpec;
 
-export enum FocusMode { ContentFocus, UiFocus }
+export enum FocusMode {
+  ContentFocus,
+  UiFocus
+}
 
 const createMenuItemFromBridge = (
   item: SingleMenuItemSpec,
@@ -157,7 +161,8 @@ export const createPartialMenu = (
   items: SingleMenuItemSpec[],
   itemResponse: ItemResponse,
   backstage: UiFactoryBackstage,
-  isHorizontalMenu: boolean
+  isHorizontalMenu: boolean,
+  searchMode: MenuSearchMode
 ): PartialMenuSpec => {
   const hasIcons = MenuUtils.menuHasIcons(items);
 
@@ -181,10 +186,14 @@ export const createPartialMenu = (
       }
     })
   );
+
+  // The menu layout is dependent upon our search mode.
+  const menuLayout = identifyMenuLayout(searchMode);
+
   const createPartial = isHorizontalMenu ?
     MenuUtils.createHorizontalPartialMenuWithAlloyItems :
     MenuUtils.createPartialMenuWithAlloyItems;
-  return createPartial(value, hasIcons, alloyItems, 1, 'normal');
+  return createPartial(value, hasIcons, alloyItems, 1, menuLayout);
 };
 
 export const createTieredDataFrom = (partialMenu: TieredMenuTypes.PartialMenuSpec & { value: string }): TieredMenuTypes.TieredData =>

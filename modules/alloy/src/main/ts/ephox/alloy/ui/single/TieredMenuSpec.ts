@@ -22,8 +22,9 @@ import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { LayeredState } from '../../menu/layered/LayeredState';
 import * as ItemEvents from '../../menu/util/ItemEvents';
 import * as MenuEvents from '../../menu/util/MenuEvents';
+import { OnMenuItemDehighlightedEvent, onMenuItemDehighlightedEvent, OnMenuItemDehighlightedEventData, OnMenuItemHighlightedEvent, onMenuItemHighlightedEvent, OnMenuItemHighlightedEventData } from '../../menu/util/TieredMenuEvents';
 import { MenuFocusEvent, MenuItemHoverEvent } from '../types/MenuTypes';
-import { PartialMenuSpec, TieredMenuApis, TieredMenuDetail, TieredMenuSpec } from '../types/TieredMenuTypes';
+import { HighlightOnOpen, PartialMenuSpec, TieredMenuApis, TieredMenuDetail, TieredMenuSpec } from '../types/TieredMenuTypes';
 
 export type MenuPreparation = MenuPrepared | MenuNotBuilt;
 
@@ -40,17 +41,52 @@ export interface MenuNotBuilt {
 const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _rawUiSpec) => {
   const submenuParentItems = Singleton.value<Record<string, AlloyComponent>>();
 
+  // So the way to provide extra configuration for the menus that tiered menus create is just
+  // to provide different menu specs when building up the TieredData. The TieredMenu itself
+  // does not control it, except to set: markers, fakeFocus, onHighlight, and focusManager
   const buildMenus = (container: AlloyComponent, primaryName: string, menus: Record<string, PartialMenuSpec>): Record<string, MenuPreparation> => Obj.map(menus, (spec, name) => {
 
     const makeSketch = () => Menu.sketch({
       ...spec,
       value: name,
+      // The TieredMenu markers should be inherited by the Menu. "Markers" are things like
+      // what is the class for the currently selected item
       markers: detail.markers,
 
-      // Fake focus.
+      // If the TieredMenu has been configured with FakeFocus, it needs the menus that it generates
+      // to preserve that configuration. Generally, FakeFocus is used for situations where the user
+      // wants to keep focus inside some editable element (like an input, or editor content)
       fakeFocus: detail.fakeFocus,
-      onHighlight: detail.onHighlight,
 
+      // The TieredMenu detail.onHighlight function only relates to selecting an item,
+      // not a menu, and the menuComp it is passed is the menu, not the tiered menu.
+      // This makes it a difficult handler to use for a tieredmenu, so we are
+      // deprecating it.
+      onHighlight: (menuComp: AlloyComponent, itemComp: AlloyComponent) => {
+        // Trigger an internal event so that we can listen to it at the tieredmenu
+        // level, and call detail.onHighlightItem handler with tmenu, menu, and item.
+        const highlightData: OnMenuItemHighlightedEventData = {
+          menuComp,
+          itemComp
+        };
+        AlloyTriggers.emitWith(menuComp, onMenuItemHighlightedEvent, highlightData);
+      },
+
+      onDehighlight: (menuComp: AlloyComponent, itemComp: AlloyComponent) => {
+        const dehighlightData: OnMenuItemDehighlightedEventData = {
+          menuComp,
+          itemComp
+        };
+
+        // Trigger an internal event so that we can listen to it at the tieredmenu
+        // level, and call detail.onDehighlightItem handler with tmenu, menu, and item.
+        AlloyTriggers.emitWith(menuComp, onMenuItemDehighlightedEvent, dehighlightData);
+      },
+
+      // The Menu itself doesn't set the focusManager based on the value of fakeFocus. It only uses
+      // its fakeFocus configuration for creating items that ignore focus, but it still needs to be
+      // told which focusManager to use. Perhaps we should change this, though it does allow for more
+      // complex focusManagers in single menus.
       focusManager: detail.fakeFocus ? FocusManagers.highlights() : FocusManagers.dom()
     });
 
@@ -88,10 +124,29 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
 
   const toDirectory = (_container: AlloyComponent): Record<string, string[]> => Obj.map(detail.data.menus, (data, _menuName) => Arr.bind(data.items, (item) => item.type === 'separator' ? [ ] : [ item.data.value ]));
 
-  const setActiveMenu = (container: AlloyComponent, menu: AlloyComponent): void => {
-    Highlighting.highlight(container, menu);
+  // This just sets the active menu. It will not set any active items.
+  const setActiveMenu = Highlighting.highlight;
+
+  // The item highlighted as active is either the currently active item in the menu,
+  // or the first one.
+  const setActiveMenuAndItem = (container: AlloyComponent, menu: AlloyComponent): void => {
+    // Firstly, choose the active menu
+    setActiveMenu(container, menu);
+    // Then, choose the active item inside the active menu
     Highlighting.getHighlighted(menu).orThunk(() => Highlighting.getFirst(menu)).each((item) => {
-      AlloyTriggers.dispatch(container, item.element, SystemEvents.focusItem());
+      if (detail.fakeFocus) {
+        // When using fakeFocus, the items won't have a tab-index, so calling focusItem on them
+        // won't do anything. So we need to manually call highlighting, which is what fakeFocus
+        // uses. It would probably be better to use the focusManager specified.
+        Highlighting.highlight(menu, item);
+      } else {
+        // We don't just use Focusing.focus here, because some items can have slightly different
+        // handling when they respond to a focusItem event. Widgets with autofocus, for example,
+        // will trigger a Keying.focusIn instead of Focusing.focus call, because they want to move
+        // the focus _inside_ the widget, not just to its outer level. The focusItem event
+        // performs a similar purpose to SystemEvents.focus() and potentially, could be consolidated.
+        AlloyTriggers.dispatch(container, item.element, SystemEvents.focusItem());
+      }
     });
   };
 
@@ -152,13 +207,16 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
 
         // Remove the background-menu class from the active menu
         Classes.remove(activeMenu.element, [ detail.markers.backgroundMenu ]);
-        setActiveMenu(container, activeMenu);
+        setActiveMenuAndItem(container, activeMenu);
         closeOthers(container, state, path);
         return Optional.some(activeMenu);
       }
     }));
 
-  enum ExpandHighlightDecision { HighlightSubmenu, HighlightParent }
+  enum ExpandHighlightDecision {
+    HighlightSubmenu,
+    HighlightParent
+  }
 
   const buildIfRequired = (container: AlloyComponent, menuName: string, menuPrep: MenuPreparation) => {
     if (menuPrep.type === 'notbuilt') {
@@ -239,23 +297,44 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
 
   type KeyHandler = (container: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Optional<boolean>;
   const keyOnItem = (f: (container: AlloyComponent, item: AlloyComponent) => Optional<AlloyComponent>): KeyHandler =>
-    (container: AlloyComponent, simulatedEvent: NativeSimulatedEvent): Optional<boolean> =>
-      SelectorFind.closest(simulatedEvent.getSource(), '.' + detail.markers.item)
+    (container: AlloyComponent, simulatedEvent: NativeSimulatedEvent): Optional<boolean> => {
+      // 2022-08-16 This seems to be the only code in alloy that actually uses
+      // the getSource aspect of an event. Remember, that this code is firing
+      // when an event bubbles up the tiered menu, e.g. left arrow key.
+      // The only current code that sets the source manually is in the Widget item
+      // type, and it only sets the source when it is using autofocus. Autofocus
+      // is used to essentially treat the widget like it is the top-level item, so
+      // when events originate from *within* the widget, their source is changed to
+      // the top-level item. Consider removing EventSource from alloy altogether.
+      return SelectorFind.closest(simulatedEvent.getSource(), `.${detail.markers.item}`)
         .bind((target) => container.getSystem().getByDom(target).toOptional().bind(
           (item: AlloyComponent) => f(container, item).map<boolean>(Fun.always)
         ));
+    };
 
-  const events = AlloyEvents.derive([
+  // NOTE: Many of these events rely on identifying the current item by information
+  // sent with the event. However, in situations where you are using fakeFocus, but
+  // the real focus is still somewhere in the menu (e.g. search bar), this will lead to
+  // an incorrect identification of the active item. Ideally, instead of pulling the
+  // item from the event, we should just use Highlighting to identify the active item,
+  // and operate on it. However, not all events will necessarily have to happen on the
+  // active item, so we need to consider all the cases before making this change. For now,
+  // there will be a known limitation that if the real focus is still inside the TieredMenu,
+  // but the menu is using fakeFocus, then the actions will operate on the wrong targets.
+  // A workaround for that is to stop or cut or redispatch the events in whichever
+  // component has the real focus.
+  // TODO: TINY-9011 Introduce proper handling of fakeFocus in TieredMenu
+  const events = AlloyEvents.derive<any>([
     // Set "active-menu" for the menu with focus
-    AlloyEvents.run<MenuFocusEvent>(MenuEvents.focus(), (sandbox, simulatedEvent) => {
+    AlloyEvents.run<MenuFocusEvent>(MenuEvents.focus(), (tmenu, simulatedEvent) => {
       // Ensure the item is actually part of this menu structure, and not part of another menu structure that's bubbling.
       const item = simulatedEvent.event.item;
       layeredState.lookupItem(getItemValue(item)).each(() => {
         const menu = simulatedEvent.event.menu;
-        Highlighting.highlight(sandbox, menu);
+        Highlighting.highlight(tmenu, menu);
 
         const value = getItemValue(simulatedEvent.event.item);
-        layeredState.refresh(value).each((path) => closeOthers(sandbox, layeredState, path));
+        layeredState.refresh(value).each((path) => closeOthers(tmenu, layeredState, path));
       });
     }),
 
@@ -285,21 +364,36 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
       setup(container).each((primary) => {
         Replacing.append(container, GuiFactory.premade(primary));
         detail.onOpenMenu(container, primary);
-        if (detail.highlightImmediately) {
+        if (detail.highlightOnOpen === HighlightOnOpen.HighlightMenuAndItem) {
+          setActiveMenuAndItem(container, primary);
+        } else if (detail.highlightOnOpen === HighlightOnOpen.HighlightJustMenu) {
           setActiveMenu(container, primary);
         }
       });
-    })
-  ].concat(detail.navigateOnHover ? [
-    // Hide any irrelevant submenus and expand any submenus based
-    // on hovered item
-    AlloyEvents.run<MenuItemHoverEvent>(ItemEvents.hover(), (sandbox, simulatedEvent) => {
-      const item = simulatedEvent.event.item;
-      updateView(sandbox, item);
-      expandRight(sandbox, item, ExpandHighlightDecision.HighlightParent);
-      detail.onHover(sandbox, item);
-    })
-  ] : [ ]));
+    }),
+
+    // Listen to the events bubbling up from menu about highlighting, and trigger
+    // our handlers with tmenu, menu and item
+    AlloyEvents.run<OnMenuItemHighlightedEvent>(onMenuItemHighlightedEvent, (tmenuComp, se) => {
+      detail.onHighlightItem(tmenuComp, se.event.menuComp, se.event.itemComp);
+    }),
+    AlloyEvents.run<OnMenuItemDehighlightedEvent>(onMenuItemDehighlightedEvent, (tmenuComp, se) => {
+      detail.onDehighlightItem(tmenuComp, se.event.menuComp, se.event.itemComp);
+    }),
+
+    ...(
+      detail.navigateOnHover ? [
+        // Hide any irrelevant submenus and expand any submenus based
+        // on hovered item
+        AlloyEvents.run<MenuItemHoverEvent>(ItemEvents.hover(), (tmenu, simulatedEvent) => {
+          const item = simulatedEvent.event.item;
+          updateView(tmenu, item);
+          expandRight(tmenu, item, ExpandHighlightDecision.HighlightParent);
+          detail.onHover(tmenu, item);
+        })
+      ] : [ ]
+    )
+  ]);
 
   const getActiveItem = (container: AlloyComponent): Optional<AlloyComponent> => Highlighting.getHighlighted(container).bind(Highlighting.getHighlighted);
 
@@ -311,7 +405,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
 
   const highlightPrimary = (container: AlloyComponent) => {
     layeredState.getPrimary().each((primary) => {
-      setActiveMenu(container, primary);
+      setActiveMenuAndItem(container, primary);
     });
   };
 

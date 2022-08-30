@@ -1,25 +1,47 @@
 import { Arr } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
+import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
 
+import * as Selection from '../core/Selection';
 import * as NodeType from './NodeType';
 
-export const isCustomList = (list: HTMLElement): boolean =>
+const isCustomList = (list: HTMLElement): boolean =>
   /\btox\-/.test(list.className);
 
-export const listState = (editor: Editor, listName: string, activate: (active: boolean) => void): () => void => {
-  const nodeChangeHandler = (e: { parents: Node[] }) => {
-    const inList = Arr.findUntil(e.parents, NodeType.isListNode, NodeType.isTableCellNode)
-      .filter((list: HTMLElement) => list.nodeName === listName && !isCustomList(list))
-      .isSome();
-    activate(inList);
-  };
+const inList = (parents: Node[], listName: string): boolean =>
+  Arr.findUntil(parents, NodeType.isListNode, NodeType.isTableCellNode)
+    .exists((list) => list.nodeName === listName && !isCustomList(list));
 
+// Advlist/core/ListUtils.ts - Duplicated in Advlist plugin
+const isWithinNonEditable = (editor: Editor, element: Element | null): boolean =>
+  element !== null && editor.dom.getContentEditableParent(element) === 'false';
+
+const selectionIsWithinNonEditableList = (editor: Editor): boolean => {
+  const parentList = Selection.getParentList(editor);
+  return isWithinNonEditable(editor, parentList);
+};
+
+const isWithinNonEditableList = (editor: Editor, element: Element | null): boolean => {
+  const parentList = editor.dom.getParent(element, 'ol,ul,dl');
+  return isWithinNonEditable(editor, parentList);
+};
+
+const setNodeChangeHandler = (editor: Editor, nodeChangeHandler: (e: NodeChangeEvent) => void): () => void => {
+  const initialNode = editor.selection.getNode();
   // Set the initial state
-  const parents = editor.dom.getParents(editor.selection.getNode());
-  nodeChangeHandler({ parents });
-
+  nodeChangeHandler({
+    parents: editor.dom.getParents(initialNode),
+    element: initialNode
+  });
   editor.on('NodeChange', nodeChangeHandler);
-
   return () => editor.off('NodeChange', nodeChangeHandler);
+};
+
+export {
+  isCustomList,
+  inList,
+  selectionIsWithinNonEditableList,
+  isWithinNonEditableList,
+  setNodeChangeHandler
 };

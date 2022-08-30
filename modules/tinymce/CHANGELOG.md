@@ -10,26 +10,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `text_patterns_lookup` option to provide additional text patterns dynamically #TINY-8778
 - New promotion element has been added to the UI and can be disabled using the new `promotion` option #TINY-8840
 - New `format_noneditable_selector` option to specify the `contenteditable="false"` elements that can be wrapped in a format. #TINY-8905
+- Added `allow` as a valid attribute for the `iframe` element in the editor schema. #TINY-8939
+- New `search` field in the `MenuButton` that shows a search field at the top of the menu, and refetches items when the search field updates. #TINY-8952
 
 ### Improved
 - The formatter can now apply a format to a `contenteditable="false"` element by wrapping it. Configurable using the `format_noneditable_selector` option. #TINY-8905
 - The autocompleter now supports a multiple character trigger using the new `trigger` configuration #TINY-8887
+- The formatter will now apply some inline formats like color and font size to list item elements when the entire item content is selected. #TINY-8961
+- The plugin lists in the Help dialog are now sorted alphabetically. #TINY-9019
+- Alignment can now be applied to more types of embedded media elements. #TINY-8687
+
+### Changed
+- The `@menubar-row-separator-color` oxide variable no longer affects the divider between the Menubar and Toolbar and only controls the color of the separator lines drawn in multiline Menubars. #TINY-8632
+- The `@toolbar-separator-color` oxide variable now exclusively affects the color of the separator between the Menubar and Toolbar. #TINY-8632
+- The available premium plugins listed in the Help dialog are no longer translated. #TINY-9019
 
 ### Fixed
 - The Autolink plugin did not work when the text nodes in the content were fragmented #TINY-3723
 - Fixed various incorrect types on public APIs found while enabling TypeScript strict mode #TINY-8806
 - Text returned from `editor.getContent({format: 'text'})` would differ with blank lines between some browsers #TINY-8579
 - The editor focused via the `auto_focus` option was not scrolled into the viewport #TINY-8785
+- Adding spaces just after a `contenteditable="false"` block would not work properly in some situations #TINY-8814
 - Elements with only custom attributes starting with `data-` would sometimes be removed when they shouldn't #TINY-8755
 - Selecting a figure with `class="image"` would incorrectly highlight the link toolbar button #TINY-8832
 - Specifying a single, non-default list style for the `advlist_bullet_styles` and `advlist_number_styles` options was not respected. #TINY-8721
 - Fixed various issues that occurred when formatting `contenteditable` elements. #TINY-8905
+- Spaces could be incorrectly added to urlinput dialog components in certain cases #TINY-8775
 - The text pattern logic threw an error when there were fragmented text nodes in a paragraph #TINY-8779
 - Dragging a `contentEditable=false` element towards the edges would not cause scrolling #TINY-8874
 - The content of the `contenteditable="false"` element could be selected with the mouse on Firefox  #TINY-8828
 - Parsing large documents no longer throws a `Maximum call stack size exceeded` exception #TINY-6945
 - DomParser filter matching was not checked between filters, which could lead to an exception in the parser #TINY-8888
 - Enabling the `Enter` key to insert `line-break` for inline editors when the tag is `p` or `h*`
+- Lists with `contenteditable="false"` can no longer be toggled, and `contenteditable="true"` list elements within them can no longer be indented, split into another list element, or appended to the previous list element by deletion. #TINY-8920
+- Removed extra padding for the context toolbar in the `tinymce-5` skin. #TINY-8980
 
 ### Deprecated
 - The autocompleter `ch` configuration property has been deprecated and will be removed in the next major release. Use the `trigger` property instead. #TINY-8887

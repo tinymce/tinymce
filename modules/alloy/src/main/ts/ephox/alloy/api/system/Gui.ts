@@ -34,8 +34,6 @@ export interface GuiSystem {
   readonly broadcastEvent: (eventName: string, event: EventArgs) => void;
 }
 
-export type message = Record<string, any>;
-
 const create = (): GuiSystem => {
   const root = GuiFactory.build(
     Container.sketch({

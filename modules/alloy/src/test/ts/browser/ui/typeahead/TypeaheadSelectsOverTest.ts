@@ -15,7 +15,7 @@ import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
 
-UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (success, failure) => {
+UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadSelectsOverTest', (success, failure) => {
   const typeaheadMarkers = {
     openClass: 'test-typeahead-open'
   };

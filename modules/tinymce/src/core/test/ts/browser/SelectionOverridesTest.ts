@@ -247,7 +247,7 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
 
     assert.isFalse(caretContainer.hasAttribute('data-mce-bogus'), 'Bogus attribute should have been removed');
     assert.isFalse(caretContainer.hasAttribute('data-mce-caret'), 'Caret attribute should have been removed');
-    assert.equal(editor.getContent(), '<p>\u00a0</p><p contenteditable="false">a</p>');
+    TinyAssertions.assertContent(editor, '<p>\u00a0</p><p contenteditable="false">a</p>');
   });
 
   it('showBlockCaretContainer after ce=false element', () => {
@@ -266,7 +266,7 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
 
     assert.isFalse(caretContainer.hasAttribute('data-mce-bogus'), 'Bogus attribute should have been removed');
     assert.isFalse(caretContainer.hasAttribute('data-mce-caret'), 'Caret attribute should have been removed');
-    assert.equal(editor.getContent(), '<p contenteditable="false">a</p><p>\u00a0</p>');
+    TinyAssertions.assertContent(editor, '<p contenteditable="false">a</p><p>\u00a0</p>');
   });
 
   it('set range in short ended element', () => {

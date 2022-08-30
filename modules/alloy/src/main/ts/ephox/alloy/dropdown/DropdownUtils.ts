@@ -21,6 +21,7 @@ import * as Tagger from '../registry/Tagger';
 import * as Dismissal from '../sandbox/Dismissal';
 import * as Reposition from '../sandbox/Reposition';
 import { CommonDropdownDetail } from '../ui/types/DropdownTypes';
+import { HighlightOnOpen } from '../ui/types/TieredMenuTypes';
 
 type OnOpenSyncFunc = (sandbox: AlloyComponent) => void;
 type MapFetch = (tdata: Optional<TieredData>) => Optional<TieredData>;
@@ -29,8 +30,6 @@ export interface SandboxExtras {
   onClose?: (component: AlloyComponent, menu: AlloyComponent) => void;
   onOpen?: (component: AlloyComponent, menu: AlloyComponent) => void;
 }
-
-export enum HighlightOnOpen { HighlightFirst, HighlightNone }
 
 const getAnchor = (
   detail: CommonDropdownDetail<TieredData>,
@@ -69,12 +68,14 @@ const openF = (
 
   // TODO: Make this potentially a single menu also
   return futureData.map((tdata) => tdata.bind((data) => Optional.from(TieredMenu.sketch({
+    // Externals are configured by the "menu" part. It's called external because it isn't contained
+    // within the DOM descendants of the dropdown. You can configure things like `fakeFocus` here.
     ...externals.menu(),
 
     uid: Tagger.generate(''),
     data,
 
-    highlightImmediately: highlightOnOpen === HighlightOnOpen.HighlightFirst,
+    highlightOnOpen,
 
     onOpenMenu: (tmenu, menu) => {
       const sink = getLazySink().getOrDie();
@@ -265,6 +266,8 @@ const makeSandbox = (
             return lazySink().getOrDie();
           }
         }),
+        // The Composing of the dropdown here is the the active menu of the TieredMenu
+        // inside the sandbox.
         Composing.config({
           find: (sandbox: AlloyComponent): Optional<AlloyComponent> => {
             return Sandboxing.getState(sandbox).bind((menu) => Composing.getCurrent(menu));

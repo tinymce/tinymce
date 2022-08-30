@@ -20,8 +20,18 @@ const getSelectedStyleType = (editor: Editor): Optional<string> => {
   return Optional.from(style);
 };
 
+// Lists/core/Util.ts - Duplicated in Lists plugin
+const isWithinNonEditable = (editor: Editor, element: Element | null): boolean =>
+  element !== null && editor.dom.getContentEditableParent(element) === 'false';
+
+const isWithinNonEditableList = (editor: Editor, element: Element | null): boolean => {
+  const parentList = editor.dom.getParent(element, 'ol,ul,dl');
+  return isWithinNonEditable(editor, parentList);
+};
+
 export {
   isTableCellNode,
   isListNode,
-  getSelectedStyleType
+  getSelectedStyleType,
+  isWithinNonEditableList
 };

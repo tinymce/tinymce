@@ -152,6 +152,12 @@ export default (): void => {
           selectsOver: false,
           getDisplayText: (itemData) => itemData.value,
           populateFromBrowse: false
+        }),
+
+        sketchTypeahead({
+          selectsOver: true,
+          getDisplayText: (itemData) => itemData.value,
+          populateFromBrowse: false
         })
       ]
     })

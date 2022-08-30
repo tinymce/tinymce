@@ -7,6 +7,14 @@ import * as Structs from 'ephox/snooker/api/Structs';
 import * as TableMerge from 'ephox/snooker/model/TableMerge';
 import * as Fitment from 'ephox/snooker/test/Fitment';
 
+interface Spec {
+  readonly rows: number;
+  readonly cols: number;
+  readonly grid: Structs.ElementNew[][];
+}
+
+type Asserter = (result: Result<Structs.RowCells[], string>, s: Structs.Address, specA: Spec, specB: Spec) => void;
+
 const mapToStructGrid = (grid: Structs.ElementNew[][]): Structs.RowCells[] => {
   return Arr.map(grid, (row) => {
     return Structs.rowcells('tr' as any, row, 'tbody', false);
@@ -55,8 +63,6 @@ const mergeTest = (
   });
 };
 
-interface Spec { rows: number; cols: number; grid: Structs.ElementNew[][] }
-type Asserter = (result: Result<Structs.RowCells[], string>, s: Structs.Address, specA: Spec, specB: Spec) => void;
 const mergeIVTest = (
   asserter: Asserter,
   startAddress: Structs.Address,

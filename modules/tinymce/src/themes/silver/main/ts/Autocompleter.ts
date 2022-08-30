@@ -3,8 +3,8 @@ import { InlineContent } from '@ephox/bridge';
 import { Arr, Cell, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import { DOMUtils } from 'tinymce/core/api/PublicApi';
 import { AutocompleteLookupData } from 'tinymce/core/autocomplete/AutocompleteTypes';
 
 import { AutocompleterEditorEvents, AutocompleterUiApi } from './autocomplete/AutocompleteEditorEvents';
@@ -107,7 +107,13 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared): vo
           }
         },
         createInlineMenuFrom(
-          createPartialMenuWithAlloyItems('autocompleter-value', true, items, columns, 'normal'),
+          createPartialMenuWithAlloyItems(
+            'autocompleter-value',
+            true,
+            items,
+            columns,
+            { menuType: 'normal' }
+          ),
           columns,
           FocusMode.ContentFocus,
           // Use the constant.

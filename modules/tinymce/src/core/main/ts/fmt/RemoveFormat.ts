@@ -20,6 +20,7 @@ import * as ExpandRange from './ExpandRange';
 import { Format, FormatAttrOrStyleValue, FormatVars } from './FormatTypes';
 import { normalizeStyleValue } from './FormatUtils';
 import * as FormatUtils from './FormatUtils';
+import * as ListItemFormat from './ListItemFormat';
 import * as MatchFormat from './MatchFormat';
 import { mergeSiblings } from './MergeUtils';
 
@@ -192,8 +193,46 @@ const processFormatAttrOrStyle = (name: string | number, value: FormatAttrOrStyl
   }
 };
 
-const removeFormatInternal = (ed: Editor, format: Format, vars?: FormatVars, node?: Node, compareNode?: Node | null): RemoveFormatAdt => {
+const removeEmptyStyleAttributeIfNeeded = (dom: DOMUtils, elm: Element) => {
+  if (dom.getAttrib(elm, 'style') === '') {
+    elm.removeAttribute('style');
+    elm.removeAttribute('data-mce-style');
+  }
+};
+
+const removeStyles = (dom: DOMUtils, elm: Element, format: Format, vars: FormatVars | undefined, compareNode: Node | null | undefined) => {
   let stylesModified = false;
+
+  each(format.styles as any, (value: FormatAttrOrStyleValue | string, name: string | number) => {
+    const { name: styleName, value: styleValue } = processFormatAttrOrStyle(name, value, vars);
+    const normalizedStyleValue = normalizeStyleValue(styleValue, styleName);
+
+    if (format.remove_similar || Type.isNull(styleValue) || !NodeType.isElement(compareNode) || isEq(FormatUtils.getStyle(dom, compareNode, styleName), normalizedStyleValue)) {
+      dom.setStyle(elm, styleName, '');
+    }
+
+    stylesModified = true;
+  });
+
+  if (stylesModified) {
+    removeEmptyStyleAttributeIfNeeded(dom, elm);
+  }
+};
+
+const removeListStyleFormats = (editor: Editor, name: string, vars: FormatVars | undefined) => {
+  if (name === 'removeformat') {
+    Arr.each(ListItemFormat.getPartiallySelectedListItems(editor.selection), (li) => {
+      Arr.each(ListItemFormat.listItemStyles, (name) => editor.dom.setStyle(li, name, ''));
+      removeEmptyStyleAttributeIfNeeded(editor.dom, li);
+    });
+  } else {
+    ListItemFormat.getExpandedListItemFormat(editor.formatter, name).each((liFmt) => {
+      Arr.each(ListItemFormat.getPartiallySelectedListItems(editor.selection), (li) => removeStyles(editor.dom, li, liFmt, vars, null));
+    });
+  }
+};
+
+const removeFormatInternal = (ed: Editor, format: Format, vars?: FormatVars, node?: Node, compareNode?: Node | null): RemoveFormatAdt => {
   const dom = ed.dom;
   const elementUtils = ElementUtils(ed);
 
@@ -226,23 +265,7 @@ const removeFormatInternal = (ed: Editor, format: Format, vars?: FormatVars, nod
 
   // Should we compare with format attribs and styles
   if (format.remove !== 'all') {
-    // Remove styles
-    each(format.styles as any, (value: FormatAttrOrStyleValue | string, name: string | number) => {
-      const { name: styleName, value: styleValue } = processFormatAttrOrStyle(name, value, vars);
-      const normalizedStyleValue = normalizeStyleValue(styleValue, styleName);
-
-      if (format.remove_similar || Type.isNull(styleValue) || !NodeType.isElement(compareNode) || isEq(FormatUtils.getStyle(dom, compareNode, styleName), normalizedStyleValue)) {
-        dom.setStyle(elm, styleName, '');
-      }
-
-      stylesModified = true;
-    });
-
-    // Remove style attribute if it's empty
-    if (stylesModified && dom.getAttrib(elm, 'style') === '') {
-      elm.removeAttribute('style');
-      elm.removeAttribute('data-mce-style');
-    }
+    removeStyles(dom, elm, format, vars, compareNode);
 
     // Remove attributes
     each(format.attributes as any, (value: FormatAttrOrStyleValue | string, name: string | number) => {
@@ -630,6 +653,9 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
   } else {
     CaretFormat.removeCaretFormat(ed, name, vars, similar);
   }
+
+  removeListStyleFormats(ed, name, vars);
+
   Events.fireFormatRemove(ed, name, node, vars);
 };
 

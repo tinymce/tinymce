@@ -7,7 +7,7 @@ import { McEditor, TinyContentActions, TinyDom, TinyHooks, TinyUiActions } from 
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { NotificationApi } from 'tinymce/core/api/PublicApi';
+import { NotificationApi } from 'tinymce/core/api/NotificationManager';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 

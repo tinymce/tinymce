@@ -48,7 +48,7 @@ const renderBody = (spec: WindowBodySpec, dialogId: string, contentId: Optional<
       tag: 'div',
       classes: [ 'tox-dialog__content-js' ],
       attributes: {
-        ...contentId.map((x): {id?: string} => ({ id: x })).getOr({}),
+        ...contentId.map((x): { id?: string } => ({ id: x })).getOr({}),
         ...ariaAttrs ? ariaAttributes : {}
       }
     },

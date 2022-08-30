@@ -5,7 +5,7 @@ import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const applyForDeleteAndBackspace = (fn: (pair: {label: string; key: () => number}) => void) =>
+const applyForDeleteAndBackspace = (fn: (pair: { label: string; key: () => number }) => void) =>
   Arr.each([
     { label: 'Delete', key: Keys.delete },
     { label: 'Backspace', key: Keys.backspace }

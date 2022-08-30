@@ -9,6 +9,7 @@ import {
 import {
   createToggleButton, ToolbarToggleButton, ToolbarToggleButtonInstanceApi, ToolbarToggleButtonSpec
 } from '../components/toolbar/ToolbarToggleButton';
+import { MenuButtonFetchContext } from '../core/MenuButton';
 
 export {
   ToolbarButton,
@@ -38,5 +39,6 @@ export {
 
   ColumnTypes,
   PresetItemTypes,
-  PresetTypes
+  PresetTypes,
+  MenuButtonFetchContext
 };

@@ -65,8 +65,13 @@ export interface SchemaElement extends ElementRule {
   pattern?: RegExp;
 }
 
-export interface SchemaMap { [name: string]: {} }
-export interface SchemaRegExpMap { [name: string]: RegExp }
+export interface SchemaMap {
+  [name: string]: {};
+}
+
+export interface SchemaRegExpMap {
+  [name: string]: RegExp;
+}
 
 interface Schema {
   type: SchemaType;
@@ -366,7 +371,7 @@ const compileSchema = (type: SchemaType): SchemaLookupTable => {
     addAttrs('a', 'download');
     addAttrs('link script img', 'crossorigin');
     addAttrs('img', 'loading');
-    addAttrs('iframe', 'sandbox seamless allowfullscreen loading'); // Excluded: srcdoc
+    addAttrs('iframe', 'sandbox seamless allow allowfullscreen loading'); // Excluded: srcdoc
   }
 
   // Special: iframe, ruby, video, audio, label

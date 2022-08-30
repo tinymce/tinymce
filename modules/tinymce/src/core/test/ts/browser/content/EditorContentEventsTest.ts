@@ -49,7 +49,7 @@ describe('browser.tinymce.core.content.EditorContentEventsTest', () => {
 
     clearEvents();
     overrideGetContent('<h1>new content</h1>');
-    assert.equal(editor.getContent(), '<h1>new content</h1>');
+    TinyAssertions.assertContent(editor, '<h1>new content</h1>');
     assertEvents([ 'beforegetcontent', 'getcontent' ]);
 
     clearEvents();
@@ -62,7 +62,7 @@ describe('browser.tinymce.core.content.EditorContentEventsTest', () => {
     const editor = hook.editor();
 
     clearEvents();
-    assert.equal(editor.getContent({ no_events: true }), '<p>Some initial content</p>');
+    TinyAssertions.assertContent(editor, '<p>Some initial content</p>', { no_events: true });
     assertEvents([]);
 
     clearEvents();

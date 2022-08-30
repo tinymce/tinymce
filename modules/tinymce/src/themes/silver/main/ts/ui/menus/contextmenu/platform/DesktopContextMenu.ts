@@ -1,4 +1,5 @@
 import { AlloyComponent, InlineView } from '@ephox/alloy';
+import { Optional } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
@@ -21,7 +22,15 @@ export const initAndShow = (
   const items = buildMenu();
   const anchorSpec = getAnchorSpec(editor, e, anchorType);
 
-  NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, false).map((menuData) => {
+  NestedMenus.build(
+    items,
+    ItemResponse.CLOSE_ON_EXECUTE,
+    backstage,
+    {
+      isHorizontalMenu: false,
+      search: Optional.none()
+    }
+  ).map((menuData) => {
     e.preventDefault();
 
     // show the context menu, with items set to close on click

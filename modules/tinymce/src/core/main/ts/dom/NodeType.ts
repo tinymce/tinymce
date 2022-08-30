@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Type } from '@ephox/katamari';
 
 type NullableNode = Node | null | undefined;
 
@@ -14,13 +14,20 @@ const isRestrictedNode = (node: NullableNode): boolean => !!node && !Object.getP
 
 const isElement = isNodeType<HTMLElement>(1);
 
+const matchNodeName = <T extends Node>(name: string): (node: NullableNode) => node is T => {
+  const lowerCasedName = name.toLowerCase();
+
+  return (node: NullableNode): node is T =>
+    Type.isNonNullable(node) && node.nodeName.toLowerCase() === lowerCasedName;
+};
+
 const matchNodeNames = <T extends Node>(names: string[]): (node: NullableNode) => node is T => {
-  const lowercasedNames = names.map((s) => s.toLowerCase());
+  const lowerCasedNames = names.map((s) => s.toLowerCase());
 
   return (node: NullableNode): node is T => {
     if (node && node.nodeName) {
       const nodeName = node.nodeName.toLowerCase();
-      return Arr.contains(lowercasedNames, nodeName);
+      return Arr.contains(lowerCasedNames, nodeName);
     }
 
     return false;
@@ -94,14 +101,15 @@ const isPi = isNodeType<ProcessingInstruction>(7);
 const isComment = isNodeType<Comment>(8);
 const isDocument = isNodeType<Document>(9);
 const isDocumentFragment = isNodeType<DocumentFragment>(11);
-const isBr = matchNodeNames<HTMLBRElement>([ 'br' ]);
-const isImg = matchNodeNames<HTMLImageElement>([ 'img' ]);
+const isBr = matchNodeName<HTMLBRElement>('br');
+const isImg = matchNodeName<HTMLImageElement>('img');
 const isContentEditableTrue = hasContentEditableState('true');
 const isContentEditableFalse = hasContentEditableState('false');
 
 const isTableCell = matchNodeNames<HTMLTableCellElement>([ 'td', 'th' ]);
 const isTableCellOrCaption = matchNodeNames<HTMLTableCellElement>([ 'td', 'th', 'caption' ]);
 const isMedia = matchNodeNames<HTMLElement>([ 'video', 'audio', 'object', 'embed' ]);
+const isListItem = matchNodeName<HTMLLIElement>('li');
 
 export {
   isText,
@@ -127,5 +135,6 @@ export {
   isBogus,
   isBogusAll,
   isTable,
-  isTextareaOrInput
+  isTextareaOrInput,
+  isListItem
 };

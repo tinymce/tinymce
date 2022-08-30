@@ -289,7 +289,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.formatter.register('format', { inline: 'b' });
     LegacyUnit.setSelection(editor, 'b', 1, 'b', 1);
     editor.formatter.remove('format');
-    assert.equal(editor.getContent(), '<p>abc</p>');
+    TinyAssertions.assertContent(editor, '<p>abc</p>');
   });
 
   it('Caret format at end of text', () => {
@@ -299,7 +299,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     LegacyUnit.setSelection(editor, 'b', 3, 'b', 3);
     editor.formatter.remove('format');
     KeyUtils.type(editor, 'd');
-    assert.equal(editor.getContent(), '<p><b>abc</b>d</p>');
+    TinyAssertions.assertContent(editor, '<p><b>abc</b>d</p>');
   });
 
   it('Caret format at end of text inside other format', () => {
@@ -309,7 +309,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     LegacyUnit.setSelection(editor, 'b', 3, 'b', 3);
     editor.formatter.remove('format');
     KeyUtils.type(editor, 'd');
-    assert.equal(editor.getContent(), '<p><em><b>abc</b>d</em></p>');
+    TinyAssertions.assertContent(editor, '<p><em><b>abc</b>d</em></p>');
   });
 
   it('Caret format at end of text inside other format with text after 1', () => {
@@ -319,7 +319,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     LegacyUnit.setSelection(editor, 'b', 3, 'b', 3);
     editor.formatter.remove('format');
     KeyUtils.type(editor, 'd');
-    assert.equal(editor.getContent(), '<p><em><b>abc</b>d</em>e</p>');
+    TinyAssertions.assertContent(editor, '<p><em><b>abc</b>d</em>e</p>');
   });
 
   it('Caret format at end of text inside other format with text after 2', () => {
@@ -329,7 +329,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     LegacyUnit.setSelection(editor, 'b', 3, 'b', 3);
     editor.formatter.remove('format');
     KeyUtils.type(editor, 'd');
-    assert.equal(editor.getContent(), '<p><em><b>abc</b></em><b>d</b>e</p>');
+    TinyAssertions.assertContent(editor, '<p><em><b>abc</b></em><b>d</b>e</p>');
   });
 
   it(`Toggle styles at the end of the content don' removes the format where it is not needed.`, () => {
@@ -340,7 +340,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     LegacyUnit.setSelection(editor, 'b', 4, 'b', 4);
     editor.formatter.remove('b');
     editor.formatter.remove('em');
-    assert.equal(editor.getContent(), '<p><em><b>abce</b></em></p>');
+    TinyAssertions.assertContent(editor, '<p><em><b>abce</b></em></p>');
   });
 
   it('Caret format on second word in table cell', () => {
@@ -349,7 +349,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.formatter.register('format', { inline: 'b' });
     LegacyUnit.setSelection(editor, 'b', 2, 'b', 2);
     editor.formatter.remove('format');
-    assert.equal(editor.getContent(), '<table><tbody><tr><td>one two</td></tr></tbody></table>');
+    TinyAssertions.assertContent(editor, '<table><tbody><tr><td>one two</td></tr></tbody></table>');
   });
 
   it('contentEditable: false on start and contentEditable: true on end', () => {
@@ -421,7 +421,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.formatter.register('format', { inline: 'b' });
     LegacyUnit.setSelection(editor, 'i', 1, 'i', 2);
     editor.formatter.remove('format');
-    assert.equal(editor.getContent(), '<p><b><i>a</i></b><i>b</i><b>c</b></p>');
+    TinyAssertions.assertContent(editor, '<p><b><i>a</i></b><i>b</i><b>c</b></p>');
   });
 
   it('Remove format of nested elements at end', () => {
@@ -430,7 +430,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.formatter.register('format', { inline: 'b' });
     LegacyUnit.setSelection(editor, 'i', 0, 'i', 1);
     editor.formatter.remove('format');
-    assert.equal(editor.getContent(), '<p><b>a</b><i>b</i><b><i>c</i></b></p>');
+    TinyAssertions.assertContent(editor, '<p><b>a</b><i>b</i><b><i>c</i></b></p>');
   });
 
   it('Remove format of nested elements at end with text after ', () => {
@@ -439,7 +439,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.formatter.register('format', { inline: 'b' });
     LegacyUnit.setSelection(editor, 'i', 0, 'i', 2);
     editor.formatter.remove('format');
-    assert.equal(editor.getContent(), '<p><b>a</b><i>bc</i>d</p>');
+    TinyAssertions.assertContent(editor, '<p><b>a</b><i>bc</i>d</p>');
   });
 
   it('Remove format bug 2', () => {
@@ -448,7 +448,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.formatter.register('format', { inline: 'b' });
     LegacyUnit.setSelection(editor, 'b', 0, 'b', 1);
     editor.formatter.remove('format');
-    assert.equal(editor.getContent(), '<p>abc</p>');
+    TinyAssertions.assertContent(editor, '<p>abc</p>');
   });
 
   it('Remove format bug 3', () => {
@@ -457,7 +457,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.formatter.register('format', { inline: 'b' });
     LegacyUnit.setSelection(editor, 'i', 1, 'i', 2);
     editor.formatter.remove('format');
-    assert.equal(editor.getContent(), '<p><b><i>a</i></b><i>b</i></p>');
+    TinyAssertions.assertContent(editor, '<p><b><i>a</i></b><i>b</i></p>');
   });
 
   it('Remove format with classes', () => {
