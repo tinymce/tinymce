@@ -7,7 +7,7 @@ import * as Utils from './Utils';
 
 const removeEmptyNamedAnchorsInSelection = (editor: Editor): void => {
   const dom = editor.dom;
-  RangeUtils(editor.dom).walk(editor.selection.getRng(), (nodes) => {
+  RangeUtils(dom).walk(editor.selection.getRng(), (nodes) => {
     Tools.each(nodes, (node) => {
       if (Utils.isEmptyNamedAnchor(node)) {
         dom.remove(node, false);

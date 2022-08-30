@@ -545,7 +545,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
   };
 
   /**
-   * Expands the range of the selection to contain the entire word when the selection is collapsed within the word
+   * Expands the selection range to contain the entire word when the selection is collapsed within the word.
    *
    * @method expand
    * @param {Object} options Optional options provided to the expansion. Defaults to { type: 'word' }
