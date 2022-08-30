@@ -7,7 +7,12 @@ import * as DescribedHandler from 'ephox/alloy/events/DescribedHandler';
 import { ElementAndHandler, EventRegistry } from 'ephox/alloy/events/EventRegistry';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
 
-interface ExpectedType { id?: string; handler: string; target?: string; purpose?: string }
+interface ExpectedType {
+  readonly id?: string;
+  readonly handler: string;
+  readonly target?: string;
+  readonly purpose?: string;
+}
 
 UnitTest.asynctest('EventRegistryTest', (success, failure) => {
   const body = SugarElement.fromDom(document.body);

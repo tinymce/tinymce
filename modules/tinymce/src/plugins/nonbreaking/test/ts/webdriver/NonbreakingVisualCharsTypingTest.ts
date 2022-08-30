@@ -17,15 +17,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest
     base_url: '/project/tinymce/js/tinymce'
   }, [ NonbreakingPlugin, VisualCharsPlugin ], true);
 
-  const detection = PlatformDetection.detect();
-
-  const getNbspText = (text: string) => {
-    if (detection.browser.isFirefox()) {
-      return Unicode.zeroWidth + text + ' ';
-    } else {
-      return Unicode.zeroWidth + text + Unicode.nbsp;
-    }
-  };
+  const isFirefox = PlatformDetection.detect().browser.isFirefox();
 
   const clickNbspToolbarButton = (editor: Editor) => TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Nonbreaking space"]');
 
@@ -116,8 +108,8 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest
                 s.text(str.is(Unicode.nbsp))
               ]
             }),
-            s.text(str.is(getNbspText('')))
-          ].concat(detection.browser.isFirefox() ? [ s.element('br', {}) ] : [])
+            s.text(str.is(Unicode.zeroWidth + Unicode.nbsp))
+          ].concat(isFirefox ? [ s.element('br', {}) ] : [])
         })
       ]
     })));
@@ -156,8 +148,8 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest
                 s.text(str.is(Unicode.nbsp))
               ]
             }),
-            s.text(str.is(getNbspText('test')))
-          ].concat(detection.browser.isFirefox() ? [ s.element('br', {}) ] : [])
+            s.text(str.is(Unicode.zeroWidth + 'test' + Unicode.nbsp))
+          ].concat(isFirefox ? [ s.element('br', {}) ] : [])
         })
       ]
     })));
@@ -196,8 +188,8 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest
                 s.text(str.is(Unicode.nbsp))
               ]
             }),
-            s.text(str.is(getNbspText('test')))
-          ].concat(detection.browser.isFirefox() ? [ s.element('br', {}) ] : [])
+            s.text(str.is(Unicode.zeroWidth + 'test' + Unicode.nbsp))
+          ].concat(isFirefox ? [ s.element('br', {}) ] : [])
         })
       ]
     })));
@@ -213,8 +205,8 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest
                 s.text(str.is(Unicode.nbsp))
               ]
             }),
-            s.text(str.is(getNbspText('test test')))
-          ].concat(detection.browser.isFirefox() ? [ s.element('br', {}) ] : [])
+            s.text(str.is(Unicode.zeroWidth + 'test test' + Unicode.nbsp))
+          ].concat(isFirefox ? [ s.element('br', {}) ] : [])
         })
       ]
     })));

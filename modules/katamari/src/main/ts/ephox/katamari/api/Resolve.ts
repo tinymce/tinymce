@@ -24,7 +24,7 @@ export const step = <T extends {}, K extends keyof T>(o: T, part: K): T[K] => {
 };
 
 /** forge :: ([String], JsObj?) -> JsObj */
-export const forge = <T extends string[]>(parts: T, target?: {}): {[ K in T[number]]: {}} => {
+export const forge = <T extends string[]>(parts: T, target?: {}): { [ K in T[number]]: {}} => {
   let o = target !== undefined ? target : Global;
   for (let i = 0; i < parts.length; ++i) {
     o = step(o, parts[i]);
@@ -33,7 +33,7 @@ export const forge = <T extends string[]>(parts: T, target?: {}): {[ K in T[numb
 };
 
 /** namespace :: (String, JsObj?) -> JsObj */
-export const namespace = (name: string, target?: {}): { [key: string]: {} } => {
+export const namespace = (name: string, target?: {}): { [key: string]: {}} => {
   const parts = name.split('.');
   return forge(parts, target);
 };

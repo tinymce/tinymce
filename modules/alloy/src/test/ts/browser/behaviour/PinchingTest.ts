@@ -30,7 +30,7 @@ UnitTest.asynctest('Browser Test: behaviour.PinchingTest', (success, failure) =>
     ])
   }), (_doc, _body, _gui, component, store) => {
 
-    const sSendTouchmove = (touches: Array<{ clientX: number; clientY: number}>) => Step.sync(() => {
+    const sSendTouchmove = (touches: Array<{ clientX: number; clientY: number }>) => Step.sync(() => {
       AlloyTriggers.emitWith(component, NativeEvents.touchmove(), {
         raw: { touches }
       });

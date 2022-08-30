@@ -24,7 +24,7 @@ UnitTest.test('RecalculationsTest', () => {
     }>;
   }
 
-  const expectedParts = (columns: {element: string; width: number}[], widths: {element: string; width: number}[], heights: {element: string; height: number}[]): Parts => ({
+  const expectedParts = (columns: Array<{ element: string; width: number }>, widths: Array<{ element: string; width: number }>, heights: Array<{ element: string; height: number }>): Parts => ({
     columns,
     widths,
     heights

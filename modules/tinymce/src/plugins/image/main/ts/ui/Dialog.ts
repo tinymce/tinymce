@@ -328,7 +328,7 @@ const createBlobCache = (editor: Editor) => (file: File, blobUri: string, dataUr
     blobUri,
     name: file.name?.replace(/\.[^\.]+$/, ''),
     filename: file.name,
-    base64: dataUrl.split(',')[ 1 ]
+    base64: dataUrl.split(',')[1]
   });
 
 const addToBlobCache = (editor: Editor) => (blobInfo: BlobInfo): void => {

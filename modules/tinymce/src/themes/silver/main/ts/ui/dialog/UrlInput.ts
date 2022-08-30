@@ -4,7 +4,7 @@ import {
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Arr, Fun, Future, FutureResult, Id, Optional, Result } from '@ephox/katamari';
-import { Attribute, Traverse } from '@ephox/sugar';
+import { Attribute, Traverse, Value } from '@ephox/sugar';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { UiFactoryBackstageForUrlInput } from '../../backstage/UrlInputBackstage';
@@ -73,7 +73,15 @@ export const renderUrlInput = (
     responseTime: 0,
     fetch: (input) => {
       const items = getItems(spec.filetype, input, urlBackstage);
-      const tdata = NestedMenus.build(items, ItemResponse.BUBBLE_TO_SANDBOX, backstage, false);
+      const tdata = NestedMenus.build(
+        items,
+        ItemResponse.BUBBLE_TO_SANDBOX,
+        backstage,
+        {
+          isHorizontalMenu: false,
+          search: Optional.none()
+        }
+      );
       return Future.pure(tdata);
     },
 
@@ -119,14 +127,20 @@ export const renderUrlInput = (
         disabled: () => !spec.enabled || providersBackstage.isDisabled()
       }),
       Tabstopping.config({}),
-      AddEventsBehaviour.config('urlinput-events', Arr.flatten([
+      AddEventsBehaviour.config('urlinput-events',
         // We want to get fast feedback for the link dialog, but not sure about others
-        spec.filetype === 'file' ? [
-          AlloyEvents.run(NativeEvents.input(), (comp) => {
-            AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name });
-          })
-        ] : [ ],
         [
+          AlloyEvents.run(NativeEvents.input(), (comp) => {
+            const currentValue = Value.get(comp.element);
+            const trimmedValue = currentValue.trim();
+            if (trimmedValue !== currentValue) {
+              Value.set(comp.element, trimmedValue);
+            }
+
+            if (spec.filetype === 'file') {
+              AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name });
+            }
+          }),
           AlloyEvents.run(NativeEvents.change(), (comp) => {
             AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name });
             updateHistory(comp);
@@ -136,7 +150,7 @@ export const renderUrlInput = (
             updateHistory(comp);
           })
         ]
-      ]))
+      )
     ]),
 
     eventOrder: {
@@ -146,7 +160,7 @@ export const renderUrlInput = (
     model: {
       getDisplayText: (itemData) => itemData.value,
       selectsOver: false,
-      populateFromBrowser: false
+      populateFromBrowse: false
     },
 
     markers: {

@@ -1,7 +1,7 @@
 import { Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { SugarElement } from '@ephox/sugar';
-import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
+import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -53,7 +53,7 @@ describe('browser.tinymce.core.MiscCommandsTest', () => {
     rng.setEnd(editor.dom.select('p')[0].firstChild as Text, 2);
     editor.selection.setRng(rng);
     editor.execCommand('InsertHorizontalRule');
-    assert.equal(editor.getContent(), '<p>1</p><hr><p>3</p>');
+    TinyAssertions.assertContent(editor, '<p>1</p><hr><p>3</p>');
     rng = normalizeRng(editor.selection.getRng());
     assert.isTrue(rng.collapsed);
     Assertions.assertDomEq('Nodes are not equal', SugarElement.fromDom(editor.getBody().lastChild as HTMLParagraphElement), SugarElement.fromDom(rng.startContainer));

@@ -16,7 +16,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () =
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ]);
 
-  const isGecko = Env.browser.isFirefox();
+  const isFirefox = Env.browser.isFirefox();
 
   const clickNbspToolbarButton = (editor: Editor) => TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Nonbreaking space"]');
 
@@ -107,8 +107,8 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () =
                 s.text(str.is(Unicode.nbsp))
               ]
             }),
-            s.text(str.is(isGecko ? Unicode.zeroWidth + ' ' : Unicode.zeroWidth + Unicode.nbsp))
-          ].concat(isGecko ? [ s.element('br', {}) ] : [])
+            s.text(str.is(Unicode.zeroWidth + Unicode.nbsp))
+          ].concat(isFirefox ? [ s.element('br', {}) ] : [])
         })
       ]
     })));
@@ -148,8 +148,8 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () =
                 s.text(str.is(Unicode.nbsp))
               ]
             }),
-            s.text(str.is(isGecko ? Unicode.zeroWidth + 'test ' : Unicode.zeroWidth + 'test\u00a0'))
-          ].concat(isGecko ? [ s.element('br', {}) ] : [])
+            s.text(str.is(Unicode.zeroWidth + 'test' + Unicode.nbsp))
+          ].concat(isFirefox ? [ s.element('br', {}) ] : [])
         })
       ]
     })));
@@ -189,8 +189,8 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () =
                 s.text(str.is(Unicode.nbsp))
               ]
             }),
-            s.text(str.is(isGecko ? Unicode.zeroWidth + 'test ' : Unicode.zeroWidth + 'test\u00a0'))
-          ].concat(isGecko ? [ s.element('br', {}) ] : [])
+            s.text(str.is(Unicode.zeroWidth + 'test' + Unicode.nbsp))
+          ].concat(isFirefox ? [ s.element('br', {}) ] : [])
         })
       ]
     })));
@@ -207,8 +207,8 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () =
                 s.text(str.is(Unicode.nbsp))
               ]
             }),
-            s.text(str.is(isGecko ? Unicode.zeroWidth + 'test test ' : Unicode.zeroWidth + 'test test\u00a0'))
-          ].concat(isGecko ? [ s.element('br', {}) ] : [])
+            s.text(str.is(Unicode.zeroWidth + 'test test' + Unicode.nbsp))
+          ].concat(isFirefox ? [ s.element('br', {}) ] : [])
         })
       ]
     })));

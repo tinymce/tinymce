@@ -56,6 +56,13 @@ const get = (editor: Editor): Formats => {
           dom.setStyle(table as HTMLTableElement, 'float', null);
         },
         preview: 'font-family font-size'
+      },
+      {
+        selector: '.mce-preview-object,[data-ephox-embed-iri]',
+        ceFalseOverride: true,
+        styles: {
+          float: 'left'
+        }
       }
     ],
 
@@ -93,6 +100,25 @@ const get = (editor: Editor): Formats => {
           marginRight: 'auto'
         },
         preview: 'font-family font-size'
+      },
+      {
+        selector: '.mce-preview-object',
+        ceFalseOverride: true,
+        styles: {
+          display: 'table', // Needs to be `table` to properly render while editing
+          marginLeft: 'auto',
+          marginRight: 'auto'
+        },
+        preview: false
+      },
+      {
+        selector: '[data-ephox-embed-iri]',
+        ceFalseOverride: true,
+        styles: {
+          marginLeft: 'auto',
+          marginRight: 'auto'
+        },
+        preview: false
       }
     ],
 
@@ -132,6 +158,14 @@ const get = (editor: Editor): Formats => {
           dom.setStyle(table as HTMLTableElement, 'float', null);
         },
         preview: 'font-family font-size'
+      },
+      {
+        selector: '.mce-preview-object,[data-ephox-embed-iri]',
+        ceFalseOverride: true,
+        styles: {
+          float: 'right'
+        },
+        preview: false
       }
     ],
 

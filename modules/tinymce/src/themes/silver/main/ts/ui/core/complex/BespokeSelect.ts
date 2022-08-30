@@ -80,7 +80,10 @@ interface BespokeMenuItems {
   readonly getStyleItems: () => FormatItem[];
 }
 
-const enum IrrelevantStyleItemResponse { Hide, Disable }
+const enum IrrelevantStyleItemResponse {
+  Hide,
+  Disable
+}
 
 const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec) => {
   const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, invalid: boolean, value: Optional<SelectedFormat>): Optional<Menu.NestedMenuItemContents> => {
@@ -138,7 +141,15 @@ const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spe
   const getFetch = (backstage: UiFactoryBackstage, getStyleItems: () => FormatItem[]) => (comp: AlloyComponent, callback: (menu: Optional<TieredData>) => void) => {
     const preItems = getStyleItems();
     const items = validateItems(preItems);
-    const menu = NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, false);
+    const menu = NestedMenus.build(
+      items,
+      ItemResponse.CLOSE_ON_EXECUTE,
+      backstage,
+      {
+        isHorizontalMenu: false,
+        search: Optional.none()
+      }
+    );
     callback(menu);
   };
 

@@ -187,7 +187,9 @@ const arrOf = (prop: StructureProcessor): StructureProcessor => {
   };
 };
 
-const oneOf = (props: StructureProcessor[]): StructureProcessor => {
+const oneOf = (props: StructureProcessor[], rawF?: (x: any) => any): StructureProcessor => {
+  // If f is not supplied, then use identity.
+  const f = rawF !== undefined ? rawF : Fun.identity;
   const extract = (path: string[], val: any): SimpleResult<SchemaError[], any> => {
     const errors: Array<SimpleResult<SchemaError[], any>> = [];
 
@@ -195,7 +197,10 @@ const oneOf = (props: StructureProcessor[]): StructureProcessor => {
     for (const prop of props) {
       const res = prop.extract(path, val);
       if (res.stype === SimpleResultType.Value) {
-        return res;
+        return {
+          stype: SimpleResultType.Value,
+          svalue: f(res.svalue)
+        };
       }
       errors.push(res);
     }

@@ -1,6 +1,6 @@
 import { Assertions, Pipeline, Step, TestLogs } from '@ephox/agar';
-import { Fun, Global, Merger, Obj, Optional } from '@ephox/katamari';
-import { DomEvent, EventUnbinder, Html, Insert, Remove, SugarBody, SugarDocument, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { Fun, Global, Merger, Obj, Optional, Type } from '@ephox/katamari';
+import { DomEvent, EventUnbinder, Html, Insert, Remove, SugarBody, SugarDocument, SugarElement, SugarShadowDom, Traverse } from '@ephox/sugar';
 
 import { AlloyComponent } from '../component/ComponentApi';
 import * as Attachment from '../system/Attachment';
@@ -65,6 +65,7 @@ const setupIn = <T extends RootNode>(
 const bddSetupIn = <T extends RootNode>(
   setupRoot: () => SetupRootElement<T>,
   createComponent: (store: TestStore, doc: T, body: SugarElement<Node>) => AlloyComponent,
+  createGui?: () => Gui.GuiSystem,
   skip: () => boolean = Fun.never
 ): Hook<T> => {
   let state: Record<string, any> = {};
@@ -82,11 +83,13 @@ const bddSetupIn = <T extends RootNode>(
     const setup = setupRoot();
     teardown = setup.teardown;
     const root = setup.root;
-
-    const gui = Gui.create();
     const contentContainer = SugarShadowDom.getContentContainer(root);
+    const gui = Type.isNullable(createGui) ? Gui.create() : createGui();
 
-    Attachment.attachSystem(contentContainer, gui);
+    // Attach the gui if needed
+    if (Traverse.parent(gui.element).isNone()) {
+      Attachment.attachSystem(contentContainer, gui);
+    }
 
     const component = createComponent(store, root, contentContainer);
     gui.add(component);
@@ -143,12 +146,13 @@ const setup = (
 };
 
 const bddSetup = (
-  createComponent: (store: TestStore, doc: SugarElement<Document>, body: SugarElement<Node>) => AlloyComponent
+  createComponent: (store: TestStore, doc: SugarElement<Document>, body: SugarElement<Node>) => AlloyComponent,
+  createGui?: () => Gui.GuiSystem
 ): Hook<SugarElement<Document>> =>
   bddSetupIn(() => ({
     root: SugarDocument.getDocument(),
     teardown: Fun.noop
-  }), createComponent);
+  }), createComponent, createGui);
 
 /**
  * Setup in a Shadow Root, run list of untyped Steps, then tear down.
@@ -177,7 +181,8 @@ const setupInShadowRoot = (
 };
 
 const bddSetupInShadowRoot = (
-  createComponent: (store: TestStore, doc: SugarElement<ShadowRoot>, body: SugarElement<Node>) => AlloyComponent
+  createComponent: (store: TestStore, doc: SugarElement<ShadowRoot>, body: SugarElement<Node>) => AlloyComponent,
+  createGui?: () => Gui.GuiSystem
 ): Hook<SugarElement<ShadowRoot>> => {
   return bddSetupIn(() => {
     const sh = SugarElement.fromTag('div');
@@ -187,7 +192,7 @@ const bddSetupInShadowRoot = (
       root: sr,
       teardown: () => Remove.remove(sh)
     };
-  }, createComponent, () => !SugarShadowDom.isSupported());
+  }, createComponent, createGui, () => !SugarShadowDom.isSupported());
 };
 
 const setupInBodyAndShadowRoot = (

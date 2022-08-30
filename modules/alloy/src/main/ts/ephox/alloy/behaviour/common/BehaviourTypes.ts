@@ -11,7 +11,9 @@ import { BehaviourState, BehaviourStateInitialiser } from './BehaviourState';
 export type BehaviourApiFunc<D extends BehaviourConfigDetail, S extends BehaviourState> = (component: AlloyComponent, bConfig: D, bState: S, ...rest: any[]) => any;
 
 export type BehaviourRecord = Record<string, ConfiguredBehaviour<any, any, any> | undefined>;
-export interface BehaviourApisRecord<D extends BehaviourConfigDetail, S extends BehaviourState> { [key: string]: BehaviourApiFunc<D, S> }
+export interface BehaviourApisRecord<D extends BehaviourConfigDetail, S extends BehaviourState> {
+  [key: string]: BehaviourApiFunc<D, S>;
+}
 export type BehaviourExtraRecord<E> = { [K in keyof E]: Function };
 
 export type BehaviourInfo<D extends BehaviourConfigDetail, S extends BehaviourState> = Record<string, () => Optional<BehaviourConfigAndState<D, S>>>;

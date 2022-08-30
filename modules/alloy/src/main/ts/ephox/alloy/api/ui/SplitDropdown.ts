@@ -6,6 +6,7 @@ import * as AlloyParts from '../../parts/AlloyParts';
 import * as ButtonBase from '../../ui/common/ButtonBase';
 import * as SplitDropdownSchema from '../../ui/schema/SplitDropdownSchema';
 import { SplitDropdownApis, SplitDropdownDetail, SplitDropdownSketcher, SplitDropdownSpec } from '../../ui/types/SplitDropdownTypes';
+import { HighlightOnOpen } from '../../ui/types/TieredMenuTypes';
 import { Composing } from '../behaviour/Composing';
 import { Coupling } from '../behaviour/Coupling';
 import { Focusing } from '../behaviour/Focusing';
@@ -31,7 +32,7 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
 
   const action = (component: AlloyComponent) => {
     const onOpenSync = switchToMenu;
-    DropdownUtils.togglePopup(detail, Fun.identity, component, externals, onOpenSync, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
+    DropdownUtils.togglePopup(detail, Fun.identity, component, externals, onOpenSync, HighlightOnOpen.HighlightMenuAndItem).get(Fun.noop);
   };
 
   const openMenu = (comp: AlloyComponent) => {

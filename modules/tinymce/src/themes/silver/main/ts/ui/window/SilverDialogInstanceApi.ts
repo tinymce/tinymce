@@ -72,7 +72,7 @@ const getDialogApi = <T extends Dialog.DialogData>(
       Representing.setValue(form, newInternalData);
       Obj.each(menuItemStates, (v, k) => {
         if (Obj.has(mergedData, k)) {
-          v.set(mergedData[ k ]);
+          v.set(mergedData[k]);
         }
       });
     });

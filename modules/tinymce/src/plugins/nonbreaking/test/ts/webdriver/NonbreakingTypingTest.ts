@@ -1,5 +1,6 @@
 import { ApproxStructure, RealKeys } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
+import { Unicode } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -15,7 +16,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ]);
 
-  const isGecko = Env.browser.isFirefox();
+  const isFirefox = Env.browser.isFirefox();
 
   const clickNbspToolbarButton = (editor: Editor) => TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Nonbreaking space"]');
 
@@ -33,7 +34,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest', () => {
         children: [
           s.element('p', {
             children: [
-              s.text(str.is('\u00a0test'))
+              s.text(str.is(Unicode.nbsp + 'test'))
             ]
           })
         ]
@@ -51,7 +52,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest', () => {
         children: [
           s.element('p', {
             children: [
-              s.text(str.is('test\u00a0'))
+              s.text(str.is('test' + Unicode.nbsp))
             ]
           })
         ]
@@ -87,8 +88,8 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest', () => {
         children: [
           s.element('p', {
             children: [
-              s.text(str.is(isGecko ? '\u00a0 ' : '\u00a0\u00a0'))
-            ].concat(isGecko ? [ s.element('br', {}) ] : [])
+              s.text(str.is(isFirefox ? Unicode.nbsp + ' ' : Unicode.nbsp + Unicode.nbsp))
+            ].concat(isFirefox ? [ s.element('br', {}) ] : [])
           })
         ]
       });
@@ -106,8 +107,8 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest', () => {
         children: [
           s.element('p', {
             children: [
-              s.text(str.is(isGecko ? 'test test ' : 'test test\u00a0'))
-            ].concat(isGecko ? [ s.element('br', {}) ] : [])
+              s.text(str.is('test test' + Unicode.nbsp))
+            ].concat(isFirefox ? [ s.element('br', {}) ] : [])
           })
         ]
       });

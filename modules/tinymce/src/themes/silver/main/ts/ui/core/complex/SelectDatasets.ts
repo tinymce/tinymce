@@ -38,7 +38,10 @@ const buildBasicStaticDataset = (data: Array<BasicSelectItem>): BasicSelectDatas
   data
 });
 
-export enum Delimiter { SemiColon, Space }
+export enum Delimiter {
+  SemiColon,
+  Space
+}
 
 const split = (rawFormats: string, delimiter: Delimiter): string[] => {
   if (delimiter === Delimiter.SemiColon) {
@@ -49,6 +52,7 @@ const split = (rawFormats: string, delimiter: Delimiter): string[] => {
 };
 
 const buildBasicSettingsDataset = (editor: Editor, settingName: 'block_formats' | 'font_family_formats' | 'font_size_formats', delimiter: Delimiter): BasicSelectDataset => {
+  // eslint-disable-next-line @tinymce/no-direct-editor-options
   const rawFormats = editor.options.get(settingName);
   const data = process(split(rawFormats, delimiter));
   return {

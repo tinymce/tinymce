@@ -3,6 +3,7 @@ import { Arr } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
+import * as Events from '../../api/Events';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
@@ -75,10 +76,7 @@ const renderElementPath = (editor: Editor, settings: ElementPathSettings, provid
     while (i-- > 0) {
       const parent = parents[i];
       if (parent.nodeType === 1 && !isHidden(parent as Element)) {
-        const args = editor.dispatch('ResolveName', {
-          name: parent.nodeName.toLowerCase(),
-          target: parent
-        });
+        const args = Events.fireResolveName(editor, parent);
 
         if (!args.isDefaultPrevented()) {
           newPath.push({ name: args.name, element: parent });

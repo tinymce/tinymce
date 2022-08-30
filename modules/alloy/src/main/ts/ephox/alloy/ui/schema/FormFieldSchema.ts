@@ -40,7 +40,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     name: 'aria-descriptor'
   }),
 
-  PartType.required<FormFieldDetail, { factory: { sketch: (spec: Record<string, any>) => Record<string, any> } }>({
+  PartType.required<FormFieldDetail, { factory: { sketch: (spec: Record<string, any>) => Record<string, any> }}>({
     factory: {
       sketch: (spec) => {
         const excludeFactory = Objects.exclude(spec, [ 'factory' ]);

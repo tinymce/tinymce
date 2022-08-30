@@ -79,7 +79,7 @@ export const isInvalidUri = (settings: SafeUriOptions, uri: string, tagName?: st
 
 class URI {
 
-  public static parseDataUri(uri: string): { type: string | undefined; data: string} {
+  public static parseDataUri(uri: string): { type: string | undefined; data: string } {
     let type;
 
     const uriComponents = decodeURIComponent(uri).split(',');

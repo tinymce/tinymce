@@ -55,7 +55,7 @@ const setup = (editor: Editor): void => {
     editor.parser.addNodeFilter('pre', (nodes) => {
       for (let i = 0, l = nodes.length; i < l; i++) {
         const node = nodes[i];
-        const isCodeSample = (node.attr('class') ?? '').indexOf('language-') !== -1 ;
+        const isCodeSample = (node.attr('class') ?? '').indexOf('language-') !== -1;
         if (isCodeSample) {
           node.attr('contenteditable', 'false');
           node.attr('data-mce-highlighted', 'false');

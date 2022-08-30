@@ -106,12 +106,12 @@ const sTrueClickOn = <T>(container: SugarElement<Node>, selector: string): Step<
   sTriggerOn<T, HTMLElement>(container, selector, trueClick);
 
 // Low level exports
-const leftClickButton = Clicks.leftClickButton ;
-const middleClickButton = Clicks.middleClickButton ;
-const rightClickButton = Clicks.rightClickButton ;
-const leftClickButtons = Clicks.leftClickButtons ;
-const rightClickButtons = Clicks.rightClickButtons ;
-const middleClickButtons = Clicks.middleClickButtons ;
+const leftClickButton = Clicks.leftClickButton;
+const middleClickButton = Clicks.middleClickButton;
+const rightClickButton = Clicks.rightClickButton;
+const leftClickButtons = Clicks.leftClickButtons;
+const rightClickButtons = Clicks.rightClickButtons;
+const middleClickButtons = Clicks.middleClickButtons;
 /**
  * @deprecated Use event instead */
 const point = Clicks.point;

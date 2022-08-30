@@ -207,6 +207,6 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplacePluginTest', () => 
     assert.lengthOf(editor.getBody().getElementsByTagName('span'), 2);
     editor.plugins.searchreplace.done();
     assert.lengthOf(editor.getBody().getElementsByTagName('span'), 0);
-    assert.equal(editor.getBody().innerHTML, content);
+    TinyAssertions.assertRawContent(editor, content);
   });
 });

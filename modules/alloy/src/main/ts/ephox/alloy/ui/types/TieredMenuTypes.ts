@@ -16,7 +16,9 @@ export interface TieredMenuDetail extends SingleSketchDetail {
   tmenuBehaviours: SketchBehaviours;
 
   fakeFocus: boolean;
-  onHighlight: (comp: AlloyComponent, target: AlloyComponent) => void;
+
+  onHighlightItem: (tmenuComp: AlloyComponent, menuComp: AlloyComponent, itemComp: AlloyComponent) => void;
+  onDehighlightItem: (tmenuComp: AlloyComponent, menuComp: AlloyComponent, itemComp: AlloyComponent) => void;
 
   markers: {
     item: string;
@@ -35,7 +37,7 @@ export interface TieredMenuDetail extends SingleSketchDetail {
   onHover: (comp: AlloyComponent, item: AlloyComponent) => void;
 
   navigateOnHover: boolean;
-  highlightImmediately: boolean;
+  highlightOnOpen: HighlightOnOpen;
 
   stayInDom: boolean;
 
@@ -57,11 +59,12 @@ export interface TieredMenuSpec extends SingleSketchSpec {
   onCollapseMenu?: (comp: AlloyComponent, item: AlloyComponent, activeMenu: AlloyComponent) => void;
   onRepositionMenu?: (comp: AlloyComponent, item: AlloyComponent, triggers: LayeredItemTrigger[]) => void;
   onHover?: (comp: AlloyComponent, item: AlloyComponent) => void;
-  onHighlight?: (comp: AlloyComponent, target: AlloyComponent) => void;
+  onHighlightItem?: (tmenuComp: AlloyComponent, menuComp: AlloyComponent, itemComp: AlloyComponent) => void;
+  onDehighlightItem?: (tmenuComp: AlloyComponent, menuComp: AlloyComponent, itemComp: AlloyComponent) => void;
 
   navigateOnHover?: boolean;
   stayInDom?: boolean;
-  highlightImmediately?: boolean;
+  highlightOnOpen?: HighlightOnOpen;
   fakeFocus?: boolean;
 
   eventOrder?: Record<string, string[]>;
@@ -84,6 +87,12 @@ export type PartialMenuSpec = Partial<MenuSpec> & {
 };
 
 export type TieredMenuRecord = Record<string, PartialMenuSpec>;
+
+export enum HighlightOnOpen {
+  HighlightMenuAndItem,
+  HighlightJustMenu,
+  HighlightNone
+}
 
 export interface TieredData {
   primary: string;

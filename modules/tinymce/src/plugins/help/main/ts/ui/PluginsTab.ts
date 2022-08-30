@@ -7,13 +7,24 @@ import I18n from 'tinymce/core/api/util/I18n';
 import * as Options from '../api/Options';
 import * as PluginUrls from '../data/PluginUrls';
 
+interface PluginData {
+  // The name is just used for sorting alphabetically.
+  readonly name: string;
+  readonly html: string;
+}
+
 const tab = (editor: Editor): Dialog.TabSpec & { name: string } => {
   const availablePlugins = () => {
-    const premiumPlugins = Arr.filter(PluginUrls.urls, ({ key, type }) => {
-      return key !== 'autocorrect' && type === PluginUrls.PluginType.Premium;
+    const premiumPlugins = Arr.filter(PluginUrls.urls, ({ type }) => {
+      return type === PluginUrls.PluginType.Premium;
     });
-    const premiumPluginList = Arr.map(premiumPlugins, (plugin) => '<li>' + I18n.translate(plugin.name) + '</li>').join('');
 
+    const sortedPremiumPlugins = Arr.sort(
+      Arr.map(premiumPlugins, (p) => p.name),
+      (s1, s2) => s1.localeCompare(s2)
+    );
+
+    const premiumPluginList = Arr.map(sortedPremiumPlugins, (pluginName) => `<li>${pluginName}</li>`).join('');
     return '<div data-mce-tabstop="1" tabindex="-1">' +
       '<p><b>' + I18n.translate('Premium plugins:') + '</b></p>' +
       '<ul>' +
@@ -26,14 +37,25 @@ const tab = (editor: Editor): Dialog.TabSpec & { name: string } => {
   const makeLink = (p: { name: string; url: string }): string =>
     `<a href="${p.url}" target="_blank" rel="noopener">${p.name}</a>`;
 
-  const maybeUrlize = (editor: Editor, key: string) => Arr.find(PluginUrls.urls, (x) => {
+  const identifyUnknownPlugin = (editor: Editor, key: string): PluginData => {
+    const getMetadata = editor.plugins[key].getMetadata;
+    if (Type.isFunction(getMetadata)) {
+      const metadata = getMetadata();
+      return { name: metadata.name, html: makeLink(metadata) };
+    } else {
+      return { name: key, html: key };
+    }
+  };
+
+  const getPluginData = (editor: Editor, key: string): PluginData => Arr.find(PluginUrls.urls, (x) => {
     return x.key === key;
   }).fold(() => {
-    const getMetadata = editor.plugins[key].getMetadata;
-    return typeof getMetadata === 'function' ? makeLink(getMetadata()) : key;
+    return identifyUnknownPlugin(editor, key);
   }, (x) => {
+    // We know this plugin, so use our stored details.
     const name = x.type === PluginUrls.PluginType.Premium ? `${x.name}*` : x.name;
-    return makeLink({ name, url: `https://www.tiny.cloud/docs/tinymce/6/${x.slug}/` });
+    const html = makeLink({ name, url: `https://www.tiny.cloud/docs/tinymce/6/${x.slug}/` });
+    return { name, html };
   });
 
   const getPluginKeys = (editor: Editor) => {
@@ -47,8 +69,13 @@ const tab = (editor: Editor): Dialog.TabSpec & { name: string } => {
 
   const pluginLister = (editor: Editor) => {
     const pluginKeys = getPluginKeys(editor);
-    const pluginLis = Arr.map(pluginKeys, (key) => {
-      return '<li>' + maybeUrlize(editor, key) + '</li>';
+    const sortedPluginData = Arr.sort(
+      Arr.map(pluginKeys, (k) => getPluginData(editor, k)),
+      (pd1, pd2) => pd1.name.localeCompare(pd2.name)
+    );
+
+    const pluginLis = Arr.map(sortedPluginData, (key) => {
+      return '<li>' + key.html + '</li>';
     });
     const count = pluginLis.length;
     const pluginsString = pluginLis.join('');
