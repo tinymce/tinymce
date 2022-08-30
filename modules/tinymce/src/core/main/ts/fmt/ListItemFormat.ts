@@ -23,7 +23,12 @@ export const getExpandedListItemFormat = (formatter: Formatter, format: string):
 };
 
 const isRngStartAtStartOfElement = (rng: Range, elm: Element) => CaretFinder.prevPosition(elm, CaretPosition.fromRangeStart(rng)).isNone();
-const isRngEndAtEndOfElement = (rng: Range, elm: Element) => CaretFinder.nextPosition(elm, CaretPosition.fromRangeEnd(rng)).isNone();
+
+const isRngEndAtEndOfElement = (rng: Range, elm: Element) => {
+  return CaretFinder.nextPosition(elm, CaretPosition.fromRangeEnd(rng))
+    .exists((pos) => !NodeType.isBr(pos.getNode()) || CaretFinder.nextPosition(elm, pos).isSome()) === false;
+};
+
 const isEditableListItem = (dom: DOMUtils) => (elm: Element) => NodeType.isListItem(elm) && dom.getContentEditableParent(elm) !== 'false';
 
 const getFullySelectedBlocks = (selection: EditorSelection) => {
