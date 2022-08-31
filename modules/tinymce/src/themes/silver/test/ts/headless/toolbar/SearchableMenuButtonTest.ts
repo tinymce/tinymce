@@ -24,6 +24,8 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
     }`
   ]);
 
+  const structNoPlaceholderSearch = structSearchField(Optional.none());
+
   const hook = TestHelpers.GuiSetup.bddSetup(
     (store, _doc, _body) => GuiFactory.build(
       renderMenuButton(
@@ -116,7 +118,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
         return s.element('div', {
           children: [
             structMenuWith({ selected: true }, [
-              structSearchField(''),
+              structNoPlaceholderSearch,
               structSearchResultsWith([
                 structSearchLeafItem({ selected: true }),
                 structSearchLeafItem({ selected: false }),
@@ -140,7 +142,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
         return s.element('div', {
           children: [
             structMenuWith({ selected: true }, [
-              structSearchField(''),
+              structNoPlaceholderSearch,
               structSearchResultsWith([
                 structSearchLeafItem({ selected: false }),
                 structSearchLeafItem({ selected: false }),
@@ -164,7 +166,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
         return s.element('div', {
           children: [
             structMenuWith({ selected: true }, [
-              structSearchField(''),
+              structNoPlaceholderSearch,
               structSearchResultsWith([
                 structSearchLeafItem({ selected: false }),
                 structSearchLeafItem({ selected: false }),
@@ -187,7 +189,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
         return s.element('div', {
           children: [
             structMenuWith({ selected: false }, [
-              structSearchField(''),
+              structNoPlaceholderSearch,
               structSearchResultsWith([
                 structSearchLeafItem({ selected: false }),
                 structSearchLeafItem({ selected: false }),
@@ -218,7 +220,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
         return s.element('div', {
           children: [
             structMenuWith({ selected: false }, [
-              structSearchField(''),
+              structNoPlaceholderSearch,
               structSearchResultsWith([
                 structSearchLeafItem({ selected: false }),
                 structSearchLeafItem({ selected: false }),
@@ -249,7 +251,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
         return s.element('div', {
           children: [
             structMenuWith({ selected: false }, [
-              structSearchField(''),
+              structNoPlaceholderSearch,
               structSearchResultsWith([
                 structSearchLeafItem({ selected: false }),
                 structSearchLeafItem({ selected: false }),
@@ -283,7 +285,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
         return s.element('div', {
           children: [
             structMenuWith({ selected: true }, [
-              structSearchField(''),
+              structNoPlaceholderSearch,
               structSearchResultsWith([
                 structSearchLeafItem({ selected: false }),
                 structSearchLeafItem({ selected: false }),
@@ -307,7 +309,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
         return s.element('div', {
           children: [
             structMenuWith({ selected: true }, [
-              structSearchField(''),
+              structNoPlaceholderSearch,
               structSearchResultsWith([
                 structSearchLeafItem({ selected: false }),
                 structSearchLeafItem({ selected: false }),
@@ -330,7 +332,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
         return s.element('div', {
           children: [
             structMenuWith({ selected: false }, [
-              structSearchField(''),
+              structNoPlaceholderSearch,
               structSearchResultsWith([
                 structSearchLeafItem({ selected: false }),
                 structSearchLeafItem({ selected: false }),
@@ -363,7 +365,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
         return s.element('div', {
           children: [
             structMenuWith({ selected: false }, [
-              structSearchField(''),
+              structNoPlaceholderSearch,
               structSearchResultsWith([
                 structSearchLeafItem({ selected: false }),
                 structSearchLeafItem({ selected: false }),
@@ -397,7 +399,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
         return s.element('div', {
           children: [
             structMenuWith({ selected: false }, [
-              structSearchField(''),
+              structNoPlaceholderSearch,
               structSearchResultsWith([
                 structSearchLeafItem({ selected: false }),
                 structSearchLeafItem({ selected: false }),
@@ -487,7 +489,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
         return s.element('div', {
           children: [
             structMenuWith({ selected: true }, [
-              structSearchField(''),
+              structNoPlaceholderSearch,
               structSearchResultsWith([
                 structSearchLeafItem({ selected: true }),
                 structSearchLeafItem({ selected: false })
@@ -518,7 +520,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
         return s.element('div', {
           children: [
             structMenuWith({ selected: true }, [
-              structSearchField(''),
+              structNoPlaceholderSearch,
               structSearchResultsWith([
                 structSearchLeafItem({ selected: true }),
                 structSearchLeafItem({ selected: false }),

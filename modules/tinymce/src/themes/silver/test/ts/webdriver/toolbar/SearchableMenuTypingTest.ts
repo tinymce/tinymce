@@ -121,6 +121,8 @@ describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () 
     )
   );
 
+  const structNoPlaceholderSearch = structSearchField(Optional.none());
+
   // TINY-9013: The <space> key is missing from KeyEffects in bedrock
   const spaceKey = RealKeys.text('\uE00D');
 
@@ -143,7 +145,7 @@ describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () 
       onActiveElement( hook.root(), assertCursorAtEndOfText('Ph') );
       await pAssertTieredMenuStructure('Typing Ph', helpers.sink(), [
         structMenuWith({ selected: true }, [
-          structSearchField(''),
+          structNoPlaceholderSearch,
           structSearchResultsWith([
             structSearchLeafItem({ selected: true }),
             structSearchLeafItem({ selected: false }),
@@ -161,7 +163,7 @@ describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () 
       );
       await pAssertTieredMenuStructure('After <left>', helpers.sink(), [
         structMenuWith({ selected: true }, [
-          structSearchField(''),
+          structNoPlaceholderSearch,
           structSearchResultsWith([
             structSearchLeafItem({ selected: true }),
             structSearchLeafItem({ selected: false }),
@@ -179,7 +181,7 @@ describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () 
       );
       await pAssertTieredMenuStructure('After <up>', helpers.sink(), [
         structMenuWith({ selected: true }, [
-          structSearchField(''),
+          structNoPlaceholderSearch,
           structSearchResultsWith([
             structSearchLeafItem({ selected: false }),
             structSearchLeafItem({ selected: false }),
@@ -199,7 +201,7 @@ describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () 
       );
       await pAssertTieredMenuStructure('After <right>', helpers.sink(), [
         structMenuWith({ selected: true }, [
-          structSearchField(''),
+          structNoPlaceholderSearch,
           structSearchResultsWith([
             structSearchLeafItem({ selected: false }),
             structSearchLeafItem({ selected: false }),
@@ -224,7 +226,7 @@ describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () 
       // by the input.
       await pAssertTieredMenuStructure('After <space> (which will trigger a refetch)', helpers.sink(), [
         structMenuWith({ selected: true }, [
-          structSearchField(''),
+          structNoPlaceholderSearch,
           structSearchResultsWith([
             structSearchLeafItem({ selected: true }),
             structSearchLeafItem({ selected: false }),
@@ -242,7 +244,7 @@ describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () 
       );
       await pAssertTieredMenuStructure('After <up>', helpers.sink(), [
         structMenuWith({ selected: true }, [
-          structSearchField(''),
+          structNoPlaceholderSearch,
           structSearchResultsWith([
             structSearchLeafItem({ selected: false }),
             structSearchLeafItem({ selected: false }),
@@ -260,7 +262,7 @@ describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () 
       );
       await pAssertTieredMenuStructure('After <enter>', helpers.sink(), [
         structMenuWith({ selected: false }, [
-          structSearchField(''),
+          structNoPlaceholderSearch,
           structSearchResultsWith([
             structSearchLeafItem({ selected: false }),
             structSearchLeafItem({ selected: false }),
@@ -291,7 +293,7 @@ describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () 
       );
       await pAssertTieredMenuStructure('After <left>', helpers.sink(), [
         structMenuWith({ selected: false }, [
-          structSearchField(''),
+          structNoPlaceholderSearch,
           structSearchResultsWith([
             structSearchLeafItem({ selected: false }),
             structSearchLeafItem({ selected: false }),
@@ -321,7 +323,7 @@ describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () 
       );
       await pAssertTieredMenuStructure('After <down>', helpers.sink(), [
         structMenuWith({ selected: false }, [
-          structSearchField(''),
+          structNoPlaceholderSearch,
           structSearchResultsWith([
             structSearchLeafItem({ selected: false }),
             structSearchLeafItem({ selected: false }),
@@ -352,7 +354,7 @@ describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () 
       );
       await pAssertTieredMenuStructure('After <escape>', helpers.sink(), [
         structMenuWith({ selected: true }, [
-          structSearchField(''),
+          structNoPlaceholderSearch,
           structSearchResultsWith([
             structSearchLeafItem({ selected: false }),
             structSearchLeafItem({ selected: false }),
