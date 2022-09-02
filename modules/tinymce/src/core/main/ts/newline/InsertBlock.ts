@@ -152,7 +152,7 @@ const setForcedBlockAttrs = (editor: Editor, node: Element) => {
 // Wraps any text nodes or inline elements in the specified forced root block name
 const wrapSelfAndSiblingsInDefaultBlock = (editor: Editor, newBlockName: string, rng: Range, container: Node, offset: number) => {
   const dom = editor.dom;
-  const editableRoot = NewLineUtils.getEditableRoot(dom, container);
+  const editableRoot = NewLineUtils.getEditableRoot(dom, container) ?? dom.getRoot();
 
   // Not in a block element or in a table cell or caption
   let parentBlock = dom.getParent(container, dom.isBlock);

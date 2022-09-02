@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
+import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -64,5 +64,14 @@ describe('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', () => {
       '<div contenteditable="false">x</div><p><br data-mce-bogus="1"></p>'
     );
     assert.equal(editor.selection.getNode().nodeName, 'P');
+  });
+
+  it('TINY-9098: Enter key on inline cE=false should do nothing', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><span contenteditable="false">x</span></p>');
+    TinySelections.select(editor, 'span', []);
+    pressEnter(editor);
+    TinyAssertions.assertContent(editor, '<p><span contenteditable="false">x</span></p>');
+    assert.equal(editor.selection.getNode().nodeName, 'SPAN');
   });
 });
