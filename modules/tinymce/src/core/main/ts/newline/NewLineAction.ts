@@ -1,4 +1,4 @@
-import { Adt, Arr, Optional } from '@ephox/katamari';
+import { Adt, Arr, Optional, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
@@ -67,7 +67,7 @@ const canInsertIntoEditableRoot = (editor: Editor) => {
   const forcedRootBlock = Options.getForcedRootBlock(editor);
   const rootEditable = NewLineUtils.getEditableRoot(editor.dom, editor.selection.getStart());
 
-  return rootEditable && editor.schema.isValidChild(rootEditable.nodeName, forcedRootBlock);
+  return Type.isNonNullable(rootEditable) && editor.schema.isValidChild(rootEditable.nodeName, forcedRootBlock);
 };
 
 const match = (predicates: Array<(editor: Editor, shiftKey: boolean) => boolean>, action: NewLineActionAdt) => {
