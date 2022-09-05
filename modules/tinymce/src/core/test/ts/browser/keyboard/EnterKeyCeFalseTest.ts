@@ -75,7 +75,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'SPAN');
   });
 
-  it('TINY-9101: Pressing Enter on a cE=false block should do nothing it', () => {
+  it('TINY-9101: Pressing Enter on a cE=false block should do nothing', () => {
     const editor = hook.editor();
     editor.getBody().innerHTML = '<p>First</p><p contenteditable="false">Second</p><p>Third</p>';
     TinySelections.select(editor, 'p:eq(1)', [ ]);
@@ -84,7 +84,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  it('TINY-9101: Pressing Enter on a cE=false pre should do nothing it', () => {
+  it('TINY-9101: Pressing Enter on a cE=false pre should do nothing', () => {
     const editor = hook.editor();
     editor.getBody().innerHTML = '<p>First</p><pre contenteditable="false">Second</pre><p>Third</p>';
     TinySelections.select(editor, 'pre', [ ]);
