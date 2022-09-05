@@ -74,4 +74,14 @@ describe('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', () => {
     TinyAssertions.assertContent(editor, '<p><span contenteditable="false">x</span></p>');
     assert.equal(editor.selection.getNode().nodeName, 'SPAN');
   });
+
+  it('TINY-9101: Enter after selecting across paragraphs before a cE=false span should not delete cE=false span', () => {
+    const editor = hook.editor();
+    editor.getBody().innerHTML = '<p>first</p><p>second<span contenteditable="false">2</span></p>';
+    // Select across the two paragraphs, but stop before the cef span
+    TinySelections.setSelection(editor, [ 0, 0 ], 'fir'.length, [ 1, 0 ], 'sec'.length);
+    pressEnter(editor);
+    TinyAssertions.assertContent(editor, '<p>fir</p><p>ond<span contenteditable="false">2</span></p>');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
+  });
 });

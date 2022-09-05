@@ -11,7 +11,7 @@ import * as BoundaryLocation from '../keyboard/BoundaryLocation';
 import * as BoundarySelection from '../keyboard/BoundarySelection';
 import * as InlineUtils from '../keyboard/InlineUtils';
 import * as DeleteElement from './DeleteElement';
-import { execDeleteCommand } from './DeleteUtils';
+import { execNativeDeleteCommand } from './DeleteUtils';
 
 const rangeFromPositions = (from: CaretPosition, to: CaretPosition): Range => {
   const range = document.createRange();
@@ -45,7 +45,13 @@ const deleteFromTo = (editor: Editor, caret: Cell<Text | null>, from: CaretPosit
 
   editor.undoManager.ignore(() => {
     editor.selection.setRng(rangeFromPositions(from, to));
-    execDeleteCommand(editor);
+    // TINY-9120: The entrypoint `backspaceDelete` in this module can be triggered by the
+    // overrides in our delete execCommand, so there is a risk that firing another
+    // execCommand that goes through our overrides could result in infinite recursion.
+    // Therefore, we will leave this as just the native execCommand for now, but understand
+    // that means it isn't going to be processed by any of our delete overrides, which might
+    // cause edge cases.
+    execNativeDeleteCommand(editor);
 
     BoundaryLocation.readLocation(isInlineTarget, rootNode, CaretPosition.fromRangeStart(editor.selection.getRng()))
       .map(BoundaryLocation.inside)
