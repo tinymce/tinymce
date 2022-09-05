@@ -49,15 +49,7 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
   });
 
   it('TINY-8861: press enter after pasting a code sample should not add a newline inside the code', async () => {
-    // TINY-9101: When this test was written for TINY-8861, pressing <enter> on a cef block
-    // added a newline before the cef block. This was actually a regression from TinyMCE v5,
-    // and the correct behaviour is that it should be deleted when the user selects the
-    // cef block, and presses <enter>. So as part of TINY-9101, this test needed to be
-    // signficantly rewritten. Pressing <enter> was now a destructive operation, so instead of checking
-    // that a newline wasn't added to the codesample block, we need to check that the whole block gets
-    // deleted.
     const editor = hook.editor();
-
     editor.setContent('<p><br /></p><p><br /></p>');
     await TestUtils.pOpenDialogAndAssertInitial(hook.editor(), 'markup', '');
     TestUtils.setTextareaContent('test content');
@@ -66,28 +58,30 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
     TinyAssertions.assertContentPresence(editor, { 'pre[data-mce-selected]': 1 });
 
     await pClickEditMenu(editor, 'Copy');
-
-    // Now, move to a new paragraph and paste the codesample. After pasting, the pasted
-    // content should be selected.
-    TinySelections.setCursor(editor, [ 1 ], 1);
+    TinySelections.setCursor(editor, [ 1 ], 0);
     TinyAssertions.assertContentPresence(editor, { 'pre[data-mce-selected]': 0 });
+
     await pPaste(editor);
     TinyAssertions.assertSelection(editor, [], 1, [], 2);
-    // We need to use "root" selections to exclude the pre that appears in the
-    // .mce-offscreen-selection div.
-    TinyAssertions.assertContentPresence(editor, {
-      'root>pre': 2,
-      'pre[data-mce-selected]': 1
-    });
+    TinyAssertions.assertContentPresence(editor, { 'pre[data-mce-selected]': 1 });
 
-    // After pasting, the cef is selected. So pressing <enter> is going to delete it,
-    // and we are just left with the original.
+    // Pressing <enter> should do nothing.
     pressEnter(editor);
-    TinyAssertions.assertCursor(editor, [ 1 ], 1);
-    TinyAssertions.assertContentPresence(editor, {
-      'root>pre': 1,
-      'pre[data-mce-selected]': 0
-    });
+    TinyAssertions.assertSelection(editor, [], 1, [], 2);
+    TinyAssertions.assertContentPresence(editor, { 'pre[data-mce-selected]': 1 });
+
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => {
+      return s.element('body', {
+        children: [
+          getMockPreStructure(s, str),
+          getMockPreStructure(s, str),
+          s.element('div', {
+            // offscreen selection of cef because the second pre still has the selection
+            classes: [ arr.has('mce-offscreen-selection') ]
+          })
+        ]
+      });
+    }));
   });
 
   // Safari cannot select the CEF in this scenario, so we can't run the test (and there is no bug)

@@ -32,6 +32,8 @@ const deleteCommand = (editor: Editor, caret: Cell<Text | null>): void => {
 
   result.fold(
     () => {
+      // We can't use an `execEditorDeleteCommand` here, otherwise we'd get
+      // possible infinite recursion (as it would trigger `deleteCommand` again)
       DeleteUtils.execNativeDeleteCommand(editor);
       DeleteUtils.paddEmptyBody(editor);
     },
