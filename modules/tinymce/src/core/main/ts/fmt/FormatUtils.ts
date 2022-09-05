@@ -18,9 +18,9 @@ const isNode = (node: any): node is Node => !!(node).nodeType;
 const isElementNode = (node: Node): node is Element =>
   NodeType.isElement(node) && !Bookmarks.isBookmarkNode(node) && !isCaretNode(node) && !NodeType.isBogus(node);
 
-// Control blocks are any elements e.g. (img, iframe, noneditable element) that can be selected individually
-// In TinyMCE, selected blocks are indicated with the data-mce-selected attribute
-const isControlBlockSelected = (dom: DOMUtils, node: Node): boolean => {
+// In TinyMCE, directly selected elements are indicated with the data-mce-selected attribute
+// Elements that can be directly selected include control elements such as img, media elements, noneditable elements and others
+const isElementDirectlySelected = (dom: DOMUtils, node: Node): boolean => {
   // Table cells are a special case and are separately handled from native editor selection
   if (isElementNode(node) && !/^(TD|TH)$/.test(node.nodeName)) {
     const selectedAttr = dom.getAttrib(node, 'data-mce-selected');
@@ -35,16 +35,16 @@ const isControlBlockSelected = (dom: DOMUtils, node: Node): boolean => {
 const isEditable = (elm: HTMLElement): boolean =>
   elm.isContentEditable === true;
 
-const adjustSelectionAfter = <T>(editor: Editor, action: () => T, shouldMoveStart: (startNode: Node) => boolean): void => {
+const adjustSelectionAfter = (editor: Editor, action: () => void, shouldMoveStart: (startNode: Node) => boolean): void => {
   const { selection, dom } = editor;
   const selectedNodeBeforeAction = selection.getNode();
-  const isSelectedBeforeNodeNoneditable = dom.getContentEditable(selectedNodeBeforeAction) === 'false';
+  const isSelectedBeforeNodeNoneditable = NodeType.isContentEditableFalse(selectedNodeBeforeAction);
 
   action();
 
   // Check previous selected node before the action still exists in the DOM
   // and is still noneditable
-  const isBeforeNodeStillNoneditable = isSelectedBeforeNodeNoneditable && dom.getContentEditable(selectedNodeBeforeAction) === 'false';
+  const isBeforeNodeStillNoneditable = isSelectedBeforeNodeNoneditable && NodeType.isContentEditableFalse(selectedNodeBeforeAction);
   if (isBeforeNodeStillNoneditable && dom.isChildOf(selectedNodeBeforeAction, editor.getBody())) {
     editor.selection.select(selectedNodeBeforeAction);
   } else if (shouldMoveStart(selection.getStart())) {
@@ -53,14 +53,12 @@ const adjustSelectionAfter = <T>(editor: Editor, action: () => T, shouldMoveStar
 };
 
 // Note: The reason why we only care about moving the start is because MatchFormat and its function use the start of the selection to determine if a selection has a given format or not
-// The format toolbar buttons use the MatchFormat functions to determine whether the button should be active or not
-// Therefore, if the start is not moved forward in certain cases, the match format detection and by extension,the toolbar button state will be incorrect
 const moveStartToNearestText = (dom: DOMUtils, selection: EditorSelection): void => {
   const rng = selection.getRng();
   const { startContainer, startOffset } = rng;
   const selectedNode = selection.getNode();
 
-  if (isControlBlockSelected(dom, selectedNode)) {
+  if (isElementDirectlySelected(dom, selectedNode)) {
     return;
   }
 
