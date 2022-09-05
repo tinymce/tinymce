@@ -46,18 +46,9 @@ const inBlock = (blockName: string, requiredState: boolean) => (editor: Editor, 
   return state === requiredState;
 };
 
-const inCefPreBlock = (editor: Editor) => {
-  const parentBlockOpt = NewLineUtils.getParentBlock(editor);
-  return parentBlockOpt.exists(
-    (parentBlock) => {
-      if (parentBlock.nodeName.toUpperCase() === 'PRE') {
-        const editableRoot = NewLineUtils.getEditableRoot(editor.dom, editor.selection.getStart());
-        return Type.isNullable(editableRoot);
-      } else {
-        return false;
-      }
-    }
-  );
+const inCefBlock = (editor: Editor) => {
+  const editableRoot = NewLineUtils.getEditableRoot(editor.dom, editor.selection.getStart());
+  return Type.isNullable(editableRoot);
 };
 
 const inPreBlock = (requiredState: boolean) => inBlock('pre', requiredState);
@@ -98,7 +89,8 @@ const getAction = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): NewLineAct
   return LazyEvaluator.evaluateUntil([
     match([ shouldBlockNewLine ], newLineAction.none()),
     match([ inSummaryBlock() ], newLineAction.br()),
-    match([ inCefPreBlock ], newLineAction.none()),
+    // If the pre block is cef, do not try to insert a new line (or delete contents)
+    match([ inPreBlock(true), inCefBlock ], newLineAction.none()),
     match([ inPreBlock(true), shouldPutBrInPre(false), hasShiftKey ], newLineAction.br()),
     match([ inPreBlock(true), shouldPutBrInPre(false) ], newLineAction.block()),
     match([ inPreBlock(true), shouldPutBrInPre(true), hasShiftKey ], newLineAction.block()),
