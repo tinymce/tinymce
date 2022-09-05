@@ -1,6 +1,7 @@
 import { Optional } from '@ephox/katamari';
 
 import { SugarElement } from '../../api/node/SugarElement';
+import * as ContentEditable from '../../api/properties/ContentEditable';
 import { SimRange } from '../../api/selection/SimRange';
 
 interface CaretPosition {
@@ -41,14 +42,34 @@ const availableSearch = (() => {
   }
 })();
 
+const getNodeIndex = (node: Node): number => Array.prototype.indexOf.call(
+  node.parentNode?.children, node);
+
 const fromPoint = (win: Window, x: number, y: number): Optional<SimRange> => {
   const doc = SugarElement.fromDom(win.document);
-  return availableSearch(doc, x, y).map((rng) => SimRange.create(
-    SugarElement.fromDom(rng.startContainer),
-    rng.startOffset,
-    SugarElement.fromDom(rng.endContainer),
-    rng.endOffset
-  ));
+  return availableSearch(doc, x, y).map((rng) => {
+    const startContainer = SugarElement.fromDom(rng.startContainer);
+    const endContainer = SugarElement.fromDom(rng.endContainer);
+
+    const isStartEditable = ContentEditable.isEditable(startContainer as SugarElement);
+    const isEndEditable = ContentEditable.isEditable(endContainer as SugarElement);
+
+    if (!isStartEditable && rng.startContainer.parentNode && !isEndEditable && rng.endContainer.parentNode) {
+      return SimRange.create(
+        SugarElement.fromDom(rng.startContainer.parentNode),
+        getNodeIndex(rng.startContainer) + 1,
+        SugarElement.fromDom(rng.endContainer.parentNode),
+        getNodeIndex(rng.endContainer) + 1
+      );
+    } else {
+      return SimRange.create(
+        startContainer,
+        rng.startOffset,
+        endContainer,
+        rng.endOffset
+      );
+    }
+  });
 };
 
 export {
