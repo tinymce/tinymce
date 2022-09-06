@@ -43,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Lists with `contenteditable="false"` can no longer be toggled, and `contenteditable="true"` list elements within them can no longer be indented, split into another list element, or appended to the previous list element by deletion. #TINY-8920
 - Removed extra padding for the context toolbar in the `tinymce-5` skin. #TINY-8980
 - Fixed a regression where pressing Enter caused content outside the selection to be added or deleted unexpectedly. #TINY-9101
+- Fixed a bug where pressing Enter deleted selected "contenteditable="false" pre elements. #TINY-9101
 
 ### Deprecated
 - The autocompleter `ch` configuration property has been deprecated and will be removed in the next major release. Use the `trigger` property instead. #TINY-8887
