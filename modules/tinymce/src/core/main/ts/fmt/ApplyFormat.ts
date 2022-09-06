@@ -336,14 +336,16 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
         // Apply formatting to selection
         selection.setRng(RangeNormalizer.normalize(selection.getRng()));
 
-        FormatUtils.adjustSelectionAfter(ed, () => {
-          SelectionUtils.preserve(selection, true, () => {
+        FormatUtils.preserveSelection(
+          ed,
+          () => {
             SelectionUtils.runOnRanges(ed, (selectionRng, fake) => {
               const expandedRng = fake ? selectionRng : ExpandRange.expandRng(ed, selectionRng, formatList);
               applyRngStyle(dom, expandedRng, false);
             });
-          });
-        }, Fun.always);
+          },
+          Fun.always
+        );
 
         ed.nodeChanged();
       } else {

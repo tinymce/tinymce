@@ -9,6 +9,7 @@ import Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as NodeType from '../dom/NodeType';
+import * as SelectionUtils from '../selection/SelectionUtils';
 import * as Whitespace from '../text/Whitespace';
 import { isCaretNode } from './FormatContainer';
 import { BlockFormat, Format, FormatAttrOrStyleValue, FormatVars, InlineFormat, MixedFormat, SelectorFormat } from './FormatTypes';
@@ -35,12 +36,15 @@ const isElementDirectlySelected = (dom: DOMUtils, node: Node): boolean => {
 const isEditable = (elm: HTMLElement): boolean =>
   elm.isContentEditable === true;
 
-const adjustSelectionAfter = (editor: Editor, action: () => void, shouldMoveStart: (startNode: Node) => boolean): void => {
+// TODO: TINY-9130 Look at making SelectionUtils.preserve maintain the noneditable selection instead
+const preserveSelection = (editor: Editor, action: () => void, shouldMoveStart: (startNode: Node) => boolean): void => {
   const { selection, dom } = editor;
   const selectedNodeBeforeAction = selection.getNode();
   const isSelectedBeforeNodeNoneditable = NodeType.isContentEditableFalse(selectedNodeBeforeAction);
 
-  action();
+  SelectionUtils.preserve(selection, true, () => {
+    action();
+  });
 
   // Check previous selected node before the action still exists in the DOM
   // and is still noneditable
@@ -312,7 +316,7 @@ export {
   isNode,
   isElementNode,
   isEditable,
-  adjustSelectionAfter,
+  preserveSelection,
   getNonWhiteSpaceSibling,
   isTextBlock,
   isValid,
