@@ -50,7 +50,7 @@ const trimOrPad = (editor: Editor, value: string): string => {
 const insertAtCaret = (editor: Editor, value: string | DetailsWithContent): void => {
   const { content, details } = processValue(value);
 
-  preProcessSetContent(editor, { content: trimOrPad(editor, content), format: 'html', set: false, selection: true, paste: details.paste }).each((args) => {
+  preProcessSetContent(editor, { ...details, content: trimOrPad(editor, content), format: 'html', set: false, selection: true }).each((args) => {
     const insertedContent = Rtc.insertContent(editor, args.content, details);
     postProcessSetContent(editor, insertedContent, args);
     editor.addVisual();
