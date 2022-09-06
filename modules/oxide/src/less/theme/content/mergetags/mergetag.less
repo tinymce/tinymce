@@ -1,4 +1,4 @@
-@mergetag-hover-background-color: fade(@color-tint, 10%);
+@mergetag-hover-background-color: if(@content-ui-darkmode, fade(@color-tint, 30%), fade(@color-tint, 10%));
 @mergetag-affix-text-color: @color-tint;
 @mergetag-affix-background-color: @mergetag-hover-background-color;
 
