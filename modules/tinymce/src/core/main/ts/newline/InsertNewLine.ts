@@ -3,7 +3,7 @@ import { Fun, Type } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import { getNewlineBehavior } from '../api/Options';
 import { EditorEvent } from '../api/util/EventDispatcher';
-import { execDeleteCommand } from '../delete/DeleteUtils';
+import { execEditorDeleteCommand } from '../delete/DeleteUtils';
 import { fireFakeBeforeInputEvent, fireFakeInputEvent } from '../keyboard/FakeInputEvents';
 import { blockbreak } from './InsertBlock';
 import { linebreak } from './InsertBr';
@@ -16,7 +16,9 @@ interface BreakType {
 
 const insertBreak = (breakType: BreakType, editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   if (!editor.selection.isCollapsed()) {
-    execDeleteCommand(editor);
+    // IMPORTANT: We want to use the editor execCommand here, so that our `delete` execCommand
+    // overrides will be considered.
+    execEditorDeleteCommand(editor);
   }
   if (Type.isNonNullable(evt)) {
     const event = fireFakeBeforeInputEvent(editor, breakType.fakeEventName);
