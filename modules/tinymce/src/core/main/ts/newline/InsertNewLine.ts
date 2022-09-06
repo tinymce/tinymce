@@ -16,7 +16,7 @@ interface BreakType {
 
 const insertBreak = (breakType: BreakType, editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   if (!editor.selection.isCollapsed()) {
-    // Importantly, we want to use the editor execCommand here, so that our `delete` execCommand
+    // IMPORTANT: We want to use the editor execCommand here, so that our `delete` execCommand
     // overrides will be considered.
     execEditorDeleteCommand(editor);
   }

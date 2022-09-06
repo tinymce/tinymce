@@ -45,12 +45,7 @@ const deleteFromTo = (editor: Editor, caret: Cell<Text | null>, from: CaretPosit
 
   editor.undoManager.ignore(() => {
     editor.selection.setRng(rangeFromPositions(from, to));
-    // TINY-9120: The entrypoint `backspaceDelete` in this module can be triggered by the
-    // overrides in our delete execCommand, so there is a risk that firing another
-    // execCommand that goes through our overrides could result in infinite recursion.
-    // Therefore, we will leave this as just the native execCommand for now, but understand
-    // that means it isn't going to be processed by any of our delete overrides, which might
-    // cause edge cases.
+    // TODO: TINY-9120 - Investigate if this should be using our custom overrides
     execNativeDeleteCommand(editor);
 
     BoundaryLocation.readLocation(isInlineTarget, rootNode, CaretPosition.fromRangeStart(editor.selection.getRng()))
