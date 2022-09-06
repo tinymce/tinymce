@@ -14,7 +14,8 @@ import * as Whitespace from '../text/Whitespace';
 import { isCaretNode } from './FormatContainer';
 import { BlockFormat, Format, FormatAttrOrStyleValue, FormatVars, InlineFormat, MixedFormat, SelectorFormat } from './FormatTypes';
 
-const isNode = (node: any): node is Node => !!(node).nodeType;
+const isNode = (node: any): node is Node =>
+  Type.isNumber(node?.nodeType);
 
 const isElementNode = (node: Node): node is Element =>
   NodeType.isElement(node) && !Bookmarks.isBookmarkNode(node) && !isCaretNode(node) && !NodeType.isBogus(node);
