@@ -7,23 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- New `text_patterns_lookup` option to provide additional text patterns dynamically #TINY-8778
-- New promotion element has been added to the UI and can be disabled using the new `promotion` option #TINY-8840
+- New `text_patterns_lookup` option to provide additional text patterns dynamically. #TINY-8778
+- New promotion element has been added to the default UI. It can be disabled using the new `promotion` option. #TINY-8840
 - New `format_noneditable_selector` option to specify the `contenteditable="false"` elements that can be wrapped in a format. #TINY-8905
 - Added `allow` as a valid attribute for the `iframe` element in the editor schema. #TINY-8939
 - New `search` field in the `MenuButton` that shows a search field at the top of the menu, and refetches items when the search field updates. #TINY-8952
 
 ### Improved
 - The formatter can now apply a format to a `contenteditable="false"` element by wrapping it. Configurable using the `format_noneditable_selector` option. #TINY-8905
-- The autocompleter now supports a multiple character trigger using the new `trigger` configuration #TINY-8887
-- The formatter will now apply some inline formats like color and font size to list item elements when the entire item content is selected. #TINY-8961
-- The plugin lists in the Help dialog are now sorted alphabetically. #TINY-9019
+- The autocompleter now supports a multiple character trigger using the new `trigger` configuration. #TINY-8887
+- The formatter now applies some inline formats, such as color and font size, to list item elements when the entire item content is selected. #TINY-8961
+- The available plugin lists in the Help dialog are now sorted alphabetically. #TINY-9019
 - Alignment can now be applied to more types of embedded media elements. #TINY-8687
 
 ### Changed
-- The `@menubar-row-separator-color` oxide variable no longer affects the divider between the Menubar and Toolbar and only controls the color of the separator lines drawn in multiline Menubars. #TINY-8632
-- The `@toolbar-separator-color` oxide variable now exclusively affects the color of the separator between the Menubar and Toolbar. #TINY-8632
-- The available premium plugins listed in the Help dialog are no longer translated. #TINY-9019
+- The `@menubar-row-separator-color` oxide variable no longer affects the divider between the Menubar and Toolbar. It only controls the color of the separator lines drawn in multiline Menubars. #TINY-8632
+- The `@toolbar-separator-color` oxide variable now affects the color of the separator between the Menubar and Toolbar only. #TINY-8632
+- Available Premium plugins are listed by name in the Help dialog. These names are no longer translated. #TINY-9019
 
 ### Fixed
 - The Autolink plugin did not work when text nodes in the content were fragmented. #TINY-3723
