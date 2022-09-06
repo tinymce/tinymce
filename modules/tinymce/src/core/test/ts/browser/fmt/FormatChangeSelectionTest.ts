@@ -35,6 +35,7 @@ describe('browser.tinymce.core.fmt.FormatChangeSelectionTest', () => {
     editor.execCommand('italic');
     TinyAssertions.assertContent(editor, `<p>before<em><img src="about:blank"></em>after</p>`);
     TinyAssertions.assertSelection(editor, [ 0, 1 ], 0, [ 0, 1 ], 1);
+    TinyAssertions.assertContentPresence(editor, { 'img[data-mce-selected]': 1 });
   });
 
   it('TINY-8935: should keep nonwrappable, noneditable node selected after applying an inline format', () => {
@@ -49,6 +50,7 @@ describe('browser.tinymce.core.fmt.FormatChangeSelectionTest', () => {
 
     TinyAssertions.assertContent(editor, content);
     TinyAssertions.assertSelection(editor, [ 0 ], 1, [ 0 ], 2);
+    TinyAssertions.assertContentPresence(editor, { 'span[contenteditable="false"][data-mce-selected]': 1 });
   });
 
   it('TINY-8935: should keep wrappable, noneditable node selected after applying an inline format', () => {
@@ -62,6 +64,7 @@ describe('browser.tinymce.core.fmt.FormatChangeSelectionTest', () => {
 
     TinyAssertions.assertContent(editor, `<p>before <em><span contenteditable="false" data-mce-cef-wrappable="true">test</span></em> after</p>`);
     TinyAssertions.assertSelection(editor, [ 0, 1 ], 0, [ 0, 1 ], 1);
+    TinyAssertions.assertContentPresence(editor, { 'span[contenteditable="false"][data-mce-selected]': 1 });
   });
 
   it('TINY-8935: should keep wrappable, noneditable node selected after removing an inline format', () => {
@@ -75,6 +78,7 @@ describe('browser.tinymce.core.fmt.FormatChangeSelectionTest', () => {
 
     TinyAssertions.assertContent(editor, `<p>before <span contenteditable="false" data-mce-cef-wrappable="true">test</span> after</p>`);
     TinyAssertions.assertSelection(editor, [ 0 ], 1, [ 0 ], 2);
+    TinyAssertions.assertContentPresence(editor, { 'span[contenteditable="false"][data-mce-selected]': 1 });
   });
 
   it('TINY-8935: should not move the start of selection inside of the noneditable node after applying an inline format', () => {
