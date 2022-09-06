@@ -1,3 +1,4 @@
+import { Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
@@ -24,6 +25,16 @@ describe('browser.tinymce.core.fmt.FormatChangeSelectionTest', () => {
     editor.execCommand('italic');
     TinyAssertions.assertContent(editor, `<p><em><strong>test</strong></em></p>`);
     TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
+  });
+
+  it('TINY-8935: should keep image node selected after applying an inline format', async () => {
+    const editor = hook.editor();
+    editor.setContent(`<p>before<img src="about:blank">after</p>`);
+    TinySelections.select(editor, 'img', []);
+    await Waiter.pTryUntil('image should be selected', () => TinyAssertions.assertContentPresence(editor, { 'img[data-mce-selected]': 1 }));
+    editor.execCommand('italic');
+    TinyAssertions.assertContent(editor, `<p>before<em><img src="about:blank"></em>after</p>`);
+    TinyAssertions.assertSelection(editor, [ 0, 1 ], 0, [ 0, 1 ], 1);
   });
 
   it('TINY-8935: should keep nonwrappable, noneditable node selected after applying an inline format', () => {
