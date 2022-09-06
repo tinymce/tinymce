@@ -77,7 +77,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', () => {
 
   it('TINY-9101: Pressing Enter on a cE=false block should do nothing', () => {
     const editor = hook.editor();
-    editor.getBody().innerHTML = '<p>First</p><p contenteditable="false">Second</p><p>Third</p>';
+    editor.setContent('<p>First</p><p contenteditable="false">Second</p><p>Third</p>');
     TinySelections.select(editor, 'p:eq(1)', [ ]);
     pressEnter(editor);
     TinyAssertions.assertContent(editor, '<p>First</p><p contenteditable="false">Second</p><p>Third</p>');
@@ -86,7 +86,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', () => {
 
   it('TINY-9101: Pressing Enter on a cE=false pre should do nothing', () => {
     const editor = hook.editor();
-    editor.getBody().innerHTML = '<p>First</p><pre contenteditable="false">Second</pre><p>Third</p>';
+    editor.setContent('<p>First</p><pre contenteditable="false">Second</pre><p>Third</p>');
     TinySelections.select(editor, 'pre', [ ]);
     pressEnter(editor);
     TinyAssertions.assertContent(editor, '<p>First</p><pre contenteditable="false">Second</pre><p>Third</p>');
@@ -95,7 +95,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', () => {
 
   it('TINY-9101: Enter after selecting across paragraphs before a cE=false span should not delete cE=false span', () => {
     const editor = hook.editor();
-    editor.getBody().innerHTML = '<p>first</p><p>second<span contenteditable="false">2</span></p>';
+    editor.setContent('<p>first</p><p>second<span contenteditable="false">2</span></p>');
     // Select across the two paragraphs, but stop before the cef span
     TinySelections.setSelection(editor, [ 0, 0 ], 'fir'.length, [ 1, 0 ], 'sec'.length);
     pressEnter(editor);
