@@ -26,27 +26,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The available premium plugins listed in the Help dialog are no longer translated. #TINY-9019
 
 ### Fixed
-- The Autolink plugin did not work when the text nodes in the content were fragmented #TINY-3723
-- Fixed various incorrect types on public APIs found while enabling TypeScript strict mode #TINY-8806
-- Text returned from `editor.getContent({format: 'text'})` would differ with blank lines between some browsers #TINY-8579
-- The editor focused via the `auto_focus` option was not scrolled into the viewport #TINY-8785
-- Adding spaces just after a `contenteditable="false"` block would not work properly in some situations #TINY-8814
-- Elements with only custom attributes starting with `data-` would sometimes be removed when they shouldn't #TINY-8755
-- Selecting a figure with `class="image"` would incorrectly highlight the link toolbar button #TINY-8832
+- The Autolink plugin did not work when text nodes in the content were fragmented. #TINY-3723
+- Fixed multiple incorrect types on public APIs found while enabling TypeScript strict mode. #TINY-8806
+- The number of blank lines returned from `editor.getContent({format: 'text'})` differed between browsers. #TINY-8579
+- The editor focused via the `auto_focus` option was not scrolled into the viewport. #TINY-8785
+- Adding spaces immediately after a `contenteditable="false"` block did not work properly in some circumstances. #TINY-8814
+- Elements with only `data-*` custom attributes were sometimes removed when they should not be removed. #TINY-8755
+- Selecting a figure with `class="image"` incorrectly highlighted the link toolbar button. #TINY-8832
 - Specifying a single, non-default list style for the `advlist_bullet_styles` and `advlist_number_styles` options was not respected. #TINY-8721
-- Fixed various issues that occurred when formatting `contenteditable` elements. #TINY-8905
-- Spaces could be incorrectly added to urlinput dialog components in certain cases #TINY-8775
-- The text pattern logic threw an error when there were fragmented text nodes in a paragraph #TINY-8779
-- Dragging a `contentEditable=false` element towards the edges would not cause scrolling #TINY-8874
-- Parsing large documents no longer throws a `Maximum call stack size exceeded` exception #TINY-6945
-- DomParser filter matching was not checked between filters, which could lead to an exception in the parser #TINY-8888
-- Lists with `contenteditable="false"` can no longer be toggled, and `contenteditable="true"` list elements within them can no longer be indented, split into another list element, or appended to the previous list element by deletion. #TINY-8920
-- Removed extra padding for the context toolbar in the `tinymce-5` skin. #TINY-8980
-- Fixed a regression where pressing Enter caused content outside the selection to be added or deleted unexpectedly. #TINY-9101
-- Fixed a bug where pressing Enter deleted selected "contenteditable="false" pre elements. #TINY-9101
+- Fixed multiple issues that occurred when formatting `contenteditable` elements with a `data-mce-cef-wrappable` attribute but no editable descendants. #TINY-8905
+- Spaces could be incorrectly added to *Insert/Edit Link* dialog components in certain cases. #TINY-8775
+- The `text_patterns` logic threw an error when there were fragmented text nodes in a paragraph. #TINY-8779
+- Dragging a `contentEditable=false` element towards a document’s edge did not cause scrolling. #TINY-8874
+- Parsing large documents no longer throws a `Maximum call stack size exceeded` exception. #TINY-6945
+- DomParser filter matching was not checked between filters, which could lead to an exception in the parser. #TINY-8888
+- `contenteditable="false"` lists could not be toggled; and `contenteditable="true"` list elements within these lists could not be indented, split into another list element, or appended to the previous list element by deletion. #TINY-8920
+- Removed extra bottom padding in the context toolbar of the `tinymce-5` skin. #TINY-8980
+- Fixed a regression where pressing **Enter** added or deleted content outside the selection. #TINY-9101
+- Fixed a bug where pressing **Enter** deleted selected `contenteditable="false"` `<pre>` elements. #TINY-9101
 
 ### Deprecated
-- The autocompleter `ch` configuration property has been deprecated and will be removed in the next major release. Use the `trigger` property instead. #TINY-8887
+- The autocompleter configuration property, `ch`, has been deprecated. It will be removed in the next major release. Use the `trigger` property instead. #TINY-8887
 
 ## 6.1.2 - 2022-07-29
 
