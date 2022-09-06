@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 6.2 - 2022-09-08
+
 ### Added
 - New `text_patterns_lookup` option to provide additional text patterns dynamically. #TINY-8778
 - New promotion element has been added to the default UI. It can be disabled using the new `promotion` option. #TINY-8840
