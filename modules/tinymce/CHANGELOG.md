@@ -44,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed extra padding for the context toolbar in the `tinymce-5` skin. #TINY-8980
 - Fixed a regression where pressing Enter caused content outside the selection to be added or deleted unexpectedly. #TINY-9101
 - Fixed a bug where pressing Enter deleted selected "contenteditable="false" pre elements. #TINY-9101
+- The `editor.insertContent()` API did not respect the `no_events` argument. #TINY-9140
 
 ### Deprecated
 - The autocompleter `ch` configuration property has been deprecated and will be removed in the next major release. Use the `trigger` property instead. #TINY-8887
