@@ -42,7 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dragging a `contentEditable=false` element towards a document’s edge did not cause scrolling. #TINY-8874
 - Parsing large documents no longer throws a `Maximum call stack size exceeded` exception. #TINY-6945
 - DomParser filter matching was not checked between filters, which could lead to an exception in the parser. #TINY-8888
-- `contenteditable="false"` lists could not be toggled; and `contenteditable="true"` list elements within these lists could not be indented, split into another list element, or appended to the previous list element by deletion. #TINY-8920
+- `contenteditable="false"` lists can no longer be toggled; and `contenteditable="true"` list elements within these lists can no longer be indented, split into another list element, or appended to the previous list element by deletion. #TINY-8920
 - Removed extra bottom padding in the context toolbar of the `tinymce-5` skin. #TINY-8980
 - Fixed a regression where pressing **Enter** added or deleted content outside the selection. #TINY-9101
 - Fixed a bug where pressing **Enter** deleted selected `contenteditable="false"` `<pre>` elements. #TINY-9101
