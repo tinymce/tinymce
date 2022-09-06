@@ -639,15 +639,13 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
 
   if (!selection.isCollapsed() || !FormatUtils.isInlineFormat(format) || TableCellSelection.getCellsFromEditor(ed).length) {
     // Remove formatting on the selection
-    SelectionUtils.preserve(selection, true, () => {
-      SelectionUtils.runOnRanges(ed, removeRngStyle);
-    });
-
-    // Check if start element still has formatting then we are at: "<b>text|</b>text"
-    // and need to move the start into the next text node
-    if (FormatUtils.isInlineFormat(format) && MatchFormat.match(ed, name, vars, selection.getStart())) {
-      FormatUtils.moveStart(dom, selection, selection.getRng());
-    }
+    FormatUtils.preserveSelection(
+      ed,
+      () => SelectionUtils.runOnRanges(ed, removeRngStyle),
+      // Before trying to move the start of the selection, check if start element still has formatting then we are at: "<b>text|</b>text"
+      // and need to move the start into the next text node
+      (startNode) => FormatUtils.isInlineFormat(format) && MatchFormat.match(ed, name, vars, startNode)
+    );
 
     ed.nodeChanged();
   } else {
