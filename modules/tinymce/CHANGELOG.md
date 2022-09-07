@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - The `@menubar-row-separator-color` oxide variable no longer affects the divider between the Menubar and Toolbar. It only controls the color of the separator lines drawn in multiline Menubars. #TINY-8632
 - The `@toolbar-separator-color` oxide variable now affects the color of the separator between the Menubar and Toolbar only. #TINY-8632
-- Available Premium plugins are listed by name in the Help dialog. These names are no longer translated. #TINY-9019
+- Available Premium plugins, which are listed by name in the Help dialog, are no longer translated. #TINY-9019
 
 ### Fixed
 - The Autolink plugin did not work when text nodes in the content were fragmented. #TINY-3723
