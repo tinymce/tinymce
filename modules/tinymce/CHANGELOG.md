@@ -37,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Selecting a figure with `class="image"` incorrectly highlighted the link toolbar button. #TINY-8832
 - Specifying a single, non-default list style for the `advlist_bullet_styles` and `advlist_number_styles` options was not respected. #TINY-8721
 - Fixed multiple issues that occurred when formatting `contenteditable` elements. #TINY-8905
-- Spaces could be incorrectly added to *Insert/Edit Link* dialog components in certain cases. #TINY-8775
+- Spaces could be incorrectly added to `urlinput` dialog components (commonly but not exclusively presented in the *Insert/Edit Link* dialog) in certain cases. #TINY-8775
 - The text patterns logic threw an error when there were fragmented text nodes in a paragraph. #TINY-8779
 - Dragging a `contentEditable=false` element towards a document’s edge did not cause scrolling. #TINY-8874
 - Parsing large documents no longer throws a `Maximum call stack size exceeded` exception. #TINY-6945
