@@ -320,7 +320,7 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
               await pTest(editor, [
                 {
                   select: selectNoneditableSpan,
-                  expectedHtml: `<p>first ${noneditableBeforeHtml}<span contenteditable="true"><${format.html}>editable</${format.tag}></span>${noneditableAfterHtml} third</p>`,
+                  expectedHtml: initialHtml,
                   pAssertAfter: async () => {
                     await pAssertToolbar(false)(editor);
                     TinyAssertions.assertContentPresence(editor, { 'span[contenteditable="false"][data-mce-selected]': 1 });
@@ -739,12 +739,23 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
     });
 
     context('noneditable inline elements with selector formats', () => {
-      it('TINY-8687: applying a selector format to an inline element should apply it to the matching parent block', () => {
+      // TODO: TINY-9142 Reenable when Jira is done
+      it.skip('TINY-8687: should apply selector format to matching parent block when a noneditable inline element is selected', () => {
         const editor = hook.editor();
         editor.setContent(`<p>a<span contenteditable="false">CEF</span>b</p>`);
         TinySelections.select(editor, 'span', []);
         editor.formatter.apply('alignright');
         TinyAssertions.assertContent(editor, `<p style="text-align: right;">a<span contenteditable="false">CEF</span>b</p>`);
+      });
+
+      it('TINY-8687: should apply selector format to matching parent block when selection is within a nested noneditable inline element', () => {
+        const editor = hook.editor();
+        editor.setContent(`<p>a<span contenteditable="false">C<span contenteditable="true">E</span>F</span>b</p>`);
+        TinySelections.select(editor, 'span', []);
+        TinySelections.setCursor(editor, [ 0, 1, 1, 0 ], 0);
+        editor.formatter.apply('alignright');
+        TinyAssertions.assertContent(editor, `<p style="text-align: right;">a<span contenteditable="false">C<span contenteditable="true">E</span>F</span>b</p>`);
+        TinyAssertions.assertCursor(editor, [ 0, 1, 1, 0 ], 0);
       });
     });
   });

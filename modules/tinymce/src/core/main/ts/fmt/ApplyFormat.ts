@@ -319,6 +319,16 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
     });
   };
 
+  // TODO: TINY-9142: Remove this to make nested noneditable formatting work
+  const targetNode = FormatUtils.isNode(node) ? node : selection.getNode();
+  if (dom.getContentEditable(targetNode) === 'false' && !FormatUtils.isWrappableNoneditable(ed, targetNode)) {
+    // node variable is used by other functions above in the same scope so need to set it here
+    node = targetNode;
+    applyNodeStyle(formatList, node);
+    Events.fireFormatApply(ed, name, node, vars);
+    return;
+  }
+
   if (format) {
     if (node) {
       if (FormatUtils.isNode(node)) {
