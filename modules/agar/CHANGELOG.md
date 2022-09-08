@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 7.2.0 - 2022-09-08
+
 ### Improved
 - Exposed the `ArrayAssert` and `StringAssert` types.
 - Exposed the `KeyPressAdt` type. #TINY-8952

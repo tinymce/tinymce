@@ -6,7 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Changed
+## 7.1.0 - 2022-09-08
+
+### Improved
 - Added an optional parameter to `oneOf` that allows boulder to generate consistent output for different schema. #TINY-8952
 
 ## 7.0.0 - 2022-03-03
