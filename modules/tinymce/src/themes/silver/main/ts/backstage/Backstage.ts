@@ -13,6 +13,7 @@ import { ColorInputBackstage, UiFactoryBackstageForColorInput } from './ColorInp
 import { DialogBackstage, UiFactoryBackstageForDialog } from './DialogBackstage';
 import { HeaderBackstage, UiFactoryBackstageForHeader } from './HeaderBackstage';
 import { init as initStyleFormatBackstage, UiFactoryBackstageForStyleFormats } from './StyleFormatsBackstage';
+import { TooltipsBackstage, TooltipsProvider } from './TooltipsBackstage';
 import { UiFactoryBackstageForUrlInput, UrlInputBackstage } from './UrlInputBackstage';
 
 export interface UiFactoryBackstageProviders {
@@ -21,6 +22,7 @@ export interface UiFactoryBackstageProviders {
   readonly translate: (text: Untranslated) => TranslatedString;
   readonly isDisabled: () => boolean;
   readonly getOption: Editor['options']['get'];
+  readonly tooltips: TooltipsProvider;
 }
 
 export interface UiFactoryBackstageShared {
@@ -51,7 +53,8 @@ const init = (lazySink: () => Result<AlloyComponent, string>, editor: Editor, la
         menuItems: () => editor.ui.registry.getAll().menuItems,
         translate: I18n.translate,
         isDisabled: () => editor.mode.isReadOnly() || !editor.ui.isEnabled(),
-        getOption: editor.options.get
+        getOption: editor.options.get,
+        tooltips: TooltipsBackstage(lazySink)
       },
       interpreter: (s) => UiFactory.interpretWithoutForm(s, {}, backstage),
       anchors: Anchors.getAnchors(editor, lazyAnchorbar, toolbar.isPositionedAtTop),

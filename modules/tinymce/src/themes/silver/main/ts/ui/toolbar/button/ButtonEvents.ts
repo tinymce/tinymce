@@ -27,7 +27,8 @@ const onToolbarButtonExecute = <T>(info: OnMenuItemExecuteType<T>): AlloyEvents.
 
 const toolbarButtonEventOrder: Record<string, string[]> = {
   // TODO: use the constants provided by behaviours.
-  [SystemEvents.execute()]: [ 'disabling', 'alloy.base.behaviour', 'toggling', 'toolbar-button-events' ]
+  [SystemEvents.execute()]: [ 'disabling', 'alloy.base.behaviour', 'toggling', 'toolbar-button-events', 'tooltipping' ],
+  [SystemEvents.detachedFromDom()]: [ 'toolbar-button-events', 'tooltipping' ]
 };
 
 export { onToolbarButtonExecute, toolbarButtonEventOrder, runWithApi };

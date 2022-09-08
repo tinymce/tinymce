@@ -32,6 +32,7 @@ import * as SliderTypes from '../ui/types/SliderTypes';
 import * as SlotContainerTypes from '../ui/types/SlotContainerTypes';
 import * as TabbarTypes from '../ui/types/TabbarTypes';
 import * as TieredMenuTypes from '../ui/types/TieredMenuTypes';
+import * as TooltippingTypes from './../behaviour/tooltipping/TooltippingTypes';
 import * as AddEventsBehaviour from './behaviour/AddEventsBehaviour';
 import { AllowBubbling } from './behaviour/AllowBubbling';
 import * as Behaviour from './behaviour/Behaviour';
@@ -271,7 +272,7 @@ export {
   SubmenuAnchorSpec,
   DraggingTypes,
   Layouts,
-
+  TooltippingTypes,
   FocusInsideModes,
 
   TestHelpers

@@ -62,12 +62,12 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
       AlloyEvents.run(ShowTooltipEvent, (comp) => {
         state.resetTimer(() => {
           show(comp);
-        }, tooltipConfig.delay);
+        }, tooltipConfig.delayForShow());
       }),
       AlloyEvents.run(HideTooltipEvent, (comp) => {
         state.resetTimer(() => {
           hide(comp);
-        }, tooltipConfig.delay);
+        }, tooltipConfig.delayForHide());
       }),
       AlloyEvents.run<ReceivingEvent>(SystemEvents.receive(), (comp, message) => {
         // TODO: Think about the types for this, or find a better way for this

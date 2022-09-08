@@ -1,4 +1,4 @@
-import { AlloyComponent, Disabling, ItemTypes, Toggling } from '@ephox/alloy';
+import { AlloyComponent, Disabling, ItemTypes, Toggling, Tooltipping } from '@ephox/alloy';
 import { Menu, Toolbar } from '@ephox/bridge';
 import { Fun, Merger, Optional } from '@ephox/katamari';
 
@@ -45,6 +45,14 @@ const renderChoiceItem = (
     value: spec.value
   }, providersBackstage, renderIcons);
 
+  const optTooltipping = spec.text
+    .filter(Fun.constant(!useText))
+    .map((t) => Tooltipping.config(
+      providersBackstage.tooltips.getConfig({
+        tooltipText: providersBackstage.translate(t)
+      })
+    ));
+
   return Merger.deepMerge(
     renderCommonItem({
       data: buildData(spec),
@@ -56,7 +64,9 @@ const renderChoiceItem = (
         return Fun.noop;
       },
       triggersSubmenu: false,
-      itemBehaviours: [ ]
+      itemBehaviours: [
+        ...optTooltipping.toArray()
+      ]
     }, structure, itemResponse, providersBackstage),
     {
       toggling: {

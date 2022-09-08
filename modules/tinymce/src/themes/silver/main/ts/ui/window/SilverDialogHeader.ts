@@ -1,5 +1,5 @@
 import {
-  AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting, SketchSpec
+  AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting, SketchSpec, Tooltipping
 } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
@@ -22,8 +22,7 @@ const renderClose = (providersBackstage: UiFactoryBackstageProviders) => Button.
     classes: [ 'tox-button', 'tox-button--icon', 'tox-button--naked' ],
     attributes: {
       'type': 'button',
-      'aria-label': providersBackstage.translate('Close'),
-      'title': providersBackstage.translate('Close') // TODO tooltips: AP-213
+      'aria-label': providersBackstage.translate('Close')
     }
   },
   components: [
@@ -31,7 +30,14 @@ const renderClose = (providersBackstage: UiFactoryBackstageProviders) => Button.
   ],
   action: (comp) => {
     AlloyTriggers.emit(comp, formCancelEvent);
-  }
+  },
+  buttonBehaviours: Behaviour.derive([
+    Tooltipping.config(
+      providersBackstage.tooltips.getConfig({
+        tooltipText: providersBackstage.translate('Close')
+      })
+    )
+  ])
 });
 
 const renderTitle = (

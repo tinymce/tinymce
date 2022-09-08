@@ -2,8 +2,6 @@ import { AlloySpec, RawDomSchema } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Fun, Obj, Optional, Type } from '@ephox/katamari';
 
-import I18n from 'tinymce/core/api/util/I18n';
-
 import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import * as Icons from '../../../icons/Icons';
 import * as ItemClasses from '../ItemClasses';
@@ -31,39 +29,41 @@ const renderColorStructure = (item: ItemStructureSpec, providerBackstage: UiFact
   const colorPickerCommand = 'custom';
   const removeColorCommand = 'remove';
 
-  const itemText = item.ariaLabel;
   const itemValue = item.value;
   const iconSvg = item.iconContent.map((name) => Icons.getOr(name, providerBackstage.icons, fallbackIcon));
+
+  const attributes = item.ariaLabel.map(
+    (al) => ({
+      'aria-label': providerBackstage.translate(al)
+    })
+  ).getOr({ });
 
   const getDom = (): RawDomSchema => {
     const common = ItemClasses.colorClass;
     const icon = iconSvg.getOr('');
-    const attributes = itemText.map((text) => ({ title: providerBackstage.translate(text) } as Record<string, string>)).getOr({ });
 
-    const baseDom = {
-      tag: 'div',
-      attributes,
-      classes: [ common ]
-    };
+    // TINY-9125 Need to pass through the tooltip here.
 
     if (itemValue === colorPickerCommand) {
       return {
-        ...baseDom,
         tag: 'button',
-        classes: [ ...baseDom.classes, 'tox-swatches__picker-btn' ],
+        attributes,
+        classes: [ common, 'tox-swatches__picker-btn' ],
         innerHtml: icon
       };
     } else if (itemValue === removeColorCommand) {
       return {
-        ...baseDom,
-        classes: [ ...baseDom.classes, 'tox-swatch--remove' ],
+        tag: 'div',
+        attributes,
+        classes: [ common, 'tox-swatch--remove' ],
         innerHtml: icon
       };
     } else if (Type.isNonNullable(itemValue)) {
       return {
-        ...baseDom,
+        tag: 'div',
+        classes: [ common ],
         attributes: {
-          ...baseDom.attributes,
+          ...attributes,
           'data-mce-color': itemValue
         },
         styles: {
@@ -71,29 +71,17 @@ const renderColorStructure = (item: ItemStructureSpec, providerBackstage: UiFact
         }
       };
     } else {
-      return baseDom;
+      return {
+        tag: 'div',
+        classes: [ common ],
+        attributes
+      };
     }
   };
 
   return {
     dom: getDom(),
     optComponents: [ ]
-  };
-};
-
-const renderItemDomStructure = (ariaLabel: Optional<string>): RawDomSchema => {
-  const domTitle = ariaLabel.map((label): { attributes?: { title: string }} => ({
-    attributes: {
-      // TODO: AP-213 change this temporary solution to use tooltips, ensure its aria readable still.
-      // for icon only implementations we need either a title or aria label to satisfy aria requirements.
-      title: I18n.translate(label)
-    }
-  })).getOr({});
-
-  return {
-    tag: 'div',
-    classes: [ ItemClasses.navClass, ItemClasses.selectableClass ],
-    ...domTitle
   };
 };
 
@@ -120,7 +108,11 @@ const renderNormalItemStructure = (info: ItemStructureSpec, providersBackstage: 
   );
 
   const menuItem = {
-    dom: renderItemDomStructure(info.ariaLabel),
+    // TINY-9125: used to pass through attributes.title here.
+    dom: {
+      tag: 'div',
+      classes: [ ItemClasses.navClass, ItemClasses.selectableClass ]
+    },
     optComponents: [
       leftIcon,
       content,
@@ -141,4 +133,4 @@ const renderItemStructure = (info: ItemStructureSpec, providersBackstage: UiFact
   }
 };
 
-export { renderItemStructure, renderItemDomStructure };
+export { renderItemStructure };
