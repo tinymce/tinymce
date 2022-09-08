@@ -1,16 +1,19 @@
-import { GuiFactory, Tooltipping } from '@ephox/alloy';
-
-import { UiFactoryBackstageShared } from '../../backstage/Backstage';
+import { AlloyComponent, GuiFactory, Tooltipping } from '@ephox/alloy';
+import { Fun, Result } from '@ephox/katamari';
 
 type TooltippingBehaviour = ReturnType<typeof Tooltipping['config']>;
 
 // TODO: Consider using this once we fix the delayed attempt to appear after it's gone problem.
 
+// FIX this with a proper design / architecture.
+let numActiveTooltips = 0;
+
 // TODO: Make the arrow configurable.
-const upConfig = (item: { text: string }, sharedBackstage: UiFactoryBackstageShared): TooltippingBehaviour => Tooltipping.config({
-  delay: 200,
+const upConfig = (item: { text: string }, getSink: () => Result<AlloyComponent, any>): TooltippingBehaviour => Tooltipping.config({
+  delayForShow: () => numActiveTooltips > 0 ? 0 : 800,
+  delayForHide: Fun.constant(800),
   exclusive: true,
-  lazySink: sharedBackstage.getSink,
+  lazySink: getSink,
   /*
     <div class="tox-tooltip tox-tooltip--down">
 <div class="tox-tooltip__body">Are you hanging on the edge of your seat? </div>
@@ -36,7 +39,13 @@ const upConfig = (item: { text: string }, sharedBackstage: UiFactoryBackstageSha
         classes: [ 'tox-tooltip__arrow' ]
       }
     }
-  ]
+  ],
+  onShow: () => {
+    numActiveTooltips++;
+  },
+  onHide: () => {
+    numActiveTooltips--;
+  }
 });
 
 export {

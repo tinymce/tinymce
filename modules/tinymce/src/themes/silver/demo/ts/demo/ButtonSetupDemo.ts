@@ -189,6 +189,7 @@ export default {
 
     ed.ui.registry.addMenuButton('MailMerge', {
       text: 'MailMerge',
+      tooltip: 'MailMerge tooltip',
       search: true,
       fetch: mailMergeFetch(true)
     });

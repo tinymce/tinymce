@@ -2,6 +2,7 @@ import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button as AlloyButton, Disabling, FloatingToolbarButton, Focusing,
   GuiFactory,
   Keying, Memento, NativeEvents, Replacing, SketchSpec, SplitDropdown as AlloySplitDropdown, SystemEvents, TieredData, TieredMenuTypes, Toggling,
+  Tooltipping,
   Unselecting
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
@@ -83,8 +84,7 @@ const getToggleApi = (component: AlloyComponent): Toolbar.ToolbarToggleButtonIns
 });
 
 const getTooltipAttributes = (tooltip: Optional<string>, providersBackstage: UiFactoryBackstageProviders) => tooltip.map<{}>((tooltip) => ({
-  'aria-label': providersBackstage.translate(tooltip),
-  'title': providersBackstage.translate(tooltip)
+  'aria-label': providersBackstage.translate(tooltip)
 })).getOr({});
 
 const focusButtonEvent = Id.generate('focus-button');
@@ -203,6 +203,15 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
             onControlAttached(specialisation, editorOffCell),
             onControlDetached(specialisation, editorOffCell)
           ]),
+          ...(
+            spec.tooltip.map(
+              (t) => Tooltipping.config(
+                providersBackstage.tooltips.getConfig({
+                  tooltipText: t
+                })
+              )
+            ).toArray()
+          ),
           // Enable toolbar buttons by default
           DisablingConfigs.toolbarButton(() => !spec.enabled || providersBackstage.isDisabled()),
           ReadOnly.receivingConfig()

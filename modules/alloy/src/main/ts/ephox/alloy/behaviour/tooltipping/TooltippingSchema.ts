@@ -11,7 +11,8 @@ export default [
   FieldSchema.required('tooltipDom'),
   FieldSchema.defaulted('exclusive', true),
   FieldSchema.defaulted('tooltipComponents', []),
-  FieldSchema.defaulted('delay', 300),
+  FieldSchema.defaultedFunction('delayForShow', Fun.constant(300)),
+  FieldSchema.defaultedFunction('delayForHide', Fun.constant(300)),
   FieldSchema.defaultedStringEnum('mode', 'normal', [ 'normal', 'follow-highlight' ]),
   FieldSchema.defaulted('anchor', (comp: AlloyComponent): AnchorSpec => ({
     type: 'hotspot',
