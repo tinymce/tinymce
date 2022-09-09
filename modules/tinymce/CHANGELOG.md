@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Fix line separator scrolling in floating toolbars #TINY-8948
+
 ## 6.2.0 - 2022-09-08
 
 ### Added
