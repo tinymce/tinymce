@@ -80,6 +80,15 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     });
   });
 
+  it('TINY-9098: insert newline on inline cE=false element should do nothing', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>before<span contenteditable="false">x</span>after</p>');
+    TinySelections.select(editor, 'span', []);
+    insertNewline(editor, { });
+    editor.nodeChanged();
+    TinyAssertions.assertContent(editor, '<p>before<span contenteditable="false">x</span>after</p>');
+  });
+
   context('br_newline_selector', () => {
     before(() => {
       hook.editor().options.set('br_newline_selector', 'p,div.test');

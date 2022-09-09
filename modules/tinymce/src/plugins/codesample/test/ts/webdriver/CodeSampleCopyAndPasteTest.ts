@@ -50,7 +50,7 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
 
   it('TINY-8861: press enter after pasting a code sample should not add a newline inside the code', async () => {
     const editor = hook.editor();
-
+    editor.setContent('<p><br /></p><p><br /></p>');
     await TestUtils.pOpenDialogAndAssertInitial(hook.editor(), 'markup', '');
     TestUtils.setTextareaContent('test content');
     await TestUtils.pSubmitDialog(editor);
@@ -58,43 +58,26 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
     TinyAssertions.assertContentPresence(editor, { 'pre[data-mce-selected]': 1 });
 
     await pClickEditMenu(editor, 'Copy');
-    pressEnter(editor);
-    TinyAssertions.assertCursor(editor, [ 1 ], 0);
+    TinySelections.setCursor(editor, [ 1 ], 0);
     TinyAssertions.assertContentPresence(editor, { 'pre[data-mce-selected]': 0 });
 
     await pPaste(editor);
     TinyAssertions.assertSelection(editor, [], 1, [], 2);
     TinyAssertions.assertContentPresence(editor, { 'pre[data-mce-selected]': 1 });
 
+    // Pressing <enter> should do nothing.
     pressEnter(editor);
-    TinyAssertions.assertCursor(editor, [ 2 ], 0);
-    TinyAssertions.assertContentPresence(editor, { 'pre[data-mce-selected]': 0 });
+    TinyAssertions.assertSelection(editor, [], 1, [], 2);
+    TinyAssertions.assertContentPresence(editor, { 'pre[data-mce-selected]': 1 });
 
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => {
-      const emptyParagraph = s.element('p', {
-        children: [
-          s.element('br', {})
-        ]
-      });
       return s.element('body', {
         children: [
-          emptyParagraph,
-          emptyParagraph,
-          s.element('p', {
-            attrs: {
-              // fake caret
-              'data-mce-caret': str.is('before'),
-              'data-mce-bogus': str.is('all')
-            },
-            children: [
-              s.element('br', {})
-            ]
-          }),
           getMockPreStructure(s, str),
           getMockPreStructure(s, str),
           s.element('div', {
-            // fake caret
-            classes: [ arr.has('mce-visual-caret') ]
+            // offscreen selection of cef because the second pre still has the selection
+            classes: [ arr.has('mce-offscreen-selection') ]
           })
         ]
       });

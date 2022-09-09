@@ -1,6 +1,6 @@
 {
   "name": "@ephox/mcagar",
-  "version": "8.0.3",
+  "version": "8.1.1",
   "description": "Tinymce agar wrapper",
   "repository": {
     "type": "git",
@@ -24,10 +24,10 @@
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "MIT",
   "dependencies": {
-    "@ephox/agar": "^7.1.1",
-    "@ephox/katamari": "^9.0.3",
-    "@ephox/sand": "^6.0.3",
-    "@ephox/sugar": "^9.0.3",
+    "@ephox/agar": "^7.2.1",
+    "@ephox/katamari": "^9.1.1",
+    "@ephox/sand": "^6.0.5",
+    "@ephox/sugar": "^9.1.1",
     "fast-check": "^2.0.0",
     "tslib": "^2.0.0"
   },

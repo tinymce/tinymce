@@ -9,48 +9,85 @@ import Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as NodeType from '../dom/NodeType';
+import * as SelectionUtils from '../selection/SelectionUtils';
 import * as Whitespace from '../text/Whitespace';
 import { isCaretNode } from './FormatContainer';
 import { BlockFormat, Format, FormatAttrOrStyleValue, FormatVars, InlineFormat, MixedFormat, SelectorFormat } from './FormatTypes';
 
-const isNode = (node: any): node is Node => !!(node).nodeType;
+const isNode = (node: any): node is Node =>
+  Type.isNumber(node?.nodeType);
 
 const isElementNode = (node: Node): node is Element =>
   NodeType.isElement(node) && !Bookmarks.isBookmarkNode(node) && !isCaretNode(node) && !NodeType.isBogus(node);
 
-const isInlineBlock = (node: Node): boolean => {
-  return node && /^(IMG)$/.test(node.nodeName);
+// In TinyMCE, directly selected elements are indicated with the data-mce-selected attribute
+// Elements that can be directly selected include control elements such as img, media elements, noneditable elements and others
+const isElementDirectlySelected = (dom: DOMUtils, node: Node): boolean => {
+  // Table cells are a special case and are separately handled from native editor selection
+  if (isElementNode(node) && !/^(TD|TH)$/.test(node.nodeName)) {
+    const selectedAttr = dom.getAttrib(node, 'data-mce-selected');
+    const value = parseInt(selectedAttr, 10);
+    // Avoid cases where data-mce-selected is not a positive number e.g. inline-boundary
+    return !isNaN(value) && value > 0;
+  } else {
+    return false;
+  }
 };
 
 const isEditable = (elm: HTMLElement): boolean =>
   elm.isContentEditable === true;
 
-const moveStart = (dom: DOMUtils, selection: EditorSelection, rng: Range): void => {
-  const offset = rng.startOffset;
-  let container = rng.startContainer;
+// TODO: TINY-9130 Look at making SelectionUtils.preserve maintain the noneditable selection instead
+const preserveSelection = (editor: Editor, action: () => void, shouldMoveStart: (startNode: Node) => boolean): void => {
+  const { selection, dom } = editor;
+  const selectedNodeBeforeAction = selection.getNode();
+  const isSelectedBeforeNodeNoneditable = NodeType.isContentEditableFalse(selectedNodeBeforeAction);
 
-  if (container === rng.endContainer) {
-    if (isInlineBlock(container.childNodes[offset])) {
-      return;
-    }
+  SelectionUtils.preserve(selection, true, () => {
+    action();
+  });
+
+  // Check previous selected node before the action still exists in the DOM
+  // and is still noneditable
+  const isBeforeNodeStillNoneditable = isSelectedBeforeNodeNoneditable && NodeType.isContentEditableFalse(selectedNodeBeforeAction);
+  if (isBeforeNodeStillNoneditable && dom.isChildOf(selectedNodeBeforeAction, editor.getBody())) {
+    editor.selection.select(selectedNodeBeforeAction);
+  } else if (shouldMoveStart(selection.getStart())) {
+    moveStartToNearestText(dom, selection);
+  }
+};
+
+// Note: The reason why we only care about moving the start is because MatchFormat and its function use the start of the selection to determine if a selection has a given format or not
+const moveStartToNearestText = (dom: DOMUtils, selection: EditorSelection): void => {
+  const rng = selection.getRng();
+  const { startContainer, startOffset } = rng;
+  const selectedNode = selection.getNode();
+
+  if (isElementDirectlySelected(dom, selectedNode)) {
+    return;
   }
 
-  // Move startContainer/startOffset in to a suitable node
-  if (NodeType.isElement(container)) {
-    const nodes = container.childNodes;
+  // Try move startContainer/startOffset to a suitable text node
+  if (NodeType.isElement(startContainer)) {
+    const nodes = startContainer.childNodes;
     const root = dom.getRoot();
     let walker: DomTreeWalker;
-    if (offset < nodes.length) {
-      container = nodes[offset];
-      walker = new DomTreeWalker(container, dom.getParent(container, dom.isBlock) ?? root);
+    if (startOffset < nodes.length) {
+      const startNode = nodes[startOffset];
+      walker = new DomTreeWalker(startNode, dom.getParent(startNode, dom.isBlock) ?? root);
     } else {
-      container = nodes[nodes.length - 1];
-      walker = new DomTreeWalker(container, dom.getParent(container, dom.isBlock) ?? root);
+      const startNode = nodes[nodes.length - 1];
+      walker = new DomTreeWalker(startNode, dom.getParent(startNode, dom.isBlock) ?? root);
       walker.next(true);
     }
 
     for (let node = walker.current(); node; node = walker.next()) {
-      if (NodeType.isText(node) && !isWhiteSpaceNode(node)) {
+      // If we have found a noneditable element before we have found any text
+      // then we cannot move forward any further as otherwise the start could be put inside
+      // the non-editable element which is not valid
+      if (dom.getContentEditable(node) === 'false') {
+        return;
+      } else if (NodeType.isText(node) && !isWhiteSpaceNode(node)) {
         rng.setStart(node, 0);
         selection.setRng(rng);
 
@@ -279,9 +316,8 @@ const shouldExpandToSelector = (format: Format): boolean =>
 export {
   isNode,
   isElementNode,
-  isInlineBlock,
   isEditable,
-  moveStart,
+  preserveSelection,
   getNonWhiteSpaceSibling,
   isTextBlock,
   isValid,

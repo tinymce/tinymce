@@ -1,4 +1,4 @@
-import { Arr, Obj, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Type } from '@ephox/katamari';
 import { PredicateExists, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
@@ -137,17 +137,17 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
 
     const canRenameBlock = (nodeName: string, parentName: string, isEditableDescendant: boolean) => {
       const isValidBlockFormatForNode =
-            FormatUtils.isNonWrappingBlockFormat(format) &&
-            FormatUtils.isTextBlock(ed, nodeName) &&
-            FormatUtils.isValid(ed, parentName, wrapName);
+        FormatUtils.isNonWrappingBlockFormat(format) &&
+        FormatUtils.isTextBlock(ed, nodeName) &&
+        FormatUtils.isValid(ed, parentName, wrapName);
       return isEditableDescendant && isValidBlockFormatForNode;
     };
 
     const canWrapNode = (node: Node, parentName: string, isEditableDescendant: boolean, isWrappableNoneditableElm: boolean) => {
       const nodeName = node.nodeName.toLowerCase();
       const isValidWrapNode =
-            FormatUtils.isValid(ed, wrapName, nodeName) &&
-            FormatUtils.isValid(ed, parentName, wrapName);
+        FormatUtils.isValid(ed, wrapName, nodeName) &&
+        FormatUtils.isValid(ed, parentName, wrapName);
       // If it is not node specific, it means that it was not passed into 'formatter.apply` and is within the editor selection
       const isZwsp = !nodeSpecific && NodeType.isText(node) && Zwsp.isZwsp(node.data);
       const isCaret = isCaretNode(node);
@@ -319,6 +319,16 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
     });
   };
 
+  // TODO: TINY-9142: Remove this to make nested noneditable formatting work
+  const targetNode = FormatUtils.isNode(node) ? node : selection.getNode();
+  if (dom.getContentEditable(targetNode) === 'false' && !FormatUtils.isWrappableNoneditable(ed, targetNode)) {
+    // node variable is used by other functions above in the same scope so need to set it here
+    node = targetNode;
+    applyNodeStyle(formatList, node);
+    Events.fireFormatApply(ed, name, node, vars);
+    return;
+  }
+
   if (format) {
     if (node) {
       if (FormatUtils.isNode(node)) {
@@ -335,16 +345,18 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
       if (!isCollapsed || !FormatUtils.isInlineFormat(format) || TableCellSelection.getCellsFromEditor(ed).length) {
         // Apply formatting to selection
         selection.setRng(RangeNormalizer.normalize(selection.getRng()));
-        SelectionUtils.preserve(selection, true, () => {
-          SelectionUtils.runOnRanges(ed, (selectionRng, fake) => {
-            const expandedRng = fake ? selectionRng : ExpandRange.expandRng(ed, selectionRng, formatList);
-            applyRngStyle(dom, expandedRng, false);
-          });
-        });
 
-        if (dom.getContentEditable(selection.getNode()) !== 'false') {
-          FormatUtils.moveStart(dom, selection, selection.getRng());
-        }
+        FormatUtils.preserveSelection(
+          ed,
+          () => {
+            SelectionUtils.runOnRanges(ed, (selectionRng, fake) => {
+              const expandedRng = fake ? selectionRng : ExpandRange.expandRng(ed, selectionRng, formatList);
+              applyRngStyle(dom, expandedRng, false);
+            });
+          },
+          Fun.always
+        );
+
         ed.nodeChanged();
       } else {
         CaretFormat.applyCaretFormat(ed, name, vars);
