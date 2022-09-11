@@ -1,20 +1,18 @@
 import { UiFinder } from '@ephox/agar';
 import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Type } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Classes, Css, Html, SelectorFind, SugarBody, SugarDocument, SugarElement, SugarShadowDom, Traverse } from '@ephox/sugar';
-import { McEditor, TinyContentActions, TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
+import { McEditor, TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { NotificationApi } from 'tinymce/core/api/PublicApi';
+import { NotificationApi } from 'tinymce/core/api/NotificationManager';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
   let firedEvents: string[] = [];
-  const platform = PlatformDetection.detect();
 
   afterEach(() => {
     firedEvents = [];
@@ -100,11 +98,6 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
     assert.isFalse(position.top === oldPos.top && position.left === oldPos.left, 'Notification position not updated as expected');
   };
 
-  const fullScreenKeyCombination = (editor: Editor) => {
-    const modifiers = platform.os.isMacOS() ? { meta: true, shift: true } : { ctrl: true, shift: true };
-    TinyContentActions.keystroke(editor, 'F'.charCodeAt(0), modifiers);
-  };
-
   Arr.each([
     { label: 'Iframe Editor', setup: TinyHooks.bddSetup },
     { label: 'Shadow Dom Editor', setup: TinyHooks.bddSetupInShadowRoot }
@@ -139,30 +132,6 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
         editor.execCommand('mceFullScreen');
         assertApiAndEvents(editor, false);
         assertPageState(editor, false);
-      });
-
-      it('TINY-2884: Toggle fullscreen on with keyboard, open link dialog, insert link, close dialog and toggle fullscreen off', async () => {
-        const editor = hook.editor();
-        assertPageState(editor, false);
-        fullScreenKeyCombination(editor);
-        assertApiAndEvents(editor, true);
-        firedEvents = [];
-        assertPageState(editor, true);
-        editor.execCommand('mceLink');
-        await pWaitForDialog(editor, 'Insert/Edit Link');
-        closeOnlyWindow(editor);
-        assertPageState(editor, true);
-        fullScreenKeyCombination(editor);
-        assertApiAndEvents(editor, false);
-        assertPageState(editor, false);
-      });
-
-      it('TINY-2884: Toggle fullscreen with keyboard and cleanup editor should clean up classes', () => {
-        const editor = hook.editor();
-        fullScreenKeyCombination(editor);
-        assertApiAndEvents(editor, true);
-        assertPageState(editor, true);
-        fullScreenKeyCombination(editor);
       });
 
       it('TINY-8701: notifications are properly updated when notification is created before fullscreen', () => {

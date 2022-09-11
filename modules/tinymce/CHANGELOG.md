@@ -6,12 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Changed
-- Toggling fullscreen mode with the `fullscreen` plugin now also fires the `ResizeEditor` event #TINY-8701
-
 ### Fixed
 - The `name` and `id` attributes of some elements were incorrectly removed during serialization #TINY-8773
 - Notifications would not properly reposition when toggling fullscreen mode #TINY-8701
+- Toggling fullscreen mode with the `fullscreen` plugin now also fires the `ResizeEditor` event #TINY-8701
 
 ## 5.10.5 - 2022-05-25
 
