@@ -1,5 +1,6 @@
+import { Cursors } from '@ephox/agar';
 import { after, before, context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Type } from '@ephox/katamari';
+import { Arr, Fun, Type } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -9,6 +10,7 @@ interface Action {
   readonly expectedHtml: string;
   readonly pAssertBefore?: (editor: Editor) => Promise<void>;
   readonly pAssertAfter?: (editor: Editor) => Promise<void>;
+  readonly selectionAfter?: Cursors.CursorPath;
 }
 
 interface FormatInfo {
@@ -25,6 +27,13 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [], true);
 
+  const selectionPath = (startPath: number[], soffset: number, finishPath: number[], foffset: number): Cursors.CursorPath => ({
+    startPath,
+    soffset,
+    finishPath,
+    foffset
+  });
+
   const toggleInlineStyle = (style: string) => (editor: Editor) => {
     TinyUiActions.clickOnToolbar(editor, `[aria-label="${style}"]`);
   };
@@ -38,15 +47,26 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
 
   const pTestFormat = (format: (editor: Editor) => void) => async (editor: Editor, actions: Action[]) => {
     for (const action of actions) {
-      const { select, expectedHtml, pAssertBefore, pAssertAfter } = action;
+      const { select, expectedHtml, pAssertBefore, pAssertAfter, selectionAfter } = action;
       select(editor);
       if (Type.isNonNullable(pAssertBefore)) {
         await pAssertBefore(editor);
       }
+
       format(editor);
+
       TinyAssertions.assertContent(editor, expectedHtml);
       if (Type.isNonNullable(pAssertAfter)) {
-        await pAssertAfter(editor);
+        pAssertAfter(editor);
+      }
+      if (Type.isNonNullable(selectionAfter)) {
+        TinyAssertions.assertSelection(
+          editor,
+          selectionAfter.startPath,
+          selectionAfter.soffset,
+          selectionAfter.finishPath,
+          selectionAfter.foffset
+        );
       }
     }
   };
@@ -127,6 +147,31 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
               ]);
             });
 
+            it(`TINY-8935: select noneditable, toggle ${format.label}, keep selection, toggle ${format.label}`, async () => {
+              const editor = hook.editor();
+              editor.setContent(initialHtml);
+              await pTest(editor, [
+                {
+                  select: selectNoneditableSpan,
+                  expectedHtml: `<p>first <${format.html}>${noneditableHtml}</${format.tag}> third</p>`,
+                  pAssertAfter: async () => {
+                    await pAssertToolbar(true)(editor);
+                    TinyAssertions.assertContentPresence(editor, { 'span[contenteditable="false"][data-mce-selected]': 1 });
+                  },
+                  selectionAfter: selectionPath([ 0, 1 ], 0, [ 0, 1 ], 1)
+                },
+                {
+                  select: Fun.noop,
+                  expectedHtml: initialHtml,
+                  pAssertAfter: async () => {
+                    await pAssertToolbar(false)(editor);
+                    TinyAssertions.assertContentPresence(editor, { 'span[contenteditable="false"][data-mce-selected]': 1 });
+                  },
+                  selectionAfter: selectionPath([ 0 ], 1, [ 0 ], 2)
+                },
+              ]);
+            });
+
             it(`TINY-8842: select noneditable, toggle ${format.label}, select all, toggle ${format.label}`, async () => {
               const editor = hook.editor();
               editor.setContent(initialHtml);
@@ -178,6 +223,23 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
                 },
               ]);
             });
+
+            it(`TINY-8842: select all, toggle ${format.label}, keep selection, toggle ${format.label}`, async () => {
+              const editor = hook.editor();
+              editor.setContent(initialHtml);
+              await pTest(editor, [
+                {
+                  select: selectAll,
+                  expectedHtml: `<p><${format.html}>first ${noneditableHtml} third</${format.tag}></p>`,
+                  pAssertAfter: pAssertToolbar(true)
+                },
+                {
+                  select: Fun.noop,
+                  expectedHtml: initialHtml,
+                  pAssertAfter: pAssertToolbar(false)
+                },
+              ]);
+            });
           });
         });
       });
@@ -204,16 +266,11 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
                 {
                   select: selectNoneditableSpan,
                   expectedHtml: initialHtml,
-                  pAssertAfter: pAssertToolbar(false)
-                },
-                {
-                  select: selectAll,
-                  expectedHtml: [
-                    `<p><${format.html}>first </${format.tag}>` +
-                    noneditableHtml,
-                    `<${format.html}> third</${format.tag}></p>`,
-                  ].join(''),
-                  pAssertAfter: pAssertToolbar(true)
+                  pAssertAfter: async () => {
+                    await pAssertToolbar(false)(editor);
+                    TinyAssertions.assertContentPresence(editor, { 'span[contenteditable="false"][data-mce-selected]': 1 });
+                  },
+                  selectionAfter: selectionPath([ 0 ], 1, [ 0 ], 2)
                 },
               ]);
             });
@@ -263,8 +320,12 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
               await pTest(editor, [
                 {
                   select: selectNoneditableSpan,
-                  expectedHtml: `<p>first ${noneditableBeforeHtml}<span contenteditable="true"><${format.html}>editable</${format.tag}></span>${noneditableAfterHtml} third</p>`,
-                  pAssertAfter: pAssertToolbar(false)
+                  expectedHtml: initialHtml,
+                  pAssertAfter: async () => {
+                    await pAssertToolbar(false)(editor);
+                    TinyAssertions.assertContentPresence(editor, { 'span[contenteditable="false"][data-mce-selected]': 1 });
+                  },
+                  selectionAfter: selectionPath([ 0 ], 1, [ 0 ], 2)
                 },
               ]);
             });
@@ -678,12 +739,23 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
     });
 
     context('noneditable inline elements with selector formats', () => {
-      it('TINY-8687: applying a selector format to an inline element should apply it to the matching parent block', () => {
+      // TODO: TINY-9142 Reenable when Jira is done
+      it.skip('TINY-8687: should apply selector format to matching parent block when a noneditable inline element is selected', () => {
         const editor = hook.editor();
         editor.setContent(`<p>a<span contenteditable="false">CEF</span>b</p>`);
         TinySelections.select(editor, 'span', []);
         editor.formatter.apply('alignright');
         TinyAssertions.assertContent(editor, `<p style="text-align: right;">a<span contenteditable="false">CEF</span>b</p>`);
+      });
+
+      it('TINY-8687: should apply selector format to matching parent block when selection is within a nested noneditable inline element', () => {
+        const editor = hook.editor();
+        editor.setContent(`<p>a<span contenteditable="false">C<span contenteditable="true">E</span>F</span>b</p>`);
+        TinySelections.select(editor, 'span', []);
+        TinySelections.setCursor(editor, [ 0, 1, 1, 0 ], 0);
+        editor.formatter.apply('alignright');
+        TinyAssertions.assertContent(editor, `<p style="text-align: right;">a<span contenteditable="false">C<span contenteditable="true">E</span>F</span>b</p>`);
+        TinyAssertions.assertCursor(editor, [ 0, 1, 1, 0 ], 0);
       });
     });
   });

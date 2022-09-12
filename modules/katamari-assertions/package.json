@@ -1,6 +1,6 @@
 {
   "name": "@ephox/katamari-assertions",
-  "version": "4.0.3",
+  "version": "4.0.5",
   "description": "Bedrock test assertions for Katamari",
   "repository": {
     "type": "git",
@@ -18,7 +18,7 @@
   "dependencies": {
     "@ephox/bedrock-client": "11 || 12 || 13",
     "@ephox/dispute": "^1.0.3",
-    "@ephox/katamari": "^9.0.3",
+    "@ephox/katamari": "^9.1.1",
     "tslib": "^2.0.0"
   },
   "files": [

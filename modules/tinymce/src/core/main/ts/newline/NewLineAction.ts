@@ -46,6 +46,11 @@ const inBlock = (blockName: string, requiredState: boolean) => (editor: Editor, 
   return state === requiredState;
 };
 
+const inCefBlock = (editor: Editor) => {
+  const editableRoot = NewLineUtils.getEditableRoot(editor.dom, editor.selection.getStart());
+  return Type.isNullable(editableRoot);
+};
+
 const inPreBlock = (requiredState: boolean) => inBlock('pre', requiredState);
 const inSummaryBlock = () => inBlock('summary', true);
 
@@ -83,11 +88,14 @@ const match = (predicates: Array<(editor: Editor, shiftKey: boolean) => boolean>
 const getAction = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): NewLineActionAdt => {
   return LazyEvaluator.evaluateUntil([
     match([ shouldBlockNewLine ], newLineAction.none()),
+    // If the pre block is cef, do not try to insert a new line (or delete contents)
+    match([ inPreBlock(true), inCefBlock ], newLineAction.none()),
     match([ inSummaryBlock() ], newLineAction.br()),
     match([ inPreBlock(true), shouldPutBrInPre(false), hasShiftKey ], newLineAction.br()),
     match([ inPreBlock(true), shouldPutBrInPre(false) ], newLineAction.block()),
     match([ inPreBlock(true), shouldPutBrInPre(true), hasShiftKey ], newLineAction.block()),
     match([ inPreBlock(true), shouldPutBrInPre(true) ], newLineAction.br()),
+    // TODO: TINY-9127 investigate if the list handling (and pre) is correct here.
     match([ inListBlock(true), hasShiftKey ], newLineAction.br()),
     match([ inListBlock(true) ], newLineAction.block()),
     match([ inBrContext ], newLineAction.br()),

@@ -40,6 +40,7 @@ export interface SetSelectionContentArgs extends SetContentArgs {
 }
 
 export interface InsertContentDetails {
+  readonly no_events?: boolean;
   readonly paste?: boolean;
   readonly merge?: boolean;
   readonly data?: {

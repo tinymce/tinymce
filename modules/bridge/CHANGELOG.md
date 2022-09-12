@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 4.1.0 - 2022-09-08
+
 ### Improved
 - The `MenuButton` type now takes a `search` field for configuring searchable menus. #TINY-8952
 

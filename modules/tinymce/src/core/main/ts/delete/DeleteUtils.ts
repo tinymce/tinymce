@@ -18,10 +18,16 @@ const execCommandIgnoreInputEvents = (editor: Editor, command: string) => {
   editor.off('beforeinput input', inputBlocker);
 };
 
-const execDeleteCommand = (editor: Editor): void =>
+// ASSUMPTION: The editor command 'delete' doesn't have any `beforeinput` and `input` trapping
+// because those events are only triggered by native contenteditable behaviour.
+const execEditorDeleteCommand = (editor: Editor): void => {
+  editor.execCommand('delete');
+};
+
+const execNativeDeleteCommand = (editor: Editor): void =>
   execCommandIgnoreInputEvents(editor, 'Delete');
 
-const execForwardDeleteCommand = (editor: Editor): void =>
+const execNativeForwardDeleteCommand = (editor: Editor): void =>
   execCommandIgnoreInputEvents(editor, 'ForwardDelete');
 
 const isBeforeRoot = (rootNode: SugarElement<Node>) => (elm: SugarElement<Node>): boolean =>
@@ -96,8 +102,9 @@ const deleteRangeContents = (editor: Editor, rng: Range, root: SugarElement<HTML
 
 export {
   deleteRangeContents,
-  execDeleteCommand,
-  execForwardDeleteCommand,
+  execNativeDeleteCommand,
+  execNativeForwardDeleteCommand,
+  execEditorDeleteCommand,
   getParentBlock,
   paddEmptyBody,
   willDeleteLastPositionInElement
