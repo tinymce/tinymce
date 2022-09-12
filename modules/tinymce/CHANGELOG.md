@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Fixed
-- Fix double bottom border on inline mode editor in `tinymce-5` skin #TINY-9108
+- Fix double bottom border on inline mode editor in `tinymce-5` skin. #TINY-9108
 
 ### Added
 - New `text_patterns_lookup` option to provide additional text patterns dynamically #TINY-8778
