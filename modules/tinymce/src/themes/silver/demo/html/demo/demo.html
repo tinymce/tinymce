@@ -6,6 +6,12 @@
 <style>
    .tox-tooltip {
     z-index: 10000000000;
+    /* The pointer-events: none is designed to make mouse events bleed through the tooltip
+     * to the underlying items. For example, a mouse hovering over a tooltip that hovers over
+     * another item should trigger the hover of the item obscured by the tooltip, even though
+     * the tooltip is on top
+     */
+    pointer-events: none;
    }
 </style>
 </head>
