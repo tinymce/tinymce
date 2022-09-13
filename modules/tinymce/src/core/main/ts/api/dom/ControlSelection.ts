@@ -541,7 +541,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
       }
     });
 
-    editor.on('nodechange ResizeEditor ResizeWindow ResizeContent drop FullscreenStateChanged', throttledUpdateResizeRect);
+    editor.on('NodeChange ResizeEditor ResizeWindow ResizeContent drop', throttledUpdateResizeRect);
 
     // Update resize rect while typing in a table
     editor.on('keyup compositionend', (e) => {
