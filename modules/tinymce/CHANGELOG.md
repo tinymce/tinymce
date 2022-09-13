@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Fixed
-- Fix double bottom border on inline mode editor in `tinymce-5` skin. #TINY-9108
+- Double bottom border on inline mode editor in `tinymce-5` skin. #TINY-9108
 
 ## 6.2.0 - 2022-09-08
 
