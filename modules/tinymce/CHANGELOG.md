@@ -11,8 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `expand` function added to `tinymce.dom.RangeUtils` to return a new range expanded around the nearest word. #TINY-9001
 
 ### Fixed
+- Line separator scrolling in floating toolbars. #TINY-8948
 - Double bottom border on inline mode editor in `tinymce-5` skin. #TINY-9108
-
 
 ## 6.2.0 - 2022-09-08
 
