@@ -138,7 +138,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
     const canRenameBlock = (nodeName: string, parentName: string, isEditableDescendant: boolean) => {
       const isValidBlockFormatForNode =
         FormatUtils.isNonWrappingBlockFormat(format) &&
-        FormatUtils.isTextBlock(ed, nodeName) &&
+        FormatUtils.isTextBlock(ed.schema, nodeName) &&
         FormatUtils.isValid(ed, parentName, wrapName);
       return isEditableDescendant && isValidBlockFormatForNode;
     };
@@ -336,7 +336,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
           const rng = dom.createRng();
           rng.setStartBefore(node);
           rng.setEndAfter(node);
-          applyRngStyle(dom, ExpandRange.expandRng(ed, rng, formatList), true);
+          applyRngStyle(dom, ExpandRange.expandRng(dom, rng, formatList), true);
         }
       } else {
         applyRngStyle(dom, node, true);
@@ -350,7 +350,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
           ed,
           () => {
             SelectionUtils.runOnRanges(ed, (selectionRng, fake) => {
-              const expandedRng = fake ? selectionRng : ExpandRange.expandRng(ed, selectionRng, formatList);
+              const expandedRng = fake ? selectionRng : ExpandRange.expandRng(dom, selectionRng, formatList);
               applyRngStyle(dom, expandedRng, false);
             });
           },
