@@ -346,12 +346,6 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
         // Apply formatting to selection
         selection.setRng(RangeNormalizer.normalize(selection.getRng()));
 
-        SelectionUtils.preserve(selection, true, () => {
-          SelectionUtils.runOnRanges(ed, (selectionRng, fake) => {
-            const expandedRng = fake ? selectionRng : ExpandRange.expandRng(dom, selectionRng, formatList);
-            applyRngStyle(dom, expandedRng, false);
-          });
-        });
         FormatUtils.preserveSelection(
           ed,
           () => {
