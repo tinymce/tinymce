@@ -108,6 +108,8 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       identifyMenus(editor, rawUiConfig)
     );
 
+    OuterContainer.setCustomViews(outerContainer, rawUiConfig.customViews);
+
     setupEvents(editor, uiComponents);
   });
 
@@ -135,6 +137,11 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   });
 
   editor.addQueryValueHandler('ToggleSidebar', () => OuterContainer.whichSidebar(outerContainer) ?? '');
+
+  editor.addCommand('ToggleCustomView', (_ui: boolean, value: string) => {
+    OuterContainer.toggleCustomView(outerContainer, value);
+  });
+  editor.addQueryValueHandler('ToggleCustomView', () => OuterContainer.whichCustomView(outerContainer) ?? '');
 
   const toolbarMode = Options.getToolbarMode(editor);
 

@@ -14,6 +14,7 @@ import * as Throbber from '../throbber/Throbber';
 import {
   MoreDrawerData, MoreDrawerToolbarSpec, renderFloatingMoreToolbar, renderSlidingMoreToolbar, renderToolbar, renderToolbarGroup, ToolbarGroup
 } from '../toolbar/CommonToolbar';
+import * as View from '../view/View';
 
 export interface OuterContainerSketchSpec extends Sketcher.CompositeSketchSpec {
   readonly dom: RawDomSchema;
@@ -65,6 +66,9 @@ interface OuterContainerApis {
   readonly focusToolbar: (comp: AlloyComponent) => void;
   readonly setMenubar: (comp: AlloyComponent, groups: MenubarItemSpec[]) => void;
   readonly focusMenubar: (comp: AlloyComponent) => void;
+  readonly setCustomViews: (comp: AlloyComponent, viewConfigs: View.ViewConfig) => void;
+  readonly toggleCustomView: (comp: AlloyComponent, name: string) => void;
+  readonly whichCustomView: (comp: AlloyComponent) => string | null;
 }
 
 interface ToolbarApis {
@@ -146,6 +150,23 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
       Composite.parts.getPart(comp, detail, 'menubar').each((menubar) => {
         SilverMenubar.focus(menubar);
       });
+    },
+    setCustomViews: (comp, viewConfigs) => {
+      Composite.parts.getPart(comp, detail, 'customViewWrapper').each((wrapper) => {
+        View.setViews(wrapper, viewConfigs);
+      });
+    },
+    toggleCustomView: (comp, name) => {
+      Composite.parts.getPart(comp, detail, 'editorContainer').each((container) => {
+        Composite.parts.getPart(comp, detail, 'customViewWrapper').each(
+          (wrapper) => View.toggleView(wrapper, container, name)
+        );
+      });
+    },
+    whichCustomView: (comp) => {
+      return Composite.parts.getPart(comp, detail, 'customViewWrapper').bind(
+        View.whichView
+      ).getOrNull();
     }
   };
 
@@ -294,6 +315,30 @@ const partThrobber = Composite.partType.optional({
   ]
 });
 
+const partCustomViewWrapper = Composite.partType.optional({
+  factory: {
+    sketch: View.renderCustomViewWrapper
+  },
+  name: 'customViewWrapper'
+});
+
+const renderEditorContainer = (spec: SketchSpec): AlloySpec => ({
+  uid: spec.uid,
+  dom: {
+    tag: 'div',
+    classes: [ 'tox-editor-container' ]
+  },
+  components: spec.components
+});
+
+const partEditorContainer = Composite.partType.optional({
+  factory: {
+    sketch: renderEditorContainer
+  },
+  name: 'editorContainer',
+  schema: [ ]
+});
+
 export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketchDetail, OuterContainerApis>({
   name: 'OuterContainer',
   factory,
@@ -309,7 +354,9 @@ export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketch
     partSocket,
     partSidebar,
     partPromotion,
-    partThrobber
+    partThrobber,
+    partCustomViewWrapper,
+    partEditorContainer
   ],
 
   apis: {
@@ -358,6 +405,15 @@ export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketch
     },
     focusToolbar: (apis, comp) => {
       apis.focusToolbar(comp);
-    }
+    },
+    setCustomViews: (apis, comp, views) => {
+      apis.setCustomViews(comp, views);
+    },
+    toggleCustomView: (apis, comp, name) => {
+      return apis.toggleCustomView(comp, name);
+    },
+    whichCustomView: (apis, comp) => {
+      return apis.whichCustomView(comp);
+    },
   }
 }) as OuterContainerSketch;

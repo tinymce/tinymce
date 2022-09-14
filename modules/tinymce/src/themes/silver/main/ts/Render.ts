@@ -29,6 +29,7 @@ import * as Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
 import * as Throbber from './ui/throbber/Throbber';
 import { RenderToolbarConfig } from './ui/toolbar/Integration';
+import * as View from './ui/view/View';
 
 export interface ModeRenderInfo {
   readonly iframeContainer?: HTMLIFrameElement;
@@ -54,6 +55,7 @@ export type ToolbarConfig = Array<string | Options.ToolbarGroupOption> | string 
 
 export interface RenderUiConfig extends RenderToolbarConfig, MenuRegistry {
   readonly sidebar: Sidebar.SidebarConfig;
+  readonly customViews: View.ViewConfig;
 }
 
 export interface RenderArgs {
@@ -272,6 +274,10 @@ const setup = (editor: Editor): RenderInfo => {
       backstage
     });
 
+    const partCustomViewWrapper: AlloySpec = OuterContainer.parts.customViewWrapper({
+      backstage
+    });
+
     const statusbar: Optional<AlloySpec> =
       Options.useStatusBar(editor) && !isInline ? Optional.some(renderStatusbar(editor, backstage.shared.providers)) : Optional.none<AlloySpec>();
 
@@ -283,17 +289,13 @@ const setup = (editor: Editor): RenderInfo => {
       isToolbarBottom ? [ partHeader ] : [ ]
     ]);
 
-    const editorContainer = {
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-editor-container' ]
-      },
+    const editorContainer = OuterContainer.parts.editorContainer({
       components: Arr.flatten<AlloySpec>([
         editorComponents,
         // Inline mode does not have a status bar
         isInline ? [ ] : statusbar.toArray()
       ])
-    };
+    });
 
     // Hide the outer container if using inline mode and there's no menubar or toolbar
     const isHidden = Options.isDistractionFree(editor);
@@ -320,7 +322,11 @@ const setup = (editor: Editor): RenderInfo => {
           },
           attributes
         },
-        components: [ editorContainer, partThrobber ],
+        components: [
+          editorContainer,
+          ...isInline ? [] : [ partCustomViewWrapper ],
+          partThrobber,
+        ],
         behaviours: Behaviour.derive([
           ReadOnly.receivingConfig(),
           Disabling.config({
@@ -390,7 +396,7 @@ const setup = (editor: Editor): RenderInfo => {
     });
 
     // Apply Bridge types
-    const { buttons, menuItems, contextToolbars, sidebars } = editor.ui.registry.getAll();
+    const { buttons, menuItems, contextToolbars, sidebars, customViews } = editor.ui.registry.getAll();
     const toolbarOpt: Optional<ToolbarConfig> = Options.getMultipleToolbarsOption(editor);
     const rawUiConfig: RenderUiConfig = {
       menuItems,
@@ -399,7 +405,8 @@ const setup = (editor: Editor): RenderInfo => {
       toolbar: toolbarOpt.getOrThunk(() => Options.getToolbar(editor)),
       allowToolbarGroups: toolbarMode === Options.ToolbarMode.floating,
       buttons,
-      sidebar: sidebars
+      sidebar: sidebars,
+      customViews
     };
 
     setupShortcutsAndCommands(outerContainer);

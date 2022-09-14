@@ -30,7 +30,7 @@ export default (): void => {
   };
 
   const makeCodeView = (editor: Editor) => {
-    editor.ui.registry.addView('code', {
+    editor.ui.registry.addCustomView('code', {
       buttons: [
         {
           type: 'submit',
@@ -115,6 +115,7 @@ export default (): void => {
     theme: 'silver',
     setup: (ed) => {
       makeSidebar(ed, 'sidebar1', 'green', 200);
+      makeSidebar(ed, 'sidebar2', 'green', 200);
       makeCodeView(ed);
     },
     plugins: [

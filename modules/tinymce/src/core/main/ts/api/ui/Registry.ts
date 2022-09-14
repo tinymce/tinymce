@@ -220,7 +220,7 @@ const registry = (): Registry.Registry => {
      */
     addToggleMenuItem: bridge.addToggleMenuItem,
 
-    addView: bridge.addView,
+    addCustomView: bridge.addCustomView,
 
     /* note getAll is an internal method and may not be supported in future revisions */
     getAll: bridge.getAll
