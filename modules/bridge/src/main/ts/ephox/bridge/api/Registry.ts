@@ -11,6 +11,7 @@ import { ToolbarButtonSpec } from '../components/toolbar/ToolbarButton';
 import { ToolbarMenuButtonSpec } from '../components/toolbar/ToolbarMenuButton';
 import { ToolbarSplitButtonSpec } from '../components/toolbar/ToolbarSplitButton';
 import { ToolbarToggleButtonSpec } from '../components/toolbar/ToolbarToggleButton';
+import { ViewSpec } from '../components/view/View';
 
 // This would be part of the tinymce api under editor.ui.* so editor.ui.addButton('bold', ...)
 // TODO: This should maybe not be part of this project but rather something built into tinymce core using these public types
@@ -30,6 +31,7 @@ export interface Registry {
   addIcon: (name: string, svgData: string) => void;
   addAutocompleter: (name: string, spec: AutocompleterSpec) => void;
   addSidebar: (name: string, spec: SidebarSpec) => void;
+  addView: (name: string, spec: ViewSpec) => void;
 
   getAll: () => {
     buttons: Record<string, ToolbarButtonSpec | GroupToolbarButtonSpec | ToolbarMenuButtonSpec | ToolbarSplitButtonSpec | ToolbarToggleButtonSpec>;
@@ -39,6 +41,7 @@ export interface Registry {
     contextToolbars: Record<string, ContextToolbarSpec | ContextFormSpec>;
     icons: Record<string, string>;
     sidebars: Record<string, SidebarSpec>;
+    views: Record<string, ViewSpec>;
   };
 }
 
@@ -50,6 +53,7 @@ export const create = (): Registry => {
   const contextMenus: Record<string, ContextMenuApi> = {};
   const contextToolbars: Record<string, ContextToolbarSpec | ContextFormSpec> = {};
   const sidebars: Record<string, SidebarSpec> = {};
+  const views: Record<string, ViewSpec> = {};
   const add = <T, S extends T>(collection: Record<string, T>, type: string) => (name: string, spec: S): void => {
     collection[name.toLowerCase()] = { ...spec, type };
   };
@@ -69,6 +73,7 @@ export const create = (): Registry => {
     addContextToolbar: add(contextToolbars, 'contexttoolbar'),
     addContextForm: add(contextToolbars, 'contextform'),
     addSidebar: add(sidebars, 'sidebar'),
+    addView: add(views, 'view'),
     addIcon,
 
     getAll: () => ({
@@ -83,7 +88,8 @@ export const create = (): Registry => {
       contextMenus,
 
       contextToolbars,
-      sidebars
+      sidebars,
+      views
     })
   };
 };

@@ -10,6 +10,7 @@ import * as PublicToolbar from './PublicToolbar';
 import * as Registry from './Registry';
 import * as Sidebar from './Sidebar';
 import * as Toolbar from './Toolbar';
+import * as View from './View';
 
 export {
   Registry,
@@ -23,5 +24,6 @@ export {
   Sidebar,
   PublicSidebar,
   Toolbar,
-  PublicToolbar
+  PublicToolbar,
+  View
 };

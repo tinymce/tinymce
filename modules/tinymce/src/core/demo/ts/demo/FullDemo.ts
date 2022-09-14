@@ -29,6 +29,35 @@ export default (): void => {
     });
   };
 
+  const makeCodeView = (editor: Editor) => {
+    editor.ui.registry.addView('code', {
+      buttons: [
+        {
+          type: 'submit',
+          text: 'Save',
+          buttonType: 'primary',
+          onAction: () => {
+            console.log('save');
+          }
+        },
+        {
+          type: 'cancel',
+          text: 'Canel',
+          buttonType: 'secondary',
+          onAction: () => {
+            console.log('close');
+          }
+        }
+      ],
+      onShow: (api) => {
+        console.log('Activate code', api.getContainer());
+      },
+      onHide: (api) => {
+        console.log('Deactivate code', api.getContainer());
+      }
+    });
+  };
+
   const settings: RawEditorOptions = {
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     content_css: '../../../../js/tinymce/skins/content/default/content.css',
@@ -86,6 +115,7 @@ export default (): void => {
     theme: 'silver',
     setup: (ed) => {
       makeSidebar(ed, 'sidebar1', 'green', 200);
+      makeCodeView(ed);
     },
     plugins: [
       'autosave', 'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
