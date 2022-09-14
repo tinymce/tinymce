@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 5.0.3 - 2022-09-14
+
 ### Fixed
 - Fixed incorrect `Regexes.link` URL detection for path segments that contain valid characters such as `!` and `:` #TINY-5074
 
