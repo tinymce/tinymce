@@ -5,7 +5,7 @@ import { FieldSchema } from '@ephox/boulder';
 import { Arr, Id, Optional, Optionals, Result } from '@ephox/katamari';
 
 import { ToolbarMode } from '../../api/Options';
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { HeaderSpec, renderHeader } from '../header/CommonHeader';
 import SilverMenubar, { MenubarItemSpec, SilverMenubarSpec } from '../menus/menubar/SilverMenubar';
 import { renderPromotion } from '../promotion/Promotion';
@@ -66,7 +66,7 @@ interface OuterContainerApis {
   readonly focusToolbar: (comp: AlloyComponent) => void;
   readonly setMenubar: (comp: AlloyComponent, groups: MenubarItemSpec[]) => void;
   readonly focusMenubar: (comp: AlloyComponent) => void;
-  readonly setCustomViews: (comp: AlloyComponent, viewConfigs: View.ViewConfig) => void;
+  readonly setCustomViews: (comp: AlloyComponent, viewConfigs: View.ViewConfig, backstage: UiFactoryBackstage) => void;
   readonly toggleCustomView: (comp: AlloyComponent, name: string) => void;
   readonly whichCustomView: (comp: AlloyComponent) => string | null;
 }
@@ -151,9 +151,9 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
         SilverMenubar.focus(menubar);
       });
     },
-    setCustomViews: (comp, viewConfigs) => {
+    setCustomViews: (comp, viewConfigs, backstage) => {
       Composite.parts.getPart(comp, detail, 'customViewWrapper').each((wrapper) => {
-        View.setViews(wrapper, viewConfigs);
+        View.setViews(wrapper, viewConfigs, backstage.shared.providers);
       });
     },
     toggleCustomView: (comp, name) => {
@@ -406,8 +406,8 @@ export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketch
     focusToolbar: (apis, comp) => {
       apis.focusToolbar(comp);
     },
-    setCustomViews: (apis, comp, views) => {
-      apis.setCustomViews(comp, views);
+    setCustomViews: (apis, comp, views, backstage) => {
+      apis.setCustomViews(comp, views, backstage);
     },
     toggleCustomView: (apis, comp, name) => {
       return apis.toggleCustomView(comp, name);

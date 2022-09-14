@@ -33,24 +33,24 @@ export default (): void => {
     editor.ui.registry.addCustomView('code', {
       buttons: [
         {
-          type: 'submit',
-          text: 'Save',
-          buttonType: 'primary',
-          onAction: () => {
-            console.log('save');
-          }
-        },
-        {
           type: 'cancel',
           text: 'Canel',
           buttonType: 'secondary',
           onAction: () => {
             console.log('close');
           }
-        }
+        },
+        {
+          type: 'submit',
+          text: 'Save code',
+          buttonType: 'primary',
+          onAction: () => {
+            console.log('save');
+          }
+        },
       ],
       onShow: (api) => {
-        console.log('Activate code', api.getContainer());
+        api.getContainer().innerHTML = '<textarea style="width: 100%; height: 100%; border: 1px solid black">Hello world!</textarea>';
       },
       onHide: (api) => {
         console.log('Deactivate code', api.getContainer());

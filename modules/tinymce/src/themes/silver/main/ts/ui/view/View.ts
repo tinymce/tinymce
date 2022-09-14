@@ -1,6 +1,6 @@
 import {
-  AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Composing,
-  Composite, GuiFactory, PartType, RawDomSchema, Replacing, SimpleSpec,
+  AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Composing,
+  Composite, Container, PartType, RawDomSchema, Replacing, SimpleSpec,
   Sketcher, SketchSpec, SlotContainer, SlotContainerTypes, UiSketcher
 } from '@ephox/alloy';
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
@@ -8,7 +8,9 @@ import { View as BridgeView } from '@ephox/bridge';
 import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { Attribute, Css } from '@ephox/sugar';
 
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { SimpleBehaviours } from '../alien/SimpleBehaviours';
+import { renderButton } from '../general/Button';
 
 export type ViewConfig = Record<string, BridgeView.ViewSpec>;
 
@@ -16,7 +18,9 @@ export const renderCustomViewWrapper = (spec: SketchSpec): AlloySpec => ({
   uid: spec.uid,
   dom: {
     tag: 'div',
-    classes: [ 'tox-custom-view-wrapper' ]
+    classes: [ 'tox-custom-view-wrap' ],
+    attributes: { 'aria-hidden': 'true' },
+    styles: { display: 'none' }
   },
   components: [
     // this will be replaced on setViews
@@ -32,39 +36,63 @@ export const renderCustomViewWrapper = (spec: SketchSpec): AlloySpec => ({
   ])
 });
 
-export interface ViewToolbarSpec extends SimpleSpec {
+export interface ViewHeaderSpec extends SimpleSpec {
   buttons: BridgeView.ViewButton[];
+  providers: UiFactoryBackstageProviders;
 }
 
-const renderViewButton = (spec: BridgeView.ViewButton) => {
-  // TODO: Use `renderButtonSpec` the backstage needs to be passed along
-  return Button.sketch({
-    dom: {
-      tag: 'button',
-      classes: [ 'tox-button', 'tox-button--secondary' ]
+const renderViewButton = (spec: BridgeView.ViewButton, providers: UiFactoryBackstageProviders) => {
+  return renderButton(
+    {
+      text: spec.text,
+      enabled: true,
+      primary: false,
+      name: 'name',
+      icon: Optional.none(),
+      borderless: false,
+      buttonType: Optional.some(spec.buttonType)
     },
-    components: [ GuiFactory.text(spec.text) ],
-    action: (_comp) => spec.onAction()
-  });
+    (_comp) => {
+      spec.onAction();
+    },
+    providers
+  );
 };
 
-const renderViewToolbar = (spec: ViewToolbarSpec) => {
+const renderViewHeader = (spec: ViewHeaderSpec) => {
+  const endButtons = Arr.map(spec.buttons, (btnspec) => renderViewButton(btnspec, spec.providers));
+
   return {
     uid: spec.uid,
     dom: {
       tag: 'div',
-      innerHtml: 'code'
+      classes: [ 'tox-custom-view__header' ]
     },
-    components: Arr.map(spec.buttons, renderViewButton)
+    components: [
+      Container.sketch({
+        dom: {
+          tag: 'div',
+          classes: [ 'tox-custom-view__header-start' ]
+        },
+        components: []
+      }),
+      Container.sketch({
+        dom: {
+          tag: 'div',
+          classes: [ 'tox-custom-view__header-end' ]
+        },
+        components: endButtons
+      })
+    ]
   };
 };
 
-const renderViewSlot = (spec: SimpleSpec) => {
+const renderViewPane = (spec: SimpleSpec) => {
   return {
     uid: spec.uid,
     dom: {
       tag: 'div',
-      innerHtml: 'slot'
+      classes: [ 'tox-custom-view__pane' ]
     }
   };
 };
@@ -83,20 +111,14 @@ export interface ViewDetail extends Sketcher.CompositeSketchDetail {
 }
 
 interface ViewApis {
-  readonly getToolbar: (comp: AlloyComponent) => Optional<AlloyComponent>;
-  readonly getSlot: (comp: AlloyComponent) => Optional<AlloyComponent>;
+  readonly getPane: (comp: AlloyComponent) => Optional<AlloyComponent>;
   readonly getOnShow: (comp: AlloyComponent) => (api: BridgeView.ViewInstanceApi) => void;
   readonly getOnHide: (comp: AlloyComponent) => (api: BridgeView.ViewInstanceApi) => void;
 }
 
 const factory: UiSketcher.CompositeSketchFactory<ViewDetail, ViewSketchSpec> = (detail, components, _spec, _externals) => {
   const apis: ViewApis = {
-    getToolbar: (comp) => {
-      return Composite.parts.getPart(comp, detail, 'toolbar');
-    },
-    getSlot: (comp) => {
-      return Composite.parts.getPart(comp, detail, 'slot');
-    },
+    getPane: (comp) => Composite.parts.getPart(comp, detail, 'pane'),
     getOnShow: (_comp) => detail.viewConfig.onShow,
     getOnHide: (_comp) => detail.viewConfig.onHide,
   };
@@ -117,31 +139,31 @@ const CustomView = Sketcher.composite<ViewSketchSpec, ViewDetail, ViewApis>({
   partFields: [
     PartType.optional({
       factory: {
-        sketch: renderViewToolbar
+        sketch: renderViewHeader
       },
       schema: [
-        FieldSchema.required('buttons')
+        FieldSchema.required('buttons'),
+        FieldSchema.required('providers')
       ],
-      name: 'toolbar'
+      name: 'header'
     }),
     PartType.optional({
       factory: {
-        sketch: renderViewSlot
+        sketch: renderViewPane
       },
       schema: [],
-      name: 'slot'
+      name: 'pane'
     })
   ],
   factory,
   apis: {
-    getToolbar: (apis, comp) => apis.getToolbar(comp),
-    getSlot: (apis, comp) => apis.getSlot(comp),
+    getPane: (apis, comp) => apis.getPane(comp),
     getOnShow: (apis, comp) => apis.getOnShow(comp),
     getOnHide: (apis, comp) => apis.getOnHide(comp)
   }
 });
 
-const makeViews = (parts: SlotContainerTypes.SlotContainerParts, viewConfigs: ViewConfig) => {
+const makeViews = (parts: SlotContainerTypes.SlotContainerParts, viewConfigs: ViewConfig, providers: UiFactoryBackstageProviders) => {
   return Obj.mapToArray(viewConfigs, (config, name) => {
     const internalViewConfig: BridgeView.View = StructureSchema.getOrDie(BridgeView.createView(config));
 
@@ -152,21 +174,22 @@ const makeViews = (parts: SlotContainerTypes.SlotContainerParts, viewConfigs: Vi
       },
       viewConfig: internalViewConfig,
       components: [
-        CustomView.parts.toolbar({
-          buttons: internalViewConfig.buttons
+        CustomView.parts.header({
+          buttons: internalViewConfig.buttons,
+          providers
         }),
-        CustomView.parts.slot({})
+        CustomView.parts.pane({})
       ]
     }));
   });
 };
 
-const makeSlotContainer = (viewConfigs: ViewConfig) => SlotContainer.sketch((parts) => ({
+const makeSlotContainer = (viewConfigs: ViewConfig, providers: UiFactoryBackstageProviders) => SlotContainer.sketch((parts) => ({
   dom: {
     tag: 'div',
-    classes: [ 'tox-custom-view-wrapper__slot-container' ]
+    classes: [ 'tox-custom-view-wrap__slot-container' ]
   },
-  components: makeViews(parts, viewConfigs),
+  components: makeViews(parts, viewConfigs, providers),
   slotBehaviours: SimpleBehaviours.unnamedEvents([
     AlloyEvents.runOnAttached((slotContainer) => SlotContainer.hideAllSlots(slotContainer))
   ])
@@ -178,13 +201,13 @@ const getCurrentName = (slotContainer: AlloyComponent) => {
   );
 };
 
-const hideEditorContainer = (comp: AlloyComponent) => {
+const hideContainer = (comp: AlloyComponent) => {
   const element = comp.element;
   Css.set(element, 'display', 'none');
   Attribute.set(element, 'aria-hidden', 'true');
 };
 
-const showEditorContainer = (comp: AlloyComponent) => {
+const showContainer = (comp: AlloyComponent) => {
   const element = comp.element;
   Css.remove(element, 'display');
   Attribute.remove(element, 'aria-hidden');
@@ -196,24 +219,24 @@ const makeViewInstanceApi = (slot: HTMLElement): BridgeView.ViewInstanceApi => (
 
 const runOnShow = (slotContainer: AlloyComponent, name: string) => {
   SlotContainer.getSlot(slotContainer, name).each((view) => {
-    CustomView.getSlot(view).each((slot) => {
+    CustomView.getPane(view).each((pane) => {
       const onShow = CustomView.getOnShow(view);
-      onShow(makeViewInstanceApi(slot.element.dom));
+      onShow(makeViewInstanceApi(pane.element.dom));
     });
   });
 };
 
 const runOnHide = (slotContainer: AlloyComponent, name: string) => {
   SlotContainer.getSlot(slotContainer, name).each((view) => {
-    CustomView.getSlot(view).each((slot) => {
+    CustomView.getPane(view).each((pane) => {
       const onHide = CustomView.getOnHide(view);
-      onHide(makeViewInstanceApi(slot.element.dom));
+      onHide(makeViewInstanceApi(pane.element.dom));
     });
   });
 };
 
-export const setViews = (comp: AlloyComponent, viewConfigs: ViewConfig): void => {
-  Replacing.set(comp, [ makeSlotContainer(viewConfigs) ]);
+export const setViews = (comp: AlloyComponent, viewConfigs: ViewConfig, providers: UiFactoryBackstageProviders): void => {
+  Replacing.set(comp, [ makeSlotContainer(viewConfigs, providers) ]);
 };
 
 export const whichView = (comp: AlloyComponent): Optional<string> => {
@@ -229,11 +252,13 @@ export const toggleView = (comp: AlloyComponent, editorCont: AlloyComponent, nam
     optCurrentSlotName.each((prevName) => runOnHide(slotContainer, prevName));
     SlotContainer.hideAllSlots(slotContainer);
     if (!hasSameName) {
-      hideEditorContainer(editorCont);
+      hideContainer(editorCont);
+      showContainer(comp);
       SlotContainer.showSlot(slotContainer, name);
       runOnShow(slotContainer, name);
     } else {
-      showEditorContainer(editorCont);
+      hideContainer(comp);
+      showContainer(editorCont);
     }
   });
 };

@@ -108,7 +108,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       identifyMenus(editor, rawUiConfig)
     );
 
-    OuterContainer.setCustomViews(outerContainer, rawUiConfig.customViews);
+    OuterContainer.setCustomViews(outerContainer, rawUiConfig.customViews, backstage);
 
     setupEvents(editor, uiComponents);
   });
