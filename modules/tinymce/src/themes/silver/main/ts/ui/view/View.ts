@@ -1,42 +1,15 @@
 import {
-  AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Composing,
-  Composite, Container, PartType, RawDomSchema, Replacing, SimpleSpec,
-  Sketcher, SketchSpec, SlotContainer, SlotContainerTypes, UiSketcher
+  AlloyComponent, AlloySpec, Composite, Container, PartType, RawDomSchema, SimpleSpec,
+  Sketcher, UiSketcher
 } from '@ephox/alloy';
-import { FieldSchema, StructureSchema } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 import { View as BridgeView } from '@ephox/bridge';
-import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
-import { Attribute, Css } from '@ephox/sugar';
+import { Arr, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { SimpleBehaviours } from '../alien/SimpleBehaviours';
 import { renderButton } from '../general/Button';
 
-export type ViewConfig = Record<string, BridgeView.ViewSpec>;
-
-export const renderCustomViewWrapper = (spec: SketchSpec): AlloySpec => ({
-  uid: spec.uid,
-  dom: {
-    tag: 'div',
-    classes: [ 'tox-custom-view-wrap' ],
-    attributes: { 'aria-hidden': 'true' },
-    styles: { display: 'none' }
-  },
-  components: [
-    // this will be replaced on setViews
-  ],
-  behaviours: Behaviour.derive([
-    Replacing.config({}),
-    Composing.config({
-      find: (comp: AlloyComponent) => {
-        const children = Replacing.contents(comp);
-        return Arr.head(children);
-      }
-    })
-  ])
-});
-
-export interface ViewHeaderSpec extends SimpleSpec {
+interface ViewHeaderSpec extends SimpleSpec {
   buttons: BridgeView.ViewButton[];
   providers: UiFactoryBackstageProviders;
 }
@@ -66,20 +39,20 @@ const renderViewHeader = (spec: ViewHeaderSpec) => {
     uid: spec.uid,
     dom: {
       tag: 'div',
-      classes: [ 'tox-custom-view__header' ]
+      classes: [ 'tox-view__header' ]
     },
     components: [
       Container.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'tox-custom-view__header-start' ]
+          classes: [ 'tox-view__header-start' ]
         },
         components: []
       }),
       Container.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'tox-custom-view__header-end' ]
+          classes: [ 'tox-view__header-end' ]
         },
         components: endButtons
       })
@@ -92,7 +65,7 @@ const renderViewPane = (spec: SimpleSpec) => {
     uid: spec.uid,
     dom: {
       tag: 'div',
-      classes: [ 'tox-custom-view__pane' ]
+      classes: [ 'tox-view__pane' ]
     }
   };
 };
@@ -131,8 +104,8 @@ const factory: UiSketcher.CompositeSketchFactory<ViewDetail, ViewSketchSpec> = (
   };
 };
 
-const CustomView = Sketcher.composite<ViewSketchSpec, ViewDetail, ViewApis>({
-  name: 'CustomView',
+export default Sketcher.composite<ViewSketchSpec, ViewDetail, ViewApis>({
+  name: 'silver.View',
   configFields: [
     FieldSchema.required('viewConfig'),
   ],
@@ -162,103 +135,3 @@ const CustomView = Sketcher.composite<ViewSketchSpec, ViewDetail, ViewApis>({
     getOnHide: (apis, comp) => apis.getOnHide(comp)
   }
 });
-
-const makeViews = (parts: SlotContainerTypes.SlotContainerParts, viewConfigs: ViewConfig, providers: UiFactoryBackstageProviders) => {
-  return Obj.mapToArray(viewConfigs, (config, name) => {
-    const internalViewConfig: BridgeView.View = StructureSchema.getOrDie(BridgeView.createView(config));
-
-    return parts.slot(name, CustomView.sketch({
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-custom-view' ]
-      },
-      viewConfig: internalViewConfig,
-      components: [
-        CustomView.parts.header({
-          buttons: internalViewConfig.buttons,
-          providers
-        }),
-        CustomView.parts.pane({})
-      ]
-    }));
-  });
-};
-
-const makeSlotContainer = (viewConfigs: ViewConfig, providers: UiFactoryBackstageProviders) => SlotContainer.sketch((parts) => ({
-  dom: {
-    tag: 'div',
-    classes: [ 'tox-custom-view-wrap__slot-container' ]
-  },
-  components: makeViews(parts, viewConfigs, providers),
-  slotBehaviours: SimpleBehaviours.unnamedEvents([
-    AlloyEvents.runOnAttached((slotContainer) => SlotContainer.hideAllSlots(slotContainer))
-  ])
-}));
-
-const getCurrentName = (slotContainer: AlloyComponent) => {
-  return Arr.find(SlotContainer.getSlotNames(slotContainer), (name) =>
-    SlotContainer.isShowing(slotContainer, name)
-  );
-};
-
-const hideContainer = (comp: AlloyComponent) => {
-  const element = comp.element;
-  Css.set(element, 'display', 'none');
-  Attribute.set(element, 'aria-hidden', 'true');
-};
-
-const showContainer = (comp: AlloyComponent) => {
-  const element = comp.element;
-  Css.remove(element, 'display');
-  Attribute.remove(element, 'aria-hidden');
-};
-
-const makeViewInstanceApi = (slot: HTMLElement): BridgeView.ViewInstanceApi => ({
-  getContainer: Fun.constant(slot)
-});
-
-const runOnShow = (slotContainer: AlloyComponent, name: string) => {
-  SlotContainer.getSlot(slotContainer, name).each((view) => {
-    CustomView.getPane(view).each((pane) => {
-      const onShow = CustomView.getOnShow(view);
-      onShow(makeViewInstanceApi(pane.element.dom));
-    });
-  });
-};
-
-const runOnHide = (slotContainer: AlloyComponent, name: string) => {
-  SlotContainer.getSlot(slotContainer, name).each((view) => {
-    CustomView.getPane(view).each((pane) => {
-      const onHide = CustomView.getOnHide(view);
-      onHide(makeViewInstanceApi(pane.element.dom));
-    });
-  });
-};
-
-export const setViews = (comp: AlloyComponent, viewConfigs: ViewConfig, providers: UiFactoryBackstageProviders): void => {
-  Replacing.set(comp, [ makeSlotContainer(viewConfigs, providers) ]);
-};
-
-export const whichView = (comp: AlloyComponent): Optional<string> => {
-  return Composing.getCurrent(comp).bind(getCurrentName);
-};
-
-export const toggleView = (comp: AlloyComponent, editorCont: AlloyComponent, name: string): void => {
-  Composing.getCurrent(comp).each((slotContainer) => {
-    const optCurrentSlotName = getCurrentName(slotContainer);
-    const hasSameName = optCurrentSlotName.exists((current) => name === current);
-
-    // TODO: Clean this mess up onShow/onHide should fire when toggling on/off current and toggling to something different even if doesn't exist or noop that
-    optCurrentSlotName.each((prevName) => runOnHide(slotContainer, prevName));
-    SlotContainer.hideAllSlots(slotContainer);
-    if (!hasSameName) {
-      hideContainer(editorCont);
-      showContainer(comp);
-      SlotContainer.showSlot(slotContainer, name);
-      runOnShow(slotContainer, name);
-    } else {
-      hideContainer(comp);
-      showContainer(editorCont);
-    }
-  });
-};

@@ -5,7 +5,7 @@ import { FieldSchema } from '@ephox/boulder';
 import { Arr, Id, Optional, Optionals, Result } from '@ephox/katamari';
 
 import { ToolbarMode } from '../../api/Options';
-import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { HeaderSpec, renderHeader } from '../header/CommonHeader';
 import SilverMenubar, { MenubarItemSpec, SilverMenubarSpec } from '../menus/menubar/SilverMenubar';
 import { renderPromotion } from '../promotion/Promotion';
@@ -14,7 +14,8 @@ import * as Throbber from '../throbber/Throbber';
 import {
   MoreDrawerData, MoreDrawerToolbarSpec, renderFloatingMoreToolbar, renderSlidingMoreToolbar, renderToolbar, renderToolbarGroup, ToolbarGroup
 } from '../toolbar/CommonToolbar';
-import * as View from '../view/View';
+import * as ViewTypes from '../view/ViewTypes';
+import ViewWrapper from '../view/ViewWrapper';
 
 export interface OuterContainerSketchSpec extends Sketcher.CompositeSketchSpec {
   readonly dom: RawDomSchema;
@@ -66,9 +67,9 @@ interface OuterContainerApis {
   readonly focusToolbar: (comp: AlloyComponent) => void;
   readonly setMenubar: (comp: AlloyComponent, groups: MenubarItemSpec[]) => void;
   readonly focusMenubar: (comp: AlloyComponent) => void;
-  readonly setCustomViews: (comp: AlloyComponent, viewConfigs: View.ViewConfig, backstage: UiFactoryBackstage) => void;
-  readonly toggleCustomView: (comp: AlloyComponent, name: string) => void;
-  readonly whichCustomView: (comp: AlloyComponent) => string | null;
+  readonly setViews: (comp: AlloyComponent, viewConfigs: ViewTypes.ViewConfig) => void;
+  readonly toggleView: (comp: AlloyComponent, name: string) => void;
+  readonly whichView: (comp: AlloyComponent) => string | null;
 }
 
 interface ToolbarApis {
@@ -151,21 +152,21 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
         SilverMenubar.focus(menubar);
       });
     },
-    setCustomViews: (comp, viewConfigs, backstage) => {
-      Composite.parts.getPart(comp, detail, 'customViewWrapper').each((wrapper) => {
-        View.setViews(wrapper, viewConfigs, backstage.shared.providers);
+    setViews: (comp, viewConfigs) => {
+      Composite.parts.getPart(comp, detail, 'viewWrapper').each((wrapper) => {
+        ViewWrapper.setViews(wrapper, viewConfigs);
       });
     },
-    toggleCustomView: (comp, name) => {
+    toggleView: (comp, name) => {
       Composite.parts.getPart(comp, detail, 'editorContainer').each((container) => {
-        Composite.parts.getPart(comp, detail, 'customViewWrapper').each(
-          (wrapper) => View.toggleView(wrapper, container, name)
+        Composite.parts.getPart(comp, detail, 'viewWrapper').each(
+          (wrapper) => ViewWrapper.toggleView(wrapper, container, name)
         );
       });
     },
-    whichCustomView: (comp) => {
-      return Composite.parts.getPart(comp, detail, 'customViewWrapper').bind(
-        View.whichView
+    whichView: (comp) => {
+      return Composite.parts.getPart(comp, detail, 'viewWrapper').bind(
+        ViewWrapper.whichView
       ).getOrNull();
     }
   };
@@ -315,11 +316,12 @@ const partThrobber = Composite.partType.optional({
   ]
 });
 
-const partCustomViewWrapper = Composite.partType.optional({
-  factory: {
-    sketch: View.renderCustomViewWrapper
-  },
-  name: 'customViewWrapper'
+const partViewWrapper = Composite.partType.optional({
+  factory: ViewWrapper,
+  name: 'viewWrapper',
+  schema: [
+    FieldSchema.required('backstage')
+  ]
 });
 
 const renderEditorContainer = (spec: SketchSpec): AlloySpec => ({
@@ -355,7 +357,7 @@ export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketch
     partSidebar,
     partPromotion,
     partThrobber,
-    partCustomViewWrapper,
+    partViewWrapper,
     partEditorContainer
   ],
 
@@ -406,14 +408,14 @@ export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketch
     focusToolbar: (apis, comp) => {
       apis.focusToolbar(comp);
     },
-    setCustomViews: (apis, comp, views, backstage) => {
-      apis.setCustomViews(comp, views, backstage);
+    setViews: (apis, comp, views) => {
+      apis.setViews(comp, views);
     },
-    toggleCustomView: (apis, comp, name) => {
-      return apis.toggleCustomView(comp, name);
+    toggleView: (apis, comp, name) => {
+      return apis.toggleView(comp, name);
     },
-    whichCustomView: (apis, comp) => {
-      return apis.whichCustomView(comp);
+    whichView: (apis, comp) => {
+      return apis.whichView(comp);
     },
   }
 }) as OuterContainerSketch;

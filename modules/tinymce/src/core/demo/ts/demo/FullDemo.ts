@@ -30,7 +30,7 @@ export default (): void => {
   };
 
   const makeCodeView = (editor: Editor) => {
-    editor.ui.registry.addCustomView('code', {
+    editor.ui.registry.addView('code', {
       buttons: [
         {
           type: 'cancel',
