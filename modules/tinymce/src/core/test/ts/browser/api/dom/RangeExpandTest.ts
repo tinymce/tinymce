@@ -59,8 +59,7 @@ describe('browser.tinymce.core.api.dom.RangeExpandTest', () => {
     compareRanges(makeBaseRange(editor, 5, 6), endRange);
   });
 
-  // TODO Disabled due to inconsistent behavior between left and right, see TINY-9029
-  it.skip('TINY-9001: The cursor is between a space and a word on the left', () => {
+  it('TINY-9001: The cursor is between a space and a word on the left', () => {
     const editor = hook.editor();
     editor.setContent(textEntry);
     const startRange = makeBaseRange(editor, 3, 3);
@@ -74,22 +73,5 @@ describe('browser.tinymce.core.api.dom.RangeExpandTest', () => {
     const startRange = makeBaseRange(editor, 4, 4);
     const endRange = RangeUtils(editor.dom).expand(startRange);
     compareRanges(makeBaseRange(editor, 2, 6), endRange);
-  });
-
-  // TODO Disabled due to inconsistent behavior between left and right, see TINY-9029
-  it.skip('TINY-9001: The cursor is between a space and a block element on the right', () => {
-    const editor = hook.editor();
-    editor.setContent('<p>A <span style="display: block">B</span></p>');
-    const startRange = makeBaseRange(editor, 2, 2);
-    const endRange = RangeUtils(editor.dom).expand(startRange);
-    compareRanges(makeBaseRange(editor, 2, 2), endRange);
-  });
-
-  it('TINY-9001: The cursor is between a space and a block element on the left', () => {
-    const editor = hook.editor();
-    editor.setContent('<p><span style="display: block">A</span> B</p>');
-    const startRange = makeBaseRange(editor, 0, 0, 1);
-    const endRange = RangeUtils(editor.dom).expand(startRange);
-    compareRanges(makeBaseRange(editor, 0, 0, 1), endRange);
   });
 });

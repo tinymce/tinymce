@@ -38,9 +38,9 @@ const findParentContentEditable = (dom: DOMUtils, node: Node) => {
 
 const walkText = (start: boolean, node: Text, offset: number, predicate: (chr: string) => boolean) => {
   const str = node.data;
-  for (let i = offset; start ? i >= 0 : i < str.length; start ? i-- : i++) {
-    if (predicate(str.charAt(i))) {
-      return start ? i + 1 : i;
+  for (let i = offset; start ? i > 0 : i < str.length; start ? i-- : i++) {
+    if (predicate(str.charAt(start ? i - 1 : i))) {
+      return i;
     }
   }
   return -1;
