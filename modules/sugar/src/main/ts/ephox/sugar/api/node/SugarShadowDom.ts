@@ -1,5 +1,6 @@
 import { Arr, Fun, Optional, Type } from '@ephox/katamari';
 
+import { HTMLElementFullTagNameMap } from '../../alien/DomTypes';
 import * as Traverse from '../search/Traverse';
 import { SugarElement } from './SugarElement';
 import * as SugarHead from './SugarHead';
@@ -36,7 +37,7 @@ export const getRootNode: (e: SugarElement<Node>) => RootNode =
 
 /** Create an element, using the actual document. */
 export const createElement: {
-  <K extends keyof HTMLElementTagNameMap>(dos: RootNode, tag: K): SugarElement<HTMLElementTagNameMap[K]>;
+  <K extends keyof HTMLElementFullTagNameMap>(dos: RootNode, tag: K): SugarElement<HTMLElementFullTagNameMap[K]>;
   (dos: RootNode, tag: string): SugarElement<HTMLElement>;
 } = (dos: RootNode, tag: string) =>
   SugarElement.fromTag(tag, Traverse.documentOrOwner(dos).dom);

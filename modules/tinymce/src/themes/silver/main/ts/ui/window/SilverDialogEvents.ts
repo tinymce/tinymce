@@ -68,7 +68,7 @@ const initUrlDialog = (getInstanceApi: () => Dialog.UrlDialogInstanceApi, extras
   ];
 };
 
-const initDialog = <T>(getInstanceApi: () => Dialog.DialogInstanceApi<T>, extras: ExtraListeners, getSink: () => Result<AlloyComponent, any>): AlloyEvents.AlloyEventKeyAndHandler<any>[] => {
+const initDialog = <T extends Dialog.DialogData>(getInstanceApi: () => Dialog.DialogInstanceApi<T>, extras: ExtraListeners, getSink: () => Result<AlloyComponent, any>): AlloyEvents.AlloyEventKeyAndHandler<any>[] => {
   const fireApiEvent: FireApiFunc<Dialog.DialogInstanceApi<T>, Dialog.Dialog<T>> = (eventName, f) =>
     AlloyEvents.run(eventName, (c, se) => {
       withSpec(c, (spec, _c) => {

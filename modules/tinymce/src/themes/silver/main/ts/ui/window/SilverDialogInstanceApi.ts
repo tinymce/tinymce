@@ -24,7 +24,7 @@ const getCompByName = (access: DialogAccess, name: string): Optional<AlloyCompon
   }
 };
 
-const validateData = <T>(access: DialogAccess, data: T) => {
+const validateData = <T extends Dialog.DialogData>(access: DialogAccess, data: T) => {
   const root = access.getRoot();
   return Reflecting.getState(root).get().map((dialogState: DialogManager.DialogInit<T>) => StructureSchema.getOrDie(
     StructureSchema.asRaw('data', dialogState.dataValidator, data)

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `expand` function added to `tinymce.dom.RangeUtils` to return a new range expanded around the nearest word. #TINY-9001
 
 ### Fixed
+- Compilation errors were thrown when using TypeScript 4.8. #TINY-9161
 - Line separator scrolling in floating toolbars. #TINY-8948
 
 ## 6.2.0 - 2022-09-08

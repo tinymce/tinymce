@@ -1,5 +1,7 @@
 import { Optional } from '@ephox/katamari';
 
+import { HTMLElementFullTagNameMap } from '../../alien/DomTypes';
+
 interface SugarElement<T = any> {
   readonly dom: T;
 }
@@ -18,7 +20,7 @@ const fromHtml = <E extends Node = Node & ChildNode> (html: string, scope?: Docu
 };
 
 const fromTag: {
-  <K extends keyof HTMLElementTagNameMap>(tag: K, scope?: Document | null): SugarElement<HTMLElementTagNameMap[K]>;
+  <K extends keyof HTMLElementFullTagNameMap>(tag: K, scope?: Document | null): SugarElement<HTMLElementFullTagNameMap[K]>;
   (tag: string, scope?: Document | null): SugarElement<HTMLElement>;
 } = (tag: string, scope?: Document | null): SugarElement<HTMLElement> => {
   const doc = scope || document;

@@ -2,10 +2,10 @@ import { StructureProcessor, StructureSchema } from '@ephox/boulder';
 import { Cell, Fun, Merger } from '@ephox/katamari';
 
 import { DialogManager } from '../../../main/ts/ephox/bridge/api/DialogManager';
-import { Dialog, DialogInstanceApi, DialogSpec } from '../../../main/ts/ephox/bridge/components/dialog/Dialog';
+import { Dialog, DialogData, DialogInstanceApi, DialogSpec } from '../../../main/ts/ephox/bridge/components/dialog/Dialog';
 
 // This is the function that would be implemented in modern theme/silver theme for creating dialogs
-const createDemoApi = <T>(internalStructure: Dialog<T>, initialData: Partial<T>, dataValidator: StructureProcessor): DialogInstanceApi<T> => {
+const createDemoApi = <T extends DialogData>(internalStructure: Dialog<T>, initialData: Partial<T>, dataValidator: StructureProcessor): DialogInstanceApi<T> => {
   const data = Cell(initialData);
 
   // eslint-disable-next-line no-console
@@ -33,6 +33,6 @@ const createDemoApi = <T>(internalStructure: Dialog<T>, initialData: Partial<T>,
   };
 };
 
-export const openDemoDialog = <T>(structure: DialogSpec<T>): void => {
+export const openDemoDialog = <T extends DialogData>(structure: DialogSpec<T>): void => {
   DialogManager.open(createDemoApi, structure);
 };
