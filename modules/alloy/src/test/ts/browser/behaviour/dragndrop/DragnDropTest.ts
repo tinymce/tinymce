@@ -1,4 +1,4 @@
-import { DragnDrop as Dnd, Files, GeneralSteps, Logger } from '@ephox/agar';
+import { DragnDrop as Dnd, Files, GeneralSteps, Logger, TestStore } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 
@@ -6,7 +6,6 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { DragnDrop } from 'ephox/alloy/api/behaviour/DragnDrop';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
-import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { DropDragndropConfigSpec, StartingDragndropConfigSpec } from 'ephox/alloy/dragging/dragndrop/DragnDropTypes';
 

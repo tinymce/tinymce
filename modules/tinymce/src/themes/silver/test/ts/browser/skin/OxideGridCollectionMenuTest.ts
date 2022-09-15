@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, FocusTools, Keys, Mouse } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, TestStore } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
 
 describe('browser.tinymce.themes.silver.skin.OxideGridCollectionMenuTest', () => {
-  const store = TestHelpers.TestStore();
+  const store = TestStore();
   const hook = TinyHooks.bddSetup<Editor>({
     toolbar: 'grid-button',
     base_url: '/project/tinymce/js/tinymce',

@@ -1,8 +1,7 @@
-import { Chain, Cleaner, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, Touch, UiFinder } from '@ephox/agar';
+import { Chain, Cleaner, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, TestStore, Touch, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Attribute, DomEvent, EventArgs, Insert, Remove, SugarElement, SugarNode, SugarText } from '@ephox/sugar';
 
-import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
 import * as GuiEvents from 'ephox/alloy/events/GuiEvents';
 
 UnitTest.asynctest('GuiEventsTest', (success, failure) => {

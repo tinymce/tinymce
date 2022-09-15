@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Keyboard, Keys, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, Keyboard, Keys, TestStore, UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Objects } from '@ephox/boulder';
 import { Arr, Future, Optional, Result } from '@ephox/katamari';
@@ -11,7 +11,6 @@ import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
-import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import * as MenuEvents from 'ephox/alloy/menu/util/MenuEvents';

@@ -1,4 +1,4 @@
-import { FocusTools } from '@ephox/agar';
+import { FocusTools, TestStore } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { SugarDocument, SugarElement } from '@ephox/sugar';
@@ -10,7 +10,6 @@ import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
-import { TestStore } from 'ephox/alloy/api/testhelpers/TestHelpers';
 
 const memBlockRoot = Memento.record({
   dom: {

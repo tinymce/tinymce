@@ -1,11 +1,10 @@
-import { Assertions, Pipeline, Step, TestLogs } from '@ephox/agar';
+import { Assertions, Pipeline, Step, TestLogs, TestStore } from '@ephox/agar';
 import { Fun, Global, Merger, Obj, Optional, Type } from '@ephox/katamari';
 import { DomEvent, EventUnbinder, Html, Insert, Remove, SugarBody, SugarDocument, SugarElement, SugarShadowDom, Traverse } from '@ephox/sugar';
 
 import { AlloyComponent } from '../component/ComponentApi';
 import * as Attachment from '../system/Attachment';
 import * as Gui from '../system/Gui';
-import { TestStore } from './TestStore';
 
 type RootNode = SugarShadowDom.RootNode;
 type ContentContainer<T extends RootNode> = T extends ShadowRoot ? ShadowRoot : HTMLElement;

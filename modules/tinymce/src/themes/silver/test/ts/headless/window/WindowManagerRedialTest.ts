@@ -1,5 +1,4 @@
-import { Mouse, UiFinder, Waiter } from '@ephox/agar';
-import { TestHelpers } from '@ephox/alloy';
+import { Mouse, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { SugarBody, Value } from '@ephox/sugar';
 import { assert } from 'chai';
@@ -11,7 +10,7 @@ import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import * as TestExtras from '../../module/TestExtras';
 
 describe('headless.tinymce.themes.silver.window.WindowManagerRedialTest', () => {
-  const store = TestHelpers.TestStore();
+  const store = TestStore();
   const helpers = TestExtras.bddSetup();
   let windowManager: WindowManagerImpl;
   before(() => {

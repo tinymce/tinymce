@@ -1,5 +1,4 @@
-import { Mouse, Waiter } from '@ephox/agar';
-import { TestHelpers } from '@ephox/alloy';
+import { Mouse, Waiter, TestStore } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
@@ -12,7 +11,7 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as DialogUtils from '../../module/DialogUtils';
 
 describe('browser.tinymce.themes.silver.window.SilverDialogApiAccessTest', () => {
-  const store = TestHelpers.TestStore();
+  const store = TestStore();
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
   }, []);
