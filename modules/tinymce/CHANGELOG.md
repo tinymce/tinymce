@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Line separator scrolling in floating toolbars. #TINY-8948
+- A double bottom border appeared on inline mode editor for the `tinymce-5` skin. #TINY-9108
 
 ## 6.2.0 - 2022-09-08
 
