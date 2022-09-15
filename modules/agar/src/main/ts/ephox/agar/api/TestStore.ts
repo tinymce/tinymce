@@ -1,6 +1,8 @@
-import { Chain, Step } from '@ephox/agar';
 import { Assert } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
+
+import { Chain } from './Chain';
+import { Step } from './Step';
 
 export interface TestStore {
   add: (value: any) => void;
@@ -11,7 +13,8 @@ export interface TestStore {
   cClear: Chain<any, any>;
   sAssertEq: <T> (label: string, expected: any[]) => Step<T, T>;
   cAssertEq: <T> (label: string, expected: any[]) => Chain<T, T>;
-  assertEq: (label: string, expected: any[]) => void;
+  assertEq: (labely: string, expected: any[]) => void;
+  assertSortedEq: (labely: string, expected: any[]) => void;
   sAssertSortedEq: (label: string, expected: any[]) => Step<any, any>;
 }
 
@@ -55,6 +58,8 @@ export const TestStore = (): TestStore => {
 
   const assertEq = (label: string, expected: any[]) => Assert.eq(label, expected, array.slice(0));
 
+  const assertSortedEq = (label: string, expected: any[]) => Assert.eq(label, expected.slice(0).sort(), array.slice(0).sort());
+
   const sAssertSortedEq = (label: string, expected: any[]) => Step.sync(() =>
   // Can't use a normal step here, because we don't need to get array lazily
     Assert.eq(label, expected.slice(0).sort(), array.slice(0).sort())
@@ -70,6 +75,7 @@ export const TestStore = (): TestStore => {
     sAssertEq,
     cAssertEq,
     assertEq,
+    assertSortedEq,
     sAssertSortedEq
   };
 };

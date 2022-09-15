@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ### Removed
-- Removed `TestStore` from `TestHelpers` export, moved `TestStore` to Agar. #TINY-9157
+- Moved `TestStore` to Agar. #TINY-9157
 
 ## 11.0.0 - 2022-09-08
 
