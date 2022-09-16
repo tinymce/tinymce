@@ -1,11 +1,15 @@
-import { FieldProcessor, StructureSchema } from '@ephox/boulder';
-import { Result } from '@ephox/katamari';
+import { FieldProcessor, FieldSchema, StructureSchema } from '@ephox/boulder';
+import { Optional, Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
 import { FormComponentWithLabel, FormComponentWithLabelSpec, formComponentWithLabelFields } from './FormComponent';
 
 export interface CollectionSpec extends FormComponentWithLabelSpec {
   type: 'collection';
+  aria?: {
+    role?: string;
+    description?: string;
+  };
   // TODO TINY-3229 implement collection columns properly
   // columns?: number | 'auto';
 }
@@ -13,6 +17,10 @@ export interface CollectionSpec extends FormComponentWithLabelSpec {
 export interface Collection extends FormComponentWithLabel {
   type: 'collection';
   columns: number | 'auto';
+  aria: Optional<{
+    role: Optional<string>;
+    description: Optional<string>;
+  }>;
 }
 
 export interface CollectionItem {
@@ -22,7 +30,11 @@ export interface CollectionItem {
 }
 
 const collectionFields: FieldProcessor[] = formComponentWithLabelFields.concat([
-  ComponentSchema.defaultedColumns('auto')
+  ComponentSchema.defaultedColumns('auto'),
+  FieldSchema.optionObjOf('aria', [
+    FieldSchema.optionString('role'),
+    FieldSchema.optionString('description')
+  ])
 ]);
 
 export const collectionSchema = StructureSchema.objOf(collectionFields);

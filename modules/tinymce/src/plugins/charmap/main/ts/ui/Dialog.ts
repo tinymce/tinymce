@@ -18,7 +18,11 @@ const open = (editor: Editor, charMap: CharMap[]): void => {
     },
     {
       type: 'collection',
-      name: 'results'
+      name: 'results',
+      aria: {
+        role: 'button',
+        description: 'Insert this character and close the dialog'
+      }
       // TODO TINY-3229 implement collection columns properly
       // columns: 'auto'
     }

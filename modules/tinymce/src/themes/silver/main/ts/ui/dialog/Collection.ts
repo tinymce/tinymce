@@ -34,6 +34,27 @@ export const renderCollection = (
       f(comp, se, target, Attribute.get(target, 'data-collection-item-value'));
     });
   };
+  const ariaHtml = spec.aria.fold(
+    Fun.constant({ describedByElement: '', itemAriaAttributes: '' }),
+    (value) => {
+      let describedByElement = '';
+      const attributes = [];
+
+      if (value.role.isSome()) {
+        attributes.push(`role="${value.role.getOr('')}"`);
+      }
+
+      if (value.description.isSome()) {
+        // Add an element which is associated by all collection items via aria-describedby
+        describedByElement = `<div id="insertandcloseinfo" hidden>${value.description.getOr('')}</div>`;
+        attributes.push(`aria-describedby="insertandcloseinfo"`);
+      }
+
+      return {
+        describedByElement,
+        itemAriaAttributes: attributes.join(' ')
+      };
+    });
 
   const setContents = (comp: AlloyComponent, items: Dialog.CollectionItem[]) => {
     const htmlLines = Arr.map(items, (item) => {
@@ -57,13 +78,13 @@ export const renderCollection = (
       const ariaLabel = itemText.replace(/\_| \- |\-/g, (match) => mapItemName[match]);
 
       const disabledClass = providersBackstage.isDisabled() ? ' tox-collection__item--state-disabled' : '';
-      return `<div class="tox-collection__item${disabledClass}" tabindex="-1" data-collection-item-value="${Entities.encodeAllRaw(item.value)}" title="${ariaLabel}" aria-label="${ariaLabel}">${iconContent}${textContent}</div>`;
+      return `<div class="tox-collection__item${disabledClass}" tabindex="-1" data-collection-item-value="${Entities.encodeAllRaw(item.value)}" title="${ariaLabel}" aria-label="${ariaLabel}" ${ariaHtml.itemAriaAttributes}>${iconContent}${textContent}</div>`;
     });
 
     const chunks = spec.columns !== 'auto' && spec.columns > 1 ? Arr.chunk(htmlLines, spec.columns) : [ htmlLines ];
     const html = Arr.map(chunks, (ch) => `<div class="tox-collection__group">${ch.join('')}</div>`);
 
-    Html.set(comp.element, html.join(''));
+    Html.set(comp.element, html.join('') + ariaHtml.describedByElement);
   };
 
   const onClick = runOnItem((comp, se, tgt, itemValue) => {
