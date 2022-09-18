@@ -37,7 +37,7 @@
     "@ephox/bedrock-client": "^13.0.0",
     "@ephox/bedrock-server": "^13.3.0",
     "@ephox/oxide-icons-tools": "^3.1.0",
-    "@ephox/swag": "^4.6.0-feature.20220914084517425.shaba4cd2f",
+    "@ephox/swag": "^4.6.0",
     "@tinymce/eslint-plugin": "^2.2.1",
     "@tinymce/moxiedoc": "^0.2.1",
     "@types/chai": "^4.3.3",
