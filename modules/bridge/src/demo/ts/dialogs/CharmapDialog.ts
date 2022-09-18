@@ -11,9 +11,13 @@ export const createCharmapDialog = (): void => {
         items: [
           {
             name: 'chars',
-            type: 'collection'
+            type: 'collection',
+            aria: {
+              role: 'button',
+              description: 'Insert this character and close dialog'
+            }
           }
-        ]
+        ],
       },
       buttons: [
         {
