@@ -19,7 +19,7 @@ export interface DialogInit<T extends DialogData> {
   readonly dataValidator: StructureProcessor;
 }
 
-const extract = <T>(structure: DialogSpec<T>): DialogInit<T> => {
+const extract = <T extends DialogData>(structure: DialogSpec<T>): DialogInit<T> => {
   const internalDialog = StructureSchema.getOrDie(createDialog(structure));
   const dataValidator = createDataValidator<T>(structure);
   // We used to validate data here, but it's done when loading the dialog in tinymce

@@ -1,3 +1,4 @@
+import { HTMLElementFullTagNameMap } from '../../alien/DomTypes';
 import { SugarElement } from '../node/SugarElement';
 import * as Attribute from '../properties/Attribute';
 import * as Traverse from '../search/Traverse';
@@ -17,7 +18,7 @@ const deep = <E extends Node> (original: SugarElement<E>): SugarElement<E> =>
   clone(original, true);
 
 /** Shallow clone, with a new tag */
-const shallowAs = <K extends keyof HTMLElementTagNameMap> (original: SugarElement<Element>, tag: K): SugarElement<HTMLElementTagNameMap[K]> => {
+const shallowAs = <K extends keyof HTMLElementFullTagNameMap> (original: SugarElement<Element>, tag: K): SugarElement<HTMLElementFullTagNameMap[K]> => {
   const nu = SugarElement.fromTag(tag);
 
   const attributes = Attribute.clone(original);
@@ -27,7 +28,7 @@ const shallowAs = <K extends keyof HTMLElementTagNameMap> (original: SugarElemen
 };
 
 /** Deep clone, with a new tag */
-const copy = <K extends keyof HTMLElementTagNameMap> (original: SugarElement<Element>, tag: K): SugarElement<HTMLElementTagNameMap[K]> => {
+const copy = <K extends keyof HTMLElementFullTagNameMap> (original: SugarElement<Element>, tag: K): SugarElement<HTMLElementFullTagNameMap[K]> => {
   const nu = shallowAs(original, tag);
 
   // NOTE
@@ -43,7 +44,7 @@ const copy = <K extends keyof HTMLElementTagNameMap> (original: SugarElement<Ele
 };
 
 /** Change the tag name, but keep all children */
-const mutate = <K extends keyof HTMLElementTagNameMap> (original: SugarElement<Element>, tag: K): SugarElement<HTMLElementTagNameMap[K]> => {
+const mutate = <K extends keyof HTMLElementFullTagNameMap> (original: SugarElement<Element>, tag: K): SugarElement<HTMLElementFullTagNameMap[K]> => {
   const nu = shallowAs(original, tag);
 
   Insert.after(original, nu);
