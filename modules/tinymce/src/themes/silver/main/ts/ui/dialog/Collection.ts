@@ -28,33 +28,32 @@ export const renderCollection = (
 ): SketchSpec => {
   // DUPE with TextField.
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
+  const accessibilityHtml = spec.aria.fold(
+    Fun.constant({ insertAndCloseInfo: '', itemAttributes: '' }),
+    (value) => {
+      let insertAndCloseInfo = '';
+      const attributes = [];
+
+      if (value.role.isSome()) {
+        attributes.push(` role="${value.role.getOr('')}"`);
+      }
+
+      if (value.description.isSome()) {
+        insertAndCloseInfo = ` <div id="insertandcloseinfo" hidden>${value.description.getOr('')}</div>`;
+        attributes.push(` aria-describedby="insertandcloseinfo"`);
+      }
+
+      return {
+        insertAndCloseInfo,
+        itemAttributes: attributes.join('')
+      };
+    });
 
   const runOnItem = <T extends EventFormat>(f: ItemCallback<T>) => (comp: AlloyComponent, se: SimulatedEvent<T>) => {
     SelectorFind.closest<HTMLElement>(se.event.target, '[data-collection-item-value]').each((target) => {
       f(comp, se, target, Attribute.get(target, 'data-collection-item-value'));
     });
   };
-  const ariaHtml = spec.aria.fold(
-    Fun.constant({ describedByElement: '', itemAriaAttributes: '' }),
-    (value) => {
-      let describedByElement = '';
-      const attributes = [];
-
-      if (value.role.isSome()) {
-        attributes.push(`role="${value.role.getOr('')}"`);
-      }
-
-      if (value.description.isSome()) {
-        // Add an element which is associated by all collection items via aria-describedby
-        describedByElement = `<div id="insertandcloseinfo" hidden>${value.description.getOr('')}</div>`;
-        attributes.push(`aria-describedby="insertandcloseinfo"`);
-      }
-
-      return {
-        describedByElement,
-        itemAriaAttributes: attributes.join(' ')
-      };
-    });
 
   const setContents = (comp: AlloyComponent, items: Dialog.CollectionItem[]) => {
     const htmlLines = Arr.map(items, (item) => {
@@ -78,13 +77,14 @@ export const renderCollection = (
       const ariaLabel = itemText.replace(/\_| \- |\-/g, (match) => mapItemName[match]);
 
       const disabledClass = providersBackstage.isDisabled() ? ' tox-collection__item--state-disabled' : '';
-      return `<div class="tox-collection__item${disabledClass}" tabindex="-1" data-collection-item-value="${Entities.encodeAllRaw(item.value)}" title="${ariaLabel}" aria-label="${ariaLabel}" ${ariaHtml.itemAriaAttributes}>${iconContent}${textContent}</div>`;
+      return `<div class="tox-collection__item${disabledClass}" tabindex="-1" data-collection-item-value="${Entities.encodeAllRaw(item.value)}"` +
+      ` title="${ariaLabel}" aria-label="${ariaLabel}"${accessibilityHtml.itemAttributes}>${iconContent}${textContent}</div>`;
     });
 
     const chunks = spec.columns !== 'auto' && spec.columns > 1 ? Arr.chunk(htmlLines, spec.columns) : [ htmlLines ];
     const html = Arr.map(chunks, (ch) => `<div class="tox-collection__group">${ch.join('')}</div>`);
 
-    Html.set(comp.element, html.join('') + ariaHtml.describedByElement);
+    Html.set(comp.element, html.join('') + accessibilityHtml.insertAndCloseInfo);
   };
 
   const onClick = runOnItem((comp, se, tgt, itemValue) => {
