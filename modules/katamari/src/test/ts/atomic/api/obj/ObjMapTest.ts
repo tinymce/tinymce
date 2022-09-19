@@ -21,7 +21,7 @@ describe('atomic.katamari.api.obj.ObjMapTest', () => {
       assert.deepEqual(Obj.map(input, f), expected);
     };
 
-    const checkT = <T, R>(expected: Record<string, R>, input: Record<string, T>, f: (val: T, key: string) => { k: string; v: R }) => {
+    const checkT = <T, R extends {}>(expected: Record<string, R>, input: Record<string, T>, f: (val: T, key: string) => { k: string; v: R }) => {
       assert.deepEqual(Obj.tupleMap(input, f), expected);
     };
 

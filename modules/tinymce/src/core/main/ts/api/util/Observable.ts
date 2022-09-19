@@ -1,7 +1,7 @@
 import * as EventUtils from '../../events/EventUtils';
 import EventDispatcher, { EditorEvent, MappedEvent } from './EventDispatcher';
 
-interface Observable<T> {
+interface Observable<T extends {}> {
   fire <K extends string, U extends MappedEvent<T, K>>(name: K, args?: U, bubble?: boolean): EditorEvent<U>;
   dispatch <K extends string, U extends MappedEvent<T, K>>(name: K, args?: U, bubble?: boolean): EditorEvent<U>;
   on <K extends string>(name: K, callback: (event: EditorEvent<MappedEvent<T, K>>) => void, prepend?: boolean): EventDispatcher<T>;
@@ -10,7 +10,7 @@ interface Observable<T> {
   hasEventListeners (name: string): boolean;
 }
 
-interface ParentObservable<T> extends Observable<T> {
+interface ParentObservable<T extends {}> extends Observable<T> {
   parent?: () => ParentObservable<T>;
 }
 
