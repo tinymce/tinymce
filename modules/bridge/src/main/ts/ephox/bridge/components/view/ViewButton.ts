@@ -4,7 +4,7 @@ import { Result } from '@ephox/katamari';
 import * as ComponentSchema from '../../core/ComponentSchema';
 
 export interface ViewNormalButtonSpec {
-  type: 'submit' | 'cancel';
+  type: 'button';
   text: string;
   buttonType?: 'primary' | 'secondary';
   onAction: () => void;
@@ -13,7 +13,7 @@ export interface ViewNormalButtonSpec {
 export type ViewButtonSpec = ViewNormalButtonSpec;
 
 export interface ViewNormalButton {
-  type: 'submit' | 'cancel';
+  type: 'button';
   text: string;
   buttonType: 'primary' | 'secondary';
   onAction: () => void;
@@ -22,7 +22,7 @@ export interface ViewNormalButton {
 export type ViewButton = ViewNormalButton;
 
 const normalButtonFields = [
-  FieldSchema.requiredStringEnum('type', [ 'submit', 'cancel' ]),
+  FieldSchema.requiredStringEnum('type', [ 'button' ]),
   ComponentSchema.text,
   FieldSchema.defaultedStringEnum('buttonType', 'secondary', [ 'primary', 'secondary' ]),
   FieldSchema.requiredFunction('onAction')

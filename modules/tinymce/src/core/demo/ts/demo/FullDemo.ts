@@ -33,15 +33,15 @@ export default (): void => {
     editor.ui.registry.addView('code', {
       buttons: [
         {
-          type: 'cancel',
-          text: 'Canel',
+          type: 'button',
+          text: 'Cancel',
           buttonType: 'secondary',
           onAction: () => {
             console.log('close');
           }
         },
         {
-          type: 'submit',
+          type: 'button',
           text: 'Save code',
           buttonType: 'primary',
           onAction: () => {
