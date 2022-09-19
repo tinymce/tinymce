@@ -59,6 +59,14 @@
   }
 }
 
+// Remove styling if there is no Menubar of Toolbars in the header
+.tox.tox:not(.tox-tinymce-inline) .tox-editor-header.tox-editor-header--empty {
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
 // Docking styles for the editor container and sink
 .tox-editor-dock-fadeout {
   opacity: 0;
