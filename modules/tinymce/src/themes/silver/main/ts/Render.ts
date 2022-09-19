@@ -163,12 +163,11 @@ const setup = (editor: Editor): RenderInfo => {
 
     const menubarCollection = shouldHavePromotion ? [ partPromotion, partMenubar ] : [ partMenubar ];
 
-
     return OuterContainer.parts.header({
       dom: {
         tag: 'div',
         classes: [ 'tox-editor-header' ]
-          .concat((hasMultipleToolbar || hasToolbar || hasMenubar) ? [] : ['tox-editor-header--empty']),
+          .concat((hasMultipleToolbar || hasToolbar || hasMenubar) ? [] : [ 'tox-editor-header--empty' ]),
         ...verticalDirAttributes
       },
       components: Arr.flatten<AlloySpec>([
