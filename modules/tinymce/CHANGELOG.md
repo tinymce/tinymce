@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Editor header showing up even with no menubar/toolbar configured #TINY-8819
+
 ## 6.2.0 - 2022-09-08
 
 ### Added
