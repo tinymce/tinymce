@@ -48,7 +48,6 @@ export const TestStore = (): TestStore => {
   });
 
   const sAssertEq = <T> (label: string, expected: any[]): Step<T, T> => Step.sync(() =>
-  // Can't use a normal step here, because we don't need to get array lazily
     Assert.eq(label, expected, array.slice(0))
   );
 
@@ -61,8 +60,7 @@ export const TestStore = (): TestStore => {
   const assertSortedEq = (label: string, expected: any[]) => Assert.eq(label, expected.slice(0).sort(), array.slice(0).sort());
 
   const sAssertSortedEq = (label: string, expected: any[]) => Step.sync(() =>
-  // Can't use a normal step here, because we don't need to get array lazily
-    Assert.eq(label, expected.slice(0).sort(), array.slice(0).sort())
+    assertSortedEq(label, expected)
   );
 
   return {
