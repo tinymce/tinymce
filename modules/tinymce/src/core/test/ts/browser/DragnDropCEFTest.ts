@@ -44,11 +44,9 @@ describe('browser.tinymce.core.DragnDropCEFTest', () => {
     const destPosition = SugarLocation.viewport(dest);
     const yDelta = destPosition.top - toDragPosition.top;
     const xDelta = destPosition.left - toDragPosition.left;
-    await wait(1500);
+
     Mouse.mouseDown(toDrag);
-    await wait(1500);
     Mouse.mouseMoveTo(toDrag, xDelta - 5, yDelta - 5);
-    await wait(1500);
 
     // little trick that give "time" to CaretRange.fromPoint to find the position
     await wait(0);
