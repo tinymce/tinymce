@@ -129,7 +129,10 @@ export const renderCollection = (
     dom: {
       tag: 'div',
       // FIX: Read from columns
-      classes: [ 'tox-collection' ].concat(spec.columns !== 1 ? [ 'tox-collection--grid' ] : [ 'tox-collection--list' ])
+      classes: [ 'tox-collection' ].concat(spec.columns !== 1 ? [ 'tox-collection--grid' ] : [ 'tox-collection--list' ]),
+      attributes: {
+        'aria-live': 'polite'
+      }
     },
     components: [ ],
     factory: { sketch: Fun.identity },
