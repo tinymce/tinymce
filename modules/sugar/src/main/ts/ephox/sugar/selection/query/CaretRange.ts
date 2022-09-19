@@ -42,8 +42,10 @@ const availableSearch = (() => {
   }
 })();
 
-const getNodeIndex = (node: Node): number => Array.prototype.indexOf.call(
-  node.parentNode?.children, node);
+const getNodeIndex = (node: Node): number => {
+  const index = Array.prototype.indexOf.call(node.parentNode?.children, node);
+  return index < 0 ? 0 : index;
+};
 
 const fromPoint = (win: Window, x: number, y: number): Optional<SimRange> => {
   const doc = SugarElement.fromDom(win.document);
@@ -57,9 +59,9 @@ const fromPoint = (win: Window, x: number, y: number): Optional<SimRange> => {
     if (!isStartEditable && rng.startContainer.parentNode && !isEndEditable && rng.endContainer.parentNode) {
       return SimRange.create(
         SugarElement.fromDom(rng.startContainer.parentNode),
-        getNodeIndex(rng.startContainer) + 1,
+        getNodeIndex(rng.startContainer),
         SugarElement.fromDom(rng.endContainer.parentNode),
-        getNodeIndex(rng.endContainer) + 1
+        getNodeIndex(rng.endContainer)
       );
     } else {
       return SimRange.create(
