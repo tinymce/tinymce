@@ -34,12 +34,12 @@ export interface DialogTabChangeDetails {
   oldTabName: string;
 }
 
-export type DialogActionHandler<T> = (api: DialogInstanceApi<T>, details: DialogActionDetails) => void;
-export type DialogChangeHandler<T> = (api: DialogInstanceApi<T>, details: DialogChangeDetails<T>) => void;
-export type DialogSubmitHandler<T> = (api: DialogInstanceApi<T>) => void;
+export type DialogActionHandler<T extends DialogData> = (api: DialogInstanceApi<T>, details: DialogActionDetails) => void;
+export type DialogChangeHandler<T extends DialogData> = (api: DialogInstanceApi<T>, details: DialogChangeDetails<T>) => void;
+export type DialogSubmitHandler<T extends DialogData> = (api: DialogInstanceApi<T>) => void;
 export type DialogCloseHandler = () => void;
-export type DialogCancelHandler<T> = (api: DialogInstanceApi<T>) => void;
-export type DialogTabChangeHandler<T> = (api: DialogInstanceApi<T>, details: DialogTabChangeDetails) => void;
+export type DialogCancelHandler<T extends DialogData> = (api: DialogInstanceApi<T>) => void;
+export type DialogTabChangeHandler<T extends DialogData> = (api: DialogInstanceApi<T>, details: DialogTabChangeDetails) => void;
 
 export type DialogSize = 'normal' | 'medium' | 'large';
 export interface DialogSpec<T extends DialogData> {
@@ -68,7 +68,7 @@ export interface DialogSpec<T extends DialogData> {
   onTabChange?: DialogTabChangeHandler<T>;
 }
 
-export interface Dialog<T> {
+export interface Dialog<T extends DialogData> {
   title: string;
   size: DialogSize;
   body: TabPanel.TabPanel | Panel.Panel;
@@ -102,5 +102,5 @@ export const dialogSchema = StructureSchema.objOf([
   FieldSchema.defaultedFunction('onTabChange', Fun.noop)
 ]);
 
-export const createDialog = <T>(spec: DialogSpec<T>): Result<Dialog<T>, StructureSchema.SchemaError<any>> =>
+export const createDialog = <T extends DialogData>(spec: DialogSpec<T>): Result<Dialog<T>, StructureSchema.SchemaError<any>> =>
   StructureSchema.asRaw('dialog', dialogSchema, spec);

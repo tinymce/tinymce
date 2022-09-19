@@ -21,7 +21,7 @@ export type Decorator = (
 };
 
 const applyWordGrab = (editor: Editor, rng: Range): void => {
-  const r = ExpandRange.expandRng(editor, rng, [{ inline: 'span' }]);
+  const r = ExpandRange.expandRng(editor.dom, rng, [{ inline: 'span' }]);
   rng.setStart(r.startContainer, r.startOffset);
   rng.setEnd(r.endContainer, r.endOffset);
   editor.selection.setRng(rng);

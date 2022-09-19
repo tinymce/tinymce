@@ -3,7 +3,7 @@ import { Arr, Fun, Obj } from '@ephox/katamari';
 import * as EventUtils from '../../events/EventUtils';
 import Tools from './Tools';
 
-export type MappedEvent<T, K extends string> = K extends keyof T ? T[K] : any;
+export type MappedEvent<T extends {}, K extends string> = K extends keyof T ? T[K] : any;
 
 export interface NativeEventMap {
   'beforepaste': Event;
@@ -56,7 +56,7 @@ export interface EventDispatcherSettings {
   beforeFire?: <T>(args: EditorEvent<T>) => void;
 }
 
-export interface EventDispatcherConstructor<T extends NativeEventMap> {
+export interface EventDispatcherConstructor<T extends {}> {
   readonly prototype: EventDispatcher<T>;
 
   new (settings?: EventDispatcherSettings): EventDispatcher<T>;
@@ -84,17 +84,17 @@ const nativeEvents = Tools.makeMap(
   ' '
 );
 
-interface Binding<T, K extends string> {
+interface Binding<T extends {}, K extends string> {
   func: (event: EditorEvent<MappedEvent<T, K>>) => void | boolean;
   removed: boolean;
   once?: true;
 }
 
-type Bindings<T> = {
+type Bindings<T extends {}> = {
   [K in string]?: Binding<T, K>[];
 };
 
-class EventDispatcher<T> {
+class EventDispatcher<T extends {}> {
   /**
    * Returns true/false if the specified event name is a native browser event or not.
    *
@@ -147,7 +147,7 @@ class EventDispatcher<T> {
    */
   public dispatch <K extends string, U extends MappedEvent<T, K>>(name: K, args?: U): EditorEvent<U> {
     const lcName = name.toLowerCase();
-    const event = EventUtils.normalize<U>(lcName, args ?? {} as U, this.scope);
+    const event = EventUtils.normalize(lcName, args ?? {}, this.scope) as EventUtils.NormalizedEvent<U>;
 
     if (this.settings.beforeFire) {
       this.settings.beforeFire(event);

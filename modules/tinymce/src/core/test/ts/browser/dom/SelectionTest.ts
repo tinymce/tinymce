@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
+import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -1195,6 +1195,23 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     LegacyUnit.equal(curRng.endContainer.nodeName, 'P');
     LegacyUnit.equal(curRng.endOffset, 0);
   });
+
+  it('TINY-9001: Expanding a word expands the selection', () => {
+    const editor = hook.editor();
+    editor.setContent('A BCDE F');
+    TinySelections.setCursor(editor, [ 0, 0 ], 4);
+    editor.selection.expand();
+    TinyAssertions.assertSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 6);
+  });
+
+  it('TINY-9001: Expanding a word expands the selection, with a provided option', () => {
+    const editor = hook.editor();
+    editor.setContent('A BCDE F');
+    TinySelections.setCursor(editor, [ 0, 0 ], 4);
+    editor.selection.expand({ type: 'word' });
+    TinyAssertions.assertSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 6);
+  });
+
   /*
   // TODO: Re-implement this test as a separate test if needed by destroying an editor etc
   it('getRng should return null if win.document is not defined or null', () => {
