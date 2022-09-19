@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Compilation errors were thrown when using TypeScript 4.8. #TINY-9161
 - Line separator scrolling in floating toolbars. #TINY-8948
 - A double bottom border appeared on inline mode editor for the `tinymce-5` skin. #TINY-9108
-- Editor header showing up even with no menubar/toolbar configured #TINY-8819
+- The editor header showed up even with no menubar/toolbar configured. #TINY-8819
 
 ## 6.2.0 - 2022-09-08
 
