@@ -17,7 +17,7 @@ export const createCharmapDialog = (): void => {
               description: 'Insert this character and close dialog'
             }
           }
-        ],
+        ]
       },
       buttons: [
         {
