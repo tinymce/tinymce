@@ -2,6 +2,8 @@ import { Optional } from '@ephox/katamari';
 
 import { SugarElement } from '../../api/node/SugarElement';
 import * as ContentEditable from '../../api/properties/ContentEditable';
+import * as PredicateFind from '../../api/search/PredicateFind';
+import * as Traverse from '../../api/search/Traverse';
 import { SimRange } from '../../api/selection/SimRange';
 
 interface CaretPosition {
@@ -42,10 +44,8 @@ const availableSearch = (() => {
   }
 })();
 
-const getNodeIndex = (node: Node): number => {
-  const index = Array.prototype.indexOf.call(node.parentNode?.children, node);
-  return index < 0 ? 0 : index;
-};
+const getNodeIndex = (node: Optional<SugarElement<Node>>): number =>
+  node.bind(Traverse.findIndex).map((i) => i < 0 ? 0 : i).getOr(0);
 
 const fromPoint = (win: Window, x: number, y: number): Optional<SimRange> => {
   const doc = SugarElement.fromDom(win.document);
@@ -56,12 +56,20 @@ const fromPoint = (win: Window, x: number, y: number): Optional<SimRange> => {
     const isStartEditable = ContentEditable.isEditable(startContainer as SugarElement);
     const isEndEditable = ContentEditable.isEditable(endContainer as SugarElement);
 
-    if (!isStartEditable && rng.startContainer.parentNode && !isEndEditable && rng.endContainer.parentNode) {
+    const getLastNonEditableParent = (node: SugarElement<Node>) => PredicateFind.ancestor(
+      node,
+      (el) => Traverse.parent(el).exists((e) => ContentEditable.isEditable(e as SugarElement))
+    );
+
+    const startContainerElement = getLastNonEditableParent(startContainer);
+    const endContainerElement = getLastNonEditableParent(endContainer);
+
+    if (!isStartEditable && startContainerElement.bind(Traverse.parent).isSome() && !isEndEditable && endContainerElement.bind(Traverse.parent).isSome()) {
       return SimRange.create(
-        SugarElement.fromDom(rng.startContainer.parentNode),
-        getNodeIndex(rng.startContainer),
-        SugarElement.fromDom(rng.endContainer.parentNode),
-        getNodeIndex(rng.endContainer)
+        startContainerElement.bind(Traverse.parent).getOrDie(),
+        getNodeIndex(startContainerElement),
+        startContainerElement.bind(Traverse.parent).getOrDie(),
+        getNodeIndex(endContainerElement)
       );
     } else {
       return SimRange.create(
