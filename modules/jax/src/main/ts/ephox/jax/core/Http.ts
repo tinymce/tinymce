@@ -163,7 +163,7 @@ const fetchDownload = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, 
 
     if (body) {
       const reader = body.getReader();
-      const process = (result: ReadableStreamDefaultReadResult<Uint8Array>) => {
+      const process = (result: ReadableStreamReadResult<Uint8Array>) => {
         if (result.done) {
           resolve(Result.value(new Blob(chunks, { type: mime.getOr('') })));
         } else {
