@@ -150,6 +150,7 @@ const setup = (editor: Editor): RenderInfo => {
     const hasMenubar = Options.isMenubarEnabled(editor);
     const shouldHavePromotion = Options.promotionEnabled(editor);
     const partPromotion = makePromotion();
+    const hasAnyContents = hasMultipleToolbar || hasToolbar || hasMenubar;
 
     const getPartToolbar = () => {
       if (hasMultipleToolbar) {
@@ -167,7 +168,7 @@ const setup = (editor: Editor): RenderInfo => {
       dom: {
         tag: 'div',
         classes: [ 'tox-editor-header' ]
-          .concat((hasMultipleToolbar || hasToolbar || hasMenubar) ? [] : [ 'tox-editor-header--empty' ]),
+          .concat(hasAnyContents ? [] : [ 'tox-editor-header--empty' ]),
         ...verticalDirAttributes
       },
       components: Arr.flatten<AlloySpec>([

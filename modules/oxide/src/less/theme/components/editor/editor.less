@@ -59,7 +59,8 @@
   }
 }
 
-// Remove styling if there is no Menubar of Toolbars in the header
+// Remove styling if there is no Menubar and Toolbars in the header
+// Two `.tox` classes are used to make it more specific than sticky header styles without using `!important`
 .tox.tox:not(.tox-tinymce-inline) .tox-editor-header.tox-editor-header--empty {
   background: none;
   border: none;
