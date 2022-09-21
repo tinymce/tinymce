@@ -10,8 +10,8 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 
 interface StoreMouseDragEventTest {
-  left: number;
-  top: number;
+  readonly left: number;
+  readonly top: number;
 }
 
 UnitTest.asynctest('MouseDragEventTest', (success, failure) => {

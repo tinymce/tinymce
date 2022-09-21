@@ -9,9 +9,9 @@ import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 interface StorePinchingTest {
-  method: string;
-  dx: number;
-  dy: number;
+  readonly method: string;
+  readonly dx: number;
+  readonly dy: number;
 }
 
 UnitTest.asynctest('Browser Test: behaviour.PinchingTest', (success, failure) => {

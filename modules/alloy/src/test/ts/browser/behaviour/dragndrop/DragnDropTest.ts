@@ -10,9 +10,9 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { DropDragndropConfigSpec, StartingDragndropConfigSpec } from 'ephox/alloy/dragging/dragndrop/DragnDropTypes';
 
 interface StoreDragnDropTest {
-  type: string;
-  files: [] | Array<Record<string, any>>;
-  data?: string | Record<string, any>;
+  readonly type: string;
+  readonly files: [] | Array<Record<string, any>>;
+  readonly data?: string | Record<string, any>;
 }
 
 UnitTest.asynctest('DragnDropTest', (success, failure) => {

@@ -5,8 +5,8 @@ import { Attribute, DomEvent, EventArgs, Insert, Remove, SugarElement, SugarNode
 import * as GuiEvents from 'ephox/alloy/events/GuiEvents';
 
 interface StoreGuiEventsTest {
-  eventName: string;
-  target?: string;
+  readonly eventName: string;
+  readonly target?: string;
 }
 
 UnitTest.asynctest('GuiEventsTest', (success, failure) => {
