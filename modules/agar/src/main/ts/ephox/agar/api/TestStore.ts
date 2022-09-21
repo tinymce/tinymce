@@ -4,63 +4,64 @@ import { Optional } from '@ephox/katamari';
 import { Chain } from './Chain';
 import { Step } from './Step';
 
-export interface TestStore {
-  add: (value: any) => void;
-  adder: (value: any) => () => void;
-  adderH: (value: any) => () => Optional<boolean>;
+export interface TestStore<T = string> {
+  add: (value: T) => void;
+  adder: (value: T) => () => void;
+  adderH: (value: T) => () => Optional<boolean>;
   clear: () => void;
   sClear: Step<any, any>;
   cClear: Chain<any, any>;
-  sAssertEq: <T> (label: string, expected: any[]) => Step<T, T>;
-  cAssertEq: <T> (label: string, expected: any[]) => Chain<T, T>;
-  assertEq: (labely: string, expected: any[]) => void;
-  assertSortedEq: (labely: string, expected: any[]) => void;
-  sAssertSortedEq: (label: string, expected: any[]) => Step<any, any>;
+  sAssertEq: (label: string, expected: T[]) => Step<any, any>;
+  cAssertEq: (label: string, expected: T[]) => Chain<any, any>;
+  assertEq: (label: string, expected: T[]) => void;
+  assertSortedEq: (label: string, expected: T[], cmp?: (a: T, b: T) => number) => void;
+  sAssertSortedEq: (label: string, expected: T[], cmp?: (a: T, b: T) => number) => Step<any, any>;
 }
 
-export const TestStore = (): TestStore => {
-  let array: any[] = [ ];
+export const TestStore = <T = string>(): TestStore<T> => {
+  let array: T[] = [];
 
-  const add = (value: any) => {
+  const add = (value: T) => {
     array.push(value);
     // eslint-disable-next-line no-console
     console.log('store.add', value, array);
   };
 
-  const adder = (value: any) => () => add(value);
+  const adder = (value: T) => () => add(value);
 
   // Used for keyboard handlers which need to return Optional to know whether or not to kill the event
-  const adderH = (value: any) => () => {
+  const adderH = (value: T) => () => {
     add(value);
     return Optional.some(true);
   };
 
   const sClear = Step.sync(() => {
-    array = [ ];
+    array = [];
   });
 
   const clear = () => {
-    array = [ ];
+    array = [];
   };
 
   const cClear = Chain.op(() => {
     clear();
   });
 
-  const sAssertEq = <T> (label: string, expected: any[]): Step<T, T> => Step.sync(() =>
+  const sAssertEq = (label: string, expected: T[]): Step<any, any> => Step.sync(() =>
     Assert.eq(label, expected, array.slice(0))
   );
 
-  const cAssertEq = <T> (label: string, expected: any[]): Chain<T, T> => Chain.op(() => {
+  const cAssertEq = (label: string, expected: T[]): Chain<any, any> => Chain.op(() => {
     assertEq(label, expected);
   });
 
-  const assertEq = (label: string, expected: any[]) => Assert.eq(label, expected, array.slice(0));
+  const assertEq = (label: string, expected: T[]) => Assert.eq(label, expected, array.slice(0));
 
-  const assertSortedEq = (label: string, expected: any[]) => Assert.eq(label, expected.slice(0).sort(), array.slice(0).sort());
+  const assertSortedEq = (label: string, expected: T[], cmp?: (a: T, b: T) => number) =>
+    Assert.eq(label, expected.slice(0).sort(cmp), array.slice(0).sort(cmp));
 
-  const sAssertSortedEq = (label: string, expected: any[]) => Step.sync(() =>
-    assertSortedEq(label, expected)
+  const sAssertSortedEq = (label: string, expected: T[], cmp?: (a: T, b: T) => number) => Step.sync(() =>
+    assertSortedEq(label, expected, cmp)
   );
 
   return {

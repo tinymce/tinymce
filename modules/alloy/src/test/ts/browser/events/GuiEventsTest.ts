@@ -4,6 +4,11 @@ import { Attribute, DomEvent, EventArgs, Insert, Remove, SugarElement, SugarNode
 
 import * as GuiEvents from 'ephox/alloy/events/GuiEvents';
 
+interface StoreGuiEventsTest {
+  eventName: string;
+  target?: string;
+}
+
 UnitTest.asynctest('GuiEventsTest', (success, failure) => {
 
   const cleanup = Cleaner();
@@ -24,8 +29,8 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
   Insert.append(body, page);
   cleanup.add(() => Remove.remove(page));
 
-  const outerStore = TestStore();
-  const store = TestStore();
+  const outerStore = TestStore<string | StoreGuiEventsTest>();
+  const store = TestStore<string | StoreGuiEventsTest>();
 
   const onBodyKeydown = DomEvent.bind(body, 'keydown', (evt) => {
     if (evt.raw.which === Keys.backspace()) {

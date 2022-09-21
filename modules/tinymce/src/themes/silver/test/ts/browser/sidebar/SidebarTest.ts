@@ -13,7 +13,7 @@ interface EventLog {
 }
 
 describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
-  const store = TestStore();
+  const store = TestStore<EventLog>();
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'mysidebar1 mysidebar2 mysidebar3',

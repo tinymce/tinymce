@@ -23,22 +23,22 @@ interface SetupRootElement<T extends RootNode> {
   readonly teardown: () => void;
 }
 
-export interface Hook<T extends RootNode> {
+export interface Hook<T extends RootNode, U = string> {
   readonly root: () => T;
   readonly body: () => SugarElement<Node>;
   readonly gui: () => Gui.GuiSystem;
   readonly component: () => AlloyComponent;
-  readonly store: () => TestStore;
+  readonly store: () => TestStore<U>;
 }
 
-const setupIn = <T extends RootNode>(
+const setupIn = <T extends RootNode, U = string>(
   root: T,
-  createComponent: (store: TestStore, doc: T, body: SugarElement<ContentContainer<T>>) => AlloyComponent,
-  f: (doc: T, body: SugarElement<ContentContainer<T>>, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore) => Array<Step<any, any>>,
+  createComponent: (store: TestStore<U>, doc: T, body: SugarElement<ContentContainer<T>>) => AlloyComponent,
+  f: (doc: T, body: SugarElement<ContentContainer<T>>, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore<U>) => Array<Step<any, any>>,
   success: () => void,
   failure: (err: any, logs?: TestLogs) => void
 ) => {
-  const store = TestStore();
+  const store = TestStore<U>();
 
   const gui = Gui.create();
   const contentContainer = SugarShadowDom.getContentContainer(root) as SugarElement<ContentContainer<T>>;
@@ -61,12 +61,12 @@ const setupIn = <T extends RootNode>(
   }
 };
 
-const bddSetupIn = <T extends RootNode>(
+const bddSetupIn = <T extends RootNode, U = string>(
   setupRoot: () => SetupRootElement<T>,
-  createComponent: (store: TestStore, doc: T, body: SugarElement<Node>) => AlloyComponent,
+  createComponent: (store: TestStore<U>, doc: T, body: SugarElement<Node>) => AlloyComponent,
   createGui?: () => Gui.GuiSystem,
   skip: () => boolean = Fun.never
-): Hook<T> => {
+): Hook<T, U> => {
   let state: Record<string, any> = {};
   let teardown: () => void = Fun.noop;
   let hasFailure = false;
@@ -78,7 +78,7 @@ const bddSetupIn = <T extends RootNode>(
       this.skip();
     }
 
-    const store = TestStore();
+    const store = TestStore<U>();
     const setup = setupRoot();
     teardown = setup.teardown;
     const root = setup.root;
@@ -135,19 +135,19 @@ const bddSetupIn = <T extends RootNode>(
  * @param success
  * @param failure
  */
-const setup = (
-  createComponent: (store: TestStore, doc: SugarElement<Document>, body: SugarElement<HTMLElement>) => AlloyComponent,
-  f: (doc: SugarElement<Document>, body: SugarElement<HTMLElement>, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore) => Array<Step<any, any>>,
+const setup = <T = string>(
+  createComponent: (store: TestStore<T>, doc: SugarElement<Document>, body: SugarElement<HTMLElement>) => AlloyComponent,
+  f: (doc: SugarElement<Document>, body: SugarElement<HTMLElement>, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore<T>) => Array<Step<any, any>>,
   success: () => void,
   failure: (err: any, logs?: TestLogs) => void
 ): void => {
   setupIn(SugarDocument.getDocument(), createComponent, f, success, failure);
 };
 
-const bddSetup = (
-  createComponent: (store: TestStore, doc: SugarElement<Document>, body: SugarElement<Node>) => AlloyComponent,
+const bddSetup = <T = string>(
+  createComponent: (store: TestStore<T>, doc: SugarElement<Document>, body: SugarElement<Node>) => AlloyComponent,
   createGui?: () => Gui.GuiSystem
-): Hook<SugarElement<Document>> =>
+): Hook<SugarElement<Document>, T> =>
   bddSetupIn(() => ({
     root: SugarDocument.getDocument(),
     teardown: Fun.noop
@@ -161,9 +161,9 @@ const bddSetup = (
  * @param success
  * @param failure
  */
-const setupInShadowRoot = (
-  createComponent: (store: TestStore, doc: SugarElement<ShadowRoot>, body: SugarElement<Node>) => AlloyComponent,
-  f: (doc: SugarElement<ShadowRoot>, body: SugarElement<Node>, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore) => Array<Step<any, any>>,
+const setupInShadowRoot = <T = string>(
+  createComponent: (store: TestStore<T>, doc: SugarElement<ShadowRoot>, body: SugarElement<Node>) => AlloyComponent,
+  f: (doc: SugarElement<ShadowRoot>, body: SugarElement<Node>, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore<T>) => Array<Step<any, any>>,
   success: () => void,
   failure: (err: any, logs?: TestLogs) => void
 ): void => {
@@ -179,10 +179,10 @@ const setupInShadowRoot = (
   }, failure);
 };
 
-const bddSetupInShadowRoot = (
-  createComponent: (store: TestStore, doc: SugarElement<ShadowRoot>, body: SugarElement<Node>) => AlloyComponent,
+const bddSetupInShadowRoot = <T = string>(
+  createComponent: (store: TestStore<T>, doc: SugarElement<ShadowRoot>, body: SugarElement<Node>) => AlloyComponent,
   createGui?: () => Gui.GuiSystem
-): Hook<SugarElement<ShadowRoot>> => {
+): Hook<SugarElement<ShadowRoot>, T> => {
   return bddSetupIn(() => {
     const sh = SugarElement.fromTag('div');
     Insert.append(SugarBody.body(), sh);
@@ -194,9 +194,9 @@ const bddSetupInShadowRoot = (
   }, createComponent, createGui, () => !SugarShadowDom.isSupported());
 };
 
-const setupInBodyAndShadowRoot = (
-  createComponent: (store: TestStore, doc: RootNode, body: SugarElement<Node>) => AlloyComponent,
-  f: (doc: RootNode, body: SugarElement<Node>, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore) => Array<Step<any, any>>,
+const setupInBodyAndShadowRoot = <T = string>(
+  createComponent: (store: TestStore<T>, doc: RootNode, body: SugarElement<Node>) => AlloyComponent,
+  f: (doc: RootNode, body: SugarElement<Node>, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore<T>) => Array<Step<any, any>>,
   success: () => void,
   failure: (err: any, logs?: TestLogs) => void
 ): void => {
@@ -214,8 +214,8 @@ const setupInBodyAndShadowRoot = (
  * @param success
  * @param failure
  */
-const guiSetup = <A, B> (createComponent: (store: TestStore, doc: SugarElement<Document>, body: SugarElement<HTMLElement>) => AlloyComponent,
-  f: (doc: SugarElement<Document>, body: SugarElement<HTMLElement>, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore) => Step<A, B>,
+const guiSetup = <A, B, C = string> (createComponent: (store: TestStore<C>, doc: SugarElement<Document>, body: SugarElement<HTMLElement>) => AlloyComponent,
+  f: (doc: SugarElement<Document>, body: SugarElement<HTMLElement>, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore<C>) => Step<A, B>,
   success: () => void, failure: (err: any, logs?: TestLogs) => void): void => {
   setup(createComponent, (doc, body, gui, component, store) => [
     f(doc, body, gui, component, store)

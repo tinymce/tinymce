@@ -9,8 +9,14 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { DropDragndropConfigSpec, StartingDragndropConfigSpec } from 'ephox/alloy/dragging/dragndrop/DragnDropTypes';
 
+interface StoreDragnDropTest {
+  type: string;
+  files: [] | Array<Record<string, any>>;
+  data?: string | Record<string, any>;
+}
+
 UnitTest.asynctest('DragnDropTest', (success, failure) => {
-  const createDraggable = (store: TestStore, cls: string, overrides: Partial<StartingDragndropConfigSpec>) => Container.sketch({
+  const createDraggable = (store: TestStore<string | StoreDragnDropTest>, cls: string, overrides: Partial<StartingDragndropConfigSpec>) => Container.sketch({
     dom: {
       styles: {
         width: '100px',
@@ -40,7 +46,7 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
     ])
   });
 
-  const createDropZone = (store: TestStore, cls: string, overrides: Partial<DropDragndropConfigSpec>) => Container.sketch({
+  const createDropZone = (store: TestStore<string | StoreDragnDropTest>, cls: string, overrides: Partial<DropDragndropConfigSpec>) => Container.sketch({
     dom: {
       styles: {
         width: '100px',
@@ -73,19 +79,19 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
     ])
   });
 
-  const sAssertDraggedData = (label: string, store: TestStore, expectedDropData: Record<string, any>) => store.sAssertEq(label, [ 'canDrag', 'onDragstart', 'onDragenter', 'onDragover', {
+  const sAssertDraggedData = (label: string, store: TestStore<string | StoreDragnDropTest>, expectedDropData: Record<string, any>) => store.sAssertEq(label, [ 'canDrag', 'onDragstart', 'onDragenter', 'onDragover', {
     type: 'drop',
     files: [],
     ...expectedDropData
   }, 'onDragend' ]);
 
-  const sAssertDraggedFiles = (label: string, store: TestStore, expectedDropFiles: Array<Record<string, any>>) => store.sAssertEq(label, [ 'canDrag', 'onDragstart', 'onDragenter', 'onDragover', {
+  const sAssertDraggedFiles = (label: string, store: TestStore<string | StoreDragnDropTest>, expectedDropFiles: Array<Record<string, any>>) => store.sAssertEq(label, [ 'canDrag', 'onDragstart', 'onDragenter', 'onDragover', {
     type: 'drop',
     data: '',
     files: expectedDropFiles
   }, 'onDragend' ]);
 
-  GuiSetup.setup((store, _doc, _body) => GuiFactory.build(
+  GuiSetup.setup((store: TestStore<string | StoreDragnDropTest>, _doc, _body) => GuiFactory.build(
     Container.sketch({
       components: [
         createDropZone(store, 'dropzoneA', {}),

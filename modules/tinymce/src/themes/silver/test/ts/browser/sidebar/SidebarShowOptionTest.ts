@@ -12,8 +12,8 @@ interface EventLog {
 }
 
 describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
-  const store = TestStore();
-  const settingsFactory = (store: TestStore) => {
+  const store = TestStore<EventLog>();
+  const settingsFactory = (store: TestStore<EventLog>) => {
     const logEvent = (name: string) => (api: Sidebar.SidebarInstanceApi) => {
       const index = Traverse.findIndex(SugarElement.fromDom(api.element())).getOr(-1);
       const entry: EventLog = { name, index };
