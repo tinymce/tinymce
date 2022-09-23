@@ -1,5 +1,4 @@
-import { Keys, UiFinder, Waiter } from '@ephox/agar';
-import { TestHelpers } from '@ephox/alloy';
+import { Keys, UiFinder, TestStore, Waiter } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Throttler, Type } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
@@ -29,7 +28,7 @@ interface Scenario extends TriggerDetails {
 }
 
 describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', () => {
-  const store = TestHelpers.TestStore();
+  const store = TestStore();
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {

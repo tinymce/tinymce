@@ -30,6 +30,7 @@ import * as RealMouse from './RealMouse';
 import { Step } from './Step';
 import * as StepSequence from './StepSequence';
 import { TestLogs } from './TestLogs';
+import { TestStore } from './TestStore';
 import * as Touch from './Touch';
 import * as UiControls from './UiControls';
 import * as UiFinder from './UiFinder';
@@ -76,5 +77,6 @@ export {
   StructAssertAdv,
   DragnDrop,
   Files,
-  FileInput
+  FileInput,
+  TestStore
 };

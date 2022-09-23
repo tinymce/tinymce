@@ -1,5 +1,4 @@
-import { Keys, RealKeys, Waiter } from '@ephox/agar';
-import { TestHelpers } from '@ephox/alloy';
+import { Keys, RealKeys, TestStore, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr, Type } from '@ephox/katamari';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -22,7 +21,7 @@ interface Scenario {
 }
 
 describe('webdriver.tinymce.themes.silver.editor.AutocompleteDelayedResponseTest', () => {
-  const store = TestHelpers.TestStore();
+  const store = TestStore();
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {

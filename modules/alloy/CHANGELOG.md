@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Removed
+- Moved `TestStore` to Agar. #TINY-9157
+
 ## 11.0.0 - 2022-09-08
 
 ### Added

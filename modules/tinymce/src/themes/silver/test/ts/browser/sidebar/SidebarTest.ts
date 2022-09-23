@@ -1,5 +1,4 @@
-import { ApproxStructure, Assertions, UiFinder, Waiter } from '@ephox/agar';
-import { TestHelpers } from '@ephox/alloy';
+import { ApproxStructure, Assertions, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { SugarBody, SugarElement, Traverse } from '@ephox/sugar';
@@ -14,7 +13,7 @@ interface EventLog {
 }
 
 describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
-  const store = TestHelpers.TestStore();
+  const store = TestStore<EventLog>();
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'mysidebar1 mysidebar2 mysidebar3',

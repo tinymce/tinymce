@@ -1,5 +1,4 @@
-import { ApproxStructure, Assertions, FocusTools, Keys, StructAssert, UiFinder, Waiter } from '@ephox/agar';
-import { TestHelpers } from '@ephox/alloy';
+import { ApproxStructure, Assertions, FocusTools, Keys, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Fun, Obj } from '@ephox/katamari';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
@@ -8,7 +7,7 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
-  const store = TestHelpers.TestStore();
+  const store = TestStore();
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {

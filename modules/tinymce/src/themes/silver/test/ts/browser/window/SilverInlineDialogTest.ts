@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, FocusTools, Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Mouse, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Strings } from '@ephox/katamari';
@@ -13,7 +13,7 @@ import { WindowParams } from 'tinymce/core/api/WindowManager';
 import * as DialogUtils from '../../module/DialogUtils';
 
 describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
-  const store = TestHelpers.TestStore();
+  const store = TestStore();
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
   }, []);

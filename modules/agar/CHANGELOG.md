@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- Added `TestStore` API, which was moved from Alloy and requires types. #TINY-9157
+
 ## 7.2.0 - 2022-09-08
 
 ### Improved

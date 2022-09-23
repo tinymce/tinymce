@@ -1,4 +1,4 @@
-import { Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { Mouse, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { AlloyComponent, Behaviour, GuiFactory, ModalDialog, Positioning, TestHelpers } from '@ephox/alloy';
 import { before, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { ValueType } from '@ephox/boulder';
@@ -23,7 +23,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
     })
   );
 
-  const dialogSpec = (store: TestHelpers.TestStore): DialogManager.DialogInit<{}> => ({
+  const dialogSpec = (store: TestStore): DialogManager.DialogInit<{}> => ({
     internalDialog: {
       title: 'test dialog',
       size: 'normal',

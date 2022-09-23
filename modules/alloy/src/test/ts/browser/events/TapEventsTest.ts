@@ -1,10 +1,9 @@
-import { GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
+import { GeneralSteps, Logger, Pipeline, Step, TestStore, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { EventArgs, SugarElement } from '@ephox/sugar';
 
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
-import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
 import * as TapEvent from 'ephox/alloy/events/TapEvent';
 
 UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
