@@ -23,8 +23,6 @@ export const TestStore = <T = string>(): TestStore<T> => {
 
   const add = (value: T) => {
     array.push(value);
-    // eslint-disable-next-line no-console
-    console.log('store.add', value, array);
   };
 
   const adder = (value: T) => () => add(value);

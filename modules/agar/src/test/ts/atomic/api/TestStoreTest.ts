@@ -30,7 +30,7 @@ describe('atomic.agar.api.TestStoreTest', () => {
   const objectsSortedByIsHappy = Arr.sort(objects, (a, b) => Number(a.isHappy) - Number(b.isHappy));
 
   context('Step based', () => {
-    it('TestStore strings', () => {
+    it('TINY-9157: TestStore strings', () => {
       const store = TestStore<string>();
       const sAddItemToStore = () => {
         return Arr.map(strings, (s: string) => {
@@ -51,7 +51,7 @@ describe('atomic.agar.api.TestStoreTest', () => {
       ], Fun.noop, Fun.noop);
     });
 
-    it('TestStore numbers', () => {
+    it('TINY-9157: TestStore numbers', () => {
       const store = TestStore<number>();
       const sAddToStore = () => {
         return Arr.map(numbers, (s: number) => {
@@ -72,7 +72,7 @@ describe('atomic.agar.api.TestStoreTest', () => {
       ], Fun.noop, Fun.noop);
     });
 
-    it('TestStore objects', () => {
+    it('TINY-9157: TestStore objects', () => {
       const store = TestStore<TestData>();
       const sAddItemToStore = () => {
         return Arr.map(objects, (s: TestData) => {
@@ -99,7 +99,7 @@ describe('atomic.agar.api.TestStoreTest', () => {
   });
 
   context('Non-step based', () => {
-    it('TestStore strings', () => {
+    it('TINY-9157: TestStore strings', () => {
       const store = TestStore<string>();
 
       Arr.each(strings, (s) => store.adder(s)());
@@ -111,7 +111,7 @@ describe('atomic.agar.api.TestStoreTest', () => {
       store.assertEq('empty store', []);
     });
 
-    it('TestStore numbers', () => {
+    it('TINY-9157: TestStore numbers', () => {
       const store = TestStore<number>();
       Arr.each(numbers, (s) => store.adder(s)());
 
@@ -122,7 +122,7 @@ describe('atomic.agar.api.TestStoreTest', () => {
       store.assertEq('empty store', []);
     });
 
-    it('TestStore objects', () => {
+    it('TINY-9157: TestStore objects', () => {
       const store = TestStore<TestData>();
 
       Arr.each(objects, (s) => store.adder(s)());
