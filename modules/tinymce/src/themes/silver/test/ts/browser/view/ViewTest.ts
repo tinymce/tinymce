@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Mouse, StructAssert, TestStore, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Attribute, Css } from '@ephox/sugar';
+import { Attribute, Css, Html } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -13,7 +13,8 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     setup: (editor: Editor) => {
-      const logEvent = (name: string) => (_api: View.ViewInstanceApi) => {
+      const injectAndLog = (name: string, html: string = '') => (api: View.ViewInstanceApi) => {
+        api.getContainer().innerHTML = html;
         store.add(name);
       };
 
@@ -31,8 +32,8 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
             buttonType: 'primary'
           }
         ],
-        onShow: logEvent('myview1:show'),
-        onHide: logEvent('myview1:hide')
+        onShow: injectAndLog('myview1:show', 'myview1'),
+        onHide: injectAndLog('myview1:hide')
       });
 
       editor.ui.registry.addView('myview2', {
@@ -50,8 +51,8 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
             buttonType: 'primary'
           }
         ],
-        onShow: logEvent('myview2:show'),
-        onHide: logEvent('myview2:hide')
+        onShow: injectAndLog('myview2:show', 'myview2'),
+        onHide: injectAndLog('myview2:hide')
       });
     }
   }, []);
@@ -85,6 +86,13 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
 
     assert.isFalse(Attribute.has(editorContainer, 'aria-hidden'), 'Should not have aria-hidden');
     assert.isTrue(Css.getRaw(editorContainer, 'display').isNone(), 'Should not have display none');
+  };
+
+  const assertViewHtml = (viewIndex: number, expectedHtml: string) => {
+    const editor = hook.editor();
+    const editorContainer = UiFinder.findIn<HTMLElement>(TinyDom.container(editor), `.tox-view:nth-child(${viewIndex + 1}) .tox-view__pane`).getOrDie();
+
+    assert.equal(Html.get(editorContainer), expectedHtml);
   };
 
   it('TINY-8964: Structure', () => {
@@ -161,14 +169,20 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
 
     toggleView('myview1');
     assert.equal(queryToggleView(), 'myview1');
+    assertViewHtml(0, 'myview1');
+    assertViewHtml(1, '');
     assertMainViewHidden();
 
     toggleView('myview2');
     assert.equal(queryToggleView(), 'myview2');
+    assertViewHtml(0, '');
+    assertViewHtml(1, 'myview2');
     assertMainViewHidden();
 
     toggleView('myview2');
     assert.equal(queryToggleView(), '');
+    assertViewHtml(0, '');
+    assertViewHtml(1, '');
     assertMainViewVisible();
 
     store.assertEq('Should show/hide myview1 and myview2', [
