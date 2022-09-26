@@ -96,7 +96,7 @@ interface SilverViewWrapperDetail extends Sketcher.SingleSketchDetail {
 interface SilverViewWrapperApis {
   setViews: (comp: AlloyComponent, viewConfigs: ViewConfig) => void;
   whichView: (comp: AlloyComponent) => Optional<string>;
-  toggleView: (comp: AlloyComponent, editorCont: AlloyComponent, name: string) => void;
+  toggleView: (comp: AlloyComponent, showMainView: () => void, hideMainView: () => void, name: string) => void;
 }
 
 const factory: UiSketcher.SingleSketchFactory<SilverViewWrapperDetail, SilverViewWrapperSpec> = (detail, spec) => {
@@ -108,22 +108,26 @@ const factory: UiSketcher.SingleSketchFactory<SilverViewWrapperDetail, SilverVie
     return Composing.getCurrent(comp).bind(getCurrentName);
   };
 
-  const toggleView = (comp: AlloyComponent, editorCont: AlloyComponent, name: string): void => {
+  const toggleView = (comp: AlloyComponent, showMainView: () => void, hideMainView: () => void, name: string): void => {
     Composing.getCurrent(comp).each((slotContainer) => {
       const optCurrentSlotName = getCurrentName(slotContainer);
       const hasSameName = optCurrentSlotName.exists((current) => name === current);
+      const exists = SlotContainer.getSlot(slotContainer, name).isSome();
 
-      // TODO: Clean this mess up onShow/onHide should fire when toggling on/off current and toggling to something different even if doesn't exist or noop that
-      optCurrentSlotName.each((prevName) => runOnHide(slotContainer, prevName));
-      SlotContainer.hideAllSlots(slotContainer);
-      if (!hasSameName) {
-        hideContainer(editorCont);
-        showContainer(comp);
-        SlotContainer.showSlot(slotContainer, name);
-        runOnShow(slotContainer, name);
-      } else {
-        hideContainer(comp);
-        showContainer(editorCont);
+      if (exists) {
+        SlotContainer.hideAllSlots(slotContainer);
+
+        if (!hasSameName) {
+          hideMainView();
+          showContainer(comp);
+          SlotContainer.showSlot(slotContainer, name);
+          runOnShow(slotContainer, name);
+        } else {
+          hideContainer(comp);
+          showMainView();
+        }
+
+        optCurrentSlotName.each((prevName) => runOnHide(slotContainer, prevName));
       }
     });
   };
@@ -166,7 +170,7 @@ export default Sketcher.single<SilverViewWrapperSpec, SilverViewWrapperDetail, S
   ],
   apis: {
     setViews: (apis, comp, views) => apis.setViews(comp, views),
-    toggleView: (apis, comp, editorCont, name) => apis.toggleView(comp, editorCont, name),
+    toggleView: (apis, comp, outerContainer, editorCont, name) => apis.toggleView(comp, outerContainer, editorCont, name),
     whichView: (apis, comp) => apis.whichView(comp)
   }
 });

@@ -7,6 +7,7 @@ import * as PublicInlineContent from './PublicInlineContent';
 import * as PublicMenu from './PublicMenu';
 import * as PublicSidebar from './PublicSidebar';
 import * as PublicToolbar from './PublicToolbar';
+import * as PublicView from './PublicView';
 import * as Registry from './Registry';
 import * as Sidebar from './Sidebar';
 import * as Toolbar from './Toolbar';
@@ -25,5 +26,6 @@ export {
   PublicSidebar,
   Toolbar,
   PublicToolbar,
+  PublicView,
   View
 };

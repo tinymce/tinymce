@@ -3,6 +3,7 @@ import {
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Id, Optional, Optionals, Result } from '@ephox/katamari';
+import { Attribute, Css } from '@ephox/sugar';
 
 import { ToolbarMode } from '../../api/Options';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -70,6 +71,8 @@ interface OuterContainerApis {
   readonly setViews: (comp: AlloyComponent, viewConfigs: ViewTypes.ViewConfig) => void;
   readonly toggleView: (comp: AlloyComponent, name: string) => void;
   readonly whichView: (comp: AlloyComponent) => string | null;
+  readonly showMainView: (comp: AlloyComponent) => void;
+  readonly hideMainView: (comp: AlloyComponent) => void;
 }
 
 interface ToolbarApis {
@@ -80,6 +83,8 @@ interface ToolbarApis {
 }
 
 const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, OuterContainerSketchSpec> = (detail, components, _spec) => {
+  let state = false;
+
   const apis: OuterContainerApis = {
     getSocket: (comp) => {
       return Composite.parts.getPart(comp, detail, 'socket');
@@ -158,16 +163,39 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
       });
     },
     toggleView: (comp, name) => {
-      Composite.parts.getPart(comp, detail, 'editorContainer').each((container) => {
-        Composite.parts.getPart(comp, detail, 'viewWrapper').each(
-          (wrapper) => ViewWrapper.toggleView(wrapper, container, name)
-        );
-      });
+      Composite.parts.getPart(comp, detail, 'viewWrapper').each(
+        (wrapper) => ViewWrapper.toggleView(wrapper, () => apis.showMainView(comp), () => apis.hideMainView(comp), name)
+      );
     },
     whichView: (comp) => {
       return Composite.parts.getPart(comp, detail, 'viewWrapper').bind(
         ViewWrapper.whichView
       ).getOrNull();
+    },
+    hideMainView: (comp: AlloyComponent) => {
+      state = apis.isToolbarDrawerToggled(comp);
+      if (state) {
+        apis.toggleToolbarDrawer(comp);
+      }
+
+      Composite.parts.getPart(comp, detail, 'editorContainer').each((editorContainer) => {
+        const element = editorContainer.element;
+
+        Css.set(element, 'display', 'none');
+        Attribute.set(element, 'aria-hidden', 'true');
+      });
+    },
+    showMainView: (comp: AlloyComponent) => {
+      if (state) {
+        apis.toggleToolbarDrawer(comp);
+      }
+
+      Composite.parts.getPart(comp, detail, 'editorContainer').each((editorContainer) => {
+        const element = editorContainer.element;
+
+        Css.remove(element, 'display');
+        Attribute.remove(element, 'aria-hidden');
+      });
     }
   };
 
