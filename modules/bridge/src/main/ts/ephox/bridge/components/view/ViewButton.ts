@@ -31,8 +31,7 @@ const normalButtonFields = [
 export const viewButtonSchema = StructureSchema.choose(
   'type',
   {
-    submit: normalButtonFields,
-    cancel: normalButtonFields
+    button: normalButtonFields
   }
 );
 
