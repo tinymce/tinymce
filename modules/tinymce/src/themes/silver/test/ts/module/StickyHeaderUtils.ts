@@ -13,6 +13,14 @@ const staticPartsOuter = (s: ApproxStructure.StructApi, _str: ApproxStructure.St
     })
   ];
 
+const statusbar = (s: ApproxStructure.StructApi, _str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] =>
+  // should not change
+  [
+    s.element('div', {
+      classes: [ arr.has('tox-statusbar') ]
+    })
+  ];
+
 const staticPartsInner = (s: ApproxStructure.StructApi, _str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] =>
   // should not change
   [
@@ -149,8 +157,8 @@ const pAssertEditorContainer = async (isToolbarTop: boolean, expectedPart: Appro
       ApproxStructure.build((s, str, arr) => s.element('div', {
         classes: [ arr.has('tox-editor-container') ],
         children: isToolbarTop ?
-          expectedPart(s, str, arr).concat(staticPartsOuter(s, str, arr)) :
-          staticPartsOuter(s, str, arr).concat(expectedPart(s, str, arr))
+          expectedPart(s, str, arr).concat(staticPartsOuter(s, str, arr)).concat(statusbar(s, str, arr)) :
+          staticPartsOuter(s, str, arr).concat(expectedPart(s, str, arr)).concat(statusbar(s, str, arr))
       })),
       container
     )
@@ -166,8 +174,8 @@ const pScrollAndAssertStructure = async (isToolbarTop: boolean, scrollYDelta: nu
       ApproxStructure.build((s, str, arr) => s.element('div', {
         classes: [ arr.has('tox-editor-container') ],
         children: isToolbarTop ?
-          expectedPart(s, str, arr).concat(staticPartsOuter(s, str, arr)) :
-          staticPartsOuter(s, str, arr).concat(expectedPart(s, str, arr))
+          expectedPart(s, str, arr).concat(staticPartsOuter(s, str, arr)).concat(statusbar(s, str, arr)) :
+          staticPartsOuter(s, str, arr).concat(expectedPart(s, str, arr)).concat(statusbar(s, str, arr))
       })),
       container
     )
