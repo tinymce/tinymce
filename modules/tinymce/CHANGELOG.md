@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - New `expand` function added to `tinymce.selection` which expands the selection around the nearest word. #TINY-9001
 - New `expand` function added to `tinymce.dom.RangeUtils` to return a new range expanded around the nearest word. #TINY-9001
+- New `addView` function to `editor.ui.registry` which makes it possible to register custom editor views. #TINY-9210
+- New `ToggleView` command which makes it possible to show/hide registered custom views. #TINY-9210
 
 ### Fixed
 - Range expanding capabilities would behave inconsistently depending on where the cursor was placed. #TINY-9029
