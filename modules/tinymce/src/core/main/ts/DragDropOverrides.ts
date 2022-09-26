@@ -130,7 +130,8 @@ const moveGhost = (
   mouseX: number,
   contentAreaContainer: HTMLElement,
   win: Window,
-  state: Singleton.Value<State>
+  state: Singleton.Value<State>,
+  mouseEventOriginatedFromWithinTheEditor: boolean
 ) => {
   let overflowX = 0, overflowY = 0;
 
@@ -163,7 +164,7 @@ const moveGhost = (
 
   state.on((state) => {
     state.intervalId.clear();
-    if (state.dragging) {
+    if (state.dragging && mouseEventOriginatedFromWithinTheEditor) {
       // This basically means that the mouse is close to the bottom edge
       // (within MouseRange pixels of the bottom edge)
       if (mouseY + mouseRangeToTriggerScrollInsideEditor >= clientHeight) {
@@ -268,9 +269,16 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
     }
 
     if (state.dragging) {
+      console.log({
+        mouseY: e.clientY,
+        origin: e.currentTarget,
+        editorOringin: editor.getDoc().firstElementChild,
+        fromEditor: e.currentTarget === editor.getDoc().firstElementChild
+      });
+      const mouseEventOriginatedFromWithinTheEditor = e.currentTarget === editor.getDoc().firstElementChild;
       const targetPos = applyRelPos(state, MousePosition.calc(editor, e));
       appendGhostToBody(state.ghost, editor.getBody());
-      moveGhost(state.ghost, targetPos, state.width, state.height, state.maxX, state.maxY, e.clientY, e.clientX, editor.getContentAreaContainer(), editor.getWin(), state_);
+      moveGhost(state.ghost, targetPos, state.width, state.height, state.maxX, state.maxY, e.clientY, e.clientX, editor.getContentAreaContainer(), editor.getWin(), state_, mouseEventOriginatedFromWithinTheEditor);
       throttledPlaceCaretAt.throttle(e.clientX, e.clientY);
     }
   });
