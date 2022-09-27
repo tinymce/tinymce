@@ -219,7 +219,7 @@ describe('ResizeTest', () => {
     const table = SugarElement.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 800px;">
     <tbody>
     <tr>
-    <td style="width: 400px;">thisisareallylongsentencewithoutspacesthatcausescontenttooverflow</td>
+    <td style="width: 400px;"><span style="display: inline-block; width: 483px"></span></td>
     <td style="width: 400px;">B</td>
     </tr>
     <tr>
