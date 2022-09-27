@@ -136,7 +136,8 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     pos = SugarLocation.viewport(body);
     Assert.eq('', 0, pos.top);
     Assert.eq('', 0, pos.left);
-    Assert.eq('scroll bar width, got=' + scrollBarWidth, true, scrollBarWidth > 5 && scrollBarWidth < 50 || (platform.os.isMacOS() && scrollBarWidth === 0));
+    const noScrollBrowser = platform.os.isMacOS() || (platform.browser.isFirefox() && platform.os.isLinux());
+    Assert.eq('scroll bar width, got=' + scrollBarWidth, true, scrollBarWidth > 5 && scrollBarWidth < 50 || (noScrollBrowser && scrollBarWidth === 0));
   };
 
   const disconnectedChecks = () => {
