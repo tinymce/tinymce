@@ -23,6 +23,7 @@ describe('headless.tinymce.themes.silver.components.colorinput.ColorInputTest', 
       components: [
         renderColorInput({
           name: 'alpha',
+          swatchKey: 'test',
           label: Optional.some('test-color-input')
         }, helpers.shared(), {
           colorPicker: (_callback, _value) => {},

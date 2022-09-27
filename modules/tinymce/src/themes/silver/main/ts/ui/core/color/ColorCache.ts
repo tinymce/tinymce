@@ -2,15 +2,14 @@ import { Arr, Type } from '@ephox/katamari';
 
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
 
-const storageName = 'tinymce-custom-colors';
-
 export interface ColorCache {
   readonly add: (key: string) => void;
   readonly state: () => string[];
 }
 
-export const ColorCache = (max: number = 10): ColorCache => {
-  const storageString = LocalStorage.getItem(storageName);
+export const ColorCache = (id: string, max: number = 10): ColorCache => {
+  const storageId = 'tinymce-custom-colors-' + id;
+  const storageString = LocalStorage.getItem(storageId);
   const localstorage = Type.isString(storageString) ? JSON.parse(storageString) : [];
 
   const prune = (list: string[]): string[] => {
@@ -33,7 +32,7 @@ export const ColorCache = (max: number = 10): ColorCache => {
       cache.pop();
     }
 
-    LocalStorage.setItem(storageName, JSON.stringify(cache));
+    LocalStorage.setItem(storageId, JSON.stringify(cache));
   };
 
   const remove = (idx: number): void => {

@@ -86,7 +86,7 @@ const applyColor = (editor: Editor, format: ColorFormat, value: string, onChoice
     const dialog = colorPickerDialog(editor);
     dialog((colorOpt) => {
       colorOpt.each((color) => {
-        Options.addColor(color);
+        Options.addColor(color, format);
         editor.execCommand('mceApplyTextcolor', format as any, color);
         onChoice(color);
       });
@@ -100,11 +100,11 @@ const applyColor = (editor: Editor, format: ColorFormat, value: string, onChoice
   }
 };
 
-const getColors = (colors: Menu.ChoiceMenuItemSpec[], hasCustom: boolean): Menu.ChoiceMenuItemSpec[] =>
-  colors.concat(Options.getCurrentColors().concat(getAdditionalColors(hasCustom)));
+const getColors = (colors: Menu.ChoiceMenuItemSpec[], id: string, hasCustom: boolean): Menu.ChoiceMenuItemSpec[] =>
+  colors.concat(Options.getCurrentColors(id).concat(getAdditionalColors(hasCustom)));
 
-const getFetch = (colors: Menu.ChoiceMenuItemSpec[], hasCustom: boolean) => (callback: (value: Menu.ChoiceMenuItemSpec[]) => void): void => {
-  callback(getColors(colors, hasCustom));
+const getFetch = (colors: Menu.ChoiceMenuItemSpec[], id: string, hasCustom: boolean) => (callback: (value: Menu.ChoiceMenuItemSpec[]) => void): void => {
+  callback(getColors(colors, id, hasCustom));
 };
 
 const setIconColor = (splitButtonApi: Toolbar.ToolbarSplitButtonInstanceApi, name: string, newColor: string) => {
@@ -126,7 +126,7 @@ const registerTextColorButton = (editor: Editor, name: string, format: ColorForm
       })).getOr(false);
     },
     columns: Options.getColorCols(editor),
-    fetch: getFetch(Options.getColors(editor), Options.hasCustomColors(editor)),
+    fetch: getFetch(Options.getColors(editor, format), format, Options.hasCustomColors(editor)),
     onAction: (_splitButtonApi) => {
       applyColor(editor, format, lastColor.get(), Fun.noop);
     },
@@ -166,6 +166,9 @@ const registerTextColorMenuItem = (editor: Editor, name: string, format: ColorFo
       {
         type: 'fancymenuitem',
         fancytype: 'colorswatch',
+        initData: {
+          swatchKey: format,
+        },
         onAction: (data) => {
           applyColor(editor, format, data.value, Fun.noop);
         }

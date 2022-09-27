@@ -7,7 +7,21 @@ import { Menu } from 'tinymce/core/api/ui/Ui';
 
 import { ColorCache } from './ColorCache';
 
-const colorCache = ColorCache(10);
+interface CatcheStorageInterface {
+  [index: string]: ColorCache;
+}
+const cacheStorage: CatcheStorageInterface = {};
+
+const getCatcheForId = (id: string) => {
+  let storage = cacheStorage[id];
+
+  if (Type.isNullable(storage)) {
+    storage = ColorCache(id, 10);
+    cacheStorage[id] = storage;
+  }
+
+  return storage;
+};
 
 const calcCols = (colors: number): number =>
   Math.max(5, Math.ceil(Math.sqrt(colors)));
@@ -35,14 +49,16 @@ const option: {
 const register = (editor: Editor): void => {
   const registerOption = editor.options.register;
 
+  const colorProcessor = (value: any): any => {
+    if (Type.isArrayOf(value, Type.isString)) {
+      return { value: mapColors(value), valid: true };
+    } else {
+      return { valid: false, message: 'Must be an array of strings.' };
+    }
+  };
+
   registerOption('color_map', {
-    processor: (value) => {
-      if (Type.isArrayOf(value, Type.isString)) {
-        return { value: mapColors(value), valid: true };
-      } else {
-        return { valid: false, message: 'Must be an array of strings.' };
-      }
-    },
+    processor: colorProcessor,
     default: [
       '#BFEDD2', 'Light Green',
       '#FBEEB8', 'Light Yellow',
@@ -73,9 +89,17 @@ const register = (editor: Editor): void => {
     ]
   });
 
+  registerOption('color_map_background', {
+    processor: colorProcessor
+  });
+
+  registerOption('color_map_foreground', {
+    processor: colorProcessor
+  });
+
   registerOption('color_cols', {
     processor: 'number',
-    default: calcCols(getColors(editor).length)
+    default: calcCols(option<Menu.ChoiceMenuItemSpec[]>('color_map')(editor).length)
   });
 
   registerOption('custom_colors', {
@@ -86,16 +110,25 @@ const register = (editor: Editor): void => {
 
 const getColorCols = option('color_cols');
 const hasCustomColors = option('custom_colors');
-const getColors = option<Menu.ChoiceMenuItemSpec[]>('color_map');
+const getColors = (editor: Editor, id: string): Menu.ChoiceMenuItemSpec[] => {
+  if (id === 'forecolor' && editor.options.isSet('color_map_foreground')) {
+    return option<Menu.ChoiceMenuItemSpec[]>('color_map_foreground')(editor);
+  } else if (id === 'hilitecolor' && editor.options.isSet('color_map_background')) {
+    return option<Menu.ChoiceMenuItemSpec[]>('color_map_background')(editor);
+  } else {
+    return option<Menu.ChoiceMenuItemSpec[]>('color_map')(editor);
+  }
+};
 
-const getCurrentColors = (): Menu.ChoiceMenuItemSpec[] => Arr.map(colorCache.state(), (color) => ({
-  type: 'choiceitem',
-  text: color,
-  value: color
-}));
+const getCurrentColors = (id: string): Menu.ChoiceMenuItemSpec[] =>
+  Arr.map(getCatcheForId(id).state(), (color) => ({
+    type: 'choiceitem',
+    text: color,
+    value: color
+  }));
 
-const addColor = (color: string): void => {
-  colorCache.add(color);
+const addColor = (id: string, color: string): void => {
+  getCatcheForId(id).add(color);
 };
 
 export {

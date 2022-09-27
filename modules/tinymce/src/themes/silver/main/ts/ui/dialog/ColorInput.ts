@@ -107,7 +107,7 @@ export const renderColorInput = (
             () => AlloyTriggers.emit(colorBit, colorPickerCancelEvent),
             (value) => {
               emitSwatchChange(colorBit, value);
-              Options.addColor(value);
+              Options.addColor(spec.swatchKey, value);
             }
           );
         }, '#ffffff');
@@ -132,7 +132,7 @@ export const renderColorInput = (
         onLtr: () => [ Layout.southeast, Layout.southwest, Layout.south ]
       },
       components: [],
-      fetch: ColorSwatch.getFetch(colorInputBackstage.getColors(), colorInputBackstage.hasCustomColors()),
+      fetch: ColorSwatch.getFetch(colorInputBackstage.getColors(spec.swatchKey), spec.swatchKey, colorInputBackstage.hasCustomColors()),
       columns: colorInputBackstage.getColorCols(),
       presets: 'color',
       onItemAction
