@@ -53,7 +53,7 @@ const assertWidth = (editor: Editor, elm: HTMLElement, expectedWidth: number | n
   if (expectedWidth === null) {
     assert.isNull(widthData.raw, `${nodeName} width should not be set`);
   } else {
-    assert.approximately(widthData.raw ?? -1, expectedWidth, 2, `${nodeName} width is ${expectedWidth} ~= ${widthData.raw}`);
+    assert.approximately(widthData.raw ?? -1, expectedWidth, 4, `${nodeName} width is ${expectedWidth} ~= ${widthData.raw}`);
   }
   assert.equal(widthData.unit, expectedUnit, `${nodeName} unit is ${expectedUnit}`);
 };
