@@ -97,7 +97,7 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
 
       if (checkOtherNodes) {
         const parents = SelectorFilter.ancestors(elm, '*', (e) => Compare.eq(e, body));
-        const children = SelectorFilter.children(elm, '*');
+        const children = SelectorFilter.children(elm, '*:not(source)');
         const isFigCaption = SugarNode.isTag('figcaption');
 
         Arr.each(parents, (e) => assert.deepEqual(getOutline(e), noOutline, 'parent should not have outline'));
