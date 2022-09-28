@@ -53,6 +53,7 @@ const assertWidth = (editor: Editor, elm: HTMLElement, expectedWidth: number | n
   if (expectedWidth === null) {
     assert.isNull(widthData.raw, `${nodeName} width should not be set`);
   } else {
+    // This does a approximately check with a delta of 4 to compensate for Firefox sometimes being off by 4 pixels depending on version and platform see TINY-9200 for details
     assert.approximately(widthData.raw ?? -1, expectedWidth, 4, `${nodeName} width is ${expectedWidth} ~= ${widthData.raw}`);
   }
   assert.equal(widthData.unit, expectedUnit, `${nodeName} unit is ${expectedUnit}`);
