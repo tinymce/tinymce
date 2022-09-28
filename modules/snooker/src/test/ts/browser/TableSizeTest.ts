@@ -11,9 +11,9 @@ const tOptional = OptionalInstances.tOptional;
 
 describe('TableSizeTest', () => {
   const pixelTableHtml = '<table style="width: 400px; border-collapse: collapse;"><tbody><tr><td style="width: 200px"></td><td style="width: 200px"></td></tr></tbody></table>';
-  const overflowingPixelTableHtml = '<table style="width: 400px; border-collapse: collapse;"><tbody><tr><td style="width: 200px">thisisareallylongsentencewithoutspacesthatcausescontenttooverflow</td><td style="width: 200px"></td></tr></tbody></table>';
+  const overflowingPixelTableHtml = '<table style="width: 400px; border-collapse: collapse;"><tbody><tr><td style="width: 200px"><span style="display: inline-block; width: 483px"></span></td><td style="width: 200px"></td></tr></tbody></table>';
   const percentTableHtml = '<table style="width: 80%; border-collapse: collapse;"><tbody><tr><td style="width: 50%"></td><td style="width: 50%"></td></tr></tbody></table>';
-  const overflowingPercentTableHtml = '<table style="width: 80%; border-collapse: collapse;"><tbody><tr><td style="width: 50%">thisisareallylongsentencewithoutspacesthatcausescontenttooverflow</td><td style="width: 50%"></td></tr></tbody></table>';
+  const overflowingPercentTableHtml = '<table style="width: 80%; border-collapse: collapse;"><tbody><tr><td style="width: 50%"><span style="display: inline-block; width: 483px"></span></td><td style="width: 50%"></td></tr></tbody></table>';
   const noneTableHtml = '<table><tbody><tr><td></td><td></td></tr></tbody></table>';
 
   context('getTableSize', () => {
