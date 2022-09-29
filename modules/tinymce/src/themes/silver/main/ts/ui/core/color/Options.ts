@@ -7,10 +7,13 @@ import { Menu } from 'tinymce/core/api/ui/Ui';
 
 import { ColorCache } from './ColorCache';
 
-interface CatcheStorageInterface {
+const foregroundId = 'forecolor';
+const backgroundId = 'hilitecolor';
+
+interface CacheStorage {
   [index: string]: ColorCache;
 }
-const cacheStorage: CatcheStorageInterface = {};
+const cacheStorage: CacheStorage = {};
 
 const getCatcheForId = (id: string) => {
   let storage = cacheStorage[id];
@@ -99,7 +102,17 @@ const register = (editor: Editor): void => {
 
   registerOption('color_cols', {
     processor: 'number',
-    default: calcCols(option<Menu.ChoiceMenuItemSpec[]>('color_map')(editor).length)
+    default: calcCols(getColors(editor, 'default').length)
+  });
+
+  registerOption('color_cols_foreground', {
+    processor: 'number',
+    default: calcCols(getColors(editor, foregroundId).length)
+  });
+
+  registerOption('color_cols_background', {
+    processor: 'number',
+    default: calcCols(getColors(editor, backgroundId).length)
   });
 
   registerOption('custom_colors', {
@@ -108,12 +121,20 @@ const register = (editor: Editor): void => {
   });
 };
 
-const getColorCols = option('color_cols');
+const getColorCols = (editor: Editor, id: string): number => {
+  if (id === foregroundId) {
+    return option('color_cols_foreground')(editor);
+  } else if (id === backgroundId) {
+    return option('color_cols_background')(editor);
+  } else {
+    return option('color_cols')(editor);
+  }
+};
 const hasCustomColors = option('custom_colors');
 const getColors = (editor: Editor, id: string): Menu.ChoiceMenuItemSpec[] => {
-  if (id === 'forecolor' && editor.options.isSet('color_map_foreground')) {
+  if (id === foregroundId && editor.options.isSet('color_map_foreground')) {
     return option<Menu.ChoiceMenuItemSpec[]>('color_map_foreground')(editor);
-  } else if (id === 'hilitecolor' && editor.options.isSet('color_map_background')) {
+  } else if (id === backgroundId && editor.options.isSet('color_map_background')) {
     return option<Menu.ChoiceMenuItemSpec[]>('color_map_background')(editor);
   } else {
     return option<Menu.ChoiceMenuItemSpec[]>('color_map')(editor);

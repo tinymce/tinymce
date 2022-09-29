@@ -12,7 +12,7 @@ import ItemResponse from '../ItemResponse';
 
 export const renderColorSwatchItem = (spec: Menu.ColorSwatchMenuItem, backstage: UiFactoryBackstage): ItemTypes.WidgetItemSpec => {
   const items = getColorItems(spec, backstage);
-  const columns = backstage.colorinput.getColorCols();
+  const columns = backstage.colorinput.getColorCols(spec.initData.swatchKey);
   const presets = 'color';
 
   const menuSpec = createPartialChoiceMenu(

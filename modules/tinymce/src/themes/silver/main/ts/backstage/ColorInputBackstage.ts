@@ -9,7 +9,7 @@ export interface UiFactoryBackstageForColorInput {
   readonly colorPicker: (callback: ColorSwatch.ColorInputCallback, value: string) => void;
   readonly hasCustomColors: () => boolean;
   readonly getColors: (id: string) => Menu.ChoiceMenuItemSpec[];
-  readonly getColorCols: () => number;
+  readonly getColorCols: (id: string) => number;
 }
 
 const colorPicker = (editor: Editor) => (callback: ColorSwatch.ColorInputCallback, value: string) => {
@@ -21,7 +21,7 @@ const hasCustomColors = (editor: Editor) => (): boolean => Options.hasCustomColo
 
 const getColors = (editor: Editor) => (id: string): Menu.ChoiceMenuItemSpec[] => Options.getColors(editor, id);
 
-const getColorCols = (editor: Editor) => (): number => Options.getColorCols(editor);
+const getColorCols = (editor: Editor) => (id: string): number => Options.getColorCols(editor, id);
 
 export const ColorInputBackstage = (editor: Editor): UiFactoryBackstageForColorInput => ({
   colorPicker: colorPicker(editor),

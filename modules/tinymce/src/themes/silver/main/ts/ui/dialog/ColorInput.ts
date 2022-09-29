@@ -133,7 +133,7 @@ export const renderColorInput = (
       },
       components: [],
       fetch: ColorSwatch.getFetch(colorInputBackstage.getColors(spec.swatchKey), spec.swatchKey, colorInputBackstage.hasCustomColors()),
-      columns: colorInputBackstage.getColorCols(),
+      columns: colorInputBackstage.getColorCols(spec.swatchKey),
       presets: 'color',
       onItemAction
     }, sharedBackstage)

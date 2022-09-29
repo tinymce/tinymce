@@ -125,7 +125,7 @@ const registerTextColorButton = (editor: Editor, name: string, format: ColorForm
         return Strings.contains(value.toLowerCase(), currentHex);
       })).getOr(false);
     },
-    columns: Options.getColorCols(editor),
+    columns: Options.getColorCols(editor, format),
     fetch: getFetch(Options.getColors(editor, format), format, Options.hasCustomColors(editor)),
     onAction: (_splitButtonApi) => {
       applyColor(editor, format, lastColor.get(), Fun.noop);
