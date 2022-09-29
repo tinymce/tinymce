@@ -8,7 +8,7 @@ export interface ColorCache {
 }
 
 export const ColorCache = (id: string, max: number = 10): ColorCache => {
-  const storageId = 'tinymce-custom-colors-' + id;
+  const storageId = `tinymce-custom-colors-${id}`;
   const storageString = LocalStorage.getItem(storageId);
   const localstorage = Type.isString(storageString) ? JSON.parse(storageString) : [];
 
