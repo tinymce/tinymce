@@ -1,5 +1,5 @@
 import { Transformations } from '@ephox/acid';
-import { Arr, Type } from '@ephox/katamari';
+import { Arr, Obj, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorOptions } from 'tinymce/core/api/OptionTypes';
@@ -15,16 +15,12 @@ interface CacheStorage {
 }
 const cacheStorage: CacheStorage = {};
 
-const getCatcheForId = (id: string) => {
-  let storage = cacheStorage[id];
-
-  if (Type.isNullable(storage)) {
-    storage = ColorCache(id, 10);
+const getCatcheForId = (id: string) =>
+  Obj.get(cacheStorage, id).getOrThunk(() => {
+    const storage = ColorCache(id, 10);
     cacheStorage[id] = storage;
-  }
-
-  return storage;
-};
+    return storage;
+  });
 
 const calcCols = (colors: number): number =>
   Math.max(5, Math.ceil(Math.sqrt(colors)));
