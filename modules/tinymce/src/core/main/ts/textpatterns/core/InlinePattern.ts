@@ -49,7 +49,10 @@ const findPatternStartFromSpot = (dom: DOMUtils, pattern: InlinePattern, block: 
   const startPattern = pattern.start;
   const startSpot = TextSearch.repeatLeft(dom, spot.container, spot.offset, matchesPattern(startPattern), block);
   return startSpot.bind((spot) => {
-    if (spot.offset >= startPattern.length) {
+    const preStartLength = block.textContent?.indexOf(startPattern) ?? 0;
+    const isCompleteMatch = spot.offset >= (preStartLength === -1 ? 0 : preStartLength) + startPattern.length;
+
+    if (isCompleteMatch) {
       // Complete match
       const rng = dom.createRng();
       rng.setStart(spot.container, spot.offset - startPattern.length);
