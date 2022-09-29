@@ -269,7 +269,7 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
     }
 
     if (state.dragging) {
-      const mouseEventOriginatedFromWithinTheEditor = e.currentTarget === editor.getDoc().firstElementChild;
+      const mouseEventOriginatedFromWithinTheEditor = e.currentTarget === editor.getDoc().documentElement;
       const targetPos = applyRelPos(state, MousePosition.calc(editor, e));
       appendGhostToBody(state.ghost, editor.getBody());
       moveGhost(state.ghost, targetPos, state.width, state.height, state.maxX, state.maxY, e.clientY, e.clientX, editor.getContentAreaContainer(), editor.getWin(), state_, mouseEventOriginatedFromWithinTheEditor);
