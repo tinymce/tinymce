@@ -272,7 +272,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       const initialScrollY = window.scrollY;
       editor.getWin().scroll({
         top: editor.getWin().innerHeight
-      })
+      });
       Mouse.mouseDown(target);
       window.dispatchEvent(new MouseEvent('mousemove', {
         clientY: window.innerHeight,
