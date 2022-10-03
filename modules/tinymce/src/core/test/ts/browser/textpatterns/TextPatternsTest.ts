@@ -244,10 +244,32 @@ describe('browser.tinymce.core.textpatterns.TextPatternsTest', () => {
     Utils.setContentAndPressSpace(editor, 'a **test*');
     TinyAssertions.assertContent(editor, '<p>a *<em>test</em>&nbsp;</p>');
     Utils.setContentAndPressSpace(editor, 'a *test**');
-    TinyAssertions.assertContent(editor, '<p>a *test**&nbsp;</p>'); // TODO: fix to have '<p>a <em>test</em>*&nbsp;</p>' as result
+    TinyAssertions.assertContent(editor, '<p>a <em>test</em>*&nbsp;</p>');
     Utils.setContentAndPressSpace(editor, 'a ***b**');
     TinyAssertions.assertContent(editor, '<p>a *<strong>b</strong>&nbsp;</p>');
     Utils.setContentAndPressSpace(editor, 'a ***b***');
     TinyAssertions.assertContent(editor, '<p>a <em><strong>b</strong></em>&nbsp;</p>');
+  });
+
+  it('TINY-8949: it should take more inclusive pattern', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressSpace(editor, 'a ***test1***');
+    TinyAssertions.assertContent(editor, '<p>a <em><strong>test1</strong></em>&nbsp;</p>');
+
+    editor.options.set('text_patterns', [
+      { start: '**', end: '**', format: 'bold' },
+      { start: '***', end: '***', format: 'italic' },
+    ]);
+    Utils.setContentAndPressSpace(editor, 'a ***test2***');
+    TinyAssertions.assertContent(editor, '<p>a <em>test2</em>&nbsp;</p>');
+
+    editor.options.set('text_patterns', [
+      { start: '***', end: '***', format: 'italic' },
+      { start: '**', end: '**', format: 'bold' },
+    ]);
+    Utils.setContentAndPressSpace(editor, 'a ***test3***');
+    TinyAssertions.assertContent(editor, '<p>a <em>test3</em>&nbsp;</p>');
+
+    editor.options.unset('text_patterns');
   });
 });
