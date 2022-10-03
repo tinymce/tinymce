@@ -5,7 +5,7 @@ import { assert } from 'chai';
 
 import { ToolbarLocation } from 'tinymce/themes/silver/api/Options';
 
-const staticPartsOuter = (s: ApproxStructure.StructApi, _str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] =>
+const staticPartsOuter = (s: ApproxStructure.StructApi, arr: ApproxStructure.ArrayApi): StructAssert[] =>
   // should not change
   [
     s.element('div', {
@@ -13,7 +13,7 @@ const staticPartsOuter = (s: ApproxStructure.StructApi, _str: ApproxStructure.St
     })
   ];
 
-const statusbar = (s: ApproxStructure.StructApi, _str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] =>
+const statusbar = (s: ApproxStructure.StructApi, arr: ApproxStructure.ArrayApi): StructAssert[] =>
   // should not change
   [
     s.element('div', {
@@ -21,7 +21,7 @@ const statusbar = (s: ApproxStructure.StructApi, _str: ApproxStructure.StringApi
     })
   ];
 
-const staticPartsInner = (s: ApproxStructure.StructApi, _str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] =>
+const staticPartsInner = (s: ApproxStructure.StructApi, arr: ApproxStructure.ArrayApi): StructAssert[] =>
   // should not change
   [
     s.element('div', {
@@ -38,7 +38,7 @@ const expectedScrollEventBound = (s: ApproxStructure.StructApi, str: ApproxStruc
     classes: [
       arr.has('tox-editor-header')
     ],
-    children: staticPartsInner(s, str, arr)
+    children: staticPartsInner(s, arr)
   })
 ];
 
@@ -72,7 +72,7 @@ const expectedHalfView = (s: ApproxStructure.StructApi, str: ApproxStructure.Str
       width: str.is('496px') // 500px - 2px for each border
       // testing left value maybe flaky
     },
-    children: staticPartsInner(s, str, arr)
+    children: staticPartsInner(s, arr)
   })
 ];
 
@@ -88,7 +88,7 @@ const expectedEditorHidden = (s: ApproxStructure.StructApi, str: ApproxStructure
       width: str.is('496px') // 500px - 2px for each border
       // testing left value maybe flaky
     },
-    children: staticPartsInner(s, str, arr)
+    children: staticPartsInner(s, arr)
   })
 ];
 
@@ -102,7 +102,7 @@ const expectedInFullView = (s: ApproxStructure.StructApi, str: ApproxStructure.S
       position: str.none(),
       width: str.none()
     },
-    children: staticPartsInner(s, str, arr)
+    children: staticPartsInner(s, arr)
   })
 ];
 
@@ -157,8 +157,8 @@ const pAssertEditorContainer = async (isToolbarTop: boolean, expectedPart: Appro
       ApproxStructure.build((s, str, arr) => s.element('div', {
         classes: [ arr.has('tox-editor-container') ],
         children: isToolbarTop ?
-          expectedPart(s, str, arr).concat(staticPartsOuter(s, str, arr)).concat(statusbar(s, str, arr)) :
-          staticPartsOuter(s, str, arr).concat(expectedPart(s, str, arr)).concat(statusbar(s, str, arr))
+          expectedPart(s, str, arr).concat(staticPartsOuter(s, arr)).concat(statusbar(s, arr)) :
+          staticPartsOuter(s, arr).concat(expectedPart(s, str, arr)).concat(statusbar(s, arr))
       })),
       container
     )
@@ -174,8 +174,8 @@ const pScrollAndAssertStructure = async (isToolbarTop: boolean, scrollYDelta: nu
       ApproxStructure.build((s, str, arr) => s.element('div', {
         classes: [ arr.has('tox-editor-container') ],
         children: isToolbarTop ?
-          expectedPart(s, str, arr).concat(staticPartsOuter(s, str, arr)).concat(statusbar(s, str, arr)) :
-          staticPartsOuter(s, str, arr).concat(expectedPart(s, str, arr)).concat(statusbar(s, str, arr))
+          expectedPart(s, str, arr).concat(staticPartsOuter(s, arr)).concat(statusbar(s, arr)) :
+          staticPartsOuter(s, arr).concat(expectedPart(s, str, arr)).concat(statusbar(s, arr))
       })),
       container
     )
