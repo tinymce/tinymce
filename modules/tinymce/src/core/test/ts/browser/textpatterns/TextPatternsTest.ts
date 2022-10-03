@@ -249,6 +249,8 @@ describe('browser.tinymce.core.textpatterns.TextPatternsTest', () => {
     TinyAssertions.assertContent(editor, '<p>a *<strong>b</strong>&nbsp;</p>');
     Utils.setContentAndPressSpace(editor, 'a ***b***');
     TinyAssertions.assertContent(editor, '<p>a <em><strong>b</strong></em>&nbsp;</p>');
+
+    editor.options.unset('text_patterns');
   });
 
   it('TINY-8949: it should take more inclusive pattern', () => {
@@ -260,6 +262,7 @@ describe('browser.tinymce.core.textpatterns.TextPatternsTest', () => {
       { start: '**', end: '**', format: 'bold' },
       { start: '***', end: '***', format: 'italic' },
     ]);
+
     Utils.setContentAndPressSpace(editor, 'a ***test2***');
     TinyAssertions.assertContent(editor, '<p>a <em>test2</em>&nbsp;</p>');
 
