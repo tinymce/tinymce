@@ -100,13 +100,6 @@ describe('browser.tinymce.textpatterns.FindInlinePatternTest', () => {
       assertSimpleMatch(matches, '*', '*', [ 'italic' ], { start: [ 0, 0, 0 ], end: [ 0, 0, 1 ] }, { start: [ 0, 0, 2 ], end: [ 0, 0, 3 ] });
     });
 
-    it('TINY-8778: inline * pattern with no gap to matching token returns no match', () => {
-      const editor = hook.editor();
-      setContentAndCursor(editor, '*x***', [ 0 ], 5);
-      const matches = getInlinePattern(editor, getInlinePatternSet());
-      assertPatterns(matches, []);
-    });
-
     it('TINY-8778: inline * with uncollapsed range returns no match', () => {
       const editor = hook.editor();
       setContentAndSelection(editor, '*x*&nbsp;', [ 0 ], 3, [ 0 ], 4);
