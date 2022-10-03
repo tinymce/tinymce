@@ -96,7 +96,7 @@ interface SilverViewWrapperDetail extends Sketcher.SingleSketchDetail {
 interface SilverViewWrapperApis {
   setViews: (comp: AlloyComponent, viewConfigs: ViewConfig) => void;
   whichView: (comp: AlloyComponent) => Optional<string>;
-  toggleView: (comp: AlloyComponent, showMainView: () => void, hideMainView: () => void, name: string) => void;
+  toggleView: (comp: AlloyComponent, showMainView: () => void, hideMainView: () => void, name: string) => boolean;
 }
 
 const factory: UiSketcher.SingleSketchFactory<SilverViewWrapperDetail, SilverViewWrapperSpec> = (detail, spec) => {
@@ -108,8 +108,8 @@ const factory: UiSketcher.SingleSketchFactory<SilverViewWrapperDetail, SilverVie
     return Composing.getCurrent(comp).bind(getCurrentName);
   };
 
-  const toggleView = (comp: AlloyComponent, showMainView: () => void, hideMainView: () => void, name: string): void => {
-    Composing.getCurrent(comp).each((slotContainer) => {
+  const toggleView = (comp: AlloyComponent, showMainView: () => void, hideMainView: () => void, name: string): boolean => {
+    return Composing.getCurrent(comp).exists((slotContainer) => {
       const optCurrentSlotName = getCurrentName(slotContainer);
       const hasSameName = optCurrentSlotName.exists((current) => name === current);
       const exists = SlotContainer.getSlot(slotContainer, name).isSome();
@@ -129,6 +129,8 @@ const factory: UiSketcher.SingleSketchFactory<SilverViewWrapperDetail, SilverVie
 
         optCurrentSlotName.each((prevName) => runOnHide(slotContainer, prevName));
       }
+
+      return exists;
     });
   };
 

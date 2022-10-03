@@ -37,6 +37,7 @@ export default (): void => {
           text: 'Cancel',
           buttonType: 'secondary',
           onAction: () => {
+            editor.execCommand('ToggleView', false, 'code');
             console.log('close');
           }
         },

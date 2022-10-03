@@ -1,8 +1,8 @@
-import { ApproxStructure, Assertions, Mouse, StructAssert, TestStore, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, Mouse, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { Attribute, Css, Html } from '@ephox/sugar';
-import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
+import { Attribute, Css, Html, SugarBody } from '@ephox/sugar';
+import { TinyApis, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -11,8 +11,11 @@ import { View } from 'tinymce/core/api/ui/Ui';
 describe('browser.tinymce.themes.silver.view.ViewTest', () => {
   context('Iframe mode', () => {
     const store = TestStore();
-    const hook = TinyHooks.bddSetupLight<Editor>({
+    const hook = TinyHooks.bddSetup<Editor>({
       base_url: '/project/tinymce/js/tinymce',
+      toolbar_mode: 'floating',
+      toolbar: Arr.range(10, Fun.constant('bold | italic ')).join(''),
+      width: 500,
       setup: (editor: Editor) => {
         const injectAndLog = (name: string, html: string = '') => (api: View.ViewInstanceApi) => {
           api.getContainer().innerHTML = html;
@@ -33,7 +36,11 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
               buttonType: 'primary'
             }
           ],
-          onShow: injectAndLog('myview1:show', 'myview1'),
+          onShow: (api) => {
+            api.getContainer().innerHTML = '<button>myview1</button>';
+            api.getContainer().querySelector('button')?.focus();
+            store.add('myview1:show');
+          },
           onHide: injectAndLog('myview1:hide')
         });
 
@@ -54,6 +61,11 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
           ],
           onShow: injectAndLog('myview2:show', 'myview2'),
           onHide: injectAndLog('myview2:hide')
+        });
+
+        editor.ui.registry.addContextToolbar('test-context', {
+          predicate: (node) => node.nodeName.toLowerCase() === 'img',
+          items: 'bold'
         });
       }
     }, []);
@@ -96,7 +108,18 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       assert.equal(Html.get(editorContainer), expectedHtml);
     };
 
-    it('TINY-8964: Structure', () => {
+    const pAssertToolbarDrawerVisibleState = async (expectedState: boolean) => {
+      if (expectedState) {
+        await UiFinder.pWaitForVisible('Wait for toolbar drawer to be visible', SugarBody.body(), '.tox-toolbar__overflow');
+      } else {
+        await Waiter.pTryUntil(
+          'Wait for toolbar drawer to close',
+          () => UiFinder.notExists(SugarBody.body(), '.tox-toolbar__overflow')
+        );
+      }
+    };
+
+    it('TINY-9210: Structure', () => {
       const editor = hook.editor();
       const viewWrap = UiFinder.findIn(TinyDom.container(editor), '.tox-view-wrap').getOrDie();
 
@@ -162,7 +185,7 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       }), viewWrap);
     });
 
-    it('TINY-8964: ToggleView command', () => {
+    it('TINY-9210: ToggleView command', () => {
       store.clear();
 
       assertMainViewVisible();
@@ -170,7 +193,7 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
 
       toggleView('myview1');
       assert.equal(queryToggleView(), 'myview1');
-      assertViewHtml(0, 'myview1');
+      assertViewHtml(0, '<button>myview1</button>');
       assertViewHtml(1, '');
       assertMainViewHidden();
 
@@ -194,7 +217,7 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       ]);
     });
 
-    it('TINY-8964: Click on view buttons', () => {
+    it('TINY-9210: Click on view buttons', () => {
       const editor = hook.editor();
 
       store.clear();
@@ -208,6 +231,58 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
         'myview1:button1',
         'myview1:button2'
       ]);
+    });
+
+    it('TINY-9210: Show/hide view when toolbar drawer is not visible', async () => {
+      await pAssertToolbarDrawerVisibleState(false);
+      toggleView('myview1');
+      toggleView('myview1');
+      await pAssertToolbarDrawerVisibleState(false);
+    });
+
+    it('TINY-9210: Show/hide view when toolbar drawer is visible should hide it while the view is visible', async () => {
+      const editor = hook.editor();
+
+      await pAssertToolbarDrawerVisibleState(false);
+      editor.execCommand('ToggleToolbarDrawer');
+      await pAssertToolbarDrawerVisibleState(true);
+      toggleView('myview1');
+      await pAssertToolbarDrawerVisibleState(false);
+      toggleView('myview1');
+      await pAssertToolbarDrawerVisibleState(true);
+    });
+
+    it('TINY-9210: Should hide menus if view is toggled on', () => {
+      const editor = hook.editor();
+
+      TinyUiActions.clickOnUi(editor, 'button[role="menuitem"]:nth-child(1)');
+      UiFinder.pWaitFor('Wait for menu to open', SugarBody.body(), '.tox-menu');
+      toggleView('myview1');
+      UiFinder.pWaitForHidden('Wait for menu to close', SugarBody.body(), '.tox-menu');
+      toggleView('myview1');
+    });
+
+    it('TINY-9210: Should hide context toolbar if view is toggled on', () => {
+      const editor = hook.editor();
+
+      editor.setContent('<p><img src="about:blank"></p>');
+      TinySelections.select(editor, 'img', []);
+      UiFinder.pWaitFor('Wait for menu to open', SugarBody.body(), '.tox-pop');
+      toggleView('myview1');
+      UiFinder.pWaitForHidden('Wait for menu to close', SugarBody.body(), '.tox-pop');
+      toggleView('myview1');
+    });
+
+    it('TINY-9210: Should move focus back to the editor on ToggleView', () => {
+      const editor = hook.editor();
+      const apis = TinyApis(editor);
+
+      editor.focus();
+      apis.hasFocus(true);
+      toggleView('myview1');
+      apis.hasFocus(false);
+      toggleView('myview1');
+      apis.hasFocus(true);
     });
   });
 
@@ -230,7 +305,7 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       }
     }, []);
 
-    it('TINY-8964: ToggleView command', () => {
+    it('TINY-9210: ToggleView command', () => {
       const editor = hook.editor();
 
       assert.equal(editor.queryCommandValue('ToggleView'), '', 'Should be empty string if no view is toggled on');

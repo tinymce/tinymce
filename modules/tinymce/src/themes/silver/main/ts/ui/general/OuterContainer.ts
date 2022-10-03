@@ -69,7 +69,7 @@ interface OuterContainerApis {
   readonly setMenubar: (comp: AlloyComponent, groups: MenubarItemSpec[]) => void;
   readonly focusMenubar: (comp: AlloyComponent) => void;
   readonly setViews: (comp: AlloyComponent, viewConfigs: ViewTypes.ViewConfig) => void;
-  readonly toggleView: (comp: AlloyComponent, name: string) => void;
+  readonly toggleView: (comp: AlloyComponent, name: string) => boolean;
   readonly whichView: (comp: AlloyComponent) => string | null;
   readonly showMainView: (comp: AlloyComponent) => void;
   readonly hideMainView: (comp: AlloyComponent) => void;
@@ -163,7 +163,7 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
       });
     },
     toggleView: (comp, name) => {
-      Composite.parts.getPart(comp, detail, 'viewWrapper').each(
+      return Composite.parts.getPart(comp, detail, 'viewWrapper').exists(
         (wrapper) => ViewWrapper.toggleView(wrapper, () => apis.showMainView(comp), () => apis.hideMainView(comp), name)
       );
     },

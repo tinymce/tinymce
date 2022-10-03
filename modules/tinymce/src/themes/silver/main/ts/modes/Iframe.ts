@@ -1,5 +1,5 @@
-import { Attachment, Disabling } from '@ephox/alloy';
-import { Cell, Throttler } from '@ephox/katamari';
+import { Attachment, Channels, Disabling } from '@ephox/alloy';
+import { Cell, Throttler, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, DomEvent, SugarElement, SugarPosition, SugarShadowDom } from '@ephox/sugar';
 
@@ -139,7 +139,17 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   editor.addQueryValueHandler('ToggleSidebar', () => OuterContainer.whichSidebar(outerContainer) ?? '');
 
   editor.addCommand('ToggleView', (_ui: boolean, value: string) => {
-    OuterContainer.toggleView(outerContainer, value);
+    if (OuterContainer.toggleView(outerContainer, value)) {
+      const target = outerContainer.element;
+      uiComponents.mothership.broadcastOn([ Channels.dismissPopups() ], { target });
+      uiComponents.uiMothership.broadcastOn([ Channels.dismissPopups() ], { target });
+
+      // Switching back to main view should focus the editor and update any UIs
+      if (Type.isNull(OuterContainer.whichView(outerContainer))) {
+        editor.focus();
+        editor.nodeChanged();
+      }
+    }
   });
   editor.addQueryValueHandler('ToggleView', () => OuterContainer.whichView(outerContainer) ?? '');
 
