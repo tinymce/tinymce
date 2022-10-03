@@ -46,6 +46,10 @@ export interface ElementFields {
   children?: StructAssert[];
 }
 
+export interface ElementWithSpecificFields extends Omit<ElementFields, 'classes'> {
+  classes?: string[];
+}
+
 const elementQueue = (items: SugarElement<Node>[], container: Optional<SugarElement<Node>>): ElementQueue => {
   let i = -1;
 
@@ -112,6 +116,33 @@ const element = (tag: string, fields: ElementFields): StructAssert => {
       assertAttrs(attrs, actual);
       assertClasses(classes, actual);
       assertStyles(styles, actual);
+      assertHtml(html, actual);
+      assertValue(value, actual);
+
+      assertChildren(children, actual);
+    } else {
+      Assert.eq('Incorrect node type for: ' + Truncate.getHtml(actual), 1, SugarNode.type(actual));
+    }
+  };
+
+  return {
+    doAssert
+  };
+};
+
+const elementWithSpecifics = (tag: string, fields: ElementWithSpecificFields): StructAssert => {
+  const doAssert = (actual: SugarElement<Node>): void => {
+    if (SugarNode.isHTMLElement(actual)) {
+      Assert.eq(() => 'Incorrect node name for: ' + Truncate.getHtml(actual), tag, SugarNode.name(actual));
+      const attrs = fields.attrs !== undefined ? fields.attrs : {};
+      const classes = fields.classes !== undefined ? fields.classes : [];
+      const styles = fields.styles !== undefined ? fields.styles : {};
+      const html = fields.html !== undefined ? Optional.some(fields.html) : Optional.none<StringAssert>();
+      const value = fields.value !== undefined ? Optional.some(fields.value) : Optional.none<StringAssert>();
+      const children = fields.children !== undefined ? Optional.some(fields.children) : Optional.none<StructAssert[]>();
+      assertAttrs(attrs, actual, true);
+      assertClassesSpecific(classes, actual);
+      assertStyles(styles, actual, true);
       assertHtml(html, actual);
       assertValue(value, actual);
 
@@ -221,7 +252,21 @@ const anythingStruct: StructAssert = {
   doAssert: Fun.noop
 };
 
-const assertAttrs = (expectedAttrs: Record<string, StringAssert>, actual: SugarElement<Element>) => {
+const assertAttrs = (expectedAttrs: Record<string, StringAssert>, actual: SugarElement<Element>, specificMode: boolean = false) => {
+  if (specificMode) {
+    const allDefinedAttrs = Obj.keys(expectedAttrs);
+    const actualDefinedAttrs = Obj.keys(Obj.bifilter(Attribute.clone(actual), (_value, key) => !Arr.contains([ 'style', 'class' ], key)).t);
+
+    const isAttrsEqual = Arr.equal(
+      Arr.sort(allDefinedAttrs),
+      Arr.sort(actualDefinedAttrs)
+    );
+
+    if (!isAttrsEqual) {
+      throw new Error('Attribute names were not matching. actual: ' + actualDefinedAttrs.join(', ') + ', expected: ' + allDefinedAttrs.join(', '));
+    }
+  }
+
   Obj.each(expectedAttrs, (v, k) => {
     if (v.strAssert === undefined) {
       throw new Error(JSON.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* attributes of ' + Truncate.getHtml(actual));
@@ -244,7 +289,33 @@ const assertClasses = (expectedClasses: ArrayAssert[], actual: SugarElement<Elem
   });
 };
 
-const assertStyles = (expectedStyles: Record<string, StringAssert>, actual: SugarElement<Element>) => {
+const assertClassesSpecific = (expectedClasses: string[], actual: SugarElement<Element>) => {
+  const actualClasses = Classes.get(actual);
+
+  const isClassesEqual = Arr.equal(
+    Arr.sort(actualClasses),
+    Arr.sort(expectedClasses)
+  );
+
+  if (!isClassesEqual) {
+    throw new Error('Attribute names were not matching. actual: ' + actualClasses.join(', ') + ', expected: ' + expectedClasses.join(', '));
+  }
+};
+
+const assertStyles = (expectedStyles: Record<string, StringAssert>, actual: SugarElement<Element>, specificMode: boolean = false) => {
+  if (specificMode) {
+    const allDefinedStyles = Obj.keys(expectedStyles);
+    const actualDefinedStyles = Obj.keys(Css.getAllRaw(actual));
+    const isStylesEqual = Arr.equal(
+      Arr.sort(allDefinedStyles),
+      Arr.sort(actualDefinedStyles)
+    );
+
+    if (!isStylesEqual) {
+      throw new Error('Style names were not matching. actual: ' + actualDefinedStyles.join(', ') + ', expected: ' + allDefinedStyles.join(', '));
+    }
+  }
+
   Obj.each(expectedStyles, (v, k) => {
     const actualValue = Css.getRaw(actual, k).getOrThunk(ApproxComparisons.missing);
     if (v.strAssert === undefined) {
@@ -311,6 +382,7 @@ export {
   elementQueue,
   anything,
   element,
+  elementWithSpecifics,
   text,
   either,
   repeat,

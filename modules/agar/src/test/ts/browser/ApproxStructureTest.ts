@@ -1,139 +1,426 @@
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assert, context, describe, it } from '@ephox/bedrock-client';
 import { InsertAll, SugarElement } from '@ephox/sugar';
 
 import * as ApproxStructure from 'ephox/agar/api/ApproxStructure';
 import * as Assertions from 'ephox/agar/api/Assertions';
+import { StructAssert } from 'ephox/agar/assertions/ApproxStructures';
 
-UnitTest.asynctest('ApproxStructureTest', (success, _failure) => {
+describe('browser.agar.ApproxStructureTest', () => {
+  context('Non specific ApproxStructure', () => {
+    const html = '<div data-key="test-1" selected="double" class="test1 root" style="display: block;">' +
+      '<div selected="true">' +
+      '<span data-ephox-id="blah" class="disabled">span</span>' +
+      '</div>' +
+      'words' +
+      '<span></span>' +
+      '</div>';
 
-  const html = '<div data-key="test-1" selected="double" class="test1 root" style="display: block;">' +
-    '<div selected="true">' +
-    '<span data-ephox-id="blah" class="disabled">span</span>' +
-    '</div>' +
-    'words' +
-    '<span></span>' +
-    '</div>';
+    const check = (expected: StructAssert, input: string) => {
+      const target = SugarElement.fromHtml(input);
+      Assertions.assertStructure('Test', expected, target);
+    };
 
-  const check = (expected, input) => {
-    const target = SugarElement.fromHtml(input);
-    Assertions.assertStructure('Test', expected, target);
-  };
-
-  check(ApproxStructure.build((s, str, arr) =>
-    s.element('div', {
-      attrs: {
-        'selected': str.is('double'),
-        'car': str.none('no car attribute'),
-        'data-key': str.contains('test')
-      },
-      classes: [
-        arr.has('test1'),
-        arr.not('dog'),
-        arr.hasPrefix('tes')
-      ],
-      styles: {
-        display: str.is('block')
-      },
-      children: [
+    it('TINY-9102: ApproxStructure build', () => {
+      check(ApproxStructure.build((s, str, arr) =>
         s.element('div', {
           attrs: {
-            selected: str.is('true')
+            'selected': str.is('double'),
+            'car': str.none('no car attribute'),
+            'data-key': str.contains('test')
+          },
+          classes: [
+            arr.has('test1'),
+            arr.not('dog'),
+            arr.hasPrefix('tes')
+          ],
+          styles: {
+            display: str.is('block')
           },
           children: [
-            s.element('span', {
+            s.element('div', {
               attrs: {
-                'data-ephox-id': str.startsWith('bl')
+                selected: str.is('true')
               },
+              children: [
+                s.element('span', {
+                  attrs: {
+                    'data-ephox-id': str.startsWith('bl')
+                  },
+                  classes: [
+                    arr.not('enabled'),
+                    arr.has('disabled')
+                  ],
+                  html: str.is('span')
+                })
+              ]
+            }),
+            s.text(
+              str.is('words')
+            ),
+            s.anything()
+          ]
+        })), html);
+    });
+
+    it('TINY-9102: ApproxStructure fromHtml', () => {
+      check(ApproxStructure.fromHtml(html), html);
+    });
+
+    it('TINY-9102: ApproxStructure theRest', () => {
+      check(ApproxStructure.build((s, str, _arr) =>
+        s.element('div', {
+          children: [
+            s.element('div', {
+              attrs: {
+                selected: str.is('true')
+              }
+            }),
+            s.theRest()
+          ]
+        })), html);
+    });
+
+    it('TINY-9102: ApproxStructure either', () => {
+      const struct1 = ApproxStructure.build((s, str, arr) =>
+        s.either([
+          s.element('span', {
+            classes: [
+              arr.has('hello'),
+              arr.not('fizzbuzz')
+            ]
+          }),
+          s.element('div', {
+            classes: [
+              arr.has('fizzbuzz'),
+              arr.not('hello')
+            ]
+          })
+        ]));
+
+      check(struct1, '<span class="hello"></span>');
+      check(struct1, '<div class="fizzbuzz"></span>');
+    });
+
+    it('TINY-9102: ApproxStructure oneOrMore and zeroOrOne', () => {
+      const struct2 = ApproxStructure.build((s, str, arr) =>
+        s.element('div', {
+          children: [
+            s.oneOrMore(s.element('span', {
               classes: [
-                arr.not('enabled'),
-                arr.has('disabled')
-              ],
-              html: str.is('span')
+                arr.has('hello')
+              ]
+            })),
+            s.element('div', {}),
+            s.zeroOrOne(s.element('span', {
+              classes: [
+                arr.has('bye')
+              ]
+            }))
+          ]
+        }));
+
+      check(struct2, '<div><span class="hello"></span><div></div></div>');
+      check(struct2, '<div><span class="hello"></span><div></div><span class="bye"></span></div>');
+      check(struct2, '<div><span class="hello"></span><span class="hello"></span><span class="hello"></span><span class="hello"></span><div></div><span class="bye"></span></div>');
+    });
+
+    it('TINY-9102: ApproxStructure text combineSiblings', () => {
+      const container = SugarElement.fromTag('div');
+      InsertAll.append(container, [
+        SugarElement.fromText('hello'),
+        SugarElement.fromText(' '),
+        SugarElement.fromText('world')
+      ]);
+
+      Assertions.assertStructure('Test', ApproxStructure.build((s, str, _arr) =>
+        s.element('div', {
+          children: [
+            s.text(str.is('hello world'), true)
+          ]
+        })), container);
+
+      Assertions.assertStructure('Test', ApproxStructure.build((s, str, _arr) =>
+        s.element('div', {
+          children: [
+            s.text(str.is('hello'), false),
+            s.text(str.is(' world'), true)
+          ]
+        })), container);
+    });
+  });
+
+  context('Specific ApproxStructure', () => {
+    const html = '<div data-key="test-1" selected="double" class="test1 root" style="display: block;">' +
+      '<div selected="true">' +
+      '<span data-ephox-id="blah" class="disabled">span</span>' +
+      '</div>' +
+      'words' +
+      '<span></span>' +
+      '</div>';
+
+    const check = (expected: StructAssert, input: string) => {
+      const target = SugarElement.fromHtml(input);
+      Assertions.assertStructure('Test', expected, target);
+    };
+
+    const checkThrowError = (expected: StructAssert, input: string) => {
+      const target = SugarElement.fromHtml(input);
+      Assert.throwsError('Test', () => Assertions.assertStructure('Test', expected, target));
+    };
+
+    it('TINY-9102: ApproxStructure build', () => {
+      check(ApproxStructure.build((s, str, _arr) =>
+        s.elementWithSpecifics('div', {
+          attrs: {
+            'selected': str.is('double'),
+            'data-key': str.contains('test')
+          },
+          classes: [
+            'test1', 'root'
+          ],
+          styles: {
+            display: str.is('block')
+          },
+          children: [
+            s.elementWithSpecifics('div', {
+              attrs: {
+                selected: str.is('true')
+              },
+              children: [
+                s.elementWithSpecifics('span', {
+                  attrs: {
+                    'data-ephox-id': str.startsWith('bl')
+                  },
+                  classes: [ 'disabled' ],
+                  html: str.is('span')
+                })
+              ]
+            }),
+            s.text(
+              str.is('words')
+            ),
+            s.anything()
+          ]
+        })), html);
+    });
+
+    it('TINY-9102: ApproxStructure either', () => {
+      const struct1 = ApproxStructure.build((s, _str, _arr) =>
+        s.either([
+          s.elementWithSpecifics('span', {
+            classes: [
+              'hello'
+            ]
+          }),
+          s.elementWithSpecifics('div', {
+            classes: [
+              'fizzbuzz'
+            ]
+          }),
+        ]));
+
+      check(struct1, '<span class="hello"></span>');
+      check(struct1, '<div class="fizzbuzz"></span>');
+    });
+
+    it('TINY-9102: ApproxStructure oneOrMore and zeroOrOne', () => {
+      const struct2 = ApproxStructure.build((s, _str, _arr) =>
+        s.elementWithSpecifics('div', {
+          children: [
+            s.oneOrMore(s.elementWithSpecifics('span', {
+              classes: [
+                'hello'
+              ]
+            })),
+            s.elementWithSpecifics('div', {}),
+            s.zeroOrOne(s.elementWithSpecifics('span', {
+              classes: [
+                'bye'
+              ]
+            }))
+          ]
+        }));
+
+      check(struct2, '<div><span class="hello"></span><div></div></div>');
+      check(struct2, '<div><span class="hello"></span><div></div><span class="bye"></span></div>');
+      check(struct2, '<div><span class="hello"></span><span class="hello"></span><span class="hello"></span><span class="hello"></span><div></div><span class="bye"></span></div>');
+    });
+
+    it('TINY-9102: ApproxStructure text combineSiblings', () => {
+      const container = SugarElement.fromTag('div');
+      InsertAll.append(container, [
+        SugarElement.fromText('hello'),
+        SugarElement.fromText(' '),
+        SugarElement.fromText('world')
+      ]);
+
+      Assertions.assertStructure('Test', ApproxStructure.build((s, str, _arr) =>
+        s.elementWithSpecifics('div', {
+          children: [
+            s.text(str.is('hello world'), true)
+          ]
+        })), container);
+
+      Assertions.assertStructure('Test', ApproxStructure.build((s, str, _arr) =>
+        s.elementWithSpecifics('div', {
+          children: [
+            s.text(str.is('hello'), false),
+            s.text(str.is(' world'), true)
+          ]
+        })), container);
+    });
+
+    it('TINY-9102: ApproxStructure throws error when there are extra attributes', () => {
+      const html = '<div extra-attribute2="extra2" extra-attribute="extra" data-key="test-1" selected="double" class="test1 root" style="display: block;">' +
+        '</div>';
+
+      checkThrowError(ApproxStructure.build((s, str, _arr) =>
+        s.elementWithSpecifics('div', {
+          attrs: {
+            'selected': str.is('double'),
+            'data-key': str.contains('test'),
+            'extra-attribute': str.startsWith('ex'),
+            'non-existent-attribute': str.is('non'),
+          },
+          classes: [
+            'test1', 'root'
+          ],
+          styles: {
+            display: str.is('block')
+          },
+        })), html);
+    });
+
+    it('TINY-9102: ApproxStructure throws error when there are extra classes', () => {
+      const html = '<div data-key="test-1" selected="double" class="extra-class test1 root" style="display: block;">' +
+        '</div>';
+
+      checkThrowError(ApproxStructure.build((s, str, _arr) =>
+        s.elementWithSpecifics('div', {
+          attrs: {
+            'selected': str.is('double'),
+            'data-key': str.contains('test')
+          },
+          classes: [
+            'test1', 'root', 'non-existent-class'
+          ],
+          styles: {
+            display: str.is('block')
+          },
+        })), html);
+    });
+
+    it('TINY-9102: ApproxStructure throws error when there are extra styles', () => {
+      const html = '<div data-key="test-1" selected="double" class="test1 root" style="display: block; width: 20px;">' +
+        '</div>';
+
+      checkThrowError(ApproxStructure.build((s, str, _arr) =>
+        s.elementWithSpecifics('div', {
+          attrs: {
+            'selected': str.is('double'),
+            'data-key': str.contains('test')
+          },
+          classes: [
+            'test1', 'root'
+          ],
+          styles: {
+            display: str.is('block'),
+            height: str.is('20px')
+          },
+        })), html);
+    });
+
+    it('TINY-9102: ApproxStructure throws error when there are extra attributes (children)', () => {
+      const html = '<div extra-attribute2="extra2" extra-attribute="extra" data-key="test-1" selected="double" class="test1 root" style="display: block;">' +
+        '<div selected="true" attr="hello">' +
+        '</div>' +
+        '</div>';
+
+      checkThrowError(ApproxStructure.build((s, str, _arr) =>
+        s.elementWithSpecifics('div', {
+          attrs: {
+            'selected': str.is('double'),
+            'data-key': str.contains('test'),
+            'extra-attribute': str.startsWith('ex'),
+            'extra-attribute2': str.is('extra2'),
+          },
+          classes: [
+            'test1', 'root'
+          ],
+          styles: {
+            display: str.is('block')
+          },
+          children: [
+            s.elementWithSpecifics('div', {
+              attrs: {
+                selected: str.is('true')
+              },
             })
           ]
-        }),
-        s.text(
-          str.is('words')
-        ),
-        s.anything()
-      ]
-    })), html);
+        })), html);
+    });
 
-  check(ApproxStructure.fromHtml(html), html);
+    it('TINY-9102: ApproxStructure throws error when there are extra classes (children)', () => {
+      const html = '<div data-key="test-1" selected="double" class="extra-class test1 root" style="display: block;">' +
+        '<div selected="true" classes="hello there">' +
+        '</div>' +
+        '</div>';
 
-  check(ApproxStructure.build((s, str, _arr) =>
-    s.element('div', {
-      children: [
-        s.element('div', {
+      checkThrowError(ApproxStructure.build((s, str, _arr) =>
+        s.elementWithSpecifics('div', {
           attrs: {
-            selected: str.is('true')
-          }
-        }),
-        s.theRest()
-      ]
-    })), html);
-
-  const struct1 = ApproxStructure.build((s, str, arr) =>
-    s.either([
-      s.element('span', {
-        classes: [
-          arr.has('hello'),
-          arr.not('fizzbuzz')
-        ]
-      }),
-      s.element('div', {
-        classes: [
-          arr.has('fizzbuzz'),
-          arr.not('hello')
-        ]
-      })
-    ]));
-
-  check(struct1, '<span class="hello"></span>');
-  check(struct1, '<div class="fizzbuzz"></span>');
-
-  const struct2 = ApproxStructure.build((s, str, arr) =>
-    s.element('div', {
-      children: [
-        s.oneOrMore(s.element('span', {
+            'selected': str.is('double'),
+            'data-key': str.contains('test')
+          },
           classes: [
-            arr.has('hello')
+            'test1', 'root', 'extra-class'
+          ],
+          styles: {
+            display: str.is('block')
+          },
+          children: [
+            s.elementWithSpecifics('div', {
+              attrs: {
+                selected: str.is('true')
+              },
+              classes: [
+                'hello'
+              ]
+            })
           ]
-        })),
-        s.element('div', {}),
-        s.zeroOrOne(s.element('span', {
+        })), html);
+    });
+
+    it('TINY-9102: ApproxStructure throws error when there are extra styles (children)', () => {
+      const html = '<div data-key="test-1" selected="double" class="test1 root" style="display: block; width: 20px;">' +
+        '<div selected="true" style="display: block">' +
+        '</div>' +
+        '</div>';
+
+      checkThrowError(ApproxStructure.build((s, str, _arr) =>
+        s.elementWithSpecifics('div', {
+          attrs: {
+            'selected': str.is('double'),
+            'data-key': str.contains('test')
+          },
           classes: [
-            arr.has('bye')
+            'test1', 'root'
+          ],
+          styles: {
+            display: str.is('block'),
+            width: str.is('20px')
+          },
+          children: [
+            s.elementWithSpecifics('div', {
+              attrs: {
+                selected: str.is('true')
+              },
+              styles: {
+                display: str.is('inline-block')
+              }
+            })
           ]
-        }))
-      ]
-    }));
-
-  check(struct2, '<div><span class="hello"></span><div></div></div>');
-  check(struct2, '<div><span class="hello"></span><div></div><span class="bye"></span></div>');
-  check(struct2, '<div><span class="hello"></span><span class="hello"></span><span class="hello"></span><span class="hello"></span><div></div><span class="bye"></span></div>');
-
-  const container = SugarElement.fromTag('div');
-  InsertAll.append(container, [
-    SugarElement.fromText('hello'),
-    SugarElement.fromText(' '),
-    SugarElement.fromText('world')
-  ]);
-
-  Assertions.assertStructure('Test', ApproxStructure.build((s, str, _arr) =>
-    s.element('div', {
-      children: [
-        s.text(str.is('hello world'), true)
-      ]
-    })), container);
-
-  Assertions.assertStructure('Test', ApproxStructure.build((s, str, _arr) =>
-    s.element('div', {
-      children: [
-        s.text(str.is('hello'), false),
-        s.text(str.is(' world'), true)
-      ]
-    })), container);
-
-  success();
+        })), html);
+    });
+  });
 });
