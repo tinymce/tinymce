@@ -1,8 +1,10 @@
-import { ApproxStructure } from '@ephox/agar';
+import { ApproxStructure, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
+import { SugarBody } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
+import LocalStorage from 'tinymce/core/api/util/LocalStorage';
 
 describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -87,5 +89,28 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
     TinyUiActions.clickOnUi(editor, 'div[data-mce-color="#236FA1"]');
     TinyAssertions.assertContentStructure(editor, backcolorStruct('rgb(35, 111, 161)'));
+  });
+
+  it('TINY-9184: Adding a color is added as expected', async () => {
+    const editor = hook.editor();
+    setupContent(editor);
+    TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+    await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
+    UiFinder.notExists(SugarBody.body(), 'div[data-mce-color="#FF0000"]');
+    TinyUiActions.clickOnUi(editor, 'button[title="Custom color"]');
+    const dialog = await TinyUiActions.pWaitForDialog(editor);
+    const input = UiFinder.findIn<HTMLInputElement>(dialog, 'label:contains("R") + input').getOrDie();
+    UiControls.setValue(input, '255');
+    const evt = new Event('input', {
+      bubbles: true,
+      cancelable: true
+    });
+    input.dom.dispatchEvent(evt);
+    await Waiter.pWait(500);
+    TinyUiActions.clickOnUi(editor, 'button[title="Save"]');
+    TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+    await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
+    UiFinder.exists(SugarBody.body(), 'div[data-mce-color="#FF0000"]');
+    LocalStorage.clear();
   });
 });

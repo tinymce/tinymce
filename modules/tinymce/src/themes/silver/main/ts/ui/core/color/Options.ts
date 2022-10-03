@@ -1,26 +1,12 @@
 import { Transformations } from '@ephox/acid';
-import { Arr, Obj, Type } from '@ephox/katamari';
+import { Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorOptions } from 'tinymce/core/api/OptionTypes';
 import { Menu } from 'tinymce/core/api/ui/Ui';
 
-import { ColorCache } from './ColorCache';
-
 const foregroundId = 'forecolor';
 const backgroundId = 'hilitecolor';
-
-interface CacheStorage {
-  [index: string]: ColorCache;
-}
-const cacheStorage: CacheStorage = {};
-
-const getCatcheForId = (id: string) =>
-  Obj.get(cacheStorage, id).getOrThunk(() => {
-    const storage = ColorCache(id, 10);
-    cacheStorage[id] = storage;
-    return storage;
-  });
 
 const calcCols = (colors: number): number =>
   Math.max(5, Math.ceil(Math.sqrt(colors)));
@@ -137,24 +123,11 @@ const getColors = (editor: Editor, id: string): Menu.ChoiceMenuItemSpec[] => {
   }
 };
 
-const getCurrentColors = (id: string): Menu.ChoiceMenuItemSpec[] =>
-  Arr.map(getCatcheForId(id).state(), (color) => ({
-    type: 'choiceitem',
-    text: color,
-    value: color
-  }));
-
-const addColor = (id: string, color: string): void => {
-  getCatcheForId(id).add(color);
-};
-
 export {
   register,
   mapColors,
   calcCols,
   getColorCols,
   hasCustomColors,
-  getColors,
-  getCurrentColors,
-  addColor
+  getColors
 };

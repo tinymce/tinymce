@@ -1,5 +1,6 @@
-import { Arr, Type } from '@ephox/katamari';
+import { Arr, Obj, Type } from '@ephox/katamari';
 
+import { Menu } from 'tinymce/core/api/ui/Ui';
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
 
 export interface ColorCache {
@@ -7,7 +8,12 @@ export interface ColorCache {
   readonly state: () => string[];
 }
 
-export const ColorCache = (id: string, max: number = 10): ColorCache => {
+interface CacheStorage {
+  [index: string]: ColorCache;
+}
+const cacheStorage: CacheStorage = {};
+
+const ColorCache = (id: string, max: number = 10): ColorCache => {
   const storageId = `tinymce-custom-colors-${id}`;
   const storageString = LocalStorage.getItem(storageId);
   const localstorage = Type.isString(storageString) ? JSON.parse(storageString) : [];
@@ -45,4 +51,27 @@ export const ColorCache = (id: string, max: number = 10): ColorCache => {
     add,
     state
   };
+};
+
+const getCatcheForId = (id: string): ColorCache =>
+  Obj.get(cacheStorage, id).getOrThunk(() => {
+    const storage = ColorCache(id, 10);
+    cacheStorage[id] = storage;
+    return storage;
+  });
+
+const getCurrentColors = (id: string): Menu.ChoiceMenuItemSpec[] =>
+  Arr.map(getCatcheForId(id).state(), (color) => ({
+    type: 'choiceitem',
+    text: color,
+    value: color
+  }));
+
+const addColor = (id: string, color: string): void => {
+  getCatcheForId(id).add(color);
+};
+
+export {
+  getCurrentColors,
+  addColor
 };
