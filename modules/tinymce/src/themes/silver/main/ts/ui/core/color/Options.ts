@@ -85,18 +85,20 @@ const register = (editor: Editor): void => {
 
   registerOption('color_foreground_default', {
     processor: 'string',
+    default: 'black'
   });
 
   registerOption('color_background_default', {
     processor: 'string',
+    default: 'black'
   });
 };
 
 const getColorCols = option('color_cols');
 const hasCustomColors = option('custom_colors');
 const getColors = option<Menu.ChoiceMenuItemSpec[]>('color_map');
-const getDefaultForegroundColor = option('color_foreground_default');
-const getDefaultBackgroundColor = option('color_background_default');
+const getDefaultForegroundColor = option<string>('color_foreground_default');
+const getDefaultBackgroundColor = option<string>('color_background_default');
 
 const getCurrentColors = (): Menu.ChoiceMenuItemSpec[] => Arr.map(colorCache.state(), (color) => ({
   type: 'choiceitem',

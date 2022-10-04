@@ -79,6 +79,8 @@ const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemSpec[] => {
   ] : [ remove ];
 };
 
+const fallbackColor = 'black';
+
 const applyColor = (editor: Editor, format: ColorFormat, value: string, onChoice: (v: string) => void) => {
   if (value === 'custom') {
     const dialog = colorPickerDialog(editor);
@@ -88,7 +90,7 @@ const applyColor = (editor: Editor, format: ColorFormat, value: string, onChoice
         editor.execCommand('mceApplyTextcolor', format as any, color);
         onChoice(color);
       });
-    }, format === 'forecolor' ? 'black' : 'white');
+    }, fallbackColor);
   } else if (value === 'remove') {
     onChoice('');
     editor.execCommand('mceRemoveTextcolor', format as any);
@@ -236,8 +238,8 @@ const register = (editor: Editor): void => {
   registerCommands(editor);
   const fallbackColorForeground = Options.getDefaultForegroundColor(editor);
   const fallbackColorBackground = Options.getDefaultBackgroundColor(editor);
-  const lastForeColor = Cell( fallbackColorForeground || 'black');
-  const lastBackColor = Cell( fallbackColorBackground || 'black');
+  const lastForeColor = Cell( fallbackColorForeground );
+  const lastBackColor = Cell( fallbackColorBackground );
   registerTextColorButton(editor, 'forecolor', 'forecolor', 'Text color', lastForeColor);
   registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background color', lastBackColor);
 
