@@ -298,7 +298,7 @@ const assertClassesSpecific = (expectedClasses: string[], actual: SugarElement<E
   );
 
   if (!isClassesEqual) {
-    throw new Error('Attribute names were not matching. actual: ' + actualClasses.join(', ') + ', expected: ' + expectedClasses.join(', '));
+    throw new Error('Class names were not matching. actual: ' + actualClasses.join(', ') + ', expected: ' + expectedClasses.join(', '));
   }
 };
 
