@@ -140,9 +140,9 @@ const elementWithSpecifics = (tag: string, fields: ElementWithSpecificFields): S
       const html = fields.html !== undefined ? Optional.some(fields.html) : Optional.none<StringAssert>();
       const value = fields.value !== undefined ? Optional.some(fields.value) : Optional.none<StringAssert>();
       const children = fields.children !== undefined ? Optional.some(fields.children) : Optional.none<StructAssert[]>();
-      assertAttrs(attrs, actual, true);
+      assertAttrsWithSpecifics(attrs, actual);
       assertClassesSpecific(classes, actual);
-      assertStyles(styles, actual, true);
+      assertStylesWithSpecifics(styles, actual);
       assertHtml(html, actual);
       assertValue(value, actual);
 
@@ -252,21 +252,7 @@ const anythingStruct: StructAssert = {
   doAssert: Fun.noop
 };
 
-const assertAttrs = (expectedAttrs: Record<string, StringAssert>, actual: SugarElement<Element>, specificMode: boolean = false) => {
-  if (specificMode) {
-    const allDefinedAttrs = Obj.keys(expectedAttrs);
-    const actualDefinedAttrs = Obj.keys(Obj.bifilter(Attribute.clone(actual), (_value, key) => !Arr.contains([ 'style', 'class' ], key)).t);
-
-    const isAttrsEqual = Arr.equal(
-      Arr.sort(allDefinedAttrs),
-      Arr.sort(actualDefinedAttrs)
-    );
-
-    if (!isAttrsEqual) {
-      throw new Error('Attribute names were not matching. actual: ' + actualDefinedAttrs.join(', ') + ', expected: ' + allDefinedAttrs.join(', '));
-    }
-  }
-
+const assertAttrs = (expectedAttrs: Record<string, StringAssert>, actual: SugarElement<Element>) => {
   Obj.each(expectedAttrs, (v, k) => {
     if (v.strAssert === undefined) {
       throw new Error(JSON.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* attributes of ' + Truncate.getHtml(actual));
@@ -277,6 +263,22 @@ const assertAttrs = (expectedAttrs: Record<string, StringAssert>, actual: SugarE
       actualValue
     );
   });
+};
+
+const assertAttrsWithSpecifics = (expectedAttrs: Record<string, StringAssert>, actual: SugarElement<Element>) => {
+  const allDefinedAttrs = Obj.keys(expectedAttrs);
+  const actualDefinedAttrs = Obj.keys(Obj.bifilter(Attribute.clone(actual), (_value, key) => !Arr.contains([ 'style', 'class' ], key)).t);
+
+  const isEqual = Arr.equal(
+    Arr.sort(allDefinedAttrs),
+    Arr.sort(actualDefinedAttrs)
+  );
+
+  if (!isEqual) {
+    throw new Error('Attribute names were not matching. actual: ' + actualDefinedAttrs.join(', ') + ', expected: ' + allDefinedAttrs.join(', '));
+  }
+
+  assertAttrs(expectedAttrs, actual);
 };
 
 const assertClasses = (expectedClasses: ArrayAssert[], actual: SugarElement<Element>) => {
@@ -292,30 +294,17 @@ const assertClasses = (expectedClasses: ArrayAssert[], actual: SugarElement<Elem
 const assertClassesSpecific = (expectedClasses: string[], actual: SugarElement<Element>) => {
   const actualClasses = Classes.get(actual);
 
-  const isClassesEqual = Arr.equal(
+  const isEqual = Arr.equal(
     Arr.sort(actualClasses),
     Arr.sort(expectedClasses)
   );
 
-  if (!isClassesEqual) {
+  if (!isEqual) {
     throw new Error('Class names were not matching. actual: ' + actualClasses.join(', ') + ', expected: ' + expectedClasses.join(', '));
   }
 };
 
-const assertStyles = (expectedStyles: Record<string, StringAssert>, actual: SugarElement<Element>, specificMode: boolean = false) => {
-  if (specificMode) {
-    const allDefinedStyles = Obj.keys(expectedStyles);
-    const actualDefinedStyles = Obj.keys(Css.getAllRaw(actual));
-    const isStylesEqual = Arr.equal(
-      Arr.sort(allDefinedStyles),
-      Arr.sort(actualDefinedStyles)
-    );
-
-    if (!isStylesEqual) {
-      throw new Error('Style names were not matching. actual: ' + actualDefinedStyles.join(', ') + ', expected: ' + allDefinedStyles.join(', '));
-    }
-  }
-
+const assertStyles = (expectedStyles: Record<string, StringAssert>, actual: SugarElement<Element>) => {
   Obj.each(expectedStyles, (v, k) => {
     const actualValue = Css.getRaw(actual, k).getOrThunk(ApproxComparisons.missing);
     if (v.strAssert === undefined) {
@@ -326,6 +315,22 @@ const assertStyles = (expectedStyles: Record<string, StringAssert>, actual: Suga
       actualValue
     );
   });
+};
+
+const assertStylesWithSpecifics = (expectedStyles: Record<string, StringAssert>, actual: SugarElement<Element>) => {
+  const allDefinedStyles = Obj.keys(expectedStyles);
+  const actualDefinedStyles = Obj.keys(Css.getAllRaw(actual));
+
+  const isEqual = Arr.equal(
+    Arr.sort(allDefinedStyles),
+    Arr.sort(actualDefinedStyles)
+  );
+
+  if (!isEqual) {
+    throw new Error('Style names were not matching. actual: ' + actualDefinedStyles.join(', ') + ', expected: ' + allDefinedStyles.join(', '));
+  }
+
+  assertStyles(expectedStyles, actual);
 };
 
 const assertHtml = (expectedHtml: Optional<StringAssert>, actual: SugarElement<HTMLElement>) => {
