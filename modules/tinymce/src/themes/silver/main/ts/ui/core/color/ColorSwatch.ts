@@ -6,7 +6,7 @@ import { Dialog, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Events from '../../../api/Events';
-import { addColor, getCurrentColors } from './ColorCache';
+import * as ColorCache from './ColorCache';
 import * as Options from './Options';
 
 export type ColorInputCallback = (valueOpt: Optional<string>) => void;
@@ -87,7 +87,7 @@ const applyColor = (editor: Editor, format: ColorFormat, value: string, onChoice
     const dialog = colorPickerDialog(editor);
     dialog((colorOpt) => {
       colorOpt.each((color) => {
-        addColor(format, color);
+        ColorCache.addColor(format, color);
         editor.execCommand('mceApplyTextcolor', format as any, color);
         onChoice(color);
       });
@@ -102,7 +102,7 @@ const applyColor = (editor: Editor, format: ColorFormat, value: string, onChoice
 };
 
 const getColors = (colors: Menu.ChoiceMenuItemSpec[], id: string, hasCustom: boolean): Menu.ChoiceMenuItemSpec[] =>
-  colors.concat(getCurrentColors(id).concat(getAdditionalColors(hasCustom)));
+  colors.concat(ColorCache.getCurrentColors(id).concat(getAdditionalColors(hasCustom)));
 
 const getFetch = (colors: Menu.ChoiceMenuItemSpec[], id: string, hasCustom: boolean) => (callback: (value: Menu.ChoiceMenuItemSpec[]) => void): void => {
   callback(getColors(colors, id, hasCustom));
