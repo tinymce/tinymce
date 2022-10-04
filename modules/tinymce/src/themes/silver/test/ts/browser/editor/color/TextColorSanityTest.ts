@@ -58,14 +58,14 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
       base_url: '/project/tinymce/js/tinymce'
     }, [], true);
 
-    it('TINY-7836: Initial color is set to black for text color and to white for background color', () => {
+    it('TINY-7836: Initial color is set to black for both buttons', () => {
       const editor = hook.editor();
       setupContent(editor);
       TinyUiActions.clickOnUi(editor, 'div[title="Text color"] .tox-tbtn');
       TinyAssertions.assertContentStructure(editor, forecolorStruct('black'));
       setupContent(editor);
       TinyUiActions.clickOnUi(editor, 'div[title="Background color"] .tox-tbtn');
-      TinyAssertions.assertContentStructure(editor, backcolorStruct('white'));
+      TinyAssertions.assertContentStructure(editor, backcolorStruct('black'));
     });
 
     it('TBA: forecolor', async () => {

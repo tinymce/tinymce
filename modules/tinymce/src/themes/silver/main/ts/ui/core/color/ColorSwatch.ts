@@ -237,7 +237,7 @@ const register = (editor: Editor): void => {
   const fallbackColorForeground = Options.getDefaultForegroundColor(editor);
   const fallbackColorBackground = Options.getDefaultBackgroundColor(editor);
   const lastForeColor = Cell( fallbackColorForeground || 'black');
-  const lastBackColor = Cell( fallbackColorBackground || 'white');
+  const lastBackColor = Cell( fallbackColorBackground || 'black');
   registerTextColorButton(editor, 'forecolor', 'forecolor', 'Text color', lastForeColor);
   registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background color', lastBackColor);
 
