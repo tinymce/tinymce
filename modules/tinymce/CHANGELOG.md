@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - New `expand` function added to `tinymce.selection` which expands the selection around the nearest word. #TINY-9001
 - New `expand` function added to `tinymce.dom.RangeUtils` to return a new range expanded around the nearest word. #TINY-9001
+- New `color_foreground_default` and `color_background_default` options added to set default colors used by 
+background and foreground split buttons #TINY-9183
 
 ### Fixed
 - Range expanding capabilities would behave inconsistently depending on where the cursor was placed. #TINY-9029
