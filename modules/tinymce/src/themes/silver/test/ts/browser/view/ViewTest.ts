@@ -108,14 +108,14 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       assert.equal(Html.get(editorContainer), expectedHtml);
     };
 
+    const pWaitUntilRemoved = (label: string, selector: string) =>
+      Waiter.pTryUntil(label, () => UiFinder.notExists(SugarBody.body(), selector));
+
     const pAssertToolbarDrawerVisibleState = async (expectedState: boolean) => {
       if (expectedState) {
         await UiFinder.pWaitForVisible('Wait for toolbar drawer to be visible', SugarBody.body(), '.tox-toolbar__overflow');
       } else {
-        await Waiter.pTryUntil(
-          'Wait for toolbar drawer to close',
-          () => UiFinder.notExists(SugarBody.body(), '.tox-toolbar__overflow')
-        );
+        await pWaitUntilRemoved('Wait for toolbar drawer to close', '.tox-toolbar__overflow');
       }
     };
 
@@ -225,11 +225,13 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       toggleView('myview1');
       clickViewButton(editor, 'Button 1');
       clickViewButton(editor, 'Button 2');
+      toggleView('myview1');
 
       store.assertEq('Should get showView then onAction calls for button1 and button2', [
         'myview1:show',
         'myview1:button1',
-        'myview1:button2'
+        'myview1:button2',
+        'myview1:hide'
       ]);
     });
 
@@ -252,24 +254,25 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       await pAssertToolbarDrawerVisibleState(true);
     });
 
-    it('TINY-9210: Should hide menus if view is toggled on', () => {
+    it('TINY-9210: Should hide menus if view is toggled on', async () => {
       const editor = hook.editor();
 
       TinyUiActions.clickOnUi(editor, 'button[role="menuitem"]:nth-child(1)');
-      UiFinder.pWaitFor('Wait for menu to open', SugarBody.body(), '.tox-menu');
+      await UiFinder.pWaitFor('Wait for menu to open', SugarBody.body(), '.tox-menu');
       toggleView('myview1');
-      UiFinder.pWaitForHidden('Wait for menu to close', SugarBody.body(), '.tox-menu');
+      await pWaitUntilRemoved('Wait for menu to close', '.tox-menu');
       toggleView('myview1');
     });
 
-    it('TINY-9210: Should hide context toolbar if view is toggled on', () => {
+    it('TINY-9210: Should hide context toolbar if view is toggled on', async () => {
       const editor = hook.editor();
 
+      editor.focus();
       editor.setContent('<p><img src="about:blank"></p>');
       TinySelections.select(editor, 'img', []);
-      UiFinder.pWaitFor('Wait for menu to open', SugarBody.body(), '.tox-pop');
+      await UiFinder.pWaitFor('Wait for toolbar to open', SugarBody.body(), '.tox-pop');
       toggleView('myview1');
-      UiFinder.pWaitForHidden('Wait for menu to close', SugarBody.body(), '.tox-pop');
+      await pWaitUntilRemoved('Wait for toolbar to close', '.tox-pop');
       toggleView('myview1');
     });
 
