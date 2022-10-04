@@ -5,7 +5,7 @@ declare let tinymce: TinyMCE;
 tinymce.init({
   selector: 'textarea.tinymce',
   plugins: 'link code',
-  toolbar: 'link code',
+  toolbar: 'link unlink code',
   menubar: 'view insert tools custom',
   link_quicklink: true,
   link_list: [
@@ -18,7 +18,13 @@ tinymce.init({
   height: 600,
   setup: (ed) => {
     ed.on('init', () => {
-      ed.setContent('<h1>Heading</h1><p><a name="anchor1"></a>anchor here.');
+      ed.setContent(`
+        <h1>Heading</h1>
+        <p><a name="anchor1"></a>anchor here.</p>
+        <a href="#">Block link</a>
+        <div><a href="#"><p>Block link</p></a></div>
+        <p><a href="#">Inline link</a></p>
+      `);
     });
   }
 });
