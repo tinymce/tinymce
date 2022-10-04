@@ -30,7 +30,7 @@ describe('browser.tinymce.core.init.InitContentBodySelectionTest', () => {
   });
 
   context('TINY-4139: More complex content tests', () => {
-    initAndAssertContent('Test a (which should be wrapped in a p on init)', '<a href="www.google.com">Initial Content</a>', [ 0, 0, 0 ], 1);
+    initAndAssertContent('Test a (which should be wrapped in a p on init)', '<a href="www.google.com">Initial Content</a>', [ 0, 0 ], 0);
     initAndAssertContent('Test a in paragraph', '<p><a href="www.google.com">Initial Content</a></p>', [ 0, 0, 0 ], 1);
     initAndAssertContent('Test list', '<ul><li>Initial Content</li></ul>', [ 0, 0, 0 ]);
     initAndAssertContent('Test image (which should be wrapped in a p on init)', '<img src="https://www.google.com/logos/google.jpg" alt="My alt text" width="354" height="116" />', [ 0 ]);

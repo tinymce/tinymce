@@ -105,9 +105,17 @@ const isOnlyTextSelected = (editor: Editor): boolean => {
   const isElement = (elm: Node): elm is Element =>
     elm.nodeType === 1 && !isAnchor(elm) && !Obj.has(inlineTextElements, elm.nodeName.toLowerCase());
 
-  // Collect all non inline text elements in the range and make sure no elements were found
-  const elements = collectNodesInRange(editor.selection.getRng(), isElement);
-  return elements.length === 0;
+  const rng = editor.selection.getRng();
+  if (!rng.collapsed) {
+    // Collect all non inline text elements in the range and make sure no elements were found
+    const elements = collectNodesInRange(rng, isElement);
+    return elements.length === 0;
+  } else {
+    // If collapsed then make sure we're not in a block anchor
+    return getAnchorElement(editor).forall((anchor) => {
+      return editor.dom.getParent(rng.startContainer, isElement, anchor) === null;
+    });
+  }
 };
 
 const isImageFigure = (elm: Element | null): elm is HTMLElement =>

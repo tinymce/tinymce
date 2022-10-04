@@ -7,11 +7,12 @@ import * as Options from '../api/Options';
 import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
 import * as CaretUtils from '../caret/CaretUtils';
+import * as TransparentElements from '../content/TransparentElements';
 import * as NodeType from '../dom/NodeType';
 import * as Bidi from '../text/Bidi';
 
 const isInlineTarget = (editor: Editor, elm: Node): elm is Element =>
-  Selectors.is(SugarElement.fromDom(elm), Options.getInlineBoundarySelector(editor));
+  Selectors.is(SugarElement.fromDom(elm), Options.getInlineBoundarySelector(editor)) && !TransparentElements.isTransparentBlock(editor.schema, elm);
 
 const isRtl = (element: Element): boolean =>
   DOMUtils.DOM.getStyle(element, 'direction', true) === 'rtl' || Bidi.hasStrongRtl(element.textContent ?? '');

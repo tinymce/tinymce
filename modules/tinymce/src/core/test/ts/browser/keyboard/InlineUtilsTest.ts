@@ -4,6 +4,7 @@ import { Hierarchy, SugarElement, SugarNode } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import Schema from 'tinymce/core/api/html/Schema';
 import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as InlineUtils from 'tinymce/core/keyboard/InlineUtils';
@@ -39,7 +40,8 @@ describe('browser.tinymce.core.keyboard.InlineUtilsTest', () => {
     return {
       options: {
         get: (name: string) => options[name] ?? 'a[href],code,.mce-annotation'
-      }
+      },
+      schema: Schema()
     } as any;
   };
 

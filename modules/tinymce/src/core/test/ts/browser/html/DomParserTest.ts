@@ -496,13 +496,13 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
     parser = DomParser({}, Schema({ valid_elements: 'span,a[name],img' }));
     root = parser.parse('<span></span><a name="anchor"></a>');
-    assert.equal(serializer.serialize(root), '<span></span><a name="anchor"></a>', 'Leave a with name attribute');
+    assert.equal(serializer.serialize(root), '<span></span><a name="anchor" data-mce-block="true"></a>', 'Leave a with name attribute');
 
     parser = DomParser({}, Schema({ valid_elements: 'span,a[href],img[src]' }));
     root = parser.parse('<span></span><a href="#"><img src="about:blank" /></a>');
     assert.equal(
       serializer.serialize(root),
-      '<span></span><a href="#"><img src="about:blank"></a>',
+      '<span></span><a href="#" data-mce-block="true"><img src="about:blank"></a>',
       'Leave elements with img in it'
     );
   });
@@ -635,7 +635,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
     const parser = DomParser({ allow_html_in_named_anchor: false }, schema);
     const root = parser.parse('<a name="x">a</a><a href="x">x</a>');
-    assert.equal(serializer.serialize(root), '<a name="x"></a>a<a href="x">x</a>');
+    assert.equal(serializer.serialize(root), '<a name="x" data-mce-block="true"></a>a<a href="x" data-mce-block="true">x</a>');
   });
 
   it('Parse contents with html5 anchors and allow_html_in_named_anchor: false', () => {
@@ -643,7 +643,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
     const parser = DomParser({ allow_html_in_named_anchor: false }, schema);
     const root = parser.parse('<a id="x">a</a><a href="x">x</a>');
-    assert.equal(serializer.serialize(root), '<a id="x"></a>a<a href="x">x</a>');
+    assert.equal(serializer.serialize(root), '<a id="x" data-mce-block="true"></a>a<a href="x" data-mce-block="true">x</a>');
   });
 
   it('Parse contents with html4 anchors and allow_html_in_named_anchor: true', () => {
@@ -651,7 +651,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
     const parser = DomParser({ allow_html_in_named_anchor: true }, schema);
     const root = parser.parse('<a name="x">a</a><a href="x">x</a>');
-    assert.equal(serializer.serialize(root), '<a name="x">a</a><a href="x">x</a>');
+    assert.equal(serializer.serialize(root), '<a name="x" data-mce-block="true">a</a><a href="x" data-mce-block="true">x</a>');
   });
 
   it('Parse contents with html5 anchors and allow_html_in_named_anchor: true', () => {
@@ -659,7 +659,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
     const parser = DomParser({ allow_html_in_named_anchor: true }, schema);
     const root = parser.parse('<a id="x">a</a><a href="x">x</a>');
-    assert.equal(serializer.serialize(root), '<a id="x">a</a><a href="x">x</a>');
+    assert.equal(serializer.serialize(root), '<a id="x" data-mce-block="true">a</a><a href="x" data-mce-block="true">x</a>');
   });
 
   it('Parse contents with html5 self closing datalist options', () => {
@@ -836,8 +836,8 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     const serializedHtml = serializer.serialize(parser.parse(html));
 
     assert.equal(serializedHtml,
-      '<a href="javascript:alert(1)">1</a>' +
-      '<a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">3</a>'
+      '<a href="javascript:alert(1)" data-mce-block="true">1</a>' +
+      '<a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+" data-mce-block="true">3</a>'
     );
   });
 
@@ -849,9 +849,9 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     const serializedHtml = serializer.serialize(parser.parse(html));
 
     assert.equal(serializedHtml,
-      '<a>1</a>' +
-      '<a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">2</a>' +
-      '<a href="data:image/svg+xml;base64,x">3</a>'
+      '<a data-mce-block="true">1</a>' +
+      '<a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+" data-mce-block="true">2</a>' +
+      '<a href="data:image/svg+xml;base64,x" data-mce-block="true">3</a>'
     );
   });
 
@@ -863,7 +863,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
     assert.equal(
       serializedHtml,
-      '<a>1</a>' +
+      '<a data-mce-block="true">1</a>' +
       '<img>'
     );
   });
@@ -891,23 +891,23 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
     assert.equal(
       serializedHtml,
-      '<a>1</a>' +
-      '<a>2</a>' +
-      '<a>3</a>' +
-      '<a>4</a>' +
-      '<a>5</a>' +
-      '<a>6</a>' +
-      '<a>7</a>' +
-      '<a>8</a>' +
-      '<a>9</a>' +
+      '<a data-mce-block="true">1</a>' +
+      '<a data-mce-block="true">2</a>' +
+      '<a data-mce-block="true">3</a>' +
+      '<a data-mce-block="true">4</a>' +
+      '<a data-mce-block="true">5</a>' +
+      '<a data-mce-block="true">6</a>' +
+      '<a data-mce-block="true">7</a>' +
+      '<a data-mce-block="true">8</a>' +
+      '<a data-mce-block="true">9</a>' +
       '<object>10</object>' +
       '<button>11</button>' +
       '<form>12</form>' +
       '<table><tbody><tr><td>13</td></tr></tbody></table>' +
-      '<a>14</a>' +
-      '<a>15</a>' +
+      '<a data-mce-block="true">14</a>' +
+      '<a data-mce-block="true">15</a>' +
       '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">' +
-      '<a href="%E3%82%AA%E3%83%BC%E3%83">Invalid url</a>'
+      '<a href="%E3%82%AA%E3%83%BC%E3%83" data-mce-block="true">Invalid url</a>'
     );
   });
 
@@ -922,7 +922,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     ));
     assert.equal(serializedHtml,
       '<iframe></iframe>' +
-      '<a>1</a>' +
+      '<a data-mce-block="true">1</a>' +
       '<object></object>' +
       '<img src="data:image/svg+xml;base64,x">' +
       '<video></video>'
@@ -940,7 +940,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     ));
     assert.equal(serializedHtml,
       '<iframe src="data:image/svg+xml;base64,x"></iframe>' +
-      '<a href="data:image/svg+xml;base64,x">1</a>' +
+      '<a href="data:image/svg+xml;base64,x" data-mce-block="true">1</a>' +
       '<object data="data:image/svg+xml;base64,x"></object>' +
       '<img src="data:image/svg+xml;base64,x">' +
       '<video poster="data:image/svg+xml;base64,x"></video>'
@@ -958,7 +958,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     ));
     assert.equal(serializedHtml,
       '<iframe></iframe>' +
-      '<a>1</a>' +
+      '<a data-mce-block="true">1</a>' +
       '<object></object>' +
       '<img>' +
       '<video></video>'

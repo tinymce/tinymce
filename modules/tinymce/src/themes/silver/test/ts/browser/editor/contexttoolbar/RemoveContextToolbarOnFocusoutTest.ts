@@ -44,7 +44,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.RemoveContextToolb
   it('iframe editor focusout should remove context toolbar', async () => {
     const editor = await McEditor.pFromHtml<Editor>(html, { setup, base_url: '/project/tinymce/js/tinymce' });
     editor.focus();
-    TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
+    TinySelections.setCursor(editor, [ 1, 0 ], 1);
     await pWaitForContextToolbarState(true);
     focusInput();
     await pWaitForContextToolbarState(false);

@@ -1,6 +1,7 @@
 import { Arr, Fun, Obj, Optionals, Strings, Type } from '@ephox/katamari';
 import { Attribute, Class, Css, Html, Insert, Remove, Selectors, SugarElement, SugarNode, Traverse, WindowVisualViewport } from '@ephox/sugar';
 
+import * as TransparentElements from '../../content/TransparentElements';
 import * as NodeType from '../../dom/NodeType';
 import * as Position from '../../dom/Position';
 import * as StyleSheetLoaderRegistry from '../../dom/StyleSheetLoaderRegistry';
@@ -353,7 +354,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     if (Type.isString(node)) {
       return Obj.has(blockElementsMap, node);
     } else {
-      return NodeType.isElement(node) && Obj.has(blockElementsMap, node.nodeName);
+      return NodeType.isElement(node) && Obj.has(blockElementsMap, node.nodeName) && !TransparentElements.isTransparentInline(schema, node);
     }
   };
 

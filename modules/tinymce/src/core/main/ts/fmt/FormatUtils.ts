@@ -9,6 +9,7 @@ import Editor from '../api/Editor';
 import Schema from '../api/html/Schema';
 import * as Options from '../api/Options';
 import * as Bookmarks from '../bookmark/Bookmarks';
+import * as TransparentElements from '../content/TransparentElements';
 import * as NodeType from '../dom/NodeType';
 import * as SelectionUtils from '../selection/SelectionUtils';
 import * as Whitespace from '../text/Whitespace';
@@ -121,12 +122,8 @@ const getNonWhiteSpaceSibling = (node: Node | null, next?: boolean, inc?: boolea
   return undefined;
 };
 
-const isTextBlock = (schema: Schema, name: string | Node): boolean => {
-  if (isNode(name)) {
-    name = name.nodeName;
-  }
-
-  return !!schema.getTextBlockElements()[name.toLowerCase()];
+const isTextBlock = (schema: Schema, node: Node): boolean => {
+  return !!schema.getTextBlockElements()[node.nodeName.toLowerCase()] || TransparentElements.isTransparentBlock(schema, node);
 };
 
 const isValid = (ed: Editor, parent: string, child: string): boolean => {

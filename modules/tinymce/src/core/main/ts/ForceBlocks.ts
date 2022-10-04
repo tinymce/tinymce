@@ -55,7 +55,8 @@ const createRootBlock = (editor: Editor): HTMLElement =>
 
 const addRootBlocks = (editor: Editor) => {
   const dom = editor.dom, selection = editor.selection;
-  const schema = editor.schema, blockElements = schema.getBlockElements();
+  const schema = editor.schema;
+  const blockElements = { ...schema.getBlockElements(), ...schema.getTransparentElements() };
   const startNode = selection.getStart();
   const rootNode = editor.getBody();
   let rootBlockNode: Node | undefined | null;
