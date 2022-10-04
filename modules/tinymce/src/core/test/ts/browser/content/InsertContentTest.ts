@@ -662,4 +662,32 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     editor.insertContent('<foo-bar contenteditable="false" data-name="foobar"></foo-bar>');
     TinyAssertions.assertContent(editor, '<p><foo-bar contenteditable="false" data-name="foobar"></foo-bar></p>');
   });
+
+  it('TINY-9172: Insert block anchor in regual block', () => {
+    const editor = hook.editor();
+
+    editor.setContent('<div>a</div>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    editor.insertContent('<a href="#"><p>b</p></a>');
+    TinyAssertions.assertContent(editor, '<div><a href="#"><p>b</p></a>a</div>');
+    assert.equal('true', editor.dom.select('a')[0].getAttribute('data-mce-block'), 'Should have data-mce-block set to true');
+  });
+
+  it('TINY-9172: Insert block anchor in transparent block should split the block', () => {
+    const editor = hook.editor();
+
+    editor.setContent('<a href="#1">ac</a>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    editor.insertContent('<a href="#2"><p>b</p></a>');
+    TinyAssertions.assertContent(editor, '<a href="#1">a</a><a href="#2"><p>b</p></a><a href="#1">c</a>');
+  });
+
+  it('TINY-9172: Insert inline anchor in transparent block should split the block', () => {
+    const editor = hook.editor();
+
+    editor.setContent('<a href="#1">ac</a>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    editor.insertContent('<a href="#2">b</a>');
+    TinyAssertions.assertContent(editor, '<a href="#1">a</a><a href="#2">b</a><a href="#1">c</a>');
+  });
 });

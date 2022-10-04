@@ -1,5 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
+import { Arr, Obj } from '@ephox/katamari';
+import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -113,5 +114,18 @@ describe('browser.tinymce.core.ForceBlocksTest', () => {
     LegacyUnit.setSelection(editor, 'body', 0);
     pressArrowKey(editor);
     assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<span data-mce-type="bookmark">a</span>');
+  });
+
+  it('TINY-9172: Do not wrap root level transparent elements', () => {
+    const editor = hook.editor();
+    const transparentElements = Arr.unique(Arr.map(Obj.keys(editor.schema.getTransparentElements()), (s) => s.toLowerCase()));
+    const transparentElementsHtml = Arr.map(transparentElements, (name) => `<${name}>text</${name}>`).join('');
+    const innerHtml = transparentElementsHtml + 'text';
+    const expectedInnerHtml = transparentElementsHtml + '<p>text</p>';
+
+    editor.getBody().innerHTML = innerHtml;
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    pressArrowKey(editor);
+    assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), expectedInnerHtml);
   });
 });
