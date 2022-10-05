@@ -46,6 +46,7 @@ export interface SelectedFormat {
 }
 
 export interface SelectSpec {
+  readonly styles?: Record<string, string>;
   readonly tooltip: string;
   readonly text: Optional<string>;
   readonly icon: Optional<string>;
@@ -183,6 +184,7 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
 
   return renderCommonDropdown(
     {
+      styles: spec.styles,
       text: spec.icon.isSome() ? Optional.none() : spec.text,
       icon: spec.icon,
       tooltip: Optional.from(spec.tooltip),

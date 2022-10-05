@@ -45,6 +45,7 @@ export interface CommonDropdownSpec<T> {
   readonly classes: string[];
   readonly dropdownBehaviours: Behaviour.NamedConfiguredBehaviour<any, any, any>[];
   readonly searchable?: boolean;
+  readonly styles?: Record<string, string>;
 }
 
 // TODO: Use renderCommonStructure here.
@@ -126,6 +127,7 @@ const renderCommonDropdown = <T>(
       ...role,
       dom: {
         tag: 'button',
+        styles: spec.styles,
         classes: [ prefix, `${prefix}--select` ].concat(Arr.map(spec.classes, (c) => `${prefix}--${c}`)),
         attributes: {
           ...tooltipAttributes
