@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - New `expand` function added to `tinymce.selection` which expands the selection around the nearest word. #TINY-9001
 - New `expand` function added to `tinymce.dom.RangeUtils` to return a new range expanded around the nearest word. #TINY-9001
+- New `getTransparentElements` function added to `tinymce.html.Schema` to return a map object of transparent HTML elements. #TINY-9172
 
 ### Fixed
 - Dragging a noneditable element toward the bottom edge would cause the page to scroll up. #TINY-9025
@@ -17,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Line separator scrolling in floating toolbars. #TINY-8948
 - A double bottom border appeared on inline mode editor for the `tinymce-5` skin. #TINY-9108
 - The editor header showed up even with no menubar and toolbar configured. #TINY-8819
+
+### Changed
+- Transparent elements like anchors are now allowed in the root of the editor body. #TINY-9172
+- Transparent elements like anchors can now contain block elements. #TINY-9172
 
 ## 6.2.0 - 2022-09-08
 
