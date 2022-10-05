@@ -19,14 +19,19 @@ export const update = (schema: Schema, root: Element, inEditorRoot: boolean): vo
   });
 };
 
-export const isTransparentBlock = (schema: Schema, node: Node): boolean =>
-  NodeType.isElement(node) && node.nodeName in schema.getTransparentElements() && node.hasAttribute(transparentBlockAttr);
+export const isTransparentElementName = (schema: Schema, name: string): boolean => name in schema.getTransparentElements();
 
-export const isTransparentInline = (schema: Schema, node: Node): boolean =>
-  NodeType.isElement(node) && node.nodeName in schema.getTransparentElements() && !node.hasAttribute(transparentBlockAttr);
+const isTransparentElement = (schema: Schema, node: Node | null | undefined): node is Element =>
+  NodeType.isElement(node) && isTransparentElementName(schema, node.nodeName);
+
+export const isTransparentBlock = (schema: Schema, node: Node | null | undefined): node is Element =>
+  isTransparentElement(schema, node) && node.hasAttribute(transparentBlockAttr);
+
+export const isTransparentInline = (schema: Schema, node: Node | null | undefined): node is Element =>
+  isTransparentElement(schema, node) && !node.hasAttribute(transparentBlockAttr);
 
 export const isTransparentAstBlock = (schema: Schema, node: AstNode): boolean =>
-  node.type === 1 && node.name in schema.getTransparentElements() && Type.isString(node.attr(transparentBlockAttr));
+  node.type === 1 && isTransparentElementName(schema, node.name) && Type.isString(node.attr(transparentBlockAttr));
 
 export const isTransparentAstInline = (schema: Schema, node: AstNode): boolean =>
-  node.type === 1 && node.name in schema.getTransparentElements() && Type.isUndefined(node.attr(transparentBlockAttr));
+  node.type === 1 && isTransparentElementName(schema, node.name) && Type.isUndefined(node.attr(transparentBlockAttr));

@@ -8,6 +8,7 @@ import * as Events from '../api/Events';
 import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
+import * as TransparentElements from '../content/TransparentElements';
 import ElementUtils from '../dom/ElementUtils';
 import * as NodeType from '../dom/NodeType';
 import { RangeLikeObject } from '../selection/RangeTypes';
@@ -235,6 +236,12 @@ const removeListStyleFormats = (editor: Editor, name: string, vars: FormatVars |
 const removeFormatInternal = (ed: Editor, format: Format, vars?: FormatVars, node?: Node, compareNode?: Node | null): RemoveFormatAdt => {
   const dom = ed.dom;
   const elementUtils = ElementUtils(ed);
+  const schema = ed.schema;
+
+  // Root level block transparents should get converted into regular text blocks
+  if (FormatUtils.isInlineFormat(format) && TransparentElements.isTransparentElementName(schema, format.inline) && TransparentElements.isTransparentBlock(schema, node) && node.parentElement === ed.getBody()) {
+    return removeResult.rename(Options.getForcedRootBlock(ed));
+  }
 
   // Check if node is noneditable and can have the format removed from it
   if (!format.ceFalseOverride && node && dom.getContentEditableParent(node) === 'false') {

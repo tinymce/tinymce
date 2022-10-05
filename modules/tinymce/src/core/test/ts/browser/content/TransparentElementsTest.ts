@@ -42,6 +42,19 @@ describe('browser.tinymce.core.content.TransparentElementsTest', () => {
     });
   });
 
+  context('isTransparentElementName', () => {
+    it('TINY-9172: Should return true for any transparent element name', () => {
+      Arr.each(transparentElements, (name) => {
+        assert.isTrue(TransparentElements.isTransparentElementName(schema, name));
+      });
+    });
+
+    it('TINY-9172: Should return false for any non transparent element names', () => {
+      assert.isFalse(TransparentElements.isTransparentElementName(schema, 'p'));
+      assert.isFalse(TransparentElements.isTransparentElementName(schema, 'span'));
+    });
+  });
+
   context('isTransparentBlock', () => {
     it('TINY-9172: Should return true for any transparent element with data-mce-block', () => {
       Arr.each(transparentElements, (name) => {
