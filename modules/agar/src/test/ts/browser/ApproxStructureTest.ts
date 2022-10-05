@@ -170,7 +170,7 @@ describe('browser.agar.ApproxStructureTest', () => {
 
     it('TINY-9102: ApproxStructure build', () => {
       check(ApproxStructure.build((s, str, _arr) =>
-        s.elementWithSpecifics('div', {
+        s.elementWithExactMatch('div', {
           attrs: {
             'selected': str.is('double'),
             'data-key': str.contains('test')
@@ -182,12 +182,12 @@ describe('browser.agar.ApproxStructureTest', () => {
             display: str.is('block')
           },
           children: [
-            s.elementWithSpecifics('div', {
+            s.elementWithExactMatch('div', {
               attrs: {
                 selected: str.is('true')
               },
               children: [
-                s.elementWithSpecifics('span', {
+                s.elementWithExactMatch('span', {
                   attrs: {
                     'data-ephox-id': str.startsWith('bl')
                   },
@@ -207,12 +207,12 @@ describe('browser.agar.ApproxStructureTest', () => {
     it('TINY-9102: ApproxStructure either', () => {
       const struct1 = ApproxStructure.build((s, _str, _arr) =>
         s.either([
-          s.elementWithSpecifics('span', {
+          s.elementWithExactMatch('span', {
             classes: [
               'hello'
             ]
           }),
-          s.elementWithSpecifics('div', {
+          s.elementWithExactMatch('div', {
             classes: [
               'fizzbuzz'
             ]
@@ -225,15 +225,15 @@ describe('browser.agar.ApproxStructureTest', () => {
 
     it('TINY-9102: ApproxStructure oneOrMore and zeroOrOne', () => {
       const struct2 = ApproxStructure.build((s, _str, _arr) =>
-        s.elementWithSpecifics('div', {
+        s.elementWithExactMatch('div', {
           children: [
-            s.oneOrMore(s.elementWithSpecifics('span', {
+            s.oneOrMore(s.elementWithExactMatch('span', {
               classes: [
                 'hello'
               ]
             })),
-            s.elementWithSpecifics('div', {}),
-            s.zeroOrOne(s.elementWithSpecifics('span', {
+            s.elementWithExactMatch('div', {}),
+            s.zeroOrOne(s.elementWithExactMatch('span', {
               classes: [
                 'bye'
               ]
@@ -255,14 +255,14 @@ describe('browser.agar.ApproxStructureTest', () => {
       ]);
 
       Assertions.assertStructure('Test', ApproxStructure.build((s, str, _arr) =>
-        s.elementWithSpecifics('div', {
+        s.elementWithExactMatch('div', {
           children: [
             s.text(str.is('hello world'), true)
           ]
         })), container);
 
       Assertions.assertStructure('Test', ApproxStructure.build((s, str, _arr) =>
-        s.elementWithSpecifics('div', {
+        s.elementWithExactMatch('div', {
           children: [
             s.text(str.is('hello'), false),
             s.text(str.is(' world'), true)
@@ -275,7 +275,7 @@ describe('browser.agar.ApproxStructureTest', () => {
         '</div>';
 
       checkThrowError(ApproxStructure.build((s, str, _arr) =>
-        s.elementWithSpecifics('div', {
+        s.elementWithExactMatch('div', {
           attrs: {
             'selected': str.is('double'),
             'data-key': str.contains('test'),
@@ -296,7 +296,7 @@ describe('browser.agar.ApproxStructureTest', () => {
         '</div>';
 
       checkThrowError(ApproxStructure.build((s, str, _arr) =>
-        s.elementWithSpecifics('div', {
+        s.elementWithExactMatch('div', {
           attrs: {
             'selected': str.is('double'),
             'data-key': str.contains('test')
@@ -315,7 +315,7 @@ describe('browser.agar.ApproxStructureTest', () => {
         '</div>';
 
       checkThrowError(ApproxStructure.build((s, str, _arr) =>
-        s.elementWithSpecifics('div', {
+        s.elementWithExactMatch('div', {
           attrs: {
             'selected': str.is('double'),
             'data-key': str.contains('test')
@@ -337,7 +337,7 @@ describe('browser.agar.ApproxStructureTest', () => {
         '</div>';
 
       checkThrowError(ApproxStructure.build((s, str, _arr) =>
-        s.elementWithSpecifics('div', {
+        s.elementWithExactMatch('div', {
           attrs: {
             'selected': str.is('double'),
             'data-key': str.contains('test'),
@@ -351,7 +351,7 @@ describe('browser.agar.ApproxStructureTest', () => {
             display: str.is('block')
           },
           children: [
-            s.elementWithSpecifics('div', {
+            s.elementWithExactMatch('div', {
               attrs: {
                 selected: str.is('true')
               },
@@ -367,7 +367,7 @@ describe('browser.agar.ApproxStructureTest', () => {
         '</div>';
 
       checkThrowError(ApproxStructure.build((s, str, _arr) =>
-        s.elementWithSpecifics('div', {
+        s.elementWithExactMatch('div', {
           attrs: {
             'selected': str.is('double'),
             'data-key': str.contains('test')
@@ -379,7 +379,7 @@ describe('browser.agar.ApproxStructureTest', () => {
             display: str.is('block')
           },
           children: [
-            s.elementWithSpecifics('div', {
+            s.elementWithExactMatch('div', {
               attrs: {
                 selected: str.is('true')
               },
@@ -398,7 +398,7 @@ describe('browser.agar.ApproxStructureTest', () => {
         '</div>';
 
       checkThrowError(ApproxStructure.build((s, str, _arr) =>
-        s.elementWithSpecifics('div', {
+        s.elementWithExactMatch('div', {
           attrs: {
             'selected': str.is('double'),
             'data-key': str.contains('test')
@@ -411,13 +411,160 @@ describe('browser.agar.ApproxStructureTest', () => {
             width: str.is('20px')
           },
           children: [
-            s.elementWithSpecifics('div', {
+            s.elementWithExactMatch('div', {
               attrs: {
                 selected: str.is('true')
               },
               styles: {
                 display: str.is('inline-block')
               }
+            })
+          ]
+        })), html);
+    });
+
+    it('TINY-9102: ApproxStructure throws error when there are fewer attributes', () => {
+      const html = '<div extra-attribute2="extra2" extra-attribute="extra" data-key="test-1" selected="double" class="test1 root" style="display: block;">' +
+        '</div>';
+
+      checkThrowError(ApproxStructure.build((s, str, _arr) =>
+        s.elementWithExactMatch('div', {
+          attrs: {
+            'selected': str.is('double'),
+            'data-key': str.contains('test'),
+            'extra-attribute': str.startsWith('ex'),
+          },
+          classes: [
+            'test1', 'root'
+          ],
+          styles: {
+            display: str.is('block')
+          },
+        })), html);
+    });
+
+    it('TINY-9102: ApproxStructure throws error when there are fewer classes', () => {
+      const html = '<div data-key="test-1" selected="double" class="extra-class test1 root" style="display: block;">' +
+        '</div>';
+
+      checkThrowError(ApproxStructure.build((s, str, _arr) =>
+        s.elementWithExactMatch('div', {
+          attrs: {
+            'selected': str.is('double'),
+            'data-key': str.contains('test')
+          },
+          classes: [
+            'test1'
+          ],
+          styles: {
+            display: str.is('block')
+          },
+        })), html);
+    });
+
+    it('TINY-9102: ApproxStructure throws error when there are fewer styles', () => {
+      const html = '<div data-key="test-1" selected="double" class="test1 root" style="display: block; width: 20px;">' +
+        '</div>';
+
+      checkThrowError(ApproxStructure.build((s, str, _arr) =>
+        s.elementWithExactMatch('div', {
+          attrs: {
+            'selected': str.is('double'),
+            'data-key': str.contains('test')
+          },
+          classes: [
+            'test1', 'root'
+          ],
+          styles: {
+            display: str.is('block'),
+          },
+        })), html);
+    });
+
+    it('TINY-9102: ApproxStructure throws error when there are fewer attributes (children)', () => {
+      const html = '<div extra-attribute2="extra2" extra-attribute="extra" data-key="test-1" selected="double" class="test1 root" style="display: block;">' +
+        '<div selected="true" attr="hello">' +
+        '</div>' +
+        '</div>';
+
+      checkThrowError(ApproxStructure.build((s, str, _arr) =>
+        s.elementWithExactMatch('div', {
+          attrs: {
+            'selected': str.is('double'),
+            'data-key': str.contains('test'),
+            'extra-attribute': str.startsWith('ex'),
+            'extra-attribute2': str.is('extra2'),
+          },
+          classes: [
+            'test1', 'root'
+          ],
+          styles: {
+            display: str.is('block')
+          },
+          children: [
+            s.elementWithExactMatch('div', {
+              attrs: {
+                selected: str.is('true')
+              },
+            })
+          ]
+        })), html);
+    });
+
+    it('TINY-9102: ApproxStructure throws error when there are fewer classes (children)', () => {
+      const html = '<div data-key="test-1" selected="double" class="extra-class test1 root" style="display: block;">' +
+        '<div selected="true" classes="hello there">' +
+        '</div>' +
+        '</div>';
+
+      checkThrowError(ApproxStructure.build((s, str, _arr) =>
+        s.elementWithExactMatch('div', {
+          attrs: {
+            'selected': str.is('double'),
+            'data-key': str.contains('test')
+          },
+          classes: [
+            'test1', 'root', 'extra-class'
+          ],
+          styles: {
+            display: str.is('block')
+          },
+          children: [
+            s.elementWithExactMatch('div', {
+              attrs: {
+                selected: str.is('true')
+              },
+              classes: []
+            })
+          ]
+        })), html);
+    });
+
+    it('TINY-9102: ApproxStructure throws error when there are fewer styles (children)', () => {
+      const html = '<div data-key="test-1" selected="double" class="test1 root" style="display: block; width: 20px;">' +
+        '<div selected="true" style="display: block">' +
+        '</div>' +
+        '</div>';
+
+      checkThrowError(ApproxStructure.build((s, str, _arr) =>
+        s.elementWithExactMatch('div', {
+          attrs: {
+            'selected': str.is('double'),
+            'data-key': str.contains('test')
+          },
+          classes: [
+            'test1', 'root'
+          ],
+          styles: {
+            display: str.is('block'),
+            width: str.is('20px')
+          },
+          children: [
+            s.elementWithExactMatch('div', {
+              attrs: {
+                selected: str.is('true')
+              },
+              styles: { }
             })
           ]
         })), html);

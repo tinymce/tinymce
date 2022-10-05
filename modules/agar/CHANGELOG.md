@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Added `TestStore` API, which was moved from Alloy and requires types. #TINY-9157
-- Added `elementWithSpecifics` to `structApi`. #TINY-9102
+- Added `elementWithExactMatch` to `structApi`. #TINY-9102
 
 ## 7.2.0 - 2022-09-08
 

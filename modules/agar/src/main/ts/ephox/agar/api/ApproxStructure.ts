@@ -18,7 +18,7 @@ export type Builder<T> = (struct: StructApi, str: StringApi, arr: ArrayApi) => T
 
 const structApi = {
   element: ApproxStructures.element,
-  elementWithSpecifics: ApproxStructures.elementWithSpecifics,
+  elementWithExactMatch: ApproxStructures.elementWithExactMatch,
   text: ApproxStructures.text,
   anything: ApproxStructures.anything,
   either: ApproxStructures.either,

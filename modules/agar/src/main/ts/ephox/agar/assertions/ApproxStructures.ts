@@ -46,7 +46,7 @@ export interface ElementFields {
   children?: StructAssert[];
 }
 
-export interface ElementWithSpecificFields extends Omit<ElementFields, 'classes'> {
+export interface ElementFieldsWithExactMatch extends Omit<ElementFields, 'classes'> {
   classes?: string[];
 }
 
@@ -107,9 +107,9 @@ const element = (tag: string, fields: ElementFields): StructAssert => {
   const doAssert = (actual: SugarElement<Node>): void => {
     if (SugarNode.isHTMLElement(actual)) {
       Assert.eq(() => 'Incorrect node name for: ' + Truncate.getHtml(actual), tag, SugarNode.name(actual));
-      const attrs = fields.attrs !== undefined ? fields.attrs : {};
-      const classes = fields.classes !== undefined ? fields.classes : [];
-      const styles = fields.styles !== undefined ? fields.styles : {};
+      const attrs = fields.attrs ?? {};
+      const classes = fields.classes ?? [];
+      const styles = fields.styles ?? {};
       const html = fields.html !== undefined ? Optional.some(fields.html) : Optional.none<StringAssert>();
       const value = fields.value !== undefined ? Optional.some(fields.value) : Optional.none<StringAssert>();
       const children = fields.children !== undefined ? Optional.some(fields.children) : Optional.none<StructAssert[]>();
@@ -130,19 +130,19 @@ const element = (tag: string, fields: ElementFields): StructAssert => {
   };
 };
 
-const elementWithSpecifics = (tag: string, fields: ElementWithSpecificFields): StructAssert => {
+const elementWithExactMatch = (tag: string, fields: ElementFieldsWithExactMatch): StructAssert => {
   const doAssert = (actual: SugarElement<Node>): void => {
     if (SugarNode.isHTMLElement(actual)) {
       Assert.eq(() => 'Incorrect node name for: ' + Truncate.getHtml(actual), tag, SugarNode.name(actual));
-      const attrs = fields.attrs !== undefined ? fields.attrs : {};
-      const classes = fields.classes !== undefined ? fields.classes : [];
-      const styles = fields.styles !== undefined ? fields.styles : {};
+      const attrs = fields.attrs ?? {};
+      const classes = fields.classes ?? [];
+      const styles = fields.styles ?? {};
       const html = fields.html !== undefined ? Optional.some(fields.html) : Optional.none<StringAssert>();
       const value = fields.value !== undefined ? Optional.some(fields.value) : Optional.none<StringAssert>();
       const children = fields.children !== undefined ? Optional.some(fields.children) : Optional.none<StructAssert[]>();
-      assertAttrsWithSpecifics(attrs, actual);
-      assertClassesSpecific(classes, actual);
-      assertStylesWithSpecifics(styles, actual);
+      assertExactMatchAttrs(attrs, actual);
+      assertExactMatchClasses(classes, actual);
+      assertExactMatchStyles(styles, actual);
       assertHtml(html, actual);
       assertValue(value, actual);
 
@@ -265,13 +265,13 @@ const assertAttrs = (expectedAttrs: Record<string, StringAssert>, actual: SugarE
   });
 };
 
-const assertAttrsWithSpecifics = (expectedAttrs: Record<string, StringAssert>, actual: SugarElement<Element>) => {
+const assertExactMatchAttrs = (expectedAttrs: Record<string, StringAssert>, actual: SugarElement<Element>) => {
   const allDefinedAttrs = Obj.keys(expectedAttrs);
   const actualDefinedAttrs = Obj.keys(Obj.bifilter(Attribute.clone(actual), (_value, key) => !Arr.contains([ 'style', 'class' ], key)).t);
 
-  const isEqual = Arr.equal(
-    Arr.sort(allDefinedAttrs),
-    Arr.sort(actualDefinedAttrs)
+  const isEqual = assertEqualArray(
+    allDefinedAttrs,
+    actualDefinedAttrs
   );
 
   if (!isEqual) {
@@ -291,12 +291,12 @@ const assertClasses = (expectedClasses: ArrayAssert[], actual: SugarElement<Elem
   });
 };
 
-const assertClassesSpecific = (expectedClasses: string[], actual: SugarElement<Element>) => {
+const assertExactMatchClasses = (expectedClasses: string[], actual: SugarElement<Element>) => {
   const actualClasses = Classes.get(actual);
 
-  const isEqual = Arr.equal(
-    Arr.sort(actualClasses),
-    Arr.sort(expectedClasses)
+  const isEqual = assertEqualArray(
+    actualClasses,
+    expectedClasses
   );
 
   if (!isEqual) {
@@ -317,13 +317,13 @@ const assertStyles = (expectedStyles: Record<string, StringAssert>, actual: Suga
   });
 };
 
-const assertStylesWithSpecifics = (expectedStyles: Record<string, StringAssert>, actual: SugarElement<Element>) => {
+const assertExactMatchStyles = (expectedStyles: Record<string, StringAssert>, actual: SugarElement<Element>) => {
   const allDefinedStyles = Obj.keys(expectedStyles);
   const actualDefinedStyles = Obj.keys(Css.getAllRaw(actual));
 
-  const isEqual = Arr.equal(
-    Arr.sort(allDefinedStyles),
-    Arr.sort(actualDefinedStyles)
+  const isEqual = assertEqualArray(
+    allDefinedStyles,
+    actualDefinedStyles
   );
 
   if (!isEqual) {
@@ -383,11 +383,16 @@ const anything = Fun.constant(anythingStruct);
 
 const theRest = Fun.constant(zeroOrMore(anythingStruct));
 
+const assertEqualArray = (expected: string[], actual: string[]): boolean => Arr.equal(
+  Arr.sort(expected),
+  Arr.sort(actual)
+);
+
 export {
   elementQueue,
   anything,
   element,
-  elementWithSpecifics,
+  elementWithExactMatch,
   text,
   either,
   repeat,
