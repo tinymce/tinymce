@@ -1,9 +1,6 @@
 import { Optional } from '@ephox/katamari';
 
 import { SugarElement } from '../../api/node/SugarElement';
-import * as ContentEditable from '../../api/properties/ContentEditable';
-import * as PredicateFind from '../../api/search/PredicateFind';
-import * as Traverse from '../../api/search/Traverse';
 import { SimRange } from '../../api/selection/SimRange';
 
 interface CaretPosition {
@@ -44,52 +41,14 @@ const availableSearch = (() => {
   }
 })();
 
-const isParentEditable = (node: SugarElement) => Traverse.parent(node).exists((e) => ContentEditable.isEditable(e as SugarElement));
-
-const getNodeIndex = (node: Optional<SugarElement<Node>>): number =>
-  node.bind(Traverse.findIndex).map((i) => i < 0 ? 0 : i).getOr(0);
-
 const fromPoint = (win: Window, x: number, y: number): Optional<SimRange> => {
   const doc = SugarElement.fromDom(win.document);
-  return availableSearch(doc, x, y).map((rng) => {
-    const startContainer = SugarElement.fromDom(rng.startContainer);
-    const endContainer = SugarElement.fromDom(rng.endContainer);
-
-    const isStartEditable = ContentEditable.isEditable(startContainer as SugarElement);
-    const isEndEditable = ContentEditable.isEditable(endContainer as SugarElement);
-
-    const getLastNonEditableParent = (node: SugarElement<Node>) => isParentEditable(node)
-      ? Optional.some(node)
-      : PredicateFind.ancestor(node, isParentEditable);
-
-    if (!isStartEditable && !isEndEditable ) {
-      const startContainerElement = getLastNonEditableParent(startContainer);
-      const endContainerElement = getLastNonEditableParent(endContainer);
-
-      if (startContainerElement.bind(Traverse.parent).isSome() && endContainerElement.bind(Traverse.parent).isSome()) {
-        return SimRange.create(
-          startContainerElement.bind(Traverse.parent).getOrDie(),
-          getNodeIndex(startContainerElement),
-          startContainerElement.bind(Traverse.parent).getOrDie(),
-          getNodeIndex(endContainerElement)
-        );
-      } else {
-        return SimRange.create(
-          startContainer,
-          rng.startOffset,
-          endContainer,
-          rng.endOffset
-        );
-      }
-    } else {
-      return SimRange.create(
-        startContainer,
-        rng.startOffset,
-        endContainer,
-        rng.endOffset
-      );
-    }
-  });
+  return availableSearch(doc, x, y).map((rng) => SimRange.create(
+    SugarElement.fromDom(rng.startContainer),
+    rng.startOffset,
+    SugarElement.fromDom(rng.endContainer),
+    rng.endOffset
+  ));
 };
 
 export {
