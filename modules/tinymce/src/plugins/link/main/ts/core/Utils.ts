@@ -112,9 +112,7 @@ const isOnlyTextSelected = (editor: Editor): boolean => {
     return elements.length === 0;
   } else {
     // If collapsed then make sure we're not in a block anchor
-    return getAnchorElement(editor).forall((anchor) => {
-      return editor.dom.getParent(rng.startContainer, isElement, anchor) === null;
-    });
+    return getAnchorElement(editor).forall((anchor) => !anchor.hasAttribute('data-mce-block'));
   }
 };
 
