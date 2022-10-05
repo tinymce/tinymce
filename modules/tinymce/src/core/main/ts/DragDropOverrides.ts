@@ -8,6 +8,7 @@ import * as Options from './api/Options';
 import Delay from './api/util/Delay';
 import { EditorEvent } from './api/util/EventDispatcher';
 import VK from './api/util/VK';
+import * as ClosestCaretCandidate from './caret/ClosestCaretCandidate';
 import * as MousePosition from './dom/MousePosition';
 import * as NodeType from './dom/NodeType';
 import * as ErrorReporter from './ErrorReporter';
@@ -250,7 +251,17 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
   // Reduces laggy drag behavior on Gecko
   const throttledPlaceCaretAt = Throttler.first((clientX: number, clientY: number) => {
     editor._selectionOverrides.hideFakeCaret();
-    editor.selection.placeCaretAt(clientX, clientY);
+    ClosestCaretCandidate.closestFakeCaretCandidate(editor.getBody(), clientX, clientY).fold(
+      () => editor.selection.placeCaretAt(clientX, clientY),
+      (caretInfo) => {
+        const range = editor._selectionOverrides.showCaret(1, caretInfo.node as HTMLElement, caretInfo.position === ClosestCaretCandidate.FakeCaretPosition.Before, false);
+        if (range) {
+          editor.selection.setRng(range);
+        } else {
+          editor.selection.placeCaretAt(clientX, clientY);
+        }
+      }
+    );
   }, 0);
   editor.on('remove', throttledPlaceCaretAt.cancel);
   const state_ = state;
