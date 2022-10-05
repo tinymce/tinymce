@@ -137,9 +137,9 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
 
     const canRenameBlock = (node: Node, parentName: string, isEditableDescendant: boolean) => {
       const isValidBlockFormatForNode =
-            FormatUtils.isNonWrappingBlockFormat(format) &&
-            FormatUtils.isTextBlock(ed.schema, node) &&
-            FormatUtils.isValid(ed, parentName, wrapName);
+        FormatUtils.isNonWrappingBlockFormat(format) &&
+        FormatUtils.isTextBlock(ed.schema, node) &&
+        FormatUtils.isValid(ed, parentName, wrapName);
       return isEditableDescendant && isValidBlockFormatForNode;
     };
 
