@@ -106,6 +106,8 @@ describe('browser.tinymce.core.ForceBlocksTest', () => {
     assert.equal(HtmlUtils.cleanHtml(body.innerHTML), '<div>abcd</div><div>abcd</div>');
     assert.equal(editor.selection.getNode().nodeName, 'DIV');
     assert.lengthOf(body.childNodes, 2);
+
+    editor.options.unset('forced_root_block');
   });
 
   it('Do not wrap bookmark spans', () => {

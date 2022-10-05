@@ -30,6 +30,8 @@ describe('browser.tinymce.plugins.visualchars.PluginTest', () => {
     await Waiter.pTryUntil('wait for visual chars to appear', () => assertNbspStruct(editor));
     TinyUiActions.clickOnToolbar(editor, 'button');
     await Waiter.pTryUntil('wait for visual chars to appear', () => assertSpanStruct(editor));
+    TinyUiActions.clickOnToolbar(editor, 'button');
+    await Waiter.pTryUntil('wait for visual chars to appear', () => assertNbspStruct(editor));
   });
 
   it('TINY-4507: Set content with HTML like content, click visual chars button and assert span char is present in whitespaces, click the button again and assert no span is present in the whitespace', async () => {

@@ -12,7 +12,8 @@ describe('browser.tinymce.plugins.link.UpdateLinkTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'link',
     toolbar: '',
-    base_url: '/project/tinymce/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce',
+    indent: false
   }, [ Plugin ]);
 
   before(() => {
@@ -90,7 +91,7 @@ describe('browser.tinymce.plugins.link.UpdateLinkTest', () => {
       await TinyUiActions.pWaitForDialog(editor);
       FocusTools.setActiveValue(SugarDocument.getDocument(), '#2');
       TinyUiActions.submitDialog(editor);
-      Waiter.pTryUntil('Wait for content to change', () => TinyAssertions.assertContent(editor, '<a href="#2">tiny</a>'));
+      await Waiter.pTryUntil('Wait for content to change', () => TinyAssertions.assertContent(editor, '<a href="#2">tiny</a>'));
     });
 
     it('TINY-9172: Should update a wrapped block link', async () => {
@@ -101,7 +102,7 @@ describe('browser.tinymce.plugins.link.UpdateLinkTest', () => {
       await TinyUiActions.pWaitForDialog(editor);
       FocusTools.setActiveValue(SugarDocument.getDocument(), '#2');
       TinyUiActions.submitDialog(editor);
-      Waiter.pTryUntil('Wait for content to change', () => TinyAssertions.assertContent(editor, '<div><a href="#2"><p>tiny</p></a></div>'));
+      await Waiter.pTryUntil('Wait for content to change', () => TinyAssertions.assertContent(editor, '<div><a href="#2"><p>tiny</p></a></div>'));
     });
   });
 });
