@@ -13,8 +13,7 @@ interface CacheStorage {
 }
 const cacheStorage: CacheStorage = {};
 
-const ColorCache = (id: string, max: number = 10): ColorCache => {
-  const storageId = `tinymce-custom-colors-${id}`;
+const ColorCache = (storageId: string, max: number = 10): ColorCache => {
   const storageString = LocalStorage.getItem(storageId);
   const localstorage = Type.isString(storageString) ? JSON.parse(storageString) : [];
 
@@ -55,7 +54,15 @@ const ColorCache = (id: string, max: number = 10): ColorCache => {
 
 const getCatcheForId = (id: string): ColorCache =>
   Obj.get(cacheStorage, id).getOrThunk(() => {
-    const storage = ColorCache(id, 10);
+    const storageId = `tinymce-custom-colors-${id}`;
+    const currentData = LocalStorage.getItem(storageId);
+
+    if (Type.isNullable(currentData)) {
+      const legacyDefault = LocalStorage.getItem('tinymce-custom-colors');
+      LocalStorage.setItem(storageId, Type.isNonNullable(legacyDefault) ? legacyDefault : '[]');
+    }
+
+    const storage = ColorCache(storageId, 10);
     cacheStorage[id] = storage;
     return storage;
   });
@@ -71,7 +78,12 @@ const addColor = (id: string, color: string): void => {
   getCatcheForId(id).add(color);
 };
 
+const clearStoredCaches = (): void => {
+  Arr.each(Obj.keys(cacheStorage), (key) => delete cacheStorage[key]);
+};
+
 export {
   getCurrentColors,
-  addColor
+  addColor,
+  clearStoredCaches
 };
