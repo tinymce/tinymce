@@ -168,7 +168,7 @@ const registerTextColorMenuItem = (editor: Editor, name: string, format: ColorFo
         type: 'fancymenuitem',
         fancytype: 'colorswatch',
         initData: {
-          swatchKey: format,
+          storageKey: format,
         },
         onAction: (data) => {
           applyColor(editor, format, data.value, Fun.noop);

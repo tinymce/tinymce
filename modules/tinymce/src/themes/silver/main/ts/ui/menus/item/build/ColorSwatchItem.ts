@@ -12,7 +12,7 @@ import ItemResponse from '../ItemResponse';
 
 export const renderColorSwatchItem = (spec: Menu.ColorSwatchMenuItem, backstage: UiFactoryBackstage): ItemTypes.WidgetItemSpec => {
   const items = getColorItems(spec, backstage);
-  const columns = backstage.colorinput.getColorCols(spec.initData.swatchKey);
+  const columns = backstage.colorinput.getColorCols(spec.initData.storageKey);
   const presets = 'color';
 
   const menuSpec = createPartialChoiceMenu(
@@ -51,7 +51,7 @@ export const renderColorSwatchItem = (spec: Menu.ColorSwatchMenuItem, backstage:
 const getColorItems = (spec: Menu.ColorSwatchMenuItem, backstage: UiFactoryBackstage): Menu.ChoiceMenuItemSpec[] => {
   const useCustomColors = spec.initData.allowCustomColors && backstage.colorinput.hasCustomColors();
   return spec.initData.colors.fold(
-    () => ColorSwatch.getColors(backstage.colorinput.getColors(spec.initData.swatchKey), spec.initData.swatchKey, useCustomColors),
+    () => ColorSwatch.getColors(backstage.colorinput.getColors(spec.initData.storageKey), spec.initData.storageKey, useCustomColors),
     (colors) => colors.concat(ColorSwatch.getAdditionalColors(useCustomColors))
   );
 };

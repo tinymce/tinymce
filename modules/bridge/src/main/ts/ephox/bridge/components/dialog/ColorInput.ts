@@ -5,16 +5,16 @@ import { FormComponentWithLabel, formComponentWithLabelFields, FormComponentWith
 
 export interface ColorInputSpec extends FormComponentWithLabelSpec {
   type: 'colorinput';
-  swatchKey?: string;
+  storageKey?: string;
 }
 
 export interface ColorInput extends FormComponentWithLabel {
   type: 'colorinput';
-  swatchKey: string;
+  storageKey: string;
 }
 
 const colorInputFields = formComponentWithLabelFields.concat([
-  FieldSchema.defaultedString('swatchKey', 'default')
+  FieldSchema.defaultedString('storageKey', 'default')
 ]);
 
 export const colorInputSchema = StructureSchema.objOf(colorInputFields);
