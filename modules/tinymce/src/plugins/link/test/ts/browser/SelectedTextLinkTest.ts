@@ -8,7 +8,7 @@ import Plugin from 'tinymce/plugins/link/Plugin';
 
 import { TestLinkUi } from '../module/TestLinkUi';
 
-describe.only('browser.tinymce.plugins.link.SelectedTextLinkTest', () => {
+describe('browser.tinymce.plugins.link.SelectedTextLinkTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'link',
     toolbar: '',
