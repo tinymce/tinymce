@@ -32,6 +32,8 @@ const option: {
 } = (name: string) => (editor: Editor) =>
   editor.options.get(name);
 
+const fallbackColor = '#000000';
+
 const register = (editor: Editor): void => {
   const registerOption = editor.options.register;
 
@@ -85,12 +87,12 @@ const register = (editor: Editor): void => {
 
   registerOption('color_foreground_default', {
     processor: 'string',
-    default: 'black'
+    default: fallbackColor
   });
 
   registerOption('color_background_default', {
     processor: 'string',
-    default: 'black'
+    default: fallbackColor
   });
 };
 
@@ -120,5 +122,6 @@ export {
   getCurrentColors,
   getDefaultBackgroundColor,
   getDefaultForegroundColor,
-  addColor
+  addColor,
+  fallbackColor
 };

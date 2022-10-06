@@ -79,7 +79,6 @@ const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemSpec[] => {
   ] : [ remove ];
 };
 
-const fallbackColor = 'black';
 
 const applyColor = (editor: Editor, format: ColorFormat, value: string, onChoice: (v: string) => void) => {
   if (value === 'custom') {
@@ -90,7 +89,7 @@ const applyColor = (editor: Editor, format: ColorFormat, value: string, onChoice
         editor.execCommand('mceApplyTextcolor', format as any, color);
         onChoice(color);
       });
-    }, fallbackColor);
+    }, Options.fallbackColor);
   } else if (value === 'remove') {
     onChoice('');
     editor.execCommand('mceRemoveTextcolor', format as any);

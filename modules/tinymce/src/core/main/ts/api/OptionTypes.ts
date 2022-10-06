@@ -265,6 +265,8 @@ export interface EditorOptions extends NormalizedEditorOptions {
   body_id: string;
   br_newline_selector: string;
   color_cols: number;
+  color_background_default: string;
+  color_foreground_default: string;
   content_css: string[];
   contextmenu: string[];
   custom_colors: boolean;
