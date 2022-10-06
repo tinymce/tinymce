@@ -670,7 +670,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     editor.insertContent('<a href="#"><p>b</p></a>');
     TinyAssertions.assertContent(editor, '<div><a href="#"><p>b</p></a>a</div>');
-    assert.equal('true', editor.dom.select('a')[0].getAttribute('data-mce-block'), 'Should have data-mce-block set to true');
+    assert.isTrue(editor.dom.select('a[data-mce-block="true"]').length === 1, 'Should have data-mce-block set to true');
   });
 
   it('TINY-9172: Insert block anchor in transparent block should split the block', () => {
@@ -689,5 +689,15 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
     editor.insertContent('<a href="#2">b</a>');
     TinyAssertions.assertContent(editor, '<a href="#1">a</a><a href="#2">b</a><a href="#1">c</a>');
+  });
+
+  it('TINY-9172: Insert block in anchor should work and annotate the element with data-mce-block', () => {
+    const editor = hook.editor();
+
+    editor.setContent('<div><a href="#1">ac</a></div>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+    editor.insertContent('<p>b</p>');
+    TinyAssertions.assertContent(editor, '<div><a href="#1">a<p>b</p>c</a></div>');
+    assert.isTrue(editor.dom.select('a[data-mce-block="true"]').length === 1, 'Should have data-mce-block set to true');
   });
 });

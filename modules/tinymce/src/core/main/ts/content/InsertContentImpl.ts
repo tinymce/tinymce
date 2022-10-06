@@ -10,6 +10,7 @@ import * as StyleUtils from '../api/html/StyleUtils';
 import Tools from '../api/util/Tools';
 import CaretPosition from '../caret/CaretPosition';
 import { CaretWalker } from '../caret/CaretWalker';
+import * as TransparentElements from '../content/TransparentElements';
 import * as TableDelete from '../delete/TableDelete';
 import * as CefUtils from '../dom/CefUtils';
 import ElementUtils from '../dom/ElementUtils';
@@ -344,5 +345,6 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
   moveSelectionToMarker(editor, dom.get('mce_marker'));
   unmarkFragmentElements(editor.getBody());
   trimBrsFromTableCell(dom, selection.getStart());
+  TransparentElements.update(editor.schema, editor.getBody(), true);
   return value;
 };
