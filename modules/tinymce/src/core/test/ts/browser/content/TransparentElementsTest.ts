@@ -40,6 +40,14 @@ describe('browser.tinymce.core.content.TransparentElementsTest', () => {
       TransparentElements.update(schema, root.dom, false);
       assert.equal(Html.get(root), '<a href="#">link</a><div><a href="#" data-mce-block="true"><p>link</p></a></div><div><a href="#">link</a></div>');
     });
+
+    it('TINY-9172: Should add data-mce-block on transparent block elements that wrap blocks and also remove data-mce-selected="inline-boundary"', () => {
+      const root = rootState.get().getOrDie();
+
+      Html.set(root, '<div><a href="#" data-mce-selected="inline-boundary"><p>link</p></a></div>');
+      TransparentElements.update(schema, root.dom, false);
+      assert.equal(Html.get(root), '<div><a href="#" data-mce-block="true"><p>link</p></a></div>');
+    });
   });
 
   context('isTransparentElementName', () => {

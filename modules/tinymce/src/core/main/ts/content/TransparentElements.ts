@@ -13,6 +13,10 @@ export const update = (schema: Schema, root: Element, inEditorRoot: boolean): vo
   Arr.each(root.querySelectorAll(transparentSelector), (anchor) => {
     if ((inEditorRoot && anchor.parentElement === root) || anchor.querySelectorAll(blocksSelector).length > 0) {
       anchor.setAttribute(transparentBlockAttr, 'true');
+
+      if (anchor.getAttribute('data-mce-selected') === 'inline-boundary') {
+        anchor.removeAttribute('data-mce-selected');
+      }
     } else {
       anchor.removeAttribute(transparentBlockAttr);
     }
