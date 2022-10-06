@@ -1,17 +1,19 @@
-import { Arr, Type } from '@ephox/katamari';
+import { Arr, Obj, Type } from '@ephox/katamari';
 
 import AstNode from '../api/html/Node';
-import Schema from '../api/html/Schema';
+import Schema, { SchemaMap } from '../api/html/Schema';
 import * as NodeType from '../dom/NodeType';
 
 export const transparentBlockAttr = 'data-mce-block';
 
+const makeSelectorFromSchemaMap = (map: SchemaMap) => Arr.filter(Obj.keys(map), (key) => /^[a-z]+$/.test(key)).join(',');
+
 export const update = (schema: Schema, root: Element, inEditorRoot: boolean): void => {
-  const transparentSelector = Object.keys(schema.getTransparentElements()).join(',');
-  const blocksSelector = Object.keys(schema.getBlockElements()).join(',');
+  const transparentSelector = makeSelectorFromSchemaMap(schema.getTransparentElements());
+  const blocksSelector = makeSelectorFromSchemaMap(schema.getBlockElements());
 
   Arr.each(root.querySelectorAll(transparentSelector), (anchor) => {
-    if ((inEditorRoot && anchor.parentElement === root) || anchor.querySelectorAll(blocksSelector).length > 0) {
+    if ((inEditorRoot && anchor.parentElement === root) || anchor.matches(`:has(${blocksSelector})`)) {
       anchor.setAttribute(transparentBlockAttr, 'true');
 
       if (anchor.getAttribute('data-mce-selected') === 'inline-boundary') {

@@ -9,7 +9,7 @@ import * as TransparentElements from 'tinymce/core/content/TransparentElements';
 
 describe('browser.tinymce.core.content.TransparentElementsTest', () => {
   const schema = Schema();
-  const transparentElements = Arr.unique(Arr.map(Obj.keys(schema.getTransparentElements()), (key) => key.toLowerCase()));
+  const transparentElements = Arr.filter(Obj.keys(schema.getTransparentElements()), (name) => /^[a-z]+$/.test(name.toLowerCase()));
 
   context('update', () => {
     const rootState = Singleton.value<SugarElement<HTMLElement>>();
