@@ -120,7 +120,7 @@ describe('browser.tinymce.core.ForceBlocksTest', () => {
 
   it('TINY-9172: Do not wrap root level transparent elements', () => {
     const editor = hook.editor();
-    const transparentElements = Arr.filter(Obj.keys(editor.schema.getTransparentElements()), (name) => /^[a-z]+$/.test(name.toLowerCase()));
+    const transparentElements = Arr.filter(Obj.keys(editor.schema.getTransparentElements()), (name) => /^[a-z]+$/.test(name));
     const transparentElementsHtml = Arr.map(transparentElements, (name) => `<${name}>text</${name}>`).join('');
     const innerHtml = transparentElementsHtml + 'text';
     const expectedInnerHtml = transparentElementsHtml + '<p>text</p>';
