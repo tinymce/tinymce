@@ -5,7 +5,7 @@ import { Menu } from 'tinymce/core/api/ui/Ui';
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
 import * as ColorCache from 'tinymce/themes/silver/ui/core/color/ColorCache';
 
-describe('browser.tinymce.themes.silver.editor.color.ColorCatcheTest', () => {
+describe('browser.tinymce.themes.silver.editor.color.ColorCacheTest', () => {
   afterEach(() => {
     LocalStorage.clear();
     ColorCache.clearStoredCaches();
