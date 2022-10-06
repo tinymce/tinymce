@@ -44,10 +44,9 @@ export interface ElementFields {
   html?: StringAssert;
   value?: StringAssert;
   children?: StructAssert[];
-}
-
-export interface ElementFieldsWithExactMatch extends Omit<ElementFields, 'classes'> {
-  classes?: string[];
+  exactAttrs?: Record<string, StringAssert>;
+  exactClasses?: string[];
+  exactStyles?: Record<string, StringAssert>;
 }
 
 const elementQueue = (items: SugarElement<Node>[], container: Optional<SugarElement<Node>>): ElementQueue => {
@@ -110,43 +109,31 @@ const element = (tag: string, fields: ElementFields): StructAssert => {
       const attrs = fields.attrs ?? {};
       const classes = fields.classes ?? [];
       const styles = fields.styles ?? {};
-      const html = fields.html !== undefined ? Optional.some(fields.html) : Optional.none<StringAssert>();
-      const value = fields.value !== undefined ? Optional.some(fields.value) : Optional.none<StringAssert>();
-      const children = fields.children !== undefined ? Optional.some(fields.children) : Optional.none<StructAssert[]>();
-      assertAttrs(attrs, actual);
-      assertClasses(classes, actual);
-      assertStyles(styles, actual);
-      assertHtml(html, actual);
-      assertValue(value, actual);
+      const optHtml = Optional.from(fields.html);
+      const optValue = Optional.from(fields.value);
+      const optChildren = Optional.from(fields.children);
+      const optExactClasses = Optional.from(fields.exactClasses);
+      const optExactAttrs = Optional.from(fields.exactAttrs);
+      const optExactStyles = Optional.from(fields.exactStyles);
 
-      assertChildren(children, actual);
-    } else {
-      Assert.eq('Incorrect node type for: ' + Truncate.getHtml(actual), 1, SugarNode.type(actual));
-    }
-  };
+      optExactClasses.fold(
+        () => assertClasses(classes, actual),
+        (exactClasses) => assertExactMatchClasses(exactClasses, actual)
+      );
 
-  return {
-    doAssert
-  };
-};
+      optExactAttrs.fold(
+        () => assertAttrs(attrs, actual),
+        (exactAttrs) => assertExactMatchAttrs(exactAttrs, actual)
+      );
 
-const elementWithExactMatch = (tag: string, fields: ElementFieldsWithExactMatch): StructAssert => {
-  const doAssert = (actual: SugarElement<Node>): void => {
-    if (SugarNode.isHTMLElement(actual)) {
-      Assert.eq(() => 'Incorrect node name for: ' + Truncate.getHtml(actual), tag, SugarNode.name(actual));
-      const attrs = fields.attrs ?? {};
-      const classes = fields.classes ?? [];
-      const styles = fields.styles ?? {};
-      const html = fields.html !== undefined ? Optional.some(fields.html) : Optional.none<StringAssert>();
-      const value = fields.value !== undefined ? Optional.some(fields.value) : Optional.none<StringAssert>();
-      const children = fields.children !== undefined ? Optional.some(fields.children) : Optional.none<StructAssert[]>();
-      assertExactMatchAttrs(attrs, actual);
-      assertExactMatchClasses(classes, actual);
-      assertExactMatchStyles(styles, actual);
-      assertHtml(html, actual);
-      assertValue(value, actual);
+      optExactStyles.fold(
+        () => assertStyles(styles, actual),
+        (exactStyles) => assertExactMatchStyles(exactStyles, actual)
+      );
 
-      assertChildren(children, actual);
+      assertHtml(optHtml, actual);
+      assertValue(optValue, actual);
+      assertChildren(optChildren, actual);
     } else {
       Assert.eq('Incorrect node type for: ' + Truncate.getHtml(actual), 1, SugarNode.type(actual));
     }
@@ -392,7 +379,6 @@ export {
   elementQueue,
   anything,
   element,
-  elementWithExactMatch,
   text,
   either,
   repeat,
