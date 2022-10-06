@@ -13,7 +13,7 @@ export const update = (schema: Schema, root: Element, inEditorRoot: boolean): vo
   const blocksSelector = makeSelectorFromSchemaMap(schema.getBlockElements());
 
   Arr.each(root.querySelectorAll(transparentSelector), (anchor) => {
-    if ((inEditorRoot && anchor.parentElement === root) || anchor.matches(`:has(${blocksSelector})`)) {
+    if ((inEditorRoot && anchor.parentElement === root) || anchor.querySelectorAll(blocksSelector).length > 0) {
       anchor.setAttribute(transparentBlockAttr, 'true');
 
       if (anchor.getAttribute('data-mce-selected') === 'inline-boundary') {
