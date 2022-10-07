@@ -287,9 +287,9 @@ const getBestMatches = (matches: InlinePatternMatch[], matchesWithSortedPattenrs
 
 const findPatterns = (editor: Editor, block: Element, node: Node, offset: number, patternSet: PatternSet, normalizedMatches: boolean): InlinePatternMatch[] => {
   const matches = findPatternsRec(editor, patternSet.inlinePatterns, node, offset, block, normalizedMatches).fold(() => [], (result) => result.matches);
-  const matchesWithSortedPattenrs = findPatternsRec(editor, sortPatterns(patternSet.inlinePatterns), node, offset, block, normalizedMatches).fold(() => [], (result) => result.matches);
+  const matchesWithSortedPatterns = findPatternsRec(editor, sortPatterns(patternSet.inlinePatterns), node, offset, block, normalizedMatches).fold(() => [], (result) => result.matches);
 
-  return getBestMatches(matches, matchesWithSortedPattenrs);
+  return getBestMatches(matches, matchesWithSortedPatterns);
 };
 
 const applyMatches = (editor: Editor, matches: InlinePatternMatch[]): void => {
