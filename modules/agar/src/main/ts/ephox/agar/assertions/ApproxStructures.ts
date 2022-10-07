@@ -254,7 +254,7 @@ const assertAttrs = (expectedAttrs: Record<string, StringAssert>, actual: SugarE
 
 const assertExactMatchAttrs = (expectedAttrs: Record<string, StringAssert>, actual: SugarElement<Element>) => {
   const allDefinedAttrs = Obj.keys(expectedAttrs);
-  const actualDefinedAttrs = Obj.keys(Obj.bifilter(Attribute.clone(actual), (_value, key) => !Arr.contains([ 'style', 'class' ], key)).t);
+  const actualDefinedAttrs = Arr.filter(Obj.keys(Attribute.clone(actual)), (attr) => attr !== 'class' && attr !== 'style');
 
   const isEqual = assertEqualArray(
     allDefinedAttrs,
@@ -262,7 +262,7 @@ const assertExactMatchAttrs = (expectedAttrs: Record<string, StringAssert>, actu
   );
 
   if (!isEqual) {
-    throw new Error('Attribute names were not matching. actual: ' + actualDefinedAttrs.join(', ') + ', expected: ' + allDefinedAttrs.join(', '));
+    throw new Error(`Attribute names were not matching. actual: [${actualDefinedAttrs.join(', ')}], expected: [${allDefinedAttrs.join(', ')}]`);
   }
 
   assertAttrs(expectedAttrs, actual);
@@ -287,7 +287,7 @@ const assertExactMatchClasses = (expectedClasses: string[], actual: SugarElement
   );
 
   if (!isEqual) {
-    throw new Error('Class names were not matching. actual: ' + actualClasses.join(', ') + ', expected: ' + expectedClasses.join(', '));
+    throw new Error(`Class names were not matching. actual:  [${actualClasses.join(', ')}], expected: [${expectedClasses.join(', ')}]`);
   }
 };
 
@@ -314,7 +314,7 @@ const assertExactMatchStyles = (expectedStyles: Record<string, StringAssert>, ac
   );
 
   if (!isEqual) {
-    throw new Error('Style names were not matching. actual: ' + actualDefinedStyles.join(', ') + ', expected: ' + allDefinedStyles.join(', '));
+    throw new Error(`Style names were not matching. actual: [${actualDefinedStyles.join(', ')}], expected: [${allDefinedStyles.join(', ')}]`);
   }
 
   assertStyles(expectedStyles, actual);
