@@ -52,7 +52,7 @@ const ColorCache = (storageId: string, max: number = 10): ColorCache => {
   };
 };
 
-const getCatcheForId = (id: string): ColorCache =>
+const getCacheForId = (id: string): ColorCache =>
   Obj.get(cacheStorage, id).getOrThunk(() => {
     const storageId = `tinymce-custom-colors-${id}`;
     const currentData = LocalStorage.getItem(storageId);
@@ -68,14 +68,14 @@ const getCatcheForId = (id: string): ColorCache =>
   });
 
 const getCurrentColors = (id: string): Menu.ChoiceMenuItemSpec[] =>
-  Arr.map(getCatcheForId(id).state(), (color) => ({
+  Arr.map(getCacheForId(id).state(), (color) => ({
     type: 'choiceitem',
     text: color,
     value: color
   }));
 
 const addColor = (id: string, color: string): void => {
-  getCatcheForId(id).add(color);
+  getCacheForId(id).add(color);
 };
 
 const clearStoredCaches = (): void => {

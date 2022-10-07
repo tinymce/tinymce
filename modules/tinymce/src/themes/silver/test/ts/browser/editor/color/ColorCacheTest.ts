@@ -29,7 +29,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorCacheTest', () => {
     assert.deepEqual(colors, expectedResult, 'Color cache should have the correct entry');
   });
 
-  it('TINY-9184: A cache should use not be tied to the legacy cache', () => {
+  it('TINY-9184: A cache should not be tied to the legacy cache', () => {
     LocalStorage.setItem('tinymce-custom-colors', JSON.stringify([ '#0F00F0' ]));
     ColorCache.addColor('another-id', '#F0FF0F');
 
