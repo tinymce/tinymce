@@ -268,21 +268,21 @@ const addMarkers = (dom: DOMUtils, matches: InlinePatternMatch[]): InlinePattern
 
 const sortPatterns = (patterns: InlinePattern[]) => Arr.sort(patterns, (a, b) => b.end.length - a.end.length);
 
-const getBestMatches = (matches: InlinePatternMatch[], matchesWithSortedPattenrs: InlinePatternMatch[]) => {
+const getBestMatches = (matches: InlinePatternMatch[], matchesWithSortedPatterns: InlinePatternMatch[]) => {
   const hasSameMatches = Arr.forall(matches, (match) =>
-    Arr.exists(matchesWithSortedPattenrs, (sortedMatch) =>
+    Arr.exists(matchesWithSortedPatterns, (sortedMatch) =>
       match.pattern.start === sortedMatch.pattern.start && match.pattern.end === sortedMatch.pattern.end
     )
   );
 
-  if (matches.length === matchesWithSortedPattenrs.length) {
+  if (matches.length === matchesWithSortedPatterns.length) {
     if (hasSameMatches) {
       return matches;
     } else {
-      return matchesWithSortedPattenrs;
+      return matchesWithSortedPatterns;
     }
   }
-  return matches.length > matchesWithSortedPattenrs.length ? matches : matchesWithSortedPattenrs;
+  return matches.length > matchesWithSortedPatterns.length ? matches : matchesWithSortedPatterns;
 };
 
 const findPatterns = (editor: Editor, block: Element, node: Node, offset: number, patternSet: PatternSet, normalizedMatches: boolean): InlinePatternMatch[] => {
