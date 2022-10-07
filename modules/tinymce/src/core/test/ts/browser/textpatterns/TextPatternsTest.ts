@@ -275,4 +275,20 @@ describe('browser.tinymce.core.textpatterns.TextPatternsTest', () => {
 
     editor.options.unset('text_patterns');
   });
+
+  it('TINY-8949: the patterns should be applied to the correct element', () => {
+    const editor = hook.editor();
+    editor.options.set('text_patterns', [
+      { start: '**', end: '**', format: 'bold' },
+      { start: '***', end: '***', format: 'italic' },
+    ]);
+
+    Utils.setContentAndPressSpace(editor, 'a **test1** **test2**');
+    TinyAssertions.assertContent(editor, '<p>a **test1** <strong>test2</strong>&nbsp;</p>');
+
+    Utils.setContentAndPressSpace(editor, 'a ***test1*** ***test2***');
+    TinyAssertions.assertContent(editor, '<p>a ***test1*** <em>test2</em>&nbsp;</p>');
+
+    editor.options.unset('text_patterns');
+  });
 });
