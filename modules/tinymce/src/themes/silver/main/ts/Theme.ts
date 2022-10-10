@@ -22,16 +22,24 @@ const registerOptions = (editor: Editor) => {
 export default (): void => {
   ThemeManager.add('silver', (editor): Theme => {
     registerOptions(editor);
-    const { getUiMothership, backstage, renderUI }: RenderInfo = Render.setup(editor);
+    const { forDialogs, forPopups, renderUI }: RenderInfo = Render.setup(editor);
 
-    Autocompleter.register(editor, backstage.shared);
+    Autocompleter.register(editor, forPopups.backstage.shared);
 
-    const windowMgr = WindowManager.setup({ editor, backstage });
+    // TINY-9223: TODO: Add support for inline dialogs using popup sinks through backstage.
+    const windowMgr = WindowManager.setup({ editor, backstage: forDialogs.backstage });
+
+    // The NotificationManager uses the popup mothership (and sink)
+    const getNotificationManagerImpl = () => NotificationManagerImpl(
+      editor,
+      { backstage: forPopups.backstage },
+      forPopups.getMothership()
+    );
 
     return {
       renderUI,
       getWindowManagerImpl: Fun.constant(windowMgr),
-      getNotificationManagerImpl: () => NotificationManagerImpl(editor, { backstage }, getUiMothership())
+      getNotificationManagerImpl
     };
   });
 };

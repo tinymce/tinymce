@@ -38,9 +38,14 @@ export interface ModeRenderInfo {
 }
 
 export interface RenderInfo {
-  readonly getMothership: () => Gui.GuiSystem;
-  readonly getUiMothership: () => Gui.GuiSystem;
-  readonly backstage: Backstage.UiFactoryBackstage;
+  readonly forPopups: {
+    readonly getMothership: () => Gui.GuiSystem;
+    readonly backstage: Backstage.UiFactoryBackstage;
+  };
+  readonly forDialogs: {
+    readonly getMothership: () => Gui.GuiSystem;
+    readonly backstage: Backstage.UiFactoryBackstage;
+  };
   readonly renderUI: () => ModeRenderInfo;
 }
 
@@ -427,10 +432,17 @@ const setup = (editor: Editor): RenderInfo => {
     return mode.render(editor, uiComponents, rawUiConfig, backstage, args);
   };
 
-  const getMothership = (): Gui.GuiSystem => getLazyMothership(lazyMothership);
-  const getUiMothership = (): Gui.GuiSystem => getLazyMothership(lazyUiMothership);
-
-  return { getMothership, getUiMothership, backstage, renderUI };
+  return {
+    forPopups: {
+      backstage,
+      getMothership: (): Gui.GuiSystem => getLazyMothership(lazyUiMothership)
+    },
+    forDialogs: {
+      backstage,
+      getMothership: (): Gui.GuiSystem => getLazyMothership(lazyUiMothership)
+    },
+    renderUI
+  };
 };
 
 export {
