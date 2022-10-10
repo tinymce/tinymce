@@ -273,6 +273,18 @@ describe('browser.tinymce.core.textpatterns.TextPatternsTest', () => {
     Utils.setContentAndPressSpace(editor, 'a ***test3***');
     TinyAssertions.assertContent(editor, '<p>a <em>test3</em>&nbsp;</p>');
 
+    editor.options.set('text_patterns', [
+      { start: '**', end: '//', format: 'bold' }
+    ]);
+    Utils.setContentAndPressSpace(editor, 'a *test3//');
+    TinyAssertions.assertContent(editor, '<p>a *test3//&nbsp;</p>');
+
+    editor.options.set('text_patterns', [
+      { start: '*', end: '*', format: 'italic' }
+    ]);
+    Utils.setContentAndPressSpace(editor, 'a *test1* *test2*');
+    TinyAssertions.assertContent(editor, '<p>a *test1* <em>test2</em>&nbsp;</p>');
+
     editor.options.unset('text_patterns');
   });
 

@@ -49,8 +49,8 @@ const findPatternStartFromSpot = (dom: DOMUtils, pattern: InlinePattern, block: 
   const startPattern = pattern.start;
   const startSpot = TextSearch.repeatLeft(dom, spot.container, spot.offset, matchesPattern(startPattern), block);
   return startSpot.bind((spot) => {
-    const preStartLength = block.textContent?.indexOf(startPattern) ?? 0;
-    const isCompleteMatch = spot.offset >= (preStartLength === -1 ? 0 : preStartLength) + startPattern.length;
+    const startPatternIndex = block.textContent?.indexOf(startPattern) ?? -1;
+    const isCompleteMatch = startPatternIndex !== -1 && spot.offset >= startPatternIndex + startPattern.length;
 
     if (isCompleteMatch) {
       // Complete match
