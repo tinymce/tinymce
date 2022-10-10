@@ -11,11 +11,11 @@ import * as TestExtras from '../../module/TestExtras';
 
 describe('headless.tinymce.themes.silver.window.SilverDialogTest', () => {
   const store = TestStore();
-  const helpers = TestExtras.bddSetup();
+  const extrasHook = TestExtras.bddSetup();
   let windowManager: WindowManagerImpl;
   let dialogApi: Dialog.DialogInstanceApi<any>;
   before(() => {
-    windowManager = WindowManager.setup(helpers.extras());
+    windowManager = WindowManager.setup(extrasHook.access().extras);
   });
 
   const openDialogAndAssertInitialData = () => {

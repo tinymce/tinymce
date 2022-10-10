@@ -1,6 +1,6 @@
 import { Attachment, Behaviour, DomFactory, Gui, GuiFactory, Positioning } from '@ephox/alloy';
 import { after, afterEach, before } from '@ephox/bedrock-client';
-import { Fun, Obj, Optional } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { Class, SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -14,19 +14,14 @@ export interface TestExtras {
     readonly backstages: UiFactoryBackstagePair;
   };
   readonly destroy: () => void;
-  readonly uiMothership: Gui.GuiSystem;
   readonly mockEditor: Editor;
-  readonly sink: SugarElement<HTMLDivElement>;
+  readonly getPopupSink: () => SugarElement<HTMLElement>;
+  readonly getPopupMothership: () => Gui.GuiSystem;
+  readonly getDialogSink: () => SugarElement<HTMLElement>;
 }
 
-interface BddTestExtras {
-  readonly extras: () => {
-    readonly editor: Editor;
-    readonly backstages: UiFactoryBackstagePair;
-  };
-  readonly uiMothership: () => Gui.GuiSystem;
-  readonly mockEditor: () => Editor;
-  readonly sink: () => SugarElement<HTMLDivElement>;
+interface BddTestExtrasHook {
+  readonly access: () => TestExtras;
 }
 
 export const TestExtras = (): TestExtras => {
@@ -74,6 +69,10 @@ export const TestExtras = (): TestExtras => {
   uiMothership.add(sink);
   Attachment.attachSystem(SugarBody.body(), uiMothership);
 
+  const getPopupSink = () => sink.element;
+  const getDialogSink = () => sink.element;
+  const getPopupMothership = Fun.constant(uiMothership);
+
   const destroy = () => {
     uiMothership.remove(sink);
     uiMothership.destroy();
@@ -82,13 +81,14 @@ export const TestExtras = (): TestExtras => {
   return {
     extras,
     destroy,
-    uiMothership,
     mockEditor,
-    sink: sink.element
+    getPopupSink,
+    getDialogSink,
+    getPopupMothership
   };
 };
 
-export const bddSetup = (): BddTestExtras => {
+export const bddSetup = (): BddTestExtrasHook => {
   let helpers: Optional<TestExtras> = Optional.none();
   let hasFailure = false;
 
@@ -109,16 +109,11 @@ export const bddSetup = (): BddTestExtras => {
     }
   });
 
-  const get = <K extends keyof BddTestExtras>(name: K) => (): TestExtras[K] => helpers
-    .bind((h) => Obj.get(h, name))
-    .getOrDie('The setup hooks have not run yet');
+  const access = (): TestExtras => helpers.getOrDie(
+    'The setup hooks have not run yet'
+  );
 
   return {
-    extras: get('extras'),
-    uiMothership: get('uiMothership'),
-    mockEditor: get('mockEditor'),
-    sink: get('sink')
+    access
   };
 };
-
-export default TestExtras;

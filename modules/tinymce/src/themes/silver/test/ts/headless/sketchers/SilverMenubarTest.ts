@@ -10,7 +10,7 @@ import SilverMenubar from 'tinymce/themes/silver/ui/menus/menubar/SilverMenubar'
 import * as TestExtras from '../../module/TestExtras';
 
 describe('headless.tinymce.themes.silver.sketchers.SilverMenubar Test', () => {
-  const helpers = TestExtras.bddSetup();
+  const extrasHook = TestExtras.bddSetup();
 
   const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build({
     dom: {
@@ -25,7 +25,7 @@ describe('headless.tinymce.themes.silver.sketchers.SilverMenubar Test', () => {
         },
         onEscape: store.adder('Menubar.escape'),
         onSetup: store.adder('Menubar.setup'),
-        backstage: helpers.extras().backstages.popup
+        backstage: extrasHook.access().extras.backstages.popup
       })
     ]
   }));
@@ -44,7 +44,10 @@ describe('headless.tinymce.themes.silver.sketchers.SilverMenubar Test', () => {
     );
 
   const assertActiveToggleItemHasOneCheckmark = (itemText: string) => {
-    UiFinder.findIn(helpers.sink(), '.tox-selected-menu [role=menuitemcheckbox]:contains("' + itemText + '")').getOrDie();
+    UiFinder.findIn(
+      extrasHook.access().getPopupSink(),
+      '.tox-selected-menu [role=menuitemcheckbox]:contains("' + itemText + '")'
+    ).getOrDie();
     const checkMarks = Selectors.all('.tox-collection__item-checkmark');
     assert.lengthOf(checkMarks, 1, 'only one check mark is displayed for active toggled menu items');
   };
@@ -67,17 +70,20 @@ describe('headless.tinymce.themes.silver.sketchers.SilverMenubar Test', () => {
     // Wait for menu to appear
     Waiter.pTryUntil(
       'Waiting for menu to be in DOM',
-      () => UiFinder.exists(helpers.sink(), '.tox-menu')
+      () => UiFinder.exists(extrasHook.access().getPopupSink(), '.tox-menu')
     );
 
   const pWaitForMenuToDisappear = () =>
     Waiter.pTryUntil(
       'Waiting for menu to NO LONGER be in DOM',
-      () => UiFinder.notExists(helpers.sink(), '.tox-menu')
+      () => UiFinder.notExists(extrasHook.access().getPopupSink(), '.tox-menu')
     );
 
   const assertMenuItemGroups = (label: string, groups: string[][], hasIcons: boolean, hasCheckmark: boolean) => {
-    const menu = UiFinder.findIn(helpers.sink(), '.tox-selected-menu').getOrDie();
+    const menu = UiFinder.findIn(
+      extrasHook.access().getPopupSink(),
+      '.tox-selected-menu'
+    ).getOrDie();
     Assertions.assertStructure(
       label + '. Checking contents of menu',
       ApproxStructure.build((s, str, arr) => s.element('div', {
@@ -269,7 +275,7 @@ describe('headless.tinymce.themes.silver.sketchers.SilverMenubar Test', () => {
     it('AP-307: Once a menu is expanded, hovering on buttons should switch which menu is expanded', async () => {
       const doc = hook.root();
       const menubar = getMenubar();
-      const sink = helpers.sink();
+      const sink = extrasHook.access().getPopupSink();
       Mouse.hoverOn(menubar.element, 'button[role="menuitem"]:contains("Basic Menu Button")');
       await Waiter.pWait(100);
       UiFinder.notExists(sink, '[role="menu"]');

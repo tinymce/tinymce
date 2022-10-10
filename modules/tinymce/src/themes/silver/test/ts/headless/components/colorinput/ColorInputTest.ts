@@ -13,7 +13,7 @@ type StringAssert = ReturnType<ApproxStructure.StringApi['is']>;
 type ArrayAssert = ReturnType<ApproxStructure.ArrayApi['has']>;
 
 describe('headless.tinymce.themes.silver.components.colorinput.ColorInputTest', () => {
-  const helpers = TestExtras.bddSetup();
+  const extrasHook = TestExtras.bddSetup();
 
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     Container.sketch({
@@ -24,7 +24,7 @@ describe('headless.tinymce.themes.silver.components.colorinput.ColorInputTest', 
         renderColorInput({
           name: 'alpha',
           label: Optional.some('test-color-input')
-        }, helpers.extras().backstages.popup.shared, {
+        }, extrasHook.access().extras.backstages.popup.shared, {
           colorPicker: (_callback, _value) => {},
           hasCustomColors: Fun.always,
           getColors: () => [
@@ -69,11 +69,17 @@ describe('headless.tinymce.themes.silver.components.colorinput.ColorInputTest', 
 
   const pOpenPicker = async () => {
     Mouse.clickOn(getLegend().element, 'root:span');
-    await UiFinder.pWaitFor('Waiting for colorswatch to show up!', helpers.sink(), '.tox-swatches');
+    await UiFinder.pWaitFor(
+      'Waiting for colorswatch to show up!',
+      extrasHook.access().getPopupSink(),
+      '.tox-swatches'
+    );
   };
 
   const assertFocusedValue = (label: string, expected: string) => {
-    const value = FocusTools.getActiveValue(helpers.sink());
+    const value = FocusTools.getActiveValue(
+      extrasHook.access().getPopupSink()
+    );
     assert.equal(value, expected, 'Checking value of focused element');
   };
 
@@ -154,7 +160,10 @@ describe('headless.tinymce.themes.silver.components.colorinput.ColorInputTest', 
     Keyboard.activeKeydown(doc, Keys.enter());
     await FocusTools.pTryOnSelector('Focus should be back on colorinput button (after escape)', doc, '.colorinput-container input');
     assertFocusedValue('After pressing <enter> in hex', '#18BC9B');
-    UiFinder.notExists(helpers.sink(), '.tox-swatches');
+    UiFinder.notExists(
+      extrasHook.access().getPopupSink(),
+      '.tox-swatches'
+    );
   });
 
   it('TBA: Check that pressing escape inside the picker refocuses the colorinput button', async () => {
@@ -163,7 +172,10 @@ describe('headless.tinymce.themes.silver.components.colorinput.ColorInputTest', 
     await FocusTools.pTryOnSelector('Focus should be on a swatch', doc, 'div.tox-swatch');
     Keyboard.activeKeyup(doc, Keys.escape());
     await FocusTools.pTryOnSelector('Focus should be back on colorinput button (after escape)', doc, '.colorinput-container > div:not(.mce-silver-sink) span');
-    UiFinder.notExists(helpers.sink(), '.tox-swatches');
+    UiFinder.notExists(
+      extrasHook.access().getPopupSink(),
+      '.tox-swatches'
+    );
   });
 
   it('TBA: Check that validating an empty string passes (first time)', async () => {

@@ -15,7 +15,7 @@ import TestProviders from '../../module/TestProviders';
 describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
   const shouldDisable = Cell(false);
   const shouldActivate = Cell(false);
-  const helpers = TestExtras.bddSetup();
+  const extrasHook = TestExtras.bddSetup();
 
   const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build({
     dom: {
@@ -108,7 +108,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
               store.adder('onItemAction.3')();
               api.setActive(true);
             }
-          }, helpers.extras().backstages.popup.shared)
+          }, extrasHook.access().extras.backstages.popup.shared)
         ]
       },
 
@@ -138,7 +138,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
               store.adder('onSetup.4')();
               return Fun.noop;
             }
-          }, 'tox-mbtn', helpers.extras().backstages.popup, Optional.none())
+          }, 'tox-mbtn', extrasHook.access().extras.backstages.popup, Optional.none())
         ]
       }
     ]

@@ -11,11 +11,11 @@ import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import * as TestExtras from '../../module/TestExtras';
 
 describe('headless.tinymce.themes.silver.window.WindowManagerTest', () => {
-  const helpers = TestExtras.bddSetup();
+  const extrasHook = TestExtras.bddSetup();
   let windowManager: WindowManagerImpl;
   let windowManagerWithDragging: WindowManagerImpl;
   before(() => {
-    const testExtras = helpers.extras();
+    const testExtras = extrasHook.access().extras;
     windowManager = WindowManager.setup(testExtras);
     windowManagerWithDragging = WindowManager.setup({
       editor: testExtras.editor,
@@ -62,7 +62,7 @@ describe('headless.tinymce.themes.silver.window.WindowManagerTest', () => {
   };
 
   const assertSinkStructure = (asserter: (sink: SugarElement<HTMLElement>) => void) => {
-    const sink = helpers.sink();
+    const sink = extrasHook.access().getPopupSink();
     asserter(sink);
   };
 
