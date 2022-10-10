@@ -1,5 +1,5 @@
 import { Attachment, Channels, Disabling } from '@ephox/alloy';
-import { Cell, Throttler, Type } from '@ephox/katamari';
+import { Arr, Cell, Throttler, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, DomEvent, SugarElement, SugarPosition, SugarShadowDom } from '@ephox/sugar';
 
@@ -11,16 +11,17 @@ import * as Events from '../api/Events';
 import * as Options from '../api/Options';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import * as ReadOnly from '../ReadOnly';
-import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
+import { ModeRenderInfo, RenderArgs, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { iframe as loadIframeSkin } from '../ui/skin/Loader';
 import { setToolbar } from './Toolbars';
+import { ReadyUiReferences } from './UiReferences';
 
 const detection = PlatformDetection.detect();
 const isiOS12 = detection.os.isiOS() && detection.os.version.major <= 12;
 
-const setupEvents = (editor: Editor, uiComponents: RenderUiComponents) => {
+const setupEvents = (editor: Editor, uiRefs: ReadyUiReferences) => {
   const dom = editor.dom;
   let contentWindow = editor.getWin();
   const initialDocEle = editor.getDoc().documentElement;
@@ -59,12 +60,16 @@ const setupEvents = (editor: Editor, uiComponents: RenderUiComponents) => {
   // Bind to async load events and trigger a content resize event if the size has changed
   const elementLoad = DomEvent.capture(SugarElement.fromDom(editor.getBody()), 'load', resizeDocument);
 
-  const mothership = uiComponents.uiMothership.element;
+  // We want to hide ALL UI motherships here.
   editor.on('hide', () => {
-    Css.set(mothership, 'display', 'none');
+    Arr.each(uiRefs.uiMotherships, (m) => {
+      Css.set(m.element, 'display', 'none');
+    });
   });
   editor.on('show', () => {
-    Css.remove(mothership, 'display');
+    Arr.each(uiRefs.uiMotherships, (m) => {
+      Css.set(m.element, 'display', 'none');
+    });
   });
 
   editor.on('NodeChange', resizeDocument);
@@ -78,17 +83,22 @@ const setupEvents = (editor: Editor, uiComponents: RenderUiComponents) => {
   });
 };
 
-const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
+const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   const lastToolbarWidth = Cell(0);
-  const outerContainer = uiComponents.outerContainer;
+  const { mainUi, uiMotherships } = uiRefs;
+  const outerContainer = mainUi.outerContainer;
 
   loadIframeSkin(editor);
 
   const eTargetNode = SugarElement.fromDom(args.targetNode);
   const uiRoot = SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(eTargetNode));
 
-  Attachment.attachSystemAfter(eTargetNode, uiComponents.mothership);
-  Attachment.attachSystem(uiRoot, uiComponents.uiMothership);
+  Attachment.attachSystemAfter(eTargetNode, mainUi.mothership);
+  // TINY-9223: This is where we would insert the popup mothership at a different location
+  // from the dialog mothership. But for now, we just treat them the same.
+  Arr.each(uiMotherships, (m) => {
+    Attachment.attachSystem(uiRoot, m);
+  });
 
   editor.on('PostRender', () => {
     // Set the sidebar before the toolbar and menubar
@@ -100,7 +110,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       Options.getSidebarShow(editor)
     );
 
-    setToolbar(editor, uiComponents, rawUiConfig, backstage);
+    setToolbar(editor, uiRefs, rawUiConfig, backstage);
     lastToolbarWidth.set(editor.getWin().innerWidth);
 
     OuterContainer.setMenubar(
@@ -110,7 +120,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
     OuterContainer.setViews(outerContainer, rawUiConfig.views);
 
-    setupEvents(editor, uiComponents);
+    setupEvents(editor, uiRefs);
   });
 
   const socket = OuterContainer.getSocket(outerContainer).getOrDie('Could not find expected socket element');
@@ -129,7 +139,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     editor.on('remove', unbinder.unbind);
   }
 
-  ReadOnly.setupReadonlyModeSwitch(editor, uiComponents);
+  ReadOnly.setupReadonlyModeSwitch(editor, uiRefs);
 
   editor.addCommand('ToggleSidebar', (_ui: boolean, value: string) => {
     OuterContainer.toggleSidebar(outerContainer, value);
@@ -141,8 +151,10 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   editor.addCommand('ToggleView', (_ui: boolean, value: string) => {
     if (OuterContainer.toggleView(outerContainer, value)) {
       const target = outerContainer.element;
-      uiComponents.mothership.broadcastOn([ Channels.dismissPopups() ], { target });
-      uiComponents.uiMothership.broadcastOn([ Channels.dismissPopups() ], { target });
+      mainUi.mothership.broadcastOn([ Channels.dismissPopups() ], { target });
+      Arr.each(uiMotherships, (m) => {
+        m.broadcastOn([ Channels.dismissPopups() ], { target });
+      });
 
       // Switching back to main view should focus the editor and update any UIs
       if (Type.isNull(OuterContainer.whichView(outerContainer))) {
@@ -156,7 +168,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   const toolbarMode = Options.getToolbarMode(editor);
 
   const refreshDrawer = () => {
-    OuterContainer.refreshToolbar(uiComponents.outerContainer);
+    OuterContainer.refreshToolbar(uiRefs.mainUi.outerContainer);
   };
 
   if (toolbarMode === Options.ToolbarMode.sliding || toolbarMode === Options.ToolbarMode.floating) {
@@ -172,7 +184,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   const api: Partial<EditorUiApi> = {
     setEnabled: (state) => {
-      ReadOnly.broadcastReadonly(uiComponents, !state);
+      ReadOnly.broadcastReadonly(uiRefs, !state);
     },
     isEnabled: () => !Disabling.isDisabled(outerContainer)
   };
