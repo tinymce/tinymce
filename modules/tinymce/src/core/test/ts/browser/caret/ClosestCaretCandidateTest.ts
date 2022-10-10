@@ -403,6 +403,20 @@ describe('browser.tinymce.core.ClosestCaretCandidateTest', () => {
           expected: Optional.some({ path: [ 0, 0 ], position: FakeCaretPosition.After })
         })
       );
+
+      it('TINY-8881: ghost caret should not be considered', () => {
+        const ghostCaret = '<div class="mce-drag-container" contenteditable="false">|</div>';
+        testClosestFakeCaret({
+          html: [
+            '<span contenteditable="false" style="display: inline-block; margin: 10px; background: green">a</span>',
+            ghostCaret,
+            '<span contenteditable="false" style="display: inline-block; margin: 10px; background: cyan">b</span>'
+          ].join(''),
+          targetPath: [ 1 ],
+          dx: -7, dy: 5,
+          expected: Optional.some({ path: [ 2 ], position: FakeCaretPosition.Before })
+        });
+      });
     });
 
     context('block noneditables', () => {
