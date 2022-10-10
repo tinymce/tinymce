@@ -31,8 +31,8 @@ export const TestExtras = (): TestExtras => {
     throw Error('old sinks found, a previous test did not call helpers.destroy() leaving artifacts, found: ' + oldSink.length);
   }
 
-  const sink = GuiFactory.build({
-    dom: DomFactory.fromHtml('<div class="mce-silver-sink"></div>'),
+  const dialogSink = GuiFactory.build({
+    dom: DomFactory.fromHtml('<div class="mce-silver-sink test-dialogs-sink"></div>'),
     behaviours: Behaviour.derive([
       Positioning.config({
         useFixed: Fun.always
@@ -40,17 +40,41 @@ export const TestExtras = (): TestExtras => {
     ])
   });
 
-  const uiMothership = Gui.create();
-  Class.add(uiMothership.element, 'tox');
+  const popupSink = GuiFactory.build({
+    dom: DomFactory.fromHtml('<div class="mce-silver-sink test-popups-sink"></div>'),
+    behaviours: Behaviour.derive([
+      Positioning.config({
+        useFixed: Fun.always
+      })
+    ])
+  });
+
+  const dialogMothership = Gui.create();
+  Class.add(dialogMothership.element, 'tox');
+  Class.add(dialogMothership.element, 'test-dialogs-mothership');
+
+  const popupMothership = Gui.create();
+  Class.add(popupMothership.element, 'tox');
+  Class.add(popupMothership.element, 'test-popups-mothership');
 
   const backstages = {
-    popup: TestBackstage(sink),
-    dialog: TestBackstage(sink)
+    popup: TestBackstage(popupSink),
+    dialog: TestBackstage(dialogSink)
   };
   const options: Record<string, any> = {};
 
+  const editorOn: Editor['on'] = (_name, _callback) => {
+    return { } as any;
+  };
+
+  const editorOff: Editor['off'] = (_name, _callback) => {
+    return { } as any;
+  };
+
   const mockEditor = {
     setContent: (_content) => {},
+    on: editorOn,
+    off: editorOff,
     insertContent: (_content: string, _args?: any) => {},
     execCommand: (_cmd: string, _ui?: boolean, _value?: any) => {},
     ui: {
@@ -66,16 +90,20 @@ export const TestExtras = (): TestExtras => {
     backstages
   };
 
-  uiMothership.add(sink);
-  Attachment.attachSystem(SugarBody.body(), uiMothership);
+  dialogMothership.add(dialogSink);
+  popupMothership.add(popupSink);
+  Attachment.attachSystem(SugarBody.body(), dialogMothership);
+  Attachment.attachSystem(SugarBody.body(), popupMothership);
 
-  const getPopupSink = () => sink.element;
-  const getDialogSink = () => sink.element;
-  const getPopupMothership = Fun.constant(uiMothership);
+  const getPopupSink = () => popupSink.element;
+  const getDialogSink = () => dialogSink.element;
+  const getPopupMothership = Fun.constant(popupMothership);
 
   const destroy = () => {
-    uiMothership.remove(sink);
-    uiMothership.destroy();
+    dialogMothership.remove(dialogSink);
+    dialogMothership.destroy();
+    popupMothership.remove(popupSink);
+    popupMothership.destroy();
   };
 
   return {

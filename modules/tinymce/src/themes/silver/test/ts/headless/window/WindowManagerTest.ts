@@ -1,22 +1,22 @@
-import { ApproxStructure, Assertions, Mouse, UiFinder, Waiter } from '@ephox/agar';
-import { before, describe, it } from '@ephox/bedrock-client';
+import { ApproxStructure, Assertions, Mouse, StructAssert, UiFinder, Waiter } from '@ephox/agar';
+import { before, context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import { Dialog } from 'tinymce/core/api/ui/Ui';
-import { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
+import { WindowManagerImpl, WindowParams } from 'tinymce/core/api/WindowManager';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import * as TestExtras from '../../module/TestExtras';
 
 describe('headless.tinymce.themes.silver.window.WindowManagerTest', () => {
   const extrasHook = TestExtras.bddSetup();
-  let windowManager: WindowManagerImpl;
+  let windowManagerWithoutDragging: WindowManagerImpl;
   let windowManagerWithDragging: WindowManagerImpl;
   before(() => {
     const testExtras = extrasHook.access().extras;
-    windowManager = WindowManager.setup(testExtras);
+    windowManagerWithoutDragging = WindowManager.setup(testExtras);
     windowManagerWithDragging = WindowManager.setup({
       editor: testExtras.editor,
       backstages: {
@@ -38,19 +38,19 @@ describe('headless.tinymce.themes.silver.window.WindowManagerTest', () => {
 
   const assertShouldFail = (conf: any, asserter: (err: Error) => void) => {
     try {
-      windowManager.open(conf, {}, Fun.noop);
+      windowManagerWithoutDragging.open(conf, {}, Fun.noop);
       assert.fail('This should throw a configuration error');
     } catch (err: any) {
       asserter(err);
     }
   };
 
-  const setupDialogWithoutDragging = (conf: Dialog.DialogSpec<any>) => {
-    windowManager.open(conf, {}, Fun.noop);
+  const setupDialogWithoutDragging = (conf: Dialog.DialogSpec<any>, params: WindowParams) => {
+    windowManagerWithoutDragging.open(conf, params, Fun.noop);
   };
 
-  const setupDialogWithDragging = (conf: Dialog.DialogSpec<any>) => {
-    windowManagerWithDragging.open(conf, {}, Fun.noop);
+  const setupDialogWithDragging = (conf: Dialog.DialogSpec<any>, params: WindowParams) => {
+    windowManagerWithDragging.open(conf, params, Fun.noop);
   };
 
   const pTeardown = async () => {
@@ -61,158 +61,65 @@ describe('headless.tinymce.themes.silver.window.WindowManagerTest', () => {
     );
   };
 
-  const assertSinkStructure = (asserter: (sink: SugarElement<HTMLElement>) => void) => {
-    const sink = extrasHook.access().getPopupSink();
-    asserter(sink);
-  };
-
-  const pTest = async (conf: Dialog.DialogSpec<any>, asserter: (sink: SugarElement<HTMLElement>) => void, drag: boolean = false) => {
+  const pTest = async (
+    scenario: {
+      conf: Dialog.DialogSpec<any>;
+      params: WindowParams;
+      getSink: () => SugarElement<HTMLElement>;
+      expectedStructure: StructAssert;
+      hasDrag: boolean;
+    }
+  ) => {
     await Waiter.pTryUntil(
       'Waiting for any other dialogs to disappear',
       () => UiFinder.notExists(SugarBody.body(), '.tox-button--icon[aria-label="Close"]')
     );
-    const setup = drag ? setupDialogWithDragging : setupDialogWithoutDragging;
-    setup(conf);
-    await UiFinder.pWaitFor('Waiting for dialog to appear', SugarBody.body(), '.tox-button--icon[aria-label="Close"]');
-    assertSinkStructure(asserter);
+    const setup = scenario.hasDrag ? setupDialogWithDragging : setupDialogWithoutDragging;
+    setup(scenario.conf, scenario.params);
+    const sink = scenario.getSink();
+    await UiFinder.pWaitFor(
+      'Waiting for dialog to appear',
+      scenario.getSink(),
+      '.tox-button--icon[aria-label="Close"]'
+    );
+    Assertions.assertStructure(
+      `Checking contents of sink`,
+      scenario.expectedStructure,
+      sink
+    );
     await pTeardown();
   };
 
-  it('The body type should return a useful error', () => assertShouldFail({
-    title: 'test-wrong-body',
-    body: {
-      type: 'foo'
+  it('The body type should return a useful error', () => assertShouldFail(
+    {
+      title: 'test-wrong-body',
+      body: {
+        type: 'foo'
+      },
+      buttons: []
     },
-    buttons: []
-  }, (err) => {
-    const message = err.message.split('\n');
-    assert.equal('Failed path: (dialog > body)', message[1], 'This should throw a configuration error: showing the exact failure');
-    assert.equal('The chosen schema: "foo" did not exist in branches: {', message[2], 'This should throw a configuration error: showing the exact failure');
-  }));
+    (err) => {
+      const message = err.message.split('\n');
+      assert.equal('Failed path: (dialog > body)', message[1], 'This should throw a configuration error: showing the exact failure');
+      assert.equal('The chosen schema: "foo" did not exist in branches: {', message[2], 'This should throw a configuration error: showing the exact failure');
+    }
+  ));
 
-  it('body panel is missing items: []', () => assertShouldFail({
-    title: 'test-missing-panel',
-    body: {
-      type: 'panel'
-      /* items: []*/ // I need items: [] to work, thats what this test should complain about
+  it('body panel is missing items: []', () => assertShouldFail(
+    {
+      title: 'test-missing-panel',
+      body: {
+        type: 'panel'
+        /* items: []*/ // I need items: [] to work, thats what this test should complain about
+      },
+      buttons: []
     },
-    buttons: []
-  }, (err) => {
-    const message = err.message.split('\n');
-    assert.equal('Failed path: (dialog > body > branch: panel)', message[1], 'This should throw a configuration error: showing the exact failure');
-    assert.equal('Could not find valid *required* value for "items" in {', message[2], 'This should throw a configuration error: showing the exact failure');
-  }));
-
-  it('The smallest config to get draggable dialog working, it should have this DOM structure', () => pTest({
-    title: 'test-min-required-with-dragging',
-    body: {
-      type: 'panel',
-      items: []
-    },
-    buttons: []
-  }, (sink) => {
-    Assertions.assertStructure('A basic dialog should have these components',
-      ApproxStructure.build((s, str, arr) => s.element('div', {
-        classes: [ arr.has('mce-silver-sink') ],
-        children: [
-          s.element('div', {
-            classes: [ arr.has('tox-dialog-wrap') ],
-            children: [
-              s.element('div', { classes: [ arr.has('tox-dialog-wrap__backdrop') ] }),
-              s.element('div', {
-                classes: [ arr.has('tox-dialog') ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-dialog__header') ],
-                    children: [
-                      s.element('div', { classes: [ arr.has('tox-dialog__title') ] }),
-                      s.element('div', { classes: [ arr.has('tox-dialog__draghandle') ] }),
-                      s.element('button', { classes: [ arr.has('tox-button') ] })
-                    ]
-                  }),
-                  s.element('div', {
-                    classes: [ arr.has('tox-dialog__content-js') ],
-                    children: [
-                      s.element('div', {
-                        classes: [ arr.has('tox-dialog__body') ],
-                        children: [
-                          s.element('div', {
-                            // Potentially reinstate once we have the structure 100% defined.
-                            // attrs: {
-                            //   role: str.is('presentation')
-                            // }
-                          })
-                        ]
-                      })
-                    ]
-                  }),
-                  s.element('div', {
-                    classes: [ arr.has('tox-dialog__footer') ]
-                  })
-                ]
-              })
-            ]
-          })
-        ]
-      })),
-      sink
-    );
-  }, true));
-
-  it('The smallest config to get non-draggable dialog working, it should have this DOM structure', () => pTest({
-    title: 'test-min-required-without-dragging',
-    body: {
-      type: 'panel',
-      items: []
-    },
-    buttons: []
-  }, (sink) => {
-    Assertions.assertStructure('A basic dialog should have these components',
-      ApproxStructure.build((s, str, arr) => s.element('div', {
-        classes: [ arr.has('mce-silver-sink') ],
-        children: [
-          s.element('div', {
-            classes: [ arr.has('tox-dialog-wrap') ],
-            children: [
-              s.element('div', { classes: [ arr.has('tox-dialog-wrap__backdrop') ] }),
-              s.element('div', {
-                classes: [ arr.has('tox-dialog') ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-dialog__header') ],
-                    children: [
-                      s.element('div', { classes: [ arr.has('tox-dialog__title') ] }),
-                      s.element('button', { classes: [ arr.has('tox-button') ] })
-                    ]
-                  }),
-                  s.element('div', {
-                    classes: [ arr.has('tox-dialog__content-js') ],
-                    children: [
-                      s.element('div', {
-                        classes: [ arr.has('tox-dialog__body') ],
-                        children: [
-                          s.element('div', {
-                            // Potentially reinstate once we have the structure 100% defined.
-                            // attrs: {
-                            //   role: str.is('presentation')
-                            // }
-                          })
-                        ]
-                      })
-                    ]
-                  }),
-                  s.element('div', {
-                    classes: [ arr.has('tox-dialog__footer') ]
-                  })
-                ]
-              })
-            ]
-          })
-        ]
-      })),
-      sink
-    );
-  }, false));
+    (err) => {
+      const message = err.message.split('\n');
+      assert.equal('Failed path: (dialog > body > branch: panel)', message[1], 'This should throw a configuration error: showing the exact failure');
+      assert.equal('Could not find valid *required* value for "items" in {', message[2], 'This should throw a configuration error: showing the exact failure');
+    }
+  ));
 
   it('Initial Data test', async () => {
     const conf: Dialog.DialogSpec<any> = {
@@ -233,7 +140,7 @@ describe('headless.tinymce.themes.silver.window.WindowManagerTest', () => {
       }
     };
 
-    const instanceApi = windowManager.open(conf, {}, Fun.noop);
+    const instanceApi = windowManagerWithoutDragging.open(conf, {}, Fun.noop);
     const dialogBody = SelectorFind.descendant(SugarBody.body(), '.tox-dialog__body').getOrDie('Cannot find dialog body');
 
     Assertions.assertStructure('It should load with form components in the dom structure',
@@ -291,5 +198,192 @@ describe('headless.tinymce.themes.silver.window.WindowManagerTest', () => {
     }
     assert.deepEqual(instanceApi.getData(), nuData, 'Calling setData, with invalid data, should not change the data, it should remain the same');
     await pTeardown();
+  });
+
+  context('Structures for different configurations', () => {
+    context('Setting draghandles (for modals)', () => {
+      // The draghandles are not created by the window spec, but instead the WindowManager
+      // instance. So we need to use different WindowManager instances depending on whether
+      // or not we are supporting draggable modals.
+      const mkWindowSpec = (hasDrag: boolean): Dialog.DialogSpec<any> => ({
+        title: `test-min-required-${hasDrag ? 'with' : 'without'}-dragging`,
+        body: {
+          type: 'panel',
+          items: []
+        },
+        buttons: []
+      });
+
+      const structHeaderWithDrag = ApproxStructure.build((s, str, arr) => {
+        return s.element('div', {
+          classes: [ arr.has('tox-dialog__header') ],
+          children: [
+            s.element('div', { classes: [ arr.has('tox-dialog__title') ] }),
+            s.element('div', { classes: [ arr.has('tox-dialog__draghandle') ] }),
+            s.element('button', { classes: [ arr.has('tox-button') ] })
+          ]
+        });
+      });
+
+      const structHeaderWithoutDrag = ApproxStructure.build((s, str, arr) => {
+        return s.element('div', {
+          classes: [ arr.has('tox-dialog__header') ],
+          children: [
+            s.element('div', { classes: [ arr.has('tox-dialog__title') ] }),
+            s.element('button', { classes: [ arr.has('tox-button') ] })
+          ]
+        });
+      });
+
+      const buildInnerStruct = (structs: { headers: StructAssert[] }) => ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-dialog') ],
+        children: [
+          ...structs.headers,
+          s.element('div', {
+            classes: [ arr.has('tox-dialog__content-js') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-dialog__body') ],
+                children: [
+                  s.element('div', {
+                    // Potentially reinstate once we have the structure 100% defined.
+                    // attrs: {
+                    //   role: str.is('presentation')
+                    // }
+                  })
+                ]
+              })
+            ]
+          }),
+          s.element('div', {
+            classes: [ arr.has('tox-dialog__footer') ]
+          })
+        ]
+      }));
+
+      // Inline mode *always* has the drag handle. The setting only applies to modal
+      // dialogs.
+      const buildInlineStructure = () => ApproxStructure.build((s, str, arr) => {
+        return s.element('div', {
+          classes: [ arr.has('mce-silver-sink') ],
+          children: [
+            s.element('div', {
+              attrs: {
+                'data-alloy-placement': str.startsWith('')
+              },
+              children: [
+                buildInnerStruct({
+                  // Inline dialogs always have drag handles
+                  headers: [
+                    structHeaderWithDrag
+                  ]
+                })
+              ]
+            })
+          ]
+        });
+      });
+
+      const buildModalStructure = (structHeader: StructAssert) => {
+        return ApproxStructure.build((s, str, arr) => {
+          return s.element('div', {
+            classes: [ arr.has('mce-silver-sink') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-dialog-wrap') ],
+                children: [
+                  s.element('div', { classes: [ arr.has('tox-dialog-wrap__backdrop') ] }),
+                  buildInnerStruct({
+                    headers: [
+                      structHeader
+                    ]
+                  })
+                ]
+              })
+            ]
+          });
+        });
+      };
+
+      context('draggable_modal = false', () => {
+        const hasDrag = false;
+        const windowSpec = mkWindowSpec(hasDrag);
+
+        context('inline', () => {
+          // Inline mode *always* has the drag handle. The setting only applies to modal
+          // dialogs.
+          const expectedStructure = buildInlineStructure();
+
+          it('inline: toolbar', () => pTest({
+            conf: windowSpec,
+            params: { inline: 'toolbar' },
+            getSink: extrasHook.access().getPopupSink,
+            expectedStructure,
+            hasDrag
+          }));
+
+          it('inline: cursor', () => pTest({
+            conf: windowSpec,
+            params: { inline: 'cursor' },
+            getSink: extrasHook.access().getPopupSink,
+            expectedStructure,
+            hasDrag
+          }));
+        });
+
+        it('modal dialog', async () => {
+          const expectedStructure = buildModalStructure(
+            structHeaderWithoutDrag
+          );
+
+          await pTest({
+            conf: windowSpec,
+            params: { },
+            getSink: extrasHook.access().getDialogSink,
+            expectedStructure,
+            hasDrag
+          });
+        });
+      });
+
+      context('draggable_modal = true', () => {
+        const hasDrag = true;
+        const windowSpec = mkWindowSpec(hasDrag);
+
+        context('inline', () => {
+          const expectedStructure = buildInlineStructure();
+
+          it('inline: toolbar', () => pTest({
+            conf: windowSpec,
+            params: { inline: 'toolbar' },
+            getSink: extrasHook.access().getPopupSink,
+            expectedStructure,
+            hasDrag
+          }));
+
+          it('inline: cursor', () => pTest({
+            conf: windowSpec,
+            params: { inline: 'cursor' },
+            getSink: extrasHook.access().getPopupSink,
+            expectedStructure,
+            hasDrag
+          }));
+        });
+
+        it('modal dialog', async () => {
+          const expectedStructure = buildModalStructure(
+            structHeaderWithDrag
+          );
+
+          await pTest({
+            conf: windowSpec,
+            params: { },
+            getSink: extrasHook.access().getDialogSink,
+            expectedStructure,
+            hasDrag
+          });
+        });
+      });
+    });
   });
 });
