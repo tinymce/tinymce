@@ -1,5 +1,6 @@
 import { Mouse, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { SugarLocation } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
@@ -23,8 +24,10 @@ describe('browser.tinymce.core.DragnDropCEFTest', () => {
     '</div>',
     '</div>'
   ].join('');
-  const contentWithCefElements = `<div>${getBaseCEFElement('obstacle')}${getBaseCEFElement('destination')}${getBaseCEFElement('toDrag')}</div>`;
-  const expectedContentWithCefElements = `<div>${getBaseCEFElement('obstacle')}${getBaseCEFElement('toDrag')}${getBaseCEFElement('destination')}</div>`;
+
+  const getContentWithCefElements = (elementsNames: string[]): string => `<div>${Arr.foldl(elementsNames, (acc, elementName) =>
+    acc + getBaseCEFElement(elementName)
+  , '')}</div>`;
 
   const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
   const hook = TinyHooks.bddSetup<Editor>({
@@ -36,7 +39,7 @@ describe('browser.tinymce.core.DragnDropCEFTest', () => {
 
   it('TINY-8881: Dropping CEF element inside editor fires dragend event', async () => {
     const editor = hook.editor();
-    editor.setContent(contentWithCefElements);
+    editor.setContent(getContentWithCefElements([ 'obstacle', 'destination', 'toDrag' ]));
     const toDrag = UiFinder.findIn(TinyDom.body(editor), '.toDrag').getOrDie();
     const toDragPosition = SugarLocation.viewport(toDrag);
 
@@ -52,6 +55,28 @@ describe('browser.tinymce.core.DragnDropCEFTest', () => {
     await wait(0);
     Mouse.mouseUp(toDrag);
 
-    TinyAssertions.assertContent(editor, expectedContentWithCefElements);
+    TinyAssertions.assertContent(editor, getContentWithCefElements([ 'obstacle', 'toDrag', 'destination' ]));
+  });
+
+  it('TINY-8881: Dragging CEF element over the first element should work as expected', async () => {
+    const editor = hook.editor();
+    editor.setContent(getContentWithCefElements([ 'obstacle', 'destination', 'toDrag' ]));
+
+    const toDrag = UiFinder.findIn(TinyDom.body(editor), '.toDrag').getOrDie();
+    const toDragPosition = SugarLocation.viewport(toDrag);
+
+    const obst = UiFinder.findIn(TinyDom.body(editor), '.obstacle').getOrDie();
+    const obstPosition = SugarLocation.viewport(obst);
+    const yDelta = obstPosition.top - toDragPosition.top;
+    const xDelta = obstPosition.left - toDragPosition.left;
+
+    Mouse.mouseDown(toDrag);
+    Mouse.mouseMoveTo(toDrag, xDelta + 10, yDelta - 15);
+    // little trick that give "time" to CaretRange.fromPoint to find the position
+    await wait(0);
+
+    Mouse.mouseUp(toDrag);
+
+    TinyAssertions.assertContent(editor, getContentWithCefElements([ 'toDrag', 'obstacle', 'destination' ]));
   });
 });

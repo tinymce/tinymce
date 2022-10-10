@@ -102,10 +102,14 @@ const closestChildCaretCandidateNodeRect = (children: ChildNode[], clientX: numb
 
 const traverseUp = (rootElm: SugarElement<Node>, scope: SugarElement<Element>, clientX: number, clientY: number): Optional<NodeClientRect> => {
   const helper = (scope: SugarElement<Element>, prevScope: Optional<SugarElement<Element>>): Optional<NodeClientRect> => {
+    const childNodesWithoutGhost = Arr.filter(Arr.from(scope.dom.childNodes), (node) =>
+      !(node as HTMLElement)?.classList?.contains('mce-drag-container')
+    );
+
     return prevScope.fold(
-      () => closestChildCaretCandidateNodeRect(Arr.from(scope.dom.childNodes), clientX, clientY),
+      () => closestChildCaretCandidateNodeRect(childNodesWithoutGhost, clientX, clientY),
       (prevScope) => {
-        const uncheckedChildren = Arr.filter(Arr.from(scope.dom.childNodes), (node) => node !== prevScope.dom);
+        const uncheckedChildren = Arr.filter(childNodesWithoutGhost, (node) => node !== prevScope.dom);
         return closestChildCaretCandidateNodeRect(uncheckedChildren, clientX, clientY);
       }
     ).orThunk(() => {
