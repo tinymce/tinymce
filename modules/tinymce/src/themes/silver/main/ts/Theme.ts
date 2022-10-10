@@ -26,8 +26,13 @@ export default (): void => {
 
     Autocompleter.register(editor, forPopups.backstage.shared);
 
-    // TINY-9223: TODO: Add support for inline dialogs using popup sinks through backstage.
-    const windowMgr = WindowManager.setup({ editor, backstage: forDialogs.backstage });
+    const windowMgr = WindowManager.setup({
+      editor,
+      backstages: {
+        popup: forPopups.backstage,
+        dialog: forDialogs.backstage
+      }
+    });
 
     // The NotificationManager uses the popup mothership (and sink)
     const getNotificationManagerImpl = () => NotificationManagerImpl(

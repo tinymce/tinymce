@@ -4,16 +4,14 @@ import { Fun, Obj, Optional } from '@ephox/katamari';
 import { Class, SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
-import { UiFactoryBackstage, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
+import { UiFactoryBackstagePair } from 'tinymce/themes/silver/backstage/Backstage';
 
 import TestBackstage from './TestBackstage';
 
 export interface TestExtras {
-  readonly backstage: UiFactoryBackstage;
-  readonly shared: UiFactoryBackstageShared;
   readonly extras: {
     readonly editor: Editor;
-    readonly backstage: UiFactoryBackstage;
+    readonly backstages: UiFactoryBackstagePair;
   };
   readonly destroy: () => void;
   readonly uiMothership: Gui.GuiSystem;
@@ -22,11 +20,9 @@ export interface TestExtras {
 }
 
 interface BddTestExtras {
-  readonly backstage: () => UiFactoryBackstage;
-  readonly shared: () => UiFactoryBackstageShared;
   readonly extras: () => {
     readonly editor: Editor;
-    readonly backstage: UiFactoryBackstage;
+    readonly backstages: UiFactoryBackstagePair;
   };
   readonly uiMothership: () => Gui.GuiSystem;
   readonly mockEditor: () => Editor;
@@ -52,7 +48,10 @@ export const TestExtras = (): TestExtras => {
   const uiMothership = Gui.create();
   Class.add(uiMothership.element, 'tox');
 
-  const backstage = TestBackstage(sink);
+  const backstages = {
+    popup: TestBackstage(sink),
+    dialog: TestBackstage(sink)
+  };
   const options: Record<string, any> = {};
 
   const mockEditor = {
@@ -69,7 +68,7 @@ export const TestExtras = (): TestExtras => {
 
   const extras = {
     editor: mockEditor,
-    backstage
+    backstages
   };
 
   uiMothership.add(sink);
@@ -81,8 +80,6 @@ export const TestExtras = (): TestExtras => {
   };
 
   return {
-    backstage,
-    shared: backstage.shared,
     extras,
     destroy,
     uiMothership,
@@ -117,8 +114,6 @@ export const bddSetup = (): BddTestExtras => {
     .getOrDie('The setup hooks have not run yet');
 
   return {
-    backstage: get('backstage'),
-    shared: get('shared'),
     extras: get('extras'),
     uiMothership: get('uiMothership'),
     mockEditor: get('mockEditor'),

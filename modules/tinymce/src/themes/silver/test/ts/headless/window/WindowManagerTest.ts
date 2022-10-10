@@ -15,13 +15,22 @@ describe('headless.tinymce.themes.silver.window.WindowManagerTest', () => {
   let windowManager: WindowManagerImpl;
   let windowManagerWithDragging: WindowManagerImpl;
   before(() => {
-    windowManager = WindowManager.setup(helpers.extras());
+    const testExtras = helpers.extras();
+    windowManager = WindowManager.setup(testExtras);
     windowManagerWithDragging = WindowManager.setup({
-      editor: helpers.extras().editor,
-      backstage: {
-        ...helpers.extras().backstage,
+      editor: testExtras.editor,
+      backstages: {
+        popup: {
+          ...testExtras.backstages.popup,
+          dialog: {
+            isDraggableModal: Fun.always
+          }
+        },
         dialog: {
-          isDraggableModal: Fun.always
+          ...testExtras.backstages.dialog,
+          dialog: {
+            isDraggableModal: Fun.always
+          }
         }
       }
     });

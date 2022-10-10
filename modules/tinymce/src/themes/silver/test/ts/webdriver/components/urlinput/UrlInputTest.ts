@@ -19,7 +19,7 @@ describe('webdriver.tinymce.themes.silver.components.urlinput.UrlInputTest', () 
       name: 'col1',
       filetype: 'file',
       enabled: true
-    }, helpers.backstage(), {
+    }, helpers.extras().backstages.popup, {
       getHistory: (_fileType) => [],
       addToHistory: (_url, _filetype) => store.adder('addToHistory')(),
       getLinkInformation: () => Optional.none(),

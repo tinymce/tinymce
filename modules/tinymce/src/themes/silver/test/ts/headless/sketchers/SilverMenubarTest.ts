@@ -25,7 +25,7 @@ describe('headless.tinymce.themes.silver.sketchers.SilverMenubar Test', () => {
         },
         onEscape: store.adder('Menubar.escape'),
         onSetup: store.adder('Menubar.setup'),
-        backstage: helpers.backstage()
+        backstage: helpers.extras().backstages.popup
       })
     ]
   }));

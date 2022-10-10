@@ -108,7 +108,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
               store.adder('onItemAction.3')();
               api.setActive(true);
             }
-          }, helpers.shared())
+          }, helpers.extras().backstages.popup.shared)
         ]
       },
 
@@ -138,7 +138,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
               store.adder('onSetup.4')();
               return Fun.noop;
             }
-          }, 'tox-mbtn', helpers.backstage(), Optional.none())
+          }, 'tox-mbtn', helpers.extras().backstages.popup, Optional.none())
         ]
       }
     ]

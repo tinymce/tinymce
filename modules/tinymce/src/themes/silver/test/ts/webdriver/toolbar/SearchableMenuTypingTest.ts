@@ -115,7 +115,7 @@ describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () 
           }, store)
         },
         'prefix',
-        helpers.backstage(),
+        helpers.extras().backstages.popup,
         Optional.none()
       )
     )

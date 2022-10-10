@@ -25,7 +25,7 @@ describe('headless.tinymce.themes.silver.components.listbox.ListBoxTest', () => 
           { value: 'three', text: 'Three' }
         ] }
       ]
-    }, helpers.backstage(), Optional.none())
+    }, helpers.extras().backstages.popup, Optional.none())
   ));
 
   const assertValue = (component: AlloyComponent, expected: string) => {

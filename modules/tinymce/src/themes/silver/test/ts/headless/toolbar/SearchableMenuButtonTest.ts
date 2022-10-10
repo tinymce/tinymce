@@ -41,7 +41,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
           }, store)
         },
         'prefix',
-        helpers.backstage(),
+        helpers.extras().backstages.popup,
         Optional.none()
       )
     )
