@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Line separator scrolling in floating toolbars. #TINY-8948
 - A double bottom border appeared on inline mode editor for the `tinymce-5` skin. #TINY-9108
 - The editor header showed up even with no menubar and toolbar configured. #TINY-8819
-- Inline text pattern does not trigger if it matches only the end but not the start. #TINY-8947
+- Inline text pattern no longer triggers if it matches only the end but not the start. #TINY-8947
 - Matches of inline text patterns that are similar are now managed correctly. #TINY-8949
 
 ## 6.2.0 - 2022-09-08
