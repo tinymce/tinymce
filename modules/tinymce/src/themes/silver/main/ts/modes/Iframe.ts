@@ -68,7 +68,7 @@ const setupEvents = (editor: Editor, uiRefs: ReadyUiReferences) => {
   });
   editor.on('show', () => {
     Arr.each(uiRefs.uiMotherships, (m) => {
-      Css.set(m.element, 'display', 'none');
+      Css.remove(m.element, 'display');
     });
   });
 
