@@ -23,7 +23,10 @@ export interface LazyUiReferences {
   readonly popupUi: Singleton.Value<SinkAndMothership>;
   readonly mainUi: Singleton.Value<MainUi>;
 
-  // dialog + popup, if popup is different.
+  // TINY-9226: We abstract over all "UI Motherships" for things like
+  // * showing / hiding on editor focus/blur
+  // * destroying on remove
+  // * broadcasting events for dismissing popups on mousedown etc.
   readonly getUiMotherships: () => Array<Gui.GuiSystem>;
 
   readonly setupDialogUi: (ui: { sink: AlloyComponent; mothership: Gui.GuiSystem }) => void;
@@ -52,9 +55,9 @@ export const LazyUiReferences = (): LazyUiReferences => {
     popupUi,
     mainUi,
 
+    // TINY-9226: We need to return the popup mothership here once it has been added to the code
     getUiMotherships: () => [
-      ...dialogUi.get().map((e) => e.mothership).toArray(),
-      ...popupUi.get().map((a) => a.mothership).toArray()
+      ...dialogUi.get().map((e) => e.mothership).toArray()
     ],
     setupDialogUi,
     lazyGetInOuterOrDie

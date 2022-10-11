@@ -1,7 +1,7 @@
 import {
   AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Disabling, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec, SystemEvents, VerticalDir
 } from '@ephox/alloy';
-import { Arr, Merger, Obj, Optional, Result, Singleton } from '@ephox/katamari';
+import { Arr, Fun, Merger, Obj, Optional, Result, Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Compare, Css, SugarBody, SugarElement } from '@ephox/sugar';
 
@@ -14,7 +14,7 @@ import * as Backstage from './backstage/Backstage';
 import * as Events from './Events';
 import * as Iframe from './modes/Iframe';
 import * as Inline from './modes/Inline';
-import { LazyUiReferences, ReadyUiReferences } from './modes/UiReferences';
+import { LazyUiReferences, ReadyUiReferences, SinkAndMothership } from './modes/UiReferences';
 import * as ReadOnly from './ReadOnly';
 import * as ContextToolbar from './ui/context/ContextToolbar';
 import * as FormatControls from './ui/core/FormatControls';
@@ -62,8 +62,8 @@ export interface RenderArgs {
   readonly height: string;
 }
 
-const getLazyMothership = (singleton: Singleton.Value<Gui.GuiSystem>) =>
-  singleton.get().getOrDie('UI has not been rendered');
+const getLazyMothership = (label: string, singleton: Singleton.Value<Gui.GuiSystem>) =>
+  singleton.get().getOrDie(`UI for ${label} has not been rendered`);
 
 const setup = (editor: Editor): RenderInfo => {
   const isInline = editor.inline;
@@ -76,8 +76,9 @@ const setup = (editor: Editor): RenderInfo => {
 
   const lazyUiRefs = LazyUiReferences();
 
+  // Importantly, this is outside the setup function.
   const lazyMothership = Singleton.value<Gui.GuiSystem>();
-  const lazyUiMothership = Singleton.value<Gui.GuiSystem>();
+  const lazyDialogMothership = Singleton.value<Gui.GuiSystem>();
 
   const platform = PlatformDetection.detect();
   const isTouch = platform.deviceType.isTouch();
@@ -293,10 +294,14 @@ const setup = (editor: Editor): RenderInfo => {
     const sink = GuiFactory.build(Merger.deepMerge(sinkSpec, isGridUiContainer ? reactiveWidthSpec : {}));
     const uiMothership = Gui.takeover(sink);
 
-    lazyUiMothership.set(uiMothership);
+    lazyDialogMothership.set(uiMothership);
 
     return { sink, mothership: uiMothership };
   };
+
+  // TINY-9226: We will want to create a separate mothership and sink here for the popups
+  // instead of just returning the same as the dialogUi (which it is passed as an argument)
+  const renderPopupUi = Fun.identity<SinkAndMothership>;
 
   const renderMainUi = () => {
     const partHeader = makeHeaderPart();
@@ -467,7 +472,7 @@ const setup = (editor: Editor): RenderInfo => {
   const renderUI = (): ModeRenderInfo => {
     const mainUi = renderMainUi();
     const dialogUi = renderDialogUi();
-    const popupUi = dialogUi;
+    const popupUi = renderPopupUi(dialogUi);
 
     lazyUiRefs.dialogUi.set(dialogUi);
     lazyUiRefs.popupUi.set(popupUi);
@@ -484,14 +489,17 @@ const setup = (editor: Editor): RenderInfo => {
     return renderUIWithRefs(uiRefs);
   };
 
+  // We don't have uiRefs here, so we have to rely on cells unfortunately.
   return {
     forPopups: {
       backstage: backstages.popup,
-      getMothership: (): Gui.GuiSystem => getLazyMothership(lazyUiMothership)
+      // TINY-9226: We haven't enabled the separate popup mothership yet, so this needs to
+      // point to the dialog mothership
+      getMothership: (): Gui.GuiSystem => getLazyMothership('popups', lazyDialogMothership)
     },
     forDialogs: {
       backstage: backstages.dialog,
-      getMothership: (): Gui.GuiSystem => getLazyMothership(lazyUiMothership)
+      getMothership: (): Gui.GuiSystem => getLazyMothership('dialogs', lazyDialogMothership)
     },
     renderUI
   };
