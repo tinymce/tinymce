@@ -85,12 +85,12 @@ const register = (editor: Editor): void => {
     default: true
   });
 
-  registerOption('color_foreground_default', {
+  registerOption('color_default_foreground', {
     processor: 'string',
     default: fallbackColor
   });
 
-  registerOption('color_background_default', {
+  registerOption('color_default_background', {
     processor: 'string',
     default: fallbackColor
   });
@@ -99,8 +99,8 @@ const register = (editor: Editor): void => {
 const getColorCols = option('color_cols');
 const hasCustomColors = option('custom_colors');
 const getColors = option<Menu.ChoiceMenuItemSpec[]>('color_map');
-const getDefaultForegroundColor = option<string>('color_foreground_default');
-const getDefaultBackgroundColor = option<string>('color_background_default');
+const getDefaultForegroundColor = option<string>('color_default_foreground');
+const getDefaultBackgroundColor = option<string>('color_default_background');
 
 const getCurrentColors = (): Menu.ChoiceMenuItemSpec[] => Arr.map(colorCache.state(), (color) => ({
   type: 'choiceitem',

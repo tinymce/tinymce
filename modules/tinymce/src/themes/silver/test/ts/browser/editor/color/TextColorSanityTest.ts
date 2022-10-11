@@ -97,8 +97,8 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     const hook = TinyHooks.bddSetupLight<Editor>({
       toolbar: 'forecolor backcolor fontsize',
       base_url: '/project/tinymce/js/tinymce',
-      color_foreground_default: 'yellow',
-      color_background_default: 'cyan'
+      color_default_foreground: 'yellow',
+      color_default_background: 'cyan'
     }, [], true);
 
     it('TINY-9183: Initial color is set to yellow for text color and to cyan for background color', () => {
