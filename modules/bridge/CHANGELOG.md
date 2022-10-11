@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- New `view` component. #TINY-9210
+
 ### Fixed
 - Fixed type errors caused by upgrading to TypeScript 4.8. #TINY-9161
 
