@@ -444,7 +444,7 @@ const setup = (editor: Editor): RenderInfo => {
     };
 
     setupShortcutsAndCommands(uiRefs.mainUi.outerContainer);
-    Events.setup(editor, uiRefs.mainUi.mothership, uiRefs.dialogUi.mothership);
+    Events.setup(editor, uiRefs.mainUi.mothership, uiRefs.uiMotherships);
 
     // This backstage needs to kept in sync with the one passed to the Header part.
     header.setup(editor, backstages.popup.shared, lazyHeader);

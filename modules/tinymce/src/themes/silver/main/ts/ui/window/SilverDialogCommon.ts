@@ -75,6 +75,9 @@ const renderModalDialog = <T>(spec: DialogSpec, initialData: T, dialogEvents: Al
     ...spec,
     lazySink: backstage.shared.getSink,
     extraBehaviours: [
+      // Because this doesn't define `renderComponents`, all this does is update the state.
+      // We use the state for the initialData. The other parts (body etc.) render the
+      // components based on what reflecting receives.
       Reflecting.config({
         channel: `${dialogChannel}-${spec.id}`,
         updateState,

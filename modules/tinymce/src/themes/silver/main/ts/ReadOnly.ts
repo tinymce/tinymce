@@ -21,7 +21,7 @@ const broadcastReadonly = (uiRefs: ReadyUiReferences, readonly: boolean): void =
   const outerContainer = uiRefs.mainUi.outerContainer;
   const target = outerContainer.element;
 
-  const motherships = [ uiRefs.mainUi.mothership ].concat(uiRefs.uiMotherships);
+  const motherships = [ uiRefs.mainUi.mothership, ...uiRefs.uiMotherships ];
   if (readonly) {
     Arr.each(motherships, (m) => {
       m.broadcastOn([ Channels.dismissPopups() ], { target });
