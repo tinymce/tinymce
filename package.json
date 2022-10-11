@@ -37,7 +37,7 @@
     "@ephox/oxide-icons-tools": "^2.2.2",
     "@ephox/swag": "^4.4.0",
     "@ephox/wrap-jsverify": "^2.0.1",
-    "@ephox/wrap-prismjs": "^1.25.0",
+    "@ephox/wrap-prismjs": "^1.29.1-patchfix.3558",
     "@ephox/wrap-promise-polyfill": "^2.2.1",
     "@tinymce/eslint-plugin": "^1.9.1",
     "@tinymce/moxiedoc": "^0.1.0",
