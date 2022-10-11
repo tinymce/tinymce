@@ -63,6 +63,11 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
           onHide: injectAndLog('myview2:hide')
         });
 
+        editor.ui.registry.addView('myview3', {
+          onShow: injectAndLog('myview3:show', 'myview3'),
+          onHide: injectAndLog('myview3:hide')
+        });
+
         editor.ui.registry.addContextToolbar('test-context', {
           predicate: (node) => node.nodeName.toLowerCase() === 'img',
           items: 'bold'
@@ -158,6 +163,18 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
             ]
           });
 
+        const buttonlessView = () =>
+          s.element('div', {
+            classes: [ arr.has('tox-view') ],
+            attrs: { 'aria-hidden': str.is('true') },
+            styles: { display: str.is('none') },
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-view__pane') ]
+              })
+            ]
+          });
+
         return s.element('div', {
           classes: [ arr.has('tox-view-wrap') ],
           children: [
@@ -177,7 +194,8 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
                     button('Button 1', [ 'tox-button', 'tox-button--secondary' ]),
                     button('Button 2', [ 'tox-button' ])
                   ]
-                )
+                ),
+                buttonlessView()
               ]
             })
           ]

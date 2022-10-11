@@ -23,10 +23,12 @@ const makeViews = (parts: SlotContainerTypes.SlotContainerParts, viewConfigs: Vi
       },
       viewConfig: internalViewConfig,
       components: [
-        View.parts.header({
-          buttons: internalViewConfig.buttons,
-          providers
-        }),
+        ...internalViewConfig.buttons.length > 0 ? [
+          View.parts.header({
+            buttons: internalViewConfig.buttons,
+            providers
+          })
+        ] : [],
         View.parts.pane({})
       ]
     }));

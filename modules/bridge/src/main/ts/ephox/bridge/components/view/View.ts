@@ -8,7 +8,7 @@ export interface ViewInstanceApi {
 }
 
 export interface ViewSpec {
-  buttons: ViewButtonSpec[];
+  buttons?: ViewButtonSpec[];
   onShow: (api: ViewInstanceApi) => void;
   onHide: (api: ViewInstanceApi) => void;
 }
@@ -20,7 +20,7 @@ export interface View {
 }
 
 export const viewSchema = StructureSchema.objOf([
-  FieldSchema.requiredArrayOf('buttons', viewButtonSchema),
+  FieldSchema.defaultedArrayOf('buttons', [], viewButtonSchema),
   FieldSchema.requiredFunction('onShow'),
   FieldSchema.requiredFunction('onHide')
 ]);
