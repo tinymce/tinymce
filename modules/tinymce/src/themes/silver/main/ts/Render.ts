@@ -95,7 +95,7 @@ const setup = (editor: Editor): RenderInfo => {
 
   const lazyHeader = () => lazyUiRefs.mainUi.get()
     .map((ui) => ui.outerContainer)
-    .bind((oc) => editor.inline ? Optional.some(oc) : OuterContainer.getHeader(oc));
+    .bind(OuterContainer.getHeader);
 
   const lazyDialogSinkResult = () => Result.fromOption(
     lazyUiRefs.dialogUi.get().map((ui) => ui.sink),
