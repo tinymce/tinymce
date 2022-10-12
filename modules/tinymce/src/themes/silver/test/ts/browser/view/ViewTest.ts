@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Mouse, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { Attribute, Css, Html, SugarBody } from '@ephox/sugar';
