@@ -57,4 +57,11 @@ describe('browser.tinymce.plugins.quickbars.ContentEditableTest', () => {
     TinySelections.select(editor, 'p span', []);
     await pAssertToolbarNotVisible();
   });
+
+  it('TINY-9190: Toolbar is not shown in the fake caret', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p contenteditable="false">CEF element</p>');
+    // Selection is already in the fake caret
+    await pAssertToolbarNotVisible();
+  });
 });

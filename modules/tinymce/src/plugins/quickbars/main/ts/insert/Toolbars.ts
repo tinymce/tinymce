@@ -13,9 +13,19 @@ const addToEditor = (editor: Editor): void => {
         const sugarNode = SugarElement.fromDom(node);
         const textBlockElementsMap = editor.schema.getTextBlockElements();
         const isRoot = (elem: SugarElement<Node>) => elem.dom === editor.getBody();
+        const isFakeCaret = (elem: SugarElement<Node>) =>
+          Attribute.has(elem, 'data-mce-bogus') || SelectorExists.ancestor(elem, '[data-mce-bogus="all"]', (el) => isRoot(el));
+
         return SelectorFind.closest(sugarNode, 'table', isRoot).fold(
-          () => PredicateFind.closest(sugarNode, (elem) =>
-            SugarNode.name(elem) in textBlockElementsMap && editor.dom.isEmpty(elem.dom), isRoot).isSome(),
+          () => {
+            return PredicateFind.closest(
+              sugarNode,
+              (elem) => {
+                return !isFakeCaret(elem) && SugarNode.name(elem) in textBlockElementsMap && editor.dom.isEmpty(elem.dom);
+              },
+              isRoot
+            ).isSome();
+          },
           Fun.never
         );
       },
