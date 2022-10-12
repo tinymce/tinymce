@@ -1,7 +1,7 @@
 import { UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
-import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/quickbars/Plugin';
@@ -61,7 +61,9 @@ describe('browser.tinymce.plugins.quickbars.ContentEditableTest', () => {
   it('TINY-9190: Toolbar is not shown in the fake caret', async () => {
     const editor = hook.editor();
     editor.setContent('<p contenteditable="false">CEF element</p>');
-    // Selection is already in the fake caret
+    // Selection is in the fake caret
+    TinyAssertions.assertCursor(editor, [ 0 ], 0);
+    TinyAssertions.assertContentPresence(editor, { 'p[data-mce-bogus="all"]': 1, 'p[data-mce-caret="before"]': 1 });
     await pAssertToolbarNotVisible();
   });
 });
