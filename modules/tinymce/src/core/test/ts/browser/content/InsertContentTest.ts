@@ -714,7 +714,8 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
         children: [
           s.element('div', {
             children: [
-              s.element('a', { attrs: { 'data-mce-block': str.is('true') }})
+              s.element('a', { attrs: { 'data-mce-block': str.is('true') }}),
+              s.zeroOrOne(s.element('br', {}))
             ]
           })
         ]
