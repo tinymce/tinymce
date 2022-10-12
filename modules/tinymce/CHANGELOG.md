@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Line separator scrolling in floating toolbars. #TINY-8948
 - A double bottom border appeared on inline mode editor for the `tinymce-5` skin. #TINY-9108
 - The editor header showed up even with no menubar and toolbar configured. #TINY-8819
-- The context toolbar of `quickbars` plugin was showed in the fake block caret. #TINY-9190
+- The Quick Insert context toolbar provided by the `quickbars` plugin showed when the cursor was in a fake block caret. #TINY-9190
 
 ## 6.2.0 - 2022-09-08
 
