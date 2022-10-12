@@ -12,15 +12,15 @@ export const update = (schema: Schema, root: Element, inEditorRoot: boolean): vo
   const transparentSelector = makeSelectorFromSchemaMap(schema.getTransparentElements());
   const blocksSelector = makeSelectorFromSchemaMap(schema.getBlockElements());
 
-  Arr.each(root.querySelectorAll(transparentSelector), (anchor) => {
-    if ((inEditorRoot && anchor.parentElement === root) || anchor.querySelectorAll(blocksSelector).length > 0) {
-      anchor.setAttribute(transparentBlockAttr, 'true');
+  Arr.each(root.querySelectorAll(transparentSelector), (transparent) => {
+    if ((inEditorRoot && transparent.parentElement === root) || transparent.querySelectorAll(blocksSelector).length > 0) {
+      transparent.setAttribute(transparentBlockAttr, 'true');
 
-      if (anchor.getAttribute('data-mce-selected') === 'inline-boundary') {
-        anchor.removeAttribute('data-mce-selected');
+      if (transparent.getAttribute('data-mce-selected') === 'inline-boundary') {
+        transparent.removeAttribute('data-mce-selected');
       }
     } else {
-      anchor.removeAttribute(transparentBlockAttr);
+      transparent.removeAttribute(transparentBlockAttr);
     }
   });
 };

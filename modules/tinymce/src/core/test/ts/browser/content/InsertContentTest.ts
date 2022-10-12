@@ -1,3 +1,4 @@
+import { ApproxStructure } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -699,5 +700,25 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     editor.insertContent('<p>b</p>');
     TinyAssertions.assertContent(editor, '<div><a href="#1">a<p>b</p>c</a></div>');
     assert.isTrue(editor.dom.select('a[data-mce-block="true"]').length === 1, 'Should have data-mce-block set to true');
+  });
+
+  it('TINY-9172: Insert block in regular anchor should annotate the block with data-mce-block', () => {
+    const editor = hook.editor();
+
+    editor.setContent('<div><a href="#1">ac</a></div>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+    editor.insertContent('<p>b</p>');
+    TinyAssertions.assertContent(editor, '<div><a href="#1">a<p>b</p>c</a></div>');
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, _arr) =>
+      s.element('body', {
+        children: [
+          s.element('div', {
+            children: [
+              s.element('a', { attrs: { 'data-mce-block': str.is('true') }})
+            ]
+          })
+        ]
+      })
+    ));
   });
 });
