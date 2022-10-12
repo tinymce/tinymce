@@ -24,7 +24,7 @@ export type ViewButton = ViewNormalButton;
 const normalButtonFields = [
   FieldSchema.requiredStringEnum('type', [ 'button' ]),
   ComponentSchema.text,
-  ComponentSchema.buttonType,
+  FieldSchema.defaultedStringEnum('buttonType', 'secondary', [ 'primary', 'secondary' ]),
   FieldSchema.requiredFunction('onAction')
 ];
 

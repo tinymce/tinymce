@@ -30,7 +30,6 @@ export const defaultedColumns = (num: number | 'auto'): FieldProcessor => FieldS
 export const defaultedMeta = FieldSchema.defaulted('meta', {});
 export const defaultedOnAction = FieldSchema.defaultedFunction('onAction', Fun.noop);
 export const defaultedType = (type: string): FieldProcessor => FieldSchema.defaultedString('type', type);
-export const buttonType = FieldSchema.defaultedStringEnum('buttonType', 'secondary', [ 'primary', 'secondary' ]);
 
 export const generatedName = (namePrefix: string): FieldProcessor =>
   FieldSchema.field(

@@ -66,7 +66,7 @@ const baseFooterButtonFields = [
   ComponentSchema.primary,
   ComponentSchema.enabled,
   // this should be defaulted to `secondary` but the implementation needs to manage the deprecation
-  ComponentSchema.buttonType
+  FieldSchema.optionStringEnum('buttonType', [ 'primary', 'secondary' ])
 ];
 
 export const dialogFooterButtonFields = [
