@@ -14,6 +14,25 @@ interface ViewHeaderSpec extends SimpleSpec {
   providers: UiFactoryBackstageProviders;
 }
 
+export interface ViewSketchSpec extends Sketcher.CompositeSketchSpec {
+  readonly dom: RawDomSchema;
+  readonly components: AlloySpec[];
+  readonly viewConfig: BridgeView.View;
+}
+
+export interface ViewDetail extends Sketcher.CompositeSketchDetail {
+  readonly uid: string;
+  readonly dom: RawDomSchema;
+  readonly components: AlloySpec[ ];
+  readonly viewConfig: BridgeView.View;
+}
+
+interface ViewApis {
+  readonly getPane: (comp: AlloyComponent) => Optional<AlloyComponent>;
+  readonly getOnShow: (comp: AlloyComponent) => (api: BridgeView.ViewInstanceApi) => void;
+  readonly getOnHide: (comp: AlloyComponent) => (api: BridgeView.ViewInstanceApi) => void;
+}
+
 const renderViewButton = (spec: BridgeView.ViewButton, providers: UiFactoryBackstageProviders) => {
   return renderButton(
     {
@@ -69,25 +88,6 @@ const renderViewPane = (spec: SimpleSpec) => {
     }
   };
 };
-
-export interface ViewSketchSpec extends Sketcher.CompositeSketchSpec {
-  readonly dom: RawDomSchema;
-  readonly components: AlloySpec[];
-  readonly viewConfig: BridgeView.View;
-}
-
-export interface ViewDetail extends Sketcher.CompositeSketchDetail {
-  readonly uid: string;
-  readonly dom: RawDomSchema;
-  readonly components: AlloySpec[ ];
-  readonly viewConfig: BridgeView.View;
-}
-
-interface ViewApis {
-  readonly getPane: (comp: AlloyComponent) => Optional<AlloyComponent>;
-  readonly getOnShow: (comp: AlloyComponent) => (api: BridgeView.ViewInstanceApi) => void;
-  readonly getOnHide: (comp: AlloyComponent) => (api: BridgeView.ViewInstanceApi) => void;
-}
 
 const factory: UiSketcher.CompositeSketchFactory<ViewDetail, ViewSketchSpec> = (detail, components, _spec, _externals) => {
   const apis: ViewApis = {
