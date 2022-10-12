@@ -14,7 +14,7 @@ const addToEditor = (editor: Editor): void => {
         const textBlockElementsMap = editor.schema.getTextBlockElements();
         const isRoot = (elem: SugarElement<Node>) => elem.dom === editor.getBody();
         const isFakeCaret = (elem: SugarElement<Node>) =>
-          Attribute.has(elem, 'data-mce-bogus') || SelectorExists.ancestor(elem, '[data-mce-bogus="all"]', (el) => isRoot(el));
+          Attribute.has(elem, 'data-mce-bogus') || SelectorExists.ancestor(elem, '[data-mce-bogus="all"]', isRoot);
 
         return SelectorFind.closest(sugarNode, 'table', isRoot).fold(
           () => PredicateExists.closest(
