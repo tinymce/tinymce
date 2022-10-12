@@ -83,23 +83,17 @@ const makeViewInstanceApi = (slot: HTMLElement): BridgeView.ViewInstanceApi => (
   getContainer: Fun.constant(slot)
 });
 
-const runOnShow = (slotContainer: AlloyComponent, name: string) => {
+const runOnPaneWithInstanceApi = (slotContainer: AlloyComponent, name: string, get: (view: AlloyComponent) => (api: BridgeView.ViewInstanceApi) => void) => {
   SlotContainer.getSlot(slotContainer, name).each((view) => {
     View.getPane(view).each((pane) => {
-      const onShow = View.getOnShow(view);
-      onShow(makeViewInstanceApi(pane.element.dom));
+      const onCallback = get(view);
+      onCallback(makeViewInstanceApi(pane.element.dom));
     });
   });
 };
 
-const runOnHide = (slotContainer: AlloyComponent, name: string) => {
-  SlotContainer.getSlot(slotContainer, name).each((view) => {
-    View.getPane(view).each((pane) => {
-      const onHide = View.getOnHide(view);
-      onHide(makeViewInstanceApi(pane.element.dom));
-    });
-  });
-};
+const runOnShow = (slotContainer: AlloyComponent, name: string) => runOnPaneWithInstanceApi(slotContainer, name, View.getOnShow);
+const runOnHide = (slotContainer: AlloyComponent, name: string) => runOnPaneWithInstanceApi(slotContainer, name, View.getOnHide);
 
 const factory: UiSketcher.SingleSketchFactory<SilverViewWrapperDetail, SilverViewWrapperSpec> = (detail, spec) => {
   const setViews = (comp: AlloyComponent, viewConfigs: ViewConfig) => {
