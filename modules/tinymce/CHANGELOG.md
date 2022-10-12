@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `expand` function added to `tinymce.selection` which expands the selection around the nearest word. #TINY-9001
 - New `expand` function added to `tinymce.dom.RangeUtils` to return a new range expanded around the nearest word. #TINY-9001
 - New `getTransparentElements` function added to `tinymce.html.Schema` to return a map object of transparent HTML elements. #TINY-9172
+- New `addView` function added to `editor.ui.registry` which makes it possible to register custom editor views. #TINY-9210
+- New `ToggleView` command which makes it possible to hide or show registered custom views. #TINY-9210
+- New `color_default_foreground` and `color_default_background` options to set the initial default color for the `forecolor` and `backcolor` toolbar buttons and menu items. #TINY-9183
 
 ### Fixed
 - Dragging a noneditable element toward the bottom edge would cause the page to scroll up. #TINY-9025
