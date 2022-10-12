@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `editor.selection.getRng()` API was not returning a proper range on hidden editors in Firefox. #TINY-9259
 - The `editor.selection.getBookmark()` API was not returning a proper bookmark on hidden editors in Firefox. #TINY-9259
 - Dragging over CEF element now works correctly #TINY-8881
+- Dragging a noneditable element before or after another noneditable element now works correctly. #TINY-8881
 
 ## 6.2.0 - 2022-09-08
 
