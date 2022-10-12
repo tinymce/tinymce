@@ -367,7 +367,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
 
     // Select the 4th row
     TinySelections.setCursor(editor, [ 1, 0, 3, 0, 0 ], 0);
-    await Waiter.pWait(20); // Need to wait for all NodeChange events to finish firing
+    await Waiter.pWait(50); // Need to wait for all NodeChange events to finish firing
 
     // Scroll the 4th row so it is now at the top and make sure the toolbar hasn't moved
     scrollTo(editor, 0, 220 + 3 * 22);
