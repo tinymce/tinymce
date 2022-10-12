@@ -10,9 +10,15 @@ describe('browser.tinymce.core.DragnDropCEFTest', () => {
   const getBaseCEFElement = (name: string) =>
     `<div class="${name}" style="margin: 40px; width: 1110px; height: 120px;" contenteditable="false">${name}</div>`;
 
-  const getContentWithCefElements = (elementsNames: string[]): string => `<div>${Arr.foldl(elementsNames, (acc, elementName) =>
-    acc + getBaseCEFElement(elementName)
-  , '')}</div>`;
+  const getContentWithCefElements = (elementsNames: string[]): string => {
+    if (!Arr.contains(elementsNames, 'toDrag') || !Arr.contains(elementsNames, 'destination')) {
+      // eslint-disable-next-line no-throw-literal
+      throw new Error('This function require to have an element named toDrag and one destination');
+    }
+    return `<div>${Arr.foldl(elementsNames, (acc, elementName) =>
+      acc + getBaseCEFElement(elementName)
+    , '')}</div>`;
+  };
 
   const hook = TinyHooks.bddSetup<Editor>({
     indent: false,
@@ -21,9 +27,7 @@ describe('browser.tinymce.core.DragnDropCEFTest', () => {
     height: 3000
   }, [], true);
 
-  it('TINY-8881: Dropping CEF element inside editor fires dragend event', async () => {
-    const editor = hook.editor();
-    editor.setContent(getContentWithCefElements([ 'obstacle', 'destination', 'toDrag' ]));
+  const moveToDragElementToDestinationElement = async (editor: Editor, xOffset: number, yOffset: number) => {
     const toDrag = UiFinder.findIn(TinyDom.body(editor), '.toDrag').getOrDie();
     const toDragPosition = SugarLocation.viewport(toDrag);
 
@@ -33,34 +37,26 @@ describe('browser.tinymce.core.DragnDropCEFTest', () => {
     const xDelta = destPosition.left - toDragPosition.left;
 
     Mouse.mouseDown(toDrag);
-    Mouse.mouseMoveTo(toDrag, xDelta - 5, yDelta - 5);
+    Mouse.mouseMoveTo(toDrag, xDelta + xOffset, yDelta + yOffset);
 
     // little trick that give "time" to CaretRange.fromPoint to find the position
     await Waiter.pWait(0);
     Mouse.mouseUp(toDrag);
+  };
+
+  it('TINY-8881: Dropping CEF element inside editor fires dragend event', async () => {
+    const editor = hook.editor();
+    editor.setContent(getContentWithCefElements([ 'obstacle', 'destination', 'toDrag' ]));
+    await moveToDragElementToDestinationElement(editor, -5, -5);
 
     TinyAssertions.assertContent(editor, getContentWithCefElements([ 'obstacle', 'toDrag', 'destination' ]));
   });
 
   it('TINY-8881: Dragging CEF element over the first element should work as expected', async () => {
     const editor = hook.editor();
-    editor.setContent(getContentWithCefElements([ 'obstacle', 'destination', 'toDrag' ]));
+    editor.setContent(getContentWithCefElements([ 'destination', 'obstacle', 'toDrag' ]));
+    await moveToDragElementToDestinationElement(editor, 10, -15);
 
-    const toDrag = UiFinder.findIn(TinyDom.body(editor), '.toDrag').getOrDie();
-    const toDragPosition = SugarLocation.viewport(toDrag);
-
-    const obst = UiFinder.findIn(TinyDom.body(editor), '.obstacle').getOrDie();
-    const obstPosition = SugarLocation.viewport(obst);
-    const yDelta = obstPosition.top - toDragPosition.top;
-    const xDelta = obstPosition.left - toDragPosition.left;
-
-    Mouse.mouseDown(toDrag);
-    Mouse.mouseMoveTo(toDrag, xDelta + 10, yDelta - 15);
-    // little trick that give "time" to CaretRange.fromPoint to find the position
-    await Waiter.pWait(0);
-
-    Mouse.mouseUp(toDrag);
-
-    TinyAssertions.assertContent(editor, getContentWithCefElements([ 'toDrag', 'obstacle', 'destination' ]));
+    TinyAssertions.assertContent(editor, getContentWithCefElements([ 'toDrag', 'destination', 'obstacle' ]));
   });
 });
