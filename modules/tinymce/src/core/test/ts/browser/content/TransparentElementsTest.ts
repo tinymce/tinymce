@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Obj, Singleton } from '@ephox/katamari';
-import { Html, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+import { Hierarchy, Html, Insert, Remove, SugarBody, SugarElement, SugarNode } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import AstNode from 'tinymce/core/api/html/Node';
@@ -11,7 +11,7 @@ describe('browser.tinymce.core.content.TransparentElementsTest', () => {
   const schema = Schema();
   const transparentElements = Arr.filter(Obj.keys(schema.getTransparentElements()), (name) => /^[a-z]+$/.test(name));
 
-  context('update', () => {
+  context('update/updateCaret', () => {
     const rootState = Singleton.value<SugarElement<HTMLElement>>();
 
     beforeEach(() => {
@@ -48,6 +48,28 @@ describe('browser.tinymce.core.content.TransparentElementsTest', () => {
       TransparentElements.update(schema, root.dom, false);
       assert.equal(Html.get(root), '<div><a href="#" data-mce-block="true"><p>link</p></a></div>');
     });
+
+    it('TINY-9172: Should update all anchors in element closest to the root only', () => {
+      const root = rootState.get().getOrDie();
+
+      Html.set(root, '<div><a href="#"><p>link</p></a><a href="#"><p>link</p></a></div><a href="#">not this</a><a href="#"><p>not this</p></a>');
+      const scope = Hierarchy.follow(root, [ 0, 0, 0 ]).filter(SugarNode.isElement).getOrDie();
+      TransparentElements.updateCaret(schema, root.dom, scope.dom);
+      assert.equal(
+        Html.get(root),
+        '<div><a href="#" data-mce-block="true"><p>link</p></a><a href="#" data-mce-block="true"><p>link</p></a></div><a href="#">not this</a><a href="#"><p>not this</p></a>'
+      );
+    });
+
+    it('TINY-9172: Should update anchor closest to root', () => {
+      const root = rootState.get().getOrDie();
+
+      Html.set(root, '<a href="#" data-mce-block="true">link</a>');
+      const scope = Hierarchy.follow(root, [ 0 ]).filter(SugarNode.isElement).getOrDie();
+      TransparentElements.updateCaret(schema, root.dom, scope.dom);
+      assert.equal( Html.get(root), '<a href="#" data-mce-block="true">link</a>');
+    });
+
   });
 
   context('isTransparentElementName', () => {

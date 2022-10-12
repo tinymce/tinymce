@@ -345,6 +345,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
   moveSelectionToMarker(editor, dom.get('mce_marker'));
   unmarkFragmentElements(editor.getBody());
   trimBrsFromTableCell(dom, selection.getStart());
-  TransparentElements.update(editor.schema, editor.getBody(), true);
+  TransparentElements.updateCaret(editor.schema, editor.getBody(), selection.getStart());
+
   return value;
 };
