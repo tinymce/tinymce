@@ -3,3 +3,4 @@
 
 alloy@12.0.0
 agar@7.3.0
+bridge@4.2.0
