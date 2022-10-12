@@ -75,10 +75,7 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       }
     }, []);
 
-    const clickViewButton = (editor: Editor, tooltip: string) => {
-      const btn = UiFinder.findIn(TinyDom.container(editor), `.tox-view button[title='${tooltip}']`).getOrDie();
-      Mouse.click(btn);
-    };
+    const clickViewButton = (editor: Editor, tooltip: string) => TinyUiActions.clickOnUi(editor, `.tox-view button[title='${tooltip}']`);
 
     const toggleView = (name: string) => {
       const editor = hook.editor();
@@ -132,7 +129,12 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
         const button = (title: string, classes: string[]) =>
           s.element('button', {
             classes: Arr.map(classes, (cls) => arr.has(cls)),
-            attrs: { 'title': str.is(title), 'type': str.is('button'), 'tabindex': str.is('-1'), 'data-alloy-tabstop': str.is('true') },
+            attrs: {
+              'title': str.is(title),
+              'type': str.is('button'),
+              'tabindex': str.is('-1'),
+              'data-alloy-tabstop': str.is('true')
+            },
             children: [ s.text(str.is(title)) ]
           });
 

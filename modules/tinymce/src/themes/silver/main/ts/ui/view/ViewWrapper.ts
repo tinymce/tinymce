@@ -12,6 +12,21 @@ import { SimpleBehaviours } from '../alien/SimpleBehaviours';
 import View from './View';
 import { ViewConfig } from './ViewTypes';
 
+interface SilverViewWrapperSpec extends Sketcher.SingleSketchSpec {
+  readonly backstage: UiFactoryBackstage;
+}
+
+interface SilverViewWrapperDetail extends Sketcher.SingleSketchDetail {
+  readonly uid: string;
+  readonly backstage: UiFactoryBackstage;
+}
+
+interface SilverViewWrapperApis {
+  readonly setViews: (comp: AlloyComponent, viewConfigs: ViewConfig) => void;
+  readonly whichView: (comp: AlloyComponent) => Optional<string>;
+  readonly toggleView: (comp: AlloyComponent, showMainView: () => void, hideMainView: () => void, name: string) => boolean;
+}
+
 const makeViews = (parts: SlotContainerTypes.SlotContainerParts, viewConfigs: ViewConfig, providers: UiFactoryBackstageProviders) => {
   return Obj.mapToArray(viewConfigs, (config, name) => {
     const internalViewConfig: BridgeView.View = StructureSchema.getOrDie(BridgeView.createView(config));
@@ -86,21 +101,6 @@ const runOnHide = (slotContainer: AlloyComponent, name: string) => {
   });
 };
 
-interface SilverViewWrapperSpec extends Sketcher.SingleSketchSpec {
-  backstage: UiFactoryBackstage;
-}
-
-interface SilverViewWrapperDetail extends Sketcher.SingleSketchDetail {
-  uid: string;
-  backstage: UiFactoryBackstage;
-}
-
-interface SilverViewWrapperApis {
-  setViews: (comp: AlloyComponent, viewConfigs: ViewConfig) => void;
-  whichView: (comp: AlloyComponent) => Optional<string>;
-  toggleView: (comp: AlloyComponent, showMainView: () => void, hideMainView: () => void, name: string) => boolean;
-}
-
 const factory: UiSketcher.SingleSketchFactory<SilverViewWrapperDetail, SilverViewWrapperSpec> = (detail, spec) => {
   const setViews = (comp: AlloyComponent, viewConfigs: ViewConfig) => {
     Replacing.set(comp, [ makeSlotContainer(viewConfigs, spec.backstage.shared.providers) ]);
@@ -113,13 +113,13 @@ const factory: UiSketcher.SingleSketchFactory<SilverViewWrapperDetail, SilverVie
   const toggleView = (comp: AlloyComponent, showMainView: () => void, hideMainView: () => void, name: string): boolean => {
     return Composing.getCurrent(comp).exists((slotContainer) => {
       const optCurrentSlotName = getCurrentName(slotContainer);
-      const hasSameName = optCurrentSlotName.exists((current) => name === current);
+      const isTogglingCurrentView = optCurrentSlotName.exists((current) => name === current);
       const exists = SlotContainer.getSlot(slotContainer, name).isSome();
 
       if (exists) {
         SlotContainer.hideAllSlots(slotContainer);
 
-        if (!hasSameName) {
+        if (!isTogglingCurrentView) {
           hideMainView();
           showContainer(comp);
           SlotContainer.showSlot(slotContainer, name);

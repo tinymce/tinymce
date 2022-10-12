@@ -83,7 +83,7 @@ interface ToolbarApis {
 }
 
 const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, OuterContainerSketchSpec> = (detail, components, _spec) => {
-  let state = false;
+  let toolbarDrawerOpenState = false;
 
   const apis: OuterContainerApis = {
     getSocket: (comp) => {
@@ -173,8 +173,8 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
       ).getOrNull();
     },
     hideMainView: (comp: AlloyComponent) => {
-      state = apis.isToolbarDrawerToggled(comp);
-      if (state) {
+      toolbarDrawerOpenState = apis.isToolbarDrawerToggled(comp);
+      if (toolbarDrawerOpenState) {
         apis.toggleToolbarDrawer(comp);
       }
 
@@ -186,7 +186,7 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
       });
     },
     showMainView: (comp: AlloyComponent) => {
-      if (state) {
+      if (toolbarDrawerOpenState) {
         apis.toggleToolbarDrawer(comp);
       }
 
