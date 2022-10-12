@@ -1,5 +1,5 @@
 import { Fun } from '@ephox/katamari';
-import { PredicateFind, SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
+import { Attribute, PredicateFind, SelectorExists, SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -9,23 +9,19 @@ const addToEditor = (editor: Editor): void => {
   const insertToolbarItems = Options.getInsertToolbarItems(editor);
   if (insertToolbarItems.length > 0) {
     editor.ui.registry.addContextToolbar('quickblock', {
-      predicate: (node) => {
+      predicate: (node: Node) => {
         const sugarNode = SugarElement.fromDom(node);
         const textBlockElementsMap = editor.schema.getTextBlockElements();
         const isRoot = (elem: SugarElement<Node>) => elem.dom === editor.getBody();
         const isFakeCaret = (elem: SugarElement<Node>) =>
-          Attribute.has(elem, 'data-mce-bogus') || SelectorExists.ancestor(elem, '[data-mce-bogus="all"]', (el) => isRoot(el));
+          Attribute.has(elem, 'data-mce-bogus') || SelectorExists.ancestor(elem, '[data-mce-bogus="all"]', (el: SugarElement<Node>) => isRoot(el));
 
         return SelectorFind.closest(sugarNode, 'table', isRoot).fold(
-          () => {
-            return PredicateFind.closest(
-              sugarNode,
-              (elem) => {
-                return !isFakeCaret(elem) && SugarNode.name(elem) in textBlockElementsMap && editor.dom.isEmpty(elem.dom);
-              },
-              isRoot
-            ).isSome();
-          },
+          () => PredicateFind.closest(
+            sugarNode,
+            (elem: SugarElement<Node>) => !isFakeCaret(elem) && SugarNode.name(elem) in textBlockElementsMap && editor.dom.isEmpty(elem.dom),
+            isRoot
+          ).isSome(),
           Fun.never
         );
       },
