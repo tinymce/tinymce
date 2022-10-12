@@ -1,4 +1,4 @@
-import { Mouse, UiFinder } from '@ephox/agar';
+import { Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SugarLocation } from '@ephox/sugar';
@@ -14,7 +14,6 @@ describe('browser.tinymce.core.DragnDropCEFTest', () => {
     acc + getBaseCEFElement(elementName)
   , '')}</div>`;
 
-  const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
   const hook = TinyHooks.bddSetup<Editor>({
     indent: false,
     menubar: false,
@@ -37,7 +36,7 @@ describe('browser.tinymce.core.DragnDropCEFTest', () => {
     Mouse.mouseMoveTo(toDrag, xDelta - 5, yDelta - 5);
 
     // little trick that give "time" to CaretRange.fromPoint to find the position
-    await wait(0);
+    await Waiter.pWait(0);
     Mouse.mouseUp(toDrag);
 
     TinyAssertions.assertContent(editor, getContentWithCefElements([ 'obstacle', 'toDrag', 'destination' ]));
@@ -58,7 +57,7 @@ describe('browser.tinymce.core.DragnDropCEFTest', () => {
     Mouse.mouseDown(toDrag);
     Mouse.mouseMoveTo(toDrag, xDelta + 10, yDelta - 15);
     // little trick that give "time" to CaretRange.fromPoint to find the position
-    await wait(0);
+    await Waiter.pWait(0);
 
     Mouse.mouseUp(toDrag);
 
