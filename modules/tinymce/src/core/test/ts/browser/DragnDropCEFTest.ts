@@ -7,23 +7,8 @@ import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.DragnDropCEFTest', () => {
-  const getBaseCEFElement = (name: string) => [ `<div class="${name}" style="margin: 40px;" contenteditable="false">`,
-    '<div style="height: 20px; cursor: grab; background-color: lightgrey;">&nbsp;',
-    '</div>',
-    '<div style="border: 1px solid lightgrey;">',
-    '<div>',
-    '<div style="padding-left: 50px;">',
-    `<label contenteditable="true">${name} header</label>`,
-    '</div>',
-    '<div>',
-    '<article style="padding: 10px 50px;" contenteditable="true">',
-    `<p>${name} description</p>`,
-    '</article>',
-    '</div>',
-    '</div>',
-    '</div>',
-    '</div>'
-  ].join('');
+  const getBaseCEFElement = (name: string) =>
+    `<div class="${name}" style="margin: 40px; width: 1110px; height: 120px;" contenteditable="false">${name}</div>`;
 
   const getContentWithCefElements = (elementsNames: string[]): string => `<div>${Arr.foldl(elementsNames, (acc, elementName) =>
     acc + getBaseCEFElement(elementName)
