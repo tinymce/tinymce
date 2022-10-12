@@ -24,7 +24,7 @@ export interface ExecCommandArgs {
   skip_focus?: boolean;
 }
 
-// List of commands that are considered safe even if the editor has no selection when the iframe is hidden in Firefox
+// List of commands that are considered safe even if the editor has no selection when the iframe is hidden in Firefox. See TINY-9210 for details.
 const selectionSafeCommands = [ 'toggleview' ];
 
 const isSelectionSafeCommand = (command: string) => Arr.contains(selectionSafeCommands, command.toLowerCase());
