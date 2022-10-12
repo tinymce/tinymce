@@ -222,10 +222,13 @@ const registry = (): Registry.Registry => {
 
     /**
      * Registers a new view container.
-     * This view container is hidden by default and attached next to the main view
-     * and can be toggled on or off. When it's toggled on the main editor view is hidden and the
-     * specific view is shown in it's place when toggled off the specific view is hidden and the main view becomes visible again.
-     * There is a ToggleView command that can be used to toggle the visibility of the view on or off or queried for the current state.
+     * This view container is hidden (off) by default and attached next to the main view.
+     * It can be toggled on or off.
+     * When it is on, the main editor view is hidden and the specific view is shown.
+     * When it is off, the specific view is hidden and the main view is shown.
+     * There is also a ToggleView command.
+     * The ToggleView command can toggle the view visibility.
+     * The ToggleView command can be queried for its current state.
      *
      * @method addView
      * @param {String} name Unique name identifying the new view.
