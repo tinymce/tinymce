@@ -15,10 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `color_default_foreground` and `color_default_background` options to set the initial default color for the `forecolor` and `backcolor` toolbar buttons and menu items. #TINY-9183
 
 ### Changed
-- Transparent elements like anchors are now allowed in the root of the editor body. #TINY-9172
+- Transparent elements, like anchors, are now allowed in the root of the editor body if they contain blocks. #TINY-9172
 
 ### Improved
-- Transparent elements like anchors can now contain block elements. #TINY-9172
+- Transparent elements, like anchors, can now contain block elements. #TINY-9172
 
 ### Fixed
 - Dragging a noneditable element toward the bottom edge would cause the page to scroll up. #TINY-9025
