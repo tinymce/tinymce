@@ -577,7 +577,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     const rootNode = new AstNode(rootName, 11);
     transferChildren(rootNode, element, schema.getSpecialElements());
 
-    // This next line is needed to fix memory leak in chrome and firefox.
+    // This next line is needed to fix a memory leak in chrome and firefox.
     // For more information see TINY-9186
     element.innerHTML = '';
 
