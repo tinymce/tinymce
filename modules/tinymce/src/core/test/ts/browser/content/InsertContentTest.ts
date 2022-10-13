@@ -1,5 +1,4 @@
-import { ApproxStructure } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -664,62 +663,63 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     TinyAssertions.assertContent(editor, '<p><foo-bar contenteditable="false" data-name="foobar"></foo-bar></p>');
   });
 
-  it('TINY-9172: Insert block anchor in regular block', () => {
-    const editor = hook.editor();
+  context('Transparent blocks', () => {
+    it('TINY-9172: Insert block anchor in regular block', () => {
+      const editor = hook.editor();
 
-    editor.setContent('<div>a</div>');
-    TinySelections.setCursor(editor, [ 0, 0 ], 0);
-    editor.insertContent('<a href="#"><p>b</p></a>');
-    TinyAssertions.assertContent(editor, '<div><a href="#"><p>b</p></a>a</div>');
-    assert.isTrue(editor.dom.select('a[data-mce-block="true"]').length === 1, 'Should have data-mce-block set to true');
-  });
+      editor.setContent('<div>a</div>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 0);
+      editor.insertContent('<a href="#"><p>b</p></a>');
+      TinyAssertions.assertContent(editor, '<div><a href="#"><p>b</p></a>a</div>');
+      assert.isTrue(editor.dom.select('a[data-mce-block="true"]').length === 1, 'Should have data-mce-block set to true');
+    });
 
-  it('TINY-9172: Insert block anchor in transparent block should split the block', () => {
-    const editor = hook.editor();
+    it('TINY-9172: Insert block anchor in transparent block should split the block', () => {
+      const editor = hook.editor();
 
-    editor.setContent('<a href="#1"><div>ac</div></a>');
-    TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
-    editor.insertContent('<a href="#2"><p>b</p></a>');
-    TinyAssertions.assertContent(editor, '<div><a href="#1">a</a><a href="#2"><p>b</p></a>c</div>');
-  });
+      editor.setContent('<a href="#1"><div>ac</div></a>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      editor.insertContent('<a href="#2"><p>b</p></a>');
+      TinyAssertions.assertContent(editor, '<div><a href="#1">a</a><a href="#2"><p>b</p></a>c</div>');
+    });
 
-  it('TINY-9172: Insert inline anchor in transparent block should split the block', () => {
-    const editor = hook.editor();
+    it('TINY-9172: Insert inline anchor in transparent block should split the block', () => {
+      const editor = hook.editor();
 
-    editor.setContent('<a href="#1"><div>ac</div></a>');
-    TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
-    editor.insertContent('<a href="#2">b</a>');
-    TinyAssertions.assertContent(editor, '<div><a href="#1">a</a><a href="#2">b</a>c</div>');
-  });
+      editor.setContent('<a href="#1"><div>ac</div></a>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      editor.insertContent('<a href="#2">b</a>');
+      TinyAssertions.assertContent(editor, '<div><a href="#1">a</a><a href="#2">b</a>c</div>');
+    });
 
-  it('TINY-9172: Insert block in anchor should work and annotate the element with data-mce-block', () => {
-    const editor = hook.editor();
+    it('TINY-9172: Insert block in anchor should work and annotate the element with data-mce-block', () => {
+      const editor = hook.editor();
 
-    editor.setContent('<div><a href="#1">ac</a></div>');
-    TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
-    editor.insertContent('<p>b</p>');
-    TinyAssertions.assertContent(editor, '<div><a href="#1">a<p>b</p>c</a></div>');
-    assert.isTrue(editor.dom.select('a[data-mce-block="true"]').length === 1, 'Should have data-mce-block set to true');
-  });
+      editor.setContent('<div><a href="#1">ac</a></div>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      editor.insertContent('<p>b</p>');
+      TinyAssertions.assertContent(editor, '<div><a href="#1">a<p>b</p>c</a></div>');
+      assert.isTrue(editor.dom.select('a[data-mce-block="true"]').length === 1, 'Should have data-mce-block set to true');
+    });
 
-  it('TINY-9172: Insert block in regular anchor should annotate the block with data-mce-block', () => {
-    const editor = hook.editor();
+    it('TINY-9172: Insert block in regular anchor should annotate the block with data-mce-block', () => {
+      const editor = hook.editor();
 
-    editor.setContent('<div><a href="#1">ac</a></div>');
-    TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
-    editor.insertContent('<p>b</p>');
-    TinyAssertions.assertContent(editor, '<div><a href="#1">a<p>b</p>c</a></div>');
-    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, _arr) =>
-      s.element('body', {
-        children: [
-          s.element('div', {
-            children: [
-              s.element('a', { attrs: { 'data-mce-block': str.is('true') }}),
-              s.zeroOrOne(s.element('br', {}))
-            ]
-          })
-        ]
-      })
-    ));
+      editor.setContent('<div><a href="#1">ac</a></div>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      editor.insertContent('<p>b</p>');
+      TinyAssertions.assertContent(editor, '<div><a href="#1">a<p>b</p>c</a></div>');
+      TinyAssertions.assertContentPresence(editor, { 'a[data-mce-block]': 1 });
+    });
+
+    it('TINY-9172: Insert block mixed with inlines in regular anchor should annotate the block with data-mce-block', () => {
+      const editor = hook.editor();
+
+      editor.setContent('<div><a href="#1">ad</a></div>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      editor.insertContent('<p>b</p><strong><em>c</em></strong>');
+      TinyAssertions.assertContent(editor, '<div><a href="#1">a<p>b</p><strong><em>c</em></strong>d</a></div>');
+      TinyAssertions.assertContentPresence(editor, { 'a[data-mce-block]': 1 });
+    });
   });
 });

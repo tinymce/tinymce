@@ -62,6 +62,14 @@ describe('browser.tinymce.core.content.TransparentElementsTest', () => {
       assert.equal(Html.get(root), '<a href="#" data-mce-block="true"><p>link</p></a>');
     });
 
+    it('TINY-9172: Should update anchor even if target element is in another branch', () => {
+      const root = rootState.get().getOrDie();
+
+      Html.set(root, '<div><a href="#"><p>link</p></a><b><i>target</i></b></div>');
+      const scope = Hierarchy.follow(root, [ 0, 1, 0 ]).filter(SugarNode.isElement).getOrDie();
+      TransparentElements.updateCaret(schema, root.dom, scope.dom);
+      assert.equal(Html.get(root), '<div><a href="#" data-mce-block="true"><p>link</p></a><b><i>target</i></b></div>');
+    });
   });
 
   context('isTransparentElementName', () => {
