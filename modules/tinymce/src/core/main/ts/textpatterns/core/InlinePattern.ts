@@ -49,7 +49,10 @@ const findPatternStartFromSpot = (dom: DOMUtils, pattern: InlinePattern, block: 
   const startPattern = pattern.start;
   const startSpot = TextSearch.repeatLeft(dom, spot.container, spot.offset, matchesPattern(startPattern), block);
   return startSpot.bind((spot) => {
-    if (spot.offset >= startPattern.length) {
+    const startPatternIndex = block.textContent?.indexOf(startPattern) ?? -1;
+    const isCompleteMatch = startPatternIndex !== -1 && spot.offset >= startPatternIndex + startPattern.length;
+
+    if (isCompleteMatch) {
       // Complete match
       const rng = dom.createRng();
       rng.setStart(spot.container, spot.offset - startPattern.length);
@@ -182,6 +185,17 @@ const findPatternsRec = (
         position: endSpot
       }, normalizedMatches);
 
+      if (result.isNone() && offset > 0) {
+        return findPatternsRec(
+          editor,
+          patterns,
+          node,
+          offset - 1,
+          block,
+          normalizedMatches
+        );
+      }
+
       // If a match was found then return that
       if (result.isSome()) {
         return result;
@@ -252,8 +266,31 @@ const addMarkers = (dom: DOMUtils, matches: InlinePatternMatch[]): InlinePattern
   }, [] as InlinePatternMatchWithMarkers[]);
 };
 
-const findPatterns = (editor: Editor, block: Element, node: Node, offset: number, patternSet: PatternSet, normalizedMatches: boolean): InlinePatternMatch[] =>
-  findPatternsRec(editor, patternSet.inlinePatterns, node, offset, block, normalizedMatches).fold(() => [], (result) => result.matches);
+const sortPatterns = (patterns: InlinePattern[]) => Arr.sort(patterns, (a, b) => b.end.length - a.end.length);
+
+const getBestMatches = (matches: InlinePatternMatch[], matchesWithSortedPatterns: InlinePatternMatch[]) => {
+  const hasSameMatches = Arr.forall(matches, (match) =>
+    Arr.exists(matchesWithSortedPatterns, (sortedMatch) =>
+      match.pattern.start === sortedMatch.pattern.start && match.pattern.end === sortedMatch.pattern.end
+    )
+  );
+
+  if (matches.length === matchesWithSortedPatterns.length) {
+    if (hasSameMatches) {
+      return matches;
+    } else {
+      return matchesWithSortedPatterns;
+    }
+  }
+  return matches.length > matchesWithSortedPatterns.length ? matches : matchesWithSortedPatterns;
+};
+
+const findPatterns = (editor: Editor, block: Element, node: Node, offset: number, patternSet: PatternSet, normalizedMatches: boolean): InlinePatternMatch[] => {
+  const matches = findPatternsRec(editor, patternSet.inlinePatterns, node, offset, block, normalizedMatches).fold(() => [], (result) => result.matches);
+  const matchesWithSortedPatterns = findPatternsRec(editor, sortPatterns(patternSet.inlinePatterns), node, offset, block, normalizedMatches).fold(() => [], (result) => result.matches);
+
+  return getBestMatches(matches, matchesWithSortedPatterns);
+};
 
 const applyMatches = (editor: Editor, matches: InlinePatternMatch[]): void => {
   if (matches.length === 0) {
