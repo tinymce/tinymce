@@ -19,7 +19,7 @@ const addToEditor = (editor: Editor): void => {
         return SelectorFind.closest(sugarNode, 'table', isRoot).fold(
           () => PredicateExists.closest(
             sugarNode,
-            (elem) => !isFakeCaret(elem) && SugarNode.name(elem) in textBlockElementsMap && editor.dom.isEmpty(elem.dom),
+            (elem) => SugarNode.name(elem) in textBlockElementsMap && editor.dom.isEmpty(elem.dom) && !isFakeCaret(elem),
             isRoot
           ),
           Fun.never
