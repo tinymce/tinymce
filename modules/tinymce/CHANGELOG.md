@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - New `expand` function added to `tinymce.selection` which expands the selection around the nearest word. #TINY-9001
 - New `expand` function added to `tinymce.dom.RangeUtils` to return a new range expanded around the nearest word. #TINY-9001
+- New `addView` function added to `editor.ui.registry` which makes it possible to register custom editor views. #TINY-9210
+- New `ToggleView` command which makes it possible to hide or show registered custom views. #TINY-9210
 - New `color_default_foreground` and `color_default_background` options to set the initial default color for the `forecolor` and `backcolor` toolbar buttons and menu items. #TINY-9183
 
 ### Fixed
@@ -18,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Line separator scrolling in floating toolbars. #TINY-8948
 - A double bottom border appeared on inline mode editor for the `tinymce-5` skin. #TINY-9108
 - The editor header showed up even with no menubar and toolbar configured. #TINY-8819
+- Inline text pattern no longer triggers if it matches only the end but not the start. #TINY-8947
+- Matches of inline text patterns that are similar are now managed correctly. #TINY-8949
 
 ## 6.2.0 - 2022-09-08
 
