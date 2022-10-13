@@ -10,7 +10,7 @@ export const transparentBlockAttr = 'data-mce-block';
 const makeSelectorFromSchemaMap = (map: SchemaMap) => Arr.filter(Obj.keys(map), (key) => /^[a-z]+$/.test(key)).join(',');
 
 const updateTransparent = (blocksSelector: string, transparent: Element) => {
-  if (transparent.querySelectorAll(blocksSelector).length > 0) {
+  if (Type.isNonNullable(transparent.querySelector(blocksSelector))) {
     transparent.setAttribute(transparentBlockAttr, 'true');
 
     if (transparent.getAttribute('data-mce-selected') === 'inline-boundary') {
