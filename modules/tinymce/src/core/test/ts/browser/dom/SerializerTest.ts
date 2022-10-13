@@ -830,10 +830,10 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   it('TINY-9172: Should remove the internal data-mce-block attribute for transparent block elements', () => {
     const ser = DomSerializer({ });
 
-    setTestHtml('<a href="#" data-mce-block="true">block</a>');
+    setTestHtml('<a href="#" data-mce-block="true"><p>block</p></a>');
     assert.equal(
       ser.serialize(getTestElement(), { getInner: true }),
-      '<a href="#">block</a>'
+      '<a href="#"><p>block</p></a>'
     );
   });
 });
