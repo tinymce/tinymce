@@ -14,17 +14,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `ToggleView` command which makes it possible to hide or show registered custom views. #TINY-9210
 - New `color_default_foreground` and `color_default_background` options to set the initial default color for the `forecolor` and `backcolor` toolbar buttons and menu items. #TINY-9183
 
+### Changed
+- Transparent elements like anchors are now allowed in the root of the editor body. #TINY-9172
+
+### Improved
+- Transparent elements like anchors can now contain block elements. #TINY-9172
+
 ### Fixed
 - Dragging a noneditable element toward the bottom edge would cause the page to scroll up. #TINY-9025
 - Range expanding capabilities would behave inconsistently depending on where the cursor was placed. #TINY-9029
 - Compilation errors were thrown when using TypeScript 4.8. #TINY-9161
 - Line separator scrolling in floating toolbars. #TINY-8948
 - A double bottom border appeared on inline mode editor for the `tinymce-5` skin. #TINY-9108
-- The editor header showed up even with no menubar and toolbar configured. #TINY-8819
-
-### Changed
-- Transparent elements like anchors are now allowed in the root of the editor body. #TINY-9172
-- Transparent elements like anchors can now contain block elements. #TINY-9172
 
 ## 6.2.0 - 2022-09-08
 
