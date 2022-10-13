@@ -122,9 +122,8 @@ const getNonWhiteSpaceSibling = (node: Node | null, next?: boolean, inc?: boolea
   return undefined;
 };
 
-const isTextBlock = (schema: Schema, node: Node): boolean => {
-  return !!schema.getTextBlockElements()[node.nodeName.toLowerCase()] || TransparentElements.isTransparentBlock(schema, node);
-};
+const isTextBlock = (schema: Schema, node: Node): boolean =>
+  !!schema.getTextBlockElements()[node.nodeName.toLowerCase()] || TransparentElements.isTransparentBlock(schema, node);
 
 const isValid = (ed: Editor, parent: string, child: string): boolean => {
   return ed.schema.isValidChild(parent, child);
