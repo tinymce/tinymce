@@ -21,7 +21,7 @@ const updateTransparent = (blocksSelector: string, transparent: Element) => {
   }
 };
 
-const updateAt = (schema: Schema, scope: Element) => {
+export const updateChildren = (schema: Schema, scope: Element): void => {
   const transparentSelector = makeSelectorFromSchemaMap(schema.getTransparentElements());
   const blocksSelector = makeSelectorFromSchemaMap(schema.getBlockElements());
 
@@ -36,8 +36,6 @@ export const updateElement = (schema: Schema, target: Element): void => {
   }
 };
 
-export const updateChildren = (schema: Schema, root: Element): void => updateAt(schema, root);
-
 export const updateCaret = (schema: Schema, root: Element, caretParent: Element): void => {
   const isRoot = (el: SugarElement<Node>) => Compare.eq(el, SugarElement.fromDom(root));
   const parents = Traverse.parents(SugarElement.fromDom(caretParent), isRoot);
@@ -45,7 +43,7 @@ export const updateCaret = (schema: Schema, root: Element, caretParent: Element)
   // case <body><p><b><i>|</i></b></p></body> it would use the P as the scope
   Arr.get(parents, parents.length - 2).filter(SugarNode.isElement).fold(
     () => updateChildren(schema, root),
-    (scope) => updateAt(schema, scope.dom)
+    (scope) => updateChildren(schema, scope.dom)
   );
 };
 
