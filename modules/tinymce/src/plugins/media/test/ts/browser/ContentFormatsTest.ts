@@ -48,7 +48,7 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
   it('TBA: Video retained as is', () => {
     const editor = hook.editor();
     editor.setContent(
-      '<p><video src="320x240.ogg" autoplay loop controls>text<a href="#">link</a></video></p>'
+      '<video src="320x240.ogg" autoplay loop controls>text<a href="#">link</a></video>'
     );
 
     TinyAssertions.assertContent(editor,
@@ -60,7 +60,7 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
   it.skip('TBA: Iframe retained as is', () => {
     const editor = hook.editor();
     editor.setContent(
-      '<p><iframe src="320x240.ogg" allowfullscreen>text<a href="#">link</a></iframe></p>'
+      '<iframe src="320x240.ogg" allowfullscreen>text<a href="#">link</a></iframe>'
     );
 
     TinyAssertions.assertContent(editor,

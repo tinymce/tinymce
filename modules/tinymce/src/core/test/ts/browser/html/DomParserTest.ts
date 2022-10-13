@@ -1417,12 +1417,13 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       assert.equal(serializedHtml, html);
     });
 
-    context('transparent elements', () => {
+    context('Transparent elements', () => {
       const getTransparentElements = (schema: Schema) => Arr.unique(Arr.map(Obj.keys(schema.getTransparentElements()), (s) => s.toLowerCase()));
 
       it('TINY-9172: inline transparents should not get data-mce-block attribute', () => {
         const parser = DomParser();
-        const html = '<p>' + Arr.map(getTransparentElements(parser.schema), (name) => `<${name}>text</${name}>`).join('') + '</p>';
+        const innerHtml = Arr.map(getTransparentElements(parser.schema), (name) => `<${name}>text</${name}>`).join('');
+        const html = `<p>${innerHtml}</p>`;
         const serializedHtml = serializer.serialize(parser.parse(html));
 
         assert.equal(serializedHtml, html);
@@ -1439,8 +1440,10 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
       it('TINY-9172: transparents wrapping blocks should get data-mce-block attribute', () => {
         const parser = DomParser();
-        const html = '<div>' + Arr.map(getTransparentElements(parser.schema), (name) => `<${name}><p>text</p></${name}>`).join('') + '</div>';
-        const expectedHtml = '<div>' + Arr.map(getTransparentElements(parser.schema), (name) => `<${name} data-mce-block="true"><p>text</p></${name}>`).join('') + '</div>';
+        const innerHtml = Arr.map(getTransparentElements(parser.schema), (name) => `<${name}><p>text</p></${name}>`).join('');
+        const html = `<div>${innerHtml}</div>`;
+        const expectedInnerHtml = Arr.map(getTransparentElements(parser.schema), (name) => `<${name} data-mce-block="true"><p>text</p></${name}>`).join('');
+        const expectedHtml = `<div>${expectedInnerHtml}</div>`;
         const serializedHtml = serializer.serialize(parser.parse(html));
 
         assert.equal(serializedHtml, expectedHtml);

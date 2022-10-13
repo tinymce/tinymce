@@ -181,4 +181,3 @@ describe('browser.tinymce.core.content.TransparentElementsTest', () => {
     });
   });
 });
-

@@ -664,7 +664,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     TinyAssertions.assertContent(editor, '<p><foo-bar contenteditable="false" data-name="foobar"></foo-bar></p>');
   });
 
-  it('TINY-9172: Insert block anchor in regual block', () => {
+  it('TINY-9172: Insert block anchor in regular block', () => {
     const editor = hook.editor();
 
     editor.setContent('<div>a</div>');
