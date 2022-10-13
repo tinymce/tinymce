@@ -85,13 +85,13 @@ describe('browser.tinymce.plugins.link.UpdateLinkTest', () => {
   context('Block links', () => {
     it('TINY-9172: Should update a root block link', async () => {
       const editor = hook.editor();
-      editor.setContent('<a href="#1">tiny</a>');
-      TinySelections.setCursor(editor, [ 0, 0 ], 1);
+      editor.setContent('<a href="#1"><p>tiny</p></a>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       editor.execCommand('mceLink');
       await TinyUiActions.pWaitForDialog(editor);
       FocusTools.setActiveValue(SugarDocument.getDocument(), '#2');
       TinyUiActions.submitDialog(editor);
-      await Waiter.pTryUntil('Wait for content to change', () => TinyAssertions.assertContent(editor, '<a href="#2">tiny</a>'));
+      await Waiter.pTryUntil('Wait for content to change', () => TinyAssertions.assertContent(editor, '<a href="#2"><p>tiny</p></a>'));
     });
 
     it('TINY-9172: Should update a wrapped block link', async () => {

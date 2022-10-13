@@ -21,8 +21,9 @@ tinymce.init({
       ed.setContent(`
         <h1>Heading</h1>
         <p><a name="anchor1"></a>anchor here.</p>
-        <a href="#">Block link</a>
+        <a href="#"><p>Block root link</p></a>
         <div><a href="#"><p>Block link</p></a></div>
+        <a href="#">Inline root link</a>
         <p><a href="#">Inline link</a></p>
       `);
     });

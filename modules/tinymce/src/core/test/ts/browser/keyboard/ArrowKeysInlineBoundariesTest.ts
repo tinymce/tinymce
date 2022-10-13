@@ -378,11 +378,11 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
   context('Block links', () => {
     it('TINY-9172: Arrow right at beginning of block link should do nothing', () => {
       const editor = hook.editor();
-      editor.setContent('<a href="#">x</a>');
-      TinySelections.setCursor(editor, [ 0, 0 ], 0);
+      editor.setContent('<a href="#"><p>x</p></a>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
       editor.nodeChanged();
       TinyContentActions.keystroke(editor, Keys.right());
-      TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
     });
   });
 });

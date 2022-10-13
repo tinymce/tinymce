@@ -9,24 +9,34 @@ export const transparentBlockAttr = 'data-mce-block';
 
 const makeSelectorFromSchemaMap = (map: SchemaMap) => Arr.filter(Obj.keys(map), (key) => /^[a-z]+$/.test(key)).join(',');
 
-const updateAt = (schema: Schema, root: Element, scope: Element, inEditorRoot: boolean) => {
+const updateTransparent = (blocksSelector: string, transparent: Element) => {
+  if (transparent.querySelectorAll(blocksSelector).length > 0) {
+    transparent.setAttribute(transparentBlockAttr, 'true');
+
+    if (transparent.getAttribute('data-mce-selected') === 'inline-boundary') {
+      transparent.removeAttribute('data-mce-selected');
+    }
+  } else {
+    transparent.removeAttribute(transparentBlockAttr);
+  }
+};
+
+const updateAt = (schema: Schema, scope: Element) => {
   const transparentSelector = makeSelectorFromSchemaMap(schema.getTransparentElements());
   const blocksSelector = makeSelectorFromSchemaMap(schema.getBlockElements());
 
-  Arr.each(scope.querySelectorAll(transparentSelector), (transparent) => {
-    if ((inEditorRoot && transparent.parentElement === root) || transparent.querySelectorAll(blocksSelector).length > 0) {
-      transparent.setAttribute(transparentBlockAttr, 'true');
-
-      if (transparent.getAttribute('data-mce-selected') === 'inline-boundary') {
-        transparent.removeAttribute('data-mce-selected');
-      }
-    } else {
-      transparent.removeAttribute(transparentBlockAttr);
-    }
-  });
+  Arr.each(scope.querySelectorAll(transparentSelector), (transparent) => updateTransparent(blocksSelector, transparent));
 };
 
-export const update = (schema: Schema, root: Element, inEditorRoot: boolean): void => updateAt(schema, root, root, inEditorRoot);
+export const updateElement = (schema: Schema, target: Element): void => {
+  const blocksSelector = makeSelectorFromSchemaMap(schema.getBlockElements());
+
+  if (isTransparentElement(schema, target)) {
+    updateTransparent(blocksSelector, target);
+  }
+};
+
+export const updateChildren = (schema: Schema, root: Element): void => updateAt(schema, root);
 
 export const updateCaret = (schema: Schema, root: Element, caretParent: Element): void => {
   const isRoot = (el: SugarElement<Node>) => Compare.eq(el, SugarElement.fromDom(root));
@@ -34,8 +44,8 @@ export const updateCaret = (schema: Schema, root: Element, caretParent: Element)
   // Check the element just above below the root so in if caretParent is I in this
   // case <body><p><b><i>|</i></b></p></body> it would use the P as the scope
   Arr.get(parents, parents.length - 2).filter(SugarNode.isElement).fold(
-    () => update(schema, root, true),
-    (scope) => updateAt(schema, root, scope.dom, true)
+    () => updateChildren(schema, root),
+    (scope) => updateAt(schema, scope.dom)
   );
 };
 

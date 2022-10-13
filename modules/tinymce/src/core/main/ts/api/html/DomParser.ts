@@ -14,7 +14,7 @@ import { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
 import * as URI from '../util/URI';
 import AstNode from './Node';
-import Schema, { getTextRootBlockElements, SchemaRegExpMap } from './Schema';
+import Schema, { getTextRootBlockElements, SchemaMap, SchemaRegExpMap } from './Schema';
 
 /**
  * @summary
@@ -503,8 +503,15 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     }
   };
 
+  const isWrappableNode = (blockElements: SchemaMap, node: AstNode) => {
+    const isInternalElement = Type.isString(node.attr(internalElementAttr));
+    const isInlineElement = node.type === 1 && (!Obj.has(blockElements, node.name) && !TransparentElements.isTransparentAstBlock(schema, node));
+
+    return node.type === 3 || (isInlineElement && !isInternalElement);
+  };
+
   const addRootBlocks = (rootNode: AstNode, rootBlockName: string): void => {
-    const blockElements = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements(), schema.getTransparentElements());
+    const blockElements = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
     const startWhiteSpaceRegExp = /^[ \t\r\n]+/;
     const endWhiteSpaceRegExp = /[ \t\r\n]+$/;
 
@@ -534,8 +541,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     while (node) {
       const next = node.next;
 
-      if (node.type === 3 || (node.type === 1 && node.name !== 'p' &&
-        !blockElements[node.name] && !node.attr(internalElementAttr))) {
+      if (isWrappableNode(blockElements, node)) {
         if (!rootBlockNode) {
           // Create a new root block element
           rootBlockNode = new AstNode(rootBlockName, 1);
@@ -573,7 +579,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     // Parse and sanitize the content
     const element = parseAndSanitizeWithContext(html, rootName, args.format);
 
-    TransparentElements.update(schema, element, Type.isUndefined(args.context));
+    TransparentElements.updateChildren(schema, element);
 
     // Create the AST representation
     const rootNode = new AstNode(rootName, 11);

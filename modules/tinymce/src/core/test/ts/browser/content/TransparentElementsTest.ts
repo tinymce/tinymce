@@ -25,19 +25,11 @@ describe('browser.tinymce.core.content.TransparentElementsTest', () => {
       rootState.clear();
     });
 
-    it('TINY-9172: Should add data-mce-block on transparent block elements', () => {
+    it('TINY-9172: Should add data-mce-block on transparent elements if the contain blocks', () => {
       const root = rootState.get().getOrDie();
 
       Html.set(root, '<a href="#">link</a><div><a href="#"><p>link</p></a></div><div><a href="#">link</a></div>');
-      TransparentElements.update(schema, root.dom, true);
-      assert.equal(Html.get(root), '<a href="#" data-mce-block="true">link</a><div><a href="#" data-mce-block="true"><p>link</p></a></div><div><a href="#">link</a></div>');
-    });
-
-    it('TINY-9172: Should add data-mce-block on transparent block elements that wrap blocks but not at root level', () => {
-      const root = rootState.get().getOrDie();
-
-      Html.set(root, '<a href="#">link</a><div><a href="#"><p>link</p></a></div><div><a href="#">link</a></div>');
-      TransparentElements.update(schema, root.dom, false);
+      TransparentElements.updateChildren(schema, root.dom);
       assert.equal(Html.get(root), '<a href="#">link</a><div><a href="#" data-mce-block="true"><p>link</p></a></div><div><a href="#">link</a></div>');
     });
 
@@ -45,7 +37,7 @@ describe('browser.tinymce.core.content.TransparentElementsTest', () => {
       const root = rootState.get().getOrDie();
 
       Html.set(root, '<div><a href="#" data-mce-selected="inline-boundary"><p>link</p></a></div>');
-      TransparentElements.update(schema, root.dom, false);
+      TransparentElements.updateChildren(schema, root.dom);
       assert.equal(Html.get(root), '<div><a href="#" data-mce-block="true"><p>link</p></a></div>');
     });
 
@@ -64,10 +56,10 @@ describe('browser.tinymce.core.content.TransparentElementsTest', () => {
     it('TINY-9172: Should update anchor closest to root', () => {
       const root = rootState.get().getOrDie();
 
-      Html.set(root, '<a href="#" data-mce-block="true">link</a>');
+      Html.set(root, '<a href="#"><p>link</p></a>');
       const scope = Hierarchy.follow(root, [ 0 ]).filter(SugarNode.isElement).getOrDie();
       TransparentElements.updateCaret(schema, root.dom, scope.dom);
-      assert.equal( Html.get(root), '<a href="#" data-mce-block="true">link</a>');
+      assert.equal(Html.get(root), '<a href="#" data-mce-block="true"><p>link</p></a>');
     });
 
   });

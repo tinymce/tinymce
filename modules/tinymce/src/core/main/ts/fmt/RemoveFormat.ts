@@ -240,7 +240,8 @@ const removeFormatInternal = (ed: Editor, format: Format, vars?: FormatVars, nod
 
   // Root level block transparents should get converted into regular text blocks
   if (FormatUtils.isInlineFormat(format) && TransparentElements.isTransparentElementName(schema, format.inline) && TransparentElements.isTransparentBlock(schema, node) && node.parentElement === ed.getBody()) {
-    return removeResult.rename(Options.getForcedRootBlock(ed));
+    removeNode(ed, node, format);
+    return removeResult.removed();
   }
 
   // Check if node is noneditable and can have the format removed from it

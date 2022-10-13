@@ -37,7 +37,7 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
   it('TBA: Embed retained as is', () => {
     const editor = hook.editor();
     editor.setContent(
-      '<p><embed src="320x240.ogg" width="100" height="200">text<a href="#">link</a></embed></p>'
+      '<embed src="320x240.ogg" width="100" height="200">text<a href="#">link</a></embed>'
     );
 
     TinyAssertions.assertContent(editor,

@@ -2,9 +2,10 @@ import { Arr, Fun, Obj } from '@ephox/katamari';
 import { Insert, SugarElement } from '@ephox/sugar';
 
 import Editor from './api/Editor';
-import { SchemaMap } from './api/html/Schema';
+import Schema, { SchemaMap } from './api/html/Schema';
 import * as Options from './api/Options';
 import * as Bookmarks from './bookmark/Bookmarks';
+import * as TransparentElements from './content/TransparentElements';
 import * as NodeType from './dom/NodeType';
 import * as PaddingBr from './dom/PaddingBr';
 import * as Parents from './dom/Parents';
@@ -20,11 +21,11 @@ import * as EditorFocus from './focus/EditorFocus';
 const isBlockElement = (blockElements: SchemaMap, node: Node) =>
   Obj.has(blockElements, node.nodeName);
 
-const isValidTarget = (blockElements: SchemaMap, node: Node) => {
+const isValidTarget = (schema: Schema, node: Node) => {
   if (NodeType.isText(node)) {
     return true;
   } else if (NodeType.isElement(node)) {
-    return !isBlockElement(blockElements, node) && !Bookmarks.isBookmarkNode(node);
+    return !isBlockElement(schema.getBlockElements(), node) && !Bookmarks.isBookmarkNode(node) && !TransparentElements.isTransparentBlock(schema, node);
   } else {
     return false;
   }
@@ -35,8 +36,6 @@ const hasBlockParent = (blockElements: SchemaMap, root: Node, node: Node) => {
     return isBlockElement(blockElements, elm.dom);
   });
 };
-
-// const is
 
 const shouldRemoveTextNode = (blockElements: SchemaMap, node: Node) => {
   if (NodeType.isText(node)) {
@@ -56,7 +55,7 @@ const createRootBlock = (editor: Editor): HTMLElement =>
 const addRootBlocks = (editor: Editor) => {
   const dom = editor.dom, selection = editor.selection;
   const schema = editor.schema;
-  const blockElements = { ...schema.getBlockElements(), ...schema.getTransparentElements() };
+  const blockElements = schema.getBlockElements();
   const startNode = selection.getStart();
   const rootNode = editor.getBody();
   let rootBlockNode: Node | undefined | null;
@@ -81,7 +80,11 @@ const addRootBlocks = (editor: Editor) => {
   // Wrap non block elements and text nodes
   let node = rootNode.firstChild;
   while (node) {
-    if (isValidTarget(blockElements, node)) {
+    if (NodeType.isElement(node)) {
+      TransparentElements.updateElement(schema, node);
+    }
+
+    if (isValidTarget(schema, node)) {
       // Remove empty text nodes and nodes containing only whitespace
       if (shouldRemoveTextNode(blockElements, node)) {
         tempNode = node;

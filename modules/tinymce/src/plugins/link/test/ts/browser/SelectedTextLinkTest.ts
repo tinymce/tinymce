@@ -149,8 +149,8 @@ describe('browser.tinymce.plugins.link.SelectedTextLinkTest', () => {
   context('Block links', () => {
     it('TINY-9172: Collapsed selection in root block link should not have text to display', async () => {
       const editor = hook.editor();
-      editor.setContent('<a href="#">root</a>');
-      TinySelections.setCursor(editor, [ 0, 0 ], 1);
+      editor.setContent('<a href="#"><p>root</p></a>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       await pOpenDialog(editor, false);
       await TestLinkUi.pClickCancel(editor);
     });

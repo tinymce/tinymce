@@ -51,8 +51,8 @@ describe('browser.tinymce.plugins.link.RemoveLinkTest', () => {
   context('Block links', () => {
     it('TINY-9172: Removing root level link should convert it to regular text block', () => {
       const editor = hook.editor();
-      editor.setContent('<a href="#">tiny</a>');
-      TinySelections.setCursor(editor, [ 0, 0 ], 1);
+      editor.setContent('<a href="#"><p>tiny</p></a>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       TinyUiActions.clickOnToolbar(editor, 'button[title="Remove link"]');
       TinyAssertions.assertContent(editor, '<p>tiny</p>');
       TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
