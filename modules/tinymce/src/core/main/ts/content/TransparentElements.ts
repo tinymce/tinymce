@@ -47,7 +47,7 @@ export const updateCaret = (schema: Schema, root: Element, caretParent: Element)
   );
 };
 
-export const isTransparentElementName = (schema: Schema, name: string): boolean => name in schema.getTransparentElements();
+export const isTransparentElementName = (schema: Schema, name: string): boolean => Obj.has(schema.getTransparentElements(), name);
 
 const isTransparentElement = (schema: Schema, node: Node | null | undefined): node is Element =>
   NodeType.isElement(node) && isTransparentElementName(schema, node.nodeName);
