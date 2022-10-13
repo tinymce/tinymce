@@ -29,9 +29,8 @@ export const updateChildren = (schema: Schema, scope: Element): void => {
 };
 
 export const updateElement = (schema: Schema, target: Element): void => {
-  const blocksSelector = makeSelectorFromSchemaMap(schema.getBlockElements());
-
   if (isTransparentElement(schema, target)) {
+    const blocksSelector = makeSelectorFromSchemaMap(schema.getBlockElements());
     updateTransparent(blocksSelector, target);
   }
 };
