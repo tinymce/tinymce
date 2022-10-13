@@ -24,6 +24,11 @@ export interface ExecCommandArgs {
   skip_focus?: boolean;
 }
 
+// List of commands that are considered safe even if the editor has no selection when the iframe is hidden in Firefox. See TINY-9210 for details.
+const selectionSafeCommands = [ 'toggleview' ];
+
+const isSelectionSafeCommand = (command: string) => Arr.contains(selectionSafeCommands, command.toLowerCase());
+
 export interface EditorCommandsConstructor {
   readonly prototype: EditorCommands;
 
@@ -89,7 +94,7 @@ class EditorCommands {
    * @return {Boolean} true/false - For example: If the selected contents is bold or not.
    */
   public queryCommandState(command: string): boolean {
-    if (this.editor.quirks.isHidden() || this.editor.removed) {
+    if ((!isSelectionSafeCommand(command) && this.editor.quirks.isHidden()) || this.editor.removed) {
       return false;
     }
 
@@ -110,7 +115,7 @@ class EditorCommands {
    * @return {String} Command value, for example the current font size or an empty string (`""`) if the query command is not found.
    */
   public queryCommandValue(command: string): string {
-    if (this.editor.quirks.isHidden() || this.editor.removed) {
+    if ((!isSelectionSafeCommand(command) && this.editor.quirks.isHidden()) || this.editor.removed) {
       return '';
     }
 

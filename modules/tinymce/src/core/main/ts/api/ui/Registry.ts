@@ -220,6 +220,22 @@ const registry = (): Registry.Registry => {
      */
     addToggleMenuItem: bridge.addToggleMenuItem,
 
+    /**
+     * Registers a new view container.
+     * This view container is hidden (off) by default and attached next to the main view.
+     * It can be toggled on or off.
+     * When it is on, the main editor view is hidden and the specific view is shown.
+     * When it is off, the specific view is hidden and the main view is shown.
+     * There is also a ToggleView command.
+     * The ToggleView command can toggle the view visibility.
+     * The ToggleView command can be queried for its current state.
+     *
+     * @method addView
+     * @param {String} name Unique name identifying the new view.
+     * @param {View.ViewSpec} obj The view configuration object.
+     */
+    addView: bridge.addView,
+
     /* note getAll is an internal method and may not be supported in future revisions */
     getAll: bridge.getAll
   };

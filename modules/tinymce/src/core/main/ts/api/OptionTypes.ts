@@ -69,6 +69,8 @@ interface BaseEditorOptions {
   cache_suffix?: string;
   color_cols?: number;
   color_map?: string[];
+  color_default_foreground?: string;
+  color_default_background?: string;
   content_css?: boolean | string | string[];
   content_css_cors?: boolean;
   content_security_policy?: string;
@@ -263,6 +265,8 @@ export interface EditorOptions extends NormalizedEditorOptions {
   body_id: string;
   br_newline_selector: string;
   color_cols: number;
+  color_default_background: string;
+  color_default_foreground: string;
   content_css: string[];
   contextmenu: string[];
   custom_colors: boolean;
