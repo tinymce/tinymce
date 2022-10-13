@@ -578,7 +578,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     transferChildren(rootNode, element, schema.getSpecialElements());
 
     // This next line is needed to fix memory leak in chrome and firefox.
-    // For more information see: https://ephocks.atlassian.net/browse/TINY-9186
+    // For more information see TINY-9186
     element.innerHTML = '';
 
     // Set up whitespace fixes
