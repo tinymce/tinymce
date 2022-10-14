@@ -257,6 +257,31 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       });
     });
 
+    it('TINY-9025: Dragging CEF element outside the editor should not cause scrolling', async () => {
+      const editor = hook.editor();
+      editor.setContent(`
+      <p>CEF can get dragged before this one</p>
+      <p class="hidden" style="height: 1500px"></p>
+      <p id="separator" style="height: 100px"></p>
+      <p contenteditable="false" style="height: 200px; background-color: black; color: white">Draggable CEF</p>
+    `);
+      window.scroll({
+        top: window.innerHeight + 2000
+      });
+      const target = UiFinder.findIn(TinyDom.body(editor), 'p:contains("Draggable CEF")').getOrDie();
+      const initialScrollY = window.scrollY;
+      editor.getWin().scroll({
+        top: editor.getWin().innerHeight
+      });
+      Mouse.mouseDown(target);
+      window.dispatchEvent(new MouseEvent('mousemove', {
+        clientY: window.innerHeight,
+      }));
+      await Waiter.pWait(100);
+      Mouse.mouseUp(target);
+      assert.strictEqual(window.scrollY, initialScrollY);
+    });
+
     it('TINY-8874: Dragging CEF element towards the right edge causes scrolling', async () => {
       const editor = hook.editor();
       editor.setContent(`

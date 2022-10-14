@@ -31,6 +31,8 @@ const option: {
 } = (name: string) => (editor: Editor) =>
   editor.options.get(name);
 
+const fallbackColor = '#000000';
+
 const register = (editor: Editor): void => {
   const registerOption = editor.options.register;
 
@@ -101,6 +103,16 @@ const register = (editor: Editor): void => {
     processor: 'boolean',
     default: true
   });
+
+  registerOption('color_default_foreground', {
+    processor: 'string',
+    default: fallbackColor
+  });
+
+  registerOption('color_default_background', {
+    processor: 'string',
+    default: fallbackColor
+  });
 };
 
 const getColorCols = (editor: Editor, id: string): number => {
@@ -123,11 +135,17 @@ const getColors = (editor: Editor, id: string): Menu.ChoiceMenuItemSpec[] => {
   }
 };
 
+const getDefaultForegroundColor = option<string>('color_default_foreground');
+const getDefaultBackgroundColor = option<string>('color_default_background');
+
 export {
   register,
   mapColors,
   calcCols,
   getColorCols,
   hasCustomColors,
-  getColors
+  getColors,
+  getDefaultBackgroundColor,
+  getDefaultForegroundColor,
+  fallbackColor
 };

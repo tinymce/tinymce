@@ -17,8 +17,6 @@ export interface ColorSwatchDialogData {
 
 type ColorFormat = 'forecolor' | 'hilitecolor';
 
-const fallbackColor = '#000000';
-
 const hasStyleApi = (node: Node): node is (Node & ElementCSSInlineStyle) =>
   Type.isNonNullable((node as HTMLElement).style);
 
@@ -91,7 +89,7 @@ const applyColor = (editor: Editor, format: ColorFormat, value: string, onChoice
         editor.execCommand('mceApplyTextcolor', format as any, color);
         onChoice(color);
       });
-    }, fallbackColor);
+    }, Options.fallbackColor);
   } else if (value === 'remove') {
     onChoice('');
     editor.execCommand('mceRemoveTextcolor', format as any);
@@ -240,8 +238,10 @@ const colorPickerDialog = (editor: Editor) => (callback: ColorInputCallback, val
 
 const register = (editor: Editor): void => {
   registerCommands(editor);
-  const lastForeColor = Cell(fallbackColor);
-  const lastBackColor = Cell(fallbackColor);
+  const fallbackColorForeground = Options.getDefaultForegroundColor(editor);
+  const fallbackColorBackground = Options.getDefaultBackgroundColor(editor);
+  const lastForeColor = Cell(fallbackColorForeground);
+  const lastBackColor = Cell(fallbackColorBackground);
   registerTextColorButton(editor, 'forecolor', 'forecolor', 'Text color', lastForeColor);
   registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background color', lastBackColor);
 

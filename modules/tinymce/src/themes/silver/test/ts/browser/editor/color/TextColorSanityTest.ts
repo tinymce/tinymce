@@ -11,6 +11,46 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
   const assertUiElementDoesNotExist = (editor: Editor, selector: string) =>
     UiFinder.notExists(SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(TinyDom.targetElement((editor)))), selector);
 
+  const forecolorStruct = (color: string) => ApproxStructure.build((s, str) => {
+    return s.element('body', {
+      children: [
+        s.element('p', {
+          children: [
+            s.element('span', {
+              styles: {
+                color: str.is(color)
+              },
+              children: [
+                s.text(str.is('hello'))
+              ]
+            }),
+            s.text(str.is(' test'))
+          ]
+        })
+      ]
+    });
+  });
+
+  const backcolorStruct = (color: string) => ApproxStructure.build((s, str) => {
+    return s.element('body', {
+      children: [
+        s.element('p', {
+          children: [
+            s.element('span', {
+              styles: {
+                'background-color': str.is(color)
+              },
+              children: [
+                s.text(str.is('hello'))
+              ]
+            }),
+            s.text(str.is(' test'))
+          ]
+        })
+      ]
+    });
+  });
+
   const setupContent = (editor: Editor) => {
     editor.setContent('hello test');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 5);
@@ -216,6 +256,25 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
       assertUiElementDoesNotExist(editor, 'div[data-mce-color="#FF0000"]');
       TinyUiActions.clickOnUi(editor, 'div[data-mce-color="#0000FF"]');
       Assert.eq('Cols is the expected value', getColorCols(editor, 'hilitecolor'), 3);
+    });
+  });
+
+  context('Custom default background and foreground set', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      toolbar: 'forecolor backcolor fontsize',
+      base_url: '/project/tinymce/js/tinymce',
+      color_default_foreground: 'yellow',
+      color_default_background: 'cyan'
+    }, [], true);
+
+    it('TINY-9183: Initial color is set to yellow for text color and to cyan for background color', () => {
+      const editor = hook.editor();
+      setupContent(editor);
+      TinyUiActions.clickOnUi(editor, 'div[title="Text color"] .tox-tbtn');
+      TinyAssertions.assertContentStructure(editor, forecolorStruct('yellow'));
+      setupContent(editor);
+      TinyUiActions.clickOnUi(editor, 'div[title="Background color"] .tox-tbtn');
+      TinyAssertions.assertContentStructure(editor, backcolorStruct('cyan'));
     });
   });
 });

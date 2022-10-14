@@ -1,5 +1,5 @@
 import {
-  PublicDialog as Dialog, PublicInlineContent as InlineContent, PublicMenu as Menu, PublicSidebar as Sidebar, PublicToolbar as Toolbar,
+  PublicDialog as Dialog, PublicInlineContent as InlineContent, PublicMenu as Menu, PublicSidebar as Sidebar, PublicView as View, PublicToolbar as Toolbar,
   Registry as BridgeRegistry
 } from '@ephox/bridge';
 
@@ -25,6 +25,7 @@ export {
   Dialog,
   InlineContent,
   Menu,
+  View,
   Sidebar,
   Toolbar
 };
