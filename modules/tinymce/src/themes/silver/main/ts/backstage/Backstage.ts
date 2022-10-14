@@ -50,7 +50,7 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
   const contextMenuState = Cell(false);
   const toolbar = HeaderBackstage(editor);
 
-  const providers: UiFactoryBackstage['shared']['providers'] = {
+  const providers: UiFactoryBackstageProviders = {
     icons: () => editor.ui.registry.getAll().icons,
     menuItems: () => editor.ui.registry.getAll().menuItems,
     translate: I18n.translate,
@@ -92,8 +92,8 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
     ...commonBackstage,
     shared: {
       ...commonBackstage.shared,
-      interpreter: (s) => UiFactory.interpretWithoutForm(s, {}, popupBackstage),
-      getSink: lazySinks.popup
+      interpreter: (s) => UiFactory.interpretWithoutForm(s, {}, dialogBackstage),
+      getSink: lazySinks.dialog
     }
   };
 
