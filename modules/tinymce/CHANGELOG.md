@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - New `expand` function added to `tinymce.selection` which expands the selection around the nearest word. #TINY-9001
 - New `expand` function added to `tinymce.dom.RangeUtils` to return a new range expanded around the nearest word. #TINY-9001
-- New `color_map_background` option which sets the default colors in the background highlight colorswatch. #TINY-9184
-- New `color_map_foreground` option which sets the default colors in the textcolor colorswatch. #TINY-9184
+- New `color_map_background` and `color_map_foreground` option which sets the base colors used in the `backcolor` and `forecolor` toolbar buttons and menu items. #TINY-9184
+- Added optional `storageKey` property to colorinput component #TINY-9184
 
 ### Fixed
 - Range expanding capabilities would behave inconsistently depending on where the cursor was placed. #TINY-9029
