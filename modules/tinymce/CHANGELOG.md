@@ -13,9 +13,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `ToggleView` command which makes it possible to hide or show registered custom views. #TINY-9210
 - New `color_default_foreground` and `color_default_background` options to set the initial default color for the `forecolor` and `backcolor` toolbar buttons and menu items. #TINY-9183
 
-### Changed
-- Separated the sinks and backstage setups between dialogs and other popups. #TINY-9223
-
 ### Fixed
 - Dragging a noneditable element toward the bottom edge would cause the page to scroll up. #TINY-9025
 - Range expanding capabilities would behave inconsistently depending on where the cursor was placed. #TINY-9029
