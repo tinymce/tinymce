@@ -39,11 +39,11 @@ export interface ModeRenderInfo {
 }
 
 export interface RenderInfo {
-  readonly forPopups: {
+  readonly popups: {
     readonly getMothership: () => Gui.GuiSystem;
     readonly backstage: Backstage.UiFactoryBackstage;
   };
-  readonly forDialogs: {
+  readonly dialogs: {
     readonly getMothership: () => Gui.GuiSystem;
     readonly backstage: Backstage.UiFactoryBackstage;
   };
@@ -105,7 +105,7 @@ const setup = (editor: Editor): RenderInfo => {
 
   const lazyPopupSinkResult = () => Result.fromOption(
     lazyUiRefs.popupUi.get().map((ui) => ui.sink),
-    '(adjacent) UI has not been rendered'
+    '(popup) UI has not been rendered'
   );
 
   const lazyAnchorBar = lazyUiRefs.lazyGetInOuterOrDie(
@@ -430,6 +430,7 @@ const setup = (editor: Editor): RenderInfo => {
   };
 
   const renderUIWithRefs = (uiRefs: ReadyUiReferences): ModeRenderInfo => {
+    const { mainUi, popupUi, uiMotherships } = uiRefs;
     Obj.map(Options.getToolbarGroups(editor), (toolbarGroupButtonConfig, name) => {
       editor.ui.registry.addGroupToolbarButton(name, toolbarGroupButtonConfig);
     });
@@ -448,8 +449,8 @@ const setup = (editor: Editor): RenderInfo => {
       views
     };
 
-    setupShortcutsAndCommands(uiRefs.mainUi.outerContainer);
-    Events.setup(editor, uiRefs.mainUi.mothership, uiRefs.uiMotherships);
+    setupShortcutsAndCommands(mainUi.outerContainer);
+    Events.setup(editor, mainUi.mothership, uiMotherships);
 
     // This backstage needs to kept in sync with the one passed to the Header part.
     header.setup(editor, backstages.popup.shared, lazyHeader);
@@ -458,11 +459,11 @@ const setup = (editor: Editor): RenderInfo => {
     SilverContextMenu.setup(editor, backstages.popup.shared.getSink, backstages.popup);
     Sidebar.setup(editor);
     Throbber.setup(editor, lazyThrobber, backstages.popup.shared);
-    ContextToolbar.register(editor, contextToolbars, uiRefs.popupUi.sink, { backstage: backstages.popup });
-    TableSelectorHandles.setup(editor, uiRefs.popupUi.sink);
+    ContextToolbar.register(editor, contextToolbars, popupUi.sink, { backstage: backstages.popup });
+    TableSelectorHandles.setup(editor, popupUi.sink);
 
     const elm = editor.getElement();
-    const height = setEditorSize(uiRefs.mainUi.outerContainer);
+    const height = setEditorSize(mainUi.outerContainer);
 
     const args: RenderArgs = { targetNode: elm, height };
     // The only components that use backstages.dialog currently are the Modal dialogs.
@@ -491,13 +492,13 @@ const setup = (editor: Editor): RenderInfo => {
 
   // We don't have uiRefs here, so we have to rely on cells unfortunately.
   return {
-    forPopups: {
+    popups: {
       backstage: backstages.popup,
       // TINY-9226: We haven't enabled the separate popup mothership yet, so this needs to
       // point to the dialog mothership
       getMothership: (): Gui.GuiSystem => getLazyMothership('popups', lazyDialogMothership)
     },
-    forDialogs: {
+    dialogs: {
       backstage: backstages.dialog,
       getMothership: (): Gui.GuiSystem => getLazyMothership('dialogs', lazyDialogMothership)
     },

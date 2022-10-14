@@ -31,6 +31,7 @@ export const InlineHeader = (
   backstage: UiFactoryBackstage,
   floatContainer: Singleton.Value<AlloyComponent>
 ): InlineHeader => {
+  const { mainUi, uiMotherships } = uiRefs;
   const DOM = DOMUtils.DOM;
   const useFixedToolbarContainer = Options.useFixedContainer(editor);
   const isSticky = Options.isStickyToolbar(editor);
@@ -55,7 +56,7 @@ export const InlineHeader = (
   const calcMode = (container: AlloyComponent): 'top' | 'bottom' => {
     switch (Options.getToolbarLocation(editor)) {
       case ToolbarLocation.auto:
-        const toolbar = OuterContainer.getToolbar(uiRefs.mainUi.outerContainer);
+        const toolbar = OuterContainer.getToolbar(mainUi.outerContainer);
         const offset = calcToolbarOffset(toolbar);
         const toolbarHeight = Height.get(container.element) - offset;
         const targetBounds = Boxes.box(targetElm);
@@ -115,7 +116,7 @@ export const InlineHeader = (
 
   const updateChromePosition = () => {
     floatContainer.on((container) => {
-      const toolbar = OuterContainer.getToolbar(uiRefs.mainUi.outerContainer);
+      const toolbar = OuterContainer.getToolbar(mainUi.outerContainer);
       const offset = calcToolbarOffset(toolbar);
 
       // The float container/editor may not have been rendered yet, which will cause it to have a non integer based positions
@@ -125,7 +126,7 @@ export const InlineHeader = (
         Math.max(targetBounds.y - Height.get(container.element) + offset, 0) :
         targetBounds.bottom;
 
-      Css.setAll(uiRefs.mainUi.outerContainer.element, {
+      Css.setAll(mainUi.outerContainer.element, {
         position: 'absolute',
         top: Math.round(top) + 'px',
         left: Math.round(targetBounds.x) + 'px'
@@ -134,7 +135,7 @@ export const InlineHeader = (
   };
 
   const repositionPopups = () => {
-    Arr.each(uiRefs.uiMotherships, (m) => {
+    Arr.each(uiMotherships, (m) => {
       m.broadcastOn([ Channels.repositionPopups() ], { });
     });
   };
@@ -158,7 +159,7 @@ export const InlineHeader = (
 
     // Refresh split toolbar
     if (isSplitToolbar) {
-      OuterContainer.refreshToolbar(uiRefs.mainUi.outerContainer);
+      OuterContainer.refreshToolbar(mainUi.outerContainer);
     }
 
     // Positioning
@@ -197,9 +198,9 @@ export const InlineHeader = (
 
   const show = () => {
     visible.set(true);
-    Css.set(uiRefs.mainUi.outerContainer.element, 'display', 'flex');
+    Css.set(mainUi.outerContainer.element, 'display', 'flex');
     DOM.addClass(editor.getBody(), 'mce-edit-focus');
-    Arr.each(uiRefs.uiMotherships, (m) => {
+    Arr.each(uiMotherships, (m) => {
       Css.remove(m.element, 'display');
     });
     updateMode(false);
@@ -208,12 +209,9 @@ export const InlineHeader = (
 
   const hide = () => {
     visible.set(false);
-    // In what situation would `outerContainer` not be set?
-    if (uiRefs.mainUi.outerContainer) {
-      Css.set(uiRefs.mainUi.outerContainer.element, 'display', 'none');
-      DOM.removeClass(editor.getBody(), 'mce-edit-focus');
-    }
-    Arr.each(uiRefs.uiMotherships, (m) => {
+    Css.set(mainUi.outerContainer.element, 'display', 'none');
+    DOM.removeClass(editor.getBody(), 'mce-edit-focus');
+    Arr.each(uiMotherships, (m) => {
       Css.set(m.element, 'display', 'none');
     });
   };

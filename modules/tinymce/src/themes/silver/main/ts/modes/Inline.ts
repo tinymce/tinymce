@@ -81,6 +81,7 @@ const attachUiMotherships = (uiRoot: SugarElement<HTMLElement | ShadowRoot>, uiR
 };
 
 const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
+  const { mainUi } = uiRefs;
   const floatContainer = Singleton.value<AlloyComponent>();
   const targetElm = SugarElement.fromDom(args.targetNode);
   const ui = InlineHeader(editor, targetElm, uiRefs, backstage, floatContainer);
@@ -94,16 +95,16 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
       return;
     }
 
-    floatContainer.set(OuterContainer.getHeader(uiRefs.mainUi.outerContainer).getOrDie());
+    floatContainer.set(OuterContainer.getHeader(mainUi.outerContainer).getOrDie());
 
     const uiContainer = getUiContainer(editor);
-    Attachment.attachSystem(uiContainer, uiRefs.mainUi.mothership);
+    Attachment.attachSystem(uiContainer, mainUi.mothership);
     attachUiMotherships(uiContainer, uiRefs);
 
     setToolbar(editor, uiRefs, rawUiConfig, backstage);
 
     OuterContainer.setMenubar(
-      uiRefs.mainUi.outerContainer,
+      mainUi.outerContainer,
       identifyMenus(editor, rawUiConfig)
     );
 
@@ -137,11 +138,11 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
     setEnabled: (state) => {
       ReadOnly.broadcastReadonly(uiRefs, !state);
     },
-    isEnabled: () => !Disabling.isDisabled(uiRefs.mainUi.outerContainer)
+    isEnabled: () => !Disabling.isDisabled(mainUi.outerContainer)
   };
 
   return {
-    editorContainer: uiRefs.mainUi.outerContainer.element.dom,
+    editorContainer: mainUi.outerContainer.element.dom,
     api
   };
 };

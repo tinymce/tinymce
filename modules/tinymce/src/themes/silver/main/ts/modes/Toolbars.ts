@@ -10,7 +10,7 @@ import { ReadyUiReferences } from './UiReferences';
 
 // Set toolbar(s) depending on if multiple toolbars is configured or not
 const setToolbar = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage): void => {
-  const comp = uiRefs.mainUi.outerContainer;
+  const outerContainer = uiRefs.mainUi.outerContainer;
   const toolbarConfig = rawUiConfig.toolbar;
   const toolbarButtonsConfig = rawUiConfig.buttons;
 
@@ -20,10 +20,10 @@ const setToolbar = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: Rend
       const config = { toolbar: t, buttons: toolbarButtonsConfig, allowToolbarGroups: rawUiConfig.allowToolbarGroups };
       return identifyButtons(editor, config, backstage, Optional.none());
     });
-    OuterContainer.setToolbars(comp, toolbars);
+    OuterContainer.setToolbars(outerContainer, toolbars);
   } else {
     OuterContainer.setToolbar(
-      comp,
+      outerContainer,
       identifyButtons(editor, rawUiConfig, backstage, Optional.none())
     );
   }

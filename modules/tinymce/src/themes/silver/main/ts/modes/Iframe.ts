@@ -22,6 +22,7 @@ const detection = PlatformDetection.detect();
 const isiOS12 = detection.os.isiOS() && detection.os.version.major <= 12;
 
 const setupEvents = (editor: Editor, uiRefs: ReadyUiReferences) => {
+  const { uiMotherships } = uiRefs;
   const dom = editor.dom;
   let contentWindow = editor.getWin();
   const initialDocEle = editor.getDoc().documentElement;
@@ -62,12 +63,12 @@ const setupEvents = (editor: Editor, uiRefs: ReadyUiReferences) => {
 
   // We want to hide ALL UI motherships here.
   editor.on('hide', () => {
-    Arr.each(uiRefs.uiMotherships, (m) => {
+    Arr.each(uiMotherships, (m) => {
       Css.set(m.element, 'display', 'none');
     });
   });
   editor.on('show', () => {
-    Arr.each(uiRefs.uiMotherships, (m) => {
+    Arr.each(uiMotherships, (m) => {
       Css.remove(m.element, 'display');
     });
   });
@@ -92,8 +93,8 @@ const attachUiMotherships = (uiRoot: SugarElement<HTMLElement | ShadowRoot>, uiR
 };
 
 const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
-  const lastToolbarWidth = Cell(0);
   const { mainUi, uiMotherships } = uiRefs;
+  const lastToolbarWidth = Cell(0);
   const outerContainer = mainUi.outerContainer;
 
   loadIframeSkin(editor);
@@ -101,7 +102,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   const eTargetNode = SugarElement.fromDom(args.targetNode);
   const uiRoot = SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(eTargetNode));
 
-  Attachment.attachSystemAfter(eTargetNode, uiRefs.mainUi.mothership);
+  Attachment.attachSystemAfter(eTargetNode, mainUi.mothership);
   attachUiMotherships(uiRoot, uiRefs);
 
   editor.on('PostRender', () => {
