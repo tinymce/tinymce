@@ -83,6 +83,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
             tooltip: Optional.some('tooltip'),
             icon: Optional.none(),
             text: Optional.some('button3'),
+            size: Optional.none(),
             columns: 1,
             presets: 'normal',
             select: Optional.none(),

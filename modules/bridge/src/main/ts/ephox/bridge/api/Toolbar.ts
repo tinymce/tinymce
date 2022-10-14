@@ -4,7 +4,7 @@ import {
 import { createToolbarButton, ToolbarButton, ToolbarButtonInstanceApi, ToolbarButtonSpec } from '../components/toolbar/ToolbarButton';
 import { createMenuButton, ToolbarMenuButton, ToolbarMenuButtonInstanceApi, ToolbarMenuButtonSpec } from '../components/toolbar/ToolbarMenuButton';
 import {
-  ColumnTypes, createSplitButton, PresetItemTypes, PresetTypes, ToolbarSplitButton, ToolbarSplitButtonInstanceApi, ToolbarSplitButtonSpec
+  ColumnTypes, createSplitButton, PresetItemTypes, PresetTypes, Size, ToolbarSplitButton, ToolbarSplitButtonInstanceApi, ToolbarSplitButtonSpec
 } from '../components/toolbar/ToolbarSplitButton';
 import {
   createToggleButton, ToolbarToggleButton, ToolbarToggleButtonInstanceApi, ToolbarToggleButtonSpec
@@ -39,6 +39,7 @@ export {
 
   ColumnTypes,
   PresetItemTypes,
+  Size,
   PresetTypes,
   MenuButtonFetchContext
 };

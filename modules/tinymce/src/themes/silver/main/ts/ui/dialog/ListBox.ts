@@ -67,6 +67,7 @@ export const renderListBox = (spec: ListBoxSpec, backstage: UiFactoryBackstage, 
         uid: sketchSpec.uid,
         text: initialItem.map((item) => item.text),
         icon: Optional.none(),
+        size: Optional.none(),
         tooltip: spec.label,
         role: Optional.none(),
         fetch: (comp, callback) => {

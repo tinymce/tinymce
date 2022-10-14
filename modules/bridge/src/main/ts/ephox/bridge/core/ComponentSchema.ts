@@ -15,6 +15,7 @@ export const onItemAction = FieldSchema.requiredFunction('onItemAction');
 export const onSetup = FieldSchema.defaultedFunction('onSetup', () => Fun.noop);
 
 export const optionalName = FieldSchema.optionString('name');
+export const optionalSize = FieldSchema.optionString('size');
 export const optionalText = FieldSchema.optionString('text');
 export const optionalIcon = FieldSchema.optionString('icon');
 export const optionalTooltip = FieldSchema.optionString('tooltip');

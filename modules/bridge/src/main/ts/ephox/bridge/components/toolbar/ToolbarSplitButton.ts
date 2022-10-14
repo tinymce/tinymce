@@ -12,11 +12,13 @@ export type SelectPredicate = (value: string) => boolean;
 export type PresetTypes = 'color' | 'normal' | 'listpreview';
 export type PresetItemTypes = 'color' | 'normal';
 export type ColumnTypes = number | 'auto';
+export type Size = 'default' | 'small' | 'medium' | 'large';
 
 export interface ToolbarSplitButtonSpec {
   type?: 'splitbutton';
   tooltip?: string;
   icon?: string;
+  size?: Size;
   text?: string;
   select?: SelectPredicate;
   presets?: PresetTypes;
@@ -31,6 +33,7 @@ export interface ToolbarSplitButton {
   type: 'splitbutton';
   tooltip: Optional<string>;
   icon: Optional<string>;
+  size: Optional<Size>;
   text: Optional<string>;
   select: Optional<SelectPredicate>;
   presets: PresetTypes;
@@ -53,6 +56,7 @@ export const splitButtonSchema = StructureSchema.objOf([
   ComponentSchema.type,
   ComponentSchema.optionalTooltip,
   ComponentSchema.optionalIcon,
+  ComponentSchema.optionalSize,
   ComponentSchema.optionalText,
   ComponentSchema.optionalSelect,
   ComponentSchema.fetch,

@@ -1,4 +1,5 @@
 import { AlloyComponent, SketchSpec, TieredData } from '@ephox/alloy';
+import { Toolbar } from '@ephox/bridge';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -46,7 +47,7 @@ export interface SelectedFormat {
 }
 
 export interface SelectSpec {
-  readonly styles?: Record<string, string>;
+  readonly size?: Optional<Toolbar.Size>;
   readonly tooltip: string;
   readonly text: Optional<string>;
   readonly icon: Optional<string>;
@@ -184,7 +185,6 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
 
   return renderCommonDropdown(
     {
-      styles: spec.styles,
       text: spec.icon.isSome() ? Optional.none() : spec.text,
       icon: spec.icon,
       tooltip: Optional.from(spec.tooltip),
@@ -195,6 +195,7 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
       columns: 1,
       presets: 'normal',
       classes: spec.icon.isSome() ? [] : [ 'bespoke' ],
+      size: Optional.from(spec.size).getOr(Optional.none()),
       dropdownBehaviours: []
     },
     ToolbarButtonClasses.Button,

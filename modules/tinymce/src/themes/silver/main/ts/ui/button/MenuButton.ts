@@ -45,6 +45,7 @@ const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonI
 const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Optional<string>): SketchSpec => {
   return renderCommonDropdown({
     text: spec.text,
+    size: Optional.none(),
     icon: spec.icon,
     tooltip: spec.tooltip,
     searchable: spec.search.isSome(),

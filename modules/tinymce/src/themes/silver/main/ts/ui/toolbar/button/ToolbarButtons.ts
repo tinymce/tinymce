@@ -95,7 +95,7 @@ const renderCommonStructure = (
     },
     components: componentRenderPipeline([
       icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)),
-      text.map((text) => renderLabel(text, ToolbarButtonClasses.Button, providersBackstage))
+      text.map((text) => renderLabel(text, ToolbarButtonClasses.Button, providersBackstage, 'default'))
     ]),
 
     eventOrder: {
@@ -122,7 +122,7 @@ const renderCommonStructure = (
           initialData: { icon, text },
           renderComponents: (data: ButtonState, _state) => componentRenderPipeline([
             data.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)),
-            data.text.map((text) => renderLabel(text, ToolbarButtonClasses.Button, providersBackstage))
+            data.text.map((text) => renderLabel(text, ToolbarButtonClasses.Button, providersBackstage, 'default'))
           ])
         })).toArray()
       ).concat(behaviours.getOr([ ]))

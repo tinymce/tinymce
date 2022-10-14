@@ -93,9 +93,7 @@ const getSpec = (editor: Editor): SelectSpec => {
   const dataset = buildBasicSettingsDataset(editor, 'font_size_formats', Delimiter.Space);
 
   return {
-    styles: {
-      width: '65px'
-    },
+    size: Optional.some('small'),
     tooltip: 'Font sizes',
     text: Optional.some('12pt'),
     icon: Optional.none(),

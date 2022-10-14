@@ -32,6 +32,7 @@ export interface UpdateMenuIconEvent extends CustomEvent {
 
 export interface CommonDropdownSpec<T> {
   readonly uid?: string;
+  readonly size: Optional<Toolbar.Size>;
   readonly text: Optional<string>;
   readonly icon: Optional<string>;
   readonly disabled?: boolean;
@@ -61,7 +62,7 @@ const renderCommonDropdown = <T>(
   // via Replacing. These events are generally emitted by dropdowns that want the
   // main text and icon to match the current selection (e.g. bespokes like font family)
   const optMemDisplayText = spec.text.map(
-    (text) => Memento.record(renderLabel(text, prefix, sharedBackstage.providers))
+    (text) => Memento.record(renderLabel(text, prefix, sharedBackstage.providers, spec.size.getOr('default')))
   );
   const optMemDisplayIcon = spec.icon.map(
     (iconName) => Memento.record(renderReplaceableIconFromPack(iconName, sharedBackstage.providers.icons))
