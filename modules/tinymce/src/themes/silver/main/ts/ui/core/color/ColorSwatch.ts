@@ -1,5 +1,6 @@
 import { HexColour, RgbaColour } from '@ephox/acid';
 import { Cell, Fun, Optional, Strings, Type } from '@ephox/katamari';
+import { Css, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
@@ -83,13 +84,15 @@ const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemSpec[] => {
 const applyColor = (editor: Editor, format: ColorFormat, value: string, onChoice: (v: string) => void) => {
   if (value === 'custom') {
     const dialog = colorPickerDialog(editor);
+    const cssRgbValue = Css.get(SugarElement.fromDom(editor.selection.getStart()), format === 'hilitecolor' ? 'background-color' : 'color');
+    const hexvalue = RgbaColour.fromString(cssRgbValue).map((rgba) => '#' + HexColour.fromRgba(rgba).value).getOr(Options.fallbackColor);
     dialog((colorOpt) => {
       colorOpt.each((color) => {
         ColorCache.addColor(format, color);
         editor.execCommand('mceApplyTextcolor', format as any, color);
         onChoice(color);
       });
-    }, Options.fallbackColor);
+    }, hexvalue);
   } else if (value === 'remove') {
     onChoice('');
     editor.execCommand('mceRemoveTextcolor', format as any);
