@@ -1,7 +1,7 @@
-import { FocusTools, Keys } from '@ephox/agar';
-import { describe, it, before, afterEach } from '@ephox/bedrock-client';
+import { FocusTools, Keys, Waiter } from '@ephox/agar';
+import { describe, it, before, afterEach, context } from '@ephox/bedrock-client';
 import { SugarDocument } from '@ephox/sugar';
-import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
@@ -12,7 +12,8 @@ describe('browser.tinymce.plugins.link.UpdateLinkTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'link',
     toolbar: '',
-    base_url: '/project/tinymce/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce',
+    indent: false
   }, [ Plugin ]);
 
   before(() => {
@@ -78,6 +79,30 @@ describe('browser.tinymce.plugins.link.UpdateLinkTest', () => {
       'a[href]': 0,
       'a[title="shouldbekept"]': 1,
       'a:contains("tiny")': 1
+    });
+  });
+
+  context('Block links', () => {
+    it('TINY-9172: Should update a root block link', async () => {
+      const editor = hook.editor();
+      editor.setContent('<a href="#1"><p>tiny</p></a>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      editor.execCommand('mceLink');
+      await TinyUiActions.pWaitForDialog(editor);
+      FocusTools.setActiveValue(SugarDocument.getDocument(), '#2');
+      TinyUiActions.submitDialog(editor);
+      await Waiter.pTryUntil('Wait for content to change', () => TinyAssertions.assertContent(editor, '<a href="#2"><p>tiny</p></a>'));
+    });
+
+    it('TINY-9172: Should update a wrapped block link', async () => {
+      const editor = hook.editor();
+      editor.setContent('<div><a href="#1"><p>tiny</p></a></div>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1);
+      editor.execCommand('mceLink');
+      await TinyUiActions.pWaitForDialog(editor);
+      FocusTools.setActiveValue(SugarDocument.getDocument(), '#2');
+      TinyUiActions.submitDialog(editor);
+      await Waiter.pTryUntil('Wait for content to change', () => TinyAssertions.assertContent(editor, '<div><a href="#2"><p>tiny</p></a></div>'));
     });
   });
 });

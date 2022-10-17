@@ -14,6 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `addView` function added to `editor.ui.registry` which makes it possible to register custom editor views. #TINY-9210
 - New `ToggleView` command which makes it possible to hide or show registered custom views. #TINY-9210
 - New `color_default_foreground` and `color_default_background` options to set the initial default color for the `forecolor` and `backcolor` toolbar buttons and menu items. #TINY-9183
+- New `getTransparentElements` function added to `tinymce.html.Schema` to return a map object of transparent HTML elements. #TINY-9172
+
+### Changed
+- Transparent elements, like anchors, are now allowed in the root of the editor body if they contain blocks. #TINY-9172
+
+### Improved
+- Transparent elements, like anchors, can now contain block elements. #TINY-9172
 
 ### Fixed
 - Parsing media content would cause a memory leak, which for example occurred when using the `getContent` API. #TINY-9186

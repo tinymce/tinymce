@@ -1,5 +1,6 @@
-import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { Arr, Obj } from '@ephox/katamari';
+import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -105,6 +106,8 @@ describe('browser.tinymce.core.ForceBlocksTest', () => {
     assert.equal(HtmlUtils.cleanHtml(body.innerHTML), '<div>abcd</div><div>abcd</div>');
     assert.equal(editor.selection.getNode().nodeName, 'DIV');
     assert.lengthOf(body.childNodes, 2);
+
+    editor.options.unset('forced_root_block');
   });
 
   it('Do not wrap bookmark spans', () => {
@@ -113,5 +116,33 @@ describe('browser.tinymce.core.ForceBlocksTest', () => {
     LegacyUnit.setSelection(editor, 'body', 0);
     pressArrowKey(editor);
     assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<span data-mce-type="bookmark">a</span>');
+  });
+
+  context('Transparent elements', () => {
+    it('TINY-9172: Do not wrap root level transparent elements if they blocks inside', () => {
+      const editor = hook.editor();
+      const transparentElements = Arr.filter(Obj.keys(editor.schema.getTransparentElements()), (name) => /^[a-z]+$/.test(name));
+      const transparentElementsHtml = Arr.map(transparentElements, (name) => `<${name} data-mce-block="true"><p>text</p></${name}>`).join('');
+      const innerHtml = 'text' + transparentElementsHtml;
+      const expectedInnerHtml = '<p>text</p>' + transparentElementsHtml;
+
+      editor.getBody().innerHTML = innerHtml;
+      TinySelections.setCursor(editor, [ 0 ], 0);
+      pressArrowKey(editor);
+      assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), expectedInnerHtml);
+    });
+
+    it('TINY-9172: Wrap root level transparent elements if they do not have blocks inside', () => {
+      const editor = hook.editor();
+      const transparentElements = Arr.filter(Obj.keys(editor.schema.getTransparentElements()), (name) => /^[a-z]+$/.test(name));
+      const transparentElementsHtml = Arr.map(transparentElements, (name) => `<${name}>text</${name}>`).join('');
+      const innerHtml = 'text' + transparentElementsHtml;
+      const expectedInnerHtml = `<p>text${transparentElementsHtml}</p>`;
+
+      editor.getBody().innerHTML = innerHtml;
+      TinySelections.setCursor(editor, [ 0 ], 0);
+      pressArrowKey(editor);
+      assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), expectedInnerHtml);
+    });
   });
 });

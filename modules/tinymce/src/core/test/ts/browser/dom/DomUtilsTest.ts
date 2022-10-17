@@ -509,6 +509,9 @@ describe('browser.tinymce.core.dom.DOMUtilsTest', () => {
     assert.isTrue(DOM.isBlock('DIV'));
     assert.isFalse(DOM.isBlock('SPAN'));
     assert.isTrue(DOM.isBlock('div'));
+    assert.isFalse(DOM.isBlock('a'), 'Anchor name should not be block');
+    assert.isTrue(DOM.isBlock(DOM.create('a', { 'data-mce-block': 'true' } )), 'Anchor with data-mce-block should be block');
+    assert.isFalse(DOM.isBlock(DOM.create('a')), 'Anchor without data-mce-block should not be block');
   });
 
   it('remove', () => {

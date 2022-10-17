@@ -402,7 +402,7 @@ const Quirks = (editor: Editor): Quirks => {
    */
   const addBrAfterLastLinks = () => {
     const fixLinks = () => {
-      each(dom.select('a'), (node) => {
+      each(dom.select('a:not([data-mce-block])'), (node) => {
         let parentNode: Node | null = node.parentNode;
         const root = dom.getRoot();
 
