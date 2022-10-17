@@ -34,11 +34,14 @@ describe('browser.tinymce.themes.silver.editor.header.HeaderLocationTest', () =>
                   classes: [ arr.has('tox-anchorbar') ]
                 })
               ]
-            })
+            }),
+            s.element('div', {
+              classes: [ arr.has('tox-statusbar') ]
+            }),
           ]
         }),
         s.element('div', {
-          classes: [ arr.has('tox-statusbar') ]
+          classes: [ arr.has('tox-view-wrap') ]
         }),
         s.element('div', {
           classes: [ arr.has('tox-throbber') ]

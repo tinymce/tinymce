@@ -178,7 +178,7 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
   // Remove internal data attributes
   htmlParser.addAttributeFilter(
     'data-mce-src,data-mce-href,data-mce-style,' +
-    'data-mce-selected,data-mce-expando,' +
+    'data-mce-selected,data-mce-expando,data-mce-block,' +
     'data-mce-type,data-mce-resize,data-mce-placeholder',
 
     (nodes, name) => {

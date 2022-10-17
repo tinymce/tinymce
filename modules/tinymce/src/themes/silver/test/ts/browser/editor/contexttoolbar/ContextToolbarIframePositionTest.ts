@@ -355,11 +355,19 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
       '</table>'
     );
 
+    const pWaitForNoNodeChanges = () =>
+      TinyContentActions.pWaitForEventToStopFiring(
+        editor,
+        'nodeChange',
+        { delay: 20, timeout: 1000 }
+      );
+
     // Select the 1st row in the table, then make sure the toolbar appears above the table
     scrollTo(editor, 0, 0);
     TinySelections.setCursor(editor, [ 1, 0, 0, 0, 0 ], 0);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the top', SugarBody.body(), topSelector);
-    await Waiter.pWait(20); // Need to wait for all NodeChange events to finish firing
+    // Need to wait for all NodeChange events to finish firing
+    await pWaitForNoNodeChanges();
 
     // Scroll the 1st row to the top and make sure the toolbar doesn't flip to the bottom
     scrollTo(editor, 0, 220);
@@ -367,7 +375,8 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
 
     // Select the 4th row
     TinySelections.setCursor(editor, [ 1, 0, 3, 0, 0 ], 0);
-    await Waiter.pWait(20); // Need to wait for all NodeChange events to finish firing
+    // Need to wait for all NodeChange events to finish firing
+    await pWaitForNoNodeChanges();
 
     // Scroll the 4th row so it is now at the top and make sure the toolbar hasn't moved
     scrollTo(editor, 0, 220 + 3 * 22);

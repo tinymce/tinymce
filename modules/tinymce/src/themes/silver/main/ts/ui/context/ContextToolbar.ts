@@ -84,8 +84,10 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
         ContextToolbarBounds.getAnchorElementBounds(editor, lastElement.get()) :
         ContextToolbarBounds.getSelectionBounds(editor);
 
-      // If the anchor bounds aren't overlapping with the context toolbar bounds, then the context toolbar should hide
-      return contextToolbarBounds.height <= 0 || !ContextToolbarBounds.isVerticalOverlap(anchorBounds, contextToolbarBounds);
+      // If the anchor bounds aren't overlapping with the context toolbar bounds, then the context toolbar
+      // should hide. We want the threshold to require some overlap here (+.01), so that as soon as the
+      // anchor is off-screen, the context toolbar disappers.
+      return contextToolbarBounds.height <= 0 || !ContextToolbarBounds.isVerticalOverlap(anchorBounds, contextToolbarBounds, 0.01);
     }
   };
 

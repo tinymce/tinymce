@@ -1,5 +1,5 @@
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Obj } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
 
@@ -1415,6 +1415,39 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       const serializedHtml = serializer.serialize(parser.parse(html));
 
       assert.equal(serializedHtml, html);
+    });
+
+    context('Transparent elements', () => {
+      const getTransparentElements = (schema: Schema) => Arr.unique(Arr.map(Obj.keys(schema.getTransparentElements()), (s) => s.toLowerCase()));
+
+      it('TINY-9172: inline transparents should not get data-mce-block attribute', () => {
+        const parser = DomParser();
+        const innerHtml = Arr.map(getTransparentElements(parser.schema), (name) => `<${name}>text</${name}>`).join('');
+        const html = `<p>${innerHtml}</p>`;
+        const serializedHtml = serializer.serialize(parser.parse(html));
+
+        assert.equal(serializedHtml, html);
+      });
+
+      it('TINY-9172: root level transparents should not get data-mce-block attribute', () => {
+        const parser = DomParser();
+        const html = Arr.map(getTransparentElements(parser.schema), (name) => `<${name}>text</${name}>`).join('');
+        const expectedHtml = Arr.map(getTransparentElements(parser.schema), (name) => `<${name}>text</${name}>`).join('');
+        const serializedHtml = serializer.serialize(parser.parse(html));
+
+        assert.equal(serializedHtml, expectedHtml);
+      });
+
+      it('TINY-9172: transparents wrapping blocks should get data-mce-block attribute', () => {
+        const parser = DomParser();
+        const innerHtml = Arr.map(getTransparentElements(parser.schema), (name) => `<${name}><p>text</p></${name}>`).join('');
+        const html = `<div>${innerHtml}</div>`;
+        const expectedInnerHtml = Arr.map(getTransparentElements(parser.schema), (name) => `<${name} data-mce-block="true"><p>text</p></${name}>`).join('');
+        const expectedHtml = `<div>${expectedInnerHtml}</div>`;
+        const serializedHtml = serializer.serialize(parser.parse(html));
+
+        assert.equal(serializedHtml, expectedHtml);
+      });
     });
   });
 });

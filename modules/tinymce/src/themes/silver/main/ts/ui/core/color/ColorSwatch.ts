@@ -6,6 +6,7 @@ import { Dialog, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Events from '../../../api/Events';
+import * as ColorCache from './ColorCache';
 import * as Options from './Options';
 
 export type ColorInputCallback = (valueOpt: Optional<string>) => void;
@@ -15,8 +16,6 @@ export interface ColorSwatchDialogData {
 }
 
 type ColorFormat = 'forecolor' | 'hilitecolor';
-
-const fallbackColor = '#000000';
 
 const hasStyleApi = (node: Node): node is (Node & ElementCSSInlineStyle) =>
   Type.isNonNullable((node as HTMLElement).style);
@@ -86,11 +85,11 @@ const applyColor = (editor: Editor, format: ColorFormat, value: string, onChoice
     const dialog = colorPickerDialog(editor);
     dialog((colorOpt) => {
       colorOpt.each((color) => {
-        Options.addColor(color);
+        ColorCache.addColor(format, color);
         editor.execCommand('mceApplyTextcolor', format as any, color);
         onChoice(color);
       });
-    }, fallbackColor);
+    }, Options.fallbackColor);
   } else if (value === 'remove') {
     onChoice('');
     editor.execCommand('mceRemoveTextcolor', format as any);
@@ -100,11 +99,11 @@ const applyColor = (editor: Editor, format: ColorFormat, value: string, onChoice
   }
 };
 
-const getColors = (colors: Menu.ChoiceMenuItemSpec[], hasCustom: boolean): Menu.ChoiceMenuItemSpec[] =>
-  colors.concat(Options.getCurrentColors().concat(getAdditionalColors(hasCustom)));
+const getColors = (colors: Menu.ChoiceMenuItemSpec[], id: string, hasCustom: boolean): Menu.ChoiceMenuItemSpec[] =>
+  colors.concat(ColorCache.getCurrentColors(id).concat(getAdditionalColors(hasCustom)));
 
-const getFetch = (colors: Menu.ChoiceMenuItemSpec[], hasCustom: boolean) => (callback: (value: Menu.ChoiceMenuItemSpec[]) => void): void => {
-  callback(getColors(colors, hasCustom));
+const getFetch = (colors: Menu.ChoiceMenuItemSpec[], id: string, hasCustom: boolean) => (callback: (value: Menu.ChoiceMenuItemSpec[]) => void): void => {
+  callback(getColors(colors, id, hasCustom));
 };
 
 const setIconColor = (splitButtonApi: Toolbar.ToolbarSplitButtonInstanceApi, name: string, newColor: string) => {
@@ -125,8 +124,8 @@ const registerTextColorButton = (editor: Editor, name: string, format: ColorForm
         return Strings.contains(value.toLowerCase(), currentHex);
       })).getOr(false);
     },
-    columns: Options.getColorCols(editor),
-    fetch: getFetch(Options.getColors(editor), Options.hasCustomColors(editor)),
+    columns: Options.getColorCols(editor, format),
+    fetch: getFetch(Options.getColors(editor, format), format, Options.hasCustomColors(editor)),
     onAction: (_splitButtonApi) => {
       applyColor(editor, format, lastColor.get(), Fun.noop);
     },
@@ -166,6 +165,9 @@ const registerTextColorMenuItem = (editor: Editor, name: string, format: ColorFo
       {
         type: 'fancymenuitem',
         fancytype: 'colorswatch',
+        initData: {
+          storageKey: format,
+        },
         onAction: (data) => {
           applyColor(editor, format, data.value, Fun.noop);
         }
@@ -236,8 +238,10 @@ const colorPickerDialog = (editor: Editor) => (callback: ColorInputCallback, val
 
 const register = (editor: Editor): void => {
   registerCommands(editor);
-  const lastForeColor = Cell(fallbackColor);
-  const lastBackColor = Cell(fallbackColor);
+  const fallbackColorForeground = Options.getDefaultForegroundColor(editor);
+  const fallbackColorBackground = Options.getDefaultBackgroundColor(editor);
+  const lastForeColor = Cell(fallbackColorForeground);
+  const lastBackColor = Cell(fallbackColorBackground);
   registerTextColorButton(editor, 'forecolor', 'forecolor', 'Text color', lastForeColor);
   registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background color', lastBackColor);
 

@@ -7,7 +7,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
-import { getContextToolbarBounds } from 'tinymce/themes/silver/ui/context/ContextToolbarBounds';
+import { getContextToolbarBounds, isVerticalOverlap } from 'tinymce/themes/silver/ui/context/ContextToolbarBounds';
 
 import TestBackstage from '../../../module/TestBackstage';
 import * as UiUtils from '../../../module/UiUtils';
@@ -214,5 +214,118 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarBoun
         bottom: bounds.header.y - expectedMargin
       })
     }));
+  });
+
+  context('isVerticalOverlap', () => {
+    const bY = 200;
+    const bBottom = 300;
+
+    // The threshold values are intentionally negative numbers, because the
+    // function is measuring overlap, so a negative value is not overlap. Using higher
+    // negative numbers for the threshold increases the chance of overlap.
+    const threshold = -10;
+    // We use a value of 5 instead of 10 to give us a bit of room to play with for
+    // before/after y values.
+    const withinThreshold = -5;
+
+    const beforeBOutsideThreshold = bY - 50;
+    const beforeBBWithinThreshold = bY + withinThreshold;
+
+    const midB = (bY + bBottom) / 2;
+
+    const afterBWithinThreshold = bBottom + Math.abs(withinThreshold);
+    const afterBOutsideThreshold = bBottom + 50;
+
+    const testAValue = (expected: boolean, aY: number, aBottom: number) => {
+      const a: any = { bottom: aBottom, y: aY };
+      const b: any = { bottom: bBottom, y: bY };
+
+      const actual = isVerticalOverlap(a, b, threshold);
+      assert.equal(actual, expected);
+    };
+
+    context('a starts above b and outside threshold', () => {
+      const aY = beforeBOutsideThreshold - 50;
+
+      it('a finishes before b, and outside threshold', () => {
+        testAValue(false, aY, beforeBOutsideThreshold);
+      });
+
+      it('a finishes before b, but within threshold', () => {
+        testAValue(true, aY, beforeBBWithinThreshold);
+      });
+
+      it('a finishes within b', () => {
+        testAValue(true, aY, midB);
+      });
+
+      it('a finishes after b, but within threshold', () => {
+        testAValue(true, aY, afterBWithinThreshold);
+      });
+
+      it('a finishes after b, and outside threshold', () => {
+        testAValue(true, aY, afterBOutsideThreshold);
+      });
+    });
+
+    context('a starts above b and inside threshold', () => {
+      // Because the within threshold is smaller than the threshold, this should
+      // still be within the threshold of bY
+      const aY = beforeBBWithinThreshold - 1;
+
+      it('a finishes before b, but within threshold', () => {
+        testAValue(true, aY, beforeBBWithinThreshold);
+      });
+
+      it('a finishes within b', () => {
+        testAValue(true, aY, midB);
+      });
+
+      it('a finishes after b, but within threshold', () => {
+        testAValue(true, aY, afterBWithinThreshold);
+      });
+
+      it('a finishes after b, and outside threshold', () => {
+        testAValue(true, aY, afterBOutsideThreshold);
+      });
+    });
+
+    context('a starts within b', () => {
+      const aY = midB;
+
+      it('a finishes within b', () => {
+        testAValue(true, aY, midB + 10);
+      });
+
+      it('a finishes after b, but within threshold', () => {
+        testAValue(true, aY, afterBWithinThreshold);
+      });
+
+      it('a finishes after b, but outside threshold', () => {
+        testAValue(true, aY, afterBOutsideThreshold);
+      });
+    });
+
+    context('a starts after b, but within threshold', () => {
+      // This value should be before afterBWithinThreshold, but after bBottom
+      const aY = bBottom + 1;
+
+      it('a finishes after b, but within threshold', () => {
+        testAValue(true, aY, afterBWithinThreshold);
+      });
+
+      it('a finishes after b, but outside threshold', () => {
+        testAValue(true, aY, afterBOutsideThreshold);
+      });
+    });
+
+    context('a starts after b, but outside threshold', () => {
+      // This value should be before afterBWithinThreshold, but after bBottom
+      const aY = afterBOutsideThreshold;
+
+      it('a finishes after b, but outside threshold', () => {
+        testAValue(false, aY, afterBOutsideThreshold + 50);
+      });
+    });
   });
 });

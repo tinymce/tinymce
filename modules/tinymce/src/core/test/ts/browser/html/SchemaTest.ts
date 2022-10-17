@@ -286,6 +286,14 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
     });
   });
 
+  it('getTransparentElements', () => {
+    const schema = Schema();
+    assert.deepEqual(schema.getTransparentElements(), {
+      MAP: {}, CANVAS: {}, DEL: {}, INS: {}, A: {},
+      map: {}, canvas: {}, del: {}, ins: {}, a: {}
+    });
+  });
+
   it('getTextInlineElements', () => {
     const schema = Schema();
     assert.deepEqual(schema.getTextInlineElements(), {

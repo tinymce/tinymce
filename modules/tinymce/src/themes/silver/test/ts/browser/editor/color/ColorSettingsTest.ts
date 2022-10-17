@@ -58,8 +58,8 @@ describe('browser.tinymce.themes.silver.editor.color.ColorSettingsTest', () => {
     });
   };
 
-  const assertCols = (editor: Editor, expected: number) => {
-    const colors = Options.getColorCols(editor);
+  const assertCols = (editor: Editor, id: string, expected: number) => {
+    const colors = Options.getColorCols(editor, id);
     assert.equal(colors, expected, 'Color cols should be the same');
   };
 
@@ -113,7 +113,9 @@ describe('browser.tinymce.themes.silver.editor.color.ColorSettingsTest', () => {
   it('TBA: getCurrentColor should return the first found forecolor, not the parent color', () => {
     const editor = hook.editor();
     assertColors(colorSettings, mappedColors);
-    assertCols(editor, 5);
+    assertCols(editor, 'default', 5);
+    assertCols(editor, 'forecolor', 5);
+    assertCols(editor, 'hilitecolor', 5);
   });
 
   it('TBA: calcCols', () => {
