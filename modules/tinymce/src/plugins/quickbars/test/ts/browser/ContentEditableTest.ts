@@ -67,7 +67,7 @@ describe('browser.tinymce.plugins.quickbars.ContentEditableTest', () => {
     await pAssertToolbarNotVisible();
   });
 
-  it('TINY-9190: Toolbar is not shown when the parent element has data-mce-bogus="all"', async () => {
+  it('TINY-9190: Toolbar is not shown when the ancestor element has data-mce-bogus="all"', async () => {
     const editor = hook.editor();
     editor.setContent('<p>one two three <span data-mce-bogus="all"><span><span></span></span></span></p>', { format: 'raw' });
     // Set selection in the deepest span
