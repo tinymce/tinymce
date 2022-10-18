@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, StructAssert, TestStore, UiFinder, Waiter 
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { Attribute, Css, Html, SugarBody } from '@ephox/sugar';
-import { TinyApis, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyApis, TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -306,6 +306,17 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       apis.hasFocus(false);
       toggleView('myview1');
       apis.hasFocus(true);
+    });
+
+    it('TINY-9259: Should retain range selection when main view is hidden', () => {
+      const editor = hook.editor();
+
+      editor.setContent('<p>ab</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 1);
+      toggleView('myview1');
+      TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
+      toggleView('myview1');
+      TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
     });
   });
 
