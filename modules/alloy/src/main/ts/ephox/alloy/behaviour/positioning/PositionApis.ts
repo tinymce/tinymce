@@ -31,9 +31,9 @@ const getRelativeOrigin = (component: AlloyComponent): Origins.OriginAdt => {
   return Origins.relative(position.left, position.top, bounds.width, bounds.height);
 };
 
-const place = (component: AlloyComponent, origin: Origins.OriginAdt, anchoring: Anchoring, getBounds: Optional<() => Bounds>, placee: AlloyComponent, lastPlace: Optional<PlacerResult>, transition: Optional<Transition>): PlacerResult => {
+const place = (component: AlloyComponent, origin: Origins.OriginAdt, anchoring: Anchoring, optBounds: Optional<Bounds>, placee: AlloyComponent, lastPlace: Optional<PlacerResult>, transition: Optional<Transition>): PlacerResult => {
   const anchor = Anchor.box(anchoring.anchorBox, origin);
-  return SimpleLayout.simple(anchor, placee.element, anchoring.bubble, anchoring.layouts, lastPlace, getBounds, anchoring.overrides, transition);
+  return SimpleLayout.simple(anchor, placee.element, anchoring.bubble, anchoring.layouts, lastPlace, optBounds, anchoring.overrides, transition);
 };
 
 const position = (component: AlloyComponent, posConfig: PositioningConfig, posState: PositioningState, placee: AlloyComponent, placementSpec: PlacementSpec): void => {
@@ -41,7 +41,11 @@ const position = (component: AlloyComponent, posConfig: PositioningConfig, posSt
   positionWithinBounds(component, posConfig, posState, placee, placementSpec, boundsBox);
 };
 
-const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningConfig, posState: PositioningState, placee: AlloyComponent, placementSpec: PlacementSpec, bounds: Optional<Bounds>): void => {
+const getOptConstrainedBounds = (optWithinBounds: Optional<Bounds>, posConfig: PositioningConfig): Optional<Bounds> => {
+  return optWithinBounds.orThunk(() => posConfig.getBounds.map(Fun.apply));
+};
+
+const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningConfig, posState: PositioningState, placee: AlloyComponent, placementSpec: PlacementSpec, optWithinBounds: Optional<Bounds>): void => {
   const placeeDetail: PlacementDetail = StructureSchema.asRawOrDie('placement.info', StructureSchema.objOf(PlacementSchema), placementSpec);
   const anchorage = placeeDetail.anchor;
   const element = placee.element;
@@ -61,13 +65,11 @@ const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningC
     // (bottom and right) will be using the wrong dimensions
     const origin = posConfig.useFixed() ? getFixedOrigin() : getRelativeOrigin(component);
 
-    const placement = anchorage.placement;
+    const optBounds: Optional<Bounds> = getOptConstrainedBounds(optWithinBounds, posConfig);
 
-    const getBounds = bounds.map(Fun.constant).or(posConfig.getBounds);
-
-    placement(component, anchorage, origin).each((anchoring) => {
+    anchorage.placement(component, anchorage, origin).each((anchoring) => {
       // Place the element and then update the state for the placee
-      const newState = place(component, origin, anchoring, getBounds, placee, placeeState, placeeDetail.transition);
+      const newState = place(component, origin, anchoring, optBounds, placee, placeeState, placeeDetail.transition);
       posState.set(placee.uid, newState);
     });
 
