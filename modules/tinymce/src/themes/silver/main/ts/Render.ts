@@ -1,7 +1,7 @@
 import {
-  AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Bounds, Boxes, Disabling, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec, SystemEvents, VerticalDir
+  AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Bounds, Disabling, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec, SystemEvents, VerticalDir
 } from '@ephox/alloy';
-import { Arr, Cell, Fun, Merger, Obj, Optional, Result, Singleton } from '@ephox/katamari';
+import { Arr, Merger, Obj, Optional, Result, Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Compare, Css, SugarBody, SugarElement } from '@ephox/sugar';
 
@@ -14,8 +14,7 @@ import * as Backstage from './backstage/Backstage';
 import * as Events from './Events';
 import * as Iframe from './modes/Iframe';
 import * as Inline from './modes/Inline';
-import * as ScrollingContext from './modes/ScrollingContext';
-import { LazyUiReferences, ReadyUiReferences, SinkAndMothership } from './modes/UiReferences';
+import { LazyUiReferences, ReadyUiReferences } from './modes/UiReferences';
 import * as ReadOnly from './ReadOnly';
 import * as ContextToolbar from './ui/context/ContextToolbar';
 import * as FormatControls from './ui/core/FormatControls';

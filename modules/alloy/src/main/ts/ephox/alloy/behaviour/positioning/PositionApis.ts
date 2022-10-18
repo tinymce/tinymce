@@ -1,8 +1,8 @@
 import { StructureSchema } from '@ephox/boulder';
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
-import { Css, SugarElement, SugarLocation } from '@ephox/sugar';
+import { Css, SugarLocation } from '@ephox/sugar';
 
-import { Bounds, box } from '../../alien/Boxes';
+import { Bounds } from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AriaFocus from '../../aria/AriaFocus';
 import * as Anchor from '../../positioning/layout/Anchor';
@@ -37,12 +37,8 @@ const place = (component: AlloyComponent, origin: Origins.OriginAdt, anchoring: 
 };
 
 const position = (component: AlloyComponent, posConfig: PositioningConfig, posState: PositioningState, placee: AlloyComponent, placementSpec: PlacementSpec): void => {
-  positionWithin(component, posConfig, posState, placee, placementSpec, Optional.none());
-};
-
-const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig, posState: PositioningState, placee: AlloyComponent, placementSpec: PlacementSpec, boxElement: Optional<SugarElement<HTMLElement>>): void => {
-  const boundsBox = boxElement.map(box);
-  return positionWithinBounds(component, posConfig, posState, placee, placementSpec, boundsBox);
+  const boundsBox = Optional.none();
+  positionWithinBounds(component, posConfig, posState, placee, placementSpec, boundsBox);
 };
 
 const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningConfig, posState: PositioningState, placee: AlloyComponent, placementSpec: PlacementSpec, bounds: Optional<Bounds>): void => {
@@ -107,7 +103,6 @@ const reset = (component: AlloyComponent, pConfig: PositioningConfig, posState: 
 
 export {
   position,
-  positionWithin,
   positionWithinBounds,
   getMode,
   reset
