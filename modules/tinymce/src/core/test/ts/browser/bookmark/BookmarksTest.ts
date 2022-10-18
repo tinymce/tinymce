@@ -224,6 +224,18 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
   }));
 
+  it('TINY-9259: Should be able to get bookmark on hidden editor', bookmarkTest((editor) => {
+    editor.focus();
+    editor.setContent('<p>ab</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    editor.getContainer().style.display = 'none';
+    const bm = editor.selection.getBookmark();
+    editor.getContainer().style.display = '';
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    editor.selection.moveToBookmark(bm);
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
+  }));
+
   context('Get bookmark should work if the first element of the content is a comment', () => {
     const outsideButton: SugarElement<HTMLButtonElement> = SugarElement.fromHtml('<button id="getBookmarkButton">Get Bookmark</button>');
     const setupElement = () => {

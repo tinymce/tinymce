@@ -193,9 +193,11 @@ const renderSlidingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec): SketchSpe
       overflowToggledClass: ToolbarButtonClasses.Ticked
     },
     onOpened: (comp) => {
+      // TINY-9223: This will only broadcast to the same mothership as the toolbar
       comp.getSystem().broadcastOn([ Channels.toolbarHeightChange() ], { type: 'opened' });
     },
     onClosed: (comp) => {
+      // TINY-9223: This will only broadcast to the same mothership as the toolbar
       comp.getSystem().broadcastOn([ Channels.toolbarHeightChange() ], { type: 'closed' });
     }
   });

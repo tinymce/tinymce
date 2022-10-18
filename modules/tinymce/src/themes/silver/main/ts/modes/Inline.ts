@@ -10,12 +10,13 @@ import * as Events from '../api/Events';
 import { getUiContainer, isToolbarPersist } from '../api/Options';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import * as ReadOnly from '../ReadOnly';
-import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
+import { ModeRenderInfo, RenderArgs, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { InlineHeader } from '../ui/header/InlineHeader';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { inline as loadInlineSkin } from '../ui/skin/Loader';
 import { setToolbar } from './Toolbars';
+import { ReadyUiReferences } from './UiReferences';
 
 const getTargetPosAndBounds = (targetElm: SugarElement, isToolbarTop: boolean) => {
   const bounds = Boxes.box(targetElm);
@@ -71,11 +72,19 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader, 
   });
 };
 
-const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
-  const { mothership, uiMothership, outerContainer } = uiComponents;
+// TINY-9226: When introducing two sinks, the dialog mothership should be attached to the ui
+// root, and the popup mothership should be attached *after* the target node (for inline)
+const attachUiMotherships = (uiRoot: SugarElement<HTMLElement | ShadowRoot>, uiRefs: ReadyUiReferences) => {
+  // We only have one sink currently, until TINY-9226 is completed.
+  // Add the dialog sink to the ui root
+  Attachment.attachSystem(uiRoot, uiRefs.dialogUi.mothership);
+};
+
+const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
+  const { mainUi } = uiRefs;
   const floatContainer = Singleton.value<AlloyComponent>();
   const targetElm = SugarElement.fromDom(args.targetNode);
-  const ui = InlineHeader(editor, targetElm, uiComponents, backstage, floatContainer);
+  const ui = InlineHeader(editor, targetElm, uiRefs, backstage, floatContainer);
   const toolbarPersist = isToolbarPersist(editor);
 
   loadInlineSkin(editor);
@@ -86,16 +95,16 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       return;
     }
 
-    floatContainer.set(OuterContainer.getHeader(outerContainer).getOrDie());
+    floatContainer.set(OuterContainer.getHeader(mainUi.outerContainer).getOrDie());
 
     const uiContainer = getUiContainer(editor);
-    Attachment.attachSystem(uiContainer, mothership);
-    Attachment.attachSystem(uiContainer, uiMothership);
+    Attachment.attachSystem(uiContainer, mainUi.mothership);
+    attachUiMotherships(uiContainer, uiRefs);
 
-    setToolbar(editor, uiComponents, rawUiConfig, backstage);
+    setToolbar(editor, uiRefs, rawUiConfig, backstage);
 
     OuterContainer.setMenubar(
-      outerContainer,
+      mainUi.outerContainer,
       identifyMenus(editor, rawUiConfig)
     );
 
@@ -121,19 +130,19 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     }
   });
 
-  ReadOnly.setupReadonlyModeSwitch(editor, uiComponents);
+  ReadOnly.setupReadonlyModeSwitch(editor, uiRefs);
 
   const api: Partial<EditorUiApi> = {
     show: render,
     hide: ui.hide,
     setEnabled: (state) => {
-      ReadOnly.broadcastReadonly(uiComponents, !state);
+      ReadOnly.broadcastReadonly(uiRefs, !state);
     },
-    isEnabled: () => !Disabling.isDisabled(outerContainer)
+    isEnabled: () => !Disabling.isDisabled(mainUi.outerContainer)
   };
 
   return {
-    editorContainer: outerContainer.element.dom,
+    editorContainer: mainUi.outerContainer.element.dom,
     api
   };
 };

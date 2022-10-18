@@ -1,11 +1,11 @@
 import { Type, Unicode } from '@ephox/katamari';
 
-import { DomParserSettings, ParserArgs } from '../api/html/DomParser';
+import { ParserArgs } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
 import Schema, { SchemaMap } from '../api/html/Schema';
 
-const paddEmptyNode = (settings: DomParserSettings, args: ParserArgs, blockElements: SchemaMap, node: AstNode): void => {
-  if (args.insert && blockElements[node.name]) {
+const paddEmptyNode = (args: ParserArgs, isBlock: (node: AstNode) => boolean, node: AstNode): void => {
+  if (args.insert && isBlock(node)) {
     const astNode = new AstNode('br', 1);
     astNode.attr('data-mce-bogus', '1');
     node.empty().append(astNode);
@@ -30,8 +30,8 @@ const isPadded = (schema: Schema, node: AstNode): boolean => {
 const isEmpty = (schema: Schema, nonEmptyElements: SchemaMap, whitespaceElements: SchemaMap, node: AstNode): boolean =>
   node.isEmpty(nonEmptyElements, whitespaceElements, (node) => isPadded(schema, node));
 
-const isLineBreakNode = (node: AstNode | null | undefined, blockElements: SchemaMap): boolean =>
-  Type.isNonNullable(node) && (node.name in blockElements || node.name === 'br');
+const isLineBreakNode = (node: AstNode | null | undefined, isBlock: (node: AstNode) => boolean): boolean =>
+  Type.isNonNullable(node) && (isBlock(node) || node.name === 'br');
 
 export {
   paddEmptyNode,

@@ -26,6 +26,7 @@ export interface ColorSwatchMenuItemSpec extends BaseFancyMenuItemSpec<'colorswa
   initData?: {
     allowCustomColors?: boolean;
     colors?: ChoiceMenuItemSpec[];
+    storageKey?: string;
   };
 }
 
@@ -48,6 +49,7 @@ export interface ColorSwatchMenuItem extends BaseFancyMenuItem<'colorswatch'> {
   initData: {
     allowCustomColors: boolean;
     colors: Optional<ChoiceMenuItemSpec[]>;
+    storageKey: string;
   };
 }
 
@@ -66,6 +68,7 @@ const insertTableFields = [
 const colorSwatchFields = [
   FieldSchema.defaultedObjOf('initData', {}, [
     FieldSchema.defaultedBoolean('allowCustomColors', true),
+    FieldSchema.defaultedString('storageKey', 'default'),
     // Note: We don't validate the colors as they are instead validated by choiceschema when rendering
     FieldSchema.optionArrayOf('colors', ValueType.anyValue())
   ])

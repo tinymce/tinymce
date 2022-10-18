@@ -1,13 +1,12 @@
 import { Transformations } from '@ephox/acid';
-import { Arr, Type } from '@ephox/katamari';
+import { Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorOptions } from 'tinymce/core/api/OptionTypes';
 import { Menu } from 'tinymce/core/api/ui/Ui';
 
-import { ColorCache } from './ColorCache';
-
-const colorCache = ColorCache(10);
+const foregroundId = 'forecolor';
+const backgroundId = 'hilitecolor';
 
 const calcCols = (colors: number): number =>
   Math.max(5, Math.ceil(Math.sqrt(colors)));
@@ -37,14 +36,16 @@ const fallbackColor = '#000000';
 const register = (editor: Editor): void => {
   const registerOption = editor.options.register;
 
+  const colorProcessor = (value: any): any => {
+    if (Type.isArrayOf(value, Type.isString)) {
+      return { value: mapColors(value), valid: true };
+    } else {
+      return { valid: false, message: 'Must be an array of strings.' };
+    }
+  };
+
   registerOption('color_map', {
-    processor: (value) => {
-      if (Type.isArrayOf(value, Type.isString)) {
-        return { value: mapColors(value), valid: true };
-      } else {
-        return { valid: false, message: 'Must be an array of strings.' };
-      }
-    },
+    processor: colorProcessor,
     default: [
       '#BFEDD2', 'Light Green',
       '#FBEEB8', 'Light Yellow',
@@ -75,9 +76,27 @@ const register = (editor: Editor): void => {
     ]
   });
 
+  registerOption('color_map_background', {
+    processor: colorProcessor
+  });
+
+  registerOption('color_map_foreground', {
+    processor: colorProcessor
+  });
+
   registerOption('color_cols', {
     processor: 'number',
-    default: calcCols(getColors(editor).length)
+    default: calcCols(getColors(editor, 'default').length)
+  });
+
+  registerOption('color_cols_foreground', {
+    processor: 'number',
+    default: calcCols(getColors(editor, foregroundId).length)
+  });
+
+  registerOption('color_cols_background', {
+    processor: 'number',
+    default: calcCols(getColors(editor, backgroundId).length)
   });
 
   registerOption('custom_colors', {
@@ -96,21 +115,28 @@ const register = (editor: Editor): void => {
   });
 };
 
-const getColorCols = option('color_cols');
+const getColorCols = (editor: Editor, id: string): number => {
+  if (id === foregroundId) {
+    return option('color_cols_foreground')(editor);
+  } else if (id === backgroundId) {
+    return option('color_cols_background')(editor);
+  } else {
+    return option('color_cols')(editor);
+  }
+};
 const hasCustomColors = option('custom_colors');
-const getColors = option<Menu.ChoiceMenuItemSpec[]>('color_map');
+const getColors = (editor: Editor, id: string): Menu.ChoiceMenuItemSpec[] => {
+  if (id === foregroundId && editor.options.isSet('color_map_foreground')) {
+    return option<Menu.ChoiceMenuItemSpec[]>('color_map_foreground')(editor);
+  } else if (id === backgroundId && editor.options.isSet('color_map_background')) {
+    return option<Menu.ChoiceMenuItemSpec[]>('color_map_background')(editor);
+  } else {
+    return option<Menu.ChoiceMenuItemSpec[]>('color_map')(editor);
+  }
+};
+
 const getDefaultForegroundColor = option<string>('color_default_foreground');
 const getDefaultBackgroundColor = option<string>('color_default_background');
-
-const getCurrentColors = (): Menu.ChoiceMenuItemSpec[] => Arr.map(colorCache.state(), (color) => ({
-  type: 'choiceitem',
-  text: color,
-  value: color
-}));
-
-const addColor = (color: string): void => {
-  colorCache.add(color);
-};
 
 export {
   register,
@@ -119,9 +145,7 @@ export {
   getColorCols,
   hasCustomColors,
   getColors,
-  getCurrentColors,
   getDefaultBackgroundColor,
   getDefaultForegroundColor,
-  addColor,
   fallbackColor
 };

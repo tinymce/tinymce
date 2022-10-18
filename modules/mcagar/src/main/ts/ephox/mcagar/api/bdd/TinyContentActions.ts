@@ -25,6 +25,33 @@ const trueClick = (editor: Editor): void =>
 const trueClickOn = (editor: Editor, selector: string): void =>
   Mouse.trueClickOn(TinyDom.body(editor), selector);
 
+const pWaitForEventToStopFiring = (editor: Editor, eventName: string, timing: { delay: number; timeout: number }): Promise<void> =>
+  new Promise((resolve, reject) => {
+    const startTime = Date.now();
+    let timer: number | undefined;
+    const onEditorEvent = () => {
+      const currentTime = Date.now();
+      if (currentTime - startTime > timing.timeout) {
+        editor.off(eventName, onEditorEvent);
+        reject(
+          `It took too long (${currentTime - startTime} ms) to stop receiving ${eventName} events. Max timeout was: ${timing.timeout} ms.`
+        );
+      } else {
+        if (timer !== undefined) {
+          clearTimeout(timer);
+        }
+
+        timer = setTimeout(() => {
+          editor.off(eventName, onEditorEvent);
+          resolve();
+        }, timing.delay);
+      }
+    };
+
+    editor.on(eventName, onEditorEvent);
+    onEditorEvent();
+  });
+
 export {
   keydown,
   keypress,
@@ -32,5 +59,6 @@ export {
   keyup,
   type,
   trueClick,
-  trueClickOn
+  trueClickOn,
+  pWaitForEventToStopFiring
 };

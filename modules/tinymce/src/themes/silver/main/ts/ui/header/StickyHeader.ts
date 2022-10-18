@@ -190,8 +190,14 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
       updateIframeContentFlow(comp);
     }
     updateEditorClasses(editor, Docking.isDocked(comp));
+
+    // TINY-9223: This will only reposition the popups in the same mothership as the StickyHeader
+    // and its sink. If we need to reposition the popups in all motherships (in the two sink
+    // model) then we'll need a reference to all motherships here.
     comp.getSystem().broadcastOn( [ Channels.repositionPopups() ], { });
-    lazySink().each((sink) => sink.getSystem().broadcastOn( [ Channels.repositionPopups() ], { }));
+    lazySink().each(
+      (sink) => sink.getSystem().broadcastOn( [ Channels.repositionPopups() ], { })
+    );
   };
 
   const additionalBehaviours = editor.inline ? [ ] : getIframeBehaviours();

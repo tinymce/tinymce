@@ -1,5 +1,5 @@
 import { AlloyComponent, Boxes, Channels, Docking, VerticalDir } from '@ephox/alloy';
-import { Cell, Fun, Optional, Singleton } from '@ephox/katamari';
+import { Arr, Cell, Fun, Optional, Singleton } from '@ephox/katamari';
 import { Attribute, Css, Height, SugarBody, SugarElement, SugarLocation, Traverse, Width } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -7,7 +7,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import * as Options from '../../api/Options';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
-import { RenderUiComponents } from '../../Render';
+import { ReadyUiReferences } from '../../modes/UiReferences';
 import OuterContainer from '../general/OuterContainer';
 import * as EditorSize from '../sizing/EditorSize';
 import * as Utils from '../sizing/Utils';
@@ -27,11 +27,11 @@ const { ToolbarLocation, ToolbarMode } = Options;
 export const InlineHeader = (
   editor: Editor,
   targetElm: SugarElement<HTMLElement>,
-  uiComponents: RenderUiComponents,
+  uiRefs: ReadyUiReferences,
   backstage: UiFactoryBackstage,
   floatContainer: Singleton.Value<AlloyComponent>
 ): InlineHeader => {
-  const { uiMothership, outerContainer } = uiComponents;
+  const { mainUi, uiMotherships } = uiRefs;
   const DOM = DOMUtils.DOM;
   const useFixedToolbarContainer = Options.useFixedContainer(editor);
   const isSticky = Options.isStickyToolbar(editor);
@@ -56,7 +56,7 @@ export const InlineHeader = (
   const calcMode = (container: AlloyComponent): 'top' | 'bottom' => {
     switch (Options.getToolbarLocation(editor)) {
       case ToolbarLocation.auto:
-        const toolbar = OuterContainer.getToolbar(outerContainer);
+        const toolbar = OuterContainer.getToolbar(mainUi.outerContainer);
         const offset = calcToolbarOffset(toolbar);
         const toolbarHeight = Height.get(container.element) - offset;
         const targetBounds = Boxes.box(targetElm);
@@ -116,7 +116,7 @@ export const InlineHeader = (
 
   const updateChromePosition = () => {
     floatContainer.on((container) => {
-      const toolbar = OuterContainer.getToolbar(outerContainer);
+      const toolbar = OuterContainer.getToolbar(mainUi.outerContainer);
       const offset = calcToolbarOffset(toolbar);
 
       // The float container/editor may not have been rendered yet, which will cause it to have a non integer based positions
@@ -126,7 +126,7 @@ export const InlineHeader = (
         Math.max(targetBounds.y - Height.get(container.element) + offset, 0) :
         targetBounds.bottom;
 
-      Css.setAll(outerContainer.element, {
+      Css.setAll(mainUi.outerContainer.element, {
         position: 'absolute',
         top: Math.round(top) + 'px',
         left: Math.round(targetBounds.x) + 'px'
@@ -135,7 +135,9 @@ export const InlineHeader = (
   };
 
   const repositionPopups = () => {
-    uiMothership.broadcastOn([ Channels.repositionPopups() ], { });
+    Arr.each(uiMotherships, (m) => {
+      m.broadcastOn([ Channels.repositionPopups() ], { });
+    });
   };
 
   const updateChromeUi = (resetDocking: boolean = false) => {
@@ -157,7 +159,7 @@ export const InlineHeader = (
 
     // Refresh split toolbar
     if (isSplitToolbar) {
-      OuterContainer.refreshToolbar(outerContainer);
+      OuterContainer.refreshToolbar(mainUi.outerContainer);
     }
 
     // Positioning
@@ -196,20 +198,22 @@ export const InlineHeader = (
 
   const show = () => {
     visible.set(true);
-    Css.set(outerContainer.element, 'display', 'flex');
+    Css.set(mainUi.outerContainer.element, 'display', 'flex');
     DOM.addClass(editor.getBody(), 'mce-edit-focus');
-    Css.remove(uiMothership.element, 'display');
+    Arr.each(uiMotherships, (m) => {
+      Css.remove(m.element, 'display');
+    });
     updateMode(false);
     updateChromeUi();
   };
 
   const hide = () => {
     visible.set(false);
-    if (uiComponents.outerContainer) {
-      Css.set(outerContainer.element, 'display', 'none');
-      DOM.removeClass(editor.getBody(), 'mce-edit-focus');
-    }
-    Css.set(uiMothership.element, 'display', 'none');
+    Css.set(mainUi.outerContainer.element, 'display', 'none');
+    DOM.removeClass(editor.getBody(), 'mce-edit-focus');
+    Arr.each(uiMotherships, (m) => {
+      Css.set(m.element, 'display', 'none');
+    });
   };
 
   return {

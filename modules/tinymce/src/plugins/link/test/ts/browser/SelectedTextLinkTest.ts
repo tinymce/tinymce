@@ -1,5 +1,5 @@
 import { FocusTools, Keys, UiFinder } from '@ephox/agar';
-import { describe, it, before, after } from '@ephox/bedrock-client';
+import { describe, it, before, after, context } from '@ephox/bedrock-client';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
@@ -143,6 +143,24 @@ describe('browser.tinymce.plugins.link.SelectedTextLinkTest', () => {
       'a[href="http://something"]': 1,
       'a': 2,
       'p': 1
+    });
+  });
+
+  context('Block links', () => {
+    it('TINY-9172: Collapsed selection in root block link should not have text to display', async () => {
+      const editor = hook.editor();
+      editor.setContent('<a href="#"><p>root</p></a>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      await pOpenDialog(editor, false);
+      await TestLinkUi.pClickCancel(editor);
+    });
+
+    it('TINY-9172: Collapsed selection in wrapped block link should not have text to display', async () => {
+      const editor = hook.editor();
+      editor.setContent('<div><a href="#"><p>block</p></a></div>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1);
+      await pOpenDialog(editor, false);
+      await TestLinkUi.pClickCancel(editor);
     });
   });
 });
