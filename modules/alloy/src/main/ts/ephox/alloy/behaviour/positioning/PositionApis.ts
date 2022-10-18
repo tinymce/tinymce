@@ -61,14 +61,13 @@ const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningC
     // (bottom and right) will be using the wrong dimensions
     const origin = posConfig.useFixed() ? getFixedOrigin() : getRelativeOrigin(component);
 
-    const placer = anchorage.placement;
+    const placement = anchorage.placement;
 
     const getBounds = bounds.map(Fun.constant).or(posConfig.getBounds);
 
-    placer(component, anchorage, origin).each((anchoring) => {
+    placement(component, anchorage, origin).each((anchoring) => {
       // Place the element and then update the state for the placee
-      const doPlace = anchoring.placer.getOr(place);
-      const newState = doPlace(component, origin, anchoring, getBounds, placee, placeeState, placeeDetail.transition);
+      const newState = place(component, origin, anchoring, getBounds, placee, placeeState, placeeDetail.transition);
       posState.set(placee.uid, newState);
     });
 
