@@ -72,12 +72,11 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader, 
   });
 };
 
-// TINY-9226: When introducing two sinks, the dialog mothership should be attached to the ui
+// With two sinks in inline mode, the dialog mothership should be attached to the ui
 // root, and the popup mothership should be attached *after* the target node (for inline)
-const attachUiMotherships = (uiRoot: SugarElement<HTMLElement | ShadowRoot>, uiRefs: ReadyUiReferences) => {
-  // We only have one sink currently, until TINY-9226 is completed.
-  // Add the dialog sink to the ui root
+const attachUiMotherships = (uiRoot: SugarElement<HTMLElement | ShadowRoot>, uiRefs: ReadyUiReferences, targetElm: SugarElement<HTMLElement>) => {
   Attachment.attachSystem(uiRoot, uiRefs.dialogUi.mothership);
+  Attachment.attachSystemAfter(targetElm, uiRefs.popupUi.mothership);
 };
 
 const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
@@ -99,7 +98,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
 
     const uiContainer = getUiContainer(editor);
     Attachment.attachSystem(uiContainer, mainUi.mothership);
-    attachUiMotherships(uiContainer, uiRefs);
+    attachUiMotherships(uiContainer, uiRefs, targetElm);
 
     setToolbar(editor, uiRefs, rawUiConfig, backstage);
 

@@ -1,11 +1,13 @@
-import { Fun } from '@ephox/katamari';
+import { Bounds, Boxes } from '@ephox/alloy';
+import { Cell, Fun } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
-import ThemeManager, { Theme } from 'tinymce/core/api/ThemeManager';
+import ThemeManager, { RenderResult, Theme } from 'tinymce/core/api/ThemeManager';
 
 import NotificationManagerImpl from './alien/NotificationManagerImpl';
 import * as Options from './api/Options';
 import { Autocompleter } from './Autocompleter';
+import * as ScrollingContext from './modes/ScrollingContext';
 import * as Render from './Render';
 import * as ColorOptions from './ui/core/color/Options';
 import * as WindowManager from './ui/dialog/WindowManager';
@@ -22,7 +24,23 @@ const registerOptions = (editor: Editor) => {
 export default (): void => {
   ThemeManager.add('silver', (editor): Theme => {
     registerOptions(editor);
-    const { dialogs, popups, renderUI }: RenderInfo = Render.setup(editor);
+
+    const popupSinkBounds = Cell<Bounds>(Boxes.win());
+
+    const { dialogs, popups, renderUI: renderModeUI }: RenderInfo = Render.setup(editor, {
+      getPopupSinkBounds: () => popupSinkBounds.get()
+    });
+
+    const renderUI = (): RenderResult => {
+      const renderResult = renderModeUI();
+      ScrollingContext.detect(popups.getMothership().element).map(
+        ScrollingContext.getBoundsFrom
+      ).each((newBounds) => {
+        console.log('new bounds', newBounds);
+        popupSinkBounds.set(newBounds);
+      });
+      return renderResult;
+    };
 
     Autocompleter.register(editor, popups.backstage.shared);
 

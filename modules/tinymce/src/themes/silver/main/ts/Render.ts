@@ -1,7 +1,7 @@
 import {
-  AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Disabling, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec, SystemEvents, VerticalDir
+  AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Bounds, Boxes, Disabling, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec, SystemEvents, VerticalDir
 } from '@ephox/alloy';
-import { Arr, Fun, Merger, Obj, Optional, Result, Singleton } from '@ephox/katamari';
+import { Arr, Cell, Fun, Merger, Obj, Optional, Result, Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Compare, Css, SugarBody, SugarElement } from '@ephox/sugar';
 
@@ -14,6 +14,7 @@ import * as Backstage from './backstage/Backstage';
 import * as Events from './Events';
 import * as Iframe from './modes/Iframe';
 import * as Inline from './modes/Inline';
+import * as ScrollingContext from './modes/ScrollingContext';
 import { LazyUiReferences, ReadyUiReferences, SinkAndMothership } from './modes/UiReferences';
 import * as ReadOnly from './ReadOnly';
 import * as ContextToolbar from './ui/context/ContextToolbar';
@@ -62,10 +63,14 @@ export interface RenderArgs {
   readonly height: string;
 }
 
+export interface RenderSetup {
+  readonly getPopupSinkBounds: () => Bounds;
+}
+
 const getLazyMothership = (label: string, singleton: Singleton.Value<Gui.GuiSystem>) =>
   singleton.get().getOrDie(`UI for ${label} has not been rendered`);
 
-const setup = (editor: Editor): RenderInfo => {
+const setup = (editor: Editor, setupInfo: RenderSetup): RenderInfo => {
   const isInline = editor.inline;
   const mode = isInline ? Inline : Iframe;
 
@@ -79,6 +84,7 @@ const setup = (editor: Editor): RenderInfo => {
   // Importantly, this is outside the setup function.
   const lazyMothership = Singleton.value<Gui.GuiSystem>();
   const lazyDialogMothership = Singleton.value<Gui.GuiSystem>();
+  const lazyPopupMothership = Singleton.value<Gui.GuiSystem>();
 
   const platform = PlatformDetection.detect();
   const isTouch = platform.deviceType.isTouch();
@@ -299,9 +305,32 @@ const setup = (editor: Editor): RenderInfo => {
     return { sink, mothership: uiMothership };
   };
 
-  // TINY-9226: We will want to create a separate mothership and sink here for the popups
-  // instead of just returning the same as the dialogUi (which it is passed as an argument)
-  const renderPopupUi = Fun.identity<SinkAndMothership>;
+  const renderPopupUi = () => {
+    const sinkSpec = {
+      dom: {
+        tag: 'div',
+        classes: [ 'tox', 'tox-silver-sink', 'tox-silver-popup-sink', 'tox-tinymce-aux' ].concat(deviceClasses),
+        attributes: {
+          ...I18n.isRtl() ? { dir: 'rtl' } : {}
+        }
+      },
+      behaviours: Behaviour.derive([
+        Positioning.config({
+          useFixed: () => header.isDocked(lazyHeader),
+          getBounds: () => {
+            return setupInfo.getPopupSinkBounds();
+          }
+        })
+      ])
+    };
+
+    const sink = GuiFactory.build(sinkSpec);
+    const uiMothership = Gui.takeover(sink);
+
+    lazyPopupMothership.set(uiMothership);
+
+    return { sink, mothership: uiMothership };
+  };
 
   const renderMainUi = () => {
     const partHeader = makeHeaderPart();
@@ -473,7 +502,7 @@ const setup = (editor: Editor): RenderInfo => {
   const renderUI = (): ModeRenderInfo => {
     const mainUi = renderMainUi();
     const dialogUi = renderDialogUi();
-    const popupUi = renderPopupUi(dialogUi);
+    const popupUi = renderPopupUi();
 
     lazyUiRefs.dialogUi.set(dialogUi);
     lazyUiRefs.popupUi.set(popupUi);
@@ -494,9 +523,7 @@ const setup = (editor: Editor): RenderInfo => {
   return {
     popups: {
       backstage: backstages.popup,
-      // TINY-9226: We haven't enabled the separate popup mothership yet, so this needs to
-      // point to the dialog mothership
-      getMothership: (): Gui.GuiSystem => getLazyMothership('popups', lazyDialogMothership)
+      getMothership: (): Gui.GuiSystem => getLazyMothership('popups', lazyPopupMothership)
     },
     dialogs: {
       backstage: backstages.dialog,
