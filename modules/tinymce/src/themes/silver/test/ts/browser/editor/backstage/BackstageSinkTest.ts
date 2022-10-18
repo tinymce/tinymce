@@ -72,6 +72,7 @@ describe('browser.tinymce.themes.silver.editor.backstage.BackstageSinkTest', () 
     const colorInputSpec = backstage.shared.interpreter({
       type: 'colorinput',
       label: Optional.some('color'),
+      storageKey: 'test_storage_key',
       name: 'color'
     });
 
