@@ -12,7 +12,7 @@ import { renderUrlInput } from 'tinymce/themes/silver/ui/dialog/UrlInput';
 import * as TestExtras from '../../../module/TestExtras';
 
 describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () => {
-  const helpers = TestExtras.bddSetup();
+  const extrasHook = TestExtras.bddSetup();
 
   const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
     renderUrlInput({
@@ -20,7 +20,7 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
       name: 'col1',
       filetype: 'file',
       enabled: true
-    }, helpers.backstage(), {
+    }, extrasHook.access().extras.backstages.popup, {
       getHistory: (_fileType) => [],
       addToHistory: (_url, _filetype) => store.adder('addToHistory')(),
       getLinkInformation: () => Optional.some({
@@ -49,7 +49,7 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
         return Future.pure({ value: 'http://tiny.cloud', meta: { before: entry.value }, fieldname: 'test' });
       })
     }, Optional.none())
-  ), helpers.uiMothership);
+  ), () => extrasHook.access().getPopupMothership());
 
   TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
     '.tox-menu { background: white; }',
@@ -64,7 +64,7 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
   };
 
   const pOpenMenu = async () => {
-    const sink = helpers.sink();
+    const sink = extrasHook.access().getPopupSink();
     const doc = hook.root();
     Focusing.focus(getInput());
     Keyboard.activeKeydown(doc, Keys.down());
@@ -138,7 +138,7 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
   });
 
   it('Type "He", select an item and assert input state is updated', async () => {
-    const sink = helpers.sink();
+    const sink = extrasHook.access().getPopupSink();
     const store = hook.store();
     const doc = hook.root();
     const input = getInput();

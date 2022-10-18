@@ -41,32 +41,66 @@ export interface UiFactoryBackstage {
   readonly setContextMenuState: (state: boolean) => void;
 }
 
-const init = (lazySink: () => Result<AlloyComponent, string>, editor: Editor, lazyAnchorbar: () => AlloyComponent): UiFactoryBackstage => {
+export interface UiFactoryBackstagePair {
+  readonly popup: UiFactoryBackstage;
+  readonly dialog: UiFactoryBackstage;
+}
+
+const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: () => Result<AlloyComponent, string> }, editor: Editor, lazyAnchorbar: () => AlloyComponent): UiFactoryBackstagePair => {
   const contextMenuState = Cell(false);
   const toolbar = HeaderBackstage(editor);
-  const backstage: UiFactoryBackstage = {
-    shared: {
-      providers: {
-        icons: () => editor.ui.registry.getAll().icons,
-        menuItems: () => editor.ui.registry.getAll().menuItems,
-        translate: I18n.translate,
-        isDisabled: () => editor.mode.isReadOnly() || !editor.ui.isEnabled(),
-        getOption: editor.options.get
-      },
-      interpreter: (s) => UiFactory.interpretWithoutForm(s, {}, backstage),
-      anchors: Anchors.getAnchors(editor, lazyAnchorbar, toolbar.isPositionedAtTop),
-      header: toolbar,
-      getSink: lazySink
-    },
-    urlinput: UrlInputBackstage(editor),
-    styles: initStyleFormatBackstage(editor),
-    colorinput: ColorInputBackstage(editor),
-    dialog: DialogBackstage(editor),
-    isContextMenuOpen: () => contextMenuState.get(),
-    setContextMenuState: (state) => contextMenuState.set(state)
+
+  const providers: UiFactoryBackstageProviders = {
+    icons: () => editor.ui.registry.getAll().icons,
+    menuItems: () => editor.ui.registry.getAll().menuItems,
+    translate: I18n.translate,
+    isDisabled: () => editor.mode.isReadOnly() || !editor.ui.isEnabled(),
+    getOption: editor.options.get
   };
 
-  return backstage;
+  const urlinput = UrlInputBackstage(editor);
+  const styles = initStyleFormatBackstage(editor);
+  const colorinput = ColorInputBackstage(editor);
+  const dialogSettings = DialogBackstage(editor);
+  const isContextMenuOpen = () => contextMenuState.get();
+  const setContextMenuState = (state: boolean) => contextMenuState.set(state);
+
+  const commonBackstage = {
+    shared: {
+      providers,
+      anchors: Anchors.getAnchors(editor, lazyAnchorbar, toolbar.isPositionedAtTop),
+      header: toolbar,
+    },
+    urlinput,
+    styles,
+    colorinput,
+    dialog: dialogSettings,
+    isContextMenuOpen,
+    setContextMenuState
+  };
+
+  const popupBackstage: UiFactoryBackstage = {
+    ...commonBackstage,
+    shared: {
+      ...commonBackstage.shared,
+      interpreter: (s) => UiFactory.interpretWithoutForm(s, {}, popupBackstage),
+      getSink: lazySinks.popup
+    }
+  };
+
+  const dialogBackstage: UiFactoryBackstage = {
+    ...commonBackstage,
+    shared: {
+      ...commonBackstage.shared,
+      interpreter: (s) => UiFactory.interpretWithoutForm(s, {}, dialogBackstage),
+      getSink: lazySinks.dialog
+    }
+  };
+
+  return {
+    popup: popupBackstage,
+    dialog: dialogBackstage
+  };
 };
 
 export { init };
