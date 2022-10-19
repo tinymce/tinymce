@@ -66,12 +66,4 @@ describe('browser.tinymce.plugins.quickbars.ContentEditableTest', () => {
     TinyAssertions.assertContentPresence(editor, { 'p[data-mce-bogus="all"]': 1, 'p[data-mce-caret="before"]': 1 });
     await pAssertToolbarNotVisible();
   });
-
-  it('TINY-9190: Toolbar is not shown when the ancestor element has data-mce-bogus="all"', async () => {
-    const editor = hook.editor();
-    editor.setContent('<p>one two three <span data-mce-bogus="all"><span><span></span></span></span></p>', { format: 'raw' });
-    // Set selection in the deepest span
-    TinySelections.setSelection(editor, [ 0, 1, 0, 0 ], 0, [ 0, 1, 0, 0 ], 0);
-    await pAssertToolbarNotVisible();
-  });
 });
