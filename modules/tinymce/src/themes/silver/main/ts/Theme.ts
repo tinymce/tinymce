@@ -25,20 +25,21 @@ export default (): void => {
   ThemeManager.add('silver', (editor): Theme => {
     registerOptions(editor);
 
-    const popupSinkBounds = Cell<Bounds>(Boxes.win());
+    const popupSinkBounds = Cell<() => Bounds>(() => Boxes.win());
 
     const { dialogs, popups, renderUI: renderModeUI }: RenderInfo = Render.setup(editor, {
-      getPopupSinkBounds: () => popupSinkBounds.get()
+      getPopupSinkBounds: popupSinkBounds.get()
     });
 
     const renderUI = (): RenderResult => {
       const renderResult = renderModeUI();
-      ScrollingContext.detect(popups.getMothership().element).map(
-        ScrollingContext.getBoundsFrom
-      ).each((newBounds) => {
-        console.log('new bounds', newBounds);
-        popupSinkBounds.set(newBounds);
-      });
+      const optScrollingContext = ScrollingContext.detect(popups.getMothership().element);
+
+      optScrollingContext.each(
+        (sc) => popupSinkBounds.set(
+          () => ScrollingContext.getBoundsFrom(sc)
+        )
+      );
       return renderResult;
     };
 

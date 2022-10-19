@@ -52,7 +52,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
       height: 400,
       width: 650,
       toolbar_sticky: false,
-      toolbar_mode: 'wrap'
+      toolbar_mode: 'wrap',
     }, []);
 
     it('Test position when resizing', async () => {
@@ -173,7 +173,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
       inline: true,
       toolbar_location: 'bottom'
     }, () => {
-      const div = SugarElement.fromHtml<HTMLDivElement>('<div style="width: 600px; height: 400px;"></div>');
+      const div = SugarElement.fromHtml<HTMLDivElement>('<div style="width: 600px; height: 400px; border: 2px solid green;"></div>');
       return {
         element: div,
         teardown: () => Remove.remove(div)

@@ -48,7 +48,7 @@ const getOptConstrainedBounds = (optWithinBounds: Optional<Boxes.Bounds>, posCon
     Fun.constant(optConstrainingBounds),
     (withinBounds: Boxes.Bounds) => optConstrainingBounds
       .map(
-        (cb) => Boxes.constrain(withinBounds, cb)
+        (cb) => false ? Boxes.constrain(withinBounds, cb) : withinBounds
       )
       .orThunk(() => optWithinBounds)
   );

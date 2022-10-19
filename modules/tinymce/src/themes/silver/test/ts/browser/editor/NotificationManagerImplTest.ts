@@ -170,7 +170,7 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
       notification.close();
     });
 
-    it.only('TINY-7894: Should always render below the top of the header and within the content area', async () => {
+    it('TINY-7894: Should always render below the top of the header and within the content area', async () => {
       const editor = hook.editor();
       const cleanup = PageScroll.setup(editor, 2000);
 
