@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ### Added
--Added optional `storageKey` property to `colorinput` component and `colorswatch` fancy menu item. #TINY-9184
+- Added optional `storageKey` property to `colorinput` component and `colorswatch` fancy menu item. #TINY-9184
 - New `view` component. #TINY-9210
 
 ### Fixed
