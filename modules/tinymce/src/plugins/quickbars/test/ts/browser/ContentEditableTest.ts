@@ -1,12 +1,10 @@
-import { UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { SugarBody } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/quickbars/Plugin';
 
-import { pAssertToolbarNotVisible } from '../module/test/Utils';
+import { pAssertToolbarNotVisible, pAssertToolbarVisible } from '../module/test/Utils';
 
 describe('browser.tinymce.plugins.quickbars.ContentEditableTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
@@ -16,8 +14,6 @@ describe('browser.tinymce.plugins.quickbars.ContentEditableTest', () => {
     menubar: false,
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ], true);
-
-  const pAssertToolbarVisible = () => Waiter.pTryUntil('toolbar should exist', () => UiFinder.exists(SugarBody.body(), '.tox-toolbar'));
 
   it('TBA: Text selection toolbar is not shown with contenteditable=false', async () => {
     const editor = hook.editor();
