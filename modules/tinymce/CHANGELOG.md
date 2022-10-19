@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 5.10.6 - 2022-10-19
+
 ### Fixed
 - The `name` and `id` attributes of some elements were incorrectly removed during serialization #TINY-8773
 - Notifications would not properly reposition when toggling fullscreen mode #TINY-8701
