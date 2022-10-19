@@ -15,6 +15,8 @@ export interface BaseToolbarToggleButton<I extends BaseToolbarButtonInstanceApi>
 export interface BaseToolbarToggleButtonInstanceApi extends BaseToolbarButtonInstanceApi {
   isActive: () => boolean;
   setActive: (state: boolean) => void;
+  setText: (text: string) => void;
+  setIcon: (icon: string) => void;
 }
 
 export interface ToolbarToggleButtonSpec extends BaseToolbarToggleButtonSpec<ToolbarToggleButtonInstanceApi> {

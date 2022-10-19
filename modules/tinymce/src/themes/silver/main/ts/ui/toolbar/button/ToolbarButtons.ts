@@ -1,6 +1,7 @@
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button as AlloyButton, Disabling, FloatingToolbarButton, Focusing,
-  Keying, NativeEvents, Reflecting, Replacing, SketchSpec, SplitDropdown as AlloySplitDropdown, SystemEvents, TieredData, TieredMenuTypes, Toggling,
+  GuiFactory,
+  Keying, Memento, NativeEvents, Reflecting, Replacing, SketchSpec, SplitDropdown as AlloySplitDropdown, SystemEvents, TieredData, TieredMenuTypes, Toggling,
   Unselecting
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
@@ -15,6 +16,7 @@ import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
 import { renderIconFromPack, renderLabel } from '../../button/ButtonSlices';
 import { onControlAttached, onControlDetached, OnDestroy } from '../../controls/Controls';
+import { updateMenuText, UpdateMenuTextEvent } from '../../dropdown/CommonDropdown';
 import * as Icons from '../../icons/Icons';
 import { componentRenderPipeline } from '../../menus/item/build/CommonMenuItem';
 import { classForPreset } from '../../menus/item/ItemClasses';
@@ -69,7 +71,13 @@ const getToggleApi = (component: AlloyComponent): Toolbar.ToolbarToggleButtonIns
   },
   isActive: () => Toggling.isOn(component),
   isEnabled: () => !Disabling.isDisabled(component),
-  setEnabled: (state: boolean) => Disabling.set(component, !state)
+  setEnabled: (state: boolean) => Disabling.set(component, !state),
+  setText: (text: string) => AlloyTriggers.emitWith(component, updateMenuText, {
+    text
+  }),
+  setIcon: (icon: string) => AlloyTriggers.emitWith(component, updateMenuText, {
+    icon
+  })
 });
 
 const getTooltipAttributes = (tooltip: Optional<string>, providersBackstage: UiFactoryBackstageProviders) => tooltip.map<{}>((tooltip) => ({
@@ -78,6 +86,57 @@ const getTooltipAttributes = (tooltip: Optional<string>, providersBackstage: UiF
 })).getOr({});
 
 const focusButtonEvent = Id.generate('focus-button');
+
+const renderCommonStructureUpdateableText = (
+  icon: Optional<string>,
+  text: Optional<Memento.MementoRecord>,
+  tooltip: Optional<string>,
+  receiver: Optional<string>,
+  behaviours: Optional<Behaviours>,
+  providersBackstage: UiFactoryBackstageProviders
+): AlloyButtonSpec => {
+  return {
+    dom: {
+      tag: 'button',
+      classes: [ ToolbarButtonClasses.Button ].concat(text.isSome() ? [ ToolbarButtonClasses.MatchWidth ] : []),
+      attributes: getTooltipAttributes(tooltip, providersBackstage)
+    },
+    components: componentRenderPipeline([
+      icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)),
+      text.map((mem) => mem.asSpec()),
+    ]),
+
+    eventOrder: {
+      [NativeEvents.mousedown()]: [
+        'focusing',
+        'alloy.base.behaviour',
+        'common-button-display-events'
+      ]
+    },
+
+    buttonBehaviours: Behaviour.derive(
+      [
+        DisablingConfigs.toolbarButton(providersBackstage.isDisabled),
+        ReadOnly.receivingConfig(),
+        AddEventsBehaviour.config('common-button-display-events', [
+          AlloyEvents.run<EventArgs<MouseEvent>>(NativeEvents.mousedown(), (button, se) => {
+            se.event.prevent();
+            AlloyTriggers.emit(button, focusButtonEvent);
+          })
+        ])
+      ].concat(
+        receiver.map((r) => Reflecting.config({
+          channel: r,
+          initialData: { icon, text },
+          renderComponents: (data: ButtonState, _state) => componentRenderPipeline([
+            data.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)),
+            data.text.map((text) => renderLabel(text, ToolbarButtonClasses.Button, providersBackstage))
+          ])
+        })).toArray()
+      ).concat(behaviours.getOr([ ]))
+    )
+  };
+};
 
 const renderCommonStructure = (
   icon: Optional<string>,
@@ -156,7 +215,12 @@ const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage
 
 const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisation: Specialisation<T>, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   const editorOffCell = Cell(Fun.noop);
-  const structure = renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.none(), Optional.none(), providersBackstage);
+
+  const optMemDisplayText = spec.text.map(
+    (text) => Memento.record(renderLabel(text, '', providersBackstage))
+  );
+
+  const structure = renderCommonStructureUpdateableText(spec.icon, optMemDisplayText, spec.tooltip, Optional.none(), Optional.none(), providersBackstage);
   return AlloyButton.sketch({
     dom: structure.dom,
     components: structure.components,
@@ -165,6 +229,11 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
     buttonBehaviours: Behaviour.derive(
       [
         AddEventsBehaviour.config('toolbar-button-events', [
+          AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
+            optMemDisplayText.bind((mem) => mem.getOpt(comp)).each((displayText) => {
+              Replacing.set(displayText, [ GuiFactory.text(providersBackstage.translate(se.event.text)) ]);
+            });
+          }),
           onToolbarButtonExecute<T>({
             onAction: spec.onAction,
             getApi: specialisation.getApi
@@ -204,7 +273,7 @@ const renderToolbarToggleButtonWith = (spec: Toolbar.ToolbarToggleButton, provid
         Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, aria: { mode: 'pressed' }, toggleOnExecute: false })
       ].concat(bonusEvents.length > 0 ? [
         // TODO: May have to pass through eventOrder if events start clashing
-        AddEventsBehaviour.config('toolbarToggleButtonWith', bonusEvents)
+        AddEventsBehaviour.config('toolbarToggleButtonWith', bonusEvents),
       ] : [ ]),
       getApi: getToggleApi,
       onSetup: spec.onSetup
@@ -334,6 +403,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
 };
 
 export {
+  renderCommonStructureUpdateableText,
   renderCommonStructure,
   renderFloatingToolbarButton,
   renderToolbarButton,
