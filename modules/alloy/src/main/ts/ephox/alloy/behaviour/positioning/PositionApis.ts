@@ -2,7 +2,7 @@ import { StructureSchema } from '@ephox/boulder';
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import { Css, SugarLocation } from '@ephox/sugar';
 
-import { Bounds } from '../../alien/Boxes';
+import * as Boxes from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AriaFocus from '../../aria/AriaFocus';
 import * as Anchor from '../../positioning/layout/Anchor';
@@ -31,7 +31,7 @@ const getRelativeOrigin = (component: AlloyComponent): Origins.OriginAdt => {
   return Origins.relative(position.left, position.top, bounds.width, bounds.height);
 };
 
-const place = (component: AlloyComponent, origin: Origins.OriginAdt, anchoring: Anchoring, optBounds: Optional<Bounds>, placee: AlloyComponent, lastPlace: Optional<PlacerResult>, transition: Optional<Transition>): PlacerResult => {
+const place = (component: AlloyComponent, origin: Origins.OriginAdt, anchoring: Anchoring, optBounds: Optional<Boxes.Bounds>, placee: AlloyComponent, lastPlace: Optional<PlacerResult>, transition: Optional<Transition>): PlacerResult => {
   const anchor = Anchor.box(anchoring.anchorBox, origin);
   return SimpleLayout.simple(anchor, placee.element, anchoring.bubble, anchoring.layouts, lastPlace, optBounds, anchoring.overrides, transition);
 };
@@ -41,11 +41,20 @@ const position = (component: AlloyComponent, posConfig: PositioningConfig, posSt
   positionWithinBounds(component, posConfig, posState, placee, placementSpec, boundsBox);
 };
 
-const getOptConstrainedBounds = (optWithinBounds: Optional<Bounds>, posConfig: PositioningConfig): Optional<Bounds> => {
-  return optWithinBounds.orThunk(() => posConfig.getBounds.map(Fun.apply));
+const getOptConstrainedBounds = (optWithinBounds: Optional<Boxes.Bounds>, posConfig: PositioningConfig): Optional<Boxes.Bounds> => {
+  const optConstrainingBounds: Optional<Boxes.Bounds> = posConfig.getBounds.map(Fun.apply);
+  // If posConfig has a getBounds, then the final result cannot exceed those bounds.
+  return optWithinBounds.fold(
+    Fun.constant(optConstrainingBounds),
+    (withinBounds: Boxes.Bounds) => optConstrainingBounds
+      .map(
+        (cb) => Boxes.constrain(withinBounds, cb)
+      )
+      .orThunk(() => optWithinBounds)
+  );
 };
 
-const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningConfig, posState: PositioningState, placee: AlloyComponent, placementSpec: PlacementSpec, optWithinBounds: Optional<Bounds>): void => {
+const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningConfig, posState: PositioningState, placee: AlloyComponent, placementSpec: PlacementSpec, optWithinBounds: Optional<Boxes.Bounds>): void => {
   const placeeDetail: PlacementDetail = StructureSchema.asRawOrDie('placement.info', StructureSchema.objOf(PlacementSchema), placementSpec);
   const anchorage = placeeDetail.anchor;
   const element = placee.element;
@@ -65,7 +74,7 @@ const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningC
     // (bottom and right) will be using the wrong dimensions
     const origin = posConfig.useFixed() ? getFixedOrigin() : getRelativeOrigin(component);
 
-    const optBounds: Optional<Bounds> = getOptConstrainedBounds(optWithinBounds, posConfig);
+    const optBounds: Optional<Boxes.Bounds> = getOptConstrainedBounds(optWithinBounds, posConfig);
 
     anchorage.placement(component, anchorage, origin).each((anchoring) => {
       // Place the element and then update the state for the placee
