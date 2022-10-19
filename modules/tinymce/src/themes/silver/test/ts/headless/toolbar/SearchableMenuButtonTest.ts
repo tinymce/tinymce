@@ -11,7 +11,7 @@ import { structMenuWith, structSearchField, structSearchLeafItem, structSearchPa
 import * as TestExtras from '../../module/TestExtras';
 
 describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () => {
-  const helpers = TestExtras.bddSetup();
+  const extrasHook = TestExtras.bddSetup();
 
   TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
     `.tox-menu .tox-collection__item--active {
@@ -41,7 +41,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
           }, store)
         },
         'prefix',
-        helpers.backstage(),
+        extrasHook.access().extras.backstages.popup,
         Optional.none()
       )
     )
@@ -52,13 +52,13 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
     // So find the field.
     const inputField: SugarElement<HTMLElement> = await UiFinder.pWaitForVisible(
       'Waiting for search widget to appear (testing aria consistency)',
-      helpers.uiMothership().element,
+      extrasHook.access().getPopupSink(),
       '.tox-menu input'
     );
 
     const activeResults = await UiFinder.pWaitForVisible(
       'Waiting for selected menu to appear',
-      helpers.uiMothership().element,
+      extrasHook.access().getPopupSink(),
       '.tox-selected-menu .tox-collection--results__js, .tox-selected-menu.tox-collection--results__js'
     );
 
@@ -74,7 +74,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
     // Invariant: aria-activedescendant points to active item
     const activeItem = await UiFinder.pWaitForVisible(
       'Waiting for selected item to appear',
-      helpers.uiMothership().element,
+      extrasHook.access().getPopupSink(),
       '.tox-selected-menu .tox-collection__item--active'
     );
     const inputFieldDescendant = Attribute.get(inputField, 'aria-activedescendant');
@@ -455,7 +455,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
     const updateInputAndEmit = (newValue: string): void => {
       FocusTools.setActiveValue(hook.root(), newValue);
       FocusTools.getFocused(hook.root()).each((input) => {
-        helpers.uiMothership().getByDom(input).each((inputComp) => {
+        extrasHook.access().getPopupMothership().getByDom(input).each((inputComp) => {
           AlloyTriggers.emit(inputComp, NativeEvents.input());
         });
       });
@@ -473,7 +473,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
     updateInputAndEmit('Pho');
     await UiFinder.pWaitForVisible(
       'Waiting for the Phone.Home to appear',
-      helpers.uiMothership().element,
+      extrasHook.access().getPopupSink(),
       'div:contains(Phone.Home)'
     );
 
@@ -505,7 +505,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
     updateInputAndEmit('P');
     await UiFinder.pWaitForVisible(
       'Waiting for the Person.Email to appear',
-      helpers.uiMothership().element,
+      extrasHook.access().getPopupSink(),
       'div:contains(Person.Email)'
     );
 

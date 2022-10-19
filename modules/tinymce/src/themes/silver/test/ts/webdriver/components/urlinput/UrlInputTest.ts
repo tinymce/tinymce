@@ -11,7 +11,7 @@ import { renderUrlInput } from 'tinymce/themes/silver/ui/dialog/UrlInput';
 import * as TestExtras from '../../../module/TestExtras';
 
 describe('webdriver.tinymce.themes.silver.components.urlinput.UrlInputTest', () => {
-  const helpers = TestExtras.bddSetup();
+  const extrasHook = TestExtras.bddSetup();
 
   const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
     renderUrlInput({
@@ -19,7 +19,7 @@ describe('webdriver.tinymce.themes.silver.components.urlinput.UrlInputTest', () 
       name: 'col1',
       filetype: 'file',
       enabled: true
-    }, helpers.backstage(), {
+    }, extrasHook.access().extras.backstages.popup, {
       getHistory: (_fileType) => [],
       addToHistory: (_url, _filetype) => store.adder('addToHistory')(),
       getLinkInformation: () => Optional.none(),

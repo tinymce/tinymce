@@ -11,10 +11,10 @@ import * as TestExtras from '../../module/TestExtras';
 
 describe('headless.tinymce.themes.silver.window.WindowManagerRedialTest', () => {
   const store = TestStore();
-  const helpers = TestExtras.bddSetup();
+  const extrasHook = TestExtras.bddSetup();
   let windowManager: WindowManagerImpl;
   before(() => {
-    windowManager = WindowManager.setup(helpers.extras());
+    windowManager = WindowManager.setup(extrasHook.access().extras);
   });
 
   const dialogA: Dialog.DialogSpec<{}> = {
