@@ -1,10 +1,10 @@
-import { UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { SugarBody } from '@ephox/sugar';
 import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/quickbars/Plugin';
+
+import { pAssertToolbarNotVisible } from '../module/test/Utils';
 
 describe('browser.tinymce.plugins.quickbars.PredicateTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
@@ -15,10 +15,6 @@ describe('browser.tinymce.plugins.quickbars.PredicateTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ], true);
 
-  const pAssertToolbarNotVisible = async () => {
-    await Waiter.pWait(50);
-    UiFinder.notExists(SugarBody.body(), '.tox-pop__dialog .tox-toolbar');
-  };
 
   it('TINY-9190: Toolbar is not shown when the ancestor element has a data-mce-bogus attribute', async () => {
     const editor = hook.editor();

@@ -6,6 +6,8 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/quickbars/Plugin';
 
+import { pAssertToolbarNotVisible } from '../module/test/Utils';
+
 describe('browser.tinymce.plugins.quickbars.ContentEditableTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'quickbars link',
@@ -16,11 +18,6 @@ describe('browser.tinymce.plugins.quickbars.ContentEditableTest', () => {
   }, [ Plugin ], true);
 
   const pAssertToolbarVisible = () => Waiter.pTryUntil('toolbar should exist', () => UiFinder.exists(SugarBody.body(), '.tox-toolbar'));
-
-  const pAssertToolbarNotVisible = async () => {
-    await Waiter.pWait(50);
-    UiFinder.notExists(SugarBody.body(), '.tox-pop__dialog .tox-toolbar');
-  };
 
   it('TBA: Text selection toolbar is not shown with contenteditable=false', async () => {
     const editor = hook.editor();
