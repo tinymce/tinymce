@@ -46,16 +46,18 @@ export const updateCaret = (schema: Schema, root: Element, caretParent: Element)
   );
 };
 
+export const hasBlockAttr = (el: Element): boolean => el.hasAttribute(transparentBlockAttr);
+
 export const isTransparentElementName = (schema: Schema, name: string): boolean => Obj.has(schema.getTransparentElements(), name);
 
 const isTransparentElement = (schema: Schema, node: Node | null | undefined): node is Element =>
   NodeType.isElement(node) && isTransparentElementName(schema, node.nodeName);
 
 export const isTransparentBlock = (schema: Schema, node: Node | null | undefined): node is Element =>
-  isTransparentElement(schema, node) && node.hasAttribute(transparentBlockAttr);
+  isTransparentElement(schema, node) && hasBlockAttr(node);
 
 export const isTransparentInline = (schema: Schema, node: Node | null | undefined): node is Element =>
-  isTransparentElement(schema, node) && !node.hasAttribute(transparentBlockAttr);
+  isTransparentElement(schema, node) && !hasBlockAttr(node);
 
 export const isTransparentAstBlock = (schema: Schema, node: AstNode): boolean =>
   node.type === 1 && isTransparentElementName(schema, node.name) && Type.isString(node.attr(transparentBlockAttr));

@@ -1,8 +1,10 @@
 import { Optional, Optionals } from '@ephox/katamari';
-import { Compare, SugarElement, Traverse } from '@ephox/sugar';
+import { Compare, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
+import * as TransparentElements from '../content/TransparentElements';
+import * as ElementType from '../dom/ElementType';
 import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
 import * as DeleteUtils from './DeleteUtils';
@@ -36,13 +38,24 @@ const getBlockPosition = (rootNode: Node, pos: CaretPosition): Optional<BlockPos
 const isDifferentBlocks = (blockBoundary: BlockBoundary): boolean =>
   !Compare.eq(blockBoundary.from.block, blockBoundary.to.block);
 
-const hasSameParent = (blockBoundary: BlockBoundary): boolean =>
-  Traverse.parent(blockBoundary.from.block).bind((parent1) =>
-    Traverse.parent(blockBoundary.to.block).filter((parent2) => Compare.eq(parent1, parent2))
-  ).isSome();
+const getClosestHost = (root: SugarElement<Node>, scope: SugarElement<Node>) => {
+  const isRoot = (node: SugarElement<Node>) => Compare.eq(node, root);
+  const isHost = (node: SugarElement<Node>) => ElementType.isTableCell(node) || NodeType.isContentEditableTrue(node.dom);
+  return PredicateFind.closest(scope, isHost, isRoot).filter(SugarNode.isElement).getOr(root);
+};
+
+const hasSameHost = (rootNode: Node, blockBoundary: BlockBoundary): boolean => {
+  const root = SugarElement.fromDom(rootNode);
+  return Compare.eq(getClosestHost(root, blockBoundary.from.block), getClosestHost(root, blockBoundary.to.block));
+};
 
 const isEditable = (blockBoundary: BlockBoundary): boolean =>
   NodeType.isContentEditableFalse(blockBoundary.from.block.dom) === false && NodeType.isContentEditableFalse(blockBoundary.to.block.dom) === false;
+
+const hasValidBlocks = (blockBoundary: BlockBoundary): boolean => {
+  const isValidBlock = (block: SugarElement<Element>) => ElementType.isTextBlock(block) || TransparentElements.hasBlockAttr(block.dom);
+  return isValidBlock(blockBoundary.from.block) && isValidBlock(blockBoundary.to.block);
+};
 
 const skipLastBr = (rootNode: Node, forward: boolean, blockPosition: BlockPosition): BlockPosition => {
   if (NodeType.isBr(blockPosition.position.getNode()) && !Empty.isEmpty(blockPosition.block)) {
@@ -67,7 +80,7 @@ const readFromRange = (rootNode: Node, forward: boolean, rng: Range): Optional<B
   );
 
   return Optionals.lift2(fromBlockPos, toBlockPos, blockBoundary).filter((blockBoundary) =>
-    isDifferentBlocks(blockBoundary) && hasSameParent(blockBoundary) && isEditable(blockBoundary));
+    isDifferentBlocks(blockBoundary) && hasSameHost(rootNode, blockBoundary) && isEditable(blockBoundary) && hasValidBlocks(blockBoundary));
 };
 
 const read = (rootNode: Node, forward: boolean, rng: Range): Optional<BlockBoundary> =>
