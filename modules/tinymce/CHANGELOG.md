@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The context toolbar prevented the user from placing the cursor at the edges of the editor. #TINY-8890
 - The `editor.selection.getRng()` API was not returning a proper range on hidden editors in Firefox. #TINY-9259
 - The `editor.selection.getBookmark()` API was not returning a proper bookmark on hidden editors in Firefox. #TINY-9259
+- Scrolling to the cursor after undo/redo. #TINY-9222
 
 ## 6.2.0 - 2022-09-08
 

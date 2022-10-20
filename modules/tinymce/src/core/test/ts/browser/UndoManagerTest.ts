@@ -1,8 +1,9 @@
-import { Keys } from '@ephox/agar';
+import { Keys, UiFinder } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { LegacyUnit, TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { SugarElement, Scroll } from '@ephox/sugar';
+import { TinyDom, LegacyUnit, TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -682,4 +683,25 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     });
   });
 
+  context('TINY-9222: Scroll to the cursor after undo or redo actions', () => {
+    ([ 'undo', 'redo' ] as const).forEach((action) => {
+      it('TINY-9222: Scroll to the cursor after ' + action, () => {
+        const editor = hook.editor();
+        editor.setContent(`<p class="first">top paragraph</p>${'<br>'.repeat(50)}<p class="last">last paragraph</p>`);
+        TinySelections.select(editor, 'p.last', [ 0 ]);
+        TinyContentActions.type(editor, 'updated ');
+
+        const doc = TinyDom.document(editor);
+        Scroll.to(0, 0, doc);
+        editor.undoManager[action]();
+        const yPos = Scroll.get(doc).top;
+        assert.notEqual(0, yPos, 'should change scroll after undo');
+
+        const el = UiFinder.findIn(doc, 'p.last').getOrDie();
+        Scroll.intoViewIfNeeded(el, SugarElement.fromDom(doc.dom.scrollingElement as Element));
+        const newYPos = Scroll.get(doc).top;
+        assert.equal(newYPos, yPos, 'should scroll to the cursor after undo');
+      });
+    });
+  });
 });
