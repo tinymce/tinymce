@@ -1,5 +1,5 @@
 import { HexColour, RgbaColour } from '@ephox/acid';
-import { Cell, Fun, Optional } from '@ephox/katamari';
+import { Cell, Fun, Optional, Optionals } from '@ephox/katamari';
 import { Css, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -106,10 +106,8 @@ const registerTextColorButton = (editor: Editor, name: string, format: ColorForm
     presets: 'color',
     icon: name === 'forecolor' ? 'text-color' : 'highlight-bg-color',
     select: (value) => {
-      const optCurrenthex = getCurrentColor(editor, format);
-      return optCurrenthex.map((currentHex) => {
-        return value.toUpperCase() === currentHex;
-      }).getOr(false);
+      const optCurrentHex = getCurrentColor(editor, format);
+      return Optionals.is(optCurrentHex, value.toUpperCase());
     },
     columns: Options.getColorCols(editor, format),
     fetch: getFetch(Options.getColors(editor, format), format, Options.hasCustomColors(editor)),
