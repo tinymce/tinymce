@@ -29,9 +29,16 @@ describe('browser.tinymce.plugins.quickbars.PredicateTest', () => {
     await pAssertToolbarVisible();
   });
 
-  it('TINY-9190: Toolbar is not shown when the ancestor element has a data-mce-bogus attribute', async () => {
+  it('TINY-9190: Toolbar is not shown when the ancesor element has a data-mce-bogus="1" attribute', async () => {
     const editor = hook.editor();
-    editor.setContent('<p><span data-mce-bogus="all"><span><span></span></span></span></p>', { format: 'raw' });
+    editor.setContent('<p><span><span data-mce-bogus="1"><span></span></span></span></p>', { format: 'raw' });
+    TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 0);
+    await pAssertToolbarNotVisible();
+  });
+
+  it('TINY-9190: Toolbar is not shown when the ancestor element has a data-mce-bogus="all" attribute', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><span><span data-mce-bogus="all"><span></span></span></span></p>', { format: 'raw' });
     TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 0);
     await pAssertToolbarNotVisible();
   });
@@ -41,18 +48,13 @@ describe('browser.tinymce.plugins.quickbars.PredicateTest', () => {
     const table = '<table><tbody>' +
     '<tr><td></td></tr>' +
     '</tbody></table>';
-    editor.setContent(`${table}`, { format: 'raw' });
+    editor.setContent(`${table}`);
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
     await pAssertToolbarNotVisible();
   });
 
-  it('TINY-9190: Toolbar is not shown on the elements that have "data-mce-bogus" attribute', async () => {
+  it('TINY-9190: Toolbar is not shown on the element that has "data-mce-bogus" attribute', async () => {
     const editor = hook.editor();
-    editor.setContent('<p><span></span></p>', { format: 'raw' });
-    TinySelections.setCursor(editor, [ 0, 0 ], 0);
-    await pAssertToolbarVisible();
-
-    // Add data-mce-bogus attribute
     editor.setContent('<p><span data-mce-bogus="1"></span></p>', { format: 'raw' });
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     await pAssertToolbarNotVisible();
