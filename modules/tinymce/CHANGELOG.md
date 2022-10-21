@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `expand` function added to `tinymce.selection` which expands the selection around the nearest word. #TINY-9001
 - New `expand` function added to `tinymce.dom.RangeUtils` to return a new range expanded around the nearest word. #TINY-9001
 - New `color_map_background` and `color_map_foreground` option which sets the base colors used in the `backcolor` and `forecolor` toolbar buttons and menu items. #TINY-9184
-- Added optional `storageKey` property to colorinput component #TINY-9184
+- Added optional `storageKey` property to `colorinput` component and `colorswatch` fancy menu item. #TINY-9184
 - New `addView` function added to `editor.ui.registry` which makes it possible to register custom editor views. #TINY-9210
 - New `ToggleView` command which makes it possible to hide or show registered custom views. #TINY-9210
 - New `color_default_foreground` and `color_default_background` options to set the initial default color for the `forecolor` and `backcolor` toolbar buttons and menu items. #TINY-9183
