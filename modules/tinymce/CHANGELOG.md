@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Improved
 - Transparent elements, like anchors, can now contain block elements. #TINY-9172
-- Color picker dialog now starts on the appropriate color for the cursor position #TINY-9213
+- Color picker dialog now starts on the appropriate color for the cursor position. #TINY-9213
 
 ### Fixed
 - Parsing media content would cause a memory leak, which for example occurred when using the `getContent` API. #TINY-9186
