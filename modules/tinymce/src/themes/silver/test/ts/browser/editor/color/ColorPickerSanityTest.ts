@@ -13,6 +13,37 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
     { label: 'Iframe Editor', setup: TinyHooks.bddSetup },
     { label: 'Shadow Dom Editor', setup: TinyHooks.bddSetupInShadowRoot }
   ], (tester) => {
+    context(`${tester.label}, Test of different color types`, () => {
+      const hook = tester.setup<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        toolbar: 'forecolor backcolor',
+        content_style: 'p{color: pink; background-color: hsl(120, 100%, 75%);}'
+      }, []);
+
+      it('TINY-9213: Color detected on color, background', async () => {
+        const editor = hook.editor();
+        editor.setContent('<p>Text</p>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 2);
+        TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+        await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
+        TinyUiActions.clickOnUi(editor, 'button[title="Custom color"]');
+        const backgroundDialog = await TinyUiActions.pWaitForDialog(editor);
+        const backgroundDialogResult = UiFinder.findIn<HTMLInputElement>(backgroundDialog, 'label:contains("#") + input').getOrDie();
+        await Waiter.pTryUntil('Dialog should start with the right color', () => assert.equal(backgroundDialogResult.dom.value, '80FF80'));
+      });
+
+      it('TINY-9213: Color detected on color, foreground', async () => {
+        const editor = hook.editor();
+        editor.setContent('<p>Text</p>');
+        TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+        await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
+        TinyUiActions.clickOnUi(editor, 'button[title="Custom color"]');
+        const textDialog = await TinyUiActions.pWaitForDialog(editor);
+        const textDialogResult = UiFinder.findIn<HTMLInputElement>(textDialog, 'label:contains("#") + input').getOrDie();
+        await Waiter.pTryUntil('Dialog should start with the right color', () => assert.equal(textDialogResult.dom.value, 'FFC0CB'));
+      });
+    });
+
     context(tester.label, () => {
       const hook = tester.setup<Editor>({
         base_url: '/project/tinymce/js/tinymce',
@@ -119,7 +150,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         TinyUiActions.clickOnUi(editor, 'button[title="Custom color"]');
         const backgroundDialog = await TinyUiActions.pWaitForDialog(editor);
         const backgroundDialogResult = UiFinder.findIn<HTMLInputElement>(backgroundDialog, 'label:contains("#") + input').getOrDie();
-        await Waiter.pTryUntil('Dialog should start with the right color', () => backgroundDialogResult.dom.value === '00FF00');
+        await Waiter.pTryUntil('Dialog should start with the right color', () => assert.equal(backgroundDialogResult.dom.value, '00FF00'));
       });
 
       it('TINY-9213: Color detected on color, foreground', async () => {
@@ -130,7 +161,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         TinyUiActions.clickOnUi(editor, 'button[title="Custom color"]');
         const textDialog = await TinyUiActions.pWaitForDialog(editor);
         const textDialogResult = UiFinder.findIn<HTMLInputElement>(textDialog, 'label:contains("#") + input').getOrDie();
-        await Waiter.pTryUntil('Dialog should start with the right color', () => textDialogResult.dom.value === 'FF00FF');
+        await Waiter.pTryUntil('Dialog should start with the right color', () => assert.equal(textDialogResult.dom.value, 'FF00FF'));
       });
 
       it('TINY-6952: Submitting an invalid hex color code will show an alert with an error message', async () => {
