@@ -40,7 +40,7 @@ describe('browser.tinymce.core.init.ShadowDomEditorTest', () => {
         editor.nodeChanged();
         await UiFinder.pWaitForVisible('Wait for editor to be visible', shadowRoot, '.tox-editor-header');
         assert.lengthOf(SelectorFilter.descendants(SugarBody.body(), '.tox-tinymce-aux'), 0, 'Should be no aux divs in the document');
-        assert.lengthOf(SelectorFilter.descendants(shadowRoot, '.tox-tinymce-aux'), 1, 'Should be 1 aux div in the shadow root');
+        assert.lengthOf(SelectorFilter.descendants(shadowRoot, '.tox-tinymce-aux'), 2, 'Should be 1 aux div in the shadow root (popup sink and dialog sink');
       });
     });
 

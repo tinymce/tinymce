@@ -22,27 +22,12 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
     assert.isTrue(notificationFocused, 'Notification should be focused');
   };
 
-  const assertPosition = (prefix: string, editor: Editor, notification: NotificationApi, notificationIndex: number, diff: number = 5) => {
-    // This is the approximate number of pixels that the first notification appears below the top of the editor container
-    const yDeltaForFirstNotification = 10;
-
-    // NOTE: We use getBoundingClientRect values here so that we are getting screen/viewport coordinates.
-
-    // Here, we are asserting that the notifications are stacked directly below the top of the editor container.
-    const editorContainerRect = editor.getContainer().getBoundingClientRect();
-    // const editorContainerY = editorContainerRect.top;
-    const editorContainerMiddleX = (editorContainerRect.left + editorContainerRect.right) / 2;
-
-    const notificationContainer = Traverse.parent(SugarElement.fromDom(notification.getEl())).getOrDie() as SugarElement<HTMLElement>;
-    const notificationRect = notificationContainer.dom.getBoundingClientRect();
-
-    // Check that the notification banner is approximately centered.
-    assert.approximately(notificationRect.left, editorContainerMiddleX - notificationRect.width / 2, diff, `${prefix} should appear approximately in the center of the editor container`);
-
-    // Check the notification banner is approximately stacked down the editor
-    assert.isAbove(notificationRect.top, editorContainerRect.top, `The ${prefix} should appear below the top of the editor`);
-    assert.isBelow(notificationRect.top, editorContainerRect.bottom, `The ${prefix} should appear above the bottom of the editor`);
-    assert.approximately(notificationRect.top, editorContainerRect.top + yDeltaForFirstNotification + (notificationIndex * 48), diff, `${prefix} should stack down the editor`);
+  const assertPosition = (prefix: string, notification: NotificationApi, x: number, y: number, diff: number = 5) => {
+    const elem = Traverse.parent(SugarElement.fromDom(notification.getEl())).getOrDie() as SugarElement<HTMLElement>;
+    const top = elem.dom.offsetTop;
+    const left = elem.dom.offsetLeft;
+    assert.approximately(top, y, diff, `${prefix} top position should be ${y}px~=${top}px`);
+    assert.approximately(left, x, diff, `${prefix} left position should be ${x}px~=${left}px`);
   };
 
   context('Top toolbar positioning', () => {
@@ -115,7 +100,7 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
       })), SugarElement.fromDom(notification.getEl()));
     };
 
-    it('Check notification stacking and structure', async () => {
+    it('Check notification stacking and structure', () => {
       const editor = hook.editor();
       const nError = openNotification(editor, 'error', 'Message 1');
       const nWarn = openNotification(editor, 'warning', 'Message 2');
@@ -129,21 +114,21 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
       assertStructure('Check success notification structure', nSuccess, 'success', 'Message 4');
 
       // Check items are positioned so that they are stacked
-      assertPosition('Error notification', editor, nError, 0);
-      assertPosition('Warning notification', editor, nWarn, 1);
-      assertPosition('Info notification', editor, nInfo, 2);
-      assertPosition('Success notification', editor, nSuccess, 3);
+      assertPosition('Error notification', nError, 220, -192);
+      assertPosition('Warning notification', nWarn, 220, -144);
+      assertPosition('Info notification', nInfo, 220, -96);
+      assertPosition('Success notification', nSuccess, 220, -48);
 
       nError.close();
 
-      assertPosition('Warning notification', editor, nWarn, 0);
-      assertPosition('Info notification', editor, nInfo, 1);
-      assertPosition('Success notification', editor, nSuccess, 2);
+      assertPosition('Warning notification', nWarn, 220, -192);
+      assertPosition('Info notification', nInfo, 220, -144);
+      assertPosition('Success notification', nSuccess, 220, -96);
 
       nInfo.close();
 
-      assertPosition('Warning notification', editor, nWarn, 0);
-      assertPosition('Success notification', editor, nSuccess, 1);
+      assertPosition('Warning notification', nWarn, 220, -192);
+      assertPosition('Success notification', nSuccess, 220, -144);
 
       nWarn.close();
       nSuccess.close();
@@ -170,30 +155,27 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
       notification.close();
     });
 
-    it('TINY-7894: Should always render below the top of the header and within the content area', async () => {
+    it('TINY-7894: Should always render below the top of the header and within the content area', () => {
       const editor = hook.editor();
       const cleanup = PageScroll.setup(editor, 2000);
 
       // Scroll so the editor is below the bottom of the window
       Scroll.to(0, 0);
       const notification1 = openNotification(editor, 'success', 'Message');
-
-      await Waiter.pWait(10000);
-
-      assertPosition('Below window notification', editor, notification1, 0);
+      assertPosition('Below window notification', notification1, 226, -2192);
       notification1.close();
 
       // Scroll so the header is above the top of the window, but the bottom of the editor is in view
       const topOfEditor = SugarLocation.absolute(TinyDom.container(editor)).top;
       Scroll.to(0, topOfEditor + 100);
       const notification2 = openNotification(editor, 'success', 'Message');
-      assertPosition('Partial editor view notification', editor, notification2, 226, -2100);
+      assertPosition('Partial editor view notification', notification2, 226, -2100);
       notification2.close();
 
       // Scroll so the editor is above the top of the window
       Scroll.to(0, 4000);
       const notification3 = openNotification(editor, 'success', 'Message');
-      assertPosition('Above window notification', editor, notification3, 226, -2000);
+      assertPosition('Above window notification', notification3, 226, -2000);
       notification3.close();
 
       cleanup();
@@ -203,7 +185,7 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
       const editor = hook.editor();
 
       const notifications = Arr.range(9, (i) => openNotification(editor, 'success', `Message ${i + 1}`));
-      assertPosition('Last notification is outside the content area', editor, notifications[notifications.length - 1], 220, 192);
+      assertPosition('Last notification is outside the content area', notifications[notifications.length - 1], 220, 192);
 
       Arr.each(notifications, (notification) => notification.close());
     });
@@ -223,8 +205,8 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
       const nWarn = openNotification(editor, 'warning', 'Message 2');
 
       // Check items are positioned so that they are stacked
-      assertPosition('Error notification', editor, nError, 220, -399);
-      assertPosition('Warning notification', editor, nWarn, 220, -351);
+      assertPosition('Error notification', nError, 220, -399);
+      assertPosition('Warning notification', nWarn, 220, -351);
 
       // Shrink the editor to 300px
       const resizeHandle = UiFinder.findIn(SugarBody.body(), '.tox-statusbar__resize-handle').getOrDie();
@@ -233,8 +215,8 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
 
       // Add a wait to allow the resize event to be processed and notifications to be rerendered
       await Waiter.pTryUntil('Check items are positioned so that they are stacked', () => {
-        assertPosition('Error notification', editor, nError, 220, -299);
-        assertPosition('Warning notification', editor, nWarn, 220, -251);
+        assertPosition('Error notification', nError, 220, -299);
+        assertPosition('Warning notification', nWarn, 220, -251);
       });
 
       // Check the notification can be focused
