@@ -5,11 +5,12 @@ import {
 import { StructureProcessor, StructureSchema } from '@ephox/boulder';
 import { Dialog, DialogManager } from '@ephox/bridge';
 import { Optional, Singleton } from '@ephox/katamari';
-import { SelectorExists, SugarBody, SugarElement } from '@ephox/sugar';
+import { SelectorExists, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { WindowManagerImpl, WindowParams } from 'tinymce/core/api/WindowManager';
 
+import * as Boundosaurus from '../../alien/Boundosaurus';
 import * as Options from '../../api/Options';
 import { UiFactoryBackstagePair } from '../../backstage/Backstage';
 import { formCancelEvent } from '../general/FormEvents';
@@ -180,11 +181,11 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
       inlineDialog.set(inlineDialogComp);
 
       // Position the inline dialog
-      InlineView.showWithin(
+      InlineView.showWithinBounds(
         inlineDialogComp,
         GuiFactory.premade(dialogUi.dialog),
         { anchor },
-        Optional.some(SugarBody.body())
+        () => Boundosaurus.getInlineDialogBounds(editor)
       );
 
       // Refresh the docking position if not using a sticky toolbar

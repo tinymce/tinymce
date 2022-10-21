@@ -5,6 +5,7 @@ import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } fro
 
 import Editor from 'tinymce/core/api/Editor';
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
+import * as ColorCache from 'tinymce/themes/silver/ui/core/color/ColorCache';
 import { getColorCols } from 'tinymce/themes/silver/ui/core/color/Options';
 
 describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () => {
@@ -159,6 +160,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       UiFinder.exists(SugarBody.body(), 'div[data-mce-color="#FF0000"]');
       LocalStorage.clear();
+      ColorCache.clearStoredCaches();
     });
   });
 

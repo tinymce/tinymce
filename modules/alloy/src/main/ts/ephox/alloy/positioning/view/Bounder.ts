@@ -106,6 +106,9 @@ const calcReposition = (box: Boxes.Bounds, bounds: Boxes.Bounds): Boxes.Bounds =
  * to account for which direction it's rendering in.
  */
 const calcMaxSizes = (direction: Direction.DirectionAdt, box: Boxes.Bounds, bounds: Boxes.Bounds): MaxSizes => {
+  // The upAvailable and downAvailable and (west and east) need to consider both the placement bounds, and
+  // the so-called screenBounds. The screenBounds will be used for setting maxHeight.
+
   // Futz with the "height" of the popup to ensure if it doesn't fit it's capped at the available height.
   const upAvailable = Fun.constant(box.bottom - bounds.y);
   const downAvailable = Fun.constant(bounds.bottom - box.y);
