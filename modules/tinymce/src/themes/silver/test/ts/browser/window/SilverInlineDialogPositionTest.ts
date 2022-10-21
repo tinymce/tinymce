@@ -30,13 +30,13 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
 
   const pAssertPos = (dialog: SugarElement<HTMLElement>, pos: string, x: number, y: number) =>
     Waiter.pTryUntil('Wait for dialog position to update', () => {
-      const diff = 5;
+      const diff = 8;
       const position = Css.get(dialog, 'position');
       const top = dialog.dom.offsetTop;
       const left = dialog.dom.offsetLeft;
       assert.equal(position, pos, `Dialog position (${position}) should be ${pos}`);
-      assert.approximately(top, y, diff, `Dialog top position (${top}px) should be ~${y}px`);
-      assert.approximately(left, x, diff, `Dialog left position (${left}px) should be ~${x}px`);
+      assert.approximately(top, y, diff, `Dialog top position (${top}px) should be ~${y}px [position: ${position}]`);
+      assert.approximately(left, x, diff, `Dialog left position (${left}px) should be ~${x}px [position: ${position}]`);
     });
 
   const openDialog = (editor: Editor): SugarElement<HTMLElement> => {
@@ -51,8 +51,24 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
       resize: 'both',
       height: 400,
       width: 650,
+      menu: {
+        goose: {
+          title: 'goose',
+          items: 'open-dialog'
+        }
+      },
+      menubar: 'file goose',
       toolbar_sticky: false,
       toolbar_mode: 'wrap',
+      setup: (editor: Editor) => {
+        editor.ui.registry.addMenuItem('open-dialog', {
+          type: 'menuitem',
+          text: 'Open Dialog',
+          onAction: () => {
+            DialogUtils.open(editor, dialogSpec, { inline: 'toolbar' });
+          }
+        });
+      }
     }, []);
 
     it('Test position when resizing', async () => {
@@ -124,11 +140,32 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
       base_url: '/project/tinymce/js/tinymce',
       height: 400,
       width: 600,
+      menu: {
+        goose: {
+          title: 'goose',
+          items: 'open-dialog'
+        }
+      },
+      menubar: 'file goose',
       toolbar_sticky: true,
-      toolbar_location: 'bottom'
+      toolbar_location: 'bottom',
+      setup: (editor: Editor) => {
+        editor.ui.registry.addMenuItem('open-dialog', {
+          type: 'menuitem',
+          text: 'Open Dialog',
+          onAction: () => {
+            DialogUtils.open(editor, dialogSpec, { inline: 'toolbar' });
+          }
+        });
+      }
     }, []);
 
-    PageScroll.bddSetup(hook.editor, 1000);
+    // This scroll div is inserted before and after the target, so the popup sink that
+    // gets added for inline mode is separated from the dialog sink by the height of one
+    // scroll div
+    const scrollDivHeight = 1000;
+
+    PageScroll.bddSetup(hook.editor, scrollDivHeight);
 
     it('Position of dialog should be constant when toolbar bottom docks', async () => {
       const editor = hook.editor();
@@ -171,7 +208,23 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
       theme: 'silver',
       base_url: '/project/tinymce/js/tinymce',
       inline: true,
-      toolbar_location: 'bottom'
+      menu: {
+        goose: {
+          title: 'goose',
+          items: 'open-dialog'
+        }
+      },
+      menubar: 'file goose',
+      toolbar_location: 'bottom',
+      setup: (editor: Editor) => {
+        editor.ui.registry.addMenuItem('open-dialog', {
+          type: 'menuitem',
+          text: 'Open Dialog',
+          onAction: () => {
+            DialogUtils.open(editor, dialogSpec, { inline: 'toolbar' });
+          }
+        });
+      }
     }, () => {
       const div = SugarElement.fromHtml<HTMLDivElement>('<div style="width: 600px; height: 400px; border: 2px solid green;"></div>');
       return {
@@ -180,7 +233,12 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
       };
     }, []);
 
-    PageScroll.bddSetup(hook.editor, 1000);
+    // This scroll div is inserted before and after the target, so the popup sink that
+    // gets added for inline mode is separated from the dialog sink by the height of one
+    // scroll div
+    const scrollDivHeight = 1000;
+
+    PageScroll.bddSetup(hook.editor, scrollDivHeight);
 
     it('Position of dialog should be constant when toolbar bottom docks', async () => {
       const editor = hook.editor();
@@ -190,14 +248,16 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
       editor.focus();
       await TinyUiActions.pWaitForPopup(editor, '.tox-tinymce-inline');
       const dialog = openDialog(editor);
-      await pAssertPos(dialog, 'absolute', 106, -1388);
+
+      await pAssertPos(dialog, 'absolute', 106, -1388 + scrollDivHeight);
 
       // Scroll so that bottom of window overlaps bottom of editor
       scrollRelativeEditor(editor, 'bottom', -200);
-      await pAssertPos(dialog, 'absolute', 106, -1388);
+      await pAssertPos(dialog, 'absolute', 106, -1388 + scrollDivHeight);
 
       // Scroll so that top of window overlaps top of editor
       scrollRelativeEditor(editor, 'top', 200);
+      // We don't consider scrollDivHeight in this assertion because position is fixed.
       await pAssertPos(dialog, 'fixed', 106, 0);
 
       DialogUtils.close(editor);

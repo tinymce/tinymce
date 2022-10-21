@@ -41,19 +41,6 @@ const position = (component: AlloyComponent, posConfig: PositioningConfig, posSt
   positionWithinBounds(component, posConfig, posState, placee, placementSpec, boundsBox);
 };
 
-const getOptConstrainedBounds = (optWithinBounds: Optional<Boxes.Bounds>, posConfig: PositioningConfig): Optional<Boxes.Bounds> => {
-  const optConstrainingBounds: Optional<Boxes.Bounds> = posConfig.getBounds.map(Fun.apply);
-  // If posConfig has a getBounds, then the final result cannot exceed those bounds.
-  return optWithinBounds.fold(
-    Fun.constant(optConstrainingBounds),
-    (withinBounds: Boxes.Bounds) => optConstrainingBounds
-      .map(
-        (cb) => false ? Boxes.constrain(withinBounds, cb) : withinBounds
-      )
-      .orThunk(() => optWithinBounds)
-  );
-};
-
 const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningConfig, posState: PositioningState, placee: AlloyComponent, placementSpec: PlacementSpec, optWithinBounds: Optional<Boxes.Bounds>): void => {
   const placeeDetail: PlacementDetail = StructureSchema.asRawOrDie('placement.info', StructureSchema.objOf(PlacementSchema), placementSpec);
   const anchorage = placeeDetail.anchor;
@@ -74,7 +61,7 @@ const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningC
     // (bottom and right) will be using the wrong dimensions
     const origin = posConfig.useFixed() ? getFixedOrigin() : getRelativeOrigin(component);
 
-    const optBounds: Optional<Boxes.Bounds> = getOptConstrainedBounds(optWithinBounds, posConfig);
+    const optBounds: Optional<Boxes.Bounds> = optWithinBounds.orThunk(() => posConfig.getBounds.map(Fun.apply));
 
     anchorage.placement(component, anchorage, origin).each((anchoring) => {
       // Place the element and then update the state for the placee

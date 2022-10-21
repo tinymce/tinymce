@@ -9,6 +9,7 @@ import { Class, Compare, Css, Focus, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 
+import * as Boundosaurus from '../../alien/Boundosaurus';
 import { getToolbarMode, ToolbarMode } from '../../api/Options';
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderToolbar } from '../toolbar/CommonToolbar';
@@ -59,11 +60,7 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
   );
 
   const getBounds = () => {
-    const position = lastContextPosition.get().getOr('node');
-    // Use a 1px margin for the bounds to keep the context toolbar from butting directly against
-    // the header, etc... when switching to inset layouts
-    const margin = ContextToolbarAnchor.shouldUseInsetLayouts(position) ? 1 : 0;
-    return ContextToolbarBounds.getContextToolbarBounds(editor, sharedBackstage, position, margin);
+    return Boundosaurus.getContextToolbarBounds(editor, sharedBackstage, lastContextPosition);
   };
 
   const canLaunchToolbar = () => {
@@ -74,6 +71,8 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
   const isSameLaunchElement = (elem: Optional<SugarElement<Element>>) =>
     Optionals.is(Optionals.lift2(elem, lastElement.get(), Compare.eq), true);
 
+  // TINY-9226: Does this need to live in Boundosaurus. Still a POC so not sure
+  // on the boundaries
   const shouldContextToolbarHide = (): boolean => {
     if (!canLaunchToolbar()) {
       return true;
