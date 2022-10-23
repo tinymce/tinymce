@@ -7,7 +7,7 @@ const pAssertToolbarNotVisible = async (): Promise<void> => {
 };
 
 const pAssertToolbarVisible = (): Promise<void> =>
-  Waiter.pTryUntil('toolbar should exist', () => UiFinder.exists(SugarBody.body(), '.tox-toolbar'));
+  Waiter.pTryUntil('toolbar should exist', () => UiFinder.exists(SugarBody.body(), '.tox-pop__dialog .tox-toolbar'));
 
 export {
   pAssertToolbarNotVisible,
