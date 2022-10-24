@@ -166,12 +166,17 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
         },
         // Fires the default dismiss event.
         fireDismissalEventInstead: { },
+        // INVESTIGATE [TBA JIRA] inline dialogs with editor option toolbar_location: bottom specifically
+        // don't reposition like inline dialogs with the toolbar at the top. This was done as part of
+        // TINY-4587, but it's unclear what the intent was. We need to investigate whether there are
+        // problems with getting the toolbar_location bottom inline dialogs to reposition like the top
+        // inline dialogs do, and if there are, if we can resolve them.
         ...isToolbarLocationTop ? { } : { fireRepositionEventInstead: { }},
         inlineBehaviours: Behaviour.derive([
           AddEventsBehaviour.config('window-manager-inline-events', [
             AlloyEvents.run(SystemEvents.dismissRequested(), (_comp, _se) => {
               AlloyTriggers.emit(dialogUi.dialog, formCancelEvent);
-            })
+            }),
           ]),
           ...inlineAdditionalBehaviours(editor, isStickyToolbar, isToolbarLocationTop)
         ]),
