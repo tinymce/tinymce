@@ -236,6 +236,27 @@ describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
     TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
   }));
 
+  it('TINY-9194: should shift caret into zwnbsp if the bookmark is right after the cef element', bookmarkTest((editor) => {
+    editor.focus();
+    editor.setContent('<p><span contenteditable="false">a</span></p>');
+    // actual content <p>&#xFEFF;<span contenteditable="false">a</span></p>
+    TinySelections.setCursor(editor, [ 0 ], 2);
+    // actual content <p><span contenteditable="false">a</span>&#xFEFF;</p>
+    TinyAssertions.assertCursor(editor, [ 0, 1 ], 1);
+    const bm1 = editor.selection.getBookmark();
+    editor.selection.moveToBookmark(bm1);
+    // actual content <p><span contenteditable="false">a</span>&#xFEFF;</p>
+    TinyAssertions.assertCursor(editor, [ 0, 1 ], 1);
+
+    TinySelections.setCursor(editor, [ 0 ], 0);
+    // actual content <p>&#xFEFF;<span contenteditable="false">a</span></p>
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
+    const bm2 = editor.selection.getBookmark();
+    editor.selection.moveToBookmark(bm2);
+    // actual content <p>&#xFEFF;<span contenteditable="false">a</span></p>
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
+  }));
+
   context('Get bookmark should work if the first element of the content is a comment', () => {
     const outsideButton: SugarElement<HTMLButtonElement> = SugarElement.fromHtml('<button id="getBookmarkButton">Get Bookmark</button>');
     const setupElement = () => {
