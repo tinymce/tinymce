@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inline text pattern no longer triggers if it matches only the end but not the start. #TINY-8947
 - Matches of inline text patterns that are similar are now managed correctly. #TINY-8949
 - The context toolbar prevented the user from placing the cursor at the edges of the editor. #TINY-8890
+- The Quick Insert context toolbar provided by the `quickbars` plugin showed when the cursor was in a fake block caret. #TINY-9190
 - The `editor.selection.getRng()` API was not returning a proper range on hidden editors in Firefox. #TINY-9259
 - The `editor.selection.getBookmark()` API was not returning a proper bookmark on hidden editors in Firefox. #TINY-9259
 - Dragging a noneditable element before or after another noneditable element now works correctly. #TINY-9253
