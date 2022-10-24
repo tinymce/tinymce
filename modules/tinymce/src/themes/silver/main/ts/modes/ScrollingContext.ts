@@ -49,6 +49,11 @@ export const getBoundsFrom = (sc: ScrollingContext): Bounds => {
   return Arr.foldl(
     sc.stencils,
     (acc, stencil) => {
+      console.log({
+        acc,
+        stencil
+      });
+      // TODO: Use clamping.
       const left = Math.max(acc.x, stencil.x);
       const top = Math.max(acc.y, stencil.y);
       const right = Math.min(acc.right, stencil.right);

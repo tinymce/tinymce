@@ -8,6 +8,7 @@ import { ScrollIntoViewEvent } from 'tinymce/core/api/EventTypes';
 import * as Options from '../../api/Options';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import * as EditorChannels from '../../Channels';
+import * as ScrollingContext from '../../modes/ScrollingContext';
 
 const visibility = {
   fadeInClass: 'tox-editor-dock-fadein',
@@ -236,11 +237,24 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
         ...visibility
       },
       lazyViewport: (comp) => {
-        const win = Boxes.win();
+        const optScrollingContext = ScrollingContext.detect(comp.element);
+        const boundsWithoutOffset = optScrollingContext.fold(
+          () => {
+            // No scrolling context, so just window
+            return Boxes.win();
+          },
+          (sc) => ScrollingContext.getBoundsFrom(sc)
+        );
+
+        console.log('comparison', {
+          win: JSON.stringify(Boxes.win()),
+          bo: JSON.stringify(boundsWithoutOffset)
+        });
+
         const offset = Options.getStickyToolbarOffset(editor);
-        const top = win.y + (isDockedMode(comp, 'top') ? offset : 0);
-        const height = win.height - (isDockedMode(comp, 'bottom') ? offset : 0);
-        return Boxes.bounds(win.x, top, win.width, height);
+        const top = boundsWithoutOffset.y + (isDockedMode(comp, 'top') ? offset : 0);
+        const height = boundsWithoutOffset.height - (isDockedMode(comp, 'bottom') ? offset : 0);
+        return Boxes.bounds(boundsWithoutOffset.x, top, boundsWithoutOffset.width, height);
       },
       modes: [ sharedBackstage.header.getDockingMode() ],
       onDocked: onDockingSwitch,

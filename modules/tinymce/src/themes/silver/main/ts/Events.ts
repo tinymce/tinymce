@@ -60,6 +60,14 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMotherships: Gui.Gui
     broadcastEvent(SystemEvents.windowResize(), DomEvent.fromRawEvent(evt));
   };
 
+  // FIX: Unbind this.
+  DomEvent.capture(doc, 'scroll', (e) => {
+    window.requestAnimationFrame(() => {
+      editor.dispatch('ElementScroll', { target: e.target });
+      broadcastEvent(SystemEvents.elementScroll(), e);
+    });
+  });
+
   const onEditorResize = () => broadcastOn(Channels.repositionPopups(), {});
   const onEditorProgress = (evt: EditorEvent<AfterProgressStateEvent>) => {
     if (evt.state) {

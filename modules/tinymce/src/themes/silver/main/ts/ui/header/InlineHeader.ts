@@ -157,7 +157,9 @@ export const InlineHeader = (
       updateChromeWidth();
     }
 
-    // Refresh split toolbar
+    // Refresh split toolbar. A spilt toolbar requires a calculation to see what ends up in the
+    // "more drawer". When we don't have a spilt toolbar, then there is no reason to refresh the toolbar
+    // when the size changes.
     if (isSplitToolbar) {
       OuterContainer.refreshToolbar(mainUi.outerContainer);
     }
@@ -169,6 +171,7 @@ export const InlineHeader = (
 
     // Docking
     if (isSticky) {
+      // In what situation are we using `resetDocking` here? Probably try and understand that.
       const action = resetDocking ? Docking.reset : Docking.refresh;
       floatContainer.on(action);
     }
@@ -178,15 +181,18 @@ export const InlineHeader = (
   };
 
   const updateMode = (updateUi: boolean = true) => {
+    console.log('updateMode');
     // Skip updating the mode if the toolbar is hidden, is
     // using a fixed container or has sticky toolbars disabled
     if (useFixedToolbarContainer || !isSticky || !isVisible()) {
       return;
     }
 
+    console.log('passed first check');
     floatContainer.on((container) => {
-      const currentMode = headerBackstage.getDockingMode();
-      const newMode = calcMode(container);
+      const currentMode: 'top' | 'bottom' = headerBackstage.getDockingMode();
+      const newMode: 'top' | 'bottom' = calcMode(container);
+      console.log({ newMode, currentMode, updateUi });
       if (newMode !== currentMode) {
         setupMode(newMode);
         if (updateUi) {
@@ -201,8 +207,12 @@ export const InlineHeader = (
     Css.set(mainUi.outerContainer.element, 'display', 'flex');
     DOM.addClass(editor.getBody(), 'mce-edit-focus');
     Arr.each(uiMotherships, (m) => {
+      // We remove the display style, because when hiding, we set it to "none"
       Css.remove(m.element, 'display');
     });
+
+    // We don't want to call updateChromeUi as part of updateMode because
+    // we are about to call updateChromeUi below!
     updateMode(false);
     updateChromeUi();
   };
@@ -216,12 +226,16 @@ export const InlineHeader = (
     });
   };
 
+  const update = () => {
+    updateChromeUi(true);
+  };
+
   return {
     isVisible,
     isPositionedAtTop,
     show,
     hide,
-    update: updateChromeUi,
+    update,
     updateMode,
     repositionPopups
   };

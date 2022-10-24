@@ -37,7 +37,7 @@ export default (): void => {
     // statusbar: false,
     resize: 'both',
     link_context_toolbar: true,
-    toolbar_location: 'bottom',
+    toolbar_location: 'top',
     // fixed_toolbar_container: '#tiny-fixed-container', // DEPRECATED
 
     menubar: 'file edit view insert format table tools Menu-1 help',
