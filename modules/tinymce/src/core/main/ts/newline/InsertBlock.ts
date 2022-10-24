@@ -394,14 +394,11 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   if (NodeType.isElement(container) && container.hasChildNodes()) {
     isAfterLastNodeInContainer = offset > container.childNodes.length - 1;
 
-    const childContainer = container.childNodes[Math.min(offset, container.childNodes.length - 1)];
-    if (Type.isNonNullable(childContainer) && dom.getContentEditable(childContainer) !== 'false') {
-      container = childContainer;
-      if (isAfterLastNodeInContainer && NodeType.isText(container)) {
-        offset = container.data.length;
-      } else {
-        offset = 0;
-      }
+    container = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;
+    if (isAfterLastNodeInContainer && NodeType.isText(container)) {
+      offset = container.data.length;
+    } else {
+      offset = 0;
     }
   }
 
