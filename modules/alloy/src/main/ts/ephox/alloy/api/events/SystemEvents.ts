@@ -82,6 +82,9 @@ const focusShifted = prefixName('focusmanager.shifted');
 // Fired when slots are made hidden/shown
 const slotVisibility = prefixName('slotcontainer.visibility');
 
+// Used for containers outside the mothership that scroll. Used by docking.
+const elementScroll = prefixName('system.element.scroll');
+
 export interface AlloySlotVisibilityEvent extends CustomEvent {
   readonly name: string;
   readonly visible: boolean;
@@ -132,5 +135,7 @@ export {
   slotVisibility,
 
   highlight,
-  dehighlight
+  dehighlight,
+
+  elementScroll
 };
