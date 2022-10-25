@@ -317,4 +317,15 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
 
     TinyAssertions.assertContent(editor, content);
   });
+
+  it('TINY-9194: set the caret after ce=false inline element and zwnbsp but lean backwards into zwnbsp', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><span contenteditable="false">CEF</span></p>');
+    TinySelections.setCursor(editor, [ 0 ], 2);
+    // actual content <p><span contenteditable="false">a</span>&#xFEFF;</p>
+    TinyAssertions.assertCursor(editor, [ 0, 1 ], 1);
+    TinySelections.setCursor(editor, [ 0 ], 2);
+    // actual content <p><span contenteditable="false">a</span>&#xFEFF;</p>
+    TinyAssertions.assertCursor(editor, [ 0, 1 ], 1);
+  });
 });
