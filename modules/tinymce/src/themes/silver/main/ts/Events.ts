@@ -63,8 +63,13 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMotherships: Gui.Gui
   // FIX: Unbind this.
   DomEvent.capture(doc, 'scroll', (e) => {
     window.requestAnimationFrame(() => {
-      editor.dispatch('ElementScroll', { target: e.target });
-      broadcastEvent(SystemEvents.elementScroll(), e);
+      const c = editor.getContainer();
+      // Because this can fire before the editor is rendered, we need to stop that from happening.
+      // Some tests can create this situation, and then we get a Node name null or defined error.
+      if (c !== undefined && c !== null) {
+        editor.dispatch('ElementScroll', { target: e.target });
+        broadcastEvent(SystemEvents.elementScroll(), e);
+      }
     });
   });
 

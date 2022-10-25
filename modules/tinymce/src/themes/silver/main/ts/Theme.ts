@@ -35,6 +35,10 @@ export default (): void => {
       const renderResult = renderModeUI();
       const optScrollingContext = ScrollingContext.detect(popups.getMothership().element);
 
+      // I don't think this can be calculated in advance. The boxes.size of the stencils might change.
+      // Maybe the advanced part should just be the elements. I think this will mainly be a problem
+      // in more than one scroller container inside the window, because then Boxes.size will change
+      // depending on the scroll value of something that isn't considered (the outer scroll container)
       optScrollingContext.each(
         (sc) => popupSinkBounds.set(
           () => ScrollingContext.getBoundsFrom(sc)

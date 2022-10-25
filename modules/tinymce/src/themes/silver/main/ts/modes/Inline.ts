@@ -87,7 +87,7 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineUi, tool
 
   editor.on('ElementScroll', (_args) => {
     // The update mode thing only does something if ToolbarLocation is auto
-    ui.update();
+    requestAnimationFrame(() => ui.update());
   });
 
   editor.on('remove', () => {

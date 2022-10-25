@@ -181,6 +181,7 @@ export const InlineHeader = (
   };
 
   const updateMode = (updateUi: boolean = true) => {
+    // eslint-disable-next-line no-console
     console.log('updateMode');
     // Skip updating the mode if the toolbar is hidden, is
     // using a fixed container or has sticky toolbars disabled
@@ -188,10 +189,12 @@ export const InlineHeader = (
       return;
     }
 
+    // eslint-disable-next-line no-console
     console.log('passed first check');
     floatContainer.on((container) => {
       const currentMode: 'top' | 'bottom' = headerBackstage.getDockingMode();
       const newMode: 'top' | 'bottom' = calcMode(container);
+      // eslint-disable-next-line no-console
       console.log({ newMode, currentMode, updateUi });
       if (newMode !== currentMode) {
         setupMode(newMode);

@@ -210,11 +210,13 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
         lazyContext: (comp) => {
           const headerHeight = Height.getOuter(comp.element);
           const container = editor.inline ? editor.getContentAreaContainer() : editor.getContainer();
-          const box = Boxes.box(SugarElement.fromDom(container));
-          // Force the header to hide before it overflows outside the container
-          const boxHeight = box.height - headerHeight;
-          const topBound = box.y + (isDockedMode(comp, 'top') ? 0 : headerHeight);
-          return Optional.some(Boxes.bounds(box.x, topBound, box.width, boxHeight));
+          return Optional.from(container).map((c) => {
+            const box = Boxes.box(SugarElement.fromDom(c));
+            // Force the header to hide before it overflows outside the container
+            const boxHeight = box.height - headerHeight;
+            const topBound = box.y + (isDockedMode(comp, 'top') ? 0 : headerHeight);
+            return Boxes.bounds(box.x, topBound, box.width, boxHeight);
+          });
         },
         onShow: () => {
           runOnSinkElement((elem) => updateSinkVisibility(elem, true));
@@ -246,6 +248,7 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
           (sc) => ScrollingContext.getBoundsFrom(sc)
         );
 
+        // eslint-disable-next-line no-console
         console.log('comparison', {
           win: JSON.stringify(Boxes.win()),
           bo: JSON.stringify(boundsWithoutOffset)
