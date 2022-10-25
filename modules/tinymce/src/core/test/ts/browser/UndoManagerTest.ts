@@ -1,8 +1,8 @@
-import { Keys, UiFinder } from '@ephox/agar';
+import { Keys } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { SugarElement, Scroll } from '@ephox/sugar';
+import { Scroll } from '@ephox/sugar';
 import { TinyDom, LegacyUnit, TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -699,7 +699,6 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     const checkScroll = (action: 'undo' | 'redo') => {
       Scroll.to(0, 0, doc);
       editor.undoManager[action]();
-      Scroll.intoViewIfNeeded(UiFinder.findIn(doc, 'p.last').getOrDie(), SugarElement.fromDom(doc.dom.scrollingElement as Element));
       assert.isAtLeast(Scroll.get(doc).top + editorHeight, height, `should scroll to the cursor after ${action}`);
     };
 
