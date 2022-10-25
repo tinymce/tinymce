@@ -7,7 +7,7 @@ import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
 import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 
 import * as Events from '../api/Events';
-import { getUiContainer, isToolbarPersist } from '../api/Options';
+import { getUiContainer, isToolbarPersist, useFixedContainer } from '../api/Options';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import * as ReadOnly from '../ReadOnly';
 import { ModeRenderInfo, RenderArgs, RenderUiConfig } from '../Render';
@@ -156,7 +156,12 @@ const renderUsingUi = (
     // This handles *where* the inline Ui gets added. Currently, uiContainer will mostly
     // be the <body> of the document (unless it's a ShadowRoot)
     const uiContainer = getUiContainer(editor);
-    Attachment.attachSystemAfter(targetElm, mainUi.mothership);
+    if (useFixedContainer(editor)) {
+      Attachment.attachSystem(uiContainer, mainUi.mothership);
+    } else {
+      Attachment.attachSystemAfter(targetElm, mainUi.mothership);
+    }
+
     attachUiMotherships(uiContainer, uiRefs, targetElm);
 
     // Unlike menubar, this has to handle different types of toolbars, so it has a further
