@@ -685,11 +685,9 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
   it('TINY-9222: Scroll to the cursor after undo and redo', () => {
     const editor = hook.editor();
-    editor.undoManager.clear();
-    editor.focus();
 
     const height = 5000;
-    editor.setContent(`<p class="first">top paragraph</p><p style="height: ${height}px"></p><p class="last">last paragraph</p>`);
+    editor.resetContent(`<p class="first">top paragraph</p><p style="height: ${height}px"></p><p class="last">last paragraph</p>`);
     TinySelections.select(editor, 'p.last', [ 0 ]);
     TinyContentActions.type(editor, 'updated ');
 
