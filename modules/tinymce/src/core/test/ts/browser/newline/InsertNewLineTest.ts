@@ -100,7 +100,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       const bookmark = editor.selection.getBookmark();
       editor.selection.moveToBookmark(bookmark);
       // actual content <p><span contenteditable="false">a</span></p>
-      TinyAssertions.assertCursor(editor, [ 0 ], 1);
+      TinyAssertions.assertCursor(editor, [ 0, 1 ], 1);
       insertNewline(editor, { });
       TinyAssertions.assertContent(editor, '<p><span contenteditable="false">a</span></p><p>&nbsp;</p>');
       TinyAssertions.assertCursor(editor, [ 1 ], 0);
