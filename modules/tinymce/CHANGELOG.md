@@ -37,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `editor.selection.getRng()` API was not returning a proper range on hidden editors in Firefox. #TINY-9259
 - The `editor.selection.getBookmark()` API was not returning a proper bookmark on hidden editors in Firefox. #TINY-9259
 - Dragging a noneditable element before or after another noneditable element now works correctly. #TINY-9253
-- The newline could not be inserted when the selection was restored from the bookmark after the `contenteditable="false"` element. #TINY-9194
+- A newline could not be inserted when the selection was restored from a bookmark after an inline `contenteditable="false"` element. #TINY-9194
 
 ## 6.2.0 - 2022-09-08
 
