@@ -313,7 +313,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
           if (isFakeCaretTarget(beforeNode)) {
             return showCaret(dir, beforeNode, forward ? !caretPosition.isAtEnd() : false, false);
           }
-          if (CaretContainer.isCaretContainer(beforeNode) && NodeType.isContentEditableFalse(beforeNode.nextSibling)) {
+          if (CaretContainer.isCaretContainerInline(beforeNode) && NodeType.isContentEditableFalse(beforeNode.nextSibling)) {
             const rng = dom.createRng();
             rng.setStart(beforeNode, 0);
             rng.setEnd(beforeNode, 0);
@@ -326,7 +326,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
           if (isFakeCaretTarget(afterNode)) {
             return showCaret(dir, afterNode, forward ? false : !caretPosition.isAtEnd(), false);
           }
-          if (CaretContainer.isCaretContainer(afterNode) && NodeType.isContentEditableFalse(afterNode.previousSibling)) {
+          if (CaretContainer.isCaretContainerInline(afterNode) && NodeType.isContentEditableFalse(afterNode.previousSibling)) {
             const rng = dom.createRng();
             rng.setStart(afterNode, 1);
             rng.setEnd(afterNode, 1);
