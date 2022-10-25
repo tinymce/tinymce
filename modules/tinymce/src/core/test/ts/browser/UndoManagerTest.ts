@@ -689,7 +689,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     editor.focus();
 
     const height = 5000;
-    editor.resetContent(`<p class="first">top paragraph</p><p style="height: ${height}px"></p><p class="last">last paragraph</p>`);
+    editor.setContent(`<p class="first">top paragraph</p><p style="height: ${height}px"></p><p class="last">last paragraph</p>`);
     TinySelections.select(editor, 'p.last', [ 0 ]);
     TinyContentActions.type(editor, 'updated ');
 
