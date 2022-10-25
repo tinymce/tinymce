@@ -688,8 +688,8 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     editor.undoManager.clear();
     editor.focus();
 
-    const HEIGHT = 5000;
-    editor.resetContent(`<p class="first">top paragraph</p><p style="height: ${HEIGHT}px"></p><p class="last">last paragraph</p>`);
+    const height = 5000;
+    editor.resetContent(`<p class="first">top paragraph</p><p style="height: ${height}px"></p><p class="last">last paragraph</p>`);
     TinySelections.select(editor, 'p.last', [ 0 ]);
     TinyContentActions.type(editor, 'updated ');
 
@@ -700,7 +700,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
       Scroll.to(0, 0, doc);
       editor.undoManager[action]();
       Scroll.intoViewIfNeeded(UiFinder.findIn(doc, 'p.last').getOrDie(), SugarElement.fromDom(doc.dom.scrollingElement as Element));
-      assert.isAtLeast(Scroll.get(doc).top + editorHeight, HEIGHT, `should scroll to the cursor after ${action}`);
+      assert.isAtLeast(Scroll.get(doc).top + editorHeight, height, `should scroll to the cursor after ${action}`);
     };
 
     Arr.each([ 'undo', 'redo' ], checkScroll);
