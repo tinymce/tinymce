@@ -1,4 +1,4 @@
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Compare, SugarElement, Traverse } from '@ephox/sugar';
 
 import { getClientRects, NodeClientRect } from '../dom/Dimensions';
@@ -102,10 +102,13 @@ const closestChildCaretCandidateNodeRect = (children: ChildNode[], clientX: numb
 
 const traverseUp = (rootElm: SugarElement<Node>, scope: SugarElement<Element>, clientX: number, clientY: number): Optional<NodeClientRect> => {
   const helper = (scope: SugarElement<Element>, prevScope: Optional<SugarElement<Element>>): Optional<NodeClientRect> => {
+    const isDragGhostContainer = (node: ChildNode) => NodeType.isElement(node) && node.classList.contains('mce-drag-container');
+    const childNodesWithoutGhost = Arr.filter(scope.dom.childNodes, Fun.not(isDragGhostContainer));
+
     return prevScope.fold(
-      () => closestChildCaretCandidateNodeRect(Arr.from(scope.dom.childNodes), clientX, clientY),
+      () => closestChildCaretCandidateNodeRect(childNodesWithoutGhost, clientX, clientY),
       (prevScope) => {
-        const uncheckedChildren = Arr.filter(Arr.from(scope.dom.childNodes), (node) => node !== prevScope.dom);
+        const uncheckedChildren = Arr.filter(childNodesWithoutGhost, (node) => node !== prevScope.dom);
         return closestChildCaretCandidateNodeRect(uncheckedChildren, clientX, clientY);
       }
     ).orThunk(() => {
