@@ -123,4 +123,28 @@ describe('browser.tinymce.core.content.EditorContentEventsTest', () => {
     assertEvents([]);
     TinyAssertions.assertContent(editor, '<p>Selection content</p>');
   });
+
+  const data = { hello: 'world', test: 132 };
+  Arr.each([ 'BeforeSetContent', 'SetContent' ], (action) => {
+    it(`TINY-9143: Can pass custom data object to "${action}" event`, () => {
+      const editor = hook.editor();
+      editor.setContent('<p>initial</p>');
+      editor.once(action, (e) => {
+        assert.equal(data.hello, e.hello);
+        assert.equal(data.test, e.test);
+      });
+      editor.setContent('<p>new</p>', data);
+    });
+  });
+  Arr.each([ 'BeforeGetContent', 'GetContent' ], (action) => {
+    it(`TINY-9143: Can pass custom data object to "${action}" event`, () => {
+      const editor = hook.editor();
+      editor.setContent('<p>initial</p>');
+      editor.once(action, (e) => {
+        assert.equal(data.hello, e.hello);
+        assert.equal(data.test, e.test);
+      });
+      editor.getContent(data);
+    });
+  });
 });
