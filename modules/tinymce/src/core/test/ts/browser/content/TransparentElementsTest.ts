@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Obj, Singleton } from '@ephox/katamari';
+import { Arr, Singleton } from '@ephox/katamari';
 import { Hierarchy, Html, Insert, Remove, SugarBody, SugarElement, SugarNode } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -9,7 +9,8 @@ import * as TransparentElements from 'tinymce/core/content/TransparentElements';
 
 describe('browser.tinymce.core.content.TransparentElementsTest', () => {
   const schema = Schema();
-  const transparentElements = Arr.filter(Obj.keys(schema.getTransparentElements()), (name) => /^[a-z]+$/.test(name));
+  const transparentElements = TransparentElements.elementNames(schema.getTransparentElements());
+  const textBlockElements = TransparentElements.elementNames(schema.getTextBlockElements());
 
   context('update/updateCaret', () => {
     const rootState = Singleton.value<SugarElement<HTMLElement>>();
@@ -25,12 +26,18 @@ describe('browser.tinymce.core.content.TransparentElementsTest', () => {
       rootState.clear();
     });
 
+    it('TINY-9172: makeElementList', () => {
+      assert.deepEqual(TransparentElements.elementNames({ a: {}, h1: {}, A: {}, H1: {}}), [ 'a', 'h1' ]);
+    });
+
     it('TINY-9172: Should add data-mce-block on transparent elements if the contain blocks', () => {
       const root = rootState.get().getOrDie();
+      const blockLinks = Arr.map(textBlockElements, (name) => `<a href="#"><${name}>link</${name}></a>`).join('');
+      const expectedBlockLinks = Arr.map(textBlockElements, (name) => `<a href="#" data-mce-block="true"><${name}>link</${name}></a>`).join('');
 
-      Html.set(root, '<a href="#">link</a><div><a href="#"><p>link</p></a></div><div><a href="#">link</a></div>');
+      Html.set(root, `<a href="#">link</a><div>${blockLinks}</div>${blockLinks}<div><a href="#">link</a></div>`);
       TransparentElements.updateChildren(schema, root.dom);
-      assert.equal(Html.get(root), '<a href="#">link</a><div><a href="#" data-mce-block="true"><p>link</p></a></div><div><a href="#">link</a></div>');
+      assert.equal(Html.get(root), `<a href="#">link</a><div>${expectedBlockLinks}</div>${expectedBlockLinks}<div><a href="#">link</a></div>`);
     });
 
     it('TINY-9172: Should add data-mce-block on transparent block elements that wrap blocks and also remove data-mce-selected="inline-boundary"', () => {
