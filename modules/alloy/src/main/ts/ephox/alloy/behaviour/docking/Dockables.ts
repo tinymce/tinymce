@@ -65,7 +65,7 @@ const isTopCompletelyVisible = (box: Boxes.Bounds, viewport: DockingViewport): b
   if (viewport.type === 'simple-docking-viewport') {
     return box.y >= viewport.bounds.y;
   } else {
-    console.log('tops', { box: box.y, viewport: viewport.combinedBounds.y });
+    console.log('tops', { box: box.y, combinedViewport: viewport.combinedBounds.y });
     return box.y >= viewport.combinedBounds.y;
   }
 };
@@ -78,8 +78,14 @@ const isBottomCompletelyVisible = (box: Boxes.Bounds, viewport: DockingViewport)
   }
 };
 
-const isVisibleForModes = (modes: DockingMode[], box: Boxes.Bounds, viewport: DockingViewport): boolean =>
-  Arr.forall(modes, (mode) => {
+const isVisibleForModes = (modes: DockingMode[], box: Boxes.Bounds, viewport: DockingViewport): boolean => {
+  console.log('isVisibleForModes', {
+    modes,
+    viewport,
+    box
+  });
+
+  const isVisible = Arr.forall(modes, (mode) => {
     switch (mode) {
       case 'bottom':
         return isBottomCompletelyVisible(box, viewport);
@@ -87,20 +93,27 @@ const isVisibleForModes = (modes: DockingMode[], box: Boxes.Bounds, viewport: Do
         return isTopCompletelyVisible(box, viewport);
     }
   });
+  console.log('isVisible verdict', isVisible);
+
+  return isVisible;
+};
 
 const getPrior = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, state: DockingState): Optional<Boxes.Bounds> =>
   state.getInitialPos().map(
     // Only supports position absolute.
     (pos) => {
       if (pos.initialViewport.type === 'complex-docking-viewport' && viewport.type === 'complex-docking-viewport') {
-        console.log('**************************************************', pos.bounds.y, viewport.currentScroll);
-
-        return Boxes.bounds(
+        const result = Boxes.bounds(
           pos.bounds.x,
           viewport.scrollerElemTop + (pos.bounds.y - viewport.currentScroll),
           Width.get(elem),
           Height.get(elem)
         );
+        console.log('getPrior result', {
+          original: pos,
+          result
+        });
+        return result;
       } else {
         return Boxes.bounds(
           pos.bounds.x,
@@ -121,11 +134,17 @@ const storePrior = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, viewport
       initialViewport: viewport
     });
   } else {
+
     const bounds = Boxes.translate(
       box,
       0,
-      viewport.currentScroll
+      viewport.currentScroll - viewport.scrollerElemTop
     );
+    console.log('storePrior', {
+      box,
+      viewport,
+      finalBounds: bounds
+    });
     state.setInitialPos({
       style: Css.getAllRaw(elem),
       position: Css.get(elem, 'position') || 'static',
@@ -221,6 +240,8 @@ const getMorph = (component: AlloyComponent, viewport: DockingViewport, state: D
 };
 
 const getMorphToOriginal = (component: AlloyComponent, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> => {
+  console.log('getMorphToOriginal');
+
   const elem = component.element;
   return getPrior(elem, viewport, state).bind((box) => revertToOriginal(elem, box, state));
 };
