@@ -185,6 +185,24 @@ const morphToOriginal = (elem: SugarElement<HTMLElement>, viewport: DockingViewp
     .bind((box) => revertToOriginal(elem, box, state));
 };
 
+const wiggle = (boxX: number, isTopDock: boolean, viewportBounds: Boxes.Bounds) => {
+  // Calculate the fixed position
+  const winBox = Boxes.win();
+  const left = boxX - winBox.x;
+  const top = viewportBounds.y - winBox.y;
+  const bottom = winBox.bottom - viewportBounds.bottom;
+
+  // Check whether we are docking the bottom of the viewport, or the top
+  // const isTop = box.y <= viewportBounds.y;
+  return Optional.some(morphAdt.fixed(NuPositionCss(
+    'fixed',
+    Optional.some(left),
+    isTopDock ? Optional.some(top) : Optional.none(),
+    Optional.none(),
+    !isTopDock ? Optional.some(bottom) : Optional.none()
+  )));
+};
+
 const morphToFixed = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> => {
   console.log('morphToFixed -=====================');
   const box = Boxes.box(elem);
@@ -193,41 +211,9 @@ const morphToFixed = (elem: SugarElement<HTMLElement>, viewport: DockingViewport
     // So this store prior has to do fancy things.
 
     storePrior(elem, box, viewport, state);
-    console.log('would be docking');
 
-    if (viewport.type === 'simple-docking-viewport') {
-      // Calculate the fixed position
-      const winBox = Boxes.win();
-      const left = box.x - winBox.x;
-      const top = viewport.bounds.y - winBox.y;
-      const bottom = winBox.bottom - viewport.bounds.bottom;
-
-      // Check whether we are docking the bottom of the viewport, or the top
-      const isTop = box.y <= viewport.bounds.y;
-      return Optional.some(morphAdt.fixed(NuPositionCss(
-        'fixed',
-        Optional.some(left),
-        isTop ? Optional.some(top) : Optional.none(),
-        Optional.none(),
-        !isTop ? Optional.some(bottom) : Optional.none()
-      )));
-    } else {
-      // Calculate the fixed position
-      const winBox = Boxes.win();
-      const left = box.x - winBox.x;
-      const top = viewport.combinedBounds.y - winBox.y;
-      const bottom = winBox.bottom - viewport.combinedBounds.bottom;
-
-      // Check whether we are docking the bottom of the viewport, or the top
-      const isTop = box.y <= viewport.combinedBounds.y;
-      return Optional.some(morphAdt.fixed(NuPositionCss(
-        'fixed',
-        Optional.some(left),
-        isTop ? Optional.some(top) : Optional.none(),
-        Optional.none(),
-        !isTop ? Optional.some(bottom) : Optional.none()
-      )));
-    }
+    const bounds = viewport.type === 'simple-docking-viewport' ? viewport.bounds : viewport.combinedBounds;
+    return wiggle(box.x, box.y <= bounds.y, bounds);
   } else {
     return Optional.none<MorphAdt>();
   }
@@ -236,7 +222,16 @@ const morphToFixed = (elem: SugarElement<HTMLElement>, viewport: DockingViewport
 const getMorph = (component: AlloyComponent, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> => {
   const elem = component.element;
   const isDocked = Optionals.is(Css.getRaw(elem, 'position'), 'fixed');
-  return isDocked ? morphToOriginal(elem, viewport, state) : morphToFixed(elem, viewport, state);
+  return isDocked ? morphToOriginal(elem, viewport, state).orThunk(() => {
+    // Importantly, we don't change our position. We just improve our fixed.
+    return getPrior(elem, viewport, state).bind(
+      (box) => {
+        const bounds = viewport.type === 'simple-docking-viewport' ? viewport.bounds
+          : viewport.combinedBounds;
+        return wiggle(box.x, box.y <= bounds.y, bounds);
+      }
+    );
+  }) : morphToFixed(elem, viewport, state);
 };
 
 const getMorphToOriginal = (component: AlloyComponent, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> => {
