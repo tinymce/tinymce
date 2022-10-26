@@ -65,7 +65,6 @@ const isTopCompletelyVisible = (box: Boxes.Bounds, viewport: DockingViewport): b
   if (viewport.type === 'simple-docking-viewport') {
     return box.y >= viewport.bounds.y;
   } else {
-    console.log('tops', { box: box.y, combinedViewport: viewport.combinedBounds.y });
     return box.y >= viewport.combinedBounds.y;
   }
 };
@@ -79,12 +78,6 @@ const isBottomCompletelyVisible = (box: Boxes.Bounds, viewport: DockingViewport)
 };
 
 const isVisibleForModes = (modes: DockingMode[], box: Boxes.Bounds, viewport: DockingViewport): boolean => {
-  console.log('isVisibleForModes', {
-    modes,
-    viewport,
-    box
-  });
-
   const isVisible = Arr.forall(modes, (mode) => {
     switch (mode) {
       case 'bottom':
@@ -93,8 +86,6 @@ const isVisibleForModes = (modes: DockingMode[], box: Boxes.Bounds, viewport: Do
         return isTopCompletelyVisible(box, viewport);
     }
   });
-  console.log('isVisible verdict', isVisible);
-
   return isVisible;
 };
 
@@ -109,10 +100,6 @@ const getPrior = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, st
           Width.get(elem),
           Height.get(elem)
         );
-        console.log('getPrior result', {
-          original: pos,
-          result
-        });
         return result;
       } else {
         return Boxes.bounds(
@@ -140,11 +127,6 @@ const storePrior = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, viewport
       0,
       viewport.currentScroll - viewport.scrollerElemTop
     );
-    console.log('storePrior', {
-      box,
-      viewport,
-      finalBounds: bounds
-    });
     state.setInitialPos({
       style: Css.getAllRaw(elem),
       position: Css.get(elem, 'position') || 'static',
@@ -179,7 +161,6 @@ const revertToOriginal = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, st
   });
 
 const morphToOriginal = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> => {
-  console.log('morphToOriginal -======================');
   return getPrior(elem, viewport, state)
     .filter((box) => isVisibleForModes(state.getModes(), box, viewport))
     .bind((box) => revertToOriginal(elem, box, state));
@@ -204,7 +185,6 @@ const wiggle = (boxX: number, isTopDock: boolean, viewportBounds: Boxes.Bounds) 
 };
 
 const morphToFixed = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> => {
-  console.log('morphToFixed -=====================');
   const box = Boxes.box(elem);
   if (!isVisibleForModes(state.getModes(), box, viewport)) {
 
@@ -235,8 +215,6 @@ const getMorph = (component: AlloyComponent, viewport: DockingViewport, state: D
 };
 
 const getMorphToOriginal = (component: AlloyComponent, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> => {
-  console.log('getMorphToOriginal');
-
   const elem = component.element;
   return getPrior(elem, viewport, state).bind((box) => revertToOriginal(elem, box, state));
 };

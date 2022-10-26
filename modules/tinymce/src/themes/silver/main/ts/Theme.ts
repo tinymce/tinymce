@@ -28,7 +28,7 @@ export default (): void => {
     const popupSinkBounds = Cell<() => Bounds>(() => Boxes.win());
 
     const { dialogs, popups, renderUI: renderModeUI }: RenderInfo = Render.setup(editor, {
-      getPopupSinkBounds: popupSinkBounds.get()
+      getPopupSinkBounds: () => popupSinkBounds.get()()
     });
 
     const renderUI = (): RenderResult => {
@@ -39,9 +39,15 @@ export default (): void => {
       // Maybe the advanced part should just be the elements. I think this will mainly be a problem
       // in more than one scroller container inside the window, because then Boxes.size will change
       // depending on the scroll value of something that isn't considered (the outer scroll container)
+      // eslint-disable-next-line no-console
+      console.log('optScrollingContext', optScrollingContext);
       optScrollingContext.each(
         (sc) => popupSinkBounds.set(
-          () => ScrollingContext.getBoundsFrom(sc)
+          () => {
+            // eslint-disable-next-line no-console
+            console.log('SC ********************', sc);
+            return ScrollingContext.getBoundsFrom(sc);
+          }
         )
       );
       return renderResult;
