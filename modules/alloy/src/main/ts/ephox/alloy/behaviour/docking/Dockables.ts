@@ -65,6 +65,7 @@ const isTopCompletelyVisible = (box: Boxes.Bounds, viewport: DockingViewport): b
   if (viewport.type === 'simple-docking-viewport') {
     return box.y >= viewport.bounds.y;
   } else {
+    console.log('tops', { box: box.y, viewport: viewport.combinedBounds.y });
     return box.y >= viewport.combinedBounds.y;
   }
 };
@@ -87,23 +88,51 @@ const isVisibleForModes = (modes: DockingMode[], box: Boxes.Bounds, viewport: Do
     }
   });
 
-const getPrior = (elem: SugarElement<HTMLElement>, state: DockingState): Optional<Boxes.Bounds> =>
+const getPrior = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, state: DockingState): Optional<Boxes.Bounds> =>
   state.getInitialPos().map(
     // Only supports position absolute.
-    (pos) => Boxes.bounds(
-      pos.bounds.x,
-      pos.bounds.y,
-      Width.get(elem),
-      Height.get(elem)
-    )
+    (pos) => {
+      if (pos.initialViewport.type === 'complex-docking-viewport' && viewport.type === 'complex-docking-viewport') {
+        console.log('**************************************************', pos.bounds.y, viewport.currentScroll);
+
+        return Boxes.bounds(
+          pos.bounds.x,
+          viewport.scrollerElemTop + (pos.bounds.y - viewport.currentScroll),
+          Width.get(elem),
+          Height.get(elem)
+        );
+      } else {
+        return Boxes.bounds(
+          pos.bounds.x,
+          pos.bounds.y,
+          Width.get(elem),
+          Height.get(elem)
+        );
+      }
+    }
   );
 
-const storePrior = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, state: DockingState): void => {
-  state.setInitialPos({
-    style: Css.getAllRaw(elem),
-    position: Css.get(elem, 'position') || 'static',
-    bounds: box
-  });
+const storePrior = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, viewport: DockingViewport, state: DockingState): void => {
+  if (viewport.type === 'simple-docking-viewport') {
+    state.setInitialPos({
+      style: Css.getAllRaw(elem),
+      position: Css.get(elem, 'position') || 'static',
+      bounds: box,
+      initialViewport: viewport
+    });
+  } else {
+    const bounds = Boxes.translate(
+      box,
+      0,
+      viewport.currentScroll
+    );
+    state.setInitialPos({
+      style: Css.getAllRaw(elem),
+      position: Css.get(elem, 'position') || 'static',
+      bounds,
+      initialViewport: viewport
+    });
+  }
 };
 
 const revertToOriginal = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, state: DockingState): Optional<MorphAdt> =>
@@ -130,16 +159,21 @@ const revertToOriginal = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, st
     }
   });
 
-const morphToOriginal = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> =>
-  getPrior(elem, state)
+const morphToOriginal = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> => {
+  console.log('morphToOriginal -======================');
+  return getPrior(elem, viewport, state)
     .filter((box) => isVisibleForModes(state.getModes(), box, viewport))
     .bind((box) => revertToOriginal(elem, box, state));
+};
 
 const morphToFixed = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> => {
-  console.log('looking at this');
+  console.log('morphToFixed -=====================');
   const box = Boxes.box(elem);
   if (!isVisibleForModes(state.getModes(), box, viewport)) {
-    storePrior(elem, box, state);
+
+    // So this store prior has to do fancy things.
+
+    storePrior(elem, box, viewport, state);
     console.log('would be docking');
 
     if (viewport.type === 'simple-docking-viewport') {
@@ -186,9 +220,9 @@ const getMorph = (component: AlloyComponent, viewport: DockingViewport, state: D
   return isDocked ? morphToOriginal(elem, viewport, state) : morphToFixed(elem, viewport, state);
 };
 
-const getMorphToOriginal = (component: AlloyComponent, state: DockingState): Optional<MorphAdt> => {
+const getMorphToOriginal = (component: AlloyComponent, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> => {
   const elem = component.element;
-  return getPrior(elem, state).bind((box) => revertToOriginal(elem, box, state));
+  return getPrior(elem, viewport, state).bind((box) => revertToOriginal(elem, box, state));
 };
 
 export {

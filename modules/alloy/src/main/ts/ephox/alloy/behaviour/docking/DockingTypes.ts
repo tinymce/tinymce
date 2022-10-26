@@ -11,6 +11,7 @@ export interface InitialDockingPosition {
   style: Record<string, string>;
   position: string;
   bounds: Bounds;
+  initialViewport: DockingViewport;
 }
 
 export interface DockingBehaviour extends Behaviour.AlloyBehaviour<DockingConfigSpec, DockingConfig> {
@@ -41,6 +42,7 @@ export interface SimpleDockingViewport {
 
 export interface ComplexDockingViewport {
   readonly type: 'complex-docking-viewport';
+  readonly scrollerElemTop: number;
   readonly currentScroll: number;
   readonly combinedBounds: Bounds;
 }

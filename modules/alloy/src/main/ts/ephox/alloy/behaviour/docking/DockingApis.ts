@@ -69,7 +69,7 @@ const resetInternal = (component: AlloyComponent, config: DockingConfig, state: 
   // Morph back to the original position
   const elem = component.element;
   state.setDocked(false);
-  Dockables.getMorphToOriginal(component, state).each((morph) => {
+  Dockables.getMorphToOriginal(component, config.lazyViewport(component), state).each((morph) => {
     morph.fold(
       () => morphToStatic(component, config, state),
       (position) => morphToCoord(component, config, state, position),

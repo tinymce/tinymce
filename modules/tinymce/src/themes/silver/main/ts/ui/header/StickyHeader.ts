@@ -256,9 +256,11 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
           (sc) => {
             // FIX TINY-9226: Consider how to use toolbar offsets here. Ignore for now.
             const currentScroll = sc.element.dom.scrollTop;
+            console.log('element', sc.element, 'scrollTop', currentScroll);
             const combinedBounds = ScrollingContext.getBoundsFrom(sc);
             return {
               type: 'complex-docking-viewport',
+              scrollerElemTop: SugarLocation.absolute(sc.element).top,
               currentScroll,
               combinedBounds
             };
