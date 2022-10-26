@@ -13,7 +13,6 @@ import {
 } from '../../ui/types/FloatingToolbarButtonTypes';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Coupling } from '../behaviour/Coupling';
-import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
 import { Positioning } from '../behaviour/Positioning';
 import { Receiving } from '../behaviour/Receiving';
