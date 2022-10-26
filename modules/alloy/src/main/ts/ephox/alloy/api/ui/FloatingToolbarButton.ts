@@ -72,7 +72,6 @@ const makeSandbox = (button: AlloyComponent, spec: FloatingToolbarButtonSpec, de
   const onClose = () => {
     // Toggle and focus the button
     Toggling.off(button);
-    Focusing.focus(button);
     ariaOwner.unlink(button.element);
   };
 
