@@ -78,6 +78,15 @@ const constrain = (original: Bounds, constraint: Bounds): Bounds => {
   );
 };
 
+const translate = (original: Bounds, x: number, y: number): Bounds => {
+  return bounds(
+    original.x + x,
+    original.y + y,
+    original.width,
+    original.height
+  );
+};
+
 const win = (): Bounds => WindowVisualViewport.getBounds(window);
 
 export {
@@ -87,5 +96,6 @@ export {
   box,
   absolute,
   win,
-  constrain
+  constrain,
+  translate
 };
