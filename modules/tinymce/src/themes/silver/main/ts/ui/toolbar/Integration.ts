@@ -13,7 +13,7 @@ import { createAlignButton } from '../core/complex/AlignBespoke';
 import { createBlocksButton } from '../core/complex/BlocksBespoke';
 import { createFontFamilyButton } from '../core/complex/FontFamilyBespoke';
 import { createFontSizeButton } from '../core/complex/FontSizeBespoke';
-import { createStylesButton } from '../core/complex/StylesBespoke';
+import { createStylesButton, createStylesTypeahead } from '../core/complex/StylesBespoke';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
 import { renderFloatingToolbarButton, renderSplitButton, renderToolbarButton, renderToolbarToggleButton } from './button/ToolbarButtons';
 import { ToolbarGroup } from './CommonToolbar';
@@ -114,6 +114,7 @@ const extractFrom = (spec: ToolbarButton & { type: string }, backstage: UiFactor
 
 const bespokeButtons: Record<string, (editor: Editor, backstage: UiFactoryBackstage) => SketchSpec> = {
   styles: createStylesButton,
+  stylestypeahead: createStylesTypeahead,
   fontsize: createFontSizeButton,
   fontfamily: createFontFamilyButton,
   blocks: createBlocksButton,

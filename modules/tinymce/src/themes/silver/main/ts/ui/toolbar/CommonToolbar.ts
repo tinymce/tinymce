@@ -60,7 +60,8 @@ const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
       // nav within a group breaks if disabled buttons are first in their group so skip them
       itemSelector: '*:not(.tox-split-button) > .tox-tbtn:not([disabled]), ' +
                     '.tox-split-button:not([disabled]), ' +
-                    '.tox-toolbar-nav-js:not([disabled])'
+                    '.tox-toolbar-nav-js:not([disabled]), ' +
+                    '.typeahead-wrapper:not([disabled])'
     },
     tgroupBehaviours: Behaviour.derive([
       Tabstopping.config({}),

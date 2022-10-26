@@ -9,6 +9,7 @@ import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { onActionToggleFormat } from '../ControlUtils';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
+import { createTypeaheadButton } from './BespokeTypeahead';
 import { AdvancedSelectDataset, BasicSelectItem, SelectDataset } from './SelectDatasets';
 import { getStyleFormats, isFormatReference, isNestedFormat, StyleFormatType } from './StyleFormat';
 import { findNearest } from './utils/FormatDetection';
@@ -64,6 +65,11 @@ const createStylesButton = (editor: Editor, backstage: UiFactoryBackstage): Sket
   return createSelectButton(editor, backstage, getSpec(editor, dataset));
 };
 
+const createStylesTypeahead = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec => {
+  const dataset: AdvancedSelectDataset = { type: 'advanced', ...backstage.styles };
+  return createTypeaheadButton(editor, backstage, getSpec(editor, dataset));
+};
+
 const createStylesMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
   const dataset: AdvancedSelectDataset = { type: 'advanced', ...backstage.styles };
   const menuItems = createMenuItems(editor, backstage, getSpec(editor, dataset));
@@ -73,4 +79,4 @@ const createStylesMenu = (editor: Editor, backstage: UiFactoryBackstage): void =
   });
 };
 
-export { createStylesButton, createStylesMenu };
+export { createStylesButton, createStylesTypeahead, createStylesMenu };
