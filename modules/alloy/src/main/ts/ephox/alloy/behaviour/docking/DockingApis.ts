@@ -1,11 +1,10 @@
 import { Arr, Fun } from '@ephox/katamari';
 import { Classes, Css } from '@ephox/sugar';
 
-import * as Boxes from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { applyPositionCss, PositionCss } from '../../positioning/view/PositionCss';
 import * as Dockables from './Dockables';
-import { DockingConfig, DockingMode, DockingState } from './DockingTypes';
+import { DockingConfig, DockingMode, DockingState, DockingViewport } from './DockingTypes';
 
 const morphToStatic = (component: AlloyComponent, config: DockingConfig, state: DockingState): void => {
   state.setDocked(false);
@@ -21,7 +20,7 @@ const morphToCoord = (component: AlloyComponent, config: DockingConfig, state: D
   method(component);
 };
 
-const updateVisibility = (component: AlloyComponent, config: DockingConfig, state: DockingState, viewport: Boxes.Bounds, morphToDocked: boolean = false): void => {
+const updateVisibility = (component: AlloyComponent, config: DockingConfig, state: DockingState, viewport: DockingViewport, morphToDocked: boolean = false): void => {
   config.contextual.each((contextInfo) => {
     // Make the dockable component disappear if the context is outside the viewport
     contextInfo.lazyContext(component).each((box) => {

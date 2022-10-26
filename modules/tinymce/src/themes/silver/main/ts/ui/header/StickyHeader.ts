@@ -1,4 +1,4 @@
-import { AlloyComponent, Behaviour, Boxes, Channels, Docking, Focusing, Receiving } from '@ephox/alloy';
+import { AlloyComponent, Behaviour, Boxes, Channels, Docking, DockingTypes, Focusing, Receiving } from '@ephox/alloy';
 import { Arr, Optional, Result, Singleton } from '@ephox/katamari';
 import { Class, Classes, Compare, Css, Focus, Height, Scroll, SugarElement, SugarLocation, Traverse, Visibility, Width } from '@ephox/sugar';
 
@@ -239,25 +239,31 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
         ...visibility
       },
       lazyViewport: (comp) => {
+
         const optScrollingContext = ScrollingContext.detect(comp.element);
-        const boundsWithoutOffset = optScrollingContext.fold(
+        return optScrollingContext.fold<DockingTypes.DockingViewport>(
           () => {
+            const boundsWithoutOffset = Boxes.win();
+            const offset = Options.getStickyToolbarOffset(editor);
+            const top = boundsWithoutOffset.y + (isDockedMode(comp, 'top') ? offset : 0);
+            const height = boundsWithoutOffset.height - (isDockedMode(comp, 'bottom') ? offset : 0);
             // No scrolling context, so just window
-            return Boxes.win();
+            return {
+              type: 'simple-docking-viewport',
+              bounds: Boxes.bounds(boundsWithoutOffset.x, top, boundsWithoutOffset.width, height)
+            };
           },
-          (sc) => ScrollingContext.getBoundsFrom(sc)
+          (sc) => {
+            // FIX TINY-9226: Consider how to use toolbar offsets here. Ignore for now.
+            const currentScroll = sc.element.dom.scrollTop;
+            const combinedBounds = ScrollingContext.getBoundsFrom(sc);
+            return {
+              type: 'complex-docking-viewport',
+              currentScroll,
+              combinedBounds
+            };
+          }
         );
-
-        // eslint-disable-next-line no-console
-        console.log('comparison', {
-          win: JSON.stringify(Boxes.win()),
-          bo: JSON.stringify(boundsWithoutOffset)
-        });
-
-        const offset = Options.getStickyToolbarOffset(editor);
-        const top = boundsWithoutOffset.y + (isDockedMode(comp, 'top') ? offset : 0);
-        const height = boundsWithoutOffset.height - (isDockedMode(comp, 'bottom') ? offset : 0);
-        return Boxes.bounds(boundsWithoutOffset.x, top, boundsWithoutOffset.width, height);
       },
       modes: [ sharedBackstage.header.getDockingMode() ],
       onDocked: onDockingSwitch,

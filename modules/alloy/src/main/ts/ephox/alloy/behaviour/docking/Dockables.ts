@@ -5,7 +5,7 @@ import * as Boxes from '../../alien/Boxes';
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { NuPositionCss, PositionCss } from '../../positioning/view/PositionCss';
-import { DockingContext, DockingMode, DockingState } from './DockingTypes';
+import { DockingContext, DockingMode, DockingState, DockingViewport } from './DockingTypes';
 
 type StaticMorph<T> = () => T;
 type AbsoluteMorph<T> = (pos: PositionCss) => T;
@@ -53,16 +53,31 @@ const disappear = (component: AlloyComponent, contextualInfo: DockingContext): v
   contextualInfo.onHide(component);
 };
 
-const isPartiallyVisible = (box: Boxes.Bounds, viewport: Boxes.Bounds): boolean =>
-  box.y < viewport.bottom && box.bottom > viewport.y;
+const isPartiallyVisible = (box: Boxes.Bounds, viewport: DockingViewport): boolean => {
+  if (viewport.type === 'simple-docking-viewport') {
+    return box.y < viewport.bounds.bottom && box.bottom > viewport.bounds.y;
+  } else {
+    return box.y < viewport.combinedBounds.bottom && box.bottom > viewport.combinedBounds.y;
+  }
+};
 
-const isTopCompletelyVisible = (box: Boxes.Bounds, viewport: Boxes.Bounds): boolean =>
-  box.y >= viewport.y;
+const isTopCompletelyVisible = (box: Boxes.Bounds, viewport: DockingViewport): boolean => {
+  if (viewport.type === 'simple-docking-viewport') {
+    return box.y >= viewport.bounds.y;
+  } else {
+    return box.y >= viewport.combinedBounds.y;
+  }
+};
 
-const isBottomCompletelyVisible = (box: Boxes.Bounds, viewport: Boxes.Bounds): boolean =>
-  box.bottom <= viewport.bottom;
+const isBottomCompletelyVisible = (box: Boxes.Bounds, viewport: DockingViewport): boolean => {
+  if (viewport.type === 'simple-docking-viewport') {
+    return box.bottom <= viewport.bounds.bottom;
+  } else {
+    return box.bottom <= viewport.combinedBounds.bottom;
+  }
+};
 
-const isVisibleForModes = (modes: DockingMode[], box: Boxes.Bounds, viewport: Boxes.Bounds): boolean =>
+const isVisibleForModes = (modes: DockingMode[], box: Boxes.Bounds, viewport: DockingViewport): boolean =>
   Arr.forall(modes, (mode) => {
     switch (mode) {
       case 'bottom':
@@ -115,37 +130,57 @@ const revertToOriginal = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, st
     }
   });
 
-const morphToOriginal = (elem: SugarElement<HTMLElement>, viewport: Boxes.Bounds, state: DockingState): Optional<MorphAdt> =>
+const morphToOriginal = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> =>
   getPrior(elem, state)
     .filter((box) => isVisibleForModes(state.getModes(), box, viewport))
     .bind((box) => revertToOriginal(elem, box, state));
 
-const morphToFixed = (elem: SugarElement<HTMLElement>, viewport: Boxes.Bounds, state: DockingState): Optional<MorphAdt> => {
+const morphToFixed = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> => {
+  console.log('looking at this');
   const box = Boxes.box(elem);
   if (!isVisibleForModes(state.getModes(), box, viewport)) {
     storePrior(elem, box, state);
+    console.log('would be docking');
 
-    // Calculate the fixed position
-    const winBox = Boxes.win();
-    const left = box.x - winBox.x;
-    const top = viewport.y - winBox.y;
-    const bottom = winBox.bottom - viewport.bottom;
+    if (viewport.type === 'simple-docking-viewport') {
+      // Calculate the fixed position
+      const winBox = Boxes.win();
+      const left = box.x - winBox.x;
+      const top = viewport.bounds.y - winBox.y;
+      const bottom = winBox.bottom - viewport.bounds.bottom;
 
-    // Check whether we are docking the bottom of the viewport, or the top
-    const isTop = box.y <= viewport.y;
-    return Optional.some(morphAdt.fixed(NuPositionCss(
-      'fixed',
-      Optional.some(left),
-      isTop ? Optional.some(top) : Optional.none(),
-      Optional.none(),
-      !isTop ? Optional.some(bottom) : Optional.none()
-    )));
+      // Check whether we are docking the bottom of the viewport, or the top
+      const isTop = box.y <= viewport.bounds.y;
+      return Optional.some(morphAdt.fixed(NuPositionCss(
+        'fixed',
+        Optional.some(left),
+        isTop ? Optional.some(top) : Optional.none(),
+        Optional.none(),
+        !isTop ? Optional.some(bottom) : Optional.none()
+      )));
+    } else {
+      // Calculate the fixed position
+      const winBox = Boxes.win();
+      const left = box.x - winBox.x;
+      const top = viewport.combinedBounds.y - winBox.y;
+      const bottom = winBox.bottom - viewport.combinedBounds.bottom;
+
+      // Check whether we are docking the bottom of the viewport, or the top
+      const isTop = box.y <= viewport.combinedBounds.y;
+      return Optional.some(morphAdt.fixed(NuPositionCss(
+        'fixed',
+        Optional.some(left),
+        isTop ? Optional.some(top) : Optional.none(),
+        Optional.none(),
+        !isTop ? Optional.some(bottom) : Optional.none()
+      )));
+    }
   } else {
     return Optional.none<MorphAdt>();
   }
 };
 
-const getMorph = (component: AlloyComponent, viewport: Boxes.Bounds, state: DockingState): Optional<MorphAdt> => {
+const getMorph = (component: AlloyComponent, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> => {
   const elem = component.element;
   const isDocked = Optionals.is(Css.getRaw(elem, 'position'), 'fixed');
   return isDocked ? morphToOriginal(elem, viewport, state) : morphToFixed(elem, viewport, state);

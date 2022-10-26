@@ -11,7 +11,7 @@ export default (): void => {
   tinymce.init({
     // TODO: Investigate. Should thisget the styles (e.g. margin) of the div/textarea?
     selector: 'div.tiny-text',
-    inline: true,
+    inline: false,
     theme: 'silver',
     toolbar: [ 'styles', 'MagicButton', 'code', 'undo', 'redo', 'preview', '|', 'help', 'link', '|', 'align', 'alignleft', 'alignright', 'aligncenter',
       'alignjustify', 'alignnone', '|', 'bold', 'italic', 'underline', 'strikethrough', 'subscript', 'superscript', '|', 'blockquote',
@@ -38,6 +38,7 @@ export default (): void => {
     resize: 'both',
     link_context_toolbar: true,
     toolbar_location: 'auto',
+    toolbar_sticky: true,
     // fixed_toolbar_container: '#tiny-fixed-container', // DEPRECATED
 
     menubar: 'file edit view insert format table tools Menu-1 help',

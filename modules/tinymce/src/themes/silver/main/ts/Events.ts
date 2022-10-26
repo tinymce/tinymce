@@ -6,6 +6,8 @@ import Editor from 'tinymce/core/api/Editor';
 import { AfterProgressStateEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
+import * as ScrollingContext from './modes/ScrollingContext';
+
 const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMotherships: Gui.GuiSystem[]): void => {
   const broadcastEvent = (name: string, evt: EventArgs) => {
     Arr.each([ mothership, ...uiMotherships ], (m) => {
@@ -67,8 +69,16 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMotherships: Gui.Gui
       // Because this can fire before the editor is rendered, we need to stop that from happening.
       // Some tests can create this situation, and then we get a Node name null or defined error.
       if (c !== undefined && c !== null) {
-        editor.dispatch('ElementScroll', { target: e.target });
-        broadcastEvent(SystemEvents.elementScroll(), e);
+        // eslint-disable-next-line no-console
+        console.log('dispatching element scroll');
+        const optScrollingContext = ScrollingContext.detect(mothership.element);
+
+        const scrollers = optScrollingContext.map((sc) => [ sc.element, ...sc.others ]).getOr([ ]);
+        if (Arr.exists(scrollers, (s) => s.dom === e.target.dom)) {
+
+          editor.dispatch('ElementScroll', { target: e.target });
+          broadcastEvent(SystemEvents.elementScroll(), e);
+        }
       }
     });
   });

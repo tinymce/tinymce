@@ -4,18 +4,10 @@ import { Css, PredicateFilter, SugarElement, SugarNode } from '@ephox/sugar';
 
 export interface ScrollingContext {
   readonly element: SugarElement<HTMLElement>;
-  readonly stencils: Bounds[];
+  readonly others: SugarElement<HTMLElement>[];
 }
 
 export const isScroller = (elem: SugarElement<Node> | any): boolean => {
-  // eslint-disable-next-line no-console
-  console.log('is ', elem.dom, 'a scroller?', {
-    scrollHeight: elem.dom.scrollHeight,
-    clientHeight: elem.dom.clientHeight,
-    scrollWidth: elem.dom.scrollWidth,
-    clientWidth: elem.dom.clientWidth
-  });
-
   if (SugarNode.isHTMLElement(elem)) {
     const overflow = Css.get(elem, 'overflow');
 
@@ -25,8 +17,9 @@ export const isScroller = (elem: SugarElement<Node> | any): boolean => {
       return false;
     } else {
       // What is the most performant way to do this? Does querying sizes trigger unnecessary reflows?
-      return elem.dom.scrollHeight > elem.dom.clientHeight ||
-      elem.dom.scrollWidth > elem.dom.clientWidth;
+      // return elem.dom.scrollHeight > elem.dom.clientHeight ||
+      return true;
+      // elem.dom.scrollWidth > elem.dom.clientWidth;
     }
   } else {
     return false;
@@ -49,25 +42,32 @@ export const detect = (poupSinkElem: SugarElement<HTMLElement>): Optional<Scroll
       return Optional.none();
     },
     (x) => {
-      const element = x;
-      const stencils = [
-        ...Arr.map(scrollers.slice(1), (elem) => {
-          return Boxes.box(elem);
-        }),
-        Boxes.win()
-      ];
-
       return Optional.some({
-        element,
-        stencils
+        element: x,
+        others: scrollers.slice(1)
       });
+      // const stencils = [
+      //   ...Arr.map(scrollers.slice(1), (elem) => {
+      //     return Boxes.box(elem);
+      //   }),
+      //   Boxes.win()
+      // ];
+
+      // return Optional.some({
+      //   element,
+      //   stencils
+      // });
     }
   );
 };
 
 export const getBoundsFrom = (sc: ScrollingContext): Bounds => {
+  const stencils = [
+    ...Arr.map(sc.others, Boxes.box),
+    Boxes.win()
+  ];
   return Arr.foldl(
-    sc.stencils,
+    stencils,
     (acc, stencil) => {
       // eslint-disable-next-line no-console
       console.log({
