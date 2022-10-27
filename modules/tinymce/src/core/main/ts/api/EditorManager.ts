@@ -270,10 +270,23 @@ const EditorManager: EditorManager = {
   },
 
   /**
-   * Overrides the default options for editor instances.
+   * Overrides the default options for editor instances. <code>overrideDefaults</code> replaces any of the defaults set by a previous call to the <code>overrideDefaults</code> function.
+   * <br /><br />
+   * When using the cloud, some of these defaults are required for the cloud-based editor to function.
+   * <br /><br />
+   * Therefore, when using <code>overrideDefaults</code> with the cloud-based editor, combine the previous defaults, <code>tinymce.defaultOptions</code>, with the new options that you want to integrate.
    *
    * @method overrideDefaults
-   * @param {Object} defaultOptions Defaults options object.
+   * @param {Object} defaultOptions Default options object.
+   * @example
+   * const customOptions = {
+   *   promotion: true
+   * };
+   *
+   * tinymce.overrideDefaults({
+   *   ...tinymce.defaultOptions,
+   *   ...customOptions
+   * });
    */
   overrideDefaults(defaultOptions) {
     const baseUrl = defaultOptions.base_url;
