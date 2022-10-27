@@ -30,8 +30,7 @@ const placement = (component: AlloyComponent, anchorInfo: MakeshiftAnchor, origi
       anchorBox,
       bubble: anchorInfo.bubble,
       overrides: anchorInfo.overrides,
-      layouts,
-      placer: Optional.none()
+      layouts
     })
   );
 };
