@@ -18,10 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Transparent elements, like anchors, are now allowed in the root of the editor body if they contain blocks. #TINY-9172
+- `setContent` is now allowed to accept any custom keys and values as a second options argument. #TINY-9143
 
 ### Improved
 - Transparent elements, like anchors, can now contain block elements. #TINY-9172
-- Tests for insert content and get content events. #TINY-9143
 
 ### Fixed
 - Parsing media content would cause a memory leak, which for example occurred when using the `getContent` API. #TINY-9186
