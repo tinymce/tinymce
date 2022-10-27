@@ -15,6 +15,19 @@ describe('browser.tinymce.selection.GetSelectionContentTest', () => {
   }, []);
   const testDivId = 'testDiv1';
 
+  const assertSelectedRadioButtons = (editor: Editor, nrOfInputs: number, shouldBeSelected: number) => {
+    const inputs = editor.getBody().getElementsByTagName('input');
+    let selected = 0;
+    for (let index = 0; index < inputs.length; index++) {
+      if (inputs[index].checked) {
+        selected++;
+      }
+    }
+
+    assert.equal(inputs.length, nrOfInputs, 'Should have the right amount of inputs');
+    assert.equal(selected, shouldBeSelected, 'Should have exactly one radio button');
+  };
+
   const focusDiv = () => {
     const input = document.querySelector('#' + testDivId) as HTMLDivElement;
     input.focus();
@@ -121,6 +134,15 @@ describe('browser.tinymce.selection.GetSelectionContentTest', () => {
     editor.setContent('<p>          This      Has\n     Spaces</p>');
     TinySelections.setSelection(editor, [ ], 0, [ ], 1);
     assertGetContent('Should be some content', editor, 'This Has Spaces', { format: 'text' });
+  });
+
+  it('TINY-7981: inputs should not be deselected', () => {
+    const editor = hook.editor();
+    // eslint-disable-next-line max-len
+    editor.setContent('<p><label><input name="group-name" type="radio" value="1">Option 1</label><label><input checked="checked" name="group-name" type="radio" value="2">Option 2</label><label><input name="group-name" type="radio" value="3">Option 3</label></p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 3);
+    assertGetContent('Should be some content', editor, 'Option 1Option 2Option 3', { format: 'text' });
+    assertSelectedRadioButtons(editor, 3, 1);
   });
 
   it('TBA: Should be text content without non-visible leading/trailing spaces', () => {

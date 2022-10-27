@@ -3,6 +3,7 @@ import { SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import { Content, ContentFormat, GetSelectionContentArgs } from '../content/ContentTypes';
+import { cleanupBogusElements, cleanupInputNames } from '../content/GetContentImpl';
 import { postProcessGetContent, preProcessGetContent } from '../content/PrePostProcess';
 import * as CharType from '../text/CharType';
 import * as Zwsp from '../text/Zwsp';
@@ -26,10 +27,15 @@ const getTextContent = (editor: Editor): string =>
 
     const contextNodeName = getContextNodeName(parentBlockOpt);
 
+    const rangeClone = SugarElement.fromDom(rng.cloneContents());
+    cleanupBogusElements(rangeClone);
+    cleanupInputNames(rangeClone);
+
     const bin = editor.dom.add(body, contextNodeName, {
       'data-mce-bogus': 'all',
       'style': 'overflow: hidden; opacity: 0;'
-    }, rng.cloneContents());
+    }, rangeClone.dom);
+
     const text = getInnerText(bin);
 
     // textContent will not strip leading/trailing spaces since it doesn't consider how it'll render

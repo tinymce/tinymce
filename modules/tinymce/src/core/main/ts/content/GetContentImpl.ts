@@ -16,6 +16,30 @@ const trimEmptyContents = (editor: Editor, html: string): string => {
   return html.replace(emptyRegExp, '');
 };
 
+export const cleanupBogusElements = (parent: SugarElement<Node>): void => {
+  const bogusElements = SelectorFilter.descendants(parent, '[data-mce-bogus]');
+  Arr.each(bogusElements, (elem) => {
+    const bogusValue = Attribute.get(elem, 'data-mce-bogus');
+    if (bogusValue === 'all') {
+      Remove.remove(elem);
+    } else if (ElementType.isBr(elem)) {
+      // Need to keep bogus padding brs represented as a zero-width space so that they aren't collapsed by the browser
+      Insert.before(elem, SugarElement.fromText(Unicode.zeroWidth));
+      Remove.remove(elem);
+    } else {
+      Remove.unwrap(elem);
+    }
+  });
+};
+
+export const cleanupInputNames = (parent: SugarElement<Node>): void => {
+  const inputs = SelectorFilter.descendants(parent, 'input');
+
+  Arr.each(inputs, (input) => {
+    Attribute.remove(input, 'name');
+  });
+};
+
 const getPlainTextContent = (editor: Editor, body: HTMLElement) => {
   const doc = editor.getDoc();
   const dos = SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getBody()));
@@ -29,21 +53,8 @@ const getPlainTextContent = (editor: Editor, body: HTMLElement) => {
   });
   Html.set(offscreenDiv, body.innerHTML);
 
-  // Cleanup bogus elements
-  const bogusElements = SelectorFilter.descendants(offscreenDiv, '[data-mce-bogus]');
-  Arr.each(bogusElements, (elem) => {
-    const bogusValue = Attribute.get(elem, 'data-mce-bogus');
-    if (bogusValue === 'all') {
-      Remove.remove(elem);
-    } else if (ElementType.isBr(elem)) {
-      // Need to keep bogus padding brs represented as a zero-width space so that they aren't collapsed by the browser
-      Insert.before(elem, SugarElement.fromText(Unicode.zeroWidth));
-      Remove.remove(elem);
-    } else {
-      Remove.unwrap(elem);
-    }
-  });
-
+  cleanupBogusElements(offscreenDiv);
+  cleanupInputNames(offscreenDiv);
   // Append the wrapper element so that the browser will evaluate styles when getting the `innerText`
   const root = SugarShadowDom.getContentContainer(dos);
   Insert.append(root, offscreenDiv);
