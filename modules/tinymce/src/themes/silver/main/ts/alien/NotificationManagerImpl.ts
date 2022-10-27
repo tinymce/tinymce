@@ -1,12 +1,11 @@
-import { Gui, GuiFactory, InlineView, Layout, MaxHeight, NodeAnchorSpec } from '@ephox/alloy';
-import { Arr, Optional, Type } from '@ephox/katamari';
+import { Boxes, Gui, GuiFactory, InlineView, Layout, MaxHeight, NodeAnchorSpec } from '@ephox/alloy';
+import { Arr, Num, Optional, Type } from '@ephox/katamari';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { NotificationApi, NotificationManagerImpl, NotificationSpec } from 'tinymce/core/api/NotificationManager';
 import Delay from 'tinymce/core/api/util/Delay';
 
-import * as Boundosaurus from '../alien/Boundosaurus';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import { Notification } from '../ui/general/Notification';
 
@@ -18,7 +17,22 @@ export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): No
   const sharedBackstage = extras.backstage.shared;
 
   const getBounds = () => {
-    return Boundosaurus.getNotificationBounds(editor);
+    /* Attempt to ensure that the notifications render below the top of the header and between
+     * whichever is the larger between the bottom of the content area and the bottom of the viewport
+     *
+     * Note: This isn't perfect, but we have a plan to fix it now that TinyMCE 6 removed public methods restricting
+     * our ability to change anything (TINY-6679).
+     *
+     * TODO TINY-8128: use docking and associate the notifications together so they update position automatically
+     * during UI refresh updates.
+     */
+    const contentArea = Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()));
+    const win = Boxes.win();
+    const x = Num.clamp(win.x, contentArea.x, contentArea.right);
+    const y = Num.clamp(win.y, contentArea.y, contentArea.bottom);
+    const right = Math.max(contentArea.right, win.right);
+    const bottom = Math.max(contentArea.bottom, win.bottom);
+    return Optional.some(Boxes.bounds(x, y, right - x, bottom - y));
   };
 
   const open = (settings: NotificationSpec, closeCallback: () => void): NotificationApi => {
