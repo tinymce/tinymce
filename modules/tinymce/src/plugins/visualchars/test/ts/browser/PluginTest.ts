@@ -56,6 +56,7 @@ describe('browser.tinymce.plugins.visualchars.PluginTest', () => {
     editor.setContent('<p>abc&nbsp;&nbsp;</p>');
 
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
+    editor.focus();
     editor.selection.setRng(editor.selection.getRng(), false);
 
     TinyUiActions.clickOnToolbar(editor, 'button');
