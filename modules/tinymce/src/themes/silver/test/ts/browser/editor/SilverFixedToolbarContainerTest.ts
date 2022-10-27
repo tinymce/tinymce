@@ -15,9 +15,7 @@ describe('browser.tinymce.themes.silver.editor.SilverFixedToolbarContainerTest',
   });
 
   after(() => {
-    if (false) {
-      Remove.remove(toolbar);
-    }
+    Remove.remove(toolbar);
   });
 
   const hook = TinyHooks.bddSetup<Editor>({
