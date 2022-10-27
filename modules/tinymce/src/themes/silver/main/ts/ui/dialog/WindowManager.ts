@@ -1,17 +1,18 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Boxes, Docking, GuiFactory, HotspotAnchorSpec, InlineView, Keying,
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Boxes, Docking, DockingTypes, GuiFactory, HotspotAnchorSpec, InlineView, Keying,
   MakeshiftAnchorSpec, ModalDialog, NodeAnchorSpec, SelectionAnchorSpec, SystemEvents
 } from '@ephox/alloy';
 import { StructureProcessor, StructureSchema } from '@ephox/boulder';
 import { Dialog, DialogManager } from '@ephox/bridge';
 import { Optional, Singleton } from '@ephox/katamari';
-import { SelectorExists, SugarBody, SugarElement } from '@ephox/sugar';
+import { SelectorExists, SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { WindowManagerImpl, WindowParams } from 'tinymce/core/api/WindowManager';
 
 import * as Options from '../../api/Options';
 import { UiFactoryBackstagePair } from '../../backstage/Backstage';
+import * as ScrollingContext from '../../modes/ScrollingContext';
 import { formCancelEvent } from '../general/FormEvents';
 import { renderDialog } from '../window/SilverDialog';
 import { renderInlineDialog } from '../window/SilverInlineDialog';
@@ -46,7 +47,30 @@ const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, is
           fadeOutClass: 'tox-dialog-dock-fadeout',
           transitionClass: 'tox-dialog-dock-transition'
         },
-        modes: [ 'top' ]
+        modes: [ 'top' ],
+        lazyViewport: (comp) => {
+
+          const optScrollingContext = ScrollingContext.detect(comp.element);
+          return optScrollingContext.fold<DockingTypes.DockingViewport>(
+            () => {
+              return {
+                bounds: Boxes.win(),
+                optScrollEnv: Optional.none()
+              };
+            },
+            (sc) => {
+              // FIX TINY-9226: Consider how to use toolbar offsets here. Ignore for now.
+              const combinedBounds = ScrollingContext.getBoundsFrom(sc);
+              return {
+                bounds: combinedBounds,
+                optScrollEnv: Optional.some({
+                  currentScrollTop: sc.element.dom.scrollTop,
+                  scrollElmTop: SugarLocation.absolute(sc.element).top
+                })
+              };
+            }
+          );
+        },
       })
     ];
   }
