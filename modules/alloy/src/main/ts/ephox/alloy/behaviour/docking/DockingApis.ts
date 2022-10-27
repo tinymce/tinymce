@@ -24,7 +24,7 @@ const updateVisibility = (component: AlloyComponent, config: DockingConfig, stat
   config.contextual.each((contextInfo) => {
     // Make the dockable component disappear if the context is outside the viewport
     contextInfo.lazyContext(component).each((box) => {
-      const isVisible = Dockables.isPartiallyVisible(box, viewport);
+      const isVisible = Dockables.isPartiallyVisible(box, viewport.bounds);
       if (isVisible !== state.isVisible()) {
         state.setVisible(isVisible);
 

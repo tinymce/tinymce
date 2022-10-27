@@ -1,4 +1,4 @@
-import { Adt, Arr, Obj, Optional, Optionals } from '@ephox/katamari';
+import { Adt, Arr, Fun, Obj, Optional, Optionals } from '@ephox/katamari';
 import { Class, Css, Height, SugarBody, SugarElement, Width } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
@@ -53,37 +53,22 @@ const disappear = (component: AlloyComponent, contextualInfo: DockingContext): v
   contextualInfo.onHide(component);
 };
 
-const isPartiallyVisible = (box: Boxes.Bounds, viewport: DockingViewport): boolean => {
-  if (viewport.type === 'simple-docking-viewport') {
-    return box.y < viewport.bounds.bottom && box.bottom > viewport.bounds.y;
-  } else {
-    return box.y < viewport.combinedBounds.bottom && box.bottom > viewport.combinedBounds.y;
-  }
-};
+const isPartiallyVisible = (box: Boxes.Bounds, bounds: Boxes.Bounds): boolean =>
+  box.y < bounds.bottom && box.bottom > bounds.y;
 
-const isTopCompletelyVisible = (box: Boxes.Bounds, viewport: DockingViewport): boolean => {
-  if (viewport.type === 'simple-docking-viewport') {
-    return box.y >= viewport.bounds.y;
-  } else {
-    return box.y >= viewport.combinedBounds.y;
-  }
-};
+const isTopCompletelyVisible = (box: Boxes.Bounds, bounds: Boxes.Bounds): boolean =>
+  box.y >= bounds.y;
 
-const isBottomCompletelyVisible = (box: Boxes.Bounds, viewport: DockingViewport): boolean => {
-  if (viewport.type === 'simple-docking-viewport') {
-    return box.bottom <= viewport.bounds.bottom;
-  } else {
-    return box.bottom <= viewport.combinedBounds.bottom;
-  }
-};
+const isBottomCompletelyVisible = (box: Boxes.Bounds, bounds: Boxes.Bounds): boolean =>
+  box.bottom <= bounds.bottom;
 
 const isVisibleForModes = (modes: DockingMode[], box: Boxes.Bounds, viewport: DockingViewport): boolean => {
   const isVisible = Arr.forall(modes, (mode) => {
     switch (mode) {
       case 'bottom':
-        return isBottomCompletelyVisible(box, viewport);
+        return isBottomCompletelyVisible(box, viewport.bounds);
       case 'top':
-        return isTopCompletelyVisible(box, viewport);
+        return isTopCompletelyVisible(box, viewport.bounds);
     }
   });
   return isVisible;
@@ -93,47 +78,38 @@ const getPrior = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, st
   state.getInitialPos().map(
     // Only supports position absolute.
     (pos) => {
-      if (pos.initialViewport.type === 'complex-docking-viewport' && viewport.type === 'complex-docking-viewport') {
-        const result = Boxes.bounds(
-          pos.bounds.x,
-          viewport.scrollerElemTop + (pos.bounds.y - viewport.currentScroll),
-          Width.get(elem),
-          Height.get(elem)
-        );
-        return result;
-      } else {
-        return Boxes.bounds(
-          pos.bounds.x,
-          pos.bounds.y,
-          Width.get(elem),
-          Height.get(elem)
-        );
-      }
+      const priorY = viewport.optScrollEnv.fold(
+        Fun.constant(pos.bounds.y),
+        (scrollEnv) => scrollEnv.scrollElmTop + (pos.bounds.y - scrollEnv.currentScrollTop)
+      );
+
+      return Boxes.bounds(
+        pos.bounds.x,
+        priorY,
+        Width.get(elem),
+        Height.get(elem)
+      );
     }
   );
 
 const storePrior = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, viewport: DockingViewport, state: DockingState): void => {
-  if (viewport.type === 'simple-docking-viewport') {
-    state.setInitialPos({
-      style: Css.getAllRaw(elem),
-      position: Css.get(elem, 'position') || 'static',
-      bounds: box,
-      initialViewport: viewport
-    });
-  } else {
+  const bounds = viewport.optScrollEnv.fold(
+    Fun.constant(box),
+    (scrollEnv) => {
+      return Boxes.translate(
+        box,
+        0,
+        scrollEnv.currentScrollTop - scrollEnv.scrollElmTop
+      );
+    }
+  );
 
-    const bounds = Boxes.translate(
-      box,
-      0,
-      viewport.currentScroll - viewport.scrollerElemTop
-    );
-    state.setInitialPos({
-      style: Css.getAllRaw(elem),
-      position: Css.get(elem, 'position') || 'static',
-      bounds,
-      initialViewport: viewport
-    });
-  }
+  state.setInitialPos({
+    style: Css.getAllRaw(elem),
+    position: Css.get(elem, 'position') || 'static',
+    bounds,
+    initialViewport: viewport
+  });
 };
 
 const revertToOriginal = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, state: DockingState): Optional<MorphAdt> =>
@@ -160,13 +136,13 @@ const revertToOriginal = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, st
     }
   });
 
-const morphToOriginal = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> => {
+const tryMorphToOriginal = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> => {
   return getPrior(elem, viewport, state)
     .filter((box) => isVisibleForModes(state.getModes(), box, viewport))
     .bind((box) => revertToOriginal(elem, box, state));
 };
 
-const wiggle = (boxX: number, isTopDock: boolean, viewportBounds: Boxes.Bounds) => {
+const getFixedMorph = (boxX: number, boxY: number, viewportBounds: Boxes.Bounds): MorphAdt => {
   // Calculate the fixed position
   const winBox = Boxes.win();
   const left = boxX - winBox.x;
@@ -174,44 +150,46 @@ const wiggle = (boxX: number, isTopDock: boolean, viewportBounds: Boxes.Bounds) 
   const bottom = winBox.bottom - viewportBounds.bottom;
 
   // Check whether we are docking the bottom of the viewport, or the top
-  // const isTop = box.y <= viewportBounds.y;
-  return Optional.some(morphAdt.fixed(NuPositionCss(
-    'fixed',
-    Optional.some(left),
-    isTopDock ? Optional.some(top) : Optional.none(),
-    Optional.none(),
-    !isTopDock ? Optional.some(bottom) : Optional.none()
-  )));
+  const isTopDock = boxY <= viewportBounds.y;
+  return morphAdt.fixed(
+    NuPositionCss(
+      'fixed',
+      Optional.some(left),
+      isTopDock ? Optional.some(top) : Optional.none(),
+      Optional.none(),
+      !isTopDock ? Optional.some(bottom) : Optional.none()
+    )
+  );
 };
 
-const morphToFixed = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> => {
+const tryMorphToFixedIfRequired = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> => {
   const box = Boxes.box(elem);
   if (!isVisibleForModes(state.getModes(), box, viewport)) {
 
     // So this store prior has to do fancy things.
-
     storePrior(elem, box, viewport, state);
-
-    const bounds = viewport.type === 'simple-docking-viewport' ? viewport.bounds : viewport.combinedBounds;
-    return wiggle(box.x, box.y <= bounds.y, bounds);
+    return Optional.some(
+      getFixedMorph(box.x, box.y, viewport.bounds)
+    );
   } else {
     return Optional.none<MorphAdt>();
   }
 };
 
+const tryMorphToUpdatedFixed = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> => {
+  // Importantly, we don't change our position. We just improve our fixed.
+  return getPrior(elem, viewport, state).map(
+    (box) => getFixedMorph(box.x, box.y, viewport.bounds)
+  );
+};
+
 const getMorph = (component: AlloyComponent, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> => {
   const elem = component.element;
   const isDocked = Optionals.is(Css.getRaw(elem, 'position'), 'fixed');
-  return isDocked ? morphToOriginal(elem, viewport, state).orThunk(() => {
-    // Importantly, we don't change our position. We just improve our fixed.
-    return getPrior(elem, viewport, state).bind(
-      (box) => {
-        const bounds = viewport.type === 'simple-docking-viewport' ? viewport.bounds
-          : viewport.combinedBounds;
-        return wiggle(box.x, box.y <= bounds.y, bounds);
-      }
-    );
-  }) : morphToFixed(elem, viewport, state);
+  return isDocked ? tryMorphToOriginal(elem, viewport, state).orThunk(() => {
+    // Importantly, we don't change our stored position. We just improve our fixed.
+    return tryMorphToUpdatedFixed(elem, viewport, state);
+  }) : tryMorphToFixedIfRequired(elem, viewport, state);
 };
 
 const getMorphToOriginal = (component: AlloyComponent, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> => {

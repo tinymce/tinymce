@@ -249,19 +249,19 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
             const height = boundsWithoutOffset.height - (isDockedMode(comp, 'bottom') ? offset : 0);
             // No scrolling context, so just window
             return {
-              type: 'simple-docking-viewport',
-              bounds: Boxes.bounds(boundsWithoutOffset.x, top, boundsWithoutOffset.width, height)
+              bounds: Boxes.bounds(boundsWithoutOffset.x, top, boundsWithoutOffset.width, height),
+              optScrollEnv: Optional.none()
             };
           },
           (sc) => {
             // FIX TINY-9226: Consider how to use toolbar offsets here. Ignore for now.
-            const currentScroll = sc.element.dom.scrollTop;
             const combinedBounds = ScrollingContext.getBoundsFrom(sc);
             return {
-              type: 'complex-docking-viewport',
-              scrollerElemTop: SugarLocation.absolute(sc.element).top,
-              currentScroll,
-              combinedBounds
+              bounds: combinedBounds,
+              optScrollEnv: Optional.some({
+                currentScrollTop: sc.element.dom.scrollTop,
+                scrollElmTop: SugarLocation.absolute(sc.element).top
+              })
             };
           }
         );

@@ -47,7 +47,13 @@ export interface ComplexDockingViewport {
   readonly combinedBounds: Bounds;
 }
 
-export type DockingViewport = SimpleDockingViewport | ComplexDockingViewport;
+export interface DockingViewport {
+  readonly bounds: Bounds;
+  readonly optScrollEnv: Optional<{
+    readonly currentScrollTop: number;
+    readonly scrollElmTop: number;
+  }>;
+}
 
 export interface DockingConfig extends Behaviour.BehaviourConfigDetail {
   contextual: Optional<DockingContext>;
