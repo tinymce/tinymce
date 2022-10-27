@@ -53,6 +53,11 @@ node("headless-macos") {
   timestamps {
     checkout scm
 
+    if (true) {
+      currentBuild.result = 'FAILURE'
+      error("While prototyping, do not run time-consuming builds")
+    }
+
     def props = readProperties file: 'build.properties'
 
     def primaryBranch = props.primaryBranch
