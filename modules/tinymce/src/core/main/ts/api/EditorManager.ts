@@ -278,7 +278,7 @@ const EditorManager: EditorManager = {
   },
 
   /**
-   * Overrides the default options for editor instances. <code>overrideDefaults</code> replaces any of the defaults set by a previous call to the <code>overrideDefaults</code> function.
+   * Overrides the default options for editor instances. The <code>overrideDefaults</code> method replaces any of the defaults set by a previous call to the <code>overrideDefaults</code> function.
    * <br /><br />
    * When using the Tiny Cloud, some of these defaults are required for the cloud-based editor to function.
    * <br /><br />
@@ -288,7 +288,7 @@ const EditorManager: EditorManager = {
    * @param {Object} defaultOptions Default options object.
    * @example
    * const customOptions = {
-   *   promotion: true
+   *   toolbar_sticky: true
    * };
    *
    * tinymce.overrideDefaults({
