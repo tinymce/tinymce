@@ -17,7 +17,7 @@ export interface InlineHeader {
   readonly isPositionedAtTop: () => boolean;
   readonly show: () => void;
   readonly hide: () => void;
-  readonly update: (resetDocking?: boolean) => void;
+  readonly update: () => void;
   readonly updateMode: () => void;
   readonly repositionPopups: () => void;
 }
@@ -140,7 +140,7 @@ export const InlineHeader = (
     });
   };
 
-  const updateChromeUi = (resetDocking: boolean = false) => {
+  const updateChromeUi = (resetDocking: boolean) => {
     // Skip updating the ui if it's hidden
     if (!isVisible()) {
       return;
@@ -180,7 +180,7 @@ export const InlineHeader = (
     repositionPopups();
   };
 
-  const updateMode = (updateUi: boolean = true) => {
+  const doUpdateMode = (updateUi: boolean = true) => {
     // eslint-disable-next-line no-console
     console.log('updateMode');
     // Skip updating the mode if the toolbar is hidden, is
@@ -216,8 +216,8 @@ export const InlineHeader = (
 
     // We don't want to call updateChromeUi as part of updateMode because
     // we are about to call updateChromeUi below!
-    updateMode(false);
-    updateChromeUi();
+    doUpdateMode(false);
+    updateChromeUi(false);
   };
 
   const hide = () => {
@@ -231,6 +231,11 @@ export const InlineHeader = (
 
   const update = () => {
     updateChromeUi(true);
+  };
+
+  // updateMode will call updateChromeUi also if the docking mode has changed.
+  const updateMode = () => {
+    doUpdateMode(true);
   };
 
   return {

@@ -26,7 +26,7 @@ const getTargetPosAndBounds = (targetElm: SugarElement, isToolbarTop: boolean) =
   };
 };
 
-const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineUi, toolbarPersist: boolean) => {
+const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader, toolbarPersist: boolean) => {
   const prevPosAndBounds = Cell(getTargetPosAndBounds(targetElm, ui.isPositionedAtTop()));
 
   const resizeContent = (e: NodeChangeEvent | KeyboardEvent | Event) => {
@@ -51,7 +51,7 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineUi, tool
       } else if (hasResized) {
         // If we haven't moved position, but we have changed size, then update the docking mode,
         // and only recalculate the position (and repositionPopups) only if the docking mode has changed
-        ui.updateMode(true);
+        ui.updateMode();
 
         // This repositionPopups call is going to be a duplicate if updateMode identifies
         // that the mode has changed. We probably need to make it a bit more granular .. so
@@ -70,7 +70,7 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineUi, tool
   }
 
   // Get initial position and position on resize window. We also reset docking here.
-  editor.on('SkinLoaded ResizeWindow', () => ui.update());
+  editor.on('SkinLoaded ResizeWindow', ui.update);
 
   // Check on all nodeChanges and keydown to see if the content has been resized.
   editor.on('NodeChange keydown', (e) => {
@@ -78,7 +78,7 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineUi, tool
   });
 
   // This true means it will call update as well (if the docking changes)
-  editor.on('ScrollWindow', () => ui.updateMode(true));
+  editor.on('ScrollWindow', ui.updateMode);
 
   // Bind to async load events and trigger a content resize event if the size has changed
   const elementLoad = Singleton.unbindable();
@@ -102,33 +102,7 @@ const attachUiMotherships = (uiRoot: SugarElement<HTMLElement | ShadowRoot>, uiR
   Attachment.attachSystemAfter(targetElm, uiRefs.popupUi.mothership);
 };
 
-export interface InlineUi {
-  readonly isVisible: () => boolean;
-  readonly repositionPopups: () => void;
-
-  // So how does update and updateMode and repositionPopups compare?
-  // Update also always calls repositionPopups if the toolbar if the UI is visible
-  readonly update: () => void;
-
-  // This will call update only if (updateUi is true, and the docking mode has changed)
-  // It also changes the current docking
-  readonly updateMode: (updateUi: boolean) => void;
-  readonly show: () => void;
-  readonly hide: () => void;
-  readonly isPositionedAtTop: () => boolean;
-}
-
-const renderUsingUi = (
-  editor: Editor,
-  uiRefs: ReadyUiReferences,
-  rawUiConfig: RenderUiConfig,
-  backstage: UiFactoryBackstage,
-  args: RenderArgs,
-  makeUi: (
-    floatContainer: Singleton.Value<AlloyComponent>,
-    targetElm: SugarElement<HTMLElement>
-  ) => InlineUi
-) => {
+const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   const { mainUi } = uiRefs;
 
   // This is used to store the reference to the header part of OuterContainer, which is
@@ -137,7 +111,7 @@ const renderUsingUi = (
   // InlineHeader's show function if this reference is already set.
   const floatContainer = Singleton.value<AlloyComponent>();
   const targetElm = SugarElement.fromDom(args.targetNode);
-  const ui = makeUi(floatContainer, targetElm);
+  const ui = InlineHeader(editor, targetElm, uiRefs, backstage, floatContainer);
   const toolbarPersist = isToolbarPersist(editor);
 
   loadInlineSkin(editor);
@@ -210,18 +184,6 @@ const renderUsingUi = (
     editorContainer: mainUi.outerContainer.element.dom,
     api
   };
-};
-
-const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
-  return renderUsingUi(
-    editor,
-    uiRefs,
-    rawUiConfig,
-    backstage,
-    args,
-    (floatContainer: Singleton.Value<AlloyComponent>, targetElm: SugarElement<HTMLElement>) =>
-      InlineHeader(editor, targetElm, uiRefs, backstage, floatContainer)
-  );
 };
 
 export {
