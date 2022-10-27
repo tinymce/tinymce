@@ -4,6 +4,7 @@ import { Optional, Result } from '@ephox/katamari';
 import { Css, DomEvent, Scroll, SelectorFind, SimRange, SugarElement, SugarNode, SugarPosition, Traverse, WindowSelection } from '@ephox/sugar';
 import { assert } from 'chai';
 
+import * as Boxes from 'ephox/alloy/alien/Boxes';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
@@ -143,19 +144,20 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
             'Relative, Selected: 3rd paragraph, no page scroll, no editor scroll',
             'relative'
           ),
-          PositionTestUtils.cTestSinkWithin(
+          PositionTestUtils.cTestSinkWithinBounds(
             'Relative, Selected: 3rd paragraph, no page scroll, no editor scroll, positioned within frame',
             'relative',
-            frame),
+            () => Boxes.box(frame)
+          ),
 
           PositionTestUtils.cTestSink(
             'Fixed, Selected: 3rd paragraph, no page scroll, no editor scroll',
             'fixed'
           ),
-          PositionTestUtils.cTestSinkWithin(
+          PositionTestUtils.cTestSinkWithinBounds(
             'Fixed, Selected: 3rd paragraph, no page scroll, no editor scroll, positioned within frame',
             'fixed',
-            frame
+            () => Boxes.box(frame)
           ),
 
           PositionTestUtils.cScrollDown('classic', '2000px'),
@@ -163,20 +165,20 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
             'Relative, Selected: 3rd paragraph, 2000px scroll, no editor scroll',
             'relative'
           ),
-          PositionTestUtils.cTestSinkWithin(
+          PositionTestUtils.cTestSinkWithinBounds(
             'Relative, Selected: 3rd paragraph, 2000px scroll, no editor scroll, positioned within frame',
             'relative',
-            frame
+            () => Boxes.box(frame)
           ),
 
           PositionTestUtils.cTestSink(
             'Fixed, Selected: 3rd paragraph, 2000px scroll, no editor scroll',
             'fixed'
           ),
-          PositionTestUtils.cTestSinkWithin(
+          PositionTestUtils.cTestSinkWithinBounds(
             'Fixed, Selected: 3rd paragraph, 2000px scroll, no editor scroll, positioned within frame',
             'fixed',
-            frame
+            () => Boxes.box(frame)
           ),
 
           ChainUtils.cLogging(
