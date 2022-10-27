@@ -75,18 +75,7 @@ export const getBoundsFrom = (sc: ScrollingContext): Bounds => {
         stencil
       });
       // TODO: Use clamping.
-      const left = Math.max(acc.x, stencil.x);
-      const top = Math.max(acc.y, stencil.y);
-      const right = Math.min(acc.right, stencil.right);
-      const bottom = Math.min(acc.bottom, stencil.bottom);
-      const width = right - left;
-      const height = bottom - top;
-      return Boxes.bounds(
-        left,
-        top,
-        width,
-        height
-      );
+      return Boxes.constrain(acc, stencil);
     },
     Boxes.box(sc.element)
   );
