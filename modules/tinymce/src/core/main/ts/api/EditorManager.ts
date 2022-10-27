@@ -126,7 +126,15 @@ const EditorManager: EditorManager = {
 
   baseURI: null as any,
   baseURL: null as any,
+
+  /**
+   * Default options for TinyMCE.
+   *
+   * @property defaultOptions
+   * @type Object
+   */
   defaultOptions: {},
+
   documentBaseURL: null as any,
   suffix: null as any,
 
@@ -272,7 +280,7 @@ const EditorManager: EditorManager = {
   /**
    * Overrides the default options for editor instances. <code>overrideDefaults</code> replaces any of the defaults set by a previous call to the <code>overrideDefaults</code> function.
    * <br /><br />
-   * When using the cloud, some of these defaults are required for the cloud-based editor to function.
+   * When using the Tiny Cloud, some of these defaults are required for the cloud-based editor to function.
    * <br /><br />
    * Therefore, when using <code>overrideDefaults</code> with the cloud-based editor, combine the previous defaults, <code>tinymce.defaultOptions</code>, with the new options that you want to integrate.
    *
