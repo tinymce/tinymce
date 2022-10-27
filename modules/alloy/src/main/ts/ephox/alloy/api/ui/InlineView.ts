@@ -108,11 +108,8 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
   };
 
   const showAt = (sandbox: AlloyComponent, thing: AlloySpec, placementSpec: PlacementSpec) => {
-    showWithin(sandbox, thing, placementSpec, Optional.none());
-  };
-
-  const showWithin = (sandbox: AlloyComponent, thing: AlloySpec, placementSpec: PlacementSpec, boxElement: Optional<SugarElement<HTMLElement>>) => {
-    showWithinBounds(sandbox, thing, placementSpec, () => boxElement.map((elem) => Boxes.box(elem)));
+    const getBounds = Optional.none;
+    showWithinBounds(sandbox, thing, placementSpec, getBounds);
   };
 
   const showWithinBounds = (sandbox: AlloyComponent, thing: AlloySpec, placementSpec: PlacementSpec, getBounds: () => Optional<Boxes.Bounds>) => {
@@ -164,10 +161,9 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
     }
   };
 
-  const apis = {
+  const apis: InlineViewApis = {
     setContent,
     showAt,
-    showWithin,
     showWithinBounds,
     showMenuAt,
     showMenuWithinBounds,
@@ -245,9 +241,6 @@ const InlineView: InlineViewSketcher = Sketcher.single<InlineViewSpec, InlineVie
   apis: {
     showAt: (apis, component, anchor, thing) => {
       apis.showAt(component, anchor, thing);
-    },
-    showWithin: (apis, component, anchor, thing, boxElement) => {
-      apis.showWithin(component, anchor, thing, boxElement);
     },
     showWithinBounds: (apis, component, anchor, thing, bounds) => {
       apis.showWithinBounds(component, anchor, thing, bounds);
