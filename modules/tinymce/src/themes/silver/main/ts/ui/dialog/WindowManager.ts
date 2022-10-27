@@ -5,12 +5,11 @@ import {
 import { StructureProcessor, StructureSchema } from '@ephox/boulder';
 import { Dialog, DialogManager } from '@ephox/bridge';
 import { Optional, Singleton } from '@ephox/katamari';
-import { SelectorExists, SugarElement } from '@ephox/sugar';
+import { SelectorExists, SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { WindowManagerImpl, WindowParams } from 'tinymce/core/api/WindowManager';
 
-import * as Boundosaurus from '../../alien/Boundosaurus';
 import * as Options from '../../api/Options';
 import { UiFactoryBackstagePair } from '../../backstage/Backstage';
 import { formCancelEvent } from '../general/FormEvents';
@@ -51,6 +50,13 @@ const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, is
       })
     ];
   }
+};
+
+const getInlineDialogBounds = (): Optional<Boxes.Bounds> => {
+  // At the moment the inline dialog is just put anywhere in the body, and docking is what is used to make
+  // sure that it stays onscreen
+  const bounds = Boxes.box(SugarBody.body());
+  return Optional.some(bounds);
 };
 
 const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
@@ -190,7 +196,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
         inlineDialogComp,
         GuiFactory.premade(dialogUi.dialog),
         { anchor },
-        () => Boundosaurus.getInlineDialogBounds(editor)
+        () => getInlineDialogBounds()
       );
 
       // Refresh the docking position if not using a sticky toolbar
