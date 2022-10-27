@@ -31,7 +31,7 @@ const getRelativeOrigin = (component: AlloyComponent): Origins.OriginAdt => {
   return Origins.relative(position.left, position.top, bounds.width, bounds.height);
 };
 
-const place = (_component: AlloyComponent, origin: Origins.OriginAdt, anchoring: Anchoring, optBounds: Optional<Boxes.Bounds>, placee: AlloyComponent, lastPlace: Optional<PlacerResult>, transition: Optional<Transition>): PlacerResult => {
+const place = (origin: Origins.OriginAdt, anchoring: Anchoring, optBounds: Optional<Boxes.Bounds>, placee: AlloyComponent, lastPlace: Optional<PlacerResult>, transition: Optional<Transition>): PlacerResult => {
   const anchor = Anchor.box(anchoring.anchorBox, origin);
   return SimpleLayout.simple(anchor, placee.element, anchoring.bubble, anchoring.layouts, lastPlace, optBounds, anchoring.overrides, transition);
 };
@@ -73,7 +73,7 @@ const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningC
       );
 
       // Place the element and then update the state for the placee
-      const newState = place(component, origin, anchoring, optBounds, placee, placeeState, placeeDetail.transition);
+      const newState = place(origin, anchoring, optBounds, placee, placeeState, placeeDetail.transition);
       posState.set(placee.uid, newState);
     });
 
