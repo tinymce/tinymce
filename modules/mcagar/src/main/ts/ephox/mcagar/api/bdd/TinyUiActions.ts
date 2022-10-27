@@ -27,7 +27,6 @@ const getMenuRoot = (editor: Editor) => {
 const clickOnToolbar = <T extends Element>(editor: Editor, selector: string): SugarElement<T> => {
   const container = getToolbarRoot(editor);
   const elem = UiFinder.findIn<T>(container, selector).getOrDie();
-  Mouse.mouseDown(elem);
   Mouse.click(elem);
   return elem;
 };
