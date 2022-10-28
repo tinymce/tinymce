@@ -25,6 +25,11 @@ describe('browser.tinymce.core.content.TransparentElementsTest', () => {
       rootState.clear();
     });
 
+    it('TINY-9230: hasBlockAttr', () => {
+      assert.isTrue(TransparentElements.hasBlockAttr(SugarElement.fromHtml<Element>('<a data-mce-block="true"></a>').dom));
+      assert.isFalse(TransparentElements.hasBlockAttr(SugarElement.fromHtml<Element>('<a></a>').dom));
+    });
+
     it('TINY-9172: Should add data-mce-block on transparent elements if the contain blocks', () => {
       const root = rootState.get().getOrDie();
 
