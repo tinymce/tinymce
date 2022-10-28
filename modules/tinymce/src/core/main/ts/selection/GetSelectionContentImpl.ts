@@ -2,8 +2,8 @@ import { Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
+import { cleanupBogusElements, cleanupInputNames } from '../content/ContentCleanup';
 import { Content, ContentFormat, GetSelectionContentArgs } from '../content/ContentTypes';
-import { cleanupBogusElements, cleanupInputNames } from '../content/GetContentImpl';
 import { postProcessGetContent, preProcessGetContent } from '../content/PrePostProcess';
 import * as CharType from '../text/CharType';
 import * as Zwsp from '../text/Zwsp';
@@ -27,14 +27,14 @@ const getTextContent = (editor: Editor): string =>
 
     const contextNodeName = getContextNodeName(parentBlockOpt);
 
-    const rangeClone = SugarElement.fromDom(rng.cloneContents());
-    cleanupBogusElements(rangeClone);
-    cleanupInputNames(rangeClone);
+    const rangeContentClone = SugarElement.fromDom(rng.cloneContents());
+    cleanupBogusElements(rangeContentClone);
+    cleanupInputNames(rangeContentClone);
 
     const bin = editor.dom.add(body, contextNodeName, {
       'data-mce-bogus': 'all',
       'style': 'overflow: hidden; opacity: 0;'
-    }, rangeClone.dom);
+    }, rangeContentClone.dom);
 
     const text = getInnerText(bin);
 

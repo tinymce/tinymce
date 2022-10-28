@@ -16,15 +16,10 @@ describe('browser.tinymce.selection.GetSelectionContentTest', () => {
   const testDivId = 'testDiv1';
 
   const assertSelectedRadioButtons = (editor: Editor, nrOfInputs: number, shouldBeSelected: number) => {
-    const inputs = editor.getBody().getElementsByTagName('input');
-    let selected = 0;
-    for (let index = 0; index < inputs.length; index++) {
-      if (inputs[index].checked) {
-        selected++;
-      }
-    }
+    const total = editor.getBody().querySelectorAll('input').length;
+    const selected = editor.getBody().querySelectorAll('input:checked').length;
 
-    assert.equal(inputs.length, nrOfInputs, 'Should have the right amount of inputs');
+    assert.equal(total, nrOfInputs, 'Should have the right amount of inputs');
     assert.equal(selected, shouldBeSelected, 'Should have exactly one radio button');
   };
 
@@ -138,9 +133,8 @@ describe('browser.tinymce.selection.GetSelectionContentTest', () => {
 
   it('TINY-7981: inputs should not be deselected', () => {
     const editor = hook.editor();
-    // eslint-disable-next-line max-len
-    editor.setContent('<p><label><input name="group-name" type="radio" value="1">Option 1</label><label><input checked="checked" name="group-name" type="radio" value="2">Option 2</label><label><input name="group-name" type="radio" value="3">Option 3</label></p>');
-    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 3);
+    editor.setContent('<p><input name="group-name" type="radio">Option 1<input checked="checked" name="group-name" type="radio">Option 2<input name="group-name" type="radio">Option 3</p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 6);
     assertGetContent('Should be some content', editor, 'Option 1Option 2Option 3', { format: 'text' });
     assertSelectedRadioButtons(editor, 3, 1);
   });

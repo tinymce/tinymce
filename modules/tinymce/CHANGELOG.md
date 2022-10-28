@@ -32,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The editor header showed up even with no menubar and toolbar configured. #TINY-8819
 - Inline text pattern no longer triggers if it matches only the end but not the start. #TINY-8947
 - Matches of inline text patterns that are similar are now managed correctly. #TINY-8949
-- Using `editor.selection.getContent({ format: 'text' })` or `editor.getContent({ format: 'text' })` would sometimes deselect selected radio buttons #TINY-9213
+- Using `editor.selection.getContent({ format: 'text' })` or `editor.getContent({ format: 'text' })` would sometimes deselect selected radio buttons. #TINY-9213
 - The context toolbar prevented the user from placing the cursor at the edges of the editor. #TINY-8890
 - The Quick Insert context toolbar provided by the `quickbars` plugin showed when the cursor was in a fake block caret. #TINY-9190
 - The `editor.selection.getRng()` API was not returning a proper range on hidden editors in Firefox. #TINY-9259
