@@ -1,5 +1,6 @@
 import { AlloyComponent, Gui } from '@ephox/alloy';
 import { Optional, Singleton } from '@ephox/katamari';
+import { Compare } from '@ephox/sugar';
 
 export interface SinkAndMothership {
   readonly sink: AlloyComponent;
@@ -23,13 +24,12 @@ export interface LazyUiReferences {
   readonly popupUi: Singleton.Value<SinkAndMothership>;
   readonly mainUi: Singleton.Value<MainUi>;
 
-  // TINY-9226: We abstract over all "UI Motherships" for things like
+  // We abstract over all "UI Motherships" for things like
   // * showing / hiding on editor focus/blur
   // * destroying on remove
   // * broadcasting events for dismissing popups on mousedown etc.
+  // Unless ui_of_tomorrow is set, there will only be one UI mothership
   readonly getUiMotherships: () => Array<Gui.GuiSystem>;
-
-  readonly setupDialogUi: (ui: { sink: AlloyComponent; mothership: Gui.GuiSystem }) => void;
 
   readonly lazyGetInOuterOrDie: <A>(label: string, f: (oc: AlloyComponent) => Optional<A>) => () => A;
 }
@@ -39,10 +39,6 @@ export const LazyUiReferences = (): LazyUiReferences => {
   const popupUi = Singleton.value<SinkAndMothership>();
   const mainUi = Singleton.value<{ mothership: Gui.GuiSystem; outerContainer: AlloyComponent }>();
 
-  const setupDialogUi = (ui: SinkAndMothership): void => {
-    dialogUi.set(ui);
-  };
-
   const lazyGetInOuterOrDie = <A>(label: string, f: (oc: AlloyComponent) => Optional<A>): () => A =>
     () => mainUi.get().bind(
       (oc) => f(oc.outerContainer)
@@ -50,16 +46,25 @@ export const LazyUiReferences = (): LazyUiReferences => {
       `Could not find ${label} element in OuterContainer`
     );
 
+  // TINY-9226: If the motherships are the same, return just the dialog Ui of them (ui_of_tomorrow = false mode)
+  const getUiMotherships = () => {
+    const optDialogMothership = dialogUi.get().map((ui) => ui.mothership);
+    const optPopupMothership = popupUi.get().map((ui) => ui.mothership);
+
+    return optDialogMothership.fold(
+      () => optPopupMothership.toArray(),
+      (dm) => optPopupMothership.fold(
+        () => [ dm ],
+        (pm) => Compare.eq(dm.element, pm.element) ? [ dm ] : [ dm, pm ]
+      )
+    );
+  };
+
   return {
     dialogUi,
     popupUi,
     mainUi,
-
-    // TINY-9226: We need to return the popup mothership here once it has been added to the code
-    getUiMotherships: () => [
-      ...dialogUi.get().map((e) => e.mothership).toArray()
-    ],
-    setupDialogUi,
+    getUiMotherships,
     lazyGetInOuterOrDie
   };
 };

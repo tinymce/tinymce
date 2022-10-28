@@ -84,11 +84,13 @@ const setupEvents = (editor: Editor, uiRefs: ReadyUiReferences) => {
   });
 };
 
-// TINY-9226: When introducing two sinks, the dialog mothership should be attached to the ui
-// root, and the popup mothership should be attached *after* (or before) the main mothership
-const attachUiMotherships = (uiRoot: SugarElement<HTMLElement | ShadowRoot>, uiRefs: ReadyUiReferences) => {
-  // We only have one sink currently, until TINY-9226 is completed.
-  // Add the dialog sink to the ui root
+// TINY-9226: When set, the `ui_of_tomorrow` option will create two different sinks (one for popups and one for sinks)
+// and the popup sink will be placed adjacent to the editor. This will make it having the same scrolling ancestry.
+const attachUiMotherships = (editor: Editor, uiRoot: SugarElement<HTMLElement | ShadowRoot>, uiRefs: ReadyUiReferences) => {
+  if (Options.isUiOfTomorrow(editor)) {
+    Attachment.attachSystemAfter(uiRefs.mainUi.mothership.element, uiRefs.popupUi.mothership);
+  }
+  // In UiRefs, dialogUi and popupUi refer to the same thing if ui_of_tomorrow is false
   Attachment.attachSystem(uiRoot, uiRefs.dialogUi.mothership);
 };
 
@@ -103,7 +105,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   const uiRoot = SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(eTargetNode));
 
   Attachment.attachSystemAfter(eTargetNode, mainUi.mothership);
-  attachUiMotherships(uiRoot, uiRefs);
+  attachUiMotherships(editor, uiRoot, uiRefs);
 
   editor.on('PostRender', () => {
     // Set the sidebar before the toolbar and menubar

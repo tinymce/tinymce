@@ -110,5 +110,7 @@ export {
   pWaitForDialog,
   pWaitForPopup,
   pWaitForUi,
-  pTriggerContextMenu
+  pTriggerContextMenu,
+
+  getUiRoot
 };
