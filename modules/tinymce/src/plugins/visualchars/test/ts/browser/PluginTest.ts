@@ -14,7 +14,7 @@ describe('browser.tinymce.plugins.visualchars.PluginTest', () => {
     plugins: 'visualchars',
     toolbar: 'visualchars',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin ]);
+  }, [ Plugin ], true);
 
   it('TBA: Set content, click visual chars button and assert span char is present in whitespaces, click the button again and assert no span is present in the whitespace', async () => {
     const editor = hook.editor();
