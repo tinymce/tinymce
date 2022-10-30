@@ -7,7 +7,11 @@ import * as NodeType from '../dom/NodeType';
 
 export const transparentBlockAttr = 'data-mce-block';
 
-const makeSelectorFromSchemaMap = (map: SchemaMap) => Arr.filter(Obj.keys(map), (key) => /^[a-z]+$/.test(key)).join(',');
+// Returns the lowercase element names form a SchemaMap by excluding anyone that has uppercase letters.
+// This method is to avoid having to specify all possible valid characters other than lowercase a-z such as '-' or ':' etc.
+export const elementNames = (map: SchemaMap): string[] => Arr.filter(Obj.keys(map), (key) => !/[A-Z]/.test(key));
+
+const makeSelectorFromSchemaMap = (map: SchemaMap) => elementNames(map).join(',');
 
 const updateTransparent = (blocksSelector: string, transparent: Element) => {
   if (Type.isNonNullable(transparent.querySelector(blocksSelector))) {

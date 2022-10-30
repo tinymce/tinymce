@@ -1,9 +1,10 @@
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import * as TransparentElements from 'tinymce/core/content/TransparentElements';
 
 import * as HtmlUtils from '../module/test/HtmlUtils';
 
@@ -121,7 +122,7 @@ describe('browser.tinymce.core.ForceBlocksTest', () => {
   context('Transparent elements', () => {
     it('TINY-9172: Do not wrap root level transparent elements if they blocks inside', () => {
       const editor = hook.editor();
-      const transparentElements = Arr.filter(Obj.keys(editor.schema.getTransparentElements()), (name) => /^[a-z]+$/.test(name));
+      const transparentElements = TransparentElements.elementNames(editor.schema.getTransparentElements());
       const transparentElementsHtml = Arr.map(transparentElements, (name) => `<${name} data-mce-block="true"><p>text</p></${name}>`).join('');
       const innerHtml = 'text' + transparentElementsHtml;
       const expectedInnerHtml = '<p>text</p>' + transparentElementsHtml;
@@ -134,7 +135,7 @@ describe('browser.tinymce.core.ForceBlocksTest', () => {
 
     it('TINY-9172: Wrap root level transparent elements if they do not have blocks inside', () => {
       const editor = hook.editor();
-      const transparentElements = Arr.filter(Obj.keys(editor.schema.getTransparentElements()), (name) => /^[a-z]+$/.test(name));
+      const transparentElements = TransparentElements.elementNames(editor.schema.getTransparentElements());
       const transparentElementsHtml = Arr.map(transparentElements, (name) => `<${name}>text</${name}>`).join('');
       const innerHtml = 'text' + transparentElementsHtml;
       const expectedInnerHtml = `<p>text${transparentElementsHtml}</p>`;
