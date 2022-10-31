@@ -30,6 +30,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         const backgroundDialog = await TinyUiActions.pWaitForDialog(editor);
         const backgroundDialogResult = UiFinder.findIn<HTMLInputElement>(backgroundDialog, 'label:contains("#") + input').getOrDie();
         await Waiter.pTryUntil('Dialog should start with the right color', () => assert.equal(backgroundDialogResult.dom.value, '80FF80'));
+        TinyUiActions.cancelDialog(editor);
       });
 
       it('TINY-9213: Color detected on color, foreground', async () => {
@@ -41,6 +42,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         const textDialog = await TinyUiActions.pWaitForDialog(editor);
         const textDialogResult = UiFinder.findIn<HTMLInputElement>(textDialog, 'label:contains("#") + input').getOrDie();
         await Waiter.pTryUntil('Dialog should start with the right color', () => assert.equal(textDialogResult.dom.value, 'FFC0CB'));
+        TinyUiActions.cancelDialog(editor);
       });
     });
 
@@ -151,6 +153,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         const backgroundDialog = await TinyUiActions.pWaitForDialog(editor);
         const backgroundDialogResult = UiFinder.findIn<HTMLInputElement>(backgroundDialog, 'label:contains("#") + input').getOrDie();
         await Waiter.pTryUntil('Dialog should start with the right color', () => assert.equal(backgroundDialogResult.dom.value, '00FF00'));
+        TinyUiActions.cancelDialog(editor);
       });
 
       it('TINY-9213: Color detected on color, foreground', async () => {
@@ -162,6 +165,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         const textDialog = await TinyUiActions.pWaitForDialog(editor);
         const textDialogResult = UiFinder.findIn<HTMLInputElement>(textDialog, 'label:contains("#") + input').getOrDie();
         await Waiter.pTryUntil('Dialog should start with the right color', () => assert.equal(textDialogResult.dom.value, 'FF00FF'));
+        TinyUiActions.cancelDialog(editor);
       });
 
       it('TINY-6952: Submitting an invalid hex color code will show an alert with an error message', async () => {
