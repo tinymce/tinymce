@@ -128,7 +128,7 @@ const EditorManager: EditorManager = {
   baseURL: null as any,
 
   /**
-   * Default options for TinyMCE.
+   * Object which contains required, and user-specific, default values for cloud-related options.
    *
    * @property defaultOptions
    * @type Object
