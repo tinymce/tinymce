@@ -309,13 +309,29 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
         const caretPosition = CaretUtils.getNormalizedRangeEndPoint(dir, rootNode, range);
 
         const beforeNode = caretPosition.getNode(!forward);
-        if (isFakeCaretTarget(beforeNode)) {
-          return showCaret(dir, beforeNode, forward ? !caretPosition.isAtEnd() : false, false);
+        if (Type.isNonNullable(beforeNode)) {
+          if (isFakeCaretTarget(beforeNode)) {
+            return showCaret(dir, beforeNode, forward ? !caretPosition.isAtEnd() : false, false);
+          }
+          if (CaretContainer.isCaretContainerInline(beforeNode) && NodeType.isContentEditableFalse(beforeNode.nextSibling)) {
+            const rng = dom.createRng();
+            rng.setStart(beforeNode, 0);
+            rng.setEnd(beforeNode, 0);
+            return rng;
+          }
         }
 
         const afterNode = caretPosition.getNode(forward);
-        if (isFakeCaretTarget(afterNode)) {
-          return showCaret(dir, afterNode, forward ? false : !caretPosition.isAtEnd(), false);
+        if (Type.isNonNullable(afterNode)) {
+          if (isFakeCaretTarget(afterNode)) {
+            return showCaret(dir, afterNode, forward ? false : !caretPosition.isAtEnd(), false);
+          }
+          if (CaretContainer.isCaretContainerInline(afterNode) && NodeType.isContentEditableFalse(afterNode.previousSibling)) {
+            const rng = dom.createRng();
+            rng.setStart(afterNode, 1);
+            rng.setEnd(afterNode, 1);
+            return rng;
+          }
         }
       }
 
