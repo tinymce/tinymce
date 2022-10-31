@@ -55,7 +55,7 @@ const schema = Fun.constant([
     Focusing, Representing, Streaming, Keying, Toggling, Coupling
   ]),
 
-  FieldSchema.customField('lazyTypeaheadComp', () => Cell(Optional.none)),
+  FieldSchema.customField('lazyTypeaheadComp', () => Cell(Optional.none())),
 
   FieldSchema.customField('previewing', () => Cell(true))
 ].concat(

@@ -1,13 +1,11 @@
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Focusing, GuiFactory, Keying, Memento, Replacing, SketchSpec, Typeahead } from '@ephox/alloy';
-import { TypeaheadData } from '@ephox/alloy/src/main/ts/ephox/alloy/ui/types/TypeaheadTypes';
-import { Arr, Cell, Fun, Future, Optional } from '@ephox/katamari';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Focusing, Keying, Representing, SketchSpec, SystemEvents, Typeahead } from '@ephox/alloy';
+import { Arr, Cell, Fun, Future, Id, Optional } from '@ephox/katamari';
 import { Focus, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
-import { renderLabel } from '../../button/ButtonSlices';
 import { onControlAttached, onControlDetached } from '../../controls/Controls';
 import { updateMenuText, UpdateMenuTextEvent } from '../../dropdown/CommonDropdown';
 import ItemResponse from '../../menus/item/ItemResponse';
@@ -15,20 +13,16 @@ import * as MenuParts from '../../menus/menu/MenuParts';
 import * as NestedMenus from '../../menus/menu/NestedMenus';
 import { SingleMenuItemSpec } from '../../menus/menu/SingleMenuTypes';
 import { onSetupEvent } from '../ControlUtils';
-import { SelectSpec } from './BespokeSelect';
+import { SelectTypeaheadSpec } from './BespokeSelect';
 
 interface BespokeSelectApi {
   readonly getComponent: () => AlloyComponent;
 }
 
-const createTypeaheadButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec): SketchSpec => {
-  const optMemDisplayText = spec.text.map(
-    (text) => Memento.record(renderLabel(text, '', backstage.shared.providers))
-  );
+const createTypeaheadButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectTypeaheadSpec): SketchSpec => {
   const data: SingleMenuItemSpec[] = spec.dataset.type === 'basic'
     ? []
     : Arr.map(spec.dataset.getData(), (item): Menu.ToggleMenuItemSpec => ({ type: 'togglemenuitem', text: item.title, onAction: (api) => {
-      // it seems to work only with click :(
       if (item.type === 'formatter') {
         spec.onAction(item)(api);
       }
@@ -41,6 +35,8 @@ const createTypeaheadButton = (editor: Editor, backstage: UiFactoryBackstage, sp
   const getApi = (comp: AlloyComponent): BespokeSelectApi => ({ getComponent: Fun.constant(comp) });
   const editorOffCell = Cell(Fun.noop);
 
+  const customEvents = Id.generate('custom-events');
+
   const typeahead = Typeahead.sketch({
     minChars: 1,
     responseTime: 0.1,
@@ -52,18 +48,21 @@ const createTypeaheadButton = (editor: Editor, backstage: UiFactoryBackstage, sp
     },
     model: {
       selectsOver: true,
-      getDisplayText: (itemData: TypeaheadData) => itemData.meta && itemData.meta.text ? itemData.meta.text : 'No.text',
+      getDisplayText: (itemData: any) => itemData.meta && itemData.meta.text ? itemData.meta.text : 'No.text',
       populateFromBrowse: true,
     },
     typeaheadBehaviours: Behaviour.derive([
-      AddEventsBehaviour.config('typeaheadevents', [
+      AddEventsBehaviour.config(customEvents, [
         onControlAttached({ onSetup, getApi }, editorOffCell),
         onControlDetached({ getApi }, editorOffCell)
       ]),
       AddEventsBehaviour.config('menubutton-update-display-text', [
         AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
-          optMemDisplayText.bind((mem) => mem.getOpt(comp)).each((displayText) => {
-            Replacing.set(displayText, [ GuiFactory.text(backstage.shared.providers.translate(se.event.text)) ]);
+          Representing.setValue(comp, {
+            meta: {
+              text: se.event.text,
+              format: se.event.format
+            }
           });
         })
       ])
@@ -81,11 +80,14 @@ const createTypeaheadButton = (editor: Editor, backstage: UiFactoryBackstage, sp
       return Future.pure(optTieredData);
     },
     onExecute: (sandbox, item, value) => {
-      // it seems to not work
-      // eslint-disable-next-line no-console
-      console.log('onExecute: ', sandbox, item, value);
+      // it should have format in the value
+      spec.onTypeaheadSelection(value);
     },
-    lazySink: backstage.shared.getSink
+    lazySink: backstage.shared.getSink,
+    eventOrder: {
+      [SystemEvents.attachedToDom()]: [ 'typeaheadevents', customEvents ],
+      [SystemEvents.detachedFromDom()]: [ 'streaming', customEvents, 'typeaheadevents' ]
+    }
   });
 
   return {
@@ -94,10 +96,7 @@ const createTypeaheadButton = (editor: Editor, backstage: UiFactoryBackstage, sp
       tag: 'div',
       classes: [ 'typeahead-wrapper' ],
     },
-    components: [
-      // ...componentRenderPipeline([ optMemDisplayText.map((mem) => mem.asSpec()) ]),
-      typeahead
-    ],
+    components: [ typeahead ],
     behaviours: Behaviour.derive([
       Focusing.config({}),
       Keying.config({

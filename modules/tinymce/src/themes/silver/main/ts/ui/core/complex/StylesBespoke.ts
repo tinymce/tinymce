@@ -8,7 +8,7 @@ import * as Options from '../../../api/Options';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { onActionToggleFormat } from '../ControlUtils';
-import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
+import { createMenuItems, createSelectButton, SelectSpec, SelectTypeaheadSpec } from './BespokeSelect';
 import { createTypeaheadButton } from './BespokeTypeahead';
 import { AdvancedSelectDataset, BasicSelectItem, SelectDataset } from './SelectDatasets';
 import { getStyleFormats, isFormatReference, isNestedFormat, StyleFormatType } from './StyleFormat';
@@ -60,6 +60,54 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
   } as SelectSpec;
 };
 
+const getSpecTypeahead = (editor: Editor, dataset: SelectDataset): SelectTypeaheadSpec => {
+  const fallbackFormat = 'Paragraph';
+
+  const isSelectedFor = (format: string) => () => editor.formatter.match(format);
+
+  const getPreviewFor = (format: string) => () => {
+    const fmt = editor.formatter.get(format);
+    return fmt !== undefined ? Optional.some({
+      tag: fmt.length > 0 ? (fmt[0] as InlineFormat).inline || (fmt[0] as BlockFormat).block || 'div' : 'div',
+      styles: editor.dom.parseStyle(editor.formatter.getCssText(format))
+    }) : Optional.none();
+  };
+
+  const updateSelectMenuText = (comp: AlloyComponent) => {
+    const getFormatItems = (fmt: StyleFormatType): BasicSelectItem[] => {
+      if (isNestedFormat(fmt)) {
+        return Arr.bind(fmt.items, getFormatItems);
+      } else if (isFormatReference(fmt)) {
+        return [{ title: fmt.title, format: fmt.format }];
+      } else {
+        return [];
+      }
+    };
+    const flattenedItems = Arr.bind(getStyleFormats(editor), getFormatItems);
+    const detectedFormat = findNearest(editor, Fun.constant(flattenedItems));
+    const text = detectedFormat.fold(Fun.constant(fallbackFormat), (fmt) => fmt.title);
+    AlloyTriggers.emitWith(comp, updateMenuText, {
+      text,
+      // format: detectedFormat
+    });
+  };
+
+  return {
+    tooltip: 'Formats',
+    text: Optional.some(fallbackFormat),
+    icon: Optional.none(),
+    isSelectedFor,
+    getCurrentValue: Optional.none,
+    getPreviewFor,
+    onAction: onActionToggleFormat(editor),
+    onTypeaheadSelection: (rawItem) => onActionToggleFormat(editor)(rawItem)(),
+    updateText: updateSelectMenuText,
+    shouldHide: Options.shouldAutoHideStyleFormats(editor) || false,
+    isInvalid: (item) => !editor.formatter.canApply(item.format),
+    dataset
+  };
+};
+
 const createStylesButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec => {
   const dataset: AdvancedSelectDataset = { type: 'advanced', ...backstage.styles };
   return createSelectButton(editor, backstage, getSpec(editor, dataset));
@@ -67,7 +115,7 @@ const createStylesButton = (editor: Editor, backstage: UiFactoryBackstage): Sket
 
 const createStylesTypeahead = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec => {
   const dataset: AdvancedSelectDataset = { type: 'advanced', ...backstage.styles };
-  return createTypeaheadButton(editor, backstage, getSpec(editor, dataset));
+  return createTypeaheadButton(editor, backstage, getSpecTypeahead(editor, dataset));
 };
 
 const createStylesMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {

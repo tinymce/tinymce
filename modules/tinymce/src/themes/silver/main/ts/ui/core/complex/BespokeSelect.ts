@@ -68,6 +68,10 @@ export interface SelectSpec {
   readonly dataset: SelectDataset;
 }
 
+export interface SelectTypeaheadSpec extends SelectSpec {
+  readonly onTypeaheadSelection: (item: FormatterFormatItem) => void;
+}
+
 interface BespokeSelectApi {
   readonly getComponent: () => AlloyComponent;
 }
