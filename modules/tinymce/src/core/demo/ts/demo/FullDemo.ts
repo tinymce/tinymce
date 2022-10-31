@@ -51,7 +51,7 @@ export default (): void => {
         },
       ],
       onShow: (api) => {
-        api.getContainer().innerHTML = '<textarea style="width: 100%; height: 100%; border: 1px solid black">Hello world!</textarea>';
+        api.getContainer().innerHTML = '<div style="height: 100%"><textarea class="tox-view__pane_panel" style="width: 100%; height: 100%">Hello world!</textarea></div>';
       },
       onHide: (api) => {
         console.log('Deactivate code', api.getContainer());

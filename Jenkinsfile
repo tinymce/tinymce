@@ -1,7 +1,9 @@
 #!groovy
-@Library('waluigi@v4.5.0') _
+@Library('waluigi@release/7') _
 
-def runTests(name, bedrockCommand, runAll) {
+standardProperties()
+
+def runTests(String name, String bedrockCommand, Boolean runAll) {
   // Clean out the old XML files before running tests, since we junit import *.XML files
   dir('scratch') {
     if (isUnix()) {
@@ -12,18 +14,20 @@ def runTests(name, bedrockCommand, runAll) {
   }
 
   def command = runAll ? bedrockCommand + ' --ignore-lerna-changed=true' : bedrockCommand
-  def successfulTests = execHandle(command)
+  def testStatus = exec(script: command, returnStatus: true)
 
-  echo "Writing JUnit results for " + name + " on node: $NODE_NAME"
+  echo "Writing JUnit results for ${name} on node: $NODE_NAME"
   junit allowEmptyResults: true, testResults: 'scratch/TEST-*.xml'
 
-  if (!successfulTests) {
-    echo "Tests failed for " + name + " so passing failure as exit code for node: $NODE_NAME"
-    exec("exit 1")
+  // If the tests failed (exit code 4) then just mark it as unstable
+  if (testStatus == 4) {
+    unstable("Tests failed for ${name}")
+  } else if (testStatus != 0) {
+    error("Unexpected error running tests for ${name} so passing failure as exit code")
   }
 }
 
-def runBrowserTests(name, browser, os, bucket, buckets, runAll) {
+def runBrowserTests(String name, String browser, String os, Integer bucket, Integer buckets, Boolean runAll) {
   def bedrockCommand =
     "yarn grunt browser-auto" +
       " --chunk=400" +
@@ -35,15 +39,13 @@ def runBrowserTests(name, browser, os, bucket, buckets, runAll) {
   runTests(name, bedrockCommand, runAll);
 }
 
-def runHeadlessTests(runAll) {
+def runHeadlessTests(Boolean runAll) {
   def bedrockCommand = "yarn grunt headless-auto";
   runTests("chrome-headless", bedrockCommand, runAll);
 }
 
-standardProperties()
-
 def gitMerge(String primaryBranch) {
-  if (BRANCH_NAME != primaryBranch) {
+  if (env.BRANCH_NAME != primaryBranch) {
     echo "Merging ${primaryBranch} into this branch to run tests"
     exec("git merge --no-commit --no-ff origin/${primaryBranch}")
   }
@@ -57,20 +59,20 @@ node("headless-macos") {
 
     def primaryBranch = props.primaryBranch
     assert primaryBranch != null && primaryBranch != ""
-    def runAllTests = BRANCH_NAME == primaryBranch
+    def runAllTests = env.BRANCH_NAME == primaryBranch
 
-    stage ("Merge") {
+    stage("Merge") {
       // cancel build if primary branch doesn't merge cleanly
       gitMerge(primaryBranch)
     }
 
-    def browserPermutations = [
-      [ name: "win10Chrome", os: "windows-10", browser: "chrome", buckets: 1 ],
-      [ name: "win10FF", os: "windows-10", browser: "firefox", buckets: 1 ],
-      [ name: "win10Edge", os: "windows-10", browser: "MicrosoftEdge", buckets: 1 ],
-      [ name: "macSafari", os: "macos", browser: "safari", buckets: 1 ],
-      [ name: "macChrome", os: "macos", browser: "chrome", buckets: 1 ],
-      [ name: "macFirefox", os: "macos", browser: "firefox", buckets: 1 ]
+    def platforms = [
+      [ os: "windows", browser: "chrome" ],
+      [ os: "windows", browser: "firefox" ],
+      [ os: "windows", browser: "MicrosoftEdge" ],
+      [ os: "macos", browser: "safari" ],
+      [ os: "macos", browser: "chrome" ],
+      [ os: "macos", browser: "firefox" ]
     ]
 
     def cleanAndInstall = {
@@ -82,34 +84,35 @@ node("headless-macos") {
     def processes = [:]
 
     // Browser tests
-    for (int i = 0; i < browserPermutations.size(); i++) {
-      def permutation = browserPermutations.get(i)
+    for (int i = 0; i < platforms.size(); i++) {
+      def platform = platforms.get(i)
 
-      def buckets = permutation.buckets
+      def buckets = platform.buckets ?: 1
       for (int bucket = 1; bucket <= buckets; bucket++) {
         def suffix = buckets == 1 ? "" : "-" + bucket
 
         // closure variable - don't inline
         def c_bucket = bucket
 
-        processes[permutation.name + suffix] = {
-          stage (permutation.os + " " + permutation.browser + suffix) {
-            node("bedrock-" + permutation.os) {
-              echo "name: " + permutation.name + " bucket: " + c_bucket + "/" + buckets
-              echo "Node checkout on node $NODE_NAME"
-              checkout scm
+        def name = "${platform.os}-${platform.browser}${suffix}"
+
+        processes[name] = {
+          stage(name) {
+            node("bedrock-${platform.os}") {
+              echo("Bedrock tests for ${name}")
+
+              echo("Checking out code on build node: $NODE_NAME")
+              checkout(scm)
 
               // windows tends to not have username or email set
-              exec("git config user.email \"local@build.node\"")
-              exec("git config user.name \"irrelevant\"")
-
+              tinyGit.addAuthorConfig()
               gitMerge(primaryBranch)
 
               cleanAndInstall()
               exec("yarn ci")
 
-              echo "Platform: browser tests for " + permutation.name + " on node: $NODE_NAME"
-              runBrowserTests(permutation.name, permutation.browser, permutation.os, c_bucket, buckets, runAllTests)
+              echo("Running browser tests")
+              runBrowserTests(name, platform.browser, platform.os, c_bucket, buckets, runAllTests)
             }
           }
         }
@@ -117,7 +120,7 @@ node("headless-macos") {
     }
 
     processes["headless-and-archive"] = {
-      stage ("headless tests") {
+      stage("headless tests") {
         // Prevent multiple headless tests running at once
         lock("headless tests") {
           // chrome-headless tests run on the same node as the pipeline
@@ -128,8 +131,8 @@ node("headless-macos") {
         }
       }
 
-      if (BRANCH_NAME != primaryBranch) {
-        stage ("Archive Build") {
+      if (env.BRANCH_NAME != primaryBranch) {
+        stage("Archive Build") {
           exec("yarn tinymce-grunt prodBuild symlink:js")
           archiveArtifacts artifacts: 'js/**', onlyIfSuccessful: true
         }
@@ -138,20 +141,20 @@ node("headless-macos") {
 
     // our linux nodes have multiple executors, sometimes yarn creates conflicts
     lock("Don't run yarn simultaneously") {
-      stage ("Install tools") {
+      stage("Install tools") {
         cleanAndInstall()
       }
     }
 
-    stage ("Type check") {
+    stage("Type check") {
       exec("yarn ci-all")
     }
 
-    stage ("Moxiedoc check") {
+    stage("Moxiedoc check") {
       exec("yarn tinymce-grunt shell:moxiedoc")
     }
 
-    stage ("Run Tests") {
+    stage("Run Tests") {
       grunt("list-changed-headless list-changed-browser")
       // Run all the tests in parallel
       parallel processes

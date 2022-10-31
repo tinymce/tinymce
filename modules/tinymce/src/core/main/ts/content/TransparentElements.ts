@@ -7,7 +7,11 @@ import * as NodeType from '../dom/NodeType';
 
 export const transparentBlockAttr = 'data-mce-block';
 
-const makeSelectorFromSchemaMap = (map: SchemaMap) => Arr.filter(Obj.keys(map), (key) => /^[a-z]+$/.test(key)).join(',');
+// Returns the lowercase element names form a SchemaMap by excluding anyone that has uppercase letters.
+// This method is to avoid having to specify all possible valid characters other than lowercase a-z such as '-' or ':' etc.
+export const elementNames = (map: SchemaMap): string[] => Arr.filter(Obj.keys(map), (key) => !/[A-Z]/.test(key));
+
+const makeSelectorFromSchemaMap = (map: SchemaMap) => elementNames(map).join(',');
 
 const updateTransparent = (blocksSelector: string, transparent: Element) => {
   if (Type.isNonNullable(transparent.querySelector(blocksSelector))) {
@@ -46,16 +50,18 @@ export const updateCaret = (schema: Schema, root: Element, caretParent: Element)
   );
 };
 
+export const hasBlockAttr = (el: Element): boolean => el.hasAttribute(transparentBlockAttr);
+
 export const isTransparentElementName = (schema: Schema, name: string): boolean => Obj.has(schema.getTransparentElements(), name);
 
 const isTransparentElement = (schema: Schema, node: Node | null | undefined): node is Element =>
   NodeType.isElement(node) && isTransparentElementName(schema, node.nodeName);
 
 export const isTransparentBlock = (schema: Schema, node: Node | null | undefined): node is Element =>
-  isTransparentElement(schema, node) && node.hasAttribute(transparentBlockAttr);
+  isTransparentElement(schema, node) && hasBlockAttr(node);
 
 export const isTransparentInline = (schema: Schema, node: Node | null | undefined): node is Element =>
-  isTransparentElement(schema, node) && !node.hasAttribute(transparentBlockAttr);
+  isTransparentElement(schema, node) && !hasBlockAttr(node);
 
 export const isTransparentAstBlock = (schema: Schema, node: AstNode): boolean =>
   node.type === 1 && isTransparentElementName(schema, node.name) && Type.isString(node.attr(transparentBlockAttr));
