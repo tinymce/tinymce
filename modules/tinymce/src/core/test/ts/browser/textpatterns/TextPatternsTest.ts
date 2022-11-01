@@ -303,4 +303,21 @@ describe('browser.tinymce.core.textpatterns.TextPatternsTest', () => {
 
     editor.options.unset('text_patterns');
   });
+
+  it('TINY-9193: should move the caret to the next line after the Enter key pressed', () => {
+    const editor = hook.editor();
+    editor.options.set('text_patterns', [
+      { start: '~', end: '~', cmd: 'mceInsertContent', value: 'world' }
+    ]);
+    editor.setContent('<p>Hello</p><p>~test~</p>');
+    TinySelections.setCursor(editor, [ 1, 0 ], 6 );
+    TinyContentActions.keystroke(editor, Keys.enter());
+    TinyAssertions.assertContentPresence(editor, {
+      p: 3
+    });
+    // actual content: <p>Hello</p><p>world</p><p>&nbsp;</p>
+    TinyAssertions.assertCursor(editor, [ 2 ], 0);
+
+    editor.options.unset('text_patterns');
+  });
 });
