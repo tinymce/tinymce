@@ -1,6 +1,7 @@
+import { Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
-import { McEditor } from '@ephox/wrap-mcagar';
+import { Arr, Singleton } from '@ephox/katamari';
+import { McEditor, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -67,5 +68,44 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest',
     it('TINY-6032: Multiple toolbars (inline)', () =>
       pTestToggle({ toolbar: [ 'undo redo', 'bold italic' ], inline: true }, false)
     );
+  });
+
+  const pTestEvent = async (toolbarMode: ToolbarMode, command: (editor: Editor) => void) => {
+    const editor = await McEditor.pFromSettings<Editor>({
+      menubar: false,
+      statusbar: false,
+      width: 200,
+      toolbar_mode: toolbarMode,
+      base_url: '/project/tinymce/js/tinymce'
+    });
+    editor.focus();
+
+    const lastState = Singleton.value<boolean>();
+    lastState.set(false);
+    await UiUtils.pWaitForEditorToRender();
+
+    editor.on('ToggleToolbarDrawer', (options: { isToolbarDrawerToggled: boolean }) => {
+      lastState.set(options.isToolbarDrawerToggled);
+    });
+
+    assert.isFalse(lastState.get().getOrDie('Should be set'));
+    command(editor);
+    await Waiter.pWait(10);
+    assert.isTrue(lastState.get().getOrDie('Should be set'));
+    command(editor);
+    await Waiter.pWait(10);
+    assert.isFalse(lastState.get().getOrDie('Should be set'));
+    McEditor.remove(editor);
+  };
+
+  context(`Should emit 'ToogleToolbarDrawer' event when toggled`, () => {
+    Arr.each<ToolbarMode>([ 'floating', 'sliding' ], (toolbarMode) => {
+      it(`TINY-9271: Emits 'ToggleToolbarDrawer' in ${toolbarMode} via execCommand`, async () => {
+        await pTestEvent(toolbarMode, (editor) => editor.execCommand('ToggleToolbarDrawer'));
+      });
+      it(`TINY-9271: Emits 'ToggleToolbarDrawer' in ${toolbarMode} via user click`, async () => {
+        await pTestEvent(toolbarMode, (editor) => TinyUiActions.clickOnToolbar(editor, 'button[title="More..."]'));
+      });
+    });
   });
 });

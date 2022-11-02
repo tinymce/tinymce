@@ -24,7 +24,8 @@ const schema = Fun.constant([
   FieldSchema.optionObjOf('fireDismissalEventInstead', [
     FieldSchema.defaulted('event', SystemEvents.dismissRequested())
   ]),
-  AnchorLayouts.schema()
+  AnchorLayouts.schema(),
+  Fields.onHandler('onToggled'),
 ]);
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
@@ -42,7 +43,8 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
           aria: {
             mode: 'expanded'
           },
-          toggleOnExecute: false
+          toggleOnExecute: false,
+          onToggled: (_api, state) => detail.onToggled(state)
         })
       ])
     })

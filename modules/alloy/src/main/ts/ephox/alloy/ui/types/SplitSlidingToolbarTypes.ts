@@ -14,6 +14,7 @@ export interface SplitSlidingToolbarDetail extends SplitToolbarBaseDetail {
 
   onOpened: (comp: AlloyComponent) => void;
   onClosed: (comp: AlloyComponent) => void;
+  onToggled: (state: boolean) => void;
 }
 
 export interface SplitSlidingToolbarSpec extends SplitToolbarBaseSpec {
@@ -27,6 +28,7 @@ export interface SplitSlidingToolbarSpec extends SplitToolbarBaseSpec {
 
   onOpened?: (comp: AlloyComponent) => void;
   onClosed?: (comp: AlloyComponent) => void;
+  onToggled?: (state: boolean) => void;
 
   parts: {
     'overflow-group': Partial<ToolbarGroupSpec>;

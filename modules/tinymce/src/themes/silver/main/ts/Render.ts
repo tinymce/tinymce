@@ -165,6 +165,9 @@ const setup = (editor: Editor): RenderInfo => {
       onEscape: () => {
         editor.focus();
       },
+      onToolbarToggled: (state: boolean) => {
+        editor.dispatch('ToggleToolbarDrawer', { isToolbarDrawerToggled: state });
+      },
       type: toolbarMode,
       lazyToolbar,
       lazyHeader: () => lazyHeader().getOrDie('Could not find header element'),
@@ -423,7 +426,6 @@ const setup = (editor: Editor): RenderInfo => {
 
     editor.addCommand('ToggleToolbarDrawer', () => {
       OuterContainer.toggleToolbarDrawer(outerContainer);
-      // TODO: Consider firing event - TINY-6371
     });
 
     editor.addQueryStateHandler('ToggleToolbarDrawer', () => OuterContainer.isToolbarDrawerToggled(outerContainer));

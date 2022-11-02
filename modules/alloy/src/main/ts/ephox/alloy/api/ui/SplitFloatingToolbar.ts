@@ -50,7 +50,8 @@ const factory: CompositeSketchFactory<SplitFloatingToolbarDetail, SplitFloatingT
       parts: {
         button: externals['overflow-button'](),
         toolbar: externals.overflow()
-      }
+      },
+      onToggled: detail.onToggled,
     })
   );
 

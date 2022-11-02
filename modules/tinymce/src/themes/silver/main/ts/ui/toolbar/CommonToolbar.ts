@@ -34,6 +34,7 @@ export interface ToolbarSpec {
 export interface MoreDrawerToolbarSpec extends ToolbarSpec {
   readonly getSink: () => Result<AlloyComponent, string>;
   readonly moreDrawerData: MoreDrawerData;
+  readonly onToggled: (state: boolean) => void;
 }
 
 export interface ToolbarGroup {
@@ -161,7 +162,8 @@ const renderFloatingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec): SketchSp
     components: [ primary ],
     markers: {
       overflowToggledClass: ToolbarButtonClasses.Ticked
-    }
+    },
+    onToggled: toolbarSpec.onToggled,
   });
 };
 
@@ -199,7 +201,8 @@ const renderSlidingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec): SketchSpe
     onClosed: (comp) => {
       // TINY-9223: This will only broadcast to the same mothership as the toolbar
       comp.getSystem().broadcastOn([ Channels.toolbarHeightChange() ], { type: 'closed' });
-    }
+    },
+    onToggled: toolbarSpec.onToggled,
   });
 };
 

@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- Added `ToggleToolbarDrawer` event to subscribe to toolbar's opening and closing. #TINY-9271
+
 ### Removed
 - Moved `TestStore` to Agar. #TINY-9157
 

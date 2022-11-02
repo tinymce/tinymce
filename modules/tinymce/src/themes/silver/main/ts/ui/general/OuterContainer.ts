@@ -22,12 +22,14 @@ export interface OuterContainerSketchSpec extends Sketcher.CompositeSketchSpec {
   readonly dom: RawDomSchema;
   readonly components: AlloySpec[];
   readonly behaviours: Behaviour.AlloyBehaviourRecord;
+  readonly onToolbarToggled?: (state: boolean) => void;
 }
 
 export interface OuterContainerSketchDetail extends Sketcher.CompositeSketchDetail {
   readonly dom: RawDomSchema;
   readonly uid: string;
   readonly behaviours: Behaviour.AlloyBehaviourRecord;
+  readonly onToolbarToggled: (state: boolean) => void;
 }
 
 export interface OuterContainerSketch extends Sketcher.CompositeSketch<OuterContainerSketchSpec>, OuterContainerApis {
@@ -49,6 +51,7 @@ interface ToolbarSketchSpec extends MoreDrawerData {
   readonly type: ToolbarMode;
   readonly getSink: () => Result<AlloyComponent, string>;
   readonly providers: UiFactoryBackstageProviders;
+  readonly onToolbarToggled: (state: boolean) => void;
 }
 
 interface OuterContainerApis {
@@ -274,6 +277,7 @@ const partToolbar = Composite.partType.optional<OuterContainerSketchDetail, Tool
           spec.onEscape();
           return Optional.some(true);
         },
+        onToggled: spec.onToolbarToggled,
         cyclicKeying: false,
         initGroups: [],
         getSink: spec.getSink,

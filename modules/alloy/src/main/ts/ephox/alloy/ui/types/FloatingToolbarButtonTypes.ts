@@ -19,6 +19,8 @@ export interface FloatingToolbarButtonDetail extends CompositeSketchDetail, HasL
   markers: {
     toggledClass: string;
   };
+
+  onToggled: (state: boolean) => void;
 }
 
 export interface FloatingToolbarButtonApis {
@@ -45,6 +47,8 @@ export interface FloatingToolbarButtonSpec extends CompositeSketchSpec, HasLayou
     'button': Partial<SimpleOrSketchSpec>;
     'toolbar': Partial<ToolbarSpec>;
   };
+
+  onToggled?: (state: boolean) => void;
 }
 
 export interface FloatingToolbarButtonSketcher extends CompositeSketch<FloatingToolbarButtonSpec>, FloatingToolbarButtonApis { }

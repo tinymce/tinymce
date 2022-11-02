@@ -18,7 +18,8 @@ import * as ToolbarSchema from './ToolbarSchema';
 const schema = Fun.constant([
   Fields.markers([ 'closedClass', 'openClass', 'shrinkingClass', 'growingClass', 'overflowToggledClass' ]),
   Fields.onHandler('onOpened'),
-  Fields.onHandler('onClosed')
+  Fields.onHandler('onClosed'),
+  Fields.onHandler('onToggled'),
 ].concat(
   SplitToolbarBase.schema()
 ));
@@ -58,7 +59,11 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
             },
             onStartGrow: (comp) => {
               AlloyParts.getPart(comp, detail, 'overflow-button').each(Toggling.on);
-            }
+              detail.onToggled(true);
+            },
+            onStartShrink: () => {
+              detail.onToggled(false);
+            },
           }),
           Keying.config({
             mode: 'acyclic',
