@@ -128,7 +128,7 @@ const EditorManager: EditorManager = {
   baseURL: null as any,
 
   /**
-   * Object which contains required, and user-specific, default values for cloud-related options.
+   * Object containing the options that will be passed by default to the `init` method upon each initialization of an editor.
    *
    * @property defaultOptions
    * @type Object
