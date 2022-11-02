@@ -128,7 +128,7 @@ const EditorManager: EditorManager = {
   baseURL: null as any,
 
   /**
-   * Object containing the default options that will be shallow merged with the options object passed to the `init` method upon each initialization of an editor.
+   * Object containing the options that will be passed by default to the <code>init</code> method upon each initialization of an editor. These defaults will be shallow merged with other options passed to <code>init</code>.
    *
    * @property defaultOptions
    * @type Object
