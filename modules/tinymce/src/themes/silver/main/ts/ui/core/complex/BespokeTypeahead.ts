@@ -1,9 +1,9 @@
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Focusing, Keying, Representing, SketchSpec, SystemEvents, Typeahead } from '@ephox/alloy';
+import { Menu } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Optional } from '@ephox/katamari';
 import { Focus, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
-import { Menu } from 'tinymce/core/api/ui/Ui';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
 import { onControlAttached, onControlDetached } from '../../controls/Controls';
@@ -22,11 +22,26 @@ interface BespokeSelectApi {
 const createTypeaheadButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectTypeaheadSpec): SketchSpec => {
   const data: SingleMenuItemSpec[] = spec.dataset.type === 'basic'
     ? []
-    : Arr.map(spec.dataset.getData(), (item): Menu.ToggleMenuItemSpec => ({ type: 'togglemenuitem', text: item.title, onAction: (api) => {
-      if (item.type === 'formatter') {
-        spec.onAction(item)(api);
+    : Arr.foldl(spec.dataset.getData(), (acc, item): Menu.ToggleMenuItemSpec[] => {
+      if (item.type === 'separator') {
+        return acc;
       }
-    } }));
+      if (item.type === 'submenu') {
+        return acc.concat(Arr.map(item.items, (subItem) => ({ type: 'togglemenuitem', text: subItem.title, onAction: (api) => {
+          spec.onAction({ ...subItem, type: 'formatter' } as any)(api);
+        } })));
+      }
+
+      if (item.type === 'formatter') {
+        return acc.concat({ type: 'togglemenuitem', text: item.title, onAction: (api) => {
+          if (item.type === 'formatter') {
+            spec.onAction(item)(api);
+          }
+        } });
+      }
+      return acc;
+    },
+    [] as Menu.ToggleMenuItemSpec[]);
 
   const onSetup = onSetupEvent(editor, 'NodeChange', (api: BespokeSelectApi) => {
     const comp = api.getComponent();
@@ -80,8 +95,34 @@ const createTypeaheadButton = (editor: Editor, backstage: UiFactoryBackstage, sp
       return Future.pure(optTieredData);
     },
     onExecute: (sandbox, item, value) => {
-      // it should have format in the value
-      spec.onTypeaheadSelection(value);
+      const styles = spec.dataset.type === 'advanced' ? spec.dataset.getData() : [];
+
+      const selectedStyle = Arr.find(styles, (style) => {
+        if (style.type === 'formatter') {
+          return style.title === value.meta.text;
+        }
+        if (style.type === 'separator') {
+          return false;
+        }
+        if (style.type === 'submenu') {
+          return Arr.exists(style.items, (subItem) => subItem.title === value.meta.text);
+        }
+        return false;
+      });
+
+      selectedStyle.each((style) => {
+        if (style.type === 'formatter') {
+          spec.onTypeaheadSelection(style);
+        }
+        if (style.type === 'submenu') {
+          Arr.each(style.items, (item) => {
+            if (item.title === value.meta.text) {
+              spec.onTypeaheadSelection(item as any);
+            }
+          });
+        }
+      });
+      // spec.onTypeaheadSelection(value);
     },
     lazySink: backstage.shared.getSink,
     eventOrder: {
