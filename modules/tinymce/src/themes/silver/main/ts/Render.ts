@@ -423,6 +423,7 @@ const setup = (editor: Editor): RenderInfo => {
 
     editor.addCommand('ToggleToolbarDrawer', () => {
       OuterContainer.toggleToolbarDrawer(outerContainer);
+      editor.dispatch('ToggleToolbarDrawer');
       // TODO: Consider firing event - TINY-6371
     });
 

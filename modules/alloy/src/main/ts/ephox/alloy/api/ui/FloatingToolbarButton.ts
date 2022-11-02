@@ -28,6 +28,7 @@ import { CompositeSketchFactory } from './UiSketcher';
 
 const toggle = (button: AlloyComponent, externals: Record<string, any>) => {
   const toolbarSandbox = Coupling.getCoupled(button, 'toolbarSandbox');
+  console.log('Should call ToogleToolbarDrawer event somewhere here');
   if (Sandboxing.isOpen(toolbarSandbox)) {
     Sandboxing.close(toolbarSandbox);
   } else {
