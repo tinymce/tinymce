@@ -22,6 +22,7 @@ export interface SetContentArgs {
   paste?: boolean;
   load?: boolean;
   initial?: boolean;
+  [key: string]: any;
 }
 
 export interface SetContentResult {
