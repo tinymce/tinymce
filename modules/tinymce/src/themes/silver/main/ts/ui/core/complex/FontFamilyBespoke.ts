@@ -5,7 +5,8 @@ import Editor from 'tinymce/core/api/Editor';
 
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
-import { createMenuItems, createSelectButton, FormatterFormatItem, PreviewSpec, SelectedFormat, SelectSpec } from './BespokeSelect';
+import { createMenuItems, createSelectButton, FormatterFormatItem, PreviewSpec, SelectedFormat, SelectSpec, SelectTypeaheadSpec } from './BespokeSelect';
+import { createTypeaheadButton } from './BespokeTypeahead';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 
 // A list of fonts that must be in a font family for the font to be recognised as the system stack
@@ -99,8 +100,21 @@ const getSpec = (editor: Editor): SelectSpec => {
   };
 };
 
+const getSpecTypeahead = (editor: Editor): SelectTypeaheadSpec => {
+  return {
+    ...getSpec(editor),
+    onTypeaheadSelection: (rawItem) => editor.undoManager.transact(() => {
+      editor.focus();
+      editor.execCommand('FontName', false, rawItem.format);
+    })
+  };
+};
+
 const createFontFamilyButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
   createSelectButton(editor, backstage, getSpec(editor));
+
+const createFontFamilyTypeaheadButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
+  createTypeaheadButton(editor, backstage, getSpecTypeahead(editor));
 
 // TODO: Test this!
 const createFontFamilyMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
@@ -111,4 +125,4 @@ const createFontFamilyMenu = (editor: Editor, backstage: UiFactoryBackstage): vo
   });
 };
 
-export { createFontFamilyButton, createFontFamilyMenu };
+export { createFontFamilyButton, createFontFamilyTypeaheadButton, createFontFamilyMenu };

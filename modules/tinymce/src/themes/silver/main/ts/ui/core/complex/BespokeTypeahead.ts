@@ -21,7 +21,15 @@ interface BespokeSelectApi {
 
 const createTypeaheadButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectTypeaheadSpec): SketchSpec => {
   const data: SingleMenuItemSpec[] = spec.dataset.type === 'basic'
-    ? []
+    ? Arr.map(spec.dataset.data, (item) => {
+      return {
+        type: 'togglemenuitem',
+        text: item.title,
+        onAction: (api) => {
+          spec.onAction(item as any)(api);
+        }
+      };
+    })
     : Arr.foldl(spec.dataset.getData(), (acc, item): Menu.ToggleMenuItemSpec[] => {
       if (item.type === 'separator') {
         return acc;
@@ -95,33 +103,42 @@ const createTypeaheadButton = (editor: Editor, backstage: UiFactoryBackstage, sp
       return Future.pure(optTieredData);
     },
     onExecute: (sandbox, item, value) => {
-      const styles = spec.dataset.type === 'advanced' ? spec.dataset.getData() : [];
+      if (spec.dataset.type === 'advanced') {
 
-      const selectedStyle = Arr.find(styles, (style) => {
-        if (style.type === 'formatter') {
-          return style.title === value.meta.text;
-        }
-        if (style.type === 'separator') {
+        const styles = spec.dataset.getData();
+
+        const selectedStyle = Arr.find(styles, (style) => {
+          if (style.type === 'formatter') {
+            return style.title === value.meta.text;
+          }
+          if (style.type === 'separator') {
+            return false;
+          }
+          if (style.type === 'submenu') {
+            return Arr.exists(style.items, (subItem) => subItem.title === value.meta.text);
+          }
           return false;
-        }
-        if (style.type === 'submenu') {
-          return Arr.exists(style.items, (subItem) => subItem.title === value.meta.text);
-        }
-        return false;
-      });
+        });
 
-      selectedStyle.each((style) => {
-        if (style.type === 'formatter') {
-          spec.onTypeaheadSelection(style);
-        }
-        if (style.type === 'submenu') {
-          Arr.each(style.items, (item) => {
-            if (item.title === value.meta.text) {
-              spec.onTypeaheadSelection(item as any);
-            }
-          });
-        }
-      });
+        selectedStyle.each((style) => {
+          if (style.type === 'formatter') {
+            spec.onTypeaheadSelection(style);
+          }
+          if (style.type === 'submenu') {
+            Arr.each(style.items, (item) => {
+              if (item.title === value.meta.text) {
+                spec.onTypeaheadSelection(item as any);
+              }
+            });
+          }
+        });
+      } else {
+        const styles = spec.dataset.data;
+        const selectedStyle = Arr.find(styles, (style) => style.title === value.meta.text);
+        selectedStyle.each((item) => {
+          spec.onTypeaheadSelection(item as any);
+        });
+      }
       // spec.onTypeaheadSelection(value);
     },
     lazySink: backstage.shared.getSink,
@@ -132,7 +149,7 @@ const createTypeaheadButton = (editor: Editor, backstage: UiFactoryBackstage, sp
   });
 
   return {
-    uid: 'fake-uid-typeahead-wrapper',
+    uid: Id.generate('typeahead-wrapper'),
     dom: {
       tag: 'div',
       classes: [ 'typeahead-wrapper' ],

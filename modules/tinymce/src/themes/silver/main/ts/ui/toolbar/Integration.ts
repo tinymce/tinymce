@@ -11,7 +11,7 @@ import { ToolbarConfig } from '../../Render';
 import { renderMenuButton } from '../button/MenuButton';
 import { createAlignButton } from '../core/complex/AlignBespoke';
 import { createBlocksButton } from '../core/complex/BlocksBespoke';
-import { createFontFamilyButton } from '../core/complex/FontFamilyBespoke';
+import { createFontFamilyButton, createFontFamilyTypeaheadButton } from '../core/complex/FontFamilyBespoke';
 import { createFontSizeButton } from '../core/complex/FontSizeBespoke';
 import { createStylesButton, createStylesTypeahead } from '../core/complex/StylesBespoke';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
@@ -117,6 +117,7 @@ const bespokeButtons: Record<string, (editor: Editor, backstage: UiFactoryBackst
   stylestypeahead: createStylesTypeahead,
   fontsize: createFontSizeButton,
   fontfamily: createFontFamilyButton,
+  fontfamilytypeahead: createFontFamilyTypeaheadButton,
   blocks: createBlocksButton,
   align: createAlignButton
 };

@@ -87,8 +87,7 @@ const getSpecTypeahead = (editor: Editor, dataset: SelectDataset): SelectTypeahe
     const detectedFormat = findNearest(editor, Fun.constant(flattenedItems));
     const text = detectedFormat.fold(Fun.constant(fallbackFormat), (fmt) => fmt.title);
     AlloyTriggers.emitWith(comp, updateMenuText, {
-      text,
-      // format: detectedFormat
+      text
     });
   };
 
