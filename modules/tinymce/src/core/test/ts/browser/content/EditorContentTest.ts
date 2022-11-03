@@ -269,6 +269,25 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
           const tree = editor.getContent({ format: 'tree' });
           assert.equal(toHtml(tree), '<p>replaced</p>', 'Should be replaced html');
         });
+
+        const initialContent = '<p>initial</p>';
+        const newContent = '<p>new content</p>';
+        const manipulatedContent = '<p>manipulated</p>';
+        Arr.each([
+          [ 'setContent', manipulatedContent ],
+          [ 'insertContent', manipulatedContent + '\n' + initialContent ]
+        ] as const, ([ action, result ]) => {
+          it(`TINY-9143: Can manipulate content in "BeforeSetContent" callback when called from "${action}" function`, () => {
+            const editor = hook.editor();
+            editor.setContent(initialContent);
+            editor.once('BeforeSetContent', (e) => {
+              assert.equal(e.content, newContent);
+              e.content = manipulatedContent;
+            });
+            editor[action](newContent);
+            TinyAssertions.assertContent(editor, result);
+          });
+        });
       });
     }
   );

@@ -1,5 +1,6 @@
 import { HexColour, RgbaColour } from '@ephox/acid';
-import { Cell, Fun, Optional, Strings, Type } from '@ephox/katamari';
+import { Cell, Fun, Optional, Optionals } from '@ephox/katamari';
+import { Css, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
@@ -17,21 +18,9 @@ export interface ColorSwatchDialogData {
 
 type ColorFormat = 'forecolor' | 'hilitecolor';
 
-const hasStyleApi = (node: Node): node is (Node & ElementCSSInlineStyle) =>
-  Type.isNonNullable((node as HTMLElement).style);
-
 const getCurrentColor = (editor: Editor, format: ColorFormat): Optional<string> => {
-  let color: string | undefined;
-
-  editor.dom.getParents(editor.selection.getStart(), (elm) => {
-    const value = hasStyleApi(elm) ? elm.style[format === 'forecolor' ? 'color' : 'backgroundColor'] : null;
-
-    if (value) {
-      color = color ? color : value;
-    }
-  });
-
-  return Optional.from(color);
+  const cssRgbValue = Css.get(SugarElement.fromDom(editor.selection.getStart()), format === 'hilitecolor' ? 'background-color' : 'color');
+  return RgbaColour.fromString(cssRgbValue).map((rgba) => '#' + HexColour.fromRgba(rgba).value);
 };
 
 const applyFormat = (editor: Editor, format: ColorFormat, value: string) => {
@@ -89,7 +78,7 @@ const applyColor = (editor: Editor, format: ColorFormat, value: string, onChoice
         editor.execCommand('mceApplyTextcolor', format as any, color);
         onChoice(color);
       });
-    }, Options.fallbackColor);
+    }, getCurrentColor(editor, format).getOr(Options.fallbackColor));
   } else if (value === 'remove') {
     onChoice('');
     editor.execCommand('mceRemoveTextcolor', format as any);
@@ -117,12 +106,8 @@ const registerTextColorButton = (editor: Editor, name: string, format: ColorForm
     presets: 'color',
     icon: name === 'forecolor' ? 'text-color' : 'highlight-bg-color',
     select: (value) => {
-      const optCurrentRgb = getCurrentColor(editor, format);
-      return optCurrentRgb.bind((currentRgb) => RgbaColour.fromString(currentRgb).map((rgba) => {
-        const currentHex = HexColour.fromRgba(rgba).value;
-        // note: value = '#FFFFFF', currentHex = 'ffffff'
-        return Strings.contains(value.toLowerCase(), currentHex);
-      })).getOr(false);
+      const optCurrentHex = getCurrentColor(editor, format);
+      return Optionals.is(optCurrentHex, value.toUpperCase());
     },
     columns: Options.getColorCols(editor, format),
     fetch: getFetch(Options.getColors(editor, format), format, Options.hasCustomColors(editor)),

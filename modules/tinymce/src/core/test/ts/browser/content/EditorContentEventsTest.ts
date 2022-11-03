@@ -1,9 +1,10 @@
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
+import { Arr, Singleton } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import { SetContentEvent, GetContentEvent } from 'tinymce/core/api/EventTypes';
 import { ContentFormat } from 'tinymce/core/content/ContentTypes';
 
 describe('browser.tinymce.core.content.EditorContentEventsTest', () => {
@@ -122,5 +123,31 @@ describe('browser.tinymce.core.content.EditorContentEventsTest', () => {
     editor.selection.setContent('Selection content', { no_events: true });
     assertEvents([]);
     TinyAssertions.assertContent(editor, '<p>Selection content</p>');
+  });
+
+  const data = { hello: 'world', test: 132 };
+  Arr.each([ 'BeforeSetContent', 'SetContent' ], (action) => {
+    it(`TINY-9143: Can pass custom data object to "${action}" event`, () => {
+      const editor = hook.editor();
+      const lastEventState = Singleton.value<SetContentEvent>();
+      editor.setContent('<p>initial</p>');
+      editor.once(action, (e) => lastEventState.set(e));
+      editor.setContent('<p>new</p>', data);
+      const lastEvent = lastEventState.get().getOrDie('Should be set');
+      assert.equal(lastEvent.hello, data.hello);
+      assert.equal(lastEvent.test, data.test);
+    });
+  });
+  Arr.each([ 'BeforeGetContent', 'GetContent' ], (action) => {
+    it(`TINY-9143: Can pass custom data object to "${action}" event`, () => {
+      const editor = hook.editor();
+      const lastEventState = Singleton.value<GetContentEvent>();
+      editor.setContent('<p>initial</p>');
+      editor.once(action, (e) => lastEventState.set(e));
+      editor.getContent(data);
+      const lastEvent = lastEventState.get().getOrDie('Should be set');
+      assert.equal(lastEvent.hello, data.hello);
+      assert.equal(lastEvent.test, data.test);
+    });
   });
 });

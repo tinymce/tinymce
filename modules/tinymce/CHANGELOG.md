@@ -18,9 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Transparent elements, like anchors, are now allowed in the root of the editor body if they contain blocks. #TINY-9172
+- `setContent` is now allowed to accept any custom keys and values as a second options argument. #TINY-9143
 
 ### Improved
 - Transparent elements, like anchors, can now contain block elements. #TINY-9172
+- Color picker dialog now starts on the appropriate color for the cursor position. #TINY-9213
 
 ### Fixed
 - Parsing media content would cause a memory leak, which for example occurred when using the `getContent` API. #TINY-9186
@@ -32,11 +34,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The editor header showed up even with no menubar and toolbar configured. #TINY-8819
 - Inline text pattern no longer triggers if it matches only the end but not the start. #TINY-8947
 - Matches of inline text patterns that are similar are now managed correctly. #TINY-8949
+- Using `editor.selection.getContent({ format: 'text' })` or `editor.getContent({ format: 'text' })` would sometimes deselect selected radio buttons. #TINY-9213
 - The context toolbar prevented the user from placing the cursor at the edges of the editor. #TINY-8890
 - The Quick Insert context toolbar provided by the `quickbars` plugin showed when the cursor was in a fake block caret. #TINY-9190
 - The `editor.selection.getRng()` API was not returning a proper range on hidden editors in Firefox. #TINY-9259
 - The `editor.selection.getBookmark()` API was not returning a proper bookmark on hidden editors in Firefox. #TINY-9259
 - Dragging a noneditable element before or after another noneditable element now works correctly. #TINY-9253
+- The restored selection after a redo or undo action was not scrolled into view. #TINY-9222
+- A newline could not be inserted when the selection was restored from a bookmark after an inline `contenteditable="false"` element. #TINY-9194
 - The caret was moved to the previous line when the inline text pattern have been executed on Enter key pressing in Firefox. #TINY-9193
 
 ## 6.2.0 - 2022-09-08

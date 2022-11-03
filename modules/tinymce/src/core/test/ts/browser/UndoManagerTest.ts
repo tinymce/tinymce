@@ -2,7 +2,8 @@ import { Keys } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { LegacyUnit, TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { Scroll } from '@ephox/sugar';
+import { TinyDom, LegacyUnit, TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -682,4 +683,23 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     });
   });
 
+  it('TINY-9222: Scroll to the cursor after undo and redo', () => {
+    const editor = hook.editor();
+
+    const height = 5000;
+    editor.resetContent(`<p class="first">top paragraph</p><p style="height: ${height}px"></p><p class="last">last paragraph</p>`);
+    TinySelections.select(editor, 'p.last', [ 0 ]);
+    TinyContentActions.type(editor, 'updated ');
+
+    const doc = TinyDom.document(editor);
+    const editorHeight = editor.getWin().innerHeight;
+
+    const checkScroll = (action: 'undo' | 'redo') => {
+      Scroll.to(0, 0, doc);
+      editor.undoManager[action]();
+      assert.isAtLeast(Scroll.get(doc).top + editorHeight, height, `should scroll to the cursor after ${action}`);
+    };
+
+    Arr.each([ 'undo', 'redo' ], checkScroll);
+  });
 });
