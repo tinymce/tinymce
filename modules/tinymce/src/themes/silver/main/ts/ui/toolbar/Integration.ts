@@ -12,7 +12,7 @@ import { renderMenuButton } from '../button/MenuButton';
 import { createAlignButton } from '../core/complex/AlignBespoke';
 import { createBlocksButton } from '../core/complex/BlocksBespoke';
 import { createFontFamilyButton, createFontFamilyTypeaheadButton } from '../core/complex/FontFamilyBespoke';
-import { createFontSizeButton } from '../core/complex/FontSizeBespoke';
+import { createFontSizeButton, createFontSizeInputButton } from '../core/complex/FontSizeBespoke';
 import { createStylesButton, createStylesTypeahead } from '../core/complex/StylesBespoke';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
 import { renderFloatingToolbarButton, renderSplitButton, renderToolbarButton, renderToolbarToggleButton } from './button/ToolbarButtons';
@@ -116,6 +116,7 @@ const bespokeButtons: Record<string, (editor: Editor, backstage: UiFactoryBackst
   styles: createStylesButton,
   stylestypeahead: createStylesTypeahead,
   fontsize: createFontSizeButton,
+  fontsizeinput: createFontSizeInputButton,
   fontfamily: createFontFamilyButton,
   fontfamilytypeahead: createFontFamilyTypeaheadButton,
   blocks: createBlocksButton,

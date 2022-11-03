@@ -5,6 +5,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
+import { createBespokeNumberInput } from './BespokeNumberInput';
 import { createMenuItems, createSelectButton, FormatterFormatItem, SelectedFormat, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import * as FormatRegister from './utils/FormatRegister';
@@ -110,6 +111,9 @@ const getSpec = (editor: Editor): SelectSpec => {
 const createFontSizeButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
   createSelectButton(editor, backstage, getSpec(editor));
 
+const createFontSizeInputButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
+  createBespokeNumberInput(editor, backstage, getSpec(editor));
+
 // TODO: Test this!
 const createFontSizeMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
@@ -119,4 +123,4 @@ const createFontSizeMenu = (editor: Editor, backstage: UiFactoryBackstage): void
   });
 };
 
-export { createFontSizeButton, createFontSizeMenu };
+export { createFontSizeButton, createFontSizeInputButton, createFontSizeMenu };
