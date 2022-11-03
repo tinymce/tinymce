@@ -6,7 +6,7 @@ import {
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
-import { Attribute, EventArgs, SelectorFind } from '@ephox/sugar';
+import { Attribute, Css, EventArgs, SelectorFind } from '@ephox/sugar';
 
 import { ToolbarGroupOption } from '../../../api/Options';
 import { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
@@ -99,7 +99,7 @@ const renderCommonStructureUpdateableText = (
     dom: {
       tag: 'button',
       classes: [ ToolbarButtonClasses.Button ].concat(text.isSome() ? [ ToolbarButtonClasses.MatchWidth ] : []),
-      attributes: getTooltipAttributes(tooltip, providersBackstage)
+      attributes: getTooltipAttributes(tooltip, providersBackstage),
     },
     components: componentRenderPipeline([
       icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)),
@@ -113,17 +113,19 @@ const renderCommonStructureUpdateableText = (
         'common-button-display-events'
       ]
     },
-
     buttonBehaviours: Behaviour.derive(
       [
         DisablingConfigs.toolbarButton(providersBackstage.isDisabled),
         ReadOnly.receivingConfig(),
         AddEventsBehaviour.config('common-button-display-events', [
+          AlloyEvents.runOnAttached((comp, _se) => {
+            Css.set(comp.element, 'width', Css.get(comp.element, 'width') );
+          }),
           AlloyEvents.run<EventArgs<MouseEvent>>(NativeEvents.mousedown(), (button, se) => {
             se.event.prevent();
             AlloyTriggers.emit(button, focusButtonEvent);
           })
-        ])
+        ]),
       ].concat(
         receiver.map((r) => Reflecting.config({
           channel: r,
@@ -217,7 +219,7 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
   const editorOffCell = Cell(Fun.noop);
 
   const optMemDisplayText = spec.text.map(
-    (text) => Memento.record(renderLabel(text, '', providersBackstage))
+    (text) => Memento.record(renderLabel(text, ToolbarButtonClasses.Button, providersBackstage))
   );
 
   const structure = renderCommonStructureUpdateableText(spec.icon, optMemDisplayText, spec.tooltip, Optional.none(), Optional.none(), providersBackstage);
@@ -226,26 +228,29 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
     components: structure.components,
 
     eventOrder: toolbarButtonEventOrder,
-    buttonBehaviours: Behaviour.derive(
-      [
-        AddEventsBehaviour.config('toolbar-button-events', [
-          AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
-            optMemDisplayText.bind((mem) => mem.getOpt(comp)).each((displayText) => {
-              Replacing.set(displayText, [ GuiFactory.text(providersBackstage.translate(se.event.text)) ]);
-            });
-          }),
-          onToolbarButtonExecute<T>({
-            onAction: spec.onAction,
-            getApi: specialisation.getApi
-          }),
-          onControlAttached(specialisation, editorOffCell),
-          onControlDetached(specialisation, editorOffCell)
-        ]),
-        // Enable toolbar buttons by default
-        DisablingConfigs.toolbarButton(() => !spec.enabled || providersBackstage.isDisabled()),
-        ReadOnly.receivingConfig()
-      ].concat(specialisation.toolbarButtonBehaviours)
-    )
+    buttonBehaviours: {
+      ...Behaviour.derive(
+        [
+          AddEventsBehaviour.config('toolbar-button-events', [
+            AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
+              optMemDisplayText.bind((mem) => mem.getOpt(comp)).each((displayText) => {
+                Replacing.set(displayText, [ GuiFactory.text(providersBackstage.translate(se.event.text)) ]);
+              });
+            }),
+            onToolbarButtonExecute<T>({
+              onAction: spec.onAction,
+              getApi: specialisation.getApi
+            }),
+            onControlAttached(specialisation, editorOffCell),
+            onControlDetached(specialisation, editorOffCell)
+          ]),
+          // Enable toolbar buttons by default
+          DisablingConfigs.toolbarButton(() => !spec.enabled || providersBackstage.isDisabled()),
+          ReadOnly.receivingConfig()
+        ].concat(specialisation.toolbarButtonBehaviours)
+      ),
+      ...structure.buttonBehaviours
+    }
   });
 };
 
