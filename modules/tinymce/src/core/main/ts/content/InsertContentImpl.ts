@@ -11,7 +11,6 @@ import Tools from '../api/util/Tools';
 import CaretPosition from '../caret/CaretPosition';
 import { CaretWalker } from '../caret/CaretWalker';
 import * as TransparentElements from '../content/TransparentElements';
-import * as DeleteUtils from '../delete/DeleteUtils';
 import * as TableDelete from '../delete/TableDelete';
 import * as CefUtils from '../dom/CefUtils';
 import ElementUtils from '../dom/ElementUtils';
@@ -208,8 +207,6 @@ const deleteSelectedContent = (editor: Editor): void => {
   const startCell = dom.getParent(rng.startContainer, isTableCell);
   if (isTableCellContentSelected(dom, rng, startCell)) {
     TableDelete.deleteCellContents(editor, rng, SugarElement.fromDom(startCell as HTMLTableCellElement));
-  } else {
-    DeleteUtils.deleteRangeContents(editor, rng, SugarElement.fromDom(editor.getBody()));
   }
 };
 
