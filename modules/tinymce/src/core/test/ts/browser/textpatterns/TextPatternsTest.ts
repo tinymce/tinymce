@@ -2,6 +2,7 @@ import { ApproxStructure, Keys } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Unicode } from '@ephox/katamari';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
@@ -315,6 +316,9 @@ describe('browser.tinymce.core.textpatterns.TextPatternsTest', () => {
     TinyAssertions.assertContentPresence(editor, {
       p: 3
     });
+    const p = editor.getBody().childNodes;
+    assert.equal(p[0].textContent, 'Hello');
+    assert.equal(p[1].textContent, 'world');
     // actual content: <p>Hello</p><p>world</p><p>&nbsp;</p>
     TinyAssertions.assertCursor(editor, [ 2 ], 0);
 
