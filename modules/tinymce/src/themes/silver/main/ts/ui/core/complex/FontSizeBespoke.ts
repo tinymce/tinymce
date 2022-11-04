@@ -108,11 +108,26 @@ const getSpec = (editor: Editor): SelectSpec => {
   };
 };
 
+export interface NumberInputSpec {
+  onAction: (format: string) => void;
+  updateText: (comp: AlloyComponent) => void;
+}
+
+const getNumberInputSpec = (editor: Editor): NumberInputSpec => ({
+  ...getSpec(editor),
+  onAction: (format) => {
+    editor.undoManager.transact(() => {
+      editor.focus();
+      editor.execCommand('FontSize', false, format);
+    });
+  }
+});
+
 const createFontSizeButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
   createSelectButton(editor, backstage, getSpec(editor));
 
 const createFontSizeInputButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
-  createBespokeNumberInput(editor, backstage, getSpec(editor));
+  createBespokeNumberInput(editor, backstage, getNumberInputSpec(editor));
 
 // TODO: Test this!
 const createFontSizeMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
