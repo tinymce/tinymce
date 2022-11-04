@@ -108,20 +108,40 @@ const getSpec = (editor: Editor): SelectSpec => {
   };
 };
 
+interface Config {
+  step: number;
+}
+
 export interface NumberInputSpec {
   onAction: (format: string) => void;
   updateText: (comp: AlloyComponent) => void;
+  getConfigFromUnit: (unit: string) => Config;
 }
 
-const getNumberInputSpec = (editor: Editor): NumberInputSpec => ({
-  ...getSpec(editor),
-  onAction: (format) => {
-    editor.undoManager.transact(() => {
-      editor.focus();
-      editor.execCommand('FontSize', false, format);
-    });
-  }
-});
+const getNumberInputSpec = (editor: Editor): NumberInputSpec => {
+  const getConfigFromUnit = (unit: string): Config => {
+    const baseConfig = { step: 1 };
+
+    const configs: Record<string, Config> = {
+      em: { step: 0.1 },
+      px: { step: 1 },
+      pt: { step: 1 }
+    };
+
+    return configs[unit] || baseConfig;
+  };
+
+  return {
+    updateText: getSpec(editor).updateText,
+    getConfigFromUnit,
+    onAction: (format) => {
+      editor.undoManager.transact(() => {
+        editor.focus();
+        editor.execCommand('FontSize', false, format);
+      });
+    }
+  };
+};
 
 const createFontSizeButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
   createSelectButton(editor, backstage, getSpec(editor));

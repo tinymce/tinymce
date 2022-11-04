@@ -29,11 +29,11 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
 
   const isValidValue = (value: number): boolean => value >= 0;
 
-  const changeValue = (f: (v: number) => number): void => {
+  const changeValue = (f: (v: number, step: number) => number): void => {
     const text = currentValue.get();
-    const unit = text.match(/\D+$/)?.join('');
+    const unit = text.match(/\D+$/)?.join('') || '';
     const value = parseFloat(text.match(/^[\d\.]+/)?.join('') || '0');
-    const newValue = f(value);
+    const newValue = f(value, spec.getConfigFromUnit(unit).step);
     const newValueWithUnit = `${isValidValue(newValue) ? newValue : value}${unit}`;
 
     spec.onAction(newValueWithUnit);
@@ -62,7 +62,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
           styles: buttonStyles,
           innerHtml: '-',
         },
-        action: () => changeValue((n) => n - 1)
+        action: () => changeValue((n, s) => n - s)
       }),
       Input.sketch({
         inputStyles: {
@@ -91,7 +91,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
           styles: buttonStyles,
           innerHtml: '+'
         },
-        action: () => changeValue((n) => n + 1)
+        action: () => changeValue((n, s) => n + s)
       })
     ]
   };
