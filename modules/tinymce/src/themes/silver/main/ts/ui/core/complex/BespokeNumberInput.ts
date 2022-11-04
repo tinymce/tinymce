@@ -27,12 +27,12 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
 
   const customEvents = Id.generate('custom-number-input-events');
 
-  const isValidValue = (value: number): boolean => value >= 1;
+  const isValidValue = (value: number): boolean => value >= 0;
 
   const changeValue = (f: (v: number) => number): void => {
     const text = currentValue.get();
     const unit = text.match(/\D+$/)?.join('');
-    const value = parseInt(text.match(/^\d+/)?.join('') || '0', 10);
+    const value = parseFloat(text.match(/^[\d\.]+/)?.join('') || '0');
     const newValue = f(value);
     const newValueWithUnit = `${isValidValue(newValue) ? newValue : value}${unit}`;
 
