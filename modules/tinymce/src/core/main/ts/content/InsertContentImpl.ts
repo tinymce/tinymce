@@ -10,13 +10,14 @@ import * as StyleUtils from '../api/html/StyleUtils';
 import Tools from '../api/util/Tools';
 import CaretPosition from '../caret/CaretPosition';
 import { CaretWalker } from '../caret/CaretWalker';
+import * as TransparentElements from '../content/TransparentElements';
 import * as TableDelete from '../delete/TableDelete';
 import * as CefUtils from '../dom/CefUtils';
 import ElementUtils from '../dom/ElementUtils';
 import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as FilterNode from '../html/FilterNode';
-import { cleanInvalidNodes } from '../html/InvalidNodes';
+import * as InvalidNodes from '../html/InvalidNodes';
 import * as RangeNormalizer from '../selection/RangeNormalizer';
 import * as SelectionUtils from '../selection/SelectionUtils';
 import { InsertContentDetails } from './ContentTypes';
@@ -325,10 +326,10 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
       }
     }
     const toExtract = fragment.children();
-    const parent = fragment.parent?.name ?? root.name;
+    const parent = fragment.parent ?? root;
     fragment.unwrap();
-    const invalidChildren = Arr.filter(toExtract, (node) => !editor.schema.isValidChild(parent, node.name));
-    cleanInvalidNodes(invalidChildren, editor.schema);
+    const invalidChildren = Arr.filter(toExtract, (node) => InvalidNodes.isInvalid(editor.schema, node, parent));
+    InvalidNodes.cleanInvalidNodes(invalidChildren, editor.schema);
     FilterNode.filter(parser.getNodeFilters(), parser.getAttributeFilters(), root);
     value = serializer.serialize(root);
 
@@ -344,5 +345,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
   moveSelectionToMarker(editor, dom.get('mce_marker'));
   unmarkFragmentElements(editor.getBody());
   trimBrsFromTableCell(dom, selection.getStart());
+  TransparentElements.updateCaret(editor.schema, editor.getBody(), selection.getStart());
+
   return value;
 };

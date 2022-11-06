@@ -4,6 +4,7 @@ import Env from '../api/Env';
 import DomParser, { DomParserSettings } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
 import Tools from '../api/util/Tools';
+import * as TransparentElements from '../content/TransparentElements';
 import { dataUriToBlobInfo } from '../file/BlobCacheUtils';
 import { isEmpty, paddEmptyNode } from './ParserUtils';
 
@@ -47,6 +48,8 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
       // Remove brs from body element as well
       blockElements.body = 1;
 
+      const isBlock = (node: AstNode) => node.name in blockElements && TransparentElements.isTransparentAstInline(schema, node);
+
       // Must loop forwards since it will otherwise remove all brs in <p>a<br><br><br></p>
       for (let i = 0, l = nodes.length; i < l; i++) {
         let node: AstNode | null = nodes[i];
@@ -83,7 +86,7 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
                 if (elementRule.removeEmpty) {
                   parent.remove();
                 } else if (elementRule.paddEmpty) {
-                  paddEmptyNode(settings, args, blockElements, parent);
+                  paddEmptyNode(args, isBlock, parent);
                 }
               }
             }

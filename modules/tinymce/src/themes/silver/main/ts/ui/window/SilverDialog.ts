@@ -9,7 +9,7 @@ import { SilverDialogEvents } from './SilverDialogEvents';
 import { renderModalFooter } from './SilverDialogFooter';
 import { DialogAccess, getDialogApi } from './SilverDialogInstanceApi';
 
-interface RenderedDialog<T> {
+interface RenderedDialog<T extends Dialog.DialogData> {
   readonly dialog: AlloyComponent;
   readonly instanceApi: Dialog.DialogInstanceApi<T>;
 }
@@ -25,7 +25,7 @@ const getDialogSizeClasses = (size: Dialog.DialogSize): string[] => {
   }
 };
 
-const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra<T>, backstage: UiFactoryBackstage): RenderedDialog<T> => {
+const renderDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra<T>, backstage: UiFactoryBackstage): RenderedDialog<T> => {
   const dialogId = Id.generate('dialog');
   const internalDialog = dialogInit.internalDialog;
   const header = SilverDialogCommon.getHeader(internalDialog.title, dialogId, backstage);

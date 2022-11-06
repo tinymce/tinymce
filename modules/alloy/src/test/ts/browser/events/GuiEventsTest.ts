@@ -1,9 +1,13 @@
-import { Chain, Cleaner, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, Touch, UiFinder } from '@ephox/agar';
+import { Chain, Cleaner, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, TestStore, Touch, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Attribute, DomEvent, EventArgs, Insert, Remove, SugarElement, SugarNode, SugarText } from '@ephox/sugar';
 
-import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
 import * as GuiEvents from 'ephox/alloy/events/GuiEvents';
+
+interface StoreGuiEventsTest {
+  readonly eventName: string;
+  readonly target?: string;
+}
 
 UnitTest.asynctest('GuiEventsTest', (success, failure) => {
 
@@ -25,8 +29,8 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
   Insert.append(body, page);
   cleanup.add(() => Remove.remove(page));
 
-  const outerStore = TestStore();
-  const store = TestStore();
+  const outerStore = TestStore<string | StoreGuiEventsTest>();
+  const store = TestStore<string | StoreGuiEventsTest>();
 
   const onBodyKeydown = DomEvent.bind(body, 'keydown', (evt) => {
     if (evt.raw.which === Keys.backspace()) {

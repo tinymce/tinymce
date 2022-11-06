@@ -149,4 +149,28 @@ const cleanInvalidNodes = (nodes: AstNode[], schema: Schema, onCreate: (newNode:
   }
 };
 
-export { cleanInvalidNodes };
+const hasClosest = (node: AstNode, parentName: string): boolean => {
+  let tempNode: AstNode | null | undefined = node;
+  while (tempNode) {
+    if (tempNode.name === parentName) {
+      return true;
+    }
+    tempNode = tempNode.parent;
+  }
+  return false;
+};
+
+const isInvalid = (schema: Schema, node: AstNode, parent: AstNode | null | undefined = node.parent): boolean => {
+  // Check if the node is a valid child of the parent node. If the child is
+  // unknown we don't collect it since it's probably a custom element
+  if (parent && schema.children[node.name] && !schema.isValidChild(parent.name, node.name)) {
+    return true;
+  // Anchors are a special case and cannot be nested
+  } else if (parent && node.name === 'a' && hasClosest(parent, 'a')) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+export { cleanInvalidNodes, isInvalid };

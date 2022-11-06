@@ -1,7 +1,7 @@
 {
   "name": "@ephox/phoenix",
   "description": "DOM node text gathering library, rose from the ashes of some other projects we can't remember the names of now (edit: seek, sherlock, gift)",
-  "version": "8.0.3",
+  "version": "8.0.5",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce.git",
@@ -19,14 +19,14 @@
     "LICENSE.txt"
   ],
   "dependencies": {
-    "@ephox/boss": "^6.0.3",
-    "@ephox/katamari": "^9.0.3",
-    "@ephox/polaris": "^6.0.3",
-    "@ephox/sugar": "^9.0.3",
+    "@ephox/boss": "^6.0.5",
+    "@ephox/katamari": "^9.1.1",
+    "@ephox/polaris": "^6.0.5",
+    "@ephox/sugar": "^9.1.1",
     "tslib": "^2.0.0"
   },
   "devDependencies": {
-    "@ephox/katamari-assertions": "^4.0.3"
+    "@ephox/katamari-assertions": "^4.0.5"
   },
   "scripts": {
     "test-manual": "bedrock -d src/test",

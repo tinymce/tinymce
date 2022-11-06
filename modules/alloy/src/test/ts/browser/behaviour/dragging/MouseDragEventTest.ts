@@ -1,4 +1,4 @@
-import { Assertions, Chain, Mouse, NamedChain, UiFinder } from '@ephox/agar';
+import { Assertions, Chain, Mouse, NamedChain, TestStore, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Result } from '@ephox/katamari';
 import { Css, SugarElement } from '@ephox/sugar';
@@ -9,8 +9,13 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 
+interface StoreMouseDragEventTest {
+  readonly left: number;
+  readonly top: number;
+}
+
 UnitTest.asynctest('MouseDragEventTest', (success, failure) => {
-  GuiSetup.setup((store, _doc, _body) => GuiFactory.build(
+  GuiSetup.setup((store: TestStore<StoreMouseDragEventTest>, _doc, _body) => GuiFactory.build(
     Container.sketch({
       dom: {
         styles: {

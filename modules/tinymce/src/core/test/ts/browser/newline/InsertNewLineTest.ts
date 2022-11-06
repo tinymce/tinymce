@@ -80,6 +80,33 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     });
   });
 
+  context('CEF', () => {
+    it('TINY-9098: insert newline on inline CEF element should do nothing', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>before<span contenteditable="false">x</span>after</p>');
+      TinySelections.select(editor, 'span', []);
+      insertNewline(editor, { });
+      editor.nodeChanged();
+      TinyAssertions.assertContent(editor, '<p>before<span contenteditable="false">x</span>after</p>');
+    });
+
+    it('TINY-9194: restore selection from the bookmark and insert newline after inline CEF element', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><span contenteditable="false">a</span></p>');
+      // actual content <p>&#xFEFF;<span contenteditable="false">a</span></p>
+      TinySelections.setCursor(editor, [ 0 ], 2);
+      // actual content <p><span contenteditable="false">a</span>&#xFEFF;</p>
+      TinyAssertions.assertCursor(editor, [ 0, 1 ], 1);
+      const bookmark = editor.selection.getBookmark();
+      editor.selection.moveToBookmark(bookmark);
+      // actual content <p><span contenteditable="false">a</span></p>
+      TinyAssertions.assertCursor(editor, [ 0, 1 ], 1);
+      insertNewline(editor, { });
+      TinyAssertions.assertContent(editor, '<p><span contenteditable="false">a</span></p><p>&nbsp;</p>');
+      TinyAssertions.assertCursor(editor, [ 1 ], 0);
+    });
+  });
+
   context('br_newline_selector', () => {
     before(() => {
       hook.editor().options.set('br_newline_selector', 'p,div.test');

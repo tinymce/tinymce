@@ -34,17 +34,17 @@ export interface WindowParams {
 }
 
 interface WindowManager {
-  open: <T>(config: Dialog.DialogSpec<T>, params?: WindowParams) => Dialog.DialogInstanceApi<T>;
+  open: <T extends Dialog.DialogData>(config: Dialog.DialogSpec<T>, params?: WindowParams) => Dialog.DialogInstanceApi<T>;
   openUrl: (config: Dialog.UrlDialogSpec) => Dialog.UrlDialogInstanceApi;
   alert: (message: string, callback?: () => void, scope?: any) => void;
   confirm: (message: string, callback?: (state: boolean) => void, scope?: any) => void;
   close: () => void;
 }
 
-export type InstanceApi<T> = Dialog.UrlDialogInstanceApi | Dialog.DialogInstanceApi<T>;
+export type InstanceApi<T extends Dialog.DialogData> = Dialog.UrlDialogInstanceApi | Dialog.DialogInstanceApi<T>;
 
 export interface WindowManagerImpl {
-  open: <T>(config: Dialog.DialogSpec<T>, params: WindowParams | undefined, closeWindow: (dialog: Dialog.DialogInstanceApi<T>) => void) => Dialog.DialogInstanceApi<T>;
+  open: <T extends Dialog.DialogData>(config: Dialog.DialogSpec<T>, params: WindowParams | undefined, closeWindow: (dialog: Dialog.DialogInstanceApi<T>) => void) => Dialog.DialogInstanceApi<T>;
   openUrl: (config: Dialog.UrlDialogSpec, closeWindow: (dialog: Dialog.UrlDialogInstanceApi) => void) => Dialog.UrlDialogInstanceApi;
   alert: (message: string, callback: () => void) => void;
   confirm: (message: string, callback: (state: boolean) => void) => void;
@@ -65,24 +65,24 @@ const WindowManager = (editor: Editor): WindowManager => {
     };
   };
 
-  const fireOpenEvent = <T>(dialog: InstanceApi<T>) => {
+  const fireOpenEvent = <T extends Dialog.DialogData>(dialog: InstanceApi<T>) => {
     editor.dispatch('OpenWindow', {
       dialog
     });
   };
 
-  const fireCloseEvent = <T>(dialog: InstanceApi<T>) => {
+  const fireCloseEvent = <T extends Dialog.DialogData>(dialog: InstanceApi<T>) => {
     editor.dispatch('CloseWindow', {
       dialog
     });
   };
 
-  const addDialog = <T>(dialog: InstanceApi<T>) => {
+  const addDialog = <T extends Dialog.DialogData>(dialog: InstanceApi<T>) => {
     dialogs.push(dialog);
     fireOpenEvent(dialog);
   };
 
-  const closeDialog = <T>(dialog: InstanceApi<T>) => {
+  const closeDialog = <T extends Dialog.DialogData>(dialog: InstanceApi<T>) => {
     fireCloseEvent(dialog);
     dialogs = Arr.filter(dialogs, (otherDialog) => {
       return otherDialog !== dialog;
@@ -107,7 +107,7 @@ const WindowManager = (editor: Editor): WindowManager => {
     return dialog;
   };
 
-  const open = <T>(args: Dialog.DialogSpec<T>, params?: WindowParams): Dialog.DialogInstanceApi<T> => {
+  const open = <T extends Dialog.DialogData>(args: Dialog.DialogSpec<T>, params?: WindowParams): Dialog.DialogInstanceApi<T> => {
     return storeSelectionAndOpenDialog(() => getImplementation().open<T>(args, params, closeDialog));
   };
 

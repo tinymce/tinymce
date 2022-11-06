@@ -9,8 +9,8 @@ import * as Unique from 'ephox/katamari/api/Unique';
 describe('atomic.katamari.api.arr.ArrMapToObjectTest', () => {
   it('maps to object', () => {
 
-    const checkToObject = <T, U>(expected: U, input: T[], f: (x: T) => U[keyof U]) => {
-      assert.deepEqual(expected, Arr.mapToObject<T, U>(input, f));
+    const checkToObject = <T extends {}, U extends {}>(expected: U, input: T[], f: (x: T) => U[keyof U]) => {
+      assert.deepEqual(expected, Arr.mapToObject(input, f));
       assert.deepEqual(expected, Arr.mapToObject(Object.freeze(input.slice()), f));
     };
 

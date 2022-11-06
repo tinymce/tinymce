@@ -79,25 +79,25 @@ describe('browser.tinymce.core.EditorTest', () => {
     editor.options.set('relative_urls', true);
     editor.documentBaseURI = new URI('http://www.site.com/dirA/dirB/dirC/');
 
-    editor.setContent('<a href="test.html">test</a>');
+    editor.setContent('<p><a href="test.html">test</a></p>');
     assert.equal(editor.getContent(), '<p><a href="test.html">test</a></p>', 'urls - relativeURLs');
 
-    editor.setContent('<a href="../test.html">test</a>');
+    editor.setContent('<p><a href="../test.html">test</a></p>');
     assert.equal(editor.getContent(), '<p><a href="../test.html">test</a></p>', 'urls - relativeURLs');
 
-    editor.setContent('<a href="test/test.html">test</a>');
+    editor.setContent('<p><a href="test/test.html">test</a></p>');
     assert.equal(editor.getContent(), '<p><a href="test/test.html">test</a></p>', 'urls - relativeURLs');
 
-    editor.setContent('<a href="/test.html">test</a>');
+    editor.setContent('<p><a href="/test.html">test</a></p>');
     assert.equal(editor.getContent(), '<p><a href="../../../test.html">test</a></p>', 'urls - relativeURLs');
 
-    editor.setContent('<a href="http://www.somesite.com/test/file.htm">test</a>');
+    editor.setContent('<p><a href="http://www.somesite.com/test/file.htm">test</a></p>');
     assert.equal(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>', 'urls - relativeURLs');
 
-    editor.setContent('<a href="//www.site.com/test/file.htm">test</a>');
+    editor.setContent('<p><a href="//www.site.com/test/file.htm">test</a></p>');
     assert.equal(editor.getContent(), '<p><a href="../../../test/file.htm">test</a></p>', 'urls - relativeURLs');
 
-    editor.setContent('<a href="//www.somesite.com/test/file.htm">test</a>');
+    editor.setContent('<p><a href="//www.somesite.com/test/file.htm">test</a></p>');
     assert.equal(editor.getContent(), '<p><a href="//www.somesite.com/test/file.htm">test</a></p>', 'urls - relativeURLs');
   });
 
@@ -107,37 +107,37 @@ describe('browser.tinymce.core.EditorTest', () => {
     editor.options.set('remove_script_host', true);
     editor.documentBaseURI = new URI('http://www.site.com/dirA/dirB/dirC/');
 
-    editor.setContent('<a href="test.html">test</a>');
+    editor.setContent('<p><a href="test.html">test</a></p>');
     assert.equal(editor.getContent(), '<p><a href="/dirA/dirB/dirC/test.html">test</a></p>', 'urls - absoluteURLs');
 
-    editor.setContent('<a href="../test.html">test</a>');
+    editor.setContent('<p><a href="../test.html">test</a></p>');
     assert.equal(editor.getContent(), '<p><a href="/dirA/dirB/test.html">test</a></p>', 'urls - absoluteURLs');
 
-    editor.setContent('<a href="test/test.html">test</a>');
+    editor.setContent('<p><a href="test/test.html">test</a></p>');
     assert.equal(editor.getContent(), '<p><a href="/dirA/dirB/dirC/test/test.html">test</a></p>', 'urls - absoluteURLs');
 
-    editor.setContent('<a href="http://www.somesite.com/test/file.htm">test</a>');
+    editor.setContent('<p><a href="http://www.somesite.com/test/file.htm">test</a></p>');
     assert.equal(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>', 'urls - absoluteURLs');
 
     editor.options.set('relative_urls', false);
     editor.options.set('remove_script_host', false);
 
-    editor.setContent('<a href="test.html">test</a>');
+    editor.setContent('<p><a href="test.html">test</a></p>');
     assert.equal(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/dirC/test.html">test</a></p>', 'urls - absoluteURLs');
 
-    editor.setContent('<a href="../test.html">test</a>');
+    editor.setContent('<p><a href="../test.html">test</a></p>');
     assert.equal(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/test.html">test</a></p>', 'urls - absoluteURLs');
 
-    editor.setContent('<a href="test/test.html">test</a>');
+    editor.setContent('<p><a href="test/test.html">test</a></p>');
     assert.equal(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/dirC/test/test.html">test</a></p>', 'urls - absoluteURLs');
 
-    editor.setContent('<a href="http://www.somesite.com/test/file.htm">test</a>');
+    editor.setContent('<p><a href="http://www.somesite.com/test/file.htm">test</a></p>');
     assert.equal(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>', 'urls - absoluteURLs');
 
-    editor.setContent('<a href="//www.site.com/test/file.htm">test</a>');
+    editor.setContent('<p><a href="//www.site.com/test/file.htm">test</a></p>');
     assert.equal(editor.getContent(), '<p><a href="//www.site.com/test/file.htm">test</a></p>', 'urls - absoluteURLs');
 
-    editor.setContent('<a href="//www.somesite.com/test/file.htm">test</a>');
+    editor.setContent('<p><a href="//www.somesite.com/test/file.htm">test</a></p>');
     assert.equal(editor.getContent(), '<p><a href="//www.somesite.com/test/file.htm">test</a></p>', 'urls - absoluteURLs');
   });
 

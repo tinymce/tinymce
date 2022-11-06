@@ -2,7 +2,6 @@ import { Optional, Strings, Type } from '@ephox/katamari';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import TextSeeker from '../api/dom/TextSeeker';
-import Editor from '../api/Editor';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as NodeType from '../dom/NodeType';
 import * as RangeNodes from '../selection/RangeNodes';
@@ -39,9 +38,17 @@ const findParentContentEditable = (dom: DOMUtils, node: Node) => {
 
 const walkText = (start: boolean, node: Text, offset: number, predicate: (chr: string) => boolean) => {
   const str = node.data;
-  for (let i = offset; start ? i >= 0 : i < str.length; start ? i-- : i++) {
-    if (predicate(str.charAt(i))) {
-      return start ? i + 1 : i;
+  if (start) {
+    for (let i = offset; i > 0; i--) {
+      if (predicate(str.charAt(i - 1))) {
+        return i;
+      }
+    }
+  } else {
+    for (let i = offset; i < str.length; i++) {
+      if (predicate(str.charAt(i))) {
+        return i;
+      }
     }
   }
   return -1;
@@ -114,9 +121,8 @@ const findSelectorEndPoint = (dom: DOMUtils, formatList: Format[], rng: Range, c
   return container;
 };
 
-const findBlockEndPoint = (editor: Editor, formatList: Format[], container: Node, siblingName: Sibling) => {
+const findBlockEndPoint = (dom: DOMUtils, formatList: Format[], container: Node, siblingName: Sibling) => {
   let node: Node | null = container;
-  const dom = editor.dom;
   const root = dom.getRoot();
   const format = formatList[0];
 
@@ -131,7 +137,7 @@ const findBlockEndPoint = (editor: Editor, formatList: Format[], container: Node
     node = dom.getParent(
       NodeType.isText(container) ? container.parentNode : container,
       // Fixes #6183 where it would expand to editable parent element in inline mode
-      (node) => node !== root && isTextBlock(editor, node),
+      (node) => node !== root && isTextBlock(dom.schema, node),
       scopeRoot
     );
   }
@@ -222,9 +228,8 @@ const findParentContainer = (
 
 const isSelfOrParentBookmark = (container: Node) => isBookmarkNode(container.parentNode) || isBookmarkNode(container);
 
-const expandRng = (editor: Editor, rng: Range, formatList: Format[], includeTrailingSpace: boolean = false): RangeLikeObject => {
+const expandRng = (dom: DOMUtils, rng: Range, formatList: Format[], includeTrailingSpace: boolean = false): RangeLikeObject => {
   let { startContainer, startOffset, endContainer, endOffset } = rng;
-  const dom = editor.dom;
   const format = formatList[0];
 
   // If index based start position then resolve it
@@ -278,7 +283,7 @@ const expandRng = (editor: Editor, rng: Range, formatList: Format[], includeTrai
     // Expand left to closest word boundary
     const startPoint = findWordEndPoint(
       dom,
-      editor.getBody(),
+      dom.getRoot(),
       startContainer,
       startOffset,
       true,
@@ -290,7 +295,7 @@ const expandRng = (editor: Editor, rng: Range, formatList: Format[], includeTrai
     });
 
     // Expand right to closest word boundary
-    const endPoint = findWordEndPoint(dom, editor.getBody(), endContainer, endOffset, false, includeTrailingSpace);
+    const endPoint = findWordEndPoint(dom, dom.getRoot(), endContainer, endOffset, false, includeTrailingSpace);
     endPoint.each(({ container, offset }) => {
       endContainer = container;
       endOffset = offset;
@@ -321,8 +326,8 @@ const expandRng = (editor: Editor, rng: Range, formatList: Format[], includeTrai
   // Expand start/end container to matching block element or text node
   if (FormatUtils.isBlockFormat(format) || FormatUtils.isSelectorFormat(format)) {
     // Find new startContainer/endContainer if there is better one
-    startContainer = findBlockEndPoint(editor, formatList, startContainer, 'previousSibling');
-    endContainer = findBlockEndPoint(editor, formatList, endContainer, 'nextSibling');
+    startContainer = findBlockEndPoint(dom, formatList, startContainer, 'previousSibling');
+    endContainer = findBlockEndPoint(dom, formatList, endContainer, 'nextSibling');
 
     // Non block element then try to expand up the leaf
     if (FormatUtils.isBlockFormat(format)) {

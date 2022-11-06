@@ -1,6 +1,6 @@
 {
   "name": "@ephox/sand",
-  "version": "6.0.3",
+  "version": "6.0.5",
   "description": "Platform detection library",
   "repository": {
     "type": "git",
@@ -30,7 +30,7 @@
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "MIT",
   "dependencies": {
-    "@ephox/katamari": "^9.0.3",
+    "@ephox/katamari": "^9.1.1",
     "tslib": "^2.0.0"
   },
   "main": "./lib/main/ts/ephox/sand/api/Main.js",

@@ -8,6 +8,7 @@ import * as Events from '../api/Events';
 import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
+import * as TransparentElements from '../content/TransparentElements';
 import ElementUtils from '../dom/ElementUtils';
 import * as NodeType from '../dom/NodeType';
 import { RangeLikeObject } from '../selection/RangeTypes';
@@ -235,6 +236,13 @@ const removeListStyleFormats = (editor: Editor, name: string, vars: FormatVars |
 const removeFormatInternal = (ed: Editor, format: Format, vars?: FormatVars, node?: Node, compareNode?: Node | null): RemoveFormatAdt => {
   const dom = ed.dom;
   const elementUtils = ElementUtils(ed);
+  const schema = ed.schema;
+
+  // Root level block transparents should get converted into regular text blocks
+  if (FormatUtils.isInlineFormat(format) && TransparentElements.isTransparentElementName(schema, format.inline) && TransparentElements.isTransparentBlock(schema, node) && node.parentElement === ed.getBody()) {
+    removeNode(ed, node, format);
+    return removeResult.removed();
+  }
 
   // Check if node is noneditable and can have the format removed from it
   if (!format.ceFalseOverride && node && dom.getContentEditableParent(node) === 'false') {
@@ -551,7 +559,7 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
     let startContainer: Node;
     let endContainer: Node;
 
-    let expandedRng = ExpandRange.expandRng(ed, rng, formatList, rng.collapsed);
+    let expandedRng = ExpandRange.expandRng(dom, rng, formatList, rng.collapsed);
 
     if (format.split) {
       // Split text nodes
@@ -639,15 +647,13 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
 
   if (!selection.isCollapsed() || !FormatUtils.isInlineFormat(format) || TableCellSelection.getCellsFromEditor(ed).length) {
     // Remove formatting on the selection
-    SelectionUtils.preserve(selection, true, () => {
-      SelectionUtils.runOnRanges(ed, removeRngStyle);
-    });
-
-    // Check if start element still has formatting then we are at: "<b>text|</b>text"
-    // and need to move the start into the next text node
-    if (FormatUtils.isInlineFormat(format) && MatchFormat.match(ed, name, vars, selection.getStart())) {
-      FormatUtils.moveStart(dom, selection, selection.getRng());
-    }
+    FormatUtils.preserveSelection(
+      ed,
+      () => SelectionUtils.runOnRanges(ed, removeRngStyle),
+      // Before trying to move the start of the selection, check if start element still has formatting then we are at: "<b>text|</b>text"
+      // and need to move the start into the next text node
+      (startNode) => FormatUtils.isInlineFormat(format) && MatchFormat.match(ed, name, vars, startNode)
+    );
 
     ed.nodeChanged();
   } else {

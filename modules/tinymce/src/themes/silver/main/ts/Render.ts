@@ -1,7 +1,7 @@
 import {
   AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Disabling, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec, SystemEvents, VerticalDir
 } from '@ephox/alloy';
-import { Arr, Merger, Obj, Optional, Result, Singleton } from '@ephox/katamari';
+import { Arr, Fun, Merger, Obj, Optional, Result, Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Compare, Css, SugarBody, SugarElement } from '@ephox/sugar';
 
@@ -14,6 +14,7 @@ import * as Backstage from './backstage/Backstage';
 import * as Events from './Events';
 import * as Iframe from './modes/Iframe';
 import * as Inline from './modes/Inline';
+import { LazyUiReferences, ReadyUiReferences, SinkAndMothership } from './modes/UiReferences';
 import * as ReadOnly from './ReadOnly';
 import * as ContextToolbar from './ui/context/ContextToolbar';
 import * as FormatControls from './ui/core/FormatControls';
@@ -29,6 +30,7 @@ import * as Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
 import * as Throbber from './ui/throbber/Throbber';
 import { RenderToolbarConfig } from './ui/toolbar/Integration';
+import { ViewConfig } from './ui/view/ViewTypes';
 
 export interface ModeRenderInfo {
   readonly iframeContainer?: HTMLIFrameElement;
@@ -37,23 +39,22 @@ export interface ModeRenderInfo {
 }
 
 export interface RenderInfo {
-  readonly getMothership: () => Gui.GuiSystem;
-  readonly getUiMothership: () => Gui.GuiSystem;
-  readonly backstage: Backstage.UiFactoryBackstage;
+  readonly popups: {
+    readonly getMothership: () => Gui.GuiSystem;
+    readonly backstage: Backstage.UiFactoryBackstage;
+  };
+  readonly dialogs: {
+    readonly getMothership: () => Gui.GuiSystem;
+    readonly backstage: Backstage.UiFactoryBackstage;
+  };
   readonly renderUI: () => ModeRenderInfo;
-}
-
-export interface RenderUiComponents {
-  readonly mothership: Gui.GuiSystem;
-  readonly uiMothership: Gui.GuiSystem;
-  readonly outerContainer: AlloyComponent;
-  readonly sink: AlloyComponent;
 }
 
 export type ToolbarConfig = Array<string | Options.ToolbarGroupOption> | string | boolean;
 
 export interface RenderUiConfig extends RenderToolbarConfig, MenuRegistry {
   readonly sidebar: Sidebar.SidebarConfig;
+  readonly views: ViewConfig;
 }
 
 export interface RenderArgs {
@@ -61,18 +62,23 @@ export interface RenderArgs {
   readonly height: string;
 }
 
-const getLazyMothership = (singleton: Singleton.Value<Gui.GuiSystem>) =>
-  singleton.get().getOrDie('UI has not been rendered');
+const getLazyMothership = (label: string, singleton: Singleton.Value<Gui.GuiSystem>) =>
+  singleton.get().getOrDie(`UI for ${label} has not been rendered`);
 
 const setup = (editor: Editor): RenderInfo => {
   const isInline = editor.inline;
   const mode = isInline ? Inline : Iframe;
+
+  // We use a different component for creating the sticky toolbar behaviour. The
+  // most important difference is it needs "Docking" configured and all of the
+  // ripple effects that creates.
   const header = Options.isStickyToolbar(editor) ? StickyHeader : StaticHeader;
 
-  const lazySink = Singleton.value<AlloyComponent>();
-  const lazyOuterContainer = Singleton.value<AlloyComponent>();
+  const lazyUiRefs = LazyUiReferences();
+
+  // Importantly, this is outside the setup function.
   const lazyMothership = Singleton.value<Gui.GuiSystem>();
-  const lazyUiMothership = Singleton.value<Gui.GuiSystem>();
+  const lazyDialogMothership = Singleton.value<Gui.GuiSystem>();
 
   const platform = PlatformDetection.detect();
   const isTouch = platform.deviceType.isTouch();
@@ -88,13 +94,45 @@ const setup = (editor: Editor): RenderInfo => {
     }
   });
 
-  const lazyHeader = () => lazyOuterContainer.get().bind(OuterContainer.getHeader);
-  const lazySinkResult = () => Result.fromOption(lazySink.get(), 'UI has not been rendered');
-  const lazyAnchorBar = () => lazyOuterContainer.get().bind((container) => memAnchorBar.getOpt(container)).getOrDie('Could not find a anchor bar element');
-  const lazyToolbar = () => lazyOuterContainer.get().bind((container) => OuterContainer.getToolbar(container)).getOrDie('Could not find more toolbar element');
-  const lazyThrobber = () => lazyOuterContainer.get().bind((container) => OuterContainer.getThrobber(container)).getOrDie('Could not find throbber element');
+  const lazyHeader = () => lazyUiRefs.mainUi.get()
+    .map((ui) => ui.outerContainer)
+    .bind(OuterContainer.getHeader);
 
-  const backstage: Backstage.UiFactoryBackstage = Backstage.init(lazySinkResult, editor, lazyAnchorBar);
+  const lazyDialogSinkResult = () => Result.fromOption(
+    lazyUiRefs.dialogUi.get().map((ui) => ui.sink),
+    'UI has not been rendered'
+  );
+
+  const lazyPopupSinkResult = () => Result.fromOption(
+    lazyUiRefs.popupUi.get().map((ui) => ui.sink),
+    '(popup) UI has not been rendered'
+  );
+
+  const lazyAnchorBar = lazyUiRefs.lazyGetInOuterOrDie(
+    'anchor bar',
+    memAnchorBar.getOpt
+  );
+
+  const lazyToolbar = lazyUiRefs.lazyGetInOuterOrDie(
+    'toolbar',
+    OuterContainer.getToolbar
+  );
+
+  const lazyThrobber = lazyUiRefs.lazyGetInOuterOrDie(
+    'throbber',
+    OuterContainer.getThrobber
+  );
+
+  // Here, we build the backstage. The backstage is going to use different sinks for dialog
+  // vs popup.
+  const backstages: Backstage.UiFactoryBackstagePair = Backstage.init(
+    {
+      popup: lazyPopupSinkResult,
+      dialog: lazyDialogSinkResult
+    },
+    editor,
+    lazyAnchorBar
+  );
 
   const makeHeaderPart = (): AlloyParts.ConfiguredPart => {
     const verticalDirAttributes = {
@@ -110,7 +148,8 @@ const setup = (editor: Editor): RenderInfo => {
         tag: 'div',
         classes: [ 'tox-menubar' ]
       },
-      backstage,
+      // TINY-9223: The menu bar should scroll with the editor.
+      backstage: backstages.popup,
       onEscape: () => {
         editor.focus();
       }
@@ -121,8 +160,8 @@ const setup = (editor: Editor): RenderInfo => {
         tag: 'div',
         classes: [ 'tox-toolbar' ]
       },
-      getSink: lazySinkResult,
-      providers: backstage.shared.providers,
+      getSink: backstages.popup.shared.getSink,
+      providers: backstages.popup.shared.providers,
       onEscape: () => {
         editor.focus();
       },
@@ -137,7 +176,7 @@ const setup = (editor: Editor): RenderInfo => {
         tag: 'div',
         classes: [ 'tox-toolbar-overlord' ]
       },
-      providers: backstage.shared.providers,
+      providers: backstages.popup.shared.providers,
       onEscape: () => {
         editor.focus();
       },
@@ -150,6 +189,7 @@ const setup = (editor: Editor): RenderInfo => {
     const hasMenubar = Options.isMenubarEnabled(editor);
     const shouldHavePromotion = Options.promotionEnabled(editor);
     const partPromotion = makePromotion();
+    const hasAnyContents = hasMultipleToolbar || hasToolbar || hasMenubar;
 
     const getPartToolbar = () => {
       if (hasMultipleToolbar) {
@@ -166,7 +206,8 @@ const setup = (editor: Editor): RenderInfo => {
     return OuterContainer.parts.header({
       dom: {
         tag: 'div',
-        classes: [ 'tox-editor-header' ],
+        classes: [ 'tox-editor-header' ]
+          .concat(hasAnyContents ? [] : [ 'tox-editor-header--empty' ]),
         ...verticalDirAttributes
       },
       components: Arr.flatten<AlloySpec>([
@@ -177,7 +218,8 @@ const setup = (editor: Editor): RenderInfo => {
       ]),
       sticky: Options.isStickyToolbar(editor),
       editor,
-      sharedBackstage: backstage.shared
+      // TINY-9223: If using a sticky toolbar, which sink should it really go in?
+      sharedBackstage: backstages.popup.shared
     });
   };
 
@@ -217,7 +259,7 @@ const setup = (editor: Editor): RenderInfo => {
     };
   };
 
-  const renderSink = () => {
+  const renderDialogUi = () => {
     const uiContainer = Options.getUiContainer(editor);
 
     // TINY-3321: When the body is using a grid layout, we need to ensure the sink width is manually set
@@ -252,13 +294,16 @@ const setup = (editor: Editor): RenderInfo => {
     const sink = GuiFactory.build(Merger.deepMerge(sinkSpec, isGridUiContainer ? reactiveWidthSpec : {}));
     const uiMothership = Gui.takeover(sink);
 
-    lazySink.set(sink);
-    lazyUiMothership.set(uiMothership);
+    lazyDialogMothership.set(uiMothership);
 
-    return { sink, uiMothership };
+    return { sink, mothership: uiMothership };
   };
 
-  const renderContainer = () => {
+  // TINY-9226: We will want to create a separate mothership and sink here for the popups
+  // instead of just returning the same as the dialogUi (which it is passed as an argument)
+  const renderPopupUi = Fun.identity<SinkAndMothership>;
+
+  const renderMainUi = () => {
     const partHeader = makeHeaderPart();
     const sidebarContainer = makeSidebarDefinition();
 
@@ -267,11 +312,17 @@ const setup = (editor: Editor): RenderInfo => {
         tag: 'div',
         classes: [ 'tox-throbber' ]
       },
-      backstage
+      backstage: backstages.popup
+    });
+
+    const partViewWrapper: AlloySpec = OuterContainer.parts.viewWrapper({
+      backstage: backstages.popup
     });
 
     const statusbar: Optional<AlloySpec> =
-      Options.useStatusBar(editor) && !isInline ? Optional.some(renderStatusbar(editor, backstage.shared.providers)) : Optional.none<AlloySpec>();
+      Options.useStatusBar(editor) && !isInline ? Optional.some(
+        renderStatusbar(editor, backstages.popup.shared.providers)
+      ) : Optional.none<AlloySpec>();
 
     // We need the statusbar to be separate to everything else so resizing works properly
     const editorComponents = Arr.flatten<AlloySpec>([
@@ -281,20 +332,13 @@ const setup = (editor: Editor): RenderInfo => {
       isToolbarBottom ? [ partHeader ] : [ ]
     ]);
 
-    const editorContainer = {
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-editor-container' ]
-      },
-      components: editorComponents
-    };
-
-    const containerComponents = Arr.flatten<AlloySpec>([
-      [ editorContainer ],
-      // Inline mode does not have a status bar
-      isInline ? [ ] : statusbar.toArray(),
-      [ partThrobber ]
-    ]);
+    const editorContainer = OuterContainer.parts.editorContainer({
+      components: Arr.flatten<AlloySpec>([
+        editorComponents,
+        // Inline mode does not have a status bar
+        isInline ? [ ] : statusbar.toArray()
+      ])
+    });
 
     // Hide the outer container if using inline mode and there's no menubar or toolbar
     const isHidden = Options.isDistractionFree(editor);
@@ -321,7 +365,11 @@ const setup = (editor: Editor): RenderInfo => {
           },
           attributes
         },
-        components: containerComponents,
+        components: [
+          editorContainer,
+          ...isInline ? [] : [ partViewWrapper ],
+          partThrobber,
+        ],
         behaviours: Behaviour.derive([
           ReadOnly.receivingConfig(),
           Disabling.config({
@@ -337,7 +385,6 @@ const setup = (editor: Editor): RenderInfo => {
 
     const mothership = Gui.takeover(outerContainer);
 
-    lazyOuterContainer.set(outerContainer);
     lazyMothership.set(mothership);
 
     return { mothership, outerContainer };
@@ -382,16 +429,14 @@ const setup = (editor: Editor): RenderInfo => {
     editor.addQueryStateHandler('ToggleToolbarDrawer', () => OuterContainer.isToolbarDrawerToggled(outerContainer));
   };
 
-  const renderUI = (): ModeRenderInfo => {
-    const { mothership, outerContainer } = renderContainer();
-    const { uiMothership, sink } = renderSink();
-
+  const renderUIWithRefs = (uiRefs: ReadyUiReferences): ModeRenderInfo => {
+    const { mainUi, popupUi, uiMotherships } = uiRefs;
     Obj.map(Options.getToolbarGroups(editor), (toolbarGroupButtonConfig, name) => {
       editor.ui.registry.addGroupToolbarButton(name, toolbarGroupButtonConfig);
     });
 
     // Apply Bridge types
-    const { buttons, menuItems, contextToolbars, sidebars } = editor.ui.registry.getAll();
+    const { buttons, menuItems, contextToolbars, sidebars, views } = editor.ui.registry.getAll();
     const toolbarOpt: Optional<ToolbarConfig> = Options.getMultipleToolbarsOption(editor);
     const rawUiConfig: RenderUiConfig = {
       menuItems,
@@ -400,31 +445,65 @@ const setup = (editor: Editor): RenderInfo => {
       toolbar: toolbarOpt.getOrThunk(() => Options.getToolbar(editor)),
       allowToolbarGroups: toolbarMode === Options.ToolbarMode.floating,
       buttons,
-      sidebar: sidebars
+      sidebar: sidebars,
+      views
     };
 
-    setupShortcutsAndCommands(outerContainer);
-    Events.setup(editor, mothership, uiMothership);
-    header.setup(editor, backstage.shared, lazyHeader);
-    FormatControls.setup(editor, backstage);
-    SilverContextMenu.setup(editor, lazySinkResult, backstage);
+    setupShortcutsAndCommands(mainUi.outerContainer);
+    Events.setup(editor, mainUi.mothership, uiMotherships);
+
+    // This backstage needs to kept in sync with the one passed to the Header part.
+    header.setup(editor, backstages.popup.shared, lazyHeader);
+    // This backstage is probably needed for just the bespoke dropdowns
+    FormatControls.setup(editor, backstages.popup);
+    SilverContextMenu.setup(editor, backstages.popup.shared.getSink, backstages.popup);
     Sidebar.setup(editor);
-    Throbber.setup(editor, lazyThrobber, backstage.shared);
-    ContextToolbar.register(editor, contextToolbars, sink, { backstage });
-    TableSelectorHandles.setup(editor, sink);
+    Throbber.setup(editor, lazyThrobber, backstages.popup.shared);
+    ContextToolbar.register(editor, contextToolbars, popupUi.sink, { backstage: backstages.popup });
+    TableSelectorHandles.setup(editor, popupUi.sink);
 
     const elm = editor.getElement();
-    const height = setEditorSize(outerContainer);
+    const height = setEditorSize(mainUi.outerContainer);
 
-    const uiComponents: RenderUiComponents = { mothership, uiMothership, outerContainer, sink };
     const args: RenderArgs = { targetNode: elm, height };
-    return mode.render(editor, uiComponents, rawUiConfig, backstage, args);
+    // The only components that use backstages.dialog currently are the Modal dialogs.
+    return mode.render(editor, uiRefs, rawUiConfig, backstages.popup, args);
   };
 
-  const getMothership = (): Gui.GuiSystem => getLazyMothership(lazyMothership);
-  const getUiMothership = (): Gui.GuiSystem => getLazyMothership(lazyUiMothership);
+  const renderUI = (): ModeRenderInfo => {
+    const mainUi = renderMainUi();
+    const dialogUi = renderDialogUi();
+    const popupUi = renderPopupUi(dialogUi);
 
-  return { getMothership, getUiMothership, backstage, renderUI };
+    lazyUiRefs.dialogUi.set(dialogUi);
+    lazyUiRefs.popupUi.set(popupUi);
+    lazyUiRefs.mainUi.set(mainUi);
+
+    // From this point on, we shouldn't use LazyReferences any more.
+    const uiRefs: ReadyUiReferences = {
+      popupUi,
+      dialogUi,
+      mainUi,
+      uiMotherships: lazyUiRefs.getUiMotherships()
+    };
+
+    return renderUIWithRefs(uiRefs);
+  };
+
+  // We don't have uiRefs here, so we have to rely on cells unfortunately.
+  return {
+    popups: {
+      backstage: backstages.popup,
+      // TINY-9226: We haven't enabled the separate popup mothership yet, so this needs to
+      // point to the dialog mothership
+      getMothership: (): Gui.GuiSystem => getLazyMothership('popups', lazyDialogMothership)
+    },
+    dialogs: {
+      backstage: backstages.dialog,
+      getMothership: (): Gui.GuiSystem => getLazyMothership('dialogs', lazyDialogMothership)
+    },
+    renderUI
+  };
 };
 
 export {

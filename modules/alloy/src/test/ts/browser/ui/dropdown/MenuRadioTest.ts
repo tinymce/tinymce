@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, StructAssert, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, StructAssert, TestStore, UiFinder } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
@@ -11,7 +11,6 @@ import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
-import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import * as MenuEvents from 'ephox/alloy/menu/util/MenuEvents';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';

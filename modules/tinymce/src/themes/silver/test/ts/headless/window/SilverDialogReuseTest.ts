@@ -1,5 +1,4 @@
-import { ApproxStructure, Assertions, FocusTools, StructAssert, UiFinder } from '@ephox/agar';
-import { TestHelpers } from '@ephox/alloy';
+import { ApproxStructure, Assertions, FocusTools, StructAssert, TestStore, UiFinder } from '@ephox/agar';
 import { afterEach, before, describe, it } from '@ephox/bedrock-client';
 import { Dialog as BridgeSpec } from '@ephox/bridge';
 import { Optional } from '@ephox/katamari';
@@ -13,12 +12,12 @@ import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import * as TestExtras from '../../module/TestExtras';
 
 describe('headless.tinymce.themes.silver.window.SilverDialogReuseTest', () => {
-  const store = TestHelpers.TestStore();
-  const helpers = TestExtras.bddSetup();
+  const store = TestStore();
+  const extrasHook = TestExtras.bddSetup();
   let windowManager: WindowManagerImpl;
   let dialogApi: Dialog.DialogInstanceApi<any>;
   before(() => {
-    windowManager = WindowManager.setup(helpers.extras());
+    windowManager = WindowManager.setup(extrasHook.access().extras);
   });
 
   afterEach(() => {

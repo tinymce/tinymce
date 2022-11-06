@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, FocusTools, Keys } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keys, TestStore } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { SugarDocument } from '@ephox/sugar';
@@ -7,7 +7,7 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.skin.OxideListCollectionMenuTest', () => {
-  const store = TestHelpers.TestStore();
+  const store = TestStore();
   const hook = TinyHooks.bddSetup<Editor>({
     toolbar: 'list-button',
     base_url: '/project/tinymce/js/tinymce',

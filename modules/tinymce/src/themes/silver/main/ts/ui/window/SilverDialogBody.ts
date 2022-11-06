@@ -11,7 +11,7 @@ import { bodyChannel } from './DialogChannels';
 
 // TypeScript allows some pretty weird stuff.
 interface WindowBodySpec {
-  readonly body: Dialog.Dialog<unknown>['body'];
+  readonly body: Dialog.Dialog<Record<string, unknown>>['body'];
   readonly initialData: Dialog.DialogData;
 }
 

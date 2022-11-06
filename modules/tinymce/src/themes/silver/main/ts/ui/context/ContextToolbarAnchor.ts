@@ -70,7 +70,11 @@ const determineInsetLayout = (editor: Editor, contextbar: SugarElement<HTMLEleme
     // Preserve the position, get the bounds and then see if we have an overlap.
     // If overlapping and this wasn't triggered by a reposition then flip the placement
     return preservePosition(contextbar, data.getMode(), () => {
-      const isOverlapping = isVerticalOverlap(selectionBounds, Boxes.box(contextbar));
+      // TINY-8890: The negative 20px threshold here was arrived at by considering the use
+      // case of a table with default heights for the rows. The threshold had to be
+      // large enough so that the context toolbar would not prevent the user selecting
+      // in the row containing the context toolbar.
+      const isOverlapping = isVerticalOverlap(selectionBounds, Boxes.box(contextbar), -20);
       return isOverlapping && !data.isReposition() ? LayoutInset.flip : LayoutInset.preserve;
     });
   } else {

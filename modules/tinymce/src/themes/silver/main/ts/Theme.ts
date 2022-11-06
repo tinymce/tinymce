@@ -22,16 +22,29 @@ const registerOptions = (editor: Editor) => {
 export default (): void => {
   ThemeManager.add('silver', (editor): Theme => {
     registerOptions(editor);
-    const { getUiMothership, backstage, renderUI }: RenderInfo = Render.setup(editor);
+    const { dialogs, popups, renderUI }: RenderInfo = Render.setup(editor);
 
-    Autocompleter.register(editor, backstage.shared);
+    Autocompleter.register(editor, popups.backstage.shared);
 
-    const windowMgr = WindowManager.setup({ editor, backstage });
+    const windowMgr = WindowManager.setup({
+      editor,
+      backstages: {
+        popup: popups.backstage,
+        dialog: dialogs.backstage
+      }
+    });
+
+    // The NotificationManager uses the popup mothership (and sink)
+    const getNotificationManagerImpl = () => NotificationManagerImpl(
+      editor,
+      { backstage: popups.backstage },
+      popups.getMothership()
+    );
 
     return {
       renderUI,
       getWindowManagerImpl: Fun.constant(windowMgr),
-      getNotificationManagerImpl: () => NotificationManagerImpl(editor, { backstage }, getUiMothership())
+      getNotificationManagerImpl
     };
   });
 };

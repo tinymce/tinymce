@@ -1,5 +1,5 @@
 
-import { ApproxStructure, Assertions, Keyboard, Keys, Mouse, UiControls, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, Keyboard, Keys, Mouse, TestStore, UiControls, UiFinder } from '@ephox/agar';
 import { after, before, context, describe, it } from '@ephox/bedrock-client';
 import { Objects } from '@ephox/boulder';
 import { Arr, Future, Optional, Result } from '@ephox/katamari';
@@ -14,7 +14,6 @@ import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
-import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import * as MenuEvents from 'ephox/alloy/menu/util/MenuEvents';

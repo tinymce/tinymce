@@ -11,7 +11,7 @@ import * as BoundaryLocation from '../keyboard/BoundaryLocation';
 import * as BoundarySelection from '../keyboard/BoundarySelection';
 import * as InlineUtils from '../keyboard/InlineUtils';
 import * as DeleteElement from './DeleteElement';
-import { execDeleteCommand } from './DeleteUtils';
+import { execNativeDeleteCommand } from './DeleteUtils';
 
 const rangeFromPositions = (from: CaretPosition, to: CaretPosition): Range => {
   const range = document.createRange();
@@ -45,7 +45,8 @@ const deleteFromTo = (editor: Editor, caret: Cell<Text | null>, from: CaretPosit
 
   editor.undoManager.ignore(() => {
     editor.selection.setRng(rangeFromPositions(from, to));
-    execDeleteCommand(editor);
+    // TODO: TINY-9120 - Investigate if this should be using our custom overrides
+    execNativeDeleteCommand(editor);
 
     BoundaryLocation.readLocation(isInlineTarget, rootNode, CaretPosition.fromRangeStart(editor.selection.getRng()))
       .map(BoundaryLocation.inside)

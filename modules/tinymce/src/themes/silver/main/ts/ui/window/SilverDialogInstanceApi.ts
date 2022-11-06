@@ -24,7 +24,7 @@ const getCompByName = (access: DialogAccess, name: string): Optional<AlloyCompon
   }
 };
 
-const validateData = <T>(access: DialogAccess, data: T) => {
+const validateData = <T extends Dialog.DialogData>(access: DialogAccess, data: T) => {
   const root = access.getRoot();
   return Reflecting.getState(root).get().map((dialogState: DialogManager.DialogInit<T>) => StructureSchema.getOrDie(
     StructureSchema.asRaw('data', dialogState.dataValidator, data)
@@ -117,8 +117,16 @@ const getDialogApi = <T extends Dialog.DialogData>(
     withRoot((root) => {
       const id = access.getId();
       const dialogInit = doRedial(d);
+      // TINY-9223: We only need to broadcast to the mothership containing the dialog
       root.getSystem().broadcastOn([ `${dialogChannel}-${id}` ], dialogInit);
 
+      // NOTE: Reflecting does not have any smart handling of nested reflecting components,
+      // and the order of receiving a broadcast is non-deterministic. Here we use separate
+      // channels for each section (title, body, footer), and make those broadcasts *after*
+      // we've already sent the overall dialog broadcast. The overall dialog broadcast
+      // doesn't actually change the components ... its Reflecting config just stores state,
+      // but these Reflecting configs (title, body, footer) do change the components based on
+      // the received broadcasts.
       root.getSystem().broadcastOn([ `${titleChannel}-${id}` ], dialogInit.internalDialog);
       root.getSystem().broadcastOn([ `${bodyChannel}-${id}` ], dialogInit.internalDialog);
       root.getSystem().broadcastOn([ `${footerChannel}-${id}` ], dialogInit.internalDialog);

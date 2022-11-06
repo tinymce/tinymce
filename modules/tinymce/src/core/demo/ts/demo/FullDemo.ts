@@ -29,6 +29,36 @@ export default (): void => {
     });
   };
 
+  const makeCodeView = (editor: Editor) => {
+    editor.ui.registry.addView('code', {
+      buttons: [
+        {
+          type: 'button',
+          text: 'Cancel',
+          buttonType: 'secondary',
+          onAction: () => {
+            editor.execCommand('ToggleView', false, 'code');
+            console.log('close');
+          }
+        },
+        {
+          type: 'button',
+          text: 'Save code',
+          buttonType: 'primary',
+          onAction: () => {
+            console.log('save');
+          }
+        },
+      ],
+      onShow: (api) => {
+        api.getContainer().innerHTML = '<div style="height: 100%"><textarea class="tox-view__pane_panel" style="width: 100%; height: 100%">Hello world!</textarea></div>';
+      },
+      onHide: (api) => {
+        console.log('Deactivate code', api.getContainer());
+      }
+    });
+  };
+
   const settings: RawEditorOptions = {
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     content_css: '../../../../js/tinymce/skins/content/default/content.css',
@@ -86,6 +116,8 @@ export default (): void => {
     theme: 'silver',
     setup: (ed) => {
       makeSidebar(ed, 'sidebar1', 'green', 200);
+      makeSidebar(ed, 'sidebar2', 'green', 200);
+      makeCodeView(ed);
     },
     plugins: [
       'autosave', 'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',

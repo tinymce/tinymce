@@ -1,4 +1,4 @@
-import { TestHelpers } from '@ephox/alloy';
+import { TestStore } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 
@@ -8,7 +8,7 @@ import { DynamicPatternContext } from 'tinymce/core/textpatterns/core/PatternTyp
 import * as Utils from '../../module/test/TextPatternsUtils';
 
 describe('browser.tinymce.textpatterns.TextPatternsLookupTest', () => {
-  const store = TestHelpers.TestStore();
+  const store = TestStore();
   const hook = TinyHooks.bddSetupLight<Editor>({
     text_patterns: [
       { start: '**', end: '**', format: 'bold' }

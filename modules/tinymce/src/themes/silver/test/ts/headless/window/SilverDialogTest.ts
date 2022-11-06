@@ -1,5 +1,4 @@
-import { ApproxStructure, Assertions, FocusTools, Mouse, UiFinder, Waiter } from '@ephox/agar';
-import { TestHelpers } from '@ephox/alloy';
+import { ApproxStructure, Assertions, FocusTools, Mouse, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
 import { assert } from 'chai';
@@ -11,12 +10,12 @@ import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import * as TestExtras from '../../module/TestExtras';
 
 describe('headless.tinymce.themes.silver.window.SilverDialogTest', () => {
-  const store = TestHelpers.TestStore();
-  const helpers = TestExtras.bddSetup();
+  const store = TestStore();
+  const extrasHook = TestExtras.bddSetup();
   let windowManager: WindowManagerImpl;
   let dialogApi: Dialog.DialogInstanceApi<any>;
   before(() => {
-    windowManager = WindowManager.setup(helpers.extras());
+    windowManager = WindowManager.setup(extrasHook.access().extras);
   });
 
   const openDialogAndAssertInitialData = () => {

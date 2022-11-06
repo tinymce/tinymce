@@ -33,15 +33,9 @@
 
   *[contentEditable=false] {
     cursor: default;
-    user-select: none;
   }
 
   *[contentEditable=true] {
     cursor: text;
-  }
-
-  // needed to select the content of cet wrapped in cef on Safari, should be fixed in Safari 16
-  *[contentEditable=false] *[contentEditable=true] {
-    user-select: text;
   }
 }

@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Chain, Log, Step, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Log, Step, TestStore, UiFinder } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
@@ -11,7 +11,6 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
-import { TestStore } from 'ephox/alloy/api/testhelpers/TestHelpers';
 
 UnitTest.asyncTest('BlockingTest', (success, failure) => {
   const memBlockRoot = Memento.record({

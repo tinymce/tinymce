@@ -311,11 +311,14 @@ describe('browser.tinymce.themes.silver.editor.SilverEditorTest', () => {
                     classes: [ arr.has('tox-sidebar') ]
                   })
                 ]
+              }),
+              s.element('div', {
+                classes: [ arr.has('tox-statusbar') ]
               })
             ]
           }),
           s.element('div', {
-            classes: [ arr.has('tox-statusbar') ]
+            classes: [ arr.has('tox-view-wrap') ]
           }),
           s.element('div', {
             classes: [ arr.has('tox-throbber') ]

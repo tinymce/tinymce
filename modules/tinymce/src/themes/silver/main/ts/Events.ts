@@ -6,20 +6,23 @@ import Editor from 'tinymce/core/api/Editor';
 import { AfterProgressStateEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
-const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiSystem): void => {
+const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMotherships: Gui.GuiSystem[]): void => {
   const broadcastEvent = (name: string, evt: EventArgs) => {
-    Arr.each([ mothership, uiMothership ], (ship) => {
-      ship.broadcastEvent(name, evt);
+    Arr.each([ mothership, ...uiMotherships ], (m) => {
+      m.broadcastEvent(name, evt);
     });
   };
 
   const broadcastOn = (channel: string, message: Record<string, any>) => {
-    Arr.each([ mothership, uiMothership ], (ship) => {
-      ship.broadcastOn([ channel ], message);
+    Arr.each([ mothership, ...uiMotherships ], (m) => {
+      m.broadcastOn([ channel ], message);
     });
   };
 
-  const fireDismissPopups = (evt: EventArgs) => broadcastOn(Channels.dismissPopups(), { target: evt.target });
+  const fireDismissPopups = (evt: EventArgs) => broadcastOn(
+    Channels.dismissPopups(),
+    { target: evt.target }
+  );
 
   // Document touch events
   const doc = SugarDocument.getDocument();
@@ -101,10 +104,8 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
   });
 
   editor.on('detach', () => {
-    Attachment.detachSystem(mothership);
-    Attachment.detachSystem(uiMothership);
-    mothership.destroy();
-    uiMothership.destroy();
+    Arr.each([ mothership, ...uiMotherships ], Attachment.detachSystem);
+    Arr.each([ mothership, ...uiMotherships ], (m) => m.destroy());
   });
 };
 

@@ -1,5 +1,4 @@
-import { UiFinder } from '@ephox/agar';
-import { TestHelpers } from '@ephox/alloy';
+import { TestStore, UiFinder } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Sidebar } from '@ephox/bridge';
 import { SugarBody, SugarElement, Traverse } from '@ephox/sugar';
@@ -13,8 +12,8 @@ interface EventLog {
 }
 
 describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
-  const store = TestHelpers.TestStore();
-  const settingsFactory = (store: TestHelpers.TestStore) => {
+  const store = TestStore<EventLog>();
+  const settingsFactory = (store: TestStore<EventLog>) => {
     const logEvent = (name: string) => (api: Sidebar.SidebarInstanceApi) => {
       const index = Traverse.findIndex(SugarElement.fromDom(api.element())).getOr(-1);
       const entry: EventLog = { name, index };
