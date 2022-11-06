@@ -1,8 +1,8 @@
 import { Assertions, DragnDrop, Keyboard, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Cell } from '@ephox/katamari';
+import { Arr, Cell } from '@ephox/katamari';
 import { SugarBody, SugarLocation } from '@ephox/sugar';
-import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -257,6 +257,31 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       });
     });
 
+    it('TINY-9025: Dragging CEF element outside the editor should not cause scrolling', async () => {
+      const editor = hook.editor();
+      editor.setContent(`
+      <p>CEF can get dragged before this one</p>
+      <p class="hidden" style="height: 1500px"></p>
+      <p id="separator" style="height: 100px"></p>
+      <p contenteditable="false" style="height: 200px; background-color: black; color: white">Draggable CEF</p>
+    `);
+      window.scroll({
+        top: window.innerHeight + 2000
+      });
+      const target = UiFinder.findIn(TinyDom.body(editor), 'p:contains("Draggable CEF")').getOrDie();
+      const initialScrollY = window.scrollY;
+      editor.getWin().scroll({
+        top: editor.getWin().innerHeight
+      });
+      Mouse.mouseDown(target);
+      window.dispatchEvent(new MouseEvent('mousemove', {
+        clientY: window.innerHeight,
+      }));
+      await Waiter.pWait(100);
+      Mouse.mouseUp(target);
+      assert.strictEqual(window.scrollY, initialScrollY);
+    });
+
     it('TINY-8874: Dragging CEF element towards the right edge causes scrolling', async () => {
       const editor = hook.editor();
       editor.setContent(`
@@ -303,4 +328,58 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
 
   });
 
+  context('Tests when CEF element are dragged on other CEF element', () => {
+    const getBaseCEFElement = (name: string) =>
+      `<div class="${name}" style="margin: 40px; width: 1110px; height: 120px;" contenteditable="false">${name}</div>`;
+
+    const getContentWithCefElements = (elementsNames: string[]): string => {
+      if (!Arr.contains(elementsNames, 'toDrag') || !Arr.contains(elementsNames, 'destination')) {
+      // eslint-disable-next-line no-throw-literal
+        throw new Error('This function require to have an element named toDrag and one destination');
+      }
+      return `<div>${Arr.foldl(elementsNames, (acc, elementName) =>
+        acc + getBaseCEFElement(elementName)
+      , '')}</div>`;
+    };
+
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      indent: false,
+      menubar: false,
+      base_url: '/project/tinymce/js/tinymce',
+      height: 3000
+    }, [], true);
+
+    const moveToDragElementToDestinationElement = async (editor: Editor, xOffset: number, yOffset: number) => {
+      const toDrag = UiFinder.findIn(TinyDom.body(editor), '.toDrag').getOrDie();
+      const toDragPosition = SugarLocation.viewport(toDrag);
+
+      const dest = UiFinder.findIn(TinyDom.body(editor), '.destination').getOrDie();
+      const destPosition = SugarLocation.viewport(dest);
+      const yDelta = destPosition.top - toDragPosition.top;
+      const xDelta = destPosition.left - toDragPosition.left;
+
+      Mouse.mouseDown(toDrag);
+      Mouse.mouseMoveTo(toDrag, xDelta + xOffset, yDelta + yOffset);
+
+      // little trick that give "time" to CaretRange.fromPoint to find the position
+      await Waiter.pWait(0);
+      Mouse.mouseUp(toDrag);
+    };
+
+    it('TINY-8881: Dropping CEF element inside editor fires dragend event', async () => {
+      const editor = hook.editor();
+      editor.setContent(getContentWithCefElements([ 'obstacle', 'destination', 'toDrag' ]));
+      await moveToDragElementToDestinationElement(editor, -5, -5);
+
+      TinyAssertions.assertContent(editor, getContentWithCefElements([ 'obstacle', 'toDrag', 'destination' ]));
+    });
+
+    it('TINY-8881: Dragging CEF element over the first element should work as expected', async () => {
+      const editor = hook.editor();
+      editor.setContent(getContentWithCefElements([ 'destination', 'obstacle', 'toDrag' ]));
+      await moveToDragElementToDestinationElement(editor, 10, -15);
+
+      TinyAssertions.assertContent(editor, getContentWithCefElements([ 'toDrag', 'destination', 'obstacle' ]));
+    });
+  });
 });

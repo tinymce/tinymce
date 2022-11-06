@@ -1,36 +1,27 @@
 import { Attachment, Behaviour, DomFactory, Gui, GuiFactory, Positioning } from '@ephox/alloy';
 import { after, afterEach, before } from '@ephox/bedrock-client';
-import { Fun, Obj, Optional } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { Class, SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
-import { UiFactoryBackstage, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
+import { UiFactoryBackstagePair } from 'tinymce/themes/silver/backstage/Backstage';
 
 import TestBackstage from './TestBackstage';
 
 export interface TestExtras {
-  readonly backstage: UiFactoryBackstage;
-  readonly shared: UiFactoryBackstageShared;
   readonly extras: {
     readonly editor: Editor;
-    readonly backstage: UiFactoryBackstage;
+    readonly backstages: UiFactoryBackstagePair;
   };
   readonly destroy: () => void;
-  readonly uiMothership: Gui.GuiSystem;
   readonly mockEditor: Editor;
-  readonly sink: SugarElement<HTMLDivElement>;
+  readonly getPopupSink: () => SugarElement<HTMLElement>;
+  readonly getPopupMothership: () => Gui.GuiSystem;
+  readonly getDialogSink: () => SugarElement<HTMLElement>;
 }
 
-interface BddTestExtras {
-  readonly backstage: () => UiFactoryBackstage;
-  readonly shared: () => UiFactoryBackstageShared;
-  readonly extras: () => {
-    readonly editor: Editor;
-    readonly backstage: UiFactoryBackstage;
-  };
-  readonly uiMothership: () => Gui.GuiSystem;
-  readonly mockEditor: () => Editor;
-  readonly sink: () => SugarElement<HTMLDivElement>;
+interface BddTestExtrasHook {
+  readonly access: () => TestExtras;
 }
 
 export const TestExtras = (): TestExtras => {
@@ -40,8 +31,8 @@ export const TestExtras = (): TestExtras => {
     throw Error('old sinks found, a previous test did not call helpers.destroy() leaving artifacts, found: ' + oldSink.length);
   }
 
-  const sink = GuiFactory.build({
-    dom: DomFactory.fromHtml('<div class="mce-silver-sink"></div>'),
+  const dialogSink = GuiFactory.build({
+    dom: DomFactory.fromHtml('<div class="mce-silver-sink test-dialogs-sink"></div>'),
     behaviours: Behaviour.derive([
       Positioning.config({
         useFixed: Fun.always
@@ -49,14 +40,41 @@ export const TestExtras = (): TestExtras => {
     ])
   });
 
-  const uiMothership = Gui.create();
-  Class.add(uiMothership.element, 'tox');
+  const popupSink = GuiFactory.build({
+    dom: DomFactory.fromHtml('<div class="mce-silver-sink test-popups-sink"></div>'),
+    behaviours: Behaviour.derive([
+      Positioning.config({
+        useFixed: Fun.always
+      })
+    ])
+  });
 
-  const backstage = TestBackstage(sink);
+  const dialogMothership = Gui.create();
+  Class.add(dialogMothership.element, 'tox');
+  Class.add(dialogMothership.element, 'test-dialogs-mothership');
+
+  const popupMothership = Gui.create();
+  Class.add(popupMothership.element, 'tox');
+  Class.add(popupMothership.element, 'test-popups-mothership');
+
+  const backstages = {
+    popup: TestBackstage(popupSink),
+    dialog: TestBackstage(dialogSink)
+  };
   const options: Record<string, any> = {};
+
+  const editorOn: Editor['on'] = (_name, _callback) => {
+    return { } as any;
+  };
+
+  const editorOff: Editor['off'] = (_name, _callback) => {
+    return { } as any;
+  };
 
   const mockEditor = {
     setContent: (_content) => {},
+    on: editorOn,
+    off: editorOff,
     insertContent: (_content: string, _args?: any) => {},
     execCommand: (_cmd: string, _ui?: boolean, _value?: any) => {},
     ui: {
@@ -69,29 +87,36 @@ export const TestExtras = (): TestExtras => {
 
   const extras = {
     editor: mockEditor,
-    backstage
+    backstages
   };
 
-  uiMothership.add(sink);
-  Attachment.attachSystem(SugarBody.body(), uiMothership);
+  dialogMothership.add(dialogSink);
+  popupMothership.add(popupSink);
+  Attachment.attachSystem(SugarBody.body(), dialogMothership);
+  Attachment.attachSystem(SugarBody.body(), popupMothership);
+
+  const getPopupSink = () => popupSink.element;
+  const getDialogSink = () => dialogSink.element;
+  const getPopupMothership = Fun.constant(popupMothership);
 
   const destroy = () => {
-    uiMothership.remove(sink);
-    uiMothership.destroy();
+    dialogMothership.remove(dialogSink);
+    dialogMothership.destroy();
+    popupMothership.remove(popupSink);
+    popupMothership.destroy();
   };
 
   return {
-    backstage,
-    shared: backstage.shared,
     extras,
     destroy,
-    uiMothership,
     mockEditor,
-    sink: sink.element
+    getPopupSink,
+    getDialogSink,
+    getPopupMothership
   };
 };
 
-export const bddSetup = (): BddTestExtras => {
+export const bddSetup = (): BddTestExtrasHook => {
   let helpers: Optional<TestExtras> = Optional.none();
   let hasFailure = false;
 
@@ -112,18 +137,11 @@ export const bddSetup = (): BddTestExtras => {
     }
   });
 
-  const get = <K extends keyof BddTestExtras>(name: K) => (): TestExtras[K] => helpers
-    .bind((h) => Obj.get(h, name))
-    .getOrDie('The setup hooks have not run yet');
+  const access = (): TestExtras => helpers.getOrDie(
+    'The setup hooks have not run yet'
+  );
 
   return {
-    backstage: get('backstage'),
-    shared: get('shared'),
-    extras: get('extras'),
-    uiMothership: get('uiMothership'),
-    mockEditor: get('mockEditor'),
-    sink: get('sink')
+    access
   };
 };
-
-export default TestExtras;

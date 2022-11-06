@@ -9,10 +9,10 @@ import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import * as TestExtras from '../../module/TestExtras';
 
 describe('headless.tinymce.themes.silver.window.TabbedDialogTest', () => {
-  const helpers = TestExtras.bddSetup();
+  const extrasHook = TestExtras.bddSetup();
   let windowManager: WindowManagerImpl;
   before(() => {
-    windowManager = WindowManager.setup(helpers.extras());
+    windowManager = WindowManager.setup(extrasHook.access().extras);
   });
 
   const assertFormContents = (label: string, tabview: SugarElement<HTMLElement>, f: ApproxStructure.Builder<StructAssert>) => {

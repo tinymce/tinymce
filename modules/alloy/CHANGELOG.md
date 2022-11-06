@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Removed
+- Moved `TestStore` to Agar. #TINY-9157
+
+## 11.0.0 - 2022-09-08
+
 ### Added
 - Added new `retargetAndDispatchWith` API to `AlloyTriggers` to allow for redispatching of events to different targets. #TINY-8952
 - Added new `refetch` API to `Dropdown` that triggers a fetch and redraw for the dropdown menu. #TINY-8952

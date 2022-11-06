@@ -22,6 +22,7 @@ export interface SetContentArgs {
   paste?: boolean;
   load?: boolean;
   initial?: boolean;
+  [key: string]: any;
 }
 
 export interface SetContentResult {
@@ -40,6 +41,7 @@ export interface SetSelectionContentArgs extends SetContentArgs {
 }
 
 export interface InsertContentDetails {
+  readonly no_events?: boolean;
   readonly paste?: boolean;
   readonly merge?: boolean;
   readonly data?: {

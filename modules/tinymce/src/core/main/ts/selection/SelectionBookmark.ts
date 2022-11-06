@@ -2,6 +2,7 @@ import { Optional } from '@ephox/katamari';
 import { Compare, SimRange, SimSelection, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
+import Env from '../api/Env';
 import * as NodeType from '../dom/NodeType';
 
 const clamp = (offset: number, element: SugarElement<Node>): number => {
@@ -30,7 +31,8 @@ const isOrContains = (root: SugarElement<Node>, elm: SugarElement<Node>): boolea
 const isRngInRoot = (root: SugarElement<Node>) => (rng: SimRange): boolean =>
   isOrContains(root, rng.start) && isOrContains(root, rng.finish);
 
-const shouldStore = (editor: Editor) => editor.inline;
+// TINY-9259: We need to store the selection on Firefox since if the editor is hidden the selection.getRng() api will not work as expected.
+const shouldStore = (editor: Editor) => editor.inline || Env.browser.isFirefox();
 
 const nativeRangeToSelectionRange = (r: Range): SimRange =>
   SimSelection.range(SugarElement.fromDom(r.startContainer), r.startOffset, SugarElement.fromDom(r.endContainer), r.endOffset);

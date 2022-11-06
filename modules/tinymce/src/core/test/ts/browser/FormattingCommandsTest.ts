@@ -431,6 +431,14 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     TinyAssertions.assertContent(editor, '<p><strong><em>test</em></strong></p>');
   });
 
+  it('TINY-9172: unlink block links', () => {
+    const editor = hook.editor();
+    editor.setContent('<a href="test">test</a><div><a href="#"><p>test</p></a></div>');
+    editor.execCommand('SelectAll');
+    editor.execCommand('unlink');
+    TinyAssertions.assertContent(editor, '<p>test</p><div><p>test</p></div>');
+  });
+
   it('subscript/superscript', () => {
     const editor = hook.editor();
     editor.setContent('<p>test 123</p>');

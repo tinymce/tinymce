@@ -1,8 +1,8 @@
-import { TestHelpers } from '@ephox/alloy';
+import { TestStore } from '@ephox/agar';
 import { Menu, Toolbar } from '@ephox/bridge';
 import { Arr } from '@ephox/katamari';
 
-export const fetchMailMergeData = (settings: { collapseSearchResults: boolean }, store: TestHelpers.TestStore): Toolbar.ToolbarMenuButtonSpec['fetch'] => (callback, fetchContext) => {
+export const fetchMailMergeData = (settings: { collapseSearchResults: boolean }, store: TestStore): Toolbar.ToolbarMenuButtonSpec['fetch'] => (callback, fetchContext) => {
   const makeMailMerge = (info: { value: string; title?: string }): Menu.MenuItemSpec => ({
     type: 'menuitem',
     text: info.title ?? info.value,

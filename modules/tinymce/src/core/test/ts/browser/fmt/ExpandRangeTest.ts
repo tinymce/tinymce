@@ -27,7 +27,7 @@ describe('browser.tinymce.core.fmt.ExpandRangeTest', () => {
     rng.setStart(startContainer.dom, startOffset);
     rng.setEnd(endContainer.dom, endOffset);
 
-    return ExpandRange.expandRng(editor, rng, format, excludeTrailingSpaces);
+    return ExpandRange.expandRng(editor.dom, rng, format, excludeTrailingSpaces);
   };
 
   const assertRange = (editor: Editor, rng: RangeLikeObject, startPath: number[], startOffset: number, endPath: number[], endOffset: number) => {

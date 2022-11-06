@@ -10,8 +10,8 @@ import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import { UiFactoryBackstageForColorInput } from '../../backstage/ColorInputBackstage';
 import * as ReadOnly from '../../ReadOnly';
 import { renderLabel } from '../alien/FieldLabeller';
+import * as ColorCache from '../core/color/ColorCache';
 import * as ColorSwatch from '../core/color/ColorSwatch';
-import * as Options from '../core/color/Options';
 import { formChangeEvent } from '../general/FormEvents';
 import { renderPanelButton } from '../general/PanelButton';
 
@@ -107,7 +107,7 @@ export const renderColorInput = (
             () => AlloyTriggers.emit(colorBit, colorPickerCancelEvent),
             (value) => {
               emitSwatchChange(colorBit, value);
-              Options.addColor(value);
+              ColorCache.addColor(spec.storageKey, value);
             }
           );
         }, '#ffffff');
@@ -132,8 +132,8 @@ export const renderColorInput = (
         onLtr: () => [ Layout.southeast, Layout.southwest, Layout.south ]
       },
       components: [],
-      fetch: ColorSwatch.getFetch(colorInputBackstage.getColors(), colorInputBackstage.hasCustomColors()),
-      columns: colorInputBackstage.getColorCols(),
+      fetch: ColorSwatch.getFetch(colorInputBackstage.getColors(spec.storageKey), spec.storageKey, colorInputBackstage.hasCustomColors()),
+      columns: colorInputBackstage.getColorCols(spec.storageKey),
       presets: 'color',
       onItemAction
     }, sharedBackstage)

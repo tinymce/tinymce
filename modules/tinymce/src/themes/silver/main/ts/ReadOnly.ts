@@ -1,10 +1,11 @@
 import { Behaviour, Channels, Disabling, Receiving } from '@ephox/alloy';
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
+import { Arr } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Options from './api/Options';
-import { RenderUiComponents } from './Render';
+import { ReadyUiReferences } from './modes/UiReferences';
 
 export const ReadOnlyChannel = 'silver.readonly';
 
@@ -16,28 +17,31 @@ const ReadOnlyDataSchema = StructureSchema.objOf([
   FieldSchema.requiredBoolean('readonly')
 ]);
 
-const broadcastReadonly = (uiComponents: RenderUiComponents, readonly: boolean): void => {
-  const outerContainer = uiComponents.outerContainer;
+const broadcastReadonly = (uiRefs: ReadyUiReferences, readonly: boolean): void => {
+  const outerContainer = uiRefs.mainUi.outerContainer;
   const target = outerContainer.element;
 
+  const motherships = [ uiRefs.mainUi.mothership, ...uiRefs.uiMotherships ];
   if (readonly) {
-    uiComponents.mothership.broadcastOn([ Channels.dismissPopups() ], { target });
-    uiComponents.uiMothership.broadcastOn([ Channels.dismissPopups() ], { target });
+    Arr.each(motherships, (m) => {
+      m.broadcastOn([ Channels.dismissPopups() ], { target });
+    });
   }
 
-  uiComponents.mothership.broadcastOn([ ReadOnlyChannel ], { readonly });
-  uiComponents.uiMothership.broadcastOn([ ReadOnlyChannel ], { readonly });
+  Arr.each(motherships, (m) => {
+    m.broadcastOn([ ReadOnlyChannel ], { readonly });
+  });
 };
 
-const setupReadonlyModeSwitch = (editor: Editor, uiComponents: RenderUiComponents): void => {
+const setupReadonlyModeSwitch = (editor: Editor, uiRefs: ReadyUiReferences): void => {
   editor.on('init', () => {
     // Force an update of the ui components disabled states if in readonly mode
     if (editor.mode.isReadOnly()) {
-      broadcastReadonly(uiComponents, true);
+      broadcastReadonly(uiRefs, true);
     }
   });
 
-  editor.on('SwitchMode', () => broadcastReadonly(uiComponents, editor.mode.isReadOnly()));
+  editor.on('SwitchMode', () => broadcastReadonly(uiRefs, editor.mode.isReadOnly()));
 
   if (Options.isReadOnly(editor)) {
     editor.mode.set('readonly');

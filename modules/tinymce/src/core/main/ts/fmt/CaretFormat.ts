@@ -138,7 +138,7 @@ const removeCaretContainer = (editor: Editor, node: Node | null, moveCaret: bool
 
 const insertCaretContainerNode = (editor: Editor, caretContainer: Node, formatNode: Node) => {
   const dom = editor.dom;
-  const block = dom.getParent(formatNode, Fun.curry(FormatUtils.isTextBlock, editor));
+  const block = dom.getParent(formatNode, Fun.curry(FormatUtils.isTextBlock, editor.schema));
 
   if (block && dom.isEmpty(block)) {
     // Replace formatNode with caretContainer when removing format from empty block like <p><b>|</b></p>
@@ -217,7 +217,7 @@ const applyCaretFormat = (editor: Editor, name: string, vars?: FormatVars): void
     selectionRng.collapse(true);
 
     // Expand the range to the closest word and split it at those points
-    let rng = ExpandRange.expandRng(editor, selectionRng, formatList);
+    let rng = ExpandRange.expandRng(editor.dom, selectionRng, formatList);
     rng = SplitRange.split(rng);
 
     // Apply the format to the range
@@ -298,7 +298,7 @@ const removeCaretFormat = (editor: Editor, name: string, vars?: FormatVars, simi
     rng.collapse(true);
 
     // Expand the range to the closest word and split it at those points
-    let expandedRng = ExpandRange.expandRng(editor, rng, formatList, true);
+    let expandedRng = ExpandRange.expandRng(dom, rng, formatList, true);
     expandedRng = SplitRange.split(expandedRng);
 
     // TODO: Figure out how on earth this works, as it shouldn't since remove format

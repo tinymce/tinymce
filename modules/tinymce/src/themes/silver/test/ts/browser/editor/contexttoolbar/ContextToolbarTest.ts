@@ -1,5 +1,4 @@
-import { UiFinder, Waiter } from '@ephox/agar';
-import { TestHelpers } from '@ephox/alloy';
+import { TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
 import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
@@ -7,7 +6,7 @@ import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarTest', () => {
-  const store = TestHelpers.TestStore();
+  const store = TestStore();
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {

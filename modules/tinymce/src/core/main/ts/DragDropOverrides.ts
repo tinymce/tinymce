@@ -8,6 +8,7 @@ import * as Options from './api/Options';
 import Delay from './api/util/Delay';
 import { EditorEvent } from './api/util/EventDispatcher';
 import VK from './api/util/VK';
+import * as ClosestCaretCandidate from './caret/ClosestCaretCandidate';
 import * as MousePosition from './dom/MousePosition';
 import * as NodeType from './dom/NodeType';
 import * as ErrorReporter from './ErrorReporter';
@@ -130,7 +131,8 @@ const moveGhost = (
   mouseX: number,
   contentAreaContainer: HTMLElement,
   win: Window,
-  state: Singleton.Value<State>
+  state: Singleton.Value<State>,
+  mouseEventOriginatedFromWithinTheEditor: boolean
 ) => {
   let overflowX = 0, overflowY = 0;
 
@@ -163,7 +165,7 @@ const moveGhost = (
 
   state.on((state) => {
     state.intervalId.clear();
-    if (state.dragging) {
+    if (state.dragging && mouseEventOriginatedFromWithinTheEditor) {
       // This basically means that the mouse is close to the bottom edge
       // (within MouseRange pixels of the bottom edge)
       if (mouseY + mouseRangeToTriggerScrollInsideEditor >= clientHeight) {
@@ -249,7 +251,17 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
   // Reduces laggy drag behavior on Gecko
   const throttledPlaceCaretAt = Throttler.first((clientX: number, clientY: number) => {
     editor._selectionOverrides.hideFakeCaret();
-    editor.selection.placeCaretAt(clientX, clientY);
+    ClosestCaretCandidate.closestFakeCaretCandidate(editor.getBody(), clientX, clientY).fold(
+      () => editor.selection.placeCaretAt(clientX, clientY),
+      (caretInfo) => {
+        const range = editor._selectionOverrides.showCaret(1, caretInfo.node as HTMLElement, caretInfo.position === ClosestCaretCandidate.FakeCaretPosition.Before, false);
+        if (range) {
+          editor.selection.setRng(range);
+        } else {
+          editor.selection.placeCaretAt(clientX, clientY);
+        }
+      }
+    );
   }, 0);
   editor.on('remove', throttledPlaceCaretAt.cancel);
   const state_ = state;
@@ -268,9 +280,10 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
     }
 
     if (state.dragging) {
+      const mouseEventOriginatedFromWithinTheEditor = e.currentTarget === editor.getDoc().documentElement;
       const targetPos = applyRelPos(state, MousePosition.calc(editor, e));
       appendGhostToBody(state.ghost, editor.getBody());
-      moveGhost(state.ghost, targetPos, state.width, state.height, state.maxX, state.maxY, e.clientY, e.clientX, editor.getContentAreaContainer(), editor.getWin(), state_);
+      moveGhost(state.ghost, targetPos, state.width, state.height, state.maxX, state.maxY, e.clientY, e.clientX, editor.getContentAreaContainer(), editor.getWin(), state_, mouseEventOriginatedFromWithinTheEditor);
       throttledPlaceCaretAt.throttle(e.clientX, e.clientY);
     }
   });

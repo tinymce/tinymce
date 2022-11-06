@@ -64,6 +64,7 @@ const applyToEditor = (editor: Editor, level: UndoLevel, before: boolean): void 
 
   if (bookmark) {
     editor.selection.moveToBookmark(bookmark);
+    editor.selection.scrollIntoView();
   }
 };
 

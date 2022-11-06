@@ -11,7 +11,7 @@ import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import * as TestExtras from '../../module/TestExtras';
 
 describe('webdriver.tinymce.themes.silver.dialogs.DialogFocusTest', () => {
-  const helpers = TestExtras.bddSetup();
+  const extrasHook = TestExtras.bddSetup();
 
   let windowManager: WindowManagerImpl;
   before(function () {
@@ -21,7 +21,7 @@ describe('webdriver.tinymce.themes.silver.dialogs.DialogFocusTest', () => {
       this.skip();
     }
 
-    windowManager = WindowManager.setup(helpers.extras());
+    windowManager = WindowManager.setup(extrasHook.access().extras);
   });
 
   TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [

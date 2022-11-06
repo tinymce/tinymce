@@ -12,10 +12,10 @@ import * as TestExtras from '../../module/TestExtras';
 
 describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
   const isFirefox = PlatformDetection.detect().browser.isFirefox();
-  const helpers = TestExtras.bddSetup();
+  const extrasHook = TestExtras.bddSetup();
   let windowManager: WindowManagerImpl;
   before(() => {
-    windowManager = WindowManager.setup(helpers.extras());
+    windowManager = WindowManager.setup(extrasHook.access().extras);
   });
 
   TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [

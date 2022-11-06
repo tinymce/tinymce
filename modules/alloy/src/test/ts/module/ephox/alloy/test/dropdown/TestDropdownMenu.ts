@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Step, StructAssert, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, Step, StructAssert, TestStore, Waiter } from '@ephox/agar';
 import { Arr, Fun, Merger, Obj } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
@@ -7,7 +7,6 @@ import { Disabling } from 'ephox/alloy/api/behaviour/Disabling';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
-import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
 import * as ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { TogglingConfigSpec } from 'ephox/alloy/behaviour/toggling/TogglingTypes';

@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## Added
+- Add new `pWaitForEventToStopFiring` function to the `TinyContentActions` helper methods to allow tests to wait until an event stops being triggered.
+
+## 8.1.0 - 2022-09-08
+
 ### Changed
 - The new `promotion` option added in TinyMCE 6.2 is set to `false` by default.
 

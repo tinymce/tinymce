@@ -52,7 +52,7 @@ describe('browser.tinymce.plugins.link.AllowUnsafeLinkTargetTest', () => {
   it(`TBA: allow_unsafe_link_target=false: node filter normalizes and secures rel on SetContent`, () => {
     const editor = hook.editor();
     editor.options.set('allow_unsafe_link_target', false);
-    editor.setContent('<a href="http://www.google.com" target="_blank" rel="nofollow alternate">Google</a>');
+    editor.setContent('<p><a href="http://www.google.com" target="_blank" rel="nofollow alternate">Google</a></p>');
     TinyAssertions.assertContent(editor, '<p><a href="http://www.google.com" target="_blank" rel="alternate nofollow noopener">Google</a></p>');
   });
 
@@ -64,7 +64,7 @@ describe('browser.tinymce.plugins.link.AllowUnsafeLinkTargetTest', () => {
       { title: 'Test rel', value: 'alternate nofollow' },
       { title: 'Table of contents', value: 'toc' }
     ]);
-    editor.setContent('<a href="http://www.google.com" target="_blank" rel="nofollow alternate">Google</a>');
+    editor.setContent('<p><a href="http://www.google.com" target="_blank" rel="nofollow alternate">Google</a></p>');
     TinySelections.select(editor, 'p', [ 0 ]);
     await TestLinkUi.pOpenLinkDialog(editor);
     TestLinkUi.assertDialogContents({

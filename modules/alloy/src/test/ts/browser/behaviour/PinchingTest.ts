@@ -1,4 +1,4 @@
-import { Step } from '@ephox/agar';
+import { Step, TestStore } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -8,9 +8,15 @@ import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
+interface StorePinchingTest {
+  readonly method: string;
+  readonly dx: number;
+  readonly dy: number;
+}
+
 UnitTest.asynctest('Browser Test: behaviour.PinchingTest', (success, failure) => {
 
-  GuiSetup.setup((store, _doc, _body) => GuiFactory.build({
+  GuiSetup.setup((store: TestStore<StorePinchingTest>, _doc, _body) => GuiFactory.build({
     dom: {
       tag: 'div',
       styles: {

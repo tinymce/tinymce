@@ -1,5 +1,5 @@
-import { Attachment, Disabling } from '@ephox/alloy';
-import { Cell, Throttler } from '@ephox/katamari';
+import { Attachment, Channels, Disabling } from '@ephox/alloy';
+import { Arr, Cell, Throttler, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, DomEvent, SugarElement, SugarPosition, SugarShadowDom } from '@ephox/sugar';
 
@@ -11,16 +11,18 @@ import * as Events from '../api/Events';
 import * as Options from '../api/Options';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import * as ReadOnly from '../ReadOnly';
-import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
+import { ModeRenderInfo, RenderArgs, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { iframe as loadIframeSkin } from '../ui/skin/Loader';
 import { setToolbar } from './Toolbars';
+import { ReadyUiReferences } from './UiReferences';
 
 const detection = PlatformDetection.detect();
 const isiOS12 = detection.os.isiOS() && detection.os.version.major <= 12;
 
-const setupEvents = (editor: Editor, uiComponents: RenderUiComponents) => {
+const setupEvents = (editor: Editor, uiRefs: ReadyUiReferences) => {
+  const { uiMotherships } = uiRefs;
   const dom = editor.dom;
   let contentWindow = editor.getWin();
   const initialDocEle = editor.getDoc().documentElement;
@@ -59,12 +61,16 @@ const setupEvents = (editor: Editor, uiComponents: RenderUiComponents) => {
   // Bind to async load events and trigger a content resize event if the size has changed
   const elementLoad = DomEvent.capture(SugarElement.fromDom(editor.getBody()), 'load', resizeDocument);
 
-  const mothership = uiComponents.uiMothership.element;
+  // We want to hide ALL UI motherships here.
   editor.on('hide', () => {
-    Css.set(mothership, 'display', 'none');
+    Arr.each(uiMotherships, (m) => {
+      Css.set(m.element, 'display', 'none');
+    });
   });
   editor.on('show', () => {
-    Css.remove(mothership, 'display');
+    Arr.each(uiMotherships, (m) => {
+      Css.remove(m.element, 'display');
+    });
   });
 
   editor.on('NodeChange', resizeDocument);
@@ -78,17 +84,26 @@ const setupEvents = (editor: Editor, uiComponents: RenderUiComponents) => {
   });
 };
 
-const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
+// TINY-9226: When introducing two sinks, the dialog mothership should be attached to the ui
+// root, and the popup mothership should be attached *after* (or before) the main mothership
+const attachUiMotherships = (uiRoot: SugarElement<HTMLElement | ShadowRoot>, uiRefs: ReadyUiReferences) => {
+  // We only have one sink currently, until TINY-9226 is completed.
+  // Add the dialog sink to the ui root
+  Attachment.attachSystem(uiRoot, uiRefs.dialogUi.mothership);
+};
+
+const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
+  const { mainUi, uiMotherships } = uiRefs;
   const lastToolbarWidth = Cell(0);
-  const outerContainer = uiComponents.outerContainer;
+  const outerContainer = mainUi.outerContainer;
 
   loadIframeSkin(editor);
 
   const eTargetNode = SugarElement.fromDom(args.targetNode);
   const uiRoot = SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(eTargetNode));
 
-  Attachment.attachSystemAfter(eTargetNode, uiComponents.mothership);
-  Attachment.attachSystem(uiRoot, uiComponents.uiMothership);
+  Attachment.attachSystemAfter(eTargetNode, mainUi.mothership);
+  attachUiMotherships(uiRoot, uiRefs);
 
   editor.on('PostRender', () => {
     // Set the sidebar before the toolbar and menubar
@@ -100,7 +115,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       Options.getSidebarShow(editor)
     );
 
-    setToolbar(editor, uiComponents, rawUiConfig, backstage);
+    setToolbar(editor, uiRefs, rawUiConfig, backstage);
     lastToolbarWidth.set(editor.getWin().innerWidth);
 
     OuterContainer.setMenubar(
@@ -108,7 +123,9 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       identifyMenus(editor, rawUiConfig)
     );
 
-    setupEvents(editor, uiComponents);
+    OuterContainer.setViews(outerContainer, rawUiConfig.views);
+
+    setupEvents(editor, uiRefs);
   });
 
   const socket = OuterContainer.getSocket(outerContainer).getOrDie('Could not find expected socket element');
@@ -127,7 +144,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     editor.on('remove', unbinder.unbind);
   }
 
-  ReadOnly.setupReadonlyModeSwitch(editor, uiComponents);
+  ReadOnly.setupReadonlyModeSwitch(editor, uiRefs);
 
   editor.addCommand('ToggleSidebar', (_ui: boolean, value: string) => {
     OuterContainer.toggleSidebar(outerContainer, value);
@@ -136,10 +153,27 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   editor.addQueryValueHandler('ToggleSidebar', () => OuterContainer.whichSidebar(outerContainer) ?? '');
 
+  editor.addCommand('ToggleView', (_ui: boolean, value: string) => {
+    if (OuterContainer.toggleView(outerContainer, value)) {
+      const target = outerContainer.element;
+      mainUi.mothership.broadcastOn([ Channels.dismissPopups() ], { target });
+      Arr.each(uiMotherships, (m) => {
+        m.broadcastOn([ Channels.dismissPopups() ], { target });
+      });
+
+      // Switching back to main view should focus the editor and update any UIs
+      if (Type.isNull(OuterContainer.whichView(outerContainer))) {
+        editor.focus();
+        editor.nodeChanged();
+      }
+    }
+  });
+  editor.addQueryValueHandler('ToggleView', () => OuterContainer.whichView(outerContainer) ?? '');
+
   const toolbarMode = Options.getToolbarMode(editor);
 
   const refreshDrawer = () => {
-    OuterContainer.refreshToolbar(uiComponents.outerContainer);
+    OuterContainer.refreshToolbar(uiRefs.mainUi.outerContainer);
   };
 
   if (toolbarMode === Options.ToolbarMode.sliding || toolbarMode === Options.ToolbarMode.floating) {
@@ -155,7 +189,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   const api: Partial<EditorUiApi> = {
     setEnabled: (state) => {
-      ReadOnly.broadcastReadonly(uiComponents, !state);
+      ReadOnly.broadcastReadonly(uiRefs, !state);
     },
     isEnabled: () => !Disabling.isDisabled(outerContainer)
   };

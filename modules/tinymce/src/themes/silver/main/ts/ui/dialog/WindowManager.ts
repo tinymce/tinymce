@@ -11,7 +11,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { WindowManagerImpl, WindowParams } from 'tinymce/core/api/WindowManager';
 
 import * as Options from '../../api/Options';
-import { UiFactoryBackstage } from '../../backstage/Backstage';
+import { UiFactoryBackstagePair } from '../../backstage/Backstage';
 import { formCancelEvent } from '../general/FormEvents';
 import { renderDialog } from '../window/SilverDialog';
 import { renderInlineDialog } from '../window/SilverInlineDialog';
@@ -20,7 +20,7 @@ import * as AlertDialog from './AlertDialog';
 import * as ConfirmDialog from './ConfirmDialog';
 
 export interface WindowManagerSetup {
-  readonly backstage: UiFactoryBackstage;
+  readonly backstages: UiFactoryBackstagePair;
   readonly editor: Editor;
 }
 
@@ -53,18 +53,18 @@ const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, is
 };
 
 const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
-  const backstage = extras.backstage;
   const editor = extras.editor;
   const isStickyToolbar = Options.isStickyToolbar(editor);
 
-  const alertDialog = AlertDialog.setup(backstage);
-  const confirmDialog = ConfirmDialog.setup(backstage);
+  // Alert and Confirm dialogs are Modal Dialogs
+  const alertDialog = AlertDialog.setup(extras.backstages.dialog);
+  const confirmDialog = ConfirmDialog.setup(extras.backstages.dialog);
 
   const open = <T extends Dialog.DialogData>(config: Dialog.DialogSpec<T>, params: WindowParams | undefined, closeWindow: (dialogApi: Dialog.DialogInstanceApi<T>) => void): Dialog.DialogInstanceApi<T> => {
     if (params !== undefined && params.inline === 'toolbar') {
-      return openInlineDialog(config, backstage.shared.anchors.inlineDialog(), closeWindow, params.ariaAttrs);
+      return openInlineDialog(config, extras.backstages.popup.shared.anchors.inlineDialog(), closeWindow, params.ariaAttrs);
     } else if (params !== undefined && params.inline === 'cursor') {
-      return openInlineDialog(config, backstage.shared.anchors.cursor(), closeWindow, params.ariaAttrs);
+      return openInlineDialog(config, extras.backstages.popup.shared.anchors.cursor(), closeWindow, params.ariaAttrs);
     } else {
       return openModalDialog(config, closeWindow);
     }
@@ -84,7 +84,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
           }
         },
         editor,
-        backstage
+        extras.backstages.dialog
       );
 
       ModalDialog.show(dialog.dialog);
@@ -114,7 +114,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
             closeWindow(dialog.instanceApi);
           }
         },
-        backstage
+        extras.backstages.dialog
       );
 
       ModalDialog.show(dialog.dialog);
@@ -129,7 +129,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
     const factory = (contents: Dialog.Dialog<T>, internalInitialData: Partial<T>, dataValidator: StructureProcessor): Dialog.DialogInstanceApi<T> => {
       const initialData = validateData<T>(internalInitialData, dataValidator);
       const inlineDialog = Singleton.value<AlloyComponent>();
-      const isToolbarLocationTop = backstage.shared.header.isPositionedAtTop();
+      const isToolbarLocationTop = extras.backstages.popup.shared.header.isPositionedAtTop();
 
       const dialogInit = {
         dataValidator,
@@ -153,11 +153,12 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
             closeWindow(dialogUi.instanceApi);
           }
         },
-        backstage, ariaAttrs
+        extras.backstages.popup,
+        ariaAttrs
       );
 
       const inlineDialogComp = GuiFactory.build(InlineView.sketch({
-        lazySink: backstage.shared.getSink,
+        lazySink: extras.backstages.popup.shared.getSink,
         dom: {
           tag: 'div',
           classes: [ ]
