@@ -59,9 +59,17 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
             },
             onStartGrow: (comp) => {
               AlloyParts.getPart(comp, detail, 'overflow-button').each(Toggling.on);
+              /**
+               * Calling the `onToggled` for the consistency with `onStartShrink` callback.
+               */
               detail.onToggled(true);
             },
             onStartShrink: () => {
+              /**
+               * Calling the `onToggled` callback here instead of `Toggling` behaviour,
+               * because I want the instant state change.
+               * Otherwise the callback is called only after the animation is completed.
+               */
               detail.onToggled(false);
             },
           }),
