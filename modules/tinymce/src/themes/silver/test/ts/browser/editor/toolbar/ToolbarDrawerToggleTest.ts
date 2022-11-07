@@ -1,5 +1,6 @@
+import { TestStore } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Singleton } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { McEditor, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -79,20 +80,17 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest',
     });
     editor.focus();
 
-    const lastState = Singleton.value<boolean>();
-    lastState.set(false);
+    const store = TestStore<boolean>();
     await UiUtils.pWaitForEditorToRender();
 
     editor.on('ToggleToolbarDrawer', (options: { isToolbarDrawerToggled: boolean }) => {
-      lastState.set(options.isToolbarDrawerToggled);
+      store.add(options.isToolbarDrawerToggled);
     });
 
-    assert.isFalse(lastState.get().getOrDie('Should be set'));
     command(editor);
     await TinyUiActions.pWaitForUi(editor, '.tox-toolbar__overflow');
-    assert.isTrue(lastState.get().getOrDie('Should be set'));
     command(editor);
-    assert.isFalse(lastState.get().getOrDie('Should be set'));
+    store.assertEq('should be toggled twice', [ true, false ]);
     McEditor.remove(editor);
   };
 
