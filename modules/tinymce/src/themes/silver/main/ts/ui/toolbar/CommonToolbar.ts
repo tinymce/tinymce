@@ -61,7 +61,8 @@ const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
       itemSelector: '*:not(.tox-split-button) > .tox-tbtn:not([disabled]), ' +
                     '.tox-split-button:not([disabled]), ' +
                     '.tox-toolbar-nav-js:not([disabled]), ' +
-                    '.typeahead-wrapper:not([disabled])'
+                    '.typeahead-wrapper:not([disabled]), ' +
+                    '.number-input-wrapper:not([disabled])'
     },
     tgroupBehaviours: Behaviour.derive([
       Tabstopping.config({}),

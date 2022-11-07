@@ -1,5 +1,6 @@
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Button, Input, NativeEvents, Representing, SketchSpec } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Button, Focusing, Input, Keying, NativeEvents, Representing, SketchSpec } from '@ephox/alloy';
 import { Cell, Fun, Id, Optional } from '@ephox/katamari';
+import { Focus, SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
@@ -53,7 +54,8 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
       tag: 'div',
       styles: {
         display: 'flex'
-      }
+      },
+      classes: [ 'number-input-wrapper' ]
     },
     components: [
       Button.sketch({
@@ -93,7 +95,31 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
         },
         action: () => changeValue((n, s) => n + s)
       })
-    ]
+    ],
+    behaviours: Behaviour.derive([
+      Focusing.config({}),
+      Keying.config({
+        mode: 'special',
+        onEnter: (comp) => {
+          if (Focus.hasFocus(comp.element)) {
+            Traverse.child(comp.element, 1).each((inputElement) => {
+              Focus.focus(inputElement as SugarElement<HTMLElement>);
+            });
+            return Optional.some(true);
+          } else {
+            return Optional.none();
+          }
+        },
+        onEscape: (wrapperComp) => {
+          if (Focus.hasFocus(wrapperComp.element)) {
+            return Optional.none();
+          } else {
+            Focusing.focus(wrapperComp);
+            return Optional.some(true);
+          }
+        }
+      })
+    ])
   };
 };
 
