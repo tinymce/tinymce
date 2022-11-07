@@ -9,10 +9,10 @@ import Editor from 'tinymce/core/api/Editor';
 import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 import I18n from 'tinymce/core/api/util/I18n';
 
+import { fireToggleToolbarDrawer } from './api/Events';
 import * as Options from './api/Options';
 import * as Backstage from './backstage/Backstage';
 import * as Events from './Events';
-import { fireToggleToolbarDrawer } from './api/Events';
 import * as Iframe from './modes/Iframe';
 import * as Inline from './modes/Inline';
 import { LazyUiReferences, ReadyUiReferences, SinkAndMothership } from './modes/UiReferences';

@@ -48,5 +48,5 @@ export {
   fireTextColorChange,
   fireAfterProgressState,
   fireResolveName,
-  fireToggleToolbarDrawer,
+  fireToggleToolbarDrawer
 };
