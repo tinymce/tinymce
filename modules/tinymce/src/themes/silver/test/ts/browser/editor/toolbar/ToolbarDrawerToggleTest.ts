@@ -1,4 +1,3 @@
-import { Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Singleton } from '@ephox/katamari';
 import { McEditor, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -90,10 +89,9 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest',
 
     assert.isFalse(lastState.get().getOrDie('Should be set'));
     command(editor);
-    await Waiter.pWait(10);
+    await TinyUiActions.pWaitForUi(editor, '.tox-toolbar__overflow');
     assert.isTrue(lastState.get().getOrDie('Should be set'));
     command(editor);
-    await Waiter.pWait(10);
     assert.isFalse(lastState.get().getOrDie('Should be set'));
     McEditor.remove(editor);
   };
