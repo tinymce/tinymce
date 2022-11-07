@@ -35,6 +35,10 @@ const fireResolveName = (editor: Editor, node: Node): EditorEvent<{ name: string
     target: node
   });
 
+const fireToggleToolbarDrawer = (editor: Editor, state: boolean): void => {
+  editor.dispatch('ToggleToolbarDrawer', { isToolbarDrawerToggled: state });
+};
+
 export {
   fireSkinLoaded,
   fireSkinLoadError,
@@ -43,5 +47,6 @@ export {
   fireResizeContent,
   fireTextColorChange,
   fireAfterProgressState,
-  fireResolveName
+  fireResolveName,
+  fireToggleToolbarDrawer,
 };

@@ -12,6 +12,7 @@ import I18n from 'tinymce/core/api/util/I18n';
 import * as Options from './api/Options';
 import * as Backstage from './backstage/Backstage';
 import * as Events from './Events';
+import { fireToggleToolbarDrawer } from './api/Events';
 import * as Iframe from './modes/Iframe';
 import * as Inline from './modes/Inline';
 import { LazyUiReferences, ReadyUiReferences, SinkAndMothership } from './modes/UiReferences';
@@ -166,7 +167,7 @@ const setup = (editor: Editor): RenderInfo => {
         editor.focus();
       },
       onToolbarToggled: (state: boolean) => {
-        editor.dispatch('ToggleToolbarDrawer', { isToolbarDrawerToggled: state });
+        fireToggleToolbarDrawer(editor, state);
       },
       type: toolbarMode,
       lazyToolbar,
