@@ -101,8 +101,12 @@ const getSpec = (editor: Editor): SelectSpec => {
 };
 
 const getSpecTypeahead = (editor: Editor): SelectTypeaheadSpec => {
+  const spec = getSpec(editor);
+
   return {
-    ...getSpec(editor),
+    dataset: spec.dataset,
+    onAction: spec.onAction,
+    updateText: spec.updateText,
     onTypeaheadSelection: (rawItem) => editor.undoManager.transact(() => {
       editor.focus();
       editor.execCommand('FontName', false, rawItem.format);

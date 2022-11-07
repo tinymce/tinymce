@@ -68,7 +68,10 @@ export interface SelectSpec {
   readonly dataset: SelectDataset;
 }
 
-export interface SelectTypeaheadSpec extends SelectSpec {
+export interface SelectTypeaheadSpec {
+  readonly dataset: SelectDataset;
+  readonly onAction: (item: FormatterFormatItem) => (api: Menu.ToggleMenuItemInstanceApi) => void;
+  readonly updateText: (comp: AlloyComponent) => void;
   readonly onTypeaheadSelection: (item: FormatterFormatItem) => void;
 }
 

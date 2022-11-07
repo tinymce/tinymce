@@ -63,16 +63,6 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
 const getSpecTypeahead = (editor: Editor, dataset: SelectDataset): SelectTypeaheadSpec => {
   const fallbackFormat = 'Paragraph';
 
-  const isSelectedFor = (format: string) => () => editor.formatter.match(format);
-
-  const getPreviewFor = (format: string) => () => {
-    const fmt = editor.formatter.get(format);
-    return fmt !== undefined ? Optional.some({
-      tag: fmt.length > 0 ? (fmt[0] as InlineFormat).inline || (fmt[0] as BlockFormat).block || 'div' : 'div',
-      styles: editor.dom.parseStyle(editor.formatter.getCssText(format))
-    }) : Optional.none();
-  };
-
   const updateSelectMenuText = (comp: AlloyComponent) => {
     const getFormatItems = (fmt: StyleFormatType): BasicSelectItem[] => {
       if (isNestedFormat(fmt)) {
@@ -92,18 +82,10 @@ const getSpecTypeahead = (editor: Editor, dataset: SelectDataset): SelectTypeahe
   };
 
   return {
-    tooltip: 'Formats',
-    text: Optional.some(fallbackFormat),
-    icon: Optional.none(),
-    isSelectedFor,
-    getCurrentValue: Optional.none,
-    getPreviewFor,
+    dataset,
     onAction: onActionToggleFormat(editor),
     onTypeaheadSelection: (rawItem) => onActionToggleFormat(editor)(rawItem)(),
-    updateText: updateSelectMenuText,
-    shouldHide: Options.shouldAutoHideStyleFormats(editor) || false,
-    isInvalid: (item) => !editor.formatter.canApply(item.format),
-    dataset
+    updateText: updateSelectMenuText
   };
 };
 
