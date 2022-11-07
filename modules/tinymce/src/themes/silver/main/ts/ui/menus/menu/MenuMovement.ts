@@ -1,5 +1,7 @@
 import { KeyingConfigSpec, MenuTypes } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
+import { Optional } from '@ephox/katamari';
+import { SelectorFind } from '@ephox/sugar';
 
 import { colorClass, selectableClass } from '../item/ItemClasses';
 import { markers as getMenuMarkers } from './MenuParts';
@@ -21,8 +23,14 @@ export const deriveMenuMovement = (columns: number | 'auto', presets: Toolbar.Pr
     const rowClass = presets === 'color' ? 'tox-swatches__row' : 'tox-collection__group';
     return {
       mode: 'matrix',
-      rowSelector: '.' + rowClass
-    } as MenuTypes.MenuMatrixMovementSpec;
+      rowSelector: '.' + rowClass,
+      previousSelector: (menu) => {
+        // We only want the navigation to start on the selected item if we are in color-mode (The colorswatch)
+        return presets === 'color'
+          ? SelectorFind.descendant(menu.element, '[aria-checked=true]')
+          : Optional.none();
+      }
+    };
   }
 };
 

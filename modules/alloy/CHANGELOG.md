@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- Added `previousSelector` optional property to `MenuMatrixMovementSpec`, to start with the selected item in focus #TINY-9283
+
 ### Removed
 - Moved `TestStore` to Agar. #TINY-9157
 

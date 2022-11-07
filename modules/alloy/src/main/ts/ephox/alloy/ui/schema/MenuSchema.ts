@@ -1,5 +1,5 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
-import { Fun, Obj } from '@ephox/katamari';
+import { Fun, Obj, Optional } from '@ephox/katamari';
 
 import { Composing } from '../../api/behaviour/Composing';
 import { Highlighting } from '../../api/behaviour/Highlighting';
@@ -42,6 +42,7 @@ const configureMatrix = (detail: MenuDetail, movementInfo: MenuMatrixMovement): 
     row: movementInfo.rowSelector,
     cell: '.' + detail.markers.item
   },
+  previousSelector: movementInfo.previousSelector,
   focusManager: detail.focusManager
 });
 
@@ -108,7 +109,8 @@ const schema = Fun.constant([
       ],
       matrix: [
         Fields.output('config', configureMatrix),
-        FieldSchema.required('rowSelector')
+        FieldSchema.required('rowSelector'),
+        FieldSchema.defaulted('previousSelector', Optional.none),
       ],
       menu: [
         FieldSchema.defaulted('moveOnTab', true),

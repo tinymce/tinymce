@@ -70,6 +70,27 @@
       background: @toolbar-button-hover-background-color;
     }
   }
+
+  div.tox-swatch:not(.tox-swatch--remove) {
+    svg {
+      display: none;
+      fill: @swatch-picker-button-icon-fill;
+      height: @swatch-picker-button-icon-height;
+      margin: calc((@swatch-size - @swatch-picker-button-icon-height) / 2) calc((@swatch-size - @swatch-picker-button-icon-width) / 2);
+      width: @swatch-picker-button-icon-width;
+
+      path {
+        fill: #fff;
+        paint-order: stroke;
+        stroke: #222f3e;
+        stroke-width: 2px;
+      }
+    }
+
+    &[aria-checked="true"] svg {
+      display: block;
+    }
+  }
 }
 
 .tox:not([dir=rtl]) {
