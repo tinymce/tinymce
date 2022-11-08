@@ -182,4 +182,15 @@ describe('browser.tinymce.plugins.link.QuickLinkTest', () => {
     TinyUiActions.keydown(editor, Keys.enter());
     UiFinder.notExists(SugarBody.body(), '.tox-pop__dialog');
   });
+
+  it('TINY-8827: Closes Quicklink toolbar on escape keyup', async () => {
+    const editor = hook.editor();
+    editor.setContent('');
+    TinyContentActions.keystroke(editor, 'K'.charCodeAt(0), metaKey);
+    await TinyUiActions.pWaitForPopup(editor, '.tox-pop__dialog .tox-toolbar');
+    await FocusTools.pTryOnSelector('Selector should be in context form input', doc, '.tox-toolbar input');
+    await Waiter.pWait(100);
+    TinyUiActions.keyup(editor, Keys.escape());
+    UiFinder.notExists(SugarBody.body(), '.tox-pop__dialog');
+  });
 });

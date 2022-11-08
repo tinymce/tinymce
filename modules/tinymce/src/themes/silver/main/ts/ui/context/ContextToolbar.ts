@@ -47,11 +47,15 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
   const lastElement = Singleton.value<SugarElement<Element>>();
   const lastTrigger = Singleton.value<TriggerCause>();
   const lastContextPosition = Singleton.value<InlineContent.ContextPosition>();
+  const lastToolbarKey = Singleton.value<string>();
 
   const contextbar = GuiFactory.build(
     renderContextToolbar({
       sink,
       onEscape: () => {
+        if (lastToolbarKey.get().getOr('default') === 'quicklink') {
+          close();
+        }
         editor.focus();
         return Optional.some(true);
       }
@@ -95,6 +99,7 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     lastElement.clear();
     lastTrigger.clear();
     lastContextPosition.clear();
+    lastToolbarKey.clear();
     InlineView.hide(contextbar);
   };
 
@@ -257,6 +262,7 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
       const scopes = getScopes();
       // TODO: Have this stored in a better structure
       Obj.get(scopes.lookupTable, e.toolbarKey).each((ctx) => {
+        lastToolbarKey.set(e.toolbarKey);
         // ASSUMPTION: this is only used to open one specific toolbar at a time, hence [ctx]
         launchContext([ ctx ], Optionals.someIf(e.target !== editor, e.target));
         // Forms launched via this way get immediate focus
