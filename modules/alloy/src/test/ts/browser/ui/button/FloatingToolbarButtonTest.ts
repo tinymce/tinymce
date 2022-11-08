@@ -27,7 +27,7 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
     ])
   });
 
-  GuiSetup.setup((_store, _doc, _body) => GuiFactory.build(
+  GuiSetup.setup((store, _doc, _body) => GuiFactory.build(
     FloatingToolbarButton.sketch({
       layouts: {
         onRtl: () => [ ],
@@ -58,9 +58,10 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
             classes: [ 'test-toolbar' ]
           }
         }
-      }
+      },
+      onToggled: store.adder('onToggled')
     })
-  ), (doc, _body, gui, component, _store) => {
+  ), (doc, _body, gui, component, store) => {
     gui.add(sinkComp);
 
     const sAssertButtonStructure = (active: boolean) => GeneralSteps.sequence([
@@ -132,6 +133,8 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
         '.test-toolbar { display: flex; }'
       ]),
 
+      store.sAssertEq('Assert initial store state', [ ]),
+
       Log.stepsAsStep('', 'Assert initial structure', [
         sAssertButtonStructure(false),
         sAssertFloatingToolbarClosed()
@@ -142,11 +145,13 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
         sAssertButtonStructure(true),
         sAssertFloatingToolbarOpened()
       ]),
+      store.sAssertEq('Assert store contains toggled state', [ 'onToggled' ]),
 
       Log.stepsAsStep('', 'Escape should close floating toolbar', [
         Keyboard.sKeyup(doc, Keys.escape(), { }),
         sAssertFloatingToolbarClosed()
       ]),
+      store.sAssertEq('Assert store contains 2 toggled state', [ 'onToggled', 'onToggled' ]),
 
       Log.stepsAsStep('TINY-6032', 'Using the API to toggle the floating toolbar should work', [
         sToggleFloatingToolbar(),
