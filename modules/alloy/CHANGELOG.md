@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ### Added
-- Added `onToggled` event for `SplitFloatingToolbar` and `SplitSlidingToolbar` components. #TINY-9271
+- Added the `onToggled` callback for `SplitFloatingToolbar` and `SplitSlidingToolbar` components. #TINY-9271
 
 ### Removed
 - Moved `TestStore` to Agar. #TINY-9157
