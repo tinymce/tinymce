@@ -197,12 +197,13 @@ const renderSlidingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec): SketchSpe
     onOpened: (comp) => {
       // TINY-9223: This will only broadcast to the same mothership as the toolbar
       comp.getSystem().broadcastOn([ Channels.toolbarHeightChange() ], { type: 'opened' });
+      toolbarSpec.onToggled(true);
     },
     onClosed: (comp) => {
       // TINY-9223: This will only broadcast to the same mothership as the toolbar
       comp.getSystem().broadcastOn([ Channels.toolbarHeightChange() ], { type: 'closed' });
-    },
-    onToggled: toolbarSpec.onToggled,
+      toolbarSpec.onToggled(false);
+    }
   });
 };
 

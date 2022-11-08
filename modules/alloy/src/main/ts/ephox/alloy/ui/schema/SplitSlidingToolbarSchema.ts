@@ -59,19 +59,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
             },
             onStartGrow: (comp) => {
               AlloyParts.getPart(comp, detail, 'overflow-button').each(Toggling.on);
-              /**
-               * Calling the `onToggled` for the consistency with the `onStartShrink` callback.
-               */
-              detail.onToggled(true);
-            },
-            onStartShrink: () => {
-              /**
-               * Calling the `onToggled` callback here instead of `Toggling` behaviour's configuration,
-               * because we want the instant state change.
-               * Otherwise the callback is called only after the animation is completed.
-               */
-              detail.onToggled(false);
-            },
+            }
           }),
           Keying.config({
             mode: 'acyclic',
@@ -95,13 +83,6 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
             mode: 'pressed'
           },
           toggleOnExecute: false
-          /**
-           * For FloatingToolbars, we can hook up our `onToggled` handler directly to the Toggling
-           * because we don't have to worry about any animations.
-           *
-           * Unfortunately, for SlidingToolbars, Toggling is more directly hooked into the animation for growing, 
-           * so to have an event `onToggled` that doesn't care about the animation, we can't just hook into the Toggling config.
-           */
         })
       ])
     })
