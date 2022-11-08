@@ -66,7 +66,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
             },
             onStartShrink: () => {
               /**
-               * Calling the `onToggled` callback here instead of `Toggling` behaviour,
+               * Calling the `onToggled` callback here instead of `Toggling` behaviour's configuration,
                * because we want the instant state change.
                * Otherwise the callback is called only after the animation is completed.
                */
