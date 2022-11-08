@@ -291,6 +291,11 @@ class Editor implements EditorObservable {
       DOMUtils.DOM.styleSheetLoader._setReferrerPolicy(referrerPolicy);
     }
 
+    const contentCssCors = Options.hasContentCssCors(self);
+    if (contentCssCors) {
+      DOMUtils.DOM.styleSheetLoader._setContentCssCors(contentCssCors);
+    }
+
     AddOnManager.languageLoad = getOption('language_load');
     AddOnManager.baseURL = editorManager.baseURL;
 

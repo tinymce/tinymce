@@ -15,6 +15,7 @@ interface StyleSheetLoader {
   unload: (url: string) => void;
   unloadAll: (urls: string[]) => void;
   _setReferrerPolicy: (referrerPolicy: ReferrerPolicy) => void;
+  _setContentCssCors: (contentCssCors: boolean) => void;
 }
 
 export interface StyleSheetLoaderSettings {
@@ -42,6 +43,10 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
 
   const _setReferrerPolicy = (referrerPolicy: ReferrerPolicy) => {
     settings.referrerPolicy = referrerPolicy;
+  };
+
+  const _setContentCssCors = (contentCssCors: boolean) => {
+    settings.contentCssCors = contentCssCors;
   };
 
   const addStyle = (element: SugarElement<HTMLStyleElement>) => {
@@ -233,7 +238,8 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
     loadAll,
     unload,
     unloadAll,
-    _setReferrerPolicy
+    _setReferrerPolicy,
+    _setContentCssCors
   };
 };
 
