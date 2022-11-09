@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dragging a noneditable element before or after another noneditable element now works correctly. #TINY-9253
 - The restored selection after a redo or undo action was not scrolled into view. #TINY-9222
 - A newline could not be inserted when the selection was restored from a bookmark after an inline `contenteditable="false"` element. #TINY-9194
+- Fixed `quickbars` selection toolbar appearing on video elements.
 
 ## 6.2.0 - 2022-09-08
 

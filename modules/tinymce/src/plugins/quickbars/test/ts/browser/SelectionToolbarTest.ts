@@ -91,4 +91,12 @@ describe('browser.tinymce.plugins.quickbars.SelectionToolbarTest', () => {
     await pSetImageAndAssertToolbarState(editor, true, Alignment.Center);
     await pSetImageAndAssertToolbarState(editor, true, Alignment.Right);
   });
+
+  it('TBA: Text selection toolbar is not shown for videos', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><video controls="controls"></video></p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
+    await Waiter.pWait(50);
+    UiFinder.notExists(SugarBody.body(), '.tox-pop__dialog .tox-toolbar');
+  });
 });
