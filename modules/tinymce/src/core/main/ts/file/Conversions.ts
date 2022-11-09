@@ -27,9 +27,9 @@ const parseDataUri = (uri: string): Optional<DataUriResult> => {
   const [ type, ...rest ] = uri.split(',');
   const data = rest.join(',');
 
-  const matches = /data:([^/]+\/[^;]+)(;.+)?/.exec(type);
+  const matches = /data:([^/]+\/[^;]+)([^=]+=[^;]+)*(;.+)?/.exec(type);
   if (matches) {
-    const base64Encoded = matches[2] === ';base64';
+    const base64Encoded = matches[3] === ';base64';
     const extractedData = base64Encoded ? extractBase64Data(data) : decodeURIComponent(data);
     return Optional.some({
       type: matches[1],
