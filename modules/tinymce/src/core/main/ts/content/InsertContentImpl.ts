@@ -208,11 +208,10 @@ const deleteSelectedContent = (editor: Editor): void => {
   if (isTableCellContentSelected(dom, rng, startCell)) {
     TableDelete.deleteCellContents(editor, rng, SugarElement.fromDom(startCell as HTMLTableCellElement));
   // TINY-9193: If the selection is over the whole text node in an element then Firefox incorrectly moves the caret to the previous line
-  } else  if (rng.startContainer === rng.endContainer && rng.endOffset - rng.startOffset === 1 && NodeType.isText(rng.startContainer.childNodes[rng.startOffset])) {
-      rng.deleteContents();
-    } else {
-      editor.getDoc().execCommand('Delete', false);
-    }
+  } else if (rng.startContainer === rng.endContainer && rng.endOffset - rng.startOffset === 1 && NodeType.isText(rng.startContainer.childNodes[rng.startOffset])) {
+    rng.deleteContents();
+  } else {
+    editor.getDoc().execCommand('Delete', false);
   }
 };
 
