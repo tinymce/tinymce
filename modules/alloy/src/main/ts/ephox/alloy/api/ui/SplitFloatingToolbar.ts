@@ -51,7 +51,7 @@ const factory: CompositeSketchFactory<SplitFloatingToolbarDetail, SplitFloatingT
         button: externals['overflow-button'](),
         toolbar: externals.overflow()
       },
-      onToggled: detail.onToggled,
+      onToggled: (comp, state) => detail[state ? 'onOpened' : 'onClosed'](comp)
     })
   );
 

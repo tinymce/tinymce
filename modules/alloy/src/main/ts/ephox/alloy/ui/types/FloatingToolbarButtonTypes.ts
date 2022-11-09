@@ -20,7 +20,7 @@ export interface FloatingToolbarButtonDetail extends CompositeSketchDetail, HasL
     toggledClass: string;
   };
 
-  onToggled: (state: boolean) => void;
+  onToggled: (comp: AlloyComponent, state: boolean) => void;
 }
 
 export interface FloatingToolbarButtonApis {
@@ -48,7 +48,7 @@ export interface FloatingToolbarButtonSpec extends CompositeSketchSpec, HasLayou
     'toolbar': Partial<ToolbarSpec>;
   };
 
-  onToggled?: (state: boolean) => void;
+  onToggled?: (comp: AlloyComponent, state: boolean) => void;
 }
 
 export interface FloatingToolbarButtonSketcher extends CompositeSketch<FloatingToolbarButtonSpec>, FloatingToolbarButtonApis { }

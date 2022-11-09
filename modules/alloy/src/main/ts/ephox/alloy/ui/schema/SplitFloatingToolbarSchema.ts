@@ -14,7 +14,8 @@ const schema = Fun.constant([
   FieldSchema.optionFunction('getOverflowBounds'),
   FieldSchema.required('lazySink'),
   FieldSchema.customField('overflowGroups', () => Cell([ ])),
-  Fields.onHandler('onToggled'),
+  Fields.onHandler('onOpened'),
+  Fields.onHandler('onClosed')
 ].concat(
   SplitToolbarBase.schema()
 ));

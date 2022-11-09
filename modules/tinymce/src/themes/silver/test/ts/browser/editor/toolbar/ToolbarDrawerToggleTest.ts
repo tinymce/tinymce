@@ -1,4 +1,4 @@
-import { TestStore } from '@ephox/agar';
+import { TestStore, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { McEditor, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -83,14 +83,16 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest',
     const store = TestStore<boolean>();
     await UiUtils.pWaitForEditorToRender();
 
-    editor.on('ToggleToolbarDrawer', (options: { isToolbarDrawerToggled: boolean }) => {
-      store.add(options.isToolbarDrawerToggled);
+    editor.on('ToggleToolbarDrawer', (options: { state: boolean }) => {
+      store.add(options.state);
     });
 
     command(editor);
     await TinyUiActions.pWaitForUi(editor, '.tox-toolbar__overflow');
     command(editor);
-    store.assertEq('should be toggled twice', [ true, false ]);
+    await Waiter.pTryUntil('Wait for toolbar to be completely open', () => {
+      store.sAssertEq('Assert store contains opened state', [ true, false ]);
+    });
     McEditor.remove(editor);
   };
 

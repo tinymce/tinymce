@@ -277,7 +277,7 @@ const partToolbar = Composite.partType.optional<OuterContainerSketchDetail, Tool
           spec.onEscape();
           return Optional.some(true);
         },
-        onToggled: spec.onToolbarToggled,
+        onToggled: (_comp, state) => spec.onToolbarToggled(state),
         cyclicKeying: false,
         initGroups: [],
         getSink: spec.getSink,

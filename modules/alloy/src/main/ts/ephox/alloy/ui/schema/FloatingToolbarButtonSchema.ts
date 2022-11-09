@@ -51,7 +51,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
            * Unfortunately, for SlidingToolbars, Toggling is more directly hooked into the animation for growing,
            * so to have an event `onToggled` that doesn't care about the animation, we can't just hook into the Toggling config.
            */
-          onToggled: (_api, state) => detail.onToggled(state)
+          onToggled: detail.onToggled
         })
       ])
     })

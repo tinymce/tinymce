@@ -18,7 +18,8 @@ export interface SplitFloatingToolbarDetail extends SplitToolbarBaseDetail {
 
   overflowGroups: Cell<AlloyComponent[]>;
 
-  onToggled: (state: boolean) => void;
+  onOpened: (comp: AlloyComponent) => void;
+  onClosed: (comp: AlloyComponent) => void;
 }
 
 export interface SplitFloatingToolbarApis extends SplitToolbarBaseApis {
@@ -40,7 +41,8 @@ export interface SplitFloatingToolbarSpec extends SplitToolbarBaseSpec {
     'overflow': Partial<ToolbarSpec>;
   };
 
-  onToggled?: (state: boolean) => void;
+  onOpened?: (comp: AlloyComponent) => void;
+  onClosed?: (comp: AlloyComponent) => void;
 }
 
 export interface SplitFloatingToolbarSketcher extends SplitToolbarBaseSketcher<SplitFloatingToolbarSpec>, SplitFloatingToolbarApis { }
