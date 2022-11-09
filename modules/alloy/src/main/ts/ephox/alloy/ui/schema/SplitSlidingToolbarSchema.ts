@@ -18,8 +18,7 @@ import * as ToolbarSchema from './ToolbarSchema';
 const schema = Fun.constant([
   Fields.markers([ 'closedClass', 'openClass', 'shrinkingClass', 'growingClass', 'overflowToggledClass' ]),
   Fields.onHandler('onOpened'),
-  Fields.onHandler('onClosed'),
-  Fields.onHandler('onToggled'),
+  Fields.onHandler('onClosed')
 ].concat(
   SplitToolbarBase.schema()
 ));
