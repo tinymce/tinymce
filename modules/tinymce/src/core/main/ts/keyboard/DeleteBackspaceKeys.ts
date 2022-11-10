@@ -65,7 +65,8 @@ const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent) => {
   MatchKeys.execute([
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) },
     { keyCode: VK.DELETE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) },
-  ].concat(multiDeleteKeyPatterns), evt);
+    ...multiDeleteKeyPatterns
+  ], evt);
 };
 
 const setup = (editor: Editor, caret: Cell<Text | null>): void => {
