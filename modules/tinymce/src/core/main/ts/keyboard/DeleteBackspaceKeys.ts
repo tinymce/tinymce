@@ -1,4 +1,5 @@
 import { Cell } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 
 import Editor from '../api/Editor';
 import { EditorEvent } from '../api/util/EventDispatcher';
@@ -51,10 +52,20 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: K
 };
 
 const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent) => {
+  const os = PlatformDetection.detect().os;
+  const multiDeleteKeyPatterns = os.isMacOS() ? [
+    { keyCode: VK.BACKSPACE, metaKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaretFormat, editor) },
+    { keyCode: VK.BACKSPACE, altKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaretFormat, editor) },
+    { keyCode: VK.DELETE, altKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaretFormat, editor) },
+  ] : [
+    { keyCode: VK.BACKSPACE, ctrlKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaretFormat, editor) },
+    { keyCode: VK.BACKSPACE, ctrlKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaretFormat, editor) }
+  ];
+
   MatchKeys.execute([
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) },
-    { keyCode: VK.DELETE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) }
-  ], evt);
+    { keyCode: VK.DELETE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) },
+  ].concat(multiDeleteKeyPatterns), evt);
 };
 
 const setup = (editor: Editor, caret: Cell<Text | null>): void => {

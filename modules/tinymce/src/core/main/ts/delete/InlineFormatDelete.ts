@@ -71,6 +71,15 @@ const deleteRange = (editor: Editor): Optional<() => void> => {
 const backspaceDelete = (editor: Editor, forward: boolean): Optional<() => void> =>
   editor.selection.isCollapsed() ? deleteCaret(editor, forward) : deleteRange(editor);
 
+const refreshCaretFormat = (editor: Editor): boolean => {
+  const parentInlines = getParentInlines(editor);
+  const formatNodes = getFormatNodes(editor, parentInlines);
+  CaretFormat.updateCaretFormat(editor, formatNodes);
+
+  return true;
+};
+
 export {
-  backspaceDelete
+  backspaceDelete,
+  refreshCaretFormat
 };
