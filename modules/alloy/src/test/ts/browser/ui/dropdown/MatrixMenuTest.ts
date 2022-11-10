@@ -1,10 +1,11 @@
-import { ApproxStructure, Assertions, Keyboard, Keys, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, Keyboard, Keys, TestStore, UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
@@ -17,30 +18,40 @@ import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import { MenuMovementSpec } from 'ephox/alloy/ui/types/MenuTypes';
 
 describe('browser.ui.dropdown.MatrixMenuTest', () => {
-  const assertSelectedStates = (label: string, expected: boolean[], menu: SugarElement<HTMLElement>) =>
+  const selectedClass = 'selected-item';
+
+  const assertSelectedStates = (label: string, expectedPos: number, menu: SugarElement<HTMLElement>) =>
     Assertions.assertStructure(
       label,
-      ApproxStructure.build((s, _str, arr) => s.element('ol', {
-        classes: [
-          arr.has('test-menu')
-        ],
-        children: [
-          s.element('div', {
-            classes: [ arr.has('row-class') ],
+      ApproxStructure.build(
+        (s, _str, arr) => {
+          const classcheck = (index: number) =>
+            index === expectedPos ?
+              arr.has(selectedClass) :
+              arr.not(selectedClass);
+
+          return s.element('ol', {
+            classes: [
+              arr.has('test-menu')
+            ],
             children: [
-              s.element('li', { classes: [ (expected[0] ? arr.has : arr.not)('selected-item') ] }),
-              s.element('li', { classes: [ (expected[1] ? arr.has : arr.not)('selected-item') ] })
+              s.element('div', {
+                classes: [ arr.has('row-class') ],
+                children: [
+                  s.element('li', { classes: [ classcheck(0) ] }),
+                  s.element('li', { classes: [ classcheck(1) ] })
+                ]
+              }),
+              s.element('div', {
+                classes: [ arr.has('row-class') ],
+                children: [
+                  s.element('li', { classes: [ classcheck(2) ] }),
+                  s.element('li', { classes: [ classcheck(3) ] })
+                ]
+              })
             ]
-          }),
-          s.element('div', {
-            classes: [ arr.has('row-class') ],
-            children: [
-              s.element('li', { classes: [ (expected[2] ? arr.has : arr.not)('selected-item') ] }),
-              s.element('li', { classes: [ (expected[3] ? arr.has : arr.not)('selected-item') ] })
-            ]
-          })
-        ]
-      })
+          });
+        }
       ), menu);
 
   const makeGuiHook = (movementSpec: MenuMovementSpec) => {
@@ -90,15 +101,39 @@ describe('browser.ui.dropdown.MatrixMenuTest', () => {
       )
     );
   };
-  context('No previous selector', () => {
 
+  const assertInitialFocusIsOnElement = (store: TestStore<string>, menuComponent: AlloyComponent, position: number, message: string) => {
+    AlloyTriggers.dispatch(menuComponent, menuComponent.element, SystemEvents.focus());
+    assertFocusIsOnItem(menuComponent, position, message);
+    store.assertEq('After focusItem event', [ 'menu.events.focus' ]);
+    store.clear();
+  };
+
+  const assertFocusIsOnItem = (menuComponent: AlloyComponent, position: number, message: string) =>
+    assertSelectedStates(message, position, menuComponent.element);
+
+  const setFocusOnItem = (store: TestStore<string>, menuComponent: AlloyComponent, element: SugarElement<Element>, position: number, message: string) => {
+    AlloyTriggers.dispatch(menuComponent, element, SystemEvents.focusItem());
+    // Focus item on alpha should select alpha (the first item)
+    assertFocusIsOnItem(menuComponent, position, message);
+    store.assertEq('After focusItem event', [ 'menu.events.focus' ]);
+    store.clear();
+  };
+
+  const keyboardNavigationMovement = (store: TestStore<string>, menuComponent: AlloyComponent, key: number, position: number, message: string) => {
+    Keyboard.keydown(key, { }, menuComponent.element);
+    assertFocusIsOnItem(menuComponent, position, message);
+    store.assertEq('After pressing key', [ 'menu.events.focus' ]);
+    store.clear();
+  };
+
+  context('No previous selector', () => {
     const hook = makeGuiHook({
       mode: 'matrix',
       rowSelector: '.row-class'
     });
 
-    it('basic navigation', () => {
-
+    it('TBA: Basic Focusing', () => {
       const menuComponent = hook.component();
       const store = hook.store();
 
@@ -107,29 +142,37 @@ describe('browser.ui.dropdown.MatrixMenuTest', () => {
       const betaItem = UiFinder.findIn(menuComponent.element, 'li[data-value="beta"]').getOrDie();
 
       store.assertEq('Before focusItem event', [ ]);
+      assertInitialFocusIsOnElement(store, menuComponent, 0, 'Focus should be on alpha');
 
-      AlloyTriggers.dispatch(menuComponent, alphaItem, SystemEvents.focusItem());
-      // Focus item on alpha should select alpha (the first item)
-      assertSelectedStates('After focusing on alpha', [ true, false, false, false ], menuComponent.element);
-      store.assertEq('After focusItem event', [ 'menu.events.focus' ]);
+      setFocusOnItem(store, menuComponent, alphaItem, 0, 'After focusing on alpha');
+      setFocusOnItem(store, menuComponent, betaItem, 1, 'After focusing on beta');
+    });
 
-      store.clear();
-      // Focus item on beta should select beta (the second item)
-      AlloyTriggers.dispatch(menuComponent, betaItem, SystemEvents.focusItem());
-      assertSelectedStates('After focusing on beta', [ false, true, false, false ], menuComponent.element);
-      store.assertEq('After focusItem event (on beta)', [ 'menu.events.focus' ]);
+    it('TBA: Keyboard navigation', () => {
+      const menuComponent = hook.component();
+      const store = hook.store();
 
-      store.clear();
-      Keyboard.keydown(Keys.down(), { }, menuComponent.element);
-      assertSelectedStates('After pressing down on beta to get to delta (goes down one row)', [ false, false, false, true ], menuComponent.element);
-      store.assertEq('After pressing down on beta', [ 'menu.events.focus' ]);
+      store.assertEq('Before focusItem event', [ ]);
+      assertInitialFocusIsOnElement(store, menuComponent, 0, 'Focus should be on alpha');
 
-      store.clear();
-      Keyboard.keydown(Keys.left(), { }, menuComponent.element);
-      assertSelectedStates('After pressing left on delta to get to gamma (goes back one column)', [ false, false, true, false ], menuComponent.element);
-      store.assertEq('After pressing left on delta', [ 'menu.events.focus' ]);
+      keyboardNavigationMovement(store, menuComponent, Keys.right(), 1, 'Press right to go from alpha to beta ( column movement )');
+      keyboardNavigationMovement(store, menuComponent, Keys.down(), 3, 'Press down to move from beta to delta ( row movement )');
+      keyboardNavigationMovement(store, menuComponent, Keys.left(), 2, 'Press left to go from delta to gamma ( column movement )');
+      keyboardNavigationMovement(store, menuComponent, Keys.up(), 0, 'Press up to move from gamma to alpha ( row movement )');
+    });
+  });
 
-      store.clear();
+  context('Previous selector', () => {
+    const hook = makeGuiHook({
+      mode: 'matrix',
+      rowSelector: '.row-class',
+      previousSelector: (component) => Optional.some(UiFinder.findIn<HTMLElement>(component.element, 'li[data-value="beta"]').getOrDie())
+    });
+
+    it('Position starts as expected', () => {
+      const menuComponent = hook.component();
+      const store = hook.store();
+      assertInitialFocusIsOnElement(store, menuComponent, 1, 'Focus should be on beta');
     });
   });
 });
