@@ -349,25 +349,25 @@ const setup = (editor: Editor): void => {
 
 const createCaretFormat = (formatNodes: Node[]): {
   caretContainer: SugarElement<HTMLSpanElement>;
-  innerMost: Node;
+  caretPosition: CaretPosition;
 } => {
   const caretContainer = createCaretContainer(false);
   const innerMost = insertFormatNodesIntoCaretContainer(formatNodes, caretContainer.dom);
-  return { caretContainer, innerMost };
+  return { caretContainer, caretPosition: CaretPosition(innerMost, 0) };
 };
 
 const replaceWithCaretFormat = (targetNode: Node, formatNodes: Node[]): CaretPosition => {
-  const { caretContainer, innerMost } = createCaretFormat(formatNodes);
+  const { caretContainer, caretPosition } = createCaretFormat(formatNodes);
   Insert.before(SugarElement.fromDom(targetNode), caretContainer);
   Remove.remove(SugarElement.fromDom(targetNode));
 
-  return CaretPosition(innerMost, 0);
+  return caretPosition;
 };
 
 const updateCaretFormat = (editor: Editor, formatNodes: Node[]): void => {
-  const { caretContainer, innerMost } = createCaretFormat(formatNodes);
+  const { caretContainer, caretPosition } = createCaretFormat(formatNodes);
   editor.selection.getRng().insertNode(caretContainer.dom);
-  editor.selection.setRng(CaretPosition(innerMost, 0).toRange());
+  editor.selection.setRng(caretPosition.toRange());
 };
 
 const isFormatElement = (editor: Editor, element: SugarElement<Node>): boolean => {
