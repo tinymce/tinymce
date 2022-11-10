@@ -41,7 +41,7 @@ describe('browser.tinymce.core.content.TransparentElementsTest', () => {
       const expectedBlockLinks = Arr.map(textBlockElements, (name) => `<a href="#" data-mce-block="true"><${name}>link</${name}></a>`).join('');
 
       Html.set(root, `<a href="#">link</a><div>${blockLinks}</div>${blockLinks}<div><a href="#">link</a></div>`);
-      TransparentElements.updateChildren(schema, root.dom);
+      TransparentElements.updateBlockStateOnChildren(schema, root.dom);
       assert.equal(Html.get(root), `<a href="#">link</a><div>${expectedBlockLinks}</div>${expectedBlockLinks}<div><a href="#">link</a></div>`);
     });
 
@@ -49,7 +49,7 @@ describe('browser.tinymce.core.content.TransparentElementsTest', () => {
       const root = rootState.get().getOrDie();
 
       Html.set(root, '<div><a href="#" data-mce-selected="inline-boundary"><p>link</p></a></div>');
-      TransparentElements.updateChildren(schema, root.dom);
+      TransparentElements.updateBlockStateOnChildren(schema, root.dom);
       assert.equal(Html.get(root), '<div><a href="#" data-mce-block="true"><p>link</p></a></div>');
     });
 

@@ -721,5 +721,14 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       TinyAssertions.assertContent(editor, '<div><a href="#1">a<p>b</p><strong><em>c</em></strong>d</a></div>');
       TinyAssertions.assertContentPresence(editor, { 'a[data-mce-block]': 1 });
     });
+
+    it('TINY-9232: Insert paragraphs in anchor inside paragraph should split the paragraph and anchor', () => {
+      const editor = hook.editor();
+
+      editor.setContent('<p><a href="#1">ad</a></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      editor.insertContent('<p>b</p><p>c</p>');
+      TinyAssertions.assertContent(editor, '<p><a href="#1">a</a></p><p>b</p><p>c</p><p><a href="#1">d</a></p>');
+    });
   });
 });
