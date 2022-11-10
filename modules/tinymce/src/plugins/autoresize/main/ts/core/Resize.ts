@@ -64,7 +64,15 @@ const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unk
   }
 
   const docEle = doc.documentElement;
-  const resizeBottomMargin = Options.getAutoResizeBottomMargin(editor);
+  let resizeBottomMargin = Options.getAutoResizeBottomMargin(editor);
+
+  if (dom.getStyle(docEle, 'min-height', true) === '100%' || dom.getStyle(docEle, 'height', true) === '100%') {
+    const body = editor.getBody();
+    const bodyRect = body.getBoundingClientRect();
+    const doc = editor.getDoc();
+    resizeBottomMargin = doc.documentElement.offsetHeight - (body.offsetHeight + bodyRect.top);
+  }
+
   const minHeight = Options.getMinHeight(editor) ?? editor.getElement().offsetHeight;
   let resizeHeight = minHeight;
 
@@ -134,12 +142,19 @@ const setup = (editor: Editor, oldSize: Cell<number>): void => {
       height: 'auto'
     });
 
-    dom.setStyles(editor.getBody(), {
-      'paddingLeft': overflowPadding,
-      'paddingRight': overflowPadding,
-      // IE & Edge have a min height of 150px by default on the body, so override that
-      'min-height': 0
-    });
+    if (Env.browser.isEdge() || Env.browser.isIE()) {
+      dom.setStyles(editor.getBody(), {
+        'paddingLeft': overflowPadding,
+        'paddingRight': overflowPadding,
+        // IE & Edge have a min height of 150px by default on the body, so override that
+        'min-height': 0
+      });
+    } else {
+      dom.setStyles(editor.getBody(), {
+        paddingLeft: overflowPadding,
+        paddingRight: overflowPadding
+      });
+    }
   });
 
   editor.on('NodeChange SetContent keyup FullscreenStateChanged ResizeContent', (e) => {

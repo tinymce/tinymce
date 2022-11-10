@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Waiter } from '@ephox/agar';
-import { beforeEach, describe, it } from '@ephox/bedrock-client';
+import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -179,4 +179,29 @@ describe('browser.tinymce.plugins.autoresize.AutoresizePluginTest', () => {
     editor.execCommand('Redo');
     assertScrollPositionGreaterThan(window, 3500);
   });
+
+  context('TINY-9123', () => {
+    const resizeEventsCount = Cell(0);
+    const hook = TinyHooks.bddSetup<Editor>({
+      plugins: 'autoresize fullscreen',
+      menubar: false,
+      toolbar: 'autoresize',
+      base_url: '/project/tinymce/js/tinymce',
+      autoresize_bottom_margin: 50,
+      // Override the content css margins, so they don't come into play
+      content_style: 'html { min-height: 100%; } body { margin: 0; margin-top: 10px; min-height: calc(100vh - 10px) }',
+      setup: (editor: Editor) => {
+        editor.on('ResizeEditor', () => {
+          resizeEventsCount.set(resizeEventsCount.get() + 1);
+        });
+      }
+    }, [ AutoresizePlugin, FullscreenPlugin ], true);
+    it('TINY-9123: it should not continue to resaize in some specific condition', async () => {
+      const editor = hook.editor();
+      editor.setContent('<div style="height: 250px;">a</div>');
+      await Waiter.pWait(1000);
+      assert.isAtMost(resizeEventsCount.get(), 10, 'Should have fired a ResizeEditor event at most 10 time');
+    });
+  });
+
 });
