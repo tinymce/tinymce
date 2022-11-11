@@ -29,7 +29,7 @@ const updateTransparent = (blocksSelector: string, transparent: Element) => {
   }
 };
 
-export const updateBlockStateOnChildren = (schema: Schema, scope: Element): Element[] => {
+const updateBlockStateOnChildren = (schema: Schema, scope: Element): Element[] => {
   const transparentSelector = makeSelectorFromSchemaMap(schema.getTransparentElements());
   const blocksSelector = makeSelectorFromSchemaMap(schema.getBlockElements());
 
@@ -79,9 +79,9 @@ const split = (parentElm: Element, splitElm: Node) => {
 };
 
 // This will find invalid blocks wrapped in anchors and split them out so for example
-// <h1><a href="#"><h2>x</h2></a></h1> will find that h2 is invalid in side the H1 and split that out.
-// This is a simplistic apporach so it's likely not covering all the cases it's hard to not make this a slow algoritm.
-export const splitInvalidChildren = (schema: Schema, scope: Element, transparentBlocks: Element[]): void => {
+// <h1><a href="#"><h2>x</h2></a></h1> will find that h2 is invalid inside the H1 and split that out.
+// This is a simplistic apporach so it's likely not covering all the cases but it's a start.
+const splitInvalidChildren = (schema: Schema, scope: Element, transparentBlocks: Element[]): void => {
   const blocksElements = schema.getBlockElements();
   const rootNode = SugarElement.fromDom(scope);
   const isBlock = (el: SugarElement) => SugarNode.name(el) in blocksElements;
@@ -89,7 +89,11 @@ export const splitInvalidChildren = (schema: Schema, scope: Element, transparent
 
   Arr.each(SugarElements.fromDom(transparentBlocks), (transparentBlock) => {
     PredicateFind.ancestor(transparentBlock, isBlock, isRoot).each((parentBlock) => {
-      const invalidChildren = PredicateFilter.children(transparentBlock, (el) => isBlock(el) && !schema.isValidChild(SugarNode.name(parentBlock), SugarNode.name(el)));
+      const invalidChildren = PredicateFilter.children(
+        transparentBlock,
+        (el) => isBlock(el) && !schema.isValidChild(SugarNode.name(parentBlock), SugarNode.name(el))
+      );
+
       if (invalidChildren.length > 0) {
         const stateScope = Traverse.parentElement(parentBlock);
 
