@@ -23,7 +23,7 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
     }
   }));
 
-  GuiSetup.setup((_store, _doc, _body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const pPrimary = SplitFloatingToolbar.parts.primary({
       dom: {
         tag: 'div',
@@ -70,10 +70,12 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
               classes: [ 'test-toolbar-overflow' ]
             }
           }
-        }
+        },
+        onOpened: store.adder('onOpened'),
+        onClosed: store.adder('onClosed')
       })
     );
-  }, (doc, _body, gui, component, _store) => {
+  }, (doc, _body, gui, component, store) => {
     gui.add(sinkComp);
     gui.add(GuiFactory.build(anchorButtonMem.asSpec()));
 
@@ -173,6 +175,7 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
         '.test-split-toolbar button.more-button { width: 50px; }'
       ]),
 
+      store.sAssertEq('Assert initial store state', [ ]),
       sAssertSplitFloatingToolbarToggleState(false),
 
       Step.sync(() => {
@@ -185,6 +188,7 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
         SplitFloatingToolbar.toggle(component);
       }),
 
+      store.sAssertEq('Assert store contains toggled state', [ 'onOpened' ]),
       sAssertSplitFloatingToolbarToggleState(true),
 
       sAssertGroups('width=400px (1 +)', [ group1, oGroup ], [ group2, group3 ]),
@@ -211,10 +215,13 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
       sResetWidth('400px'),
       sAssertGroups('width=400px (1 +)', [ group1, oGroup ], [ group2, group3 ]),
 
+      store.sClear,
       sToggleSplitFloatingToolbar(),
+      store.sAssertEq('Assert store contains toggled state', [ 'onClosed' ]),
       sAssertSplitFloatingToolbarToggleState(false),
 
       sToggleSplitFloatingToolbar(),
+      store.sAssertEq('Assert store contains toggled state', [ 'onClosed', 'onOpened' ]),
       sAssertSplitFloatingToolbarToggleState(true),
 
       GuiSetup.mRemoveStyles
