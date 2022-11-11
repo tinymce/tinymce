@@ -1,4 +1,4 @@
-import { Cell } from '@ephox/katamari';
+import { Cell, Fun } from '@ephox/katamari';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -50,7 +50,7 @@ const shouldScrollIntoView = (trigger: EditorEvent<unknown> | undefined) => {
 /**
  * This method gets executed each time the editor needs to resize.
  */
-const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unknown>): void => {
+const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unknown>, getExtraMarginBottom?: () => number): void => {
   const dom = editor.dom;
 
   const doc = editor.getDoc();
@@ -64,14 +64,7 @@ const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unk
   }
 
   const docEle = doc.documentElement;
-  let resizeBottomMargin = Options.getAutoResizeBottomMargin(editor);
-
-  if (dom.getStyle(docEle, 'min-height', true) === '100%' || dom.getStyle(docEle, 'height', true) === '100%') {
-    const body = editor.getBody();
-    const bodyRect = body.getBoundingClientRect();
-    const doc = editor.getDoc();
-    resizeBottomMargin = doc.documentElement.offsetHeight - (body.offsetHeight + bodyRect.top);
-  }
+  const resizeBottomMargin = getExtraMarginBottom ? getExtraMarginBottom() : Options.getAutoResizeOverflowPadding(editor);
 
   const minHeight = Options.getMinHeight(editor) ?? editor.getElement().offsetHeight;
   let resizeHeight = minHeight;
@@ -127,12 +120,15 @@ const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unk
     // WebKit doesn't decrease the size of the body element until the iframe gets resized
     // So we need to continue to resize the iframe down until the size gets fixed
     if ((Env.browser.isSafari() || Env.browser.isChromium()) && deltaSize < 0) {
-      resize(editor, oldSize, trigger);
+      resize(editor, oldSize, trigger, getExtraMarginBottom);
     }
   }
 };
 
 const setup = (editor: Editor, oldSize: Cell<number>): void => {
+  let getExtraMarginBottom = () => Options.getAutoResizeBottomMargin(editor);
+  let initilized = false;
+
   editor.on('init', () => {
     const overflowPadding = Options.getAutoResizeOverflowPadding(editor);
     const dom = editor.dom;
@@ -155,10 +151,19 @@ const setup = (editor: Editor, oldSize: Cell<number>): void => {
         paddingRight: overflowPadding
       });
     }
+
+    const body = editor.getBody();
+    const bodyRect = body.getBoundingClientRect();
+    const doc = editor.getDoc();
+    const currentExtraMarginBottom = doc.documentElement.offsetHeight - (body.offsetHeight + bodyRect.top);
+    getExtraMarginBottom = currentExtraMarginBottom <= 0 ? Fun.constant(currentExtraMarginBottom) : getExtraMarginBottom;
+    initilized = true;
   });
 
   editor.on('NodeChange SetContent keyup FullscreenStateChanged ResizeContent', (e) => {
-    resize(editor, oldSize, e);
+    if (initilized) {
+      resize(editor, oldSize, e, getExtraMarginBottom);
+    }
   });
 };
 
