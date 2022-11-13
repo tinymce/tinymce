@@ -78,7 +78,9 @@ const backspaceDelete = (editor: Editor, forward: boolean): Optional<() => void>
   editor.selection.isCollapsed() ? deleteCaret(editor, forward) : deleteRange(editor);
 
 const refreshCaretFormat = (editor: Editor): boolean => {
-  CaretFormat.createCaretFormatAtStart(editor, []);
+  if (editor.selection.getRng().startOffset === 0) {
+    CaretFormat.createCaretFormatAtStart(editor, []);
+  }
   return true;
 };
 
