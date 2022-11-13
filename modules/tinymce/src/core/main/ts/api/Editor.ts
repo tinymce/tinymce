@@ -292,7 +292,7 @@ class Editor implements EditorObservable {
     }
 
     const contentCssCors = Options.hasContentCssCors(self);
-    if (contentCssCors !== undefined) {
+    if (Type.isNonNullable(contentCssCors)) {
       DOMUtils.DOM.styleSheetLoader._setContentCssCors(contentCssCors);
     }
 
