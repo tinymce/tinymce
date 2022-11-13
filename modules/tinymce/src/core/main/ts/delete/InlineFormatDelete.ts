@@ -27,7 +27,12 @@ const getFormatNodes = (editor: Editor, parentInlines: SugarElement<Node>[]): No
   return Arr.map(Arr.filter(parentInlines, isFormatElement), (elm) => elm.dom);
 };
 
-const deleteLastPosition = (forward: boolean, editor: Editor, target: SugarElement<Node>, parentInlines: SugarElement<Node>[]) => {
+const getFormatNodesAtStart = (editor: Editor) => {
+  const parentInlines = getParentInlines(editor);
+  return getFormatNodes(editor, parentInlines);
+};
+
+const deleteLastPosition = (forward: boolean, editor: Editor, target: SugarElement<Node>, parentInlines: SugarElement<Node>[]): void => {
   const formatNodes = getFormatNodes(editor, parentInlines);
 
   if (formatNodes.length === 0) {
@@ -50,19 +55,20 @@ const deleteCaret = (editor: Editor, forward: boolean): Optional<() => void> => 
   });
 };
 
+const updateCaretFormat = (editor: Editor, updateFormats: Node[]): void => {
+  const missingFormats = Arr.difference(updateFormats, getFormatNodesAtStart(editor));
+  CaretFormat.createCaretFormatAtStart(editor, missingFormats);
+};
+
 const deleteRange = (editor: Editor): Optional<() => void> => {
   if (editor.selection.getRng().startOffset === 0) {
-    const parentInlines = getParentInlines(editor);
-    const formatNodes = getFormatNodes(editor, parentInlines);
-
-    if (formatNodes.length === 0) {
-      return Optional.none();
-    } else {
-      return Optional.some(() => {
+    const formatNodes = getFormatNodesAtStart(editor);
+    return formatNodes.length === 0
+      ? Optional.none()
+      : Optional.some(() => {
         DeleteUtils.execNativeDeleteCommand(editor);
-        CaretFormat.updateCaretFormat(editor, formatNodes);
+        updateCaretFormat(editor, formatNodes);
       });
-    }
   } else {
     return Optional.none();
   }
@@ -72,10 +78,7 @@ const backspaceDelete = (editor: Editor, forward: boolean): Optional<() => void>
   editor.selection.isCollapsed() ? deleteCaret(editor, forward) : deleteRange(editor);
 
 const refreshCaretFormat = (editor: Editor): boolean => {
-  const parentInlines = getParentInlines(editor);
-  const formatNodes = getFormatNodes(editor, parentInlines);
-  CaretFormat.updateCaretFormat(editor, formatNodes);
-
+  CaretFormat.createCaretFormatAtStart(editor, []);
   return true;
 };
 

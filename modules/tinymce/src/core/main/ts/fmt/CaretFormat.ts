@@ -364,7 +364,7 @@ const replaceWithCaretFormat = (targetNode: Node, formatNodes: Node[]): CaretPos
   return caretPosition;
 };
 
-const updateCaretFormat = (editor: Editor, formatNodes: Node[]): void => {
+const createCaretFormatAtStart = (editor: Editor, formatNodes: Node[]): void => {
   const { caretContainer, caretPosition } = createCaretFormat(formatNodes);
   editor.selection.getRng().insertNode(caretContainer.dom);
   editor.selection.setRng(caretPosition.toRange());
@@ -384,7 +384,7 @@ export {
   applyCaretFormat,
   removeCaretFormat,
   replaceWithCaretFormat,
-  updateCaretFormat,
+  createCaretFormatAtStart,
   isFormatElement,
   isEmptyCaretFormatElement
 };
