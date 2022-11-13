@@ -17,8 +17,12 @@ import * as TableDelete from '../delete/TableDelete';
 import { fireFakeBeforeInputEvent, fireFakeInputEvent } from './FakeInputEvents';
 import * as MatchKeys from './MatchKeys';
 
+// global backspace keydown state for Meta + Backspace emulation on macOS
+let isBackspaceKeydown = false;
+
 const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: KeyboardEvent) => {
-  const inputType = evt.keyCode === VK.BACKSPACE ? 'deleteContentBackward' : 'deleteContentForward';
+  isBackspaceKeydown = evt.keyCode === VK.BACKSPACE;
+  const inputType = isBackspaceKeydown ? 'deleteContentBackward' : 'deleteContentForward';
 
   MatchKeys.executeWithDelayedAction([
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(Outdent.backspaceDelete, editor) },
@@ -53,8 +57,7 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: K
 
 const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent) => {
   const os = PlatformDetection.detect().os;
-  const multiDeleteKeyPatterns = os.isMacOS() ? [
-    { keyCode: VK.BACKSPACE, metaKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaretFormat, editor) },
+  const multiDeleteKeyPatterns: MatchKeys.KeyPattern[] = os.isMacOS() ? [
     { keyCode: VK.BACKSPACE, altKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaretFormat, editor) },
     { keyCode: VK.DELETE, altKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaretFormat, editor) },
   ] : [
@@ -62,11 +65,20 @@ const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent) => {
     { keyCode: VK.BACKSPACE, ctrlKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaretFormat, editor) }
   ];
 
+  // macOS surpresses keyup events for most keys including Backspace when Meta key is engaged
+  // To emulate Meta + Backspace on macOS, add a pattern for the meta key when backspace was
+  // detected on keydown
+  if (os.isMacOS() && isBackspaceKeydown) {
+    multiDeleteKeyPatterns.push({ keyCode: 91, action: MatchKeys.action(InlineFormatDelete.refreshCaretFormat, editor) });
+  }
+
   MatchKeys.execute([
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) },
     { keyCode: VK.DELETE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) },
     ...multiDeleteKeyPatterns
   ], evt);
+
+  isBackspaceKeydown = false;
 };
 
 const setup = (editor: Editor, caret: Cell<Text | null>): void => {
