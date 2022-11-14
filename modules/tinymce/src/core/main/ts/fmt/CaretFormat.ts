@@ -1,4 +1,4 @@
-import { Arr, Fun, Obj, Optional, Strings } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
 import { Attribute, Insert, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
@@ -366,6 +366,11 @@ const replaceWithCaretFormat = (targetNode: Node, formatNodes: Node[]): CaretPos
 
 const createCaretFormatAtStart = (editor: Editor, formatNodes: Node[]): void => {
   const { caretContainer, caretPosition } = createCaretFormat(formatNodes);
+  const startParentElm = editor.selection.getStart().parentElement;
+  if (!Type.isNull(startParentElm) && editor.dom.isEmpty(startParentElm)) {
+    // remove <br> from empty node
+    startParentElm.innerHTML = '';
+  }
   editor.selection.getRng().insertNode(caretContainer.dom);
   editor.selection.setRng(caretPosition.toRange());
 };
