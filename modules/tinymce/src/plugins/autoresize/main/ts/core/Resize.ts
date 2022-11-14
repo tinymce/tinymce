@@ -1,4 +1,4 @@
-import { Cell, Fun } from '@ephox/katamari';
+import { Cell, Fun, Optional } from '@ephox/katamari';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -128,8 +128,9 @@ const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unk
 const setup = (editor: Editor, oldSize: Cell<number>): void => {
   let getExtraMarginBottom = () => Options.getAutoResizeBottomMargin(editor);
   let initilized = false;
+  let afterFirstResize: Optional<number> = Optional.none();
 
-  editor.on('init', () => {
+  editor.on('init', (e) => {
     const overflowPadding = Options.getAutoResizeOverflowPadding(editor);
     const dom = editor.dom;
 
@@ -152,16 +153,25 @@ const setup = (editor: Editor, oldSize: Cell<number>): void => {
       });
     }
 
-    const body = editor.getBody();
-    const bodyRect = body.getBoundingClientRect();
-    const doc = editor.getDoc();
-    const currentExtraMarginBottom = doc.documentElement.offsetHeight - (body.offsetHeight + bodyRect.top);
-    getExtraMarginBottom = currentExtraMarginBottom <= 0 ? Fun.constant(currentExtraMarginBottom) : getExtraMarginBottom;
-    initilized = true;
+    resize(editor, oldSize, e, getExtraMarginBottom);
+  });
+
+  editor.once('ResizeContent', (e) => {
+    afterFirstResize = Optional.some(editor.getContainer().offsetHeight);
+    resize(editor, oldSize, e, getExtraMarginBottom);
   });
 
   editor.on('NodeChange SetContent keyup FullscreenStateChanged ResizeContent', (e) => {
-    if (initilized) {
+    if (!initilized && afterFirstResize.isSome()) {
+      if (editor.getContainer().offsetHeight > afterFirstResize.getOr(Infinity)) {
+        const body = editor.getBody();
+        const bodyRect = body.getBoundingClientRect();
+        const doc = editor.getDoc();
+        const currentExtraMarginBottom = doc.documentElement.offsetHeight - (body.offsetHeight + bodyRect.top);
+        getExtraMarginBottom = Fun.constant(currentExtraMarginBottom);
+      }
+      initilized = true;
+    } else {
       resize(editor, oldSize, e, getExtraMarginBottom);
     }
   });
