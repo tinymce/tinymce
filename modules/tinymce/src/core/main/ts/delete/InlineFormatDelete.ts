@@ -61,17 +61,13 @@ const updateCaretFormat = (editor: Editor, updateFormats: Node[]): void => {
 };
 
 const deleteRange = (editor: Editor): Optional<() => void> => {
-  if (editor.selection.getRng().startOffset === 0) {
-    const formatNodes = getFormatNodesAtStart(editor);
-    return formatNodes.length === 0
-      ? Optional.none()
-      : Optional.some(() => {
-        DeleteUtils.execNativeDeleteCommand(editor);
-        updateCaretFormat(editor, formatNodes);
-      });
-  } else {
-    return Optional.none();
-  }
+  const formatNodes = getFormatNodesAtStart(editor);
+  return editor.selection.getRng().startOffset === 0
+    ? Optional.some(() => {
+      DeleteUtils.execNativeDeleteCommand(editor);
+      updateCaretFormat(editor, formatNodes);
+    })
+    : Optional.none();
 };
 
 const backspaceDelete = (editor: Editor, forward: boolean): Optional<() => void> =>
