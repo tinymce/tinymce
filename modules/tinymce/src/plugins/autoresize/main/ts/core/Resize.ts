@@ -127,11 +127,12 @@ const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unk
 
 const setup = (editor: Editor, oldSize: Cell<number>): void => {
   let getExtraMarginBottom = () => Options.getAutoResizeBottomMargin(editor);
-  let resizeCounter = 0;
+  let resizeCounter: number;
   let sizeAfterFirstResize: number;
   let checkDone = false;
 
   editor.on('init', (e) => {
+    resizeCounter = 0;
     const overflowPadding = Options.getAutoResizeOverflowPadding(editor);
     const dom = editor.dom;
 
@@ -163,7 +164,10 @@ const setup = (editor: Editor, oldSize: Cell<number>): void => {
       sizeAfterFirstResize = editor.getContainer().offsetHeight;
       resize(editor, oldSize, e, getExtraMarginBottom);
       resizeCounter += 1;
-    } else if (resizeCounter === 2 && !checkDone) {
+    } else if (resizeCounter < 3) {
+      resize(editor, oldSize, e, getExtraMarginBottom);
+      resizeCounter += 1;
+    } else if (resizeCounter === 3 && !checkDone) {
       const body = editor.getBody();
       const bodyRect = body.getBoundingClientRect();
       const doc = editor.getDoc();
