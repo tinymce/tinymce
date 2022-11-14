@@ -1,4 +1,4 @@
-import { Cell, Fun, Optional } from '@ephox/katamari';
+import { Arr, Cell, Fun } from '@ephox/katamari';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -129,7 +129,8 @@ const setup = (editor: Editor, oldSize: Cell<number>): void => {
   let getExtraMarginBottom = () => Options.getAutoResizeBottomMargin(editor);
   let initilized = false;
   let firstResizeDone = false;
-  let afterFirstResize: Optional<number> = Optional.none();
+  let allChecksDone = false;
+  const sizes: number[] = [];
 
   editor.on('init', (e) => {
     const overflowPadding = Options.getAutoResizeOverflowPadding(editor);
@@ -155,25 +156,32 @@ const setup = (editor: Editor, oldSize: Cell<number>): void => {
     }
 
     resize(editor, oldSize, e, getExtraMarginBottom);
+    sizes.push(editor.getContainer().offsetHeight);
+    initilized = true;
   });
 
   editor.once('ResizeContent', (e) => {
-    afterFirstResize = Optional.some(editor.getContainer().offsetHeight);
-    resize(editor, oldSize, e, getExtraMarginBottom);
-    firstResizeDone = true;
+    if (initilized) {
+      resize(editor, oldSize, e, getExtraMarginBottom);
+      sizes.push(editor.getContainer().offsetHeight);
+      firstResizeDone = true;
+    }
   });
 
   editor.on('NodeChange SetContent keyup FullscreenStateChanged ResizeContent', (e) => {
     if (firstResizeDone) {
-      if (!initilized && afterFirstResize.isSome()) {
-        if (afterFirstResize.fold(Fun.never, (size) => editor.getContainer().offsetHeight > size)) {
-          const body = editor.getBody();
-          const bodyRect = body.getBoundingClientRect();
-          const doc = editor.getDoc();
-          const currentExtraMarginBottom = doc.documentElement.offsetHeight - (body.offsetHeight + bodyRect.top);
-          getExtraMarginBottom = Fun.constant(currentExtraMarginBottom);
-        }
-        initilized = true;
+      if (!allChecksDone) {
+        const body = editor.getBody();
+        const bodyRect = body.getBoundingClientRect();
+        const doc = editor.getDoc();
+        const currentExtraMarginBottom = doc.documentElement.offsetHeight - (body.offsetHeight + bodyRect.top);
+        const isSizeIncreasing = Arr.foldl(sizes, (acc, n) => ({ lastValue: n, isIncreasing: acc.isIncreasing && n > acc.lastValue }), {
+          lastValue: 0,
+          isIncreasing: true
+        }).isIncreasing;
+
+        getExtraMarginBottom = isSizeIncreasing ? Fun.constant(currentExtraMarginBottom) : getExtraMarginBottom;
+        allChecksDone = true;
       } else {
         resize(editor, oldSize, e, getExtraMarginBottom);
       }
