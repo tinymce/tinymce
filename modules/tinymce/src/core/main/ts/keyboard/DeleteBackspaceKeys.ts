@@ -17,12 +17,8 @@ import * as TableDelete from '../delete/TableDelete';
 import { fireFakeBeforeInputEvent, fireFakeInputEvent } from './FakeInputEvents';
 import * as MatchKeys from './MatchKeys';
 
-// global backspace keydown state for Meta + Backspace emulation on macOS
-let isBackspaceKeydown = false;
-
 const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: KeyboardEvent) => {
-  isBackspaceKeydown = evt.keyCode === VK.BACKSPACE;
-  const inputType = isBackspaceKeydown ? 'deleteContentBackward' : 'deleteContentForward';
+  const inputType = evt.keyCode === VK.BACKSPACE ? 'deleteContentBackward' : 'deleteContentForward';
 
   MatchKeys.executeWithDelayedAction([
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(Outdent.backspaceDelete, editor) },
@@ -55,7 +51,7 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: K
   });
 };
 
-const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent) => {
+const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent, isBackspaceKeydown: boolean) => {
   const os = PlatformDetection.detect().os;
   const multiDeleteKeyPatterns: MatchKeys.KeyPattern[] = os.isMacOS() ? [
     { keyCode: VK.BACKSPACE, altKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaretFormat, editor) },
@@ -77,12 +73,15 @@ const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent) => {
     { keyCode: VK.DELETE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) },
     ...multiDeleteKeyPatterns
   ], evt);
-
-  isBackspaceKeydown = false;
 };
 
 const setup = (editor: Editor, caret: Cell<Text | null>): void => {
+  // global backspace keydown state for Meta + Backspace emulation on macOS
+  let isBackspaceKeydown = false;
+
   editor.on('keydown', (evt: EditorEvent<KeyboardEvent>) => {
+    isBackspaceKeydown = evt.keyCode === VK.BACKSPACE;
+
     if (!evt.isDefaultPrevented()) {
       executeKeydownOverride(editor, caret, evt);
     }
@@ -90,8 +89,10 @@ const setup = (editor: Editor, caret: Cell<Text | null>): void => {
 
   editor.on('keyup', (evt: EditorEvent<KeyboardEvent>) => {
     if (!evt.isDefaultPrevented()) {
-      executeKeyupOverride(editor, evt);
+      executeKeyupOverride(editor, evt, isBackspaceKeydown);
     }
+
+    isBackspaceKeydown = false;
   });
 };
 
