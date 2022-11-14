@@ -76,7 +76,7 @@ const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent, isBackspaceKey
 };
 
 const setup = (editor: Editor, caret: Cell<Text | null>): void => {
-  // global backspace keydown state for Meta + Backspace emulation on macOS
+  // global backspace keydown state to emulate Meta + Backspace keyup detection on macOS
   let isBackspaceKeydown = false;
 
   editor.on('keydown', (evt: EditorEvent<KeyboardEvent>) => {
