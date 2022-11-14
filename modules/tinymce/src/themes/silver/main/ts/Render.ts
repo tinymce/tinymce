@@ -9,9 +9,10 @@ import Editor from 'tinymce/core/api/Editor';
 import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 import I18n from 'tinymce/core/api/util/I18n';
 
+import * as Events from './api/Events';
 import * as Options from './api/Options';
 import * as Backstage from './backstage/Backstage';
-import * as Events from './Events';
+import * as DomEvents from './Events';
 import * as Iframe from './modes/Iframe';
 import * as Inline from './modes/Inline';
 import { LazyUiReferences, ReadyUiReferences, SinkAndMothership } from './modes/UiReferences';
@@ -164,6 +165,9 @@ const setup = (editor: Editor): RenderInfo => {
       providers: backstages.popup.shared.providers,
       onEscape: () => {
         editor.focus();
+      },
+      onToolbarToggled: (state: boolean) => {
+        Events.fireToggleToolbarDrawer(editor, state);
       },
       type: toolbarMode,
       lazyToolbar,
@@ -423,7 +427,6 @@ const setup = (editor: Editor): RenderInfo => {
 
     editor.addCommand('ToggleToolbarDrawer', () => {
       OuterContainer.toggleToolbarDrawer(outerContainer);
-      // TODO: Consider firing event - TINY-6371
     });
 
     editor.addQueryStateHandler('ToggleToolbarDrawer', () => OuterContainer.isToolbarDrawerToggled(outerContainer));
@@ -450,7 +453,7 @@ const setup = (editor: Editor): RenderInfo => {
     };
 
     setupShortcutsAndCommands(mainUi.outerContainer);
-    Events.setup(editor, mainUi.mothership, uiMotherships);
+    DomEvents.setup(editor, mainUi.mothership, uiMotherships);
 
     // This backstage needs to kept in sync with the one passed to the Header part.
     header.setup(editor, backstages.popup.shared, lazyHeader);
