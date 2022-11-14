@@ -128,6 +128,7 @@ const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unk
 const setup = (editor: Editor, oldSize: Cell<number>): void => {
   let getExtraMarginBottom = () => Options.getAutoResizeBottomMargin(editor);
   let initilized = false;
+  let firstResizeDone = false;
   let afterFirstResize: Optional<number> = Optional.none();
 
   editor.on('init', (e) => {
@@ -159,20 +160,23 @@ const setup = (editor: Editor, oldSize: Cell<number>): void => {
   editor.once('ResizeContent', (e) => {
     afterFirstResize = Optional.some(editor.getContainer().offsetHeight);
     resize(editor, oldSize, e, getExtraMarginBottom);
+    firstResizeDone = true;
   });
 
   editor.on('NodeChange SetContent keyup FullscreenStateChanged ResizeContent', (e) => {
-    if (!initilized && afterFirstResize.isSome()) {
-      if (editor.getContainer().offsetHeight > afterFirstResize.getOr(Infinity)) {
-        const body = editor.getBody();
-        const bodyRect = body.getBoundingClientRect();
-        const doc = editor.getDoc();
-        const currentExtraMarginBottom = doc.documentElement.offsetHeight - (body.offsetHeight + bodyRect.top);
-        getExtraMarginBottom = Fun.constant(currentExtraMarginBottom);
+    if (firstResizeDone) {
+      if (!initilized && afterFirstResize.isSome()) {
+        if (afterFirstResize.fold(Fun.never, (size) => editor.getContainer().offsetHeight > size)) {
+          const body = editor.getBody();
+          const bodyRect = body.getBoundingClientRect();
+          const doc = editor.getDoc();
+          const currentExtraMarginBottom = doc.documentElement.offsetHeight - (body.offsetHeight + bodyRect.top);
+          getExtraMarginBottom = Fun.constant(currentExtraMarginBottom);
+        }
+        initilized = true;
+      } else {
+        resize(editor, oldSize, e, getExtraMarginBottom);
       }
-      initilized = true;
-    } else {
-      resize(editor, oldSize, e, getExtraMarginBottom);
     }
   });
 };
