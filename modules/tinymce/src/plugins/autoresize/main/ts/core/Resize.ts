@@ -1,4 +1,4 @@
-import { Arr, Cell, Fun } from '@ephox/katamari';
+import { Cell, Fun } from '@ephox/katamari';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -127,10 +127,9 @@ const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unk
 
 const setup = (editor: Editor, oldSize: Cell<number>): void => {
   let getExtraMarginBottom = () => Options.getAutoResizeBottomMargin(editor);
-  let initilized = false;
-  let firstResizeDone = false;
-  let allChecksDone = false;
-  const sizes: number[] = [];
+  let resizeCounter = 0;
+  let sizeAfterFirstResize: number;
+  let checkDone = false;
 
   editor.on('init', (e) => {
     const overflowPadding = Options.getAutoResizeOverflowPadding(editor);
@@ -156,35 +155,26 @@ const setup = (editor: Editor, oldSize: Cell<number>): void => {
     }
 
     resize(editor, oldSize, e, getExtraMarginBottom);
-    sizes.push(editor.getContainer().offsetHeight);
-    initilized = true;
-  });
-
-  editor.once('ResizeContent', (e) => {
-    if (initilized) {
-      resize(editor, oldSize, e, getExtraMarginBottom);
-      sizes.push(editor.getContainer().offsetHeight);
-      firstResizeDone = true;
-    }
+    resizeCounter += 1;
   });
 
   editor.on('NodeChange SetContent keyup FullscreenStateChanged ResizeContent', (e) => {
-    if (firstResizeDone) {
-      if (!allChecksDone) {
-        const body = editor.getBody();
-        const bodyRect = body.getBoundingClientRect();
-        const doc = editor.getDoc();
-        const currentExtraMarginBottom = doc.documentElement.offsetHeight - (body.offsetHeight + bodyRect.top);
-        const isSizeIncreasing = Arr.foldl(sizes, (acc, n) => ({ lastValue: n, isIncreasing: acc.isIncreasing && n > acc.lastValue }), {
-          lastValue: 0,
-          isIncreasing: true
-        }).isIncreasing;
+    if (resizeCounter === 1) {
+      sizeAfterFirstResize = editor.getContainer().offsetHeight;
+      resize(editor, oldSize, e, getExtraMarginBottom);
+      resizeCounter += 1;
+    } else if (resizeCounter === 2 && !checkDone) {
+      const body = editor.getBody();
+      const bodyRect = body.getBoundingClientRect();
+      const doc = editor.getDoc();
+      const currentExtraMarginBottom = doc.documentElement.offsetHeight - (body.offsetHeight + bodyRect.top);
 
-        getExtraMarginBottom = isSizeIncreasing ? Fun.constant(currentExtraMarginBottom) : getExtraMarginBottom;
-        allChecksDone = true;
-      } else {
-        resize(editor, oldSize, e, getExtraMarginBottom);
-      }
+      getExtraMarginBottom = sizeAfterFirstResize < editor.getContainer().offsetHeight ? Fun.constant(currentExtraMarginBottom) : getExtraMarginBottom;
+      checkDone = true;
+    }
+
+    if (checkDone) {
+      resize(editor, oldSize, e, getExtraMarginBottom);
     }
   });
 };
