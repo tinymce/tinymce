@@ -663,6 +663,14 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     TinyAssertions.assertContent(editor, '<p><foo-bar contenteditable="false" data-name="foobar"></foo-bar></p>');
   });
 
+  it('TINY-9193: it should keep the caret in the same paragraph where insertion occurred', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>foo</p><p>bar<span></span>baz</p>', { format: 'raw' });
+    TinySelections.setSelection(editor, [ 1 ], 0, [ 1 ], 1);
+    editor.insertContent('X');
+    TinyAssertions.assertRawContent(editor, '<p>foo</p><p>X<span></span>baz</p>');
+  });
+
   context('Transparent blocks', () => {
     it('TINY-9172: Insert block anchor in regular block', () => {
       const editor = hook.editor();
