@@ -45,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A newline could not be inserted when the selection was restored from a bookmark after an inline `contenteditable="false"` element. #TINY-9194
 - The global `tinymce.dom.styleSheetLoader` was not affected by the `content_css_cors` option. #TINY-6037
 - The caret was moved to the previous line when a text pattern executed a `mceInsertContent` command on Enter key when running on Firefox. #TINY-9193
+- The `autoresize` plugin does not cause infinite resize when `content_css` is set to `document` #TINY-8872
 
 ## 6.2.0 - 2022-09-08
 
