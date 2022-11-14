@@ -58,7 +58,7 @@ const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent, isBackspaceKey
     { keyCode: VK.DELETE, altKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaretFormat, editor) },
   ] : [
     { keyCode: VK.BACKSPACE, ctrlKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaretFormat, editor) },
-    { keyCode: VK.BACKSPACE, ctrlKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaretFormat, editor) }
+    { keyCode: VK.DELETE, ctrlKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaretFormat, editor) }
   ];
 
   // macOS surpresses keyup events for most keys including Backspace when Meta key is engaged
