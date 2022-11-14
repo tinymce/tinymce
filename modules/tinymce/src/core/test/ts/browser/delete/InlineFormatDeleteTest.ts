@@ -1,6 +1,6 @@
 import { ApproxStructure } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -283,6 +283,49 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       );
       TinyAssertions.assertSelection(editor, [ 0, 0, 1, 0, 0, 0 ], 0, [ 0, 0, 1, 0, 0, 0 ], 0);
     });
+  });
 
+  context('Backspace/delete a selection', () => {
+    it('TINY-9302: Backspace selection of formatted block should retain original formats', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><span style="text-decoration: underline;"><em>abc</em></span></p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 3);
+      doBackspace(editor);
+      TinyAssertions.assertContentStructure(editor,
+        ApproxStructure.build((s, str, _arr) => {
+          return s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.element('span', {
+                    attrs: {
+                      'id': str.is('_mce_caret'),
+                      'data-mce-bogus': str.is('1')
+                    },
+                    children: [
+                      s.element('span', {
+                        attrs: {
+                          style: str.is('text-decoration: underline;')
+                        },
+                        children: [
+                          s.element('em', {
+                            children: [
+                              s.text(str.is(Zwsp.ZWSP))
+                            ]
+                          })
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              })
+            ]
+          });
+        })
+      );
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 0);
+      TinyContentActions.type(editor, 'def');
+      TinyAssertions.assertContent(editor, '<p><span style="text-decoration: underline;"><em>def</em></span></p>');
+    });
   });
 });
