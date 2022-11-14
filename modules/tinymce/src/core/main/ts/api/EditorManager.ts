@@ -126,7 +126,15 @@ const EditorManager: EditorManager = {
 
   baseURI: null as any,
   baseURL: null as any,
+
+  /**
+   * Object containing the options that will be passed by default to the <code>init</code> method upon each initialization of an editor. These defaults will be shallow merged with other options passed to <code>init</code>.
+   *
+   * @property defaultOptions
+   * @type Object
+   */
   defaultOptions: {},
+
   documentBaseURL: null as any,
   suffix: null as any,
 
@@ -270,10 +278,23 @@ const EditorManager: EditorManager = {
   },
 
   /**
-   * Overrides the default options for editor instances.
+   * Overrides the default options for editor instances. The <code>overrideDefaults</code> method replaces the <code>defaultOptions</code>, including any set by a previous call to the <code>overrideDefaults</code> method.
+   * <br /><br />
+   * When using the Tiny Cloud, some of these defaults are required for the cloud-based editor to function.
+   * <br /><br />
+   * Therefore, when using <code>overrideDefaults</code> with the cloud-based editor, any newly integrated options must be combined with the options in <code>tinymce.defaultOptions</code>.
    *
    * @method overrideDefaults
-   * @param {Object} defaultOptions Defaults options object.
+   * @param {Object} defaultOptions Default options object.
+   * @example
+   * const customOptions = {
+   *   toolbar_sticky: true
+   * };
+   *
+   * tinymce.overrideDefaults({
+   *   ...tinymce.defaultOptions,
+   *   ...customOptions
+   * });
    */
   overrideDefaults(defaultOptions) {
     const baseUrl = defaultOptions.base_url;

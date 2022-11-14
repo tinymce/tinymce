@@ -4,7 +4,7 @@
     <title>icon-notice</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <path d="M17.75,9.75 L15.5,4 L20,8.5 L20,15.5 L15.5,20 L8.5,20 L4,15.5 L4,8.5 L8.5,4 L15.5,4 L17.75,9.75 Z M17.75,9.75 L20,15.5 L17.75,9.75 Z M13,17 L13,15 L11,15 L11,17 L13,17 Z M13,13 L13,7 L11,7 L11,13 L13,13 Z" fill="#000000"></path>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" clip-rule="evenodd">
+        <path d="M15.5 4L20 8.5V15.5L15.5 20H8.5L4 15.5V8.5L8.5 4H15.5ZM13 17V15H11V17H13ZM13 13V7H11V13H13Z" fill="#000000"></path>
     </g>
 </svg>
