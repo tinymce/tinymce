@@ -1,4 +1,5 @@
-import { Type } from '@ephox/katamari';
+import { Type, Unicode, Obj, Fun, Arr } from '@ephox/katamari';
+import { SugarElement, SugarNode } from '@ephox/sugar';
 
 import BookmarkManager from 'tinymce/core/api/dom/BookmarkManager';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -46,6 +47,26 @@ const removeStyles = (dom: DOMUtils, element: HTMLElement, styles: string[]): vo
   Tools.each(styles, (style) => dom.setStyle(element, style, ''));
 };
 
+const blocks = [
+  'article', 'aside', 'details', 'div', 'dt', 'figcaption', 'footer',
+  'form', 'fieldset', 'header', 'hgroup', 'html', 'main', 'nav',
+  'section', 'summary', 'body', 'p', 'dl', 'multicol', 'dd', 'figure',
+  'address', 'center', 'blockquote', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+  'listing', 'xmp', 'pre', 'plaintext', 'menu', 'dir', 'ul', 'ol', 'li', 'hr',
+  'table', 'tbody', 'thead', 'tfoot', 'th', 'tr', 'td', 'caption'
+];
+
+const lazyLookup = <T extends Node = HTMLElement>(items: string[]) => {
+  let lookup: Record<string, boolean> | undefined;
+  return (node: SugarElement<Node>): node is SugarElement<T> => {
+    lookup = lookup ? lookup : Arr.mapToObject(items, Fun.always);
+    return Obj.has(lookup, SugarNode.name(node));
+  };
+};
+
+const isBlock = lazyLookup(blocks);
+const isInline = (node: SugarElement<Node>): node is SugarElement<HTMLElement> => SugarNode.isElement(node) && !isBlock(node);
+
 const getEndPointNode = (editor: Editor, rng: Range, start: Boolean, root: Node): Node => {
   let container = rng[start ? 'startContainer' : 'endContainer'];
   const offset = rng[start ? 'startOffset' : 'endOffset'];
@@ -57,6 +78,42 @@ const getEndPointNode = (editor: Editor, rng: Range, start: Boolean, root: Node)
 
   if (!start && NodeType.isBr(container.nextSibling)) {
     container = container.nextSibling;
+  }
+
+  if (start && NodeType.isTextNode(container)) {
+    if (Unicode.isZwsp(container.textContent as string)) {
+      if (container.previousSibling !== null && isInline(SugarElement.fromDom(container.previousSibling))) {
+        container = container.previousSibling.firstChild || container.previousSibling;
+      } else if (container.nextSibling !== null && isInline(SugarElement.fromDom(container.nextSibling))) {
+        container = container.nextSibling.firstChild || container.nextSibling;
+      }
+    }
+    if (!Unicode.isZwsp(container.textContent as string)) {
+      if ( container.parentNode !== null && isInline(SugarElement.fromDom(container.parentNode))) {
+        container = container.parentNode;
+      }
+      while (container.previousSibling !== null && (isInline(SugarElement.fromDom(container.previousSibling)) || NodeType.isTextNode(container.previousSibling))) {
+        container = container.previousSibling;
+      }
+    }
+  }
+
+  if (!start && NodeType.isTextNode(container)) {
+    if (Unicode.isZwsp(container.textContent as string)) {
+      if (container.nextSibling !== null && isInline(SugarElement.fromDom(container.nextSibling))) {
+        container = container.nextSibling.firstChild || container.nextSibling;
+      } else if (container.previousSibling !== null && isInline(SugarElement.fromDom(container.previousSibling))) {
+        container = container.previousSibling.firstChild || container.previousSibling;
+      }
+    }
+    if (!Unicode.isZwsp(container.textContent as string)) {
+      if (container.parentNode !== null && isInline(SugarElement.fromDom(container.parentNode))) {
+        container = container.parentNode;
+      }
+      while (container.nextSibling !== null && ( isInline(SugarElement.fromDom(container.nextSibling)) || NodeType.isTextNode(container.nextSibling) ) ) {
+        container = container.nextSibling;
+      }
+    }
   }
 
   while (container.parentNode !== root) {
