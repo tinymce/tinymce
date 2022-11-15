@@ -37,9 +37,9 @@ const updateBlockStateOnChildren = (schema: Schema, scope: Element): Element[] =
 };
 
 const trimEdge = (el: DocumentFragment, leftSide: boolean) => {
-  const childName = leftSide ? 'lastChild' : 'firstChild';
+  const childPropertyName = leftSide ? 'lastChild' : 'firstChild';
 
-  for (let child = el[childName]; child; child = child[childName]) {
+  for (let child = el[childPropertyName]; child; child = child[childPropertyName]) {
     if (Empty.isEmpty(SugarElement.fromDom(child))) {
       child.parentNode?.removeChild(child);
       return;

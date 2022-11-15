@@ -1420,6 +1420,13 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     context('Transparent elements', () => {
       const getTransparentElements = (schema: Schema) => Arr.unique(Arr.map(Obj.keys(schema.getTransparentElements()), (s) => s.toLowerCase()));
 
+      const testSplitInvalidBlocksOut = (testCase: { input: string; expected: string }) => {
+        const parser = DomParser();
+        const serializedHtml = serializer.serialize(parser.parse(testCase.input));
+
+        assert.equal(serializedHtml, testCase.expected);
+      };
+
       it('TINY-9172: inline transparents should not get data-mce-block attribute', () => {
         const parser = DomParser();
         const innerHtml = Arr.map(getTransparentElements(parser.schema), (name) => `<${name}>text</${name}>`).join('');
@@ -1448,13 +1455,6 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
         assert.equal(serializedHtml, expectedHtml);
       });
-
-      const testSplitInvalidBlocksOut = (testCase: { input: string; expected: string }) => {
-        const parser = DomParser();
-        const serializedHtml = serializer.serialize(parser.parse(testCase.input));
-
-        assert.equal(serializedHtml, testCase.expected);
-      };
 
       it('TINY-9232: H1 in H1 should unwrap to single H1', () => testSplitInvalidBlocksOut({
         input: '<h1><a href="#"><h1>foo</h1></a></h1>',
