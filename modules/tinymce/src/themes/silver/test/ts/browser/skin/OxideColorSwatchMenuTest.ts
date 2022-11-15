@@ -149,7 +149,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
     closeSwatchButtonMenu();
   });
 
-  it('TINY-9283: ', async () => {
+  it('TINY-9283: selected color is successfully marked', async () => {
     const editor = hook.editor();
     editor.setContent('<p>black</p><p style="color: rgb(224, 62, 45);">red</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2, true);

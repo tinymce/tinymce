@@ -133,7 +133,7 @@ describe('browser.ui.dropdown.MatrixMenuTest', () => {
       rowSelector: '.row-class'
     });
 
-    it('TBA: Basic Focusing', () => {
+    it('TINY-9283: Basic Focusing', () => {
       const menuComponent = hook.component();
       const store = hook.store();
 
@@ -148,7 +148,7 @@ describe('browser.ui.dropdown.MatrixMenuTest', () => {
       setFocusOnItem(store, menuComponent, betaItem, 1, 'After focusing on beta');
     });
 
-    it('TBA: Keyboard navigation', () => {
+    it('TINY-9283: Keyboard navigation', () => {
       const menuComponent = hook.component();
       const store = hook.store();
 
@@ -169,7 +169,7 @@ describe('browser.ui.dropdown.MatrixMenuTest', () => {
       previousSelector: (component) => Optional.some(UiFinder.findIn<HTMLElement>(component.element, 'li[data-value="beta"]').getOrDie())
     });
 
-    it('Position starts as expected', () => {
+    it('TINY-9283: Position starts as expected', () => {
       const menuComponent = hook.component();
       const store = hook.store();
       assertInitialFocusIsOnElement(store, menuComponent, 1, 'Focus should be on beta');
