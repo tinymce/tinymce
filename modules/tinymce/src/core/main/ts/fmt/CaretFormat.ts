@@ -368,8 +368,8 @@ const createCaretFormatAtStart = (editor: Editor, formatNodes: Node[]): void => 
   const { caretContainer, caretPosition } = createCaretFormat(formatNodes);
   const startElm = editor.selection.getStart();
   const startParentElm = startElm.parentElement;
-  if (!Type.isNull(startParentElm) && editor.dom.isEmpty(startParentElm)) {
-    // replace bogus <br> from empty node
+  if (!Type.isNull(startParentElm) && editor.dom.isEmpty(startParentElm) && isBogusBr(startElm)) {
+    // replace bogus <br> in empty node
     startParentElm.replaceChild(caretContainer.dom, startElm);
   } else {
     editor.selection.getRng().insertNode(caretContainer.dom);
@@ -385,6 +385,9 @@ const isFormatElement = (editor: Editor, element: SugarElement<Node>): boolean =
 const isEmptyCaretFormatElement = (element: SugarElement<Node>): boolean => {
   return isCaretNode(element.dom) && isCaretContainerEmpty(element.dom);
 };
+
+const isBogusBr = (element: Node): boolean =>
+  NodeType.isBr(element) && NodeType.isBogus(element);
 
 export {
   setup,
