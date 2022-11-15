@@ -57,18 +57,22 @@ const deleteCaret = (editor: Editor, forward: boolean): Optional<() => void> => 
 
 const updateCaretFormat = (editor: Editor, updateFormats: Node[]): void => {
   const missingFormats = Arr.difference(updateFormats, getFormatNodesAtStart(editor));
-  CaretFormat.createCaretFormatAtStart(editor, missingFormats);
+  if (missingFormats.length !== 0) {
+    CaretFormat.createCaretFormatAtStart(editor, missingFormats);
+  }
 };
 
 const deleteRange = (editor: Editor): Optional<() => void> => {
-  const formatNodes = getFormatNodesAtStart(editor);
   const selRng = editor.selection.getRng();
-  return selRng.startOffset === 0
-    ? Optional.some(() => {
+  if (selRng.startOffset === 0) {
+    const formatNodes = getFormatNodesAtStart(editor);
+    return Optional.some(() => {
       DeleteUtils.deleteRangeContents(editor, selRng, SugarElement.fromDom(editor.getBody()));
       updateCaretFormat(editor, formatNodes);
-    })
-    : Optional.none();
+    });
+  } else {
+    return Optional.none();
+  }
 };
 
 const backspaceDelete = (editor: Editor, forward: boolean): Optional<() => void> =>
