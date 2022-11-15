@@ -62,9 +62,10 @@ const updateCaretFormat = (editor: Editor, updateFormats: Node[]): void => {
 
 const deleteRange = (editor: Editor): Optional<() => void> => {
   const formatNodes = getFormatNodesAtStart(editor);
-  return editor.selection.getRng().startOffset === 0
+  const selRng = editor.selection.getRng();
+  return selRng.startOffset === 0
     ? Optional.some(() => {
-      DeleteUtils.execNativeDeleteCommand(editor);
+      DeleteUtils.deleteRangeContents(editor, selRng, SugarElement.fromDom(editor.getBody()));
       updateCaretFormat(editor, formatNodes);
     })
     : Optional.none();
