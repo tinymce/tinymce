@@ -67,7 +67,7 @@ const deleteRange = (editor: Editor): Optional<() => void> => {
   if (selRng.startOffset === 0) {
     const formatNodes = getFormatNodesAtStart(editor);
     return Optional.some(() => {
-      DeleteUtils.deleteRangeContents(editor, selRng, SugarElement.fromDom(editor.getBody()));
+      DeleteUtils.execNativeDeleteCommand(editor);
       updateCaretFormat(editor, formatNodes);
     });
   } else {
