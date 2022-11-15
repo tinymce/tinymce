@@ -2,6 +2,7 @@ import { ApproxStructure, Keys } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Unicode } from '@ephox/katamari';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
@@ -300,6 +301,26 @@ describe('browser.tinymce.core.textpatterns.TextPatternsTest', () => {
 
     Utils.setContentAndPressSpace(editor, 'a ***test1*** ***test2***');
     TinyAssertions.assertContent(editor, '<p>a ***test1*** <em>test2</em>&nbsp;</p>');
+
+    editor.options.unset('text_patterns');
+  });
+
+  it('TINY-9193: should move the caret to the next line after the Enter key pressed', () => {
+    const editor = hook.editor();
+    editor.options.set('text_patterns', [
+      { start: '~', end: '~', cmd: 'mceInsertContent', value: 'world' }
+    ]);
+    editor.setContent('<p>Hello</p><p>~test~</p>');
+    TinySelections.setCursor(editor, [ 1, 0 ], 6 );
+    TinyContentActions.keystroke(editor, Keys.enter());
+    TinyAssertions.assertContentPresence(editor, {
+      p: 3
+    });
+    const p = editor.getBody().childNodes;
+    assert.equal(p[0].textContent, 'Hello');
+    assert.equal(p[1].textContent, 'world');
+    // actual content: <p>Hello</p><p>world</p><p>&nbsp;</p>
+    TinyAssertions.assertCursor(editor, [ 2 ], 0);
 
     editor.options.unset('text_patterns');
   });

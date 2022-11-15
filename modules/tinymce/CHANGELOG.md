@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `ToggleView` command which makes it possible to hide or show registered custom views. #TINY-9210
 - New `color_default_foreground` and `color_default_background` options to set the initial default color for the `forecolor` and `backcolor` toolbar buttons and menu items. #TINY-9183
 - New `getTransparentElements` function added to `tinymce.html.Schema` to return a map object of transparent HTML elements. #TINY-9172
+- Added `ToggleToolbarDrawer` event to subscribe to toolbar's opening and closing. #TINY-9271
 
 ### Changed
 - Transparent elements, like anchors, are now allowed in the root of the editor body if they contain blocks. #TINY-9172
@@ -44,6 +45,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dragging a noneditable element before or after another noneditable element now works correctly. #TINY-9253
 - The restored selection after a redo or undo action was not scrolled into view. #TINY-9222
 - A newline could not be inserted when the selection was restored from a bookmark after an inline `contenteditable="false"` element. #TINY-9194
+- The global `tinymce.dom.styleSheetLoader` was not affected by the `content_css_cors` option. #TINY-6037
+- The caret was moved to the previous line when a text pattern executed a `mceInsertContent` command on Enter key when running on Firefox. #TINY-9193
 
 ## 6.2.0 - 2022-09-08
 
