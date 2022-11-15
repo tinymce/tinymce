@@ -366,12 +366,14 @@ const replaceWithCaretFormat = (targetNode: Node, formatNodes: Node[]): CaretPos
 
 const createCaretFormatAtStart = (editor: Editor, formatNodes: Node[]): void => {
   const { caretContainer, caretPosition } = createCaretFormat(formatNodes);
-  const startParentElm = editor.selection.getStart().parentElement;
+  const startElm = editor.selection.getStart();
+  const startParentElm = startElm.parentElement;
   if (!Type.isNull(startParentElm) && editor.dom.isEmpty(startParentElm)) {
-    // remove <br> from empty node
-    startParentElm.innerHTML = '';
+    // replace bogus <br> from empty node
+    startParentElm.replaceChild(caretContainer.dom, startElm);
+  } else {
+    editor.selection.getRng().insertNode(caretContainer.dom);
   }
-  editor.selection.getRng().insertNode(caretContainer.dom);
   editor.selection.setRng(caretPosition.toRange());
 };
 
