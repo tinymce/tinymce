@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Color picker dialog now starts on the appropriate color for the cursor position. #TINY-9213
 
 ### Fixed
+- Clicking on list toolbar button inside a table cell that has anchor element when the cursor is outside the anchor element would not include the anchor element in the produce list. #TINY-6853
 - Parsing media content would cause a memory leak, which for example occurred when using the `getContent` API. #TINY-9186
 - Dragging a noneditable element toward the bottom edge would cause the page to scroll up. #TINY-9025
 - Range expanding capabilities would behave inconsistently depending on where the cursor was placed. #TINY-9029
