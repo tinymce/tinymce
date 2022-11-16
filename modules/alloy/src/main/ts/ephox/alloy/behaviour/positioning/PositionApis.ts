@@ -1,8 +1,8 @@
 import { StructureSchema } from '@ephox/boulder';
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
-import { Css, SugarElement, SugarLocation } from '@ephox/sugar';
+import { Css, SugarLocation } from '@ephox/sugar';
 
-import { Bounds, box } from '../../alien/Boxes';
+import * as Boxes from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AriaFocus from '../../aria/AriaFocus';
 import * as Anchor from '../../positioning/layout/Anchor';
@@ -31,21 +31,17 @@ const getRelativeOrigin = (component: AlloyComponent): Origins.OriginAdt => {
   return Origins.relative(position.left, position.top, bounds.width, bounds.height);
 };
 
-const place = (component: AlloyComponent, origin: Origins.OriginAdt, anchoring: Anchoring, getBounds: Optional<() => Bounds>, placee: AlloyComponent, lastPlace: Optional<PlacerResult>, transition: Optional<Transition>): PlacerResult => {
+const place = (origin: Origins.OriginAdt, anchoring: Anchoring, optBounds: Optional<Boxes.Bounds>, placee: AlloyComponent, lastPlace: Optional<PlacerResult>, transition: Optional<Transition>): PlacerResult => {
   const anchor = Anchor.box(anchoring.anchorBox, origin);
-  return SimpleLayout.simple(anchor, placee.element, anchoring.bubble, anchoring.layouts, lastPlace, getBounds, anchoring.overrides, transition);
+  return SimpleLayout.simple(anchor, placee.element, anchoring.bubble, anchoring.layouts, lastPlace, optBounds, anchoring.overrides, transition);
 };
 
 const position = (component: AlloyComponent, posConfig: PositioningConfig, posState: PositioningState, placee: AlloyComponent, placementSpec: PlacementSpec): void => {
-  positionWithin(component, posConfig, posState, placee, placementSpec, Optional.none());
+  const optWithinBounds = Optional.none();
+  positionWithinBounds(component, posConfig, posState, placee, placementSpec, optWithinBounds);
 };
 
-const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig, posState: PositioningState, placee: AlloyComponent, placementSpec: PlacementSpec, boxElement: Optional<SugarElement<HTMLElement>>): void => {
-  const boundsBox = boxElement.map(box);
-  return positionWithinBounds(component, posConfig, posState, placee, placementSpec, boundsBox);
-};
-
-const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningConfig, posState: PositioningState, placee: AlloyComponent, placementSpec: PlacementSpec, bounds: Optional<Bounds>): void => {
+const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningConfig, posState: PositioningState, placee: AlloyComponent, placementSpec: PlacementSpec, optWithinBounds: Optional<Boxes.Bounds>): void => {
   const placeeDetail: PlacementDetail = StructureSchema.asRawOrDie('placement.info', StructureSchema.objOf(PlacementSchema), placementSpec);
   const anchorage = placeeDetail.anchor;
   const element = placee.element;
@@ -65,14 +61,19 @@ const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningC
     // (bottom and right) will be using the wrong dimensions
     const origin = posConfig.useFixed() ? getFixedOrigin() : getRelativeOrigin(component);
 
-    const placer = anchorage.placement;
+    anchorage.placement(component, anchorage, origin).each((anchoring) => {
+      // If "within bounds" is specified, it overrides any Positioning config. Otherwise, we
+      // use the Positioning config. We don't try to combine automatically here because they are
+      // sometimes serving different purposes. If the Positioning config getBounds needs to be
+      // combined with the optWithinBounds bounds, then it is the responsibility of the calling
+      // code to combine them, and pass in the combined value as optWithinBounds. The optWithinBounds
+      // will *always* override the Positioning config.
+      const optBounds: Optional<Boxes.Bounds> = optWithinBounds.orThunk(
+        () => posConfig.getBounds.map(Fun.apply)
+      );
 
-    const getBounds = bounds.map(Fun.constant).or(posConfig.getBounds);
-
-    placer(component, anchorage, origin).each((anchoring) => {
       // Place the element and then update the state for the placee
-      const doPlace = anchoring.placer.getOr(place);
-      const newState = doPlace(component, origin, anchoring, getBounds, placee, placeeState, placeeDetail.transition);
+      const newState = place(origin, anchoring, optBounds, placee, placeeState, placeeDetail.transition);
       posState.set(placee.uid, newState);
     });
 
@@ -107,7 +108,6 @@ const reset = (component: AlloyComponent, pConfig: PositioningConfig, posState: 
 
 export {
   position,
-  positionWithin,
   positionWithinBounds,
   getMode,
   reset

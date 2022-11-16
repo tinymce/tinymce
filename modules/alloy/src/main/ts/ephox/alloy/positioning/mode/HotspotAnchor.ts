@@ -28,8 +28,7 @@ const placement = (component: AlloyComponent, anchorInfo: HotspotAnchor, origin:
       anchorBox,
       bubble: anchorInfo.bubble.getOr(Bubble.fallback()),
       overrides: anchorInfo.overrides,
-      layouts,
-      placer: Optional.none()
+      layouts
     })
   );
 };
