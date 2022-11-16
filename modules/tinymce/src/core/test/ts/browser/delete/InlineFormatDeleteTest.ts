@@ -1,6 +1,8 @@
 import { ApproxStructure } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { Arr } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -120,6 +122,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
           return s.element('body', {
             children: [
               s.element('p', {
+                // firefox retains all formats by default
                 children: [
                   s.element('span', {
                     attrs: {
@@ -286,46 +289,179 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
   });
 
   context('Backspace/delete a selection', () => {
-    it('TINY-9302: Backspace selection of formatted block should retain original formats', () => {
+    const browser = PlatformDetection.detect().browser;
+
+    const assertStructureAndSelectionBlockDelete = (editor: Editor) => {
+      TinyAssertions.assertContentStructure(editor,
+        ApproxStructure.build((s, str, _arr) => {
+          return s.element('body', {
+            children: [
+              s.element('p', {
+                // firefox retains caret format for block delete, so no new caret created
+                children: browser.isFirefox()
+                  ? [
+                    s.element('strong', {
+                      children: [
+                        s.element('em', {
+                          children: [
+                            s.element('span', {
+                              attrs: {
+                                style: str.is('text-decoration: underline;')
+                              },
+                              children: [
+                                s.element('br', {}),
+                              ]
+                            })
+                          ]
+                        })
+                      ]
+                    })
+                  ]
+                  : [
+                    s.element('span', {
+                      attrs: {
+                        'id': str.is('_mce_caret'),
+                        'data-mce-bogus': str.is('1')
+                      },
+                      children: [
+                        s.element('strong', {
+                          children: [
+                            s.element('em', {
+                              children: [
+                                s.element('span', {
+                                  attrs: {
+                                    style: str.is('text-decoration: underline;')
+                                  },
+                                  children: [
+                                    s.text(str.is(Zwsp.ZWSP))
+                                  ]
+                                })
+                              ]
+                            })
+                          ]
+                        })
+                      ]
+                    })
+                  ]
+              })
+            ]
+          });
+        })
+      );
+      const selPath = browser.isFirefox() ? [ 0, 0, 0, 0 ] : [ 0, 0, 0, 0, 0, 0 ];
+      TinyAssertions.assertSelection(editor, selPath, 0, selPath, 0);
+    };
+
+    it('Backspace entire selection of block containing a single formatted element should retain original formats', () => {
       const editor = hook.editor();
-      editor.setContent('<p><span style="text-decoration: underline;"><em>abc</em></span></p>');
-      TinySelections.setSelection(editor, [ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 3);
+      editor.setContent('<p><strong><em><span style="text-decoration: underline;">abc</span></em></strong></p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 3);
       doBackspace(editor);
+      assertStructureAndSelectionBlockDelete(editor);
+    });
+
+    it('Delete entire selection of block containing a single formatted element should retain original formats', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><strong><em><span style="text-decoration: underline;">abc</span></em></strong></p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 3);
+      doDelete(editor);
+      assertStructureAndSelectionBlockDelete(editor);
+    });
+
+    it('Backspace entire selection of formatted element within block should retain original formats', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>a<strong><em><span style="text-decoration: underline;">bcd</span></em></strong>e</p>');
+      TinySelections.setSelection(editor, [ 0, 1, 0, 0, 0 ], 0, [ 0, 1, 0, 0, 0 ], 3);
+      doBackspace(editor);
+      const outerText = browser.isFirefox() ? [ 'e' ] : [ '', 'e' ];
       TinyAssertions.assertContentStructure(editor,
         ApproxStructure.build((s, str, _arr) => {
           return s.element('body', {
             children: [
               s.element('p', {
                 children: [
+                  s.text(str.is('a')),
                   s.element('span', {
                     attrs: {
                       'id': str.is('_mce_caret'),
                       'data-mce-bogus': str.is('1')
                     },
                     children: [
-                      s.element('span', {
-                        attrs: {
-                          style: str.is('text-decoration: underline;')
-                        },
+                      s.element('strong', {
                         children: [
                           s.element('em', {
                             children: [
-                              s.text(str.is(Zwsp.ZWSP))
+                              s.element('span', {
+                                attrs: {
+                                  style: str.is('text-decoration: underline;')
+                                },
+                                children: [
+                                  s.text(str.is(Zwsp.ZWSP))
+                                ]
+                              })
                             ]
                           })
                         ]
                       })
                     ]
-                  })
+                  }),
+                  ...Arr.map(outerText, (text) => s.text(str.is(text)))
                 ]
               })
             ]
           });
         })
       );
-      TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 0);
-      TinyContentActions.type(editor, 'def');
-      TinyAssertions.assertContent(editor, '<p><span style="text-decoration: underline;"><em>def</em></span></p>');
+      TinyAssertions.assertSelection(editor, [ 0, 1, 0, 0, 0, 0 ], 0, [ 0, 1, 0, 0, 0, 0 ], 0);
+    });
+
+    it('Backspace partial selection from start of formatted element within block should retain original formats', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>a<strong><em><span style="text-decoration: underline;">bcd</span></em></strong>ef</p>');
+      TinySelections.setSelection(editor, [ 0, 1, 0, 0, 0 ], 0, [ 0, 2 ], 1);
+      doBackspace(editor);
+      const firstOuterText = browser.isFirefox() ? [ 'a', '' ] : [ 'a' ];
+      const secondOuterText = browser.isFirefox() ? [ 'f' ] : [ '', 'f' ];
+      TinyAssertions.assertContentStructure(editor,
+        ApproxStructure.build((s, str, _arr) => {
+          return s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  ...Arr.map(firstOuterText, (text) => s.text(str.is(text))),
+                  s.element('span', {
+                    attrs: {
+                      'id': str.is('_mce_caret'),
+                      'data-mce-bogus': str.is('1')
+                    },
+                    children: [
+                      s.element('strong', {
+                        children: [
+                          s.element('em', {
+                            children: [
+                              s.element('span', {
+                                attrs: {
+                                  style: str.is('text-decoration: underline;')
+                                },
+                                children: [
+                                  s.text(str.is(Zwsp.ZWSP))
+                                ]
+                              })
+                            ]
+                          })
+                        ]
+                      })
+                    ]
+                  }),
+                  ...Arr.map(secondOuterText, (text) => s.text(str.is(text))),
+                ]
+              })
+            ]
+          });
+        })
+      );
+      const selPath = browser.isFirefox() ? [ 0, 2, 0, 0, 0, 0 ] : [ 0, 1, 0, 0, 0, 0 ];
+      TinyAssertions.assertSelection(editor, selPath, 0, selPath, 0);
     });
   });
 });
