@@ -1,9 +1,11 @@
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional, Type } from '@ephox/katamari';
 import { SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';
+import * as Empty from '../dom/Empty';
+import * as NodeType from '../dom/NodeType';
 import * as Parents from '../dom/Parents';
 import * as CaretFormat from '../fmt/CaretFormat';
 import * as DeleteElement from './DeleteElement';
@@ -55,10 +57,24 @@ const deleteCaret = (editor: Editor, forward: boolean): Optional<() => void> => 
   });
 };
 
+const isBrInEmptyElement = (elm: Element): boolean => {
+  const parentElm = elm.parentElement;
+  return !Type.isNull(parentElm) && Empty.isEmpty(SugarElement.fromDom(parentElm)) && NodeType.isBr(elm);
+};
+
+const createCaretFormatAtStart = (editor: Editor, formatNodes: Node[]): void => {
+  const startElm = editor.selection.getStart();
+  // replace <br> with caret format if in empty node or create new caret format at start
+  const pos = isBrInEmptyElement(startElm)
+    ? CaretFormat.replaceWithCaretFormat(startElm, formatNodes)
+    : CaretFormat.createCaretFormatAtStart(editor, formatNodes);
+  editor.selection.setRng(pos.toRange());
+};
+
 const updateCaretFormat = (editor: Editor, updateFormats: Node[]): void => {
   const missingFormats = Arr.difference(updateFormats, getFormatNodesAtStart(editor));
   if (missingFormats.length !== 0) {
-    CaretFormat.createCaretFormatAtStart(editor, missingFormats);
+    createCaretFormatAtStart(editor, missingFormats);
   }
 };
 
@@ -80,7 +96,7 @@ const backspaceDelete = (editor: Editor, forward: boolean): Optional<() => void>
 
 const refreshCaretFormat = (editor: Editor): boolean => {
   if (editor.selection.getRng().startOffset === 0) {
-    CaretFormat.createCaretFormatAtStart(editor, []);
+    createCaretFormatAtStart(editor, []);
   }
   return true;
 };
