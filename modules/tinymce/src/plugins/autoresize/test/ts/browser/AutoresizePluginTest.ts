@@ -199,7 +199,7 @@ describe('browser.tinymce.plugins.autoresize.AutoresizePluginTest', () => {
     it('TINY-9123: it should not continue to resaize in some specific condition', async () => {
       const editor = hook.editor();
       editor.setContent('<div style="height: 250px;">a</div>');
-      await Waiter.pWait(1000);
+      await Waiter.pWait(2000);
       assert.isAtMost(resizeEventsCount.get(), 10, 'Should have fired a ResizeEditor event at most 10 time');
     });
   });
