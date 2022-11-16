@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Removed
 - Moved `TestStore` to Agar. #TINY-9157
+- Removed `positionWithin` from `Positioning` behaviour's APIs. #TINY-9226
+- Removed `showWithin` from `InlineView` sketcher's APIs. #TINY-9226
+- Removed unused custom `placer` from `Anchorage`. #TINY-9226
 
 ## 11.0.0 - 2022-09-08
 
