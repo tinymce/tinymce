@@ -167,7 +167,7 @@ const setup = (editor: Editor, oldSize: Cell<number>): void => {
     } else if (resizeCounter < 3) {
       resize(editor, oldSize, e, getExtraMarginBottom);
       resizeCounter += 1;
-    } else if (resizeCounter === 3 && !checkDone) {
+    } else if (resizeCounter >= 3 && !checkDone) {
       const body = editor.getBody();
       const bodyRect = body.getBoundingClientRect();
       const doc = editor.getDoc();
