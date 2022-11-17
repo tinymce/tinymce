@@ -61,7 +61,7 @@ const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'mediaembed', name: 'Enhanced Media Embed', type: PluginType.Premium, slug: 'introduction-to-mediaembed' },
   { key: 'export', name: 'Export', type: PluginType.Premium },
   { key: 'formatpainter', name: 'Format Painter', type: PluginType.Premium },
-  { key: 'inlinecss', name: 'InlineCss', type: PluginType.Premium },
+  { key: 'inlinecss', name: 'Inline CSS', type: PluginType.Premium },
   { key: 'linkchecker', name: 'Link Checker', type: PluginType.Premium },
   { key: 'mentions', name: 'Mentions', type: PluginType.Premium },
   { key: 'mergetags', name: 'Merge Tags', type: PluginType.Premium },
