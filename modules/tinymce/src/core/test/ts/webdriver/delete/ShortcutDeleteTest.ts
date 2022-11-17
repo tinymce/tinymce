@@ -65,6 +65,8 @@ describe('webdriver.tinymce.core.delete.ShortcutDeleteTest', () => {
           });
         })
       );
+      const selPath = browser.isFirefox() ? [ 0, 0, 0, 0, 0, 0 ] : [ 0, 0, 0 ];
+      TinyAssertions.assertSelection(editor, selPath, 0, selPath, 0);
     });
   });
 });
