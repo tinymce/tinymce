@@ -21,7 +21,7 @@ describe('webdriver.tinymce.core.delete.InlineFormatRetentionTest', () => {
     assert.isTrue(returnVal.isSome(), 'Should return true since the operation should have done something');
   };
 
-  it('TINY-9302: Backspace entire selection of block containing underlined text and then typing will produce underlined text with correct span format', async () => {
+  it('TINY-9302: Backspace entire selection of block containing underlined text and then typing will produce underlined text will not produce unexpected formats', async () => {
     const editor = hook.editor();
     editor.setContent('<p><span style="text-decoration: underline;">abc</span></p>');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 3);
@@ -32,7 +32,7 @@ describe('webdriver.tinymce.core.delete.InlineFormatRetentionTest', () => {
     TinyAssertions.assertContent(editor, browser.isFirefox() ? '<p><span style="text-decoration: underline;">d<br></span></p>' : '<p><span style="text-decoration: underline;">d</span></p>');
   });
 
-  it('TINY-9302: Backspace partial selection of underlined text within block then typing will produce underlined text with correct span format', async () => {
+  it('TINY-9302: Backspace partial selection of underlined text within block then typing will not produce unexpected formats', async () => {
     const editor = hook.editor();
     editor.setContent('<p>a<span style="text-decoration: underline;">bcd</span>e</p>');
     TinySelections.setSelection(editor, [ 0, 1, 0 ], 0, [ 0, 2 ], 1);
