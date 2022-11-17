@@ -748,12 +748,12 @@ class Editor implements EditorObservable {
 
     const saveArgs = { ...getArgs, content: html } as SaveContentEvent;
     if (!saveArgs.no_events) {
-      self.dispatch('SaveContent', saveArgs);
+      saveArgs.content = self.dispatch('SaveContent', saveArgs).content;
     }
 
     // Always run this internal event
     if (saveArgs.format === 'raw') {
-      self.dispatch('RawSaveContent', saveArgs);
+      saveArgs.content = self.dispatch('RawSaveContent', saveArgs).content;
     }
 
     html = saveArgs.content;

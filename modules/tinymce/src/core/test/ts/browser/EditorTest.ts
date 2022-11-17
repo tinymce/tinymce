@@ -243,6 +243,30 @@ describe('browser.tinymce.core.EditorTest', () => {
     assert.isUndefined(lastEvent, 'show/hide/isHidden and events');
   });
 
+  it('TBA: SaveContent adn RawSaveContent events', () => {
+    const editor = hook.editor();
+    const elm: any = document.getElementById(editor.id);
+
+    editor.on('SaveContent', (e) => {
+      e.content = e.content.replace(/abc/, 'xyz');
+    });
+    editor.on('RawSaveContent', (e) => {
+      e.content = e.content.replace(/def/, '123');
+    });
+
+    editor.setContent('abcdef');
+    editor.save();
+    assert.equal(elm.value, '<p>xyzdef</p>', 'save updated content in SaveContent');
+
+    editor.setContent('abcdef');
+    editor.save({ format: 'raw' });
+    assert.equal(elm.value, '<p>xyz123</p>', 'save updated content in SaveContent and RawSaveContent');
+
+    editor.setContent('abcdef');
+    editor.save({ no_events: true, format: 'raw' });
+    assert.equal(elm.value, '<p>abc123</p>', 'save updated content in RawSaveContent');
+  });
+
   it('TBA: hide save content and hidden state while saving', () => {
     const editor = hook.editor();
     let lastEvent: EditorEvent<SaveContentEvent> | undefined;
