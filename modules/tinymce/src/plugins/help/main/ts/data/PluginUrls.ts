@@ -61,6 +61,7 @@ const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'mediaembed', name: 'Enhanced Media Embed', type: PluginType.Premium, slug: 'introduction-to-mediaembed' },
   { key: 'export', name: 'Export', type: PluginType.Premium },
   { key: 'formatpainter', name: 'Format Painter', type: PluginType.Premium },
+  { key: 'inlinecss', name: 'InlineCss', type: PluginType.Premium },
   { key: 'linkchecker', name: 'Link Checker', type: PluginType.Premium },
   { key: 'mentions', name: 'Mentions', type: PluginType.Premium },
   { key: 'mergetags', name: 'Merge Tags', type: PluginType.Premium },
@@ -73,7 +74,6 @@ const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'tinycomments', name: 'Tiny Comments', type: PluginType.Premium, slug: 'introduction-to-tiny-comments' },
   { key: 'tinydrive', name: 'Tiny Drive', type: PluginType.Premium, slug: 'tinydrive-introduction' },
   { key: 'tableofcontents', name: 'Table of Contents', type: PluginType.Premium },
-  { key: 'inlinecss', name: 'InlineCss', type: PluginType.Premium },
 ], (item) => ({
   ...item,
   // Set the defaults/fallbacks for the plugin urls
