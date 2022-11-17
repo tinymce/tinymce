@@ -89,7 +89,7 @@ const getEndPointNode = (editor: Editor, rng: Range, start: Boolean, root: Node)
       }
     }
     if (!Unicode.isZwsp(container.textContent as string)) {
-      if ( container.parentNode !== null && isInline(SugarElement.fromDom(container.parentNode))) {
+      if (container.parentNode !== null && isInline(SugarElement.fromDom(container.parentNode))) {
         container = container.parentNode;
       }
       while (container.previousSibling !== null && (isInline(SugarElement.fromDom(container.previousSibling)) || NodeType.isTextNode(container.previousSibling))) {
