@@ -52,7 +52,9 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: K
 };
 
 const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent, isBackspaceKeydown: boolean) => {
-  const os = PlatformDetection.detect().os;
+  const platform = PlatformDetection.detect();
+  const os = platform.os;
+  const browser = platform.browser;
   const multiDeleteKeyPatterns: MatchKeys.KeyPattern[] = os.isMacOS() ? [
     { keyCode: VK.BACKSPACE, altKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaretFormat, editor) },
     { keyCode: VK.DELETE, altKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaretFormat, editor) },
@@ -65,7 +67,11 @@ const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent, isBackspaceKey
   // To emulate Meta + Backspace on macOS, add a pattern for the meta key when backspace was
   // detected on keydown
   if (os.isMacOS() && isBackspaceKeydown) {
-    multiDeleteKeyPatterns.push({ keyCode: 91, action: MatchKeys.action(InlineFormatDelete.refreshCaretFormat, editor) });
+    multiDeleteKeyPatterns.push({
+      // firefox detects Cmd as "Command" not "Meta"
+      keyCode: browser.isFirefox() ? 224 : 91,
+      action: MatchKeys.action(InlineFormatDelete.refreshCaretFormat, editor)
+    });
   }
 
   MatchKeys.execute([
