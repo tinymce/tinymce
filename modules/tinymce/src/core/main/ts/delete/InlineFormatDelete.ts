@@ -62,10 +62,15 @@ const isBrInEmptyElement = (elm: Element): boolean => {
   return !Type.isNull(parentElm) && Empty.isEmpty(SugarElement.fromDom(parentElm)) && NodeType.isBr(elm);
 };
 
+const isEmptyCaret = (elm: Element): boolean => {
+  return CaretFormat.isEmptyCaretFormatElement(SugarElement.fromDom(elm));
+};
+
 const createCaretFormatAtStart = (editor: Editor, formatNodes: Node[]): void => {
   const startElm = editor.selection.getStart();
-  // replace <br> with caret format if in empty node or create new caret format at start
-  const pos = isBrInEmptyElement(startElm)
+  // replace <br> in empty node or existing caret at start if applicable
+  // otherwise create new caret format at start
+  const pos = isBrInEmptyElement(startElm) || isEmptyCaret(startElm)
     ? CaretFormat.replaceWithCaretFormat(startElm, formatNodes)
     : CaretFormat.createCaretFormatAtStart(editor, formatNodes);
   editor.selection.setRng(pos.toRange());
