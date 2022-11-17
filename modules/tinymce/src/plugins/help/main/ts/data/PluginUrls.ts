@@ -73,6 +73,7 @@ const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'tinycomments', name: 'Tiny Comments', type: PluginType.Premium, slug: 'introduction-to-tiny-comments' },
   { key: 'tinydrive', name: 'Tiny Drive', type: PluginType.Premium, slug: 'tinydrive-introduction' },
   { key: 'tableofcontents', name: 'Table of Contents', type: PluginType.Premium },
+  { key: 'inlinecss', name: 'InlineCss', type: PluginType.Premium },
 ], (item) => ({
   ...item,
   // Set the defaults/fallbacks for the plugin urls
