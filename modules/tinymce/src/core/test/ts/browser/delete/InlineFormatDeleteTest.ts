@@ -2,7 +2,7 @@ import { ApproxStructure } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -297,7 +297,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
           return s.element('body', {
             children: [
               s.element('p', {
-                // firefox retains caret format for block delete, so no new caret created
+                // firefox retains format for block delete, so no new caret created
                 children: browser.isFirefox()
                   ? [
                     s.element('strong', {
@@ -462,6 +462,26 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       );
       const selPath = browser.isFirefox() ? [ 0, 2, 0, 0, 0, 0 ] : [ 0, 1, 0, 0, 0, 0 ];
       TinyAssertions.assertSelection(editor, selPath, 0, selPath, 0);
+    });
+
+    it('TINY-9302: Backspace entire selection of block containing underlined text and then typing will produce underlined text with correct span format', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><span style="text-decoration: underline;">abc</span></p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 3);
+      doBackspace(editor);
+      TinyAssertions.assertContent(editor, browser.isFirefox() ? '<p><span style="text-decoration: underline;">&nbsp;</span></p>' : '');
+      TinyContentActions.type(editor, 'd');
+      TinyAssertions.assertContent(editor, browser.isFirefox() ? '<p><span style="text-decoration: underline;">d<br></span></p>' : '<p><span style="text-decoration: underline;">d</span></p>');
+    });
+
+    it('TINY-9302: Backspace partial selection of underlined text within block then typing will produce underlined text with correct span format', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>a<span style="text-decoration: underline;">bcd</span>e</p>');
+      TinySelections.setSelection(editor, [ 0, 1, 0 ], 0, [ 0, 2 ], 1);
+      doBackspace(editor);
+      TinyAssertions.assertContent(editor, '<p>a</p>');
+      TinyContentActions.type(editor, 'd');
+      TinyAssertions.assertContent(editor, '<p>a<span style="text-decoration: underline;">d</span></p>');
     });
   });
 });
