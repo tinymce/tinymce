@@ -63,6 +63,21 @@ const absolute = (element: SugarElement<HTMLElement>): Bounds => {
   return bounds(position.left, position.top, width, height);
 };
 
+const constrain = (original: Bounds, constraint: Bounds): Bounds => {
+  const left = Math.max(original.x, constraint.x);
+  const top = Math.max(original.y, constraint.y);
+  const right = Math.min(original.right, constraint.right);
+  const bottom = Math.min(original.bottom, constraint.bottom);
+  const width = right - left;
+  const height = bottom - top;
+  return bounds(
+    left,
+    top,
+    width,
+    height
+  );
+};
+
 const win = (): Bounds => WindowVisualViewport.getBounds(window);
 
 export {
@@ -71,5 +86,6 @@ export {
   bounds,
   box,
   absolute,
-  win
+  win,
+  constrain
 };
