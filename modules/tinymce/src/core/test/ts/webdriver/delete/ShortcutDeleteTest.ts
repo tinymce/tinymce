@@ -4,6 +4,9 @@ import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
+import * as InlineFormatDelete from 'tinymce/core/delete/InlineFormatDelete';
+
+type BackspaceDeleteModifier = { ctrl: true } | { alt: true } | { meta: true };
 
 describe('webdriver.tinymce.core.delete.ShortcutDeleteTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -14,12 +17,15 @@ describe('webdriver.tinymce.core.delete.ShortcutDeleteTest', () => {
   const os = platform.os;
   const browser = platform.browser;
 
-  it('Ctrl/Alt + Backspace a formatted word', async () => {
-    const modifiers = os.isMacOS() ? { alt: true } : { ctrl: true };
-    const editor = hook.editor();
-    editor.setContent('<p><strong><em><span style="text-decoration: underline;">abc</span></em></strong></p>');
-    TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 3);
-    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo(modifiers, 'Backspace') ]);
+  const doBackspaceDelete = async (editor: Editor, deletionKey: 'Backspace' | 'Delete', modifiers: BackspaceDeleteModifier): Promise<void> => {
+    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo(modifiers, deletionKey) ]);
+    if (browser.isSafari()) {
+      // safari doesn't trigger this override automatically in test
+      InlineFormatDelete.refreshCaretFormat(editor);
+    }
+  };
+
+  const assertStructureAndSelectionFormattedWord = (editor: Editor): void => {
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, _arr) => {
         return s.element('body', {
@@ -65,5 +71,46 @@ describe('webdriver.tinymce.core.delete.ShortcutDeleteTest', () => {
     );
     const selPath = browser.isFirefox() ? [ 0, 0, 0, 0, 0, 0 ] : [ 0, 0, 0 ];
     TinyAssertions.assertSelection(editor, selPath, 0, selPath, 0);
+  };
+
+  const assertContentDeletionThenTyping = (editor: Editor): void =>
+    TinyAssertions.assertContent(editor, browser.isFirefox()
+      ? '<p><span style="text-decoration: underline;">d</span></p>'
+      : '<p>d</p>');
+
+  const ctrlModifier: BackspaceDeleteModifier = os.isMacOS() ? { alt: true } : { ctrl: true };
+
+  it('Ctrl/Alt + Backspace at the end of a formatted word', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><strong><em><span style="text-decoration: underline;">abc</span></em></strong></p>');
+    TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 3);
+    await doBackspaceDelete(editor, 'Backspace', ctrlModifier);
+    assertStructureAndSelectionFormattedWord(editor);
+  });
+
+  it('Ctrl/Alt + Delete at the start of a formatted word', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><strong><em><span style="text-decoration: underline;">abc</span></em></strong></p>');
+    TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+    await doBackspaceDelete(editor, 'Delete', ctrlModifier);
+    assertStructureAndSelectionFormattedWord(editor);
+  });
+
+  it('TINY-9302: Ctrl/Alt + Backspace at the end of an underlined word then typing will not produce unexpected formats', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><span style="text-decoration: underline;">abc</span></p>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 3);
+    await doBackspaceDelete(editor, 'Backspace', ctrlModifier);
+    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('d') ]);
+    assertContentDeletionThenTyping(editor);
+  });
+
+  it('TINY-9302: Ctrl/Alt + Delete at the end of an underlined word then typing will not produce unexpected formats', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><span style="text-decoration: underline;">abc</span></p>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    await doBackspaceDelete(editor, 'Delete', ctrlModifier);
+    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('d') ]);
+    assertContentDeletionThenTyping(editor);
   });
 });
