@@ -105,14 +105,19 @@ const isOnlyTextSelected = (editor: Editor): boolean => {
   const isElement = (elm: Node): elm is Element =>
     elm.nodeType === 1 && !isAnchor(elm) && !Obj.has(inlineTextElements, elm.nodeName.toLowerCase());
 
+  // If selection is inside a block anchor then always treat it as non text only
+  const isInBlockAnchor = getAnchorElement(editor).exists((anchor) => anchor.hasAttribute('data-mce-block'));
+  if (isInBlockAnchor) {
+    return false;
+  }
+
   const rng = editor.selection.getRng();
   if (!rng.collapsed) {
     // Collect all non inline text elements in the range and make sure no elements were found
     const elements = collectNodesInRange(rng, isElement);
     return elements.length === 0;
   } else {
-    // If collapsed then make sure we're not in a block anchor
-    return getAnchorElement(editor).forall((anchor) => !anchor.hasAttribute('data-mce-block'));
+    return true;
   }
 };
 

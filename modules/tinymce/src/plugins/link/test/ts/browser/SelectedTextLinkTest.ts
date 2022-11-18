@@ -162,5 +162,13 @@ describe('browser.tinymce.plugins.link.SelectedTextLinkTest', () => {
       await pOpenDialog(editor, false);
       await TestLinkUi.pClickCancel(editor);
     });
+
+    it('TINY-9335: Expanded selections inside a block link should not have text to display', async () => {
+      const editor = hook.editor();
+      editor.setContent('<div><a href="#"><p>block</p></a></div>');
+      TinySelections.setSelection(editor, [ 0, 0, 0, 0 ], 1, [ 0, 0, 0, 0 ], 3);
+      await pOpenDialog(editor, false);
+      await TestLinkUi.pClickCancel(editor);
+    });
   });
 });
