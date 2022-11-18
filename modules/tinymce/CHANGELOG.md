@@ -19,12 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Transparent elements, like anchors, are now allowed in the root of the editor body if they contain blocks. #TINY-9172
-- Colorswatch keyboard navigation now starts on currently selected color if present in the colorswatch. Otherwise defaults to current behavior #TINY-9283
+- Colorswatch keyboard navigation now starts on currently selected color if present in the colorswatch. #TINY-9283
 - `setContent` is now allowed to accept any custom keys and values as a second options argument. #TINY-9143
 
 ### Improved
 - Transparent elements, like anchors, can now contain block elements. #TINY-9172
-- Colorswatch now displays a checkmark for selected color #TINY-9283
+- Colorswatch now displays a checkmark for selected color. #TINY-9283
 - Color picker dialog now starts on the appropriate color for the cursor position. #TINY-9213
 
 ### Fixed
