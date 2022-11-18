@@ -1,8 +1,9 @@
 import { Arr, Obj, Type } from '@ephox/katamari';
-import { Compare, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { Compare, PredicateFilter, PredicateFind, SugarElement, SugarElements, SugarNode, Traverse } from '@ephox/sugar';
 
 import AstNode from '../api/html/Node';
 import Schema, { SchemaMap } from '../api/html/Schema';
+import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
 
 export const transparentBlockAttr = 'data-mce-block';
@@ -20,16 +21,97 @@ const updateTransparent = (blocksSelector: string, transparent: Element) => {
     if (transparent.getAttribute('data-mce-selected') === 'inline-boundary') {
       transparent.removeAttribute('data-mce-selected');
     }
+
+    return true;
   } else {
     transparent.removeAttribute(transparentBlockAttr);
+    return false;
   }
 };
 
-export const updateChildren = (schema: Schema, scope: Element): void => {
+const updateBlockStateOnChildren = (schema: Schema, scope: Element): Element[] => {
   const transparentSelector = makeSelectorFromSchemaMap(schema.getTransparentElements());
   const blocksSelector = makeSelectorFromSchemaMap(schema.getBlockElements());
 
-  Arr.each(scope.querySelectorAll(transparentSelector), (transparent) => updateTransparent(blocksSelector, transparent));
+  return Arr.filter(scope.querySelectorAll(transparentSelector), (transparent) => updateTransparent(blocksSelector, transparent));
+};
+
+const trimEdge = (el: DocumentFragment, leftSide: boolean) => {
+  const childPropertyName = leftSide ? 'lastChild' : 'firstChild';
+
+  for (let child = el[childPropertyName]; child; child = child[childPropertyName]) {
+    if (Empty.isEmpty(SugarElement.fromDom(child))) {
+      child.parentNode?.removeChild(child);
+      return;
+    }
+  }
+};
+
+const split = (parentElm: Element, splitElm: Node) => {
+  const range = document.createRange();
+  const parentNode = parentElm.parentNode;
+
+  if (parentNode) {
+    range.setStartBefore(parentElm);
+    range.setEndBefore(splitElm);
+    const beforeFragment = range.extractContents();
+    trimEdge(beforeFragment, true);
+
+    range.setStartAfter(splitElm);
+    range.setEndAfter(parentElm);
+    const afterFragment = range.extractContents();
+    trimEdge(afterFragment, false);
+
+    if (!Empty.isEmpty(SugarElement.fromDom(beforeFragment))) {
+      parentNode.insertBefore(beforeFragment, parentElm);
+    }
+
+    if (!Empty.isEmpty(SugarElement.fromDom(splitElm))) {
+      parentNode.insertBefore(splitElm, parentElm);
+    }
+
+    if (!Empty.isEmpty(SugarElement.fromDom(afterFragment))) {
+      parentNode.insertBefore(afterFragment, parentElm);
+    }
+
+    parentNode.removeChild(parentElm);
+  }
+};
+
+// This will find invalid blocks wrapped in anchors and split them out so for example
+// <h1><a href="#"><h2>x</h2></a></h1> will find that h2 is invalid inside the H1 and split that out.
+// This is a simplistic apporach so it's likely not covering all the cases but it's a start.
+const splitInvalidChildren = (schema: Schema, scope: Element, transparentBlocks: Element[]): void => {
+  const blocksElements = schema.getBlockElements();
+  const rootNode = SugarElement.fromDom(scope);
+  const isBlock = (el: SugarElement) => SugarNode.name(el) in blocksElements;
+  const isRoot = (el: SugarElement) => Compare.eq(el, rootNode);
+
+  Arr.each(SugarElements.fromDom(transparentBlocks), (transparentBlock) => {
+    PredicateFind.ancestor(transparentBlock, isBlock, isRoot).each((parentBlock) => {
+      const invalidChildren = PredicateFilter.children(
+        transparentBlock,
+        (el) => isBlock(el) && !schema.isValidChild(SugarNode.name(parentBlock), SugarNode.name(el))
+      );
+
+      if (invalidChildren.length > 0) {
+        const stateScope = Traverse.parentElement(parentBlock);
+
+        Arr.each(invalidChildren, (child) => {
+          PredicateFind.ancestor(child, isBlock, isRoot).each((parentBlock) => {
+            split(parentBlock.dom as Element, child.dom);
+          });
+        });
+
+        stateScope.each((scope) => updateBlockStateOnChildren(schema, scope.dom));
+      }
+    });
+  });
+};
+
+export const updateChildren = (schema: Schema, scope: Element): void => {
+  const transparentBlocks = updateBlockStateOnChildren(schema, scope);
+  splitInvalidChildren(schema, scope, transparentBlocks);
 };
 
 export const updateElement = (schema: Schema, target: Element): void => {

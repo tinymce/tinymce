@@ -1,5 +1,5 @@
-import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Singleton } from '@ephox/katamari';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { Hierarchy, Html, Insert, Remove, SugarBody, SugarElement, SugarNode } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -12,76 +12,92 @@ describe('browser.tinymce.core.content.TransparentElementsTest', () => {
   const transparentElements = TransparentElements.elementNames(schema.getTransparentElements());
   const textBlockElements = TransparentElements.elementNames(schema.getTextBlockElements());
 
-  context('update/updateCaret', () => {
-    const rootState = Singleton.value<SugarElement<HTMLElement>>();
+  it('TINY-9172: makeElementList', () => {
+    assert.deepEqual(TransparentElements.elementNames({ a: {}, h1: {}, A: {}, H1: {}}), [ 'a', 'h1' ]);
+  });
 
-    beforeEach(() => {
+  it('TINY-9230: hasBlockAttr', () => {
+    assert.isTrue(TransparentElements.hasBlockAttr(SugarElement.fromHtml<Element>('<a data-mce-block="true"></a>').dom));
+    assert.isFalse(TransparentElements.hasBlockAttr(SugarElement.fromHtml<Element>('<a></a>').dom));
+  });
+
+  context('updateChildren/updateCaret', () => {
+    const withScratchDiv = (html: string, f: (el: SugarElement<HTMLElement>) => void) => {
       const root = SugarElement.fromTag('div');
+      Html.set(root, html);
       Insert.append(SugarBody.body(), root);
-      rootState.set(root);
-    });
+      f(root);
+      Remove.remove(root);
+    };
 
-    afterEach(() => {
-      rootState.get().each((root) => Remove.remove(root));
-      rootState.clear();
-    });
+    const testUpdateChildren = (testCase: { input: string; expected: string }) => {
+      withScratchDiv(testCase.input, (root) => {
+        TransparentElements.updateChildren(schema, root.dom);
+        assert.equal(Html.get(root), testCase.expected);
+      });
+    };
 
-    it('TINY-9172: makeElementList', () => {
-      assert.deepEqual(TransparentElements.elementNames({ a: {}, h1: {}, A: {}, H1: {}}), [ 'a', 'h1' ]);
-    });
-
-    it('TINY-9230: hasBlockAttr', () => {
-      assert.isTrue(TransparentElements.hasBlockAttr(SugarElement.fromHtml<Element>('<a data-mce-block="true"></a>').dom));
-      assert.isFalse(TransparentElements.hasBlockAttr(SugarElement.fromHtml<Element>('<a></a>').dom));
-    });
+    const testUpdateCaret = (testCase: { input: string; path: number[]; expected: string }) => {
+      withScratchDiv(testCase.input, (root) => {
+        const scope = Hierarchy.follow(root, testCase.path).filter(SugarNode.isElement).getOrDie();
+        TransparentElements.updateCaret(schema, root.dom, scope.dom);
+        assert.equal(Html.get(root), testCase.expected);
+      });
+    };
 
     it('TINY-9172: Should add data-mce-block on transparent elements if the contain blocks', () => {
-      const root = rootState.get().getOrDie();
       const blockLinks = Arr.map(textBlockElements, (name) => `<a href="#"><${name}>link</${name}></a>`).join('');
       const expectedBlockLinks = Arr.map(textBlockElements, (name) => `<a href="#" data-mce-block="true"><${name}>link</${name}></a>`).join('');
 
-      Html.set(root, `<a href="#">link</a><div>${blockLinks}</div>${blockLinks}<div><a href="#">link</a></div>`);
-      TransparentElements.updateChildren(schema, root.dom);
-      assert.equal(Html.get(root), `<a href="#">link</a><div>${expectedBlockLinks}</div>${expectedBlockLinks}<div><a href="#">link</a></div>`);
+      testUpdateChildren({
+        input: `<a href="#">link</a><div>${blockLinks}</div>${blockLinks}<div><a href="#">link</a></div>`,
+        expected: `<a href="#">link</a><div>${expectedBlockLinks}</div>${expectedBlockLinks}<div><a href="#">link</a></div>`
+      });
     });
 
-    it('TINY-9172: Should add data-mce-block on transparent block elements that wrap blocks and also remove data-mce-selected="inline-boundary"', () => {
-      const root = rootState.get().getOrDie();
+    it('TINY-9172: Should add data-mce-block on transparent block elements that wrap blocks and also remove data-mce-selected="inline-boundary"', () => testUpdateChildren({
+      input: '<div><a href="#" data-mce-selected="inline-boundary"><p>link</p></a></div>',
+      expected: '<div><a href="#" data-mce-block="true"><p>link</p></a></div>'
+    }));
 
-      Html.set(root, '<div><a href="#" data-mce-selected="inline-boundary"><p>link</p></a></div>');
-      TransparentElements.updateChildren(schema, root.dom);
-      assert.equal(Html.get(root), '<div><a href="#" data-mce-block="true"><p>link</p></a></div>');
-    });
+    it('TINY-9232: Should split the H1 at the P element and remove any empty nodes that gets produced', () => testUpdateChildren({
+      input: '<h1><a href="#"><p>link</p></a></h1>',
+      expected: '<p>link</p>'
+    }));
 
-    it('TINY-9172: Should update all anchors in element closest to the root only', () => {
-      const root = rootState.get().getOrDie();
+    it('TINY-9232: Should split the H1 at the P element and keep the contents that is around the paragraph', () => testUpdateChildren({
+      input: '<h1>a<a href="#"><p>b</p></a>c</h1>',
+      expected: '<h1>a</h1><p>b</p><h1>c</h1>'
+    }));
 
-      Html.set(root, '<div><a href="#"><p>link</p></a><a href="#"><p>link</p></a></div><a href="#">not this</a><a href="#"><p>not this</p></a>');
-      const scope = Hierarchy.follow(root, [ 0, 0, 0 ]).filter(SugarNode.isElement).getOrDie();
-      TransparentElements.updateCaret(schema, root.dom, scope.dom);
-      assert.equal(
-        Html.get(root),
-        '<div><a href="#" data-mce-block="true"><p>link</p></a><a href="#" data-mce-block="true"><p>link</p></a></div><a href="#">not this</a><a href="#"><p>not this</p></a>'
-      );
-    });
+    it('TINY-9232: Should split the H1 and the P element but not split the parent div element', () => testUpdateChildren({
+      input: '<div><h1>a<a href="#"><p>b</p></a>c</h1></div>',
+      expected: '<div><h1>a</h1><p>b</p><h1>c</h1></div>'
+    }));
 
-    it('TINY-9172: Should update anchor closest to root', () => {
-      const root = rootState.get().getOrDie();
+    it('TINY-9172: Should update all anchors in element closest to the root only', () => testUpdateCaret({
+      input: '<div><a href="#"><p>link</p></a><a href="#"><p>link</p></a></div><a href="#">not this</a><a href="#"><p>not this</p></a>',
+      path: [ 0, 0, 0 ],
+      expected: '<div><a href="#" data-mce-block="true"><p>link</p></a><a href="#" data-mce-block="true"><p>link</p></a></div><a href="#">not this</a><a href="#"><p>not this</p></a>'
+    }));
 
-      Html.set(root, '<a href="#"><p>link</p></a>');
-      const scope = Hierarchy.follow(root, [ 0 ]).filter(SugarNode.isElement).getOrDie();
-      TransparentElements.updateCaret(schema, root.dom, scope.dom);
-      assert.equal(Html.get(root), '<a href="#" data-mce-block="true"><p>link</p></a>');
-    });
+    it('TINY-9172: Should update anchor closest to root', () => testUpdateCaret({
+      input: '<a href="#"><p>link</p></a>',
+      path: [ 0 ],
+      expected: '<a href="#" data-mce-block="true"><p>link</p></a>'
+    }));
 
-    it('TINY-9172: Should update anchor even if target element is in another branch', () => {
-      const root = rootState.get().getOrDie();
+    it('TINY-9172: Should update anchor even if target element is in another branch', () => testUpdateCaret({
+      input: '<div><a href="#"><p>link</p></a><b><i>target</i></b></div>',
+      path: [ 0, 1, 0 ],
+      expected: '<div><a href="#" data-mce-block="true"><p>link</p></a><b><i>target</i></b></div>'
+    }));
 
-      Html.set(root, '<div><a href="#"><p>link</p></a><b><i>target</i></b></div>');
-      const scope = Hierarchy.follow(root, [ 0, 1, 0 ]).filter(SugarNode.isElement).getOrDie();
-      TransparentElements.updateCaret(schema, root.dom, scope.dom);
-      assert.equal(Html.get(root), '<div><a href="#" data-mce-block="true"><p>link</p></a><b><i>target</i></b></div>');
-    });
+    it('TINY-9172: Split the H1 at the P point within the DIV but ignore the other P not in the caret scope', () => testUpdateCaret({
+      input: '<div><h1><a href="#"><p>link</p></a></h1></div><h1><a href="#"><p>link</p></a></h1>',
+      path: [ 0, 0, 0, 0 ],
+      expected: '<div><p>link</p></div><h1><a href="#"><p>link</p></a></h1>'
+    }));
   });
 
   context('isTransparentElementName', () => {
