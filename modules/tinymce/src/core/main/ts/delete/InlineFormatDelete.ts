@@ -8,6 +8,7 @@ import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
 import * as Parents from '../dom/Parents';
 import * as CaretFormat from '../fmt/CaretFormat';
+import { isCaretNode } from '../fmt/FormatContainer';
 import * as DeleteElement from './DeleteElement';
 import * as DeleteUtils from './DeleteUtils';
 
@@ -78,7 +79,7 @@ const createCaretFormatAtStart = (editor: Editor, formatNodes: Node[]): void => 
 
 const updateCaretFormat = (editor: Editor, updateFormats: Node[]): void => {
   const missingFormats = Arr.difference(updateFormats, getFormatNodesAtStart(editor));
-  if (missingFormats.length !== 0) {
+  if (missingFormats.length > 0) {
     createCaretFormatAtStart(editor, missingFormats);
   }
 };
@@ -99,20 +100,12 @@ const deleteRange = (editor: Editor): Optional<() => void> => {
 const backspaceDelete = (editor: Editor, forward: boolean): Optional<() => void> =>
   editor.selection.isCollapsed() ? deleteCaret(editor, forward) : deleteRange(editor);
 
-const getAncestorInlineEmptyCarets = (elm: SugarElement<Node>): SugarElement<Node>[] =>
-  PredicateFilter.ancestors(elm, (node) => CaretFormat.isEmptyCaretFormatElement(node), (node) => ElementType.isBlock(node));
+const hasAncestorInlineCaret = (elm: SugarElement<Node>): boolean =>
+  PredicateFilter.ancestors(elm, (node) => isCaretNode(node.dom), (node) => ElementType.isBlock(node)).length > 0;
 
 const refreshCaretFormat = (editor: Editor): boolean => {
-  if (editor.selection.getRng().startOffset === 0) {
-    const startElm = editor.selection.getStart();
-    const ancestorInlineEmptyCarets = getAncestorInlineEmptyCarets(SugarElement.fromDom(startElm));
-    Arr.last(ancestorInlineEmptyCarets).fold(
-      () => createCaretFormatAtStart(editor, []),
-      (elm) => {
-        const pos = CaretFormat.replaceWithCaretFormat(elm.dom, []);
-        editor.selection.setRng(pos.toRange());
-      }
-    );
+  if (editor.selection.getRng().startOffset === 0 && !hasAncestorInlineCaret(SugarElement.fromDom(editor.selection.getStart()))) {
+    createCaretFormatAtStart(editor, []);
   }
   return true;
 };
