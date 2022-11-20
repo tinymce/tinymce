@@ -56,11 +56,11 @@ const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent, isBackspaceKey
   const os = platform.os;
   const browser = platform.browser;
   const multiDeleteKeyPatterns: MatchKeys.KeyPattern[] = os.isMacOS() ? [
-    { keyCode: VK.BACKSPACE, altKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaretFormat, editor) },
-    { keyCode: VK.DELETE, altKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaretFormat, editor) },
+    { keyCode: VK.BACKSPACE, altKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor) },
+    { keyCode: VK.DELETE, altKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor) },
   ] : [
-    { keyCode: VK.BACKSPACE, ctrlKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaretFormat, editor) },
-    { keyCode: VK.DELETE, ctrlKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaretFormat, editor) }
+    { keyCode: VK.BACKSPACE, ctrlKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor) },
+    { keyCode: VK.DELETE, ctrlKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor) }
   ];
 
   // macOS surpresses keyup events for most keys including Backspace when Meta key is engaged
@@ -70,7 +70,7 @@ const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent, isBackspaceKey
     multiDeleteKeyPatterns.push({
       // firefox detects Cmd as "Command" not "Meta"
       keyCode: browser.isFirefox() ? 224 : 91,
-      action: MatchKeys.action(InlineFormatDelete.refreshCaretFormat, editor)
+      action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor)
     });
   }
 

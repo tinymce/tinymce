@@ -63,9 +63,8 @@ const isBrInEmptyElement = (elm: Element): boolean => {
   return !Type.isNull(parentElm) && Empty.isEmpty(SugarElement.fromDom(parentElm)) && NodeType.isBr(elm);
 };
 
-const isEmptyCaret = (elm: Element): boolean => {
-  return CaretFormat.isEmptyCaretFormatElement(SugarElement.fromDom(elm));
-};
+const isEmptyCaret = (elm: Element): boolean =>
+  CaretFormat.isEmptyCaretFormatElement(SugarElement.fromDom(elm));
 
 const createCaretFormatAtStart = (editor: Editor, formatNodes: Node[]): void => {
   const startElm = editor.selection.getStart();
@@ -84,9 +83,11 @@ const updateCaretFormat = (editor: Editor, updateFormats: Node[]): void => {
   }
 };
 
+const isSelectionAtStartOfContainer = (editor: Editor): boolean =>
+  editor.selection.getRng().startOffset === 0;
+
 const deleteRange = (editor: Editor): Optional<() => void> => {
-  const selRng = editor.selection.getRng();
-  if (selRng.startOffset === 0) {
+  if (isSelectionAtStartOfContainer(editor)) {
     const formatNodes = getFormatNodesAtStart(editor);
     return Optional.some(() => {
       DeleteUtils.execNativeDeleteCommand(editor);
@@ -103,8 +104,11 @@ const backspaceDelete = (editor: Editor, forward: boolean): Optional<() => void>
 const hasAncestorInlineCaret = (elm: SugarElement<Node>): boolean =>
   PredicateFilter.ancestors(elm, (node) => isCaretNode(node.dom), (node) => ElementType.isBlock(node)).length > 0;
 
-const refreshCaretFormat = (editor: Editor): boolean => {
-  if (editor.selection.getRng().startOffset === 0 && !hasAncestorInlineCaret(SugarElement.fromDom(editor.selection.getStart()))) {
+const hasAncestorInlineCaretAtStart = (editor: Editor): boolean =>
+  hasAncestorInlineCaret(SugarElement.fromDom(editor.selection.getStart()));
+
+const refreshCaret = (editor: Editor): boolean => {
+  if (isSelectionAtStartOfContainer(editor) && !hasAncestorInlineCaretAtStart(editor)) {
     createCaretFormatAtStart(editor, []);
   }
   return true;
@@ -112,5 +116,5 @@ const refreshCaretFormat = (editor: Editor): boolean => {
 
 export {
   backspaceDelete,
-  refreshCaretFormat
+  refreshCaret
 };

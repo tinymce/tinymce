@@ -21,7 +21,7 @@ describe('webdriver.tinymce.core.delete.ShortcutDeleteTest', () => {
     await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo(modifiers, deletionKey) ]);
     if (browser.isSafari()) {
       // safari doesn't trigger this override automatically in test
-      InlineFormatDelete.refreshCaretFormat(editor);
+      InlineFormatDelete.refreshCaret(editor);
     }
   };
 
