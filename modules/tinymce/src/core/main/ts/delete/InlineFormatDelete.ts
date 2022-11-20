@@ -1,5 +1,5 @@
 import { Arr, Fun, Optional, Type } from '@ephox/katamari';
-import { SugarElement, Traverse } from '@ephox/sugar';
+import { PredicateFilter, SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
@@ -99,9 +99,20 @@ const deleteRange = (editor: Editor): Optional<() => void> => {
 const backspaceDelete = (editor: Editor, forward: boolean): Optional<() => void> =>
   editor.selection.isCollapsed() ? deleteCaret(editor, forward) : deleteRange(editor);
 
+const getAncestorInlineEmptyCarets = (elm: SugarElement<Node>): SugarElement<Node>[] =>
+  PredicateFilter.ancestors(elm, (node) => CaretFormat.isEmptyCaretFormatElement(node), (node) => ElementType.isBlock(node));
+
 const refreshCaretFormat = (editor: Editor): boolean => {
   if (editor.selection.getRng().startOffset === 0) {
-    createCaretFormatAtStart(editor, []);
+    const startElm = editor.selection.getStart();
+    const ancestorInlineEmptyCarets = getAncestorInlineEmptyCarets(SugarElement.fromDom(startElm));
+    Arr.last(ancestorInlineEmptyCarets).fold(
+      () => createCaretFormatAtStart(editor, []),
+      (elm) => {
+        const pos = CaretFormat.replaceWithCaretFormat(elm.dom, []);
+        editor.selection.setRng(pos.toRange());
+      }
+    );
   }
   return true;
 };
