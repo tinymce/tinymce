@@ -171,7 +171,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
     const editor = hook.editor();
     editor.setContent('<pre><span style="background-color: rgb(224, 62, 45);"><b>red</b></span></pre>');
 
-    TinySelections.setSelection(editor, [ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 1, true);
+    TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1, true);
 
     await openAndGetBackcolorMenu();
     assertFocusIsOnColor('rgb(224, 62, 45)');
