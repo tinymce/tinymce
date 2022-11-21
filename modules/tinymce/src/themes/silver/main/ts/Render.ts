@@ -1,5 +1,5 @@
 import {
-  AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Disabling, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec, SystemEvents, VerticalDir
+  AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Boxes, Disabling, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec, SystemEvents, VerticalDir
 } from '@ephox/alloy';
 import { Arr, Merger, Obj, Optional, Result, Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
@@ -63,10 +63,14 @@ export interface RenderArgs {
   readonly height: string;
 }
 
+export interface ThemeRenderSetup {
+  readonly getPopupSinkBounds: () => Boxes.Bounds;
+}
+
 const getLazyMothership = (label: string, singleton: Singleton.Value<Gui.GuiSystem>) =>
   singleton.get().getOrDie(`UI for ${label} has not been rendered`);
 
-const setup = (editor: Editor): RenderInfo => {
+const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
   const isInline = editor.inline;
   const mode = isInline ? Inline : Iframe;
 
@@ -320,7 +324,12 @@ const setup = (editor: Editor): RenderInfo => {
       },
       behaviours: Behaviour.derive([
         Positioning.config({
-          useFixed: () => header.isDocked(lazyHeader)
+          useFixed: () => header.isDocked(lazyHeader),
+
+          // TINY-9226: We want to limit the popup sink's bounds based on its scrolling environment. We don't
+          // want it to try to position things outside of its scrolling viewport, because they will
+          // just appear offscreen (hidden by the current scroll values)
+          getBounds: () => setupForTheme.getPopupSinkBounds()
         })
       ])
     };
