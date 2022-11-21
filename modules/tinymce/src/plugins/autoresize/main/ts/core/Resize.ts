@@ -73,6 +73,8 @@ const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unk
   const marginTop = parseCssValueToInt(dom, docEle, 'margin-top', true);
   const marginBottom = parseCssValueToInt(dom, docEle, 'margin-bottom', true);
   let contentHeight = docEle.offsetHeight + marginTop + marginBottom + resizeBottomMargin;
+  // eslint-disable-next-line no-console
+  console.log(`CALC: docEle.offsetHeight: ${docEle.offsetHeight} + marginTop: ${marginTop} + marginBottom: ${marginBottom} + resizeBottomMargin: ${resizeBottomMargin}`);
 
   // Make sure we have a valid height
   if (contentHeight < 0) {
@@ -164,16 +166,15 @@ const setup = (editor: Editor, oldSize: Cell<number>): void => {
       sizeAfterFirstResize = editor.getContainer().offsetHeight;
       resize(editor, oldSize, e, getExtraMarginBottom);
       resizeCounter += 1;
-    } else if (resizeCounter < 3) {
-      resize(editor, oldSize, e, getExtraMarginBottom);
-      resizeCounter += 1;
-    } else if (resizeCounter >= 3 && !checkDone) {
-      const body = editor.getBody();
-      const bodyRect = body.getBoundingClientRect();
+    } else if (resizeCounter >= 2 && !checkDone) {
+      const dom = editor.dom;
       const doc = editor.getDoc();
-      const currentExtraMarginBottom = doc.documentElement.offsetHeight - (body.offsetHeight + bodyRect.top);
-
-      getExtraMarginBottom = sizeAfterFirstResize < editor.getContainer().offsetHeight ? Fun.constant(currentExtraMarginBottom) : getExtraMarginBottom;
+      const isLooping = sizeAfterFirstResize < editor.getContainer().offsetHeight;
+      if (isLooping) {
+        dom.setStyles(doc.documentElement, { 'min-height': 0 });
+        dom.setStyles(editor.getBody(), { 'min-height': 'inherit' });
+      }
+      getExtraMarginBottom = isLooping ? Fun.constant(0) : getExtraMarginBottom;
       checkDone = true;
     }
 
