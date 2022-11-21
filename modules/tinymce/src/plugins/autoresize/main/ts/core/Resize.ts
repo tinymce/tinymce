@@ -73,8 +73,6 @@ const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unk
   const marginTop = parseCssValueToInt(dom, docEle, 'margin-top', true);
   const marginBottom = parseCssValueToInt(dom, docEle, 'margin-bottom', true);
   let contentHeight = docEle.offsetHeight + marginTop + marginBottom + resizeBottomMargin;
-  // eslint-disable-next-line no-console
-  console.log(`CALC: docEle.offsetHeight: ${docEle.offsetHeight} + marginTop: ${marginTop} + marginBottom: ${marginBottom} + resizeBottomMargin: ${resizeBottomMargin}`);
 
   // Make sure we have a valid height
   if (contentHeight < 0) {
