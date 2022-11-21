@@ -15,7 +15,7 @@ import * as Backstage from './backstage/Backstage';
 import * as DomEvents from './Events';
 import * as Iframe from './modes/Iframe';
 import * as Inline from './modes/Inline';
-import { LazyUiReferences, ReadyUiReferences } from './modes/UiReferences';
+import { LazyUiReferences, ReadyUiReferences, SinkAndMothership } from './modes/UiReferences';
 import * as ReadOnly from './ReadOnly';
 import * as ContextToolbar from './ui/context/ContextToolbar';
 import * as FormatControls from './ui/core/FormatControls';
@@ -499,12 +499,17 @@ const setup = (editor: Editor): RenderInfo => {
     return mode.render(editor, uiRefs, rawUiConfig, backstages.popup, args);
   };
 
+  const reuseDialogUiForPopuUi = (dialogUi: SinkAndMothership) => {
+    lazyPopupMothership.set(dialogUi.mothership);
+    return dialogUi;
+  };
+
   const renderUI = (): ModeRenderInfo => {
     const mainUi = renderMainUi();
     const dialogUi = renderDialogUi();
     // If dialogUi and popupUi are the same, LazyUiReferences should handle deduplicating then
     // get calling getUiMotherships
-    const popupUi = Options.isUiOfTomorrow(editor) ? renderPopupUi() : dialogUi;
+    const popupUi = Options.isUiOfTomorrow(editor) ? renderPopupUi() : reuseDialogUiForPopuUi(dialogUi);
 
     lazyUiRefs.dialogUi.set(dialogUi);
     lazyUiRefs.popupUi.set(popupUi);

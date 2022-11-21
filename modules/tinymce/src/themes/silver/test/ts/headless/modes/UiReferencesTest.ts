@@ -30,12 +30,12 @@ describe('headless.modes.UiReferencesTest', () => {
       assert.deepEqual(actual, expected, 'Checking classes of motherships');
     };
 
-    it('No UIs set', () => {
+    it('TINY-9226: No UIs set', () => {
       const lazyRefs = LazyUiReferences();
       assert.deepEqual(lazyRefs.getUiMotherships(), [ ], 'There should be no motherships');
     });
 
-    it('DialogUi set but not PopupUp', () => {
+    it('TINY-9226: DialogUi set but not PopupUp', () => {
       const lazyRefs = LazyUiReferences();
       lazyRefs.dialogUi.set(
         makeSinkAndMothership('alpha')
@@ -43,7 +43,7 @@ describe('headless.modes.UiReferencesTest', () => {
       assertClasses([[ 'alpha' ]], lazyRefs.getUiMotherships());
     });
 
-    it('PopupUi set but not DialogUi', () => {
+    it('TINY-9226: PopupUi set but not DialogUi', () => {
       const lazyRefs = LazyUiReferences();
       lazyRefs.popupUi.set(
         makeSinkAndMothership('beta')
@@ -51,7 +51,7 @@ describe('headless.modes.UiReferencesTest', () => {
       assertClasses([[ 'beta' ]], lazyRefs.getUiMotherships());
     });
 
-    it('PopupUi set and DialogUi set, but same component', () => {
+    it('TINY-9226: PopupUi set and DialogUi set, but same component', () => {
       const lazyRefs = LazyUiReferences();
       const shared = makeSinkAndMothership('shared');
       lazyRefs.dialogUi.set(shared);
@@ -59,7 +59,7 @@ describe('headless.modes.UiReferencesTest', () => {
       assertClasses([[ 'shared' ]], lazyRefs.getUiMotherships());
     });
 
-    it('PopupUi set and DialogUi set, and different components', () => {
+    it('TINY-9226: PopupUi set and DialogUi set, and different components', () => {
       const lazyRefs = LazyUiReferences();
       lazyRefs.dialogUi.set(
         makeSinkAndMothership('alpha')

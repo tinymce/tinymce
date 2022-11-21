@@ -152,12 +152,12 @@ describe('browser.tinymce.themes.silver.editor.SilverUiOfTomorrowTest', () => {
           []
         );
 
-        it('Check basic structure (1 sink, parent is body)', async () => {
+        it('TINY-9226: Check basic structure (1 sink, parent is body)', async () => {
           const editor = hook.editor();
           await pAssertOneSinkMode(editor);
         });
 
-        it('Check popup menu sink location - dialog sink (there is no popup sink)', async () => {
+        it('TINY-9226: Check popup menu sink location - dialog sink (there is no popup sink)', async () => {
           const editor = hook.editor();
           editor.focus();
           const sink = await pGetSinkWithPopup(editor);
@@ -165,7 +165,7 @@ describe('browser.tinymce.themes.silver.editor.SilverUiOfTomorrowTest', () => {
           closeMenu(editor);
         });
 
-        it('Check dialog sink location - dialog sink', async () => {
+        it('TINY-9226: Check dialog sink location - dialog sink', async () => {
           const editor = hook.editor();
           editor.focus();
           const sink = await pGetSinkWithDialog(editor);
@@ -192,12 +192,12 @@ describe('browser.tinymce.themes.silver.editor.SilverUiOfTomorrowTest', () => {
           []
         );
 
-        it('Check basic structure', async () => {
+        it('TINY-9226: Check basic structure', async () => {
           const editor = hook.editor();
           await pAssertTwoSinksMode(editor);
         });
 
-        it('Check popup menu sink location', async () => {
+        it('TINY-9226: Check popup menu sink location', async () => {
           const editor = hook.editor();
           editor.focus();
           const sink = await pGetSinkWithPopup(editor);
@@ -205,7 +205,7 @@ describe('browser.tinymce.themes.silver.editor.SilverUiOfTomorrowTest', () => {
           closeMenu(editor);
         });
 
-        it('Check dialog sink location', async () => {
+        it('TINY-9226: Check dialog sink location', async () => {
           const editor = hook.editor();
           editor.focus();
           const sink = await pGetSinkWithDialog(editor);
