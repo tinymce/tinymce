@@ -58,6 +58,7 @@ const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'checklist', name: 'Checklist', type: PluginType.Premium },
   { key: 'editimage', name: 'Enhanced Image Editing', type: PluginType.Premium },
   { key: 'footnotes', name: 'Footnotes', type: PluginType.Premium },
+  { key: 'typography', name: 'Advanced Typography', type: PluginType.Premium },
   { key: 'mediaembed', name: 'Enhanced Media Embed', type: PluginType.Premium, slug: 'introduction-to-mediaembed' },
   { key: 'export', name: 'Export', type: PluginType.Premium },
   { key: 'formatpainter', name: 'Format Painter', type: PluginType.Premium },
