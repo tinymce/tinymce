@@ -1,6 +1,6 @@
 import { HexColour, RgbaColour } from '@ephox/acid';
-import { Cell, Fun, Optional, Optionals, Strings } from '@ephox/katamari';
-import { Css, SugarElement, Traverse } from '@ephox/sugar';
+import { Cell, Fun, Optional, Optionals } from '@ephox/katamari';
+import { Css, SugarElement, SugarNode, TransformFind } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
@@ -18,31 +18,29 @@ export interface ColorSwatchDialogData {
 
 type ColorFormat = 'forecolor' | 'hilitecolor';
 
-const defaultBackgroundColor = Fun.constant('rgba(0, 0, 0, 0)');
+const defaultBackgroundColor = 'rgba(0, 0, 0, 0)';
+
+const isValidBackgroundColor = (value: string) =>
+  RgbaColour.fromString(value).exists((c) => c.alpha !== 0);
 
 /*
-Climb up the tree to find the value of the provided key. First check getRaw for a value set directly on the element, then check get to see if the value is already set with a css rule. Repeat until finding a non-transparent value or defaulting.
+Climb up the tree to find the value of the background until finding a non-transparent value or defaulting.
 */
-const climbTreeForValue = (node: SugarElement<Element>, key: string): string =>
-  Css.getRaw(node, key).fold( // Check raw first
-    () => {
-      const parsed = Css.get(node, key); // Check computed if no raw.
-      if (Strings.endsWith(parsed, ' 0)')) { // If not transparent.
-        return Traverse.parentElement(node).fold<string>(
-          defaultBackgroundColor,
-          (parentNode) => climbTreeForValue(parentNode, key)
-        );
-      } else {
-        return parsed;
-      }
-    },
-    () => Css.get(node, key) // Raw found. Use computed to make sure it's rgb and not "blue"
-  );
+const getClosestCssBackgroundColorValue = (scope: SugarElement<Element>): string => {
+  return TransformFind.closest(scope, (node) => {
+    if (SugarNode.isElement(node)) {
+      const color = Css.get(node, 'background-color');
+      return Optionals.someIf(isValidBackgroundColor(color), color);
+    } else {
+      return Optional.none();
+    }
+  }).getOr(defaultBackgroundColor);
+};
 
 const getCurrentColor = (editor: Editor, format: ColorFormat): Optional<string> => {
   const node = SugarElement.fromDom(editor.selection.getStart());
   const cssRgbValue = format === 'hilitecolor'
-    ? climbTreeForValue(node, 'background-color')
+    ? getClosestCssBackgroundColorValue(node)
     : Css.get(node, 'color');
 
   return RgbaColour.fromString(cssRgbValue).map((rgba) => '#' + HexColour.fromRgba(rgba).value);
