@@ -1,5 +1,6 @@
 import { Cursors } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { Css, InsertAll, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -93,7 +94,7 @@ describe('headless.modes.ScrollingContextTest', () => {
     });
   });
 
-  // context('getBoundsFrom', () => {
-
-  // });
+  context('getBoundsFrom', () => {
+    it.skip('TINY-9226: Sanity test', () => Fun.noop);
+  });
 });
