@@ -1,5 +1,6 @@
 import { Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { Css, Height, Remove, Scroll, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -46,161 +47,194 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
   };
 
   context('Top toolbar positioning', () => {
-    const hook = TinyHooks.bddSetup<Editor>({
-      base_url: '/project/tinymce/js/tinymce',
-      resize: 'both',
-      height: 400,
-      width: 650,
-      toolbar_sticky: false,
-      toolbar_mode: 'wrap'
-    }, []);
+    Arr.each([
+      { name: 'normal', settings: { ui_of_tomorrow: false }},
+      { name: 'normal-tomorrow', settings: { ui_of_tomorrow: true }}
+    ], (tester) => {
+      context(tester.name, () => {
+        const hook = TinyHooks.bddSetup<Editor>({
+          base_url: '/project/tinymce/js/tinymce',
+          resize: 'both',
+          height: 400,
+          width: 650,
+          toolbar_sticky: false,
+          toolbar_mode: 'wrap',
+          ...tester.settings
+        }, []);
 
-    it('Test position when resizing', async () => {
-      const editor = hook.editor();
-      const resizeHandle = UiFinder.findIn(SugarBody.body(), '.tox-statusbar__resize-handle').getOrDie();
-      const dialog = openDialog(editor);
-      await pAssertPos(dialog, 'absolute', 158, -306);
+        it('Test position when resizing', async () => {
+          const editor = hook.editor();
+          const resizeHandle = UiFinder.findIn(SugarBody.body(), '.tox-statusbar__resize-handle').getOrDie();
+          const dialog = openDialog(editor);
+          await pAssertPos(dialog, 'absolute', 158, -306);
 
-      // Shrink the editor to 300px
-      Mouse.mouseDown(resizeHandle);
-      resizeToPos(650, 400, 500, 300);
-      await pAssertPos(dialog, 'absolute', 5, -166); // Toolbar wraps so y diff is 100 + toolbar height
+          // Shrink the editor to 300px
+          Mouse.mouseDown(resizeHandle);
+          resizeToPos(650, 400, 500, 300);
+          await pAssertPos(dialog, 'absolute', 5, -166); // Toolbar wraps so y diff is 100 + toolbar height
 
-      // Enlarge the editor to 500px
-      Mouse.mouseDown(resizeHandle);
-      resizeToPos(500, 300, 750, 500);
-      await pAssertPos(dialog, 'absolute', 258, -406);
+          // Enlarge the editor to 500px
+          Mouse.mouseDown(resizeHandle);
+          resizeToPos(500, 300, 750, 500);
+          await pAssertPos(dialog, 'absolute', 258, -406);
 
-      // Resize back to the original size
-      Mouse.mouseDown(resizeHandle);
-      resizeToPos(750, 500, 650, 400);
-      await pAssertPos(dialog, 'absolute', 158, -306);
+          // Resize back to the original size
+          Mouse.mouseDown(resizeHandle);
+          resizeToPos(750, 500, 650, 400);
+          await pAssertPos(dialog, 'absolute', 158, -306);
 
-      DialogUtils.close(editor);
-    });
+          DialogUtils.close(editor);
+        });
 
-    it('Test position when scrolling', async () => {
-      const editor = hook.editor();
-      const dialog = openDialog(editor);
+        it('Test position when scrolling', async () => {
+          const editor = hook.editor();
+          const dialog = openDialog(editor);
 
-      // Enlarge the editor to 2000px
-      Height.set(TinyDom.container(editor), 2000);
-      editor.dispatch('ResizeEditor');
-      await pAssertPos(dialog, 'absolute', 158, -1901);
+          // Enlarge the editor to 2000px
+          Height.set(TinyDom.container(editor), 2000);
+          editor.dispatch('ResizeEditor');
+          await pAssertPos(dialog, 'absolute', 158, -1901);
 
-      // Scroll to 1500px and assert docked
-      Scroll.to(0, 1500);
-      await pAssertPos(dialog, 'fixed', 158, 0);
+          // Scroll to 1500px and assert docked
+          Scroll.to(0, 1500);
+          await pAssertPos(dialog, 'fixed', 158, 0);
 
-      // Scroll back to top and assert not docked
-      Scroll.to(0, 0);
-      await pAssertPos(dialog, 'absolute', 158, -1906);
+          // Scroll back to top and assert not docked
+          Scroll.to(0, 0);
+          await pAssertPos(dialog, 'absolute', 158, -1906);
 
-      DialogUtils.close(editor);
-    });
+          DialogUtils.close(editor);
+        });
 
-    it('Test initial position when initially scrolled', async () => {
-      const editor = hook.editor();
+        it('Test initial position when initially scrolled', async () => {
+          const editor = hook.editor();
 
-      // Enlarge the editor to 2000px
-      Height.set(TinyDom.container(editor), 2000);
-      editor.dispatch('ResizeEditor');
+          // Enlarge the editor to 2000px
+          Height.set(TinyDom.container(editor), 2000);
+          editor.dispatch('ResizeEditor');
 
-      // Scroll to 1500px, open the dialog and assert docked
-      Scroll.to(0, 1500);
-      const dialog = openDialog(editor);
-      await pAssertPos(dialog, 'fixed', 158, 0);
+          // Scroll to 1500px, open the dialog and assert docked
+          Scroll.to(0, 1500);
+          const dialog = openDialog(editor);
+          await pAssertPos(dialog, 'fixed', 158, 0);
 
-      // Scroll back to top and assert not docked
-      Scroll.to(0, 0);
-      await pAssertPos(dialog, 'absolute', 158, -1906);
+          // Scroll back to top and assert not docked
+          Scroll.to(0, 0);
+          await pAssertPos(dialog, 'absolute', 158, -1906);
 
-      DialogUtils.close(editor);
+          DialogUtils.close(editor);
+        });
+      });
     });
   });
 
   context('Bottom toolbar positioning', () => {
-    const hook = TinyHooks.bddSetup<Editor>({
-      base_url: '/project/tinymce/js/tinymce',
-      height: 400,
-      width: 600,
-      toolbar_sticky: true,
-      toolbar_location: 'bottom'
-    }, []);
+    Arr.each([
+      { name: 'normal', settings: { ui_of_tomorrow: false }},
+      { name: 'normal-tomorrow', settings: { ui_of_tomorrow: true }}
+    ], (tester) => {
+      context(tester.name, () => {
+        const hook = TinyHooks.bddSetup<Editor>({
+          base_url: '/project/tinymce/js/tinymce',
+          height: 400,
+          width: 600,
+          toolbar_sticky: true,
+          toolbar_location: 'bottom',
+          ...tester.settings
+        }, []);
 
-    PageScroll.bddSetup(hook.editor, 1000);
+        PageScroll.bddSetup(hook.editor, 1000);
 
-    it('Position of dialog should be constant when toolbar bottom docks', async () => {
-      const editor = hook.editor();
+        it('Position of dialog should be constant when toolbar bottom docks', async () => {
+          const editor = hook.editor();
 
-      // Scroll so that the editor is fully in view
-      scrollRelativeEditor(editor, 'top', -100);
-      const dialog = openDialog(editor);
-      await pAssertPos(dialog, 'absolute', 108, -1387);
+          // Scroll so that the editor is fully in view
+          scrollRelativeEditor(editor, 'top', -100);
+          const dialog = openDialog(editor);
+          await pAssertPos(dialog, 'absolute', 108, -1387);
 
-      // Scroll so that bottom of window overlaps bottom of editor
-      scrollRelativeEditor(editor, 'bottom', -200);
-      await pAssertPos(dialog, 'absolute', 108, -1387);
+          // Scroll so that bottom of window overlaps bottom of editor
+          scrollRelativeEditor(editor, 'bottom', -200);
+          await pAssertPos(dialog, 'absolute', 108, -1387);
 
-      // Scroll so that top of window overlaps top of editor
-      scrollRelativeEditor(editor, 'top', 200);
-      await pAssertPos(dialog, 'fixed', 108, 0);
+          // Scroll so that top of window overlaps top of editor
+          scrollRelativeEditor(editor, 'top', 200);
+          await pAssertPos(dialog, 'fixed', 108, 0);
 
-      DialogUtils.close(editor);
-    });
+          DialogUtils.close(editor);
+        });
 
-    it('Test position when resizing', async () => {
-      const editor = hook.editor();
-      const resizeHandle = UiFinder.findIn(SugarBody.body(), '.tox-statusbar__resize-handle').getOrDie();
+        it('Test position when resizing', async () => {
+          const editor = hook.editor();
+          const resizeHandle = UiFinder.findIn(SugarBody.body(), '.tox-statusbar__resize-handle').getOrDie();
 
-      scrollRelativeEditor(editor, 'top', -100);
-      const dialog = openDialog(editor);
-      await pAssertPos(dialog, 'absolute', 108, -1387);
+          scrollRelativeEditor(editor, 'top', -100);
+          const dialog = openDialog(editor);
+          await pAssertPos(dialog, 'absolute', 108, -1387);
 
-      // Shrink the editor to 300px
-      Mouse.mouseDown(resizeHandle);
-      resizeToPos(600, 400, 600, 300);
-      await pAssertPos(dialog, 'absolute', 108, -1287);
+          // Shrink the editor to 300px
+          Mouse.mouseDown(resizeHandle);
+          resizeToPos(600, 400, 600, 300);
+          await pAssertPos(dialog, 'absolute', 108, -1287);
 
-      DialogUtils.close(editor);
+          DialogUtils.close(editor);
+        });
+      });
     });
   });
 
   context('Bottom toolbar with inline editor positioning', () => {
-    const hook = TinyHooks.bddSetupFromElement<Editor>({
-      theme: 'silver',
-      base_url: '/project/tinymce/js/tinymce',
-      inline: true,
-      toolbar_location: 'bottom'
-    }, () => {
-      const div = SugarElement.fromHtml<HTMLDivElement>('<div style="width: 600px; height: 400px;"></div>');
-      return {
-        element: div,
-        teardown: () => Remove.remove(div)
-      };
-    }, []);
+    Arr.each([
+      { name: 'inline', settings: { ui_of_tomorrow: false }, sinkSeparatedByScrollDiv: false },
+      { name: 'inline-tomorrow', settings: { ui_of_tomorrow: true }, sinkSeparatedByScrollDiv: true }
+    ], (tester) => {
+      context(tester.name, () => {
+        const hook = TinyHooks.bddSetupFromElement<Editor>({
+          theme: 'silver',
+          base_url: '/project/tinymce/js/tinymce',
+          inline: true,
+          toolbar_location: 'bottom',
+          ...tester.settings
+        }, () => {
+          const div = SugarElement.fromHtml<HTMLDivElement>('<div style="width: 600px; height: 400px;"></div>');
+          return {
+            element: div,
+            teardown: () => Remove.remove(div)
+          };
+        }, []);
 
-    PageScroll.bddSetup(hook.editor, 1000);
+        // This scroll div is inserted before and after the target, so the popup sink that
+        // gets added for inline mode in ui_of_tomorrow: true is separated from the dialog sink
+        // by the height of one scroll div
+        const scrollDivHeight = 1000;
+        PageScroll.bddSetup(hook.editor, scrollDivHeight);
 
-    it('Position of dialog should be constant when toolbar bottom docks', async () => {
-      const editor = hook.editor();
+        it('Position of dialog should be constant when toolbar bottom docks', async () => {
+          const editor = hook.editor();
 
-      // Scroll so that the editor is fully in view
-      scrollRelativeEditor(editor, 'top', -100);
-      editor.focus();
-      await TinyUiActions.pWaitForPopup(editor, '.tox-tinymce-inline');
-      const dialog = openDialog(editor);
-      await pAssertPos(dialog, 'absolute', 106, -1388);
+          // When in two sink mode (ui_of_tomorrow), we need to consider the height of the scrollDiv when
+          // comparing *absolute* positions.
+          const yDelta = tester.sinkSeparatedByScrollDiv ? scrollDivHeight : 0;
 
-      // Scroll so that bottom of window overlaps bottom of editor
-      scrollRelativeEditor(editor, 'bottom', -200);
-      await pAssertPos(dialog, 'absolute', 106, -1388);
+          // Scroll so that the editor is fully in view
+          scrollRelativeEditor(editor, 'top', -100);
+          editor.focus();
+          await TinyUiActions.pWaitForPopup(editor, '.tox-tinymce-inline');
+          const dialog = openDialog(editor);
+          await pAssertPos(dialog, 'absolute', 106, -1388 + yDelta);
 
-      // Scroll so that top of window overlaps top of editor
-      scrollRelativeEditor(editor, 'top', 200);
-      await pAssertPos(dialog, 'fixed', 106, 0);
+          // Scroll so that bottom of window overlaps bottom of editor
+          scrollRelativeEditor(editor, 'bottom', -200);
+          await pAssertPos(dialog, 'absolute', 106, -1388 + yDelta);
 
-      DialogUtils.close(editor);
+          // Scroll so that top of window overlaps top of editor
+          scrollRelativeEditor(editor, 'top', 200);
+          // We don't need to consider the height of the scrollDiv for things with fixed positioning
+          await pAssertPos(dialog, 'fixed', 106, 0);
+
+          DialogUtils.close(editor);
+        });
+      });
     });
   });
 });
