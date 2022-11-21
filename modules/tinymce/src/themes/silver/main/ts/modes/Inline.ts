@@ -7,7 +7,7 @@ import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
 import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 
 import * as Events from '../api/Events';
-import { getUiContainer, isToolbarPersist } from '../api/Options';
+import * as Options from '../api/Options';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import * as ReadOnly from '../ReadOnly';
 import { ModeRenderInfo, RenderArgs, RenderUiConfig } from '../Render';
@@ -72,11 +72,12 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader, 
   });
 };
 
-// TINY-9226: When introducing two sinks, the dialog mothership should be attached to the ui
-// root, and the popup mothership should be attached *after* the target node (for inline)
-const attachUiMotherships = (uiRoot: SugarElement<HTMLElement | ShadowRoot>, uiRefs: ReadyUiReferences) => {
-  // We only have one sink currently, until TINY-9226 is completed.
-  // Add the dialog sink to the ui root
+// TINY-9226: If ui_of_tomorrow is set, then attach the popup mothership adjacent to the target node
+const attachUiMotherships = (editor: Editor, uiRoot: SugarElement<HTMLElement | ShadowRoot>, targetElm: SugarElement<HTMLElement>, uiRefs: ReadyUiReferences) => {
+  if (Options.isUiOfTomorrow(editor)) {
+    Attachment.attachSystemAfter(targetElm, uiRefs.popupUi.mothership);
+  }
+  // In UiRefs, dialogUi and popupUi refer to the same thing if ui_of_tomorrow is false
   Attachment.attachSystem(uiRoot, uiRefs.dialogUi.mothership);
 };
 
@@ -85,7 +86,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   const floatContainer = Singleton.value<AlloyComponent>();
   const targetElm = SugarElement.fromDom(args.targetNode);
   const ui = InlineHeader(editor, targetElm, uiRefs, backstage, floatContainer);
-  const toolbarPersist = isToolbarPersist(editor);
+  const toolbarPersist = Options.isToolbarPersist(editor);
 
   loadInlineSkin(editor);
 
@@ -97,9 +98,9 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
 
     floatContainer.set(OuterContainer.getHeader(mainUi.outerContainer).getOrDie());
 
-    const uiContainer = getUiContainer(editor);
+    const uiContainer = Options.getUiContainer(editor);
     Attachment.attachSystem(uiContainer, mainUi.mothership);
-    attachUiMotherships(uiContainer, uiRefs);
+    attachUiMotherships(editor, uiContainer, targetElm, uiRefs);
 
     setToolbar(editor, uiRefs, rawUiConfig, backstage);
 

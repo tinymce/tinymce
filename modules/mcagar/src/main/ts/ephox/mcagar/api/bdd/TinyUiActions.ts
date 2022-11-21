@@ -9,7 +9,7 @@ import { TinyDom } from '../TinyDom';
 const getUiDoc = (editor: Editor) =>
   SugarShadowDom.getRootNode(TinyDom.targetElement(editor));
 
-const getUiRoot = (editor: Editor) =>
+const getUiRoot = (editor: Editor): SugarElement<HTMLElement | ShadowRoot> =>
   SugarShadowDom.getContentContainer(getUiDoc(editor));
 
 const getToolbarRoot = (editor: Editor) => {
@@ -110,5 +110,7 @@ export {
   pWaitForDialog,
   pWaitForPopup,
   pWaitForUi,
-  pTriggerContextMenu
+  pTriggerContextMenu,
+
+  getUiRoot
 };
