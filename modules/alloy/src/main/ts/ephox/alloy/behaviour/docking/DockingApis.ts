@@ -43,6 +43,24 @@ const updateVisibility = (component: AlloyComponent, config: DockingConfig, stat
   });
 };
 
+const applyMorph = (
+  component: AlloyComponent,
+  config: DockingConfig,
+  state: DockingState,
+  viewport: DockingViewport,
+  morph: Dockables.MorphAdt
+) => {
+  // Apply the morph result
+  morph.fold(
+    () => morphToStatic(component, config, state),
+    (position) => morphToCoord(component, config, state, position),
+    (position) => {
+      updateVisibility(component, config, state, viewport, true);
+      morphToCoord(component, config, state, position);
+    }
+  );
+};
+
 const refreshInternal = (component: AlloyComponent, config: DockingConfig, state: DockingState): void => {
   // Absolute coordinates (considers scroll)
   const viewport: DockingViewport = config.lazyViewport(component);
@@ -53,15 +71,7 @@ const refreshInternal = (component: AlloyComponent, config: DockingConfig, state
   }
 
   Dockables.getMorph(component, viewport, state).each((morph) => {
-    // Apply the morph result
-    morph.fold(
-      () => morphToStatic(component, config, state),
-      (position) => morphToCoord(component, config, state, position),
-      (position) => {
-        updateVisibility(component, config, state, viewport, true);
-        morphToCoord(component, config, state, position);
-      }
-    );
+    applyMorph(component, config, state, viewport, morph);
   });
 };
 

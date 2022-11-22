@@ -31,6 +31,7 @@ interface MorphConstructor {
   fixed: FixedMorph<MorphAdt>;
 }
 
+// TODO: Stop this being an ADT
 const morphAdt: MorphConstructor = Adt.generate([
   { static: [ ] },
   { absolute: [ 'positionCss' ] },
