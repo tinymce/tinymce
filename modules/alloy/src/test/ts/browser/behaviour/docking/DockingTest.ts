@@ -78,6 +78,8 @@ describe('browser.alloy.behaviour.docking.DockingTest', () => {
       onWindowScroll = DomEvent.bind(SugarElement.fromDom(window), 'scroll', (evt) => {
         gui.broadcastEvent(SystemEvents.windowScroll(), evt);
       });
+      const store = hook.store();
+      store.clear();
     });
 
     after(() => {
@@ -109,15 +111,15 @@ describe('browser.alloy.behaviour.docking.DockingTest', () => {
         }
       }));
 
-      const assertInitialStructure = () => {
+      const assertInitialStructure = (label: string) => {
         Assertions.assertStructure(
-          'Assert initial structure of staticBox. Box should have neither "position: absolute" nor "position: fixed"',
+          `${label}. Assert initial structure of staticBox. Box should have neither "position: absolute" nor "position: fixed"`,
           boxWithNoPosition(),
           staticBox.element
         );
 
         Assertions.assertStructure(
-          'Assert initial structure of absoluteBox',
+          `${label}. Assert initial structure of absoluteBox`,
           ApproxStructure.build((s, str, _arr) => s.element('div', {
             styles: {
               position: str.is('absolute'),
@@ -132,7 +134,7 @@ describe('browser.alloy.behaviour.docking.DockingTest', () => {
       };
 
       store.assertEq('Store should start empty', [ ]);
-      assertInitialStructure();
+      assertInitialStructure('Initial load');
 
       // Scroll the boxes completely off-screen. One of them is just at the top of the document,
       // and the other is at 2300px, so scrolling 3000px should do it.
@@ -194,7 +196,38 @@ describe('browser.alloy.behaviour.docking.DockingTest', () => {
       );
 
       store.assertEq('After undocked', [ 'static.onUndocked', 'absolute.onUndocked' ]);
-      assertInitialStructure();
+      assertInitialStructure('After undocking due to scroll');
+
+      Docking.forceDockToTop(absoluteBox);
+
+      Assertions.assertStructure(
+        'After forcing to top, position should be fixed with top: 0',
+        ApproxStructure.build((s, str, _arr) => s.element('div', {
+          styles: {
+            position: str.is('fixed'),
+            top: str.is('0px')
+          }
+        })),
+        absoluteBox.element
+      );
+
+      Docking.forceDockToBottom(absoluteBox);
+      Assertions.assertStructure(
+        'After forcing to bottom, position should be fixed with bottom: 0',
+        ApproxStructure.build((s, str, _arr) => s.element('div', {
+          styles: {
+            position: str.is('fixed'),
+            bottom: str.is('0px')
+          }
+        })),
+        absoluteBox.element
+      );
+
+      Docking.refresh(absoluteBox);
+      // After refreshing, should be back at initial position, not the bottom docked position
+      // This is testing that we are only storing the position if we aren't already docked when
+      // using the force APIs.
+      assertInitialStructure('After Docking.refresh');
     });
   });
 });

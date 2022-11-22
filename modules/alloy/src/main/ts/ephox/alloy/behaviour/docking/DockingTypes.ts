@@ -20,7 +20,8 @@ export interface DockingBehaviour extends Behaviour.AlloyBehaviour<DockingConfig
   isDocked: (component: AlloyComponent) => boolean;
   getModes: (component: AlloyComponent) => DockingMode[];
   setModes: (component: AlloyComponent, modes: DockingMode[]) => void;
-  getInitialPosition: (component: AlloyComponent) => Optional<InitialDockingPosition>;
+  forceDockToTop: (component: AlloyComponent) => void;
+  forceDockToBottom: (component: AlloyComponent) => void;
 }
 
 export interface DockingContext {
