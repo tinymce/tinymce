@@ -1,4 +1,4 @@
-import { Adt, Arr, Obj, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Obj, Optional, Optionals } from '@ephox/katamari';
 import { Class, Css, Height, SugarBody, SugarElement, Width } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
@@ -7,36 +7,21 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { NuPositionCss, PositionCss } from '../../positioning/view/PositionCss';
 import { DockingContext, DockingDecision, DockingMode, DockingState, DockingViewport } from './DockingTypes';
 
-type StaticMorph<T> = () => T;
-type AbsoluteMorph<T> = (pos: PositionCss) => T;
-type FixedMorph<T> = (pos: PositionCss) => T;
-
-export interface MorphAdt {
-  fold: <T> (
-    statics: StaticMorph<T>,
-    absolute: AbsoluteMorph<T>,
-    fixed: FixedMorph<T>
-  ) => T;
-  match: <T> (branches: {
-    static: StaticMorph<T>;
-    absolute: AbsoluteMorph<T>;
-    fixed: FixedMorph<T>;
-  }) => T;
-  log: (label: string) => void;
+export interface StaticMorph {
+  morph: 'static';
 }
 
-interface MorphConstructor {
-  static: StaticMorph<MorphAdt>;
-  absolute: AbsoluteMorph<MorphAdt>;
-  fixed: FixedMorph<MorphAdt>;
+export interface AbsoluteMorph {
+  morph: 'absolute';
+  positionCss: PositionCss;
 }
 
-// TODO: Stop this being an ADT
-const morphAdt: MorphConstructor = Adt.generate([
-  { static: [ ] },
-  { absolute: [ 'positionCss' ] },
-  { fixed: [ 'positionCss' ] }
-]);
+export interface FixedMorph {
+  morph: 'fixed';
+  positionCss: PositionCss;
+}
+
+export type MorphInfo = StaticMorph | AbsoluteMorph | FixedMorph;
 
 const appear = (component: AlloyComponent, contextualInfo: DockingContext): void => {
   const elem = component.element;
@@ -139,67 +124,70 @@ const storePrior = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, _viewpor
   });
 };
 
-const revertToOriginal = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, state: DockingState): Optional<MorphAdt> =>
+const revertToOriginal = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, state: DockingState): Optional<StaticMorph | AbsoluteMorph> =>
   state.getInitialPos().bind((position) => {
     state.clearInitialPos();
 
     switch (position.position) {
       case 'static':
-        return Optional.some(morphAdt.static());
+        return Optional.some({
+          morph: 'static'
+        });
 
       case 'absolute':
         const offsetBox = OffsetOrigin.getOffsetParent(elem).map(Boxes.box)
           .getOrThunk(() => Boxes.box(SugarBody.body()));
-        return Optional.some(morphAdt.absolute(NuPositionCss(
-          'absolute',
-          Obj.get(position.style, 'left').map((_left) => box.x - offsetBox.x),
-          Obj.get(position.style, 'top').map((_top) => box.y - offsetBox.y),
-          Obj.get(position.style, 'right').map((_right) => offsetBox.right - box.right),
-          Obj.get(position.style, 'bottom').map((_bottom) => offsetBox.bottom - box.bottom)
-        )));
+        return Optional.some({
+          morph: 'absolute',
+          positionCss: NuPositionCss(
+            'absolute',
+            Obj.get(position.style, 'left').map((_left) => box.x - offsetBox.x),
+            Obj.get(position.style, 'top').map((_top) => box.y - offsetBox.y),
+            Obj.get(position.style, 'right').map((_right) => offsetBox.right - box.right),
+            Obj.get(position.style, 'bottom').map((_bottom) => offsetBox.bottom - box.bottom)
+          )
+        });
 
       default:
-        return Optional.none<MorphAdt>();
+        return Optional.none<StaticMorph | AbsoluteMorph>();
     }
   });
 
-const tryMorphToOriginal = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> =>
+const tryMorphToOriginal = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, state: DockingState): Optional<MorphInfo> =>
   getPrior(elem, viewport, state)
     .filter((box) => isVisibleForModes(state.getModes(), box, viewport))
     .bind((box) => revertToOriginal(elem, box, state));
 
-const tryDecisionToMorph = (decision: DockingDecision): Optional<MorphAdt> => {
+const tryDecisionToMorph = (decision: DockingDecision): Optional<MorphInfo> => {
   switch (decision.location) {
     case 'top': {
       // We store our current position so we can revert to it once it's
       // visible again.
-      return Optional.some(
-        morphAdt.fixed(
-          NuPositionCss(
-            'fixed',
-            Optional.some(decision.leftX),
-            Optional.some(decision.topY),
-            Optional.none(),
-            Optional.none()
-          )
+      return Optional.some({
+        morph: 'fixed',
+        positionCss: NuPositionCss(
+          'fixed',
+          Optional.some(decision.leftX),
+          Optional.some(decision.topY),
+          Optional.none(),
+          Optional.none()
         )
-      );
+      });
     }
 
     case 'bottom': {
       // We store our current position so we can revert to it once it's
       // visible again.
-      return Optional.some(
-        morphAdt.fixed(
-          NuPositionCss(
-            'fixed',
-            Optional.some(decision.leftX),
-            Optional.none(),
-            Optional.none(),
-            Optional.some(decision.bottomY)
-          )
+      return Optional.some({
+        morph: 'fixed',
+        positionCss: NuPositionCss(
+          'fixed',
+          Optional.some(decision.leftX),
+          Optional.none(),
+          Optional.none(),
+          Optional.some(decision.bottomY)
         )
-      );
+      });
     }
 
     default:
@@ -207,7 +195,7 @@ const tryDecisionToMorph = (decision: DockingDecision): Optional<MorphAdt> => {
   }
 };
 
-const tryMorphToFixed = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> => {
+const tryMorphToFixed = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, state: DockingState): Optional<MorphInfo> => {
   const box = Boxes.box(elem);
   const winBox = Boxes.win();
 
@@ -230,13 +218,13 @@ const tryMorphToFixed = (elem: SugarElement<HTMLElement>, viewport: DockingViewp
   }
 };
 
-const getMorph = (component: AlloyComponent, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> => {
+const getMorph = (component: AlloyComponent, viewport: DockingViewport, state: DockingState): Optional<MorphInfo> => {
   const elem = component.element;
   const isDocked = Optionals.is(Css.getRaw(elem, 'position'), 'fixed');
   return isDocked ? tryMorphToOriginal(elem, viewport, state) : tryMorphToFixed(elem, viewport, state);
 };
 
-const getMorphToOriginal = (component: AlloyComponent, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> => {
+const getMorphToOriginal = (component: AlloyComponent, viewport: DockingViewport, state: DockingState): Optional<StaticMorph | AbsoluteMorph> => {
   const elem = component.element;
   return getPrior(elem, viewport, state)
     .bind((box) => revertToOriginal(elem, box, state));

@@ -1,4 +1,4 @@
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { Classes, Css } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -48,20 +48,24 @@ const applyMorph = (
   config: DockingConfig,
   state: DockingState,
   viewport: DockingViewport,
-  morph: Dockables.MorphAdt
+  morph: Dockables.MorphInfo
 ) => {
-  // Apply the morph result
-  morph.fold(
-    () => morphToStatic(component, config, state),
-    (position) => morphToCoord(component, config, state, position),
-    (position) => {
+  // Apply the morph result depending on its type
+  switch (morph.morph) {
+    case 'static': {
+      return morphToStatic(component, config, state);
+    }
+    case 'absolute': {
+      return morphToCoord(component, config, state, morph.positionCss);
+    }
+    case 'fixed': {
       // This "updateVisibility" call is potentially duplicated with the
       // call in refreshInternal for isDocked. We might want to consolidate them.
       // The difference between them is the "morphToDocked" flag.
       updateVisibility(component, config, state, viewport, true);
-      morphToCoord(component, config, state, position);
+      morphToCoord(component, config, state, morph.positionCss);
     }
-  );
+  }
 };
 
 const refreshInternal = (component: AlloyComponent, config: DockingConfig, state: DockingState): void => {
@@ -83,18 +87,23 @@ const resetInternal = (component: AlloyComponent, config: DockingConfig, state: 
   const elem = component.element;
   state.setDocked(false);
   const viewport = config.lazyViewport(component);
-  Dockables.getMorphToOriginal(component, viewport, state).each((morph) => {
-    // This code is very similar to the "applyMorph" function above. The main difference
-    // is that it doesn't consider fixed position (through both setting morphToDocked to false
-    // and by not handling a Fixed position response). The reason for this is that
-    // getMorphToOriginal cannot return a Fixed position, which we ideally should try to encode
-    // in the types.
-    morph.fold(
-      () => morphToStatic(component, config, state),
-      (position) => morphToCoord(component, config, state, position),
-      Fun.noop
-    );
-  });
+  Dockables.getMorphToOriginal(component, viewport, state).each(
+    (staticOrAbsoluteMorph: Dockables.StaticMorph | Dockables.AbsoluteMorph) => {
+      // This code is very similar to the "applyMorph" function above. The main difference
+      // is that it doesn't consider fixed position, because something that is docking
+      // can't currently start with fixed position
+      switch (staticOrAbsoluteMorph.morph) {
+        case 'static': {
+          return morphToStatic(component, config, state);
+        }
+        case 'absolute': {
+          return morphToCoord(component, config, state, staticOrAbsoluteMorph.positionCss);
+        }
+        default:
+
+      }
+    }
+  );
 
   // Remove contextual visibility classes
   state.setVisible(true);
