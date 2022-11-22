@@ -9,13 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - New `expand` function added to `tinymce.selection` which expands the selection around the nearest word. #TINY-9001
 - New `expand` function added to `tinymce.dom.RangeUtils` to return a new range expanded around the nearest word. #TINY-9001
-- New `color_map_background` and `color_map_foreground` option which sets the base colors used in the `backcolor` and `forecolor` toolbar buttons and menu items. #TINY-9184
+- New `color_map_background` and `color_map_foreground` options which set the base colors used in the `backcolor` and `forecolor` toolbar buttons and menu items. #TINY-9184
 - Added optional `storageKey` property to `colorinput` component and `colorswatch` fancy menu item. #TINY-9184
 - New `addView` function added to `editor.ui.registry` which makes it possible to register custom editor views. #TINY-9210
 - New `ToggleView` command which makes it possible to hide or show registered custom views. #TINY-9210
 - New `color_default_foreground` and `color_default_background` options to set the initial default color for the `forecolor` and `backcolor` toolbar buttons and menu items. #TINY-9183
 - New `getTransparentElements` function added to `tinymce.html.Schema` to return a map object of transparent HTML elements. #TINY-9172
-- Added `ToggleToolbarDrawer` event to subscribe to toolbar's opening and closing. #TINY-9271
+- Added `ToggleToolbarDrawer` event to subscribe to toolbar’s opening and closing. #TINY-9271
 
 ### Changed
 - Transparent elements, like anchors, are now allowed in the root of the editor body if they contain blocks. #TINY-9172
@@ -44,7 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `editor.selection.getBookmark()` API was not returning a proper bookmark on hidden editors in Firefox. #TINY-9259
 - Dragging a noneditable element before or after another noneditable element now works correctly. #TINY-9253
 - The restored selection after a redo or undo action was not scrolled into view. #TINY-9222
-- A newline could not be inserted when the selection was restored from a bookmark after an inline `contenteditable="false"` element. #TINY-9194
+- A newline could not be inserted when the selection was restored from a bookmark after an inline element with a `contenteditable="false"` attribute. #TINY-9194
 - The global `tinymce.dom.styleSheetLoader` was not affected by the `content_css_cors` option. #TINY-6037
 - The caret was moved to the previous line when a text pattern executed a `mceInsertContent` command on Enter key when running on Firefox. #TINY-9193
 
