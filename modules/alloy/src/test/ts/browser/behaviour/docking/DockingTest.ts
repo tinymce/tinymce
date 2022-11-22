@@ -155,10 +155,8 @@ describe('browser.alloy.behaviour.docking.DockingTest', () => {
           'Now that absolute box is offscreen normally, it should switch to fixed coordinates',
           ApproxStructure.build((s, str, _arr) => s.element('div', {
             styles: {
-              // For future reference - Docking is always using 'left' and 'top' when docked
-              // but this behavior isn't set in stone
               position: str.is('fixed'),
-              left: str.contains('px'), // assert isSome
+              left: str.contains('px'), // essentially checking that there is a left value
               top: str.contains('0px'),
               right: str.none(),
               bottom: str.none()
@@ -173,7 +171,7 @@ describe('browser.alloy.behaviour.docking.DockingTest', () => {
 
       // Now, scroll back so that the absolute box should be able to be restored to
       // its earlier position. The 2000px also allows the static box to be restored,
-      // because the margin on the wrapping container is 2000px.
+      // because the margin-top on the wrapping container is 2000px.
       window.scrollTo(0, 2000);
 
       // Now, the static box should no longer be docked

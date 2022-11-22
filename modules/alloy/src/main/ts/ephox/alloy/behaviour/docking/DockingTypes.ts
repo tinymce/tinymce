@@ -40,11 +40,13 @@ export interface DockingViewport {
 
 export interface DockToTopDecision {
   location: 'top';
+  leftX: number;
   topY: number;
 }
 
 export interface DockToBottomDecision {
   location: 'bottom';
+  leftX: number;
   bottomY: number;
 }
 
