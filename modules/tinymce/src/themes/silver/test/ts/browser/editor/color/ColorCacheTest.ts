@@ -23,6 +23,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorCacheTest', () => {
       {
         type: 'choiceitem',
         text: '#0F00F0',
+        icon: 'checkmark',
         value: '#0F00F0'
       }
     ];
@@ -39,6 +40,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorCacheTest', () => {
       {
         type: 'choiceitem',
         text: '#0F00F0',
+        icon: 'checkmark',
         value: '#0F00F0'
       }
     ];
@@ -46,11 +48,13 @@ describe('browser.tinymce.themes.silver.editor.color.ColorCacheTest', () => {
       {
         type: 'choiceitem',
         text: '#F0FF0F',
+        icon: 'checkmark',
         value: '#F0FF0F'
       },
       {
         type: 'choiceitem',
         text: '#0F00F0',
+        icon: 'checkmark',
         value: '#0F00F0'
       }
     ];

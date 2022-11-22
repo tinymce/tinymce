@@ -71,6 +71,7 @@ const getCurrentColors = (id: string): Menu.ChoiceMenuItemSpec[] =>
   Arr.map(getCacheForId(id).state(), (color) => ({
     type: 'choiceitem',
     text: color,
+    icon: 'checkmark',
     value: color
   }));
 
