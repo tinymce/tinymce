@@ -1,11 +1,10 @@
 import { Arr, Fun } from '@ephox/katamari';
 import { Classes, Css } from '@ephox/sugar';
 
-import * as Boxes from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { applyPositionCss, PositionCss } from '../../positioning/view/PositionCss';
 import * as Dockables from './Dockables';
-import { DockingConfig, DockingMode, DockingState } from './DockingTypes';
+import { DockingConfig, DockingMode, DockingState, DockingViewport } from './DockingTypes';
 
 const morphToStatic = (component: AlloyComponent, config: DockingConfig, state: DockingState): void => {
   state.setDocked(false);
@@ -21,11 +20,11 @@ const morphToCoord = (component: AlloyComponent, config: DockingConfig, state: D
   method(component);
 };
 
-const updateVisibility = (component: AlloyComponent, config: DockingConfig, state: DockingState, viewport: Boxes.Bounds, morphToDocked: boolean = false): void => {
+const updateVisibility = (component: AlloyComponent, config: DockingConfig, state: DockingState, viewport: DockingViewport, morphToDocked: boolean = false): void => {
   config.contextual.each((contextInfo) => {
     // Make the dockable component disappear if the context is outside the viewport
     contextInfo.lazyContext(component).each((box) => {
-      const isVisible = Dockables.isPartiallyVisible(box, viewport);
+      const isVisible = Dockables.isPartiallyVisible(box, viewport.bounds);
       if (isVisible !== state.isVisible()) {
         state.setVisible(isVisible);
 
@@ -46,7 +45,7 @@ const updateVisibility = (component: AlloyComponent, config: DockingConfig, stat
 
 const refreshInternal = (component: AlloyComponent, config: DockingConfig, state: DockingState): void => {
   // Absolute coordinates (considers scroll)
-  const viewport = config.lazyViewport(component);
+  const viewport: DockingViewport = config.lazyViewport(component);
   // If docked then check if we need to hide/show the component
   const isDocked = state.isDocked();
   if (isDocked) {
@@ -70,7 +69,8 @@ const resetInternal = (component: AlloyComponent, config: DockingConfig, state: 
   // Morph back to the original position
   const elem = component.element;
   state.setDocked(false);
-  Dockables.getMorphToOriginal(component, state).each((morph) => {
+  const viewport = config.lazyViewport(component);
+  Dockables.getMorphToOriginal(component, viewport, state).each((morph) => {
     morph.fold(
       () => morphToStatic(component, config, state),
       (position) => morphToCoord(component, config, state, position),

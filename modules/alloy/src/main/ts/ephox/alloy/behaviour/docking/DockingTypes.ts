@@ -34,9 +34,13 @@ export interface DockingContext {
   onHidden: (component: AlloyComponent) => void;
 }
 
+export interface DockingViewport {
+  readonly bounds: Bounds;
+}
+
 export interface DockingConfig extends Behaviour.BehaviourConfigDetail {
   contextual: Optional<DockingContext>;
-  lazyViewport: (component: AlloyComponent) => Bounds;
+  lazyViewport: (component: AlloyComponent) => DockingViewport;
   modes: DockingMode[];
   onDocked: (component: AlloyComponent) => void;
   onUndocked: (component: AlloyComponent) => void;
@@ -65,7 +69,7 @@ export interface DockingConfigSpec extends Behaviour.BehaviourConfigSpec {
     onHide?: (component: AlloyComponent) => void;
     onHidden?: (component: AlloyComponent) => void;
   };
-  lazyViewport?: (component: AlloyComponent) => Bounds;
+  lazyViewport?: (component: AlloyComponent) => DockingViewport;
   modes?: DockingMode[];
   onDocked?: (comp: AlloyComponent) => void;
   onUndocked?: (comp: AlloyComponent) => void;
