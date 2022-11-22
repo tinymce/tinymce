@@ -1,10 +1,11 @@
 import { Arr } from '@ephox/katamari';
 import { Classes, Css } from '@ephox/sugar';
 
+import * as Boxes from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { applyPositionCss, PositionCss } from '../../positioning/view/PositionCss';
 import * as Dockables from './Dockables';
-import { DockingConfig, DockingMode, DockingState, DockingViewport } from './DockingTypes';
+import { DockingConfig, DockingDecision, DockingMode, DockingState, DockingViewport } from './DockingTypes';
 
 const morphToStatic = (component: AlloyComponent, config: DockingConfig, state: DockingState): void => {
   state.setDocked(false);
@@ -43,6 +44,20 @@ const updateVisibility = (component: AlloyComponent, config: DockingConfig, stat
   });
 };
 
+const applyFixedMorph = (
+  component: AlloyComponent,
+  config: DockingConfig,
+  state: DockingState,
+  viewport: DockingViewport,
+  morph: Dockables.FixedMorph
+) => {
+  // This "updateVisibility" call is potentially duplicated with the
+  // call in refreshInternal for isDocked. We might want to consolidate them.
+  // The difference between them is the "morphToDocked" flag.
+  updateVisibility(component, config, state, viewport, true);
+  morphToCoord(component, config, state, morph.positionCss);
+};
+
 const applyMorph = (
   component: AlloyComponent,
   config: DockingConfig,
@@ -59,11 +74,7 @@ const applyMorph = (
       return morphToCoord(component, config, state, morph.positionCss);
     }
     case 'fixed': {
-      // This "updateVisibility" call is potentially duplicated with the
-      // call in refreshInternal for isDocked. We might want to consolidate them.
-      // The difference between them is the "morphToDocked" flag.
-      updateVisibility(component, config, state, viewport, true);
-      morphToCoord(component, config, state, morph.positionCss);
+      return applyFixedMorph(component, config, state, viewport, morph);
     }
   }
 };
@@ -132,6 +143,25 @@ const reset = (component: AlloyComponent, config: DockingConfig, state: DockingS
   }
 };
 
+const forceDockWithDecision = (
+  getDecision: (winBox: Boxes.Bounds, leftX: number, v: DockingViewport) => DockingDecision
+) => (
+  component: AlloyComponent,
+  config: DockingConfig,
+  state: DockingState
+): void => {
+  const viewport = config.lazyViewport(component);
+  const optMorph = Dockables.forceDockWith(component.element, viewport, state, getDecision);
+  optMorph.each((morph) => {
+    // ASSUMPTION: This "applyFixedMorph" sets state.setDocked to true.
+    applyFixedMorph(component, config, state, viewport, morph);
+  });
+};
+
+const forceDockToTop = forceDockWithDecision(Dockables.forceTopPosition);
+
+const forceDockToBottom = forceDockWithDecision(Dockables.forceBottomPosition);
+
 const isDocked = (component: AlloyComponent, config: DockingConfig, state: DockingState): boolean =>
   state.isDocked();
 
@@ -141,4 +171,12 @@ const setModes = (component: AlloyComponent, config: DockingConfig, state: Docki
 const getModes = (component: AlloyComponent, config: DockingConfig, state: DockingState): DockingMode[] =>
   state.getModes();
 
-export { refresh, reset, isDocked, getModes, setModes };
+export {
+  refresh,
+  reset,
+  isDocked,
+  getModes,
+  setModes,
+  forceDockToTop,
+  forceDockToBottom
+};
