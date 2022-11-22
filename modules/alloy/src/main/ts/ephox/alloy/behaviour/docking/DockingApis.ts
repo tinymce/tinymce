@@ -55,6 +55,9 @@ const applyMorph = (
     () => morphToStatic(component, config, state),
     (position) => morphToCoord(component, config, state, position),
     (position) => {
+      // This "updateVisibility" call is potentially duplicated with the
+      // call in refreshInternal for isDocked. We might want to consolidate them.
+      // The difference between them is the "morphToDocked" flag.
       updateVisibility(component, config, state, viewport, true);
       morphToCoord(component, config, state, position);
     }
@@ -81,6 +84,11 @@ const resetInternal = (component: AlloyComponent, config: DockingConfig, state: 
   state.setDocked(false);
   const viewport = config.lazyViewport(component);
   Dockables.getMorphToOriginal(component, viewport, state).each((morph) => {
+    // This code is very similar to the "applyMorph" function above. The main difference
+    // is that it doesn't consider fixed position (through both setting morphToDocked to false
+    // and by not handling a Fixed position response). The reason for this is that
+    // getMorphToOriginal cannot return a Fixed position, which we ideally should try to encode
+    // in the types.
     morph.fold(
       () => morphToStatic(component, config, state),
       (position) => morphToCoord(component, config, state, position),
