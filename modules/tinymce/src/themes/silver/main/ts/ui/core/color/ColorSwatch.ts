@@ -23,9 +23,7 @@ const defaultBackgroundColor = 'rgba(0, 0, 0, 0)';
 const isValidBackgroundColor = (value: string) =>
   RgbaColour.fromString(value).exists((c) => c.alpha !== 0);
 
-/*
-Climb up the tree to find the value of the background until finding a non-transparent value or defaulting.
-*/
+// Climb up the tree to find the value of the background until finding a non-transparent value or defaulting.
 const getClosestCssBackgroundColorValue = (scope: SugarElement<Element>): string => {
   return TransformFind.closest(scope, (node) => {
     if (SugarNode.isElement(node)) {
