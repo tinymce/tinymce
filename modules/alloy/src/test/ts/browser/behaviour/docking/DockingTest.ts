@@ -1,43 +1,41 @@
-import { ApproxStructure, Assertions, Cleaner, GeneralSteps, Logger, Step, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { DomEvent, SugarElement } from '@ephox/sugar';
+import { ApproxStructure, Assertions, Waiter } from '@ephox/agar';
+import { after, before, context, describe, it } from '@ephox/bedrock-client';
+import { DomEvent, EventUnbinder, SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Docking } from 'ephox/alloy/api/behaviour/Docking';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
-import { Container } from 'ephox/alloy/api/ui/Container';
 
-UnitTest.asynctest('DockingTest', (success, failure) => {
-  const cleanup = Cleaner();
+describe('browser.alloy.behaviour.docking.DockingTest', () => {
 
-  GuiSetup.setup((store, _doc, _body) => GuiFactory.build(
-    Container.sketch({
-      dom: {
-        styles: {
-          'margin-top': '2000px',
-          'margin-bottom': '5000px'
-        }
-      },
-      components: [
-        Container.sketch({
+  context('high-falutin', () => {
+
+    const hook = GuiSetup.bddSetup(
+      (store, _doc, _body) => {
+
+        const staticBox: AlloySpec = {
           dom: {
+            tag: 'div',
             styles: {
               width: '100px',
               height: '100px',
               background: 'blue'
             }
           },
-          containerBehaviours: Behaviour.derive([
+          behaviours: Behaviour.derive([
             Docking.config({
               onDocked: store.adder('static.onDocked'),
               onUndocked: store.adder('static.onUndocked')
             })
           ])
-        }),
-        Container.sketch({
+        };
+
+        const absoluteBox: AlloySpec = {
           dom: {
+            tag: 'div',
             styles: {
               width: '100px',
               height: '100px',
@@ -47,94 +45,118 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
               right: '200px'
             }
           },
-          containerBehaviours: Behaviour.derive([
+          behaviours: Behaviour.derive([
             Docking.config({
               onDocked: store.adder('absolute.onDocked'),
               onUndocked: store.adder('absolute.onUndocked')
             })
           ])
-        })
-      ]
-    })
-  ), (_doc, _body, gui, component, store) => {
-    const staticBox = component.components()[0];
-    const absoluteBox = component.components()[1];
-    cleanup.add(
-      DomEvent.bind(SugarElement.fromDom(window), 'scroll', (evt) => {
-        gui.broadcastEvent(SystemEvents.windowScroll(), evt);
-      }).unbind
-    );
-    const boxWithNoPosition = () => ApproxStructure.build((s, str, _arr) => s.element('div', {
-      styles: {
-        position: str.none(),
-        left: str.none(),
-        top: str.none(),
-        right: str.none(),
-        bottom: str.none()
-      }
-    }));
+        };
 
-    const boxWithPosition = (position: string) => ApproxStructure.build((s, str, _arr) => s.element('div', {
-      styles: {
-        position: str.is(position)
-      }
-    }));
-
-    const sAssertInitialStructure = Logger.t('Assert initial structure', GeneralSteps.sequence([
-      Assertions.sAssertStructure(
-        'Assert initial structure of staticBox. Box should have neither "position: absolute" nor "position: fixed"',
-        boxWithNoPosition(),
-        staticBox.element
-      ),
-      Assertions.sAssertStructure(
-        'Assert initial structure of absoluteBox',
-        ApproxStructure.build((s, str, _arr) => s.element('div', {
-          styles: {
-            position: str.is('absolute'),
-            left: str.none(),
-            top: str.is('2300px'),
-            right: str.is('200px'),
-            bottom: str.none()
+        return GuiFactory.build(
+          {
+            dom: {
+              tag: 'div',
+              styles: {
+                // We add these margins to allow the window page to scroll
+                'margin-top': '2000px',
+                'margin-bottom': '5000px'
+              }
+            },
+            components: [
+              staticBox,
+              absoluteBox
+            ]
           }
-        })),
-        absoluteBox.element
-      )
-    ]));
+        );
+      }
+    );
 
-    return [
-      store.sAssertEq('Store should be empty', [ ]),
-      sAssertInitialStructure,
+    let onWindowScroll: EventUnbinder | null = null;
+    before(() => {
+      const gui = hook.gui();
+      onWindowScroll = DomEvent.bind(SugarElement.fromDom(window), 'scroll', (evt) => {
+        gui.broadcastEvent(SystemEvents.windowScroll(), evt);
+      });
+    });
 
-      Logger.t(
-        'Scroll completely offscreen',
-        Step.sync(() => {
-          window.scrollTo(0, 3000);
-        })
-      ),
+    after(() => {
+      if (onWindowScroll) {
+        onWindowScroll.unbind();
+      }
+    });
 
-      Waiter.sTryUntil(
+    it('basic test', async () => {
+      const store = hook.store();
+      const component = hook.component();
+
+      const staticBox = component.components()[0];
+      const absoluteBox = component.components()[1];
+
+      const boxWithNoPosition = () => ApproxStructure.build((s, str, _arr) => s.element('div', {
+        styles: {
+          position: str.none(),
+          left: str.none(),
+          top: str.none(),
+          right: str.none(),
+          bottom: str.none()
+        }
+      }));
+
+      const boxWithPosition = (position: string) => ApproxStructure.build((s, str, _arr) => s.element('div', {
+        styles: {
+          position: str.is(position)
+        }
+      }));
+
+      const assertInitialStructure = () => {
+        Assertions.assertStructure(
+          'Assert initial structure of staticBox. Box should have neither "position: absolute" nor "position: fixed"',
+          boxWithNoPosition(),
+          staticBox.element
+        );
+
+        Assertions.assertStructure(
+          'Assert initial structure of absoluteBox',
+          ApproxStructure.build((s, str, _arr) => s.element('div', {
+            styles: {
+              position: str.is('absolute'),
+              left: str.none(),
+              top: str.is('2300px'),
+              right: str.is('200px'),
+              bottom: str.none()
+            }
+          })),
+          absoluteBox.element
+        );
+      };
+
+      store.assertEq('Store should start empty', [ ]);
+      assertInitialStructure();
+
+      // Scroll the boxes completely off-screen. One of them is just at the top of the document,
+      // and the other is at 2300px, so scrolling 3000px should do it.
+      window.scrollTo(0, 3000);
+
+      // Scrolling the static box off-screen should result in it being docked to the top
+      await Waiter.pTryUntil(
         'Waiting until position is fixed',
-        Assertions.sAssertStructure(
+        () => Assertions.assertStructure(
           'Now that static box is offscreen normally, it should switch to fixed coordinates',
           boxWithPosition('fixed'),
           staticBox.element
         )
-      ),
-      Waiter.sTryUntil(
+      );
+
+      // Scrolling the absolute box off-screen should result it in being docked to the top
+      await Waiter.pTryUntil(
         'Waiting until position is fixed',
-        Assertions.sAssertStructure(
+        () => Assertions.assertStructure(
           'Now that absolute box is offscreen normally, it should switch to fixed coordinates',
-          boxWithPosition('fixed'),
-          absoluteBox.element
-        )
-      ),
-      // For future reference - Docking is always using 'left' and 'top' when docked but this behavior isn't set in stone
-      Logger.t(
-        'When fixed, absoluteBox should be positioned with "top" and "left"',
-        Assertions.sAssertStructure(
-          'Assert structure of absoluteBox',
           ApproxStructure.build((s, str, _arr) => s.element('div', {
             styles: {
+              // For future reference - Docking is always using 'left' and 'top' when docked
+              // but this behavior isn't set in stone
               position: str.is('fixed'),
               left: str.contains('px'), // assert isSome
               top: str.contains('0px'),
@@ -144,38 +166,37 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
           })),
           absoluteBox.element
         )
-      ),
-      store.sAssertEq('When docked', [ 'static.onDocked', 'absolute.onDocked' ]),
-      store.sClear,
+      );
 
-      Logger.t(
-        'Scroll back onscreen',
-        Step.sync(() => {
-          window.scrollTo(0, 2000);
-        })
-      ),
+      store.assertEq('When docked', [ 'static.onDocked', 'absolute.onDocked' ]);
+      store.clear();
 
-      Waiter.sTryUntil(
+      // Now, scroll back so that the absolute box should be able to be restored to
+      // its earlier position. The 2000px also allows the static box to be restored,
+      // because the margin on the wrapping container is 2000px.
+      window.scrollTo(0, 2000);
+
+      // Now, the static box should no longer be docked
+      await Waiter.pTryUntil(
         'Waiting until position is static',
-        Assertions.sAssertStructure(
+        () => Assertions.assertStructure(
           'Now that static box is back on screen, it should switch to having no position again',
           boxWithNoPosition(),
           staticBox.element
         )
-      ),
-      Waiter.sTryUntil(
+      );
+
+      await Waiter.pTryUntil(
         'Waiting until position is absolute',
-        Assertions.sAssertStructure(
+        () => Assertions.assertStructure(
           'Now that absolute box is back on screen, it should switch back to absolute',
           boxWithPosition('absolute'),
           absoluteBox.element
         )
-      ),
-      store.sAssertEq('After undocked', [ 'static.onUndocked', 'absolute.onUndocked' ]),
-      Logger.t(
-        'After undocking, the structure of the docked elements should be what it originally was',
-        sAssertInitialStructure
-      )
-    ];
-  }, cleanup.wrap(success), cleanup.wrap(failure));
+      );
+
+      store.assertEq('After undocked', [ 'static.onUndocked', 'absolute.onUndocked' ]);
+      assertInitialStructure();
+    });
+  });
 });

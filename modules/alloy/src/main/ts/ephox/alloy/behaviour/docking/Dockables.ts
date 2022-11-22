@@ -5,7 +5,7 @@ import * as Boxes from '../../alien/Boxes';
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { NuPositionCss, PositionCss } from '../../positioning/view/PositionCss';
-import { DockingContext, DockingMode, DockingState, DockingViewport } from './DockingTypes';
+import { DockingContext, DockingDecision, DockingMode, DockingState, DockingViewport } from './DockingTypes';
 
 type StaticMorph<T> = () => T;
 type AbsoluteMorph<T> = (pos: PositionCss) => T;
@@ -62,6 +62,38 @@ const isTopCompletelyVisible = (box: Boxes.Bounds, bounds: Boxes.Bounds): boolea
 const isBottomCompletelyVisible = (box: Boxes.Bounds, bounds: Boxes.Bounds): boolean =>
   box.bottom <= bounds.bottom;
 
+const forceTopPosition = (winBox: Boxes.Bounds, viewport: DockingViewport): DockingDecision => ({
+  location: 'top',
+  topY: viewport.bounds.y - winBox.y
+});
+
+const forceBottomPosition = (winBox: Boxes.Bounds, viewport: DockingViewport): DockingDecision => ({
+  location: 'bottom',
+  bottomY: winBox.bottom - viewport.bounds.bottom
+});
+
+const tryDockingPosition = (modes: DockingMode[], bounds: { win: Boxes.Bounds; box: Boxes.Bounds }, viewport: DockingViewport): DockingDecision => {
+  const winBox = bounds.win;
+  const box = bounds.box;
+  return Arr.findMap(modes, (mode): Optional<DockingDecision> => {
+    switch (mode) {
+      case 'bottom':
+        return !isBottomCompletelyVisible(box, viewport.bounds) ? Optional.some(
+          forceBottomPosition(winBox, viewport)
+        ) : Optional.none();
+      case 'top':
+        return !isTopCompletelyVisible(box, viewport.bounds) ? Optional.some(
+          forceTopPosition(winBox, viewport)
+        ) : Optional.none();
+
+      default:
+        return Optional.none();
+    }
+  }).getOr({
+    location: 'no-dock'
+  });
+};
+
 const isVisibleForModes = (modes: DockingMode[], box: Boxes.Bounds, viewport: DockingViewport): boolean =>
   Arr.forall(modes, (mode) => {
     switch (mode) {
@@ -74,7 +106,6 @@ const isVisibleForModes = (modes: DockingMode[], box: Boxes.Bounds, viewport: Do
 
 const getPrior = (elem: SugarElement<HTMLElement>, _viewport: DockingViewport, state: DockingState): Optional<Boxes.Bounds> =>
   state.getInitialPos().map(
-    // Only supports position absolute.
     (pos) => {
       // TINY-9242: Consider the scrolling viewport here when calculating priorY.
       const priorY = pos.bounds.y;
@@ -128,26 +159,56 @@ const tryMorphToOriginal = (elem: SugarElement<HTMLElement>, viewport: DockingVi
 
 const tryMorphToFixed = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, state: DockingState): Optional<MorphAdt> => {
   const box = Boxes.box(elem);
-  if (!isVisibleForModes(state.getModes(), box, viewport)) {
-    storePrior(elem, box, viewport, state);
+  const winBox = Boxes.win();
 
-    // Calculate the fixed position
-    const winBox = Boxes.win();
-    const left = box.x - winBox.x;
-    const top = viewport.bounds.y - winBox.y;
-    const bottom = winBox.bottom - viewport.bounds.bottom;
+  const decision = tryDockingPosition(
+    state.getModes(),
+    {
+      win: winBox,
+      box
+    },
+    viewport
+  );
 
-    // Check whether we are docking the bottom of the viewport, or the top
-    const isTop = box.y <= viewport.bounds.y;
-    return Optional.some(morphAdt.fixed(NuPositionCss(
-      'fixed',
-      Optional.some(left),
-      isTop ? Optional.some(top) : Optional.none(),
-      Optional.none(),
-      !isTop ? Optional.some(bottom) : Optional.none()
-    )));
-  } else {
-    return Optional.none<MorphAdt>();
+  console.log({ decision });
+
+  switch (decision.location) {
+    case 'top': {
+      // We store our current position so we can revert to it once it's
+      // visible again.
+      storePrior(elem, box, viewport, state);
+      return Optional.some(
+        morphAdt.fixed(
+          NuPositionCss(
+            'fixed',
+            Optional.some(box.x - winBox.x),
+            Optional.some(decision.topY),
+            Optional.none(),
+            Optional.none()
+          )
+        )
+      );
+    }
+
+    case 'bottom': {
+      // We store our current position so we can revert to it once it's
+      // visible again.
+      storePrior(elem, box, viewport, state);
+      return Optional.some(
+        morphAdt.fixed(
+          NuPositionCss(
+            'fixed',
+            Optional.some(box.x - winBox.x),
+            Optional.none(),
+            Optional.none(),
+            Optional.some(decision.bottomY)
+          )
+        )
+      );
+    }
+
+    default:
+      return Optional.none();
   }
 };
 

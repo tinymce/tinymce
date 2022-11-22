@@ -38,6 +38,22 @@ export interface DockingViewport {
   readonly bounds: Bounds;
 }
 
+export interface DockToTopDecision {
+  location: 'top';
+  topY: number;
+}
+
+export interface DockToBottomDecision {
+  location: 'bottom';
+  bottomY: number;
+}
+
+export interface NoDockDecision {
+  location: 'no-dock';
+}
+
+export type DockingDecision = DockToTopDecision | DockToBottomDecision | NoDockDecision;
+
 export interface DockingConfig extends Behaviour.BehaviourConfigDetail {
   contextual: Optional<DockingContext>;
   lazyViewport: (component: AlloyComponent) => DockingViewport;
