@@ -11,7 +11,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 describe('browser.alloy.behaviour.docking.DockingTest', () => {
 
-  context('high-falutin', () => {
+  context('APIs and scrolling', () => {
 
     const hook = GuiSetup.bddSetup(
       (store, _doc, _body) => {
