@@ -13,10 +13,10 @@
  */
 
 /**
- * Returns <code>true</code> if the user's browser is Microsoft Edge.
+ * Returns <code>true</code> if the user's browser is Microsoft Edge Legacy. Does not return true for the newer Chromium-based Microsoft Edge.
  *
  * @method browser.isEdge
- * @return {Boolean} Returns <code>true</code> if the user's browser is Microsoft Edge.
+ * @return {Boolean} Returns <code>true</code> if the user's browser is Microsoft Edge Legacy.
  */
 
 /**

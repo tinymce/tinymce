@@ -3,7 +3,7 @@ import { TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
-import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
@@ -11,13 +11,14 @@ import { Menu } from 'tinymce/core/api/ui/Ui';
 describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
   const store = TestStore();
   const hook = TinyHooks.bddSetup<Editor>({
-    toolbar: 'swatch-button',
+    toolbar: 'swatch-button forecolor',
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {
       ed.ui.registry.addSplitButton('swatch-button', {
         type: 'splitbutton',
         presets: 'color',
         columns: 2,
+        tooltip: 'swatch-button',
         fetch: (callback) => {
           const items = Arr.map([
             'green',
@@ -58,7 +59,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
   const structColors = (values: string[]): ApproxStructure.Builder<StructAssert[]> =>
     (s, str, arr) => Arr.map(values, (v) => structColor(v)(s, str, arr));
 
-  const focusOnColor = (expected: string) => {
+  const assertFocusIsOnColor = (expected: string) => {
     const focused = FocusTools.getFocused(SugarDocument.getDocument()).getOrDie();
     Assertions.assertStructure(
       'Checking focus is on ' + expected,
@@ -67,16 +68,34 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
     );
   };
 
+  const openAndGetMenu = (title: string) =>
+    () => {
+      Mouse.clickOn(SugarBody.body(), `[title="${title}"] .tox-split-button__chevron`);
+      return Waiter.pTryUntil('Waiting for menu', () =>
+        UiFinder.findIn(SugarBody.body(), '[role="menu"]').getOrDie()
+      );
+    };
+
+  const closeMenu = (title: string) =>
+    () => {
+      Mouse.clickOn(SugarBody.body(), `[title="${title}"] .tox-split-button__chevron`);
+      return Waiter.pTryUntil('Waiting for menu', () =>
+        UiFinder.notExists(SugarBody.body(), '[role="menu"]')
+      );
+    };
+
+  const openAndGetSwatchButtonMenu = openAndGetMenu('swatch-button');
+  const closeSwatchButtonMenu = closeMenu('swatch-button');
+  const openAndGetForecolorMenu = openAndGetMenu('Text color');
+  const closeForecolorMenu = closeMenu('Text color');
+
   TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
     ':focus { transform: scale(0.8) }'
   ]);
 
   it('Check structure of color swatch', async () => {
     const editor = hook.editor();
-    Mouse.clickOn(SugarBody.body(), '.tox-split-button__chevron');
-    const menu = await Waiter.pTryUntil('Waiting for menu', () =>
-      UiFinder.findIn(SugarBody.body(), '[role="menu"]').getOrDie()
-    );
+    const menu = await openAndGetSwatchButtonMenu();
     Assertions.assertStructure(
       'Checking menu structure for color swatches',
       ApproxStructure.build((s, str, arr) => s.element('div', {
@@ -122,10 +141,27 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
       menu
     );
 
-    focusOnColor('green');
+    assertFocusIsOnColor('green');
     TinyUiActions.keydown(editor, Keys.down());
-    focusOnColor('blue');
+    assertFocusIsOnColor('blue');
     TinyUiActions.keydown(editor, Keys.right());
-    focusOnColor('black');
+    assertFocusIsOnColor('black');
+    closeSwatchButtonMenu();
+  });
+
+  it('TINY-9283: selected color is successfully marked', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>black</p><p style="color: rgb(224, 62, 45);">red</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2, true);
+
+    await openAndGetForecolorMenu();
+    assertFocusIsOnColor('rgb(0, 0, 0)');
+    closeForecolorMenu();
+
+    TinySelections.setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 2, true);
+
+    await openAndGetForecolorMenu();
+    assertFocusIsOnColor('rgb(224, 62, 45)');
+    closeForecolorMenu();
   });
 });

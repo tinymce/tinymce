@@ -6,7 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 12.0.0 - 2022-11-23
+
 ### Added
+- Added `previousSelector` optional property to `MenuMatrixMovementSpec`, to start with the selected item in focus. #TINY-9283
 - Added the `onToggled` callback for the `FloatingToolbarButton` component. #TINY-9271
 - Added the `onOpened` and `onClosed` callbacks for the `SplitFloatingToolbar` component. #TINY-9271
 

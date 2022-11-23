@@ -68,7 +68,8 @@ const renderColorStructure = (item: ItemStructureSpec, providerBackstage: UiFact
         },
         styles: {
           'background-color': itemValue
-        }
+        },
+        innerHtml: icon
       };
     } else {
       return baseDom;

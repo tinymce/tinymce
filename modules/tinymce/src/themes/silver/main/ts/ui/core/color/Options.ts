@@ -18,6 +18,7 @@ const mapColors = (colorMap: string[]): Menu.ChoiceMenuItemSpec[] => {
     colors.push({
       text: colorMap[i + 1],
       value: '#' + Transformations.anyToHex(colorMap[i]).value,
+      icon: 'checkmark',
       type: 'choiceitem'
     });
   }
