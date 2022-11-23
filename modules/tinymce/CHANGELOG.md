@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 6.3.0 - 2022-11-23
+
 ### Added
 - New `expand` function added to `tinymce.selection` which expands the selection around the nearest word. #TINY-9001
 - New `expand` function added to `tinymce.dom.RangeUtils` to return a new range expanded around the nearest word. #TINY-9001
