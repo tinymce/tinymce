@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+- Changed positioning behaviour position style from `relative` to `absolute` to avoid Safari autoscroll. #TINY-9148
+
 ## 12.0.0 - 2022-11-23
 
 ### Added
