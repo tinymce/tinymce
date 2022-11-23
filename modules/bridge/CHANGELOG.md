@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 4.2.0 - 2022-11-23
+
 ### Added
 - Added optional `storageKey` property to `colorinput` component and `colorswatch` fancy menu item. #TINY-9184
 - New `view` component. #TINY-9210
