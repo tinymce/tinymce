@@ -100,11 +100,15 @@ const isVisibleForModes = (modes: DockingMode[], box: Boxes.Bounds, viewport: Do
     }
   });
 
+// FIX: We should only consider the scroll top for absolutely position items, if their
+// offset parent is within the scroller.
+const considerScrollTop = true;
+
 const getXYForRestoring = (pos: InitialDockingPosition, viewport: DockingViewport): SugarPosition => {
   // TINY-9242: If there is a scrolling environment, then do stuff.
   const priorY = viewport.optScrollEnv.fold(
     Fun.constant(pos.bounds.y),
-    (scrollEnv) => scrollEnv.scrollElmTop + (pos.bounds.y - scrollEnv.currentScrollTop)
+    (scrollEnv) => scrollEnv.scrollElmTop + (pos.bounds.y - (considerScrollTop ? scrollEnv.currentScrollTop : 0))
   );
 
   return SugarPosition(pos.bounds.x, priorY);
@@ -113,7 +117,7 @@ const getXYForRestoring = (pos: InitialDockingPosition, viewport: DockingViewpor
 const getXYForSaving = (box: Boxes.Bounds, viewport: DockingViewport): SugarPosition => {
   const priorY = viewport.optScrollEnv.fold(
     Fun.constant(box.y),
-    (scrollEnv) => box.y + scrollEnv.currentScrollTop - scrollEnv.scrollElmTop
+    (scrollEnv) => box.y + (considerScrollTop ? scrollEnv.currentScrollTop : 0) - scrollEnv.scrollElmTop
   );
 
   return SugarPosition(box.x, priorY);
@@ -138,6 +142,7 @@ const storePrior = (
   decision: DockToTopDecision | DockToBottomDecision
 ): void => {
   const xy = getXYForSaving(box, viewport);
+  console.log('Backing up', xy);
   const bounds = Boxes.bounds(
     xy.left,
     xy.top,
@@ -182,6 +187,7 @@ const revertToOriginal = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, st
       case 'absolute':
         const offsetBox = OffsetOrigin.getOffsetParent(elem).map(Boxes.box)
           .getOrThunk(() => Boxes.box(SugarBody.body()));
+        console.log('revert', { box, offsetBox });
         return Optional.some({
           morph: 'absolute',
           positionCss: NuPositionCss(

@@ -32,7 +32,6 @@ export default (): void => {
 
   // TINY-9242: Make scrollable examples work properly
   const includeScrollableExamples = true;
-  const hideWhenContextGone = true;
 
   const listenToWindowScroll = true;
   // Until TINY-9242 is implemented, element scroll is emulated by a window scroll
@@ -124,6 +123,7 @@ export default (): void => {
       extraRedPanelStyles: Record<string, string>;
       extraBarStyles: Record<string, string>;
       lazyViewport: DockingConfigSpec['lazyViewport'];
+      hideWhenContextGone: boolean;
     }
   ): AlloySpec => {
     const redPanel: AlloySpec = {
@@ -164,7 +164,7 @@ export default (): void => {
 
             Docking.config({
               lazyViewport: settings.lazyViewport,
-              ...(hideWhenContextGone ? {
+              ...(settings.hideWhenContextGone ? {
                 contextual: {
                   ...dockingSharedContext,
                   lazyContext: (component) => {
@@ -258,7 +258,8 @@ export default (): void => {
       },
       extraBarStyles: { left: '150px', top: '2500px', position: 'absolute' },
       scrollableContainerStyles: Optional.none(),
-      lazyViewport: undefined
+      lazyViewport: undefined,
+      hideWhenContextGone: true
     });
   };
 
@@ -279,7 +280,8 @@ export default (): void => {
         'z-index': '100'
       },
       scrollableContainerStyles: Optional.some({ }),
-      lazyViewport: getCommonLazyViewport(boxId)
+      lazyViewport: getCommonLazyViewport(boxId),
+      hideWhenContextGone: true
     });
   };
 
@@ -298,7 +300,10 @@ export default (): void => {
         position: 'absolute'
       },
       scrollableContainerStyles: Optional.some({ position: 'relative' }),
-      lazyViewport: getCommonLazyViewport(boxId)
+      lazyViewport: getCommonLazyViewport(boxId),
+      // Because this is a relative scroller, and the top of bar is considerably
+      // less than the top of the red panel, we just always show the bar
+      hideWhenContextGone: false
     });
   };
 
@@ -313,7 +318,8 @@ export default (): void => {
       },
       extraBarStyles: { },
       scrollableContainerStyles: Optional.some({ }),
-      lazyViewport: getCommonLazyViewport(boxId)
+      lazyViewport: getCommonLazyViewport(boxId),
+      hideWhenContextGone: true
     });
   };
 

@@ -1,7 +1,7 @@
 import { TestStore, Waiter } from '@ephox/agar';
-import { before, context, describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
-import { Css, SugarElement, SugarLocation, Traverse } from '@ephox/sugar';
+import { Css, SelectorFind, SugarElement, SugarLocation } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import * as Boxes from 'ephox/alloy/alien/Boxes';
@@ -50,71 +50,79 @@ describe('browser.alloy.behaviour.docking.DockingInScrollingContainerTest', () =
     ])
   ]);
 
-  context('Static Positioning', () => {
-    const makeStaticBox = (store: TestStore<string>): AlloySpec => {
-      return {
-        dom: {
-          tag: 'div',
-          styles: {
-            width: '200px',
-            height: '200px',
-            background: '#cadbee'
+  const makeBoxWithStyles = (store: TestStore<string>, styles: Record<string, string>): AlloySpec => {
+    return {
+      dom: {
+        tag: 'div',
+        styles: {
+          width: '200px',
+          height: '200px',
+          background: '#cadbee',
+          ...styles
+        }
+      },
+      behaviours: Behaviour.derive([
+        Docking.config({
+          onDocked: store.adder('static.onDocked'),
+          onUndocked: store.adder('static.onUndocked'),
+          lazyViewport: (boxComp) => {
+            const scroller = boxComp.getSystem().getByDom(
+              SelectorFind.ancestor(boxComp.element, '.box-scroller').getOrDie(
+                'Could not find scroller of box'
+              )
+            ).getOrDie();
+            return {
+              bounds: Boxes.box(scroller.element),
+              optScrollEnv: Optional.some({
+                currentScrollTop: scroller.element.dom.scrollTop,
+                scrollElmTop: SugarLocation.absolute(scroller.element).top
+              })
+            };
           }
-        },
-        behaviours: Behaviour.derive([
-          Docking.config({
-            onDocked: store.adder('static.onDocked'),
-            onUndocked: store.adder('static.onUndocked'),
-            lazyViewport: (boxComp) => {
-              const scroller = boxComp.getSystem().getByDom(
-                Traverse.parent(boxComp.element).getOrDie('Could not find parent')
-              ).getOrDie();
-              return {
-                bounds: Boxes.box(scroller.element),
-                optScrollEnv: Optional.some({
-                  currentScrollTop: scroller.element.dom.scrollTop,
-                  scrollElmTop: SugarLocation.absolute(scroller.element).top
-                })
-              };
-            }
-          })
-        ])
-      };
+        })
+      ])
     };
+  };
 
-    const pAssertStaticBoxDockedToTop = (label: string, scroller: AlloyComponent, staticBox: AlloyComponent) =>
-      Waiter.pTryUntil(
-        `[WAIT for top dock]: ${label}`,
-        () => {
-          assert.isTrue(
-            Math.abs(getRect(scroller).top - getRect(staticBox).top) < 5,
-            'Check that the top positions of scroller and static box are approximately equal'
-          );
+  const pAssertBoxDockedToTop = (label: string, scroller: AlloyComponent, box: AlloyComponent) =>
+    Waiter.pTryUntil(
+      `[WAIT for top dock]: ${label}`,
+      () => {
+        assert.isTrue(
+          Math.abs(getRect(scroller).top - getRect(box).top) < 5,
+          'Check that the top positions of scroller and box are approximately equal'
+        );
 
-          assert.equal(
-            'fixed',
-            Css.getRaw(staticBox.element, 'position').getOrDie('Should have position'),
-            'Checking "position" style'
-          );
-        }
-      );
+        assert.equal(
+          'fixed',
+          Css.getRaw(box.element, 'position').getOrDie('Should have position'),
+          'Checking "position" style'
+        );
+      }
+    );
 
-    const pAssertStaticBoxDockedToBottom = (label: string, scroller: AlloyComponent, staticBox: AlloyComponent) =>
-      Waiter.pTryUntil(
-        `[WAIT for bottom dock]: ${label}`,
-        () => {
-          assert.isTrue(
-            Math.abs(getRect(scroller).bottom - getRect(staticBox).bottom) < 5,
-            'Check that the bottom positions of scroller and static box are approximately equal'
-          );
+  const pAssertBoxDockedToBottom = (label: string, scroller: AlloyComponent, box: AlloyComponent) =>
+    Waiter.pTryUntil(
+      `[WAIT for bottom dock]: ${label}`,
+      () => {
+        assert.isTrue(
+          Math.abs(getRect(scroller).bottom - getRect(box).bottom) < 5,
+          'Check that the bottom positions of scroller and box are approximately equal'
+        );
 
-          assert.equal(
-            'fixed',
-            Css.getRaw(staticBox.element, 'position').getOrDie('Should have position'),
-            'Checking "position" style'
-          );
-        }
-      );
+        assert.equal(
+          'fixed',
+          Css.getRaw(box.element, 'position').getOrDie('Should have position'),
+          'Checking "position" style'
+        );
+      }
+    );
+
+  context('Static Positioning', () => {
+    const makeStaticBox = (store: TestStore<string>): AlloySpec => makeBoxWithStyles(
+      store,
+      { }
+    );
 
     context('Single scroller', () => {
       const hook = GuiSetup.bddSetup(
@@ -126,6 +134,7 @@ describe('browser.alloy.behaviour.docking.DockingInScrollingContainerTest', () =
             {
               dom: {
                 tag: 'div',
+                classes: [ 'box-scroller' ],
                 styles: {
                   'height': '600px',
                   'overflow': 'auto',
@@ -153,7 +162,7 @@ describe('browser.alloy.behaviour.docking.DockingInScrollingContainerTest', () =
         AlloyTriggers.emit(scroller, 'test.bubbled.scroll');
 
         // It should have docked to the bottom
-        await pAssertStaticBoxDockedToBottom(
+        await pAssertBoxDockedToBottom(
           'The static box should dock to the bottom after emulated event',
           scroller,
           staticBox
@@ -180,7 +189,7 @@ describe('browser.alloy.behaviour.docking.DockingInScrollingContainerTest', () =
 
         // Scroll a further 125px and check that it is docking to the top
         scroller.element.dom.scrollTop = 900 + 125;
-        await pAssertStaticBoxDockedToTop(
+        await pAssertBoxDockedToTop(
           'After the 125px additional scroll',
           scroller,
           staticBox
@@ -237,6 +246,7 @@ describe('browser.alloy.behaviour.docking.DockingInScrollingContainerTest', () =
                 {
                   dom: {
                     tag: 'div',
+                    classes: [ 'box-scroller' ],
                     styles: {
                       'height': '500px',
                       'overflow': 'auto',
@@ -259,10 +269,6 @@ describe('browser.alloy.behaviour.docking.DockingInScrollingContainerTest', () =
         }
       );
 
-      before(function () {
-        this.timeout(10000000);
-      });
-
       it('Docking and Undocking', async () => {
 
         /*
@@ -284,7 +290,7 @@ describe('browser.alloy.behaviour.docking.DockingInScrollingContainerTest', () =
         // The height of the green divider is 300px, so scroll the inner scroller by 310 px to trigger
         // docking
         innerScroller.element.dom.scrollTop = 310;
-        await pAssertStaticBoxDockedToTop(
+        await pAssertBoxDockedToTop(
           'After scrolling the inner scroller',
           innerScroller,
           staticBox
@@ -312,6 +318,231 @@ describe('browser.alloy.behaviour.docking.DockingInScrollingContainerTest', () =
         );
       });
 
+    });
+  });
+
+  context('Absolute Positioning', () => {
+    const makeAbsoluteBox = (store: TestStore<string>, top: number): AlloySpec => makeBoxWithStyles(
+      store,
+      {
+        position: 'absolute',
+        top: `${top}px`,
+        left: '50px'
+      }
+    );
+
+    context('Single scroller (position relative on scroller)', () => {
+      const hook = GuiSetup.bddSetup(
+        (store, _doc, _body): AlloyComponent => {
+
+          // We use "300" as the top here because when position: relative is on the scroller itself,
+          // the box's position is not influenced by the scrollTop of the scroller.
+          const absoluteBox: AlloySpec = makeAbsoluteBox(store, 300);
+
+          return GuiFactory.build(
+            {
+              dom: {
+                tag: 'div',
+                classes: [ 'box-scroller' ],
+                styles: {
+                  'height': '600px',
+                  'overflow': 'auto',
+                  'margin-bottom': '1000px',
+                  'position': 'relative'
+                }
+              },
+              components: [
+                makeDividingSection(1000, 'purple'),
+                absoluteBox,
+                makeDividingSection(1000, 'cyan')
+              ],
+              behaviours: makeScrollerBehaviours()
+            }
+          );
+        }
+      );
+
+      it('Docking and Undocking', async () => {
+        const scroller = hook.component();
+
+        const absoluteBox = scroller.components()[1];
+
+        // OK. so initially, the absolute box will be off-screen, because no scrolling event has occurred,
+        // so we'll fire an external scrolling event to get it into position.
+        AlloyTriggers.emit(scroller, 'test.bubbled.scroll');
+
+        // It should have docked to the bottom
+        await pAssertBoxDockedToBottom(
+          'The absolute box should dock to the bottom after emulated event',
+          scroller,
+          absoluteBox
+        );
+        await Waiter.pWait(2000);
+
+        // Now, scroll the scroller down 500px. That should make 500px of the dividing section still visible,
+        // and the box should be at 300px (800 - 500). It should undock.
+        scroller.element.dom.scrollTop = 100;
+        await Waiter.pWait(10000000);
+
+        await Waiter.pTryUntil(
+          'Wait until is undocked',
+          () => {
+            assert.equal(
+              'absolute',
+              Css.getRaw(absoluteBox.element, 'position').getOrDie(),
+              'Checking "position" style'
+            );
+
+            // Check that it is appearing about 100 pixels lower than the top of the scroller
+            assert.isTrue(
+              Math.abs(getRect(absoluteBox).top - (getRect(scroller).top + 100)) < 5,
+              'Check that the static box is appearing about 100px down from the scroller'
+            );
+          }
+        );
+
+        // // Scroll a further 125px and check that it is docking to the top
+        // scroller.element.dom.scrollTop = 900 + 125;
+        // await pAssertBoxDockedToTop(
+        //   'After the 125px additional scroll',
+        //   scroller,
+        //   staticBox
+        // );
+
+        // // Now, scroll the window so that the top position of the scroller moves. We want
+        // // to check that when it will undock later, it will still be in the right position.
+        // // We choose 50 so that it doesn't scroll all the way to the end of the first dividing
+        // // section
+        // window.scrollTo(0, getRect(scroller).top + 50);
+
+        // // Now, we want to check that it will undock at the right point, even though the
+        // // window has scrolled. So if we trigger a scroll event now, it should stay docked.
+        // AlloyTriggers.emit(scroller, 'test.bubbled.scroll');
+
+        // // And is we scroll the scroller back up 125 px, it should undock.
+        // scroller.element.dom.scrollTop = 900;
+        // await Waiter.pTryUntil(
+        //   'Wait until is undocked post the scroll',
+        //   () => {
+        //     assert.isFalse(
+        //       Css.getRaw(staticBox.element, 'position').isSome(),
+        //       'Checking "position" style'
+        //     );
+
+        //     // Check that it is appearing about 100 pixels lower than the top of the scroller
+        //     assert.isTrue(
+        //       Math.abs(getRect(staticBox).top - (getRect(scroller).top + 100)) < 5,
+        //       'Check that the static box is appearing about 100px down from the scroller'
+        //     );
+        //   }
+        // );
+      });
+    });
+
+    context.only('Single scroller (position relative inside scroller)', () => {
+      const hook = GuiSetup.bddSetup(
+        (store, _doc, _body): AlloyComponent => {
+
+          const absoluteBox: AlloySpec = makeAbsoluteBox(store, 800);
+
+          return GuiFactory.build(
+            {
+              dom: {
+                tag: 'div',
+                classes: [ 'box-scroller' ],
+                styles: {
+                  'height': '600px',
+                  'overflow': 'auto',
+                  'margin-bottom': '1000px',
+                  'position': 'relative'
+                }
+              },
+              components: [
+                {
+                  dom: {
+                    tag: 'div',
+                    styles: {
+                      position: 'relative'
+                    }
+                  },
+                  components: [
+                    makeDividingSection(1000, 'purple'),
+                    absoluteBox,
+                    makeDividingSection(1000, '#4f8585')
+                  ]
+                }
+              ],
+              behaviours: makeScrollerBehaviours()
+            }
+          );
+        }
+      );
+
+      it('Docking and Undocking', async () => {
+        const scroller = hook.component();
+        const sink = scroller.components()[0];
+
+        const absoluteBox = sink.components()[1];
+
+        // OK. so initially, the absolute box will be off-screen, because no scrolling event has occurred,
+        // so we'll fire an external scrolling event to get it into position.
+        AlloyTriggers.emit(scroller, 'test.bubbled.scroll');
+
+        // It should have docked to the bottom
+        await pAssertBoxDockedToBottom(
+          'The absolute box should dock to the bottom after emulated event',
+          scroller,
+          absoluteBox
+        );
+
+        // Now, scroll the scroller down 500px. That should make 500px of the dividing section still visible,
+        // and the box should be at 300px (800 - 500). It should undock.
+        scroller.element.dom.scrollTop = 500;
+
+        await Waiter.pTryUntil(
+          'Wait until is undocked',
+          () => {
+            assert.equal(
+              'absolute',
+              Css.getRaw(absoluteBox.element, 'position').getOrDie(),
+              'Checking "position" style'
+            );
+
+            // Check that it is appearing about 100 pixels lower than the top of the scroller
+            assert.isTrue(
+              Math.abs(getRect(absoluteBox).top - (getRect(scroller).top + 300)) < 5,
+              'Check that the absolute box is appearing about 100px down from the scroller'
+            );
+          }
+        );
+
+        // Scroll a further 400px down the page. It should dock again
+        scroller.element.dom.scrollTop = 500 + 400;
+        await pAssertBoxDockedToTop(
+          'After scrolling past the box, it should dock to the top',
+          scroller,
+          absoluteBox
+        );
+
+        // Scroll back up to make the box on screen again (750 < 800)
+        scroller.element.dom.scrollTop = 800 - 50;
+        await Waiter.pTryUntil(
+          'After scrolling back before the box, it should undock again, 50px',
+          () => {
+            assert.equal(
+              'absolute',
+              Css.getRaw(absoluteBox.element, 'position').getOrDie(),
+              'Checking "position" style'
+            );
+
+            // Check that it is appearing about 100 pixels lower than the top of the scroller
+            assert.isTrue(
+              Math.abs(getRect(absoluteBox).top - (getRect(scroller).top + 50)) < 5,
+              'Check that the absolute box is appearing about 100px down from the scroller'
+            );
+          }
+        );
+      });
     });
   });
 });
