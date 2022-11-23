@@ -1,0 +1,317 @@
+import { TestStore, Waiter } from '@ephox/agar';
+import { before, context, describe, it } from '@ephox/bedrock-client';
+import { Optional } from '@ephox/katamari';
+import { Css, SugarElement, SugarLocation, Traverse } from '@ephox/sugar';
+import { assert } from 'chai';
+
+import * as Boxes from 'ephox/alloy/alien/Boxes';
+import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
+import { AllowBubbling } from 'ephox/alloy/api/behaviour/AllowBubbling';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Docking } from 'ephox/alloy/api/behaviour/Docking';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
+import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
+import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
+import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+
+describe('browser.alloy.behaviour.docking.DockingInScrollingContainerTest', () => {
+
+  const makeDividingSection = (height: number, color: string) => ({
+    dom: {
+      tag: 'div',
+      styles: {
+        'height': `${height}px`,
+        'background-color': color
+      }
+    }
+  });
+
+  const getRect = (comp: AlloyComponent): DOMRect =>
+    (comp.element as SugarElement<HTMLElement>).dom.getBoundingClientRect();
+
+  const makeScrollerBehaviours = () => Behaviour.derive([
+    AllowBubbling.config({
+      events: [
+        {
+          native: 'scroll',
+          simulated: 'test.bubbled.scroll'
+        }
+      ]
+    }),
+    AddEventsBehaviour.config('bubbled-scroll-events', [
+      AlloyEvents.run('test.bubbled.scroll', (comp, se) => {
+        comp.getSystem().broadcastEvent(SystemEvents.externalElementScroll(), se.event);
+        // Don't bubble up to the next scroller.
+        se.stop();
+      })
+    ])
+  ]);
+
+  context('Static Positioning', () => {
+    const makeStaticBox = (store: TestStore<string>): AlloySpec => {
+      return {
+        dom: {
+          tag: 'div',
+          styles: {
+            width: '200px',
+            height: '200px',
+            background: '#cadbee'
+          }
+        },
+        behaviours: Behaviour.derive([
+          Docking.config({
+            onDocked: store.adder('static.onDocked'),
+            onUndocked: store.adder('static.onUndocked'),
+            lazyViewport: (boxComp) => {
+              const scroller = boxComp.getSystem().getByDom(
+                Traverse.parent(boxComp.element).getOrDie('Could not find parent')
+              ).getOrDie();
+              return {
+                bounds: Boxes.box(scroller.element),
+                optScrollEnv: Optional.some({
+                  currentScrollTop: scroller.element.dom.scrollTop,
+                  scrollElmTop: SugarLocation.absolute(scroller.element).top
+                })
+              };
+            }
+          })
+        ])
+      };
+    };
+
+    const pAssertStaticBoxDockedToTop = (label: string, scroller: AlloyComponent, staticBox: AlloyComponent) =>
+      Waiter.pTryUntil(
+        `[WAIT for top dock]: ${label}`,
+        () => {
+          assert.isTrue(
+            Math.abs(getRect(scroller).top - getRect(staticBox).top) < 5,
+            'Check that the top positions of scroller and static box are approximately equal'
+          );
+
+          assert.equal(
+            'fixed',
+            Css.getRaw(staticBox.element, 'position').getOrDie('Should have position'),
+            'Checking "position" style'
+          );
+        }
+      );
+
+    const pAssertStaticBoxDockedToBottom = (label: string, scroller: AlloyComponent, staticBox: AlloyComponent) =>
+      Waiter.pTryUntil(
+        `[WAIT for bottom dock]: ${label}`,
+        () => {
+          assert.isTrue(
+            Math.abs(getRect(scroller).bottom - getRect(staticBox).bottom) < 5,
+            'Check that the bottom positions of scroller and static box are approximately equal'
+          );
+
+          assert.equal(
+            'fixed',
+            Css.getRaw(staticBox.element, 'position').getOrDie('Should have position'),
+            'Checking "position" style'
+          );
+        }
+      );
+
+    context('Single scroller', () => {
+      const hook = GuiSetup.bddSetup(
+        (store, _doc, _body): AlloyComponent => {
+
+          const staticBox: AlloySpec = makeStaticBox(store);
+
+          return GuiFactory.build(
+            {
+              dom: {
+                tag: 'div',
+                styles: {
+                  'height': '600px',
+                  'overflow': 'auto',
+                  'margin-bottom': '1000px',
+                }
+              },
+              components: [
+                makeDividingSection(1000, 'purple'),
+                staticBox,
+                makeDividingSection(1000, 'purple')
+              ],
+              behaviours: makeScrollerBehaviours()
+            }
+          );
+        }
+      );
+
+      it('Docking and Undocking', async () => {
+        const scroller = hook.component();
+
+        const staticBox = scroller.components()[1];
+
+        // OK. so initially, the static box will be off-screen, because no scrolling event has occurred,
+        // so we'll fire an external scrolling event to get it into position.
+        AlloyTriggers.emit(scroller, 'test.bubbled.scroll');
+
+        // It should have docked to the bottom
+        await pAssertStaticBoxDockedToBottom(
+          'The static box should dock to the bottom after emulated event',
+          scroller,
+          staticBox
+        );
+
+        // Now, scroll the scroller down 900px. That should make 100px of the dividing section still visible,
+        // and because the height of the scroller is 400px, the static box should have moved.
+        scroller.element.dom.scrollTop = 900;
+        await Waiter.pTryUntil(
+          'Wait until is undocked',
+          () => {
+            assert.isFalse(
+              Css.getRaw(staticBox.element, 'position').isSome(),
+              'Checking "position" style'
+            );
+
+            // Check that it is appearing about 100 pixels lower than the top of the scroller
+            assert.isTrue(
+              Math.abs(getRect(staticBox).top - (getRect(scroller).top + 100)) < 5,
+              'Check that the static box is appearing about 100px down from the scroller'
+            );
+          }
+        );
+
+        // Scroll a further 125px and check that it is docking to the top
+        scroller.element.dom.scrollTop = 900 + 125;
+        await pAssertStaticBoxDockedToTop(
+          'After the 125px additional scroll',
+          scroller,
+          staticBox
+        );
+
+        // Now, scroll the window so that the top position of the scroller moves. We want
+        // to check that when it will undock later, it will still be in the right position.
+        // We choose 50 so that it doesn't scroll all the way to the end of the first dividing
+        // section
+        window.scrollTo(0, getRect(scroller).top + 50);
+
+        // Now, we want to check that it will undock at the right point, even though the
+        // window has scrolled. So if we trigger a scroll event now, it should stay docked.
+        AlloyTriggers.emit(scroller, 'test.bubbled.scroll');
+
+        // And is we scroll the scroller back up 125 px, it should undock.
+        scroller.element.dom.scrollTop = 900;
+        await Waiter.pTryUntil(
+          'Wait until is undocked post the scroll',
+          () => {
+            assert.isFalse(
+              Css.getRaw(staticBox.element, 'position').isSome(),
+              'Checking "position" style'
+            );
+
+            // Check that it is appearing about 100 pixels lower than the top of the scroller
+            assert.isTrue(
+              Math.abs(getRect(staticBox).top - (getRect(scroller).top + 100)) < 5,
+              'Check that the static box is appearing about 100px down from the scroller'
+            );
+          }
+        );
+      });
+    });
+
+    context('Nested scrollers', () => {
+      const hook = GuiSetup.bddSetup(
+        (store, _doc, _body): AlloyComponent => {
+
+          const staticBox: AlloySpec = makeStaticBox(store);
+
+          return GuiFactory.build(
+            {
+              dom: {
+                tag: 'div',
+                styles: {
+                  'height': '600px',
+                  'overflow': 'auto',
+                  'margin-bottom': '1000px',
+                }
+              },
+              components: [
+                makeDividingSection(200, 'orange'),
+                {
+                  dom: {
+                    tag: 'div',
+                    styles: {
+                      'height': '500px',
+                      'overflow': 'auto',
+                      'margin-bottom': '1000px',
+                      'outline': '10px solid magenta'
+                    }
+                  },
+                  components: [
+                    makeDividingSection(300, 'green'),
+                    staticBox,
+                    makeDividingSection(1200, 'lime')
+                  ],
+                  behaviours: makeScrollerBehaviours()
+                },
+                makeDividingSection(200, 'orange')
+              ],
+              behaviours: makeScrollerBehaviours()
+            }
+          );
+        }
+      );
+
+      before(function () {
+        this.timeout(10000000);
+      });
+
+      it('Docking and Undocking', async () => {
+
+        /*
+         * The main issue here is that our Location.absolute, which we tend to use everywhere
+         * considers only the page scroll and not the wrapping scrolling container's scroll. We
+         * have code in docking to consider the "top" position of the scroller (which would be
+         * influenced by ancestor scrollers scrolling), and we want to test that here. The basic
+         * approach is:
+         *
+         * (1) Scroll the inner scroller until the box is docked by about 10px
+         * (2) Scroll the outer scroller so that it is much further down the page
+         * (3) Scroll the inner scroller back by just more than the docking delta (e.g. 10px)
+         * (4) Check that it has undocked.
+         */
+        const outerScroller = hook.component();
+        const innerScroller = outerScroller.components()[1];
+        const staticBox = innerScroller.components()[1];
+
+        // The height of the green divider is 300px, so scroll the inner scroller by 310 px to trigger
+        // docking
+        innerScroller.element.dom.scrollTop = 310;
+        await pAssertStaticBoxDockedToTop(
+          'After scrolling the inner scroller',
+          innerScroller,
+          staticBox
+        );
+
+        // Now, scroll the outer scroller 800px down the page
+        outerScroller.element.dom.scrollTop = 400;
+
+        // Now, scroll the inner scroller 100px up the page, so the static box should undock
+        innerScroller.element.dom.scrollTop = 210;
+        await Waiter.pTryUntil(
+          'Wait until is undocked even though the outer scroll has changed',
+          () => {
+            assert.isFalse(
+              Css.getRaw(staticBox.element, 'position').isSome(),
+              'Checking "position" style'
+            );
+
+            // Check that it is appearing about 90 pixels lower than the top of the scroller
+            assert.isTrue(
+              Math.abs(getRect(staticBox).top - (getRect(innerScroller).top + 90)) < 5,
+              'Check that the static box is appearing about 100px down from the scroller'
+            );
+          }
+        );
+      });
+
+    });
+  });
+});

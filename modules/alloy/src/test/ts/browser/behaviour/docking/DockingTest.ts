@@ -1,9 +1,10 @@
 import { ApproxStructure, Assertions, Waiter } from '@ephox/agar';
-import { after, before, context, describe, it } from '@ephox/bedrock-client';
+import { after, before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { DomEvent, EventUnbinder, SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Docking } from 'ephox/alloy/api/behaviour/Docking';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
@@ -78,6 +79,9 @@ describe('browser.alloy.behaviour.docking.DockingTest', () => {
       onWindowScroll = DomEvent.bind(SugarElement.fromDom(window), 'scroll', (evt) => {
         gui.broadcastEvent(SystemEvents.windowScroll(), evt);
       });
+    });
+
+    beforeEach(() => {
       const store = hook.store();
       store.clear();
     });
@@ -88,6 +92,47 @@ describe('browser.alloy.behaviour.docking.DockingTest', () => {
       }
     });
 
+    const boxWithNoPosition = () => ApproxStructure.build((s, str, _arr) => s.element('div', {
+      styles: {
+        position: str.none(),
+        left: str.none(),
+        top: str.none(),
+        right: str.none(),
+        bottom: str.none()
+      }
+    }));
+
+    const boxWithPosition = (position: string) => ApproxStructure.build((s, str, _arr) => s.element('div', {
+      styles: {
+        position: str.is(position)
+      }
+    }));
+
+    const assertInitialStructures = (
+      label: string,
+      boxes: { static: AlloyComponent; absolute: AlloyComponent }
+    ): void => {
+      Assertions.assertStructure(
+        `${label}. Assert initial structure of staticBox. Box should have neither "position: absolute" nor "position: fixed"`,
+        boxWithNoPosition(),
+        boxes.static.element
+      );
+
+      Assertions.assertStructure(
+        `${label}. Assert initial structure of absoluteBox`,
+        ApproxStructure.build((s, str, _arr) => s.element('div', {
+          styles: {
+            position: str.is('absolute'),
+            left: str.none(),
+            top: str.is('2300px'),
+            right: str.is('200px'),
+            bottom: str.none()
+          }
+        })),
+        boxes.absolute.element
+      );
+    };
+
     it('basic test', async () => {
       const store = hook.store();
       const component = hook.component();
@@ -95,46 +140,8 @@ describe('browser.alloy.behaviour.docking.DockingTest', () => {
       const staticBox = component.components()[0];
       const absoluteBox = component.components()[1];
 
-      const boxWithNoPosition = () => ApproxStructure.build((s, str, _arr) => s.element('div', {
-        styles: {
-          position: str.none(),
-          left: str.none(),
-          top: str.none(),
-          right: str.none(),
-          bottom: str.none()
-        }
-      }));
-
-      const boxWithPosition = (position: string) => ApproxStructure.build((s, str, _arr) => s.element('div', {
-        styles: {
-          position: str.is(position)
-        }
-      }));
-
-      const assertInitialStructure = (label: string) => {
-        Assertions.assertStructure(
-          `${label}. Assert initial structure of staticBox. Box should have neither "position: absolute" nor "position: fixed"`,
-          boxWithNoPosition(),
-          staticBox.element
-        );
-
-        Assertions.assertStructure(
-          `${label}. Assert initial structure of absoluteBox`,
-          ApproxStructure.build((s, str, _arr) => s.element('div', {
-            styles: {
-              position: str.is('absolute'),
-              left: str.none(),
-              top: str.is('2300px'),
-              right: str.is('200px'),
-              bottom: str.none()
-            }
-          })),
-          absoluteBox.element
-        );
-      };
-
       store.assertEq('Store should start empty', [ ]);
-      assertInitialStructure('Initial load');
+      assertInitialStructures('Initial load', { static: staticBox, absolute: absoluteBox });
 
       // Scroll the boxes completely off-screen. One of them is just at the top of the document,
       // and the other is at 2300px, so scrolling 3000px should do it.
@@ -196,7 +203,7 @@ describe('browser.alloy.behaviour.docking.DockingTest', () => {
       );
 
       store.assertEq('After undocked', [ 'static.onUndocked', 'absolute.onUndocked' ]);
-      assertInitialStructure('After undocking due to scroll');
+      assertInitialStructures('After undocking due to scroll', { static: staticBox, absolute: absoluteBox });
 
       Docking.forceDockToTop(absoluteBox);
 
@@ -227,7 +234,40 @@ describe('browser.alloy.behaviour.docking.DockingTest', () => {
       // After refreshing, should be back at initial position, not the bottom docked position
       // This is testing that we are only storing the position if we aren't already docked when
       // using the force APIs.
-      assertInitialStructure('After Docking.refresh');
+      assertInitialStructures('After Docking.refresh', { static: staticBox, absolute: absoluteBox });
+    });
+
+    it('External Scroll event', () => {
+      const store = hook.store();
+      const component = hook.component();
+
+      const staticBox = component.components()[0];
+      const absoluteBox = component.components()[1];
+
+      store.assertEq('Store should start empty', [ ]);
+      // Firstly, check things are where we expect them to be to start the test
+      assertInitialStructures('Before docking', { static: staticBox, absolute: absoluteBox });
+
+      // Now, dock to the bottom, and check that it worked.
+      Docking.forceDockToBottom(absoluteBox);
+      Assertions.assertStructure(
+        'After forcing to bottom, position should be fixed with bottom: 0',
+        ApproxStructure.build((s, str, _arr) => s.element('div', {
+          styles: {
+            position: str.is('fixed'),
+            bottom: str.is('0px')
+          }
+        })),
+        absoluteBox.element
+      );
+
+      // Now, broadcast an external scroll event to the mothership, and check that it triggers
+      // refresh and puts the box back where it should be.
+      hook.gui().broadcastEvent(SystemEvents.externalElementScroll(), { } as any);
+      assertInitialStructures(
+        'After broadcasting external scroll event',
+        { static: staticBox, absolute: absoluteBox }
+      );
     });
   });
 });
