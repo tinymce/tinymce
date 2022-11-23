@@ -241,7 +241,8 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
         const top = win.y + (isDockedMode(comp, 'top') ? offset : 0);
         const height = win.height - (isDockedMode(comp, 'bottom') ? offset : 0);
         return {
-          bounds: Boxes.bounds(win.x, top, win.width, height)
+          bounds: Boxes.bounds(win.x, top, win.width, height),
+          optScrollEnv: Optional.none()
         };
       },
       modes: [ sharedBackstage.header.getDockingMode() ],

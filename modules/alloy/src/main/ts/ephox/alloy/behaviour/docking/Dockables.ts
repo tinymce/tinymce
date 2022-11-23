@@ -1,11 +1,11 @@
 import { Arr, Fun, Obj, Optional, Optionals } from '@ephox/katamari';
-import { Class, Css, Height, SugarBody, SugarElement, Width } from '@ephox/sugar';
+import { Class, Css, Height, SugarBody, SugarElement, SugarPosition, Width } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { NuPositionCss, PositionCss } from '../../positioning/view/PositionCss';
-import { DockingContext, DockingDecision, DockingMode, DockingState, DockingViewport } from './DockingTypes';
+import { DockingContext, DockingDecision, DockingMode, DockingState, DockingViewport, DockToBottomDecision, DockToTopDecision, InitialDockingPosition } from './DockingTypes';
 
 export interface StaticMorph {
   morph: 'static';
@@ -100,36 +100,71 @@ const isVisibleForModes = (modes: DockingMode[], box: Boxes.Bounds, viewport: Do
     }
   });
 
-const getPrior = (elem: SugarElement<HTMLElement>, state: DockingState): Optional<Boxes.Bounds> =>
+const getXYForRestoring = (pos: InitialDockingPosition, viewport: DockingViewport): SugarPosition => {
+  // TINY-9242: If there is a scrolling environment, then do stuff.
+  const priorY = viewport.optScrollEnv.fold(
+    Fun.constant(pos.bounds.y),
+    (scrollEnv) => scrollEnv.scrollElmTop + (pos.bounds.y - scrollEnv.currentScrollTop)
+  );
+
+  return SugarPosition(pos.bounds.x, priorY);
+};
+
+const getXYForSaving = (box: Boxes.Bounds, viewport: DockingViewport): SugarPosition => {
+  const priorY = viewport.optScrollEnv.fold(
+    Fun.constant(box.y),
+    (scrollEnv) => box.y + scrollEnv.currentScrollTop - scrollEnv.scrollElmTop
+  );
+
+  return SugarPosition(box.x, priorY);
+};
+
+const getPrior = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, state: DockingState): Optional<{ box: Boxes.Bounds; location: 'top' | 'bottom' }> =>
   state.getInitialPos().map(
     (pos) => {
-      // TINY-9242: Consider the scrolling viewport here when calculating priorY.
-      const priorY = pos.bounds.y;
-      return Boxes.bounds(
-        pos.bounds.x,
-        priorY,
-        Width.get(elem),
-        Height.get(elem)
-      );
+      const xy = getXYForRestoring(pos, viewport);
+      return {
+        box: Boxes.bounds(xy.left, xy.top, Width.get(elem), Height.get(elem)),
+        location: pos.location
+      };
     }
   );
 
-const storePrior = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, state: DockingState): void => {
-  // TINY-9242: Consider the scrolling viewport here when calculating bounds.
-  const bounds = box;
+const storePrior = (
+  elem: SugarElement<HTMLElement>,
+  box: Boxes.Bounds,
+  viewport: DockingViewport,
+  state: DockingState,
+  decision: DockToTopDecision | DockToBottomDecision
+): void => {
+  const xy = getXYForSaving(box, viewport);
+  const bounds = Boxes.bounds(
+    xy.left,
+    xy.top,
+    box.width,
+    box.height
+  );
+
   state.setInitialPos({
     style: Css.getAllRaw(elem),
     position: Css.get(elem, 'position') || 'static',
-    bounds
+    bounds,
+    location: decision.location
   });
 };
 
 // When we are using APIs like forceDockToTop, then we only want to store the previous position
 // if we weren't already docked. Otherwise, we still want to move the component, but keep its old
 // restore values
-const storePriorIfNone = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, state: DockingState): void => {
+const storePriorIfNone = (
+  elem: SugarElement<HTMLElement>,
+  box: Boxes.Bounds,
+  viewport: DockingViewport,
+  state: DockingState,
+  decision: DockToTopDecision | DockToBottomDecision
+): void => {
   state.getInitialPos().fold(
-    () => storePrior(elem, box, state),
+    () => storePrior(elem, box, viewport, state, decision),
     () => Fun.noop
   );
 };
@@ -164,9 +199,9 @@ const revertToOriginal = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, st
   });
 
 const tryMorphToOriginal = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, state: DockingState): Optional<MorphInfo> =>
-  getPrior(elem, state)
-    .filter((box) => isVisibleForModes(state.getModes(), box, viewport))
-    .bind((box) => revertToOriginal(elem, box, state));
+  getPrior(elem, viewport, state)
+    .filter(({ box }) => isVisibleForModes(state.getModes(), box, viewport))
+    .bind(({ box }) => revertToOriginal(elem, box, state));
 
 const tryDecisionToFixedMorph = (decision: DockingDecision): Optional<FixedMorph> => {
   switch (decision.location) {
@@ -221,23 +256,65 @@ const tryMorphToFixed = (elem: SugarElement<HTMLElement>, viewport: DockingViewp
   if (decision.location === 'top' || decision.location === 'bottom') {
     // We are moving to undocked to docked, so store the previous location
     // so that we can restore it when we switch out of docking (back to undocked)
-    storePrior(elem, box, state);
+    storePrior(elem, box, viewport, state, decision);
     return tryDecisionToFixedMorph(decision);
   } else {
     return Optional.none();
   }
 };
 
-const getMorph = (component: AlloyComponent, viewport: DockingViewport, state: DockingState): Optional<MorphInfo> => {
-  const elem = component.element;
-  const isDocked = Optionals.is(Css.getRaw(elem, 'position'), 'fixed');
-  return isDocked ? tryMorphToOriginal(elem, viewport, state) : tryMorphToFixed(elem, viewport, state);
+const tryMorphToOriginalOrUpdateFixed = (
+  elem: SugarElement<HTMLElement>,
+  viewport: DockingViewport,
+  state: DockingState
+): Optional<MorphInfo> => {
+  // When a "docked" element is docked to the top of a scroll container (due to optScrollEnv in
+  // viewport), we need to reposition its fixed if the scroll container has itself moved its top position.
+  // This isn't required when the docking is to the top of the window, because the entire window cannot
+  // be scrolled up and down the page - it is the page.
+  //
+  // Imagine a situation where the toolbar has docked to the top of the scroll container, which is at
+  // y = 200. Now, when the user scrolls the page another 50px down the page, the top of the scroll
+  // container will now be 150px, but the "fixed" toolbar will still be at "200px". So this is a morph
+  // from "fixed" to "fixed", but with new coordinates. So if we can't morph to original from "fixed",
+  // we try to update our "fixed" position (if we have a scrolling environment in the viewport)
+  return tryMorphToOriginal(elem, viewport, state)
+    .orThunk(() => {
+      // Importantly, we don't update our stored position for the element before "docking", because
+      // this is a transition between "docked" and "docked", not "undocked" and "docked". We want to
+      // keep our undocked position in our store, not a docked position.
+      // Importantly, we don't change our position. We just improve our fixed.
+      return viewport.optScrollEnv
+        .bind((_) => getPrior(elem, viewport, state))
+        .bind(
+          ({ box, location }) => {
+            const winBox = Boxes.win();
+            const leftX = getDockedLeftPosition({ win: winBox, box });
+            // Keep the same docking location
+            const decision = location === 'top'
+              ? forceTopPosition(winBox, leftX, viewport)
+              : forceBottomPosition(winBox, leftX, viewport);
+            return tryDecisionToFixedMorph(decision);
+          }
+        );
+    });
 };
 
-const getMorphToOriginal = (component: AlloyComponent, viewport: DockingViewport, state: DockingState): Optional<StaticMorph | AbsoluteMorph> => {
+const tryMorph = (component: AlloyComponent, viewport: DockingViewport, state: DockingState): Optional<MorphInfo> => {
   const elem = component.element;
-  return getPrior(elem, state)
-    .bind((box) => revertToOriginal(elem, box, state));
+  const isDocked = Optionals.is(Css.getRaw(elem, 'position'), 'fixed');
+  return isDocked
+    ? tryMorphToOriginalOrUpdateFixed(elem, viewport, state)
+    : tryMorphToFixed(elem, viewport, state);
+};
+
+// The difference between the "calculate" functions and the "try" functions is that the "try" functions
+// will first consider whether there is a need to morph, whereas the "calculate" functions will just
+// give you the morph details, bypassing the check to see if it's needed
+const calculateMorphToOriginal = (component: AlloyComponent, viewport: DockingViewport, state: DockingState): Optional<StaticMorph | AbsoluteMorph> => {
+  const elem = component.element;
+  return getPrior(elem, viewport, state)
+    .bind(({ box }) => revertToOriginal(elem, box, state));
 };
 
 const forceDockWith = (
@@ -248,21 +325,25 @@ const forceDockWith = (
 ): Optional<FixedMorph> => {
   const box = Boxes.box(elem);
 
-  // We only want to store the values if we aren't already docking. If we are already docking, then
-  // we just want to move the element, without updating where it started originally
-  storePriorIfNone(elem, box, state);
   const winBox = Boxes.win();
   const leftX = getDockedLeftPosition({ win: winBox, box });
   const decision = getDecision(winBox, leftX, viewport);
-  return tryDecisionToFixedMorph(decision);
+  if (decision.location === 'bottom' || decision.location === 'top') {
+    // We only want to store the values if we aren't already docking. If we are already docking, then
+    // we just want to move the element, without updating where it started originally
+    storePriorIfNone(elem, box, viewport, state, decision);
+    return tryDecisionToFixedMorph(decision);
+  } else {
+    return Optional.none();
+  }
 };
 
 export {
   appear,
   disappear,
   isPartiallyVisible,
-  getMorph,
-  getMorphToOriginal,
+  tryMorph,
+  calculateMorphToOriginal,
   forceDockWith,
   forceTopPosition,
   forceBottomPosition
