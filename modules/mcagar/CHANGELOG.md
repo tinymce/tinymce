@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 8.2.0 - 2022-11-23
+
 ## Added
 - Add new `pWaitForEventToStopFiring` function to the `TinyContentActions` helper methods to allow tests to wait until an event stops being triggered.
 

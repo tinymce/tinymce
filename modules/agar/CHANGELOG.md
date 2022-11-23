@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 7.3.0 - 2022-11-23
+
 ### Added
 - Added `TestStore` API, which was moved from Alloy and requires types. #TINY-9157
 - Added `exactAttrs`, `exactClasses` and `exactStyles` to `ApproxStructures.element`. #TINY-9102
