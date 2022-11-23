@@ -339,14 +339,16 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       }
       return `<div>${Arr.foldl(elementsNames, (acc, elementName) =>
         acc + getBaseCEFElement(elementName)
-      , '')}</div>`;
+      , '')}</div>
+      `;
     };
 
     const hook = TinyHooks.bddSetupLight<Editor>({
       indent: false,
       menubar: false,
       base_url: '/project/tinymce/js/tinymce',
-      height: 3000
+      height: 3000,
+      extended_valid_elements: 'span[class]',
     }, [], true);
 
     const moveToDragElementToDestinationElement = async (editor: Editor, xOffset: number, yOffset: number) => {
@@ -380,6 +382,16 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       await moveToDragElementToDestinationElement(editor, 10, -15);
 
       TinyAssertions.assertContent(editor, getContentWithCefElements([ 'toDrag', 'destination', 'obstacle' ]));
+    });
+
+    it('TINY-9364: Should prevent dropping a CEF element onto another CEF element', async () => {
+      const editor = hook.editor();
+      const originalContent = '<div class="toDrag" style="margin: 40px; width: 1110px; height: 120px; background-color: blue;" contenteditable="false">To drag element</div>'
+      + '<div style="margin: 40px; width: 1110px; height: 120px; background-color: red;" contenteditable="false"><span class="destination">Destination element</span></div>';
+      editor.setContent(originalContent);
+      await moveToDragElementToDestinationElement(editor, 0, 0);
+      await Waiter.pWait(100);
+      TinyAssertions.assertContent(editor, originalContent.trim());
     });
   });
 });
