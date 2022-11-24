@@ -316,7 +316,11 @@ export default (): void => {
         'margin-top': '1400px',
         'margin-bottom': '500px'
       },
-      extraBarStyles: { },
+      extraBarStyles: {
+        position: 'absolute',
+        top: '800px',
+        left: '10px'
+      },
       scrollableContainerStyles: Optional.some({ }),
       lazyViewport: getCommonLazyViewport(boxId),
       hideWhenContextGone: true
@@ -332,14 +336,14 @@ export default (): void => {
       dom: {
         tag: 'div',
       },
-      components: [
+      components: false ? [
         ...(includeWindowExample ? [ example1() ] : []),
         ...(includeScrollableExamples ? [
           example2(),
           example3(),
           example4()
         ] : [])
-      ]
+      ] : [ example4() ]
     }
   );
 };

@@ -101,7 +101,10 @@ const isVisibleForModes = (modes: DockingMode[], box: Boxes.Bounds, viewport: Do
   });
 
 // FIX: We should only consider the scroll top for absolutely position items, if their
-// offset parent is within the scroller.
+// offset parent is within the scroller. Not sure about this. Hmm.
+// Hmm. For some reason, when restoring, we couldn't consider scroll-top, but should when saving
+// if the scroller is the offset parent. But maybe, it's just a positioning decision when we look up
+// offset parent.
 const considerScrollTop = true;
 
 const getXYForRestoring = (pos: InitialDockingPosition, viewport: DockingViewport): SugarPosition => {
@@ -117,7 +120,12 @@ const getXYForRestoring = (pos: InitialDockingPosition, viewport: DockingViewpor
 const getXYForSaving = (box: Boxes.Bounds, viewport: DockingViewport): SugarPosition => {
   const priorY = viewport.optScrollEnv.fold(
     Fun.constant(box.y),
-    (scrollEnv) => box.y + (considerScrollTop ? scrollEnv.currentScrollTop : 0) - scrollEnv.scrollElmTop
+    (scrollEnv) => {
+      console.log('box.y', box.y);
+      console.log('currentScrollTop', scrollEnv.currentScrollTop);
+      console.log('scrollElmTop', scrollEnv.scrollElmTop);
+      return box.y + (considerScrollTop ? scrollEnv.currentScrollTop : 0) - scrollEnv.scrollElmTop;
+    }
   );
 
   return SugarPosition(box.x, priorY);
@@ -142,6 +150,8 @@ const storePrior = (
   decision: DockToTopDecision | DockToBottomDecision
 ): void => {
   const xy = getXYForSaving(box, viewport);
+  console.log('element', elem.dom.cloneNode(true));
+  console.log('element.box', box.y);
   console.log('Backing up', xy);
   const bounds = Boxes.bounds(
     xy.left,
@@ -185,15 +195,19 @@ const revertToOriginal = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, st
         });
 
       case 'absolute':
-        const offsetBox = OffsetOrigin.getOffsetParent(elem).map(Boxes.box)
-          .getOrThunk(() => Boxes.box(SugarBody.body()));
-        console.log('revert', { box, offsetBox });
+        const offsetParent = OffsetOrigin.getOffsetParent(elem).getOr(SugarBody.body());
+        const offsetBox = Boxes.box(offsetParent);
+        // I don't really know why we want to consider the scrollTop. I have no idea. There must
+        // be a reason. A good reason!!!!
+        const scrollDelta = offsetParent.dom.scrollTop ?? 0;
+        console.log('offsetParent', offsetParent, 'scrollDelta', scrollDelta);
+        console.log('revert', { box, offsetBox, blah: position.bounds });
         return Optional.some({
           morph: 'absolute',
           positionCss: NuPositionCss(
             'absolute',
             Obj.get(position.style, 'left').map((_left) => box.x - offsetBox.x),
-            Obj.get(position.style, 'top').map((_top) => box.y - offsetBox.y),
+            Obj.get(position.style, 'top').map((_top) => box.y - offsetBox.y + scrollDelta),
             Obj.get(position.style, 'right').map((_right) => offsetBox.right - box.right),
             Obj.get(position.style, 'bottom').map((_bottom) => offsetBox.bottom - box.bottom)
           )
@@ -330,6 +344,7 @@ const forceDockWith = (
   getDecision: (winBox: Boxes.Bounds, leftX: number, v: DockingViewport) => DockingDecision
 ): Optional<FixedMorph> => {
   const box = Boxes.box(elem);
+  console.log({ y: box.y });
 
   const winBox = Boxes.win();
   const leftX = getDockedLeftPosition({ win: winBox, box });
