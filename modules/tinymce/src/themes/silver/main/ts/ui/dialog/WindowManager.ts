@@ -5,13 +5,14 @@ import {
 import { StructureProcessor, StructureSchema } from '@ephox/boulder';
 import { Dialog, DialogManager } from '@ephox/bridge';
 import { Optional, Singleton } from '@ephox/katamari';
-import { SelectorExists, SugarBody, SugarElement } from '@ephox/sugar';
+import { SelectorExists, SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { WindowManagerImpl, WindowParams } from 'tinymce/core/api/WindowManager';
 
 import * as Options from '../../api/Options';
 import { UiFactoryBackstagePair } from '../../backstage/Backstage';
+import * as ScrollingContext from '../../modes/ScrollingContext';
 import { formCancelEvent } from '../general/FormEvents';
 import { renderDialog } from '../window/SilverDialog';
 import { renderInlineDialog } from '../window/SilverInlineDialog';
@@ -46,7 +47,31 @@ const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, is
           fadeOutClass: 'tox-dialog-dock-fadeout',
           transitionClass: 'tox-dialog-dock-transition'
         },
-        modes: [ 'top' ]
+        modes: [ 'top' ],
+        lazyViewport: (comp) => {
+          // If we don't have a special scrolling environment, then just use the default
+          // viewport of (window)
+          // TODO: Should we consult ui_of_tomorrow here also?
+          const optScrollingContext = ScrollingContext.detect(comp.element);
+          return optScrollingContext
+            .map(
+              (sc) => {
+                const combinedBounds = ScrollingContext.getBoundsFrom(sc);
+                return {
+                  bounds: combinedBounds,
+                  optScrollEnv: Optional.some({
+                    currentScrollTop: sc.element.dom.scrollTop,
+                    scrollElmTop: SugarLocation.absolute(sc.element).top
+                  })
+                };
+              }
+            ).getOrThunk(
+              () => ({
+                bounds: Boxes.win(),
+                optScrollEnv: Optional.none()
+              })
+            );
+        }
       })
     ];
   }

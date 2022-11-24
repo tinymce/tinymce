@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Waiter } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
-import { Class, Css, Insert, InsertAll, Remove, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
+import { Class, Css, Insert, InsertAll, Remove, SelectorFind, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -50,7 +50,8 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
     banner: 200,
     scroller: 500,
     outerScroller: 200,
-    editor: 2000
+    editor: 2000,
+    miniEditor: 400
   };
 
   const getOtherUi = (editor: Editor, testUi: TestUi) => {
@@ -84,12 +85,11 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
 
   context('Classic editor', () => {
     const pWaitUntilUndocked = (header: SugarElement<HTMLElement>): Promise<void> => Waiter.pTryUntil(
-      'Waiting for sticky toolbar to undock',
+      'Waiting for sticky element to undock',
       () => {
         Assertions.assertStructure(
-          'Toolbar should undock',
-          ApproxStructure.build((s, str, arr) => s.element('div', {
-            classes: [ arr.has(ui.editor.stickyHeader.className) ],
+          'Element should undock',
+          ApproxStructure.build((s, str, _arr) => s.element('div', {
             styles: {
               position: str.none()
             }
@@ -99,13 +99,27 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
       }
     );
 
-    const pWaitUntilDockedAtTop = (header: SugarElement<HTMLElement>, optTop: Optional<number>): Promise<void> => Waiter.pTryUntil(
-      'Waiting for sticky toolbar to dock',
+    const pWaitUntilUndockedAbsolute = (header: SugarElement<HTMLElement>): Promise<void> => Waiter.pTryUntil(
+      'Waiting for sticky element to undock',
       () => {
         Assertions.assertStructure(
-          'Toolbar should dock to the top',
-          ApproxStructure.build((s, str, arr) => s.element('div', {
-            classes: [ arr.has(ui.editor.stickyHeader.className) ],
+          'Element should undock',
+          ApproxStructure.build((s, str, _arr) => s.element('div', {
+            styles: {
+              position: str.is('absolute')
+            }
+          })),
+          header
+        );
+      }
+    );
+
+    const pWaitUntilDockedAtTop = (header: SugarElement<HTMLElement>, optTop: Optional<number>): Promise<void> => Waiter.pTryUntil(
+      'Waiting for sticky element to dock',
+      () => {
+        Assertions.assertStructure(
+          'Element should dock to the top',
+          ApproxStructure.build((s, str, _arr) => s.element('div', {
             styles: {
               position: str.is('fixed'),
               ...(optTop.map((top) => ({ top: str.is(`${top}px`) })).getOr({ }))
@@ -154,41 +168,41 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
       }
     );
 
-    context('Single scroller', () => {
-      const setupElement = () => {
-        const scroller = SugarElement.fromTag('div');
-        Css.setAll(scroller, {
-          overflow: 'auto',
-          height: `${heights.scroller}px`,
-          margin: '0em 2em 2000px 2em',
-          outline: '3px solid brown'
-        });
-        Class.add(scroller, ui.other.scrollingWrapper.className);
+    const setupSingleScrollerElement = () => {
+      const scroller = SugarElement.fromTag('div');
+      Css.setAll(scroller, {
+        overflow: 'auto',
+        height: `${heights.scroller}px`,
+        margin: '0em 2em 2000px 2em',
+        outline: '3px solid brown'
+      });
+      Class.add(scroller, ui.other.scrollingWrapper.className);
 
-        const banner = SugarElement.fromHtml(`<div style="height: ${heights.banner}px; background-color: orange;" />`);
+      const banner = SugarElement.fromHtml(`<div style="height: ${heights.banner}px; background-color: orange;" />`);
 
-        const target = SugarElement.fromTag('textarea');
-        InsertAll.append(
-          scroller,
-          [
-            banner,
-            target,
-            SugarElement.fromHtml(
-              `<div style="height: 2000px; background-color: lime;" />`
-            )
-          ]
-        );
+      const target = SugarElement.fromTag('textarea');
+      InsertAll.append(
+        scroller,
+        [
+          banner,
+          target,
+          SugarElement.fromHtml(
+            `<div style="height: 2000px; background-color: lime;" />`
+          )
+        ]
+      );
 
-        Insert.append(SugarBody.body(), scroller);
+      Insert.append(SugarBody.body(), scroller);
 
-        return {
-          element: target,
-          teardown: () => {
-            Remove.remove(scroller);
-          }
-        };
+      return {
+        element: target,
+        teardown: () => {
+          Remove.remove(scroller);
+        }
       };
+    };
 
+    context('Single scroller', () => {
       const hook = TinyHooks.bddSetupFromElement<Editor>(
         {
           ...sharedSettings,
@@ -196,7 +210,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
           toolbar_sticky: true,
           height: heights.editor
         },
-        () => setupElement(),
+        () => setupSingleScrollerElement(),
         []
       );
 
@@ -234,7 +248,6 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
 
           // Close the menu
           TinyUiActions.clickOnMenu(editor, `${ui.editor.menuButton.selector}:contains("File")`);
-          await Waiter.pWait(1);
         };
 
         it('When scrolling the outer page', async () => {
@@ -349,7 +362,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
         });
       });
 
-      context.only('Testing contextual disappearance', () => {
+      context('Testing contextual disappearance', () => {
         const pRunTestWithAdjustment = async (
           editor: Editor,
           adjustments: {
@@ -364,7 +377,6 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
 
           // Trigger docking
           adjustments.toDock.action();
-          await Waiter.pWait(1000);
           await pWaitUntilDockedAtTop(header, adjustments.toDock.topValue);
           await pWaitUntilAppears(header);
 
@@ -375,7 +387,6 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
 
           // Scroll up again and check it reappears
           adjustments.toOnScreen();
-          await Waiter.pWait(1000);
           await pWaitUntilAppears(header);
         };
 
@@ -409,6 +420,108 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
             toOffscreen: () => scroller.dom.scrollTo(0, heights.banner + heights.editor + 100),
             toOnScreen: () => scroller.dom.scrollTo(0, heights.banner + heights.editor - 100)
           });
+        });
+      });
+
+    });
+
+    context('Single scroller and toolbar_location: bottom, but no sticky', () => {
+      const hook = TinyHooks.bddSetupFromElement<Editor>(
+        {
+          ...sharedSettings,
+          ui_of_tomorrow: true,
+          toolbar_sticky: false,
+          toolbar_location: 'bottom',
+          setup: (ed: Editor) => {
+            ed.addCommand('showTestDialog', (_ui, _value) => {
+              ed.windowManager.open(
+                {
+                  title: 'Inline dialog',
+                  body: {
+                    type: 'panel',
+                    items: [
+                      {
+                        type: 'input',
+                        name: 'alpha',
+                      }
+                    ]
+                  },
+                  buttons: [ ],
+                  initialData: {
+                    alpha: 'Go'
+                  }
+                },
+                {
+                  inline: 'toolbar'
+                }
+              );
+            });
+          },
+          height: heights.miniEditor
+        },
+        () => setupSingleScrollerElement(),
+        []
+      );
+
+      beforeEach(() => resetScrolls(hook.editor()));
+
+      context('toolbar dialog docking', () => {
+        const pRunTestWithAdjustment = async (
+          editor: Editor,
+          adjustments: {
+            toDock: { action: () => void; optTop: Optional<number> };
+            toUndock: () => void;
+          }): Promise<void> => {
+          editor.execCommand('showTestDialog');
+          const dialog = await TinyUiActions.pWaitForDialog(editor);
+
+          const elementWithFixed: SugarElement<HTMLElement> = Traverse.parent(dialog).getOrDie(
+            'Could not find parent of dialog'
+          ) as SugarElement<HTMLElement>;
+          // Trigger docking
+          adjustments.toDock.action();
+          await pWaitUntilDockedAtTop(elementWithFixed, adjustments.toDock.optTop);
+
+          adjustments.toUndock();
+          await pWaitUntilUndockedAbsolute(elementWithFixed);
+        };
+
+        it('When scrolling the outer page', async () => {
+          const editor = hook.editor();
+          // const header = getEditorUi(editor, ui.editor.stickyHeader);
+          const scroller = getOtherUi(editor, ui.other.scrollingWrapper);
+          const scrollerTop = scroller.dom.getBoundingClientRect().top;
+
+          await pRunTestWithAdjustment(
+            editor,
+            {
+              toDock: {
+                action: () => window.scrollTo(0, scrollerTop + 250),
+                optTop: Optional.some(0)
+              },
+              toUndock: () => window.scrollTo(0, scrollerTop - 100)
+            }
+          );
+
+        });
+
+        it('When scrolling the scroller', async () => {
+          const editor = hook.editor();
+          const scroller = getOtherUi(editor, ui.other.scrollingWrapper);
+
+          await pRunTestWithAdjustment(
+            editor,
+            {
+              toDock: {
+                action: () => scroller.dom.scrollTo(0, heights.banner + 50),
+                // Is an exact pixel amount here going to be tolerant enough? Or
+                // will this cause test flakes?
+                optTop: Optional.some(scroller.dom.getBoundingClientRect().top)
+              },
+              toUndock: () => scroller.dom.scrollTo(0, heights.banner - 200)
+            }
+          );
+
         });
       });
     });

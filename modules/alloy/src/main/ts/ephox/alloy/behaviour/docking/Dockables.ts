@@ -100,18 +100,10 @@ const isVisibleForModes = (modes: DockingMode[], box: Boxes.Bounds, viewport: Do
     }
   });
 
-// FIX: We should only consider the scroll top for absolutely position items, if their
-// offset parent is within the scroller. Not sure about this. Hmm.
-// Hmm. For some reason, when restoring, we couldn't consider scroll-top, but should when saving
-// if the scroller is the offset parent. But maybe, it's just a positioning decision when we look up
-// offset parent.
-const considerScrollTop = true;
-
 const getXYForRestoring = (pos: InitialDockingPosition, viewport: DockingViewport): SugarPosition => {
-  // TINY-9242: If there is a scrolling environment, then do stuff.
   const priorY = viewport.optScrollEnv.fold(
     Fun.constant(pos.bounds.y),
-    (scrollEnv) => scrollEnv.scrollElmTop + (pos.bounds.y - (considerScrollTop ? scrollEnv.currentScrollTop : 0))
+    (scrollEnv) => scrollEnv.scrollElmTop + (pos.bounds.y - scrollEnv.currentScrollTop)
   );
 
   return SugarPosition(pos.bounds.x, priorY);
@@ -120,12 +112,7 @@ const getXYForRestoring = (pos: InitialDockingPosition, viewport: DockingViewpor
 const getXYForSaving = (box: Boxes.Bounds, viewport: DockingViewport): SugarPosition => {
   const priorY = viewport.optScrollEnv.fold(
     Fun.constant(box.y),
-    (scrollEnv) => {
-      console.log('box.y', box.y);
-      console.log('currentScrollTop', scrollEnv.currentScrollTop);
-      console.log('scrollElmTop', scrollEnv.scrollElmTop);
-      return box.y + (considerScrollTop ? scrollEnv.currentScrollTop : 0) - scrollEnv.scrollElmTop;
-    }
+    (scrollEnv) => box.y + scrollEnv.currentScrollTop - scrollEnv.scrollElmTop
   );
 
   return SugarPosition(box.x, priorY);
@@ -150,9 +137,6 @@ const storePrior = (
   decision: DockToTopDecision | DockToBottomDecision
 ): void => {
   const xy = getXYForSaving(box, viewport);
-  console.log('element', elem.dom.cloneNode(true));
-  console.log('element.box', box.y);
-  console.log('Backing up', xy);
   const bounds = Boxes.bounds(
     xy.left,
     xy.top,
@@ -197,11 +181,21 @@ const revertToOriginal = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, st
       case 'absolute':
         const offsetParent = OffsetOrigin.getOffsetParent(elem).getOr(SugarBody.body());
         const offsetBox = Boxes.box(offsetParent);
-        // I don't really know why we want to consider the scrollTop. I have no idea. There must
-        // be a reason. A good reason!!!!
+        // Adding the scrollDelta here may not be the right solution. The basic problem is that the
+        // rest of the code isn't considering whether its absolute or not, and where the offset parent
+        // is. In the situation where the offset parent is *inside* the scrolling environment, then
+        // we don't need to consider the scroll, and that's what getXYForRestoring does ... it removes
+        // the scroll. We don't need to consider the scroll because the sink is already affected by the
+        // scroll. However, when the sink IS the scroller, its position is not moved by scrolling. But the
+        // positions of everything inside it needs to consider the scroll. So we add the scroll value.
+        //
+        // This might also be a bit naive. It's possible that we need to check that the offsetParent
+        // is THE scroller, not just that it has a scroll value. For example, if the offset parent
+        // was the body, and the body had a scroll, this might give unexpected results. That's somewhat
+        // countered by the fact that if the offset parent is outside the scroller, then you don't really
+        // have a scrolling environment any more, because the offset parent isn't going to be impacted
+        // at all by the scroller
         const scrollDelta = offsetParent.dom.scrollTop ?? 0;
-        console.log('offsetParent', offsetParent, 'scrollDelta', scrollDelta);
-        console.log('revert', { box, offsetBox, blah: position.bounds });
         return Optional.some({
           morph: 'absolute',
           positionCss: NuPositionCss(
@@ -344,8 +338,6 @@ const forceDockWith = (
   getDecision: (winBox: Boxes.Bounds, leftX: number, v: DockingViewport) => DockingDecision
 ): Optional<FixedMorph> => {
   const box = Boxes.box(elem);
-  console.log({ y: box.y });
-
   const winBox = Boxes.win();
   const leftX = getDockedLeftPosition({ win: winBox, box });
   const decision = getDecision(winBox, leftX, viewport);
