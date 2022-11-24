@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Improved
-- Direct invalid child nodes of list elements will be wrapped in list item elements. #TINY-4818
+- Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
 
 ## 6.3.0 - 2022-11-23
 

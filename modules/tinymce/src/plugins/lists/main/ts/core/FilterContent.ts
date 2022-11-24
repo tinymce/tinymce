@@ -3,7 +3,7 @@ import { Arr } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import AstNode from 'tinymce/core/api/html/Node';
 
-const isListItem = (node: AstNode) => node.name === 'li';
+const isTextNode = (node: AstNode) => node.type === 3;
 const isEmpty = (nodeBuffer: AstNode[]) => nodeBuffer.length === 0;
 
 const wrapInvalidChildren = (list: AstNode) => {
@@ -18,9 +18,9 @@ const wrapInvalidChildren = (list: AstNode) => {
   };
 
   const reducer = (buffer: AstNode[], node: AstNode): AstNode[] => {
-    if (!isListItem(node)) {
+    if (isTextNode(node)) {
       return [ ...buffer, node ];
-    } else if (!isEmpty(buffer) && isListItem(node)) {
+    } else if (!isEmpty(buffer) && !isTextNode(node)) {
       insertListItem(buffer, node);
       return [];
     } else {
