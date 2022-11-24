@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Waiter } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Class, Css, Insert, InsertAll, Remove, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -19,8 +19,6 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
     base_url: '/project/tinymce/js/tinymce'
   };
 
-  // look for .tox-editor-header
-
   const fromClass = (className: string): TestUi => ({
     className,
     selector: `.${className}`
@@ -29,6 +27,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
   const ui = {
     other: {
       scrollingWrapper: fromClass('scrolling-wrapper'),
+      outerScroller: fromClass('outer-scroller')
     },
     editor: {
       stickyHeader: fromClass('tox-editor-header'),
@@ -47,6 +46,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
   const heights = {
     banner: 200,
     scroller: 500,
+    outerScroller: 200,
     editor: 2000
   };
 
@@ -80,194 +80,307 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
   };
 
   context('Classic editor', () => {
-    const setupElement = () => {
-      const scroller = SugarElement.fromTag('div');
-      Css.set(scroller, 'overflow', 'auto');
-      Css.set(scroller, 'height', `${heights.scroller}px`);
-      Css.set(scroller, 'margin', '0em 2em 2000px 2em');
-      Css.set(scroller, 'outline', '3px solid brown');
-      Class.add(scroller, ui.other.scrollingWrapper.className);
-
-      const banner = SugarElement.fromHtml(`<div style="height: ${heights.banner}px; background-color: orange;" />`);
-
-      const target = SugarElement.fromTag('textarea');
-      InsertAll.append(
-        scroller,
-        [
-          banner,
-          target
-        ]
-      );
-
-      Insert.append(SugarBody.body(), scroller);
-
-      return {
-        element: target,
-        teardown: () => {
-          Remove.remove(scroller);
-        }
-      };
-    };
-
-    const hook = TinyHooks.bddSetupFromElement<Editor>(
-      {
-        ...sharedSettings,
-        ui_of_tomorrow: true,
-        toolbar_sticky: true,
-        height: heights.editor
-      },
-      () => setupElement(),
-      []
+    const pWaitUntilUndocked = (header: SugarElement<HTMLElement>): Promise<void> => Waiter.pTryUntil(
+      'Waiting for sticky toolbar to undock',
+      () => {
+        Assertions.assertStructure(
+          'Toolbar should undock',
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [ arr.has(ui.editor.stickyHeader.className) ],
+            styles: {
+              position: str.none()
+            }
+          })),
+          header
+        );
+      }
     );
 
-    beforeEach(() => resetScrolls(hook.editor()));
-
-    context('No disconnect between menubar and menu after scrolling', () => {
-      // This is the allowed gap between the bottom of the menubar and the top of the menu
-      const allowedGap = 10;
-
-      const pAssertMenuBelowMenubar = async (editor: Editor) => {
-        const menu = await TinyUiActions.pWaitForPopup(editor, ui.editor.menu.selector);
-
-        const menubar = await TinyUiActions.pWaitForUi(editor, ui.editor.menubar.selector);
-        const menubarBottom = menubar.dom.getBoundingClientRect().bottom;
-        const menuTop = menu.dom.getBoundingClientRect().top;
-        assertApprox(
-          'Menu and menubar should stay in sync',
-          menubarBottom,
-          menuTop,
-          allowedGap
+    const pWaitUntilDockedAtTop = (header: SugarElement<HTMLElement>, optTop: Optional<number>): Promise<void> => Waiter.pTryUntil(
+      'Waiting for sticky toolbar to dock',
+      () => {
+        Assertions.assertStructure(
+          'Toolbar should dock to the top',
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [ arr.has(ui.editor.stickyHeader.className) ],
+            styles: {
+              position: str.is('fixed'),
+              ...(optTop.map((top) => ({ top: str.is(`${top}px`) })).getOr({ }))
+            }
+          })),
+          header
         );
+      }
+    );
+
+    context('Single scroller', () => {
+      const setupElement = () => {
+        const scroller = SugarElement.fromTag('div');
+        Css.setAll(scroller, {
+          overflow: 'auto',
+          height: `${heights.scroller}px`,
+          margin: '0em 2em 2000px 2em',
+          outline: '3px solid brown'
+        });
+        Class.add(scroller, ui.other.scrollingWrapper.className);
+
+        const banner = SugarElement.fromHtml(`<div style="height: ${heights.banner}px; background-color: orange;" />`);
+
+        const target = SugarElement.fromTag('textarea');
+        InsertAll.append(
+          scroller,
+          [
+            banner,
+            target
+          ]
+        );
+
+        Insert.append(SugarBody.body(), scroller);
+
+        return {
+          element: target,
+          teardown: () => {
+            Remove.remove(scroller);
+          }
+        };
       };
 
-      const pRunTestWithAdjustment = async (editor: Editor, adjustScrollPosition: () => void): Promise<void> => {
-        const header = getEditorUi(editor, ui.editor.stickyHeader);
-        // It should not be fixed yet.
-        assert.isTrue(Css.getRaw(header, 'position').isNone(), 'We have not yet docked the sticky toolbar');
+      const hook = TinyHooks.bddSetupFromElement<Editor>(
+        {
+          ...sharedSettings,
+          ui_of_tomorrow: true,
+          toolbar_sticky: true,
+          height: heights.editor
+        },
+        () => setupElement(),
+        []
+      );
 
-        // Open the menu
-        TinyUiActions.clickOnMenu(editor, `${ui.editor.menuButton.selector}:contains("File")`);
-        await pAssertMenuBelowMenubar(editor);
+      beforeEach(() => resetScrolls(hook.editor()));
 
-        adjustScrollPosition();
-        await pAssertMenuBelowMenubar(editor);
+      context('No disconnect between menubar and menu after scrolling', () => {
+        // This is the allowed gap between the bottom of the menubar and the top of the menu
+        const allowedGap = 10;
 
-        // Close the menu
-        TinyUiActions.clickOnMenu(editor, `${ui.editor.menuButton.selector}:contains("File")`);
-        await Waiter.pWait(1);
-      };
+        const pAssertMenuBelowMenubar = async (editor: Editor) => {
+          const menu = await TinyUiActions.pWaitForPopup(editor, ui.editor.menu.selector);
 
-      it('When scrolling the outer page', async () => {
-        await pRunTestWithAdjustment(
-          hook.editor(),
-          () => {
-            window.scrollTo(0, 200);
-          }
-        );
+          const menubar = await TinyUiActions.pWaitForUi(editor, ui.editor.menubar.selector);
+          const menubarBottom = menubar.dom.getBoundingClientRect().bottom;
+          const menuTop = menu.dom.getBoundingClientRect().top;
+          assertApprox(
+            'Menu and menubar should stay in sync',
+            menubarBottom,
+            menuTop,
+            allowedGap
+          );
+        };
+
+        const pRunTestWithAdjustment = async (editor: Editor, adjustScrollPosition: () => void): Promise<void> => {
+          const header = getEditorUi(editor, ui.editor.stickyHeader);
+          // It should not be fixed yet.
+          assert.isTrue(Css.getRaw(header, 'position').isNone(), 'We have not yet docked the sticky toolbar');
+
+          // Open the menu
+          TinyUiActions.clickOnMenu(editor, `${ui.editor.menuButton.selector}:contains("File")`);
+          await pAssertMenuBelowMenubar(editor);
+
+          adjustScrollPosition();
+          await pAssertMenuBelowMenubar(editor);
+
+          // Close the menu
+          TinyUiActions.clickOnMenu(editor, `${ui.editor.menuButton.selector}:contains("File")`);
+          await Waiter.pWait(1);
+        };
+
+        it('When scrolling the outer page', async () => {
+          await pRunTestWithAdjustment(
+            hook.editor(),
+            () => {
+              window.scrollTo(0, 200);
+            }
+          );
+        });
+
+        it('When scrolling the scroller', async () => {
+          const editor = hook.editor();
+          const scroller = getOtherUi(editor, ui.other.scrollingWrapper);
+          await pRunTestWithAdjustment(
+            editor,
+            () => {
+              // Don't scroll so far that it docks.
+              scroller.dom.scrollTop = heights.banner - 50;
+            }
+          );
+        });
+
+        it('When scrolling the editor itself', async () => {
+          const editor = hook.editor();
+          const paragraphs = Arr.range(100, (x) => `<p>This is line #${x}</p>`).join('\n');
+          editor.setContent(paragraphs);
+          await pRunTestWithAdjustment(
+            editor,
+            () => {
+              editor.getWin().scrollTo(0, 500);
+            }
+          );
+        });
       });
 
-      it('When scrolling the scroller', async () => {
-        const editor = hook.editor();
-        const scroller = getOtherUi(editor, ui.other.scrollingWrapper);
-        await pRunTestWithAdjustment(
-          editor,
-          () => {
-            // Don't scroll so far that it docks.
-            scroller.dom.scrollTop = heights.banner - 50;
-          }
-        );
-      });
+      context('Testing stickiness', () => {
+        it('When scrolling the outer page', async () => {
+          const editor = hook.editor();
+          const header = getEditorUi(editor, ui.editor.stickyHeader);
+          const headerTop = header.dom.getBoundingClientRect().top;
+          window.scrollTo(0, headerTop - 10);
 
-      it('When scrolling the editor itself', async () => {
-        const editor = hook.editor();
-        const paragraphs = Arr.range(100, (x) => `<p>This is line #${x}</p>`).join('\n');
-        editor.setContent(paragraphs);
-        await pRunTestWithAdjustment(
-          editor,
-          () => {
-            editor.getWin().scrollTo(0, 500);
-          }
-        );
+          // An amount of chosen that will trigger docking.
+          const scrollPastHeaderAmount = 30;
+
+          // It should not be docked yet.
+          assert.isTrue(Css.getRaw(header, 'position').isNone(), 'We have not yet docked the sticky toolbar');
+
+          // Scroll a bit further, and it should dock to top: 0px.
+          window.scrollTo(0, headerTop + scrollPastHeaderAmount);
+          await pWaitUntilDockedAtTop(header, Optional.some(0));
+
+          // Scroll back a bit and watch it undock.
+          window.scrollTo(0, headerTop - scrollPastHeaderAmount);
+          await pWaitUntilUndocked(header);
+          assertApprox(
+            `Toolbar should be about ${scrollPastHeaderAmount} pixels from the top`,
+            header.dom.getBoundingClientRect().top,
+            scrollPastHeaderAmount,
+            // Arbitrary margin of error. Reduce as permitted.
+            4
+          );
+        });
+
+        it('When scrolling the scroller', async () => {
+          // Remember, that the editor is about 200px down the scroller.
+          const editor = hook.editor();
+          const header = getEditorUi(editor, ui.editor.stickyHeader);
+          const scroller = getOtherUi(editor, ui.other.scrollingWrapper);
+
+          scroller.dom.scrollTo(0, heights.banner - 10);
+          // It should not be docked yet.
+          await pWaitUntilUndocked(header);
+
+          // Now scroll further, and it should dock
+          const scrollerTop = scroller.dom.getBoundingClientRect().top;
+          // 22 was chosen, because it is far enough down the header that it's obvious that it's been
+          // cut-off if docking isn't working (visually).
+          scroller.dom.scrollTo(0, heights.banner + 22);
+          await pWaitUntilDockedAtTop(header, Optional.none());
+
+          assertApprox(
+            'Top position should be pretty much at scroller top position',
+            header.dom.getBoundingClientRect().top,
+            scrollerTop,
+            // Arbitrary margin of error. Reduce as permitted
+            4
+          );
+
+          // Now scroll back a bit.
+          scroller.dom.scrollTo(0, heights.banner - 5);
+          await pWaitUntilUndocked(header);
+        });
+
+        it('When combining scrolling the outer page and the scroller', async () => {
+          const editor = hook.editor();
+          const header = getEditorUi(editor, ui.editor.stickyHeader);
+          const scroller = getOtherUi(editor, ui.other.scrollingWrapper);
+
+          // We will scroll the scroller just before it would dock, and then scroll the window
+          // afterwards
+          scroller.dom.scrollTo(0, heights.banner - 10);
+          await pWaitUntilUndocked(header);
+
+          // Now, scroll the window down to 30 pixels after the scroller top
+          window.scrollTo(0, scroller.dom.getBoundingClientRect().top + 30);
+          await pWaitUntilDockedAtTop(header, Optional.some(0));
+
+          scroller.dom.scrollTo(0, heights.banner - 50);
+          await pWaitUntilUndocked(header);
+        });
       });
     });
 
-    context('Testing stickiness', () => {
-      const pWaitUntilUndocked = (header: SugarElement<HTMLElement>): Promise<void> => Waiter.pTryUntil(
-        'Waiting for sticky toolbar to undock',
-        () => {
-          Assertions.assertStructure(
-            'Toolbar should undock',
-            ApproxStructure.build((s, str, arr) => s.element('div', {
-              classes: [ arr.has(ui.editor.stickyHeader.className) ],
-              styles: {
-                position: str.none()
-              }
-            })),
-            header
-          );
-        }
-      );
+    context('Nested scrollers', () => {
+      const setupElement = () => {
+        const scroller = SugarElement.fromTag('div');
+        Css.setAll(scroller, {
+          overflow: 'auto',
+          height: `${heights.scroller}px`,
+          margin: '0em 2em 2000px 2em',
+          outline: '3px solid brown'
+        });
+        Class.add(scroller, ui.other.scrollingWrapper.className);
 
-      const pWaitUntilDockedAtTop = (header: SugarElement<HTMLElement>, optTop: Optional<number>): Promise<void> => Waiter.pTryUntil(
-        'Waiting for sticky toolbar to dock',
-        () => {
-          Assertions.assertStructure(
-            'Toolbar should dock to the top',
-            ApproxStructure.build((s, str, arr) => s.element('div', {
-              classes: [ arr.has(ui.editor.stickyHeader.className) ],
-              styles: {
-                position: str.is('fixed'),
-                ...(optTop.map((top) => ({ top: str.is(`${top}px`) })).getOr({ }))
-              }
-            })),
-            header
-          );
-        }
-      );
+        const banner = SugarElement.fromHtml(`<div style="height: ${heights.banner}px; background-color: orange;" />`);
 
-      it('When scrolling the outer page', async () => {
-        const editor = hook.editor();
-        const header = getEditorUi(editor, ui.editor.stickyHeader);
-        const headerTop = header.dom.getBoundingClientRect().top;
-        window.scrollTo(0, headerTop - 10);
-
-        // An amount of chosen that will trigger docking.
-        const scrollPastHeaderAmount = 30;
-
-        // It should not be docked yet.
-        assert.isTrue(Css.getRaw(header, 'position').isNone(), 'We have not yet docked the sticky toolbar');
-
-        // Scroll a bit further, and it should dock to top: 0px.
-        window.scrollTo(0, headerTop + scrollPastHeaderAmount);
-        await pWaitUntilDockedAtTop(header, Optional.some(0));
-
-        // Scroll back a bit and watch it undock.
-        window.scrollTo(0, headerTop - scrollPastHeaderAmount);
-        await pWaitUntilUndocked(header);
-        assertApprox(
-          `Toolbar should be about ${scrollPastHeaderAmount} pixels from the top`,
-          header.dom.getBoundingClientRect().top,
-          scrollPastHeaderAmount,
-          // Arbitrary margin of error. Reduce as permitted.
-          4
+        const target = SugarElement.fromTag('textarea');
+        InsertAll.append(
+          scroller,
+          [
+            banner,
+            target
+          ]
         );
-      });
 
-      it('When scrolling the scroller', async () => {
+        const outerScroller = SugarElement.fromTag('div');
+        Css.setAll(outerScroller, {
+          'overflow': 'auto',
+          'height': `${heights.outerScroller}px`,
+          'padding': '0em 2em 0em 2em',
+          'margin-bottom': '2000px',
+          'background-color': 'darkgreen'
+        });
+        Class.add(outerScroller, ui.other.outerScroller.className);
+
+        InsertAll.append(outerScroller, [
+          SugarElement.fromHtml(`<div style="height: ${heights.banner}px; background-color: pink;" />`),
+          scroller
+        ]);
+        Insert.append(SugarBody.body(), outerScroller);
+
+        return {
+          element: target,
+          teardown: () => {
+            Remove.remove(outerScroller);
+          }
+        };
+      };
+
+      const hook = TinyHooks.bddSetupFromElement<Editor>(
+        {
+          ...sharedSettings,
+          ui_of_tomorrow: true,
+          toolbar_sticky: true,
+          height: heights.editor
+        },
+        () => setupElement(),
+        []
+      );
+
+      beforeEach(() => resetScrolls(hook.editor()));
+
+      it('When scrolling the outer scroller (contains another scroller)', async () => {
         // Remember, that the editor is about 200px down the scroller.
         const editor = hook.editor();
         const header = getEditorUi(editor, ui.editor.stickyHeader);
-        const scroller = getOtherUi(editor, ui.other.scrollingWrapper);
+        const outerScroller = getOtherUi(editor, ui.other.outerScroller);
 
-        scroller.dom.scrollTo(0, heights.banner - 10);
+        // There are banners in both scrollers, so we use * 2 to scroll towards the menubar
+        outerScroller.dom.scrollTo(0, heights.banner * 2 - 10);
         // It should not be docked yet.
         await pWaitUntilUndocked(header);
 
         // Now scroll further, and it should dock
-        const scrollerTop = scroller.dom.getBoundingClientRect().top;
+        const scrollerTop = outerScroller.dom.getBoundingClientRect().top;
         // 22 was chosen, because it is far enough down the header that it's obvious that it's been
         // cut-off if docking isn't working (visually).
-        scroller.dom.scrollTo(0, heights.banner + 22);
+        outerScroller.dom.scrollTo(0, heights.banner * 2 + 22);
         await pWaitUntilDockedAtTop(header, Optional.none());
 
         assertApprox(
@@ -278,30 +391,11 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
           4
         );
 
-        // Now scroll back a bit.
-        scroller.dom.scrollTo(0, heights.banner - 5);
-        await pWaitUntilUndocked(header);
-      });
-
-      it('When combining scrolling the outer page and the scroller', async () => {
-        const editor = hook.editor();
-        const header = getEditorUi(editor, ui.editor.stickyHeader);
-        const scroller = getOtherUi(editor, ui.other.scrollingWrapper);
-
-        // We will scroll the scroller just before it would dock, and then scroll the window
-        // afterwards
-        scroller.dom.scrollTo(0, heights.banner - 10);
-        await pWaitUntilUndocked(header);
-
-        // Now, scroll the window down to 30 pixels after the scroller top
-        window.scrollTo(0, scroller.dom.getBoundingClientRect().top + 30);
-        await pWaitUntilDockedAtTop(header, Optional.some(0));
-
-        scroller.dom.scrollTo(0, heights.banner - 50);
+        // Now scroll back a bit until it undocks
+        outerScroller.dom.scrollTo(0, heights.banner * 2 - 5);
         await pWaitUntilUndocked(header);
       });
     });
   });
 
-  context('Nested stuff', () => Fun.noop);
 });

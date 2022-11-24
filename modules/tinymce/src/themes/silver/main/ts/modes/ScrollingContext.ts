@@ -43,6 +43,8 @@ export const detect = (poupSinkElem: SugarElement<HTMLElement>): Optional<Scroll
 // viewports.
 export const getBoundsFrom = (sc: ScrollingContext): Bounds => {
   const scrollableBoxes = [
+    // sc.element is the main scroller, others are *additional* scrollers above that
+    // we need to combine all of them to constrain the bounds
     ...Arr.map(sc.others, Boxes.box),
     Boxes.win()
   ];
