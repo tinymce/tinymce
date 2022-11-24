@@ -44,6 +44,12 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
     }
   };
 
+  const heights = {
+    banner: 200,
+    scroller: 500,
+    editor: 2000
+  };
+
   const getOtherUi = (editor: Editor, testUi: TestUi) => {
     return SelectorFind.ancestor<HTMLElement>(TinyDom.container(editor), testUi.selector).getOrDie(
       `Could not find selector: ${testUi.selector}`
@@ -63,16 +69,26 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
     editor.getWin().scrollTo(0, 0);
   };
 
+  const assertApprox = (label: string, value1: number, value2: number, marginOfError: number): void => {
+    assert.isTrue(
+      Math.abs(value1 - value2) <= marginOfError,
+      `${label}.
+        Value1: ${value1}\n
+        Value2: ${value2}\n
+        Error Margin: ${marginOfError}`
+    );
+  };
+
   context('Classic editor', () => {
     const setupElement = () => {
       const scroller = SugarElement.fromTag('div');
       Css.set(scroller, 'overflow', 'auto');
-      Css.set(scroller, 'height', '500px');
+      Css.set(scroller, 'height', `${heights.scroller}px`);
       Css.set(scroller, 'margin', '0em 2em 2000px 2em');
       Css.set(scroller, 'outline', '3px solid brown');
       Class.add(scroller, ui.other.scrollingWrapper.className);
 
-      const banner = SugarElement.fromHtml('<div style="height: 200px; background-color: orange;" />');
+      const banner = SugarElement.fromHtml(`<div style="height: ${heights.banner}px; background-color: orange;" />`);
 
       const target = SugarElement.fromTag('textarea');
       InsertAll.append(
@@ -98,7 +114,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
         ...sharedSettings,
         ui_of_tomorrow: true,
         toolbar_sticky: true,
-        height: 2000
+        height: heights.editor
       },
       () => setupElement(),
       []
@@ -107,16 +123,20 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
     beforeEach(() => resetScrolls(hook.editor()));
 
     context('No disconnect between menubar and menu after scrolling', () => {
-      // We can compare their positions.
+      // This is the allowed gap between the bottom of the menubar and the top of the menu
+      const allowedGap = 10;
+
       const pAssertMenuBelowMenubar = async (editor: Editor) => {
         const menu = await TinyUiActions.pWaitForPopup(editor, ui.editor.menu.selector);
 
         const menubar = await TinyUiActions.pWaitForUi(editor, ui.editor.menubar.selector);
         const menubarBottom = menubar.dom.getBoundingClientRect().bottom;
         const menuTop = menu.dom.getBoundingClientRect().top;
-        assert.isTrue(
-          Math.abs(menubarBottom - menuTop) < 10,
-          'Menu and menubar should stay in sync'
+        assertApprox(
+          'Menu and menubar should stay in sync',
+          menubarBottom,
+          menuTop,
+          allowedGap
         );
       };
 
@@ -152,7 +172,8 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
         await pRunTestWithAdjustment(
           editor,
           () => {
-            scroller.dom.scrollTop = 150;
+            // Don't scroll so far that it docks.
+            scroller.dom.scrollTop = heights.banner - 50;
           }
         );
       });
@@ -210,20 +231,25 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
         const headerTop = header.dom.getBoundingClientRect().top;
         window.scrollTo(0, headerTop - 10);
 
+        // An amount of chosen that will trigger docking.
+        const scrollPastHeaderAmount = 30;
+
         // It should not be docked yet.
         assert.isTrue(Css.getRaw(header, 'position').isNone(), 'We have not yet docked the sticky toolbar');
 
         // Scroll a bit further, and it should dock to top: 0px.
-        await Waiter.pWait(1000);
-        window.scrollTo(0, headerTop + 30);
+        window.scrollTo(0, headerTop + scrollPastHeaderAmount);
         await pWaitUntilDockedAtTop(header, Optional.some(0));
 
         // Scroll back a bit and watch it undock.
-        window.scrollTo(0, headerTop - 30);
+        window.scrollTo(0, headerTop - scrollPastHeaderAmount);
         await pWaitUntilUndocked(header);
-        assert.isTrue(
-          Math.abs(header.dom.getBoundingClientRect().top - 30) < 4,
-          'Toolbar should be about 30 pixels from the top'
+        assertApprox(
+          `Toolbar should be about ${scrollPastHeaderAmount} pixels from the top`,
+          header.dom.getBoundingClientRect().top,
+          scrollPastHeaderAmount,
+          // Arbitrary margin of error. Reduce as permitted.
+          4
         );
       });
 
@@ -233,7 +259,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
         const header = getEditorUi(editor, ui.editor.stickyHeader);
         const scroller = getOtherUi(editor, ui.other.scrollingWrapper);
 
-        scroller.dom.scrollTo(0, 200 - 10);
+        scroller.dom.scrollTo(0, heights.banner - 10);
         // It should not be docked yet.
         await pWaitUntilUndocked(header);
 
@@ -241,16 +267,19 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
         const scrollerTop = scroller.dom.getBoundingClientRect().top;
         // 22 was chosen, because it is far enough down the header that it's obvious that it's been
         // cut-off if docking isn't working (visually).
-        scroller.dom.scrollTo(0, 200 + 22);
+        scroller.dom.scrollTo(0, heights.banner + 22);
         await pWaitUntilDockedAtTop(header, Optional.none());
 
-        assert.isTrue(
-          Math.abs(header.dom.getBoundingClientRect().top - scrollerTop) < 5,
-          'Top position should be pretty much at scroller top position'
+        assertApprox(
+          'Top position should be pretty much at scroller top position',
+          header.dom.getBoundingClientRect().top,
+          scrollerTop,
+          // Arbitrary margin of error. Reduce as permitted
+          4
         );
 
         // Now scroll back a bit.
-        scroller.dom.scrollTo(0, 200 - 5);
+        scroller.dom.scrollTo(0, heights.banner - 5);
         await pWaitUntilUndocked(header);
       });
 
@@ -261,14 +290,14 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
 
         // We will scroll the scroller just before it would dock, and then scroll the window
         // afterwards
-        scroller.dom.scrollTo(0, 200 - 10);
+        scroller.dom.scrollTo(0, heights.banner - 10);
         await pWaitUntilUndocked(header);
 
         // Now, scroll the window down to 30 pixels after the scroller top
         window.scrollTo(0, scroller.dom.getBoundingClientRect().top + 30);
         await pWaitUntilDockedAtTop(header, Optional.some(0));
 
-        scroller.dom.scrollTo(0, 200 - 50);
+        scroller.dom.scrollTo(0, heights.banner - 50);
         await pWaitUntilUndocked(header);
       });
     });
