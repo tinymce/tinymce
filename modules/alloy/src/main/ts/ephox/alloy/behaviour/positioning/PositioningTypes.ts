@@ -38,13 +38,15 @@ export interface PositioningBehaviour extends Behaviour.AlloyBehaviour<Positioni
   readonly reset: (component: AlloyComponent, placee: AlloyComponent) => void;
 }
 
+export type PositioningType = 'fixed' | 'relative' | 'absolute';
+
 export interface PositioningConfigSpec extends Behaviour.BehaviourConfigSpec {
-  readonly useFixed?: () => boolean;
+  readonly usePositioningType?: () => PositioningType;
   readonly getBounds?: () => Bounds;
 }
 
 export interface PositioningConfig extends Behaviour.BehaviourConfigDetail {
-  readonly useFixed: () => boolean;
+  readonly usePositioningType: () => PositioningType;
   readonly getBounds: Optional<() => Bounds>;
 }
 

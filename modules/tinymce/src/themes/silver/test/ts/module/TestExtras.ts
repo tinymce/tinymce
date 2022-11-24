@@ -35,7 +35,7 @@ export const TestExtras = (): TestExtras => {
     dom: DomFactory.fromHtml('<div class="mce-silver-sink test-dialogs-sink"></div>'),
     behaviours: Behaviour.derive([
       Positioning.config({
-        useFixed: Fun.always
+        usePositioningType: Fun.constant('fixed')
       })
     ])
   });
@@ -44,7 +44,7 @@ export const TestExtras = (): TestExtras => {
     dom: DomFactory.fromHtml('<div class="mce-silver-sink test-popups-sink"></div>'),
     behaviours: Behaviour.derive([
       Positioning.config({
-        useFixed: Fun.always
+        usePositioningType: Fun.constant('fixed')
       })
     ])
   });

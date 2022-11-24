@@ -63,7 +63,9 @@ const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningC
     // We need to calculate the origin (esp. the bounding client rect) *after* we have done
     // all the preprocessing of the component and placee. Otherwise, the relative positions
     // (bottom and right) will be using the wrong dimensions
-    const origin = posConfig.useFixed() ? getFixedOrigin() : getRelativeOrigin(component);
+    const origin = posConfig.usePositioningType() === 'fixed'
+      ? getFixedOrigin()
+      : getRelativeOrigin(component);
 
     const placer = anchorage.placement;
 
@@ -96,7 +98,7 @@ const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningC
 };
 
 const getMode = (component: AlloyComponent, pConfig: PositioningConfig, _pState: PositioningState): string =>
-  pConfig.useFixed() ? 'fixed' : 'absolute';
+  pConfig.usePositioningType() === 'fixed' ? 'fixed' : 'absolute';
 
 const reset = (component: AlloyComponent, pConfig: PositioningConfig, posState: PositioningState, placee: AlloyComponent): void => {
   const element = placee.element;

@@ -26,7 +26,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
     Container.sketch({
       containerBehaviours: Behaviour.derive([
         Positioning.config({
-          useFixed: Fun.always
+          usePositioningType: Fun.constant('fixed')
         })
       ])
     })

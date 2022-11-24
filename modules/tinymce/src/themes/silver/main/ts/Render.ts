@@ -279,7 +279,9 @@ const setup = (editor: Editor): RenderInfo => {
       },
       behaviours: Behaviour.derive([
         Positioning.config({
-          useFixed: () => header.isDocked(lazyHeader)
+          // TINY-9148: Using absolute positioning here because Safari
+          // tries to focus the sink after it's content is changed with relative positioning.
+          usePositioningType: () => header.isDocked(lazyHeader) ? 'fixed' :  'absolute'
         })
       ])
     };

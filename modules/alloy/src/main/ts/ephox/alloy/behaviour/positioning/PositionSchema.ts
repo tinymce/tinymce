@@ -9,7 +9,7 @@ const TransitionSchema = [
 ];
 
 export const PositionSchema = [
-  FieldSchema.defaulted('useFixed', Fun.never),
+  FieldSchema.defaulted('usePositioningType', Fun.constant('relative')),
   FieldSchema.option('getBounds')
 ];
 

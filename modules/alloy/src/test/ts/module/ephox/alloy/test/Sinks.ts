@@ -24,7 +24,7 @@ const fixedSink = (): AlloyComponent => GuiFactory.build(
     uid: 'fixed-sink',
     containerBehaviours: Behaviour.derive([
       Positioning.config({
-        useFixed: Fun.always
+        usePositioningType: Fun.constant('fixed')
       })
     ])
   })
@@ -41,7 +41,7 @@ const relativeSink = (): AlloyComponent => GuiFactory.build(
     uid: 'relative-sink',
     containerBehaviours: Behaviour.derive([
       Positioning.config({
-        useFixed: Fun.always
+        usePositioningType: Fun.constant('fixed')
       })
     ])
   })

@@ -16,7 +16,7 @@ const partType = Fun.constant(PartType.optional({
     behaviours: Behaviour.derive([
       Positioning.config({
         // TODO: Make an internal sink also be able to be used with relative layouts
-        useFixed: Fun.always
+        usePositioningType: Fun.constant('fixed')
       })
     ]),
     events: AlloyEvents.derive([

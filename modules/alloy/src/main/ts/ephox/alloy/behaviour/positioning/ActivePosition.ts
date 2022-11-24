@@ -5,7 +5,11 @@ import { PositioningConfig } from './PositioningTypes';
 const exhibit = (base: DomDefinitionDetail, posConfig: PositioningConfig): DomModification.DomModification =>
   DomModification.nu({
     classes: [ ],
-    styles: posConfig.useFixed() ? { } : { position: 'absolute', width: '100%' }
+    styles: {
+      fixed: { },
+      relative: { position: 'relative' },
+      absolute: { position: 'absolute', width: '100%' }
+    }[posConfig.usePositioningType()]
   });
 
 export {
