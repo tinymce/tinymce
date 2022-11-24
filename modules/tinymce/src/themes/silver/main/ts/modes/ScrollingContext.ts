@@ -24,31 +24,31 @@ export const isScroller = (elem: SugarElement<Node> | any): boolean => {
 // NOTE: Calculating the list of scrolling ancestors each time this function is called might
 // be unnecessary. It will depend on its usage.
 export const detect = (poupSinkElem: SugarElement<HTMLElement>): Optional<ScrollingContext> => {
-  // We don't want to include popuSinkElem in the list of scrollers, so we just use "ancestors"
+  // We don't want to include popupSinkElem in the list of scrollers, so we just use "ancestors"
   const scrollers: SugarElement<HTMLElement>[] = PredicateFilter.ancestors(poupSinkElem, isScroller) as SugarElement<HTMLElement>[];
 
-  const closestScroller = Arr.head(scrollers);
-  return closestScroller.map(
-    (element) => ({
-      element,
-      // A list of all scrolling elements above the nearest scroller,
-      // ordered from closest to popup -> closest to top of document
-      others: scrollers.slice(1)
-    })
-  );
+  return Arr.head(scrollers)
+    .map(
+      (element) => ({
+        element,
+        // A list of all scrolling elements above the nearest scroller,
+        // ordered from closest to popup -> closest to top of document
+        others: scrollers.slice(1)
+      })
+    );
 };
 
 // Using all the scrolling viewports in the ancestry, limit the absolute
 // coordinates of window so that the bounds are limited by all the scrolling
 // viewports.
 export const getBoundsFrom = (sc: ScrollingContext): Bounds => {
-  const stencils = [
+  const scrollableBoxes = [
     ...Arr.map(sc.others, Boxes.box),
     Boxes.win()
   ];
-  return Arr.foldl(
-    stencils,
-    (acc, stencil) => Boxes.constrain(acc, stencil),
-    Boxes.box(sc.element)
+
+  return Boxes.constrainByMany(
+    Boxes.box(sc.element),
+    scrollableBoxes
   );
 };
