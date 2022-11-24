@@ -31,6 +31,9 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
     },
     editor: {
       stickyHeader: fromClass('tox-editor-header'),
+      stickyHeaderVisible: fromClass('tox-editor-dock-fadein'),
+      stickyHeaderInvisible: fromClass('tox-editor-dock-fadeout'),
+      stickyHeaderTransitioning: fromClass('tox-editor-dock-transition'),
       menuButton: fromClass('tox-mbtn'),
       menu: {
         className: 'tox-menu',
@@ -113,6 +116,44 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
       }
     );
 
+    const pWaitUntilAppears = (header: SugarElement<HTMLElement>): Promise<void> => Waiter.pTryUntil(
+      'Waiting for sticky toolbar to appear',
+      () => {
+        Assertions.assertStructure(
+          'Sticky toolbar should appear',
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [
+              // The first time it appears, it doesn't get fade-in, so we just look for non-fadeout
+              // for now.
+              arr.not(ui.editor.stickyHeaderInvisible.className),
+              // BUG: In classic mode, the transition class isn't going away because
+              // there is another transition style clobbering it.
+              // arr.not(ui.editor.stickyHeaderTransitioning.className)
+            ]
+          })),
+          header
+        );
+      }
+    );
+
+    const pWaitUntilDisappears = (header: SugarElement<HTMLElement>): Promise<void> => Waiter.pTryUntil(
+      'Waiting for sticky toolbar to disappear',
+      () => {
+        Assertions.assertStructure(
+          'Sticky toolbar should disappear',
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [
+              arr.has(ui.editor.stickyHeaderInvisible.className),
+              // BUG: In classic mode, the transition class isn't going away because
+              // there is another transition style clobbering it.
+              // arr.not(ui.editor.stickyHeaderTransitioning.className)
+            ]
+          })),
+          header
+        );
+      }
+    );
+
     context('Single scroller', () => {
       const setupElement = () => {
         const scroller = SugarElement.fromTag('div');
@@ -131,7 +172,10 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
           scroller,
           [
             banner,
-            target
+            target,
+            SugarElement.fromHtml(
+              `<div style="height: 2000px; background-color: lime;" />`
+            )
           ]
         );
 
@@ -302,6 +346,69 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
 
           scroller.dom.scrollTo(0, heights.banner - 50);
           await pWaitUntilUndocked(header);
+        });
+      });
+
+      context.only('Testing contextual disappearance', () => {
+        const pRunTestWithAdjustment = async (
+          editor: Editor,
+          adjustments: {
+            toDock: {
+              action: () => void;
+              topValue: Optional<number>;
+            };
+            toOffscreen: () => void;
+            toOnScreen: () => void;
+          }): Promise<void> => {
+          const header = getEditorUi(editor, ui.editor.stickyHeader);
+
+          // Trigger docking
+          adjustments.toDock.action();
+          await Waiter.pWait(1000);
+          await pWaitUntilDockedAtTop(header, adjustments.toDock.topValue);
+          await pWaitUntilAppears(header);
+
+          // Scroll much further down and check that it disappears
+          adjustments.toOffscreen();
+          await Waiter.pWait(1000);
+          await pWaitUntilDisappears(header);
+
+          // Scroll up again and check it reappears
+          adjustments.toOnScreen();
+          await Waiter.pWait(1000);
+          await pWaitUntilAppears(header);
+        };
+
+        it('When scrolling the outer page', async () => {
+          const editor = hook.editor();
+          const header = getEditorUi(editor, ui.editor.stickyHeader);
+          const scroller = getOtherUi(editor, ui.other.scrollingWrapper);
+          const headerTop = header.dom.getBoundingClientRect().top;
+          const scrollerBottom = scroller.dom.getBoundingClientRect().bottom;
+
+          await pRunTestWithAdjustment(editor, {
+            toDock: {
+              action: () => window.scrollTo(0, headerTop + 30),
+              topValue: Optional.some(0)
+            },
+            toOffscreen: () => window.scrollTo(0, scrollerBottom + 100),
+            toOnScreen: () => window.scrollTo(0, scrollerBottom - 100)
+          });
+        });
+
+        it('When scrolling the scroller', async () => {
+          const editor = hook.editor();
+          const scroller = getOtherUi(editor, ui.other.scrollingWrapper);
+          const scrollerTop = scroller.dom.getBoundingClientRect().top;
+
+          await pRunTestWithAdjustment(editor, {
+            toDock: {
+              action: () => scroller.dom.scrollTo(0, heights.banner + 100),
+              topValue: Optional.some(scrollerTop)
+            },
+            toOffscreen: () => scroller.dom.scrollTo(0, heights.banner + heights.editor + 100),
+            toOnScreen: () => scroller.dom.scrollTo(0, heights.banner + heights.editor - 100)
+          });
         });
       });
     });

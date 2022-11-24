@@ -210,12 +210,35 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
         lazyContext: (comp) => {
           const headerHeight = Height.getOuter(comp.element);
           const container = editor.inline ? editor.getContentAreaContainer() : editor.getContainer();
+
           return Optional.from(container).map((c) => {
             const box = Boxes.box(SugarElement.fromDom(c));
-            // Force the header to hide before it overflows outside the container
-            const boxHeight = box.height - headerHeight;
-            const topBound = box.y + (isDockedMode(comp, 'top') ? 0 : headerHeight);
-            return Boxes.bounds(box.x, topBound, box.width, boxHeight);
+            const optScrollingContext = ScrollingContext.detect(comp.element);
+            return optScrollingContext.fold(
+              () => {
+                // Force the header to hide before it overflows outside the container
+                const boxHeight = box.height - headerHeight;
+                const topBound = box.y + (isDockedMode(comp, 'top') ? 0 : headerHeight);
+                return Boxes.bounds(box.x, topBound, box.width, boxHeight);
+              },
+              (scrollEnv) => {
+                // It might be docked at the window, or the scroller. Simplify for now.
+                const constrainedBounds = Boxes.constrain(
+                  box,
+                  ScrollingContext.getBoundsFrom(scrollEnv)
+                );
+
+                return Boxes.bounds(
+                  constrainedBounds.x,
+                  // ASSUMPTION: The constrainedBounds removes the need for us to set this to 0px
+                  // for docked mode. Also, docking in a scrolling environment will often be
+                  // at the scroller top, not the window top
+                  constrainedBounds.y,
+                  constrainedBounds.width,
+                  constrainedBounds.height - headerHeight
+                );
+              }
+            );
           });
         },
         onShow: () => {
