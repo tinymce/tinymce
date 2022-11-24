@@ -2,6 +2,7 @@ import * as Boxes from '../alien/Boxes';
 import * as EventRoot from '../alien/EventRoot';
 import * as AriaVoice from '../aria/AriaVoice';
 import { BehaviourState } from '../behaviour/common/BehaviourState';
+import * as DockingTypes from '../behaviour/docking/DockingTypes';
 import * as Fields from '../data/Fields';
 import * as Debugging from '../debugging/Debugging';
 import * as FunctionAnnotator from '../debugging/FunctionAnnotator';
@@ -270,6 +271,7 @@ export {
   HotspotAnchorSpec,
   SubmenuAnchorSpec,
   DraggingTypes,
+  DockingTypes,
   Layouts,
 
   FocusInsideModes,

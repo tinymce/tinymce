@@ -1,10 +1,12 @@
 import { Attachment, Channels, Gui, SystemEvents } from '@ephox/alloy';
 import { Arr } from '@ephox/katamari';
-import { DomEvent, EventArgs, SugarDocument, SugarElement } from '@ephox/sugar';
+import { Compare, DomEvent, EventArgs, SugarDocument, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { AfterProgressStateEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+
+import * as ScrollingContext from './modes/ScrollingContext';
 
 const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMotherships: Gui.GuiSystem[]): void => {
   const broadcastEvent = (name: string, evt: EventArgs) => {
@@ -60,6 +62,27 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMotherships: Gui.Gui
     broadcastEvent(SystemEvents.windowResize(), DomEvent.fromRawEvent(evt));
   };
 
+  const onElementScroll = DomEvent.capture(doc, 'scroll', (evt) => {
+    window.requestAnimationFrame(() => {
+      const c = editor.getContainer();
+      // Because this can fire before the editor is rendered, we need to stop that from happening.
+      // Some tests can create this situation, and then we get a Node name null or defined error.
+      if (c !== undefined && c !== null) {
+        // eslint-disable-next-line no-console
+        console.log('dispatching element scroll');
+        const optScrollingContext = ScrollingContext.detect(mothership.element);
+
+        const scrollers = optScrollingContext.map((sc) => [ sc.element, ...sc.others ]).getOr([ ]);
+        if (Arr.exists(scrollers, (s) => Compare.eq(s, evt.target))) {
+
+          editor.dispatch('ElementScroll', { target: evt.target });
+          broadcastEvent(SystemEvents.externalElementScroll(), evt);
+        }
+      }
+    });
+
+  });
+
   const onEditorResize = () => broadcastOn(Channels.repositionPopups(), {});
   const onEditorProgress = (evt: EditorEvent<AfterProgressStateEvent>) => {
     if (evt.state) {
@@ -101,6 +124,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMotherships: Gui.Gui
     onTouchmove.unbind();
     onTouchend.unbind();
     onMouseup.unbind();
+    onElementScroll.unbind();
   });
 
   editor.on('detach', () => {
