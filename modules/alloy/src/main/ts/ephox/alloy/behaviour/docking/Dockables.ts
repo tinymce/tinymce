@@ -100,7 +100,7 @@ const isVisibleForModes = (modes: DockingMode[], box: Boxes.Bounds, viewport: Do
     }
   });
 
-const getPrior = (elem: SugarElement<HTMLElement>, _viewport: DockingViewport, state: DockingState): Optional<Boxes.Bounds> =>
+const getPrior = (elem: SugarElement<HTMLElement>, state: DockingState): Optional<Boxes.Bounds> =>
   state.getInitialPos().map(
     (pos) => {
       // TINY-9242: Consider the scrolling viewport here when calculating priorY.
@@ -114,7 +114,7 @@ const getPrior = (elem: SugarElement<HTMLElement>, _viewport: DockingViewport, s
     }
   );
 
-const storePrior = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, _viewport: DockingViewport, state: DockingState): void => {
+const storePrior = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, state: DockingState): void => {
   // TINY-9242: Consider the scrolling viewport here when calculating bounds.
   const bounds = box;
   state.setInitialPos({
@@ -127,9 +127,9 @@ const storePrior = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, _viewpor
 // When we are using APIs like forceDockToTop, then we only want to store the previous position
 // if we weren't already docked. Otherwise, we still want to move the component, but keep its old
 // restore values
-const storePriorIfNone = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, viewport: DockingViewport, state: DockingState): void => {
+const storePriorIfNone = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, state: DockingState): void => {
   state.getInitialPos().fold(
-    () => storePrior(elem, box, viewport, state),
+    () => storePrior(elem, box, state),
     () => Fun.noop
   );
 };
@@ -164,7 +164,7 @@ const revertToOriginal = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, st
   });
 
 const tryMorphToOriginal = (elem: SugarElement<HTMLElement>, viewport: DockingViewport, state: DockingState): Optional<MorphInfo> =>
-  getPrior(elem, viewport, state)
+  getPrior(elem, state)
     .filter((box) => isVisibleForModes(state.getModes(), box, viewport))
     .bind((box) => revertToOriginal(elem, box, state));
 
@@ -221,7 +221,7 @@ const tryMorphToFixed = (elem: SugarElement<HTMLElement>, viewport: DockingViewp
   if (decision.location === 'top' || decision.location === 'bottom') {
     // We are moving to undocked to docked, so store the previous location
     // so that we can restore it when we switch out of docking (back to undocked)
-    storePrior(elem, box, viewport, state);
+    storePrior(elem, box, state);
     return tryDecisionToFixedMorph(decision);
   } else {
     return Optional.none();
@@ -236,7 +236,7 @@ const getMorph = (component: AlloyComponent, viewport: DockingViewport, state: D
 
 const getMorphToOriginal = (component: AlloyComponent, viewport: DockingViewport, state: DockingState): Optional<StaticMorph | AbsoluteMorph> => {
   const elem = component.element;
-  return getPrior(elem, viewport, state)
+  return getPrior(elem, state)
     .bind((box) => revertToOriginal(elem, box, state));
 };
 
@@ -250,7 +250,7 @@ const forceDockWith = (
 
   // We only want to store the values if we aren't already docking. If we are already docking, then
   // we just want to move the element, without updating where it started originally
-  storePriorIfNone(elem, box, viewport, state);
+  storePriorIfNone(elem, box, state);
   const winBox = Boxes.win();
   const leftX = getDockedLeftPosition({ win: winBox, box });
   const decision = getDecision(winBox, leftX, viewport);
