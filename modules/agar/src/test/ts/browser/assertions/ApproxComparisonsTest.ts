@@ -35,6 +35,17 @@ describe('browser.agar.assertions.ApproxComparisonsTest', () => {
     });
 
     context('integers', () => {
+      it('no unit, wrong margin', () => {
+        assert.throws(
+          () => ApproxComparisons.measurement(10, '', 8).strAssert('Label', '20'),
+          '"20" was not within "8" of the expected value: "10"'
+        );
+      });
+
+      it('no unit, right margin', () => {
+        ApproxComparisons.measurement(10, '', 8).strAssert('Label', '18');
+      });
+
       it('right unit, wrong margin', () => {
         assert.throws(
           () => ApproxComparisons.measurement(10, 'px', 0).strAssert('Label', '20px'),
@@ -74,6 +85,17 @@ describe('browser.agar.assertions.ApproxComparisonsTest', () => {
     });
 
     context('floats', () => {
+      it('no unit, wrong margin', () => {
+        assert.throws(
+          () => ApproxComparisons.measurement(10, '', 8).strAssert('Label', '20.5'),
+          '"20.5" was not within "8" of the expected value: "10"'
+        );
+      });
+
+      it('no unit, right margin', () => {
+        ApproxComparisons.measurement(10, '', 8).strAssert('Label', '17.5');
+      });
+
       it('right unit, wrong margin', () => {
         assert.throws(
           () => ApproxComparisons.measurement(10, 'px', 0).strAssert('Label', '20.8px'),

@@ -336,14 +336,14 @@ export default (): void => {
       dom: {
         tag: 'div',
       },
-      components: false ? [
+      components: [
         ...(includeWindowExample ? [ example1() ] : []),
         ...(includeScrollableExamples ? [
           example2(),
           example3(),
           example4()
         ] : [])
-      ] : [ example4() ]
+      ]
     }
   );
 };
