@@ -122,7 +122,10 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
           ApproxStructure.build((s, str, _arr) => s.element('div', {
             styles: {
               position: str.is('fixed'),
-              ...(optTop.map((top) => ({ top: str.is(`${top}px`) })).getOr({ }))
+              ...(optTop.map((top) => ({
+                // Allow 5px of error.
+                top: str.measurement(top, 'px', 5)
+              })).getOr({ }))
             }
           })),
           header

@@ -32,7 +32,8 @@ const strApi = {
   is: ApproxComparisons.is,
   startsWith: ApproxComparisons.startsWith,
   contains: ApproxComparisons.contains,
-  none: ApproxComparisons.none
+  none: ApproxComparisons.none,
+  measurement: ApproxComparisons.measurement
 };
 
 const arrApi = {
