@@ -286,11 +286,25 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
       }
     });
 
+    let isDragging = false;
+
+    editor.on('mousedown', () => {
+      isDragging = true;
+    });
+    editor.on('mousemove', () => {
+      isDragging = true;
+    });
+    editor.on('mouseup', () => {
+      isDragging = false;
+    });
+
     editor.on('NodeChange', (_e) => {
-      Focus.search(contextbar.element).fold(
-        launchContextToolbar.throttle,
-        Fun.noop
-      );
+      if (!isDragging) {
+        Focus.search(contextbar.element).fold(
+          launchContextToolbar.throttle,
+          Fun.noop
+        );
+      }
     });
   });
 };

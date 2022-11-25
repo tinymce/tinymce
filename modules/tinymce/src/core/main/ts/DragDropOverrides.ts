@@ -28,11 +28,6 @@ const scrollIntervalValue = 100;
 const mouseRangeToTriggerScrollInsideEditor = 8;
 const mouseRangeToTriggerScrollOutsideEditor = 16;
 
-type CurrentSelection = Range | {
-  clientX: number;
-  clientY: number;
-};
-
 interface State {
   element: HTMLElement;
   dragging: boolean;
@@ -46,7 +41,6 @@ interface State {
   height: number;
   ghost: HTMLElement;
   intervalId: Singleton.Repeatable;
-  currentSelection?: CurrentSelection;
 }
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
@@ -253,27 +247,18 @@ const start = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent
   }
 };
 
-const updateCurrentSelection = (state: Singleton.Value<State>, currentSelection: CurrentSelection) => {
-  state.get().each((currentState) => {
-    state.set({
-      ...currentState,
-      currentSelection
-    });
-  });
-};
-
 const move = (state: Singleton.Value<State>, editor: Editor) => {
   // Reduces laggy drag behavior on Gecko
   const throttledPlaceCaretAt = Throttler.first((clientX: number, clientY: number) => {
     editor._selectionOverrides.hideFakeCaret();
     ClosestCaretCandidate.closestFakeCaretCandidate(editor.getBody(), clientX, clientY).fold(
-      () => updateCurrentSelection(state, { clientX, clientY }),
+      () => editor.selection.placeCaretAt(clientX, clientY),
       (caretInfo) => {
         const range = editor._selectionOverrides.showCaret(1, caretInfo.node as HTMLElement, caretInfo.position === ClosestCaretCandidate.FakeCaretPosition.Before, false);
         if (range) {
-          updateCurrentSelection(state, range);
+          editor.selection.setRng(range);
         } else {
-          updateCurrentSelection(state, { clientX, clientY });
+          editor.selection.placeCaretAt(clientX, clientY);
         }
       }
     );
@@ -321,13 +306,6 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
     state.intervalId.clear();
     if (state.dragging) {
       if (isValidDropTarget(editor, getRawTarget(editor.selection), state.element)) {
-        if (state.currentSelection) {
-          if ('clientX' in state.currentSelection) {
-            editor.selection.placeCaretAt(state.currentSelection.clientX, state.currentSelection.clientY);
-          } else {
-            editor.selection.setRng(state.currentSelection);
-          }
-        }
         const targetClone = cloneElement(state.element);
 
         const args = editor.dispatch('drop', {
