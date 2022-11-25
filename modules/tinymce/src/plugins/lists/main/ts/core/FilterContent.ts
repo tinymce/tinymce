@@ -37,7 +37,7 @@ const wrapInvalidChildren = (list: AstNode) => {
 const setup = (editor: Editor): void => {
   editor.on('PreInit', () => {
     const { parser } = editor;
-    parser.addNodeFilter('ul, ol', (nodes) => Arr.each(nodes, wrapInvalidChildren ));
+    parser.addNodeFilter('ul,ol', (nodes) => Arr.each(nodes, wrapInvalidChildren));
   });
 };
 

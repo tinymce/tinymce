@@ -5,7 +5,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 
 describe('browser.tinymce.plugins.lists.FilterContentTest', () => {
-  context(' wrapping the list child text nodes within list item elements', () => {
+  context('wrapping the list child text nodes within list item elements', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       plugins: 'lists',
       indent: false,
