@@ -339,8 +339,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       }
       return `<div>${Arr.foldl(elementsNames, (acc, elementName) =>
         acc + getBaseCEFElement(elementName)
-      , '')}</div>
-      `;
+      , '')}</div>`;
     };
 
     const hook = TinyHooks.bddSetupLight<Editor>({
@@ -390,7 +389,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       + '<div style="margin: 40px; width: 1110px; height: 120px; background-color: red;" contenteditable="false"><span class="destination">Destination element</span></div>';
       editor.setContent(originalContent);
       await moveToDragElementToDestinationElement(editor, 0, 0);
-      await Waiter.pWait(100);
+
       TinyAssertions.assertContent(editor, originalContent.trim());
     });
   });

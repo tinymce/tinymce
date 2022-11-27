@@ -55,7 +55,7 @@ const isValidDropTarget = (editor: Editor, targetElement: Node | null, dragEleme
   } else if (targetElement === dragElement || editor.dom.isChildOf(targetElement, dragElement)) {
     return false;
   } else {
-    return !isContentEditableFalse(targetElement);
+    return !isContentEditableFalse(targetElement) && editor.dom.getContentEditableParent(targetElement) !== 'false';
   }
 };
 
@@ -427,20 +427,8 @@ const blockUnsupportedFileDrop = (editor: Editor) => {
   });
 };
 
-const blockCEFDrop = (editor: Editor) => {
-  editor.on('drop', (e) => {
-    // dropping/dragging file doesn't have clientX and clientY
-    const realTarget = typeof e.clientX !== 'undefined' ? editor.getDoc().elementFromPoint(e.clientX, e.clientY) : null;
-    if (realTarget && (isContentEditableFalse(realTarget) || editor.dom.getContentEditableParent(realTarget) === 'false')) {
-      e.preventDefault();
-    }
-  });
-};
-
 const init = (editor: Editor): void => {
   bindFakeDragEvents(editor);
-  // prevent dropping into content editable false elements
-  blockCEFDrop(editor);
 
   if (Options.shouldBlockUnsupportedDrop(editor)) {
     blockUnsupportedFileDrop(editor);
