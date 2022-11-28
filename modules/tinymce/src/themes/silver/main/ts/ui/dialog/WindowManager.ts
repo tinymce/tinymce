@@ -51,8 +51,7 @@ const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, is
         lazyViewport: (comp) => {
           // If we don't have a special scrolling environment, then just use the default
           // viewport of (window)
-          // TODO: Should we consult ui_of_tomorrow here also?
-          const optScrollingContext = ScrollingContext.detect(comp.element);
+          const optScrollingContext = ScrollingContext.detectWhenUiOfTomorrow(editor, comp.element);
           return optScrollingContext
             .map(
               (sc) => {

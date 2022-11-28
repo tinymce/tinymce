@@ -268,7 +268,7 @@ const tryMorphToFixed = (elem: SugarElement<HTMLElement>, viewport: DockingViewp
   );
 
   if (decision.location === 'top' || decision.location === 'bottom') {
-    // We are moving to undocked to docked, so store the previous location
+    // We are moving from undocked to docked, so store the previous location
     // so that we can restore it when we switch out of docking (back to undocked)
     storePrior(elem, box, viewport, state, decision);
     return tryDecisionToFixedMorph(decision);
@@ -297,7 +297,7 @@ const tryMorphToOriginalOrUpdateFixed = (
       // Importantly, we don't update our stored position for the element before "docking", because
       // this is a transition between "docked" and "docked", not "undocked" and "docked". We want to
       // keep our undocked position in our store, not a docked position.
-      // Importantly, we don't change our position. We just improve our fixed.
+      // So we don't change our stored position. We just improve our fixed.
       return viewport.optScrollEnv
         .bind((_) => getPrior(elem, viewport, state))
         .bind(

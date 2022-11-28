@@ -143,8 +143,9 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
               // The first time it appears, it doesn't get fade-in, so we just look for non-fadeout
               // for now.
               arr.not(ui.editor.stickyHeaderInvisible.className),
-              // BUG: In classic mode, the transition class isn't going away because
-              // there is another transition style clobbering it.
+              // TINY-9408: In classic mode, the transition class isn't going away because
+              // there is another transition style clobbering it. Reinstate the `arr.not` check
+              // when the bug is fixed.
               // arr.not(ui.editor.stickyHeaderTransitioning.className)
             ]
           })),
@@ -161,8 +162,9 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
           ApproxStructure.build((s, str, arr) => s.element('div', {
             classes: [
               arr.has(ui.editor.stickyHeaderInvisible.className),
-              // BUG: In classic mode, the transition class isn't going away because
-              // there is another transition style clobbering it.
+              // TINY-9408: In classic mode, the transition class isn't going away because
+              // there is another transition style clobbering it. Reinstate the `arr.not` check
+              // when the bug is fixed.
               // arr.not(ui.editor.stickyHeaderTransitioning.className)
             ]
           })),
@@ -491,7 +493,6 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
 
         it('When scrolling the outer page', async () => {
           const editor = hook.editor();
-          // const header = getEditorUi(editor, ui.editor.stickyHeader);
           const scroller = getOtherUi(editor, ui.other.scrollingWrapper);
           const scrollerTop = scroller.dom.getBoundingClientRect().top;
 
@@ -517,8 +518,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
             {
               toDock: {
                 action: () => scroller.dom.scrollTo(0, heights.banner + 50),
-                // Is an exact pixel amount here going to be tolerant enough? Or
-                // will this cause test flakes?
+                // NOTE: The assertion will do an approximate match for "top"
                 optTop: Optional.some(scroller.dom.getBoundingClientRect().top)
               },
               toUndock: () => scroller.dom.scrollTo(0, heights.banner - 200)

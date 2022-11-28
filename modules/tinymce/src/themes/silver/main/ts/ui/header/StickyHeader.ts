@@ -213,7 +213,7 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
 
           return Optional.from(container).map((c) => {
             const box = Boxes.box(SugarElement.fromDom(c));
-            const optScrollingContext = ScrollingContext.detect(comp.element);
+            const optScrollingContext = ScrollingContext.detectWhenUiOfTomorrow(editor, comp.element);
             return optScrollingContext.fold(
               () => {
                 // Force the header to hide before it overflows outside the container
@@ -222,7 +222,6 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
                 return Boxes.bounds(box.x, topBound, box.width, boxHeight);
               },
               (scrollEnv) => {
-                // It might be docked at the window, or the scroller. Simplify for now.
                 const constrainedBounds = Boxes.constrain(
                   box,
                   ScrollingContext.getBoundsFrom(scrollEnv)
@@ -262,7 +261,7 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
         ...visibility
       },
       lazyViewport: (comp) => {
-        const optScrollingContext = ScrollingContext.detect(comp.element);
+        const optScrollingContext = ScrollingContext.detectWhenUiOfTomorrow(editor, comp.element);
         return optScrollingContext.fold<DockingTypes.DockingViewport>(
           () => {
             const boundsWithoutOffset = Boxes.win();
@@ -276,7 +275,7 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
             };
           },
           (sc) => {
-            // FIX TINY-9226: Consider how to use toolbar offsets here. Ignore for now.
+            // TINY-9411: Implement sticky toolbar offsets in scrollable containers
             const combinedBounds = ScrollingContext.getBoundsFrom(sc);
             return {
               bounds: combinedBounds,
