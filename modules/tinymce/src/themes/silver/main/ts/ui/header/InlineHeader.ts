@@ -17,7 +17,7 @@ export interface InlineHeader {
   readonly isPositionedAtTop: () => boolean;
   readonly show: () => void;
   readonly hide: () => void;
-  readonly update: (resetDocking?: boolean) => void;
+  readonly update: () => void;
   readonly updateMode: () => void;
   readonly repositionPopups: () => void;
 }
@@ -140,7 +140,7 @@ export const InlineHeader = (
     });
   };
 
-  const updateChromeUi = (resetDocking: boolean = false) => {
+  const updateChromeUi = (stickyAction: (c: AlloyComponent) => void) => {
     // Skip updating the ui if it's hidden
     if (!isVisible()) {
       return;
@@ -157,7 +157,9 @@ export const InlineHeader = (
       updateChromeWidth();
     }
 
-    // Refresh split toolbar
+    // Refresh split toolbar. A spilt toolbar requires a calculation to see what ends up in the
+    // "more drawer". When we don't have a split toolbar, then there is no reason to refresh the toolbar
+    // when the size changes.
     if (isSplitToolbar) {
       OuterContainer.refreshToolbar(mainUi.outerContainer);
     }
@@ -169,31 +171,36 @@ export const InlineHeader = (
 
     // Docking
     if (isSticky) {
-      const action = resetDocking ? Docking.reset : Docking.refresh;
-      floatContainer.on(action);
+      // FIX: Clarify why we choose Docking.reset over Docking.refresh
+      // const action = resetDocking ? Docking.reset : Docking.refresh;
+      floatContainer.on(stickyAction);
     }
 
     // Floating toolbar
     repositionPopups();
   };
 
-  const updateMode = (updateUi: boolean = true) => {
+  const doUpdateMode = (): boolean => {
     // Skip updating the mode if the toolbar is hidden, is
     // using a fixed container or has sticky toolbars disabled
     if (useFixedToolbarContainer || !isSticky || !isVisible()) {
-      return;
+      return false;
     }
 
-    floatContainer.on((container) => {
-      const currentMode = headerBackstage.getDockingMode();
-      const newMode = calcMode(container);
-      if (newMode !== currentMode) {
-        setupMode(newMode);
-        if (updateUi) {
-          updateChromeUi(true);
+    return floatContainer.get().exists(
+      (fc) => {
+        const currentMode: 'top' | 'bottom' = headerBackstage.getDockingMode();
+        const newMode: 'top' | 'bottom' = calcMode(fc);
+        // Note: the docking mode will only be able to change when the `toolbar_location`
+        // is set to "auto".
+        if (newMode !== currentMode) {
+          setupMode(newMode);
+          return true;
+        } else {
+          return false;
         }
       }
-    });
+    );
   };
 
   const show = () => {
@@ -201,10 +208,15 @@ export const InlineHeader = (
     Css.set(mainUi.outerContainer.element, 'display', 'flex');
     DOM.addClass(editor.getBody(), 'mce-edit-focus');
     Arr.each(uiMotherships, (m) => {
+      // We remove the display style when showing, because when hiding, we set it to "none"
       Css.remove(m.element, 'display');
     });
-    updateMode(false);
-    updateChromeUi();
+    doUpdateMode();
+
+    // Even if we aren't updating the docking mode, we still want to reposition
+    // the Ui. We are choosing to "refresh" docking here, rather than "reset" it
+    // INVESTIGATE - REASON ... DO NOT APPROVE PR FIX FIX FIX
+    updateChromeUi(Docking.refresh);
   };
 
   const hide = () => {
@@ -216,12 +228,25 @@ export const InlineHeader = (
     });
   };
 
+  const update = () => {
+    updateChromeUi(Docking.reset);
+  };
+
+  const updateMode = () => {
+    const changedMode = doUpdateMode();
+    // If the docking mode has changed due to the update, we want to reset
+    // docking.
+    if (changedMode) {
+      updateChromeUi(Docking.reset);
+    }
+  };
+
   return {
     isVisible,
     isPositionedAtTop,
     show,
     hide,
-    update: updateChromeUi,
+    update,
     updateMode,
     repositionPopups
   };
