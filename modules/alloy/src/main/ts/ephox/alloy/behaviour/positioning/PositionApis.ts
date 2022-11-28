@@ -15,6 +15,9 @@ import { Transition } from '../../positioning/view/Transitions';
 import { PlacementDetail, PlacementSpec, PositioningConfig, PositioningState } from './PositioningTypes';
 import { PlacementSchema } from './PositionSchema';
 
+const isFixed = (posConfig: PositioningConfig): boolean =>
+  posConfig.usePositioningType() === 'fixed';
+
 const getFixedOrigin = (): Origins.OriginAdt => {
   // Don't use window.innerWidth/innerHeight here, as we don't want to include scrollbars
   // since the right/bottom position is based on the edge of the scrollbar not the window
@@ -63,9 +66,7 @@ const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningC
     // We need to calculate the origin (esp. the bounding client rect) *after* we have done
     // all the preprocessing of the component and placee. Otherwise, the relative positions
     // (bottom and right) will be using the wrong dimensions
-    const origin = posConfig.usePositioningType() === 'fixed'
-      ? getFixedOrigin()
-      : getRelativeOrigin(component);
+    const origin = isFixed(posConfig) ? getFixedOrigin() : getRelativeOrigin(component);
 
     const placer = anchorage.placement;
 
@@ -98,7 +99,7 @@ const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningC
 };
 
 const getMode = (component: AlloyComponent, pConfig: PositioningConfig, _pState: PositioningState): string =>
-  pConfig.usePositioningType() === 'fixed' ? 'fixed' : 'absolute';
+  isFixed(pConfig) ? 'fixed' : 'absolute';
 
 const reset = (component: AlloyComponent, pConfig: PositioningConfig, posState: PositioningState, placee: AlloyComponent): void => {
   const element = placee.element;
