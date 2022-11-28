@@ -207,11 +207,10 @@ describe('browser.tinymce.plugins.autoresize.AutoresizePluginTest', () => {
       assert.isAtMost(resizeEventsCount.get(), 10, 'Should have fired a ResizeEditor event at most 10 time');
     });
 
-    // this is not working because of a bug in the `setContent`
-    it.skip('TINY-9123: it should continue to resize if the content expands or contract', async () => {
+    it('TINY-9123: it should continue to resize if the content expands or contract', async () => {
       const editor = hook.editor();
       const content = '<p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p>';
-      editor.setContent('<div style="height: 10px;">' + content + '</div>');
+      editor.setContent('<div>' + content + '</div>');
       await Waiter.pTryUntil('wait for editor height', () => assertEditorHeightBelow(editor, 610), 10, 3000);
       TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 12);
       editor.execCommand('FontSize', false, '36pt');
