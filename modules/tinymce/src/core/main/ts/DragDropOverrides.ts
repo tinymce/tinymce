@@ -55,6 +55,7 @@ const isValidDropTarget = (editor: Editor, targetElement: Node | null, dragEleme
   } else if (targetElement === dragElement || editor.dom.isChildOf(targetElement, dragElement)) {
     return false;
   } else {
+    // Allow dropping onto the contenteditable=true elements that are within contenteditable=false elements
     return !isContentEditableFalse(targetElement) && editor.dom.getContentEditableParent(targetElement) !== 'false';
   }
 };
