@@ -63,7 +63,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMotherships: Gui.Gui
   };
 
   const onElementScroll = DomEvent.capture(doc, 'scroll', (evt) => {
-    window.requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
       const c = editor.getContainer();
       // Because this can fire before the editor is rendered, we need to stop that from happening.
       // Some tests can create this situation, and then we get a Node name null or defined error.
@@ -73,7 +73,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMotherships: Gui.Gui
         const scrollers = optScrollingContext.map((sc) => [ sc.element, ...sc.others ]).getOr([ ]);
         if (Arr.exists(scrollers, (s) => Compare.eq(s, evt.target))) {
 
-          editor.dispatch('ElementScroll', { target: evt.target });
+          editor.dispatch('ElementScroll', { target: evt.target.dom });
           broadcastEvent(SystemEvents.externalElementScroll(), evt);
         }
       }

@@ -143,7 +143,11 @@ export const InlineHeader = (
   const updateChromeUi = (stickyAction: (c: AlloyComponent) => void) => {
     // Skip updating the ui if it's hidden
     if (!isVisible()) {
+      // Is this the problem?
+      console.log('I am the problem!');
       return;
+    } else {
+      console.log('I am not the problem');
     }
 
     // Handles positioning, docking and SplitToolbar (more drawer) behaviour. Modes:
@@ -176,8 +180,12 @@ export const InlineHeader = (
       floatContainer.on(stickyAction);
     }
 
+    console.log('repositioning', document.querySelector('.tox-editor-header') ?? document.querySelector('.tox-editor-header')?.cloneNode(true));
+
     // Floating toolbar
     repositionPopups();
+
+    console.log('repositioning.2', document.querySelector('.tox-editor-header') ?? document.querySelector('.tox-editor-header')?.cloneNode(true));
   };
 
   const doUpdateMode = (): boolean => {
@@ -229,10 +237,12 @@ export const InlineHeader = (
   };
 
   const update = () => {
+    console.log('Updating');
     updateChromeUi(Docking.reset);
   };
 
   const updateMode = () => {
+    console.log('updating mode');
     const changedMode = doUpdateMode();
     // If the docking mode has changed due to the update, we want to reset
     // docking.

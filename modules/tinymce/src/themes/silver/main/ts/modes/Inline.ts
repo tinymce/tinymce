@@ -79,6 +79,13 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader, 
   // want to reposition all the Ui elements if required.
   editor.on('ScrollWindow', ui.updateMode);
 
+  if (Options.isUiOfTomorrow(editor)) {
+    editor.on('ElementScroll', (_args) => {
+      // When the scroller containing the editor scrolls, update the Ui positions
+      ui.update();
+    });
+  }
+
   // Bind to async load events and trigger a content resize event if the size has changed
   // This is handling resizing based on anything loading inside the content (e.g. img tags)
   const elementLoad = Singleton.unbindable();
@@ -87,15 +94,6 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader, 
   editor.on('remove', () => {
     elementLoad.clear();
   });
-};
-
-// TINY-9226: If ui_of_tomorrow is set, then attach the popup mothership adjacent to the target node
-const attachUiMotherships = (editor: Editor, uiRoot: SugarElement<HTMLElement | ShadowRoot>, targetElm: SugarElement<HTMLElement>, uiRefs: ReadyUiReferences) => {
-  if (Options.isUiOfTomorrow(editor)) {
-    Attachment.attachSystemAfter(targetElm, uiRefs.popupUi.mothership);
-  }
-  // In UiRefs, dialogUi and popupUi refer to the same thing if ui_of_tomorrow is false
-  Attachment.attachSystem(uiRoot, uiRefs.dialogUi.mothership);
 };
 
 const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
@@ -132,9 +130,21 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
     // allow us to call `render` multiple times, but only have it execute the setup code once.
     floatContainer.set(OuterContainer.getHeader(mainUi.outerContainer).getOrDie());
 
+    // `uiContainer` handles *where* the motherhips get added by default. Currently, uiContainer
+    // will mostly be the <body> of the document (unless it's a ShadowRoot). When using ui_of_tomorrow,
+    // the main mothership (which includes the toolbar) and popup sinks will be added as sibilngs of
+    // the target element, so that they have the same scrolling context / environment
     const uiContainer = Options.getUiContainer(editor);
-    Attachment.attachSystem(uiContainer, mainUi.mothership);
-    attachUiMotherships(editor, uiContainer, targetElm, uiRefs);
+    // Position the motherships based on the editor Ui options.
+    if (Options.isUiOfTomorrow(editor)) {
+      Attachment.attachSystemAfter(targetElm, mainUi.mothership);
+      // Only in ui_of_tomorrow, do we have a separate popup sink
+      Attachment.attachSystemAfter(targetElm, uiRefs.popupUi.mothership);
+    } else {
+      Attachment.attachSystem(uiContainer, mainUi.mothership);
+    }
+    // In UiRefs, dialogUi and popupUi refer to the same thing if ui_of_tomorrow is false
+    Attachment.attachSystem(uiContainer, uiRefs.dialogUi.mothership);
 
     // Unlike menubar below which uses OuterContainer directly, this level of abstraction is
     // required because of the different types of toolbars available (e.g. multiple vs single)

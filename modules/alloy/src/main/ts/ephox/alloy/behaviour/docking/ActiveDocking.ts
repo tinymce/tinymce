@@ -20,10 +20,12 @@ const events = (dockInfo: DockingConfig, dockState: DockingState): AlloyEvents.A
     }),
 
     AlloyEvents.run(SystemEvents.windowScroll(), (component, _) => {
+      console.log('window scroll');
       DockingApis.refresh(component, dockInfo, dockState);
     }),
 
     AlloyEvents.run(SystemEvents.externalElementScroll(), (component, _) => {
+      console.log('external scroll');
       DockingApis.refresh(component, dockInfo, dockState);
     }),
 
