@@ -240,7 +240,9 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
         const offset = Options.getStickyToolbarOffset(editor);
         const top = win.y + (isDockedMode(comp, 'top') ? offset : 0);
         const height = win.height - (isDockedMode(comp, 'bottom') ? offset : 0);
-        return Boxes.bounds(win.x, top, win.width, height);
+        return {
+          bounds: Boxes.bounds(win.x, top, win.width, height)
+        };
       },
       modes: [ sharedBackstage.header.getDockingMode() ],
       onDocked: onDockingSwitch,
