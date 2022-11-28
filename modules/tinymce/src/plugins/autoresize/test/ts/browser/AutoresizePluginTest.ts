@@ -200,7 +200,7 @@ describe('browser.tinymce.plugins.autoresize.AutoresizePluginTest', () => {
       resizeEventsCount.set(0);
     });
 
-    it('TINY-9123: it should not continue to resaize in some specific condition', async () => {
+    it('TINY-9123: it should not continue to resize in some specific condition', async () => {
       const editor = hook.editor();
       editor.setContent('<div style="height: 250px;">a</div>');
       await Waiter.pWait(2000);
@@ -208,7 +208,7 @@ describe('browser.tinymce.plugins.autoresize.AutoresizePluginTest', () => {
     });
 
     // this is not working because of a bug in the `setContent`
-    it.skip('TINY-9123: it should continue to resaize if the content expands or contract', async () => {
+    it.skip('TINY-9123: it should continue to resize if the content expands or contract', async () => {
       const editor = hook.editor();
       const content = '<p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p>';
       editor.setContent('<div style="height: 10px;">' + content + '</div>');
