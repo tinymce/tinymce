@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Improved
 - Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
 
+### Fixed
+- Quick toolbars were incorrectly rendered during the dragging of `contenteditable="false"` elements. #TINY-9305
+
 ## 6.3.0 - 2022-11-23
 
 ### Added
@@ -52,7 +55,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A newline could not be inserted when the selection was restored from a bookmark after an inline element with a `contenteditable="false"` attribute. #TINY-9194
 - The global `tinymce.dom.styleSheetLoader` was not affected by the `content_css_cors` option. #TINY-6037
 - The caret was moved to the previous line when a text pattern executed a `mceInsertContent` command on Enter key when running on Firefox. #TINY-9193
-- Quick toolbars were incorrectly rendered during the dragging of contenteditable="false" elements. #TINY-9305
 
 ## 6.2.0 - 2022-09-08
 
