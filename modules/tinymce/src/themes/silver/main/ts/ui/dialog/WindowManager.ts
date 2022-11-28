@@ -196,6 +196,12 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
         },
         // Fires the default dismiss event.
         fireDismissalEventInstead: { },
+        // TINY-9412: The docking behaviour for inline dialogs is inconsistent
+        // for toolbar_location: bottom. We need to clarify exactly what the behaviour
+        // should be. The intent here might have been that they shouldn't automatically
+        // reposition at all because they aren't visually connected to the toolbar
+        // (i.e. inline "toolbar" dialogs still display at the top, even when the
+        // toolbar_location is bottom), but it's unclear.
         ...isToolbarLocationTop ? { } : { fireRepositionEventInstead: { }},
         inlineBehaviours: Behaviour.derive([
           AddEventsBehaviour.config('window-manager-inline-events', [
