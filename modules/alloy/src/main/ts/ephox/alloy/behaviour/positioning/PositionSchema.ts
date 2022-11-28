@@ -1,5 +1,5 @@
-import { FieldSchema, ValueType } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
+import { FieldSchema, ValueType, StructureSchema } from '@ephox/boulder';
+import { Arr, Fun, Result } from '@ephox/katamari';
 
 import AnchorSchema from '../../positioning/mode/AnchorSchema';
 
@@ -9,7 +9,14 @@ const TransitionSchema = [
 ];
 
 export const PositionSchema = [
-  FieldSchema.defaulted('usePositioningType', Fun.constant('relative')),
+  FieldSchema.defaultedOf(
+    'usePositioningType',
+    Fun.constant('relative'),
+    StructureSchema.valueOf((val) =>
+      Arr.contains([ 'fixed', 'relative', 'absolute' ], val())
+        ? Result.value(val)
+        : Result.error('Invalid value for usePositioningType'))),
+
   FieldSchema.option('getBounds')
 ];
 
