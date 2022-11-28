@@ -383,7 +383,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       TinyAssertions.assertContent(editor, getContentWithCefElements([ 'toDrag', 'destination', 'obstacle' ]));
     });
 
-    it('TINY-9364: Should prevent dropping a CEF element onto another CEF element', async () => {
+    it('TINY-9364: Should prevent dropping an element onto the descendant of another CEF element', async () => {
       const editor = hook.editor();
       const originalContent = '<div class="toDrag" style="margin: 40px; width: 1110px; height: 120px; background-color: blue;" contenteditable="false">To drag element</div>'
       + '<div style="margin: 40px; width: 1110px; height: 120px; background-color: red;" contenteditable="false"><span class="destination">Destination element</span></div>';
