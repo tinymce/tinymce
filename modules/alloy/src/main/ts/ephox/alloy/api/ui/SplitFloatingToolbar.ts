@@ -120,7 +120,7 @@ const SplitFloatingToolbar: SplitFloatingToolbarSketcher = Sketcher.composite<Sp
       apis.reposition(toolbar);
     },
     toggle: (apis, toolbar, options) => {
-      apis.toggle(toolbar);
+      apis.toggle(toolbar, options);
     },
     isOpen: (apis, toolbar) => apis.isOpen(toolbar),
     getOverflow: (apis, toolbar) => apis.getOverflow(toolbar)
