@@ -71,4 +71,16 @@ describe('browser.tinymce.plugins.quickbars.ContentEditableTest', () => {
     await Waiter.pWait(100);
     await pAssertToolbarNotVisible();
   });
+
+  it('TINY-9305: Dragging CEF elements outside the editor should not prevent successive triggers of the quickbars', async () => {
+    const editor = hook.editor();
+    const emptyP = '<p>&nbsp;</p>';
+    editor.setContent(emptyP + emptyP + emptyP + '<p id="cefElement" contenteditable="false">CEF element</p>' + emptyP + emptyP + emptyP);
+    const elem = UiFinder.findIn(TinyDom.body(editor), '#cefElement').getOrDie();
+    Mouse.mouseDown(elem);
+    Mouse.mouseMoveTo(elem, -1000, -1000);
+    Mouse.mouseUp(elem);
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 0);
+    await pAssertToolbarVisible();
+  });
 });

@@ -291,6 +291,9 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     editor.on('dragstart', () => {
       isDragging = true;
     });
+    editor.on('dragend', () => {
+      isDragging = false;
+    });
     editor.on('drop', () => {
       isDragging = false;
     });
