@@ -65,7 +65,7 @@ interface OuterContainerApis {
   readonly setToolbar: (comp: AlloyComponent, groups: ToolbarGroup[]) => void;
   readonly setToolbars: (comp: AlloyComponent, toolbars: ToolbarGroup[][]) => void;
   readonly refreshToolbar: (comp: AlloyComponent) => void;
-  readonly toggleToolbarDrawer: (comp: AlloyComponent) => void;
+  readonly toggleToolbarDrawer: (comp: AlloyComponent, options?: { skipFocus: boolean }) => void;
   readonly isToolbarDrawerToggled: (comp: AlloyComponent) => boolean;
   readonly getThrobber: (comp: AlloyComponent) => Optional<AlloyComponent>;
   readonly focusToolbar: (comp: AlloyComponent) => void;
@@ -81,7 +81,7 @@ interface OuterContainerApis {
 interface ToolbarApis {
   readonly setGroups: (toolbar: AlloyComponent, groups: SketchSpec[]) => void;
   readonly refresh: (toolbar: AlloyComponent) => void;
-  readonly toggle?: (toolbar: AlloyComponent) => void;
+  readonly toggle?: (toolbar: AlloyComponent, options?: { skipFocus: boolean }) => void;
   readonly isOpen?: (toolbar: AlloyComponent) => boolean;
 }
 
@@ -129,9 +129,9 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
       const toolbar = Composite.parts.getPart(comp, detail, 'toolbar');
       toolbar.each((toolbar) => toolbar.getApis<ToolbarApis>().refresh(toolbar));
     },
-    toggleToolbarDrawer: (comp) => {
+    toggleToolbarDrawer: (comp, options) => {
       Composite.parts.getPart(comp, detail, 'toolbar').each((toolbar) => {
-        Optionals.mapFrom(toolbar.getApis<ToolbarApis>().toggle, (toggle) => toggle(toolbar));
+        Optionals.mapFrom(toolbar.getApis<ToolbarApis>().toggle, (toggle) => toggle(toolbar, options));
       });
     },
     isToolbarDrawerToggled: (comp) => {
@@ -421,8 +421,8 @@ export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketch
     refreshToolbar: (apis, comp) => {
       return apis.refreshToolbar(comp);
     },
-    toggleToolbarDrawer: (apis, comp) => {
-      apis.toggleToolbarDrawer(comp);
+    toggleToolbarDrawer: (apis, comp, options) => {
+      apis.toggleToolbarDrawer(comp, options);
     },
     isToolbarDrawerToggled: (apis, comp) => {
       return apis.isToolbarDrawerToggled(comp);

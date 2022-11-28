@@ -82,9 +82,9 @@ const factory: CompositeSketchFactory<SplitFloatingToolbarDetail, SplitFloatingT
         refresh(toolbar, memFloatingToolbarButton, detail);
       },
       refresh: (toolbar: AlloyComponent) => refresh(toolbar, memFloatingToolbarButton, detail),
-      toggle: (toolbar: AlloyComponent) => {
+      toggle: (toolbar: AlloyComponent, options?: { skipFocus: boolean }) => {
         memFloatingToolbarButton.getOpt(toolbar).each((floatingToolbarButton) => {
-          FloatingToolbarButton.toggle(floatingToolbarButton);
+          FloatingToolbarButton.toggle(floatingToolbarButton, options);
         });
       },
       isOpen: (toolbar: AlloyComponent) =>
@@ -119,7 +119,7 @@ const SplitFloatingToolbar: SplitFloatingToolbarSketcher = Sketcher.composite<Sp
     reposition: (apis, toolbar) => {
       apis.reposition(toolbar);
     },
-    toggle: (apis, toolbar) => {
+    toggle: (apis, toolbar, options) => {
       apis.toggle(toolbar);
     },
     isOpen: (apis, toolbar) => apis.isOpen(toolbar),
