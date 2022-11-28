@@ -288,13 +288,10 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
       }
     });
 
-    editor.on('mousedown', () => {
+    editor.on('dragstart', () => {
       isDragging = true;
     });
-    editor.on('mousemove', () => {
-      isDragging = true;
-    });
-    editor.on('mouseup', () => {
+    editor.on('drop', () => {
       isDragging = false;
     });
 
