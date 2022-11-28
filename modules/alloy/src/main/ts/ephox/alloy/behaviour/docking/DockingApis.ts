@@ -105,13 +105,14 @@ const resetInternal = (component: AlloyComponent, config: DockingConfig, state: 
       // can't currently start with fixed position
       switch (staticOrAbsoluteMorph.morph) {
         case 'static': {
-          return morphToStatic(component, config, state);
+          morphToStatic(component, config, state);
+          break;
         }
         case 'absolute': {
-          return morphToCoord(component, config, state, staticOrAbsoluteMorph.positionCss);
+          morphToCoord(component, config, state, staticOrAbsoluteMorph.positionCss);
+          break;
         }
         default:
-
       }
     }
   );
