@@ -1,15 +1,21 @@
 import { DomDefinitionDetail } from '../../dom/DomDefinition';
 import * as DomModification from '../../dom/DomModification';
-import { PositioningConfig } from './PositioningTypes';
+import { PositioningConfig, PositioningType  } from './PositioningTypes';
 
-const exhibit = (base: DomDefinitionDetail, posConfig: PositioningConfig): DomModification.DomModification =>
+const getStyles = (positioningType: PositioningType): Record<string, string> => {
+  if (positioningType === 'relative') {
+    return { position: 'relative' };
+  } else if (positioningType === 'absolute') {
+    return { position: 'absolute', width: '100%' };
+  } else {
+    return { };
+  }
+};
+
+const exhibit = (base: DomDefinitionDetail, posConfig: PositioningConfig): DomModification.DomModification => 
   DomModification.nu({
     classes: [ ],
-    styles: {
-      fixed: { },
-      relative: { position: 'relative' },
-      absolute: { position: 'absolute', width: '100%' }
-    }[posConfig.usePositioningType()]
+    styles: getStyles(posConfig.usePositioningType()),
   });
 
 export {
