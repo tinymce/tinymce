@@ -723,10 +723,10 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
             editor,
             {
               toDock: {
-                action: () => pWaitUntilScrollWindowFires(editor, 0, scrollerTop + 250),
+                action: () => pWaitUntilScrollWindowFires(editor, 0, scrollerTop + heights.banner + 100),
                 optTop: Optional.some(0)
               },
-              toUndock: () => pWaitUntilScrollWindowFires(editor, 0, scrollerTop - 100)
+              toUndock: () => pWaitUntilScrollWindowFires(editor, 0, scrollerTop + heights.banner - 50)
             }
           );
         });
@@ -743,7 +743,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
                   editor,
                   scroller,
                   0,
-                  heights.banner + 50
+                  heights.banner + 150
                 ),
                 // NOTE: The assertion will do an approximate match for "top"
                 optTop: Optional.some(scroller.dom.getBoundingClientRect().top)
