@@ -11,7 +11,7 @@ import { Menu } from 'tinymce/core/api/ui/Ui';
 describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
   const store = TestStore();
   const hook = TinyHooks.bddSetup<Editor>({
-    toolbar: 'swatch-button forecolor',
+    toolbar: 'swatch-button forecolor backcolor',
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {
       ed.ui.registry.addSplitButton('swatch-button', {
@@ -88,6 +88,8 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
   const closeSwatchButtonMenu = closeMenu('swatch-button');
   const openAndGetForecolorMenu = openAndGetMenu('Text color');
   const closeForecolorMenu = closeMenu('Text color');
+  const openAndGetBackcolorMenu = openAndGetMenu('Background color');
+  const closeBackcolorMenu = closeMenu('Background color');
 
   TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
     ':focus { transform: scale(0.8) }'
@@ -163,5 +165,16 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
     await openAndGetForecolorMenu();
     assertFocusIsOnColor('rgb(224, 62, 45)');
     closeForecolorMenu();
+  });
+
+  it('TINY-9342: selected color is successfully marked even in a tree', async () => {
+    const editor = hook.editor();
+    editor.setContent('<pre><span style="background-color: rgb(224, 62, 45);"><b>red</b></span></pre>');
+
+    TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1, true);
+
+    await openAndGetBackcolorMenu();
+    assertFocusIsOnColor('rgb(224, 62, 45)');
+    closeBackcolorMenu();
   });
 });
