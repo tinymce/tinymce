@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Fixed
 - An element could be dropped onto the decendants of a noneditable element. #TINY-9364
+- Toolbar split buttons in advlist plugin to show the correct state when the cursor is in a checklist. #TINY-5167
 
 ### Improved
 - Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
