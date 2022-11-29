@@ -461,7 +461,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
         })
       );
       const selPath = browser.isFirefox() ? [ 0, 2, 0, 0, 0, 0 ] : [ 0, 1, 0, 0, 0, 0 ];
-      TinyAssertions.assertSelection(editor, selPath, 0, selPath, 0);
+      TinyAssertions.assertCursor(editor, selPath, 0);
     });
   });
 });
