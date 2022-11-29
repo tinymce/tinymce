@@ -1,5 +1,5 @@
 import { Arr, Fun, Optional, Type } from '@ephox/katamari';
-import { PredicateFilter, SugarElement, Traverse } from '@ephox/sugar';
+import { PredicateExists, SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
@@ -102,7 +102,7 @@ const backspaceDelete = (editor: Editor, forward: boolean): Optional<() => void>
   editor.selection.isCollapsed() ? deleteCaret(editor, forward) : deleteRange(editor);
 
 const hasAncestorInlineCaret = (elm: SugarElement<Node>): boolean =>
-  PredicateFilter.ancestors(elm, (node) => isCaretNode(node.dom), (node) => ElementType.isBlock(node)).length > 0;
+  PredicateExists.ancestor(elm, (node) => isCaretNode(node.dom), ElementType.isBlock);
 
 const hasAncestorInlineCaretAtStart = (editor: Editor): boolean =>
   hasAncestorInlineCaret(SugarElement.fromDom(editor.selection.getStart()));
