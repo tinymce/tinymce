@@ -672,15 +672,19 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
             adjustments: {
               toDock: { action: () => Promise<void>; optTop: Optional<number> };
               toUndock: () => Promise<void>;
-            }): Promise<void> => {
+            }
+          ): Promise<void> => {
             editor.execCommand('showTestDialog');
             const dialog = await TinyUiActions.pWaitForDialog(editor);
 
             const elementWithFixed: SugarElement<HTMLElement> = Traverse.parent(dialog).getOrDie(
               'Could not find parent of dialog'
             ) as SugarElement<HTMLElement>;
-            // Trigger docking
+            // Trigger docking. On Safari, we seem to need this wait to give it time to
+            // catch up. Not sure of the underlying cause, unfortunately.
+            await Waiter.pWait(0);
             await adjustments.toDock.action();
+
             await pWaitUntilDockedAtTop(elementWithFixed, adjustments.toDock.optTop);
 
             await adjustments.toUndock();
