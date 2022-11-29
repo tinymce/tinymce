@@ -16,7 +16,7 @@ interface TestScenario {
   readonly label: string;
   readonly settings: {
     readonly inline: boolean;
-    readonly shadow: boolean;
+    readonly shadow: 'inside' | 'outside' | 'none';
   };
 }
 
@@ -91,7 +91,6 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
     return SelectorFind.descendant<HTMLElement>(root, testUi.selector)
       .fold(
         () => {
-          debugger;
           throw new Error(`Could not find selector: ${testUi.selector} in root`);
         },
 
@@ -260,7 +259,6 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
     };
 
     editor.on(eventName, f);
-    console.log('Waiting', eventName, Date.now());
     action();
 
     return Waiter.pTryUntil(
@@ -272,14 +270,12 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
           throw new Error('errormessage');
           throw new Error(m);
         } else if (hasFinished) {
-          console.log('Heard event', eventName, Date.now());
           return;
         } else {
-          console.log('keep waiting');
           throw new Error('Keep waiting');
         }
       }
-    ).then<void>((res) => {
+    ).then<void>(() => {
       return new Promise((resolve) => {
         setTimeout(() => {
           resolve();
@@ -343,6 +339,17 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
     }
   };
 
+  const setupRoot = (scenario: TestScenario, shadowParent: SugarElement<HTMLElement>): SugarElement<HTMLElement | ShadowRoot> => {
+    if (scenario.settings.shadow !== 'none') {
+      const shadowHost = SugarElement.fromTag('div', document);
+      Class.add(shadowHost, 'test-shadow-root');
+      Insert.append(shadowParent, shadowHost);
+      return SugarElement.fromDom(shadowHost.dom.attachShadow({ mode: 'open' }));
+    } else {
+      return SugarBody.body();
+    }
+  };
+
   const setupSingleScrollerElement = (scenario: TestScenario) => {
     const scroller = SugarElement.fromTag('div');
     Css.setAll(scroller, {
@@ -357,19 +364,41 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
       `<div style="height: ${height}px; background-color: ${bgColor};" />`
     );
 
-    // Can't be a textarea for inline mode.
     const target = setupTargetElement(scenario);
 
-    InsertAll.append(
-      scroller,
-      [
+    if (scenario.settings.shadow === 'none') {
+      InsertAll.append(
+        scroller,
+        [
+          mkBanner(heights.banner, 'orange'),
+          target,
+          mkBanner(2000, 'lime')
+        ]
+      );
+
+      Insert.append(SugarBody.body(), scroller);
+    } else if (scenario.settings.shadow === 'inside') {
+      // The scroller is being appended to the ShadowRoot
+      const root = setupRoot(scenario, SugarBody.body());
+      InsertAll.append(
+        scroller,
+        [
+          mkBanner(heights.banner, 'orange'),
+          target,
+          mkBanner(2000, 'lime')
+        ]
+      );
+      Insert.append(root, scroller);
+    } else {
+      // The scroller is appending the ShadowRoot
+      const root = setupRoot(scenario, scroller);
+      InsertAll.append(root, [
         mkBanner(heights.banner, 'orange'),
         target,
         mkBanner(2000, 'lime')
-      ]
-    );
-
-    Insert.append(SugarBody.body(), scroller);
+      ]);
+      Insert.append(SugarBody.body(), scroller);
+    }
 
     return {
       element: target,
@@ -399,18 +428,17 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
     );
 
   const scenarios: TestScenario[] = [
-    { label: 'classic', settings: { inline: false, shadow: false }},
-    { label: 'inline', settings: { inline: true, shadow: false }},
-    // { label: 'shadowdom classic', settings: { inline: false, shadow: true }},
+    { label: 'classic', settings: { inline: false, shadow: 'none' }},
+    { label: 'inline', settings: { inline: true, shadow: 'none' }},
+    { label: 'shadowdom classic', settings: { inline: false, shadow: 'inside' }},
+    { label: 'shadowdom classic', settings: { inline: false, shadow: 'outside' }},
     // { label: 'shadowdom inline', settings: { inline: true, shadow: true }}
   ];
 
-  context('Shadow DOM Editor', () => {
-
-  });
+  context('Shadow DOM Editor', () => { });
 
   context('Classic editor', () => {
-    const scenario = scenarios[1];
+    const scenario = scenarios[2];
 
     context('Single scroller', () => {
       const hook = TinyHooks.bddSetupFromElement<Editor>(

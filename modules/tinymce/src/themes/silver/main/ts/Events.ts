@@ -1,6 +1,6 @@
 import { Attachment, Channels, Gui, SystemEvents } from '@ephox/alloy';
 import { Arr } from '@ephox/katamari';
-import { Compare, DomEvent, EventArgs, SugarDocument, SugarElement } from '@ephox/sugar';
+import { Compare, DomEvent, EventArgs, SugarDocument, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { AfterProgressStateEvent } from 'tinymce/core/api/EventTypes';
@@ -62,7 +62,9 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMotherships: Gui.Gui
     broadcastEvent(SystemEvents.windowResize(), DomEvent.fromRawEvent(evt));
   };
 
-  const onElementScroll = DomEvent.capture(doc, 'scroll', (evt) => {
+  // This needs to consider the shadow root, because otherwise we don't get the scroll events
+  const dos = SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement()));
+  const onElementScroll = DomEvent.capture(dos, 'scroll', (evt) => {
     requestAnimationFrame(() => {
       const c = editor.getContainer();
       // Because this can fire before the editor is rendered, we need to stop that from happening.
