@@ -102,7 +102,7 @@ const getEndPointNode = (editor: Editor, rng: Range, start: Boolean, root: Node)
       if (container.parentNode !== null && isInline(editor, container.parentNode)) {
         container = container.parentNode;
       }
-      while (container.nextSibling !== null && ( isInline(editor, container.nextSibling) || NodeType.isTextNode(container.nextSibling) ) ) {
+      while (container.nextSibling !== null && (isInline(editor, container.nextSibling) || NodeType.isTextNode(container.nextSibling))) {
         container = container.nextSibling;
       }
     }
