@@ -24,7 +24,7 @@ export const renderColorSwatchItem = (spec: Menu.ColorSwatchMenuItem, backstage:
     columns,
     presets,
     ItemResponse.CLOSE_ON_EXECUTE,
-    Fun.never,
+    spec.select.getOr(Fun.never),
     backstage.shared.providers
   );
 
