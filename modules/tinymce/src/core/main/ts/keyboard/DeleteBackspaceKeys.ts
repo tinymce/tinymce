@@ -82,7 +82,7 @@ const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent, isBackspaceKey
 };
 
 const setup = (editor: Editor, caret: Cell<Text | null>): void => {
-  // global backspace keydown state to emulate Meta + Backspace keyup detection on macOS
+  // track backspace keydown state for emulating Meta + Backspace keyup detection on macOS
   let isBackspaceKeydown = false;
 
   editor.on('keydown', (evt: EditorEvent<KeyboardEvent>) => {
