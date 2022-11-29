@@ -1,5 +1,5 @@
 import { ApproxStructure, RealKeys } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { before, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
@@ -17,12 +17,16 @@ describe('webdriver.tinymce.core.delete.ShortcutDeleteTest', () => {
   const os = platform.os;
   const browser = platform.browser;
 
+  before(function () {
+    // Safari doesn't automatically trigger keyup override in tests
+    if (browser.isSafari()) {
+      this.skip();
+    }
+  });
+
   const doBackspaceDelete = async (editor: Editor, deletionKey: 'Backspace' | 'Delete', modifiers: BackspaceDeleteModifier): Promise<void> => {
     await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo(modifiers, deletionKey) ]);
-    if (browser.isSafari()) {
-      // safari doesn't trigger this override automatically in test
-      InlineFormatDelete.refreshCaret(editor);
-    }
+    InlineFormatDelete.refreshCaret(editor);
   };
 
   const assertStructureAndSelectionFormattedWord = (editor: Editor): void => {
