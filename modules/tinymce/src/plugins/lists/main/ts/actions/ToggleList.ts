@@ -1,5 +1,4 @@
-import { Type, Unicode, Obj, Fun, Arr } from '@ephox/katamari';
-import { SugarElement, SugarNode } from '@ephox/sugar';
+import { Type, Unicode } from '@ephox/katamari';
 
 import BookmarkManager from 'tinymce/core/api/dom/BookmarkManager';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -47,25 +46,7 @@ const removeStyles = (dom: DOMUtils, element: HTMLElement, styles: string[]): vo
   Tools.each(styles, (style) => dom.setStyle(element, style, ''));
 };
 
-const blocks = [
-  'article', 'aside', 'details', 'div', 'dt', 'figcaption', 'footer',
-  'form', 'fieldset', 'header', 'hgroup', 'html', 'main', 'nav',
-  'section', 'summary', 'body', 'p', 'dl', 'multicol', 'dd', 'figure',
-  'address', 'center', 'blockquote', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-  'listing', 'xmp', 'pre', 'plaintext', 'menu', 'dir', 'ul', 'ol', 'li', 'hr',
-  'table', 'tbody', 'thead', 'tfoot', 'th', 'tr', 'td', 'caption'
-];
-
-const lazyLookup = <T extends Node = HTMLElement>(items: string[]) => {
-  let lookup: Record<string, boolean> | undefined;
-  return (node: SugarElement<Node>): node is SugarElement<T> => {
-    lookup = lookup ? lookup : Arr.mapToObject(items, Fun.always);
-    return Obj.has(lookup, SugarNode.name(node));
-  };
-};
-
-const isBlock = lazyLookup(blocks);
-const isInline = (node: SugarElement<Node>): node is SugarElement<HTMLElement> => SugarNode.isElement(node) && !isBlock(node);
+const isInline = (editor: Editor, node: Node): boolean => Type.isNonNullable(node) && !NodeType.isBlock(node, editor.schema.getBlockElements());
 
 const getEndPointNode = (editor: Editor, rng: Range, start: Boolean, root: Node): Node => {
   let container = rng[start ? 'startContainer' : 'endContainer'];
@@ -80,37 +61,48 @@ const getEndPointNode = (editor: Editor, rng: Range, start: Boolean, root: Node)
     container = container.nextSibling;
   }
 
+  // The reason why the next two if statements exist is because when the root node is a table cell (possibly some other node types)
+  // then the highest we can go up the dom hierarchy is one level below the table cell.
+  // So what happens when we have a bunch of inline nodes and text nodes in the table cell
+  // and when the selection is collapsed inside one of the inline nodes then only that inline node (or text node) will be included
+  // in the created list because that would be one level below td node and the other inline nodes won't be included.
+  // So the fix proposed is to traverse left when looking for start node (and traverse right when looking for end node)
+  // and keep traversing as long as we have an inline or text node (same for traversing right).
+  // This way we end up including all the inline elements in the created list.
+  // For more info look at #TINY-6853
+
+  // Traverse left to include inline/text nodes
   if (start && NodeType.isTextNode(container)) {
     if (Unicode.isZwsp(container.textContent as string)) {
-      if (container.previousSibling !== null && isInline(SugarElement.fromDom(container.previousSibling))) {
-        container = container.previousSibling.firstChild || container.previousSibling;
-      } else if (container.nextSibling !== null && isInline(SugarElement.fromDom(container.nextSibling))) {
+      if (container.previousSibling !== null && isInline(editor, container.previousSibling)) {
+        container = container.previousSibling.lastChild || container.previousSibling;
+      } else if (container.nextSibling !== null && isInline(editor, container.nextSibling)) {
         container = container.nextSibling.firstChild || container.nextSibling;
       }
-    }
-    if (!Unicode.isZwsp(container.textContent as string)) {
-      if (container.parentNode !== null && isInline(SugarElement.fromDom(container.parentNode))) {
+    } else {
+      if (container.parentNode !== null && isInline(editor, container.parentNode)) {
         container = container.parentNode;
       }
-      while (container.previousSibling !== null && (isInline(SugarElement.fromDom(container.previousSibling)) || NodeType.isTextNode(container.previousSibling))) {
+      while (container.previousSibling !== null && (isInline(editor, container.previousSibling) || NodeType.isTextNode(container.previousSibling))) {
         container = container.previousSibling;
       }
     }
   }
 
+  // Traverse right to include inline/text nodes
   if (!start && NodeType.isTextNode(container)) {
     if (Unicode.isZwsp(container.textContent as string)) {
-      if (container.nextSibling !== null && isInline(SugarElement.fromDom(container.nextSibling))) {
+      if (container.nextSibling !== null && isInline(editor, container.nextSibling)) {
         container = container.nextSibling.firstChild || container.nextSibling;
-      } else if (container.previousSibling !== null && isInline(SugarElement.fromDom(container.previousSibling))) {
+      } else if (container.previousSibling !== null && isInline(editor, container.previousSibling)) {
         container = container.previousSibling.firstChild || container.previousSibling;
       }
     }
     if (!Unicode.isZwsp(container.textContent as string)) {
-      if (container.parentNode !== null && isInline(SugarElement.fromDom(container.parentNode))) {
+      if (container.parentNode !== null && isInline(editor, container.parentNode)) {
         container = container.parentNode;
       }
-      while (container.nextSibling !== null && ( isInline(SugarElement.fromDom(container.nextSibling)) || NodeType.isTextNode(container.nextSibling) ) ) {
+      while (container.nextSibling !== null && ( isInline(editor, container.nextSibling) || NodeType.isTextNode(container.nextSibling) ) ) {
         container = container.nextSibling;
       }
     }
