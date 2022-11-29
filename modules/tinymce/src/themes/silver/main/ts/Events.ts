@@ -62,7 +62,11 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMotherships: Gui.Gui
     broadcastEvent(SystemEvents.windowResize(), DomEvent.fromRawEvent(evt));
   };
 
-  // This needs to consider the shadow root, because otherwise we don't get the scroll events
+  // TINY-9425: At the moment, we are only supporting situations where the scrolling container
+  // is *inside* the shadow root - which is why we bind to the root node, instead of just the outer
+  // document. However, if we needed to support scrolling containers that *contained* the shadow root,
+  // we would need to listen to the outer document (or at the least, the root node of the scrolling div in
+  // the case of muliple layers of shadow roots).
   const dos = SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement()));
   const onElementScroll = DomEvent.capture(dos, 'scroll', (evt) => {
     requestAnimationFrame(() => {

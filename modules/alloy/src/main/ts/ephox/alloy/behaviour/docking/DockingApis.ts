@@ -129,25 +129,19 @@ const resetInternal = (component: AlloyComponent, config: DockingConfig, state: 
 };
 
 const refresh = (component: AlloyComponent, config: DockingConfig, state: DockingState): void => {
-  console.log('refresh.1', document.querySelector('.tox-editor-header') ?? document.querySelector('.tox-editor-header')?.cloneNode(true));
-  console.log('REFRESH');
   // Ensure the component is attached to the document/world, if not then do nothing as we can't
   // check if the component should be docked or not when in a detached state
   if (component.getSystem().isConnected()) {
     refreshInternal(component, config, state);
   }
-  console.log('refresh.2', document.querySelector('.tox-editor-header') ?? document.querySelector('.tox-editor-header')?.cloneNode(true));
 };
 
 const reset = (component: AlloyComponent, config: DockingConfig, state: DockingState): void => {
-  console.log('reset.1', document.querySelector('.tox-editor-header') ?? document.querySelector('.tox-editor-header')?.cloneNode(true));
-  console.log('RESET');
   // If the component is not docked then there's no need to reset the state,
   // so only reset when docked
   if (state.isDocked()) {
     resetInternal(component, config, state);
   }
-  console.log('reset.2', document.querySelector('.tox-editor-header') ?? document.querySelector('.tox-editor-header')?.cloneNode(true));
 };
 
 const forceDockWithDecision = (

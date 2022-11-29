@@ -102,7 +102,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   // This is used to store the reference to the header part of OuterContainer, which is
   // *not* created by this module. This reference is used to make sure that we only bind
   // events for an inline container *once* ... because our show function is just the
-  // InlineHeader's show function if this reference is already set. we pass it through to
+  // InlineHeader's show function if this reference is already set. We pass it through to
   // InlineHeader because InlineHeader will depend on it.
   const floatContainer = Singleton.value<AlloyComponent>();
   const targetElm = SugarElement.fromDom(args.targetNode);
@@ -118,8 +118,8 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
     // this `if` block is only executed once (setting up events etc.). So the first call
     // to `render` will execute it, but the second call won't. This `render` function is
     // used for most of the "show" handlers here, so the function can be invoked either
-    // for the first time, or or just because something has been toggled to hidden previously
-    // after having already been shown.
+    // for the first time, or or just because something is being show again, after being
+    // toggled to hidden earlier.
     if (floatContainer.isSet()) {
       ui.show();
       return;
@@ -143,7 +143,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
     } else {
       Attachment.attachSystem(uiContainer, mainUi.mothership);
     }
-    // In UiRefs, dialogUi and popupUi refer to the same thing if ui_of_tomorrow is false
+    // NOTE: In UiRefs, dialogUi and popupUi refer to the same thing if ui_of_tomorrow is false
     Attachment.attachSystem(uiContainer, uiRefs.dialogUi.mothership);
 
     // Unlike menubar below which uses OuterContainer directly, this level of abstraction is

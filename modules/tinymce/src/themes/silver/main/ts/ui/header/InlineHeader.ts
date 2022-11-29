@@ -143,11 +143,7 @@ export const InlineHeader = (
   const updateChromeUi = (stickyAction: (c: AlloyComponent) => void) => {
     // Skip updating the ui if it's hidden
     if (!isVisible()) {
-      // Is this the problem?
-      console.log('I am the problem!');
       return;
-    } else {
-      console.log('I am not the problem');
     }
 
     // Handles positioning, docking and SplitToolbar (more drawer) behaviour. Modes:
@@ -175,17 +171,11 @@ export const InlineHeader = (
 
     // Docking
     if (isSticky) {
-      // FIX: Clarify why we choose Docking.reset over Docking.refresh
-      // const action = resetDocking ? Docking.reset : Docking.refresh;
       floatContainer.on(stickyAction);
     }
 
-    console.log('repositioning', document.querySelector('.tox-editor-header') ?? document.querySelector('.tox-editor-header')?.cloneNode(true));
-
     // Floating toolbar
     repositionPopups();
-
-    console.log('repositioning.2', document.querySelector('.tox-editor-header') ?? document.querySelector('.tox-editor-header')?.cloneNode(true));
   };
 
   const doUpdateMode = (): boolean => {
@@ -222,8 +212,10 @@ export const InlineHeader = (
     doUpdateMode();
 
     // Even if we aren't updating the docking mode, we still want to reposition
-    // the Ui. We are choosing to "refresh" docking here, rather than "reset" it
-    // INVESTIGATE - REASON ... DO NOT APPROVE PR FIX FIX FIX
+    // the Ui. NOTE: We are using Docking.refresh here, rather than Docking.reset. This
+    // means it should keep whatever its "previous" coordinates were, and will just
+    // behave like the window was scrolled again, and Docking needs to work out if it
+    // is going to dock / undock
     updateChromeUi(Docking.refresh);
   };
 
@@ -237,17 +229,19 @@ export const InlineHeader = (
   };
 
   const update = () => {
-    console.log('Updating');
+    // Because we use Docking.reset here instead of Docking.refresh. That means
+    // that it will revert back to its original position, clear any state, and then
+    // trigger a refresh. This should be called in situations where the DOM has
+    // changed significantly (resizing, scrolling etc.)
     updateChromeUi(Docking.reset);
   };
 
   const updateMode = () => {
-    console.log('updating mode');
     const changedMode = doUpdateMode();
     // If the docking mode has changed due to the update, we want to reset
-    // docking.
+    // docking. This will clear any prior stored positions
     if (changedMode) {
-      updateChromeUi(Docking.reset);
+      update();
     }
   };
 
