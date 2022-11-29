@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Improved
+- Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
+
 ### Fixed
 - Ranged deletion of formatted text using selection or keyboard shortcut would sometimes cause Blink and Webkit browsers to insert interpreted tags upon typing, which may affect document semantics. #TINY-9302
 
