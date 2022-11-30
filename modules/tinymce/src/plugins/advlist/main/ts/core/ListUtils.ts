@@ -2,7 +2,7 @@ import { Arr, Optional, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
-const isCustomList = (list: Element): boolean =>
+const isCustomList = (list: HTMLElement): boolean =>
   /\btox\-/.test(list.className);
 
 const isChildOfBody = (editor: Editor, elm: Node): boolean => {
@@ -16,9 +16,9 @@ const isListNode = matchNodeNames<HTMLOListElement | HTMLUListElement | HTMLDLis
 
 const isTableCellNode = matchNodeNames<HTMLTableHeaderCellElement | HTMLTableCellElement>(/^(TH|TD)$/);
 
-const inList = (editor: Editor, e: Node[], nodeName: string): boolean =>
-  Arr.findUntil(e, isListNode, isTableCellNode)
-    .exists((list) => list.nodeName === nodeName && !isCustomList(list) && isChildOfBody(editor, list));
+const inList = (editor: Editor, parents: Node[], nodeName: string): boolean =>
+  Arr.findUntil(parents, (parent) => isListNode(parent) && !isCustomList(parent), isTableCellNode)
+    .exists((list) => list.nodeName === nodeName && isChildOfBody(editor, list));
 
 const getSelectedStyleType = (editor: Editor): Optional<string> => {
   const listElm = editor.dom.getParent(editor.selection.getNode(), 'ol,ul');
