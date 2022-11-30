@@ -109,7 +109,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
     TinyUiActions.clickOnUi(editor, submenuButton);
     return TinyUiActions.pWaitForUi(editor, '.tox-swatches-menu');
   };
-  const closeAndGetMenuColorMenu = (editor: Editor) =>
+  const closeMenuColorMenu = (editor: Editor) =>
     TinyUiActions.clickOnMenu(editor, 'button:contains("Color")');
   const openAndGetBackcolorMenu = openAndGetMenu('Background color');
   const closeBackcolorMenu = closeMenu('Background color');
@@ -235,7 +235,14 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
       menu
     );
 
-    closeAndGetMenuColorMenu(editor);
+    closeMenuColorMenu(editor);
+
+    editor.setContent('<p style="background-color: rgb(224, 62, 45);">red</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2, true);
+
+    await pOpenAndGetMenuColorMenu(editor);
+    assertFocusIsOnColor('rgb(224, 62, 45)');
+    closeMenuColorMenu(editor);
   });
 
   it('TINY-9283: selected color is successfully marked', async () => {
