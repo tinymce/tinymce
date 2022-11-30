@@ -49,6 +49,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
     },
     color_map_background: [
       '#FFFFFF', 'white',
+      'rgb(224, 62, 45)', 'red',
       '#000000', 'black',
     ],
     menu: {
@@ -102,7 +103,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
   const closeForecolorMenu = closeMenu('Text color');
   const pOpenAndGetMenuColorMenu = async (editor: Editor) => {
     const mainButton = 'button:contains("Color")';
-    const submenuButton = 'div[title="Background color"]';
+    const submenuButton = '[role="menu"] div[title="Background color"]';
     TinyUiActions.clickOnMenu(editor, mainButton);
     await TinyUiActions.pWaitForUi(editor, submenuButton);
     TinyUiActions.clickOnUi(editor, submenuButton);
@@ -196,6 +197,15 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
                     classes: [ arr.has('tox-swatch') ],
                     styles: {
                       'background-color': str.is('rgb(255, 255, 255)')
+                    },
+                    attrs: {
+                      'aria-checked': str.is('false')
+                    }
+                  }),
+                  s.element('div', {
+                    classes: [ arr.has('tox-swatch') ],
+                    styles: {
+                      'background-color': str.is('rgb(224, 62, 45)')
                     },
                     attrs: {
                       'aria-checked': str.is('false')
