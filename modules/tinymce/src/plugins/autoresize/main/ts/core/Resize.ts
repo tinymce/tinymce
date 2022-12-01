@@ -129,7 +129,6 @@ const setup = (editor: Editor, oldSize: Cell<number>): void => {
   let getExtraMarginBottom = () => Options.getAutoResizeBottomMargin(editor);
   let resizeCounter: number;
   let sizeAfterFirstResize: number;
-  let checkDone = false;
 
   editor.on('init', (e) => {
     resizeCounter = 0;
@@ -164,19 +163,19 @@ const setup = (editor: Editor, oldSize: Cell<number>): void => {
       sizeAfterFirstResize = editor.getContainer().offsetHeight;
       resize(editor, oldSize, e, getExtraMarginBottom);
       resizeCounter += 1;
-    } else if (resizeCounter >= 2 && !checkDone) {
-      const dom = editor.dom;
-      const doc = editor.getDoc();
+    } else if (resizeCounter === 2) {
+      // After the first check, this code checks if the editor's container is resized again, if so it means that the resize is in a loop
+      // in this case, the CSS is changed to let the document and body adapt to the height of the content
       const isLooping = sizeAfterFirstResize < editor.getContainer().offsetHeight;
       if (isLooping) {
+        const dom = editor.dom;
+        const doc = editor.getDoc();
         dom.setStyles(doc.documentElement, { 'min-height': 0 });
         dom.setStyles(editor.getBody(), { 'min-height': 'inherit' });
       }
       getExtraMarginBottom = isLooping ? Fun.constant(0) : getExtraMarginBottom;
-      checkDone = true;
-    }
-
-    if (checkDone) {
+      resizeCounter += 1;
+    } else {
       resize(editor, oldSize, e, getExtraMarginBottom);
     }
   });
