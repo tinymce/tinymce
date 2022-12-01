@@ -200,7 +200,7 @@ describe('browser.tinymce.plugins.autoresize.AutoresizePluginTest', () => {
       resizeEventsCount.set(0);
     });
 
-    it('TINY-9123: it should not continue to resize in some specific condition', async () => {
+    it('TINY-9123: it should not continue to resize when the CSS forces the content to have a margin-bottom lesser than autoresize_bottom_margin', async () => {
       const editor = hook.editor();
       editor.setContent('<div style="height: 250px;">a</div>');
       await Waiter.pWait(2000);
