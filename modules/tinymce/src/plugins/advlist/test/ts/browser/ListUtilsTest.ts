@@ -4,7 +4,7 @@ import { assert } from 'chai';
 
 import { isTableCellNode, isListNode } from 'tinymce/plugins/advlist/core/ListUtils';
 
-describe('atomic.tinymce.plugins.advlist.ListUtilsTest', () => {
+describe('browser.tinymce.plugins.advlist.ListUtilsTest', () => {
   it('isTableCellNode', () => {
     assert.isTrue(isTableCellNode(SugarElement.fromTag('td').dom), 'td');
     assert.isTrue(isTableCellNode(SugarElement.fromTag('th').dom), 'th');

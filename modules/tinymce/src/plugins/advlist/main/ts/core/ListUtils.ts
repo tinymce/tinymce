@@ -36,8 +36,8 @@ const isWithinNonEditableList = (editor: Editor, element: Element | null): boole
 };
 
 export {
-  isTableCellNode,
-  isListNode,
+  isTableCellNode, // Exported for testing
+  isListNode, // Exported for testing
   inList,
   getSelectedStyleType,
   isWithinNonEditableList
