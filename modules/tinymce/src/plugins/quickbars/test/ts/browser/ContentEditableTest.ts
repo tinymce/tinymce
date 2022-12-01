@@ -1,4 +1,4 @@
-import { Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { Mouse, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
@@ -68,7 +68,6 @@ describe('browser.tinymce.plugins.quickbars.ContentEditableTest', () => {
     const elem = UiFinder.findIn(TinyDom.body(editor), '#cefElement').getOrDie();
     Mouse.mouseDown(elem);
     Mouse.mouseMoveTo(elem, 10, -75);
-    await Waiter.pWait(100);
     await pAssertToolbarNotVisible();
   });
 
