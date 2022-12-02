@@ -109,17 +109,20 @@ const splitInvalidChildren = (schema: Schema, scope: Element, transparentBlocks:
   });
 };
 
-const unwrapInvalidChildren = (transparentBlocks: Element[]) => {
-  Arr.each(transparentBlocks, (block) =>
-    Arr.each(SelectorFilter.descendants(SugarElement.fromDom(block), block.nodeName.toLowerCase()), Remove.unwrap)
+const unwrapInvalidChildren = (schema: Schema, scope: Element, transparentBlocks: Element[]) => {
+  Arr.each(transparentBlocks.concat(isTransparentBlock(schema, scope ) ? [ scope ] : []), (block) =>
+    Arr.each(SelectorFilter.descendants(SugarElement.fromDom(block), block.nodeName.toLowerCase()), (elm) => {
+      if (isTransparentInline(schema, elm.dom)) {
+        Remove.unwrap(elm);
+      }
+    })
   );
 };
 
 export const updateChildren = (schema: Schema, scope: Element): void => {
-  const transparentBlocks = updateBlockStateOnChildren(schema, scope).concat(isTransparentBlock(schema, scope ) ? [ scope ] : []);
-
-  unwrapInvalidChildren(transparentBlocks);
+  const transparentBlocks = updateBlockStateOnChildren(schema, scope);
   splitInvalidChildren(schema, scope, transparentBlocks);
+  unwrapInvalidChildren(schema, scope, transparentBlocks);
 };
 
 export const updateElement = (schema: Schema, target: Element): void => {
