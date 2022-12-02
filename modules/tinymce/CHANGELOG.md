@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Improved
 - Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
 
+### Fixed
+- Quick toolbars were incorrectly rendered during the dragging of `contenteditable="false"` elements. #TINY-9305
+
 ## 6.3.0 - 2022-11-23
 
 ### Added
