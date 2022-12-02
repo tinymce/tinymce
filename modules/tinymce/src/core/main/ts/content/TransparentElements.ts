@@ -1,5 +1,5 @@
 import { Arr, Obj, Type } from '@ephox/katamari';
-import { Compare, PredicateFilter, PredicateFind, SugarElement, SugarElements, SugarNode, Traverse } from '@ephox/sugar';
+import { Compare, PredicateFilter, PredicateFind, Remove, SelectorFilter, SugarElement, SugarElements, SugarNode, Traverse } from '@ephox/sugar';
 
 import AstNode from '../api/html/Node';
 import Schema, { SchemaMap } from '../api/html/Schema';
@@ -109,8 +109,16 @@ const splitInvalidChildren = (schema: Schema, scope: Element, transparentBlocks:
   });
 };
 
+const unwrapInvalidChildren = (transparentBlocks: Element[]) => {
+  Arr.each(transparentBlocks, (block) =>
+    Arr.each(SelectorFilter.descendants(SugarElement.fromDom(block), block.nodeName.toLowerCase()), Remove.unwrap)
+  );
+};
+
 export const updateChildren = (schema: Schema, scope: Element): void => {
-  const transparentBlocks = updateBlockStateOnChildren(schema, scope);
+  const transparentBlocks = updateBlockStateOnChildren(schema, scope).concat(isTransparentBlock(schema, scope ) ? [ scope ] : []);
+
+  unwrapInvalidChildren(transparentBlocks);
   splitInvalidChildren(schema, scope, transparentBlocks);
 };
 

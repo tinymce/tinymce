@@ -55,6 +55,18 @@ describe('browser.tinymce.core.content.TransparentElementsTest', () => {
       });
     });
 
+    it('TINY-9231: Should unwrap invalid children', () => {
+      withScratchDiv('', (root) => {
+        const anchor = SugarElement.fromHtml('<a href="#1"></a>');
+        Html.set(anchor, '<p><a href="#2">link</a></p>');
+        Insert.append(root, anchor);
+
+        assert.equal(Html.get(root), '<a href="#1"><p><a href="#2">link</a></p></a>', 'Check that the setup worked');
+        TransparentElements.updateChildren(schema, root.dom);
+        assert.equal(Html.get(root), '<a href="#1" data-mce-block="true"><p>link</p></a>', 'Should unwrap the inner anchor');
+      });
+    });
+
     it('TINY-9172: Should add data-mce-block on transparent block elements that wrap blocks and also remove data-mce-selected="inline-boundary"', () => testUpdateChildren({
       input: '<div><a href="#" data-mce-selected="inline-boundary"><p>link</p></a></div>',
       expected: '<div><a href="#" data-mce-block="true"><p>link</p></a></div>'
