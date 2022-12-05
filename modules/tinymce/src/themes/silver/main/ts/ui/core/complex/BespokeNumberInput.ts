@@ -14,7 +14,7 @@ interface BespokeSelectApi {
   readonly getComponent: () => AlloyComponent;
 }
 
-const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage, spec: NumberInputSpec): SketchSpec => {
+const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage, spec: NumberInputSpec): SketchSpec => {
   const currentValue = Cell('');
   const currentComp: Cell<Optional<AlloyComponent>> = Cell(Optional.none());
 

@@ -5,6 +5,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
+import { createBespokeNumberInput } from './BespokeNumberInput';
 import { createMenuItems, createSelectButton, FormatterFormatItem, SelectedFormat, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import * as FormatRegister from './utils/FormatRegister';
@@ -120,6 +121,34 @@ const getSpec = (editor: Editor): SelectSpec => {
 const createFontSizeButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
   createSelectButton(editor, backstage, getSpec(editor));
 
+const getNumberInputSpec = (editor: Editor): NumberInputSpec => {
+  const getConfigFromUnit = (unit: string): Config => {
+    const baseConfig = { step: 1 };
+
+    const configs: Record<string, Config> = {
+      em: { step: 0.1 },
+      px: { step: 1 },
+      pt: { step: 1 }
+    };
+
+    return configs[unit] || baseConfig;
+  };
+
+  return {
+    updateText: getSpec(editor).updateText,
+    getConfigFromUnit,
+    onAction: (format) => {
+      editor.undoManager.transact(() => {
+        editor.focus();
+        editor.execCommand('FontSize', false, format);
+      });
+    }
+  };
+};
+
+const createFontSizeInputButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
+  createBespokeNumberInput(editor, backstage, getNumberInputSpec(editor));
+
 // TODO: Test this!
 const createFontSizeMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
@@ -129,4 +158,4 @@ const createFontSizeMenu = (editor: Editor, backstage: UiFactoryBackstage): void
   });
 };
 
-export { createFontSizeButton, createFontSizeMenu };
+export { createFontSizeButton, createFontSizeInputButton, createFontSizeMenu };
