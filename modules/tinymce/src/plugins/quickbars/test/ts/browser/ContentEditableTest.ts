@@ -1,5 +1,6 @@
+import { Mouse, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/quickbars/Plugin';
@@ -58,5 +59,27 @@ describe('browser.tinymce.plugins.quickbars.ContentEditableTest', () => {
     TinyAssertions.assertCursor(editor, [ 0 ], 0);
     TinyAssertions.assertContentPresence(editor, { 'p[data-mce-bogus="all"]': 1, 'p[data-mce-caret="before"]': 1 });
     await pAssertToolbarNotVisible();
+  });
+
+  it('TINY-9305: Toolbar is not shown when dragging', async () => {
+    const editor = hook.editor();
+    const emptyP = '<p>&nbsp;</p>';
+    editor.setContent(emptyP + emptyP + emptyP + '<p id="cefElement" contenteditable="false">CEF element</p>' + emptyP + emptyP + emptyP);
+    const elem = UiFinder.findIn(TinyDom.body(editor), '#cefElement').getOrDie();
+    Mouse.mouseDown(elem);
+    Mouse.mouseMoveTo(elem, 10, -75);
+    await pAssertToolbarNotVisible();
+  });
+
+  it('TINY-9305: Dragging CEF elements outside the editor should not prevent successive triggers of the quickbars', async () => {
+    const editor = hook.editor();
+    const emptyP = '<p>&nbsp;</p>';
+    editor.setContent(emptyP + emptyP + emptyP + '<p id="cefElement" contenteditable="false">CEF element</p>' + emptyP + emptyP + emptyP);
+    const elem = UiFinder.findIn(TinyDom.body(editor), '#cefElement').getOrDie();
+    Mouse.mouseDown(elem);
+    Mouse.mouseMoveTo(elem, -1000, -1000);
+    Mouse.mouseUp(elem);
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 0);
+    await pAssertToolbarVisible();
   });
 });

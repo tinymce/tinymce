@@ -346,7 +346,8 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       indent: false,
       menubar: false,
       base_url: '/project/tinymce/js/tinymce',
-      height: 3000
+      height: 3000,
+      extended_valid_elements: 'span[class|contenteditable]',
     }, [], true);
 
     const moveToDragElementToDestinationElement = async (editor: Editor, xOffset: number, yOffset: number) => {
@@ -380,6 +381,30 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       await moveToDragElementToDestinationElement(editor, 10, -15);
 
       TinyAssertions.assertContent(editor, getContentWithCefElements([ 'toDrag', 'destination', 'obstacle' ]));
+    });
+
+    it('TINY-9364: Should prevent dropping an element onto the descendant of another CEF element', async () => {
+      const editor = hook.editor();
+      const originalContent = '<div class="toDrag" style="margin: 40px; width: 1110px; height: 120px; background-color: blue;" contenteditable="false">To drag element</div>'
+      + '<div style="margin: 40px; width: 1110px; height: 120px; background-color: red;" contenteditable="false"><span class="destination">Destination element</span></div>';
+      editor.setContent(originalContent);
+      await moveToDragElementToDestinationElement(editor, 0, 0);
+
+      TinyAssertions.assertContent(editor, originalContent);
+    });
+
+    it('TINY-9364: Should allow dropping an element onto a contenteditable=true element that is within a contenteditable=false element', async () => {
+      const editor = hook.editor();
+      const originalContent = '<div class="toDrag" style="margin: 40px; width: 1110px; height: 120px; background-color: blue;" contenteditable="false">To drag element</div>'
+      + '<div style="margin: 40px; width: 1110px; height: 120px; background-color: red;" contenteditable="false"><span class="destination" contenteditable="true">Destination element</span></div>';
+      const expectedContent = '<div style="margin: 40px; width: 1110px; height: 120px; background-color: red;" contenteditable="false">' +
+      '<div class="toDrag" style="margin: 40px; width: 1110px; height: 120px; background-color: blue;" contenteditable="false">To drag element</div>' +
+      '<span class="destination" contenteditable="true">Destination element</span>' +
+    '</div>';
+      editor.setContent(originalContent);
+      await moveToDragElementToDestinationElement(editor, 0, 0);
+
+      TinyAssertions.assertContent(editor, expectedContent);
     });
   });
 });
