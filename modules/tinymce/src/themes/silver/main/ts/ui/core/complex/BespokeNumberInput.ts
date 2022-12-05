@@ -32,9 +32,9 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
 
   const changeValue = (f: (v: number, step: number) => number): void => {
     const text = currentValue.get();
-    const value = parseFloat(text.match(/^[\d\.]+/)?.join('') || '0');
+    const value = parseFloat(text.match(/^[\d\.]+/)?.join('') ?? '0');
     const unitRegexp = new RegExp(`(?<=${value})\\D+$`);
-    const unit = text.match(unitRegexp)?.join('') || '';
+    const unit = text.match(unitRegexp)?.join('') ?? '';
     const newValue = f(value, spec.getConfigFromUnit(unit).step);
     const newValueWithUnit = `${isValidValue(newValue) ? newValue : value}${unit}`;
 
@@ -115,7 +115,7 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
           if (Focus.hasFocus(wrapperComp.element)) {
             return Optional.none();
           } else {
-            Focusing.focus(wrapperComp);
+            Focus.focus(wrapperComp.element);
             return Optional.some(true);
           }
         }
