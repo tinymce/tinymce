@@ -15,17 +15,6 @@ const enum ListType {
   UnorderedList = 'UL'
 }
 
-const findIndex = <T>(list: T[], predicate: (element: T) => boolean): number => {
-  for (let index = 0; index < list.length; index++) {
-    const element = list[index];
-
-    if (predicate(element)) {
-      return index;
-    }
-  }
-  return -1;
-};
-
 // <ListStyles>
 const styleValueToText = (styleValue: string): string => {
   return styleValue.replace(/\-/g, ' ').replace(/\b\w/g, (chr) => {
@@ -36,16 +25,9 @@ const styleValueToText = (styleValue: string): string => {
 const normalizeStyleValue = (styleValue: string | undefined): string =>
   Type.isNullable(styleValue) || styleValue === 'default' ? '' : styleValue;
 
-const isWithinList = (editor: Editor, e: EditorEvent<NodeChangeEvent>, nodeName: ListType): boolean => {
-  const tableCellIndex = findIndex(e.parents, ListUtils.isTableCellNode);
-  const parents = tableCellIndex !== -1 ? e.parents.slice(0, tableCellIndex) : e.parents;
-  const lists = Tools.grep(parents, ListUtils.isListNode(editor));
-  return lists.length > 0 && lists[0].nodeName === nodeName;
-};
-
 const makeSetupHandler = (editor: Editor, nodeName: ListType) => (api: Toolbar.ToolbarSplitButtonInstanceApi | Toolbar.ToolbarToggleButtonInstanceApi) => {
   const nodeChangeHandler = (e: EditorEvent<NodeChangeEvent>) => {
-    api.setActive(isWithinList(editor, e, nodeName));
+    api.setActive(ListUtils.inList(editor, e.parents, nodeName));
     api.setEnabled(!ListUtils.isWithinNonEditableList(editor, e.element));
   };
   editor.on('NodeChange', nodeChangeHandler);
