@@ -134,7 +134,7 @@ describe('webdriver.tinymce.core.delete.ShortcutDeleteTest', () => {
 
   const ctrlModifier: BackspaceDeleteModifier = os.isMacOS() ? { alt: true } : { ctrl: true };
 
-  it('Ctrl/Alt + Backspace at the end of a formatted word', async () => {
+  it('TINY-9302: Ctrl/Alt + Backspace at the end of a formatted word', async () => {
     const editor = hook.editor();
     editor.setContent('<p><strong><em><span style="text-decoration: underline;">abc</span></em></strong></p>');
     TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 'abc'.length);
@@ -142,7 +142,7 @@ describe('webdriver.tinymce.core.delete.ShortcutDeleteTest', () => {
     assertStructureAndCursorFormattedWord(editor);
   });
 
-  it('Ctrl/Alt + Delete at the start of a formatted word', async () => {
+  it('TINY-9302: Ctrl/Alt + Delete at the start of a formatted word', async () => {
     const editor = hook.editor();
     editor.setContent('<p><strong><em><span style="text-decoration: underline;">abc</span></em></strong></p>');
     TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);

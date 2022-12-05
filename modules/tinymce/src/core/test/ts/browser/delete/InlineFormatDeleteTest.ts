@@ -293,7 +293,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
     });
   });
 
-  context('Backspace/delete a selection', () => {
+  context('TINY-9302: Backspace/delete a selection', () => {
     const browser = PlatformDetection.detect().browser;
 
     const assertStructureAndSelectionBlockDelete = (editor: Editor) => {
