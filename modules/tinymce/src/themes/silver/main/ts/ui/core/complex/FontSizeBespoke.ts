@@ -9,6 +9,16 @@ import { createMenuItems, createSelectButton, FormatterFormatItem, SelectedForma
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import * as FormatRegister from './utils/FormatRegister';
 
+interface Config {
+  step: number;
+}
+
+export interface NumberInputSpec {
+  onAction: (format: string) => void;
+  updateText: (comp: AlloyComponent) => void;
+  getConfigFromUnit: (unit: string) => Config;
+}
+
 // See https://websemantics.uk/articles/font-size-conversion/ for conversions
 const legacyFontSizes: Record<string, string> = {
   '8pt': '1',
