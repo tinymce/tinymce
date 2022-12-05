@@ -60,7 +60,7 @@ const deleteCaret = (editor: Editor, forward: boolean): Optional<() => void> => 
 
 const isBrInEmptyElement = (elm: Element): boolean => {
   const parentElm = elm.parentElement;
-  return !Type.isNull(parentElm) && Empty.isEmpty(SugarElement.fromDom(parentElm)) && NodeType.isBr(elm);
+  return NodeType.isBr(elm) && !Type.isNull(parentElm) && Empty.isEmpty(SugarElement.fromDom(parentElm));
 };
 
 const isEmptyCaret = (elm: Element): boolean =>
