@@ -23,6 +23,7 @@ export interface InsertTableMenuItemSpec extends BaseFancyMenuItemSpec<'insertta
 
 export interface ColorSwatchMenuItemSpec extends BaseFancyMenuItemSpec<'colorswatch'> {
   fancytype: 'colorswatch';
+  select?: (value: string) => boolean;
   initData?: {
     allowCustomColors?: boolean;
     colors?: ChoiceMenuItemSpec[];
@@ -46,6 +47,7 @@ export interface InsertTableMenuItem extends BaseFancyMenuItem<'inserttable'> {
 
 export interface ColorSwatchMenuItem extends BaseFancyMenuItem<'colorswatch'> {
   fancytype: 'colorswatch';
+  select: Optional<(value: string) => boolean>;
   initData: {
     allowCustomColors: boolean;
     colors: Optional<ChoiceMenuItemSpec[]>;
@@ -66,6 +68,7 @@ const insertTableFields = [
 ].concat(baseFields);
 
 const colorSwatchFields = [
+  FieldSchema.optionFunction('select'),
   FieldSchema.defaultedObjOf('initData', {}, [
     FieldSchema.defaultedBoolean('allowCustomColors', true),
     FieldSchema.defaultedString('storageKey', 'default'),

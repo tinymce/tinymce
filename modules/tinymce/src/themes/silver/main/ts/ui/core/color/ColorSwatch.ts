@@ -121,15 +121,18 @@ const setIconColor = (splitButtonApi: Toolbar.ToolbarSplitButtonInstanceApi, nam
   splitButtonApi.setIconFill(id, newColor);
 };
 
+const select = (editor: Editor, format: ColorFormat) =>
+  (value: string) => {
+    const optCurrentHex = getCurrentColor(editor, format);
+    return Optionals.is(optCurrentHex, value.toUpperCase());
+  };
+
 const registerTextColorButton = (editor: Editor, name: string, format: ColorFormat, tooltip: string, lastColor: Cell<string>) => {
   editor.ui.registry.addSplitButton(name, {
     tooltip,
     presets: 'color',
     icon: name === 'forecolor' ? 'text-color' : 'highlight-bg-color',
-    select: (value) => {
-      const optCurrentHex = getCurrentColor(editor, format);
-      return Optionals.is(optCurrentHex, value.toUpperCase());
-    },
+    select: select(editor, format),
     columns: Options.getColorCols(editor, format),
     fetch: getFetch(Options.getColors(editor, format), format, Options.hasCustomColors(editor)),
     onAction: (_splitButtonApi) => {
@@ -171,6 +174,7 @@ const registerTextColorMenuItem = (editor: Editor, name: string, format: ColorFo
       {
         type: 'fancymenuitem',
         fancytype: 'colorswatch',
+        select: select(editor, format),
         initData: {
           storageKey: format,
         },
