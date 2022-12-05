@@ -56,7 +56,7 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
       styles: {
         display: 'flex'
       },
-      classes: [ 'number-input-wrapper' ]
+      classes: [ 'tox-number-input' ]
     },
     components: [
       Button.sketch({
