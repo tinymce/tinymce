@@ -90,7 +90,8 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
                   s.element('span', {
                     attrs: {
                       'id': str.is('_mce_caret'),
-                      'data-mce-bogus': str.is('1')
+                      'data-mce-bogus': str.is('1'),
+                      'data-mce-type': str.is('format-caret')
                     },
                     children: [
                       s.element('strong', {
@@ -127,7 +128,8 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
                   s.element('span', {
                     attrs: {
                       'id': str.is('_mce_caret'),
-                      'data-mce-bogus': str.is('1')
+                      'data-mce-bogus': str.is('1'),
+                      'data-mce-type': str.is('format-caret')
                     },
                     children: [
                       s.element('strong', {
@@ -164,7 +166,8 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
                   s.element('span', {
                     attrs: {
                       'id': str.is('_mce_caret'),
-                      'data-mce-bogus': str.is('1')
+                      'data-mce-bogus': str.is('1'),
+                      'data-mce-type': str.is('format-caret')
                     },
                     children: [
                       s.element('strong', {
@@ -219,7 +222,8 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
                       s.element('span', {
                         attrs: {
                           'id': str.is('_mce_caret'),
-                          'data-mce-bogus': str.is('1')
+                          'data-mce-bogus': str.is('1'),
+                          'data-mce-type': str.is('format-caret')
                         },
                         children: [
                           s.element('strong', {
@@ -262,7 +266,8 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
                       s.element('span', {
                         attrs: {
                           'id': str.is('_mce_caret'),
-                          'data-mce-bogus': str.is('1')
+                          'data-mce-bogus': str.is('1'),
+                          'data-mce-type': str.is('format-caret')
                         },
                         children: [
                           s.element('strong', {
@@ -321,7 +326,8 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
                     s.element('span', {
                       attrs: {
                         'id': str.is('_mce_caret'),
-                        'data-mce-bogus': str.is('1')
+                        'data-mce-bogus': str.is('1'),
+                        'data-mce-type': str.is('format-caret')
                       },
                       children: [
                         s.element('strong', {
@@ -384,7 +390,8 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
                   s.element('span', {
                     attrs: {
                       'id': str.is('_mce_caret'),
-                      'data-mce-bogus': str.is('1')
+                      'data-mce-bogus': str.is('1'),
+                      'data-mce-type': str.is('format-caret')
                     },
                     children: [
                       s.element('strong', {
@@ -432,7 +439,8 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
                   s.element('span', {
                     attrs: {
                       'id': str.is('_mce_caret'),
-                      'data-mce-bogus': str.is('1')
+                      'data-mce-bogus': str.is('1'),
+                      'data-mce-type': str.is('format-caret')
                     },
                     children: [
                       s.element('strong', {
