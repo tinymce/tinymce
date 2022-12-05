@@ -44,7 +44,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
       noopBackspace(editor);
       TinyAssertions.assertContent(editor, '<p>a</p>');
-      TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
+      TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
     });
 
     it('Delete before plain text should do nothing', () => {
@@ -53,7 +53,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
       noopDelete(editor);
       TinyAssertions.assertContent(editor, '<p>a</p>');
-      TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
+      TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
     });
 
     it('Backspace in middle of plain text should do nothing', () => {
@@ -62,7 +62,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
       noopBackspace(editor);
       TinyAssertions.assertContent(editor, '<p>ab</p>');
-      TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
+      TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
     });
 
     it('Delete in middle of plain text should do nothing', () => {
@@ -71,7 +71,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
       noopDelete(editor);
       TinyAssertions.assertContent(editor, '<p>ab</p>');
-      TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
+      TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
     });
 
     it('Delete in middle of caret format span should do nothing', () => {
@@ -79,7 +79,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       editor.setContent('<p>a<span id="_mce_caret" data-mce-bogus="1" data-mce-type="format-caret"><strong>&#65279;</strong></span>b</p>', { format: 'raw' });
       TinySelections.setCursor(editor, [ 0, 1 ], 0);
       noopDelete(editor);
-      TinyAssertions.assertSelection(editor, [ 0, 1 ], 0, [ 0, 1 ], 0);
+      TinyAssertions.assertCursor(editor, [ 0, 1 ], 0);
       TinyAssertions.assertContentStructure(editor,
         ApproxStructure.build((s, str, _arr) => {
           return s.element('body', {
@@ -149,7 +149,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
           });
         })
       );
-      TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 0);
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
     });
 
     it('Delete before last character in formatted element', () => {
@@ -187,7 +187,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
           });
         })
       );
-      TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 0);
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
     });
 
     it('Backspace before last character in formatted element', () => {
@@ -195,7 +195,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       editor.setContent('<p><em>a</em><strong>b</strong></p>');
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
       noopBackspace(editor);
-      TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 0, [ 0, 1, 0 ], 0);
+      TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 0);
     });
 
     it('Delete after last character in formatted element', () => {
@@ -203,7 +203,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       editor.setContent('<p><em>a</em><strong>b</strong></p>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       noopDelete(editor);
-      TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 1);
     });
 
     it('Backspace after last character in formatted element with sibling in format parent', () => {
@@ -246,7 +246,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
           });
         })
       );
-      TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 0);
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0, 0 ], 0);
     });
 
     it('Delete after last character in formatted element with sibling in format parent', () => {
@@ -289,7 +289,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
           });
         })
       );
-      TinyAssertions.assertSelection(editor, [ 0, 0, 1, 0, 0, 0 ], 0, [ 0, 0, 1, 0, 0, 0 ], 0);
+      TinyAssertions.assertCursor(editor, [ 0, 0, 1, 0, 0, 0 ], 0);
     });
   });
 
@@ -355,7 +355,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
         })
       );
       const selPath = browser.isFirefox() ? [ 0, 0, 0, 0 ] : [ 0, 0, 0, 0, 0, 0 ];
-      TinyAssertions.assertSelection(editor, selPath, 0, selPath, 0);
+      TinyAssertions.assertCursor(editor, selPath, 0);
     };
 
     it('Backspace entire selection of block containing a single formatted element should retain original formats', () => {
@@ -419,7 +419,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
           });
         })
       );
-      TinyAssertions.assertSelection(editor, [ 0, 1, 0, 0, 0, 0 ], 0, [ 0, 1, 0, 0, 0, 0 ], 0);
+      TinyAssertions.assertCursor(editor, [ 0, 1, 0, 0, 0, 0 ], 0);
     });
 
     it('Backspace partial selection from start of formatted element within block should retain original formats', () => {
