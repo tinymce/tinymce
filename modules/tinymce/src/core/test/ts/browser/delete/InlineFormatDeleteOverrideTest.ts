@@ -34,6 +34,14 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       editor.setContent('<table><tr><td><span style="text-decoration: underline;">abc</span></td></tr></table>');
       TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 'abc'.length);
       assert.isTrue(requiresDeleteRangeOverride(editor));
+
+      editor.setContent('<p><span style="text-decoration: underline;">a<img src="about:blank">bc</span></p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 2 ], 'bc'.length);
+      assert.isTrue(requiresDeleteRangeOverride(editor));
+
+      editor.setContent('<p><span style="text-decoration: underline;">a<iframe src="about:blank"></iframe>bc</span></p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 2 ], 'bc'.length);
+      assert.isTrue(requiresDeleteRangeOverride(editor));
     });
 
     it('should return true for selections of text format elements starting from start of and ending after the end of the element', () => {
@@ -53,6 +61,14 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
 
       editor.setContent('<table><tr><td><span style="text-decoration: underline;">abc</span>d</td></tr></table>');
       TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 1 ], 'd'.length);
+      assert.isTrue(requiresDeleteRangeOverride(editor));
+
+      editor.setContent('<p><span style="text-decoration: underline;">a<img src="about:blank">bc</span>d</p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 1 ], 'd'.length);
+      assert.isTrue(requiresDeleteRangeOverride(editor));
+
+      editor.setContent('<p><span style="text-decoration: underline;">a<iframe src="about:blank"></iframe>bc</span></p><p>d</p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 1, 0 ], 'd'.length);
       assert.isTrue(requiresDeleteRangeOverride(editor));
     });
 
