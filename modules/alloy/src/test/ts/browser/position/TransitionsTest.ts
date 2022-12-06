@@ -233,7 +233,9 @@ describe('browser.alloy.position.TransitionsTest', () => {
     await pTestTransition('fixed', sinks.fixed(), scenarios, expectedEvents);
   });
 
-  it('TINY-7740: layout transition mode should only transition when the layout changes', async () => {
+  // This test is flaky when run in phantomJs
+  const testrunner = isPhantomJs ? it.skip : it;
+  testrunner('TINY-7740: layout transition mode should only transition when the layout changes', async () => {
     const button2 = memButton2.get(gui.component());
     const scenarios: Scenario[] = [
       { spec: getMakeshiftPlacementSpec(500, 300, 'layout'), expectTransition: false },
