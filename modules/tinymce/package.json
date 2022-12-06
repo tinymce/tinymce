@@ -23,6 +23,7 @@
     "silver-test-manual": "grunt bedrock-manual:silver"
   },
   "dependencies": {
+    "dompurify": "2.3.8",
     "tslib": "^2.0.0"
   }
 }

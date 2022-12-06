@@ -15,6 +15,7 @@ import { Class, SugarBody } from '@ephox/sugar';
 import Env from 'tinymce/core/api/Env';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import * as HtmlSanitizer from '../core/HtmlSanitizer';
 import * as NavigableObject from '../general/NavigableObject';
 
 const isTouch = Env.deviceType.isTouch();
@@ -84,7 +85,7 @@ const pBodyMessage = (message: string, providersBackstage: UiFactoryBackstagePro
       },
       components: [
         {
-          dom: DomFactory.fromHtml(`<p>${providersBackstage.translate(message)}</p>`)
+          dom: DomFactory.fromHtml(`<p>${HtmlSanitizer.sanitizeHtmlString(providersBackstage.translate(message))}</p>`)
         }
       ]
     }

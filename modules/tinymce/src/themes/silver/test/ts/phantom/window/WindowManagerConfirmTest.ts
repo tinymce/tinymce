@@ -195,4 +195,43 @@ describe('phantom.tinymce.themes.silver.window.WindowManagerConfirmTest', () => 
     Mouse.clickOn(SugarBody.body(), '.tox-button:contains("Yes")');
     UiFinder.notExists(SugarBody.body(), '[role="dialog"]');
   });
+
+  it('TINY-3548: sanitize message', async () => {
+    createConfirm('<a href="javascript:alert(1)">invalid link</a><script>alert(1)</script><a href="http://tiny.cloud">valid link</a>', Fun.noop);
+    const dialogBody = SelectorFind.descendant(SugarDocument.getDocument(), '.tox-dialog__body').getOrDie('Cannot find dialog body element');
+    Assertions.assertStructure('A basic alert dialog should have these components',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-dialog__body') ],
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-dialog__body-content') ],
+            children: [
+              s.element('p', {
+                children: [
+                  s.element('a', {
+                    attrs: {
+                      href: str.none('Should have been trimmed away')
+                    },
+                    children: [
+                      s.text(str.is('invalid link'))
+                    ]
+                  }),
+                  s.element('a', {
+                    attrs: {
+                      href: str.is('http://tiny.cloud')
+                    },
+                    children: [
+                      s.text(str.is('valid link'))
+                    ]
+                  })
+                ]
+              })
+            ]
+          })
+        ]
+      })),
+      dialogBody
+    );
+    await pTeardown();
+  });
 });
