@@ -83,11 +83,30 @@ const updateCaretFormat = (editor: Editor, updateFormats: Node[]): void => {
   }
 };
 
-const isSelectionAtStartOfContainer = (editor: Editor): boolean =>
-  editor.selection.getRng().startOffset === 0;
+const rangeStartsAtStartOfTextContainer = (rng: Range): boolean =>
+  rng.startOffset === 0 && NodeType.isText(rng.startContainer);
+
+const rangeStartContainerParentIsFormatElement = (editor: Editor, rng: Range): boolean => {
+  const startParent = rng.startContainer.parentElement;
+  return !Type.isNull(startParent) && CaretFormat.isFormatElement(editor, SugarElement.fromDom(startParent));
+};
+
+const rangeEndsAtEndOfStartContainer = (rng: Range): boolean =>
+  rng.endContainer.isEqualNode(rng.commonAncestorContainer) && !Type.isNull(rng.endContainer.nodeValue) && rng.endOffset === rng.endContainer.nodeValue.length;
+
+const rangeEndsAfterEndOfStartContainer = (rng: Range): boolean =>
+  !rng.endContainer.isEqualNode(rng.commonAncestorContainer);
+
+const rangeEndsAtOrAfterEndOfStartContainer = (rng: Range): boolean =>
+  rangeEndsAtEndOfStartContainer(rng) || rangeEndsAfterEndOfStartContainer(rng);
+
+const requiresDeleteRangeOverride = (editor: Editor): boolean => {
+  const rng = editor.selection.getRng();
+  return rangeStartsAtStartOfTextContainer(rng) && rangeStartContainerParentIsFormatElement(editor, rng) && rangeEndsAtOrAfterEndOfStartContainer(rng);
+};
 
 const deleteRange = (editor: Editor): Optional<() => void> => {
-  if (isSelectionAtStartOfContainer(editor)) {
+  if (requiresDeleteRangeOverride(editor)) {
     const formatNodes = getFormatNodesAtStart(editor);
     return Optional.some(() => {
       DeleteUtils.execNativeDeleteCommand(editor);
@@ -108,7 +127,7 @@ const hasAncestorInlineCaretAtStart = (editor: Editor): boolean =>
   hasAncestorInlineCaret(SugarElement.fromDom(editor.selection.getStart()));
 
 const refreshCaret = (editor: Editor): boolean => {
-  if (isSelectionAtStartOfContainer(editor) && !hasAncestorInlineCaretAtStart(editor)) {
+  if (editor.selection.getRng().startOffset === 0 && !hasAncestorInlineCaretAtStart(editor)) {
     createCaretFormatAtStart(editor, []);
   }
   return true;
@@ -116,5 +135,8 @@ const refreshCaret = (editor: Editor): boolean => {
 
 export {
   backspaceDelete,
-  refreshCaret
+  refreshCaret,
+
+  // exported for testing
+  requiresDeleteRangeOverride
 };
