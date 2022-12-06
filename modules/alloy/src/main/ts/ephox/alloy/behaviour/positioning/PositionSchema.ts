@@ -15,7 +15,7 @@ export const PositionSchema = [
     StructureSchema.valueOf((val) =>
       Arr.contains([ 'fixed', 'relative', 'absolute' ], val())
         ? Result.value(val)
-        : Result.error('Invalid value for usePositioningType'))),
+        : Result.error(`Invalid value ${val()} for usePositioningType`))),
 
   FieldSchema.option('getBounds')
 ];
