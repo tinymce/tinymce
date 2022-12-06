@@ -68,7 +68,7 @@ node("primary") {
       [ name: "win11Chrome", os: "windows-11", browser: "chrome", buckets: 1 ],
       [ name: "win11FF", os: "windows-11", browser: "firefox", buckets: 1 ],
       [ name: "win11Edge", os: "windows-11", browser: "MicrosoftEdge", buckets: 1 ],
-      [ name: "win10IE", os: "windows-10", browser: "ie", buckets: 1 ],
+      [ name: "win10IE", os: "windows-10", browser: "ie", buckets: 3 ],
       [ name: "macSafari", os: "macos", browser: "safari", buckets: 1 ],
       [ name: "macChrome", os: "macos", browser: "chrome", buckets: 1 ],
       [ name: "macFirefox", os: "macos", browser: "firefox", buckets: 1 ]
