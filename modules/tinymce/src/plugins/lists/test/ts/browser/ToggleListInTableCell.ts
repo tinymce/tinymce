@@ -74,8 +74,7 @@ describe('browser.tinymce.plugins.lists.ToggleListWithEmptyLiTest', () => {
     editor.setContent(wrapInsideTable(content));
     TinySelections.setCursor(editor, [ 0, 1, 0, 0, 1 ], 0);
     // Needed to move the cursor outside of the link
-    TinyContentActions.keydown(editor, Keys.left());
-    TinyContentActions.keyup(editor, Keys.left());
+    TinyContentActions.keystroke(editor, Keys.left());
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Bullet list"]');
     TinyAssertions.assertContent(editor, wrapInsideTableWithList(content));
   });
