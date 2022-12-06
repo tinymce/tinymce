@@ -139,7 +139,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
 
     // TINY-9203: due to Win11 FF adopting native hidden scrollbar behavior and current inability to distinguish between Win10 and Win11
     // (both os.version.major === 10), allow scrollbar to be either hidden or visible when on Win10/11 FF
-    const noVisibleScrollbarBrowser = platform.os.isMacOS() || (platform.browser.isFirefox() && platform.os.isLinux()) || (platform.browser.isFirefox() && platform.os.isWindows() && platform.os.version.major >= 10);
+    const noVisibleScrollbarBrowser = platform.os.isOSX() || (platform.browser.isFirefox() && platform.os.isLinux()) || (platform.browser.isFirefox() && platform.os.isWindows() && platform.os.version.major >= 10);
     assert.eq(true, scrollBarWidth > 5 && scrollBarWidth < 50 || (noVisibleScrollbarBrowser && scrollBarWidth === 0), 'scroll bar width, got=' + scrollBarWidth);
   };
 
