@@ -110,7 +110,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest',
 
   context(`Should preserve focus if skipFocus: true option was passed`, () => {
     Arr.each<ToolbarMode>([ 'floating', 'sliding' ], (toolbarMode) => {
-      it(`TINY-9337: Preserves focus in ${toolbarMode}`, async () => {
+      it(`TINY-9337: Preserves focus in ${toolbarMode} if skipFocus is true`, async () => {
         const editor = await McEditor.pFromSettings<Editor>({
           menubar: false,
           statusbar: false,
@@ -126,6 +126,29 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest',
         assert.equal(initialFocusedElement, document.activeElement, 'Focus should be preserved');
         editor.execCommand('ToggleToolbarDrawer', false, { skipFocus: true });
         assert.equal(initialFocusedElement, document.activeElement, 'Focus should be preserved');
+        McEditor.remove(editor);
+      });
+
+      it(`TINY-9337: Does not preserve focus in ${toolbarMode} if skipFocus is false`, async () => {
+        const editor = await McEditor.pFromSettings<Editor>({
+          menubar: false,
+          statusbar: false,
+          width: 200,
+          toolbar_mode: toolbarMode,
+          base_url: '/project/tinymce/js/tinymce'
+        });
+        await UiUtils.pWaitForEditorToRender();
+        editor.focus();
+        const initialFocusedElement = document.activeElement;
+        editor.execCommand('ToggleToolbarDrawer', false, { skipFocus: false });
+        await TinyUiActions.pWaitForUi(editor, '.tox-toolbar__overflow');
+        await Waiter.pTryUntil('Wait for toolbar to be completely open', () => {
+          assert.notEqual(initialFocusedElement, document.activeElement, 'Focus should not be preserved');
+        });
+        editor.execCommand('ToggleToolbarDrawer', false, { skipFocus: false });
+        await Waiter.pTryUntil('Wait for toolbar to be completely closed', () => {
+          assert.notEqual(initialFocusedElement, document.activeElement, 'Focus should not be preserved');
+        });
         McEditor.remove(editor);
       });
     });
