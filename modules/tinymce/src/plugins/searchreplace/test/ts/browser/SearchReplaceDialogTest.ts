@@ -1,5 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { Scroll } from '@ephox/sugar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/searchreplace/Plugin';
@@ -111,5 +113,15 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTest', () => 
     await Utils.pAssertFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', 'fish');
     findAndAssertFound(editor, 3);
     TinyUiActions.closeDialog(editor);
+  });
+
+  it('TINY-9148: Scroll should remain in place after the dialog is closed', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>top</p><p style="height: 2000px"></p><p>bottom</p>');
+    const doc = TinyDom.document(editor);
+    const initialScroll = Scroll.get(doc);
+    await Utils.pOpenDialog(editor);
+    TinyUiActions.closeDialog(editor);
+    assert.equal(initialScroll.top, Scroll.get(doc).top);
   });
 });
