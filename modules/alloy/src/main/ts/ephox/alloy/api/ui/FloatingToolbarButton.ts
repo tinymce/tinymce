@@ -33,8 +33,8 @@ const onClose = (
   options?: { skipFocus: boolean }
 ) => {
   Sandboxing.close(toolbar);
+  Toggling.off(button);
   if (!options?.skipFocus) {
-    Toggling.off(button);
     Focusing.focus(button);
   }
   ariaControls.unlink(button.element);
