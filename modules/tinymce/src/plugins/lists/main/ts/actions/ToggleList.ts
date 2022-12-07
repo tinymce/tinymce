@@ -1,12 +1,10 @@
 import { Optional, Type, Unicode } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
 
 import BookmarkManager from 'tinymce/core/api/dom/BookmarkManager';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Editor from 'tinymce/core/api/Editor';
-import { DomTreeWalker } from 'tinymce/core/api/PublicApi';
 import Tools from 'tinymce/core/api/util/Tools';
-import { isVoid } from 'tinymce/core/dom/ElementType';
 
 import { fireListEvent } from '../api/Events';
 import * as Bookmark from '../core/Bookmark';
@@ -79,7 +77,7 @@ const getEndPointNode = (editor: Editor, rng: Range, start: Boolean, root: Node)
     const dir = forward ? 'next' : 'prev';
     let node;
     while ((node = walker[dir]())) {
-      if (isVoid(SugarElement.fromDom(node) ) || Unicode.isZwsp(node.textContent as string) || node.textContent?.length === 0) {
+      if (NodeType.isVoid(editor, node) || Unicode.isZwsp(node.textContent as string) || node.textContent?.length === 0) {
         return Optional.some(node);
       }
     }
