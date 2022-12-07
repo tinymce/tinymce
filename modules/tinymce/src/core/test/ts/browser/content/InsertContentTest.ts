@@ -691,13 +691,13 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       TinyAssertions.assertContent(editor, '<div><a href="#1">a</a><a href="#2"><p>b</p></a>c</div>');
     });
 
-    it('TINY-9172: Insert inline anchor in transparent block should split the block', () => {
+    it('TINY-9172: Insert inline anchor in anchor block should unwrap the inline anchor', () => {
       const editor = hook.editor();
 
       editor.setContent('<a href="#1"><div>ac</div></a>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       editor.insertContent('<a href="#2">b</a>');
-      TinyAssertions.assertContent(editor, '<div><a href="#1">a</a><a href="#2">b</a>c</div>');
+      TinyAssertions.assertContent(editor, '<a href="#1"><div>abc</div></a>');
     });
 
     it('TINY-9172: Insert block in anchor should work and annotate the element with data-mce-block', () => {
