@@ -12,8 +12,8 @@ describe('browser.tinymce.core.EditorAutoFocusTest', () => {
   before(() => {
     Insert.append(SugarBody.body(), SugarElement.fromHtml(`<div id="abc">
       <div class="tinymce" id="mce_0">Editor_0</div>
-      <div style="margin-top: 500px" class="tinymce" id="mce_1">Editor_1</div>
-      <div style="margin-top: 500px" class="tinymce" id="mce_2">Editor_2</div>
+      <div style="margin-top: ${window.innerHeight}px"><div class="tinymce" id="mce_1">Editor_1</div></div>
+      <div style="margin-top: ${window.innerHeight}px"><div class="tinymce" id="mce_2">Editor_2</div></div>
     </div>`));
   });
 
@@ -71,10 +71,12 @@ describe('browser.tinymce.core.EditorAutoFocusTest', () => {
 
       it('TINY-8785: should autofocus the second editor', async () => {
         await pTestEditorAutoFocus('mce_1', tester.settings);
+        assert.isAtLeast(window.scrollY, 10);
       });
 
       it('TINY-8785: should autofocus the third editor', async () => {
         await pTestEditorAutoFocus('mce_2', tester.settings);
+        assert.isAtLeast(window.scrollY, 10);
       });
     });
   });
