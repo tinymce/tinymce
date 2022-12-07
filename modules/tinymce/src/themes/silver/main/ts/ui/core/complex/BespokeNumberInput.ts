@@ -15,14 +15,14 @@ interface BespokeSelectApi {
 }
 
 const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage, spec: NumberInputSpec): SketchSpec => {
-  const currentComp: Cell<Optional<AlloyComponent>> = Cell(Optional.none());
+  let currentComp: Optional<AlloyComponent> = Optional.none();
 
-  const getValueFromCurrentComp = (comp: Cell<Optional<AlloyComponent>>): string =>
-    comp.get().map((alloyComp) => Representing.getValue(alloyComp)).getOr('');
+  const getValueFromCurrentComp = (comp: Optional<AlloyComponent>): string =>
+    comp.map((alloyComp) => Representing.getValue(alloyComp)).getOr('');
 
   const onSetup = onSetupEvent(editor, 'NodeChange', (api: BespokeSelectApi) => {
     const comp = api.getComponent();
-    currentComp.set(Optional.some(comp));
+    currentComp = Optional.some(comp);
     spec.updateInputValue(comp);
   });
 
@@ -42,7 +42,7 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
     const newValueWithUnit = `${isValidValue(newValue) ? newValue : value}${unit}`;
 
     spec.onAction(newValueWithUnit);
-    currentComp.get().each((comp) => Representing.setValue(comp, newValueWithUnit));
+    currentComp.each((comp) => Representing.setValue(comp, newValueWithUnit));
   };
 
   const decrease = () => changeValue((n, s) => n - s);
