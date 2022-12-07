@@ -131,7 +131,7 @@ const getNumberInputSpec = (editor: Editor): NumberInputSpec => {
       pt: { step: 1 }
     };
 
-    return configs[unit] || baseConfig;
+    return configs[unit] ?? baseConfig;
   };
 
   return {
