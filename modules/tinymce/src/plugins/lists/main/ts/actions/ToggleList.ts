@@ -1,9 +1,12 @@
-import { Type, Unicode } from '@ephox/katamari';
+import { Optional, Type, Unicode } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
 import BookmarkManager from 'tinymce/core/api/dom/BookmarkManager';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
+import { DomTreeWalker } from 'tinymce/core/api/PublicApi';
 import Tools from 'tinymce/core/api/util/Tools';
+import { isVoid } from 'tinymce/core/dom/ElementType';
 
 import { fireListEvent } from '../api/Events';
 import * as Bookmark from '../core/Bookmark';
@@ -71,14 +74,23 @@ const getEndPointNode = (editor: Editor, rng: Range, start: Boolean, root: Node)
   // This way we end up including all the inline elements in the created list.
   // For more info look at #TINY-6853
 
+  const findBetterContainer = (container: Node, forward: boolean): Optional<Node> => {
+    const walker = new DomTreeWalker(container, root);
+    const dir = forward ? 'next' : 'prev';
+    let node;
+    while ((node = walker[dir]())) {
+      if (isVoid(SugarElement.fromDom(node) ) || Unicode.isZwsp(node.textContent as string) || node.textContent?.length === 0) {
+        return Optional.some(node);
+      }
+    }
+
+    return Optional.none();
+  };
+
   // Traverse left to include inline/text nodes
   if (start && NodeType.isTextNode(container)) {
     if (Unicode.isZwsp(container.textContent as string)) {
-      if (container.previousSibling !== null && isInline(editor, container.previousSibling)) {
-        container = container.previousSibling.lastChild || container.previousSibling;
-      } else if (container.nextSibling !== null && isInline(editor, container.nextSibling)) {
-        container = container.nextSibling.firstChild || container.nextSibling;
-      }
+      container = findBetterContainer(container, false).getOr(container);
     } else {
       if (container.parentNode !== null && isInline(editor, container.parentNode)) {
         container = container.parentNode;
@@ -92,13 +104,8 @@ const getEndPointNode = (editor: Editor, rng: Range, start: Boolean, root: Node)
   // Traverse right to include inline/text nodes
   if (!start && NodeType.isTextNode(container)) {
     if (Unicode.isZwsp(container.textContent as string)) {
-      if (container.nextSibling !== null && isInline(editor, container.nextSibling)) {
-        container = container.nextSibling.firstChild || container.nextSibling;
-      } else if (container.previousSibling !== null && isInline(editor, container.previousSibling)) {
-        container = container.previousSibling.firstChild || container.previousSibling;
-      }
-    }
-    if (!Unicode.isZwsp(container.textContent as string)) {
+      container = findBetterContainer(container, true).getOr(container);
+    } else {
       if (container.parentNode !== null && isInline(editor, container.parentNode)) {
         container = container.parentNode;
       }
