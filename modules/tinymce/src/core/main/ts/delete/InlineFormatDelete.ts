@@ -27,7 +27,7 @@ const getParentInlines = (editor: Editor): SugarElement<Node>[] => {
 
 const getFormatNodes = (editor: Editor, parentInlines: SugarElement<Node>[]): Node[] => {
   const isFormatElement = Fun.curry(CaretFormat.isFormatElement, editor);
-  return Arr.map(Arr.filter(parentInlines, isFormatElement), (elm) => elm.dom);
+  return Arr.bind(parentInlines, (elm) => isFormatElement(elm) ? [ elm.dom ] : [ ]);
 };
 
 const getFormatNodesAtStart = (editor: Editor) => {
