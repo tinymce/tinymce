@@ -55,7 +55,7 @@ const assertWidth = (editor: Editor, elm: HTMLElement, expectedWidth: number | n
   } else {
     const platform = PlatformDetection.detect();
     // This does a approximately check with a delta of 4 to compensate for Firefox sometimes being off by 4 pixels depending on version and platform see TINY-9200 for details
-    const delta = platform.browser.isFirefox() ? 4 : 2;
+    const delta = platform.browser.isFirefox() ? 4 : 3;
     assert.approximately(widthData.raw ?? -1, expectedWidth, delta, `${nodeName} width is ${expectedWidth} ~= ${widthData.raw}`);
   }
   assert.equal(widthData.unit, expectedUnit, `${nodeName} unit is ${expectedUnit}`);
