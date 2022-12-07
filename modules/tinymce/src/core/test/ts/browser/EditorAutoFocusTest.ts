@@ -11,7 +11,7 @@ import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 describe('browser.tinymce.core.EditorAutoFocusTest', () => {
   before(() => {
     Insert.append(SugarBody.body(), SugarElement.fromHtml(`<div id="abc">
-      <div style="margin-top: 500px" class="tinymce" id="mce_0">Editor_0</div>
+      <div class="tinymce" id="mce_0">Editor_0</div>
       <div style="margin-top: 500px" class="tinymce" id="mce_1">Editor_1</div>
       <div style="margin-top: 500px" class="tinymce" id="mce_2">Editor_2</div>
     </div>`));
@@ -22,6 +22,7 @@ describe('browser.tinymce.core.EditorAutoFocusTest', () => {
   });
 
   afterEach(() => {
+    window.scrollTo(0, 0);
     EditorManager.remove();
   });
 
