@@ -17,8 +17,8 @@ interface BespokeSelectApi {
 const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage, spec: NumberInputSpec): SketchSpec => {
   const currentComp: Cell<Optional<AlloyComponent>> = Cell(Optional.none());
 
-  const getValueFromCurrentComp = (comp: Cell<Optional<AlloyComponent>>): string => comp
-    .get().map((alloyComp) => Representing.getValue(alloyComp)).getOr('');
+  const getValueFromCurrentComp = (comp: Cell<Optional<AlloyComponent>>): string =>
+    comp.get().map((alloyComp) => Representing.getValue(alloyComp)).getOr('');
 
   const onSetup = onSetupEvent(editor, 'NodeChange', (api: BespokeSelectApi) => {
     const comp = api.getComponent();
