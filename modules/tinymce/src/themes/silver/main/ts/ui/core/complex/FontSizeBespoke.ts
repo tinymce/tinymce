@@ -16,7 +16,7 @@ interface Config {
 
 export interface NumberInputSpec {
   onAction: (format: string) => void;
-  updateText: (comp: AlloyComponent) => void;
+  updateInputValue: (comp: AlloyComponent) => void;
   getConfigFromUnit: (unit: string) => Config;
 }
 
@@ -135,7 +135,7 @@ const getNumberInputSpec = (editor: Editor): NumberInputSpec => {
   };
 
   return {
-    updateText: getSpec(editor).updateText,
+    updateInputValue: getSpec(editor).updateText,
     getConfigFromUnit,
     onAction: (format) => {
       editor.undoManager.transact(() => {

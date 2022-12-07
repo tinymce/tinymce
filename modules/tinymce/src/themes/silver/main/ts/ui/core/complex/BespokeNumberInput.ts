@@ -23,7 +23,7 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
   const onSetup = onSetupEvent(editor, 'NodeChange', (api: BespokeSelectApi) => {
     const comp = api.getComponent();
     currentComp.set(Optional.some(comp));
-    spec.updateText(comp);
+    spec.updateInputValue(comp);
   });
 
   const getApi = (comp: AlloyComponent): BespokeSelectApi => ({ getComponent: Fun.constant(comp) });
