@@ -1,6 +1,6 @@
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Button, Focusing, Input, Keying, NativeEvents, Representing, SketchSpec } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Button, Focusing, Input, Keying, Memento, NativeEvents, Representing, SketchSpec } from '@ephox/alloy';
 import { Cell, Fun, Id, Optional } from '@ephox/katamari';
-import { Focus, SugarElement, Traverse } from '@ephox/sugar';
+import { Focus } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
@@ -54,6 +54,48 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
     'background-color': 'grey'
   };
 
+  const memInput = Memento.record(Input.sketch({
+    inputStyles: {
+      'width': '75px',
+      'text-align': 'center'
+    },
+    inputBehaviours: Behaviour.derive([
+      AddEventsBehaviour.config(customEvents, [
+        onControlAttached({ onSetup, getApi }, editorOffCell),
+        onControlDetached({ getApi }, editorOffCell)
+      ]),
+      AddEventsBehaviour.config('menubutton-update-display-text', [
+        AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
+          Representing.setValue(comp, se.event.text);
+        }),
+        AlloyEvents.run(NativeEvents.focusout(), (_comp, se) => {
+          spec.onAction(se.event.target.dom.value);
+        }),
+        AlloyEvents.run(NativeEvents.change(), (_comp, se) => {
+          spec.onAction(se.event.target.dom.value);
+        })
+      ]),
+      Keying.config({
+        mode: 'special',
+        onEnter: (comp) => {
+          comp.element.dom.blur();
+          return Optional.some(true);
+        },
+        onUp: (comp) => {
+          increase();
+          // TOFIX: now it preserve the focus but it put the selection at the end of the input
+          Focus.focusInside(comp.element);
+          return Optional.some(true);
+        },
+        onDown: (comp) => {
+          decrease();
+          Focus.focusInside(comp.element);
+          return Optional.some(true);
+        }
+      })
+    ])
+  }));
+
   return {
     uid: Id.generate('number-input-wrapper'),
     dom: {
@@ -73,47 +115,7 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
         },
         action: decrease
       }),
-      Input.sketch({
-        inputStyles: {
-          'width': '75px',
-          'text-align': 'center'
-        },
-        inputBehaviours: Behaviour.derive([
-          AddEventsBehaviour.config(customEvents, [
-            onControlAttached({ onSetup, getApi }, editorOffCell),
-            onControlDetached({ getApi }, editorOffCell)
-          ]),
-          AddEventsBehaviour.config('menubutton-update-display-text', [
-            AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
-              Representing.setValue(comp, se.event.text);
-            }),
-            AlloyEvents.run(NativeEvents.focusout(), (_comp, se) => {
-              spec.onAction(se.event.target.dom.value);
-            }),
-            AlloyEvents.run(NativeEvents.change(), (_comp, se) => {
-              spec.onAction(se.event.target.dom.value);
-            })
-          ]),
-          Keying.config({
-            mode: 'special',
-            onEnter: (comp) => {
-              comp.element.dom.blur();
-              return Optional.some(true);
-            },
-            onUp: (comp) => {
-              increase();
-              // TOFIX: now it preserve the focus but it put the selection at the end of the input
-              Focus.focusInside(comp.element);
-              return Optional.some(true);
-            },
-            onDown: (comp) => {
-              decrease();
-              Focus.focusInside(comp.element);
-              return Optional.some(true);
-            }
-          })
-        ])
-      }),
+      memInput.asSpec(),
       Button.sketch({
         dom: {
           tag: 'button',
@@ -130,9 +132,7 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
         mode: 'special',
         onEnter: (comp) => {
           if (Focus.hasFocus(comp.element)) {
-            Traverse.child(comp.element, 1).each((inputElement) => {
-              Focus.focus(inputElement as SugarElement<HTMLElement>);
-            });
+            Focus.focus(memInput.get(comp).element);
             return Optional.some(true);
           } else {
             return Optional.none();
