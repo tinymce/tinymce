@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Fixed
 - An element could be dropped onto the decendants of a noneditable element. #TINY-9364
+- Checkmark did not show in menu colorswatches. #TINY-9395
 - Toolbar split buttons in advlist plugin to show the correct state when the cursor is in a checklist. #TINY-5167
 - Dragging transparent elements into transparent blocks elements could produce invalid nesting of transparents. #TINY-9231
 
@@ -16,6 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Quick toolbars were incorrectly rendered during the dragging of `contenteditable="false"` elements. #TINY-9305
+
+## 6.3.1 - 2022-12-06
+
+### Fixed
+- HTML in messages for the `WindowManager.alert` and `WindowManager.confirm` APIs were not properly sanitized. #TINY-3548
 
 ## 6.3.0 - 2022-11-23
 
@@ -60,6 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A newline could not be inserted when the selection was restored from a bookmark after an inline element with a `contenteditable="false"` attribute. #TINY-9194
 - The global `tinymce.dom.styleSheetLoader` was not affected by the `content_css_cors` option. #TINY-6037
 - The caret was moved to the previous line when a text pattern executed a `mceInsertContent` command on Enter key when running on Firefox. #TINY-9193
+- The `autoresize` plugin used to cause infinite resize when `content_css` is set to `document`. #TINY-8872
 
 ## 6.2.0 - 2022-09-08
 

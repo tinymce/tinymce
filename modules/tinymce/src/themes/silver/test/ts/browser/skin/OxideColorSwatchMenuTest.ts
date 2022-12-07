@@ -1,12 +1,13 @@
 import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
-import { describe, it } from '@ephox/bedrock-client';
+import { before, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
+import LocalStorage from 'tinymce/core/api/util/LocalStorage';
 
 describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
   const store = TestStore();
@@ -45,7 +46,19 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
         onAction: store.adder('onAction'),
         onItemAction: store.adder('onItemAction')
       });
-    }
+    },
+    color_map_background: [
+      '#FFFFFF', 'white',
+      'rgb(224, 62, 45)', 'red',
+      '#000000', 'black',
+    ],
+    menu: {
+      color: {
+        title: 'Color',
+        items: 'backcolor'
+      }
+    },
+    menubar: 'color'
   }, []);
 
   const structColor = (value: string): ApproxStructure.Builder<StructAssert> =>
@@ -88,12 +101,26 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
   const closeSwatchButtonMenu = closeMenu('swatch-button');
   const openAndGetForecolorMenu = openAndGetMenu('Text color');
   const closeForecolorMenu = closeMenu('Text color');
+  const pOpenAndGetMenuColorMenu = async (editor: Editor) => {
+    const mainButton = 'button:contains("Color")';
+    const submenuButton = '[role="menu"] div[title="Background color"]';
+    TinyUiActions.clickOnMenu(editor, mainButton);
+    await TinyUiActions.pWaitForUi(editor, submenuButton);
+    TinyUiActions.clickOnUi(editor, submenuButton);
+    return TinyUiActions.pWaitForUi(editor, '.tox-swatches-menu');
+  };
+  const closeMenuColorMenu = (editor: Editor) =>
+    TinyUiActions.clickOnMenu(editor, 'button:contains("Color")');
   const openAndGetBackcolorMenu = openAndGetMenu('Background color');
   const closeBackcolorMenu = closeMenu('Background color');
 
   TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
     ':focus { transform: scale(0.8) }'
   ]);
+
+  before(() => {
+    LocalStorage.clear();
+  });
 
   it('Check structure of color swatch', async () => {
     const editor = hook.editor();
@@ -149,6 +176,73 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
     TinyUiActions.keydown(editor, Keys.right());
     assertFocusIsOnColor('black');
     closeSwatchButtonMenu();
+  });
+
+  it('TINY-9395: Check structure of menu color swatch', async () => {
+    const editor = hook.editor();
+    const menu = await pOpenAndGetMenuColorMenu(editor);
+
+    Assertions.assertStructure(
+      'Checking menu structure for color swatches',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-menu') ],
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-swatches') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-swatches__row') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-swatch') ],
+                    styles: {
+                      'background-color': str.is('rgb(255, 255, 255)')
+                    },
+                    attrs: {
+                      'aria-checked': str.is('false')
+                    }
+                  }),
+                  s.element('div', {
+                    classes: [ arr.has('tox-swatch') ],
+                    styles: {
+                      'background-color': str.is('rgb(224, 62, 45)')
+                    },
+                    attrs: {
+                      'aria-checked': str.is('false')
+                    }
+                  }),
+                  s.element('div', {
+                    classes: [ arr.has('tox-swatch') ],
+                    styles: {
+                      'background-color': str.is('rgb(0, 0, 0)')
+                    },
+                    attrs: {
+                      'aria-checked': str.is('true')
+                    }
+                  }),
+                  s.element('div', {
+                    classes: [ arr.has('tox-swatch') ],
+                  }),
+                  s.element('button', {
+                    classes: [ arr.has('tox-swatch') ],
+                  }),
+                ]
+              }),
+            ]
+          })
+        ]
+      })),
+      menu
+    );
+
+    closeMenuColorMenu(editor);
+
+    editor.setContent('<p style="background-color: rgb(224, 62, 45);">red</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2, true);
+
+    await pOpenAndGetMenuColorMenu(editor);
+    assertFocusIsOnColor('rgb(224, 62, 45)');
+    closeMenuColorMenu(editor);
   });
 
   it('TINY-9283: selected color is successfully marked', async () => {
