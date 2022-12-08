@@ -76,6 +76,8 @@ const createCaretFormatAtStart = (editor: Editor, formatNodes: Node[]): void => 
 };
 
 const updateCaretFormat = (editor: Editor, updateFormats: Node[]): void => {
+  // calculate the difference between the formats at cursor and the formats that are supposed to be retained
+  // if any formats are missing, create a caret format at cursor with the missing formats
   const missingFormats = Arr.difference(updateFormats, getFormatNodesAtStart(editor));
   if (missingFormats.length > 0) {
     createCaretFormatAtStart(editor, missingFormats);
