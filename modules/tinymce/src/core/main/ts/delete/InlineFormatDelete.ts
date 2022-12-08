@@ -4,7 +4,6 @@ import { PredicateExists, SugarElement, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';
-import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
 import * as Parents from '../dom/Parents';
 import * as CaretFormat from '../fmt/CaretFormat';
@@ -58,9 +57,9 @@ const deleteCaret = (editor: Editor, forward: boolean): Optional<() => void> => 
   });
 };
 
-const isBrInEmptyElement = (elm: Element): boolean => {
+const isBrInEmptyElement = (editor: Editor, elm: Element): boolean => {
   const parentElm = elm.parentElement;
-  return NodeType.isBr(elm) && !Type.isNull(parentElm) && Empty.isEmpty(SugarElement.fromDom(parentElm));
+  return NodeType.isBr(elm) && !Type.isNull(parentElm) && editor.dom.isEmpty(parentElm);
 };
 
 const isEmptyCaret = (elm: Element): boolean =>
@@ -70,7 +69,7 @@ const createCaretFormatAtStart = (editor: Editor, formatNodes: Node[]): void => 
   const startElm = editor.selection.getStart();
   // replace <br> in empty node or existing caret at start if applicable
   // otherwise create new caret format at start
-  const pos = isBrInEmptyElement(startElm) || isEmptyCaret(startElm)
+  const pos = isBrInEmptyElement(editor, startElm) || isEmptyCaret(startElm)
     ? CaretFormat.replaceWithCaretFormat(startElm, formatNodes)
     : CaretFormat.createCaretFormatAtStart(editor, formatNodes);
   editor.selection.setRng(pos.toRange());
