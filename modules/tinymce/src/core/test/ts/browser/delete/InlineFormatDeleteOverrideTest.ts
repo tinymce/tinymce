@@ -3,7 +3,7 @@ import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { requiresDeleteRangeOverride } from 'tinymce/core/delete/InlineFormatDelete';
+import { requiresDeleteRangeOverride, requiresRefreshCaretOverride } from 'tinymce/core/delete/InlineFormatDelete';
 
 describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -110,6 +110,76 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       editor.setContent('<p><span style="text-decoration: underline;"><iframe src="about:blank"></iframe>a</span></p>');
       TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 1 ], 'a'.length);
       assert.isFalse(requiresDeleteRangeOverride(editor));
+    });
+  });
+
+  context('TINY-9302: requiresRefreshCaretOverride', () => {
+    it('should return true for collapsed selections in text nodes', () => {
+      const editor = hook.editor();
+
+      editor.setContent('<p>a</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 0);
+      assert.isTrue(requiresRefreshCaretOverride(editor));
+
+      editor.setContent('<p><span style="text-decoration: underline;">abc</span></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 'ab'.length);
+      assert.isTrue(requiresRefreshCaretOverride(editor));
+
+      editor.setContent('<div><img src="about:blank">a</div>');
+      TinySelections.setCursor(editor, [ 0, 1 ], 0);
+      assert.isTrue(requiresRefreshCaretOverride(editor));
+    });
+
+    it('should return true for collapsed selections in empty nodes', () => {
+      const editor = hook.editor();
+
+      editor.setContent('<p></p>');
+      TinySelections.setCursor(editor, [ 0 ], 0);
+      assert.isTrue(requiresRefreshCaretOverride(editor));
+
+      editor.setContent('<p><span style="text-decoration: underline;"></span></p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 0);
+      assert.isTrue(requiresRefreshCaretOverride(editor));
+
+      editor.setContent('<p><br></p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 0);
+      assert.isTrue(requiresRefreshCaretOverride(editor));
+
+      editor.setContent('<p><br data-mce-bogus="1"></p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 0);
+      assert.isTrue(requiresRefreshCaretOverride(editor));
+    });
+
+    it('should return false for non-collapsed selections', () => {
+      const editor = hook.editor();
+
+      editor.setContent('<p>abc</p>');
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 'ab'.length);
+      assert.isFalse(requiresRefreshCaretOverride(editor));
+
+      editor.setContent('<p><span style="text-decoration: underline;">abc</span></p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 'ab'.length);
+      assert.isFalse(requiresRefreshCaretOverride(editor));
+
+      editor.setContent('<p></p><p></p>');
+      TinySelections.setSelection(editor, [ 0 ], 0, [ 1 ], 0);
+      assert.isFalse(requiresRefreshCaretOverride(editor));
+    });
+
+    it('should return false for collapsed selections in non-empty non-text nodes', () => {
+      const editor = hook.editor();
+
+      editor.setContent('<p><img src="about:blank"></p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 0);
+      assert.isFalse(requiresRefreshCaretOverride(editor));
+    });
+
+    it('should return false for collapsed selections within an ancestor caret', () => {
+      const editor = hook.editor();
+
+      editor.setContent('<p>a<span id="_mce_caret" data-mce-bogus="1" data-mce-type="format-caret"><strong>b&#65279;</strong></span>c</p>', { format: 'raw' });
+      TinySelections.setCursor(editor, [ 0, 1, 0, 0 ], 'b'.length);
+      assert.isFalse(requiresRefreshCaretOverride(editor));
     });
   });
 });

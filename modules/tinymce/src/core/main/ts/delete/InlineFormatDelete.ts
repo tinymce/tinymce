@@ -83,8 +83,11 @@ const updateCaretFormat = (editor: Editor, updateFormats: Node[]): void => {
   }
 };
 
+const rangeStartsAtTextContainer = (rng: Range): boolean =>
+  NodeType.isText(rng.startContainer);
+
 const rangeStartsAtStartOfTextContainer = (rng: Range): boolean =>
-  rng.startOffset === 0 && NodeType.isText(rng.startContainer);
+  rng.startOffset === 0 && rangeStartsAtTextContainer(rng);
 
 const rangeStartParentIsFormatElement = (editor: Editor, rng: Range): boolean => {
   const startParent = rng.startContainer.parentElement;
@@ -137,8 +140,13 @@ const hasAncestorInlineCaret = (elm: SugarElement<Node>): boolean =>
 const hasAncestorInlineCaretAtStart = (editor: Editor): boolean =>
   hasAncestorInlineCaret(SugarElement.fromDom(editor.selection.getStart()));
 
+const requiresRefreshCaretOverride = (editor: Editor): boolean => {
+  const rng = editor.selection.getRng();
+  return rng.collapsed && (rangeStartsAtTextContainer(rng) || editor.dom.isEmpty(rng.startContainer)) && !hasAncestorInlineCaretAtStart(editor);
+};
+
 const refreshCaret = (editor: Editor): boolean => {
-  if (editor.selection.getRng().startOffset === 0 && !hasAncestorInlineCaretAtStart(editor)) {
+  if (requiresRefreshCaretOverride(editor)) {
     createCaretFormatAtStart(editor, []);
   }
   return true;
@@ -149,5 +157,6 @@ export {
   refreshCaret,
 
   // exported for testing
-  requiresDeleteRangeOverride
+  requiresDeleteRangeOverride,
+  requiresRefreshCaretOverride
 };
