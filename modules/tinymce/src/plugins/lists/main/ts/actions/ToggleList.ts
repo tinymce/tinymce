@@ -77,7 +77,7 @@ const getEndPointNode = (editor: Editor, rng: Range, start: Boolean, root: Node)
     const dir = forward ? 'next' : 'prev';
     let node;
     while ((node = walker[dir]())) {
-      if (NodeType.isVoid(editor, node) || Unicode.isZwsp(node.textContent as string) || node.textContent?.length === 0) {
+      if (!(NodeType.isVoid(editor, node) || Unicode.isZwsp(node.textContent as string) || node.textContent?.length === 0)) {
         return Optional.some(node);
       }
     }

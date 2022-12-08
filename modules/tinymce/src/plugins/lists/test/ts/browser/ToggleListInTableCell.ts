@@ -30,6 +30,15 @@ describe('browser.tinymce.plugins.lists.ToggleListWithEmptyLiTest', () => {
     TinyAssertions.assertContent(editor, wrapInsideTableWithList(content));
   });
 
+  it('TINY-6853: toggle list inside table cell with anchor containing an img tag outside of anchor to the left of the anchor should include the anchor in the list', () => {
+    const editor = hook.editor();
+    const content = '<a href="#"><strong><em><img src="#"></em></strong></a>';
+    editor.setContent(wrapInsideTable(content));
+    TinySelections.setCursor(editor, [ 0, 1, 0, 0, 0 ], 0);
+    TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Bullet list"]');
+    TinyAssertions.assertContent(editor, wrapInsideTableWithList(content));
+  });
+
   it('TINY-6853: toggle list inside table cell with anchor outside of anchor to the right of the anchor should include the anchor in the list', () => {
     const editor = hook.editor();
     const content = '<a href="#">link</a>';
