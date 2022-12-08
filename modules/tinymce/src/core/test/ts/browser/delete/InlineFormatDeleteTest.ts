@@ -249,7 +249,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0, 0 ], 0);
     });
 
-    it('Delete after last character in formatted element with sibling in format parent', () => {
+    it('Delete before last character in formatted element with sibling in format parent', () => {
       const editor = hook.editor();
       editor.setContent('<p><ins>a<strong><em>b</em></strong></ins></p>');
       TinySelections.setCursor(editor, [ 0, 0, 1, 0, 0 ], 0);
@@ -290,6 +290,106 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
         })
       );
       TinyAssertions.assertCursor(editor, [ 0, 0, 1, 0, 0, 0 ], 0);
+    });
+
+    it('Backspace after last character in formatted element with sibling in format parent and outer single-child format ancestor', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><span style="text-decoration: underline;"><ins><strong><em>a</em></strong>b</ins></span></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0, 0 ], 1);
+      doBackspace(editor);
+      TinyAssertions.assertContentStructure(editor,
+        ApproxStructure.build((s, str, _arr) => {
+          return s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.element('span', {
+                    attrs: {
+                      style: str.is('text-decoration: underline;')
+                    },
+                    children: [
+                      s.element('ins', {
+                        children: [
+                          s.element('span', {
+                            attrs: {
+                              'id': str.is('_mce_caret'),
+                              'data-mce-bogus': str.is('1'),
+                              'data-mce-type': str.is('format-caret')
+                            },
+                            children: [
+                              s.element('strong', {
+                                children: [
+                                  s.element('em', {
+                                    children: [
+                                      s.text(str.is(Zwsp.ZWSP))
+                                    ]
+                                  })
+                                ]
+                              })
+                            ]
+                          }),
+                          s.text(str.is('b'))
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              })
+            ]
+          });
+        })
+      );
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0, 0, 0 ], 0);
+    });
+
+    it('Delete before last character in formatted element with sibling in format parent and outer single-child format ancestor', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><span style="text-decoration: underline;"><ins>a<strong><em>b</em></strong></ins></span></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0, 0 ], 0);
+      doDelete(editor);
+      TinyAssertions.assertContentStructure(editor,
+        ApproxStructure.build((s, str, _arr) => {
+          return s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.element('span', {
+                    attrs: {
+                      style: str.is('text-decoration: underline;')
+                    },
+                    children: [
+                      s.element('ins', {
+                        children: [
+                          s.text(str.is('a')),
+                          s.element('span', {
+                            attrs: {
+                              'id': str.is('_mce_caret'),
+                              'data-mce-bogus': str.is('1'),
+                              'data-mce-type': str.is('format-caret')
+                            },
+                            children: [
+                              s.element('strong', {
+                                children: [
+                                  s.element('em', {
+                                    children: [
+                                      s.text(str.is(Zwsp.ZWSP))
+                                    ]
+                                  })
+                                ]
+                              })
+                            ]
+                          })
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              })
+            ]
+          });
+        })
+      );
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 0, 0, 0 ], 0);
     });
   });
 
