@@ -86,13 +86,24 @@ const updateCaretFormat = (editor: Editor, updateFormats: Node[]): void => {
 const rangeStartsAtStartOfTextContainer = (rng: Range): boolean =>
   rng.startOffset === 0 && NodeType.isText(rng.startContainer);
 
-const rangeStartContainerParentIsFormatElement = (editor: Editor, rng: Range): boolean => {
+const rangeStartParentIsFormatElement = (editor: Editor, rng: Range): boolean => {
   const startParent = rng.startContainer.parentElement;
   return !Type.isNull(startParent) && CaretFormat.isFormatElement(editor, SugarElement.fromDom(startParent));
 };
 
+const rangeStartAndEndHaveSameParent = (rng: Range): boolean => {
+  const startParent = rng.startContainer.parentNode;
+  const endParent = rng.endContainer.parentNode;
+  return !Type.isNull(startParent) && !Type.isNull(endParent) && startParent.isEqualNode(endParent);
+};
+
+const rangeEndsAtEndOfEndContainer = (rng: Range): boolean => {
+  const endContainer = rng.endContainer;
+  return rng.endOffset === (NodeType.isText(endContainer) ? endContainer.length : endContainer.childNodes.length);
+};
+
 const rangeEndsAtEndOfStartContainer = (rng: Range): boolean =>
-  rng.endContainer.isEqualNode(rng.commonAncestorContainer) && !Type.isNull(rng.endContainer.nodeValue) && rng.endOffset === rng.endContainer.nodeValue.length;
+  rangeStartAndEndHaveSameParent(rng) && rangeEndsAtEndOfEndContainer(rng);
 
 const rangeEndsAfterEndOfStartContainer = (rng: Range): boolean =>
   !rng.endContainer.isEqualNode(rng.commonAncestorContainer);
@@ -102,7 +113,7 @@ const rangeEndsAtOrAfterEndOfStartContainer = (rng: Range): boolean =>
 
 const requiresDeleteRangeOverride = (editor: Editor): boolean => {
   const rng = editor.selection.getRng();
-  return rangeStartsAtStartOfTextContainer(rng) && rangeStartContainerParentIsFormatElement(editor, rng) && rangeEndsAtOrAfterEndOfStartContainer(rng);
+  return rangeStartsAtStartOfTextContainer(rng) && rangeStartParentIsFormatElement(editor, rng) && rangeEndsAtOrAfterEndOfStartContainer(rng);
 };
 
 const deleteRange = (editor: Editor): Optional<() => void> => {
