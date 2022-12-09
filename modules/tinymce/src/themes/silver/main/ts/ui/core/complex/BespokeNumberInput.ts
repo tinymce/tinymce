@@ -36,8 +36,8 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
   const changeValue = (f: (v: number, step: number) => number): void => {
     const text = getValueFromCurrentComp(currentComp);
     const value = parseFloat(text.match(/^[\d\.]+/)?.join('') ?? '0');
-    const unitRegexp = new RegExp(`(?<=${value})\\D+$`);
-    const unit = text.match(unitRegexp)?.join('') ?? '';
+    const unitRegexp = new RegExp(`(?:${value})(\\D+)$`);
+    const unit = (text.match(unitRegexp) ?? [ '', '' ])[1];
     const newValue = f(value, spec.getConfigFromUnit(unit).step);
     const newValueWithUnit = `${isValidValue(newValue) ? newValue : value}${unit}`;
 
