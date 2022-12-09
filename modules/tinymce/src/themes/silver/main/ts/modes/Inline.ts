@@ -1,6 +1,6 @@
 import { AlloyComponent, Attachment, Boxes, Disabling } from '@ephox/alloy';
 import { Cell, Singleton } from '@ephox/katamari';
-import { DomEvent, SugarElement } from '@ephox/sugar';
+import { DomEvent, Scroll, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
@@ -61,7 +61,16 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader, 
     requestAnimationFrame(() => resizeContent(e));
   });
 
-  editor.on('ScrollWindow', () => ui.updateMode());
+  let lastScrollX = 0;
+  editor.on('ScrollWindow', () => {
+    const newScrollX = Scroll.get().left;
+    if (newScrollX !== lastScrollX) {
+      lastScrollX = newScrollX;
+      ui.update();
+    }
+
+    ui.updateMode();
+  });
 
   // Bind to async load events and trigger a content resize event if the size has changed
   const elementLoad = Singleton.unbindable();
