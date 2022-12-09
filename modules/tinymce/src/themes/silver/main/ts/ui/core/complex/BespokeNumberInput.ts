@@ -48,12 +48,6 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
   const decrease = () => changeValue((n, s) => n - s);
   const increase = () => changeValue((n, s) => n + s);
 
-  const buttonStyles = {
-    'width': '20px',
-    'text-align': 'center',
-    'background-color': 'grey'
-  };
-
   const memInput = Memento.record(Input.sketch({
     inputStyles: {
       'width': '75px',
@@ -96,6 +90,24 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
     ])
   }));
 
+  const makeStepperButton = (label: string, action: VoidFunction, classes: string[]) => {
+    const buttonStyles = {
+      'width': '20px',
+      'text-align': 'center',
+      'background-color': 'grey'
+    };
+
+    return Button.sketch({
+      dom: {
+        tag: 'button',
+        styles: buttonStyles,
+        innerHtml: label,
+        classes
+      },
+      action
+    });
+  };
+
   return {
     uid: Id.generate('number-input-wrapper'),
     dom: {
@@ -106,25 +118,9 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
       classes: [ 'tox-number-input' ]
     },
     components: [
-      Button.sketch({
-        dom: {
-          tag: 'button',
-          styles: buttonStyles,
-          innerHtml: '-',
-          classes: [ 'minus' ]
-        },
-        action: decrease
-      }),
+      makeStepperButton('-', decrease, [ 'minus' ]),
       memInput.asSpec(),
-      Button.sketch({
-        dom: {
-          tag: 'button',
-          styles: buttonStyles,
-          innerHtml: '+',
-          classes: [ 'plus' ]
-        },
-        action: increase
-      })
+      makeStepperButton('+', increase, [ 'plus' ])
     ],
     behaviours: Behaviour.derive([
       Focusing.config({}),
