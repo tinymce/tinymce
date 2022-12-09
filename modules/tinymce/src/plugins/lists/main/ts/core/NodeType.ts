@@ -39,6 +39,9 @@ const isTextBlock = (editor: Editor, node: Node | null): node is HTMLElement =>
 const isBlock = (node: Node | null, blockElements: Record<string, any>): boolean =>
   Type.isNonNullable(node) && node.nodeName in blockElements;
 
+const isVoid = (editor: Editor, node: Node | null): boolean =>
+  Type.isNonNullable(node) && node.nodeName in editor.schema.getVoidElements();
+
 const isBogusBr = (dom: DOMUtils, node: Node): node is HTMLBRElement => {
   if (!isBr(node)) {
     return false;
@@ -76,5 +79,6 @@ export {
   isBlock,
   isBogusBr,
   isEmpty,
-  isChildOfBody
+  isChildOfBody,
+  isVoid
 };

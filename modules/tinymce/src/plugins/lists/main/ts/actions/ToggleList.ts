@@ -1,7 +1,8 @@
-import { Type } from '@ephox/katamari';
+import { Optional, Type, Unicode } from '@ephox/katamari';
 
 import BookmarkManager from 'tinymce/core/api/dom/BookmarkManager';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
@@ -46,6 +47,8 @@ const removeStyles = (dom: DOMUtils, element: HTMLElement, styles: string[]): vo
   Tools.each(styles, (style) => dom.setStyle(element, style, ''));
 };
 
+const isInline = (editor: Editor, node: Node): boolean => Type.isNonNullable(node) && !NodeType.isBlock(node, editor.schema.getBlockElements());
+
 const getEndPointNode = (editor: Editor, rng: Range, start: Boolean, root: Node): Node => {
   let container = rng[start ? 'startContainer' : 'endContainer'];
   const offset = rng[start ? 'startOffset' : 'endOffset'];
@@ -57,6 +60,57 @@ const getEndPointNode = (editor: Editor, rng: Range, start: Boolean, root: Node)
 
   if (!start && NodeType.isBr(container.nextSibling)) {
     container = container.nextSibling;
+  }
+
+  // The reason why the next two if statements exist is because when the root node is a table cell (possibly some other node types)
+  // then the highest we can go up the dom hierarchy is one level below the table cell.
+  // So what happens when we have a bunch of inline nodes and text nodes in the table cell
+  // and when the selection is collapsed inside one of the inline nodes then only that inline node (or text node) will be included
+  // in the created list because that would be one level below td node and the other inline nodes won't be included.
+  // So the fix proposed is to traverse left when looking for start node (and traverse right when looking for end node)
+  // and keep traversing as long as we have an inline or text node (same for traversing right).
+  // This way we end up including all the inline elements in the created list.
+  // For more info look at #TINY-6853
+
+  const findBetterContainer = (container: Node, forward: boolean): Optional<Node> => {
+    const walker = new DomTreeWalker(container, root);
+    const dir = forward ? 'next' : 'prev';
+    let node;
+    while ((node = walker[dir]())) {
+      if (!(NodeType.isVoid(editor, node) || Unicode.isZwsp(node.textContent as string) || node.textContent?.length === 0)) {
+        return Optional.some(node);
+      }
+    }
+
+    return Optional.none();
+  };
+
+  // Traverse left to include inline/text nodes
+  if (start && NodeType.isTextNode(container)) {
+    if (Unicode.isZwsp(container.textContent as string)) {
+      container = findBetterContainer(container, false).getOr(container);
+    } else {
+      if (container.parentNode !== null && isInline(editor, container.parentNode)) {
+        container = container.parentNode;
+      }
+      while (container.previousSibling !== null && (isInline(editor, container.previousSibling) || NodeType.isTextNode(container.previousSibling))) {
+        container = container.previousSibling;
+      }
+    }
+  }
+
+  // Traverse right to include inline/text nodes
+  if (!start && NodeType.isTextNode(container)) {
+    if (Unicode.isZwsp(container.textContent as string)) {
+      container = findBetterContainer(container, true).getOr(container);
+    } else {
+      if (container.parentNode !== null && isInline(editor, container.parentNode)) {
+        container = container.parentNode;
+      }
+      while (container.nextSibling !== null && (isInline(editor, container.nextSibling) || NodeType.isTextNode(container.nextSibling))) {
+        container = container.nextSibling;
+      }
+    }
   }
 
   while (container.parentNode !== root) {
