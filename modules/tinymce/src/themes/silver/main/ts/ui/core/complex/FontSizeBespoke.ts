@@ -134,8 +134,12 @@ const getNumberInputSpec = (editor: Editor): NumberInputSpec => {
     return configs[unit] ?? baseConfig;
   };
 
+  const updateInputValue = (comp: AlloyComponent) => AlloyTriggers.emitWith(comp, updateMenuText, {
+    text: editor.queryCommandValue('FontSize')
+  });
+
   return {
-    updateInputValue: getSpec(editor).updateText,
+    updateInputValue,
     getConfigFromUnit,
     onAction: (format) => {
       editor.undoManager.transact(() => {
