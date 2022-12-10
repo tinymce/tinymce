@@ -123,7 +123,6 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
           return s.element('body', {
             children: [
               s.element('p', {
-                // firefox retains all formats by default
                 children: [
                   s.element('span', {
                     attrs: {
@@ -402,7 +401,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
           return s.element('body', {
             children: [
               s.element('p', {
-                // firefox retains format for block delete, so no new caret created
+                // firefox retains formats by default, so no new caret created
                 children: browser.isFirefox()
                   ? [
                     s.element('strong', {
@@ -414,7 +413,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
                                 style: str.is('text-decoration: underline;')
                               },
                               children: [
-                                s.element('br', {}),
+                                s.element('br', {})
                               ]
                             })
                           ]
@@ -458,7 +457,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       TinyAssertions.assertCursor(editor, selPath, 0);
     };
 
-    it('Backspace entire selection of block containing a single formatted element should retain original formats', () => {
+    it('Backspace entire selection of block containing a single formatted element', () => {
       const editor = hook.editor();
       editor.setContent('<p><strong><em><span style="text-decoration: underline;">abc</span></em></strong></p>');
       TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 3);
@@ -466,7 +465,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       assertStructureAndSelectionBlockDelete(editor);
     });
 
-    it('Delete entire selection of block containing a single formatted element should retain original formats', () => {
+    it('Delete entire selection of block containing a single formatted element', () => {
       const editor = hook.editor();
       editor.setContent('<p><strong><em><span style="text-decoration: underline;">abc</span></em></strong></p>');
       TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 3);
@@ -474,7 +473,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       assertStructureAndSelectionBlockDelete(editor);
     });
 
-    it('Backspace entire selection of formatted element within block should retain original formats', () => {
+    it('Backspace entire selection of formatted element within block', () => {
       const editor = hook.editor();
       editor.setContent('<p>a<strong><em><span style="text-decoration: underline;">bcd</span></em></strong>e</p>');
       TinySelections.setSelection(editor, [ 0, 1, 0, 0, 0 ], 0, [ 0, 1, 0, 0, 0 ], 3);
@@ -522,7 +521,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       TinyAssertions.assertCursor(editor, [ 0, 1, 0, 0, 0, 0 ], 0);
     });
 
-    it('Backspace partial selection from start of formatted element within block should retain original formats', () => {
+    it('Backspace partial selection from start of formatted element within block', () => {
       const editor = hook.editor();
       editor.setContent('<p>a<strong><em><span style="text-decoration: underline;">bcd</span></em></strong>ef</p>');
       TinySelections.setSelection(editor, [ 0, 1, 0, 0, 0 ], 0, [ 0, 2 ], 1);
@@ -569,6 +568,64 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
         })
       );
       const selPath = browser.isFirefox() ? [ 0, 2, 0, 0, 0, 0 ] : [ 0, 1, 0, 0, 0, 0 ];
+      TinyAssertions.assertCursor(editor, selPath, 0);
+    });
+
+    it('Backspace entire selection of format node containing multiple children', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><span style="text-decoration: underline;">a<em><strong>b</strong></em></span></p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 1, 0, 0 ], 'b'.length);
+      doBackspace(editor);
+      TinyAssertions.assertContentStructure(editor,
+        ApproxStructure.build((s, str, _arr) => {
+          return s.element('body', {
+            children: [
+              s.element('p', {
+                // firefox retains formats by default, so no new caret created
+                children: browser.isFirefox()
+                  ? [
+                    s.element('span', {
+                      attrs: {
+                        style: str.is('text-decoration: underline;')
+                      },
+                      children: [
+                        s.element('em', {
+                          children: [
+                            s.element('strong', {
+                              children: [
+                                s.element('br', {})
+                              ]
+                            })
+                          ]
+                        })
+                      ]
+                    })
+                  ]
+                  : [
+                    s.element('span', {
+                      attrs: {
+                        'id': str.is('_mce_caret'),
+                        'data-mce-bogus': str.is('1'),
+                        'data-mce-type': str.is('format-caret')
+                      },
+                      children: [
+                        s.element('span', {
+                          attrs: {
+                            style: str.is('text-decoration: underline;')
+                          },
+                          children: [
+                            s.text(str.is(Zwsp.ZWSP))
+                          ]
+                        })
+                      ]
+                    })
+                  ]
+              })
+            ]
+          });
+        })
+      );
+      const selPath = [ 0, 0, 0, 0 ];
       TinyAssertions.assertCursor(editor, selPath, 0);
     });
   });
