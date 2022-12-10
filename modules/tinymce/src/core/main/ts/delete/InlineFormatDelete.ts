@@ -11,8 +11,8 @@ import { isCaretNode } from '../fmt/FormatContainer';
 import * as DeleteElement from './DeleteElement';
 import * as DeleteUtils from './DeleteUtils';
 
-const hasOnlyOneChild = (elm: SugarElement<Node>): boolean =>
-  Traverse.childNodesCount(elm) === 1;
+const hasMultipleChildren = (elm: SugarElement<Node>): boolean =>
+  Traverse.childNodesCount(elm) > 1;
 
 const getParentsUntil = (editor: Editor, pred: (elm: SugarElement<Node>) => boolean): SugarElement<Node>[] => {
   const rootElm = SugarElement.fromDom(editor.getBody());
@@ -24,8 +24,8 @@ const getParentsUntil = (editor: Editor, pred: (elm: SugarElement<Node>) => bool
   );
 };
 
-const getSingleChildParentInlines = (editor: Editor): SugarElement<Node>[] =>
-  getParentsUntil(editor, (elm) => ElementType.isBlock(elm) || !hasOnlyOneChild(elm));
+const getParentInlinesUntilMultichildInline = (editor: Editor): SugarElement<Node>[] =>
+  getParentsUntil(editor, (elm) => ElementType.isBlock(elm) || hasMultipleChildren(elm));
 
 const getParentInlines = (editor: Editor): SugarElement<Node>[] =>
   getParentsUntil(editor, ElementType.isBlock);
@@ -52,11 +52,11 @@ const deleteLastPosition = (forward: boolean, editor: Editor, target: SugarEleme
 };
 
 const deleteCaret = (editor: Editor, forward: boolean): Optional<() => void> => {
-  const singleChildParentInlines = getSingleChildParentInlines(editor);
-  return Arr.last(singleChildParentInlines).bind((target) => {
+  const parentInlines = getParentInlinesUntilMultichildInline(editor);
+  return Arr.last(parentInlines).bind((target) => {
     const fromPos = CaretPosition.fromRangeStart(editor.selection.getRng());
     if (DeleteUtils.willDeleteLastPositionInElement(forward, fromPos, target.dom) && !CaretFormat.isEmptyCaretFormatElement(target)) {
-      return Optional.some(() => deleteLastPosition(forward, editor, target, singleChildParentInlines));
+      return Optional.some(() => deleteLastPosition(forward, editor, target, parentInlines));
     } else {
       return Optional.none();
     }
