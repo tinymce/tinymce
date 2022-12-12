@@ -127,7 +127,7 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
         mode: 'special',
         onEnter: (comp) => {
           if (Focus.hasFocus(comp.element)) {
-            Focus.focus(memInput.get(comp).element);
+            memInput.getOpt(comp).each((input) => Focus.focus(input.element));
             return Optional.some(true);
           } else {
             return Optional.none();
