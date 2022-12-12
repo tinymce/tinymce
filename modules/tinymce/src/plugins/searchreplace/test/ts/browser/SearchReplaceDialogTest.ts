@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { Scroll } from '@ephox/sugar';
+import { Css, Scroll } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -117,11 +117,13 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTest', () => 
 
   it('TINY-9148: Scroll should remain in place after the dialog is closed', async () => {
     const editor = hook.editor();
+    Css.set(TinyDom.container(editor), 'margin', '1000px 0');
     editor.setContent('<p>top</p><p style="height: 2000px"></p><p>bottom</p>');
     const doc = TinyDom.document(editor);
-    const initialScroll = Scroll.get(doc);
     await Utils.pOpenDialog(editor);
+    const initialScroll = Scroll.get(doc);
     TinyUiActions.closeDialog(editor);
     assert.equal(initialScroll.top, Scroll.get(doc).top);
+    assert.ok(false);
   });
 });
