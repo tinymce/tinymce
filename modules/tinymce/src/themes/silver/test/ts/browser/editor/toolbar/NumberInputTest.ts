@@ -5,7 +5,7 @@ import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } fro
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.themes.silver.throbber.ThrobberEditorTest', () => {
+describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     toolbar: [ 'undo', 'fontsizeinput', 'redo' ]
