@@ -1,6 +1,6 @@
 import { AlloyComponent, AlloyEvents, AlloyTriggers, CustomEvent, Keying, NativeEvents, Reflecting, Representing } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
-import { Result , Fun } from '@ephox/katamari';
+import { Result, Fun } from '@ephox/katamari';
 import { Attribute, Compare, Focus, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import {
