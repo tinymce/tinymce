@@ -72,7 +72,7 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
       Keying.config({
         mode: 'special',
         onEnter: (comp) => {
-          comp.element.dom.blur();
+          spec.onAction(Representing.getValue(comp));
           return Optional.some(true);
         },
         onUp: (comp) => {
