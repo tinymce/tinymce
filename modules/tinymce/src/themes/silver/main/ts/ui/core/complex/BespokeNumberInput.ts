@@ -1,6 +1,6 @@
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, GuiFactory, Input, Keying, Memento, NativeEvents, Representing } from '@ephox/alloy';
 import { Cell, Fun, Id, Optional } from '@ephox/katamari';
-import { Focus, Value } from '@ephox/sugar';
+import { Dimension, Focus, Value } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
@@ -35,9 +35,9 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
 
   const changeValue = (f: (v: number, step: number) => number): void => {
     const text = getValueFromCurrentComp(currentComp);
-    const value = parseFloat(text.match(/(?<value>^[\d\.]+)/)?.groups?.value ?? '0');
-    const unitRegexp = new RegExp(`${value}(?<unit>\\D+)$`);
-    const unit = text.match(unitRegexp)?.groups?.unit ?? '';
+    const parsedText = Dimension.parse(text, [ 'unsupportedLength' ]);
+    const value = parsedText.map((res) => res.value).getOr(0);
+    const unit = parsedText.map((res) => res.unit).getOr('');
     const newValue = f(value, spec.getConfigFromUnit(unit).step);
     const newValueWithUnit = `${isValidValue(newValue) ? newValue : value}${unit}`;
 
