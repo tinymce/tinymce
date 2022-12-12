@@ -69,10 +69,11 @@ const makeSandbox = (button: AlloyComponent, spec: FloatingToolbarButtonSpec, de
   const ariaControls = AriaControls.manager();
 
   const onOpen = (sandbox: AlloyComponent, toolbar: AlloyComponent) => {
+    const skipFocus = shouldSkipFocus.get().getOr(false);
     detail.fetch().get((groups) => {
       setGroups(button, toolbar, detail, spec.layouts, groups);
       ariaControls.link(button.element);
-      if (!shouldSkipFocus.get()) {
+      if (!skipFocus) {
         Keying.focusIn(toolbar);
       }
     });
@@ -81,7 +82,7 @@ const makeSandbox = (button: AlloyComponent, spec: FloatingToolbarButtonSpec, de
   const onClose = () => {
     // Toggle and focus the button
     Toggling.off(button);
-    if (!shouldSkipFocus.get()) {
+    if (!shouldSkipFocus.get().getOr(false)) {
       Focusing.focus(button);
     }
     ariaControls.unlink(button.element);
