@@ -26,7 +26,8 @@ export interface FloatingToolbarButtonDetail extends CompositeSketchDetail, HasL
 export interface FloatingToolbarButtonApis {
   setGroups: (floatingToolbarButton: AlloyComponent, groups: AlloySpec[]) => Optional<AlloyComponent>;
   reposition: (floatingToolbarButton: AlloyComponent) => void;
-  toggle: (floatingToolbarButton: AlloyComponent, options?: { skipFocus: boolean }) => void;
+  toggle: (floatingToolbarButton: AlloyComponent) => void;
+  toggleWithoutFocusing: (floatingToolbarButton: AlloyComponent) => void;
   getToolbar: (floatingToolbarButton: AlloyComponent) => Optional<AlloyComponent>;
   isOpen: (floatingToolbarButton: AlloyComponent) => boolean;
 }

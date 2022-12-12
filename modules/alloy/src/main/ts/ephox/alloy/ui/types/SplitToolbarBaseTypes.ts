@@ -18,7 +18,8 @@ export interface SplitToolbarBaseDetail extends CompositeSketchDetail {
 export interface SplitToolbarBaseApis {
   setGroups: (toolbar: AlloyComponent, groups: SketchSpec[]) => void;
   refresh: (toolbar: AlloyComponent) => void;
-  toggle: (toolbar: AlloyComponent, options?: { skipFocus: boolean }) => void;
+  toggle: (toolbar: AlloyComponent) => void;
+  toggleWithoutFocusing: (toolbar: AlloyComponent) => void;
   isOpen: (toolbar: AlloyComponent) => boolean;
 }
 

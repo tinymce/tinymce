@@ -28,15 +28,19 @@ import { CompositeSketchFactory } from './UiSketcher';
 
 const shouldSkipFocus = Singleton.value<boolean>();
 
-const toggle = (button: AlloyComponent, externals: Record<string, any>, options?: { skipFocus: boolean }) => {
-  shouldSkipFocus.set(options?.skipFocus || false);
+const toggleWithoutFocusing = (button: AlloyComponent, externals: Record<string, any>) => {
+  shouldSkipFocus.set(true);
+  toggle(button, externals);
+  shouldSkipFocus.clear();
+};
+
+const toggle = (button: AlloyComponent, externals: Record<string, any>) => {
   const toolbarSandbox = Coupling.getCoupled(button, 'toolbarSandbox');
   if (Sandboxing.isOpen(toolbarSandbox)) {
     Sandboxing.close(toolbarSandbox);
   } else {
     Sandboxing.open(toolbarSandbox, externals.toolbar());
   }
-  shouldSkipFocus.clear();
 };
 
 const position = (button: AlloyComponent, toolbar: AlloyComponent, detail: FloatingToolbarButtonDetail, layouts: Layouts | undefined) => {
@@ -162,6 +166,9 @@ const factory: CompositeSketchFactory<FloatingToolbarButtonDetail, FloatingToolb
     toggle: (button: AlloyComponent) => {
       toggle(button, externals);
     },
+    toggleWithoutFocusing: (button: AlloyComponent) => {
+      toggleWithoutFocusing(button, externals);
+    },
     getToolbar: (button: AlloyComponent) => {
       return Sandboxing.getState(Coupling.getCoupled(button, 'toolbarSandbox'));
     },
@@ -183,8 +190,11 @@ const FloatingToolbarButton: FloatingToolbarButtonSketcher = Sketcher.composite<
     reposition: (apis, button) => {
       apis.reposition(button);
     },
-    toggle: (apis, button, options) => {
-      apis.toggle(button, options);
+    toggle: (apis, button) => {
+      apis.toggle(button);
+    },
+    toggleWithoutFocusing: (apis, button) => {
+      apis.toggleWithoutFocusing(button);
     },
     getToolbar: (apis, button) => apis.getToolbar(button),
     isOpen: (apis, button) => apis.isOpen(button)
