@@ -121,19 +121,19 @@ const getSpec = (editor: Editor): SelectSpec => {
 const createFontSizeButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
   createSelectButton(editor, backstage, getSpec(editor));
 
-const getNumberInputSpec = (editor: Editor): NumberInputSpec => {
-  const getConfigFromUnit = (unit: string): Config => {
-    const baseConfig = { step: 1 };
+const getConfigFromUnit = (unit: string): Config => {
+  const baseConfig = { step: 1 };
 
-    const configs: Record<string, Config> = {
-      em: { step: 0.1 },
-      px: { step: 1 },
-      pt: { step: 1 }
-    };
-
-    return configs[unit] ?? baseConfig;
+  const configs: Record<string, Config> = {
+    em: { step: 0.1 },
+    px: { step: 1 },
+    pt: { step: 1 }
   };
 
+  return configs[unit] ?? baseConfig;
+};
+
+const getNumberInputSpec = (editor: Editor): NumberInputSpec => {
   const updateInputValue = (comp: AlloyComponent) => AlloyTriggers.emitWith(comp, updateMenuText, {
     text: editor.queryCommandValue('FontSize')
   });
