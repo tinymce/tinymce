@@ -1,6 +1,6 @@
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, Input, Keying, Memento, NativeEvents, Representing } from '@ephox/alloy';
 import { Cell, Fun, Id, Optional } from '@ephox/katamari';
-import { Focus } from '@ephox/sugar';
+import { Focus, Value } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
@@ -63,10 +63,10 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
           Representing.setValue(comp, se.event.text);
         }),
         AlloyEvents.run(NativeEvents.focusout(), (_comp, se) => {
-          spec.onAction(se.event.target.dom.value);
+          spec.onAction(Value.get(se.event.target));
         }),
         AlloyEvents.run(NativeEvents.change(), (_comp, se) => {
-          spec.onAction(se.event.target.dom.value);
+          spec.onAction(Value.get(se.event.target));
         })
       ]),
       Keying.config({
