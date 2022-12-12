@@ -11,7 +11,7 @@ import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import * as FormatRegister from './utils/FormatRegister';
 
 interface Config {
-  step: number;
+  readonly step: number;
 }
 
 export interface NumberInputSpec {
