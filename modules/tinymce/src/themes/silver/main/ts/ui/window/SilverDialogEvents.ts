@@ -1,6 +1,6 @@
 import { AlloyComponent, AlloyEvents, AlloyTriggers, CustomEvent, Keying, NativeEvents, Reflecting, Representing } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
-import { Result, Fun } from '@ephox/katamari';
+import { Result /*, Fun */ } from '@ephox/katamari';
 import { Attribute, Compare, Focus, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import {
@@ -33,7 +33,7 @@ const initCommonEvents = <A, S extends EventSpec<A>>(fireApiEvent: FireApiFunc<A
   fireApiEvent<FormCloseEvent>(formCloseEvent, (_api: A, spec: S, _event, self) => {
     // TINY-9148: Safari scrolls down to the sink if the dialog is selected before removing,
     // so we should blur the currently active element beforehand.
-    Focus.active(SugarShadowDom.getRootNode(self.element)).fold(Fun.noop, Focus.blur);
+    // Focus.active(SugarShadowDom.getRootNode(self.element)).fold(Fun.noop, Focus.blur);
     extras.onClose();
     spec.onClose();
   }),
