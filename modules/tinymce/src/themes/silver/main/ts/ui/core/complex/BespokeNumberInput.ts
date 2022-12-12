@@ -1,4 +1,4 @@
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, Input, Keying, Memento, NativeEvents, Representing } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, GuiFactory, Input, Keying, Memento, NativeEvents, Representing } from '@ephox/alloy';
 import { Cell, Fun, Id, Optional } from '@ephox/katamari';
 import { Focus, Value } from '@ephox/sugar';
 
@@ -101,9 +101,11 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
       dom: {
         tag: 'button',
         styles: buttonStyles,
-        innerHtml: label,
         classes
       },
+      components: [
+        GuiFactory.text(label)
+      ],
       action
     });
   };
