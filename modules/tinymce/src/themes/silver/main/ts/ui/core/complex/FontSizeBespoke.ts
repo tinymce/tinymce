@@ -143,7 +143,6 @@ const getNumberInputSpec = (editor: Editor): NumberInputSpec => {
     getConfigFromUnit,
     onAction: (format) => {
       editor.undoManager.transact(() => {
-        editor.focus();
         editor.execCommand('FontSize', false, format);
       });
     }
