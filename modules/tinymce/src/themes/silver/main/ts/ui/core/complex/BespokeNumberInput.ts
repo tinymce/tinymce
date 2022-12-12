@@ -1,4 +1,4 @@
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Button, Focusing, Input, Keying, Memento, NativeEvents, Representing, SketchSpec } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, Input, Keying, Memento, NativeEvents, Representing } from '@ephox/alloy';
 import { Cell, Fun, Id, Optional } from '@ephox/katamari';
 import { Focus } from '@ephox/sugar';
 
@@ -14,7 +14,7 @@ interface BespokeSelectApi {
   readonly getComponent: () => AlloyComponent;
 }
 
-const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage, spec: NumberInputSpec): SketchSpec => {
+const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage, spec: NumberInputSpec): AlloySpec => {
   let currentComp: Optional<AlloyComponent> = Optional.none();
 
   const getValueFromCurrentComp = (comp: Optional<AlloyComponent>): string =>
@@ -109,7 +109,6 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
   };
 
   return {
-    uid: Id.generate('number-input-wrapper'),
     dom: {
       tag: 'div',
       styles: {

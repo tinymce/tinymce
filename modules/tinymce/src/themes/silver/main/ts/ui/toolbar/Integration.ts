@@ -1,4 +1,4 @@
-import { AlloySpec, SketchSpec, VerticalDir } from '@ephox/alloy';
+import { AlloySpec, VerticalDir } from '@ephox/alloy';
 import { StructureSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Obj, Optional, Result, Type } from '@ephox/katamari';
@@ -112,7 +112,7 @@ const extractFrom = (spec: ToolbarButton & { type: string }, backstage: UiFactor
     )
   );
 
-const bespokeButtons: Record<string, (editor: Editor, backstage: UiFactoryBackstage) => SketchSpec> = {
+const bespokeButtons: Record<string, (editor: Editor, backstage: UiFactoryBackstage) => AlloySpec> = {
   styles: createStylesButton,
   fontsize: createFontSizeButton,
   fontsizeinput: createFontSizeInputButton,

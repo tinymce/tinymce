@@ -1,4 +1,4 @@
-import { AlloyComponent, AlloyTriggers, SketchSpec } from '@ephox/alloy';
+import { AlloyComponent, AlloySpec, AlloyTriggers, SketchSpec } from '@ephox/alloy';
 import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -150,7 +150,7 @@ const getNumberInputSpec = (editor: Editor): NumberInputSpec => {
   };
 };
 
-const createFontSizeInputButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
+const createFontSizeInputButton = (editor: Editor, backstage: UiFactoryBackstage): AlloySpec =>
   createBespokeNumberInput(editor, backstage, getNumberInputSpec(editor));
 
 // TODO: Test this!
