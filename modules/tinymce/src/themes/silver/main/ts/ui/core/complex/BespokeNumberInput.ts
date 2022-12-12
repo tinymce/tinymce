@@ -49,10 +49,6 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
   const increase = () => changeValue((n, s) => n + s);
 
   const memInput = Memento.record(Input.sketch({
-    inputStyles: {
-      'width': '75px',
-      'text-align': 'center'
-    },
     inputBehaviours: Behaviour.derive([
       AddEventsBehaviour.config(customEvents, [
         onControlAttached({ onSetup, getApi }, editorOffCell),
@@ -90,32 +86,20 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
     ])
   }));
 
-  const makeStepperButton = (label: string, action: VoidFunction, classes: string[]) => {
-    const buttonStyles = {
-      'width': '20px',
-      'text-align': 'center',
-      'background-color': 'grey'
-    };
-
-    return Button.sketch({
-      dom: {
-        tag: 'button',
-        styles: buttonStyles,
-        classes
-      },
-      components: [
-        GuiFactory.text(label)
-      ],
-      action
-    });
-  };
+  const makeStepperButton = (label: string, action: VoidFunction, classes: string[]) => Button.sketch({
+    dom: {
+      tag: 'button',
+      classes
+    },
+    components: [
+      GuiFactory.text(label)
+    ],
+    action
+  });
 
   return {
     dom: {
       tag: 'div',
-      styles: {
-        display: 'flex'
-      },
       classes: [ 'tox-number-input' ]
     },
     components: [
