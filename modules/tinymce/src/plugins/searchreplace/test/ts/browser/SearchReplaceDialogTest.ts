@@ -124,6 +124,5 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTest', () => 
     const initialScroll = Scroll.get(doc);
     TinyUiActions.closeDialog(editor);
     assert.equal(initialScroll.top, Scroll.get(doc).top);
-    assert.ok(false);
   });
 });
