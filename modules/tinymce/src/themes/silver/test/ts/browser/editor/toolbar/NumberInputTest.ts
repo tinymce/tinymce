@@ -73,4 +73,27 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     TinyUiActions.keystroke(editor, Keys.down());
     TinyAssertions.assertContent(editor, '<p>a<span style="font-size: 2em;">b</span>c</p>');
   });
+
+  it('TINY-9429: should navigate correclty via keyboard', async () => {
+    const editor = hook.editor();
+    const root = SugarShadowDom.getRootNode(TinyDom.targetElement(editor));
+
+    FocusTools.setFocus(root, '.tox-number-input input');
+    await FocusTools.pTryOnSelector('Focus should should be on input', root, '.tox-number-input input');
+
+    TinyUiActions.keystroke(editor, Keys.escape());
+    await FocusTools.pTryOnSelector('With escape it should pass from input to its wrapper', root, '.tox-number-input .tox-input-wrapper');
+
+    TinyUiActions.keystroke(editor, Keys.left());
+    await FocusTools.pTryOnSelector('With left it should pass from input-wrapper to minus button', root, '.tox-number-input .minus');
+
+    TinyUiActions.keystroke(editor, Keys.right());
+    await FocusTools.pTryOnSelector('With right it should pass from minut button to input-wrapper', root, '.tox-number-input .tox-input-wrapper');
+
+    TinyUiActions.keystroke(editor, Keys.right());
+    await FocusTools.pTryOnSelector('With right it should pass from input-wrapper to plus button', root, '.tox-number-input .plus');
+
+    TinyUiActions.keystroke(editor, Keys.escape());
+    await FocusTools.pTryOnSelector('With escape it should pass from plus button to number-input', root, '.tox-number-input');
+  });
 });

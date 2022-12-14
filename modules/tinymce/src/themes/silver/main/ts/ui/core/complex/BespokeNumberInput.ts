@@ -1,6 +1,6 @@
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, GuiFactory, Input, Keying, Memento, NativeEvents, Representing } from '@ephox/alloy';
-import { Cell, Fun, Id, Optional } from '@ephox/katamari';
-import { Dimension, Focus, Value } from '@ephox/sugar';
+import { Arr, Cell, Fun, Id, Optional } from '@ephox/katamari';
+import { Dimension, Focus, SugarElement, Traverse, Value } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
@@ -48,43 +48,75 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
   const decrease = () => changeValue((n, s) => n - s);
   const increase = () => changeValue((n, s) => n + s);
 
-  const memInput = Memento.record(Input.sketch({
-    inputBehaviours: Behaviour.derive([
-      AddEventsBehaviour.config(customEvents, [
-        onControlAttached({ onSetup, getApi }, editorOffCell),
-        onControlDetached({ getApi }, editorOffCell)
-      ]),
-      AddEventsBehaviour.config('menubutton-update-display-text', [
-        AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
-          Representing.setValue(comp, se.event.text);
-        }),
-        AlloyEvents.run(NativeEvents.focusout(), (_comp, se) => {
-          spec.onAction(Value.get(se.event.target));
-        }),
-        AlloyEvents.run(NativeEvents.change(), (_comp, se) => {
-          spec.onAction(Value.get(se.event.target));
-        })
-      ]),
+  const memInput = Memento.record({
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-input-wrapper' ]
+    },
+    components: [
+      Input.sketch({
+        inputBehaviours: Behaviour.derive([
+          AddEventsBehaviour.config(customEvents, [
+            onControlAttached({ onSetup, getApi }, editorOffCell),
+            onControlDetached({ getApi }, editorOffCell)
+          ]),
+          AddEventsBehaviour.config('menubutton-update-display-text', [
+            AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
+              Representing.setValue(comp, se.event.text);
+            }),
+            AlloyEvents.run(NativeEvents.focusout(), (_comp, se) => {
+              spec.onAction(Value.get(se.event.target));
+            }),
+            AlloyEvents.run(NativeEvents.change(), (_comp, se) => {
+              spec.onAction(Value.get(se.event.target));
+            })
+          ]),
+          Keying.config({
+            mode: 'special',
+            onEnter: (comp) => {
+              spec.onAction(Representing.getValue(comp));
+              return Optional.some(true);
+            },
+            onEscape: (comp) => {
+              Traverse.parentElement(comp.element).each(Focus.focus);
+              return Optional.some(true);
+            },
+            onUp: (comp) => {
+              increase();
+              // TOFIX: now it preserve the focus but it put the selection at the end of the input
+              Focus.focusInside(comp.element);
+              return Optional.some(true);
+            },
+            onDown: (comp) => {
+              decrease();
+              Focus.focusInside(comp.element);
+              return Optional.some(true);
+            }
+          })
+        ])
+      })
+    ],
+    behaviours: Behaviour.derive([
+      Focusing.config({}),
       Keying.config({
         mode: 'special',
         onEnter: (comp) => {
-          spec.onAction(Representing.getValue(comp));
-          return Optional.some(true);
-        },
-        onUp: (comp) => {
-          increase();
-          // TOFIX: now it preserve the focus but it put the selection at the end of the input
-          Focus.focusInside(comp.element);
-          return Optional.some(true);
-        },
-        onDown: (comp) => {
-          decrease();
-          Focus.focusInside(comp.element);
-          return Optional.some(true);
+          if (Focus.hasFocus(comp.element)) {
+            Traverse.firstChild(comp.element).each((input) => Focus.focus(input as SugarElement<HTMLElement>));
+            return Optional.some(true);
+          } else {
+            return Optional.none();
+          }
         }
       })
     ])
-  }));
+  });
+
+  const moveFocus = (parentComp: AlloyComponent, direction: 'left' | 'right'): void => {
+    const nextNode = direction === 'right' ? Traverse.nextSibling : Traverse.prevSibling;
+    const focussed = Arr.find(Traverse.children(parentComp.element), Focus.hasFocus);
+    focussed.fold(Optional.none, nextNode).each((next) => Focus.focus(next as SugarElement<HTMLElement>));
+  };
 
   const makeStepperButton = (label: string, action: VoidFunction, classes: string[]) => Button.sketch({
     dom: {
@@ -113,7 +145,7 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
         mode: 'special',
         onEnter: (comp) => {
           if (Focus.hasFocus(comp.element)) {
-            memInput.getOpt(comp).each((input) => Focus.focus(input.element));
+            memInput.getOpt(comp).each((inputWrapper) => Focus.focus(inputWrapper.element));
             return Optional.some(true);
           } else {
             return Optional.none();
@@ -126,6 +158,14 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
             Focus.focus(wrapperComp.element);
             return Optional.some(true);
           }
+        },
+        onLeft: (comp) => {
+          moveFocus(comp, 'left');
+          return Optional.none();
+        },
+        onRight: (comp) => {
+          moveFocus(comp, 'right');
+          return Optional.none();
         }
       })
     ])
