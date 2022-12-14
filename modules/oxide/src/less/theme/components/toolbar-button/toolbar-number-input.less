@@ -6,22 +6,29 @@
   .tox-number-input {
     display: flex;
 
-    :focus {
-      border: 2px solid #2d6adf;
+    > *:focus > {
+      background: #d9edf7;
+    }
+
+    .tox-input-wrapper,
+    input {
+      display: flex;
+      text-align: center;
+      width: 75px;
+    }
+
+    button {
+      background: #f7f7f7;
       border-radius: 3px;
+      height: 28px;
+      text-align: center;
+      width: 24px;
     }
   }
 
-  .tox-number-input > button {
-    background: #f7f7f7;
-    border-radius: 3px;
-    height: 28px;
-    text-align: center;
-    width: 24px;
-  }
-
-  .tox-number-input > input {
-    text-align: center;
-    width: 75px;
+  .tox-number-input:focus {
+    * > {
+      background: #d9edf7;
+    }
   }
 }
