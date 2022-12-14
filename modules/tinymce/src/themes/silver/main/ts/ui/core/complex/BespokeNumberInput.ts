@@ -48,10 +48,16 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
   const decrease = () => changeValue((n, s) => n - s);
   const increase = () => changeValue((n, s) => n + s);
 
+  const goToParent = (comp: AlloyComponent) =>
+    Traverse.parentElement(comp.element).fold(Optional.none, (parent) => {
+      Focus.focus(parent);
+      return Optional.some(true);
+    });
+
   const memInput = Memento.record({
     dom: {
       tag: 'div',
-      classes: [ 'tox-input-wrapper' ]
+      classes: [ 'tox-input-wrapper', 'highlight-on-focus' ]
     },
     components: [
       Input.sketch({
@@ -77,10 +83,7 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
               spec.onAction(Representing.getValue(comp));
               return Optional.some(true);
             },
-            onEscape: (comp) => {
-              Traverse.parentElement(comp.element).each(Focus.focus);
-              return Optional.some(true);
-            },
+            onEscape: goToParent,
             onUp: (comp) => {
               increase();
               // TOFIX: now it preserve the focus but it put the selection at the end of the input
@@ -107,7 +110,8 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
           } else {
             return Optional.none();
           }
-        }
+        },
+        onEscape: goToParent
       })
     ])
   });
@@ -135,9 +139,9 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
       classes: [ 'tox-number-input' ]
     },
     components: [
-      makeStepperButton('-', decrease, [ 'minus' ]),
+      makeStepperButton('-', decrease, [ 'minus', 'highlight-on-focus' ]),
       memInput.asSpec(),
-      makeStepperButton('+', increase, [ 'plus' ])
+      makeStepperButton('+', increase, [ 'plus', 'highlight-on-focus' ])
     ],
     behaviours: Behaviour.derive([
       Focusing.config({}),
