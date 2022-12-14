@@ -14,7 +14,7 @@ interface BespokeSelectApi {
   readonly getComponent: () => AlloyComponent;
 }
 
-const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage, spec: NumberInputSpec): AlloySpec => {
+const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage, spec: NumberInputSpec): AlloySpec => {
   let currentComp: Optional<AlloyComponent> = Optional.none();
 
   const getValueFromCurrentComp = (comp: Optional<AlloyComponent>): string =>
@@ -122,16 +122,23 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
     focussed.fold(Optional.none, nextNode).each((next) => Focus.focus(next as SugarElement<HTMLElement>));
   };
 
-  const makeStepperButton = (label: string, action: VoidFunction, classes: string[]) => Button.sketch({
-    dom: {
-      tag: 'button',
-      classes
-    },
-    components: [
-      GuiFactory.text(label)
-    ],
-    action
-  });
+  const makeStepperButton = (label: string, action: VoidFunction, title: string, classes: string[]) => {
+    const translatedTooltip = backstage.shared.providers.translate(title);
+    return Button.sketch({
+      dom: {
+        tag: 'button',
+        attributes: {
+          'title': translatedTooltip,
+          'aria-label': translatedTooltip
+        },
+        classes: classes.concat(title)
+      },
+      components: [
+        GuiFactory.text(label)
+      ],
+      action
+    });
+  };
 
   return {
     dom: {
@@ -139,9 +146,9 @@ const createBespokeNumberInput = (editor: Editor, _backstage: UiFactoryBackstage
       classes: [ 'tox-number-input' ]
     },
     components: [
-      makeStepperButton('-', decrease, [ 'minus', 'highlight-on-focus' ]),
+      makeStepperButton('-', decrease, 'minus', [ 'highlight-on-focus' ]),
       memInput.asSpec(),
-      makeStepperButton('+', increase, [ 'plus', 'highlight-on-focus' ])
+      makeStepperButton('+', increase, 'plus', [ 'highlight-on-focus' ])
     ],
     behaviours: Behaviour.derive([
       Focusing.config({}),
