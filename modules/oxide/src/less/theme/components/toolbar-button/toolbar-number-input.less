@@ -2,12 +2,14 @@
 // Toolbar number input
 //
 
+@toolbar-number-input-focus-color: #d9edf7;
+
 .tox {
   .tox-number-input {
     display: flex;
 
     > *:focus > {
-      background: #d9edf7;
+      background: @toolbar-number-input-focus-color;
     }
 
     .tox-input-wrapper,
@@ -24,11 +26,15 @@
       text-align: center;
       width: 24px;
     }
+
+    button:hover {
+      background: @toolbar-number-input-focus-color;
+    }
   }
 
   .tox-number-input:focus {
     * > {
-      background: #d9edf7;
+      background: @toolbar-number-input-focus-color;
     }
   }
 }
