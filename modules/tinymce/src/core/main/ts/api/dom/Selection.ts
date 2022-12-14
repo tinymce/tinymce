@@ -69,6 +69,7 @@ interface EditorSelection {
   moveToBookmark: (bookmark: Bookmark) => void;
   select: (node: Node, content?: boolean) => Node;
   isCollapsed: () => boolean;
+  isEditable: () => boolean;
   isForward: () => boolean;
   setNode: (elm: Element) => Element;
   getNode: () => HTMLElement;
@@ -254,6 +255,22 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     }
 
     return !sel || rng.collapsed;
+  };
+
+  /**
+   * Returns true if both the endpoints of the selection range is editable and false if one if them isn't editable.
+   *
+   * @method isEditable
+   * @return {Boolean} true or false if the selection range is editable or not.
+   */
+  const isEditable = (): boolean => {
+    const rng = getRng();
+
+    if (rng.startContainer === rng.endContainer) {
+      return dom.isEditable(rng.startContainer);
+    } else {
+      return dom.isEditable(rng.startContainer) && dom.isEditable(rng.endContainer);
+    }
   };
 
   /**
@@ -567,6 +584,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     moveToBookmark,
     select,
     isCollapsed,
+    isEditable,
     isForward,
     setNode,
     getNode,
