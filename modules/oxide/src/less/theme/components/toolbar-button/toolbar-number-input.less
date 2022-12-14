@@ -3,6 +3,9 @@
 //
 
 @toolbar-number-input-focus-color: #d9edf7;
+@toolbar-number-input-button-height: 28px;
+@toolbar-number-input-button-width: 24px;
+@toolbar-number-input-input-wrapper-width: 75px;
 
 .tox {
   .tox-number-input {
@@ -16,15 +19,15 @@
     input {
       display: flex;
       text-align: center;
-      width: 75px;
+      width: @toolbar-number-input-input-wrapper-width;
     }
 
     button {
-      background: #f7f7f7;
-      border-radius: 3px;
-      height: 28px;
+      background: @toolbar-button-bespoke-background-color;
+      border-radius: @toolbar-button-border-radius;
+      height: @toolbar-number-input-button-height;
       text-align: center;
-      width: 24px;
+      width: @toolbar-number-input-button-width;
     }
 
     button:hover {
