@@ -18,21 +18,18 @@ import { createUploader, openNotification } from './util/ImageUploader';
  *
  * @class tinymce.EditorUpload
  * @example
- * // Apply a filter to all images as uploaded..
+ * // Apply a new filter within the image scan.
  * tinymce.activeEditor.EditorUpload.addFilter((image) => {
  *   const maxSize = 1920 * 1080;
  *   const imageSize = image.width * image.height;
  *   return imageSize < maxSize;
  * });
  *
- * // UploadImages
+ * // Upload all valid images in the editor
  * tinymce.activeEditor.EditorUpload.uploadImages();
  *
- * // ScanForImages
+ * // Scan the editor for valid images
  * tinymce.activeEditor.EditorUpload.scanForImages();
- *
- * // Destroy
- * tinymce.activeEditor.EditorUpload.destroy();
  */
 
 export interface UploadResult {
@@ -53,8 +50,8 @@ interface EditorUpload {
   blobCache: BlobCache;
 
   /**
-   * Adds a custom filter to be executed before any images are uploaded to the server.
-   * Images must return true on every added filter to be uploaded, else they are filtered out.
+   * Adds a custom filter that controls the images which are included in the scan.
+   * Images must return true on every added filter to be considered valid.
    *
    * @method addFilter
    * @param {Function} filter Function which filters each image upload.
@@ -69,7 +66,7 @@ interface EditorUpload {
   addFilter: (filter: (img: HTMLImageElement) => boolean) => void;
 
   /**
-   * Uploads all data uri/blob uri images in the editor contents to server.
+   * Uploads all the data uri/blob uri images scanned from the editor content to the server.
    *
    * @method uploadImages
    * @return {Promise} Promise instance with images and status for each image.
@@ -77,7 +74,7 @@ interface EditorUpload {
   uploadImages: () => Promise<UploadResult[]>;
 
   /**
-   * Uploads all data uri/blob uri images in the editor contents to server only when automatic uploads are enabled.
+   * Uploads all data uri/blob uri images to the server only when automatic uploads are enabled.
    *
    * @method uploadImagesAuto
    * @return {Promise} Promise instance with images and status for each image.
@@ -85,7 +82,7 @@ interface EditorUpload {
   uploadImagesAuto: () => Promise<UploadResult[]>;
 
   /**
-   * Retrieves each valid image element in the editor, and blob information for each image.
+   * Scans the editor content for valid image elements and generates blob information for each image.
    *
    * @method scanForImages
    * @return {Promise} Promise instance with element object and blob information for each image.
@@ -93,7 +90,8 @@ interface EditorUpload {
   scanForImages: () => Promise<BlobInfoImagePair[]>;
 
   /**
-   * Resets the blob cache, uploads and image scanner.
+   * Resets the blob cache, uploads and image scanner. Called automatically on <code>editor.remove</code>.
+   * This method is not recommended to be used by integrators.
    *
    * @method destroy
    */
