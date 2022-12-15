@@ -84,15 +84,13 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
               return Optional.some(true);
             },
             onEscape: goToParent,
-            onUp: (comp) => {
+            onUp: (_comp) => {
               increase();
               // TOFIX: now it preserve the focus but it put the selection at the end of the input
-              Focus.focusInside(comp.element);
               return Optional.some(true);
             },
-            onDown: (comp) => {
+            onDown: (_comp) => {
               decrease();
-              Focus.focusInside(comp.element);
               return Optional.some(true);
             }
           })
