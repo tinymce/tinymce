@@ -74,7 +74,7 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 2em;">b</span>c</p>');
   });
 
-  it('TINY-9429: should navigate correclty via keyboard', async () => {
+  it('TINY-9429: should navigate correctly via keyboard', async () => {
     const editor = hook.editor();
     const root = SugarShadowDom.getRootNode(TinyDom.targetElement(editor));
 
