@@ -1,4 +1,4 @@
-import { FocusTools, Keys, UiControls, Waiter } from '@ephox/agar';
+import { FocusTools, Keys, UiControls } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { SugarElement, SugarShadowDom } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -11,22 +11,15 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     toolbar: [ 'undo', 'fontsizeinput', 'redo' ]
   }, []);
 
-  const pressUpDown = async (editor: Editor, key: number) => {
-    TinyUiActions.keystroke(editor, key);
-    await Waiter.pWait(50);
-  };
-
-  it('TINY-9429: plus and minus should increase and decrease font size of the current selection', async () => {
+  it('TINY-9429: plus and minus should increase and decrease font size of the current selection', () => {
     const editor = hook.editor();
     editor.setContent('<p style="font-size: 16px;">abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
 
     TinyUiActions.clickOnToolbar(editor, '.tox-number-input .plus');
-    await Waiter.pWait(50);
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 17px;">b</span>c</p>');
 
     TinyUiActions.clickOnToolbar(editor, '.tox-number-input .minus');
-    await Waiter.pWait(50);
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 16px;">b</span>c</p>');
   });
 
@@ -55,12 +48,12 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
 
     FocusTools.setFocus(root, '.tox-number-input input');
     await FocusTools.pTryOnSelector('Focus should should be on input', root, '.tox-number-input input');
-    await pressUpDown(editor, Keys.up());
+    TinyUiActions.keystroke(editor, Keys.up());
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 17px;">b</span>c</p>');
 
     FocusTools.setFocus(root, '.tox-number-input input');
     await FocusTools.pTryOnSelector('Focus should should be on input', root, '.tox-number-input input');
-    await pressUpDown(editor, Keys.down());
+    TinyUiActions.keystroke(editor, Keys.down());
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 16px;">b</span>c</p>');
 
     const input: SugarElement<HTMLInputElement> = TinyUiActions.clickOnToolbar(editor, '.tox-number-input input');
@@ -72,12 +65,12 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
 
     FocusTools.setFocus(root, '.tox-number-input input');
     await FocusTools.pTryOnSelector('Focus should should be on input', root, '.tox-number-input input');
-    await pressUpDown(editor, Keys.up());
+    TinyUiActions.keystroke(editor, Keys.up());
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 2.1em;">b</span>c</p>');
 
     FocusTools.setFocus(root, '.tox-number-input input');
     await FocusTools.pTryOnSelector('Focus should should be on input', root, '.tox-number-input input');
-    await pressUpDown(editor, Keys.down());
+    TinyUiActions.keystroke(editor, Keys.down());
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 2em;">b</span>c</p>');
   });
 
