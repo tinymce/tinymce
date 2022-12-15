@@ -33,7 +33,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
 
   const isValidValue = (value: number): boolean => value >= 0;
 
-  const debouncedOnAction = Throttler.last(spec.onAction, 100);
+  const debouncedOnAction = Throttler.last(spec.onAction, 50);
 
   const changeValue = (f: (v: number, step: number) => number): void => {
     const text = getValueFromCurrentComp(currentComp);
