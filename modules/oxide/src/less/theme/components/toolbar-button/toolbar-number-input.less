@@ -2,7 +2,6 @@
 // Toolbar number input
 //
 
-@toolbar-number-input-focus-color: #d9edf7;
 @toolbar-number-input-button-height: 28px;
 @toolbar-number-input-button-width: 24px;
 @toolbar-number-input-input-wrapper-width: 75px;
@@ -12,7 +11,9 @@
     display: flex;
 
     > *:focus > {
-      background: @toolbar-number-input-focus-color;
+      background: @toolbar-button-focus-background-color;
+      border: @toolbar-button-focus-border;
+      box-shadow: @toolbar-button-focus-box-shadow;
     }
 
     .tox-input-wrapper,
@@ -31,13 +32,22 @@
     }
 
     button:hover {
-      background: @toolbar-number-input-focus-color;
+      background: @toolbar-button-hover-background-color;
+      border: @toolbar-button-hover-border;
+      box-shadow: @toolbar-button-hover-box-shadow;
+      color: @toolbar-button-hover-text-color;
+
+      svg {
+        fill: @toolbar-button-hover-icon-color;
+      }
     }
   }
 
   .tox-number-input:focus {
     * > {
-      background: @toolbar-number-input-focus-color;
+      background: @toolbar-button-focus-background-color;
+      border: @toolbar-button-focus-border;
+      box-shadow: @toolbar-button-focus-box-shadow;
     }
   }
 }
