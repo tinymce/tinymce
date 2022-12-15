@@ -126,8 +126,11 @@ const getConfigFromUnit = (unit: string): Config => {
 
   const configs: Record<string, Config> = {
     em: { step: 0.1 },
-    px: { step: 1 },
-    pt: { step: 1 }
+    cm: { step: 0.1 },
+    in: { step: 0.1 },
+    pc: { step: 0.1 },
+    ch: { step: 0.1 },
+    rem: { step: 0.1 }
   };
 
   return configs[unit] ?? baseConfig;
