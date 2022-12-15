@@ -11,7 +11,7 @@ const isWrappedNbsp = (node: Node): node is HTMLSpanElement =>
 
 const show = (editor: Editor, rootElm: Element): void => {
   const dom = editor.dom;
-  const nodeList = Nodes.filterDescendants(SugarElement.fromDom(rootElm), Nodes.isMatch);
+  const nodeList = Nodes.filterDescendants(SugarElement.fromDom(rootElm), Nodes.isMatch, editor.dom.isEditable(rootElm));
 
   Arr.each(nodeList, (n) => {
     const parent = n.dom.parentNode as Node;

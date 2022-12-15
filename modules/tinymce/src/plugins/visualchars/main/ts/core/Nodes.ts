@@ -1,5 +1,5 @@
 import { Arr, Type } from '@ephox/katamari';
-import { SugarElement, SugarNode } from '@ephox/sugar';
+import { ContentEditable, SugarElement, SugarNode } from '@ephox/sugar';
 
 import * as Data from './Data';
 import * as Html from './Html';
@@ -11,17 +11,32 @@ const isMatch = (n: SugarElement<Node>): n is SugarElement<Text> => {
     Data.regExp.test(value);
 };
 
-// inlined sugars PredicateFilter.descendants for file size
-const filterDescendants = <T extends Node>(scope: SugarElement<Node>, predicate: (x: SugarElement<Node>) => x is SugarElement<T>): SugarElement<T>[] => {
+const isContentEditableFalse = (node: SugarElement<Node>) => SugarNode.isHTMLElement(node) && ContentEditable.getRaw(node) === 'false';
+
+const isChildEditable = (node: SugarElement<Node>, currentState: boolean) => {
+  if (SugarNode.isHTMLElement(node)) {
+    const value = ContentEditable.getRaw(node);
+    if (value === 'true') {
+      return true;
+    } else if (value === 'false') {
+      return false;
+    }
+  }
+
+  return currentState;
+};
+
+// inlined sugars PredicateFilter.descendants for file size but also make it only act on editable nodes
+const filterDescendants = <T extends Node>(scope: SugarElement<Node>, predicate: (x: SugarElement<Node>) => x is SugarElement<T>, editable: boolean): SugarElement<T>[] => {
   let result: SugarElement<T>[] = [];
   const dom = scope.dom;
   const children = Arr.map(dom.childNodes, SugarElement.fromDom);
 
   Arr.each(children, (x) => {
-    if (predicate(x)) {
+    if (editable && !isContentEditableFalse(x) && predicate(x)) {
       result = result.concat([ x ]);
     }
-    result = result.concat(filterDescendants(x, predicate));
+    result = result.concat(filterDescendants(x, predicate, isChildEditable(x, editable)));
   });
   return result;
 };
