@@ -90,8 +90,8 @@ interface EditorUpload {
   scanForImages: () => Promise<BlobInfoImagePair[]>;
 
   /**
-   * Resets the blob cache, uploads and image scanner. Called automatically on <code>editor.remove</code>.
-   * This method is not recommended to be used by integrators.
+   * Resets the blob data and upload status of all uploaded images. Called automatically on <code>editor.remove</code>.
+   * This method is not recommended for integration.
    *
    * @method destroy
    */
