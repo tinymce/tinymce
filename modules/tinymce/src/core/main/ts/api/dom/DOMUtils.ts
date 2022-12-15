@@ -1845,7 +1845,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      *
      * @method isEditable
      * @param {Node} scope Node to check if it's editable or not.
-     * @return {Boolean} True if it's editable, false if it's not editable.
+     * @return {Boolean} true if it's editable, false if it's not editable.
      */
     isEditable,
 
