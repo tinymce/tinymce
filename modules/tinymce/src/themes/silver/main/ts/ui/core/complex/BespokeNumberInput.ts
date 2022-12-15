@@ -1,5 +1,5 @@
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, GuiFactory, Input, Keying, Memento, NativeEvents, Representing } from '@ephox/alloy';
-import { Arr, Cell, Fun, Id, Optional, Throttler } from '@ephox/katamari';
+import { Arr, Cell, Fun, Id, Optional } from '@ephox/katamari';
 import { Dimension, Focus, SugarElement, Traverse, Value } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -33,8 +33,6 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
 
   const isValidValue = (value: number): boolean => value >= 0;
 
-  const debouncedOnAction = Throttler.last(spec.onAction, 100);
-
   const changeValue = (f: (v: number, step: number) => number): void => {
     const text = getValueFromCurrentComp(currentComp);
     const parsedText = Dimension.parse(text, [ 'unsupportedLength' ]);
@@ -43,7 +41,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
     const newValue = f(value, spec.getConfigFromUnit(unit).step);
     const newValueWithUnit = `${isValidValue(newValue) ? newValue : value}${unit}`;
 
-    debouncedOnAction.throttle(newValueWithUnit);
+    spec.onAction(newValueWithUnit);
     currentComp.each((comp) => Representing.setValue(comp, newValueWithUnit));
   };
 
