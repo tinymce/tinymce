@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Checkmark did not show in menu colorswatches. #TINY-9395
 - Toolbar split buttons in advlist plugin to show the correct state when the cursor is in a checklist. #TINY-5167
 - Dragging transparent elements into transparent blocks elements could produce invalid nesting of transparents. #TINY-9231
+- Closing a dialog would scroll down the document in Safari. #TINY-9148
 - Removed a workaround for ensuring stylesheets are loaded in an outdated version of webkit. #TINY-9433
 
 ### Improved
