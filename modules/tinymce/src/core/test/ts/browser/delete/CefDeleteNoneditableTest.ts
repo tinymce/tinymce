@@ -10,7 +10,8 @@ describe('browser.tinymce.core.delete.CefDeleteNoneditableTest', () => {
     base_url: '/project/tinymce/js/tinymce',
   }, [], true);
 
-  it('TINY-3868: Should not backspace cef inside cef with ranged selection', () => {
+  // TINY-9473: Selection of cef in cef should not be possible was logged as followup TINY-3994 that never got done
+  it.skip('TINY-3868: Should not backspace cef inside cef with ranged selection', () => {
     const editor = hook.editor();
     editor.setContent('<div class="mceNonEditable"><span class="mceNonEditable">a</span> b</div><p>c</p>');
     TinySelections.select(editor, 'div.mceNonEditable', [ 0 ]);
@@ -42,7 +43,8 @@ describe('browser.tinymce.core.delete.CefDeleteNoneditableTest', () => {
     );
   });
 
-  it('TINY-3868: Should not delete cef inside cef with ranged selection', () => {
+  // TINY-9473: Selection of cef in cef should not be possible was logged as followup TINY-3994 that never got done
+  it.skip('TINY-3868: Should not delete cef inside cef with ranged selection', () => {
     const editor = hook.editor();
     editor.setContent('<div class="mceNonEditable"><span class="mceNonEditable">a</span> b</div><p>c</p>');
     TinySelections.select(editor, 'div.mceNonEditable', [ 0 ]);
