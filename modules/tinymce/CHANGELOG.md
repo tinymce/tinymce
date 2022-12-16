@@ -6,10 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Added
-- Typography added to the default menubar tools list. #TINY-9450
-
-### Fixed
+## Fixed
 - An element could be dropped onto the decendants of a noneditable element. #TINY-9364
 - Checkmark did not show in menu colorswatches. #TINY-9395
 - Toolbar split buttons in advlist plugin to show the correct state when the cursor is in a checklist. #TINY-5167
