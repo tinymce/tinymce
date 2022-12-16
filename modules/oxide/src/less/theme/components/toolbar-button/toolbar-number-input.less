@@ -4,6 +4,7 @@
 
 @toolbar-number-input-button-height: 28px;
 @toolbar-number-input-button-width: 24px;
+@toolbar-number-input-button-margin: 2px;
 @toolbar-number-input-input-wrapper-width: 75px;
 
 .tox {
@@ -12,23 +13,46 @@
 
     > *:focus > {
       background: @toolbar-button-focus-background-color;
-      border: @toolbar-button-focus-border;
-      box-shadow: @toolbar-button-focus-box-shadow;
     }
 
-    .tox-input-wrapper,
-    input {
+    .tox-input-wrapper {
+      background: @toolbar-button-bespoke-background-color;
       display: flex;
       text-align: center;
+    }
+
+    .tox-input-wrapper:focus {
+      background: @toolbar-button-focus-background-color;
+    }
+
+    input {
+      border-radius: @toolbar-button-border-radius;
+      margin: @toolbar-number-input-button-margin 0;
       width: @toolbar-number-input-input-wrapper-width;
+    }
+
+    input:focus {
+      background: @color-white;
     }
 
     button {
       background: @toolbar-button-bespoke-background-color;
-      border-radius: @toolbar-button-border-radius;
       height: @toolbar-number-input-button-height;
       text-align: center;
       width: @toolbar-number-input-button-width;
+    }
+
+    button.minus {
+      border-radius: @toolbar-button-border-radius 0 0 @toolbar-button-border-radius;
+    }
+
+    button.plus {
+      border-radius: 0 @toolbar-button-border-radius @toolbar-button-border-radius 0;
+    }
+
+    button svg {
+      display: block;
+      margin: 0 auto;
     }
 
     button:hover {
@@ -46,8 +70,6 @@
   .tox-number-input:focus {
     * > {
       background: @toolbar-button-focus-background-color;
-      border: @toolbar-button-focus-border;
-      box-shadow: @toolbar-button-focus-box-shadow;
     }
   }
 }
