@@ -157,7 +157,8 @@ describe('browser.tinymce.models.dom.table.FakeSelectionTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
   });
 
-  it('TINY-7724: does not select CEF cell if contenteditable=false child is selected', () => {
+  // TINY-9473: Selection of cef in cef should not be possible was logged as followup TINY-3994 that never got done
+  it.skip('TINY-7724: does not select CEF cell if contenteditable=false child is selected', () => {
     const editor = hook.editor();
     editor.setContent('<table><tbody><tr><td contenteditable="false"><p contenteditable="false"><strong>1</strong></p></td><td>2</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>');
 
