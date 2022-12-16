@@ -175,6 +175,14 @@ class Editor implements EditorObservable {
    */
   public options: EditorOptions;
 
+  /**
+   * Editor upload API
+   *
+   * @property editorUpload
+   * @type tinymce.EditorUpload
+   */
+  public editorUpload!: EditorUpload;
+
   public shortcuts: Shortcuts;
   public loadedCSS: Record<string, any> = {};
   public editorCommands: EditorCommands;
@@ -201,7 +209,6 @@ class Editor implements EditorObservable {
   public destroyed: boolean = false;
   public dom!: DOMUtils;
   public editorContainer!: HTMLElement;
-  public editorUpload!: EditorUpload;
   public eventRoot: Element | undefined;
   public formatter!: Formatter;
   public formElement: HTMLElement | undefined;
