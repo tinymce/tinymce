@@ -120,8 +120,8 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
     focussed.fold(Optional.none, nextNode).each((next) => Focus.focus(next as SugarElement<HTMLElement>));
   };
 
-  const makeStepperButton = (label: string, action: VoidFunction, title: string, classes: string[]) => {
-    const translatedTooltip = backstage.shared.providers.translate(title);
+  const makeStepperButton = (label: string, action: VoidFunction, title: string, tooltip: string, classes: string[]) => {
+    const translatedTooltip = backstage.shared.providers.translate(tooltip);
     return Button.sketch({
       dom: {
         tag: 'button',
@@ -144,9 +144,9 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
       classes: [ 'tox-number-input' ]
     },
     components: [
-      makeStepperButton('-', decrease, 'minus', [ 'highlight-on-focus' ]),
+      makeStepperButton('-', decrease, 'minus', 'Decrease font size', [ 'highlight-on-focus' ]),
       memInput.asSpec(),
-      makeStepperButton('+', increase, 'plus', [ 'highlight-on-focus' ])
+      makeStepperButton('+', increase, 'plus', 'Increase font size', [ 'highlight-on-focus' ])
     ],
     behaviours: Behaviour.derive([
       Focusing.config({}),
