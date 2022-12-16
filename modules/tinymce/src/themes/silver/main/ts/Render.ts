@@ -426,7 +426,11 @@ const setup = (editor: Editor): RenderInfo => {
     });
 
     editor.addCommand('ToggleToolbarDrawer', (_ui, options?: { skipFocus: boolean }) => {
-      OuterContainer[options?.skipFocus ? 'toggleToolbarDrawerWithoutFocusing' : 'toggleToolbarDrawer'](outerContainer);
+      if (options?.skipFocus) {
+        OuterContainer.toggleToolbarDrawerWithoutFocusing(outerContainer);
+      } else {
+        OuterContainer.toggleToolbarDrawer(outerContainer);
+      }
     });
 
     editor.addQueryStateHandler('ToggleToolbarDrawer', () => OuterContainer.isToolbarDrawerToggled(outerContainer));
