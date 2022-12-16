@@ -94,5 +94,10 @@ describe('browser.tinymce.selection.NoneditableRootElementSelectionTest', () => 
       expected: 1
     }));
 
+    it('TINY-9473: Selecting a element inside a table inside a noneditable root should not select it', testSelectElement({
+      input: '<table><tbody><tr><td><em>table</em></td></tr></tbody></table>',
+      selector: 'em',
+      expected: 0
+    }));
   });
 });

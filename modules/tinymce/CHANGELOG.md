@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `editor.insertContent` API would insert contents inside noneditable elements if the selection was inside the element. #TINY-9462
 - Closing a dialog would scroll down the document in Safari. #TINY-9148
 - Quick toolbars were incorrectly rendered during the dragging of `contenteditable="false"` elements. #TINY-9305
-- Clicking on an image, hr element or noneditable element inside a noneditable root would select the element. #TINY-9473
+- Selection of images, hrs, tables or noneditable elements was possible if they where within a noneditable root. #TINY-9473
 
 ## 6.3.1 - 2022-12-06
 
