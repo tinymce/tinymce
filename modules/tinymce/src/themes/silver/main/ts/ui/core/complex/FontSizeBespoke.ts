@@ -15,7 +15,7 @@ interface Config {
 }
 
 export interface NumberInputSpec {
-  onAction: (format: string) => void;
+  onAction: (format: string, focusBack?: boolean) => void;
   updateInputValue: (comp: AlloyComponent) => void;
   getConfigFromUnit: (unit: string) => Config;
 }
@@ -144,7 +144,7 @@ const getNumberInputSpec = (editor: Editor): NumberInputSpec => {
   return {
     updateInputValue,
     getConfigFromUnit,
-    onAction: (format) => editor.execCommand('FontSize', false, format, { skip_focus: true })
+    onAction: (format, focusBack = false) => editor.execCommand('FontSize', false, format, { skip_focus: !focusBack })
   };
 };
 

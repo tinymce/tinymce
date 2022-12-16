@@ -33,7 +33,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
 
   const isValidValue = (value: number): boolean => value >= 0;
 
-  const changeValue = (f: (v: number, step: number) => number): void => {
+  const changeValue = (f: (v: number, step: number) => number, focusBack: boolean): void => {
     const text = getValueFromCurrentComp(currentComp);
     const parsedText = Dimension.parse(text, [ 'unsupportedLength' ]);
     const value = parsedText.map((res) => res.value).getOr(0);
@@ -41,12 +41,12 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
     const newValue = f(value, spec.getConfigFromUnit(unit).step);
     const newValueWithUnit = `${isValidValue(newValue) ? newValue : value}${unit}`;
 
-    spec.onAction(newValueWithUnit);
+    spec.onAction(newValueWithUnit, focusBack);
     currentComp.each((comp) => Representing.setValue(comp, newValueWithUnit));
   };
 
-  const decrease = () => changeValue((n, s) => n - s);
-  const increase = () => changeValue((n, s) => n + s);
+  const decrease = (focusBack: boolean) => changeValue((n, s) => n - s, focusBack);
+  const increase = (focusBack: boolean) => changeValue((n, s) => n + s, focusBack);
 
   const goToParent = (comp: AlloyComponent) =>
     Traverse.parentElement(comp.element).fold(Optional.none, (parent) => {
@@ -85,12 +85,12 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
             },
             onEscape: goToParent,
             onUp: (_comp) => {
-              increase();
+              increase(false);
               // TOFIX: now it preserve the focus but it put the selection at the end of the input
               return Optional.some(true);
             },
             onDown: (_comp) => {
-              decrease();
+              decrease(false);
               return Optional.some(true);
             }
           })
@@ -144,9 +144,9 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
       classes: [ 'tox-number-input' ]
     },
     components: [
-      makeStepperButton('-', decrease, 'minus', 'Decrease font size', [ 'highlight-on-focus' ]),
+      makeStepperButton('-', () => decrease(true), 'minus', 'Decrease font size', [ 'highlight-on-focus' ]),
       memInput.asSpec(),
-      makeStepperButton('+', increase, 'plus', 'Increase font size', [ 'highlight-on-focus' ])
+      makeStepperButton('+', () => increase(true), 'plus', 'Increase font size', [ 'highlight-on-focus' ])
     ],
     behaviours: Behaviour.derive([
       Focusing.config({}),
