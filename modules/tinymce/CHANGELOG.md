@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `editor.insertContent` API would insert contents inside noneditable elements if the selection was inside the element. #TINY-9462
 - Closing a dialog would scroll down the document in Safari. #TINY-9148
 - Quick toolbars were incorrectly rendered during the dragging of `contenteditable="false"` elements. #TINY-9305
+- Removed a workaround for ensuring stylesheets are loaded in an outdated version of webkit. #TINY-9433
 
 ## 6.3.1 - 2022-12-06
 

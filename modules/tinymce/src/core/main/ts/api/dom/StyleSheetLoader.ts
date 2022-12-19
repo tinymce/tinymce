@@ -39,8 +39,6 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
   const edos = SugarElement.fromDom(documentOrShadowRoot);
   const doc = Traverse.documentOrOwner(edos);
 
-  const maxLoadTime = settings.maxLoadTime || 5000;
-
   const _setReferrerPolicy = (referrerPolicy: ReferrerPolicy) => {
     settings.referrerPolicy = referrerPolicy;
   };
@@ -100,38 +98,6 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
       const passed = () => resolve(state.passed, 2);
       const failed = () => resolve(state.failed, 3);
 
-      // Calls the waitCallback until the test returns true or the timeout occurs
-      const wait = (testCallback: () => boolean, waitCallback: () => void) => {
-        if (!testCallback()) {
-          // Wait for timeout
-          if ((Date.now()) - startTime < maxLoadTime) {
-            setTimeout(waitCallback);
-          } else {
-            failed();
-          }
-        }
-      };
-
-      // Workaround for WebKit that doesn't properly support the onload event for link elements
-      // Or WebKit that fires the onload event before the StyleSheet is added to the document
-      const waitForWebKitLinkLoaded = () => {
-        wait(() => {
-          const styleSheets = documentOrShadowRoot.styleSheets;
-          let i = styleSheets.length;
-
-          while (i--) {
-            const styleSheet = styleSheets[i];
-            const owner = styleSheet.ownerNode;
-            if (owner && link && (owner as Element).id === link.id) {
-              passed();
-              return true;
-            }
-          }
-
-          return false;
-        }, waitForWebKitLinkLoaded);
-      };
-
       if (success) {
         state.passed.push(success);
       }
@@ -165,7 +131,6 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
         type: 'text/css',
         id: state.id
       });
-      const startTime = Date.now();
 
       if (settings.contentCssCors) {
         Attribute.set(linkElem, 'crossOrigin', 'anonymous');
@@ -177,7 +142,7 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
       }
 
       link = linkElem.dom;
-      link.onload = waitForWebKitLinkLoaded;
+      link.onload = passed;
       link.onerror = failed;
 
       addStyle(linkElem);
