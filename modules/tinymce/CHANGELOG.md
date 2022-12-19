@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Removed a workaround for ensuring stylesheets are loaded in an outdated version of webkit. #TINY-9433
+
 ## 6.3.1 - 2022-12-06
 
 ### Fixed
