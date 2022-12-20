@@ -12,7 +12,7 @@ UnitTest.test('CloneFormatsTest', () => {
   const noCloneTableFill = TableFill.cellOperations(Fun.noop, doc, noCloneFormats);
 
   const cellElement = SugarElement.fromTag('td');
-  const cellContent = SugarElement.fromHtml('<strong contenteditable="false"><em>stuff</em></strong>');
+  const cellContent = SugarElement.fromHtml('<strong><em contenteditable="false">stuff</em></strong>');
   Insert.append(cellElement, cellContent);
   const cell: CellData = {
     element: cellElement,
@@ -22,7 +22,7 @@ UnitTest.test('CloneFormatsTest', () => {
 
   const clonedCell = cloneTableFill.cell(cell);
 
-  Assert.eq('', '<td><strong><em><br></em></strong></td>', Html.getOuter(clonedCell));
+  Assert.eq('', '<td><strong><br></strong></td>', Html.getOuter(clonedCell));
 
   const noClonedCell = noCloneTableFill.cell(cell);
   Assert.eq('', '<td><br></td>', Html.getOuter(noClonedCell));
