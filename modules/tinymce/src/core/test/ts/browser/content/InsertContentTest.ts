@@ -739,4 +739,40 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       TinyAssertions.assertContent(editor, '<p><a href="#1">a</a></p><p>b</p><p>c</p><p><a href="#1">d</a></p>');
     });
   });
+
+  context('Noneditable parents', () => {
+    it('TINY-9462: insertContent in noneditable element should be a noop', () => {
+      const editor = hook.editor();
+      const content = '<div contenteditable="false">text</div>';
+
+      editor.setContent(content);
+      // Shifted since fake caret is before div
+      TinySelections.setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 2);
+      editor.insertContent('hello');
+      TinyAssertions.assertContent(editor, content);
+    });
+
+    it('TINY-9462: insertContent in normal element in noneditable root should be a noop', () => {
+      const editor = hook.editor();
+      const content = '<div>text</div>';
+
+      editor.getBody().contentEditable = 'false';
+      editor.setContent(content);
+      TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
+      editor.insertContent('hello');
+      TinyAssertions.assertContent(editor, content);
+      editor.getBody().contentEditable = 'true';
+    });
+
+    it('TINY-9462: insertContent in editable element in noneditable root should insert content', () => {
+      const editor = hook.editor();
+
+      editor.getBody().contentEditable = 'false';
+      editor.setContent('<div contenteditable="true">text</div>');
+      TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
+      editor.insertContent('hello');
+      TinyAssertions.assertContent(editor, '<div contenteditable="true">thelloxt</div>');
+      editor.getBody().contentEditable = 'true';
+    });
+  });
 });

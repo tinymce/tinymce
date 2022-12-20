@@ -1,5 +1,6 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Type } from '@ephox/katamari';
+import { ContentEditable, Hierarchy, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -845,5 +846,93 @@ describe('browser.tinymce.core.dom.DOMUtilsTest', () => {
       assert.isTrue(DOM.isChildOf(s, p), 'Attached text node');
       assert.isTrue(DOM.isChildOf(m, p), 'Attached para node');
     });
+  });
+
+  context('isEditable', () => {
+    const withScratchDomUtils = (innerHtml: string, f: (dom: DOMUtils, root: SugarElement<HTMLElement>) => void) => {
+      const root = SugarElement.fromHtml<HTMLElement>(`<div>${innerHtml}</div>`);
+
+      Insert.append(SugarBody.body(), root);
+
+      const dom = DOMUtils(document, { root_element: root.dom, schema: Schema() });
+
+      f(dom, root);
+
+      dom.destroy();
+      Remove.remove(root);
+    };
+
+    const testIsEditable = (testCase: { input: string; editableRoot?: boolean; path: number[]; expected: boolean }) => () => {
+      withScratchDomUtils(testCase.input, (domUtils, root) => {
+        const scope = Hierarchy.follow(root, testCase.path).getOrDie('Could not find element by path');
+        ContentEditable.set(root, testCase.editableRoot ?? true);
+        assert.equal(domUtils.isEditable(scope.dom), testCase.expected, 'Should be the expected editable state');
+      });
+    };
+
+    it('TINY-9462: isEditable on text node in editable root', testIsEditable({
+      input: 'text node',
+      path: [],
+      expected: true
+    }));
+
+    it('TINY-9462: isEditable on text node in noneditable root', testIsEditable({
+      input: 'text node',
+      editableRoot: false,
+      path: [],
+      expected: false
+    }));
+
+    it('TINY-9462: isEditable on element in editable root', testIsEditable({
+      input: '<p>test</p>',
+      path: [ 0 ],
+      expected: true
+    }));
+
+    it('TINY-9462: isEditable on element in noneditable root', testIsEditable({
+      input: '<p>test</p>',
+      editableRoot: false,
+      path: [ 0 ],
+      expected: false
+    }));
+
+    it('TINY-9462: isEditable on text node in element in editable root', testIsEditable({
+      input: '<p>test</p>',
+      path: [ 0, 0 ],
+      expected: true
+    }));
+
+    it('TINY-9462: isEditable on text node in element in noneditable root', testIsEditable({
+      input: '<p>test</p>',
+      editableRoot: false,
+      path: [ 0, 0 ],
+      expected: false
+    }));
+
+    it('TINY-9462: isEditable on text node in noneditable element in editable root', testIsEditable({
+      input: '<p contenteditable="false">test</p>',
+      path: [ 0, 0 ],
+      expected: false
+    }));
+
+    it('TINY-9462: isEditable on text node in editable element in noneditable root', testIsEditable({
+      input: '<p contenteditable="true">test</p>',
+      editableRoot: false,
+      path: [ 0, 0 ],
+      expected: true
+    }));
+
+    it('TINY-9462: isEditable on element in noneditable element in editable root', testIsEditable({
+      input: '<p contenteditable="false"><span></span></p>',
+      path: [ 0, 0 ],
+      expected: false
+    }));
+
+    it('TINY-9462: isEditable on element in editable element in noneditable root', testIsEditable({
+      input: '<p contenteditable="true"><span></span></p>',
+      editableRoot: false,
+      path: [ 0, 0 ],
+      expected: true
+    }));
   });
 });

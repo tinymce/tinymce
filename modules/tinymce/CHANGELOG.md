@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `isEditable` API to `editor.dom` that returns true or false if the specified node is editable. #TINY-9462
 - New `setText` and `setIcon` methods added to menu button and toolbar button apis. #TINY-9268
 
+
 ### Improved
 - Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
 
