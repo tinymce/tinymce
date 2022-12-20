@@ -1,10 +1,10 @@
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Dropdown as AlloyDropdown, Focusing, GuiFactory, Highlighting,
-  Keying, Memento, Replacing, Representing, SimulatedEvent, SketchSpec, TieredData, Unselecting
+  Keying, Memento, Replacing, Representing, SimulatedEvent, SketchSpec, SystemEvents, TieredData, Unselecting
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
-import { EventArgs } from '@ephox/sugar';
+import { Css, EventArgs } from '@ephox/sugar';
 
 import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button/ButtonEvents';
 
@@ -162,6 +162,11 @@ const renderCommonDropdown = <T>(
           onControlAttached(spec, editorOffCell),
           onControlDetached(spec, editorOffCell)
         ]),
+        AddEventsBehaviour.config('common-button-display-events', [
+          AlloyEvents.runOnAttached((comp, _se) => {
+            Css.set(comp.element, 'width', Css.get(comp.element, 'width') );
+          }),
+        ]),
         AddEventsBehaviour.config('menubutton-update-display-text', [
           // These handlers are just using Replacing to replace either the menu
           // text or the icon.
@@ -183,7 +188,12 @@ const renderCommonDropdown = <T>(
         // INVESTIGATE (TINY-9014): Explain why we need the events in this order.
         // Ideally, have a test that fails when they are in a different order if order
         // is important
-        mousedown: [ 'focusing', 'alloy.base.behaviour', 'item-type-events', 'normal-dropdown-events' ]
+        mousedown: [ 'focusing', 'alloy.base.behaviour', 'item-type-events', 'normal-dropdown-events' ],
+        [SystemEvents.attachedToDom()]: [
+          'toolbar-button-events',
+          'common-button-display-events',
+          'dropdown-events',
+        ]
       }),
 
       sandboxBehaviours: Behaviour.derive([

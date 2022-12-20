@@ -1,11 +1,12 @@
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button as AlloyButton, Disabling, FloatingToolbarButton, Focusing,
-  Keying, NativeEvents, Reflecting, Replacing, SketchSpec, SplitDropdown as AlloySplitDropdown, SystemEvents, TieredData, TieredMenuTypes, Toggling,
+  GuiFactory,
+  Keying, Memento, NativeEvents, Reflecting, Replacing, SketchSpec, SplitDropdown as AlloySplitDropdown, SystemEvents, TieredData, TieredMenuTypes, Toggling,
   Unselecting
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
-import { Attribute, EventArgs, SelectorFind } from '@ephox/sugar';
+import { Attribute, Css, EventArgs, SelectorFind } from '@ephox/sugar';
 
 import { ToolbarGroupOption } from '../../../api/Options';
 import { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
@@ -13,8 +14,9 @@ import * as ReadOnly from '../../../ReadOnly';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
-import { renderIconFromPack, renderLabel } from '../../button/ButtonSlices';
+import { renderIconFromPack, renderLabel, renderReplaceableIconFromPack } from '../../button/ButtonSlices';
 import { onControlAttached, onControlDetached, OnDestroy } from '../../controls/Controls';
+import { updateMenuIcon, UpdateMenuIconEvent, updateMenuText, UpdateMenuTextEvent } from '../../dropdown/CommonDropdown';
 import * as Icons from '../../icons/Icons';
 import { componentRenderPipeline } from '../../menus/item/build/CommonMenuItem';
 import { classForPreset } from '../../menus/item/ItemClasses';
@@ -60,7 +62,15 @@ interface ChoiceFetcher {
 
 const getButtonApi = (component: AlloyComponent): Toolbar.ToolbarButtonInstanceApi => ({
   isEnabled: () => !Disabling.isDisabled(component),
-  setEnabled: (state: boolean) => Disabling.set(component, !state)
+  setEnabled: (state: boolean) => Disabling.set(component, !state),
+  setText: (text: string) => {
+    AlloyTriggers.emitWith(component, updateMenuText, {
+      text
+    });
+  },
+  setIcon: (icon: string) => AlloyTriggers.emitWith(component, updateMenuIcon, {
+    icon
+  })
 });
 
 const getToggleApi = (component: AlloyComponent): Toolbar.ToolbarToggleButtonInstanceApi => ({
@@ -69,7 +79,13 @@ const getToggleApi = (component: AlloyComponent): Toolbar.ToolbarToggleButtonIns
   },
   isActive: () => Toggling.isOn(component),
   isEnabled: () => !Disabling.isDisabled(component),
-  setEnabled: (state: boolean) => Disabling.set(component, !state)
+  setEnabled: (state: boolean) => Disabling.set(component, !state),
+  setText: (text: string) => AlloyTriggers.emitWith(component, updateMenuText, {
+    text
+  }),
+  setIcon: (icon: string) => AlloyTriggers.emitWith(component, updateMenuIcon, {
+    icon
+  })
 });
 
 const getTooltipAttributes = (tooltip: Optional<string>, providersBackstage: UiFactoryBackstageProviders) => tooltip.map<{}>((tooltip) => ({
@@ -87,6 +103,12 @@ const renderCommonStructure = (
   behaviours: Optional<Behaviours>,
   providersBackstage: UiFactoryBackstageProviders
 ): AlloyButtonSpec => {
+  const optMemDisplayText = text.map(
+    (text) => Memento.record(renderLabel(text, ToolbarButtonClasses.Button, providersBackstage))
+  );
+  const optMemDisplayIcon = icon.map(
+    (icon) => Memento.record(renderReplaceableIconFromPack(icon, providersBackstage.icons))
+  );
   return {
     dom: {
       tag: 'button',
@@ -94,8 +116,8 @@ const renderCommonStructure = (
       attributes: getTooltipAttributes(tooltip, providersBackstage)
     },
     components: componentRenderPipeline([
-      icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)),
-      text.map((text) => renderLabel(text, ToolbarButtonClasses.Button, providersBackstage))
+      optMemDisplayIcon.map((mem) => mem.asSpec()),
+      optMemDisplayText.map((mem) => mem.asSpec()),
     ]),
 
     eventOrder: {
@@ -111,6 +133,19 @@ const renderCommonStructure = (
         DisablingConfigs.toolbarButton(providersBackstage.isDisabled),
         ReadOnly.receivingConfig(),
         AddEventsBehaviour.config('common-button-display-events', [
+          AlloyEvents.runOnAttached((comp, _se) => {
+            Css.set(comp.element, 'width', Css.get(comp.element, 'width') );
+          }),
+          AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
+            optMemDisplayText.bind((mem) => mem.getOpt(comp)).each((displayText) => {
+              Replacing.set(displayText, [ GuiFactory.text(providersBackstage.translate(se.event.text)) ]);
+            });
+          }),
+          AlloyEvents.run<UpdateMenuIconEvent>(updateMenuIcon, (comp, se) => {
+            optMemDisplayIcon.bind((mem) => mem.getOpt(comp)).each((displayIcon) => {
+              Replacing.set(displayIcon, [ renderReplaceableIconFromPack(se.event.icon, providersBackstage.icons) ]);
+            });
+          }),
           AlloyEvents.run<EventArgs<MouseEvent>>(NativeEvents.mousedown(), (button, se) => {
             se.event.prevent();
             AlloyTriggers.emit(button, focusButtonEvent);
@@ -162,21 +197,24 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
     components: structure.components,
 
     eventOrder: toolbarButtonEventOrder,
-    buttonBehaviours: Behaviour.derive(
-      [
-        AddEventsBehaviour.config('toolbar-button-events', [
-          onToolbarButtonExecute<T>({
-            onAction: spec.onAction,
-            getApi: specialisation.getApi
-          }),
-          onControlAttached(specialisation, editorOffCell),
-          onControlDetached(specialisation, editorOffCell)
-        ]),
-        // Enable toolbar buttons by default
-        DisablingConfigs.toolbarButton(() => !spec.enabled || providersBackstage.isDisabled()),
-        ReadOnly.receivingConfig()
-      ].concat(specialisation.toolbarButtonBehaviours)
-    )
+    buttonBehaviours: {
+      ...Behaviour.derive(
+        [
+          AddEventsBehaviour.config('toolbar-button-events', [
+            onToolbarButtonExecute<T>({
+              onAction: spec.onAction,
+              getApi: specialisation.getApi
+            }),
+            onControlAttached(specialisation, editorOffCell),
+            onControlDetached(specialisation, editorOffCell)
+          ]),
+          // Enable toolbar buttons by default
+          DisablingConfigs.toolbarButton(() => !spec.enabled || providersBackstage.isDisabled()),
+          ReadOnly.receivingConfig()
+        ].concat(specialisation.toolbarButtonBehaviours)
+      ),
+      ...structure.buttonBehaviours
+    }
   });
 };
 
