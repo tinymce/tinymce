@@ -21,10 +21,12 @@ const isTextNodeWithCursorPosition = (el: SugarElement<Node>) => SugarText.getOp
   text.trim().length !== 0 || text.indexOf(Unicode.nbsp) > -1
 ).isSome();
 
+const isContentEditableFalse = (elem: SugarElement<Node>) => SugarNode.isHTMLElement(elem) && !elem.dom.isContentEditable;
+
 const elementsWithCursorPosition = [ 'img', 'br' ];
 const isCursorPosition = (elem: SugarElement<Node>): boolean => {
   const hasCursorPosition = isTextNodeWithCursorPosition(elem);
-  return hasCursorPosition || Arr.contains(elementsWithCursorPosition, SugarNode.name(elem));
+  return hasCursorPosition || Arr.contains(elementsWithCursorPosition, SugarNode.name(elem)) || isContentEditableFalse(elem);
 };
 
 export {
