@@ -13,7 +13,7 @@ const pAssertFloatingToolbarPosition = async (editor: Editor, getTop: () => numb
   const toolbar = await TinyUiActions.pWaitForUi(editor, '.tox-toolbar__overflow') as SugarElement<HTMLElement>;
   await Waiter.pTryUntil('Wait for toolbar position', () => {
     const top = getTop();
-    const diff = 10;
+    const diff = 20;
     const pos = SugarLocation.absolute(toolbar);
     const right = pos.left + Width.get(toolbar);
     assert.approximately(pos.top, top, diff, `Drawer top position ${pos.top}px should be ~${top}px`);
@@ -30,7 +30,7 @@ const pAssertFloatingToolbarHeight = async (editor: Editor, expectedHeight: numb
 
 const pOpenFloatingToolbarAndAssertPosition = async (editor: Editor, getTop: () => number, pActions?: () => Promise<void>): Promise<void> => {
   await pOpenMore(ToolbarMode.floating);
-  await pAssertFloatingToolbarPosition(editor, getTop, 105, 531);
+  await pAssertFloatingToolbarPosition(editor, getTop, 105, 520);
   if (Type.isNonNullable(pActions)) {
     await pActions();
   }
