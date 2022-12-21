@@ -125,7 +125,8 @@ const renderCommonStructure = (
         'focusing',
         'alloy.base.behaviour',
         'common-button-display-events'
-      ]
+      ],
+      [SystemEvents.attachedToDom()]: [ 'common-button-display-events', 'reflecting' ]
     },
 
     buttonBehaviours: Behaviour.derive(
