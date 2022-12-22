@@ -61,6 +61,13 @@ describe('headless.tinymce.themes.silver.components.colorpicker.ColorPickerTest'
     });
   };
 
+  const pAssertPreviewBgColor = (component: AlloyComponent, expected: string) => {
+    return Waiter.pTryUntil('Assert preview background color matches expected', () => {
+      const preview = UiFinder.findIn<HTMLCanvasElement>(component.element, '.tox-rgba-preview').getOrDie();
+      assert.equal(preview.dom.style.backgroundColor, expected);
+    });
+  };
+
   it('Representing state', async () => {
     const component = hook.component();
     RepresentingUtils.setComposedValue(
@@ -128,5 +135,31 @@ describe('headless.tinymce.themes.silver.components.colorpicker.ColorPickerTest'
       component,
       '#00EEDD'
     );
+  });
+
+  it('TINY-9457: Updates preview when hex field value prefixed with #', async () => {
+    const component = hook.component();
+    RepresentingUtils.setComposedValue(
+      component,
+      '#000000'
+    );
+
+    await pAssertColour(component, '0', 'R');
+    await pAssertColour(component, '0', 'G');
+    await pAssertColour(component, '0', 'B');
+
+    setHexValue(component, '#00EEDD');
+
+    await pAssertColour(component, '0', 'R');
+    await pAssertColour(component, '238', 'G');
+    await pAssertColour(component, '221', 'B');
+    await pAssertPaletteHue(component, 176);
+    await pAssertPreviewBgColor(component, 'rgb(0, 238, 221)');
+
+    RepresentingUtils.assertComposedValue(
+      component,
+      '#00EEDD'
+    );
+
   });
 });
