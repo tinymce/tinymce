@@ -21,7 +21,7 @@ const isTextNodeWithCursorPosition = (el: SugarElement<Node>) => SugarText.getOp
   text.trim().length !== 0 || text.indexOf(Unicode.nbsp) > -1
 ).isSome();
 
-const isContentEditableFalse = (elem: SugarElement<Node>) => SugarNode.isHTMLElement(elem) && (elem.dom.contentEditable === 'false');
+const isContentEditableFalse = (elem: SugarElement<Node>) => SugarNode.isHTMLElement(elem) && (Attribute.get(elem, 'contenteditable') === 'false');
 
 const elementsWithCursorPosition = [ 'img', 'br' ];
 const isCursorPosition = (elem: SugarElement<Node>): boolean => {
