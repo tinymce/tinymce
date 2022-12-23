@@ -3,6 +3,7 @@ import { Arr, Unicode } from '@ephox/katamari';
 import { SugarElement } from '../node/SugarElement';
 import * as SugarNode from '../node/SugarNode';
 import * as SugarText from '../node/SugarText';
+import * as Attribute from '../properties/Attribute';
 import * as Traverse from '../search/Traverse';
 
 const getEnd = (element: SugarElement<Node>): number =>
