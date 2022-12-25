@@ -14,7 +14,7 @@ import * as ReadOnly from '../../../ReadOnly';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
-import { renderIconFromPack, renderLabel, renderReplaceableIconFromPack } from '../../button/ButtonSlices';
+import { renderLabel, renderReplaceableIconFromPack } from '../../button/ButtonSlices';
 import { onControlAttached, onControlDetached, OnDestroy } from '../../controls/Controls';
 import { updateMenuIcon, UpdateMenuIconEvent, updateMenuText, UpdateMenuTextEvent } from '../../dropdown/CommonDropdown';
 import * as Icons from '../../icons/Icons';
@@ -156,9 +156,11 @@ const renderCommonStructure = (
         receiver.map((r) => Reflecting.config({
           channel: r,
           initialData: { icon, text },
-          renderComponents: (data: ButtonState, _state) => componentRenderPipeline([
-            data.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)),
-            data.text.map((text) => renderLabel(text, ToolbarButtonClasses.Button, providersBackstage))
+          renderComponents: (_data: ButtonState, _state) => componentRenderPipeline([
+            // data.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)),
+            optMemDisplayIcon.map((mem) => mem.asSpec()),
+            // data.text.map((text) => renderLabel(text, ToolbarButtonClasses.Button, providersBackstage))
+            optMemDisplayText.map((mem) => mem.asSpec())
           ])
         })).toArray()
       ).concat(behaviours.getOr([ ]))
@@ -302,7 +304,16 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         comp.getSystem().getByDom(button).each((buttonComp) => Toggling.set(buttonComp, state));
       });
     },
-    isActive: () => SelectorFind.descendant(comp.element, 'span').exists((button) => comp.getSystem().getByDom(button).exists(Toggling.isOn))
+    isActive: () => SelectorFind.descendant(comp.element, 'span').exists((button) => comp.getSystem().getByDom(button).exists(Toggling.isOn)),
+    setText: (text: string) =>
+      AlloyTriggers.emitWith(comp.components()[0], updateMenuText, {
+        text
+      })
+    ,
+    setIcon: (icon: string) =>
+      AlloyTriggers.emitWith(comp.components()[0], updateMenuIcon, {
+        icon
+      })
   });
 
   const editorOffCell = Cell(Fun.noop);
@@ -327,6 +338,9 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
       DisablingConfigs.splitButton(sharedBackstage.providers.isDisabled),
       ReadOnly.receivingConfig(),
       AddEventsBehaviour.config('split-dropdown-events', [
+        AlloyEvents.runOnAttached((comp, _se) => {
+          Css.set(comp.element, 'width', Css.get(comp.element, 'width') );
+        }),
         AlloyEvents.run(focusButtonEvent, Focusing.focus),
         onControlAttached(specialisation, editorOffCell),
         onControlDetached(specialisation, editorOffCell)
