@@ -3043,6 +3043,8 @@ Npm version bump due to package not being fully updated.
 ## 4.1.0 - 2014-06-18
 
 ### Added
+- Add new 'anchor_name_placeholder' to change the placeholder of input in anchor plugin
+- Add new 'anchor_invalid_message' to change the alert on invalid anchor name in anchor plugin
 - Added new file_picker_callback option to replace the old file_browser_callback the latter will still work though.
 - Added new custom colors to textcolor plugin will be displayed if a color picker is provided also shows the latest colors.
 - Added new color_picker_callback option to enable you to add custom color pickers to the editor.
