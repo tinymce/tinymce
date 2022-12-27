@@ -14,11 +14,25 @@ const register = (editor: Editor): void => {
     processor: 'boolean',
     default: false
   });
+
+  registerOption('anchor_name_placeholder', {
+    processor: 'string',
+    default: 'example'
+  });
+
+  registerOption('anchor_invalid_message', {
+    processor: 'string',
+    default: 'ID should start with a letter, followed only by letters, numbers, dashes, dots, colons or underscores.'
+  });
 };
 
 const allowHtmlInNamedAnchor = option<boolean>('allow_html_in_named_anchor');
+const anchorNamePlaceholder = option<string>('anchor_name_placeholder');
+const anchorInvalidMessage = option<string>('anchor_invalid_message');
 
 export {
   register,
-  allowHtmlInNamedAnchor
+  allowHtmlInNamedAnchor,
+  anchorNamePlaceholder,
+  anchorInvalidMessage
 };
