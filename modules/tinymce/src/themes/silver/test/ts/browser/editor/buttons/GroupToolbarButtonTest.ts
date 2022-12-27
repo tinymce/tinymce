@@ -1,5 +1,6 @@
 import { ApproxStructure, Assertions, Mouse, StructAssert, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { McEditor } from '@ephox/wrap-mcagar';
 
@@ -121,4 +122,25 @@ describe('browser.tinymce.themes.silver.editor.buttons.GroupToolbarButtonTest', 
       return Promise.resolve();
     })
   );
+
+  it('TINY-9496: onSetup function should run when defining custom group toolbar button', () =>
+    pTestWithEditor({
+      ...defaultToolbarGroupOptions,
+      toolbar: 'test',
+      setup: (editor: Editor) => {
+        editor.ui.registry.addGroupToolbarButton('test', {
+          text: 'test',
+          items: 'alignleft aligncenter alignright',
+          onSetup: (api) => {
+            api.setEnabled(false);
+            return Fun.noop;
+          }
+        });
+      }
+    }, () => {
+      UiFinder.exists(SugarBody.body(), '.tox-toolbar__group button.tox-tbtn.tox-tbtn--select.tox-tbtn--disabled:has(.tox-tbtn__select-label:contains("test"))');
+      return Promise.resolve();
+    })
+  );
+
 });
