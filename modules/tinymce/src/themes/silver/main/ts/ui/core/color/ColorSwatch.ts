@@ -166,7 +166,7 @@ const registerTextColorButton = (editor: Editor, name: string, format: ColorForm
   });
 };
 
-const registerTextColorMenuItem = (editor: Editor, name: string, format: ColorFormat, text: string) => {
+const registerTextColorMenuItem = (editor: Editor, name: string, format: ColorFormat, text: string, lastColor: Cell<string>) => {
   editor.ui.registry.addNestedMenuItem(name, {
     text,
     icon: name === 'forecolor' ? 'text-color' : 'highlight-bg-color',
@@ -179,8 +179,15 @@ const registerTextColorMenuItem = (editor: Editor, name: string, format: ColorFo
           storageKey: format,
         },
         onAction: (data) => {
-          applyColor(editor, format, data.value, Fun.noop);
-        }
+          applyColor(editor, format, data.value, (newColor) => {
+            lastColor.set(newColor);
+
+            Events.fireTextColorChange(editor, {
+              name,
+              color: newColor
+            });
+          } );
+        },
       }
     ]
   });
@@ -255,8 +262,8 @@ const register = (editor: Editor): void => {
   registerTextColorButton(editor, 'forecolor', 'forecolor', 'Text color', lastForeColor);
   registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background color', lastBackColor);
 
-  registerTextColorMenuItem(editor, 'forecolor', 'forecolor', 'Text color');
-  registerTextColorMenuItem(editor, 'backcolor', 'hilitecolor', 'Background color');
+  registerTextColorMenuItem(editor, 'forecolor', 'forecolor', 'Text color', lastForeColor);
+  registerTextColorMenuItem(editor, 'backcolor', 'hilitecolor', 'Background color', lastBackColor);
 };
 
 export {
