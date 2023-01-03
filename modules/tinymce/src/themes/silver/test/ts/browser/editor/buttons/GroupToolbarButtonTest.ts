@@ -3,6 +3,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { McEditor } from '@ephox/wrap-mcagar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
@@ -123,7 +124,8 @@ describe('browser.tinymce.themes.silver.editor.buttons.GroupToolbarButtonTest', 
     })
   );
 
-  it('TINY-9496: onSetup function should run when defining custom group toolbar button', () =>
+  it('TINY-9496: onSetup function should run when defining custom group toolbar button', () => {
+    let hasSetupBeenCalled = false;
     pTestWithEditor({
       ...defaultToolbarGroupOptions,
       toolbar: 'test',
@@ -131,16 +133,16 @@ describe('browser.tinymce.themes.silver.editor.buttons.GroupToolbarButtonTest', 
         editor.ui.registry.addGroupToolbarButton('test', {
           text: 'test',
           items: 'alignleft aligncenter alignright',
-          onSetup: (api) => {
-            api.setEnabled(false);
+          onSetup: () => {
+            hasSetupBeenCalled = true;
             return Fun.noop;
           }
         });
       }
     }, () => {
-      UiFinder.exists(SugarBody.body(), '.tox-toolbar__group button.tox-tbtn.tox-tbtn--select.tox-tbtn--disabled:has(.tox-tbtn__select-label:contains("test"))');
+      assert.isTrue(hasSetupBeenCalled);
       return Promise.resolve();
-    })
-  );
+    });
+  });
 
 });
