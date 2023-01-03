@@ -473,7 +473,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       assertStructureAndSelectionBlockDelete(editor);
     });
 
-    it('Backspace selection starting at start of and ending at end of text format element within block', () => {
+    it('Backspace entire selection of format element in block', () => {
       const editor = hook.editor();
       editor.setContent('<p>a<strong><em><span style="text-decoration: underline;">bcd</span></em></strong>e</p>');
       TinySelections.setSelection(editor, [ 0, 1, 0, 0, 0 ], 0, [ 0, 1, 0, 0, 0 ], 3);
@@ -521,7 +521,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       TinyAssertions.assertCursor(editor, [ 0, 1, 0, 0, 0, 0 ], 0);
     });
 
-    it('Backspace selection starting at start of and ending after the end of text format element within block', () => {
+    it('Backspace selection starting at start of and ending after the end of text format element in block', () => {
       const editor = hook.editor();
       editor.setContent('<p>a<strong><em><span style="text-decoration: underline;">bcd</span></em></strong>ef</p>');
       TinySelections.setSelection(editor, [ 0, 1, 0, 0, 0 ], 0, [ 0, 2 ], 'e'.length);
@@ -571,7 +571,101 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       TinyAssertions.assertCursor(editor, selPath, 0);
     });
 
-    it('Backspace entire selection of text format node containing multiple children', () => {
+    it('Backspace entire selection of text format element in list item', () => {
+      const editor = hook.editor();
+      editor.setContent('<ul><li><span style="text-decoration: underline;">a</span></li></ul>');
+      TinySelections.setSelection(editor, [ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 'a'.length);
+      doBackspace(editor);
+      TinyAssertions.assertContentStructure(editor,
+        ApproxStructure.build((s, str, _arr) => {
+          return s.element('body', {
+            children: [
+              s.element('ul', {
+                children: [
+                  s.element('li', {
+                    children: [
+                      s.element('span', {
+                        attrs: {
+                          'id': str.is('_mce_caret'),
+                          'data-mce-bogus': str.is('1'),
+                          'data-mce-type': str.is('format-caret')
+                        },
+                        children: [
+                          s.element('span', {
+                            attrs: {
+                              style: str.is('text-decoration: underline;')
+                            },
+                            children: [
+                              s.text(str.is(Zwsp.ZWSP))
+                            ]
+                          })
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              })
+            ]
+          });
+        }));
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+    });
+
+    it('Backspace selection starting at start of and ending after the end of text format element within list item', () => {
+      const editor = hook.editor();
+      editor.setContent('<ul><li>a<strong><em><span style="text-decoration: underline;">bcd</span></em></strong>ef</li></ul>');
+      TinySelections.setSelection(editor, [ 0, 0, 1, 0, 0, 0 ], 0, [ 0, 0, 2 ], 'e'.length);
+      doBackspace(editor);
+      const firstOuterText = browser.isFirefox() ? [ 'a', '' ] : [ 'a' ];
+      const secondOuterText = browser.isFirefox() ? [ 'f' ] : [ '', 'f' ];
+      TinyAssertions.assertContentStructure(editor,
+        ApproxStructure.build((s, str, _arr) => {
+          return s.element('body', {
+            children: [
+              s.element('ul', {
+                children: [
+                  s.element('li', {
+                    children: [
+                      ...Arr.map(firstOuterText, (text) => s.text(str.is(text))),
+                      s.element('span', {
+                        attrs: {
+                          'id': str.is('_mce_caret'),
+                          'data-mce-bogus': str.is('1'),
+                          'data-mce-type': str.is('format-caret')
+                        },
+                        children: [
+                          s.element('strong', {
+                            children: [
+                              s.element('em', {
+                                children: [
+                                  s.element('span', {
+                                    attrs: {
+                                      style: str.is('text-decoration: underline;')
+                                    },
+                                    children: [
+                                      s.text(str.is(Zwsp.ZWSP))
+                                    ]
+                                  })
+                                ]
+                              })
+                            ]
+                          })
+                        ]
+                      }),
+                      ...Arr.map(secondOuterText, (text) => s.text(str.is(text))),
+                    ]
+                  })
+                ]
+              })
+            ]
+          });
+        })
+      );
+      const selPath = [ 0, 0, browser.isFirefox() ? 2 : 1, 0, 0, 0, 0 ];
+      TinyAssertions.assertCursor(editor, selPath, 0);
+    });
+
+    it('Backspace entire selection of text format element containing multiple children', () => {
       const editor = hook.editor();
       editor.setContent('<p><span style="text-decoration: underline;">a<em><strong>b</strong></em></span></p>');
       TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 1, 0, 0 ], 'b'.length);
@@ -625,8 +719,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
           });
         })
       );
-      const selPath = [ 0, 0, 0, 0 ];
-      TinyAssertions.assertCursor(editor, selPath, 0);
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0 ], 0);
     });
   });
 });
