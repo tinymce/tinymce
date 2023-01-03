@@ -764,6 +764,92 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 1, 0, 0 ], 0);
     });
 
+    it('Backspace entire selection of format element containing non-text child', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><span style="text-decoration: underline;">a<img src="about:blank" />b</span></p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 2 ], 'b'.length);
+      doBackspace(editor);
+      TinyAssertions.assertContentStructure(editor,
+        ApproxStructure.build((s, str, _arr) => {
+          return s.element('body', {
+            children: [
+              s.element('p', {
+                // firefox retains formats by default, so no new caret created
+                children: browser.isFirefox()
+                  ? [
+                    s.element('span', {
+                      attrs: {
+                        style: str.is('text-decoration: underline;')
+                      },
+                      children: [
+                        s.element('br', {})
+                      ]
+                    })
+                  ] : [
+                    s.element('span', {
+                      attrs: {
+                        'id': str.is('_mce_caret'),
+                        'data-mce-bogus': str.is('1'),
+                        'data-mce-type': str.is('format-caret')
+                      },
+                      children: [
+                        s.element('span', {
+                          attrs: {
+                            style: str.is('text-decoration: underline;')
+                          },
+                          children: [
+                            s.text(str.is(Zwsp.ZWSP))
+                          ]
+                        })
+                      ]
+                    })
+                  ]
+              })
+            ]
+          });
+        }));
+      const selPath = browser.isFirefox() ? [ 0, 0 ] : [ 0, 0, 0, 0 ];
+      TinyAssertions.assertCursor(editor, selPath, 0);
+    });
+
+    it('Backspace selection starting at start of and ending after the end of format element containing non-text child', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><span style="text-decoration: underline;">a<img src="about:blank" />b</span>cd</p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 1 ], 'c'.length);
+      doBackspace(editor);
+      TinyAssertions.assertContentStructure(editor,
+        ApproxStructure.build((s, str, _arr) => {
+          return s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.text(str.is('')),
+                  s.element('span', {
+                    attrs: {
+                      'id': str.is('_mce_caret'),
+                      'data-mce-bogus': str.is('1'),
+                      'data-mce-type': str.is('format-caret')
+                    },
+                    children: [
+                      s.element('span', {
+                        attrs: {
+                          style: str.is('text-decoration: underline;')
+                        },
+                        children: [
+                          s.text(str.is(Zwsp.ZWSP))
+                        ]
+                      })
+                    ]
+                  }),
+                  s.text(str.is('d'))
+                ]
+              })
+            ]
+          });
+        }));
+      TinyAssertions.assertCursor(editor, [ 0, 1, 0, 0 ], 0);
+    });
+
     it('Backspace entire selection of text format element containing multiple children', () => {
       const editor = hook.editor();
       editor.setContent('<p><span style="text-decoration: underline;">a<em><strong>b</strong></em></span></p>');
