@@ -56,9 +56,13 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
       color: {
         title: 'Color',
         items: 'backcolor'
+      },
+      forecolor: {
+        title: 'Forecolor',
+        items: 'forecolor'
       }
     },
-    menubar: 'color'
+    menubar: 'color forecolor'
   }, []);
 
   const structColor = (value: string): ApproxStructure.Builder<StructAssert> =>
@@ -111,6 +115,16 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
   };
   const closeMenuColorMenu = (editor: Editor) =>
     TinyUiActions.clickOnMenu(editor, 'button:contains("Color")');
+
+  const pOpenAndGetMenuForecolorMenu = async (editor: Editor) => {
+    const mainButton = 'button:contains("Forecolor")';
+    const submenuButton = '[role="menu"] div[title="Text color"]';
+    TinyUiActions.clickOnMenu(editor, mainButton);
+    await TinyUiActions.pWaitForUi(editor, submenuButton);
+    TinyUiActions.clickOnUi(editor, submenuButton);
+    return TinyUiActions.pWaitForUi(editor, '.tox-swatches-menu');
+  };
+
   const openAndGetBackcolorMenu = openAndGetMenu('Background color');
   const closeBackcolorMenu = closeMenu('Background color');
 
@@ -282,6 +296,10 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
     await openAndGetBackcolorMenu();
     assertFocusIsOnColor('rgb(224, 62, 45)');
     closeBackcolorMenu();
+    await pOpenAndGetMenuForecolorMenu(editor);
+    TinyUiActions.clickOnUi(editor, '[role="menuitemradio"][title="Light Gray"]');
+    await openAndGetForecolorMenu();
+    assertFocusIsOnColor('rgb(236, 240, 241)');
   });
 
 });
