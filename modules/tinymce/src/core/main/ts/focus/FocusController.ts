@@ -60,8 +60,11 @@ const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => 
   SelectionRestore.register(editor);
 
   const toggleContainerFocus = (editor: Editor) => {
-    const contentArea = SugarElement.fromDom(editor.getContainer());
-    Class.toggle(contentArea, 'tox-edit-focus');
+    // Inline editors have a different approach to highlight the content area on focus
+    if (editor.inline !== true) {
+      const contentArea = SugarElement.fromDom(editor.getContainer());
+      Class.toggle(contentArea, 'tox-edit-focus');
+    }
   };
 
   editor.on('focusin', () => {
