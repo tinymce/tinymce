@@ -665,6 +665,105 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       TinyAssertions.assertCursor(editor, selPath, 0);
     });
 
+    it('Backspace entire selection of text format element in table cell', () => {
+      const editor = hook.editor();
+      editor.setContent('<table><tbody><tr><td><span style="text-decoration: underline;">a</span>b</td></tr></tbody></table>');
+      TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 'a'.length);
+      doBackspace(editor);
+      const outerText = browser.isFirefox() ? [ ] : [ '' ];
+      TinyAssertions.assertContentStructure(editor,
+        ApproxStructure.build((s, str, _arr) => {
+          return s.element('body', {
+            children: [
+              s.element('table', {
+                children: [
+                  s.element('tbody', {
+                    children: [
+                      s.element('tr', {
+                        children: [
+                          s.element('td', {
+                            children: [
+                              ...Arr.map(outerText, (text) => s.text(str.is(text))),
+                              s.element('span', {
+                                attrs: {
+                                  'id': str.is('_mce_caret'),
+                                  'data-mce-bogus': str.is('1'),
+                                  'data-mce-type': str.is('format-caret')
+                                },
+                                children: [
+                                  s.element('span', {
+                                    attrs: {
+                                      style: str.is('text-decoration: underline;')
+                                    },
+                                    children: [
+                                      s.text(str.is(Zwsp.ZWSP))
+                                    ]
+                                  })
+                                ]
+                              }),
+                              s.text(str.is('b'))
+                            ]
+                          })
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              })
+            ]
+          });
+        }));
+      const selPath = browser.isFirefox() ? [ 0, 0, 0, 0, 0, 0, 0 ] : [ 0, 0, 0, 0, 1, 0, 0 ];
+      TinyAssertions.assertCursor(editor, selPath, 0);
+    });
+
+    it('Backspace selection starting at start of and ending after the end of text format element in table cell', () => {
+      const editor = hook.editor();
+      editor.setContent('<table><tbody><tr><td><span style="text-decoration: underline;">a</span>bc</td></tr></tbody></table>');
+      TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 1 ], 'b'.length);
+      doBackspace(editor);
+      TinyAssertions.assertContentStructure(editor,
+        ApproxStructure.build((s, str, _arr) => {
+          return s.element('body', {
+            children: [
+              s.element('table', {
+                children: [
+                  s.element('tbody', {
+                    children: [
+                      s.element('tr', {
+                        children: [
+                          s.element('td', {
+                            children: [
+                              s.text(str.is('')),
+                              s.element('span', {
+                                attrs: {
+                                  'id': str.is('_mce_caret'),
+                                  'data-mce-bogus': str.is('1'),
+                                  'data-mce-type': str.is('format-caret')
+                                },
+                                children: [
+                                  s.element('span', {
+                                    attrs: {
+                                      style: str.is('text-decoration: underline;')
+                                    }
+                                  })
+                                ]
+                              }),
+                              s.text(str.is('c'))
+                            ]
+                          })
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              })
+            ]
+          });
+        }));
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 1, 0, 0 ], 0);
+    });
+
     it('Backspace entire selection of text format element containing multiple children', () => {
       const editor = hook.editor();
       editor.setContent('<p><span style="text-decoration: underline;">a<em><strong>b</strong></em></span></p>');
