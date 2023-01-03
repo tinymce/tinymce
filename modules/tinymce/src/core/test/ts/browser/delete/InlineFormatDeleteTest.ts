@@ -457,7 +457,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       TinyAssertions.assertCursor(editor, selPath, 0);
     };
 
-    it('Backspace entire selection of block containing a single formatted element', () => {
+    it('Backspace entire selection of block containing a single text format element', () => {
       const editor = hook.editor();
       editor.setContent('<p><strong><em><span style="text-decoration: underline;">abc</span></em></strong></p>');
       TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 3);
@@ -465,7 +465,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       assertStructureAndSelectionBlockDelete(editor);
     });
 
-    it('Delete entire selection of block containing a single formatted element', () => {
+    it('Delete entire selection of block containing a single text format element', () => {
       const editor = hook.editor();
       editor.setContent('<p><strong><em><span style="text-decoration: underline;">abc</span></em></strong></p>');
       TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 3);
@@ -473,7 +473,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       assertStructureAndSelectionBlockDelete(editor);
     });
 
-    it('Backspace entire selection of formatted element within block', () => {
+    it('Backspace selection starting at start of and ending at end of text format element within block', () => {
       const editor = hook.editor();
       editor.setContent('<p>a<strong><em><span style="text-decoration: underline;">bcd</span></em></strong>e</p>');
       TinySelections.setSelection(editor, [ 0, 1, 0, 0, 0 ], 0, [ 0, 1, 0, 0, 0 ], 3);
@@ -521,10 +521,10 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       TinyAssertions.assertCursor(editor, [ 0, 1, 0, 0, 0, 0 ], 0);
     });
 
-    it('Backspace partial selection from start of formatted element within block', () => {
+    it('Backspace selection starting at start of and ending after the end of text format element within block', () => {
       const editor = hook.editor();
       editor.setContent('<p>a<strong><em><span style="text-decoration: underline;">bcd</span></em></strong>ef</p>');
-      TinySelections.setSelection(editor, [ 0, 1, 0, 0, 0 ], 0, [ 0, 2 ], 1);
+      TinySelections.setSelection(editor, [ 0, 1, 0, 0, 0 ], 0, [ 0, 2 ], 'e'.length);
       doBackspace(editor);
       const firstOuterText = browser.isFirefox() ? [ 'a', '' ] : [ 'a' ];
       const secondOuterText = browser.isFirefox() ? [ 'f' ] : [ '', 'f' ];
@@ -571,7 +571,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       TinyAssertions.assertCursor(editor, selPath, 0);
     });
 
-    it('Backspace entire selection of format node containing multiple children', () => {
+    it('Backspace entire selection of text format node containing multiple children', () => {
       const editor = hook.editor();
       editor.setContent('<p><span style="text-decoration: underline;">a<em><strong>b</strong></em></span></p>');
       TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 1, 0, 0 ], 'b'.length);
