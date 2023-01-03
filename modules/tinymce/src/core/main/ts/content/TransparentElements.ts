@@ -1,5 +1,5 @@
 import { Arr, Obj, Type } from '@ephox/katamari';
-import { Compare, PredicateFilter, PredicateFind, SugarElement, SugarElements, SugarNode, Traverse } from '@ephox/sugar';
+import { Compare, PredicateFilter, PredicateFind, Remove, SelectorFilter, SugarElement, SugarElements, SugarNode, Traverse } from '@ephox/sugar';
 
 import AstNode from '../api/html/Node';
 import Schema, { SchemaMap } from '../api/html/Schema';
@@ -84,7 +84,7 @@ const split = (parentElm: Element, splitElm: Node) => {
 const splitInvalidChildren = (schema: Schema, scope: Element, transparentBlocks: Element[]): void => {
   const blocksElements = schema.getBlockElements();
   const rootNode = SugarElement.fromDom(scope);
-  const isBlock = (el: SugarElement) => SugarNode.name(el) in blocksElements;
+  const isBlock = (el: SugarElement): el is SugarElement<Element> => SugarNode.name(el) in blocksElements;
   const isRoot = (el: SugarElement) => Compare.eq(el, rootNode);
 
   Arr.each(SugarElements.fromDom(transparentBlocks), (transparentBlock) => {
@@ -109,9 +109,20 @@ const splitInvalidChildren = (schema: Schema, scope: Element, transparentBlocks:
   });
 };
 
+const unwrapInvalidChildren = (schema: Schema, scope: Element, transparentBlocks: Element[]) => {
+  Arr.each([ ...transparentBlocks, ...(isTransparentBlock(schema, scope) ? [ scope ] : []) ], (block) =>
+    Arr.each(SelectorFilter.descendants(SugarElement.fromDom(block), block.nodeName.toLowerCase()), (elm) => {
+      if (isTransparentInline(schema, elm.dom)) {
+        Remove.unwrap(elm);
+      }
+    })
+  );
+};
+
 export const updateChildren = (schema: Schema, scope: Element): void => {
   const transparentBlocks = updateBlockStateOnChildren(schema, scope);
   splitInvalidChildren(schema, scope, transparentBlocks);
+  unwrapInvalidChildren(schema, scope, transparentBlocks);
 };
 
 export const updateElement = (schema: Schema, target: Element): void => {

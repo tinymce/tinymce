@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -1292,5 +1292,80 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     testImageSelection('<p dir="rtl"><img style="float: left;" src="#">abc</p>', 'P', 0);
     testImageSelection('<p dir="rtl">abc<img style="float: left;" src="#"></p>', 'P', 1);
     testImageSelection('<p dir="rtl">abc<img style="float: left;" src="#">def</p>', 'P', 1);
+  });
+
+  context('isEditable', () => {
+    const testIsEditableSelection = (testCase: { input: string; editableRoot?: boolean; spath: number[]; soffset: number; fpath: number[]; foffset: number; expected: boolean }) => () => {
+      const editor = hook.editor();
+      const editable = testCase.editableRoot ?? true;
+
+      editor.getBody().contentEditable = editable ? 'true' : 'false';
+      editor.setContent(testCase.input);
+      TinySelections.setSelection(editor, testCase.spath, testCase.soffset, testCase.fpath, testCase.foffset);
+      assert.equal(editor.selection.isEditable(), testCase.expected);
+      editor.getBody().contentEditable = 'true';
+    };
+
+    const testIsEditableCaret = (testCase: { input: string; editableRoot?: boolean; path: number[]; offset: number; expected: boolean }) => testIsEditableSelection({
+      input: testCase.input,
+      editableRoot: testCase.editableRoot,
+      spath: testCase.path,
+      soffset: testCase.offset,
+      fpath: testCase.path,
+      foffset: testCase.offset,
+      expected: testCase.expected
+    });
+
+    it('TINY-9462: isEditable on paragraph in editable root', testIsEditableCaret({
+      input: '<p>abc</p>',
+      path: [ 0, 0 ],
+      offset: 0,
+      expected: true
+    }));
+
+    it('TINY-9462: isEditable on paragraph in noneditable root', testIsEditableCaret({
+      input: '<p>abc</p>',
+      editableRoot: false,
+      path: [ 0, 0 ],
+      offset: 0,
+      expected: false
+    }));
+
+    it('TINY-9462: isEditable on expanded range in editable root', testIsEditableSelection({
+      input: '<p>ab</p><p>cd</p>',
+      spath: [ 0, 0 ],
+      soffset: 1,
+      fpath: [ 1, 0 ],
+      foffset: 1,
+      expected: true
+    }));
+
+    it('TINY-9462: isEditable on expanded range in noneditable root', testIsEditableSelection({
+      input: '<p>ab</p><p>cd</p>',
+      editableRoot: false,
+      spath: [ 0, 0 ],
+      soffset: 1,
+      fpath: [ 1, 0 ],
+      foffset: 1,
+      expected: false
+    }));
+
+    it('TINY-9462: isEditable on expanded range where start is noneditable', testIsEditableSelection({
+      input: '<p contenteditable="false">ab</p><p>cd</p>',
+      spath: [ 1, 0 ], // Shifted by one due to fake caret before P
+      soffset: 1,
+      fpath: [ 2, 0 ], // Shifted by one due to fake caret before P
+      foffset: 1,
+      expected: false
+    }));
+
+    it('TINY-9462: isEditable on expanded range where end is noneditable', testIsEditableSelection({
+      input: '<p>ab</p><p contenteditable="false">cd</p>',
+      spath: [ 0, 0 ],
+      soffset: 1,
+      fpath: [ 1, 0 ],
+      foffset: 1,
+      expected: false
+    }));
   });
 });

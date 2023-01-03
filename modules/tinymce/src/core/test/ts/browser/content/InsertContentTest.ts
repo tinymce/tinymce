@@ -691,13 +691,13 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       TinyAssertions.assertContent(editor, '<div><a href="#1">a</a><a href="#2"><p>b</p></a>c</div>');
     });
 
-    it('TINY-9172: Insert inline anchor in transparent block should split the block', () => {
+    it('TINY-9172: Insert inline anchor in anchor block should unwrap the inline anchor', () => {
       const editor = hook.editor();
 
       editor.setContent('<a href="#1"><div>ac</div></a>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       editor.insertContent('<a href="#2">b</a>');
-      TinyAssertions.assertContent(editor, '<div><a href="#1">a</a><a href="#2">b</a>c</div>');
+      TinyAssertions.assertContent(editor, '<a href="#1"><div>abc</div></a>');
     });
 
     it('TINY-9172: Insert block in anchor should work and annotate the element with data-mce-block', () => {
@@ -737,6 +737,42 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       editor.insertContent('<p>b</p><p>c</p>');
       TinyAssertions.assertContent(editor, '<p><a href="#1">a</a></p><p>b</p><p>c</p><p><a href="#1">d</a></p>');
+    });
+  });
+
+  context('Noneditable parents', () => {
+    it('TINY-9462: insertContent in noneditable element should be a noop', () => {
+      const editor = hook.editor();
+      const content = '<div contenteditable="false">text</div>';
+
+      editor.setContent(content);
+      // Shifted since fake caret is before div
+      TinySelections.setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 2);
+      editor.insertContent('hello');
+      TinyAssertions.assertContent(editor, content);
+    });
+
+    it('TINY-9462: insertContent in normal element in noneditable root should be a noop', () => {
+      const editor = hook.editor();
+      const content = '<div>text</div>';
+
+      editor.getBody().contentEditable = 'false';
+      editor.setContent(content);
+      TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
+      editor.insertContent('hello');
+      TinyAssertions.assertContent(editor, content);
+      editor.getBody().contentEditable = 'true';
+    });
+
+    it('TINY-9462: insertContent in editable element in noneditable root should insert content', () => {
+      const editor = hook.editor();
+
+      editor.getBody().contentEditable = 'false';
+      editor.setContent('<div contenteditable="true">text</div>');
+      TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
+      editor.insertContent('hello');
+      TinyAssertions.assertContent(editor, '<div contenteditable="true">thelloxt</div>');
+      editor.getBody().contentEditable = 'true';
     });
   });
 });
