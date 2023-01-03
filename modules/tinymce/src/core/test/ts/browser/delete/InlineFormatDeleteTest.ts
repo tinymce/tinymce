@@ -906,5 +906,77 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
       );
       TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0 ], 0);
     });
+
+    it('Backspace partial selection from start to middle of text format element should do nothing', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><span style="text-decoration: underline;">abc</span></p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 'ab'.length);
+      noopBackspace(editor);
+      TinyAssertions.assertContent(editor, '<p><span style="text-decoration: underline;">abc</span></p>');
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 'ab'.length);
+    });
+
+    it('Backspace partial selection from middle to end of text format element should do nothing', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><span style="text-decoration: underline;">abc</span></p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 'a'.length, [ 0, 0, 0 ], 'bc'.length);
+      noopBackspace(editor);
+      TinyAssertions.assertContent(editor, '<p><span style="text-decoration: underline;">abc</span></p>');
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 'a'.length, [ 0, 0, 0 ], 'bc'.length);
+    });
+
+    it('Backspace partial selection between start and end of text format element should do nothing', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><span style="text-decoration: underline;">abc</span></p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 'a'.length, [ 0, 0, 0 ], 'b'.length);
+      noopBackspace(editor);
+      TinyAssertions.assertContent(editor, '<p><span style="text-decoration: underline;">abc</span></p>');
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 'a'.length, [ 0, 0, 0 ], 'b'.length);
+    });
+
+    it('Backspace partial selection from middle to after end of text format element should do nothing', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><strong><em>abc</em></strong></p><p>d</p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0, 0 ], 'a'.length, [ 1, 0 ], 'd'.length);
+      noopBackspace(editor);
+      TinyAssertions.assertContent(editor, '<p><strong><em>abc</em></strong></p><p>d</p>');
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0 ], 'a'.length, [ 1, 0 ], 'd'.length);
+    });
+
+    it('Backspace unformatted text selection should do nothing', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>abc</p>');
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 'ab'.length);
+      noopBackspace(editor);
+      TinyAssertions.assertContent(editor, '<p>abc</p>');
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 'ab'.length);
+    });
+
+    it('Backspace inline text selection containing text format element starting from non-format element should do nothing', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>a<span style="text-decoration: underline;">b</span></p>');
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 1, 0 ], 'b'.length);
+      noopBackspace(editor);
+      TinyAssertions.assertContent(editor, '<p>a<span style="text-decoration: underline;">b</span></p>');
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 1, 0 ], 'b'.length);
+    });
+
+    it('Backspace text selection across blocks containing text format element starting from non-format element should do nothing', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>a</p><p><span style="text-decoration: underline;">b</span></p>');
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 1, 0, 0 ], 'b'.length);
+      noopBackspace(editor);
+      TinyAssertions.assertContent(editor, '<p>a</p><p><span style="text-decoration: underline;">b</span></p>');
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 1, 0, 0 ], 'b'.length);
+    });
+
+    it('Backspace selection starting from non-text node within format element should do nothing', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><span style="text-decoration: underline;"><img src="about:blank">a</span></p>');
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0, 1 ], 'a'.length);
+      noopBackspace(editor);
+      TinyAssertions.assertContent(editor, '<p><span style="text-decoration: underline;"><img src="about:blank">a</span></p>');
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0, 1 ], 'a'.length);
+    });
   });
 });
