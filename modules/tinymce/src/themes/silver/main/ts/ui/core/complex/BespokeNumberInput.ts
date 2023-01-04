@@ -94,12 +94,12 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
               decrease(false);
               return Optional.some(true);
             },
-            onLeft: (_comp, s) => {
-              s.cut();
+            onLeft: (_comp, se) => {
+              se.cut();
               return Optional.none();
             },
-            onRight: (_comp, s) => {
-              s.cut();
+            onRight: (_comp, se) => {
+              se.cut();
               return Optional.none();
             }
           })
