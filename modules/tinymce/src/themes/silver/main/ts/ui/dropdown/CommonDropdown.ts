@@ -4,13 +4,14 @@ import {
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
-import { Css, EventArgs } from '@ephox/sugar';
+import { EventArgs } from '@ephox/sugar';
 
 import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button/ButtonEvents';
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
+import * as UiUtils from '../alien/UiUtils';
 import { renderLabel, renderReplaceableIconFromPack } from '../button/ButtonSlices';
 import { onControlAttached, onControlDetached, OnDestroy } from '../controls/Controls';
 import * as Icons from '../icons/Icons';
@@ -163,9 +164,7 @@ const renderCommonDropdown = <T>(
           onControlDetached(spec, editorOffCell)
         ]),
         AddEventsBehaviour.config('common-button-display-events', [
-          AlloyEvents.runOnAttached((comp, _se) => {
-            Css.set(comp.element, 'width', Css.get(comp.element, 'width') );
-          }),
+          AlloyEvents.runOnAttached((comp, _se) => UiUtils.forceInitialSize(comp)),
         ]),
         AddEventsBehaviour.config('menubutton-update-display-text', [
           // These handlers are just using Replacing to replace either the menu

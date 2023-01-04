@@ -6,7 +6,7 @@ import {
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
-import { Attribute, Css, EventArgs, SelectorFind } from '@ephox/sugar';
+import { Attribute, EventArgs, SelectorFind } from '@ephox/sugar';
 
 import { ToolbarGroupOption } from '../../../api/Options';
 import { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
@@ -14,6 +14,7 @@ import * as ReadOnly from '../../../ReadOnly';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
+import * as UiUtils from '../../alien/UiUtils';
 import { renderLabel, renderReplaceableIconFromPack } from '../../button/ButtonSlices';
 import { onControlAttached, onControlDetached, OnDestroy } from '../../controls/Controls';
 import { updateMenuIcon, UpdateMenuIconEvent, updateMenuText, UpdateMenuTextEvent } from '../../dropdown/CommonDropdown';
@@ -63,11 +64,9 @@ interface ChoiceFetcher {
 const getButtonApi = (component: AlloyComponent): Toolbar.ToolbarButtonInstanceApi => ({
   isEnabled: () => !Disabling.isDisabled(component),
   setEnabled: (state: boolean) => Disabling.set(component, !state),
-  setText: (text: string) => {
-    AlloyTriggers.emitWith(component, updateMenuText, {
-      text
-    });
-  },
+  setText: (text: string) => AlloyTriggers.emitWith(component, updateMenuText, {
+    text
+  }),
   setIcon: (icon: string) => AlloyTriggers.emitWith(component, updateMenuIcon, {
     icon
   })
@@ -134,9 +133,7 @@ const renderCommonStructure = (
         DisablingConfigs.toolbarButton(providersBackstage.isDisabled),
         ReadOnly.receivingConfig(),
         AddEventsBehaviour.config('common-button-display-events', [
-          AlloyEvents.runOnAttached((comp, _se) => {
-            Css.set(comp.element, 'width', Css.get(comp.element, 'width') );
-          }),
+          AlloyEvents.runOnAttached((comp, _se) => UiUtils.forceInitialSize(comp)),
           AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
             optMemDisplayText.bind((mem) => mem.getOpt(comp)).each((displayText) => {
               Replacing.set(displayText, [ GuiFactory.text(providersBackstage.translate(se.event.text)) ]);
@@ -338,9 +335,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
       DisablingConfigs.splitButton(sharedBackstage.providers.isDisabled),
       ReadOnly.receivingConfig(),
       AddEventsBehaviour.config('split-dropdown-events', [
-        AlloyEvents.runOnAttached((comp, _se) => {
-          Css.set(comp.element, 'width', Css.get(comp.element, 'width') );
-        }),
+        AlloyEvents.runOnAttached((comp, _se) => UiUtils.forceInitialSize(comp)),
         AlloyEvents.run(focusButtonEvent, Focusing.focus),
         onControlAttached(specialisation, editorOffCell),
         onControlDetached(specialisation, editorOffCell)
