@@ -161,9 +161,5 @@ const refreshCaret = (editor: Editor): boolean => {
 
 export {
   backspaceDelete,
-  refreshCaret,
-
-  // exported for testing
-  requiresDeleteRangeOverride,
-  requiresRefreshCaretOverride
+  refreshCaret
 };

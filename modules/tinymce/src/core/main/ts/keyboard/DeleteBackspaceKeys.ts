@@ -57,7 +57,7 @@ const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent, isBackspaceKey
   const browser = platform.browser;
   const multiDeleteKeyPatterns: MatchKeys.KeyPattern[] = os.isMacOS() ? [
     { keyCode: VK.BACKSPACE, altKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor) },
-    { keyCode: VK.DELETE, altKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor) },
+    { keyCode: VK.DELETE, altKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor) }
   ] : [
     { keyCode: VK.BACKSPACE, ctrlKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor) },
     { keyCode: VK.DELETE, ctrlKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor) }
@@ -68,7 +68,7 @@ const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent, isBackspaceKey
   // detected on keydown
   if (os.isMacOS() && isBackspaceKeydown) {
     multiDeleteKeyPatterns.push({
-      // firefox detects Cmd as "Command" not "Meta"
+      // firefox detects macOS Command keycode as "Command" not "Meta"
       keyCode: browser.isFirefox() ? 224 : 91,
       action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor)
     });
