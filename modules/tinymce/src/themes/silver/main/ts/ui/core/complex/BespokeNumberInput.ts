@@ -93,6 +93,14 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
             onDown: (_comp) => {
               decrease(false);
               return Optional.some(true);
+            },
+            onLeft: (_comp, s) => {
+              s.cut();
+              return Optional.none();
+            },
+            onRight: (_comp, s) => {
+              s.cut();
+              return Optional.none();
             }
           })
         ])
