@@ -1,5 +1,5 @@
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, Input, Keying, Memento, NativeEvents, Representing } from '@ephox/alloy';
-import { Arr, Cell, Fun, Id, Optional } from '@ephox/katamari';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, FocusInsideModes, Input, Keying, Memento, NativeEvents, Representing } from '@ephox/alloy';
+import { Cell, Fun, Id, Optional } from '@ephox/katamari';
 import { Dimension, Focus, SugarElement, Traverse, Value } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -123,12 +123,6 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
     ])
   });
 
-  const moveFocus = (parentComp: AlloyComponent, direction: 'left' | 'right'): void => {
-    const nextNode = direction === 'right' ? Traverse.nextSibling : Traverse.prevSibling;
-    const focussed = Arr.find(Traverse.children(parentComp.element), Focus.hasFocus);
-    focussed.fold(Optional.none, nextNode).each((next) => Focus.focus(next as SugarElement<HTMLElement>));
-  };
-
   const makeStepperButton = (action: VoidFunction, title: string, tooltip: string, classes: string[]) => {
     const translatedTooltip = backstage.shared.providers.translate(tooltip);
     return Button.sketch({
@@ -160,15 +154,11 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
     behaviours: Behaviour.derive([
       Focusing.config({}),
       Keying.config({
-        mode: 'special',
-        onEnter: (comp) => {
-          if (Focus.hasFocus(comp.element)) {
-            memInput.getOpt(comp).each((inputWrapper) => Focus.focus(inputWrapper.element));
-            return Optional.some(true);
-          } else {
-            return Optional.none();
-          }
-        },
+        mode: 'flow',
+        focusInside: FocusInsideModes.OnEnterOrSpaceMode,
+        cycles: false,
+        getInitial: (comp) => memInput.getOpt(comp).map((c) => c.element),
+        selector: 'button, .tox-input-wrapper',
         onEscape: (wrapperComp) => {
           if (Focus.hasFocus(wrapperComp.element)) {
             return Optional.none();
@@ -177,14 +167,6 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
             return Optional.some(true);
           }
         },
-        onLeft: (comp) => {
-          moveFocus(comp, 'left');
-          return Optional.none();
-        },
-        onRight: (comp) => {
-          moveFocus(comp, 'right');
-          return Optional.none();
-        }
       })
     ])
   };
