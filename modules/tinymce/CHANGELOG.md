@@ -9,10 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - New `isEditable` API to `editor.selection` that returns true or false if the current selection is editable. #TINY-9462
 - New `isEditable` API to `editor.dom` that returns true or false if the specified node is editable. #TINY-9462
+- New `highlight_on_focus` option which enables highlighting the content area on focus. #TINY-9277
 
 ### Improved
 - Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
-- Highlight the content area when the editor is focused. #TINY-9277
 
 ### Fixed
 - An element could be dropped onto the decendants of a noneditable element. #TINY-9364
