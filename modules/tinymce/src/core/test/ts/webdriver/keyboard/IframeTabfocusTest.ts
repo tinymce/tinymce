@@ -39,8 +39,8 @@ describe('webdriver.tinymce.core.keyboard.IframeTabfocusTest', () => {
   });
 
   context('Highlight editor content area on focus', () => {
-    const asssertIsHighlighted = (editor: Editor) => assert.isTrue(Class.has(TinyDom.container(editor), 'tox-edit-focus'), 'Editor container should has tox-edit-focus class');
-    const asssertIsNotHighlighted = (editor: Editor) => assert.isFalse(Class.has(TinyDom.container(editor), 'tox-edit-focus'), 'Editor container should not has tox-edit-focus class');
+    const assertIsHighlighted = (editor: Editor) => assert.isTrue(Class.has(TinyDom.container(editor), 'tox-edit-focus'), 'Editor container should has tox-edit-focus class');
+    const assertIsNotHighlighted = (editor: Editor) => assert.isFalse(Class.has(TinyDom.container(editor), 'tox-edit-focus'), 'Editor container should not has tox-edit-focus class');
 
     const hook = TinyHooks.bddSetupLight<Editor>({
       base_url: '/project/tinymce/js/tinymce',
