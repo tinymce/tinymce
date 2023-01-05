@@ -26,8 +26,8 @@ const isChildEditable = (node: SugarElement<Node>, currentState: boolean) => {
   return currentState;
 };
 
-// inlined sugars PredicateFilter.descendants for file size but also make it only act on editable nodes
-const filterDescendants = <T extends Node>(scope: SugarElement<Node>, predicate: (x: SugarElement<Node>) => x is SugarElement<T>, editable: boolean): SugarElement<T>[] => {
+// inlined sugars PredicateFilter.descendants for file size but also make it only act on editable nodes it changes the current editable state when it traveses down
+const filterEditableDescendants = <T extends Node>(scope: SugarElement<Node>, predicate: (x: SugarElement<Node>) => x is SugarElement<T>, editable: boolean): SugarElement<T>[] => {
   let result: SugarElement<T>[] = [];
   const dom = scope.dom;
   const children = Arr.map(dom.childNodes, SugarElement.fromDom);
@@ -36,7 +36,7 @@ const filterDescendants = <T extends Node>(scope: SugarElement<Node>, predicate:
     if (editable && !isContentEditableFalse(x) && predicate(x)) {
       result = result.concat([ x ]);
     }
-    result = result.concat(filterDescendants(x, predicate, isChildEditable(x, editable)));
+    result = result.concat(filterEditableDescendants(x, predicate, isChildEditable(x, editable)));
   });
   return result;
 };
@@ -57,7 +57,7 @@ const replaceWithSpans = (text: string): string =>
 
 export {
   isMatch,
-  filterDescendants,
+  filterEditableDescendants,
   findParentElm,
   replaceWithSpans
 };

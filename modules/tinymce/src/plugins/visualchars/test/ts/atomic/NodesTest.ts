@@ -28,7 +28,7 @@ describe('atomic.tinymce.plugins.visualchars.NodesTest', () => {
         '<p>c</p>' +
         '<p>d' + Unicode.softHyphen + '</p>'
       );
-      assert.equal(Nodes.filterDescendants(SugarElement.fromDom(div), Nodes.isMatch, true).length, 2);
+      assert.equal(Nodes.filterEditableDescendants(SugarElement.fromDom(div), Nodes.isMatch, true).length, 2);
 
       // 4 matches
       div.innerHTML = (
@@ -37,7 +37,7 @@ describe('atomic.tinymce.plugins.visualchars.NodesTest', () => {
         '<p>c' + Unicode.nbsp + '</p>' +
         '<p>d' + Unicode.softHyphen + '</p>'
       );
-      assert.equal(Nodes.filterDescendants(SugarElement.fromDom(div), Nodes.isMatch, true).length, 4);
+      assert.equal(Nodes.filterEditableDescendants(SugarElement.fromDom(div), Nodes.isMatch, true).length, 4);
     });
 
     it('should only return editable nodes for initial editable state', () => {
@@ -58,7 +58,7 @@ describe('atomic.tinymce.plugins.visualchars.NodesTest', () => {
       `;
       const div = SugarElement.fromHtml(`<div>${innerHtml}</div>`);
 
-      assert.deepEqual(Arr.map(Nodes.filterDescendants(div, SugarNode.isElement, true), Html.getOuter), [
+      assert.deepEqual(Arr.map(Nodes.filterEditableDescendants(div, SugarNode.isElement, true), Html.getOuter), [
         '<b>editable 1</b>',
         '<b>editable 2</b>',
         '<i>editable 3</i>',
@@ -85,7 +85,7 @@ describe('atomic.tinymce.plugins.visualchars.NodesTest', () => {
       `;
       const div = SugarElement.fromHtml(`<div>${innerHtml}</div>`);
 
-      assert.deepEqual(Arr.map(Nodes.filterDescendants(div, SugarNode.isElement, false), Html.getOuter), [
+      assert.deepEqual(Arr.map(Nodes.filterEditableDescendants(div, SugarNode.isElement, false), Html.getOuter), [
         '<b>editable 1</b>',
         '<i>editable 2</i>',
         '<b>editable 3</b>'
