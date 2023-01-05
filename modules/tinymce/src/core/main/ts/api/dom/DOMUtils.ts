@@ -1840,6 +1840,13 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     getContentEditable,
     getContentEditableParent,
 
+    /**
+     * Checks if the specified node is editable within the given context of it's parents.
+     *
+     * @method isEditable
+     * @param {Node} node Node to check if it's editable.
+     * @return {Boolean} Will be true if the node is editable and false it it's not editable.
+     */
     isEditable,
 
     /**
