@@ -1,16 +1,13 @@
 import { FocusTools, RealKeys, RealMouse } from '@ephox/agar';
-import { after, before, context, describe, it } from '@ephox/bedrock-client';
-import { Class, Insert, SugarDocument, SugarElement } from '@ephox/sugar';
+import { after, afterEach, before, context, describe, it } from '@ephox/bedrock-client';
+import { Class, SugarDocument } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
 describe('webdriver.tinymce.core.keyboard.IframeTabfocusTest', () => {
-  const asssertIsHighlighted = (editor: Editor) => assert.isTrue(Class.has(TinyDom.container(editor), 'tox-edit-focus'), 'Editor container should has tox-edit-focus class');
-  const asssertIsNotHighlighted = (editor: Editor) => assert.isFalse(Class.has(TinyDom.container(editor), 'tox-edit-focus'), 'Editor container should not has tox-edit-focus class');
-
-  context('tab focus', () => {
+  context('Focus shift on pressing tab', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       base_url: '/project/tinymce/js/tinymce',
       iframe_attrs: { // using this instead of tabindex on the target to check custom attrs don't get clobbered
@@ -42,25 +39,32 @@ describe('webdriver.tinymce.core.keyboard.IframeTabfocusTest', () => {
   });
 
   context('Highlight editor content area on focus', () => {
+    const asssertIsHighlighted = (editor: Editor) => assert.isTrue(Class.has(TinyDom.container(editor), 'tox-edit-focus'), 'Editor container should has tox-edit-focus class');
+    const asssertIsNotHighlighted = (editor: Editor) => assert.isFalse(Class.has(TinyDom.container(editor), 'tox-edit-focus'), 'Editor container should not has tox-edit-focus class');
+
     const hook = TinyHooks.bddSetupLight<Editor>({
       base_url: '/project/tinymce/js/tinymce',
+      highlight_on_focus: true,
+      iframe_attrs: { // using this instead of tabindex on the target to check custom attrs don't get clobbered
+        tabindex: '1'
+      }
     }, []);
 
-    it('TINY-9277: On tab', async () => {
-      const editor = hook.editor();
-      // Need to have another element to help with tabbing to change focus
-      const textInput = SugarElement.fromTag('input');
-      const editorElement = TinyDom.targetElement(hook.editor());
-      Insert.before(editorElement, textInput);
-      asssertIsNotHighlighted(editor);
-      // Pressing tab to focus on the editor
-      await RealKeys.pSendKeysOn('input', [ RealKeys.text('\t') ]);
-      asssertIsHighlighted(editor);
+    afterEach(async () => {
       // Un focus the editor
-      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('\t') ]);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({ shiftKey: true }, '\t') ]);
     });
 
-    it('TINY-9277: Click on', async () => {
+    it('TINY-9277: Focus on tab', async () => {
+      const editor = hook.editor();
+      asssertIsNotHighlighted(editor);
+      // Pressing tab to focus on the editor
+      // await Waiter.pWait(2000);
+      await RealKeys.pSendKeysOn('body', [ RealKeys.text('\t') ]);
+      asssertIsHighlighted(editor);
+    });
+
+    it('TINY-9277: Focus on click', async () => {
       const editor = hook.editor();
       asssertIsNotHighlighted(editor);
       await RealMouse.pClickOn('iframe => body');
