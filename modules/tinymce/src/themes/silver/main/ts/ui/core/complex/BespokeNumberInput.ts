@@ -42,8 +42,16 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
     const newValue = f(value, spec.getConfigFromUnit(unit).step);
     const newValueWithUnit = `${isValidValue(newValue) ? newValue : value}${unit}`;
 
+    const lenghtDelta = `${value}${unit}`.length - `${newValueWithUnit}`.length;
+    const oldStart = currentComp.map((comp) => comp.element.dom.selectionStart - lenghtDelta);
+    const oldEnd = currentComp.map((comp) => comp.element.dom.selectionEnd - lenghtDelta);
+
     spec.onAction(newValueWithUnit, focusBack);
-    currentComp.each((comp) => Representing.setValue(comp, newValueWithUnit));
+    currentComp.each((comp) => {
+      Representing.setValue(comp, newValueWithUnit);
+      oldStart.each((oldStart) => comp.element.dom.selectionStart = oldStart);
+      oldEnd.each((oldEnd) => comp.element.dom.selectionEnd = oldEnd);
+    });
   };
 
   const decrease = (focusBack: boolean) => changeValue((n, s) => n - s, focusBack);
@@ -87,7 +95,6 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
             onEscape: goToParent,
             onUp: (_comp) => {
               increase(false);
-              // TOFIX: now it preserve the focus but it put the selection at the end of the input
               return Optional.some(true);
             },
             onDown: (_comp) => {

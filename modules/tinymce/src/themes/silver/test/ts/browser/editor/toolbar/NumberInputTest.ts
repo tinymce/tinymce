@@ -1,11 +1,26 @@
 import { FocusTools, Keys, UiControls } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
+import { Optional } from '@ephox/katamari';
 import { SugarElement, SugarShadowDom } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
+  const setInputSelection = (toolbarInput: Optional<HTMLInputElement>, index: number) => toolbarInput.each((input) => {
+    input.selectionStart = index;
+    input.selectionEnd = index;
+  });
+
+  const checkInputSelection = (toolbarInput: Optional<HTMLInputElement>, index: number, message?: string) => toolbarInput.fold(
+    () => assert.fail('input should be found'),
+    (input) => {
+      assert.equal(input.selectionStart, index, `Start: ${message}`);
+      assert.equal(input.selectionEnd, index, `End: ${message}`);
+    }
+  );
+
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     toolbar: [ 'undo', 'fontsizeinput', 'redo' ]
@@ -95,5 +110,51 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
 
     TinyUiActions.keystroke(editor, Keys.escape());
     await FocusTools.pTryOnSelector('With escape it should pass from plus button to number-input', root, '.tox-number-input');
+  });
+
+  it('TINY-9429: arrow up and arrow down should not change caret position in the input', async () => {
+    const editor = hook.editor();
+    const root = SugarShadowDom.getRootNode(TinyDom.targetElement(editor));
+    const toolbarInput: Optional<HTMLInputElement> = Optional.from(root.dom.querySelector('.tox-input-wrapper input') as HTMLInputElement);
+    editor.setContent('<p style="font-size: 10px;">abc</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
+
+    FocusTools.setFocus(root, '.tox-number-input input');
+    await FocusTools.pTryOnSelector('Focus should should be on input', root, '.tox-number-input input');
+    setInputSelection(toolbarInput, 2);
+
+    TinyUiActions.keystroke(editor, Keys.up());
+
+    checkInputSelection(toolbarInput, 2, 'selection should be preserved');
+    TinyAssertions.assertContent(editor, '<p style="font-size: 10px;">a<span style="font-size: 11px;">b</span>c</p>');
+
+    TinyUiActions.keystroke(editor, Keys.down());
+    TinyUiActions.keystroke(editor, Keys.down());
+
+    checkInputSelection(
+      toolbarInput,
+      1,
+      'switching from 2 digit number to 1 digit number should mantain the selection beween the number and the unit'
+    );
+    TinyAssertions.assertContent(editor, '<p style="font-size: 10px;">a<span style="font-size: 9px;">b</span>c</p>');
+
+    editor.setContent('<p style="font-size: 1px;">abc</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
+
+    FocusTools.setFocus(root, '.tox-number-input input');
+    await FocusTools.pTryOnSelector('Focus should should be on input', root, '.tox-number-input input');
+
+    setInputSelection(toolbarInput, 1);
+
+    TinyUiActions.keystroke(editor, Keys.down());
+
+    TinyAssertions.assertContent(editor, '<p style="font-size: 1px;">a<span style="font-size: 0px;">b</span>c</p>');
+    checkInputSelection(toolbarInput, 1, 'selection should be preserved');
+
+    TinyUiActions.keystroke(editor, Keys.down());
+
+    TinyAssertions.assertContent(editor, '<p style="font-size: 1px;">a<span style="font-size: 0px;">b</span>c</p>');
+
+    checkInputSelection(toolbarInput, 1, 'selection should be preserved');
   });
 });
