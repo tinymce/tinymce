@@ -1,7 +1,5 @@
-import { Mouse } from '@ephox/agar';
 import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { SelectorFind, SugarNode } from '@ephox/sugar';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -31,8 +29,7 @@ describe('browser.tinymce.selection.NoneditableRootElementSelectionTest', () => 
     const testClickElement = (testCase: { input: string; selector: string; expected: number }) => () => {
       const editor = hook.editor();
       editor.setContent(testCase.input);
-      const target = SelectorFind.descendant(TinyDom.body(editor), testCase.selector).filter(SugarNode.isHTMLElement).getOrDie('Failed to find target');
-      Mouse.trueClick(target);
+      TinyContentActions.trueClickOn(editor, testCase.selector);
       assertElementSelection(editor, testCase.expected);
     };
 
