@@ -38,10 +38,10 @@ describe('browser.tinymce.core.delete.InlineFormatPostShortcutDeleteTest', () =>
     { name: 'Ctrl + Delete', fn: ctrlDeleteKeyup },
   ];
 
-  const shortcutDeleteScenarios = [
+  const shortcutDeleteScenarios = os.isMacOS() ? [
     ...shortcutDeleteScenariosNoMeta,
     { name: 'Meta + Backspace', fn: metaBackspaceKeyup }
-  ];
+  ] : shortcutDeleteScenariosNoMeta;
 
   context('TINY-9302: Caret refresh triggers after deletion by keyboard shortcuts', () => {
     context('Empty unformatted block should trigger caret refresh', () => {
