@@ -39,8 +39,8 @@ describe('webdriver.tinymce.core.keyboard.IframeTabfocusTest', () => {
   });
 
   context('Highlight editor content area on focus', () => {
-    const assertIsHighlighted = (editor: Editor) => assert.isTrue(Class.has(TinyDom.container(editor), 'tox-edit-focus'), 'Editor container should has tox-edit-focus class');
-    const assertIsNotHighlighted = (editor: Editor) => assert.isFalse(Class.has(TinyDom.container(editor), 'tox-edit-focus'), 'Editor container should not has tox-edit-focus class');
+    const assertIsHighlighted = (editor: Editor) => assert.isTrue(Class.has(TinyDom.container(editor), 'tox-edit-focus'), 'Editor container should have tox-edit-focus class');
+    const assertIsNotHighlighted = (editor: Editor) => assert.isFalse(Class.has(TinyDom.container(editor), 'tox-edit-focus'), 'Editor container should not have tox-edit-focus class');
 
     const hook = TinyHooks.bddSetupLight<Editor>({
       base_url: '/project/tinymce/js/tinymce',
@@ -57,18 +57,18 @@ describe('webdriver.tinymce.core.keyboard.IframeTabfocusTest', () => {
 
     it('TINY-9277: Focus on tab', async () => {
       const editor = hook.editor();
-      asssertIsNotHighlighted(editor);
+      assertIsNotHighlighted(editor);
       // Pressing tab to focus on the editor
       // await Waiter.pWait(2000);
       await RealKeys.pSendKeysOn('body', [ RealKeys.text('\t') ]);
-      asssertIsHighlighted(editor);
+      assertIsHighlighted(editor);
     });
 
     it('TINY-9277: Focus on click', async () => {
       const editor = hook.editor();
-      asssertIsNotHighlighted(editor);
+      assertIsNotHighlighted(editor);
       await RealMouse.pClickOn('iframe => body');
-      asssertIsHighlighted(editor);
+      assertIsHighlighted(editor);
     });
   });
 });
