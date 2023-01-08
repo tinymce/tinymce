@@ -17,7 +17,7 @@ describe('browser.tinymce.core.focus.HighlightOnFocus', () => {
 
     it('TINY-9277: Content area should be highlighted on focus', () => {
       const editor = hook.editor();
-      assertIsHighlighted(editor);
+      assertIsNotHighlighted(editor);
       editor.focus();
       assertIsHighlighted(editor);
     });
