@@ -1,7 +1,7 @@
 import { ApproxStructure, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Unicode } from '@ephox/katamari';
-import { TinyHooks, TinyUiActions, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyHooks, TinyUiActions, TinySelections, TinyAssertions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -74,5 +74,31 @@ describe('browser.tinymce.plugins.visualchars.PluginTest', () => {
     ])));
 
     assert.isFalse(editor.selection.isForward(), 'should still be backwards');
+  });
+
+  it('TINY-9474: should not process noneditable elements', async () => {
+    const editor = hook.editor();
+
+    editor.setContent('<p contenteditable="false">abc&nbsp;&nbsp;</p><p>123&nbsp;&nbsp;</p>');
+    TinyUiActions.clickOnToolbar(editor, 'button');
+    await Waiter.pTryUntil('wait for visual chars to appear', () => {
+      TinyAssertions.assertContentPresence(editor, {
+        'span.mce-nbsp': 2
+      });
+    });
+  });
+
+  it('TINY-9474: should not process noneditable elements in a noneditable root', async () => {
+    const editor = hook.editor();
+
+    editor.getBody().contentEditable = 'false';
+    editor.setContent('<p>abc&nbsp;&nbsp;</p><p contenteditable="true">123&nbsp;&nbsp;</p>');
+    TinyUiActions.clickOnToolbar(editor, 'button');
+    await Waiter.pTryUntil('wait for visual chars to appear', () => {
+      TinyAssertions.assertContentPresence(editor, {
+        'span.mce-nbsp': 2
+      });
+    });
+    editor.getBody().contentEditable = 'true';
   });
 });

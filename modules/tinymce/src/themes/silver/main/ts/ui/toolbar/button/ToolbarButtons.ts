@@ -150,6 +150,18 @@ const renderCommonStructure = (
 
 const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage: UiFactoryBackstage, identifyButtons: (toolbar: string | ToolbarGroupOption[]) => ToolbarGroup[], attributes: Record<string, string>): SketchSpec => {
   const sharedBackstage = backstage.shared;
+  const editorOffCell = Cell(Fun.noop);
+  const specialisation = {
+    toolbarButtonBehaviours: [],
+    getApi: getButtonApi,
+    onSetup: spec.onSetup
+  };
+  const behaviours: Behaviours = [
+    AddEventsBehaviour.config('toolbar-group-button-events', [
+      onControlAttached(specialisation, editorOffCell),
+      onControlDetached(specialisation, editorOffCell)
+    ])
+  ];
 
   return FloatingToolbarButton.sketch({
     lazySink: sharedBackstage.getSink,
