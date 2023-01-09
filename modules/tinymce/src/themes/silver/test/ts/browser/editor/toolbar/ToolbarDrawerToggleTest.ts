@@ -1,6 +1,7 @@
-import { TestStore, Waiter } from '@ephox/agar';
+import { TestStore, Waiter, FocusTools } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
+import { SugarDocument } from '@ephox/sugar';
 import { McEditor, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -120,12 +121,14 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest',
         });
         await UiUtils.pWaitForEditorToRender();
         editor.focus();
-        const initialFocusedElement = document.activeElement;
+
+        const doc = SugarDocument.getDocument();
+        FocusTools.isOnSelector('Root element is focused', doc, 'iframe');
         editor.execCommand('ToggleToolbarDrawer', false, { skipFocus: true });
         await TinyUiActions.pWaitForUi(editor, '.tox-toolbar__overflow');
-        assert.equal(initialFocusedElement, document.activeElement, 'Focus should be preserved');
+        await FocusTools.pTryOnSelector('Focus should be preserved', doc, 'iframe');
         editor.execCommand('ToggleToolbarDrawer', false, { skipFocus: true });
-        assert.equal(initialFocusedElement, document.activeElement, 'Focus should be preserved');
+        await FocusTools.pTryOnSelector('Focus should be preserved', doc, 'iframe');
         McEditor.remove(editor);
       });
 
