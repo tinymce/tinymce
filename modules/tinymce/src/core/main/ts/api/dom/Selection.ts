@@ -258,7 +258,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
   };
 
   /**
-   * Checks if the current selection start and end containers is editable within their parent contexts.
+   * Checks if the current selection start and end containers are editable within their parent contexts.
    *
    * @method isEditable
    * @return {Boolean} Will be true if the selection is editable and false if it's not.
