@@ -173,7 +173,7 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
 
     TinyUiActions.keystroke(editor, Keys.space());
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 14px;">b</span>c</p>');
-    await FocusTools.pTryOnSelector('Focus should should be not change after enter is pressed', root, '.tox-number-input .minus');
+    await FocusTools.pTryOnSelector('Focus should should be not change after space is pressed', root, '.tox-number-input .minus');
 
     editor.setContent('<p style="font-size: 16px;">abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
@@ -187,6 +187,6 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
 
     TinyUiActions.keystroke(editor, Keys.space());
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 18px;">b</span>c</p>');
-    await FocusTools.pTryOnSelector('Focus should should be not change after enter is pressed', root, '.tox-number-input .plus');
+    await FocusTools.pTryOnSelector('Focus should should be not change after space is pressed', root, '.tox-number-input .plus');
   });
 });
