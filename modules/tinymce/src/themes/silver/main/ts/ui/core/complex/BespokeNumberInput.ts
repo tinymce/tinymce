@@ -154,9 +154,9 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
       classes: [ 'tox-number-input' ]
     },
     components: [
-      makeStepperButton(() => decrease(true), 'minus', 'Decrease font size', [ 'highlight-on-focus' ]),
+      makeStepperButton(() => decrease(false), 'minus', 'Decrease font size', [ 'highlight-on-focus' ]),
       memInput.asSpec(),
-      makeStepperButton(() => increase(true), 'plus', 'Increase font size', [ 'highlight-on-focus' ])
+      makeStepperButton(() => increase(false), 'plus', 'Increase font size', [ 'highlight-on-focus' ])
     ],
     behaviours: Behaviour.derive([
       Focusing.config({}),

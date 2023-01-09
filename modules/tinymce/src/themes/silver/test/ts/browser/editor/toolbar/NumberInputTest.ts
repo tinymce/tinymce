@@ -157,4 +157,36 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
 
     checkInputSelection(toolbarInput, 1, 'selection should be preserved');
   });
+
+  it('TINY-9429: plus and minus button should preserve focus after activation via `enter` and `space`', async () => {
+    const editor = hook.editor();
+    const root = SugarShadowDom.getRootNode(TinyDom.targetElement(editor));
+    editor.setContent('<p style="font-size: 16px;">abc</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
+
+    FocusTools.setFocus(root, '.tox-number-input .minus');
+    await FocusTools.pTryOnSelector('Focus should should be on the minus button', root, '.tox-number-input .minus');
+
+    TinyUiActions.keystroke(editor, Keys.enter());
+    TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 15px;">b</span>c</p>');
+    await FocusTools.pTryOnSelector('Focus should should be not change after enter is pressed', root, '.tox-number-input .minus');
+
+    TinyUiActions.keystroke(editor, Keys.space());
+    TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 14px;">b</span>c</p>');
+    await FocusTools.pTryOnSelector('Focus should should be not change after enter is pressed', root, '.tox-number-input .minus');
+
+    editor.setContent('<p style="font-size: 16px;">abc</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
+
+    FocusTools.setFocus(root, '.tox-number-input .plus');
+    await FocusTools.pTryOnSelector('Focus should should be on the plus button', root, '.tox-number-input .plus');
+
+    TinyUiActions.keystroke(editor, Keys.enter());
+    TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 17px;">b</span>c</p>');
+    await FocusTools.pTryOnSelector('Focus should should be not change after enter is pressed', root, '.tox-number-input .plus');
+
+    TinyUiActions.keystroke(editor, Keys.space());
+    TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 18px;">b</span>c</p>');
+    await FocusTools.pTryOnSelector('Focus should should be not change after enter is pressed', root, '.tox-number-input .plus');
+  });
 });
