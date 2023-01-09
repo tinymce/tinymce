@@ -20,7 +20,7 @@
 @toolbar-button-text-transform: none;
 @toolbar-button-width: 34px;
 
-@toolbar-button-hover-background-color: multiply(white, contrast(@background-color, fade(@color-tint, 20), fade(@color-tint, 80)));
+@toolbar-button-hover-background-color: #285EC7;
 @toolbar-button-hover-border: @toolbar-button-border;
 @toolbar-button-hover-box-shadow: @toolbar-button-box-shadow;
 @toolbar-button-hover-icon-color: @toolbar-button-icon-color;
@@ -130,6 +130,17 @@
     // since they need to be kept the same/use the same rules
     svg { /* stylelint-disable-line no-descending-specificity */
       fill: @toolbar-button-disabled-icon-color;
+    }
+  }
+
+  .tox-tbtn:hover:not(.tox-tbtn--enabled) {
+    background: @toolbar-button-hover-background-color;
+    border: @toolbar-button-hover-border;
+    box-shadow: @toolbar-button-hover-box-shadow;
+    color: #fff;
+
+    svg {
+      fill: #fff;
     }
   }
 

@@ -25,7 +25,7 @@
 @menubar-select-hover-background-color: @toolbar-button-hover-background-color;
 @menubar-select-hover-border: @menubar-select-border;
 @menubar-select-hover-box-shadow: @toolbar-button-hover-box-shadow;
-@menubar-select-hover-text-color: @toolbar-button-hover-text-color;
+@menubar-select-hover-text-color: #fff;
 
 @menubar-select-focus-background-color: @menubar-select-hover-background-color;
 @menubar-select-focus-border: @menubar-select-hover-border;
@@ -88,6 +88,10 @@
     border: @menubar-select-hover-border;
     box-shadow: @menubar-select-hover-box-shadow;
     color: @menubar-select-hover-text-color;
+
+    svg {
+      fill: #fff;
+    }
   }
 
   .tox-mbtn__select-label {
