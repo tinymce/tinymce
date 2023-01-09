@@ -99,6 +99,18 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     TinyUiActions.keystroke(editor, Keys.escape());
     await FocusTools.pTryOnSelector('With escape it should pass from input to its wrapper', root, '.tox-number-input .tox-input-wrapper');
 
+    TinyUiActions.keystroke(editor, Keys.space());
+    await FocusTools.pTryOnSelector('With space it should pass from input wrapper to input', root, '.tox-number-input input');
+
+    TinyUiActions.keystroke(editor, Keys.escape());
+    await FocusTools.pTryOnSelector('With escape it should pass from input to its wrapper', root, '.tox-number-input .tox-input-wrapper');
+
+    TinyUiActions.keystroke(editor, Keys.enter());
+    await FocusTools.pTryOnSelector('With enter it should pass from input wrapper to input', root, '.tox-number-input input');
+
+    TinyUiActions.keystroke(editor, Keys.escape());
+    await FocusTools.pTryOnSelector('With escape it should pass from input to its wrapper', root, '.tox-number-input .tox-input-wrapper');
+
     TinyUiActions.keystroke(editor, Keys.left());
     await FocusTools.pTryOnSelector('With left it should pass from input-wrapper to minus button', root, '.tox-number-input .minus');
 

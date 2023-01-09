@@ -63,6 +63,15 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
       return Optional.some(true);
     });
 
+  const focusInput = (comp: AlloyComponent) => {
+    if (Focus.hasFocus(comp.element)) {
+      Traverse.firstChild(comp.element).each((input) => Focus.focus(input as SugarElement<HTMLElement>));
+      return Optional.some(true);
+    } else {
+      return Optional.none();
+    }
+  };
+
   const memInput = Memento.record({
     dom: {
       tag: 'div',
@@ -117,14 +126,8 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
       Focusing.config({}),
       Keying.config({
         mode: 'special',
-        onEnter: (comp) => {
-          if (Focus.hasFocus(comp.element)) {
-            Traverse.firstChild(comp.element).each((input) => Focus.focus(input as SugarElement<HTMLElement>));
-            return Optional.some(true);
-          } else {
-            return Optional.none();
-          }
-        },
+        onEnter: focusInput,
+        onSpace: focusInput,
         onEscape: goToParent
       })
     ])
