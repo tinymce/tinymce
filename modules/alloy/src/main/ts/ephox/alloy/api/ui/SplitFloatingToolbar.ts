@@ -88,9 +88,7 @@ const factory: CompositeSketchFactory<SplitFloatingToolbarDetail, SplitFloatingT
         });
       },
       toggleWithoutFocusing: (toolbar: AlloyComponent) => {
-        memFloatingToolbarButton.getOpt(toolbar).each((floatingToolbarButton) => {
-          FloatingToolbarButton.toggleWithoutFocusing(floatingToolbarButton);
-        });
+        memFloatingToolbarButton.getOpt(toolbar).each(FloatingToolbarButton.toggleWithoutFocusing);
       },
       isOpen: (toolbar: AlloyComponent) =>
         memFloatingToolbarButton.getOpt(toolbar).map(FloatingToolbarButton.isOpen).getOr(false),
