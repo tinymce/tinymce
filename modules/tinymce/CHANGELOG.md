@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
 
 ### Fixed
+- Color picker on toolbar would not update when changing forecolor or backcolor from menu. #TINY-9439
 - The `onSetup` api function would not run when defining custom group toolbar button. #TINY-9496
 - An element could be dropped onto the decendants of a noneditable element. #TINY-9364
 - Checkmark did not show in menu colorswatches. #TINY-9395
@@ -22,8 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `editor.insertContent` API would insert contents inside noneditable elements if the selection was inside the element. #TINY-9462
 - Closing a dialog would scroll down the document in Safari. #TINY-9148
 - Quick toolbars were incorrectly rendered during the dragging of `contenteditable="false"` elements. #TINY-9305
+- Visual characters were rendered inside noneditable elements. #TINY-9474
 - Removed a workaround for ensuring stylesheets are loaded in an outdated version of webkit. #TINY-9433
 - Lists in a noneditable root was editable by editor commands and editor ui. #TINY-9458
+- Color picker dialog would not update the preview color if the hex input value was prefixed with `#` symbol. #TINY-9457
 
 ## 6.3.1 - 2022-12-06
 
