@@ -5,12 +5,16 @@
 @toolbar-number-input-button-height: 28px;
 @toolbar-number-input-button-width: 24px;
 @toolbar-number-input-button-margin: 2px;
-@toolbar-number-input-input-wrapper-width: 75px;
+@toolbar-number-input-input-wrapper-font-size: 14px;
+@toolbar-number-input-input-wrapper-width: 60px;
 
 .tox {
   .tox-number-input {
     border-radius: @toolbar-button-border-radius;
     display: flex;
+    margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0;
+    padding: 0 @toolbar-button-select-padding;
+    width: auto;
 
     > *:focus > {
       background: @toolbar-button-focus-background-color;
@@ -28,6 +32,7 @@
 
     input {
       border-radius: @toolbar-button-border-radius;
+      font-size: @toolbar-number-input-input-wrapper-font-size;
       margin: @toolbar-number-input-button-margin 0;
       width: @toolbar-number-input-input-wrapper-width;
     }
@@ -54,6 +59,17 @@
     button svg {
       display: block;
       margin: 0 auto;
+    }
+
+    button:active {
+      background: @toolbar-button-active-background-color;
+      border: @toolbar-button-active-border;
+      box-shadow: @toolbar-button-active-box-shadow;
+      color: @toolbar-button-active-text-color;
+
+      svg {
+        fill: @toolbar-button-active-icon-color;
+      }
     }
 
     button:hover {
