@@ -167,7 +167,6 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
         mode: 'flow',
         focusInside: FocusInsideModes.OnEnterOrSpaceMode,
         cycles: false,
-        getInitial: (comp) => memInput.getOpt(comp).map((c) => c.element),
         selector: 'button, .tox-input-wrapper',
         onEscape: (wrapperComp) => {
           if (Focus.hasFocus(wrapperComp.element)) {

@@ -93,6 +93,11 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     const editor = hook.editor();
     const root = SugarShadowDom.getRootNode(TinyDom.targetElement(editor));
 
+    FocusTools.setFocus(root, '.tox-number-input');
+    await FocusTools.pTryOnSelector('Focus should should be on input', root, '.tox-number-input');
+    TinyUiActions.keystroke(editor, Keys.enter());
+    await FocusTools.pTryOnSelector('minus button should be the first selection', root, '.tox-number-input .minus');
+
     FocusTools.setFocus(root, '.tox-number-input input');
     await FocusTools.pTryOnSelector('Focus should should be on input', root, '.tox-number-input input');
 
