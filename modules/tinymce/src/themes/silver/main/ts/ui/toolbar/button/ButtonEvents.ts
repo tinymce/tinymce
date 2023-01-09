@@ -25,18 +25,20 @@ const onToolbarButtonExecute = <T>(info: OnMenuItemExecuteType<T>): AlloyEvents.
     });
   });
 
+const commonButtonDisplayEvent = Id.generate('common-button-display-events');
+
 const toolbarButtonEventOrder: Record<string, string[]> = {
   // TODO: use the constants provided by behaviours.
   [SystemEvents.execute()]: [ 'disabling', 'alloy.base.behaviour', 'toggling', 'toolbar-button-events' ],
   [SystemEvents.attachedToDom()]: [
     'toolbar-button-events',
-    'common-button-display-events'
+    commonButtonDisplayEvent
   ],
   [NativeEvents.mousedown()]: [
     'focusing',
     'alloy.base.behaviour',
-    'common-button-display-events'
+    commonButtonDisplayEvent
   ]
 };
 
-export { onToolbarButtonExecute, toolbarButtonEventOrder, runWithApi };
+export { onToolbarButtonExecute, toolbarButtonEventOrder, runWithApi, commonButtonDisplayEvent };

@@ -1,7 +1,7 @@
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button as AlloyButton, Disabling, FloatingToolbarButton, Focusing,
   GuiFactory,
-  Keying, Memento, NativeEvents, Reflecting, Replacing, SketchSpec, SplitDropdown as AlloySplitDropdown, SystemEvents, TieredData, TieredMenuTypes, Toggling,
+  Keying, Memento, NativeEvents, Replacing, SketchSpec, SplitDropdown as AlloySplitDropdown, SystemEvents, TieredData, TieredMenuTypes, Toggling,
   Unselecting
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
@@ -29,7 +29,7 @@ import { createTieredDataFrom } from '../../menus/menu/SingleMenu';
 import { SingleMenuItemSpec } from '../../menus/menu/SingleMenuTypes';
 import { renderToolbarGroup, ToolbarGroup } from '../CommonToolbar';
 import { ToolbarButtonClasses } from './ButtonClasses';
-import { onToolbarButtonExecute, toolbarButtonEventOrder } from './ButtonEvents';
+import { commonButtonDisplayEvent, onToolbarButtonExecute, toolbarButtonEventOrder } from './ButtonEvents';
 
 type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];
 type AlloyButtonSpec = Parameters<typeof AlloyButton['sketch']>[0];
@@ -46,11 +46,6 @@ interface GeneralToolbarButton<T> {
   readonly tooltip: Optional<string>;
   readonly onAction: (api: T) => void;
   readonly enabled: boolean;
-}
-
-interface ButtonState {
-  readonly text: Optional<string>;
-  readonly icon: Optional<string>;
 }
 
 interface ChoiceFetcher {
@@ -95,23 +90,22 @@ const getTooltipAttributes = (tooltip: Optional<string>, providersBackstage: UiF
 const focusButtonEvent = Id.generate('focus-button');
 
 const renderCommonStructure = (
-  icon: Optional<string>,
-  text: Optional<string>,
+  optIcon: Optional<string>,
+  optText: Optional<string>,
   tooltip: Optional<string>,
-  receiver: Optional<string>,
   behaviours: Optional<Behaviours>,
   providersBackstage: UiFactoryBackstageProviders
 ): AlloyButtonSpec => {
-  const optMemDisplayText = text.map(
+  const optMemDisplayText = optText.map(
     (text) => Memento.record(renderLabel(text, ToolbarButtonClasses.Button, providersBackstage))
   );
-  const optMemDisplayIcon = icon.map(
+  const optMemDisplayIcon = optIcon.map(
     (icon) => Memento.record(renderReplaceableIconFromPack(icon, providersBackstage.icons))
   );
   return {
     dom: {
       tag: 'button',
-      classes: [ ToolbarButtonClasses.Button ].concat(text.isSome() ? [ ToolbarButtonClasses.MatchWidth ] : []),
+      classes: [ ToolbarButtonClasses.Button ].concat(optText.isSome() ? [ ToolbarButtonClasses.MatchWidth ] : []),
       attributes: getTooltipAttributes(tooltip, providersBackstage)
     },
     components: componentRenderPipeline([
@@ -123,16 +117,16 @@ const renderCommonStructure = (
       [NativeEvents.mousedown()]: [
         'focusing',
         'alloy.base.behaviour',
-        'common-button-display-events'
+        commonButtonDisplayEvent
       ],
-      [SystemEvents.attachedToDom()]: [ 'common-button-display-events', 'reflecting' ]
+      [SystemEvents.attachedToDom()]: [ commonButtonDisplayEvent ]
     },
 
     buttonBehaviours: Behaviour.derive(
       [
         DisablingConfigs.toolbarButton(providersBackstage.isDisabled),
         ReadOnly.receivingConfig(),
-        AddEventsBehaviour.config('common-button-display-events', [
+        AddEventsBehaviour.config(commonButtonDisplayEvent, [
           AlloyEvents.runOnAttached((comp, _se) => UiUtils.forceInitialSize(comp)),
           AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
             optMemDisplayText.bind((mem) => mem.getOpt(comp)).each((displayText) => {
@@ -149,18 +143,7 @@ const renderCommonStructure = (
             AlloyTriggers.emit(button, focusButtonEvent);
           })
         ])
-      ].concat(
-        receiver.map((r) => Reflecting.config({
-          channel: r,
-          initialData: { icon, text },
-          renderComponents: (_data: ButtonState, _state) => componentRenderPipeline([
-            // data.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)),
-            optMemDisplayIcon.map((mem) => mem.asSpec()),
-            // data.text.map((text) => renderLabel(text, ToolbarButtonClasses.Button, providersBackstage))
-            optMemDisplayText.map((mem) => mem.asSpec())
-          ])
-        })).toArray()
-      ).concat(behaviours.getOr([ ]))
+      ].concat(behaviours.getOr([ ]))
     )
   };
 };
@@ -177,7 +160,7 @@ const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage
       toggledClass: ToolbarButtonClasses.Ticked
     },
     parts: {
-      button: renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.none(), Optional.none(), sharedBackstage.providers),
+      button: renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.none(), sharedBackstage.providers),
       toolbar: {
         dom: {
           tag: 'div',
@@ -191,7 +174,7 @@ const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage
 
 const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisation: Specialisation<T>, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   const editorOffCell = Cell(Fun.noop);
-  const structure = renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.none(), Optional.none(), providersBackstage);
+  const structure = renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.none(), providersBackstage);
   return AlloyButton.sketch({
     dom: structure.dom,
     components: structure.components,
@@ -213,7 +196,7 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
           ReadOnly.receivingConfig()
         ].concat(specialisation.toolbarButtonBehaviours)
       ),
-      ...structure.buttonBehaviours
+      [commonButtonDisplayEvent]: structure.buttonBehaviours?.[commonButtonDisplayEvent],
     }
   });
 };
@@ -282,8 +265,6 @@ const fetchChoices = (getApi: (comp: AlloyComponent) => Toolbar.ToolbarSplitButt
 
 // TODO: hookup onSetup and onDestroy
 const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
-  // This is used to change the icon on the button. Normally, affected by the select call.
-  const displayChannel = Id.generate('channel-update-split-dropdown-display');
 
   const getApi = (comp: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => ({
     isEnabled: () => !Disabling.isDisabled(comp),
@@ -303,14 +284,19 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     },
     isActive: () => SelectorFind.descendant(comp.element, 'span').exists((button) => comp.getSystem().getByDom(button).exists(Toggling.isOn)),
     setText: (text: string) =>
-      AlloyTriggers.emitWith(comp.components()[0], updateMenuText, {
-        text
-      })
-    ,
+      SelectorFind.descendant(comp.element, 'span').each((button) =>
+        comp.getSystem().getByDom(button).each((buttonComp) =>
+          AlloyTriggers.emitWith(buttonComp, updateMenuText, {
+            text
+          }))
+      ),
     setIcon: (icon: string) =>
-      AlloyTriggers.emitWith(comp.components()[0], updateMenuIcon, {
-        icon
-      })
+      SelectorFind.descendant(comp.element, 'span').each((button) =>
+        comp.getSystem().getByDom(button).each((buttonComp) =>
+          AlloyTriggers.emitWith(buttonComp, updateMenuIcon, {
+            icon
+          }))
+      ),
   });
 
   const editorOffCell = Cell(Fun.noop);
@@ -358,7 +344,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
 
     components: [
       AlloySplitDropdown.parts.button(
-        renderCommonStructure(spec.icon, spec.text, Optional.none(), Optional.some(displayChannel), Optional.some([
+        renderCommonStructure(spec.icon, spec.text, Optional.none(), Optional.some([
           Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, toggleOnExecute: false })
         ]), sharedBackstage.providers)
       ),

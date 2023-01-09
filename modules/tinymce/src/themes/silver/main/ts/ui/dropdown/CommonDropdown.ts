@@ -121,6 +121,8 @@ const renderCommonDropdown = <T>(
     classes: [ `${prefix}__select-chevron` ]
   }, sharedBackstage.providers.icons);
 
+  const fixWidthBehaviourName = Id.generate('common-button-display-events');
+
   const memDropdown = Memento.record(
     AlloyDropdown.sketch({
       ...spec.uid ? { uid: spec.uid } : {},
@@ -163,7 +165,7 @@ const renderCommonDropdown = <T>(
           onControlAttached(spec, editorOffCell),
           onControlDetached(spec, editorOffCell)
         ]),
-        AddEventsBehaviour.config('common-button-display-events', [
+        AddEventsBehaviour.config(fixWidthBehaviourName, [
           AlloyEvents.runOnAttached((comp, _se) => UiUtils.forceInitialSize(comp)),
         ]),
         AddEventsBehaviour.config('menubutton-update-display-text', [
@@ -190,8 +192,8 @@ const renderCommonDropdown = <T>(
         mousedown: [ 'focusing', 'alloy.base.behaviour', 'item-type-events', 'normal-dropdown-events' ],
         [SystemEvents.attachedToDom()]: [
           'toolbar-button-events',
-          'common-button-display-events',
           'dropdown-events',
+          fixWidthBehaviourName
         ]
       }),
 
