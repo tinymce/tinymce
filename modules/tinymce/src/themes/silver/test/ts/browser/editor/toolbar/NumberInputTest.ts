@@ -129,7 +129,7 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     await FocusTools.pTryOnSelector('With escape it should pass from plus button to number-input', root, '.tox-number-input');
   });
 
-  it.skip('TINY-9429: arrow up and arrow down should not change caret position in the input', async () => {
+  it('TINY-9429: arrow up and arrow down should not change caret position in the input', async () => {
     const editor = hook.editor();
     const root = SugarShadowDom.getRootNode(TinyDom.targetElement(editor));
     const toolbarInput: Optional<HTMLInputElement> = Optional.from(root.dom.querySelector('.tox-input-wrapper input') as HTMLInputElement);
@@ -175,7 +175,7 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     checkInputSelection(toolbarInput, 1, 'selection should be preserved');
   });
 
-  it.skip('TINY-9429: plus and minus button should preserve focus after activation via `enter` and `space`', async () => {
+  it('TINY-9429: plus and minus button should preserve focus after activation via `enter` and `space`', async () => {
     const editor = hook.editor();
     const root = SugarShadowDom.getRootNode(TinyDom.targetElement(editor));
     editor.setContent('<p style="font-size: 16px;">abc</p>');

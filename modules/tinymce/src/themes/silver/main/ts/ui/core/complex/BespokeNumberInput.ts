@@ -34,7 +34,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
 
   const isValidValue = (value: number): boolean => value >= 0;
 
-  const changeValue = (f: (v: number, step: number) => number, focusBack: boolean): void => {
+  const changeValue = (f: (v: number, step: number) => number, fromInput: boolean): void => {
     const text = getValueFromCurrentComp(currentComp);
     const parsedText = Dimension.parse(text, [ 'unsupportedLength' ]);
     const value = parsedText.map((res) => res.value).getOr(0);
@@ -46,11 +46,13 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
     const oldStart = currentComp.map((comp) => comp.element.dom.selectionStart - lenghtDelta);
     const oldEnd = currentComp.map((comp) => comp.element.dom.selectionEnd - lenghtDelta);
 
-    spec.onAction(newValueWithUnit, focusBack);
+    spec.onAction(newValueWithUnit);
     currentComp.each((comp) => {
       Representing.setValue(comp, newValueWithUnit);
-      oldStart.each((oldStart) => comp.element.dom.selectionStart = oldStart);
-      oldEnd.each((oldEnd) => comp.element.dom.selectionEnd = oldEnd);
+      if (fromInput) {
+        oldStart.each((oldStart) => comp.element.dom.selectionStart = oldStart);
+        oldEnd.each((oldEnd) => comp.element.dom.selectionEnd = oldEnd);
+      }
     });
   };
 
@@ -103,11 +105,11 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
             },
             onEscape: goToParent,
             onUp: (_comp) => {
-              increase(false);
+              increase(true);
               return Optional.some(true);
             },
             onDown: (_comp) => {
-              decrease(false);
+              decrease(true);
               return Optional.some(true);
             },
             onLeft: (_comp, se) => {
