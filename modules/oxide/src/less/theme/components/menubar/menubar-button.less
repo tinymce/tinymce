@@ -68,6 +68,11 @@
     cursor: not-allowed;
   }
 
+  .tox-mbtn:focus-visible {
+    background: #285ec7;
+    color: #fff;
+  }
+
   .tox-mbtn:focus:not(:disabled) {
     background: @menubar-select-focus-background-color;
     border: @menubar-select-focus-border;
@@ -77,10 +82,10 @@
 
   // Active state applied using class
   .tox-mbtn--active {
-    background: @menubar-select-active-background-color;
+    background: #f0f0f0;
     border: @menubar-select-active-border;
     box-shadow: @menubar-select-active-box-shadow;
-    color: @menubar-select-active-text-color;
+    color: #000;
   }
 
   .tox-mbtn:hover:not(:disabled):not(.tox-mbtn--active) {
