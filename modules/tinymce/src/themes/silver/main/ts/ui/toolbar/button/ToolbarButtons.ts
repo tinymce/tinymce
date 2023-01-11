@@ -119,7 +119,7 @@ const renderCommonStructure = (
         'alloy.base.behaviour',
         commonButtonDisplayEvent
       ],
-      [SystemEvents.attachedToDom()]: [ commonButtonDisplayEvent ]
+      [SystemEvents.attachedToDom()]: [ commonButtonDisplayEvent, 'toolbar-group-button-events' ]
     },
 
     buttonBehaviours: Behaviour.derive(
@@ -172,7 +172,7 @@ const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage
       toggledClass: ToolbarButtonClasses.Ticked
     },
     parts: {
-      button: renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.none(), sharedBackstage.providers),
+      button: renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.some(behaviours), sharedBackstage.providers),
       toolbar: {
         dom: {
           tag: 'div',
