@@ -116,6 +116,10 @@
     }
   }
 
+  .tox-tbtn:focus-visible svg {
+    fill: #fff;
+  }
+
   .tox-tbtn--disabled,
   .tox-tbtn--disabled:hover,
   .tox-tbtn:disabled,
@@ -133,6 +137,11 @@
     }
   }
 
+  .tox-tbtn:focus-visible:not(.tox-tbtn--enabled) {
+    background: #285ec7;
+    color: #fff;
+  }
+
   .tox-tbtn:hover:not(.tox-tbtn--enabled) {
     background: @toolbar-button-hover-background-color;
     border: @toolbar-button-hover-border;
@@ -147,7 +156,7 @@
   // An toggle on/off button's on state.
   .tox-tbtn--enabled,
   .tox-tbtn--enabled:hover {
-    background: @toolbar-button-enabled-background-color;
+    background: #b4d7ff;
     border: @toolbar-button-enabled-border;
     box-shadow: @toolbar-button-enabled-box-shadow;
     color: @toolbar-button-enabled-text-color;
@@ -161,6 +170,14 @@
     svg { /* stylelint-disable-line no-descending-specificity */
       fill: @toolbar-button-enabled-icon-color;
     }
+  }
+
+  .tox-tbtn--enabled:focus-visible {
+    outline: 2px solid #285ec7;
+  }
+
+  .tox-tbtn--enabled:focus svg {
+    fill: #2253ae;
   }
 
   .tox-tbtn:focus:not(.tox-tbtn--disabled) {
