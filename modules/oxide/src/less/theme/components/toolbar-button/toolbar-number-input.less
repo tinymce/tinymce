@@ -17,10 +17,6 @@
     padding: 0 @toolbar-button-select-padding;
     width: auto;
 
-    > *:focus > {
-      background: @toolbar-button-focus-background-color;
-    }
-
     .tox-input-wrapper {
       background: @toolbar-button-bespoke-background-color;
       display: flex;
@@ -66,6 +62,10 @@
       display: block;
       margin: 0 auto;
       transform: scale(@toolbar-number-input-button-icon-ratio);
+    }
+
+    button:focus {
+      background: @toolbar-button-focus-background-color;
     }
 
     button:hover {
