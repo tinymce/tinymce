@@ -15,6 +15,7 @@ import * as Backstage from './backstage/Backstage';
 import * as DomEvents from './Events';
 import * as Iframe from './modes/Iframe';
 import * as Inline from './modes/Inline';
+import * as SemiInline from './modes/SemiInline';
 import { LazyUiReferences, ReadyUiReferences, SinkAndMothership } from './modes/UiReferences';
 import * as ReadOnly from './ReadOnly';
 import * as ContextToolbar from './ui/context/ContextToolbar';
@@ -68,7 +69,10 @@ const getLazyMothership = (label: string, singleton: Singleton.Value<Gui.GuiSyst
 
 const setup = (editor: Editor): RenderInfo => {
   const isInline = editor.inline;
-  const mode = isInline ? Inline : Iframe;
+  // eslint-disable-next-line @tinymce/no-direct-editor-options
+  const isSemi = editor.options.get<boolean>('semi');
+  // eslint-disable-next-line no-nested-ternary
+  const mode = isInline ? (isSemi ? SemiInline : Inline) : Iframe;
 
   // We use a different component for creating the sticky toolbar behaviour. The
   // most important difference is it needs "Docking" configured and all of the
@@ -324,7 +328,7 @@ const setup = (editor: Editor): RenderInfo => {
     });
 
     const statusbar: Optional<AlloySpec> =
-      Options.useStatusBar(editor) && !isInline ? Optional.some(
+      Options.useStatusBar(editor) && !isInline || isSemi ? Optional.some(
         renderStatusbar(editor, backstages.popup.shared.providers)
       ) : Optional.none<AlloySpec>();
 
@@ -332,7 +336,7 @@ const setup = (editor: Editor): RenderInfo => {
     const editorComponents = Arr.flatten<AlloySpec>([
       isToolbarBottom ? [ ] : [ partHeader ],
       // Inline mode does not have a socket/sidebar
-      isInline ? [ ] : [ sidebarContainer ],
+      isInline && !isSemi ? [ ] : [ sidebarContainer ],
       isToolbarBottom ? [ partHeader ] : [ ]
     ]);
 
@@ -340,7 +344,7 @@ const setup = (editor: Editor): RenderInfo => {
       components: Arr.flatten<AlloySpec>([
         editorComponents,
         // Inline mode does not have a status bar
-        isInline ? [ ] : statusbar.toArray()
+        isInline && !isSemi ? [ ] : statusbar.toArray()
       ])
     });
 
@@ -358,7 +362,7 @@ const setup = (editor: Editor): RenderInfo => {
         dom: {
           tag: 'div',
           classes: [ 'tox', 'tox-tinymce' ]
-            .concat(isInline ? [ 'tox-tinymce-inline' ] : [])
+            .concat(isInline ? [ isSemi ? 'tox-tinymce-semi-inline' : 'tox-tinymce-inline' ] : [])
             .concat(isToolbarBottom ? [ 'tox-tinymce--toolbar-bottom' ] : [])
             .concat(deviceClasses),
           styles: {
@@ -371,7 +375,7 @@ const setup = (editor: Editor): RenderInfo => {
         },
         components: [
           editorContainer,
-          ...isInline ? [] : [ partViewWrapper ],
+          ...isInline && !isSemi ? [] : [ partViewWrapper ],
           partThrobber,
         ],
         behaviours: Behaviour.derive([
@@ -399,7 +403,8 @@ const setup = (editor: Editor): RenderInfo => {
     const parsedHeight = Utils.numToPx(EditorSize.getHeightWithFallback(editor));
     const parsedWidth = Utils.numToPx(EditorSize.getWidthWithFallback(editor));
 
-    if (!editor.inline) {
+    // eslint-disable-next-line @tinymce/no-direct-editor-options
+    if (!editor.inline || editor.options.get<boolean>('semi')) {
       // Update the width
       if (Css.isValidValue('div', 'width', parsedWidth)) {
         Css.set(outerContainer.element, 'width', parsedWidth);

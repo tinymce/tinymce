@@ -19,7 +19,7 @@
   vertical-align: initial;
   white-space: normal;
 
-  *:not(svg):not(rect) {
+  *:not(svg):not(rect):not(:where(.tox-edit-area *)) {
     // inherit everything in the tox selector, so components have a chance to override it
     box-sizing: inherit;
     color: inherit;
@@ -39,7 +39,7 @@
     white-space: inherit;
   }
 
-  *:not(svg):not(rect) { /* stylelint-disable-line no-duplicate-selectors */
+  *:not(svg):not(rect):not(:where(.tox-edit-area *)) { /* stylelint-disable-line no-duplicate-selectors */
     // remaining specific reset styles for properties that shouldn't be inherited
     background: transparent;
     border: 0;

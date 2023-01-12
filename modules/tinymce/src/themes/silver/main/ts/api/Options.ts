@@ -271,6 +271,10 @@ const register = (editor: Editor): void => {
   registerOption('sidebar_show', {
     processor: 'string'
   });
+
+  registerOption('semi', {
+    processor: 'boolean'
+  });
 };
 
 const isReadOnly = option('readonly');

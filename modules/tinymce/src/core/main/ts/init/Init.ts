@@ -182,6 +182,16 @@ const init = (editor: Editor): void => {
 
   // Content editable mode ends here
   if (editor.inline) {
+    // eslint-disable-next-line @tinymce/no-direct-editor-options
+    if (editor.options.get<boolean>('semi')) {
+      renderInfo.iframeContainer?.appendChild(editor.getElement());
+      editor.on('remove', () => {
+        const parent = editor.getContainer().parentElement;
+        if (parent) {
+          parent.insertBefore(editor.getElement(), editor.getContainer());
+        }
+      });
+    }
     InitContentBody.initContentBody(editor);
   } else {
     InitIframe.init(editor, {

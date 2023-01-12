@@ -113,7 +113,8 @@ const findFocusedElem = (rootElm: SugarElement, lazySink: () => Result<AlloyComp
   Focus.search(rootElm).orThunk(() => lazySink().toOptional().bind((sink) => Focus.search(sink.element)));
 
 const setup = (editor: Editor, sharedBackstage: UiFactoryBackstageShared, lazyHeader: () => Optional<AlloyComponent>): void => {
-  if (!editor.inline) {
+  // eslint-disable-next-line @tinymce/no-direct-editor-options
+  if (!editor.inline || editor.options.get<boolean>('semi')) {
     // If using bottom toolbar then when the editor resizes we need to reset docking
     // otherwise it won't know the original toolbar position has moved
     if (!sharedBackstage.header.isPositionedAtTop()) {
@@ -186,7 +187,8 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
   };
 
   const onDockingSwitch = (comp: AlloyComponent) => {
-    if (!editor.inline) {
+    // eslint-disable-next-line @tinymce/no-direct-editor-options
+    if (!editor.inline || editor.options.get<boolean>('semi')) {
       updateIframeContentFlow(comp);
     }
     updateEditorClasses(editor, Docking.isDocked(comp));
@@ -200,7 +202,8 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
     );
   };
 
-  const additionalBehaviours = editor.inline ? [ ] : getIframeBehaviours();
+  // eslint-disable-next-line @tinymce/no-direct-editor-options
+  const additionalBehaviours = editor.inline && !editor.options.get<boolean>('semi') ? [ ] : getIframeBehaviours();
 
   return [
     Focusing.config({ }),
@@ -208,7 +211,8 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
       contextual: {
         lazyContext: (comp) => {
           const headerHeight = Height.getOuter(comp.element);
-          const container = editor.inline ? editor.getContentAreaContainer() : editor.getContainer();
+          // eslint-disable-next-line @tinymce/no-direct-editor-options
+          const container = editor.inline && !editor.options.get<boolean>('semi') ? editor.getContentAreaContainer() : editor.getContainer();
           const box = Boxes.box(SugarElement.fromDom(container));
           // Force the header to hide before it overflows outside the container
           const boxHeight = box.height - headerHeight;

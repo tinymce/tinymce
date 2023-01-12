@@ -10,6 +10,8 @@ const rename = require('gulp-rename');
 const chalk = require('chalk');
 const fs = require('fs');
 const path = require('path');
+const lightningcss = require('lightningcss');
+const through2 = require('through2');
 
 const autoprefix = new lessAutoprefix({
   browsers: ['last 2 Safari versions', 'iOS 14.0', 'last 2 Chrome versions', 'Firefox ESR'],
@@ -83,13 +85,29 @@ gulp.task('less', function() {
     .pipe(gulp.dest('./build/skins/'));
 });
 
+const minifyCss = () =>
+  through2.obj(function(file, _, cb) {
+      if (file.isBuffer()) {
+        let { code } = lightningcss.transform({
+          filename: 'style.css',
+          code: file.contents,
+          minify: true,
+          sourceMap: false
+        });
+
+        file.contents = code;
+      }
+
+      cb(null, file);
+  });
+
 //
 // Minify CSS
 //
 gulp.task('minifyCss', function() {
   return gulp.src(['./build/skins/**/*.css', '!**/*.min.css'])
     .pipe(sourcemaps.init())
-    .pipe(cleanCSS({ rebase: false }))
+    .pipe(minifyCss())
     .pipe(rename({ extname: '.min.css' }))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./build/skins'))
