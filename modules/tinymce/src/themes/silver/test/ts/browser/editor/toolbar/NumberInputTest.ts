@@ -49,7 +49,7 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     UiControls.setValue(input, '15px');
     const root = SugarShadowDom.getRootNode(TinyDom.targetElement(editor));
     FocusTools.setFocus(root, '.tox-number-input input');
-    await FocusTools.pTryOnSelector('Focus should should be on input', root, '.tox-number-input input');
+    await FocusTools.pTryOnSelector('Focus should be on input', root, '.tox-number-input input');
     TinyUiActions.keystroke(editor, Keys.enter());
 
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 15px;">b</span>c</p>');
@@ -62,29 +62,29 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
 
     FocusTools.setFocus(root, '.tox-number-input input');
-    await FocusTools.pTryOnSelector('Focus should should be on input', root, '.tox-number-input input');
+    await FocusTools.pTryOnSelector('Focus should be on input', root, '.tox-number-input input');
     TinyUiActions.keystroke(editor, Keys.up());
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 17px;">b</span>c</p>');
 
     FocusTools.setFocus(root, '.tox-number-input input');
-    await FocusTools.pTryOnSelector('Focus should should be on input', root, '.tox-number-input input');
+    await FocusTools.pTryOnSelector('Focus should be on input', root, '.tox-number-input input');
     TinyUiActions.keystroke(editor, Keys.down());
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 16px;">b</span>c</p>');
 
     const input: SugarElement<HTMLInputElement> = TinyUiActions.clickOnToolbar(editor, '.tox-number-input input');
     UiControls.setValue(input, '2em');
     FocusTools.setFocus(root, '.tox-number-input input');
-    await FocusTools.pTryOnSelector('Focus should should be on input', root, '.tox-number-input input');
+    await FocusTools.pTryOnSelector('Focus should be on input', root, '.tox-number-input input');
     TinyUiActions.keystroke(editor, Keys.enter());
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 2em;">b</span>c</p>');
 
     FocusTools.setFocus(root, '.tox-number-input input');
-    await FocusTools.pTryOnSelector('Focus should should be on input', root, '.tox-number-input input');
+    await FocusTools.pTryOnSelector('Focus should be on input', root, '.tox-number-input input');
     TinyUiActions.keystroke(editor, Keys.up());
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 2.1em;">b</span>c</p>');
 
     FocusTools.setFocus(root, '.tox-number-input input');
-    await FocusTools.pTryOnSelector('Focus should should be on input', root, '.tox-number-input input');
+    await FocusTools.pTryOnSelector('Focus should be on input', root, '.tox-number-input input');
     TinyUiActions.keystroke(editor, Keys.down());
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 2em;">b</span>c</p>');
   });
@@ -94,12 +94,12 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     const root = SugarShadowDom.getRootNode(TinyDom.targetElement(editor));
 
     FocusTools.setFocus(root, '.tox-number-input');
-    await FocusTools.pTryOnSelector('Focus should should be on input', root, '.tox-number-input');
+    await FocusTools.pTryOnSelector('Focus should be on input', root, '.tox-number-input');
     TinyUiActions.keystroke(editor, Keys.enter());
     await FocusTools.pTryOnSelector('minus button should be the first selection', root, '.tox-number-input .minus');
 
     FocusTools.setFocus(root, '.tox-number-input input');
-    await FocusTools.pTryOnSelector('Focus should should be on input', root, '.tox-number-input input');
+    await FocusTools.pTryOnSelector('Focus should be on input', root, '.tox-number-input input');
 
     TinyUiActions.keystroke(editor, Keys.escape());
     await FocusTools.pTryOnSelector('With escape it should pass from input to its wrapper', root, '.tox-number-input .tox-input-wrapper');
@@ -137,7 +137,7 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
 
     FocusTools.setFocus(root, '.tox-number-input input');
-    await FocusTools.pTryOnSelector('Focus should should be on input', root, '.tox-number-input input');
+    await FocusTools.pTryOnSelector('Focus should be on input', root, '.tox-number-input input');
     setInputSelection(toolbarInput, 2);
 
     TinyUiActions.keystroke(editor, Keys.up());
@@ -159,7 +159,7 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
 
     FocusTools.setFocus(root, '.tox-number-input input');
-    await FocusTools.pTryOnSelector('Focus should should be on input', root, '.tox-number-input input');
+    await FocusTools.pTryOnSelector('Focus should be on input', root, '.tox-number-input input');
 
     setInputSelection(toolbarInput, 1);
 
@@ -182,29 +182,29 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
 
     FocusTools.setFocus(root, '.tox-number-input .minus');
-    await FocusTools.pTryOnSelector('Focus should should be on the minus button', root, '.tox-number-input .minus');
+    await FocusTools.pTryOnSelector('Focus should be on the minus button', root, '.tox-number-input .minus');
 
     TinyUiActions.keystroke(editor, Keys.enter());
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 15px;">b</span>c</p>');
-    await FocusTools.pTryOnSelector('Focus should should be not change after enter is pressed', root, '.tox-number-input .minus');
+    await FocusTools.pTryOnSelector('Focus should be not change after enter is pressed', root, '.tox-number-input .minus');
 
     TinyUiActions.keystroke(editor, Keys.space());
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 14px;">b</span>c</p>');
-    await FocusTools.pTryOnSelector('Focus should should be not change after space is pressed', root, '.tox-number-input .minus');
+    await FocusTools.pTryOnSelector('Focus should be not change after space is pressed', root, '.tox-number-input .minus');
 
     editor.setContent('<p style="font-size: 16px;">abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
 
     FocusTools.setFocus(root, '.tox-number-input .plus');
-    await FocusTools.pTryOnSelector('Focus should should be on the plus button', root, '.tox-number-input .plus');
+    await FocusTools.pTryOnSelector('Focus should be on the plus button', root, '.tox-number-input .plus');
 
     TinyUiActions.keystroke(editor, Keys.enter());
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 17px;">b</span>c</p>');
-    await FocusTools.pTryOnSelector('Focus should should be not change after enter is pressed', root, '.tox-number-input .plus');
+    await FocusTools.pTryOnSelector('Focus should be not change after enter is pressed', root, '.tox-number-input .plus');
 
     TinyUiActions.keystroke(editor, Keys.space());
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 18px;">b</span>c</p>');
-    await FocusTools.pTryOnSelector('Focus should should be not change after space is pressed', root, '.tox-number-input .plus');
+    await FocusTools.pTryOnSelector('Focus should be not change after space is pressed', root, '.tox-number-input .plus');
   });
 
   it('TINY-9429: plus and minus buttons should lose focus when the user goes with the mouse over the input', async () => {
