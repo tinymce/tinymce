@@ -116,6 +116,12 @@
     user-select: none;
   }
 
+  .tox-collection__item--active {
+    background: #285ec7;
+    color: #fff;
+    fill: #fff;
+  }
+
   .tox-collection--list .tox-collection__item {
     padding: @collection-item-padding;
   }
@@ -221,6 +227,12 @@
     svg {
       fill: @collection-item-label-text-color;
     }
+  }
+
+  .tox-collection__item--active .tox-collection__item-accessory,
+  .tox-collection__item--active .tox-collection__item-caret {
+    color: rgba(255, 255, 255, .7);
+    fill: rgba(255, 255, 255, .7);
   }
 
   .tox-collection__item-icon:hover {
