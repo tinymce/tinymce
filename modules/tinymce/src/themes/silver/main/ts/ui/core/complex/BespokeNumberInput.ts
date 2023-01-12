@@ -1,5 +1,5 @@
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, FocusInsideModes, Input, Keying, Memento, NativeEvents, Representing } from '@ephox/alloy';
-import { Cell, Fun, Id, Optional } from '@ephox/katamari';
+import { Arr, Cell, Fun, Id, Optional } from '@ephox/katamari';
 import { Dimension, Focus, SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -74,6 +74,27 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
     }
   };
 
+  const makeStepperButton = (action: VoidFunction, title: string, tooltip: string, classes: string[]) => {
+    const translatedTooltip = backstage.shared.providers.translate(tooltip);
+    return Button.sketch({
+      dom: {
+        tag: 'button',
+        attributes: {
+          'title': translatedTooltip,
+          'aria-label': translatedTooltip
+        },
+        classes: classes.concat(title)
+      },
+      components: [
+        renderIconFromPack(title, backstage.shared.providers.icons)
+      ],
+      action
+    });
+  };
+
+  const memMinus = Memento.record(makeStepperButton(() => decrease(false), 'minus', 'Decrease font size', [ 'highlight-on-focus' ]));
+  const memPlus = Memento.record(makeStepperButton(() => increase(false), 'plus', 'Increase font size', [ 'highlight-on-focus' ]));
+
   const memInput = Memento.record({
     dom: {
       tag: 'div',
@@ -86,7 +107,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
             onControlAttached({ onSetup, getApi }, editorOffCell),
             onControlDetached({ getApi }, editorOffCell)
           ]),
-          AddEventsBehaviour.config('menubutton-update-display-text', [
+          AddEventsBehaviour.config('input-update-display-text', [
             AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
               Representing.setValue(comp, se.event.text);
             }),
@@ -96,6 +117,14 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
             AlloyEvents.run(NativeEvents.change(), (comp) => {
               spec.onAction(Representing.getValue(comp));
             })
+            // AlloyEvents.run(NativeEvents.mouseover(), (comp) => {
+            //   Arr.each([ memMinus, memPlus ], (button) => {
+            //     const buttonNode = SugarElement.fromDom(button.get(comp).element.dom);
+            //     if (Focus.hasFocus(buttonNode)) {
+            //       Focus.blur(buttonNode);
+            //     }
+            //   });
+            // })
           ]),
           Keying.config({
             mode: 'special',
@@ -131,27 +160,19 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
         onEnter: focusInput,
         onSpace: focusInput,
         onEscape: goToParent
-      })
+      }),
+      AddEventsBehaviour.config('input-wrapper-events', [
+        AlloyEvents.run(NativeEvents.mouseover(), (comp) => {
+          Arr.each([ memMinus, memPlus ], (button) => {
+            const buttonNode = SugarElement.fromDom(button.get(comp).element.dom);
+            if (Focus.hasFocus(buttonNode)) {
+              Focus.blur(buttonNode);
+            }
+          });
+        })
+      ])
     ])
   });
-
-  const makeStepperButton = (action: VoidFunction, title: string, tooltip: string, classes: string[]) => {
-    const translatedTooltip = backstage.shared.providers.translate(tooltip);
-    return Button.sketch({
-      dom: {
-        tag: 'button',
-        attributes: {
-          'title': translatedTooltip,
-          'aria-label': translatedTooltip
-        },
-        classes: classes.concat(title)
-      },
-      components: [
-        renderIconFromPack(title, backstage.shared.providers.icons)
-      ],
-      action
-    });
-  };
 
   return {
     dom: {
@@ -159,9 +180,9 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
       classes: [ 'tox-number-input' ]
     },
     components: [
-      makeStepperButton(() => decrease(false), 'minus', 'Decrease font size', [ 'highlight-on-focus' ]),
+      memMinus.asSpec(),
       memInput.asSpec(),
-      makeStepperButton(() => increase(false), 'plus', 'Increase font size', [ 'highlight-on-focus' ])
+      memPlus.asSpec()
     ],
     behaviours: Behaviour.derive([
       Focusing.config({}),
