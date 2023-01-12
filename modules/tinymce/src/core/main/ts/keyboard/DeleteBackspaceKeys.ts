@@ -1,4 +1,5 @@
 import { Cell } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 
 import Editor from '../api/Editor';
 import { EditorEvent } from '../api/util/EventDispatcher';
@@ -50,15 +51,43 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: K
   });
 };
 
-const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent) => {
+const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent, isBackspaceKeydown: boolean) => {
+  const platform = PlatformDetection.detect();
+  const os = platform.os;
+  const browser = platform.browser;
+  const multiDeleteKeyPatterns: MatchKeys.KeyPattern[] = os.isMacOS() ? [
+    { keyCode: VK.BACKSPACE, altKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor) },
+    { keyCode: VK.DELETE, altKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor) }
+  ] : [
+    { keyCode: VK.BACKSPACE, ctrlKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor) },
+    { keyCode: VK.DELETE, ctrlKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor) }
+  ];
+
+  // macOS surpresses keyup events for most keys including Backspace when Meta key is engaged
+  // To emulate Meta + Backspace on macOS, add a pattern for the meta key when backspace was
+  // detected on keydown
+  if (os.isMacOS() && isBackspaceKeydown) {
+    multiDeleteKeyPatterns.push({
+      // firefox detects macOS Command keycode as "Command" not "Meta"
+      keyCode: browser.isFirefox() ? 224 : 91,
+      action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor)
+    });
+  }
+
   MatchKeys.execute([
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) },
-    { keyCode: VK.DELETE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) }
+    { keyCode: VK.DELETE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) },
+    ...multiDeleteKeyPatterns
   ], evt);
 };
 
 const setup = (editor: Editor, caret: Cell<Text | null>): void => {
+  // track backspace keydown state for emulating Meta + Backspace keyup detection on macOS
+  let isBackspaceKeydown = false;
+
   editor.on('keydown', (evt: EditorEvent<KeyboardEvent>) => {
+    isBackspaceKeydown = evt.keyCode === VK.BACKSPACE;
+
     if (!evt.isDefaultPrevented()) {
       executeKeydownOverride(editor, caret, evt);
     }
@@ -66,8 +95,10 @@ const setup = (editor: Editor, caret: Cell<Text | null>): void => {
 
   editor.on('keyup', (evt: EditorEvent<KeyboardEvent>) => {
     if (!evt.isDefaultPrevented()) {
-      executeKeyupOverride(editor, evt);
+      executeKeyupOverride(editor, evt, isBackspaceKeydown);
     }
+
+    isBackspaceKeydown = false;
   });
 };
 
