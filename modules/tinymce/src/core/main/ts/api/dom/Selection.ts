@@ -261,7 +261,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * Checks if the current selection’s start and end containers are editable within their parent’s contexts.
    *
    * @method isEditable
-   * @return {Boolean} Will be true if the selection is editable and false if it's not.
+   * @return {Boolean} Will be true if the selection is editable and false if it's not editable.
    */
   const isEditable = (): boolean => {
     const rng = getRng();
