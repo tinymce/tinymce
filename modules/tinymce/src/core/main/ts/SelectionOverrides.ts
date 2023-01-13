@@ -77,13 +77,10 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
 
   const registerEvents = () => {
     editor.on('click', (e) => {
-      const contentEditableRoot = getContentEditableRoot(editor, e.target);
-      if (contentEditableRoot) {
-        // Prevent clicks on links in a cE=false element
-        if (isContentEditableFalse(contentEditableRoot)) {
-          e.preventDefault();
-          editor.focus();
-        }
+      // Prevent clicks on links in a cE=false element
+      if (!dom.isEditable(e.target)) {
+        e.preventDefault();
+        editor.focus();
       }
     });
 

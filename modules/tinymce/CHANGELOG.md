@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Visual characters were rendered inside noneditable elements. #TINY-9474
 - Removed a workaround for ensuring stylesheets are loaded in an outdated version of webkit. #TINY-9433
 - Color picker dialog would not update the preview color if the hex input value was prefixed with `#` symbol. #TINY-9457
+- It was possible to open links inside the editor if the editor root was noneditable. #TINY-9470
 
 ## 6.3.1 - 2022-12-06
 
