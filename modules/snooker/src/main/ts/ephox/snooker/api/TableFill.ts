@@ -60,7 +60,6 @@ const cloneFormats = (oldCell: SugarElement<Element>, newCell: SugarElement<Elem
     // Add the matched ancestors to the new cell, then return the new cell.
     return Arr.foldr(parents, (last, parent) => {
       const clonedFormat = Replication.shallow(parent);
-      Attribute.remove(clonedFormat, 'contenteditable');
       Insert.append(last, clonedFormat);
       return clonedFormat;
     }, newCell);
