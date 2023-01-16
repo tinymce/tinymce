@@ -157,7 +157,7 @@ export const InlineHeader = (
       updateChromeWidth();
     }
 
-    // Refresh split toolbar. A spilt toolbar requires a calculation to see what ends up in the
+    // Refresh split toolbar. A split toolbar requires a calculation to see what ends up in the
     // "more drawer". When we don't have a split toolbar, then there is no reason to refresh the toolbar
     // when the size changes.
     if (isSplitToolbar) {
@@ -187,8 +187,8 @@ export const InlineHeader = (
 
     return floatContainer.get().exists(
       (fc) => {
-        const currentMode: 'top' | 'bottom' = headerBackstage.getDockingMode();
-        const newMode: 'top' | 'bottom' = calcMode(fc);
+        const currentMode = headerBackstage.getDockingMode();
+        const newMode = calcMode(fc);
         // Note: the docking mode will only be able to change when the `toolbar_location`
         // is set to "auto".
         if (newMode !== currentMode) {

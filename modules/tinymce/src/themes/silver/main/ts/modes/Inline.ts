@@ -132,7 +132,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
 
     // `uiContainer` handles *where* the motherhips get added by default. Currently, uiContainer
     // will mostly be the <body> of the document (unless it's a ShadowRoot). When using ui_of_tomorrow,
-    // the main mothership (which includes the toolbar) and popup sinks will be added as sibilngs of
+    // the main mothership (which includes the toolbar) and popup sinks will be added as siblings of
     // the target element, so that they have the same scrolling context / environment
     const uiContainer = Options.getUiContainer(editor);
     // Position the motherships based on the editor Ui options.
