@@ -40,23 +40,27 @@ const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchS
     }
   };
 
+  const behaviours = [
+    Focusing.config({ }),
+    Keying.config({
+      mode: 'execution',
+      // Note execution will capture keyup when the focus is on the button
+      // on Firefox, because otherwise it will fire a click event and double
+      // up on the action
+      useSpace: true,
+      useEnter: true
+    }),
+  ];
+
   return {
     uid: detail.uid,
     dom: detail.dom,
     components: detail.components,
     events,
-    behaviours: SketchBehaviours.augment(
-      detail.buttonBehaviours, [
-        Focusing.config({ }),
-        Keying.config({
-          mode: 'execution',
-          // Note execution will capture keyup when the focus is on the button
-          // on Firefox, because otherwise it will fire a click event and double
-          // up on the action
-          useSpace: true,
-          useEnter: true
-        })
-      ]
+    behaviours: SketchBehaviours.augment(detail.buttonBehaviours,
+      detail.keyingSpecialOverwrite
+        ? behaviours.concat(Keying.config(detail.keyingSpecialOverwrite))
+        : behaviours
     ),
     domModification: {
       attributes: getModAttributes()
@@ -73,6 +77,7 @@ const Button: ButtonSketcher = Sketcher.single({
     FieldSchema.required('dom'),
     FieldSchema.defaulted('components', [ ]),
     SketchBehaviours.field('buttonBehaviours', [ Focusing, Keying ]),
+    FieldSchema.defaulted('keyingSpecialOverwrite', undefined),
     FieldSchema.option('action'),
     FieldSchema.option('role'),
     FieldSchema.defaulted('eventOrder', { })

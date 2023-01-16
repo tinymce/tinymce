@@ -227,4 +227,19 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
 
     await FocusTools.pTryOnSelector('Focus should not be on the plus button', root, 'body');
   });
+
+  it('TINY-9429: plus and minus buttons should put focus back to the editor when they are clicked', async () => {
+    const editor = hook.editor();
+    const root = SugarShadowDom.getRootNode(TinyDom.targetElement(editor));
+    editor.setContent('<p style="font-size: 16px;">abc</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
+
+    TinyUiActions.clickOnToolbar(editor, '.tox-number-input .plus');
+    TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 17px;">b</span>c</p>');
+    await FocusTools.pTryOnSelector('Focus should be on the editor', root, '.tox-edit-area__iframe');
+
+    TinyUiActions.clickOnToolbar(editor, '.tox-number-input .minus');
+    TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 16px;">b</span>c</p>');
+    await FocusTools.pTryOnSelector('Focus should be on the minus button', root, '.tox-edit-area__iframe');
+  });
 });

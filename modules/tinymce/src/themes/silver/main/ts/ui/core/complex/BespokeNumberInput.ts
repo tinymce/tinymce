@@ -34,7 +34,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
 
   const isValidValue = (value: number): boolean => value >= 0;
 
-  const changeValue = (f: (v: number, step: number) => number, fromInput: boolean): void => {
+  const changeValue = (f: (v: number, step: number) => number, fromInput: boolean, focusBack: boolean): void => {
     const text = getValueFromCurrentComp(currentComp);
     const parsedText = Dimension.parse(text, [ 'unsupportedLength' ]);
     const value = parsedText.map((res) => res.value).getOr(0);
@@ -46,7 +46,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
     const oldStart = currentComp.map((comp) => comp.element.dom.selectionStart - lenghtDelta);
     const oldEnd = currentComp.map((comp) => comp.element.dom.selectionEnd - lenghtDelta);
 
-    spec.onAction(newValueWithUnit);
+    spec.onAction(newValueWithUnit, focusBack);
     currentComp.each((comp) => {
       Representing.setValue(comp, newValueWithUnit);
       if (fromInput) {
@@ -56,8 +56,8 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
     });
   };
 
-  const decrease = (focusBack: boolean) => changeValue((n, s) => n - s, focusBack);
-  const increase = (focusBack: boolean) => changeValue((n, s) => n + s, focusBack);
+  const decrease = (fromInput: boolean, focusBack: boolean) => changeValue((n, s) => n - s, fromInput, focusBack);
+  const increase = (fromInput: boolean, focusBack: boolean) => changeValue((n, s) => n + s, fromInput, focusBack);
 
   const goToParent = (comp: AlloyComponent) =>
     Traverse.parentElement(comp.element).fold(Optional.none, (parent) => {
@@ -74,7 +74,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
     }
   };
 
-  const makeStepperButton = (action: VoidFunction, title: string, tooltip: string, classes: string[]) => {
+  const makeStepperButton = (action: (focusBack: boolean) => void, title: string, tooltip: string, classes: string[]) => {
     const translatedTooltip = backstage.shared.providers.translate(tooltip);
     return Button.sketch({
       dom: {
@@ -88,12 +88,25 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
       components: [
         renderIconFromPack(title, backstage.shared.providers.icons)
       ],
-      action
+      action: (_comp) => {
+        action(true);
+      },
+      keyingSpecialOverwrite: {
+        mode: 'special',
+        onEnter: (_comp) => {
+          action(false);
+          return Optional.some(true);
+        },
+        onSpace: (_comp) => {
+          action(false);
+          return Optional.some(true);
+        }
+      }
     });
   };
 
-  const memMinus = Memento.record(makeStepperButton(() => decrease(false), 'minus', 'Decrease font size', [ 'highlight-on-focus' ]));
-  const memPlus = Memento.record(makeStepperButton(() => increase(false), 'plus', 'Increase font size', [ 'highlight-on-focus' ]));
+  const memMinus = Memento.record(makeStepperButton((focusBack) => decrease(false, focusBack), 'minus', 'Decrease font size', [ 'highlight-on-focus' ]));
+  const memPlus = Memento.record(makeStepperButton((focusBack) => increase(false, focusBack), 'plus', 'Increase font size', [ 'highlight-on-focus' ]));
 
   const memInput = Memento.record({
     dom: {
@@ -117,14 +130,6 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
             AlloyEvents.run(NativeEvents.change(), (comp) => {
               spec.onAction(Representing.getValue(comp));
             })
-            // AlloyEvents.run(NativeEvents.mouseover(), (comp) => {
-            //   Arr.each([ memMinus, memPlus ], (button) => {
-            //     const buttonNode = SugarElement.fromDom(button.get(comp).element.dom);
-            //     if (Focus.hasFocus(buttonNode)) {
-            //       Focus.blur(buttonNode);
-            //     }
-            //   });
-            // })
           ]),
           Keying.config({
             mode: 'special',
@@ -134,11 +139,11 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
             },
             onEscape: goToParent,
             onUp: (_comp) => {
-              increase(true);
+              increase(true, false);
               return Optional.some(true);
             },
             onDown: (_comp) => {
-              decrease(true);
+              decrease(true, false);
               return Optional.some(true);
             },
             onLeft: (_comp, se) => {
