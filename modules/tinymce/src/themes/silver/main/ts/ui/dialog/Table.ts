@@ -32,7 +32,7 @@ export const renderTable = (spec: TableSpec, providersBackstage: UiFactoryBackst
   return {
     dom: {
       tag: 'table',
-      classes: [ 'tox-dialog__table' ]
+      classes: [ 'tox-dialog__table' ].concat(spec.classes)
     },
     components: [
       renderHeader(spec.header),

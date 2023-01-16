@@ -5,7 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+
+### Added
 - Added optional `select`-property to `colorswatch`-type `fancymenuitem` to allow setting colors as selected. #TINY-9395
+- Added optional `classes` property to dialog table. #TINY-9380
 
 ## 4.2.0 - 2022-11-23
 

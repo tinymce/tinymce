@@ -10,12 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `isEditable` API to `editor.selection` that returns true or false if the current selection is editable. #TINY-9462
 - New `isEditable` API to `editor.dom` that returns true or false if the specified node is editable. #TINY-9462
 - New `highlight_on_focus` option which enables highlighting the content area on focus. #TINY-9277
+- Added right padding to the action column in the Help dialog. #TINY-9380
 
 ### Improved
 - Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
 
 ### Changed
 - The formatting of `contenteditable="false"` elements are no longer cloned to new cells while creating new table rows. #TINY-9449
+- Changed the default color of `@dialog-table-border-color`. #TINY-9380
 
 ### Fixed
 - Color picker on toolbar would not update when changing forecolor or backcolor from menu. #TINY-9439

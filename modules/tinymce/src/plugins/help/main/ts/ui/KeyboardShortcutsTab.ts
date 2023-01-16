@@ -18,6 +18,7 @@ const tab = (): Dialog.TabSpec & { name: string } => {
 
   const tablePanel: Dialog.TableSpec = {
     type: 'table',
+    classes: [ 'tox-help' ],
     // TODO: Fix table styles #TINY-2909
     header: [ 'Action', 'Shortcut' ],
     cells: shortcutList
