@@ -1,4 +1,5 @@
 import { Fun, Optional } from '@ephox/katamari';
+import { Class, PredicateFind, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { InlineContent } from 'tinymce/core/api/ui/Ui';
@@ -57,7 +58,14 @@ const setupContextMenu = (editor: Editor): void => {
   const inLink = 'link unlink openlink';
   const noLink = 'link';
   editor.ui.registry.addContextMenu('link', {
-    update: (element) => Utils.hasLinks(editor.dom.getParents(element, 'a') as HTMLAnchorElement[]) ? inLink : noLink
+    update: (element) => {
+      const isInToC = PredicateFind.ancestor(SugarElement.fromDom(element), (ancestor) => Class.has(ancestor, 'mce-toc')).isSome();
+      if (isInToC) {
+        return '';
+      }
+
+      return Utils.hasLinks(editor.dom.getParents(element, 'a') as HTMLAnchorElement[]) ? inLink : noLink;
+    }
   });
 };
 

@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
 
 ### Changed
+- The `link` plugin will no longer try to add, change, or remove links generated in the `tableofcontent` plugin. #TINY-9491
 - The formatting of `contenteditable="false"` elements are no longer cloned to new cells while creating new table rows. #TINY-9449
 
 ### Fixed

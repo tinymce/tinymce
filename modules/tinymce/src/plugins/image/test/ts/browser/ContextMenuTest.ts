@@ -1,13 +1,14 @@
-import { Keys, Waiter } from '@ephox/agar';
+import { Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { SugarShadowDom } from '@ephox/sugar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
 describe('browser.tinymce.plugins.image.ContextMenuTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
-    plugins: 'image',
+    plugins: 'image link',
     toolbar: 'image',
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
@@ -34,6 +35,25 @@ describe('browser.tinymce.plugins.image.ContextMenuTest', () => {
     TinyUiActions.keydown(editor, Keys.enter());
     await pWaitForAndSubmitDialog(editor);
     TinyAssertions.assertSelection(editor, [], 0, [], 1);
+  });
+
+  it('TINY-9491: Opening context menus on a selected figure', async () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<div class="mce-toc" data-mce-toc="true" contenteditable="false">' +
+        '<h2 contenteditable="true">Table of Contents</h2>' +
+        '<ul>' +
+          '<li>' +
+            '<a href="#mcetoc_1gmi3gu5b11" data-mce-href="#mcetoc_1gmi3gu5b11">point </a>' +
+          '</li>' +
+        '</ul>' +
+      '</div>' +
+      '<h2 id="mcetoc_1gmi3gu5b12">point</h2>',
+      { format: 'raw' }
+    );
+    Mouse.contextMenuOn(TinyDom.body(editor), 'a');
+    await Waiter.pWait(250); // Give plenty of time for the context menu to appear
+    UiFinder.notExists(SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(TinyDom.targetElement(editor))), '.tox-silver-sink [role="menuitem"]');
   });
 
   it('TBA: Opening context menus on an unselected figure', async () => {
