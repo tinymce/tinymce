@@ -88,7 +88,7 @@ const refreshInternal = (component: AlloyComponent, config: DockingConfig, state
     updateVisibility(component, config, state, viewport);
   }
 
-  Dockables.getMorph(component, viewport, state).each((morph) => {
+  Dockables.tryMorph(component, viewport, state).each((morph) => {
     applyMorph(component, config, state, viewport, morph);
   });
 };
@@ -98,7 +98,7 @@ const resetInternal = (component: AlloyComponent, config: DockingConfig, state: 
   const elem = component.element;
   state.setDocked(false);
   const viewport = config.lazyViewport(component);
-  Dockables.getMorphToOriginal(component, viewport, state).each(
+  Dockables.calculateMorphToOriginal(component, viewport, state).each(
     (staticOrAbsoluteMorph: Dockables.StaticMorph | Dockables.AbsoluteMorph) => {
       // This code is very similar to the "applyMorph" function above. The main difference
       // is that it doesn't consider fixed position, because something that is docking

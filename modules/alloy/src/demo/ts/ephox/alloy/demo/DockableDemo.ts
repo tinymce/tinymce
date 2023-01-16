@@ -1,5 +1,5 @@
 import { Optional } from '@ephox/katamari';
-import { Class, Css, DomEvent, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Class, Css, DomEvent, SelectorFind, SugarElement, SugarLocation } from '@ephox/sugar';
 
 import * as Boxes from 'ephox/alloy/alien/Boxes';
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
@@ -14,7 +14,7 @@ import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Button } from 'ephox/alloy/api/ui/Button';
-import { DockingConfigSpec } from 'ephox/alloy/behaviour/docking/DockingTypes';
+import { DockingConfigSpec, DockingViewport } from 'ephox/alloy/behaviour/docking/DockingTypes';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 export default (): void => {
@@ -28,11 +28,10 @@ export default (): void => {
 
   // The example without a bounding scrolling container is rather large, so it can
   // be useful to just remove it when focusing on scrolling container development.
-  const includeWindowExample = true;
+  const includeWindowExample = false;
 
   // TINY-9242: Make scrollable examples work properly
-  const includeScrollableExamples = false;
-  const hideWhenContextGone = true;
+  const includeScrollableExamples = true;
 
   const listenToWindowScroll = true;
   // Until TINY-9242 is implemented, element scroll is emulated by a window scroll
@@ -124,6 +123,7 @@ export default (): void => {
       extraRedPanelStyles: Record<string, string>;
       extraBarStyles: Record<string, string>;
       lazyViewport: DockingConfigSpec['lazyViewport'];
+      hideWhenContextGone: boolean;
     }
   ): AlloySpec => {
     const redPanel: AlloySpec = {
@@ -164,7 +164,7 @@ export default (): void => {
 
             Docking.config({
               lazyViewport: settings.lazyViewport,
-              ...(hideWhenContextGone ? {
+              ...(settings.hideWhenContextGone ? {
                 contextual: {
                   ...dockingSharedContext,
                   lazyContext: (component) => {
@@ -224,13 +224,27 @@ export default (): void => {
             AddEventsBehaviour.config('bubbled-scroll-events', [
               AlloyEvents.run('bubbled.scroll', (comp, se) => {
                 if (listenToElementScroll) {
-                  comp.getSystem().broadcastEvent(SystemEvents.windowScroll(), se.event);
+                  comp.getSystem().broadcastEvent(SystemEvents.externalElementScroll(), se.event);
                 }
               })
             ])
           ]),
         })).getOr(redPanel)
       ]
+    };
+  };
+
+  const getCommonLazyViewport = (boxId: number) => (comp: AlloyComponent): DockingViewport => {
+    const scroller = comp.getSystem().getByUid(
+      `scrollable-container-${boxId}`
+    ).getOrDie();
+
+    return {
+      bounds: Boxes.box(scroller.element),
+      optScrollEnv: Optional.some({
+        currentScrollTop: scroller.element.dom.scrollTop,
+        scrollElmTop: SugarLocation.absolute(scroller.element).top
+      })
     };
   };
 
@@ -244,7 +258,8 @@ export default (): void => {
       },
       extraBarStyles: { left: '150px', top: '2500px', position: 'absolute' },
       scrollableContainerStyles: Optional.none(),
-      lazyViewport: undefined
+      lazyViewport: undefined,
+      hideWhenContextGone: true
     });
   };
 
@@ -265,14 +280,8 @@ export default (): void => {
         'z-index': '100'
       },
       scrollableContainerStyles: Optional.some({ }),
-      lazyViewport: (comp: AlloyComponent) => {
-        const scroller = comp.getSystem().getByUid(
-          `scrollable-container-${boxId}`
-        ).getOrDie();
-        return {
-          bounds: Boxes.box(scroller.element)
-        };
-      }
+      lazyViewport: getCommonLazyViewport(boxId),
+      hideWhenContextGone: true
     });
   };
 
@@ -291,14 +300,10 @@ export default (): void => {
         position: 'absolute'
       },
       scrollableContainerStyles: Optional.some({ position: 'relative' }),
-      lazyViewport: (comp) => {
-        const scroller = comp.getSystem().getByUid(
-          `scrollable-container-${boxId}`
-        ).getOrDie();
-        return {
-          bounds: Boxes.box(scroller.element)
-        };
-      }
+      lazyViewport: getCommonLazyViewport(boxId),
+      // Because this is a relative scroller, and the top of bar is considerably
+      // less than the top of the red panel, we just always show the bar
+      hideWhenContextGone: false
     });
   };
 
@@ -311,19 +316,14 @@ export default (): void => {
         'margin-top': '1400px',
         'margin-bottom': '500px'
       },
-      extraBarStyles: { },
+      extraBarStyles: {
+        position: 'absolute',
+        top: '800px',
+        left: '10px'
+      },
       scrollableContainerStyles: Optional.some({ }),
-      lazyViewport: (comp) => {
-        const scroller = comp.getSystem().getByUid(
-          `scrollable-container-${boxId}`
-        ).getOrDie();
-        return {
-          bounds: Boxes.constrain(
-            Boxes.box(scroller.element),
-            Boxes.win()
-          )
-        };
-      }
+      lazyViewport: getCommonLazyViewport(boxId),
+      hideWhenContextGone: true
     });
   };
 
@@ -345,6 +345,5 @@ export default (): void => {
         ] : [])
       ]
     }
-
   );
 };

@@ -43,19 +43,20 @@ export default (): void => {
     const renderUI = (): RenderResult => {
       const renderResult = renderModeUI();
 
-      if (Options.isUiOfTomorrow(editor)) {
-        const optScrollingContext = ScrollingContext.detect(popups.getMothership().element);
-        optScrollingContext.each(
-          (sc) => {
-            popupSinkBounds = () => {
-              // At this stage, it looks like we need to calculate the bounds each time, just in
-              // case the scrolling context details have changed since the last time. The bounds considers
-              // the Boxes.box sizes, which might change over time.
-              return ScrollingContext.getBoundsFrom(sc);
-            };
-          }
-        );
-      }
+      const optScrollingContext = ScrollingContext.detectWhenUiOfTomorrow(
+        editor,
+        popups.getMothership().element
+      );
+      optScrollingContext.each(
+        (sc) => {
+          popupSinkBounds = () => {
+            // At this stage, it looks like we need to calculate the bounds each time, just in
+            // case the scrolling context details have changed since the last time. The bounds considers
+            // the Boxes.box sizes, which might change over time.
+            return ScrollingContext.getBoundsFrom(sc);
+          };
+        }
+      );
 
       return renderResult;
     };

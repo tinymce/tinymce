@@ -11,6 +11,7 @@ export interface InitialDockingPosition {
   style: Record<string, string>;
   position: string;
   bounds: Bounds;
+  location: 'top' | 'bottom';
 }
 
 export interface DockingBehaviour extends Behaviour.AlloyBehaviour<DockingConfigSpec, DockingConfig> {
@@ -37,6 +38,10 @@ export interface DockingContext {
 
 export interface DockingViewport {
   readonly bounds: Bounds;
+  readonly optScrollEnv: Optional<{
+    readonly currentScrollTop: number;
+    readonly scrollElmTop: number;
+  }>;
 }
 
 export interface DockToTopDecision {

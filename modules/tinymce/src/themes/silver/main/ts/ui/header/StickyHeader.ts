@@ -1,4 +1,4 @@
-import { AlloyComponent, Behaviour, Boxes, Channels, Docking, Focusing, Receiving } from '@ephox/alloy';
+import { AlloyComponent, Behaviour, Boxes, Channels, Docking, DockingTypes, Focusing, Receiving } from '@ephox/alloy';
 import { Arr, Optional, Result, Singleton } from '@ephox/katamari';
 import { Class, Classes, Compare, Css, Focus, Height, Scroll, SugarElement, SugarLocation, Traverse, Visibility, Width } from '@ephox/sugar';
 
@@ -8,6 +8,7 @@ import { ScrollIntoViewEvent } from 'tinymce/core/api/EventTypes';
 import * as Options from '../../api/Options';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import * as EditorChannels from '../../Channels';
+import * as ScrollingContext from '../../modes/ScrollingContext';
 
 const visibility = {
   fadeInClass: 'tox-editor-dock-fadein',
@@ -209,11 +210,35 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
         lazyContext: (comp) => {
           const headerHeight = Height.getOuter(comp.element);
           const container = editor.inline ? editor.getContentAreaContainer() : editor.getContainer();
-          const box = Boxes.box(SugarElement.fromDom(container));
-          // Force the header to hide before it overflows outside the container
-          const boxHeight = box.height - headerHeight;
-          const topBound = box.y + (isDockedMode(comp, 'top') ? 0 : headerHeight);
-          return Optional.some(Boxes.bounds(box.x, topBound, box.width, boxHeight));
+
+          return Optional.from(container).map((c) => {
+            const box = Boxes.box(SugarElement.fromDom(c));
+            const optScrollingContext = ScrollingContext.detectWhenUiOfTomorrow(editor, comp.element);
+            return optScrollingContext.fold(
+              () => {
+                // Force the header to hide before it overflows outside the container
+                const boxHeight = box.height - headerHeight;
+                const topBound = box.y + (isDockedMode(comp, 'top') ? 0 : headerHeight);
+                return Boxes.bounds(box.x, topBound, box.width, boxHeight);
+              },
+              (scrollEnv) => {
+                const constrainedBounds = Boxes.constrain(
+                  box,
+                  ScrollingContext.getBoundsFrom(scrollEnv)
+                );
+
+                return Boxes.bounds(
+                  constrainedBounds.x,
+                  // ASSUMPTION: The constrainedBounds removes the need for us to set this to 0px
+                  // for docked mode. Also, docking in a scrolling environment will often be
+                  // at the scroller top, not the window top
+                  constrainedBounds.y,
+                  constrainedBounds.width,
+                  constrainedBounds.height - headerHeight
+                );
+              }
+            );
+          });
         },
         onShow: () => {
           runOnSinkElement((elem) => updateSinkVisibility(elem, true));
@@ -236,13 +261,31 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
         ...visibility
       },
       lazyViewport: (comp) => {
-        const win = Boxes.win();
-        const offset = Options.getStickyToolbarOffset(editor);
-        const top = win.y + (isDockedMode(comp, 'top') ? offset : 0);
-        const height = win.height - (isDockedMode(comp, 'bottom') ? offset : 0);
-        return {
-          bounds: Boxes.bounds(win.x, top, win.width, height)
-        };
+        const optScrollingContext = ScrollingContext.detectWhenUiOfTomorrow(editor, comp.element);
+        return optScrollingContext.fold<DockingTypes.DockingViewport>(
+          () => {
+            const boundsWithoutOffset = Boxes.win();
+            const offset = Options.getStickyToolbarOffset(editor);
+            const top = boundsWithoutOffset.y + (isDockedMode(comp, 'top') ? offset : 0);
+            const height = boundsWithoutOffset.height - (isDockedMode(comp, 'bottom') ? offset : 0);
+            // No scrolling context, so just window
+            return {
+              bounds: Boxes.bounds(boundsWithoutOffset.x, top, boundsWithoutOffset.width, height),
+              optScrollEnv: Optional.none()
+            };
+          },
+          (sc) => {
+            // TINY-9411: Implement sticky toolbar offsets in scrollable containers
+            const combinedBounds = ScrollingContext.getBoundsFrom(sc);
+            return {
+              bounds: combinedBounds,
+              optScrollEnv: Optional.some({
+                currentScrollTop: sc.element.dom.scrollTop,
+                scrollElmTop: SugarLocation.absolute(sc.element).top
+              })
+            };
+          }
+        );
       },
       modes: [ sharedBackstage.header.getDockingMode() ],
       onDocked: onDockingSwitch,

@@ -23,6 +23,10 @@ const events = (dockInfo: DockingConfig, dockState: DockingState): AlloyEvents.A
       DockingApis.refresh(component, dockInfo, dockState);
     }),
 
+    AlloyEvents.run(SystemEvents.externalElementScroll(), (component, _) => {
+      DockingApis.refresh(component, dockInfo, dockState);
+    }),
+
     AlloyEvents.run(SystemEvents.windowResize(), (component, _) => {
       DockingApis.reset(component, dockInfo, dockState);
     })
