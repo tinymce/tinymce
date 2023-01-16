@@ -28,7 +28,7 @@ const getSelectedStyleType = (editor: Editor): Optional<string> => {
 
 // Lists/core/Util.ts - Duplicated in Lists plugin
 const isWithinNonEditable = (editor: Editor, element: Element | null): boolean =>
-  element !== null && editor.dom.getContentEditableParent(element) === 'false';
+  element !== null && !editor.dom.isEditable(element);
 
 const isWithinNonEditableList = (editor: Editor, element: Element | null): boolean => {
   const parentList = editor.dom.getParent(element, 'ol,ul,dl');
