@@ -29,6 +29,7 @@
 
     input {
       border-radius: @toolbar-button-border-radius;
+      color: @toolbar-button-text-color;
       font-size: @toolbar-number-input-input-wrapper-font-size;
       margin: @toolbar-number-input-button-margin 0;
       width: @toolbar-number-input-input-wrapper-width;
@@ -40,17 +41,20 @@
 
       &:focus {
         background: @color-white;
+        color: @color-black;
       }
     }
 
     button {
       background: @toolbar-button-bespoke-background-color;
+      color: @toolbar-button-text-color;
       height: @toolbar-number-input-button-height;
       text-align: center;
       width: @toolbar-number-input-button-width;
 
       svg {
         display: block;
+        fill: @toolbar-button-icon-color;
         margin: 0 auto;
         transform: scale(@toolbar-number-input-button-icon-ratio);
       }
