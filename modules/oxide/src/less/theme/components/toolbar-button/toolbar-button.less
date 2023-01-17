@@ -20,13 +20,14 @@
 @toolbar-button-text-transform: none;
 @toolbar-button-width: 34px;
 
-@toolbar-button-hover-background-color: #285EC7;
+@toolbar-button-hover-background-color: multiply(white, contrast(@background-color, fade(@color-tint, 20), fade(@color-tint, 80)));
 @toolbar-button-hover-border: @toolbar-button-border;
 @toolbar-button-hover-box-shadow: @toolbar-button-box-shadow;
 @toolbar-button-hover-icon-color: @toolbar-button-icon-color;
 @toolbar-button-hover-text-color: @toolbar-button-text-color;
 
-@toolbar-button-focus-background-color: @toolbar-button-hover-background-color;
+@toolbar-button-focus-background-color: #285ec7;
+@toolbar-button-focus-text-color: #fff;
 @toolbar-button-focus-border: @toolbar-button-hover-border;
 @toolbar-button-focus-box-shadow: @toolbar-button-hover-box-shadow;
 @toolbar-button-focus-icon-color: @toolbar-button-hover-icon-color;
@@ -117,7 +118,7 @@
   }
 
   .tox-tbtn:focus-visible svg {
-    fill: #fff;
+    fill: @toolbar-button-focus-text-color;
   }
 
   .tox-tbtn--disabled,
@@ -138,18 +139,18 @@
   }
 
   .tox-tbtn:focus-visible:not(.tox-tbtn--enabled) {
-    background: #285ec7;
-    color: #fff;
+    background: @toolbar-button-focus-background-color;
+    color: @toolbar-button-focus-text-color;
   }
 
   .tox-tbtn:hover:not(.tox-tbtn--enabled) {
-    background: @toolbar-button-hover-background-color;
+    background: @toolbar-button-focus-background-color;
     border: @toolbar-button-hover-border;
     box-shadow: @toolbar-button-hover-box-shadow;
-    color: #fff;
+    color: @toolbar-button-focus-text-color;
 
     svg {
-      fill: #fff;
+      fill: @toolbar-button-focus-text-color;
     }
   }
 
@@ -173,7 +174,7 @@
   }
 
   .tox-tbtn--enabled:focus-visible {
-    outline: 2px solid #285ec7;
+    outline: 2px solid @toolbar-button-focus-background-color;
   }
 
   .tox-tbtn--enabled:focus svg {

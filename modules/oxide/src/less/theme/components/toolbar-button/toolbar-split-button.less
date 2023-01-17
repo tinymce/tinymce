@@ -3,6 +3,8 @@
 //
 
 @toolbar-split-button-chevron-touch-padding: 4px;
+@toolbar-split-button-focus-background-color: #285ec7;
+@toolbar-split-button-focus-text-color: #fff;
 
 .tox {
   .tox-split-button {
@@ -15,7 +17,7 @@
   }
 
   .tox-split-button:hover {
-    box-shadow: 0 0 0 2px #285ec7 inset;
+    box-shadow: 0 0 0 2px @toolbar-split-button-focus-background-color inset;
   }
 
   .tox-split-button__chevron svg {
@@ -23,12 +25,12 @@
   }
 
   .tox-split-button:focus {
-    background: #285ec7;
+    background: @toolbar-split-button-focus-background-color;
     box-shadow: @toolbar-button-focus-box-shadow;
-    color: #fff;
+    color: @toolbar-split-button-focus-text-color;
 
     svg {
-      fill: #fff;
+      fill: @toolbar-split-button-focus-text-color;
     }
   }
 

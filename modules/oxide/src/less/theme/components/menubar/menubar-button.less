@@ -22,20 +22,20 @@
 @menubar-select-disabled-box-shadow: @toolbar-button-box-shadow;
 @menubar-select-disabled-text-color: fade(@toolbar-button-text-color, 50%);
 
-@menubar-select-hover-background-color: @toolbar-button-hover-background-color;
+@menubar-select-hover-background-color: #285ec7;
+@menubar-select-hover-text-color: #fff;
 @menubar-select-hover-border: @menubar-select-border;
 @menubar-select-hover-box-shadow: @toolbar-button-hover-box-shadow;
-@menubar-select-hover-text-color: #fff;
 
-@menubar-select-focus-background-color: @menubar-select-hover-background-color;
+@menubar-select-focus-background-color: @toolbar-button-hover-background-color;
 @menubar-select-focus-border: @menubar-select-hover-border;
 @menubar-select-focus-box-shadow: @menubar-select-hover-box-shadow;
-@menubar-select-focus-text-color: @menubar-select-hover-text-color;
+@menubar-select-focus-text-color: @toolbar-button-hover-text-color;
 
-@menubar-select-active-background-color: @toolbar-button-active-background-color;
+@menubar-select-active-background-color: #f0f0f0;
 @menubar-select-active-border: @menubar-select-hover-border;
 @menubar-select-active-box-shadow: @toolbar-button-active-box-shadow;
-@menubar-select-active-text-color: @toolbar-button-active-text-color;
+@menubar-select-active-text-color: #000;
 
 .tox {
   .tox-mbtn {
@@ -69,8 +69,8 @@
   }
 
   .tox-mbtn:focus-visible {
-    background: #285ec7;
-    color: #fff;
+    background: @menubar-select-hover-background-color;
+    color: @menubar-select-hover-text-color;
   }
 
   .tox-mbtn:focus:not(:disabled) {
@@ -82,10 +82,10 @@
 
   // Active state applied using class
   .tox-mbtn--active {
-    background: #f0f0f0;
+    background: @menubar-select-active-background-color;
     border: @menubar-select-active-border;
     box-shadow: @menubar-select-active-box-shadow;
-    color: #000;
+    color: @menubar-select-active-text-color;
   }
 
   .tox-mbtn:hover:not(:disabled):not(.tox-mbtn--active) {
@@ -95,7 +95,7 @@
     color: @menubar-select-hover-text-color;
 
     svg {
-      fill: #fff;
+      fill: @menubar-select-hover-text-color;
     }
   }
 

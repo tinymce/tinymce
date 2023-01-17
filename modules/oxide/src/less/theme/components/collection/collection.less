@@ -17,18 +17,21 @@
 @collection-item-label-disabled-text-color: fade(@collection-item-label-text-color, 50%);
 @collection-item-caret-disabled-text-color: fade(@collection-item-label-text-color, 50%);
 
-@collection-list-item-active-background-color: @toolbar-button-hover-background-color;
-@collection-list-item-label-active-text-color: contrast(@collection-list-item-active-background-color, @color-black, @color-white);
+@collection-item-hover-background-color: #285ec7;
+@collection-item-hover-text-color: #fff;
+
+@collection-list-item-active-background-color: @collection-item-hover-background-color;
+@collection-list-item-label-active-text-color: @collection-item-hover-text-color;
 @collection-list-item-enabled-background-color: @menu-background-color;
 @collection-list-item-label-enabled-text-color: contrast(@collection-list-item-enabled-background-color, @color-black, @color-white);
 
-@collection-toolbar-item-active-background-color: @toolbar-button-hover-background-color;
-@collection-toolbar-item-label-active-text-color: contrast(@collection-toolbar-item-active-background-color, @color-black, @color-white);
+@collection-toolbar-item-active-background-color: @collection-item-hover-background-color;
+@collection-toolbar-item-label-active-text-color: @collection-item-hover-text-color;
 @collection-toolbar-item-enabled-background-color: @toolbar-button-enabled-background-color;
 @collection-toolbar-item-label-enabled-text-color: contrast(@collection-toolbar-item-enabled-background-color, @color-black, @color-white);
 
-@collection-grid-item-active-background-color: @toolbar-button-hover-background-color;
-@collection-grid-item-label-active-text-color: contrast(@collection-grid-item-active-background-color, @color-black, @color-white);
+@collection-grid-item-active-background-color: @collection-item-hover-background-color;
+@collection-grid-item-label-active-text-color: @collection-item-hover-text-color;
 @collection-grid-item-enabled-background-color: @toolbar-button-enabled-background-color;
 @collection-grid-item-label-enabled-text-color: contrast(@collection-grid-item-enabled-background-color, @color-black, @color-white);
 
@@ -117,8 +120,6 @@
   }
 
   .tox-collection__item--active {
-    background: #285ec7;
-    color: #fff;
     fill: #fff;
   }
 
@@ -236,11 +237,11 @@
   }
 
   .tox-collection__item-icon:hover {
-    background: #285ec7;
-    color: #fff;
+    background: @collection-item-hover-background-color;
+    color: @collection-item-hover-text-color;
 
     svg {
-      fill: #fff;
+      fill: @collection-item-hover-text-color;
     }
   }
 
