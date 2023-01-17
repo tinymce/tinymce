@@ -20,6 +20,7 @@
     .tox-input-wrapper {
       background: @toolbar-button-bespoke-background-color;
       display: flex;
+      pointer-events: none;
       text-align: center;
 
       &:focus {
@@ -32,6 +33,7 @@
       color: @toolbar-button-text-color;
       font-size: @toolbar-number-input-input-wrapper-font-size;
       margin: @toolbar-number-input-button-margin 0;
+      pointer-events: all;
       width: @toolbar-number-input-input-wrapper-width;
 
       &:hover {
