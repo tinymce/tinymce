@@ -8,14 +8,6 @@ export const registerCommands = (editor: Editor): void => {
     const anchor = editor.dom.getParent(editor.selection.getNode(), 'a');
 
     if (Type.isObject(linkDetails) && Type.isString(linkDetails.href)) {
-      /**
-       * TINY-7993: Tiny's formatter sets an undesirable selection after applying a link.
-       * The caret is positioned right after the link, so `editor.selection.getNode()` returns a paragraph instead of the link.
-       * Consequently, the context menu and the link dialog do not work properly.
-       * We're using a bookmark here to restore the desirable selection.
-       */
-      const bookmark = editor.selection.getBookmark();
-
       // Spaces are never valid in URLs and it's a very common mistake for people to make so we fix it here.
       linkDetails.href = linkDetails.href.replace(/ /g, '%20');
 
@@ -28,8 +20,6 @@ export const registerCommands = (editor: Editor): void => {
       if (linkDetails.href) {
         editor.formatter.apply('link', linkDetails, anchor);
       }
-
-      editor.selection.moveToBookmark(bookmark);
     }
   };
 

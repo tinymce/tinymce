@@ -73,7 +73,8 @@ const trimCaretContainers = (text: string): string =>
   text.replace(/\uFEFF/g, '');
 
 const getAnchorElement = (editor: Editor, selectedElm?: Element): Optional<HTMLAnchorElement> => {
-  selectedElm = selectedElm || editor.selection.getNode();
+  selectedElm = selectedElm || getLinksInSelection(editor.selection.getRng())[0] || editor.selection.getNode();
+
   if (isImageFigure(selectedElm)) {
     // for an image contained in a figure we look for a link inside the selected element
     return Optional.from(editor.dom.select<HTMLAnchorElement>('a[href]', selectedElm)[0]);
@@ -93,11 +94,14 @@ const getAnchorText = (selection: EditorSelection, anchorElm: Optional<HTMLAncho
   return trimCaretContainers(text);
 };
 
+const getLinksInSelection = (rng: Range): HTMLAnchorElement[] =>
+  collectNodesInRange(rng, isLink);
+
 const hasLinks = (elements: Node[]): boolean =>
   Tools.grep(elements, isLink).length > 0;
 
 const hasLinksInSelection = (rng: Range): boolean =>
-  collectNodesInRange(rng, isLink).length > 0;
+  getLinksInSelection(rng).length > 0;
 
 const isOnlyTextSelected = (editor: Editor): boolean => {
   // Allow anchor and inline text elements to be in the selection but nothing else
