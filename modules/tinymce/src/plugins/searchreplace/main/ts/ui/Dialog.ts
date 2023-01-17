@@ -45,9 +45,7 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
   };
 
   const notFoundAlert = (api: Dialog.DialogInstanceApi<DialogData>): void => {
-    editor.windowManager.alert('Could not find the specified string.', () => {
-      api.focus('findtext');
-    });
+    api.redial(getDialogSpec(true, api.getData()));
   };
 
   // Temporarily workaround for iOS/iPadOS dialog placement to hide the keyboard
@@ -84,6 +82,8 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
       const count = Actions.find(editor, currentSearchState, data.findtext, data.matchcase, data.wholewords, data.inselection);
       if (count <= 0) {
         notFoundAlert(api);
+      } else {
+        api.redial(getDialogSpec( false, api.getData()));
       }
       disableAll(api, count === 0);
     }
@@ -101,47 +101,60 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
     inselection: initialState.inSelection
   };
 
-  const spec: Dialog.DialogSpec<DialogData> = {
+  const getPanelItems = (error: boolean): Dialog.BodyComponentSpec[] => {
+    const items: Dialog.BodyComponentSpec[] = [
+      {
+        type: 'bar',
+        items: [
+          {
+            type: 'input',
+            name: 'findtext',
+            placeholder: 'Find',
+            maximized: true,
+            inputMode: 'search'
+          },
+          {
+            type: 'button',
+            name: 'prev',
+            text: 'Previous',
+            icon: 'action-prev',
+            enabled: false,
+            borderless: true
+          },
+          {
+            type: 'button',
+            name: 'next',
+            text: 'Next',
+            icon: 'action-next',
+            enabled: false,
+            borderless: true
+          }
+        ]
+      },
+      {
+        type: 'input',
+        name: 'replacetext',
+        placeholder: 'Replace with',
+        inputMode: 'search'
+      },
+    ];
+    if (error) {
+      items.push({
+        type: 'alertbanner',
+        level: 'error',
+        text: 'Could not find the specified string.',
+        icon: 'warning',
+      });
+    }
+    return items;
+  };
+
+  const getDialogSpec = (error: boolean, initialData: DialogData): Dialog.DialogSpec<DialogData> => ({
     title: 'Find and Replace',
     size: 'normal',
     body: {
       type: 'panel',
-      items: [
-        {
-          type: 'bar',
-          items: [
-            {
-              type: 'input',
-              name: 'findtext',
-              placeholder: 'Find',
-              maximized: true,
-              inputMode: 'search'
-            },
-            {
-              type: 'button',
-              name: 'prev',
-              text: 'Previous',
-              icon: 'action-prev',
-              enabled: false,
-              borderless: true
-            },
-            {
-              type: 'button',
-              name: 'next',
-              text: 'Next',
-              icon: 'action-next',
-              enabled: false,
-              borderless: true
-            }
-          ]
-        },
-        {
-          type: 'input',
-          name: 'replacetext',
-          placeholder: 'Replace with',
-          inputMode: 'search'
-        }
-      ]
+      items: getPanelItems(error)
     },
     buttons: [
       {
@@ -238,9 +251,9 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
       Actions.done(editor, currentSearchState);
       editor.undoManager.add();
     }
-  };
+  });
 
-  dialogApi.set(editor.windowManager.open(spec, { inline: 'toolbar' }));
+  dialogApi.set(editor.windowManager.open(getDialogSpec(false, initialData), { inline: 'toolbar' }));
 };
 
 export {
