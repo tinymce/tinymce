@@ -138,12 +138,12 @@
     }
   }
 
-  .tox-tbtn:focus-visible:not(.tox-tbtn--enabled) {
+  .tox-tbtn:focus-visible:not(.tox-tbtn--enabled):not(.tox-tbtn--disabled) {
     background: @toolbar-button-focus-background-color;
     color: @toolbar-button-focus-text-color;
   }
 
-  .tox-tbtn:hover:not(.tox-tbtn--enabled) {
+  .tox-tbtn:hover:not(.tox-tbtn--enabled):not(.tox-tbtn--disabled) {
     background: @toolbar-button-focus-background-color;
     border: @toolbar-button-hover-border;
     box-shadow: @toolbar-button-hover-box-shadow;
