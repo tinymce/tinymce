@@ -97,8 +97,11 @@ const getAnchorText = (selection: EditorSelection, anchorElm: Optional<HTMLAncho
 const getLinksInSelection = (rng: Range): HTMLAnchorElement[] =>
   collectNodesInRange(rng, isLink);
 
+const getLinks = (elements: Node[]): Node[] =>
+  Tools.grep(elements, isLink);
+
 const hasLinks = (elements: Node[]): boolean =>
-  Tools.grep(elements, isLink).length > 0;
+  getLinks(elements).length > 0;
 
 const hasLinksInSelection = (rng: Range): boolean =>
   getLinksInSelection(rng).length > 0;
@@ -317,7 +320,9 @@ export {
   unlink,
   isLink,
   hasLinks,
+  getLinks,
   hasLinksInSelection,
+  getLinksInSelection,
   getHref,
   isOnlyTextSelected,
   getAnchorElement,
