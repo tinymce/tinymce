@@ -143,10 +143,6 @@
     color: @collection-list-item-label-enabled-text-color;
   }
 
-  .tox-collection--list .tox-collection__item--active {
-    background-color: @collection-list-item-active-background-color;
-  }
-
   .tox-collection--toolbar .tox-collection__item--enabled {
     background-color: @collection-toolbar-item-enabled-background-color;
     color: @collection-toolbar-item-label-enabled-text-color;
@@ -166,12 +162,20 @@
     color: @collection-grid-item-label-active-text-color;
   }
 
-  .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
-    color: @collection-list-item-label-active-text-color;
-  }
-
   .tox-collection--toolbar .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
     color: @collection-toolbar-item-label-active-text-color;
+  }
+
+  // active menu item (when hovering)
+  .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+    background-color: @collection-grid-item-active-background-color;
+    color: @collection-grid-item-label-active-text-color;
+  }
+
+  // parent menu item when focus/hover is shifted to its children menu
+  .tox-collection--list.tox-background-menu .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+    background-color: #f0f0f0;
+    color: #222f3e;
   }
 
   .tox-collection__item-icon,
@@ -228,12 +232,6 @@
     svg {
       fill: @collection-item-label-text-color;
     }
-  }
-
-  .tox-collection__item--active .tox-collection__item-accessory,
-  .tox-collection__item--active .tox-collection__item-caret {
-    color: rgba(255, 255, 255, .7);
-    fill: rgba(255, 255, 255, .7);
   }
 
   .tox-collection__item-icon:hover {
@@ -361,6 +359,12 @@
       align-self: flex-end;
     }
   }
+}
+
+.tox-collection__item--active:not(.tox-collection__item--state-disabled) .tox-collection__item-accessory,
+.tox-collection__item--active:not(.tox-collection__item--state-disabled) .tox-collection__item-caret {
+  color: rgba(255, 255, 255, .7);
+  fill: rgba(255, 255, 255, .7);
 }
 
 .tox:not([dir=rtl]) {
