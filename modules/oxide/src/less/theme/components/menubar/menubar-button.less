@@ -35,7 +35,7 @@
 @menubar-select-active-background-color: #f0f0f0;
 @menubar-select-active-border: @menubar-select-hover-border;
 @menubar-select-active-box-shadow: @toolbar-button-active-box-shadow;
-@menubar-select-active-text-color: #000;
+@menubar-select-active-text-color: #222f3e;
 
 .tox {
   .tox-mbtn {
@@ -74,10 +74,10 @@
   }
 
   .tox-mbtn:focus:not(:disabled) {
-    background: @menubar-select-focus-background-color;
+    background: @menubar-select-hover-background-color;
     border: @menubar-select-focus-border;
     box-shadow: @menubar-select-focus-box-shadow;
-    color: @menubar-select-focus-text-color;
+    color: @menubar-select-hover-text-color;
   }
 
   // Active state applied using class
