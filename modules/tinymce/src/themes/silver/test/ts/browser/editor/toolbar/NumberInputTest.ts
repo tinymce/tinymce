@@ -240,6 +240,6 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
 
     TinyUiActions.clickOnToolbar(editor, '.tox-number-input .minus');
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 16px;">b</span>c</p>');
-    await FocusTools.pTryOnSelector('Focus should be on the minus button', root, '.tox-edit-area__iframe');
+    await FocusTools.pTryOnSelector('Focus should be on the editor', root, '.tox-edit-area__iframe');
   });
 });
