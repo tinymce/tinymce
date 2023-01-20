@@ -10,6 +10,10 @@ const register = (editor: Editor): void => {
   editor.addCommand('mceDirectionRTL', () => {
     Direction.setDir(editor, 'rtl');
   });
+
+  editor.addCommand('mceDirectionAuto', () => {
+    Direction.setDir(editor, 'auto');
+  });
 };
 
 export {

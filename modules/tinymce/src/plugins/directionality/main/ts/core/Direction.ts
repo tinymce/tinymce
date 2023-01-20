@@ -3,7 +3,7 @@ import { Traverse, Attribute, SugarElement, SugarNode, SelectorFind, Direction, 
 
 import Editor from 'tinymce/core/api/Editor';
 
-type Dir = 'rtl' | 'ltr';
+type Dir = 'rtl' | 'ltr' | 'auto';
 
 const getParentElement = (element: SugarElement<Element>): Optional<SugarElement<Element>> =>
   Traverse.parent(element).filter(SugarNode.isElement);

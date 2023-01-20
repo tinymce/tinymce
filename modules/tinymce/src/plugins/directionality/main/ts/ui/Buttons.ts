@@ -5,7 +5,7 @@ import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
 import { Toolbar } from 'tinymce/core/api/ui/Ui';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
-const getNodeChangeHandler = (editor: Editor, dir: 'ltr' | 'rtl') => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
+const getNodeChangeHandler = (editor: Editor, dir: 'ltr' | 'rtl' | 'auto') => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
   const nodeChangeHandler = (e: EditorEvent<NodeChangeEvent>) => {
     const element = SugarElement.fromDom(e.element);
     api.setActive(Direction.getDirection(element) === dir);
@@ -28,6 +28,13 @@ const register = (editor: Editor): void => {
     icon: 'rtl',
     onAction: () => editor.execCommand('mceDirectionRTL'),
     onSetup: getNodeChangeHandler(editor, 'rtl')
+  });
+
+  editor.ui.registry.addToggleButton('auto', {
+    tooltip: 'Auto',
+    icon: 'warning',
+    onAction: () => editor.execCommand('mceDirectionAuto'),
+    onSetup: getNodeChangeHandler(editor, 'auto')
   });
 };
 

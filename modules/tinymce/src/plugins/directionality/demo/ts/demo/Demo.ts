@@ -5,7 +5,7 @@ declare let tinymce: TinyMCE;
 tinymce.init({
   selector: 'textarea.tinymce',
   plugins: 'directionality code lists',
-  toolbar: 'ltr rtl code | bullist numlist',
+  toolbar: 'ltr rtl auto code | bullist numlist',
   height: 600
 });
 
