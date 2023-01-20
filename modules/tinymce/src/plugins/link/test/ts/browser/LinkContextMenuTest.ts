@@ -45,5 +45,6 @@ describe('browser.tinymce.plugins.link.LinkContextMenuTest', () => {
       TinyAssertions.assertContent(editor, '<p>aaa <a href="http://tiny.cloud">bbb</a> ccc</p>'));
     await TinyUiActions.pTriggerContextMenu(editor, 'a[href="http://tiny.cloud"]', '.tox-silver-sink [role="menuitem"]');
     await pTestContextMenuItems(editor);
+    await pAssertFocusOnItem('Open link', '.tox-collection__item:contains("Open link"):not([aria-disabled="true"])');
   });
 });
