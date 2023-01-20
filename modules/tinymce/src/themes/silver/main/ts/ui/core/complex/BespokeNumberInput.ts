@@ -77,6 +77,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
 
   const makeStepperButton = (action: (focusBack: boolean) => void, title: string, tooltip: string, classes: string[]) => {
     const translatedTooltip = backstage.shared.providers.translate(tooltip);
+    const altExecuting = Id.generate('altExecuting');
     return Button.sketch({
       dom: {
         tag: 'button',
@@ -90,7 +91,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
         renderIconFromPack(title, backstage.shared.providers.icons)
       ],
       buttonBehaviours: Behaviour.derive([
-        AddEventsBehaviour.config('button-events', [
+        AddEventsBehaviour.config(altExecuting, [
           AlloyEvents.run(NativeEvents.keydown(), (_comp, se) => {
             if (se.event.raw.keyCode === Keys.space() || se.event.raw.keyCode === Keys.enter()) {
               action(false);
@@ -102,8 +103,8 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
         ])
       ]),
       eventOrder: {
-        [NativeEvents.keydown()]: [ 'button-events', 'keying', 'alloy.base.behaviour' ],
-        [NativeEvents.click()]: [ 'button-events', 'alloy.base.behaviour' ]
+        [NativeEvents.keydown()]: [ altExecuting, 'keying', 'alloy.base.behaviour' ],
+        [NativeEvents.click()]: [ altExecuting, 'alloy.base.behaviour' ]
       }
     });
   };
