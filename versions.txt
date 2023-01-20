@@ -2,4 +2,3 @@
 # Format: [package_name]@[new_version]
 
 sugar@9.2.0
-bridge@4.3.0

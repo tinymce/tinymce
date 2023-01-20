@@ -7,19 +7,16 @@ export interface TableSpec {
   type: 'table';
   header: string[];
   cells: string[][];
-  classes?: string[];
 }
 
 export interface Table {
   type: 'table';
   header: string[];
   cells: string[][];
-  classes: string[];
 }
 
 const tableFields = [
   ComponentSchema.type,
-  FieldSchema.defaulted('classes', []),
   FieldSchema.requiredArrayOf('header', ValueType.string),
   FieldSchema.requiredArrayOf('cells', StructureSchema.arrOf(ValueType.string))
 ];
