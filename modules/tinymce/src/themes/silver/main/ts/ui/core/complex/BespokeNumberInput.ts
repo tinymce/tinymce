@@ -1,3 +1,4 @@
+import { Keys } from '@ephox/agar';
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, FocusInsideModes, Input, Keying, Memento, NativeEvents, Representing } from '@ephox/alloy';
 import { Arr, Cell, Fun, Id, Optional } from '@ephox/katamari';
 import { Dimension, Focus, SugarElement, Traverse } from '@ephox/sugar';
@@ -88,19 +89,21 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
       components: [
         renderIconFromPack(title, backstage.shared.providers.icons)
       ],
-      action: (_comp) => {
-        action(true);
-      },
-      keyingSpecialOverwrite: {
-        mode: 'special',
-        onEnter: (_comp) => {
-          action(false);
-          return Optional.some(true);
-        },
-        onSpace: (_comp) => {
-          action(false);
-          return Optional.some(true);
-        }
+      buttonBehaviours: Behaviour.derive([
+        AddEventsBehaviour.config('button-events', [
+          AlloyEvents.run(NativeEvents.keydown(), (_comp, se) => {
+            if (se.event.raw.keyCode === Keys.space() || se.event.raw.keyCode === Keys.enter()) {
+              action(false);
+            }
+          }),
+          AlloyEvents.run(NativeEvents.click(), (_comp, _se) => {
+            action(true);
+          })
+        ])
+      ]),
+      eventOrder: {
+        [NativeEvents.keydown()]: [ 'button-events', 'keying', 'alloy.base.behaviour' ],
+        [NativeEvents.click()]: [ 'button-events', 'alloy.base.behaviour' ]
       }
     });
   };
