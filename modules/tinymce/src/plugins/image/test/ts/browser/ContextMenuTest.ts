@@ -37,8 +37,7 @@ describe('browser.tinymce.plugins.image.ContextMenuTest', () => {
     TinyAssertions.assertSelection(editor, [], 0, [], 1);
   });
 
-  // eslint-disable-next-line mocha/no-exclusive-tests
-  it.only('TINY-9491: Opening context menus on a selected figure', async () => {
+  it('TINY-9491: Opening context menus on a selected figure', async () => {
     const editor = hook.editor();
     editor.setContent(
       '<div contenteditable="false">' +
