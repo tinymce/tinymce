@@ -103,7 +103,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
         ])
       ]),
       eventOrder: {
-        [NativeEvents.keydown()]: [ altExecuting, 'keying', 'alloy.base.behaviour' ],
+        [NativeEvents.keydown()]: [ altExecuting, 'keying' ],
         [NativeEvents.click()]: [ altExecuting, 'alloy.base.behaviour' ]
       }
     });
