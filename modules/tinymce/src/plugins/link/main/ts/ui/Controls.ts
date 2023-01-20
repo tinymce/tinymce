@@ -1,5 +1,4 @@
 import { Fun, Optional } from '@ephox/katamari';
-import { Class, PredicateFind, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { InlineContent } from 'tinymce/core/api/ui/Ui';
@@ -59,8 +58,8 @@ const setupContextMenu = (editor: Editor): void => {
   const noLink = 'link';
   editor.ui.registry.addContextMenu('link', {
     update: (element) => {
-      const isInToC = PredicateFind.ancestor(SugarElement.fromDom(element), (ancestor) => Class.has(ancestor, 'mce-toc')).isSome();
-      if (isInToC) {
+      const isEditable = editor.dom.isEditable(element);
+      if (!isEditable) {
         return '';
       }
 

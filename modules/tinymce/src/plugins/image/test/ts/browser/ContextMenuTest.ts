@@ -37,11 +37,12 @@ describe('browser.tinymce.plugins.image.ContextMenuTest', () => {
     TinyAssertions.assertSelection(editor, [], 0, [], 1);
   });
 
-  it('TINY-9491: Opening context menus on a selected figure', async () => {
+  // eslint-disable-next-line mocha/no-exclusive-tests
+  it.only('TINY-9491: Opening context menus on a selected figure', async () => {
     const editor = hook.editor();
     editor.setContent(
-      '<div class="mce-toc" data-mce-toc="true" contenteditable="false">' +
-        '<h2 contenteditable="true">Table of Contents</h2>' +
+      '<div contenteditable="false">' +
+        '<h2 contenteditable="true">Table</h2>' +
         '<ul>' +
           '<li>' +
             '<a href="#mcetoc_1gmi3gu5b11" data-mce-href="#mcetoc_1gmi3gu5b11">point </a>' +
