@@ -73,7 +73,6 @@ const Button: ButtonSketcher = Sketcher.single({
     FieldSchema.required('dom'),
     FieldSchema.defaulted('components', [ ]),
     SketchBehaviours.field('buttonBehaviours', [ Focusing, Keying ]),
-    FieldSchema.defaulted('keyingSpecialOverwrite', undefined),
     FieldSchema.option('action'),
     FieldSchema.option('role'),
     FieldSchema.defaulted('eventOrder', { })
