@@ -17,20 +17,21 @@
 @collection-item-label-disabled-text-color: fade(@collection-item-label-text-color, 50%);
 @collection-item-caret-disabled-text-color: fade(@collection-item-label-text-color, 50%);
 
-@collection-item-hover-background-color: #285ec7;
+@collection-item-active-background-color: #285ec7;
+@collection-item-hover-background-color: #2d6adf;
 @collection-item-hover-text-color: #fff;
 
-@collection-list-item-active-background-color: @collection-item-hover-background-color;
+@collection-list-item-active-background-color: @collection-item-active-background-color;
 @collection-list-item-label-active-text-color: @collection-item-hover-text-color;
 @collection-list-item-enabled-background-color: @menu-background-color;
 @collection-list-item-label-enabled-text-color: contrast(@collection-list-item-enabled-background-color, @color-black, @color-white);
 
-@collection-toolbar-item-active-background-color: @collection-item-hover-background-color;
+@collection-toolbar-item-active-background-color: @collection-item-active-background-color;
 @collection-toolbar-item-label-active-text-color: @collection-item-hover-text-color;
 @collection-toolbar-item-enabled-background-color: @toolbar-button-enabled-background-color;
 @collection-toolbar-item-label-enabled-text-color: contrast(@collection-toolbar-item-enabled-background-color, @color-black, @color-white);
 
-@collection-grid-item-active-background-color: @collection-item-hover-background-color;
+@collection-grid-item-active-background-color: @collection-item-active-background-color;
 @collection-grid-item-label-active-text-color: @collection-item-hover-text-color;
 @collection-grid-item-enabled-background-color: @toolbar-button-enabled-background-color;
 @collection-grid-item-label-enabled-text-color: contrast(@collection-grid-item-enabled-background-color, @color-black, @color-white);
@@ -148,21 +149,13 @@
     color: @collection-toolbar-item-label-enabled-text-color;
   }
 
-  .tox-collection--toolbar .tox-collection__item--active {
-    background-color: @collection-toolbar-item-active-background-color;
-  }
-
-  .tox-collection--grid .tox-collection__item--enabled {
-    background-color: @collection-grid-item-enabled-background-color;
-    color: @collection-grid-item-label-enabled-text-color;
-  }
-
   .tox-collection--grid .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
     background-color: @collection-grid-item-active-background-color;
     color: @collection-grid-item-label-active-text-color;
   }
 
   .tox-collection--toolbar .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+    background-color: @collection-toolbar-item-active-background-color;
     color: @collection-toolbar-item-label-active-text-color;
   }
 
@@ -170,6 +163,29 @@
   .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
     background-color: @collection-grid-item-active-background-color;
     color: @collection-grid-item-label-active-text-color;
+  }
+
+  .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled):hover,
+  .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled):focus,
+  .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled):focus-visible {
+    background-color: @collection-item-hover-background-color;
+  }
+
+  .tox-collection--toolbar .tox-collection__item--active:not(.tox-collection__item--state-disabled):hover,
+  .tox-collection--toolbar .tox-collection__item--active:not(.tox-collection__item--state-disabled):focus,
+  .tox-collection--toolbar .tox-collection__item--active:not(.tox-collection__item--state-disabled):focus-visible {
+    background-color: @collection-item-hover-background-color;
+  }
+
+  .tox-collection--grid .tox-collection__item--active:not(.tox-collection__item--state-disabled):hover,
+  .tox-collection--grid .tox-collection__item--active:not(.tox-collection__item--state-disabled):focus,
+  .tox-collection--grid .tox-collection__item--active:not(.tox-collection__item--state-disabled):focus-visible {
+    background-color: @collection-item-hover-background-color;
+  }
+
+  .tox-collection--grid .tox-collection__item--enabled {
+    background-color: @collection-grid-item-enabled-background-color;
+    color: @collection-grid-item-label-enabled-text-color;
   }
 
   // parent menu item when focus/hover is shifted to its children menu
@@ -234,14 +250,14 @@
     }
   }
 
-  .tox-collection__item-icon:hover {
-    background: @collection-item-hover-background-color;
-    color: @collection-item-hover-text-color;
+  // .tox-collection__item-icon:hover {
+  //   background: @collection-item-hover-background-color;
+  //   color: @collection-item-hover-text-color;
 
-    svg {
-      fill: @collection-item-hover-text-color;
-    }
-  }
+  //   svg {
+  //     fill: @collection-item-hover-text-color;
+  //   }
+  // }
 
   // Disabled item
   .tox-collection__item--state-disabled {
