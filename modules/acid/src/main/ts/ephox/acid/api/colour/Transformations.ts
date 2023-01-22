@@ -19,7 +19,7 @@ const anyToHex = (color: string): Hex =>
       // all valid colors after this point
       canvasContext.clearRect(0, 0, canvas.width, canvas.height);
       // invalid colors will be shown as white - the first assignment will pass and the second may be ignored
-      canvasContext.fillStyle = '#FFFFFF'; // lgtm[js/useless-assignment-to-property]
+      canvasContext.fillStyle = '#FFFFFF';
       canvasContext.fillStyle = color;
       canvasContext.fillRect(0, 0, 1, 1);
 

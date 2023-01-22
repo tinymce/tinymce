@@ -103,7 +103,7 @@ const getSelectedBlocks = (dom: DOMUtils, rng: Range, startElm?: Element, endElm
   }
 
   if (start && end && start !== end) {
-    let node: Node | null | undefined = start;
+    let node: Node | null | undefined;
 
     const walker = new DomTreeWalker(start, root);
     while ((node = walker.next()) && node !== end) {
