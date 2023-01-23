@@ -201,6 +201,9 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
     ],
     initialData,
     onChange: (api, details) => {
+      if (error) {
+        api.redial(getDialogSpec(false, api.getData()));
+      }
       if (details.name === 'findtext' && currentSearchState.get().count > 0) {
         reset(api);
       }
