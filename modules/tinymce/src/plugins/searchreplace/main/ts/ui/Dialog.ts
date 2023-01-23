@@ -82,8 +82,6 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
       const count = Actions.find(editor, currentSearchState, data.findtext, data.matchcase, data.wholewords, data.inselection);
       if (count <= 0) {
         notFoundAlert(api);
-      } else {
-        api.redial(getDialogSpec( false, api.getData()));
       }
       disableAll(api, count === 0);
     }
