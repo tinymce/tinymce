@@ -868,15 +868,7 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
                         style: str.is('text-decoration: underline;')
                       },
                       children: [
-                        s.element('em', {
-                          children: [
-                            s.element('strong', {
-                              children: [
-                                s.element('br', {})
-                              ]
-                            })
-                          ]
-                        })
+                        s.element('br', {})
                       ]
                     })
                   ]
@@ -904,7 +896,8 @@ describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
           });
         })
       );
-      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0 ], 0);
+      const selPath = browser.isFirefox() ? [ 0, 0 ] : [ 0, 0, 0, 0 ];
+      TinyAssertions.assertCursor(editor, selPath, 0);
     });
 
     it('Backspace partial selection from start to middle of text format element should do nothing', () => {

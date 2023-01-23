@@ -40,7 +40,7 @@ const create = (inFile, outFile) => {
           }
         },
         {
-          test: /\.js|\.ts$/,
+          test: /\.js$|\.ts$/,
           use: ['@ephox/swag/webpack/remapper']
         },
         {

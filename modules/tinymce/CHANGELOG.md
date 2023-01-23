@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ranged deletion of formatted text using selection or keyboard shortcut would sometimes cause Blink and Webkit browsers to insert interpreted tags upon typing, which may result in inconsistent tags. #TINY-9302
 - Visual characters were rendered inside noneditable elements. #TINY-9474
 - Removed a workaround for ensuring stylesheets are loaded in an outdated version of webkit. #TINY-9433
+- Lists in a noneditable root were incorrectly editable using list API commands, toolbar buttons and menu items. #TINY-9458
 - Color picker dialog would not update the preview color if the hex input value was prefixed with `#` symbol. #TINY-9457
 - It was possible to open links inside the editor if the editor root was noneditable. #TINY-9470
 
