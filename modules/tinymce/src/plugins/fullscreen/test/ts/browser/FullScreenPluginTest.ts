@@ -2,7 +2,7 @@ import { UiFinder } from '@ephox/agar';
 import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Attribute, Classes, Css, Html, SelectorFind, SugarBody, SugarDocument, SugarElement, SugarShadowDom, Traverse } from '@ephox/sugar';
+import { Attribute, Classes, Css, Html, SelectorFind, SugarDocument, SugarElement, SugarShadowDom, Traverse } from '@ephox/sugar';
 import { McEditor, TinyContentActions, TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -47,7 +47,7 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
 
   const assertHtmlAndBodyState = (editor: Editor, shouldExist: boolean) => {
     const existsFn = shouldExist ? UiFinder.exists : UiFinder.notExists;
-    existsFn(SugarBody.body(), 'root:.tox-fullscreen');
+    existsFn(TinyDom.body(editor), 'root:.tox-fullscreen');
     existsFn(Traverse.documentElement(SugarDocument.getDocument()), 'root:.tox-fullscreen');
   };
 
