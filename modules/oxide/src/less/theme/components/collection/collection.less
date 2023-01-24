@@ -205,6 +205,11 @@
     display: none;
   }
 
+  // Use the old background colour for the table table (insert table)
+  .tox-collection--list .tox-fancymenuitem.tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+    background-color: #cce2fa;
+  }
+
   // active menu item (when hovering)
   .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
     background-color: @collection-grid-item-active-background-color;
@@ -213,12 +218,6 @@
     .tox-collection__item-caret svg {
       fill: #fff;
     }
-  }
-
-  .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled):hover,
-  .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled):focus,
-  .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled):focus-visible {
-    background-color: @collection-item-hover-background-color;
   }
 
   .tox-collection--toolbar .tox-collection__item--active:not(.tox-collection__item--state-disabled):hover,
@@ -255,6 +254,13 @@
     .tox-collection__item-caret svg {
       fill: @collection-item-label-text-color;
     }
+  }
+
+  // Exclude the table creation grid (.tox-fancymenuitem)
+  .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled):not(.tox-fancymenuitem):hover,
+  .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled):not(.tox-fancymenuitem):focus,
+  .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled):not(.tox-fancymenuitem):focus-visible {
+    background-color: @collection-item-hover-background-color;
   }
 
   .tox-collection--toolbar-lg .tox-collection__item-icon {
