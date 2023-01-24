@@ -21,7 +21,8 @@ const schema = [
   FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
   Fields.onKeyboardHandler('onEscape'),
   FieldSchema.defaulted('executeOnMove', false),
-  FieldSchema.defaulted('allowVertical', true)
+  FieldSchema.defaulted('allowVertical', true),
+  FieldSchema.defaulted('cycles', true)
 ];
 
 // TODO: Remove dupe.
@@ -41,10 +42,10 @@ const focusIn = (component: AlloyComponent, flowConfig: FlowConfig, _state: Stat
 };
 
 const moveLeft = (element: SugarElement<HTMLElement>, focused: SugarElement<HTMLElement>, info: FlowConfig): Optional<SugarElement<HTMLElement>> =>
-  DomNavigation.horizontal(element, info.selector, focused, -1);
+  (info.cycles ? DomNavigation.horizontal : DomNavigation.horizontalWithoutCycles)(element, info.selector, focused, -1);
 
 const moveRight = (element: SugarElement<HTMLElement>, focused: SugarElement<HTMLElement>, info: FlowConfig): Optional<SugarElement<HTMLElement>> =>
-  DomNavigation.horizontal(element, info.selector, focused, +1);
+  (info.cycles ? DomNavigation.horizontal : DomNavigation.horizontalWithoutCycles)(element, info.selector, focused, +1);
 
 const doMove = (movement: KeyRuleHandler<FlowConfig, Stateless>): KeyRuleHandler<FlowConfig, Stateless> =>
   (component, simulatedEvent, flowConfig, flowState) =>

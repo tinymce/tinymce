@@ -1,13 +1,24 @@
-import { AlloyComponent, AlloyTriggers, SketchSpec } from '@ephox/alloy';
+import { AlloyComponent, AlloySpec, AlloyTriggers, SketchSpec } from '@ephox/alloy';
 import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
+import { createBespokeNumberInput } from './BespokeNumberInput';
 import { createMenuItems, createSelectButton, FormatterFormatItem, SelectedFormat, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import * as FormatRegister from './utils/FormatRegister';
+
+interface Config {
+  readonly step: number;
+}
+
+export interface NumberInputSpec {
+  onAction: (format: string, focusBack?: boolean) => void;
+  updateInputValue: (comp: AlloyComponent) => void;
+  getConfigFromUnit: (unit: string) => Config;
+}
 
 // See https://websemantics.uk/articles/font-size-conversion/ for conversions
 const legacyFontSizes: Record<string, string> = {
@@ -110,6 +121,36 @@ const getSpec = (editor: Editor): SelectSpec => {
 const createFontSizeButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
   createSelectButton(editor, backstage, getSpec(editor));
 
+const getConfigFromUnit = (unit: string): Config => {
+  const baseConfig = { step: 1 };
+
+  const configs: Record<string, Config> = {
+    em: { step: 0.1 },
+    cm: { step: 0.1 },
+    in: { step: 0.1 },
+    pc: { step: 0.1 },
+    ch: { step: 0.1 },
+    rem: { step: 0.1 }
+  };
+
+  return configs[unit] ?? baseConfig;
+};
+
+const getNumberInputSpec = (editor: Editor): NumberInputSpec => {
+  const updateInputValue = (comp: AlloyComponent) => AlloyTriggers.emitWith(comp, updateMenuText, {
+    text: editor.queryCommandValue('FontSize')
+  });
+
+  return {
+    updateInputValue,
+    getConfigFromUnit,
+    onAction: (format, focusBack) => editor.execCommand('FontSize', false, format, { skip_focus: !focusBack })
+  };
+};
+
+const createFontSizeInputButton = (editor: Editor, backstage: UiFactoryBackstage): AlloySpec =>
+  createBespokeNumberInput(editor, backstage, getNumberInputSpec(editor));
+
 // TODO: Test this!
 const createFontSizeMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
@@ -119,4 +160,4 @@ const createFontSizeMenu = (editor: Editor, backstage: UiFactoryBackstage): void
   });
 };
 
-export { createFontSizeButton, createFontSizeMenu };
+export { createFontSizeButton, createFontSizeInputButton, createFontSizeMenu };
