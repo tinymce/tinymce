@@ -42,7 +42,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
 
   // Note: isChildOf will return true if node === rootNode, so we need an additional check for that
   const isFakeSelectionTargetElement = (node: Node): node is HTMLElement =>
-    node !== rootNode && (isContentEditableFalse(node) || NodeType.isMedia(node)) && dom.isChildOf(node, rootNode);
+    node !== rootNode && (isContentEditableFalse(node) || NodeType.isMedia(node)) && dom.isChildOf(node, rootNode) && dom.isEditable(node.parentNode);
 
   const setRange = (range: Range | null) => {
     if (range) {
