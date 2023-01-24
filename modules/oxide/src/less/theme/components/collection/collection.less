@@ -159,10 +159,60 @@
     color: @collection-toolbar-item-label-active-text-color;
   }
 
+  .tox-collection__item-caret {
+    align-items: center;
+    display: flex;
+    min-height: @collection-item-list-icon-height;
+
+    // Workaround for the above not centering items in IE11. See https://github.com/philipwalton/flexbugs/issues/231#issuecomment-362790042
+    &::after {
+      content: '';
+      font-size: 0;
+      min-height: inherit;
+    }
+
+    svg {
+      fill: @collection-item-label-text-color;
+    }
+  }
+
+  .tox-collection__item-icon,
+  .tox-collection__item-checkmark {
+    align-items: center;
+    display: flex;
+    height: @collection-item-list-icon-height;
+    justify-content: center;
+    width: @collection-item-list-icon-width;
+
+    svg {
+      fill: currentColor;
+    }
+  }
+
+  // Disabled item
+  .tox-collection__item--state-disabled {
+    background-color: transparent;
+    color: @collection-item-label-disabled-text-color;
+    cursor: not-allowed;
+
+    .tox-collection__item-caret svg {
+      fill: @collection-item-caret-disabled-text-color;
+    }
+  }
+
+  // Tickable items that are not ticked hide the check mark SVG (not the entire icon so there is still a gap)
+  .tox-collection--list .tox-collection__item:not(.tox-collection__item--enabled) .tox-collection__item-checkmark svg {
+    display: none;
+  }
+
   // active menu item (when hovering)
   .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
     background-color: @collection-grid-item-active-background-color;
     color: @collection-grid-item-label-active-text-color;
+
+    .tox-collection__item-caret svg {
+      fill: #fff;
+    }
   }
 
   .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled):hover,
@@ -188,22 +238,22 @@
     color: @collection-grid-item-label-enabled-text-color;
   }
 
+  .tox-collection__item-accessory {
+    color: @text-color-muted;
+    display: inline-block;
+    font-size: @font-size-sm;
+    height: @collection-item-list-icon-height;
+    line-height: @collection-item-list-icon-height;
+    text-transform: none;
+  }
+
   // parent menu item when focus/hover is shifted to its children menu
   .tox-collection--list.tox-background-menu .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
     background-color: #f0f0f0;
     color: #222f3e;
-  }
 
-  .tox-collection__item-icon,
-  .tox-collection__item-checkmark {
-    align-items: center;
-    display: flex;
-    height: @collection-item-list-icon-height;
-    justify-content: center;
-    width: @collection-item-list-icon-width;
-
-    svg {
-      fill: currentColor;
+    .tox-collection__item-caret svg {
+      fill: @collection-item-label-text-color;
     }
   }
 
@@ -224,32 +274,6 @@
     word-break: break-all;
   }
 
-  .tox-collection__item-accessory {
-    color: @text-color-muted;
-    display: inline-block;
-    font-size: @font-size-sm;
-    height: @collection-item-list-icon-height;
-    line-height: @collection-item-list-icon-height;
-    text-transform: none;
-  }
-
-  .tox-collection__item-caret {
-    align-items: center;
-    display: flex;
-    min-height: @collection-item-list-icon-height;
-
-    // Workaround for the above not centering items in IE11. See https://github.com/philipwalton/flexbugs/issues/231#issuecomment-362790042
-    &::after {
-      content: '';
-      font-size: 0;
-      min-height: inherit;
-    }
-
-    svg {
-      fill: @collection-item-label-text-color;
-    }
-  }
-
   // .tox-collection__item-icon:hover {
   //   background: @collection-item-hover-background-color;
   //   color: @collection-item-hover-text-color;
@@ -258,22 +282,6 @@
   //     fill: @collection-item-hover-text-color;
   //   }
   // }
-
-  // Disabled item
-  .tox-collection__item--state-disabled {
-    background-color: transparent;
-    color: @collection-item-label-disabled-text-color;
-    cursor: not-allowed;
-
-    .tox-collection__item-caret svg {
-      fill: @collection-item-caret-disabled-text-color;
-    }
-  }
-
-  // Tickable items that are not ticked hide the check mark SVG (not the entire icon so there is still a gap)
-  .tox-collection--list .tox-collection__item:not(.tox-collection__item--enabled) .tox-collection__item-checkmark svg {
-    display: none;
-  }
 
   // Tickable items that are not ticked and have an adjacent shortcut hide the check mark completely (gap is removed)
   .tox-collection--list .tox-collection__item:not(.tox-collection__item--enabled) .tox-collection__item-accessory + .tox-collection__item-checkmark {
@@ -377,12 +385,6 @@
   }
 }
 
-.tox-collection__item--active:not(.tox-collection__item--state-disabled) .tox-collection__item-accessory,
-.tox-collection__item--active:not(.tox-collection__item--state-disabled) .tox-collection__item-caret {
-  color: rgba(255, 255, 255, .7);
-  fill: rgba(255, 255, 255, .7);
-}
-
 .tox:not([dir=rtl]) {
   .tox-collection--horizontal .tox-collection__group:not(:last-of-type) {
     border-right: 1px solid @toolbar-group-separator-color;
@@ -437,4 +439,13 @@
   .tox-collection--horizontal .tox-collection__item-caret {
     margin-right: 4px;
   }
+}
+
+// These two are here to bypass lint errors
+.tox .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) .tox-collection__item-accessory {
+  color: #fff;
+}
+
+.tox .tox-collection--list.tox-background-menu .tox-collection__item--active:not(.tox-collection__item--state-disabled) .tox-collection__item-accessory {
+  color: #fff;
 }
