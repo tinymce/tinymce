@@ -14,24 +14,24 @@
 @collection-item-label-text-color: @text-color;
 @collection-item-label-text-transform: none;
 
+@collection-item-hover-text-color: @toolbar-button-hover-text-color;
+@collection-item-hover-background-color: @toolbar-button-hover-background-color;
+@collection-item-not-focus-active-background-color: @menubar-select-active-background-color;
+
 @collection-item-label-disabled-text-color: fade(@collection-item-label-text-color, 50%);
 @collection-item-caret-disabled-text-color: fade(@collection-item-label-text-color, 50%);
 
-@collection-item-active-background-color: #285ec7;
-@collection-item-hover-background-color: #2d6adf;
-@collection-item-hover-text-color: #fff;
-
-@collection-list-item-active-background-color: @collection-item-active-background-color;
+@collection-list-item-active-background-color: @collection-item-hover-background-color;
 @collection-list-item-label-active-text-color: @collection-item-hover-text-color;
 @collection-list-item-enabled-background-color: @menu-background-color;
 @collection-list-item-label-enabled-text-color: contrast(@collection-list-item-enabled-background-color, @color-black, @color-white);
 
-@collection-toolbar-item-active-background-color: @collection-item-active-background-color;
+@collection-toolbar-item-active-background-color: @collection-item-hover-background-color;
 @collection-toolbar-item-label-active-text-color: @collection-item-hover-text-color;
 @collection-toolbar-item-enabled-background-color: @toolbar-button-enabled-background-color;
 @collection-toolbar-item-label-enabled-text-color: contrast(@collection-toolbar-item-enabled-background-color, @color-black, @color-white);
 
-@collection-grid-item-active-background-color: @collection-item-active-background-color;
+@collection-grid-item-active-background-color: @toolbar-button-active-background-color;
 @collection-grid-item-label-active-text-color: @collection-item-hover-text-color;
 @collection-grid-item-enabled-background-color: @toolbar-button-enabled-background-color;
 @collection-grid-item-label-enabled-text-color: contrast(@collection-grid-item-enabled-background-color, @color-black, @color-white);
@@ -121,7 +121,7 @@
   }
 
   .tox-collection__item--active {
-    fill: #fff;
+    fill: @collection-list-item-label-active-text-color;
   }
 
   .tox-collection--list .tox-collection__item {
@@ -205,18 +205,18 @@
     display: none;
   }
 
-  // Use the old background colour for the table table (insert table)
+  // Use the old background colour for the table creation (insert table)
   .tox-collection--list .tox-fancymenuitem.tox-collection__item--active:not(.tox-collection__item--state-disabled) {
     background-color: #cce2fa;
   }
 
   // active menu item (when hovering)
   .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
-    background-color: @collection-grid-item-active-background-color;
-    color: @collection-grid-item-label-active-text-color;
+    background-color: @collection-list-item-active-background-color;
+    color: @collection-list-item-label-active-text-color;
 
     .tox-collection__item-caret svg {
-      fill: #fff;
+      fill: @collection-list-item-label-active-text-color;
     }
   }
 
@@ -248,19 +248,21 @@
 
   // parent menu item when focus/hover is shifted to its children menu
   .tox-collection--list.tox-background-menu .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
-    background-color: #f0f0f0;
-    color: #222f3e;
+    background-color: @collection-item-not-focus-active-background-color;
+    color: @collection-item-label-text-color;
 
     .tox-collection__item-caret svg {
       fill: @collection-item-label-text-color;
     }
   }
 
-  // Exclude the table creation grid (.tox-fancymenuitem)
-  .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled):not(.tox-fancymenuitem):hover,
-  .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled):not(.tox-fancymenuitem):focus,
-  .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled):not(.tox-fancymenuitem):focus-visible {
-    background-color: @collection-item-hover-background-color;
+  // Active menu item excluding the table creation grid (.tox-fancymenuitem) and parent menu item
+  .tox-collection--list:not(.tox-background-menu) .tox-collection__item--active:not(.tox-collection__item--state-disabled):not(.tox-fancymenuitem) {
+    &:hover,
+    &:focus,
+    &:focus-visible {
+      background-color: @collection-item-hover-background-color;
+    }
   }
 
   .tox-collection--toolbar-lg .tox-collection__item-icon {
@@ -279,15 +281,6 @@
     text-transform: @collection-item-label-text-transform;
     word-break: break-all;
   }
-
-  // .tox-collection__item-icon:hover {
-  //   background: @collection-item-hover-background-color;
-  //   color: @collection-item-hover-text-color;
-
-  //   svg {
-  //     fill: @collection-item-hover-text-color;
-  //   }
-  // }
 
   // Tickable items that are not ticked and have an adjacent shortcut hide the check mark completely (gap is removed)
   .tox-collection--list .tox-collection__item:not(.tox-collection__item--enabled) .tox-collection__item-accessory + .tox-collection__item-checkmark {

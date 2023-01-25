@@ -3,8 +3,7 @@
 //
 
 @toolbar-split-button-chevron-touch-padding: 4px;
-@toolbar-split-button-focus-background-color: #2d6adf;
-@toolbar-split-button-enabled-focus-background-color: #b4d7ff;
+@toolbar-split-button-focus-background-color: @toolbar-button-hover-background-color;
 @toolbar-split-button-chevron-color: fade(@toolbar-button-icon-color, 50%);
 
 .tox {
@@ -20,7 +19,7 @@
   .tox-split-button:hover,
   .tox-split-button:focus,
   .tox-split-button:focus-visible {
-    box-shadow: 0 0 0 2px @toolbar-split-button-focus-background-color inset;
+    box-shadow: 0 0 0 2px @toolbar-button-hover-background-color inset;
   }
 
   .tox-split-button__chevron svg {
@@ -30,7 +29,7 @@
   .tox-split-button__chevron.tox-tbtn--enabled {
     &:hover,
     &:focus {
-      background: @toolbar-split-button-enabled-focus-background-color;
+      background: @toolbar-button-enabled-hover-background-color;
 
       svg {
         fill: @toolbar-button-icon-color;

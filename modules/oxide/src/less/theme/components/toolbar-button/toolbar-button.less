@@ -1,6 +1,6 @@
 //
 // Toolbar button
-// When making changes here, please review menubar/menubar.less and menubar/menubar-button.less
+// When making changes here, please review toolbar-button/toolbar-split-button.less, collection/collection.less, toolbar-button/toolbar-select-button.less and menubar/menubar-button.less
 //
 
 @toolbar-button-background-color: transparent;
@@ -13,9 +13,11 @@
 @toolbar-button-font-style: normal;
 @toolbar-button-font-weight: @font-weight-normal;
 @toolbar-button-height: 28px;
-@toolbar-button-icon-color: contrast(@background-color, @color-white, @color-black);
+// @toolbar-button-icon-color: contrast(@background-color, @color-white, @color-black);
+@toolbar-button-icon-color: #222f3e;
 @toolbar-button-spacing-x: 1px;
 @toolbar-button-spacing-y: 5px;
+// @toolbar-button-text-color: contrast(@background-color, @color-white, @color-black);
 @toolbar-button-text-color: #222f3e;
 @toolbar-button-text-transform: none;
 @toolbar-button-width: 34px;
@@ -23,33 +25,34 @@
 @toolbar-button-hover-background-color: #2d6adf;
 @toolbar-button-hover-border: @toolbar-button-border;
 @toolbar-button-hover-box-shadow: @toolbar-button-box-shadow;
-@toolbar-button-hover-icon-color: #fff;
+@toolbar-button-hover-icon-color: @color-white;
 @toolbar-button-hover-text-color: @toolbar-button-hover-icon-color;
 
 @toolbar-button-focus-background-color: @toolbar-button-hover-background-color;
 @toolbar-button-focus-border: @toolbar-button-hover-border;
 @toolbar-button-focus-box-shadow: @toolbar-button-hover-box-shadow;
-@toolbar-button-focus-icon-color: @toolbar-button-hover-text-color;
+@toolbar-button-focus-icon-color: @toolbar-button-hover-icon-color;
 @toolbar-button-focus-text-color: @toolbar-button-hover-text-color;
 
 @toolbar-button-active-background-color: #285ec7;
-@toolbar-button-active-border: @toolbar-button-enabled-border;
+@toolbar-button-active-border: @toolbar-button-hover-border;
 @toolbar-button-active-box-shadow: @toolbar-button-box-shadow;
-@toolbar-button-active-icon-color: @toolbar-button-focus-text-color;
-@toolbar-button-active-text-color: @toolbar-button-focus-text-color;
+@toolbar-button-active-icon-color: @toolbar-button-hover-icon-color;
+@toolbar-button-active-text-color: @toolbar-button-hover-text-color;
 @toolbar-button-active-transform: none; // Set to `translateY(1px)` for a small push down effect
 
 @toolbar-button-enabled-background-color: #e8f1f8;
 @toolbar-button-enabled-border: @toolbar-button-hover-border;
 @toolbar-button-enabled-box-shadow: @toolbar-button-box-shadow;
-@toolbar-button-enabled-icon-color: @toolbar-button-hover-icon-color;
-@toolbar-button-enabled-text-color: @toolbar-button-hover-text-color;
+@toolbar-button-enabled-icon-color: #2253ae;
+@toolbar-button-enabled-text-color: @toolbar-button-enabled-icon-color;
 @toolbar-button-enabled-transform: none;
+@toolbar-button-enabled-hover-background-color: #b4d7ff;
 
-@toolbar-button-disabled-background-color:  @toolbar-button-background-color;
+@toolbar-button-disabled-background-color: @toolbar-button-background-color;
 @toolbar-button-disabled-border: @toolbar-button-border;
 @toolbar-button-disabled-box-shadow: @toolbar-button-box-shadow;
-@toolbar-button-disabled-icon-color: fade(@toolbar-button-text-color, 50%);
+@toolbar-button-disabled-icon-color: fade(@toolbar-button-icon-color, 50%);
 @toolbar-button-disabled-text-color: fade(@toolbar-button-text-color, 50%);
 
 .tox {
@@ -161,16 +164,16 @@
     // Disable stylelint below because we're mixing the :hover modifier with the "--enabled" class
     // since they need to be kept the same/use the same rules
     svg { /* stylelint-disable-line no-descending-specificity */
-      // fill: @toolbar-button-enabled-icon-color;
-      fill: #2253ae;
+      fill: @toolbar-button-enabled-icon-color;
     }
 
     &:hover,
-    &:focus {
-      background: #b4d7ff;
+    &:focus,
+    &:focus-visible {
+      background: @toolbar-button-enabled-hover-background-color;
 
       svg {
-        fill: @toolbar-button-text-color;
+        fill: @toolbar-button-icon-color;
       }
     }
   }
