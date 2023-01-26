@@ -291,7 +291,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     },
 
     onExecute: (button: AlloyComponent) => {
-      const api = getApi(button)
+      const api = getApi(button);
       if (api.isEnabled()) {
         spec.onAction(api);
       }
