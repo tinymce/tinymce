@@ -1,5 +1,6 @@
 import { Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { SugarShadowDom } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
@@ -12,6 +13,18 @@ describe('browser.tinymce.plugins.image.ContextMenuTest', () => {
     toolbar: 'image',
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
+    setup: (editor: Editor) => {
+      editor.ui.registry.addMenuItem('contextfiller', {
+        icon: 'link',
+        text: 'Context Filler',
+        onAction: Fun.noop
+      });
+
+      editor.ui.registry.addContextMenu('contextfiller', {
+        update: Fun.constant('contextfiller')
+      });
+    },
+    contextmenu: 'image link contextfiller',
     image_caption: true
   }, [ Plugin ], true);
 
@@ -52,8 +65,8 @@ describe('browser.tinymce.plugins.image.ContextMenuTest', () => {
       { format: 'raw' }
     );
     Mouse.contextMenuOn(TinyDom.body(editor), 'a');
-    await Waiter.pWait(250); // Give plenty of time for the context menu to appear
-    UiFinder.notExists(SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(TinyDom.targetElement(editor))), '.tox-silver-sink [role="menuitem"]');
+    await pOpenContextMenu(editor, 'a');
+    UiFinder.notExists(SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(TinyDom.targetElement(editor))), 'div[title="Link..."');
   });
 
   it('TBA: Opening context menus on an unselected figure', async () => {
