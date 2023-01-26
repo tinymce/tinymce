@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Color picker dialog would not update the preview color if the hex input value was prefixed with `#` symbol. #TINY-9457
 - It was possible to open links inside the editor if the editor root was noneditable. #TINY-9470
 - Inline boundary was rendered for noneditable inline boundary elements. #TINY-9471
+- Clicking on a disabled split button will not call `onAction` callback anymore. #TINY-9504
 
 ## 6.3.1 - 2022-12-06
 
