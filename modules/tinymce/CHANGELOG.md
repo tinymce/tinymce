@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Improved
 - Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
+- Pressing backspace in an empty line now preserves formatting in a previous empty line. #TINY-9454
 
 ### Changed
 - The `link` plugins context menu items will no longer appear for noneditable links. #TINY-9491

@@ -1,5 +1,5 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Compare, Insert, Remove, SugarElement, Traverse } from '@ephox/sugar';
+import { SelectorFind, Compare, SelectorFilter, Insert, Remove, SugarElement, Traverse } from '@ephox/sugar';
 
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
@@ -55,9 +55,14 @@ const nestedBlockMerge = (
 
 const sidelongBlockMerge = (rootNode: SugarElement<Node>, fromBlock: SugarElement<Element>, toBlock: SugarElement<Element>): Optional<CaretPosition> => {
   if (Empty.isEmpty(toBlock)) {
+    const descendants = SelectorFilter.descendants(toBlock, '*');
     Remove.remove(toBlock);
     if (Empty.isEmpty(fromBlock)) {
       PaddingBr.fillWithPaddingBr(fromBlock);
+      SelectorFind.child(fromBlock, '[data-mce-bogus]').fold(
+        Fun.noop,
+        (bogus) => Arr.each(descendants, (descendant) => Insert.wrap(bogus, descendant))
+      );
     }
     return CaretFinder.firstPositionIn(fromBlock.dom);
   }
