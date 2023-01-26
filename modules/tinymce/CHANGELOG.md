@@ -40,7 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Clicking on a disabled split button will no longer call the `onAction` callback. #TINY-9504
 - Selection after inserting a link is now within the link so the context menu and dialog behave correctly straight away. #TINY-7993
 - Fix determining if the current selection contains a link and retrieving its href value. #TINY-7993
-- The Edit Link dialog incorrectly retrieved the URL value when opened immediately after the link insertion. #TINY-7993
+- The "Edit Link" dialog incorrectly retrieved the URL value when opened immediately after the link insertion. #TINY-7993
 
 ## 6.3.1 - 2022-12-06
 
