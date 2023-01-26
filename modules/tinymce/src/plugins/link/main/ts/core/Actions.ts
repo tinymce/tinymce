@@ -69,13 +69,15 @@ const toggleActiveState = (editor: Editor) => (api: Toolbar.ToolbarToggleButtonI
   return toggleState(editor, updateState);
 };
 
+const hasExactlyOneLinkInSelection = (editor: Editor): boolean => {
+  const links = editor.selection.isCollapsed() ?
+    Utils.getLinks(editor.dom.getParents(editor.selection.getStart())) :
+    Utils.getLinksInSelection(editor.selection.getRng());
+  return links.length === 1;
+};
+
 const toggleEnabledState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi | Menu.MenuItemInstanceApi): () => void => {
-  const updateState = () => {
-    const links = editor.selection.isCollapsed() ?
-      Utils.getLinks(editor.dom.getParents(editor.selection.getStart())) :
-      Utils.getLinksInSelection(editor.selection.getRng());
-    api.setEnabled(links.length === 1);
-  };
+  const updateState = () => api.setEnabled(hasExactlyOneLinkInSelection(editor));
   updateState();
   return toggleState(editor, updateState);
 };
