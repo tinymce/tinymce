@@ -11,30 +11,6 @@ type Align = 'start' | 'end';
 
 type ButtonType = 'primary' | 'secondary';
 
-interface BaseDialogHeaderButton {
-  name: string;
-  align: Align;
-  /** @deprecated use `buttonType: "primary"` instead */
-  primary: boolean;
-  enabled: boolean;
-  icon: string;
-  buttonType: Optional<ButtonType>;
-}
-
-export interface DialogHeaderNormalButtonSpec extends BaseDialogHeaderButton {
-  type: 'submit' | 'cancel' | 'custom';
-  text: string;
-}
-
-export interface DialogHeaderTogglableIconButton extends BaseDialogHeaderButton {
-  type: 'customTogglableIcon';
-  text: Optional<string>;
-  tooltip: Optional<string>;
-  icon: string;
-  toggledIcon: string;
-  items: DialogHeaderMenuButtonItem[];
-}
-
 interface BaseDialogHeaderButtonSpec {
   name?: string;
   align?: Align;
@@ -45,7 +21,7 @@ interface BaseDialogHeaderButtonSpec {
   buttonType?: ButtonType;
 }
 
-export interface DialogHeaderNormalButton extends BaseDialogHeaderButtonSpec {
+export interface DialogHeaderNormalButtonSpec extends BaseDialogHeaderButtonSpec {
   type: 'submit' | 'cancel' | 'custom';
   text: string;
 }
@@ -56,15 +32,38 @@ export interface DialogHeaderTogglableIconButtonSpec extends BaseDialogHeaderBut
   tooltip?: string;
   icon: string;
   toggledIcon: string;
-  items?: DialogHeaderMenuButtonItemSpec[];
+}
+
+export type DialogHeaderButtonSpec = DialogHeaderNormalButtonSpec | DialogHeaderTogglableIconButtonSpec;
+
+interface BaseDialogHeaderButton {
+  name: string;
+  align: 'start' | 'end';
+  /** @deprecated use `buttonType: "primary"` instead */
+  primary: boolean;
+  enabled: boolean;
+  buttonType: Optional<'primary' | 'secondary'>;
+}
+
+export interface DialogHeaderNormalButton extends BaseDialogHeaderButton {
+  type: 'submit' | 'cancel' | 'custom';
+  text: string;
+  icon: Optional<string>;
+}
+
+export interface DialogHeaderTogglableIconButton extends BaseDialogHeaderButton {
+  type: 'customTogglableIcon';
+  text?: string;
+  tooltip?: string;
+  icon: string;
+  toggledIcon: string;
 }
 
 export type DialogHeaderButton = DialogHeaderNormalButton | DialogHeaderTogglableIconButton;
-export type DialogHeaderButtonSpec = DialogHeaderNormalButtonSpec | DialogHeaderTogglableIconButtonSpec;
 
 const baseHeaderButtonFields = [
   ComponentSchema.generatedName('button'),
-  ComponentSchema.icon,
+  ComponentSchema.optionalIcon,
   FieldSchema.defaultedStringEnum('align', 'end', [ 'start', 'end' ] as Align[]),
   // this should be removed, but must live here because FieldSchema doesn't have a way to manage deprecated fields
   ComponentSchema.primary,
@@ -84,11 +83,12 @@ const normalHeaderButtonFields = [
 ];
 
 const customTogglableIconHeaderButtonFields = [
+  ...baseHeaderButtonFields,
   FieldSchema.requiredStringEnum('type', [ 'customTogglableIcon' ]),
   ComponentSchema.optionalText,
   ComponentSchema.optionalTooltip,
   ComponentSchema.icon,
-  ...baseHeaderButtonFields
+  FieldSchema.requiredString('toggledIcon')
 ];
 
 export const dialogHeaderButtonSchema = StructureSchema.choose(

@@ -169,17 +169,13 @@ const getAction = (name: string, buttonType: string) => (comp: AlloyComponent) =
 
 const isMenuFooterButtonSpec = (spec: FooterButtonSpec | HeaderButtonSpec, buttonType: string): spec is Dialog.DialogFooterMenuButton => buttonType === 'menu';
 
-const isNormalFooterButtonSpec = (spec: FooterButtonSpec | HeaderButtonSpec, buttonType: string): spec is Dialog.DialogFooterNormalButton => buttonType === 'custom' || buttonType === 'cancel' || buttonType === 'submit';
+const isNormalFooterButtonSpec = (spec: FooterButtonSpec | HeaderButtonSpec, buttonType: string): spec is Dialog.DialogFooterNormalButton | Dialog.DialogHeaderNormalButton => buttonType === 'custom' || buttonType === 'cancel' || buttonType === 'submit';
 
 const isTogglableIconButton = (spec: FooterButtonSpec | HeaderButtonSpec, buttonType: string): spec is Dialog.DialogHeaderTogglableIconButton => buttonType === 'customTogglableIcon';
 
 const renderTogglableIconButton = (spec: Dialog.DialogHeaderTogglableIconButton, backstage: UiFactoryBackstage): SimpleOrSketchSpec => {
   const optMemIcon = Optional.some(spec.icon)
-    .map((iconName) => {
-      // eslint-disable-next-line no-console
-      console.log('iconName: ', iconName);
-      return renderReplaceableIconFromPack(iconName, backstage.shared.providers.icons);
-    })
+    .map((iconName) => renderReplaceableIconFromPack(iconName, backstage.shared.providers.icons))
     .map(Memento.record);
   const currentStatus = Cell('normal');
 
@@ -208,12 +204,12 @@ const renderTogglableIconButton = (spec: Dialog.DialogHeaderTogglableIconButton,
 
   const buttonSpec: IconButtonWrapper = {
     ...spec,
-    tooltip: spec.text,
-    icon: Optional.some(spec.name),
+    tooltip: Optional.from(spec.text),
+    icon: Optional.from(spec.name),
     borderless: false
   };
 
-  const tooltipAttributes = spec.tooltip.map<{}>((tooltip) => ({
+  const tooltipAttributes = buttonSpec.tooltip.map<{}>((tooltip) => ({
     'aria-label': backstage.shared.providers.translate(tooltip),
     'title': backstage.shared.providers.translate(tooltip)
   })).getOr({});
@@ -258,8 +254,7 @@ export const renderFooterButton = (spec: FooterButtonSpec | HeaderButtonSpec, bu
   } else if (isTogglableIconButton(spec, buttonType)) {
     const buttonSpec: Dialog.DialogHeaderTogglableIconButton = {
       ...spec,
-      tooltip: Optional.some(spec.name),
-      items: []
+      tooltip: spec.name
     };
     return renderTogglableIconButton(buttonSpec, backstage);
   } else {
