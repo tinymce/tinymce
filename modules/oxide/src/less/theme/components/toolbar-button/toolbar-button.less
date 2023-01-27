@@ -13,12 +13,10 @@
 @toolbar-button-font-style: normal;
 @toolbar-button-font-weight: @font-weight-normal;
 @toolbar-button-height: 28px;
-// @toolbar-button-icon-color: contrast(@background-color, @color-white, @color-black);
-@toolbar-button-icon-color: #222f3e;
+@toolbar-button-icon-color: contrast(@background-color, @color-white, @color-black);
 @toolbar-button-spacing-x: 1px;
 @toolbar-button-spacing-y: 5px;
-// @toolbar-button-text-color: contrast(@background-color, @color-white, @color-black);
-@toolbar-button-text-color: #222f3e;
+@toolbar-button-text-color: contrast(@background-color, @color-white, @color-black);
 @toolbar-button-text-transform: none;
 @toolbar-button-width: 34px;
 
@@ -36,7 +34,7 @@
 
 @toolbar-button-active-background-color: #285ec7;
 @toolbar-button-active-border: @toolbar-button-hover-border;
-@toolbar-button-active-box-shadow: @toolbar-button-box-shadow;
+@toolbar-button-active-box-shadow: @toolbar-button-box-shadow; // set to `0 1px 1px 0 rgba(0, 0, 0, .1) inset` for a small push in effect
 @toolbar-button-active-icon-color: @toolbar-button-hover-icon-color;
 @toolbar-button-active-text-color: @toolbar-button-hover-text-color;
 @toolbar-button-active-transform: none; // Set to `translateY(1px)` for a small push down effect
