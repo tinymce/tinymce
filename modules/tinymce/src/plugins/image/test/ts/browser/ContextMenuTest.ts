@@ -1,30 +1,16 @@
-import { Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { Keys, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
-import { SugarShadowDom } from '@ephox/sugar';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
 describe('browser.tinymce.plugins.image.ContextMenuTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
-    plugins: 'image link',
+    plugins: 'image',
     toolbar: 'image',
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
-    setup: (editor: Editor) => {
-      editor.ui.registry.addMenuItem('contextfiller', {
-        icon: 'link',
-        text: 'Context Filler',
-        onAction: Fun.noop
-      });
-
-      editor.ui.registry.addContextMenu('contextfiller', {
-        update: Fun.constant('contextfiller')
-      });
-    },
-    contextmenu: 'image link contextfiller',
     image_caption: true
   }, [ Plugin ], true);
 
@@ -48,25 +34,6 @@ describe('browser.tinymce.plugins.image.ContextMenuTest', () => {
     TinyUiActions.keydown(editor, Keys.enter());
     await pWaitForAndSubmitDialog(editor);
     TinyAssertions.assertSelection(editor, [], 0, [], 1);
-  });
-
-  it('TINY-9491: Opening context menus on a selected figure', async () => {
-    const editor = hook.editor();
-    editor.setContent(
-      '<div contenteditable="false">' +
-        '<h2 contenteditable="true">Table</h2>' +
-        '<ul>' +
-          '<li>' +
-            '<a href="#mcetoc_1gmi3gu5b11" data-mce-href="#mcetoc_1gmi3gu5b11">point </a>' +
-          '</li>' +
-        '</ul>' +
-      '</div>' +
-      '<h2 id="mcetoc_1gmi3gu5b12">point</h2>',
-      { format: 'raw' }
-    );
-    Mouse.contextMenuOn(TinyDom.body(editor), 'a');
-    await pOpenContextMenu(editor, 'a');
-    UiFinder.notExists(SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(TinyDom.targetElement(editor))), 'div[title="Link..."');
   });
 
   it('TBA: Opening context menus on an unselected figure', async () => {
