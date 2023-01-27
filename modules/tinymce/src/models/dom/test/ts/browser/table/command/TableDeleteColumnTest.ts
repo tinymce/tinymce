@@ -7,6 +7,8 @@ import Editor from 'tinymce/core/api/Editor';
 import { TableModifiedEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
+import * as TableTestUtils from '../../../module/table/TableTestUtils';
+
 describe('browser.tinymce.models.dom.table.command.TableDeleteColumnTest', () => {
   let events: Array<EditorEvent<TableModifiedEvent>> = [];
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -60,5 +62,15 @@ describe('browser.tinymce.models.dom.table.command.TableDeleteColumnTest', () =>
     editor.execCommand('mceTableDeleteCol');
     TinyAssertions.assertContent(editor, '');
     assertEvents(2);
+  });
+
+  it('TINY-9459: Should not apply mceTableDeleteCol command on table in noneditable root', () => {
+    TableTestUtils.withNoneditableRootEditor(hook.editor(), (editor) => {
+      const initalContent = '<table><tbody><tr><td>cell</td></tr></tbody></table>';
+      editor.setContent(initalContent);
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+      editor.execCommand('mceTableDeleteCol');
+      TinyAssertions.assertContent(editor, initalContent);
+    });
   });
 });
