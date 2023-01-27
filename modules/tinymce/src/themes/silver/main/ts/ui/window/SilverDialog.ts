@@ -28,7 +28,7 @@ const getDialogSizeClasses = (size: Dialog.DialogSize): string[] => {
 const renderDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra<T>, backstage: UiFactoryBackstage): RenderedDialog<T> => {
   const dialogId = Id.generate('dialog');
   const internalDialog = dialogInit.internalDialog;
-  const header = SilverDialogCommon.getHeader(internalDialog.title, dialogId, backstage);
+  const header = SilverDialogCommon.getHeader(internalDialog.title, internalDialog.headerButtons ?? [], dialogId, backstage);
 
   const body = renderModalBody({
     body: internalDialog.body,

@@ -1,10 +1,12 @@
 import {
   AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting, SketchSpec
 } from '@ephox/alloy';
-import { Optional } from '@ephox/katamari';
+import { Dialog } from '@ephox/bridge';
+import { Arr, Optional } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import { renderFooterButton as renderHeaderButton } from '../general/Button';
 import { formCancelEvent } from '../general/FormEvents';
 import * as Icons from '../icons/Icons';
 import { titleChannel } from './DialogChannels';
@@ -14,6 +16,7 @@ import { titleChannel } from './DialogChannels';
 export interface WindowHeaderSpec {
   title: string;
   draggable: boolean;
+  headerButtons?: Dialog.DialogHeaderButton[];
 }
 
 const renderClose = (providersBackstage: UiFactoryBackstageProviders) => Button.sketch({
@@ -93,9 +96,11 @@ const renderInlineHeader = (
   ])
 });
 
-const renderModalHeader = (spec: WindowHeaderSpec, dialogId: string, providersBackstage: UiFactoryBackstageProviders): AlloySpec => {
+const makeButton = (button: Dialog.DialogHeaderButton, backstage: UiFactoryBackstage) => renderHeaderButton(button, button.type, backstage);
+
+const renderModalHeader = (spec: WindowHeaderSpec, dialogId: string, backstage: UiFactoryBackstage): AlloySpec => {
   const pTitle = ModalDialog.parts.title(
-    renderTitle(spec, dialogId, Optional.none(), providersBackstage)
+    renderTitle(spec, dialogId, Optional.none(), backstage.shared.providers)
   );
 
   const pHandle = ModalDialog.parts.draghandle(
@@ -103,13 +108,19 @@ const renderModalHeader = (spec: WindowHeaderSpec, dialogId: string, providersBa
   );
 
   const pClose = ModalDialog.parts.close(
-    renderClose(providersBackstage)
+    renderClose(backstage.shared.providers)
   );
 
-  const components = [ pTitle ].concat(spec.draggable ? [ pHandle ] : []).concat([ pClose ]);
+  const headerButtons = spec.headerButtons ?? [];
+
+  const renderedButtons = [ ...Arr.map(headerButtons, (headerButton) => {
+    return makeButton(headerButton, backstage);
+  }), pClose ];
+
+  const defaultComponents = [ pTitle ].concat(spec.draggable ? [ pHandle ] : []).concat([ pClose ]);
   return Container.sketch({
     dom: DomFactory.fromHtml('<div class="tox-dialog__header"></div>'),
-    components
+    components: headerButtons.length > 0 ? renderedButtons : defaultComponents
   });
 };
 

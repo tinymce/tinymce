@@ -52,7 +52,7 @@ const handleMessage = (editor: Editor, api: Dialog.UrlDialogInstanceApi, data: a
 
 const renderUrlDialog = (internalDialog: Dialog.UrlDialog, extra: SharedWindowExtra, editor: Editor, backstage: UiFactoryBackstage): RenderedUrlDialog => {
   const dialogId = Id.generate('dialog');
-  const header = getHeader(internalDialog.title, dialogId, backstage);
+  const header = getHeader(internalDialog.title, [], dialogId, backstage);
   const body = renderIframeBody(internalDialog);
   const footer = internalDialog.buttons.bind((buttons) => {
     // Don't render a footer if no buttons are specified

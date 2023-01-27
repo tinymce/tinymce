@@ -114,7 +114,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
         }),
         AddEventsBehaviour.config(modalEventsId, [
           AlloyEvents.runOnAttached((c) => {
-            AriaLabel.labelledBy(c.element, AlloyParts.getPartOrDie(c, detail, 'title').element);
+            AlloyParts.getPart(c, detail, 'title').each((title) => AriaLabel.labelledBy(c.element, title.element));
             AriaDescribe.describedBy(c.element, AlloyParts.getPartOrDie(c, detail, 'body').element);
           })
         ])
