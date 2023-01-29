@@ -147,12 +147,12 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
     return items;
   };
 
-  const getDialogSpec = (error: boolean, initialData: DialogData): Dialog.DialogSpec<DialogData> => ({
+  const getDialogSpec = (showNoMatchesAlertBanner: boolean, initialData: DialogData): Dialog.DialogSpec<DialogData> => ({
     title: 'Find and Replace',
     size: 'normal',
     body: {
       type: 'panel',
-      items: getPanelItems(error)
+      items: getPanelItems(showNoMatchesAlertBanner)
     },
     buttons: [
       {
@@ -199,7 +199,7 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
     ],
     initialData,
     onChange: (api, details) => {
-      if (error) {
+      if (showNoMatchesAlertBanner) {
         api.redial(getDialogSpec(false, api.getData()));
       }
       if (details.name === 'findtext' && currentSearchState.get().count > 0) {
