@@ -19,6 +19,7 @@ interface BaseDialogHeaderButtonSpec {
   enabled?: boolean;
   icon?: string;
   buttonType?: ButtonType;
+  showIconAndText?: boolean;
 }
 
 export interface DialogHeaderNormalButtonSpec extends BaseDialogHeaderButtonSpec {
@@ -43,6 +44,7 @@ interface BaseDialogHeaderButton {
   primary: boolean;
   enabled: boolean;
   buttonType: Optional<'primary' | 'secondary'>;
+  showIconAndText: boolean;
 }
 
 export interface DialogHeaderNormalButton extends BaseDialogHeaderButton {
@@ -68,6 +70,7 @@ const baseHeaderButtonFields = [
   // this should be removed, but must live here because FieldSchema doesn't have a way to manage deprecated fields
   ComponentSchema.primary,
   ComponentSchema.enabled,
+  FieldSchema.defaulted('showIconAndText', false),
   // this should be defaulted to `secondary` but the implementation needs to manage the deprecation
   FieldSchema.optionStringEnum('buttonType', [ 'primary', 'secondary' ] as ButtonType[])
 ];

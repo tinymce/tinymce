@@ -1,6 +1,5 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, FormField as AlloyFormField, GuiFactory, Memento,
-  RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, Tabstopping
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, FormField as AlloyFormField, GuiFactory, Memento, RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, Tabstopping
 } from '@ephox/alloy';
 import { Dialog, Toolbar } from '@ephox/bridge';
 import { Cell, Fun, Merger, Optional } from '@ephox/katamari';
@@ -116,7 +115,13 @@ export const renderButtonSpec = (
   const translatedText = providersBackstage.translate(spec.text);
 
   const icon = spec.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons));
-  const components = [ icon.getOrThunk(() => GuiFactory.text(translatedText)) ];
+  const translatedTextComponed = GuiFactory.text(translatedText);
+  const components = !spec.showIconAndText
+    ? [ icon.getOrThunk(Fun.constant(translatedTextComponed)) ]
+    : icon.fold(
+      Fun.constant([ translatedTextComponed ]),
+      (iconComp) => [ iconComp, translatedTextComponed ]
+    );
 
   // The old default is based on the now-deprecated 'primary' property. `buttonType` takes precedence now.
   const buttonType = spec.buttonType.getOr(!spec.primary && !spec.borderless ? 'secondary' : 'primary');
@@ -127,6 +132,7 @@ export const renderButtonSpec = (
     ...baseClasses,
     ...icon.isSome() ? [ 'tox-button--icon' ] : [],
     ...spec.borderless ? [ 'tox-button--naked' ] : [],
+    ...spec.showIconAndText ? [ 'tox-button--icon-and-text' ] : [],
     ...extraClasses
   ];
 

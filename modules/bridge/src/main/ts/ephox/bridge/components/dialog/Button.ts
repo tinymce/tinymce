@@ -13,6 +13,7 @@ export interface ButtonSpec {
   icon?: string;
   borderless?: boolean;
   buttonType?: 'primary' | 'secondary' | 'toolbar';
+  showIconAndText?: boolean;
 }
 
 export interface Button {
@@ -25,6 +26,7 @@ export interface Button {
   icon: Optional<string>;
   borderless: boolean;
   buttonType: Optional<'primary' | 'secondary' | 'toolbar'>;
+  showIconAndText?: boolean;
 }
 
 const buttonFields = [

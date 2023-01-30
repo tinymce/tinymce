@@ -2,7 +2,7 @@ import {
   AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting, SketchSpec
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Optional, Strings } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -112,15 +112,17 @@ const renderModalHeader = (spec: WindowHeaderSpec, dialogId: string, backstage: 
   );
 
   const headerButtons = spec.headerButtons ?? [];
+  const hasHeadersButton = headerButtons.length > 0;
 
   const renderedButtons = [ ...Arr.map(headerButtons, (headerButton) => {
     return makeButton(headerButton, backstage);
   }), pClose ];
 
+  const classes = Strings.rTrim(`tox-dialog__header ${hasHeadersButton ? 'tox-dialog__header-with-custom-button' : ''}`);
   const defaultComponents = [ pTitle ].concat(spec.draggable ? [ pHandle ] : []).concat([ pClose ]);
   return Container.sketch({
-    dom: DomFactory.fromHtml('<div class="tox-dialog__header"></div>'),
-    components: headerButtons.length > 0 ? renderedButtons : defaultComponents
+    dom: DomFactory.fromHtml(`<div class="${classes}"></div>`),
+    components: hasHeadersButton ? renderedButtons : defaultComponents
   });
 };
 
