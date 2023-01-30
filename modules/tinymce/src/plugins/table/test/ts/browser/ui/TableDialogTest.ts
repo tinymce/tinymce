@@ -1,5 +1,6 @@
-import { ApproxStructure } from '@ephox/agar';
+import { ApproxStructure, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
+import { SugarBody } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -413,5 +414,31 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     await TableTestUtils.pOpenTableDialog(editor);
     TableTestUtils.assertDialogValues(getExpectedData(2, ''), false, generalSelectors);
     await TableTestUtils.pClickDialogButton(editor, false);
+  });
+
+  it('TINY-9459: Should not open table properties dialog on noneditable table', () => {
+    const editor = hook.editor();
+    editor.setContent('<table contenteditable="false"><tbody><tr><td>x</td></tr></tbody></table>');
+    TinySelections.setCursor(editor, [ 1, 0, 0, 0, 0 ], 0); // Index offset off by one due to cef fake caret
+    editor.execCommand('mceTableProps');
+    UiFinder.notExists(SugarBody.body(), '.tox-dialog');
+  });
+
+  it('TINY-9459: Should not open table properties dialog on noneditable root', () => {
+    TableTestUtils.withNoneditableRootEditor(hook.editor(), (editor) => {
+      editor.setContent('<table><tbody><tr><td>x</td></tr></tbody></table>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+      editor.execCommand('mceTableProps');
+      UiFinder.notExists(SugarBody.body(), '.tox-dialog');
+    });
+  });
+
+  it('TINY-9459: Should not open table insert dialog on noneditable root', () => {
+    TableTestUtils.withNoneditableRootEditor(hook.editor(), (editor) => {
+      editor.setContent('<table><tbody><tr><td>x</td></tr></tbody></table>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+      editor.execCommand('mceInsertTableDialog');
+      UiFinder.notExists(SugarBody.body(), '.tox-dialog');
+    });
   });
 });
