@@ -9,7 +9,7 @@ declare let tinymce: TinyMCE;
 
 export default (): void => {
   tinymce.init({
-    // TODO: Investigate. Should thisget the styles (e.g. margin) of the div/textarea?
+    // TODO: Investigate. Should this get the styles (e.g. margin) of the div/textarea?
     selector: 'div.tiny-text',
     inline: false,
     theme: 'silver',

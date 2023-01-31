@@ -17,7 +17,7 @@ export interface InlineHeader {
   readonly isPositionedAtTop: () => boolean;
   readonly show: () => void;
   readonly hide: () => void;
-  readonly update: (resetDocking?: boolean) => void;
+  readonly update: () => void;
   readonly updateMode: () => void;
   readonly repositionPopups: () => void;
 }
@@ -140,7 +140,7 @@ export const InlineHeader = (
     });
   };
 
-  const updateChromeUi = (resetDocking: boolean = false) => {
+  const updateChromeUi = (stickyAction: (c: AlloyComponent) => void) => {
     // Skip updating the ui if it's hidden
     if (!isVisible()) {
       return;
@@ -157,7 +157,9 @@ export const InlineHeader = (
       updateChromeWidth();
     }
 
-    // Refresh split toolbar
+    // Refresh split toolbar. A split toolbar requires a calculation to see what ends up in the
+    // "more drawer". When we don't have a split toolbar, then there is no reason to refresh the toolbar
+    // when the size changes.
     if (isSplitToolbar) {
       OuterContainer.refreshToolbar(mainUi.outerContainer);
     }
@@ -169,31 +171,34 @@ export const InlineHeader = (
 
     // Docking
     if (isSticky) {
-      const action = resetDocking ? Docking.reset : Docking.refresh;
-      floatContainer.on(action);
+      floatContainer.on(stickyAction);
     }
 
     // Floating toolbar
     repositionPopups();
   };
 
-  const updateMode = (updateUi: boolean = true) => {
+  const doUpdateMode = (): boolean => {
     // Skip updating the mode if the toolbar is hidden, is
     // using a fixed container or has sticky toolbars disabled
     if (useFixedToolbarContainer || !isSticky || !isVisible()) {
-      return;
+      return false;
     }
 
-    floatContainer.on((container) => {
-      const currentMode = headerBackstage.getDockingMode();
-      const newMode = calcMode(container);
-      if (newMode !== currentMode) {
-        setupMode(newMode);
-        if (updateUi) {
-          updateChromeUi(true);
+    return floatContainer.get().exists(
+      (fc) => {
+        const currentMode = headerBackstage.getDockingMode();
+        const newMode = calcMode(fc);
+        // Note: the docking mode will only be able to change when the `toolbar_location`
+        // is set to "auto".
+        if (newMode !== currentMode) {
+          setupMode(newMode);
+          return true;
+        } else {
+          return false;
         }
       }
-    });
+    );
   };
 
   const show = () => {
@@ -201,10 +206,26 @@ export const InlineHeader = (
     Css.set(mainUi.outerContainer.element, 'display', 'flex');
     DOM.addClass(editor.getBody(), 'mce-edit-focus');
     Arr.each(uiMotherships, (m) => {
+      // We remove the display style when showing, because when hiding, we set it to "none"
       Css.remove(m.element, 'display');
     });
-    updateMode(false);
-    updateChromeUi();
+    doUpdateMode();
+
+    if (Options.isUiOfTomorrow(editor)) {
+      // When the toolbar is shown, then hidden and when the page is then scrolled,
+      // the toolbar is set to docked, which shouldn't be as it should be static position
+      // calling reset here, to reset the state.
+      // Another case would be when the toolbar is shown initially (with location_bottom)
+      // we don't want to dock the toolbar, calling Docking.refresh
+      updateChromeUi((elem) => Docking.isDocked(elem) ? Docking.reset(elem) : Docking.refresh(elem));
+    } else {
+      // Even if we aren't updating the docking mode, we still want to reposition
+      // the Ui. NOTE: We are using Docking.refresh here, rather than Docking.reset. This
+      // means it should keep whatever its "previous" coordinates were, and will just
+      // behave like the window was scrolled again, and Docking needs to work out if it
+      // is going to dock / undock
+      updateChromeUi(Docking.refresh);
+    }
   };
 
   const hide = () => {
@@ -216,12 +237,29 @@ export const InlineHeader = (
     });
   };
 
+  const update = () => {
+    // Because we use Docking.reset here instead of Docking.refresh. That means
+    // that it will revert back to its original position, clear any state, and then
+    // trigger a refresh. This should be called in situations where the DOM has
+    // changed significantly (resizing, scrolling etc.)
+    updateChromeUi(Docking.reset);
+  };
+
+  const updateMode = () => {
+    const changedMode = doUpdateMode();
+    // If the docking mode has changed due to the update, we want to reset
+    // docking. This will clear any prior stored positions
+    if (changedMode) {
+      update();
+    }
+  };
+
   return {
     isVisible,
     isPositionedAtTop,
     show,
     hide,
-    update: updateChromeUi,
+    update,
     updateMode,
     repositionPopups
   };
