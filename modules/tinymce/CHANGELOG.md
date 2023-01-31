@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The formatting of `contenteditable="false"` elements are no longer cloned to new cells while creating new table rows. #TINY-9449
 
 ### Fixed
+- The searchreplace modal would close incorrectly when clicking outside of the alert that pops up when no match is found. #TINY-9443
 - Color picker on toolbar would not update when changing forecolor or backcolor from menu. #TINY-9439
 - The `onSetup` api function would not run when defining custom group toolbar button. #TINY-9496
 - An element could be dropped onto the decendants of a noneditable element. #TINY-9364
