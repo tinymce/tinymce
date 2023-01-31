@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Lists in a noneditable root were incorrectly editable using list API commands, toolbar buttons and menu items. #TINY-9458
 - Color picker dialog would not update the preview color if the hex input value was prefixed with `#` symbol. #TINY-9457
 - Table cell selection was possible even if the element was noneditable in a noneditable root element. #TINY-9459
+- Table commands were modifying noneditable tables. #TINY-9459
 
 ## 6.3.1 - 2022-12-06
 
