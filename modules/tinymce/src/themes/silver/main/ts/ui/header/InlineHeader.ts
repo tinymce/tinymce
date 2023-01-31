@@ -211,12 +211,21 @@ export const InlineHeader = (
     });
     doUpdateMode();
 
-    // Even if we aren't updating the docking mode, we still want to reposition
-    // the Ui. NOTE: We are using Docking.refresh here, rather than Docking.reset. This
-    // means it should keep whatever its "previous" coordinates were, and will just
-    // behave like the window was scrolled again, and Docking needs to work out if it
-    // is going to dock / undock
-    updateChromeUi(Docking.refresh);
+    if (Options.isUiOfTomorrow(editor)) {
+      // When the toolbar is shown, then hidden and when the page is then scrolled,
+      // the toolbar is set to docked, which shouldn't be as it should be static position
+      // calling reset here, to reset the state.
+      // Another case would be when the toolbar is shown initially (with location_bottom)
+      // we don't want to dock the toolbar, calling Docking.refresh
+      updateChromeUi((elem) => Docking.isDocked(elem) ? Docking.reset(elem) : Docking.refresh(elem));
+    } else {
+      // Even if we aren't updating the docking mode, we still want to reposition
+      // the Ui. NOTE: We are using Docking.refresh here, rather than Docking.reset. This
+      // means it should keep whatever its "previous" coordinates were, and will just
+      // behave like the window was scrolled again, and Docking needs to work out if it
+      // is going to dock / undock
+      updateChromeUi(Docking.refresh);
+    }
   };
 
   const hide = () => {
