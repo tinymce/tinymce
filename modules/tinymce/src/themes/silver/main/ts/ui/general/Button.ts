@@ -221,7 +221,8 @@ const renderTogglableIconButton = (spec: Dialog.DialogHeaderTogglableIconButton,
   })).getOr({});
   const dom = {
     tag: 'button',
-    classes: [ ToolbarButtonClasses.Button ],
+    // TODO: do it properly
+    classes: [ 'tox-button' ],
     attributes: tooltipAttributes
   };
   const components = optMemIcon.map((memIcon) => componentRenderPipeline([ Optional.some(memIcon.asSpec()) ])).getOr([]);

@@ -68,8 +68,8 @@
 @z-index-dialogs-offset-dialog: 2;
 @z-index-dialogs-offset-busy-spinner: 3;
 
-@dialog-toolbar-group-spacing-x: 5px;
-@dialog-toolbar-button-spacing-x: 3px;
+@dialog-toolbar-button-spacing-x: 8px;
+@dialog-toolbar-group-spacing-x: 12px;
 
 .tox {
   .tox-dialog-wrap {
@@ -145,14 +145,15 @@
   .tox-dialog__toolbar {
     display: flex;
     flex-direction: row;
-    gap: @dialog-toolbar-group-spacing-x; // minimal spacing between toolbar groups
+    gap: @dialog-toolbar-button-spacing-x; // spacing between buttons within a group
     justify-content: space-between;
+    padding: @dialog-header-padding;
   }
 
   .tox-dialog__toolbar__group {
     display: flex;
     flex-direction: row;
-    gap: @dialog-toolbar-button-spacing-x; // spacing between buttons within a group
+    gap: @dialog-toolbar-group-spacing-x; // minimal spacing between toolbar groups
   }
 
   .tox-dialog__header .tox-button {
