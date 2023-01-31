@@ -35,9 +35,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed a workaround for ensuring stylesheets are loaded in an outdated version of webkit. #TINY-9433
 - Lists in a noneditable root were incorrectly editable using list API commands, toolbar buttons and menu items. #TINY-9458
 - Color picker dialog would not update the preview color if the hex input value was prefixed with `#` symbol. #TINY-9457
-- Table cell selection was possible even if the element was noneditable in a noneditable root element. #TINY-9459
-- Table commands were modifying noneditable tables. #TINY-9459
-- Fake carets were rendered for noneditable element and tables if the root was noneditable. #TINY-9459
+- Table cell selection was possible even if the element was in a noneditable root element. #TINY-9459
+- Table commands were modifying tables in a noneditable root element. #TINY-9459
+- Fake carets were rendered for noneditable elements and tables in a noneditable root element. #TINY-9459
 
 ## 6.3.1 - 2022-12-06
 
