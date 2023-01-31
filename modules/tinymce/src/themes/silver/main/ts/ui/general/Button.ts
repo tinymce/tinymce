@@ -21,7 +21,7 @@ type AlloyButtonSpec = Parameters<typeof AlloyButton['sketch']>[0];
 
 type ButtonSpec = Omit<Dialog.Button, 'type'>;
 type FooterButtonSpec = Omit<Dialog.DialogFooterNormalButton, 'type'> | Omit<Dialog.DialogFooterMenuButton, 'type'>;
-type HeaderButtonSpec = Omit<Dialog.DialogHeaderNormalButton, 'type'> | Omit<Dialog.DialogHeaderGroupButtonSpec, 'type'> | Omit<Dialog.DialogHeaderTogglableIconButton, 'type'>;
+type HeaderButtonSpec = Omit<Dialog.DialogHeaderNormalButton, 'type'> | Omit<Dialog.DialogHeaderTogglableIconButton, 'type'>;
 
 export interface IconButtonWrapper extends Omit<ButtonSpec, 'text'> {
   readonly tooltip: Optional<string>;
@@ -179,8 +179,6 @@ const isNormalFooterButtonSpec = (spec: FooterButtonSpec | HeaderButtonSpec, but
 
 const isTogglableIconButton = (spec: FooterButtonSpec | HeaderButtonSpec, buttonType: string): spec is Dialog.DialogHeaderTogglableIconButton => buttonType === 'customTogglableIcon';
 
-const isGroupButton = (spec: FooterButtonSpec | HeaderButtonSpec, buttonType: string): spec is Dialog.DialogHeaderTogglableIconButton => buttonType === 'group';
-
 const renderTogglableIconButton = (spec: Dialog.DialogHeaderTogglableIconButton, backstage: UiFactoryBackstage): SimpleOrSketchSpec => {
   const optMemIcon = Optional.some(spec.icon)
     .map((iconName) => renderReplaceableIconFromPack(iconName, backstage.shared.providers.icons))
@@ -265,15 +263,6 @@ export const renderFooterButton = (spec: FooterButtonSpec | HeaderButtonSpec, bu
       tooltip: spec.name
     };
     return renderTogglableIconButton(buttonSpec, backstage);
-    // TODO: remove this if
-  } else if (isGroupButton(spec, buttonType)) {
-    const group: SimpleOrSketchSpec = {
-      dom: {
-        tag: 'div',
-        classes: [ 'some-class' ]
-      }
-    };
-    return group;
   } else {
     // eslint-disable-next-line no-console
     console.error('Unknown footer button type: ', buttonType);
