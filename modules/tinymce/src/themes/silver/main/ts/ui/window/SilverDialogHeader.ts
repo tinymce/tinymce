@@ -2,7 +2,7 @@ import {
   AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting, SimpleOrSketchSpec, SketchSpec
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Arr, Optional, Strings } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -102,7 +102,7 @@ const makeGroupButton = (buttons: (Dialog.DialogHeaderNormalButton | Dialog.Dial
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tox-group-button' ],
+      classes: [ 'tox-dialog__toolbar__group' ],
     },
     components: Arr.map(buttons, (button) => makeButton(button, backstage))
   };
@@ -132,10 +132,9 @@ const renderModalHeader = (spec: WindowHeaderSpec, dialogId: string, backstage: 
     }
   }, []);
 
-  const classes = Strings.rTrim(`tox-dialog__header ${hasHeadersButton ? 'tox-dialog__header-with-custom-button' : ''}`);
   const defaultComponents = [ pTitle ].concat(spec.draggable ? [ pHandle ] : []).concat([ pClose ]);
   return Container.sketch({
-    dom: DomFactory.fromHtml(`<div class="${classes}"></div>`),
+    dom: DomFactory.fromHtml(`<div class="${hasHeadersButton ? 'tox-dialog__toolbar' : 'tox-dialog__header'}"></div>`),
     components: hasHeadersButton ? renderedButtons : defaultComponents
   });
 };

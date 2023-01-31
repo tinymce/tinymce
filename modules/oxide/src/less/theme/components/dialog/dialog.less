@@ -68,6 +68,9 @@
 @z-index-dialogs-offset-dialog: 2;
 @z-index-dialogs-offset-busy-spinner: 3;
 
+@dialog-toolbar-group-spacing-x: 5px;
+@dialog-toolbar-button-spacing-x: 3px;
+
 .tox {
   .tox-dialog-wrap {
     align-items: center;
@@ -137,24 +140,19 @@
     justify-content: space-between;
     padding: @dialog-header-padding;
     position: relative;
+  }
 
-    &.tox-dialog__header-with-custom-button {
-      display: flex;
-      flex-direction: row;
-    }
+  .tox-dialog__toolbar {
+    display: flex;
+    flex-direction: row;
+    gap: @dialog-toolbar-group-spacing-x; // minimal spacing between toolbar groups
+    justify-content: space-between;
+  }
 
-    .tox-group-button {
-      margin: 0 auto;
-
-      &:first-child {
-        margin-inline-end: 0;
-        order: 9999;
-      }
-
-      &:first-child + & {
-        margin-inline-start: 0;
-      }
-    }
+  .tox-dialog__toolbar__group {
+    display: flex;
+    flex-direction: row;
+    gap: @dialog-toolbar-button-spacing-x; // spacing between buttons within a group
   }
 
   .tox-dialog__header .tox-button {
