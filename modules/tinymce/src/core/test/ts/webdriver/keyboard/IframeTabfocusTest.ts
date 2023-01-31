@@ -59,7 +59,6 @@ describe('webdriver.tinymce.core.keyboard.IframeTabfocusTest', () => {
       const editor = hook.editor();
       assertIsNotHighlighted(editor);
       // Pressing tab to focus on the editor
-      // await Waiter.pWait(2000);
       await RealKeys.pSendKeysOn('body', [ RealKeys.text('\t') ]);
       assertIsHighlighted(editor);
     });
@@ -69,6 +68,16 @@ describe('webdriver.tinymce.core.keyboard.IframeTabfocusTest', () => {
       assertIsNotHighlighted(editor);
       await RealMouse.pClickOn('iframe => body');
       assertIsHighlighted(editor);
+    });
+
+    it('TINY-9277: Remove highlight when not in focus', async () => {
+      const editor = hook.editor();
+      assertIsNotHighlighted(editor);
+      await RealMouse.pClickOn('iframe => body');
+      assertIsHighlighted(editor);
+      // tab to defocus
+      await RealKeys.pSendKeysOn('body', [ RealKeys.text('\t') ]);
+      assertIsNotHighlighted(editor);
     });
   });
 });

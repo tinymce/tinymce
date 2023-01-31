@@ -87,7 +87,7 @@ const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => 
     Delay.setEditorTimeout(editor, () => {
       const focusedEditor = editorManager.focusedEditor;
 
-      // Remove focus if no longer on the same editor
+      // Remove focus higlight if no longer in focus
       if (focusedEditor !== editor) {
         toggleContentAreaOnFocus(editor, Class.remove);
       }
