@@ -135,7 +135,7 @@ module.exports = function (grunt) {
   const browserTests = filterChangesNot(changes, runsHeadless);
 
   const activeBrowser = grunt.option('bedrock-browser') || 'chrome-headless';
-  const headlessBrowser = activeBrowser.endsWith("-headless") ? activeBrowser : 'chrome-headless'
+  const headlessBrowser = activeBrowser.endsWith("-headless") ? activeBrowser : 'chrome-headless';
   const activeOs = grunt.option('bedrock-os') || 'tests';
   const gruntConfig = {
     shell: {
