@@ -2,6 +2,7 @@ import { Arr, Optional } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
+import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import Tools from 'tinymce/core/api/util/Tools';
 
@@ -59,7 +60,9 @@ const getPreviewContent = (editor: Editor, html: string): string => {
       preventClicksOnLinksScript +
       '</head>' +
       '<body class="' + encode(bodyClass) + '"' + dirAttr + '>' +
-      html +
+      HtmlSerializer({ validate: true }, editor.schema).serialize(
+        editor.parser.parse(html, { insert: true })
+      ) +
       '</body>' +
       '</html>'
     );
