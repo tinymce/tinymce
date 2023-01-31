@@ -139,7 +139,21 @@
     position: relative;
 
     &.tox-dialog__header-with-custom-button {
-      justify-content: inherit;
+      display: flex;
+      flex-direction: row;
+    }
+
+    .tox-group-button {
+      margin: 0 auto;
+
+      &:first-child {
+        margin-inline-end: 0;
+        order: 9999;
+      }
+
+      &:first-child + & {
+        margin-inline-start: 0;
+      }
     }
   }
 

@@ -1,5 +1,5 @@
 import {
-  AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting, SketchSpec
+  AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting, SimpleOrSketchSpec, SketchSpec
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Arr, Optional, Strings } from '@ephox/katamari';
@@ -96,7 +96,17 @@ const renderInlineHeader = (
   ])
 });
 
-const makeButton = (button: Dialog.DialogHeaderButton, backstage: UiFactoryBackstage) => renderHeaderButton(button, button.type, backstage);
+const makeButton = (button: Dialog.DialogHeaderNormalButton | Dialog.DialogHeaderTogglableIconButton, backstage: UiFactoryBackstage) => renderHeaderButton(button, button.type, backstage);
+
+const makeGroupButton = (buttons: (Dialog.DialogHeaderNormalButton | Dialog.DialogHeaderTogglableIconButton)[], backstage: UiFactoryBackstage) => {
+  return {
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-group-button' ],
+    },
+    components: Arr.map(buttons, (button) => makeButton(button, backstage))
+  };
+};
 
 const renderModalHeader = (spec: WindowHeaderSpec, dialogId: string, backstage: UiFactoryBackstage): AlloySpec => {
   const pTitle = ModalDialog.parts.title(
@@ -114,9 +124,13 @@ const renderModalHeader = (spec: WindowHeaderSpec, dialogId: string, backstage: 
   const headerButtons = spec.headerButtons ?? [];
   const hasHeadersButton = headerButtons.length > 0;
 
-  const renderedButtons = [ ...Arr.map(headerButtons, (headerButton) => {
-    return makeButton(headerButton, backstage);
-  }), pClose ];
+  const renderedButtons = Arr.foldl(headerButtons, (acc: SimpleOrSketchSpec[], headerButton) => {
+    if (headerButton.type === 'group') {
+      return acc.concat([ makeGroupButton(headerButton.buttons, backstage) ]);
+    } else {
+      return acc.concat([ makeButton(headerButton, backstage) ]);
+    }
+  }, []);
 
   const classes = Strings.rTrim(`tox-dialog__header ${hasHeadersButton ? 'tox-dialog__header-with-custom-button' : ''}`);
   const defaultComponents = [ pTitle ].concat(spec.draggable ? [ pHandle ] : []).concat([ pClose ]);

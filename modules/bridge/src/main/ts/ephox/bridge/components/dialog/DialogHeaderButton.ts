@@ -35,7 +35,12 @@ export interface DialogHeaderTogglableIconButtonSpec extends BaseDialogHeaderBut
   toggledIcon: string;
 }
 
-export type DialogHeaderButtonSpec = DialogHeaderNormalButtonSpec | DialogHeaderTogglableIconButtonSpec;
+export interface DialogHeaderGroupButtonSpec {
+  type: 'group';
+  buttons: (DialogHeaderNormalButtonSpec | DialogHeaderTogglableIconButtonSpec)[];
+}
+
+export type DialogHeaderButtonSpec = DialogHeaderNormalButtonSpec | DialogHeaderTogglableIconButtonSpec | DialogHeaderGroupButtonSpec;
 
 interface BaseDialogHeaderButton {
   name: string;
@@ -61,7 +66,12 @@ export interface DialogHeaderTogglableIconButton extends BaseDialogHeaderButton 
   toggledIcon: string;
 }
 
-export type DialogHeaderButton = DialogHeaderNormalButton | DialogHeaderTogglableIconButton;
+export interface DialogHeaderGroupButton {
+  type: 'group';
+  buttons: (DialogHeaderNormalButton | DialogHeaderTogglableIconButton)[];
+}
+
+export type DialogHeaderButton = DialogHeaderNormalButton | DialogHeaderTogglableIconButton | DialogHeaderGroupButton;
 
 const baseHeaderButtonFields = [
   ComponentSchema.generatedName('button'),
@@ -94,12 +104,25 @@ const customTogglableIconHeaderButtonFields = [
   FieldSchema.requiredString('toggledIcon')
 ];
 
+const schemaWithoutGroupButton = {
+  submit: normalHeaderButtonFields,
+  cancel: normalHeaderButtonFields,
+  custom: normalHeaderButtonFields,
+  customTogglableIcon: customTogglableIconHeaderButtonFields
+};
+
+const groupButtonFields = [
+  FieldSchema.requiredStringEnum('type', [ 'group' ]),
+  FieldSchema.defaultedArrayOf('buttons', [], StructureSchema.choose(
+    'type',
+    schemaWithoutGroupButton
+  ))
+];
+
 export const dialogHeaderButtonSchema = StructureSchema.choose(
   'type',
   {
-    submit: normalHeaderButtonFields,
-    cancel: normalHeaderButtonFields,
-    custom: normalHeaderButtonFields,
-    customTogglableIcon: customTogglableIconHeaderButtonFields
+    ...schemaWithoutGroupButton,
+    group: groupButtonFields
   }
 );
