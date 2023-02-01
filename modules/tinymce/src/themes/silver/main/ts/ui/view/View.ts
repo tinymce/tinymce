@@ -40,8 +40,9 @@ const renderViewButton = (spec: BridgeView.ViewButton, providers: UiFactoryBacks
       enabled: true,
       primary: false,
       name: 'name',
-      icon: Optional.none(),
-      borderless: false,
+      icon: spec.type === 'iconButton' ? Optional.from(spec.icon) : Optional.none(),
+      ...(spec.type === 'iconButton' && { showIconAndText: spec.showIconAndText }),
+      borderless: spec.type === 'iconButton',
       buttonType: Optional.some(spec.buttonType)
     },
     (_comp) => {

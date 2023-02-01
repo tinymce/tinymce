@@ -3,23 +3,41 @@ import { Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
 
-export interface ViewNormalButtonSpec {
-  type: 'button';
+interface BaseButtonSpec {
   text: string;
   buttonType?: 'primary' | 'secondary';
   onAction: () => void;
 }
 
-export type ViewButtonSpec = ViewNormalButtonSpec;
-
-export interface ViewNormalButton {
+export interface ViewNormalButtonSpec extends BaseButtonSpec {
   type: 'button';
+}
+
+export interface ViewIconButtonSpec extends BaseButtonSpec {
+  type: 'iconButton';
+  icon: string;
+  showIconAndText: boolean;
+}
+
+export type ViewButtonSpec = ViewNormalButtonSpec | ViewIconButtonSpec;
+
+interface BaseButton {
   text: string;
   buttonType: 'primary' | 'secondary';
   onAction: () => void;
 }
 
-export type ViewButton = ViewNormalButton;
+export interface ViewNormalButton extends BaseButton {
+  type: 'button';
+}
+
+export interface ViewIconButton extends BaseButton {
+  type: 'iconButton';
+  icon: string;
+  showIconAndText: boolean;
+}
+
+export type ViewButton = ViewNormalButton | ViewIconButton;
 
 const normalButtonFields = [
   FieldSchema.requiredStringEnum('type', [ 'button' ]),
@@ -28,10 +46,20 @@ const normalButtonFields = [
   FieldSchema.requiredFunction('onAction')
 ];
 
+const iconButtonFields = [
+  FieldSchema.requiredStringEnum('type', [ 'iconButton' ]),
+  ComponentSchema.text,
+  ComponentSchema.icon,
+  FieldSchema.defaultedBoolean('showIconAndText', false),
+  FieldSchema.defaultedStringEnum('buttonType', 'secondary', [ 'primary', 'secondary' ]),
+  FieldSchema.requiredFunction('onAction')
+];
+
 export const viewButtonSchema = StructureSchema.choose(
   'type',
   {
-    button: normalButtonFields
+    button: normalButtonFields,
+    iconButton: iconButtonFields
   }
 );
 

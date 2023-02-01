@@ -130,7 +130,7 @@ export const renderButtonSpec = (
 
   const classes = [
     ...baseClasses,
-    ...icon.isSome() ? [ 'tox-button--icon' ] : [],
+    ...(icon.isSome() && !spec.showIconAndText) ? [ 'tox-button--icon' ] : [],
     ...spec.borderless ? [ 'tox-button--naked' ] : [],
     ...spec.showIconAndText ? [ 'tox-button--icon-and-text' ] : [],
     ...extraClasses
@@ -222,7 +222,7 @@ const renderTogglableIconButton = (spec: Dialog.DialogHeaderTogglableIconButton,
   const dom = {
     tag: 'button',
     // TODO: do it properly
-    classes: [ 'tox-button' ],
+    classes: [ 'tox-button', 'tox-button--secondary', 'tox-button--icon' ],
     attributes: tooltipAttributes
   };
   const components = optMemIcon.map((memIcon) => componentRenderPipeline([ Optional.some(memIcon.asSpec()) ])).getOr([]);
@@ -255,6 +255,7 @@ export const renderFooterButton = (spec: FooterButtonSpec | HeaderButtonSpec, bu
     const action = getAction(spec.name, buttonType);
     const buttonSpec = {
       ...spec,
+      // TODO: it should be configurable
       borderless: false
     };
     return renderButton(buttonSpec, action, backstage.shared.providers, [ ]);
