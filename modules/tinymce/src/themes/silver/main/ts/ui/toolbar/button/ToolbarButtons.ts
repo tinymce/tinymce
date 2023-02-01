@@ -208,6 +208,9 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
           ReadOnly.receivingConfig()
         ].concat(specialisation.toolbarButtonBehaviours)
       ),
+      // Here we add the commonButtonDisplayEvent behaviour from the structure so we can listen
+      // to updateMenuIcon and updateMenuText events and run the defined callbacks as they are
+      // defined in the renderCommonStructure function and fix the size of the button onAttached.
       [commonButtonDisplayEvent]: structure.buttonBehaviours?.[commonButtonDisplayEvent],
     }
   });
