@@ -1,6 +1,7 @@
 import { AlloyComponent, Disabling, ItemTypes } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Fun, Optional } from '@ephox/katamari';
+import { Attribute, SelectorFind } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 
@@ -14,7 +15,12 @@ const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse,
   const caret = downwardsCaret ? renderDownwardsCaret(providersBackstage.icons) : renderSubmenuCaret(providersBackstage.icons);
   const getApi = (component: AlloyComponent): Menu.NestedMenuItemInstanceApi => ({
     isEnabled: () => !Disabling.isDisabled(component),
-    setEnabled: (state: boolean) => Disabling.set(component, !state)
+    setEnabled: (state: boolean) => Disabling.set(component, !state),
+    setIconFill: (id, value) => {
+      SelectorFind.descendant(component.element, 'svg path[id="' + id + '"], rect[id="' + id + '"]').each((underlinePath) => {
+        Attribute.set(underlinePath, 'fill', value);
+      });
+    },
   });
 
   const structure = renderItemStructure({
