@@ -38,8 +38,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - It was possible to open links inside the editor if the editor root was noneditable. #TINY-9470
 - Inline boundary was rendered for noneditable inline boundary elements. #TINY-9471
 - Clicking on a disabled split button will no longer call the `onAction` callback. #TINY-9504
-- Selection after inserting a link is now within the link so the context menu and dialog behave correctly straight away. #TINY-7993
-- Fix determining if the current selection contains a link and retrieving its href value. #TINY-7993
 - The "Edit Link" dialog incorrectly retrieved the URL value when opened immediately after the link insertion. #TINY-7993
 
 ## 6.3.1 - 2022-12-06
