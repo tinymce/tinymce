@@ -334,6 +334,12 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
     store.clear();
     assertSplitButtonDisabledState('Disabled', true, button3);
     assertSplitButtonActiveState('Off still', false, button3);
+
+    // TINY-9504: The button is disabled now. Clicking on it should not call onAction callback.
+    Mouse.clickOn(component.element, '.button3-container .tox-split-button .tox-tbtn');
+    store.assertEq('Store should not have action3', [ ]);
+    assertSplitButtonDisabledState('Disabled', true, button3);
+    assertSplitButtonActiveState('Off still', false, button3);
   });
 
   it('Fourth button (button4): menu button', async () => {
