@@ -47,7 +47,19 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
 
   const assertHtmlAndBodyState = (editor: Editor, shouldExist: boolean) => {
     const existsFn = shouldExist ? UiFinder.exists : UiFinder.notExists;
-    existsFn(SugarBody.body(), 'root:.tox-fullscreen');
+
+    try {
+      existsFn(SugarBody.body(), 'root:.tox-fullscreen');
+    } catch (e) {
+      // TODO: Remove this once we figure out why this flakes this adds some extra logging
+      if (e instanceof Error) {
+        const hasToxFullscreen = Type.isNonNullable(document.querySelector('.tox-fullscreen'));
+        throw new Error(`${e.message} body-class: "${document.body.className}" html-class: "${document.documentElement.className}" hasToxFullscreen: ${hasToxFullscreen}`);
+      } else {
+        throw e;
+      }
+    }
+
     existsFn(Traverse.documentElement(SugarDocument.getDocument()), 'root:.tox-fullscreen');
   };
 
