@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The formatting of `contenteditable="false"` elements are no longer cloned to new cells while creating new table rows. #TINY-9449
 
 ### Fixed
+- The searchreplace modal would close incorrectly when clicking outside of the alert that pops up when no match is found. #TINY-9443
 - Color picker on toolbar would not update when changing forecolor or backcolor from menu. #TINY-9439
 - The `onSetup` api function would not run when defining custom group toolbar button. #TINY-9496
 - An element could be dropped onto the decendants of a noneditable element. #TINY-9364
@@ -35,6 +36,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Lists in a noneditable root were incorrectly editable using list API commands, toolbar buttons and menu items. #TINY-9458
 - Color picker dialog would not update the preview color if the hex input value was prefixed with `#` symbol. #TINY-9457
 - Textareas with scrollbars in dialogs would not render rounded corners correctly on some browsers. #TINY-9331
+- It was possible to open links inside the editor if the editor root was noneditable. #TINY-9470
+- Inline boundary was rendered for noneditable inline boundary elements. #TINY-9471
 
 ## 6.3.1 - 2022-12-06
 
