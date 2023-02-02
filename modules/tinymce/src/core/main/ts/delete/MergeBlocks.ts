@@ -59,8 +59,7 @@ const sidelongBlockMerge = (rootNode: SugarElement<Node>, fromBlock: SugarElemen
     Remove.remove(toBlock);
     if (Empty.isEmpty(fromBlock)) {
       PaddingBr.fillWithPaddingBr(fromBlock);
-      SelectorFind.child(fromBlock, '[data-mce-bogus]').fold(
-        Fun.noop,
+      SelectorFind.child(fromBlock, '[data-mce-bogus]').each(
         (bogus) => Arr.each(descendants, (descendant) => Insert.wrap(bogus, descendant))
       );
     }
