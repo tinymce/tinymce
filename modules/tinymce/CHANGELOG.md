@@ -16,7 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
 
 ### Changed
+- The `link` plugins context menu items will no longer appear for noneditable links. #TINY-9491
 - The formatting of `contenteditable="false"` elements are no longer cloned to new cells while creating new table rows. #TINY-9449
+- Changed the color of `@dialog-table-border-color`, and added right padding to the first cell of dialog table. #TINY-9380
 
 ### Fixed
 - The searchreplace modal would close incorrectly when clicking outside of the alert that pops up when no match is found. #TINY-9443
@@ -38,6 +40,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Table cell selection was possible even if the element was in a noneditable root element. #TINY-9459
 - Table commands were modifying tables in a noneditable root element. #TINY-9459
 - Fake carets were rendered for noneditable elements and tables in a noneditable root element. #TINY-9459
+- Textareas with scrollbars in dialogs would not render rounded corners correctly on some browsers. #TINY-9331
+- It was possible to open links inside the editor if the editor root was noneditable. #TINY-9470
+- Inline boundary was rendered for noneditable inline boundary elements. #TINY-9471
+- Clicking on a disabled split button will no longer call the `onAction` callback. #TINY-9504
+- The "Edit Link" dialog incorrectly retrieved the URL value when opened immediately after the link insertion. #TINY-7993
 
 ## 6.3.1 - 2022-12-06
 
