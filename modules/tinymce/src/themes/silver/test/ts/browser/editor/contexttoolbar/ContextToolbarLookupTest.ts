@@ -94,8 +94,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLook
   };
 
   it('TINY-4571: Context toolbar initial load lookups', async () => {
-    await Waiter.pWait(50); // Need to wait a little for the context toolbar lookup to run
-    assertNames([ 'p', 'div' ], [ 'p', 'div' ], [ 'p' ]);
+    await Waiter.pTryUntil('Waited for names to match', () => assertNames([ 'p', 'div' ], [ 'p', 'div' ], [ 'p' ]));
   });
 
   it('TINY-4571: Context toolbar node scope lookup', async () => {
