@@ -17,7 +17,7 @@ const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse,
     isEnabled: () => !Disabling.isDisabled(component),
     setEnabled: (state: boolean) => Disabling.set(component, !state),
     setIconFill: (id, value) => {
-      SelectorFind.descendant(component.element, 'svg path[id="' + id + '"], rect[id="' + id + '"]').each((underlinePath) => {
+      SelectorFind.descendant(component.element, `svg path[id="${id}"], rect[id="${id}"]`).each((underlinePath) => {
         Attribute.set(underlinePath, 'fill', value);
       });
     },

@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 - Added optional `select`-property to `colorswatch`-type `fancymenuitem` to allow setting colors as selected. #TINY-9395
-- Added new `setIconColor`-function to `nestedmenuitemspec`. #TINY-9497
+- Added new `setIconFill` function to `nestedmenuitemspec`. #TINY-9497
 
 ## 4.2.0 - 2022-11-23
 
