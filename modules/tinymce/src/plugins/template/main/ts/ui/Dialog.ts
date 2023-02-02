@@ -13,6 +13,11 @@ import * as Utils from '../core/Utils';
 
 type UpdateDialogCallback = (dialogApi: Dialog.DialogInstanceApi<DialogData>, template: InternalTemplate, previewHtml: string) => void;
 
+const sanitise = (editor: Editor, html: string) =>
+  HtmlSerializer({ validate: true }, editor.schema).serialize(
+    editor.parser.parse(html, { insert: true })
+  );
+
 const getPreviewContent = (editor: Editor, html: string): string => {
   if (html.indexOf('<html>') === -1) {
     let contentCssEntries = '';
@@ -60,9 +65,7 @@ const getPreviewContent = (editor: Editor, html: string): string => {
       preventClicksOnLinksScript +
       '</head>' +
       '<body class="' + encode(bodyClass) + '"' + dirAttr + '>' +
-      HtmlSerializer({ validate: true }, editor.schema).serialize(
-        editor.parser.parse(html, { insert: true })
-      ) +
+      html +
       '</body>' +
       '</html>'
     );
@@ -106,8 +109,8 @@ const open = (editor: Editor, templateList: ExternalTemplate[]): void => {
 
   const getTemplateContent = (t: InternalTemplate): Promise<string> =>
     t.value.url.fold(
-      () => Promise.resolve(t.value.content.getOr('')),
-      (url) => fetch(url).then((res) => res.ok ? res.text() : Promise.reject())
+      () => Promise.resolve(sanitise(editor, t.value.content.getOr(''))),
+      (url) => fetch(url).then((res) => res.ok ? res.text().then((content) => sanitise(editor, content)) : Promise.reject())
     );
 
   const onChange = (templates: InternalTemplate[], updateDialog: UpdateDialogCallback) =>
