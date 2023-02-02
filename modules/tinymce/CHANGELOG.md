@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - The formatting of `contenteditable="false"` elements are no longer cloned to new cells while creating new table rows. #TINY-9449
+- Changed the color of `@dialog-table-border-color`, and added right padding to the first cell of dialog table. #TINY-9380
 
 ### Fixed
 - The searchreplace modal would close incorrectly when clicking outside of the alert that pops up when no match is found. #TINY-9443
