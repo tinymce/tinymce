@@ -129,8 +129,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLook
     editor.setContent('<p><code>Code</code></p>');
     resetNames();
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
-    await Waiter.pWait(50); // Need to wait a little for the context toolbar lookup to run
-    assertNames([ 'code', 'p', 'div' ], [ 'code', 'p', 'div' ], [ 'code' ]);
+    await Waiter.pTryUntil('Waited for names to match', () => assertNames([ 'code', 'p', 'div' ], [ 'code', 'p', 'div' ], [ 'code' ]));
   });
 
   it('TINY-4571: Context toolbar root node lookup', async () => {
@@ -139,8 +138,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLook
     resetNames();
     // TODO: TINY-7167
     TinySelections.setCursor(editor, [], 0, false);
-    await Waiter.pWait(50); // Need to wait a little for the context toolbar lookup to run
-    assertNames([ 'div' ], [ 'div' ], [ 'div' ]);
+    await Waiter.pTryUntil('Waited for names to match', () => assertNames([ 'div' ], [ 'div' ], [ 'div' ]));
   });
 
   it('TINY-4571: Context toolbar click outside to inside', async () => {
