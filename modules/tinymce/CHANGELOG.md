@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed a workaround for ensuring stylesheets are loaded in an outdated version of webkit. #TINY-9433
 - Lists in a noneditable root were incorrectly editable using list API commands, toolbar buttons and menu items. #TINY-9458
 - Color picker dialog would not update the preview color if the hex input value was prefixed with `#` symbol. #TINY-9457
+- Textareas with scrollbars in dialogs would not render rounded corners correctly on some browsers. #TINY-9331
 - It was possible to open links inside the editor if the editor root was noneditable. #TINY-9470
 - Inline boundary was rendered for noneditable inline boundary elements. #TINY-9471
 - Clicking on a disabled split button will no longer call the `onAction` callback. #TINY-9504
