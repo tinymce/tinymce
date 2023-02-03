@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inline boundary was rendered for noneditable inline boundary elements. #TINY-9471
 - Clicking on a disabled split button will no longer call the `onAction` callback. #TINY-9504
 - The "Edit Link" dialog incorrectly retrieved the URL value when opened immediately after the link insertion. #TINY-7993
+- Inserting newlines inside an editable element inside a noneditable root would sometimes try to split the editable element. #TINY-9461
 
 ## 6.3.1 - 2022-12-06
 
