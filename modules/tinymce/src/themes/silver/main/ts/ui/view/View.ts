@@ -10,7 +10,7 @@ import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderButton, renderTogglableIconButton } from '../general/Button';
 
 interface ViewHeaderSpec extends SimpleSpec {
-  buttons: BridgeView.ViewButton[];
+  buttons: (BridgeView.ViewButton | BridgeView.ViewButtonsGroup)[];
   providers: UiFactoryBackstageProviders;
 }
 
@@ -33,7 +33,9 @@ interface ViewApis {
   readonly getOnHide: (comp: AlloyComponent) => (api: BridgeView.ViewInstanceApi) => void;
 }
 
-const renderViewButton = (spec: BridgeView.ViewButton, providers: UiFactoryBackstageProviders) => {
+type ViewButtonWithoutGroup = Exclude<BridgeView.ViewButton, BridgeView.ViewButtonsGroup>;
+
+const renderViewButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryBackstageProviders) => {
   if (spec.type === 'togglableIconButton') {
     return renderTogglableIconButton(
       {
@@ -71,7 +73,12 @@ const renderViewButton = (spec: BridgeView.ViewButton, providers: UiFactoryBacks
 };
 
 const renderViewHeader = (spec: ViewHeaderSpec) => {
-  const endButtons = Arr.map(spec.buttons, (btnspec) => renderViewButton(btnspec, spec.providers));
+  const endButtons = Arr.foldl(spec.buttons, (acc: any[], btnspec) => {
+    if (btnspec.type === 'group') {
+      return acc.concat(Arr.map(btnspec.buttons, (btn) => renderViewButton(btn, spec.providers)));
+    }
+    return acc.concat([ renderViewButton(btnspec, spec.providers) ]);
+  }, []);
 
   return {
     uid: spec.uid,

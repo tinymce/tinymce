@@ -30,7 +30,12 @@ export interface ViewTogglableIconButtonSpec extends BaseButtonSpec {
   onAction: (api: TogglableIconButtonStatus) => void;
 }
 
-export type ViewButtonSpec = ViewNormalButtonSpec | ViewIconButtonSpec | ViewTogglableIconButtonSpec;
+export interface ViewButtonsGroupSpec {
+  type: 'group';
+  buttons: Array<ViewNormalButtonSpec | ViewIconButtonSpec | ViewTogglableIconButtonSpec>;
+}
+
+export type ViewButtonSpec = ViewNormalButtonSpec | ViewIconButtonSpec | ViewTogglableIconButtonSpec | ViewButtonsGroupSpec;
 
 interface BaseButton {
   text: string;
@@ -56,8 +61,12 @@ export interface ViewTogglableIconButton extends BaseButton {
   toggledIcon: string;
   onAction: (api: TogglableIconButtonStatus) => void;
 }
+export interface ViewButtonsGroup {
+  type: 'group';
+  buttons: Array<ViewNormalButton | ViewIconButton | ViewTogglableIconButton>;
+}
 
-export type ViewButton = ViewNormalButton | ViewIconButton | ViewTogglableIconButton;
+export type ViewButton = ViewNormalButton | ViewIconButton | ViewTogglableIconButton | ViewButtonsGroup;
 
 const normalButtonFields = [
   FieldSchema.requiredStringEnum('type', [ 'button' ]),
@@ -85,12 +94,25 @@ const togglableIconButtonFields = [
   FieldSchema.requiredFunction('onAction')
 ];
 
+const schemaWithoutGroupButton = {
+  button: normalButtonFields,
+  iconButton: iconButtonFields,
+  togglableIconButton: togglableIconButtonFields,
+};
+
+const groupFields = [
+  FieldSchema.requiredStringEnum('type', [ 'group' ]),
+  FieldSchema.defaultedArrayOf('buttons', [], StructureSchema.choose(
+    'type',
+    schemaWithoutGroupButton
+  ))
+];
+
 export const viewButtonSchema = StructureSchema.choose(
   'type',
   {
-    button: normalButtonFields,
-    iconButton: iconButtonFields,
-    togglableIconButton: togglableIconButtonFields
+    ...schemaWithoutGroupButton,
+    group: groupFields
   }
 );
 

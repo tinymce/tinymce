@@ -1,5 +1,5 @@
-import { createView, View, ViewSpec, ViewInstanceApi } from '../components/view/View';
-import { ViewButton, ViewButtonSpec } from '../components/view/ViewButton';
+import { createView, View, ViewInstanceApi, ViewSpec } from '../components/view/View';
+import { ViewButton, ViewButtonsGroup, ViewButtonsGroupSpec, ViewButtonSpec } from '../components/view/ViewButton';
 
 export {
   createView,
@@ -8,5 +8,7 @@ export {
   ViewInstanceApi,
 
   ViewButton,
-  ViewButtonSpec
+  ViewButtonsGroup,
+  ViewButtonSpec,
+  ViewButtonsGroupSpec
 };
