@@ -1,8 +1,8 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, FormField as AlloyFormField, GuiFactory, Memento, RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, Tabstopping, Toggling
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, FormField as AlloyFormField, GuiFactory, Memento, RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, Tabstopping
 } from '@ephox/alloy';
 import { Dialog, Toolbar, View } from '@ephox/bridge';
-import { Arr, Cell, Fun, Merger, Optional } from '@ephox/katamari';
+import { Cell, Fun, Merger, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';
@@ -178,31 +178,32 @@ const isNormalFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): s
 
 // TODO: remove from here?
 export const renderTogglableIconButton = (spec: View.ViewTogglableIconButtonSpec, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
-  const optMemIcon = Optional.some(spec.icon)
+  const optMemIcon = Optional.some((spec.initialStatus === 'normal' ? spec.icon : spec.toggledIcon))
     .map((iconName) => renderReplaceableIconFromPack(iconName, providers.icons))
     .map(Memento.record);
-  const currentStatus = Cell('normal');
-
-  const switchIcon = (comp: AlloyComponent, newStatus: string): void => {
-    optMemIcon.bind((mem) => mem.getOpt(comp)).each((displayIcon) => {
-      if (newStatus === 'normal') {
-        Replacing.set(displayIcon, [
-          renderReplaceableIconFromPack(spec.icon ?? '', providers.icons)
-        ]);
-      } else {
-        Replacing.set(displayIcon, [
-          renderReplaceableIconFromPack(spec.toggledIcon ?? '', providers.icons)
-        ]);
-      }
-      currentStatus.set(newStatus);
-    });
-  };
+  const currentStatus = Cell(spec.initialStatus);
 
   const action = (comp: AlloyComponent) => {
-    const itIsGoingToEnable = !Arr.contains(comp.element.dom.classList, ToolbarButtonClasses.Ticked);
-    const newStatus = itIsGoingToEnable ? 'toggled' : 'normal';
-    spec.onAction(newStatus);
-    switchIcon(comp, newStatus);
+    spec.onAction({
+      getStatus: () => currentStatus.get(),
+      setStatus: (newStatus) => {
+        optMemIcon.bind((mem) => mem.getOpt(comp)).each((displayIcon) => {
+          if (newStatus === 'normal') {
+            Replacing.set(displayIcon, [
+              renderReplaceableIconFromPack(spec.icon ?? '', providers.icons)
+            ]);
+          } else {
+            Replacing.set(displayIcon, [
+              renderReplaceableIconFromPack(spec.toggledIcon ?? '', providers.icons)
+            ]);
+          }
+          currentStatus.set(newStatus);
+        });
+      },
+      // TODO: fix this
+      isEnabled: Fun.always,
+      setEnabled: Fun.noop
+    });
   };
 
   const buttonSpec: IconButtonWrapper = {
@@ -226,9 +227,7 @@ export const renderTogglableIconButton = (spec: View.ViewTogglableIconButtonSpec
     classes: [ 'tox-button', 'tox-button--secondary', 'tox-button--icon' ],
     attributes: tooltipAttributes
   };
-  const extraBehaviours: Behaviours = [
-    Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, aria: { mode: 'pressed' }, toggleOnExecute: true })
-  ];
+  const extraBehaviours: Behaviours = [];
   const components = optMemIcon.map((memIcon) => componentRenderPipeline([ Optional.some(memIcon.asSpec()) ])).getOr([]);
   const iconButtonSpec = renderCommonSpec(buttonSpec, Optional.some(action), extraBehaviours, dom, components, providers);
   return AlloyButton.sketch(iconButtonSpec);

@@ -9,9 +9,14 @@ interface BaseButtonSpec<Api extends BaseToolbarButtonInstanceApi> extends BaseT
   buttonType?: 'primary' | 'secondary';
 }
 
-type BaseViewButtonInstanceApi = any;
+type TogglableIconButtonStatus = 'normal' | 'toggled';
+interface BaseViewButtonInstanceApi extends BaseToolbarButtonInstanceApi {
+}
 
-export type TogglableIconButtonStatus = 'normal' | 'toggled';
+export interface TogglableIconButtonApi extends BaseViewButtonInstanceApi {
+  getStatus: () => TogglableIconButtonStatus;
+  setStatus: (newStatus: TogglableIconButtonStatus) => void;
+}
 
 export interface ViewNormalButtonSpec extends BaseButtonSpec<BaseViewButtonInstanceApi> {
   type: 'button';
@@ -25,13 +30,14 @@ export interface ViewIconButtonSpec extends BaseButtonSpec<BaseViewButtonInstanc
   onAction: () => void;
 }
 
-export interface ViewTogglableIconButtonSpec extends BaseButtonSpec<BaseViewButtonInstanceApi> {
+export interface ViewTogglableIconButtonSpec extends BaseButtonSpec<TogglableIconButtonApi> {
   name: string;
   type: 'togglableIconButton';
   icon: string;
   toggledIcon: string;
+  initialStatus: TogglableIconButtonStatus;
   // TODO: this should return the API to allow caller to block the toggle if something goes wrong
-  onAction: (api: TogglableIconButtonStatus) => void;
+  onAction: (api: TogglableIconButtonApi) => void;
 }
 
 export interface ViewButtonsGroupSpec {
@@ -58,12 +64,13 @@ export interface ViewIconButton extends Omit<BaseButton<BaseViewButtonInstanceAp
   onAction: () => void;
 }
 
-export interface ViewTogglableIconButton extends Omit<BaseButton<BaseViewButtonInstanceApi>, 'icon'> {
+export interface ViewTogglableIconButton extends Omit<BaseButton<TogglableIconButtonApi>, 'icon'> {
   name: string;
   type: 'togglableIconButton';
   icon: string;
   toggledIcon: string;
-  onAction: (api: TogglableIconButtonStatus) => void;
+  initialStatus: TogglableIconButtonStatus;
+  onAction: (api: TogglableIconButtonApi) => void;
 }
 export interface ViewButtonsGroup {
   type: 'group';
@@ -95,6 +102,7 @@ const togglableIconButtonFields = [
   ComponentSchema.icon,
   FieldSchema.required('toggledIcon'),
   FieldSchema.defaultedStringEnum('buttonType', 'secondary', [ 'primary', 'secondary' ]),
+  FieldSchema.defaultedStringEnum('initialStatus', 'normal', [ 'normal', 'toggled' ]),
   FieldSchema.requiredFunction('onAction')
 ];
 
