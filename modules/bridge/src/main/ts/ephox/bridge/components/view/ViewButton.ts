@@ -8,7 +8,7 @@ interface BaseButtonSpec {
   buttonType?: 'primary' | 'secondary';
 }
 
-type TogglableIconButtonStatus = 'normal' | 'toggled';
+export type TogglableIconButtonStatus = 'normal' | 'toggled';
 
 export interface ViewNormalButtonSpec extends BaseButtonSpec {
   type: 'button';
@@ -27,6 +27,7 @@ export interface ViewTogglableIconButtonSpec extends BaseButtonSpec {
   type: 'togglableIconButton';
   icon: string;
   toggledIcon: string;
+  // TODO: this should return the API to allow caller to block the toggle if something goes wrong
   onAction: (api: TogglableIconButtonStatus) => void;
 }
 

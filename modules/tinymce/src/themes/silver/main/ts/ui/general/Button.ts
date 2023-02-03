@@ -1,7 +1,7 @@
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, FormField as AlloyFormField, GuiFactory, Memento, RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, Tabstopping, Toggling
 } from '@ephox/alloy';
-import { Dialog, Toolbar } from '@ephox/bridge';
+import { Dialog, Toolbar, View } from '@ephox/bridge';
 import { Arr, Cell, Fun, Merger, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -179,8 +179,6 @@ const isNormalFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): s
 export interface TogglableIconButton {
   name: string;
   align: 'start' | 'end';
-  /** @deprecated use `buttonType: "primary"` instead */
-  primary: boolean;
   enabled: boolean;
   buttonType: Optional<'primary' | 'secondary'>;
   showIconAndText: boolean;
@@ -190,7 +188,7 @@ export interface TogglableIconButton {
   icon: string;
   toggledIcon: string;
   // TODO: insert the correct type
-  onAction: (status: any) => void;
+  onAction: (status: View.TogglableIconButtonStatus) => void;
 }
 
 // TODO: remove from here?
@@ -224,6 +222,7 @@ export const renderTogglableIconButton = (spec: TogglableIconButton, providers: 
 
   const buttonSpec: IconButtonWrapper = {
     ...spec,
+    primary: spec.buttonType === Optional.some('primary'),
     tooltip: Optional.from(spec.text),
     icon: Optional.from(spec.name),
     borderless: false
