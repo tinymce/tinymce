@@ -72,36 +72,52 @@ const renderViewButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryBack
   );
 };
 
+const renderButtonsGroup = (spec: BridgeView.ViewButtonsGroup, providers: UiFactoryBackstageProviders) => {
+  return {
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-view__toolbar__group' ],
+    },
+    components: Arr.map(spec.buttons, (button) => renderViewButton(button, providers))
+  };
+};
+
 const renderViewHeader = (spec: ViewHeaderSpec) => {
-  const endButtons = Arr.foldl(spec.buttons, (acc: any[], btnspec) => {
+  let hasGroups = false;
+  const endButtons = Arr.map(spec.buttons, (btnspec) => {
     if (btnspec.type === 'group') {
-      return acc.concat(Arr.map(btnspec.buttons, (btn) => renderViewButton(btn, spec.providers)));
+      hasGroups = true;
+      return renderButtonsGroup(btnspec, spec.providers);
+    } else {
+      return renderViewButton(btnspec, spec.providers);
     }
-    return acc.concat([ renderViewButton(btnspec, spec.providers) ]);
-  }, []);
+  });
 
   return {
     uid: spec.uid,
     dom: {
       tag: 'div',
-      classes: [ 'tox-view__header' ]
+      classes: [ !hasGroups ? 'tox-view__header' : 'tox-view__toolbar' ]
     },
-    components: [
-      Container.sketch({
-        dom: {
-          tag: 'div',
-          classes: [ 'tox-view__header-start' ]
-        },
-        components: []
-      }),
-      Container.sketch({
-        dom: {
-          tag: 'div',
-          classes: [ 'tox-view__header-end' ]
-        },
-        components: endButtons
-      })
-    ]
+    components: hasGroups ?
+      endButtons
+      : [
+
+        Container.sketch({
+          dom: {
+            tag: 'div',
+            classes: [ 'tox-view__header-start' ]
+          },
+          components: []
+        }),
+        Container.sketch({
+          dom: {
+            tag: 'div',
+            classes: [ 'tox-view__header-end' ]
+          },
+          components: endButtons
+        })
+      ]
   };
 };
 
