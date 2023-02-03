@@ -21,7 +21,6 @@ type AlloyButtonSpec = Parameters<typeof AlloyButton['sketch']>[0];
 
 type ButtonSpec = Omit<Dialog.Button, 'type'>;
 type FooterButtonSpec = Omit<Dialog.DialogFooterNormalButton, 'type'> | Omit<Dialog.DialogFooterMenuButton, 'type'>;
-type HeaderButtonSpec = Omit<Dialog.DialogHeaderNormalButton, 'type'> | Omit<Dialog.DialogHeaderTogglableIconButton, 'type'>;
 
 export interface IconButtonWrapper extends Omit<ButtonSpec, 'text'> {
   readonly tooltip: Optional<string>;
@@ -173,14 +172,29 @@ const getAction = (name: string, buttonType: string) => (comp: AlloyComponent) =
   }
 };
 
-const isMenuFooterButtonSpec = (spec: FooterButtonSpec | HeaderButtonSpec, buttonType: string): spec is Dialog.DialogFooterMenuButton => buttonType === 'menu';
+const isMenuFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Dialog.DialogFooterMenuButton => buttonType === 'menu';
 
-const isNormalFooterButtonSpec = (spec: FooterButtonSpec | HeaderButtonSpec, buttonType: string): spec is Dialog.DialogFooterNormalButton | Dialog.DialogHeaderNormalButton => buttonType === 'custom' || buttonType === 'cancel' || buttonType === 'submit';
+const isNormalFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Dialog.DialogFooterNormalButton => buttonType === 'custom' || buttonType === 'cancel' || buttonType === 'submit';
 
-const isTogglableIconButton = (spec: FooterButtonSpec | HeaderButtonSpec, buttonType: string): spec is Dialog.DialogHeaderTogglableIconButton => buttonType === 'customTogglableIcon';
+export interface TogglableIconButton {
+  name: string;
+  align: 'start' | 'end';
+  /** @deprecated use `buttonType: "primary"` instead */
+  primary: boolean;
+  enabled: boolean;
+  buttonType: Optional<'primary' | 'secondary'>;
+  showIconAndText: boolean;
+  type: 'togglableIconButton';
+  text?: string;
+  tooltip?: string;
+  icon: string;
+  toggledIcon: string;
+  // TODO: insert the correct type
+  onAction: (status: any) => void;
+}
 
 // TODO: remove from here?
-export const renderTogglableIconButton = (spec: Dialog.DialogHeaderTogglableIconButton, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
+export const renderTogglableIconButton = (spec: TogglableIconButton, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
   const optMemIcon = Optional.some(spec.icon)
     .map((iconName) => renderReplaceableIconFromPack(iconName, providers.icons))
     .map(Memento.record);
@@ -202,20 +216,10 @@ export const renderTogglableIconButton = (spec: Dialog.DialogHeaderTogglableIcon
   };
 
   const action = (comp: AlloyComponent) => {
-    if (spec.type === 'togglableIconButton') {
-      const itIsGoingToEnable = !Arr.contains(comp.element.dom.classList, ToolbarButtonClasses.Ticked);
-      const newStatus = itIsGoingToEnable ? 'toggled' : 'normal';
-      spec.onAction(newStatus);
-      switchIcon(comp, newStatus);
-    } else {
-      AlloyTriggers.emitWith(comp, formActionEvent, {
-        name: spec.name,
-        value: {
-          getStatus: currentStatus.get,
-          setStatus: (newStatus: string) => switchIcon(comp, newStatus)
-        }
-      });
-    }
+    const itIsGoingToEnable = !Arr.contains(comp.element.dom.classList, ToolbarButtonClasses.Ticked);
+    const newStatus = itIsGoingToEnable ? 'toggled' : 'normal';
+    spec.onAction(newStatus);
+    switchIcon(comp, newStatus);
   };
 
   const buttonSpec: IconButtonWrapper = {
@@ -244,7 +248,7 @@ export const renderTogglableIconButton = (spec: Dialog.DialogHeaderTogglableIcon
   return AlloyButton.sketch(iconButtonSpec);
 };
 
-export const renderFooterButton = (spec: FooterButtonSpec | HeaderButtonSpec, buttonType: string, backstage: UiFactoryBackstage): SimpleOrSketchSpec => {
+export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, backstage: UiFactoryBackstage): SimpleOrSketchSpec => {
   if (isMenuFooterButtonSpec(spec, buttonType)) {
     const getButton = () => memButton;
 
@@ -273,12 +277,6 @@ export const renderFooterButton = (spec: FooterButtonSpec | HeaderButtonSpec, bu
       borderless: false
     };
     return renderButton(buttonSpec, action, backstage.shared.providers, [ ]);
-  } else if (isTogglableIconButton(spec, buttonType)) {
-    const buttonSpec: Dialog.DialogHeaderTogglableIconButton = {
-      ...spec,
-      tooltip: spec.name
-    };
-    return renderTogglableIconButton(buttonSpec, backstage.shared.providers);
   } else {
     // eslint-disable-next-line no-console
     console.error('Unknown footer button type: ', buttonType);
