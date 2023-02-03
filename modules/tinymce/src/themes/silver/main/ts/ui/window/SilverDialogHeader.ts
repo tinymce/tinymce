@@ -1,12 +1,10 @@
 import {
-  AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting, SimpleOrSketchSpec, SketchSpec
+  AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting, SketchSpec
 } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
-import { Arr, Optional } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
-import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { renderFooterButton as renderHeaderButton } from '../general/Button';
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { formCancelEvent } from '../general/FormEvents';
 import * as Icons from '../icons/Icons';
 import { titleChannel } from './DialogChannels';
@@ -16,7 +14,6 @@ import { titleChannel } from './DialogChannels';
 export interface WindowHeaderSpec {
   title: string;
   draggable: boolean;
-  headerButtons?: Dialog.DialogHeaderButton[];
 }
 
 const renderClose = (providersBackstage: UiFactoryBackstageProviders) => Button.sketch({
@@ -96,21 +93,9 @@ const renderInlineHeader = (
   ])
 });
 
-const makeButton = (button: Dialog.DialogHeaderNormalButton | Dialog.DialogHeaderTogglableIconButton, backstage: UiFactoryBackstage) => renderHeaderButton(button, button.type, backstage);
-
-const makeGroupButton = (buttons: (Dialog.DialogHeaderNormalButton | Dialog.DialogHeaderTogglableIconButton)[], backstage: UiFactoryBackstage) => {
-  return {
-    dom: {
-      tag: 'div',
-      classes: [ 'tox-dialog__toolbar__group' ],
-    },
-    components: Arr.map(buttons, (button) => makeButton(button, backstage))
-  };
-};
-
-const renderModalHeader = (spec: WindowHeaderSpec, dialogId: string, backstage: UiFactoryBackstage): AlloySpec => {
+const renderModalHeader = (spec: WindowHeaderSpec, dialogId: string, providersBackstage: UiFactoryBackstageProviders): AlloySpec => {
   const pTitle = ModalDialog.parts.title(
-    renderTitle(spec, dialogId, Optional.none(), backstage.shared.providers)
+    renderTitle(spec, dialogId, Optional.none(), providersBackstage)
   );
 
   const pHandle = ModalDialog.parts.draghandle(
@@ -118,24 +103,14 @@ const renderModalHeader = (spec: WindowHeaderSpec, dialogId: string, backstage: 
   );
 
   const pClose = ModalDialog.parts.close(
-    renderClose(backstage.shared.providers)
+    renderClose(providersBackstage)
   );
 
-  const headerButtons = spec.headerButtons ?? [];
-  const hasHeadersButton = headerButtons.length > 0;
+  const components = [ pTitle ].concat(spec.draggable ? [ pHandle ] : []).concat([ pClose ]);
 
-  const renderedButtons = Arr.foldl(headerButtons, (acc: SimpleOrSketchSpec[], headerButton) => {
-    if (headerButton.type === 'group') {
-      return acc.concat([ makeGroupButton(headerButton.buttons, backstage) ]);
-    } else {
-      return acc.concat([ makeButton(headerButton, backstage) ]);
-    }
-  }, []);
-
-  const defaultComponents = [ pTitle ].concat(spec.draggable ? [ pHandle ] : []).concat([ pClose ]);
   return Container.sketch({
-    dom: DomFactory.fromHtml(`<div class="${hasHeadersButton ? 'tox-dialog__toolbar' : 'tox-dialog__header'}"></div>`),
-    components: hasHeadersButton ? renderedButtons : defaultComponents
+    dom: DomFactory.fromHtml('<div class="tox-dialog__header"></div>'),
+    components
   });
 };
 

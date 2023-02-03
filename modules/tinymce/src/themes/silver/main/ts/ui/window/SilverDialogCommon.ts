@@ -32,11 +32,10 @@ export interface DialogSpec {
   readonly extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[];
 }
 
-const getHeader = (title: string, headerButtons: Dialog.DialogHeaderButton[], dialogId: string, backstage: UiFactoryBackstage): AlloySpec => renderModalHeader({
+const getHeader = (title: string, dialogId: string, backstage: UiFactoryBackstage): AlloySpec => renderModalHeader({
   title: backstage.shared.providers.translate(title),
-  draggable: backstage.dialog.isDraggableModal(),
-  headerButtons
-}, dialogId, backstage);
+  draggable: backstage.dialog.isDraggableModal()
+}, dialogId, backstage.shared.providers);
 
 const getBusySpec = (message: string, bs: Behaviour.AlloyBehaviourRecord, providers: UiFactoryBackstageProviders): AlloySpec => ({
   dom: {

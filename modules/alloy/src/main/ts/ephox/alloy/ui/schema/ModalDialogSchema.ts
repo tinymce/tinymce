@@ -50,13 +50,12 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     }
   }),
 
-  PartType.optional<ModalDialogDetail>({
+  PartType.required<ModalDialogDetail>({
     schema: [ FieldSchema.required('dom') ],
     name: 'title'
   }),
 
-  // TODO: this should be required if there is no cancel button
-  PartType.optional<ModalDialogDetail>({
+  PartType.required<ModalDialogDetail>({
     factory: basic,
     schema: [ FieldSchema.required('dom') ],
     name: 'close'
