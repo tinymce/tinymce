@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - An element could be dropped onto the decendants of a noneditable element. #TINY-9364
 - Checkmark did not show in menu colorswatches. #TINY-9395
 - The foreground and background menu icons would not properly update to display the last used color. #TINY-9497
-- Added new `setIconFill` function to `nestedmenuitemspec` #TINY-9497
+- Added new `setIconFill` function to `NestedMenuItemInstanceApi`. #TINY-9497
 - Toolbar split buttons in advlist plugin to show the correct state when the cursor is in a checklist. #TINY-5167
 - Dragging transparent elements into transparent blocks elements could produce invalid nesting of transparents. #TINY-9231
 - The `editor.insertContent` API would insert contents inside noneditable elements if the selection was inside the element. #TINY-9462
