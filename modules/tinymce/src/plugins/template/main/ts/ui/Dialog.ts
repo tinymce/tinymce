@@ -110,7 +110,7 @@ const open = (editor: Editor, templateList: ExternalTemplate[]): void => {
   const getTemplateContent = (t: InternalTemplate): Promise<string> =>
     t.value.url.fold(
       () => Promise.resolve(sanitise(editor, t.value.content.getOr(''))),
-      (url) => fetch(url).then((res) => res.ok ? res.text().then((content) => sanitise(editor, content)) : Promise.reject())
+      (url) => fetch(url).then((res) => res.ok ? res.text() : Promise.reject()).then((content) => sanitise(editor, content))
     );
 
   const onChange = (templates: InternalTemplate[], updateDialog: UpdateDialogCallback) =>
