@@ -29,11 +29,9 @@ const createPaddingBr = (): SugarElement<HTMLBRElement> => {
   return br;
 };
 
-const fillWithPaddingBr = (elm: SugarElement<Node>): SugarElement<HTMLBRElement> => {
+const fillWithPaddingBr = (elm: SugarElement<Node>): void => {
   Remove.empty(elm);
-  const br = createPaddingBr();
-  Insert.append(elm, br);
-  return br;
+  Insert.append(elm, createPaddingBr());
 };
 
 const isPaddingContents = (elm: SugarElement<Node>): boolean => {
