@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
@@ -28,5 +28,51 @@ describe('browser.tinymce.core.delete.DeleteCommandsTest', () => {
     DeleteCommands.forwardDeleteCommand(editor, caret);
     TinyAssertions.assertContent(editor, '<p><span style="color: red;">a</span>b</p>');
     TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
+  });
+
+  context('noneditable', () => {
+    it('TINY-9477: Delete on noneditable blocks should not do anything', () => {
+      const editor = hook.editor();
+      const initialContent = '<div contenteditable="false"><p>a</p><p>b</p></div>';
+      editor.setContent(initialContent);
+      TinySelections.setSelection(editor, [ 1, 0, 0 ], 0, [ 1, 1, 0 ], 1);
+      DeleteCommands.deleteCommand(editor, caret);
+      TinyAssertions.assertContent(editor, initialContent);
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 1, 0 ], 1);
+    });
+
+    it('TINY-9477: ForwardDelete on noneditable blocks should not do anything', () => {
+      const editor = hook.editor();
+      const initialContent = '<div contenteditable="false"><p>a</p><p>b</p></div>';
+      editor.setContent(initialContent);
+      TinySelections.setSelection(editor, [ 1, 0, 0 ], 0, [ 1, 1, 0 ], 1);
+      DeleteCommands.forwardDeleteCommand(editor, caret);
+      TinyAssertions.assertContent(editor, initialContent);
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 1, 0 ], 1);
+    });
+
+    it('TINY-9477: Delete on blocks in noneditable root should not do anything', () => {
+      const editor = hook.editor();
+      const initialContent = '<p>a</p><p>b</p>';
+      editor.getBody().contentEditable = 'false';
+      editor.setContent(initialContent);
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 1, 0 ], 1);
+      DeleteCommands.deleteCommand(editor, caret);
+      TinyAssertions.assertContent(editor, initialContent);
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 1, 0 ], 1);
+      editor.getBody().contentEditable = 'true';
+    });
+
+    it('TINY-9477: ForwardDelete on blocks in noneditable root should not do anything', () => {
+      const editor = hook.editor();
+      const initialContent = '<p>a</p><p>b</p>';
+      editor.getBody().contentEditable = 'false';
+      editor.setContent(initialContent);
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 1, 0 ], 1);
+      DeleteCommands.forwardDeleteCommand(editor, caret);
+      TinyAssertions.assertContent(editor, initialContent);
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 1, 0 ], 1);
+      editor.getBody().contentEditable = 'true';
+    });
   });
 });
