@@ -6,38 +6,58 @@ import * as ComponentSchema from '../../core/ComponentSchema';
 interface BaseButtonSpec {
   text: string;
   buttonType?: 'primary' | 'secondary';
-  onAction: () => void;
 }
+
+type TogglableIconButtonStatus = 'normal' | 'toggled';
 
 export interface ViewNormalButtonSpec extends BaseButtonSpec {
   type: 'button';
+  onAction: () => void;
 }
 
 export interface ViewIconButtonSpec extends BaseButtonSpec {
   type: 'iconButton';
   icon: string;
   showIconAndText: boolean;
+  onAction: () => void;
 }
 
-export type ViewButtonSpec = ViewNormalButtonSpec | ViewIconButtonSpec;
+export interface ViewTogglableIconButtonSpec extends BaseButtonSpec {
+  name: string;
+  type: 'togglableIconButton';
+  icon: string;
+  toggledIcon: string;
+  onAction: (api: TogglableIconButtonStatus) => void;
+}
+
+export type ViewButtonSpec = ViewNormalButtonSpec | ViewIconButtonSpec | ViewTogglableIconButtonSpec;
 
 interface BaseButton {
   text: string;
   buttonType: 'primary' | 'secondary';
-  onAction: () => void;
 }
 
 export interface ViewNormalButton extends BaseButton {
   type: 'button';
+  onAction: () => void;
 }
 
 export interface ViewIconButton extends BaseButton {
   type: 'iconButton';
   icon: string;
   showIconAndText: boolean;
+  onAction: () => void;
 }
 
-export type ViewButton = ViewNormalButton | ViewIconButton;
+export interface ViewTogglableIconButton extends BaseButton {
+  name: string;
+  type: 'togglableIconButton';
+  icon: string;
+  toggledIcon: string;
+  onAction: (api: TogglableIconButtonStatus) => void;
+}
+
+export type ViewButton = ViewNormalButton | ViewIconButton | ViewTogglableIconButton;
 
 const normalButtonFields = [
   FieldSchema.requiredStringEnum('type', [ 'button' ]),
@@ -55,11 +75,22 @@ const iconButtonFields = [
   FieldSchema.requiredFunction('onAction')
 ];
 
+const togglableIconButtonFields = [
+  ComponentSchema.name,
+  FieldSchema.requiredStringEnum('type', [ 'togglableIconButton' ]),
+  ComponentSchema.text,
+  ComponentSchema.icon,
+  FieldSchema.required('toggledIcon'),
+  FieldSchema.defaultedStringEnum('buttonType', 'secondary', [ 'primary', 'secondary' ]),
+  FieldSchema.requiredFunction('onAction')
+];
+
 export const viewButtonSchema = StructureSchema.choose(
   'type',
   {
     button: normalButtonFields,
-    iconButton: iconButtonFields
+    iconButton: iconButtonFields,
+    togglableIconButton: togglableIconButtonFields
   }
 );
 

@@ -1,8 +1,8 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, FormField as AlloyFormField, GuiFactory, Memento, RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, Tabstopping
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, FormField as AlloyFormField, GuiFactory, Memento, RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, Tabstopping, Toggling
 } from '@ephox/alloy';
 import { Dialog, Toolbar } from '@ephox/bridge';
-import { Cell, Fun, Merger, Optional } from '@ephox/katamari';
+import { Arr, Cell, Fun, Merger, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';
@@ -179,33 +179,43 @@ const isNormalFooterButtonSpec = (spec: FooterButtonSpec | HeaderButtonSpec, but
 
 const isTogglableIconButton = (spec: FooterButtonSpec | HeaderButtonSpec, buttonType: string): spec is Dialog.DialogHeaderTogglableIconButton => buttonType === 'customTogglableIcon';
 
-const renderTogglableIconButton = (spec: Dialog.DialogHeaderTogglableIconButton, backstage: UiFactoryBackstage): SimpleOrSketchSpec => {
+// TODO: remove from here?
+export const renderTogglableIconButton = (spec: Dialog.DialogHeaderTogglableIconButton, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
   const optMemIcon = Optional.some(spec.icon)
-    .map((iconName) => renderReplaceableIconFromPack(iconName, backstage.shared.providers.icons))
+    .map((iconName) => renderReplaceableIconFromPack(iconName, providers.icons))
     .map(Memento.record);
   const currentStatus = Cell('normal');
 
-  const action = (comp: AlloyComponent) => {
-    AlloyTriggers.emitWith(comp, formActionEvent, {
-      name: spec.name,
-      value: {
-        getStatus: currentStatus.get,
-        setStatus: (newStatus: string) => {
-          optMemIcon.bind((mem) => mem.getOpt(comp)).each((displayIcon) => {
-            if (newStatus === 'normal') {
-              Replacing.set(displayIcon, [
-                renderReplaceableIconFromPack(spec.icon ?? '', backstage.shared.providers.icons)
-              ]);
-            } else {
-              Replacing.set(displayIcon, [
-                renderReplaceableIconFromPack(spec.toggledIcon ?? '', backstage.shared.providers.icons)
-              ]);
-            }
-            currentStatus.set(newStatus);
-          });
-        }
+  const switchIcon = (comp: AlloyComponent, newStatus: string): void => {
+    optMemIcon.bind((mem) => mem.getOpt(comp)).each((displayIcon) => {
+      if (newStatus === 'normal') {
+        Replacing.set(displayIcon, [
+          renderReplaceableIconFromPack(spec.icon ?? '', providers.icons)
+        ]);
+      } else {
+        Replacing.set(displayIcon, [
+          renderReplaceableIconFromPack(spec.toggledIcon ?? '', providers.icons)
+        ]);
       }
+      currentStatus.set(newStatus);
     });
+  };
+
+  const action = (comp: AlloyComponent) => {
+    if (spec.type === 'togglableIconButton') {
+      const itIsGoingToEnable = !Arr.contains(comp.element.dom.classList, ToolbarButtonClasses.Ticked);
+      const newStatus = itIsGoingToEnable ? 'toggled' : 'normal';
+      spec.onAction(newStatus);
+      switchIcon(comp, newStatus);
+    } else {
+      AlloyTriggers.emitWith(comp, formActionEvent, {
+        name: spec.name,
+        value: {
+          getStatus: currentStatus.get,
+          setStatus: (newStatus: string) => switchIcon(comp, newStatus)
+        }
+      });
+    }
   };
 
   const buttonSpec: IconButtonWrapper = {
@@ -216,17 +226,21 @@ const renderTogglableIconButton = (spec: Dialog.DialogHeaderTogglableIconButton,
   };
 
   const tooltipAttributes = buttonSpec.tooltip.map<{}>((tooltip) => ({
-    'aria-label': backstage.shared.providers.translate(tooltip),
-    'title': backstage.shared.providers.translate(tooltip)
+    'aria-label': providers.translate(tooltip),
+    'title': providers.translate(tooltip)
   })).getOr({});
+
   const dom = {
     tag: 'button',
     // TODO: do it properly
     classes: [ 'tox-button', 'tox-button--secondary', 'tox-button--icon' ],
     attributes: tooltipAttributes
   };
+  const extraBehaviours: Behaviours = [
+    Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, aria: { mode: 'pressed' }, toggleOnExecute: true })
+  ];
   const components = optMemIcon.map((memIcon) => componentRenderPipeline([ Optional.some(memIcon.asSpec()) ])).getOr([]);
-  const iconButtonSpec = renderCommonSpec(buttonSpec, Optional.some(action), [], dom, components, backstage.shared.providers);
+  const iconButtonSpec = renderCommonSpec(buttonSpec, Optional.some(action), extraBehaviours, dom, components, providers);
   return AlloyButton.sketch(iconButtonSpec);
 };
 
@@ -264,7 +278,7 @@ export const renderFooterButton = (spec: FooterButtonSpec | HeaderButtonSpec, bu
       ...spec,
       tooltip: spec.name
     };
-    return renderTogglableIconButton(buttonSpec, backstage);
+    return renderTogglableIconButton(buttonSpec, backstage.shared.providers);
   } else {
     // eslint-disable-next-line no-console
     console.error('Unknown footer button type: ', buttonType);

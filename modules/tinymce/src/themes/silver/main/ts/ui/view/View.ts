@@ -7,7 +7,7 @@ import { View as BridgeView } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { renderButton } from '../general/Button';
+import { renderButton, renderTogglableIconButton } from '../general/Button';
 
 interface ViewHeaderSpec extends SimpleSpec {
   buttons: BridgeView.ViewButton[];
@@ -34,6 +34,24 @@ interface ViewApis {
 }
 
 const renderViewButton = (spec: BridgeView.ViewButton, providers: UiFactoryBackstageProviders) => {
+  if (spec.type === 'togglableIconButton') {
+    return renderTogglableIconButton(
+      {
+        type: spec.type,
+        align: 'end', // TODO: remove it
+        showIconAndText: false,
+        text: spec.text,
+        enabled: true,
+        primary: false,
+        name: spec.name,
+        onAction: spec.onAction,
+        icon: spec.icon,
+        toggledIcon: spec.toggledIcon,
+        buttonType: Optional.some(spec.buttonType)
+      },
+      providers
+    );
+  }
   return renderButton(
     {
       text: spec.text,

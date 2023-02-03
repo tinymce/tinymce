@@ -59,11 +59,13 @@ export interface DialogHeaderNormalButton extends BaseDialogHeaderButton {
 }
 
 export interface DialogHeaderTogglableIconButton extends BaseDialogHeaderButton {
-  type: 'customTogglableIcon';
+  type: 'customTogglableIcon' | 'togglableIconButton';
   text?: string;
   tooltip?: string;
   icon: string;
   toggledIcon: string;
+  // TODO: insert the correct type
+  onAction: (status: any) => void;
 }
 
 export interface DialogHeaderGroupButton {
