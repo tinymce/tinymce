@@ -126,6 +126,25 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       TinyAssertions.assertContent(editor, '<div contenteditable="true"><p>a</p><p>b</p></div>');
       editor.getBody().contentEditable = 'true';
     });
+
+    it('TINY-9461: should not split editing host', () => {
+      const editor = hook.editor();
+      const initialContent = '<div contenteditable="false"><p contenteditable="true">ab</p></div>';
+      editor.setContent(initialContent);
+      TinySelections.setCursor(editor, [ 1, 0, 0 ], 1);
+      insertNewline(editor, { });
+      TinyAssertions.assertContent(editor, initialContent);
+    });
+
+    it('TINY-9461: should wrap div contents in paragraph and split inner paragraph in a div editing host', () => {
+      const editor = hook.editor();
+      editor.getBody().contentEditable = 'false';
+      editor.setContent('<div contenteditable="false"><div contenteditable="true">ab</div></div>');
+      TinySelections.setCursor(editor, [ 1, 0, 0 ], 1);
+      insertNewline(editor, { });
+      TinyAssertions.assertContent(editor, '<div contenteditable="false"><div contenteditable="true"><p>a</p><p>b</p></div></div>');
+      editor.getBody().contentEditable = 'true';
+    });
   });
 
   context('br_newline_selector', () => {
