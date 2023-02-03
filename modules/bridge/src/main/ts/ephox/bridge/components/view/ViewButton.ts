@@ -2,27 +2,30 @@ import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
+import { BaseToolbarButton, BaseToolbarButtonInstanceApi, BaseToolbarButtonSpec } from '../toolbar/ToolbarButton';
 
-interface BaseButtonSpec {
+interface BaseButtonSpec<Api extends BaseToolbarButtonInstanceApi> extends BaseToolbarButtonSpec<Api> {
   text: string;
   buttonType?: 'primary' | 'secondary';
 }
 
+type BaseViewButtonInstanceApi = any;
+
 export type TogglableIconButtonStatus = 'normal' | 'toggled';
 
-export interface ViewNormalButtonSpec extends BaseButtonSpec {
+export interface ViewNormalButtonSpec extends BaseButtonSpec<BaseViewButtonInstanceApi> {
   type: 'button';
   onAction: () => void;
 }
 
-export interface ViewIconButtonSpec extends BaseButtonSpec {
+export interface ViewIconButtonSpec extends BaseButtonSpec<BaseViewButtonInstanceApi> {
   type: 'iconButton';
   icon: string;
   showIconAndText: boolean;
   onAction: () => void;
 }
 
-export interface ViewTogglableIconButtonSpec extends BaseButtonSpec {
+export interface ViewTogglableIconButtonSpec extends BaseButtonSpec<BaseViewButtonInstanceApi> {
   name: string;
   type: 'togglableIconButton';
   icon: string;
@@ -38,24 +41,24 @@ export interface ViewButtonsGroupSpec {
 
 export type ViewButtonSpec = ViewNormalButtonSpec | ViewIconButtonSpec | ViewTogglableIconButtonSpec | ViewButtonsGroupSpec;
 
-interface BaseButton {
+interface BaseButton<Api extends BaseToolbarButtonInstanceApi> extends Omit<BaseToolbarButton<Api>, 'text'> {
   text: string;
   buttonType: 'primary' | 'secondary';
 }
 
-export interface ViewNormalButton extends BaseButton {
+export interface ViewNormalButton extends BaseButton<BaseViewButtonInstanceApi> {
   type: 'button';
   onAction: () => void;
 }
 
-export interface ViewIconButton extends BaseButton {
+export interface ViewIconButton extends Omit<BaseButton<BaseViewButtonInstanceApi>, 'icon'> {
   type: 'iconButton';
   icon: string;
   showIconAndText: boolean;
   onAction: () => void;
 }
 
-export interface ViewTogglableIconButton extends BaseButton {
+export interface ViewTogglableIconButton extends Omit<BaseButton<BaseViewButtonInstanceApi>, 'icon'> {
   name: string;
   type: 'togglableIconButton';
   icon: string;

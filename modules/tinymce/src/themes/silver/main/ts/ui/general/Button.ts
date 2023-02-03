@@ -176,23 +176,8 @@ const isMenuFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): spe
 
 const isNormalFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Dialog.DialogFooterNormalButton => buttonType === 'custom' || buttonType === 'cancel' || buttonType === 'submit';
 
-export interface TogglableIconButton {
-  name: string;
-  align: 'start' | 'end';
-  enabled: boolean;
-  buttonType: Optional<'primary' | 'secondary'>;
-  showIconAndText: boolean;
-  type: 'togglableIconButton';
-  text?: string;
-  tooltip?: string;
-  icon: string;
-  toggledIcon: string;
-  // TODO: insert the correct type
-  onAction: (status: View.TogglableIconButtonStatus) => void;
-}
-
 // TODO: remove from here?
-export const renderTogglableIconButton = (spec: TogglableIconButton, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
+export const renderTogglableIconButton = (spec: View.ViewTogglableIconButtonSpec, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
   const optMemIcon = Optional.some(spec.icon)
     .map((iconName) => renderReplaceableIconFromPack(iconName, providers.icons))
     .map(Memento.record);
@@ -222,9 +207,11 @@ export const renderTogglableIconButton = (spec: TogglableIconButton, providers: 
 
   const buttonSpec: IconButtonWrapper = {
     ...spec,
-    primary: spec.buttonType === Optional.some('primary'),
+    primary: spec.buttonType === 'primary',
+    buttonType: Optional.from(spec.buttonType),
     tooltip: Optional.from(spec.text),
     icon: Optional.from(spec.name),
+    enabled: spec.enabled ?? false,
     borderless: false
   };
 

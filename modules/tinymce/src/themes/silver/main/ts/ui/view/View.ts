@@ -40,15 +40,13 @@ const renderViewButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryBack
     return renderTogglableIconButton(
       {
         type: spec.type,
-        align: 'end', // TODO: remove it
-        showIconAndText: false,
         text: spec.text,
         enabled: true,
         name: spec.name,
         onAction: spec.onAction,
         icon: spec.icon,
         toggledIcon: spec.toggledIcon,
-        buttonType: Optional.some(spec.buttonType)
+        buttonType: spec.buttonType
       },
       providers
     );
