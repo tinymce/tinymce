@@ -83,6 +83,7 @@ const renderButtonsGroup = (spec: BridgeView.ViewButtonsGroup, providers: UiFact
 };
 
 const renderViewHeader = (spec: ViewHeaderSpec) => {
+  // TODO: this should be a different check
   let hasGroups = false;
   const endButtons = Arr.map(spec.buttons, (btnspec) => {
     if (btnspec.type === 'group') {
