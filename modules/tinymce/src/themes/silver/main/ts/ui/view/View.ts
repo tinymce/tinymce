@@ -103,7 +103,6 @@ const renderViewHeader = (spec: ViewHeaderSpec) => {
     components: hasGroups ?
       endButtons
       : [
-
         Container.sketch({
           dom: {
             tag: 'div',
