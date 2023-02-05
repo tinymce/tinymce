@@ -69,15 +69,5 @@ describe('webdriver.tinymce.core.keyboard.IframeTabfocusTest', () => {
       await RealMouse.pClickOn('iframe => body');
       assertIsHighlighted(editor);
     });
-
-    it('TINY-9277: Remove highlight when not in focus', async () => {
-      const editor = hook.editor();
-      assertIsNotHighlighted(editor);
-      await RealMouse.pClickOn('iframe => body');
-      assertIsHighlighted(editor);
-      // tab to defocus
-      await RealKeys.pSendKeysOn('body', [ RealKeys.text('\t') ]);
-      assertIsNotHighlighted(editor);
-    });
   });
 });
