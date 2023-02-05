@@ -58,12 +58,22 @@ const funcOrDie = (args: any[], prop: StructureProcessor): StructureProcessor =>
   return func(args, prop, retriever);
 };
 
+const oneOfFunc = (processor: (val: any) => StructureProcessor): StructureProcessor => {
+  const extract = (path: string[], o: any) => processor(o).extract(path, o);
+  const toString = Fun.constant( 'oneOfFunc');
+  return {
+    extract,
+    toString
+  };
+};
+
 export {
   arrOfObj,
   arrOf,
   arrOfVal,
 
   oneOf,
+  oneOfFunc,
 
   valueOf,
   valueThunkOf,

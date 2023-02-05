@@ -34,6 +34,7 @@ import { Slider, SliderSpec } from '../components/dialog/Slider';
 import { createTable, Table, TableSpec } from '../components/dialog/Table';
 import { createTabPanel, Tab, TabPanel, TabPanelSpec, TabSpec } from '../components/dialog/TabPanel';
 import { createTextArea, TextArea, TextAreaSpec } from '../components/dialog/Textarea';
+import { Directory, createTree, Tree, TreeItem, TreeSpec, treeSchema } from '../components/dialog/Tree';
 import {
   createUrlDialog, UrlDialog, UrlDialogActionDetails, UrlDialogActionHandler, UrlDialogCancelHandler, UrlDialogCloseHandler, UrlDialogFooterButton,
   UrlDialogFooterButtonSpec, UrlDialogInstanceApi, UrlDialogMessage, UrlDialogMessageHandler, UrlDialogSpec
@@ -175,6 +176,13 @@ export {
   TextArea,
   TextAreaSpec,
   createTextArea,
+
+  Tree,
+  TreeItem,
+  TreeSpec,
+  Directory,
+  treeSchema,
+  createTree,
 
   UrlDialog,
   UrlDialogSpec,
