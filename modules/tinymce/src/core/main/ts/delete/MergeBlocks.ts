@@ -55,22 +55,29 @@ const nestedBlockMerge = (
 
 const sidelongBlockMerge = (rootNode: SugarElement<Node>, fromBlock: SugarElement<Element>, toBlock: SugarElement<Element>): Optional<CaretPosition> => {
   if (Empty.isEmpty(toBlock)) {
-    const inlineDescendants = Traverse.firstChild(toBlock).fold(
-      Fun.constant([]),
-      (child) => {
-        const descendants = PredicateFilter.descendants(child, ElementType.isInline);
-        return ElementType.isInline(child) ? [ child, ...descendants ] : descendants;
-      }
-    );
+    if (Empty.isEmpty(fromBlock)) {
+      const inlineToBlockDescendants = Traverse.firstChild(toBlock).fold(
+        Fun.constant([]),
+        (child) => {
+          const descendants = PredicateFilter.descendants(child, ElementType.isInline);
+          return ElementType.isInline(child) ? [ child, ...descendants ] : descendants;
+        }
+      );
+
+      const newFromBlockDescendants = Arr.foldr(
+        inlineToBlockDescendants,
+        (element: SugarElement<HTMLElement>, wrapper) => {
+          Insert.wrap(element, wrapper);
+          return wrapper;
+        },
+        PaddingBr.createPaddingBr()
+      );
+
+      Remove.empty(fromBlock);
+      Insert.append(fromBlock, newFromBlockDescendants);
+    }
 
     Remove.remove(toBlock);
-    if (Empty.isEmpty(fromBlock)) {
-      const bogus = PaddingBr.fillWithPaddingBr(fromBlock);
-      Arr.foldr(inlineDescendants, (descendant: SugarElement<HTMLElement>, wrapper) => {
-        Insert.wrap(descendant, wrapper);
-        return wrapper;
-      }, bogus);
-    }
     return CaretFinder.firstPositionIn(fromBlock.dom);
   }
 
