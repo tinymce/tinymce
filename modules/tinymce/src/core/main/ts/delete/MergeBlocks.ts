@@ -1,5 +1,5 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Compare, Insert, PredicateFilter, Remove, SugarElement, Traverse } from '@ephox/sugar';
+import { Compare, Insert, PredicateFilter, Replication, Remove, SugarElement, Traverse } from '@ephox/sugar';
 
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
@@ -60,7 +60,7 @@ const sidelongBlockMerge = (rootNode: SugarElement<Node>, fromBlock: SugarElemen
         Fun.constant([]),
         (child) => {
           const descendants = PredicateFilter.descendants(child, ElementType.isInline);
-          return ElementType.isInline(child) ? [ child, ...descendants ] : descendants;
+          return Arr.map(ElementType.isInline(child) ? [ child, ...descendants ] : descendants, Replication.shallow);
         }
       );
 
