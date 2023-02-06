@@ -78,12 +78,11 @@ describe('browser.tinymce.plugins.template.TemplateSanityTest', () => {
 
   it('TINY-9244: Parsed html should be shown when previewing templates', async () => {
     const editor = hook.editor();
-    const unparsedHtml = '<img src="error" onerror="console.log(`Unparsed html`);">';
+    const unparsedHtml = '<img src="error" onerror="throw new Error();">';
     addSettings({
       templates: [{ title: 'a', description: 'b', content: unparsedHtml }],
     });
-
-    const unParsedPreviewHtmlSelector = 'p > img[src="error"][onerror="console.log(`Unparsed html`);"]';
+    const unParsedPreviewHtmlSelector = 'p > img[src="error"][onerror="throw new Error();"]';
     const parsedPreviewHtmlSelector = 'p > img[src="error"][data-mce-src="error"]';
     const assertPreviewContent = (dialogEl: SugarElement<Node>, existsSelector: string, notExistsSelector: string): void => {
       UiFinder.findIn<HTMLIFrameElement>(dialogEl, 'iframe').fold(
@@ -96,6 +95,13 @@ describe('browser.tinymce.plugins.template.TemplateSanityTest', () => {
         }
       );
     };
-    await pPreviewTemplate(editor, (dialogEl) => assertPreviewContent(dialogEl, parsedPreviewHtmlSelector, unParsedPreviewHtmlSelector));
+
+    try {
+      await pPreviewTemplate(editor, (dialogEl) => assertPreviewContent(dialogEl, parsedPreviewHtmlSelector, unParsedPreviewHtmlSelector));
+    } catch (e) {
+      if (e instanceof Error) {
+        assert.fail('Unparsed html interpreted');
+      }
+    }
   });
 });
