@@ -132,7 +132,7 @@ describe('browser.tinymce.core.init.EditorCustomThemeTest', () => {
       }
     }, [ AsyncTheme ]);
 
-    it('The skin loads before editor finshes initializing', () => {
+    it('The skin loads before editor finishes initializing', () => {
       hook.editor();
       assert.deepEqual(eventsOrdered, [ 'SkinLoaded', 'init' ]);
     });
