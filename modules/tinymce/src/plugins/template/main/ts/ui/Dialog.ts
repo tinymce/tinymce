@@ -2,7 +2,6 @@ import { Arr, Optional } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import Tools from 'tinymce/core/api/util/Tools';
 
@@ -12,11 +11,6 @@ import { DialogData, ExternalTemplate, InternalTemplate, UrlTemplate } from '../
 import * as Utils from '../core/Utils';
 
 type UpdateDialogCallback = (dialogApi: Dialog.DialogInstanceApi<DialogData>, template: InternalTemplate, previewHtml: string) => void;
-
-const parseAndSerialize = (editor: Editor, html: string) =>
-  HtmlSerializer({ validate: true }, editor.schema).serialize(
-    editor.parser.parse(html, { insert: true })
-  );
 
 const getPreviewContent = (editor: Editor, html: string): string => {
   if (html.indexOf('<html>') === -1) {
@@ -65,7 +59,7 @@ const getPreviewContent = (editor: Editor, html: string): string => {
       preventClicksOnLinksScript +
       '</head>' +
       '<body class="' + encode(bodyClass) + '"' + dirAttr + '>' +
-      html +
+      Utils.parseAndSerialize(editor, html) +
       '</body>' +
       '</html>'
     );
@@ -109,8 +103,8 @@ const open = (editor: Editor, templateList: ExternalTemplate[]): void => {
 
   const getTemplateContent = (t: InternalTemplate): Promise<string> =>
     t.value.url.fold(
-      () => Promise.resolve(parseAndSerialize(editor, t.value.content.getOr(''))),
-      (url) => fetch(url).then((res) => res.ok ? res.text() : Promise.reject()).then((content) => parseAndSerialize(editor, content))
+      () => Promise.resolve(t.value.content.getOr('')),
+      (url) => fetch(url).then((res) => res.ok ? res.text() : Promise.reject())
     );
 
   const onChange = (templates: InternalTemplate[], updateDialog: UpdateDialogCallback) =>
