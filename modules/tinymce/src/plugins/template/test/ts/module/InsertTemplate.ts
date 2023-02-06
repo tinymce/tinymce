@@ -8,16 +8,37 @@ import Editor from 'tinymce/core/api/Editor';
 const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Insert template"]';
 const dialogSelector = 'div.tox-dialog';
 
-const pInsertTemplate = async (editor: Editor, assertFn?: (elm: SugarElement<Node>) => Promise<void>): Promise<void> => {
+const waitUntilIframeLoaded = async (dialogEl: SugarElement<Node>): Promise<void> => {
+  await UiFinder.pWaitForState<HTMLIFrameElement>('iframe is loaded', dialogEl, 'iframe', (elm) => {
+    const iframeDoc = elm.dom.contentDocument || elm.dom.contentWindow?.document;
+    return Type.isNonNullable(iframeDoc?.body.firstChild);
+  });
+};
+
+const pUseTemplateDialog = async (editor: Editor, submit: boolean, assertFn?: (elm: SugarElement<Node>) => void): Promise<void> => {
   TinyUiActions.clickOnToolbar(editor, toolbarButtonSelector);
   const dialogEl = await TinyUiActions.pWaitForDialog(editor);
   if (Type.isFunction(assertFn)) {
-    await assertFn(dialogEl);
+    await waitUntilIframeLoaded(dialogEl);
+    assertFn(dialogEl);
   }
-  TinyUiActions.submitDialog(editor);
+  if (submit) {
+    TinyUiActions.submitDialog(editor);
+  } else {
+    TinyUiActions.closeDialog(editor);
+  }
   await Waiter.pTryUntil('Dialog should close', () => UiFinder.notExists(SugarBody.body(), dialogSelector));
 };
 
+const pInsertTemplate = async (editor: Editor, assertFn?: (elm: SugarElement<Node>) => void): Promise<void> => {
+  await pUseTemplateDialog(editor, true, assertFn);
+};
+
+const pPreviewTemplate = async (editor: Editor, assertFn?: (elm: SugarElement<Node>) => void): Promise<void> => {
+  await pUseTemplateDialog(editor, false, assertFn);
+};
+
 export {
-  pInsertTemplate
+  pInsertTemplate,
+  pPreviewTemplate
 };
