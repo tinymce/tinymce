@@ -98,10 +98,8 @@ describe('browser.tinymce.plugins.template.TemplateSanityTest', () => {
 
     try {
       await pPreviewTemplate(editor, (dialogEl) => assertPreviewContent(dialogEl, parsedPreviewHtmlSelector, unParsedPreviewHtmlSelector));
-    } catch (e) {
-      if (e instanceof Error) {
-        assert.fail('Unparsed html interpreted');
-      }
+    } catch (_) {
+      assert.fail('Unparsed html interpreted');
     }
   });
 });
