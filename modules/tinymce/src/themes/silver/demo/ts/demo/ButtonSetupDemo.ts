@@ -84,7 +84,7 @@ export default {
     // This fetch function is used for the MailMerge example buttons. The
     // flag passed in determines whether to collapse all the items into a single
     // menu when a search pattern is present.
-    const mailMergeFetch = (collapseIfSearch: boolean): Toolbar.ToolbarMenuButton['fetch'] => (callback, fetchContext) => {
+    const mailMergeFetch = (collapseIfSearch: boolean): Toolbar.ToolbarMenuButton['fetch'] => (callback, fetchContext, _api) => {
       const makeMailMerge = (info: { value: string; title?: string }) => ({
         type: 'menuitem',
         text: info.title ?? info.value,

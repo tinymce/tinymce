@@ -95,16 +95,16 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
                 }
               ]);
             },
-            onSetup: (_api: Toolbar.ToolbarToggleButtonInstanceApi) => {
+            onSetup: (_api: Toolbar.ToolbarSplitButtonInstanceApi) => {
               store.adder('onSetup.3')();
               return Fun.noop;
             },
-            onAction: (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
+            onAction: (api: Toolbar.ToolbarSplitButtonInstanceApi) => {
               store.adder('onToggleAction.3')();
               api.setEnabled(!shouldDisable.get());
               api.setActive(shouldActivate.get());
             },
-            onItemAction: (api: Toolbar.ToolbarToggleButtonInstanceApi, _value: string) => {
+            onItemAction: (api: Toolbar.ToolbarSplitButtonInstanceApi, _value: string) => {
               store.adder('onItemAction.3')();
               api.setActive(true);
             }
