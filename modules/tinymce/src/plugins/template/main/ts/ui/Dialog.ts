@@ -13,7 +13,7 @@ import * as Utils from '../core/Utils';
 
 type UpdateDialogCallback = (dialogApi: Dialog.DialogInstanceApi<DialogData>, template: InternalTemplate, previewHtml: string) => void;
 
-const sanitise = (editor: Editor, html: string) =>
+const parseAndSerialize = (editor: Editor, html: string) =>
   HtmlSerializer({ validate: true }, editor.schema).serialize(
     editor.parser.parse(html, { insert: true })
   );
@@ -109,8 +109,8 @@ const open = (editor: Editor, templateList: ExternalTemplate[]): void => {
 
   const getTemplateContent = (t: InternalTemplate): Promise<string> =>
     t.value.url.fold(
-      () => Promise.resolve(sanitise(editor, t.value.content.getOr(''))),
-      (url) => fetch(url).then((res) => res.ok ? res.text() : Promise.reject()).then((content) => sanitise(editor, content))
+      () => Promise.resolve(parseAndSerialize(editor, t.value.content.getOr(''))),
+      (url) => fetch(url).then((res) => res.ok ? res.text() : Promise.reject()).then((content) => parseAndSerialize(editor, content))
     );
 
   const onChange = (templates: InternalTemplate[], updateDialog: UpdateDialogCallback) =>
