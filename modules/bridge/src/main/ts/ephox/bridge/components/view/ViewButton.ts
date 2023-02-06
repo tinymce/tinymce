@@ -36,7 +36,6 @@ export interface ViewTogglableIconButtonSpec extends BaseButtonSpec<TogglableIco
   icon: string;
   toggledIcon: string;
   initialStatus: TogglableIconButtonStatus;
-  // TODO: this should return the API to allow caller to block the toggle if something goes wrong
   onAction: (api: TogglableIconButtonApi) => void;
 }
 
