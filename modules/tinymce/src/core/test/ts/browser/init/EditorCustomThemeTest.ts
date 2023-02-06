@@ -102,7 +102,7 @@ describe('browser.tinymce.core.init.EditorCustomThemeTest', () => {
             const editorContainer = document.createElement('div');
             editor.getElement().after(editorContainer);
             const promise = new Promise((resolve, _reject) => {
-              setTimeout(() => resolve(editor.dispatch('SkinLoaded')), 1000);
+              setTimeout(() => resolve(editor.dispatch('SkinLoaded')), 10);
             });
             await promise;
 
