@@ -7,7 +7,8 @@ import { View as BridgeView } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { renderButton, renderTogglableIconButton } from '../general/Button';
+import { renderButton } from '../general/Button';
+import { renderTogglableIconButton } from './ViewButtons';
 
 interface ViewHeaderSpec extends SimpleSpec {
   buttons: (BridgeView.ViewButton | BridgeView.ViewButtonsGroup)[];

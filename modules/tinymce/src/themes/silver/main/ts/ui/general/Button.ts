@@ -1,8 +1,8 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, Disabling, FormField as AlloyFormField, GuiFactory, Memento, RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, Tabstopping
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, FormField as AlloyFormField, GuiFactory, Memento, RawDomSchema, SimpleOrSketchSpec, SketchSpec, Tabstopping
 } from '@ephox/alloy';
-import { Dialog, Toolbar, View } from '@ephox/bridge';
-import { Cell, Fun, Merger, Optional } from '@ephox/katamari';
+import { Dialog, Toolbar } from '@ephox/bridge';
+import { Fun, Merger, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';
@@ -10,7 +10,7 @@ import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderFormField } from '../alien/FieldLabeller';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
-import { renderIconFromPack, renderReplaceableIconFromPack } from '../button/ButtonSlices';
+import { renderIconFromPack } from '../button/ButtonSlices';
 import { getFetch, renderMenuButton, StoredMenuButton } from '../button/MenuButton';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
@@ -26,7 +26,7 @@ export interface IconButtonWrapper extends Omit<ButtonSpec, 'text'> {
   readonly tooltip: Optional<string>;
 }
 
-const renderCommonSpec = (
+export const renderCommonSpec = (
   spec: ButtonSpec | IconButtonWrapper,
   actionOpt: Optional<(comp: AlloyComponent) => void>,
   extraBehaviours: Behaviours = [],
@@ -90,7 +90,7 @@ export const renderIconButton = (
   return AlloyButton.sketch(iconButtonSpec);
 };
 
-const calculateClassesFromButtonType = (buttonType: 'primary' | 'secondary' | 'toolbar') => {
+export const calculateClassesFromButtonType = (buttonType: 'primary' | 'secondary' | 'toolbar'): string[] => {
   switch (buttonType) {
     case 'primary':
       return [ 'tox-button' ];
@@ -175,62 +175,6 @@ const getAction = (name: string, buttonType: string) => (comp: AlloyComponent) =
 const isMenuFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Dialog.DialogFooterMenuButton => buttonType === 'menu';
 
 const isNormalFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Dialog.DialogFooterNormalButton => buttonType === 'custom' || buttonType === 'cancel' || buttonType === 'submit';
-
-// TODO: remove from here?
-export const renderTogglableIconButton = (spec: View.ViewTogglableIconButtonSpec, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
-  const optMemIcon = Optional.some((spec.initialStatus === 'normal' ? spec.icon : spec.toggledIcon))
-    .map((iconName) => renderReplaceableIconFromPack(iconName, providers.icons))
-    .map(Memento.record);
-  const currentStatus = Cell(spec.initialStatus);
-
-  const action = (comp: AlloyComponent) => {
-    spec.onAction({
-      getStatus: () => currentStatus.get(),
-      setStatus: (newStatus) => {
-        optMemIcon.bind((mem) => mem.getOpt(comp)).each((displayIcon) => {
-          if (newStatus === 'normal') {
-            Replacing.set(displayIcon, [
-              renderReplaceableIconFromPack(spec.icon ?? '', providers.icons)
-            ]);
-          } else {
-            Replacing.set(displayIcon, [
-              renderReplaceableIconFromPack(spec.toggledIcon ?? '', providers.icons)
-            ]);
-          }
-          currentStatus.set(newStatus);
-        });
-      },
-      isEnabled: () => !Disabling.isDisabled(comp),
-      setEnabled: (state: boolean) => Disabling.set(comp, !state)
-    });
-  };
-
-  const buttonSpec: IconButtonWrapper = {
-    ...spec,
-    primary: spec.buttonType === 'primary',
-    buttonType: Optional.from(spec.buttonType),
-    tooltip: Optional.from(spec.text),
-    icon: Optional.from(spec.name),
-    enabled: spec.enabled ?? false,
-    borderless: false
-  };
-
-  const tooltipAttributes = buttonSpec.tooltip.map<{}>((tooltip) => ({
-    'aria-label': providers.translate(tooltip),
-    'title': providers.translate(tooltip)
-  })).getOr({});
-
-  const buttonTypeClasses = calculateClassesFromButtonType(spec.buttonType ?? 'secondary');
-  const dom = {
-    tag: 'button',
-    classes: buttonTypeClasses.concat([ 'tox-button--icon' ]),
-    attributes: tooltipAttributes
-  };
-  const extraBehaviours: Behaviours = [];
-  const components = optMemIcon.map((memIcon) => componentRenderPipeline([ Optional.some(memIcon.asSpec()) ])).getOr([]);
-  const iconButtonSpec = renderCommonSpec(buttonSpec, Optional.some(action), extraBehaviours, dom, components, providers);
-  return AlloyButton.sketch(iconButtonSpec);
-};
 
 export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, backstage: UiFactoryBackstage): SimpleOrSketchSpec => {
   if (isMenuFooterButtonSpec(spec, buttonType)) {
