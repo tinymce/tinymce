@@ -107,7 +107,6 @@ const renderModalHeader = (spec: WindowHeaderSpec, dialogId: string, providersBa
   );
 
   const components = [ pTitle ].concat(spec.draggable ? [ pHandle ] : []).concat([ pClose ]);
-
   return Container.sketch({
     dom: DomFactory.fromHtml('<div class="tox-dialog__header"></div>'),
     components
