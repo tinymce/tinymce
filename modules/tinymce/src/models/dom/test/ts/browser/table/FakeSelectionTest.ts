@@ -1,8 +1,8 @@
 import { Assertions, Keys } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Html, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
-import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -216,5 +216,27 @@ describe('browser.tinymce.models.dom.table.FakeSelectionTest', () => {
       'td[contenteditable="false"][data-mce-first-selected="1"]': 0,
       'td[contenteditable="false"][data-mce-last-selected="1"]': 0
     });
+  });
+
+  context('Noneditable root', () => {
+    it('TINY-9459: Should not select cells with mouse in a noneditable root', () =>
+      TableTestUtils.withNoneditableRootEditor(hook.editor(), (editor) => {
+        assertTableSelection(
+          editor,
+          simpleTable,
+          [ '1', '2' ],
+          []
+        );
+      })
+    );
+
+    it('TINY-9459: Should not select cells with keyboard in a noneditable root', () =>
+      TableTestUtils.withNoneditableRootEditor(hook.editor(), (editor) => {
+        editor.setContent('<table><tbody><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>');
+        TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+        TinyContentActions.keystroke(editor, Keys.down(), { shiftKey: true });
+        TableTestUtils.assertSelectedCells(editor, [], Html.get);
+      })
+    );
   });
 });

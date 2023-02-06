@@ -25,7 +25,7 @@ const getSelectionStartCellOrCaption = (editor: Editor): Optional<SugarElement<H
   TableSelection.getSelectionCellOrCaption(Utils.getSelectionStart(editor), Utils.getIsRoot(editor));
 
 const getSelectionStartCell = (editor: Editor): Optional<SugarElement<HTMLTableCellElement>> =>
-  TableSelection.getSelectionCell(Utils.getSelectionStart(editor), Utils.getIsRoot(editor));
+  TableSelection.getSelectionCell(Utils.getSelectionStart(editor), Utils.getIsRoot(editor)).filter((el) => Utils.isInEditableContext(el));
 
 const registerCommands = (editor: Editor, actions: TableActions): void => {
   const isRoot = Utils.getIsRoot(editor);

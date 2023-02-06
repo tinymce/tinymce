@@ -1,7 +1,7 @@
 import { Cursors } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
-import { Css, Html, Insert, Remove, SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
+import { ContentEditable, Css, Html, Insert, Remove, SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import { FakeCaretPosition, closestCaretCandidateNodeRect, closestFakeCaretCandidate } from 'tinymce/core/caret/ClosestCaretCandidate';
@@ -42,6 +42,7 @@ describe('browser.tinymce.core.ClosestCaretCandidateTest', () => {
 
   const createContainer = (html: string) => {
     const container = SugarElement.fromTag('div');
+    ContentEditable.set(container, true);
     Html.set(container, html);
     Css.setAll(container, {
       outline: '1px solid black',

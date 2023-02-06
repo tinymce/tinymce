@@ -1,5 +1,6 @@
 import { Assertions } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { Hierarchy, SugarElement, SugarNode } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -40,6 +41,9 @@ describe('browser.tinymce.core.keyboard.InlineUtilsTest', () => {
     return {
       options: {
         get: (name: string) => options[name] ?? 'a[href],code,.mce-annotation'
+      },
+      dom: {
+        isEditable: Fun.always
       },
       schema: Schema()
     } as any;

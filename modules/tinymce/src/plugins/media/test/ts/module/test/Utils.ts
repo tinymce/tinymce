@@ -10,7 +10,7 @@ const selectors = {
   source: 'label:contains(Source) + div.tox-form__controls-h-stack input.tox-textfield',
   width: '.tox-form__controls-h-stack label:contains(Width) + input.tox-textfield',
   height: '.tox-form__controls-h-stack label:contains(Height) + input.tox-textfield',
-  embed: 'label:contains(Paste your embed code below:) + textarea.tox-textarea',
+  embed: 'label:contains(Paste your embed code below:) + .tox-textarea-wrap textarea.tox-textarea',
   lockIcon: 'button.tox-lock',
   embedButton: 'div.tox-tab:contains(Embed)',
   poster: 'label:contains(Media poster (Image URL)) + div.tox-form__controls-h-stack input.tox-textfield'

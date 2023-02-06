@@ -1,5 +1,5 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { EventArgs, Situ, SugarElement } from '@ephox/sugar';
+import { ContentEditable, EventArgs, PredicateFind, Situ, SugarElement, SugarNode } from '@ephox/sugar';
 
 import * as KeySelection from '../keyboard/KeySelection';
 import * as VerticalMovement from '../keyboard/VerticalMovement';
@@ -39,6 +39,9 @@ const mouse = (win: Window, container: SugarElement<Node>, isRoot: (e: SugarElem
   };
 };
 
+const isEditableNode = (node: SugarElement<Node>) => PredicateFind.closest(node, SugarNode.isHTMLElement).exists(ContentEditable.isEditable);
+const isEditableSelection = (start: SugarElement<Node>, finish: SugarElement<Node>) => isEditableNode(start) || isEditableNode(finish);
+
 const keyboard = (win: Window, container: SugarElement<Node>, isRoot: (e: SugarElement<Node>) => boolean, annotations: SelectionAnnotation): KeyboardHandler => {
   const bridge = WindowBridge(win);
 
@@ -59,7 +62,9 @@ const keyboard = (win: Window, container: SugarElement<Node>, isRoot: (e: SugarE
       }
 
       // Shift down should predict the movement and set the selection.
-      if (SelectionKeys.isDown(keycode) && shiftKey) {
+      if (SelectionKeys.isNavigation(keycode) && shiftKey && !isEditableSelection(start, finish)) {
+        return Optional.none;
+      } else if (SelectionKeys.isDown(keycode) && shiftKey) {
         return Fun.curry(VerticalMovement.select, bridge, container, isRoot, KeyDirection.down, finish, start, annotations.selectRange);
       } else if (SelectionKeys.isUp(keycode) && shiftKey) { // Shift up should predict the movement and set the selection.
         return Fun.curry(VerticalMovement.select, bridge, container, isRoot, KeyDirection.up, finish, start, annotations.selectRange);
@@ -94,7 +99,9 @@ const keyboard = (win: Window, container: SugarElement<Node>, isRoot: (e: SugarE
         };
       };
 
-      if (SelectionKeys.isDown(keycode) && shiftKey) {
+      if (SelectionKeys.isNavigation(keycode) && shiftKey && !isEditableSelection(start, finish)) {
+        return Optional.none;
+      } else if (SelectionKeys.isDown(keycode) && shiftKey) {
         return update([ rc(+1, 0) ]);
       } else if (SelectionKeys.isUp(keycode) && shiftKey) {
         return update([ rc(-1, 0) ]);
@@ -120,7 +127,7 @@ const keyboard = (win: Window, container: SugarElement<Node>, isRoot: (e: SugarE
       if (!shiftKey) {
         return Optional.none<Response>();
       }
-      if (SelectionKeys.isNavigation(keycode)) {
+      if (SelectionKeys.isNavigation(keycode) && isEditableSelection(start, finish)) {
         return KeySelection.sync(container, isRoot, start, soffset, finish, foffset, annotations.selectRange);
       } else {
         return Optional.none<Response>();

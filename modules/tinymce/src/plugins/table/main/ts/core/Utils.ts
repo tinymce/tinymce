@@ -5,7 +5,7 @@
  Make sure that if making changes to this file, the other files are updated as well
  */
 
-import { Compare, SugarElement } from '@ephox/sugar';
+import { Compare, ContentEditable, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -30,6 +30,9 @@ const getSelectionStart = (editor: Editor): SugarElement<Element> =>
 const getSelectionEnd = (editor: Editor): SugarElement<Element> =>
   SugarElement.fromDom(editor.selection.getEnd());
 
+const isInEditableContext = (cell: SugarElement<Node>): boolean =>
+  PredicateFind.closest(cell, SugarNode.isTag('table')).forall(ContentEditable.isEditable);
+
 export {
   getNodeName,
   getBody,
@@ -37,5 +40,6 @@ export {
   addPxSuffix,
   removePxSuffix,
   getSelectionStart,
-  getSelectionEnd
+  getSelectionEnd,
+  isInEditableContext
 };
