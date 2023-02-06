@@ -181,4 +181,14 @@
     margin-bottom: @pad-xs;
     white-space: nowrap;
   }
+
+  .tree-directory-children {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .5s ease-in-out;
+  }
+
+  .tree-directory-children.expanded {
+    max-height: 200px;
+  }
 }

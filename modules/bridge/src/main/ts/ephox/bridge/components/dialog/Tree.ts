@@ -23,7 +23,7 @@ export interface Directory extends BaseTreeItem {
   children: TreeItem[];
 }
 
-interface Leaf extends BaseTreeItem {
+export interface Leaf extends BaseTreeItem {
   type: 'leaf';
 }
 

@@ -1,7 +1,7 @@
-import { AddEventsBehaviour, AlloyEvents, Behaviour, Button as AlloyButton, GuiFactory, NativeEvents, SimpleSpec, SketchSpec } from '@ephox/alloy';
+import { Behaviour, Button as AlloyButton, GuiFactory, SimpleSpec, SketchSpec, Toggling } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Id } from '@ephox/katamari';
-import { EventArgs } from '@ephox/sugar';
+import { SelectorFind } from '@ephox/sugar';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as Icons from '../icons/Icons';
@@ -19,9 +19,7 @@ const renderLabel = (text: string ): SimpleSpec => ({
   ],
 });
 
-const treeItemLabelId = Id.generate('tree-item');
-
-const renderItemLabel = (text: string, level: number): AlloyButtonSpec => {
+const renderItemLabel = (item: Dialog.Leaf, level: number): AlloyButtonSpec => {
   return AlloyButton.sketch({
     dom: {
       tag: 'span',
@@ -32,22 +30,11 @@ const renderItemLabel = (text: string, level: number): AlloyButtonSpec => {
       }
     },
     components: [
-      renderLabel(text)
+      renderLabel(item.title)
     ],
-    eventOrder: {
-      [NativeEvents.mousedown()]: [
-        'focusing',
-        'alloy.base.behaviour',
-        treeItemLabelId
-      ]
-    },
-    buttonBehaviours: Behaviour.derive([
-      AddEventsBehaviour.config(treeItemLabelId, [
-        AlloyEvents.run<EventArgs<MouseEvent>>(NativeEvents.mousedown(), (button, se) => {
-          console.log('Clicked on item', text);
-        })
-      ])
-    ])
+    action: (_button) => {
+      console.log(`clicked on file ${item.title}, id: ${item.id}`);
+    }
   });
 };
 
@@ -63,8 +50,6 @@ const renderIcon = (iconName: string, iconsProvider: Icons.IconProvider, behavio
 
 const renderIconFromPack = (iconName: string, iconsProvider: Icons.IconProvider): SimpleSpec =>
   renderIcon(iconName, iconsProvider, []);
-
-const treeDirectoryLabelId = Id.generate('tree-directory');
 
 const renderDirectoryLabel = (text: string, level: number, iconsProvider: Icons.IconProvider): AlloyButtonSpec => {
   return AlloyButton.sketch({
@@ -89,20 +74,11 @@ const renderDirectoryLabel = (text: string, level: number, iconsProvider: Icons.
         components: [ renderLabel(text) ]
       }
     ],
-    eventOrder: {
-      [NativeEvents.mousedown()]: [
-        'focusing',
-        'alloy.base.behaviour',
-        treeDirectoryLabelId
-      ]
+    action: (button) => {
+      SelectorFind.sibling(button.element, '.tree-directory-children').each((childrenEle) => {
+        button.getSystem().getByDom(childrenEle).each((childrenComp) => Toggling.toggle(childrenComp));
+      });
     },
-    buttonBehaviours: Behaviour.derive([
-      AddEventsBehaviour.config(treeDirectoryLabelId, [
-        AlloyEvents.run<EventArgs<MouseEvent>>(NativeEvents.mousedown(), (button, se) => {
-          console.log('Clicked on item', text);
-        })
-      ])
-    ])
   });
 };
 
@@ -116,25 +92,34 @@ const renderDirectoryChildren = (children: Dialog.TreeItem[], level: number, pro
       }
     },
     components: children.map((item) => {
-      return item.type === 'leaf' ? renderItemLabel(item.title, level + 1) : renderDirectory(item, level + 1, providers);
-    })
+      return item.type === 'leaf' ? renderItemLabel(item, level + 1) : renderDirectory(item, level + 1, providers);
+    }),
+    behaviours: Behaviour.derive([
+      Toggling.config({
+        toggleClass: 'expanded'
+      })
+    ])
   };
 };
 
-const renderDirectory = (dir: Dialog.Directory, level: number, providers: UiFactoryBackstageProviders): SimpleSpec => ({
-  dom: {
-    tag: 'div',
-    classes: [ `tree-directory` ],
-    styles: {
-      'display': 'flex',
-      'flex-direction': 'column',
-    }
-  },
-  components: [
-    renderDirectoryLabel(dir.title, level, providers.icons),
-    renderDirectoryChildren(dir.children, level, providers)
-  ],
-});
+const renderDirectory = (dir: Dialog.Directory, level: number, providers: UiFactoryBackstageProviders): SimpleSpec => {
+  const children =
+    renderDirectoryChildren(dir.children, level, providers);
+  return ({
+    dom: {
+      tag: 'div',
+      classes: [ `tree-directory` ],
+      styles: {
+        'display': 'flex',
+        'flex-direction': 'column',
+      }
+    },
+    components: [
+      renderDirectoryLabel(dir.title, level, providers.icons),
+      children
+    ],
+  });
+};
 
 const renderTree = (
   spec: TreeSpec,
@@ -152,7 +137,7 @@ const renderTree = (
     },
     components: spec.items.map((item) => {
       return item.type === 'leaf' ?
-        renderItemLabel(item.title, level) :
+        renderItemLabel(item, level) :
         renderDirectory(item, level, backstage.shared.providers);
     })
   };
