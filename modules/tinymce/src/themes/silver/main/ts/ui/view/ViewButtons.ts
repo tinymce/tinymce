@@ -1,6 +1,6 @@
 import { AlloyComponent, Behaviour, Button as AlloyButton, Disabling, Memento, Replacing, SimpleOrSketchSpec } from '@ephox/alloy';
 import { View } from '@ephox/bridge';
-import { Cell, Optional } from '@ephox/katamari';
+import { Cell, Fun, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderReplaceableIconFromPack } from '../button/ButtonSlices';
@@ -33,7 +33,9 @@ export const renderTogglableIconButton = (spec: View.ViewTogglableIconButtonSpec
         });
       },
       isEnabled: () => !Disabling.isDisabled(comp),
-      setEnabled: (state: boolean) => Disabling.set(comp, !state)
+      setEnabled: (state: boolean) => Disabling.set(comp, !state),
+      setText: Fun.noop,
+      setIcon: Fun.noop
     });
   };
 
