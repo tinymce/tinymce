@@ -1,5 +1,5 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, FormField as AlloyFormField, GuiFactory, Memento, RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, Tabstopping
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, Disabling, FormField as AlloyFormField, GuiFactory, Memento, RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, Tabstopping
 } from '@ephox/alloy';
 import { Dialog, Toolbar, View } from '@ephox/bridge';
 import { Cell, Fun, Merger, Optional } from '@ephox/katamari';
@@ -200,9 +200,8 @@ export const renderTogglableIconButton = (spec: View.ViewTogglableIconButtonSpec
           currentStatus.set(newStatus);
         });
       },
-      // TODO: fix this
-      isEnabled: Fun.always,
-      setEnabled: Fun.noop
+      isEnabled: () => !Disabling.isDisabled(comp),
+      setEnabled: (state: boolean) => Disabling.set(comp, !state)
     });
   };
 
@@ -221,10 +220,10 @@ export const renderTogglableIconButton = (spec: View.ViewTogglableIconButtonSpec
     'title': providers.translate(tooltip)
   })).getOr({});
 
+  const buttonTypeClasses = calculateClassesFromButtonType(spec.buttonType ?? 'secondary');
   const dom = {
     tag: 'button',
-    // TODO: do it properly
-    classes: [ 'tox-button', 'tox-button--secondary', 'tox-button--icon' ],
+    classes: buttonTypeClasses.concat([ 'tox-button--icon' ]),
     attributes: tooltipAttributes
   };
   const extraBehaviours: Behaviours = [];
@@ -258,7 +257,6 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
     const action = getAction(spec.name, buttonType);
     const buttonSpec = {
       ...spec,
-      // TODO: it should be configurable
       borderless: false
     };
     return renderButton(buttonSpec, action, backstage.shared.providers, [ ]);
