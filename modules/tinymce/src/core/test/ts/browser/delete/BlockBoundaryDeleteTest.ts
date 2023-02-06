@@ -446,7 +446,7 @@ describe('browser.tinymce.core.delete.BlockBoundaryDeleteTest', () => {
     const editor = hook.editor();
     editor.setContent(
       `<p>1st</p>` +
-      `<p><span data-mce-style="font-family: symbol;" style="font-family: symbol;"><em><strong><br data-mce-bogus="1"></strong></em></span><strong><em></em></strong></p>` +
+      `<p><span data-mce-style="font-family: symbol;" style="font-family: symbol;"><em><strong><br data-mce-bogus="1"></strong><i></i></em></span><strong><em></em></strong></p>` +
       `<p><span data-mce-style="font-family: arial;" style="font-family: arial;"><strong><em><br data-mce-bogus="1"></em></strong></span></p>` +
       `<p>4th</p>`,
       { format: 'raw' }

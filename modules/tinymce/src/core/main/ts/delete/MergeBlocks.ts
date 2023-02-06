@@ -1,5 +1,5 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Compare, Insert, PredicateFilter, Replication, Remove, SugarElement, Traverse } from '@ephox/sugar';
+import { Compare, Insert, Replication, Remove, SugarElement, Traverse } from '@ephox/sugar';
 
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
@@ -56,17 +56,18 @@ const nestedBlockMerge = (
 const sidelongBlockMerge = (rootNode: SugarElement<Node>, fromBlock: SugarElement<Element>, toBlock: SugarElement<Element>): Optional<CaretPosition> => {
   if (Empty.isEmpty(toBlock)) {
     if (Empty.isEmpty(fromBlock)) {
-      const inlineToBlockDescendants = Traverse.firstChild(toBlock).fold(
-        Fun.constant([]),
-        (child) => {
-          const descendants = PredicateFilter.descendants(child, ElementType.isInline);
-          return Arr.map(ElementType.isInline(child) ? [ child, ...descendants ] : descendants, Replication.shallow);
-        }
-      );
+      const getInlineToBlockDescendants = (el: SugarElement<Element>) => {
+        const helper = (node: SugarElement<Element>, elements: SugarElement<Element>[]): SugarElement<Element>[] =>
+          Traverse.firstChild(node).fold(
+            () => elements,
+            (child) => ElementType.isInline(child) ? helper(child, elements.concat(Replication.shallow(child))) : elements
+          );
+        return helper(el, []);
+      };
 
       const newFromBlockDescendants = Arr.foldr(
-        inlineToBlockDescendants,
-        (element: SugarElement<HTMLElement>, wrapper) => {
+        getInlineToBlockDescendants(toBlock),
+        (element: SugarElement<Element>, wrapper) => {
           Insert.wrap(element, wrapper);
           return wrapper;
         },
