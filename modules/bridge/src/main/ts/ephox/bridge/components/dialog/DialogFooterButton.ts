@@ -31,7 +31,16 @@ export interface DialogFooterMenuButtonSpec extends BaseDialogFooterButtonSpec {
   items: DialogFooterMenuButtonItemSpec[];
 }
 
-export type DialogFooterButtonSpec = DialogFooterNormalButtonSpec | DialogFooterMenuButtonSpec;
+export interface DialogFooterTogglableIconButtonSpec extends BaseDialogFooterButtonSpec {
+  type: 'togglableIconButton';
+  text: string;
+  tooltip?: string;
+  icon: string;
+  toggledIcon: string;
+  initialStatus?: string;
+}
+
+export type DialogFooterButtonSpec = DialogFooterNormalButtonSpec | DialogFooterMenuButtonSpec | DialogFooterTogglableIconButtonSpec;
 
 interface BaseDialogFooterButton {
   name: string;
@@ -56,7 +65,16 @@ export interface DialogFooterMenuButton extends BaseDialogFooterButton {
   items: DialogFooterToggleMenuItem[];
 }
 
-export type DialogFooterButton = DialogFooterNormalButton | DialogFooterMenuButton;
+export interface DialogFooterTogglableIconButton extends Omit<BaseDialogFooterButton, 'icon'> {
+  type: 'togglableIconButton';
+  text: string;
+  tooltip: Optional<string>;
+  icon: string;
+  toggledIcon: string;
+  initialStatus: Optional<string>;
+}
+
+export type DialogFooterButton = DialogFooterNormalButton | DialogFooterMenuButton | DialogFooterTogglableIconButton;
 
 const baseFooterButtonFields = [
   ComponentSchema.generatedName('button'),
@@ -88,13 +106,24 @@ const menuFooterButtonFields = [
   ...baseFooterButtonFields
 ];
 
+const togglableIconButtonSpecFields = [
+  ...baseFooterButtonFields,
+  FieldSchema.requiredStringEnum('type', [ 'togglableIconButton' ]),
+  FieldSchema.optionStringEnum('initialStatus', [ 'normal', 'toggled' ]),
+  FieldSchema.requiredString('toggledIcon'),
+  ComponentSchema.optionalText,
+  ComponentSchema.optionalTooltip,
+  ComponentSchema.icon
+];
+
 export const dialogFooterButtonSchema = StructureSchema.choose(
   'type',
   {
     submit: normalFooterButtonFields,
     cancel: normalFooterButtonFields,
     custom: normalFooterButtonFields,
-    menu: menuFooterButtonFields
+    menu: menuFooterButtonFields,
+    togglableIconButton: togglableIconButtonSpecFields
   }
 );
 

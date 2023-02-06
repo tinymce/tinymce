@@ -9,7 +9,7 @@ interface BaseButtonSpec<Api extends BaseToolbarButtonInstanceApi> extends BaseT
   buttonType?: 'primary' | 'secondary';
 }
 
-type TogglableIconButtonStatus = 'normal' | 'toggled';
+export type TogglableIconButtonStatus = 'normal' | 'toggled';
 interface BaseViewButtonInstanceApi extends BaseToolbarButtonInstanceApi {
 }
 

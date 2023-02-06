@@ -118,7 +118,7 @@ const mapMenuButtons = (buttons: Dialog.DialogFooterButton[]): (Dialog.DialogFoo
   });
 };
 
-const extractCellsToObject = (buttons: (StoredMenuButton | Dialog.DialogFooterMenuButton | Dialog.DialogFooterNormalButton)[]): Record<string, Cell<boolean>> =>
+const extractCellsToObject = (buttons: (StoredMenuButton | Dialog.DialogFooterMenuButton | Dialog.DialogFooterNormalButton | Dialog.DialogFooterTogglableIconButton)[]): Record<string, Cell<boolean>> =>
   Arr.foldl(buttons, (acc, button) => {
     if (button.type === 'menu') {
       const menuButton = button as StoredMenuButton;
