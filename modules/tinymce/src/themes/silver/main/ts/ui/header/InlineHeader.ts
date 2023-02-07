@@ -211,7 +211,7 @@ export const InlineHeader = (
     });
     doUpdateMode();
 
-    if (Options.isUiOfTomorrow(editor)) {
+    if (Options.isSplitUiMode(editor)) {
       // When the toolbar is shown, then hidden and when the page is then scrolled,
       // the toolbar is set to docked, which shouldn't be as it should be static position
       // calling reset here, to reset the state.

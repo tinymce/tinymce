@@ -79,7 +79,7 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader, 
   // want to reposition all the Ui elements if required.
   editor.on('ScrollWindow', ui.updateMode);
 
-  if (Options.isUiOfTomorrow(editor)) {
+  if (Options.isSplitUiMode(editor)) {
     editor.on('ElementScroll', (_args) => {
       // When the scroller containing the editor scrolls, update the Ui positions
       ui.update();
@@ -131,19 +131,19 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
     floatContainer.set(OuterContainer.getHeader(mainUi.outerContainer).getOrDie());
 
     // `uiContainer` handles *where* the motherhips get added by default. Currently, uiContainer
-    // will mostly be the <body> of the document (unless it's a ShadowRoot). When using ui_of_tomorrow,
+    // will mostly be the <body> of the document (unless it's a ShadowRoot). When using ui_mode: split,
     // the main mothership (which includes the toolbar) and popup sinks will be added as siblings of
     // the target element, so that they have the same scrolling context / environment
     const uiContainer = Options.getUiContainer(editor);
     // Position the motherships based on the editor Ui options.
-    if (Options.isUiOfTomorrow(editor)) {
+    if (Options.isSplitUiMode(editor)) {
       Attachment.attachSystemAfter(targetElm, mainUi.mothership);
-      // Only in ui_of_tomorrow, do we have a separate popup sink
+      // Only in ui_mode: split, do we have a separate popup sink
       Attachment.attachSystemAfter(targetElm, uiRefs.popupUi.mothership);
     } else {
       Attachment.attachSystem(uiContainer, mainUi.mothership);
     }
-    // NOTE: In UiRefs, dialogUi and popupUi refer to the same thing if ui_of_tomorrow is false
+    // NOTE: In UiRefs, dialogUi and popupUi refer to the same thing if ui_mode: default
     Attachment.attachSystem(uiContainer, uiRefs.dialogUi.mothership);
 
     // Unlike menubar below which uses OuterContainer directly, this level of abstraction is

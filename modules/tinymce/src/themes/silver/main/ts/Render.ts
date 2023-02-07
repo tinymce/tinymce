@@ -312,7 +312,7 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
     // TINY-9226: Because the popupUi is going to be placed adjacent to the editor, we aren't currently
     // implementing the behaviour to reset widths based on window sizing. It is a workaround that
     // is mainly targeted at Ui containers in the root. However, we may need to revisit this
-    // if the ui_of_tomorrow setting is commonly used when the editor is at the root level, and the
+    // if the ui_mode: split setting is commonly used when the editor is at the root level, and the
     // page has size-unfriendly CSS for sinks (like CSS grid)
     const sinkSpec = {
       dom: {
@@ -518,7 +518,7 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
     const dialogUi = renderDialogUi();
     // If dialogUi and popupUi are the same, LazyUiReferences should handle deduplicating then
     // get calling getUiMotherships
-    const popupUi = Options.isUiOfTomorrow(editor) ? renderPopupUi() : reuseDialogUiForPopuUi(dialogUi);
+    const popupUi = Options.isSplitUiMode(editor) ? renderPopupUi() : reuseDialogUiForPopuUi(dialogUi);
 
     lazyUiRefs.dialogUi.set(dialogUi);
     lazyUiRefs.popupUi.set(popupUi);

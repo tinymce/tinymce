@@ -387,7 +387,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
         const hook = TinyHooks.bddSetupFromElement<Editor>(
           {
             ...sharedSettings,
-            ui_of_tomorrow: true,
+            ui_mode: 'split',
             toolbar_sticky: true,
             height: heights.editor,
             inline: scenario.settings.inline,
@@ -615,7 +615,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
         const hook = TinyHooks.bddSetupFromElement<Editor>(
           {
             ...sharedSettings,
-            ui_of_tomorrow: true,
+            ui_mode: 'split',
             toolbar_sticky: false,
             toolbar_location: 'bottom',
             toolbar: 'showtestdialog',
@@ -787,7 +787,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
         const hook = TinyHooks.bddSetupFromElement<Editor>(
           {
             ...sharedSettings,
-            ui_of_tomorrow: true,
+            ui_mode: 'split',
             toolbar_sticky: true,
             height: heights.editor,
             inline: scenario.settings.inline

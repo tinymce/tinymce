@@ -25,7 +25,7 @@ export default (): void => {
   ThemeManager.add('silver', (editor): Theme => {
     registerOptions(editor);
 
-    // When using the ui_of_tomorrow, the popup sink is placed as a sibling to the
+    // When using the ui_mode: split, the popup sink is placed as a sibling to the
     // editor, which means that it might be subject to any scrolling environments
     // that the editor has. Therefore, we want to make the popup sink have an overall
     // bounds that is dependent on its scrolling environment. We don't know that ahead
@@ -43,7 +43,7 @@ export default (): void => {
     const renderUI = (): RenderResult => {
       const renderResult = renderModeUI();
 
-      const optScrollingContext = ScrollingContext.detectWhenUiOfTomorrow(
+      const optScrollingContext = ScrollingContext.detectWhenSplitUiMode(
         editor,
         popups.getMothership().element
       );

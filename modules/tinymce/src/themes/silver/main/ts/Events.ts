@@ -74,7 +74,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMotherships: Gui.Gui
       // Because this can fire before the editor is rendered, we need to stop that from happening.
       // Some tests can create this situation, and then we get a Node name null or defined error.
       if (c !== undefined && c !== null) {
-        const optScrollingContext = ScrollingContext.detectWhenUiOfTomorrow(editor, mothership.element);
+        const optScrollingContext = ScrollingContext.detectWhenSplitUiMode(editor, mothership.element);
 
         const scrollers = optScrollingContext.map((sc) => [ sc.element, ...sc.others ]).getOr([ ]);
         if (Arr.exists(scrollers, (s) => Compare.eq(s, evt.target))) {

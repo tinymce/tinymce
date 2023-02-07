@@ -48,8 +48,8 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
 
   context('Top toolbar positioning', () => {
     Arr.each([
-      { name: 'normal', settings: { ui_of_tomorrow: false }},
-      { name: 'normal-tomorrow', settings: { ui_of_tomorrow: true }}
+      { name: 'normal', settings: { ui_mode: 'default' }},
+      { name: 'normal-split-ui-mode', settings: { ui_mode: 'split' }}
     ], (tester) => {
       context(tester.name, () => {
         const hook = TinyHooks.bddSetup<Editor>({
@@ -130,8 +130,8 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
 
   context('Bottom toolbar positioning', () => {
     Arr.each([
-      { name: 'normal', settings: { ui_of_tomorrow: false }},
-      { name: 'normal-tomorrow', settings: { ui_of_tomorrow: true }}
+      { name: 'normal', settings: { ui_mode: 'default' }},
+      { name: 'normal-split-ui-mode', settings: { ui_mode: 'split' }}
     ], (tester) => {
       context(tester.name, () => {
         const hook = TinyHooks.bddSetup<Editor>({
@@ -185,8 +185,8 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
 
   context('Bottom toolbar with inline editor positioning', () => {
     Arr.each([
-      { name: 'inline', settings: { ui_of_tomorrow: false }, sinkSeparatedByScrollDiv: false },
-      { name: 'inline-tomorrow', settings: { ui_of_tomorrow: true }, sinkSeparatedByScrollDiv: true }
+      { name: 'inline', settings: { ui_mode: 'default' }, sinkSeparatedByScrollDiv: false },
+      { name: 'inline-split-ui-mode', settings: { ui_mode: 'split' }, sinkSeparatedByScrollDiv: true }
     ], (tester) => {
       context(tester.name, () => {
         const hook = TinyHooks.bddSetupFromElement<Editor>({
@@ -204,7 +204,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
         }, []);
 
         // This scroll div is inserted before and after the target, so the popup sink that
-        // gets added for inline mode in ui_of_tomorrow: true is separated from the dialog sink
+        // gets added for inline mode in ui_mode: split is separated from the dialog sink
         // by the height of one scroll div
         const scrollDivHeight = 1000;
         PageScroll.bddSetup(hook.editor, scrollDivHeight);
@@ -212,7 +212,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
         it('Position of dialog should be constant when toolbar bottom docks', async () => {
           const editor = hook.editor();
 
-          // When in two sink mode (ui_of_tomorrow), we need to consider the height of the scrollDiv when
+          // When in two sink mode (ui_mode: split), we need to consider the height of the scrollDiv when
           // comparing *absolute* positions.
           const yDelta = tester.sinkSeparatedByScrollDiv ? scrollDivHeight : 0;
 

@@ -84,13 +84,13 @@ const setupEvents = (editor: Editor, uiRefs: ReadyUiReferences) => {
   });
 };
 
-// TINY-9226: When set, the `ui_of_tomorrow` option will create two different sinks (one for popups and one for sinks)
+// TINY-9226: When set, the `ui_mode: split` option will create two different sinks (one for popups and one for sinks)
 // and the popup sink will be placed adjacent to the editor. This will make it having the same scrolling ancestry.
 const attachUiMotherships = (editor: Editor, uiRoot: SugarElement<HTMLElement | ShadowRoot>, uiRefs: ReadyUiReferences) => {
-  if (Options.isUiOfTomorrow(editor)) {
+  if (Options.isSplitUiMode(editor)) {
     Attachment.attachSystemAfter(uiRefs.mainUi.mothership.element, uiRefs.popupUi.mothership);
   }
-  // In UiRefs, dialogUi and popupUi refer to the same thing if ui_of_tomorrow is false
+  // In UiRefs, dialogUi and popupUi refer to the same thing if ui_mode: default
   Attachment.attachSystem(uiRoot, uiRefs.dialogUi.mothership);
 };
 

@@ -221,7 +221,7 @@ interface BaseEditorOptions {
   toolbar_sticky?: boolean;
   toolbar_sticky_offset?: number;
   typeahead_urls?: boolean;
-  ui_of_tomorrow?: boolean;
+  ui_mode?: 'default' | 'split';
   url_converter?: URLConverter;
   url_converter_scope?: any;
   urlconverter_callback?: URLConverterCallback;
@@ -325,7 +325,6 @@ export interface EditorOptions extends NormalizedEditorOptions {
   toolbar_sticky_offset: number;
   text_patterns: Pattern[];
   text_patterns_lookup: DynamicPatternsLookup;
-  ui_of_tomorrow: boolean;
   visual: boolean;
   visual_anchor_class: string;
   visual_table_class: string;

@@ -20,8 +20,8 @@ describe('browser.tinymce.core.init.ShadowDomEditorTest', () => {
   Arr.each([
     { type: 'normal', settings: { }, numSinks: 1 },
     { type: 'inline', settings: { inline: true }, numSinks: 1 },
-    { type: 'normal-tomorrow', settings: { ui_of_tomorrow: true }, numSinks: 2 },
-    { type: 'inline-tomorrow', settings: { ui_of_tomorrow: true, inline: true }, numSinks: 2 }
+    { type: 'normal-split-ui-mode', settings: { ui_mode: 'split' }, numSinks: 2 },
+    { type: 'inline-split-ui-mode', settings: { ui_mode: 'split', inline: true }, numSinks: 2 }
   ], (tester) => {
     context(`${tester.type} editor`, () => {
       const hook = TinyHooks.bddSetupInShadowRoot<Editor>({

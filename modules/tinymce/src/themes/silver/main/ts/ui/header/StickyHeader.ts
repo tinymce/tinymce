@@ -213,7 +213,7 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
 
           return Optional.from(container).map((c) => {
             const box = Boxes.box(SugarElement.fromDom(c));
-            const optScrollingContext = ScrollingContext.detectWhenUiOfTomorrow(editor, comp.element);
+            const optScrollingContext = ScrollingContext.detectWhenSplitUiMode(editor, comp.element);
             return optScrollingContext.fold(
               () => {
                 // Force the header to hide before it overflows outside the container
@@ -261,7 +261,7 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
         ...visibility
       },
       lazyViewport: (comp) => {
-        const optScrollingContext = ScrollingContext.detectWhenUiOfTomorrow(editor, comp.element);
+        const optScrollingContext = ScrollingContext.detectWhenSplitUiMode(editor, comp.element);
         return optScrollingContext.fold<DockingTypes.DockingViewport>(
           () => {
             const boundsWithoutOffset = Boxes.win();

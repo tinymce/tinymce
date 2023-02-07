@@ -7,7 +7,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.themes.silver.editor.SilverUiOfTomorrowTest', () => {
+describe('browser.tinymce.themes.silver.editor.SilverUiModeTest', () => {
   const sharedSettings = {
     menubar: 'file',
     toolbar: 'undo bold',
@@ -79,7 +79,7 @@ describe('browser.tinymce.themes.silver.editor.SilverUiOfTomorrowTest', () => {
     await TinyUiActions.pWaitForUi(editor, selectors.sink);
     const uiRoot = TinyUiActions.getUiRoot(editor);
     const sinks = UiFinder.findAllIn(uiRoot, selectors.sink);
-    assert.equal(1, sinks.length, 'There should be one sink in ui_is_tomorrow=false mode');
+    assert.equal(1, sinks.length, 'There should be one sink in ui_mode: default mode');
     assertIsDialogSinkInBody(sinks[0]);
   };
 
@@ -89,7 +89,7 @@ describe('browser.tinymce.themes.silver.editor.SilverUiOfTomorrowTest', () => {
     await TinyUiActions.pWaitForUi(editor, selectors.sink);
     const uiRoot = TinyUiActions.getUiRoot(editor);
     const sinks = UiFinder.findAllIn(uiRoot, selectors.sink);
-    assert.equal(2, sinks.length, 'There should be two sinks in ui_is_tomorrow=true mode');
+    assert.equal(2, sinks.length, 'There should be two sinks in ui_mode: split mode');
     // TODO: Double-check this ordering.
     assertIsDialogSinkInBody(sinks[1]);
     assertIsPopupSinkIn(sinks[0], selectors.editorParent);
@@ -136,7 +136,7 @@ describe('browser.tinymce.themes.silver.editor.SilverUiOfTomorrowTest', () => {
     UiFinder.notExists(uiRoot, selectors.dialog);
   };
 
-  context('ui_of_tomorrow = false', () => {
+  context('ui_mode: default', () => {
     Arr.each([
       { name: 'inline', settings: { inline: true }},
       { name: 'normal', settings: { inline: false }}
@@ -145,7 +145,7 @@ describe('browser.tinymce.themes.silver.editor.SilverUiOfTomorrowTest', () => {
         const hook = TinyHooks.bddSetupFromElement<Editor>(
           {
             ...tester.settings,
-            ui_of_tomorrow: false,
+            ui_mode: 'default',
             ...sharedSettings,
           },
           () => setupElement(tester.settings.inline),
@@ -176,7 +176,7 @@ describe('browser.tinymce.themes.silver.editor.SilverUiOfTomorrowTest', () => {
     });
   });
 
-  context('ui_of_tomorrow = true', () => {
+  context('ui_mode: split', () => {
     Arr.each([
       { name: 'inline', settings: { inline: true }},
       { name: 'normal', settings: { inline: false }}
@@ -185,7 +185,7 @@ describe('browser.tinymce.themes.silver.editor.SilverUiOfTomorrowTest', () => {
         const hook = TinyHooks.bddSetupFromElement<Editor>(
           {
             ...tester.settings,
-            ui_of_tomorrow: true,
+            ui_mode: 'split',
             ...sharedSettings
           },
           () => setupElement(tester.settings.inline),

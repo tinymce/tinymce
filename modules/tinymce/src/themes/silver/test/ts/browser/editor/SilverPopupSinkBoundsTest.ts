@@ -82,11 +82,11 @@ describe('browser.tinymce.themes.silver.editor.SilverPopupSinkBoundsTest', () =>
     return wrapper.dom.getBoundingClientRect();
   };
 
-  context('ui_of_tomorrow = false', () => {
+  context('ui_mode: default', () => {
     const hook = TinyHooks.bddSetupFromElement<Editor>(
       {
         ...sharedSettings,
-        ui_of_tomorrow: false
+        ui_mode: 'default'
       },
       () => setupElement(false),
       []
@@ -109,11 +109,11 @@ describe('browser.tinymce.themes.silver.editor.SilverPopupSinkBoundsTest', () =>
     });
   });
 
-  context('ui_of_tomorrow = true', () => {
+  context('ui_mode: split', () => {
     const hook = TinyHooks.bddSetupFromElement<Editor>(
       {
         ...sharedSettings,
-        ui_of_tomorrow: true
+        ui_mode: 'split'
       },
       () => setupElement(false),
       []

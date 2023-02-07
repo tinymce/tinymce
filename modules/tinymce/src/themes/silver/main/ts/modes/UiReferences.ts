@@ -28,7 +28,7 @@ export interface LazyUiReferences {
   // * showing / hiding on editor focus/blur
   // * destroying on remove
   // * broadcasting events for dismissing popups on mousedown etc.
-  // Unless ui_of_tomorrow is set, there will only be one UI mothership
+  // Unless ui_mode: split is set, there will only be one UI mothership
   readonly getUiMotherships: () => Array<Gui.GuiSystem>;
 
   readonly lazyGetInOuterOrDie: <A>(label: string, f: (oc: AlloyComponent) => Optional<A>) => () => A;
@@ -46,7 +46,7 @@ export const LazyUiReferences = (): LazyUiReferences => {
       `Could not find ${label} element in OuterContainer`
     );
 
-  // TINY-9226: If the motherships are the same, return just the dialog Ui of them (ui_of_tomorrow = false mode)
+  // TINY-9226: If the motherships are the same, return just the dialog Ui of them (ui_mode: default mode)
   const getUiMotherships = () => {
     const optDialogMothership = dialogUi.get().map((ui) => ui.mothership);
     const optPopupMothership = popupUi.get().map((ui) => ui.mothership);

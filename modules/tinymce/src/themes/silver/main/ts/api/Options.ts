@@ -210,9 +210,9 @@ const register = (editor: Editor): void => {
     processor: 'object'
   });
 
-  registerOption('ui_of_tomorrow', {
-    processor: 'boolean',
-    default: false
+  registerOption('ui_mode', {
+    processor: 'string',
+    default: 'default'
   });
 
   registerOption('file_picker_callback', {
@@ -405,8 +405,8 @@ const isStickyToolbar = (editor: Editor): boolean => {
   return (isStickyToolbar || editor.inline) && !useFixedContainer(editor) && !isDistractionFree(editor);
 };
 
-const isUiOfTomorrow = (editor: Editor): boolean =>
-  !useFixedContainer(editor) && editor.options.get('ui_of_tomorrow');
+const isSplitUiMode = (editor: Editor): boolean =>
+  !useFixedContainer(editor) && editor.options.get('ui_mode') === 'split';
 
 const getMenus = (editor: Editor): Record<string, { title: string; items: string }> => {
   const menu = editor.options.get('menu');
@@ -437,7 +437,7 @@ export {
   getMultipleToolbarsOption,
   getUiContainer,
   useFixedContainer,
-  isUiOfTomorrow,
+  isSplitUiMode,
   getToolbarMode,
   isDraggableModal,
   isDistractionFree,

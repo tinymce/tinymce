@@ -42,8 +42,8 @@ export const detect = (poupSinkElem: SugarElement<HTMLElement>): Optional<Scroll
     );
 };
 
-export const detectWhenUiOfTomorrow = (editor: Editor, popupSinkElem: SugarElement<HTMLElement>): Optional<ScrollingContext> =>
-  Options.isUiOfTomorrow(editor) ? detect(popupSinkElem) : Optional.none();
+export const detectWhenSplitUiMode = (editor: Editor, popupSinkElem: SugarElement<HTMLElement>): Optional<ScrollingContext> =>
+  Options.isSplitUiMode(editor) ? detect(popupSinkElem) : Optional.none();
 
 // Using all the scrolling viewports in the ancestry, limit the absolute
 // coordinates of window so that the bounds are limited by all the scrolling
