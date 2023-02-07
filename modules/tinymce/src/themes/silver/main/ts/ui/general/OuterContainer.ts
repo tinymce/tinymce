@@ -66,6 +66,7 @@ interface OuterContainerApis {
   readonly setToolbars: (comp: AlloyComponent, toolbars: ToolbarGroup[][]) => void;
   readonly refreshToolbar: (comp: AlloyComponent) => void;
   readonly toggleToolbarDrawer: (comp: AlloyComponent) => void;
+  readonly toggleToolbarDrawerWithoutFocusing: (comp: AlloyComponent) => void;
   readonly isToolbarDrawerToggled: (comp: AlloyComponent) => boolean;
   readonly getThrobber: (comp: AlloyComponent) => Optional<AlloyComponent>;
   readonly focusToolbar: (comp: AlloyComponent) => void;
@@ -81,7 +82,8 @@ interface OuterContainerApis {
 interface ToolbarApis {
   readonly setGroups: (toolbar: AlloyComponent, groups: SketchSpec[]) => void;
   readonly refresh: (toolbar: AlloyComponent) => void;
-  readonly toggle?: (toolbar: AlloyComponent) => void;
+  readonly toggle: (toolbar: AlloyComponent) => void;
+  readonly toggleWithoutFocusing: (toolbar: AlloyComponent) => void;
   readonly isOpen?: (toolbar: AlloyComponent) => boolean;
 }
 
@@ -132,6 +134,11 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
     toggleToolbarDrawer: (comp) => {
       Composite.parts.getPart(comp, detail, 'toolbar').each((toolbar) => {
         Optionals.mapFrom(toolbar.getApis<ToolbarApis>().toggle, (toggle) => toggle(toolbar));
+      });
+    },
+    toggleToolbarDrawerWithoutFocusing: (comp) => {
+      Composite.parts.getPart(comp, detail, 'toolbar').each((toolbar) => {
+        Optionals.mapFrom(toolbar.getApis<ToolbarApis>().toggleWithoutFocusing, (toggleWithoutFocusing) => toggleWithoutFocusing(toolbar));
       });
     },
     isToolbarDrawerToggled: (comp) => {
@@ -423,6 +430,9 @@ export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketch
     },
     toggleToolbarDrawer: (apis, comp) => {
       apis.toggleToolbarDrawer(comp);
+    },
+    toggleToolbarDrawerWithoutFocusing: (apis, comp) => {
+      apis.toggleToolbarDrawerWithoutFocusing(comp);
     },
     isToolbarDrawerToggled: (apis, comp) => {
       return apis.isToolbarDrawerToggled(comp);

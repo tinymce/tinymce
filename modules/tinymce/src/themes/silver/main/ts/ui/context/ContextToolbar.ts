@@ -225,9 +225,11 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     }
   };
 
+  let isDragging = false;
+
   const launchContextToolbar = Throttler.last(() => {
     // Don't launch if the editor doesn't have focus or has been destroyed
-    if (!editor.hasFocus() || editor.removed) {
+    if (!editor.hasFocus() || editor.removed || isDragging) {
       return;
     }
 
@@ -284,6 +286,13 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
       } else if (editor.hasFocus()) {
         launchContextToolbar.throttle();
       }
+    });
+
+    editor.on('dragstart', () => {
+      isDragging = true;
+    });
+    editor.on('dragend drop', () => {
+      isDragging = false;
     });
 
     editor.on('NodeChange', (_e) => {

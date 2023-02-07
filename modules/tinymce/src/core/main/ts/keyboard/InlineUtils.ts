@@ -12,7 +12,9 @@ import * as NodeType from '../dom/NodeType';
 import * as Bidi from '../text/Bidi';
 
 const isInlineTarget = (editor: Editor, elm: Node): elm is Element =>
-  Selectors.is(SugarElement.fromDom(elm), Options.getInlineBoundarySelector(editor)) && !TransparentElements.isTransparentBlock(editor.schema, elm);
+  Selectors.is(SugarElement.fromDom(elm), Options.getInlineBoundarySelector(editor))
+  && !TransparentElements.isTransparentBlock(editor.schema, elm)
+  && editor.dom.isEditable(elm);
 
 const isRtl = (element: Element): boolean =>
   DOMUtils.DOM.getStyle(element, 'direction', true) === 'rtl' || Bidi.hasStrongRtl(element.textContent ?? '');

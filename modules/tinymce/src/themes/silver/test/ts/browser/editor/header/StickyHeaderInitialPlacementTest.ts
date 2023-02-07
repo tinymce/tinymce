@@ -11,7 +11,7 @@ describe('browser.tinymce.themes.silver.editor.header.StickyHeaderInitialPlaceme
 
   Arr.each([
     { location: ToolbarLocation.top, height: 2000, expectDocked: false },
-    { location: ToolbarLocation.bottom, height: 500, expectDocked: false },
+    { location: ToolbarLocation.bottom, height: 200, expectDocked: false },
     { location: ToolbarLocation.bottom, height: 2000, expectDocked: true }
   ], (test) => {
     it(`Test toolbar initial placement with toolbar_location: ${test.location} and height: ${test.height}`, async () => {

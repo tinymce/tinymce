@@ -1,6 +1,6 @@
 import { HexColour, RgbaColour } from '@ephox/acid';
 import { Cell, Fun, Optional, Optionals } from '@ephox/katamari';
-import { Css, SugarElement } from '@ephox/sugar';
+import { Css, SugarElement, SugarNode, TransformFind } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
@@ -18,8 +18,29 @@ export interface ColorSwatchDialogData {
 
 type ColorFormat = 'forecolor' | 'hilitecolor';
 
+const defaultBackgroundColor = 'rgba(0, 0, 0, 0)';
+
+const isValidBackgroundColor = (value: string) =>
+  RgbaColour.fromString(value).exists((c) => c.alpha !== 0);
+
+// Climb up the tree to find the value of the background until finding a non-transparent value or defaulting.
+const getClosestCssBackgroundColorValue = (scope: SugarElement<Element>): string => {
+  return TransformFind.closest(scope, (node) => {
+    if (SugarNode.isElement(node)) {
+      const color = Css.get(node, 'background-color');
+      return Optionals.someIf(isValidBackgroundColor(color), color);
+    } else {
+      return Optional.none();
+    }
+  }).getOr(defaultBackgroundColor);
+};
+
 const getCurrentColor = (editor: Editor, format: ColorFormat): Optional<string> => {
-  const cssRgbValue = Css.get(SugarElement.fromDom(editor.selection.getStart()), format === 'hilitecolor' ? 'background-color' : 'color');
+  const node = SugarElement.fromDom(editor.selection.getStart());
+  const cssRgbValue = format === 'hilitecolor'
+    ? getClosestCssBackgroundColorValue(node)
+    : Css.get(node, 'color');
+
   return RgbaColour.fromString(cssRgbValue).map((rgba) => '#' + HexColour.fromRgba(rgba).value);
 };
 
@@ -100,15 +121,18 @@ const setIconColor = (splitButtonApi: Toolbar.ToolbarSplitButtonInstanceApi, nam
   splitButtonApi.setIconFill(id, newColor);
 };
 
+const select = (editor: Editor, format: ColorFormat) =>
+  (value: string) => {
+    const optCurrentHex = getCurrentColor(editor, format);
+    return Optionals.is(optCurrentHex, value.toUpperCase());
+  };
+
 const registerTextColorButton = (editor: Editor, name: string, format: ColorFormat, tooltip: string, lastColor: Cell<string>) => {
   editor.ui.registry.addSplitButton(name, {
     tooltip,
     presets: 'color',
     icon: name === 'forecolor' ? 'text-color' : 'highlight-bg-color',
-    select: (value) => {
-      const optCurrentHex = getCurrentColor(editor, format);
-      return Optionals.is(optCurrentHex, value.toUpperCase());
-    },
+    select: select(editor, format),
     columns: Options.getColorCols(editor, format),
     fetch: getFetch(Options.getColors(editor, format), format, Options.hasCustomColors(editor)),
     onAction: (_splitButtonApi) => {
@@ -142,7 +166,7 @@ const registerTextColorButton = (editor: Editor, name: string, format: ColorForm
   });
 };
 
-const registerTextColorMenuItem = (editor: Editor, name: string, format: ColorFormat, text: string) => {
+const registerTextColorMenuItem = (editor: Editor, name: string, format: ColorFormat, text: string, lastColor: Cell<string>) => {
   editor.ui.registry.addNestedMenuItem(name, {
     text,
     icon: name === 'forecolor' ? 'text-color' : 'highlight-bg-color',
@@ -150,12 +174,20 @@ const registerTextColorMenuItem = (editor: Editor, name: string, format: ColorFo
       {
         type: 'fancymenuitem',
         fancytype: 'colorswatch',
+        select: select(editor, format),
         initData: {
           storageKey: format,
         },
         onAction: (data) => {
-          applyColor(editor, format, data.value, Fun.noop);
-        }
+          applyColor(editor, format, data.value, (newColor) => {
+            lastColor.set(newColor);
+
+            Events.fireTextColorChange(editor, {
+              name,
+              color: newColor
+            });
+          } );
+        },
       }
     ]
   });
@@ -230,8 +262,8 @@ const register = (editor: Editor): void => {
   registerTextColorButton(editor, 'forecolor', 'forecolor', 'Text color', lastForeColor);
   registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background color', lastBackColor);
 
-  registerTextColorMenuItem(editor, 'forecolor', 'forecolor', 'Text color');
-  registerTextColorMenuItem(editor, 'backcolor', 'hilitecolor', 'Background color');
+  registerTextColorMenuItem(editor, 'forecolor', 'forecolor', 'Text color', lastForeColor);
+  registerTextColorMenuItem(editor, 'backcolor', 'hilitecolor', 'Background color', lastBackColor);
 };
 
 export {

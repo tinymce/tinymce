@@ -1,9 +1,12 @@
-import { Arr, Cell, Type } from '@ephox/katamari';
+import { Arr, Cell, Obj, Type } from '@ephox/katamari';
 
+import DOMUtils from '../api/dom/DOMUtils';
 import RangeUtils from '../api/dom/RangeUtils';
 import Editor from '../api/Editor';
+import Schema from '../api/html/Schema';
 import * as Options from '../api/Options';
 import Delay from '../api/util/Delay';
+import * as TransparentElements from '../content/TransparentElements';
 import * as Clipboard from './Clipboard';
 import * as InternalHtml from './InternalHtml';
 import * as PasteUtils from './PasteUtils';
@@ -27,6 +30,16 @@ const setFocusedRange = (editor: Editor, rng: Range | undefined): void => {
 const hasImage = (dataTransfer: DataTransfer): boolean =>
   Arr.exists(dataTransfer.files, (file) => /^image\//.test(file.type));
 
+const isTransparentBlockDrop = (dom: DOMUtils, schema: Schema, target: Node, dropContent: Clipboard.ClipboardContents) => {
+  const parentTransparent = dom.getParent(target, (node) => TransparentElements.isTransparentBlock(schema, node));
+  if (parentTransparent && Obj.has(dropContent, 'text/html')) {
+    const fragment = new DOMParser().parseFromString(dropContent['text/html'], 'text/html').body;
+    return !Type.isNull(fragment.querySelector(parentTransparent.nodeName.toLowerCase()));
+  } else {
+    return false;
+  }
+};
+
 const setup = (editor: Editor, draggingInternallyState: Cell<boolean>): void => {
   // Block all drag/drop events
   if (Options.shouldPasteBlockDrop(editor)) {
@@ -48,7 +61,7 @@ const setup = (editor: Editor, draggingInternallyState: Cell<boolean>): void => 
   }
 
   editor.on('drop', (e) => {
-    if (e.isDefaultPrevented() || draggingInternallyState.get()) {
+    if (e.isDefaultPrevented()) {
       return;
     }
 
@@ -66,6 +79,11 @@ const setup = (editor: Editor, draggingInternallyState: Cell<boolean>): void => 
 
     const internalContent = dropContent[InternalHtml.internalHtmlMime()];
     const content = internalContent || dropContent['text/html'] || dropContent['text/plain'];
+    const transparentElementDrop = isTransparentBlockDrop(editor.dom, editor.schema, rng.startContainer, dropContent);
+
+    if (draggingInternallyState.get() && !transparentElementDrop) {
+      return;
+    }
 
     if (content) {
       e.preventDefault();
@@ -80,6 +98,7 @@ const setup = (editor: Editor, draggingInternallyState: Cell<boolean>): void => 
           setFocusedRange(editor, rng);
 
           const trimmedContent = PasteUtils.trimHtml(content);
+
           if (dropContent['text/html']) {
             Clipboard.pasteHtml(editor, trimmedContent, internal);
           } else {

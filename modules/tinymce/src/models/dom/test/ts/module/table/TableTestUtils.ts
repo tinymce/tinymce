@@ -259,6 +259,12 @@ const assertWidths = (widths: { widthBefore: WidthData; widthAfter: WidthData })
   }
 };
 
+const withNoneditableRootEditor = (editor: Editor, f: (editor: Editor) => void): void => {
+  editor.getBody().contentEditable = 'false';
+  f(editor);
+  editor.getBody().contentEditable = 'true';
+};
+
 export {
   getCellWidth,
   assertTableStructure,
@@ -281,5 +287,6 @@ export {
   deleteRow,
   insertTable,
   makeInsertTable,
-  assertWidths
+  assertWidths,
+  withNoneditableRootEditor
 };

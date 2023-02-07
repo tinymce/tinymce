@@ -60,7 +60,7 @@
 @dialog-body-h2-text-color: @text-color;
 @dialog-body-h2-text-transform: none;
 
-@dialog-table-border-color: @border-color;
+@dialog-table-border-color: darken(@border-color, 55%);
 @dialog-nav-focus-background-color: fade(@color-tint, 10%);
 
 // These get stacked on top of the global dialog z-index (1100)
@@ -390,6 +390,10 @@
         font-weight: @font-weight-bold;
         padding-bottom: @pad-sm;
       }
+
+      th:first-child {
+        padding-right: @pad-sm;
+      }
     }
 
     tbody {
@@ -405,6 +409,10 @@
     td {
       padding-bottom: @pad-sm;
       padding-top: @pad-sm;
+    }
+
+    td:first-child {
+      padding-right: @pad-sm;
     }
   }
 

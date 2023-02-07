@@ -3,6 +3,7 @@ import { Arr, Unicode } from '@ephox/katamari';
 import { SugarElement } from '../node/SugarElement';
 import * as SugarNode from '../node/SugarNode';
 import * as SugarText from '../node/SugarText';
+import * as Attribute from '../properties/Attribute';
 import * as Traverse from '../search/Traverse';
 
 const getEnd = (element: SugarElement<Node>): number =>
@@ -21,10 +22,12 @@ const isTextNodeWithCursorPosition = (el: SugarElement<Node>) => SugarText.getOp
   text.trim().length !== 0 || text.indexOf(Unicode.nbsp) > -1
 ).isSome();
 
+const isContentEditableFalse = (elem: SugarElement<Node>) => SugarNode.isHTMLElement(elem) && (Attribute.get(elem, 'contenteditable') === 'false');
+
 const elementsWithCursorPosition = [ 'img', 'br' ];
 const isCursorPosition = (elem: SugarElement<Node>): boolean => {
   const hasCursorPosition = isTextNodeWithCursorPosition(elem);
-  return hasCursorPosition || Arr.contains(elementsWithCursorPosition, SugarNode.name(elem));
+  return hasCursorPosition || Arr.contains(elementsWithCursorPosition, SugarNode.name(elem)) || isContentEditableFalse(elem);
 };
 
 export {

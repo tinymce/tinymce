@@ -11,7 +11,7 @@ describe('browser.tinymce.plugins.codesample.CodeSampleSanityTest', () => {
     plugins: 'codesample',
     toolbar: 'codesample',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin ]);
+  }, [ Plugin ], true);
 
   const markupContent = '<p>hello world</p>';
   const newContent = 'editor content should not change to this';

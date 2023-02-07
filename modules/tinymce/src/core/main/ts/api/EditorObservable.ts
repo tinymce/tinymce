@@ -37,7 +37,7 @@ const getEventTarget = (editor: Editor, eventName: string): Node => {
 
   // Need to bind mousedown/mouseup etc to document not body in iframe mode
   // Since the user might click on the HTML element not the BODY
-  if (!editor.inline && /^mouse|touch|click|contextmenu|drop|dragover|dragend/.test(eventName)) {
+  if (!editor.inline && /^(?:mouse|touch|click|contextmenu|drop|dragover|dragend)/.test(eventName)) {
     return editor.getDoc().documentElement;
   }
 

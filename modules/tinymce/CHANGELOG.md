@@ -9,6 +9,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- New `isEditable` API to `editor.selection` that returns true or false if the current selection is editable. #TINY-9462
+- New `isEditable` API to `editor.dom` that returns true or false if the specified node is editable. #TINY-9462
+- New `setText` and `setIcon` methods added to menu button and toolbar button apis. #TINY-9268
+- New `highlight_on_focus` option which enables highlighting the content area on focus. #TINY-9277
+- New `fontsizeinput` toolbar item which allows the user to set the size via input and also increase and decrease it with `+` and `-` buttons. #TINY-9429
+
+
+### Improved
+- Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
+
+### Changed
+- The `link` plugins context menu items will no longer appear for noneditable links. #TINY-9491
+- The formatting of `contenteditable="false"` elements are no longer cloned to new cells while creating new table rows. #TINY-9449
+- Changed the color of `@dialog-table-border-color`, and added right padding to the first cell of dialog table. #TINY-9380
+
+### Fixed
+- The searchreplace modal would close incorrectly when clicking outside of the alert that pops up when no match is found. #TINY-9443
+- Color picker on toolbar would not update when changing forecolor or backcolor from menu. #TINY-9439
+- The `onSetup` api function would not run when defining custom group toolbar button. #TINY-9496
+- An element could be dropped onto the decendants of a noneditable element. #TINY-9364
+- Checkmark did not show in menu colorswatches. #TINY-9395
+- Toolbar split buttons in advlist plugin to show the correct state when the cursor is in a checklist. #TINY-5167
+- Dragging transparent elements into transparent blocks elements could produce invalid nesting of transparents. #TINY-9231
+- The `editor.insertContent` API would insert contents inside noneditable elements if the selection was inside the element. #TINY-9462
+- Closing a dialog would scroll down the document in Safari. #TINY-9148
+- Quick toolbars were incorrectly rendered during the dragging of `contenteditable="false"` elements. #TINY-9305
+- Selection of images, hrs, tables or noneditable elements was possible if they were within a noneditable element. #TINY-9473
+- Ranged deletion of formatted text using selection or keyboard shortcut would sometimes cause Blink and Webkit browsers to insert interpreted tags upon typing, which may result in inconsistent tags. #TINY-9302
+- Visual characters were rendered inside noneditable elements. #TINY-9474
+- Removed a workaround for ensuring stylesheets are loaded in an outdated version of webkit. #TINY-9433
+- Lists in a noneditable root were incorrectly editable using list API commands, toolbar buttons and menu items. #TINY-9458
+- Color picker dialog would not update the preview color if the hex input value was prefixed with `#` symbol. #TINY-9457
+- Table cell selection was possible even if the element was in a noneditable root element. #TINY-9459
+- Table commands were modifying tables in a noneditable root element. #TINY-9459
+- Fake carets were rendered for noneditable elements and tables in a noneditable root element. #TINY-9459
+- Textareas with scrollbars in dialogs would not render rounded corners correctly on some browsers. #TINY-9331
+- It was possible to open links inside the editor if the editor root was noneditable. #TINY-9470
+- Inline boundary was rendered for noneditable inline boundary elements. #TINY-9471
+- Clicking on a disabled split button will no longer call the `onAction` callback. #TINY-9504
+- The "Edit Link" dialog incorrectly retrieved the URL value when opened immediately after the link insertion. #TINY-7993
+
+## 6.3.1 - 2022-12-06
+
+### Fixed
+- HTML in messages for the `WindowManager.alert` and `WindowManager.confirm` APIs were not properly sanitized. #TINY-3548
+
 ## 6.3.0 - 2022-11-23
 
 ### Added
@@ -21,6 +68,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `color_default_foreground` and `color_default_background` options to set the initial default color for the `forecolor` and `backcolor` toolbar buttons and menu items. #TINY-9183
 - New `getTransparentElements` function added to `tinymce.html.Schema` to return a map object of transparent HTML elements. #TINY-9172
 - Added `ToggleToolbarDrawer` event to subscribe to toolbar’s opening and closing. #TINY-9271
+- Added `skipFocus` option to the `ToggleToolbarDrawer` command to preserve focus. #TINY-9337
 
 ### Changed
 - Transparent elements, like anchors, are now allowed in the root of the editor body if they contain blocks. #TINY-9172
@@ -33,6 +81,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Color picker dialog now starts on the appropriate color for the cursor position. #TINY-9213
 
 ### Fixed
+- Creating a list in a table cell when the caret is in front of an anchor element would not properly include the anchor in the list. #TINY-6853
 - Parsing media content would cause a memory leak, which for example occurred when using the `getContent` API. #TINY-9186
 - Dragging a noneditable element toward the bottom edge would cause the page to scroll up. #TINY-9025
 - Range expanding capabilities would behave inconsistently depending on where the cursor was placed. #TINY-9029
@@ -52,6 +101,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A newline could not be inserted when the selection was restored from a bookmark after an inline element with a `contenteditable="false"` attribute. #TINY-9194
 - The global `tinymce.dom.styleSheetLoader` was not affected by the `content_css_cors` option. #TINY-6037
 - The caret was moved to the previous line when a text pattern executed a `mceInsertContent` command on Enter key when running on Firefox. #TINY-9193
+- The `autoresize` plugin used to cause infinite resize when `content_css` is set to `document`. #TINY-8872
 
 ## 6.2.0 - 2022-09-08
 

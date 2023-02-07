@@ -56,4 +56,13 @@ UnitTest.test('Browser Test: CursorPositionTest', () => {
 
   // INVESTIGATE: Not sure if offset here should be 0 or 1.
   Assert.eq('', true, Edge.isAtRightEdge(container, child4, 0));
+
+  const container2 = SugarElement.fromTag('p');
+  const child2_1 = SugarElement.fromHtml('<span contenteditable="false">AAA</span>');
+  const child2_2 = SugarElement.fromText('BBB');
+  const child2_3 = SugarElement.fromHtml('<span contenteditable="false">CCC</span>');
+  InsertAll.append(container2, [ child2_1, child2_2, child2_3 ]);
+  checkFirst('First of container2 should be first CEF', child2_1, container2);
+  checkLast('Last of container2 should be last CEF', child2_3, container2);
+
 });

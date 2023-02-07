@@ -1,5 +1,5 @@
 import { Arr, Fun, Obj, Optionals, Strings, Type } from '@ephox/katamari';
-import { Attribute, Class, Css, Html, Insert, Remove, Selectors, SugarElement, SugarNode, Traverse, WindowVisualViewport } from '@ephox/sugar';
+import { Attribute, Class, ContentEditable, Css, Html, Insert, Remove, Selectors, SugarElement, SugarNode, Traverse, WindowVisualViewport } from '@ephox/sugar';
 
 import * as TransparentElements from '../../content/TransparentElements';
 import * as NodeType from '../../dom/NodeType';
@@ -200,6 +200,7 @@ interface DOMUtils {
   dispatch: (target: Node | Window, name: string, evt?: {}) => EventUtils;
   getContentEditable: (node: Node) => string | null;
   getContentEditableParent: (node: Node) => string | null;
+  isEditable: (node: Node | null | undefined) => boolean;
   destroy: () => void;
   isChildOf: (node: Node, parent: Node) => boolean;
   dumpRng: (r: Range) => string;
@@ -1122,6 +1123,16 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return state;
   };
 
+  const isEditable = (node: Node | null | undefined) => {
+    if (Type.isNonNullable(node)) {
+      const scope = NodeType.isElement(node) ? node : node.parentElement;
+      const isRootEditable = getContentEditable(getRoot()) === 'true';
+      return Type.isNonNullable(scope) && ContentEditable.isEditable(SugarElement.fromDom(scope), isRootEditable);
+    } else {
+      return false;
+    }
+  };
+
   const destroy = () => {
     // Unbind all events bound to window/document by editor instance
     if (boundEvents.length > 0) {
@@ -1828,6 +1839,15 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     // Returns the content editable state of a node
     getContentEditable,
     getContentEditableParent,
+
+    /**
+     * Checks if the specified node is editable within the given context of its parents.
+     *
+     * @method isEditable
+     * @param {Node} node Node to check if it's editable.
+     * @return {Boolean} Will be true if the node is editable and false if it's not editable.
+     */
+    isEditable,
 
     /**
      * Destroys all internal references to the DOM to solve memory leak issues.

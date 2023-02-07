@@ -24,7 +24,8 @@
   .tox-editor-header {
     display: grid;
     grid-template-columns: 1fr min-content;
-    z-index: 1;
+    // Escape the highlight of content area when the toolbar is sticky
+    z-index: 2;
   }
 
   &:not(.tox-tinymce-inline) .tox-editor-header {

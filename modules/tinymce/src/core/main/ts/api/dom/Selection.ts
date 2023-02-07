@@ -69,6 +69,7 @@ interface EditorSelection {
   moveToBookmark: (bookmark: Bookmark) => void;
   select: (node: Node, content?: boolean) => Node;
   isCollapsed: () => boolean;
+  isEditable: () => boolean;
   isForward: () => boolean;
   setNode: (elm: Element) => Element;
   getNode: () => HTMLElement;
@@ -254,6 +255,22 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     }
 
     return !sel || rng.collapsed;
+  };
+
+  /**
+   * Checks if the current selection’s start and end containers are editable within their parent’s contexts.
+   *
+   * @method isEditable
+   * @return {Boolean} Will be true if the selection is editable and false if it's not editable.
+   */
+  const isEditable = (): boolean => {
+    const rng = getRng();
+
+    if (rng.startContainer === rng.endContainer) {
+      return dom.isEditable(rng.startContainer);
+    } else {
+      return dom.isEditable(rng.startContainer) && dom.isEditable(rng.endContainer);
+    }
   };
 
   /**
@@ -567,6 +584,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     moveToBookmark,
     select,
     isCollapsed,
+    isEditable,
     isForward,
     setNode,
     getNode,

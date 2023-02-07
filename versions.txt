@@ -3,3 +3,5 @@
 
 agar@7.4.0
 alloy@12.1.0
+sugar@9.2.0
+oxide-icons-default@2.2.0

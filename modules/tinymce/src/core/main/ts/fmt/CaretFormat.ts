@@ -347,13 +347,28 @@ const setup = (editor: Editor): void => {
   });
 };
 
-const replaceWithCaretFormat = (targetNode: Node, formatNodes: Node[]): CaretPosition => {
+const createCaretFormat = (formatNodes: Node[]): {
+  caretContainer: SugarElement<HTMLSpanElement>;
+  caretPosition: CaretPosition;
+} => {
   const caretContainer = createCaretContainer(false);
   const innerMost = insertFormatNodesIntoCaretContainer(formatNodes, caretContainer.dom);
+  return { caretContainer, caretPosition: CaretPosition(innerMost, 0) };
+};
+
+const replaceWithCaretFormat = (targetNode: Node, formatNodes: Node[]): CaretPosition => {
+  const { caretContainer, caretPosition } = createCaretFormat(formatNodes);
   Insert.before(SugarElement.fromDom(targetNode), caretContainer);
   Remove.remove(SugarElement.fromDom(targetNode));
 
-  return CaretPosition(innerMost, 0);
+  return caretPosition;
+};
+
+const createCaretFormatAtStart = (editor: Editor, formatNodes: Node[]): CaretPosition => {
+  const { caretContainer, caretPosition } = createCaretFormat(formatNodes);
+  editor.selection.getRng().insertNode(caretContainer.dom);
+
+  return caretPosition;
 };
 
 const isFormatElement = (editor: Editor, element: SugarElement<Node>): boolean => {
@@ -370,6 +385,7 @@ export {
   applyCaretFormat,
   removeCaretFormat,
   replaceWithCaretFormat,
+  createCaretFormatAtStart,
   isFormatElement,
   isEmptyCaretFormatElement
 };
