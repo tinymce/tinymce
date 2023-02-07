@@ -4,9 +4,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### Added
-- New `ui_mode` setting for editor in scrollable containers support. #TINY-9414
-
 ## Unreleased
 
 ### Added
@@ -15,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `setText` and `setIcon` methods added to menu button and toolbar button apis. #TINY-9268
 - New `highlight_on_focus` option which enables highlighting the content area on focus. #TINY-9277
 - New `fontsizeinput` toolbar item which allows the user to set the size via input and also increase and decrease it with `+` and `-` buttons. #TINY-9429
-
+- New `ui_mode` setting for editor in scrollable containers support. #TINY-9414
 
 ### Improved
 - Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
