@@ -267,5 +267,14 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     TinyUiActions.keystroke(editor, Keys.enter());
 
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 20px;">b</span>c</p>');
+
+    editor.options.set('font_size_input_default_unit', 'fake_unit');
+
+    UiControls.setValue(input, '19');
+    FocusTools.setFocus(root, '.tox-number-input input');
+    await FocusTools.pTryOnSelector('Focus should be on input', root, '.tox-number-input input');
+    TinyUiActions.keystroke(editor, Keys.enter());
+
+    TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 20px;">b</span>c</p>');
   });
 });
