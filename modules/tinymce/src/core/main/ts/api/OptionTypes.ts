@@ -114,6 +114,7 @@ interface BaseEditorOptions {
   font_size_legacy_values?: string;
   font_size_style_values?: string;
   font_size_formats?: string;
+  font_size_input_default_unit?: string;
   forced_root_block?: string;
   forced_root_block_attrs?: Record<string, string>;
   formats?: Formats;
@@ -284,6 +285,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   font_family_formats: string;
   font_size_classes: string;
   font_size_formats: string;
+  font_size_input_default_unit: string;
   font_size_legacy_values: string;
   font_size_style_values: string;
   forced_root_block: string;

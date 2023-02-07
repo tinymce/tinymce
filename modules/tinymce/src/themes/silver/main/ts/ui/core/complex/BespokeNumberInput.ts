@@ -4,6 +4,7 @@ import { Arr, Cell, Fun, Id, Optional } from '@ephox/katamari';
 import { Dimension, Focus, SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { getFontSizeInputDefaultUnit } from 'tinymce/themes/silver/api/Options';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
 import { renderIconFromPack } from '../../button/ButtonSlices';
@@ -37,9 +38,14 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
 
   const changeValue = (f: (v: number, step: number) => number, fromInput: boolean, focusBack: boolean): void => {
     const text = getValueFromCurrentComp(currentComp);
-    const parsedText = Dimension.parse(text, [ 'unsupportedLength' ]);
+    const parsedText = Dimension.parse(text, [ 'unsupportedLength' ]).or(Dimension.parse(text, [ 'empty' ]));
     const value = parsedText.map((res) => res.value).getOr(0);
-    const unit = parsedText.map((res) => res.unit).getOr('');
+    const defaultUnit = getFontSizeInputDefaultUnit(editor);
+    const unit = parsedText.map((res) => res.unit).fold(
+      Fun.constant(defaultUnit),
+      (unit) => unit === '' ? defaultUnit : unit
+    );
+
     const newValue = f(value, spec.getConfigFromUnit(unit).step);
     const newValueWithUnit = `${isValidValue(newValue) ? newValue : value}${unit}`;
 
@@ -137,8 +143,8 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
           ]),
           Keying.config({
             mode: 'special',
-            onEnter: (comp) => {
-              spec.onAction(Representing.getValue(comp));
+            onEnter: (_comp) => {
+              changeValue(Fun.identity, true, false);
               return Optional.some(true);
             },
             onEscape: goToParent,
