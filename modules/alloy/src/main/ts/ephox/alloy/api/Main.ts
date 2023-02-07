@@ -1,5 +1,6 @@
 import * as Boxes from '../alien/Boxes';
 import * as EventRoot from '../alien/EventRoot';
+import * as OffsetOrigin from '../alien/OffsetOrigin';
 import * as AriaVoice from '../aria/AriaVoice';
 import { BehaviourState } from '../behaviour/common/BehaviourState';
 import * as DockingTypes from '../behaviour/docking/DockingTypes';
@@ -225,6 +226,7 @@ export {
   PartType,
   Bounds,
   Boxes,
+  OffsetOrigin,
   EventRoot,
   TapEvent,
   AlloyLogger,

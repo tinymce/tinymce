@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- Exposed `OffsetOrigin` module and `DockingType` type in api main entry point. #TINY-9414
+
 ## 12.0.0 - 2022-11-23
 
 ### Added

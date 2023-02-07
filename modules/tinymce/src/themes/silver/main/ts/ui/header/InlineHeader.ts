@@ -1,6 +1,6 @@
-import { AlloyComponent, Boxes, Channels, Docking, VerticalDir } from '@ephox/alloy';
+import { AlloyComponent, Boxes, Channels, Docking, OffsetOrigin, VerticalDir } from '@ephox/alloy';
 import { Arr, Cell, Fun, Optional, Singleton } from '@ephox/katamari';
-import { Attribute, Css, Height, SugarBody, SugarElement, SugarLocation, Traverse, Width } from '@ephox/sugar';
+import { Attribute, Compare, Css, Height, SugarBody, SugarElement, SugarLocation, Traverse, Width } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -121,18 +121,53 @@ export const InlineHeader = (
 
       // The float container/editor may not have been rendered yet, which will cause it to have a non integer based positions
       // so we need to round this to account for that.
+
       const targetBounds = Boxes.box(targetElm);
-      const top = isPositionedAtTop() ?
-        Math.max(targetBounds.y - Height.get(container.element) + offset, 0) :
-        targetBounds.bottom;
+      const { top, left } = getOffsetParent(editor, mainUi.outerContainer.element).fold(
+        () => {
+          return {
+            top: isPositionedAtTop()
+              ? Math.max(targetBounds.y - Height.get(container.element) + offset, 0)
+              : targetBounds.bottom,
+            left: targetBounds.x,
+          };
+        },
+        (offsetParent) => {
+          // Because for ui_mode: split, the main mothership (which includes the toolbar) is moved and added as a sibling
+          // If there's any relative position div set as the parent and the offsetParent is no longer the body,
+          // the absolute top/left positions would no longer be correct
+          // When there's a relative div and the position is the same as the toolbar container
+          // then it would produce a negative top as it needs to be positioned on top of the offsetParent
+          const offsetBox = Boxes.box(offsetParent);
+          const scrollDelta = offsetParent.dom.scrollTop ?? 0;
+
+          const isOffsetParentBody = Compare.eq(offsetParent, SugarBody.body());
+          const topValue = isOffsetParentBody
+            ? Math.max(targetBounds.y - Height.get(container.element) + offset, 0)
+            : targetBounds.y - offsetBox.y + scrollDelta - Height.get(container.element) + offset;
+
+          return {
+            top: isPositionedAtTop()
+              ? topValue
+              : targetBounds.bottom,
+            left: isOffsetParentBody
+              ? targetBounds.x
+              : targetBounds.x - offsetBox.x
+          };
+        }
+      );
 
       Css.setAll(mainUi.outerContainer.element, {
         position: 'absolute',
         top: Math.round(top) + 'px',
-        left: Math.round(targetBounds.x) + 'px'
+        left: Math.round(left) + 'px'
       });
     });
   };
+
+  // This would return Optional.none, for ui_mode: default, which will fallback to the default code block
+  // For ui_mode: split, the offsetParent would be the body if there were no relative div set as parent
+  const getOffsetParent = (editor: Editor, element: SugarElement<HTMLElement>) => Options.isSplitUiMode(editor) ? OffsetOrigin.getOffsetParent(element) : Optional.none();
 
   const repositionPopups = () => {
     Arr.each(uiMotherships, (m) => {
