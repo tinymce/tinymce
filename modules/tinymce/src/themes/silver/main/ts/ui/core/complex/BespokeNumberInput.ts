@@ -4,7 +4,7 @@ import { Arr, Cell, Fun, Id, Optional } from '@ephox/katamari';
 import { Dimension, Focus, SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
-import { getFontSizeInputDefaultUnit } from 'tinymce/themes/silver/api/Options';
+import * as Options from 'tinymce/themes/silver/api/Options';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
 import { renderIconFromPack } from '../../button/ButtonSlices';
@@ -40,7 +40,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
     const text = getValueFromCurrentComp(currentComp);
     const parsedText = Dimension.parse(text, [ 'unsupportedLength', 'empty' ]);
     const value = parsedText.map((res) => res.value).getOr(0);
-    const defaultUnit = getFontSizeInputDefaultUnit(editor);
+    const defaultUnit = Options.getFontSizeInputDefaultUnit(editor);
     const unit = parsedText.map((res) => res.unit).filter((u) => u !== '').getOr(defaultUnit);
 
     const newValue = f(value, spec.getConfigFromUnit(unit).step);
