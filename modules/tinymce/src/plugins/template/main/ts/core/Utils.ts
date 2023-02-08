@@ -18,7 +18,7 @@ const htmlEscape = (html: string): string =>
 const hasAnyClasses = (dom: DOMUtils, n: Element, classes: string): boolean =>
   Arr.exists(classes.split(/\s+/), (c) => dom.hasClass(n, c));
 
-const parseAndSerialize = (editor: Editor, html: string): string =>
+const sanitise = (editor: Editor, html: string): string =>
   HtmlSerializer({ validate: true }, editor.schema).serialize(
     editor.parser.parse(html, { insert: true })
   );
@@ -26,5 +26,5 @@ const parseAndSerialize = (editor: Editor, html: string): string =>
 export {
   hasAnyClasses,
   htmlEscape,
-  parseAndSerialize
+  sanitise
 };

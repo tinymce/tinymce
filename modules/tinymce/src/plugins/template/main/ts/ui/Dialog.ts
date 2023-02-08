@@ -59,7 +59,7 @@ const getPreviewContent = (editor: Editor, html: string): string => {
       preventClicksOnLinksScript +
       '</head>' +
       '<body class="' + encode(bodyClass) + '"' + dirAttr + '>' +
-      Utils.parseAndSerialize(editor, html) +
+      Utils.sanitise(editor, html) +
       '</body>' +
       '</html>'
     );

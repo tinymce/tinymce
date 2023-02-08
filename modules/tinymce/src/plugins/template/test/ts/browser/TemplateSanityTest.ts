@@ -76,14 +76,14 @@ describe('browser.tinymce.plugins.template.TemplateSanityTest', () => {
     TinyAssertions.assertContent(editor, '<p>Tester</p>');
   });
 
-  it('TINY-9244: Parsed html should be shown when previewing templates', async () => {
+  it('TINY-9244: Sanitised html should be shown when previewing templates', async () => {
     const editor = hook.editor();
-    const unparsedHtml = '<img src="error" onerror="throw new Error();">';
+    const unsanitisedHtml = '<img src="error" onerror="throw new Error();">';
     addSettings({
-      templates: [{ title: 'a', description: 'b', content: unparsedHtml }],
+      templates: [{ title: 'a', description: 'b', content: unsanitisedHtml }],
     });
-    const unParsedPreviewHtmlSelector = 'p > img[src="error"][onerror="throw new Error();"]';
-    const parsedPreviewHtmlSelector = 'p > img[src="error"][data-mce-src="error"]';
+    const unsanitisedPreviewHtmlSelector = 'p > img[src="error"][onerror="throw new Error();"]';
+    const sanitisedPreviewHtmlSelector = 'p > img[src="error"][data-mce-src="error"]';
     const assertPreviewContent = (dialogEl: SugarElement<Node>, existsSelector: string, notExistsSelector: string): void => {
       UiFinder.findIn<HTMLIFrameElement>(dialogEl, 'iframe').fold(
         () => assert.fail('Preview iframe not found'),
@@ -97,9 +97,9 @@ describe('browser.tinymce.plugins.template.TemplateSanityTest', () => {
     };
 
     try {
-      await pPreviewTemplate(editor, (dialogEl) => assertPreviewContent(dialogEl, parsedPreviewHtmlSelector, unParsedPreviewHtmlSelector));
+      await pPreviewTemplate(editor, (dialogEl) => assertPreviewContent(dialogEl, sanitisedPreviewHtmlSelector, unsanitisedPreviewHtmlSelector));
     } catch {
-      assert.fail('Unparsed html interpreted');
+      assert.fail('Unsanitised html interpreted');
     }
   });
 
