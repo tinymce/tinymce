@@ -67,9 +67,9 @@ const sidelongBlockMerge = (rootNode: SugarElement<Node>, fromBlock: SugarElemen
 
       const newFromBlockDescendants = Arr.foldr(
         getInlineToBlockDescendants(toBlock),
-        (element: SugarElement<Element>, wrapper) => {
-          Insert.wrap(element, wrapper);
-          return wrapper;
+        (element: SugarElement<Element>, descendant) => {
+          Insert.wrap(element, descendant);
+          return descendant;
         },
         PaddingBr.createPaddingBr()
       );
