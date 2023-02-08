@@ -10,6 +10,7 @@ const dialogSelector = 'div.tox-dialog';
 
 const waitUntilIframeLoaded = async (dialogEl: SugarElement<Node>): Promise<void> => {
   await UiFinder.pWaitForState<HTMLIFrameElement>('iframe is loaded', dialogEl, 'iframe', (elm) => {
+    // fallback for pre-IE 8 using contentWindow.document
     const iframeDoc = elm.dom.contentDocument || elm.dom.contentWindow?.document;
     return Type.isNonNullable(iframeDoc?.body.firstChild);
   });
