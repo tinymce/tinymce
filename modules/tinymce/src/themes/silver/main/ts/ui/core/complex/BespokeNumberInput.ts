@@ -41,10 +41,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
     const parsedText = Dimension.parse(text, [ 'unsupportedLength', 'empty' ]);
     const value = parsedText.map((res) => res.value).getOr(0);
     const defaultUnit = getFontSizeInputDefaultUnit(editor);
-    const unit = parsedText.map((res) => res.unit).fold(
-      Fun.constant(defaultUnit),
-      (unit) => unit === '' ? defaultUnit : unit
-    );
+    const unit = parsedText.map((res) => res.unit).filter((u) => u !== '').getOr(defaultUnit);
 
     const newValue = f(value, spec.getConfigFromUnit(unit).step);
     const newValueWithUnit = `${isValidValue(newValue) ? newValue : value}${unit}`;
