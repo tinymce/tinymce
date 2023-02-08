@@ -1,4 +1,4 @@
-import { UiFinder } from '@ephox/agar';
+import { UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
@@ -101,5 +101,23 @@ describe('browser.tinymce.plugins.template.TemplateSanityTest', () => {
     } catch {
       assert.fail('Unparsed html interpreted');
     }
+  });
+
+  it('TINY-9244: Unsanitised html should not be read when inserting templates via command', async () => {
+    const editor = hook.editor();
+    const fnReadsUnsanitisedHtml = async (fn: (unsanitisedHtml: string) => any) => {
+      const unsanitisedHtml = '<img src="error" onerror="window.document.unsanitisedHtmlFn();">';
+      let isUnsanitisedHtmlRead = false;
+      (editor.getDoc() as any).unsanitisedHtmlFn = () => {
+        isUnsanitisedHtmlRead = true;
+      };
+      fn(unsanitisedHtml);
+      // wait for unsanitised html to be read and error to be thrown
+      await Waiter.pWait(1000);
+      return isUnsanitisedHtmlRead;
+    };
+    assert.isFalse(await fnReadsUnsanitisedHtml((unsanitisedHtml) => {
+      editor.execCommand('mceInsertTemplate', false, unsanitisedHtml);
+    }), 'Unsanitised html read');
   });
 });
