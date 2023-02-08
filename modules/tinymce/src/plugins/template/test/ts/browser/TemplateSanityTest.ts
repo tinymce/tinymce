@@ -99,7 +99,7 @@ describe('browser.tinymce.plugins.template.TemplateSanityTest', () => {
     try {
       await pPreviewTemplate(editor, (dialogEl) => assertPreviewContent(dialogEl, sanitisedPreviewHtmlSelector, unsanitisedPreviewHtmlSelector));
     } catch {
-      assert.fail('Unsanitised html interpreted');
+      assert.fail('Unsanitised html read');
     }
   });
 
