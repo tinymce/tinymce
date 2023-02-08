@@ -285,7 +285,7 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
 
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 15pt;">b</span>c</p>');
 
-    editor.options.set('font_size_input_default_unit', 'fake_unit' as any);
+    editor.options.set('font_size_input_default_unit', 'fake_unit');
 
     UiControls.setValue(input, '20');
     FocusTools.setFocus(root, '.tox-number-input input');
