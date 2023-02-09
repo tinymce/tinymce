@@ -140,7 +140,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       const editor = hook.editor();
       editor.getBody().contentEditable = 'false';
       editor.setContent('<div contenteditable="false"><div contenteditable="true">ab</div></div>');
-      TinySelections.setCursor(editor, [ 1, 0, 0 ], 1);
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       insertNewline(editor, { });
       TinyAssertions.assertContent(editor, '<div contenteditable="false"><div contenteditable="true"><p>a</p><p>b</p></div></div>');
       editor.getBody().contentEditable = 'true';
