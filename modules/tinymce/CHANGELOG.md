@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `fontsizeinput` toolbar item which allows the user to set the size via input and also increase and decrease it with `+` and `-` buttons. #TINY-9429
 - Added `skipFocus` option to the `ToggleToolbarDrawer` command to preserve focus. #TINY-9337
 - Added `common/space/delBetweenExclamationMarks` to remove spaces between exclamation marks. #TINY-9398
+- New `font_size_input_default_unit` option allow to use of numbers without a unit in `fontsizeinput` and have them parsed with the default unit, if it is not defined the default is `pt` #TINY-9585
 
 ### Improved
 - Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
@@ -52,6 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The "Edit Link" dialog incorrectly retrieved the URL value when opened immediately after the link insertion. #TINY-7993
 - Editor commands `ForwardDelete` and `Delete` was deleting contents inside noneditable elements. #TINY-9477
 - Backspace or delete keys was deleting contents inside noneditable elements. #TINY-9477
+- Inserting newlines inside an editable element inside a noneditable root would sometimes try to split the editable element. #TINY-9461
 - Creating a list in a table cell when the caret is in front of an anchor element would not properly include the anchor in the list. #TINY-6853
 
 ## 6.3.1 - 2022-12-06

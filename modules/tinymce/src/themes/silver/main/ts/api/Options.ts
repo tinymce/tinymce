@@ -120,6 +120,11 @@ const register = (editor: Editor): void => {
     default: '8pt 10pt 12pt 14pt 18pt 24pt 36pt'
   });
 
+  registerOption('font_size_input_default_unit', {
+    processor: 'string',
+    default: 'pt'
+  });
+
   registerOption('block_formats', {
     processor: 'string',
     default: 'Paragraph=p;' +
@@ -296,6 +301,7 @@ const getMenubar = option('menubar');
 const getToolbar = option('toolbar');
 const getFilePickerCallback = option('file_picker_callback');
 const getFilePickerValidatorHandler = option('file_picker_validator_handler');
+const getFontSizeInputDefaultUnit = option('font_size_input_default_unit');
 const getFilePickerTypes = option('file_picker_types');
 const useTypeaheadUrls = option('typeahead_urls');
 const getAnchorTop = option('anchor_top');
@@ -446,6 +452,7 @@ export {
   getAnchorTop,
   getAnchorBottom,
   getFilePickerValidatorHandler,
+  getFontSizeInputDefaultUnit,
   useStatusBar,
   useElementPath,
   promotionEnabled,
