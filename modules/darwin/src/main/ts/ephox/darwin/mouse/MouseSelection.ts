@@ -1,5 +1,5 @@
 import { Optional, Optionals, Singleton } from '@ephox/katamari';
-import { Compare, ContentEditable, EventArgs, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Compare, ContentEditable, EventArgs, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 
 import { SelectionAnnotation } from '../api/SelectionAnnotation';
 import { WindowBridge } from '../api/WindowBridge';
@@ -14,6 +14,9 @@ export interface MouseSelection {
 
 const findCell = (target: SugarElement<Node>, isRoot: (e: SugarElement<Node>) => boolean): Optional<SugarElement<HTMLTableCellElement>> =>
   SelectorFind.closest<HTMLTableCellElement>(target, 'td,th', isRoot);
+
+const isInEditableContext = (cell: SugarElement<HTMLTableCellElement>) =>
+  Traverse.parentElement(cell).exists(ContentEditable.isEditable);
 
 export const MouseSelection = (bridge: WindowBridge, container: SugarElement<Node>, isRoot: (e: SugarElement<Node>) => boolean, annotations: SelectionAnnotation): MouseSelection => {
   const cursor = Singleton.value<SugarElement<HTMLTableCellElement>>();
@@ -51,7 +54,7 @@ export const MouseSelection = (bridge: WindowBridge, container: SugarElement<Nod
   /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
   const mousedown = (event: EventArgs<MouseEvent>) => {
     annotations.clear(container);
-    findCell(event.target, isRoot).each(cursor.set);
+    findCell(event.target, isRoot).filter(isInEditableContext).each(cursor.set);
   };
 
   /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */

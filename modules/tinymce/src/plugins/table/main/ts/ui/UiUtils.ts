@@ -3,7 +3,7 @@ import { Arr, Obj, Singleton, Strings } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
-import { Dialog, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
+import { Dialog, Menu } from 'tinymce/core/api/ui/Ui';
 
 import * as TableSelection from '../selection/TableSelection';
 
@@ -22,7 +22,7 @@ export interface UserListGroup {
 export type UserListItem = UserListValue | UserListGroup;
 
 const onSetupToggle = (editor: Editor, formatName: string, formatValue: string) => {
-  return (api: Toolbar.ToolbarMenuButtonInstanceApi): () => void => {
+  return (api: Menu.ToggleMenuItemInstanceApi): () => void => {
     const boundCallback = Singleton.unbindable();
     const isNone = Strings.isEmpty(formatValue);
 

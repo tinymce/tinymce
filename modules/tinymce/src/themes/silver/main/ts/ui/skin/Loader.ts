@@ -29,7 +29,7 @@ const loadShadowDomUiSkins = (editor: Editor, skinUrl: string): Promise<void> =>
   }
 };
 
-const loadSkin = (isInline: boolean, editor: Editor) => {
+const loadSkin = (isInline: boolean, editor: Editor): Promise<void> => {
   const skinUrl = Options.getSkinUrl(editor);
 
   if (skinUrl) {
@@ -39,12 +39,12 @@ const loadSkin = (isInline: boolean, editor: Editor) => {
   // In Modern Inline, this is explicitly called in editor.on('focus', ...) as well as in render().
   // Seems to work without, but adding a note in case things break later
   if (!Options.isSkinDisabled(editor) && Type.isString(skinUrl)) {
-    Promise.all([
+    return Promise.all([
       loadUiSkins(editor, skinUrl),
       loadShadowDomUiSkins(editor, skinUrl)
     ]).then(SkinLoaded.fireSkinLoaded(editor), SkinLoaded.fireSkinLoadError(editor, 'Skin could not be loaded'));
   } else {
-    SkinLoaded.fireSkinLoaded(editor)();
+    return Promise.resolve(SkinLoaded.fireSkinLoaded(editor)());
   }
 };
 

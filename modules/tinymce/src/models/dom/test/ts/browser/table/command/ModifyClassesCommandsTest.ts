@@ -6,6 +6,8 @@ import Editor from 'tinymce/core/api/Editor';
 import { TableModifiedEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
+import * as TableTestUtils from '../../../module/table/TableTestUtils';
+
 describe('browser.tinymce.models.dom.table.command.ModifyClassesCommandsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
@@ -288,6 +290,16 @@ describe('browser.tinymce.models.dom.table.command.ModifyClassesCommandsTest', (
         execCmdAndAssertEvent(editor, 'mceTableToggleClass', 'a');
         TinyAssertions.assertContent(editor, contentWithoutClass);
       });
+    });
+  });
+
+  it('TINY-9459: Should not apply mceTableToggleClass command on table in noneditable root', () => {
+    TableTestUtils.withNoneditableRootEditor(hook.editor(), (editor) => {
+      const initalContent = '<table><tbody><tr><td>cell</td></tr></tbody></table>';
+      editor.setContent(initalContent);
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+      editor.execCommand('mceTableToggleClass', false, 'a');
+      TinyAssertions.assertContent(editor, initalContent);
     });
   });
 });
