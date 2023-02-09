@@ -76,14 +76,14 @@ describe('browser.tinymce.plugins.template.TemplateSanityTest', () => {
     TinyAssertions.assertContent(editor, '<p>Tester</p>');
   });
 
-  it('TINY-9244: Sanitised html should be shown when previewing template', async () => {
+  it('TINY-9244: Sanitized html should be shown when previewing template', async () => {
     const editor = hook.editor();
-    const unsanitisedHtml = '<img src="error" onerror="throw new Error();">';
+    const unsanitizedHtml = '<img src="error" onerror="throw new Error();">';
     addSettings({
-      templates: [{ title: 'a', description: 'b', content: unsanitisedHtml }],
+      templates: [{ title: 'a', description: 'b', content: unsanitizedHtml }],
     });
-    const unsanitisedPreviewHtmlSelector = 'p > img[src="error"][onerror="throw new Error();"]';
-    const sanitisedPreviewHtmlSelector = 'p > img[src="error"][data-mce-src="error"]';
+    const unsanitizedPreviewHtmlSelector = 'p > img[src="error"][onerror="throw new Error();"]';
+    const sanitizedPreviewHtmlSelector = 'p > img[src="error"][data-mce-src="error"]';
     const assertPreviewContent = (dialogEl: SugarElement<Node>, existsSelector: string, notExistsSelector: string): void => {
       UiFinder.findIn<HTMLIFrameElement>(dialogEl, 'iframe').fold(
         () => assert.fail('Preview iframe not found'),
@@ -98,41 +98,41 @@ describe('browser.tinymce.plugins.template.TemplateSanityTest', () => {
     };
 
     try {
-      await pPreviewTemplate(editor, (dialogEl) => assertPreviewContent(dialogEl, sanitisedPreviewHtmlSelector, unsanitisedPreviewHtmlSelector));
+      await pPreviewTemplate(editor, (dialogEl) => assertPreviewContent(dialogEl, sanitizedPreviewHtmlSelector, unsanitizedPreviewHtmlSelector));
     } catch {
-      assert.fail('Unsanitised html read');
+      assert.fail('Unsanitized html read');
     }
   });
 
-  const assertFnDoesNotReadUnsanitisedHtmlInDom = async (editor: Editor, fn: (unsanitisedHtml: string) => void | Promise<void>): Promise<void> => {
-    const fnReadsUnsanitisedHtmlInDom = async () => {
-      const unsanitisedHtml = '<img src="error" onerror="window.document.unsanitisedHtmlFn();">';
-      let isUnsanitisedHtmlRead = false;
-      (editor.getDoc() as any).unsanitisedHtmlFn = () => {
-        isUnsanitisedHtmlRead = true;
+  const assertFnDoesNotReadUnsanitizedHtmlInDom = async (editor: Editor, fn: (unsanitizedHtml: string) => void | Promise<void>): Promise<void> => {
+    const fnReadsUnsanitizedHtmlInDom = async () => {
+      const unsanitizedHtml = '<img src="error" onerror="window.document.unsanitizedHtmlFn();">';
+      let isUnsanitizedHtmlRead = false;
+      (editor.getDoc() as any).unsanitizedHtmlFn = () => {
+        isUnsanitizedHtmlRead = true;
       };
-      await fn(unsanitisedHtml);
-      // wait for unsanitised html to be read and error to be thrown
+      await fn(unsanitizedHtml);
+      // wait for unsanitized html to be read and error to be thrown
       await Waiter.pWait(1000);
-      return isUnsanitisedHtmlRead;
+      return isUnsanitizedHtmlRead;
     };
-    assert.isFalse(await fnReadsUnsanitisedHtmlInDom(), 'Unsanitised html read');
+    assert.isFalse(await fnReadsUnsanitizedHtmlInDom(), 'Unsanitized html read');
   };
 
-  it('TINY-9244: Unsanitised html should not be read when inserting template via command', async () => {
+  it('TINY-9244: Unsanitized html should not be read when inserting template via command', async () => {
     const editor = hook.editor();
-    await assertFnDoesNotReadUnsanitisedHtmlInDom(editor, (unsanitisedHtml) => {
-      editor.execCommand('mceInsertTemplate', false, unsanitisedHtml);
+    await assertFnDoesNotReadUnsanitizedHtmlInDom(editor, (unsanitizedHtml) => {
+      editor.execCommand('mceInsertTemplate', false, unsanitizedHtml);
     });
   });
 
-  it('TINY-9244: Unsanitised html should not be read when inserting template via dialog', async () => {
+  it('TINY-9244: Unsanitized html should not be read when inserting template via dialog', async () => {
     const editor = hook.editor();
-    const unsanitisedHtml = '<img src="error" onerror="window.document.unsanitisedHtmlFn();">';
+    const unsanitizedHtml = '<img src="error" onerror="window.document.unsanitizedHtmlFn();">';
     addSettings({
-      templates: [{ title: 'a', description: 'b', content: unsanitisedHtml }],
+      templates: [{ title: 'a', description: 'b', content: unsanitizedHtml }],
     });
-    await assertFnDoesNotReadUnsanitisedHtmlInDom(editor, async () => {
+    await assertFnDoesNotReadUnsanitizedHtmlInDom(editor, async () => {
       await pInsertTemplate(editor);
     });
   });

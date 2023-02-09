@@ -6,7 +6,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import * as Options from '../api/Options';
 import * as DateTimeHelper from './DateTimeHelper';
 import { ExternalTemplate, TemplateValues } from './Types';
-import { hasAnyClasses, sanitise } from './Utils';
+import { hasAnyClasses, sanitize } from './Utils';
 
 const createTemplateList = (editor: Editor, callback: (templates: ExternalTemplate[]) => void) => {
   return (): void => {
@@ -61,7 +61,7 @@ const insertTemplate = (editor: Editor, _ui: boolean, html: string): void => {
   const sel = editor.selection.getContent();
 
   html = replaceTemplateValues(html, Options.getTemplateReplaceValues(editor));
-  let el = dom.create('div', {}, sanitise(editor, html));
+  let el = dom.create('div', {}, sanitize(editor, html));
 
   // Find template element within div
   const n = dom.select('.mceTmpl', el);
