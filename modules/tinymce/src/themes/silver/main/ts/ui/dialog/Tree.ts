@@ -1,13 +1,15 @@
-import { Behaviour, Button as AlloyButton, GuiFactory, SimpleSpec, SketchSpec, Toggling } from '@ephox/alloy';
+import { Behaviour, Button as AlloyButton, Tabstopping, GuiFactory, SimpleSpec, SketchSpec, Toggling } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Id } from '@ephox/katamari';
+import { Fun, Id, Optional } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
-import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import { UiFactoryBackstage } from '../../backstage/Backstage';
+import { renderMenuButton } from '../button/MenuButton';
 import * as Icons from '../icons/Icons';
 
 type TreeSpec = Omit<Dialog.Tree, 'type'>;
 type AlloyButtonSpec = Parameters<typeof AlloyButton['sketch']>[0];
+type OnLeafAction = (id: string) => void;
 
 const renderLabel = (text: string ): SimpleSpec => ({
   dom: {
@@ -19,7 +21,11 @@ const renderLabel = (text: string ): SimpleSpec => ({
   ],
 });
 
-const renderItemLabel = (item: Dialog.Leaf, level: number): AlloyButtonSpec => {
+const renderItemLabel = (item: Dialog.Leaf, level: number, onLeafAction: OnLeafAction, backstage: UiFactoryBackstage): AlloyButtonSpec => {
+  const internalMenuButton = item.menu.map((btn) => renderMenuButton(btn, 'tox-mbtn', backstage, Optional.none()));
+  const components = [ renderLabel(item.title) ];
+  internalMenuButton.each((btn) => components.push(btn));
+
   return AlloyButton.sketch({
     dom: {
       tag: 'span',
@@ -29,12 +35,13 @@ const renderItemLabel = (item: Dialog.Leaf, level: number): AlloyButtonSpec => {
         'font-weight': '400',
       }
     },
-    components: [
-      renderLabel(item.title)
-    ],
+    components,
     action: (_button) => {
-      console.log(`clicked on file ${item.title}, id: ${item.id}`);
-    }
+      onLeafAction(item.id);
+    },
+    buttonBehaviours: Behaviour.derive([
+      Tabstopping.config({})
+    ])
   });
 };
 
@@ -51,7 +58,31 @@ const renderIcon = (iconName: string, iconsProvider: Icons.IconProvider, behavio
 const renderIconFromPack = (iconName: string, iconsProvider: Icons.IconProvider): SimpleSpec =>
   renderIcon(iconName, iconsProvider, []);
 
-const renderDirectoryLabel = (text: string, level: number, iconsProvider: Icons.IconProvider): AlloyButtonSpec => {
+const renderDirectoryLabel = (directory: Dialog.Directory, level: number, backstage: UiFactoryBackstage): AlloyButtonSpec => {
+  const internalMenuButton = directory.menu.map((btn) => renderMenuButton(btn, 'tox-mbtn', backstage, Optional.none()));
+  const components: SimpleSpec[] = [
+    {
+      dom: {
+        tag: 'div',
+        classes: [ 'chevron' ]
+      },
+      components: [
+        renderIconFromPack('chevron-right', backstage.shared.providers.icons),
+      ]
+    },
+    {
+      dom: {
+        tag: 'span',
+        styles: {
+          'padding-left': '4px'
+        }
+      },
+      components: [ renderLabel(directory.title) ]
+    }
+  ];
+  internalMenuButton.each((btn) => {
+    components.push(btn);
+  });
   return AlloyButton.sketch({
 
     dom: {
@@ -62,27 +93,23 @@ const renderDirectoryLabel = (text: string, level: number, iconsProvider: Icons.
         'font-weight': '700',
       }
     },
-    components: [
-      renderIconFromPack('chevron-right', iconsProvider),
-      {
-        dom: {
-          tag: 'span',
-          styles: {
-            'padding-left': '4px'
-          }
-        },
-        components: [ renderLabel(text) ]
-      }
-    ],
+    components,
     action: (button) => {
       SelectorFind.sibling(button.element, '.tree-directory-children').each((childrenEle) => {
         button.getSystem().getByDom(childrenEle).each((childrenComp) => Toggling.toggle(childrenComp));
       });
     },
+    buttonBehaviours: Behaviour.derive([
+      Toggling.config({
+        toggleOnExecute: true,
+        toggleClass: 'active'
+      }),
+      Tabstopping.config({})
+    ])
   });
 };
 
-const renderDirectoryChildren = (children: Dialog.TreeItem[], level: number, providers: UiFactoryBackstageProviders): SimpleSpec => {
+const renderDirectoryChildren = (children: Dialog.TreeItem[], level: number, onLeafAction: OnLeafAction, backstage: UiFactoryBackstage): SimpleSpec => {
   return {
     dom: {
       tag: 'div',
@@ -92,19 +119,20 @@ const renderDirectoryChildren = (children: Dialog.TreeItem[], level: number, pro
       }
     },
     components: children.map((item) => {
-      return item.type === 'leaf' ? renderItemLabel(item, level + 1) : renderDirectory(item, level + 1, providers);
+      return item.type === 'leaf' ? renderItemLabel(item, level + 1, onLeafAction, backstage) : renderDirectory(item, level + 1, onLeafAction, backstage);
     }),
     behaviours: Behaviour.derive([
       Toggling.config({
         toggleClass: 'expanded'
-      })
+      }),
+      Tabstopping.config({})
     ])
   };
 };
 
-const renderDirectory = (dir: Dialog.Directory, level: number, providers: UiFactoryBackstageProviders): SimpleSpec => {
+const renderDirectory = (dir: Dialog.Directory, level: number, onLeafAction: OnLeafAction, backstage: UiFactoryBackstage): SimpleSpec => {
   const children =
-    renderDirectoryChildren(dir.children, level, providers);
+    renderDirectoryChildren(dir.children, level, onLeafAction, backstage);
   return ({
     dom: {
       tag: 'div',
@@ -115,7 +143,7 @@ const renderDirectory = (dir: Dialog.Directory, level: number, providers: UiFact
       }
     },
     components: [
-      renderDirectoryLabel(dir.title, level, providers.icons),
+      renderDirectoryLabel(dir, level, backstage),
       children
     ],
   });
@@ -126,6 +154,7 @@ const renderTree = (
   backstage: UiFactoryBackstage,
   level = 1
 ): SketchSpec => {
+  const onLeafAction = spec.onLeafAction.getOr(Fun.noop);
   return {
     uid: Id.generate(''),
     dom: {
@@ -137,8 +166,8 @@ const renderTree = (
     },
     components: spec.items.map((item) => {
       return item.type === 'leaf' ?
-        renderItemLabel(item, level) :
-        renderDirectory(item, level, backstage.shared.providers);
+        renderItemLabel(item, level, onLeafAction, backstage) :
+        renderDirectory(item, level, onLeafAction, backstage);
     })
   };
 };

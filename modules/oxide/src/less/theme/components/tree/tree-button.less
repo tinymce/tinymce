@@ -65,6 +65,8 @@
     font-style: @tree-button-font-style;
     font-weight: @tree-button-font-weight;
     height: @tree-button-height;
+    margin-bottom: 4px;
+    margin-top: 4px;
     outline: none;
     overflow: hidden;
     padding: 0;
@@ -182,6 +184,24 @@
     white-space: nowrap;
   }
 
+  .tree-directory-label {
+    .tox-mbtn {
+      margin-left: auto;
+    }
+
+    &:hover:has(.tox-mbtn:hover) {
+      background-color: transparent;
+    }
+
+    .chevron {
+      transition: transform .5s ease-in-out;
+    }
+
+    &.active .chevron {
+      transform: rotate(90deg);
+    }
+  }
+
   .tree-directory-children {
     max-height: 0;
     overflow: hidden;
@@ -190,5 +210,10 @@
 
   .tree-directory-children.expanded {
     max-height: 200px;
+  }
+
+  .tox-trbtn.tree-item-label {
+    display: flex;
+    justify-content: space-between;
   }
 }

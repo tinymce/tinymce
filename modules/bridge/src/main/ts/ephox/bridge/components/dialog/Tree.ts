@@ -1,21 +1,39 @@
-import { FieldProcessor, FieldSchema, StructureSchema } from '@ephox/boulder';
-import { Result } from '@ephox/katamari';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
+import { Optional, Result } from '@ephox/katamari';
 
+import { ToolbarMenuButtonSpec, ToolbarMenuButton } from '../../api/Toolbar';
 import * as ComponentSchema from '../../core/ComponentSchema';
+import { MenuButtonSchema } from '../toolbar/ToolbarMenuButton';
+
+type Id = string;
 
 export interface TreeSpec {
   type: 'tree';
-  items: TreeItem[];
+  items: TreeItemSpec[];
+  onLeafAction?: (id: Id) => void;
 }
 
 export interface Tree {
   type: 'tree';
   items: TreeItem[];
+  onLeafAction: Optional<(id: Id) => void>;
+}
+
+interface BaseTreeItemSpec {
+  title: string;
+  id: Id;
+  menu?: ToolbarMenuButtonSpec;
 }
 
 interface BaseTreeItem {
   title: string;
   id: string;
+  menu: Optional<ToolbarMenuButton>;
+}
+
+export interface DirectorySpec extends BaseTreeItemSpec {
+  type: 'directory';
+  children: TreeItemSpec[];
 }
 
 export interface Directory extends BaseTreeItem {
@@ -23,15 +41,22 @@ export interface Directory extends BaseTreeItem {
   children: TreeItem[];
 }
 
+export interface LeafSpec extends BaseTreeItemSpec {
+  type: 'leaf';
+}
+
 export interface Leaf extends BaseTreeItem {
   type: 'leaf';
 }
+
+export type TreeItemSpec = DirectorySpec | LeafSpec;
 
 export type TreeItem = Directory | Leaf;
 
 const baseTreeItemFields = [
   ComponentSchema.title,
   FieldSchema.requiredString('id'),
+  FieldSchema.optionOf('menu', MenuButtonSchema ),
   FieldSchema.requiredStringEnum('type', [ 'leaf', 'directory' ]),
 ];
 
@@ -39,11 +64,15 @@ const treeItemLeafFields = baseTreeItemFields;
 
 const treeItemLeafSchema = StructureSchema.objOf(treeItemLeafFields);
 
-const treeItemDirectoryFields = (): FieldProcessor[] => baseTreeItemFields.concat([
-  FieldSchema.requiredArrayOf('children', StructureSchema.oneOfFunc((obj: TreeItem) => obj.type === 'leaf' ? treeItemLeafSchema : treeItemDirectorySchema)),
+const treeItemDirectoryFields = baseTreeItemFields.concat([
+  FieldSchema.requiredArrayOf('children', StructureSchema.thunkOf('children', () => {
+    // The order here is very important! if we change the order, then boulder will always match
+    // againt treeItemLeafSchema, because a directory has all attributes of leaf plus the children property
+    return StructureSchema.oneOf([ treeItemDirectorySchema, treeItemLeafSchema ]);
+  })),
 ]);
 
-const treeItemDirectorySchema = StructureSchema.objOf(treeItemDirectoryFields());
+const treeItemDirectorySchema = StructureSchema.objOf(treeItemDirectoryFields);
 
 // The order here is very important! if we change the order, then boulder will always match
 // againt treeItemLeafSchema, because a directory has all attributes of leaf plus the children property
@@ -51,7 +80,8 @@ const treeItemSchema = StructureSchema.oneOf([ treeItemDirectorySchema, treeItem
 
 const treeFields = [
   ComponentSchema.type,
-  FieldSchema.requiredArrayOf('items', treeItemSchema)
+  FieldSchema.requiredArrayOf('items', treeItemSchema),
+  FieldSchema.optionFunction('onLeafAction')
 ];
 
 export const treeSchema = StructureSchema.objOf(treeFields);
