@@ -271,7 +271,7 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     editor.options.unset('font_size_input_default_unit');
   });
 
-  it('TINY-9585: if `font_size_input_default_unit` is set to invalid unit it does not try to apply that invalid unit to the `fon-tsize`', async () => {
+  it('TINY-9585: if `font_size_input_default_unit` is set to invalid unit it does not try to apply that invalid unit to the `font-size`', async () => {
     const editor = hook.editor();
     editor.setContent('<p style="font-size: 16px;">abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
