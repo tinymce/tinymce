@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed the color of `@dialog-table-border-color`, and added right padding to the first cell of dialog table. #TINY-9380
 
 ### Fixed
-- Sometimes the editor would finish initializing before the silver theme would have finished loading. #TINY-9556 
+- Sometimes the editor would finish initializing before the silver theme would have finished loading. #TINY-9556
 - The searchreplace modal would close incorrectly when clicking outside of the alert that pops up when no match is found. #TINY-9443
 - Color picker on toolbar would not update when changing forecolor or backcolor from menu. #TINY-9439
 - The `onSetup` api function would not run when defining custom group toolbar button. #TINY-9496
@@ -51,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inline boundary was rendered for noneditable inline boundary elements. #TINY-9471
 - Clicking on a disabled split button will no longer call the `onAction` callback. #TINY-9504
 - The "Edit Link" dialog incorrectly retrieved the URL value when opened immediately after the link insertion. #TINY-7993
+- Inserting newlines inside an editable element inside a noneditable root would sometimes try to split the editable element. #TINY-9461
 - Creating a list in a table cell when the caret is in front of an anchor element would not properly include the anchor in the list. #TINY-6853
 
 ## 6.3.1 - 2022-12-06
