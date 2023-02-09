@@ -70,6 +70,10 @@ const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => 
   editor.on('focusin', () => {
     const focusedEditor = editorManager.focusedEditor;
 
+    if (isEditorContentAreaElement(getActiveElement(editor))) {
+      toggleContentAreaOnFocus(editor, Class.add);
+    }
+
     if (focusedEditor !== editor) {
       if (focusedEditor) {
         focusedEditor.dispatch('blur', { focusedEditor: editor });
@@ -77,7 +81,6 @@ const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => 
 
       editorManager.setActive(editor);
       editorManager.focusedEditor = editor;
-      toggleContentAreaOnFocus(editor, Class.add);
       editor.dispatch('focus', { blurredEditor: focusedEditor });
       editor.focus(true);
     }
@@ -87,14 +90,13 @@ const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => 
     Delay.setEditorTimeout(editor, () => {
       const focusedEditor = editorManager.focusedEditor;
 
-      // Remove focus higlight if no longer in focus
-      if (focusedEditor !== editor) {
+      // Remove focus higlight if editor or if the editor content area element no longer in focus
+      if (!isEditorContentAreaElement(getActiveElement(editor)) || focusedEditor !== editor) {
         toggleContentAreaOnFocus(editor, Class.remove);
       }
 
       // Still the same editor the blur was outside any editor UI
       if (!isUIElement(editor, getActiveElement(editor)) && focusedEditor === editor) {
-        toggleContentAreaOnFocus(editor, Class.remove);
         editor.dispatch('blur', { focusedEditor: null });
         editorManager.focusedEditor = null;
       }
