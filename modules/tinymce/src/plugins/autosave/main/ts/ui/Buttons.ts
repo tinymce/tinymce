@@ -1,9 +1,12 @@
 import Editor from 'tinymce/core/api/Editor';
-import { Toolbar } from 'tinymce/core/api/ui/Ui';
 
 import * as Storage from '../core/Storage';
 
-const makeSetupHandler = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi) => {
+interface Api {
+  setEnabled: (enabled: boolean) => void;
+}
+
+const makeSetupHandler = (editor: Editor) => (api: Api) => {
   api.setEnabled(Storage.hasDraft(editor));
   const editorEventCallback = () => api.setEnabled(Storage.hasDraft(editor));
   editor.on('StoreDraft RestoreDraft RemoveDraft', editorEventCallback);

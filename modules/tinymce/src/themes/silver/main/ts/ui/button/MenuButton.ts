@@ -6,7 +6,7 @@ import { Attribute, Class, Focus } from '@ephox/sugar';
 import { formActionEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
-import { renderCommonDropdown } from '../dropdown/CommonDropdown';
+import { renderCommonDropdown, updateMenuIcon, updateMenuText } from '../dropdown/CommonDropdown';
 import ItemResponse from '../menus/item/ItemResponse';
 import * as NestedMenus from '../menus/menu/NestedMenus';
 import { getSearchPattern } from '../menus/menu/searchable/SearchableMenu';
@@ -39,7 +39,15 @@ const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonI
       Attribute.remove(elm, 'aria-pressed');
     }
   },
-  isActive: () => Class.has(component.element, ToolbarButtonClasses.Ticked)
+  isActive: () => Class.has(component.element, ToolbarButtonClasses.Ticked),
+  setText: (text: string) => {
+    AlloyTriggers.emitWith(component, updateMenuText, {
+      text
+    });
+  },
+  setIcon: (icon: string) => AlloyTriggers.emitWith(component, updateMenuIcon, {
+    icon
+  })
 });
 
 const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Optional<string>): SketchSpec => {
@@ -70,7 +78,8 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
             )
           );
         },
-        fetchContext
+        fetchContext,
+        getMenuButtonApi(dropdownComp)
       );
     },
     onSetup: spec.onSetup,

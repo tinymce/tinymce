@@ -59,7 +59,6 @@ describe('webdriver.tinymce.core.keyboard.IframeTabfocusTest', () => {
       const editor = hook.editor();
       assertIsNotHighlighted(editor);
       // Pressing tab to focus on the editor
-      // await Waiter.pWait(2000);
       await RealKeys.pSendKeysOn('body', [ RealKeys.text('\t') ]);
       assertIsHighlighted(editor);
     });

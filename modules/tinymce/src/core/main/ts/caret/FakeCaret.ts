@@ -1,5 +1,5 @@
 import { Singleton } from '@ephox/katamari';
-import { SelectorFilter, SugarElement } from '@ephox/sugar';
+import { ContentEditable, SelectorFilter, SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -223,5 +223,7 @@ export const isFakeCaretTableBrowser = (): boolean => Env.browser.isFirefox();
 export const isInlineFakeCaretTarget = (node: Node | undefined | null): node is HTMLElement =>
   isContentEditableFalse(node) || isMedia(node);
 
-export const isFakeCaretTarget = (node: Node | undefined | null): node is HTMLElement =>
-  isInlineFakeCaretTarget(node) || (NodeType.isTable(node) && isFakeCaretTableBrowser());
+export const isFakeCaretTarget = (node: Node | undefined | null): node is HTMLElement => {
+  const isTarget = isInlineFakeCaretTarget(node) || (NodeType.isTable(node) && isFakeCaretTableBrowser());
+  return isTarget && Traverse.parentElement(SugarElement.fromDom(node)).exists(ContentEditable.isEditable);
+};

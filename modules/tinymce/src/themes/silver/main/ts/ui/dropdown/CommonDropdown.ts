@@ -1,6 +1,6 @@
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Dropdown as AlloyDropdown, Focusing, GuiFactory, Highlighting,
-  Keying, Memento, Replacing, Representing, SimulatedEvent, SketchSpec, TieredData, Unselecting
+  Keying, Memento, Replacing, Representing, SimulatedEvent, SketchSpec, SystemEvents, TieredData, Unselecting
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
@@ -11,6 +11,7 @@ import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
+import * as UiUtils from '../alien/UiUtils';
 import { renderLabel, renderReplaceableIconFromPack } from '../button/ButtonSlices';
 import { onControlAttached, onControlDetached, OnDestroy } from '../controls/Controls';
 import * as Icons from '../icons/Icons';
@@ -120,6 +121,8 @@ const renderCommonDropdown = <T>(
     classes: [ `${prefix}__select-chevron` ]
   }, sharedBackstage.providers.icons);
 
+  const fixWidthBehaviourName = Id.generate('common-button-display-events');
+
   const memDropdown = Memento.record(
     AlloyDropdown.sketch({
       ...spec.uid ? { uid: spec.uid } : {},
@@ -162,6 +165,9 @@ const renderCommonDropdown = <T>(
           onControlAttached(spec, editorOffCell),
           onControlDetached(spec, editorOffCell)
         ]),
+        AddEventsBehaviour.config(fixWidthBehaviourName, [
+          AlloyEvents.runOnAttached((comp, _se) => UiUtils.forceInitialSize(comp)),
+        ]),
         AddEventsBehaviour.config('menubutton-update-display-text', [
           // These handlers are just using Replacing to replace either the menu
           // text or the icon.
@@ -183,7 +189,12 @@ const renderCommonDropdown = <T>(
         // INVESTIGATE (TINY-9014): Explain why we need the events in this order.
         // Ideally, have a test that fails when they are in a different order if order
         // is important
-        mousedown: [ 'focusing', 'alloy.base.behaviour', 'item-type-events', 'normal-dropdown-events' ]
+        mousedown: [ 'focusing', 'alloy.base.behaviour', 'item-type-events', 'normal-dropdown-events' ],
+        [SystemEvents.attachedToDom()]: [
+          'toolbar-button-events',
+          'dropdown-events',
+          fixWidthBehaviourName
+        ]
       }),
 
       sandboxBehaviours: Behaviour.derive([
