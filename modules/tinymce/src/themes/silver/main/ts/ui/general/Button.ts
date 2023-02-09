@@ -2,7 +2,7 @@ import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, FormField as AlloyFormField, GuiFactory, Memento, RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, Tabstopping
 } from '@ephox/alloy';
 import { Dialog, Toolbar } from '@ephox/bridge';
-import { Cell, Fun, Merger, Optional } from '@ephox/katamari';
+import { Fun, Merger, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';
@@ -178,31 +178,20 @@ const isNormalFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): s
 
 const isTogglableIconButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Dialog.DialogFooterTogglableIconButton => buttonType === 'togglableIconButton';
 
-// TODO: remove it
-type TogglableIconButtonStatus = 'normal' | 'toggled';
-
 export const renderTogglableIconButton = (spec: Dialog.DialogFooterTogglableIconButtonSpec, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
-  const optMemIcon = Optional.some((spec.initialStatus === 'normal' ? spec.icon : spec.toggledIcon))
+  const optMemIcon = Optional.some((spec.icon))
     .map((iconName) => renderReplaceableIconFromPack(iconName, providers.icons))
     .map(Memento.record);
-  const currentStatus = Cell(spec.initialStatus);
+
   const action = (comp: AlloyComponent) => {
     AlloyTriggers.emitWith(comp, formActionEvent, {
       name: spec.name,
       value: {
-        getStatus: currentStatus.get,
-        setStatus: (newStatus: TogglableIconButtonStatus) => {
+        setIcon: (newIcon: string) => {
           optMemIcon.bind((mem) => mem.getOpt(comp)).each((displayIcon) => {
-            if (newStatus === 'normal') {
-              Replacing.set(displayIcon, [
-                renderReplaceableIconFromPack(spec.icon ?? '', providers.icons)
-              ]);
-            } else {
-              Replacing.set(displayIcon, [
-                renderReplaceableIconFromPack(spec.toggledIcon ?? '', providers.icons)
-              ]);
-            }
-            currentStatus.set(newStatus);
+            Replacing.set(displayIcon, [
+              renderReplaceableIconFromPack(newIcon, providers.icons)
+            ]);
           });
         }
       }
@@ -269,7 +258,6 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
     const buttonSpec: Dialog.DialogFooterTogglableIconButtonSpec = {
       ...spec,
       tooltip: spec.tooltip.getOr(spec.text),
-      initialStatus: spec.initialStatus.getOrUndefined(),
       buttonType: spec.buttonType.getOrUndefined()
     };
     return renderTogglableIconButton(buttonSpec, backstage.shared.providers);

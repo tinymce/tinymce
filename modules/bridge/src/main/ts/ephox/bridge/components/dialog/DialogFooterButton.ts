@@ -36,8 +36,6 @@ export interface DialogFooterTogglableIconButtonSpec extends BaseDialogFooterBut
   text: string;
   tooltip?: string;
   icon: string;
-  toggledIcon: string;
-  initialStatus?: string;
 }
 
 export type DialogFooterButtonSpec = DialogFooterNormalButtonSpec | DialogFooterMenuButtonSpec | DialogFooterTogglableIconButtonSpec;
@@ -70,8 +68,6 @@ export interface DialogFooterTogglableIconButton extends Omit<BaseDialogFooterBu
   text: string;
   tooltip: Optional<string>;
   icon: string;
-  toggledIcon: string;
-  initialStatus: Optional<string>;
 }
 
 export type DialogFooterButton = DialogFooterNormalButton | DialogFooterMenuButton | DialogFooterTogglableIconButton;
@@ -109,8 +105,6 @@ const menuFooterButtonFields = [
 const togglableIconButtonSpecFields = [
   ...baseFooterButtonFields,
   FieldSchema.requiredStringEnum('type', [ 'togglableIconButton' ]),
-  FieldSchema.optionStringEnum('initialStatus', [ 'normal', 'toggled' ]),
-  FieldSchema.requiredString('toggledIcon'),
   ComponentSchema.optionalText,
   ComponentSchema.optionalTooltip,
   ComponentSchema.icon
