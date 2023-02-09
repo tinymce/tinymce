@@ -1,63 +1,50 @@
-import { TestStore } from '@ephox/agar';
+import { UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.view.ViewButtonsTest', () => {
   context('Iframe mode', () => {
-    const store = TestStore();
     const hook = TinyHooks.bddSetup<Editor>({
       base_url: '/project/tinymce/js/tinymce',
       toolbar_mode: 'floating',
       toolbar: Arr.range(10, Fun.constant('bold | italic ')).join(''),
       width: 500,
       setup: (editor: Editor) => {
+        let buttonWithToggle = false;
         editor.ui.registry.addView('myview1', {
           buttons: [
             {
               type: 'group',
               buttons: [
                 {
-                  name: 'initAtNormal',
+                  name: 'buttonWithToggle',
                   type: 'togglableIconButton',
-                  text: 'init-at-normal',
-                  icon: 'fullscreen',
-                  onAction: (_statusApi) => {
-                    // store.add(`myview1:init-at-normal-with-${statusApi.getStatus()}`);
-                    // const newStatus = statusApi.getStatus() === 'normal' ? 'toggled' : 'normal';
-                    // statusApi.setStatus(newStatus);
-                  }
-                },
-                {
-                  name: 'initAtToggled',
-                  type: 'togglableIconButton',
-                  text: 'init-at-toggled',
-                  icon: 'help',
-                  onAction: (_statusApi) => {
-                    // store.add(`myview1:init-at-toggled-with-${statusApi.getStatus()}`);
-                    // const newStatus = statusApi.getStatus() === 'normal' ? 'toggled' : 'normal';
-                    // statusApi.setStatus(newStatus);
+                  text: 'button-with-toggle',
+                  icon: buttonWithToggle ? 'fullscreen' : 'cut',
+                  onAction: (api) => {
+                    buttonWithToggle = !buttonWithToggle;
+                    api.setIcon(buttonWithToggle ? 'fullscreen' : 'cut');
                   }
                 }
               ]
             },
             {
-              name: 'initAtToggledNotChangable',
+              name: 'buttonWithoutToggle',
               type: 'togglableIconButton',
-              text: 'init-at-toggled-not-changable',
+              text: 'button-without-toggle',
               icon: 'help',
-              onAction: (_statusApi) => {
-                // store.add(`myview1:init-at-toggled-not-changable-with-${statusApi.getStatus()}`);
-              }
+              onAction: Fun.noop
             }
           ],
           onShow: (api: any) => {
             api.getContainer().innerHTML = '<button>myview1</button>';
             api.getContainer().querySelector('button')?.focus();
           },
-          onHide: store.adder('myview1:hide')
+          onHide: Fun.noop
         });
 
         editor.ui.registry.addContextToolbar('test-context', {
@@ -74,30 +61,24 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsTest', () => {
 
     const clickViewButton = (editor: Editor, tooltip: string) => TinyUiActions.clickOnUi(editor, `.tox-view button[title='${tooltip}']`);
 
-    // TODO: enable it befor merge
-    it.skip('TINY-9523: tooglable button api give the current status and alow user to change it', () => {
+    const getSvg = (editor: Editor, name: string) => UiFinder.findIn<HTMLElement>(TinyDom.container(editor), `.tox-view button[title='${name}'] svg`).getOrDie().dom.innerHTML;
+
+    it('TINY-9523: tooglable button can be toggled with the correct implementation', () => {
       const editor = hook.editor();
 
-      store.clear();
-
       toggleView('myview1');
-      clickViewButton(editor, 'init-at-normal');
-      clickViewButton(editor, 'init-at-normal');
 
-      clickViewButton(editor, 'init-at-toggled');
-      clickViewButton(editor, 'init-at-toggled');
+      const initialButtonWithToggleButtonSvg = getSvg(editor, 'button-with-toggle');
+      clickViewButton(editor, 'button-with-toggle');
+      assert.notEqual(getSvg(editor, 'button-with-toggle'), initialButtonWithToggleButtonSvg, 'after the first toggle icon should change');
+      clickViewButton(editor, 'button-with-toggle');
+      assert.equal(getSvg(editor, 'button-with-toggle'), initialButtonWithToggleButtonSvg, 'after the second toggle icon should return to the old value');
 
-      clickViewButton(editor, 'init-at-toggled-not-changable');
-      clickViewButton(editor, 'init-at-toggled-not-changable');
-
-      store.assertEq('Should trigger fullscreen', [
-        'myview1:init-at-normal-with-normal',
-        'myview1:init-at-normal-with-toggled',
-        'myview1:init-at-toggled-with-toggled',
-        'myview1:init-at-toggled-with-normal',
-        'myview1:init-at-toggled-not-changable-with-toggled',
-        'myview1:init-at-toggled-not-changable-with-toggled'
-      ]);
+      const initialbuttonWithoutToggleButtonSvg = getSvg(editor, 'button-without-toggle');
+      clickViewButton(editor, 'button-without-toggle');
+      assert.equal(getSvg(editor, 'button-without-toggle'), initialbuttonWithoutToggleButtonSvg, 'click should not toggle icon');
+      clickViewButton(editor, 'button-without-toggle');
+      assert.equal(getSvg(editor, 'button-without-toggle'), initialbuttonWithoutToggleButtonSvg, 'click should not toggle icon');
     });
   });
 });
