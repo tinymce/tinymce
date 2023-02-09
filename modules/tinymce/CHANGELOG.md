@@ -14,7 +14,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `highlight_on_focus` option which enables highlighting the content area on focus. #TINY-9277
 - New `fontsizeinput` toolbar item which allows the user to set the size via input and also increase and decrease it with `+` and `-` buttons. #TINY-9429
 - Added `skipFocus` option to the `ToggleToolbarDrawer` command to preserve focus. #TINY-9337
-- Added typography plugin to the default `menubar`. #TINY-9450
 - Added `common/space/delBetweenExclamationMarks` to remove spaces between exclamation marks. #TINY-9398
 
 ### Improved
@@ -52,7 +51,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Clicking on a disabled split button will no longer call the `onAction` callback. #TINY-9504
 - The "Edit Link" dialog incorrectly retrieved the URL value when opened immediately after the link insertion. #TINY-7993
 - Creating a list in a table cell when the caret is in front of an anchor element would not properly include the anchor in the list. #TINY-6853
-- Fixed the space between a comma and a quote in typography. #TINY-9442
 
 ## 6.3.1 - 2022-12-06
 
