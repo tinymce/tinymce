@@ -1,7 +1,7 @@
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, FormField as AlloyFormField, GuiFactory, Memento, RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, Tabstopping
 } from '@ephox/alloy';
-import { Dialog, Toolbar, View } from '@ephox/bridge';
+import { Dialog, Toolbar } from '@ephox/bridge';
 import { Cell, Fun, Merger, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -178,18 +178,20 @@ const isNormalFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): s
 
 const isTogglableIconButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Dialog.DialogFooterTogglableIconButton => buttonType === 'togglableIconButton';
 
+// TODO: remove it
+type TogglableIconButtonStatus = 'normal' | 'toggled';
+
 export const renderTogglableIconButton = (spec: Dialog.DialogFooterTogglableIconButtonSpec, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
   const optMemIcon = Optional.some((spec.initialStatus === 'normal' ? spec.icon : spec.toggledIcon))
     .map((iconName) => renderReplaceableIconFromPack(iconName, providers.icons))
     .map(Memento.record);
   const currentStatus = Cell(spec.initialStatus);
-
   const action = (comp: AlloyComponent) => {
     AlloyTriggers.emitWith(comp, formActionEvent, {
       name: spec.name,
       value: {
         getStatus: currentStatus.get,
-        setStatus: (newStatus: View.TogglableIconButtonStatus) => {
+        setStatus: (newStatus: TogglableIconButtonStatus) => {
           optMemIcon.bind((mem) => mem.getOpt(comp)).each((displayIcon) => {
             if (newStatus === 'normal') {
               Replacing.set(displayIcon, [

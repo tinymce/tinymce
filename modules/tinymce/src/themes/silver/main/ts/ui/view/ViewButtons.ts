@@ -1,6 +1,6 @@
 import { AlloyComponent, Behaviour, Button as AlloyButton, Disabling, Memento, Replacing, SimpleOrSketchSpec } from '@ephox/alloy';
 import { View } from '@ephox/bridge';
-import { Cell, Fun, Optional } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderReplaceableIconFromPack } from '../button/ButtonSlices';
@@ -10,32 +10,22 @@ import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];
 
 export const renderTogglableIconButton = (spec: View.ViewTogglableIconButtonSpec, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
-  const optMemIcon = Optional.some((spec.initialStatus === 'normal' ? spec.icon : spec.toggledIcon))
+  const optMemIcon = Optional.some((spec.icon))
     .map((iconName) => renderReplaceableIconFromPack(iconName, providers.icons))
     .map(Memento.record);
-  const currentStatus = Cell(spec.initialStatus);
 
   const action = (comp: AlloyComponent) => {
     spec.onAction({
-      getStatus: () => currentStatus.get(),
-      setStatus: (newStatus) => {
-        optMemIcon.bind((mem) => mem.getOpt(comp)).each((displayIcon) => {
-          if (newStatus === 'normal') {
-            Replacing.set(displayIcon, [
-              renderReplaceableIconFromPack(spec.icon ?? '', providers.icons)
-            ]);
-          } else {
-            Replacing.set(displayIcon, [
-              renderReplaceableIconFromPack(spec.toggledIcon ?? '', providers.icons)
-            ]);
-          }
-          currentStatus.set(newStatus);
-        });
-      },
       isEnabled: () => !Disabling.isDisabled(comp),
       setEnabled: (state: boolean) => Disabling.set(comp, !state),
       setText: Fun.noop,
-      setIcon: Fun.noop
+      setIcon: (newIcon) => {
+        optMemIcon.bind((mem) => mem.getOpt(comp)).each((displayIcon) => {
+          Replacing.set(displayIcon, [
+            renderReplaceableIconFromPack(newIcon, providers.icons)
+          ]);
+        });
+      }
     });
   };
 

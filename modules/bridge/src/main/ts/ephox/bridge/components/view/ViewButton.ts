@@ -9,13 +9,10 @@ interface BaseButtonSpec<Api extends BaseToolbarButtonInstanceApi> extends BaseT
   buttonType?: 'primary' | 'secondary';
 }
 
-export type TogglableIconButtonStatus = 'normal' | 'toggled';
 interface BaseViewButtonInstanceApi extends BaseToolbarButtonInstanceApi {
 }
 
 export interface TogglableIconButtonApi extends BaseViewButtonInstanceApi {
-  getStatus: () => TogglableIconButtonStatus;
-  setStatus: (newStatus: TogglableIconButtonStatus) => void;
 }
 
 export interface ViewNormalButtonSpec extends BaseButtonSpec<BaseViewButtonInstanceApi> {
@@ -34,8 +31,6 @@ export interface ViewTogglableIconButtonSpec extends BaseButtonSpec<TogglableIco
   name: string;
   type: 'togglableIconButton';
   icon: string;
-  toggledIcon: string;
-  initialStatus: TogglableIconButtonStatus;
   onAction: (api: TogglableIconButtonApi) => void;
 }
 
@@ -67,8 +62,6 @@ export interface ViewTogglableIconButton extends Omit<BaseButton<TogglableIconBu
   name: string;
   type: 'togglableIconButton';
   icon: string;
-  toggledIcon: string;
-  initialStatus: TogglableIconButtonStatus;
   onAction: (api: TogglableIconButtonApi) => void;
 }
 export interface ViewButtonsGroup {
@@ -99,9 +92,7 @@ const togglableIconButtonFields = [
   FieldSchema.requiredStringEnum('type', [ 'togglableIconButton' ]),
   ComponentSchema.text,
   ComponentSchema.icon,
-  FieldSchema.required('toggledIcon'),
   FieldSchema.defaultedStringEnum('buttonType', 'secondary', [ 'primary', 'secondary' ]),
-  FieldSchema.defaultedStringEnum('initialStatus', 'normal', [ 'normal', 'toggled' ]),
   FieldSchema.requiredFunction('onAction')
 ];
 
