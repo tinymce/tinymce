@@ -24,7 +24,7 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsTest', () => {
                   name: 'buttonWithToggle',
                   type: 'togglableIconButton',
                   text: 'button-with-toggle',
-                  icon: buttonWithToggle ? 'fullscreen' : 'cut',
+                  icon: 'fullscreen',
                   onAction: (api) => {
                     buttonWithToggle = !buttonWithToggle;
                     api.setIcon(buttonWithToggle ? 'fullscreen' : 'cut');
