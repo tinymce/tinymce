@@ -15,6 +15,9 @@ describe('browser.tinymce.core.focus.HighlightOnFocus', () => {
     await Waiter.pWait(200);
   };
 
+  const pAssertIsNotHighlighted = (editor: Editor) =>
+    Waiter.pTryUntil('Waiting for focus to be shifted', () => assertIsNotHighlighted(editor));
+
   context('with highlight_on_focus: true', () => {
     const hook = TinyHooks.bddSetup<Editor>({
       base_url: '/project/tinymce/js/tinymce',
@@ -65,8 +68,7 @@ describe('browser.tinymce.core.focus.HighlightOnFocus', () => {
       assertIsHighlighted(editor);
       TinyUiActions.clickOnMenu(editor, 'button:contains("Edit")');
       await TinyUiActions.pWaitForUi(editor, '*[role="menu"]');
-      await Waiter.pWait(0);
-      assertIsNotHighlighted(editor);
+      await pAssertIsNotHighlighted(editor);
       TinyUiActions.keyup(editor, Keys.escape());
     });
 
@@ -77,8 +79,7 @@ describe('browser.tinymce.core.focus.HighlightOnFocus', () => {
       assertIsHighlighted(editor);
       TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
-      await Waiter.pWait(0);
-      assertIsNotHighlighted(editor);
+      await pAssertIsNotHighlighted(editor);
       TinyUiActions.keyup(editor, Keys.escape());
     });
 
@@ -89,8 +90,7 @@ describe('browser.tinymce.core.focus.HighlightOnFocus', () => {
       assertIsHighlighted(editor);
       TinyUiActions.clickOnToolbar(editor, '[aria-label="Find and replace"]');
       await TinyUiActions.pWaitForDialog(editor);
-      await Waiter.pWait(0);
-      assertIsNotHighlighted(editor);
+      await pAssertIsNotHighlighted(editor);
       TinyUiActions.closeDialog(editor);
       assertIsHighlighted(editor);
     });
@@ -104,8 +104,7 @@ describe('browser.tinymce.core.focus.HighlightOnFocus', () => {
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       TinyUiActions.clickOnUi(editor, 'button[title="Custom color"]');
       await TinyUiActions.pWaitForDialog(editor);
-      await Waiter.pWait(0);
-      assertIsNotHighlighted(editor);
+      await pAssertIsNotHighlighted(editor);
       TinyUiActions.closeDialog(editor);
       assertIsHighlighted(editor);
     });

@@ -120,6 +120,7 @@ interface BaseEditorOptions {
   format_noneditable_selector?: string;
   height?: number | string;
   hidden_input?: boolean;
+  highlight_on_focus?: boolean;
   icons?: string;
   icons_url?: string;
   id?: string;
@@ -290,6 +291,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   forced_root_block_attrs: Record<string, string>;
   format_noneditable_selector: string;
   height: number | string;
+  highlight_on_focus: boolean;
   iframe_attrs: Record<string, string>;
   images_file_types: string;
   images_upload_base_path: string;
