@@ -21,7 +21,7 @@ export default (): void => {
                 name: 'togglableIcon',
                 type: 'togglableIconButton',
                 tooltip: 'togglableIcon',
-                icon: isToggled ? 'fullscreen' : 'info',
+                icon: 'info',
                 onAction: (statusApi) => {
                   isToggled = !isToggled;
                   statusApi.setIcon(isToggled ? 'fullscreen' : 'info');
@@ -46,7 +46,7 @@ export default (): void => {
             name: 'togglableIcon2',
             type: 'togglableIconButton',
             tooltip: 'togglableIcon2',
-            icon: isToggled2 ? 'fullscreen' : 'info',
+            icon: 'info',
             onAction: (statusApi) => {
               isToggled2 = !isToggled2;
               statusApi.setIcon(isToggled2 ? 'fullscreen' : 'info');
