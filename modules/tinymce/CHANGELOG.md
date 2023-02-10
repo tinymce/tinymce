@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `skipFocus` option to the `ToggleToolbarDrawer` command to preserve focus. #TINY-9337
 - Added `common/space/delBetweenExclamationMarks` to remove spaces between exclamation marks. #TINY-9398
 - New `font_size_input_default_unit` option allow to use of numbers without a unit in `fontsizeinput` and have them parsed with the default unit, if it is not defined the default is `pt` #TINY-9585
-- New `gourp` and `togglableIconButton` in view. #TINY-9523
+- New `group` and `togglableIconButton` in view. #TINY-9523
 - New `togglableIconButton` in dialog footer buttons. #TINY-9523
 - New `showIconAndText` flag for buttons. #TINY-9523
 
