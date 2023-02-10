@@ -23,6 +23,7 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsTest', () => {
                 {
                   name: 'buttonWithToggle',
                   type: 'togglableIconButton',
+                  text: 'button-with-toggle',
                   tooltip: 'button-with-toggle',
                   icon: 'cut',
                   onAction: (api) => {
@@ -35,7 +36,8 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsTest', () => {
             {
               name: 'buttonWithoutToggle',
               type: 'togglableIconButton',
-              tooltip: 'button-with-toggle',
+              text: 'button-without-toggle',
+              tooltip: 'button-without-toggle',
               icon: 'help',
               onAction: Fun.noop
             }
