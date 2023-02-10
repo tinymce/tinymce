@@ -46,6 +46,7 @@ const renderViewButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryBack
         tooltip: spec.tooltip ?? spec.text,
         onAction: spec.onAction,
         icon: spec.icon,
+        borderless: spec.borderless,
         buttonType: spec.buttonType
       },
       providers

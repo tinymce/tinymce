@@ -7,6 +7,7 @@ interface BaseButtonSpec {
   text: string;
   tooltip?: string;
   buttonType?: 'primary' | 'secondary';
+  borderless?: boolean;
 }
 
 export interface TogglableButtonApi {
@@ -40,6 +41,7 @@ interface BaseButton {
   text: string;
   tooltip: Optional<string>;
   buttonType: 'primary' | 'secondary';
+  borderless: boolean;
 }
 
 export interface ViewNormalButton extends BaseButton {
@@ -67,6 +69,7 @@ const normalButtonFields = [
   ComponentSchema.text,
   FieldSchema.optionString('tooltip'),
   FieldSchema.defaultedStringEnum('buttonType', 'secondary', [ 'primary', 'secondary' ]),
+  FieldSchema.defaultedBoolean('borderless', false),
   FieldSchema.requiredFunction('onAction')
 ];
 
@@ -77,6 +80,7 @@ const togglableIconButtonFields = [
   ComponentSchema.icon,
   FieldSchema.requiredString('tooltip'),
   FieldSchema.defaultedStringEnum('buttonType', 'secondary', [ 'primary', 'secondary' ]),
+  FieldSchema.defaultedBoolean('borderless', false),
   FieldSchema.requiredFunction('onAction')
 ];
 

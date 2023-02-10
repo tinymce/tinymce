@@ -44,7 +44,7 @@ export const renderTogglableIconButton = (spec: View.ViewTogglableIconButton, pr
     tooltip: spec.text,
     icon: Optional.from(spec.name),
     enabled: true,
-    borderless: false
+    borderless: spec.borderless
   };
 
   const tooltipAttributes = buttonSpec.tooltip.map<{}>((tooltip) => ({
@@ -63,7 +63,9 @@ export const renderTogglableIconButton = (spec: View.ViewTogglableIconButton, pr
 
   const dom = {
     tag: 'button',
-    classes: buttonTypeClasses.concat([ hasIconAndText ? 'tox-button--icon-and-text' : 'tox-button--icon' ]),
+    classes: buttonTypeClasses
+      .concat([ hasIconAndText ? 'tox-button--icon-and-text' : 'tox-button--icon' ])
+      .concat(...spec.borderless ? [ 'tox-button--naked' ] : []),
     attributes: tooltipAttributes
   };
   const extraBehaviours: Behaviours = [];

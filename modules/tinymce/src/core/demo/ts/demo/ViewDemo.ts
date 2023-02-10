@@ -34,6 +34,7 @@ export default (): void => {
                 text: 'iconAndText',
                 tooltip: 'iconAndText',
                 icon: 'copy',
+                borderless: true,
                 onAction: () => {
                   // eslint-disable-next-line no-console
                   console.log('iconAndText');
