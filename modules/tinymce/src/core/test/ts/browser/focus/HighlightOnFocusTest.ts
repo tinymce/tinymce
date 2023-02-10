@@ -83,20 +83,20 @@ describe('browser.tinymce.core.focus.HighlightOnFocus', () => {
 
     it('TINY-9277: Content area should be highlighted on focus and removed when shifted to menubar', async () => {
       const editor = hook.editor();
-      assertHighlightOnFocus(editor );
+      assertHighlightOnFocus(editor);
       TinyUiActions.clickOnMenu(editor, 'button:contains("Edit")');
       await TinyUiActions.pWaitForUi(editor, '*[role="menu"]');
       await pAssertIsNotHighlighted(editor);
-      TinyUiActions.keyup(editor, Keys.escape())
+      TinyUiActions.keyup(editor, Keys.escape());
     });
 
     it('TINY-9277: Content area should be highlighted on focus and removed when shifted to toolbar', async () => {
       const editor = hook.editor();
-      assertHighlightOnFocus(editor );
+      assertHighlightOnFocus(editor);
       TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       await pAssertIsNotHighlighted(editor);
-      TinyUiActions.keyup(editor, Keys.escape())
+      TinyUiActions.keyup(editor, Keys.escape());
     });
 
     it('TINY-9277: Content area should be highlighted on focus and removed when shifted to inline toolbar dialog', async () => {
