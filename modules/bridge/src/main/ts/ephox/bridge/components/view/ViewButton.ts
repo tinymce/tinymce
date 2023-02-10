@@ -1,88 +1,67 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
-import { Result } from '@ephox/katamari';
+import { Optional, Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
-import { BaseToolbarButton, BaseToolbarButtonInstanceApi, BaseToolbarButtonSpec } from '../toolbar/ToolbarButton';
 
-interface BaseButtonSpec<Api extends BaseToolbarButtonInstanceApi> extends BaseToolbarButtonSpec<Api> {
-  text: string;
+interface BaseButtonSpec {
+  text?: string;
+  tooltip?: string;
   buttonType?: 'primary' | 'secondary';
 }
 
-interface BaseViewButtonInstanceApi extends BaseToolbarButtonInstanceApi {
+export interface TogglableButtonApi {
+  isActive: () => boolean;
+  setActive: (state: boolean) => void;
+  setIcon: (newIcon: string) => void;
 }
 
-export interface TogglableIconButtonApi extends BaseViewButtonInstanceApi {
-}
-
-export interface ViewNormalButtonSpec extends BaseButtonSpec<BaseViewButtonInstanceApi> {
+export interface ViewNormalButtonSpec extends BaseButtonSpec {
   type: 'button';
   onAction: () => void;
 }
 
-export interface ViewIconButtonSpec extends BaseButtonSpec<BaseViewButtonInstanceApi> {
-  type: 'iconButton';
-  icon: string;
-  showIconAndText: boolean;
-  onAction: () => void;
-}
-
-export interface ViewTogglableIconButtonSpec extends BaseButtonSpec<TogglableIconButtonApi> {
+export interface ViewTogglableIconButtonSpec extends BaseButtonSpec {
   name: string;
   type: 'togglableIconButton';
-  icon: string;
-  onAction: (api: TogglableIconButtonApi) => void;
+  icon?: string;
+  onAction: (api: TogglableButtonApi) => void;
 }
 
 export interface ViewButtonsGroupSpec {
   type: 'group';
-  buttons: Array<ViewNormalButtonSpec | ViewIconButtonSpec | ViewTogglableIconButtonSpec>;
+  buttons: Array<ViewNormalButtonSpec | ViewTogglableIconButtonSpec>;
 }
 
-export type ViewButtonSpec = ViewNormalButtonSpec | ViewIconButtonSpec | ViewTogglableIconButtonSpec | ViewButtonsGroupSpec;
+export type ViewButtonSpec = ViewNormalButtonSpec | ViewTogglableIconButtonSpec | ViewButtonsGroupSpec;
 
-interface BaseButton<Api extends BaseToolbarButtonInstanceApi> extends Omit<BaseToolbarButton<Api>, 'text'> {
-  text: string;
+interface BaseButton {
+  text: Optional<string>;
+  tooltip: Optional<string>;
   buttonType: 'primary' | 'secondary';
 }
 
-export interface ViewNormalButton extends BaseButton<BaseViewButtonInstanceApi> {
+export interface ViewNormalButton extends BaseButton {
   type: 'button';
   onAction: () => void;
 }
 
-export interface ViewIconButton extends Omit<BaseButton<BaseViewButtonInstanceApi>, 'icon'> {
-  type: 'iconButton';
-  icon: string;
-  showIconAndText: boolean;
-  onAction: () => void;
-}
-
-export interface ViewTogglableIconButton extends Omit<BaseButton<TogglableIconButtonApi>, 'icon'> {
+export interface ViewTogglableIconButton extends BaseButton {
   name: string;
   type: 'togglableIconButton';
-  icon: string;
-  onAction: (api: TogglableIconButtonApi) => void;
+  icon: Optional<string>;
+  onAction: (api: TogglableButtonApi) => void;
 }
 export interface ViewButtonsGroup {
   type: 'group';
-  buttons: Array<ViewNormalButton | ViewIconButton | ViewTogglableIconButton>;
+  buttons: Array<ViewNormalButton | ViewTogglableIconButton>;
 }
 
-export type ViewButton = ViewNormalButton | ViewIconButton | ViewTogglableIconButton | ViewButtonsGroup;
+export type ViewButton = ViewNormalButton | ViewTogglableIconButton | ViewButtonsGroup;
 
 const normalButtonFields = [
   FieldSchema.requiredStringEnum('type', [ 'button' ]),
-  ComponentSchema.text,
-  FieldSchema.defaultedStringEnum('buttonType', 'secondary', [ 'primary', 'secondary' ]),
-  FieldSchema.requiredFunction('onAction')
-];
-
-const iconButtonFields = [
-  FieldSchema.requiredStringEnum('type', [ 'iconButton' ]),
-  ComponentSchema.text,
-  ComponentSchema.icon,
-  FieldSchema.defaultedBoolean('showIconAndText', false),
+  ComponentSchema.optionalText,
+  FieldSchema.optionString('tooltip'),
   FieldSchema.defaultedStringEnum('buttonType', 'secondary', [ 'primary', 'secondary' ]),
   FieldSchema.requiredFunction('onAction')
 ];
@@ -90,15 +69,14 @@ const iconButtonFields = [
 const togglableIconButtonFields = [
   ComponentSchema.name,
   FieldSchema.requiredStringEnum('type', [ 'togglableIconButton' ]),
-  ComponentSchema.text,
-  ComponentSchema.icon,
+  ComponentSchema.optionalText,
+  ComponentSchema.optionalIcon,
   FieldSchema.defaultedStringEnum('buttonType', 'secondary', [ 'primary', 'secondary' ]),
   FieldSchema.requiredFunction('onAction')
 ];
 
 const schemaWithoutGroupButton = {
   button: normalButtonFields,
-  iconButton: iconButtonFields,
   togglableIconButton: togglableIconButtonFields,
 };
 

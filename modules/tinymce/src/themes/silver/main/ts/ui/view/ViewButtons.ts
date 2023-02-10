@@ -1,31 +1,41 @@
-import { AlloyComponent, Behaviour, Button as AlloyButton, Disabling, Memento, Replacing, SimpleOrSketchSpec } from '@ephox/alloy';
+import { AlloyComponent, Behaviour, Button as AlloyButton, GuiFactory, Memento, Replacing, SimpleOrSketchSpec } from '@ephox/alloy';
 import { View } from '@ephox/bridge';
-import { Fun, Optional } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
+import { Attribute, Class } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderReplaceableIconFromPack } from '../button/ButtonSlices';
 import { calculateClassesFromButtonType, IconButtonWrapper, renderCommonSpec } from '../general/Button';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
+import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 
 type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];
 
-export const renderTogglableIconButton = (spec: View.ViewTogglableIconButtonSpec, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
-  const optMemIcon = Optional.some((spec.icon))
+export const renderTogglableIconButton = (spec: View.ViewTogglableIconButton, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
+  const optMemIcon = spec.icon
     .map((iconName) => renderReplaceableIconFromPack(iconName, providers.icons))
     .map(Memento.record);
 
   const action = (comp: AlloyComponent) => {
     spec.onAction({
-      isEnabled: () => !Disabling.isDisabled(comp),
-      setEnabled: (state: boolean) => Disabling.set(comp, !state),
-      setText: Fun.noop,
       setIcon: (newIcon) => {
         optMemIcon.bind((mem) => mem.getOpt(comp)).each((displayIcon) => {
           Replacing.set(displayIcon, [
             renderReplaceableIconFromPack(newIcon, providers.icons)
           ]);
         });
-      }
+      },
+      setActive: (state) => {
+        const elm = comp.element;
+        if (state) {
+          Class.add(elm, ToolbarButtonClasses.Ticked);
+          Attribute.set(elm, 'aria-pressed', true);
+        } else {
+          Class.remove(elm, ToolbarButtonClasses.Ticked);
+          Attribute.remove(elm, 'aria-pressed');
+        }
+      },
+      isActive: () => Class.has(comp.element, ToolbarButtonClasses.Ticked),
     });
   };
 
@@ -33,9 +43,9 @@ export const renderTogglableIconButton = (spec: View.ViewTogglableIconButtonSpec
     ...spec,
     primary: spec.buttonType === 'primary',
     buttonType: Optional.from(spec.buttonType),
-    tooltip: Optional.from(spec.text),
+    tooltip: spec.text,
     icon: Optional.from(spec.name),
-    enabled: spec.enabled ?? false,
+    enabled: true,
     borderless: false
   };
 
@@ -45,13 +55,21 @@ export const renderTogglableIconButton = (spec: View.ViewTogglableIconButtonSpec
   })).getOr({});
 
   const buttonTypeClasses = calculateClassesFromButtonType(spec.buttonType ?? 'secondary');
+  const optTranslatedText = spec.text.map(providers.translate);
+  const optTranslatedTextComponed = optTranslatedText.map(GuiFactory.text);
+
+  const optIcon = optMemIcon.map((memIcon) => memIcon.asSpec());
+  const components = componentRenderPipeline([ optIcon, optTranslatedTextComponed ]);
+
+  const hasIconAndText = optTranslatedTextComponed.isSome() && optIcon.isSome();
+
   const dom = {
     tag: 'button',
-    classes: buttonTypeClasses.concat([ 'tox-button--icon' ]),
+    classes: buttonTypeClasses.concat([ hasIconAndText ? 'tox-button--icon-and-text' : 'tox-button--icon' ]),
     attributes: tooltipAttributes
   };
   const extraBehaviours: Behaviours = [];
-  const components = optMemIcon.map((memIcon) => componentRenderPipeline([ Optional.some(memIcon.asSpec()) ])).getOr([]);
+
   const iconButtonSpec = renderCommonSpec(buttonSpec, Optional.some(action), extraBehaviours, dom, components, providers);
   return AlloyButton.sketch(iconButtonSpec);
 };

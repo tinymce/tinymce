@@ -42,8 +42,8 @@ const renderViewButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryBack
       {
         type: spec.type,
         text: spec.text,
-        enabled: true,
         name: spec.name,
+        tooltip: spec.tooltip ?? spec.text,
         onAction: spec.onAction,
         icon: spec.icon,
         buttonType: spec.buttonType
@@ -53,13 +53,12 @@ const renderViewButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryBack
   }
   return renderButton(
     {
-      text: spec.text,
+      text: spec.text.getOr(''),
       enabled: true,
       primary: false,
       name: 'name',
-      icon: spec.type === 'iconButton' ? Optional.from(spec.icon) : Optional.none(),
-      ...(spec.type === 'iconButton' && { showIconAndText: spec.showIconAndText }),
-      borderless: spec.type === 'iconButton',
+      icon: Optional.none(),
+      borderless: false,
       buttonType: Optional.some(spec.buttonType)
     },
     (_comp) => {
@@ -80,7 +79,6 @@ const renderButtonsGroup = (spec: BridgeView.ViewButtonsGroup, providers: UiFact
 };
 
 const renderViewHeader = (spec: ViewHeaderSpec) => {
-  // TODO: this should be a different check
   let hasGroups = false;
   const endButtons = Arr.map(spec.buttons, (btnspec) => {
     if (btnspec.type === 'group') {
