@@ -90,7 +90,7 @@ const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => 
     Delay.setEditorTimeout(editor, () => {
       const focusedEditor = editorManager.focusedEditor;
 
-      // Remove focus higlight if editor or if the editor content area element no longer in focus
+      // Remove focus highlight when the content area is no longer the active editor element, or if the highlighted editor is not the current focused editor
       if (!isEditorContentAreaElement(getActiveElement(editor)) || focusedEditor !== editor) {
         toggleContentAreaOnFocus(editor, Class.remove);
       }
