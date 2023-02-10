@@ -25,7 +25,7 @@ const defaultMenus: Record<string, MenuSpec> = {
   view: { title: 'View', items: 'code | visualaid visualchars visualblocks | spellchecker | preview fullscreen | showcomments' },
   insert: { title: 'Insert', items: 'image link media addcomment pageembed template inserttemplate codesample inserttable | charmap emoticons hr | pagebreak nonbreaking anchor tableofcontents footnotes | mergetags | insertdatetime' },
   format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript codeformat | styles blocks fontfamily fontsize align lineheight | forecolor backcolor | language | removeformat' },
-  tools: { title: 'Tools', items: 'spellchecker spellcheckerlanguage | autocorrect capitalization | a11ycheck code typography wordcount | addtemplate' },
+  tools: { title: 'Tools', items: 'spellchecker spellcheckerlanguage | autocorrect capitalization | a11ycheck code typography wordcount addtemplate' },
   table: { title: 'Table', items: 'inserttable | cell row column | advtablesort | tableprops deletetable' },
   help: { title: 'Help', items: 'help' }
 };
