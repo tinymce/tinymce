@@ -4,7 +4,7 @@ import { Optional, Result } from '@ephox/katamari';
 import * as ComponentSchema from '../../core/ComponentSchema';
 
 interface BaseButtonSpec {
-  text?: string;
+  text: string;
   tooltip?: string;
   buttonType?: 'primary' | 'secondary';
 }
@@ -20,10 +20,12 @@ export interface ViewNormalButtonSpec extends BaseButtonSpec {
   onAction: () => void;
 }
 
-export interface ViewTogglableIconButtonSpec extends BaseButtonSpec {
+export interface ViewTogglableIconButtonSpec extends Omit<BaseButtonSpec, 'text'> {
+  text?: string;
   name: string;
   type: 'togglableIconButton';
-  icon?: string;
+  tooltip: string;
+  icon: string;
   onAction: (api: TogglableButtonApi) => void;
 }
 
@@ -35,7 +37,7 @@ export interface ViewButtonsGroupSpec {
 export type ViewButtonSpec = ViewNormalButtonSpec | ViewTogglableIconButtonSpec | ViewButtonsGroupSpec;
 
 interface BaseButton {
-  text: Optional<string>;
+  text: string;
   tooltip: Optional<string>;
   buttonType: 'primary' | 'secondary';
 }
@@ -45,10 +47,12 @@ export interface ViewNormalButton extends BaseButton {
   onAction: () => void;
 }
 
-export interface ViewTogglableIconButton extends BaseButton {
+export interface ViewTogglableIconButton extends Omit<BaseButton, 'text' | 'tooltip'> {
+  text: Optional<string>;
   name: string;
   type: 'togglableIconButton';
-  icon: Optional<string>;
+  icon: string;
+  tooltip: string;
   onAction: (api: TogglableButtonApi) => void;
 }
 export interface ViewButtonsGroup {
@@ -60,7 +64,7 @@ export type ViewButton = ViewNormalButton | ViewTogglableIconButton | ViewButton
 
 const normalButtonFields = [
   FieldSchema.requiredStringEnum('type', [ 'button' ]),
-  ComponentSchema.optionalText,
+  ComponentSchema.text,
   FieldSchema.optionString('tooltip'),
   FieldSchema.defaultedStringEnum('buttonType', 'secondary', [ 'primary', 'secondary' ]),
   FieldSchema.requiredFunction('onAction')
@@ -70,7 +74,8 @@ const togglableIconButtonFields = [
   ComponentSchema.name,
   FieldSchema.requiredStringEnum('type', [ 'togglableIconButton' ]),
   ComponentSchema.optionalText,
-  ComponentSchema.optionalIcon,
+  ComponentSchema.icon,
+  FieldSchema.requiredString('tooltip'),
   FieldSchema.defaultedStringEnum('buttonType', 'secondary', [ 'primary', 'secondary' ]),
   FieldSchema.requiredFunction('onAction')
 ];

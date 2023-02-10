@@ -53,7 +53,7 @@ const renderViewButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryBack
   }
   return renderButton(
     {
-      text: spec.text.getOr(''),
+      text: spec.text,
       enabled: true,
       primary: false,
       name: 'name',

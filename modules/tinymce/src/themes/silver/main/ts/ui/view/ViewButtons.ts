@@ -12,14 +12,12 @@ import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];
 
 export const renderTogglableIconButton = (spec: View.ViewTogglableIconButton, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
-  const optMemIcon = spec.icon
-    .map((iconName) => renderReplaceableIconFromPack(iconName, providers.icons))
-    .map(Memento.record);
+  const memIcon = Memento.record(renderReplaceableIconFromPack(spec.icon, providers.icons));
 
   const action = (comp: AlloyComponent) => {
     spec.onAction({
       setIcon: (newIcon) => {
-        optMemIcon.bind((mem) => mem.getOpt(comp)).each((displayIcon) => {
+        memIcon.getOpt(comp).each((displayIcon) => {
           Replacing.set(displayIcon, [
             renderReplaceableIconFromPack(newIcon, providers.icons)
           ]);
@@ -58,10 +56,10 @@ export const renderTogglableIconButton = (spec: View.ViewTogglableIconButton, pr
   const optTranslatedText = spec.text.map(providers.translate);
   const optTranslatedTextComponed = optTranslatedText.map(GuiFactory.text);
 
-  const optIcon = optMemIcon.map((memIcon) => memIcon.asSpec());
-  const components = componentRenderPipeline([ optIcon, optTranslatedTextComponed ]);
+  const iconSpec = memIcon.asSpec();
+  const components = componentRenderPipeline([ Optional.some(iconSpec), optTranslatedTextComponed ]);
 
-  const hasIconAndText = optTranslatedTextComponed.isSome() && optIcon.isSome();
+  const hasIconAndText = optTranslatedTextComponed.isSome();
 
   const dom = {
     tag: 'button',
