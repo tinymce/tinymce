@@ -94,6 +94,7 @@ tinymce.init({
               {
                 type: 'tree',
                 onLeafAction: (id) => {
+                  // eslint-disable-next-line
                   console.log('clicked on item with id', id);
                 },
                 items: tree
