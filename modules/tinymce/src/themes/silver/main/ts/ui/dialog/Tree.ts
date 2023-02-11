@@ -1,6 +1,6 @@
-import { Behaviour, Button as AlloyButton, Tabstopping, GuiFactory, SimpleSpec, SketchSpec, Toggling } from '@ephox/alloy';
+import { Behaviour, Button as AlloyButton, Tabstopping, GuiFactory, SimpleSpec, Toggling } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Fun, Id, Optional } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
