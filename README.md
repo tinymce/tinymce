@@ -1,3 +1,7 @@
+# Skin customization doc
+
+https://www.tiny.cloud/docs/tinymce/6/creating-a-skin/
+
 # TinyMCE
 
 The world's #1 open source rich text editor.
