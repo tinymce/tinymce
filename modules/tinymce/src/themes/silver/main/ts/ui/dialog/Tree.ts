@@ -153,10 +153,9 @@ const renderTree = (
   spec: TreeSpec,
   backstage: UiFactoryBackstage,
   level = 1
-): SketchSpec => {
+): SimpleSpec => {
   const onLeafAction = spec.onLeafAction.getOr(Fun.noop);
   return {
-    uid: Id.generate(''),
     dom: {
       tag: 'div',
       styles: {
