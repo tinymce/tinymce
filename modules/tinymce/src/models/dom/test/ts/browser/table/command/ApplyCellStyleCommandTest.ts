@@ -207,5 +207,13 @@ describe('browser.tinymce.models.dom.table.command.ApplyCellStyleCommandTest', (
     ]);
   });
 
+  it('TINY-9459: Should not apply command to table in noneditable root', () => {
+    TableTestUtils.withNoneditableRootEditor(hook.editor(), (editor) => {
+      editor.setContent(table);
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+      applyCellStyle(editor, { backgroundColor: 'red' });
+      assertTableCellStructure(editor, { });
+    });
+  });
 });
 

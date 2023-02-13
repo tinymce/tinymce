@@ -1,5 +1,5 @@
 import { Assertions } from '@ephox/agar';
-import { context, describe, it } from '@ephox/bedrock-client';
+import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
@@ -15,6 +15,10 @@ describe('browser.tinymce.core.delete.CefDeleteActionTest', () => {
   const viewBlock = ViewBlock.bddSetup();
 
   const setHtml = viewBlock.update;
+
+  beforeEach(() => {
+    viewBlock.get().contentEditable = 'true';
+  });
 
   const readAction = (forward: boolean, cursorPath: number[], cursorOffset: number) => {
     const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), cursorPath).getOrDie();

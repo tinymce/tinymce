@@ -18,7 +18,7 @@ export interface BaseMenuButtonSpec {
   search?: boolean | { placeholder?: string };
   // In order to avoid breaking APIs with pre 6.2 releases, the fetchContext was added
   // as an additional argument to fetch.
-  fetch: (success: SuccessCallback, fetchContext: MenuButtonFetchContext) => void;
+  fetch: (success: SuccessCallback, fetchContext: MenuButtonFetchContext, api: BaseMenuButtonInstanceApi) => void;
   onSetup?: (api: BaseMenuButtonInstanceApi) => (api: BaseMenuButtonInstanceApi) => void;
 }
 
@@ -27,7 +27,7 @@ export interface BaseMenuButton {
   tooltip: Optional<string>;
   icon: Optional<string>;
   search: Optional<{ placeholder: Optional<string> }>;
-  fetch: (success: SuccessCallback, fetchContext: MenuButtonFetchContext) => void;
+  fetch: (success: SuccessCallback, fetchContext: MenuButtonFetchContext, api: BaseMenuButtonInstanceApi) => void;
   onSetup: (api: BaseMenuButtonInstanceApi) => (api: BaseMenuButtonInstanceApi) => void;
 }
 
@@ -36,6 +36,8 @@ export interface BaseMenuButtonInstanceApi {
   setEnabled: (state: boolean) => void;
   isActive: () => boolean;
   setActive: (state: boolean) => void;
+  setText: (text: string) => void;
+  setIcon: (icon: string) => void;
 }
 
 export const baseMenuButtonFields = [

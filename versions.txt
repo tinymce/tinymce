@@ -2,3 +2,4 @@
 # Format: [package_name]@[new_version]
 
 sugar@9.2.0
+oxide-icons-default@2.2.0

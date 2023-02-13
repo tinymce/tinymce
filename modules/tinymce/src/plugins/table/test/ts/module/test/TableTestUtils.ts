@@ -228,6 +228,12 @@ const createTableChildren = (s: ApproxStructure.StructApi, str: ApproxStructure.
   return withColGroups ? [ columns, tbody ] : [ tbody ];
 };
 
+const withNoneditableRootEditor = (editor: Editor, f: (editor: Editor) => void): void => {
+  editor.getBody().contentEditable = 'false';
+  f(editor);
+  editor.getBody().contentEditable = 'true';
+};
+
 export {
   pAssertDialogPresence,
   pAssertListBoxValue,
@@ -242,5 +248,6 @@ export {
   setDialogValues,
   pClickDialogButton,
   assertElementStructure,
-  assertApproxElementStructure
+  assertApproxElementStructure,
+  withNoneditableRootEditor
 };

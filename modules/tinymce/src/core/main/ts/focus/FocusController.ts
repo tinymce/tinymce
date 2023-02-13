@@ -59,11 +59,11 @@ const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => 
 
   SelectionRestore.register(editor);
 
-  const toggleContainerFocus = (editor: Editor) => {
+  const toggleContentAreaOnFocus = (editor: Editor, fn: (element: SugarElement<Element>, clazz: string) => void) => {
     // Inline editors have a different approach to highlight the content area on focus
     if (Options.shouldHighlightOnFocus(editor) && editor.inline !== true) {
       const contentArea = SugarElement.fromDom(editor.getContainer());
-      Class.toggle(contentArea, 'tox-edit-focus');
+      fn(contentArea, 'tox-edit-focus');
     }
   };
 
@@ -77,7 +77,7 @@ const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => 
 
       editorManager.setActive(editor);
       editorManager.focusedEditor = editor;
-      toggleContainerFocus(editor);
+      toggleContentAreaOnFocus(editor, Class.add);
       editor.dispatch('focus', { blurredEditor: focusedEditor });
       editor.focus(true);
     }
@@ -87,9 +87,14 @@ const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => 
     Delay.setEditorTimeout(editor, () => {
       const focusedEditor = editorManager.focusedEditor;
 
+      // Remove focus higlight if no longer in focus
+      if (focusedEditor !== editor) {
+        toggleContentAreaOnFocus(editor, Class.remove);
+      }
+
       // Still the same editor the blur was outside any editor UI
       if (!isUIElement(editor, getActiveElement(editor)) && focusedEditor === editor) {
-        toggleContainerFocus(focusedEditor);
+        toggleContentAreaOnFocus(editor, Class.remove);
         editor.dispatch('blur', { focusedEditor: null });
         editorManager.focusedEditor = null;
       }
