@@ -40,8 +40,8 @@ export default (): void => {
 
     // We wrap the `renderModeUI` function being returned by Render so that we can update
     // the getPopupSinkBounds mutable variable if required.
-    const renderUI = (): RenderResult => {
-      const renderResult = renderModeUI();
+    const renderUI = async (): Promise<RenderResult> => {
+      const renderResult = await renderModeUI();
 
       const optScrollingContext = ScrollingContext.detectWhenSplitUiMode(
         editor,
