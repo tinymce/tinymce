@@ -113,7 +113,7 @@ describe('browser.tinymce.plugins.template.TemplateSanityTest', () => {
       };
       await fn(unsanitizedHtml);
       // wait for any unsanitized html to be read and error to be thrown if it is
-      await Waiter.pWait(1000);
+      await Waiter.pWait(1);
       return isUnsanitizedHtmlRead;
     };
     assert.isFalse(await fnReadsUnsanitizedHtmlInDom(), 'Unsanitized html read');
