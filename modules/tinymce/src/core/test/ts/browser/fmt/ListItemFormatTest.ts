@@ -1,4 +1,3 @@
-
 import { Cursors } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Type } from '@ephox/katamari';
@@ -215,6 +214,19 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
           expected: '<p><strong>a</strong></p><ul contenteditable="false"><li>b</li><li>c</li></ul><p><strong>d</strong></p>',
         })
       );
+
+      it('TINY-9563: applying bold on LIs in a noneditable root should not get bold styles', () => {
+        const editor = hook.editor();
+
+        editor.getBody().contentEditable = 'false';
+        testApplyInlineListFormat({
+          format: 'bold',
+          rawInput: '<p>a</p><ul><li>b</li><li>c</li></ul><p>d</p>',
+          selection: { startPath: [ 0, 0 ], soffset: 0, finishPath: [ 2, 0 ], foffset: 1 },
+          expected: '<p>a</p><ul><li>b</li><li>c</li></ul><p>d</p>',
+        });
+        editor.getBody().contentEditable = 'true';
+      });
     });
   });
 
