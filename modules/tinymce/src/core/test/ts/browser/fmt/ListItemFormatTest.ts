@@ -351,7 +351,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
         })
       );
 
-      it.only('TINY-9563: remove bold on LI elements in a noneditable root should not remove bold styles', () => {
+      it('TINY-9563: remove bold on LI elements in a noneditable root should not remove bold styles', () => {
         const editor = hook.editor();
         const initialContent = '<ul><li style="font-weight: bold;">b</li><li style="font-weight: bold;">c</li></ul>';
 
