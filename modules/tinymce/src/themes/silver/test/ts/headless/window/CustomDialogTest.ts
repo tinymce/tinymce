@@ -47,7 +47,7 @@ describe('headless.tinymce.themes.silver.window.CustomDialogTest', () => {
 
   const selectors = {
     field1: 'input', // nothing more useful, because it does not have a label
-    field2: 'label:contains("F2") + textarea',
+    field2: 'label:contains("F2") + .tox-textarea-wrap textarea',
     field3: 'label:contains("F3") + .tox-form__controls-h-stack input',
     field4_a: '.tox-collection__item:contains("a")',
     field4_b: '.tox-collection__item:contains("b")',

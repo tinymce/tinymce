@@ -48,7 +48,7 @@ const canSplitBlock = (dom: DOMUtils, node: Node | null): node is Element => {
     dom.isBlock(node) &&
     !/^(TD|TH|CAPTION|FORM)$/.test(node.nodeName) &&
     !/^(fixed|absolute)/i.test(node.style.position) &&
-    dom.getContentEditable(node) !== 'true';
+    dom.isEditable(node.parentNode) && dom.getContentEditable(node) !== 'false';
 };
 
 // Remove the first empty inline element of the block so this: <p><b><em></em></b>x</p> becomes this: <p>x</p>
@@ -159,15 +159,6 @@ const wrapSelfAndSiblingsInDefaultBlock = (editor: Editor, newBlockName: string,
   if (!parentBlock || !canSplitBlock(dom, parentBlock)) {
     parentBlock = parentBlock || editableRoot;
 
-    let rootBlockName: string;
-    if (parentBlock === editor.getBody() || NodeType.isTableCellOrCaption(parentBlock)) {
-      rootBlockName = parentBlock.nodeName.toLowerCase();
-    } else if (parentBlock.parentNode) {
-      rootBlockName = parentBlock.parentNode.nodeName.toLowerCase();
-    } else {
-      rootBlockName = '';
-    }
-
     if (!parentBlock.hasChildNodes()) {
       const newBlock = dom.create(newBlockName);
       setForcedBlockAttrs(editor, newBlock);
@@ -190,7 +181,8 @@ const wrapSelfAndSiblingsInDefaultBlock = (editor: Editor, newBlockName: string,
       node = node.previousSibling;
     }
 
-    if (startNode && editor.schema.isValidChild(rootBlockName, newBlockName.toLowerCase())) {
+    const startNodeName = startNode?.parentElement?.nodeName;
+    if (startNode && startNodeName && editor.schema.isValidChild(startNodeName, newBlockName.toLowerCase())) {
       // This should never be null since we check it above
       const startNodeParent = startNode.parentNode as Node;
       const newBlock = dom.create(newBlockName);
@@ -442,8 +434,8 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     }
   }
 
-  // If parent block is root then never insert new blocks
-  if (parentBlock === editor.getBody()) {
+  // Never split the body or blocks that we can't split like noneditable host elements
+  if (parentBlock === editor.getBody() || !canSplitBlock(dom, parentBlock)) {
     return;
   }
   const parentBlockParent = parentBlock.parentNode;

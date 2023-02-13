@@ -1,6 +1,7 @@
+import { UiFinder } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { SugarElement, SugarNode } from '@ephox/sugar';
+import { SugarBody, SugarElement, SugarNode } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -393,5 +394,22 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
     await TableTestUtils.pClickDialogButton(editor, true);
     TinyAssertions.assertContent(editor, expectedHtml);
     assertEvents([{ type: 'tablemodified', structure: true, style: false }]);
+  });
+
+  it('TINY-9459: Should not open table row properties dialog on noneditable table', () => {
+    const editor = hook.editor();
+    editor.setContent('<table contenteditable="false"><tbody><tr><td>x</td></tr></tbody></table>');
+    TinySelections.setCursor(editor, [ 1, 0, 0, 0, 0 ], 0); // Index offset off by one due to cef fake caret
+    editor.execCommand('mceTableRowProps');
+    UiFinder.notExists(SugarBody.body(), '.tox-dialog');
+  });
+
+  it('TINY-9459: Should not open table row properties dialog on noneditable root', () => {
+    TableTestUtils.withNoneditableRootEditor(hook.editor(), (editor) => {
+      editor.setContent('<table><tbody><tr><td>x</td></tr></tbody></table>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+      editor.execCommand('mceTableRowProps');
+      UiFinder.notExists(SugarBody.body(), '.tox-dialog');
+    });
   });
 });

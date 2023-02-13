@@ -52,6 +52,16 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
     assert.equal(evt.isDefaultPrevented(), true);
   });
 
+  it('TINY-9470: click on link in cE=false editor root', () => {
+    const editor = hook.editor();
+    editor.getBody().contentEditable = 'false';
+    editor.setContent('<p><a href="#"><strong>link</strong></a></p>');
+    const evt = editor.dispatch('click', { target: editor.dom.select('strong')[0] } as any);
+    editor.getBody().contentEditable = 'true';
+
+    assert.equal(evt.isDefaultPrevented(), true);
+  });
+
   it('click in non-empty cell next to cell with cE=false block', () => {
     const editor = hook.editor();
     editor.setContent(

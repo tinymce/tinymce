@@ -168,14 +168,14 @@ const augmentEditorUiApi = (editor: Editor, api: Partial<EditorUiApi>) => {
   editor.ui = { ...editor.ui, ...uiApiFacade };
 };
 
-const init = (editor: Editor): void => {
+const init = async (editor: Editor): Promise<void> => {
   editor.dispatch('ScriptsLoaded');
 
   initIcons(editor);
   initTheme(editor);
   initModel(editor);
   initPlugins(editor);
-  const renderInfo = renderThemeUi(editor);
+  const renderInfo = await renderThemeUi(editor);
   augmentEditorUiApi(editor, Optional.from(renderInfo.api).getOr({}));
   editor.editorContainer = renderInfo.editorContainer as HTMLElement;
   appendContentCssFromSettings(editor);

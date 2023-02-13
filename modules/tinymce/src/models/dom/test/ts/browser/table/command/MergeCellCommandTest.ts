@@ -6,6 +6,8 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
+import * as TableTestUtils from '../../../module/table/TableTestUtils';
+
 interface PartialTableModifiedEvent {
   readonly type: string;
   readonly structure: boolean;
@@ -174,6 +176,30 @@ describe('browser.tinymce.models.dom.table.command.MergeCellCommandTest', () => 
     editor.execCommand('mceTableMergeCells');
     const colspan = SelectorFind.descendant(TinyDom.body(editor), 'td[colspan="2"]').getOrDie();
     assert.approximately(getWidth(colspan), totalColsWidth, 2, 'Check new cell is similar width the the two cells that were merged');
+  });
+
+  it('TINY-9459: Should not merge cells in table inside noneditable root', () => {
+    TableTestUtils.withNoneditableRootEditor(hook.editor(), (editor) => {
+      testMerge(editor, {
+        before: (
+          '<table>' +
+            '<tbody>' +
+            '<tr><td data-mce-selected="1" data-mce-first-selected="1">a1</td><td data-mce-selected="1">b1</td></tr>' +
+            '<tr><td data-mce-selected="1">a2</td><td data-mce-selected="1" data-mce-last-selected="1">b2</td></tr>' +
+            '</tbody>' +
+            '</table>'
+        ),
+        after: (
+          '<table>' +
+            '<tbody>' +
+            '<tr><td>a1</td><td>b1</td></tr>' +
+            '<tr><td>a2</td><td>b2</td></tr>' +
+            '</tbody>' +
+            '</table>'
+        ),
+        expectedEvents: [ ]
+      });
+    });
   });
 
   /*

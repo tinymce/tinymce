@@ -242,4 +242,60 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 16px;">b</span>c</p>');
     await FocusTools.pTryOnSelector('Focus should be on the editor', root, '.tox-edit-area__iframe');
   });
+
+  it('TINY-9585: inserting just a number it should set the size at that number with `font_size_input_default_unit` or `pt` as unit', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p style="font-size: 16px;">abc</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
+
+    TinyUiActions.clickOnToolbar(editor, '.tox-number-input input');
+
+    const input = TinyUiActions.clickOnToolbar<HTMLInputElement>(editor, '.tox-number-input input');
+    UiControls.setValue(input, '15');
+    const root = SugarShadowDom.getRootNode(TinyDom.targetElement(editor));
+    FocusTools.setFocus(root, '.tox-number-input input');
+    await FocusTools.pTryOnSelector('Focus should be on input', root, '.tox-number-input input');
+    TinyUiActions.keystroke(editor, Keys.enter());
+
+    TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 15pt;">b</span>c</p>');
+
+    editor.options.set('font_size_input_default_unit', 'px');
+
+    UiControls.setValue(input, '20');
+    FocusTools.setFocus(root, '.tox-number-input input');
+    await FocusTools.pTryOnSelector('Focus should be on input', root, '.tox-number-input input');
+    TinyUiActions.keystroke(editor, Keys.enter());
+
+    TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 20px;">b</span>c</p>');
+
+    editor.options.unset('font_size_input_default_unit');
+  });
+
+  it('TINY-9585: if `font_size_input_default_unit` is set to invalid unit it does not try to apply that invalid unit to the `font-size`', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p style="font-size: 16px;">abc</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
+
+    TinyUiActions.clickOnToolbar(editor, '.tox-number-input input');
+
+    const input = TinyUiActions.clickOnToolbar<HTMLInputElement>(editor, '.tox-number-input input');
+    UiControls.setValue(input, '15');
+    const root = SugarShadowDom.getRootNode(TinyDom.targetElement(editor));
+    FocusTools.setFocus(root, '.tox-number-input input');
+    await FocusTools.pTryOnSelector('Focus should be on input', root, '.tox-number-input input');
+    TinyUiActions.keystroke(editor, Keys.enter());
+
+    TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 15pt;">b</span>c</p>');
+
+    editor.options.set('font_size_input_default_unit', 'fake_unit');
+
+    UiControls.setValue(input, '20');
+    FocusTools.setFocus(root, '.tox-number-input input');
+    await FocusTools.pTryOnSelector('Focus should be on input', root, '.tox-number-input input');
+    TinyUiActions.keystroke(editor, Keys.enter());
+
+    TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 15pt;">b</span>c</p>');
+
+    editor.options.unset('font_size_input_default_unit');
+  });
 });

@@ -1,10 +1,12 @@
-import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { TableModifiedEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+
+import * as TableTestUtils from '../../../module/table/TableTestUtils';
 
 describe('browser.tinymce.models.dom.table.command.InsertCommandsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -163,5 +165,22 @@ describe('browser.tinymce.models.dom.table.command.InsertCommandsTest', () => {
       '<table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr>' +
       '<tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>'
     );
+  });
+
+  context('Noneditable root', () => {
+    const testNoopExecCommand = (cmd: string) => () => {
+      TableTestUtils.withNoneditableRootEditor(hook.editor(), (editor) => {
+        const initalContent = '<table><tbody><tr><td>cell</td></tr></tbody></table>';
+        editor.setContent(initalContent);
+        TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+        editor.execCommand(cmd);
+        TinyAssertions.assertContent(editor, initalContent);
+      });
+    };
+
+    it('TINY-9459: Should not apply mceInsertColBefore command on table in noneditable root', testNoopExecCommand('mceInsertColBefore'));
+    it('TINY-9459: Should not apply mceInsertColAfter command on table in noneditable root', testNoopExecCommand('mceInsertColAfter'));
+    it('TINY-9459: Should not apply mceInsertRowBefore command on table in noneditable root', testNoopExecCommand('mceInsertRowBefore'));
+    it('TINY-9459: Should not apply mceInsertRowAfter command on table in noneditable root', testNoopExecCommand('mceInsertRowAfter'));
   });
 });
