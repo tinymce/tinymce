@@ -54,10 +54,10 @@ export type TreeItemSpec = DirectorySpec | LeafSpec;
 export type TreeItem = Directory | Leaf;
 
 const baseTreeItemFields = [
+  FieldSchema.requiredStringEnum('type', [ 'directory', 'leaf' ]),
   ComponentSchema.title,
   FieldSchema.requiredString('id'),
   FieldSchema.optionOf('menu', MenuButtonSchema ),
-  FieldSchema.requiredStringEnum('type', [ 'leaf', 'directory' ]),
 ];
 
 const treeItemLeafFields = baseTreeItemFields;
@@ -68,7 +68,10 @@ const treeItemDirectoryFields = baseTreeItemFields.concat([
   FieldSchema.requiredArrayOf('children', StructureSchema.thunkOf('children', () => {
     // The order here is very important! if we change the order, then boulder will always match
     // againt treeItemLeafSchema, because a directory has all attributes of leaf plus the children property
-    return StructureSchema.oneOf([ treeItemDirectorySchema, treeItemLeafSchema ]);
+    return StructureSchema.chooseProcessor('type', {
+      directory: treeItemDirectorySchema,
+      leaf: treeItemLeafSchema,
+    });
   })),
 ]);
 
@@ -76,7 +79,10 @@ const treeItemDirectorySchema = StructureSchema.objOf(treeItemDirectoryFields);
 
 // The order here is very important! if we change the order, then boulder will always match
 // againt treeItemLeafSchema, because a directory has all attributes of leaf plus the children property
-const treeItemSchema = StructureSchema.oneOf([ treeItemDirectorySchema, treeItemLeafSchema ]);
+const treeItemSchema = StructureSchema.chooseProcessor('type', {
+  directory: treeItemDirectorySchema,
+  leaf: treeItemLeafSchema,
+});
 
 const treeFields = [
   ComponentSchema.type,

@@ -123,7 +123,7 @@ const renderDirectoryChildren = (children: Dialog.TreeItem[], level: number, onL
     }),
     behaviours: Behaviour.derive([
       Toggling.config({
-        toggleClass: 'expanded'
+        toggleClass: 'tox-trbtn--expanded'
       }),
       Tabstopping.config({})
     ])
@@ -158,6 +158,7 @@ const renderTree = (
   return {
     dom: {
       tag: 'div',
+      classes: [ 'tree' ],
       styles: {
         'display': 'flex',
         'flex-direction': 'column'

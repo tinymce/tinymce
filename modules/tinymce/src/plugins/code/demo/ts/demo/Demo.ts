@@ -50,6 +50,20 @@ tinymce.init({
                 type: 'leaf',
                 title: 'File 4',
                 id: Id.generate(''),
+                menu: {
+                  type: 'menubutton',
+                  icon: 'image-options',
+                  fetch: (success) => success([
+                    {
+                      type: 'menuitem',
+                      text: 'menuitem',
+                      onAction: () => {
+                        // eslint-disable-next-line
+                        console.log('clicked action');
+                      }
+                    }
+                  ])
+                }
               },
             ]
           },
