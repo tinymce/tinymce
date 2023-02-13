@@ -670,4 +670,16 @@ describe('browser.tinymce.core.keyboard.EnterKeyTest', () => {
     TinyAssertions.assertContent(editor, '<p>a</p><p>c</p>');
     TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 0);
   });
+
+  it('TINY-9461: Enter inside an editing host should not split the editing host', () => {
+    const editor = hook.editor();
+    const initialContent = '<p contenteditable="true">ab</p>';
+
+    editor.getBody().contentEditable = 'false';
+    editor.setContent(initialContent);
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    pressEnter(editor, true);
+    TinyAssertions.assertContent(editor, initialContent);
+    editor.getBody().contentEditable = 'false';
+  });
 });
