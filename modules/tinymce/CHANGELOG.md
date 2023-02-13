@@ -54,7 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The "Edit Link" dialog incorrectly retrieved the URL value when opened immediately after the link insertion. #TINY-7993
 - Inserting newlines inside an editable element inside a noneditable root would sometimes try to split the editable element. #TINY-9461
 - Creating a list in a table cell when the caret is in front of an anchor element would not properly include the anchor in the list. #TINY-6853
-- Formatting was applied to noneditable list items inside a noneditable root. #TINY-9563
+- Formatting was applied or removed on noneditable list items inside a noneditable root. #TINY-9563
 
 ## 6.3.1 - 2022-12-06
 

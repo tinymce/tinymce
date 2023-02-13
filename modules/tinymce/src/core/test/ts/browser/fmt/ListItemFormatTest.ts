@@ -350,6 +350,20 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
           expected: '<p>a</p><ul contenteditable="false"><li style="font-weight: bold;">b</li><li style="font-weight: bold;">c</li></ul><p>d</p>',
         })
       );
+
+      it.only('TINY-9563: remove bold on LI elements in a noneditable root should not remove bold styles', () => {
+        const editor = hook.editor();
+        const initialContent = '<ul><li style="font-weight: bold;">b</li><li style="font-weight: bold;">c</li></ul>';
+
+        editor.getBody().contentEditable = 'false';
+        testRemoveInlineListFormat({
+          format: 'bold',
+          rawInput: initialContent,
+          selection: { startPath: [ 0, 0, 0 ], soffset: 0, finishPath: [ 0, 1, 0 ], foffset: 1 },
+          expected: initialContent,
+        });
+        editor.getBody().contentEditable = 'true';
+      });
     });
 
     context('Remove all formats', () => {
