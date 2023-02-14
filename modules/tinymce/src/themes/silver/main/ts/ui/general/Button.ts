@@ -203,7 +203,7 @@ export const renderTogglableIconButton = (spec: Dialog.DialogFooterTogglableIcon
     name: spec.name ?? '',
     primary: spec.buttonType === 'primary',
     buttonType: Optional.from(spec.buttonType),
-    tooltip: Optional.from(spec.text),
+    tooltip: Optional.from(spec.tooltip),
     icon: Optional.from(spec.name),
     enabled: spec.enabled ?? false,
     borderless: false
@@ -257,7 +257,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
   } else if (isTogglableIconButtonSpec(spec, buttonType)) {
     const buttonSpec: Dialog.DialogFooterTogglableIconButtonSpec = {
       ...spec,
-      tooltip: spec.tooltip.getOr(spec.text),
+      tooltip: spec.tooltip,
       buttonType: spec.buttonType.getOrUndefined()
     };
     return renderTogglableIconButton(buttonSpec, backstage.shared.providers);
