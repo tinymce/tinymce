@@ -41,7 +41,7 @@ export const renderTogglableIconButton = (spec: View.ViewTogglableIconButton, pr
     ...spec,
     primary: spec.buttonType === 'primary',
     buttonType: Optional.from(spec.buttonType),
-    tooltip: spec.text,
+    tooltip: Optional.from(spec.tooltip),
     icon: Optional.from(spec.name),
     enabled: true,
     borderless: spec.borderless
