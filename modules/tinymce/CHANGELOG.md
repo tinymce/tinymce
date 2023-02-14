@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Improved
 - Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
 - Pressing backspace in an empty line now preserves formatting in a previous empty line. #TINY-9454
-- Enter in `inputfontsize`'s input now put focus back to the editor. #TINY-9598
+- Pressing enter inside the `inputfontsize` input would not move the focus back into the editor content. #TINY-9598
 
 ### Changed
 - The `link` plugins context menu items will no longer appear for noneditable links. #TINY-9491
