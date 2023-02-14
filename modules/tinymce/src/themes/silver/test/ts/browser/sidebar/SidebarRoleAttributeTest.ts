@@ -42,7 +42,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarRoleAttributeTest', () =>
     );
   };
 
-  it('TINY-9517: No sidebar shown role should be presentation', async () => {
+  it('TINY-9517: No sidebar shown, role should be presentation', async () => {
     const editor = await McEditor.pFromSettings<Editor>({
       ...baseSettings
     });
@@ -50,7 +50,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarRoleAttributeTest', () =>
     McEditor.remove(editor);
   });
 
-  it('TINY-9517: Sidebar one is set to shown on initialization, role should be complementary', async () => {
+  it('TINY-9517: Sidebar one is set to be shown on initialization, role should be region', async () => {
     const editor = await McEditor.pFromSettings<Editor>({
       ...baseSettings,
       sidebar_show: 'sidebarone'
@@ -59,7 +59,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarRoleAttributeTest', () =>
     McEditor.remove(editor);
   });
 
-  it('TINY-9517: Non-existent sidebar is set to show on initialization, sidebar role should be presentation', async () => {
+  it('TINY-9517: Non-existent sidebar is set to be shown on initialization, sidebar role should be presentation', async () => {
     const editor = await McEditor.pFromSettings<Editor>({
       ...baseSettings,
       sidebar_show: 'noexistsidebar'
