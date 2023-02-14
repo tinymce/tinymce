@@ -7,7 +7,7 @@ import {
 import { StructureSchema } from '@ephox/boulder';
 import { Sidebar as BridgeSidebar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Id, Obj, Optional, Optionals, Type } from '@ephox/katamari';
-import { Css, Width } from '@ephox/sugar';
+import { Attribute, Css, SugarElement, Width } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/controls/Controls';
@@ -16,6 +16,11 @@ import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { SimpleBehaviours } from '../alien/SimpleBehaviours';
 
 export type SidebarConfig = Record<string, BridgeSidebar.SidebarSpec>;
+
+const enum SidebarStateRoleAttr {
+  Grown = 'region',
+  Shrunk = 'presentation'
+}
 
 const setup = (editor: Editor): void => {
   const { sidebars } = editor.ui.registry.getAll();
@@ -111,9 +116,14 @@ const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSi
         Sliding.immediateGrow(slider);
         // TINY-8710: Remove the width as since the skins/styles won't have loaded yet, so it's going to be incorrect
         Css.remove(slider.element, 'width');
+        updateSidebarRoleOnToggle(sidebar.element, SidebarStateRoleAttr.Grown);
       });
     }
   });
+};
+
+const updateSidebarRoleOnToggle = (sidebar: SugarElement<HTMLElement>, sidebarState: SidebarStateRoleAttr): void => {
+  Attribute.set(sidebar, 'role', sidebarState);
 };
 
 const toggleSidebar = (sidebar: AlloyComponent, name: string): void => {
@@ -125,15 +135,18 @@ const toggleSidebar = (sidebar: AlloyComponent, name: string): void => {
         if (SlotContainer.isShowing(slotContainer, name)) {
           // close the slider and then hide the slot after the animation finishes
           Sliding.shrink(slider);
+          updateSidebarRoleOnToggle(sidebar.element, SidebarStateRoleAttr.Shrunk);
         } else {
           SlotContainer.hideAllSlots(slotContainer);
           SlotContainer.showSlot(slotContainer, name);
+          updateSidebarRoleOnToggle(sidebar.element, SidebarStateRoleAttr.Grown);
         }
       } else {
         // Should already be hidden if the animation has finished but if it has not we hide them
         SlotContainer.hideAllSlots(slotContainer);
         SlotContainer.showSlot(slotContainer, name);
         Sliding.grow(slider);
+        updateSidebarRoleOnToggle(sidebar.element, SidebarStateRoleAttr.Grown);
       }
     });
   });
@@ -168,7 +181,7 @@ const renderSidebar = (spec: SketchSpec): AlloySpec => ({
     tag: 'div',
     classes: [ 'tox-sidebar' ],
     attributes: {
-      role: 'complementary'
+      role: SidebarStateRoleAttr.Shrunk
     }
   },
   components: [
