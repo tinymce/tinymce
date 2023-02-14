@@ -107,30 +107,30 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
   });
 
   it('Tree', async () => {
-    const dir = getTreeItem('.tree-directory');
+    const dir = getTreeItem('.tox-tree--directory');
     const store = hook.store();
     store.clear();
     Assertions.assertStructure(
       'Checking directory structure',
       ApproxStructure.build((s, _str, arr) => s.element('div', {
-        classes: [ arr.has('tree-directory') ],
+        classes: [ arr.has('tox-tree--directory') ],
       })),
       dir.element
     );
 
     assertDirectoryExpandedState('Collapsed', false, dir);
-    Mouse.clickOn(dir.element, '.tox-trbtn.tree-directory-label');
-    assertDirectoryExpandedState('Expanded', true, getTreeItem('.tree-directory-children'));
+    Mouse.clickOn(dir.element, '.tox-trbtn.tox-tree--directory__label');
+    assertDirectoryExpandedState('Expanded', true, getTreeItem('.tox-tree--directory__children'));
 
-    assertDirectoryExpandedState('Collapsed', false, getTreeItem('.tree-directory .tree-directory .tree-directory-children'));
-    Mouse.clickOn(dir.element, '.tree-directory .tox-trbtn.tree-directory-label');
-    assertDirectoryExpandedState('Expanded', true, getTreeItem('.tree-directory .tree-directory .tree-directory-children'));
+    assertDirectoryExpandedState('Collapsed', false, getTreeItem('.tox-tree--directory .tox-tree--directory .tox-tree--directory__children'));
+    Mouse.clickOn(dir.element, '.tox-tree--directory .tox-trbtn.tox-tree--directory__label');
+    assertDirectoryExpandedState('Expanded', true, getTreeItem('.tox-tree--directory .tox-tree--directory .tox-tree--directory__children'));
 
-    Mouse.clickOn(getTreeItem('.tree').element, '>.tree-item-label');
+    Mouse.clickOn(getTreeItem('.tox-tree').element, '>.tox-tree--item__label');
     store.assertEq('File 5', [ '5' ]);
 
     store.clear();
-    Mouse.clickOn(getTreeItem('.tree').element, '.tree-item-label');
+    Mouse.clickOn(getTreeItem('.tox-tree').element, '.tox-tree--item__label');
     store.assertEq('File 1', [ '1' ]);
 
     store.clear();

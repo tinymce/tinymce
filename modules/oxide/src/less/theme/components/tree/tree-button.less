@@ -184,7 +184,7 @@
     white-space: nowrap;
   }
 
-  .tree-directory-label {
+  .tox-tree--directory__label {
     .tox-mbtn {
       margin-left: auto;
     }
@@ -193,26 +193,36 @@
       background-color: transparent;
     }
 
-    .chevron {
+    .tox-chevron {
       transition: transform .5s ease-in-out;
     }
 
-    &.active .chevron {
+    &.tox-tree--directory__label--active .tox-chevron {
       transform: rotate(90deg);
     }
   }
 
-  .tree-directory-children {
+  .tox-tree--item__label {
+    .tox-mbtn {
+      margin-left: auto;
+    }
+
+    &:hover:has(.tox-mbtn:hover) {
+      background-color: transparent;
+    }
+  }
+
+  .tox-tree--directory__children {
     max-height: 0;
     overflow: hidden;
     transition: max-height .5s ease-in-out;
   }
 
-  .tree-directory-children.tox-trbtn--expanded {
+  .tox-tree--directory__children.tox-trbtn--expanded {
     max-height: 200px;
   }
 
-  .tox-trbtn.tree-item-label {
+  .tox-trbtn.tox-tree--item__label {
     display: flex;
     justify-content: space-between;
   }

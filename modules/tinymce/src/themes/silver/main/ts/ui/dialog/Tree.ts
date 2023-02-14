@@ -14,7 +14,7 @@ type OnLeafAction = (id: string) => void;
 const renderLabel = (text: string ): SimpleSpec => ({
   dom: {
     tag: 'span',
-    classes: [ `tree-label` ]
+    classes: [ `tox-tree__label` ]
   },
   components: [
     GuiFactory.text(text)
@@ -29,7 +29,7 @@ const renderItemLabel = (item: Dialog.Leaf, level: number, onLeafAction: OnLeafA
   return AlloyButton.sketch({
     dom: {
       tag: 'span',
-      classes: [ `tree-item-label`, 'tox-trbtn' ],
+      classes: [ `tox-tree--item__label`, 'tox-trbtn' ],
       styles: {
         'padding-left': `${level * 8}px`,
         'font-weight': '400',
@@ -64,7 +64,7 @@ const renderDirectoryLabel = (directory: Dialog.Directory, level: number, backst
     {
       dom: {
         tag: 'div',
-        classes: [ 'chevron' ]
+        classes: [ 'tox-chevron' ]
       },
       components: [
         renderIconFromPack('chevron-right', backstage.shared.providers.icons),
@@ -87,7 +87,7 @@ const renderDirectoryLabel = (directory: Dialog.Directory, level: number, backst
 
     dom: {
       tag: 'div',
-      classes: [ `tree-directory-label`, 'tox-trbtn' ],
+      classes: [ `tox-tree--directory__label`, 'tox-trbtn' ],
       styles: {
         'padding-left': `${level * 8}px`,
         'font-weight': '700',
@@ -95,14 +95,14 @@ const renderDirectoryLabel = (directory: Dialog.Directory, level: number, backst
     },
     components,
     action: (button) => {
-      SelectorFind.sibling(button.element, '.tree-directory-children').each((childrenEle) => {
+      SelectorFind.sibling(button.element, '.tox-tree--directory__children').each((childrenEle) => {
         button.getSystem().getByDom(childrenEle).each((childrenComp) => Toggling.toggle(childrenComp));
       });
     },
     buttonBehaviours: Behaviour.derive([
       Toggling.config({
         toggleOnExecute: true,
-        toggleClass: 'active'
+        toggleClass: 'tox-tree--directory__label--active'
       }),
       Tabstopping.config({})
     ])
@@ -113,7 +113,7 @@ const renderDirectoryChildren = (children: Dialog.TreeItem[], level: number, onL
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tree-directory-children' ],
+      classes: [ 'tox-tree--directory__children' ],
       styles: {
         'padding-left': `${level * 8}px`
       }
@@ -136,7 +136,7 @@ const renderDirectory = (dir: Dialog.Directory, level: number, onLeafAction: OnL
   return ({
     dom: {
       tag: 'div',
-      classes: [ `tree-directory` ],
+      classes: [ `tox-tree--directory` ],
       styles: {
         'display': 'flex',
         'flex-direction': 'column',
@@ -158,7 +158,7 @@ const renderTree = (
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tree' ],
+      classes: [ 'tox-tree' ],
       styles: {
         'display': 'flex',
         'flex-direction': 'column'
