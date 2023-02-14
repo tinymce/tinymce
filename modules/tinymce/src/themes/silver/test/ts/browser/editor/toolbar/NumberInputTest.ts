@@ -298,4 +298,19 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
 
     editor.options.unset('font_size_input_default_unit');
   });
+
+  it('TINY-9598: pressing enter in the input field should take the focus back to the editor to allow user to digit with the new size', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p>\n<p>b</p>');
+    TinySelections.setCursor(editor, [ 1 ], 1);
+    TinyUiActions.clickOnToolbar(editor, '.tox-number-input input');
+
+    const input = TinyUiActions.clickOnToolbar<HTMLInputElement>(editor, '.tox-number-input input');
+    const root = SugarShadowDom.getRootNode(TinyDom.targetElement(editor));
+    FocusTools.setFocus(root, '.tox-number-input input');
+    UiControls.setValue(input, '20em');
+    assert.isFalse(editor.hasFocus(), 'before enter editor should not have focus');
+    TinyUiActions.keystroke(editor, Keys.enter());
+    assert.isTrue(editor.hasFocus(), 'after enter editor should have focus');
+  });
 });
