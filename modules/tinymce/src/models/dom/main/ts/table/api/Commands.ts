@@ -22,10 +22,10 @@ interface InsertTableArgs {
 }
 
 const getSelectionStartCellOrCaption = (editor: Editor): Optional<SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>> =>
-  TableSelection.getSelectionCellOrCaption(Utils.getSelectionStart(editor), Utils.getIsRoot(editor));
+  TableSelection.getSelectionCellOrCaption(Utils.getSelectionStart(editor), Utils.getIsRoot(editor)).filter(Utils.isInEditableContext);
 
 const getSelectionStartCell = (editor: Editor): Optional<SugarElement<HTMLTableCellElement>> =>
-  TableSelection.getSelectionCell(Utils.getSelectionStart(editor), Utils.getIsRoot(editor));
+  TableSelection.getSelectionCell(Utils.getSelectionStart(editor), Utils.getIsRoot(editor)).filter(Utils.isInEditableContext);
 
 const registerCommands = (editor: Editor, actions: TableActions): void => {
   const isRoot = Utils.getIsRoot(editor);
@@ -214,7 +214,7 @@ const registerCommands = (editor: Editor, actions: TableActions): void => {
     if (!Type.isObject(args)) {
       return;
     }
-    const cells = TableSelection.getCellsFromSelection(editor);
+    const cells = Arr.filter(TableSelection.getCellsFromSelection(editor), Utils.isInEditableContext);
     if (cells.length === 0) {
       return;
     }

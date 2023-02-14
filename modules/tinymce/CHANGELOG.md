@@ -8,18 +8,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - New `tree` component that can be used in dialog body panel. #TINY-9532
+- renderUI property in the `Theme` type can now return a `Promise<RenderResult>` instead of `RenderResult`. #TINY-9556
 - New `isEditable` API to `editor.selection` that returns true or false if the current selection is editable. #TINY-9462
 - New `isEditable` API to `editor.dom` that returns true or false if the specified node is editable. #TINY-9462
+- New `setText` and `setIcon` methods added to menu button and toolbar button apis. #TINY-9268
 - New `highlight_on_focus` option which enables highlighting the content area on focus. #TINY-9277
 - New `fontsizeinput` toolbar item which allows the user to set the size via input and also increase and decrease it with `+` and `-` buttons. #TINY-9429
+- Added `skipFocus` option to the `ToggleToolbarDrawer` command to preserve focus. #TINY-9337
+- Added `common/space/delBetweenExclamationMarks` to remove spaces between exclamation marks. #TINY-9398
+- New `font_size_input_default_unit` option allow to use of numbers without a unit in `fontsizeinput` and have them parsed with the default unit, if it is not defined the default is `pt` #TINY-9585
 
 ### Improved
 - Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
+- Pressing backspace in an empty line now preserves formatting in a previous empty line. #TINY-9454
 
 ### Changed
+- The `link` plugins context menu items will no longer appear for noneditable links. #TINY-9491
 - The formatting of `contenteditable="false"` elements are no longer cloned to new cells while creating new table rows. #TINY-9449
+- Changed the color of `@dialog-table-border-color`, and added right padding to the first cell of dialog table. #TINY-9380
 
 ### Fixed
+- Sometimes the editor would finish initializing before the silver theme would have finished loading. #TINY-9556
 - The searchreplace modal would close incorrectly when clicking outside of the alert that pops up when no match is found. #TINY-9443
 - Color picker on toolbar would not update when changing forecolor or backcolor from menu. #TINY-9439
 - The `onSetup` api function would not run when defining custom group toolbar button. #TINY-9496
@@ -36,6 +45,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed a workaround for ensuring stylesheets are loaded in an outdated version of webkit. #TINY-9433
 - Lists in a noneditable root were incorrectly editable using list API commands, toolbar buttons and menu items. #TINY-9458
 - Color picker dialog would not update the preview color if the hex input value was prefixed with `#` symbol. #TINY-9457
+- Table cell selection was possible even if the element was in a noneditable root element. #TINY-9459
+- Table commands were modifying tables in a noneditable root element. #TINY-9459
+- Fake carets were rendered for noneditable elements and tables in a noneditable root element. #TINY-9459
+- Textareas with scrollbars in dialogs would not render rounded corners correctly on some browsers. #TINY-9331
+- It was possible to open links inside the editor if the editor root was noneditable. #TINY-9470
+- Inline boundary was rendered for noneditable inline boundary elements. #TINY-9471
+- Clicking on a disabled split button will no longer call the `onAction` callback. #TINY-9504
+- The "Edit Link" dialog incorrectly retrieved the URL value when opened immediately after the link insertion. #TINY-7993
+- Inserting newlines inside an editable element inside a noneditable root would sometimes try to split the editable element. #TINY-9461
+- Creating a list in a table cell when the caret is in front of an anchor element would not properly include the anchor in the list. #TINY-6853
 
 ## 6.3.1 - 2022-12-06
 
@@ -54,7 +73,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `color_default_foreground` and `color_default_background` options to set the initial default color for the `forecolor` and `backcolor` toolbar buttons and menu items. #TINY-9183
 - New `getTransparentElements` function added to `tinymce.html.Schema` to return a map object of transparent HTML elements. #TINY-9172
 - Added `ToggleToolbarDrawer` event to subscribe to toolbar’s opening and closing. #TINY-9271
-- Added `skipFocus` option to the `ToggleToolbarDrawer` command to preserve focus. #TINY-9337
 
 ### Changed
 - Transparent elements, like anchors, are now allowed in the root of the editor body if they contain blocks. #TINY-9172
@@ -67,7 +85,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Color picker dialog now starts on the appropriate color for the cursor position. #TINY-9213
 
 ### Fixed
-- Creating a list in a table cell when the caret is in front of an anchor element would not properly include the anchor in the list. #TINY-6853
 - Parsing media content would cause a memory leak, which for example occurred when using the `getContent` API. #TINY-9186
 - Dragging a noneditable element toward the bottom edge would cause the page to scroll up. #TINY-9025
 - Range expanding capabilities would behave inconsistently depending on where the cursor was placed. #TINY-9029

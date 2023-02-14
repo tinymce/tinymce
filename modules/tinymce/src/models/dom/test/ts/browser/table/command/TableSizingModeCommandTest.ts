@@ -1,10 +1,11 @@
-import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks } from '@ephox/wrap-mcagar';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 
 import { tableSizingModeScenarioTest } from '../../../module/table/TableSizingModeCommandUtil';
+import * as TableTestUtils from '../../../module/table/TableTestUtils';
 
 describe('browser.tinymce.models.dom.table.command.TableSizingModeCommandTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -14,7 +15,7 @@ describe('browser.tinymce.models.dom.table.command.TableSizingModeCommandTest', 
     content_style: 'body { margin: 10px; max-width: 800px }',
     base_url: '/project/tinymce/js/tinymce',
     table_use_colgroups: false
-  }, [ Plugin ]);
+  }, [ Plugin ], true);
 
   it('TINY-6000: Percent (relative) to pixel (fixed) sizing', () => tableSizingModeScenarioTest(hook.editor(), false, {
     mode: 'relative',
@@ -95,4 +96,27 @@ describe('browser.tinymce.models.dom.table.command.TableSizingModeCommandTest', 
       [ 41, 41, 41 ]
     ]
   }));
+
+  context('noneditable', () => {
+    it('TINY-9459: Should not apply mceTableSizingMode command on table inside a noneditable div', () => {
+      const editor = hook.editor();
+      const initalContent = '<div contenteditable="false"><table><tbody><tr><td>cell</td></tr></tbody></table></div>';
+      editor.setContent(initalContent);
+      TinySelections.setCursor(editor, [ 1, 0, 0, 0, 0, 0 ], 0); // Index off by one due to cef fake caret
+      editor.execCommand('mceTableSizingMode', false, 'fixed');
+      TinyAssertions.assertContent(editor, initalContent);
+    });
+
+    it('TINY-9459: Should not apply mceTableSizingMode command on table inside a noneditable root', () => {
+      TableTestUtils.withNoneditableRootEditor(hook.editor(), (editor) => {
+        const initalContent = '<table><tbody><tr><td>cell</td></tr></tbody></table>';
+        editor.getBody().contentEditable = 'false';
+        editor.setContent(initalContent);
+        TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+        editor.execCommand('mceTableSizingMode', false, 'fixed');
+        TinyAssertions.assertContent(editor, initalContent);
+        editor.getBody().contentEditable = 'true';
+      });
+    });
+  });
 });

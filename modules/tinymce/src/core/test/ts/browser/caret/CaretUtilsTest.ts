@@ -20,6 +20,7 @@ describe('browser.tinymce.core.CaretUtilTest', () => {
   const getRoot = viewBlock.get;
 
   const setupHtml = (html: string) => {
+    viewBlock.get().contentEditable = 'true';
     viewBlock.update(html);
 
     // IE messes zwsp up on innerHTML so we need to first set markers then replace then using dom operations

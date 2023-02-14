@@ -7,7 +7,7 @@
 
 import { Arr, Optional, Strings } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
-import { Attribute, Compare, SugarElement } from '@ephox/sugar';
+import { Attribute, Compare, ContentEditable, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -47,6 +47,9 @@ const getRawWidth = (editor: Editor, elm: HTMLElement): Optional<string> => {
 const isPercentage = (value: string): boolean => /^(\d+(\.\d+)?)%$/.test(value);
 const isPixel = (value: string): boolean => /^(\d+(\.\d+)?)px$/.test(value);
 
+const isInEditableContext = (cell: SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>): boolean =>
+  PredicateFind.closest(cell, SugarNode.isTag('table')).exists(ContentEditable.isEditable);
+
 export {
   getBody,
   getIsRoot,
@@ -57,5 +60,6 @@ export {
   isPixel,
   getPixelWidth,
   getPixelHeight,
-  getRawWidth
+  getRawWidth,
+  isInEditableContext
 };

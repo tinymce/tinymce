@@ -80,14 +80,14 @@ const attachUiMotherships = (uiRoot: SugarElement<HTMLElement | ShadowRoot>, uiR
   Attachment.attachSystem(uiRoot, uiRefs.dialogUi.mothership);
 };
 
-const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
+const render = async (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): Promise<ModeRenderInfo> => {
   const { mainUi } = uiRefs;
   const floatContainer = Singleton.value<AlloyComponent>();
   const targetElm = SugarElement.fromDom(args.targetNode);
   const ui = InlineHeader(editor, targetElm, uiRefs, backstage, floatContainer);
   const toolbarPersist = isToolbarPersist(editor);
 
-  loadInlineSkin(editor);
+  await loadInlineSkin(editor);
 
   const render = () => {
     if (floatContainer.isSet()) {

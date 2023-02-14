@@ -57,7 +57,14 @@ const setupContextMenu = (editor: Editor): void => {
   const inLink = 'link unlink openlink';
   const noLink = 'link';
   editor.ui.registry.addContextMenu('link', {
-    update: (element) => Utils.hasLinks(editor.dom.getParents(element, 'a') as HTMLAnchorElement[]) ? inLink : noLink
+    update: (element) => {
+      const isEditable = editor.dom.isEditable(element);
+      if (!isEditable) {
+        return '';
+      }
+
+      return Utils.hasLinks(editor.dom.getParents(element, 'a') as HTMLAnchorElement[]) ? inLink : noLink;
+    }
   });
 };
 

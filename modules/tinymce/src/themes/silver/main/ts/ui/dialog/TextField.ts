@@ -99,6 +99,15 @@ const renderTextField = (spec: TextField, providersBackstage: UiFactoryBackstage
     factory: AlloyInput
   });
 
+  // TINY-9331: This wrapper is needed to avoid border-radius rendering issues when the textarea has a scrollbar
+  const pTextField = spec.multiline ? {
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-textarea-wrap' ]
+    },
+    components: [ pField ]
+  } : pField;
+
   const extraClasses = spec.flex ? [ 'tox-form__group--stretched' ] : [];
   const extraClasses2 = extraClasses.concat(spec.maximized ? [ 'tox-form-group--maximize' ] : []);
 
@@ -115,7 +124,7 @@ const renderTextField = (spec: TextField, providersBackstage: UiFactoryBackstage
     ReadOnly.receivingConfig()
   ];
 
-  return renderFormFieldWith(pLabel, pField, extraClasses2, extraBehaviours);
+  return renderFormFieldWith(pLabel, pTextField, extraClasses2, extraBehaviours);
 };
 
 const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProviders, initialData: Optional<string>): SketchSpec => renderTextField({

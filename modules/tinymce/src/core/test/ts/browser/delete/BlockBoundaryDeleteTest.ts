@@ -441,4 +441,54 @@ describe('browser.tinymce.core.delete.BlockBoundaryDeleteTest', () => {
       TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 1);
     });
   });
+
+  it('TINY-9454: Should preserve formatting when merging with backspace from an empty block to an empty block', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      `<p>1st</p>` +
+      `<p><span data-mce-style="font-family: symbol;" style="font-family: symbol;"><em><strong><br data-mce-bogus="1"></strong><i></i></em></span><strong><em></em></strong></p>` +
+      `<p><span data-mce-style="font-family: arial;" style="font-family: arial;"><strong><em><br data-mce-bogus="1"></em></strong></span></p>` +
+      `<p>4th</p>`,
+      { format: 'raw' }
+    );
+
+    TinySelections.setCursor(editor, [ 2, 0, 0, 0 ], 0);
+    doBackspace(editor);
+
+    TinyAssertions.assertContentStructure(editor,
+      ApproxStructure.build((s, str, _arr) => s.element('body', {
+        children: [
+          s.element('p', { children: [ s.text(str.is('1st')) ] }),
+          s.element('p', {
+            children: [
+              s.element('span', {
+                attrs: {
+                  'style': str.is('font-family: symbol;'),
+                  'data-mce-style': str.is('font-family: symbol;'),
+                },
+                children: [
+                  s.element('em', {
+                    children: [
+                      s.element('strong', { })
+                    ]
+                  }),
+                ],
+              }),
+            ]
+          }),
+          s.element('p', { children: [ s.text(str.is('4th')) ] }),
+        ]
+      }))
+    );
+
+    TinyAssertions.assertContent(
+      editor,
+      `<p>1st</p>` +
+      `<p><span data-mce-style="font-family: symbol;" style="font-family: symbol;"><em><strong><br data-mce-bogus="1"></strong></em></span></p>` +
+      `<p>4th</p>`,
+      { format: 'raw' }
+    );
+
+    TinyAssertions.assertCursor(editor, [ 1, 0, 0, 0 ], 0);
+  });
 });
