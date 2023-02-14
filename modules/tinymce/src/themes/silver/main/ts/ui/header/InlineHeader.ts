@@ -24,6 +24,8 @@ export interface InlineHeader {
 
 const { ToolbarLocation, ToolbarMode } = Options;
 
+const scanIfWithinDistance = 40;
+
 export const InlineHeader = (
   editor: Editor,
   targetElm: SugarElement<HTMLElement>,
@@ -133,7 +135,7 @@ export const InlineHeader = (
       };
 
       const widthProperties = optToolbarWidth.map(
-        (toolbarWidth: number) => {
+        (toolbarWidth: number): {} | { width: string } => {
           const scroll = Scroll.get();
 
           /*
@@ -156,6 +158,10 @@ export const InlineHeader = (
             ),
             minimumToolbarWidth
           );
+
+          if (availableWidth > width) { // If there's already enough space, don't add a width for performance reasons.
+            return {};
+          }
 
           return {
             width: width + 'px'
@@ -182,11 +188,21 @@ export const InlineHeader = (
     Natural width of the container needs to be calculated first.
     */
     if (!useFixedToolbarContainer) {
-      Css.set(mainUi.outerContainer.element, 'position', 'absolute');
-      Css.set(mainUi.outerContainer.element, 'left', '0px');
-      Css.remove(mainUi.outerContainer.element, 'width');
-      const w = Width.getOuter(mainUi.outerContainer.element);
-      return Optional.some(w);
+      const toolbarCurrentRightsidePosition = SugarLocation.absolute(mainUi.outerContainer.element).left + Width.getOuter(mainUi.outerContainer.element);
+
+      /*
+      Check the width if we are within X number of pixels to the edge ( or above ). Also check if we have the width-value set.
+      This helps handling the issue where it goes from having a width set ( because it's too wide ) to going so far from the edge it no longer triggers the problem. Common when the width is changed by test.
+      */
+      if (toolbarCurrentRightsidePosition >= window.innerWidth - scanIfWithinDistance || Css.getRaw(mainUi.outerContainer.element, 'width').isSome()) {
+        Css.set(mainUi.outerContainer.element, 'position', 'absolute');
+        Css.set(mainUi.outerContainer.element, 'left', '0px');
+        Css.remove(mainUi.outerContainer.element, 'width');
+        const w = Width.getOuter(mainUi.outerContainer.element);
+        return Optional.some(w);
+      } else {
+        return Optional.none();
+      }
     } else {
       return Optional.none();
     }
@@ -210,7 +226,7 @@ export const InlineHeader = (
     }
 
     // This width can be used for calculating the "width" when resolving issues with flex-wrapping being triggered at the window width, despite scroll space being available to the right.
-    const optToolbarWidth: Optional<number> = restoreAndGetCompleteOuterContainerWidth();
+    const optToolbarWidth: Optional<number> = useFixedToolbarContainer ? Optional.none() : restoreAndGetCompleteOuterContainerWidth();
 
     /*
     Refresh split toolbar. Before calling refresh, we need to make sure that we have the full width (through restoreAndGet.. above), otherwise too much will be put in the overflow drawer.

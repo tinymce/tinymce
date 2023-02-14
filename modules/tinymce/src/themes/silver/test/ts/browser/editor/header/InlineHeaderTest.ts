@@ -1,8 +1,8 @@
 import { Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
+import { Optional, Optionals } from '@ephox/katamari';
 import { Css, Insert, Remove, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -27,14 +27,14 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
     };
   });
 
-  const pRunToolbarWidthTest = async (remainingWidth: number, expectedWidth: string) => {
+  const pRunToolbarWidthTest = async (remainingWidth: number, expectedWidth: Optional<string>) => {
     const editor = setupEditor(remainingWidth);
 
     editor.setContent('<p>Content</p>');
     editor.focus();
     editor.fire('ScrollWindow');
 
-    await pAssertHeaderWidth(expectedWidth);
+    await pAssertHeaderWidth(expectedWidth, Optional.some('400px'));
   };
 
   const setupEditor = (remainingWidth: number) => {
@@ -46,26 +46,33 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
     return editor;
   };
 
-  const pAssertHeaderWidth = (expected: string) =>
+  const pAssertHeaderWidth = (expectedWidth: Optional<string>, expectedMaxWidth: Optional<string>) =>
     Waiter.pTryUntil('Could not verify width', () => {
       const header = SelectorFind.descendant(SugarBody.body(), '.tox-editor-header').getOrDie();
-      const width = Css.get(header, 'width');
-      assert.equal(width, expected, 'Width should be equal');
+      const headerWrapper = SelectorFind.descendant(SugarBody.body(), '.tox-tinymce--toolbar-sticky-off').getOrDie();
+      const width = Css.getRaw(headerWrapper, 'width');
+      const maxWidth = Css.getRaw(header, 'max-width');
+      if (!Optionals.equals(maxWidth, expectedMaxWidth) ) {
+        throw new Error(`maxWidth is ${maxWidth.isSome()}, ${maxWidth.getOrNull()} and expectedMaxWidth is ${expectedMaxWidth.isSome()}, ${expectedMaxWidth.getOrNull()}`);
+      }
+      if (!Optionals.equals(width, expectedWidth)) {
+        throw new Error(`Width is ${width.isSome()}, ${width.getOrNull()} and expectedWidth is ${expectedWidth.isSome()}, ${expectedWidth.getOrNull()}`);
+      }
     });
 
   it('TINY-8977: If the editor fits with a wide margin it should not set a width', () =>
-    pRunToolbarWidthTest(500, '400px')
+    pRunToolbarWidthTest(500, Optional.none())
   );
 
   it('TINY-8977: If the editor does not fit within the view', () =>
-    pRunToolbarWidthTest(200, '200px')
+    pRunToolbarWidthTest(200, Optional.some('200px'))
   );
 
   it('TINY-8977: If the visible editor is smaller than the minimum', () =>
-    pRunToolbarWidthTest(50, '150px')
+    pRunToolbarWidthTest(50, Optional.some('150px'))
   );
 
   it('TINY-8977: If the editor is not visible at all', () =>
-    pRunToolbarWidthTest(-50, '150px')
+    pRunToolbarWidthTest(-50, Optional.some('150px'))
   );
 });
