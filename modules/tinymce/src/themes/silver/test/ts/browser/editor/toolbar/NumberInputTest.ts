@@ -299,7 +299,7 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     editor.options.unset('font_size_input_default_unit');
   });
 
-  it('TINY-9598: pressing enter in the input field should take the focus back to the editor to allow user to digit with the new size', async () => {
+  it('TINY-9598: pressing enter in the input field should take the focus back to the editor to allow user to digit with the new size', () => {
     const editor = hook.editor();
     editor.setContent('<p>a</p>\n<p>b</p>');
     TinySelections.setCursor(editor, [ 1 ], 1);
