@@ -11,6 +11,9 @@
     display: flex;
     flex: 1;
 
+    // This is needed to clip the scrollbars by the border-radius see #TINY-9331
+    overflow: hidden;
+
     &:focus-within {
       &:extend(.tox .tox-textfield:focus);
     }
