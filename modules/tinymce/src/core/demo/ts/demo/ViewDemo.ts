@@ -18,7 +18,6 @@ export default (): void => {
             type: 'group',
             buttons: [
               {
-                name: 'togglableIcon',
                 type: 'togglableIconButton',
                 tooltip: 'togglableIcon',
                 icon: 'info',
@@ -29,7 +28,6 @@ export default (): void => {
                 }
               },
               {
-                name: 'iconAndText',
                 type: 'togglableIconButton',
                 text: 'iconAndText',
                 tooltip: 'iconAndText',
@@ -43,7 +41,6 @@ export default (): void => {
             ]
           },
           {
-            name: 'togglableIcon2',
             type: 'togglableIconButton',
             tooltip: 'togglableIcon2',
             icon: 'info',
@@ -57,7 +54,6 @@ export default (): void => {
             type: 'group',
             buttons: [
               {
-                name: 'plus',
                 tooltip: 'Plus',
                 type: 'togglableIconButton',
                 icon: 'plus',
@@ -67,7 +63,6 @@ export default (): void => {
                 }
               },
               {
-                name: 'minus',
                 tooltip: 'Minus',
                 type: 'togglableIconButton',
                 icon: 'minus',

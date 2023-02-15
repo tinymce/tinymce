@@ -23,7 +23,6 @@ export interface ViewNormalButtonSpec extends BaseButtonSpec {
 
 export interface ViewTogglableIconButtonSpec extends Omit<BaseButtonSpec, 'text'> {
   text?: string;
-  name: string;
   type: 'togglableIconButton';
   tooltip: string;
   icon: string;
@@ -51,7 +50,6 @@ export interface ViewNormalButton extends BaseButton {
 
 export interface ViewTogglableIconButton extends Omit<BaseButton, 'text' | 'tooltip'> {
   text: Optional<string>;
-  name: string;
   type: 'togglableIconButton';
   icon: string;
   tooltip: string;
@@ -74,7 +72,6 @@ const normalButtonFields = [
 ];
 
 const togglableIconButtonFields = [
-  ComponentSchema.name,
   FieldSchema.requiredStringEnum('type', [ 'togglableIconButton' ]),
   ComponentSchema.optionalText,
   ComponentSchema.icon,

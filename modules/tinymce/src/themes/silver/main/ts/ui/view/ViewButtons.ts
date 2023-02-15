@@ -39,10 +39,11 @@ export const renderTogglableIconButton = (spec: View.ViewTogglableIconButton, pr
 
   const buttonSpec: IconButtonWrapper = {
     ...spec,
+    name: spec.text.getOr(spec.icon),
     primary: spec.buttonType === 'primary',
     buttonType: Optional.from(spec.buttonType),
     tooltip: Optional.from(spec.tooltip),
-    icon: Optional.from(spec.name),
+    icon: Optional.from(spec.icon),
     enabled: true,
     borderless: spec.borderless
   };
