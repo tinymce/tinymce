@@ -1,6 +1,5 @@
 import { Keys, Waiter } from '@ephox/agar';
 import { after, before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Dialog } from '@ephox/bridge';
 import { Attribute, Class, Focus, Insert, Remove, SelectorFind, SugarElement } from '@ephox/sugar';
 import { TinyContentActions, TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -31,25 +30,6 @@ describe('browser.tinymce.core.focus.HighlightOnFocus', () => {
       toolbar: 'forecolor',
       highlight_on_focus: true
     }, []);
-
-    const dummyDialog: Dialog.DialogSpec<{}> = {
-      title: 'Dummy dialog',
-      body: {
-        type: 'panel',
-        items: [
-          {
-            type: 'htmlpanel',
-            html: 'Lorem ipsum'
-          }
-        ]
-      },
-      buttons: [
-        {
-          type: 'submit',
-          text: 'Ok'
-        }
-      ]
-    };
 
     before(() => {
       const fakeButton = SugarElement.fromTag('button');
@@ -102,7 +82,7 @@ describe('browser.tinymce.core.focus.HighlightOnFocus', () => {
     it('TINY-9277: Content area should be highlighted on focus and removed when shifted to inline toolbar dialog', async () => {
       const editor = hook.editor();
       assertHighlightOnFocus(editor);
-      DialogUtils.open(editor, dummyDialog, { inline: 'toolbar' });
+      DialogUtils.open(editor, { inline: 'toolbar' });
       await TinyUiActions.pWaitForDialog(editor);
       await pAssertIsNotHighlighted(editor);
       TinyUiActions.closeDialog(editor);
@@ -112,7 +92,7 @@ describe('browser.tinymce.core.focus.HighlightOnFocus', () => {
     it('TINY-9277: Content area should be highlighted on focus and removed when shifted to inline cursor dialog', async () => {
       const editor = hook.editor();
       assertHighlightOnFocus(editor);
-      DialogUtils.open(editor, dummyDialog, { inline: 'cursor' });
+      DialogUtils.open(editor, { inline: 'cursor' });
       await TinyUiActions.pWaitForDialog(editor);
       await pAssertIsNotHighlighted(editor);
       TinyUiActions.closeDialog(editor);
@@ -122,7 +102,7 @@ describe('browser.tinymce.core.focus.HighlightOnFocus', () => {
     it('TINY-9277: Content area should be highlighted on focus and removed when shifted to dialog', async () => {
       const editor = hook.editor();
       assertHighlightOnFocus(editor);
-      DialogUtils.open(editor, dummyDialog, { inline: 'cursor' });
+      DialogUtils.open(editor);
       await TinyUiActions.pWaitForDialog(editor);
       await pAssertIsNotHighlighted(editor);
       TinyUiActions.closeDialog(editor);
