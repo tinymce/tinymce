@@ -114,13 +114,7 @@ export const renderButtonSpec = (
   const translatedText = providersBackstage.translate(spec.text);
 
   const icon = spec.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons));
-  const translatedTextComponed = GuiFactory.text(translatedText);
-  const components = !spec.showIconAndText
-    ? [ icon.getOrThunk(Fun.constant(translatedTextComponed)) ]
-    : icon.fold(
-      Fun.constant([ translatedTextComponed ]),
-      (iconComp) => [ iconComp, translatedTextComponed ]
-    );
+  const components = [ icon.getOrThunk(() => GuiFactory.text(translatedText)) ];
 
   // The old default is based on the now-deprecated 'primary' property. `buttonType` takes precedence now.
   const buttonType = spec.buttonType.getOr(!spec.primary && !spec.borderless ? 'secondary' : 'primary');
@@ -129,9 +123,8 @@ export const renderButtonSpec = (
 
   const classes = [
     ...baseClasses,
-    ...(icon.isSome() && !spec.showIconAndText) ? [ 'tox-button--icon' ] : [],
+    ...icon.isSome() ? [ 'tox-button--icon' ] : [],
     ...spec.borderless ? [ 'tox-button--naked' ] : [],
-    ...spec.showIconAndText ? [ 'tox-button--icon-and-text' ] : [],
     ...extraClasses
   ];
 
@@ -179,16 +172,14 @@ const isNormalFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): s
 const isTogglableIconButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Dialog.DialogFooterTogglableIconButton => buttonType === 'togglableIconButton';
 
 export const renderTogglableIconButton = (spec: Dialog.DialogFooterTogglableIconButtonSpec, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
-  const optMemIcon = Optional.some((spec.icon))
-    .map((iconName) => renderReplaceableIconFromPack(iconName, providers.icons))
-    .map(Memento.record);
+  const memIcon = Memento.record(renderReplaceableIconFromPack(spec.icon, providers.icons));
 
   const action = (comp: AlloyComponent) => {
     AlloyTriggers.emitWith(comp, formActionEvent, {
       name: spec.name,
       value: {
         setIcon: (newIcon: string) => {
-          optMemIcon.bind((mem) => mem.getOpt(comp)).each((displayIcon) => {
+          memIcon.getOpt(comp).each((displayIcon) => {
             Replacing.set(displayIcon, [
               renderReplaceableIconFromPack(newIcon, providers.icons)
             ]);
@@ -215,13 +206,27 @@ export const renderTogglableIconButton = (spec: Dialog.DialogFooterTogglableIcon
   })).getOr({});
 
   const buttonTypeClasses = calculateClassesFromButtonType(spec.buttonType ?? 'secondary');
+  const showIconAndText: boolean = !!spec.icon && !!spec.text;
+
   const dom = {
     tag: 'button',
-    classes: buttonTypeClasses.concat([ 'tox-button--icon' ]),
+    classes: [
+      ...buttonTypeClasses.concat([ 'tox-button--icon' ]),
+      ...(showIconAndText ? [ 'tox-button--icon-and-text' ] : [])
+    ],
     attributes: tooltipAttributes
   };
   const extraBehaviours: Behaviours = [];
-  const components = optMemIcon.map((memIcon) => componentRenderPipeline([ Optional.some(memIcon.asSpec()) ])).getOr([]);
+
+  const translatedText = providers.translate(spec.text);
+  const translatedTextComponed = GuiFactory.text(translatedText);
+
+  const iconComp = componentRenderPipeline([ Optional.some(memIcon.asSpec()) ]);
+  const components = [
+    ...iconComp,
+    ...(showIconAndText ? [ translatedTextComponed ] : [])
+  ];
+
   const iconButtonSpec = renderCommonSpec(buttonSpec, Optional.some(action), extraBehaviours, dom, components, providers);
   return AlloyButton.sketch(iconButtonSpec);
 };
@@ -258,6 +263,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
     const buttonSpec: Dialog.DialogFooterTogglableIconButtonSpec = {
       ...spec,
       tooltip: spec.tooltip,
+      text: spec.text.getOrUndefined(),
       buttonType: spec.buttonType.getOrUndefined()
     };
     return renderTogglableIconButton(buttonSpec, backstage.shared.providers);
