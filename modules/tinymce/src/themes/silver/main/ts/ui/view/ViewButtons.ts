@@ -11,17 +11,19 @@ import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 
 type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];
 
-export const renderTogglableIconButton = (spec: View.ViewTogglableIconButton, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
-  const memIcon = Memento.record(renderReplaceableIconFromPack(spec.icon, providers.icons));
+export const renderTogglableButton = (spec: View.ViewTogglableButton, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
+  const optMemIcon = spec.icon
+    .map((memIcon) => renderReplaceableIconFromPack(memIcon, providers.icons))
+    .map(Memento.record);
 
   const action = (comp: AlloyComponent) => {
     spec.onAction({
       setIcon: (newIcon) => {
-        memIcon.getOpt(comp).each((displayIcon) => {
+        optMemIcon.map((memIcon) => memIcon.getOpt(comp).each((displayIcon) => {
           Replacing.set(displayIcon, [
             renderReplaceableIconFromPack(newIcon, providers.icons)
           ]);
-        });
+        }));
       },
       setActive: (state) => {
         const elm = comp.element;
@@ -39,11 +41,11 @@ export const renderTogglableIconButton = (spec: View.ViewTogglableIconButton, pr
 
   const buttonSpec: IconButtonWrapper = {
     ...spec,
-    name: spec.text.getOr(spec.icon),
+    name: spec.text.getOr(spec.icon.getOr('')),
     primary: spec.buttonType === 'primary',
     buttonType: Optional.from(spec.buttonType),
-    tooltip: Optional.from(spec.tooltip),
-    icon: Optional.from(spec.icon),
+    tooltip: spec.tooltip,
+    icon: spec.icon,
     enabled: true,
     borderless: spec.borderless
   };
@@ -57,8 +59,8 @@ export const renderTogglableIconButton = (spec: View.ViewTogglableIconButton, pr
   const optTranslatedText = spec.text.map(providers.translate);
   const optTranslatedTextComponed = optTranslatedText.map(GuiFactory.text);
 
-  const iconSpec = memIcon.asSpec();
-  const components = componentRenderPipeline([ Optional.some(iconSpec), optTranslatedTextComponed ]);
+  const optIconSpec = optMemIcon.map((memIcon) => memIcon.asSpec());
+  const components = componentRenderPipeline([ optIconSpec, optTranslatedTextComponed ]);
 
   const hasIconAndText = optTranslatedTextComponed.isSome();
 

@@ -31,14 +31,15 @@ export interface DialogFooterMenuButtonSpec extends BaseDialogFooterButtonSpec {
   items: DialogFooterMenuButtonItemSpec[];
 }
 
-export interface DialogFooterTogglableIconButtonSpec extends BaseDialogFooterButtonSpec {
-  type: 'togglableIconButton';
-  tooltip: string;
-  icon: string;
+export interface DialogFooterTogglableButtonSpec extends BaseDialogFooterButtonSpec {
+  type: 'togglableButton';
+  tooltip?: string;
+  icon?: string;
   text?: string;
+  active: boolean; // default: false
 }
 
-export type DialogFooterButtonSpec = DialogFooterNormalButtonSpec | DialogFooterMenuButtonSpec | DialogFooterTogglableIconButtonSpec;
+export type DialogFooterButtonSpec = DialogFooterNormalButtonSpec | DialogFooterMenuButtonSpec | DialogFooterTogglableButtonSpec;
 
 interface BaseDialogFooterButton {
   name: string;
@@ -63,14 +64,15 @@ export interface DialogFooterMenuButton extends BaseDialogFooterButton {
   items: DialogFooterToggleMenuItem[];
 }
 
-export interface DialogFooterTogglableIconButton extends Omit<BaseDialogFooterButton, 'icon'> {
-  type: 'togglableIconButton';
+export interface DialogFooterTogglableButton extends Omit<BaseDialogFooterButton, 'icon'> {
+  type: 'togglableButton';
   tooltip: string;
   icon: string;
   text: Optional<string>;
+  active: boolean;
 }
 
-export type DialogFooterButton = DialogFooterNormalButton | DialogFooterMenuButton | DialogFooterTogglableIconButton;
+export type DialogFooterButton = DialogFooterNormalButton | DialogFooterMenuButton | DialogFooterTogglableButton;
 
 const baseFooterButtonFields = [
   ComponentSchema.generatedName('button'),
@@ -102,9 +104,9 @@ const menuFooterButtonFields = [
   ...baseFooterButtonFields
 ];
 
-const togglableIconButtonSpecFields = [
+const togglableButtonSpecFields = [
   ...baseFooterButtonFields,
-  FieldSchema.requiredStringEnum('type', [ 'togglableIconButton' ]),
+  FieldSchema.requiredStringEnum('type', [ 'togglableButton' ]),
   FieldSchema.requiredString('tooltip'),
   ComponentSchema.icon,
   ComponentSchema.optionalText
@@ -117,7 +119,7 @@ export const dialogFooterButtonSchema = StructureSchema.choose(
     cancel: normalFooterButtonFields,
     custom: normalFooterButtonFields,
     menu: menuFooterButtonFields,
-    togglableIconButton: togglableIconButtonSpecFields
+    togglableButton: togglableButtonSpecFields
   }
 );
 

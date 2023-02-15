@@ -15,7 +15,7 @@ import {
 } from '../components/dialog/Dialog';
 import {
   createDialogFooterButton, DialogFooterButton, DialogFooterButtonSpec, DialogFooterMenuButton, DialogFooterMenuButtonItemSpec,
-  DialogFooterMenuButtonSpec, DialogFooterNormalButton, DialogFooterNormalButtonSpec, DialogFooterTogglableIconButton, DialogFooterTogglableIconButtonSpec, DialogFooterToggleMenuItem
+  DialogFooterMenuButtonSpec, DialogFooterNormalButton, DialogFooterNormalButtonSpec, DialogFooterTogglableButton, DialogFooterTogglableButtonSpec, DialogFooterToggleMenuItem
 } from '../components/dialog/DialogFooterButton';
 import { createDropZone, DropZone, DropZoneSpec } from '../components/dialog/Dropzone';
 import { createGridFields, Grid, GridSpec } from '../components/dialog/Grid';
@@ -105,8 +105,8 @@ export {
   DialogFooterNormalButtonSpec,
   DialogFooterMenuButton,
   DialogFooterMenuButtonSpec,
-  DialogFooterTogglableIconButton,
-  DialogFooterTogglableIconButtonSpec,
+  DialogFooterTogglableButton,
+  DialogFooterTogglableButtonSpec,
   DialogFooterToggleMenuItem,
   DialogFooterMenuButtonItemSpec,
   createDialogFooterButton,

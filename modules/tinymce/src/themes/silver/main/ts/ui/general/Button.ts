@@ -20,7 +20,7 @@ type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];
 type AlloyButtonSpec = Parameters<typeof AlloyButton['sketch']>[0];
 
 type ButtonSpec = Omit<Dialog.Button, 'type'>;
-type FooterButtonSpec = Omit<Dialog.DialogFooterNormalButton, 'type'> | Omit<Dialog.DialogFooterMenuButton, 'type'> | Omit<Dialog.DialogFooterTogglableIconButton, 'type'>;
+type FooterButtonSpec = Omit<Dialog.DialogFooterNormalButton, 'type'> | Omit<Dialog.DialogFooterMenuButton, 'type'> | Omit<Dialog.DialogFooterTogglableButton, 'type'>;
 
 export interface IconButtonWrapper extends Omit<ButtonSpec, 'text'> {
   readonly tooltip: Optional<string>;
@@ -169,21 +169,23 @@ const isMenuFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): spe
 
 const isNormalFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Dialog.DialogFooterNormalButton => buttonType === 'custom' || buttonType === 'cancel' || buttonType === 'submit';
 
-const isTogglableIconButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Dialog.DialogFooterTogglableIconButton => buttonType === 'togglableIconButton';
+const isTogglableButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Dialog.DialogFooterTogglableButton => buttonType === 'togglableButton';
 
-export const renderTogglableIconButton = (spec: Dialog.DialogFooterTogglableIconButtonSpec, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
-  const memIcon = Memento.record(renderReplaceableIconFromPack(spec.icon, providers.icons));
+export const renderTogglableButton = (spec: Dialog.DialogFooterTogglableButtonSpec, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
+  const optMemIcon = Optional.from(spec.icon)
+    .map((memIcon) => renderReplaceableIconFromPack(memIcon, providers.icons))
+    .map(Memento.record);
 
   const action = (comp: AlloyComponent) => {
     AlloyTriggers.emitWith(comp, formActionEvent, {
       name: spec.name,
       value: {
         setIcon: (newIcon: string) => {
-          memIcon.getOpt(comp).each((displayIcon) => {
+          optMemIcon.map((memIcon) => memIcon.getOpt(comp).each((displayIcon) => {
             Replacing.set(displayIcon, [
               renderReplaceableIconFromPack(newIcon, providers.icons)
             ]);
-          });
+          }));
         }
       }
     });
@@ -212,6 +214,7 @@ export const renderTogglableIconButton = (spec: Dialog.DialogFooterTogglableIcon
     tag: 'button',
     classes: [
       ...buttonTypeClasses.concat([ 'tox-button--icon' ]),
+      ...(spec.active ? [ ToolbarButtonClasses.Ticked ] : []),
       ...(showIconAndText ? [ 'tox-button--icon-and-text' ] : [])
     ],
     attributes: tooltipAttributes
@@ -221,7 +224,7 @@ export const renderTogglableIconButton = (spec: Dialog.DialogFooterTogglableIcon
   const translatedText = providers.translate(spec.text);
   const translatedTextComponed = GuiFactory.text(translatedText);
 
-  const iconComp = componentRenderPipeline([ Optional.some(memIcon.asSpec()) ]);
+  const iconComp = componentRenderPipeline([ optMemIcon.map((memIcon) => memIcon.asSpec()) ]);
   const components = [
     ...iconComp,
     ...(showIconAndText ? [ translatedTextComponed ] : [])
@@ -259,14 +262,14 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
       borderless: false
     };
     return renderButton(buttonSpec, action, backstage.shared.providers, [ ]);
-  } else if (isTogglableIconButtonSpec(spec, buttonType)) {
-    const buttonSpec: Dialog.DialogFooterTogglableIconButtonSpec = {
+  } else if (isTogglableButtonSpec(spec, buttonType)) {
+    const buttonSpec: Dialog.DialogFooterTogglableButtonSpec = {
       ...spec,
       tooltip: spec.tooltip,
       text: spec.text.getOrUndefined(),
-      buttonType: spec.buttonType.getOrUndefined()
+      buttonType: spec.buttonType.getOrUndefined(),
     };
-    return renderTogglableIconButton(buttonSpec, backstage.shared.providers);
+    return renderTogglableButton(buttonSpec, backstage.shared.providers);
   } else {
     // eslint-disable-next-line no-console
     console.error('Unknown footer button type: ', buttonType);

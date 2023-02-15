@@ -8,7 +8,7 @@ import { Arr, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderButton } from '../general/Button';
-import { renderTogglableIconButton } from './ViewButtons';
+import { renderTogglableButton } from './ViewButtons';
 
 interface ViewHeaderSpec extends SimpleSpec {
   buttons: (BridgeView.ViewButton | BridgeView.ViewButtonsGroup)[];
@@ -37,8 +37,8 @@ interface ViewApis {
 type ViewButtonWithoutGroup = Exclude<BridgeView.ViewButton, BridgeView.ViewButtonsGroup>;
 
 const renderViewButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryBackstageProviders) => {
-  if (spec.type === 'togglableIconButton') {
-    return renderTogglableIconButton(
+  if (spec.type === 'togglableButton') {
+    return renderTogglableButton(
       {
         type: spec.type,
         text: spec.text,

@@ -3,87 +3,90 @@ import { Optional, Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
 
-interface BaseButtonSpec {
-  text: string;
-  tooltip?: string;
-  buttonType?: 'primary' | 'secondary';
-  borderless?: boolean;
-}
-
-export interface TogglableButtonApi {
-  isActive: () => boolean;
-  setActive: (state: boolean) => void;
+interface ViewButtonApi {
   setIcon: (newIcon: string) => void;
 }
 
-export interface ViewNormalButtonSpec extends BaseButtonSpec {
-  type: 'button';
-  onAction: () => void;
+interface ViewTogglableButtonApi extends ViewButtonApi {
+  isActive: () => boolean;
+  setActive: (state: boolean) => void;
 }
 
-export interface ViewTogglableIconButtonSpec extends Omit<BaseButtonSpec, 'text'> {
+interface BaseButtonSpec<Api extends ViewButtonApi> {
   text?: string;
-  type: 'togglableIconButton';
-  tooltip: string;
-  icon: string;
-  onAction: (api: TogglableButtonApi) => void;
+  icon?: string;
+  tooltip?: string;
+  buttonType?: 'primary' | 'secondary';
+  borderless?: boolean;
+  onAction: (api: Api) => void;
+}
+
+export interface ViewNormalButtonSpec extends BaseButtonSpec<ViewButtonApi> {
+  text: string;
+  type: 'button';
+}
+
+export interface ViewTogglableButtonSpec extends BaseButtonSpec<ViewTogglableButtonApi> {
+  type: 'togglableButton';
+  onAction: (api: ViewTogglableButtonApi) => void;
 }
 
 export interface ViewButtonsGroupSpec {
   type: 'group';
-  buttons: Array<ViewNormalButtonSpec | ViewTogglableIconButtonSpec>;
+  buttons: Array<ViewNormalButtonSpec | ViewTogglableButtonSpec>;
 }
 
-export type ViewButtonSpec = ViewNormalButtonSpec | ViewTogglableIconButtonSpec | ViewButtonsGroupSpec;
+export type ViewButtonSpec = ViewNormalButtonSpec | ViewTogglableButtonSpec | ViewButtonsGroupSpec;
 
-interface BaseButton {
-  text: string;
+interface BaseButton<Api extends ViewButtonApi> {
+  text: Optional<string>;
+  icon: Optional<string>;
   tooltip: Optional<string>;
   buttonType: 'primary' | 'secondary';
   borderless: boolean;
+  onAction: (api: Api) => void;
 }
 
-export interface ViewNormalButton extends BaseButton {
+export interface ViewNormalButton extends Omit<BaseButton<ViewButtonApi>, 'text'> {
   type: 'button';
+  text: string;
   onAction: () => void;
 }
 
-export interface ViewTogglableIconButton extends Omit<BaseButton, 'text' | 'tooltip'> {
-  text: Optional<string>;
-  type: 'togglableIconButton';
-  icon: string;
-  tooltip: string;
-  onAction: (api: TogglableButtonApi) => void;
+export interface ViewTogglableButton extends BaseButton<ViewTogglableButtonApi> {
+  type: 'togglableButton';
+  onAction: (api: ViewTogglableButtonApi) => void;
 }
 export interface ViewButtonsGroup {
   type: 'group';
-  buttons: Array<ViewNormalButton | ViewTogglableIconButton>;
+  buttons: Array<ViewNormalButton | ViewTogglableButton>;
 }
 
-export type ViewButton = ViewNormalButton | ViewTogglableIconButton | ViewButtonsGroup;
+export type ViewButton = ViewNormalButton | ViewTogglableButton | ViewButtonsGroup;
 
-const normalButtonFields = [
-  FieldSchema.requiredStringEnum('type', [ 'button' ]),
-  ComponentSchema.text,
+const baseButtonFields = [
+  ComponentSchema.optionalText,
+  ComponentSchema.optionalIcon,
   FieldSchema.optionString('tooltip'),
   FieldSchema.defaultedStringEnum('buttonType', 'secondary', [ 'primary', 'secondary' ]),
   FieldSchema.defaultedBoolean('borderless', false),
   FieldSchema.requiredFunction('onAction')
 ];
 
-const togglableIconButtonFields = [
-  FieldSchema.requiredStringEnum('type', [ 'togglableIconButton' ]),
-  ComponentSchema.optionalText,
-  ComponentSchema.icon,
-  FieldSchema.requiredString('tooltip'),
-  FieldSchema.defaultedStringEnum('buttonType', 'secondary', [ 'primary', 'secondary' ]),
-  FieldSchema.defaultedBoolean('borderless', false),
-  FieldSchema.requiredFunction('onAction')
+const normalButtonFields = [
+  ...baseButtonFields,
+  ComponentSchema.text,
+  FieldSchema.requiredStringEnum('type', [ 'button' ]),
+];
+
+const togglableButtonFields = [
+  ...baseButtonFields,
+  FieldSchema.requiredStringEnum('type', [ 'togglableButton' ])
 ];
 
 const schemaWithoutGroupButton = {
   button: normalButtonFields,
-  togglableIconButton: togglableIconButtonFields,
+  togglableButton: togglableButtonFields,
 };
 
 const groupFields = [
