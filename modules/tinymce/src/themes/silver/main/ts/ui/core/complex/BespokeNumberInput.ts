@@ -141,7 +141,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
           Keying.config({
             mode: 'special',
             onEnter: (_comp) => {
-              changeValue(Fun.identity, true, false);
+              changeValue(Fun.identity, true, true);
               return Optional.some(true);
             },
             onEscape: goToParent,
