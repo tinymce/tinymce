@@ -36,7 +36,7 @@ export interface DialogFooterTogglableButtonSpec extends BaseDialogFooterButtonS
   tooltip?: string;
   icon?: string;
   text?: string;
-  active: boolean; // default: false
+  active: boolean;
 }
 
 export type DialogFooterButtonSpec = DialogFooterNormalButtonSpec | DialogFooterMenuButtonSpec | DialogFooterTogglableButtonSpec;
@@ -109,7 +109,8 @@ const togglableButtonSpecFields = [
   FieldSchema.requiredStringEnum('type', [ 'togglableButton' ]),
   FieldSchema.requiredString('tooltip'),
   ComponentSchema.icon,
-  ComponentSchema.optionalText
+  ComponentSchema.optionalText,
+  FieldSchema.requiredBoolean('active')
 ];
 
 export const dialogFooterButtonSchema = StructureSchema.choose(
