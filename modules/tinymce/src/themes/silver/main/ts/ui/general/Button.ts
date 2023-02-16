@@ -171,7 +171,7 @@ const isNormalFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): s
 
 const isTogglableButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Dialog.DialogFooterTogglableButton => buttonType === 'togglableButton';
 
-export const renderTogglableButton = (spec: Dialog.DialogFooterTogglableButtonSpec, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
+const renderTogglableButton = (spec: Dialog.DialogFooterTogglableButtonSpec, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
   const optMemIcon = Optional.from(spec.icon)
     .map((memIcon) => renderReplaceableIconFromPack(memIcon, providers.icons))
     .map(Memento.record);
