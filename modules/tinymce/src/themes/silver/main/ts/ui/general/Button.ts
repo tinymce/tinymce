@@ -214,7 +214,7 @@ const renderTogglableButton = (spec: Dialog.DialogFooterTogglableButtonSpec, pro
     tag: 'button',
     classes: [
       ...buttonTypeClasses.concat([ 'tox-button--icon' ]),
-      ...(spec.active ? [ ToolbarButtonClasses.Ticked ] : []),
+      ...(spec.active ? [ 'tox-button--enabled' ] : []),
       ...(showIconAndText ? [ 'tox-button--icon-and-text' ] : [])
     ],
     attributes: tooltipAttributes
