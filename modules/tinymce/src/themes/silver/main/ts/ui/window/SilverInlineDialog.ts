@@ -136,7 +136,8 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
     getFormWrapper: () => {
       const body = memBody.get(dialog);
       return Composing.getCurrent(body).getOr(body);
-    }
+    },
+    toggleFullscreen: Fun.noop
   }, extra.redial, objOfCells);
 
   return {
