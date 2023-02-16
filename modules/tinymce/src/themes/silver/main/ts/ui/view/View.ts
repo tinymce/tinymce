@@ -7,7 +7,6 @@ import { View as BridgeView } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { renderButton } from '../general/Button';
 import { renderTogglableButton } from './ViewButtons';
 
 interface ViewHeaderSpec extends SimpleSpec {
@@ -34,39 +33,10 @@ interface ViewApis {
   readonly getOnHide: (comp: AlloyComponent) => (api: BridgeView.ViewInstanceApi) => void;
 }
 
-type ViewButtonWithoutGroup = Exclude<BridgeView.ViewButton, BridgeView.ViewButtonsGroup>;
+export type ViewButtonWithoutGroup = Exclude<BridgeView.ViewButton, BridgeView.ViewButtonsGroup>;
 
-const renderViewButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryBackstageProviders) => {
-  if (spec.type === 'togglableButton') {
-    return renderTogglableButton(
-      {
-        type: spec.type,
-        text: spec.text,
-        tooltip: spec.tooltip,
-        onAction: spec.onAction,
-        icon: spec.icon,
-        borderless: spec.borderless,
-        buttonType: spec.buttonType
-      },
-      providers
-    );
-  }
-  return renderButton(
-    {
-      text: spec.text,
-      enabled: true,
-      primary: false,
-      name: 'name',
-      icon: Optional.none(),
-      borderless: false,
-      buttonType: Optional.some(spec.buttonType)
-    },
-    (_comp) => {
-      spec.onAction();
-    },
-    providers
-  );
-};
+const renderViewButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryBackstageProviders) =>
+  renderTogglableButton(spec, providers);
 
 const renderButtonsGroup = (spec: BridgeView.ViewButtonsGroup, providers: UiFactoryBackstageProviders) => {
   return {

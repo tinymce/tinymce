@@ -1,5 +1,4 @@
 import { AlloyComponent, Behaviour, Button as AlloyButton, GuiFactory, Memento, Replacing, SimpleOrSketchSpec } from '@ephox/alloy';
-import { View } from '@ephox/bridge';
 import { Optional } from '@ephox/katamari';
 import { Attribute, Class } from '@ephox/sugar';
 
@@ -8,10 +7,13 @@ import { renderReplaceableIconFromPack } from '../button/ButtonSlices';
 import { calculateClassesFromButtonType, IconButtonWrapper, renderCommonSpec } from '../general/Button';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
+import { ViewButtonWithoutGroup } from './View';
 
 type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];
 
-export const renderTogglableButton = (spec: View.ViewTogglableButton, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
+export const renderTogglableButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
+  const isTogglableButton = spec.type === 'togglableButton';
+
   const optMemIcon = spec.icon
     .map((memIcon) => renderReplaceableIconFromPack(memIcon, providers.icons))
     .map(Memento.record);
@@ -41,7 +43,7 @@ export const renderTogglableButton = (spec: View.ViewTogglableButton, providers:
 
   const buttonSpec: IconButtonWrapper = {
     ...spec,
-    name: spec.text.getOr(spec.icon.getOr('')),
+    name: isTogglableButton ? spec.text.getOr(spec.icon.getOr('')) : spec.text ?? spec.icon.getOr(''),
     primary: spec.buttonType === 'primary',
     buttonType: Optional.from(spec.buttonType),
     tooltip: spec.tooltip,
@@ -50,14 +52,14 @@ export const renderTogglableButton = (spec: View.ViewTogglableButton, providers:
     borderless: spec.borderless
   };
 
-  const tooltipAttributes = buttonSpec.tooltip.map<{}>((tooltip) => ({
+  const buttonTypeClasses = calculateClassesFromButtonType(spec.buttonType ?? 'secondary');
+  const optTranslatedText = isTogglableButton ? spec.text.map(providers.translate) : Optional.some(providers.translate(spec.text));
+  const optTranslatedTextComponed = optTranslatedText.map(GuiFactory.text);
+
+  const tooltipAttributes = buttonSpec.tooltip.or(optTranslatedText).map<{}>((tooltip) => ({
     'aria-label': providers.translate(tooltip),
     'title': providers.translate(tooltip)
   })).getOr({});
-
-  const buttonTypeClasses = calculateClassesFromButtonType(spec.buttonType ?? 'secondary');
-  const optTranslatedText = spec.text.map(providers.translate);
-  const optTranslatedTextComponed = optTranslatedText.map(GuiFactory.text);
 
   const optIconSpec = optMemIcon.map((memIcon) => memIcon.asSpec());
   const components = componentRenderPipeline([ optIconSpec, optTranslatedTextComponed ]);
