@@ -50,7 +50,7 @@ interface BaseButton<Api extends ViewButtonApi> {
 export interface ViewNormalButton extends Omit<BaseButton<ViewButtonApi>, 'text'> {
   type: 'button';
   text: string;
-  onAction: () => void;
+  onAction: (api: ViewButtonApi) => void;
 }
 
 export interface ViewTogglableButton extends BaseButton<ViewTogglableButtonApi> {

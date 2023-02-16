@@ -11,35 +11,42 @@ import { ViewButtonWithoutGroup } from './View';
 
 type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];
 
-export const renderTogglableButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
+export const renderButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
   const isTogglableButton = spec.type === 'togglableButton';
 
   const optMemIcon = spec.icon
     .map((memIcon) => renderReplaceableIconFromPack(memIcon, providers.icons))
     .map(Memento.record);
 
-  const action = (comp: AlloyComponent) => {
-    spec.onAction({
-      setIcon: (newIcon) => {
-        optMemIcon.map((memIcon) => memIcon.getOpt(comp).each((displayIcon) => {
-          Replacing.set(displayIcon, [
-            renderReplaceableIconFromPack(newIcon, providers.icons)
-          ]);
-        }));
-      },
-      setActive: (state) => {
-        const elm = comp.element;
-        if (state) {
-          Class.add(elm, ToolbarButtonClasses.Ticked);
-          Attribute.set(elm, 'aria-pressed', true);
-        } else {
-          Class.remove(elm, ToolbarButtonClasses.Ticked);
-          Attribute.remove(elm, 'aria-pressed');
-        }
-      },
-      isActive: () => Class.has(comp.element, ToolbarButtonClasses.Ticked),
-    });
+  const getAction = () => (comp: AlloyComponent) => {
+    const setIcon = (newIcon: string) => {
+      optMemIcon.map((memIcon) => memIcon.getOpt(comp).each((displayIcon) => {
+        Replacing.set(displayIcon, [
+          renderReplaceableIconFromPack(newIcon, providers.icons)
+        ]);
+      }));
+    };
+    const setActive = (state: boolean) => {
+      const elm = comp.element;
+      if (state) {
+        Class.add(elm, ToolbarButtonClasses.Ticked);
+        Attribute.set(elm, 'aria-pressed', true);
+      } else {
+        Class.remove(elm, ToolbarButtonClasses.Ticked);
+        Attribute.remove(elm, 'aria-pressed');
+      }
+    };
+    const isActive = () => Class.has(comp.element, ToolbarButtonClasses.Ticked);
+
+    if (spec.type === 'togglableButton') {
+      return spec.onAction({ setIcon, setActive, isActive });
+    }
+    if (spec.type === 'button') {
+      return spec.onAction({ setIcon });
+    }
   };
+
+  const action = getAction();
 
   const buttonSpec: IconButtonWrapper = {
     ...spec,

@@ -7,7 +7,7 @@ import { View as BridgeView } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { renderTogglableButton } from './ViewButtons';
+import { renderButton } from './ViewButtons';
 
 interface ViewHeaderSpec extends SimpleSpec {
   buttons: (BridgeView.ViewButton | BridgeView.ViewButtonsGroup)[];
@@ -36,7 +36,7 @@ interface ViewApis {
 export type ViewButtonWithoutGroup = Exclude<BridgeView.ViewButton, BridgeView.ViewButtonsGroup>;
 
 const renderViewButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryBackstageProviders) =>
-  renderTogglableButton(spec, providers);
+  renderButton(spec, providers);
 
 const renderButtonsGroup = (spec: BridgeView.ViewButtonsGroup, providers: UiFactoryBackstageProviders) => {
   return {
