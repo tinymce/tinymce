@@ -18,7 +18,6 @@ describe('browser.tinymce.themes.silver.window.SilverDialogApiAccessTest', () =>
 
   const dialogSpec: Dialog.DialogSpec<{ fieldA: string }> = {
     title: 'Silver Test Access Dialog',
-    size: 'medium',
     body: {
       type: 'panel',
       items: [
@@ -105,25 +104,21 @@ describe('browser.tinymce.themes.silver.window.SilverDialogApiAccessTest', () =>
         ]));
       });
 
-      // TODO: fix this it seems not to work with inline dialog
-      it.skip('TINY-9528: fullscrenn toggle should apply the correct class', () => {
+      it('TINY-9528: fullscrenn toggle should apply the correct class', () => {
         const editor = hook.editor();
         DialogUtils.open(editor, dialogSpec, test.params);
 
         const dialog = UiFinder.findIn(TinyDom.fromDom(document), '.tox-dialog').getOrDie();
         const dialogHasClass = (className: string) => dialog.dom.classList.contains(className);
 
-        // assert.isTrue(dialogHasClass('tox-dialog--width-md'), 'before toggle dialog should have class tox-dialog--width-md');
         assert.isFalse(dialogHasClass('tox-dialog--fullscreen'), 'before toggle dialog should not have class tox-dialog--fullscreen');
 
         Mouse.clickOn(SugarBody.body(), 'button:contains("Toggle fullscreen")');
 
-        // assert.isFalse(dialogHasClass('tox-dialog--width-md'), 'after toggle dialog should not have class tox-dialog--width-md');
         assert.isTrue(dialogHasClass('tox-dialog--fullscreen'), 'after toggle dialog should have class tox-dialog--fullscreen');
 
         Mouse.clickOn(SugarBody.body(), 'button:contains("Toggle fullscreen")');
 
-        // assert.isTrue(dialogHasClass('tox-dialog--width-md'), 'after a second toggle dialog should have class tox-dialog--width-md');
         assert.isFalse(dialogHasClass('tox-dialog--fullscreen'), 'after a second toggle dialog should not have class tox-dialog--fullscreen');
 
         DialogUtils.close(editor);

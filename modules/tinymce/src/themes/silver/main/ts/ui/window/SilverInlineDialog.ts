@@ -5,7 +5,7 @@ import {
 } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
 import { Fun, Id, Optional } from '@ephox/katamari';
-import { Attribute, SugarNode } from '@ephox/sugar';
+import { Attribute, Classes, SugarElement, SugarNode } from '@ephox/sugar';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
@@ -70,11 +70,13 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
     backstage.shared.getSink
   );
 
+  const inlineClass = 'tox-dialog-inline';
+
   // TODO: Disable while validating?
   const dialog = GuiFactory.build({
     dom: {
       tag: 'div',
-      classes: [ 'tox-dialog', 'tox-dialog-inline' ],
+      classes: [ 'tox-dialog', inlineClass ],
       attributes: {
         role: 'dialog',
         ['aria-labelledby']: dialogLabelId,
@@ -127,6 +129,18 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
     ]
   });
 
+  const toggleFullscreen = (): void => {
+    const fullscreenClass = 'tox-dialog--fullscreen';
+    const sugarBody = SugarElement.fromDom(dialog.element.dom);
+    if (!Classes.hasAll(sugarBody, [ fullscreenClass ])) {
+      Classes.remove(sugarBody, [ inlineClass ]);
+      Classes.add(sugarBody, [ fullscreenClass ]);
+    } else {
+      Classes.remove(sugarBody, [ fullscreenClass ]);
+      Classes.add(sugarBody, [ inlineClass ]);
+    }
+  };
+
   // TODO: Clean up the dupe between this (InlineDialog) and SilverDialog
   const instanceApi = getDialogApi<T>({
     getId: Fun.constant(dialogId),
@@ -137,7 +151,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
       const body = memBody.get(dialog);
       return Composing.getCurrent(body).getOr(body);
     },
-    toggleFullscreen: Fun.noop
+    toggleFullscreen
   }, extra.redial, objOfCells);
 
   return {
