@@ -132,7 +132,6 @@ export const BarManager = (wire: ResizeWire): BarManager => {
 
   /* mouseover on table: When the mouse moves within the CONTENT AREA (NOT THE TABLE), refresh the bars. */
   const mouseover = DomEvent.bind(wire.view(), 'mouseover', (event) => {
-    console.log(event.target);
     findClosestEditableTable(event.target).fold(
       () => {
         /*
