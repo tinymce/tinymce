@@ -20,7 +20,7 @@ type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];
 type AlloyButtonSpec = Parameters<typeof AlloyButton['sketch']>[0];
 
 type ButtonSpec = Omit<Dialog.Button, 'type'>;
-type FooterButtonSpec = Omit<Dialog.DialogFooterNormalButton, 'type'> | Omit<Dialog.DialogFooterMenuButton, 'type'> | Omit<Dialog.DialogFooterTogglableButton, 'type'>;
+type FooterButtonSpec = Omit<Dialog.DialogFooterNormalButton, 'type'> | Omit<Dialog.DialogFooterMenuButton, 'type'> | Omit<Dialog.DialogFooterToggleButton, 'type'>;
 
 export interface IconButtonWrapper extends Omit<ButtonSpec, 'text'> {
   readonly tooltip: Optional<string>;
@@ -169,9 +169,9 @@ const isMenuFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): spe
 
 const isNormalFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Dialog.DialogFooterNormalButton => buttonType === 'custom' || buttonType === 'cancel' || buttonType === 'submit';
 
-const isTogglableButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Dialog.DialogFooterTogglableButton => buttonType === 'togglableButton';
+const isToggleButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Dialog.DialogFooterToggleButton => buttonType === 'togglebutton';
 
-const renderTogglableButton = (spec: Dialog.DialogFooterTogglableButtonSpec, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
+const renderToggleButton = (spec: Dialog.DialogFooterToggleButtonSpec, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
   const optMemIcon = Optional.from(spec.icon)
     .map((memIcon) => renderReplaceableIconFromPack(memIcon, providers.icons))
     .map(Memento.record);
@@ -262,14 +262,14 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
       borderless: false
     };
     return renderButton(buttonSpec, action, backstage.shared.providers, [ ]);
-  } else if (isTogglableButtonSpec(spec, buttonType)) {
-    const buttonSpec: Dialog.DialogFooterTogglableButtonSpec = {
+  } else if (isToggleButtonSpec(spec, buttonType)) {
+    const buttonSpec: Dialog.DialogFooterToggleButtonSpec = {
       ...spec,
       tooltip: spec.tooltip,
       text: spec.text.getOrUndefined(),
       buttonType: spec.buttonType.getOrUndefined(),
     };
-    return renderTogglableButton(buttonSpec, backstage.shared.providers);
+    return renderToggleButton(buttonSpec, backstage.shared.providers);
   } else {
     // eslint-disable-next-line no-console
     console.error('Unknown footer button type: ', buttonType);

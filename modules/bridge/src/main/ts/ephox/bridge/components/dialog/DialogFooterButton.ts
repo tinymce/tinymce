@@ -31,15 +31,15 @@ export interface DialogFooterMenuButtonSpec extends BaseDialogFooterButtonSpec {
   items: DialogFooterMenuButtonItemSpec[];
 }
 
-export interface DialogFooterTogglableButtonSpec extends BaseDialogFooterButtonSpec {
-  type: 'togglableButton';
+export interface DialogFooterToggleButtonSpec extends BaseDialogFooterButtonSpec {
+  type: 'togglebutton';
   tooltip?: string;
   icon?: string;
   text?: string;
   active?: boolean;
 }
 
-export type DialogFooterButtonSpec = DialogFooterNormalButtonSpec | DialogFooterMenuButtonSpec | DialogFooterTogglableButtonSpec;
+export type DialogFooterButtonSpec = DialogFooterNormalButtonSpec | DialogFooterMenuButtonSpec | DialogFooterToggleButtonSpec;
 
 interface BaseDialogFooterButton {
   name: string;
@@ -64,15 +64,15 @@ export interface DialogFooterMenuButton extends BaseDialogFooterButton {
   items: DialogFooterToggleMenuItem[];
 }
 
-export interface DialogFooterTogglableButton extends Omit<BaseDialogFooterButton, 'icon'> {
-  type: 'togglableButton';
+export interface DialogFooterToggleButton extends Omit<BaseDialogFooterButton, 'icon'> {
+  type: 'togglebutton';
   tooltip: string;
   icon: string;
   text: Optional<string>;
   active: boolean;
 }
 
-export type DialogFooterButton = DialogFooterNormalButton | DialogFooterMenuButton | DialogFooterTogglableButton;
+export type DialogFooterButton = DialogFooterNormalButton | DialogFooterMenuButton | DialogFooterToggleButton;
 
 const baseFooterButtonFields = [
   ComponentSchema.generatedName('button'),
@@ -104,9 +104,9 @@ const menuFooterButtonFields = [
   ...baseFooterButtonFields
 ];
 
-const togglableButtonSpecFields = [
+const toggleButtonSpecFields = [
   ...baseFooterButtonFields,
-  FieldSchema.requiredStringEnum('type', [ 'togglableButton' ]),
+  FieldSchema.requiredStringEnum('type', [ 'togglebutton' ]),
   FieldSchema.requiredString('tooltip'),
   ComponentSchema.icon,
   ComponentSchema.optionalText,
@@ -120,7 +120,7 @@ export const dialogFooterButtonSchema = StructureSchema.choose(
     cancel: normalFooterButtonFields,
     custom: normalFooterButtonFields,
     menu: menuFooterButtonFields,
-    togglableButton: togglableButtonSpecFields
+    togglebutton: toggleButtonSpecFields
   }
 );
 

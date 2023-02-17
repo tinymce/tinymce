@@ -12,7 +12,7 @@ import { ViewButtonWithoutGroup } from './View';
 type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];
 
 export const renderButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
-  const isTogglableButton = spec.type === 'togglableButton';
+  const isToggleButton = spec.type === 'togglebutton';
 
   const optMemIcon = spec.icon
     .map((memIcon) => renderReplaceableIconFromPack(memIcon, providers.icons))
@@ -38,7 +38,7 @@ export const renderButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryB
     };
     const isActive = () => Class.has(comp.element, ToolbarButtonClasses.Ticked);
 
-    if (spec.type === 'togglableButton') {
+    if (isToggleButton) {
       return spec.onAction({ setIcon, setActive, isActive });
     }
     if (spec.type === 'button') {
@@ -50,7 +50,7 @@ export const renderButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryB
 
   const buttonSpec: IconButtonWrapper = {
     ...spec,
-    name: isTogglableButton ? spec.text.getOr(spec.icon.getOr('')) : spec.text ?? spec.icon.getOr(''),
+    name: isToggleButton ? spec.text.getOr(spec.icon.getOr('')) : spec.text ?? spec.icon.getOr(''),
     primary: spec.buttonType === 'primary',
     buttonType: Optional.from(spec.buttonType),
     tooltip: spec.tooltip,
@@ -60,7 +60,7 @@ export const renderButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryB
   };
 
   const buttonTypeClasses = calculateClassesFromButtonType(spec.buttonType ?? 'secondary');
-  const optTranslatedText = isTogglableButton ? spec.text.map(providers.translate) : Optional.some(providers.translate(spec.text));
+  const optTranslatedText = isToggleButton ? spec.text.map(providers.translate) : Optional.some(providers.translate(spec.text));
   const optTranslatedTextComponed = optTranslatedText.map(GuiFactory.text);
 
   const tooltipAttributes = buttonSpec.tooltip.or(optTranslatedText).map<{}>((tooltip) => ({

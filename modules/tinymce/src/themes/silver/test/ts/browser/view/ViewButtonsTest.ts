@@ -21,7 +21,7 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsTest', () => {
               type: 'group',
               buttons: [
                 {
-                  type: 'togglableButton',
+                  type: 'togglebutton',
                   text: 'button-with-toggle',
                   tooltip: 'button-with-toggle',
                   icon: 'cut',
@@ -33,7 +33,7 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsTest', () => {
               ]
             },
             {
-              type: 'togglableButton',
+              type: 'togglebutton',
               text: 'button-without-toggle',
               tooltip: 'button-without-toggle',
               icon: 'help',

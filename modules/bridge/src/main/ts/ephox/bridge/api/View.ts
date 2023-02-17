@@ -1,5 +1,5 @@
 import { createView, View, ViewInstanceApi, ViewSpec } from '../components/view/View';
-import { ViewButton, ViewButtonsGroup, ViewButtonsGroupSpec, ViewButtonSpec, ViewTogglableButton, ViewTogglableButtonSpec } from '../components/view/ViewButton';
+import { ViewButton, ViewButtonsGroup, ViewButtonsGroupSpec, ViewButtonSpec, ViewToggleButton, ViewToggleButtonSpec } from '../components/view/ViewButton';
 
 export {
   createView,
@@ -12,6 +12,6 @@ export {
   ViewButtonSpec,
   ViewButtonsGroupSpec,
 
-  ViewTogglableButton,
-  ViewTogglableButtonSpec
+  ViewToggleButton,
+  ViewToggleButtonSpec
 };

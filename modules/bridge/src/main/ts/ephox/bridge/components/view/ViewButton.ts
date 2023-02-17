@@ -7,7 +7,7 @@ interface ViewButtonApi {
   setIcon: (newIcon: string) => void;
 }
 
-interface ViewTogglableButtonApi extends ViewButtonApi {
+interface ViewToggleButtonApi extends ViewButtonApi {
   isActive: () => boolean;
   setActive: (state: boolean) => void;
 }
@@ -26,17 +26,17 @@ export interface ViewNormalButtonSpec extends BaseButtonSpec<ViewButtonApi> {
   type: 'button';
 }
 
-export interface ViewTogglableButtonSpec extends BaseButtonSpec<ViewTogglableButtonApi> {
-  type: 'togglableButton';
-  onAction: (api: ViewTogglableButtonApi) => void;
+export interface ViewToggleButtonSpec extends BaseButtonSpec<ViewToggleButtonApi> {
+  type: 'togglebutton';
+  onAction: (api: ViewToggleButtonApi) => void;
 }
 
 export interface ViewButtonsGroupSpec {
   type: 'group';
-  buttons: Array<ViewNormalButtonSpec | ViewTogglableButtonSpec>;
+  buttons: Array<ViewNormalButtonSpec | ViewToggleButtonSpec>;
 }
 
-export type ViewButtonSpec = ViewNormalButtonSpec | ViewTogglableButtonSpec | ViewButtonsGroupSpec;
+export type ViewButtonSpec = ViewNormalButtonSpec | ViewToggleButtonSpec | ViewButtonsGroupSpec;
 
 interface BaseButton<Api extends ViewButtonApi> {
   text: Optional<string>;
@@ -53,16 +53,16 @@ export interface ViewNormalButton extends Omit<BaseButton<ViewButtonApi>, 'text'
   onAction: (api: ViewButtonApi) => void;
 }
 
-export interface ViewTogglableButton extends BaseButton<ViewTogglableButtonApi> {
-  type: 'togglableButton';
-  onAction: (api: ViewTogglableButtonApi) => void;
+export interface ViewToggleButton extends BaseButton<ViewToggleButtonApi> {
+  type: 'togglebutton';
+  onAction: (api: ViewToggleButtonApi) => void;
 }
 export interface ViewButtonsGroup {
   type: 'group';
-  buttons: Array<ViewNormalButton | ViewTogglableButton>;
+  buttons: Array<ViewNormalButton | ViewToggleButton>;
 }
 
-export type ViewButton = ViewNormalButton | ViewTogglableButton | ViewButtonsGroup;
+export type ViewButton = ViewNormalButton | ViewToggleButton | ViewButtonsGroup;
 
 const baseButtonFields = [
   ComponentSchema.optionalText,
@@ -79,14 +79,14 @@ const normalButtonFields = [
   FieldSchema.requiredStringEnum('type', [ 'button' ]),
 ];
 
-const togglableButtonFields = [
+const toggleButtonFields = [
   ...baseButtonFields,
-  FieldSchema.requiredStringEnum('type', [ 'togglableButton' ])
+  FieldSchema.requiredStringEnum('type', [ 'togglebutton' ])
 ];
 
 const schemaWithoutGroupButton = {
   button: normalButtonFields,
-  togglableButton: togglableButtonFields,
+  togglebutton: toggleButtonFields,
 };
 
 const groupFields = [

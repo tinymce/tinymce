@@ -18,7 +18,7 @@ export default (): void => {
             type: 'group',
             buttons: [
               {
-                type: 'togglableButton',
+                type: 'togglebutton',
                 tooltip: 'togglableIcon',
                 icon: 'info',
                 onAction: (statusApi) => {
@@ -28,7 +28,7 @@ export default (): void => {
                 }
               },
               {
-                type: 'togglableButton',
+                type: 'togglebutton',
                 text: 'iconAndText',
                 tooltip: 'iconAndText',
                 icon: 'copy',
@@ -41,7 +41,7 @@ export default (): void => {
             ]
           },
           {
-            type: 'togglableButton',
+            type: 'togglebutton',
             tooltip: 'togglableIcon2',
             icon: 'info',
             onAction: (statusApi) => {
@@ -55,7 +55,7 @@ export default (): void => {
             buttons: [
               {
                 tooltip: 'Plus',
-                type: 'togglableButton',
+                type: 'togglebutton',
                 icon: 'plus',
                 onAction: () => {
                   // eslint-disable-next-line no-console
@@ -64,7 +64,7 @@ export default (): void => {
               },
               {
                 tooltip: 'Minus',
-                type: 'togglableButton',
+                type: 'togglebutton',
                 icon: 'minus',
                 onAction: () => {
                   // eslint-disable-next-line no-console
