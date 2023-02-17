@@ -13,7 +13,7 @@ import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { renderIconFromPack, renderReplaceableIconFromPack } from '../button/ButtonSlices';
 import { getFetch, renderMenuButton, StoredMenuButton } from '../button/MenuButton';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
-import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
+import { ToolbarButtonClasses, ViewButtonClasses } from '../toolbar/button/ButtonClasses';
 import { formActionEvent, formCancelEvent, formSubmitEvent } from './FormEvents';
 
 type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];
@@ -214,7 +214,7 @@ const renderToggleButton = (spec: Dialog.DialogFooterToggleButtonSpec, providers
     tag: 'button',
     classes: [
       ...buttonTypeClasses.concat([ 'tox-button--icon' ]),
-      ...(spec.active ? [ 'tox-button--enabled' ] : []),
+      ...(spec.active ? [ ViewButtonClasses.Ticked ] : []),
       ...(showIconAndText ? [ 'tox-button--icon-and-text' ] : [])
     ],
     attributes: tooltipAttributes

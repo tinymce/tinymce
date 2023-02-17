@@ -6,7 +6,7 @@ import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderReplaceableIconFromPack } from '../button/ButtonSlices';
 import { calculateClassesFromButtonType, IconButtonWrapper, renderCommonSpec } from '../general/Button';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
-import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
+import { ViewButtonClasses } from '../toolbar/button/ButtonClasses';
 import { ViewButtonWithoutGroup } from './View';
 
 type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];
@@ -29,14 +29,14 @@ export const renderButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryB
     const setActive = (state: boolean) => {
       const elm = comp.element;
       if (state) {
-        Class.add(elm, ToolbarButtonClasses.Ticked);
+        Class.add(elm, ViewButtonClasses.Ticked);
         Attribute.set(elm, 'aria-pressed', true);
       } else {
-        Class.remove(elm, ToolbarButtonClasses.Ticked);
+        Class.remove(elm, ViewButtonClasses.Ticked);
         Attribute.remove(elm, 'aria-pressed');
       }
     };
-    const isActive = () => Class.has(comp.element, ToolbarButtonClasses.Ticked);
+    const isActive = () => Class.has(comp.element, ViewButtonClasses.Ticked);
 
     if (isToggleButton) {
       return spec.onAction({ setIcon, setActive, isActive });
