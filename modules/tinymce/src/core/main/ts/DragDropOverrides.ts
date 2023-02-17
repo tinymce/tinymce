@@ -46,8 +46,8 @@ interface State {
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 const isContentEditable = Predicate.or(isContentEditableFalse, NodeType.isContentEditableTrue) as (node: Node) => node is HTMLElement;
 
-const isDraggable = (rootElm: HTMLElement, elm: HTMLElement) =>
-  isContentEditableFalse(elm) && elm !== rootElm;
+const isDraggable = (dom: DOMUtils, rootElm: HTMLElement, elm: HTMLElement) =>
+  isContentEditableFalse(elm) && elm !== rootElm && dom.isEditable(elm.parentElement);
 
 const isValidDropTarget = (editor: Editor, targetElement: Node | null, dragElement: Node) => {
   if (Type.isNullable(targetElement)) {
@@ -55,8 +55,7 @@ const isValidDropTarget = (editor: Editor, targetElement: Node | null, dragEleme
   } else if (targetElement === dragElement || editor.dom.isChildOf(targetElement, dragElement)) {
     return false;
   } else {
-    // Allow dropping onto the contenteditable=true elements that are within contenteditable=false elements
-    return !isContentEditableFalse(targetElement) && editor.dom.getContentEditableParent(targetElement) !== 'false';
+    return editor.dom.isEditable(targetElement);
   }
 };
 
@@ -225,7 +224,7 @@ const start = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent
   if (isLeftMouseButtonPressed(e)) {
     const ceElm = Arr.find(editor.dom.getParents(e.target as Node), isContentEditable).getOr(null);
 
-    if (Type.isNonNullable(ceElm) && isDraggable(editor.getBody(), ceElm)) {
+    if (Type.isNonNullable(ceElm) && isDraggable(editor.dom, editor.getBody(), ceElm)) {
       const elmPos = editor.dom.getPos(ceElm);
       const bodyElm = editor.getBody();
       const docElm = editor.getDoc().documentElement;
