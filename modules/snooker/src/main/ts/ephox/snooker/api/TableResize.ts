@@ -42,6 +42,7 @@ export interface TableResize {
   readonly refreshBars: (table: SugarElement<HTMLTableElement>) => void;
   readonly hideBars: () => void;
   readonly showBars: () => void;
+  readonly setHoverRefresh: (state: boolean) => void;
   readonly destroy: () => void;
   readonly events: TableResizeEventRegistry;
 }
@@ -85,6 +86,7 @@ const create = (wire: ResizeWire, resizing: ResizeBehaviour, lazySizing: (elemen
     refreshBars: manager.refresh,
     hideBars: manager.hideBars,
     showBars: manager.showBars,
+    setHoverRefresh: manager.setHoverRefresh,
     destroy: manager.destroy,
     events: events.registry
   };

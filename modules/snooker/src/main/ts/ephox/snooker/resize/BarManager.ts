@@ -41,6 +41,7 @@ export interface BarManager {
   readonly off: () => void;
   readonly hideBars: () => void;
   readonly showBars: () => void;
+  readonly setHoverRefresh: (state: boolean) => void;
   readonly events: DragAdjustEvents['registry'];
 }
 
@@ -49,6 +50,7 @@ const resizeBarDragging = Styles.resolve('resizer-bar-dragging');
 export const BarManager = (wire: ResizeWire): BarManager => {
   const mutation = BarMutation();
   const resizing = Dragger.transform(mutation, {});
+  let hoverRefresh = true;
 
   let hoverTable = Optional.none<SugarElement<HTMLTableElement>>();
 
@@ -73,6 +75,10 @@ export const BarManager = (wire: ResizeWire): BarManager => {
     const newX = CellUtils.getCssValue(target, dir);
     const oldX = CellUtils.getAttrValue(target, 'data-initial-' + dir, 0);
     return newX - oldX;
+  };
+
+  const setHoverRefresh = (state: boolean) => {
+    hoverRefresh = state;
   };
 
   /* Resize the column once the user releases the mouse */
@@ -138,8 +144,10 @@ export const BarManager = (wire: ResizeWire): BarManager => {
         }
       },
       (table) => {
-        hoverTable = Optional.some(table);
-        Bars.refresh(wire, table);
+        if (hoverRefresh) {
+          hoverTable = Optional.some(table);
+          Bars.refresh(wire, table);
+        }
       }
     );
   });
@@ -168,6 +176,7 @@ export const BarManager = (wire: ResizeWire): BarManager => {
     off: resizing.off,
     hideBars: Fun.curry(Bars.hide, wire),
     showBars: Fun.curry(Bars.show, wire),
+    setHoverRefresh,
     events: events.registry
   };
 };
