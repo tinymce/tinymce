@@ -14,6 +14,7 @@
 @tree-button-font-weight: @font-weight-normal;
 @tree-button-height: 28px;
 @tree-button-icon-color: contrast(@background-color, @color-white, @color-black);
+@tree-button-menu-icon-color: contrast(@tree-button-hover-background-color, @color-white, @color-black);
 @tree-button-spacing-x: 1px;
 @tree-button-spacing-y: 5px;
 @tree-button-text-color: contrast(@background-color, @color-white, @color-black);
@@ -205,6 +206,16 @@
   .tox-tree--item__label {
     .tox-mbtn {
       margin-left: auto;
+
+      svg {/* stylelint-disable-line no-descending-specificity */
+        fill: transparent;
+      }
+    }
+
+    &:hover .tox-mbtn {
+      svg {/* stylelint-disable-line no-descending-specificity */
+        fill: @tree-button-menu-icon-color;
+      }
     }
 
     &:hover:has(.tox-mbtn:hover) {
