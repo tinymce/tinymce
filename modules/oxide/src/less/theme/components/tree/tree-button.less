@@ -75,7 +75,7 @@
 
     svg {
       display: block;
-      fill: @tree-button-icon-color;
+      fill: transparent;
     }
   }
 
@@ -185,9 +185,24 @@
     white-space: nowrap;
   }
 
+  /* stylelint-disable no-descending-specificity */
   .tox-tree--directory__label {
     .tox-mbtn {
       margin-left: auto;
+
+      svg {
+        fill: transparent;
+      }
+
+      &.tox-mbtn--active svg {
+        fill: @tree-button-menu-icon-color;
+      }
+    }
+
+    &:hover .tox-mbtn {
+      svg {
+        fill: @tree-button-menu-icon-color;
+      }
     }
 
     &:hover:has(.tox-mbtn:hover) {
@@ -207,13 +222,17 @@
     .tox-mbtn {
       margin-left: auto;
 
-      svg {/* stylelint-disable-line no-descending-specificity */
+      svg {
         fill: transparent;
+      }
+
+      &.tox-mbtn--active svg {
+        fill: @tree-button-menu-icon-color;
       }
     }
 
     &:hover .tox-mbtn {
-      svg {/* stylelint-disable-line no-descending-specificity */
+      svg {
         fill: @tree-button-menu-icon-color;
       }
     }
