@@ -75,7 +75,7 @@
 
     svg {
       display: block;
-      fill: transparent;
+      fill: @tree-button-icon-color;
     }
   }
 
@@ -211,6 +211,11 @@
 
     .tox-chevron {
       transition: transform .5s ease-in-out;
+
+      svg {
+        fill: @tree-button-chevron-color;
+        width: @tree-button-chevron-width;
+      }
     }
 
     &.tox-tree--directory__label--active .tox-chevron {
