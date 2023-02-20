@@ -52,7 +52,10 @@
 @tree-button-disabled-icon-color: fade(@tree-button-icon-color, 50%);
 @tree-button-disabled-text-color: fade(@tree-button-text-color, 50%);
 
-.tox {
+.tox .tox-tree {
+  display: flex;
+  flex-direction: column;
+
   .tox-trbtn {
     align-items: center;
     background: @tree-button-background-color;
@@ -185,45 +188,58 @@
     white-space: nowrap;
   }
 
-  /* stylelint-disable no-descending-specificity */
-  .tox-tree--directory__label {
-    .tox-mbtn {
-      margin-left: auto;
+  .tox-tree--directory {
+    display: flex;
+    flex-direction: column;
 
-      svg {
-        fill: transparent;
+    /* stylelint-disable no-descending-specificity */
+    .tox-tree--directory__label {
+      font-weight: bold;
+
+      .tox-tree--directory__title__wrapper {
+        padding-left: 4px;
       }
 
-      &.tox-mbtn--active svg {
-        fill: @tree-button-menu-icon-color;
+      .tox-mbtn {
+        margin-left: auto;
+
+        svg {
+          fill: transparent;
+        }
+
+        &.tox-mbtn--active svg {
+          fill: @tree-button-menu-icon-color;
+        }
       }
-    }
 
-    &:hover .tox-mbtn {
-      svg {
-        fill: @tree-button-menu-icon-color;
+      &:hover .tox-mbtn {
+        svg {
+          fill: @tree-button-menu-icon-color;
+        }
       }
-    }
 
-    &:hover:has(.tox-mbtn:hover) {
-      background-color: transparent;
-    }
-
-    .tox-chevron {
-      transition: transform .5s ease-in-out;
-
-      svg {
-        fill: @tree-button-chevron-color;
-        width: @tree-button-chevron-width;
+      &:hover:has(.tox-mbtn:hover) {
+        background-color: transparent;
       }
-    }
 
-    &.tox-tree--directory__label--active .tox-chevron {
-      transform: rotate(90deg);
+      .tox-chevron {
+        transition: transform .5s ease-in-out;
+
+        svg {
+          fill: @tree-button-chevron-color;
+          width: @tree-button-chevron-width;
+        }
+      }
+
+      &.tox-tree--directory__label--active .tox-chevron {
+        transform: rotate(90deg);
+      }
     }
   }
 
   .tox-tree--item__label {
+    font-weight: normal;
+
     .tox-mbtn {
       margin-left: auto;
 

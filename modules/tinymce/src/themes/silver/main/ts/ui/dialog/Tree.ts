@@ -32,7 +32,6 @@ const renderItemLabel = (item: Dialog.Leaf, level: number, onLeafAction: OnLeafA
       classes: [ `tox-tree--item__label`, 'tox-trbtn' ],
       styles: {
         'padding-left': `${level * 8}px`,
-        'font-weight': '400',
       }
     },
     components,
@@ -60,6 +59,13 @@ const renderIconFromPack = (iconName: string, iconsProvider: Icons.IconProvider)
 
 const renderDirectoryLabel = (directory: Dialog.Directory, level: number, backstage: UiFactoryBackstage): AlloyButtonSpec => {
   const internalMenuButton = directory.menu.map((btn) => renderMenuButton(btn, 'tox-mbtn', backstage, Optional.none()));
+  const directoryLabelWrapper = {
+    dom: {
+      tag: 'span',
+      classes: ['tox-tree--directory__title__wrapper'],
+    },
+    components: [ renderLabel(directory.title) ]
+  };
   const components: SimpleSpec[] = [
     {
       dom: {
@@ -70,15 +76,7 @@ const renderDirectoryLabel = (directory: Dialog.Directory, level: number, backst
         renderIconFromPack('chevron-right', backstage.shared.providers.icons),
       ]
     },
-    {
-      dom: {
-        tag: 'span',
-        styles: {
-          'padding-left': '4px'
-        }
-      },
-      components: [ renderLabel(directory.title) ]
-    }
+    directoryLabelWrapper
   ];
   internalMenuButton.each((btn) => {
     components.push(btn);
@@ -90,7 +88,6 @@ const renderDirectoryLabel = (directory: Dialog.Directory, level: number, backst
       classes: [ `tox-tree--directory__label`, 'tox-trbtn' ],
       styles: {
         'padding-left': `${level * 8}px`,
-        'font-weight': '700',
       }
     },
     components,
@@ -137,10 +134,6 @@ const renderDirectory = (dir: Dialog.Directory, level: number, onLeafAction: OnL
     dom: {
       tag: 'div',
       classes: [ `tox-tree--directory` ],
-      styles: {
-        'display': 'flex',
-        'flex-direction': 'column',
-      }
     },
     components: [
       renderDirectoryLabel(dir, level, backstage),
@@ -159,10 +152,6 @@ const renderTree = (
     dom: {
       tag: 'div',
       classes: [ 'tox-tree' ],
-      styles: {
-        'display': 'flex',
-        'flex-direction': 'column'
-      }
     },
     components: spec.items.map((item) => {
       return item.type === 'leaf' ?
