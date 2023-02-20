@@ -71,12 +71,13 @@ export const renderButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryB
   const optIconSpec = optMemIcon.map((memIcon) => memIcon.asSpec());
   const components = componentRenderPipeline([ optIconSpec, optTranslatedTextComponed ]);
 
-  const hasIconAndText = optTranslatedTextComponed.isSome();
+  const hasIconAndText = spec.icon.isSome() && optTranslatedTextComponed.isSome();
 
   const dom = {
     tag: 'button',
     classes: buttonTypeClasses
-      .concat([ hasIconAndText ? 'tox-button--icon-and-text' : 'tox-button--icon' ])
+      .concat(...spec.icon.isSome() && !hasIconAndText ? [ 'tox-button--icon' ] : [])
+      .concat(...hasIconAndText ? [ 'tox-button--icon-and-text' ] : [])
       .concat(...spec.borderless ? [ 'tox-button--naked' ] : []),
     attributes: tooltipAttributes
   };
