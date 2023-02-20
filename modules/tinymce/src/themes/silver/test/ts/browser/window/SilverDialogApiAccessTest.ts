@@ -2,7 +2,7 @@ import { Mouse, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
-import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
+import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -113,11 +113,11 @@ describe('browser.tinymce.themes.silver.window.SilverDialogApiAccessTest', () =>
 
         assert.isFalse(dialogHasClass('tox-dialog--fullscreen'), 'before toggle dialog should not have class tox-dialog--fullscreen');
 
-        Mouse.clickOn(SugarBody.body(), 'button:contains("Toggle fullscreen")');
+        TinyUiActions.clickOnUi(editor, 'button:contains("Toggle fullscreen")');
 
         assert.isTrue(dialogHasClass('tox-dialog--fullscreen'), 'after toggle dialog should have class tox-dialog--fullscreen');
 
-        Mouse.clickOn(SugarBody.body(), 'button:contains("Toggle fullscreen")');
+        TinyUiActions.clickOnUi(editor, 'button:contains("Toggle fullscreen")');
 
         assert.isFalse(dialogHasClass('tox-dialog--fullscreen'), 'after a second toggle dialog should not have class tox-dialog--fullscreen');
 

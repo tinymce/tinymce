@@ -1,7 +1,7 @@
 import { AlloyComponent, Composing, ModalDialog } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
 import { Fun, Id, Optional } from '@ephox/katamari';
-import { Classes, SugarElement } from '@ephox/sugar';
+import { Class, Classes, SugarElement } from '@ephox/sugar';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderModalBody } from './SilverDialogBody';
@@ -74,11 +74,11 @@ const renderDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.Dia
       const fullscreenClass = 'tox-dialog--fullscreen';
       const sugarBody = SugarElement.fromDom(dialog.element.dom);
 
-      if (!Classes.hasAll(sugarBody, [ fullscreenClass ])) {
+      if (!Class.has(sugarBody, fullscreenClass)) {
         Classes.remove(sugarBody, dialogSize);
-        Classes.add(sugarBody, [ fullscreenClass ]);
+        Class.add(sugarBody, fullscreenClass);
       } else {
-        Classes.remove(sugarBody, [ fullscreenClass ]);
+        Class.remove(sugarBody, fullscreenClass);
         Classes.add(sugarBody, dialogSize);
       }
     };
