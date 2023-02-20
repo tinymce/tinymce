@@ -13,7 +13,8 @@ const applyForDeleteAndBackspace = (fn: (pair: { label: string; key: () => numbe
 
 describe('browser.tinymce.core.delete.CefDeleteTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
-    base_url: '/project/tinymce/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce',
+    indent: false
   }, [], true);
 
   const fakeBackspaceKeyOnRange = (editor: Editor) => {
@@ -243,6 +244,32 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
         TinyContentActions.keystroke(editor, key());
         TinyAssertions.assertRawContent(editor, '<p><br data-mce-bogus="1"></p>');
         TinyAssertions.assertCursor(editor, [ 0 ], 0);
+      });
+    });
+  });
+
+  context('delete inside noneditables', () => {
+    applyForDeleteAndBackspace(({ label, key }) => {
+      it(`TINY-9477: should not delete anything between noneditables when ${label} is pressed`, () => {
+        const editor = hook.editor();
+        const initialContent = '<div contenteditable="false"><p>a</p><p>b</p></div>';
+        editor.setContent(initialContent);
+        TinySelections.setSelection(editor, [ 1, 0, 0 ], 0, [ 1, 1, 0 ], 1);
+        TinyContentActions.keystroke(editor, key());
+        TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 1, 0 ], 1);
+        TinyAssertions.assertContent(editor, initialContent);
+      });
+
+      it(`TINY-9477: should not delete anything between editables in a noneditable root when ${label} is pressed`, () => {
+        const editor = hook.editor();
+        const initialContent = '<p>a</p><p>b</p>';
+        editor.getBody().contentEditable = 'false';
+        editor.setContent(initialContent);
+        TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 1, 0 ], 1);
+        TinyContentActions.keystroke(editor, key());
+        TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 1, 0 ], 1);
+        TinyAssertions.assertContent(editor, initialContent);
+        editor.getBody().contentEditable = 'true';
       });
     });
   });

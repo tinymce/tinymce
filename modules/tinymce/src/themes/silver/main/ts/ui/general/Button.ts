@@ -1,6 +1,5 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, FormField as AlloyFormField, GuiFactory, Memento,
-  RawDomSchema, SimpleOrSketchSpec, SketchSpec, Tabstopping
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, FormField as AlloyFormField, GuiFactory, Memento, RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, Tabstopping
 } from '@ephox/alloy';
 import { Dialog, Toolbar } from '@ephox/bridge';
 import { Fun, Merger, Optional } from '@ephox/katamari';
@@ -11,23 +10,23 @@ import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderFormField } from '../alien/FieldLabeller';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
-import { renderIconFromPack } from '../button/ButtonSlices';
+import { renderIconFromPack, renderReplaceableIconFromPack } from '../button/ButtonSlices';
 import { getFetch, renderMenuButton, StoredMenuButton } from '../button/MenuButton';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
-import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
+import { ToolbarButtonClasses, ViewButtonClasses } from '../toolbar/button/ButtonClasses';
 import { formActionEvent, formCancelEvent, formSubmitEvent } from './FormEvents';
 
 type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];
 type AlloyButtonSpec = Parameters<typeof AlloyButton['sketch']>[0];
 
 type ButtonSpec = Omit<Dialog.Button, 'type'>;
-type FooterButtonSpec = Omit<Dialog.DialogFooterNormalButton, 'type'> | Omit<Dialog.DialogFooterMenuButton, 'type'>;
+type FooterButtonSpec = Omit<Dialog.DialogFooterNormalButton, 'type'> | Omit<Dialog.DialogFooterMenuButton, 'type'> | Omit<Dialog.DialogFooterToggleButton, 'type'>;
 
 export interface IconButtonWrapper extends Omit<ButtonSpec, 'text'> {
   readonly tooltip: Optional<string>;
 }
 
-const renderCommonSpec = (
+export const renderCommonSpec = (
   spec: ButtonSpec | IconButtonWrapper,
   actionOpt: Optional<(comp: AlloyComponent) => void>,
   extraBehaviours: Behaviours = [],
@@ -91,7 +90,7 @@ export const renderIconButton = (
   return AlloyButton.sketch(iconButtonSpec);
 };
 
-const calculateClassesFromButtonType = (buttonType: 'primary' | 'secondary' | 'toolbar') => {
+export const calculateClassesFromButtonType = (buttonType: 'primary' | 'secondary' | 'toolbar'): string[] => {
   switch (buttonType) {
     case 'primary':
       return [ 'tox-button' ];
@@ -170,6 +169,71 @@ const isMenuFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): spe
 
 const isNormalFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Dialog.DialogFooterNormalButton => buttonType === 'custom' || buttonType === 'cancel' || buttonType === 'submit';
 
+const isToggleButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Dialog.DialogFooterToggleButton => buttonType === 'togglebutton';
+
+const renderToggleButton = (spec: Dialog.DialogFooterToggleButtonSpec, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
+  const optMemIcon = Optional.from(spec.icon)
+    .map((memIcon) => renderReplaceableIconFromPack(memIcon, providers.icons))
+    .map(Memento.record);
+
+  const action = (comp: AlloyComponent) => {
+    AlloyTriggers.emitWith(comp, formActionEvent, {
+      name: spec.name,
+      value: {
+        setIcon: (newIcon: string) => {
+          optMemIcon.map((memIcon) => memIcon.getOpt(comp).each((displayIcon) => {
+            Replacing.set(displayIcon, [
+              renderReplaceableIconFromPack(newIcon, providers.icons)
+            ]);
+          }));
+        }
+      }
+    });
+  };
+
+  const buttonSpec: IconButtonWrapper = {
+    ...spec,
+    name: spec.name ?? '',
+    primary: spec.buttonType === 'primary',
+    buttonType: Optional.from(spec.buttonType),
+    tooltip: Optional.from(spec.tooltip),
+    icon: Optional.from(spec.name),
+    enabled: spec.enabled ?? false,
+    borderless: false
+  };
+
+  const tooltipAttributes = buttonSpec.tooltip.map<{}>((tooltip) => ({
+    'aria-label': providers.translate(tooltip),
+    'title': providers.translate(tooltip)
+  })).getOr({});
+
+  const buttonTypeClasses = calculateClassesFromButtonType(spec.buttonType ?? 'secondary');
+  const showIconAndText: boolean = !!spec.icon && !!spec.text;
+
+  const dom = {
+    tag: 'button',
+    classes: [
+      ...buttonTypeClasses.concat([ 'tox-button--icon' ]),
+      ...(spec.active ? [ ViewButtonClasses.Ticked ] : []),
+      ...(showIconAndText ? [ 'tox-button--icon-and-text' ] : [])
+    ],
+    attributes: tooltipAttributes
+  };
+  const extraBehaviours: Behaviours = [];
+
+  const translatedText = providers.translate(spec.text);
+  const translatedTextComponed = GuiFactory.text(translatedText);
+
+  const iconComp = componentRenderPipeline([ optMemIcon.map((memIcon) => memIcon.asSpec()) ]);
+  const components = [
+    ...iconComp,
+    ...(showIconAndText ? [ translatedTextComponed ] : [])
+  ];
+
+  const iconButtonSpec = renderCommonSpec(buttonSpec, Optional.some(action), extraBehaviours, dom, components, providers);
+  return AlloyButton.sketch(iconButtonSpec);
+};
+
 export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, backstage: UiFactoryBackstage): SimpleOrSketchSpec => {
   if (isMenuFooterButtonSpec(spec, buttonType)) {
     const getButton = () => memButton;
@@ -198,6 +262,14 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
       borderless: false
     };
     return renderButton(buttonSpec, action, backstage.shared.providers, [ ]);
+  } else if (isToggleButtonSpec(spec, buttonType)) {
+    const buttonSpec: Dialog.DialogFooterToggleButtonSpec = {
+      ...spec,
+      tooltip: spec.tooltip,
+      text: spec.text.getOrUndefined(),
+      buttonType: spec.buttonType.getOrUndefined(),
+    };
+    return renderToggleButton(buttonSpec, backstage.shared.providers);
   } else {
     // eslint-disable-next-line no-console
     console.error('Unknown footer button type: ', buttonType);
