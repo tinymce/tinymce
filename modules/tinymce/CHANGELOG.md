@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `togglebutton` in dialog footer buttons. #TINY-9523
 - Added `toggleFullscreen` to dialog API. #TINY-9528
 - New text-size-increase and text-size-decrease icons. #TINY-9530
+- New `text-size-increase` and `text-size-decrease` icons. #TINY-9530
 
 ### Improved
 - Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
