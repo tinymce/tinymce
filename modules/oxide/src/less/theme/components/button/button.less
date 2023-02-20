@@ -130,5 +130,23 @@
       box-shadow: @button-active-box-shadow;
       color: @button-active-text-color;
     }
+
+    &.tox-button--enabled,
+    &.tox-button--enabled:hover {
+      background: @toolbar-button-enabled-background-color;
+      border-width: @button-border-width;
+      box-shadow: @button-active-box-shadow;
+      color: @toolbar-button-enabled-text-color;
+
+      > * {
+        transform: @toolbar-button-enabled-transform;
+      }
+
+      // Disable stylelint below because we're mixing the :hover modifier with the "--enabled" class
+      // since they need to be kept the same/use the same rules
+      svg { /* stylelint-disable-line no-descending-specificity */
+        fill: @toolbar-button-enabled-icon-color;
+      }
+    }
   }
 }

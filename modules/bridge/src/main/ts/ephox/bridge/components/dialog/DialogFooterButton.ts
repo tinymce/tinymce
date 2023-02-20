@@ -31,7 +31,15 @@ export interface DialogFooterMenuButtonSpec extends BaseDialogFooterButtonSpec {
   items: DialogFooterMenuButtonItemSpec[];
 }
 
-export type DialogFooterButtonSpec = DialogFooterNormalButtonSpec | DialogFooterMenuButtonSpec;
+export interface DialogFooterToggleButtonSpec extends BaseDialogFooterButtonSpec {
+  type: 'togglebutton';
+  tooltip?: string;
+  icon?: string;
+  text?: string;
+  active?: boolean;
+}
+
+export type DialogFooterButtonSpec = DialogFooterNormalButtonSpec | DialogFooterMenuButtonSpec | DialogFooterToggleButtonSpec;
 
 interface BaseDialogFooterButton {
   name: string;
@@ -56,7 +64,15 @@ export interface DialogFooterMenuButton extends BaseDialogFooterButton {
   items: DialogFooterToggleMenuItem[];
 }
 
-export type DialogFooterButton = DialogFooterNormalButton | DialogFooterMenuButton;
+export interface DialogFooterToggleButton extends Omit<BaseDialogFooterButton, 'icon'> {
+  type: 'togglebutton';
+  tooltip: string;
+  icon: string;
+  text: Optional<string>;
+  active: boolean;
+}
+
+export type DialogFooterButton = DialogFooterNormalButton | DialogFooterMenuButton | DialogFooterToggleButton;
 
 const baseFooterButtonFields = [
   ComponentSchema.generatedName('button'),
@@ -88,13 +104,23 @@ const menuFooterButtonFields = [
   ...baseFooterButtonFields
 ];
 
+const toggleButtonSpecFields = [
+  ...baseFooterButtonFields,
+  FieldSchema.requiredStringEnum('type', [ 'togglebutton' ]),
+  FieldSchema.requiredString('tooltip'),
+  ComponentSchema.icon,
+  ComponentSchema.optionalText,
+  FieldSchema.defaultedBoolean('active', false)
+];
+
 export const dialogFooterButtonSchema = StructureSchema.choose(
   'type',
   {
     submit: normalFooterButtonFields,
     cancel: normalFooterButtonFields,
     custom: normalFooterButtonFields,
-    menu: menuFooterButtonFields
+    menu: menuFooterButtonFields,
+    togglebutton: toggleButtonSpecFields
   }
 );
 

@@ -1367,5 +1367,14 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
       foffset: 1,
       expected: false
     }));
+
+    it('TINY-9477: isEditable on selected noneditable table cells should be true since parent is editable', testIsEditableSelection({
+      input: '<table><tbody><tr><td contenteditable="false" data-mce-selected="1">a</td><td contenteditable="false" data-mce-selected="1">b</td></tr></tbody></table>',
+      spath: [ 0, 0, 0, 0, 0 ],
+      soffset: 0,
+      fpath: [ 0, 0, 0, 1, 0 ],
+      foffset: 1,
+      expected: true
+    }));
   });
 });
