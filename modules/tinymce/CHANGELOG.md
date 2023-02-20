@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `font_size_input_default_unit` option allow to use of numbers without a unit in `fontsizeinput` and have them parsed with the default unit, if it is not defined the default is `pt` #TINY-9585
 - New `group` and `togglebutton` in view. #TINY-9523
 - New `togglebutton` in dialog footer buttons. #TINY-9523
+- Added `toggleFullscreen` to dialog API. #TINY-9528
 
 ### Improved
 - Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
