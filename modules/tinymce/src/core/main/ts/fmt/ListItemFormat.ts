@@ -29,7 +29,7 @@ const isRngEndAtEndOfElement = (rng: Range, elm: Element) => {
     .exists((pos) => !NodeType.isBr(pos.getNode()) || CaretFinder.nextPosition(elm, pos).isSome()) === false;
 };
 
-const isEditableListItem = (dom: DOMUtils) => (elm: Element) => NodeType.isListItem(elm) && dom.getContentEditableParent(elm) !== 'false';
+const isEditableListItem = (dom: DOMUtils) => (elm: Element) => NodeType.isListItem(elm) && dom.isEditable(elm);
 
 const getFullySelectedBlocks = (selection: EditorSelection) => {
   const blocks = selection.getSelectedBlocks();
