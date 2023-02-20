@@ -87,7 +87,7 @@ const Quirks = (editor: Editor): Quirks => {
       const keyCode = e.keyCode;
 
       // Empty the editor if it's needed for example backspace at <p><b>|</b></p>
-      if (!isDefaultPrevented(e) && (keyCode === DELETE || keyCode === BACKSPACE)) {
+      if (!isDefaultPrevented(e) && (keyCode === DELETE || keyCode === BACKSPACE) && editor.selection.isEditable()) {
         const isCollapsed = editor.selection.isCollapsed();
         const body = editor.getBody();
 

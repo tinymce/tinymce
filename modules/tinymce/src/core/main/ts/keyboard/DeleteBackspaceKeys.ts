@@ -40,15 +40,17 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: K
     { keyCode: VK.DELETE, action: MatchKeys.action(BlockBoundaryDelete.backspaceDelete, editor, true) },
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(InlineFormatDelete.backspaceDelete, editor, false) },
     { keyCode: VK.DELETE, action: MatchKeys.action(InlineFormatDelete.backspaceDelete, editor, true) }
-  ], evt).each((applyAction) => {
-    evt.preventDefault();
-    const beforeInput = fireFakeBeforeInputEvent(editor, inputType);
+  ], evt)
+    .filter((_) => editor.selection.isEditable())
+    .each((applyAction) => {
+      evt.preventDefault();
+      const beforeInput = fireFakeBeforeInputEvent(editor, inputType);
 
-    if (!beforeInput.isDefaultPrevented()) {
-      applyAction();
-      fireFakeInputEvent(editor, inputType);
-    }
-  });
+      if (!beforeInput.isDefaultPrevented()) {
+        applyAction();
+        fireFakeInputEvent(editor, inputType);
+      }
+    });
 };
 
 const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent, isBackspaceKeydown: boolean) => {
