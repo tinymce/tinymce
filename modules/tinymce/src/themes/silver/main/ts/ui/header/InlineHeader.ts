@@ -24,7 +24,7 @@ export interface InlineHeader {
 
 const { ToolbarLocation, ToolbarMode } = Options;
 
-const scanIfWithinDistance = 40;
+const maximumDistanceToEdge = 40;
 
 export const InlineHeader = (
   editor: Editor,
@@ -194,7 +194,7 @@ export const InlineHeader = (
       Check the width if we are within X number of pixels to the edge ( or above ). Also check if we have the width-value set.
       This helps handling the issue where it goes from having a width set ( because it's too wide ) to going so far from the edge it no longer triggers the problem. Common when the width is changed by test.
       */
-      if (toolbarCurrentRightsidePosition >= window.innerWidth - scanIfWithinDistance || Css.getRaw(mainUi.outerContainer.element, 'width').isSome()) {
+      if (toolbarCurrentRightsidePosition >= window.innerWidth - maximumDistanceToEdge || Css.getRaw(mainUi.outerContainer.element, 'width').isSome()) {
         Css.set(mainUi.outerContainer.element, 'position', 'absolute');
         Css.set(mainUi.outerContainer.element, 'left', '0px');
         Css.remove(mainUi.outerContainer.element, 'width');
