@@ -21,7 +21,7 @@ const renderLabel = (text: string ): SimpleSpec => ({
   ],
 });
 
-const renderItemLabel = (item: Dialog.Leaf, onLeafAction: OnLeafAction, backstage: UiFactoryBackstage): AlloyButtonSpec => {
+const renderLeafLabel = (item: Dialog.Leaf, onLeafAction: OnLeafAction, backstage: UiFactoryBackstage): AlloyButtonSpec => {
   const internalMenuButton = item.menu.map((btn) => renderMenuButton(btn, 'tox-mbtn', backstage, Optional.none()));
   const components = [ renderLabel(item.title) ];
   internalMenuButton.each((btn) => components.push(btn));
@@ -107,7 +107,7 @@ const renderDirectoryChildren = (children: Dialog.TreeItem[], onLeafAction: OnLe
       classes: [ 'tox-tree--directory__children' ],
     },
     components: children.map((item) => {
-      return item.type === 'leaf' ? renderItemLabel(item, onLeafAction, backstage) : renderDirectory(item, onLeafAction, backstage);
+      return item.type === 'leaf' ? renderLeafLabel(item, onLeafAction, backstage) : renderDirectory(item, onLeafAction, backstage);
     }),
     behaviours: Behaviour.derive([
       Toggling.config({
@@ -145,7 +145,7 @@ const renderTree = (
     },
     components: spec.items.map((item) => {
       return item.type === 'leaf' ?
-        renderItemLabel(item, onLeafAction, backstage) :
+        renderLeafLabel(item, onLeafAction, backstage) :
         renderDirectory(item, onLeafAction, backstage);
     })
   };
