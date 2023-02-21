@@ -126,11 +126,11 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
     Mouse.clickOn(dir.element, '.tox-tree--directory .tox-trbtn.tox-tree--directory__label');
     assertDirectoryExpandedState('Expanded', true, getTreeItem('.tox-tree--directory .tox-tree--directory .tox-tree--directory__children'));
 
-    Mouse.clickOn(getTreeItem('.tox-tree').element, '>.tox-tree--item__label');
+    Mouse.clickOn(getTreeItem('.tox-tree').element, '>.tox-tree--leaf__label');
     store.assertEq('File 5', [ '5' ]);
 
     store.clear();
-    Mouse.clickOn(getTreeItem('.tox-tree').element, '.tox-tree--item__label');
+    Mouse.clickOn(getTreeItem('.tox-tree').element, '.tox-tree--leaf__label');
     store.assertEq('File 1', [ '1' ]);
 
     store.clear();
