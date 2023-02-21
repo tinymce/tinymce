@@ -21,19 +21,19 @@ const renderLabel = (text: string ): SimpleSpec => ({
   ],
 });
 
-const renderLeafLabel = (item: Dialog.Leaf, onLeafAction: OnLeafAction, backstage: UiFactoryBackstage): AlloyButtonSpec => {
-  const internalMenuButton = item.menu.map((btn) => renderMenuButton(btn, 'tox-mbtn', backstage, Optional.none()));
-  const components = [ renderLabel(item.title) ];
+const renderLeafLabel = (leaf: Dialog.Leaf, onLeafAction: OnLeafAction, backstage: UiFactoryBackstage): AlloyButtonSpec => {
+  const internalMenuButton = leaf.menu.map((btn) => renderMenuButton(btn, 'tox-mbtn', backstage, Optional.none()));
+  const components = [ renderLabel(leaf.title) ];
   internalMenuButton.each((btn) => components.push(btn));
 
   return AlloyButton.sketch({
     dom: {
       tag: 'span',
-      classes: [ `tox-tree--item__label`, 'tox-trbtn' ],
+      classes: [ `tox-tree--leaf__label`, 'tox-trbtn' ],
     },
     components,
     action: (_button) => {
-      onLeafAction(item.id);
+      onLeafAction(leaf.id);
     },
     buttonBehaviours: Behaviour.derive([
       Tabstopping.config({})
