@@ -15,16 +15,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `fontsizeinput` toolbar item which allows the user to set the size via input and also increase and decrease it with `+` and `-` buttons. #TINY-9429
 - Added `skipFocus` option to the `ToggleToolbarDrawer` command to preserve focus. #TINY-9337
 - Added `common/space/delBetweenExclamationMarks` to remove spaces between exclamation marks. #TINY-9398
-- New `font_size_input_default_unit` option allow to use of numbers without a unit in `fontsizeinput` and have them parsed with the default unit, if it is not defined the default is `pt` #TINY-9585
+- New `font_size_input_default_unit` option allow to use of numbers without a unit in `fontsizeinput` and have them parsed with the default unit, if it is not defined the default is `pt`. #TINY-9585
+- New `group` and `togglebutton` in view. #TINY-9523
+- New `togglebutton` in dialog footer buttons. #TINY-9523
+- Added `toggleFullscreen` to dialog API. #TINY-9528
+- New text-size-increase and text-size-decrease icons. #TINY-9530
+- New `text-size-increase` and `text-size-decrease` icons. #TINY-9530
 
 ### Improved
 - Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
+- Templates will be parsed before preview and insertion to make preview consistent with inserted template content and prevent XSS. #TINY-9244
 - Pressing backspace in an empty line now preserves formatting in a previous empty line. #TINY-9454
+- Pressing enter inside the `inputfontsize` input would not move the focus back into the editor content. #TINY-9598
 
 ### Changed
 - The `link` plugins context menu items will no longer appear for noneditable links. #TINY-9491
 - The formatting of `contenteditable="false"` elements are no longer cloned to new cells while creating new table rows. #TINY-9449
 - Changed the color of `@dialog-table-border-color`, and added right padding to the first cell of dialog table. #TINY-9380
+- The sidebar element now has accessibility role `region` when visible and `presentation` when hidden. #TINY-9517
 
 ### Fixed
 - Sometimes the editor would finish initializing before the silver theme would have finished loading. #TINY-9556
@@ -35,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Checkmark did not show in menu colorswatches. #TINY-9395
 - The foreground and background menu icons would not properly update to display the last used color. #TINY-9497
 - Added new `setIconFill` function to `NestedMenuItemInstanceApi`. #TINY-9497
+- Pasting links to text would sometimes not generate the correct undo stack on safari. #TINY-9489
 - Toolbar split buttons in advlist plugin to show the correct state when the cursor is in a checklist. #TINY-5167
 - Dragging transparent elements into transparent blocks elements could produce invalid nesting of transparents. #TINY-9231
 - The `editor.insertContent` API would insert contents inside noneditable elements if the selection was inside the element. #TINY-9462
@@ -54,8 +63,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inline boundary was rendered for noneditable inline boundary elements. #TINY-9471
 - Clicking on a disabled split button will no longer call the `onAction` callback. #TINY-9504
 - The "Edit Link" dialog incorrectly retrieved the URL value when opened immediately after the link insertion. #TINY-7993
+- Editor commands `ForwardDelete` and `Delete` was deleting contents inside noneditable elements. #TINY-9477
+- Backspace or delete keys was deleting contents inside noneditable elements. #TINY-9477
 - Inserting newlines inside an editable element inside a noneditable root would sometimes try to split the editable element. #TINY-9461
 - Creating a list in a table cell when the caret is in front of an anchor element would not properly include the anchor in the list. #TINY-6853
+- Formatting could be applied or removed on noneditable list items inside a noneditable root. #TINY-9563
 
 ## 6.3.1 - 2022-12-06
 

@@ -7,6 +7,10 @@ export const enum ToolbarButtonClasses {
   MatchWidth = 'tox-tbtn--select'
 }
 
+export const enum ViewButtonClasses {
+  Ticked = 'tox-button--enabled'
+}
+
 export const enum MenuButtonClasses {
   Button = 'tox-mbtn',
   Active = 'tox-mbtn--active'

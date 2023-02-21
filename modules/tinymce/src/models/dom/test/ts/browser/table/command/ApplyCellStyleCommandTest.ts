@@ -15,6 +15,7 @@ describe('browser.tinymce.models.dom.table.command.ApplyCellStyleCommandTest', (
   const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'table',
     base_url: '/project/tinymce/js/tinymce',
+    indent: false,
     setup: (editor: Editor) => {
       editor.on('TableModified', logEvent);
     }
@@ -44,8 +45,8 @@ describe('browser.tinymce.models.dom.table.command.ApplyCellStyleCommandTest', (
   const table = '<table style="border-collapse: collapse; width: 100%;" border="1">' +
     '<tbody>' +
     '<tr>' +
-    `<td style="width: 50%;" >a</td>` +
-    `<td style="width: 50%;" >b</td>` +
+    `<td style="width: 50%;">a</td>` +
+    `<td style="width: 50%;">b</td>` +
     '</tr>' +
     '</tbody>' +
     '</table>';
@@ -212,7 +213,7 @@ describe('browser.tinymce.models.dom.table.command.ApplyCellStyleCommandTest', (
       editor.setContent(table);
       TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
       applyCellStyle(editor, { backgroundColor: 'red' });
-      assertTableCellStructure(editor, { });
+      TinyAssertions.assertContent(editor, table);
     });
   });
 });
