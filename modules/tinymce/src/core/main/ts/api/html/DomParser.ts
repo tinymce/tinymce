@@ -56,18 +56,19 @@ export interface DomParserSettings {
   allow_html_in_named_anchor?: boolean;
   allow_script_urls?: boolean;
   allow_unsafe_link_target?: boolean;
+  blob_cache?: BlobCache;
   convert_fonts_to_spans?: boolean;
+  document?: Document;
   fix_list_elements?: boolean;
   font_size_legacy_values?: string;
   forced_root_block?: boolean | string;
   forced_root_block_attrs?: Record<string, string>;
+  inline_styles?: boolean;
   preserve_cdata?: boolean;
   remove_trailing_brs?: boolean;
   root_name?: string;
+  sanitize?: boolean;
   validate?: boolean;
-  inline_styles?: boolean;
-  blob_cache?: BlobCache;
-  document?: Document;
 }
 
 interface DomParser {
@@ -408,11 +409,11 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
   const defaultedSettings = {
     validate: true,
     root_name: 'body',
+    sanitize: true,
     ...settings
   };
 
   const parser = new DOMParser();
-  const purify = setupPurify(defaultedSettings, schema);
 
   const parseAndSanitizeWithContext = (html: string, rootName: string, format: string = 'html'): Element => {
     const mimeType = format === 'xhtml' ? 'application/xhtml+xml' : 'text/html';
@@ -425,8 +426,11 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     const body = parser.parseFromString(wrappedHtml, mimeType).body;
 
     // Sanitize the content
-    purify.sanitize(body, getPurifyConfig(defaultedSettings, mimeType));
-    purify.removed = [];
+    if (defaultedSettings.sanitize) {
+      const purify = setupPurify(defaultedSettings, schema);
+      purify.sanitize(body, getPurifyConfig(defaultedSettings, mimeType));
+      purify.removed = [];
+    }
 
     return isSpecialRoot ? body.firstChild as Element : body;
   };

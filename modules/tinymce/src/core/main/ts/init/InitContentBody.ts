@@ -80,6 +80,7 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
     remove_trailing_brs: getOption('remove_trailing_brs'),
     inline_styles: getOption('inline_styles'),
     root_name: getRootName(editor),
+    sanitize: getOption('editor_security'),
     validate: true,
     blob_cache: blobCache,
     document: editor.getDoc()
