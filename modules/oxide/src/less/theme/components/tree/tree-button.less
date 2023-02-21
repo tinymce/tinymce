@@ -75,6 +75,12 @@
     padding: 0;
     text-transform: @tree-button-text-transform;
 
+    .tox-tree__label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
     svg {
       display: block;
       fill: @tree-button-icon-color;
