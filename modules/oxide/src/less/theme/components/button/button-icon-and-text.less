@@ -1,0 +1,13 @@
+.tox {
+  .tox-button--icon-and-text,
+  .tox-button.tox-button--icon-and-text,
+  .tox-button.tox-button--secondary.tox-button--icon-and-text {
+    display: flex;
+    padding: @button-padding-y * 1.25 @button-padding-y; // Slightly more than regular icon button, but less than regular button
+
+    .tox-icon svg {
+      display: block;
+      fill: currentColor;
+    }
+  }
+}

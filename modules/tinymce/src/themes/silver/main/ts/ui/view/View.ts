@@ -7,10 +7,10 @@ import { View as BridgeView } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { renderButton } from '../general/Button';
+import { renderButton } from './ViewButtons';
 
 interface ViewHeaderSpec extends SimpleSpec {
-  buttons: BridgeView.ViewButton[];
+  buttons: (BridgeView.ViewButton | BridgeView.ViewButtonsGroup)[];
   providers: UiFactoryBackstageProviders;
 }
 
@@ -33,49 +33,56 @@ interface ViewApis {
   readonly getOnHide: (comp: AlloyComponent) => (api: BridgeView.ViewInstanceApi) => void;
 }
 
-const renderViewButton = (spec: BridgeView.ViewButton, providers: UiFactoryBackstageProviders) => {
-  return renderButton(
-    {
-      text: spec.text,
-      enabled: true,
-      primary: false,
-      name: 'name',
-      icon: Optional.none(),
-      borderless: false,
-      buttonType: Optional.some(spec.buttonType)
+export type ViewButtonWithoutGroup = Exclude<BridgeView.ViewButton, BridgeView.ViewButtonsGroup>;
+
+const renderViewButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryBackstageProviders) =>
+  renderButton(spec, providers);
+
+const renderButtonsGroup = (spec: BridgeView.ViewButtonsGroup, providers: UiFactoryBackstageProviders) => {
+  return {
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-view__toolbar__group' ],
     },
-    (_comp) => {
-      spec.onAction();
-    },
-    providers
-  );
+    components: Arr.map(spec.buttons, (button) => renderViewButton(button, providers))
+  };
 };
 
 const renderViewHeader = (spec: ViewHeaderSpec) => {
-  const endButtons = Arr.map(spec.buttons, (btnspec) => renderViewButton(btnspec, spec.providers));
+  let hasGroups = false;
+  const endButtons = Arr.map(spec.buttons, (btnspec) => {
+    if (btnspec.type === 'group') {
+      hasGroups = true;
+      return renderButtonsGroup(btnspec, spec.providers);
+    } else {
+      return renderViewButton(btnspec, spec.providers);
+    }
+  });
 
   return {
     uid: spec.uid,
     dom: {
       tag: 'div',
-      classes: [ 'tox-view__header' ]
+      classes: [ !hasGroups ? 'tox-view__header' : 'tox-view__toolbar' ]
     },
-    components: [
-      Container.sketch({
-        dom: {
-          tag: 'div',
-          classes: [ 'tox-view__header-start' ]
-        },
-        components: []
-      }),
-      Container.sketch({
-        dom: {
-          tag: 'div',
-          classes: [ 'tox-view__header-end' ]
-        },
-        components: endButtons
-      })
-    ]
+    components: hasGroups ?
+      endButtons
+      : [
+        Container.sketch({
+          dom: {
+            tag: 'div',
+            classes: [ 'tox-view__header-start' ]
+          },
+          components: []
+        }),
+        Container.sketch({
+          dom: {
+            tag: 'div',
+            classes: [ 'tox-view__header-end' ]
+          },
+          components: endButtons
+        })
+      ]
   };
 };
 

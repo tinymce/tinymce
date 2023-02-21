@@ -29,7 +29,8 @@ const createDemoApi = <T extends DialogData>(internalStructure: Dialog<T>, initi
     setEnabled: (_name: string, _state: boolean) => {},
     block: (_message: string) => {},
     unblock: Fun.noop,
-    close: Fun.noop
+    close: Fun.noop,
+    toggleFullscreen: Fun.noop
   };
 };
 

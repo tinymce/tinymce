@@ -240,6 +240,14 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     if (hasContentType(clipboardContent, 'text/html')) {
       e.preventDefault();
       insertClipboardContent(editor, clipboardContent, clipboardContent['text/html'], plainTextMode);
+    } else if (hasContentType(clipboardContent, 'text/plain') && hasContentType(clipboardContent, 'text/uri-list')) {
+      /*
+      Safari adds the uri-list attribute to links copied within it.
+      When pasting something with the url-list within safari using the default functionality it will convert it from www.example.com to <a href="www.example.com">www.example.com</a> when pasting into the pasteBin-div.
+      This causes issues. To solve this we bypass the default paste functionality for this situation.
+       */
+      e.preventDefault();
+      insertClipboardContent(editor, clipboardContent, clipboardContent['text/plain'], plainTextMode);
     } else {
       // We can't extract the HTML content from the clipboard so we need to allow the paste
       // to run via the pastebin and then extract from there

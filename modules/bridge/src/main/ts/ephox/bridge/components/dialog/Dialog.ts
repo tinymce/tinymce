@@ -17,6 +17,7 @@ export interface DialogInstanceApi<T extends DialogData> {
   redial: (nu: DialogSpec<T>) => void;
   block: (msg: string) => void;
   unblock: () => void;
+  toggleFullscreen: () => void;
   close: () => void;
 }
 
