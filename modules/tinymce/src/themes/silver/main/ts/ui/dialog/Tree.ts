@@ -21,7 +21,7 @@ const renderLabel = (text: string ): SimpleSpec => ({
   ],
 });
 
-const renderItemLabel = (item: Dialog.Leaf, level: number, onLeafAction: OnLeafAction, backstage: UiFactoryBackstage): AlloyButtonSpec => {
+const renderItemLabel = (item: Dialog.Leaf, onLeafAction: OnLeafAction, backstage: UiFactoryBackstage): AlloyButtonSpec => {
   const internalMenuButton = item.menu.map((btn) => renderMenuButton(btn, 'tox-mbtn', backstage, Optional.none()));
   const components = [ renderLabel(item.title) ];
   internalMenuButton.each((btn) => components.push(btn));
@@ -30,9 +30,6 @@ const renderItemLabel = (item: Dialog.Leaf, level: number, onLeafAction: OnLeafA
     dom: {
       tag: 'span',
       classes: [ `tox-tree--item__label`, 'tox-trbtn' ],
-      styles: {
-        'padding-left': `${level * 8}px`,
-      }
     },
     components,
     action: (_button) => {
@@ -57,12 +54,12 @@ const renderIcon = (iconName: string, iconsProvider: Icons.IconProvider, behavio
 const renderIconFromPack = (iconName: string, iconsProvider: Icons.IconProvider): SimpleSpec =>
   renderIcon(iconName, iconsProvider, []);
 
-const renderDirectoryLabel = (directory: Dialog.Directory, level: number, backstage: UiFactoryBackstage): AlloyButtonSpec => {
+const renderDirectoryLabel = (directory: Dialog.Directory, backstage: UiFactoryBackstage): AlloyButtonSpec => {
   const internalMenuButton = directory.menu.map((btn) => renderMenuButton(btn, 'tox-mbtn', backstage, Optional.none()));
   const directoryLabelWrapper = {
     dom: {
       tag: 'span',
-      classes: ['tox-tree--directory__title__wrapper'],
+      classes: [ 'tox-tree--directory__title__wrapper' ],
     },
     components: [ renderLabel(directory.title) ]
   };
@@ -86,9 +83,6 @@ const renderDirectoryLabel = (directory: Dialog.Directory, level: number, backst
     dom: {
       tag: 'div',
       classes: [ `tox-tree--directory__label`, 'tox-trbtn' ],
-      styles: {
-        'padding-left': `${level * 8}px`,
-      }
     },
     components,
     action: (button) => {
@@ -106,17 +100,14 @@ const renderDirectoryLabel = (directory: Dialog.Directory, level: number, backst
   });
 };
 
-const renderDirectoryChildren = (children: Dialog.TreeItem[], level: number, onLeafAction: OnLeafAction, backstage: UiFactoryBackstage): SimpleSpec => {
+const renderDirectoryChildren = (children: Dialog.TreeItem[], onLeafAction: OnLeafAction, backstage: UiFactoryBackstage): SimpleSpec => {
   return {
     dom: {
       tag: 'div',
       classes: [ 'tox-tree--directory__children' ],
-      styles: {
-        'padding-left': `${level * 8}px`
-      }
     },
     components: children.map((item) => {
-      return item.type === 'leaf' ? renderItemLabel(item, level + 1, onLeafAction, backstage) : renderDirectory(item, level + 1, onLeafAction, backstage);
+      return item.type === 'leaf' ? renderItemLabel(item, onLeafAction, backstage) : renderDirectory(item, onLeafAction, backstage);
     }),
     behaviours: Behaviour.derive([
       Toggling.config({
@@ -127,16 +118,16 @@ const renderDirectoryChildren = (children: Dialog.TreeItem[], level: number, onL
   };
 };
 
-const renderDirectory = (dir: Dialog.Directory, level: number, onLeafAction: OnLeafAction, backstage: UiFactoryBackstage): SimpleSpec => {
+const renderDirectory = (dir: Dialog.Directory, onLeafAction: OnLeafAction, backstage: UiFactoryBackstage): SimpleSpec => {
   const children =
-    renderDirectoryChildren(dir.children, level, onLeafAction, backstage);
+    renderDirectoryChildren(dir.children, onLeafAction, backstage);
   return ({
     dom: {
       tag: 'div',
       classes: [ `tox-tree--directory` ],
     },
     components: [
-      renderDirectoryLabel(dir, level, backstage),
+      renderDirectoryLabel(dir, backstage),
       children
     ],
   });
@@ -144,8 +135,7 @@ const renderDirectory = (dir: Dialog.Directory, level: number, onLeafAction: OnL
 
 const renderTree = (
   spec: TreeSpec,
-  backstage: UiFactoryBackstage,
-  level = 1
+  backstage: UiFactoryBackstage
 ): SimpleSpec => {
   const onLeafAction = spec.onLeafAction.getOr(Fun.noop);
   return {
@@ -155,8 +145,8 @@ const renderTree = (
     },
     components: spec.items.map((item) => {
       return item.type === 'leaf' ?
-        renderItemLabel(item, level, onLeafAction, backstage) :
-        renderDirectory(item, level, onLeafAction, backstage);
+        renderItemLabel(item, onLeafAction, backstage) :
+        renderDirectory(item, onLeafAction, backstage);
     })
   };
 };

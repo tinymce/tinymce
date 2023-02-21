@@ -8,7 +8,6 @@
 @tree-button-border: 0;
 @tree-button-box-shadow: none;
 @tree-button-chevron-color: fade(@tree-button-icon-color, 50%);
-@tree-button-chevron-width: @base-value;
 @tree-button-font-size: @font-size-sm;
 @tree-button-font-style: normal;
 @tree-button-font-weight: @font-weight-normal;
@@ -197,7 +196,7 @@
       font-weight: bold;
 
       .tox-tree--directory__title__wrapper {
-        padding-left: 4px;
+        padding-left: 6px;
       }
 
       .tox-mbtn {
@@ -227,7 +226,6 @@
 
         svg {
           fill: @tree-button-chevron-color;
-          width: @tree-button-chevron-width;
         }
       }
 
@@ -266,6 +264,7 @@
   .tox-tree--directory__children {
     max-height: 0;
     overflow: hidden;
+    padding-left: 16px;
     transition: max-height .5s ease-in-out;
   }
 
