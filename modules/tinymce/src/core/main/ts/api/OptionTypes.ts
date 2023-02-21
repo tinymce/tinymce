@@ -95,6 +95,7 @@ interface BaseEditorOptions {
   document_base_url?: string;
   draggable_modal?: boolean;
   editable_class?: string;
+  editor_security?: boolean;
   element_format?: 'xhtml' | 'html';
   elementpath?: boolean;
   encoding?: string;
@@ -283,6 +284,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   document_base_url: string;
   draggable_modal: boolean;
   editable_class: string;
+  editor_security: boolean;
   font_css: string[];
   font_family_formats: string;
   font_size_classes: string;
