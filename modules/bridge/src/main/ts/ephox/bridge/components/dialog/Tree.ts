@@ -66,8 +66,6 @@ const treeItemLeafSchema = StructureSchema.objOf(treeItemLeafFields);
 
 const treeItemDirectoryFields = baseTreeItemFields.concat([
   FieldSchema.requiredArrayOf('children', StructureSchema.thunkOf('children', () => {
-    // The order here is very important! if we change the order, then boulder will always match
-    // againt treeItemLeafSchema, because a directory has all attributes of leaf plus the children property
     return StructureSchema.chooseProcessor('type', {
       directory: treeItemDirectorySchema,
       leaf: treeItemLeafSchema,
@@ -77,8 +75,6 @@ const treeItemDirectoryFields = baseTreeItemFields.concat([
 
 const treeItemDirectorySchema = StructureSchema.objOf(treeItemDirectoryFields);
 
-// The order here is very important! if we change the order, then boulder will always match
-// againt treeItemLeafSchema, because a directory has all attributes of leaf plus the children property
 const treeItemSchema = StructureSchema.chooseProcessor('type', {
   directory: treeItemDirectorySchema,
   leaf: treeItemLeafSchema,
