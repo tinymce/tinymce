@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Mouse, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, Mouse, UiFinder } from '@ephox/agar';
 import { AlloyComponent, GuiFactory, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { StructureSchema } from '@ephox/boulder';
@@ -135,8 +135,7 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
 
     store.clear();
     Mouse.clickOn(dir.element, '.tox-mbtn');
-    // Wait for the menu item to show up
-    await Waiter.pWait(1);
+    await UiFinder.pWaitFor('Wait for menu item to show up', SugarBody.body(), '[title="menuitem"]');
     Mouse.clickOn(SugarBody.body(), '[title="menuitem"]');
     store.assertEq('menuitem', [ 'menuitem' ]);
   });
