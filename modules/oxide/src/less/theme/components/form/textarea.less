@@ -25,14 +25,27 @@
     // restore appearance for scrollbars
     appearance: textarea;
 
-    // Remove border that gets imported from tox-textfield since that is applied by to the wrapper element
-    border: none;
-
     // This is required to allow white-spaces and new lines within textareas in Firefox
     white-space: pre-wrap;
+
+    &:focus {
+      &:extend(.tox .tox-textfield:focus);
+    }
   }
 
   .tox-textarea[disabled] {
     &:extend(.tox .tox-textfield[disabled]);
+  }
+
+  // Remove border and focus styling when textarea is wrapped since that is applied to the wrapper
+  // Comments uses unwrapped textareas see: TINY-9610
+  .tox-textarea-wrap .tox-textarea {
+    border: none;
+
+    &:focus {
+      &:extend(.tox .tox-textfield);
+
+      border: none;
+    }
   }
 }
