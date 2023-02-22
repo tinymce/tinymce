@@ -116,7 +116,6 @@ export interface DialogSpec {
   body: AlloyParts.ConfiguredPart;
   footer: Optional<AlloyParts.ConfiguredPart>;
   onEscape: (comp: AlloyComponent) => void;
-  firstTabstop?: number;
   extraClasses: string[];
   extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[];
   extraStyles: Record<string, string>;
@@ -124,7 +123,15 @@ export interface DialogSpec {
   eventOrder: Record<string, string[]>;
 }
 
-const renderDialog = (spec: DialogSpec): SketchSpec => {
+const renderDialogWithHeader = (spec: DialogSpec): SketchSpec => {
+  return renderDialog(spec, 1);
+};
+
+const renderDialogWithoutHeader = (spec: DialogSpec): SketchSpec => {
+  return renderDialog(spec);
+};
+
+const renderDialog = (spec: DialogSpec, firstTabstop?: number): SketchSpec => {
   const dialogClass = 'tox-dialog';
   const blockerClass = dialogClass + '-wrap';
   const blockerBackdropClass = blockerClass + '__backdrop';
@@ -139,7 +146,7 @@ const renderDialog = (spec: DialogSpec): SketchSpec => {
         return Optional.some(true);
       },
       useTabstopAt: (elem) => !NavigableObject.isPseudoStop(elem),
-      firstTabstop: spec.firstTabstop,
+      firstTabstop,
       dom: {
         tag: 'div',
         classes: [ dialogClass ].concat(spec.extraClasses),
@@ -198,4 +205,4 @@ const renderDialog = (spec: DialogSpec): SketchSpec => {
   );
 };
 
-export { defaultHeader, hiddenHeader, pClose, pUntitled, pBodyMessage, pFooter, pFooterGroup, renderDialog };
+export { defaultHeader, hiddenHeader, pClose, pUntitled, pBodyMessage, pFooter, pFooterGroup, renderDialogWithHeader, renderDialogWithoutHeader };
