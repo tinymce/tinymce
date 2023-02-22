@@ -56,6 +56,7 @@ const renderDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.Dia
     id: dialogId,
     header,
     body,
+    firstTabstop: 1,
     footer: Optional.some(footer),
     extraClasses: dialogSize,
     extraBehaviours: [],

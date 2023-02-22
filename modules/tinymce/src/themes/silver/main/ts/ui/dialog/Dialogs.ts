@@ -116,6 +116,7 @@ export interface DialogSpec {
   body: AlloyParts.ConfiguredPart;
   footer: Optional<AlloyParts.ConfiguredPart>;
   onEscape: (comp: AlloyComponent) => void;
+  firstTabstop?: number;
   extraClasses: string[];
   extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[];
   extraStyles: Record<string, string>;
@@ -138,6 +139,7 @@ const renderDialog = (spec: DialogSpec): SketchSpec => {
         return Optional.some(true);
       },
       useTabstopAt: (elem) => !NavigableObject.isPseudoStop(elem),
+      firstTabstop: spec.firstTabstop,
       dom: {
         tag: 'div',
         classes: [ dialogClass ].concat(spec.extraClasses),
