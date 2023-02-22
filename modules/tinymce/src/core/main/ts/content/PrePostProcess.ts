@@ -4,13 +4,14 @@ import Editor from '../api/Editor';
 import * as Events from '../api/Events';
 import DomParser from '../api/html/DomParser';
 import HtmlSerializer from '../api/html/Serializer';
+import * as Options from '../api/Options';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import { Content, GetContentArgs, isTreeNode, SetContentArgs } from './ContentTypes';
 
 const serializeContent = (content: Content): string =>
   isTreeNode(content) ? HtmlSerializer({ validate: false }).serialize(content) : content;
 
-const withSerializedContent = <R extends EditorEvent<{ content: string }>>(content: Content, fireEvent: (content: string) => R): R & { content: Content } => {
+const withSerializedContent = <R extends EditorEvent<{ content: string }>>(editor: Editor, content: Content, fireEvent: (content: string) => R): R & { content: Content } => {
   const serializedContent = serializeContent(content);
   const eventArgs = fireEvent(serializedContent);
   if (eventArgs.isDefaultPrevented()) {
@@ -19,7 +20,7 @@ const withSerializedContent = <R extends EditorEvent<{ content: string }>>(conte
     // Restore the content type back to being an AstNode. If the content has changed we need to
     // re-parse the new content, otherwise we can return the input.
     if (eventArgs.content !== serializedContent) {
-      const rootNode = DomParser({ validate: false, forced_root_block: false }).parse(eventArgs.content, { context: content.name });
+      const rootNode = DomParser({ validate: false, forced_root_block: false, sanitize: Options.shouldSanitizeContent(editor) }).parse(eventArgs.content, { context: content.name });
       return { ...eventArgs, content: rootNode };
     } else {
       return { ...eventArgs, content };
@@ -46,7 +47,7 @@ const postProcessGetContent = <T extends GetContentArgs>(editor: Editor, content
   if (args.no_events) {
     return content;
   } else {
-    const processedEventArgs = withSerializedContent(content, (c) => Events.fireGetContent(editor, { ...args, content: c }));
+    const processedEventArgs = withSerializedContent(editor, content, (c) => Events.fireGetContent(editor, { ...args, content: c }));
     return processedEventArgs.content;
   }
 };
@@ -55,7 +56,7 @@ const preProcessSetContent = <T extends SetContentArgs>(editor: Editor, args: T)
   if (args.no_events) {
     return Result.value(args);
   } else {
-    const processedEventArgs = withSerializedContent(args.content, (content) => Events.fireBeforeSetContent(editor, { ...args, content }));
+    const processedEventArgs = withSerializedContent(editor, args.content, (content) => Events.fireBeforeSetContent(editor, { ...args, content }));
     if (processedEventArgs.isDefaultPrevented()) {
       Events.fireSetContent(editor, processedEventArgs);
       return Result.error(undefined);
