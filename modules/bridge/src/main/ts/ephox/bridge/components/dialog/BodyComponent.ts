@@ -20,6 +20,7 @@ import { SizeInput, SizeInputSpec } from './SizeInput';
 import { Slider, SliderSpec } from './Slider';
 import { Table, TableSpec } from './Table';
 import { TextArea, TextAreaSpec } from './Textarea';
+import { Tree, TreeSpec } from './Tree';
 import { UrlInput, UrlInputSpec } from './UrlInput';
 
 export type BodyComponentSpec
@@ -44,6 +45,7 @@ export type BodyComponentSpec
   | CollectionSpec
   | LabelSpec
   | TableSpec
+  | TreeSpec
   | PanelSpec
   | CustomEditorSpec;
 
@@ -69,5 +71,6 @@ export type BodyComponent
   | Collection
   | Label
   | Table
+  | Tree
   | Panel
   | CustomEditor;

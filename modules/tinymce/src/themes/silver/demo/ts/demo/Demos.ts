@@ -3,6 +3,7 @@ import MenuItemDemo from './MenuItemDemo';
 import PlayDemo from './PlayDemo';
 import SidebarDemo from './SidebarDemo';
 import ToolbarButtonDemo from './ToolbarButtonDemo';
+import TreeDemo from './TreeDemo';
 // import InsertAnchorDemo from './InsertAnchorDemo';
 
 declare let window: any;
@@ -12,6 +13,7 @@ window.demos = {
   MenuItemDemo,
   ToolbarButtonDemo,
   FormatSelectDemo,
-  SidebarDemo
+  SidebarDemo,
+  TreeDemo
   // InsertAnchorDemo
 };
