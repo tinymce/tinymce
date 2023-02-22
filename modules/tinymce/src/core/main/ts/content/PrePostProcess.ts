@@ -20,7 +20,7 @@ const withSerializedContent = <R extends EditorEvent<{ content: string }>>(edito
     // Restore the content type back to being an AstNode. If the content has changed we need to
     // re-parse the new content, otherwise we can return the input.
     if (eventArgs.content !== serializedContent) {
-      const rootNode = DomParser({ validate: false, forced_root_block: false, sanitize: Options.shouldSanitizeContent(editor) }).parse(eventArgs.content, { context: content.name });
+      const rootNode = DomParser({ validate: false, forced_root_block: false, sanitize: Options.shouldSanitizeXss(editor) }).parse(eventArgs.content, { context: content.name });
       return { ...eventArgs, content: rootNode };
     } else {
       return { ...eventArgs, content };

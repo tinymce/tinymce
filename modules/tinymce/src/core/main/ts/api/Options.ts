@@ -894,7 +894,7 @@ const getEditableClass = option('editable_class');
 const getNonEditableRegExps = option('noneditable_regexp');
 const shouldPreserveCData = option('preserve_cdata');
 const shouldHighlightOnFocus = option('highlight_on_focus');
-const shouldSanitizeContent = option('xss_sanitization');
+const shouldSanitizeXss = option('xss_sanitization');
 
 const hasTextPatternsLookup = (editor: Editor): boolean =>
   editor.options.isSet('text_patterns_lookup');
@@ -1011,5 +1011,5 @@ export {
   hasTableTabNavigation,
   shouldPreserveCData,
   shouldHighlightOnFocus,
-  shouldSanitizeContent
+  shouldSanitizeXss
 };
