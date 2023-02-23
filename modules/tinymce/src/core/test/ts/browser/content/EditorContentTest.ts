@@ -18,10 +18,7 @@ const defaultExpectedEvents = [
 ];
 
 describe('browser.tinymce.core.content.EditorContentTest', () => {
-  const toHtml = (node: AstNode): string => {
-    const htmlSerializer = HtmlSerializer({});
-    return htmlSerializer.serialize(node);
-  };
+  const toHtml = (node: AstNode): string => HtmlSerializer({}).serialize(node);
 
   const assertContentTreeEqualToHtml = (editor: Editor, html: string, msg: string) => {
     const tree = editor.getContent({ format: 'tree' });
