@@ -128,7 +128,6 @@ const renderUrlDialog = (internalDialog: Dialog.UrlDialog, extra: SharedWindowEx
     header,
     body,
     footer,
-    firstTabstop: 1,
     extraClasses: classes,
     extraBehaviours,
     extraStyles: styles

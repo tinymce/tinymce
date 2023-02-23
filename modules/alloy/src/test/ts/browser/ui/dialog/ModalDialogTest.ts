@@ -128,6 +128,8 @@ describe('browser.alloy.ui.dialog.ModalDialogTest', () => {
           return !Class.has(elem, 'untabbable');
         },
 
+        firstTabstop: 1,
+
         modalBehaviours: Behaviour.derive([
           AddEventsBehaviour.config('modal-events-1', [
             AlloyEvents.runOnAttached(store.adder('modal.attached.1'))

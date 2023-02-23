@@ -27,7 +27,6 @@ export interface DialogSpec {
   readonly header: AlloySpec;
   readonly body: AlloyParts.ConfiguredPart;
   readonly footer: Optional<AlloyParts.ConfiguredPart>;
-  readonly firstTabstop?: number;
   readonly extraClasses: string[];
   readonly extraStyles: Record<string, string>;
   readonly extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[];

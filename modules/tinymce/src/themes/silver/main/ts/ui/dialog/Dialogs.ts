@@ -121,17 +121,18 @@ export interface DialogSpec {
   extraStyles: Record<string, string>;
   dialogEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[];
   eventOrder: Record<string, string[]>;
+  firstTabstop?: number;
 }
 
 const renderDialogWithHeader = (spec: DialogSpec): SketchSpec => {
-  return renderDialog(spec, 1);
+  return renderDialog({ ...spec, firstTabstop: 1 });
 };
 
 const renderDialogWithoutHeader = (spec: DialogSpec): SketchSpec => {
   return renderDialog(spec);
 };
 
-const renderDialog = (spec: DialogSpec, firstTabstop?: number): SketchSpec => {
+const renderDialog = (spec: DialogSpec): SketchSpec => {
   const dialogClass = 'tox-dialog';
   const blockerClass = dialogClass + '-wrap';
   const blockerBackdropClass = blockerClass + '__backdrop';
@@ -146,7 +147,7 @@ const renderDialog = (spec: DialogSpec, firstTabstop?: number): SketchSpec => {
         return Optional.some(true);
       },
       useTabstopAt: (elem) => !NavigableObject.isPseudoStop(elem),
-      firstTabstop,
+      firstTabstop: spec.firstTabstop,
       dom: {
         tag: 'div',
         classes: [ dialogClass ].concat(spec.extraClasses),
