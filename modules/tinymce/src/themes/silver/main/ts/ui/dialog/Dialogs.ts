@@ -128,7 +128,7 @@ const renderDialogWithHeader = (spec: DialogSpec): SketchSpec => {
   return renderDialog({ ...spec, firstTabstop: 1 });
 };
 
-const renderDialogWithoutHeader = (spec: DialogSpec): SketchSpec => {
+const renderDialogWithHiddenHeader = (spec: DialogSpec): SketchSpec => {
   return renderDialog(spec);
 };
 
@@ -206,4 +206,4 @@ const renderDialog = (spec: DialogSpec): SketchSpec => {
   );
 };
 
-export { defaultHeader, hiddenHeader, pClose, pUntitled, pBodyMessage, pFooter, pFooterGroup, renderDialogWithHeader, renderDialogWithoutHeader };
+export { defaultHeader, hiddenHeader, pClose, pUntitled, pBodyMessage, pFooter, pFooterGroup, renderDialogWithHeader, renderDialogWithHiddenHeader };

@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ### Added
-- Added `firstTabstop` optional property to `ModalDialogDetail`, to specify the sequence of element to focus on when dialog shows. #TINY-9520
+- Added `firstTabstop` optional property to `ModalDialogDetail`, to specify the index of elements to focus on when dialog shows. #TINY-9520
 
 ## 12.0.0 - 2022-11-23
 
