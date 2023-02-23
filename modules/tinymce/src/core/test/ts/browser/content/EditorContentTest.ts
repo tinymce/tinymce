@@ -22,6 +22,11 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
     return htmlSerializer.serialize(node);
   };
 
+  const assertContentTreeEqualToHtml = (editor: Editor, html: string, msg: string) => {
+    const tree = editor.getContent({ format: 'tree' });
+    assert.equal(toHtml(tree), html, msg);
+  };
+
   const getFontTree = (): AstNode => {
     const body = new AstNode('body', 11);
     const font = new AstNode('font', 1);
@@ -123,8 +128,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         it('TBA: getContent tree', () => {
           const editor = hook.editor();
           editor.setContent('<p>tree</p>');
-          const tree = editor.getContent({ format: 'tree' });
-          assert.equal(toHtml(tree), '<p>tree</p>', 'Should be expected tree html');
+          assertContentTreeEqualToHtml(editor, '<p>tree</p>', 'Should be expected tree html');
           assertEventsFiredInOrder();
           assertEventsContentType();
         });
@@ -132,9 +136,8 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         it('TINY-6281: getContent tree with empty editor', () => {
           const editor = hook.editor();
           editor.setContent('');
-          const tree = editor.getContent({ format: 'tree' });
           // bogus br that sits in an empty editor is replaced with a &nbsp; by the html parser, hence the space
-          assert.equal(toHtml(tree), '<p> </p>', 'Should be expected tree html');
+          assertContentTreeEqualToHtml(editor, '<p> </p>', 'Should be expected tree html');
           assertEventsFiredInOrder();
           assertEventsContentType();
         });
@@ -142,8 +145,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         it('TBA: getContent tree filtered', () => {
           const editor = hook.editor();
           editor.setContent('<p><font size="7">x</font></p>', { format: 'raw' });
-          const tree = editor.getContent({ format: 'tree' });
-          assert.equal(toHtml(tree), '<p><span style="font-size: 300%;">x</span></p>', 'Should be expected tree filtered html');
+          assertContentTreeEqualToHtml(editor, '<p><span style="font-size: 300%;">x</span></p>', 'Should be expected tree filtered html');
           assertEventsFiredInOrder();
           assertEventsContentType();
         });
@@ -274,8 +276,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
             assert.equal(e.content, '<p>tree</p>');
             e.content = '<p>replaced</p>';
           });
-          const tree = editor.getContent({ format: 'tree' });
-          assert.equal(toHtml(tree), '<p>replaced</p>', 'Should be replaced html');
+          assertContentTreeEqualToHtml(editor, '<p>replaced</p>', 'Should be replaced html');
         });
 
         const initialContent = '<p>initial</p>';
@@ -336,8 +337,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
       it('getContent tree with unsanitized content', () => {
         const editor = hook.editor();
         editor.setContent(unsanitizedHtml);
-        const tree = editor.getContent({ format: 'tree' });
-        assert.equal(toHtml(tree), unsanitizedHtml, 'Unsanitized html should not be altered');
+        assertContentTreeEqualToHtml(editor, unsanitizedHtml, 'Unsanitized html should not be altered');
       });
 
       it('setContent tree with content altered to unsanitized html in BeforeSetContent', () => {
@@ -358,8 +358,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
           assert.equal(e.content, '<p>tree</p>');
           e.content = unsanitizedHtml;
         });
-        const tree = editor.getContent({ format: 'tree' });
-        assert.equal(toHtml(tree), unsanitizedHtml, 'Replaced content should be unaltered unsanitized html');
+        assertContentTreeEqualToHtml(editor, unsanitizedHtml, 'Replaced content should be unaltered unsanitized html');
       });
     });
   });
