@@ -17,6 +17,24 @@ const defaultExpectedEvents = [
 ];
 
 describe('browser.tinymce.core.content.EditorContentTest', () => {
+  const toHtml = (node: AstNode): string => {
+    const htmlSerializer = HtmlSerializer({});
+    return htmlSerializer.serialize(node);
+  };
+
+  const getFontTree = (): AstNode => {
+    const body = new AstNode('body', 11);
+    const font = new AstNode('font', 1);
+    const text = new AstNode('#text', 3);
+
+    text.value = 'x';
+    font.attr('size', '7');
+    font.append(text);
+    body.append(font);
+
+    return body;
+  };
+
   Arr.each(
     [
       {
@@ -24,9 +42,17 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
       },
       {
         inline: false
+      },
+      {
+        inline: true,
+        xss_sanitization: false
+      },
+      {
+        inline: false,
+        xss_sanitization: false
       }
     ], (options) => {
-      context('Test with inline option ' + options.inline, () => {
+      context('Test with inline option ' + options.inline + ' and xss sanitization option ' + options.xss_sanitization, () => {
         let events: EditorEvent<SetContentEvent | GetContentEvent | BeforeSetContentEvent | BeforeGetContentEvent>[] = [];
         const hook = TinyHooks.bddSetupLight<Editor>({
           base_url: '/project/tinymce/js/tinymce',
@@ -37,24 +63,6 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
           },
           ...options
         }, []);
-
-        const getFontTree = (): AstNode => {
-          const body = new AstNode('body', 11);
-          const font = new AstNode('font', 1);
-          const text = new AstNode('#text', 3);
-
-          text.value = 'x';
-          font.attr('size', '7');
-          font.append(text);
-          body.append(font);
-
-          return body;
-        };
-
-        const toHtml = (node: AstNode): string => {
-          const htmlSerializer = HtmlSerializer({});
-          return htmlSerializer.serialize(node);
-        };
 
         const assertEventsFiredInOrder = (expectedEvents: string[] = defaultExpectedEvents) => {
           const names = Arr.map(events, (e) => e.type);
@@ -291,4 +299,68 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
       });
     }
   );
+
+  Arr.each([
+    { inline: true },
+    { inline: false }
+  ], (options) => {
+    context('TINY:9600: Test unsanitized content with inline option ' + options.inline, () => {
+      const hook = TinyHooks.bddSetupLight<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        xss_sanitization: false,
+        ...options
+      }, []);
+
+      const unsanitizedHtml = '<p><a href="javascript:alert(1)">XSS</a></p>';
+
+      it('setContent with unsanitized content', () => {
+        const editor = hook.editor();
+        editor.setContent(unsanitizedHtml);
+        TinyAssertions.assertContent(editor, unsanitizedHtml);
+      });
+
+      it('getContent html with unsanitized content', () => {
+        const editor = hook.editor();
+        editor.setContent(unsanitizedHtml);
+        const content = editor.getContent();
+        assert.equal(content, unsanitizedHtml, 'Unsanitized html should not be altered');
+      });
+
+      it('getContent text with unsanitized content', () => {
+        const editor = hook.editor();
+        editor.setContent(unsanitizedHtml);
+        const text = editor.getContent({ format: 'text' });
+        assert.equal(text, 'XSS', 'Text content from unsanitized html should not be altered');
+      });
+
+      it('getContent tree with unsanitized content', () => {
+        const editor = hook.editor();
+        editor.setContent(unsanitizedHtml);
+        const tree = editor.getContent({ format: 'tree' });
+        assert.equal(toHtml(tree), unsanitizedHtml, 'Unsanitized html should not be altered');
+      });
+
+      it('setContent tree with content altered to unsanitized html in BeforeSetContent', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>tree</p>');
+        editor.once('BeforeSetContent', (e) => {
+          assert.equal(e.content, '<font size="7">x</font>');
+          e.content = unsanitizedHtml;
+        });
+        editor.setContent(getFontTree());
+        assert.equal(editor.getContent(), unsanitizedHtml, 'Replaced content should be unaltered unsanitized html');
+      });
+
+      it('getContent tree with content altered to unsanitized html in GetContent', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>tree</p>');
+        editor.once('GetContent', (e) => {
+          assert.equal(e.content, '<p>tree</p>');
+          e.content = unsanitizedHtml;
+        });
+        const tree = editor.getContent({ format: 'tree' });
+        assert.equal(toHtml(tree), unsanitizedHtml, 'Replaced content should be unaltered unsanitized html');
+      });
+    });
+  });
 });
