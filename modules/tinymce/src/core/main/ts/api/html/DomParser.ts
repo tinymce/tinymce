@@ -414,6 +414,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
   };
 
   const parser = new DOMParser();
+  const purify = setupPurify(defaultedSettings, schema);
 
   const parseAndSanitizeWithContext = (html: string, rootName: string, format: string = 'html'): Element => {
     const mimeType = format === 'xhtml' ? 'application/xhtml+xml' : 'text/html';
@@ -427,7 +428,6 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
 
     // Sanitize the content
     if (defaultedSettings.sanitize) {
-      const purify = setupPurify(defaultedSettings, schema);
       purify.sanitize(body, getPurifyConfig(defaultedSettings, mimeType));
       purify.removed = [];
     }
