@@ -1,9 +1,9 @@
-import { ApproxStructure, Assertions, Mouse, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, Mouse, UiFinder, FocusTools, Keyboard, Keys } from '@ephox/agar';
 import { AlloyComponent, GuiFactory, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { StructureSchema } from '@ephox/boulder';
 import { Dialog } from '@ephox/bridge';
-import { Class, SelectorFind, SugarBody } from '@ephox/sugar';
+import { Class, SelectorFind, SugarBody, SugarDocument, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import { renderTree } from 'tinymce/themes/silver/ui/dialog/Tree';
@@ -101,6 +101,13 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
     ).getOrDie();
   };
 
+  const pAssertFocusOnItem = (doc: SugarElement<Document>, type: 'leaf' | 'directory', text: string): Promise<SugarElement<HTMLElement>> =>
+    FocusTools.pTryOnSelector(
+      'Focus should be on: ' + text,
+      doc,
+      `.tox-trbtn.tox-tree--${type}__label:contains(${text})`
+    );
+
   it('Check initial event state', () => {
     const store = hook.store();
     store.assertEq('Store should empty', []);
@@ -132,6 +139,12 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
     store.clear();
     Mouse.clickOn(getTreeItem('.tox-tree').element, '.tox-tree--leaf__label');
     store.assertEq('File 1', [ '1' ]);
+
+    const dirLabelButton = FocusTools.setFocus(dir.element, '.tox-trbtn.tox-tree--directory__label');
+    Keyboard.keystroke(Keys.tab(), {}, dirLabelButton);
+    const file5Label = await pAssertFocusOnItem(SugarDocument.getDocument(), 'leaf', 'File 5');
+    Keyboard.keystroke(Keys.tab(), { shiftKey: true }, file5Label);
+    await pAssertFocusOnItem(SugarDocument.getDocument(), 'directory', 'Dir');
 
     store.clear();
     Mouse.clickOn(dir.element, '.tox-mbtn');
