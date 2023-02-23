@@ -6,10 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
-### Added
-- New `setHoverRefresh` API to TableResize to control if table resize grid should get updated on mouseover or not.
-
 ### Fixed
+- TableResize.on/off functions will now toggle the mouseover resize bar refresh state.
 - The `TableFill.cellOperations` function incorrectly declared the mutate element types as generic when they should have been a `CellElement`.
 
 ## 11.0.3 - 2022-06-29

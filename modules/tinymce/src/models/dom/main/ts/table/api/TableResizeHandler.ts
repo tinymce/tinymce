@@ -188,9 +188,9 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
     tableResize.on((resize) => {
       if (e.type === 'dragstart') {
         resize.hideBars();
-        resize.setHoverRefresh(false);
+        resize.off();
       } else {
-        resize.setHoverRefresh(true);
+        resize.on();
         resize.showBars();
       }
     });
