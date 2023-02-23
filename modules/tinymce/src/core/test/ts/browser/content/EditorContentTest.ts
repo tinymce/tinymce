@@ -1,5 +1,6 @@
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Type } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -339,7 +340,11 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         const editor = hook.editor();
         editor.setContent('<p><iframe><p>test</p></iframe></p>');
         const content = editor.getContent();
-        assert.equal(content, '<p><iframe><p>test</p></iframe></p>', 'getContent should not error when there is iframes with child nodes in content');
+        assert.equal(content,
+          PlatformDetection.detect().browser.isSafari()
+            ? '<p><iframe>&lt;p&gt;test&lt;/p&gt;</iframe></p>'
+            : '<p><iframe><p>test</p></iframe></p>',
+          'getContent should not error when there is iframes with child nodes in content');
       });
 
       it('getContent text with unsanitized content', () => {
