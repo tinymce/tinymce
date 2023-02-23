@@ -40,6 +40,25 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
     return body;
   };
 
+  const testSetContentTreeWithContentAlteredInBeforeSetContent = (editor: Editor, alteredContent: string, msg: string) => {
+    editor.setContent('<p>tree</p>');
+    editor.once('BeforeSetContent', (e) => {
+      assert.equal(e.content, '<font size="7">x</font>');
+      e.content = alteredContent;
+    });
+    editor.setContent(getFontTree());
+    assert.equal(editor.getContent(), alteredContent, msg);
+  };
+
+  const testGetContentTreeWithContentAlteredInGetContent = (editor: Editor, alteredContent: string, msg: string) => {
+    editor.setContent('<p>tree</p>');
+    editor.once('GetContent', (e) => {
+      assert.equal(e.content, '<p>tree</p>');
+      e.content = alteredContent;
+    });
+    assertContentTreeEqualToHtml(editor, alteredContent, msg);
+  };
+
   Arr.each(
     [
       {
@@ -260,23 +279,12 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
 
         it('TINY-7996: Set tree content with content altered in BeforeSetContent', () => {
           const editor = hook.editor();
-          editor.setContent('<p>tree</p>');
-          editor.once('BeforeSetContent', (e) => {
-            assert.equal(e.content, '<font size="7">x</font>');
-            e.content = '<p>replaced</p>';
-          });
-          editor.setContent(getFontTree());
-          assert.equal(editor.getContent(), '<p>replaced</p>', 'Should be replaced html');
+          testSetContentTreeWithContentAlteredInBeforeSetContent(editor, '<p>replaced</p>', 'Should be replaced html');
         });
 
         it('TINY-7996: Get tree content with content altered in GetContent', () => {
           const editor = hook.editor();
-          editor.setContent('<p>tree</p>');
-          editor.once('GetContent', (e) => {
-            assert.equal(e.content, '<p>tree</p>');
-            e.content = '<p>replaced</p>';
-          });
-          assertContentTreeEqualToHtml(editor, '<p>replaced</p>', 'Should be replaced html');
+          testGetContentTreeWithContentAlteredInGetContent(editor, '<p>replaced</p>', 'Should be replaced html');
         });
 
         const initialContent = '<p>initial</p>';
@@ -342,23 +350,12 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
 
       it('setContent tree with content altered to unsanitized html in BeforeSetContent', () => {
         const editor = hook.editor();
-        editor.setContent('<p>tree</p>');
-        editor.once('BeforeSetContent', (e) => {
-          assert.equal(e.content, '<font size="7">x</font>');
-          e.content = unsanitizedHtml;
-        });
-        editor.setContent(getFontTree());
-        assert.equal(editor.getContent(), unsanitizedHtml, 'Replaced content should be unaltered unsanitized html');
+        testSetContentTreeWithContentAlteredInBeforeSetContent(editor, unsanitizedHtml, 'Replaced content should be unaltered unsanitized html');
       });
 
       it('getContent tree with content altered to unsanitized html in GetContent', () => {
         const editor = hook.editor();
-        editor.setContent('<p>tree</p>');
-        editor.once('GetContent', (e) => {
-          assert.equal(e.content, '<p>tree</p>');
-          e.content = unsanitizedHtml;
-        });
-        assertContentTreeEqualToHtml(editor, unsanitizedHtml, 'Replaced content should be unaltered unsanitized html');
+        testGetContentTreeWithContentAlteredInGetContent(editor, unsanitizedHtml, 'Replaced content should be unaltered unsanitized html');
       });
     });
   });
