@@ -1,4 +1,4 @@
-import { Behaviour, Button as AlloyButton, Tabstopping, GuiFactory, SimpleSpec, Toggling } from '@ephox/alloy';
+import { Behaviour, Button as AlloyButton, Tabstopping, GuiFactory, SimpleSpec, Toggling, Replacing } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Fun, Optional } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
@@ -8,21 +8,25 @@ import { renderMenuButton } from '../button/MenuButton';
 import * as Icons from '../icons/Icons';
 
 type TreeSpec = Omit<Dialog.Tree, 'type'>;
-type AlloyButtonSpec = Parameters<typeof AlloyButton['sketch']>[0];
+// type AlloyButtonSpec = Parameters<typeof AlloyButton['sketch']>[0];
 type OnLeafAction = (id: string) => void;
 
 const renderLabel = (text: string ): SimpleSpec => ({
   dom: {
     tag: 'span',
-    classes: [ `tox-tree__label` ]
+    classes: [ `tox-tree__label` ],
+    attributes: {
+      'title': text,
+      'aria-label': text,
+    }
   },
   components: [
     GuiFactory.text(text)
   ],
 });
 
-const renderLeafLabel = (leaf: Dialog.Leaf, onLeafAction: OnLeafAction, backstage: UiFactoryBackstage): AlloyButtonSpec => {
-  const internalMenuButton = leaf.menu.map((btn) => renderMenuButton(btn, 'tox-mbtn', backstage, Optional.none()));
+const renderLeafLabel = (leaf: Dialog.Leaf, onLeafAction: OnLeafAction, tabstopping: boolean, backstage: UiFactoryBackstage): SimpleSpec => {
+  const internalMenuButton = leaf.menu.map((btn) => renderMenuButton(btn, 'tox-mbtn', backstage, Optional.none(), tabstopping));
   const components = [ renderLabel(leaf.title) ];
   internalMenuButton.each((btn) => components.push(btn));
 
@@ -36,8 +40,8 @@ const renderLeafLabel = (leaf: Dialog.Leaf, onLeafAction: OnLeafAction, backstag
       onLeafAction(leaf.id);
     },
     buttonBehaviours: Behaviour.derive([
-      Tabstopping.config({})
-    ])
+      ...(tabstopping ? [ Tabstopping.config({}) ] : []),
+    ]),
   });
 };
 
@@ -54,15 +58,8 @@ const renderIcon = (iconName: string, iconsProvider: Icons.IconProvider, behavio
 const renderIconFromPack = (iconName: string, iconsProvider: Icons.IconProvider): SimpleSpec =>
   renderIcon(iconName, iconsProvider, []);
 
-const renderDirectoryLabel = (directory: Dialog.Directory, backstage: UiFactoryBackstage): AlloyButtonSpec => {
+const renderDirectoryLabel = (directory: Dialog.Directory, tabstopping: boolean, backstage: UiFactoryBackstage): SimpleSpec => {
   const internalMenuButton = directory.menu.map((btn) => renderMenuButton(btn, 'tox-mbtn', backstage, Optional.none()));
-  const directoryLabelWrapper = {
-    dom: {
-      tag: 'span',
-      classes: [ 'tox-tree--directory__title__wrapper' ],
-    },
-    components: [ renderLabel(directory.title) ]
-  };
   const components: SimpleSpec[] = [
     {
       dom: {
@@ -73,7 +70,7 @@ const renderDirectoryLabel = (directory: Dialog.Directory, backstage: UiFactoryB
         renderIconFromPack('chevron-right', backstage.shared.providers.icons),
       ]
     },
-    directoryLabelWrapper
+    renderLabel(directory.title)
   ];
   internalMenuButton.each((btn) => {
     components.push(btn);
@@ -95,30 +92,35 @@ const renderDirectoryLabel = (directory: Dialog.Directory, backstage: UiFactoryB
         toggleOnExecute: true,
         toggleClass: 'tox-tree--directory__label--active'
       }),
-      Tabstopping.config({})
+      ...(tabstopping ? [ Tabstopping.config({}) ] : [])
     ])
+
   });
 };
 
 const renderDirectoryChildren = (children: Dialog.TreeItem[], onLeafAction: OnLeafAction, backstage: UiFactoryBackstage): SimpleSpec => {
+  const computeChildren = (tabstopping: boolean) => children.map((item) => {
+    return item.type === 'leaf' ? renderLeafLabel(item, onLeafAction, tabstopping, backstage) : renderDirectory(item, onLeafAction, tabstopping, backstage);
+  });
   return {
     dom: {
       tag: 'div',
       classes: [ 'tox-tree--directory__children' ],
     },
-    components: children.map((item) => {
-      return item.type === 'leaf' ? renderLeafLabel(item, onLeafAction, backstage) : renderDirectory(item, onLeafAction, backstage);
-    }),
+    components: computeChildren(false),
     behaviours: Behaviour.derive([
       Toggling.config({
-        toggleClass: 'tox-trbtn--expanded'
+        toggleClass: 'tox-trbtn--expanded',
+        onToggled: (cmp, state) => {
+          Replacing.set(cmp, computeChildren(state));
+        }
       }),
-      Tabstopping.config({})
+      Replacing.config({})
     ])
   };
 };
 
-const renderDirectory = (dir: Dialog.Directory, onLeafAction: OnLeafAction, backstage: UiFactoryBackstage): SimpleSpec => {
+const renderDirectory = (dir: Dialog.Directory, onLeafAction: OnLeafAction, labelTabstopping: boolean, backstage: UiFactoryBackstage): SimpleSpec => {
   const children =
     renderDirectoryChildren(dir.children, onLeafAction, backstage);
   return ({
@@ -127,7 +129,7 @@ const renderDirectory = (dir: Dialog.Directory, onLeafAction: OnLeafAction, back
       classes: [ `tox-tree--directory` ],
     },
     components: [
-      renderDirectoryLabel(dir, backstage),
+      renderDirectoryLabel(dir, labelTabstopping, backstage),
       children
     ],
   });
@@ -145,9 +147,9 @@ const renderTree = (
     },
     components: spec.items.map((item) => {
       return item.type === 'leaf' ?
-        renderLeafLabel(item, onLeafAction, backstage) :
-        renderDirectory(item, onLeafAction, backstage);
-    })
+        renderLeafLabel(item, onLeafAction, true, backstage) :
+        renderDirectory(item, onLeafAction, true, backstage);
+    }),
   };
 };
 

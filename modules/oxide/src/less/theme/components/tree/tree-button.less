@@ -201,10 +201,6 @@
     .tox-tree--directory__label {
       font-weight: bold;
 
-      .tox-tree--directory__title__wrapper {
-        padding-left: 6px;
-      }
-
       .tox-mbtn {
         margin-left: auto;
 
@@ -212,12 +208,14 @@
           fill: transparent;
         }
 
-        &.tox-mbtn--active svg {
+        &.tox-mbtn--active svg,
+        &:focus svg {
           fill: @tree-button-menu-icon-color;
         }
       }
 
-      &:hover .tox-mbtn {
+      &:hover .tox-mbtn,
+      &:focus .tox-mbtn {
         svg {
           fill: @tree-button-menu-icon-color;
         }
@@ -228,6 +226,7 @@
       }
 
       .tox-chevron {
+        margin-right: 6px;
         transition: transform .5s ease-in-out;
 
         svg {
@@ -251,7 +250,8 @@
         fill: transparent;
       }
 
-      &.tox-mbtn--active svg {
+      &.tox-mbtn--active svg,
+      &:focus svg {
         fill: @tree-button-menu-icon-color;
       }
     }
