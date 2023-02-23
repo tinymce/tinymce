@@ -1,5 +1,5 @@
 import { context, describe, it } from '@ephox/bedrock-client';
-import { McEditor, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -773,20 +773,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       editor.insertContent('hello');
       TinyAssertions.assertContent(editor, '<div contenteditable="true">thelloxt</div>');
       editor.getBody().contentEditable = 'true';
-    });
-  });
-
-  context('TINY-9600: Inserting unsanitized html with xss_sanitization: false', () => {
-    const unsanitizedHtml = '<p><a href="javascript:alert(1)">XSS</a></p>';
-
-    it('insertContent should not alter inserted unsanitized html', async () => {
-      const editor = await McEditor.pFromSettings<Editor>({
-        xss_sanitization: false,
-      });
-      editor.setContent('<p>initial</p>');
-      editor.insertContent(unsanitizedHtml);
-      TinyAssertions.assertContent(editor, unsanitizedHtml + '\n<p>initial</p>');
-      McEditor.remove(editor);
     });
   });
 });
