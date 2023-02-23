@@ -11,7 +11,7 @@ describe('browser.tinymce.core.content.InsertUnsanitizedContentTest', () => {
     editor.setContent(initialContent);
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     editor.insertContent(content);
-    TinyAssertions.assertContent(editor, expected + '\n' + initialContent);
+    TinyAssertions.assertContent(editor, `${expected}\n${initialContent}`);
   };
 
   context('TINY-9600: Inserting unsanitized html with xss_sanitization: true', () => {

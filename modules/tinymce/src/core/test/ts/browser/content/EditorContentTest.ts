@@ -74,7 +74,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         xss_sanitization: false
       }
     ], (options) => {
-      context('Test with inline: ' + options.inline + ' and xss_sanitization: ' + options.xss_sanitization, () => {
+      context(`Test with inline: ${options.inline} and xss_sanitization: ${options.xss_sanitization}`, () => {
         let events: EditorEvent<SetContentEvent | GetContentEvent | BeforeSetContentEvent | BeforeGetContentEvent>[] = [];
         const hook = TinyHooks.bddSetupLight<Editor>({
           base_url: '/project/tinymce/js/tinymce',
@@ -290,7 +290,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         const manipulatedContent = '<p>manipulated</p>';
         Arr.each([
           [ 'setContent', manipulatedContent ],
-          [ 'insertContent', manipulatedContent + '\n' + initialContent ]
+          [ 'insertContent', `${manipulatedContent}\n${initialContent}` ]
         ] as const, ([ action, result ]) => {
           it(`TINY-9143: Can manipulate content in "BeforeSetContent" callback when called from "${action}" function`, () => {
             const editor = hook.editor();
@@ -313,7 +313,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
   ], (options) => {
     const unsanitizedHtml = '<p><a href="javascript:alert(1)">XSS</a></p>';
 
-    context('TINY-9600: Test unsanitized content with inline: ' + options.inline + ' and xss_sanitization: true', () => {
+    context(`TINY-9600: Test unsanitized content with inline: ${options.inline} and xss_sanitization: true`, () => {
       const hook = TinyHooks.bddSetupLight<Editor>({
         base_url: '/project/tinymce/js/tinymce',
         xss_sanitization: true,
@@ -359,7 +359,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
       });
     });
 
-    context('TINY-9600: Test unsanitized content with inline: ' + options.inline + ' and xss_sanitization: false', () => {
+    context(`TINY-9600: Test unsanitized content with inline: ${options.inline} and xss_sanitization: false`, () => {
       const hook = TinyHooks.bddSetupLight<Editor>({
         base_url: '/project/tinymce/js/tinymce',
         xss_sanitization: false,
