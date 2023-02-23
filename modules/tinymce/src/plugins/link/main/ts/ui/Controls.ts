@@ -79,16 +79,18 @@ const setupContextToolbars = (editor: Editor): void => {
     return Fun.noop;
   };
 
-  /*
+  /**
    * if we're editing a link, don't change the text.
    * if anything other than text is selected, don't change the text.
+   * TINY-9593: If there is a text selection return `Optional.none`
+   * because `mceInsertLink` command will handle the selection.
    */
   const getLinkText = (value: string) => {
     const anchor = Utils.getAnchorElement(editor);
     const onlyText = Utils.isOnlyTextSelected(editor);
     if (anchor.isNone() && onlyText) {
       const text = Utils.getAnchorText(editor.selection, anchor);
-      return Optional.some(text.length > 0 ? text : value);
+      return text.length > 0 ? Optional.none() : Optional.some(value);
     } else {
       return Optional.none();
     }
