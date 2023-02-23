@@ -335,6 +335,13 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         assert.equal(content, unsanitizedHtml, 'Unsanitized html should not be altered');
       });
 
+      it('getContent html with iframe with child node', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><iframe><p>test</p></iframe></p>');
+        const content = editor.getContent();
+        assert.equal(content, '<p><iframe><p>test</p></iframe></p>', 'getContent should not error when there is iframes with child nodes in content');
+      });
+
       it('getContent text with unsanitized content', () => {
         const editor = hook.editor();
         editor.setContent(unsanitizedHtml);
