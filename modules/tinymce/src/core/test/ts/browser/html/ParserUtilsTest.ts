@@ -30,7 +30,7 @@ describe('browser.tinymce.core.html.ParserUtilsTest', () => {
 
     const testFindClosestEditingHost = (states: CeType[], expectedIndex: number) => {
       const [ node, nodes ] = generateContentEditableBranch(states).getOrDie('Failed to generate branch');
-      const actualIndex = findClosestEditingHost(node).bind((host) => Arr.findIndex(nodes, (bnode) => bnode === host)).getOr(-1);
+      const actualIndex = ParserUtils.findClosestEditingHost(node).bind((host) => Arr.findIndex(nodes, (bnode) => bnode === host)).getOr(-1);
       assert.equal(actualIndex, expectedIndex, 'Expect to find editing host at specified index in branch.');
     };
 
@@ -40,6 +40,10 @@ describe('browser.tinymce.core.html.ParserUtilsTest', () => {
 
     it('Should not find a editing host on a cef node', () =>
       testFindClosestEditingHost([ 'false' ], -1)
+    );
+
+    it('Should not find a editing host on a inherit node', () =>
+      testFindClosestEditingHost([ 'inherit' ], -1)
     );
 
     it('Should find a editing host on a cet node', () =>
@@ -56,6 +60,10 @@ describe('browser.tinymce.core.html.ParserUtilsTest', () => {
 
     it('Should find last cet just before a cef', () =>
       testFindClosestEditingHost([ 'true', 'false', 'true', 'true' ], 2)
+    );
+
+    it('Should not find a editing host since the closest one is cef', () =>
+      testFindClosestEditingHost([ 'true', 'false' ], -1)
     );
 
     it('Should find last cet ignoring inherit', () =>
