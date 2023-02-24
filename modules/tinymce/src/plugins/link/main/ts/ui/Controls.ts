@@ -1,4 +1,4 @@
-import { Fun, Optional } from '@ephox/katamari';
+import { Fun, Optional, Optionals } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { InlineContent } from 'tinymce/core/api/ui/Ui';
@@ -90,7 +90,7 @@ const setupContextToolbars = (editor: Editor): void => {
     const onlyText = Utils.isOnlyTextSelected(editor);
     if (anchor.isNone() && onlyText) {
       const text = Utils.getAnchorText(editor.selection, anchor);
-      return text.length > 0 ? Optional.none() : Optional.some(value);
+      return Optionals.someIf(text.length === 0, value);
     } else {
       return Optional.none();
     }
