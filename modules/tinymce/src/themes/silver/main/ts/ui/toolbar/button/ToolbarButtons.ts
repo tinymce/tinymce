@@ -285,7 +285,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     isEnabled: () => !Disabling.isDisabled(comp),
     setEnabled: (state: boolean) => Disabling.set(comp, !state),
     setIconFill: (id, value) => {
-      SelectorFind.descendant(comp.element, 'svg path[id="' + id + '"], rect[id="' + id + '"]').each((underlinePath) => {
+      SelectorFind.descendant(comp.element, `svg path[id="${id}"], rect[id="${id}"]`).each((underlinePath) => {
         Attribute.set(underlinePath, 'fill', value);
       });
     },

@@ -20,6 +20,7 @@ import { renderSizeInput } from '../dialog/SizeInput';
 import { renderSlider } from '../dialog/Slider';
 import { renderTable } from '../dialog/Table';
 import { renderInput, renderTextarea } from '../dialog/TextField';
+import { renderTree } from '../dialog/Tree';
 import { renderUrlInput } from '../dialog/UrlInput';
 import { renderAlertBanner } from './AlertBanner';
 import { renderDialogButton } from './Button';
@@ -69,6 +70,7 @@ const factories: Record<string, FormPartRenderer<any>> = {
   htmlpanel: make<Dialog.HtmlPanel>(renderHtmlPanel),
   imagepreview: make<Dialog.ImagePreview, Dialog.ImagePreviewData>((spec, _, data) => renderImagePreview(spec, data)),
   table: make<Dialog.Table>((spec, backstage) => renderTable(spec, backstage.shared.providers)),
+  tree: make<Dialog.Tree>((spec, backstage) => renderTree(spec, backstage)),
   panel: make<Dialog.Panel>((spec, backstage) => renderPanel(spec, backstage))
 };
 

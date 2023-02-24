@@ -14,8 +14,9 @@ export interface NestedMenuItemSpec extends CommonMenuItemSpec {
   onSetup?: (api: NestedMenuItemInstanceApi) => (api: NestedMenuItemInstanceApi) => void;
 }
 
-// tslint:disable-next-line:no-empty-interface
-export interface NestedMenuItemInstanceApi extends CommonMenuItemInstanceApi { }
+export interface NestedMenuItemInstanceApi extends CommonMenuItemInstanceApi {
+  setIconFill: (id: string, value: string) => void;
+}
 
 export interface NestedMenuItem extends CommonMenuItem {
   type: 'nestedmenuitem';
