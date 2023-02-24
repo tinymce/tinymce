@@ -1,5 +1,6 @@
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Type } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -17,6 +18,45 @@ const defaultExpectedEvents = [
 ];
 
 describe('browser.tinymce.core.content.EditorContentTest', () => {
+  const toHtml = (node: AstNode): string => HtmlSerializer({}).serialize(node);
+
+  const assertContentTreeEqualToHtml = (editor: Editor, html: string, msg: string) => {
+    const tree = editor.getContent({ format: 'tree' });
+    assert.equal(toHtml(tree), html, msg);
+  };
+
+  const getFontTree = (): AstNode => {
+    const body = new AstNode('body', 11);
+    const font = new AstNode('font', 1);
+    const text = new AstNode('#text', 3);
+
+    text.value = 'x';
+    font.attr('size', '7');
+    font.append(text);
+    body.append(font);
+
+    return body;
+  };
+
+  const testSetContentTreeWithContentAlteredInBeforeSetContent = (editor: Editor, alteredContent: string, msg: string, expectedContent?: string) => {
+    editor.setContent('<p>tree</p>');
+    editor.once('BeforeSetContent', (e) => {
+      assert.equal(e.content, '<font size="7">x</font>');
+      e.content = alteredContent;
+    });
+    editor.setContent(getFontTree());
+    assert.equal(editor.getContent(), expectedContent ?? alteredContent, msg);
+  };
+
+  const testGetContentTreeWithContentAlteredInGetContent = (editor: Editor, alteredContent: string, msg: string, expectedContent?: string) => {
+    editor.setContent('<p>tree</p>');
+    editor.once('GetContent', (e) => {
+      assert.equal(e.content, '<p>tree</p>');
+      e.content = alteredContent;
+    });
+    assertContentTreeEqualToHtml(editor, expectedContent ?? alteredContent, msg);
+  };
+
   Arr.each(
     [
       {
@@ -24,9 +64,17 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
       },
       {
         inline: false
+      },
+      {
+        inline: true,
+        xss_sanitization: false
+      },
+      {
+        inline: false,
+        xss_sanitization: false
       }
     ], (options) => {
-      context('Test with inline option ' + options.inline, () => {
+      context(`Test with inline: ${options.inline} and xss_sanitization: ${options.xss_sanitization}`, () => {
         let events: EditorEvent<SetContentEvent | GetContentEvent | BeforeSetContentEvent | BeforeGetContentEvent>[] = [];
         const hook = TinyHooks.bddSetupLight<Editor>({
           base_url: '/project/tinymce/js/tinymce',
@@ -37,24 +85,6 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
           },
           ...options
         }, []);
-
-        const getFontTree = (): AstNode => {
-          const body = new AstNode('body', 11);
-          const font = new AstNode('font', 1);
-          const text = new AstNode('#text', 3);
-
-          text.value = 'x';
-          font.attr('size', '7');
-          font.append(text);
-          body.append(font);
-
-          return body;
-        };
-
-        const toHtml = (node: AstNode): string => {
-          const htmlSerializer = HtmlSerializer({});
-          return htmlSerializer.serialize(node);
-        };
 
         const assertEventsFiredInOrder = (expectedEvents: string[] = defaultExpectedEvents) => {
           const names = Arr.map(events, (e) => e.type);
@@ -115,8 +145,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         it('TBA: getContent tree', () => {
           const editor = hook.editor();
           editor.setContent('<p>tree</p>');
-          const tree = editor.getContent({ format: 'tree' });
-          assert.equal(toHtml(tree), '<p>tree</p>', 'Should be expected tree html');
+          assertContentTreeEqualToHtml(editor, '<p>tree</p>', 'Should be expected tree html');
           assertEventsFiredInOrder();
           assertEventsContentType();
         });
@@ -124,9 +153,8 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         it('TINY-6281: getContent tree with empty editor', () => {
           const editor = hook.editor();
           editor.setContent('');
-          const tree = editor.getContent({ format: 'tree' });
           // bogus br that sits in an empty editor is replaced with a &nbsp; by the html parser, hence the space
-          assert.equal(toHtml(tree), '<p> </p>', 'Should be expected tree html');
+          assertContentTreeEqualToHtml(editor, '<p> </p>', 'Should be expected tree html');
           assertEventsFiredInOrder();
           assertEventsContentType();
         });
@@ -134,8 +162,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         it('TBA: getContent tree filtered', () => {
           const editor = hook.editor();
           editor.setContent('<p><font size="7">x</font></p>', { format: 'raw' });
-          const tree = editor.getContent({ format: 'tree' });
-          assert.equal(toHtml(tree), '<p><span style="font-size: 300%;">x</span></p>', 'Should be expected tree filtered html');
+          assertContentTreeEqualToHtml(editor, '<p><span style="font-size: 300%;">x</span></p>', 'Should be expected tree filtered html');
           assertEventsFiredInOrder();
           assertEventsContentType();
         });
@@ -250,24 +277,12 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
 
         it('TINY-7996: Set tree content with content altered in BeforeSetContent', () => {
           const editor = hook.editor();
-          editor.setContent('<p>tree</p>');
-          editor.once('BeforeSetContent', (e) => {
-            assert.equal(e.content, '<font size="7">x</font>');
-            e.content = '<p>replaced</p>';
-          });
-          editor.setContent(getFontTree());
-          assert.equal(editor.getContent(), '<p>replaced</p>', 'Should be replaced html');
+          testSetContentTreeWithContentAlteredInBeforeSetContent(editor, '<p>replaced</p>', 'Should be replaced html');
         });
 
         it('TINY-7996: Get tree content with content altered in GetContent', () => {
           const editor = hook.editor();
-          editor.setContent('<p>tree</p>');
-          editor.once('GetContent', (e) => {
-            assert.equal(e.content, '<p>tree</p>');
-            e.content = '<p>replaced</p>';
-          });
-          const tree = editor.getContent({ format: 'tree' });
-          assert.equal(toHtml(tree), '<p>replaced</p>', 'Should be replaced html');
+          testGetContentTreeWithContentAlteredInGetContent(editor, '<p>replaced</p>', 'Should be replaced html');
         });
 
         const initialContent = '<p>initial</p>';
@@ -275,7 +290,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         const manipulatedContent = '<p>manipulated</p>';
         Arr.each([
           [ 'setContent', manipulatedContent ],
-          [ 'insertContent', manipulatedContent + '\n' + initialContent ]
+          [ 'insertContent', `${manipulatedContent}\n${initialContent}` ]
         ] as const, ([ action, result ]) => {
           it(`TINY-9143: Can manipulate content in "BeforeSetContent" callback when called from "${action}" function`, () => {
             const editor = hook.editor();
@@ -291,4 +306,113 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
       });
     }
   );
+
+  Arr.each([
+    { inline: true },
+    { inline: false }
+  ], (options) => {
+    const unsanitizedHtml = '<p><a href="javascript:alert(1)">XSS</a></p>';
+
+    context(`TINY-9600: Test unsanitized content with inline: ${options.inline} and xss_sanitization: true`, () => {
+      const hook = TinyHooks.bddSetupLight<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        xss_sanitization: true,
+        ...options
+      }, []);
+
+      const sanitizedHtml = '<p><a>XSS</a></p>';
+
+      it('setContent with unsanitized content should set sanitized html', () => {
+        const editor = hook.editor();
+        editor.setContent(unsanitizedHtml);
+        TinyAssertions.assertContent(editor, sanitizedHtml);
+      });
+
+      it('getContent html with unsanitized content should get sanitized html', () => {
+        const editor = hook.editor();
+        editor.setContent(unsanitizedHtml);
+        const content = editor.getContent();
+        assert.equal(content, sanitizedHtml, 'Unsanitized html should be sanitized');
+      });
+
+      it('getContent text with unsanitized content should get text from sanitized content', () => {
+        const editor = hook.editor();
+        editor.setContent(unsanitizedHtml);
+        const text = editor.getContent({ format: 'text' });
+        assert.equal(text, 'XSS', 'Text should be retrieved from sanitized html');
+      });
+
+      it('getContent tree with unsanitized content should get sanitized tree', () => {
+        const editor = hook.editor();
+        editor.setContent(unsanitizedHtml);
+        assertContentTreeEqualToHtml(editor, sanitizedHtml, 'Unsanitized html should be sanitized');
+      });
+
+      it('setContent tree with content altered in BeforeSetContent should set sanitized html', () => {
+        const editor = hook.editor();
+        testSetContentTreeWithContentAlteredInBeforeSetContent(editor, unsanitizedHtml, 'Replaced content should be sanitized', sanitizedHtml);
+      });
+
+      it('getContent tree with content altered in GetContent should get sanitized html', () => {
+        const editor = hook.editor();
+        testGetContentTreeWithContentAlteredInGetContent(editor, unsanitizedHtml, 'Replaced content should be sanitized', sanitizedHtml);
+      });
+    });
+
+    context(`TINY-9600: Test unsanitized content with inline: ${options.inline} and xss_sanitization: false`, () => {
+      const hook = TinyHooks.bddSetupLight<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        xss_sanitization: false,
+        ...options
+      }, []);
+
+      it('setContent with unsanitized content should set content unaltered', () => {
+        const editor = hook.editor();
+        editor.setContent(unsanitizedHtml);
+        TinyAssertions.assertContent(editor, unsanitizedHtml);
+      });
+
+      it('getContent html with unsanitized content should get content unaltered', () => {
+        const editor = hook.editor();
+        editor.setContent(unsanitizedHtml);
+        const content = editor.getContent();
+        assert.equal(content, unsanitizedHtml, 'Unsanitized html should not be altered');
+      });
+
+      it('getContent html with iframe with child node should get the content as expected and not error', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><iframe><p>test</p></iframe></p>');
+        const content = editor.getContent();
+        assert.equal(content,
+          // TINY-9624: Investigate Safari-specific HTML output
+          PlatformDetection.detect().browser.isSafari()
+            ? '<p><iframe>&lt;p&gt;test&lt;/p&gt;</iframe></p>'
+            : '<p><iframe><p>test</p></iframe></p>',
+          'getContent should not error when there is iframes with child nodes in content');
+      });
+
+      it('getContent text with unsanitized content should get text from unsanitized content', () => {
+        const editor = hook.editor();
+        editor.setContent(unsanitizedHtml);
+        const text = editor.getContent({ format: 'text' });
+        assert.equal(text, 'XSS', 'Text content from unsanitized html should not be altered');
+      });
+
+      it('getContent tree with unsanitized content should get unsanitized tree', () => {
+        const editor = hook.editor();
+        editor.setContent(unsanitizedHtml);
+        assertContentTreeEqualToHtml(editor, unsanitizedHtml, 'Unsanitized html should not be altered');
+      });
+
+      it('setContent tree with content altered to unsanitized html in BeforeSetContent should set unsanitized html', () => {
+        const editor = hook.editor();
+        testSetContentTreeWithContentAlteredInBeforeSetContent(editor, unsanitizedHtml, 'Replaced content should be unaltered unsanitized html');
+      });
+
+      it('getContent tree with content altered to unsanitized html in GetContent should get unsanitized html', () => {
+        const editor = hook.editor();
+        testGetContentTreeWithContentAlteredInGetContent(editor, unsanitizedHtml, 'Replaced content should be unaltered unsanitized html');
+      });
+    });
+  });
 });
