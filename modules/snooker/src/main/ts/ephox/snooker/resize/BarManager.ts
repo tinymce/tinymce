@@ -138,8 +138,10 @@ export const BarManager = (wire: ResizeWire): BarManager => {
         }
       },
       (table) => {
-        hoverTable = Optional.some(table);
-        Bars.refresh(wire, table);
+        if (resizing.isActive()) {
+          hoverTable = Optional.some(table);
+          Bars.refresh(wire, table);
+        }
       }
     );
   });
