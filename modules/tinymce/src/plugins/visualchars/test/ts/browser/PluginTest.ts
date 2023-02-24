@@ -86,6 +86,7 @@ describe('browser.tinymce.plugins.visualchars.PluginTest', () => {
         'span.mce-nbsp': 2
       });
     });
+    TinyUiActions.clickOnToolbar(editor, 'button');
   });
 
   it('TINY-9474: should not process noneditable elements in a noneditable root', async () => {
@@ -100,5 +101,6 @@ describe('browser.tinymce.plugins.visualchars.PluginTest', () => {
       });
     });
     editor.getBody().contentEditable = 'true';
+    TinyUiActions.clickOnToolbar(editor, 'button');
   });
 });
