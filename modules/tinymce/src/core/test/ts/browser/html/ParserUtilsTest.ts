@@ -3,7 +3,7 @@ import { Arr, Optional } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import AstNode from 'tinymce/core/api/html/Node';
-import { findClosestEditingHost } from 'tinymce/core/html/ParserUtils';
+import * as ParserUtils from 'tinymce/core/html/ParserUtils';
 
 type CeType = 'false' | 'true' | 'inherit' | 'none';
 type Branch = [AstNode, AstNode[]];
