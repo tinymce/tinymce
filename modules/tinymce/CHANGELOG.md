@@ -54,6 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dragging transparent elements into transparent blocks elements could produce invalid nesting of transparents. #TINY-9231
 - The `editor.insertContent` API would insert contents inside noneditable elements if the selection was inside the element. #TINY-9462
 - Closing a dialog would scroll down the document in Safari. #TINY-9148
+- Inline headers would not work in some situations when the editor was moved too far right horizontally. #TINY-8977
 - Quick toolbars were incorrectly rendered during the dragging of `contenteditable="false"` elements. #TINY-9305
 - Selection of images, hrs, tables or noneditable elements was possible if they were within a noneditable element. #TINY-9473
 - Ranged deletion of formatted text using selection or keyboard shortcut would sometimes cause Blink and Webkit browsers to insert interpreted tags upon typing, which may result in inconsistent tags. #TINY-9302
