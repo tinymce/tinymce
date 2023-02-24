@@ -92,11 +92,16 @@ const Annotator = (editor: Editor): Annotator => {
      * @param {String} name the name of the annotation to remove
      */
     remove: (name: string): void => {
-      const bookmark = editor.selection.getBookmark();
       identify(editor, Optional.some(name)).each(({ elements }) => {
+        /**
+         * TINY-9399: It is important to keep the bookmarking in the callback
+         * because it adjusts selection in a way that `identify` function
+         * cannot retain the selected word.
+         */
+        const bookmark = editor.selection.getBookmark();
         removeAnnotations(elements);
+        editor.selection.moveToBookmark(bookmark);
       });
-      editor.selection.moveToBookmark(bookmark);
     },
 
     /**

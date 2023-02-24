@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
+- New `tree` component that can be used in dialog body panel. #TINY-9532
 - renderUI property in the `Theme` type can now return a `Promise<RenderResult>` instead of `RenderResult`. #TINY-9556
 - New `isEditable` API to `editor.selection` that returns true or false if the current selection is editable. #TINY-9462
 - New `isEditable` API to `editor.dom` that returns true or false if the specified node is editable. #TINY-9462
@@ -21,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `toggleFullscreen` to dialog API. #TINY-9528
 - New text-size-increase and text-size-decrease icons. #TINY-9530
 - New `text-size-increase` and `text-size-decrease` icons. #TINY-9530
+- New `xss_sanitization` option to allow for XSS sanitization to be disabled. #TINY-9600
 
 ### Improved
 - Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
@@ -41,6 +43,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `onSetup` api function would not run when defining custom group toolbar button. #TINY-9496
 - An element could be dropped onto the decendants of a noneditable element. #TINY-9364
 - Checkmark did not show in menu colorswatches. #TINY-9395
+- The foreground and background menu icons would not properly update to display the last used color. #TINY-9497
+- Added new `setIconFill` function to `NestedMenuItemInstanceApi`. #TINY-9497
 - Pasting links to text would sometimes not generate the correct undo stack on safari. #TINY-9489
 - Toolbar split buttons in advlist plugin to show the correct state when the cursor is in a checklist. #TINY-5167
 - Dragging transparent elements into transparent blocks elements could produce invalid nesting of transparents. #TINY-9231
@@ -50,7 +54,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Selection of images, hrs, tables or noneditable elements was possible if they were within a noneditable element. #TINY-9473
 - Ranged deletion of formatted text using selection or keyboard shortcut would sometimes cause Blink and Webkit browsers to insert interpreted tags upon typing, which may result in inconsistent tags. #TINY-9302
 - Visual characters were rendered inside noneditable elements. #TINY-9474
-- Removed a workaround for ensuring stylesheets are loaded in an outdated version of webkit. #TINY-9433
 - Lists in a noneditable root were incorrectly editable using list API commands, toolbar buttons and menu items. #TINY-9458
 - Color picker dialog would not update the preview color if the hex input value was prefixed with `#` symbol. #TINY-9457
 - Table cell selection was possible even if the element was in a noneditable root element. #TINY-9459
@@ -65,7 +68,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Backspace or delete keys was deleting contents inside noneditable elements. #TINY-9477
 - Inserting newlines inside an editable element inside a noneditable root would sometimes try to split the editable element. #TINY-9461
 - Creating a list in a table cell when the caret is in front of an anchor element would not properly include the anchor in the list. #TINY-6853
+- Noneditable elements would be removed when dragged and dropped within a noneditable root. #TINY-9558
 - Formatting could be applied or removed on noneditable list items inside a noneditable root. #TINY-9563
+- Annotation would not be removed if the annotation was immediately deleted after being created. #TINY-9399
+
+## 6.3.2 - 2023-02-22
+
+### Fixed
+- Removed a workaround for ensuring stylesheets are loaded in an outdated version of webkit. #TINY-9433
 
 ## 6.3.1 - 2022-12-06
 
