@@ -406,5 +406,27 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
 
       TinyAssertions.assertContent(editor, expectedContent);
     });
+
+    it('TINY-9558: Should not be possible to drag a noneditable CEF element to a noneditable target within a noneditable root', async () => {
+      const editor = hook.editor();
+      const initialContent = '<div class="toDrag" contenteditable="false">To drag element</div><div class="destination">drop target</div>';
+
+      editor.setContent(initialContent);
+      editor.getBody().contentEditable = 'false';
+      await moveToDragElementToDestinationElement(editor, 0, 0);
+      TinyAssertions.assertContent(editor, initialContent);
+      editor.getBody().contentEditable = 'true';
+    });
+
+    it('TINY-9558: Should not be possible to drag a noneditable CEF element to an editable target within a noneditable root', async () => {
+      const editor = hook.editor();
+      const initialContent = '<div class="toDrag" contenteditable="false">To drag element</div><div contenteditable="true"><div class="destination">drop target</div></div>';
+
+      editor.setContent(initialContent);
+      editor.getBody().contentEditable = 'false';
+      await moveToDragElementToDestinationElement(editor, 0, 0);
+      TinyAssertions.assertContent(editor, initialContent);
+      editor.getBody().contentEditable = 'true';
+    });
   });
 });
