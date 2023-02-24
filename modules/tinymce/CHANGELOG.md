@@ -73,6 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Backspace or delete keys was deleting contents inside noneditable elements. #TINY-9477
 - Inserting newlines inside an editable element inside a noneditable root would sometimes try to split the editable element. #TINY-9461
 - Creating a list in a table cell when the caret is in front of an anchor element would not properly include the anchor in the list. #TINY-6853
+- Dragging and dropping noneditable elements on table borders would remove the element on drop. #TINY-9021
 - Noneditable elements would be removed when dragged and dropped within a noneditable root. #TINY-9558
 - Formatting could be applied or removed on noneditable list items inside a noneditable root. #TINY-9563
 - Annotation would not be removed if the annotation was immediately deleted after being created. #TINY-9399
