@@ -236,6 +236,7 @@ interface BaseEditorOptions {
   visual_anchor_class?: string;
   visual_table_class?: string;
   width?: number | string;
+  xss_sanitization?: boolean;
 
   // Internal settings (used by cloud or tests)
   disable_nodechange?: boolean;
@@ -333,4 +334,5 @@ export interface EditorOptions extends NormalizedEditorOptions {
   visual_anchor_class: string;
   visual_table_class: string;
   width: number | string;
+  xss_sanitization: boolean;
 }
