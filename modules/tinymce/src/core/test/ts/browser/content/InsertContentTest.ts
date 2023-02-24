@@ -774,5 +774,27 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       TinyAssertions.assertContent(editor, '<div contenteditable="true">thelloxt</div>');
       editor.getBody().contentEditable = 'true';
     });
+
+    it('TINY-9595: insert paragraphs in a paragraph editing host paragraph should unwrap the paragraphs and not split the em', () => {
+      const editor = hook.editor();
+      const content = '<div contenteditable="false"><p contenteditable="true"><em>ad</em></p></div>';
+
+      editor.setContent(content);
+      // Shifted since fake caret is before div
+      TinySelections.setCursor(editor, [ 1, 0, 0, 0 ], 1);
+      editor.insertContent('<p>b</p><p>c</p>');
+      TinyAssertions.assertContent(editor, '<div contenteditable="false"><p contenteditable="true"><em>abcd</em></p></div>');
+    });
+
+    it('TINY-9595: insert div in a dvi editing host paragraph should not wrap the divs but split the em', () => {
+      const editor = hook.editor();
+      const content = '<div contenteditable="false"><div contenteditable="true"><em>ad</em></div></div>';
+
+      editor.setContent(content);
+      // Shifted since fake caret is before div
+      TinySelections.setCursor(editor, [ 1, 0, 0, 0 ], 1);
+      editor.insertContent('<p>b</p><p>c</p>');
+      TinyAssertions.assertContent(editor, '<div contenteditable="false"><div contenteditable="true"><em>a</em><p>b</p><p>c</p><em>d</em></div></div>');
+    });
   });
 });
