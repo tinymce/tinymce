@@ -1,6 +1,6 @@
 import { Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Css, Height, Remove, Scroll, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
+import { Css, Height, Insert, Remove, Scroll, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -114,6 +114,41 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
       // Scroll back to top and assert not docked
       Scroll.to(0, 0);
       await pAssertPos(dialog, 'absolute', 158, -1906);
+
+      DialogUtils.close(editor);
+    });
+  });
+
+  context('TINY-9554: dialog position with editor in fixed container', () => {
+    const setupElement = () => {
+      const container = SugarElement.fromHtml('<div style="position: fixed; top: 0; left: 0;"></div>');
+      const element = SugarElement.fromTag('textarea');
+
+      Insert.append(SugarBody.body(), container);
+      Insert.append(container, element);
+
+      return {
+        element,
+        teardown: () => {
+          Remove.remove(element);
+          Remove.remove(container);
+        }
+      };
+    };
+
+    const hook = TinyHooks.bddSetupFromElement<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      resize: 'both',
+      height: 400,
+      width: 650,
+      toolbar_sticky: false,
+      toolbar_mode: 'wrap'
+    }, setupElement, []);
+
+    it('TINY-9554: test position', async () => {
+      const editor = hook.editor();
+      const dialog = openDialog(editor);
+      await pAssertPos(dialog, 'absolute', 158, -109);
 
       DialogUtils.close(editor);
     });
