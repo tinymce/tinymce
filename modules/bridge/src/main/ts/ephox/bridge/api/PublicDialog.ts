@@ -26,6 +26,7 @@ import { SliderSpec } from '../components/dialog/Slider';
 import { TableSpec } from '../components/dialog/Table';
 import { TabPanelSpec, TabSpec } from '../components/dialog/TabPanel';
 import { TextAreaSpec } from '../components/dialog/Textarea';
+import { TreeSpec, TreeItemSpec, DirectorySpec as TreeDirectorySpec, LeafSpec as TreeLeafSpec } from '../components/dialog/Tree';
 import {
   UrlDialogActionDetails, UrlDialogFooterButtonSpec, UrlDialogInstanceApi, UrlDialogMessage, UrlDialogSpec
 } from '../components/dialog/UrlDialog';
@@ -98,6 +99,11 @@ export {
   TabPanelSpec,
 
   TextAreaSpec,
+
+  TreeSpec,
+  TreeItemSpec,
+  TreeDirectorySpec,
+  TreeLeafSpec,
 
   UrlInputData,
   UrlInputSpec,

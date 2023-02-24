@@ -176,4 +176,14 @@ describe('browser.tinymce.core.annotate.AnnotationRemovedTest', () => {
     });
     TinyAssertions.assertCursor(editor, [ 0, 2 ], 2);
   });
+
+  it('TINY-9399: remove annotation right after its creation', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>This was the first paragraph</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 'This '.length, [ 0, 0 ], 'This was'.length);
+    annotate(editor, 'alpha', 'id-one', { anything: 'comment-1' });
+    TinyAssertions.assertContentPresence(editor, { 'span[data-mce-annotation="alpha"]': 1 });
+    editor.annotator.remove('alpha');
+    TinyAssertions.assertContentPresence(editor, { 'span[data-mce-annotation="alpha"]': 0 });
+  });
 });
