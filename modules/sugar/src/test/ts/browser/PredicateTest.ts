@@ -11,7 +11,7 @@ import * as Checkers from 'ephox/sugar/test/Checkers';
 import * as TestPage from 'ephox/sugar/test/TestPage';
 
 describe('PredicateTest', () => {
-  it('TDA: Structure check', () => {
+  it('TBA: Structure check', () => {
     TestPage.connect(); // description of structure is in TestPage
 
     Checkers.checkOpt(Optional.some(TestPage.p1), PredicateFind.first(Checkers.isName('p')));
