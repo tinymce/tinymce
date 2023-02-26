@@ -1,5 +1,6 @@
 import { FocusTools, Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
@@ -26,9 +27,7 @@ describe('browser.tinymce.themes.silver.editor.DialogTreeTest', () => {
               type: 'panel',
               items: [{
                 type: 'tree',
-                onLeafAction: (id) => {
-                  console.log('clicked on item with id', id);
-                },
+                onLeafAction: Fun.noop,
                 items: [
                   {
                     type: 'directory',
@@ -41,9 +40,7 @@ describe('browser.tinymce.themes.silver.editor.DialogTreeTest', () => {
                         {
                           type: 'menuitem',
                           text: 'menuitem',
-                          onAction: () => {
-                            console.log('dir menubutton');
-                          }
+                          onAction: Fun.noop
                         }
                       ])
                     },
@@ -64,9 +61,7 @@ describe('browser.tinymce.themes.silver.editor.DialogTreeTest', () => {
                             {
                               type: 'menuitem',
                               text: 'menuitem',
-                              onAction: () => {
-                                console.log('File 4 menubutton');
-                              }
+                              onAction: Fun.noop
                             }
                           ])
                         }
@@ -83,7 +78,6 @@ describe('browser.tinymce.themes.silver.editor.DialogTreeTest', () => {
                     title: 'File 6',
                     id: '6',
                   },
-
                 ]
               }]
             }
