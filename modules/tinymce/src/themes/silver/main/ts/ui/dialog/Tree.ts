@@ -1,4 +1,4 @@
-import { Behaviour, Button as AlloyButton, Tabstopping, GuiFactory, SimpleSpec, Toggling, Replacing } from '@ephox/alloy';
+import { Behaviour, Button as AlloyButton, Tabstopping, GuiFactory, SimpleSpec, Toggling, Replacing, Keying } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Fun, Optional } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
@@ -8,7 +8,6 @@ import { renderMenuButton } from '../button/MenuButton';
 import * as Icons from '../icons/Icons';
 
 type TreeSpec = Omit<Dialog.Tree, 'type'>;
-// type AlloyButtonSpec = Parameters<typeof AlloyButton['sketch']>[0];
 type OnLeafAction = (id: string) => void;
 
 const renderLabel = (text: string ): SimpleSpec => ({
@@ -25,22 +24,22 @@ const renderLabel = (text: string ): SimpleSpec => ({
   ],
 });
 
-const renderLeafLabel = (leaf: Dialog.Leaf, onLeafAction: OnLeafAction, tabstopping: boolean, backstage: UiFactoryBackstage): SimpleSpec => {
-  const internalMenuButton = leaf.menu.map((btn) => renderMenuButton(btn, 'tox-mbtn', backstage, Optional.none(), tabstopping));
+const renderLeafLabel = (leaf: Dialog.Leaf, onLeafAction: OnLeafAction, visible: boolean, backstage: UiFactoryBackstage): SimpleSpec => {
+  const internalMenuButton = leaf.menu.map((btn) => renderMenuButton(btn, 'tox-mbtn', backstage, Optional.none(), visible));
   const components = [ renderLabel(leaf.title) ];
   internalMenuButton.each((btn) => components.push(btn));
 
   return AlloyButton.sketch({
     dom: {
       tag: 'span',
-      classes: [ `tox-tree--leaf__label`, 'tox-trbtn' ],
+      classes: [ `tox-tree--leaf__label`, 'tox-trbtn' ].concat(visible ? [ 'tox-tree--leaf__label--visible' ] : []),
     },
     components,
     action: (_button) => {
       onLeafAction(leaf.id);
     },
     buttonBehaviours: Behaviour.derive([
-      ...(tabstopping ? [ Tabstopping.config({}) ] : []),
+      ...(visible ? [ Tabstopping.config({}) ] : []),
     ]),
   });
 };
@@ -58,7 +57,7 @@ const renderIcon = (iconName: string, iconsProvider: Icons.IconProvider, behavio
 const renderIconFromPack = (iconName: string, iconsProvider: Icons.IconProvider): SimpleSpec =>
   renderIcon(iconName, iconsProvider, []);
 
-const renderDirectoryLabel = (directory: Dialog.Directory, tabstopping: boolean, backstage: UiFactoryBackstage): SimpleSpec => {
+const renderDirectoryLabel = (directory: Dialog.Directory, visible: boolean, backstage: UiFactoryBackstage): SimpleSpec => {
   const internalMenuButton = directory.menu.map((btn) => renderMenuButton(btn, 'tox-mbtn', backstage, Optional.none()));
   const components: SimpleSpec[] = [
     {
@@ -79,7 +78,7 @@ const renderDirectoryLabel = (directory: Dialog.Directory, tabstopping: boolean,
 
     dom: {
       tag: 'div',
-      classes: [ `tox-tree--directory__label`, 'tox-trbtn' ],
+      classes: [ `tox-tree--directory__label`, 'tox-trbtn' ].concat( visible ? [ 'tox-tree--directory__label--visible' ] : [] ),
     },
     components,
     action: (button) => {
@@ -92,7 +91,7 @@ const renderDirectoryLabel = (directory: Dialog.Directory, tabstopping: boolean,
         toggleOnExecute: true,
         toggleClass: 'tox-tree--directory__label--active'
       }),
-      ...(tabstopping ? [ Tabstopping.config({}) ] : [])
+      ...(visible ? [ Tabstopping.config({}) ] : [])
     ])
 
   });
@@ -150,6 +149,12 @@ const renderTree = (
         renderLeafLabel(item, onLeafAction, true, backstage) :
         renderDirectory(item, onLeafAction, true, backstage);
     }),
+    behaviours: Behaviour.derive([
+      Keying.config({
+        mode: 'flow',
+        selector: '.tox-tree--leaf__label--visible, .tox-tree--directory__label--visible'
+      })
+    ])
   };
 };
 
