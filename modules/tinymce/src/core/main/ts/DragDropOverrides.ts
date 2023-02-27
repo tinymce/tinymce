@@ -219,7 +219,7 @@ const removeElementWithPadding = (dom: DOMUtils, elm: HTMLElement) => {
   const parentBlock = dom.getParent(elm.parentNode, dom.isBlock);
 
   removeElement(elm);
-  if (parentBlock && dom.isEmpty(parentBlock)) {
+  if (parentBlock && parentBlock !== dom.getRoot() && dom.isEmpty(parentBlock)) {
     PaddingBr.fillWithPaddingBr(SugarElement.fromDom(parentBlock));
   }
 };
