@@ -74,6 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Formatting could be applied or removed on noneditable list items inside a noneditable root. #TINY-9563
 - Annotation would not be removed if the annotation was immediately deleted after being created. #TINY-9399
 - Inserting a link for a selection from quickbars didn't preserve formatting. #TINY-9593
+- Drag and dropping the last noneditable element out of it's parent block would not properly pad the parent block element. #TINY-9606
 
 ## 6.3.2 - 2023-02-22
 
