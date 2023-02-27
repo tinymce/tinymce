@@ -69,6 +69,10 @@ describe('browser.tinymce.core.html.ParserUtilsTest', () => {
     it('Should find last cet ignoring inherit', () =>
       testFindClosestEditingHost([ 'true', 'inherit', 'inherit', 'true' ], 0)
     );
+
+    it('Should find last cet ignoring none', () =>
+      testFindClosestEditingHost([ 'true', 'none', 'none', 'true' ], 0)
+    );
   });
 });
 
