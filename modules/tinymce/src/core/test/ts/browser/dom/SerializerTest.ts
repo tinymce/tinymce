@@ -26,6 +26,9 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   const getTestElement = () =>
     DOM.get('test') as HTMLElement;
 
+  const getTestElementAssertionHtml = (innerHtml: string): string =>
+    `<div id="test" style="position: absolute; right: 10px; top: 10px;">${innerHtml}</div>`;
+
   it('Schema rules', () => {
     let ser = DomSerializer({ fix_list_elements: true });
 
@@ -334,27 +337,27 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<s' + 'cript type="mylanguage"></s' + 'cript>');
   });
 
-  // TODO: TINY-4627/TINY-8363
-  it.skip('Script with tags inside a comment with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
-    ser.setRules('script[type|language|src]');
+  it('Script with tags inside a comment with element_format: xhtml', () => {
+    // TINY-8363: Disable sanitization to avoid DOMPurify false positive affecting expected output
+    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml', sanitize: false });
 
     setTestHtml('<s' + 'cript>// <img src="test"><a href="#"></a></s' + 'cript>');
     assert.equal(
       ser.serialize(getTestElement()).replace(/\r/g, ''),
-      '<s' + 'cript>// <![CDATA[\n// <img src="test"><a href="#"></a>\n// ]]></s' + 'cript>'
+      // DomSerializer.setRules does not modify elements when sanitization is disabled, so need to account for outer test element tag
+      getTestElementAssertionHtml('<s' + 'cript>// <![CDATA[\n// <img src="test"><a href="#"></a>\n// ]]></s' + 'cript>')
     );
   });
 
-  // TODO: TINY-4627/TINY-8363
-  it.skip('Script with tags inside a comment', () => {
-    const ser = DomSerializer({ fix_list_elements: true });
-    ser.setRules('script[type|language|src]');
+  it('Script with tags inside a comment', () => {
+    // TINY-8363: Disable sanitization to avoid DOMPurify false positive affecting expected output
+    const ser = DomSerializer({ fix_list_elements: true, sanitize: false });
 
     setTestHtml('<s' + 'cript>// <img src="test"><a href="#"></a></s' + 'cript>');
     assert.equal(
       ser.serialize(getTestElement()).replace(/\r/g, ''),
-      '<s' + 'cript>// <img src="test"><a href="#"></a></s' + 'cript>'
+      // DomSerializer.setRules does not modify elements when sanitization is disabled, so need to account for outer test element tag
+      getTestElementAssertionHtml('<s' + 'cript>// <img src="test"><a href="#"></a></s' + 'cript>')
     );
   });
 
