@@ -22,6 +22,7 @@ export interface Dragging {
   readonly go: (parent: SugarElement<Node>) => void;
   readonly on: () => void;
   readonly off: () => void;
+  readonly isActive: () => boolean;
   readonly destroy: () => void;
   readonly events: DragActionEvents['registry'];
 }
@@ -70,6 +71,8 @@ const setup = <T>(mutation: DragMutation, mode: DragMode<T>, settings: Partial<B
     // acivate some events here?
   };
 
+  const isActive = () => active;
+
   const runIfActive = <F extends (...args: any[]) => any> (f: F) => {
     return (...args: Parameters<F>) => {
       if (active) {
@@ -96,6 +99,7 @@ const setup = <T>(mutation: DragMutation, mode: DragMode<T>, settings: Partial<B
     go,
     on,
     off,
+    isActive,
     destroy,
     events: events.registry
   };

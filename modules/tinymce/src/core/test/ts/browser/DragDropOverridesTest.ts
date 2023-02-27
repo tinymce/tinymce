@@ -8,7 +8,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.DragDropOverridesTest', () => {
-
   context('Tests when the editor is inside the viewport', () => {
     const fired = Cell(false);
     const hook = TinyHooks.bddSetup<Editor>({
@@ -28,6 +27,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
 
     beforeEach(() => {
       fired.set(false);
+      Mouse.mouseMoveTo(SugarBody.body(), 0, 0);
     });
 
     const createFile = (name: string, lastModified: number, blob: Blob): File => {
@@ -166,13 +166,13 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
     it('TINY-8874: Dragging CEF element towards the right edge causes scrolling', async () => {
       const editor = hook.editor();
       editor.setContent(`
-      <div style="display: flex">
-      <p contenteditable="false" style="flex: 0 0 200px; background-color: black; color: white">Draggable CEF</p>
-      <p id="separator" style="flex: 0 0 200px"></p>
-      <p style="margin-right: 16px">CEF can get dragged after this one</p>
-      <p class="target" style="flex: 0 0 200px; height: 300px">Content</p>
-      </div>
-    `);
+        <div style="display: flex">
+        <p contenteditable="false" style="flex: 0 0 200px; background-color: black; color: white">Draggable CEF</p>
+        <p id="separator" style="flex: 0 0 200px"></p>
+        <p style="margin-right: 16px">CEF can get dragged after this one</p>
+        <p class="target" style="flex: 0 0 200px; height: 300px">Content</p>
+        </div>
+      `);
       const target = UiFinder.findIn(TinyDom.body(editor), 'p:contains("Draggable CEF")').getOrDie();
       const initialScrollX = editor.getWin().scrollX;
       Mouse.mouseDown(target);
@@ -405,6 +405,28 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       await moveToDragElementToDestinationElement(editor, 0, 0);
 
       TinyAssertions.assertContent(editor, expectedContent);
+    });
+
+    it('TINY-9558: Should not be possible to drag a noneditable CEF element to a noneditable target within a noneditable root', async () => {
+      const editor = hook.editor();
+      const initialContent = '<div class="toDrag" contenteditable="false">To drag element</div><div class="destination">drop target</div>';
+
+      editor.setContent(initialContent);
+      editor.getBody().contentEditable = 'false';
+      await moveToDragElementToDestinationElement(editor, 0, 0);
+      TinyAssertions.assertContent(editor, initialContent);
+      editor.getBody().contentEditable = 'true';
+    });
+
+    it('TINY-9558: Should not be possible to drag a noneditable CEF element to an editable target within a noneditable root', async () => {
+      const editor = hook.editor();
+      const initialContent = '<div class="toDrag" contenteditable="false">To drag element</div><div contenteditable="true"><div class="destination">drop target</div></div>';
+
+      editor.setContent(initialContent);
+      editor.getBody().contentEditable = 'false';
+      await moveToDragElementToDestinationElement(editor, 0, 0);
+      TinyAssertions.assertContent(editor, initialContent);
+      editor.getBody().contentEditable = 'true';
     });
   });
 });

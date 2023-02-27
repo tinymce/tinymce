@@ -182,4 +182,14 @@ describe('browser.tinymce.plugins.link.QuickLinkTest', () => {
     TinyUiActions.keydown(editor, Keys.enter());
     UiFinder.notExists(SugarBody.body(), '.tox-pop__dialog');
   });
+
+  it('TINY-9593: Preserve formatting on text selection', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>Lorem <em><strong>ipsum</strong></em> dolor sit amet</p>');
+    TinySelections.setSelection(editor, [ 0, 1, 0, 0 ], ''.length, [ 0, 1, 0, 0 ], 'ipsum'.length);
+    await pOpenQuickLink(editor);
+    FocusTools.setActiveValue(doc, 'http://tiny.cloud/2');
+    TinyUiActions.keydown(editor, Keys.enter());
+    TinyAssertions.assertContent(editor, '<p>Lorem <a href="http://tiny.cloud/2"><em><strong>ipsum</strong></em></a> dolor sit amet</p>');
+  });
 });

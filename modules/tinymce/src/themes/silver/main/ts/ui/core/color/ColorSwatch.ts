@@ -116,7 +116,7 @@ const getFetch = (colors: Menu.ChoiceMenuItemSpec[], id: string, hasCustom: bool
   callback(getColors(colors, id, hasCustom));
 };
 
-const setIconColor = (splitButtonApi: Toolbar.ToolbarSplitButtonInstanceApi, name: string, newColor: string) => {
+const setIconColor = (splitButtonApi: Toolbar.ToolbarSplitButtonInstanceApi | Menu.NestedMenuItemInstanceApi, name: string, newColor: string) => {
   const id = name === 'forecolor' ? 'tox-icon-text-color__color' : 'tox-icon-highlight-bg-color__color';
   splitButtonApi.setIconFill(id, newColor);
 };
@@ -170,6 +170,10 @@ const registerTextColorMenuItem = (editor: Editor, name: string, format: ColorFo
   editor.ui.registry.addNestedMenuItem(name, {
     text,
     icon: name === 'forecolor' ? 'text-color' : 'highlight-bg-color',
+    onSetup: (api) => {
+      setIconColor(api, name, lastColor.get());
+      return Fun.noop;
+    },
     getSubmenuItems: () => [
       {
         type: 'fancymenuitem',

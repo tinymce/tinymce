@@ -1,10 +1,11 @@
 import { ApproxStructure, UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { Assert, context, describe, it } from '@ephox/bedrock-client';
+import { Assert, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { SugarBody, SugarShadowDom } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
+import * as ColorCache from 'tinymce/themes/silver/ui/core/color/ColorCache';
 import { getColorCols } from 'tinymce/themes/silver/ui/core/color/Options';
 
 describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () => {
@@ -55,6 +56,11 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     editor.setContent('hello test');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 5);
   };
+
+  beforeEach(() => {
+    LocalStorage.clear();
+    ColorCache.clearStoredCaches();
+  });
 
   context('Basic Color Sanity Test', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
