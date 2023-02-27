@@ -71,8 +71,9 @@ const getEventExtras = (lazyDialog: () => AlloyComponent, providers: UiFactoryBa
 const renderModalDialog = <T>(spec: DialogSpec, initialData: T, dialogEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[], backstage: UiFactoryBackstage): AlloyComponent => {
   const updateState = (_comp: AlloyComponent, incoming: T) => Optional.some(incoming);
 
-  return GuiFactory.build(Dialogs.renderDialogWithHeader({
+  return GuiFactory.build(Dialogs.renderDialog({
     ...spec,
+    firstTabstop: 1,
     lazySink: backstage.shared.getSink,
     extraBehaviours: [
       // Because this doesn't define `renderComponents`, all this does is update the state.

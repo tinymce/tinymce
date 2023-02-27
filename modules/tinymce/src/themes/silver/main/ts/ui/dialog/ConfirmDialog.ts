@@ -46,7 +46,7 @@ export const setup = (backstage: UiFactoryBackstage): ConfirmDialogApi => {
     const closeSpec = Dialogs.pClose(() => closeDialog(false), sharedBackstage.providers);
 
     const confirmDialog = GuiFactory.build(
-      Dialogs.renderDialogWithHiddenHeader({
+      Dialogs.renderDialog({
         lazySink: () => sharedBackstage.getSink(),
         header: Dialogs.hiddenHeader(titleSpec, closeSpec),
         body: Dialogs.pBodyMessage(message, sharedBackstage.providers),

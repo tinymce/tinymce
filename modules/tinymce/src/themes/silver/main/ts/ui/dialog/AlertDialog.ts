@@ -36,7 +36,7 @@ export const setup = (backstage: UiFactoryBackstage): AlertDialogApi => {
     const closeSpec = Dialogs.pClose(closeDialog, sharedBackstage.providers);
 
     const alertDialog = GuiFactory.build(
-      Dialogs.renderDialogWithHiddenHeader({
+      Dialogs.renderDialog({
         lazySink: () => sharedBackstage.getSink(),
         header: Dialogs.hiddenHeader(titleSpec, closeSpec),
         body: Dialogs.pBodyMessage(message, sharedBackstage.providers),

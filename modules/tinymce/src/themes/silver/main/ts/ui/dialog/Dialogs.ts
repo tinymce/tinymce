@@ -124,14 +124,6 @@ export interface DialogSpec {
   firstTabstop?: number;
 }
 
-const renderDialogWithHeader = (spec: DialogSpec): SketchSpec => {
-  return renderDialog({ ...spec, firstTabstop: 1 });
-};
-
-const renderDialogWithHiddenHeader = (spec: DialogSpec): SketchSpec => {
-  return renderDialog(spec);
-};
-
 const renderDialog = (spec: DialogSpec): SketchSpec => {
   const dialogClass = 'tox-dialog';
   const blockerClass = dialogClass + '-wrap';
@@ -206,4 +198,4 @@ const renderDialog = (spec: DialogSpec): SketchSpec => {
   );
 };
 
-export { defaultHeader, hiddenHeader, pClose, pUntitled, pBodyMessage, pFooter, pFooterGroup, renderDialogWithHeader, renderDialogWithHiddenHeader };
+export { defaultHeader, hiddenHeader, pClose, pUntitled, pBodyMessage, pFooter, pFooterGroup, renderDialog };
