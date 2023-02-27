@@ -775,7 +775,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       editor.getBody().contentEditable = 'true';
     });
 
-    it('TINY-9595: insert paragraphs in a paragraph editing host paragraph should unwrap the paragraphs and not split the em', () => {
+    it('TINY-9595: insert paragraphs in a paragraph editing host paragraph should unwrap the paragraphs and not split the div and em', () => {
       const editor = hook.editor();
       const content = '<div contenteditable="false"><p contenteditable="true"><em>ad</em></p></div>';
 
@@ -786,7 +786,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       TinyAssertions.assertContent(editor, '<div contenteditable="false"><p contenteditable="true"><em>abcd</em></p></div>');
     });
 
-    it('TINY-9595: insert div in a dvi editing host paragraph should not wrap the divs but split the em', () => {
+    it('TINY-9595: insert paragraphs in a div editing host with an em should split the em but not the div editing host', () => {
       const editor = hook.editor();
       const content = '<div contenteditable="false"><div contenteditable="true"><em>ad</em></div></div>';
 
@@ -795,6 +795,18 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       TinySelections.setCursor(editor, [ 1, 0, 0, 0 ], 1);
       editor.insertContent('<p>b</p><p>c</p>');
       TinyAssertions.assertContent(editor, '<div contenteditable="false"><div contenteditable="true"><em>a</em><p>b</p><p>c</p><em>d</em></div></div>');
+    });
+
+    it('TINY-9595: insert paragraphs in a paragraph editing host in a noneditable root editor should unwrap the paragraphs', () => {
+      const editor = hook.editor();
+      const content = '<p contenteditable="true"><em>ad</em></p>';
+
+      editor.getBody().contentEditable = 'false';
+      editor.setContent(content);
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      editor.insertContent('<p>b</p><p>c</p>');
+      editor.getBody().contentEditable = 'true';
+      TinyAssertions.assertContent(editor, '<p contenteditable="true"><em>abcd</em></p>');
     });
   });
 });
