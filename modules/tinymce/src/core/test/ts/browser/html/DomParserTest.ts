@@ -798,7 +798,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     );
   });
 
-  // TODO: TINY-4627/TINY-8363 - the iframe innerHTML on safari is `&lt;textarea&gt;` whereas on other browsers
+  // TODO: TINY-9624 - the iframe innerHTML on safari is `&lt;textarea&gt;` whereas on other browsers
   //       is `<textarea>`. This causes the mXSS cleaner in DOMPurify to run and causes the different assertions below
   it('parse iframe XSS', () => {
     const serializer = HtmlSerializer();
