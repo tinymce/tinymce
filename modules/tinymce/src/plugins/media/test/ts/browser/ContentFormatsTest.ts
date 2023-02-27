@@ -57,7 +57,7 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     );
   });
 
-  it('TBA: Iframe with innerHTML retained as is', async () => {
+  it('TBA: Iframe with innerHTML retained as is with xss_sanitization: false', async () => {
     // TINY-8363: Iframe with innerHTML is removed by DOMPurify, so disable sanitization for this test
     const editor = await McEditor.pFromSettings<Editor>({
       ...settings,

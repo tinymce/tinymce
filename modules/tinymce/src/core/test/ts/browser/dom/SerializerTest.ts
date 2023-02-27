@@ -337,7 +337,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<s' + 'cript type="mylanguage"></s' + 'cript>');
   });
 
-  it('Script with tags inside a comment with element_format: xhtml', () => {
+  it('Script with tags inside a comment with element_format: xhtml and sanitize: false', () => {
     // TINY-8363: Disable sanitization to avoid DOMPurify false positive affecting expected output
     const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml', sanitize: false });
 
@@ -349,7 +349,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     );
   });
 
-  it('Script with tags inside a comment', () => {
+  it('Script with tags inside a comment with sanitize: false', () => {
     // TINY-8363: Disable sanitization to avoid DOMPurify false positive affecting expected output
     const ser = DomSerializer({ fix_list_elements: true, sanitize: false });
 
