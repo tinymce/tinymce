@@ -143,7 +143,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
       menubar: false
     }, setupElement, []);
 
-    it('TINY-9554: test position', async () => {
+    it('TINY-9554: test that the position of the dialog is inside the content of the editor', async () => {
       const editor = hook.editor();
       const dialog = openDialog(editor);
 
