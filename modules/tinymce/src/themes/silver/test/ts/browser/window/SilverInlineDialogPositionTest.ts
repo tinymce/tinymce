@@ -121,7 +121,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
 
   context('TINY-9554: dialog position with editor in fixed container', () => {
     const setupElement = () => {
-      const container = SugarElement.fromHtml('<div style="position: fixed; top: 150px; left: 150px;"></div>');
+      const container = SugarElement.fromHtml('<div class="container" style="position: fixed; top: 150px; left: 150px;"></div>');
       const element = SugarElement.fromTag('textarea');
 
       Insert.append(SugarBody.body(), container);
@@ -143,11 +143,12 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
       menubar: false
     }, setupElement, []);
 
-    it('TINY-9554: test that the position of the dialog is inside the content of the editor', async () => {
+    it('TINY-9554: the dialog should be below the toolbar of the editor', () => {
       const editor = hook.editor();
       const dialog = openDialog(editor);
+      const editorToolbar = UiFinder.findIn(TinyDom.container(editor), '.tox-editor-header').getOrDie();
 
-      await pAssertPos(dialog, 'absolute', 306, 0);
+      assert.isTrue(editorToolbar.dom.getBoundingClientRect().bottom < dialog.dom.getBoundingClientRect().top);
 
       DialogUtils.close(editor);
     });
