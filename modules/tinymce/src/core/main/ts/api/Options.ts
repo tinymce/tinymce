@@ -780,6 +780,16 @@ const register = (editor: Editor): void => {
     default: true
   });
 
+  registerOption('highlight_on_focus', {
+    processor: 'boolean',
+    default: false
+  });
+
+  registerOption('xss_sanitization', {
+    processor: 'boolean',
+    default: true
+  });
+
   // These options must be registered later in the init sequence due to their default values
   editor.on('ScriptsLoaded', () => {
     registerOption('directionality', {
@@ -883,6 +893,8 @@ const getNonEditableClass = option('noneditable_class');
 const getEditableClass = option('editable_class');
 const getNonEditableRegExps = option('noneditable_regexp');
 const shouldPreserveCData = option('preserve_cdata');
+const shouldHighlightOnFocus = option('highlight_on_focus');
+const shouldSanitizeXss = option('xss_sanitization');
 
 const hasTextPatternsLookup = (editor: Editor): boolean =>
   editor.options.isSet('text_patterns_lookup');
@@ -997,5 +1009,7 @@ export {
   getNonEditableRegExps,
   getEditableClass,
   hasTableTabNavigation,
-  shouldPreserveCData
+  shouldPreserveCData,
+  shouldHighlightOnFocus,
+  shouldSanitizeXss
 };

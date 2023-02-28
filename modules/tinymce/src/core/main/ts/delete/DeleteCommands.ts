@@ -25,7 +25,8 @@ const findAction = (editor: Editor, caret: Cell<Text | null>, forward: boolean) 
     MediaDelete.backspaceDelete,
     BlockRangeDelete.backspaceDelete,
     InlineFormatDelete.backspaceDelete,
-  ], (item) => item(editor, forward));
+  ], (item) => item(editor, forward))
+    .filter((_) => editor.selection.isEditable());
 
 const deleteCommand = (editor: Editor, caret: Cell<Text | null>): void => {
   const result = findAction(editor, caret, false);

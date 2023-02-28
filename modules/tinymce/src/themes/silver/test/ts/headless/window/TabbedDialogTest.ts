@@ -110,8 +110,12 @@ describe('headless.tinymce.themes.silver.window.TabbedDialogTest', () => {
     }));
 
     Mouse.clickOn(dialog, 'button:contains("-> Advanced")');
-    assertFormContents('Clicking Advanced button (not tab)', tabview, (s, str, _arr) => s.element('textarea', {
-      value: str.is('Textarea value')
+    assertFormContents('Clicking Advanced button (not tab)', tabview, (s, str, _arr) => s.element('div', {
+      children: [
+        s.element('textarea', {
+          value: str.is('Textarea value')
+        })
+      ]
     }));
 
     Mouse.clickOn(dialog, 'button:contains("-> Basic")');

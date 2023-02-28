@@ -1,7 +1,7 @@
 import { Assertions } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Unicode } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { Arr, Unicode } from '@ephox/katamari';
+import { Html, SugarElement, SugarNode } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import * as Nodes from 'tinymce/plugins/visualchars/core/Nodes';
@@ -28,7 +28,7 @@ describe('atomic.tinymce.plugins.visualchars.NodesTest', () => {
         '<p>c</p>' +
         '<p>d' + Unicode.softHyphen + '</p>'
       );
-      assert.equal(2, Nodes.filterDescendants(SugarElement.fromDom(div), Nodes.isMatch).length);
+      assert.equal(Nodes.filterEditableDescendants(SugarElement.fromDom(div), Nodes.isMatch, true).length, 2);
 
       // 4 matches
       div.innerHTML = (
@@ -37,8 +37,59 @@ describe('atomic.tinymce.plugins.visualchars.NodesTest', () => {
         '<p>c' + Unicode.nbsp + '</p>' +
         '<p>d' + Unicode.softHyphen + '</p>'
       );
-      assert.equal(4, Nodes.filterDescendants(SugarElement.fromDom(div), Nodes.isMatch).length);
+      assert.equal(Nodes.filterEditableDescendants(SugarElement.fromDom(div), Nodes.isMatch, true).length, 4);
+    });
+
+    it('should only return editable nodes for initial editable state', () => {
+      const innerHtml = `
+        <b>editable 1</b>
+        <span contenteditable="false">
+          <b><i>noneditable</i></b>
+          <span contenteditable="true">
+            <b>editable 2</b>
+            <i>editable 3</i>
+          </span>
+          <i>noneditable</i>
+          <span contenteditable="true">
+            <b>editable 4</b>
+          </span>
+        </span>
+        <i>editable 5</i>
+      `;
+      const div = SugarElement.fromHtml(`<div>${innerHtml}</div>`);
+
+      assert.deepEqual(Arr.map(Nodes.filterEditableDescendants(div, SugarNode.isElement, true), Html.getOuter), [
+        '<b>editable 1</b>',
+        '<b>editable 2</b>',
+        '<i>editable 3</i>',
+        '<b>editable 4</b>',
+        '<i>editable 5</i>'
+      ]);
+    });
+
+    it('should only return editable nodes for initial noneditable state', () => {
+      const innerHtml = `
+        <b>noneditable</b>
+        <span contenteditable="false">
+          <b><i>noneditable</i></b>
+          <span contenteditable="true">
+            <b>editable 1</b>
+            <i>editable 2</i>
+          </span>
+          <i>noneditable</i>
+          <span contenteditable="true">
+            <b>editable 3</b>
+          </span>
+        </span>
+        <i>noneditable</i>
+      `;
+      const div = SugarElement.fromHtml(`<div>${innerHtml}</div>`);
+
+      assert.deepEqual(Arr.map(Nodes.filterEditableDescendants(div, SugarNode.isElement, false), Html.getOuter), [
+        '<b>editable 1</b>',
+        '<i>editable 2</i>',
+        '<b>editable 3</b>'
+      ]);
     });
   });
-
 });

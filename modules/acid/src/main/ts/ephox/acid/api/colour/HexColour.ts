@@ -3,7 +3,7 @@ import { Strings, Optional } from '@ephox/katamari';
 import { Hex, Rgba } from './ColourTypes';
 
 const hexColour = (value: string): Hex => ({
-  value
+  value: normalizeHex(value)
 });
 
 const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;

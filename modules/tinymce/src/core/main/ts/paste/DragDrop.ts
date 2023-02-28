@@ -30,7 +30,7 @@ const setFocusedRange = (editor: Editor, rng: Range | undefined): void => {
 const hasImage = (dataTransfer: DataTransfer): boolean =>
   Arr.exists(dataTransfer.files, (file) => /^image\//.test(file.type));
 
-const isTransparentBlockDrop = (dom: DOMUtils, schema: Schema, target: Element, dropContent: Clipboard.ClipboardContents) => {
+const isTransparentBlockDrop = (dom: DOMUtils, schema: Schema, target: Node, dropContent: Clipboard.ClipboardContents) => {
   const parentTransparent = dom.getParent(target, (node) => TransparentElements.isTransparentBlock(schema, node));
   if (parentTransparent && Obj.has(dropContent, 'text/html')) {
     const fragment = new DOMParser().parseFromString(dropContent['text/html'], 'text/html').body;
@@ -79,7 +79,7 @@ const setup = (editor: Editor, draggingInternallyState: Cell<boolean>): void => 
 
     const internalContent = dropContent[InternalHtml.internalHtmlMime()];
     const content = internalContent || dropContent['text/html'] || dropContent['text/plain'];
-    const transparentElementDrop = isTransparentBlockDrop(editor.dom, editor.schema, e.target, dropContent);
+    const transparentElementDrop = isTransparentBlockDrop(editor.dom, editor.schema, rng.startContainer, dropContent);
 
     if (draggingInternallyState.get() && !transparentElementDrop) {
       return;

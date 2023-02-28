@@ -1,18 +1,21 @@
-import { FocusTools, Keyboard, Keys } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+
+import { FocusTools, Keyboard, Keys, TestStore } from '@ephox/agar';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
+import { SugarDocument, SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 
-UnitTest.asynctest('Flow Keying Skip Element Test', (success, failure) => {
-  GuiSetup.setup((store, _doc, _body) => {
+describe('browser.alloy.behaviour.keying.FlowKeyingTest', () => {
+
+  const makeFlow = (store: TestStore, cycles: boolean): SketchSpec => {
     const item = (classes: string[], name: string) => Container.sketch({
       dom: {
         tag: 'span',
@@ -35,45 +38,78 @@ UnitTest.asynctest('Flow Keying Skip Element Test', (success, failure) => {
       ])
     });
 
-    return GuiFactory.build(
-      Container.sketch({
-        dom: {
-          classes: [ 'flow-keying-test' ],
-          styles: {
-            background: 'white',
-            width: '200px',
-            height: '200px'
-          }
-        },
-        uid: 'custom-uid',
-        containerBehaviours: Behaviour.derive([
-          Keying.config({
-            mode: 'flow',
-            selector: '.stay',
-            onEscape: store.adderH('flow.onEscape')
-          })
-        ]),
-        components: [
-          item([ 'stay', 'one' ], 'one'),
-          item([ 'stay', 'two' ], 'two'),
-          item([ 'skip', 'three' ], 'three'),
-          item([ 'skip', 'four' ], 'four'),
-          item([ 'stay', 'five' ], 'five')
-        ]
-      })
-    );
-  }, (doc, body, gui, _component, store) => {
+    return Container.sketch({
+      dom: {
+        classes: [ 'flow-keying-test' ],
+        styles: {
+          background: 'white',
+          width: '200px',
+          height: '200px'
+        }
+      },
+      uid: 'custom-uid',
+      containerBehaviours: Behaviour.derive([
+        Keying.config({
+          mode: 'flow',
+          selector: '.stay',
+          onEscape: store.adderH('flow.onEscape'),
+          cycles
+        })
+      ]),
+      components: [
+        item([ 'stay', 'one' ], 'one'),
+        item([ 'stay', 'two' ], 'two'),
+        item([ 'skip', 'three' ], 'three'),
+        item([ 'skip', 'four' ], 'four'),
+        item([ 'stay', 'five' ], 'five')
+      ]
+    });
+  };
 
-    const targets = {
-      one: { label: 'one', selector: '.one' },
-      two: { label: 'two', selector: '.two' },
-      five: { label: 'five', selector: '.five' }
-    };
+  GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
+    `.selected-item {
+      background-color: #cadbee;
+    }`
+  ]);
 
-    return [
-      GuiSetup.mSetupKeyLogger(body),
-      FocusTools.sSetFocus('Initial focus', gui.element, '.one'),
-      NavigationUtils.sequence(
+  const sequence = async (doc: SugarElement<Document>, key: number, modifiers: { }, identifiers: Array<{ label: string; selector: string }>) => {
+    const cases = Arr.range(identifiers.length, async (i: number) => {
+      Keyboard.activeKeydown(doc, key, modifiers);
+      await FocusTools.pTryOnSelector(
+        'Focus should move from ' + (i > 0 ? identifiers[i - 1].label : '(start)') + ' to ' + identifiers[i].label,
+        doc,
+        identifiers[i].selector
+      );
+    });
+
+    for (const c of cases) {
+      await c;
+    }
+  };
+
+  const hook = GuiSetup.bddSetup(
+    (store) => GuiFactory.build(makeFlow(store, true))
+  );
+
+  const hookWithoutCycles = GuiSetup.bddSetup(
+    (store) => GuiFactory.build(makeFlow(store, false))
+  );
+
+  const targets = {
+    one: { label: 'one', selector: '.one' },
+    two: { label: 'two', selector: '.two' },
+    five: { label: 'five', selector: '.five' }
+  };
+
+  context('Testing FlowKeying', () => {
+    it('Flow Keying Skip Element Test', async () => {
+      const container = hook.component();
+      const doc = hook.root();
+      const store = hook.store();
+      const keyLoger = GuiSetup.setupKeyLogger(hook.body());
+      FocusTools.setFocus(container.element, '.one');
+
+      await sequence(
         doc,
         Keys.right(),
         {},
@@ -85,8 +121,8 @@ UnitTest.asynctest('Flow Keying Skip Element Test', (success, failure) => {
           targets.five,
           targets.one
         ]
-      ),
-      NavigationUtils.sequence(
+      );
+      await sequence(
         doc,
         Keys.left(),
         { },
@@ -98,8 +134,8 @@ UnitTest.asynctest('Flow Keying Skip Element Test', (success, failure) => {
           targets.two,
           targets.one
         ]
-      ),
-      NavigationUtils.sequence(
+      );
+      await sequence(
         doc,
         Keys.up(),
         { },
@@ -111,8 +147,8 @@ UnitTest.asynctest('Flow Keying Skip Element Test', (success, failure) => {
           targets.two,
           targets.one
         ]
-      ),
-      NavigationUtils.sequence(
+      );
+      await sequence(
         doc,
         Keys.down(),
         { },
@@ -124,17 +160,67 @@ UnitTest.asynctest('Flow Keying Skip Element Test', (success, failure) => {
           targets.five,
           targets.one
         ]
-      ),
+      );
 
       // Test execute
-      Keyboard.sKeydown(doc, Keys.enter(), {}),
-      store.sAssertEq('Check that execute has fired on the right target', [ 'item.execute: one' ]),
-      store.sClear,
+      Keyboard.activeKeydown(doc, Keys.enter(), {});
+      store.assertEq('Check that execute has fired on the right target', [ 'item.execute: one' ]);
+      store.clear();
 
-      Keyboard.sKeyup(doc, Keys.escape(), {}),
-      store.sAssertEq('Check that escape handler has fired', [ 'flow.onEscape' ]),
+      Keyboard.activeKeyup(doc, Keys.escape(), {});
+      store.assertEq('Check that escape handler has fired', [ 'flow.onEscape' ]);
 
-      GuiSetup.mTeardownKeyLogger(body, [ ])
-    ];
-  }, success, failure);
+      GuiSetup.teardownKeyLogger(keyLoger, [ ]);
+    });
+
+    it('TINY-9429: Flow with cycles false should stop on the first element when left is pressed and on the last when right is pressed', async () => {
+      const container = hookWithoutCycles.component();
+      const doc = hookWithoutCycles.root();
+      const store = hookWithoutCycles.store();
+      const keyLoger = GuiSetup.setupKeyLogger(hookWithoutCycles.body());
+      FocusTools.setFocus(container.element, '.one');
+
+      await sequence(
+        doc,
+        Keys.right(),
+        { },
+        [
+          targets.two,
+          targets.five,
+          targets.five,
+          targets.five,
+          targets.five,
+          targets.five
+        ]
+      );
+
+      GuiSetup.teardownKeyLogger(keyLoger, [ ]);
+
+      await sequence(
+        doc,
+        Keys.left(),
+        { },
+        [
+          targets.two,
+          targets.one,
+          targets.one,
+          targets.one,
+          targets.one,
+          targets.one
+        ]
+      );
+
+      GuiSetup.teardownKeyLogger(keyLoger, [ ]);
+
+      // Test execute
+      Keyboard.activeKeydown(doc, Keys.enter(), {});
+      store.assertEq('Check that execute has fired on the right target', [ 'item.execute: one' ]);
+      store.clear();
+
+      Keyboard.activeKeyup(doc, Keys.escape(), {});
+      store.assertEq('Check that escape handler has fired', [ 'flow.onEscape' ]);
+
+      GuiSetup.teardownKeyLogger(keyLoger, [ ]);
+    });
+  });
 });

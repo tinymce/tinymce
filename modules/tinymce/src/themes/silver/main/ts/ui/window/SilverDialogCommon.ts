@@ -73,6 +73,7 @@ const renderModalDialog = <T>(spec: DialogSpec, initialData: T, dialogEvents: Al
 
   return GuiFactory.build(Dialogs.renderDialog({
     ...spec,
+    firstTabstop: 1,
     lazySink: backstage.shared.getSink,
     extraBehaviours: [
       // Because this doesn't define `renderComponents`, all this does is update the state.
@@ -118,7 +119,7 @@ const mapMenuButtons = (buttons: Dialog.DialogFooterButton[]): (Dialog.DialogFoo
   });
 };
 
-const extractCellsToObject = (buttons: (StoredMenuButton | Dialog.DialogFooterMenuButton | Dialog.DialogFooterNormalButton)[]): Record<string, Cell<boolean>> =>
+const extractCellsToObject = (buttons: (StoredMenuButton | Dialog.DialogFooterMenuButton | Dialog.DialogFooterNormalButton | Dialog.DialogFooterToggleButton)[]): Record<string, Cell<boolean>> =>
   Arr.foldl(buttons, (acc, button) => {
     if (button.type === 'menu') {
       const menuButton = button as StoredMenuButton;

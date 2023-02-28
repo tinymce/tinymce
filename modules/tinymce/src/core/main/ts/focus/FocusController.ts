@@ -1,5 +1,5 @@
 import { Fun } from '@ephox/katamari';
-import { Focus, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { Class, Focus, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
@@ -59,8 +59,20 @@ const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => 
 
   SelectionRestore.register(editor);
 
+  const toggleContentAreaOnFocus = (editor: Editor, fn: (element: SugarElement<Element>, clazz: string) => void) => {
+    // Inline editors have a different approach to highlight the content area on focus
+    if (Options.shouldHighlightOnFocus(editor) && editor.inline !== true) {
+      const contentArea = SugarElement.fromDom(editor.getContainer());
+      fn(contentArea, 'tox-edit-focus');
+    }
+  };
+
   editor.on('focusin', () => {
     const focusedEditor = editorManager.focusedEditor;
+
+    if (isEditorContentAreaElement(getActiveElement(editor))) {
+      toggleContentAreaOnFocus(editor, Class.add);
+    }
 
     if (focusedEditor !== editor) {
       if (focusedEditor) {
@@ -77,6 +89,11 @@ const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => 
   editor.on('focusout', () => {
     Delay.setEditorTimeout(editor, () => {
       const focusedEditor = editorManager.focusedEditor;
+
+      // Remove focus highlight when the content area is no longer the active editor element, or if the highlighted editor is not the current focused editor
+      if (!isEditorContentAreaElement(getActiveElement(editor)) || focusedEditor !== editor) {
+        toggleContentAreaOnFocus(editor, Class.remove);
+      }
 
       // Still the same editor the blur was outside any editor UI
       if (!isUIElement(editor, getActiveElement(editor)) && focusedEditor === editor) {

@@ -334,6 +334,15 @@
     max-width: 1200px;
   }
 
+  .tox-dialog--fullscreen {
+    height: 100%;
+    max-width: 100%;
+
+    .tox-dialog__body-content {
+      max-height: 100%;
+    }
+  }
+
   .tox-dialog--width-md {
     // TODO (verify width for size medium)
     max-width: 800px;
@@ -390,6 +399,10 @@
         font-weight: @font-weight-bold;
         padding-bottom: @pad-sm;
       }
+
+      th:first-child {
+        padding-right: @pad-sm;
+      }
     }
 
     tbody {
@@ -405,6 +418,10 @@
     td {
       padding-bottom: @pad-sm;
       padding-top: @pad-sm;
+    }
+
+    td:first-child {
+      padding-right: @pad-sm;
     }
   }
 

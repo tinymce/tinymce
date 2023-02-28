@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+- `Awareness.isCursorPosition` API now returns `true` for passed `contenteditable=false` elements.
+
 ## 9.1.0 - 2022-09-08
 
 ### Improved

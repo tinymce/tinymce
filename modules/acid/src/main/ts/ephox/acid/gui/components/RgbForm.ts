@@ -224,7 +224,7 @@ const rgbFormFactory = (
     const onValidHex = (form: AlloyComponent, value: string) => {
       onValidHexx(form);
       const hex = HexColour.hexColour(value);
-      set('hex', Optional.some(value));
+      set('hex', Optional.some(hex.value));
 
       const rgb = RgbaColour.fromHex(hex);
       copyRgbToForm(form, rgb);

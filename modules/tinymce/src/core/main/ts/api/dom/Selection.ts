@@ -1,4 +1,4 @@
-import { Type } from '@ephox/katamari';
+import { Arr, Type } from '@ephox/katamari';
 import { Compare, SugarElement } from '@ephox/sugar';
 
 import { Bookmark } from '../../bookmark/BookmarkTypes';
@@ -257,10 +257,19 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     return !sel || rng.collapsed;
   };
 
+  /**
+   * Checks if the current selection’s start and end containers are editable within their parent’s contexts.
+   *
+   * @method isEditable
+   * @return {Boolean} Will be true if the selection is editable and false if it's not editable.
+   */
   const isEditable = (): boolean => {
     const rng = getRng();
+    const fakeSelectedElements = editor.getBody().querySelectorAll('[data-mce-selected="1"]');
 
-    if (rng.startContainer === rng.endContainer) {
+    if (fakeSelectedElements.length > 0) {
+      return Arr.forall(fakeSelectedElements, (el) => dom.isEditable(el.parentElement));
+    } else if (rng.startContainer === rng.endContainer) {
       return dom.isEditable(rng.startContainer);
     } else {
       return dom.isEditable(rng.startContainer) && dom.isEditable(rng.endContainer);

@@ -1,7 +1,7 @@
 import { ColourPicker } from '@ephox/acid';
 import { AlloyComponent, AlloyTriggers, Behaviour, Composing, Form, Memento, NativeEvents, Representing, SimpleSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Optional, Strings } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
@@ -73,7 +73,7 @@ export const renderColorPicker = (_spec: ColorPickerSpec, providerBackstage: UiF
             const formValues = Representing.getValue(rgbForm);
             return formValues.hex as Optional<string>;
           });
-          return optHex.map((hex) => '#' + hex).getOr('');
+          return optHex.map((hex) => '#' + Strings.removeLeading(hex, '#')).getOr('');
         },
         (comp, newValue) => {
           const pattern = /^#([a-fA-F0-9]{3}(?:[a-fA-F0-9]{3})?)/;

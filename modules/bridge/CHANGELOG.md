@@ -5,7 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+- Added `Tree` component that can be a `BodyComponent`. #TINY-9532
 - Added optional `select`-property to `colorswatch`-type `fancymenuitem` to allow setting colors as selected. #TINY-9395
+- Added new `setIconFill` function to `nestedmenuitemspec`. #TINY-9497
+- Added `setText` and `setIcon` properties to toolbar button api and menu button api. #TINY-9268
+- Provide menu button `api` property as an argument to the fetch function to allow menu items to change the icon or text of the parent menu. #TINY-9268
 
 ## 4.2.0 - 2022-11-23
 

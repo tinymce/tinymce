@@ -1,4 +1,4 @@
-import { AlloyEvents, AlloyTriggers, CustomEvent, EventFormat, SystemEvents } from '@ephox/alloy';
+import { AlloyEvents, AlloyTriggers, CustomEvent, EventFormat, NativeEvents, SystemEvents } from '@ephox/alloy';
 import { Id } from '@ephox/katamari';
 
 import { GetApiType, runWithApi } from '../../controls/Controls';
@@ -25,9 +25,20 @@ const onToolbarButtonExecute = <T>(info: OnMenuItemExecuteType<T>): AlloyEvents.
     });
   });
 
+const commonButtonDisplayEvent = Id.generate('common-button-display-events');
+
 const toolbarButtonEventOrder: Record<string, string[]> = {
   // TODO: use the constants provided by behaviours.
-  [SystemEvents.execute()]: [ 'disabling', 'alloy.base.behaviour', 'toggling', 'toolbar-button-events' ]
+  [SystemEvents.execute()]: [ 'disabling', 'alloy.base.behaviour', 'toggling', 'toolbar-button-events' ],
+  [SystemEvents.attachedToDom()]: [
+    'toolbar-button-events',
+    commonButtonDisplayEvent
+  ],
+  [NativeEvents.mousedown()]: [
+    'focusing',
+    'alloy.base.behaviour',
+    commonButtonDisplayEvent
+  ]
 };
 
-export { onToolbarButtonExecute, toolbarButtonEventOrder, runWithApi };
+export { onToolbarButtonExecute, toolbarButtonEventOrder, runWithApi, commonButtonDisplayEvent };

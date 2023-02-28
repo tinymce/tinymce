@@ -87,7 +87,7 @@ const Quirks = (editor: Editor): Quirks => {
       const keyCode = e.keyCode;
 
       // Empty the editor if it's needed for example backspace at <p><b>|</b></p>
-      if (!isDefaultPrevented(e) && (keyCode === DELETE || keyCode === BACKSPACE)) {
+      if (!isDefaultPrevented(e) && (keyCode === DELETE || keyCode === BACKSPACE) && editor.selection.isEditable()) {
         const isCollapsed = editor.selection.isCollapsed();
         const body = editor.getBody();
 
@@ -235,13 +235,13 @@ const Quirks = (editor: Editor): Quirks => {
       // Workaround for bug, http://bugs.webkit.org/show_bug.cgi?id=12250
       // WebKit can't even do simple things like selecting an image
       // Needs to be the setBaseAndExtend or it will fail to select floated images
-      if (/^(IMG|HR)$/.test(target.nodeName) && dom.getContentEditableParent(target) !== 'false') {
+      if (/^(IMG|HR)$/.test(target.nodeName) && dom.isEditable(target.parentNode)) {
         e.preventDefault();
         editor.selection.select(target);
         editor.nodeChanged();
       }
 
-      if (target.nodeName === 'A' && dom.hasClass(target, visualAidsAnchorClass) && target.childNodes.length === 0) {
+      if (target.nodeName === 'A' && dom.hasClass(target, visualAidsAnchorClass) && target.childNodes.length === 0 && dom.isEditable(target.parentNode)) {
         e.preventDefault();
         selection.select(target);
       }

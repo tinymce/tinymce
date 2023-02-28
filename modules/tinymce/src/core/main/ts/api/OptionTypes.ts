@@ -1,3 +1,4 @@
+
 import { UploadHandler } from '../file/Uploader';
 import { DynamicPatternsLookup, Pattern, RawDynamicPatternsLookup, RawPattern } from '../textpatterns/core/PatternTypes';
 import Editor from './Editor';
@@ -114,12 +115,14 @@ interface BaseEditorOptions {
   font_size_legacy_values?: string;
   font_size_style_values?: string;
   font_size_formats?: string;
+  font_size_input_default_unit?: string;
   forced_root_block?: string;
   forced_root_block_attrs?: Record<string, string>;
   formats?: Formats;
   format_noneditable_selector?: string;
   height?: number | string;
   hidden_input?: boolean;
+  highlight_on_focus?: boolean;
   icons?: string;
   icons_url?: string;
   id?: string;
@@ -233,6 +236,7 @@ interface BaseEditorOptions {
   visual_anchor_class?: string;
   visual_table_class?: string;
   width?: number | string;
+  xss_sanitization?: boolean;
 
   // Internal settings (used by cloud or tests)
   disable_nodechange?: boolean;
@@ -284,12 +288,14 @@ export interface EditorOptions extends NormalizedEditorOptions {
   font_family_formats: string;
   font_size_classes: string;
   font_size_formats: string;
+  font_size_input_default_unit: string;
   font_size_legacy_values: string;
   font_size_style_values: string;
   forced_root_block: string;
   forced_root_block_attrs: Record<string, string>;
   format_noneditable_selector: string;
   height: number | string;
+  highlight_on_focus: boolean;
   iframe_attrs: Record<string, string>;
   images_file_types: string;
   images_upload_base_path: string;
@@ -328,4 +334,5 @@ export interface EditorOptions extends NormalizedEditorOptions {
   visual_anchor_class: string;
   visual_table_class: string;
   width: number | string;
+  xss_sanitization: boolean;
 }

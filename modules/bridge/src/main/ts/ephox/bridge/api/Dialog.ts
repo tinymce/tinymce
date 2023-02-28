@@ -15,7 +15,7 @@ import {
 } from '../components/dialog/Dialog';
 import {
   createDialogFooterButton, DialogFooterButton, DialogFooterButtonSpec, DialogFooterMenuButton, DialogFooterMenuButtonItemSpec,
-  DialogFooterMenuButtonSpec, DialogFooterNormalButton, DialogFooterNormalButtonSpec, DialogFooterToggleMenuItem
+  DialogFooterMenuButtonSpec, DialogFooterNormalButton, DialogFooterNormalButtonSpec, DialogFooterToggleButton, DialogFooterToggleButtonSpec, DialogFooterToggleMenuItem
 } from '../components/dialog/DialogFooterButton';
 import { createDropZone, DropZone, DropZoneSpec } from '../components/dialog/Dropzone';
 import { createGridFields, Grid, GridSpec } from '../components/dialog/Grid';
@@ -34,6 +34,7 @@ import { Slider, SliderSpec } from '../components/dialog/Slider';
 import { createTable, Table, TableSpec } from '../components/dialog/Table';
 import { createTabPanel, Tab, TabPanel, TabPanelSpec, TabSpec } from '../components/dialog/TabPanel';
 import { createTextArea, TextArea, TextAreaSpec } from '../components/dialog/Textarea';
+import { Directory, Leaf, createTree, Tree, TreeItem, TreeItemSpec, TreeSpec, treeSchema } from '../components/dialog/Tree';
 import {
   createUrlDialog, UrlDialog, UrlDialogActionDetails, UrlDialogActionHandler, UrlDialogCancelHandler, UrlDialogCloseHandler, UrlDialogFooterButton,
   UrlDialogFooterButtonSpec, UrlDialogInstanceApi, UrlDialogMessage, UrlDialogMessageHandler, UrlDialogSpec
@@ -105,6 +106,8 @@ export {
   DialogFooterNormalButtonSpec,
   DialogFooterMenuButton,
   DialogFooterMenuButtonSpec,
+  DialogFooterToggleButton,
+  DialogFooterToggleButtonSpec,
   DialogFooterToggleMenuItem,
   DialogFooterMenuButtonItemSpec,
   createDialogFooterButton,
@@ -175,6 +178,15 @@ export {
   TextArea,
   TextAreaSpec,
   createTextArea,
+
+  Tree,
+  TreeItem,
+  TreeItemSpec,
+  TreeSpec,
+  Directory,
+  Leaf,
+  treeSchema,
+  createTree,
 
   UrlDialog,
   UrlDialogSpec,

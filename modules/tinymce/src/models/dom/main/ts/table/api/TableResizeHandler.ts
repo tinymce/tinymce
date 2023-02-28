@@ -184,6 +184,18 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
     });
   });
 
+  editor.on('dragstart dragend', (e) => {
+    tableResize.on((resize) => {
+      if (e.type === 'dragstart') {
+        resize.hideBars();
+        resize.off();
+      } else {
+        resize.on();
+        resize.showBars();
+      }
+    });
+  });
+
   editor.on('remove', () => {
     destroy();
   });

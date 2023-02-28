@@ -24,6 +24,7 @@ import { sizeInputSchema } from './SizeInput';
 import { sliderSchema } from './Slider';
 import { tableSchema } from './Table';
 import { textAreaSchema } from './Textarea';
+import { treeSchema } from './Tree';
 import { urlInputSchema } from './UrlInput';
 
 export interface PanelSpec {
@@ -73,6 +74,7 @@ export const itemSchema = StructureSchema.valueThunkOf(
     collection: collectionSchema,
     label: StructureSchema.objOf(createLabelFields(createItemsField('label'))),
     table: tableSchema,
+    tree: treeSchema,
     panel: panelSchema
   })
 );

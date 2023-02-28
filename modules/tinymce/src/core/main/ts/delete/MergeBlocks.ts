@@ -1,5 +1,5 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Compare, Insert, Remove, SugarElement, Traverse } from '@ephox/sugar';
+import { Compare, Insert, Replication, Remove, SugarElement, Traverse } from '@ephox/sugar';
 
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
@@ -55,10 +55,30 @@ const nestedBlockMerge = (
 
 const sidelongBlockMerge = (rootNode: SugarElement<Node>, fromBlock: SugarElement<Element>, toBlock: SugarElement<Element>): Optional<CaretPosition> => {
   if (Empty.isEmpty(toBlock)) {
-    Remove.remove(toBlock);
     if (Empty.isEmpty(fromBlock)) {
-      PaddingBr.fillWithPaddingBr(fromBlock);
+      const getInlineToBlockDescendants = (el: SugarElement<Element>) => {
+        const helper = (node: SugarElement<Element>, elements: SugarElement<Element>[]): SugarElement<Element>[] =>
+          Traverse.firstChild(node).fold(
+            () => elements,
+            (child) => ElementType.isInline(child) ? helper(child, elements.concat(Replication.shallow(child))) : elements
+          );
+        return helper(el, []);
+      };
+
+      const newFromBlockDescendants = Arr.foldr(
+        getInlineToBlockDescendants(toBlock),
+        (element: SugarElement<Element>, descendant) => {
+          Insert.wrap(element, descendant);
+          return descendant;
+        },
+        PaddingBr.createPaddingBr()
+      );
+
+      Remove.empty(fromBlock);
+      Insert.append(fromBlock, newFromBlockDescendants);
     }
+
+    Remove.remove(toBlock);
     return CaretFinder.firstPositionIn(fromBlock.dom);
   }
 

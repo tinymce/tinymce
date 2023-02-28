@@ -48,7 +48,7 @@ export interface RenderInfo {
     readonly getMothership: () => Gui.GuiSystem;
     readonly backstage: Backstage.UiFactoryBackstage;
   };
-  readonly renderUI: () => ModeRenderInfo;
+  readonly renderUI: () => Promise<ModeRenderInfo>;
 }
 
 export type ToolbarConfig = Array<string | Options.ToolbarGroupOption> | string | boolean;
@@ -425,14 +425,18 @@ const setup = (editor: Editor): RenderInfo => {
       OuterContainer.focusToolbar(outerContainer);
     });
 
-    editor.addCommand('ToggleToolbarDrawer', () => {
-      OuterContainer.toggleToolbarDrawer(outerContainer);
+    editor.addCommand('ToggleToolbarDrawer', (_ui, options?: { skipFocus: boolean }) => {
+      if (options?.skipFocus) {
+        OuterContainer.toggleToolbarDrawerWithoutFocusing(outerContainer);
+      } else {
+        OuterContainer.toggleToolbarDrawer(outerContainer);
+      }
     });
 
     editor.addQueryStateHandler('ToggleToolbarDrawer', () => OuterContainer.isToolbarDrawerToggled(outerContainer));
   };
 
-  const renderUIWithRefs = (uiRefs: ReadyUiReferences): ModeRenderInfo => {
+  const renderUIWithRefs = (uiRefs: ReadyUiReferences): Promise<ModeRenderInfo> => {
     const { mainUi, popupUi, uiMotherships } = uiRefs;
     Obj.map(Options.getToolbarGroups(editor), (toolbarGroupButtonConfig, name) => {
       editor.ui.registry.addGroupToolbarButton(name, toolbarGroupButtonConfig);
@@ -473,7 +477,7 @@ const setup = (editor: Editor): RenderInfo => {
     return mode.render(editor, uiRefs, rawUiConfig, backstages.popup, args);
   };
 
-  const renderUI = (): ModeRenderInfo => {
+  const renderUI = (): Promise<ModeRenderInfo> => {
     const mainUi = renderMainUi();
     const dialogUi = renderDialogUi();
     const popupUi = renderPopupUi(dialogUi);

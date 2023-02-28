@@ -1,6 +1,6 @@
 import { AlloyComponent, Attachment, Boxes, Disabling } from '@ephox/alloy';
-import { Cell, Singleton } from '@ephox/katamari';
-import { DomEvent, SugarElement } from '@ephox/sugar';
+import { Cell, Singleton, Throttler } from '@ephox/katamari';
+import { DomEvent, Scroll, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
@@ -61,7 +61,17 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader, 
     requestAnimationFrame(() => resizeContent(e));
   });
 
-  editor.on('ScrollWindow', () => ui.updateMode());
+  let lastScrollX = 0;
+  const updateUi = Throttler.last(() => ui.update(), 33);
+  editor.on('ScrollWindow', () => {
+    const newScrollX = Scroll.get().left;
+    if (newScrollX !== lastScrollX) {
+      lastScrollX = newScrollX;
+      updateUi.throttle();
+    }
+
+    ui.updateMode();
+  });
 
   // Bind to async load events and trigger a content resize event if the size has changed
   const elementLoad = Singleton.unbindable();
@@ -80,14 +90,14 @@ const attachUiMotherships = (uiRoot: SugarElement<HTMLElement | ShadowRoot>, uiR
   Attachment.attachSystem(uiRoot, uiRefs.dialogUi.mothership);
 };
 
-const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
+const render = async (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): Promise<ModeRenderInfo> => {
   const { mainUi } = uiRefs;
   const floatContainer = Singleton.value<AlloyComponent>();
   const targetElm = SugarElement.fromDom(args.targetNode);
   const ui = InlineHeader(editor, targetElm, uiRefs, backstage, floatContainer);
   const toolbarPersist = isToolbarPersist(editor);
 
-  loadInlineSkin(editor);
+  await loadInlineSkin(editor);
 
   const render = () => {
     if (floatContainer.isSet()) {
