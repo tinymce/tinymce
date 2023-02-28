@@ -34,6 +34,7 @@ const toolbarButtonEventOrder: Record<string, string[]> = {
     'toolbar-button-events',
     commonButtonDisplayEvent
   ],
+  [SystemEvents.detachedFromDom()]: [ 'toolbar-button-events', 'dropdown-events', 'tooltipping' ],
   [NativeEvents.mousedown()]: [
     'focusing',
     'alloy.base.behaviour',

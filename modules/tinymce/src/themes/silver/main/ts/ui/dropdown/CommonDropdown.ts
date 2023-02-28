@@ -198,8 +198,9 @@ const renderCommonDropdown = <T>(
         [NativeEvents.mousedown()]: [ 'focusing', 'alloy.base.behaviour', 'item-type-events', 'normal-dropdown-events' ],
         [SystemEvents.attachedToDom()]: [
           'toolbar-button-events',
-          'dropdown-events',
-          fixWidthBehaviourName
+          Tooltipping.name(),
+          customEventsName,
+          fixWidthBehaviourName,
         ]
       }),
 
