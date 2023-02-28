@@ -24,9 +24,16 @@
 @content-ui-darkmode: false; // Change this to true to get white icons in the content such as bookmarks.
 
 // Colors
-@border-color: darken(@background-color, 6.5%);
+@border-color: contrast(@background-color, darken(@background-color, 30%), lighten(@background-color, 30%));
 @text-color: contrast(@background-color, @color-black, @color-white);
 @text-color-muted: contrast(@background-color, fade(@color-black, 70%), fade(@color-white, 50%));
+
+@active-background-color: contrast(@background-color, darken(desaturate(@color-tint, 15%), 5%), lighten(desaturate(@color-tint, 30%), 11%));
+@active-text-color: @color-white;
+@enabled-active-background-color: lighten(@color-tint, 25%);
+@enabled-background-color: contrast(@background-color, lighten(@color-tint, 40%), @color-white);
+@enabled-text-color:  @color-black;
+@hover-background-color: contrast(@background-color, lighten(desaturate(@color-tint, 20%), 10%), lighten(desaturate(@color-tint, 30%), 20%));
 
 // Some useful generic variables
 @panel-border-radius: 6px; // Dialogs, menues etc.

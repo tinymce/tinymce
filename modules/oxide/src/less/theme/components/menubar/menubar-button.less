@@ -33,7 +33,7 @@
 @menubar-select-focus-box-shadow: @menubar-select-hover-box-shadow;
 @menubar-select-focus-text-color: @menubar-select-hover-text-color;
 
-@menubar-select-active-background-color: #f0f0f0;
+@menubar-select-active-background-color: contrast(@background-color, darken(@background-color, 20%), lighten(@background-color, 35%));
 @menubar-select-active-border: @menubar-select-hover-border;
 @menubar-select-active-box-shadow: @toolbar-button-active-box-shadow;
 @menubar-select-active-text-color: @toolbar-button-text-color;
@@ -69,7 +69,7 @@
     cursor: not-allowed;
   }
 
-  .tox-mbtn:focus:not(:disabled) {
+  .tox-mbtn:not(:disabled) {
     &:focus,
     &:focus-visible {
       background: @menubar-select-focus-background-color;
