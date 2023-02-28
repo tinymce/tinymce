@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- Added `firstTabstop` optional property to `ModalDialogDetail`, to specify the index of elements to focus on when dialog shows. #TINY-9520
+
 ### Changed
 -  `aria-activedescendant` attribute for `Typeahead` input component is updated to the menu item that is highlighted. #TINY-9280
 
