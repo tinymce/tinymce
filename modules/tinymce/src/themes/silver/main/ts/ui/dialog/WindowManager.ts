@@ -184,7 +184,9 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
         inlineDialogComp,
         GuiFactory.premade(dialogUi.dialog),
         { anchor },
-        Optional.some(SugarBody.body())
+        editor.inline
+          ? Optional.some(SugarBody.body())
+          : Optional.some(SugarElement.fromDom(editor.getContainer()))
       );
 
       // Refresh the docking position if not using a sticky toolbar
