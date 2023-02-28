@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Templates will be parsed before preview and insertion to make preview consistent with inserted template content and prevent XSS. #TINY-9244
 - Pressing backspace in an empty line now preserves formatting in a previous empty line. #TINY-9454
 - Pressing enter inside the `inputfontsize` input would not move the focus back into the editor content. #TINY-9598
+- Improved contrast of border colors against the background color throughout the UI. #TINY-9587
 
 ### Changed
 - The `link` plugins context menu items will no longer appear for noneditable links. #TINY-9491
