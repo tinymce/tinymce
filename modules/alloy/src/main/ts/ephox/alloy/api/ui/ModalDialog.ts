@@ -107,7 +107,8 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
           mode: 'cyclic',
           onEnter: detail.onExecute,
           onEscape: detail.onEscape,
-          useTabstopAt: detail.useTabstopAt
+          useTabstopAt: detail.useTabstopAt,
+          firstTabstop: detail.firstTabstop
         }),
         Blocking.config({
           getRoot: dialogComp.get

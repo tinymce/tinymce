@@ -121,6 +121,7 @@ export interface DialogSpec {
   extraStyles: Record<string, string>;
   dialogEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[];
   eventOrder: Record<string, string[]>;
+  firstTabstop?: number;
 }
 
 const renderDialog = (spec: DialogSpec): SketchSpec => {
@@ -138,6 +139,7 @@ const renderDialog = (spec: DialogSpec): SketchSpec => {
         return Optional.some(true);
       },
       useTabstopAt: (elem) => !NavigableObject.isPseudoStop(elem),
+      firstTabstop: spec.firstTabstop,
       dom: {
         tag: 'div',
         classes: [ dialogClass ].concat(spec.extraClasses),
