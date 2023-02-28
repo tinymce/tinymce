@@ -77,6 +77,7 @@ export const TestExtras = (): TestExtras => {
     off: editorOff,
     insertContent: (_content: string, _args?: any) => {},
     execCommand: (_cmd: string, _ui?: boolean, _value?: any) => {},
+    getContainer: () => SugarBody.body().dom,
     ui: {
       show: Fun.noop
     },

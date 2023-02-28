@@ -81,6 +81,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Formatting could be applied or removed on noneditable list items inside a noneditable root. #TINY-9563
 - Annotation would not be removed if the annotation was immediately deleted after being created. #TINY-9399
 - Inserting a link for a selection from quickbars didn't preserve formatting. #TINY-9593
+- Inline dialog position was not correct when the editor wasn't inline and was contained in a `fixed` or `absolute` positioned element. #TINY-9554
 
 ## 6.3.1 - 2022-12-06
 
