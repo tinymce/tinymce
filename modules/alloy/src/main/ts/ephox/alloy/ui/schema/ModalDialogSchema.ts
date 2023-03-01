@@ -16,6 +16,7 @@ const schema = Fun.constant([
   FieldSchema.option('dragBlockClass'),
   FieldSchema.defaultedFunction('getBounds', Boxes.win),
   FieldSchema.defaulted('useTabstopAt', Fun.always),
+  FieldSchema.defaulted('firstTabstop', 0),
   FieldSchema.defaulted('eventOrder', {}),
   SketchBehaviours.field('modalBehaviours', [ Keying ]),
 
