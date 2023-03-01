@@ -119,37 +119,73 @@ describe('browser.tinymce.core.textpatterns.TextPatternsTest', () => {
   it('H1 format on single word node using enter', () => {
     const editor = hook.editor();
     Utils.setContentAndPressEnter(editor, '# a');
-    TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h1', ' a'));
+    TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h1', 'a'));
+  });
+
+  it('H1 format on single word node with several spaces using enter', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressEnter(editor, '#   a'); // nbsp spaces here
+    TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h1', '   a'));
   });
 
   it('H2 format on single word node using enter', () => {
     const editor = hook.editor();
     Utils.setContentAndPressEnter(editor, '## a');
-    TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h2', ' a'));
+    TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h2', 'a'));
+  });
+
+  it('H2 format on single word node with several spaces using enter', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressEnter(editor, '#   a'); // nbsp spaces here
+    TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h2', '   a'));
   });
 
   it('H3 format on single word node using enter', () => {
     const editor = hook.editor();
     Utils.setContentAndPressEnter(editor, '### a');
-    TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h3', ' a'));
+    TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h3', 'a'));
+  });
+
+  it('H3 format on single word node with several spaces using enter', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressEnter(editor, '#   a'); // nbsp spaces here
+    TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h3', '   a'));
   });
 
   it('H4 format on single word node using enter', () => {
     const editor = hook.editor();
     Utils.setContentAndPressEnter(editor, '#### a');
-    TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h4', ' a'));
+    TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h4', 'a'));
+  });
+
+  it('H4 format on single word node with several spaces using enter', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressEnter(editor, '#   a'); // nbsp spaces here
+    TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h4', '   a'));
   });
 
   it('H5 format on single word node using enter', () => {
     const editor = hook.editor();
     Utils.setContentAndPressEnter(editor, '##### a');
-    TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h5', ' a'));
+    TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h5', 'a'));
+  });
+  
+  it('H5 format on single word node with several spaces using enter', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressEnter(editor, '#   a'); // nbsp spaces here
+    TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h5', '   a'));
   });
 
   it('H6 format on single word node using enter', () => {
     const editor = hook.editor();
     Utils.setContentAndPressEnter(editor, '###### a');
-    TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h6', ' a'));
+    TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h6', 'a'));
+  });
+
+  it('H6 format on single word node with several spaces using enter', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressEnter(editor, '#   a'); // nbsp spaces here
+    TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h6', '   a'));
   });
 
   it('OL format on single word node using enter', () => {
