@@ -76,13 +76,6 @@ const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, is
   }
 };
 
-const getInlineDialogBounds = (): Optional<Boxes.Bounds> => {
-  // At the moment the inline dialog is just put anywhere in the body, and docking is what is used to make
-  // sure that it stays onscreen
-  const bounds = Boxes.box(SugarBody.body());
-  return Optional.some(bounds);
-};
-
 const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
   const editor = extras.editor;
   const isStickyToolbar = Options.isStickyToolbar(editor);
@@ -215,6 +208,14 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
         isExtraPart: (_comp, target) => isAlertOrConfirmDialog(target)
       }));
       inlineDialog.set(inlineDialogComp);
+
+      const getInlineDialogBounds = (): Optional<Boxes.Bounds> => {
+        // At the moment the inline dialog is just put anywhere in the body, and docking is what is used to make
+        // sure that it stays onscreen
+        const elem = editor.inline ? SugarBody.body() : SugarElement.fromDom(editor.getContainer());
+        const bounds = Boxes.box(elem);
+        return Optional.some(bounds);
+      };
 
       // Position the inline dialog
       InlineView.showWithinBounds(

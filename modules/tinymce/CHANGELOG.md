@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
+- New `tree` component that can be used in dialog body panel. #TINY-9532
 - renderUI property in the `Theme` type can now return a `Promise<RenderResult>` instead of `RenderResult`. #TINY-9556
 - New `isEditable` API to `editor.selection` that returns true or false if the current selection is editable. #TINY-9462
 - New `isEditable` API to `editor.dom` that returns true or false if the specified node is editable. #TINY-9462
@@ -15,17 +16,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `fontsizeinput` toolbar item which allows the user to set the size via input and also increase and decrease it with `+` and `-` buttons. #TINY-9429
 - Added `skipFocus` option to the `ToggleToolbarDrawer` command to preserve focus. #TINY-9337
 - Added `common/space/delBetweenExclamationMarks` to remove spaces between exclamation marks. #TINY-9398
-- New `font_size_input_default_unit` option allow to use of numbers without a unit in `fontsizeinput` and have them parsed with the default unit, if it is not defined the default is `pt` #TINY-9585
+- New `font_size_input_default_unit` option allow to use of numbers without a unit in `fontsizeinput` and have them parsed with the default unit, if it is not defined the default is `pt`. #TINY-9585
+- New `group` and `togglebutton` in view. #TINY-9523
+- New `togglebutton` in dialog footer buttons. #TINY-9523
+- Added `toggleFullscreen` to dialog API. #TINY-9528
+- New text-size-increase and text-size-decrease icons. #TINY-9530
+- New `text-size-increase` and `text-size-decrease` icons. #TINY-9530
+- New `xss_sanitization` option to allow for XSS sanitization to be disabled. #TINY-9600
+- Added top right close 'x' button of the modal dialogs to keyboard navigation. #TINY-9520
 - New `ui_mode` option for editor in scrollable containers support. #TINY-9414
 
 ### Improved
 - Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
+- Templates will be parsed before preview and insertion to make preview consistent with inserted template content and prevent XSS. #TINY-9244
 - Pressing backspace in an empty line now preserves formatting in a previous empty line. #TINY-9454
+- Pressing enter inside the `inputfontsize` input would not move the focus back into the editor content. #TINY-9598
+- Improved contrast of border colors against the background color throughout the UI. #TINY-9587
 
 ### Changed
 - The `link` plugins context menu items will no longer appear for noneditable links. #TINY-9491
 - The formatting of `contenteditable="false"` elements are no longer cloned to new cells while creating new table rows. #TINY-9449
 - Changed the color of `@dialog-table-border-color`, and added right padding to the first cell of dialog table. #TINY-9380
+- The sidebar element now has accessibility role `region` when visible and `presentation` when hidden. #TINY-9517
 
 ### Fixed
 - Sometimes the editor would finish initializing before the silver theme would have finished loading. #TINY-9556
@@ -34,15 +46,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `onSetup` api function would not run when defining custom group toolbar button. #TINY-9496
 - An element could be dropped onto the decendants of a noneditable element. #TINY-9364
 - Checkmark did not show in menu colorswatches. #TINY-9395
+- The foreground and background menu icons would not properly update to display the last used color. #TINY-9497
+- Added new `setIconFill` function to `NestedMenuItemInstanceApi`. #TINY-9497
+- Pasting links to text would sometimes not generate the correct undo stack on safari. #TINY-9489
 - Toolbar split buttons in advlist plugin to show the correct state when the cursor is in a checklist. #TINY-5167
 - Dragging transparent elements into transparent blocks elements could produce invalid nesting of transparents. #TINY-9231
 - The `editor.insertContent` API would insert contents inside noneditable elements if the selection was inside the element. #TINY-9462
 - Closing a dialog would scroll down the document in Safari. #TINY-9148
+- Inline headers would not work in some situations when the editor was moved too far right horizontally. #TINY-8977
 - Quick toolbars were incorrectly rendered during the dragging of `contenteditable="false"` elements. #TINY-9305
 - Selection of images, hrs, tables or noneditable elements was possible if they were within a noneditable element. #TINY-9473
 - Ranged deletion of formatted text using selection or keyboard shortcut would sometimes cause Blink and Webkit browsers to insert interpreted tags upon typing, which may result in inconsistent tags. #TINY-9302
 - Visual characters were rendered inside noneditable elements. #TINY-9474
-- Removed a workaround for ensuring stylesheets are loaded in an outdated version of webkit. #TINY-9433
 - Lists in a noneditable root were incorrectly editable using list API commands, toolbar buttons and menu items. #TINY-9458
 - Color picker dialog would not update the preview color if the hex input value was prefixed with `#` symbol. #TINY-9457
 - Table cell selection was possible even if the element was in a noneditable root element. #TINY-9459
@@ -53,8 +68,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inline boundary was rendered for noneditable inline boundary elements. #TINY-9471
 - Clicking on a disabled split button will no longer call the `onAction` callback. #TINY-9504
 - The "Edit Link" dialog incorrectly retrieved the URL value when opened immediately after the link insertion. #TINY-7993
+- Editor commands `ForwardDelete` and `Delete` was deleting contents inside noneditable elements. #TINY-9477
+- Backspace or delete keys was deleting contents inside noneditable elements. #TINY-9477
 - Inserting newlines inside an editable element inside a noneditable root would sometimes try to split the editable element. #TINY-9461
 - Creating a list in a table cell when the caret is in front of an anchor element would not properly include the anchor in the list. #TINY-6853
+- Dragging and dropping noneditable elements on table borders would remove the element on drop. #TINY-9021
+- Noneditable elements would be removed when dragged and dropped within a noneditable root. #TINY-9558
+- Formatting could be applied or removed on noneditable list items inside a noneditable root. #TINY-9563
+- Annotation would not be removed if the annotation was immediately deleted after being created. #TINY-9399
+- Inserting a link for a selection from quickbars didn't preserve formatting. #TINY-9593
+- Inline dialog position was not correct when the editor wasn't inline and was contained in a `fixed` or `absolute` positioned element. #TINY-9554
+
+## 6.3.2 - 2023-02-22
+
+### Fixed
+- Removed a workaround for ensuring stylesheets are loaded in an outdated version of webkit. #TINY-9433
 
 ## 6.3.1 - 2022-12-06
 

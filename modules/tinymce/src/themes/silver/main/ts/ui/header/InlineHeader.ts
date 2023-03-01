@@ -1,6 +1,6 @@
 import { AlloyComponent, Boxes, Channels, Docking, OffsetOrigin, VerticalDir } from '@ephox/alloy';
 import { Arr, Cell, Fun, Optional, Singleton } from '@ephox/katamari';
-import { Attribute, Compare, Css, Height, SugarBody, SugarElement, SugarLocation, Traverse, Width } from '@ephox/sugar';
+import { Attribute, Compare, Css, Height, Scroll, SugarBody, SugarElement, SugarLocation, Traverse, Width } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -23,6 +23,8 @@ export interface InlineHeader {
 }
 
 const { ToolbarLocation, ToolbarMode } = Options;
+
+const maximumDistanceToEdge = 40;
 
 export const InlineHeader = (
   editor: Editor,
@@ -114,7 +116,7 @@ export const InlineHeader = (
     });
   };
 
-  const updateChromePosition = () => {
+  const updateChromePosition = (optToolbarWidth: Optional<number>) => {
     floatContainer.on((container) => {
       const toolbar = OuterContainer.getToolbar(mainUi.outerContainer);
       const offset = calcToolbarOffset(toolbar);
@@ -157,10 +159,50 @@ export const InlineHeader = (
         }
       );
 
-      Css.setAll(mainUi.outerContainer.element, {
+      const baseProperties = {
         position: 'absolute',
-        top: Math.round(top) + 'px',
-        left: Math.round(left) + 'px'
+        left: Math.round(left) + 'px',
+        top: Math.round(top) + 'px'
+      };
+
+      const widthProperties = optToolbarWidth.bind(
+        (toolbarWidth: number) => {
+          const scroll = Scroll.get();
+
+          /*
+          As the editor container can wrap its elements (due to flex-wrap), the width of the container impacts also its height. Adding a minimum width works around two problems:
+
+          a) The docking behaviour (e.g. lazyContext) does not handle the situation of a very thin component near the edge of the screen very well, and actually has no concept of horizontal scroll - it only checks y values.
+
+          b) A very small toolbar is essentially unusable. On scrolling of X, we keep updating the width of the toolbar so that it can grow to fit the available space.
+
+          Note: this is entirely determined on the number of items in the menu and the toolbar, because when they wrap, that's what causes the height. Also, having multiple toolbars can also make it higher.
+          */
+          const minimumToolbarWidth = 150; // Value is arbitrary.
+
+          const availableWidth = window.innerWidth - (targetBounds.x - scroll.left);
+
+          const width = Math.max(
+            Math.min(
+              toolbarWidth,
+              availableWidth
+            ),
+            minimumToolbarWidth
+          );
+
+          if (availableWidth > width) { // If there's already enough space, don't add a width for performance reasons.
+            return Optional.none();
+          }
+
+          return Optional.some({
+            width: width + 'px'
+          });
+        }
+      ).getOr({ });
+
+      Css.setAll(mainUi.outerContainer.element, {
+        ...baseProperties,
+        ...widthProperties
       });
     });
   };
@@ -173,6 +215,32 @@ export const InlineHeader = (
     Arr.each(uiMotherships, (m) => {
       m.broadcastOn([ Channels.repositionPopups() ], { });
     });
+  };
+
+  const restoreAndGetCompleteOuterContainerWidth = (): Optional<number> => {
+    /*
+    Editors can be placed so far to the right that their left position is beyond the window width. This causes problems with flex-wrap. To solve this, set a width style on the container.
+    Natural width of the container needs to be calculated first.
+    */
+    if (!useFixedToolbarContainer) {
+      const toolbarCurrentRightsidePosition = SugarLocation.absolute(mainUi.outerContainer.element).left + Width.getOuter(mainUi.outerContainer.element);
+
+      /*
+      Check the width if we are within X number of pixels to the edge ( or above ). Also check if we have the width-value set.
+      This helps handling the issue where it goes from having a width set ( because it's too wide ) to going so far from the edge it no longer triggers the problem. Common when the width is changed by test.
+      */
+      if (toolbarCurrentRightsidePosition >= window.innerWidth - maximumDistanceToEdge || Css.getRaw(mainUi.outerContainer.element, 'width').isSome()) {
+        Css.set(mainUi.outerContainer.element, 'position', 'absolute');
+        Css.set(mainUi.outerContainer.element, 'left', '0px');
+        Css.remove(mainUi.outerContainer.element, 'width');
+        const w = Width.getOuter(mainUi.outerContainer.element);
+        return Optional.some(w);
+      } else {
+        return Optional.none();
+      }
+    } else {
+      return Optional.none();
+    }
   };
 
   const updateChromeUi = (stickyAction: (c: AlloyComponent) => void) => {
@@ -192,16 +260,21 @@ export const InlineHeader = (
       updateChromeWidth();
     }
 
-    // Refresh split toolbar. A split toolbar requires a calculation to see what ends up in the
-    // "more drawer". When we don't have a split toolbar, then there is no reason to refresh the toolbar
-    // when the size changes.
+    // This width can be used for calculating the "width" when resolving issues with flex-wrapping being triggered at the window width, despite scroll space being available to the right.
+    const optToolbarWidth: Optional<number> = useFixedToolbarContainer ? Optional.none() : restoreAndGetCompleteOuterContainerWidth();
+
+    /*
+      Refresh split toolbar. Before calling refresh, we need to make sure that we have the full width (through restoreAndGet.. above), otherwise too much will be put in the overflow drawer.
+      A split toolbar requires a calculation to see what ends up in the "more drawer". When we don't have a split toolbar, then there is no reason to refresh the toolbar when the size changes.
+    */
     if (isSplitToolbar) {
       OuterContainer.refreshToolbar(mainUi.outerContainer);
     }
 
     // Positioning
     if (!useFixedToolbarContainer) {
-      updateChromePosition();
+      // This will position the container in the right spot.
+      updateChromePosition(optToolbarWidth);
     }
 
     // Docking

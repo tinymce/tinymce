@@ -122,6 +122,7 @@ interface BaseEditorOptions {
   format_noneditable_selector?: string;
   height?: number | string;
   hidden_input?: boolean;
+  highlight_on_focus?: boolean;
   icons?: string;
   icons_url?: string;
   id?: string;
@@ -236,6 +237,7 @@ interface BaseEditorOptions {
   visual_anchor_class?: string;
   visual_table_class?: string;
   width?: number | string;
+  xss_sanitization?: boolean;
 
   // Internal settings (used by cloud or tests)
   disable_nodechange?: boolean;
@@ -294,6 +296,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   forced_root_block_attrs: Record<string, string>;
   format_noneditable_selector: string;
   height: number | string;
+  highlight_on_focus: boolean;
   iframe_attrs: Record<string, string>;
   images_file_types: string;
   images_upload_base_path: string;
@@ -332,4 +335,5 @@ export interface EditorOptions extends NormalizedEditorOptions {
   visual_anchor_class: string;
   visual_table_class: string;
   width: number | string;
+  xss_sanitization: boolean;
 }

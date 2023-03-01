@@ -2,6 +2,7 @@ import Editor from '../api/Editor';
 import * as Events from '../api/Events';
 import DomParser from '../api/html/DomParser';
 import HtmlSerializer from '../api/html/Serializer';
+import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';
 
 interface ProcessResult {
@@ -10,7 +11,7 @@ interface ProcessResult {
 }
 
 const preProcess = (editor: Editor, html: string): string => {
-  const parser = DomParser({ }, editor.schema);
+  const parser = DomParser({ sanitize: Options.shouldSanitizeXss(editor) }, editor.schema);
 
   // Strip meta elements
   parser.addNodeFilter('meta', (nodes) => {

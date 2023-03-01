@@ -47,7 +47,7 @@ const getRawWidth = (editor: Editor, elm: HTMLElement): Optional<string> => {
 const isPercentage = (value: string): boolean => /^(\d+(\.\d+)?)%$/.test(value);
 const isPixel = (value: string): boolean => /^(\d+(\.\d+)?)px$/.test(value);
 
-const isInEditableContext = (cell: SugarElement<HTMLTableCellElement>): boolean =>
+const isInEditableContext = (cell: SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>): boolean =>
   PredicateFind.closest(cell, SugarNode.isTag('table')).exists(ContentEditable.isEditable);
 
 export {

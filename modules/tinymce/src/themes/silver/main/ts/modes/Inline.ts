@@ -1,6 +1,6 @@
 import { AlloyComponent, Attachment, Boxes, Disabling } from '@ephox/alloy';
-import { Cell, Singleton } from '@ephox/katamari';
-import { DomEvent, SugarElement } from '@ephox/sugar';
+import { Cell, Singleton, Throttler } from '@ephox/katamari';
+import { DomEvent, Scroll, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
@@ -77,7 +77,17 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader, 
 
   // When the page has been scrolled, we need to update any docking positions. We also
   // want to reposition all the Ui elements if required.
-  editor.on('ScrollWindow', ui.updateMode);
+  let lastScrollX = 0;
+  const updateUi = Throttler.last(() => ui.update(), 33);
+  editor.on('ScrollWindow', () => {
+    const newScrollX = Scroll.get().left;
+    if (newScrollX !== lastScrollX) {
+      lastScrollX = newScrollX;
+      updateUi.throttle();
+    }
+
+    ui.updateMode();
+  });
 
   if (Options.isSplitUiMode(editor)) {
     editor.on('ElementScroll', (_args) => {

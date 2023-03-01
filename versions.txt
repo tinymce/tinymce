@@ -3,5 +3,8 @@
 
 agar@7.4.0
 alloy@12.1.0
-sugar@9.2.0
+darwin@8.0.1
+dragster@7.1.0
 oxide-icons-default@2.2.0
+snooker@11.0.4
+sugar@9.2.0

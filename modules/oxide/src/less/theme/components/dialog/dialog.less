@@ -60,7 +60,7 @@
 @dialog-body-h2-text-color: @text-color;
 @dialog-body-h2-text-transform: none;
 
-@dialog-table-border-color: darken(@border-color, 55%);
+@dialog-table-border-color: @border-color;
 @dialog-nav-focus-background-color: fade(@color-tint, 10%);
 
 // These get stacked on top of the global dialog z-index (1100)
@@ -332,6 +332,15 @@
   .tox-dialog--width-lg {
     height: 650px; // The height property is required to flex the textarea within large dialogs to fit to parent
     max-width: 1200px;
+  }
+
+  .tox-dialog--fullscreen {
+    height: 100%;
+    max-width: 100%;
+
+    .tox-dialog__body-content {
+      max-height: 100%;
+    }
   }
 
   .tox-dialog--width-md {

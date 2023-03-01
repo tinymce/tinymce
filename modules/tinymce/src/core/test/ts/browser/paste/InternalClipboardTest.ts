@@ -65,6 +65,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
   const paste = (editor: Editor, startHtml: string, pasteData: Record<string, string>, spath: number[], soffset: number, fpath: number[], foffset: number) => {
     editor.setContent(startHtml);
     TinySelections.setSelection(editor, spath, soffset, fpath, foffset);
+    editor.undoManager.add(); // Undo level would not always be properly created in some situations, so we create it manually to prevent tests from failing when they shouldn't.
     resetProcessEvents();
     pasteDataTransferEvent(editor, pasteData);
   };
@@ -226,6 +227,15 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
       await pWaitForProcessEvents();
       assertLastPreProcessEvent({ internal: true, content: '<p>X</p>' });
       assertLastPostProcessEvent({ internal: true, content: '<p>X</p>' });
+    });
+
+    it('TINY-9489: uri-list should not be pasted in as a link', async () => {
+      const editor = hook.editor();
+      paste(editor, '<p>X</p>', { 'text/plain': 'https://tiny.com', 'text/uri-list': 'https://tiny.com' }, [ 0, 0 ], 0, [ 0, 0 ], 1);
+      await pWaitForProcessEvents();
+      assertLastPreProcessEvent({ internal: false, content: 'https://tiny.com' });
+      assertLastPostProcessEvent({ internal: false, content: 'https://tiny.com' });
+      TinyAssertions.assertContent(editor, '<p><a href="https://tiny.com">X</a></p>');
     });
   });
 });

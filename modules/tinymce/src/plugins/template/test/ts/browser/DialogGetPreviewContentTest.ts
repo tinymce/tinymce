@@ -58,7 +58,7 @@ const corsStyleAndContent = '<!DOCTYPE html><html><head>' +
   metaKey +
   ')) {e.preventDefault();}}}, false);</script> ' +
   '</head>' +
-  '<body class="">Custom content which was provided</body></html>';
+  '<body class=""><p>Custom content which was provided</p></body></html>';
 
 describe('browser.tinymce.plugins.template.Dialog.getPreviewContent', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

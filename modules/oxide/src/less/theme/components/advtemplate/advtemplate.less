@@ -1,0 +1,25 @@
+//
+// Advtemplate
+//
+
+@advtemplate-iframe-border-style: solid;
+@advtemplate-iframe-border-width: 1px;
+@advtemplate-iframe-border-color: @border-color;
+@advtemplate-iframe-border-radius: @tinymce-border-radius;
+@advtemplate-iframe-margin: 0 10px;
+
+.tox {
+  .tox-advtemplate {
+    .tox-form__grid {
+      flex: 1;
+    }
+
+    iframe {
+      border-color: @advtemplate-iframe-border-color;
+      border-radius: @advtemplate-iframe-border-radius;
+      border-style: @advtemplate-iframe-border-style;
+      border-width: @advtemplate-iframe-border-width;
+      margin: @advtemplate-iframe-margin;
+    }
+  }
+}

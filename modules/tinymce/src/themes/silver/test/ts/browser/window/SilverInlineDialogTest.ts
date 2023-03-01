@@ -1,7 +1,7 @@
-import { ApproxStructure, Assertions, FocusTools, Mouse, TestStore, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
-import { Strings } from '@ephox/katamari';
+import { Arr, Strings } from '@ephox/katamari';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -142,5 +142,45 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
       ])
     );
     UiFinder.notExists(SugarBody.body(), '[role="dialog"]');
+  });
+
+  Arr.each([
+    { label: 'Modal', params: { }},
+    { label: 'Inline toolbar', params: { inline: 'toolbar' as 'toolbar' }},
+    { label: 'Inline cursor', params: { inline: 'cursor' as 'cursor' }},
+  ], (test) => {
+    it('TINY-9520: Modal focus testing for type: ' + test.label, async () => {
+      const editor = hook.editor();
+      openDialog(editor, test.params);
+      await FocusTools.pTryOnSelector(
+        'Focus should start on the input',
+        SugarDocument.getDocument(),
+        'input'
+      );
+      TinyUiActions.keydown(editor, Keys.tab());
+      await FocusTools.pTryOnSelector(
+        'Focus should be on barny button',
+        SugarDocument.getDocument(),
+        'button[title="Barny Text"]'
+      );
+      TinyUiActions.keydown(editor, Keys.tab());
+      await FocusTools.pTryOnSelector(
+        'Focus should be on alert button',
+        SugarDocument.getDocument(),
+        'button[title="Alert"]'
+      );
+      TinyUiActions.keydown(editor, Keys.tab());
+      await FocusTools.pTryOnSelector(
+        'Focus should be on confirm button',
+        SugarDocument.getDocument(),
+        'button[title="Confirm"]'
+      );
+      TinyUiActions.keydown(editor, Keys.tab());
+      await FocusTools.pTryOnSelector(
+        'Focus should be on x close button',
+        SugarDocument.getDocument(),
+        '.tox-button[title="Close"]'
+      );
+    });
   });
 });
