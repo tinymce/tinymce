@@ -73,6 +73,7 @@ const renderModalDialog = <T>(spec: DialogSpec, initialData: T, dialogEvents: Al
 
   return GuiFactory.build(Dialogs.renderDialog({
     ...spec,
+    firstTabstop: 1,
     lazySink: backstage.shared.getSink,
     extraBehaviours: [
       // Because this doesn't define `renderComponents`, all this does is update the state.

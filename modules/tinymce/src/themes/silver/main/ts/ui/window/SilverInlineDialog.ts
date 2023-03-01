@@ -99,7 +99,8 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
         },
         useTabstopAt: (elem) => !NavigableObject.isPseudoStop(elem) && (
           SugarNode.name(elem) !== 'button' || Attribute.get(elem, 'disabled') !== 'disabled'
-        )
+        ),
+        firstTabstop: 1
       }),
       Reflecting.config({
         channel: `${dialogChannel}-${dialogId}`,

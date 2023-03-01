@@ -23,12 +23,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New text-size-increase and text-size-decrease icons. #TINY-9530
 - New `text-size-increase` and `text-size-decrease` icons. #TINY-9530
 - New `xss_sanitization` option to allow for XSS sanitization to be disabled. #TINY-9600
+- Added top right close 'x' button of the modal dialogs to keyboard navigation. #TINY-9520
 
 ### Improved
 - Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
 - Templates will be parsed before preview and insertion to make preview consistent with inserted template content and prevent XSS. #TINY-9244
 - Pressing backspace in an empty line now preserves formatting in a previous empty line. #TINY-9454
 - Pressing enter inside the `inputfontsize` input would not move the focus back into the editor content. #TINY-9598
+- Improved contrast of border colors against the background color throughout the UI. #TINY-9587
 
 ### Changed
 - The `link` plugins context menu items will no longer appear for noneditable links. #TINY-9491
@@ -74,6 +76,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Formatting could be applied or removed on noneditable list items inside a noneditable root. #TINY-9563
 - Annotation would not be removed if the annotation was immediately deleted after being created. #TINY-9399
 - Inserting a link for a selection from quickbars didn't preserve formatting. #TINY-9593
+- Inline dialog position was not correct when the editor wasn't inline and was contained in a `fixed` or `absolute` positioned element. #TINY-9554
 - Drag and dropping the last noneditable element out of it's parent block would not properly pad the parent block element. #TINY-9606
 
 ## 6.3.2 - 2023-02-22

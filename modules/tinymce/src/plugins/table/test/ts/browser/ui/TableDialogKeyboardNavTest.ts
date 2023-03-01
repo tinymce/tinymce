@@ -57,6 +57,8 @@ describe('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', () => {
     pressTabKey(editor);
     await pAssertFocusOnItem('Save', '.tox-button:contains("Save")');
     pressTabKey(editor);
+    await pAssertFocusOnItem('x Close Button', '.tox-button[title="Close"]');
+    pressTabKey(editor);
     await pAssertFocusOnItem('General Tab', '.tox-dialog__body-nav-item:contains("General")');
 
     // Press arrow keys to nav between tabs
@@ -78,6 +80,8 @@ describe('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', () => {
     await pAssertFocusOnItem('Cancel', '.tox-button:contains("Cancel")');
     pressTabKey(editor);
     await pAssertFocusOnItem('Save', '.tox-button:contains("Save")');
+    pressTabKey(editor);
+    await pAssertFocusOnItem('x Close Button', '.tox-button[title="Close"]');
     pressTabKey(editor);
     await pAssertFocusOnItem('Advanced Tab', '.tox-dialog__body-nav-item:contains("Advanced")');
   });
