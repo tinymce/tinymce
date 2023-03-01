@@ -202,12 +202,8 @@ const shouldKeepAttribute = (settings: DomParserSettings, schema: Schema, tagNam
 
 const filterAttributes = (ele: Element, settings: DomParserSettings, schema: Schema) => {
   const { attributes } = ele;
-  if (!attributes) {
-    return;
-  }
   for (let i = attributes.length - 1; i >= 0; i--) {
     const attrName = attributes[i].name;
-
     if (!shouldKeepAttribute(settings, schema, ele.tagName.toLowerCase(), attrName)) {
       ele.removeAttribute(attrName);
     }
