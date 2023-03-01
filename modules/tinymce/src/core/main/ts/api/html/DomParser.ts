@@ -115,86 +115,96 @@ const getPurifyConfig = (settings: DomParserSettings, mimeType: string): Config 
   return config;
 };
 
+const processElement = (ele: Element, settings: DomParserSettings, schema: Schema, uid: number, evt?: createDompurify.SanitizeElementHookEvent): number => {
+  const validate = settings.validate;
+  const specialElements = schema.getSpecialElements();
+
+  // Pad conditional comments if they aren't allowed
+  if (ele.nodeType === NodeTypes.COMMENT && !settings.allow_conditional_comments && /^\[if/i.test(ele.nodeValue ?? '')) {
+    ele.nodeValue = ' ' + ele.nodeValue;
+  }
+
+  const lcTagName = evt?.tagName ?? ele.nodeName.toLowerCase();
+
+  // Just leave non-elements such as text and comments up to dompurify
+  if (ele.nodeType !== NodeTypes.ELEMENT || lcTagName === 'body') {
+    return uid;
+  }
+
+  // Construct the sugar element wrapper
+  const element = SugarElement.fromDom(ele);
+
+  // Determine if we're dealing with an internal attribute
+  const isInternalElement = Attribute.has(element, internalElementAttr);
+
+  // Cleanup bogus elements
+  const bogus = Attribute.get(element, 'data-mce-bogus');
+  if (!isInternalElement && Type.isString(bogus)) {
+    if (bogus === 'all') {
+      Remove.remove(element);
+    } else {
+      Remove.unwrap(element);
+    }
+    return uid;
+  }
+
+  // Determine if the schema allows the element and either add it or remove it
+  const rule = schema.getElementRule(lcTagName);
+  if (validate && !rule) {
+    // If a special element is invalid, then remove the entire element instead of unwrapping
+    if (Obj.has(specialElements, lcTagName)) {
+      Remove.remove(element);
+    } else {
+      Remove.unwrap(element);
+    }
+    return uid;
+  } else {
+    if (Type.isNonNullable(evt)) {
+      evt.allowedTags[lcTagName] = true;
+    }
+  }
+
+  // Validate the element using the attribute rules
+  if (validate && rule && !isInternalElement) {
+    // Fix the attributes for the element, unwrapping it if we have to
+    Arr.each(rule.attributesForced ?? [], (attr) => {
+      Attribute.set(element, attr.name, attr.value === '{$uid}' ? `mce_${uid++}` : attr.value);
+    });
+    Arr.each(rule.attributesDefault ?? [], (attr) => {
+      if (!Attribute.has(element, attr.name)) {
+        Attribute.set(element, attr.name, attr.value === '{$uid}' ? `mce_${uid++}` : attr.value);
+      }
+    });
+
+    // If none of the required attributes were found then remove
+    if (rule.attributesRequired && !Arr.exists(rule.attributesRequired, (attr) => Attribute.has(element, attr))) {
+      Remove.unwrap(element);
+      return uid;
+    }
+
+    // If there are no attributes then remove
+    if (rule.removeEmptyAttrs && Attribute.hasNone(element)) {
+      Remove.unwrap(element);
+      return uid;
+    }
+
+    // Change the node name if the schema says to
+    if (rule.outputName && rule.outputName !== lcTagName) {
+      Replication.mutate(element, rule.outputName as keyof HTMLElementTagNameMap);
+    }
+  }
+
+  return uid;
+};
+
 const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI => {
   const purify = createDompurify();
-  const specialElements = schema.getSpecialElements();
   const validate = settings.validate;
   let uid = 0;
 
   // We use this to add new tags to the allow-list as we parse, if we notice that a tag has been banned but it's still in the schema
   purify.addHook('uponSanitizeElement', (ele, evt) => {
-    // Pad conditional comments if they aren't allowed
-    if (ele.nodeType === NodeTypes.COMMENT && !settings.allow_conditional_comments && /^\[if/i.test(ele.nodeValue ?? '')) {
-      ele.nodeValue = ' ' + ele.nodeValue;
-    }
-
-    // Just leave non-elements such as text and comments up to dompurify
-    const tagName = evt.tagName;
-    if (ele.nodeType !== NodeTypes.ELEMENT || tagName === 'body') {
-      return;
-    }
-
-    // Construct the sugar element wrapper
-    const element = SugarElement.fromDom(ele);
-    const lcTagName = tagName.toLowerCase();
-
-    // Determine if we're dealing with an internal attribute
-    const isInternalElement = Attribute.has(element, internalElementAttr);
-
-    // Cleanup bogus elements
-    const bogus = Attribute.get(element, 'data-mce-bogus');
-    if (!isInternalElement && Type.isString(bogus)) {
-      if (bogus === 'all') {
-        Remove.remove(element);
-      } else {
-        Remove.unwrap(element);
-      }
-      return;
-    }
-
-    // Determine if the schema allows the element and either add it or remove it
-    const rule = schema.getElementRule(lcTagName);
-    if (validate && !rule) {
-      // If a special element is invalid, then remove the entire element instead of unwrapping
-      if (Obj.has(specialElements, lcTagName)) {
-        Remove.remove(element);
-      } else {
-        Remove.unwrap(element);
-      }
-      return;
-    } else {
-      evt.allowedTags[tagName] = true;
-    }
-
-    // Validate the element using the attribute rules
-    if (validate && rule && !isInternalElement) {
-      // Fix the attributes for the element, unwrapping it if we have to
-      Arr.each(rule.attributesForced ?? [], (attr) => {
-        Attribute.set(element, attr.name, attr.value === '{$uid}' ? `mce_${uid++}` : attr.value);
-      });
-      Arr.each(rule.attributesDefault ?? [], (attr) => {
-        if (!Attribute.has(element, attr.name)) {
-          Attribute.set(element, attr.name, attr.value === '{$uid}' ? `mce_${uid++}` : attr.value);
-        }
-      });
-
-      // If none of the required attributes were found then remove
-      if (rule.attributesRequired && !Arr.exists(rule.attributesRequired, (attr) => Attribute.has(element, attr))) {
-        Remove.unwrap(element);
-        return;
-      }
-
-      // If there are no attributes then remove
-      if (rule.removeEmptyAttrs && Attribute.hasNone(element)) {
-        Remove.unwrap(element);
-        return;
-      }
-
-      // Change the node name if the schema says to
-      if (rule.outputName && rule.outputName !== lcTagName) {
-        Replication.mutate(element, rule.outputName as keyof HTMLElementTagNameMap);
-      }
-    }
+    uid = processElement(ele, settings, schema, uid, evt);
   });
 
   // Let's do the same thing for attributes
@@ -426,10 +436,18 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     const wrappedHtml = format === 'xhtml' ? `<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body>${content}</body></html>` : `<body>${content}</body>`;
     const body = parser.parseFromString(wrappedHtml, mimeType).body;
 
-    // Sanitize the content
     if (defaultedSettings.sanitize) {
+      // Sanitize the content
       purify.sanitize(body, getPurifyConfig(defaultedSettings, mimeType));
       purify.removed = [];
+    } else {
+      // eslint-disable-next-line no-bitwise
+      const nodeIterator = document.createNodeIterator(body, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_TEXT);
+      let uid = 0;
+      let ele;
+      while ((ele = nodeIterator.nextNode() as Element)) {
+        uid = processElement(ele, defaultedSettings, schema, uid);
+      }
     }
 
     return isSpecialRoot ? body.firstChild as Element : body;
