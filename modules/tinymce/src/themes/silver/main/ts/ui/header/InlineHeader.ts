@@ -180,7 +180,7 @@ export const InlineHeader = (
           */
           const minimumToolbarWidth = 150; // Value is arbitrary.
 
-          const availableWidth = window.innerWidth - (targetBounds.x - scroll.left);
+          const availableWidth = window.innerWidth - (left - scroll.left);
 
           const width = Math.max(
             Math.min(
