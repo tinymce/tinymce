@@ -197,9 +197,25 @@ const processElement = (ele: Element, settings: DomParserSettings, schema: Schem
   return uid;
 };
 
+const shouldKeepAttribute = (settings: DomParserSettings, schema: Schema, tagName: string, attrName: string): boolean =>
+  !settings.validate || schema.isValid(tagName, attrName) || Strings.startsWith(attrName, 'data-') || Strings.startsWith(attrName, 'aria-');
+
+const filterAttributes = (ele: Element, settings: DomParserSettings, schema: Schema) => {
+  const { attributes } = ele;
+  if (!attributes) {
+    return;
+  }
+  for (let i = attributes.length - 1; i >= 0; i--) {
+    const attrName = attributes[i].name;
+
+    if (!shouldKeepAttribute(settings, schema, ele.tagName.toLowerCase(), attrName)) {
+      ele.removeAttribute(attrName);
+    }
+  }
+};
+
 const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI => {
   const purify = createDompurify();
-  const validate = settings.validate;
   let uid = 0;
 
   // We use this to add new tags to the allow-list as we parse, if we notice that a tag has been banned but it's still in the schema
@@ -212,7 +228,7 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
     const tagName = ele.tagName.toLowerCase();
     const { attrName, attrValue } = evt;
 
-    evt.keepAttr = !validate || schema.isValid(tagName, attrName) || Strings.startsWith(attrName, 'data-') || Strings.startsWith(attrName, 'aria-');
+    evt.keepAttr = shouldKeepAttribute(settings, schema, tagName, attrName);
     if (attrName in filteredUrlAttrs && URI.isInvalidUri(settings, attrValue, tagName)) {
       evt.keepAttr = false;
     }
@@ -447,6 +463,9 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
       let ele;
       while ((ele = nodeIterator.nextNode() as Element)) {
         uid = processElement(ele, defaultedSettings, schema, uid);
+        if (NodeType.isElement(ele)) {
+          filterAttributes(ele, settings, schema);
+        }
       }
     }
 
