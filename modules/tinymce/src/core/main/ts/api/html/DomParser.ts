@@ -115,24 +115,24 @@ const getPurifyConfig = (settings: DomParserSettings, mimeType: string): Config 
   return config;
 };
 
-const processElement = (ele: Element, settings: DomParserSettings, schema: Schema, uid: number, evt?: createDompurify.SanitizeElementHookEvent): number => {
+const processNode = (node: Node, settings: DomParserSettings, schema: Schema, uid: number, evt?: createDompurify.SanitizeElementHookEvent): number => {
   const validate = settings.validate;
   const specialElements = schema.getSpecialElements();
 
   // Pad conditional comments if they aren't allowed
-  if (ele.nodeType === NodeTypes.COMMENT && !settings.allow_conditional_comments && /^\[if/i.test(ele.nodeValue ?? '')) {
-    ele.nodeValue = ' ' + ele.nodeValue;
+  if (node.nodeType === NodeTypes.COMMENT && !settings.allow_conditional_comments && /^\[if/i.test(node.nodeValue ?? '')) {
+    node.nodeValue = ' ' + node.nodeValue;
   }
 
-  const lcTagName = evt?.tagName ?? ele.nodeName.toLowerCase();
+  const lcTagName = evt?.tagName ?? node.nodeName.toLowerCase();
 
   // Just leave non-elements such as text and comments up to dompurify
-  if (ele.nodeType !== NodeTypes.ELEMENT || lcTagName === 'body') {
+  if (node.nodeType !== NodeTypes.ELEMENT || lcTagName === 'body') {
     return uid;
   }
 
   // Construct the sugar element wrapper
-  const element = SugarElement.fromDom(ele);
+  const element = SugarElement.fromDom(node) as SugarElement<Element>;
 
   // Determine if we're dealing with an internal attribute
   const isInternalElement = Attribute.has(element, internalElementAttr);
@@ -220,7 +220,7 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
 
   // We use this to add new tags to the allow-list as we parse, if we notice that a tag has been banned but it's still in the schema
   purify.addHook('uponSanitizeElement', (ele, evt) => {
-    uid = processElement(ele, settings, schema, uid, evt);
+    uid = processNode(ele, settings, schema, uid, evt);
   });
 
   // Let's do the same thing for attributes
@@ -460,11 +460,11 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
       // eslint-disable-next-line no-bitwise
       const nodeIterator = document.createNodeIterator(body, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_TEXT);
       let uid = 0;
-      let ele;
-      while ((ele = nodeIterator.nextNode() as Element)) {
-        uid = processElement(ele, defaultedSettings, schema, uid);
-        if (NodeType.isElement(ele)) {
-          filterAttributes(ele, settings, schema);
+      let node;
+      while ((node = nodeIterator.nextNode())) {
+        uid = processNode(node, defaultedSettings, schema, uid);
+        if (NodeType.isElement(node)) {
+          filterAttributes(node, settings, schema);
         }
       }
     }
