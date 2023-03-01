@@ -460,7 +460,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
       while ((node = nodeIterator.nextNode())) {
         uid = processNode(node, defaultedSettings, schema, uid);
         if (NodeType.isElement(node)) {
-          filterAttributes(node, settings, schema);
+          filterAttributes(node, defaultedSettings, schema);
         }
       }
     }
