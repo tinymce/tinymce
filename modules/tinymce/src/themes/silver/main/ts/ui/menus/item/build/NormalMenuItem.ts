@@ -1,4 +1,4 @@
-import { AlloyComponent, Disabling, ItemTypes, Tooltipping } from '@ephox/alloy';
+import { AlloyComponent, Disabling, ItemTypes } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Optional } from '@ephox/katamari';
 
@@ -14,15 +14,6 @@ const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, provi
     isEnabled: () => !Disabling.isDisabled(component),
     setEnabled: (state: boolean) => Disabling.set(component, !state)
   });
-
-  // Dupe
-  const optTooltipping = spec.text.map(
-    (t) => Tooltipping.config(
-      providersBackstage.tooltips.getConfig({
-        tooltipText: providersBackstage.translate(t)
-      })
-    )
-  );
 
   const structure = renderItemStructure({
     presets: 'normal',
@@ -42,9 +33,7 @@ const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, provi
     onAction: spec.onAction,
     onSetup: spec.onSetup,
     triggersSubmenu: false,
-    itemBehaviours: [
-      ...optTooltipping.toArray()
-    ]
+    itemBehaviours: []
   }, structure, itemResponse, providersBackstage);
 };
 

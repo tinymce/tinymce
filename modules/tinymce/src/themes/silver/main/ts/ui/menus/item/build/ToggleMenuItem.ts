@@ -1,4 +1,4 @@
-import { AlloyComponent, Disabling, ItemTypes, Toggling, Tooltipping } from '@ephox/alloy';
+import { AlloyComponent, Disabling, ItemTypes, Toggling } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Merger, Optional } from '@ephox/katamari';
 
@@ -25,15 +25,6 @@ const renderToggleMenuItem = (
     setEnabled: (state: boolean) => Disabling.set(component, !state)
   });
 
-  // Dupe
-  const optTooltipping = spec.text.map(
-    (t) => Tooltipping.config(
-      providersBackstage.tooltips.getConfig({
-        tooltipText: providersBackstage.translate(t)
-      })
-    )
-  );
-
   // BespokeSelects use meta to pass through styling information. Bespokes should only
   // be togglemenuitems hence meta is only passed through in this MenuItem.
   const structure = renderItemStructure({
@@ -56,9 +47,7 @@ const renderToggleMenuItem = (
       onAction: spec.onAction,
       onSetup: spec.onSetup,
       triggersSubmenu: false,
-      itemBehaviours: [
-        ...optTooltipping.toArray()
-      ]
+      itemBehaviours: []
     }, structure, itemResponse, providersBackstage),
     {
       toggling: {
