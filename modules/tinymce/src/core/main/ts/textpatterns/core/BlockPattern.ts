@@ -32,7 +32,7 @@ const stripPattern = (dom: DOMUtils, block: Node, pattern: BlockPattern): void =
      * then it will be left in the text content and then can appear in certain circumstances.
      * This is not an issue with multiple spaces because they are transformed to non-breaking ones.
      *
-     * In this specific case we've decided to remove this single space whatsoever 
+     * In this specific case we've decided to remove this single space whatsoever
      * as it feels to be the expected behavior.
      */
     const text = SugarElement.fromDom(node);

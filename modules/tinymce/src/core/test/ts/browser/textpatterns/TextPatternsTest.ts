@@ -169,7 +169,7 @@ describe('browser.tinymce.core.textpatterns.TextPatternsTest', () => {
     Utils.setContentAndPressEnter(editor, '##### a');
     TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h5', 'a'));
   });
-  
+
   it('H5 format on single word node with several spaces using enter', () => {
     const editor = hook.editor();
     Utils.setContentAndPressEnter(editor, '#   a'); // nbsp spaces here
