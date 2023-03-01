@@ -200,7 +200,7 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, ui
 const shouldKeepAttribute = (settings: DomParserSettings, schema: Schema, tagName: string, attrName: string): boolean =>
   !settings.validate || schema.isValid(tagName, attrName) || Strings.startsWith(attrName, 'data-') || Strings.startsWith(attrName, 'aria-');
 
-const filterAttributes = (ele: Element, settings: DomParserSettings, schema: Schema) => {
+const filterAttributes = (ele: Element, settings: DomParserSettings, schema: Schema): void => {
   const { attributes } = ele;
   for (let i = attributes.length - 1; i >= 0; i--) {
     const attrName = attributes[i].name;
