@@ -61,7 +61,11 @@
     &.tox-tbtn__select-label {
       cursor: default;
       font-weight: @toolbar-button-font-weight;
+      height: initial;
       margin: 0 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     // Make dynamic text labeled buttons fixed width to prevent them from

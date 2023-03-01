@@ -175,91 +175,11 @@
     }
   }
 
-  .tox-collection--list {
-    .tox-collection__group {
-      border-bottom-width: 0;
-      border-color: @collection-item-separator-color;
-      border-left-width: 0;
-      border-right-width: 0;
-      border-style: solid;
-      border-top-width: 1px;
-      padding: @collection-item-separator-margin-y 0;
-    }
-
-    // Group headings should only be used on collection lists.
-    .tox-collection__group-heading {
-      background-color: @collection-group-label-background-color;
-      color: @collection-group-label-text-color;
-      cursor: default;
-      font-size: @collection-group-label-font-size;
-      font-style: @collection-group-label-font-style;
-      font-weight: @collection-group-label-font-weight;
-      margin-bottom: @collection-item-separator-margin-y;
-      margin-top: -@collection-item-separator-margin-y;
-      padding: @collection-item-padding;
-      text-transform: @collection-group-label-text-transform;
-      -webkit-touch-callout: none;
-      user-select: none;
-    }
-
-    .tox-collection__item {
-      padding: @collection-item-padding;
-
-      svg {
-        fill: @collection-item-icon-color;
-      }
-
-      &:not(.tox-collection__item--enabled) .tox-collection__item-checkmark svg {
-        display: none;
-      }
-
-      &.tox-collection__item--enabled .tox-collection__item-checkmark svg {
-        display: block;
-      }
-
-      &hover,
-      &focus,
-      &focus-visible {
-        background-color: @collection-item-hover-background-color;
-      }
-    }
-
-    // parent menu item when focus/hover is shifted to its children menu
-    &.tox-background-menu .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
-      background-color: @collection-item-secondary-active-background-color;
-      color: @collection-item-label-text-color;
-
-      .tox-collection__item-caret svg {
-        fill: @collection-item-icon-color;
-      }
-    }
-
-    // active menu item (when hovering)
-    &:not(.tox-background-menu) .tox-collection__item--active:not(.tox-collection__item--state-disabled):not(.tox-fancymenuitem) {
-      background-color: @collection-item-active-background-color;
-      color: @collection-item-active-label-text-color;
-
-      svg {
-        fill: @collection-item-active-icon-color;
-      }
-    }
-
-    &:first-child {
-      border-top-width: 0;
-    }
-
-    // Use the old background colour for the table creation (insert table)
-    .tox-fancymenuitem.tox-collection__item--active:not(.tox-collection__item--state-disabled) {
-      background-color: @collection-item-table-background-color;
-    }
-  }
-
   .tox-collection--toolbar-lg .tox-collection__item-icon {
     height: @collection-item-list-icon-height * 2;
     width: @collection-item-list-icon-width * 2;
   }
 
-  /* stylelint-disable no-descending-specificity */
   .tox-collection--toolbar {
     .tox-collection__group {
       display: flex;
@@ -314,6 +234,88 @@
       }
     }
   }
+
+  .tox-collection--list {
+    .tox-collection__group {
+      border-bottom-width: 0;
+      border-color: @collection-item-separator-color;
+      border-left-width: 0;
+      border-right-width: 0;
+      border-style: solid;
+      border-top-width: 1px;
+      padding: @collection-item-separator-margin-y 0;
+    }
+
+    // Group headings should only be used on collection lists.
+    .tox-collection__group-heading {
+      background-color: @collection-group-label-background-color;
+      color: @collection-group-label-text-color;
+      cursor: default;
+      font-size: @collection-group-label-font-size;
+      font-style: @collection-group-label-font-style;
+      font-weight: @collection-group-label-font-weight;
+      margin-bottom: @collection-item-separator-margin-y;
+      margin-top: -@collection-item-separator-margin-y;
+      padding: @collection-item-padding;
+      text-transform: @collection-group-label-text-transform;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+
+    // disable descending specificity to allow grouping selectors under one parent
+    /* stylelint-disable no-descending-specificity */
+    .tox-collection__item {
+      padding: @collection-item-padding;
+
+      svg {
+        fill: @collection-item-icon-color;
+      }
+
+      &:not(.tox-collection__item--enabled) .tox-collection__item-checkmark svg {
+        display: none;
+      }
+
+      &.tox-collection__item--enabled .tox-collection__item-checkmark svg {
+        display: block;
+      }
+
+      &hover,
+      &focus,
+      &focus-visible {
+        background-color: @collection-item-hover-background-color;
+      }
+    }
+
+    // parent menu item when focus/hover is shifted to its children menu
+    &.tox-background-menu .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+      background-color: @collection-item-secondary-active-background-color;
+      color: @collection-item-label-text-color;
+
+      .tox-collection__item-caret svg {
+        fill: @collection-item-icon-color;
+      }
+    }
+
+    // active menu item (when hovering)
+    &:not(.tox-background-menu) .tox-collection__item--active:not(.tox-collection__item--state-disabled):not(.tox-fancymenuitem) {
+      background-color: @collection-item-active-background-color;
+      color: @collection-item-active-label-text-color;
+
+      svg {
+        fill: @collection-item-active-icon-color;
+      }
+    }
+
+    &:first-child {
+      border-top-width: 0;
+    }
+
+    // Use the old background colour for the table creation (insert table)
+    .tox-fancymenuitem.tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+      background-color: @collection-item-table-background-color;
+    }
+  }
+  /* stylelint-enable no-descending-specificity */
 
   .tox-collection__item-container {
     display: flex;
