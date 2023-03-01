@@ -357,11 +357,21 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         onControlAttached(specialisation, editorOffCell),
         onControlDetached(specialisation, editorOffCell)
       ]),
-      Unselecting.config({ })
+      Unselecting.config({ }),
+      ...(
+        spec.tooltip.map(
+          (t) => Tooltipping.config(
+            sharedBackstage.providers.tooltips.getConfig({
+              tooltipText: t
+            })
+          )
+        ).toArray()
+      ),
     ]),
 
     eventOrder: {
-      [SystemEvents.attachedToDom()]: [ 'alloy.base.behaviour', 'split-dropdown-events' ]
+      [SystemEvents.attachedToDom()]: [ 'alloy.base.behaviour', 'split-dropdown-events', 'tooltipping' ],
+      [SystemEvents.detachedFromDom()]: [ 'split-dropdown-events', 'tooltipping' ]
     },
 
     toggleClass: ToolbarButtonClasses.Ticked,
