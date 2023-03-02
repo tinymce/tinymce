@@ -244,6 +244,10 @@
       border-style: solid;
       border-top-width: 1px;
       padding: @collection-item-separator-margin-y 0;
+
+      &:first-child {
+        border-top-width: 0;
+      }
     }
 
     // Group headings should only be used on collection lists.
@@ -284,12 +288,21 @@
       &focus-visible {
         background-color: @collection-item-hover-background-color;
       }
+
+      &.tox-collection__item--active:not(.tox-collection__item--state-disabled) .tox-collection__item-accessory {
+        color: #fff;
+      }
     }
+    /* stylelint-enable no-descending-specificity */
 
     // parent menu item when focus/hover is shifted to its children menu
     &.tox-background-menu .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
       background-color: @collection-item-secondary-active-background-color;
       color: @collection-item-label-text-color;
+
+      .tox-collection__item-accessory {
+        color: #fff;
+      }
 
       .tox-collection__item-caret svg {
         fill: @collection-item-icon-color;
@@ -306,16 +319,11 @@
       }
     }
 
-    &:first-child {
-      border-top-width: 0;
-    }
-
     // Use the old background colour for the table creation (insert table)
     .tox-fancymenuitem.tox-collection__item--active:not(.tox-collection__item--state-disabled) {
       background-color: @collection-item-table-background-color;
     }
   }
-  /* stylelint-enable no-descending-specificity */
 
   .tox-collection__item-container {
     display: flex;
@@ -392,6 +400,7 @@
     margin-left: @pad-xs;
   }
 
+  /* stylelint-disable-next-line no-descending-specificity */
   .tox-collection__item-accessory {
     margin-left: @pad-md;
     text-align: right;
@@ -418,6 +427,7 @@
     margin-right: @pad-xs;
   }
 
+  /* stylelint-disable-next-line no-descending-specificity */
   .tox-collection__item-accessory {
     margin-right: @pad-md;
     text-align: left;
@@ -431,13 +441,4 @@
   .tox-collection--horizontal .tox-collection__item-caret {
     margin-right: 4px;
   }
-}
-
-// These two are here to bypass lint errors
-.tox .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) .tox-collection__item-accessory {
-  color: #fff;
-}
-
-.tox .tox-collection--list.tox-background-menu .tox-collection__item--active:not(.tox-collection__item--state-disabled) .tox-collection__item-accessory {
-  color: #fff;
 }

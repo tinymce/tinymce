@@ -31,7 +31,7 @@
 @menubar-select-active-background-color: contrast(@background-color, darken(@background-color, 20%), lighten(@background-color, 35%));
 @menubar-select-active-border: @menubar-select-hover-border;
 @menubar-select-active-box-shadow: @toolbar-button-active-box-shadow;
-@menubar-select-active-text-color: @toolbar-button-active-text-color;
+@menubar-select-active-text-color: contrast(@menubar-select-active-background-color, @toolbar-button-active-text-color, @toolbar-button-enabled-text-color);
 
 .tox {
   .tox-mbtn {
