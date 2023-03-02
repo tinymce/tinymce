@@ -20,21 +20,21 @@ const regExps = {
 /* eslint-enable max-len */
 
 const characterIndices = {
-  ALETTER: 0,
-  MIDNUMLET: 1,
-  MIDLETTER: 2,
-  MIDNUM: 3,
-  NUMERIC: 4,
-  CR: 5,
-  LF: 6,
-  NEWLINE: 7,
-  EXTEND: 8,
-  FORMAT: 9,
-  KATAKANA: 10,
-  EXTENDNUMLET: 11,
-  AT: 12,
-  PUNCTUATION: 13,
-  WHITESPACE: 14,
+  WHITESPACE: 0,
+  PUNCTUATION: 1,
+  ALETTER: 2,
+  MIDNUMLET: 3,
+  MIDLETTER: 4,
+  MIDNUM: 5,
+  NUMERIC: 6,
+  CR: 7,
+  LF: 8,
+  NEWLINE: 9,
+  EXTEND: 10,
+  FORMAT: 11,
+  KATAKANA: 12,
+  EXTENDNUMLET: 13,
+  AT: 14,
   OTHER: 15
 };
 
@@ -47,6 +47,8 @@ const WHITESPACE = /^\s+$/;
 // this array must match its corresponding code point constant value defined
 // above.
 const SETS = [
+  WHITESPACE,
+  PUNCTUATION,
   new RegExp(regExps.aletter),
   new RegExp(regExps.midnumlet),
   new RegExp(regExps.midletter),
@@ -59,8 +61,6 @@ const SETS = [
   new RegExp(regExps.format),
   new RegExp(regExps.katakana),
   new RegExp(regExps.extendnumlet),
-  PUNCTUATION,
-  WHITESPACE,
   new RegExp('@')
 ];
 

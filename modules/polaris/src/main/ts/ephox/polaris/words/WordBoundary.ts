@@ -11,8 +11,8 @@ const isWordBoundary = (map: CharacterMap, index: number): boolean => {
     return false;
   }
 
-  // Break on or before punctuation or whitespace
-  if (type === ci.PUNCTUATION || nextType === ci.PUNCTUATION || type === ci.WHITESPACE || nextType === ci.WHITESPACE) {
+  // Break before punctuation or whitespace
+  if (nextType === ci.PUNCTUATION || nextType === ci.WHITESPACE) {
     return true;
   }
 
