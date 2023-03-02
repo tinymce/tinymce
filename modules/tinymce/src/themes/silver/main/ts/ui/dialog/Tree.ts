@@ -169,7 +169,8 @@ const renderTree = (
     behaviours: Behaviour.derive([
       Keying.config({
         mode: 'flow',
-        selector: '.tox-tree--leaf__label--visible, .tox-tree--directory__label--visible'
+        selector: '.tox-tree--leaf__label--visible, .tox-tree--directory__label--visible',
+        cycles: false
       })
     ])
   };
