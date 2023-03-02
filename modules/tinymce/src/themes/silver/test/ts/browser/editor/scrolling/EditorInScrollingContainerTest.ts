@@ -82,11 +82,19 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
     );
   };
 
-  const resetScrolls = (editor: Editor) => {
+  const resetScrolls = async (editor: Editor) => {
     const scroller = getAncestorUi(editor, ui.ancestors.scrollingWrapper);
     scroller.dom.scrollTo(0, 0);
     window.scrollTo(0, 0);
     editor.getWin().scrollTo(0, 0);
+
+    // Adding here to prevent flaky test, when scrolling to the top, test cases should'nt start with docked toolbar
+    const header = getEditorUi(editor, ui.editor.stickyHeader);
+    await Waiter.pTryUntil('Wait for scrollHeight to be updated', () => {
+      assert.equal(editor.getWin().scrollX, 0, 'Scroll body should be 0');
+      assert.equal(window.scrollX, 0, 'Scroll body should be 0');
+      assert.isTrue(Css.getRaw(header, 'position').isNone(), 'We have not yet docked the sticky toolbar');
+    });
   };
 
   const assertApprox = (label: string, value1: number, value2: number, marginOfError: number): void => {
