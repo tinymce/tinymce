@@ -97,12 +97,12 @@ const register = (editor: Editor): void => {
 
   registerOption('color_cols_foreground', {
     processor: 'number',
-    default: calcColsOption(calcCols(getColors(editor, backgroundId).length), option('color_cols')(editor))
+    default: calcColsOption(calcCols(getColors(editor, foregroundId).length), option('color_cols')(editor))
   });
 
   registerOption('color_cols_background', {
     processor: 'number',
-    default: calcColsOption(calcCols(getColors(editor, foregroundId).length), option('color_cols')(editor))
+    default: calcColsOption(calcCols(getColors(editor, backgroundId).length), option('color_cols')(editor))
   });
 
   registerOption('custom_colors', {
