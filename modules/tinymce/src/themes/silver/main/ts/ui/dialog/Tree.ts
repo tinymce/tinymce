@@ -35,6 +35,7 @@ const renderLeafLabel = (leaf: Dialog.Leaf, onLeafAction: OnLeafAction, visible:
       classes: [ `tox-tree--leaf__label`, 'tox-trbtn' ].concat(visible ? [ 'tox-tree--leaf__label--visible' ] : []),
     },
     components,
+    role: 'treeitem',
     action: (_button) => {
       onLeafAction(leaf.id);
     },
@@ -63,7 +64,7 @@ const renderDirectoryLabel = (directory: Dialog.Directory, visible: boolean, bac
     {
       dom: {
         tag: 'div',
-        classes: [ 'tox-chevron' ]
+        classes: [ 'tox-chevron' ],
       },
       components: [
         renderIconFromPack('chevron-right', backstage.shared.providers.icons),
@@ -84,6 +85,9 @@ const renderDirectoryLabel = (directory: Dialog.Directory, visible: boolean, bac
     action: (button) => {
       SelectorFind.sibling(button.element, '.tox-tree--directory__children').each((childrenEle) => {
         button.getSystem().getByDom(childrenEle).each((childrenComp) => Toggling.toggle(childrenComp));
+      });
+      SelectorFind.ancestor(button.element, '.tox-tree--directory').each((directoryEle) => {
+        button.getSystem().getByDom(directoryEle).each((directoryComp) => Toggling.toggle(directoryComp));
       });
     },
     buttonBehaviours: Behaviour.derive([
@@ -126,11 +130,21 @@ const renderDirectory = (dir: Dialog.Directory, onLeafAction: OnLeafAction, labe
     dom: {
       tag: 'div',
       classes: [ `tox-tree--directory` ],
+      attributes: {
+        role: 'treeitem'
+      }
     },
     components: [
       renderDirectoryLabel(dir, labelTabstopping, backstage),
       children
     ],
+    behaviours: Behaviour.derive([
+      Toggling.config({
+        aria: {
+          mode: 'expanded',
+        },
+      })
+    ])
   });
 };
 
@@ -143,6 +157,9 @@ const renderTree = (
     dom: {
       tag: 'div',
       classes: [ 'tox-tree' ],
+      attributes: {
+        role: 'tree'
+      }
     },
     components: spec.items.map((item) => {
       return item.type === 'leaf' ?
