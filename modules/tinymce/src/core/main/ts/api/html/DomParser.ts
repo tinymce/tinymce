@@ -197,14 +197,17 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, ui
   return uid;
 };
 
-const shouldKeepAttribute = (validate: boolean | undefined, schema: Schema, tagName: string, attrName: string): boolean =>
-  !validate || schema.isValid(tagName, attrName) || Strings.startsWith(attrName, 'data-') || Strings.startsWith(attrName, 'aria-');
+const shouldKeepAttribute = (settings: DomParserSettings, schema: Schema, tagName: string, attrName: string, attrValue: string): boolean =>
+  !(attrName in filteredUrlAttrs && URI.isInvalidUri(settings, attrValue, tagName)) &&
+  (!settings.validate || schema.isValid(tagName, attrName) || Strings.startsWith(attrName, 'data-') || Strings.startsWith(attrName, 'aria-'));
 
-const filterAttributes = (ele: Element, validate: boolean, schema: Schema): void => {
+const filterAttributes = (ele: Element, settings: DomParserSettings, schema: Schema): void => {
   const { attributes } = ele;
   for (let i = attributes.length - 1; i >= 0; i--) {
-    const attrName = attributes[i].name;
-    if (!shouldKeepAttribute(validate, schema, ele.tagName.toLowerCase(), attrName)) {
+    const attr = attributes[i];
+    const attrName = attr.name;
+    const attrValue = attr.value;
+    if (!shouldKeepAttribute(settings, schema, ele.tagName.toLowerCase(), attrName, attrValue)) {
       ele.removeAttribute(attrName);
     }
   }
@@ -224,10 +227,7 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
     const tagName = ele.tagName.toLowerCase();
     const { attrName, attrValue } = evt;
 
-    evt.keepAttr = shouldKeepAttribute(settings.validate, schema, tagName, attrName);
-    if (attrName in filteredUrlAttrs && URI.isInvalidUri(settings, attrValue, tagName)) {
-      evt.keepAttr = false;
-    }
+    evt.keepAttr = shouldKeepAttribute(settings, schema, tagName, attrName, attrValue);
 
     if (evt.keepAttr) {
       evt.allowedAttributes[attrName] = true;
@@ -460,7 +460,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
       while ((node = nodeIterator.nextNode())) {
         uid = processNode(node, defaultedSettings, schema, uid);
         if (NodeType.isElement(node)) {
-          filterAttributes(node, defaultedSettings.validate, schema);
+          filterAttributes(node, defaultedSettings, schema);
         }
       }
     }
