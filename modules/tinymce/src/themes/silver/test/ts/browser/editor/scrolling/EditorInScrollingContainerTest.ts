@@ -88,11 +88,11 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
     window.scrollTo(0, 0);
     editor.getWin().scrollTo(0, 0);
 
-    // Adding here to prevent flaky test, when scrolling to the top, test cases should'nt start with docked toolbar
     const header = getEditorUi(editor, ui.editor.stickyHeader);
-    await Waiter.pTryUntil('Wait for scrollHeight to be updated', () => {
-      assert.equal(editor.getWin().scrollX, 0, 'Scroll body should be 0');
-      assert.equal(window.scrollX, 0, 'Scroll body should be 0');
+    await Waiter.pTryUntil('Wait for scroll position to be updated', () => {
+      assert.equal(editor.getWin().scrollY, 0, 'scrollY of editor.getWin() should be 0');
+      assert.equal(scroller.dom.scrollTop, 0, 'scrollTop of scrollingWrapper should be 0');
+      assert.equal(window.scrollY, 0, 'scrollY of window should be 0');
       assert.isTrue(Css.getRaw(header, 'position').isNone(), 'We have not yet docked the sticky toolbar');
     });
   };
