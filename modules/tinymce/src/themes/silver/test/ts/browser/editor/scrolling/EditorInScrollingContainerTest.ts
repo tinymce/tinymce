@@ -82,13 +82,18 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
     );
   };
 
-  const resetScrolls = async (editor: Editor) => {
+  const resetScrolls = (editor: Editor) => {
     const scroller = getAncestorUi(editor, ui.ancestors.scrollingWrapper);
     scroller.dom.scrollTo(0, 0);
     window.scrollTo(0, 0);
     editor.getWin().scrollTo(0, 0);
+  };
+
+  const pResetScrollsAndAssertPosition = async (editor: Editor) => {
+    resetScrolls(editor);
 
     const header = getEditorUi(editor, ui.editor.stickyHeader);
+    const scroller = getAncestorUi(editor, ui.ancestors.scrollingWrapper);
     await Waiter.pTryUntil('Wait for scroll position to be updated', () => {
       assert.equal(editor.getWin().scrollY, 0, 'scrollY of editor.getWin() should be 0');
       assert.equal(scroller.dom.scrollTop, 0, 'scrollTop of scrollingWrapper should be 0');
@@ -406,7 +411,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
           scenario.settings.inline
         );
 
-        beforeEach(() => resetScrolls(hook.editor()));
+        beforeEach(async () => pResetScrollsAndAssertPosition(hook.editor()));
 
         context('No disconnect between menubar and menu after scrolling', () => {
           it('When scrolling the outer page', async () => {
@@ -669,7 +674,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
           scenario.settings.inline
         );
 
-        beforeEach(() => resetScrolls(hook.editor()));
+        beforeEach(async () => pResetScrollsAndAssertPosition(hook.editor()));
 
         // TINY-9412: The desired behaviour for toolbar dialog docking when toolbar_location
         // is bottom on inline is unclear. Skip these tests for now.
@@ -809,7 +814,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
         beforeEach(() => resetScrolls(hook.editor()));
 
         it('When scrolling the outer scroller (contains another scroller)', async () => {
-          // Remember, that the editor is about 200px down the scroller.
+          // Remember, that the editor is about 200px down the scroller, avoiding assertion of the header is not docked
           const editor = hook.editor();
           const header = getEditorUi(editor, ui.editor.stickyHeader);
           const outerScroller = getAncestorUi(editor, ui.ancestors.outerScroller);
