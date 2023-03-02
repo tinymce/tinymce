@@ -61,7 +61,8 @@ const decodeUri = (encodedUri: string) => {
 };
 
 export const isInvalidUri = (settings: SafeUriOptions, uri: string, tagName?: string): boolean => {
-  const decodedUri = decodeUri(uri);
+  // remove all whitespaces from decoded uri to prevent impact on regex matching
+  const decodedUri = decodeUri(uri).replace(/\s/g, '');
 
   if (settings.allow_script_urls) {
     return false;
