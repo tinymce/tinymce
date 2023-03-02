@@ -112,8 +112,15 @@ const isWordBoundary = (map: CharacterMap, index: number): boolean => {
     return false;
   }
 
-  // Don't break after any character not covered by the rules above.
-  return false;
+  if (type === ci.ALTLETTER || nextType === ci.ALTLETTER ||
+    ((type !== ci.CR || type !== ci.LF || type !== ci.NEWLINE) && nextType === ci.ALTLETTER) ||
+    ((prevType !== ci.CR || prevType !== ci.LF || prevType !== ci.NEWLINE) && type === ci.ALTLETTER) ||
+    ((nextType !== ci.CR || nextType !== ci.LF || nextType !== ci.NEWLINE) && type === ci.ALTLETTER)) {
+    return false;
+  }
+
+  // Break after any character not covered by the rules above.
+  return true;
 };
 
 export {
