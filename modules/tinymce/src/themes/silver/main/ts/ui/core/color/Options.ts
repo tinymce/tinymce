@@ -8,8 +8,13 @@ import { Menu } from 'tinymce/core/api/ui/Ui';
 const foregroundId = 'forecolor';
 const backgroundId = 'hilitecolor';
 
+const defaultCols = 5;
+
 const calcCols = (colors: number): number =>
-  Math.max(5, Math.ceil(Math.sqrt(colors)));
+  Math.max(defaultCols, Math.ceil(Math.sqrt(colors)));
+
+const calcColsOption = (calculatedCols: number, fallbackCols: number): number =>
+  defaultCols === calculatedCols ? fallbackCols : calculatedCols;
 
 const mapColors = (colorMap: string[]): Menu.ChoiceMenuItemSpec[] => {
   const colors: Menu.ChoiceMenuItemSpec[] = [];
@@ -92,12 +97,12 @@ const register = (editor: Editor): void => {
 
   registerOption('color_cols_foreground', {
     processor: 'number',
-    default: calcCols(getColors(editor, foregroundId).length)
+    default: calcColsOption(calcCols(getColors(editor, backgroundId).length), option('color_cols')(editor))
   });
 
   registerOption('color_cols_background', {
     processor: 'number',
-    default: calcCols(getColors(editor, backgroundId).length)
+    default: calcColsOption(calcCols(getColors(editor, foregroundId).length), option('color_cols')(editor))
   });
 
   registerOption('custom_colors', {
@@ -125,7 +130,9 @@ const getColorCols = (editor: Editor, id: string): number => {
     return option('color_cols')(editor);
   }
 };
+
 const hasCustomColors = option('custom_colors');
+
 const getColors = (editor: Editor, id: string): Menu.ChoiceMenuItemSpec[] => {
   if (id === foregroundId && editor.options.isSet('color_map_foreground')) {
     return option<Menu.ChoiceMenuItemSpec[]>('color_map_foreground')(editor);
