@@ -201,14 +201,22 @@ const shouldKeepAttribute = (settings: DomParserSettings, schema: Schema, tagNam
   !(attrName in filteredUrlAttrs && URI.isInvalidUri(settings, attrValue, tagName)) &&
   (!settings.validate || schema.isValid(tagName, attrName) || Strings.startsWith(attrName, 'data-') || Strings.startsWith(attrName, 'aria-'));
 
+const isRequiredAttributeOfInternalElement = (ele: Element, attrName: string): boolean =>
+  ele.hasAttribute(internalElementAttr) && (attrName === 'id' || attrName === 'class' || attrName === 'style');
+
+const isBooleanAttribute = (attrName: string, schema: Schema): boolean =>
+  attrName in schema.getBoolAttrs();
+
 const filterAttributes = (ele: Element, settings: DomParserSettings, schema: Schema): void => {
   const { attributes } = ele;
   for (let i = attributes.length - 1; i >= 0; i--) {
     const attr = attributes[i];
     const attrName = attr.name;
     const attrValue = attr.value;
-    if (!shouldKeepAttribute(settings, schema, ele.tagName.toLowerCase(), attrName, attrValue)) {
+    if (!shouldKeepAttribute(settings, schema, ele.tagName.toLowerCase(), attrName, attrValue) && !isRequiredAttributeOfInternalElement(ele, attrName)) {
       ele.removeAttribute(attrName);
+    } else if (isBooleanAttribute(attrName, schema)) {
+      ele.setAttribute(attrName, attrName);
     }
   }
 };
@@ -232,7 +240,7 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
     if (evt.keepAttr) {
       evt.allowedAttributes[attrName] = true;
 
-      if (attrName in schema.getBoolAttrs()) {
+      if (isBooleanAttribute(attrName, schema)) {
         evt.attrValue = attrName;
       }
 
@@ -241,7 +249,7 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
         evt.forceKeepAttr = true;
       }
     // For internal elements always keep the attribute if the attribute name is id, class or style
-    } else if (ele.hasAttribute(internalElementAttr) && (attrName === 'id' || attrName === 'class' || attrName === 'style')) {
+    } else if (isRequiredAttributeOfInternalElement(ele, attrName)) {
       evt.forceKeepAttr = true;
     }
   });
