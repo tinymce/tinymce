@@ -15,14 +15,14 @@ describe('browser.tinymce.core.init.InitUnsanitizedContentTest', () => {
     });
   };
 
-  const unsanitizedHtml = '<p><a href="javascript:alert(1)">XSS</a></p>';
+  const unsanitizedHtml = '<p id="action">XSS</p>';
 
-  context('TINY-9600: xss_sanitized: true', () => {
-    const sanitizedHtml = '<p><a>XSS</a></p>';
+  context('TINY-9600: xss_sanitization: true', () => {
+    const sanitizedHtml = '<p>XSS</p>';
     initAndAssertContent('should sanitize initial content', true, unsanitizedHtml, sanitizedHtml);
   });
 
-  context('TINY-9600: xss_sanitized: false', () => {
+  context('TINY-9600: xss_sanitization: false', () => {
     initAndAssertContent('should not sanitize initial content', false, unsanitizedHtml, unsanitizedHtml);
   });
 });

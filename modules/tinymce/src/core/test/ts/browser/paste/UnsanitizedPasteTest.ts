@@ -4,8 +4,8 @@ import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.paste.UnsanitizedPasteTest', () => {
-  const unsanitizedHtml = '<p><a href="javascript:alert(1)">XSS</a></p>';
-  const sanitizedHtml = '<p><a>XSS</a></p>';
+  const unsanitizedHtml = '<p id="action">XSS</p>';
+  const sanitizedHtml = '<p>XSS</p>';
   const testPaste = (editor: Editor, content: string, expected: string) => {
     editor.setContent('');
     editor.execCommand('mceInsertClipboardContent', false, { html: content });
