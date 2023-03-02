@@ -1488,60 +1488,58 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     });
   });
 
-  context('TINY-9600: sanitize: false', () => {
+  context('TINY-9600: sanitize: false with unsafe input', () => {
     const getNoSanitizeParser = (settings: DomParserSettings, schema: Schema): DomParser =>
       DomParser({ ...settings, sanitize: false }, schema);
 
-    context('Test unsafe input', () => {
-      const testDisablingSanitization = (outputs: string[], schemaSettings: SchemaSettings) => {
-        Arr.each([
-          {
-            name: 'script tags',
-            input: '<script>alert(1)</script>'
-          }, {
-            name: 'iframe tags with child nodes',
-            input: '<iframe src="https://example.com"><p>Lorem ipsum</p></iframe>'
-          }, {
-            name: 'iframe tags with srcdoc attribute',
-            input: '<iframe srcdoc="Lorem ipsum"></iframe>'
-          }, {
-            name: 'unsafe href attributes',
-            input: '<p><a href="javascript:alert(1)">XSS</a></p>'
-          },
-          {
-            name: 'svg tags',
-            input: '<svg><circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow"></circle></svg>'
-          }
-        ], (testCase, i) => {
-          it(testCase.name, () => {
-            const schema = Schema(schemaSettings);
-            const serializedHtml = HtmlSerializer({}, schema).serialize(
-              getNoSanitizeParser({}, schema).parse(testCase.input)
-            );
-            assert.equal(serializedHtml, outputs[i]);
-          });
+    const testDisablingSanitization = (outputs: string[], schemaSettings: SchemaSettings) => {
+      Arr.each([
+        {
+          name: 'script tags',
+          input: '<script>alert(1)</script>'
+        }, {
+          name: 'iframe tags with child nodes',
+          input: '<iframe src="https://example.com"><p>Lorem ipsum</p></iframe>'
+        }, {
+          name: 'iframe tags with srcdoc attribute',
+          input: '<iframe srcdoc="Lorem ipsum"></iframe>'
+        }, {
+          name: 'unsafe href attributes',
+          input: '<p><a href="javascript:alert(1)">XSS</a></p>'
+        },
+        {
+          name: 'svg tags',
+          input: '<svg><circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow"></circle></svg>'
+        }
+      ], (testCase, i) => {
+        it(testCase.name, () => {
+          const schema = Schema(schemaSettings);
+          const serializedHtml = HtmlSerializer({}, schema).serialize(
+            getNoSanitizeParser({}, schema).parse(testCase.input)
+          );
+          assert.equal(serializedHtml, outputs[i]);
         });
-      };
-
-      context('with default schema', () => {
-        testDisablingSanitization([
-          '',
-          '<iframe src="https://example.com"><p>Lorem ipsum</p></iframe>',
-          '<iframe></iframe>',
-          '<p><a>XSS</a></p>',
-          ''
-        ], {});
       });
+    };
 
-      context('with valid_elements: \'*[*]\' schema', () => {
-        testDisablingSanitization([
-          '<script>alert(1)</script>',
-          '<iframe src="https://example.com"><p>Lorem ipsum</p></iframe>',
-          '<iframe srcdoc="Lorem ipsum"></iframe>',
-          '<p><a>XSS</a></p>',
-          '<svg><circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow"></circle></svg>'
-        ], { valid_elements: '*[*]' });
-      });
+    context('with default schema', () => {
+      testDisablingSanitization([
+        '',
+        '<iframe src="https://example.com"><p>Lorem ipsum</p></iframe>',
+        '<iframe></iframe>',
+        '<p><a>XSS</a></p>',
+        ''
+      ], {});
+    });
+
+    context('with valid_elements: \'*[*]\' schema', () => {
+      testDisablingSanitization([
+        '<script>alert(1)</script>',
+        '<iframe src="https://example.com"><p>Lorem ipsum</p></iframe>',
+        '<iframe srcdoc="Lorem ipsum"></iframe>',
+        '<p><a>XSS</a></p>',
+        '<svg><circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow"></circle></svg>'
+      ], { valid_elements: '*[*]' });
     });
   });
 });

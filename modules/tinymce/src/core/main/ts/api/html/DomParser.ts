@@ -456,7 +456,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     const wrappedHtml = format === 'xhtml' ? `<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body>${content}</body></html>` : `<body>${content}</body>`;
     const body = parser.parseFromString(wrappedHtml, mimeType).body;
 
-    if (false) {
+    if (defaultedSettings.sanitize) {
       // Sanitize the content
       purify.sanitize(body, getPurifyConfig(defaultedSettings, mimeType));
       purify.removed = [];
