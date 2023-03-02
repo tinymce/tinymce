@@ -28,6 +28,7 @@ export interface ViewNormalButtonSpec extends BaseButtonSpec<ViewButtonApi> {
 
 export interface ViewToggleButtonSpec extends BaseButtonSpec<ViewToggleButtonApi> {
   type: 'togglebutton';
+  active?: boolean;
   onAction: (api: ViewToggleButtonApi) => void;
 }
 
@@ -55,6 +56,7 @@ export interface ViewNormalButton extends Omit<BaseButton<ViewButtonApi>, 'text'
 
 export interface ViewToggleButton extends BaseButton<ViewToggleButtonApi> {
   type: 'togglebutton';
+  active: boolean;
   onAction: (api: ViewToggleButtonApi) => void;
 }
 export interface ViewButtonsGroup {
@@ -81,6 +83,7 @@ const normalButtonFields = [
 
 const toggleButtonFields = [
   ...baseButtonFields,
+  FieldSchema.defaultedBoolean('active', false),
   FieldSchema.requiredStringEnum('type', [ 'togglebutton' ])
 ];
 
