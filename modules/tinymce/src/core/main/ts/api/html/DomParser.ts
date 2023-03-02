@@ -458,10 +458,9 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
       let uid = 0;
       let node;
       while ((node = nodeIterator.nextNode())) {
-        // disable schema validation to allow all elements and attributes including those not in the schema spec
-        uid = processNode(node, { ...defaultedSettings, validate: false }, schema, uid);
+        uid = processNode(node, defaultedSettings, schema, uid);
         if (NodeType.isElement(node)) {
-          filterAttributes(node, false, schema);
+          filterAttributes(node, defaultedSettings.validate, schema);
         }
       }
     }

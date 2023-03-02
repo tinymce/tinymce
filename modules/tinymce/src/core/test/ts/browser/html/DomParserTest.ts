@@ -1489,34 +1489,46 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
   });
 
   context('TINY-9600: sanitize: false', () => {
-    const testDisablingSanitization = (testCase: { name: string; input: string }) => {
-      it(testCase.name, () => {
-        const schema = Schema();
-        const serializedHtml = HtmlSerializer({}, schema).serialize(
-          DomParser({ sanitize: false }, schema).parse(testCase.input)
-        );
-        assert.equal(serializedHtml, testCase.input);
-      });
-    };
-
-    Arr.each([
+    const testCases = [
       {
-        name: 'should not remove script tags',
+        name: 'script tags',
         input: '<script>alert(1)</script>'
       }, {
-        name: 'should not remove iframe tags with child nodes',
+        name: 'iframe tags with child nodes',
         input: '<iframe src="https://example.com"><p>Lorem ipsum</p></iframe>'
       }, {
-        name: 'should not remove iframe tags with srcdoc',
+        name: 'iframe tags with srcdoc attribute',
         input: '<iframe srcdoc="Lorem ipsum"></iframe>'
       }, {
-        name: 'should not remove unsafe attributes',
+        name: 'unsafe href attributes',
         input: '<p><a href="javascript:alert(1)">XSS</a></p>'
       },
       {
-        name: 'should not remove svg tags',
+        name: 'svg tags',
         input: '<svg><circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow"></circle></svg>'
       }
-    ], testDisablingSanitization);
+    ];
+
+    const testDisablingSanitization = (outputs: string[]) => {
+      Arr.each(testCases, (testCase, i) => {
+        it(testCase.name, () => {
+          const schema = Schema();
+          const serializedHtml = HtmlSerializer({}, schema).serialize(
+            DomParser({ sanitize: false }, schema).parse(testCase.input)
+          );
+          assert.equal(serializedHtml, outputs[i]);
+        });
+      });
+    };
+
+    context('with default schema', () => {
+      testDisablingSanitization([
+        '',
+        '<iframe src="https://example.com"><p>Lorem ipsum</p></iframe>',
+        '<iframe></iframe>',
+        '<p><a>XSS</a></p>',
+        '',
+      ]);
+    });
   });
 });
