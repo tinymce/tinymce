@@ -136,7 +136,7 @@ describe('browser.tinymce.core.textpatterns.TextPatternsTest', () => {
 
   it('H2 format on single word node with several spaces using enter', () => {
     const editor = hook.editor();
-    Utils.setContentAndPressEnter(editor, '#   a'); // nbsp spaces here
+    Utils.setContentAndPressEnter(editor, '##   a'); // nbsp spaces here
     TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h2', '   a'));
   });
 
@@ -148,7 +148,7 @@ describe('browser.tinymce.core.textpatterns.TextPatternsTest', () => {
 
   it('H3 format on single word node with several spaces using enter', () => {
     const editor = hook.editor();
-    Utils.setContentAndPressEnter(editor, '#   a'); // nbsp spaces here
+    Utils.setContentAndPressEnter(editor, '###   a'); // nbsp spaces here
     TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h3', '   a'));
   });
 
@@ -160,7 +160,7 @@ describe('browser.tinymce.core.textpatterns.TextPatternsTest', () => {
 
   it('H4 format on single word node with several spaces using enter', () => {
     const editor = hook.editor();
-    Utils.setContentAndPressEnter(editor, '#   a'); // nbsp spaces here
+    Utils.setContentAndPressEnter(editor, '####   a'); // nbsp spaces here
     TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h4', '   a'));
   });
 
@@ -172,7 +172,7 @@ describe('browser.tinymce.core.textpatterns.TextPatternsTest', () => {
 
   it('H5 format on single word node with several spaces using enter', () => {
     const editor = hook.editor();
-    Utils.setContentAndPressEnter(editor, '#   a'); // nbsp spaces here
+    Utils.setContentAndPressEnter(editor, '#####   a'); // nbsp spaces here
     TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h5', '   a'));
   });
 
@@ -184,7 +184,7 @@ describe('browser.tinymce.core.textpatterns.TextPatternsTest', () => {
 
   it('H6 format on single word node with several spaces using enter', () => {
     const editor = hook.editor();
-    Utils.setContentAndPressEnter(editor, '#   a'); // nbsp spaces here
+    Utils.setContentAndPressEnter(editor, '######   a'); // nbsp spaces here
     TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h6', '   a'));
   });
 
