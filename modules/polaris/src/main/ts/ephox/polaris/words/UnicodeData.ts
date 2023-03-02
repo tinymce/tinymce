@@ -33,8 +33,14 @@ const characterIndices = {
   KATAKANA: 10,
   EXTENDNUMLET: 11,
   AT: 12,
-  OTHER: 13
+  PUNCTUATION: 13,
+  WHITESPACE: 14,
+  OTHER: 15
 };
+
+const EMPTY_STRING = '';
+const PUNCTUATION = new RegExp('^' + regExps.punctuation + '$');
+const WHITESPACE = /^\s+$/;
 
 // RegExp objects generated from code point data. Each regex matches a single
 // character against a set of Unicode code points. The index of each item in
@@ -53,12 +59,10 @@ const SETS = [
   new RegExp(regExps.format),
   new RegExp(regExps.katakana),
   new RegExp(regExps.extendnumlet),
+  PUNCTUATION,
+  WHITESPACE,
   new RegExp('@')
 ];
-
-const EMPTY_STRING = '';
-const PUNCTUATION = new RegExp('^' + regExps.punctuation + '$');
-const WHITESPACE = /^\s+$/;
 
 export {
   punctuationStr,
