@@ -87,7 +87,7 @@ const refreshInternal = (component: AlloyComponent, config: DockingConfig, state
 
   // Checking isDocked works for only, toolbar_location: top mode, as you scroll, it would be undocked, docked then hidden
   // But for toobar_location, it would be from docked, undocked then hidden
-  if ((isDocked && Arr.contains(config.modes, 'top')) || (!isDocked && Arr.contains(config.modes, 'bottom'))) {
+  if (isDocked || (!isDocked && Arr.contains(state.getModes(), 'bottom'))) {
     updateVisibility(component, config, state, viewport);
   }
 
