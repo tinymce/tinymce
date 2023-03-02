@@ -33,7 +33,10 @@
     border-bottom: @editor-header-border;
     box-shadow: @editor-header-box-shadow;
     padding: @pad-xs 0;
-    transition: box-shadow .5s;
+
+    &:not(.tox-editor-dock-transition) {
+      transition: box-shadow .5s;
+    }
   }
 
   &:not(.tox-tinymce-inline).tox-tinymce--toolbar-bottom .tox-editor-header {
