@@ -9,13 +9,14 @@ import { DomParserSettings } from './DomParser';
 import Schema from './Schema';
 
 type MimeType = 'text/html' | 'application/xhtml+xml';
-type SanitizeFn = (body: HTMLElement, mimeType: MimeType) => void;
+type Sanitizer = (body: HTMLElement, mimeType: MimeType) => void;
 
 // A list of attributes that should be filtered further based on the parser settings
 const filteredUrlAttrs = Tools.makeMap('src,href,data,background,action,formaction,poster,xlink:href');
 const internalElementAttr = 'data-mce-type';
 
-const processNode = (node: Node, settings: DomParserSettings, schema: Schema, uid: number, evt?: createDompurify.SanitizeElementHookEvent): number => {
+let uid = 0;
+const processNode = (node: Node, settings: DomParserSettings, schema: Schema, evt?: createDompurify.SanitizeElementHookEvent): void => {
   const validate = settings.validate;
   const specialElements = schema.getSpecialElements();
 
@@ -28,7 +29,7 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, ui
 
   // Just leave non-elements such as text and comments up to dompurify
   if (node.nodeType !== NodeTypes.ELEMENT || lcTagName === 'body') {
-    return uid;
+    return;
   }
 
   // Construct the sugar element wrapper
@@ -45,7 +46,7 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, ui
     } else {
       Remove.unwrap(element);
     }
-    return uid;
+    return;
   }
 
   // Determine if the schema allows the element and either add it or remove it
@@ -57,7 +58,7 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, ui
     } else {
       Remove.unwrap(element);
     }
-    return uid;
+    return;
   } else {
     if (Type.isNonNullable(evt)) {
       evt.allowedTags[lcTagName] = true;
@@ -79,13 +80,13 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, ui
     // If none of the required attributes were found then remove
     if (rule.attributesRequired && !Arr.exists(rule.attributesRequired, (attr) => Attribute.has(element, attr))) {
       Remove.unwrap(element);
-      return uid;
+      return;
     }
 
     // If there are no attributes then remove
     if (rule.removeEmptyAttrs && Attribute.hasNone(element)) {
       Remove.unwrap(element);
-      return uid;
+      return;
     }
 
     // Change the node name if the schema says to
@@ -93,8 +94,6 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, ui
       Replication.mutate(element, rule.outputName as keyof HTMLElementTagNameMap);
     }
   }
-
-  return uid;
 };
 
 const shouldKeepAttribute = (settings: DomParserSettings, schema: Schema, tagName: string, attrName: string, attrValue: string): boolean =>
@@ -123,11 +122,10 @@ const filterAttributes = (ele: Element, settings: DomParserSettings, schema: Sch
 
 const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI => {
   const purify = createDompurify();
-  let uid = 0;
 
   // We use this to add new tags to the allow-list as we parse, if we notice that a tag has been banned but it's still in the schema
   purify.addHook('uponSanitizeElement', (ele, evt) => {
-    uid = processNode(ele, settings, schema, uid, evt);
+    processNode(ele, settings, schema, evt);
   });
 
   // Let's do the same thing for attributes
@@ -157,17 +155,16 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
   return purify;
 };
 
-const basePurifyConfig: Config = {
-  IN_PLACE: true,
-  ALLOW_UNKNOWN_PROTOCOLS: true,
-  // Deliberately ban all tags and attributes by default, and then un-ban them on demand in hooks
-  // #comment and #cdata-section are always allowed as they aren't controlled via the schema
-  // body is also allowed due to the DOMPurify checking the root node before sanitizing
-  ALLOWED_TAGS: [ '#comment', '#cdata-section', 'body' ],
-  ALLOWED_ATTR: []
-};
-
 const getPurifyConfig = (settings: DomParserSettings, mimeType: string): Config => {
+  const basePurifyConfig: Config = {
+    IN_PLACE: true,
+    ALLOW_UNKNOWN_PROTOCOLS: true,
+    // Deliberately ban all tags and attributes by default, and then un-ban them on demand in hooks
+    // #comment and #cdata-section are always allowed as they aren't controlled via the schema
+    // body is also allowed due to the DOMPurify checking the root node before sanitizing
+    ALLOWED_TAGS: [ '#comment', '#cdata-section', 'body' ],
+    ALLOWED_ATTR: []
+  };
   const config = { ...basePurifyConfig };
 
   // Set the relevant parser mimetype
@@ -184,7 +181,7 @@ const getPurifyConfig = (settings: DomParserSettings, mimeType: string): Config 
   return config;
 };
 
-const getSanitizer = (settings: DomParserSettings, schema: Schema): SanitizeFn => {
+const getSanitizer = (settings: DomParserSettings, schema: Schema): Sanitizer => {
   if (settings.sanitize) {
     const purify = setupPurify(settings, schema);
     return (body, mimeType) => {
@@ -192,13 +189,12 @@ const getSanitizer = (settings: DomParserSettings, schema: Schema): SanitizeFn =
       purify.removed = [];
     };
   } else {
-    let uid = 0;
     return (body, _) => {
       // eslint-disable-next-line no-bitwise
       const nodeIterator = document.createNodeIterator(body, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_TEXT);
       let node;
       while ((node = nodeIterator.nextNode())) {
-        uid = processNode(node, settings, schema, uid);
+        processNode(node, settings, schema);
         if (NodeType.isElement(node)) {
           filterAttributes(node, settings, schema);
         }
