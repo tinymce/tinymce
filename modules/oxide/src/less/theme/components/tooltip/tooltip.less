@@ -3,22 +3,24 @@
 //
 
 @tooltip-arrow-size: @base-value / 2;
-@tooltip-background-color: contrast(@background-color, @color-black, lighten(@background-color, 15%));
-@tooltip-border-radius: @panel-border-radius;
-@tooltip-box-shadow: 0 2px 4px fade(@color-black, 30%);
-@tooltip-font-size: @font-size-sm;
-@tooltip-font-weight: @font-weight-normal;
+@tooltip-background-color: @color-black;
+@tooltip-border-radius: @panel-border-radius / 2;
+@tooltip-box-shadow: none;
+@tooltip-font-size: @font-size-xs;
+@tooltip-font-weight: 600;
 @tooltip-font-style: normal;
-@tooltip-padding-x: @pad-sm;
+@tooltip-padding-x: 6px;
 @tooltip-padding-y: @pad-xs;
-@tooltip-text-color: contrast(@tooltip-background-color, @color-black, fade(@color-white, 75%));
+@tooltip-text-color: @color-white;
 @tooltip-text-transform: none;
 
 .tox {
   .tox-tooltip {
     display: inline-block;
     padding: @tooltip-arrow-size;
-    /* The pointer-events: none is designed to make mouse events bleed through the tooltip
+
+    /*
+     * The pointer-events: none is designed to make mouse events bleed through the tooltip
      * to the underlying items. For example, a mouse hovering over a tooltip that hovers over
      * another item should trigger the hover of the item obscured by the tooltip, even though
      * the tooltip is on top

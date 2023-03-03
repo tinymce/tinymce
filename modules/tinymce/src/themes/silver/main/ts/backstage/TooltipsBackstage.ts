@@ -39,12 +39,13 @@ export const TooltipsBackstage = (
           GuiFactory.text(spec.tooltipText)
         ]
       },
-      {
-        dom: {
-          tag: 'i',
-          classes: [ 'tox-tooltip__arrow' ]
-        }
-      }
+      // Figma design does not include tooltip arrow
+      // {
+      //   dom: {
+      //     tag: 'i',
+      //     classes: [ 'tox-tooltip__arrow' ]
+      //   }
+      // }
     ],
     onShow: () => {
       numActiveTooltips++;
