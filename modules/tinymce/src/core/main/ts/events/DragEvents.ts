@@ -80,10 +80,10 @@ const makeDragEvent = <K extends keyof DragEvent>(type: string, props: Record<K,
   return event;
 };
 
-const fallback = (target: HTMLElement) => ({ target, srcElement: target });
+const fallback = (target: Element) => ({ target, srcElement: target });
 
-const makeDndEvent = (type: string) => (target: HTMLElement): DragEvent => makeDragEvent(type, fallback(target));
-const makeDndEventFromMouseEvent = (type: string) => (mouseEvent: EditorEvent<MouseEvent>, target: HTMLElement): DragEvent =>
+const makeDndEvent = (type: string) => (target: Element): DragEvent => makeDragEvent(type, fallback(target));
+const makeDndEventFromMouseEvent = (type: string) => (mouseEvent: EditorEvent<MouseEvent>, target: Element): DragEvent =>
   makeDragEventFromMouseEvent(type, mouseEvent, fallback(target));
 
 export const makeDragstartEvent = makeDndEvent('dragstart');

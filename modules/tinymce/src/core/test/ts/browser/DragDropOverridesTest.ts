@@ -1,7 +1,7 @@
 import { Assertions, DragnDrop, Keyboard, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Type } from '@ephox/katamari';
-import { SugarBody, SugarLocation } from '@ephox/sugar';
+import { SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -46,6 +46,15 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
 
       assert.equal((event.target as HTMLElement)?.className.trim(), expectedClass, `Expected target on "${expectedType}" event to have class`);
       assert.equal((event.srcElement as HTMLElement)?.className.trim(), expectedClass, `Expected srcElement on "${expectedType}" event to have class`);
+    };
+
+    const pMouseMoveToCaretChange = (editor: Editor, target: SugarElement<Element>, dx = 0, dy = 0) => {
+      const { startContainer, startOffset } = editor.selection.getRng();
+      Mouse.mouseMoveTo(target, dx, dy);
+      return Waiter.pTryUntilPredicate('Waited for selection to change', () => {
+        const newRng = editor.selection.getRng();
+        return newRng.startContainer !== startContainer || newRng.startOffset !== startOffset;
+      });
     };
 
     const makeMouseEvent = <K extends keyof MouseEvent>(type: string, props: Record<K, MouseEvent[K]>): MouseEvent => {
@@ -97,7 +106,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       assertEventsDispatched([ 'dragstart', 'dragend' ]);
     });
 
-    it('TINY-7917: Dropping draggable element inside editor fires dragend event', () => {
+    it('TINY-7917: Dropping draggable element inside editor fires dragend event', async () => {
       const editor = hook.editor();
       editor.setContent('<p contenteditable="false" class="draggable">a</p><p class="dest">bc123</p>');
       const target = UiFinder.findIn(TinyDom.body(editor), '.draggable').getOrDie();
@@ -109,7 +118,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
 
       Mouse.mouseDown(target);
       // Drag CE=F paragraph roughly into other paragraph in order to trigger a valid drop on mouseup
-      Mouse.mouseMoveTo(target, 15, yDelta + 5);
+      await pMouseMoveToCaretChange(editor, target, 15, yDelta + 5);
       Mouse.mouseUp(dest, { dx: 5, dy: 5 });
 
       assertEventsDispatched([ 'dragstart', 'drop', 'dragend' ]);
@@ -119,7 +128,30 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       assertDndEvent('dragend', 'mce-content-body');
     });
 
-    it('TINY-7917: Pressing escape during drag fires dragend event', () => {
+    it('TINY-9599: Dropping draggable element should be preventable', async () => {
+      const editor = hook.editor();
+      const initialContent = '<p class="draggable" contenteditable="false">a</p><p class="dest">bc123</p>';
+      editor.setContent(initialContent);
+      const target = UiFinder.findIn(TinyDom.body(editor), '.draggable').getOrDie();
+      const targetPosition = SugarLocation.viewport(target);
+
+      const dest = UiFinder.findIn(TinyDom.body(editor), '.dest').getOrDie();
+      const destPosition = SugarLocation.viewport(dest);
+      const yDelta = destPosition.top - targetPosition.top;
+
+      editor.once('drop', (e) => {
+        e.preventDefault();
+      });
+
+      Mouse.mouseDown(target);
+      // Drag CE=F paragraph roughly into other paragraph in order to trigger a valid drop on mouseup
+      await pMouseMoveToCaretChange(editor, target, 15, yDelta + 5);
+      Mouse.mouseUp(dest, { dx: 5, dy: 5 });
+
+      TinyAssertions.assertContent(editor, initialContent);
+    });
+
+    it('TINY-7917: Pressing escape during drag fires dragend event', async () => {
       const editor = hook.editor();
       editor.setContent('<p class="draggable" contenteditable="false">a</p><p class="dest">bc123</p>');
       const target = UiFinder.findIn(TinyDom.body(editor), '.draggable').getOrDie();
@@ -131,7 +163,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
 
       Mouse.mouseDown(target);
       // Where we drag to here is largely irrelevant
-      Mouse.mouseMoveTo(target, 15, yDelta + 5);
+      await pMouseMoveToCaretChange(editor, target, 15, yDelta + 5);
       Keyboard.activeKeydown(TinyDom.document(editor), Keys.escape());
 
       assertEventsDispatched([ 'dragstart', 'dragend' ]);

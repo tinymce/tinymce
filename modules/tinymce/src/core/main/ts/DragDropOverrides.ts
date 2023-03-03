@@ -309,10 +309,8 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
     state.intervalId.clear();
     if (state.dragging) {
       if (isValidDropTarget(editor, getRawTarget(editor.selection), state.element)) {
-        placeCaretAt(editor, e.clientX, e.clientY);
-
         const targetClone = cloneElement(state.element);
-        const dropTarget = editor.selection.getNode();
+        const dropTarget = editor.getDoc().elementFromPoint(e.clientX, e.clientY) ?? editor.getBody();
         const args = editor.dispatch('drop', DragEvents.makeDropEventFromMouseEvent(e, dropTarget));
 
         if (!args.isDefaultPrevented()) {
