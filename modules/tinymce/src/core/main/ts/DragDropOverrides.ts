@@ -1,4 +1,4 @@
-import { Arr, Singleton, Throttler, Type } from '@ephox/katamari';
+import { Arr, Optional, Singleton, Throttler, Type } from '@ephox/katamari';
 
 import DOMUtils from './api/dom/DOMUtils';
 import { EventUtilsEvent } from './api/dom/EventUtils';
@@ -12,6 +12,7 @@ import * as ClosestCaretCandidate from './caret/ClosestCaretCandidate';
 import * as MousePosition from './dom/MousePosition';
 import * as NodeType from './dom/NodeType';
 import * as ErrorReporter from './ErrorReporter';
+import * as DragEvents from './events/DragEvents';
 import { isUIElement } from './focus/FocusController';
 import * as Predicate from './util/Predicate';
 
@@ -247,22 +248,24 @@ const start = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent
   }
 };
 
+const placeCaretAt = (editor: Editor, clientX: number, clientY: number) => {
+  editor._selectionOverrides.hideFakeCaret();
+  ClosestCaretCandidate.closestFakeCaretCandidate(editor.getBody(), clientX, clientY).fold(
+    () => editor.selection.placeCaretAt(clientX, clientY),
+    (caretInfo) => {
+      const range = editor._selectionOverrides.showCaret(1, caretInfo.node as HTMLElement, caretInfo.position === ClosestCaretCandidate.FakeCaretPosition.Before, false);
+      if (range) {
+        editor.selection.setRng(range);
+      } else {
+        editor.selection.placeCaretAt(clientX, clientY);
+      }
+    }
+  );
+};
+
 const move = (state: Singleton.Value<State>, editor: Editor) => {
   // Reduces laggy drag behavior on Gecko
-  const throttledPlaceCaretAt = Throttler.first((clientX: number, clientY: number) => {
-    editor._selectionOverrides.hideFakeCaret();
-    ClosestCaretCandidate.closestFakeCaretCandidate(editor.getBody(), clientX, clientY).fold(
-      () => editor.selection.placeCaretAt(clientX, clientY),
-      (caretInfo) => {
-        const range = editor._selectionOverrides.showCaret(1, caretInfo.node as HTMLElement, caretInfo.position === ClosestCaretCandidate.FakeCaretPosition.Before, false);
-        if (range) {
-          editor.selection.setRng(range);
-        } else {
-          editor.selection.placeCaretAt(clientX, clientY);
-        }
-      }
-    );
-  }, 0);
+  const throttledPlaceCaretAt = Throttler.first((clientX: number, clientY: number) => placeCaretAt(editor, clientX, clientY), 0);
   editor.on('remove', throttledPlaceCaretAt.cancel);
   const state_ = state;
 
@@ -270,7 +273,7 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
     const movement = Math.max(Math.abs(e.screenX - state.screenX), Math.abs(e.screenY - state.screenY));
 
     if (!state.dragging && movement > 10) {
-      const args = editor.dispatch('dragstart', { target: state.element as EventTarget } as DragEvent);
+      const args = editor.dispatch('dragstart', DragEvents.makeDragstartEventFromMouseEvent(e, state.element));
       if (args.isDefaultPrevented()) {
         return;
       }
@@ -306,12 +309,11 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
     state.intervalId.clear();
     if (state.dragging) {
       if (isValidDropTarget(editor, getRawTarget(editor.selection), state.element)) {
-        const targetClone = cloneElement(state.element);
+        placeCaretAt(editor, e.clientX, e.clientY);
 
-        const args = editor.dispatch('drop', {
-          clientX: e.clientX,
-          clientY: e.clientY
-        } as DragEvent);
+        const targetClone = cloneElement(state.element);
+        const dropTarget = editor.selection.getNode();
+        const args = editor.dispatch('drop', DragEvents.makeDropEventFromMouseEvent(e, dropTarget));
 
         if (!args.isDefaultPrevented()) {
           editor.undoManager.transact(() => {
@@ -322,22 +324,30 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
         }
       }
 
-      editor.dispatch('dragend');
+      // Use body as the target since the element we are dragging no longer exists native drag/drop works in a similar way
+      editor.dispatch('dragend', DragEvents.makeDragendEventFromMouseEvent(e, editor.getBody()));
     }
   });
 
   removeDragState(state);
 };
 
-const stop = (state: Singleton.Value<State>, editor: Editor) => () => {
+const stopDragging = (state: Singleton.Value<State>, editor: Editor, e: Optional<EditorEvent<MouseEvent>>) => {
   state.on((state) => {
     state.intervalId.clear();
     if (state.dragging) {
-      editor.dispatch('dragend');
+      const event = e.fold(
+        () => DragEvents.makeDragendEvent(state.element),
+        (mouseEvent) => DragEvents.makeDragendEventFromMouseEvent(mouseEvent, state.element)
+      );
+      editor.dispatch('dragend', event);
     }
   });
   removeDragState(state);
 };
+
+const stop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<MouseEvent>) =>
+  stopDragging(state, editor, Optional.some(e));
 
 const removeDragState = (state: Singleton.Value<State>) => {
   state.on((state) => {
@@ -372,7 +382,7 @@ const bindFakeDragEvents = (editor: Editor) => {
   editor.on('keydown', (e) => {
     // Fire 'dragend' when the escape key is pressed
     if (e.keyCode === VK.ESC) {
-      dragEndHandler();
+      stopDragging(state, editor, Optional.none());
     }
   });
 };
