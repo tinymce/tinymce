@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+- Resolved a bug that caused inaccurate word counts for documents with specific characters. #TINY-8122
+
 ### Added
 - New `tree` component that can be used in dialog body panel. #TINY-9532
 - renderUI property in the `Theme` type can now return a `Promise<RenderResult>` instead of `RenderResult`. #TINY-9556
