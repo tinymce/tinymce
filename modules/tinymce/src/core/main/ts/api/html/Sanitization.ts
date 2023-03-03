@@ -1,6 +1,6 @@
 import { Arr, Obj, Strings, Type } from '@ephox/katamari';
 import { Attribute, NodeTypes, Remove, Replication, SugarElement } from '@ephox/sugar';
-import createDompurify, { Config, DOMPurifyI } from 'dompurify';
+import createDompurify, { Config, DOMPurifyI, SanitizeElementHookEvent } from 'dompurify';
 
 import * as NodeType from '../../dom/NodeType';
 import Tools from '../util/Tools';
@@ -16,7 +16,7 @@ const filteredUrlAttrs = Tools.makeMap('src,href,data,background,action,formacti
 const internalElementAttr = 'data-mce-type';
 
 let uid = 0;
-const processNode = (node: Node, settings: DomParserSettings, schema: Schema, evt?: createDompurify.SanitizeElementHookEvent): void => {
+const processNode = (node: Node, settings: DomParserSettings, schema: Schema, evt?: SanitizeElementHookEvent): void => {
   const validate = settings.validate;
   const specialElements = schema.getSpecialElements();
 
