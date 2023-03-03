@@ -38,7 +38,7 @@ const stripPattern = (dom: DOMUtils, block: Node, pattern: BlockPattern): void =
     const text = SugarElement.fromDom(node);
     const textContent = SugarText.get(text);
     if (startsWithSingleSpace(textContent)) {
-      SugarText.set(text, textContent.replace(/^\s/, ''));
+      SugarText.set(text, textContent.slice(1));
     }
   });
 };
