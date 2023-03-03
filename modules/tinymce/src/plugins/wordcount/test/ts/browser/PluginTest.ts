@@ -86,7 +86,7 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
     await pWaitForWordcount(1);
   });
 
-  it('TINY-8122: Does not treat $ as a word break', async () => {
+  it('TINY-8122: Treat $ as a word break', async () => {
     const editor = hook.editor();
     await pWaitForWordcount(0);
     editor.setContent('<p>$word</p>');
@@ -94,20 +94,20 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
     editor.setContent('<p>word$</p>');
     await pWaitForWordcount(1);
     editor.setContent('<p>word$word</p>');
-    await pWaitForWordcount(1);
+    await pWaitForWordcount(2);
     editor.setContent('<p>$word$</p>');
     await pWaitForWordcount(1);
     editor.setContent('<p>word$2</p>');
-    await pWaitForWordcount(1);
+    await pWaitForWordcount(2);
     editor.setContent('<p>word$word test</p>');
-    await pWaitForWordcount(2);
+    await pWaitForWordcount(3);
     editor.setContent('<p>word$word</br>test$</p>');
-    await pWaitForWordcount(2);
+    await pWaitForWordcount(3);
     editor.setContent('<p>word$word</p><p>test$</p>');
-    await pWaitForWordcount(2);
+    await pWaitForWordcount(3);
   });
 
-  it('TINY-8122: Does not treat ^ as a word break', async () => {
+  it('TINY-8122: Treat ^ as a word break', async () => {
     const editor = hook.editor();
     await pWaitForWordcount(0);
     editor.setContent('<p>^word</p>');
@@ -115,20 +115,20 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
     editor.setContent('<p>word^</p>');
     await pWaitForWordcount(1);
     editor.setContent('<p>word^word</p>');
-    await pWaitForWordcount(1);
+    await pWaitForWordcount(2);
     editor.setContent('<p>^word^</p>');
     await pWaitForWordcount(1);
     editor.setContent('<p>word^2</p>');
-    await pWaitForWordcount(1);
+    await pWaitForWordcount(2);
     editor.setContent('<p>word^word test</p>');
-    await pWaitForWordcount(2);
+    await pWaitForWordcount(3);
     editor.setContent('<p>word^word</br>test^</p>');
-    await pWaitForWordcount(2);
+    await pWaitForWordcount(3);
     editor.setContent('<p>word^word</p><p>test^</p>');
-    await pWaitForWordcount(2);
+    await pWaitForWordcount(3);
   });
 
-  it('TINY-8122: Does not treat ~ as a word break', async () => {
+  it('TINY-8122: Treat ~ as a word break', async () => {
     const editor = hook.editor();
     await pWaitForWordcount(0);
     editor.setContent('<p>~word</p>');
@@ -136,20 +136,20 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
     editor.setContent('<p>word~</p>');
     await pWaitForWordcount(1);
     editor.setContent('<p>word~word</p>');
-    await pWaitForWordcount(1);
+    await pWaitForWordcount(2);
     editor.setContent('<p>~word~</p>');
     await pWaitForWordcount(1);
     editor.setContent('<p>word~2</p>');
-    await pWaitForWordcount(1);
+    await pWaitForWordcount(2);
     editor.setContent('<p>word~word test</p>');
-    await pWaitForWordcount(2);
+    await pWaitForWordcount(3);
     editor.setContent('<p>word~word</br>test~</p>');
-    await pWaitForWordcount(2);
+    await pWaitForWordcount(3);
     editor.setContent('<p>word~word</p><p>test~</p>');
-    await pWaitForWordcount(2);
+    await pWaitForWordcount(3);
   });
 
-  it('TINY-8122: Does not treat | as a word break', async () => {
+  it('TINY-8122: Treat | as a word break', async () => {
     const editor = hook.editor();
     await pWaitForWordcount(0);
     editor.setContent('<p>|word</p>');
@@ -157,20 +157,20 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
     editor.setContent('<p>word|</p>');
     await pWaitForWordcount(1);
     editor.setContent('<p>word|word</p>');
-    await pWaitForWordcount(1);
+    await pWaitForWordcount(2);
     editor.setContent('<p>|word|</p>');
     await pWaitForWordcount(1);
     editor.setContent('<p>word|2</p>');
-    await pWaitForWordcount(1);
+    await pWaitForWordcount(2);
     editor.setContent('<p>word|word test</p>');
-    await pWaitForWordcount(2);
+    await pWaitForWordcount(3);
     editor.setContent('<p>word|word</br>test|</p>');
-    await pWaitForWordcount(2);
+    await pWaitForWordcount(3);
     editor.setContent('<p>word|word</p><p>test|</p>');
-    await pWaitForWordcount(2);
+    await pWaitForWordcount(3);
   });
 
-  it('TINY-8122: Does not treat № as a word break', async () => {
+  it('TINY-8122: Treat № as a word break', async () => {
     const editor = hook.editor();
     await pWaitForWordcount(0);
     editor.setContent('<p>№word</p>');
@@ -178,17 +178,38 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
     editor.setContent('<p>word№</p>');
     await pWaitForWordcount(1);
     editor.setContent('<p>word№word</p>');
-    await pWaitForWordcount(1);
+    await pWaitForWordcount(2);
     editor.setContent('<p>№word№</p>');
     await pWaitForWordcount(1);
     editor.setContent('<p>word№2</p>');
-    await pWaitForWordcount(1);
+    await pWaitForWordcount(2);
     editor.setContent('<p>word№word test</p>');
-    await pWaitForWordcount(2);
+    await pWaitForWordcount(3);
     editor.setContent('<p>word№word</br>test№</p>');
-    await pWaitForWordcount(2);
+    await pWaitForWordcount(3);
     editor.setContent('<p>word№word</p><p>test№</p>');
+    await pWaitForWordcount(3);
+  });
+
+  it('TINY-8122: + should be a word break when not next to number', async () => {
+    const editor = hook.editor();
+    await pWaitForWordcount(0);
+    editor.setContent('<p>+word</p>');
+    await pWaitForWordcount(1);
+    editor.setContent('<p>word+</p>');
+    await pWaitForWordcount(1);
+    editor.setContent('<p>word+word</p>');
     await pWaitForWordcount(2);
+    editor.setContent('<p>+word+</p>');
+    await pWaitForWordcount(1);
+    editor.setContent('<p>word+2</p>');
+    await pWaitForWordcount(2);
+    editor.setContent('<p>word+word test</p>');
+    await pWaitForWordcount(3);
+    editor.setContent('<p>word+word</br>test+</p>');
+    await pWaitForWordcount(3);
+    editor.setContent('<p>word+word</p><p>test+</p>');
+    await pWaitForWordcount(3);
   });
 
 });
