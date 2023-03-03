@@ -1,5 +1,3 @@
-import { Type } from '@ephox/katamari';
-
 import { CharacterMap } from './StringMapper';
 import { characterIndices as ci } from './UnicodeData';
 
@@ -9,16 +7,6 @@ const isWordBoundary = (map: CharacterMap, index: number): boolean => {
 
   if (index < 0 || (index > map.length - 1 && index !== 0)) {
     return false;
-  }
-
-  // Break before punctuation or whitespace
-  if (nextType === ci.PUNCTUATION || nextType === ci.WHITESPACE) {
-    return true;
-  }
-
-  // Break when word ends
-  if (Type.isUndefined(nextType)) {
-    return true;
   }
 
   // WB5. Don't break between most letters.
@@ -109,13 +97,6 @@ const isWordBoundary = (map: CharacterMap, index: number): boolean => {
   }
 
   if (type === ci.AT) {
-    return false;
-  }
-
-  if (type === ci.ALTLETTER || nextType === ci.ALTLETTER ||
-    ((type !== ci.CR || type !== ci.LF || type !== ci.NEWLINE) && nextType === ci.ALTLETTER) ||
-    ((prevType !== ci.CR || prevType !== ci.LF || prevType !== ci.NEWLINE) && type === ci.ALTLETTER) ||
-    ((nextType !== ci.CR || nextType !== ci.LF || nextType !== ci.NEWLINE) && type === ci.ALTLETTER)) {
     return false;
   }
 
