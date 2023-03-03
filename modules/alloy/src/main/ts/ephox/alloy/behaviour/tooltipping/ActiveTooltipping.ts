@@ -12,7 +12,7 @@ import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Attachment from '../../api/system/Attachment';
 import { ReceivingEvent, ReceivingInternalEvent } from '../../events/SimulatedEvent';
 import * as TooltippingApis from './TooltippingApis';
-import { ExclusivityChannel, HideTooltipEvent, ShowTooltipEvent } from './TooltippingCommunication';
+import { ExclusivityChannel, HideTooltipEvent, ImmediateHideTooltipEvent, ImmediateShowTooltipEvent, ShowTooltipEvent } from './TooltippingCommunication';
 import { TooltippingConfig, TooltippingState } from './TooltippingTypes';
 
 const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): AlloyEvents.AlloyEventRecord => {
@@ -69,6 +69,16 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
           hide(comp);
         }, tooltipConfig.delayForHide());
       }),
+      AlloyEvents.run(ImmediateShowTooltipEvent, (comp) => {
+        state.resetTimer(() => {
+          show(comp);
+        }, 0);
+      }),
+      AlloyEvents.run(ImmediateHideTooltipEvent, (comp) => {
+        state.resetTimer(() => {
+          hide(comp);
+        }, 0);
+      }),
       AlloyEvents.run<ReceivingEvent>(SystemEvents.receive(), (comp, message) => {
         // TODO: Think about the types for this, or find a better way for this
         // to rely on receiving.
@@ -87,10 +97,10 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
       tooltipConfig.mode === 'normal'
         ? [
           AlloyEvents.run(NativeEvents.focusin(), (comp) => {
-            AlloyTriggers.emit(comp, ShowTooltipEvent);
+            AlloyTriggers.emit(comp, ImmediateShowTooltipEvent);
           }),
           AlloyEvents.run(SystemEvents.postBlur(), (comp) => {
-            AlloyTriggers.emit(comp, HideTooltipEvent);
+            AlloyTriggers.emit(comp, ImmediateHideTooltipEvent);
           }),
           AlloyEvents.run(NativeEvents.mouseover(), (comp) => {
             AlloyTriggers.emit(comp, ShowTooltipEvent);
