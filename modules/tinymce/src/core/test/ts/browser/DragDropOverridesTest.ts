@@ -396,10 +396,10 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
     it('TINY-9364: Should allow dropping an element onto a contenteditable=true element that is within a contenteditable=false element', async () => {
       const editor = hook.editor();
       const originalContent = '<div class="toDrag" style="margin: 40px; width: 1110px; height: 120px; background-color: blue;" contenteditable="false">To drag element</div>'
-      + '<div style="margin: 40px; width: 1110px; height: 120px; background-color: red;" contenteditable="false"><span class="destination" contenteditable="true">Destination element</span></div>';
+      + '<div style="margin: 40px; width: 1110px; height: 120px; background-color: red;" contenteditable="false"><div class="destination" contenteditable="true">Destination element</div></div>';
       const expectedContent = '<div style="margin: 40px; width: 1110px; height: 120px; background-color: red;" contenteditable="false">' +
-      '<div class="toDrag" style="margin: 40px; width: 1110px; height: 120px; background-color: blue;" contenteditable="false">To drag element</div>' +
-      '<span class="destination" contenteditable="true">Destination element</span>' +
+      '<div class="destination" contenteditable="true">' +
+      '<div class="toDrag" style="margin: 40px; width: 1110px; height: 120px; background-color: blue;" contenteditable="false">To drag element</div>Destination element</div>' +
     '</div>';
       editor.setContent(originalContent);
       await moveToDragElementToDestinationElement(editor, 0, 0);

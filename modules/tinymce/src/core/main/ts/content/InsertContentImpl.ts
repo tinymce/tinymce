@@ -18,6 +18,7 @@ import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as FilterNode from '../html/FilterNode';
 import * as InvalidNodes from '../html/InvalidNodes';
+import * as ParserUtils from '../html/ParserUtils';
 import * as RangeNormalizer from '../selection/RangeNormalizer';
 import * as SelectionUtils from '../selection/SelectionUtils';
 import { InsertContentDetails } from './ContentTypes';
@@ -215,6 +216,16 @@ const deleteSelectedContent = (editor: Editor): void => {
   }
 };
 
+const findMarkerNode = (scope: AstNode): Optional<AstNode> => {
+  for (let markerNode: AstNode | null | undefined = scope; markerNode; markerNode = markerNode.walk()) {
+    if (markerNode.attr('id') === 'mce_marker') {
+      return Optional.some(markerNode);
+    }
+  }
+
+  return Optional.none();
+};
+
 export const insertHtmlAtCaret = (editor: Editor, value: string, details: InsertContentDetails): string => {
   const selection = editor.selection;
   const dom = editor.dom;
@@ -322,17 +333,15 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
     // Get the outer/inner HTML depending on if we are in the root and parser and serialize that
     value = parentNode === rootNode ? rootNode.innerHTML : dom.getOuterHTML(parentNode);
     const root = parser.parse(value);
-    for (let markerNode: AstNode | null | undefined = root; markerNode; markerNode = markerNode.walk()) {
-      if (markerNode.attr('id') === 'mce_marker') {
-        markerNode.replace(fragment);
-        break;
-      }
-    }
+    const markerNode = findMarkerNode(root);
+    const editingHost = markerNode.bind(ParserUtils.findClosestEditingHost).getOr(root);
+    markerNode.each((marker) => marker.replace(fragment));
+
     const toExtract = fragment.children();
     const parent = fragment.parent ?? root;
     fragment.unwrap();
     const invalidChildren = Arr.filter(toExtract, (node) => InvalidNodes.isInvalid(editor.schema, node, parent));
-    InvalidNodes.cleanInvalidNodes(invalidChildren, editor.schema);
+    InvalidNodes.cleanInvalidNodes(invalidChildren, editor.schema, editingHost);
     FilterNode.filter(parser.getNodeFilters(), parser.getAttributeFilters(), root);
     value = serializer.serialize(root);
 
