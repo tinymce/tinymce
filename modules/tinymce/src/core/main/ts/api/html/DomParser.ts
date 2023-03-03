@@ -614,10 +614,10 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     if (validate && invalidChildren.length > 0) {
       if (args.context) {
         const { pass: topLevelChildren, fail: otherChildren } = Arr.partition(invalidChildren, (child) => child.parent === rootNode);
-        InvalidNodes.cleanInvalidNodes(otherChildren, schema, matchFinder);
+        InvalidNodes.cleanInvalidNodes(otherChildren, schema, rootNode, matchFinder);
         args.invalid = topLevelChildren.length > 0;
       } else {
-        InvalidNodes.cleanInvalidNodes(invalidChildren, schema, matchFinder);
+        InvalidNodes.cleanInvalidNodes(invalidChildren, schema, rootNode, matchFinder);
       }
     }
 
