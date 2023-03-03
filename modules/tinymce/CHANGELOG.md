@@ -79,6 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inline dialog position was not correct when the editor wasn't inline and was contained in a `fixed` or `absolute` positioned element. #TINY-9554
 - Sticky toolbars would not have fade transition when undocking in classic iframe mode. #TINY-9408
 - `color_cols` option was not respected in the `forecolor` or `backcolor` color swatches. #TINY-9560
+- Drag and dropping the last noneditable element out of its parent block would not properly pad the parent block element. #TINY-9606
 
 ## 6.3.2 - 2023-02-22
 
