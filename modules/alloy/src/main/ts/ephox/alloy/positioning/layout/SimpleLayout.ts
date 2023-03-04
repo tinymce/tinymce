@@ -31,7 +31,7 @@ const simple = (
   bubble: Bubble,
   layouts: LayoutTypes.AnchorLayout[],
   lastPlacement: Optional<PlacerResult>,
-  getBounds: Optional<() => Bounds>,
+  optBounds: Optional<Bounds>,
   overrideOptions: AnchorOverrides,
   transition: Optional<Transition>
 ): PlacerResult => {
@@ -43,7 +43,7 @@ const simple = (
   const origin = anchor.origin;
 
   const options: ReparteeOptions = {
-    bounds: Origins.viewport(origin, getBounds),
+    bounds: Origins.viewport(origin, optBounds),
     origin,
     preference: layouts,
     maxHeightFunction,

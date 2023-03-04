@@ -1,5 +1,4 @@
 import { Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
 
 import { Bounds } from '../../alien/Boxes';
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -32,8 +31,7 @@ export interface PlacementDetail {
 export interface PositioningBehaviour extends Behaviour.AlloyBehaviour<PositioningConfigSpec, PositioningConfig> {
   readonly config: (config: PositioningConfigSpec) => Behaviour.NamedConfiguredBehaviour<PositioningConfigSpec, PositioningConfig>;
   readonly position: (component: AlloyComponent, placee: AlloyComponent, spec: PlacementSpec) => void;
-  readonly positionWithin: (component: AlloyComponent, placee: AlloyComponent, spec: PlacementSpec, boxElement: Optional<SugarElement<HTMLElement>>) => void;
-  readonly positionWithinBounds: (component: AlloyComponent, placee: AlloyComponent, spec: PlacementSpec, bounds: Optional<Bounds>) => void;
+  readonly positionWithinBounds: (component: AlloyComponent, placee: AlloyComponent, spec: PlacementSpec, optWithinBounds: Optional<Bounds>) => void;
   readonly getMode: (component: AlloyComponent) => string;
   readonly reset: (component: AlloyComponent, placee: AlloyComponent) => void;
 }

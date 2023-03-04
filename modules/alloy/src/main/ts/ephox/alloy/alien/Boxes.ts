@@ -1,3 +1,4 @@
+import { Arr } from '@ephox/katamari';
 import { Height, SugarElement, SugarLocation, Width, WindowVisualViewport } from '@ephox/sugar';
 
 import * as OuterPosition from '../frame/OuterPosition';
@@ -63,6 +64,29 @@ const absolute = (element: SugarElement<HTMLElement>): Bounds => {
   return bounds(position.left, position.top, width, height);
 };
 
+const constrain = (original: Bounds, constraint: Bounds): Bounds => {
+  const left = Math.max(original.x, constraint.x);
+  const top = Math.max(original.y, constraint.y);
+  const right = Math.min(original.right, constraint.right);
+  const bottom = Math.min(original.bottom, constraint.bottom);
+  const width = right - left;
+  const height = bottom - top;
+  return bounds(
+    left,
+    top,
+    width,
+    height
+  );
+};
+
+const constrainByMany = (original: Bounds, constraints: Bounds[]): Bounds => {
+  return Arr.foldl(
+    constraints,
+    (acc, c) => constrain(acc, c),
+    original
+  );
+};
+
 const win = (): Bounds => WindowVisualViewport.getBounds(window);
 
 export {
@@ -71,5 +95,7 @@ export {
   bounds,
   box,
   absolute,
-  win
+  win,
+  constrain,
+  constrainByMany
 };
