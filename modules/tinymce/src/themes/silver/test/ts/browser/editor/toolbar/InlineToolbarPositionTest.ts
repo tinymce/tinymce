@@ -231,7 +231,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.InlineToolbarPositionTest
     });
   };
 
-  Arr.map([ 'split', 'default' ], (uiMode: 'split' | 'default') => {
+  Arr.map([ 'split', 'combined' ], (uiMode: 'split' | 'combined') => {
     context(`ui_mode: ${uiMode}`, () => {
       context('Toolbar position with toolbar_location: "top"', () => {
         const hook = TinyHooks.bddSetup<Editor>({
@@ -343,7 +343,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.InlineToolbarPositionTest
         });
       });
 
-      const contextOrSkipIfDefaultUiMode = uiMode === 'default' ? context.skip : context;
+      const contextOrSkipIfDefaultUiMode = uiMode === 'combined' ? context.skip : context;
 
       contextOrSkipIfDefaultUiMode('Toolbar in a relative div (offsetParent is not body)', () => {
         const hook = TinyHooks.bddSetupFromElement<Editor>({

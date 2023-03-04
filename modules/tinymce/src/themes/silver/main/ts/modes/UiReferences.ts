@@ -46,7 +46,7 @@ export const LazyUiReferences = (): LazyUiReferences => {
       `Could not find ${label} element in OuterContainer`
     );
 
-  // TINY-9226: If the motherships are the same, return just the dialog Ui of them (ui_mode: default mode)
+  // TINY-9226: If the motherships are the same, return just the dialog Ui of them (ui_mode: combined mode)
   const getUiMotherships = () => {
     const optDialogMothership = dialogUi.get().map((ui) => ui.mothership);
     const optPopupMothership = popupUi.get().map((ui) => ui.mothership);

@@ -79,7 +79,7 @@ describe('browser.tinymce.themes.silver.editor.SilverUiModeTest', () => {
     await TinyUiActions.pWaitForUi(editor, selectors.sink);
     const uiRoot = TinyUiActions.getUiRoot(editor);
     const sinks = UiFinder.findAllIn(uiRoot, selectors.sink);
-    assert.equal(1, sinks.length, 'There should be one sink in ui_mode: default mode');
+    assert.equal(1, sinks.length, 'There should be one sink in ui_mode: combined mode');
     assertIsDialogSinkInBody(sinks[0]);
   };
 
@@ -136,7 +136,7 @@ describe('browser.tinymce.themes.silver.editor.SilverUiModeTest', () => {
     UiFinder.notExists(uiRoot, selectors.dialog);
   };
 
-  context('ui_mode: default', () => {
+  context('ui_mode: combined', () => {
     Arr.each([
       { name: 'inline', settings: { inline: true }},
       { name: 'normal', settings: { inline: false }}
@@ -145,7 +145,7 @@ describe('browser.tinymce.themes.silver.editor.SilverUiModeTest', () => {
         const hook = TinyHooks.bddSetupFromElement<Editor>(
           {
             ...tester.settings,
-            ui_mode: 'default',
+            ui_mode: 'combined',
             ...sharedSettings,
           },
           () => setupElement(tester.settings.inline),

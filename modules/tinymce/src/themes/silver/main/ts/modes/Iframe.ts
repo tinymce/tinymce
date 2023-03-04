@@ -90,7 +90,7 @@ const attachUiMotherships = (editor: Editor, uiRoot: SugarElement<HTMLElement | 
   if (Options.isSplitUiMode(editor)) {
     Attachment.attachSystemAfter(uiRefs.mainUi.mothership.element, uiRefs.popupUi.mothership);
   }
-  // In UiRefs, dialogUi and popupUi refer to the same thing if ui_mode: default
+  // In UiRefs, dialogUi and popupUi refer to the same thing if ui_mode: combined
   Attachment.attachSystem(uiRoot, uiRefs.dialogUi.mothership);
 };
 

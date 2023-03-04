@@ -152,7 +152,7 @@ const render = async (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: Re
     } else {
       Attachment.attachSystem(uiContainer, mainUi.mothership);
     }
-    // NOTE: In UiRefs, dialogUi and popupUi refer to the same thing if ui_mode: default
+    // NOTE: In UiRefs, dialogUi and popupUi refer to the same thing if ui_mode: combined
     Attachment.attachSystem(uiContainer, uiRefs.dialogUi.mothership);
 
     // Unlike menubar below which uses OuterContainer directly, this level of abstraction is

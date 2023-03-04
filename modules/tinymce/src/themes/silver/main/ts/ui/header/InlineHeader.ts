@@ -207,7 +207,7 @@ export const InlineHeader = (
     });
   };
 
-  // This would return Optional.none, for ui_mode: default, which will fallback to the default code block
+  // This would return Optional.none, for ui_mode: combined, which will fallback to the default code block
   // For ui_mode: split, the offsetParent would be the body if there were no relative div set as parent
   const getOffsetParent = (editor: Editor, element: SugarElement<HTMLElement>) => Options.isSplitUiMode(editor) ? OffsetOrigin.getOffsetParent(element) : Optional.none();
 

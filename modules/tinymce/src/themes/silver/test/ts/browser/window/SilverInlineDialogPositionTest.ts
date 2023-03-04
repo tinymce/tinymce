@@ -48,7 +48,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
 
   context('Top toolbar positioning', () => {
     Arr.each([
-      { name: 'normal', settings: { ui_mode: 'default' }},
+      { name: 'normal', settings: { ui_mode: 'combined' }},
       { name: 'normal-split-ui-mode', settings: { ui_mode: 'split' }}
     ], (tester) => {
       context(tester.name, () => {
@@ -165,7 +165,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
 
   context('Bottom toolbar positioning', () => {
     Arr.each([
-      { name: 'normal', settings: { ui_mode: 'default' }},
+      { name: 'normal', settings: { ui_mode: 'combined' }},
       { name: 'normal-split-ui-mode', settings: { ui_mode: 'split' }}
     ], (tester) => {
       context(tester.name, () => {
@@ -220,7 +220,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
 
   context('Bottom toolbar with inline editor positioning', () => {
     Arr.each([
-      { name: 'inline', settings: { ui_mode: 'default' }, sinkSeparatedByScrollDiv: false },
+      { name: 'inline', settings: { ui_mode: 'combined' }, sinkSeparatedByScrollDiv: false },
       { name: 'inline-split-ui-mode', settings: { ui_mode: 'split' }, sinkSeparatedByScrollDiv: true }
     ], (tester) => {
       context(tester.name, () => {

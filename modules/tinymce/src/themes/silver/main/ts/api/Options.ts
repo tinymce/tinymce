@@ -217,7 +217,7 @@ const register = (editor: Editor): void => {
 
   registerOption('ui_mode', {
     processor: 'string',
-    default: 'default'
+    default: 'combined'
   });
 
   registerOption('file_picker_callback', {

@@ -82,11 +82,11 @@ describe('browser.tinymce.themes.silver.editor.SilverPopupSinkBoundsTest', () =>
     return wrapper.dom.getBoundingClientRect();
   };
 
-  context('ui_mode: default', () => {
+  context('ui_mode: combined', () => {
     const hook = TinyHooks.bddSetupFromElement<Editor>(
       {
         ...sharedSettings,
-        ui_mode: 'default'
+        ui_mode: 'combined'
       },
       () => setupElement(false),
       []
