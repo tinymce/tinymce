@@ -63,6 +63,35 @@ const contains = (target: string): CombinedAssert => {
   };
 };
 
+const measurement = (amount: number, unit: string, margin: number): CombinedAssert => {
+  const strAssert = (label: TestLabel, actual: string) => {
+    const optValue = Strings.toFloat(actual);
+    return optValue.fold(
+      () => {
+        // There is no valid number, so fail.
+        throw new Error(`"${actual}" was not a valid measurement`);
+      },
+      (value) => {
+        const actualUnit = Strings.removeLeading(actual, `${value}`);
+        if (actualUnit !== unit) {
+          throw new Error(`"${actual}" did not have the correct unit. Expected: "${unit}", but was: "${actualUnit}"`);
+        } else {
+          // Compare the value, with an error margin.
+          if (Math.abs(amount - value) > margin) {
+            throw new Error(`"${actual}" was not within "${margin}${unit}" of the expected value: "${amount}${unit}"`);
+          }
+        }
+      }
+    );
+  };
+
+  return {
+    show: Fun.constant(`measurement("${amount} +/- ${margin}", ${unit}`),
+    strAssert,
+    arrAssert: dieWith('"measurement" is not an array assertion')
+  };
+};
+
 const none = (message: string = '[[missing value]]'): CombinedAssert => {
   const compare = (actual: string) => actual === missingValuePlaceholder;
 
@@ -131,6 +160,7 @@ export {
   startsWith,
   contains,
   none,
+  measurement,
 
   has,
   hasPrefix,
