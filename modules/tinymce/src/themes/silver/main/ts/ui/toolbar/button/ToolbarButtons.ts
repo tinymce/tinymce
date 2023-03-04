@@ -184,6 +184,14 @@ const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage
   });
 };
 
+const generateTooltippingBehaviour = (text: Optional<string>, providersBackstage: UiFactoryBackstageProviders) => text.map(
+  (t) => Tooltipping.config(
+    providersBackstage.tooltips.getConfig({
+      tooltipText: providersBackstage.translate(t)
+    })
+  )
+).toArray();
+
 const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisation: Specialisation<T>, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   const editorOffCell = Cell(Fun.noop);
   const structure = renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.none(), providersBackstage);
@@ -203,15 +211,7 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
             onControlAttached(specialisation, editorOffCell),
             onControlDetached(specialisation, editorOffCell)
           ]),
-          ...(
-            spec.tooltip.map(
-              (t) => Tooltipping.config(
-                providersBackstage.tooltips.getConfig({
-                  tooltipText: t
-                })
-              )
-            ).toArray()
-          ),
+          ...generateTooltippingBehaviour(spec.tooltip, providersBackstage),
           // Enable toolbar buttons by default
           DisablingConfigs.toolbarButton(() => !spec.enabled || providersBackstage.isDisabled()),
           ReadOnly.receivingConfig()
@@ -358,15 +358,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         onControlDetached(specialisation, editorOffCell)
       ]),
       Unselecting.config({ }),
-      ...(
-        spec.tooltip.map(
-          (t) => Tooltipping.config(
-            sharedBackstage.providers.tooltips.getConfig({
-              tooltipText: t
-            })
-          )
-        ).toArray()
-      ),
+      ...generateTooltippingBehaviour(spec.tooltip, sharedBackstage.providers),
     ]),
 
     eventOrder: {

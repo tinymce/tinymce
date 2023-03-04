@@ -46,20 +46,18 @@ export const renderCommonSpec = (
     action
   }));
 
-  const optTooltipping = tooltip.map(
-    (t) => Tooltipping.config(
-      providersBackstage.tooltips.getConfig({
-        tooltipText: t
-      })
-    )
-  );
-
   const common = {
     buttonBehaviours: Behaviour.derive([
       DisablingConfigs.button(() => !spec.enabled || providersBackstage.isDisabled()),
       ReadOnly.receivingConfig(),
       Tabstopping.config({}),
-      ...optTooltipping.toArray(),
+      ...tooltip.map(
+        (t) => Tooltipping.config(
+          providersBackstage.tooltips.getConfig({
+            tooltipText: providersBackstage.translate(t)
+          })
+        )
+      ).toArray(),
       AddEventsBehaviour.config('button press', [
         AlloyEvents.preventDefault('click'),
         AlloyEvents.preventDefault('mousedown')
