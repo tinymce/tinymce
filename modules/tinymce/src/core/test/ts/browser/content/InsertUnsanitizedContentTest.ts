@@ -4,8 +4,8 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.content.InsertUnsanitizedContentTest', () => {
-  const unsanitizedHtml = '<p><a href="javascript:alert(1)">XSS</a></p>';
-  const sanitizedHtml = '<p><a>XSS</a></p>';
+  const unsanitizedHtml = '<p id="action">XSS</p>';
+  const sanitizedHtml = '<p>XSS</p>';
   const testInsertContent = (editor: Editor, content: string, expected: string) => {
     const initialContent = '<p>initial</p>';
     editor.setContent(initialContent);
