@@ -10,13 +10,14 @@ export const TooltipsBackstage = (
 ): TooltipsProvider => {
 
   const tooltipDelay = 800;
+  const intervalDelay = tooltipDelay * 0.2;   // Arbitrary value
 
   let numActiveTooltips = 0;
 
   const alreadyShowingTooltips = () => numActiveTooltips > 0;
 
   const getConfig = (spec: { tooltipText: string }) => ({
-    delayForShow: () => alreadyShowingTooltips() ? 0 : tooltipDelay,
+    delayForShow: () => alreadyShowingTooltips() ? intervalDelay : tooltipDelay,
     delayForHide: Fun.constant(tooltipDelay),
     exclusive: true,
     lazySink: getSink,
