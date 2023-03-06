@@ -26,9 +26,6 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   const getTestElement = () =>
     DOM.get('test') as HTMLElement;
 
-  const getTestElementAssertionHtml = (innerHtml: string): string =>
-    `<div id="test" style="position: absolute; right: 10px; top: 10px;">${innerHtml}</div>`;
-
   it('Schema rules', () => {
     let ser = DomSerializer({ fix_list_elements: true });
 
@@ -340,24 +337,24 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   it('Script with tags inside a comment with element_format: xhtml and sanitize: false', () => {
     // TINY-8363: Disable sanitization to avoid DOMPurify false positive affecting expected output
     const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml', sanitize: false });
+    ser.setRules('script[type|language|src]');
 
     setTestHtml('<s' + 'cript>// <img src="test"><a href="#"></a></s' + 'cript>');
     assert.equal(
       ser.serialize(getTestElement()).replace(/\r/g, ''),
-      // DomSerializer.setRules does not modify elements when sanitization is disabled, so need to account for outer test element tag
-      getTestElementAssertionHtml('<s' + 'cript>// <![CDATA[\n// <img src="test"><a href="#"></a>\n// ]]></s' + 'cript>')
+      '<s' + 'cript>// <![CDATA[\n// <img src="test"><a href="#"></a>\n// ]]></s' + 'cript>'
     );
   });
 
   it('Script with tags inside a comment with sanitize: false', () => {
     // TINY-8363: Disable sanitization to avoid DOMPurify false positive affecting expected output
     const ser = DomSerializer({ fix_list_elements: true, sanitize: false });
+    ser.setRules('script[type|language|src]');
 
     setTestHtml('<s' + 'cript>// <img src="test"><a href="#"></a></s' + 'cript>');
     assert.equal(
       ser.serialize(getTestElement()).replace(/\r/g, ''),
-      // DomSerializer.setRules does not modify elements when sanitization is disabled, so need to account for outer test element tag
-      getTestElementAssertionHtml('<s' + 'cript>// <img src="test"><a href="#"></a></s' + 'cript>')
+      '<s' + 'cript>// <img src="test"><a href="#"></a></s' + 'cript>'
     );
   });
 
