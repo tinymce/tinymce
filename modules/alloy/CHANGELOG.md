@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- Added `firstTabstop` optional property to `ModalDialogDetail`, to specify the index of elements to focus on when dialog shows. #TINY-9520
+- Exposed `OffsetOrigin` module and `DockingType` type in api main entry point. #TINY-9414
+
+### Removed
+- Removed `positionWithin` from `Positioning` behaviour's APIs. #TINY-9226
+- Removed `showWithin` from `InlineView` sketcher's APIs. #TINY-9226
+- Removed unused custom `placer` from `Anchorage`. #TINY-9226
+
 ## 12.0.0 - 2022-11-23
 
 ### Added

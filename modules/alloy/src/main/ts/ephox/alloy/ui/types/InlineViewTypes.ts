@@ -59,7 +59,6 @@ export interface InlineMenuSpec {
 
 export interface InlineViewApis {
   showAt: (component: AlloyComponent, thing: AlloySpec, placementSpec: PlacementSpec) => void;
-  showWithin: (component: AlloyComponent, thing: AlloySpec, placementSpec: PlacementSpec, boxElement: Optional<SugarElement<HTMLElement>>) => void;
   showWithinBounds: (component: AlloyComponent, thing: AlloySpec, placementSpec: PlacementSpec, getBounds: () => Optional<Bounds>) => void;
   showMenuAt: (component: AlloyComponent, placementSpec: PlacementSpec, menuSpec: InlineMenuSpec) => void;
   showMenuWithinBounds: (component: AlloyComponent, placementSpec: PlacementSpec, menuSpec: InlineMenuSpec, getBounds: () => Optional<Bounds>) => void;

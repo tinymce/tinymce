@@ -1,4 +1,5 @@
 import { Arr, Singleton, Throttler, Type } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
 import DOMUtils from './api/dom/DOMUtils';
 import { EventUtilsEvent } from './api/dom/EventUtils';
@@ -11,6 +12,7 @@ import VK from './api/util/VK';
 import * as ClosestCaretCandidate from './caret/ClosestCaretCandidate';
 import * as MousePosition from './dom/MousePosition';
 import * as NodeType from './dom/NodeType';
+import * as PaddingBr from './dom/PaddingBr';
 import * as ErrorReporter from './ErrorReporter';
 import { isUIElement } from './focus/FocusController';
 import * as Predicate from './util/Predicate';
@@ -213,6 +215,15 @@ const removeElement = (elm: HTMLElement) => {
   }
 };
 
+const removeElementWithPadding = (dom: DOMUtils, elm: HTMLElement) => {
+  const parentBlock = dom.getParent(elm.parentNode, dom.isBlock);
+
+  removeElement(elm);
+  if (parentBlock && parentBlock !== dom.getRoot() && dom.isEmpty(parentBlock)) {
+    PaddingBr.fillWithPaddingBr(SugarElement.fromDom(parentBlock));
+  }
+};
+
 const isLeftMouseButtonPressed = (e: EditorEvent<MouseEvent>) => e.button === 0;
 
 const applyRelPos = (state: State, position: MousePosition.PagePosition) => ({
@@ -315,7 +326,7 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
 
         if (!args.isDefaultPrevented()) {
           editor.undoManager.transact(() => {
-            removeElement(state.element);
+            removeElementWithPadding(editor.dom, state.element);
             editor.insertContent(editor.dom.getOuterHTML(targetClone));
             editor._selectionOverrides.hideFakeCaret();
           });

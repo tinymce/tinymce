@@ -1,5 +1,5 @@
 import {
-  AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting, SketchSpec
+  AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting, SketchSpec, Tabstopping
 } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
@@ -26,6 +26,9 @@ const renderClose = (providersBackstage: UiFactoryBackstageProviders) => Button.
       'title': providersBackstage.translate('Close') // TODO tooltips: AP-213
     }
   },
+  buttonBehaviours: Behaviour.derive([
+    Tabstopping.config({ })
+  ]),
   components: [
     Icons.render('close', { tag: 'div', classes: [ 'tox-icon' ] }, providersBackstage.icons)
   ],

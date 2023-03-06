@@ -224,6 +224,7 @@ interface BaseEditorOptions {
   toolbar_sticky?: boolean;
   toolbar_sticky_offset?: number;
   typeahead_urls?: boolean;
+  ui_mode?: 'combined' | 'split';
   url_converter?: URLConverter;
   url_converter_scope?: any;
   urlconverter_callback?: URLConverterCallback;

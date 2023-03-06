@@ -5,13 +5,14 @@ import {
 import { StructureProcessor, StructureSchema } from '@ephox/boulder';
 import { Dialog, DialogManager } from '@ephox/bridge';
 import { Optional, Singleton } from '@ephox/katamari';
-import { SelectorExists, SugarBody, SugarElement } from '@ephox/sugar';
+import { SelectorExists, SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { WindowManagerImpl, WindowParams } from 'tinymce/core/api/WindowManager';
 
 import * as Options from '../../api/Options';
 import { UiFactoryBackstagePair } from '../../backstage/Backstage';
+import * as ScrollingContext from '../../modes/ScrollingContext';
 import { formCancelEvent } from '../general/FormEvents';
 import { renderDialog } from '../window/SilverDialog';
 import { renderInlineDialog } from '../window/SilverInlineDialog';
@@ -46,7 +47,30 @@ const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, is
           fadeOutClass: 'tox-dialog-dock-fadeout',
           transitionClass: 'tox-dialog-dock-transition'
         },
-        modes: [ 'top' ]
+        modes: [ 'top' ],
+        lazyViewport: (comp) => {
+          // If we don't have a special scrolling environment, then just use the default
+          // viewport of (window)
+          const optScrollingContext = ScrollingContext.detectWhenSplitUiMode(editor, comp.element);
+          return optScrollingContext
+            .map(
+              (sc) => {
+                const combinedBounds = ScrollingContext.getBoundsFrom(sc);
+                return {
+                  bounds: combinedBounds,
+                  optScrollEnv: Optional.some({
+                    currentScrollTop: sc.element.dom.scrollTop,
+                    scrollElmTop: SugarLocation.absolute(sc.element).top
+                  })
+                };
+              }
+            ).getOrThunk(
+              () => ({
+                bounds: Boxes.win(),
+                optScrollEnv: Optional.none()
+              })
+            );
+        }
       })
     ];
   }
@@ -165,6 +189,12 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
         },
         // Fires the default dismiss event.
         fireDismissalEventInstead: { },
+        // TINY-9412: The docking behaviour for inline dialogs is inconsistent
+        // for toolbar_location: bottom. We need to clarify exactly what the behaviour
+        // should be. The intent here might have been that they shouldn't automatically
+        // reposition at all because they aren't visually connected to the toolbar
+        // (i.e. inline "toolbar" dialogs still display at the top, even when the
+        // toolbar_location is bottom), but it's unclear.
         ...isToolbarLocationTop ? { } : { fireRepositionEventInstead: { }},
         inlineBehaviours: Behaviour.derive([
           AddEventsBehaviour.config('window-manager-inline-events', [
@@ -179,12 +209,20 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
       }));
       inlineDialog.set(inlineDialogComp);
 
+      const getInlineDialogBounds = (): Optional<Boxes.Bounds> => {
+        // At the moment the inline dialog is just put anywhere in the body, and docking is what is used to make
+        // sure that it stays onscreen
+        const elem = editor.inline ? SugarBody.body() : SugarElement.fromDom(editor.getContainer());
+        const bounds = Boxes.box(elem);
+        return Optional.some(bounds);
+      };
+
       // Position the inline dialog
-      InlineView.showWithin(
+      InlineView.showWithinBounds(
         inlineDialogComp,
         GuiFactory.premade(dialogUi.dialog),
         { anchor },
-        Optional.some(SugarBody.body())
+        getInlineDialogBounds
       );
 
       // Refresh the docking position if not using a sticky toolbar

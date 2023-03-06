@@ -18,8 +18,10 @@ describe('browser.tinymce.core.init.ShadowDomEditorTest', () => {
   const isShadowDomSkin = (ss: StyleSheet) => ss.href !== null && Strings.contains(ss.href, 'skin.shadowdom.min.css');
 
   Arr.each([
-    { type: 'normal', settings: { }},
-    { type: 'inline', settings: { inline: true }}
+    { type: 'normal', settings: { }, numSinks: 1 },
+    { type: 'inline', settings: { inline: true }, numSinks: 1 },
+    { type: 'normal-split-ui-mode', settings: { ui_mode: 'split' }, numSinks: 2 },
+    { type: 'inline-split-ui-mode', settings: { ui_mode: 'split', inline: true }, numSinks: 2 }
   ], (tester) => {
     context(`${tester.type} editor`, () => {
       const hook = TinyHooks.bddSetupInShadowRoot<Editor>({
@@ -40,7 +42,11 @@ describe('browser.tinymce.core.init.ShadowDomEditorTest', () => {
         editor.nodeChanged();
         await UiFinder.pWaitForVisible('Wait for editor to be visible', shadowRoot, '.tox-editor-header');
         assert.lengthOf(SelectorFilter.descendants(SugarBody.body(), '.tox-tinymce-aux'), 0, 'Should be no aux divs in the document');
-        assert.lengthOf(SelectorFilter.descendants(shadowRoot, '.tox-tinymce-aux'), 1, 'Should be 1 aux div in the shadow root');
+        assert.lengthOf(
+          SelectorFilter.descendants(shadowRoot, '.tox-tinymce-aux'),
+          tester.numSinks,
+          `Should be ${tester.numSinks} aux div in the shadow root`
+        );
       });
     });
 

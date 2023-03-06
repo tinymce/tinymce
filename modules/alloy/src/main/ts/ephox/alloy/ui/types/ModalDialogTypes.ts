@@ -20,6 +20,7 @@ export interface ModalDialogDetail extends CompositeSketchDetail {
   onExecute: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Optional<boolean>;
   onEscape: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Optional<boolean>;
   useTabstopAt: (elem: SugarElement<HTMLElement>) => boolean;
+  firstTabstop?: number;
 
   lazySink: LazySink;
   dragBlockClass: Optional<string>;
@@ -37,6 +38,7 @@ export interface ModalDialogSpec extends CompositeSketchSpec {
   useTabstopAt?: (comp: SugarElement<HTMLElement>) => boolean;
   onExecute?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Optional<boolean>;
   onEscape?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Optional<boolean>;
+  firstTabstop?: number;
   dragBlockClass?: string;
   getDragBounds?: () => Bounds;
 
