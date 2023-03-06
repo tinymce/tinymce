@@ -193,7 +193,7 @@
       &:hover,
       &:focus,
       &:focus-visible {
-        background: @collection-item-hover-background-color;
+        background: @collection-item-active-background-color;
         color: @collection-item-active-label-text-color;
 
         svg {
@@ -211,7 +211,6 @@
           }
         }
 
-        &.tox-collection__item--active,
         &:hover,
         &:focus,
         &:focus-visible {
@@ -225,7 +224,7 @@
       }
 
       &.tox-collection__item--active:not(.tox-collection__item--state-disabled):not(.tox-collection__item--enabled) {
-        background-color: @collection-item-active-background-color;
+        background-color: @collection-item-hover-background-color;
         color: @collection-item-active-label-text-color;
 
         svg {
@@ -290,7 +289,7 @@
       }
 
       &.tox-collection__item--active:not(.tox-collection__item--state-disabled) .tox-collection__item-accessory {
-        color: #fff;
+        color: @collection-item-active-icon-color;
       }
     }
     /* stylelint-enable no-descending-specificity */
@@ -301,7 +300,7 @@
       color: @collection-item-label-text-color;
 
       .tox-collection__item-accessory {
-        color: #fff;
+        color: @collection-item-active-icon-color;
       }
 
       .tox-collection__item-caret svg {
