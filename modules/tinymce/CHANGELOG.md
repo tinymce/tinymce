@@ -20,7 +20,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `group` and `togglebutton` in view. #TINY-9523
 - New `togglebutton` in dialog footer buttons. #TINY-9523
 - Added `toggleFullscreen` to dialog API. #TINY-9528
-- New text-size-increase and text-size-decrease icons. #TINY-9530
 - New `text-size-increase` and `text-size-decrease` icons. #TINY-9530
 - New `xss_sanitization` option to allow for XSS sanitization to be disabled. #TINY-9600
 - Added top right close 'x' button of the modal dialogs to keyboard navigation. #TINY-9520
