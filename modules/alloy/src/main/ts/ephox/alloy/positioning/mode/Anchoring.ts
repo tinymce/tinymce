@@ -140,7 +140,6 @@ export interface Anchoring {
   bubble: Bubble;
   overrides: AnchorOverrides;
   layouts: AnchorLayout[];
-  placer: Optional<AnchorPlacement>;
 }
 
 const nu: (spec: Anchoring) => Anchoring = Fun.identity;

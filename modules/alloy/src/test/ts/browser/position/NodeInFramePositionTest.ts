@@ -3,6 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Optional, Result } from '@ephox/katamari';
 import { Css, DomEvent, SelectorFind, SimRange, SugarElement, WindowSelection } from '@ephox/sugar';
 
+import * as Boxes from 'ephox/alloy/alien/Boxes';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
@@ -115,29 +116,30 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
             ]
           ),
 
-          PositionTestUtils.cTestSinkWithin(
+          PositionTestUtils.cTestSinkWithinBounds(
             'Relative, Selected: 3rd paragraph, no page scroll, no editor scroll, positioned within frame',
             'relative',
-            frame),
+            () => Boxes.box(frame)
+          ),
 
-          PositionTestUtils.cTestSinkWithin(
+          PositionTestUtils.cTestSinkWithinBounds(
             'Fixed, Selected: 3rd paragraph, no page scroll, no editor scroll, positioned within frame',
             'fixed',
-            frame
+            () => Boxes.box(frame)
           ),
 
           PositionTestUtils.cScrollDown('classic', '2000px'),
 
-          PositionTestUtils.cTestSinkWithin(
+          PositionTestUtils.cTestSinkWithinBounds(
             'Relative, Selected: 3rd paragraph, 2000px scroll, no editor scroll, positioned within frame',
             'relative',
-            frame
+            () => Boxes.box(frame)
           ),
 
-          PositionTestUtils.cTestSinkWithin(
+          PositionTestUtils.cTestSinkWithinBounds(
             'Fixed, Selected: 3rd paragraph, 2000px scroll, no editor scroll, positioned within frame',
             'fixed',
-            frame
+            () => Boxes.box(frame)
           )
         ])
       ])

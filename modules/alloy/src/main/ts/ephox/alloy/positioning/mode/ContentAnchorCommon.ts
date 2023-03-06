@@ -52,8 +52,7 @@ const calcNewAnchor = (optBox: Optional<Boxes.BoxByPoint>, rootPoint: CssPositio
       anchorBox,
       bubble: anchorInfo.bubble.getOr(Bubble.fallback()),
       overrides: anchorInfo.overrides,
-      layouts,
-      placer: Optional.none()
+      layouts
     });
   });
 

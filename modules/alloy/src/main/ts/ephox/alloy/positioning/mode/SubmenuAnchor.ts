@@ -28,8 +28,7 @@ const placement = (component: AlloyComponent, submenuInfo: SubmenuAnchor, origin
       anchorBox,
       bubble: Bubble.fallback(),
       overrides: submenuInfo.overrides,
-      layouts,
-      placer: Optional.none()
+      layouts
     })
   );
 };
