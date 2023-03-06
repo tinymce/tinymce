@@ -1,7 +1,7 @@
 import {
-  AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Disabling, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec, SystemEvents, VerticalDir
+  AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Boxes, Disabling, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec, SystemEvents, VerticalDir
 } from '@ephox/alloy';
-import { Arr, Fun, Merger, Obj, Optional, Result, Singleton } from '@ephox/katamari';
+import { Arr, Merger, Obj, Optional, Result, Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Compare, Css, SugarBody, SugarElement } from '@ephox/sugar';
 
@@ -63,10 +63,14 @@ export interface RenderArgs {
   readonly height: string;
 }
 
+export interface ThemeRenderSetup {
+  readonly getPopupSinkBounds: () => Boxes.Bounds;
+}
+
 const getLazyMothership = (label: string, singleton: Singleton.Value<Gui.GuiSystem>) =>
   singleton.get().getOrDie(`UI for ${label} has not been rendered`);
 
-const setup = (editor: Editor): RenderInfo => {
+const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
   const isInline = editor.inline;
   const mode = isInline ? Inline : Iframe;
 
@@ -80,6 +84,7 @@ const setup = (editor: Editor): RenderInfo => {
   // Importantly, this is outside the setup function.
   const lazyMothership = Singleton.value<Gui.GuiSystem>();
   const lazyDialogMothership = Singleton.value<Gui.GuiSystem>();
+  const lazyPopupMothership = Singleton.value<Gui.GuiSystem>();
 
   const platform = PlatformDetection.detect();
   const isTouch = platform.deviceType.isTouch();
@@ -303,9 +308,39 @@ const setup = (editor: Editor): RenderInfo => {
     return { sink, mothership: uiMothership };
   };
 
-  // TINY-9226: We will want to create a separate mothership and sink here for the popups
-  // instead of just returning the same as the dialogUi (which it is passed as an argument)
-  const renderPopupUi = Fun.identity<SinkAndMothership>;
+  const renderPopupUi = () => {
+    // TINY-9226: Because the popupUi is going to be placed adjacent to the editor, we aren't currently
+    // implementing the behaviour to reset widths based on window sizing. It is a workaround that
+    // is mainly targeted at Ui containers in the root. However, we may need to revisit this
+    // if the ui_mode: split setting is commonly used when the editor is at the root level, and the
+    // page has size-unfriendly CSS for sinks (like CSS grid)
+    const sinkSpec = {
+      dom: {
+        tag: 'div',
+        classes: [ 'tox', 'tox-silver-sink', 'tox-silver-popup-sink', 'tox-tinymce-aux' ].concat(deviceClasses),
+        attributes: {
+          ...I18n.isRtl() ? { dir: 'rtl' } : {}
+        }
+      },
+      behaviours: Behaviour.derive([
+        Positioning.config({
+          useFixed: () => header.isDocked(lazyHeader),
+
+          // TINY-9226: We want to limit the popup sink's bounds based on its scrolling environment. We don't
+          // want it to try to position things outside of its scrolling viewport, because they will
+          // just appear offscreen (hidden by the current scroll values)
+          getBounds: () => setupForTheme.getPopupSinkBounds()
+        })
+      ])
+    };
+
+    const sink = GuiFactory.build(sinkSpec);
+    const uiMothership = Gui.takeover(sink);
+
+    lazyPopupMothership.set(uiMothership);
+
+    return { sink, mothership: uiMothership };
+  };
 
   const renderMainUi = () => {
     const partHeader = makeHeaderPart();
@@ -477,10 +512,17 @@ const setup = (editor: Editor): RenderInfo => {
     return mode.render(editor, uiRefs, rawUiConfig, backstages.popup, args);
   };
 
+  const reuseDialogUiForPopuUi = (dialogUi: SinkAndMothership) => {
+    lazyPopupMothership.set(dialogUi.mothership);
+    return dialogUi;
+  };
+
   const renderUI = (): Promise<ModeRenderInfo> => {
     const mainUi = renderMainUi();
     const dialogUi = renderDialogUi();
-    const popupUi = renderPopupUi(dialogUi);
+    // If dialogUi and popupUi are the same, LazyUiReferences should handle deduplicating then
+    // get calling getUiMotherships
+    const popupUi = Options.isSplitUiMode(editor) ? renderPopupUi() : reuseDialogUiForPopuUi(dialogUi);
 
     lazyUiRefs.dialogUi.set(dialogUi);
     lazyUiRefs.popupUi.set(popupUi);
@@ -497,13 +539,11 @@ const setup = (editor: Editor): RenderInfo => {
     return renderUIWithRefs(uiRefs);
   };
 
-  // We don't have uiRefs here, so we have to rely on cells unfortunately.
+  // We don't have uiRefs here, so we have to rely on cells that are set by renderUI unfortunately.
   return {
     popups: {
       backstage: backstages.popup,
-      // TINY-9226: We haven't enabled the separate popup mothership yet, so this needs to
-      // point to the dialog mothership
-      getMothership: (): Gui.GuiSystem => getLazyMothership('popups', lazyDialogMothership)
+      getMothership: (): Gui.GuiSystem => getLazyMothership('popups', lazyPopupMothership)
     },
     dialogs: {
       backstage: backstages.dialog,

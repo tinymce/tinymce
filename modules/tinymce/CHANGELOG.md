@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `text-size-increase` and `text-size-decrease` icons. #TINY-9530
 - New `xss_sanitization` option to allow for XSS sanitization to be disabled. #TINY-9600
 - Added top right close 'x' button of the modal dialogs to keyboard navigation. #TINY-9520
+- New `ui_mode` option for editor in scrollable containers support. #TINY-9414
 
 ### Improved
 - Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
@@ -78,6 +79,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inserting a link for a selection from quickbars didn't preserve formatting. #TINY-9593
 - Inline dialog position was not correct when the editor wasn't inline and was contained in a `fixed` or `absolute` positioned element. #TINY-9554
 - Sticky toolbars would not have fade transition when undocking in classic iframe mode. #TINY-9408
+- Inserting elements that was not valid within the closest editing host would incorrectly split the editing host. #TINY-9595
+- `color_cols` option was not respected in the `forecolor` or `backcolor` color swatches. #TINY-9560
+- Drag and dropping the last noneditable element out of its parent block would not properly pad the parent block element. #TINY-9606
 
 ## 6.3.2 - 2023-02-22
 
