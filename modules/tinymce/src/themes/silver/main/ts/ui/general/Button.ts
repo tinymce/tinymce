@@ -139,7 +139,10 @@ const renderButtonSpec = (
 
   const dom = {
     tag: 'button',
-    classes
+    classes,
+    attributes: {
+      title: translatedText
+    }
   };
 
   // Only provide a tooltip if we are using an icon. This is because above, a button is only an icon

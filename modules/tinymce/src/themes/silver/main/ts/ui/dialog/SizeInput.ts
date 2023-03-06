@@ -27,10 +27,14 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
   const makeIcon = (iconName: string) =>
     Icons.render(iconName, { tag: 'span', classes: [ 'tox-icon', 'tox-lock-icon__' + iconName ] }, providersBackstage.icons);
 
+  const translatedLabel = providersBackstage.translate(spec.label.getOr('Constrain proportions'));
   const pLock = AlloyFormCoupledInputs.parts.lock({
     dom: {
       tag: 'button',
-      classes: [ 'tox-lock', 'tox-button', 'tox-button--naked', 'tox-button--icon' ]
+      classes: [ 'tox-lock', 'tox-button', 'tox-button--naked', 'tox-button--icon' ],
+      attributes: {
+        'aria-label': translatedLabel
+      }
     },
     components: [
       makeIcon('lock'),
@@ -44,7 +48,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
       Tabstopping.config({}),
       Tooltipping.config(
         providersBackstage.tooltips.getConfig({
-          tooltipText: providersBackstage.translate(spec.label.getOr('Constrain proportions'))
+          tooltipText: translatedLabel
         })
       )
     ])

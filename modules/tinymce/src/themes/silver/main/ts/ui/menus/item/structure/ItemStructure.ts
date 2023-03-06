@@ -42,8 +42,6 @@ const renderColorStructure = (item: ItemStructureSpec, providerBackstage: UiFact
     const common = ItemClasses.colorClass;
     const icon = iconSvg.getOr('');
 
-    // TINY-9125 Need to pass through the tooltip here.
-
     if (itemValue === colorPickerCommand) {
       return {
         tag: 'button',
@@ -95,6 +93,12 @@ const renderNormalItemStructure = (info: ItemStructureSpec, providersBackstage: 
   const leftIcon = renderIcons ? info.iconContent.map(renderIcon).orThunk(renderEmptyIcon) : Optional.none();
   // TINY-3345: Dedicated columns for icon and checkmark if applicable
   const checkmark = info.checkMark;
+  const attributes = info.ariaLabel.fold(
+    Fun.constant({}),
+    (text) => {
+      return { 'aria-label': providersBackstage.translate(text) };
+    }
+  );
 
   // Style items and autocompleter both have meta. Need to branch on style
   // This could probably be more stable...
@@ -109,10 +113,10 @@ const renderNormalItemStructure = (info: ItemStructureSpec, providersBackstage: 
   );
 
   const menuItem = {
-    // TINY-9125: used to pass through attributes.title here.
     dom: {
       tag: 'div',
-      classes: [ ItemClasses.navClass, ItemClasses.selectableClass ]
+      classes: [ ItemClasses.navClass, ItemClasses.selectableClass ],
+      attributes
     },
     optComponents: [
       leftIcon,
