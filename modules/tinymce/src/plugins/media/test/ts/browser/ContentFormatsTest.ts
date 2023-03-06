@@ -67,7 +67,7 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
       '<iframe src="320x240.ogg" allowfullscreen>text<a href="#">link</a></iframe>'
     );
     TinyAssertions.assertContent(editor,
-      '<p><iframe src="320x240.ogg" width="300" height="150" allowfullscreen="">text<a href="#">link</a></iframe></p>'
+      '<p><iframe src="320x240.ogg" width="300" height="150" allowfullscreen="allowfullscreen">text<a href="#">link</a></iframe></p>'
     );
     McEditor.remove(editor);
   });
