@@ -204,5 +204,6 @@ const getSanitizer = (settings: DomParserSettings, schema: Schema): Sanitizer =>
 };
 
 export {
-  getSanitizer
+  getSanitizer,
+  internalElementAttr
 };

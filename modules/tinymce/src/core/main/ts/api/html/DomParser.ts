@@ -11,7 +11,7 @@ import { isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../..
 import { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
 import AstNode from './Node';
-import { getSanitizer } from './Sanitization';
+import { getSanitizer, internalElementAttr } from './Sanitization';
 import Schema, { getTextRootBlockElements, SchemaMap, SchemaRegExpMap } from './Schema';
 
 /**
@@ -357,7 +357,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
   };
 
   const isWrappableNode = (blockElements: SchemaMap, node: AstNode) => {
-    const isInternalElement = Type.isString(node.attr('data-mce-type'));
+    const isInternalElement = Type.isString(node.attr(internalElementAttr));
     const isInlineElement = node.type === 1 && (!Obj.has(blockElements, node.name) && !TransparentElements.isTransparentAstBlock(schema, node));
 
     return node.type === 3 || (isInlineElement && !isInternalElement);
