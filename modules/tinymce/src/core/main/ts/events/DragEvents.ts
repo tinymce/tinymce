@@ -4,7 +4,7 @@ import { EditorEvent } from '../api/util/EventDispatcher';
 
 const makeDndEventFromMouseEvent = <K extends keyof MouseEvent>(type: string, mouseEvent: EditorEvent<MouseEvent>, extra: Record<K, MouseEvent[K]>): DragEvent => ({
   ...mouseEvent,
-  dataTransfer: null, // We are not supporting dataTransfer yet but DragEvent is MouseEvent + dataTransfer so the properly should exist
+  dataTransfer: null, // We are not supporting dataTransfer yet but DragEvent is MouseEvent + dataTransfer so the property should exist
   type,
   ...extra
 });
@@ -65,7 +65,7 @@ const makeDndEvent = <K extends keyof DragEvent>(type: string, props: Record<K, 
     getModifierState: fail,
 
     // DragEvent
-    dataTransfer: null,
+    dataTransfer: null, // We are not supporting dataTransfer yet but DragEvent is MouseEvent + dataTransfer so the property should exist
 
     ...props
   };

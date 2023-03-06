@@ -333,7 +333,7 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
         }
       }
 
-      // Use body as the target since the element we are dragging no longer exists native drag/drop works in a similar way
+      // Use body as the target since the element we are dragging no longer exists. Native drag/drop works in a similar way.
       editor.dispatch('dragend', DragEvents.makeDragendEventFromMouseEvent(e, editor.getBody()));
     }
   });
