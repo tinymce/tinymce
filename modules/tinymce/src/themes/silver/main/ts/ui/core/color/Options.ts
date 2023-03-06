@@ -9,9 +9,10 @@ const foregroundId = 'forecolor';
 const backgroundId = 'hilitecolor';
 
 const defaultCols = 5;
+const minColors = Math.pow(defaultCols, 2);
 
 const calcCols = (colors: number): number =>
-  Math.max(defaultCols, Math.ceil(Math.sqrt(colors)));
+  colors > minColors ? Math.ceil(Math.sqrt(colors)) : defaultCols;
 
 const calcColsOption = (calculatedCols: number, fallbackCols: number): number =>
   defaultCols === calculatedCols ? fallbackCols : calculatedCols;
