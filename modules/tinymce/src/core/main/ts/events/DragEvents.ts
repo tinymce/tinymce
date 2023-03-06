@@ -2,22 +2,15 @@ import { Fun } from '@ephox/katamari';
 
 import { EditorEvent } from '../api/util/EventDispatcher';
 
-const makeDragEventFromMouseEvent = <K extends keyof MouseEvent>(type: string, mouseEvent: EditorEvent<MouseEvent>, extra: Record<K, MouseEvent[K]>): DragEvent => ({
+const makeDndEventFromMouseEvent = <K extends keyof MouseEvent>(type: string, mouseEvent: EditorEvent<MouseEvent>, extra: Record<K, MouseEvent[K]>): DragEvent => ({
   ...mouseEvent,
   dataTransfer: null, // We are not supporting dataTransfer yet but DragEvent is MouseEvent + dataTransfer so the properly should exist
   type,
   ...extra
 });
 
-const makeDragEvent = <K extends keyof DragEvent>(type: string, props: Record<K, DragEvent[K]>): DragEvent => {
-  const fail = () => {
-    throw new Error('Function not supported on simulated event.');
-  };
-
-  const mutate = <K extends keyof DragEvent>(key: K, value: DragEvent[K]) => {
-    const mutableEvent = event as unknown as Record<K, DragEvent[K]>;
-    mutableEvent[key] = value;
-  };
+const makeDndEvent = <K extends keyof DragEvent>(type: string, props: Record<K, DragEvent[K]>): DragEvent => {
+  const fail = Fun.die('Function not supported on simulated event.');
 
   const event: DragEvent = {
     // Event
@@ -36,7 +29,7 @@ const makeDragEvent = <K extends keyof DragEvent>(type: string, props: Record<K,
     type,
     composedPath: fail,
     initEvent: fail,
-    preventDefault: () => mutate('defaultPrevented', true),
+    preventDefault: Fun.noop,
     stopImmediatePropagation: Fun.noop,
     stopPropagation: Fun.noop,
     AT_TARGET: window.Event.AT_TARGET,
@@ -82,16 +75,16 @@ const makeDragEvent = <K extends keyof DragEvent>(type: string, props: Record<K,
 
 const fallback = (target: Element) => ({ target, srcElement: target });
 
-const makeDndEvent = (type: string) => (target: Element): DragEvent => makeDragEvent(type, fallback(target));
-const makeDndEventFromMouseEvent = (type: string) => (mouseEvent: EditorEvent<MouseEvent>, target: Element): DragEvent =>
-  makeDragEventFromMouseEvent(type, mouseEvent, fallback(target));
+const dndEvent = (type: string) => (target: Element): DragEvent => makeDndEvent(type, fallback(target));
+const dndEventFromMouseEvent = (type: string) => (mouseEvent: EditorEvent<MouseEvent>, target: Element): DragEvent =>
+  makeDndEventFromMouseEvent(type, mouseEvent, fallback(target));
 
-export const makeDragstartEvent = makeDndEvent('dragstart');
-export const makeDragstartEventFromMouseEvent = makeDndEventFromMouseEvent('dragstart');
+export const makeDragstartEvent = dndEvent('dragstart');
+export const makeDragstartEventFromMouseEvent = dndEventFromMouseEvent('dragstart');
 
-export const makeDropEvent = makeDndEvent('drop');
-export const makeDropEventFromMouseEvent = makeDndEventFromMouseEvent('drop');
+export const makeDropEvent = dndEvent('drop');
+export const makeDropEventFromMouseEvent = dndEventFromMouseEvent('drop');
 
-export const makeDragendEvent = makeDndEvent('dragend');
-export const makeDragendEventFromMouseEvent = makeDndEventFromMouseEvent('dragend');
+export const makeDragendEvent = dndEvent('dragend');
+export const makeDragendEventFromMouseEvent = dndEventFromMouseEvent('dragend');
 
