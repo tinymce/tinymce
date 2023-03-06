@@ -78,7 +78,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inserting a link for a selection from quickbars didn't preserve formatting. #TINY-9593
 - Inline dialog position was not correct when the editor wasn't inline and was contained in a `fixed` or `absolute` positioned element. #TINY-9554
 - Sticky toolbars would not have fade transition when undocking in classic iframe mode. #TINY-9408
-- Resolved a bug that caused inaccurate word counts for documents with specific characters. #TINY-8122
+- Word count was inaccurate for documents with specific characters. #TINY-8122
 
 
 ## 6.3.2 - 2023-02-22
