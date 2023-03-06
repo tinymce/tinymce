@@ -40,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The sidebar element now has accessibility role `region` when visible and `presentation` when hidden. #TINY-9517
 
 ### Fixed
+- Add support for navigating inside the tree component using arrow keys and shift key. #TINY-9614
 - Sometimes the editor would finish initializing before the silver theme would have finished loading. #TINY-9556
 - The searchreplace modal would close incorrectly when clicking outside of the alert that pops up when no match is found. #TINY-9443
 - Color picker on toolbar would not update when changing forecolor or backcolor from menu. #TINY-9439

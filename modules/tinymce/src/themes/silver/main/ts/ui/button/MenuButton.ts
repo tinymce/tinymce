@@ -50,7 +50,7 @@ const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonI
   })
 });
 
-const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Optional<string>): SketchSpec => {
+const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Optional<string>, tabstopping = true): SketchSpec => {
   return renderCommonDropdown({
     text: spec.text,
     icon: spec.icon,
@@ -88,7 +88,7 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
     presets: 'normal',
     classes: [],
     dropdownBehaviours: [
-      Tabstopping.config({ })
+      ...(tabstopping ? [ Tabstopping.config({ }) ] : [])
     ]
   },
   prefix,

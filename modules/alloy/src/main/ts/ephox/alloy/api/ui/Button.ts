@@ -35,7 +35,7 @@ const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchS
     } else {
       // We are not a button, so type is irrelevant (unless specified)
       // Default role to button
-      const role = lookupAttr('role').getOr('button');
+      const role = detail.role.getOr(lookupAttr('role').getOr('button'));
       return { role };
     }
   };
