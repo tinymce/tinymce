@@ -311,7 +311,8 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
     { inline: true },
     { inline: false }
   ], (options) => {
-    const unsanitizedHtml = '<p><a href="javascript:alert(1)">XSS</a></p>';
+    const unsanitizedHtml = '<p id="action">XSS</p>';
+    const htmlText = 'XSS';
 
     context(`TINY-9600: Test unsanitized content with inline: ${options.inline} and xss_sanitization: true`, () => {
       const hook = TinyHooks.bddSetupLight<Editor>({
@@ -320,7 +321,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         ...options
       }, []);
 
-      const sanitizedHtml = '<p><a>XSS</a></p>';
+      const sanitizedHtml = '<p>XSS</p>';
 
       it('setContent with unsanitized content should set sanitized html', () => {
         const editor = hook.editor();
@@ -339,7 +340,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         const editor = hook.editor();
         editor.setContent(unsanitizedHtml);
         const text = editor.getContent({ format: 'text' });
-        assert.equal(text, 'XSS', 'Text should be retrieved from sanitized html');
+        assert.equal(text, htmlText, 'Text should be retrieved from sanitized html');
       });
 
       it('getContent tree with unsanitized content should get sanitized tree', () => {
@@ -395,7 +396,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         const editor = hook.editor();
         editor.setContent(unsanitizedHtml);
         const text = editor.getContent({ format: 'text' });
-        assert.equal(text, 'XSS', 'Text content from unsanitized html should not be altered');
+        assert.equal(text, htmlText, 'Text content from unsanitized html should not be altered');
       });
 
       it('getContent tree with unsanitized content should get unsanitized tree', () => {
