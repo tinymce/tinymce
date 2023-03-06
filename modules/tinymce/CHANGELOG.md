@@ -88,6 +88,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inserting elements that was not valid within the closest editing host would incorrectly split the editing host. #TINY-9595
 - `color_cols` option was not respected in the `forecolor` or `backcolor` color swatches. #TINY-9560
 - Drag and dropping the last noneditable element out of its parent block would not properly pad the parent block element. #TINY-9606
+- Applying heading formats from `text_patterns` produced an invisible space before a word. #TINY-9603
 
 ## 6.3.1 - 2022-12-06
 
