@@ -9,10 +9,9 @@ const foregroundId = 'forecolor';
 const backgroundId = 'hilitecolor';
 
 const defaultCols = 5;
-const minColors = Math.pow(defaultCols, 2);
 
 const calcCols = (colors: number): number =>
-  colors > minColors ? Math.ceil(Math.sqrt(colors)) : defaultCols;
+  Math.max(defaultCols, Math.ceil(Math.sqrt(colors)));
 
 const calcColsOption = (editor: Editor, numColors: number): number => {
   const calculatedCols = calcCols(numColors);
