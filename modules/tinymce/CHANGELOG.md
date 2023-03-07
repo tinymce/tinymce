@@ -82,6 +82,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inserting elements that was not valid within the closest editing host would incorrectly split the editing host. #TINY-9595
 - `color_cols` option was not respected in the `forecolor` or `backcolor` color swatches. #TINY-9560
 - Drag and dropping the last noneditable element out of its parent block would not properly pad the parent block element. #TINY-9606
+- Opening color swatches would cause tab to crash when `color_cols` or other column option is set to 0. #TINY-9649
 
 ## 6.3.2 - 2023-02-22
 
