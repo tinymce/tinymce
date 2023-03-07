@@ -17,11 +17,7 @@ const calcCols = (colors: number): number =>
 const calcColsOption = (editor: Editor, numColors: number): number => {
   const calculatedCols = calcCols(numColors);
   const fallbackCols = option('color_cols')(editor);
-  if (defaultCols === calculatedCols && fallbackCols >= defaultCols) {
-    return fallbackCols;
-  } else {
-    return calculatedCols;
-  }
+  return defaultCols === calculatedCols ? fallbackCols : calculatedCols;
 };
 
 const mapColors = (colorMap: string[]): Menu.ChoiceMenuItemSpec[] => {
@@ -141,7 +137,7 @@ const colorColsOption = (editor: Editor, id: string): number => {
 
 const getColorCols = (editor: Editor, id: string): number => {
   const colorCols = colorColsOption(editor, id);
-  return colorCols >= defaultCols ? colorCols : defaultCols;
+  return colorCols > 0 ? colorCols : defaultCols;
 };
 
 const hasCustomColors = option('custom_colors');
