@@ -103,7 +103,7 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
       { content: '<p>$word$</p>', expected: 1 },
       { content: '<p>word$2</p>', expected: 2 },
       { content: '<p>word$word test</p>', expected: 3 },
-      { content: '<p>word$word</br>test$</p>', expected: 3 },
+      { content: '<p>word$word<br/>test$</p>', expected: 3 },
       { content: '<p>word$word</p><p>test$</p>', expected: 3 }
     ];
 
@@ -121,7 +121,7 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
       { content: '<p>^word^</p>', expected: 1 },
       { content: '<p>word^2</p>', expected: 2 },
       { content: '<p>word^word test</p>', expected: 3 },
-      { content: '<p>word^word</br>test^</p>', expected: 3 },
+      { content: '<p>word^word<br/>test^</p>', expected: 3 },
       { content: '<p>word^word</p><p>test^</p>', expected: 3 }
     ];
 
@@ -139,7 +139,7 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
       { content: '<p>~word~</p>', expected: 1 },
       { content: '<p>word~2</p>', expected: 2 },
       { content: '<p>word~word test</p>', expected: 3 },
-      { content: '<p>word~word</br>test~</p>', expected: 3 },
+      { content: '<p>word~word<br/>test~</p>', expected: 3 },
       { content: '<p>word~word</p><p>test~</p>', expected: 3 }
     ];
 
@@ -157,7 +157,7 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
       { content: '<p>|word|</p>', expected: 1 },
       { content: '<p>word|2</p>', expected: 2 },
       { content: '<p>word|word test</p>', expected: 3 },
-      { content: '<p>word|word</br>test|</p>', expected: 3 },
+      { content: '<p>word|word<br/>test|</p>', expected: 3 },
       { content: '<p>word|word</p><p>test|</p>', expected: 3 }
     ];
 
@@ -175,7 +175,7 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
       { content: '<p>№word№</p>', expected: 1 },
       { content: '<p>word№2</p>', expected: 2 },
       { content: '<p>word№word test</p>', expected: 3 },
-      { content: '<p>word№word</br>test№</p>', expected: 3 },
+      { content: '<p>word№word<br/>test№</p>', expected: 3 },
       { content: '<p>word№word</p><p>test№</p>', expected: 3 }
     ];
 
@@ -192,7 +192,7 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
       { content: '<p>+word+</p>', expected: 1 },
       { content: '<p>word+2</p>', expected: 2 },
       { content: '<p>word+word test</p>', expected: 3 },
-      { content: '<p>word+word</br>test+</p>', expected: 3 },
+      { content: '<p>word+word<br/>test+</p>', expected: 3 },
       { content: '<p>word+word</p><p>test+</p>', expected: 3 }
     ];
 
