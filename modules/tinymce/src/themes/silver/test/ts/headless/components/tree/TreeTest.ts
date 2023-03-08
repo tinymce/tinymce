@@ -120,7 +120,7 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
 
     assertDirectoryExpandedState('Collapsed', false, dir);
     Mouse.clickOn(dir.element, '.tox-trbtn.tox-tree--directory__label');
-    assertDirectoryExpandedState('Expanded', true, getTreeItem('.tox-tree--directory'));
+    assertDirectoryExpandedState('Expanded', true, dir);
 
     assertDirectoryExpandedState('Collapsed', false, getTreeItem('.tox-tree--directory .tox-tree--directory'));
     Mouse.clickOn(dir.element, '.tox-tree--directory .tox-trbtn.tox-tree--directory__label');
