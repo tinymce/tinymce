@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pressing enter inside the `inputfontsize` input would not move the focus back into the editor content. #TINY-9598
 - Screen readers are now able to announce the highlighted menu item of link comboboxes. #TINY-9280
 - Improved contrast of border colors against the background color throughout the UI. #TINY-9587
+- Drag and drop events for noneditable elements did not include details like target element. #TINY-9599
 - Updated focus, active, and enabled colors of UI buttons for improved contrast against the UI color. #TINY-9176
 
 ### Changed
