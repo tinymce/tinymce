@@ -512,19 +512,19 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
         TinyAssertions.assertContent(editor, testCase.expectedHtml);
       };
 
-      it('TINY-9558: Should insert padding br into empty blocks when dragging the last block child out', async () => testDragDropPadding({
+      it('TINY-9606: Should insert padding br into empty blocks when dragging the last block child out', async () => testDragDropPadding({
         html: '<div><p class="toDrag" contenteditable="false">CEF</p></div><div class="destination">drop target</div>',
         expectedHtml: '<div>&nbsp;</div><div class="destination"><p class="toDrag" contenteditable="false">CEF</p>drop target</div>',
         expectedDragFromParentHtml: '<br data-mce-bogus="1">'
       }));
 
-      it('TINY-9558: Should insert padding br into empty blocks when dragging the last inline child out', async () => testDragDropPadding({
+      it('TINY-9606: Should insert padding br into empty blocks when dragging the last inline child out', async () => testDragDropPadding({
         html: '<p><span class="toDrag" contenteditable="false">CEF</span></p><div class="destination">drop target</div>',
         expectedHtml: '<p>&nbsp;</p><div class="destination"><span class="toDrag" contenteditable="false">CEF</span>drop target</div>',
         expectedDragFromParentHtml: '<br data-mce-bogus="1">'
       }));
 
-      it('TINY-9558: Should not insert padding br into blocks when not dragging the last child out', async () => testDragDropPadding({
+      it('TINY-9606: Should not insert padding br into blocks when not dragging the last child out', async () => testDragDropPadding({
         html: '<p>x<span class="toDrag" contenteditable="false">CEF</span></p><div class="destination">drop target</div>',
         expectedHtml: '<p>x</p><div class="destination"><span class="toDrag" contenteditable="false">CEF</span>drop target</div>',
         expectedDragFromParentHtml: 'x'
