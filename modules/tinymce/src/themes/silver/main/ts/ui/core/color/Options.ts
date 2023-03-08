@@ -13,8 +13,11 @@ const defaultCols = 5;
 const calcCols = (colors: number): number =>
   Math.max(defaultCols, Math.ceil(Math.sqrt(colors)));
 
-const calcColsOption = (calculatedCols: number, fallbackCols: number): number =>
-  defaultCols === calculatedCols ? fallbackCols : calculatedCols;
+const calcColsOption = (editor: Editor, numColors: number): number => {
+  const calculatedCols = calcCols(numColors);
+  const fallbackCols = option('color_cols')(editor);
+  return defaultCols === calculatedCols ? fallbackCols : calculatedCols;
+};
 
 const mapColors = (colorMap: string[]): Menu.ChoiceMenuItemSpec[] => {
   const colors: Menu.ChoiceMenuItemSpec[] = [];
@@ -97,12 +100,12 @@ const register = (editor: Editor): void => {
 
   registerOption('color_cols_foreground', {
     processor: 'number',
-    default: calcColsOption(calcCols(getColors(editor, foregroundId).length), option('color_cols')(editor))
+    default: calcColsOption(editor, getColors(editor, foregroundId).length)
   });
 
   registerOption('color_cols_background', {
     processor: 'number',
-    default: calcColsOption(calcCols(getColors(editor, backgroundId).length), option('color_cols')(editor))
+    default: calcColsOption(editor, getColors(editor, backgroundId).length)
   });
 
   registerOption('custom_colors', {
@@ -121,7 +124,7 @@ const register = (editor: Editor): void => {
   });
 };
 
-const getColorCols = (editor: Editor, id: string): number => {
+const colorColsOption = (editor: Editor, id: string): number => {
   if (id === foregroundId) {
     return option('color_cols_foreground')(editor);
   } else if (id === backgroundId) {
@@ -129,6 +132,11 @@ const getColorCols = (editor: Editor, id: string): number => {
   } else {
     return option('color_cols')(editor);
   }
+};
+
+const getColorCols = (editor: Editor, id: string): number => {
+  const colorCols = colorColsOption(editor, id);
+  return colorCols > 0 ? colorCols : defaultCols;
 };
 
 const hasCustomColors = option('custom_colors');
