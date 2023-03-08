@@ -24,7 +24,8 @@
 @content-ui-darkmode: false; // Change this to true to get white icons in the content such as bookmarks.
 
 // Colors
-@border-color: contrast(@background-color, darken(@background-color, 30%), lighten(@background-color, 30%));
+@border-color: contrast(@background-color, darken(@background-color, 6.5%), lighten(@background-color, 6.5%));
+@border-color-contrasted: contrast(@background-color, darken(@border-color, 20%), lighten(@background-color, 20%));
 @text-color: contrast(@background-color, @color-black, @color-white);
 @text-color-muted: contrast(@background-color, fade(@color-black, 70%), fade(@color-white, 50%));
 
