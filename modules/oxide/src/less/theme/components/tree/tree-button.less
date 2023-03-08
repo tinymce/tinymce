@@ -88,14 +88,6 @@
     }
   }
 
-  // This class doesn't seem to be used anywhere.
-  // The ruleset can probably be removed.
-  .tox-trbtn.tox-trbtn-more {
-    padding-left: 5px;
-    padding-right: 5px;
-    width: inherit;
-  }
-
   .tox-trbtn:focus {
     background: @tree-button-focus-background-color;
     border: @tree-button-focus-border;
@@ -198,6 +190,16 @@
     display: flex;
     flex-direction: column;
 
+    &.tox-tree--directory--expanded {
+      > .tox-tree--directory__label .tox-chevron {
+        transform: rotate(90deg);
+      }
+
+      > .tox-tree--directory__children {
+        max-height: 200px;
+      }
+    }
+
     /* stylelint-disable no-descending-specificity */
     .tox-tree--directory__label {
       font-weight: bold;
@@ -273,10 +275,6 @@
     overflow: hidden;
     padding-left: 16px;
     transition: max-height .5s ease-in-out;
-  }
-
-  .tox-tree--directory__children.tox-trbtn--expanded {
-    max-height: 200px;
   }
 
   .tox-trbtn.tox-tree--leaf__label {
