@@ -85,11 +85,14 @@ const refreshInternal = (component: AlloyComponent, config: DockingConfig, state
   // If docked then check if we need to hide/show the component
   const isDocked = state.isDocked();
 
-  // Checking isDocked works for only, toolbar_location: top mode, as you scroll, it would be undocked, docked then hidden
-  // But for toobar_location, it would be from docked, undocked then hidden
-  if (isDocked || (!isDocked && Arr.contains(state.getModes(), 'bottom'))) {
+  viewport.optScrollEnv.fold(() => {
+    if (isDocked) {
+      updateVisibility(component, config, state, viewport);
+    }
+  }, (_scrollEnv) => {
+    // If scrolling environment is set, we want to hide the toolbar if editor is out of the viewport
     updateVisibility(component, config, state, viewport);
-  }
+  });
 
   Dockables.tryMorph(component, viewport, state).each((morph) => {
     applyMorph(component, config, state, viewport, morph);

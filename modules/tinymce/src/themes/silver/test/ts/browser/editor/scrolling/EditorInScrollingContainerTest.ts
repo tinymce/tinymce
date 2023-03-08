@@ -64,6 +64,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
 
   const heights = {
     banner: 300,
+    largeBanner: 700,
     scroller: 500,
     outerScroller: 200,
     editor: 2000,
@@ -142,7 +143,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
     }
   );
 
-  const pWaitUntilDockedAtTop = (header: SugarElement<HTMLElement>, optTop: Optional<number>): Promise<void> => Waiter.pTryUntil(
+  const pWaitUntilDockedAtPosition = (header: SugarElement<HTMLElement>, optPosition: Optional<{ location: 'top' | 'bottom'; value: number }>): Promise<void> => Waiter.pTryUntil(
     'Waiting for sticky element to dock',
     () => {
       Assertions.assertStructure(
@@ -150,9 +151,9 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
         ApproxStructure.build((s, str, _arr) => s.element('div', {
           styles: {
             position: str.is('fixed'),
-            ...(optTop.map((top) => ({
+            ...(optPosition.map((position) => ({
               // Allow 5px of error.
-              top: str.measurement(top, 'px', 5)
+              [position.location]: str.measurement(position.value, 'px', 5)
             })).getOr({ }))
           }
         })),
@@ -310,7 +311,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
     }
   };
 
-  const setupSingleScrollerElement = (scenario: TestScenario) => {
+  const setupSingleScrollerElement = (scenario: TestScenario, bannerSize: number = heights.banner) => {
     const scroller = SugarElement.fromTag('div');
     Css.setAll(scroller, {
       overflow: 'auto',
@@ -330,7 +331,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
       InsertAll.append(
         scroller,
         [
-          mkBanner(heights.banner, 'orange'),
+          mkBanner(bannerSize, 'orange'),
           target,
           mkBanner(2000, 'lime')
         ]
@@ -343,7 +344,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
       InsertAll.append(
         scroller,
         [
-          mkBanner(heights.banner, 'orange'),
+          mkBanner(bannerSize, 'orange'),
           target,
           mkBanner(2000, 'lime')
         ]
@@ -353,7 +354,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
       // The scroller is appending the ShadowRoot
       const root = setupRoot(scenario, scroller);
       InsertAll.append(root, [
-        mkBanner(heights.banner, 'orange'),
+        mkBanner(bannerSize, 'orange'),
         target,
         mkBanner(2000, 'lime')
       ]);
@@ -472,7 +473,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
               0,
               headerTop + scrollPastHeaderAmount
             );
-            await pWaitUntilDockedAtTop(header, Optional.some(0));
+            await pWaitUntilDockedAtPosition(header, Optional.some({ location: 'top', value: 0 }));
 
             // Scroll back a bit and watch it undock.
             await pWaitUntilScrollWindowFires(
@@ -515,7 +516,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
               0,
               heights.banner + 22
             );
-            await pWaitUntilDockedAtTop(header, Optional.none());
+            await pWaitUntilDockedAtPosition(header, Optional.none());
 
             assertApprox(
               'Top position should be pretty much at scroller top position',
@@ -554,7 +555,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
             // Now, scroll the window down to 130 pixels after the scroller top
             window.scrollTo(0, scrollerTop + 130);
 
-            await pWaitUntilDockedAtTop(header, Optional.some(0));
+            await pWaitUntilDockedAtPosition(header, Optional.some({ location: 'top', value: 0 }));
 
             scroller.dom.scrollTo(0, 0);
             await pWaitUntilUndocked(header);
@@ -568,7 +569,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
             adjustments: {
               toDock: {
                 action: () => void;
-                topValue: Optional<number>;
+                topValue: number;
               };
               toOffscreen: () => void;
               toOnScreen: () => void;
@@ -577,7 +578,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
 
             // Trigger docking
             adjustments.toDock.action();
-            await pWaitUntilDockedAtTop(header, adjustments.toDock.topValue);
+            await pWaitUntilDockedAtPosition(header, Optional.some({ location: 'top', value: adjustments.toDock.topValue }));
             await pWaitUntilAppears(header);
 
             // Scroll much further down and check that it disappears
@@ -599,7 +600,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
             await pRunTestWithAdjustment(editor, {
               toDock: {
                 action: () => window.scrollTo(0, headerTop + 30),
-                topValue: Optional.some(0)
+                topValue: 0
               },
               toOffscreen: () => window.scrollTo(0, scrollerBottom + 100),
               toOnScreen: () => window.scrollTo(0, scrollerBottom - 100)
@@ -614,7 +615,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
             await pRunTestWithAdjustment(editor, {
               toDock: {
                 action: () => scroller.dom.scrollTo(0, heights.banner + 100),
-                topValue: Optional.some(scrollerTop)
+                topValue: scrollerTop
               },
               toOffscreen: () => scroller.dom.scrollTo(0, heights.banner + heights.editor + 100),
               toOnScreen: () => scroller.dom.scrollTo(0, heights.banner + heights.editor - 100)
@@ -683,7 +684,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
           const pRunTestWithAdjustment = async (
             editor: Editor,
             adjustments: {
-              toDock: { action: () => Promise<void>; optTop: Optional<number> };
+              toDock: { action: () => Promise<void>; top: number };
               toUndock: () => Promise<void>;
             }
           ): Promise<void> => {
@@ -698,7 +699,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
             await Waiter.pWait(0);
             await adjustments.toDock.action();
 
-            await pWaitUntilDockedAtTop(elementWithFixed, adjustments.toDock.optTop);
+            await pWaitUntilDockedAtPosition(elementWithFixed, Optional.some({ location: 'top', value: adjustments.toDock.top }));
 
             await adjustments.toUndock();
             await pWaitUntilUndockedAbsolute(elementWithFixed);
@@ -714,7 +715,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
               {
                 toDock: {
                   action: () => pWaitUntilScrollWindowFires(editor, 0, scrollerTop + heights.banner + 100),
-                  optTop: Optional.some(0)
+                  top: 0
                 },
                 toUndock: () => pWaitUntilScrollWindowFires(editor, 0, scrollerTop + heights.banner - 50)
               }
@@ -736,7 +737,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
                     heights.banner + 150
                   ),
                   // NOTE: The assertion will do an approximate match for "top"
-                  optTop: Optional.some(scroller.dom.getBoundingClientRect().top)
+                  top: scroller.dom.getBoundingClientRect().top
                 },
                 toUndock: () => pWaitUntilElementScrollFires(
                   editor,
@@ -840,7 +841,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
             0,
             heights.banner * 2 + 22
           );
-          await pWaitUntilDockedAtTop(header, Optional.none());
+          await pWaitUntilDockedAtPosition(header, Optional.none());
 
           assertApprox(
             'Top position should be pretty much at scroller top position',
@@ -859,6 +860,72 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
           );
 
           await pWaitUntilUndocked(header);
+        });
+      });
+
+      const contextOrSkipIfIframe = scenario.settings.inline ? context : context.skip;
+
+      contextOrSkipIfIframe('toolbar should disappear in inline mode, toolbar_location: top', () => {
+        const hook = TinyHooks.bddSetupFromElement<Editor>(
+          {
+            ...sharedSettings,
+            ui_mode: 'split',
+            toolbar_sticky: true,
+            height: heights.editor,
+            inline: scenario.settings.inline,
+          },
+          () => setupSingleScrollerElement(scenario, heights.largeBanner),
+          [],
+          scenario.settings.inline
+        );
+
+        beforeEach(() => resetScrolls(hook.editor()));
+
+        it('TINY-9652: Toolbar should disappear when the editor is not in view but is focused', async () => {
+          const editor = hook.editor();
+          const header = getEditorUi(editor, ui.editor.stickyHeader);
+          const scroller = getAncestorUi(editor, ui.ancestors.scrollingWrapper);
+
+          scroller.dom.scrollTo(0, 0);
+          await pWaitUntilDisappears(header);
+
+          scroller.dom.scrollTo(0, 10000);
+          await pWaitUntilDisappears(header);
+        });
+      });
+
+      contextOrSkipIfIframe('toolbar should disappear in inline mode, toolbar_location: bottom', () => {
+        const hook = TinyHooks.bddSetupFromElement<Editor>(
+          {
+            ...sharedSettings,
+            ui_mode: 'split',
+            toolbar_sticky: true,
+            height: heights.editor,
+            inline: scenario.settings.inline,
+            toolbar_location: 'bottom'
+          },
+          () => setupSingleScrollerElement(scenario, heights.largeBanner),
+          [],
+          scenario.settings.inline
+        );
+
+        beforeEach(() => resetScrolls(hook.editor()));
+
+        it('TINY-9652: Toolbar should disappear when the editor is not in view but is focused, toolbar_location: bottom', async () => {
+          const editor = hook.editor();
+          const header = getEditorUi(editor, ui.editor.stickyHeader);
+          const scroller = getAncestorUi(editor, ui.ancestors.scrollingWrapper);
+
+          // Scroll past the orange banner to let the toolbar docked at the top of the scrollable container
+          scroller.dom.scrollTo(0, heights.largeBanner + 100);
+
+          await pWaitUntilDockedAtPosition(header, Optional.none());
+
+          scroller.dom.scrollTo(0, 10000);
+          await pWaitUntilDisappears(header);
+
+          scroller.dom.scrollTo(0, 0);
+          await pWaitUntilDisappears(header);
         });
       });
     });
