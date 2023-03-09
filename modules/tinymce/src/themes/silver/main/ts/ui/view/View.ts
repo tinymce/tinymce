@@ -5,6 +5,7 @@ import {
 import { FieldSchema } from '@ephox/boulder';
 import { View as BridgeView } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderButton } from './ViewButtons';
@@ -48,6 +49,10 @@ const renderButtonsGroup = (spec: BridgeView.ViewButtonsGroup, providers: UiFact
   };
 };
 
+const deviceDetection = PlatformDetection.detect().deviceType;
+const isPhone = deviceDetection.isPhone();
+const isTablet = deviceDetection.isTablet();
+
 const renderViewHeader = (spec: ViewHeaderSpec) => {
   let hasGroups = false;
   const endButtons = Arr.map(spec.buttons, (btnspec) => {
@@ -63,7 +68,10 @@ const renderViewHeader = (spec: ViewHeaderSpec) => {
     uid: spec.uid,
     dom: {
       tag: 'div',
-      classes: [ !hasGroups ? 'tox-view__header' : 'tox-view__toolbar' ]
+      classes: [
+        !hasGroups ? 'tox-view__header' : 'tox-view__toolbar',
+        ...(isPhone || isTablet ? [ 'tox-view--mobile', 'tox-view--scrolling' ] : [])
+      ]
     },
     components: hasGroups ?
       endButtons
