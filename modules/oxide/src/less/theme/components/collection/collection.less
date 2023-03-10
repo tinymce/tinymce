@@ -14,7 +14,6 @@
 @collection-item-label-text-color: @text-color;
 @collection-item-label-text-transform: none;
 
-@collection-item-hover-background-color: @active-background-color;
 @collection-item-secondary-active-background-color: @menubar-select-active-background-color;
 
 @collection-item-label-disabled-text-color: fade(@collection-item-label-text-color, 50%);
@@ -24,6 +23,7 @@
 @collection-list-item-label-active-text-color: @active-text-color;
 @collection-list-item-enabled-background-color: @enabled-background-color;
 @collection-list-item-label-enabled-text-color: @enabled-text-color;
+@collection-list-item-table-background-color: contrast(@background-color, fade(@color-tint, 35), fade(@color-tint, 65));
 
 @collection-toolbar-item-active-background-color: @hover-background-color;
 @collection-toolbar-item-label-active-text-color: @active-text-color;
@@ -243,7 +243,7 @@
   }
 
   .tox-collection--list .tox-fancymenuitem.tox-collection__item--active:not(.tox-collection__item--state-disabled) {
-    background-color: @collection-list-item-enabled-background-color;
+    background-color: @collection-list-item-table-background-color;
   }
 
   // active menu item (when hovering)
