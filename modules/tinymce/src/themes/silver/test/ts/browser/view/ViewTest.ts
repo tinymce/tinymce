@@ -1,7 +1,7 @@
-import { ApproxStructure, Assertions, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keys, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { Attribute, Css, Html, SugarBody } from '@ephox/sugar';
+import { Attribute, Css, Html, SugarBody, SugarShadowDom } from '@ephox/sugar';
 import { TinyApis, TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -317,6 +317,29 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
       toggleView('myview1');
       TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
+    });
+
+    it('TINY-9671: should be possible to navigate the header via keyboard', async () => {
+      const editor = hook.editor();
+      const root = SugarShadowDom.getRootNode(TinyDom.targetElement(editor));
+      toggleView('myview1');
+      FocusTools.setFocus(root, '.tox-view__header');
+      await FocusTools.pTryOnSelector('Focus should be on the view header', root, '.tox-view__header');
+
+      TinyUiActions.keystroke(editor, Keys.enter());
+      await FocusTools.pTryOnSelector('Button 1 should be the first selection', root, '.tox-view__header [title="Button 1"]');
+
+      TinyUiActions.keystroke(editor, Keys.right());
+      await FocusTools.pTryOnSelector('With right it should pass from Button 1 to Button 2', root, '.tox-view__header [title="Button 2"]');
+
+      TinyUiActions.keystroke(editor, Keys.right());
+      await FocusTools.pTryOnSelector('Pressing right again it should stay on Button 2', root, '.tox-view__header [title="Button 2"]');
+
+      TinyUiActions.keystroke(editor, Keys.left());
+      await FocusTools.pTryOnSelector('With left it should pass from Button 2 to Button 1', root, '.tox-view__header [title="Button 1"]');
+
+      TinyUiActions.keystroke(editor, Keys.left());
+      await FocusTools.pTryOnSelector('Pressing left again it should stay on Button 1', root, '.tox-view__header [title="Button 1"]');
     });
   });
 
