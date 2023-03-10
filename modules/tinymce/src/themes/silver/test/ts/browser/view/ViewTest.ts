@@ -333,13 +333,13 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       await FocusTools.pTryOnSelector('With right it should pass from Button 1 to Button 2', root, '.tox-view__header [title="Button 2"]');
 
       TinyUiActions.keystroke(editor, Keys.right());
-      await FocusTools.pTryOnSelector('Pressing right again it should stay on Button 2', root, '.tox-view__header [title="Button 2"]');
+      await FocusTools.pTryOnSelector('Pressing right again it should move to Button 1', root, '.tox-view__header [title="Button 1"]');
 
       TinyUiActions.keystroke(editor, Keys.left());
-      await FocusTools.pTryOnSelector('With left it should pass from Button 2 to Button 1', root, '.tox-view__header [title="Button 1"]');
+      await FocusTools.pTryOnSelector('With left it should pass from Button 1 to Button 2', root, '.tox-view__header [title="Button 2"]');
 
       TinyUiActions.keystroke(editor, Keys.left());
-      await FocusTools.pTryOnSelector('Pressing left again it should stay on Button 1', root, '.tox-view__header [title="Button 1"]');
+      await FocusTools.pTryOnSelector('Pressing left again it should move to Button 1', root, '.tox-view__header [title="Button 1"]');
       toggleView('myview1');
     });
   });

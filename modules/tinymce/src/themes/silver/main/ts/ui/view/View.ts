@@ -78,8 +78,7 @@ const renderViewHeader = (spec: ViewHeaderSpec) => {
       Keying.config({
         mode: 'flow',
         selector: 'button, .tox-button',
-        focusInside: FocusInsideModes.OnEnterOrSpaceMode,
-        cycles: false,
+        focusInside: FocusInsideModes.OnEnterOrSpaceMode
       })
     ]),
     components: hasGroups ?
