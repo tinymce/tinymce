@@ -2,7 +2,6 @@
 // Toolbar button
 // When making changes here, please review toolbar-button/toolbar-split-button.less, collection/collection.less, toolbar-button/toolbar-select-button.less and menubar/menubar-button.less
 //
-
 @toolbar-button-background-color: transparent;
 @toolbar-button-border-radius: 3px;
 @toolbar-button-border: 0;
@@ -47,7 +46,7 @@
 @toolbar-button-enabled-transform: none;
 @toolbar-button-enabled-active-background-color: @enabled-active-background-color;
 @toolbar-button-enabled-active-icon-color: @toolbar-button-enabled-active-text-color;
-@toolbar-button-enabled-active-text-color: @active-text-color;
+@toolbar-button-enabled-active-text-color: @toolbar-button-active-text-color;
 
 @toolbar-button-disabled-background-color: @toolbar-button-background-color;
 @toolbar-button-disabled-border: @toolbar-button-border;
@@ -112,7 +111,7 @@
     }
   }
 
-  .tox-tbtn:not(.tox-tbtn--enabled) {
+  .tox-tbtn:not(.tox-tbtn--disabled):not(.tox-tbtn--enabled) {
     &:active {
       background: @toolbar-button-active-background-color;
       border: @toolbar-button-active-border;
@@ -140,6 +139,7 @@
 
   .tox-tbtn.tox-tbtn--disabled:focus,
   .tox-tbtn.tox-tbtn--disabled:focus-visible {
+    background: @toolbar-button-hover-background-color;
     color: @toolbar-button-disabled-text-color;
 
     svg { /* stylelint-disable-line no-descending-specificity */
