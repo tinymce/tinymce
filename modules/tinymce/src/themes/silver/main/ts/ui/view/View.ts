@@ -1,6 +1,6 @@
 import {
   AlloyComponent, AlloySpec, Behaviour, Composite, Container, Focusing, FocusInsideModes, Keying, PartType, RawDomSchema, SimpleSpec,
-  Sketcher, Tabstopping, UiSketcher
+  Sketcher, UiSketcher
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { View as BridgeView } from '@ephox/bridge';
@@ -45,10 +45,6 @@ const renderButtonsGroup = (spec: BridgeView.ViewButtonsGroup, providers: UiFact
       tag: 'div',
       classes: [ 'tox-view__toolbar__group' ],
     },
-    behaviours: Behaviour.derive([
-      Tabstopping.config({}),
-      Focusing.config({})
-    ]),
     components: Arr.map(spec.buttons, (button) => renderViewButton(button, providers))
   };
 };
@@ -78,7 +74,6 @@ const renderViewHeader = (spec: ViewHeaderSpec) => {
       ]
     },
     behaviours: Behaviour.derive([
-      Tabstopping.config({}),
       Focusing.config({}),
       Keying.config({
         mode: 'flow',
