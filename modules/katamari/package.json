@@ -16,8 +16,7 @@
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "MIT",
   "dependencies": {
-    "@ephox/dispute": "^1.0.3",
-    "tslib": "^2.0.0"
+    "@ephox/dispute": "^1.0.3"
   },
   "files": [
     "lib/main",

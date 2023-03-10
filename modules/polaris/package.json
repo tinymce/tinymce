@@ -19,8 +19,7 @@
     "LICENSE.txt"
   ],
   "dependencies": {
-    "@ephox/katamari": "^9.1.3",
-    "tslib": "^2.0.0"
+    "@ephox/katamari": "^9.1.3"
   },
   "devDependencies": {
     "@ephox/katamari-assertions": "^4.0.7"

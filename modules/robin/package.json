@@ -23,8 +23,7 @@
     "@ephox/katamari": "^9.1.3",
     "@ephox/phoenix": "^8.0.7",
     "@ephox/polaris": "^6.0.7",
-    "@ephox/sugar": "^9.1.3",
-    "tslib": "^2.0.0"
+    "@ephox/sugar": "^9.1.3"
   },
   "devDependencies": {
     "@ephox/katamari-assertions": "^4.0.7"
