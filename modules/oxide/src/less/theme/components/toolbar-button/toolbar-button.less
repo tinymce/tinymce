@@ -97,8 +97,6 @@
 
   .tox-tbtn--disabled,
   .tox-tbtn--disabled:hover,
-  .tox-tbtn--disabled:focus-visible,
-  .tox-tbtn--disabled:focus,
   .tox-tbtn:disabled,
   .tox-tbtn:disabled:hover {
     background: @toolbar-button-disabled-background-color;
@@ -114,7 +112,7 @@
     }
   }
 
-  .tox-tbtn:not(.tox-tbtn--disabled):not(.tox-tbtn--enabled) {
+  .tox-tbtn:not(.tox-tbtn--enabled) {
     &:active {
       background: @toolbar-button-active-background-color;
       border: @toolbar-button-active-border;
@@ -137,6 +135,15 @@
       svg {
         fill: @toolbar-button-hover-icon-color;
       }
+    }
+  }
+
+  .tox-tbtn.tox-tbtn--disabled:focus,
+  .tox-tbtn.tox-tbtn--disabled:focus-visible {
+    color: @toolbar-button-disabled-text-color;
+
+    svg { /* stylelint-disable-line no-descending-specificity */
+      fill: @toolbar-button-disabled-text-color;
     }
   }
 
