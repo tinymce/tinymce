@@ -82,17 +82,8 @@ const applyMorph = (
 const refreshInternal = (component: AlloyComponent, config: DockingConfig, state: DockingState): void => {
   // Absolute coordinates (considers scroll)
   const viewport: DockingViewport = config.lazyViewport(component);
-  // If docked then check if we need to hide/show the component
-  const isDocked = state.isDocked();
 
-  viewport.optScrollEnv.fold(() => {
-    if (isDocked) {
-      updateVisibility(component, config, state, viewport);
-    }
-  }, (_scrollEnv) => {
-    // If scrolling environment is set, we want to hide the toolbar if editor is out of the viewport
-    updateVisibility(component, config, state, viewport);
-  });
+  updateVisibility(component, config, state, viewport);
 
   Dockables.tryMorph(component, viewport, state).each((morph) => {
     applyMorph(component, config, state, viewport, morph);
