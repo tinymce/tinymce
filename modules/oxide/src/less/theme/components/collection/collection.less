@@ -251,6 +251,11 @@
     background-color: @collection-list-item-active-background-color;
     color: @collection-list-item-label-active-text-color;
 
+    // Preserve text color for code inline format against grey background color
+    code {
+      color: @collection-list-item-label-enabled-text-color;
+    }
+
     svg {
       fill: @collection-list-item-label-active-text-color;
     }
