@@ -340,6 +340,7 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
 
       TinyUiActions.keystroke(editor, Keys.left());
       await FocusTools.pTryOnSelector('Pressing left again it should stay on Button 1', root, '.tox-view__header [title="Button 1"]');
+      toggleView('myview1');
     });
   });
 
