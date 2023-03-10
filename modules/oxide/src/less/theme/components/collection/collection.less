@@ -118,6 +118,11 @@
     display: flex;
     -webkit-touch-callout: none;
     user-select: none;
+
+    // Preserve text color for code inline format against grey background color
+    code {
+      color: @collection-list-item-label-enabled-text-color;
+    }
   }
 
   .tox-collection--list .tox-collection__item {
@@ -250,11 +255,6 @@
   .tox-collection--list:not(.tox-background-menu) .tox-collection__item.tox-collection__item--active:not(.tox-collection__item--state-disabled):not(.tox-fancymenuitem) {
     background-color: @collection-list-item-active-background-color;
     color: @collection-list-item-label-active-text-color;
-
-    // Preserve text color for code inline format against grey background color
-    code {
-      color: @collection-list-item-label-enabled-text-color;
-    }
 
     svg {
       fill: @collection-list-item-label-active-text-color;
