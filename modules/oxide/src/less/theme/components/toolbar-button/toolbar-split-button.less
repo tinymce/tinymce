@@ -9,6 +9,8 @@
 @toolbar-split-button-hover-background-color: @hover-background-color;
 @toolbar-split-button-chevron-color: fade(@text-color, 50%);
 @toolbar-split-button-enabled-chevron-color: fade(@enabled-text-color, 50%);
+@toolbar-split-button-active-chevron-color: @toolbar-button-active-icon-color;
+@toolbar-split-button-enabled-active-chevron-color: @toolbar-button-enabled-active-icon-color;
 
 .tox {
   .tox-split-button {
@@ -21,62 +23,79 @@
 
     .tox-tbtn {
       margin: 0;
+    }
 
+    &:focus-visible {
+      background: @toolbar-split-button-hover-background-color;
+
+      .tox-tbtn svg {
+        fill: @toolbar-button-active-icon-color;
+      }
+    }
+
+    &:not(.tox-tbtn--disabled) .tox-tbtn.tox-split-button__chevron {
+      width: 18px;
+
+      svg {
+        fill: @toolbar-split-button-chevron-color;
+      }
+
+      &:active,
       &:hover,
       &:focus,
       &:focus-visible {
         background: @toolbar-split-button-hover-background-color;
-      }
 
-      &:active {
-        box-shadow: 0 0 0 2px @toolbar-split-button-hover-background-color inset;
+        svg {
+          fill: @toolbar-split-button-active-chevron-color;
+        }
       }
 
       &.tox-tbtn--enabled {
-        background: @toolbar-split-button-enabled-background-color;
+        svg {
+          fill: @toolbar-split-button-enabled-chevron-color;
+        }
 
         &:active,
         &:hover,
         &:focus,
         &:focus-visible {
           background: @toolbar-split-button-enabled-active-background-color;
-        }
-      }
 
-      &.tox-split-button__chevron {
-        width: 18px;
-
-        svg {
-          fill: @toolbar-split-button-chevron-color;
-        }
-
-        &.tox-tbtn--enabled {
           svg {
-            fill: @toolbar-split-button-enabled-chevron-color;
-          }
-
-          &:active,
-          &:hover,
-          &:focus,
-          &:focus-visible {
-            svg {
-              fill: @toolbar-button-enabled-active-icon-color;
-            }
+            fill: @toolbar-split-button-enabled-active-chevron-color;
           }
         }
       }
+    }
 
-      &.tox-tbtn--disabled {
-        &:hover,
-        &:focus,
-        .tox-tbtn:hover,
-        .tox-tbtn:focus,
-        .tox-tbtn:focus-visible {
-          background: @toolbar-button-disabled-background-color;
-          box-shadow: @toolbar-button-disabled-box-shadow;
-          color: @toolbar-button-disabled-text-color;
-        }
+    &.tox-tbtn--disabled {
+      background: @toolbar-button-disabled-background-color;
+      box-shadow: @toolbar-button-disabled-box-shadow;
+      color: @toolbar-button-disabled-text-color;
+    }
+
+    &:not(.tox-tbtn--disabled) .tox-tbtn--enabled {
+      background: @toolbar-split-button-enabled-background-color;
+
+      &:active,
+      &:hover,
+      &:focus,
+      &:focus-visible {
+        background: @toolbar-split-button-enabled-active-background-color;
       }
+    }
+
+    &:active,
+    &:hover,
+    &:focus,
+    &:focus-visible {
+      box-shadow: 0 0 0 2px @toolbar-split-button-hover-background-color inset;
+    }
+
+    /* stylelint-disable-next-line no-descending-specificity */
+    &:focus-visible .tox-tbtn.tox-split-button__chevron svg {
+      fill: @toolbar-button-active-icon-color;
     }
   }
 
