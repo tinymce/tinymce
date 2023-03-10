@@ -27,6 +27,7 @@
 
 @collection-item-disabled-label-text-color: fade(@collection-item-label-text-color, 50%);
 @collection-item-disabled-caret-color: fade(@collection-item-label-text-color, 50%);
+@collection-item-disabled-icon-color: @collection-item-disabled-label-text-color;
 
 @collection-item-table-background-color: #cce2fa;
 
@@ -56,49 +57,53 @@
     display: flex;
     -webkit-touch-callout: none;
     user-select: none;
-  }
 
-  .tox-collection__item-caret {
-    align-items: center;
-    display: flex;
-    min-height: @collection-item-list-icon-height;
+    &.tox-collection__item-caret {
+      align-items: center;
+      display: flex;
+      min-height: @collection-item-list-icon-height;
 
-    svg {
-      fill: @collection-item-icon-color;
+      svg {
+        fill: @collection-item-icon-color;
+      }
     }
-  }
 
-  .tox-collection__item-icon,
-  .tox-collection__item-checkmark {
-    align-items: center;
-    display: flex;
-    height: @collection-item-list-icon-height;
-    justify-content: center;
-    width: @collection-item-list-icon-width;
+    .tox-collection__item-icon,
+    .tox-collection__item-checkmark {
+      align-items: center;
+      display: flex;
+      height: @collection-item-list-icon-height;
+      justify-content: center;
+      width: @collection-item-list-icon-width;
 
-    svg {
-      fill: currentColor;
+      svg {
+        fill: currentColor;
+      }
     }
-  }
 
-  // Disabled item
-  .tox-collection__item--state-disabled {
-    background-color: transparent;
-    color: @collection-item-disabled-label-text-color;
-    cursor: not-allowed;
+    // Disabled item
+    &.tox-collection__item--state-disabled {
+      background-color: transparent;
+      color: @collection-item-disabled-label-text-color;
+      cursor: not-allowed;
 
-    .tox-collection__item-caret svg {
-      fill: @collection-item-disabled-caret-color;
+      .tox-collection__item-icon svg {
+        fill: @collection-item-disabled-icon-color;
+      }
+
+      .tox-collection__item-caret svg {
+        fill: @collection-item-disabled-caret-color;
+      }
     }
-  }
 
-  .tox-collection__item-accessory {
-    color: @text-color-muted;
-    display: inline-block;
-    font-size: @font-size-sm;
-    height: @collection-item-list-icon-height;
-    line-height: @collection-item-list-icon-height;
-    text-transform: none;
+    &.tox-collection__item-accessory {
+      color: @text-color-muted;
+      display: inline-block;
+      font-size: @font-size-sm;
+      height: @collection-item-list-icon-height;
+      line-height: @collection-item-list-icon-height;
+      text-transform: none;
+    }
   }
 
   .tox-collection__item-label {
@@ -135,8 +140,8 @@
     }
 
     .tox-collection__item {
-      height: @toolbar-button-height; // 28px
-      margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0; // 4px 0 3px 0
+      height: @toolbar-button-height;
+      margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0;
       padding: 0 4px;
     }
 
