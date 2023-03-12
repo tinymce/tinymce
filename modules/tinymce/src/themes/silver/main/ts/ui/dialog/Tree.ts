@@ -1,4 +1,4 @@
-import { Behaviour, Button as AlloyButton, Tabstopping, GuiFactory, SimpleSpec, Toggling, Replacing, Keying, AddEventsBehaviour, AlloyEvents, NativeEvents, AlloyComponent, CustomEvent, Receiving, Focusing } from '@ephox/alloy';
+import { Behaviour, Button as AlloyButton, Tabstopping, GuiFactory, SimpleSpec, Toggling, Replacing, Keying, AddEventsBehaviour, AlloyEvents, NativeEvents, AlloyComponent, CustomEvent, Receiving, Focusing, Sliding } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Fun, Id, Optional } from '@ephox/katamari';
 import { EventArgs, SelectorFind } from '@ephox/sugar';
@@ -233,6 +233,18 @@ const renderDirectoryChildren = ({
         renderLeafLabel({ leaf: item, onLeafAction, visible, treeId, backstage }) :
         renderDirectory({ directory: item, onLeafAction, labelTabstopping: visible, treeId, backstage });
     }),
+    behaviours: Behaviour.derive([
+      Sliding.config({
+        dimension: {
+          property: 'height'
+        },
+        closedClass: 'tox-tree--directory__children--closed',
+        openClass: 'tox-tree--directory__children--open',
+        growingClass: 'tox-tree--directory__children--growing',
+        shrinkingClass: 'tox-tree--directory__children--shrinking',
+      }),
+      Replacing.config({})
+    ])
   };
 };
 
@@ -244,8 +256,12 @@ const renderDirectory = ({
   backstage
 }: RenderDirectoryProps): SimpleSpec => {
   const { children } = directory;
-  const computedChildren = (childrenVisible: boolean) =>
-    renderDirectoryChildren({ children, onLeafAction, visible: childrenVisible, treeId, backstage });
+  const computedChildrenComponents = (visible: boolean) =>
+    children.map((item) => {
+      return item.type === 'leaf' ?
+        renderLeafLabel({ leaf: item, onLeafAction, visible, treeId, backstage }) :
+        renderDirectory({ directory: item, onLeafAction, labelTabstopping: visible, treeId, backstage });
+    });
   return ({
     dom: {
       tag: 'div',
@@ -256,7 +272,7 @@ const renderDirectory = ({
     },
     components: [
       renderDirectoryLabel({ directory, visible: labelTabstopping, noChildren: directory.children.length === 0, backstage }),
-      computedChildren(false)
+      renderDirectoryChildren({ children, onLeafAction, visible: false, treeId, backstage })
     ],
     behaviours: Behaviour.derive([
       Toggling.config({
@@ -267,10 +283,16 @@ const renderDirectory = ({
         } : {}),
         toggleClass: 'tox-tree--directory--expanded',
         onToggled: (comp, childrenVisible) => {
-          Replacing.replaceAt(comp, 1, Optional.some(computedChildren(childrenVisible)));
+          const childrenComp = comp.components()[1];
+          const newChildren = computedChildrenComponents(childrenVisible);
+          if (childrenVisible) {
+            Sliding.grow(childrenComp);
+          } else {
+            Sliding.shrink(childrenComp);
+          }
+          Replacing.set(childrenComp, newChildren);
         }
       }),
-      Replacing.config({})
     ])
   });
 };

@@ -194,10 +194,6 @@
       > .tox-tree--directory__label .tox-chevron {
         transform: rotate(90deg);
       }
-
-      > .tox-tree--directory__children {
-        max-height: 200px;
-      }
     }
 
     /* stylelint-disable no-descending-specificity */
@@ -271,10 +267,13 @@
   }
 
   .tox-tree--directory__children {
-    max-height: 0;
     overflow: hidden;
     padding-left: 16px;
-    transition: max-height .5s ease-in-out;
+
+    &.tox-tree--directory__children--growing,
+    &.tox-tree--directory__children--shrinking {
+      transition: height .5s ease-in-out;
+    }
   }
 
   .tox-trbtn.tox-tree--leaf__label {
