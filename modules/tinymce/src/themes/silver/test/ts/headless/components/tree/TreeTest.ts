@@ -144,7 +144,7 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
 
   });
 
-  it('TINY-9640: Tree is navigable with keyboard according to a11y recommendations from mdn', () => {
+  it('TINY-9640: Tree is navigable with keyboard according to a11y recommendations from w3c', () => {
     const dir = getTreeItem('.tox-tree--directory');
 
     // Start with clean state
