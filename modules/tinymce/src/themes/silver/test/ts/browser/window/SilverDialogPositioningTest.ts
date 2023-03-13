@@ -73,7 +73,7 @@ describe('browser.tinymce.themes.silver.window.SilverDialogPositioningTest', () 
 
     const assertWithinViewableArea = (dialog: SugarElement<HTMLElement>) => {
       const { left, right, top, bottom } = dialog.dom.getBoundingClientRect();
-      if (left < 0 || right < 0 || top < 0 || bottom < 0) {
+      if (left < 0 || right > window.innerWidth || top < 0 || bottom > window.innerHeight) {
         assert.fail('Dialog is outside of the viewable area');
       }
     };
