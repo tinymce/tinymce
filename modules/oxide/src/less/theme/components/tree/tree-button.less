@@ -221,7 +221,12 @@
       }
 
       &:hover:has(.tox-mbtn:hover) {
-        background-color: transparent;
+        background-color: @tree-button-background-color;
+        color: @tree-button-text-color;
+
+        .tox-chevron svg {
+          fill: @tree-button-icon-color;
+        }
       }
 
       .tox-chevron {
@@ -258,7 +263,12 @@
     }
 
     &:hover:has(.tox-mbtn:hover) {
-      background-color: transparent;
+      background-color: @tree-button-background-color;
+      color: @tree-button-text-color;
+
+      .tox-chevron svg {
+        fill: @tree-button-icon-color;
+      }
     }
   }
 
