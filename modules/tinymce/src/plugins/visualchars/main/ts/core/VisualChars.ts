@@ -6,16 +6,13 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Data from './Data';
 import * as Nodes from './Nodes';
 
-const isWrappedNbsp = (node: Node): node is HTMLSpanElement =>
-  node.nodeName.toLowerCase() === 'span' && (node as HTMLSpanElement).classList.contains('mce-nbsp-wrap');
-
 const show = (editor: Editor, rootElm: Element): void => {
   const dom = editor.dom;
   const nodeList = Nodes.filterEditableDescendants(SugarElement.fromDom(rootElm), Nodes.isMatch, editor.dom.isEditable(rootElm));
 
   Arr.each(nodeList, (n) => {
     const parent = n.dom.parentNode as Node;
-    if (isWrappedNbsp(parent)) {
+    if (Nodes.isWrappedNbsp(parent)) {
       Class.add(SugarElement.fromDom(parent), Data.nbspClass);
     } else {
       const withSpans = Nodes.replaceWithSpans(dom.encode(SugarNode.value(n) ?? ''));
@@ -35,7 +32,7 @@ const hide = (editor: Editor, rootElm: Element): void => {
   const nodeList = editor.dom.select(Data.selector, rootElm);
 
   Arr.each(nodeList, (node) => {
-    if (isWrappedNbsp(node)) {
+    if (Nodes.isWrappedNbsp(node)) {
       Class.remove(SugarElement.fromDom(node), Data.nbspClass);
     } else {
       editor.dom.remove(node, true);
