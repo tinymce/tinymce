@@ -19,11 +19,11 @@
 @tree-button-text-color: contrast(@background-color, @color-white, @color-black);
 @tree-button-text-transform: none;
 
-@tree-button-hover-background-color: multiply(white, contrast(@background-color, fade(@color-tint, 20), fade(@color-tint, 80)));
+@tree-button-hover-background-color: @hover-background-color;
 @tree-button-hover-border: @tree-button-border;
 @tree-button-hover-box-shadow: @tree-button-box-shadow;
-@tree-button-hover-icon-color: @tree-button-icon-color;
-@tree-button-hover-text-color: @tree-button-text-color;
+@tree-button-hover-icon-color: @tree-button-hover-text-color;
+@tree-button-hover-text-color: @active-text-color;
 
 @tree-button-focus-background-color: @tree-button-hover-background-color;
 @tree-button-focus-border: @tree-button-hover-border;
@@ -227,10 +227,6 @@
       .tox-chevron {
         margin-right: 6px;
         transition: transform .5s ease-in-out;
-
-        svg {
-          fill: @tree-button-chevron-color;
-        }
       }
 
       &.tox-tree--directory__label--active .tox-chevron {
