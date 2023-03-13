@@ -1,4 +1,5 @@
 import { Arr, Obj, Optional, Type, Unicode } from '@ephox/katamari';
+import { SugarText, SugarElement } from '@ephox/sugar';
 
 import * as TextSearch from '../../alien/TextSearch';
 import DOMUtils from '../../api/dom/DOMUtils';
@@ -9,6 +10,8 @@ import Tools from '../../api/util/Tools';
 import { generatePathRange, resolvePathRange } from '../utils/PathRange';
 import * as Utils from '../utils/Utils';
 import { BlockPattern, BlockPatternMatch, Pattern, PatternSet } from './PatternTypes';
+
+const startsWithSingleSpace = (s: string): boolean => /^\s[^\s]/.test(s);
 
 const stripPattern = (dom: DOMUtils, block: Node, pattern: BlockPattern): void => {
   // The pattern could be across fragmented text nodes, so we need to find the end
@@ -23,6 +26,20 @@ const stripPattern = (dom: DOMUtils, block: Node, pattern: BlockPattern): void =
 
       Utils.deleteRng(dom, rng, (e: Node) => e === block);
     });
+
+    /**
+     * TINY-9603: If there is a single space between pattern.start and text (e.g. # 1)
+     * then it will be left in the text content and then can appear in certain circumstances.
+     * This is not an issue with multiple spaces because they are transformed to non-breaking ones.
+     *
+     * In this specific case we've decided to remove this single space whatsoever
+     * as it feels to be the expected behavior.
+     */
+    const text = SugarElement.fromDom(node);
+    const textContent = SugarText.get(text);
+    if (startsWithSingleSpace(textContent)) {
+      SugarText.set(text, textContent.slice(1));
+    }
   });
 };
 
