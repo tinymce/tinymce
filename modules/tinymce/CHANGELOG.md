@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The formatting of `contenteditable="false"` elements are no longer cloned to new cells while creating new table rows. #TINY-9449
 - Changed the color of `@dialog-table-border-color`, and added right padding to the first cell of dialog table. #TINY-9380
 - The sidebar element now has accessibility role `region` when visible and `presentation` when hidden. #TINY-9517
+- The class `tox-custom-editor` now has a border highlight when it is selected. #TINY-9673
 
 ### Fixed
 - Add support for navigating inside the tree component using arrow keys and shift key. #TINY-9614
@@ -84,6 +85,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Drag and dropping the last noneditable element out of its parent block would not properly pad the parent block element. #TINY-9606
 - Applying heading formats from `text_patterns` produced an invisible space before a word. #TINY-9603
 - Opening color swatches would cause tab to crash when `color_cols` or other column option was set to 0. #TINY-9649
+- Closing a view, `More...` button disappeared if the editor had `toolbar_mode: 'sliding'` and the toolbar was opened. #TINY-9419
 - Inline dialogs would open partially off screen when the toolbar had a small width. #TINY-9588
 
 ## 6.3.2 - 2023-02-22

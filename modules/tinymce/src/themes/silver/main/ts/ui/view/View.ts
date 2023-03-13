@@ -1,5 +1,5 @@
 import {
-  AlloyComponent, AlloySpec, Composite, Container, PartType, RawDomSchema, SimpleSpec,
+  AlloyComponent, AlloySpec, Behaviour, Composite, Container, Focusing, FocusInsideModes, Keying, PartType, RawDomSchema, SimpleSpec,
   Sketcher, UiSketcher
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
@@ -73,6 +73,14 @@ const renderViewHeader = (spec: ViewHeaderSpec) => {
         ...(isPhone || isTablet ? [ 'tox-view--mobile', 'tox-view--scrolling' ] : [])
       ]
     },
+    behaviours: Behaviour.derive([
+      Focusing.config({}),
+      Keying.config({
+        mode: 'flow',
+        selector: 'button, .tox-button',
+        focusInside: FocusInsideModes.OnEnterOrSpaceMode
+      })
+    ]),
     components: hasGroups ?
       endButtons
       : [
