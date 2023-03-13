@@ -196,6 +196,10 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
       });
     },
     showMainView: (comp: AlloyComponent) => {
+      if (toolbarDrawerOpenState) {
+        apis.toggleToolbarDrawer(comp);
+      }
+
       Composite.parts.getPart(comp, detail, 'editorContainer').each((editorContainer) => {
         const element = editorContainer.element;
 
@@ -203,9 +207,7 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
         Attribute.remove(element, 'aria-hidden');
       });
 
-      if (toolbarDrawerOpenState) {
-        apis.toggleToolbarDrawer(comp);
-      }
+      apis.refreshToolbar(comp);
     }
   };
 
