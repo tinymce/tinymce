@@ -33,6 +33,11 @@
     border-radius: @well-border-radius;
     display: flex;
     flex: 1;
+    overflow: hidden;
     position: relative;
+
+    &:focus-within {
+      &:extend(.tox .tox-textfield:focus);
+    }
   }
 }
