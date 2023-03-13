@@ -91,6 +91,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Drag and dropping the last noneditable element out of its parent block would not properly pad the parent block element. #TINY-9606
 - Applying heading formats from `text_patterns` produced an invisible space before a word. #TINY-9603
 - Opening color swatches would cause tab to crash when `color_cols` or other column option was set to 0. #TINY-9649
+- Closing a view, `More...` button disappeared if the editor had `toolbar_mode: 'sliding'` and the toolbar was opened. #TINY-9419
 
 ## 6.3.1 - 2022-12-06
 
