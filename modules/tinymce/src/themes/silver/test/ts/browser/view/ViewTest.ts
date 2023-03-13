@@ -371,4 +371,63 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       assert.equal(editor.queryCommandValue('ToggleView'), '', 'Should still be empty since inline mode does not support views');
     });
   });
+
+  context('Sliding toolbar', () => {
+    const hook = TinyHooks.bddSetup<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      toolbar_mode: 'sliding',
+      toolbar: Arr.range(10, Fun.constant('bold | italic ')).join(''),
+      width: 500,
+      setup: (editor: Editor) => {
+        editor.ui.registry.addView('myview1', {
+          buttons: [
+            {
+              type: 'button',
+              text: 'Button 1',
+              onAction: Fun.noop
+            },
+            {
+              type: 'button',
+              text: 'Button 2',
+              onAction: Fun.noop,
+              buttonType: 'primary'
+            }
+          ],
+          onShow: (api) => {
+            api.getContainer().innerHTML = '<button>myview1</button>';
+          },
+          onHide: Fun.noop
+        });
+      }
+    }, []);
+
+    const assertMainViewVisible = () => {
+      const editor = hook.editor();
+      const editorContainer = UiFinder.findIn(TinyDom.container(editor), '.tox-editor-container').getOrDie();
+
+      assert.isFalse(Attribute.has(editorContainer, 'aria-hidden'), 'Should not have aria-hidden');
+      assert.isTrue(Css.getRaw(editorContainer, 'display').isNone(), 'Should not have display none');
+    };
+
+    const assertViewHtml = (viewIndex: number, expectedHtml: string) => {
+      const editor = hook.editor();
+      const editorContainer = UiFinder.findIn<HTMLElement>(TinyDom.container(editor), `.tox-view:nth-child(${viewIndex + 1}) .tox-view__pane`).getOrDie();
+
+      assert.equal(Html.get(editorContainer), expectedHtml);
+    };
+
+    it('TINY-9419: "More..." button should not be removed if the toolbar is opened and view is opened and close', () => {
+      const editor = hook.editor();
+
+      editor.setContent('<p>ab</p>');
+      TinyUiActions.clickOnToolbar(editor, '[title="More..."]');
+
+      editor.execCommand('ToggleView', false, 'myview1');
+      assertViewHtml(0, '<button>myview1</button>');
+      editor.execCommand('ToggleView', false, 'myview1');
+      assertMainViewVisible();
+      const moreButton = UiFinder.findIn(TinyDom.container(editor), '[title="More..."]');
+      assert.isTrue(moreButton.isValue(), 'More... button should be there');
+    });
+  });
 });
