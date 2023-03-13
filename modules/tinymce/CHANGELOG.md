@@ -15,12 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `highlight_on_focus` option which enables highlighting the content area on focus. #TINY-9277
 - New `fontsizeinput` toolbar item which allows the user to set the size via input and also increase and decrease it with `+` and `-` buttons. #TINY-9429
 - Added `skipFocus` option to the `ToggleToolbarDrawer` command to preserve focus. #TINY-9337
-- Added `common/space/delBetweenExclamationMarks` to remove spaces between exclamation marks. #TINY-9398
 - New `font_size_input_default_unit` option allow to use of numbers without a unit in `fontsizeinput` and have them parsed with the default unit, if it is not defined the default is `pt`. #TINY-9585
 - New `group` and `togglebutton` in view. #TINY-9523
 - New `togglebutton` in dialog footer buttons. #TINY-9523
 - Added `toggleFullscreen` to dialog API. #TINY-9528
-- New text-size-increase and text-size-decrease icons. #TINY-9530
 - New `text-size-increase` and `text-size-decrease` icons. #TINY-9530
 - New `xss_sanitization` option to allow for XSS sanitization to be disabled. #TINY-9600
 - Added top right close 'x' button of the modal dialogs to keyboard navigation. #TINY-9520
@@ -31,7 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Templates will be parsed before preview and insertion to make preview consistent with inserted template content and prevent XSS. #TINY-9244
 - Pressing backspace in an empty line now preserves formatting in a previous empty line. #TINY-9454
 - Pressing enter inside the `inputfontsize` input would not move the focus back into the editor content. #TINY-9598
-- Improved contrast of border colors against the background color throughout the UI. #TINY-9587
+- Drag and drop events for noneditable elements did not include details like target element. #TINY-9599
+- Updated focus, active, and enabled colors of UI buttons for improved contrast against the UI color. #TINY-9176
 
 ### Changed
 - The `link` plugins context menu items will no longer appear for noneditable links. #TINY-9491
@@ -40,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The sidebar element now has accessibility role `region` when visible and `presentation` when hidden. #TINY-9517
 
 ### Fixed
+- Add support for navigating inside the tree component using arrow keys and shift key. #TINY-9614
 - Sometimes the editor would finish initializing before the silver theme would have finished loading. #TINY-9556
 - The searchreplace modal would close incorrectly when clicking outside of the alert that pops up when no match is found. #TINY-9443
 - Color picker on toolbar would not update when changing forecolor or backcolor from menu. #TINY-9439
@@ -82,6 +82,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inserting elements that was not valid within the closest editing host would incorrectly split the editing host. #TINY-9595
 - `color_cols` option was not respected in the `forecolor` or `backcolor` color swatches. #TINY-9560
 - Drag and dropping the last noneditable element out of its parent block would not properly pad the parent block element. #TINY-9606
+- Applying heading formats from `text_patterns` produced an invisible space before a word. #TINY-9603
+- Opening color swatches would cause tab to crash when `color_cols` or other column option was set to 0. #TINY-9649
 
 ## 6.3.2 - 2023-02-22
 

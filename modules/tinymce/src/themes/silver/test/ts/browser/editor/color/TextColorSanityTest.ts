@@ -329,6 +329,33 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     });
   });
 
+  context('Color Cols Default From Zero Test', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      toolbar: 'forecolor backcolor fontsize',
+      base_url: '/project/tinymce/js/tinymce',
+      color_cols: 0,
+      color_cols_foreground: 0
+    }, [], true);
+
+    it('TINY-9560: color_map_foreground has correct number of columns', async () => {
+      const editor = hook.editor();
+      setupContent(editor);
+      TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+      await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
+      // Foreground color gets value from `color_cols_foreground` which should be replaced when set to 0
+      Assert.eq('Cols is the expected value', getColorCols(editor, 'forecolor'), 5);
+    });
+
+    it('TINY-9560: color_map_background has correct number of columns', async () => {
+      const editor = hook.editor();
+      setupContent(editor);
+      TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+      await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
+      // Background color should get default value from `color_cols` which should be replaced when set to 0
+      Assert.eq('Cols is the expected value', getColorCols(editor, 'hilitecolor'), 5);
+    });
+  });
+
   context('Custom default background and foreground set', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       toolbar: 'forecolor backcolor fontsize',

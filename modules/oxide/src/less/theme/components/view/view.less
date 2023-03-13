@@ -1,4 +1,5 @@
 @view-header-padding: @pad-sm @pad-sm 0 @pad-sm;
+@view-header-padding-mobile: @pad-sm;
 @view-pane-padding: @pad-sm;
 
 @view-toolbar-button-spacing-x: 8px;
@@ -15,8 +16,9 @@
 
   .tox-view {
     display: flex;
-    flex: 1;
+    flex: 1 1 auto;
     flex-direction: column;
+    overflow: hidden;
   }
 
   .tox-view__header {
@@ -26,6 +28,16 @@
     justify-content: space-between;
     padding: @view-header-padding;
     position: relative;
+  }
+
+  .tox-view--mobile.tox-view__header,
+  .tox-view--mobile.tox-view__toolbar {
+    padding: @view-header-padding-mobile;
+  }
+
+  .tox-view--scrolling {
+    flex-wrap: nowrap;
+    overflow-x: auto;
   }
 
   .tox-view__toolbar {
