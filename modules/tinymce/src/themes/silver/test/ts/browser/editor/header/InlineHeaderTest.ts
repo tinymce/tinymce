@@ -61,7 +61,7 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
     });
 
   it('TINY-8977: If the editor fits with a wide margin it should not set a width', () =>
-    pRunToolbarWidthTest(500, Optional.none())
+    pRunToolbarWidthTest(500, Optional.some('400px'))
   );
 
   it('TINY-8977: If the editor does not fit within the view', () =>
