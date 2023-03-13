@@ -22,7 +22,7 @@ describe('browser.tinymce.themes.silver.window.SilverDialogPositioningTest', () 
     { label: 'Location Top', location: 'top' },
     { label: 'Location Bottom', location: 'bottom' }
   ], (toolbarLocation) => context(`${editorMode.label} ${editorDirectionality.label} Toolbar ${toolbarLocation.label}`, () => {
-    const inlineHook = TinyHooks.bddSetupLight<Editor>({
+    const hook = TinyHooks.bddSetupLight<Editor>({
       base_url: '/project/tinymce/js/tinymce',
       inline: editorMode.inline,
       directionality: editorDirectionality.directionality,
@@ -60,7 +60,7 @@ describe('browser.tinymce.themes.silver.window.SilverDialogPositioningTest', () 
     };
 
     const pTestOpenDialogAssertPosition = async (params: WindowParams) => {
-      const editor = inlineHook.editor();
+      const editor = hook.editor();
       const api = DialogUtils.open(editor, dialogSpec, params);
       await TinyUiActions.pWaitForDialog(editor);
       const dialog = UiFinder.findIn(SugarBody.body(), '.tox-dialog').getOrDie() as SugarElement<HTMLElement>;
