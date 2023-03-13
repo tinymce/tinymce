@@ -165,7 +165,7 @@ export const InlineHeader = (
         top: Math.round(top) + 'px'
       };
 
-      const widthProperties = optToolbarWidth.bind(
+      const widthProperties = optToolbarWidth.map(
         (toolbarWidth: number) => {
           const scroll = Scroll.get();
 
@@ -190,13 +190,9 @@ export const InlineHeader = (
             minimumToolbarWidth
           );
 
-          if (availableWidth > width) { // If there's already enough space, don't add a width for performance reasons.
-            return Optional.none();
-          }
-
-          return Optional.some({
+          return {
             width: width + 'px'
-          });
+          };
         }
       ).getOr({ });
 
