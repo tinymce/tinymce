@@ -22,6 +22,7 @@ const schema = [
   Fields.onKeyboardHandler('onEscape'),
   FieldSchema.defaulted('executeOnMove', false),
   FieldSchema.defaulted('allowVertical', true),
+  FieldSchema.defaulted('allowHorizontal', true),
   FieldSchema.defaulted('cycles', true)
 ];
 
@@ -65,8 +66,8 @@ const getKeydownRules = (
   flowConfig: FlowConfig,
   _flowState: Stateless
 ): Array<KeyRules.KeyRule<FlowConfig, Stateless>> => {
-  const westMovers = Keys.LEFT.concat(flowConfig.allowVertical ? Keys.UP : [ ]);
-  const eastMovers = Keys.RIGHT.concat(flowConfig.allowVertical ? Keys.DOWN : [ ]);
+  const westMovers = [ ...flowConfig.allowHorizontal ? Keys.LEFT : [] ].concat(flowConfig.allowVertical ? Keys.UP : [ ]);
+  const eastMovers = [ ...flowConfig.allowHorizontal ? Keys.RIGHT : [] ].concat(flowConfig.allowVertical ? Keys.DOWN : [ ]);
   return [
     KeyRules.rule(KeyMatch.inSet(westMovers), doMove(DomMovement.west(moveLeft, moveRight))),
     KeyRules.rule(KeyMatch.inSet(eastMovers), doMove(DomMovement.east(moveLeft, moveRight))),
