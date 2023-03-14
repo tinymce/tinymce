@@ -47,8 +47,8 @@ const getInlineDialogAnchor = (contentAreaElement: () => SugarElement<HTMLElemen
     hotspot: lazyAnchorbar(),
     bubble: Bubble.nu(-bubbleSize, bubbleSize, bubbleAlignments),
     layouts: {
-      onRtl: () => [ Layout.southeast ],
-      onLtr: () => [ Layout.southwest ]
+      onRtl: () => [ Layout.southeast, Layout.southwest, Layout.south ],
+      onLtr: () => [ Layout.southwest, Layout.southeast, Layout.south ]
     },
     overrides
   });

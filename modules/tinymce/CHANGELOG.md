@@ -86,7 +86,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Applying heading formats from `text_patterns` produced an invisible space before a word. #TINY-9603
 - Opening color swatches would cause tab to crash when `color_cols` or other column option was set to 0. #TINY-9649
 - Closing a view, `More...` button disappeared if the editor had `toolbar_mode: 'sliding'` and the toolbar was opened. #TINY-9419
+- Inline dialogs would open partially off screen when the toolbar had a small width. #TINY-9588
 - Word count was inaccurate for documents with specific characters. #TINY-8122
+
 
 ## 6.3.2 - 2023-02-22
 
