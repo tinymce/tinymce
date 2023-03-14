@@ -26,18 +26,19 @@ const findUrlEnd = (characters: string[], startIndex: number): number => {
   return peakedWord.substr(0, 3) === '://' ? endIndex : startIndex;
 };
 
+type Word<T> = T[];
 interface WordIndex {
   start: number;
   end: number;
 }
 export interface WordsWithIndices<T> {
-  words: T[][];
+  words: Word<T>[];
   indices: WordIndex[];
 }
-const findWordsAndIndices = <T>(chars: T[], sChars: string[], characterMap: CharacterMap, options: WordOptions): WordsWithIndices<T> => {
-  const words: T[][] = [];
+const findWordsAndIndices = <T>(chars: Word<T>, sChars: string[], characterMap: CharacterMap, options: WordOptions): WordsWithIndices<T> => {
+  const words: Word<T>[] = [];
   const indices: WordIndex[] = [];
-  let word: T[] = [];
+  let word: Word<T> = [];
 
   // Loop through each character in the classification map and determine whether
   // it precedes a word boundary, building an array of distinct words as we go.
@@ -89,13 +90,13 @@ const getDefaultOptions = (): WordOptions => ({
   includePunctuation: false
 });
 
-const getWordsAndIndices = <T>(chars: T[], extract: (char: T) => string, options?: WordOptions): WordsWithIndices<T> => {
+const getWordsAndIndices = <T>(chars: Word<T>, extract: (char: T) => string, options?: WordOptions): WordsWithIndices<T> => {
   options = {
     ...getDefaultOptions(),
     ...options
   };
 
-  const filteredChars: T[] = [];
+  const filteredChars: Word<T> = [];
   const extractedChars: string[] = [];
 
   // tslint:disable-next-line:prefer-for-of
@@ -111,7 +112,7 @@ const getWordsAndIndices = <T>(chars: T[], extract: (char: T) => string, options
   return findWordsAndIndices(filteredChars, extractedChars, characterMap, options);
 };
 
-const getWords = <T>(chars: T[], extract: (char: T) => string, options?: WordOptions): T[][] =>
+const getWords = <T>(chars: Word<T>, extract: (char: T) => string, options?: WordOptions): Word<T>[] =>
   getWordsAndIndices(chars, extract, options).words;
 
 export {
