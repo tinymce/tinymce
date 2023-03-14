@@ -5,6 +5,7 @@ import { Cell, Merger, Obj, Optional, Type } from '@ephox/katamari';
 
 import { formBlockEvent, formCloseEvent, formUnblockEvent } from '../general/FormEvents';
 import { bodyChannel, dialogChannel, footerChannel, titleChannel } from './DialogChannels';
+import * as SilverDialogCommon from './SilverDialogCommon';
 import { FooterState } from './SilverDialogFooter';
 
 const getCompByName = (access: DialogAccess, name: string): Optional<AlloyComponent> => {
@@ -118,6 +119,7 @@ const getDialogApi = <T extends Dialog.DialogData>(
     withRoot((root) => {
       const id = access.getId();
       const dialogInit = doRedial(d);
+      const storedMenuButtons = SilverDialogCommon.mapMenuButtons(dialogInit.internalDialog.buttons, menuItemStates);
       // TINY-9223: We only need to broadcast to the mothership containing the dialog
       root.getSystem().broadcastOn([ `${dialogChannel}-${id}` ], dialogInit);
 
@@ -130,7 +132,10 @@ const getDialogApi = <T extends Dialog.DialogData>(
       // the received broadcasts.
       root.getSystem().broadcastOn([ `${titleChannel}-${id}` ], dialogInit.internalDialog);
       root.getSystem().broadcastOn([ `${bodyChannel}-${id}` ], dialogInit.internalDialog);
-      root.getSystem().broadcastOn([ `${footerChannel}-${id}` ], dialogInit.internalDialog);
+      root.getSystem().broadcastOn([ `${footerChannel}-${id}` ], {
+        ...dialogInit.internalDialog,
+        buttons: storedMenuButtons
+      });
 
       instanceApi.setData(dialogInit.initialData as T);
     });
