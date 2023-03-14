@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `xss_sanitization` option to allow disabling of XSS sanitization. #TINY-9600
 - Added the top right close button of modal dialogs to the tabbing order. The 'x' button in these dialogs can now be accessed using keyboard navigation. #TINY-9520
 - New `ui_mode` option for editor in scrollable containers support. #TINY-9414
+- The sidebar element now has the accessibility role `region` when visible and the accessibility role `presentation` when hidden. #TINY-9517
+- The `tox-custom-editor` class now has a border highlight when it is selected. #TINY-9673
 
 ### Improved
 - Direct invalid child text nodes of list elements are now wrapped in list item elements. #TINY-4818
@@ -36,8 +38,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `link` plugins context menu items no longer appears for links that include elements with a `contenteditable="false"` attribute. #TINY-9491
 - The formatting of elements with a `contenteditable="false"` attribute are no longer cloned to new cells when new table rows are created. #TINY-9449
 - Changed the color of `@dialog-table-border-color`, and added right padding to the first cell of dialog table. #TINY-9380
-- The sidebar element now has the accessibility role `region` when visible and the accessibility role `presentation` when hidden. #TINY-9517
-- The `tox-custom-editor` class now has a border highlight when it is selected. #TINY-9673
 
 ### Fixed
 - Add support for navigating inside the tree component using arrow keys and shift key. #TINY-9614
