@@ -1,6 +1,6 @@
 import { Chain, Guard, NamedChain, Waiter } from '@ephox/agar';
 import { Optional, Result } from '@ephox/katamari';
-import { Css, Scroll, SugarElement, Traverse } from '@ephox/sugar';
+import { Css, Scroll, Traverse } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import { Bounds } from 'ephox/alloy/alien/Boxes';
@@ -18,11 +18,6 @@ const addPopupToSinkCommon = (popup: AlloyComponent, sink: AlloyComponent, posit
 
 const addPopupToSink = (popup: AlloyComponent, placementSpec: PlacementSpec, sink: AlloyComponent) => {
   const positioner = () => Positioning.position(sink, popup, placementSpec);
-  addPopupToSinkCommon(popup, sink, positioner);
-};
-
-const addPopupToSinkWithin = (popup: AlloyComponent, placementSpec: PlacementSpec, sink: AlloyComponent, elem: SugarElement<HTMLElement>) => {
-  const positioner = () => Positioning.positionWithin(sink, popup, placementSpec, Optional.some(elem));
   addPopupToSinkCommon(popup, sink, positioner);
 };
 
@@ -54,11 +49,6 @@ const pTestSink = async (sinkName: string, sink: AlloyComponent, popup: AlloyCom
   await pTestPopupPosition(sinkName, popup, sink);
 };
 
-const pTestSinkWithin = async (sinkName: string, sink: AlloyComponent, popup: AlloyComponent, placementSpec: PlacementSpec, elem: SugarElement<HTMLElement>): Promise<void> => {
-  addPopupToSinkWithin(popup, placementSpec, sink, elem);
-  await pTestPopupPosition(sinkName, popup, sink);
-};
-
 const pTestSinkWithinBounds = async (sinkName: string, sink: AlloyComponent, popup: AlloyComponent, placementSpec: PlacementSpec, bounds: Bounds): Promise<void> => {
   addPopupToSinkWithinBounds(popup, placementSpec, sink, bounds);
   await pTestPopupPosition(sinkName, popup, sink);
@@ -74,13 +64,8 @@ const cAddPopupToSink = (sinkName: string): NamedChain => NamedChain.bundle((dat
   return Result.value(data);
 });
 
-const cAddPopupToSinkWithin = (sinkName: string, elem: SugarElement<HTMLElement>): NamedChain => NamedChain.bundle((data) => {
-  addPopupToSinkWithin(data.popup, { anchor: data.anchor }, data[sinkName], elem);
-  return Result.value(data);
-});
-
-const cAddPopupToSinkWithinBounds = (sinkName: string, bounds: Bounds): NamedChain => NamedChain.bundle((data) => {
-  addPopupToSinkWithinBounds(data.popup, { anchor: data.anchor }, data[sinkName], bounds);
+const cAddPopupToSinkWithinBounds = (sinkName: string, getBounds: () => Bounds): NamedChain => NamedChain.bundle((data) => {
+  addPopupToSinkWithinBounds(data.popup, { anchor: data.anchor }, data[sinkName], getBounds());
   return Result.value(data);
 });
 
@@ -129,18 +114,10 @@ const cTestSink = (label: string, sinkName: string): NamedChain => ChainUtils.cL
   ]
 );
 
-const cTestSinkWithin = (label: string, sinkName: string, elem: SugarElement<HTMLElement>): NamedChain => ChainUtils.cLogging(
+const cTestSinkWithinBounds = (label: string, sinkName: string, getBounds: () => Bounds): NamedChain => ChainUtils.cLogging(
   label,
   [
-    cAddPopupToSinkWithin(sinkName, elem),
-    cTestSinkPopupPosition(sinkName)
-  ]
-);
-
-const cTestSinkWithinBounds = (label: string, sinkName: string, bounds: Bounds): NamedChain => ChainUtils.cLogging(
-  label,
-  [
-    cAddPopupToSinkWithinBounds(sinkName, bounds),
+    cAddPopupToSinkWithinBounds(sinkName, getBounds),
     cTestSinkPopupPosition(sinkName)
   ]
 );
@@ -155,10 +132,8 @@ const cScrollDown = (componentName: string, amount: string): NamedChain => Chain
 
 export {
   cTestSink,
-  cTestSinkWithin,
   cTestSinkWithinBounds,
   cScrollDown,
   pTestSink,
-  pTestSinkWithin,
   pTestSinkWithinBounds
 };

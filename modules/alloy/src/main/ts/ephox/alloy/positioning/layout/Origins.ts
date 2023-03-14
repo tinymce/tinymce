@@ -84,16 +84,19 @@ const toBox = (origin: OriginAdt, element: SugarElement<HTMLElement>): Boxes.Bou
   return Boxes.bounds(position.left, position.top, width, height);
 };
 
-const viewport = (origin: OriginAdt, getBounds: Optional<() => Boxes.Bounds>): Boxes.Bounds => getBounds.fold(() =>
-/* There are no bounds supplied */
-  origin.fold(Boxes.win, Boxes.win, Boxes.bounds)
-, (b) =>
-/* Use any bounds supplied or remove the scroll position of the bounds for fixed. */
-  origin.fold(b, b, () => {
-    const bounds = b();
-    const pos = translate(origin, bounds.x, bounds.y);
-    return Boxes.bounds(pos.left, pos.top, bounds.width, bounds.height);
-  })
+const viewport = (origin: OriginAdt, optBounds: Optional<Boxes.Bounds>): Boxes.Bounds => optBounds.fold(
+  /* There are no bounds supplied */
+  () => origin.fold(Boxes.win, Boxes.win, Boxes.bounds),
+  (bounds) =>
+    /* Use any bounds supplied or remove the scroll position of the bounds for fixed. */
+    origin.fold(
+      Fun.constant(bounds),
+      Fun.constant(bounds),
+      () => {
+        const pos = translate(origin, bounds.x, bounds.y);
+        return Boxes.bounds(pos.left, pos.top, bounds.width, bounds.height);
+      }
+    )
 );
 
 const translate = (origin: OriginAdt, x: number, y: number): SugarPosition => {

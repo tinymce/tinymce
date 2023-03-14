@@ -22,7 +22,41 @@ export default (): void => {
             {
               type: 'directory',
               id: Id.generate(''),
+              title: 'Dir Empty',
+              menu: {
+                type: 'menubutton',
+                icon: 'image-options',
+                fetch: (success) => success([
+                  {
+                    type: 'menuitem',
+                    text: 'menuitem',
+                    onAction: () => {
+                      // eslint-disable-next-line
+                        console.log('clicked action');
+                    }
+                  }
+                ])
+              },
+              children: []
+            },
+            {
+              type: 'directory',
+              id: Id.generate(''),
               title: 'Dir',
+              menu: {
+                type: 'menubutton',
+                icon: 'image-options',
+                fetch: (success) => success([
+                  {
+                    type: 'menuitem',
+                    text: 'menuitem',
+                    onAction: () => {
+                      // eslint-disable-next-line
+                        console.log('clicked action');
+                    }
+                  }
+                ])
+              },
               children: [
                 {
                   type: 'directory',
@@ -85,6 +119,7 @@ export default (): void => {
             }
           };
           const getDialogSpec = (tree: Dialog.TreeItemSpec[], initialData: Data ): Dialog.DialogSpec<Data> => ({
+            size: 'large',
             initialData,
             onChange: (api) => {
               const { search } = api.getData();
@@ -101,18 +136,23 @@ export default (): void => {
               type: 'panel',
               items: [
                 {
-                  type: 'input',
-                  name: 'search',
-                  label: 'Search',
-                },
-                {
-                  type: 'tree',
-                  onLeafAction: (id) => {
-                  // eslint-disable-next-line
-                  console.log('clicked on item with id', id);
-                  },
-                  items: tree
+                  type: 'bar',
+                  items: [
+                    {
+                      type: 'panel',
+                      items: [
+                        {
+                          type: 'tree',
+                          onLeafAction: (id) => {
+                            // eslint-disable-next-line
+                            console.log('clicked on item with id', id);
+                          },
+                          items: tree
+                        }]
+                    },
+                  ]
                 }
+
               ]
             }
           });

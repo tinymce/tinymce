@@ -19,11 +19,11 @@
 @tree-button-text-color: contrast(@background-color, @color-white, @color-black);
 @tree-button-text-transform: none;
 
-@tree-button-hover-background-color: multiply(white, contrast(@background-color, fade(@color-tint, 20), fade(@color-tint, 80)));
+@tree-button-hover-background-color: @hover-background-color;
 @tree-button-hover-border: @tree-button-border;
 @tree-button-hover-box-shadow: @tree-button-box-shadow;
-@tree-button-hover-icon-color: @tree-button-icon-color;
-@tree-button-hover-text-color: @tree-button-text-color;
+@tree-button-hover-icon-color: @tree-button-hover-text-color;
+@tree-button-hover-text-color: @active-text-color;
 
 @tree-button-focus-background-color: @tree-button-hover-background-color;
 @tree-button-focus-border: @tree-button-hover-border;
@@ -73,6 +73,7 @@
     outline: none;
     overflow: hidden;
     padding: 0;
+    padding-left: 8px;
     text-transform: @tree-button-text-transform;
 
     .tox-tree__label {
@@ -85,14 +86,6 @@
       display: block;
       fill: @tree-button-icon-color;
     }
-  }
-
-  // This class doesn't seem to be used anywhere.
-  // The ruleset can probably be removed.
-  .tox-trbtn.tox-trbtn-more {
-    padding-left: 5px;
-    padding-right: 5px;
-    width: inherit;
   }
 
   .tox-trbtn:focus {
@@ -197,13 +190,15 @@
     display: flex;
     flex-direction: column;
 
+    &.tox-tree--directory--expanded {
+      > .tox-tree--directory__label .tox-chevron {
+        transform: rotate(90deg);
+      }
+    }
+
     /* stylelint-disable no-descending-specificity */
     .tox-tree--directory__label {
       font-weight: bold;
-
-      .tox-tree--directory__title__wrapper {
-        padding-left: 6px;
-      }
 
       .tox-mbtn {
         margin-left: auto;
@@ -212,27 +207,31 @@
           fill: transparent;
         }
 
-        &.tox-mbtn--active svg {
+        &.tox-mbtn--active svg,
+        &:focus svg {
           fill: @tree-button-menu-icon-color;
         }
       }
 
-      &:hover .tox-mbtn {
+      &:hover .tox-mbtn,
+      &:focus .tox-mbtn {
         svg {
           fill: @tree-button-menu-icon-color;
         }
       }
 
       &:hover:has(.tox-mbtn:hover) {
-        background-color: transparent;
+        background-color: @tree-button-background-color;
+        color: @tree-button-text-color;
+
+        .tox-chevron svg {
+          fill: @tree-button-icon-color;
+        }
       }
 
       .tox-chevron {
+        margin-right: 6px;
         transition: transform .5s ease-in-out;
-
-        svg {
-          fill: @tree-button-chevron-color;
-        }
       }
 
       &.tox-tree--directory__label--active .tox-chevron {
@@ -251,7 +250,8 @@
         fill: transparent;
       }
 
-      &.tox-mbtn--active svg {
+      &.tox-mbtn--active svg,
+      &:focus svg {
         fill: @tree-button-menu-icon-color;
       }
     }
@@ -263,19 +263,23 @@
     }
 
     &:hover:has(.tox-mbtn:hover) {
-      background-color: transparent;
+      background-color: @tree-button-background-color;
+      color: @tree-button-text-color;
+
+      .tox-chevron svg {
+        fill: @tree-button-icon-color;
+      }
     }
   }
 
   .tox-tree--directory__children {
-    max-height: 0;
     overflow: hidden;
     padding-left: 16px;
-    transition: max-height .5s ease-in-out;
-  }
 
-  .tox-tree--directory__children.tox-trbtn--expanded {
-    max-height: 200px;
+    &.tox-tree--directory__children--growing,
+    &.tox-tree--directory__children--shrinking {
+      transition: height .5s ease-in-out;
+    }
   }
 
   .tox-trbtn.tox-tree--leaf__label {

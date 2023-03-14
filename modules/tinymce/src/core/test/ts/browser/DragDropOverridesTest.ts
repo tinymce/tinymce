@@ -1,7 +1,7 @@
 import { Assertions, DragnDrop, Keyboard, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Cell } from '@ephox/katamari';
-import { SugarBody, SugarLocation } from '@ephox/sugar';
+import { Arr, Type } from '@ephox/katamari';
+import { Html, SelectorFind, SugarBody, SugarElement, SugarLocation, Traverse } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.DragDropOverridesTest', () => {
   context('Tests when the editor is inside the viewport', () => {
-    const fired = Cell(false);
+    let events: DragEvent[] = [];
     const hook = TinyHooks.bddSetup<Editor>({
       indent: false,
       menubar: false,
@@ -19,16 +19,58 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
     }, [], true);
 
     before(async () => {
-      hook.editor().on('dragend', () => {
-        fired.set(true);
+      hook.editor().on('dragstart drop dragend', (e: DragEvent) => {
+        events = [ ...events, e ];
       });
       await Waiter.pWait(100); // Wait a small amount of time to ensure the events have been bound
     });
 
     beforeEach(() => {
-      fired.set(false);
+      events = [];
       Mouse.mouseMoveTo(SugarBody.body(), 0, 0);
     });
+
+    const assertEventsDispatched = (expectedTypes: string[]) => {
+      const eventTypes = Arr.map(events, (e) => e.type);
+
+      assert.deepEqual(eventTypes, expectedTypes);
+    };
+
+    const assertDndEvent = (expectedType: string, expectedClass: string, assertMouseCords = true) => {
+      const event = Arr.find(events, ({ type }) => type === expectedType).getOrDie(`Could not find expected event type: ${expectedType}`);
+      const cordKeys = [ 'x', 'y', 'clientX', 'clientY', 'screenX', 'screenY', 'pageX', 'pageY' ] as const;
+
+      if (assertMouseCords) {
+        Arr.each(cordKeys, (key) => assert.isAtLeast(event[key], 1));
+      }
+
+      assert.equal((event.target as HTMLElement)?.className.trim(), expectedClass, `Expected target on "${expectedType}" event to have class`);
+      assert.equal((event.srcElement as HTMLElement)?.className.trim(), expectedClass, `Expected srcElement on "${expectedType}" event to have class`);
+    };
+
+    const pMouseMoveToCaretChange = (editor: Editor, target: SugarElement<Element>, dx = 0, dy = 0) => {
+      const { startContainer, startOffset } = editor.selection.getRng();
+      Mouse.mouseMoveTo(target, dx, dy);
+      return Waiter.pTryUntilPredicate('Waited for selection to change', () => {
+        const newRng = editor.selection.getRng();
+        return newRng.startContainer !== startContainer || newRng.startOffset !== startOffset;
+      });
+    };
+
+    const makeMouseEvent = <K extends keyof MouseEvent>(type: string, props: Record<K, MouseEvent[K]>): MouseEvent => {
+      const mouseEvent = new MouseEvent(type) as Record<string, any>;
+      const clone: Record<string, any> = {};
+
+      // eslint-disable-next-line guard-for-in
+      for (const key in mouseEvent) {
+        const value = mouseEvent[key];
+        if (!Type.isFunction(value)) {
+          clone[key] = value;
+        }
+      }
+
+      return { ...clone, ...props } as MouseEvent;
+    };
 
     const createFile = (name: string, lastModified: number, blob: Blob): File => {
       const newBlob: any = new Blob([ blob ], { type: blob.type });
@@ -50,54 +92,84 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
 
     it('drop draggable element outside of editor', () => {
       const editor = hook.editor();
-      editor.setContent('<p contenteditable="false">a</p>');
-      const target = UiFinder.findIn(TinyDom.body(editor), 'p:contains("a")').getOrDie().dom;
+      editor.setContent('<p contenteditable="false" class="draggable">a</p>');
+      const target = UiFinder.findIn(TinyDom.body(editor), '.draggable').getOrDie().dom;
       const rect = target.getBoundingClientRect();
       const button = 0;
       const screenX = rect.left + rect.width / 2;
       const screenY = rect.top + rect.height / 2;
 
-      editor.dispatch('mousedown', { button, screenX, screenY, target } as unknown as MouseEvent);
-      editor.dispatch('mousemove', { button, screenX: screenX + 20, screenY: screenY + 20, clientX: 0, clientY: 0, target } as unknown as MouseEvent);
-      editor.dom.dispatch(document.body, 'mouseup');
+      editor.dispatch('mousedown', makeMouseEvent('mousedown', { button, screenX, screenY, target }));
+      editor.dispatch('mousemove', makeMouseEvent('mousemove', { button, screenX: screenX + 20, screenY: screenY + 20, clientX: 0, clientY: 0, target }));
+      editor.dom.dispatch(document.body, 'mouseup', makeMouseEvent('mouseup', {}));
 
-      assert.isTrue(fired.get(), 'Should fire dragend event');
+      assertEventsDispatched([ 'dragstart', 'dragend' ]);
     });
 
-    it('TINY-7917: Dropping draggable element inside editor fires dragend event', () => {
+    it('TINY-7917: Dropping draggable element inside editor fires dragend event', async () => {
       const editor = hook.editor();
-      editor.setContent('<p contenteditable="false">a</p><p>bc123</p>');
-      const target = UiFinder.findIn(TinyDom.body(editor), 'p:contains("a")').getOrDie();
+      editor.setContent('<p contenteditable="false" class="draggable">a</p><p class="dest">bc123</p>');
+      const target = UiFinder.findIn(TinyDom.body(editor), '.draggable').getOrDie();
       const targetPosition = SugarLocation.viewport(target);
 
-      const dest = UiFinder.findIn(TinyDom.body(editor), 'p:contains("bc123")').getOrDie();
+      const dest = UiFinder.findIn(TinyDom.body(editor), '.dest').getOrDie();
       const destPosition = SugarLocation.viewport(dest);
       const yDelta = destPosition.top - targetPosition.top;
 
       Mouse.mouseDown(target);
       // Drag CE=F paragraph roughly into other paragraph in order to trigger a valid drop on mouseup
-      Mouse.mouseMoveTo(target, 15, yDelta + 5);
-      Mouse.mouseUp(target);
+      await pMouseMoveToCaretChange(editor, target, 15, yDelta + 5);
+      Mouse.mouseUp(dest, { dx: 5, dy: 5 });
 
-      assert.isTrue(fired.get(), 'Should fire dragend event');
+      assertEventsDispatched([ 'dragstart', 'drop', 'dragend' ]);
+
+      assertDndEvent('dragstart', 'draggable');
+      assertDndEvent('drop', 'dest');
+      assertDndEvent('dragend', 'mce-content-body');
     });
 
-    it('TINY-7917: Pressing escape during drag fires dragend event', () => {
+    it('TINY-9599: Dropping draggable element should be preventable', async () => {
       const editor = hook.editor();
-      editor.setContent('<p contenteditable="false">a</p><p>bc123</p>');
-      const target = UiFinder.findIn(TinyDom.body(editor), 'p:contains("a")').getOrDie();
+      const initialContent = '<p class="draggable" contenteditable="false">a</p><p class="dest">bc123</p>';
+      editor.setContent(initialContent);
+      const target = UiFinder.findIn(TinyDom.body(editor), '.draggable').getOrDie();
       const targetPosition = SugarLocation.viewport(target);
 
-      const dest = UiFinder.findIn(TinyDom.body(editor), 'p:contains("bc123")').getOrDie();
+      const dest = UiFinder.findIn(TinyDom.body(editor), '.dest').getOrDie();
+      const destPosition = SugarLocation.viewport(dest);
+      const yDelta = destPosition.top - targetPosition.top;
+
+      editor.once('drop', (e) => {
+        e.preventDefault();
+      });
+
+      Mouse.mouseDown(target);
+      // Drag CE=F paragraph roughly into other paragraph in order to trigger a valid drop on mouseup
+      await pMouseMoveToCaretChange(editor, target, 15, yDelta + 5);
+      Mouse.mouseUp(dest, { dx: 5, dy: 5 });
+
+      TinyAssertions.assertContent(editor, initialContent);
+    });
+
+    it('TINY-7917: Pressing escape during drag fires dragend event', async () => {
+      const editor = hook.editor();
+      editor.setContent('<p class="draggable" contenteditable="false">a</p><p class="dest">bc123</p>');
+      const target = UiFinder.findIn(TinyDom.body(editor), '.draggable').getOrDie();
+      const targetPosition = SugarLocation.viewport(target);
+
+      const dest = UiFinder.findIn(TinyDom.body(editor), '.dest').getOrDie();
       const destPosition = SugarLocation.viewport(dest);
       const yDelta = destPosition.top - targetPosition.top;
 
       Mouse.mouseDown(target);
       // Where we drag to here is largely irrelevant
-      Mouse.mouseMoveTo(target, 15, yDelta + 5);
+      await pMouseMoveToCaretChange(editor, target, 15, yDelta + 5);
       Keyboard.activeKeydown(TinyDom.document(editor), Keys.escape());
 
-      assert.isTrue(fired.get(), 'Should fire dragend event');
+      assertEventsDispatched([ 'dragstart', 'dragend' ]);
+
+      assertDndEvent('dragstart', 'draggable');
+      assertDndEvent('dragend', 'draggable', false);
     });
 
     it('TINY-6027: Drag unsupported file into the editor/UI is prevented', async () => {
@@ -396,10 +468,10 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
     it('TINY-9364: Should allow dropping an element onto a contenteditable=true element that is within a contenteditable=false element', async () => {
       const editor = hook.editor();
       const originalContent = '<div class="toDrag" style="margin: 40px; width: 1110px; height: 120px; background-color: blue;" contenteditable="false">To drag element</div>'
-      + '<div style="margin: 40px; width: 1110px; height: 120px; background-color: red;" contenteditable="false"><span class="destination" contenteditable="true">Destination element</span></div>';
+      + '<div style="margin: 40px; width: 1110px; height: 120px; background-color: red;" contenteditable="false"><div class="destination" contenteditable="true">Destination element</div></div>';
       const expectedContent = '<div style="margin: 40px; width: 1110px; height: 120px; background-color: red;" contenteditable="false">' +
-      '<div class="toDrag" style="margin: 40px; width: 1110px; height: 120px; background-color: blue;" contenteditable="false">To drag element</div>' +
-      '<span class="destination" contenteditable="true">Destination element</span>' +
+      '<div class="destination" contenteditable="true">' +
+      '<div class="toDrag" style="margin: 40px; width: 1110px; height: 120px; background-color: blue;" contenteditable="false">To drag element</div>Destination element</div>' +
     '</div>';
       editor.setContent(originalContent);
       await moveToDragElementToDestinationElement(editor, 0, 0);
@@ -427,6 +499,36 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       await moveToDragElementToDestinationElement(editor, 0, 0);
       TinyAssertions.assertContent(editor, initialContent);
       editor.getBody().contentEditable = 'true';
+    });
+
+    context('Drag/drop padding', () => {
+      const testDragDropPadding = async (testCase: { html: string; expectedHtml: string; expectedDragFromParentHtml: string }) => {
+        const editor = hook.editor();
+
+        editor.setContent(testCase.html);
+        const dragFromParent = SelectorFind.descendant(TinyDom.body(editor), '.toDrag').bind(Traverse.parentElement).getOrDie('Should find toDrag parent');
+        await moveToDragElementToDestinationElement(editor, 0, 0);
+        assert.equal(Html.get(dragFromParent), testCase.expectedDragFromParentHtml, 'Drag from parent should be expected html');
+        TinyAssertions.assertContent(editor, testCase.expectedHtml);
+      };
+
+      it('TINY-9606: Should insert padding br into empty blocks when dragging the last block child out', async () => testDragDropPadding({
+        html: '<div><p class="toDrag" contenteditable="false">CEF</p></div><div class="destination">drop target</div>',
+        expectedHtml: '<div>&nbsp;</div><div class="destination"><p class="toDrag" contenteditable="false">CEF</p>drop target</div>',
+        expectedDragFromParentHtml: '<br data-mce-bogus="1">'
+      }));
+
+      it('TINY-9606: Should insert padding br into empty blocks when dragging the last inline child out', async () => testDragDropPadding({
+        html: '<p><span class="toDrag" contenteditable="false">CEF</span></p><div class="destination">drop target</div>',
+        expectedHtml: '<p>&nbsp;</p><div class="destination"><span class="toDrag" contenteditable="false">CEF</span>drop target</div>',
+        expectedDragFromParentHtml: '<br data-mce-bogus="1">'
+      }));
+
+      it('TINY-9606: Should not insert padding br into blocks when not dragging the last child out', async () => testDragDropPadding({
+        html: '<p>x<span class="toDrag" contenteditable="false">CEF</span></p><div class="destination">drop target</div>',
+        expectedHtml: '<p>x</p><div class="destination"><span class="toDrag" contenteditable="false">CEF</span>drop target</div>',
+        expectedDragFromParentHtml: 'x'
+      }));
     });
   });
 });

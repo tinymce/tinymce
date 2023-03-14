@@ -21,13 +21,13 @@ const removeOrUnwrapInvalidNode = (node: AstNode, schema: Schema, originalNodePa
   }
 };
 
-const cleanInvalidNodes = (nodes: AstNode[], schema: Schema, onCreate: (newNode: AstNode) => void = Fun.noop): void => {
+const cleanInvalidNodes = (nodes: AstNode[], schema: Schema, rootNode: AstNode, onCreate: (newNode: AstNode) => void = Fun.noop): void => {
   const textBlockElements = schema.getTextBlockElements();
   const nonEmptyElements = schema.getNonEmptyElements();
   const whitespaceElements = schema.getWhitespaceElements();
   const nonSplittableElements = Tools.makeMap('tr,td,th,tbody,thead,tfoot,table');
-
   const fixed = new Set<AstNode>();
+  const isSplittableElement = (node: AstNode) => node !== rootNode && !nonSplittableElements[node.name];
 
   for (let ni = 0; ni < nodes.length; ni++) {
     const node = nodes[ni];
@@ -64,8 +64,7 @@ const cleanInvalidNodes = (nodes: AstNode[], schema: Schema, onCreate: (newNode:
 
     // Get list of all parent nodes until we find a valid parent to stick the child into
     const parents = [ node ];
-    for (parent = node.parent; parent && !schema.isValidChild(parent.name, node.name) &&
-    !nonSplittableElements[parent.name]; parent = parent.parent) {
+    for (parent = node.parent; parent && !schema.isValidChild(parent.name, node.name) && isSplittableElement(parent); parent = parent.parent) {
       parents.push(parent);
     }
 
@@ -83,7 +82,7 @@ const cleanInvalidNodes = (nodes: AstNode[], schema: Schema, onCreate: (newNode:
         // Start cloning and moving children on the left side of the target node
         let currentNode = newParent;
         for (let i = 0; i < parents.length - 1; i++) {
-          if (schema.isValidChild(currentNode.name, parents[i].name)) {
+          if (schema.isValidChild(currentNode.name, parents[i].name) && i > 0) {
             tempNode = parents[i].clone();
             onCreate(tempNode);
             currentNode.append(tempNode);

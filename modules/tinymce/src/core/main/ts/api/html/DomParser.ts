@@ -1,6 +1,4 @@
-import { Arr, Fun, Obj, Strings, Type } from '@ephox/katamari';
-import { Attribute, NodeTypes, Remove, Replication, SugarElement } from '@ephox/sugar';
-import createDompurify, { Config, DOMPurifyI } from 'dompurify';
+import { Arr, Fun, Obj, Type } from '@ephox/katamari';
 
 import * as TransparentElements from '../../content/TransparentElements';
 import * as NodeType from '../../dom/NodeType';
@@ -12,8 +10,8 @@ import * as ParserFilters from '../../html/ParserFilters';
 import { isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../../html/ParserUtils';
 import { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
-import * as URI from '../util/URI';
 import AstNode from './Node';
+import { getSanitizer, internalElementAttr } from './Sanitization';
 import Schema, { getTextRootBlockElements, SchemaMap, SchemaRegExpMap } from './Schema';
 
 /**
@@ -83,149 +81,6 @@ interface DomParser {
 }
 
 type WalkerCallback = (node: AstNode) => void;
-
-const basePurifyConfig: Config = {
-  IN_PLACE: true,
-  ALLOW_UNKNOWN_PROTOCOLS: true,
-  // Deliberately ban all tags and attributes by default, and then un-ban them on demand in hooks
-  // #comment and #cdata-section are always allowed as they aren't controlled via the schema
-  // body is also allowed due to the DOMPurify checking the root node before sanitizing
-  ALLOWED_TAGS: [ '#comment', '#cdata-section', 'body' ],
-  ALLOWED_ATTR: []
-};
-
-// A list of attributes that should be filtered further based on the parser settings
-const filteredUrlAttrs = Tools.makeMap('src,href,data,background,action,formaction,poster,xlink:href');
-const internalElementAttr = 'data-mce-type';
-
-const getPurifyConfig = (settings: DomParserSettings, mimeType: string): Config => {
-  const config = { ...basePurifyConfig };
-
-  // Set the relevant parser mimetype
-  config.PARSER_MEDIA_TYPE = mimeType;
-
-  // Allow any URI when allowing script urls
-  if (settings.allow_script_urls) {
-    config.ALLOWED_URI_REGEXP = /.*/;
-  // Allow anything except javascript (or similar) URIs if all html data urls are allowed
-  } else if (settings.allow_html_data_urls) {
-    config.ALLOWED_URI_REGEXP = /^(?!(\w+script|mhtml):)/i;
-  }
-
-  return config;
-};
-
-const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI => {
-  const purify = createDompurify();
-  const specialElements = schema.getSpecialElements();
-  const validate = settings.validate;
-  let uid = 0;
-
-  // We use this to add new tags to the allow-list as we parse, if we notice that a tag has been banned but it's still in the schema
-  purify.addHook('uponSanitizeElement', (ele, evt) => {
-    // Pad conditional comments if they aren't allowed
-    if (ele.nodeType === NodeTypes.COMMENT && !settings.allow_conditional_comments && /^\[if/i.test(ele.nodeValue ?? '')) {
-      ele.nodeValue = ' ' + ele.nodeValue;
-    }
-
-    // Just leave non-elements such as text and comments up to dompurify
-    const tagName = evt.tagName;
-    if (ele.nodeType !== NodeTypes.ELEMENT || tagName === 'body') {
-      return;
-    }
-
-    // Construct the sugar element wrapper
-    const element = SugarElement.fromDom(ele);
-    const lcTagName = tagName.toLowerCase();
-
-    // Determine if we're dealing with an internal attribute
-    const isInternalElement = Attribute.has(element, internalElementAttr);
-
-    // Cleanup bogus elements
-    const bogus = Attribute.get(element, 'data-mce-bogus');
-    if (!isInternalElement && Type.isString(bogus)) {
-      if (bogus === 'all') {
-        Remove.remove(element);
-      } else {
-        Remove.unwrap(element);
-      }
-      return;
-    }
-
-    // Determine if the schema allows the element and either add it or remove it
-    const rule = schema.getElementRule(lcTagName);
-    if (validate && !rule) {
-      // If a special element is invalid, then remove the entire element instead of unwrapping
-      if (Obj.has(specialElements, lcTagName)) {
-        Remove.remove(element);
-      } else {
-        Remove.unwrap(element);
-      }
-      return;
-    } else {
-      evt.allowedTags[tagName] = true;
-    }
-
-    // Validate the element using the attribute rules
-    if (validate && rule && !isInternalElement) {
-      // Fix the attributes for the element, unwrapping it if we have to
-      Arr.each(rule.attributesForced ?? [], (attr) => {
-        Attribute.set(element, attr.name, attr.value === '{$uid}' ? `mce_${uid++}` : attr.value);
-      });
-      Arr.each(rule.attributesDefault ?? [], (attr) => {
-        if (!Attribute.has(element, attr.name)) {
-          Attribute.set(element, attr.name, attr.value === '{$uid}' ? `mce_${uid++}` : attr.value);
-        }
-      });
-
-      // If none of the required attributes were found then remove
-      if (rule.attributesRequired && !Arr.exists(rule.attributesRequired, (attr) => Attribute.has(element, attr))) {
-        Remove.unwrap(element);
-        return;
-      }
-
-      // If there are no attributes then remove
-      if (rule.removeEmptyAttrs && Attribute.hasNone(element)) {
-        Remove.unwrap(element);
-        return;
-      }
-
-      // Change the node name if the schema says to
-      if (rule.outputName && rule.outputName !== lcTagName) {
-        Replication.mutate(element, rule.outputName as keyof HTMLElementTagNameMap);
-      }
-    }
-  });
-
-  // Let's do the same thing for attributes
-  purify.addHook('uponSanitizeAttribute', (ele, evt) => {
-    const tagName = ele.tagName.toLowerCase();
-    const { attrName, attrValue } = evt;
-
-    evt.keepAttr = !validate || schema.isValid(tagName, attrName) || Strings.startsWith(attrName, 'data-') || Strings.startsWith(attrName, 'aria-');
-    if (attrName in filteredUrlAttrs && URI.isInvalidUri(settings, attrValue, tagName)) {
-      evt.keepAttr = false;
-    }
-
-    if (evt.keepAttr) {
-      evt.allowedAttributes[attrName] = true;
-
-      if (attrName in schema.getBoolAttrs()) {
-        evt.attrValue = attrName;
-      }
-
-      // We need to tell DOMPurify to forcibly keep the attribute if it's an SVG data URI and svg data URIs are allowed
-      if (settings.allow_svg_data_urls && Strings.startsWith(attrValue, 'data:image/svg+xml')) {
-        evt.forceKeepAttr = true;
-      }
-    // For internal elements always keep the attribute if the attribute name is id, class or style
-    } else if (ele.hasAttribute(internalElementAttr) && (attrName === 'id' || attrName === 'class' || attrName === 'style')) {
-      evt.forceKeepAttr = true;
-    }
-  });
-
-  return purify;
-};
 
 const transferChildren = (parent: AstNode, nativeParent: Node, specialElements: SchemaRegExpMap) => {
   const parentName = parent.name;
@@ -414,7 +269,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
   };
 
   const parser = new DOMParser();
-  const purify = setupPurify(defaultedSettings, schema);
+  const sanitize = getSanitizer(defaultedSettings, schema);
 
   const parseAndSanitizeWithContext = (html: string, rootName: string, format: string = 'html'): Element => {
     const mimeType = format === 'xhtml' ? 'application/xhtml+xml' : 'text/html';
@@ -425,13 +280,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     // If parsing XHTML then the content must contain the xmlns declaration, see https://www.w3.org/TR/xhtml1/normative.html#strict
     const wrappedHtml = format === 'xhtml' ? `<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body>${content}</body></html>` : `<body>${content}</body>`;
     const body = parser.parseFromString(wrappedHtml, mimeType).body;
-
-    // Sanitize the content
-    if (defaultedSettings.sanitize) {
-      purify.sanitize(body, getPurifyConfig(defaultedSettings, mimeType));
-      purify.removed = [];
-    }
-
+    sanitize(body, mimeType);
     return isSpecialRoot ? body.firstChild as Element : body;
   };
 
@@ -614,10 +463,10 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     if (validate && invalidChildren.length > 0) {
       if (args.context) {
         const { pass: topLevelChildren, fail: otherChildren } = Arr.partition(invalidChildren, (child) => child.parent === rootNode);
-        InvalidNodes.cleanInvalidNodes(otherChildren, schema, matchFinder);
+        InvalidNodes.cleanInvalidNodes(otherChildren, schema, rootNode, matchFinder);
         args.invalid = topLevelChildren.length > 0;
       } else {
-        InvalidNodes.cleanInvalidNodes(invalidChildren, schema, matchFinder);
+        InvalidNodes.cleanInvalidNodes(invalidChildren, schema, rootNode, matchFinder);
       }
     }
 

@@ -78,7 +78,8 @@ export const renderButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryB
     classes: buttonTypeClasses
       .concat(...spec.icon.isSome() && !hasIconAndText ? [ 'tox-button--icon' ] : [])
       .concat(...hasIconAndText ? [ 'tox-button--icon-and-text' ] : [])
-      .concat(...spec.borderless ? [ 'tox-button--naked' ] : []),
+      .concat(...spec.borderless ? [ 'tox-button--naked' ] : [])
+      .concat(...spec.type === 'togglebutton' && spec.active ? [ ViewButtonClasses.Ticked ] : []),
     attributes: tooltipAttributes
   };
   const extraBehaviours: Behaviours = [];

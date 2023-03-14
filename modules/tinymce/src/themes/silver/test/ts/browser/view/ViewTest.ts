@@ -1,7 +1,7 @@
-import { ApproxStructure, Assertions, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keys, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { Attribute, Css, Html, SugarBody } from '@ephox/sugar';
+import { Attribute, Css, Html, SugarBody, SugarShadowDom } from '@ephox/sugar';
 import { TinyApis, TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -318,6 +318,30 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       toggleView('myview1');
       TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
     });
+
+    it('TINY-9671: should be possible to navigate the header via keyboard', async () => {
+      const editor = hook.editor();
+      const root = SugarShadowDom.getRootNode(TinyDom.targetElement(editor));
+      toggleView('myview1');
+      FocusTools.setFocus(root, '.tox-view__header');
+      await FocusTools.pTryOnSelector('Focus should be on the view header', root, '.tox-view__header');
+
+      TinyUiActions.keystroke(editor, Keys.enter());
+      await FocusTools.pTryOnSelector('Button 1 should be the first selection', root, '.tox-view__header [title="Button 1"]');
+
+      TinyUiActions.keystroke(editor, Keys.right());
+      await FocusTools.pTryOnSelector('With right it should pass from Button 1 to Button 2', root, '.tox-view__header [title="Button 2"]');
+
+      TinyUiActions.keystroke(editor, Keys.right());
+      await FocusTools.pTryOnSelector('Pressing right again it should move to Button 1', root, '.tox-view__header [title="Button 1"]');
+
+      TinyUiActions.keystroke(editor, Keys.left());
+      await FocusTools.pTryOnSelector('With left it should pass from Button 1 to Button 2', root, '.tox-view__header [title="Button 2"]');
+
+      TinyUiActions.keystroke(editor, Keys.left());
+      await FocusTools.pTryOnSelector('Pressing left again it should move to Button 1', root, '.tox-view__header [title="Button 1"]');
+      toggleView('myview1');
+    });
   });
 
   context('Inline mode', () => {
@@ -345,6 +369,65 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       assert.equal(editor.queryCommandValue('ToggleView'), '', 'Should be empty string if no view is toggled on');
       editor.execCommand('ToggleView', false, 'myview1');
       assert.equal(editor.queryCommandValue('ToggleView'), '', 'Should still be empty since inline mode does not support views');
+    });
+  });
+
+  context('Sliding toolbar', () => {
+    const hook = TinyHooks.bddSetup<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      toolbar_mode: 'sliding',
+      toolbar: Arr.range(10, Fun.constant('bold | italic ')).join(''),
+      width: 500,
+      setup: (editor: Editor) => {
+        editor.ui.registry.addView('myview1', {
+          buttons: [
+            {
+              type: 'button',
+              text: 'Button 1',
+              onAction: Fun.noop
+            },
+            {
+              type: 'button',
+              text: 'Button 2',
+              onAction: Fun.noop,
+              buttonType: 'primary'
+            }
+          ],
+          onShow: (api) => {
+            api.getContainer().innerHTML = '<button>myview1</button>';
+          },
+          onHide: Fun.noop
+        });
+      }
+    }, []);
+
+    const assertMainViewVisible = () => {
+      const editor = hook.editor();
+      const editorContainer = UiFinder.findIn(TinyDom.container(editor), '.tox-editor-container').getOrDie();
+
+      assert.isFalse(Attribute.has(editorContainer, 'aria-hidden'), 'Should not have aria-hidden');
+      assert.isTrue(Css.getRaw(editorContainer, 'display').isNone(), 'Should not have display none');
+    };
+
+    const assertViewHtml = (viewIndex: number, expectedHtml: string) => {
+      const editor = hook.editor();
+      const editorContainer = UiFinder.findIn<HTMLElement>(TinyDom.container(editor), `.tox-view:nth-child(${viewIndex + 1}) .tox-view__pane`).getOrDie();
+
+      assert.equal(Html.get(editorContainer), expectedHtml);
+    };
+
+    it('TINY-9419: "More..." button should not be removed if the toolbar is opened and view is opened and close', () => {
+      const editor = hook.editor();
+
+      editor.setContent('<p>ab</p>');
+      TinyUiActions.clickOnToolbar(editor, '[title="More..."]');
+
+      editor.execCommand('ToggleView', false, 'myview1');
+      assertViewHtml(0, '<button>myview1</button>');
+      editor.execCommand('ToggleView', false, 'myview1');
+      assertMainViewVisible();
+      const moreButton = UiFinder.findIn(TinyDom.container(editor), '[title="More..."]');
+      assert.isTrue(moreButton.isValue(), 'More... button should be there');
     });
   });
 });

@@ -334,9 +334,9 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<s' + 'cript type="mylanguage"></s' + 'cript>');
   });
 
-  // TODO: TINY-4627/TINY-8363
-  it.skip('Script with tags inside a comment with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
+  it('Script with tags inside a comment with element_format: xhtml and sanitize: false', () => {
+    // TINY-8363: Disable sanitization to avoid DOMPurify false positive affecting expected output
+    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml', sanitize: false });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<s' + 'cript>// <img src="test"><a href="#"></a></s' + 'cript>');
@@ -346,9 +346,9 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     );
   });
 
-  // TODO: TINY-4627/TINY-8363
-  it.skip('Script with tags inside a comment', () => {
-    const ser = DomSerializer({ fix_list_elements: true });
+  it('Script with tags inside a comment with sanitize: false', () => {
+    // TINY-8363: Disable sanitization to avoid DOMPurify false positive affecting expected output
+    const ser = DomSerializer({ fix_list_elements: true, sanitize: false });
     ser.setRules('script[type|language|src]');
 
     setTestHtml('<s' + 'cript>// <img src="test"><a href="#"></a></s' + 'cript>');

@@ -1,11 +1,11 @@
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { Classes, Css } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { applyPositionCss, PositionCss } from '../../positioning/view/PositionCss';
 import * as Dockables from './Dockables';
-import { DockingConfig, DockingMode, DockingState } from './DockingTypes';
+import { DockingConfig, DockingDecision, DockingMode, DockingState, DockingViewport } from './DockingTypes';
 
 const morphToStatic = (component: AlloyComponent, config: DockingConfig, state: DockingState): void => {
   state.setDocked(false);
@@ -21,11 +21,11 @@ const morphToCoord = (component: AlloyComponent, config: DockingConfig, state: D
   method(component);
 };
 
-const updateVisibility = (component: AlloyComponent, config: DockingConfig, state: DockingState, viewport: Boxes.Bounds, morphToDocked: boolean = false): void => {
+const updateVisibility = (component: AlloyComponent, config: DockingConfig, state: DockingState, viewport: DockingViewport, morphToDocked: boolean = false): void => {
   config.contextual.each((contextInfo) => {
     // Make the dockable component disappear if the context is outside the viewport
     contextInfo.lazyContext(component).each((box) => {
-      const isVisible = Dockables.isPartiallyVisible(box, viewport);
+      const isVisible = Dockables.isPartiallyVisible(box, viewport.bounds);
       if (isVisible !== state.isVisible()) {
         state.setVisible(isVisible);
 
@@ -44,25 +44,55 @@ const updateVisibility = (component: AlloyComponent, config: DockingConfig, stat
   });
 };
 
+const applyFixedMorph = (
+  component: AlloyComponent,
+  config: DockingConfig,
+  state: DockingState,
+  viewport: DockingViewport,
+  morph: Dockables.FixedMorph
+) => {
+  // This "updateVisibility" call is potentially duplicated with the
+  // call in refreshInternal for isDocked. We might want to consolidate them.
+  // The difference between them is the "morphToDocked" flag.
+  updateVisibility(component, config, state, viewport, true);
+  morphToCoord(component, config, state, morph.positionCss);
+};
+
+const applyMorph = (
+  component: AlloyComponent,
+  config: DockingConfig,
+  state: DockingState,
+  viewport: DockingViewport,
+  morph: Dockables.MorphInfo
+) => {
+  // Apply the morph result depending on its type
+  switch (morph.morph) {
+    case 'static': {
+      return morphToStatic(component, config, state);
+    }
+    case 'absolute': {
+      return morphToCoord(component, config, state, morph.positionCss);
+    }
+    case 'fixed': {
+      return applyFixedMorph(component, config, state, viewport, morph);
+    }
+  }
+};
+
 const refreshInternal = (component: AlloyComponent, config: DockingConfig, state: DockingState): void => {
   // Absolute coordinates (considers scroll)
-  const viewport = config.lazyViewport(component);
+  const viewport: DockingViewport = config.lazyViewport(component);
   // If docked then check if we need to hide/show the component
   const isDocked = state.isDocked();
-  if (isDocked) {
+
+  // Checking isDocked works for only, toolbar_location: top mode, as you scroll, it would be undocked, docked then hidden
+  // But for toobar_location, it would be from docked, undocked then hidden
+  if (isDocked || (!isDocked && Arr.contains(state.getModes(), 'bottom'))) {
     updateVisibility(component, config, state, viewport);
   }
 
-  Dockables.getMorph(component, viewport, state).each((morph) => {
-    // Apply the morph result
-    morph.fold(
-      () => morphToStatic(component, config, state),
-      (position) => morphToCoord(component, config, state, position),
-      (position) => {
-        updateVisibility(component, config, state, viewport, true);
-        morphToCoord(component, config, state, position);
-      }
-    );
+  Dockables.tryMorph(component, viewport, state).each((morph) => {
+    applyMorph(component, config, state, viewport, morph);
   });
 };
 
@@ -70,13 +100,25 @@ const resetInternal = (component: AlloyComponent, config: DockingConfig, state: 
   // Morph back to the original position
   const elem = component.element;
   state.setDocked(false);
-  Dockables.getMorphToOriginal(component, state).each((morph) => {
-    morph.fold(
-      () => morphToStatic(component, config, state),
-      (position) => morphToCoord(component, config, state, position),
-      Fun.noop
-    );
-  });
+  const viewport = config.lazyViewport(component);
+  Dockables.calculateMorphToOriginal(component, viewport, state).each(
+    (staticOrAbsoluteMorph: Dockables.StaticMorph | Dockables.AbsoluteMorph) => {
+      // This code is very similar to the "applyMorph" function above. The main difference
+      // is that it doesn't consider fixed position, because something that is docking
+      // can't currently start with fixed position
+      switch (staticOrAbsoluteMorph.morph) {
+        case 'static': {
+          morphToStatic(component, config, state);
+          break;
+        }
+        case 'absolute': {
+          morphToCoord(component, config, state, staticOrAbsoluteMorph.positionCss);
+          break;
+        }
+        default:
+      }
+    }
+  );
 
   // Remove contextual visibility classes
   state.setVisible(true);
@@ -105,6 +147,25 @@ const reset = (component: AlloyComponent, config: DockingConfig, state: DockingS
   }
 };
 
+const forceDockWithDecision = (
+  getDecision: (winBox: Boxes.Bounds, leftX: number, v: DockingViewport) => DockingDecision
+) => (
+  component: AlloyComponent,
+  config: DockingConfig,
+  state: DockingState
+): void => {
+  const viewport = config.lazyViewport(component);
+  const optMorph = Dockables.forceDockWith(component.element, viewport, state, getDecision);
+  optMorph.each((morph) => {
+    // ASSUMPTION: This "applyFixedMorph" sets state.setDocked to true.
+    applyFixedMorph(component, config, state, viewport, morph);
+  });
+};
+
+const forceDockToTop = forceDockWithDecision(Dockables.forceTopPosition);
+
+const forceDockToBottom = forceDockWithDecision(Dockables.forceBottomPosition);
+
 const isDocked = (component: AlloyComponent, config: DockingConfig, state: DockingState): boolean =>
   state.isDocked();
 
@@ -114,4 +175,12 @@ const setModes = (component: AlloyComponent, config: DockingConfig, state: Docki
 const getModes = (component: AlloyComponent, config: DockingConfig, state: DockingState): DockingMode[] =>
   state.getModes();
 
-export { refresh, reset, isDocked, getModes, setModes };
+export {
+  refresh,
+  reset,
+  isDocked,
+  getModes,
+  setModes,
+  forceDockToTop,
+  forceDockToBottom
+};

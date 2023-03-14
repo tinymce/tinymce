@@ -1,10 +1,12 @@
 import { UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
+import { Class } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import { ViewButtonClasses } from 'tinymce/themes/silver/ui/toolbar/button/ButtonClasses';
 
 describe('browser.tinymce.themes.silver.view.ViewButtonsTest', () => {
   context('Iframe mode', () => {
@@ -38,6 +40,34 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsTest', () => {
               tooltip: 'button-without-toggle',
               icon: 'help',
               onAction: Fun.noop
+            },
+            {
+              type: 'group',
+              buttons: [
+                {
+                  type: 'togglebutton',
+                  text: 'button-active-true',
+                  active: true,
+                  tooltip: 'button-active-true',
+                  icon: 'help',
+                  onAction: Fun.noop
+                },
+                {
+                  type: 'togglebutton',
+                  text: 'button-active-false',
+                  active: false,
+                  tooltip: 'button-active-false',
+                  icon: 'help',
+                  onAction: Fun.noop
+                },
+                {
+                  type: 'togglebutton',
+                  text: 'button-no-active',
+                  tooltip: 'button-no-active',
+                  icon: 'help',
+                  onAction: Fun.noop
+                }
+              ]
             }
           ],
           onShow: (api: any) => {
@@ -63,6 +93,11 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsTest', () => {
 
     const getSvg = (editor: Editor, name: string) => UiFinder.findIn<HTMLElement>(TinyDom.container(editor), `.tox-view button[title='${name}'] svg`).getOrDie().dom.innerHTML;
 
+    const getButtonByTitle = (title: string) => {
+      const editor = hook.editor();
+      return UiFinder.findIn<HTMLElement>(TinyDom.container(editor), `.tox-view button[title='${title}']`).getOrDie();
+    };
+
     it('TINY-9523: tooglable button can be toggled with the correct implementation', () => {
       const editor = hook.editor();
 
@@ -79,6 +114,21 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsTest', () => {
       assert.equal(getSvg(editor, 'button-without-toggle'), initialbuttonWithoutToggleButtonSvg, 'click should not toggle icon');
       clickViewButton(editor, 'button-without-toggle');
       assert.equal(getSvg(editor, 'button-without-toggle'), initialbuttonWithoutToggleButtonSvg, 'click should not toggle icon');
+
+      toggleView('myview1');
+    });
+
+    it('TINY-9616: if is active is true the button should have ViewButtonClasses.Ticked', async () => {
+      const editor = hook.editor();
+      toggleView('myview2');
+      await UiFinder.pWaitFor('buttons should be showed', TinyDom.container(editor), '[title="button-active-true"]');
+
+      const buttonActiveTrue = getButtonByTitle('button-active-true');
+      assert.isTrue(Class.has(buttonActiveTrue, ViewButtonClasses.Ticked), 'button with active true should have ticked class');
+      const buttonActiveFalse = getButtonByTitle('button-active-false');
+      assert.isFalse(Class.has(buttonActiveFalse, ViewButtonClasses.Ticked), 'button with active false should not have ticked class');
+      const buttonNoActive = getButtonByTitle('button-no-active');
+      assert.isFalse(Class.has(buttonNoActive, ViewButtonClasses.Ticked), 'button without active flag should not have ticked class');
     });
   });
 });

@@ -76,14 +76,14 @@ UnitTest.asynctest('HotspotPositionTest', (success, failure) => {
 
           NamedChain.direct('hotspot', cSetupAnchor, 'anchor'),
 
-          PositionTestUtils.cTestSinkWithinBounds('Relative, not scrolled', 'relative', win),
+          PositionTestUtils.cTestSinkWithinBounds('Relative, not scrolled', 'relative', Fun.constant(win)),
           cAssertLayoutDirection('top'),
-          PositionTestUtils.cTestSinkWithinBounds('Fixed, not scrolled', 'fixed', win),
+          PositionTestUtils.cTestSinkWithinBounds('Fixed, not scrolled', 'fixed', Fun.constant(win)),
           cAssertLayoutDirection('top'),
 
-          PositionTestUtils.cTestSinkWithinBounds('Relative, bounds 50px from top', 'relative', bounds100PixelsFromTop),
+          PositionTestUtils.cTestSinkWithinBounds('Relative, bounds 50px from top', 'relative', Fun.constant(bounds100PixelsFromTop)),
           cAssertLayoutDirection('bottom'),
-          PositionTestUtils.cTestSinkWithinBounds('Fixed, bounds 50px from top', 'fixed', bounds100PixelsFromTop),
+          PositionTestUtils.cTestSinkWithinBounds('Fixed, bounds 50px from top', 'fixed', Fun.constant(bounds100PixelsFromTop)),
           cAssertLayoutDirection('bottom')
         ])
       ])

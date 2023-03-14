@@ -1,4 +1,4 @@
-import { Type, Unicode } from '@ephox/katamari';
+import { Optional, Type, Unicode } from '@ephox/katamari';
 
 import { ParserArgs } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
@@ -33,10 +33,27 @@ const isEmpty = (schema: Schema, nonEmptyElements: SchemaMap, whitespaceElements
 const isLineBreakNode = (node: AstNode | null | undefined, isBlock: (node: AstNode) => boolean): boolean =>
   Type.isNonNullable(node) && (isBlock(node) || node.name === 'br');
 
+const findClosestEditingHost = (scope: AstNode): Optional<AstNode> => {
+  let editableNode;
+
+  for (let node: AstNode | undefined | null = scope; node; node = node.parent) {
+    const contentEditable = node.attr('contenteditable');
+
+    if (contentEditable === 'false') {
+      break;
+    } else if (contentEditable === 'true') {
+      editableNode = node;
+    }
+  }
+
+  return Optional.from(editableNode);
+};
+
 export {
   paddEmptyNode,
   isPaddedWithNbsp,
   hasOnlyChild,
   isEmpty,
-  isLineBreakNode
+  isLineBreakNode,
+  findClosestEditingHost
 };
