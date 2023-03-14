@@ -82,6 +82,47 @@ describe('browser.tinymce.themes.silver.window.SilverDialogApiAccessTest', () =>
     }
   };
 
+  it('TINY-9696: opening menu button in footer should not throw error after a redial', async () => {
+    const editor = hook.editor();
+
+    const pOpenMenuButton = async () => {
+      Mouse.clickOn(SugarBody.body(), 'button:contains("Menu button")');
+      await UiFinder.pWaitFor('', SugarBody.body(), '[role="menuitemcheckbox"]:contains("Item 1")');
+      Mouse.clickOn(SugarBody.body(), '[role="menuitemcheckbox"]:contains("Item 1")');
+    };
+
+    const spec: Dialog.DialogSpec<{ fieldA: string }> = {
+      title: 'Dialog',
+      body: {
+        type: 'panel',
+        items: [
+          {
+            type: 'input',
+            name: 'fieldA',
+            label: 'Label'
+          }
+        ]
+      },
+      buttons: [
+        {
+          type: 'menu',
+          text: 'Menu button',
+          items: [
+            { type: 'togglemenuitem', name: 'item 1', text: 'Item 1' }
+          ]
+        }
+      ]
+    };
+
+    const win = editor.windowManager.open(spec);
+
+    await pOpenMenuButton();
+    win.redial(spec);
+    await pOpenMenuButton();
+
+    win.close();
+  });
+
   Arr.each([
     { label: 'Modal', params: { }},
     { label: 'Inline', params: { inline: 'toolbar' as 'toolbar' }}
@@ -104,7 +145,7 @@ describe('browser.tinymce.themes.silver.window.SilverDialogApiAccessTest', () =>
         ]));
       });
 
-      it('TINY-9528: fullscrenn toggle should apply the correct class', () => {
+      it('TINY-9528: fullscreen toggle should apply the correct class', () => {
         const editor = hook.editor();
         DialogUtils.open(editor, dialogSpec, test.params);
 
