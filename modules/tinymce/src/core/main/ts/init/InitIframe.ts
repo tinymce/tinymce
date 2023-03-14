@@ -1,8 +1,9 @@
 import { Optional, Strings } from '@ephox/katamari';
-import { Attribute, Class, SugarElement } from '@ephox/sugar';
+import { Attribute, Class, DomEvent, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
+import Env from '../api/Env';
 import * as Options from '../api/Options';
 import { TranslatedString } from '../api/util/I18n';
 import * as InitContentBody from './InitContentBody';
@@ -77,6 +78,31 @@ const createIframe = (editor: Editor, boxInfo: BoxInfo) => {
   DOM.add(boxInfo.iframeContainer, ifr);
 };
 
+const setupIframeBody = (editor: Editor): void => {
+  // Setup iframe body
+  const iframe = editor.iframeElement as HTMLIFrameElement;
+  const binder = DomEvent.bind(SugarElement.fromDom(iframe), 'load', () => {
+    binder.unbind();
+
+    // Set the content document, now that it is available
+    editor.contentDocument = iframe.contentDocument as Document;
+
+    // Continue to init the editor
+    InitContentBody.contentBodyLoaded(editor);
+  });
+
+  // TINY-8916: Firefox has a bug in its srcdoc implementation that prevents cookies being sent so unfortunately we need
+  // to fallback to legacy APIs to load the iframe content. See https://bugzilla.mozilla.org/show_bug.cgi?id=1741489
+  if (Env.browser.isFirefox()) {
+    const doc = editor.getDoc();
+    doc.open();
+    doc.write(editor.iframeHTML as string);
+    doc.close();
+  } else {
+    iframe.srcdoc = editor.iframeHTML as string;
+  }
+};
+
 const init = (editor: Editor, boxInfo: BoxInfo): void => {
   createIframe(editor, boxInfo);
 
@@ -87,8 +113,10 @@ const init = (editor: Editor, boxInfo: BoxInfo): void => {
 
   editor.getElement().style.display = 'none';
   DOM.setAttrib(editor.id, 'aria-hidden', 'true');
+  // Restore visibility on target element
+  editor.getElement().style.visibility = editor.orgVisibility as string;
 
-  InitContentBody.initContentBody(editor);
+  setupIframeBody(editor);
 };
 
 export {
