@@ -198,5 +198,4 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
 
     await testWordcount(editor, wordCountScenarios);
   });
-
 });
