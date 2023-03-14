@@ -89,7 +89,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inline dialogs would open partially off screen when the toolbar had a small width. #TINY-9588
 - Word count was inaccurate for documents with specific characters. #TINY-8122
 
-
 ## 6.3.2 - 2023-02-22
 
 ### Fixed
