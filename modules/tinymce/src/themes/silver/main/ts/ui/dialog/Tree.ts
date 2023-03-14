@@ -1,7 +1,7 @@
-import { Behaviour, Button as AlloyButton, Tabstopping, GuiFactory, SimpleSpec, Toggling, Replacing, Keying } from '@ephox/alloy';
+import { Behaviour, Button as AlloyButton, Tabstopping, GuiFactory, SimpleSpec, Toggling, Replacing, Keying, AddEventsBehaviour, AlloyEvents, NativeEvents, AlloyComponent, CustomEvent, Receiving, Focusing, Sliding } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Fun, Optional } from '@ephox/katamari';
-import { SelectorFind } from '@ephox/sugar';
+import { Fun, Id, Optional } from '@ephox/katamari';
+import { EventArgs, SelectorFind } from '@ephox/sugar';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderMenuButton } from '../button/MenuButton';
@@ -10,10 +10,41 @@ import * as Icons from '../icons/Icons';
 type TreeSpec = Omit<Dialog.Tree, 'type'>;
 type OnLeafAction = (id: string) => void;
 
+interface RenderItemProps {
+  backstage: UiFactoryBackstage;
+}
+
+interface RenderLeafLabelProps extends RenderItemProps {
+  leaf: Dialog.Leaf;
+  visible: boolean;
+  treeId: string;
+  onLeafAction: OnLeafAction;
+}
+
+interface RenderDirectoryProps extends RenderItemProps {
+  directory: Dialog.Directory;
+  labelTabstopping: boolean;
+  treeId: string;
+  onLeafAction: OnLeafAction;
+}
+
+interface RenderDirectoryLabelProps extends RenderItemProps {
+  directory: Dialog.Directory;
+  visible: boolean;
+  noChildren: boolean;
+}
+
+interface RenderDirectoryChildrenProps extends RenderItemProps {
+  children: Dialog.TreeItem[];
+  visible: boolean;
+  treeId: string;
+  onLeafAction: OnLeafAction;
+}
+
 const renderLabel = (text: string ): SimpleSpec => ({
   dom: {
     tag: 'span',
-    classes: [ `tox-tree__label` ],
+    classes: [ 'tox-tree__label' ],
     attributes: {
       'title': text,
       'aria-label': text,
@@ -24,23 +55,76 @@ const renderLabel = (text: string ): SimpleSpec => ({
   ],
 });
 
-const renderLeafLabel = (leaf: Dialog.Leaf, onLeafAction: OnLeafAction, visible: boolean, backstage: UiFactoryBackstage): SimpleSpec => {
+const leafLabelEventsId = Id.generate('leaf-label-event-id');
+
+const renderLeafLabel = ({
+  leaf,
+  onLeafAction,
+  visible,
+  treeId,
+  backstage
+}: RenderLeafLabelProps): SimpleSpec => {
   const internalMenuButton = leaf.menu.map((btn) => renderMenuButton(btn, 'tox-mbtn', backstage, Optional.none(), visible));
   const components = [ renderLabel(leaf.title) ];
   internalMenuButton.each((btn) => components.push(btn));
 
   return AlloyButton.sketch({
     dom: {
-      tag: 'span',
-      classes: [ `tox-tree--leaf__label`, 'tox-trbtn' ].concat(visible ? [ 'tox-tree--leaf__label--visible' ] : []),
+      tag: 'div',
+      classes: [ 'tox-tree--leaf__label', 'tox-trbtn' ]
+        .concat(visible ? [ 'tox-tree--leaf__label--visible' ] : [])
+      ,
     },
     components,
     role: 'treeitem',
-    action: (_button) => {
+    action: (button) => {
       onLeafAction(leaf.id);
+      button.getSystem().broadcastOn([ `update-active-item-${treeId}` ], {
+        value: leaf.id
+      });
+    },
+    eventOrder: {
+      [NativeEvents.keydown()]: [
+        leafLabelEventsId,
+        'keying',
+      ]
     },
     buttonBehaviours: Behaviour.derive([
       ...(visible ? [ Tabstopping.config({}) ] : []),
+      Toggling.config({
+        toggleClass: 'tox-trbtn--enabled',
+        toggleOnExecute: false,
+        aria: {
+          mode: 'selected'
+        }
+      }),
+      Receiving.config({
+        channels: {
+          [`update-active-item-${treeId}`]: {
+            onReceive: (comp, message: UpdateTreeSelectedItemEvent) => {
+              (message.value === leaf.id ? Toggling.on : Toggling.off)(comp);
+            }
+          }
+        }
+      }),
+      AddEventsBehaviour.config(leafLabelEventsId, [
+        AlloyEvents.run<EventArgs<KeyboardEvent>>(NativeEvents.keydown(), (comp, se) => {
+          const isLeftArrowKey = se.event.raw.code === 'ArrowLeft';
+          const isRightArrowKey = se.event.raw.code === 'ArrowRight';
+          if (isLeftArrowKey) {
+            SelectorFind.ancestor(comp.element, '.tox-tree--directory').each((dirElement) => {
+              comp.getSystem().getByDom(dirElement).each((dirComp) => {
+                SelectorFind.child(dirElement, '.tox-tree--directory__label').each((dirLabelElement) => {
+                  dirComp.getSystem().getByDom(dirLabelElement).each(Focusing.focus);
+                });
+              });
+            });
+            se.stop();
+          } else if (isRightArrowKey) {
+            se.stop();
+          }
+        })
+      ])
     ]),
   });
 };
@@ -58,7 +142,14 @@ const renderIcon = (iconName: string, iconsProvider: Icons.IconProvider, behavio
 const renderIconFromPack = (iconName: string, iconsProvider: Icons.IconProvider): SimpleSpec =>
   renderIcon(iconName, iconsProvider, []);
 
-const renderDirectoryLabel = (directory: Dialog.Directory, visible: boolean, backstage: UiFactoryBackstage): SimpleSpec => {
+const directoryLabelEventsId = Id.generate('directory-label-event-id');
+
+const renderDirectoryLabel = ({
+  directory,
+  visible,
+  noChildren,
+  backstage
+}: RenderDirectoryLabelProps): SimpleSpec => {
   const internalMenuButton = directory.menu.map((btn) => renderMenuButton(btn, 'tox-mbtn', backstage, Optional.none()));
   const components: SimpleSpec[] = [
     {
@@ -75,84 +166,152 @@ const renderDirectoryLabel = (directory: Dialog.Directory, visible: boolean, bac
   internalMenuButton.each((btn) => {
     components.push(btn);
   });
+  const expandChildren = (button: AlloyComponent) => {
+    SelectorFind.ancestor(button.element, '.tox-tree--directory').each((directoryEle) => {
+      button.getSystem().getByDom(directoryEle).each((directoryComp) => Toggling.toggle(directoryComp));
+    });
+  };
   return AlloyButton.sketch({
-
     dom: {
       tag: 'div',
-      classes: [ `tox-tree--directory__label`, 'tox-trbtn' ].concat( visible ? [ 'tox-tree--directory__label--visible' ] : [] ),
+      classes: [ 'tox-tree--directory__label', 'tox-trbtn' ].concat( visible ? [ 'tox-tree--directory__label--visible' ] : [] ),
     },
     components,
-    action: (button) => {
-      SelectorFind.sibling(button.element, '.tox-tree--directory__children').each((childrenEle) => {
-        button.getSystem().getByDom(childrenEle).each((childrenComp) => Toggling.toggle(childrenComp));
-      });
-      SelectorFind.ancestor(button.element, '.tox-tree--directory').each((directoryEle) => {
-        button.getSystem().getByDom(directoryEle).each((directoryComp) => Toggling.toggle(directoryComp));
-      });
+    action: expandChildren,
+    eventOrder: {
+      [NativeEvents.keydown()]: [
+        directoryLabelEventsId,
+        'keying',
+      ]
     },
     buttonBehaviours: Behaviour.derive([
-      Toggling.config({
-        toggleOnExecute: true,
-        toggleClass: 'tox-tree--directory__label--active'
-      }),
-      ...(visible ? [ Tabstopping.config({}) ] : [])
+      ...(visible ? [ Tabstopping.config({}) ] : []),
+      AddEventsBehaviour.config(directoryLabelEventsId, [
+        AlloyEvents.run<EventArgs<KeyboardEvent>>(NativeEvents.keydown(), (comp, se) => {
+          const isRightArrowKey = se.event.raw.code === 'ArrowRight';
+          const isLeftArrowKey = se.event.raw.code === 'ArrowLeft';
+          if (isRightArrowKey && noChildren ) {
+            se.stop();
+          }
+          if (isRightArrowKey || isLeftArrowKey ) {
+            SelectorFind.ancestor( comp.element, '.tox-tree--directory').each((directoryEle) => {
+              comp.getSystem().getByDom(directoryEle).each((directoryComp) => {
+                if (!Toggling.isOn(directoryComp) && isRightArrowKey || Toggling.isOn(directoryComp) && isLeftArrowKey) {
+                  expandChildren(comp);
+                  se.stop();
+                } else if (isLeftArrowKey && !Toggling.isOn(directoryComp)) {
+                  SelectorFind.ancestor(directoryComp.element, '.tox-tree--directory').each((parentDirElement) => {
+                    SelectorFind.child(parentDirElement, '.tox-tree--directory__label').each((parentDirLabelElement) => {
+                      directoryComp.getSystem().getByDom(parentDirLabelElement).each(Focusing.focus);
+                    });
+                  });
+                  se.stop();
+                }
+              });
+            });
+          }
+        })
+      ])
     ])
-
   });
 };
 
-const renderDirectoryChildren = (children: Dialog.TreeItem[], onLeafAction: OnLeafAction, backstage: UiFactoryBackstage): SimpleSpec => {
-  const computeChildren = (tabstopping: boolean) => children.map((item) => {
-    return item.type === 'leaf' ? renderLeafLabel(item, onLeafAction, tabstopping, backstage) : renderDirectory(item, onLeafAction, tabstopping, backstage);
-  });
+const renderDirectoryChildren = ({
+  children,
+  onLeafAction,
+  visible,
+  treeId,
+  backstage
+}: RenderDirectoryChildrenProps): SimpleSpec => {
   return {
     dom: {
       tag: 'div',
       classes: [ 'tox-tree--directory__children' ],
     },
-    components: computeChildren(false),
+    components: children.map((item) => {
+      return item.type === 'leaf' ?
+        renderLeafLabel({ leaf: item, onLeafAction, visible, treeId, backstage }) :
+        renderDirectory({ directory: item, onLeafAction, labelTabstopping: visible, treeId, backstage });
+    }),
     behaviours: Behaviour.derive([
-      Toggling.config({
-        toggleClass: 'tox-trbtn--expanded',
-        onToggled: (cmp, state) => {
-          Replacing.set(cmp, computeChildren(state));
-        }
+      Sliding.config({
+        dimension: {
+          property: 'height'
+        },
+        closedClass: 'tox-tree--directory__children--closed',
+        openClass: 'tox-tree--directory__children--open',
+        growingClass: 'tox-tree--directory__children--growing',
+        shrinkingClass: 'tox-tree--directory__children--shrinking',
       }),
       Replacing.config({})
     ])
   };
 };
 
-const renderDirectory = (dir: Dialog.Directory, onLeafAction: OnLeafAction, labelTabstopping: boolean, backstage: UiFactoryBackstage): SimpleSpec => {
-  const children =
-    renderDirectoryChildren(dir.children, onLeafAction, backstage);
+const renderDirectory = ({
+  directory,
+  onLeafAction,
+  labelTabstopping,
+  treeId,
+  backstage
+}: RenderDirectoryProps): SimpleSpec => {
+  const { children } = directory;
+  const computedChildrenComponents = (visible: boolean) =>
+    children.map((item) => {
+      return item.type === 'leaf' ?
+        renderLeafLabel({ leaf: item, onLeafAction, visible, treeId, backstage }) :
+        renderDirectory({ directory: item, onLeafAction, labelTabstopping: visible, treeId, backstage });
+    });
   return ({
     dom: {
       tag: 'div',
-      classes: [ `tox-tree--directory` ],
+      classes: [ 'tox-tree--directory' ],
       attributes: {
         role: 'treeitem'
       }
     },
     components: [
-      renderDirectoryLabel(dir, labelTabstopping, backstage),
-      children
+      renderDirectoryLabel({ directory, visible: labelTabstopping, noChildren: directory.children.length === 0, backstage }),
+      renderDirectoryChildren({ children, onLeafAction, visible: false, treeId, backstage })
     ],
     behaviours: Behaviour.derive([
       Toggling.config({
-        aria: {
-          mode: 'expanded',
-        },
-      })
+        ...( directory.children.length > 0 ? {
+          aria: {
+            mode: 'expanded',
+          }
+        } : {}),
+        toggleClass: 'tox-tree--directory--expanded',
+        onToggled: (comp, childrenVisible) => {
+          const childrenComp = comp.components()[1];
+          const newChildren = computedChildrenComponents(childrenVisible);
+          if (childrenVisible) {
+            Sliding.grow(childrenComp);
+          } else {
+            Sliding.shrink(childrenComp);
+          }
+          Replacing.set(childrenComp, newChildren);
+        }
+      }),
     ])
   });
 };
+
+interface UpdateTreeSelectedItemEvent extends CustomEvent {
+  readonly value: string;
+}
 
 const renderTree = (
   spec: TreeSpec,
   backstage: UiFactoryBackstage
 ): SimpleSpec => {
   const onLeafAction = spec.onLeafAction.getOr(Fun.noop);
+  const treeId = Id.generate('tree-id');
+  const children = spec.items.map((item) => {
+    return item.type === 'leaf' ?
+      renderLeafLabel({ leaf: item, onLeafAction, visible: true, treeId, backstage }) :
+      renderDirectory({ directory: item, onLeafAction, labelTabstopping: true, treeId, backstage });
+  });
   return {
     dom: {
       tag: 'div',
@@ -161,17 +320,13 @@ const renderTree = (
         role: 'tree'
       }
     },
-    components: spec.items.map((item) => {
-      return item.type === 'leaf' ?
-        renderLeafLabel(item, onLeafAction, true, backstage) :
-        renderDirectory(item, onLeafAction, true, backstage);
-    }),
+    components: children,
     behaviours: Behaviour.derive([
       Keying.config({
         mode: 'flow',
         selector: '.tox-tree--leaf__label--visible, .tox-tree--directory__label--visible',
-        cycles: false
-      })
+        cycles: false,
+      }),
     ])
   };
 };
