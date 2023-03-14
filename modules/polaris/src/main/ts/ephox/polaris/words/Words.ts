@@ -26,8 +26,17 @@ const findUrlEnd = (characters: string[], startIndex: number): number => {
   return peakedWord.substr(0, 3) === '://' ? endIndex : startIndex;
 };
 
-const findWords = <T>(chars: T[], sChars: string[], characterMap: CharacterMap, options: WordOptions): T[][] => {
+interface WordIndex {
+  start: number;
+  end: number;
+}
+export interface WordsWithIndices<T> {
+  words: T[][];
+  indices: WordIndex[];
+}
+const findWordsAndIndices = <T>(chars: T[], sChars: string[], characterMap: CharacterMap, options: WordOptions): WordsWithIndices<T> => {
   const words: T[][] = [];
+  const indices: WordIndex[] = [];
   let word: T[] = [];
 
   // Loop through each character in the classification map and determine whether
@@ -57,13 +66,17 @@ const findWords = <T>(chars: T[], sChars: string[], characterMap: CharacterMap, 
         }
 
         words.push(word);
+        indices.push({
+          start: startOfWord,
+          end: endOfWord
+        });
       }
 
       word = [];
     }
   }
 
-  return words;
+  return { words, indices };
 };
 
 export interface WordOptions {
@@ -76,7 +89,7 @@ const getDefaultOptions = (): WordOptions => ({
   includePunctuation: false
 });
 
-const getWords = <T>(chars: T[], extract: (char: T) => string, options?: WordOptions): T[][] => {
+const getWordsAndIndices = <T>(chars: T[], extract: (char: T) => string, options?: WordOptions): WordsWithIndices<T> => {
   options = {
     ...getDefaultOptions(),
     ...options
@@ -95,9 +108,13 @@ const getWords = <T>(chars: T[], extract: (char: T) => string, options?: WordOpt
   }
 
   const characterMap: CharacterMap = classify(extractedChars);
-  return findWords(filteredChars, extractedChars, characterMap, options);
+  return findWordsAndIndices(filteredChars, extractedChars, characterMap, options);
 };
 
+const getWords = <T>(chars: T[], extract: (char: T) => string, options?: WordOptions): T[][] =>
+  getWordsAndIndices(chars, extract, options).words;
+
 export {
-  getWords
+  getWords,
+  getWordsAndIndices
 };
