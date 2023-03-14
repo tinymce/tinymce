@@ -78,26 +78,13 @@ const createIframe = (editor: Editor, boxInfo: BoxInfo) => {
   DOM.add(boxInfo.iframeContainer, ifr);
 };
 
-const init = (editor: Editor, boxInfo: BoxInfo): void => {
-  createIframe(editor, boxInfo);
-
-  if (boxInfo.editorContainer) {
-    boxInfo.editorContainer.style.display = editor.orgDisplay;
-    editor.hidden = DOM.isHidden(boxInfo.editorContainer);
-  }
-
-  editor.getElement().style.display = 'none';
-  DOM.setAttrib(editor.id, 'aria-hidden', 'true');
-
-  // Restore visibility on target element
-  editor.getElement().style.visibility = editor.orgVisibility as string;
-
+const setupIframeBody = (editor: Editor): void => {
   // Setup iframe body
   const iframe = editor.iframeElement as HTMLIFrameElement;
   const binder = DomEvent.bind(SugarElement.fromDom(iframe), 'load', () => {
     binder.unbind();
 
-    // Reset the content document, since using srcdoc will change the document
+    // Set the content document, now that it is available
     editor.contentDocument = iframe.contentDocument as Document;
 
     // Continue to init the editor
@@ -114,7 +101,22 @@ const init = (editor: Editor, boxInfo: BoxInfo): void => {
   } else {
     iframe.srcdoc = editor.iframeHTML as string;
   }
+};
 
+const init = (editor: Editor, boxInfo: BoxInfo): void => {
+  createIframe(editor, boxInfo);
+
+  if (boxInfo.editorContainer) {
+    boxInfo.editorContainer.style.display = editor.orgDisplay;
+    editor.hidden = DOM.isHidden(boxInfo.editorContainer);
+  }
+
+  editor.getElement().style.display = 'none';
+  DOM.setAttrib(editor.id, 'aria-hidden', 'true');
+  // Restore visibility on target element
+  editor.getElement().style.visibility = editor.orgVisibility as string;
+
+  setupIframeBody(editor);
 };
 
 export {
