@@ -108,7 +108,6 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
     ];
 
     await testWordcount(editor, wordCountScenarios);
-
   });
 
   it('TINY-8122: Treat ^ as a word break', async () => {
