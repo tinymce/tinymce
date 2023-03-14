@@ -3,7 +3,7 @@ import {
   SystemEvents
 } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
-import { Arr, Cell, Optional } from '@ephox/katamari';
+import { Arr, Cell, Obj, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
@@ -99,10 +99,10 @@ const renderModalDialog = <T>(spec: DialogSpec, initialData: T, dialogEvents: Al
   }));
 };
 
-const mapMenuButtons = (buttons: Dialog.DialogFooterButton[]): (Dialog.DialogFooterButton | StoredMenuButton)[] => {
+const mapMenuButtons = (buttons: Dialog.DialogFooterButton[], menuItemStates: Record<string, Cell<boolean>> = {}): (Dialog.DialogFooterButton | StoredMenuButton)[] => {
   const mapItems = (button: Dialog.DialogFooterMenuButton): StoredMenuButton => {
     const items = Arr.map(button.items, (item: Dialog.DialogFooterToggleMenuItem): StoredMenuItem => {
-      const cell = Cell<boolean>(false);
+      const cell = Obj.get(menuItemStates, item.name).getOr(Cell<boolean>(false));
       return {
         ...item,
         storage: cell
