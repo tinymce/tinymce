@@ -40,7 +40,7 @@ UnitTest.test('words :: Identify', () => {
     WordScope('live', some(' '), some('"'))
   ], '"it is a good day to live"');
   check([
-    WordScope(`'twas`, some(' '), some(' ')),
+    WordScope(`twas`, some(`'`), some(' ')),
     WordScope('the', some(' '), some(' ')),
     WordScope('night', some(' '), some(' ')),
     WordScope('before', some(' '), none)

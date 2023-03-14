@@ -9,7 +9,6 @@ const words = (allText: string): WordScope[] => {
   const { words, indices } = Words.getWordsAndIndices(allText.split(''), Fun.identity);
   const len = allText.length;
 
-  // FIX ... I may possibly index strings elsewhere.
   return Arr.map(words, (word, idx) => {
     const index = indices[idx];
     const start = index.start;
