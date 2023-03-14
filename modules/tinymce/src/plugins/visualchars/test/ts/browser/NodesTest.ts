@@ -6,7 +6,12 @@ import { assert } from 'chai';
 
 import * as Nodes from 'tinymce/plugins/visualchars/core/Nodes';
 
-describe('atomic.tinymce.plugins.visualchars.NodesTest', () => {
+describe('browser.tinymce.plugins.visualchars.NodesTest', () => {
+  it('isWrappedNbsp', () => {
+    assert.isTrue(Nodes.isWrappedNbsp(SugarElement.fromHtml('<span class="mce-nbsp-wrap"></span>').dom));
+    assert.isFalse(Nodes.isWrappedNbsp(SugarElement.fromTag('span').dom));
+  });
+
   context('replaceWithSpans', () => {
     it('replace with spans', () => {
       Assertions.assertHtml(
@@ -89,6 +94,27 @@ describe('atomic.tinymce.plugins.visualchars.NodesTest', () => {
         '<b>editable 1</b>',
         '<i>editable 2</i>',
         '<b>editable 3</b>'
+      ]);
+    });
+
+    it('TINY-9685: should include "mce-nbsp-wrap" elements in editable contexts even if they them selfs are noneditable', () => {
+      const innerHtml = `
+        <span class="mce-nbsp-wrap" contenteditable="false">nbsp1</span>
+        <span contenteditable="false">
+          <span class="mce-nbsp-wrap" contenteditable="false">nbsp2</span>
+          <span contenteditable="true">
+            <span class="mce-nbsp-wrap" contenteditable="false">nbsp3</span>
+          </span>
+          <span class="mce-nbsp-wrap" contenteditable="false">nbsp4</span>
+        </span>
+      `;
+
+      const div = SugarElement.fromHtml(`<div>${innerHtml}</div>`);
+      const getHtml = (node: SugarElement<Node>) => SugarNode.isHTMLElement(node) ? Html.get(node) : '';
+
+      assert.deepEqual(Arr.map(Nodes.filterEditableDescendants(div, SugarNode.isElement, true), getHtml), [
+        'nbsp1',
+        'nbsp3'
       ]);
     });
   });
