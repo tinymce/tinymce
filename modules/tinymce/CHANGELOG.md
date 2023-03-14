@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 6.4 - 2023-03-15
+
 ### Added
 - New `tree` component that can be used in dialog body panel. #TINY-9532
 - renderUI property in the `Theme` type can now return a `Promise<RenderResult>` instead of `RenderResult`. #TINY-9556
@@ -15,29 +17,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `highlight_on_focus` option which enables highlighting the content area on focus. #TINY-9277
 - New `fontsizeinput` toolbar item which allows the user to set the size via input and also increase and decrease it with `+` and `-` buttons. #TINY-9429
 - Added `skipFocus` option to the `ToggleToolbarDrawer` command to preserve focus. #TINY-9337
-- New `font_size_input_default_unit` option allow to use of numbers without a unit in `fontsizeinput` and have them parsed with the default unit, if it is not defined the default is `pt`. #TINY-9585
+- New `font_size_input_default_unit` option allows entry of numbers without a unit in `fontsizeinput`. They are then parsed as the set unit. If `font_size_input_default_unit` is not set the default is `pt`. #TINY-9585
 - New `group` and `togglebutton` in view. #TINY-9523
 - New `togglebutton` in dialog footer buttons. #TINY-9523
 - Added `toggleFullscreen` to dialog API. #TINY-9528
 - New `text-size-increase` and `text-size-decrease` icons. #TINY-9530
-- New `xss_sanitization` option to allow for XSS sanitization to be disabled. #TINY-9600
-- Added top right close 'x' button of the modal dialogs to keyboard navigation. #TINY-9520
+- New `xss_sanitization` option to allow disabling of XSS sanitization. #TINY-9600
+- Added the top right close button of modal dialogs to the tabbing order. The 'x' button in these dialogs can now be accessed using keyboard navigation. #TINY-9520
 - New `ui_mode` option for editor in scrollable containers support. #TINY-9414
 
 ### Improved
-- Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
-- Templates will be parsed before preview and insertion to make preview consistent with inserted template content and prevent XSS. #TINY-9244
-- Pressing backspace in an empty line now preserves formatting in a previous empty line. #TINY-9454
-- Pressing enter inside the `inputfontsize` input would not move the focus back into the editor content. #TINY-9598
-- Drag and drop events for noneditable elements did not include details like target element. #TINY-9599
+- Direct invalid child text nodes of list elements are now wrapped in list item elements. #TINY-4818
+- Templates are now be parsed before preview and insertion to make preview consistent with inserted template content and prevent XSS. #TINY-9244
+- Pressing backspace on an empty line now preserves formatting on the previous empty line. #TINY-9454
+- Pressing enter inside the `inputfontsize` input field now moves focus back into the editor content. #TINY-9598
+- Drag and drop events for elements with a `contenteditable="false"` attribute now includes target element details. #TINY-9599
 - Updated focus, active, and enabled colors of UI buttons for improved contrast against the UI color. #TINY-9176
 
 ### Changed
-- The `link` plugins context menu items will no longer appear for noneditable links. #TINY-9491
-- The formatting of `contenteditable="false"` elements are no longer cloned to new cells while creating new table rows. #TINY-9449
+- The `link` plugins context menu items no longer appears for links that include elements with a `contenteditable="false"` attribute. #TINY-9491
+- The formatting of elements with a `contenteditable="false"` attribute are no longer cloned to new cells when new table rows are created. #TINY-9449
 - Changed the color of `@dialog-table-border-color`, and added right padding to the first cell of dialog table. #TINY-9380
-- The sidebar element now has accessibility role `region` when visible and `presentation` when hidden. #TINY-9517
-- The class `tox-custom-editor` now has a border highlight when it is selected. #TINY-9673
+- The sidebar element now has the accessibility role `region` when visible and the accessibility role `presentation` when hidden. #TINY-9517
+- The `tox-custom-editor` class now has a border highlight when it is selected. #TINY-9673
 
 ### Fixed
 - Add support for navigating inside the tree component using arrow keys and shift key. #TINY-9614
