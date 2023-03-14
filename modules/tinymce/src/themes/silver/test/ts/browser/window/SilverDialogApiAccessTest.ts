@@ -1,4 +1,4 @@
-import { Mouse, TestStore, UiFinder, Waiter } from '@ephox/agar';
+import { Keys, Mouse, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
@@ -127,13 +127,13 @@ describe('browser.tinymce.themes.silver.window.SilverDialogApiAccessTest', () =>
       it('TINY-9696: opening menu button in footer should not throw error after a redial', async () => {
         const editor = hook.editor();
 
-        const pOpenMenuButton = async () => {
+        const pTestMenuButtonItem = async (expectedState: boolean) => {
           Mouse.clickOn(SugarBody.body(), 'button:contains("Menu button")');
-          await UiFinder.pWaitFor('Waited for menu item to appear', SugarBody.body(), '[role="menuitemcheckbox"]:contains("Item 1")');
-          Mouse.clickOn(SugarBody.body(), '[role="menuitemcheckbox"]:contains("Item 1")');
+          await UiFinder.pWaitFor('Waited for menu item to appear', SugarBody.body(), `[role="menuitemcheckbox"][aria-checked="${expectedState}"]:contains("Item 1")`);
+          TinyUiActions.keystroke(editor, Keys.escape());
         };
 
-        const dialogSpec: Dialog.DialogSpec<{ fieldA: string; item1: boolean }> = {
+        const getDialogSpec = (itemState: boolean): Dialog.DialogSpec<{ fieldA: string; item1: boolean }> => ({
           title: 'Dialog',
           body: {
             type: 'panel',
@@ -156,15 +156,17 @@ describe('browser.tinymce.themes.silver.window.SilverDialogApiAccessTest', () =>
           ],
           initialData: {
             fieldA: 'Init Value',
-            item1: true
+            item1: itemState
           }
-        };
+        });
 
-        const win = DialogUtils.open(editor, dialogSpec, test.params);
+        const win = DialogUtils.open(editor, getDialogSpec(true), test.params);
 
-        await pOpenMenuButton();
-        win.redial(dialogSpec);
-        await pOpenMenuButton();
+        await pTestMenuButtonItem(true);
+        win.redial(getDialogSpec(false));
+        await pTestMenuButtonItem(false);
+        win.redial(getDialogSpec(true));
+        await pTestMenuButtonItem(true);
 
         DialogUtils.close(editor);
       });
