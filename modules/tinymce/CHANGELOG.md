@@ -25,6 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `ui_mode` option for editor in scrollable containers support. #TINY-9414
 - The sidebar element now has the accessibility role `region` when visible and the accessibility role `presentation` when hidden. #TINY-9517
 - The `tox-custom-editor` class now has a border highlight when it is selected. #TINY-9673
+- An element could be dropped onto the decendants of an element with a `contenteditable="false"` attribute. #TINY-9364
+- Checkmark did not show in menu color swatches. #TINY-9395
 
 ### Improved
 - Direct invalid child text nodes of list elements are now wrapped in list item elements. #TINY-4818
@@ -45,8 +47,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `searchreplace` modal closed incorrectly when clicking outside of the alert that pops up when no match is found. #TINY-9443
 - The text color or background color picker toolbar buttons did not update when the text color or background color was changed using the equivalent commands in the Format menu. #TINY-9439
 - The `onSetup` api function would not run when defining custom group toolbar button. #TINY-9496
-- An element could be dropped onto the decendants of an element with a `contenteditable="false"` attribute. #TINY-9364
-- Checkmark did not show in menu color swatches. #TINY-9395
 - The foreground and background menu icons would not properly update to display the last used color. #TINY-9497
 - Added new `setIconFill` function to `NestedMenuItemInstanceApi`. #TINY-9497
 - Pasting links to text would sometimes not generate the correct undo stack in Safari. #TINY-9489
