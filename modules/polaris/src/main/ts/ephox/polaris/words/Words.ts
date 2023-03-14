@@ -26,7 +26,7 @@ const findUrlEnd = (characters: string[], startIndex: number): number => {
   return peakedWord.substr(0, 3) === '://' ? endIndex : startIndex;
 };
 
-type Word<T> = T[];
+export type Word<T> = T[];
 interface WordIndex {
   start: number;
   end: number;

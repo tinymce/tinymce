@@ -1,10 +1,10 @@
-import * as WordOptions from '../words/Words';
+import * as Words from '../words/Words';
 
-type GetWordsApi = <T>(chars: T[], extract: (char: T) => string, options?: WordOptions.WordOptions) => T[][];
-const getWords: GetWordsApi = WordOptions.getWords;
+type GetWordsApi = <T>(chars: T[], extract: (char: T) => string, options?: Words.WordOptions) => Words.Word<T>[];
+const getWords: GetWordsApi = Words.getWords;
 
-type GetWordsAndIndicesApi = <T>(chars: T[], extract: (char: T) => string, options?: WordOptions.WordOptions) => WordOptions.WordsWithIndices<T>;
-const getWordsAndIndices: GetWordsAndIndicesApi = WordOptions.getWordsAndIndices;
+type GetWordsAndIndicesApi = <T>(chars: T[], extract: (char: T) => string, options?: Words.WordOptions) => Words.WordsWithIndices<T>;
+const getWordsAndIndices: GetWordsAndIndicesApi = Words.getWordsAndIndices;
 
 export {
   getWords,
