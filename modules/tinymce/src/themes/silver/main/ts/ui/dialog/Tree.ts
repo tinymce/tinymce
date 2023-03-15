@@ -1,6 +1,8 @@
-import { Behaviour, Button as AlloyButton, Tabstopping, GuiFactory, SimpleSpec, Toggling, Replacing, Keying, AddEventsBehaviour, AlloyEvents, NativeEvents, AlloyComponent, CustomEvent, Receiving, Focusing, Sliding } from '@ephox/alloy';
+import {
+  Behaviour, Button as AlloyButton, Tabstopping, GuiFactory, SimpleSpec, Toggling, Replacing, Keying, AddEventsBehaviour, AlloyEvents, NativeEvents, AlloyComponent, CustomEvent, Receiving, Focusing, Sliding, AlloyTriggers, EventFormat
+} from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Fun, Id, Optional } from '@ephox/katamari';
+import { Cell, Fun, Id, Optional } from '@ephox/katamari';
 import { EventArgs, SelectorFind } from '@ephox/sugar';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
@@ -9,6 +11,10 @@ import * as Icons from '../icons/Icons';
 
 type TreeSpec = Omit<Dialog.Tree, 'type'>;
 type OnLeafAction = (id: string) => void;
+interface ExpandTreeNodeEventArgs extends EventFormat {
+  expanded: boolean;
+  node: string;
+}
 
 interface RenderItemProps {
   backstage: UiFactoryBackstage;
@@ -26,12 +32,14 @@ interface RenderDirectoryProps extends RenderItemProps {
   labelTabstopping: boolean;
   treeId: string;
   onLeafAction: OnLeafAction;
+  expandedKeys: string[];
 }
 
 interface RenderDirectoryLabelProps extends RenderItemProps {
   directory: Dialog.Directory;
   visible: boolean;
   noChildren: boolean;
+  expandedKeys: string[];
 }
 
 interface RenderDirectoryChildrenProps extends RenderItemProps {
@@ -39,6 +47,7 @@ interface RenderDirectoryChildrenProps extends RenderItemProps {
   visible: boolean;
   treeId: string;
   onLeafAction: OnLeafAction;
+  expandedKeys: string[];
 }
 
 const renderLabel = (text: string ): SimpleSpec => ({
@@ -148,6 +157,7 @@ const renderDirectoryLabel = ({
   directory,
   visible,
   noChildren,
+  expandedKeys,
   backstage
 }: RenderDirectoryLabelProps): SimpleSpec => {
   const internalMenuButton = directory.menu.map((btn) => renderMenuButton(btn, 'tox-mbtn', backstage, Optional.none()));
@@ -168,7 +178,11 @@ const renderDirectoryLabel = ({
   });
   const expandChildren = (button: AlloyComponent) => {
     SelectorFind.ancestor(button.element, '.tox-tree--directory').each((directoryEle) => {
-      button.getSystem().getByDom(directoryEle).each((directoryComp) => Toggling.toggle(directoryComp));
+      button.getSystem().getByDom(directoryEle).each((directoryComp) => {
+        const willExpand = !Toggling.isOn(directoryComp);
+        Toggling.toggle(directoryComp);
+        AlloyTriggers.emitWith(button, 'expand-tree-node', { expanded: willExpand, node: directory.id });
+      });
     });
   };
   return AlloyButton.sketch({
@@ -187,6 +201,12 @@ const renderDirectoryLabel = ({
     buttonBehaviours: Behaviour.derive([
       ...(visible ? [ Tabstopping.config({}) ] : []),
       AddEventsBehaviour.config(directoryLabelEventsId, [
+        AlloyEvents.runOnAttached((button, _se) => {
+          const dirExpanded = expandedKeys.includes(directory.id);
+          if (dirExpanded) {
+            expandChildren(button);
+          }
+        }),
         AlloyEvents.run<EventArgs<KeyboardEvent>>(NativeEvents.keydown(), (comp, se) => {
           const isRightArrowKey = se.event.raw.code === 'ArrowRight';
           const isLeftArrowKey = se.event.raw.code === 'ArrowLeft';
@@ -221,6 +241,7 @@ const renderDirectoryChildren = ({
   onLeafAction,
   visible,
   treeId,
+  expandedKeys,
   backstage
 }: RenderDirectoryChildrenProps): SimpleSpec => {
   return {
@@ -231,7 +252,7 @@ const renderDirectoryChildren = ({
     components: children.map((item) => {
       return item.type === 'leaf' ?
         renderLeafLabel({ leaf: item, onLeafAction, visible, treeId, backstage }) :
-        renderDirectory({ directory: item, onLeafAction, labelTabstopping: visible, treeId, backstage });
+        renderDirectory({ directory: item, expandedKeys, onLeafAction, labelTabstopping: visible, treeId, backstage });
     }),
     behaviours: Behaviour.derive([
       Sliding.config({
@@ -242,6 +263,7 @@ const renderDirectoryChildren = ({
         openClass: 'tox-tree--directory__children--open',
         growingClass: 'tox-tree--directory__children--growing',
         shrinkingClass: 'tox-tree--directory__children--shrinking',
+        expanded: visible,
       }),
       Replacing.config({})
     ])
@@ -253,15 +275,17 @@ const renderDirectory = ({
   onLeafAction,
   labelTabstopping,
   treeId,
-  backstage
+  backstage,
+  expandedKeys,
 }: RenderDirectoryProps): SimpleSpec => {
   const { children } = directory;
   const computedChildrenComponents = (visible: boolean) =>
     children.map((item) => {
       return item.type === 'leaf' ?
         renderLeafLabel({ leaf: item, onLeafAction, visible, treeId, backstage }) :
-        renderDirectory({ directory: item, onLeafAction, labelTabstopping: visible, treeId, backstage });
+        renderDirectory({ directory: item, expandedKeys, onLeafAction, labelTabstopping: visible, treeId, backstage });
     });
+  const childrenVisible = expandedKeys.includes(directory.id);
   return ({
     dom: {
       tag: 'div',
@@ -271,27 +295,27 @@ const renderDirectory = ({
       }
     },
     components: [
-      renderDirectoryLabel({ directory, visible: labelTabstopping, noChildren: directory.children.length === 0, backstage }),
-      renderDirectoryChildren({ children, onLeafAction, visible: false, treeId, backstage })
+      renderDirectoryLabel({ directory, expandedKeys, visible: labelTabstopping, noChildren: directory.children.length === 0, backstage }),
+      renderDirectoryChildren({ children, expandedKeys, onLeafAction, visible: childrenVisible, treeId, backstage })
     ],
     behaviours: Behaviour.derive([
       Toggling.config({
         ...( directory.children.length > 0 ? {
           aria: {
             mode: 'expanded',
-          }
+          },
         } : {}),
         toggleClass: 'tox-tree--directory--expanded',
         onToggled: (comp, childrenVisible) => {
           const childrenComp = comp.components()[1];
           const newChildren = computedChildrenComponents(childrenVisible);
-          if (childrenVisible) {
+          if (childrenVisible && !Sliding.hasGrown(childrenComp)) {
             Sliding.grow(childrenComp);
-          } else {
+          } else if (!childrenVisible && !Sliding.hasShrunk(childrenComp)) {
             Sliding.shrink(childrenComp);
           }
           Replacing.set(childrenComp, newChildren);
-        }
+        },
       }),
     ])
   });
@@ -301,16 +325,21 @@ interface UpdateTreeSelectedItemEvent extends CustomEvent {
   readonly value: string;
 }
 
+const treeEventsId = Id.generate('tree-event-id');
+
 const renderTree = (
   spec: TreeSpec,
   backstage: UiFactoryBackstage
 ): SimpleSpec => {
   const onLeafAction = spec.onLeafAction.getOr(Fun.noop);
+  const onExpand = spec.onExpand.getOr(Fun.noop);
+  const defaultExpandedKeys: string[] = spec.defaultExpandedKeys.getOr([]);
+  const expandedKeys = Cell(defaultExpandedKeys);
   const treeId = Id.generate('tree-id');
   const children = spec.items.map((item) => {
     return item.type === 'leaf' ?
       renderLeafLabel({ leaf: item, onLeafAction, visible: true, treeId, backstage }) :
-      renderDirectory({ directory: item, onLeafAction, labelTabstopping: true, treeId, backstage });
+      renderDirectory({ directory: item, onLeafAction, expandedKeys: defaultExpandedKeys, labelTabstopping: true, treeId, backstage });
   });
   return {
     dom: {
@@ -327,6 +356,16 @@ const renderTree = (
         selector: '.tox-tree--leaf__label--visible, .tox-tree--directory__label--visible',
         cycles: false,
       }),
+      AddEventsBehaviour.config(treeEventsId, [
+        AlloyEvents.run<ExpandTreeNodeEventArgs>('expand-tree-node', (_cmp, se) => {
+          const { expanded, node } = se.event;
+          expandedKeys.set( expanded ?
+            [ ...expandedKeys.get(), node ] :
+            expandedKeys.get().filter((id) => id !== node)
+          );
+          onExpand(expandedKeys.get(), { expanded, node });
+        })
+      ])
     ])
   };
 };
