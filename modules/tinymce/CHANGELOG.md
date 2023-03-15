@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `tox-custom-editor` class now has a border highlight when it is selected. #TINY-9673
 - An element could be dropped onto the decendants of an element with a `contenteditable="false"` attribute. #TINY-9364
 - Checkmark did not show in menu color swatches. #TINY-9395
+- Add support for navigating inside the tree component using arrow keys and shift key. #TINY-9614
 
 ### Improved
 - Direct invalid child text nodes of list elements are now wrapped in list item elements. #TINY-4818
@@ -42,7 +43,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed the color of `@dialog-table-border-color`, and added right padding to the first cell of dialog table. #TINY-9380
 
 ### Fixed
-- Add support for navigating inside the tree component using arrow keys and shift key. #TINY-9614
 - Sometimes the editor would finish initializing before the silver theme would have finished loading. #TINY-9556
 - The `searchreplace` modal closed incorrectly when clicking outside of the alert that pops up when no match is found. #TINY-9443
 - The text color or background color picker toolbar buttons did not update when the text color or background color was changed using the equivalent commands in the Format menu. #TINY-9439
