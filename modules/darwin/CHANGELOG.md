@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 8.0.9 - 2023-03-15
+
 ### Fixed
 - Table cells that are in a noneditable context was incorrectly selectable with keyboard and mouse.
 

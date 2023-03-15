@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 8.3.0 - 2023-03-15
+
 ### Added
 - Exposed `getUiRoot` from `TinyUiActions` for easier ShadowDOM support. #TINY-9226
 
