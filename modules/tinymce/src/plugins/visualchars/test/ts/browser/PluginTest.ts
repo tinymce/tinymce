@@ -103,4 +103,23 @@ describe('browser.tinymce.plugins.visualchars.PluginTest', () => {
     editor.getBody().contentEditable = 'true';
     TinyUiActions.clickOnToolbar(editor, 'button');
   });
+
+  it('TINY-9685: should add "mce-nbsp" to "mce-nbsp-wrap" elements in editable context', async () => {
+    const editor = hook.editor();
+
+    editor.getBody().contentEditable = 'false';
+    editor.setContent(`
+      <p><span class="mce-nbsp-wrap" contenteditable="false">&nbsp;</span></p>
+      <p contenteditable="true"><span class="mce-nbsp-wrap" contenteditable="false">&nbsp;</span></p>
+    `);
+    TinyUiActions.clickOnToolbar(editor, 'button');
+    await Waiter.pTryUntil('wait for visual chars to appear', () => {
+      TinyAssertions.assertContentPresence(editor, {
+        'span.mce-nbsp': 1,
+        '[contenteditable="true"] span.mce-nbsp': 1
+      });
+    });
+    editor.getBody().contentEditable = 'true';
+    TinyUiActions.clickOnToolbar(editor, 'button');
+  });
 });

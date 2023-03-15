@@ -1,4 +1,4 @@
-import { Mouse, TestStore, UiFinder, Waiter } from '@ephox/agar';
+import { Keys, Mouse, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
@@ -104,7 +104,7 @@ describe('browser.tinymce.themes.silver.window.SilverDialogApiAccessTest', () =>
         ]));
       });
 
-      it('TINY-9528: fullscrenn toggle should apply the correct class', () => {
+      it('TINY-9528: fullscreen toggle should apply the correct class', () => {
         const editor = hook.editor();
         DialogUtils.open(editor, dialogSpec, test.params);
 
@@ -120,6 +120,53 @@ describe('browser.tinymce.themes.silver.window.SilverDialogApiAccessTest', () =>
         TinyUiActions.clickOnUi(editor, 'button:contains("Toggle fullscreen")');
 
         assert.isFalse(dialogHasClass('tox-dialog--fullscreen'), 'after a second toggle dialog should not have class tox-dialog--fullscreen');
+
+        DialogUtils.close(editor);
+      });
+
+      it('TINY-9696: opening menu button in footer should not throw error after a redial', async () => {
+        const editor = hook.editor();
+
+        const pTestMenuButtonItem = async (expectedState: boolean) => {
+          Mouse.clickOn(SugarBody.body(), 'button:contains("Menu button")');
+          await UiFinder.pWaitFor('Waited for menu item to appear', SugarBody.body(), `[role="menuitemcheckbox"][aria-checked="${expectedState}"]:contains("Item 1")`);
+          TinyUiActions.keystroke(editor, Keys.escape());
+        };
+
+        const getDialogSpec = (itemState: boolean): Dialog.DialogSpec<{ fieldA: string; item1: boolean }> => ({
+          title: 'Dialog',
+          body: {
+            type: 'panel',
+            items: [
+              {
+                type: 'input',
+                name: 'fieldA',
+                label: 'Label'
+              }
+            ]
+          },
+          buttons: [
+            {
+              type: 'menu',
+              text: 'Menu button',
+              items: [
+                { type: 'togglemenuitem', name: 'item1', text: 'Item 1' }
+              ]
+            }
+          ],
+          initialData: {
+            fieldA: 'Init Value',
+            item1: itemState
+          }
+        });
+
+        const win = DialogUtils.open(editor, getDialogSpec(true), test.params);
+
+        await pTestMenuButtonItem(true);
+        win.redial(getDialogSpec(false));
+        await pTestMenuButtonItem(false);
+        win.redial(getDialogSpec(true));
+        await pTestMenuButtonItem(true);
 
         DialogUtils.close(editor);
       });

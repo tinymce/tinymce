@@ -12,10 +12,26 @@ const removedOptions = (
   'paste_enable_default_filters,paste_filter_drop,paste_word_valid_elements,paste_retain_style_properties,paste_convert_word_fake_lists'
 ).split(',');
 
+const deprecatedOptions = (
+  'template_cdate_classes,template_mdate_classes,template_selected_content_classes,template_preview_replace_values,template_replace_values,templates,template_cdate_format,template_mdate_format'
+).split(',');
+
 const removedPlugins = 'bbcode,colorpicker,contextmenu,fullpage,legacyoutput,spellchecker,textcolor'.split(',');
 
+const deprecatedPlugins = [
+  {
+    name: 'template',
+    replacedWith: 'Advanced Template',
+  },
+];
+
+const getMatchingOptions = (options: RawEditorOptions, searchingFor: string[]): string[] => {
+  const settingNames = Arr.filter(searchingFor, (setting) => Obj.has(options, setting));
+  return Arr.sort(settingNames);
+};
+
 const getRemovedOptions = (options: RawEditorOptions): string[] => {
-  const settingNames = Arr.filter(removedOptions, (setting) => Obj.has(options, setting));
+  const settingNames = getMatchingOptions(options, removedOptions);
   // Forced root block is a special case whereby only the empty/false value is deprecated
   const forcedRootBlock = options.forced_root_block;
   // Note: This cast is required for old configurations as forced root block used to allow a boolean
@@ -25,12 +41,21 @@ const getRemovedOptions = (options: RawEditorOptions): string[] => {
   return Arr.sort(settingNames);
 };
 
-const getRemovedPlugins = (options: NormalizedEditorOptions): string[] => {
+const getDeprecatedOptions = (options: RawEditorOptions): string[] =>
+  getMatchingOptions(options, deprecatedOptions);
+
+const getMatchingPlugins = (options: NormalizedEditorOptions, searchingFor: string[]): string[] => {
   const plugins = Tools.makeMap(options.plugins, ' ');
   const hasPlugin = (plugin: string) => Obj.has(plugins, plugin);
-  const pluginNames = Arr.filter(removedPlugins, hasPlugin);
+  const pluginNames = Arr.filter(searchingFor, hasPlugin);
   return Arr.sort(pluginNames);
 };
+
+const getRemovedPlugins = (options: NormalizedEditorOptions): string[] =>
+  getMatchingPlugins(options, removedPlugins);
+
+const getDeprecatedPlugins = (options: NormalizedEditorOptions): string[] =>
+  getMatchingPlugins(options, deprecatedPlugins.map((entry) => entry.name));
 
 const logRemovedWarnings = (rawOptions: RawEditorOptions, normalizedOptions: NormalizedEditorOptions): void => {
   // Note: Ensure we use the original user settings, not the final when logging
@@ -56,8 +81,30 @@ const logRemovedWarnings = (rawOptions: RawEditorOptions, normalizedOptions: Nor
   }
 };
 
-const logDeprecatedWarnings = (_rawOptions: RawEditorOptions, _normalizedOptions: NormalizedEditorOptions): void => {
-  // No current deprecations
+const getPluginDescription = (name: string) =>
+  Arr.find(deprecatedPlugins, (entry) => entry.name === name).fold(
+    () => name,
+    (entry) => `${name}, replaced by ${entry.replacedWith}`
+  );
+
+const logDeprecatedWarnings = (rawOptions: RawEditorOptions, normalizedOptions: NormalizedEditorOptions): void => {
+  // Note: Ensure we use the original user settings, not the final when logging
+  const deprecatedOptions = getDeprecatedOptions(rawOptions);
+  const deprecatedPlugins = getDeprecatedPlugins(normalizedOptions);
+
+  const hasDeprecatedPlugins = deprecatedPlugins.length > 0;
+  const hasDeprecatedOptions = deprecatedOptions.length > 0;
+  if (hasDeprecatedPlugins || hasDeprecatedOptions) {
+    const listJoiner = '\n- ';
+    const pluginsMessage = hasDeprecatedPlugins ? `\n\nPlugins:${listJoiner}${deprecatedPlugins.map(getPluginDescription).join(listJoiner)}` : '';
+    const optionsMessage = hasDeprecatedOptions ? `\n\nOptions:${listJoiner}${deprecatedOptions.join(listJoiner)}` : '';
+    // eslint-disable-next-line no-console
+    console.warn(
+      'The following deprecated features are currently enabled but will be removed soon.' +
+      pluginsMessage +
+      optionsMessage
+    );
+  }
 };
 
 const logWarnings = (rawOptions: RawEditorOptions, normalizedOptions: NormalizedEditorOptions): void => {
