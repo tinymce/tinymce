@@ -1,6 +1,6 @@
 {
   "name": "@ephox/agar",
-  "version": "7.3.1",
+  "version": "7.4.0",
   "description": "Testing infrastructure",
   "repository": {
     "type": "git",
@@ -26,15 +26,15 @@
   "dependencies": {
     "@ephox/bedrock-client": "11 || 12 || 13",
     "@ephox/bedrock-common": "11 || 12 || 13",
-    "@ephox/jax": "^7.0.7",
-    "@ephox/sand": "^6.0.7",
-    "@ephox/sugar": "^9.1.3",
+    "@ephox/jax": "^7.0.8",
+    "@ephox/sand": "^6.0.8",
+    "@ephox/sugar": "^9.2.0",
     "@types/sizzle": "^2.3.3",
     "fast-check": "^2.0.0",
     "sizzle": "^2.3.4"
   },
   "devDependencies": {
-    "@ephox/katamari-assertions": "^4.0.7"
+    "@ephox/katamari-assertions": "^4.0.8"
   },
   "files": [
     "lib/main",
