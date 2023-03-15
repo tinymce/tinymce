@@ -74,7 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inserting newlines inside an editable element that was inside an element with a `contenteditable="false"` attribute root would sometimes try to split the editable element. #TINY-9461
 - Creating a list in a table cell when the caret is in front of an anchor element would not properly include the anchor in the list. #TINY-6853
 - Dragging and dropping elements with a `contenteditable="false"` attribute on table borders would remove the element on drop. #TINY-9021
-- elements with a `contenteditable="false"` attribute would be removed when dragged and dropped within a root element with a `contenteditable="false"` attribute. #TINY-9558
+- Elements with a `contenteditable="false"` attribute would be removed when dragged and dropped within a root element with a `contenteditable="false"` attribute. #TINY-9558
 - Formatting could be applied or removed to list items with a `contenteditable="false"` attribute that were inside an element with a `contenteditable="false"` attribute. #TINY-9563
 - Annotation were not removed if the annotation was deleted immediately after being created. #TINY-9399
 - Inserting a link for a selection from quickbars did not preserve formatting. #TINY-9593
