@@ -6,7 +6,7 @@ import * as WordSanitiser from '../util/WordSanitiser';
 
 // Returns: [array of WordScope Struct] containing all words from string allText
 const words = (allText: string): WordScope[] => {
-  const { words, indices } = Words.getWordsAndIndices(allText.split(''), Fun.identity);
+  const { words, indices } = Words.getWordsWithIndices(allText.split(''), Fun.identity);
   const len = allText.length;
 
   return Arr.map(words, (word, idx) => {

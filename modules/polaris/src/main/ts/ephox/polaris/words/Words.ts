@@ -90,7 +90,7 @@ const getDefaultOptions = (): WordOptions => ({
   includePunctuation: false
 });
 
-const getWordsAndIndices = <T>(chars: Word<T>, extract: (char: T) => string, options?: WordOptions): WordsWithIndices<T> => {
+const getWordsWithIndices = <T>(chars: Word<T>, extract: (char: T) => string, options?: WordOptions): WordsWithIndices<T> => {
   options = {
     ...getDefaultOptions(),
     ...options
@@ -101,9 +101,9 @@ const getWordsAndIndices = <T>(chars: Word<T>, extract: (char: T) => string, opt
 };
 
 const getWords = <T>(chars: Word<T>, extract: (char: T) => string, options?: WordOptions): Word<T>[] =>
-  getWordsAndIndices(chars, extract, options).words;
+  getWordsWithIndices(chars, extract, options).words;
 
 export {
   getWords,
-  getWordsAndIndices
+  getWordsWithIndices
 };
