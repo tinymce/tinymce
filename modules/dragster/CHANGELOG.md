@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 7.1.0 - 2023-03-15
+
 ### Added
 - New `isActive` api to Dragger to check if it's active or not.
 

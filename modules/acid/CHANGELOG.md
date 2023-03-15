@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 5.0.8 - 2023-03-15
+
 ### Fixed
 - Color Picker doesn't handle hex color prefixed with #.
 

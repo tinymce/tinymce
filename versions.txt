@@ -5,10 +5,10 @@ acid@5.0.8
 agar@7.4.0
 alloy@12.1.0
 bridge@4.3.0
-darwin@8.0.1
+darwin@8.0.9
 dragster@7.1.0
 mcagar@8.3.0
 oxide@2.4.0
 oxide-icons-default@2.2.0
-snooker@11.0.4
+snooker@11.0.9
 sugar@9.2.0
