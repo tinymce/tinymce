@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Inline headers would not work in some situations when the editor was moved too far right horizontally. #TINY-9646
+
 ### Added
 - New `tree` component that can be used in dialog body panel. #TINY-9532
 - renderUI property in the `Theme` type can now return a `Promise<RenderResult>` instead of `RenderResult`. #TINY-9556
