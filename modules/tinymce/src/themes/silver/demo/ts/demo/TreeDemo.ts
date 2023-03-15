@@ -1,5 +1,4 @@
 import { Dialog } from '@ephox/bridge';
-import { Id } from '@ephox/katamari';
 
 import { TinyMCE } from 'tinymce/core/api/PublicApi';
 
