@@ -56,9 +56,16 @@ const isWordBoundary = (map: CharacterMap, index: number): boolean => {
   }
 
   // WB4. Ignore format and extend characters.
-  if (type === ci.EXTEND || type === ci.FORMAT ||
-    prevType === ci.EXTEND || prevType === ci.FORMAT ||
-    nextType === ci.EXTEND || nextType === ci.FORMAT) {
+  if (
+    (type === ci.EXTEND || type === ci.FORMAT) &&
+    (nextType === ci.ALETTER || nextType === ci.NUMERIC || nextType === ci.KATAKANA ||
+      nextType === ci.EXTEND || nextType === ci.FORMAT)
+    ||
+    (nextType === ci.EXTEND || nextType === ci.FORMAT) &&
+    (type === ci.ALETTER || type === ci.NUMERIC || type === ci.KATAKANA ||
+      type === ci.EXTEND || type === ci.FORMAT) &&
+    (nextNextType === ci.ALETTER || nextNextType === ci.NUMERIC || nextNextType === ci.KATAKANA ||
+      nextNextType === ci.EXTEND || nextNextType === ci.FORMAT)) {
     return false;
   }
 

@@ -52,5 +52,14 @@ UnitTest.test('api.Words.words', () => {
   assertWords([ 'n≤13' ], 'n≤13');
   assertWords([ '1≤13' ], '1≤13');
   assertWords([ '42.6±4.2' ], '42.6±4.2');
-  assertWords([ 'ab' ], 'a\ufeffb');
+
+  // TINY-9654: does not strip zwnbsp characters or split on them if they do not precede a word boundary
+  assertWords([ 'a\ufeffb' ], 'a\ufeffb');
+  assertWords([ 'a\ufeffb', 'c' ], 'a\ufeffb c');
+  assertWords([ '\ufeffb' ], '\ufeffb');
+
+  // TINY-9654: strip zwnbsp characters if they precede a word boundary
+  assertWords([ ], '\ufeff');
+  assertWords([ ], '\ufeff ');
+  assertWords([ 'a' ], 'a\ufeff');
 });

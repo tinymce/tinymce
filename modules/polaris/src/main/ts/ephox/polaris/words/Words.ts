@@ -1,4 +1,4 @@
-import { Unicode } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 
 import { CharacterMap, classify } from './StringMapper';
 import * as UnicodeData from './UnicodeData';
@@ -95,21 +95,9 @@ const getWordsAndIndices = <T>(chars: Word<T>, extract: (char: T) => string, opt
     ...getDefaultOptions(),
     ...options
   };
-
-  const filteredChars: Word<T> = [];
-  const extractedChars: string[] = [];
-
-  // tslint:disable-next-line:prefer-for-of
-  for (let i = 0; i < chars.length; i++) {
-    const ch = extract(chars[i]);
-    if (ch !== Unicode.zeroWidth) {
-      filteredChars.push(chars[i]);
-      extractedChars.push(ch);
-    }
-  }
-
+  const extractedChars: string[] = Arr.map(chars, extract);
   const characterMap: CharacterMap = classify(extractedChars);
-  return findWordsAndIndices(filteredChars, extractedChars, characterMap, options);
+  return findWordsAndIndices(chars, extractedChars, characterMap, options);
 };
 
 const getWords = <T>(chars: Word<T>, extract: (char: T) => string, options?: WordOptions): Word<T>[] =>
