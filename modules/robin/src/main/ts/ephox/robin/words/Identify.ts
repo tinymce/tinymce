@@ -9,8 +9,8 @@ const words = (allText: string): WordScope[] => {
   const { words, indices } = Words.getWordsWithIndices(allText.split(''), Fun.identity);
   const len = allText.length;
 
-  return Arr.map(words, (word, idx) => {
-    const index = indices[idx];
+  return Arr.map(words, (word, i) => {
+    const index = indices[i];
     const start = index.start;
     const end = index.end;
     const text = word.join('');
