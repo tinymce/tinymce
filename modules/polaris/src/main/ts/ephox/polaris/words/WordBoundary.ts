@@ -56,16 +56,16 @@ const isWordBoundary = (map: CharacterMap, index: number): boolean => {
   }
 
   // WB4. Ignore format and extend characters.
-  if (
-    (type === ci.EXTEND || type === ci.FORMAT) &&
+  if ((type === ci.EXTEND || type === ci.FORMAT) &&
     (nextType === ci.ALETTER || nextType === ci.NUMERIC || nextType === ci.KATAKANA ||
       nextType === ci.EXTEND || nextType === ci.FORMAT)
     ||
-    (nextType === ci.EXTEND || nextType === ci.FORMAT) &&
-    (type === ci.ALETTER || type === ci.NUMERIC || type === ci.KATAKANA ||
-      type === ci.EXTEND || type === ci.FORMAT) &&
-    (nextNextType === ci.ALETTER || nextNextType === ci.NUMERIC || nextNextType === ci.KATAKANA ||
-      nextNextType === ci.EXTEND || nextNextType === ci.FORMAT)) {
+    (nextType === ci.EXTEND ||
+      // TINY-9654: Only ignore format characters if they do not precede a word boundary. Since some format characters overlap with whitespace characters (ex: \ufeff) and
+      // our word extraction logic excludes whitespace characters, if a whitespace-overlapping format character that precedes a word boundary is not split on, whichever word
+      // it is a part of will not be added to the list of extracted words, causing inaccuracies.
+      nextType === ci.FORMAT && (nextNextType === ci.ALETTER || nextNextType === ci.NUMERIC || nextNextType === ci.KATAKANA || nextNextType === ci.EXTEND || nextNextType === ci.FORMAT))
+      && (type === ci.ALETTER || type === ci.NUMERIC || type === ci.KATAKANA || type === ci.EXTEND || type === ci.FORMAT)) {
     return false;
   }
 

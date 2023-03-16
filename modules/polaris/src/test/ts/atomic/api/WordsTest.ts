@@ -53,13 +53,29 @@ UnitTest.test('api.Words.words', () => {
   assertWords([ '1≤13' ], '1≤13');
   assertWords([ '42.6±4.2' ], '42.6±4.2');
 
-  // TINY-9654: does not strip zwnbsp characters or split on them if they do not precede a word boundary
+  // TINY-9654: Does not split on extend characters (ex: \u0300)
+  assertWords([ 'a\u0300b' ], 'a\u0300b');
+  assertWords([ 'a\u0300b', 'c' ], 'a\u0300b c');
+  assertWords([ '\u0300b' ], '\u0300b');
+  assertWords([ 'a', '\u0300b' ], 'a \u0300b');
+  assertWords([ '\u0300' ], '\u0300');
+  assertWords([ '\u0300' ], '\u0300 ');
+  assertWords([ 'a\u0300' ], 'a\u0300');
+  assertWords([ 'a\u0300' ], 'a\u0300 ');
+
+  // TINY-9654: Does not split on format characters (ex: \ufeff) if they do not precede a word boundary
+  // TINY-9654: Does not strip \ufeff characters (obsolete TINY-1166 fix removed)
   assertWords([ 'a\ufeffb' ], 'a\ufeffb');
   assertWords([ 'a\ufeffb', 'c' ], 'a\ufeffb c');
   assertWords([ '\ufeffb' ], '\ufeffb');
+  assertWords([ 'a', '\ufeffb' ], 'a \ufeffb');
 
-  // TINY-9654: strip zwnbsp characters if they precede a word boundary
+  // TINY-9654: Split on format characters if they precede a word boundary. Some format characters overlap with whitespace
+  // characters (ex: \ufeff). Since whitespace characters are not extracted, if a whitespace-overlapping format character that
+  // precedes a word boundary is not split on, whichever word it is a part of will not be added to the list of extracted words,
+  // causing inaccuracies.
   assertWords([ ], '\ufeff');
   assertWords([ ], '\ufeff ');
   assertWords([ 'a' ], 'a\ufeff');
+  assertWords([ 'a' ], 'a\ufeff ');
 });
