@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 7.4.0 - 2023-03-15
+
 ### Added
 - Added `measurement` API to StrAssert to allow for approximate measurements in strings. #TINY-9242
 
