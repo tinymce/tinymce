@@ -35,7 +35,7 @@ export interface WordsWithIndices<T> {
   words: Word<T>[];
   indices: WordIndex[];
 }
-const findWordsAndIndices = <T>(chars: Word<T>, sChars: string[], characterMap: CharacterMap, options: WordOptions): WordsWithIndices<T> => {
+const findWordsWithIndices = <T>(chars: Word<T>, sChars: string[], characterMap: CharacterMap, options: WordOptions): WordsWithIndices<T> => {
   const words: Word<T>[] = [];
   const indices: WordIndex[] = [];
   let word: Word<T> = [];
@@ -97,7 +97,7 @@ const getWordsWithIndices = <T>(chars: Word<T>, extract: (char: T) => string, op
   };
   const extractedChars: string[] = Arr.map(chars, extract);
   const characterMap: CharacterMap = classify(extractedChars);
-  return findWordsAndIndices(chars, extractedChars, characterMap, options);
+  return findWordsWithIndices(chars, extractedChars, characterMap, options);
 };
 
 const getWords = <T>(chars: Word<T>, extract: (char: T) => string, options?: WordOptions): Word<T>[] =>
