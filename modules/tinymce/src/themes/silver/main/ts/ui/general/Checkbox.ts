@@ -4,7 +4,7 @@ import {
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Fun, Optional } from '@ephox/katamari';
-import { Checked } from '@ephox/sugar';
+import { Checked, Traverse } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';
@@ -21,6 +21,7 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
     return Optional.some(true);
   };
 
+  let isEnabled = spec.enabled;
   const pField = AlloyFormField.parts.field({
     factory: { sketch: Fun.identity },
     dom: {
@@ -34,7 +35,19 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
     behaviours: Behaviour.derive([
       ComposingConfigs.self(),
       Disabling.config({
-        disabled: () => !spec.enabled || providerBackstage.isDisabled()
+        disabled: () => !spec.enabled || providerBackstage.isDisabled(),
+        onDisabled: (component) => {
+          if (isEnabled) { // Prevent recursive loop
+            isEnabled = false;
+            Traverse.parent(component.element).each((element) => component.getSystem().getByDom(element).each(Disabling.disable));
+          }
+        },
+        onEnabled: (component) => {
+          if (!isEnabled) { // Prevent recursive loop
+            isEnabled = true;
+            Traverse.parent(component.element).each((element) => component.getSystem().getByDom(element).each(Disabling.enable));
+          }
+        }
       }),
       Tabstopping.config({}),
       Focusing.config({ }),

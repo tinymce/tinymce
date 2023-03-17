@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Keyboard, Keys, UiFinder } from '@ephox/agar';
-import { AlloyComponent, Disabling, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
+import { AlloyComponent, Disabling, Form, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { assert } from 'chai';
@@ -41,7 +41,11 @@ describe('headless.tinymce.themes.silver.components.checkbox.Checkbox component 
     Keyboard.keydown(keyCode, modifiers, input);
   };
 
-  it('Check basic structure', () => {
+  const getCompByName = (access: AlloyComponent, name: string) => {
+    return Form.getField(access, name).getOrDie();
+  };
+
+  it('TBA: Check basic structure', () => {
     Assertions.assertStructure(
       'Checking initial structure',
       ApproxStructure.build((s, str, arr) => s.element('label', {
@@ -76,7 +80,7 @@ describe('headless.tinymce.themes.silver.components.checkbox.Checkbox component 
     );
   });
 
-  it('Representing state updates', () => {
+  it('TBA: Representing state updates', () => {
     const component = hook.component();
     assertCheckboxState('Initial checkbox state', component, false);
     assert.isFalse(Disabling.isDisabled(component), 'Initial disabled state');
@@ -88,7 +92,7 @@ describe('headless.tinymce.themes.silver.components.checkbox.Checkbox component 
     assertCheckboxState('unchecked > checked', component, true);
   });
 
-  it('Disabling state', () => {
+  it('TBA: Disabling state', () => {
     const component = hook.component();
     Disabling.set(component, true);
     assert.isTrue(Disabling.isDisabled(component), 'enabled > disabled');
@@ -96,7 +100,89 @@ describe('headless.tinymce.themes.silver.components.checkbox.Checkbox component 
     assert.isFalse(Disabling.isDisabled(component), 'disabled > enabled');
   });
 
-  it('Keyboard events', () => {
+  it('TINY-4189:Disabling state', () => {
+    const component = hook.component();
+    Disabling.set(getCompByName(component, 'test-check-box'), true);
+    Assertions.assertStructure(
+      'Checking initial structure',
+      ApproxStructure.build((s, str, arr) => s.element('label', {
+        classes: [
+          arr.has('tox-checkbox'),
+          arr.has('tox-checkbox--disabled')
+        ],
+        attrs: {
+          'aria-disabled': str.is('true')
+        },
+        children: [
+          s.element('input', {
+            classes: [ arr.has('tox-checkbox__input') ],
+            attrs: {
+              type: str.is('checkbox')
+            }
+          }),
+          s.element('div', {
+            classes: [ arr.has('tox-checkbox__icons') ],
+            children: [
+              s.element('span', {
+                classes: [ arr.has('tox-icon'), arr.has('tox-checkbox-icon__checked') ],
+                html: str.startsWith('<svg')
+              }),
+              s.element('span', {
+                classes: [ arr.has('tox-icon'), arr.has('tox-checkbox-icon__unchecked') ],
+                html: str.startsWith('<svg')
+              })
+            ]
+          }),
+          s.element('span', {
+            classes: [ arr.has('tox-checkbox__label') ],
+            html: str.is('TestCheckbox')
+          })
+        ]
+      })),
+      hook.component().element
+    );
+    Disabling.set(getCompByName(component, 'test-check-box'), false);
+    Assertions.assertStructure(
+      'Checking initial structure',
+      ApproxStructure.build((s, str, arr) => s.element('label', {
+        classes: [
+          arr.has('tox-checkbox'),
+          arr.not('tox-checkbox--disabled')
+        ],
+        attrs: {
+          'aria-disabled': str.is('false')
+        },
+        children: [
+          s.element('input', {
+            classes: [ arr.has('tox-checkbox__input') ],
+            attrs: {
+              type: str.is('checkbox')
+            }
+          }),
+          s.element('div', {
+            classes: [ arr.has('tox-checkbox__icons') ],
+            children: [
+              s.element('span', {
+                classes: [ arr.has('tox-icon'), arr.has('tox-checkbox-icon__checked') ],
+                html: str.startsWith('<svg')
+              }),
+              s.element('span', {
+                classes: [ arr.has('tox-icon'), arr.has('tox-checkbox-icon__unchecked') ],
+                html: str.startsWith('<svg')
+              })
+            ]
+          }),
+          s.element('span', {
+            classes: [ arr.has('tox-checkbox__label') ],
+            html: str.is('TestCheckbox')
+          })
+        ]
+      })),
+      hook.component().element
+    );
+  });
+
+  it('TBA: Keyboard events', () => {
     const component = hook.component();
     setCheckboxState(component, true);
     pressKeyOnCheckbox(component, Keys.space());
