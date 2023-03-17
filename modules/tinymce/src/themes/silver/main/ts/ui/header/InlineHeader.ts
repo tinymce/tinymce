@@ -17,7 +17,7 @@ export interface InlineHeader {
   readonly isPositionedAtTop: () => boolean;
   readonly show: () => void;
   readonly hide: () => void;
-  readonly update: () => void;
+  readonly update: (stickyAction: (c: AlloyComponent) => void) => void;
   readonly updateMode: () => void;
   readonly repositionPopups: () => void;
 }
@@ -243,7 +243,7 @@ export const InlineHeader = (
     }
   };
 
-  const updateChromeUi = (stickyAction: (c: AlloyComponent) => void) => {
+  const update = (stickyAction: (c: AlloyComponent) => void) => {
     // Skip updating the ui if it's hidden
     if (!isVisible()) {
       return;
@@ -325,14 +325,14 @@ export const InlineHeader = (
       // calling reset here, to reset the state.
       // Another case would be when the toolbar is shown initially (with location_bottom)
       // we don't want to dock the toolbar, calling Docking.refresh
-      updateChromeUi((elem) => Docking.isDocked(elem) ? Docking.reset(elem) : Docking.refresh(elem));
+      update((elem) => Docking.isDocked(elem) ? Docking.reset(elem) : Docking.refresh(elem));
     } else {
       // Even if we aren't updating the docking mode, we still want to reposition
       // the Ui. NOTE: We are using Docking.refresh here, rather than Docking.reset. This
       // means it should keep whatever its "previous" coordinates were, and will just
       // behave like the window was scrolled again, and Docking needs to work out if it
       // is going to dock / undock
-      updateChromeUi(Docking.refresh);
+      update(Docking.refresh);
     }
   };
 
@@ -345,20 +345,12 @@ export const InlineHeader = (
     });
   };
 
-  const update = () => {
-    // Because we use Docking.reset here instead of Docking.refresh. That means
-    // that it will revert back to its original position, clear any state, and then
-    // trigger a refresh. This should be called in situations where the DOM has
-    // changed significantly (resizing, scrolling etc.)
-    updateChromeUi(Docking.reset);
-  };
-
   const updateMode = () => {
     const changedMode = doUpdateMode();
     // If the docking mode has changed due to the update, we want to reset
     // docking. This will clear any prior stored positions
     if (changedMode) {
-      update();
+      update(Docking.reset);
     }
   };
 

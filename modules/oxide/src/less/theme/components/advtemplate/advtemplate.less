@@ -12,6 +12,24 @@
   .tox-advtemplate {
     .tox-form__grid {
       flex: 1;
+
+      > div:first-child {
+        display: flex;
+        flex-direction: column;
+        width: 30%;
+
+        > div:nth-child(2) {
+          flex-basis: 0;
+          flex-grow: 1;
+          overflow: auto;
+        }
+
+        @media @breakpoint-sm {
+          body:not(.tox-force-desktop) & {
+            width: 100%;
+          }
+        }
+      }
     }
 
     iframe {

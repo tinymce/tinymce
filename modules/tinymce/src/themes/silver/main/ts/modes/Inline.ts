@@ -1,4 +1,4 @@
-import { AlloyComponent, Attachment, Boxes, Disabling } from '@ephox/alloy';
+import { AlloyComponent, Attachment, Boxes, Disabling, Docking } from '@ephox/alloy';
 import { Cell, Singleton, Throttler } from '@ephox/katamari';
 import { DomEvent, Scroll, SugarElement } from '@ephox/sugar';
 
@@ -44,7 +44,7 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader, 
       if (prevPos !== pos) {
         // The proposed toolbar location has moved, so we need to reposition the Ui. This might
         // include things like refreshing any Docking / stickiness for the toolbars
-        ui.update();
+        ui.update(Docking.reset);
       } else if (hasResized) {
         // The proposed toolbar location hasn't moved, but the dimensions of the editor have changed.
         // We use "updateMode" here instead of "update". The primary reason is that "updateMode"
@@ -69,7 +69,7 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader, 
 
   // For both the initial load (SkinLoaded) and any resizes (ResizeWindow), we want to
   // update the positions of the Ui elements (and reset Docking / stickiness)
-  editor.on('SkinLoaded ResizeWindow', ui.update);
+  editor.on('SkinLoaded ResizeWindow', () => ui.update(Docking.reset));
 
   editor.on('NodeChange keydown', (e) => {
     requestAnimationFrame(() => resizeContent(e));
@@ -78,7 +78,7 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader, 
   // When the page has been scrolled, we need to update any docking positions. We also
   // want to reposition all the Ui elements if required.
   let lastScrollX = 0;
-  const updateUi = Throttler.last(() => ui.update(), 33);
+  const updateUi = Throttler.last(() => ui.update(Docking.refresh), 33);
   editor.on('ScrollWindow', () => {
     const newScrollX = Scroll.get().left;
     if (newScrollX !== lastScrollX) {
@@ -92,7 +92,7 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader, 
   if (Options.isSplitUiMode(editor)) {
     editor.on('ElementScroll', (_args) => {
       // When the scroller containing the editor scrolls, update the Ui positions
-      ui.update();
+      ui.update(Docking.refresh);
     });
   }
 

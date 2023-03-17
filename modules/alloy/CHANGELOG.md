@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 12.1.0 - 2023-03-15
+
 ### Added
 - Added `firstTabstop` optional property to `ModalDialogDetail`, to specify the index of elements to focus on when dialog shows. #TINY-9520
 - Exposed `OffsetOrigin` module and `DockingType` type in api main entry point. #TINY-9414

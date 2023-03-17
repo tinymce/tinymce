@@ -87,7 +87,7 @@ describe('browser.tinymce.themes.silver.editor.DialogTreeTest', () => {
     }
   }, [], true);
 
-  it('TINY-9614: Trigger the urlinput and check that the dropdown appears in front of the dialog', () => {
+  it('TINY-9614: Tree is navigable using up and down arrow keys and using tab and shoft+tab keys', () => {
     const editor = hook.editor();
     TinyUiActions.clickOnToolbar(editor, 'button:contains("Tree")');
     const dirElement = FocusTools.isOnSelector('Dir', SugarDocument.getDocument(), '.tox-tree--directory__label:contains("Dir")');
@@ -103,5 +103,6 @@ describe('browser.tinymce.themes.silver.editor.DialogTreeTest', () => {
     FocusTools.isOn('Dir menu', dirMenuElement);
     TinyUiActions.keystroke(editor, Keys.tab(), { shiftKey: true });
     FocusTools.isOn('Dir', dirElement);
+    TinyUiActions.closeDialog(editor);
   });
 });
