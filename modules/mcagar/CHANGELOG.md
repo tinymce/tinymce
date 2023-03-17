@@ -6,11 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 8.3.0 - 2023-03-15
+
+### Added
+- Exposed `getUiRoot` from `TinyUiActions` for easier ShadowDOM support. #TINY-9226
+
 ## 8.2.0 - 2022-11-23
 
-## Added
+### Added
 - Add new `pWaitForEventToStopFiring` function to the `TinyContentActions` helper methods to allow tests to wait until an event stops being triggered.
-- Exposed `getUiRoot` from `TinyUiActions` for easier ShadowDOM support. #TINY-9226
 
 ## 8.1.0 - 2022-09-08
 

@@ -135,6 +135,7 @@ export interface FlowConfigSpec extends GeneralKeyingConfigSpec {
   execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement<HTMLElement>) => Optional<boolean>;
   executeOnMove?: boolean;
   allowVertical?: boolean;
+  allowHorizontal?: boolean;
   cycles?: boolean;
 }
 
@@ -145,6 +146,7 @@ export interface FlowConfig extends GeneralKeyingConfig {
   execute: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement<HTMLElement>) => Optional<boolean>;
   executeOnMove: boolean;
   allowVertical: boolean;
+  allowHorizontal: boolean;
   cycles: boolean;
 }
 

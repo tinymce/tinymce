@@ -180,9 +180,8 @@ const init = async (editor: Editor): Promise<void> => {
   editor.editorContainer = renderInfo.editorContainer as HTMLElement;
   appendContentCssFromSettings(editor);
 
-  // Content editable mode ends here
   if (editor.inline) {
-    InitContentBody.initContentBody(editor);
+    InitContentBody.contentBodyLoaded(editor);
   } else {
     InitIframe.init(editor, {
       editorContainer: renderInfo.editorContainer,

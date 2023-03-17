@@ -4,6 +4,9 @@ import { ContentEditable, SugarElement, SugarNode } from '@ephox/sugar';
 import * as Data from './Data';
 import * as Html from './Html';
 
+const isWrappedNbsp = (node: Node): node is HTMLSpanElement =>
+  node.nodeName.toLowerCase() === 'span' && (node as HTMLSpanElement).classList.contains('mce-nbsp-wrap');
+
 const isMatch = (n: SugarElement<Node>): n is SugarElement<Text> => {
   const value = SugarNode.value(n);
   return SugarNode.isText(n) &&
@@ -14,7 +17,7 @@ const isMatch = (n: SugarElement<Node>): n is SugarElement<Text> => {
 const isContentEditableFalse = (node: SugarElement<Node>) => SugarNode.isHTMLElement(node) && ContentEditable.getRaw(node) === 'false';
 
 const isChildEditable = (node: SugarElement<Node>, currentState: boolean) => {
-  if (SugarNode.isHTMLElement(node)) {
+  if (SugarNode.isHTMLElement(node) && !isWrappedNbsp(node.dom)) {
     const value = ContentEditable.getRaw(node);
     if (value === 'true') {
       return true;
@@ -31,9 +34,10 @@ const filterEditableDescendants = <T extends Node>(scope: SugarElement<Node>, pr
   let result: SugarElement<T>[] = [];
   const dom = scope.dom;
   const children = Arr.map(dom.childNodes, SugarElement.fromDom);
+  const isEditable = (node: SugarElement<Node>) => isWrappedNbsp(node.dom) || !isContentEditableFalse(node);
 
   Arr.each(children, (x) => {
-    if (editable && !isContentEditableFalse(x) && predicate(x)) {
+    if (editable && isEditable(x) && predicate(x)) {
       result = result.concat([ x ]);
     }
     result = result.concat(filterEditableDescendants(x, predicate, isChildEditable(x, editable)));
@@ -56,6 +60,7 @@ const replaceWithSpans = (text: string): string =>
   text.replace(Data.regExpGlobal, Html.wrapCharWithSpan);
 
 export {
+  isWrappedNbsp,
   isMatch,
   filterEditableDescendants,
   findParentElm,

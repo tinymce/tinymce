@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+
+## 4.3.0 - 2023-03-15
+
+### Added
 - Added `Tree` component that can be a `BodyComponent`. #TINY-9532
 - Added optional `select`-property to `colorswatch`-type `fancymenuitem` to allow setting colors as selected. #TINY-9395
 - Added new `setIconFill` function to `nestedmenuitemspec`. #TINY-9497

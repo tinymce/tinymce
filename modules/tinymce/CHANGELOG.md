@@ -6,86 +6,94 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Table toolbar was visible even if the table was within a noneditable host element. #TINY-9664
+- Quickbar toolbars was shown for noneditable contents in a noneditable root. #TINY-9460
+
+## 6.4.0 - 2023-03-15
+
 ### Added
 - New `tree` component that can be used in dialog body panel. #TINY-9532
-- renderUI property in the `Theme` type can now return a `Promise<RenderResult>` instead of `RenderResult`. #TINY-9556
+- `renderUI` property in the `Theme` type can now return a `Promise<RenderResult>` instead of `RenderResult`. #TINY-9556
 - New `isEditable` API to `editor.selection` that returns true or false if the current selection is editable. #TINY-9462
 - New `isEditable` API to `editor.dom` that returns true or false if the specified node is editable. #TINY-9462
-- New `setText` and `setIcon` methods added to menu button and toolbar button apis. #TINY-9268
+- New `setText` and `setIcon` methods added to menu button and toolbar button API. #TINY-9268
 - New `highlight_on_focus` option which enables highlighting the content area on focus. #TINY-9277
 - New `fontsizeinput` toolbar item which allows the user to set the size via input and also increase and decrease it with `+` and `-` buttons. #TINY-9429
 - Added `skipFocus` option to the `ToggleToolbarDrawer` command to preserve focus. #TINY-9337
-- New `font_size_input_default_unit` option allow to use of numbers without a unit in `fontsizeinput` and have them parsed with the default unit, if it is not defined the default is `pt`. #TINY-9585
+- New `font_size_input_default_unit` option allows entry of numbers without a unit in `fontsizeinput`. They are then parsed as the set unit. If `font_size_input_default_unit` is not set the default is `pt`. #TINY-9585
 - New `group` and `togglebutton` in view. #TINY-9523
 - New `togglebutton` in dialog footer buttons. #TINY-9523
 - Added `toggleFullscreen` to dialog API. #TINY-9528
 - New `text-size-increase` and `text-size-decrease` icons. #TINY-9530
-- New `xss_sanitization` option to allow for XSS sanitization to be disabled. #TINY-9600
-- Added top right close 'x' button of the modal dialogs to keyboard navigation. #TINY-9520
+- New `xss_sanitization` option to allow disabling of XSS sanitization. #TINY-9600
+- Added the top right close button of modal dialogs to the tabbing order. The 'x' button in these dialogs can now be accessed using keyboard navigation. #TINY-9520
 - New `ui_mode` option for editor in scrollable containers support. #TINY-9414
+- The sidebar element now has the accessibility role `region` when visible and the accessibility role `presentation` when hidden. #TINY-9517
+- The `tox-custom-editor` class now has a border highlight when it is selected. #TINY-9673
+- An element could be dropped onto the decendants of an element with a `contenteditable="false"` attribute. #TINY-9364
+- Checkmark did not show in menu color swatches. #TINY-9395
+- Add support for navigating inside the tree component using arrow keys and shift key. #TINY-9614
 
 ### Improved
-- Direct invalid child text nodes of list elements will be wrapped in list item elements. #TINY-4818
-- Templates will be parsed before preview and insertion to make preview consistent with inserted template content and prevent XSS. #TINY-9244
-- Pressing backspace in an empty line now preserves formatting in a previous empty line. #TINY-9454
-- Pressing enter inside the `inputfontsize` input would not move the focus back into the editor content. #TINY-9598
-- Improved contrast of border colors against the background color throughout the UI. #TINY-9587
-- Drag and drop events for noneditable elements did not include details like target element. #TINY-9599
+- Direct invalid child text nodes of list elements are now wrapped in list item elements. #TINY-4818
+- Templates are now be parsed before preview and insertion to make preview consistent with inserted template content and prevent XSS. #TINY-9244
+- Pressing backspace on an empty line now preserves formatting on the previous empty line. #TINY-9454
+- Pressing enter inside the `inputfontsize` input field now moves focus back into the editor content. #TINY-9598
+- Drag and drop events for elements with a `contenteditable="false"` attribute now includes target element details. #TINY-9599
 - Updated focus, active, and enabled colors of UI buttons for improved contrast against the UI color. #TINY-9176
 
 ### Changed
-- The `link` plugins context menu items will no longer appear for noneditable links. #TINY-9491
-- The formatting of `contenteditable="false"` elements are no longer cloned to new cells while creating new table rows. #TINY-9449
+- The `link` plugins context menu items no longer appears for links that include elements with a `contenteditable="false"` attribute. #TINY-9491
+- The formatting of elements with a `contenteditable="false"` attribute are no longer cloned to new cells when new table rows are created. #TINY-9449
 - Changed the color of `@dialog-table-border-color`, and added right padding to the first cell of dialog table. #TINY-9380
-- The sidebar element now has accessibility role `region` when visible and `presentation` when hidden. #TINY-9517
 
 ### Fixed
-- Add support for navigating inside the tree component using arrow keys and shift key. #TINY-9614
 - Sometimes the editor would finish initializing before the silver theme would have finished loading. #TINY-9556
-- The searchreplace modal would close incorrectly when clicking outside of the alert that pops up when no match is found. #TINY-9443
-- Color picker on toolbar would not update when changing forecolor or backcolor from menu. #TINY-9439
+- The `searchreplace` modal closed incorrectly when clicking outside of the alert that pops up when no match is found. #TINY-9443
+- The text color or background color picker toolbar buttons did not update when the text color or background color was changed using the equivalent commands in the Format menu. #TINY-9439
 - The `onSetup` api function would not run when defining custom group toolbar button. #TINY-9496
-- An element could be dropped onto the decendants of a noneditable element. #TINY-9364
-- Checkmark did not show in menu colorswatches. #TINY-9395
 - The foreground and background menu icons would not properly update to display the last used color. #TINY-9497
 - Added new `setIconFill` function to `NestedMenuItemInstanceApi`. #TINY-9497
-- Pasting links to text would sometimes not generate the correct undo stack on safari. #TINY-9489
-- Toolbar split buttons in advlist plugin to show the correct state when the cursor is in a checklist. #TINY-5167
-- Dragging transparent elements into transparent blocks elements could produce invalid nesting of transparents. #TINY-9231
-- The `editor.insertContent` API would insert contents inside noneditable elements if the selection was inside the element. #TINY-9462
+- Pasting links to text would sometimes not generate the correct undo stack in Safari. #TINY-9489
+- Toolbar split buttons in `advlist` plugin now show the correct state when the cursor is in a checklist. #TINY-5167
+- Dragging transparent elements into transparent block elements could produce invalid nesting of transparents. #TINY-9231
+- The `editor.insertContent` API would insert contents inside elements with a `contenteditable="false"` attribute if the selection was inside the element. #TINY-9462
 - Closing a dialog would scroll down the document in Safari. #TINY-9148
 - Inline headers would not work in some situations when the editor was moved too far right horizontally. #TINY-8977
-- Quick toolbars were incorrectly rendered during the dragging of `contenteditable="false"` elements. #TINY-9305
-- Selection of images, hrs, tables or noneditable elements was possible if they were within a noneditable element. #TINY-9473
-- Ranged deletion of formatted text using selection or keyboard shortcut would sometimes cause Blink and Webkit browsers to insert interpreted tags upon typing, which may result in inconsistent tags. #TINY-9302
-- Visual characters were rendered inside noneditable elements. #TINY-9474
-- Lists in a noneditable root were incorrectly editable using list API commands, toolbar buttons and menu items. #TINY-9458
-- Color picker dialog would not update the preview color if the hex input value was prefixed with `#` symbol. #TINY-9457
-- Table cell selection was possible even if the element was in a noneditable root element. #TINY-9459
-- Table commands were modifying tables in a noneditable root element. #TINY-9459
-- Fake carets were rendered for noneditable elements and tables in a noneditable root element. #TINY-9459
+- Quick toolbars were incorrectly rendered during the dragging of elements with a `contenteditable="false"` attribute. #TINY-9305
+- Selection of images, horizontal rules, tables or elements with a `contenteditable="false"` attribute was possible if they were within an element with a `contenteditable="false"` attribute. #TINY-9473
+- Ranged deletion of formatted text using selection or a keyboard shortcut would sometimes cause Blink- and Webkit-based browsers to insert interpreted tags upon typing. This could result in inconsistent tags. #TINY-9302
+- Visual characters were rendered inside elements with a `contenteditable="false"` attribute. #TINY-9474
+- Lists with an element with a `contenteditable="false"` attribute as their root were incorrectly editable using list API commands, toolbar buttons and menu items. #TINY-9458
+- Color picker dialog would not update the preview color if the hex input value was prefixed with the `#` character. #TINY-9457
+- Table cell selection was possible even if the element being selected was within an element with a `contenteditable="false"` attribute. #TINY-9459
+- Table commands were modifying tables that were within an element with a `contenteditable="false"` attribute. #TINY-9459
+- Fake carets were rendered for elements with a `contenteditable="false"` attribute and for tables within an element with a `contenteditable="false"` attribute. #TINY-9459
 - Textareas with scrollbars in dialogs would not render rounded corners correctly on some browsers. #TINY-9331
-- It was possible to open links inside the editor if the editor root was noneditable. #TINY-9470
-- Inline boundary was rendered for noneditable inline boundary elements. #TINY-9471
+- It was possible to open links inside the editor if the editor root was an element with a `contenteditable="false"` attribute. #TINY-9470
+- Inline boundary was rendered for boundary elements that had a `contenteditable="false"` attribute. #TINY-9471
 - Clicking on a disabled split button will no longer call the `onAction` callback. #TINY-9504
-- The "Edit Link" dialog incorrectly retrieved the URL value when opened immediately after the link insertion. #TINY-7993
-- Editor commands `ForwardDelete` and `Delete` was deleting contents inside noneditable elements. #TINY-9477
-- Backspace or delete keys was deleting contents inside noneditable elements. #TINY-9477
-- Inserting newlines inside an editable element inside a noneditable root would sometimes try to split the editable element. #TINY-9461
+- The *Edit Link* dialog incorrectly retrieved the URL value when opened immediately after the link insertion. #TINY-7993
+- The `ForwardDelete` and `Delete` editor commands were deleting content within elements with a `contenteditable="false"` attribute. #TINY-9477
+- The Backspace and Forward Delete keys were deleting content within elements with a `contenteditable="false"` attribute. #TINY-9477
+- Inserting newlines inside an editable element that was inside an element with a `contenteditable="false"` attribute root would sometimes try to split the editable element. #TINY-9461
 - Creating a list in a table cell when the caret is in front of an anchor element would not properly include the anchor in the list. #TINY-6853
-- Dragging and dropping noneditable elements on table borders would remove the element on drop. #TINY-9021
-- Noneditable elements would be removed when dragged and dropped within a noneditable root. #TINY-9558
-- Formatting could be applied or removed on noneditable list items inside a noneditable root. #TINY-9563
-- Annotation would not be removed if the annotation was immediately deleted after being created. #TINY-9399
-- Inserting a link for a selection from quickbars didn't preserve formatting. #TINY-9593
-- Inline dialog position was not correct when the editor wasn't inline and was contained in a `fixed` or `absolute` positioned element. #TINY-9554
-- Sticky toolbars would not have fade transition when undocking in classic iframe mode. #TINY-9408
-- Inserting elements that was not valid within the closest editing host would incorrectly split the editing host. #TINY-9595
-- `color_cols` option was not respected in the `forecolor` or `backcolor` color swatches. #TINY-9560
-- Drag and dropping the last noneditable element out of its parent block would not properly pad the parent block element. #TINY-9606
+- Dragging and dropping elements with a `contenteditable="false"` attribute on table borders would remove the element on drop. #TINY-9021
+- Elements with a `contenteditable="false"` attribute would be removed when dragged and dropped within a root element with a `contenteditable="false"` attribute. #TINY-9558
+- Formatting could be applied or removed to list items with a `contenteditable="false"` attribute that were inside an element with a `contenteditable="false"` attribute. #TINY-9563
+- Annotation were not removed if the annotation was deleted immediately after being created. #TINY-9399
+- Inserting a link for a selection from quickbars did not preserve formatting. #TINY-9593
+- Inline dialog position was not correct when the editor was not inline and was contained in a `fixed` or `absolute` positioned element. #TINY-9554
+- Sticky toolbars did not fade transition when undocking in classic iframe mode. #TINY-9408
+- Inserting elements that were not valid within the closest editing host would incorrectly split the editing host. #TINY-9595
+- The `color_cols` option was not respected in the `forecolor` or `backcolor` color swatches. #TINY-9560
+- Drag and dropping the last element with a `contenteditable="false"` attribute out of its parent block would not properly pad the parent block element. #TINY-9606
 - Applying heading formats from `text_patterns` produced an invisible space before a word. #TINY-9603
-- Opening color swatches would cause tab to crash when `color_cols` or other column option was set to 0. #TINY-9649
-- Quickbar toolbars was shown for noneditable contents in a noneditable root. #TINY-9460
+- Opening color swatches caused the browser tab to crash when `color_cols` or other column option was set to 0. #TINY-9649
+- Opening a menu button in the footer of a dialog after a redial threw an error. #TINY-9686
+- After closing a view, the `more...` toolbar button disappeared if the editor had `toolbar_mode: 'sliding'` and the toolbar was opened. #TINY-9419
+- Inline dialogs would open partially off screen when the toolbar had a small width. #TINY-9588
 
 ## 6.3.2 - 2023-02-22
 

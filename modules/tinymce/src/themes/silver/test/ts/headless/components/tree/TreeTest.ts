@@ -1,9 +1,9 @@
-import { ApproxStructure, Assertions, Mouse, UiFinder } from '@ephox/agar';
-import { AlloyComponent, GuiFactory, TestHelpers } from '@ephox/alloy';
+import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, UiFinder } from '@ephox/agar';
+import { AlloyComponent, AlloyTriggers, GuiFactory, NativeEvents, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { StructureSchema } from '@ephox/boulder';
 import { Dialog } from '@ephox/bridge';
-import { Class, SelectorFind, SugarBody } from '@ephox/sugar';
+import { Class, SelectorFind, SugarBody, SugarDocument } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import { renderTree } from 'tinymce/themes/silver/ui/dialog/Tree';
@@ -89,7 +89,7 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
   });
 
   const assertDirectoryExpandedState = (label: string, expected: boolean, directory: AlloyComponent) => {
-    assert.equal(Class.has(directory.element, 'tox-trbtn--expanded'), expected, 'Checking if expanded class is present: ' + label);
+    assert.equal(Class.has(directory.element, 'tox-tree--directory--expanded'), expected, 'Checking if expanded class is present: ' + label);
   };
 
   const getTreeItem = (selector: string) => {
@@ -106,7 +106,7 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
     store.assertEq('Store should empty', []);
   });
 
-  it('Tree', async () => {
+  it('TINY-9614: Basic tree interactions', async () => {
     const dir = getTreeItem('.tox-tree--directory');
     const store = hook.store();
     store.clear();
@@ -120,11 +120,11 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
 
     assertDirectoryExpandedState('Collapsed', false, dir);
     Mouse.clickOn(dir.element, '.tox-trbtn.tox-tree--directory__label');
-    assertDirectoryExpandedState('Expanded', true, getTreeItem('.tox-tree--directory__children'));
+    assertDirectoryExpandedState('Expanded', true, dir);
 
-    assertDirectoryExpandedState('Collapsed', false, getTreeItem('.tox-tree--directory .tox-tree--directory .tox-tree--directory__children'));
+    assertDirectoryExpandedState('Collapsed', false, getTreeItem('.tox-tree--directory .tox-tree--directory'));
     Mouse.clickOn(dir.element, '.tox-tree--directory .tox-trbtn.tox-tree--directory__label');
-    assertDirectoryExpandedState('Expanded', true, getTreeItem('.tox-tree--directory .tox-tree--directory .tox-tree--directory__children'));
+    assertDirectoryExpandedState('Expanded', true, getTreeItem('.tox-tree--directory .tox-tree--directory'));
 
     Mouse.clickOn(getTreeItem('.tox-tree').element, '>.tox-tree--leaf__label');
     store.assertEq('File 5', [ '5' ]);
@@ -138,6 +138,99 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
     await UiFinder.pWaitFor('Wait for menu item to show up', SugarBody.body(), '[title="menuitem"]');
     Mouse.clickOn(SugarBody.body(), '[title="menuitem"]');
     store.assertEq('menuitem', [ 'menuitem' ]);
+
+    Mouse.clickOn(dir.element, '.tox-tree--directory .tox-trbtn.tox-tree--directory__label');
+    assertDirectoryExpandedState('Collapsed', false, getTreeItem('.tox-tree--directory .tox-tree--directory'));
+
   });
 
+  it('TINY-9640: Tree is navigable with keyboard according to a11y recommendations from w3c', () => {
+    const dir = getTreeItem('.tox-tree--directory');
+
+    // Start with clean state
+    const isDirectoryExpanded = Class.has(dir.element, '.tox-tree--directory--expanded');
+    if (isDirectoryExpanded) {
+      Mouse.clickOn(dir.element, '.tox-tree--directory .tox-trbtn.tox-tree--directory__label');
+    }
+    assertDirectoryExpandedState('Collapsed', false, dir);
+
+    // Right arrow keydown when directory is collapsed expands the directory and keeps focus in the directory label
+    const dirLabel = FocusTools.setFocus(dir.element, '.tox-tree--directory__label');
+    AlloyTriggers.emitWith(dir.getSystem().getByDom(dirLabel).getOrDie(), NativeEvents.keydown(), {
+      raw: {
+        code: 'ArrowRight',
+        which: Keys.right()
+      }
+    });
+    assertDirectoryExpandedState('Expanded', true, dir);
+    FocusTools.isOn('directory label', dirLabel);
+
+    // Right arrow keydown when focus is on an open node, moves focus to the first child node.
+    AlloyTriggers.emitWith(dir.getSystem().getByDom(dirLabel).getOrDie(), NativeEvents.keydown(), {
+      raw: {
+        code: 'ArrowRight',
+        which: Keys.right()
+      }
+    });
+    const subdirLabel = getTreeItem('.tox-tree--directory .tox-tree--directory .tox-tree--directory__label');
+    FocusTools.isOn('subdir label', subdirLabel.element);
+
+    // Down arrow keydown moves focus to the next focusable node witout opening or closing a node.
+    AlloyTriggers.emitWith(dir.getSystem().getByDom(dirLabel).getOrDie(), NativeEvents.keydown(), {
+      raw: {
+        code: 'ArrowDown',
+        which: Keys.down()
+      }
+    });
+    const file3 = FocusTools.getFocused(SugarDocument.getDocument()).getOrDie();
+    assert.deepEqual(file3.dom.textContent, 'File 3');
+
+    // Right arrow keydown when focus is on a closed node does nothing.
+    AlloyTriggers.emitWith(dir.getSystem().getByDom(file3).getOrDie(), NativeEvents.keydown(), {
+      raw: {
+        code: 'ArrowRight',
+        which: Keys.right()
+      }
+    });
+    FocusTools.isOn('File 3', file3);
+
+    // Up arrow keydown moves focus to the previous focusable tree node.
+    AlloyTriggers.emitWith(dir.getSystem().getByDom(file3).getOrDie(), NativeEvents.keydown(), {
+      raw: {
+        code: 'ArrowUp',
+        which: Keys.up()
+      }
+    });
+    FocusTools.isOn('subdir label', subdirLabel.element);
+
+    // Left arrow keydown when focus is on a child node moves focus to the parent node.
+    AlloyTriggers.emitWith(subdirLabel, NativeEvents.keydown(), {
+      raw: {
+        code: 'ArrowLeft',
+        which: Keys.left()
+      }
+    });
+    FocusTools.isOn('dir label', dirLabel);
+
+    // Left arrow keydown when focus is on a open node closes the node without moving focus.
+    AlloyTriggers.emitWith(dir.getSystem().getByDom(dirLabel).getOrDie(), NativeEvents.keydown(), {
+      raw: {
+        code: 'ArrowLeft',
+        which: Keys.left()
+      }
+    });
+    FocusTools.isOn('dir label', dirLabel);
+    assertDirectoryExpandedState('Collapsed', false, dir);
+
+    // Left arrow keydown when focus is on a closed node does nothing.
+    AlloyTriggers.emitWith(dir.getSystem().getByDom(dirLabel).getOrDie(), NativeEvents.keydown(), {
+      raw: {
+        code: 'ArrowLeft',
+        which: Keys.left()
+      }
+    });
+    FocusTools.isOn('dir label', dirLabel);
+    assertDirectoryExpandedState('Collapsed', false, dir);
+
+  });
 });
