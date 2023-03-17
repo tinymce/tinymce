@@ -110,14 +110,12 @@ describe('headless.tinymce.themes.silver.components.checkbox.Checkbox component 
           arr.has('tox-checkbox'),
           arr.has('tox-checkbox--disabled')
         ],
-        attrs: {
-          'aria-disabled': str.is('true')
-        },
         children: [
           s.element('input', {
             classes: [ arr.has('tox-checkbox__input') ],
             attrs: {
-              type: str.is('checkbox')
+              type: str.is('checkbox'),
+              disabled: str.is('disabled')
             }
           }),
           s.element('div', {
@@ -149,14 +147,12 @@ describe('headless.tinymce.themes.silver.components.checkbox.Checkbox component 
           arr.has('tox-checkbox'),
           arr.not('tox-checkbox--disabled')
         ],
-        attrs: {
-          'aria-disabled': str.is('false')
-        },
         children: [
           s.element('input', {
             classes: [ arr.has('tox-checkbox__input') ],
             attrs: {
-              type: str.is('checkbox')
+              type: str.is('checkbox'),
+              disabled: str.none()
             }
           }),
           s.element('div', {

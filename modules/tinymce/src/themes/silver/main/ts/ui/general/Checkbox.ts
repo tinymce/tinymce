@@ -4,7 +4,7 @@ import {
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Fun, Optional } from '@ephox/katamari';
-import { Checked, Traverse } from '@ephox/sugar';
+import { Checked, Class, Traverse } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';
@@ -21,7 +21,6 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
     return Optional.some(true);
   };
 
-  let isEnabled = spec.enabled;
   const pField = AlloyFormField.parts.field({
     factory: { sketch: Fun.identity },
     dom: {
@@ -37,16 +36,10 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
       Disabling.config({
         disabled: () => !spec.enabled || providerBackstage.isDisabled(),
         onDisabled: (component) => {
-          if (isEnabled) { // Prevent recursive loop
-            isEnabled = false;
-            Traverse.parent(component.element).each((element) => component.getSystem().getByDom(element).each(Disabling.disable));
-          }
+          Traverse.parentElement(component.element).each((element) => Class.add(element, 'tox-checkbox--disabled'));
         },
         onEnabled: (component) => {
-          if (!isEnabled) { // Prevent recursive loop
-            isEnabled = true;
-            Traverse.parent(component.element).each((element) => component.getSystem().getByDom(element).each(Disabling.enable));
-          }
+          Traverse.parentElement(component.element).each((element) => Class.remove(element, 'tox-checkbox--disabled'));
         }
       }),
       Tabstopping.config({}),
@@ -110,13 +103,6 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
     fieldBehaviours: Behaviour.derive([
       Disabling.config({
         disabled: () => !spec.enabled || providerBackstage.isDisabled(),
-        disableClass: 'tox-checkbox--disabled',
-        onDisabled: (comp) => {
-          AlloyFormField.getField(comp).each(Disabling.disable);
-        },
-        onEnabled: (comp) => {
-          AlloyFormField.getField(comp).each(Disabling.enable);
-        }
       }),
       ReadOnly.receivingConfig()
     ])
