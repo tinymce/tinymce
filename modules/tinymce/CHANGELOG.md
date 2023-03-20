@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Enabling or Disabling checkboxes would not set the correct classes and attributes. #TINY-4189
+- Table toolbar was visible even if the table was within a noneditable host element. #TINY-9664
+- Quickbar toolbars was shown for noneditable contents in a noneditable root. #TINY-9460
 
 ## 6.4.0 - 2023-03-15
 
