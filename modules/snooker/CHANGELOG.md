@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 11.0.9 - 2023-03-15
+
 ### Fixed
 - TableResize.on/off functions will now toggle the mouseover resize bar refresh state.
 - The `TableFill.cellOperations` function incorrectly declared the mutate element types as generic when they should have been a `CellElement`.
