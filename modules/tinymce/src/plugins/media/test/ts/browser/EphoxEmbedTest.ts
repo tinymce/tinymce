@@ -1,26 +1,17 @@
 import { ApproxStructure, Assertions, StructAssert, Waiter } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
+import AstNode from 'tinymce/core/api/html/Node';
+import { tinymce } from 'tinymce/core/api/Tinymce';
 import Plugin from 'tinymce/plugins/media/Plugin';
 
 import * as Utils from '../module/test/Utils';
 
 describe('browser.tinymce.plugins.media.core.EphoxEmbedTest', () => {
-  const hook = TinyHooks.bddSetupLight<Editor>({
-    plugins: [ 'media' ],
-    toolbar: 'media',
-    media_url_resolver: (data: { url: string }, resolve: (response: { html: string }) => void) => {
-      resolve({
-        html: '<video width="300" height="150" ' +
-          'controls="controls">\n<source src="' + data.url + '" />\n</video>'
-      });
-    },
-    base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin ], true);
-
   const ephoxEmbedStructure = ApproxStructure.build((s, str/* , arr*/) => {
     return s.element('div', {
       children: [
@@ -43,16 +34,72 @@ describe('browser.tinymce.plugins.media.core.EphoxEmbedTest', () => {
     Assertions.assertStructure('Should be the same structure', expected, actual);
   };
 
-  it('TBA: Open dialog, assert embedded content, close dialog and assert div structure', async () => {
-    const editor = hook.editor();
-    const content = '<div contenteditable="false" data-ephox-embed-iri="embed-iri"><iframe src="about:blank"></iframe></div>';
-    editor.setContent(content);
-    assertDivStructure(editor, ephoxEmbedStructure);
-    TinySelections.select(editor, 'div', []);
-    await Utils.pOpenDialog(editor);
-    await Utils.pAssertSourceValue(editor, 'embed-iri');
-    await Utils.pAssertEmbedData(editor, content);
-    TinyUiActions.submitDialog(editor);
-    await Waiter.pTryUntil('wait for div structure', () => assertDivStructure(editor, ephoxEmbedStructure));
+  context('embed', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      plugins: [ 'media' ],
+      toolbar: 'media',
+      media_url_resolver: (data: { url: string }, resolve: (response: { html: string }) => void) => {
+        resolve({
+          html: '<video width="300" height="150" ' +
+            'controls="controls">\n<source src="' + data.url + '" />\n</video>'
+        });
+      },
+      base_url: '/project/tinymce/js/tinymce'
+    }, [ Plugin ], true);
+
+    it('TBA: Open dialog, assert embedded content, close dialog and assert div structure', async () => {
+      const editor = hook.editor();
+      const content = '<div contenteditable="false" data-ephox-embed-iri="embed-iri"><iframe src="about:blank"></iframe></div>';
+      editor.setContent(content);
+      assertDivStructure(editor, ephoxEmbedStructure);
+      TinySelections.select(editor, 'div', []);
+      await Utils.pOpenDialog(editor);
+      await Utils.pAssertSourceValue(editor, 'embed-iri');
+      await Utils.pAssertEmbedData(editor, content);
+      TinyUiActions.submitDialog(editor);
+      await Waiter.pTryUntil('wait for div structure', () => assertDivStructure(editor, ephoxEmbedStructure));
+    });
+  });
+
+  context('youtube embed', () => {
+    const hook = TinyHooks.bddSetup<Editor>({
+      plugins: [ 'media' ],
+      toolbar: 'media',
+      setup: (editor: Editor) => {
+        editor.on('PreInit', () => {
+          const converter = (nodes: AstNode[]): void => {
+            Arr.each(nodes, (node) => {
+              const shimNode = new tinymce.html.Node('span', 1);
+              shimNode.attr('class', 'mce-shim');
+
+              node.append(shimNode);
+              node.attr('contenteditable', 'false');
+            });
+          };
+
+          editor.parser.addAttributeFilter('data-ephox-embed-iri', converter);
+        });
+      },
+      base_url: '/project/tinymce/js/tinymce'
+    }, [ Plugin ], true);
+
+    const responsiveEmbedData =
+      `<div style="left: 0px; width: 100%; height: 0px; position: relative; padding-bottom: 56.25%; max-width: 650px;"
+      data-ephox-embed-iri="https://www.youtube.com/watch?v=5auGeCM0knQ"><iframe style="top: 0; left: 0; width: 100%; height:
+      100%; position: absolute; border: 0;" src="https://www.youtube.com/embed/5auGeCM0knQ?rel=0" scrolling="no"
+      allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;"
+      allowfullscreen="allowfullscreen"></iframe></div>`;
+
+    it('TINY-8714: Assert dimensions of responsive embed data', async () => {
+      const editor = hook.editor();
+      editor.setContent(responsiveEmbedData);
+      TinySelections.select(editor, 'div', []);
+      await Utils.pOpenDialog(editor);
+      await Utils.pAssertSourceValue(editor, 'https://www.youtube.com/watch?v=5auGeCM0knQ');
+      // Arbritary value, we don't know what's the exact value because of max-width and padding-bottom, making it responsive
+      // Width should be still 650
+      await Utils.pAssertHeightValueIsAbove(editor, '100');
+      await Utils.pAssertWidthValue(editor, '650');
+    });
   });
 });

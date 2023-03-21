@@ -1,5 +1,5 @@
 import { Mouse, UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { Arr } from '@ephox/katamari';
+import { Arr, Strings } from '@ephox/katamari';
 import { Focus, SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -49,9 +49,23 @@ const pAssertFieldValue = (selector: string) => async (editor: Editor, expected:
   );
 };
 
+const pAssertFieldIsAbove = (selector: string) => async (editor: Editor, expected: string): Promise<void> => {
+  const dialog = await TinyUiActions.pWaitForDialog(editor);
+  await Waiter.pTryUntil(`Wait for new ${selector} value`,
+    () => {
+      const value = getValueOn(dialog, selector);
+      const valueInt = Strings.toInt(value).getOrDie('Invalid value');
+      const expectedInt = Strings.toInt(expected).getOrDie('Invalid expected');
+      assert.isAbove(valueInt, expectedInt, `Assert ${expected} value`);
+    }, 20, 3000
+  );
+};
+
 const pAssertWidthValue = pAssertFieldValue(selectors.width);
 const pAssertHeightValue = pAssertFieldValue(selectors.height);
 const pAssertSourceValue = pAssertFieldValue(selectors.source);
+
+const pAssertHeightValueIsAbove = pAssertFieldIsAbove(selectors.height);
 
 const pSetValueAndTrigger = (selector: string, value: string, events: string[]) => async (editor: Editor): Promise<void> => {
   const dialog = await TinyUiActions.pWaitForDialog(editor);
@@ -203,6 +217,7 @@ export {
   pAssertSizeRecalcUnconstrained,
   pAssertEmbedData,
   pAssertSourceValue,
+  pAssertHeightValueIsAbove,
   pChangeWidthValue,
   pChangeHeightValue,
   pPasteTextareaValue,
