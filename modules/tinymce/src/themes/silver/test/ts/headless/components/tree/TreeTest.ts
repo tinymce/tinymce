@@ -76,7 +76,11 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
     const treeSpec = StructureSchema.getOrDie(Dialog.createTree({
       type: 'tree',
       onLeafAction: store.add,
-      items: fullTree
+      items: fullTree,
+      onExpand: (_expandedKeys, { expanded, node }) => {
+        store.add(node + (expanded ? '-expanded' : '-collapsed'));
+      },
+      defaultExpandedKeys: [ 'dir' ]
     }));
 
     const tree = renderTree(treeSpec, extrasHook.access().extras.backstages.dialog );
@@ -103,7 +107,7 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
 
   it('Check initial event state', () => {
     const store = hook.store();
-    store.assertEq('Store should empty', []);
+    store.assertEq('Store should have an entry for the expanded dir', [ 'dir-expanded' ]);
   });
 
   it('TINY-9614: Basic tree interactions', async () => {
@@ -118,13 +122,17 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
       dir.element
     );
 
-    assertDirectoryExpandedState('Collapsed', false, dir);
+    assertDirectoryExpandedState('Dir', true, dir);
     Mouse.clickOn(dir.element, '.tox-trbtn.tox-tree--directory__label');
-    assertDirectoryExpandedState('Expanded', true, dir);
+    assertDirectoryExpandedState('Dir', false, dir);
+    store.assertEq('Dir collapsed', [ 'dir-collapsed' ]);
+    store.clear();
 
-    assertDirectoryExpandedState('Collapsed', false, getTreeItem('.tox-tree--directory .tox-tree--directory'));
+    assertDirectoryExpandedState('Subdir', false, getTreeItem('.tox-tree--directory .tox-tree--directory'));
     Mouse.clickOn(dir.element, '.tox-tree--directory .tox-trbtn.tox-tree--directory__label');
-    assertDirectoryExpandedState('Expanded', true, getTreeItem('.tox-tree--directory .tox-tree--directory'));
+    assertDirectoryExpandedState('Subdir', true, getTreeItem('.tox-tree--directory .tox-tree--directory'));
+    store.assertEq('Subir expanded', [ 'subdir-expanded' ]);
+    store.clear();
 
     Mouse.clickOn(getTreeItem('.tox-tree').element, '>.tox-tree--leaf__label');
     store.assertEq('File 5', [ '5' ]);
@@ -140,7 +148,7 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
     store.assertEq('menuitem', [ 'menuitem' ]);
 
     Mouse.clickOn(dir.element, '.tox-tree--directory .tox-trbtn.tox-tree--directory__label');
-    assertDirectoryExpandedState('Collapsed', false, getTreeItem('.tox-tree--directory .tox-tree--directory'));
+    assertDirectoryExpandedState('Subdir', false, getTreeItem('.tox-tree--directory .tox-tree--directory'));
 
   });
 
@@ -152,7 +160,7 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
     if (isDirectoryExpanded) {
       Mouse.clickOn(dir.element, '.tox-tree--directory .tox-trbtn.tox-tree--directory__label');
     }
-    assertDirectoryExpandedState('Collapsed', false, dir);
+    assertDirectoryExpandedState('Dir', false, dir);
 
     // Right arrow keydown when directory is collapsed expands the directory and keeps focus in the directory label
     const dirLabel = FocusTools.setFocus(dir.element, '.tox-tree--directory__label');
@@ -162,7 +170,7 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
         which: Keys.right()
       }
     });
-    assertDirectoryExpandedState('Expanded', true, dir);
+    assertDirectoryExpandedState('Dir', true, dir);
     FocusTools.isOn('directory label', dirLabel);
 
     // Right arrow keydown when focus is on an open node, moves focus to the first child node.
@@ -220,7 +228,7 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
       }
     });
     FocusTools.isOn('dir label', dirLabel);
-    assertDirectoryExpandedState('Collapsed', false, dir);
+    assertDirectoryExpandedState('Dir', false, dir);
 
     // Left arrow keydown when focus is on a closed node does nothing.
     AlloyTriggers.emitWith(dir.getSystem().getByDom(dirLabel).getOrDie(), NativeEvents.keydown(), {
@@ -230,7 +238,6 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
       }
     });
     FocusTools.isOn('dir label', dirLabel);
-    assertDirectoryExpandedState('Collapsed', false, dir);
-
+    assertDirectoryExpandedState('Dir', false, dir);
   });
 });

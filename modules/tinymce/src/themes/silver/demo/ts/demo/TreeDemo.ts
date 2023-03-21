@@ -165,7 +165,7 @@ export default (): void => {
               }
             });
           };
-          const initialData: Data = { search: '', expandedKeys: [] };
+          const initialData: Data = { search: '', expandedKeys: [ 'dir' ] };
           ed.windowManager.open(getDialogSpec(getTree(initialData.search), initialData));
         }
       });
