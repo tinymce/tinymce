@@ -132,8 +132,13 @@
     }
 
     &.tox-button--enabled,
-    &.tox-button--enabled:hover {
-      background: @toolbar-button-enabled-background-color;
+    &.tox-button--enabled:active,
+    &.tox-button--enabled:focus,
+    &.tox-button--enabled:hover,
+    &.tox-button--enabled:active:not(:disabled),
+    &.tox-button--enabled:focus:not(:disabled),
+    &.tox-button--enabled:hover:not(:disabled) {
+      background: darken(@button-background-color, 10%);
       border-width: @button-border-width;
       box-shadow: @button-active-box-shadow;
       color: @toolbar-button-enabled-text-color;
