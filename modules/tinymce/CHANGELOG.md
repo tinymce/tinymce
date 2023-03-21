@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Inline headers would not work in some situations when the editor was moved too far right horizontally. #TINY-9646
-- Tap on `fontsizeinput`'s buttons were not managed. #TINY-9725
+- Tapping on `fontsizeinput` buttons was not working correctly. #TINY-9725
 
 ## 6.4.0 - 2023-03-15
 
