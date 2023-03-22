@@ -44,8 +44,8 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
     Arr.each(buttons, toggle);
   };
 
-  const notFoundAlert = (api: Dialog.DialogInstanceApi<DialogData>): void => {
-    api.redial(getDialogSpec(true, api.getData()));
+  const toggleNotFoundAlert = (isVisible: boolean, api: Dialog.DialogInstanceApi<DialogData>): void => {
+    api.redial(getDialogSpec(isVisible, api.getData()));
   };
 
   // Temporarily workaround for iOS/iPadOS dialog placement to hide the keyboard
@@ -81,7 +81,7 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
       // Find new matches
       const count = Actions.find(editor, currentSearchState, data.findtext, data.matchcase, data.wholewords, data.inselection);
       if (count <= 0) {
-        notFoundAlert(api);
+        toggleNotFoundAlert(true, api);
       }
       disableAll(api, count === 0);
     }
@@ -208,6 +208,7 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
     },
     onAction: (api, details) => {
       const data = api.getData();
+      toggleNotFoundAlert(false, api);
       switch (details.name) {
         case 'find':
           doFind(api);
