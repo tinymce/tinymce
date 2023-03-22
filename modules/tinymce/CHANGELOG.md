@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Inline headers would not work in some situations when the editor was moved too far right horizontally. #TINY-9646
 - Tapping on `fontsizeinput` buttons was not working correctly. #TINY-9725
+- Reverted updated focus, active, and enabled colors of UI buttons for improved contrast against the UI color. #TINY-9176
 
 ## 6.4.0 - 2023-03-15
 
@@ -41,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pressing backspace on an empty line now preserves formatting on the previous empty line. #TINY-9454
 - Pressing enter inside the `inputfontsize` input field now moves focus back into the editor content. #TINY-9598
 - Drag and drop events for elements with a `contenteditable="false"` attribute now includes target element details. #TINY-9599
+- Updated focus, active, and enabled colors of UI buttons for improved contrast against the UI color. #TINY-9176
 
 ### Changed
 - The `link` plugins context menu items no longer appears for links that include elements with a `contenteditable="false"` attribute. #TINY-9491
