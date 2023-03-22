@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Inline headers would not work in some situations when the editor was moved too far right horizontally. #TINY-9646
+
 ## 6.4.0 - 2023-03-15
 
 ### Added
