@@ -1,6 +1,6 @@
 import { Waiter } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyContentActions, TinyHooks } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -83,6 +83,18 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
     const editor = hook.editor();
     await pWaitForWordcount(0);
     editor.setContent('<p><span>&#8203;&#8203;&#8203;wo&#8203;rd&#8203;&#8203;&#8203;</span></p>');
+    await pWaitForWordcount(1);
+  });
+
+  it('TINY-1166: Applying inline formats within same word', async () => {
+    const editor = hook.editor();
+    await pWaitForWordcount(0);
+    editor.setContent('<p>a</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    await pWaitForWordcount(1);
+    editor.execCommand('Bold');
+    await pWaitForWordcount(1);
+    TinyContentActions.type(editor, 'b');
     await pWaitForWordcount(1);
   });
 });
