@@ -27,14 +27,17 @@ const findUrlEnd = (characters: string[], startIndex: number): number => {
 };
 
 export type Word<T> = T[];
+
 interface WordIndex {
   readonly start: number;
   readonly end: number;
 }
+
 export interface WordsWithIndices<T> {
   readonly words: Word<T>[];
   readonly indices: WordIndex[];
 }
+
 const findWordsWithIndices = <T>(chars: Word<T>, sChars: string[], characterMap: CharacterMap, options: WordOptions): WordsWithIndices<T> => {
   const words: Word<T>[] = [];
   const indices: WordIndex[] = [];
