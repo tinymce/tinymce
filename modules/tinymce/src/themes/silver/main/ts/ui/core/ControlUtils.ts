@@ -5,27 +5,15 @@ import { Toolbar, Menu } from 'tinymce/core/api/ui/Ui';
 
 import { FormatterFormatItem } from './complex/BespokeSelect';
 
-const onSetupEditableToggle = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi | Menu.MenuItemInstanceApi): VoidFunction => {
-  const boundNodeChange = Singleton.value<() => void>();
-
-  const init = () => {
-    const updateEnabledState = () => api.setEnabled(editor.selection.isEditable());
-    editor.on('NodeChange', updateEnabledState);
-    boundNodeChange.set(updateEnabledState);
-    updateEnabledState();
-  };
-
-  // The editor may or may not have been setup yet, so check for that
-  editor.initialized ? init() : editor.once('init', init);
-
-  return () => {
-    editor.off('init', init);
-    boundNodeChange.on((callback) => {
-      editor.off('NodeChange', callback);
-    });
-    boundNodeChange.clear();
-  };
+const composeUnbinders = (f: VoidFunction, g: VoidFunction): VoidFunction => () => {
+  f();
+  g();
 };
+
+const onSetupEditableToggle = <T extends Toolbar.ToolbarButtonInstanceApi | Menu.MenuItemInstanceApi>(editor: Editor): (api: T) => VoidFunction =>
+  onSetupEvent<T>(editor, 'NodeChange', (api) => {
+    api.setEnabled(editor.selection.isEditable());
+  });
 
 const onSetupFormatToggle = (editor: Editor, name: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi): VoidFunction => {
   const boundFormatChangeCallback = Singleton.unbindable();
@@ -83,6 +71,7 @@ const onActionExecCommand = (editor: Editor, command: string) =>
   (): boolean => editor.execCommand(command);
 
 export {
+  composeUnbinders,
   onSetupEvent,
   onSetupStateToggle,
   onSetupEditableToggle,
