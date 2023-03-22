@@ -1,6 +1,6 @@
 import { Objects } from '@ephox/boulder';
 import { Arr, Fun, Merger, Obj, Optional } from '@ephox/katamari';
-import { EventArgs, Focus, Value } from '@ephox/sugar';
+import { Attribute, EventArgs, Focus, Value } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 import { Composing } from '../../api/behaviour/Composing';
@@ -37,7 +37,8 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
   const navigateList = (
     comp: AlloyComponent,
     simulatedEvent: SimulatedEvent<EventArgs>,
-    highlighter: (comp: AlloyComponent) => void
+    highlighter: (comp: AlloyComponent) => void,
+    setAria: (comp: AlloyComponent) => void
   ) => {
     /*
      * If we have an open Sandbox with an active menu,
@@ -57,8 +58,10 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       Composing.getCurrent(sandbox).each((menu) => {
         Highlighting.getHighlighted(menu).fold(() => {
           highlighter(menu);
+          setAria(menu);
         }, () => {
           AlloyTriggers.dispatchEvent(sandbox, menu.element, 'keydown', simulatedEvent);
+          setAria(menu);
         });
       });
     } else {
@@ -67,6 +70,13 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       };
       DropdownUtils.open(detail, mapFetch(comp), comp, sandbox, externals, onOpenSync, HighlightOnOpen.HighlightMenuAndItem).get(Fun.noop);
     }
+  };
+
+  const setAria = (input: AlloyComponent, get: (menu: AlloyComponent) => Optional<AlloyComponent>) => (menu: AlloyComponent) => {
+    get(menu).each((item) => {
+      const idValue = Attribute.get(item.element, 'id') || '';
+      Attribute.set(input.element, 'aria-activedescendant', idValue);
+    });
   };
 
   // Due to the fact that typeahead probably need to separate value from text, they can't reuse
@@ -205,7 +215,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       onDown: (comp, simulatedEvent) => {
         // The navigation here will stop the "previewing" mode, because
         // now the menu will get focus (fake focus, but focus nevertheless)
-        navigateList(comp, simulatedEvent, Highlighting.highlightFirst);
+        navigateList(comp, simulatedEvent, Highlighting.highlightFirst, setAria(comp, Highlighting.getNext));
         return Optional.some<boolean>(true);
       },
       onEscape: (comp): Optional<boolean> => {
@@ -214,6 +224,8 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         const sandbox = Coupling.getCoupled(comp, 'sandbox');
         if (Sandboxing.isOpen(sandbox)) {
           Sandboxing.close(sandbox);
+          // clear aria-activedescendant
+          Attribute.remove(comp.element, 'aria-activedescendant');
           return Optional.some<boolean>(true);
         }
         return Optional.none();
@@ -221,7 +233,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       onUp: (comp, simulatedEvent) => {
         // The navigation here will stop the "previewing" mode, because
         // now the menu will get focus (fake focus, but focus nevertheless)
-        navigateList(comp, simulatedEvent, Highlighting.highlightLast);
+        navigateList(comp, simulatedEvent, Highlighting.highlightLast, setAria(comp, Highlighting.getPrevious));
         return Optional.some<boolean>(true);
       },
       onEnter: (comp) => {
