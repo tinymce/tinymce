@@ -30,6 +30,7 @@ describe('browser.tinymce.plugins.media.core.SubmitTest', () => {
     '<iframe src="https://www.youtube.com/embed/IcgmSRJHu_8"' +
     ' width="560" height="314" allowfullscreen="allowfullscreen">' +
     '</iframe></div>';
+
     const pTestResolvedEmbedContentSubmit = async (editor: Editor, url: string, expected: string) => {
       await Utils.pOpenDialog(editor);
       await Utils.pSetFormItemNoEvent(editor, url);
