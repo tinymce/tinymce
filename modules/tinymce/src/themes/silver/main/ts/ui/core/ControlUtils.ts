@@ -5,15 +5,10 @@ import { Toolbar } from 'tinymce/core/api/ui/Ui';
 
 import { FormatterFormatItem } from './complex/BespokeSelect';
 
-const onSetupStateToggle = (editor: Editor, name: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi): VoidFunction => {
-  const boundFormatChangeCallback = Singleton.unbindable();
+const onSetupEditableToggle = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi): VoidFunction => {
   const boundNodeChange = Singleton.value<() => void>();
 
   const init = () => {
-    api.setActive(editor.formatter.match(name));
-    const binding = editor.formatter.formatChanged(name, api.setActive);
-    boundFormatChangeCallback.set(binding);
-
     const updateEnabledState = () => api.setEnabled(editor.selection.isEditable());
     editor.on('NodeChange', updateEnabledState);
     boundNodeChange.set(updateEnabledState);
@@ -25,11 +20,38 @@ const onSetupStateToggle = (editor: Editor, name: string) => (api: Toolbar.Toolb
 
   return () => {
     editor.off('init', init);
-    boundFormatChangeCallback.clear();
     boundNodeChange.on((callback) => {
       editor.off('NodeChange', callback);
     });
     boundNodeChange.clear();
+  };
+};
+
+const onSetupFormatToggle = (editor: Editor, name: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi): VoidFunction => {
+  const boundFormatChangeCallback = Singleton.unbindable();
+
+  const init = () => {
+    api.setActive(editor.formatter.match(name));
+    const binding = editor.formatter.formatChanged(name, api.setActive);
+    boundFormatChangeCallback.set(binding);
+  };
+
+  // The editor may or may not have been setup yet, so check for that
+  editor.initialized ? init() : editor.once('init', init);
+
+  return () => {
+    editor.off('init', init);
+    boundFormatChangeCallback.clear();
+  };
+};
+
+const onSetupStateToggle = (editor: Editor, name: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi): VoidFunction => {
+  const unbindEditableToogle = onSetupEditableToggle(editor)(api);
+  const unbindFormatToggle = onSetupFormatToggle(editor, name)(api);
+
+  return () => {
+    unbindEditableToogle();
+    unbindFormatToggle();
   };
 };
 
@@ -63,6 +85,7 @@ const onActionExecCommand = (editor: Editor, command: string) =>
 export {
   onSetupEvent,
   onSetupStateToggle,
+  onSetupEditableToggle,
   onActionToggleFormat,
   onActionExecCommand
 };

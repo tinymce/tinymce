@@ -2,7 +2,7 @@ import { Arr } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import { onActionExecCommand, onSetupStateToggle } from './ControlUtils';
+import { onActionExecCommand, onSetupEditableToggle, onSetupStateToggle } from './ControlUtils';
 
 const register = (editor: Editor): void => {
   const alignToolbarButtons = [
@@ -24,6 +24,7 @@ const register = (editor: Editor): void => {
   editor.ui.registry.addButton('alignnone', {
     tooltip: 'No alignment',
     icon: 'align-none',
+    onSetup: onSetupEditableToggle(editor),
     onAction: onActionExecCommand(editor, 'JustifyNone')
   });
 };
