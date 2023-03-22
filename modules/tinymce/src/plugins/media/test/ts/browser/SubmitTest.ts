@@ -4,7 +4,6 @@ import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import AstNode from 'tinymce/core/api/html/Node';
-import { tinymce } from 'tinymce/core/api/Tinymce';
 import { DataToHtmlCallback } from 'tinymce/plugins/media/core/DataToHtml';
 import Plugin from 'tinymce/plugins/media/Plugin';
 
@@ -127,7 +126,7 @@ describe('browser.tinymce.plugins.media.core.SubmitTest', () => {
         editor.on('PreInit', () => {
           const converter = (nodes: AstNode[]): void => {
             Arr.each(nodes, (node) => {
-              const shimNode = new tinymce.html.Node('span', 1);
+              const shimNode = new AstNode('span', 1);
               shimNode.attr('class', 'mce-shim');
 
               node.append(shimNode);
@@ -155,8 +154,7 @@ describe('browser.tinymce.plugins.media.core.SubmitTest', () => {
       TinySelections.select(editor, 'div', []);
       await Utils.pOpenDialog(editor);
       TinyUiActions.clickOnUi(editor, Utils.selectors.lockIcon);
-      await Utils.pChangeHeightValue(editor, '500');
-      await Utils.pChangeWidthValue(editor, '700');
+      await Utils.pSetHeightAndWidth(editor, '500', '700');
       await Utils.pAssertHeightAndWidth(editor, '500', '700');
       TinyUiActions.submitDialog(editor);
       await Utils.pAssertEditorContent(editor, '<p><iframe src="https://www.youtube.com/embed/5auGeCM0knQ" width="700" height="500" allowfullscreen="allowfullscreen"></iframe></p>');

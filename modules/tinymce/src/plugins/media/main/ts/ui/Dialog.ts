@@ -8,7 +8,7 @@ import { dataToHtml } from '../core/DataToHtml';
 import * as HtmlToData from '../core/HtmlToData';
 import { isMediaElement } from '../core/Selection';
 import * as Service from '../core/Service';
-import { DialogSubData, MediaData, MediaDialogData } from '../core/Types';
+import { DialogSubData, MediaData, MediaDataType, MediaDialogData } from '../core/Types';
 import * as UpdateHtml from '../core/UpdateHtml';
 import * as UrlPatterns from '../core/UrlPatterns';
 
@@ -93,13 +93,19 @@ const getEditorData = (editor: Editor): MediaData => {
   const snippet = isMediaElement(element) ? editor.serializer.serialize(element, { selection: true }) : '';
   const data = HtmlToData.htmlToData(snippet, editor.schema);
 
-  const optDimensions = isEmbedIframe(data.type, data.source) ? Optional.some(editor.dom.getRect(element)) : Optional.none();
-  const dimensions = optDimensions.map((x) => {
-    return {
-      width: x.w.toString().replace(/px$/, ''),
-      height: x.h.toString().replace(/px$/, ''),
-    };
-  }).getOr({});
+  const getDimensionsOfElement = (): MediaDialogData['dimensions'] => {
+    if (isEmbedIframe(data.source, data.type)) {
+      const rect = editor.dom.getRect(element);
+      return {
+        width: rect.w.toString().replace(/px$/, ''),
+        height: rect.h.toString().replace(/px$/, ''),
+      };
+    } else {
+      return {};
+    }
+  };
+
+  const dimensions = getDimensionsOfElement();
 
   return {
     embed: snippet,
@@ -146,14 +152,14 @@ const handleInsert = (editor: Editor, html: string): void => {
   editor.nodeChanged();
 };
 
-const isEmbedIframe = (type: 'ephox-embed-iri' | 'script' | 'object' | 'iframe' | 'embed' | 'video' | 'audio' | null | undefined, url: string) =>
-  type === 'ephox-embed-iri' && UrlPatterns.matchPattern(url)?.type === 'iframe';
+const isEmbedIframe = (url: string, mediaDataType?: MediaDataType) =>
+  Type.isNonNullable(mediaDataType) && mediaDataType === 'ephox-embed-iri' && Type.isNonNullable(UrlPatterns.matchPattern(url));
 
 const shouldInsertAsNewIframe = (prevData: MediaData, newData: MediaData) => {
   const hasDimensionsChanged = (prevData: MediaData, newData: MediaData) =>
     prevData.width !== newData.width || prevData.height !== newData.height;
 
-  return hasDimensionsChanged(prevData, newData) && isEmbedIframe(prevData.type, newData.source);
+  return hasDimensionsChanged(prevData, newData) && isEmbedIframe(newData.source, prevData.type);
 };
 
 const submitForm = (prevData: MediaData, newData: MediaData, editor: Editor): void => {

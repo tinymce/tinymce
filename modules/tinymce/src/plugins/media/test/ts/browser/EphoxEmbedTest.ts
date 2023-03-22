@@ -6,7 +6,6 @@ import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import AstNode from 'tinymce/core/api/html/Node';
-import { tinymce } from 'tinymce/core/api/Tinymce';
 import Plugin from 'tinymce/plugins/media/Plugin';
 
 import * as Utils from '../module/test/Utils';
@@ -69,7 +68,7 @@ describe('browser.tinymce.plugins.media.core.EphoxEmbedTest', () => {
         editor.on('PreInit', () => {
           const converter = (nodes: AstNode[]): void => {
             Arr.each(nodes, (node) => {
-              const shimNode = new tinymce.html.Node('span', 1);
+              const shimNode = new AstNode('span', 1);
               shimNode.attr('class', 'mce-shim');
 
               node.append(shimNode);

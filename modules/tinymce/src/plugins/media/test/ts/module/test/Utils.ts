@@ -55,7 +55,7 @@ const pAssertFieldIsAbove = (selector: string) => async (editor: Editor, expecte
     () => {
       const value = getValueOn(dialog, selector);
       const valueInt = Strings.toInt(value).getOrDie('Invalid value');
-      const expectedInt = Strings.toInt(expected).getOrDie('Invalid expected');
+      const expectedInt = Strings.toInt(expected).getOrDie('Invalid expected value');
       assert.isAbove(valueInt, expectedInt, `Assert ${expected} value`);
     }, 20, 3000
   );
