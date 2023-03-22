@@ -300,12 +300,12 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets): void =>
 };
 
 const addToolbars = (editor: Editor): void => {
-  const isTable = (table: Node) => editor.dom.is(table, 'table') && editor.getBody().contains(table);
+  const isEditableTable = (table: Node) => editor.dom.is(table, 'table') && editor.getBody().contains(table) && editor.dom.isEditable(table.parentNode);
 
   const toolbar = Options.getToolbar(editor);
   if (toolbar.length > 0) {
     editor.ui.registry.addContextToolbar('table', {
-      predicate: isTable,
+      predicate: isEditableTable,
       items: toolbar,
       scope: 'node',
       position: 'node'

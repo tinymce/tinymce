@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- New `Words.getWordsWithIndices` API to extract words and their start and end indices when provided an array of characters. #TINY-9654
+
 ## 6.0.2 - 2022-06-29
 
 ### Fixed
