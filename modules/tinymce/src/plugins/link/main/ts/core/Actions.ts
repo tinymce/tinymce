@@ -63,8 +63,19 @@ const toggleState = (editor: Editor, toggler: (e: NodeChangeEvent) => void): () 
   return () => editor.off('NodeChange', toggler);
 };
 
-const toggleActiveState = (editor: Editor) => (api: Toolbar.ToolbarToggleButtonInstanceApi | Menu.ToggleMenuItemInstanceApi): () => void => {
-  const updateState = () => api.setActive(!editor.mode.isReadOnly() && Utils.isInAnchor(editor, editor.selection.getNode()));
+const toggleLinkState = (editor: Editor) => (api: Toolbar.ToolbarToggleButtonInstanceApi | Menu.ToggleMenuItemInstanceApi): () => void => {
+  const updateState = () => {
+    api.setActive(!editor.mode.isReadOnly() && Utils.isInAnchor(editor, editor.selection.getNode()));
+    api.setEnabled(editor.selection.isEditable());
+  };
+  updateState();
+  return toggleState(editor, updateState);
+};
+
+const toggleLinkMenuState = (editor: Editor) => (api: Menu.MenuItemInstanceApi): () => void => {
+  const updateState = () => {
+    api.setEnabled(editor.selection.isEditable());
+  };
   updateState();
   return toggleState(editor, updateState);
 };
@@ -76,7 +87,7 @@ const hasExactlyOneLinkInSelection = (editor: Editor): boolean => {
   return links.length === 1;
 };
 
-const toggleEnabledState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi | Menu.MenuItemInstanceApi): () => void => {
+const toggleGotoLinkState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi | Menu.MenuItemInstanceApi): () => void => {
   const updateState = () => api.setEnabled(hasExactlyOneLinkInSelection(editor));
   updateState();
   return toggleState(editor, updateState);
@@ -85,15 +96,19 @@ const toggleEnabledState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstan
 const toggleUnlinkState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi | Menu.MenuItemInstanceApi): () => void => {
   const hasLinks = (parents: Node[]) => Utils.hasLinks(parents) || Utils.hasLinksInSelection(editor.selection.getRng());
   const parents = editor.dom.getParents(editor.selection.getStart());
-  api.setEnabled(hasLinks(parents));
-  return toggleState(editor, (e) => api.setEnabled(hasLinks(e.parents)));
+  const updateEnabled = (parents: Node[]) => {
+    api.setEnabled(hasLinks(parents) && editor.selection.isEditable());
+  };
+  updateEnabled(parents);
+  return toggleState(editor, (e) => updateEnabled(e.parents));
 };
 
 export {
   openDialog,
   gotoSelectedLink,
   setupGotoLinks,
-  toggleActiveState,
-  toggleEnabledState,
+  toggleLinkState,
+  toggleLinkMenuState,
+  toggleGotoLinkState,
   toggleUnlinkState
 };

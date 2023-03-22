@@ -12,14 +12,14 @@ const setupButtons = (editor: Editor): void => {
     icon: 'link',
     tooltip: 'Insert/edit link',
     onAction: Actions.openDialog(editor),
-    onSetup: Actions.toggleActiveState(editor)
+    onSetup: Actions.toggleLinkState(editor)
   });
 
   editor.ui.registry.addButton('openlink', {
     icon: 'new-tab',
     tooltip: 'Open link',
     onAction: Actions.gotoSelectedLink(editor),
-    onSetup: Actions.toggleEnabledState(editor)
+    onSetup: Actions.toggleGotoLinkState(editor)
   });
 
   editor.ui.registry.addButton('unlink', {
@@ -35,13 +35,14 @@ const setupMenuItems = (editor: Editor): void => {
     text: 'Open link',
     icon: 'new-tab',
     onAction: Actions.gotoSelectedLink(editor),
-    onSetup: Actions.toggleEnabledState(editor)
+    onSetup: Actions.toggleGotoLinkState(editor)
   });
 
   editor.ui.registry.addMenuItem('link', {
     icon: 'link',
     text: 'Link...',
     shortcut: 'Meta+K',
+    onSetup: Actions.toggleLinkMenuState(editor),
     onAction: Actions.openDialog(editor)
   });
 
@@ -101,7 +102,7 @@ const setupContextToolbars = (editor: Editor): void => {
       type: 'contextformtogglebutton',
       icon: 'link',
       tooltip: 'Link',
-      onSetup: Actions.toggleActiveState(editor)
+      onSetup: Actions.toggleLinkState(editor)
     },
     label: 'Link',
     predicate: (node) => Options.hasContextToolbar(editor) && Utils.isInAnchor(editor, node),
@@ -119,7 +120,7 @@ const setupContextToolbars = (editor: Editor): void => {
           const node = editor.selection.getNode();
           // TODO: Make a test for this later.
           buttonApi.setActive(Utils.isInAnchor(editor, node));
-          return Actions.toggleActiveState(editor)(buttonApi);
+          return Actions.toggleLinkState(editor)(buttonApi);
         },
         onAction: (formApi) => {
           const value = formApi.getValue();
