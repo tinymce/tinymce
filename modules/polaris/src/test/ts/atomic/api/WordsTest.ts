@@ -55,6 +55,8 @@ UnitTest.test('api.Words.words', () => {
 
   // TINY-9654: Does not split on extend characters (ex: \u0300)
   assertWords([ 'a\u0300b' ], 'a\u0300b');
+  assertWords([ 'a\u0300bc' ], 'a\u0300bc');
+  assertWords([ 'ab\u0300c' ], 'ab\u0300c');
   assertWords([ 'a\u0300b', 'c' ], 'a\u0300b c');
   assertWords([ '\u0300b' ], '\u0300b');
   assertWords([ 'a', '\u0300b' ], 'a \u0300b');
@@ -66,6 +68,8 @@ UnitTest.test('api.Words.words', () => {
   // TINY-9654: Does not split on format characters (ex: \ufeff) if they do not precede a word boundary
   // TINY-9654: Does not strip \ufeff characters (obsolete TINY-1166 fix removed)
   assertWords([ 'a\ufeffb' ], 'a\ufeffb');
+  assertWords([ 'a\ufeffbc' ], 'a\ufeffbc');
+  assertWords([ 'ab\ufeffc' ], 'ab\ufeffc');
   assertWords([ 'a\ufeffb', 'c' ], 'a\ufeffb c');
   assertWords([ '\ufeffb' ], '\ufeffb');
   assertWords([ 'a', '\ufeffb' ], 'a \ufeffb');
