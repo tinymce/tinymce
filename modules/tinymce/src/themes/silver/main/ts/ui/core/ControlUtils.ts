@@ -1,11 +1,11 @@
 import { Singleton } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
-import { Toolbar } from 'tinymce/core/api/ui/Ui';
+import { Toolbar, Menu } from 'tinymce/core/api/ui/Ui';
 
 import { FormatterFormatItem } from './complex/BespokeSelect';
 
-const onSetupEditableToggle = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi): VoidFunction => {
+const onSetupEditableToggle = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi | Menu.MenuItemInstanceApi): VoidFunction => {
   const boundNodeChange = Singleton.value<() => void>();
 
   const init = () => {
