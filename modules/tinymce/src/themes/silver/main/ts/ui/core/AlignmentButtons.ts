@@ -2,7 +2,7 @@ import { Arr } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import { onActionExecCommand, onSetupFormatToggle } from './ControlUtils';
+import { onActionExecCommand, onSetupStateToggle } from './ControlUtils';
 
 const register = (editor: Editor): void => {
   const alignToolbarButtons = [
@@ -17,7 +17,7 @@ const register = (editor: Editor): void => {
       tooltip: item.text,
       icon: item.icon,
       onAction: onActionExecCommand(editor, item.cmd),
-      onSetup: onSetupFormatToggle(editor, item.name)
+      onSetup: onSetupStateToggle(editor, item.name)
     });
   });
 

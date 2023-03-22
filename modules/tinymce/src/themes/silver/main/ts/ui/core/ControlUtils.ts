@@ -5,13 +5,19 @@ import { Toolbar } from 'tinymce/core/api/ui/Ui';
 
 import { FormatterFormatItem } from './complex/BespokeSelect';
 
-const onSetupFormatToggle = (editor: Editor, name: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi): VoidFunction => {
-  const boundCallback = Singleton.unbindable();
+const onSetupStateToggle = (editor: Editor, name: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi): VoidFunction => {
+  const boundFormatChangeCallback = Singleton.unbindable();
+  const boundNodeChange = Singleton.value<() => void>();
 
   const init = () => {
     api.setActive(editor.formatter.match(name));
     const binding = editor.formatter.formatChanged(name, api.setActive);
-    boundCallback.set(binding);
+    boundFormatChangeCallback.set(binding);
+
+    const updateEnabledState = () => api.setEnabled(editor.selection.isEditable());
+    editor.on('NodeChange', updateEnabledState);
+    boundNodeChange.set(updateEnabledState);
+    updateEnabledState();
   };
 
   // The editor may or may not have been setup yet, so check for that
@@ -19,7 +25,11 @@ const onSetupFormatToggle = (editor: Editor, name: string) => (api: Toolbar.Tool
 
   return () => {
     editor.off('init', init);
-    boundCallback.clear();
+    boundFormatChangeCallback.clear();
+    boundNodeChange.on((callback) => {
+      editor.off('NodeChange', callback);
+    });
+    boundNodeChange.clear();
   };
 };
 
@@ -52,7 +62,7 @@ const onActionExecCommand = (editor: Editor, command: string) =>
 
 export {
   onSetupEvent,
-  onSetupFormatToggle,
+  onSetupStateToggle,
   onActionToggleFormat,
   onActionExecCommand
 };

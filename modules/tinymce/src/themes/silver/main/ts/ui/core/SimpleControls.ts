@@ -1,7 +1,7 @@
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
-import { onActionExecCommand, onSetupFormatToggle } from './ControlUtils';
+import { onActionExecCommand, onSetupStateToggle } from './ControlUtils';
 
 const onActionToggleFormat = (editor: Editor, fmt: string) => (): void => {
   editor.execCommand('mceToggleFormat', false, fmt);
@@ -19,7 +19,7 @@ const registerFormatButtons = (editor: Editor): void => {
     editor.ui.registry.addToggleButton(btn.name, {
       tooltip: btn.text,
       icon: btn.icon,
-      onSetup: onSetupFormatToggle(editor, btn.name),
+      onSetup: onSetupStateToggle(editor, btn.name),
       onAction: onActionToggleFormat(editor, btn.name)
     });
   });
@@ -29,7 +29,7 @@ const registerFormatButtons = (editor: Editor): void => {
     editor.ui.registry.addToggleButton(name, {
       text: name.toUpperCase(),
       tooltip: 'Heading ' + i,
-      onSetup: onSetupFormatToggle(editor, name),
+      onSetup: onSetupStateToggle(editor, name),
       onAction: onActionToggleFormat(editor, name)
     });
   }
@@ -65,7 +65,7 @@ const registerCommandToggleButtons = (editor: Editor): void => {
       tooltip: btn.text,
       icon: btn.icon,
       onAction: onActionExecCommand(editor, btn.action),
-      onSetup: onSetupFormatToggle(editor, btn.name)
+      onSetup: onSetupStateToggle(editor, btn.name)
     });
   });
 };
