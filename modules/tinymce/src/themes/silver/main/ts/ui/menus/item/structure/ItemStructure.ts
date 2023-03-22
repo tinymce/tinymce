@@ -1,6 +1,6 @@
 import { AlloySpec, RawDomSchema } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
-import { Fun, Obj, Optional, Type } from '@ephox/katamari';
+import { Fun, Id, Obj, Optional, Type } from '@ephox/katamari';
 
 import I18n from 'tinymce/core/api/util/I18n';
 
@@ -83,11 +83,13 @@ const renderColorStructure = (item: ItemStructureSpec, providerBackstage: UiFact
 };
 
 const renderItemDomStructure = (ariaLabel: Optional<string>): RawDomSchema => {
-  const domTitle = ariaLabel.map((label): { attributes?: { title: string }} => ({
+  const domTitle = ariaLabel.map((label): { attributes?: { title: string, id?: string }} => ({
     attributes: {
       // TODO: AP-213 change this temporary solution to use tooltips, ensure its aria readable still.
       // for icon only implementations we need either a title or aria label to satisfy aria requirements.
-      title: I18n.translate(label)
+      title: I18n.translate(label),
+      // TODO: No idea if this is good
+      id: Id.generate('menu_item')
     }
   })).getOr({});
 
