@@ -17,10 +17,24 @@ interface AddButtonSpec<T> {
   readonly onAction?: (api: T) => void;
 }
 
+const onSetupEditable = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi): VoidFunction => {
+  const nodeChanged = () => {
+    api.setEnabled(editor.selection.isEditable());
+  };
+
+  editor.on('NodeChange', nodeChanged);
+  nodeChanged();
+
+  return () => {
+    editor.off('NodeChange', nodeChanged);
+  };
+};
+
 const addButtons = (editor: Editor, selectionTargets: SelectionTargets): void => {
   editor.ui.registry.addMenuButton('table', {
     tooltip: 'Table',
     icon: 'table',
+    onSetup: onSetupEditable(editor),
     fetch: (callback) => callback('inserttable | cell row column | advtablesort | tableprops deletetable')
   });
 

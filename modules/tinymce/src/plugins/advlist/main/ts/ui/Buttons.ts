@@ -28,9 +28,10 @@ const normalizeStyleValue = (styleValue: string | undefined): string =>
 const makeSetupHandler = (editor: Editor, nodeName: ListType) => (api: Toolbar.ToolbarSplitButtonInstanceApi | Toolbar.ToolbarToggleButtonInstanceApi) => {
   const nodeChangeHandler = (e: EditorEvent<NodeChangeEvent>) => {
     api.setActive(ListUtils.inList(editor, e.parents, nodeName));
-    api.setEnabled(!ListUtils.isWithinNonEditableList(editor, e.element));
+    api.setEnabled(!ListUtils.isWithinNonEditableList(editor, e.element) && editor.selection.isEditable());
   };
   editor.on('NodeChange', nodeChangeHandler);
+  api.setEnabled(editor.selection.isEditable());
 
   return () => editor.off('NodeChange', nodeChangeHandler);
 };
