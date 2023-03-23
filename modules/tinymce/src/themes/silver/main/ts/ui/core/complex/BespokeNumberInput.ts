@@ -1,5 +1,5 @@
 import { Keys } from '@ephox/agar';
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Disabling, Focusing, FocusInsideModes, Input, Keying, Memento, NativeEvents, Representing, SystemEvents } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Disabling, Focusing, FocusInsideModes, Input, Keying, Memento, NativeEvents, Representing } from '@ephox/alloy';
 import { Arr, Cell, Fun, Id, Optional } from '@ephox/katamari';
 import { Dimension, Focus, SugarElement, Traverse } from '@ephox/sugar';
 
