@@ -200,7 +200,7 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
     initialData,
     onChange: (api, details) => {
       if (showNoMatchesAlertBanner) {
-        api.redial(getDialogSpec(false, api.getData()));
+        toggleNotFoundAlert(false, api);
       }
       if (details.name === 'findtext' && currentSearchState.get().count > 0) {
         reset(api);
@@ -208,7 +208,6 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
     },
     onAction: (api, details) => {
       const data = api.getData();
-      toggleNotFoundAlert(false, api);
       switch (details.name) {
         case 'find':
           doFind(api);
@@ -235,6 +234,7 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
         case 'matchcase':
         case 'wholewords':
         case 'inselection':
+          toggleNotFoundAlert(false, api);
           updateSearchState(api);
           reset(api);
           break;
