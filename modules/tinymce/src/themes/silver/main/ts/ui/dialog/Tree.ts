@@ -32,14 +32,14 @@ interface RenderDirectoryProps extends RenderItemProps {
   labelTabstopping: boolean;
   treeId: string;
   onLeafAction: OnLeafAction;
-  expandedKeys: string[];
+  expandedIds: string[];
 }
 
 interface RenderDirectoryLabelProps extends RenderItemProps {
   directory: Dialog.Directory;
   visible: boolean;
   noChildren: boolean;
-  expandedKeys: string[];
+  expandedIds: string[];
 }
 
 interface RenderDirectoryChildrenProps extends RenderItemProps {
@@ -47,7 +47,7 @@ interface RenderDirectoryChildrenProps extends RenderItemProps {
   visible: boolean;
   treeId: string;
   onLeafAction: OnLeafAction;
-  expandedKeys: string[];
+  expandedIds: string[];
 }
 
 const renderLabel = (text: string ): SimpleSpec => ({
@@ -157,7 +157,7 @@ const renderDirectoryLabel = ({
   directory,
   visible,
   noChildren,
-  expandedKeys,
+  expandedIds: expandedIds,
   backstage
 }: RenderDirectoryLabelProps): SimpleSpec => {
   const internalMenuButton = directory.menu.map((btn) => renderMenuButton(btn, 'tox-mbtn', backstage, Optional.none()));
@@ -202,7 +202,7 @@ const renderDirectoryLabel = ({
       ...(visible ? [ Tabstopping.config({}) ] : []),
       AddEventsBehaviour.config(directoryLabelEventsId, [
         AlloyEvents.runOnAttached((button, _se) => {
-          const dirExpanded = expandedKeys.includes(directory.id);
+          const dirExpanded = expandedIds.includes(directory.id);
           if (dirExpanded) {
             expandChildren(button);
           }
@@ -241,7 +241,7 @@ const renderDirectoryChildren = ({
   onLeafAction,
   visible,
   treeId,
-  expandedKeys,
+  expandedIds: expandedIds,
   backstage
 }: RenderDirectoryChildrenProps): SimpleSpec => {
   return {
@@ -252,7 +252,7 @@ const renderDirectoryChildren = ({
     components: children.map((item) => {
       return item.type === 'leaf' ?
         renderLeafLabel({ leaf: item, onLeafAction, visible, treeId, backstage }) :
-        renderDirectory({ directory: item, expandedKeys, onLeafAction, labelTabstopping: visible, treeId, backstage });
+        renderDirectory({ directory: item, expandedIds, onLeafAction, labelTabstopping: visible, treeId, backstage });
     }),
     behaviours: Behaviour.derive([
       Sliding.config({
@@ -276,16 +276,16 @@ const renderDirectory = ({
   labelTabstopping,
   treeId,
   backstage,
-  expandedKeys,
+  expandedIds: expandedIds,
 }: RenderDirectoryProps): SimpleSpec => {
   const { children } = directory;
   const computedChildrenComponents = (visible: boolean) =>
     children.map((item) => {
       return item.type === 'leaf' ?
         renderLeafLabel({ leaf: item, onLeafAction, visible, treeId, backstage }) :
-        renderDirectory({ directory: item, expandedKeys, onLeafAction, labelTabstopping: visible, treeId, backstage });
+        renderDirectory({ directory: item, expandedIds, onLeafAction, labelTabstopping: visible, treeId, backstage });
     });
-  const childrenVisible = expandedKeys.includes(directory.id);
+  const childrenVisible = expandedIds.includes(directory.id);
   return ({
     dom: {
       tag: 'div',
@@ -295,8 +295,8 @@ const renderDirectory = ({
       }
     },
     components: [
-      renderDirectoryLabel({ directory, expandedKeys, visible: labelTabstopping, noChildren: directory.children.length === 0, backstage }),
-      renderDirectoryChildren({ children, expandedKeys, onLeafAction, visible: childrenVisible, treeId, backstage })
+      renderDirectoryLabel({ directory, expandedIds, visible: labelTabstopping, noChildren: directory.children.length === 0, backstage }),
+      renderDirectoryChildren({ children, expandedIds, onLeafAction, visible: childrenVisible, treeId, backstage })
     ],
     behaviours: Behaviour.derive([
       Toggling.config({
@@ -333,13 +333,13 @@ const renderTree = (
 ): SimpleSpec => {
   const onLeafAction = spec.onLeafAction.getOr(Fun.noop);
   const onExpand = spec.onExpand.getOr(Fun.noop);
-  const defaultExpandedKeys: string[] = spec.defaultExpandedKeys.getOr([]);
-  const expandedKeys = Cell(defaultExpandedKeys);
+  const defaultExpandedIds: string[] = spec.defaultExpandedIds.getOr([]);
+  const expandedIds = Cell(defaultExpandedIds);
   const treeId = Id.generate('tree-id');
   const children = spec.items.map((item) => {
     return item.type === 'leaf' ?
       renderLeafLabel({ leaf: item, onLeafAction, visible: true, treeId, backstage }) :
-      renderDirectory({ directory: item, onLeafAction, expandedKeys: defaultExpandedKeys, labelTabstopping: true, treeId, backstage });
+      renderDirectory({ directory: item, onLeafAction, expandedIds: defaultExpandedIds, labelTabstopping: true, treeId, backstage });
   });
   return {
     dom: {
@@ -359,11 +359,11 @@ const renderTree = (
       AddEventsBehaviour.config(treeEventsId, [
         AlloyEvents.run<ExpandTreeNodeEventArgs>('expand-tree-node', (_cmp, se) => {
           const { expanded, node } = se.event;
-          expandedKeys.set( expanded ?
-            [ ...expandedKeys.get(), node ] :
-            expandedKeys.get().filter((id) => id !== node)
+          expandedIds.set( expanded ?
+            [ ...expandedIds.get(), node ] :
+            expandedIds.get().filter((id) => id !== node)
           );
-          onExpand(expandedKeys.get(), { expanded, node });
+          onExpand(expandedIds.get(), { expanded, node });
         })
       ])
     ])

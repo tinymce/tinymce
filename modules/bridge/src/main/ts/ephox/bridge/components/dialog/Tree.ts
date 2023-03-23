@@ -11,7 +11,7 @@ export interface TreeSpec {
   type: 'tree';
   items: TreeItemSpec[];
   onLeafAction?: (id: Id) => void;
-  defaultExpandedKeys?: Id[];
+  defaultExpandedIds?: Id[];
   onExpand?: (
     expandedKeys: Id[],
     { expanded, node }: { expanded: boolean; node: Id }
@@ -21,7 +21,7 @@ export interface TreeSpec {
 export interface Tree {
   type: 'tree';
   items: TreeItem[];
-  defaultExpandedKeys: Optional<Id[]>;
+  defaultExpandedIds: Optional<Id[]>;
   onLeafAction: Optional<(id: Id) => void>;
   onExpand: Optional<(
     expandedKeys: Id[],
@@ -96,7 +96,7 @@ const treeFields = [
   FieldSchema.requiredArrayOf('items', treeItemSchema),
   FieldSchema.optionFunction('onLeafAction'),
   FieldSchema.optionFunction('onExpand'),
-  FieldSchema.optionArrayOf('defaultExpandedKeys', ValueType.string),
+  FieldSchema.optionArrayOf('defaultExpandedIds', ValueType.string),
 ];
 
 export const treeSchema = StructureSchema.objOf(treeFields);

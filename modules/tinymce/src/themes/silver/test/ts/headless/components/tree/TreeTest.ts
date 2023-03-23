@@ -80,7 +80,7 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
       onExpand: (_expandedKeys, { expanded, node }) => {
         store.add(node + (expanded ? '-expanded' : '-collapsed'));
       },
-      defaultExpandedKeys: [ 'dir' ]
+      defaultExpandedIds: [ 'dir' ]
     }));
 
     const tree = renderTree(treeSpec, extrasHook.access().extras.backstages.dialog );

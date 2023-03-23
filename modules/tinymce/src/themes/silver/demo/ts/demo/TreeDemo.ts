@@ -6,7 +6,6 @@ declare let tinymce: TinyMCE;
 
 interface Data {
   search: string;
-  expandedKeys: string[];
 }
 
 export default (): void => {
@@ -118,13 +117,14 @@ export default (): void => {
               return fullTree;
             }
           };
-          const getDialogSpec = (tree: Dialog.TreeItemSpec[], initialData: Data ): Dialog.DialogSpec<Data> => {
-            let expandedKeys = initialData.expandedKeys;
+
+          const getDialogSpec = (tree: Dialog.TreeItemSpec[], initialData: Data, initialExpandedIds: string[] ): Dialog.DialogSpec<Data> => {
+            let expandedIds = initialExpandedIds;
             return ({
               size: 'large',
               initialData,
               onChange: (api) => {
-                api.redial(getDialogSpec(getTree(''), { search: api.getData().search, expandedKeys }));
+                api.redial(getDialogSpec(getTree(''), { search: api.getData().search }, expandedIds));
               },
               title: 'Tree',
               buttons: [
@@ -153,9 +153,9 @@ export default (): void => {
                             console.log('clicked on item with id', id);
                             },
                             onExpand: (newExpandedKeys) => {
-                              expandedKeys = newExpandedKeys;
+                              expandedIds = newExpandedKeys;
                             },
-                            defaultExpandedKeys: initialData.expandedKeys,
+                            defaultExpandedIds: expandedIds,
                             items: tree
                           }]
                       },
@@ -165,8 +165,8 @@ export default (): void => {
               }
             });
           };
-          const initialData: Data = { search: '', expandedKeys: [ 'dir' ] };
-          ed.windowManager.open(getDialogSpec(getTree(initialData.search), initialData));
+          const initialData: Data = { search: '' };
+          ed.windowManager.open(getDialogSpec(getTree(initialData.search), initialData, [ 'dir' ]));
         }
       });
     }
