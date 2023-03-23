@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Inline headers would not work in some situations when the editor was moved too far right horizontally. #TINY-9646
 - Tapping on `fontsizeinput` buttons was not working correctly. #TINY-9725
+- Reverted updated focus, active, and enabled colors of UI buttons for improved contrast against the UI color. #TINY-9176
 
 ## 6.4.0 - 2023-03-15
 

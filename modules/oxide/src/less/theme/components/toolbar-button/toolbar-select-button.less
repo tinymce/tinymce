@@ -8,52 +8,11 @@
 @toolbar-button-bespoke-label-max-width: 7em;
 @toolbar-button-bespoke-spacing-x: 4px;
 
-@toolbar-button-select-active-background-color: @toolbar-button-active-background-color;
-@toolbar-button-select-active-chevron-color: @toolbar-button-active-icon-color;
-@toolbar-button-select-active-icon-color: @toolbar-button-active-icon-color;
-@toolbar-button-select-active-text-color: @toolbar-button-active-text-color;
-
-@toolbar-button-select-hover-icon-color: @toolbar-button-hover-icon-color;
-@toolbar-button-select-hover-chevron-color: @toolbar-button-hover-icon-color;
-@toolbar-button-select-chevron-color: @toolbar-button-chevron-color;
-
 .tox {
-  .tox-tbtn__select-chevron {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    width: @toolbar-button-chevron-width;
-
-    svg {
-      fill: @toolbar-button-select-chevron-color;
-    }
-  }
-
   .tox-tbtn--select {
     margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0;
     padding: 0 @toolbar-button-select-padding;
     width: auto;
-
-    &.tox-tbtn--active {
-      background: @toolbar-button-select-active-background-color;
-      color: @toolbar-button-select-active-text-color;
-
-      .tox-tbtn__icon-wrap svg {
-        fill: @toolbar-button-select-active-icon-color;
-      }
-
-      .tox-tbtn__select-chevron svg {
-        fill: @toolbar-button-select-active-chevron-color;
-      }
-    }
-
-    &:hover,
-    &:focus,
-    &:focus-visible {
-      .tox-tbtn__select-chevron svg {
-        fill: @toolbar-button-select-hover-chevron-color;
-      }
-    }
   }
 
   .tox-tbtn__select-label {
@@ -64,6 +23,17 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .tox-tbtn__select-chevron {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    width: @toolbar-button-chevron-width;
+  }
+
+  .tox-tbtn__select-chevron svg {
+    fill: @toolbar-button-chevron-color;
   }
 
   // Make dynamic text labeled buttons fixed width to prevent them from
