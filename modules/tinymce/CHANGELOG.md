@@ -9,12 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - New optional `defaultExpandedIds` and `onToggleExpand` options to the `tree` component config. #TINY-9653
 - New optional `defaultSelectedId` option to the `tree` component config. #TINY-9715
+- New `accordion` plugin with the `InsertAccordion` command, toolbar, and menu bar button to insert an accordion. #TINY-9730
 
 ### Improved
 - Screen readers are now able to announce the highlighted menu item of link comboboxes. #TINY-9280
 - Now `icon` field for dialog footer `togglebutton`s is not mandatory. #TINY-9757
-
-### Improved
 - Toolbar buttons and menu items were not disabled when they couldn't be used on noneditable content. #TINY-9669
 
 ### Fixed
