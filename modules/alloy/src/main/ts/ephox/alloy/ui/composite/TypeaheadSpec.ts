@@ -37,8 +37,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
   const navigateList = (
     comp: AlloyComponent,
     simulatedEvent: SimulatedEvent<EventArgs>,
-    highlighter: (comp: AlloyComponent) => void,
-    setAria: (comp: AlloyComponent) => void
+    highlighter: (comp: AlloyComponent) => void
   ) => {
     /*
      * If we have an open Sandbox with an active menu,
@@ -58,10 +57,8 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       Composing.getCurrent(sandbox).each((menu) => {
         Highlighting.getHighlighted(menu).fold(() => {
           highlighter(menu);
-          setAria(menu);
         }, () => {
           AlloyTriggers.dispatchEvent(sandbox, menu.element, 'keydown', simulatedEvent);
-          setAria(menu);
         });
       });
     } else {
@@ -72,10 +69,11 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
     }
   };
 
-  const setAria = (input: AlloyComponent, get: (menu: AlloyComponent) => Optional<AlloyComponent>) => (menu: AlloyComponent) => {
-    get(menu).each((item) => {
-      const idValue = Attribute.get(item.element, 'id') || '';
-      Attribute.set(input.element, 'aria-activedescendant', idValue);
+  const setAriaActiveDescendant = (input: AlloyComponent) => {
+    getActiveMenu(Coupling.getCoupled(input, 'sandbox')).each((menu) => {
+      Highlighting.getHighlighted(menu).each((menuItem) => {
+        Attribute.getOpt(menuItem.element, 'id').each((id) => Attribute.set(input.element, 'aria-activedescendant', id))
+      });
     });
   };
 
@@ -215,7 +213,8 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       onDown: (comp, simulatedEvent) => {
         // The navigation here will stop the "previewing" mode, because
         // now the menu will get focus (fake focus, but focus nevertheless)
-        navigateList(comp, simulatedEvent, Highlighting.highlightFirst, setAria(comp, Highlighting.getNext));
+        navigateList(comp, simulatedEvent, Highlighting.highlightFirst);
+        setAriaActiveDescendant(comp);
         return Optional.some<boolean>(true);
       },
       onEscape: (comp): Optional<boolean> => {
@@ -233,7 +232,8 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       onUp: (comp, simulatedEvent) => {
         // The navigation here will stop the "previewing" mode, because
         // now the menu will get focus (fake focus, but focus nevertheless)
-        navigateList(comp, simulatedEvent, Highlighting.highlightLast, setAria(comp, Highlighting.getPrevious));
+        navigateList(comp, simulatedEvent, Highlighting.highlightLast);
+        setAriaActiveDescendant(comp);
         return Optional.some<boolean>(true);
       },
       onEnter: (comp) => {
@@ -271,6 +271,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
           // If we're open and previewing, close the sandbox after firing execute.
           if (sandboxIsOpen) {
             Sandboxing.close(sandbox);
+            Attribute.remove(comp.element, 'aria-activedescendant');
           }
           return Optional.some<boolean>(true);
         }
@@ -317,6 +318,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         detail.onItemExecute(comp, sandbox, se.event.item, Representing.getValue(comp));
 
         Sandboxing.close(sandbox);
+        Attribute.remove(comp.element, 'aria-activedescendant');
         setCursorAtEnd(comp);
       })
     ].concat(detail.dismissOnBlur ? [
@@ -325,6 +327,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         // Only close the sandbox if the focus isn't inside it!
         if (Focus.search(sandbox.element).isNone()) {
           Sandboxing.close(sandbox);
+          Attribute.remove(typeahead.element, 'aria-activedescendant');
         }
       })
     ] : [ ]))
