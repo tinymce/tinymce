@@ -45,6 +45,31 @@
 @button-secondary-active-box-shadow: @button-secondary-box-shadow;
 @button-secondary-active-text-color: @button-secondary-text-color;
 
+// Enabled state
+@button-secondary-enabled-background-color: @enabled-background-color;
+@button-secondary-enabled-background-image: @button-secondary-background-image;
+@button-secondary-enabled-border-color: @button-secondary-enabled-background-color;
+@button-secondary-enabled-box-shadow: @button-secondary-box-shadow;
+@button-secondary-enabled-text-color: @button-secondary-text-color;
+
+@button-secondary-enabled-focus-background-color: @button-secondary-enabled-hover-background-color;
+@button-secondary-enabled-focus-background-image: @button-secondary-hover-background-image;
+@button-secondary-enabled-focus-border-color: @button-secondary-enabled-hover-background-color;
+@button-secondary-enabled-focus-box-shadow: @button-secondary-enabled-box-shadow;
+@button-secondary-enabled-focus-text-color: @button-secondary-enabled-text-color;
+
+@button-secondary-enabled-hover-background-color: darken(@button-secondary-enabled-background-color, 5%);
+@button-secondary-enabled-hover-background-image: @button-secondary-hover-background-image;
+@button-secondary-enabled-hover-border-color: @button-secondary-enabled-hover-background-color;
+@button-secondary-enabled-hover-box-shadow: @button-secondary-enabled-box-shadow;
+@button-secondary-enabled-hover-text-color: @button-secondary-enabled-text-color;
+
+@button-secondary-enabled-active-background-color: darken(@button-secondary-enabled-background-color, 10%);
+@button-secondary-enabled-active-background-image: @button-secondary-background-image;
+@button-secondary-enabled-active-border-color: @button-secondary-enabled-active-background-color;
+@button-secondary-enabled-active-box-shadow: @button-secondary-enabled-box-shadow;
+@button-secondary-enabled-active-text-color: @button-secondary-enabled-text-color;
+
 .tox {
   .tox-button--secondary {
     background-color: @button-secondary-background-color;
@@ -98,26 +123,44 @@
       color: @button-secondary-active-text-color;
     }
 
-    &.tox-button--enabled,
-    &.tox-button--enabled:active,
-    &.tox-button--enabled:focus,
-    &.tox-button--enabled:hover,
-    &.tox-button--enabled:active:not(:disabled),
-    &.tox-button--enabled:focus:not(:disabled),
-    &.tox-button--enabled:hover:not(:disabled) {
-      background: @toolbar-button-enabled-background-color;
-      border-width: @button-border-width;
-      box-shadow: @button-active-box-shadow;
-      color: @toolbar-button-enabled-text-color;
+    // Enabled state
+    &.tox-button--enabled {
+      background-color: @button-secondary-enabled-background-color;
+      background-image: @button-secondary-enabled-background-image;
+      border-color: @button-secondary-enabled-border-color;
+      box-shadow: @button-secondary-enabled-box-shadow;
+      color: @button-secondary-enabled-text-color;
 
-      > * {
-        transform: @toolbar-button-enabled-transform;
+      &[disabled] {
+        background-color: @button-secondary-enabled-background-color;
+        background-image: @button-secondary-enabled-background-image;
+        border-color: @button-secondary-enabled-border-color;
+        box-shadow: @button-secondary-enabled-box-shadow;
+        color: @button-secondary-disabled-text-color;
       }
 
-      // Disable stylelint below because we're mixing the :hover modifier with the "--enabled" class
-      // since they need to be kept the same/use the same rules
-      svg { /* stylelint-disable-line no-descending-specificity */
-        fill: @toolbar-button-enabled-icon-color;
+      &:focus:not(:disabled) {
+        background-color: @button-secondary-enabled-focus-background-color;
+        background-image: @button-secondary-enabled-focus-background-image;
+        border-color: @button-secondary-enabled-focus-border-color;
+        box-shadow: @button-secondary-enabled-focus-box-shadow;
+        color: @button-secondary-enabled-focus-text-color;
+      }
+
+      &:hover:not(:disabled) {
+        background-color: @button-secondary-enabled-hover-background-color;
+        background-image: @button-secondary-enabled-hover-background-image;
+        border-color: @button-secondary-enabled-hover-border-color;
+        box-shadow: @button-secondary-enabled-hover-box-shadow;
+        color: @button-secondary-enabled-hover-text-color;
+      }
+
+      &:active:not(:disabled) {
+        background-color: @button-secondary-enabled-active-background-color;
+        background-image: @button-secondary-enabled-active-background-image;
+        border-color: @button-secondary-enabled-active-border-color;
+        box-shadow: @button-secondary-enabled-active-box-shadow;
+        color: @button-secondary-enabled-active-text-color;
       }
     }
   }
