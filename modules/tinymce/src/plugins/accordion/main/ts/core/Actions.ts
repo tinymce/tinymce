@@ -2,13 +2,18 @@ import Editor from 'tinymce/core/api/Editor';
 
 import { fireInsertAccordionEvent } from '../api/Events';
 
+const validAncestorContainers = [ 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'UL', 'OL', 'TABLE', 'FIGURE', 'DETAILS', 'DIV', 'DL', 'BODY' ];
+const isValidAncestorContainer = (node: Node): node is HTMLElement => 
+  validAncestorContainers.includes(node.nodeName);
+
 const insertAccordion = (editor: Editor): void => {
   const dom = editor.dom;
 
   const rng = editor.selection.getRng();
-  const summaryText = rng.collapsed ? 'Accordion summary...' : rng.toString();
+  const summaryText = rng.toString() || 'Accordion summary...';
 
-  const target = dom.getParent(rng.commonAncestorContainer, dom.isBlock);
+  const target = dom.getParent(rng.commonAncestorContainer, isValidAncestorContainer);
+
   if (!target) {
     return;
   }
@@ -19,7 +24,7 @@ const insertAccordion = (editor: Editor): void => {
 
   details.appendChild(summary);
   details.appendChild(body);
-  target.insertAdjacentElement('afterend', details);
+  target.insertAdjacentElement(target.nodeName === 'BODY' ? 'beforeend' : 'afterend', details);
 
   if (editor.dom.isEmpty(target)) {
     target.remove();

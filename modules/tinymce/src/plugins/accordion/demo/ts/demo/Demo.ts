@@ -4,8 +4,8 @@ declare let tinymce: TinyMCE;
 
 tinymce.init({
   selector: 'textarea.tinymce',
-  plugins: 'accordion code',
-  toolbar: 'accordion | code',
+  plugins: 'lists image accordion code',
+  toolbar: 'numlist bullist | image | accordion | code',
   menu: { tools: { title: 'Tools', items: 'accordion code' }},
 });
 
