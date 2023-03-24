@@ -203,7 +203,8 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets): void =>
   addButtonIfRegistered('tableinsertdialog', {
     tooltip: 'Insert table',
     command: 'mceInsertTableDialog',
-    icon: 'table'
+    icon: 'table',
+    onSetup: onSetupEditable(editor)
   });
 
   const tableClassList = filterNoneItem(Options.getTableClassList(editor));
