@@ -58,4 +58,16 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'SUMMARY');
     TinyAssertions.assertCursor(editor, [ 1, 0 ], 1);
   });
+
+  it('TINY-9730: Emit the "InsertAccordion" event', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><br></p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    let isEventTriggered = false;
+    editor.on('InsertAccordion', () => {
+      isEventTriggered = true;
+    })
+    editor.execCommand('InsertAccordion');
+    assert.isTrue(isEventTriggered);
+  });
 });

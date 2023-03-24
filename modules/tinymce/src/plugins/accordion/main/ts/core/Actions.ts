@@ -1,5 +1,7 @@
 import Editor from 'tinymce/core/api/Editor';
 
+import { fireInsertAccordionEvent } from '../api/Events';
+
 const insertAccordion = (editor: Editor): void => {
   const dom = editor.dom;
 
@@ -24,6 +26,8 @@ const insertAccordion = (editor: Editor): void => {
   }
 
   editor.selection.setCursorLocation(summary, 1);
+
+  fireInsertAccordionEvent(editor, details);
 };
 
 export { insertAccordion };
