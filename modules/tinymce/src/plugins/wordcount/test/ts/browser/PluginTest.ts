@@ -26,6 +26,13 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
   const pWaitForWordcount = (num: number) =>
     Waiter.pTryUntil('Wait for wordcount to change', () => assertWordcount(num));
 
+  const testWordcount = async (editor: Editor, scenarios: { content: string; expected: number }[]): Promise<void> => {
+    for (let i = 0; i < scenarios.length; i++) {
+      editor.setContent(scenarios[i].content);
+      await pWaitForWordcount(scenarios[i].expected);
+    }
+  };
+
   it('Set test content and assert word count', async () => {
     const editor = hook.editor();
     await pWaitForWordcount(0);
@@ -84,6 +91,108 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
     await pWaitForWordcount(0);
     editor.setContent('<p><span>&#8203;&#8203;&#8203;wo&#8203;rd&#8203;&#8203;&#8203;</span></p>');
     await pWaitForWordcount(1);
+  });
+
+  it('TINY-8122: Treat $ as a word break', async () => {
+    const editor = hook.editor();
+    await pWaitForWordcount(0);
+    const wordCountScenarios = [
+      { content: '<p>$word</p>', expected: 1 },
+      { content: '<p>word$</p>', expected: 1 },
+      { content: '<p>word$word</p>', expected: 2 },
+      { content: '<p>$word$</p>', expected: 1 },
+      { content: '<p>word$2</p>', expected: 2 },
+      { content: '<p>word$word test</p>', expected: 3 },
+      { content: '<p>word$word<br/>test$</p>', expected: 3 },
+      { content: '<p>word$word</p><p>test$</p>', expected: 3 }
+    ];
+
+    await testWordcount(editor, wordCountScenarios);
+  });
+
+  it('TINY-8122: Treat ^ as a word break', async () => {
+    const editor = hook.editor();
+    await pWaitForWordcount(0);
+    const wordCountScenarios = [
+      { content: '<p>^word</p>', expected: 1 },
+      { content: '<p>word^</p>', expected: 1 },
+      { content: '<p>word^word</p>', expected: 2 },
+      { content: '<p>^word^</p>', expected: 1 },
+      { content: '<p>word^2</p>', expected: 2 },
+      { content: '<p>word^word test</p>', expected: 3 },
+      { content: '<p>word^word<br/>test^</p>', expected: 3 },
+      { content: '<p>word^word</p><p>test^</p>', expected: 3 }
+    ];
+
+    await testWordcount(editor, wordCountScenarios);
+  });
+
+  it('TINY-8122: Treat ~ as a word break', async () => {
+    const editor = hook.editor();
+    await pWaitForWordcount(0);
+    const wordCountScenarios = [
+      { content: '<p>~word</p>', expected: 1 },
+      { content: '<p>word~</p>', expected: 1 },
+      { content: '<p>word~word</p>', expected: 2 },
+      { content: '<p>~word~</p>', expected: 1 },
+      { content: '<p>word~2</p>', expected: 2 },
+      { content: '<p>word~word test</p>', expected: 3 },
+      { content: '<p>word~word<br/>test~</p>', expected: 3 },
+      { content: '<p>word~word</p><p>test~</p>', expected: 3 }
+    ];
+
+    await testWordcount(editor, wordCountScenarios);
+  });
+
+  it('TINY-8122: Treat | as a word break', async () => {
+    const editor = hook.editor();
+    await pWaitForWordcount(0);
+    const wordCountScenarios = [
+      { content: '<p>|word</p>', expected: 1 },
+      { content: '<p>word|</p>', expected: 1 },
+      { content: '<p>word|word</p>', expected: 2 },
+      { content: '<p>|word|</p>', expected: 1 },
+      { content: '<p>word|2</p>', expected: 2 },
+      { content: '<p>word|word test</p>', expected: 3 },
+      { content: '<p>word|word<br/>test|</p>', expected: 3 },
+      { content: '<p>word|word</p><p>test|</p>', expected: 3 }
+    ];
+
+    await testWordcount(editor, wordCountScenarios);
+  });
+
+  it('TINY-8122: Treat № as a word break', async () => {
+    const editor = hook.editor();
+    await pWaitForWordcount(0);
+    const wordCountScenarios = [
+      { content: '<p>№word</p>', expected: 1 },
+      { content: '<p>word№</p>', expected: 1 },
+      { content: '<p>word№word</p>', expected: 2 },
+      { content: '<p>№word№</p>', expected: 1 },
+      { content: '<p>word№2</p>', expected: 2 },
+      { content: '<p>word№word test</p>', expected: 3 },
+      { content: '<p>word№word<br/>test№</p>', expected: 3 },
+      { content: '<p>word№word</p><p>test№</p>', expected: 3 }
+    ];
+
+    await testWordcount(editor, wordCountScenarios);
+  });
+
+  it('TINY-8122: + should be a word break when not next to number', async () => {
+    const editor = hook.editor();
+    await pWaitForWordcount(0);
+    const wordCountScenarios = [
+      { content: '<p>+word</p>', expected: 1 },
+      { content: '<p>word+</p>', expected: 1 },
+      { content: '<p>word+word</p>', expected: 2 },
+      { content: '<p>+word+</p>', expected: 1 },
+      { content: '<p>word+2</p>', expected: 2 },
+      { content: '<p>word+word test</p>', expected: 3 },
+      { content: '<p>word+word<br/>test+</p>', expected: 3 },
+      { content: '<p>word+word</p><p>test+</p>', expected: 3 }
+    ];
+
+    await testWordcount(editor, wordCountScenarios);
   });
 
   it('TINY-1166: Applying inline formats within same word', async () => {

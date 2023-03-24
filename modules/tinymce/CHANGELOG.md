@@ -98,6 +98,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Opening a menu button in the footer of a dialog after a redial threw an error. #TINY-9686
 - After closing a view, the `more...` toolbar button disappeared if the editor had `toolbar_mode: 'sliding'` and the toolbar was opened. #TINY-9419
 - Inline dialogs would open partially off screen when the toolbar had a small width. #TINY-9588
+- Word count was inaccurate for documents with specific characters. #TINY-8122
 
 ## 6.3.1 - 2022-12-06
 
