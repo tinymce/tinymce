@@ -125,4 +125,21 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTest', () => 
     TinyUiActions.closeDialog(editor);
     assert.equal(initialScroll.top, Scroll.get(doc).top);
   });
+
+  it('TINY-9704: Should reset the "Not Found" alert after updating the search preferences', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>tiny tiny tiny tiny</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 5, [ 0, 0 ], 9);
+    await Utils.pOpenDialog(editor);
+    await Utils.pAssertFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', 'tiny');
+    findAndAssertFound(editor, 4);
+    await Utils.pSelectPreference(editor, 'Find in selection');
+    assertFound(editor, 0);
+    findAndAssertFound(editor, 0);
+    assert.isTrue(await Utils.pAssertAlertInDialog(editor));
+    await Utils.pSelectPreference(editor, 'Find in selection');
+    findAndAssertFound(editor, 4);
+    assert.isFalse(await Utils.pAssertAlertInDialog(editor));
+    TinyUiActions.closeDialog(editor);
+  });
 });
