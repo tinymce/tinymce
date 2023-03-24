@@ -11,7 +11,8 @@ import * as Icons from '../icons/Icons';
 
 type TreeSpec = Omit<Dialog.Tree, 'type'>;
 type OnLeafAction = (id: string) => void;
-interface ExpandTreeNodeEventArgs extends EventFormat {
+
+interface ToggleExpandTreeNodeEventArgs extends EventFormat {
   expanded: boolean;
   node: string;
 }
@@ -357,7 +358,7 @@ const renderTree = (
         cycles: false,
       }),
       AddEventsBehaviour.config(treeEventsId, [
-        AlloyEvents.run<ExpandTreeNodeEventArgs>('expand-tree-node', (_cmp, se) => {
+        AlloyEvents.run<ToggleExpandTreeNodeEventArgs>('expand-tree-node', (_cmp, se) => {
           const { expanded, node } = se.event;
           expandedIds.set( expanded ?
             [ ...expandedIds.get(), node ] :

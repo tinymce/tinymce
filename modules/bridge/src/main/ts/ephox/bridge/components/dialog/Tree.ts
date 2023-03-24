@@ -13,7 +13,7 @@ export interface TreeSpec {
   onLeafAction?: (id: Id) => void;
   defaultExpandedIds?: Id[];
   onExpand?: (
-    expandedKeys: Id[],
+    expandedIds: Id[],
     { expanded, node }: { expanded: boolean; node: Id }
   ) => void;
 }
@@ -24,7 +24,7 @@ export interface Tree {
   defaultExpandedIds: Optional<Id[]>;
   onLeafAction: Optional<(id: Id) => void>;
   onExpand: Optional<(
-    expandedKeys: Id[],
+    expandedIds: Id[],
     { expanded, node }: { expanded: boolean; node: Id }
   ) => void
   >;
