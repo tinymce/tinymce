@@ -9,8 +9,8 @@ const dialogSelector = 'div.tox-dialog';
 const toolbarButtonSelector = 'button[aria-label="Insert/edit code sample"]';
 
 const setLanguage = (newLanguage: string): void => {
-  const select = document.querySelector('div[role="dialog"] select') as HTMLSelectElement;
-  select.value = newLanguage;
+  const select = document.querySelector('div[role="dialog"] div[class="tox-listboxfield"] button') as HTMLSelectElement;
+  select.setAttribute('data-value', newLanguage);
 };
 
 const setTextareaContent = (content: string): void => {
@@ -19,8 +19,8 @@ const setTextareaContent = (content: string): void => {
 };
 
 const assertCodeSampleDialog = (expectedLanguage: string, expectedContent: string): void => {
-  const select = document.querySelector('div[role="dialog"] select') as HTMLSelectElement;
-  assert.equal(select.value, expectedLanguage, 'Asserting language dropdown is ' + expectedLanguage);
+  const select = document.querySelector('div[role="dialog"] div[class="tox-listboxfield"] button') as HTMLSelectElement;
+  assert.equal(select.getAttribute('data-value'), expectedLanguage, 'Asserting language dropdown is ' + expectedLanguage);
   const textarea = document.querySelector('div[role="dialog"] textarea') as HTMLTextAreaElement;
   assert.equal(textarea.value, expectedContent, 'Asserting textarea content is ' + expectedContent);
 };
