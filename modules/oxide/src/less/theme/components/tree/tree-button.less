@@ -190,12 +190,6 @@
     display: flex;
     flex-direction: column;
 
-    &.tox-tree--directory--expanded {
-      > .tox-tree--directory__label .tox-chevron {
-        transform: rotate(90deg);
-      }
-    }
-
     /* stylelint-disable no-descending-specificity */
     .tox-tree--directory__label {
       font-weight: bold;
@@ -231,11 +225,20 @@
 
       .tox-chevron {
         margin-right: 6px;
-        transition: transform .5s ease-in-out;
       }
 
-      &.tox-tree--directory__label--active .tox-chevron {
-        transform: rotate(90deg);
+      &:has(+ .tox-tree--directory__children--growing),
+      &:has(+ .tox-tree--directory__children--shrinking) {
+        .tox-chevron {
+          transition: transform .5s ease-in-out;
+        }
+      }
+
+      &:has(+ .tox-tree--directory__children--growing),
+      &:has(+ .tox-tree--directory__children--open) {
+        .tox-chevron {
+          transform: rotate(90deg);
+        }
       }
     }
   }

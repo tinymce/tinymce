@@ -1,4 +1,4 @@
-import { FieldSchema, StructureSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
 
 import { ToolbarMenuButtonSpec, ToolbarMenuButton } from '../../api/Toolbar';
@@ -11,12 +11,23 @@ export interface TreeSpec {
   type: 'tree';
   items: TreeItemSpec[];
   onLeafAction?: (id: Id) => void;
+  defaultExpandedIds?: Id[];
+  onToggleExpand?: (
+    expandedIds: Id[],
+    { expanded, node }: { expanded: boolean; node: Id }
+  ) => void;
 }
 
 export interface Tree {
   type: 'tree';
   items: TreeItem[];
+  defaultExpandedIds: Id[];
   onLeafAction: Optional<(id: Id) => void>;
+  onToggleExpand: Optional<(
+    expandedIds: Id[],
+    { expanded, node }: { expanded: boolean; node: Id }
+  ) => void
+  >;
 }
 
 interface BaseTreeItemSpec {
@@ -57,7 +68,7 @@ const baseTreeItemFields = [
   FieldSchema.requiredStringEnum('type', [ 'directory', 'leaf' ]),
   ComponentSchema.title,
   FieldSchema.requiredString('id'),
-  FieldSchema.optionOf('menu', MenuButtonSchema ),
+  FieldSchema.optionOf('menu', MenuButtonSchema),
 ];
 
 const treeItemLeafFields = baseTreeItemFields;
@@ -83,7 +94,9 @@ const treeItemSchema = StructureSchema.chooseProcessor('type', {
 const treeFields = [
   ComponentSchema.type,
   FieldSchema.requiredArrayOf('items', treeItemSchema),
-  FieldSchema.optionFunction('onLeafAction')
+  FieldSchema.optionFunction('onLeafAction'),
+  FieldSchema.optionFunction('onToggleExpand'),
+  FieldSchema.defaultedArrayOf('defaultExpandedIds', [], ValueType.string),
 ];
 
 export const treeSchema = StructureSchema.objOf(treeFields);

@@ -1,5 +1,4 @@
 import { Dialog } from '@ephox/bridge';
-import { Id } from '@ephox/katamari';
 
 import { TinyMCE } from 'tinymce/core/api/PublicApi';
 
@@ -21,7 +20,7 @@ export default (): void => {
           const fullTree: Dialog.TreeItemSpec [] = [
             {
               type: 'directory',
-              id: Id.generate(''),
+              id: 'dirempty',
               title: 'Dir Empty',
               menu: {
                 type: 'menubutton',
@@ -41,7 +40,7 @@ export default (): void => {
             },
             {
               type: 'directory',
-              id: Id.generate(''),
+              id: 'dir',
               title: 'Dir',
               menu: {
                 type: 'menubutton',
@@ -60,30 +59,30 @@ export default (): void => {
               children: [
                 {
                   type: 'directory',
-                  id: Id.generate(''),
+                  id: 'subdir',
                   title: 'Sub dir',
                   children: [
                     {
                       type: 'leaf',
                       title: 'File 1',
-                      id: Id.generate(''),
+                      id: '1',
                     },
                     {
                       type: 'leaf',
                       title: 'File 2',
-                      id: Id.generate(''),
+                      id: '2',
                     },
                   ]
                 },
                 {
                   type: 'leaf',
                   title: 'File 3',
-                  id: Id.generate(''),
+                  id: '3',
                 },
                 {
                   type: 'leaf',
                   title: 'File 4',
-                  id: Id.generate(''),
+                  id: '4',
                   menu: {
                     type: 'menubutton',
                     icon: 'image-options',
@@ -104,12 +103,12 @@ export default (): void => {
             {
               type: 'leaf',
               title: 'File 5',
-              id: Id.generate(''),
+              id: '5',
             },
             {
               type: 'leaf',
               title: 'File 6',
-              id: Id.generate(''),
+              id: '6',
             }];
           const getTree = (search: string) => {
             if (search.length > 2) {
@@ -118,46 +117,56 @@ export default (): void => {
               return fullTree;
             }
           };
-          const getDialogSpec = (tree: Dialog.TreeItemSpec[], initialData: Data ): Dialog.DialogSpec<Data> => ({
-            size: 'large',
-            initialData,
-            onChange: (api) => {
-              const { search } = api.getData();
-              api.redial(getDialogSpec(getTree(search), api.getData()));
-            },
-            title: 'Tree',
-            buttons: [
-              {
-                type: 'cancel',
-                text: 'Cancel',
-              }
-            ],
-            body: {
-              type: 'panel',
-              items: [
+
+          const getDialogSpec = (tree: Dialog.TreeItemSpec[], initialData: Data, initialExpandedIds: string[] ): Dialog.DialogSpec<Data> => {
+            let expandedIds = initialExpandedIds;
+            return ({
+              size: 'large',
+              initialData,
+              onChange: (api) => {
+                api.redial(getDialogSpec(getTree(''), { search: api.getData().search }, expandedIds));
+              },
+              title: 'Tree',
+              buttons: [
                 {
-                  type: 'bar',
-                  items: [
-                    {
-                      type: 'panel',
-                      items: [
-                        {
-                          type: 'tree',
-                          onLeafAction: (id) => {
+                  type: 'cancel',
+                  text: 'Cancel',
+                }
+              ],
+              body: {
+                type: 'panel',
+                items: [
+                  {
+                    type: 'input',
+                    name: 'search'
+                  },
+                  {
+                    type: 'bar',
+                    items: [
+                      {
+                        type: 'panel',
+                        items: [
+                          {
+                            type: 'tree',
+                            onLeafAction: (id) => {
                             // eslint-disable-next-line
                             console.log('clicked on item with id', id);
-                          },
-                          items: tree
-                        }]
-                    },
-                  ]
-                }
-
-              ]
-            }
-          });
-          const initialData = { search: '' };
-          ed.windowManager.open(getDialogSpec(getTree(initialData.search), initialData));
+                            },
+                            onToggleExpand: (newExpandedKeys) => {
+                              expandedIds = newExpandedKeys;
+                            },
+                            defaultExpandedIds: expandedIds,
+                            items: tree
+                          }]
+                      },
+                    ]
+                  }
+                ]
+              }
+            });
+          };
+          const initialData: Data = { search: '' };
+          ed.windowManager.open(getDialogSpec(getTree(initialData.search), initialData, [ 'dir' ]));
         }
       });
     }
