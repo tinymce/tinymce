@@ -107,7 +107,7 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
 
   it('Check initial event state', () => {
     const store = hook.store();
-    store.assertEq('Store should have an entry for the expanded dir', [ 'dir-expanded' ]);
+    store.assertEq('Store should be empty', []);
   });
 
   it('TINY-9614: Basic tree interactions', async () => {

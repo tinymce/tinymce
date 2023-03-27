@@ -205,7 +205,11 @@ const renderDirectoryLabel = ({
         AlloyEvents.runOnAttached((button, _se) => {
           const dirExpanded = expandedIds.includes(directory.id);
           if (dirExpanded) {
-            expandChildren(button);
+            SelectorFind.ancestor(button.element, '.tox-tree--directory').each((directoryEle) => {
+              button.getSystem().getByDom(directoryEle).each((directoryComp) => {
+                Toggling.toggle(directoryComp);
+              });
+            });
           }
         }),
         AlloyEvents.run<EventArgs<KeyboardEvent>>(NativeEvents.keydown(), (comp, se) => {
