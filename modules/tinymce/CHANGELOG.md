@@ -47,6 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pressing enter inside the `inputfontsize` input field now moves focus back into the editor content. #TINY-9598
 - Drag and drop events for elements with a `contenteditable="false"` attribute now includes target element details. #TINY-9599
 - Updated focus, active, and enabled colors of UI buttons for improved contrast against the UI color. #TINY-9176
+- Screen readers are now able to announce the highlighted menu item of link comboboxes. #TINY-9280
 
 ### Changed
 - The `link` plugins context menu items no longer appears for links that include elements with a `contenteditable="false"` attribute. #TINY-9491
