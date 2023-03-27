@@ -12,7 +12,7 @@ export interface TreeSpec {
   items: TreeItemSpec[];
   onLeafAction?: (id: Id) => void;
   defaultExpandedIds?: Id[];
-  onExpand?: (
+  onToggleExpand?: (
     expandedIds: Id[],
     { expanded, node }: { expanded: boolean; node: Id }
   ) => void;
@@ -23,7 +23,7 @@ export interface Tree {
   items: TreeItem[];
   defaultExpandedIds: Id[];
   onLeafAction: Optional<(id: Id) => void>;
-  onExpand: Optional<(
+  onToggleExpand: Optional<(
     expandedIds: Id[],
     { expanded, node }: { expanded: boolean; node: Id }
   ) => void
@@ -95,7 +95,7 @@ const treeFields = [
   ComponentSchema.type,
   FieldSchema.requiredArrayOf('items', treeItemSchema),
   FieldSchema.optionFunction('onLeafAction'),
-  FieldSchema.optionFunction('onExpand'),
+  FieldSchema.optionFunction('onToggleExpand'),
   FieldSchema.defaultedArrayOf('defaultExpandedIds', [], ValueType.string),
 ];
 

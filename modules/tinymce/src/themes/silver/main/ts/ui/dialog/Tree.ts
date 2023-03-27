@@ -333,7 +333,7 @@ const renderTree = (
   backstage: UiFactoryBackstage
 ): SimpleSpec => {
   const onLeafAction = spec.onLeafAction.getOr(Fun.noop);
-  const onExpand = spec.onExpand.getOr(Fun.noop);
+  const onExpand = spec.onToggleExpand.getOr(Fun.noop);
   const defaultExpandedIds: string[] = spec.defaultExpandedIds;
   const expandedIds = Cell(defaultExpandedIds);
   const treeId = Id.generate('tree-id');

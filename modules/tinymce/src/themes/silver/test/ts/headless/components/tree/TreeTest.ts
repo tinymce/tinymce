@@ -77,7 +77,7 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
       type: 'tree',
       onLeafAction: store.add,
       items: fullTree,
-      onExpand: (_expandedKeys, { expanded, node }) => {
+      onToggleExpand: (_expandedKeys, { expanded, node }) => {
         store.add(node + (expanded ? '-expanded' : '-collapsed'));
       },
       defaultExpandedIds: [ 'dir' ]

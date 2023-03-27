@@ -152,7 +152,7 @@ export default (): void => {
                             // eslint-disable-next-line
                             console.log('clicked on item with id', id);
                             },
-                            onExpand: (newExpandedKeys) => {
+                            onToggleExpand: (newExpandedKeys) => {
                               expandedIds = newExpandedKeys;
                             },
                             defaultExpandedIds: expandedIds,
