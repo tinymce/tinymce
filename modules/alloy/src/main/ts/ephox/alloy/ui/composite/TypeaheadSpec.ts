@@ -69,14 +69,6 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
     }
   };
 
-  const setAriaActiveDescendant = (input: AlloyComponent) => {
-    getActiveMenu(Coupling.getCoupled(input, 'sandbox')).each((menu) => {
-      Highlighting.getHighlighted(menu).each((menuItem) => {
-        Attribute.getOpt(menuItem.element, 'id').each((id) => Attribute.set(input.element, 'aria-activedescendant', id))
-      });
-    });
-  };
-
   // Due to the fact that typeahead probably need to separate value from text, they can't reuse
   // (easily) the same representing logic as input fields.
   const focusBehaviours = InputBase.focusBehaviours(detail);
@@ -214,7 +206,6 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         // The navigation here will stop the "previewing" mode, because
         // now the menu will get focus (fake focus, but focus nevertheless)
         navigateList(comp, simulatedEvent, Highlighting.highlightFirst);
-        setAriaActiveDescendant(comp);
         return Optional.some<boolean>(true);
       },
       onEscape: (comp): Optional<boolean> => {
@@ -223,8 +214,6 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         const sandbox = Coupling.getCoupled(comp, 'sandbox');
         if (Sandboxing.isOpen(sandbox)) {
           Sandboxing.close(sandbox);
-          // clear aria-activedescendant
-          Attribute.remove(comp.element, 'aria-activedescendant');
           return Optional.some<boolean>(true);
         }
         return Optional.none();
@@ -233,7 +222,6 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         // The navigation here will stop the "previewing" mode, because
         // now the menu will get focus (fake focus, but focus nevertheless)
         navigateList(comp, simulatedEvent, Highlighting.highlightLast);
-        setAriaActiveDescendant(comp);
         return Optional.some<boolean>(true);
       },
       onEnter: (comp) => {
@@ -271,7 +259,6 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
           // If we're open and previewing, close the sandbox after firing execute.
           if (sandboxIsOpen) {
             Sandboxing.close(sandbox);
-            Attribute.remove(comp.element, 'aria-activedescendant');
           }
           return Optional.some<boolean>(true);
         }
@@ -290,7 +277,11 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         sandbox: (hotspot) => {
           return DropdownUtils.makeSandbox(detail, hotspot, {
             onOpen: () => Toggling.on(hotspot),
-            onClose: () => Toggling.off(hotspot)
+            onClose: () => {
+              // TINY-9280: Remove aria-activedescendant that is set when menu item is highlighted
+              detail.lazyTypeaheadComp.get().each((input) => Attribute.remove(input.element, 'aria-activedescendant'));
+              Toggling.off(hotspot);
+            }
           });
         }
       }
@@ -318,7 +309,6 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         detail.onItemExecute(comp, sandbox, se.event.item, Representing.getValue(comp));
 
         Sandboxing.close(sandbox);
-        Attribute.remove(comp.element, 'aria-activedescendant');
         setCursorAtEnd(comp);
       })
     ].concat(detail.dismissOnBlur ? [
@@ -327,7 +317,6 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         // Only close the sandbox if the focus isn't inside it!
         if (Focus.search(sandbox.element).isNone()) {
           Sandboxing.close(sandbox);
-          Attribute.remove(typeahead.element, 'aria-activedescendant');
         }
       })
     ] : [ ]))

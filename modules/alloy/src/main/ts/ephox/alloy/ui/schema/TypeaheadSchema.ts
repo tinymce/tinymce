@@ -1,5 +1,6 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Cell, Fun, Optional } from '@ephox/katamari';
+import { Attribute } from '@ephox/sugar';
 
 import { Coupling } from '../../api/behaviour/Coupling';
 import { Focusing } from '../../api/behaviour/Focusing';
@@ -82,6 +83,10 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
               if (detail.model.populateFromBrowse) {
                 setValueFromItem(detail.model, input, item);
               }
+
+              // Since the focus is still on the typeahead comp, aria-activedescendant must be set to
+              // make screen readers to announce the menu item being highligted
+              Attribute.getOpt(item.element, 'id').each((id) => Attribute.set(input.element, 'aria-activedescendant', id));
             });
           } else {
             // ASSUMPTION: Currently, any interaction with the menu via the keyboard or the mouse
