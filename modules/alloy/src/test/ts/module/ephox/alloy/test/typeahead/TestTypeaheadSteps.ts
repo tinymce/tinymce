@@ -1,5 +1,5 @@
 import { Assertions, Chain, FocusTools, Logger, Step, UiFinder, Waiter } from '@ephox/agar';
-import { SugarElement, Value } from '@ephox/sugar';
+import { Attribute, SugarElement, Value } from '@ephox/sugar';
 
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
@@ -13,6 +13,7 @@ interface TestTypeaheadSteps {
   readonly sAssertFocusOnTypeahead: <T>(label: string) => Step<T, T>;
   readonly sTriggerInputEvent: <T>(label: string) => Step<T, T>;
   readonly sAssertValue: <T>(label: string, expected: string) => Step<T, T>;
+  readonly sAssertAriaActiveDescendant: <T>(label: string, expected: string) => Step<T, T>;
 }
 
 export default (doc: SugarElement<HTMLDocument>, gui: GuiSystem, typeahead: AlloyComponent): TestTypeaheadSteps => {
@@ -69,12 +70,21 @@ export default (doc: SugarElement<HTMLDocument>, gui: GuiSystem, typeahead: Allo
     ])
   );
 
+  const sAssertAriaActiveDescendant = <T>(label: string, expected: string) => Logger.t<T, T>(
+    label + ' sAssertAriaActiveDescendant',
+    Chain.asStep(typeahead.element, [
+      Chain.mapper((input) => Attribute.getOpt(input, 'aria-activedescendant').getOr('')),
+      Assertions.cAssertEq('Checking aria-activedescendant of typeahead', expected)
+    ])
+  );
+
   return {
     sWaitForMenu,
     sWaitForNoMenu,
     sAssertTextSelection,
     sAssertFocusOnTypeahead,
     sTriggerInputEvent,
-    sAssertValue
+    sAssertValue,
+    sAssertAriaActiveDescendant
   };
 };
