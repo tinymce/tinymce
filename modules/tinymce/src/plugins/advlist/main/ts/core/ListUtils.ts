@@ -48,8 +48,8 @@ const setNodeChangeHandler = (editor: Editor, nodeChangeHandler: (e: NodeChangeE
 };
 
 export {
-  isTableCellNode,
-  isListNode,
+  isTableCellNode, // Exported for testing
+  isListNode, // Exported for testing
   inList,
   getSelectedStyleType,
   isWithinNonEditableList,
