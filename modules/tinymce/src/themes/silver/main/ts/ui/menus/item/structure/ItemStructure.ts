@@ -88,8 +88,7 @@ const renderItemDomStructure = (ariaLabel: Optional<string>): RawDomSchema => {
       // TODO: AP-213 change this temporary solution to use tooltips, ensure its aria readable still.
       // for icon only implementations we need either a title or aria label to satisfy aria requirements.
       title: I18n.translate(label),
-      // TODO: No idea if this is good
-      id: Id.generate('menu_item')
+      id: Id.generate('menu-item')
     }
   })).getOr({});
 
