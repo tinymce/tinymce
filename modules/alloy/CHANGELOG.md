@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+-  `aria-activedescendant` attribute for `Typeahead` input component is updated to the menu item that is highlighted. #TINY-9280
+
 ## 12.1.0 - 2023-03-15
 
 ### Added
