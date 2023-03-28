@@ -25,13 +25,12 @@ const normalizeStyleValue = (styleValue: string | undefined): string =>
   Type.isNullable(styleValue) || styleValue === 'default' ? '' : styleValue;
 
 const makeSetupHandler = (editor: Editor, nodeName: ListType) => (api: Toolbar.ToolbarSplitButtonInstanceApi | Toolbar.ToolbarToggleButtonInstanceApi) => {
-  const updateButtonState = (element: Element, parents: Node[]) => {
+  const updateButtonState = (editor: Editor, parents: Node[]) => {
+    const element = editor.selection.getStart(true);
     api.setActive(ListUtils.inList(editor, parents, nodeName));
     api.setEnabled(!ListUtils.isWithinNonEditableList(editor, element));
   };
-  const nodeChangeHandler = (e: NodeChangeEvent) => updateButtonState(e.element, e.parents);
-  const element = editor.selection.getStart(true);
-  updateButtonState(element, editor.dom.getParents(element));
+  const nodeChangeHandler = (e: NodeChangeEvent) => updateButtonState(editor, e.parents);
 
   return ListUtils.setNodeChangeHandler(editor, nodeChangeHandler);
 };
