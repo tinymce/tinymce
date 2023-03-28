@@ -26,9 +26,9 @@ describe('browser.tinymce.plugins.table.NoneditableRootTest', () => {
     withNoneditableRootEditor(hook.editor(), (editor) => {
       editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
-      UiFinder.exists(SugarBody.body(), '[aria-label="Table"][disabled="disabled"]');
+      UiFinder.exists(SugarBody.body(), '[aria-label="Table"]:disabled');
       TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
-      UiFinder.exists(SugarBody.body(), '[aria-label="Table"]:not([disabled="disabled"])');
+      UiFinder.exists(SugarBody.body(), '[aria-label="Table"]:not(:disabled)');
     });
   });
 

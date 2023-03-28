@@ -1,5 +1,5 @@
-import { ApproxStructure, UiFinder } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { ApproxStructure, Keys, UiFinder } from '@ephox/agar';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
@@ -8,7 +8,8 @@ import Editor from 'tinymce/core/api/Editor';
 describe('browser.tinymce.themes.silver.editor.core.SimpleControlsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    toolbar: 'bold italic underline strikethrough print hr',
+    menubar: 'edit insert format',
+    toolbar: 'bold italic underline strikethrough superscript subscript h1 h2 h3 h4 h5 h6 cut paste removeformat remove print hr',
   }, []);
 
   const assertToolbarButtonPressed = (title: string) =>
@@ -108,5 +109,65 @@ describe('browser.tinymce.themes.silver.editor.core.SimpleControlsTest', () => {
         ]
       });
     }));
+  });
+
+  context('Noneditable root buttons', () => {
+    const testDisableButtonOnNoneditable = (title: string) => () => {
+      const editor = hook.editor();
+      editor.getBody().contentEditable = 'false';
+      editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
+      UiFinder.exists(SugarBody.body(), `[aria-label="${title}"][aria-disabled="true"]`);
+      TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
+      UiFinder.exists(SugarBody.body(), `[aria-label="${title}"][aria-disabled="false"]`);
+      editor.getBody().contentEditable = 'true';
+    };
+
+    it('TINY-9669: Disable bold on noneditable content', testDisableButtonOnNoneditable('Bold'));
+    it('TINY-9669: Disable italic on noneditable content', testDisableButtonOnNoneditable('Italic'));
+    it('TINY-9669: Disable underline on noneditable content', testDisableButtonOnNoneditable('Underline'));
+    it('TINY-9669: Disable strikethrough on noneditable content', testDisableButtonOnNoneditable('Strikethrough'));
+    it('TINY-9669: Disable superscript on noneditable content', testDisableButtonOnNoneditable('Superscript'));
+    it('TINY-9669: Disable subscript on noneditable content', testDisableButtonOnNoneditable('Subscript'));
+    it('TINY-9669: Disable h1 on noneditable content', testDisableButtonOnNoneditable('Heading 1'));
+    it('TINY-9669: Disable h2 on noneditable content', testDisableButtonOnNoneditable('Heading 2'));
+    it('TINY-9669: Disable h3 on noneditable content', testDisableButtonOnNoneditable('Heading 3'));
+    it('TINY-9669: Disable h4 on noneditable content', testDisableButtonOnNoneditable('Heading 4'));
+    it('TINY-9669: Disable h5 on noneditable content', testDisableButtonOnNoneditable('Heading 5'));
+    it('TINY-9669: Disable h6 on noneditable content', testDisableButtonOnNoneditable('Heading 6'));
+    it('TINY-9669: Disable cut on noneditable content', testDisableButtonOnNoneditable('Cut'));
+    it('TINY-9669: Disable paste on noneditable content', testDisableButtonOnNoneditable('Paste'));
+    it('TINY-9669: Disable removeformat on noneditable content', testDisableButtonOnNoneditable('Clear formatting'));
+    it('TINY-9669: Disable remove on noneditable content', testDisableButtonOnNoneditable('Remove'));
+    it('TINY-9669: Disable hr on noneditable content', testDisableButtonOnNoneditable('Horizontal line'));
+  });
+
+  context('Noneditable root menuitems', () => {
+    const testDisableMenuitemOnNoneditable = (menu: string, menuitem: string) => async () => {
+      const editor = hook.editor();
+      editor.getBody().contentEditable = 'false';
+      editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
+      TinyUiActions.clickOnMenu(editor, `button:contains("${menu}")`);
+      await TinyUiActions.pWaitForUi(editor, `[role="menu"] [title="${menuitem}"][aria-disabled="true"]`);
+      TinyUiActions.keystroke(editor, Keys.escape());
+      TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
+      TinyUiActions.clickOnMenu(editor, `button:contains("${menu}")`);
+      await TinyUiActions.pWaitForUi(editor, `[role="menu"] [title="${menuitem}"][aria-disabled="false"]`);
+      TinyUiActions.keystroke(editor, Keys.escape());
+      editor.getBody().contentEditable = 'true';
+    };
+
+    it('TINY-9669: Disable bold on noneditable content', testDisableMenuitemOnNoneditable('Format', 'Bold'));
+    it('TINY-9669: Disable italic on noneditable content', testDisableMenuitemOnNoneditable('Format', 'Italic'));
+    it('TINY-9669: Disable underline on noneditable content', testDisableMenuitemOnNoneditable('Format', 'Underline'));
+    it('TINY-9669: Disable strikethrough on noneditable content', testDisableMenuitemOnNoneditable('Format', 'Strikethrough'));
+    it('TINY-9669: Disable superscript on noneditable content', testDisableMenuitemOnNoneditable('Format', 'Superscript'));
+    it('TINY-9669: Disable subscript on noneditable content', testDisableMenuitemOnNoneditable('Format', 'Subscript'));
+    it('TINY-9669: Disable code on noneditable content', testDisableMenuitemOnNoneditable('Format', 'Code'));
+    it('TINY-9669: Disable removeformat on noneditable content', testDisableMenuitemOnNoneditable('Format', 'Clear formatting'));
+    it('TINY-9669: Disable cut on noneditable content', testDisableMenuitemOnNoneditable('Edit', 'Cut'));
+    it('TINY-9669: Disable paste on noneditable content', testDisableMenuitemOnNoneditable('Edit', 'Paste'));
+    it('TINY-9669: Disable hr on noneditable content', testDisableMenuitemOnNoneditable('Insert', 'Horizontal line'));
   });
 });
