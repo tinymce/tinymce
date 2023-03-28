@@ -17,32 +17,60 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ AccordionPlugin ]);
 
-  it('TINY-9730: Insert an accordion element into a single paragraph', () => {
-    const editor = hook.editor();
-    editor.setContent('<p>tiny</p>');
-    TinySelections.setCursor(editor, [ 0, 0 ], 'tiny'.length);
+  interface InsertAccordionTest {
+    initialContent: string;
+    initialCursor: [ number[], number ];
+    assertContent: string;
+    assertCursor: [ number[], number ];
+  };
+  const testInsertingAccordion = (editor: Editor, test: InsertAccordionTest): void => {
+    editor.setContent(test.initialContent);
+    TinySelections.setCursor(editor, ...test.initialCursor);
     editor.execCommand('InsertAccordion');
-    TinyAssertions.assertContent(
-      editor,
-      '<p>tiny</p><details class="mce-accordion"><summary class="mce-accordion-summary">Accordion summary...</summary>' +
-      '<div class="mce-accordion-body"><p>Accordion body...</p></div></details>'
-    );
+    TinyAssertions.assertContent(editor, test.assertContent);
     assert.equal(editor.selection.getNode().nodeName, 'SUMMARY');
-    TinyAssertions.assertCursor(editor, [ 1, 0 ], 1);
+    TinyAssertions.assertCursor(editor, ...test.assertCursor);
+  };
+
+  it('TINY-9730: Insert an accordion into a single paragraph', () => {
+    testInsertingAccordion(hook.editor(), {
+      initialContent: '<p>tiny</p>',
+      initialCursor: [ [ 0, 0 ], 'tiny'.length ],
+      assertContent: '<p>tiny</p><details class="mce-accordion"><summary class="mce-accordion-summary">Accordion summary...</summary>' +
+        '<div class="mce-accordion-body"><p>Accordion body...</p></div></details>',
+      assertCursor: [ [ 1, 0 ], 1 ],
+    });
   });
 
-  it('TINY-9730: Insert an accordion element into an empty paragraph', () => {
-    const editor = hook.editor();
-    editor.setContent('<p><br></p>');
-    TinySelections.setCursor(editor, [ 0, 0 ], 0);
-    editor.execCommand('InsertAccordion');
-    TinyAssertions.assertContent(
-      editor,
-      '<details class="mce-accordion"><summary class="mce-accordion-summary">Accordion summary...</summary>' +
-      '<div class="mce-accordion-body"><p>Accordion body...</p></div></details>'
-    );
-    assert.equal(editor.selection.getNode().nodeName, 'SUMMARY');
-    TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
+  it('TINY-9730: Insert an accordion into an empty paragraph', () => {
+    testInsertingAccordion(hook.editor(), {
+      initialContent: '<p><br></p>',
+      initialCursor: [ [ 0, 0 ], 0 ],
+      assertContent: '<details class="mce-accordion"><summary class="mce-accordion-summary">Accordion summary...</summary>' +
+        '<div class="mce-accordion-body"><p>Accordion body...</p></div></details>',
+      assertCursor: [ [ 0, 0 ], 1 ],
+    });
+  });
+
+  it('TINY-9730: Insert an accordion into a list item', () => {
+    testInsertingAccordion(hook.editor(), {
+      initialContent: '<ol><li>tiny</li></ol>',
+      initialCursor: [ [ 0, 0, 0 ], 'tiny'.length ],
+      assertContent: '<ol><li>tiny</li></ol><details class="mce-accordion"><summary class="mce-accordion-summary">Accordion summary...</summary>' +
+        '<div class="mce-accordion-body"><p>Accordion body...</p></div></details>',
+      assertCursor: [ [ 1, 0 ], 1 ],
+    });
+  });
+
+  it('TINY-9730: Insert an accordion into a table cell', () => {
+    testInsertingAccordion(hook.editor(), {
+      initialContent: '<table><colgroup><col></colgroup><tbody><tr><td>&nbsp;</td></tr></tbody></table>',
+      initialCursor: [ [ 0, 1, 0, 0, 0 ], 0 ],
+      assertContent: '<table><colgroup><col></colgroup><tbody><tr><td>' +
+        '<details class="mce-accordion"><summary class="mce-accordion-summary">Accordion summary...</summary>' +
+        '<div class="mce-accordion-body"><p>Accordion body...</p></div></details></td></tr></tbody></table>',
+      assertCursor: [ [ 0, 1, 0, 0, 0, 0 ], 1 ],
+    });
   });
 
   it('TINY-9730: Insert an accordion element inheriting the selected text', () => {
