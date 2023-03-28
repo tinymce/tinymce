@@ -193,5 +193,25 @@ describe('browser.tinymce.plugins.lists.NoneditableRootTest', () => {
       UiFinder.exists(SugarBody.body(), '[role="menuitem"][aria-disabled="true"]:contains("List properties...")');
       editor.getBody().contentEditable = 'true';
     });
+
+    it('TINY-9669: Disable numbered list button on noneditable content', () => {
+      withNoneditableRootEditor(hook.editor(), (editor) => {
+        editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
+        TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
+        UiFinder.exists(SugarBody.body(), '[aria-label="Numbered list"][aria-disabled="true"]');
+        TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
+        UiFinder.exists(SugarBody.body(), '[aria-label="Numbered list"][aria-disabled="false"]');
+      });
+    });
+
+    it('TINY-9669: Disable bullet list button on noneditable content', () => {
+      withNoneditableRootEditor(hook.editor(), (editor) => {
+        editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
+        TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
+        UiFinder.exists(SugarBody.body(), '[aria-label="Bullet list"][aria-disabled="true"]');
+        TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
+        UiFinder.exists(SugarBody.body(), '[aria-label="Bullet list"][aria-disabled="false"]');
+      });
+    });
   });
 });
