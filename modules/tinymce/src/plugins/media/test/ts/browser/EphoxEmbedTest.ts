@@ -83,22 +83,24 @@ describe('browser.tinymce.plugins.media.core.EphoxEmbedTest', () => {
     }, [ Plugin ], true);
 
     const responsiveEmbedData =
-      `<div style="left: 0px; width: 100%; height: 0px; position: relative; padding-bottom: 56.25%; max-width: 650px;"
-      data-ephox-embed-iri="https://www.youtube.com/watch?v=5auGeCM0knQ"><iframe style="top: 0; left: 0; width: 100%; height:
-      100%; position: absolute; border: 0;" src="https://www.youtube.com/embed/5auGeCM0knQ?rel=0" scrolling="no"
-      allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;"
-      allowfullscreen="allowfullscreen"></iframe></div>`;
+      `<div style="max-width: 650px;" data-ephox-embed-iri="https://www.youtube.com/watch?v=5auGeCM0knQ">
+      <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
+      <iframe style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;"
+      src="https://www.youtube.com/embed/5auGeCM0knQ?rel=0" scrolling="no" allow="accelerometer;
+      clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;"
+      allowfullscreen="allowfullscreen"></iframe></div></div>`;
 
     it('TINY-8714: Assert dimensions of responsive embed data', async () => {
       const editor = hook.editor();
       editor.setContent(responsiveEmbedData);
       TinySelections.select(editor, 'div', []);
       await Utils.pOpenDialog(editor);
-      await Utils.pAssertSourceValue(editor, 'https://www.youtube.com/watch?v=5auGeCM0knQ');
-      // Arbritary value, we don't know what's the exact value because of max-width and padding-bottom, making it responsive
-      // Width should be still 650
-      await Utils.pAssertHeightValueIsAbove(editor, '100');
-      await Utils.pAssertWidthValue(editor, '650');
+
+      const aspectRatio = 9 / 16;
+      const expectedWidth = 650;
+      const expectedHeight = Math.ceil(expectedWidth * aspectRatio);
+
+      await Utils.pAssertHeightAndWidth(editor, expectedHeight.toString(), expectedWidth.toString());
     });
   });
 });
