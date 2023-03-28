@@ -6,10 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 6.4.1 - 2023-03-29
+
 ### Fixed
-- Inline headers would not work in some situations when the editor was moved too far right horizontally. #TINY-9646
-- Tapping on `fontsizeinput` buttons was not working correctly. #TINY-9725
-- Reverted updated focus, active, and enabled colors of UI buttons for improved contrast against the UI color. #TINY-9176
+- Updated tests run against the Permanent Pen Premium plugin to correctly deal with a change in how TinyMCE generated blank lines in text output using <br> elements. #TINY-9741
+- When re-naming an Advanced Template Premium plugin template or category, the extant name now pre-populates the text-entry field, as expected. #TINY-9728
+- The `fontsizeinput` increase and decrease size buttons now work on TinyMCE mobile. #TINY-9725
+- Corrected the copyright year in all Premium plugin license headers. #TINY-9722
+- The TinyMCE editor toolbar is now accessible for all editor widths; it no longer collapses into an inaccessible vertical line at any presented editor width. #TINY-9646
+- Reverted the changes made, in TinyMCE 6.4.0, to UI button colors in focus, active, and enabled states. #TINY-9176
 
 ## 6.4.0 - 2023-03-15
 
