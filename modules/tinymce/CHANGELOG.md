@@ -6,10 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- New optional `defaultExpandedIds` and `onToggleExpand` options to the `tree` component config. #TINY-9653
+
 ### Fixed
+- Enabling or Disabling checkboxes would not set the correct classes and attributes. #TINY-4189
 - Table toolbar was visible even if the table was within a noneditable host element. #TINY-9664
 - Quickbar toolbars was shown for noneditable contents in a noneditable root. #TINY-9460
 - Show calculated height and width of media embed elements on media dialog shows, convert to iframe if the dimensions have changed. #TINY-8714
+- Inline alert in the "Search and Replace" dialog persisted when it wasn't necessary. #TINY-9704
 
 ## 6.4.0 - 2023-03-15
 
@@ -95,6 +100,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Opening a menu button in the footer of a dialog after a redial threw an error. #TINY-9686
 - After closing a view, the `more...` toolbar button disappeared if the editor had `toolbar_mode: 'sliding'` and the toolbar was opened. #TINY-9419
 - Inline dialogs would open partially off screen when the toolbar had a small width. #TINY-9588
+- Word count was inaccurate for documents with specific characters. #TINY-8122
 
 ## 6.3.2 - 2023-02-22
 

@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Improved
+- `Words.identify`, `TextZones.single` and `TextZones.range` now include words containing non-Latin characters. #TINY-9654
+
 ## 10.0.0 - 2022-03-03
 
 ### Changed
