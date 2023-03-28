@@ -1,6 +1,7 @@
 import { Arr, Optional, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
+import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
 
 const isCustomList = (list: HTMLElement): boolean =>
   /\btox\-/.test(list.className);
@@ -35,10 +36,23 @@ const isWithinNonEditableList = (editor: Editor, element: Element | null): boole
   return isWithinNonEditable(editor, parentList);
 };
 
+const setNodeChangeHandler = (editor: Editor, nodeChangeHandler: (e: NodeChangeEvent) => void): () => void => {
+  const initialNode = editor.selection.getNode();
+  // Set the initial state
+  nodeChangeHandler({
+    parents: editor.dom.getParents(initialNode),
+    element: initialNode
+  });
+  editor.on('NodeChange', nodeChangeHandler);
+  return () => editor.off('NodeChange', nodeChangeHandler);
+};
+
 export {
   isTableCellNode, // Exported for testing
   isListNode, // Exported for testing
   inList,
   getSelectedStyleType,
-  isWithinNonEditableList
+  isWithinNonEditableList,
+  setNodeChangeHandler
 };
+
