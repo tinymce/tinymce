@@ -8,7 +8,7 @@ const isNonRemovableContainer = (node: Node): boolean =>
 
 const validAncestorContainers =
   nonRemovableContainers.concat([ 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'UL', 'OL', 'TABLE', 'FIGURE', 'DETAILS', 'DL' ]);
-const isValidAncestorContainer = (node: Node): node is HTMLElement => 
+const isValidAncestorContainer = (node: Node): node is HTMLElement =>
   validAncestorContainers.includes(node.nodeName);
 
 const removeBr = (node: Node): void => {

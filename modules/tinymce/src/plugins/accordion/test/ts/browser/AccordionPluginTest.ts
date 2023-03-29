@@ -22,7 +22,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     initialCursor: [ number[], number ];
     assertContent: string;
     assertCursor: [ number[], number ];
-  };
+  }
   const testInsertingAccordion = (editor: Editor, test: InsertAccordionTest): void => {
     editor.setContent(test.initialContent);
     TinySelections.setCursor(editor, ...test.initialCursor);
@@ -35,41 +35,41 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
   it('TINY-9730: Insert an accordion into a single paragraph', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<p>tiny</p>',
-      initialCursor: [ [ 0, 0 ], 'tiny'.length ],
+      initialCursor: [[ 0, 0 ], 'tiny'.length ],
       assertContent: '<p>tiny</p><details class="mce-accordion"><summary class="mce-accordion-summary">Accordion summary...</summary>' +
         '<div class="mce-accordion-body"><p>Accordion body...</p></div></details>',
-      assertCursor: [ [ 1, 0 ], 1 ],
+      assertCursor: [[ 1, 0 ], 1 ],
     });
   });
 
   it('TINY-9730: Insert an accordion into an empty paragraph', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<p><br></p>',
-      initialCursor: [ [ 0, 0 ], 0 ],
+      initialCursor: [[ 0, 0 ], 0 ],
       assertContent: '<details class="mce-accordion"><summary class="mce-accordion-summary">Accordion summary...</summary>' +
         '<div class="mce-accordion-body"><p>Accordion body...</p></div></details>',
-      assertCursor: [ [ 0, 0 ], 1 ],
+      assertCursor: [[ 0, 0 ], 1 ],
     });
   });
 
   it('TINY-9730: Insert an accordion into a list item', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<ol><li>tiny</li></ol>',
-      initialCursor: [ [ 0, 0, 0 ], 'tiny'.length ],
+      initialCursor: [[ 0, 0, 0 ], 'tiny'.length ],
       assertContent: '<ol><li>tiny</li></ol><details class="mce-accordion"><summary class="mce-accordion-summary">Accordion summary...</summary>' +
         '<div class="mce-accordion-body"><p>Accordion body...</p></div></details>',
-      assertCursor: [ [ 1, 0 ], 1 ],
+      assertCursor: [[ 1, 0 ], 1 ],
     });
   });
 
   it('TINY-9730: Insert an accordion into a table cell', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<table><colgroup><col></colgroup><tbody><tr><td>&nbsp;</td></tr></tbody></table>',
-      initialCursor: [ [ 0, 1, 0, 0, 0 ], 0 ],
+      initialCursor: [[ 0, 1, 0, 0, 0 ], 0 ],
       assertContent: '<table><colgroup><col></colgroup><tbody><tr><td>' +
         '<details class="mce-accordion"><summary class="mce-accordion-summary">Accordion summary...</summary>' +
         '<div class="mce-accordion-body"><p>Accordion body...</p></div></details></td></tr></tbody></table>',
-      assertCursor: [ [ 0, 1, 0, 0, 0, 0 ], 1 ],
+      assertCursor: [[ 0, 1, 0, 0, 0, 0 ], 1 ],
     });
   });
 
@@ -94,7 +94,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     let isEventTriggered = false;
     editor.on('InsertAccordion', () => {
       isEventTriggered = true;
-    })
+    });
     editor.execCommand('InsertAccordion');
     assert.isTrue(isEventTriggered);
   });
