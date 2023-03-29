@@ -135,7 +135,6 @@
     display: flex;
     font-size: @font-size-base;
     justify-content: space-between;
-    max-height: calc(15vh - @pad-sm);
     padding: @dialog-header-padding;
     position: relative;
   }
@@ -231,7 +230,7 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    max-height: 650px; // TODO (verify max-height for dialogs)
+    max-height: min(650px, calc(100vh - 110px)); // TODO (verify max-height for dialogs)
     overflow: auto; //overflow controls all scrolling in the dialogs
     -webkit-overflow-scrolling: touch;
     padding: @dialog-body-padding;
@@ -364,7 +363,6 @@
     border-top: @dialog-footer-separator-border;
     display: flex;
     justify-content: space-between;
-    max-height: calc(15vh - (@pad-sm * 2));
     padding: @dialog-footer-padding;
   }
 
