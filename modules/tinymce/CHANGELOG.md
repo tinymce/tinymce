@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Fixed the mouse pointer style from a text cursor to a default arrow pointer when hovering over the tree dialog component items. #TINY-9692
+
 ## 6.4.1 - 2023-03-29
 
 ### Fixed
