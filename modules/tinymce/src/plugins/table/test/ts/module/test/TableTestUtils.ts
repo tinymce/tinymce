@@ -6,8 +6,8 @@
  */
 
 import { ApproxStructure, Assertions, Cursors, Mouse, StructAssert, UiFinder, Waiter } from '@ephox/agar';
-import { Obj } from '@ephox/katamari';
-import { Attribute, Checked, Class, SelectorFind, SugarBody, Value } from '@ephox/sugar';
+import { Arr, Obj } from '@ephox/katamari';
+import { Attribute, Checked, Class, Insert, SelectorFind, SugarBody, SugarElement, TextContent, Value } from '@ephox/sugar';
 import { TinyDom, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -234,6 +234,17 @@ const withNoneditableRootEditor = (editor: Editor, f: (editor: Editor) => void):
   editor.getBody().contentEditable = 'true';
 };
 
+const createRow = (cellContents: string[]): SugarElement<HTMLTableRowElement> => {
+  const tr = SugarElement.fromTag('tr');
+  Arr.each(cellContents, (content) => {
+    const td = SugarElement.fromTag('td');
+    TextContent.set(td, content);
+    Insert.append(tr, td);
+  });
+
+  return tr;
+};
+
 export {
   pAssertDialogPresence,
   pAssertListBoxValue,
@@ -249,5 +260,6 @@ export {
   pClickDialogButton,
   assertElementStructure,
   assertApproxElementStructure,
-  withNoneditableRootEditor
+  withNoneditableRootEditor,
+  createRow
 };

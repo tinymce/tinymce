@@ -128,7 +128,7 @@ export const getSelectionTargets = (editor: Editor): SelectionTargets => {
       targets.get().fold(() => {
         api.setEnabled(false);
       }, (targets) => {
-        api.setEnabled(!isDisabled(targets));
+        api.setEnabled(!isDisabled(targets) && editor.selection.isEditable());
       })
     );
 

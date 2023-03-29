@@ -1,7 +1,7 @@
 import { Clipboard } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
-import { Insert, SugarElement, SugarNode, TextContent, Traverse } from '@ephox/sugar';
+import { SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import { LegacyUnit, TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -9,6 +9,8 @@ import Editor from 'tinymce/core/api/Editor';
 import { TableEventData } from 'tinymce/core/api/EventTypes';
 import * as FakeClipboard from 'tinymce/plugins/table/api/Clipboard';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
+
+import * as TableTestUtils from '../module/test/TableTestUtils';
 
 describe('browser.tinymce.plugins.table.ClipboardTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -40,17 +42,6 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
     editor.dispatch('mouseup', { target: endElm, button: 0 } as unknown as MouseEvent);
 
     LegacyUnit.setSelection(editor, endElm, 0);
-  };
-
-  const createRow = (cellContents: string[]): SugarElement<HTMLTableRowElement> => {
-    const tr = SugarElement.fromTag('tr');
-    Arr.each(cellContents, (content) => {
-      const td = SugarElement.fromTag('td');
-      TextContent.set(td, content);
-      Insert.append(tr, td);
-    });
-
-    return tr;
   };
 
   it('TBA: selection.getContent with format equal to text', () => {
@@ -417,8 +408,8 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
     assert.isTrue(SugarNode.isTag('tr')(clipboardRows[0]));
 
     FakeClipboard.setRows(Optional.some(clipboardRows.concat([
-      createRow([ 'a', 'b' ]),
-      createRow([ 'c', 'd' ])
+      TableTestUtils.createRow([ 'a', 'b' ]),
+      TableTestUtils.createRow([ 'c', 'd' ])
     ])));
 
     LegacyUnit.setSelection(editor, 'tr:nth-child(2) td', 0);
@@ -542,8 +533,8 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
     assert.isTrue(SugarNode.isTag('td')(cells[0]));
 
     FakeClipboard.setColumns(Optional.some([
-      createRow([ 'a', 'b' ]),
-      createRow([ 'c', 'd' ])
+      TableTestUtils.createRow([ 'a', 'b' ]),
+      TableTestUtils.createRow([ 'c', 'd' ])
     ]));
 
     LegacyUnit.setSelection(editor, 'tr td:nth-child(2)', 0);
