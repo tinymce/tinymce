@@ -16,6 +16,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inline alert in the "Search and Replace" dialog persisted when it wasn't necessary. #TINY-9704
 - Context toolbars displayed the incorrect status for the `advlist` plugin buttons. #TINY-9680
 
+## 6.4.1 - 2023-03-29
+
+### Fixed
+- The `fontsizeinput` increase and decrease size buttons now work on TinyMCE mobile. #TINY-9725
+- The TinyMCE editor toolbar is now accessible for all editor widths; it no longer collapses into an inaccessible vertical line at any presented editor width. #TINY-9646
+- Reverted the changes made, in TinyMCE 6.4.0, to UI button colors in focus, active, and enabled states. #TINY-9176
+
 ## 6.4.0 - 2023-03-15
 
 ### Added

@@ -81,6 +81,9 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
   const makeStepperButton = (action: (focusBack: boolean) => void, title: string, tooltip: string, classes: string[]) => {
     const translatedTooltip = backstage.shared.providers.translate(tooltip);
     const altExecuting = Id.generate('altExecuting');
+
+    const onClick = () => action(true);
+
     return Button.sketch({
       dom: {
         tag: 'button',
@@ -100,14 +103,14 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
               action(false);
             }
           }),
-          AlloyEvents.run(NativeEvents.click(), (_comp, _se) => {
-            action(true);
-          })
+          AlloyEvents.run(NativeEvents.click(), onClick),
+          AlloyEvents.run(NativeEvents.touchend(), onClick)
         ])
       ]),
       eventOrder: {
         [NativeEvents.keydown()]: [ altExecuting, 'keying' ],
-        [NativeEvents.click()]: [ altExecuting, 'alloy.base.behaviour' ]
+        [NativeEvents.click()]: [ altExecuting, 'alloy.base.behaviour' ],
+        [NativeEvents.touchend()]: [ altExecuting, 'alloy.base.behaviour' ]
       }
     });
   };

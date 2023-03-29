@@ -14,27 +14,23 @@
 @collection-item-label-text-color: @text-color;
 @collection-item-label-text-transform: none;
 
-@collection-item-secondary-active-background-color: @menubar-select-active-background-color;
-
 @collection-item-label-disabled-text-color: fade(@collection-item-label-text-color, 50%);
 @collection-item-caret-disabled-text-color: fade(@collection-item-label-text-color, 50%);
 
-@collection-list-item-active-background-color: @hover-background-color;
-@collection-list-item-label-active-text-color: @active-text-color;
-@collection-list-item-enabled-background-color: @enabled-background-color;
-@collection-list-item-label-enabled-text-color: @enabled-text-color;
-@collection-list-item-table-background-color: contrast(@background-color, fade(@color-tint, 35), fade(@color-tint, 65));
+@collection-list-item-active-background-color: @toolbar-button-hover-background-color;
+@collection-list-item-label-active-text-color: contrast(@collection-list-item-active-background-color, @color-black, @color-white);
+@collection-list-item-enabled-background-color: @menu-background-color;
+@collection-list-item-label-enabled-text-color: contrast(@collection-list-item-enabled-background-color, @color-black, @color-white);
 
-@collection-toolbar-item-active-background-color: @hover-background-color;
-@collection-toolbar-item-label-active-text-color: @active-text-color;
-@collection-toolbar-item-enabled-background-color: @enabled-background-color;
-@collection-toolbar-item-enabled-active-background-color: @enabled-active-background-color;
-@collection-toolbar-item-label-enabled-text-color: @enabled-text-color;
+@collection-toolbar-item-active-background-color: @toolbar-button-hover-background-color;
+@collection-toolbar-item-label-active-text-color: contrast(@collection-toolbar-item-active-background-color, @color-black, @color-white);
+@collection-toolbar-item-enabled-background-color: @toolbar-button-enabled-background-color;
+@collection-toolbar-item-label-enabled-text-color: contrast(@collection-toolbar-item-enabled-background-color, @color-black, @color-white);
 
-@collection-grid-item-active-background-color: @hover-background-color;
-@collection-grid-item-label-active-text-color: @active-text-color;
-@collection-grid-item-enabled-background-color: @enabled-background-color;
-@collection-grid-item-label-enabled-text-color: @enabled-text-color;
+@collection-grid-item-active-background-color: @toolbar-button-hover-background-color;
+@collection-grid-item-label-active-text-color: contrast(@collection-grid-item-active-background-color, @color-black, @color-white);
+@collection-grid-item-enabled-background-color: @toolbar-button-enabled-background-color;
+@collection-grid-item-label-enabled-text-color: contrast(@collection-grid-item-enabled-background-color, @color-black, @color-white);
 
 @collection-item-list-icon-height: 24px;
 @collection-item-list-icon-width: 24px;
@@ -134,6 +130,12 @@
     padding: @pad-xs;
   }
 
+  // Note: Ensure "enabled" is before "active", as active styles should have a higher precedence
+  .tox-collection--list .tox-collection__item--enabled {
+    background-color: @collection-list-item-enabled-background-color;
+    color: @collection-list-item-label-enabled-text-color;
+  }
+
   .tox-collection--list .tox-collection__item--active {
     background-color: @collection-list-item-active-background-color;
   }
@@ -141,10 +143,6 @@
   .tox-collection--toolbar .tox-collection__item--enabled {
     background-color: @collection-toolbar-item-enabled-background-color;
     color: @collection-toolbar-item-label-enabled-text-color;
-
-    &.tox-collection__item--active {
-      background-color: @collection-toolbar-item-enabled-active-background-color;
-    }
   }
 
   .tox-collection--toolbar .tox-collection__item--active {
@@ -159,6 +157,10 @@
   .tox-collection--grid .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
     background-color: @collection-grid-item-active-background-color;
     color: @collection-grid-item-label-active-text-color;
+  }
+
+  .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+    color: @collection-list-item-label-active-text-color;
   }
 
   .tox-collection--toolbar .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
@@ -240,29 +242,6 @@
   // Tickable items that are not ticked and have an adjacent shortcut hide the check mark completely (gap is removed)
   .tox-collection--list .tox-collection__item:not(.tox-collection__item--enabled) .tox-collection__item-accessory + .tox-collection__item-checkmark {
     display: none;
-  }
-
-  .tox-collection--list .tox-fancymenuitem.tox-collection__item--active:not(.tox-collection__item--state-disabled) {
-    background-color: @collection-list-item-table-background-color;
-  }
-
-  // active menu item (when hovering)
-  .tox-collection--list:not(.tox-background-menu) .tox-collection__item.tox-collection__item--active:not(.tox-collection__item--state-disabled):not(.tox-fancymenuitem) {
-    color: @collection-list-item-label-active-text-color;
-
-    svg {
-      fill: @collection-list-item-label-active-text-color;
-    }
-
-    // Preserve text color for code inline format against grey background color
-    .tox-collection__item-label > * {
-      background-color: @collection-list-item-active-background-color !important;
-    }
-  }
-
-  // parent menu item when focus/hover is shifted to its children menu
-  .tox-collection--list.tox-background-menu .tox-collection__item.tox-collection__item--active:not(.tox-collection__item--state-disabled):not(.tox-fancymenuitem) {
-    background-color: @collection-item-secondary-active-background-color;
   }
 
   .tox-collection--horizontal {
@@ -368,7 +347,6 @@
   }
 
   // Make a space between all elements within a list item
-  /* stylelint-disable-next-line no-descending-specificity */
   .tox-collection--list .tox-collection__item > *:not(:first-child) {
     margin-left: @pad-sm;
   }
@@ -395,7 +373,6 @@
   }
 
   // Make a space between all elements within a list item
-  /* stylelint-disable-next-line no-descending-specificity */
   .tox-collection--list .tox-collection__item > *:not(:first-child) {
     margin-right: @pad-sm;
   }
@@ -418,8 +395,4 @@
   .tox-collection--horizontal .tox-collection__item-caret {
     margin-right: 4px;
   }
-}
-
-.tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) .tox-collection__item-accessory {
-  color: @collection-list-item-label-active-text-color;
 }
