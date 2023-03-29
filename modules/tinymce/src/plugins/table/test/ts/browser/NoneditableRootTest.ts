@@ -20,9 +20,19 @@ describe('browser.tinymce.plugins.table.NoneditableRootTest', () => {
     tablerowprops: 'Row properties',
     tablecutrow: 'Cut row',
     tablecopyrow: 'Copy row',
+    tablecaption: 'Table caption',
+    tablerowheader: 'Row header',
+    tablecolheader: 'Column header'
+  };
+  const menuButtonTableButtons = {
+    table: 'Table',
+    tablecellvalign: 'Vertical align',
+    tablecellborderwidth: 'Border width',
+    tablecellborderstyle: 'Border style',
+    tablecellbackgroundcolor: 'Background color',
+    tablecellbordercolor: 'Border color'
   };
   const specialTableButtons = {
-    table: 'Table',
     tablemergecells: 'Merge cells',
     tablesplitcells: 'Split cell',
     tablepasterowbefore: 'Paste row before',
@@ -48,7 +58,12 @@ describe('browser.tinymce.plugins.table.NoneditableRootTest', () => {
     tablecopycolumn: 'Copy column',
     tableinsertcolumnbefore: 'Insert column before',
     tableinsertcolumnafter: 'Insert column after',
-    inserttabledialog: 'Insert table'
+    inserttabledialog: 'Insert table',
+    tablecellvalign: 'Vertical align',
+    tablecellborderwidth: 'Border width',
+    tablecellborderstyle: 'Border style',
+    tablecellbackgroundcolor: 'Background color',
+    tablecellbordercolor: 'Border color'
   };
   const specialTableMenuItems = {
     inserttable: 'Table',
@@ -57,9 +72,9 @@ describe('browser.tinymce.plugins.table.NoneditableRootTest', () => {
     tablepasterowbefore: 'Paste row before',
     tablepasterowafter: 'Paste row after',
     tablepastecolumnbefore: 'Paste column before',
-    tablepastecolumnafter: 'Paste column after',
+    tablepastecolumnafter: 'Paste column after'
   };
-  const tableButtons = { ...simpleTableButtons, ...specialTableButtons };
+  const tableButtons = { ...simpleTableButtons, ...menuButtonTableButtons, ...specialTableButtons };
   const tableMenuItems = { ...simpleTableMenuItems, ...specialTableMenuItems };
   const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'table',
@@ -70,24 +85,20 @@ describe('browser.tinymce.plugins.table.NoneditableRootTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ], true);
 
-  const withNoneditableRootEditor = (editor: Editor, f: (editor: Editor) => void) => {
-    editor.getBody().contentEditable = 'false';
-    f(editor);
-    editor.getBody().contentEditable = 'true';
-  };
-
   context('Noneditable root buttons', () => {
-    const testDisableButtonOnNoneditable = (title: string) => () => {
+    const testDisableButtonOnNoneditable = (title: string, ariaDisabled = true) => () => {
       const editor = hook.editor();
+      const disabledSelector = ariaDisabled ? '[aria-disabled="true"]' : ':disabled';
+      const enabledSelector = ariaDisabled ? '[aria-disabled="false"]' : ':not(:disabled)';
       editor.getBody().contentEditable = 'false';
       editor.setContent(
         '<div><table><tbody><tr><td>Noneditable content</td></tr></tbody></table></div>' +
         '<div contenteditable="true"><table><tbody><tr><td>Editable content</td></tr></tbody></table></div>'
       );
       TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 2);
-      UiFinder.exists(SugarBody.body(), `[aria-label="${title}"][aria-disabled="true"]`);
+      UiFinder.exists(SugarBody.body(), `[aria-label="${title}"]${disabledSelector}`);
       TinySelections.setSelection(editor, [ 1, 0, 0, 0, 0, 0 ], 0, [ 1, 0, 0, 0, 0, 0 ], 2);
-      UiFinder.exists(SugarBody.body(), `[aria-label="${title}"][aria-disabled="false"]`);
+      UiFinder.exists(SugarBody.body(), `[aria-label="${title}"]${enabledSelector}`);
       editor.getBody().contentEditable = 'true';
     };
 
@@ -109,14 +120,8 @@ describe('browser.tinymce.plugins.table.NoneditableRootTest', () => {
       it(`TINY-9669: Disable ${key} on noneditable content`, testDisableButtonOnNoneditable(title));
     });
 
-    it('TINY-9669: Disable table button on noneditable content', () => {
-      withNoneditableRootEditor(hook.editor(), (editor) => {
-        editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
-        TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
-        UiFinder.exists(SugarBody.body(), '[aria-label="Table"]:disabled');
-        TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
-        UiFinder.exists(SugarBody.body(), '[aria-label="Table"]:not(:disabled)');
-      });
+    Obj.each(menuButtonTableButtons, (title, key) => {
+      it(`TINY-9669: Disable ${key} button on noneditable content`, () => testDisableButtonOnNoneditable(title, false));
     });
 
     it(`TINY-9669: Disable tablepastecolbefore on noneditable content`, testDisableColPasteButtonOnNoneditable('Paste column before'));
@@ -158,16 +163,16 @@ describe('browser.tinymce.plugins.table.NoneditableRootTest', () => {
     };
 
     const testDisableColPasteMenuItemOnNoneditable = (title: string) => {
-      return () => {
+      return async () => {
         FakeClipboard.setColumns(Optional.some([ TableTestUtils.createRow([ 'a' ]) ]));
-        testDisableMenuitemOnNoneditable(title)();
+        await testDisableMenuitemOnNoneditable(title)();
       };
     };
 
     const testDisableRowPasteMenuItemOnNoneditable = (title: string) => {
-      return () => {
+      return async () => {
         FakeClipboard.setRows(Optional.some([ TableTestUtils.createRow([ 'a' ]) ]));
-        testDisableMenuitemOnNoneditable(title)();
+        await testDisableMenuitemOnNoneditable(title)();
       };
     };
 
