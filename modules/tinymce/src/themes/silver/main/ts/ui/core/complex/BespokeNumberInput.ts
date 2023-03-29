@@ -86,6 +86,12 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
       Disabling.set(api.getComponent(), !editor.selection.isEditable());
     });
 
+    const onClick = (comp: AlloyComponent) => {
+      if (!Disabling.isDisabled(comp)) {
+        action(true);
+      }
+    };
+
     return Button.sketch({
       dom: {
         tag: 'button',
@@ -110,16 +116,14 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
               }
             }
           }),
-          AlloyEvents.run(NativeEvents.click(), (comp, _se) => {
-            if (!Disabling.isDisabled(comp)) {
-              action(true);
-            }
-          })
+          AlloyEvents.run(NativeEvents.click(), onClick),
+          AlloyEvents.run(NativeEvents.touchend(), onClick)
         ])
       ]),
       eventOrder: {
         [NativeEvents.keydown()]: [ altExecuting, 'keying' ],
-        [NativeEvents.click()]: [ altExecuting, 'alloy.base.behaviour' ]
+        [NativeEvents.click()]: [ altExecuting, 'alloy.base.behaviour' ],
+        [NativeEvents.touchend()]: [ altExecuting, 'alloy.base.behaviour' ]
       }
     });
   };

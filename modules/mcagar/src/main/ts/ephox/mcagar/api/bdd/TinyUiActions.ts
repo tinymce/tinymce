@@ -1,4 +1,4 @@
-import { Keyboard, Mouse, UiFinder } from '@ephox/agar';
+import { Keyboard, Mouse, Touch, UiFinder } from '@ephox/agar';
 import { Type } from '@ephox/katamari';
 import { SugarElement, SugarShadowDom } from '@ephox/sugar';
 
@@ -28,6 +28,14 @@ const clickOnToolbar = <T extends Element>(editor: Editor, selector: string): Su
   const container = getToolbarRoot(editor);
   const elem = UiFinder.findIn<T>(container, selector).getOrDie();
   Mouse.click(elem);
+  return elem;
+};
+
+const tapOnToolbar = <T extends Element>(editor: Editor, selector: string): SugarElement<T> => {
+  const container = getToolbarRoot(editor);
+  const elem = UiFinder.findIn<T>(container, selector).getOrDie();
+  Touch.touchStart(elem);
+  Touch.touchEnd(elem);
   return elem;
 };
 
@@ -97,6 +105,8 @@ export {
   clickOnToolbar,
   clickOnMenu,
   clickOnUi,
+
+  tapOnToolbar,
 
   submitDialog,
   cancelDialog,

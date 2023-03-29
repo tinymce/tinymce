@@ -36,6 +36,12 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
 
     TinyUiActions.clickOnToolbar(editor, '.tox-number-input .minus');
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 16px;">b</span>c</p>');
+
+    TinyUiActions.tapOnToolbar(editor, '.tox-number-input .plus');
+    TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 17px;">b</span>c</p>');
+
+    TinyUiActions.tapOnToolbar(editor, '.tox-number-input .minus');
+    TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 16px;">b</span>c</p>');
   });
 
   it('TINY-9429: should be possible to change the font size from the input', async () => {
