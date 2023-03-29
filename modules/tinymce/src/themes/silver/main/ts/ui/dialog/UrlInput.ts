@@ -24,7 +24,7 @@ type UrlInputSpec = Omit<Dialog.UrlInput, 'type'>;
 
 const getItems = (fileType: 'image' | 'media' | 'file', input: AlloyComponent, urlBackstage: UiFactoryBackstageForUrlInput) => {
   const urlInputValue = Representing.getValue(input);
-  const term = urlInputValue.meta.text !== undefined ? urlInputValue.meta.text : urlInputValue.value;
+  const term = urlInputValue?.meta?.text !== undefined ? urlInputValue.meta.text : urlInputValue.value;
   const info = urlBackstage.getLinkInformation();
   return info.fold(
     () => [],

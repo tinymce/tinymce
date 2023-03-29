@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- The `urlinput` dialog component would not open the typeahead dropdown when the input value was reset to an empty string. #TINY-9717
+
 ## 6.4.1 - 2023-03-29
 
 ### Fixed
