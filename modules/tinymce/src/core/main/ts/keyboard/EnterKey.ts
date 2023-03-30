@@ -1,4 +1,4 @@
-import { Fun, Optional } from '@ephox/katamari';
+import { Fun, Optional, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import Editor from '../api/Editor';
@@ -25,17 +25,29 @@ const handleEnterKeyEvent = (editor: Editor, event: EditorEvent<KeyboardEvent>) 
   });
 };
 
+const isCursorAfterHangulCharacter = (rng: Range): boolean => {
+  if (!rng.collapsed) {
+    return false;
+  }
+
+  const startContainer = rng.startContainer;
+  if (!NodeType.isText(startContainer)) {
+    return false;
+  } else {
+    const text = startContainer.textContent;
+    const index = rng.startOffset - 1;
+    return Type.isNonNullable(text) && index < text.length && text.charCodeAt(index) >= 0xAC00 && text.charCodeAt(index) <= 0xD7A3;
+  }
+};
+
 const setup = (editor: Editor): void => {
   let bookmark: Optional<Bookmark> = Optional.none();
   let shouldOverrideKeyup = false;
 
   const iOSSafariKeydownOverride = (editor: Editor): void => {
-    const rng = editor.selection.getRng();
-    if (rng.collapsed && NodeType.isText(rng.commonAncestorContainer)) {
-      bookmark = Optional.some(editor.selection.getBookmark());
-      editor.undoManager.add();
-      shouldOverrideKeyup = true;
-    }
+    bookmark = Optional.some(editor.selection.getBookmark());
+    editor.undoManager.add();
+    shouldOverrideKeyup = true;
   };
 
   const iOSSafariKeyupOverride = (editor: Editor, event: EditorEvent<KeyboardEvent>): void => {
@@ -48,7 +60,7 @@ const setup = (editor: Editor): void => {
 
   editor.on('keydown', (event: EditorEvent<KeyboardEvent>) => {
     if (event.keyCode === VK.ENTER) {
-      if (isIOSSafari) {
+      if (isIOSSafari && isCursorAfterHangulCharacter(editor.selection.getRng())) {
         iOSSafariKeydownOverride(editor);
       } else {
         handleEnterKeyEvent(editor, event);
