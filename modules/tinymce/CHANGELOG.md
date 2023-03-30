@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Quickbar toolbars was shown for noneditable contents in a noneditable root. #TINY-9460
 - Inline alert in the "Search and Replace" dialog persisted when it wasn't necessary. #TINY-9704
 - Context toolbars displayed the incorrect status for the `advlist` plugin buttons. #TINY-9680
-- Directionality commands no longer applies to contents in elements with a `contenteditable="false"` attribute. #TINY-9662
+- Directionality commands was setting the `dir` attribute on elements within a noneditable root. #TINY-9662
 
 ## 6.4.1 - 2023-03-29
 
