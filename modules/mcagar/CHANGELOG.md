@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ### Added
-- Added `TinyState` module that contains transational functions for editor states.
+- Added `TinyState` module that contains transactional functions for editor states.
 
 ## 8.3.0 - 2023-03-15
 
