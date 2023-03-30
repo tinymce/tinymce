@@ -1,7 +1,7 @@
 import { UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
-import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
@@ -23,15 +23,9 @@ describe('browser.tinymce.plugins.lists.NoneditableRootTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ], true);
 
-  const withNoneditableRootEditor = (editor: Editor, f: (editor: Editor) => void) => {
-    editor.getBody().contentEditable = 'false';
-    f(editor);
-    editor.getBody().contentEditable = 'true';
-  };
-
   context('Commands', () => {
     const testNoopListCommand = (testCase: CommandTestCase) => () => {
-      withNoneditableRootEditor(hook.editor(), (editor) => {
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
         editor.setContent(testCase.input);
         TinySelections.setCursor(editor, testCase.path, testCase.offset);
         editor.execCommand(testCase.cmd, false, testCase.args ?? null);
@@ -147,7 +141,7 @@ describe('browser.tinymce.plugins.lists.NoneditableRootTest', () => {
 
     context('List props', () => {
       it('TINY-9458: mceListProps command should be a noop', () => {
-        withNoneditableRootEditor(hook.editor(), (editor) => {
+        TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
           editor.execCommand('mceListProps');
           UiFinder.notExists(SugarBody.body(), '.tox-dialog');
         });
@@ -163,7 +157,7 @@ describe('browser.tinymce.plugins.lists.NoneditableRootTest', () => {
     };
 
     it('TINY-9458: List buttons numlist/bullist should be disabled', () => {
-      withNoneditableRootEditor(hook.editor(), (editor) => {
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
         setupEditor(editor);
 
         UiFinder.exists(SugarBody.body(), 'button[title="Numbered list"][aria-disabled="true"]');
@@ -172,7 +166,7 @@ describe('browser.tinymce.plugins.lists.NoneditableRootTest', () => {
     });
 
     it('TINY-9458: Outdent/indent buttons should be noop', () => {
-      withNoneditableRootEditor(hook.editor(), (editor) => {
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
         setupEditor(editor);
 
         TinyUiActions.clickOnToolbar(editor, 'button[title="Decrease indent"]');
@@ -184,18 +178,16 @@ describe('browser.tinymce.plugins.lists.NoneditableRootTest', () => {
     });
 
     it('TINY-9458: Context menu list properties should be disabled', async () => {
-      const editor = hook.editor();
+      await TinyState.withNoneditableRootEditorAsync(hook.editor(), async (editor) => {
+        setupEditor(editor);
 
-      setupEditor(editor);
-
-      editor.getBody().contentEditable = 'false';
-      await TinyUiActions.pTriggerContextMenu(editor, 'li', '.tox-silver-sink [role="menuitem"]:contains("List properties...")');
-      UiFinder.exists(SugarBody.body(), '[role="menuitem"][aria-disabled="true"]:contains("List properties...")');
-      editor.getBody().contentEditable = 'true';
+        await TinyUiActions.pTriggerContextMenu(editor, 'li', '.tox-silver-sink [role="menuitem"]:contains("List properties...")');
+        UiFinder.exists(SugarBody.body(), '[role="menuitem"][aria-disabled="true"]:contains("List properties...")');
+      });
     });
 
     it('TINY-9669: Disable numbered list button on noneditable content', () => {
-      withNoneditableRootEditor(hook.editor(), (editor) => {
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
         editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
         TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
         UiFinder.exists(SugarBody.body(), '[aria-label="Numbered list"][aria-disabled="true"]');
@@ -205,7 +197,7 @@ describe('browser.tinymce.plugins.lists.NoneditableRootTest', () => {
     });
 
     it('TINY-9669: Disable bullet list button on noneditable content', () => {
-      withNoneditableRootEditor(hook.editor(), (editor) => {
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
         editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
         TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
         UiFinder.exists(SugarBody.body(), '[aria-label="Bullet list"][aria-disabled="true"]');

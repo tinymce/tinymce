@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, UiFinde
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
-import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -323,14 +323,13 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
 
   context('Noneditable root', () => {
     const testDisableOnNoneditable = (title: string) => () => {
-      const editor = hook.editor();
-      editor.getBody().contentEditable = 'false';
-      editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
-      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
-      UiFinder.exists(SugarBody.body(), `[aria-label="${title}"]:disabled`);
-      TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
-      UiFinder.exists(SugarBody.body(), `[aria-label="${title}"]:not(:disabled)`);
-      editor.getBody().contentEditable = 'true';
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+        editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
+        TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
+        UiFinder.exists(SugarBody.body(), `[aria-label="${title}"]:disabled`);
+        TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
+        UiFinder.exists(SugarBody.body(), `[aria-label="${title}"]:not(:disabled)`);
+      });
     };
 
     it('TINY-9669: Disable align on noneditable content', testDisableOnNoneditable('Align'));

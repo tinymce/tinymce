@@ -228,12 +228,6 @@ const createTableChildren = (s: ApproxStructure.StructApi, str: ApproxStructure.
   return withColGroups ? [ columns, tbody ] : [ tbody ];
 };
 
-const withNoneditableRootEditor = (editor: Editor, f: (editor: Editor) => void): void => {
-  editor.getBody().contentEditable = 'false';
-  f(editor);
-  editor.getBody().contentEditable = 'true';
-};
-
 const createRow = (cellContents: string[]): SugarElement<HTMLTableRowElement> => {
   const tr = SugarElement.fromTag('tr');
   Arr.each(cellContents, (content) => {
@@ -260,6 +254,5 @@ export {
   pClickDialogButton,
   assertElementStructure,
   assertApproxElementStructure,
-  withNoneditableRootEditor,
   createRow
 };

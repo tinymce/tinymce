@@ -1,7 +1,7 @@
 import { ApproxStructure, Keys, UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
-import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -113,14 +113,13 @@ describe('browser.tinymce.themes.silver.editor.core.SimpleControlsTest', () => {
 
   context('Noneditable root buttons', () => {
     const testDisableButtonOnNoneditable = (title: string) => () => {
-      const editor = hook.editor();
-      editor.getBody().contentEditable = 'false';
-      editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
-      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
-      UiFinder.exists(SugarBody.body(), `[aria-label="${title}"][aria-disabled="true"]`);
-      TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
-      UiFinder.exists(SugarBody.body(), `[aria-label="${title}"][aria-disabled="false"]`);
-      editor.getBody().contentEditable = 'true';
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+        editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
+        TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
+        UiFinder.exists(SugarBody.body(), `[aria-label="${title}"][aria-disabled="true"]`);
+        TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
+        UiFinder.exists(SugarBody.body(), `[aria-label="${title}"][aria-disabled="false"]`);
+      });
     };
 
     it('TINY-9669: Disable bold on noneditable content', testDisableButtonOnNoneditable('Bold'));
@@ -144,18 +143,17 @@ describe('browser.tinymce.themes.silver.editor.core.SimpleControlsTest', () => {
 
   context('Noneditable root menuitems', () => {
     const testDisableMenuitemOnNoneditable = (menu: string, menuitem: string) => async () => {
-      const editor = hook.editor();
-      editor.getBody().contentEditable = 'false';
-      editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
-      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
-      TinyUiActions.clickOnMenu(editor, `button:contains("${menu}")`);
-      await TinyUiActions.pWaitForUi(editor, `[role="menu"] [title="${menuitem}"][aria-disabled="true"]`);
-      TinyUiActions.keystroke(editor, Keys.escape());
-      TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
-      TinyUiActions.clickOnMenu(editor, `button:contains("${menu}")`);
-      await TinyUiActions.pWaitForUi(editor, `[role="menu"] [title="${menuitem}"][aria-disabled="false"]`);
-      TinyUiActions.keystroke(editor, Keys.escape());
-      editor.getBody().contentEditable = 'true';
+      await TinyState.withNoneditableRootEditorAsync(hook.editor(), async (editor) => {
+        editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
+        TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
+        TinyUiActions.clickOnMenu(editor, `button:contains("${menu}")`);
+        await TinyUiActions.pWaitForUi(editor, `[role="menu"] [title="${menuitem}"][aria-disabled="true"]`);
+        TinyUiActions.keystroke(editor, Keys.escape());
+        TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
+        TinyUiActions.clickOnMenu(editor, `button:contains("${menu}")`);
+        await TinyUiActions.pWaitForUi(editor, `[role="menu"] [title="${menuitem}"][aria-disabled="false"]`);
+        TinyUiActions.keystroke(editor, Keys.escape());
+      });
     };
 
     it('TINY-9669: Disable bold on noneditable content', testDisableMenuitemOnNoneditable('Format', 'Bold'));

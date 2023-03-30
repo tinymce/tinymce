@@ -1,7 +1,7 @@
 import { Keys, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
-import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/emoticons/Plugin';
@@ -13,14 +13,8 @@ describe('browser.tinymce.plugins.emoticons.NoneditableRootTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ], true);
 
-  const withNoneditableRootEditor = (editor: Editor, f: (editor: Editor) => void) => {
-    editor.getBody().contentEditable = 'false';
-    f(editor);
-    editor.getBody().contentEditable = 'true';
-  };
-
   it('TINY-9669: Disable emoticons button on noneditable content', () => {
-    withNoneditableRootEditor(hook.editor(), (editor) => {
+    TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
       editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
       UiFinder.exists(SugarBody.body(), '[aria-label="Emojis"][aria-disabled="true"]');
@@ -30,18 +24,17 @@ describe('browser.tinymce.plugins.emoticons.NoneditableRootTest', () => {
   });
 
   it('TINY-9669: Disable emoticons menuitem on noneditable content', async () => {
-    const editor = hook.editor();
-    editor.getBody().contentEditable = 'false';
-    editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
-    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
-    TinyUiActions.clickOnMenu(editor, 'button:contains("Insert")');
-    await TinyUiActions.pWaitForUi(editor, '[role="menuitem"][title="Emojis..."][aria-disabled="true"]');
-    TinyUiActions.keystroke(editor, Keys.escape());
-    TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
-    TinyUiActions.clickOnMenu(editor, 'button:contains("Insert")');
-    await TinyUiActions.pWaitForUi(editor, '[role="menuitem"][title="Emojis..."][aria-disabled="false"]');
-    TinyUiActions.keystroke(editor, Keys.escape());
-    editor.getBody().contentEditable = 'true';
+    await TinyState.withNoneditableRootEditorAsync(hook.editor(), async (editor) => {
+      editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
+      TinyUiActions.clickOnMenu(editor, 'button:contains("Insert")');
+      await TinyUiActions.pWaitForUi(editor, '[role="menuitem"][title="Emojis..."][aria-disabled="true"]');
+      TinyUiActions.keystroke(editor, Keys.escape());
+      TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
+      TinyUiActions.clickOnMenu(editor, 'button:contains("Insert")');
+      await TinyUiActions.pWaitForUi(editor, '[role="menuitem"][title="Emojis..."][aria-disabled="false"]');
+      TinyUiActions.keystroke(editor, Keys.escape());
+    });
   });
 });
 

@@ -1,6 +1,6 @@
 import { ApproxStructure } from '@ephox/agar';
 import { after, before, context, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
@@ -107,24 +107,22 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     });
 
     it('TINY-9461: should not split editing host in noneditable root', () => {
-      const editor = hook.editor();
-      const initialContent = '<p contenteditable="true">ab</p>';
-      editor.getBody().contentEditable = 'false';
-      editor.setContent(initialContent);
-      TinySelections.setCursor(editor, [ 0, 0 ], 1);
-      insertNewline(editor, { });
-      TinyAssertions.assertContent(editor, initialContent);
-      editor.getBody().contentEditable = 'true';
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+        const initialContent = '<p contenteditable="true">ab</p>';
+        editor.setContent(initialContent);
+        TinySelections.setCursor(editor, [ 0, 0 ], 1);
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, initialContent);
+      });
     });
 
     it('TINY-9461: should wrap div contents in paragraph and split inner paragraph in a div editing host inside a noneditable root', () => {
-      const editor = hook.editor();
-      editor.getBody().contentEditable = 'false';
-      editor.setContent('<div contenteditable="true">ab</div>');
-      TinySelections.setCursor(editor, [ 0, 0 ], 1);
-      insertNewline(editor, { });
-      TinyAssertions.assertContent(editor, '<div contenteditable="true"><p>a</p><p>b</p></div>');
-      editor.getBody().contentEditable = 'true';
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+        editor.setContent('<div contenteditable="true">ab</div>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 1);
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<div contenteditable="true"><p>a</p><p>b</p></div>');
+      });
     });
 
     it('TINY-9461: should not split editing host', () => {
@@ -137,13 +135,12 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     });
 
     it('TINY-9461: should wrap div contents in paragraph and split inner paragraph in a div editing host', () => {
-      const editor = hook.editor();
-      editor.getBody().contentEditable = 'false';
-      editor.setContent('<div contenteditable="false"><div contenteditable="true">ab</div></div>');
-      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
-      insertNewline(editor, { });
-      TinyAssertions.assertContent(editor, '<div contenteditable="false"><div contenteditable="true"><p>a</p><p>b</p></div></div>');
-      editor.getBody().contentEditable = 'true';
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+        editor.setContent('<div contenteditable="false"><div contenteditable="true">ab</div></div>');
+        TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<div contenteditable="false"><div contenteditable="true"><p>a</p><p>b</p></div></div>');
+      });
     });
   });
 

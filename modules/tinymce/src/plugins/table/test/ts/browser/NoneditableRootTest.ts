@@ -2,7 +2,7 @@ import { Keys, UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Obj, Optional } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
-import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as FakeClipboard from 'tinymce/plugins/table/api/Clipboard';
@@ -87,19 +87,18 @@ describe('browser.tinymce.plugins.table.NoneditableRootTest', () => {
 
   context('Noneditable root buttons', () => {
     const testDisableButtonOnNoneditable = (title: string, ariaDisabled = true) => () => {
-      const editor = hook.editor();
-      const disabledSelector = ariaDisabled ? '[aria-disabled="true"]' : ':disabled';
-      const enabledSelector = ariaDisabled ? '[aria-disabled="false"]' : ':not(:disabled)';
-      editor.getBody().contentEditable = 'false';
-      editor.setContent(
-        '<div><table><tbody><tr><td>Noneditable content</td></tr></tbody></table></div>' +
-        '<div contenteditable="true"><table><tbody><tr><td>Editable content</td></tr></tbody></table></div>'
-      );
-      TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 2);
-      UiFinder.exists(SugarBody.body(), `[aria-label="${title}"]${disabledSelector}`);
-      TinySelections.setSelection(editor, [ 1, 0, 0, 0, 0, 0 ], 0, [ 1, 0, 0, 0, 0, 0 ], 2);
-      UiFinder.exists(SugarBody.body(), `[aria-label="${title}"]${enabledSelector}`);
-      editor.getBody().contentEditable = 'true';
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+        const disabledSelector = ariaDisabled ? '[aria-disabled="true"]' : ':disabled';
+        const enabledSelector = ariaDisabled ? '[aria-disabled="false"]' : ':not(:disabled)';
+        editor.setContent(
+          '<div><table><tbody><tr><td>Noneditable content</td></tr></tbody></table></div>' +
+          '<div contenteditable="true"><table><tbody><tr><td>Editable content</td></tr></tbody></table></div>'
+        );
+        TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 2);
+        UiFinder.exists(SugarBody.body(), `[aria-label="${title}"]${disabledSelector}`);
+        TinySelections.setSelection(editor, [ 1, 0, 0, 0, 0, 0 ], 0, [ 1, 0, 0, 0, 0, 0 ], 2);
+        UiFinder.exists(SugarBody.body(), `[aria-label="${title}"]${enabledSelector}`);
+      });
     };
 
     const testDisableColPasteButtonOnNoneditable = (title: string) => {
@@ -130,36 +129,34 @@ describe('browser.tinymce.plugins.table.NoneditableRootTest', () => {
     it(`TINY-9669: Disable tablepasterowafter on noneditable content`, testDisableRowPasteButtonOnNoneditable('Paste row after'));
 
     it('TINY-9669: Disable tablesplitcells on noneditable content', () => {
-      const editor = hook.editor();
-      const title = 'Split cell';
-      editor.getBody().contentEditable = 'false';
-      const table = '<table><tbody><tr><td colspan="2">A</td></tr><tr><td>A</td><td>B</td></tr></tbody></table></div>';
-      editor.setContent(`<div>${table}</div><div contenteditable="true">${table}</div>`);
-      TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 1);
-      UiFinder.exists(SugarBody.body(), `[aria-label="${title}"][aria-disabled="true"]`);
-      TinySelections.setSelection(editor, [ 1, 0, 0, 0, 0, 0 ], 0, [ 1, 0, 0, 0, 0, 0 ], 1);
-      UiFinder.exists(SugarBody.body(), `[aria-label="${title}"][aria-disabled="false"]`);
-      editor.getBody().contentEditable = 'true';
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+        const title = 'Split cell';
+        const table = '<table><tbody><tr><td colspan="2">A</td></tr><tr><td>A</td><td>B</td></tr></tbody></table></div>';
+        editor.setContent(`<div>${table}</div><div contenteditable="true">${table}</div>`);
+        TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 1);
+        UiFinder.exists(SugarBody.body(), `[aria-label="${title}"][aria-disabled="true"]`);
+        TinySelections.setSelection(editor, [ 1, 0, 0, 0, 0, 0 ], 0, [ 1, 0, 0, 0, 0, 0 ], 1);
+        UiFinder.exists(SugarBody.body(), `[aria-label="${title}"][aria-disabled="false"]`);
+      });
     });
   });
 
   context('Noneditable root menuitems', () => {
     const testDisableMenuitemOnNoneditable = (menuitem: string) => async () => {
-      const editor = hook.editor();
-      editor.getBody().contentEditable = 'false';
-      editor.setContent(
-        '<div><table><tbody><tr><td>Noneditable content</td></tr></tbody></table></div>' +
-        '<div contenteditable="true"><table><tbody><tr><td>Editable content</td></tr></tbody></table></div>'
-      );
-      TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 2);
-      TinyUiActions.clickOnMenu(editor, 'button:contains("Table")');
-      await TinyUiActions.pWaitForUi(editor, `[role="menu"] [title="${menuitem}"][aria-disabled="true"]`);
-      TinyUiActions.keystroke(editor, Keys.escape());
-      TinySelections.setSelection(editor, [ 1, 0, 0, 0, 0, 0 ], 0, [ 1, 0, 0, 0, 0, 0 ], 2);
-      TinyUiActions.clickOnMenu(editor, 'button:contains("Table")');
-      await TinyUiActions.pWaitForUi(editor, `[role="menu"] [title="${menuitem}"][aria-disabled="false"]`);
-      TinyUiActions.keystroke(editor, Keys.escape());
-      editor.getBody().contentEditable = 'true';
+      await TinyState.withNoneditableRootEditorAsync(hook.editor(), async (editor) => {
+        editor.setContent(
+          '<div><table><tbody><tr><td>Noneditable content</td></tr></tbody></table></div>' +
+          '<div contenteditable="true"><table><tbody><tr><td>Editable content</td></tr></tbody></table></div>'
+        );
+        TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 2);
+        TinyUiActions.clickOnMenu(editor, 'button:contains("Table")');
+        await TinyUiActions.pWaitForUi(editor, `[role="menu"] [title="${menuitem}"][aria-disabled="true"]`);
+        TinyUiActions.keystroke(editor, Keys.escape());
+        TinySelections.setSelection(editor, [ 1, 0, 0, 0, 0, 0 ], 0, [ 1, 0, 0, 0, 0, 0 ], 2);
+        TinyUiActions.clickOnMenu(editor, 'button:contains("Table")');
+        await TinyUiActions.pWaitForUi(editor, `[role="menu"] [title="${menuitem}"][aria-disabled="false"]`);
+        TinyUiActions.keystroke(editor, Keys.escape());
+      });
     };
 
     const testDisableColPasteMenuItemOnNoneditable = (title: string) => {
@@ -186,19 +183,18 @@ describe('browser.tinymce.plugins.table.NoneditableRootTest', () => {
     it(`TINY-9669: Disable tablepasterowafter on noneditable content`, testDisableRowPasteMenuItemOnNoneditable('Paste row after'));
 
     it('TINY-9669: Disable tablesplitcells on noneditable content', async () => {
-      const editor = hook.editor();
-      editor.getBody().contentEditable = 'false';
-      const table = '<table><tbody><tr><td colspan="2">A</td></tr><tr><td>A</td><td>B</td></tr></tbody></table></div>';
-      editor.setContent(`<div>${table}</div><div contenteditable="true">${table}</div>`);
-      TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 1);
-      TinyUiActions.clickOnMenu(editor, 'button:contains("Table")');
-      await TinyUiActions.pWaitForUi(editor, `[role="menu"] [title="Split cell"][aria-disabled="true"]`);
-      TinyUiActions.keystroke(editor, Keys.escape());
-      TinySelections.setSelection(editor, [ 1, 0, 0, 0, 0, 0 ], 0, [ 1, 0, 0, 0, 0, 0 ], 1);
-      TinyUiActions.clickOnMenu(editor, 'button:contains("Table")');
-      await TinyUiActions.pWaitForUi(editor, `[role="menu"] [title="Split cell"][aria-disabled="false"]`);
-      TinyUiActions.keystroke(editor, Keys.escape());
-      editor.getBody().contentEditable = 'true';
+      await TinyState.withNoneditableRootEditorAsync(hook.editor(), async (editor) => {
+        const table = '<table><tbody><tr><td colspan="2">A</td></tr><tr><td>A</td><td>B</td></tr></tbody></table></div>';
+        editor.setContent(`<div>${table}</div><div contenteditable="true">${table}</div>`);
+        TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 1);
+        TinyUiActions.clickOnMenu(editor, 'button:contains("Table")');
+        await TinyUiActions.pWaitForUi(editor, `[role="menu"] [title="Split cell"][aria-disabled="true"]`);
+        TinyUiActions.keystroke(editor, Keys.escape());
+        TinySelections.setSelection(editor, [ 1, 0, 0, 0, 0, 0 ], 0, [ 1, 0, 0, 0, 0, 0 ], 1);
+        TinyUiActions.clickOnMenu(editor, 'button:contains("Table")');
+        await TinyUiActions.pWaitForUi(editor, `[role="menu"] [title="Split cell"][aria-disabled="false"]`);
+        TinyUiActions.keystroke(editor, Keys.escape());
+      });
     });
   });
 });
