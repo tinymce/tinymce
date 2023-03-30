@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - The `urlinput` dialog component would not open the typeahead dropdown when the input value was reset to an empty string. #TINY-9717
+- Fixed the mouse pointer style from a text cursor to a default arrow pointer when hovering over the tree dialog component items. #TINY-9692
 
 ## 6.4.1 - 2023-03-29
 
