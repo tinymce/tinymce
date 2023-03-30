@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New optional `defaultExpandedIds` and `onToggleExpand` options to the `tree` component config. #TINY-9653
 
 ### Improved
-- Toolbar buttons and menu items that couldn't be applied to the current noneditable selection was not disabled. #TINY-9669
+- Toolbar buttons and menu items were not disabled when they couldn't be used on noneditable content. #TINY-9669
 
 ### Fixed
 - Enabling or Disabling checkboxes would not set the correct classes and attributes. #TINY-4189
