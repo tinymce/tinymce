@@ -26,6 +26,7 @@ interface RenderLeafLabelProps extends RenderItemProps {
   visible: boolean;
   treeId: string;
   onLeafAction: OnLeafAction;
+  selectedId: Optional<string>;
 }
 
 interface RenderDirectoryProps extends RenderItemProps {
@@ -34,13 +35,13 @@ interface RenderDirectoryProps extends RenderItemProps {
   treeId: string;
   onLeafAction: OnLeafAction;
   expandedIds: string[];
+  selectedId: Optional<string>;
 }
 
 interface RenderDirectoryLabelProps extends RenderItemProps {
   directory: Dialog.Directory;
   visible: boolean;
   noChildren: boolean;
-  expandedIds: string[];
 }
 
 interface RenderDirectoryChildrenProps extends RenderItemProps {
@@ -49,6 +50,7 @@ interface RenderDirectoryChildrenProps extends RenderItemProps {
   treeId: string;
   onLeafAction: OnLeafAction;
   expandedIds: string[];
+  selectedId: Optional<string>;
 }
 
 const renderLabel = (text: string ): SimpleSpec => ({
@@ -72,6 +74,7 @@ const renderLeafLabel = ({
   onLeafAction,
   visible,
   treeId,
+  selectedId,
   backstage
 }: RenderLeafLabelProps): SimpleSpec => {
   const internalMenuButton = leaf.menu.map((btn) => renderMenuButton(btn, 'tox-mbtn', backstage, Optional.none(), visible));
@@ -118,6 +121,11 @@ const renderLeafLabel = ({
         }
       }),
       AddEventsBehaviour.config(leafLabelEventsId, [
+        AlloyEvents.runOnAttached((comp, _se) => {
+          selectedId.each((id) => {
+            (id === leaf.id ? Toggling.on : Toggling.off)(comp);
+          });
+        }),
         AlloyEvents.run<EventArgs<KeyboardEvent>>(NativeEvents.keydown(), (comp, se) => {
           const isLeftArrowKey = se.event.raw.code === 'ArrowLeft';
           const isRightArrowKey = se.event.raw.code === 'ArrowRight';
@@ -158,7 +166,6 @@ const renderDirectoryLabel = ({
   directory,
   visible,
   noChildren,
-  expandedIds: expandedIds,
   backstage
 }: RenderDirectoryLabelProps): SimpleSpec => {
   const internalMenuButton = directory.menu.map((btn) => renderMenuButton(btn, 'tox-mbtn', backstage, Optional.none()));
@@ -177,7 +184,7 @@ const renderDirectoryLabel = ({
   internalMenuButton.each((btn) => {
     components.push(btn);
   });
-  const expandChildren = (button: AlloyComponent) => {
+  const toggleExpandChildren = (button: AlloyComponent) => {
     SelectorFind.ancestor(button.element, '.tox-tree--directory').each((directoryEle) => {
       button.getSystem().getByDom(directoryEle).each((directoryComp) => {
         const willExpand = !Toggling.isOn(directoryComp);
@@ -192,7 +199,7 @@ const renderDirectoryLabel = ({
       classes: [ 'tox-tree--directory__label', 'tox-trbtn' ].concat( visible ? [ 'tox-tree--directory__label--visible' ] : [] ),
     },
     components,
-    action: expandChildren,
+    action: toggleExpandChildren,
     eventOrder: {
       [NativeEvents.keydown()]: [
         directoryLabelEventsId,
@@ -202,16 +209,6 @@ const renderDirectoryLabel = ({
     buttonBehaviours: Behaviour.derive([
       ...(visible ? [ Tabstopping.config({}) ] : []),
       AddEventsBehaviour.config(directoryLabelEventsId, [
-        AlloyEvents.runOnAttached((button, _se) => {
-          const dirExpanded = expandedIds.includes(directory.id);
-          if (dirExpanded) {
-            SelectorFind.ancestor(button.element, '.tox-tree--directory').each((directoryEle) => {
-              button.getSystem().getByDom(directoryEle).each((directoryComp) => {
-                Toggling.toggle(directoryComp);
-              });
-            });
-          }
-        }),
         AlloyEvents.run<EventArgs<KeyboardEvent>>(NativeEvents.keydown(), (comp, se) => {
           const isRightArrowKey = se.event.raw.code === 'ArrowRight';
           const isLeftArrowKey = se.event.raw.code === 'ArrowLeft';
@@ -222,7 +219,7 @@ const renderDirectoryLabel = ({
             SelectorFind.ancestor( comp.element, '.tox-tree--directory').each((directoryEle) => {
               comp.getSystem().getByDom(directoryEle).each((directoryComp) => {
                 if (!Toggling.isOn(directoryComp) && isRightArrowKey || Toggling.isOn(directoryComp) && isLeftArrowKey) {
-                  expandChildren(comp);
+                  toggleExpandChildren(comp);
                   se.stop();
                 } else if (isLeftArrowKey && !Toggling.isOn(directoryComp)) {
                   SelectorFind.ancestor(directoryComp.element, '.tox-tree--directory').each((parentDirElement) => {
@@ -246,7 +243,8 @@ const renderDirectoryChildren = ({
   onLeafAction,
   visible,
   treeId,
-  expandedIds: expandedIds,
+  expandedIds,
+  selectedId,
   backstage
 }: RenderDirectoryChildrenProps): SimpleSpec => {
   return {
@@ -256,8 +254,8 @@ const renderDirectoryChildren = ({
     },
     components: children.map((item) => {
       return item.type === 'leaf' ?
-        renderLeafLabel({ leaf: item, onLeafAction, visible, treeId, backstage }) :
-        renderDirectory({ directory: item, expandedIds, onLeafAction, labelTabstopping: visible, treeId, backstage });
+        renderLeafLabel({ leaf: item, selectedId, onLeafAction, visible, treeId, backstage }) :
+        renderDirectory({ directory: item, expandedIds, selectedId, onLeafAction, labelTabstopping: visible, treeId, backstage });
     }),
     behaviours: Behaviour.derive([
       Sliding.config({
@@ -275,20 +273,23 @@ const renderDirectoryChildren = ({
   };
 };
 
+const directoryEventsId = Id.generate('directory-event-id');
 const renderDirectory = ({
   directory,
   onLeafAction,
   labelTabstopping,
   treeId,
   backstage,
-  expandedIds: expandedIds,
+  expandedIds,
+  selectedId
 }: RenderDirectoryProps): SimpleSpec => {
   const { children } = directory;
+  const expandedIdsCell = Cell(expandedIds);
   const computedChildrenComponents = (visible: boolean) =>
     children.map((item) => {
       return item.type === 'leaf' ?
-        renderLeafLabel({ leaf: item, onLeafAction, visible, treeId, backstage }) :
-        renderDirectory({ directory: item, expandedIds, onLeafAction, labelTabstopping: visible, treeId, backstage });
+        renderLeafLabel({ leaf: item, selectedId, onLeafAction, visible, treeId, backstage }) :
+        renderDirectory({ directory: item, expandedIds: expandedIdsCell.get(), selectedId, onLeafAction, labelTabstopping: visible, treeId, backstage });
     });
   const childrenVisible = expandedIds.includes(directory.id);
   return ({
@@ -300,10 +301,22 @@ const renderDirectory = ({
       }
     },
     components: [
-      renderDirectoryLabel({ directory, expandedIds, visible: labelTabstopping, noChildren: directory.children.length === 0, backstage }),
-      renderDirectoryChildren({ children, expandedIds, onLeafAction, visible: childrenVisible, treeId, backstage })
+      renderDirectoryLabel({ directory, visible: labelTabstopping, noChildren: directory.children.length === 0, backstage }),
+      renderDirectoryChildren({ children, expandedIds, selectedId, onLeafAction, visible: childrenVisible, treeId, backstage })
     ],
     behaviours: Behaviour.derive([
+      AddEventsBehaviour.config(directoryEventsId, [
+        AlloyEvents.runOnAttached((comp, _se) => {
+          Toggling.set(comp, childrenVisible);
+        }),
+        AlloyEvents.run<ToggleExpandTreeNodeEventArgs>('expand-tree-node', (_cmp, se) => {
+          const { expanded, node } = se.event;
+          expandedIdsCell.set( expanded ?
+            [ ...expandedIdsCell.get(), node ] :
+            expandedIdsCell.get().filter((id) => id !== node)
+          );
+        }),
+      ]),
       Toggling.config({
         ...( directory.children.length > 0 ? {
           aria: {
@@ -314,9 +327,9 @@ const renderDirectory = ({
         onToggled: (comp, childrenVisible) => {
           const childrenComp = comp.components()[1];
           const newChildren = computedChildrenComponents(childrenVisible);
-          if (childrenVisible && !Sliding.hasGrown(childrenComp)) {
+          if (childrenVisible) {
             Sliding.grow(childrenComp);
-          } else if (!childrenVisible && !Sliding.hasShrunk(childrenComp)) {
+          } else {
             Sliding.shrink(childrenComp);
           }
           Replacing.set(childrenComp, newChildren);
@@ -340,11 +353,12 @@ const renderTree = (
   const onToggleExpand = spec.onToggleExpand.getOr(Fun.noop);
   const defaultExpandedIds: string[] = spec.defaultExpandedIds;
   const expandedIds = Cell(defaultExpandedIds);
+  const selectedIdCell = Cell(spec.defaultSelectedId);
   const treeId = Id.generate('tree-id');
-  const children = spec.items.map((item) => {
+  const children = (selectedId: Optional<string>, expandedIds: string[]) => spec.items.map((item) => {
     return item.type === 'leaf' ?
-      renderLeafLabel({ leaf: item, onLeafAction, visible: true, treeId, backstage }) :
-      renderDirectory({ directory: item, onLeafAction, expandedIds: defaultExpandedIds, labelTabstopping: true, treeId, backstage });
+      renderLeafLabel({ leaf: item, selectedId, onLeafAction, visible: true, treeId, backstage }) :
+      renderDirectory({ directory: item, selectedId, onLeafAction, expandedIds, labelTabstopping: true, treeId, backstage });
   });
   return {
     dom: {
@@ -354,7 +368,7 @@ const renderTree = (
         role: 'tree'
       }
     },
-    components: children,
+    components: children(selectedIdCell.get(), expandedIds.get()),
     behaviours: Behaviour.derive([
       Keying.config({
         mode: 'flow',
@@ -370,7 +384,18 @@ const renderTree = (
           );
           onToggleExpand(expandedIds.get(), { expanded, node });
         })
-      ])
+      ]),
+      Receiving.config({
+        channels: {
+          [`update-active-item-${treeId}`]: {
+            onReceive: (comp, message: UpdateTreeSelectedItemEvent) => {
+              selectedIdCell.set(Optional.some(message.value));
+              Replacing.set(comp, children(Optional.some(message.value), expandedIds.get()));
+            }
+          }
+        }
+      }),
+      Replacing.config({})
     ])
   };
 };
