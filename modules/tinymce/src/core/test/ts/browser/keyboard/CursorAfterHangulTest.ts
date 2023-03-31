@@ -33,6 +33,12 @@ describe('browser.tinymce.core.keyboard.CursorAfterHangulTest', () => {
       offset: 1,
       result: true
     }, {
+      label: 'Should return true when cursor is after Hangul text in mixed text',
+      input: '<p>안a</p>',
+      cursorPath: [ 0, 0 ],
+      offset: 1,
+      result: true
+    }, {
       label: 'Should return false when cursor is before Hangul text',
       input: '<p>안</p>',
       cursorPath: [ 0, 0 ],
@@ -47,6 +53,12 @@ describe('browser.tinymce.core.keyboard.CursorAfterHangulTest', () => {
     }, {
       label: 'Should return false when cursor is after of non-Hangul text',
       input: '<p>a</p>',
+      cursorPath: [ 0, 0 ],
+      offset: 1,
+      result: false
+    }, {
+      label: 'Should return false when cursor is after non-Hangul text in mixed text',
+      input: '<p>a안</p>',
       cursorPath: [ 0, 0 ],
       offset: 1,
       result: false
