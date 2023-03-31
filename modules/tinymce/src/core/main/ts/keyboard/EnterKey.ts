@@ -76,5 +76,8 @@ const setup = (editor: Editor): void => {
 };
 
 export {
-  setup
+  setup,
+
+  // for testing purposes
+  isCursorAfterHangulCharacter
 };
