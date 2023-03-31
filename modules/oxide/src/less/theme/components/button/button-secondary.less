@@ -46,7 +46,7 @@
 @button-secondary-active-text-color: @button-secondary-text-color;
 
 // Enabled state
-@button-secondary-enabled-background-color: @enabled-background-color;
+@button-secondary-enabled-background-color: contrast(@background-color, mix(darken(@background-color, 6%), @color-tint, 70%), mix(lighten(@background-color, 15%), @color-tint, 70%));
 @button-secondary-enabled-background-image: @button-secondary-background-image;
 @button-secondary-enabled-border-color: @button-secondary-enabled-background-color;
 @button-secondary-enabled-box-shadow: @button-secondary-box-shadow;
