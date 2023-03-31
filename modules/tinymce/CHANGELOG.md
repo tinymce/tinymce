@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Quickbar toolbars was shown for noneditable contents in a noneditable root. #TINY-9460
 - Inline alert in the "Search and Replace" dialog persisted when it wasn't necessary. #TINY-9704
 - Context toolbars displayed the incorrect status for the `advlist` plugin buttons. #TINY-9680
+- On iOS Safari, Hangul (Korean) characters will no longer merge onto the previous line after inserting a newline by pressing Enter. #TINY-9746
 
 ## 6.4.1 - 2023-03-29
 
