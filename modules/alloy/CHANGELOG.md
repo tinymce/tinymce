@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ### Fixed
-- Select would in some situations not have a selected value when expected to. #TINY-9679
+- Select would in some situations when it was reused or otherwise reset not have an initial selected value when expected to. #TINY-9679
 
 ## 12.1.0 - 2023-03-15
 
