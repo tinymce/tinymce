@@ -2,7 +2,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import { fireInsertAccordionEvent } from '../api/Events';
 
-const nonRemovableContainers = [ 'BODY', 'TD', 'TH' ];
+const nonRemovableContainers = [ 'BODY', 'TD', 'TH', 'LI', 'DIV', 'DT', 'DD' ];
 const isNonRemovableContainer = (node: Node): boolean =>
   nonRemovableContainers.includes(node.nodeName);
 
