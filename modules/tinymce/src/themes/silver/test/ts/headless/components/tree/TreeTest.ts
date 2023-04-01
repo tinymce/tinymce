@@ -266,7 +266,7 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
     const file3 = dirChildren.getSystem().getByDom(file3Element).getOrDie();
     const isFile3Selected = Class.has(file3Element, '.tox-trbtn--enabled');
     if (!isFile3Selected) {
-      // The reason we havt to start from the hook component is because if we start from anywhere inside the tree, the mouse would click on the first
+      // The reason we have to start from the hook component is because if we start from anywhere inside the tree, the mouse would click on the first
       // leaf it finds which is file 1. So by using this selector we force the mouse to skip the subdirectory and
       // go for the direct leaf child instead.
       Mouse.clickOn(hook.component().element, '.tox-tree >.tox-tree--directory > .tox-tree--directory__children > .tox-tree--leaf__label');
