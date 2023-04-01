@@ -80,7 +80,8 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
       onToggleExpand: (_expandedKeys, { expanded, node }) => {
         store.add(node + (expanded ? '-expanded' : '-collapsed'));
       },
-      defaultExpandedIds: [ 'dir' ]
+      defaultExpandedIds: [ 'dir' ],
+      defaultSelectedId: '3'
     }));
 
     const tree = renderTree(treeSpec, extrasHook.access().extras.backstages.dialog );
@@ -96,6 +97,10 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
     assert.equal(Class.has(directory.element, 'tox-tree--directory--expanded'), expected, 'Checking if expanded class is present: ' + label);
   };
 
+  const assertLeafSelectedState = (label: string, expected: boolean, leaf: AlloyComponent) => {
+    assert.equal(Class.has(leaf.element, 'tox-trbtn--enabled'), expected, 'Checking if selected class is present: ' + label);
+  };
+
   const getTreeItem = (selector: string) => {
     const component = hook.component();
     return component.getSystem().getByDom(
@@ -108,6 +113,10 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
   it('Check initial event state', () => {
     const store = hook.store();
     store.assertEq('Store should be empty', []);
+    const dirChildren = getTreeItem('.tox-tree--directory > .tox-tree--directory__children');
+    const file3Element = SelectorFind.child(dirChildren.element, '.tox-tree--leaf__label').getOrDie();
+    const file3 = dirChildren.getSystem().getByDom(file3Element).getOrDie();
+    assertLeafSelectedState('File 3', true, file3);
   });
 
   it('TINY-9614: Basic tree interactions', async () => {
@@ -134,7 +143,7 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
     store.assertEq('Subir expanded', [ 'subdir-expanded' ]);
     store.clear();
 
-    Mouse.clickOn(getTreeItem('.tox-tree').element, '>.tox-tree--leaf__label');
+    Mouse.clickOn(hook.component().element, '.tox-tree > .tox-tree--leaf__label');
     store.assertEq('File 5', [ '5' ]);
 
     store.clear();
@@ -158,7 +167,7 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
     // Start with clean state
     const isDirectoryExpanded = Class.has(dir.element, '.tox-tree--directory--expanded');
     if (isDirectoryExpanded) {
-      Mouse.clickOn(dir.element, '.tox-tree--directory .tox-trbtn.tox-tree--directory__label');
+      Mouse.clickOn(dir.element, '.tox-trbtn.tox-tree--directory__label');
     }
     assertDirectoryExpandedState('Dir', false, dir);
 
@@ -239,5 +248,39 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
     });
     FocusTools.isOn('dir label', dirLabel);
     assertDirectoryExpandedState('Dir', false, dir);
+  });
+
+  it('TINY-9715: selected item under a directory stays selected after collapsing and re-expanding the directory', () => {
+    const dir = getTreeItem('.tox-tree--directory');
+
+    // Start with open directory
+    const isDirectoryExpanded = Class.has(dir.element, '.tox-tree--directory--expanded');
+    if (!isDirectoryExpanded) {
+      Mouse.clickOn(dir.element, '.tox-trbtn.tox-tree--directory__label');
+    }
+    assertDirectoryExpandedState('Dir', true, dir);
+
+    // Start with selected File 3
+    const dirChildren = getTreeItem('.tox-tree--directory > .tox-tree--directory__children');
+    const file3Element = SelectorFind.child(dirChildren.element, '.tox-tree--leaf__label').getOrDie();
+    const file3 = dirChildren.getSystem().getByDom(file3Element).getOrDie();
+    const isFile3Selected = Class.has(file3Element, '.tox-trbtn--enabled');
+    if (!isFile3Selected) {
+      // The reason we havt to start from the hook component is because if we start from anywhere inside the tree, the mouse would click on the first
+      // leaf it finds which is file 1. So by using this selector we force the mouse to skip the subdirectory and
+      // go for the direct leaf child instead.
+      Mouse.clickOn(hook.component().element, '.tox-tree >.tox-tree--directory > .tox-tree--directory__children > .tox-tree--leaf__label');
+    }
+    assertLeafSelectedState('File 3', true, file3);
+
+    // Collapse and then re-expand the tree
+    Mouse.clickOn(dir.element, '.tox-trbtn.tox-tree--directory__label');
+    assertDirectoryExpandedState('Dir', false, dir);
+    Mouse.clickOn(dir.element, '.tox-trbtn.tox-tree--directory__label');
+    assertDirectoryExpandedState('Dir', true, dir);
+
+    // File 3 is still selected
+    assertLeafSelectedState('File 3', true, file3);
+
   });
 });
