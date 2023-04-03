@@ -123,7 +123,8 @@ const renderLeafLabel = ({
       AddEventsBehaviour.config(leafLabelEventsId, [
         AlloyEvents.runOnAttached((comp, _se) => {
           selectedId.each((id) => {
-            (id === leaf.id ? Toggling.on : Toggling.off)(comp);
+            const toggle = id === leaf.id ? Toggling.on : Toggling.off;
+            toggle(comp);
           });
         }),
         AlloyEvents.run<EventArgs<KeyboardEvent>>(NativeEvents.keydown(), (comp, se) => {
