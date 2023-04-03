@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Quickbar toolbars was shown for noneditable contents in a noneditable root. #TINY-9460
 
 ### Changed
-- Update the dropdown style of code sample and template to tinymce custom style. #TINY-9630
+- Update the `codesample` plugin dialog and `template` plugin dialog to use the 'listbox' component to match other dialogs. #TINY-9630
 
 ## 6.4.0 - 2023-03-15
 
