@@ -9,7 +9,7 @@ const dialogSelector = 'div.tox-dialog';
 const toolbarButtonSelector = 'button[aria-label="Insert/edit code sample"]';
 
 const setLanguage = (newLanguage: string): void => {
-  const select = document.querySelector('div[role="dialog"] div[class="tox-listboxfield"] button') as HTMLSelectElement;
+  const select = document.querySelector('div[role="dialog"] div[class="tox-listboxfield"] button') as HTMLButtonElement;
   select.setAttribute('data-value', newLanguage);
 };
 
