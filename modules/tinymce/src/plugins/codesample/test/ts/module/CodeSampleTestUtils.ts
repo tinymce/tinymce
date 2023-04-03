@@ -19,7 +19,7 @@ const setTextareaContent = (content: string): void => {
 };
 
 const assertCodeSampleDialog = (expectedLanguage: string, expectedContent: string): void => {
-  const select = document.querySelector('div[role="dialog"] div[class="tox-listboxfield"] button') as HTMLSelectElement;
+  const select = document.querySelector('div[role="dialog"] div[class="tox-listboxfield"] button') as HTMLButtonElement;
   assert.equal(select.getAttribute('data-value'), expectedLanguage, 'Asserting language dropdown is ' + expectedLanguage);
   const textarea = document.querySelector('div[role="dialog"] textarea') as HTMLTextAreaElement;
   assert.equal(textarea.value, expectedContent, 'Asserting textarea content is ' + expectedContent);
