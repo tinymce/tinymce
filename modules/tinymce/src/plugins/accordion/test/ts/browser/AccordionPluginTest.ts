@@ -61,7 +61,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
       assertCursor: [[ 0, 0, 1, 0 ], 1 ],
     });
   });
-  
+
   it('TINY-9730: Insert an accordion into a dt tag', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<dl><dt>tiny</dt></dl>',
