@@ -1,11 +1,10 @@
 import { context, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 
 import { tableSizingModeScenarioTest } from '../../../module/table/TableSizingModeCommandUtil';
-import * as TableTestUtils from '../../../module/table/TableTestUtils';
 
 describe('browser.tinymce.models.dom.table.command.TableSizingModeCommandTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -108,14 +107,12 @@ describe('browser.tinymce.models.dom.table.command.TableSizingModeCommandTest', 
     });
 
     it('TINY-9459: Should not apply mceTableSizingMode command on table inside a noneditable root', () => {
-      TableTestUtils.withNoneditableRootEditor(hook.editor(), (editor) => {
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
         const initalContent = '<table><tbody><tr><td>cell</td></tr></tbody></table>';
-        editor.getBody().contentEditable = 'false';
         editor.setContent(initalContent);
         TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
         editor.execCommand('mceTableSizingMode', false, 'fixed');
         TinyAssertions.assertContent(editor, initalContent);
-        editor.getBody().contentEditable = 'true';
       });
     });
   });

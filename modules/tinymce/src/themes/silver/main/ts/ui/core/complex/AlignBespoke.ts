@@ -5,6 +5,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
 import { updateMenuIcon } from '../../dropdown/CommonDropdown';
+import { onSetupEditableToggle } from '../ControlUtils';
 import { createMenuItems, createSelectButton, FormatterFormatItem, SelectedFormat, SelectSpec } from './BespokeSelect';
 import { buildBasicStaticDataset } from './SelectDatasets';
 
@@ -58,6 +59,7 @@ const createAlignMenu = (editor: Editor, backstage: UiFactoryBackstage): void =>
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('align', {
     text: backstage.shared.providers.translate('Align'),
+    onSetup: onSetupEditableToggle(editor),
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   });
 };

@@ -1,7 +1,7 @@
 import { UiFinder } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { SugarBody, SugarElement, SugarNode } from '@ephox/sugar';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -536,7 +536,7 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
   });
 
   it('TINY-9459: Should not open table row properties dialog on noneditable root', () => {
-    TableTestUtils.withNoneditableRootEditor(hook.editor(), (editor) => {
+    TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
       editor.setContent('<table><tbody><tr><td>x</td></tr></tbody></table>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
       editor.execCommand('mceTableCellProps');

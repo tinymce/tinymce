@@ -1,8 +1,8 @@
-import { FocusTools, Keys, Mouse, UiControls } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { FocusTools, Keys, Mouse, UiControls, UiFinder } from '@ephox/agar';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
-import { SugarElement, SugarShadowDom } from '@ephox/sugar';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -318,5 +318,22 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     assert.isFalse(editor.hasFocus(), 'before enter editor should not have focus');
     TinyUiActions.keystroke(editor, Keys.enter());
     assert.isTrue(editor.hasFocus(), 'after enter editor should have focus');
+  });
+
+  context('Noneditable root', () => {
+    it('TINY-9669: Disable outdent on noneditable content', () => {
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+        const body = SugarBody.body();
+        editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
+        TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
+        UiFinder.exists(body, '[aria-label="Decrease font size"]:disabled');
+        UiFinder.exists(body, '.tox-number-input input[type="text"]:disabled');
+        UiFinder.exists(body, '[aria-label="Increase font size"]:disabled');
+        TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
+        UiFinder.exists(body, '[aria-label="Decrease font size"]:not(:disabled)');
+        UiFinder.exists(body, '.tox-number-input input[type="text"]:not(:disabled)');
+        UiFinder.exists(body, '[aria-label="Increase font size"]:not(:disabled)');
+      });
+    });
   });
 });

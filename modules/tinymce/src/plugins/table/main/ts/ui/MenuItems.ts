@@ -18,6 +18,19 @@ interface AddMenuSpec<T> {
   readonly onAction?: (api: T) => void;
 }
 
+const onSetupEditable = (editor: Editor) => (api: Menu.MenuItemInstanceApi): VoidFunction => {
+  const nodeChanged = () => {
+    api.setEnabled(editor.selection.isEditable());
+  };
+
+  editor.on('NodeChange', nodeChanged);
+  nodeChanged();
+
+  return () => {
+    editor.off('NodeChange', nodeChanged);
+  };
+};
+
 const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets): void => {
   const cmd = (command: string) => () => editor.execCommand(command);
 
@@ -174,13 +187,15 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets): void 
     editor.ui.registry.addMenuItem('inserttable', {
       text: 'Table',
       icon: 'table',
-      onAction: cmd('mceInsertTableDialog')
+      onAction: cmd('mceInsertTableDialog'),
+      onSetup: onSetupEditable(editor)
     });
   } else {
     editor.ui.registry.addNestedMenuItem('inserttable', {
       text: 'Table',
       icon: 'table',
-      getSubmenuItems: () => [{ type: 'fancymenuitem', fancytype: 'inserttable', onAction: insertTableAction }]
+      getSubmenuItems: () => [{ type: 'fancymenuitem', fancytype: 'inserttable', onAction: insertTableAction }],
+      onSetup: onSetupEditable(editor)
     });
   }
 
@@ -190,7 +205,8 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets): void 
   editor.ui.registry.addMenuItem('inserttabledialog', {
     text: 'Insert table',
     icon: 'table',
-    onAction: cmd('mceInsertTableDialog')
+    onAction: cmd('mceInsertTableDialog'),
+    onSetup: onSetupEditable(editor)
   });
 
   addMenuIfRegistered('tableprops', {

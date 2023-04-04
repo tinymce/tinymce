@@ -7,8 +7,11 @@ import * as Util from '../core/Util';
 const setupToggleButtonHandler = (editor: Editor, listName: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi): () => void => {
   const toggleButtonHandler = (e: NodeChangeEvent) => {
     api.setActive(Util.inList(e.parents, listName));
-    api.setEnabled(!Util.isWithinNonEditableList(editor, e.element));
+    api.setEnabled(!Util.isWithinNonEditableList(editor, e.element) && editor.selection.isEditable());
   };
+
+  api.setEnabled(editor.selection.isEditable());
+
   return Util.setNodeChangeHandler(editor, toggleButtonHandler);
 };
 
