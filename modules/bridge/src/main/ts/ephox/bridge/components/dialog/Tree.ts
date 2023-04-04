@@ -16,6 +16,7 @@ export interface TreeSpec {
     expandedIds: Id[],
     { expanded, node }: { expanded: boolean; node: Id }
   ) => void;
+  defaultSelectedId?: Id;
 }
 
 export interface Tree {
@@ -28,6 +29,7 @@ export interface Tree {
     { expanded, node }: { expanded: boolean; node: Id }
   ) => void
   >;
+  defaultSelectedId: Optional<Id>;
 }
 
 interface BaseTreeItemSpec {
@@ -97,6 +99,7 @@ const treeFields = [
   FieldSchema.optionFunction('onLeafAction'),
   FieldSchema.optionFunction('onToggleExpand'),
   FieldSchema.defaultedArrayOf('defaultExpandedIds', [], ValueType.string),
+  FieldSchema.optionString('defaultSelectedId'),
 ];
 
 export const treeSchema = StructureSchema.objOf(treeFields);
