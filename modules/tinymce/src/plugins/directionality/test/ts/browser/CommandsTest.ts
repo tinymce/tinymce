@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/directionality/Plugin';
@@ -9,12 +9,6 @@ describe('browser.tinymce.plugins.directionality.CommandsTest', () => {
     plugins: 'directionality',
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ], true);
-
-  const withNoneditableRootEditor = (editor: Editor, f: (editor: Editor) => void) => {
-    editor.getBody().contentEditable = 'false';
-    f(editor);
-    editor.getBody().contentEditable = 'true';
-  };
 
   it('TINY-9669: mceDirectionLTR on a RTL block in LTR mode should remove the dir property', () => {
     const editor = hook.editor();
@@ -35,7 +29,7 @@ describe('browser.tinymce.plugins.directionality.CommandsTest', () => {
   });
 
   it('TINY-9669: Command should not be applied to noneditable content', () => {
-    withNoneditableRootEditor(hook.editor(), (editor) => {
+    TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
       const initialContent = '<div>Noneditable content</div>';
       editor.setContent(initialContent);
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
