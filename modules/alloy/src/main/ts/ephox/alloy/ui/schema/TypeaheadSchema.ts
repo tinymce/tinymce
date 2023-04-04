@@ -84,8 +84,11 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
                 setValueFromItem(detail.model, input, item);
               }
 
-              // Since the focus is still on the typeahead comp, aria-activedescendant must be set to
-              // make screen readers to announce the menu item being highligted
+              // The focus is retained on the input element when the menu is shown (unlike the combobox in which the focus is passed onto the menu).
+              // This causes the screen readers not to be able to announce the menu or highlighted item
+              // The solution is to tell the screen readers which menu item is highligted using aria-activedescendant attribute
+              // TINY-9280: The aria attribute will be removed when the menu is closed. Since onDehighlight is called only when highlighting a new menu item
+              // this will be handled in https://github.com/tinymce/tinymce/blob/2d8c1c034e8aa484b868a0c44605489ee0ca9cd4/modules/alloy/src/main/ts/ephox/alloy/ui/composite/TypeaheadSpec.ts#L282
               Attribute.getOpt(item.element, 'id').each((id) => Attribute.set(input.element, 'aria-activedescendant', id));
             });
           } else {
