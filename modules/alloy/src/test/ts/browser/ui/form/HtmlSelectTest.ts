@@ -26,7 +26,7 @@ describe('HtmlSelectTest', () => {
       )
     );
 
-    it('TBA: Run tests', () => {
+    it('TBA: Should set/get the selected value using the Representing', () => {
       const component = store.component();
 
       simpleAssert('Checking initial value', 'alpha', component);
@@ -82,7 +82,7 @@ describe('HtmlSelectTest', () => {
       )
     );
 
-    it('TBA: Run tests', () => {
+    it('TBA: Correctly starts on the expected value, and changes when prompted as normal', () => {
       const component = store.component();
 
       Assertions.assertStructure(
