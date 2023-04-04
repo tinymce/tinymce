@@ -2,7 +2,7 @@ import { ApproxStructure } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
 import { SugarElement, SugarNode } from '@ephox/sugar';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -209,7 +209,7 @@ describe('browser.tinymce.models.dom.table.command.ApplyCellStyleCommandTest', (
   });
 
   it('TINY-9459: Should not apply command to table in noneditable root', () => {
-    TableTestUtils.withNoneditableRootEditor(hook.editor(), (editor) => {
+    TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
       editor.setContent(table);
       TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
       applyCellStyle(editor, { backgroundColor: 'red' });

@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Improved
 - Screen readers are now able to announce the highlighted menu item of link comboboxes. #TINY-9280
 
+### Improved
+- Toolbar buttons and menu items were not disabled when they couldn't be used on noneditable content. #TINY-9669
+
 ### Fixed
 - In the tree component, a selected item in a directory would not stay selected after collapsing the directory. #TINY-9715
 - Enabling or Disabling checkboxes would not set the correct classes and attributes. #TINY-4189

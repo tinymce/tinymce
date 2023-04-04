@@ -2,7 +2,7 @@ import { Mouse } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Scroll, SugarElement, Traverse } from '@ephox/sugar';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -53,13 +53,12 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
   });
 
   it('TINY-9470: click on link in cE=false editor root', () => {
-    const editor = hook.editor();
-    editor.getBody().contentEditable = 'false';
-    editor.setContent('<p><a href="#"><strong>link</strong></a></p>');
-    const evt = editor.dispatch('click', { target: editor.dom.select('strong')[0] } as any);
-    editor.getBody().contentEditable = 'true';
+    TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+      editor.setContent('<p><a href="#"><strong>link</strong></a></p>');
+      const evt = editor.dispatch('click', { target: editor.dom.select('strong')[0] } as any);
 
-    assert.equal(evt.isDefaultPrevented(), true);
+      assert.equal(evt.isDefaultPrevented(), true);
+    });
   });
 
   it('click in non-empty cell next to cell with cE=false block', () => {
@@ -136,26 +135,24 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
   });
 
   it('TINY-6555: click on ce=false body should not show offscreen selection', () => {
-    const editor = hook.editor();
-    const body = editor.getBody();
-    editor.setContent(
-      '<table contenteditable="true" style="width: 100%; table-layout: fixed">' +
-      '<tbody><tr><td>1</td><td>2</td></tr></tbody>' +
-      '</table>'
-    );
-    editor.getBody().contentEditable = 'false';
+    TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+      const body = editor.getBody();
+      editor.setContent(
+        '<table contenteditable="true" style="width: 100%; table-layout: fixed">' +
+        '<tbody><tr><td>1</td><td>2</td></tr></tbody>' +
+        '</table>'
+      );
 
-    const rect = editor.dom.getRect(body);
-    editor.dispatch('mousedown', {
-      target: body as EventTarget,
-      clientX: rect.x,
-      clientY: rect.y
-    } as MouseEvent);
+      const rect = editor.dom.getRect(body);
+      editor.dispatch('mousedown', {
+        target: body as EventTarget,
+        clientX: rect.x,
+        clientY: rect.y
+      } as MouseEvent);
 
-    const offscreenElements = editor.dom.select('.mce-offscreen-selection');
-    assert.lengthOf(offscreenElements, 0, 'No offscreen element shown');
-
-    editor.getBody().contentEditable = 'true';
+      const offscreenElements = editor.dom.select('.mce-offscreen-selection');
+      assert.lengthOf(offscreenElements, 0, 'No offscreen element shown');
+    });
   });
 
   it('set range after ce=false element but lean backwards', () => {

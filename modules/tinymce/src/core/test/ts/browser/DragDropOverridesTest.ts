@@ -2,7 +2,7 @@ import { Assertions, DragnDrop, Keyboard, Keys, Mouse, UiFinder, Waiter } from '
 import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Type } from '@ephox/katamari';
 import { Html, SelectorFind, SugarBody, SugarElement, SugarLocation, Traverse } from '@ephox/sugar';
-import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyDom, TinyHooks, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -480,25 +480,23 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
     });
 
     it('TINY-9558: Should not be possible to drag a noneditable CEF element to a noneditable target within a noneditable root', async () => {
-      const editor = hook.editor();
-      const initialContent = '<div class="toDrag" contenteditable="false">To drag element</div><div class="destination">drop target</div>';
+      await TinyState.withNoneditableRootEditorAsync(hook.editor(), async (editor) => {
+        const initialContent = '<div class="toDrag" contenteditable="false">To drag element</div><div class="destination">drop target</div>';
 
-      editor.setContent(initialContent);
-      editor.getBody().contentEditable = 'false';
-      await moveToDragElementToDestinationElement(editor, 0, 0);
-      TinyAssertions.assertContent(editor, initialContent);
-      editor.getBody().contentEditable = 'true';
+        editor.setContent(initialContent);
+        await moveToDragElementToDestinationElement(editor, 0, 0);
+        TinyAssertions.assertContent(editor, initialContent);
+      });
     });
 
     it('TINY-9558: Should not be possible to drag a noneditable CEF element to an editable target within a noneditable root', async () => {
-      const editor = hook.editor();
-      const initialContent = '<div class="toDrag" contenteditable="false">To drag element</div><div contenteditable="true"><div class="destination">drop target</div></div>';
+      await TinyState.withNoneditableRootEditorAsync(hook.editor(), async (editor) => {
+        const initialContent = '<div class="toDrag" contenteditable="false">To drag element</div><div contenteditable="true"><div class="destination">drop target</div></div>';
 
-      editor.setContent(initialContent);
-      editor.getBody().contentEditable = 'false';
-      await moveToDragElementToDestinationElement(editor, 0, 0);
-      TinyAssertions.assertContent(editor, initialContent);
-      editor.getBody().contentEditable = 'true';
+        editor.setContent(initialContent);
+        await moveToDragElementToDestinationElement(editor, 0, 0);
+        TinyAssertions.assertContent(editor, initialContent);
+      });
     });
 
     context('Drag/drop padding', () => {
