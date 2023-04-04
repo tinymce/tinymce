@@ -96,7 +96,7 @@ const renderItem = (spec: TestItem): ItemSpec => {
           attributes: {
             'data-value': spec.data.value,
             'data-test-id': 'item-' + spec.data.value,
-            'aria-disabled': spec.data.meta.disabled,
+            'aria-disabled': spec.data.meta.disabled === true ? true : false,
             'id': spec.data.value
           },
           classes: [ ],
