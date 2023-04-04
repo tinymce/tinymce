@@ -144,12 +144,16 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
       UiControls.sSetValue(typeahead.element, 'new-value'),
       Keyboard.sKeydown(doc, Keys.down(), {}),
 
+      steps.sAssertAriaActiveDescendant('aria-activedescendant is not set', ''),
+
       steps.sAssertFocusOnTypeahead('After pressing Down after Enter'),
       steps.sWaitForMenu('After pressing Down after Enter'),
       NavigationUtils.highlights(gui.element, Keys.down(), {}, [
         item('new-value2'),
         item('new-value1')
       ]),
+
+      steps.sAssertAriaActiveDescendant('aria-activedescendant is set when an item is highligted', 'new-value1'),
 
       Keyboard.sKeyup(doc, Keys.escape(), { }),
       steps.sAssertValue('After pressing ESC', 'New-value1'),
@@ -164,6 +168,8 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
         item('new-value12'),
         item('new-value11')
       ]),
+
+      steps.sAssertAriaActiveDescendant('aria-activedescendant is updated when a new item is highligted', 'new-value11'),
 
       Mouse.sClickOn(gui.element, '.item[data-value="new-value12"]'),
       steps.sWaitForNoMenu('After clicking on item'),
@@ -225,6 +231,8 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
         Focus.focus(component.element);
       }),
       steps.sWaitForNoMenu('Blurring should dismiss popup'),
+
+      steps.sAssertAriaActiveDescendant('aria-activedescendant is removed when the popup is closed', ''),
 
       Step.sync(() => {
         Representing.setValue(typeahead, {

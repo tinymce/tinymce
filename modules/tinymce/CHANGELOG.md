@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - New optional `defaultExpandedIds` and `onToggleExpand` options to the `tree` component config. #TINY-9653
 
+### Improved
+- Screen readers are now able to announce the highlighted menu item of link comboboxes. #TINY-9280
+
 ### Fixed
 - Enabling or Disabling checkboxes would not set the correct classes and attributes. #TINY-4189
 - Table toolbar was visible even if the table was within a noneditable host element. #TINY-9664

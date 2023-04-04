@@ -1,6 +1,6 @@
 import { Objects } from '@ephox/boulder';
 import { Arr, Fun, Merger, Obj, Optional } from '@ephox/katamari';
-import { EventArgs, Focus, Value } from '@ephox/sugar';
+import { Attribute, EventArgs, Focus, Value } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 import { Composing } from '../../api/behaviour/Composing';
@@ -277,7 +277,11 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         sandbox: (hotspot) => {
           return DropdownUtils.makeSandbox(detail, hotspot, {
             onOpen: () => Toggling.on(hotspot),
-            onClose: () => Toggling.off(hotspot)
+            onClose: () => {
+              // TINY-9280: Remove aria-activedescendant that is set when menu item is highlighted
+              detail.lazyTypeaheadComp.get().each((input) => Attribute.remove(input.element, 'aria-activedescendant'));
+              Toggling.off(hotspot);
+            }
           });
         }
       }
