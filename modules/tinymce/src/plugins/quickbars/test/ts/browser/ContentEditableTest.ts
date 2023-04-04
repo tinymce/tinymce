@@ -97,6 +97,8 @@ describe('browser.tinymce.plugins.quickbars.ContentEditableTest', () => {
         editor.setContent('<p contenteditable="true">abc</p>');
         TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
         await pAssertToolbarVisible();
+        TinySelections.setCursor(editor, [ 0, 0 ], 0, true);
+        await pAssertToolbarNotVisible();
       });
     });
 
