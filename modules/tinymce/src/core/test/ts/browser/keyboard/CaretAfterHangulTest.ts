@@ -4,7 +4,7 @@ import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { isCursorAfterHangulCharacter } from 'tinymce/core/keyboard/EnterKey';
+import { isCaretAfterHangulCharacter } from 'tinymce/core/keyboard/EnterKey';
 
 interface Scenario {
   label: string;
@@ -93,7 +93,7 @@ describe('browser.tinymce.core.keyboard.CursorAfterHangulTest', () => {
       const editor = hook.editor();
       editor.setContent(scenario.input);
       TinySelections.setCursor(editor, scenario.cursorPath, scenario.offset);
-      assert.equal(isCursorAfterHangulCharacter(editor.selection.getRng()), scenario.result);
+      assert.equal(isCaretAfterHangulCharacter(editor.selection.getRng()), scenario.result);
     });
   });
 
@@ -101,6 +101,6 @@ describe('browser.tinymce.core.keyboard.CursorAfterHangulTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>안녕</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
-    assert.equal(isCursorAfterHangulCharacter(editor.selection.getRng()), false);
+    assert.equal(isCaretAfterHangulCharacter(editor.selection.getRng()), false);
   });
 });

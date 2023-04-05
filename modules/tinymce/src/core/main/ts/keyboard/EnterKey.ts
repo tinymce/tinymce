@@ -25,7 +25,7 @@ const handleEnterKeyEvent = (editor: Editor, event: EditorEvent<KeyboardEvent>) 
   });
 };
 
-const isCursorAfterHangulCharacter = (rng: Range): boolean => {
+const isCaretAfterHangulCharacter = (rng: Range): boolean => {
   if (!rng.collapsed) {
     return false;
   }
@@ -41,26 +41,23 @@ const isCursorAfterHangulCharacter = (rng: Range): boolean => {
 };
 
 const setup = (editor: Editor): void => {
-  let bookmark: Optional<Bookmark> = Optional.none();
-  let shouldOverrideKeyup = false;
+  let iOSSafariKeydownBookmark: Optional<Bookmark> = Optional.none();
 
   const iOSSafariKeydownOverride = (editor: Editor): void => {
-    bookmark = Optional.some(editor.selection.getBookmark());
+    iOSSafariKeydownBookmark = Optional.some(editor.selection.getBookmark());
     editor.undoManager.add();
-    shouldOverrideKeyup = true;
   };
 
   const iOSSafariKeyupOverride = (editor: Editor, event: EditorEvent<KeyboardEvent>): void => {
     editor.undoManager.undo();
-    bookmark.fold(Fun.noop, (b) => editor.selection.moveToBookmark(b));
+    iOSSafariKeydownBookmark.fold(Fun.noop, (b) => editor.selection.moveToBookmark(b));
     handleEnterKeyEvent(editor, event);
-    shouldOverrideKeyup = false;
-    bookmark = Optional.none();
+    iOSSafariKeydownBookmark = Optional.none();
   };
 
   editor.on('keydown', (event: EditorEvent<KeyboardEvent>) => {
     if (event.keyCode === VK.ENTER) {
-      if (isIOSSafari && isCursorAfterHangulCharacter(editor.selection.getRng())) {
+      if (isIOSSafari && isCaretAfterHangulCharacter(editor.selection.getRng())) {
         // TINY-9746: iOS Safari composes Hangul (Korean) characters by deleting the previous partial character and inserting
         // the composed character. If the native Enter keypress event is not fired, iOS Safari will continue to compose across
         // our custom newline by deleting it and inserting the composed character on the previous line, causing a bug. The workaround
@@ -74,15 +71,13 @@ const setup = (editor: Editor): void => {
   });
 
   editor.on('keyup', (event: EditorEvent<KeyboardEvent>) => {
-    if (event.keyCode === VK.ENTER && shouldOverrideKeyup) {
-      iOSSafariKeyupOverride(editor, event);
+    if (event.keyCode === VK.ENTER) {
+      iOSSafariKeydownBookmark.each(() => iOSSafariKeyupOverride(editor, event));
     }
   });
 };
 
 export {
   setup,
-
-  // for testing
-  isCursorAfterHangulCharacter
+  isCaretAfterHangulCharacter
 };
