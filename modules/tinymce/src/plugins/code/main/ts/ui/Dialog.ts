@@ -24,23 +24,6 @@ const open = (editor: Editor): void => {
         text: 'Cancel'
       },
       {
-        type: 'togglebutton',
-        name: 'dark_theme_toggle',
-        text: 'Dark/light mode',
-        tooltip: 'Dark/light mode',
-        active: true,
-      },
-
-      {
-        type: 'togglebutton',
-        name: 'dark_theme_toggle',
-        // text: !status.dark ? 'Dark/light mode' : 'Dark mode enabled',
-        text: 'Dark/light mode 2',
-        tooltip: 'Dark/light mode 2',
-        icon: 'paste',
-        active: true,
-      },
-      {
         type: 'submit',
         name: 'save',
         text: 'Save',
