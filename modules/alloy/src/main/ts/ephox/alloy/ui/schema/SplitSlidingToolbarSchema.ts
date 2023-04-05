@@ -62,6 +62,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
           }),
           Keying.config({
             mode: 'acyclic',
+            selector: '.tox-toolbar__group',
             onEscape: (comp) => {
               AlloyParts.getPart(comp, detail, 'overflow-button').each(Focusing.focus);
               return Optional.some<boolean>(true);
