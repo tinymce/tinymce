@@ -102,6 +102,20 @@ const setup = (editor: Editor, caret: Cell<Text | null>): void => {
 
     isBackspaceKeydown = false;
   });
+
+  let isMetaBackspace = false;
+  editor.on('keydown', (evt) => {
+    isMetaBackspace = evt.metaKey && evt.key === 'Backspace';
+    if (isMetaBackspace && !evt.isDefaultPrevented()) {
+      editor.undoManager.beforeChange();
+    }
+  });
+  editor.on('keyup', (evt) => {
+    if (isMetaBackspace && !evt.isDefaultPrevented()) {
+      editor.undoManager.add();
+      isMetaBackspace = false;
+    }
+  });
 };
 
 export {
