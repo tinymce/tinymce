@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Toolbar buttons and menu items were not disabled when they couldn't be used on noneditable content. #TINY-9669
 
 ### Fixed
+- Command + backspace would not add an undo level. #TINY-8910
 - In the tree component, a selected item in a directory would not stay selected after collapsing the directory. #TINY-9715
 - Enabling or Disabling checkboxes would not set the correct classes and attributes. #TINY-4189
 - Redial would in some situations cause select elements not to have an initial value selected when they should have. #TINY-9679
