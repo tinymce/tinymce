@@ -2,6 +2,7 @@ import * as TinyAssertions from './bdd/TinyAssertions';
 import * as TinyContentActions from './bdd/TinyContentActions';
 import * as TinyHooks from './bdd/TinyHooks';
 import * as TinySelections from './bdd/TinySelections';
+import * as TinyState from './bdd/TinyState';
 import * as TinyUiActions from './bdd/TinyUiActions';
 import * as LegacyUnit from './legacy/LegacyUnit';
 import * as McEditor from './McEditor';
@@ -36,5 +37,6 @@ export {
   TinyHooks,
   TinySelections,
   TinyContentActions,
+  TinyState,
   TinyUiActions
 };

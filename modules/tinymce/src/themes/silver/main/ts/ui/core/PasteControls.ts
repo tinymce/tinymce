@@ -6,6 +6,7 @@ import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Options from '../../api/Options';
+import { composeUnbinders, onSetupEditableToggle } from './ControlUtils';
 
 const makeSetupHandler = (editor: Editor, pasteAsText: Cell<boolean>) => (api: Toolbar.ToolbarToggleButtonInstanceApi | Menu.ToggleMenuItemInstanceApi) => {
   api.setActive(pasteAsText.get());
@@ -14,7 +15,11 @@ const makeSetupHandler = (editor: Editor, pasteAsText: Cell<boolean>) => (api: T
     api.setActive(e.state);
   };
   editor.on('PastePlainTextToggle', pastePlainTextToggleHandler);
-  return () => editor.off('PastePlainTextToggle', pastePlainTextToggleHandler);
+
+  return composeUnbinders(
+    () => editor.off('PastePlainTextToggle', pastePlainTextToggleHandler),
+    onSetupEditableToggle(editor)(api)
+  );
 };
 
 const register = (editor: Editor): void => {

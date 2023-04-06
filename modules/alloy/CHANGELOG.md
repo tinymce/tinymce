@@ -6,11 +6,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+- Select would in some situations when it was reused or otherwise reset not have an initial selected value when expected to. #TINY-9679
+
 ## 12.1.0 - 2023-03-15
 
 ### Added
 - Added `firstTabstop` optional property to `ModalDialogDetail`, to specify the index of elements to focus on when dialog shows. #TINY-9520
 - Exposed `OffsetOrigin` module and `DockingType` type in api main entry point. #TINY-9414
+
+### Changed
+-  `aria-activedescendant` attribute for `Typeahead` input component is updated to the menu item that is highlighted. #TINY-9280
 
 ### Removed
 - Removed `positionWithin` from `Positioning` behaviour's APIs. #TINY-9226

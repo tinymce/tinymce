@@ -169,7 +169,7 @@ const open = (editor: Editor, templateList: ExternalTemplate[]): void => {
       const content = getPreviewContent(editor, previewHtml);
       const bodyItems: Dialog.BodyComponentSpec[] = [
         {
-          type: 'selectbox',
+          type: 'listbox',
           name: 'template',
           label: 'Templates',
           items: selectBoxItems

@@ -7,6 +7,7 @@ import { Dialog, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Events from '../../../api/Events';
+import { composeUnbinders, onSetupEditableToggle } from '../ControlUtils';
 import * as ColorCache from './ColorCache';
 import * as Options from './Options';
 
@@ -159,9 +160,12 @@ const registerTextColorButton = (editor: Editor, name: string, format: ColorForm
 
       editor.on('TextColorChange', handler);
 
-      return () => {
-        editor.off('TextColorChange', handler);
-      };
+      return composeUnbinders(
+        onSetupEditableToggle(editor)(splitButtonApi),
+        () => {
+          editor.off('TextColorChange', handler);
+        }
+      );
     }
   });
 };
@@ -172,7 +176,7 @@ const registerTextColorMenuItem = (editor: Editor, name: string, format: ColorFo
     icon: name === 'forecolor' ? 'text-color' : 'highlight-bg-color',
     onSetup: (api) => {
       setIconColor(api, name, lastColor.get());
-      return Fun.noop;
+      return onSetupEditableToggle(editor)(api);
     },
     getSubmenuItems: () => [
       {

@@ -156,7 +156,8 @@ export default (): void => {
                               expandedIds = newExpandedKeys;
                             },
                             defaultExpandedIds: expandedIds,
-                            items: tree
+                            items: tree,
+                            defaultSelectedId: '3'
                           }]
                       },
                     ]

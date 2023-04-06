@@ -230,7 +230,7 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    max-height: 650px; // TODO (verify max-height for dialogs)
+    max-height: ~"min(650px, calc(100vh - 110px))"; // TODO (verify max-height for dialogs)
     overflow: auto; //overflow controls all scrolling in the dialogs
     -webkit-overflow-scrolling: touch;
     padding: @dialog-body-padding;

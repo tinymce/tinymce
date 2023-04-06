@@ -276,4 +276,47 @@ describe('headless.tinymce.themes.silver.window.SilverDialogReuseTest', () => {
       slippery: 0
     }, 'Initial data');
   });
+
+  it('TINY-9679: Open a dialog with a select, which maintain its values through a redial', () => {
+    const spec: Dialog.DialogSpec<Dialog.DialogData> = {
+      title: 'Silver Test Modal Dialog',
+      body: {
+        type: 'panel',
+        items: [
+          {
+            type: 'selectbox',
+            label: 'label',
+            name: 'somename',
+            items: [
+              {
+                text: 'val1',
+                value: 'val1'
+              },
+              {
+                text: 'val2',
+                value: 'val2'
+              },
+              {
+                text: 'val3',
+                value: 'val3'
+              }
+            ]
+          },
+        ]
+      },
+      buttons: baseDialogButtons,
+    };
+
+    dialogApi = windowManager.open(spec, {}, () => store.adder('closeWindow')());
+
+    assert.deepEqual(dialogApi.getData(), {
+      somename: 'val1',
+    }, 'Initial data');
+
+    dialogApi.redial(spec);
+
+    assert.deepEqual(dialogApi.getData(), {
+      somename: 'val1',
+    }, 'Initial data');
+  });
 });

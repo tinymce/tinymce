@@ -5,6 +5,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
+import { onSetupEditableToggle } from '../ControlUtils';
 import { createMenuItems, createSelectButton, FormatterFormatItem, PreviewSpec, SelectedFormat, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 
@@ -107,6 +108,7 @@ const createFontFamilyMenu = (editor: Editor, backstage: UiFactoryBackstage): vo
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('fontfamily', {
     text: backstage.shared.providers.translate('Fonts'),
+    onSetup: onSetupEditableToggle(editor),
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   });
 };

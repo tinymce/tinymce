@@ -6,7 +6,7 @@ import { BlockFormat, InlineFormat } from 'tinymce/core/api/fmt/Format';
 
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
-import { onActionToggleFormat } from '../ControlUtils';
+import { onActionToggleFormat, onSetupEditableToggle } from '../ControlUtils';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import { findNearest } from './utils/FormatDetection';
@@ -61,6 +61,7 @@ const createBlocksMenu = (editor: Editor, backstage: UiFactoryBackstage): void =
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('blocks', {
     text: 'Blocks',
+    onSetup: onSetupEditableToggle(editor),
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   });
 };

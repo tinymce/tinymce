@@ -8,14 +8,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - New optional `defaultExpandedIds` and `onToggleExpand` options to the `tree` component config. #TINY-9653
+- New optional `defaultSelectedId` option to the `tree` component config. #TINY-9715
+
+### Improved
+- Screen readers are now able to announce the highlighted menu item of link comboboxes. #TINY-9280
+
+### Improved
+- Toolbar buttons and menu items were not disabled when they couldn't be used on noneditable content. #TINY-9669
 
 ### Fixed
+- In the tree component, a selected item in a directory would not stay selected after collapsing the directory. #TINY-9715
 - Enabling or Disabling checkboxes would not set the correct classes and attributes. #TINY-4189
+- Redial would in some situations cause select elements not to have an initial value selected when they should have. #TINY-9679
 - Table toolbar was visible even if the table was within a noneditable host element. #TINY-9664
 - Quickbar toolbars was shown for noneditable contents in a noneditable root. #TINY-9460
 - Inline alert in the "Search and Replace" dialog persisted when it wasn't necessary. #TINY-9704
 - Context toolbars displayed the incorrect status for the `advlist` plugin buttons. #TINY-9680
 - On iOS Safari, Hangul (Korean) characters will no longer merge onto the previous line after inserting a newline by pressing Enter. #TINY-9746
+- Directionality commands was setting the `dir` attribute on noneditable elements within a noneditable root. #TINY-9662
+- The content of the dialog body could not be scrolled. #TINY-9668
 
 ## 6.4.1 - 2023-03-29
 
@@ -23,6 +34,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `fontsizeinput` increase and decrease size buttons now work on TinyMCE mobile. #TINY-9725
 - The TinyMCE editor toolbar is now accessible for all editor widths; it no longer collapses into an inaccessible vertical line at any presented editor width. #TINY-9646
 - Reverted the changes made, in TinyMCE 6.4.0, to UI button colors in focus, active, and enabled states. #TINY-9176
+
+### Changed
+- Update the `codesample` plugin dialog and `template` plugin dialog to use the 'listbox' component to match other dialogs. #TINY-9630
 
 ## 6.4.0 - 2023-03-15
 
