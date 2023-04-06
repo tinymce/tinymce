@@ -1,6 +1,6 @@
 import { ApproxStructure } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -194,5 +194,42 @@ describe('browser.tinymce.core.annotate.AnnotateTest', () => {
     ], true);
 
     TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 1);
+  });
+
+  it('TINY-9467: Do not annotate things in a noneditable root', () => {
+    TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+      const initialContent = '<p>text</p>';
+
+      editor.setContent(initialContent);
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
+      annotate(editor, 'test-annotation', 'test-uid', { anything: 'noneditable' });
+      assertHtmlContent(editor, [ initialContent ]);
+    });
+  });
+
+  it('TINY-9467: Annotate noneditable blocks in the current selection', () => {
+    const editor = hook.editor();
+    const initialContent = '<p>text</p><p contenteditable="false">text</p><p>text</p>';
+
+    editor.setContent(initialContent);
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 2, 0 ], 4);
+    annotate(editor, 'test-annotation', 'test-uid', { anything: 'noneditable' });
+    assertHtmlContent(editor, [
+      '<p><span class="mce-annotation" data-mce-annotation-uid="test-uid" data-mce-annotation="test-annotation" data-test-anything="noneditable">text</span></p>',
+      '<p contenteditable="false"><span class="mce-annotation" data-mce-annotation-uid="test-uid" data-mce-annotation="test-annotation" data-test-anything="noneditable">text</span></p>',
+      '<p><span class="mce-annotation" data-mce-annotation-uid="test-uid" data-mce-annotation="test-annotation" data-test-anything="noneditable">text</span></p>',
+    ]);
+  });
+
+  it('TINY-9467: Annotate around inline noneditable elements', () => {
+    const editor = hook.editor();
+    const initialContent = '<p>text<span contenteditable="false">CEF</span>text</p>';
+
+    editor.setContent(initialContent);
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 2 ], 4);
+    annotate(editor, 'test-annotation', 'test-uid', { anything: 'noneditable' });
+    assertHtmlContent(editor, [
+      '<p><span class="mce-annotation" data-mce-annotation-uid="test-uid" data-mce-annotation="test-annotation" data-test-anything="noneditable">text<span contenteditable="false">CEF</span>text</span></p>',
+    ]);
   });
 });
