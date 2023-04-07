@@ -117,14 +117,8 @@ const preserveWith = (editor: Editor, f: (startElement: SugarElement<Node>, endE
   editor.selection.setRng(rng);
 };
 
-const scrollToMarker = (marker: MarkerInfo, viewHeight: number, alignToTop: boolean, doc?: SugarElement<Document>) => {
-  const pos = marker.pos;
-  if (alignToTop) {
-    Scroll.to(pos.left, pos.top, doc);
-  } else {
-    marker.element.dom.scrollIntoView({ block: 'end' });
-  }
-};
+const scrollToMarker = (marker: MarkerInfo, _viewHeight: number, alignToTop: boolean, _doc?: SugarElement<Document>) =>
+  marker.element.dom.scrollIntoView({ block: alignToTop ? 'start' : 'end' });
 
 const intoWindowIfNeeded = (doc: SugarElement<Document>, scrollTop: number, viewHeight: number, marker: MarkerInfo, alignToTop?: boolean) => {
   const viewportBottom = viewHeight + scrollTop;
