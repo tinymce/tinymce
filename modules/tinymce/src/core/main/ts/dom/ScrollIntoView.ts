@@ -122,10 +122,7 @@ const scrollToMarker = (marker: MarkerInfo, viewHeight: number, alignToTop: bool
   if (alignToTop) {
     Scroll.to(pos.left, pos.top, doc);
   } else {
-    // The position we want to scroll to is the...
-    // (absolute position of the marker, minus the view height) plus (the height of the marker)
-    const y = (pos.top - viewHeight) + marker.height;
-    Scroll.to(pos.left, y, doc);
+    marker.element.dom.scrollIntoView({ block: 'end' });
   }
 };
 
