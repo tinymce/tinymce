@@ -19,6 +19,7 @@ interface BespokeSelectApi {
 
 const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage, spec: NumberInputSpec): AlloySpec => {
   let currentComp: Optional<AlloyComponent> = Optional.none();
+  let oldValue: Optional<string> = Optional.none();
 
   const getValueFromCurrentComp = (comp: Optional<AlloyComponent>): string =>
     comp.map((alloyComp) => Representing.getValue(alloyComp)).getOr('');
@@ -39,7 +40,9 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
 
   const changeValue = (f: (v: number, step: number) => number, fromInput: boolean, focusBack: boolean): void => {
     const text = getValueFromCurrentComp(currentComp);
-    const parsedText = Dimension.parse(text, [ 'unsupportedLength', 'empty' ]);
+    const parsedText = Dimension.parse(text, [ 'unsupportedLength', 'empty' ]).or(
+      oldValue.bind((value) => Dimension.parse(value, [ 'unsupportedLength', 'empty' ]))
+    );
     const value = parsedText.map((res) => res.value).getOr(0);
     const defaultUnit = Options.getFontSizeInputDefaultUnit(editor);
     const unit = parsedText.map((res) => res.unit).filter((u) => u !== '').getOr(defaultUnit);
@@ -146,6 +149,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
           ]),
           AddEventsBehaviour.config('input-update-display-text', [
             AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
+              oldValue = Optional.some(se.event.text);
               Representing.setValue(comp, se.event.text);
             }),
             AlloyEvents.run(NativeEvents.focusout(), (comp) => {
