@@ -17,6 +17,8 @@ interface BespokeSelectApi {
   readonly getComponent: () => AlloyComponent;
 }
 
+const defautlValue = 16;
+
 const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage, spec: NumberInputSpec): AlloySpec => {
   let currentComp: Optional<AlloyComponent> = Optional.none();
   let oldValue: Optional<string> = Optional.none();
@@ -42,7 +44,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
     const parsedText = Dimension.parse(text, [ 'unsupportedLength', 'empty' ]).or(
       oldValue.bind((value) => Dimension.parse(value, [ 'unsupportedLength', 'empty' ]))
     );
-    const value = parsedText.map((res) => res.value).getOr(0);
+    const value = parsedText.map((res) => res.value).getOr(defautlValue);
     const defaultUnit = Options.getFontSizeInputDefaultUnit(editor);
     const unit = parsedText.map((res) => res.unit).filter((u) => u !== '').getOr(defaultUnit);
 
