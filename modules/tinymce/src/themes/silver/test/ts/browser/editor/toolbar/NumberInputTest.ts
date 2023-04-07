@@ -319,4 +319,22 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     TinyUiActions.keystroke(editor, Keys.enter());
     assert.isTrue(editor.hasFocus(), 'after enter editor should have focus');
   });
+
+  it('TINY-9754: changing unit to an invalid unit should not set the size to 0', async () => {
+    const editor = hook.editor();
+    const originalFontSize = '16px';
+    editor.setContent(`<p style="font-size: ${originalFontSize};">abc</p>`);
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
+
+    TinyUiActions.clickOnToolbar(editor, '.tox-number-input input');
+
+    const input = TinyUiActions.clickOnToolbar<HTMLInputElement>(editor, '.tox-number-input input');
+    UiControls.setValue(input, '15invalid_unit');
+    const root = SugarShadowDom.getRootNode(TinyDom.targetElement(editor));
+    FocusTools.setFocus(root, '.tox-number-input input');
+    await FocusTools.pTryOnSelector('Focus should be on input', root, '.tox-number-input input');
+    TinyUiActions.keystroke(editor, Keys.enter());
+
+    TinyAssertions.assertContent(editor, `<p style="font-size: ${originalFontSize};">a<span style="font-size: ${originalFontSize};">b</span>c</p>`);
+  });
 });
