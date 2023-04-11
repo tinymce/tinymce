@@ -151,7 +151,6 @@ const getNumberInputSpec = (editor: Editor): NumberInputSpec => {
     updateInputValue,
     onAction: (format, focusBack) => editor.execCommand('FontSize', false, format, { skip_focus: !focusBack }),
     getNewValue: (text, updateFunction) => {
-
       Dimension.parse(text, [ 'unsupportedLength', 'empty' ]);
 
       const parsedText = Dimension.parse(text, [ 'unsupportedLength', 'empty' ]).or(
