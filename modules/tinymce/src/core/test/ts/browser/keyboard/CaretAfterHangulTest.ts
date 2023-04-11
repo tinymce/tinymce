@@ -7,11 +7,11 @@ import Editor from 'tinymce/core/api/Editor';
 import { isCaretAfterHangulCharacter } from 'tinymce/core/keyboard/EnterKey';
 
 interface Scenario {
-  label: string;
-  input: string;
-  cursorPath: number[];
-  offset: number;
-  result: boolean;
+  readonly label: string;
+  readonly input: string;
+  readonly cursorPath: number[];
+  readonly offset: number;
+  readonly result: boolean;
 }
 
 describe('browser.tinymce.core.keyboard.CursorAfterHangulTest', () => {
