@@ -1,4 +1,4 @@
-import { Fun, Optional, Type } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import Editor from '../api/Editor';
@@ -29,14 +29,13 @@ const isCaretAfterHangulCharacter = (rng: Range): boolean => {
   if (!rng.collapsed) {
     return false;
   }
-
   const startContainer = rng.startContainer;
-  if (!NodeType.isText(startContainer)) {
-    return false;
-  } else {
-    const text = startContainer.textContent;
+  if (NodeType.isText(startContainer)) {
+    const text = startContainer.data;
     const index = rng.startOffset - 1;
-    return Type.isNonNullable(text) && index < text.length && text.charCodeAt(index) >= 0xAC00 && text.charCodeAt(index) <= 0xD7A3;
+    return index < text.length && text.charCodeAt(index) >= 0xAC00 && text.charCodeAt(index) <= 0xD7A3;
+  } else {
+    return false;
   }
 };
 
