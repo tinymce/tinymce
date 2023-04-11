@@ -1,10 +1,9 @@
 import { Keys } from '@ephox/agar';
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, FocusInsideModes, Input, Keying, Memento, NativeEvents, Representing } from '@ephox/alloy';
 import { Arr, Cell, Fun, Id, Optional } from '@ephox/katamari';
-import { Dimension, Focus, SugarElement, Traverse } from '@ephox/sugar';
+import { Focus, SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
-import * as Options from 'tinymce/themes/silver/api/Options';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
 import { renderIconFromPack } from '../../button/ButtonSlices';
@@ -17,11 +16,8 @@ interface BespokeSelectApi {
   readonly getComponent: () => AlloyComponent;
 }
 
-const defaultValue = 16;
-
 const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage, spec: NumberInputSpec): AlloySpec => {
   let currentComp: Optional<AlloyComponent> = Optional.none();
-  let oldValue: Optional<string> = Optional.none();
 
   const getValueFromCurrentComp = (comp: Optional<AlloyComponent>): string =>
     comp.map((alloyComp) => Representing.getValue(alloyComp)).getOr('');
@@ -37,27 +33,18 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
 
   const customEvents = Id.generate('custom-number-input-events');
 
-  const isValidValue = (value: number): boolean => value >= 0;
-
   const changeValue = (f: (v: number, step: number) => number, fromInput: boolean, focusBack: boolean): void => {
     const text = getValueFromCurrentComp(currentComp);
-    const parsedText = Dimension.parse(text, [ 'unsupportedLength', 'empty' ]).or(
-      oldValue.bind((value) => Dimension.parse(value, [ 'unsupportedLength', 'empty' ]))
-    );
-    const value = parsedText.map((res) => res.value).getOr(defaultValue);
-    const defaultUnit = Options.getFontSizeInputDefaultUnit(editor);
-    const unit = parsedText.map((res) => res.unit).filter((u) => u !== '').getOr(defaultUnit);
 
-    const newValue = f(value, spec.getConfigFromUnit(unit).step);
-    const newValueWithUnit = `${isValidValue(newValue) ? newValue : value}${unit}`;
+    const newValue = spec.getNewValue(text, f);
 
-    const lenghtDelta = `${value}${unit}`.length - `${newValueWithUnit}`.length;
+    const lenghtDelta = text.length - `${newValue}`.length;
     const oldStart = currentComp.map((comp) => comp.element.dom.selectionStart - lenghtDelta);
     const oldEnd = currentComp.map((comp) => comp.element.dom.selectionEnd - lenghtDelta);
 
-    spec.onAction(newValueWithUnit, focusBack);
+    spec.onAction(newValue, focusBack);
     currentComp.each((comp) => {
-      Representing.setValue(comp, newValueWithUnit);
+      Representing.setValue(comp, newValue);
       if (fromInput) {
         oldStart.each((oldStart) => comp.element.dom.selectionStart = oldStart);
         oldEnd.each((oldEnd) => comp.element.dom.selectionEnd = oldEnd);
@@ -137,7 +124,6 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
           ]),
           AddEventsBehaviour.config('input-update-display-text', [
             AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
-              oldValue = Optional.some(se.event.text);
               Representing.setValue(comp, se.event.text);
             }),
             AlloyEvents.run(NativeEvents.focusout(), (comp) => {
