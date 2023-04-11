@@ -420,13 +420,13 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       const editor = hook.editor();
 
       editor.setContent('<p>ab</p>');
-      TinyUiActions.clickOnToolbar(editor, '[title="Click to expand or collapse"]');
+      TinyUiActions.clickOnToolbar(editor, '[title="Toggle additional toolbar buttons"]');
 
       editor.execCommand('ToggleView', false, 'myview1');
       assertViewHtml(0, '<button>myview1</button>');
       editor.execCommand('ToggleView', false, 'myview1');
       assertMainViewVisible();
-      const moreButton = UiFinder.findIn(TinyDom.container(editor), '[title="Click to expand or collapse"]');
+      const moreButton = UiFinder.findIn(TinyDom.container(editor), '[title="Toggle additional toolbar buttons"]');
       assert.isTrue(moreButton.isValue(), '"Expand or collapse" button should be there');
     });
   });
