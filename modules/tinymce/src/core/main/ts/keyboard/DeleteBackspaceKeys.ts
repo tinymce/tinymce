@@ -105,7 +105,7 @@ const setup = (editor: Editor, caret: Cell<Text | null>): void => {
 
   let isMetaBackspace = false;
   editor.on('keydown', (evt) => {
-    isMetaBackspace = evt.metaKey && evt.key === 'Backspace';
+    isMetaBackspace = VK.metaKeyPressed(evt) && evt.key === 'Backspace';
     if (isMetaBackspace && !evt.isDefaultPrevented()) {
       editor.undoManager.beforeChange();
     }
