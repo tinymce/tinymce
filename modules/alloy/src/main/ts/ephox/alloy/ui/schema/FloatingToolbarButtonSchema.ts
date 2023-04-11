@@ -66,6 +66,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
         toolbarBehaviours: Behaviour.derive([
           Keying.config({
             mode: 'cyclic',
+            selector: '.tox-toolbar__group',
             onEscape: (comp) => {
               AlloyParts.getPart(comp, detail, 'button').each(Focusing.focus);
               // Don't return true here, as we need to allow the sandbox to handle the escape to close the overflow
