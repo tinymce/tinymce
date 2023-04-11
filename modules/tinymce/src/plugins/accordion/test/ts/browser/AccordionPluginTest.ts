@@ -36,7 +36,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<p>tiny</p>',
       initialCursor: [[ 0, 0 ], 'tiny'.length ],
-      assertContent: '<p>tiny</p><details class="mce-accordion"><summary class="mce-accordion-summary">Accordion summary...</summary>' +
+      assertContent: '<p>tiny</p><details class="mce-accordion" open="open"><summary class="mce-accordion-summary">Accordion summary...</summary>' +
         '<div class="mce-accordion-body"><p>Accordion body...</p></div></details>',
       assertCursor: [[ 1, 0 ], 1 ],
     });
@@ -46,7 +46,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<p><br></p>',
       initialCursor: [[ 0, 0 ], 0 ],
-      assertContent: '<details class="mce-accordion"><summary class="mce-accordion-summary">Accordion summary...</summary>' +
+      assertContent: '<details class="mce-accordion" open="open"><summary class="mce-accordion-summary">Accordion summary...</summary>' +
         '<div class="mce-accordion-body"><p>Accordion body...</p></div></details>',
       assertCursor: [[ 0, 0 ], 1 ],
     });
@@ -56,7 +56,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<ol><li>tiny</li></ol>',
       initialCursor: [[ 0, 0, 0 ], 'tiny'.length ],
-      assertContent: '<ol><li>tiny<details class="mce-accordion"><summary class="mce-accordion-summary">Accordion summary...</summary>' +
+      assertContent: '<ol><li>tiny<details class="mce-accordion" open="open"><summary class="mce-accordion-summary">Accordion summary...</summary>' +
         '<div class="mce-accordion-body"><p>Accordion body...</p></div></details></li></ol>',
       assertCursor: [[ 0, 0, 1, 0 ], 1 ],
     });
@@ -66,7 +66,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<dl><dt>tiny</dt></dl>',
       initialCursor: [[ 0, 0, 0 ], 'tiny'.length ],
-      assertContent: '<dl><dt>tiny<details class="mce-accordion"><summary class="mce-accordion-summary">Accordion summary...</summary>' +
+      assertContent: '<dl><dt>tiny<details class="mce-accordion" open="open"><summary class="mce-accordion-summary">Accordion summary...</summary>' +
         '<div class="mce-accordion-body"><p>Accordion body...</p></div></details></dt></dl>',
       assertCursor: [[ 0, 0, 1, 0 ], 1 ],
     });
@@ -76,7 +76,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<dl><dd>tiny</dd></dl>',
       initialCursor: [[ 0, 0, 0 ], 'tiny'.length ],
-      assertContent: '<dl><dd>tiny<details class="mce-accordion"><summary class="mce-accordion-summary">Accordion summary...</summary>' +
+      assertContent: '<dl><dd>tiny<details class="mce-accordion" open="open"><summary class="mce-accordion-summary">Accordion summary...</summary>' +
         '<div class="mce-accordion-body"><p>Accordion body...</p></div></details></dd></dl>',
       assertCursor: [[ 0, 0, 1, 0 ], 1 ],
     });
@@ -87,7 +87,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
       initialContent: '<table><colgroup><col></colgroup><tbody><tr><td>&nbsp;</td></tr></tbody></table>',
       initialCursor: [[ 0, 1, 0, 0, 0 ], 0 ],
       assertContent: '<table><colgroup><col></colgroup><tbody><tr><td>' +
-        '<details class="mce-accordion"><summary class="mce-accordion-summary">Accordion summary...</summary>' +
+        '<details class="mce-accordion" open="open"><summary class="mce-accordion-summary">Accordion summary...</summary>' +
         '<div class="mce-accordion-body"><p>Accordion body...</p></div></details></td></tr></tbody></table>',
       assertCursor: [[ 0, 1, 0, 0, 0, 0 ], 1 ],
     });
@@ -95,23 +95,24 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
 
   it('TINY-9730: Insert an accordion into an accordion body', () => {
     testInsertingAccordion(hook.editor(), {
-      initialContent: '<details><summary>title</summary><div>body</div></details>',
-      initialCursor: [[ 0, 1, 0 ], 'body'.length ],
-      assertContent: '<details><summary>title</summary><div>body<details class="mce-accordion">' +
+      initialContent: '<details open="open"><summary>title</summary><div class="mce-accordion"><p>body</p></div></details>',
+      initialCursor: [[ 0, 1, 0, 0 ], 'body'.length ],
+      assertContent: '<details open="open"><summary>title</summary><div class="mce-accordion"><p>body</p><details class="mce-accordion" open="open">' +
         '<summary class="mce-accordion-summary">Accordion summary...</summary>' +
         '<div class="mce-accordion-body"><p>Accordion body...</p></div></details></div></details>',
       assertCursor: [[ 0, 1, 1, 0 ], 1 ],
     });
   });
 
-  it('TINY-9730: Insert an accordion after another accordion if selection is in summary', () => {
+  it('TINY-9730: Insert an accordion inside another accordion if selection is in summary', () => {
     testInsertingAccordion(hook.editor(), {
-      initialContent: '<details><summary>title</summary><div>body</div></details>',
+      initialContent: '<details open="open"><summary>title</summary><div class="mce-accordion-body"><p>body</p></div></details>',
       initialCursor: [[ 0, 0, 0 ], 'title'.length ],
-      assertContent: '<details><summary>title</summary><div>body</div></details><details class="mce-accordion">' +
+      assertContent: '<details open="open"><summary>title</summary><div class="mce-accordion-body"><p>body</p>' +
+        '<details class="mce-accordion" open="open">' +
         '<summary class="mce-accordion-summary">Accordion summary...</summary>' +
-        '<div class="mce-accordion-body"><p>Accordion body...</p></div></details>',
-      assertCursor: [[ 1, 0 ], 1 ],
+        '<div class="mce-accordion-body"><p>Accordion body...</p></div></details></div></details>',
+      assertCursor: [[ 0, 1, 1, 0 ], 1 ],
     });
   });
 
@@ -122,11 +123,11 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     editor.execCommand('InsertAccordion');
     TinyAssertions.assertContent(
       editor,
-      '<p>tiny</p><details class="mce-accordion"><summary class="mce-accordion-summary">tiny</summary>' +
+      '<details class="mce-accordion" open="open"><summary class="mce-accordion-summary">tiny</summary>' +
       '<div class="mce-accordion-body"><p>Accordion body...</p></div></details>'
     );
     assert.equal(editor.selection.getNode().nodeName, 'SUMMARY');
-    TinyAssertions.assertCursor(editor, [ 1, 0 ], 1);
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
   });
 
   it('TINY-9730: Emit the "InsertAccordion" event', () => {

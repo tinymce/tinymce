@@ -1,52 +1,31 @@
 import Editor from 'tinymce/core/api/Editor';
+import { Id } from '@ephox/katamari';
 
 import * as Events from '../api/Events';
 
-const nonRemovableContainers = [ 'BODY', 'TD', 'TH', 'LI', 'DIV', 'DT', 'DD' ];
-const isNonRemovableContainer = (node: Node): boolean =>
-  nonRemovableContainers.includes(node.nodeName);
-
-const validContainers =
-  nonRemovableContainers.concat([ 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'UL', 'OL', 'TABLE', 'FIGURE', 'DETAILS', 'DL' ]);
-const isValidContainer = (node: Node): node is HTMLElement =>
-  validContainers.includes(node.nodeName);
-
-const getInsertPosition = (node: Node): InsertPosition =>
-  isNonRemovableContainer(node) ? 'beforeend' : 'afterend';
-
-const removeBr = (node: Node): void => {
-  if (node.firstChild?.nodeName === 'BR') {
-    node.firstChild.remove();
-  }
-};
-
 const insertAccordion = (editor: Editor): void => {
-  const dom = editor.dom;
-
-  const rng = editor.selection.getRng();
-  const summaryText = rng.toString() || editor.translate('Accordion summary...');
-  const bodyText = editor.translate('Accordion body...');
-
-  const target = dom.getParent(rng.commonAncestorContainer, isValidContainer);
-
-  if (!target) {
-    return;
+  const container = editor.selection.getNode();
+  if (container.nodeName === 'SUMMARY') {
+    const body = editor.dom.getNext(container, 'div.mce-accordion-body')
+    console.log(body);
+    if (!body) return;
+    if (!body.lastChild) return;
+    editor.selection.setCursorLocation(body.lastChild, 1);
   }
 
-  const details = dom.create('details', { class: 'mce-accordion', open: 'open' });
-  const summary = dom.create('summary', { class: 'mce-accordion-summary' }, summaryText);
-  const body = dom.create('div', { class: 'mce-accordion-body' }, `<p>${bodyText}</p>`);
+  const uid = Id.generate('acc');
+  const summaryText = editor.dom.encode(editor.selection.getRng().toString() || editor.translate('Accordion summary...'));
+  const bodyText = editor.dom.encode(editor.translate('Accordion body...'));
+  editor.insertContent(`<details data-mce-id="${uid}" class="mce-accordion" open="open"><summary class="mce-accordion-summary">${summaryText}</summary><div class="mce-accordion-body"><p>${bodyText}</p></div></details>`);
 
-  details.appendChild(summary);
-  details.appendChild(body);
-  removeBr(target);
+  const details = editor.dom.select(`[data-mce-id="${uid}"]`)[0];
+  if (!details) return;
+  details.removeAttribute('data-mce-id');
 
-  target.insertAdjacentElement(getInsertPosition(target), details);
-  if (!isNonRemovableContainer(target) && editor.dom.isEmpty(target)) {
-    target.remove();
+  const summary = editor.dom.select(`summary`, details)[0];
+  if (summary) {
+    editor.selection.setCursorLocation(summary, 1);
   }
-
-  editor.selection.setCursorLocation(summary, 1);
 
   Events.fireInsertAccordionEvent(editor, details);
 };
