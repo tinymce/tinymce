@@ -1,15 +1,18 @@
 import Editor from 'tinymce/core/api/Editor';
 
-import { fireInsertAccordionEvent } from '../api/Events';
+import * as Events from '../api/Events';
 
 const nonRemovableContainers = [ 'BODY', 'TD', 'TH', 'LI', 'DIV', 'DT', 'DD' ];
 const isNonRemovableContainer = (node: Node): boolean =>
   nonRemovableContainers.includes(node.nodeName);
 
-const validAncestorContainers =
+const validContainers =
   nonRemovableContainers.concat([ 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'UL', 'OL', 'TABLE', 'FIGURE', 'DETAILS', 'DL' ]);
-const isValidAncestorContainer = (node: Node): node is HTMLElement =>
-  validAncestorContainers.includes(node.nodeName);
+const isValidContainer = (node: Node): node is HTMLElement =>
+  validContainers.includes(node.nodeName);
+
+const getInsertPosition = (node: Node): InsertPosition =>
+  isNonRemovableContainer(node) ? 'beforeend' : 'afterend';
 
 const removeBr = (node: Node): void => {
   if (node.firstChild?.nodeName === 'BR') {
@@ -24,7 +27,7 @@ const insertAccordion = (editor: Editor): void => {
   const summaryText = rng.toString() || editor.translate('Accordion summary...');
   const bodyText = editor.translate('Accordion body...');
 
-  const target = dom.getParent(rng.commonAncestorContainer, isValidAncestorContainer);
+  const target = dom.getParent(rng.commonAncestorContainer, isValidContainer);
 
   if (!target) {
     return;
@@ -38,15 +41,14 @@ const insertAccordion = (editor: Editor): void => {
   details.appendChild(body);
   removeBr(target);
 
-  const isNonRemovable = isNonRemovableContainer(target);
-  target.insertAdjacentElement(isNonRemovable ? 'beforeend' : 'afterend', details);
-  if (!isNonRemovable && editor.dom.isEmpty(target)) {
+  target.insertAdjacentElement(getInsertPosition(target), details);
+  if (!isNonRemovableContainer(target) && editor.dom.isEmpty(target)) {
     target.remove();
   }
 
   editor.selection.setCursorLocation(summary, 1);
 
-  fireInsertAccordionEvent(editor, details);
+  Events.fireInsertAccordionEvent(editor, details);
 };
 
 export { insertAccordion };
