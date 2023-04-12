@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Fixed
-- Keyboard tab navigation in more floating toolbar when it has menu button would not navigate between toolbar groups but instead jump to the menu button. #TINY-9723 
+- Menu buttons would have the Tabstopping behaviour in toolbar. #TINY-9723 
 - The `urlinput` dialog component would not open the typeahead dropdown when the input value was reset to an empty string. #TINY-9717
 - Fixed the mouse pointer style from a text cursor to a default arrow pointer when hovering over the tree dialog component items. #TINY-9692
 - Enabled variant of togglable `tox-button` and `tox-button--secondary` now supports `hover`/`active`/`focus`/`disabled` states. #TINY-9713
