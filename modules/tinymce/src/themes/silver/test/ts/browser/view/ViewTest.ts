@@ -427,7 +427,7 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       editor.execCommand('ToggleView', false, 'myview1');
       assertMainViewVisible();
       const moreButton = UiFinder.findIn(TinyDom.container(editor), '[title="Reveal or hide more toolbar items"]');
-      assert.isTrue(moreButton.isValue(), '"Expand or collapse" button should be there');
+      assert.isTrue(moreButton.isValue(), '"Reveal or hide" button should be there');
     });
   });
 });
