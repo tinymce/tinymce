@@ -130,12 +130,12 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
   });
 
-  it('TINY-9730: Emit the "InsertAccordion" event', () => {
+  it('TINY-9730: Emit the "InsertedAccordion" event', () => {
     const editor = hook.editor();
     editor.setContent('<p><br></p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     let isEventTriggered = false;
-    editor.on('InsertAccordion', () => {
+    editor.on('InsertedAccordion', () => {
       isEventTriggered = true;
     });
     editor.execCommand('InsertAccordion');
