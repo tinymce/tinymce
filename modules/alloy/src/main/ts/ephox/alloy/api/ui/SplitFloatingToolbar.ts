@@ -47,6 +47,7 @@ const factory: CompositeSketchFactory<SplitFloatingToolbarDetail, SplitFloatingT
       markers: {
         toggledClass: detail.markers.overflowToggledClass
       },
+      keyingSelector: detail.splitToolbarBehaviours.dump.keying?.config.selector,
       parts: {
         button: externals['overflow-button'](),
         toolbar: externals.overflow()

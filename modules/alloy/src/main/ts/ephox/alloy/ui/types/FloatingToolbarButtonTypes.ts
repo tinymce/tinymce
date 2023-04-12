@@ -19,6 +19,7 @@ export interface FloatingToolbarButtonDetail extends CompositeSketchDetail, HasL
   markers: {
     toggledClass: string;
   };
+  keyingSelector: string;
 
   onToggled: (comp: AlloyComponent, state: boolean) => void;
 }
@@ -43,6 +44,7 @@ export interface FloatingToolbarButtonSpec extends CompositeSketchSpec, HasLayou
   markers: {
     toggledClass: string;
   };
+  keyingSelector?: string;
 
   parts: {
     'button': Partial<SimpleOrSketchSpec>;

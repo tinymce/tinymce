@@ -24,6 +24,7 @@ const schema = Fun.constant([
   FieldSchema.optionObjOf('fireDismissalEventInstead', [
     FieldSchema.defaulted('event', SystemEvents.dismissRequested())
   ]),
+  FieldSchema.defaultedString('keyingSelector', '[data-alloy-tabstop="true"]:not(:disabled)'),
   AnchorLayouts.schema(),
   Fields.onHandler('onToggled'),
 ]);
@@ -66,7 +67,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
         toolbarBehaviours: Behaviour.derive([
           Keying.config({
             mode: 'cyclic',
-            selector: '.tox-toolbar__group',
+            selector: detail.keyingSelector,
             onEscape: (comp) => {
               AlloyParts.getPart(comp, detail, 'button').each(Focusing.focus);
               // Don't return true here, as we need to allow the sandbox to handle the escape to close the overflow
