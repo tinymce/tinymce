@@ -112,7 +112,7 @@ const renderMoreToolbarCommon = (toolbarSpec: MoreDrawerToolbarSpec) => {
         name: 'more',
         icon: Optional.some('more-drawer'),
         enabled: true,
-        tooltip: Optional.some('Toggle additional toolbar buttons'),
+        tooltip: Optional.some('Reveal or hide more toolbar items'),
         primary: false,
         buttonType: Optional.none(),
         borderless: false

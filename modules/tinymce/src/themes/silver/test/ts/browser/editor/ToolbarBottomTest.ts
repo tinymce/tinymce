@@ -89,11 +89,11 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
         toolbar: Arr.range(10, Fun.constant('bold | italic ')).join('')
       },
       initial: [{
-        clickOn: 'button[title="Toggle additional toolbar buttons"]',
+        clickOn: 'button[title="Reveal or hide more toolbar items"]',
         waitFor: '.tox-toolbar__overflow'
       }],
       assertAbove: '.tox-toolbar__overflow',
-      assertBelow: 'button[title="Toggle additional toolbar buttons"]'
+      assertBelow: 'button[title="Reveal or hide more toolbar items"]'
     }));
 
     it('Menu button in overflow toolbar should open up', () => pTest({
@@ -104,7 +104,7 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
       },
       initial: [
         {
-          clickOn: 'button[title="Toggle additional toolbar buttons"]',
+          clickOn: 'button[title="Reveal or hide more toolbar items"]',
           waitFor: '.tox-toolbar__overflow'
         }, {
           clickOn: 'button[title="Align"]',

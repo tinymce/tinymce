@@ -42,7 +42,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.InlineToolbarDrawerFloati
     editor.setContent('<p>Line 1</p><p>Line 2</p><p>Line 3</p>');
     editor.focus();
     TinySelections.setCursor(editor, [ 2, 0 ], 'Line 3'.length);
-    await UiFinder.pWaitForVisible('Wait for editor to be visible', SugarBody.body(), '.tox-editor-header button[title="Toggle additional toolbar buttons"]');
+    await UiFinder.pWaitForVisible('Wait for editor to be visible', SugarBody.body(), '.tox-editor-header button[title="Reveal or hide more toolbar items"]');
     await pRunTests(editor);
     McEditor.remove(editor);
   };
