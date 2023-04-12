@@ -1,5 +1,6 @@
-import Editor from 'tinymce/core/api/Editor';
 import { Menu, Toolbar } from '@ephox/bridge';
+
+import Editor from 'tinymce/core/api/Editor';
 
 const isSummary = (node: Node): node is HTMLElement =>
   node.nodeName === 'SUMMARY';
