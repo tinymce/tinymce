@@ -26,6 +26,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Context toolbars displayed the incorrect status for the `advlist` plugin buttons. #TINY-9680
 - Directionality commands was setting the `dir` attribute on noneditable elements within a noneditable root. #TINY-9662
 - The content of the dialog body could not be scrolled. #TINY-9668
+- Formats were incorrectly applied to the closest editable element if the selection was in a noneditable context. #TINY-9678
+- Formats were incorrectly removed to the closest editable element if the selection was in a noneditable context. #TINY-9678
+- Formatter API `canApply` was not returning `false` when the selection was in a noneditable context. #TINY-9678
 
 ## 6.4.1 - 2023-03-29
 

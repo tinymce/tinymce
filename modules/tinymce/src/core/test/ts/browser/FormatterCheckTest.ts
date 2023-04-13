@@ -1,5 +1,5 @@
 import { before, context, describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { LegacyUnit, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -228,6 +228,14 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     editor.setContent('<p>a</p>');
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
     assert.isTrue(editor.formatter.canApply('bold'));
+  });
+
+  it('canApply should return false for noneditable selections', () => {
+    TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+      editor.setContent('<p>a</p>');
+      LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
+      assert.isFalse(editor.formatter.canApply('bold'));
+    });
   });
 
   it('Custom onmatch handler', () => {
