@@ -148,7 +148,6 @@ describe('browser.tinymce.plugins.media.core.SubmitTest', () => {
       clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;"
       allowfullscreen="allowfullscreen"></iframe></div></div>`;
 
-
     it('TINY-8714: Convert from responsive iframe to specified dimensions ', async () => {
       const editor = hook.editor();
       await Utils.pOpenDialog(editor);
