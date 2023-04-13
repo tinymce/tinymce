@@ -8,10 +8,7 @@ const insertAccordion = (editor: Editor): void => {
   const container = editor.selection.getNode();
   if (container.nodeName === 'SUMMARY') {
     const body = editor.dom.getNext(container, 'div.mce-accordion-body');
-    if (!body) {
-      return;
-    }
-    if (!body.lastChild) {
+    if (!body?.lastChild) {
       return;
     }
     editor.selection.setCursorLocation(body.lastChild, 1);
@@ -28,7 +25,7 @@ const insertAccordion = (editor: Editor): void => {
   }
   details.removeAttribute('data-mce-id');
 
-  const summary = editor.dom.select(`summary`, details)[0];
+  const summary = editor.dom.select('summary', details)[0];
   if (summary) {
     editor.selection.setCursorLocation(summary, 1);
   }

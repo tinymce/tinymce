@@ -11,9 +11,9 @@ const isInSummary = (editor: Editor): boolean => {
 };
 
 const onSetup = (editor: Editor) => (buttonApi: Toolbar.ToolbarButtonInstanceApi | Menu.MenuItemInstanceApi) => {
-  const f = () => buttonApi.setEnabled(!isInSummary(editor));
-  editor.on('NodeChange', f);
-  return () => editor.off('NodeChange', f);
+  const onNodeChange = () => buttonApi.setEnabled(!isInSummary(editor));
+  editor.on('NodeChange', onNodeChange);
+  return () => editor.off('NodeChange', onNodeChange);
 };
 
 const register = (editor: Editor): void => {
