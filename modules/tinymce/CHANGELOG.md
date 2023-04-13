@@ -13,9 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Improved
 - Screen readers are now able to announce the highlighted menu item of link comboboxes. #TINY-9280
 - Now `icon` field for dialog footer `togglebutton`s is not mandatory. #TINY-9757
-
-### Improved
 - Toolbar buttons and menu items were not disabled when they couldn't be used on noneditable content. #TINY-9669
+- Updated toolbar "More" button tooltip text from "More..." to "Reveal or hide additional toolbar items". #TINY-9629
 
 ### Fixed
 - In the tree component, a selected item in a directory would not stay selected after collapsing the directory. #TINY-9715
