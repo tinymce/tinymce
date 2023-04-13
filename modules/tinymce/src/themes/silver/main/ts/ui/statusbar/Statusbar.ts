@@ -1,4 +1,4 @@
-import { Behaviour, Focusing, SimpleSpec } from '@ephox/alloy';
+import { Behaviour, Focusing, GuiFactory, SimpleSpec } from '@ephox/alloy';
 
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
@@ -6,6 +6,7 @@ import { Logo } from 'tinymce/themes/silver/resources/StatusbarLogo';
 
 import * as Options from '../../api/Options';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import * as ConvertShortcut from '../alien/ConvertShortcut';
 import * as ElementPath from './ElementPath';
 import * as ResizeHandler from './ResizeHandle';
 import { renderWordCount } from './WordCount';
@@ -38,12 +39,20 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
     };
   };
 
-  const getTextComponents = (): SimpleSpec[] => {
-    const components: SimpleSpec[] = [];
+  const renderHelpAccessibility = (): SimpleSpec => {
+    return {
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-statusbar__help-text' ],
+      },
+      components: [
+        GuiFactory.text(`Press ${ConvertShortcut.convertText('Alt+0')} for help`)
+      ]
+    };
+  };
 
-    if (Options.useElementPath(editor)) {
-      components.push(ElementPath.renderElementPath(editor, { }, providersBackstage));
-    }
+  const renderRightContainer = () => {
+    const components: SimpleSpec[] = [];
 
     if (editor.hasPlugin('wordcount')) {
       components.push(renderWordCount(editor, providersBackstage));
@@ -51,6 +60,32 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
 
     if (Options.useBranding(editor)) {
       components.push(renderBranding());
+    }
+
+    return {
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-statusbar__right-container' ]
+      },
+      components
+    };
+  };
+
+  const getTextComponents = (): SimpleSpec[] => {
+    const components: SimpleSpec[] = [];
+
+    if (Options.useElementPath(editor)) {
+      components.push(ElementPath.renderElementPath(editor, { }, providersBackstage));
+    }
+
+    const shouldRenderHelpAccessibility = editor.hasPlugin('help') && Options.useHelpAccessibility(editor);
+
+    if (shouldRenderHelpAccessibility) {
+      components.push(renderHelpAccessibility());
+    }
+
+    if (Options.useBranding(editor) || editor.hasPlugin('wordcount')) {
+      components.push(renderRightContainer());
     }
 
     if (components.length > 0) {

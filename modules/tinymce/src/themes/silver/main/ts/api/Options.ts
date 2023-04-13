@@ -281,6 +281,11 @@ const register = (editor: Editor): void => {
   registerOption('sidebar_show', {
     processor: 'string'
   });
+
+  registerOption('help_accessibility', {
+    processor: 'boolean',
+    default: true
+  });
 };
 
 const isReadOnly = option('readonly');
@@ -319,6 +324,7 @@ const getResize = option('resize');
 const getPasteAsText = option('paste_as_text');
 const getSidebarShow = option('sidebar_show');
 const promotionEnabled = option('promotion');
+const useHelpAccessibility = option('help_accessibility');
 
 const isSkinDisabled = (editor: Editor): boolean =>
   editor.options.get('skin') === false;
@@ -468,5 +474,6 @@ export {
   useBranding,
   getResize,
   getPasteAsText,
-  getSidebarShow
+  getSidebarShow,
+  useHelpAccessibility
 };
