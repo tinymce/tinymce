@@ -1,4 +1,4 @@
 # List of packages to bump:
 # Format: [package_name]@[new_version]
 mcagar@8.4.0
-
+oxide@2.4.3
