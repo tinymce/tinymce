@@ -118,8 +118,8 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
       isFirstTypedCharacter.set(true);
     }
 
-    const isMetaBackspace = Env.os.isMacOS() && e.metaKey && e.key === 'Backspace';
-    if (isMetaBackspace) {
+    const hasOnlyMetaOrCtrlModifier = Env.os.isMacOS() ? e.metaKey : e.ctrlKey && !e.altKey;
+    if (hasOnlyMetaOrCtrlModifier) {
       undoManager.beforeChange();
     }
   });
