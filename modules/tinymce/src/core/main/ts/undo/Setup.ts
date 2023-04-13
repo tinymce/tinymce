@@ -116,6 +116,7 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
       setTyping(undoManager, true, locks);
       undoManager.add({} as UndoLevel, e);
       isFirstTypedCharacter.set(true);
+      return;
     }
 
     const hasOnlyMetaOrCtrlModifier = Env.os.isMacOS() ? e.metaKey : e.ctrlKey && !e.altKey;
