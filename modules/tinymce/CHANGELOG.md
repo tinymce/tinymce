@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enabling or Disabling checkboxes would not set the correct classes and attributes. #TINY-4189
 - Table toolbar was visible even if the table was within a noneditable host element. #TINY-9664
 - Quickbar toolbars was shown for noneditable contents in a noneditable root. #TINY-9460
-- Show calculated height and width of media embed elements on media dialog shows, convert to iframe if the dimensions have changed. #TINY-8714
+- Show the calculated height and width of media embed elements in the `media` plugin dialog. #TINY-8714
+- Allow a media embed element to be correctly resized when using the `media` plugin dialog by converting the media embed to a standalone iframe. #TINY-8714
 - Inline alert in the "Search and Replace" dialog persisted when it wasn't necessary. #TINY-9704
 
 ## 6.4.0 - 2023-03-15
