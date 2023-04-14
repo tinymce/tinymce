@@ -2,8 +2,6 @@ import { Id } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as Events from '../api/Events';
-
 const insertAccordion = (editor: Editor): void => {
   const container = editor.selection.getNode();
   if (container.nodeName === 'SUMMARY') {
@@ -29,8 +27,6 @@ const insertAccordion = (editor: Editor): void => {
   if (summary) {
     editor.selection.setCursorLocation(summary, 1);
   }
-
-  Events.fireInsertAccordionEvent(editor, details);
 };
 
 export { insertAccordion };
