@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated toolbar "More" button tooltip text from "More..." to "Reveal or hide additional toolbar items". #TINY-9629
 
 ### Fixed
+- Command + backspace would not add an undo level on Mac. #TINY-8910
+- Ctrl + backspace and Ctrl + delete would not restore correct caret position after redo. #TINY-8910
 - In the tree component, a selected item in a directory would not stay selected after collapsing the directory. #TINY-9715
 - Enabling or Disabling checkboxes would not set the correct classes and attributes. #TINY-4189
 - Redial would in some situations cause select elements not to have an initial value selected when they should have. #TINY-9679
@@ -24,11 +26,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Quickbar toolbars was shown for noneditable contents in a noneditable root. #TINY-9460
 - Inline alert in the "Search and Replace" dialog persisted when it wasn't necessary. #TINY-9704
 - Context toolbars displayed the incorrect status for the `advlist` plugin buttons. #TINY-9680
+- On iOS Safari, Hangul (Korean) characters will no longer merge onto the previous line after inserting a newline by pressing Enter. #TINY-9746
 - Directionality commands was setting the `dir` attribute on noneditable elements within a noneditable root. #TINY-9662
 - The content of the dialog body could not be scrolled. #TINY-9668
 - Formats were incorrectly applied to the closest editable element if the selection was in a noneditable context. #TINY-9678
 - Formats were incorrectly removed to the closest editable element if the selection was in a noneditable context. #TINY-9678
 - Formatter API `canApply` was not returning `false` when the selection was in a noneditable context. #TINY-9678
+- It was possible to remove links in noneditable contents with the 'unlink' editor command. #TINY-9739
 
 ## 6.4.1 - 2023-03-29
 
@@ -125,6 +129,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - After closing a view, the `more...` toolbar button disappeared if the editor had `toolbar_mode: 'sliding'` and the toolbar was opened. #TINY-9419
 - Inline dialogs would open partially off screen when the toolbar had a small width. #TINY-9588
 - Word count was inaccurate for documents with specific characters. #TINY-8122
+- The `autoresize` plugin would cause infinite resizing when `content_css` was set to `document`. #TINY-8872
 
 ## 6.3.2 - 2023-02-22
 
@@ -179,7 +184,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A newline could not be inserted when the selection was restored from a bookmark after an inline element with a `contenteditable="false"` attribute. #TINY-9194
 - The global `tinymce.dom.styleSheetLoader` was not affected by the `content_css_cors` option. #TINY-6037
 - The caret was moved to the previous line when a text pattern executed a `mceInsertContent` command on Enter key when running on Firefox. #TINY-9193
-- The `autoresize` plugin used to cause infinite resize when `content_css` is set to `document`. #TINY-8872
 
 ## 6.2.0 - 2022-09-08
 
