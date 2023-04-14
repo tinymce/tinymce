@@ -24,7 +24,7 @@ describe('browser.tinymce.core.dom.ScrollIntoViewTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     add_unload_trigger: false,
     height: 500,
-    with: 1000,
+    width: 1000,
     base_url: '/project/tinymce/js/tinymce',
     content_style: 'body.mce-content-body  { margin: 0 }'
   }, [], true);
