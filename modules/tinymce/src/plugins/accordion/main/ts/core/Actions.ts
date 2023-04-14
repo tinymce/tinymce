@@ -1,15 +1,18 @@
-import { Id } from '@ephox/katamari';
+import { Id, Arr } from '@ephox/katamari';
+import { Awareness, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
+import * as Events from '../api/Events';
+import * as Utils from './Utils';
+
 const insertAccordion = (editor: Editor): void => {
-  const container = editor.selection.getNode();
-  if (container.nodeName === 'SUMMARY') {
-    const body = editor.dom.getNext(container, 'div.mce-accordion-body');
+  if (Utils.isInSummary(editor)) {
+    const body = editor.dom.getNext(editor.selection.getNode(), 'div.mce-accordion-body');
     if (!body?.lastChild) {
       return;
     }
-    editor.selection.setCursorLocation(body.lastChild, 1);
+    editor.selection.setCursorLocation(body.lastChild, Awareness.getEnd(SugarElement.fromDom(body.lastChild)));
   }
 
   const uid = Id.generate('acc');
@@ -29,4 +32,57 @@ const insertAccordion = (editor: Editor): void => {
   }
 };
 
-export { insertAccordion };
+const toggleDetailsElement = (details: HTMLDetailsElement, state?: boolean): boolean => {
+  const shouldOpen = state ?? !Utils.isAccordionOpen(details);
+  if (shouldOpen) {
+    details.setAttribute('open', 'open');
+    details.setAttribute('data-mce-open', 'open');
+  } else {
+    details.removeAttribute('open');
+    details.removeAttribute('data-mce-open');
+  }
+  return shouldOpen;
+};
+
+const toggleAccordion = (editor: Editor, state?: boolean): void => {
+  const details = Utils.getSelectedDetails(editor);
+  if (details) {
+    Events.fireToggleAccordionEvent(editor, details, toggleDetailsElement(details, state));
+  }
+};
+
+const removeAccordion = (editor: Editor): void => {
+  const details = Utils.getSelectedDetails(editor);
+  if (!details) {
+    return;
+  }
+
+  const { nextSibling } = details;
+  if (nextSibling) {
+    editor.selection.setCursorLocation(nextSibling, 0);
+  } else {
+    const paragraph = editor.dom.create('p');
+    paragraph.innerHTML = '<br data-mce-bogus="1" />';
+    details.insertAdjacentElement('afterend', paragraph);
+    editor.selection.setCursorLocation(paragraph, 0);
+  }
+
+  details.remove();
+};
+
+const toggleAllAccordions = (editor: Editor, state?: boolean): void => {
+  const accordions = Array.from(editor.getBody().querySelectorAll('details'));
+  if (accordions.length === 0) {
+    return;
+  }
+  const shouldOpen = state ?? !Utils.isAccordionOpen(accordions[0]);
+  Arr.each(accordions, (accordion) => toggleDetailsElement(accordion, shouldOpen));
+  Events.fireToggleAllAccordionsEvent(editor, accordions, shouldOpen);
+};
+
+export {
+  insertAccordion,
+  toggleAccordion,
+  toggleAllAccordions,
+  removeAccordion
+};
