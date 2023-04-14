@@ -159,7 +159,16 @@ describe('browser.tinymce.core.dom.ScrollIntoViewTest', () => {
 
       TinySelections.setCursor(editor, [ 0, 2, 0 ], 0);
       editor.selection.scrollIntoView();
-      // TINY-9747: here the assertion on vertical scroll has a different value on a different browser this is probably caused by the scrollbar
+      /*
+        TINY-9747: here the assertion on vertical scroll has a different value on a different browser
+        because if the scrollbar is showed to have the element `a` inside the view the required scroll is different:
+
+        ----   ----
+        |      |
+        |      a
+        a      scrollbar
+        ----   ----
+      */
       assertHorizontalScrollPosition(editor, 0);
     });
   });
