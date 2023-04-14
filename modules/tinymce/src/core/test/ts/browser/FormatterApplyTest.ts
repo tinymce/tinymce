@@ -2510,7 +2510,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
       const initialContent = '<p>test</p><p contenteditable="true">editable</p>';
       editor.setContent(initialContent);
-      TinySelections.setSelection(editor, [ 0, 0 ], 4, [ 0, 0 ], 4);
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
       editor.formatter.apply('bold');
       TinyAssertions.assertContent(editor, initialContent);
     });

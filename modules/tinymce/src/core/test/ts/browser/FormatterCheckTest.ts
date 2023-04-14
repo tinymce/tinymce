@@ -230,10 +230,10 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     assert.isTrue(editor.formatter.canApply('bold'));
   });
 
-  it('canApply should return false for noneditable selections', () => {
+  it('TINY-9678: canApply should return false for noneditable selections', () => {
     TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
       editor.setContent('<p>a</p>');
-      LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
       assert.isFalse(editor.formatter.canApply('bold'));
     });
   });
