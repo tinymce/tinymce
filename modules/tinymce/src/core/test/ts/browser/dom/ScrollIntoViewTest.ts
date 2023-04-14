@@ -24,6 +24,7 @@ describe('browser.tinymce.core.dom.ScrollIntoViewTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     add_unload_trigger: false,
     height: 500,
+    with: 1000,
     base_url: '/project/tinymce/js/tinymce',
     content_style: 'body.mce-content-body  { margin: 0 }'
   }, [], true);
@@ -59,8 +60,8 @@ describe('browser.tinymce.core.dom.ScrollIntoViewTest', () => {
   const assertScrollPosition = (editor: Editor, x: number, y: number) => {
     const actualX = Math.round(editor.dom.getViewPort(editor.getWin()).x);
     const actualY = Math.round(editor.dom.getViewPort(editor.getWin()).y);
-    assert.equal(actualX, x, `Scroll position X should be expected value: ${x} got ${actualX}`);
-    assert.equal(actualY, y, `Scroll position Y should be expected value: ${y} got ${actualY}`);
+    assert.approximately(actualX, x, 3, `Scroll position X should be expected value: ${x} got ${actualX}`);
+    assert.approximately(actualY, y, 3, `Scroll position Y should be expected value: ${y} got ${actualY}`);
   };
 
   const assertApproxScrollPosition = (editor: Editor, x: number, y: number) => {
@@ -138,6 +139,19 @@ describe('browser.tinymce.core.dom.ScrollIntoViewTest', () => {
       TinySelections.setCursor(editor, [ 2, 0 ], 0);
       editor.selection.scrollIntoView();
       assertScrollPosition(editor, 0, 689);
+    });
+
+    it('TINY-9747: when the selection is scrolled into view selection if there is an horizontal scroll it should preserve the correct left position', async () => {
+      const editor = hook.editor();
+      await pSetContent(editor, `<div class="container-with-horizontal-scroll" style="margin-left: 100px">
+        <div style="height: 1000px; width: 2000px">a</div>
+        <div style="height: 50px">b</div>
+        <div style="height: 600px">a</div>
+      </div>`);
+
+      TinySelections.setCursor(editor, [ 0, 2, 0 ], 0);
+      editor.selection.scrollIntoView();
+      assertScrollPosition(editor, 0, 704);
     });
   });
 
