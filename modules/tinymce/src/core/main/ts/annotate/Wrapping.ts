@@ -151,38 +151,35 @@ const annotate = (editor: Editor, rng: Range, uid: string, annotationName: strin
 };
 
 const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorSettings, data: {}): void => {
-  const selection = editor.selection;
+  editor.undoManager.transact(() => {
+    const selection = editor.selection;
+    const initialRng = selection.getRng();
+    const hasFakeSelection = TableCellSelection.getCellsFromEditor(editor).length > 0;
+    const masterUid = Id.generate('mce-annotation');
 
-  if (editor.selection.isEditable()) {
-    editor.undoManager.transact(() => {
-      const initialRng = selection.getRng();
-      const hasFakeSelection = TableCellSelection.getCellsFromEditor(editor).length > 0;
-      const masterUid = Id.generate('mce-annotation');
+    if (initialRng.collapsed && !hasFakeSelection) {
+      applyWordGrab(editor, initialRng);
+    }
 
-      if (initialRng.collapsed && !hasFakeSelection) {
-        applyWordGrab(editor, initialRng);
-      }
-
-      // Even after applying word grab, we could not find a selection. Therefore,
-      // just make a wrapper and insert it at the current cursor
-      if (selection.getRng().collapsed && !hasFakeSelection) {
-        const wrapper = makeAnnotation(editor.getDoc(), masterUid, data, name, settings.decorate);
-        // Put something visible in the marker
-        Html.set(wrapper, Unicode.nbsp);
-        selection.getRng().insertNode(wrapper.dom);
-        selection.select(wrapper.dom);
-      } else {
-        // The bookmark is responsible for splitting the nodes beforehand at the selection points
-        // The "false" here means a zero width cursor is NOT put in the bookmark. It seems to be required
-        // to stop an empty paragraph splitting into two paragraphs. Probably a better way exists.
-        SelectionUtils.preserve(selection, false, () => {
-          SelectionUtils.runOnRanges(editor, (selectionRng) => {
-            annotate(editor, selectionRng, masterUid, name, settings.decorate, data);
-          });
+    // Even after applying word grab, we could not find a selection. Therefore,
+    // just make a wrapper and insert it at the current cursor
+    if (selection.getRng().collapsed && !hasFakeSelection) {
+      const wrapper = makeAnnotation(editor.getDoc(), masterUid, data, name, settings.decorate);
+      // Put something visible in the marker
+      Html.set(wrapper, Unicode.nbsp);
+      selection.getRng().insertNode(wrapper.dom);
+      selection.select(wrapper.dom);
+    } else {
+      // The bookmark is responsible for splitting the nodes beforehand at the selection points
+      // The "false" here means a zero width cursor is NOT put in the bookmark. It seems to be required
+      // to stop an empty paragraph splitting into two paragraphs. Probably a better way exists.
+      SelectionUtils.preserve(selection, false, () => {
+        SelectionUtils.runOnRanges(editor, (selectionRng) => {
+          annotate(editor, selectionRng, masterUid, name, settings.decorate, data);
         });
-      }
-    });
-  }
+      });
+    }
+  });
 };
 
 export {

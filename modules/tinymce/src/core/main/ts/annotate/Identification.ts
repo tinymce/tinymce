@@ -10,34 +10,30 @@ const isRoot = (root: SugarElement<Node>) => (node: SugarElement<Node>) =>
 // Given the current editor selection, identify the uid of any current
 // annotation
 const identify = (editor: Editor, annotationName: Optional<string>): Optional<{ uid: string; name: string; elements: SugarElement<Element>[] }> => {
-  if (editor.selection.isEditable()) {
-    const rng = editor.selection.getRng();
+  const rng = editor.selection.getRng();
 
-    const start = SugarElement.fromDom(rng.startContainer);
-    const root = SugarElement.fromDom(editor.getBody());
+  const start = SugarElement.fromDom(rng.startContainer);
+  const root = SugarElement.fromDom(editor.getBody());
 
-    const selector = annotationName.fold(
-      () => '.' + Markings.annotation(),
-      (an) => `[${Markings.dataAnnotation()}="${an}"]`
-    );
+  const selector = annotationName.fold(
+    () => '.' + Markings.annotation(),
+    (an) => `[${Markings.dataAnnotation()}="${an}"]`
+  );
 
-    const newStart = Traverse.child(start, rng.startOffset).getOr(start);
-    const closest = SelectorFind.closest(newStart, selector, isRoot(root));
+  const newStart = Traverse.child(start, rng.startOffset).getOr(start);
+  const closest = SelectorFind.closest(newStart, selector, isRoot(root));
 
-    return closest.bind((c) =>
-      Attribute.getOpt(c, `${Markings.dataAnnotationId()}`).bind((uid) =>
-        Attribute.getOpt(c, `${Markings.dataAnnotation()}`).map((name) => {
-          const elements = findMarkers(editor, uid);
-          return {
-            uid,
-            name,
-            elements
-          };
-        })
-      ));
-  } else {
-    return Optional.none();
-  }
+  return closest.bind((c) =>
+    Attribute.getOpt(c, `${Markings.dataAnnotationId()}`).bind((uid) =>
+      Attribute.getOpt(c, `${Markings.dataAnnotation()}`).map((name) => {
+        const elements = findMarkers(editor, uid);
+        return {
+          uid,
+          name,
+          elements
+        };
+      })
+    ));
 };
 
 const isAnnotation = (elem: any): boolean => SugarNode.isElement(elem) && Class.has(elem, Markings.annotation());

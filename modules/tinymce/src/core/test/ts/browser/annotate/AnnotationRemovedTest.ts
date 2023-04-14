@@ -187,25 +187,23 @@ describe('browser.tinymce.core.annotate.AnnotationRemovedTest', () => {
     TinyAssertions.assertContentPresence(editor, { 'span[data-mce-annotation="alpha"]': 0 });
   });
 
-  it('TINY-9467: Should not remove annotations in selection inside a noneditable root', () => {
-    const editor = hook.editor();
-    editor.setContent('<p>test</p>');
-    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
-    annotate(editor, 'alpha', 'id-one', { anything: 'comment-1' });
-    TinyAssertions.assertContentPresence(editor, { 'span[data-mce-annotation="alpha"]': 1 });
-    TinyState.withNoneditableRootEditor(editor, () => {
-      editor.annotator.remove('alpha');
+  it('TINY-9467: Should remove annotations even if the selection is in a noneditable root', () => {
+    TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+      editor.setContent('<p>test</p>');
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
+      annotate(editor, 'alpha', 'id-one', { anything: 'comment-1' });
       TinyAssertions.assertContentPresence(editor, { 'span[data-mce-annotation="alpha"]': 1 });
+      editor.annotator.remove('alpha');
+      TinyAssertions.assertContentPresence(editor, { 'span[data-mce-annotation="alpha"]': 0 });
     });
   });
 
-  it('TINY-9467: Should remove annotations in noneditable root if all of them should be removed', () => {
-    const editor = hook.editor();
-    editor.setContent('<p>test</p>');
-    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
-    annotate(editor, 'alpha', 'id-one', { anything: 'comment-1' });
-    TinyAssertions.assertContentPresence(editor, { 'span[data-mce-annotation="alpha"]': 1 });
-    TinyState.withNoneditableRootEditor(editor, () => {
+  it('TINY-9467: Should remove all annotations even if the selection is in a noneditable root', () => {
+    TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+      editor.setContent('<p>test</p>');
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
+      annotate(editor, 'alpha', 'id-one', { anything: 'comment-1' });
+      TinyAssertions.assertContentPresence(editor, { 'span[data-mce-annotation="alpha"]': 1 });
       editor.annotator.removeAll('alpha');
       TinyAssertions.assertContentPresence(editor, { 'span[data-mce-annotation="alpha"]': 0 });
     });
