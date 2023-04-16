@@ -16,7 +16,10 @@ interface DataUriResult {
 const blobUriToBlob = (url: string): Promise<Blob> =>
   fetch(url)
     .then((res) => res.ok ? res.blob() : Promise.reject())
-    .catch(() => Promise.reject(`Cannot convert ${url} to Blob. Resource might not exist or is inaccessible.`));
+    .catch(() => Promise.reject({
+      message: `Cannot convert ${url} to Blob. Resource might not exist or is inaccessible.`,
+      uriType: 'blob'
+    }));
 
 const extractBase64Data = (data: string): string => {
   const matches = /([a-z0-9+\/=\s]+)/i.exec(data);
