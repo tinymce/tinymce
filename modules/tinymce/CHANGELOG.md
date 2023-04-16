@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Fixed
+- The editor would display a notification error when it fails to retirieve a blob image uri. #TINY-9604
 - The `urlinput` dialog component would not open the typeahead dropdown when the input value was reset to an empty string. #TINY-9717
 - Fixed the mouse pointer style from a text cursor to a default arrow pointer when hovering over the tree dialog component items. #TINY-9692
 - Enabled variant of togglable `tox-button` and `tox-button--secondary` now supports `hover`/`active`/`focus`/`disabled` states. #TINY-9713
