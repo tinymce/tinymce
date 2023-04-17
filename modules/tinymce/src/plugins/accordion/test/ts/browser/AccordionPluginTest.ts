@@ -6,6 +6,7 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 
 import AccordionPlugin from '../../../main/ts/Plugin';
+import type { ToggledAccordionEvent, ToggledAllAccordionsEvent } from '../../../main/ts/api/Events';
 
 const createAccordion = (
   { open = true, summary = 'Accordion summary...', body = '<p>Accordion body...</p>' }:
@@ -30,9 +31,9 @@ const testInsertingAccordion = (editor: Editor, test: InsertAccordionTest): void
   TinyAssertions.assertCursor(editor, ...test.assertCursor);
 };
 
-const testEvent = (editor: Editor, eventName: string, cmd: string, callback: (event: any) => void): void => {
+const testEvent = <T>(editor: Editor, eventName: string, cmd: string, callback: (event: T) => void): void => {
   let isEventTriggered = false;
-  const fn = (event: any) => {
+  const fn = (event: T) => {
     isEventTriggered = true;
     callback(event);
   };
@@ -203,11 +204,11 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     const editor = hook.editor();
     editor.setContent(createAccordion({ summary: 'tiny' }));
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 'tiny'.length);
-    testEvent(editor, 'ToggledAccordion', 'ToggleAccordion', (event) => {
+    testEvent(editor, 'ToggledAccordion', 'ToggleAccordion', (event: ToggledAccordionEvent) => {
       assert.equal(event.element.nodeName, 'DETAILS');
       assert.isFalse(event.state);
     });
-    testEvent(editor, 'ToggledAccordion', 'ToggleAccordion', (event) => {
+    testEvent(editor, 'ToggledAccordion', 'ToggleAccordion', (event: ToggledAccordionEvent) => {
       assert.equal(event.element.nodeName, 'DETAILS');
       assert.isTrue(event.state);
     });
@@ -217,12 +218,12 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     const editor = hook.editor();
     editor.setContent(createAccordion({ summary: 'tiny' }));
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 'tiny'.length);
-    testEvent(editor, 'ToggledAllAccordions', 'ToggleAllAccordions', (event) => {
+    testEvent(editor, 'ToggledAllAccordions', 'ToggleAllAccordions', (event: ToggledAllAccordionsEvent) => {
       assert.equal(event.elements.length, 1);
       assert.equal(event.elements[0].nodeName, 'DETAILS');
       assert.isFalse(event.state);
     });
-    testEvent(editor, 'ToggledAllAccordions', 'ToggleAllAccordions', (event) => {
+    testEvent(editor, 'ToggledAllAccordions', 'ToggleAllAccordions', (event: ToggledAllAccordionsEvent) => {
       assert.equal(event.elements.length, 1);
       assert.equal(event.elements[0].nodeName, 'DETAILS');
       assert.isTrue(event.state);
