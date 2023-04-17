@@ -20,6 +20,7 @@ interface InsertAccordionTest {
   readonly assertContent: string;
   readonly assertCursor: [number[], number];
 }
+
 const testInsertingAccordion = (editor: Editor, test: InsertAccordionTest): void => {
   editor.setContent(test.initialContent);
   TinySelections.setCursor(editor, ...test.initialCursor);
