@@ -41,7 +41,7 @@ describe('browser.tinymce.core.file.ImageScannerTest', () => {
       assert.lengthOf(result, 4);
       const base64ImageResult = result[0] as BlobInfoImagePair;
       const encodedImageResult = result[2] as BlobInfoImagePair;
-      assert.typeOf(result[result.length - 1], 'string', 'Last item is not the image, but error message.');
+      assert.typeOf(result[result.length - 1], 'object', 'Last item is not the image, but error object.');
       assert.equal('data:image/gif;base64,' + base64ImageResult.blobInfo.base64(), base64Src);
       LegacyUnit.equalDom(base64ImageResult.image, viewBlock.get().firstChild as HTMLImageElement);
       assert.equal('data:image/svg+xml;base64,' + encodedImageResult.blobInfo.base64(), 'data:image/svg+xml;base64,' + btoa(svg));
