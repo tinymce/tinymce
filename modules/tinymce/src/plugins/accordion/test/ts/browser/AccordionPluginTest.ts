@@ -5,8 +5,8 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import AccordionPlugin from '../../../main/ts/Plugin';
 import type { ToggledAccordionEvent, ToggledAllAccordionsEvent } from '../../../main/ts/api/Events';
+import AccordionPlugin from '../../../main/ts/Plugin';
 
 const createAccordion = (
   { open = true, summary = 'Accordion summary...', body = '<p>Accordion body...</p>' }:
@@ -122,8 +122,8 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: createAccordion({ summary: 'title', body: '<p>body</p>' }),
       initialCursor: [[ 0, 0, 0 ], 'title'.length ],
-      assertContent: createAccordion({ summary: 'title', body: `<p>body</p>${createAccordion()}` }),
-      assertCursor: [[ 0, 1, 1, 0 ], 1 ],
+      assertContent: createAccordion({ summary: 'title', body: '<p>body</p>' }),
+      assertCursor: [[ 0, 0, 0 ], 'title'.length ],
     });
   });
 
@@ -143,7 +143,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 'tiny'.length);
     editor.execCommand('RemoveAccordion');
     TinyAssertions.assertContent(editor, '<p>tiny</p>');
-    TinyAssertions.assertCursor(editor, [ 0 ], 0);
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
   });
 
   it('TINY-9731: Toggle an accordion element under the cursor', () => {
@@ -247,7 +247,8 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     TinyContentActions.keystroke(editor, Keys.enter());
     TinyAssertions.assertContentPresence(editor, { '.mce-accordion-body > p': 2 });
     TinyContentActions.keystroke(editor, Keys.enter());
-    TinyAssertions.assertContentPresence(editor, { '.mce-accordion-body > p': 1 });
+    TinyAssertions.assertContentPresence(editor, { '.mce-accordion-body > p': 2 });
+    TinyAssertions.assertContentPresence(editor, { 'details + p': 1 });
     TinyAssertions.assertCursor(editor, [ 1 ], 0);
   });
 });

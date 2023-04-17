@@ -7,7 +7,7 @@ export const isDetails = (node?: Node): node is HTMLDetailsElement =>
   node?.nodeName === 'DETAILS';
 
 export const isAccordionBody = (node?: Node): node is HTMLDivElement =>
-  node?.nodeName === 'DIV' && (node as HTMLDivElement).classList.contains('mce-accordion-body')
+  node?.nodeName === 'DIV' && (node as HTMLDivElement).classList.contains('mce-accordion-body');
 
 export const isAccordionOpen = (accordion: HTMLDetailsElement): boolean =>
   accordion.hasAttribute('open');
