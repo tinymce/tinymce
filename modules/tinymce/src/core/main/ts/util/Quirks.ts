@@ -678,6 +678,14 @@ const Quirks = (editor: Editor): Quirks => {
     }
   };
 
+  const dropDragEndEvent = () => {
+    editor.on('drop', (event) => {
+      if (event.dataTransfer?.getData('text/html').startsWith('<img')) {
+        editor.dispatch('dragend', new window.DragEvent('dragend', event));
+      }
+    });
+  };
+
   const setup = () => {
     // All browsers
     removeBlockQuoteOnBackSpace();
@@ -720,6 +728,7 @@ const Quirks = (editor: Editor): Quirks => {
       showBrokenImageIcon();
       blockCmdArrowNavigation();
       disableBackspaceIntoATable();
+      dropDragEndEvent();
     }
   };
 
