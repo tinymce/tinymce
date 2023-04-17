@@ -78,9 +78,7 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
       components.push(ElementPath.renderElementPath(editor, { }, providersBackstage));
     }
 
-    const shouldRenderHelpAccessibility = editor.hasPlugin('help') && Options.useHelpAccessibility(editor);
-
-    if (shouldRenderHelpAccessibility) {
+    if (Options.useHelpAccessibility(editor)) {
       components.push(renderHelpAccessibility());
     }
 

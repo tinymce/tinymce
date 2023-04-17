@@ -284,7 +284,7 @@ const register = (editor: Editor): void => {
 
   registerOption('help_accessibility', {
     processor: 'boolean',
-    default: true
+    default: editor.hasPlugin('help')
   });
 };
 
