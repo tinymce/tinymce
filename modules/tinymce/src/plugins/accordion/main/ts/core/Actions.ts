@@ -1,5 +1,4 @@
 import { Id, Arr } from '@ephox/katamari';
-import { Awareness, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -8,11 +7,7 @@ import * as Utils from './Utils';
 
 const insertAccordion = (editor: Editor): void => {
   if (Utils.isInSummary(editor)) {
-    const body = editor.dom.getNext(editor.selection.getNode(), 'div.mce-accordion-body');
-    if (!body?.lastChild) {
-      return;
-    }
-    editor.selection.setCursorLocation(body.lastChild, Awareness.getEnd(SugarElement.fromDom(body.lastChild)));
+    return;
   }
 
   const uid = Id.generate('acc');
