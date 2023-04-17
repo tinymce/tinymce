@@ -46,7 +46,6 @@ const setupEnterKeyInAccordionBody = (editor: Editor): void => {
     paragraph.innerHTML = '<br data-mce-bogus="1" />';
     details.insertAdjacentElement('afterend', paragraph);
     editor.selection.setCursorLocation(paragraph, 0);
-    node.remove();
   });
 };
 
