@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the mouse pointer style from a text cursor to a default arrow pointer when hovering over the tree dialog component items. #TINY-9692
 - Enabled variant of togglable `tox-button` and `tox-button--secondary` now supports `hover`/`active`/`focus`/`disabled` states. #TINY-9713
 - Setting an invalid unit in the `fontsizeinput` would change it do the default value instead of reverting it back to the previous valid value. #TINY-9754
-- `scrollIntoView` doesn't manage horizontal scroll correctly. #TINY-9747
+- Selection was not correctly scrolled horizontally into view when using the `selection.scrollIntoView` API. #TINY-9747
 
 ## 6.4.1 - 2023-03-29
 
