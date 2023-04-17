@@ -61,10 +61,7 @@ const removeAccordion = (editor: Editor): void => {
   if (nextSibling) {
     editor.selection.setCursorLocation(nextSibling, 0);
   } else {
-    const paragraph = editor.dom.create('p');
-    paragraph.innerHTML = '<br data-mce-bogus="1" />';
-    details.insertAdjacentElement('afterend', paragraph);
-    editor.selection.setCursorLocation(paragraph, 0);
+    Utils.insertAndSelectParagraphAfter(editor, details);
   }
 
   details.remove();

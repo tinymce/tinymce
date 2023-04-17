@@ -42,10 +42,7 @@ const setupEnterKeyInAccordionBody = (editor: Editor): void => {
       return;
     }
 
-    const paragraph = editor.dom.create('p');
-    paragraph.innerHTML = '<br data-mce-bogus="1" />';
-    details.insertAdjacentElement('afterend', paragraph);
-    editor.selection.setCursorLocation(paragraph, 0);
+    Utils.insertAndSelectParagraphAfter(editor, details);
   });
 };
 
