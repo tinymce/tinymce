@@ -54,7 +54,8 @@ const removeAccordion = (editor: Editor): void => {
 
   const { nextSibling } = details;
   if (nextSibling) {
-    editor.selection.setCursorLocation(nextSibling, 0);
+    editor.selection.select(nextSibling, true);
+    editor.selection.collapse(true);
   } else {
     Utils.insertAndSelectParagraphAfter(editor, details);
   }
