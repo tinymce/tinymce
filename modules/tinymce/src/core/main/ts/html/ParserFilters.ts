@@ -48,6 +48,10 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
       // Remove brs from body element as well
       blockElements.body = 1;
 
+      // Don't remove brs in td and th blocks
+      blockElements.td = 0;
+      blockElements.th = 0;
+
       const isBlock = (node: AstNode) => node.name in blockElements && TransparentElements.isTransparentAstInline(schema, node);
 
       // Must loop forwards since it will otherwise remove all brs in <p>a<br><br><br></p>
