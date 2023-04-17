@@ -5,13 +5,7 @@ import * as Utils from './Utils';
 
 const setupEnterKeyInSummary = (editor: Editor): void => {
   editor.on('keydown', (event): void => {
-    if (event.shiftKey) {
-      return;
-    }
-    if (event.keyCode !== VK.ENTER) {
-      return;
-    }
-    if (!Utils.isInSummary(editor)) {
+    if (event.shiftKey || event.keyCode !== VK.ENTER || !Utils.isInSummary(editor)) {
       return;
     }
     event.preventDefault();
@@ -21,18 +15,18 @@ const setupEnterKeyInSummary = (editor: Editor): void => {
 
 const setupEnterKeyInAccordionBody = (editor: Editor): void => {
   editor.on('keydown', (event): void => {
-    if (event.shiftKey) {
-      return;
-    }
-    if (event.keyCode !== VK.ENTER) {
+    if (event.shiftKey || event.keyCode !== VK.ENTER) {
       return;
     }
 
-    const node = editor.selection.getNode();
-    if (!editor.dom.isEmpty(node)) {
+    const selectedNode = editor.selection.getNode();
+    const node = editor.dom.isBlock(selectedNode)
+      ? selectedNode
+      : editor.dom.getParent(selectedNode, editor.dom.isBlock);
+    if (node?.nodeName !== 'P') {
       return;
     }
-    if (node.nodeName !== 'P') {
+    if (!editor.dom.isEmpty(node)) {
       return;
     }
 

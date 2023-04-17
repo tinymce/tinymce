@@ -1,15 +1,13 @@
 import Editor from 'tinymce/core/api/Editor';
 
 export const isSummary = (node?: Node): node is HTMLElement =>
-  node ? node.nodeName === 'SUMMARY' : false;
+  node?.nodeName === 'SUMMARY';
 
 export const isDetails = (node?: Node): node is HTMLDetailsElement =>
-  node ? node.nodeName === 'DETAILS' : false;
+  node?.nodeName === 'DETAILS';
 
 export const isAccordionBody = (node?: Node): node is HTMLDivElement =>
-  node
-    ? node.nodeName === 'DIV' && (node as HTMLDivElement).classList.contains('mce-accordion-body')
-    : false;
+  node?.nodeName === 'DIV' && (node as HTMLDivElement).classList.contains('mce-accordion-body')
 
 export const isInSummary = (editor: Editor): boolean => {
   const node = editor.selection.getNode();
