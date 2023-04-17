@@ -15,10 +15,10 @@ const createAccordion = (
   `<div class="mce-accordion-body">${body}</div></details>`;
 
 interface InsertAccordionTest {
-  initialContent: string;
-  initialCursor: [number[], number];
-  assertContent: string;
-  assertCursor: [number[], number];
+  readonly initialContent: string;
+  readonly initialCursor: [number[], number];
+  readonly assertContent: string;
+  readonly assertCursor: [number[], number];
 }
 const testInsertingAccordion = (editor: Editor, test: InsertAccordionTest): void => {
   editor.setContent(test.initialContent);
