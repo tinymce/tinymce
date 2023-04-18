@@ -1,4 +1,5 @@
 # List of packages to bump:
 # Format: [package_name]@[new_version]
 mcagar@8.4.0
-
+polaris@6.2.0
+robin@10.2.0
