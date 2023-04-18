@@ -1,4 +1,4 @@
-import { Fun } from '@ephox/katamari';
+import { Fun, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -680,7 +680,8 @@ const Quirks = (editor: Editor): Quirks => {
 
   const dropDragEndEvent = () => {
     editor.on('drop', (event) => {
-      if (event.dataTransfer?.getData('text/html').startsWith('<img')) {
+      const data = event.dataTransfer?.getData('text/html');
+      if (Type.isString(data) && /^<img[^>]*>$/.test(data)) {
         editor.dispatch('dragend', new window.DragEvent('dragend', event));
       }
     });
