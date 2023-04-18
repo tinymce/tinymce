@@ -1,7 +1,9 @@
 import { AlloyComponent, AlloySpec, AlloyTriggers, SketchSpec } from '@ephox/alloy';
 import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
+import { Dimension } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import * as Options from 'tinymce/themes/silver/api/Options';
 
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
@@ -18,7 +20,7 @@ interface Config {
 export interface NumberInputSpec {
   onAction: (format: string, focusBack?: boolean) => void;
   updateInputValue: (comp: AlloyComponent) => void;
-  getConfigFromUnit: (unit: string) => Config;
+  getNewValue: (text: string, updateFunction: (value: number, step: number) => number) => string;
 }
 
 // See https://websemantics.uk/articles/font-size-conversion/ for conversions
@@ -137,15 +139,31 @@ const getConfigFromUnit = (unit: string): Config => {
   return configs[unit] ?? baseConfig;
 };
 
+const defaultValue = 16;
+const isValidValue = (value: number): boolean => value >= 0;
+
 const getNumberInputSpec = (editor: Editor): NumberInputSpec => {
+  const getCurrentValue = () => editor.queryCommandValue('FontSize');
   const updateInputValue = (comp: AlloyComponent) => AlloyTriggers.emitWith(comp, updateMenuText, {
-    text: editor.queryCommandValue('FontSize')
+    text: getCurrentValue()
   });
 
   return {
     updateInputValue,
-    getConfigFromUnit,
-    onAction: (format, focusBack) => editor.execCommand('FontSize', false, format, { skip_focus: !focusBack })
+    onAction: (format, focusBack) => editor.execCommand('FontSize', false, format, { skip_focus: !focusBack }),
+    getNewValue: (text, updateFunction) => {
+      Dimension.parse(text, [ 'unsupportedLength', 'empty' ]);
+
+      const parsedText = Dimension.parse(text, [ 'unsupportedLength', 'empty' ]).or(
+        Dimension.parse(getCurrentValue(), [ 'unsupportedLength', 'empty' ])
+      );
+      const value = parsedText.map((res) => res.value).getOr(defaultValue);
+      const defaultUnit = Options.getFontSizeInputDefaultUnit(editor);
+      const unit = parsedText.map((res) => res.unit).filter((u) => u !== '').getOr(defaultUnit);
+
+      const newValue = updateFunction(value, getConfigFromUnit(unit).step);
+      return `${isValidValue(newValue) ? newValue : value}${unit}`;
+    }
   };
 };
 

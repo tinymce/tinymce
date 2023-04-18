@@ -34,11 +34,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The content of the dialog body could not be scrolled. #TINY-9668
 - It was possible to remove links in noneditable contents with the 'unlink' editor command. #TINY-9739
 
+## 6.4.2 - TBD
+
+### Fixed
+- The editor would display a notification error when it fails to retirieve a blob image uri. #TINY-9604
+- Menu buttons would have the Tabstopping behaviour in toolbar. #TINY-9723
+- The `urlinput` dialog component would not open the typeahead dropdown when the input value was reset to an empty string. #TINY-9717
+- Fixed the mouse pointer style from a text cursor to a default arrow pointer when hovering over the tree dialog component items. #TINY-9692
+- Enabled variant of togglable `tox-button` and `tox-button--secondary` now supports `hover`/`active`/`focus`/`disabled` states. #TINY-9713
+- Setting an invalid unit in the `fontsizeinput` would change it do the default value instead of reverting it back to the previous valid value. #TINY-9754
+
 ## 6.4.1 - 2023-03-29
 
 ### Fixed
 - The `fontsizeinput` increase and decrease size buttons now work on TinyMCE mobile. #TINY-9725
-- The TinyMCE editor toolbar is now accessible for all editor widths; it no longer collapses into an inaccessible vertical line at any presented editor width. #TINY-9646
+- The TinyMCE editor toolbar is now accessible for all screen widths; it no longer collapses into an inaccessible vertical line when the screen is scrolled horizontally. #TINY-9646
 - Reverted the changes made, in TinyMCE 6.4.0, to UI button colors in focus, active, and enabled states. #TINY-9176
 
 ### Changed
