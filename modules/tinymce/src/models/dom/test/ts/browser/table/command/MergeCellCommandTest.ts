@@ -93,7 +93,7 @@ describe('browser.tinymce.models.dom.table.command.MergeCellCommandTest', () => 
       after: (
         '<table>' +
           '<tbody>' +
-          '<tr><td colspan="2" rowspan="2">a1<br>b1<br>a2<br>b2</td></tr>' +
+          '<tr><td colspan="2" rowspan="2">a1<br>b1<br>a2<br>b2<br></td></tr>' +
           '<tr></tr>' +
           '<tr><td>a3</td><td>b3</td></tr>' +
           '</tbody>' +
@@ -140,7 +140,7 @@ describe('browser.tinymce.models.dom.table.command.MergeCellCommandTest', () => 
               '<td>c2</td>' +
             '</tr>' +
             '<tr>' +
-              '<td colspan="2">b3<br>c3</td>' +
+              '<td colspan="2">b3<br>c3<br></td>' +
             '</tr>' +
           '</tbody>' +
         '</table>'

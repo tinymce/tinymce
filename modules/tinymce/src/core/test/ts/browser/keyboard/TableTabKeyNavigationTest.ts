@@ -45,8 +45,7 @@ describe('browser.tinymce.core.keyboard.TableTabKeyNavigationTest', () => {
     TinyContentActions.keystroke(editor, Keys.tab());
     assert.equal(editor.selection.getStart(true).nodeName, 'TD');
     TinyAssertions.assertContent(editor,
-      '<table><tbody><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2' +
-      '</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table><p>x</p>'
+      '<table><tbody><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2</td></tr><tr><td><br></td><td><br></td></tr></tbody></table><p>x</p>'
     );
   });
 

@@ -61,7 +61,7 @@ describe('browser.tinymce.models.dom.table.TwoCellsSelectionTest', () => {
       '<colgroup><col><col><col></colgroup>' +
       '<tbody>' +
       '<tr><td>A1</td><td>B1</td><td>C1</td></tr>' +
-      '<tr><td colspan="2">A2<br>B2</td><td>C2</td></tr>' +
+      '<tr><td colspan="2">A2<br>B2<br></td><td>C2</td></tr>' +
       '</tbody>' +
       '</table>'
     );
@@ -75,7 +75,7 @@ describe('browser.tinymce.models.dom.table.TwoCellsSelectionTest', () => {
       '<table>' +
       '<colgroup><col><col><col></colgroup>' +
       '<tbody>' +
-      '<tr><td>A1</td><td rowspan="2">B1<br>B2</td><td>C1</td></tr>' +
+      '<tr><td>A1</td><td rowspan="2">B1<br>B2<br></td><td>C1</td></tr>' +
       '<tr><td>A2</td><td>C2</td></tr>' +
       '</tbody>' +
       '</table>'

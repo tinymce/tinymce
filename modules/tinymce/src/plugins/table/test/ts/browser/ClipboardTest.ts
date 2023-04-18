@@ -266,7 +266,7 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
       '<tbody>' +
       '<tr><td colspan="2">1 2</td><td>3</td></tr>' +
       '<tr><td colspan="2">1 2</td><td>3</td></tr>' +
-      '<tr><td>1</td><td>2</td><td>&nbsp;</td></tr>' +
+      '<tr><td>1</td><td>2</td><td><br></td></tr>' +
       '</tbody>' +
       '</table>'
     );
@@ -306,7 +306,7 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
       '<table>' +
       '<tbody>' +
       '<tr><td>1b</td><td>2b</td><td>3b</td><td>4b</td></tr>' +
-      '<tr><td>1a</td><td>2a</td><td>3a</td><td>&nbsp;</td></tr>' +
+      '<tr><td>1a</td><td>2a</td><td>3a</td><td><br></td></tr>' +
       '</tbody>' +
       '</table>'
     );
@@ -347,7 +347,7 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
 
       '<table>' +
       '<tbody>' +
-      '<tr><td>1b</td><td>2b</td><td>3b</td><td>&nbsp;</td><td>&nbsp;</td></tr>' +
+      '<tr><td>1b</td><td>2b</td><td>3b</td><td>&nbsp;</td><td><br></td></tr>' +
       '<tr><td>1a</td><td>2a</td><td>3a</td><td>4a</td><td>5a</td></tr>' +
       '<tr><td>1a</td><td colspan="3">2a</td><td>5a</td></tr>' +
       '</tbody>' +
@@ -772,10 +772,10 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
     const expectedTable = '<table>' +
     '<colgroup><col data-col-id="1"><col data-col-id="2"><col data-col-id="3"></colgroup>' +
     '<tbody>' +
-    '<tr><td>&nbsp;</td><td>a</td><td>&nbsp;</td></tr>' +
-    '<tr><td colspan="2">b</td><td>&nbsp;</td></tr>' +
-    '<tr><td>&nbsp;</td><td colspan="2">c</td></tr>' +
-    '<tr><td>&nbsp;</td><td>d</td><td>&nbsp;</td></tr>' +
+    '<tr><td><br>;</td><td>a</td><td><br></td></tr>' +
+    '<tr><td colspan="2">b</td><td><br></td></tr>' +
+    '<tr><td><br></td><td colspan="2">c</td></tr>' +
+    '<tr><td><br></td><td>d</td><td><br></td></tr>' +
     '</tbody>' +
     '</table>';
 
