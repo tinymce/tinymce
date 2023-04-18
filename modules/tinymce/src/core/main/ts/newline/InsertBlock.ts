@@ -16,6 +16,7 @@ import * as NormalizeRange from '../selection/NormalizeRange';
 import { isWhitespaceText } from '../text/Whitespace';
 import * as Zwsp from '../text/Zwsp';
 import * as InsertLi from './InsertLi';
+import * as InsertAccordion from './InsertAccordion';
 import * as NewLineUtils from './NewLineUtils';
 
 const trimZwsp = (fragment: DocumentFragment) => {
@@ -420,9 +421,13 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   // Enter inside block contained within a LI then split or insert before/after LI
   if (containerBlockName === 'LI' && !ctrlKey) {
     const liBlock = containerBlock as HTMLLIElement;
-    parentBlock = liBlock;
+
     containerBlock = liBlock.parentNode;
     parentBlockName = containerBlockName;
+  }
+
+  if (NodeType.isElement(containerBlock) && InsertAccordion.shouldPreventInsertParagraph(editor, shiftKey, parentBlock)) {
+    return InsertAccordion.insertParagraph(editor, createNewBlock, parentBlock);
   }
 
   // Handle enter in list item

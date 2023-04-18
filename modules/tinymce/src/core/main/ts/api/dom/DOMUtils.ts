@@ -957,7 +957,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
           // Ignore bogus elements
           const bogusVal = tempNode.getAttribute('data-mce-bogus');
           if (bogusVal) {
-            tempNode = walker.next(bogusVal === 'all' || tempNode.id === '_mce_caret');
+            tempNode = walker.next(bogusVal === 'all');
             continue;
           }
 
