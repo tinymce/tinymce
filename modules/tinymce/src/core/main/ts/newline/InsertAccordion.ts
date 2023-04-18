@@ -1,5 +1,4 @@
 import Editor from '../api/Editor';
-
 import * as NewLineUtils from './NewLineUtils';
 
 export const isDetails = (node?: Node): node is HTMLDetailsElement =>

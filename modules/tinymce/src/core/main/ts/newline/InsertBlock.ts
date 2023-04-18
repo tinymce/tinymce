@@ -15,8 +15,8 @@ import { isCaretNode } from '../fmt/FormatContainer';
 import * as NormalizeRange from '../selection/NormalizeRange';
 import { isWhitespaceText } from '../text/Whitespace';
 import * as Zwsp from '../text/Zwsp';
-import * as InsertLi from './InsertLi';
 import * as InsertAccordion from './InsertAccordion';
+import * as InsertLi from './InsertLi';
 import * as NewLineUtils from './NewLineUtils';
 
 const trimZwsp = (fragment: DocumentFragment) => {
@@ -411,7 +411,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   }
 
   // Find parent block and setup empty block paddings
-  let parentBlock: HTMLElement = dom.getParent(container, dom.isBlock) || dom.getRoot();
+  const parentBlock: HTMLElement = dom.getParent(container, dom.isBlock) || dom.getRoot();
   containerBlock = Type.isNonNullable(parentBlock?.parentNode) ? dom.getParent(parentBlock.parentNode, dom.isBlock) : null;
 
   // Setup block names
