@@ -8,8 +8,9 @@ import { dataToHtml } from '../core/DataToHtml';
 import * as HtmlToData from '../core/HtmlToData';
 import { isMediaElement } from '../core/Selection';
 import * as Service from '../core/Service';
-import { DialogSubData, MediaData, MediaDialogData } from '../core/Types';
+import { DialogSubData, MediaData, MediaDataType, MediaDialogData } from '../core/Types';
 import * as UpdateHtml from '../core/UpdateHtml';
+import * as UrlPatterns from '../core/UrlPatterns';
 
 type SourceInput = 'source' | 'altsource' | 'poster' | 'dimensions';
 
@@ -90,9 +91,26 @@ const handleError = (editor: Editor) => (error?: { msg: string }): void => {
 const getEditorData = (editor: Editor): MediaData => {
   const element = editor.selection.getNode();
   const snippet = isMediaElement(element) ? editor.serializer.serialize(element, { selection: true }) : '';
+  const data = HtmlToData.htmlToData(snippet, editor.schema);
+
+  const getDimensionsOfElement = (): MediaDialogData['dimensions'] => {
+    if (isEmbedIframe(data.source, data.type)) {
+      const rect = editor.dom.getRect(element);
+      return {
+        width: rect.w.toString().replace(/px$/, ''),
+        height: rect.h.toString().replace(/px$/, ''),
+      };
+    } else {
+      return {};
+    }
+  };
+
+  const dimensions = getDimensionsOfElement();
+
   return {
     embed: snippet,
-    ...HtmlToData.htmlToData(snippet, editor.schema)
+    ...data,
+    ...dimensions
   };
 };
 
@@ -134,8 +152,21 @@ const handleInsert = (editor: Editor, html: string): void => {
   editor.nodeChanged();
 };
 
+const isEmbedIframe = (url: string, mediaDataType?: MediaDataType) =>
+  Type.isNonNullable(mediaDataType) && mediaDataType === 'ephox-embed-iri' && Type.isNonNullable(UrlPatterns.matchPattern(url));
+
+const shouldInsertAsNewIframe = (prevData: MediaData, newData: MediaData) => {
+  const hasDimensionsChanged = (prevData: MediaData, newData: MediaData) =>
+    prevData.width !== newData.width || prevData.height !== newData.height;
+
+  return hasDimensionsChanged(prevData, newData) && isEmbedIframe(newData.source, prevData.type);
+};
+
 const submitForm = (prevData: MediaData, newData: MediaData, editor: Editor): void => {
-  newData.embed = UpdateHtml.updateHtml(newData.embed ?? '', newData, false, editor.schema);
+  newData.embed =
+    shouldInsertAsNewIframe(prevData, newData) && Options.hasDimensions(editor)
+      ? dataToHtml(editor, { ...newData, embed: '' } )
+      : UpdateHtml.updateHtml(newData.embed ?? '', newData, false, editor.schema);
 
   // Only fetch the embed HTML content if the URL has changed from what it previously was
   if (newData.embed && (prevData.source === newData.source || Service.isCached(newData.source))) {
@@ -172,8 +203,13 @@ const showDialog = (editor: Editor): void => {
     api.setData(wrap(dataFromEmbed));
   };
 
-  const handleUpdate = (api: Dialog.DialogInstanceApi<MediaDialogData>, sourceInput: SourceInput): void => {
-    const data = unwrap(api.getData(), sourceInput);
+  const handleUpdate = (api: Dialog.DialogInstanceApi<MediaDialogData>, sourceInput: SourceInput, prevData: MediaData): void => {
+    const dialogData = unwrap(api.getData(), sourceInput);
+    const data =
+      shouldInsertAsNewIframe(prevData, dialogData) && Options.hasDimensions(editor)
+        ? { ...dialogData, embed: '' }
+        : dialogData;
+
     const embed = dataToHtml(editor, data);
     api.setData(wrap({
       ...data,
@@ -288,7 +324,7 @@ const showDialog = (editor: Editor): void => {
         case 'dimensions':
         case 'altsource':
         case 'poster':
-          handleUpdate(api, detail.name);
+          handleUpdate(api, detail.name, currentData.get());
           break;
 
         default:
