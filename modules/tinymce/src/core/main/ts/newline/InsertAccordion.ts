@@ -17,7 +17,7 @@ export const shouldPreventInsertParagraph = (editor: Editor, shiftKey: boolean, 
   switch (true) {
     case shiftKey:
     case parentBlock.nodeName !== 'P':
-    case parentBlock?.parentNode?.lastChild !== parentBlock:
+    case parentBlock.parentNode?.lastChild !== parentBlock:
     case !editor.dom.isEmpty(parentBlock):
     case !isInAccordionBody(editor, parentBlock):
       return false;
