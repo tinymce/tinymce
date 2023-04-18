@@ -26,6 +26,9 @@ const setupEnterKeyInAccordionBody = (editor: Editor): void => {
     if (node?.nodeName !== 'P') {
       return;
     }
+    if (node?.parentElement?.lastChild !== node) {
+      return;
+    }
     if (!editor.dom.isEmpty(node)) {
       return;
     }
