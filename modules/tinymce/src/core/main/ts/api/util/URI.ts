@@ -355,6 +355,7 @@ class URI {
    * @param {String} path Absolute path to convert into a relative path.
    */
   public toRelPath(base: string, path: string): string {
+    if (!base && !path) return '';
     let breakPoint = 0, out = '', i, l;
 
     // Split the paths
@@ -406,6 +407,7 @@ class URI {
    * @param {String} path Relative path to convert into an absolute path.
    */
   public toAbsPath(base: string, path: string): string {
+    if (!base && !path) return '';
     let nb = 0;
 
     // Split paths
