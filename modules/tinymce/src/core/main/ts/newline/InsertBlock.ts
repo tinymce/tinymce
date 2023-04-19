@@ -411,7 +411,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   }
 
   // Find parent block and setup empty block paddings
-  const parentBlock: HTMLElement = dom.getParent(container, dom.isBlock) || dom.getRoot();
+  let parentBlock: HTMLElement = dom.getParent(container, dom.isBlock) || dom.getRoot();
   containerBlock = Type.isNonNullable(parentBlock?.parentNode) ? dom.getParent(parentBlock.parentNode, dom.isBlock) : null;
 
   // Setup block names
@@ -421,12 +421,12 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   // Enter inside block contained within a LI then split or insert before/after LI
   if (containerBlockName === 'LI' && !ctrlKey) {
     const liBlock = containerBlock as HTMLLIElement;
-
+    parentBlock = liBlock;
     containerBlock = liBlock.parentNode;
     parentBlockName = containerBlockName;
   }
 
-  if (NodeType.isElement(containerBlock) && InsertAccordion.shouldPreventInsertParagraph(editor, shiftKey, parentBlock)) {
+  if (NodeType.isElement(containerBlock) && InsertAccordion.isLastEmptyBlockInAccordion(editor, shiftKey, parentBlock)) {
     return InsertAccordion.insertParagraph(editor, createNewBlock, parentBlock);
   }
 

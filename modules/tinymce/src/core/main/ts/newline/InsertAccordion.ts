@@ -13,7 +13,7 @@ export const getAccordionRoot = (editor: Editor, element: Element): HTMLDetailsE
 export const isInAccordionBody = (editor: Editor, element: Element): boolean =>
   isAccordionBody(element) || Boolean(editor.dom.getParent(element, isAccordionBody));
 
-export const shouldPreventInsertParagraph = (editor: Editor, shiftKey: boolean, parentBlock: Element): boolean => {
+export const isLastEmptyBlockInAccordion = (editor: Editor, shiftKey: boolean, parentBlock: Element): boolean => {
   switch (true) {
     case shiftKey:
     case parentBlock.nodeName !== 'P':
