@@ -775,7 +775,7 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
     '<tr><td><br></td><td>a</td><td><br></td></tr>' +
     '<tr><td colspan="2">b</td><td><br></td></tr>' +
     '<tr><td><br></td><td colspan="2">c</td></tr>' +
-    '<tr><td><br></td><td>d</td><td><br></td></tr>' +
+    '<tr><td><br></td><td>d</td><td>&nbsp;</td></tr>' +
     '</tbody>' +
     '</table>';
 

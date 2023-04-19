@@ -36,6 +36,6 @@ describe('browser.tinymce.models.dom.table.TableNoWidthTest', () => {
     editor.execCommand('mceTableMergeCells');
     TinyAssertions.assertContent(editor, '<table><tbody><tr><td rowspan="2">1<br>3<br></td><td>2</td></tr><tr><td>4</td></tr></tbody></table>');
     editor.execCommand('mceTableSplitCells');
-    TinyAssertions.assertContent(editor, '<table><tbody><tr><td>1<br>3</td><td>2</td></tr><tr><td><br></td><td>4</td></tr></tbody></table>');
+    TinyAssertions.assertContent(editor, '<table><tbody><tr><td>1<br>3<br></td><td>2</td></tr><tr><td><br></td><td>4</td></tr></tbody></table>');
   });
 });
