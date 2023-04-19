@@ -18,8 +18,8 @@ describe('browser.tinymce.core.file.ConversionsTest', () => {
     return Conversions.uriToBlob(invalidBlobUriSrc).then(() => {
       assert.fail('Conversion should fail.');
     }, (error) => {
-      assert.typeOf(error, 'string');
-      assert.include(error, invalidBlobUriSrc);
+      assert.typeOf(error, 'object');
+      assert.include(error.message, invalidBlobUriSrc);
     });
   });
 });
