@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, UiFinder, Waiter } from '@ephox/agar';
-import { it, before, context, describe } from '@ephox/bedrock-client';
+import { before, context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { McEditor, TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -298,6 +298,58 @@ describe('browser.tinymce.plugins.advlist.AdvlistOptionsAndToolbarTest', () => {
 
       TinySelections.setCursor(editor, [ 0, 0, 1, 0, 1, 0, 0 ], 1);
       await pAssertButtonToggledState('Bullet list', false);
+      await pAssertButtonToggledState('Numbered list', false);
+    });
+  });
+
+  context('Context Toolbar Split buttons active state', () => {
+    const hook = TinyHooks.bddSetup<Editor>({
+      ...baseOptions,
+      setup: (ed: Editor) => {
+        ed.ui.registry.addContextToolbar('textselection', {
+          predicate: (_node) => true,
+          items: 'numlist bullist',
+          position: 'selection',
+          scope: 'node'
+        });
+      }
+    }, [ AdvListPlugin, ListsPlugin ], true);
+
+    const pAssertButtonToggledState = (name: string, state: boolean) =>
+      Waiter.pTryUntil('Wait for context toolbar button state', () => {
+        const button = UiFinder.findIn(SugarBody.body(), `.tox-pop__dialog .tox-split-button[aria-label="${name}"]`).getOrDie();
+        return Assertions.assertStructure('', ApproxStructure.build((s, _, __) => s.element('div', {
+          children: [
+            s.element('span', {
+              exactClasses: [ 'tox-tbtn', ...(state ? [ 'tox-tbtn--enabled' ] : [] ) ]
+            }),
+            s.theRest()
+          ]
+        })), button);
+      });
+
+    it('TINY-9680: context toolbar should have the correct enabled element', async () => {
+      const editor = hook.editor();
+      editor.setContent(`
+          <ol>
+            <li>1</li>
+            <li>2</li>
+          </ol>
+          <ul>
+            <li>1</li>
+            <li>2</li>
+          </ul>
+        `);
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
+      await UiFinder.pWaitForVisible('Waiting for node toolbar to appear', SugarBody.body(), '.tox-tbtn');
+      await TinyUiActions.pWaitForPopup(editor, '.tox-pop__dialog .tox-toolbar');
+      await pAssertButtonToggledState('Bullet list', false);
+      await pAssertButtonToggledState('Numbered list', true);
+
+      TinySelections.setSelection(editor, [ 1, 0, 0 ], 0, [ 1, 0, 0 ], 1);
+      await UiFinder.pWaitForVisible('Waiting for node toolbar to appear', SugarBody.body(), '.tox-tbtn');
+      await TinyUiActions.pWaitForPopup(editor, '.tox-pop__dialog .tox-toolbar');
+      await pAssertButtonToggledState('Bullet list', true);
       await pAssertButtonToggledState('Numbered list', false);
     });
   });
