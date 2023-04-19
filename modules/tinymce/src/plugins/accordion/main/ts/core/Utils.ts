@@ -27,13 +27,13 @@ export const getSelectedDetails = (editor: Editor): HTMLDetailsElement | null =>
 };
 
 export const isDetailsSelected = (editor: Editor): boolean =>
-  Boolean(getSelectedDetails(editor))
+  Boolean(getSelectedDetails(editor));
 
 export const createParagraph = (editor: Editor): HTMLParagraphElement => {
   const paragraph = editor.dom.create('p');
   paragraph.innerHTML = '<br data-mce-bogus="1" />';
   return paragraph;
-}
+};
 
 export const insertAndSelectParagraphAfter = (editor: Editor, target: HTMLElement): void => {
   const paragraph = createParagraph(editor);
@@ -46,10 +46,10 @@ export const normalizeAccordion = (editor: Editor) => (accordion: HTMLDetailsEle
   if (!isAccordionBody(body)) {
     body = editor.dom.create('div', { class: 'mce-accordion-body' });
     accordion.appendChild(body);
-  } 
+  }
 
   if (body && !body.lastChild) {
-    const paragraph = createParagraph(editor)
+    const paragraph = createParagraph(editor);
     body.appendChild(paragraph);
     editor.selection.setCursorLocation(paragraph, 0);
   }
@@ -58,6 +58,6 @@ export const normalizeAccordion = (editor: Editor) => (accordion: HTMLDetailsEle
 export const normalizeAccordions = (editor: Editor): void => {
   Tools.each(
     Tools.grep(editor.dom.select<HTMLDetailsElement>('details.mce-accordion', editor.getBody())),
-    normalizeAccordion(editor),
+    normalizeAccordion(editor)
   );
 };

@@ -1,6 +1,6 @@
+import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
-import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 
 import * as Utils from './Utils';
 
