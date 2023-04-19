@@ -59,7 +59,7 @@ describe('browser.tinymce.core.keyboard.TableNavigationTest', () => {
       TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0 ], 1);
       TinyContentActions.keystroke(editor, Keys.down());
       TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
-      TinyAssertions.assertContent(editor, '<table><tbody><tr><td>a</td><td>b<br></td></tr></tbody></table><p>&nbsp;</p>');
+      TinyAssertions.assertContent(editor, '<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table><p>&nbsp;</p>');
     });
 
     it('Arrow down on last position in last table cell with br', () => {
@@ -68,7 +68,7 @@ describe('browser.tinymce.core.keyboard.TableNavigationTest', () => {
       TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0 ], 1);
       TinyContentActions.keystroke(editor, Keys.down());
       TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
-      TinyAssertions.assertContent(editor, '<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table><p>&nbsp;</p>');
+      TinyAssertions.assertContent(editor, '<table><tbody><tr><td>a</td><td>b<br></td></tr></tbody></table><p>&nbsp;</p>');
     });
 
     it('Arrow down on second last position in last table cell', () => {

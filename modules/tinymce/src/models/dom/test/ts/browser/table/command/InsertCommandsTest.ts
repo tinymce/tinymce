@@ -68,7 +68,7 @@ describe('browser.tinymce.models.dom.table.command.InsertCommandsTest', () => {
     execCmdAndAssertEvent(editor, 'mceTableInsertColBefore');
     assert.equal(
       cleanTableHtml(editor.getContent()),
-      '<table><tbody><tr><td>&nbsp;</td><td>1</td></tr><tr><td>&nbsp;</td><td>2</td></tr></tbody></table>'
+      '<table><tbody><tr><td><br></td><td>1</td></tr><tr><td><br></td><td>2</td></tr></tbody></table>'
     );
   });
 
@@ -82,8 +82,8 @@ describe('browser.tinymce.models.dom.table.command.InsertCommandsTest', () => {
     execCmdAndAssertEvent(editor, 'mceTableInsertColBefore');
     assert.equal(
       cleanTableHtml(editor.getContent()),
-      '<table><tbody><tr><td>1</td><td>&nbsp;</td><td>&nbsp;</td><td>2</td><td>3</td>' +
-      '</tr><tr><td>4</td><td>&nbsp;</td><td>&nbsp;</td><td>5</td><td>6</td></tr></tbody></table>'
+      '<table><tbody><tr><td>1</td><td><br></td><td><br></td><td>2</td><td>3</td>' +
+      '</tr><tr><td>4</td><td><br></td><td><br></td><td>5</td><td>6</td></tr></tbody></table>'
     );
   });
 
@@ -94,7 +94,7 @@ describe('browser.tinymce.models.dom.table.command.InsertCommandsTest', () => {
     execCmdAndAssertEvent(editor, 'mceTableInsertRowAfter');
     assert.equal(
       cleanTableHtml(editor.getContent()),
-      '<table><tbody><tr><td>1</td><td>2</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>'
+      '<table><tbody><tr><td>1</td><td>2</td></tr><tr><td><br></td><td><br></td></tr></tbody></table>'
     );
   });
 
@@ -108,7 +108,7 @@ describe('browser.tinymce.models.dom.table.command.InsertCommandsTest', () => {
     assert.equal(
       cleanTableHtml(editor.getContent()),
       '<table><tbody><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr><tr>' +
-      '<td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>'
+      '<td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table>'
     );
   });
 
@@ -146,7 +146,7 @@ describe('browser.tinymce.models.dom.table.command.InsertCommandsTest', () => {
     execCmdAndAssertEvent(editor, 'mceTableInsertRowBefore');
     assert.equal(
       cleanTableHtml(editor.getContent()),
-      '<table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>1</td><td>2</td></tr></tbody></table>'
+      '<table><tbody><tr><td><br></td><td><br></td></tr><tr><td>1</td><td>2</td></tr></tbody></table>'
     );
   });
 
@@ -159,7 +159,7 @@ describe('browser.tinymce.models.dom.table.command.InsertCommandsTest', () => {
     execCmdAndAssertEvent(editor, 'mceTableInsertRowBefore');
     assert.equal(
       cleanTableHtml(editor.getContent()),
-      '<table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr>' +
+      '<table><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr>' +
       '<tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>'
     );
   });
