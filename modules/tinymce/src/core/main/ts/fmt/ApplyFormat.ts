@@ -56,7 +56,7 @@ const applyStyles = (dom: DOMUtils, elm: Element, format: ApplyFormat, vars: For
   }
 };
 
-const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | RangeLikeObject | null): void => {
+const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: Node | RangeLikeObject | null): void => {
   const formatList = ed.formatter.get(name) as ApplyFormat[];
   const format = formatList[0];
   const isCollapsed = !node && ed.selection.isCollapsed();
@@ -370,6 +370,12 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
   }
 
   Events.fireFormatApply(ed, name, node, vars);
+};
+
+const applyFormat = (editor: Editor, name: string, vars?: FormatVars, node?: Node | RangeLikeObject | null): void => {
+  if (editor.selection.isEditable()) {
+    applyFormatAction(editor, name, vars, node);
+  }
 };
 
 export {

@@ -32,6 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - On iOS Safari, Hangul (Korean) characters will no longer merge onto the previous line after inserting a newline by pressing Enter. #TINY-9746
 - Directionality commands was setting the `dir` attribute on noneditable elements within a noneditable root. #TINY-9662
 - The content of the dialog body could not be scrolled. #TINY-9668
+- Formats were incorrectly applied to the closest editable element if the selection was in a noneditable context. #TINY-9678
+- Formats were incorrectly removed to the closest editable element if the selection was in a noneditable context. #TINY-9678
+- Formatter API `canApply` was not returning `false` when the selection was in a noneditable context. #TINY-9678
 - When dragging image elements and dropping the image in the editor the `dragend` event would sometimes not fire on firefox. #TINY-9694
 - It was possible to remove links in noneditable contents with the 'unlink' editor command. #TINY-9739
 
