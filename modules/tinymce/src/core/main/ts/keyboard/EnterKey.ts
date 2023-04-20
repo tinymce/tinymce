@@ -62,7 +62,7 @@ const setup = (editor: Editor): void => {
   editor.on('keydown', (event: EditorEvent<KeyboardEvent>) => {
     if (event.keyCode === VK.ENTER) {
       if (isIOSSafari && isCaretAfterKoreanCharacter(editor.selection.getRng())) {
-        // TINY-9746: iOS Safari composes Hangul (Korean) characters by deleting the previous partial character and inserting
+        // TINY-9746: iOS Safari composes Korean characters by deleting the previous partial character and inserting
         // the composed character. If the native Enter keypress event is not fired, iOS Safari will continue to compose across
         // our custom newline by deleting it and inserting the composed character on the previous line, causing a bug. The workaround
         // is to save a bookmark and an undo level on keydown while not preventing default to allow the native Enter keypress.
