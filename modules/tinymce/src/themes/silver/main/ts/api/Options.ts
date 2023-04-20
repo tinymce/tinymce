@@ -282,6 +282,7 @@ const register = (editor: Editor): void => {
     processor: 'string'
   });
 
+  // This option is being registered in the theme instead of the help plugin as it cannot be accessed from the theme when registered there
   registerOption('help_accessibility', {
     processor: 'boolean',
     default: editor.hasPlugin('help')
