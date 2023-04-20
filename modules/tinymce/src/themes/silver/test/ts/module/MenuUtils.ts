@@ -25,12 +25,12 @@ const pOpenMenuWithSelector = async (label: string, selector: string): Promise<v
 };
 
 const pOpenMore = async (type: ToolbarMode): Promise<void> => {
-  Mouse.clickOn(SugarBody.body(), 'button[title="More..."]');
+  Mouse.clickOn(SugarBody.body(), 'button[title="Reveal or hide additional toolbar items"]');
   await UiFinder.pWaitForVisible('Waiting for more drawer to open', SugarBody.body(), getToolbarSelector(type, true));
 };
 
 const pCloseMore = async (type: ToolbarMode): Promise<void> => {
-  Mouse.clickOn(SugarBody.body(), 'button[title="More..."]');
+  Mouse.clickOn(SugarBody.body(), 'button[title="Reveal or hide additional toolbar items"]');
   await Waiter.pTryUntil('Waiting for more drawer to close', () => UiFinder.notExists(SugarBody.body(), getToolbarSelector(type, false)));
 };
 

@@ -1,6 +1,6 @@
 {
   "name": "@tinymce/oxide",
-  "version": "2.4.2",
+  "version": "2.5.0-alpha.0",
   "description": "TinyMCE 5 Oxide skin",
   "repository": {
     "type": "git",

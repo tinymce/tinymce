@@ -349,18 +349,7 @@ const removeFormatInternal = (ed: Editor, format: Format, vars?: FormatVars, nod
   return removeResult.keep();
 };
 
-/**
- * Removes the specified format for the specified node. It will also remove the node if it doesn't have
- * any attributes if the format specifies it to do so.
- *
- * @private
- * @param {Object} format Format object with items to remove from node.
- * @param {Object} vars Name/value object with variables to apply to format.
- * @param {Node} node Node to remove the format styles on.
- * @param {Node} compareNode Optional compare node, if specified the styles will be compared to that node.
- * @return {Boolean} True/false if the node was removed or not.
- */
-const removeFormat = (ed: Editor, format: Format, vars: FormatVars | undefined, node: Node, compareNode?: Node | null): boolean =>
+const removeFormatAction = (ed: Editor, format: Format, vars: FormatVars | undefined, node: Node, compareNode?: Node | null): boolean =>
   removeFormatInternal(ed, format, vars, node, compareNode).fold(
     Fun.never,
     (newName) => {
@@ -663,6 +652,25 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
   removeListStyleFormats(ed, name, vars);
 
   Events.fireFormatRemove(ed, name, node, vars);
+};
+
+/**
+ * Removes the specified format for the specified node. It will also remove the node if it doesn't have
+ * any attributes if the format specifies it to do so.
+ *
+ * @private
+ * @param {Object} format Format object with items to remove from node.
+ * @param {Object} vars Name/value object with variables to apply to format.
+ * @param {Node} node Node to remove the format styles on.
+ * @param {Node} compareNode Optional compare node, if specified the styles will be compared to that node.
+ * @return {Boolean} True/false if the node was removed or not.
+ */
+const removeFormat = (editor: Editor, format: Format, vars: FormatVars | undefined, node: Node, compareNode?: Node | null): boolean => {
+  if (editor.selection.isEditable()) {
+    return removeFormatAction(editor, format, vars, node, compareNode);
+  } else {
+    return false;
+  }
 };
 
 export {

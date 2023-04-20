@@ -49,6 +49,31 @@
 @button-active-box-shadow: @button-box-shadow;
 @button-active-text-color: @button-text-color;
 
+// Enabled state
+@button-enabled-background-color: darken(@button-background-color, 10%);
+@button-enabled-background-image: @button-background-image;
+@button-enabled-border-color: @button-enabled-background-color;
+@button-enabled-box-shadow: @button-box-shadow;
+@button-enabled-text-color: @button-text-color;
+
+@button-enabled-focus-background-color: @button-enabled-hover-background-color;
+@button-enabled-focus-background-image: @button-hover-background-image;
+@button-enabled-focus-border-color: @button-enabled-hover-background-color;
+@button-enabled-focus-box-shadow: @button-enabled-box-shadow;
+@button-enabled-focus-text-color: @button-enabled-text-color;
+
+@button-enabled-hover-background-color: darken(@button-enabled-background-color, 5%);
+@button-enabled-hover-background-image: @button-hover-background-image;
+@button-enabled-hover-border-color: @button-enabled-hover-background-color;
+@button-enabled-hover-box-shadow: @button-enabled-box-shadow;
+@button-enabled-hover-text-color: @button-enabled-text-color;
+
+@button-enabled-active-background-color: darken(@button-enabled-background-color, 10%);
+@button-enabled-active-background-image: @button-background-image;
+@button-enabled-active-border-color: @button-enabled-active-background-color;
+@button-enabled-active-box-shadow: @button-enabled-box-shadow;
+@button-enabled-active-text-color: @button-enabled-text-color;
+
 .tox {
   .tox-button {
     background-color: @button-background-color;
@@ -131,21 +156,45 @@
       color: @button-active-text-color;
     }
 
-    &.tox-button--enabled,
-    &.tox-button--enabled:hover {
-      background: @toolbar-button-enabled-background-color;
-      border-width: @button-border-width;
-      box-shadow: @button-active-box-shadow;
-      color: @toolbar-button-enabled-text-color;
+    // Enabled state
+    &.tox-button--enabled {
+      background-color: @button-enabled-background-color;
+      background-image: @button-enabled-background-image;
+      border-color: @button-enabled-border-color;
+      box-shadow: @button-enabled-box-shadow;
+      color: @button-enabled-text-color;
 
-      > * {
-        transform: @toolbar-button-enabled-transform;
+      &[disabled] {
+        background-color: @button-enabled-background-color;
+        background-image: @button-enabled-background-image;
+        border-color: @button-enabled-border-color;
+        box-shadow: @button-enabled-box-shadow;
+        color: @button-disabled-text-color;
+        cursor: not-allowed;
       }
 
-      // Disable stylelint below because we're mixing the :hover modifier with the "--enabled" class
-      // since they need to be kept the same/use the same rules
-      svg { /* stylelint-disable-line no-descending-specificity */
-        fill: @toolbar-button-enabled-icon-color;
+      &:focus:not(:disabled) {
+        background-color: @button-enabled-focus-background-color;
+        background-image: @button-enabled-focus-background-image;
+        border-color: @button-enabled-focus-border-color;
+        box-shadow: @button-enabled-focus-box-shadow;
+        color: @button-enabled-focus-text-color;
+      }
+
+      &:hover:not(:disabled) {
+        background-color: @button-enabled-hover-background-color;
+        background-image: @button-enabled-hover-background-image;
+        border-color: @button-enabled-hover-border-color;
+        box-shadow: @button-enabled-hover-box-shadow;
+        color: @button-enabled-hover-text-color;
+      }
+
+      &:active:not(:disabled) {
+        background-color: @button-enabled-active-background-color;
+        background-image: @button-enabled-active-background-image;
+        border-color: @button-enabled-active-border-color;
+        box-shadow: @button-enabled-active-box-shadow;
+        color: @button-enabled-active-text-color;
       }
 
       &[disabled] {

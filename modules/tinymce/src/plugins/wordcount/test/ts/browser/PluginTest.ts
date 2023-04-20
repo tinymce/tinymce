@@ -206,4 +206,23 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
     TinyContentActions.type(editor, 'b');
     await pWaitForWordcount(1);
   });
+
+  it('TINY-8122: Treat ` as a word break', async () => {
+    const editor = hook.editor();
+    await pWaitForWordcount(0);
+    const wordCountScenarios = [
+      { content: '<p>`word</p>', expected: 1 },
+      { content: '<p>word`</p>', expected: 1 },
+      { content: '<p>word`word</p>', expected: 2 },
+      { content: '<p>`word`</p>', expected: 1 },
+      { content: '<p>word`2</p>', expected: 2 },
+      { content: '<p>word`word test</p>', expected: 3 },
+      { content: '<p>word`word<br/>test`</p>', expected: 3 },
+      { content: '<p>word`word</p><p>test`</p>', expected: 3 },
+      { content: '<p>`1234`1234</p>', expected: 2 },
+      { content: '<p>`1234`1234`1234` 1234</p>', expected: 4 }
+    ];
+
+    await testWordcount(editor, wordCountScenarios);
+  });
 });

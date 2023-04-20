@@ -1126,8 +1126,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   const isEditable = (node: Node | null | undefined) => {
     if (Type.isNonNullable(node)) {
       const scope = NodeType.isElement(node) ? node : node.parentElement;
-      const isRootEditable = getContentEditable(getRoot()) === 'true';
-      return Type.isNonNullable(scope) && ContentEditable.isEditable(SugarElement.fromDom(scope), isRootEditable);
+      return Type.isNonNullable(scope) && ContentEditable.isEditable(SugarElement.fromDom(scope));
     } else {
       return false;
     }

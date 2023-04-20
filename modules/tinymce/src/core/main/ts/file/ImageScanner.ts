@@ -10,8 +10,13 @@ export interface BlobInfoImagePair {
   blobInfo: BlobInfo;
 }
 
+export interface BlobUriError {
+  uriType: 'blob';
+  message: string;
+}
+
 export interface ImageScanner {
-  findAll: (elm: HTMLElement, predicate?: (img: HTMLImageElement) => boolean) => Promise<Array<BlobInfoImagePair | string>>;
+  findAll: (elm: HTMLElement, predicate?: (img: HTMLImageElement) => boolean) => Promise<Array<BlobInfoImagePair | string | BlobUriError>>;
 }
 
 /**

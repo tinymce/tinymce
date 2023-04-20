@@ -25,16 +25,18 @@ export const registerCommands = (editor: Editor): void => {
 
   editor.editorCommands.addCommands({
     unlink: () => {
-      if (editor.selection.isCollapsed()) {
-        const elm = editor.dom.getParent(editor.selection.getStart(), 'a');
-        if (elm) {
-          editor.dom.remove(elm, true);
+      if (editor.selection.isEditable()) {
+        if (editor.selection.isCollapsed()) {
+          const elm = editor.dom.getParent(editor.selection.getStart(), 'a');
+          if (elm) {
+            editor.dom.remove(elm, true);
+          }
+
+          return;
         }
 
-        return;
+        editor.formatter.remove('link');
       }
-
-      editor.formatter.remove('link');
     },
 
     mceInsertLink: applyLinkToSelection,

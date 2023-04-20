@@ -1,7 +1,7 @@
 import { Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
-import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -1748,17 +1748,6 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     assert.equal(editor.getContent(), '<p>abc</p><p contenteditable="false">def</p><p><b>ghi</b></p>', 'Text in last paragraph is bold');
   });
 
-  it('contentEditable: true on start and contentEditable: false on end', () => {
-    const editor = hook.editor();
-    editor.formatter.register('format', {
-      inline: 'b'
-    });
-    editor.setContent('<p>abc</p><p contenteditable="false">def</p>');
-    LegacyUnit.setSelection(editor, 'p:nth-child(1)', 0, 'p:nth-child(2)', 3);
-    editor.formatter.apply('format');
-    assert.equal(editor.getContent(), '<p><b>abc</b></p><p contenteditable="false">def</p>', 'Text in first paragraph is bold');
-  });
-
   it('contentEditable: true inside contentEditable: false', () => {
     const editor = hook.editor();
     editor.formatter.register('format', {
@@ -2515,5 +2504,15 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     TinySelections.setCursor(editor, [ 0, 0 ], 7);
     editor.formatter.apply('blockquote');
     TinyAssertions.assertContent(editor, '<blockquote><p>test test</p></blockquote>');
+  });
+
+  it('TINY-9678: Should be a noop if selection is not in an editable context', () => {
+    TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+      const initialContent = '<p>test</p><p contenteditable="true">editable</p>';
+      editor.setContent(initialContent);
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
+      editor.formatter.apply('bold');
+      TinyAssertions.assertContent(editor, initialContent);
+    });
   });
 });
