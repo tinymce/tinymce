@@ -1443,8 +1443,8 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         context('Transparent elements', () => {
           const getTransparentElements = (schema: Schema) => Arr.unique(Arr.map(Obj.keys(schema.getTransparentElements()), (s) => s.toLowerCase()));
 
-          const testSplitInvalidBlocksOut = (testCase: { input: string; expected: string }) => {
-            const parser = DomParser(scenario.settings);
+          const testTransparentElementsParsing = (testCase: { input: string; expected: string; domParserSettings?: DomParserSettings }) => {
+            const parser = DomParser({ ...scenario.settings, ...testCase.domParserSettings ?? {}});
             const serializedHtml = serializer.serialize(parser.parse(testCase.input));
 
             assert.equal(serializedHtml, testCase.expected);
@@ -1479,34 +1479,42 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
             assert.equal(serializedHtml, expectedHtml);
           });
 
-          it('TINY-9232: H1 in H1 should unwrap to single H1', () => testSplitInvalidBlocksOut({
+          it('TINY-9232: H1 in H1 should unwrap to single H1', () => testTransparentElementsParsing({
             input: '<h1><a href="#"><h1>foo</h1></a></h1>',
             expected: '<h1>foo</h1>'
           }));
 
-          it('TINY-9232: H1 and H2 in H1 should unwrap', () => testSplitInvalidBlocksOut({
+          it('TINY-9232: H1 and H2 in H1 should unwrap', () => testTransparentElementsParsing({
             input: '<h1><a href="#"><h1>a</h1><h2>b</h2></a></h1>',
             expected: '<h1>a</h1><h2>b</h2>'
           }));
 
-          it('TINY-9232: H1 and H2 in H1 should unwrap but text should remain links', () => testSplitInvalidBlocksOut({
+          it('TINY-9232: H1 and H2 in H1 should unwrap but text should remain links', () => testTransparentElementsParsing({
             input: '<h1><a href="#">a<h1>b</h1>c<h2>d</h2>e</a></h1>',
             expected: '<h1><a href="#">a</a></h1><h1>b</h1><h1><a href="#">c</a></h1><h2>d</h2><h1><a href="#">e</a></h1>'
           }));
 
-          it('TINY-9232: H1 in H1 in DIV should unwrap down to DIV', () => testSplitInvalidBlocksOut({
+          it('TINY-9232: H1 in H1 in DIV should unwrap down to DIV', () => testTransparentElementsParsing({
             input: '<div>a<h1><a href="#"><h1>b</h1></a></h1>c</div>',
             expected: '<div>a<h1>b</h1>c</div>'
           }));
 
-          it('TINY-9232: Nested anchors wrapped in H1 and H2 should all unwrap', () => testSplitInvalidBlocksOut({
+          it('TINY-9232: Nested anchors wrapped in H1 and H2 should all unwrap', () => testTransparentElementsParsing({
             input: '<h1><a href="#1"><h2><a href="#2"><h3>foo</h3></a></h2></a></h1>',
             expected: '<h3>foo</h3>'
           }));
 
-          it('TINY-9232: H1 with content before and after anchor should be retained but the anchor should be unwrapped', () => testSplitInvalidBlocksOut({
+          it('TINY-9232: H1 with content before and after anchor should be retained but the anchor should be unwrapped', () => testTransparentElementsParsing({
             input: '<h1>a<a href="#"><h1>foo</h1></a>b</h1>',
             expected: '<h1>a</h1><h1>foo</h1><h1>b</h1>'
+          }));
+
+          it('TINY-9761: Transparent elements should not get paragraphs between them', () => testTransparentElementsParsing({
+            input: '<a href="#"><p>foo</p></a>\n<a href="#"><p>bar</p></a> \t<a href="#"><p>baz</p></a>',
+            expected: '<a href="#" data-mce-block="true"><p>foo</p></a><a href="#" data-mce-block="true"><p>bar</p></a><a href="#" data-mce-block="true"><p>baz</p></a>',
+            domParserSettings: {
+              forced_root_block: 'p'
+            }
           }));
         });
       });
