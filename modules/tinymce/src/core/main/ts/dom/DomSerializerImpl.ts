@@ -91,7 +91,6 @@ const DomSerializerImpl = (settings: DomSerializerSettings, editor?: Editor): Do
   const dom = editor && editor.dom ? editor.dom : DOMUtils.DOM;
   const schema = editor && editor.schema ? editor.schema : Schema(settings);
   settings.entity_encoding = settings.entity_encoding || 'named';
-  settings.remove_trailing_brs = 'remove_trailing_brs' in settings ? settings.remove_trailing_brs : true;
 
   const htmlParser = DomParser(settings, schema);
   DomSerializerFilters.register(htmlParser, settings, dom);
