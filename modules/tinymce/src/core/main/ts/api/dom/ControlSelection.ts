@@ -429,7 +429,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
       img.removeAttribute(elementSelectionAttr);
     });
 
-    if (Type.isNonNullable(controlElm) && isChildOrEqual(controlElm, rootElement)) {
+    if (Type.isNonNullable(controlElm) && isChildOrEqual(controlElm, rootElement) && editor.hasFocus()) {
       disableGeckoResize();
       const startElm = selection.getStart(true);
 
