@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+- Added to unicode punctuation string: '$', '~', '+', '|', '№', '`'. #TINY-8122
 
 ### Added
 - New `Words.getWordsWithIndices` API to extract words and their start and end indices when provided an array of characters. #TINY-9654

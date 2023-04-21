@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Now `icon` field for dialog footer `togglebutton`s is not mandatory. #TINY-9757
 - Toolbar buttons and menu items were not disabled when they couldn't be used on noneditable content. #TINY-9669
 - Updated toolbar "More" button tooltip text from "More..." to "Reveal or hide additional toolbar items". #TINY-9629
+- Word count was inaccurate for documents with specific characters. #TINY-8122
+- Update the `codesample` plugin dialog and `template` plugin dialog to use the 'listbox' component to match other dialogs. #TINY-9630
 
 ### Fixed
 - Command + backspace would not add an undo level on Mac. #TINY-8910
@@ -55,9 +57,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `fontsizeinput` increase and decrease size buttons now work on TinyMCE mobile. #TINY-9725
 - The TinyMCE editor toolbar is now accessible for all screen widths; it no longer collapses into an inaccessible vertical line when the screen is scrolled horizontally. #TINY-9646
 - Reverted the changes made, in TinyMCE 6.4.0, to UI button colors in focus, active, and enabled states. #TINY-9176
-
-### Changed
-- Update the `codesample` plugin dialog and `template` plugin dialog to use the 'listbox' component to match other dialogs. #TINY-9630
 
 ## 6.4.0 - 2023-03-15
 
@@ -143,7 +142,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Opening a menu button in the footer of a dialog after a redial threw an error. #TINY-9686
 - After closing a view, the `more...` toolbar button disappeared if the editor had `toolbar_mode: 'sliding'` and the toolbar was opened. #TINY-9419
 - Inline dialogs would open partially off screen when the toolbar had a small width. #TINY-9588
-- Word count was inaccurate for documents with specific characters. #TINY-8122
 - The `autoresize` plugin would cause infinite resizing when `content_css` was set to `document`. #TINY-8872
 
 ## 6.3.2 - 2023-02-22
