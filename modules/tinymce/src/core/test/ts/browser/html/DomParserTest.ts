@@ -1444,7 +1444,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
           const getTransparentElements = (schema: Schema) => Arr.unique(Arr.map(Obj.keys(schema.getTransparentElements()), (s) => s.toLowerCase()));
 
           const testTransparentElementsParsing = (testCase: { input: string; expected: string; domParserSettings?: DomParserSettings }) => {
-            const parser = DomParser({ ...scenario.settings, ...testCase.domParserSettings ?? {}});
+            const parser = DomParser({ ...scenario.settings, ...testCase.domParserSettings });
             const serializedHtml = serializer.serialize(parser.parse(testCase.input));
 
             assert.equal(serializedHtml, testCase.expected);
