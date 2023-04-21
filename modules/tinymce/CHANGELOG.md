@@ -29,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Allow a media embed element to be correctly resized when using the `media` plugin dialog by converting the media embed to a standalone iframe. #TINY-8714
 - Inline alert in the "Search and Replace" dialog persisted when it wasn't necessary. #TINY-9704
 - Context toolbars displayed the incorrect status for the `advlist` plugin buttons. #TINY-9680
-- On iOS Safari, Korean characters was merging onto the previous line upon typing after inserting a newline by pressing Enter. #TINY-9746
+- On iOS Safari, Korean characters were merging onto the previous line upon typing after inserting a newline by pressing Enter. #TINY-9746
 - Directionality commands was setting the `dir` attribute on noneditable elements within a noneditable root. #TINY-9662
 - The content of the dialog body could not be scrolled. #TINY-9668
 - Formats were incorrectly applied to the closest editable element if the selection was in a noneditable context. #TINY-9678
