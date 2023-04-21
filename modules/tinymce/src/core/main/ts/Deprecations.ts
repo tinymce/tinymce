@@ -23,6 +23,9 @@ const deprecatedPlugins = [
     name: 'template',
     replacedWith: 'Advanced Template',
   },
+  {
+    name: 'rtc',
+  },
 ];
 
 const getMatchingOptions = (options: RawEditorOptions, searchingFor: string[]): string[] => {
@@ -84,7 +87,14 @@ const logRemovedWarnings = (rawOptions: RawEditorOptions, normalizedOptions: Nor
 const getPluginDescription = (name: string) =>
   Arr.find(deprecatedPlugins, (entry) => entry.name === name).fold(
     () => name,
-    (entry) => `${name}, replaced by ${entry.replacedWith}`
+    (entry) => {
+      if (entry.replacedWith) {
+        return `${name}, replaced by ${entry.replacedWith}`;
+      } else {
+        return name;
+      }
+
+    }
   );
 
 const logDeprecatedWarnings = (rawOptions: RawEditorOptions, normalizedOptions: NormalizedEditorOptions): void => {
