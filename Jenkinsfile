@@ -129,13 +129,15 @@ timestamps {
         // TODO: Determine if this should be run on a container instead
         node('headless-macos') {
           // Prepare the branch on the node
-          checkout(scm)
-          gitMerge(primaryBranch)
-          cleanAndInstall()
-          exec("yarn ci -s tinymce-rollup")
+          lock('headless tests') {
+            checkout(scm)
+            gitMerge(primaryBranch)
+            cleanAndInstall()
+            exec("yarn ci -s tinymce-rollup")
 
-          echo "Platform: chrome-headless tests on node: $NODE_NAME"
-          runHeadlessTests(runAllTests)
+            echo "Platform: chrome-headless tests on node: $NODE_NAME"
+            runHeadlessTests(runAllTests)
+          }
         }
       }
 
