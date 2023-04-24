@@ -138,7 +138,7 @@ const renderCommonStructure = (
               Replacing.set(displayIcon, [ renderReplaceableIconFromPack(se.event.icon, providersBackstage.icons) ]);
             });
           }),
-          AlloyEvents.run<EventArgs<MouseEvent>>(NativeEvents.mousedown(), (button, se) => {
+          AlloyEvents.run<EventArgs<MouseEvent>>(NativeEvents.mousedown(), (button) => {
             AlloyTriggers.emit(button, focusButtonEvent);
           })
         ])
