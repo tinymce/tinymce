@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Toolbar buttons and menu items were not disabled when they couldn't be used on noneditable content. #TINY-9669
 - Updated toolbar "More" button tooltip text from "More..." to "Reveal or hide additional toolbar items". #TINY-9629
 - Word count was inaccurate for documents with specific characters. #TINY-8122
-- Update the `codesample` plugin dialog and `template` plugin dialog to use the 'listbox' component to match other dialogs. #TINY-9630
+- Updated the `codesample` plugin dialog and `template` plugin dialog to use the 'listbox' component to match other dialogs. #TINY-9630
 
 ### Fixed
 - Command + backspace would not add an undo level on Mac. #TINY-8910
