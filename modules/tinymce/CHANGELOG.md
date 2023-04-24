@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Setting an invalid unit in the `fontsizeinput` would change it do the default value instead of reverting it back to the previous valid value. #TINY-9754
 - Selection was not correctly scrolled horizontally into view when using the `selection.scrollIntoView` API. #TINY-9747
 - Context toolbars displayed the incorrect status for the `advlist` plugin buttons. #TINY-9680
+- The image would not be inserted when using the `quickimage` button on Chrome. #TINY-9769
 
 ## 6.4.1 - 2023-03-29
 
