@@ -429,6 +429,22 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     return editor.uploadImages().then(() => assertEventsLength(1));
   });
 
+  it('TINY-9696: Removing an image should not leave the containing block without bogus element.', async () => {
+    const editor = hook.editor();
+    setInitialContent(editor, `<p>A</p><p></p><p>${imageHtml(testBlobDataUri)}</p>`);
+
+    editor.options.set('images_upload_handler', () => {
+      return Promise.reject({ message: 'Error', remove: true });
+    });
+
+    assertEventsLength(0);
+    await editor.uploadImages().then(() => {
+      assertEventsLength(1);
+    });
+
+    TinyAssertions.assertRawContent(editor, '<p>A</p><p><br data-mce-bogus="1"></p><p><br data-mce-bogus="1"></p>');
+  });
+
   it('TINY-8641: multiple successful upload and multiple fail upload simultaneous should trigger 1 change', () => {
     const editor = hook.editor();
     let successfulUploadsCounter = 0;
