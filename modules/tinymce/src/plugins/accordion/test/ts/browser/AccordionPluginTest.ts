@@ -247,7 +247,19 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     TinyContentActions.keystroke(editor, Keys.enter());
     TinyAssertions.assertContentPresence(editor, { '.mce-accordion-body > p': 2 });
     TinyContentActions.keystroke(editor, Keys.enter());
-    TinyAssertions.assertContentPresence(editor, { '.mce-accordion-body > p': 2 });
+    TinyAssertions.assertContentPresence(editor, { '.mce-accordion-body > p': 1 });
+    TinyAssertions.assertContentPresence(editor, { 'details + p': 1 });
+    TinyAssertions.assertCursor(editor, [ 1 ], 0);
+  });
+
+  it('TINY-9731: Leave accordion body with ENTER keypress within an empty paragraph for deprecated details', () => {
+    const editor = hook.editor();
+    editor.setContent(`<details open="open"><summary>summary</summary><p>tiny</p></details>`);
+    TinySelections.setCursor(editor, [ 0, 1, 0 ], 'tiny'.length);
+    TinyContentActions.keystroke(editor, Keys.enter());
+    TinyAssertions.assertContentPresence(editor, { 'details > p': 2 });
+    TinyContentActions.keystroke(editor, Keys.enter());
+    TinyAssertions.assertContentPresence(editor, { 'details > p': 1 });
     TinyAssertions.assertContentPresence(editor, { 'details + p': 1 });
     TinyAssertions.assertCursor(editor, [ 1 ], 0);
   });
