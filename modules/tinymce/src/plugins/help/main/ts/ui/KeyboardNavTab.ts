@@ -43,7 +43,7 @@ const description = `<h1>Begin keyboard navigation</h1>
 
 <p>If a UI section is not present, it is skipped.</p>
 
-<p>If the document footer has keyboard navigation focus, and there is no visible sidebar, pressing <strong>Shift+Tab</strong> moves focus to <strong>Toolbar group 1</strong>, not <strong>Toolbar group n</strong>.
+<p>If the footer has keyboard navigation focus, and there is no visible sidebar, pressing <strong>Shift+Tab</strong> moves focus to the first toolbar group, not the last.
 
 <h1>Navigate within UI sections</h1>
 
