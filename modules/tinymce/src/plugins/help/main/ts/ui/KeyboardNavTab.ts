@@ -65,7 +65,7 @@ const description = `<h1>Begin keyboard navigation</h1>
 <li>move between items in a toolbar pop-up menu.</li>
 </ul>
 
-<p><strong>Arrow</strong> keys cycle within the focussed UI section or element.</p>
+<p><strong>Arrow</strong> keys cycle within the focused UI section.</p>
 
 <p>To close an open menu, an open sub-menu, or an open pop-up menu, press the <strong>Esc</strong> key.
 
