@@ -32,8 +32,7 @@ const description = `<h1>Begin keyboard navigation</h1>
 
 <ol>
 <li>Menu bar</li>
-<li>Toolbar group 1</li>
-<li>Toolbar group n</li>
+<li>Each group of the toolbar</li>
 <li>Sidebar</li>
 <li>Element path in the footer</li>
 <li>Word count toggle button in the footer</li>
