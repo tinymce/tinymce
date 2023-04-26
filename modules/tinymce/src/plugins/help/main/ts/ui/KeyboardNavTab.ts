@@ -6,7 +6,7 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 const description = `<h1>Begin keyboard navigation</h1>
 
 <dl>
-  <dt>Activate the Menu bar</dt>
+  <dt>Focus the Menu bar</dt>
   <dd>Windows or Linux: Alt+F9</dd>
   <dd>macOS: &#x2325;+F9</dd>
   <dt>Activate the Toolbar</dt>
