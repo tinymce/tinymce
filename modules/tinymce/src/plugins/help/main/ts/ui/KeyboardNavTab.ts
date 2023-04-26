@@ -37,7 +37,7 @@ const description = `<h1>Begin keyboard navigation</h1>
 <li>Sidebar</li>
 <li>Element path in the footer</li>
 <li>Word count toggle button in the footer</li>
-<li>Branding link in the TinyMCE footer</li>
+<li>Branding link in the footer</li>
 <li>Editor resize handle in the TinyMCE footer</li>
 </ol>
 
