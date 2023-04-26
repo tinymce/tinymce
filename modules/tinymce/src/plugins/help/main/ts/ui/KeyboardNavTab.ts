@@ -15,7 +15,7 @@ const description = `<h1>Begin keyboard navigation</h1>
   <dt>Focus the footer</dt>
   <dd>Windows or Linux: Alt+F11</dd>
   <dd>macOS: &#x2325;+F11</dd>
-  <dt>Activate an open context menu or toolbar</dt>
+  <dt>Focus a contextual toolbar</dt>
   <dd>Windows, Linux or macOS: Ctrl+F9
 </dl>
 
