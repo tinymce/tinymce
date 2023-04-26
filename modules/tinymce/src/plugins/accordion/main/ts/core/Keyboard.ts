@@ -20,7 +20,7 @@ const setup = (editor: Editor): void => {
   editor.on('ExecCommand', (e) => {
     const cmd = e.command.toLowerCase();
     if ((cmd === 'delete' || cmd === 'forwarddelete') && Utils.isDetailsSelected(editor)) {
-      Utils.normalizeAccordions(editor);
+      Utils.normalizeDetails(editor);
     }
   });
 
@@ -30,7 +30,7 @@ const setup = (editor: Editor): void => {
       if (Utils.isDetails(prevNode)) {
         e.preventDefault();
         editor.execCommand('Delete');
-        Utils.normalizeAccordions(editor);
+        Utils.normalizeDetails(editor);
       }
     }
   });

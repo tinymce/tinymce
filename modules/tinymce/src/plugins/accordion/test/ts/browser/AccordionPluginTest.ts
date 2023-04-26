@@ -11,9 +11,7 @@ import AccordionPlugin from '../../../main/ts/Plugin';
 const createAccordion = (
   { open = true, summary = 'Accordion summary...', body = '<p>Accordion body...</p>' }:
   { open?: boolean; summary?: string; body?: string } = {}): string =>
-  `<details class="mce-accordion"${open ? ` open="open"` : ''}>` +
-  `<summary class="mce-accordion-summary">${summary}</summary>` +
-  `<div class="mce-accordion-body">${body}</div></details>`;
+  `<details class="mce-accordion"${open ? ` open="open"` : ''}><summary class="mce-accordion-summary">${summary}</summary>${body}</details>`;
 
 interface InsertAccordionTest {
   readonly initialContent: string;
@@ -112,9 +110,9 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
   it('TINY-9730: Insert an accordion into an accordion body', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: createAccordion({ summary: 'summary', body: '<p>body</p>' }),
-      initialCursor: [[ 0, 1, 0, 0 ], 'body'.length ],
+      initialCursor: [[ 0, 1, 0 ], 'body'.length ],
       assertContent: createAccordion({ summary: 'summary', body: `<p>body</p>${createAccordion()}` }),
-      assertCursor: [[ 0, 1, 1, 0 ], 1 ],
+      assertCursor: [[ 0, 2, 0 ], 1 ],
     });
   });
 
@@ -243,11 +241,21 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
   it('TINY-9731: Leave accordion body with ENTER keypress within an empty paragraph', () => {
     const editor = hook.editor();
     editor.setContent(createAccordion({ body: '<p>tiny</p>' }));
-    TinySelections.setCursor(editor, [ 0, 1, 0, 0 ], 'tiny'.length);
+    TinySelections.setCursor(editor, [ 0, 1, 0 ], 'tiny'.length);
     TinyContentActions.keystroke(editor, Keys.enter());
-    TinyAssertions.assertContentPresence(editor, { '.mce-accordion-body > p': 2 });
+    TinyAssertions.assertContentPresence(editor, { 'details > p': 2 });
     TinyContentActions.keystroke(editor, Keys.enter());
-    TinyAssertions.assertContentPresence(editor, { '.mce-accordion-body > p': 1 });
+    TinyAssertions.assertContentPresence(editor, { 'details > p': 1 });
+    TinyAssertions.assertContentPresence(editor, { 'details + p': 1 });
+    TinyAssertions.assertCursor(editor, [ 1 ], 0);
+  });
+
+  it('TINY-9731: Do not remove the only empty paragraph when leaving accordion body with ENTER keypress', () => {
+    const editor = hook.editor();
+    editor.setContent(createAccordion({ body: '<p></p>' }));
+    TinySelections.setCursor(editor, [ 0, 1 ], 0);
+    TinyContentActions.keystroke(editor, Keys.enter());
+    TinyAssertions.assertContentPresence(editor, { 'details > p': 1 });
     TinyAssertions.assertContentPresence(editor, { 'details + p': 1 });
     TinyAssertions.assertCursor(editor, [ 1 ], 0);
   });
@@ -269,7 +277,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     editor.setContent(createAccordion({ body: '<p><br/></p>' }) + '<p><br/></p>');
     TinySelections.setCursor(editor, [ 1, 0 ], 0);
     TinyContentActions.keystroke(editor, Keys.backspace());
-    TinyAssertions.assertContentPresence(editor, { '.mce-accordion-body > p': 1 });
-    TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 0);
+    TinyAssertions.assertContentPresence(editor, { 'details > p': 1 });
+    TinyAssertions.assertCursor(editor, [ 0, 1 ], 0);
   });
 });

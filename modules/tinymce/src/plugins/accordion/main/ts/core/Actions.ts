@@ -13,7 +13,7 @@ const insertAccordion = (editor: Editor): void => {
   const uid = Id.generate('acc');
   const summaryText = editor.dom.encode(editor.selection.getRng().toString() || editor.translate('Accordion summary...'));
   const bodyText = editor.dom.encode(editor.translate('Accordion body...'));
-  editor.insertContent(`<details data-mce-id="${uid}" class="mce-accordion" open="open"><summary class="mce-accordion-summary">${summaryText}</summary><div class="mce-accordion-body"><p>${bodyText}</p></div></details>`);
+  editor.insertContent(`<details data-mce-id="${uid}" class="mce-accordion" open="open"><summary class="mce-accordion-summary">${summaryText}</summary><p>${bodyText}</p></details>`);
 
   const details = editor.dom.select(`[data-mce-id="${uid}"]`)[0];
   if (!details) {
@@ -28,7 +28,7 @@ const insertAccordion = (editor: Editor): void => {
 };
 
 const toggleDetailsElement = (details: HTMLDetailsElement, state?: boolean): boolean => {
-  const shouldOpen = state ?? !Utils.isAccordionOpen(details);
+  const shouldOpen = state ?? !Utils.isOpen(details);
   if (shouldOpen) {
     details.setAttribute('open', 'open');
     details.setAttribute('data-mce-open', 'open');
@@ -68,7 +68,7 @@ const toggleAllAccordions = (editor: Editor, state?: boolean): void => {
   if (accordions.length === 0) {
     return;
   }
-  const shouldOpen = state ?? !Utils.isAccordionOpen(accordions[0]);
+  const shouldOpen = state ?? !Utils.isOpen(accordions[0]);
   Arr.each(accordions, (accordion) => toggleDetailsElement(accordion, shouldOpen));
   Events.fireToggleAllAccordionsEvent(editor, accordions, shouldOpen);
 };
@@ -76,6 +76,6 @@ const toggleAllAccordions = (editor: Editor, state?: boolean): void => {
 export {
   insertAccordion,
   toggleAccordion,
-  toggleAllAccordions,
-  removeAccordion
+  removeAccordion,
+  toggleAllAccordions
 };
