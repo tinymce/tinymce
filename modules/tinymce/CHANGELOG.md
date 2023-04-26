@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 6.4.2 - 2023-04-26
+
 ### Fixed
 - The editor would display a notification error when it fails to retirieve a blob image uri. #TINY-9604
 - Menu buttons would have the Tabstopping behaviour in toolbar. #TINY-9723
