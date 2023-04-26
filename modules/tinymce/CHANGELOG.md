@@ -10,9 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The editor displayed a notification error when it failed to retrieve a blob image uri. #TINY-9604
 - Tab navigation no longer incorrectly stops at menu buttons within toolbar groups. #TINY-9723
 - The `urlinput` dialog component would not open the type-ahead dropdown when the input value was reset to an empty string. #TINY-9717
-- Redial would in some situations cause select elements not to have an initial value selected when they should have. #TINY-9679
+- Redial would, in some situations, cause select elements not to have an initial value selected when they should have. #TINY-9679
 - Fixed the mouse pointer style from a text cursor to a default arrow pointer when hovering over the tree dialog component items. #TINY-9692
-- Enabled variant of togglable `tox-button` and `tox-button--secondary` now supports `hover`/`active`/`focus`/`disabled` states. #TINY-9713
+- Enabled variant of toggleable `tox-button` and `tox-button--secondary`: it now supports `hover`/`active`/`focus`/`disabled` states. #TINY-9713
 - Setting an invalid unit in the `fontsizeinput` changed it to the default value instead of reverting it to the previous, and valid, value. #TINY-9754
 - Selection was not correctly scrolled horizontally into view when using the `selection.scrollIntoView` API. #TINY-9747
 - Context toolbars displayed the incorrect status for the `advlist` plugin buttons. #TINY-9680
