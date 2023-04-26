@@ -3,7 +3,7 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 // TODO: When we translate this, we should pull the HTML out into a HTML file, the way TBIO does it.
 // That requires webpack and rollup changes though, so inlining it for now.
 /* eslint-disable max-len */
-const description = `<h1>Activate keyboard navigation</h1>
+const description = `<h1>Begin keyboard navigation</h1>
 
 <dl>
   <dt>Activate the Menu bar</dt>
