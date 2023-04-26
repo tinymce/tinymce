@@ -55,7 +55,7 @@ const description = `<h1>Begin keyboard navigation</h1>
 <li>move between menus in the menu bar.</li>
 <li>open a sub-menu in a menu.</li>
 <li>move between buttons in a toolbar group.</li>
-<li>move between items in a document footer’s element path.</li>
+<li>move between items in the footer’s element path.</li>
 </ul>
 
 <p>The <strong>Down</strong> and <strong>Up</strong> arrow keys
