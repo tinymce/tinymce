@@ -42,7 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When dragging image elements and dropping the image in the editor the `dragend` event would sometimes not fire on firefox. #TINY-9694
 - It was possible to remove links in noneditable contents with the 'unlink' editor command. #TINY-9739
 
-## 6.4.2 - TBD
+## 6.4.2 - 2023-04-26
 
 ### Fixed
 - The editor would display a notification error when it fails to retirieve a blob image uri. #TINY-9604
