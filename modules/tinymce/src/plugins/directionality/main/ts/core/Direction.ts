@@ -25,10 +25,10 @@ const setDirOnElements = (dom: DOMUtils, blocks: Element[], dir: Dir): void => {
     const normalizedBlockParent = getParentElement(normalizedBlock);
     normalizedBlockParent.each((parent) => {
       const parentDirection = Direction.getDirection(parent);
-      if (parentDirection !== dir) {
-        Attribute.set(normalizedBlock, 'dir', dir);
-      } else {
+      if (parentDirection === dir) {
         Attribute.remove(normalizedBlock, 'dir');
+      } else {
+        Attribute.set(normalizedBlock, 'dir', dir);
       }
 
       // TINY-9314: Set an inline direction style if computed css direction is still not as desired. This can
