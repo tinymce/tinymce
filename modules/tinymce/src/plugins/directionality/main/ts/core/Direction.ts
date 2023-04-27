@@ -27,12 +27,12 @@ const setDirOnElements = (dom: DOMUtils, blocks: Element[], dir: Dir): void => {
       const parentDirection = Direction.getDirection(parent);
       if (parentDirection !== dir) {
         Attribute.set(normalizedBlock, 'dir', dir);
-      } else if (Direction.getDirection(normalizedBlock) !== dir) {
+      } else {
         Attribute.remove(normalizedBlock, 'dir');
       }
 
       // TINY-9314: Set an inline direction style if computed css direction is still not as desired. This can
-      // happen either when there already is an inline direction style property or a direction style is
+      // happen either when there already is an inline direction style or a direction style is
       // derived from the stylesheet.
       if (Direction.getDirection(normalizedBlock) !== dir) {
         dom.setStyle(normalizedBlock.dom, 'direction', dir);
@@ -40,7 +40,7 @@ const setDirOnElements = (dom: DOMUtils, blocks: Element[], dir: Dir): void => {
 
       // remove dir attr and direction style from list children
       if (isBlockElementListItem) {
-        const listItems = SelectorFilter.children(normalizedBlock, 'li[dir][style]');
+        const listItems = SelectorFilter.children(normalizedBlock, 'li[dir],li[style]');
         Arr.each(listItems, (listItem) => {
           Attribute.remove(listItem, 'dir');
           Css.remove(listItem, 'direction');
