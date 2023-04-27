@@ -43,7 +43,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - It was possible to remove links in noneditable contents with the 'unlink' editor command. #TINY-9739
 - Inserting table consecutively without focus in the editor would result in the table being inserted at the wrong position. #TINY-3909
 
-
 ## 6.4.2 - 2023-04-26
 
 ### Fixed
