@@ -1,6 +1,7 @@
 import { Arr, Optional } from '@ephox/katamari';
-import { Traverse, Attribute, SugarElement, SugarNode, SelectorFind, Direction, SelectorFilter } from '@ephox/sugar';
+import { Traverse, Attribute, SugarElement, SugarNode, SelectorFind, Direction, SelectorFilter, Css } from '@ephox/sugar';
 
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 
 type Dir = 'rtl' | 'ltr';
@@ -16,7 +17,7 @@ const getNormalizedBlock = (element: SugarElement<Element>, isListItem: boolean)
 
 const isListItem = SugarNode.isTag('li');
 
-const setDirOnElements = (blocks: Element[], dir: Dir): void => {
+const setDirOnElements = (dom: DOMUtils, blocks: Element[], dir: Dir): void => {
   Arr.each(blocks, (block) => {
     const blockElement = SugarElement.fromDom(block);
     const isBlockElementListItem = isListItem(blockElement);
@@ -30,10 +31,18 @@ const setDirOnElements = (blocks: Element[], dir: Dir): void => {
         Attribute.remove(normalizedBlock, 'dir');
       }
 
-      // remove dir attr from list children
+      // set direction inline style property if it already exists
+      Css.getRaw(normalizedBlock, 'direction').each((_) => {
+        dom.setStyle(normalizedBlock.dom, 'direction', dir);
+      });
+
+      // remove dir attr and direction style from list children
       if (isBlockElementListItem) {
-        const listItems = SelectorFilter.children(normalizedBlock, 'li[dir]');
-        Arr.each(listItems, (listItem) => Attribute.remove(listItem, 'dir'));
+        const listItems = SelectorFilter.children(normalizedBlock, 'li[dir][style]');
+        Arr.each(listItems, (listItem) => {
+          Attribute.remove(listItem, 'dir');
+          Css.remove(listItem, 'direction');
+        });
       }
     });
   });
@@ -41,7 +50,7 @@ const setDirOnElements = (blocks: Element[], dir: Dir): void => {
 
 const setDir = (editor: Editor, dir: Dir): void => {
   if (editor.selection.isEditable()) {
-    setDirOnElements(editor.selection.getSelectedBlocks(), dir);
+    setDirOnElements(editor.dom, editor.selection.getSelectedBlocks(), dir);
     editor.nodeChanged();
   }
 };
