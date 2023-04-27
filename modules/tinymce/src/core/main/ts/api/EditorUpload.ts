@@ -2,7 +2,7 @@ import { Arr, Strings, Type } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
 
 import * as ErrorReporter from '../ErrorReporter';
-import { BlobInfoImagePair, ImageScanner } from '../file/ImageScanner';
+import { BlobInfoImagePair, BlobUriError, ImageScanner } from '../file/ImageScanner';
 import { Uploader } from '../file/Uploader';
 import { UploadStatus } from '../file/UploadStatus';
 import * as Rtc from '../Rtc';
@@ -247,6 +247,8 @@ const EditorUpload = (editor: Editor): EditorUpload => {
         // In such case resultItem will contain appropriate text error message, instead of image data.
         if (Type.isString(resultItem)) {
           ErrorReporter.displayError(editor, resultItem);
+          return false;
+        } else if ((resultItem as BlobUriError).uriType === 'blob') {
           return false;
         } else {
           return true;
