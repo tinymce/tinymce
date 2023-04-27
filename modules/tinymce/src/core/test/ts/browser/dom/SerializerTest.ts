@@ -647,7 +647,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('BR at end of blocks', () => {
-    const ser = DomSerializer({ fix_list_elements: true });
+    const ser = DomSerializer({ fix_list_elements: true, remove_trailing_brs: true });
 
     ser.setRules('ul,li,br');
 
