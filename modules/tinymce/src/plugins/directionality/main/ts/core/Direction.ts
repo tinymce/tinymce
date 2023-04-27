@@ -31,10 +31,12 @@ const setDirOnElements = (dom: DOMUtils, blocks: Element[], dir: Dir): void => {
         Attribute.remove(normalizedBlock, 'dir');
       }
 
-      // set direction inline style property if it already exists
-      Css.getRaw(normalizedBlock, 'direction').each((_) => {
+      // TINY-9314: Set an inline direction style if computed css direction is still not as desired. This can
+      // happen either when there already is an inline direction style property or a direction style is
+      // derived from the stylesheet.
+      if (Direction.getDirection(normalizedBlock) !== dir) {
         dom.setStyle(normalizedBlock.dom, 'direction', dir);
-      });
+      }
 
       // remove dir attr and direction style from list children
       if (isBlockElementListItem) {
