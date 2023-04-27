@@ -1,13 +1,11 @@
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { TableModifiedEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-
-import * as TableTestUtils from '../../../module/table/TableTestUtils';
 
 describe('browser.tinymce.models.dom.table.command.TableDeleteRowTest', () => {
   let events: Array<EditorEvent<TableModifiedEvent>> = [];
@@ -65,7 +63,7 @@ describe('browser.tinymce.models.dom.table.command.TableDeleteRowTest', () => {
   });
 
   it('TINY-9459: Should not apply mceTableDeleteRow command on table in noneditable root', () => {
-    TableTestUtils.withNoneditableRootEditor(hook.editor(), (editor) => {
+    TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
       const initalContent = '<table><tbody><tr><td>cell</td></tr></tbody></table>';
       editor.setContent(initalContent);
       TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);

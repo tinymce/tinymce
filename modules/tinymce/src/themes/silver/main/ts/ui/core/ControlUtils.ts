@@ -1,17 +1,27 @@
 import { Singleton } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
-import { Toolbar } from 'tinymce/core/api/ui/Ui';
+import { Toolbar, Menu } from 'tinymce/core/api/ui/Ui';
 
 import { FormatterFormatItem } from './complex/BespokeSelect';
 
+const composeUnbinders = (f: VoidFunction, g: VoidFunction): VoidFunction => () => {
+  f();
+  g();
+};
+
+const onSetupEditableToggle = <T extends Toolbar.ToolbarButtonInstanceApi | Menu.MenuItemInstanceApi>(editor: Editor): (api: T) => VoidFunction =>
+  onSetupEvent<T>(editor, 'NodeChange', (api) => {
+    api.setEnabled(editor.selection.isEditable());
+  });
+
 const onSetupFormatToggle = (editor: Editor, name: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi): VoidFunction => {
-  const boundCallback = Singleton.unbindable();
+  const boundFormatChangeCallback = Singleton.unbindable();
 
   const init = () => {
     api.setActive(editor.formatter.match(name));
     const binding = editor.formatter.formatChanged(name, api.setActive);
-    boundCallback.set(binding);
+    boundFormatChangeCallback.set(binding);
   };
 
   // The editor may or may not have been setup yet, so check for that
@@ -19,7 +29,17 @@ const onSetupFormatToggle = (editor: Editor, name: string) => (api: Toolbar.Tool
 
   return () => {
     editor.off('init', init);
-    boundCallback.clear();
+    boundFormatChangeCallback.clear();
+  };
+};
+
+const onSetupStateToggle = (editor: Editor, name: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi): VoidFunction => {
+  const unbindEditableToogle = onSetupEditableToggle(editor)(api);
+  const unbindFormatToggle = onSetupFormatToggle(editor, name)(api);
+
+  return () => {
+    unbindEditableToogle();
+    unbindFormatToggle();
   };
 };
 
@@ -51,8 +71,10 @@ const onActionExecCommand = (editor: Editor, command: string) =>
   (): boolean => editor.execCommand(command);
 
 export {
+  composeUnbinders,
   onSetupEvent,
-  onSetupFormatToggle,
+  onSetupStateToggle,
+  onSetupEditableToggle,
   onActionToggleFormat,
   onActionExecCommand
 };

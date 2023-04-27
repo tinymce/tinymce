@@ -1,6 +1,7 @@
 import { Cell } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
+import Env from '../api/Env';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import * as Levels from './Levels';
 import { endTyping, setTyping } from './TypingState';
@@ -67,7 +68,9 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
       return;
     }
 
-    if ((keyCode >= 33 && keyCode <= 36) || (keyCode >= 37 && keyCode <= 40) || keyCode === 45 || e.ctrlKey) {
+    const isMeta = Env.os.isMacOS() && e.key === 'Meta';
+
+    if ((keyCode >= 33 && keyCode <= 36) || (keyCode >= 37 && keyCode <= 40) || keyCode === 45 || e.ctrlKey || isMeta) {
       addNonTypingUndoLevel();
       editor.nodeChanged();
     }
@@ -113,6 +116,12 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
       setTyping(undoManager, true, locks);
       undoManager.add({} as UndoLevel, e);
       isFirstTypedCharacter.set(true);
+      return;
+    }
+
+    const hasOnlyMetaOrCtrlModifier = Env.os.isMacOS() ? e.metaKey : e.ctrlKey && !e.altKey;
+    if (hasOnlyMetaOrCtrlModifier) {
+      undoManager.beforeChange();
     }
   });
 

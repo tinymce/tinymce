@@ -3,8 +3,9 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Options from '../api/Options';
 
 const addToEditor = (editor: Editor): void => {
-  const isEditable = (node: Element): boolean => editor.dom.getContentEditableParent(node) !== 'false';
-  const isImage = (node: Element): boolean => node.nodeName === 'IMG' || node.nodeName === 'FIGURE' && /image/i.test(node.className);
+  const isEditable = (node: Element | null): boolean => editor.dom.isEditable(node);
+  const isInEditableContext = (el: Element) => isEditable(el.parentElement);
+  const isImage = (node: Element): boolean => node.nodeName === 'IMG' || node.nodeName === 'FIGURE' && /image/i.test(node.className) && isInEditableContext(node);
 
   const imageToolbarItems = Options.getImageToolbarItems(editor);
   if (imageToolbarItems.length > 0) {

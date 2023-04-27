@@ -1,5 +1,10 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, FormField as AlloyFormField, GuiFactory, Memento, RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, Tabstopping
+  AddEventsBehaviour,
+  Button as AlloyButton,
+  AlloyComponent, AlloyEvents,
+  FormField as AlloyFormField,
+  AlloySpec, AlloyTriggers, Behaviour,
+  GuiFactory, Memento, RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, Tabstopping
 } from '@ephox/alloy';
 import { Dialog, Toolbar } from '@ephox/bridge';
 import { Fun, Merger, Optional } from '@ephox/katamari';
@@ -20,7 +25,8 @@ type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];
 type AlloyButtonSpec = Parameters<typeof AlloyButton['sketch']>[0];
 
 type ButtonSpec = Omit<Dialog.Button, 'type'>;
-type FooterButtonSpec = Omit<Dialog.DialogFooterNormalButton, 'type'> | Omit<Dialog.DialogFooterMenuButton, 'type'> | Omit<Dialog.DialogFooterToggleButton, 'type'>;
+type FooterToggleButtonSpec = Omit<Dialog.DialogFooterToggleButton, 'type'>;
+type FooterButtonSpec = Omit<Dialog.DialogFooterNormalButton, 'type'> | Omit<Dialog.DialogFooterMenuButton, 'type'> | FooterToggleButtonSpec;
 
 export interface IconButtonWrapper extends Omit<ButtonSpec, 'text'> {
   readonly tooltip: Optional<string>;
@@ -171,8 +177,8 @@ const isNormalFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): s
 
 const isToggleButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Dialog.DialogFooterToggleButton => buttonType === 'togglebutton';
 
-const renderToggleButton = (spec: Dialog.DialogFooterToggleButtonSpec, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
-  const optMemIcon = Optional.from(spec.icon)
+const renderToggleButton = (spec: FooterToggleButtonSpec, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
+  const optMemIcon = spec.icon
     .map((memIcon) => renderReplaceableIconFromPack(memIcon, providers.icons))
     .map(Memento.record);
 
@@ -191,13 +197,14 @@ const renderToggleButton = (spec: Dialog.DialogFooterToggleButtonSpec, providers
     });
   };
 
+  // The old default is based on the now-deprecated 'primary' property. `buttonType` takes precedence now.
+  const buttonType = spec.buttonType.getOr(!spec.primary ? 'secondary' : 'primary');
+
   const buttonSpec: IconButtonWrapper = {
     ...spec,
     name: spec.name ?? '',
-    primary: spec.buttonType === 'primary',
-    buttonType: Optional.from(spec.buttonType),
+    primary: buttonType === 'primary',
     tooltip: Optional.from(spec.tooltip),
-    icon: Optional.from(spec.name),
     enabled: spec.enabled ?? false,
     borderless: false
   };
@@ -207,13 +214,12 @@ const renderToggleButton = (spec: Dialog.DialogFooterToggleButtonSpec, providers
     'title': providers.translate(tooltip)
   })).getOr({});
 
-  const buttonTypeClasses = calculateClassesFromButtonType(spec.buttonType ?? 'secondary');
-  const showIconAndText: boolean = !!spec.icon && !!spec.text;
-
+  const buttonTypeClasses = calculateClassesFromButtonType(buttonType ?? 'secondary');
+  const showIconAndText: boolean = spec.icon.isSome() && spec.text.isSome();
   const dom = {
     tag: 'button',
     classes: [
-      ...buttonTypeClasses.concat([ 'tox-button--icon' ]),
+      ...buttonTypeClasses.concat(spec.icon.isSome() ? [ 'tox-button--icon' ] : []),
       ...(spec.active ? [ ViewButtonClasses.Ticked ] : []),
       ...(showIconAndText ? [ 'tox-button--icon-and-text' ] : [])
     ],
@@ -221,13 +227,13 @@ const renderToggleButton = (spec: Dialog.DialogFooterToggleButtonSpec, providers
   };
   const extraBehaviours: Behaviours = [];
 
-  const translatedText = providers.translate(spec.text);
+  const translatedText = providers.translate(spec.text.getOr(''));
   const translatedTextComponed = GuiFactory.text(translatedText);
 
   const iconComp = componentRenderPipeline([ optMemIcon.map((memIcon) => memIcon.asSpec()) ]);
   const components = [
     ...iconComp,
-    ...(showIconAndText ? [ translatedTextComponed ] : [])
+    ...(spec.text.isSome() ? [ translatedTextComponed ] : [])
   ];
 
   const iconButtonSpec = renderCommonSpec(buttonSpec, Optional.some(action), extraBehaviours, dom, components, providers);
@@ -263,13 +269,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
     };
     return renderButton(buttonSpec, action, backstage.shared.providers, [ ]);
   } else if (isToggleButtonSpec(spec, buttonType)) {
-    const buttonSpec: Dialog.DialogFooterToggleButtonSpec = {
-      ...spec,
-      tooltip: spec.tooltip,
-      text: spec.text.getOrUndefined(),
-      buttonType: spec.buttonType.getOrUndefined(),
-    };
-    return renderToggleButton(buttonSpec, backstage.shared.providers);
+    return renderToggleButton(spec, backstage.shared.providers);
   } else {
     // eslint-disable-next-line no-console
     console.error('Unknown footer button type: ', buttonType);

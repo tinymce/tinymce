@@ -7,7 +7,7 @@ import { BlockFormat, InlineFormat } from 'tinymce/core/api/fmt/Format';
 import * as Options from '../../../api/Options';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
-import { onActionToggleFormat } from '../ControlUtils';
+import { onActionToggleFormat, onSetupEditableToggle } from '../ControlUtils';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
 import { AdvancedSelectDataset, BasicSelectItem, SelectDataset } from './SelectDatasets';
 import { getStyleFormats, isFormatReference, isNestedFormat, StyleFormatType } from './StyleFormat';
@@ -69,6 +69,7 @@ const createStylesMenu = (editor: Editor, backstage: UiFactoryBackstage): void =
   const menuItems = createMenuItems(editor, backstage, getSpec(editor, dataset));
   editor.ui.registry.addNestedMenuItem('styles', {
     text: 'Formats',
+    onSetup: onSetupEditableToggle(editor),
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   });
 };

@@ -2,8 +2,8 @@ import { Mouse } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Cell } from '@ephox/katamari';
 import { TableGridSize } from '@ephox/snooker';
-import { SugarElement } from '@ephox/sugar';
-import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
+import { Html, Insert, Remove, SelectorExists, SugarBody, SugarElement } from '@ephox/sugar';
+import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -141,6 +141,20 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     assert.isFalse(tableModifiedEvents[0].structure, 'Should not have structure modified');
     assert.isTrue(tableModifiedEvents[0].style, 'Should have style modified');
   };
+
+  const setupElement = (content: string) =>
+    () => {
+      const div = SugarElement.fromTag('div');
+      Html.set(div, content);
+      Insert.append(SugarBody.body(), div);
+
+      return {
+        element: div,
+        teardown: () => {
+          Remove.remove(div);
+        },
+      };
+    };
 
   beforeEach(() => {
     clearEventData();
@@ -451,6 +465,15 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
       const lastColWidth = widths.colWidthsAfter[1];
       assert.approximately(firstColWidth.px, 157, pixelDiffThreshold, `First column computed width ${firstColWidth.px}px should be ~157px`);
       assert.approximately(lastColWidth.px, 0, pixelDiffThreshold, `Last column computed width ${lastColWidth.px}px should be ~0px`);
+    });
+  });
+
+  context('When the editor is started with a table', () => {
+    const hook = TinyHooks.bddSetupFromElement(defaultSettings, setupElement('<table><tbody><tr><td>A</td></tr></tbody></table>'));
+
+    it('TINY-9748: The table should not be given resize handles', () => {
+      const editor = hook.editor();
+      assert.isFalse(SelectorExists.descendant(TinyDom.body(editor), '.mce-resizehandle'), 'Should not give the handles at init');
     });
   });
 });

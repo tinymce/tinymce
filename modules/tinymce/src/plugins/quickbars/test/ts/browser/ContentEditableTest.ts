@@ -1,6 +1,6 @@
 import { Mouse, UiFinder } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/quickbars/Plugin';
@@ -81,5 +81,41 @@ describe('browser.tinymce.plugins.quickbars.ContentEditableTest', () => {
     Mouse.mouseUp(elem);
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 0);
     await pAssertToolbarVisible();
+  });
+
+  context('Noneditable root', () => {
+    it('TINY-9460: Text selection toolbar is not shown on text in noneditable root', async () => {
+      await TinyState.withNoneditableRootEditorAsync(hook.editor(), async (editor) => {
+        editor.setContent('<p>abc</p>');
+        TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
+        await pAssertToolbarNotVisible();
+      });
+    });
+
+    it('TINY-9460: Text selection toolbar is shown on editable text in noneditable root', async () => {
+      await TinyState.withNoneditableRootEditorAsync(hook.editor(), async (editor) => {
+        editor.setContent('<p contenteditable="true">abc</p>');
+        TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
+        await pAssertToolbarVisible();
+        TinySelections.setCursor(editor, [ 0, 0 ], 0, true);
+        await pAssertToolbarNotVisible();
+      });
+    });
+
+    it('TINY-9460: Image selection toolbar is not shown images in noneditable root', async () => {
+      await TinyState.withNoneditableRootEditorAsync(hook.editor(), async (editor) => {
+        editor.setContent('<p><img src="about:blank"></p>');
+        TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
+        await pAssertToolbarNotVisible();
+      });
+    });
+
+    it('TINY-9460: Image selection toolbar is shown editable images in noneditable root', async () => {
+      await TinyState.withNoneditableRootEditorAsync(hook.editor(), async (editor) => {
+        editor.setContent('<p contenteditable="true"><img src="about:blank"></p>');
+        TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
+        await pAssertToolbarVisible();
+      });
+    });
   });
 });

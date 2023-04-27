@@ -1,8 +1,8 @@
 import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, UiFinder } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
-import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -319,5 +319,23 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
     TinyUiActions.keydown(editor, Keys.left());
     await pAssertFocusOnAlignToolbarButton(); // Alignment
     UiFinder.notExists(SugarBody.body(), '[role="menu"]');
+  });
+
+  context('Noneditable root', () => {
+    const testDisableOnNoneditable = (title: string) => () => {
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+        editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
+        TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
+        UiFinder.exists(SugarBody.body(), `[aria-label="${title}"]:disabled`);
+        TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
+        UiFinder.exists(SugarBody.body(), `[aria-label="${title}"]:not(:disabled)`);
+      });
+    };
+
+    it('TINY-9669: Disable align on noneditable content', testDisableOnNoneditable('Align'));
+    it('TINY-9669: Disable fontfamily on noneditable content', testDisableOnNoneditable('Fonts'));
+    it('TINY-9669: Disable fontsize on noneditable content', testDisableOnNoneditable('Font sizes'));
+    it('TINY-9669: Disable blocks on noneditable content', testDisableOnNoneditable('Blocks'));
+    it('TINY-9669: Disable styles on noneditable content', testDisableOnNoneditable('Formats'));
   });
 });

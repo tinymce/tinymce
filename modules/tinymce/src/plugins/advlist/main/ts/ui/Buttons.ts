@@ -3,7 +3,6 @@ import { Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
 import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Options from '../api/Options';
@@ -26,13 +25,14 @@ const normalizeStyleValue = (styleValue: string | undefined): string =>
   Type.isNullable(styleValue) || styleValue === 'default' ? '' : styleValue;
 
 const makeSetupHandler = (editor: Editor, nodeName: ListType) => (api: Toolbar.ToolbarSplitButtonInstanceApi | Toolbar.ToolbarToggleButtonInstanceApi) => {
-  const nodeChangeHandler = (e: EditorEvent<NodeChangeEvent>) => {
-    api.setActive(ListUtils.inList(editor, e.parents, nodeName));
-    api.setEnabled(!ListUtils.isWithinNonEditableList(editor, e.element));
+  const updateButtonState = (editor: Editor, parents: Node[]) => {
+    const element = editor.selection.getStart(true);
+    api.setActive(ListUtils.inList(editor, parents, nodeName));
+    api.setEnabled(!ListUtils.isWithinNonEditableList(editor, element) && editor.selection.isEditable());
   };
-  editor.on('NodeChange', nodeChangeHandler);
+  const nodeChangeHandler = (e: NodeChangeEvent) => updateButtonState(editor, e.parents);
 
-  return () => editor.off('NodeChange', nodeChangeHandler);
+  return ListUtils.setNodeChangeHandler(editor, nodeChangeHandler);
 };
 
 const addSplitButton = (editor: Editor, id: string, tooltip: string, cmd: string, nodeName: ListType, styles: string[]): void => {

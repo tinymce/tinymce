@@ -1,7 +1,7 @@
 import { ApproxStructure, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
@@ -425,7 +425,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
   });
 
   it('TINY-9459: Should not open table properties dialog on noneditable root', () => {
-    TableTestUtils.withNoneditableRootEditor(hook.editor(), (editor) => {
+    TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
       editor.setContent('<table><tbody><tr><td>x</td></tr></tbody></table>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
       editor.execCommand('mceTableProps');
@@ -434,7 +434,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
   });
 
   it('TINY-9459: Should not open table insert dialog on noneditable root', () => {
-    TableTestUtils.withNoneditableRootEditor(hook.editor(), (editor) => {
+    TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
       editor.setContent('<table><tbody><tr><td>x</td></tr></tbody></table>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
       editor.execCommand('mceInsertTableDialog');

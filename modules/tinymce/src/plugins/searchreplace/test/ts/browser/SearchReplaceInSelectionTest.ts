@@ -130,7 +130,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceInSelectionTest', (
   it('TINY-4549: Find special characters match, whole words: true', testInSelection({
     content: '^^ ^^ ^^^^',
     find: '^^',
-    matches: 2,
+    matches: 3,
     wholeWords: true,
     sel: { sPath: [ 0, 0 ], sOffset: 0, fPath: [ 0, 0 ], fOffset: 8 }
   }));
