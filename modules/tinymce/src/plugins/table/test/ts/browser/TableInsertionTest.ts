@@ -21,24 +21,7 @@ describe('browser.tinymce.plugins.table.TableCellPropsStyleTest', () => {
       editor.setContent('');
       await TableTestUtils.pInsertTableViaGrid(editor, 2, 2);
       await TableTestUtils.pInsertTableViaGrid(editor, 2, 2);
-      TinyAssertions.assertContent(editor,
-        '<table style="border-collapse: collapse; width: 99.9728%;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>' +
-        '<tbody>' +
-        '<tr>' +
-        '<td>' +
-        '<table style="border-collapse: collapse; width: 100.045%;" border="1"><colgroup><col style="width: 49.9022%;"><col style="width: 49.9022%;"></colgroup>' +
-        '<tbody>' +
-        '<tr><td>&nbsp;</td><td>&nbsp;</td></tr>' +
-        '<tr><td>&nbsp;</td><td>&nbsp;</td></tr>' +
-        '</tbody>' +
-        '</table>' +
-        '</td>' +
-        '<td>&nbsp;</td>' +
-        '</tr>' +
-        '<tr><td>&nbsp;</td><td>&nbsp;</td></tr>' +
-        '</tbody>' +
-        '</table>'
-      );
+      TinyAssertions.assertCursor(editor, [ 0, 1, 0, 0, 0, 1, 0, 0 ], 0);
     });
   });
 
@@ -50,24 +33,7 @@ describe('browser.tinymce.plugins.table.TableCellPropsStyleTest', () => {
       editor.setContent('');
       await TableTestUtils.pInsertTableViaGrid(editor, 2, 2);
       await TableTestUtils.pInsertTableViaGrid(editor, 2, 2);
-      TinyAssertions.assertContent(editor,
-        '<table style="border-collapse: collapse; width: 99.9728%;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>' +
-        '<tbody>' +
-        '<tr>' +
-        '<td>' +
-        '<table style="border-collapse: collapse; width: 100.045%;" border="1"><colgroup><col style="width: 49.9022%;"><col style="width: 49.9022%;"></colgroup>' +
-        '<tbody>' +
-        '<tr><td>&nbsp;</td><td>&nbsp;</td></tr>' +
-        '<tr><td>&nbsp;</td><td>&nbsp;</td></tr>' +
-        '</tbody>' +
-        '</table>' +
-        '</td>' +
-        '<td>&nbsp;</td>' +
-        '</tr>' +
-        '<tr><td>&nbsp;</td><td>&nbsp;</td></tr>' +
-        '</tbody>' +
-        '</table>'
-      );
+      TinyAssertions.assertCursor(editor, [ 0, 1, 0, 0, 0, 1, 0, 0 ], 0);
     });
   });
 });
