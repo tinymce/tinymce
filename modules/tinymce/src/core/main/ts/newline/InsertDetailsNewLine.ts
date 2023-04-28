@@ -20,7 +20,7 @@ export const isLastEmptyBlockInDetails = (editor: Editor, shiftKey: boolean, ele
   }
 };
 
-export const insertParagraph = (editor: Editor, createNewBlock: (name: string) => Element, parentBlock: Element): void => {
+export const insertNewLine = (editor: Editor, createNewBlock: (name: string) => Element, parentBlock: Element): void => {
   const newBlock = createNewBlock('p');
   const root = getDetailsRoot(editor, parentBlock);
   if (!root) {

@@ -15,7 +15,7 @@ import { isCaretNode } from '../fmt/FormatContainer';
 import * as NormalizeRange from '../selection/NormalizeRange';
 import { isWhitespaceText } from '../text/Whitespace';
 import * as Zwsp from '../text/Zwsp';
-import * as InsertDetails from './InsertDetails';
+import * as InsertDetailsNewLine from './InsertDetailsNewLine';
 import * as InsertLi from './InsertLi';
 import * as NewLineUtils from './NewLineUtils';
 
@@ -426,8 +426,8 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     parentBlockName = containerBlockName;
   }
 
-  if (NodeType.isElement(containerBlock) && InsertDetails.isLastEmptyBlockInDetails(editor, shiftKey, parentBlock)) {
-    return InsertDetails.insertParagraph(editor, createNewBlock, parentBlock);
+  if (NodeType.isElement(containerBlock) && InsertDetailsNewLine.isLastEmptyBlockInDetails(editor, shiftKey, parentBlock)) {
+    return InsertDetailsNewLine.insertNewLine(editor, createNewBlock, parentBlock);
   }
 
   // Handle enter in list item

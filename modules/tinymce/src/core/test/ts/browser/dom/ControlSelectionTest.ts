@@ -198,4 +198,12 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     });
     await UiFinder.pWaitForVisible('Wait for resize handlers to show', TinyDom.body(editor), '#mceResizeHandlese');
   });
+
+  it('TINY-9731: data-mce-selected should appear on selected details element', async () => {
+    const editor = hook.editor();
+    editor.setContent(`<details><summary>hoy</summary><p>tiny</p></details>`);
+    TinyAssertions.assertContentPresence(editor, { 'details[data-mce-selected="1"]': 0 });
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    TinyAssertions.assertContentPresence(editor, { 'details[data-mce-selected="1"]': 1 });
+  });
 });
