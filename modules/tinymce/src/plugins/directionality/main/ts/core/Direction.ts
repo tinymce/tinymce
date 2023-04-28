@@ -1,5 +1,5 @@
 import { Arr, Optional } from '@ephox/katamari';
-import { Traverse, Attribute, SugarElement, SugarNode, SelectorFind, Direction, SelectorFilter, Css } from '@ephox/sugar';
+import { Traverse, Attribute, SugarElement, SugarNode, SelectorFind, Direction, SelectorFilter } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -43,7 +43,7 @@ const setDirOnElements = (dom: DOMUtils, blocks: Element[], dir: Dir): void => {
         const listItems = SelectorFilter.children(normalizedBlock, 'li[dir],li[style]');
         Arr.each(listItems, (listItem) => {
           Attribute.remove(listItem, 'dir');
-          Css.remove(listItem, 'direction');
+          dom.setStyle(listItem.dom, 'direction', null);
         });
       }
     });
