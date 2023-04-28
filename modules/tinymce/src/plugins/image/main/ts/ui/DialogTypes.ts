@@ -27,7 +27,9 @@ export interface ImageDialogInfo {
   readonly hasDescription: boolean;
   readonly hasImageTitle: boolean;
   readonly hasDimensions: boolean;
+  readonly autoSetDimensions: boolean;
   readonly hasImageCaption: boolean;
+  readonly isSourceDisabled: boolean;
   readonly hasAccessibilityOptions: boolean;
   readonly automaticUploads: boolean;
   readonly prependURL: Optional<string>;

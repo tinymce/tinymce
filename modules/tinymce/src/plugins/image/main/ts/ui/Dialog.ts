@@ -169,7 +169,7 @@ const calculateImageSize = (helpers: Helpers, info: ImageDialogInfo, state: Imag
   const url = data.src.value;
   const meta = data.src.meta || {};
 
-  if (!meta.width && !meta.height && info.hasDimensions) {
+  if (!meta.width && !meta.height && info.hasDimensions && info.autoSetDimensions) {
     if (Strings.isNotEmpty(url)) {
       helpers.imageSize(url)
         .then((size) => {

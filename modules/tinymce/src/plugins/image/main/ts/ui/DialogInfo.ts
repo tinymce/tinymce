@@ -33,7 +33,9 @@ const collect = (editor: Editor): Promise<ImageDialogInfo> => {
   const hasDescription = Options.hasDescription(editor);
   const hasImageTitle = Options.hasImageTitle(editor);
   const hasDimensions = Options.hasDimensions(editor);
+  const autoSetDimensions = Options.autoSetDimensions(editor);
   const hasImageCaption = Options.hasImageCaption(editor);
+  const isSourceDisabled = Options.isSourceDisabled(editor);
   const hasAccessibilityOptions = Options.showAccessibilityOptions(editor);
   const automaticUploads = Options.isAutomaticUploadsEnabled(editor);
   const prependURL: Optional<string> = Optional.some(Options.getPrependUrl(editor)).filter(
@@ -50,7 +52,9 @@ const collect = (editor: Editor): Promise<ImageDialogInfo> => {
     hasDescription,
     hasImageTitle,
     hasDimensions,
+    autoSetDimensions,
     hasImageCaption,
+    isSourceDisabled,
     prependURL,
     hasAccessibilityOptions,
     automaticUploads

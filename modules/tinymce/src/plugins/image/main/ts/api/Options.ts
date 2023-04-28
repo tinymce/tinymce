@@ -65,6 +65,7 @@ const register = (editor: Editor): void => {
 };
 
 const hasDimensions = option<boolean>('image_dimensions');
+const autoSetDimensions = option<boolean>('image_dimensions_autoset');
 const hasAdvTab = option<boolean>('image_advtab');
 const hasUploadTab = option<boolean>('image_uploadtab');
 const getPrependUrl = option<string>('image_prepend_url');
@@ -73,6 +74,7 @@ const hasDescription = option<boolean>('image_description');
 const hasImageTitle = option<boolean>('image_title');
 const hasImageCaption = option<boolean>('image_caption');
 const getImageList = option<string | UserListItem[] | UserImageListCallback | false>('image_list');
+const isSourceDisabled = option<boolean>('image_source_disabled');
 const showAccessibilityOptions = option('a11y_advanced_options');
 const isAutomaticUploadsEnabled = option('automatic_uploads');
 
@@ -85,6 +87,7 @@ const hasUploadHandler = (editor: Editor): boolean =>
 export {
   register,
   hasDimensions,
+  autoSetDimensions,
   hasUploadTab,
   hasAdvTab,
   getPrependUrl,
@@ -93,6 +96,7 @@ export {
   hasImageTitle,
   hasImageCaption,
   getImageList,
+  isSourceDisabled,
   hasUploadUrl,
   hasUploadHandler,
   showAccessibilityOptions,
