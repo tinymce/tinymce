@@ -1,5 +1,5 @@
 import { Arr, Strings, Type } from '@ephox/katamari';
-import { Attribute, Insert, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { Attribute, Insert, Remove, SugarElement, SugarElements, SugarNode, Traverse } from '@ephox/sugar';
 
 import * as ErrorReporter from '../ErrorReporter';
 import { BlobInfoImagePair, BlobUriError, ImageScanner } from '../file/ImageScanner';
@@ -98,14 +98,15 @@ interface EditorUpload {
   destroy: () => void;
 }
 
-const isEmptyForPadding = (element: SugarElement<any>) =>
-  !Traverse.hasChildNodes(element) && SugarNode.isTag('p')(element);
+const isEmptyForPadding = (editor: Editor, element: SugarElement<any>) =>
+  editor.dom.isEmpty(element.dom) && Type.isNonNullable(editor.schema.getTextBlockElements()[SugarNode.name(element)]);
 
-const addPaddingToEmpty = (element: SugarElement<any>) => {
-  if (isEmptyForPadding(element)) {
-    Insert.append(element, SugarElement.fromHtml('<br data-mce-bogus="1" />'));
-  }
-};
+const addPaddingToEmpty = (editor: Editor) =>
+  (element: SugarElement<any>) => {
+    if (isEmptyForPadding(editor, element)) {
+      Insert.append(element, SugarElement.fromHtml('<br data-mce-bogus="1" />'));
+    }
+  };
 
 const EditorUpload = (editor: Editor): EditorUpload => {
   const blobCache = BlobCache();
@@ -221,13 +222,12 @@ const EditorUpload = (editor: Editor): EditorUpload => {
 
         if (imagesToRemove.length > 0 && !Rtc.isRtc(editor)) {
           editor.undoManager.transact(() => {
-            Arr.each(imagesToRemove, (element) => {
-              const sugarElement = SugarElement.fromDom(element);
+            Arr.each(SugarElements.fromDom(imagesToRemove), (sugarElement) => {
               const parentOpt = Traverse.parent(sugarElement);
               Remove.remove(sugarElement);
               // This needs a more editor-wide fix, see issue TINY-9802. Short version: Removing the image resulted in empty <p> elements, which confused the editor.
-              parentOpt.each(addPaddingToEmpty);
-              blobCache.removeByUri(element.src);
+              parentOpt.each(addPaddingToEmpty(editor));
+              blobCache.removeByUri(sugarElement.dom.src);
             });
           });
         } else if (shouldDispatchChange) {
