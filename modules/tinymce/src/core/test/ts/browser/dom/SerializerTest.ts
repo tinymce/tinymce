@@ -836,4 +836,69 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
       '<a href="#"><p>block</p></a>'
     );
   });
+
+  it('TINY-3909: Remove redundant br elements', () => {
+    const ser = DomSerializer({ remove_trailing_brs: true });
+
+    setTestHtml( '<p>a<br></p>' +
+      '<p>a<br>b<br></p>' +
+      '<p>a<br><br></p><p>a<br><span data-mce-type="bookmark"></span><br></p>' +
+      '<p>a<span data-mce-type="bookmark"></span><br></p>');
+    assert.equal(
+      ser.serialize(getTestElement(), { getInner: true }),
+      '<p>a</p><p>a<br>b</p><p>a<br><br></p><p>a<br><br></p><p>a</p>',
+      'Should remove redundant br elements');
+  });
+
+  it('TINY-3909: Replace br with nbsp when wrapped in two inline elements and one block element', () => {
+    const ser = DomSerializer({ remove_trailing_brs: true });
+
+    setTestHtml('<p><strong><em><br /></em></strong></p>');
+    assert.equal(
+      ser.serialize(getTestElement(), { getInner: true }),
+      '<p><strong><em>&nbsp;</em></strong></p>',
+      'Should replace br with nbsp');
+  });
+
+  it('TINY-3909: Replace br with nbsp when wrapped in an inline element and placed in the root', () => {
+    const ser = DomSerializer({ remove_trailing_brs: true });
+
+    setTestHtml('<strong><br /></strong>');
+    assert.equal(
+      ser.serialize(getTestElement(), { getInner: true }),
+      '<strong>&nbsp;</strong>',
+      'Should replace br with nbsp');
+  });
+
+  it('TINY-3909: Don\'t replace br inside root element when there is multiple brs', () => {
+    const ser = DomSerializer({ remove_trailing_brs: true });
+
+    setTestHtml('<strong><br /><br /></strong>');
+    assert.equal(
+      ser.serialize(getTestElement(), { getInner: true }),
+      '<strong><br><br></strong>',
+      'Should not replace br with nbsp');
+  });
+
+  it('TINY-3909: Don\'t replace br inside root element when there is siblings', () => {
+    const ser = DomSerializer({ remove_trailing_brs: true });
+
+    setTestHtml('<strong><br /></strong><em>x</em>');
+    assert.equal(
+      ser.serialize(getTestElement(), { getInner: true }),
+      '<strong><br></strong><em>x</em>',
+      'Should not replace br with nbsp');
+  });
+
+  it('TINY-3909: Remove br in invalid parent bug', () => {
+    const ser = DomSerializer({ remove_trailing_brs: true });
+
+    ser.setRules('br');
+    setTestHtml('<br>');
+    assert.equal(
+      ser.serialize(getTestElement(), { getInner: true }),
+      '',
+      'Should remove br');
+  });
 });
+
