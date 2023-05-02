@@ -13,7 +13,7 @@ describe('browser.tinymce.plugins.table.TableCellPropsStyleTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   };
 
-  context('TINY-3909: remove_trailing_br is true', () => {
+  context('remove_trailing_br is true', () => {
     const hookWithTrailingBr = TinyHooks.bddSetup<Editor>({ ...baseSettings, remove_trailing_br: true }, [ Plugin ], true);
 
     it('TINY-3909: remove_trailing_br: true', async () => {
