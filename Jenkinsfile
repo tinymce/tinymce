@@ -56,9 +56,9 @@ timestamps {
   // NOTE: Ensure not to go over 7.5 CPU/RAM due to EC2 node sizes and the jnlp container requirements
   tinyPods.node([
     resourceRequestCpu: '6',
-    resourceRequestMemory: '4Gi',
+    resourceRequestMemory: '6Gi',
     resourceLimitCpu: '7.5',
-    resourceLimitMemory: '4Gi'
+    resourceLimitMemory: '6Gi'
   ]) {
     def props = readProperties(file: 'build.properties')
 
