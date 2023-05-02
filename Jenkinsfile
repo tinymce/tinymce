@@ -1,5 +1,5 @@
 #!groovy
-@Library('waluigi@feature/TINY-9806') _
+@Library('waluigi@release/7') _
 
 standardProperties()
 
@@ -56,9 +56,9 @@ timestamps {
   // NOTE: Ensure not to go over 7.5 CPU/RAM due to EC2 node sizes and the jnlp container requirements
   tinyPods.node([
     resourceRequestCpu: '6',
-    resourceRequestMemory: '6Gi',
+    resourceRequestMemory: '4Gi',
     resourceLimitCpu: '7.5',
-    resourceLimitMemory: '6Gi'
+    resourceLimitMemory: '4Gi'
   ]) {
     def props = readProperties(file: 'build.properties')
 
