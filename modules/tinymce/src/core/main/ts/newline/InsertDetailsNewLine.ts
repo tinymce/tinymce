@@ -7,18 +7,12 @@ export const isDetails = (node?: Node | null): node is HTMLDetailsElement =>
 export const getDetailsRoot = (editor: Editor, element: Element): HTMLDetailsElement | null =>
   editor.dom.getParent(element, isDetails);
 
-export const isLastEmptyBlockInDetails = (editor: Editor, shiftKey: boolean, element: Element): boolean => {
-  switch (true) {
-    case shiftKey:
-    case element.nodeName !== 'P':
-    case element.parentNode?.lastChild !== element:
-    case !editor.dom.isEmpty(element):
-    case !isDetails(element.parentNode):
-      return false;
-    default:
-      return true;
-  }
-};
+export const isLastEmptyBlockInDetails = (editor: Editor, shiftKey: boolean, element: Element): boolean =>
+  !shiftKey &&
+  element.nodeName === 'P' &&
+  element.parentNode?.lastChild === element &&
+  editor.dom.isEmpty(element) &&
+  isDetails(element.parentNode);
 
 export const insertNewLine = (editor: Editor, createNewBlock: (name: string) => Element, parentBlock: Element): void => {
   const newBlock = createNewBlock('p');
