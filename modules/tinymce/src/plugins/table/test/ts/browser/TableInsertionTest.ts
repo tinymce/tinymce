@@ -16,7 +16,16 @@ describe('browser.tinymce.plugins.table.TableCellPropsStyleTest', () => {
   context('remove_trailing_br is true', () => {
     const hookWithTrailingBr = TinyHooks.bddSetup<Editor>({ ...baseSettings, remove_trailing_br: true }, [ Plugin ], true);
 
-    it('TINY-3909: remove_trailing_br: true', async () => {
+        it('TINY-3909: single table', async () => {
+      const editor = hookWithoutTrailingBr.editor();
+      editor.setContent('');
+      await TableTestUtils.pInsertTableViaGrid(editor, 2, 2);
+      // TODO: assert cursor position - TinyAssertions.assertCursor
+      // TODO: assert HTML to make sure brs are present in TDs - TinyAssertions.assertContentPresence
+      // TODO: assert returned content - TinyAssertsion.assertContent
+    });
+
+    it('TINY-3909: nested table', async () => {
       const editor = hookWithTrailingBr.editor();
       editor.setContent('');
       await TableTestUtils.pInsertTableViaGrid(editor, 2, 2);
