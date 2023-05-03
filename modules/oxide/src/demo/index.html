@@ -41,16 +41,17 @@
 
         tinymce.init({
             selector:'textarea',
-            plugins: 'autoresize advlist anchor autolink charmap code codesample directionality fullscreen help image insertdatetime link lists media nonbreaking pagebreak preview searchreplace table template toc visualblocks visualchars wordcount',
-            toolbar: 'undo redo | formatselect | bold italic strikethrough forecolor backcolor blockquote | link table image media | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | removeformat fullscreen',
+            plugins: [
+              'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
+              'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code', 'fullscreen', 'insertdatetime', 'media', 'nonbreaking',
+              'save', 'table', 'directionality', 'emoticons', 'importcss', 'codesample', 'help'
+            ],
+            toolbar: 'undo redo | formatselect | bold italic strikethrough forecolor backcolor blockquote | fontfamily fontsizeinput | link table image media | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | removeformat fullscreen',
             toolbar_mode: 'floating',
             toolbar_sticky: true,
             height: 600,
             skin_url: '/skins/ui/' +  skin,
-            content_css: '/skins/content/' + contentcss + '/content.css',
-            templates: [
-              {title: 'Some title', description: 'Some description', content: 'Some content'},
-            ],
+            content_css: '/skins/content/' + contentcss + '/content.css'
         });
 
         function addOptionTo (select) {
