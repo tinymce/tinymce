@@ -263,7 +263,8 @@ const compileSchema = (type: SchemaType): SchemaLookupTable => {
   add('body', 'onafterprint onbeforeprint onbeforeunload onblur onerror onfocus ' +
     'onhashchange onload onmessage onoffline ononline onpagehide onpageshow ' +
     'onpopstate onresize onscroll onstorage onunload', flowContent);
-  add('address dt dd div caption', '', flowContent);
+  add('dd div', '', flowContent);
+  add('address dt caption', '', type === 'html4' ? phrasingContent : flowContent);
   add('h1 h2 h3 h4 h5 h6 pre p abbr code var samp kbd sub sup i b u bdo span legend em strong small s cite dfn', '', phrasingContent);
   add('blockquote', 'cite', flowContent);
   add('ol', 'reversed start type', 'li');
