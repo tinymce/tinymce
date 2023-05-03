@@ -23,94 +23,94 @@ describe('browser.tinymce.plugins.directionality.DirectionStyleTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   };
 
-  context('TINY-9314: Inline direction style', () => {
+  context('Inline direction style', () => {
     const hook = TinyHooks.bddSetup<Editor>(baseSettings, [ Plugin ]);
 
-    it('Applying ltr with dir="rtl" and direction: rtl', () => testDirectionStyle(
+    it('TINY-9314: Applying ltr with dir="rtl" and direction: rtl', () => testDirectionStyle(
       hook.editor(),
       '<p dir="rtl" style="direction: rtl;">Lorem ipsum</p>',
       'ltr',
       '<p style="direction: ltr;">Lorem ipsum</p>'
     ));
 
-    it('Applying rtl with dir="ltr" and direction: ltr', () => testDirectionStyle(
+    it('TINY-9314: Applying rtl with dir="ltr" and direction: ltr', () => testDirectionStyle(
       hook.editor(),
       '<p dir="ltr" style="direction: ltr;">Lorem ipsum</p>',
       'rtl',
       '<p dir="rtl" style="direction: rtl;">Lorem ipsum</p>'
     ));
 
-    it('Applying ltr with dir="ltr" and direction: ltr', () => testDirectionStyle(
+    it('TINY-9314: Applying ltr with dir="ltr" and direction: ltr', () => testDirectionStyle(
       hook.editor(),
       '<p dir="ltr" style="direction: ltr;">Lorem ipsum</p>',
       'ltr',
       '<p style="direction: ltr;">Lorem ipsum</p>'
     ));
 
-    it('Applying rtl with dir="rtl" and direction: rtl', () => testDirectionStyle(
+    it('TINY-9314: Applying rtl with dir="rtl" and direction: rtl', () => testDirectionStyle(
       hook.editor(),
       '<p dir="rtl" style="direction: rtl;">Lorem ipsum</p>',
       'rtl',
       '<p dir="rtl" style="direction: rtl;">Lorem ipsum</p>'
     ));
 
-    it('Applying ltr with no dir attribute and direction: rtl', () => testDirectionStyle(
+    it('TINY-9314: Applying ltr with no dir attribute and direction: rtl', () => testDirectionStyle(
       hook.editor(),
       '<p style="direction: rtl;">Lorem ipsum</p>',
       'ltr',
       '<p style="direction: ltr;">Lorem ipsum</p>'
     ));
 
-    it('Applying rtl with no dir attribute and direction: ltr', () => testDirectionStyle(
+    it('TINY-9314: Applying rtl with no dir attribute and direction: ltr', () => testDirectionStyle(
       hook.editor(),
       '<p style="direction: ltr;">Lorem ipsum</p>',
       'rtl',
       '<p dir="rtl" style="direction: rtl;">Lorem ipsum</p>'
     ));
 
-    it('Applying ltr with no dir attribute and direction: ltr', () => testDirectionStyle(
+    it('TINY-9314: Applying ltr with no dir attribute and direction: ltr', () => testDirectionStyle(
       hook.editor(),
       '<p style="direction: ltr;">Lorem ipsum</p>',
       'ltr',
       '<p style="direction: ltr;">Lorem ipsum</p>'
     ));
 
-    it('Applying rtl with no dir attribute and direction: rtl', () => testDirectionStyle(
+    it('TINY-9314: Applying rtl with no dir attribute and direction: rtl', () => testDirectionStyle(
       hook.editor(),
       '<p style="direction: rtl;">Lorem ipsum</p>',
       'rtl',
       '<p dir="rtl" style="direction: rtl;">Lorem ipsum</p>'
     ));
 
-    it('Applying ltr with dir="rtl" and direction: ltr', () => testDirectionStyle(
+    it('TINY-9314: Applying ltr with dir="rtl" and direction: ltr', () => testDirectionStyle(
       hook.editor(),
       '<p dir="rtl" style="direction: ltr;">Lorem ipsum</p>',
       'ltr',
       '<p style="direction: ltr;">Lorem ipsum</p>'
     ));
 
-    it('Applying rtl with dir="rtl" and direction: ltr', () => testDirectionStyle(
+    it('TINY-9314: Applying rtl with dir="rtl" and direction: ltr', () => testDirectionStyle(
       hook.editor(),
       '<p dir="rtl" style="direction: ltr;">Lorem ipsum</p>',
       'rtl',
       '<p dir="rtl" style="direction: rtl;">Lorem ipsum</p>'
     ));
 
-    it('Applying ltr with dir="ltr" and direction: rtl', () => testDirectionStyle(
+    it('TINY-9314: Applying ltr with dir="ltr" and direction: rtl', () => testDirectionStyle(
       hook.editor(),
       '<p dir="ltr" style="direction: rtl;">Lorem ipsum</p>',
       'ltr',
       '<p style="direction: ltr;">Lorem ipsum</p>'
     ));
 
-    it('Applying rtl with dir="ltr" and direction: rtl', () => testDirectionStyle(
+    it('TINY-9314: Applying rtl with dir="ltr" and direction: rtl', () => testDirectionStyle(
       hook.editor(),
       '<p dir="ltr" style="direction: rtl;">Lorem ipsum</p>',
       'rtl',
       '<p dir="rtl" style="direction: rtl;">Lorem ipsum</p>'
     ));
 
-    it('Should remove dir and direction style from selected list item and children', () => testDirectionStyle(
+    it('TINY-9314: Should remove dir and direction style from selected list item and children', () => testDirectionStyle(
       hook.editor(),
       '<ul>' +
         '<li dir="ltr" style="direction: ltr;">foo' +
@@ -144,97 +144,97 @@ describe('browser.tinymce.plugins.directionality.DirectionStyleTest', () => {
     ));
   });
 
-  context('TINY-9314: Direction style from stylesheet', () => {
+  context('Direction style from stylesheet', () => {
     const hook = TinyHooks.bddSetup<Editor>({
       ...baseSettings,
       content_style: '.rtl-content { direction: rtl }; .ltr-content { direction: ltr }',
     }, [ Plugin ]);
 
-    it('Applying ltr with dir="rtl" and direction: rtl', () => testDirectionStyle(
+    it('TINY-9314: Applying ltr with dir="rtl" and direction: rtl', () => testDirectionStyle(
       hook.editor(),
       '<p class="rtl-content" dir="rtl">Lorem ipsum</p>',
       'ltr',
       '<p class="rtl-content" style="direction: ltr;">Lorem ipsum</p>'
     ));
 
-    it('Applying rtl with dir="ltr" and direction: ltr', () => testDirectionStyle(
+    it('TINY-9314: Applying rtl with dir="ltr" and direction: ltr', () => testDirectionStyle(
       hook.editor(),
       '<p class="ltr-content" dir="ltr">Lorem ipsum</p>',
       'rtl',
       '<p class="ltr-content" dir="rtl">Lorem ipsum</p>'
     ));
 
-    it('Applying ltr with dir="ltr" and direction: ltr', () => testDirectionStyle(
+    it('TINY-9314: Applying ltr with dir="ltr" and direction: ltr', () => testDirectionStyle(
       hook.editor(),
       '<p class="ltr-content" dir="ltr">Lorem ipsum</p>',
       'ltr',
       '<p class="ltr-content">Lorem ipsum</p>'
     ));
 
-    it('Applying rtl with dir="rtl" and direction: rtl', () => testDirectionStyle(
+    it('TINY-9314: Applying rtl with dir="rtl" and direction: rtl', () => testDirectionStyle(
       hook.editor(),
       '<p class="rtl-content" dir="rtl">Lorem ipsum</p>',
       'rtl',
       '<p class="rtl-content" dir="rtl">Lorem ipsum</p>'
     ));
 
-    it('Applying ltr with no dir attribute and direction: rtl', () => testDirectionStyle(
+    it('TINY-9314: Applying ltr with no dir attribute and direction: rtl', () => testDirectionStyle(
       hook.editor(),
       '<p class="rtl-content">Lorem ipsum</p>',
       'ltr',
       '<p class="rtl-content" style="direction: ltr;">Lorem ipsum</p>'
     ));
 
-    it('Applying rtl with no dir attribute and direction: ltr', () => testDirectionStyle(
+    it('TINY-9314: Applying rtl with no dir attribute and direction: ltr', () => testDirectionStyle(
       hook.editor(),
       '<p class="ltr-content">Lorem ipsum</p>',
       'rtl',
       '<p class="ltr-content" dir="rtl">Lorem ipsum</p>'
     ));
 
-    it('Applying ltr with no dir attribute and direction: ltr', () => testDirectionStyle(
+    it('TINY-9314: Applying ltr with no dir attribute and direction: ltr', () => testDirectionStyle(
       hook.editor(),
       '<p class="ltr-content">Lorem ipsum</p>',
       'ltr',
       '<p class="ltr-content">Lorem ipsum</p>'
     ));
 
-    it('Applying rtl with no dir attribute and direction: rtl', () => testDirectionStyle(
+    it('TINY-9314: Applying rtl with no dir attribute and direction: rtl', () => testDirectionStyle(
       hook.editor(),
       '<p class="rtl-content">Lorem ipsum</p>',
       'rtl',
       '<p class="rtl-content" dir="rtl">Lorem ipsum</p>'
     ));
 
-    it('Applying ltr with dir="rtl" and direction: ltr', () => testDirectionStyle(
+    it('TINY-9314: Applying ltr with dir="rtl" and direction: ltr', () => testDirectionStyle(
       hook.editor(),
       '<p class="ltr-content" dir="rtl">Lorem ipsum</p>',
       'ltr',
       '<p class="ltr-content">Lorem ipsum</p>'
     ));
 
-    it('Applying rtl with dir="rtl" and direction: ltr', () => testDirectionStyle(
+    it('TINY-9314: Applying rtl with dir="rtl" and direction: ltr', () => testDirectionStyle(
       hook.editor(),
       '<p class="ltr-content" dir="rtl">Lorem ipsum</p>',
       'rtl',
       '<p class="ltr-content" dir="rtl">Lorem ipsum</p>'
     ));
 
-    it('Applying ltr with dir="ltr" and direction: rtl', () => testDirectionStyle(
+    it('TINY-9314: Applying ltr with dir="ltr" and direction: rtl', () => testDirectionStyle(
       hook.editor(),
       '<p class="rtl-content" dir="ltr">Lorem ipsum</p>',
       'ltr',
       '<p class="rtl-content" style="direction: ltr;">Lorem ipsum</p>'
     ));
 
-    it('Applying rtl with dir="ltr" and direction: rtl', () => testDirectionStyle(
+    it('TINY-9314: Applying rtl with dir="ltr" and direction: rtl', () => testDirectionStyle(
       hook.editor(),
       '<p class="rtl-content" dir="ltr">Lorem ipsum</p>',
       'rtl',
       '<p class="rtl-content" dir="rtl">Lorem ipsum</p>'
     ));
 
-    it('Should remove dir and direction style from selected list item and children', () => testDirectionStyle(
+    it('TINY-9314: Should remove dir and direction style from selected list item and children', () => testDirectionStyle(
       hook.editor(),
       '<ul class="rtl-content">' +
         '<li dir="ltr" style="direction: ltr;">foo' +
