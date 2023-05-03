@@ -10,13 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The editor displayed a notification error when it failed to retrieve a blob image uri. #TINY-9604
 - Tab navigation no longer incorrectly stops at menu buttons within toolbar groups. #TINY-9723
 - The `urlinput` dialog component would not open the type-ahead dropdown when the input value was reset to an empty string. #TINY-9717
-- Redial would, in some situations, cause select elements not to have an initial value selected when they should have. #TINY-9679
-- Fixed the mouse pointer style from a text cursor to a default arrow pointer when hovering over the tree dialog component items. #TINY-9692
-- Enabled variant of toggleable `tox-button` and `tox-button--secondary`: it now supports `hover`/`active`/`focus`/`disabled` states. #TINY-9713
+- Redial would, in some circumstances, cause elements to not have an initial value selected when they should have. #TINY-9679
+- When hovering over tree dialog components the mouse pointer rendered incorrectly. #TINY-9692
+- The `tox-button` and `tox-button-secondary` buttons now support the `hover`, `active`, `focus`, and `disabled` states. #TINY-9713
 - Setting an invalid unit in the `fontsizeinput` changed it to the default value instead of reverting it to the previous, and valid, value. #TINY-9754
 - Selection was not correctly scrolled horizontally into view when using the `selection.scrollIntoView` API. #TINY-9747
-- Context toolbars displayed the incorrect status for the `advlist` plugin buttons. #TINY-9680
-- The image would not be inserted when the `quickimage` button was used on Chrome. #TINY-9769
+- The contextual toolbar displayed the status of Advanced List Premium plugin icons incorrectly. #TINY-9680
+- The `quickimage` toolbar button failed to insert images selected from the local computer when running on Google Chrome for macOS. #TINY-9769
 
 ## 6.4.1 - 2023-03-29
 
