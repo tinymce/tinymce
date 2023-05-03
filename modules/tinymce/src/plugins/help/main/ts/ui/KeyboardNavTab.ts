@@ -70,9 +70,9 @@ const description = `<h1>Begin keyboard navigation</h1>
 
 <p>If the current focus is at the ‘top’ of a particular UI section, pressing the <strong>Esc</strong> key also exits keyboard navigation entirely.</p>
 
-<h1>Execute a menu command or toolbar button</h1>
+<h1>Execute a menu item or toolbar button</h1>
 
-<p>When the desired menu command or toolbar button is highlighted, press <strong>Return</strong>, <strong>Enter</strong>, or the <strong>Space bar</strong> to execute the item.
+<p>When the desired menu item or toolbar button is highlighted, press <strong>Return</strong>, <strong>Enter</strong>, or the <strong>Space bar</strong> to execute the item.
 
 <h1>Navigate non-tabbed dialogs</h1>
 
