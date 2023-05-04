@@ -190,10 +190,10 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     editor.execCommand('ToggleAllAccordions', false, false);
     TinyAssertions.assertContentPresence(editor, { 'details:not([open="open"])': 2 });
     TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
-    editor.execCommand('ToggleAllAccordions', true, true);
+    editor.execCommand('ToggleAllAccordions', false, true);
     TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 2 });
     TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
-    editor.execCommand('ToggleAllAccordions', true, true);
+    editor.execCommand('ToggleAllAccordions', false, true);
     TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 2 });
     TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
   });
