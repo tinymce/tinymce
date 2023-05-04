@@ -45,6 +45,31 @@
 @button-secondary-active-box-shadow: @button-secondary-box-shadow;
 @button-secondary-active-text-color: @button-secondary-text-color;
 
+// Enabled state
+@button-secondary-enabled-background-color: contrast(@background-color, mix(darken(@background-color, 6%), @color-tint, 70%), mix(lighten(@background-color, 15%), @color-tint, 70%));
+@button-secondary-enabled-background-image: @button-secondary-background-image;
+@button-secondary-enabled-border-color: @button-secondary-enabled-background-color;
+@button-secondary-enabled-box-shadow: @button-secondary-box-shadow;
+@button-secondary-enabled-text-color: @button-secondary-text-color;
+
+@button-secondary-enabled-focus-background-color: @button-secondary-enabled-hover-background-color;
+@button-secondary-enabled-focus-background-image: @button-secondary-hover-background-image;
+@button-secondary-enabled-focus-border-color: @button-secondary-enabled-hover-background-color;
+@button-secondary-enabled-focus-box-shadow: @button-secondary-enabled-box-shadow;
+@button-secondary-enabled-focus-text-color: @button-secondary-enabled-text-color;
+
+@button-secondary-enabled-hover-background-color: darken(@button-secondary-enabled-background-color, 5%);
+@button-secondary-enabled-hover-background-image: @button-secondary-hover-background-image;
+@button-secondary-enabled-hover-border-color: @button-secondary-enabled-hover-background-color;
+@button-secondary-enabled-hover-box-shadow: @button-secondary-enabled-box-shadow;
+@button-secondary-enabled-hover-text-color: @button-secondary-enabled-text-color;
+
+@button-secondary-enabled-active-background-color: darken(@button-secondary-enabled-background-color, 10%);
+@button-secondary-enabled-active-background-image: @button-secondary-background-image;
+@button-secondary-enabled-active-border-color: @button-secondary-enabled-active-background-color;
+@button-secondary-enabled-active-box-shadow: @button-secondary-enabled-box-shadow;
+@button-secondary-enabled-active-text-color: @button-secondary-enabled-text-color;
+
 .tox {
   .tox-button--secondary {
     background-color: @button-secondary-background-color;
@@ -96,6 +121,47 @@
       border-color: @button-secondary-active-border-color;
       box-shadow: @button-secondary-active-box-shadow;
       color: @button-secondary-active-text-color;
+    }
+
+    // Enabled state
+    &.tox-button--enabled {
+      background-color: @button-secondary-enabled-background-color;
+      background-image: @button-secondary-enabled-background-image;
+      border-color: @button-secondary-enabled-border-color;
+      box-shadow: @button-secondary-enabled-box-shadow;
+      color: @button-secondary-enabled-text-color;
+
+      &[disabled] {
+        background-color: @button-secondary-enabled-background-color;
+        background-image: @button-secondary-enabled-background-image;
+        border-color: @button-secondary-enabled-border-color;
+        box-shadow: @button-secondary-enabled-box-shadow;
+        color: @button-secondary-disabled-text-color;
+      }
+
+      &:focus:not(:disabled) {
+        background-color: @button-secondary-enabled-focus-background-color;
+        background-image: @button-secondary-enabled-focus-background-image;
+        border-color: @button-secondary-enabled-focus-border-color;
+        box-shadow: @button-secondary-enabled-focus-box-shadow;
+        color: @button-secondary-enabled-focus-text-color;
+      }
+
+      &:hover:not(:disabled) {
+        background-color: @button-secondary-enabled-hover-background-color;
+        background-image: @button-secondary-enabled-hover-background-image;
+        border-color: @button-secondary-enabled-hover-border-color;
+        box-shadow: @button-secondary-enabled-hover-box-shadow;
+        color: @button-secondary-enabled-hover-text-color;
+      }
+
+      &:active:not(:disabled) {
+        background-color: @button-secondary-enabled-active-background-color;
+        background-image: @button-secondary-enabled-active-background-image;
+        border-color: @button-secondary-enabled-active-border-color;
+        box-shadow: @button-secondary-enabled-active-box-shadow;
+        color: @button-secondary-enabled-active-text-color;
+      }
     }
   }
 }

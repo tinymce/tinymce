@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - New optional `defaultExpandedIds` and `onToggleExpand` options to the `tree` component config. #TINY-9653
 - New optional `defaultSelectedId` option to the `tree` component config. #TINY-9715
+- New `help_accessibility` option which displays the keyboard shortcut to access the help functionality in the statusbar. #TINY-9379
 - New `accordion` plugin with the `InsertAccordion` command. #TINY-9730
 
 ### Improved
@@ -17,6 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Toolbar buttons and menu items were not disabled when they couldn't be used on noneditable content. #TINY-9669
 - Updated toolbar "More" button tooltip text from "More..." to "Reveal or hide additional toolbar items". #TINY-9629
 - Help text displayed at **Help > Help > Keyboard Navigation** re-written. #DOC-1936
+- These characters '$', '~', '+', '|', '№', '`' are now considered as punctuation marks. Therefore, they will not increase the word count. #TINY-8122
+- Updated the `codesample` plugin dialog and `template` plugin dialog to use the 'listbox' component to match other dialogs. #TINY-9630
+
+### Changed
+- The `caption`, `address` and `dt` elements were allowed to have non-inline children elements when the editor schema was set to `html4`. #TINY-9768
 
 ### Fixed
 - Command + backspace would not add an undo level on Mac. #TINY-8910
@@ -27,24 +33,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Table toolbar was visible even if the table was within a noneditable host element. #TINY-9664
 - Quickbar toolbars was shown for noneditable contents in a noneditable root. #TINY-9460
 - Show the calculated height and width of media embed elements in the `media` plugin dialog. #TINY-8714
+- Removing an image that failed to upload from an empty paragraph would leave the paragraph without a padding br. #TINY-9696
 - Allow a media embed element to be correctly resized when using the `media` plugin dialog by converting the media embed to a standalone iframe. #TINY-8714
 - Inline alert in the "Search and Replace" dialog persisted when it wasn't necessary. #TINY-9704
 - Context toolbars displayed the incorrect status for the `advlist` plugin buttons. #TINY-9680
-- On iOS Safari, Hangul (Korean) characters will no longer merge onto the previous line after inserting a newline by pressing Enter. #TINY-9746
+- On iOS Safari, Korean characters were merging onto the previous line upon typing after inserting a newline by pressing Enter. #TINY-9746
+- Initiating the editor with a table at the start would display resize handles even when the editor wasn't focused. #TINY-9748
 - Directionality commands was setting the `dir` attribute on noneditable elements within a noneditable root. #TINY-9662
 - The content of the dialog body could not be scrolled. #TINY-9668
+- Some toolbar items were not rendering the `not-allowed` mouse cursor. #TINY-9758
+- Formats were incorrectly applied to the closest editable element if the selection was in a noneditable context. #TINY-9678
+- Formats were incorrectly removed to the closest editable element if the selection was in a noneditable context. #TINY-9678
+- Formatter API `canApply` was not returning `false` when the selection was in a noneditable context. #TINY-9678
 - When dragging image elements and dropping the image in the editor the `dragend` event would sometimes not fire on firefox. #TINY-9694
 - It was possible to remove links in noneditable contents with the 'unlink' editor command. #TINY-9739
+- Whitespace between transparent elements would incorrectly be converted into empty paragraphs. #TINY-9761
+
+## 6.4.2 - 2023-04-26
+
+### Fixed
+- The editor would display a notification error when it fails to retirieve a blob image uri. #TINY-9604
+- Menu buttons would have the Tabstopping behaviour in toolbar. #TINY-9723
+- The `urlinput` dialog component would not open the typeahead dropdown when the input value was reset to an empty string. #TINY-9717
+- Redial would in some situations cause select elements not to have an initial value selected when they should have. #TINY-9679
+- Fixed the mouse pointer style from a text cursor to a default arrow pointer when hovering over the tree dialog component items. #TINY-9692
+- Enabled variant of togglable `tox-button` and `tox-button--secondary` now supports `hover`/`active`/`focus`/`disabled` states. #TINY-9713
+- Setting an invalid unit in the `fontsizeinput` would change it do the default value instead of reverting it back to the previous valid value. #TINY-9754
+- Selection was not correctly scrolled horizontally into view when using the `selection.scrollIntoView` API. #TINY-9747
+- Context toolbars displayed the incorrect status for the `advlist` plugin buttons. #TINY-9680
+- The image would not be inserted when using the `quickimage` button on Chrome. #TINY-9769
 
 ## 6.4.1 - 2023-03-29
 
 ### Fixed
 - The `fontsizeinput` increase and decrease size buttons now work on TinyMCE mobile. #TINY-9725
-- The TinyMCE editor toolbar is now accessible for all editor widths; it no longer collapses into an inaccessible vertical line at any presented editor width. #TINY-9646
+- The TinyMCE editor toolbar is now accessible for all screen widths; it no longer collapses into an inaccessible vertical line when the screen is scrolled horizontally. #TINY-9646
 - Reverted the changes made, in TinyMCE 6.4.0, to UI button colors in focus, active, and enabled states. #TINY-9176
-
-### Changed
-- Update the `codesample` plugin dialog and `template` plugin dialog to use the 'listbox' component to match other dialogs. #TINY-9630
 
 ## 6.4.0 - 2023-03-15
 
@@ -130,7 +154,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Opening a menu button in the footer of a dialog after a redial threw an error. #TINY-9686
 - After closing a view, the `more...` toolbar button disappeared if the editor had `toolbar_mode: 'sliding'` and the toolbar was opened. #TINY-9419
 - Inline dialogs would open partially off screen when the toolbar had a small width. #TINY-9588
-- Word count was inaccurate for documents with specific characters. #TINY-8122
 - The `autoresize` plugin would cause infinite resizing when `content_css` was set to `document`. #TINY-8872
 
 ## 6.3.2 - 2023-02-22

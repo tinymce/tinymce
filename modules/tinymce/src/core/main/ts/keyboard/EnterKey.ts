@@ -25,15 +25,20 @@ const handleEnterKeyEvent = (editor: Editor, event: EditorEvent<KeyboardEvent>) 
   });
 };
 
-const isCaretAfterHangulCharacter = (rng: Range): boolean => {
+const isCaretAfterKoreanCharacter = (rng: Range): boolean => {
   if (!rng.collapsed) {
     return false;
   }
   const startContainer = rng.startContainer;
   if (NodeType.isText(startContainer)) {
-    const text = startContainer.data;
-    const index = rng.startOffset - 1;
-    return index < text.length && text.charCodeAt(index) >= 0xAC00 && text.charCodeAt(index) <= 0xD7A3;
+    // Hangul: \uAC00-\uD7AF
+    // Hangul Jamo: \u1100-\u11FF
+    // Hangul Compatibility Jamo: \u3130-\u318F
+    // Hangul Jamo Extended-A: \uA960-\uA97F
+    // Hangul Jamo Extended-B: \uD7B0-\uD7FF
+    const koreanCharRegex = /^[\uAC00-\uD7AF\u1100-\u11FF\u3130-\u318F\uA960-\uA97F\uD7B0-\uD7FF]$/;
+    const char = startContainer.data.charAt(rng.startOffset - 1);
+    return koreanCharRegex.test(char);
   } else {
     return false;
   }
@@ -56,8 +61,8 @@ const setup = (editor: Editor): void => {
 
   editor.on('keydown', (event: EditorEvent<KeyboardEvent>) => {
     if (event.keyCode === VK.ENTER) {
-      if (isIOSSafari && isCaretAfterHangulCharacter(editor.selection.getRng())) {
-        // TINY-9746: iOS Safari composes Hangul (Korean) characters by deleting the previous partial character and inserting
+      if (isIOSSafari && isCaretAfterKoreanCharacter(editor.selection.getRng())) {
+        // TINY-9746: iOS Safari composes Korean characters by deleting the previous partial character and inserting
         // the composed character. If the native Enter keypress event is not fired, iOS Safari will continue to compose across
         // our custom newline by deleting it and inserting the composed character on the previous line, causing a bug. The workaround
         // is to save a bookmark and an undo level on keydown while not preventing default to allow the native Enter keypress.
@@ -78,5 +83,5 @@ const setup = (editor: Editor): void => {
 
 export {
   setup,
-  isCaretAfterHangulCharacter
+  isCaretAfterKoreanCharacter
 };

@@ -24,6 +24,7 @@ describe('browser.tinymce.core.dom.ScrollIntoViewTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     add_unload_trigger: false,
     height: 500,
+    width: 1000,
     base_url: '/project/tinymce/js/tinymce',
     content_style: 'body.mce-content-body  { margin: 0 }'
   }, [], true);
@@ -56,11 +57,19 @@ describe('browser.tinymce.core.dom.ScrollIntoViewTest', () => {
     ScrollIntoView.scrollRangeIntoView(editor, rng);
   };
 
-  const assertScrollPosition = (editor: Editor, x: number, y: number) => {
+  const assertHorizontalScrollPosition = (editor: Editor, x: number) => {
     const actualX = Math.round(editor.dom.getViewPort(editor.getWin()).x);
+    assert.approximately(actualX, x, 3, `Scroll position X should be expected value: ${x} got ${actualX}`);
+  };
+
+  const assertVerticalScrollPosition = (editor: Editor, y: number) => {
     const actualY = Math.round(editor.dom.getViewPort(editor.getWin()).y);
-    assert.equal(actualX, x, `Scroll position X should be expected value: ${x} got ${actualX}`);
-    assert.equal(actualY, y, `Scroll position Y should be expected value: ${y} got ${actualY}`);
+    assert.approximately(actualY, y, 3, `Scroll position Y should be expected value: ${y} got ${actualY}`);
+  };
+
+  const assertScrollPosition = (editor: Editor, x: number, y: number) => {
+    assertHorizontalScrollPosition(editor, x);
+    assertVerticalScrollPosition(editor, y);
   };
 
   const assertApproxScrollPosition = (editor: Editor, x: number, y: number) => {
@@ -138,6 +147,29 @@ describe('browser.tinymce.core.dom.ScrollIntoViewTest', () => {
       TinySelections.setCursor(editor, [ 2, 0 ], 0);
       editor.selection.scrollIntoView();
       assertScrollPosition(editor, 0, 689);
+    });
+
+    it('TINY-9747: when the selection is scrolled into view selection if there is an horizontal scroll it should preserve the correct left position', async () => {
+      const editor = hook.editor();
+      await pSetContent(editor, `<div class="container-with-horizontal-scroll" style="margin-left: 100px">
+        <div style="height: 1000px; width: 2000px">a</div>
+        <div style="height: 50px">b</div>
+        <div style="height: 600px">a</div>
+      </div>`);
+
+      TinySelections.setCursor(editor, [ 0, 2, 0 ], 0);
+      editor.selection.scrollIntoView();
+      /*
+        TINY-9747: here the assertion on vertical scroll has a different value on a different browser
+        because if the scrollbar is showed to have the element `a` inside the view the required scroll is different:
+
+        ----   ----
+        |      |
+        |      a
+        a      scrollbar
+        ----   ----
+      */
+      assertHorizontalScrollPosition(editor, 0);
     });
   });
 

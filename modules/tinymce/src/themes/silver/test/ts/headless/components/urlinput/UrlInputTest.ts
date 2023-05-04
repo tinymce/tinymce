@@ -262,4 +262,11 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
       'Checking Rep.getValue'
     );
   });
+
+  it('TINY-9717: it should open dropdown after the input value was reset to an empty string', async () => {
+    const component = hook.component();
+    Representing.setValue(component, { value: '' });
+    await pOpenMenu();
+    closeMenu();
+  });
 });
