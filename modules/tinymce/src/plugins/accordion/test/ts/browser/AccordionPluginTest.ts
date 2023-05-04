@@ -29,14 +29,14 @@ const testInsertingAccordion = (editor: Editor, test: InsertAccordionTest): void
   TinyAssertions.assertCursor(editor, ...test.assertCursor);
 };
 
-const testEvent = <T>(editor: Editor, eventName: string, cmd: string, callback: (event: T) => void): void => {
+const testEvent = <T>(editor: Editor, eventName: string, cmd: string, callback: (event: T) => void, arg?: boolean): void => {
   let isEventTriggered = false;
   const fn = (event: T) => {
     isEventTriggered = true;
     callback(event);
   };
   editor.on(eventName, fn);
-  editor.execCommand(cmd);
+  editor.execCommand(cmd, false, arg);
   assert.isTrue(isEventTriggered);
   editor.off(eventName, fn);
 };
@@ -214,18 +214,28 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
 
   it('TINY-9731: Emit the "ToggledAllAccordions" event', () => {
     const editor = hook.editor();
-    editor.setContent(createAccordion({ summary: 'tiny' }));
+    editor.setContent([ createAccordion({ open: true }), createAccordion({ open: false }) ].join(''));
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 'tiny'.length);
     testEvent(editor, 'ToggledAllAccordions', 'ToggleAllAccordions', (event: ToggledAllAccordionsEvent) => {
-      assert.equal(event.elements.length, 1);
+      assert.equal(event.elements.length, 2);
       assert.equal(event.elements[0].nodeName, 'DETAILS');
-      assert.isFalse(event.state);
+      assert.isUndefined(event.state);
     });
     testEvent(editor, 'ToggledAllAccordions', 'ToggleAllAccordions', (event: ToggledAllAccordionsEvent) => {
-      assert.equal(event.elements.length, 1);
+      assert.equal(event.elements.length, 2);
+      assert.equal(event.elements[0].nodeName, 'DETAILS');
+      assert.isUndefined(event.state);
+    });
+    testEvent(editor, 'ToggledAllAccordions', 'ToggleAllAccordions', (event: ToggledAllAccordionsEvent) => {
+      assert.equal(event.elements.length, 2);
       assert.equal(event.elements[0].nodeName, 'DETAILS');
       assert.isTrue(event.state);
-    });
+    }, true);
+    testEvent(editor, 'ToggledAllAccordions', 'ToggleAllAccordions', (event: ToggledAllAccordionsEvent) => {
+      assert.equal(event.elements.length, 2);
+      assert.equal(event.elements[0].nodeName, 'DETAILS');
+      assert.isFalse(event.state);
+    }, false);
   });
 
   it('TINY-9731: Toggle summary with ENTER keypress', () => {
