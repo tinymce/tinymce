@@ -31,10 +31,8 @@ const toggleDetailsElement = (details: HTMLDetailsElement, state?: boolean): boo
   const shouldOpen = state ?? !Utils.isOpen(details);
   if (shouldOpen) {
     details.setAttribute('open', 'open');
-    details.setAttribute('data-mce-open', 'open');
   } else {
     details.removeAttribute('open');
-    details.removeAttribute('data-mce-open');
   }
   return shouldOpen;
 };
