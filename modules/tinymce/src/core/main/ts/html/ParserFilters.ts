@@ -5,6 +5,7 @@ import DomParser, { DomParserSettings } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
 import Tools from '../api/util/Tools';
 import { dataUriToBlobInfo } from '../file/BlobCacheUtils';
+// import RemoveTrailingBRs from '../RemoveTrailingBr';
 
 const isBogusImage = (img: AstNode): boolean =>
   Type.isNonNullable(img.attr('data-mce-bogus'));
@@ -33,6 +34,13 @@ const registerBase64ImageFilter = (parser: DomParser, settings: DomParserSetting
 
 const register = (parser: DomParser, settings: DomParserSettings): void => {
   const schema = parser.schema;
+
+  // /**
+  //  * @deprecated removing in 7 */
+  //
+  // if (settings.remove_trailing_brs) {
+  //   RemoveTrailingBRs(parser);
+  // }
 
   parser.addAttributeFilter('href', (nodes) => {
     let i = nodes.length;
