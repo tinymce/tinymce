@@ -40,13 +40,13 @@ const toggleDetailsElement = (details: HTMLDetailsElement, state?: boolean): boo
 };
 
 const toggleAccordion = (editor: Editor, state?: boolean): void => {
-  Utils.getSelectedDetails(editor).each(details => {
+  Utils.getSelectedDetails(editor).each((details) => {
     Events.fireToggleAccordionEvent(editor, details, toggleDetailsElement(details, state));
   });
 };
 
 const removeAccordion = (editor: Editor): void => {
-  Utils.getSelectedDetails(editor).each(details => {
+  Utils.getSelectedDetails(editor).each((details) => {
     const { nextSibling } = details;
     if (nextSibling) {
       editor.selection.select(nextSibling, true);
