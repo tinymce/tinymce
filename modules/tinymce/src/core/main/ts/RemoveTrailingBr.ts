@@ -2,13 +2,12 @@ import { Unicode } from '@ephox/katamari';
 
 import DomParser from './api/html/DomParser';
 import AstNode from './api/html/Node';
+import Schema from './api/html/Schema';
 import Tools from './api/util/Tools';
 import * as TransparentElements from './content/TransparentElements';
 import { isEmpty, paddEmptyNode } from './html/ParserUtils';
 
-export default (htmlParser: DomParser): void => {
-
-  const schema = htmlParser.schema;
+export const addNodeFilter = (htmlParser: DomParser, schema: Schema): void => {
   htmlParser.addNodeFilter('br', (nodes, _, args) => {
     const blockElements = Tools.extend({}, schema.getBlockElements());
     const nonEmptyElements = schema.getNonEmptyElements();

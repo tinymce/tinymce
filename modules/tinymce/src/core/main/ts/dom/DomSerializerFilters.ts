@@ -4,7 +4,7 @@ import DOMUtils from '../api/dom/DOMUtils';
 import DomParser from '../api/html/DomParser';
 import Entities from '../api/html/Entities';
 import AstNode from '../api/html/Node';
-import RemoveTrailingBRs from '../RemoveTrailingBr';
+import * as RemoveTrailingBr from '../RemoveTrailingBr';
 import * as Zwsp from '../text/Zwsp';
 import { DomSerializerSettings } from './DomSerializerImpl';
 
@@ -194,10 +194,9 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
   // Remove <br> at end of block elements Gecko and WebKit injects BR elements to
   // make it possible to place the caret inside empty blocks. This logic tries to remove
   // these elements and keep br elements that where intended to be there intact
-  /**
-   * @deprecated removing in 7 */
   if (settings.remove_trailing_brs) {
-    RemoveTrailingBRs(htmlParser);
+    const schema = htmlParser.schema;
+    RemoveTrailingBr.addNodeFilter(htmlParser, schema);
   }
 };
 
