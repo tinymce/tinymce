@@ -19,8 +19,6 @@ const filterDetails = (editor: Editor): void => {
         details.attr('open', 'open');
       } else if (initialStateOption === 'collapsed') {
         details.attr('open', null);
-      } else if (initialStateOption === 'inherited') {
-        details.attr('open', details.attr('open'));
       }
     });
   });
@@ -32,8 +30,6 @@ const filterDetails = (editor: Editor): void => {
         details.attr('open', 'open');
       } else if (serializedStateOption === 'collapsed') {
         details.attr('open', null);
-      } else if (serializedStateOption === 'inherited') {
-        details.attr('open', details.attr('open'));
       }
     });
   });
