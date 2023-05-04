@@ -76,7 +76,6 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
     forced_root_block: getOption('forced_root_block'),
     forced_root_block_attrs: getOption('forced_root_block_attrs'),
     preserve_cdata: getOption('preserve_cdata'),
-    remove_trailing_brs: getOption('remove_trailing_brs'),
     inline_styles: getOption('inline_styles'),
     root_name: getRootName(editor),
     sanitize: getOption('xss_sanitization'),
@@ -119,6 +118,7 @@ const mkSerializerSettings = (editor: Editor): DomSerializerSettings => {
       element_format: getOption('element_format'),
       entities: getOption('entities'),
       entity_encoding: getOption('entity_encoding'),
+      remove_trailing_brs: getOption('remove_trailing_brs'),
       indent: getOption('indent'),
       indent_after: getOption('indent_after'),
       indent_before: getOption('indent_before')

@@ -19,6 +19,7 @@ import { isWsPreserveElement } from './ElementType';
 interface DomSerializerSettings extends DomParserSettings, WriterSettings, SchemaSettings, HtmlSerializerSettings {
   url_converter?: URLConverter;
   url_converter_scope?: {};
+  remove_trailing_brs?: boolean;
 }
 
 interface DomSerializerImpl {
