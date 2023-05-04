@@ -64,9 +64,8 @@ const toggleAllAccordions = (editor: Editor, state?: boolean): void => {
   if (accordions.length === 0) {
     return;
   }
-  const shouldOpen = state ?? !Utils.isOpen(accordions[0]);
-  Arr.each(accordions, (accordion) => toggleDetailsElement(accordion, shouldOpen));
-  Events.fireToggleAllAccordionsEvent(editor, accordions, shouldOpen);
+  Arr.each(accordions, (accordion) => toggleDetailsElement(accordion, state ?? !Utils.isOpen(accordion)));
+  Events.fireToggleAllAccordionsEvent(editor, accordions, state);
 };
 
 export {
