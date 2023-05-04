@@ -63,6 +63,8 @@ export interface DomParserSettings {
   forced_root_block_attrs?: Record<string, string>;
   inline_styles?: boolean;
   preserve_cdata?: boolean;
+  /**
+   * @deprecated filter moved to dom serializer */
   remove_trailing_brs?: boolean;
   root_name?: string;
   sanitize?: boolean;
