@@ -1,13 +1,13 @@
-import { Files } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Type } from '@ephox/katamari';
 
-import { createFileList } from 'ephox/dragster/filelist/FileList';
+import { createFileList } from 'ephox/dragster/file/FileList';
+import { createFile } from 'ephox/dragster/file/Files';
 
 UnitTest.test('FileListTest', () => {
   const files = createFileList([
-    Files.createFile('a.txt', 1234, new Blob([ '123' ], { type: 'text/plain' })),
-    Files.createFile('b.html', 1234, new Blob([ '123' ], { type: 'text/html' }))
+    createFile('a.txt', 1234, new Blob([ '123' ], { type: 'text/plain' })),
+    createFile('b.html', 1234, new Blob([ '123' ], { type: 'text/html' }))
   ]);
 
   Assert.eq('Should be the expected file list length', 2, files.length);

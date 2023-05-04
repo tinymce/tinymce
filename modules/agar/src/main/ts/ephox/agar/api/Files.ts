@@ -1,4 +1,7 @@
-import { createFile, createFileFromString } from '../file/Files';
+import { Files } from '@ephox/dragster';
+
+const createFile = Files.createFile;
+const createFileFromString = Files.createFileFromString;
 
 export {
   createFile,

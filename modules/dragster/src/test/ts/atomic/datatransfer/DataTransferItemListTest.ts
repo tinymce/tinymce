@@ -1,4 +1,3 @@
-import { Files } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Type } from '@ephox/katamari';
 import { assert } from 'chai';
@@ -7,6 +6,7 @@ import { createDataTransfer } from 'ephox/dragster/datatransfer/DataTransfer';
 import { getData } from 'ephox/dragster/datatransfer/DataTransferItem';
 import { createDataTransferItemList } from 'ephox/dragster/datatransfer/DataTransferItemList';
 import { setProtectedMode, setReadOnlyMode } from 'ephox/dragster/datatransfer/Mode';
+import { createFile } from 'ephox/dragster/file/Files';
 
 UnitTest.test('DataTransferItemListTest', () => {
   const testAdding = () => {
@@ -14,7 +14,7 @@ UnitTest.test('DataTransferItemListTest', () => {
 
     assert.isFalse(Type.isArray(items), 'Should not be an array');
 
-    items.add(Files.createFile('a.txt', 1234, new Blob([ '123' ], { type: 'text/html' })));
+    items.add(createFile('a.txt', 1234, new Blob([ '123' ], { type: 'text/html' })));
     assert.equal(items[0].kind, 'file', 'Should be expected kind');
     assert.lengthOf(items, 1, 'Should be expected length');
 
@@ -31,7 +31,7 @@ UnitTest.test('DataTransferItemListTest', () => {
   const testRemoving = () => {
     const items = createDataTransferItemList(createDataTransfer());
 
-    items.add(Files.createFile('a.txt', 1234, new Blob([ '123' ], { type: 'text/html' })));
+    items.add(createFile('a.txt', 1234, new Blob([ '123' ], { type: 'text/html' })));
     items.add('123', 'text/plain');
     items.add('1234', 'text/something');
 
@@ -45,7 +45,7 @@ UnitTest.test('DataTransferItemListTest', () => {
   const testClearing = () => {
     const items = createDataTransferItemList(createDataTransfer());
 
-    items.add(Files.createFile('a.txt', 1234, new Blob([ '123' ], { type: 'text/html' })));
+    items.add(createFile('a.txt', 1234, new Blob([ '123' ], { type: 'text/html' })));
     items.add('123', 'text/plain');
     items.add('1234', 'text/something');
 

@@ -1,10 +1,10 @@
-import { Files } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 
 import { createDataTransfer, getDragImage } from 'ephox/dragster/datatransfer/DataTransfer';
 import { setProtectedMode, setReadOnlyMode } from 'ephox/dragster/datatransfer/Mode';
+import { createFile } from 'ephox/dragster/file/Files';
 
 UnitTest.test('DataTransfer: setEffects', () => {
   const transfer = createDataTransfer();
@@ -71,7 +71,7 @@ UnitTest.test('DataTransfer: testTypes', () => {
   Assert.eq('Should the expected type', 'text/plain', transfer.types[0]);
   Assert.eq('Should the expected type', 'text/html', transfer.types[1]);
 
-  transfer.items.add(Files.createFile('test.gif', 1234, new Blob([ '123' ], { type: 'image/gif' })));
+  transfer.items.add(createFile('test.gif', 1234, new Blob([ '123' ], { type: 'image/gif' })));
 
   Assert.eq('Should the length', 4, transfer.types.length);
   Assert.eq('Should the expected type 1', 'text/plain', transfer.types[0]);
@@ -84,7 +84,7 @@ UnitTest.test('DataTransfer: mutation in protected mode', () => {
   const transfer = createDataTransfer();
 
   transfer.setData('text/html', '123');
-  transfer.items.add(Files.createFile('test.gif', 123, new Blob([ '' ], { type: 'image/gif' })));
+  transfer.items.add(createFile('test.gif', 123, new Blob([ '' ], { type: 'image/gif' })));
 
   setProtectedMode(transfer);
 
@@ -110,7 +110,7 @@ UnitTest.test('DataTransfer: mutation in read-only mode', () => {
   const transfer = createDataTransfer();
 
   transfer.setData('text/html', '123');
-  transfer.items.add(Files.createFile('test.gif', 123, new Blob([ '' ], { type: 'image/gif' })));
+  transfer.items.add(createFile('test.gif', 123, new Blob([ '' ], { type: 'image/gif' })));
 
   setReadOnlyMode(transfer);
 
@@ -139,12 +139,12 @@ UnitTest.test('DataTransfer: mutation in read-only mode', () => {
 UnitTest.test('DataTransfer: add files', () => {
   const transfer = createDataTransfer();
 
-  transfer.items.add(Files.createFile('test.gif', 123, new Blob([ '' ], { type: 'image/gif' })));
+  transfer.items.add(createFile('test.gif', 123, new Blob([ '' ], { type: 'image/gif' })));
 
   Assert.eq('Should be able to access files length', 1, transfer.files.length);
   Assert.eq('Types', [ 'image/gif' ], Arr.map(transfer.files, (x) => x.type));
 
-  transfer.items.add(Files.createFile('test.jpg', 123, new Blob([ '' ], { type: 'image/jpg' })));
+  transfer.items.add(createFile('test.jpg', 123, new Blob([ '' ], { type: 'image/jpg' })));
 
   Assert.eq('Expected file types', [ 'image/gif', 'image/jpg' ], Arr.map(transfer.files, (x) => x.type));
   Assert.eq('Expected file kinds', [ 'file', 'file' ], Arr.map(transfer.items, (x) => x.kind));

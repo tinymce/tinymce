@@ -1,3 +1,3 @@
-import { createFileList } from '../filelist/FileList';
+import { createFileList } from '../file/FileList';
 
 export { createFileList };

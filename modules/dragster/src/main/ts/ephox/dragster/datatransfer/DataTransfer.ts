@@ -1,6 +1,6 @@
 import { Arr, Id, Optional, Type } from '@ephox/katamari';
 
-import { createFileList } from '../filelist/FileList';
+import { createFileList } from '../file/FileList';
 import { getData } from './DataTransferItem';
 import { createDataTransferItemList } from './DataTransferItemList';
 import { isInProtectedMode, isInReadWriteMode, setReadWriteMode } from './Mode';
