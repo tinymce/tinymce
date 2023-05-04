@@ -1,12 +1,12 @@
+import { Files } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Type } from '@ephox/katamari';
 import { assert } from 'chai';
 
-import { createFile } from 'ephox/agar/api/Files';
-import { createDataTransfer } from 'ephox/agar/datatransfer/DataTransfer';
-import { getData } from 'ephox/agar/datatransfer/DataTransferItem';
-import { createDataTransferItemList } from 'ephox/agar/datatransfer/DataTransferItemList';
-import { setProtectedMode, setReadOnlyMode } from 'ephox/agar/datatransfer/Mode';
+import { createDataTransfer } from 'ephox/dragster/datatransfer/DataTransfer';
+import { getData } from 'ephox/dragster/datatransfer/DataTransferItem';
+import { createDataTransferItemList } from 'ephox/dragster/datatransfer/DataTransferItemList';
+import { setProtectedMode, setReadOnlyMode } from 'ephox/dragster/datatransfer/Mode';
 
 UnitTest.test('DataTransferItemListTest', () => {
   const testAdding = () => {
@@ -14,7 +14,7 @@ UnitTest.test('DataTransferItemListTest', () => {
 
     assert.isFalse(Type.isArray(items), 'Should not be an array');
 
-    items.add(createFile('a.txt', 1234, new Blob([ '123' ], { type: 'text/html' })));
+    items.add(Files.createFile('a.txt', 1234, new Blob([ '123' ], { type: 'text/html' })));
     assert.equal(items[0].kind, 'file', 'Should be expected kind');
     assert.lengthOf(items, 1, 'Should be expected length');
 
@@ -31,7 +31,7 @@ UnitTest.test('DataTransferItemListTest', () => {
   const testRemoving = () => {
     const items = createDataTransferItemList(createDataTransfer());
 
-    items.add(createFile('a.txt', 1234, new Blob([ '123' ], { type: 'text/html' })));
+    items.add(Files.createFile('a.txt', 1234, new Blob([ '123' ], { type: 'text/html' })));
     items.add('123', 'text/plain');
     items.add('1234', 'text/something');
 
@@ -45,7 +45,7 @@ UnitTest.test('DataTransferItemListTest', () => {
   const testClearing = () => {
     const items = createDataTransferItemList(createDataTransfer());
 
-    items.add(createFile('a.txt', 1234, new Blob([ '123' ], { type: 'text/html' })));
+    items.add(Files.createFile('a.txt', 1234, new Blob([ '123' ], { type: 'text/html' })));
     items.add('123', 'text/plain');
     items.add('1234', 'text/something');
 

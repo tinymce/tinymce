@@ -1,6 +1,6 @@
 import { Arr, Id, Optional, Type } from '@ephox/katamari';
 
-import { createFileList } from '../file/FileList';
+import { createFileList } from '../filelist/FileList';
 import { getData } from './DataTransferItem';
 import { createDataTransferItemList } from './DataTransferItemList';
 import { isInProtectedMode, isInReadWriteMode, setReadWriteMode } from './Mode';
@@ -75,7 +75,14 @@ const createDataTransfer = (): DataTransfer => {
         return createFileList([]);
       }
 
-      const files = Arr.bind(Arr.from(items), (item) => item.kind === 'file' ? [ item.getAsFile() ] : []);
+      const files = Arr.bind(Arr.from(items), (item) => {
+        if (item.kind === 'file') {
+          const file = item.getAsFile();
+          return Type.isNull(file) ? [] : [ file ];
+        } else {
+          return [];
+        }
+      });
 
       return createFileList(files);
     },

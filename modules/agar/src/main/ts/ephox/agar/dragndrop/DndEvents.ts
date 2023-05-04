@@ -1,6 +1,5 @@
+import { DataTransferMode } from '@ephox/dragster';
 import { SugarElement } from '@ephox/sugar';
-
-import { setProtectedMode, setReadOnlyMode, setReadWriteMode } from '../datatransfer/Mode';
 
 const createDndEvent = (name: string) => (win: Window, x: number, y: number, dataTransfer: DataTransfer): DragEvent => {
   const event: any = document.createEvent('CustomEvent');
@@ -32,11 +31,11 @@ const isDefaultPrevented = (evt: DragEvent): boolean => evt.defaultPrevented;
 
 const dispatchDndEvent = (event: DragEvent, target: SugarElement<Node>): DragEvent => {
   if (event.type === 'dragstart') {
-    setReadWriteMode(event.dataTransfer);
+    DataTransferMode.setReadWriteMode(event.dataTransfer);
   } else if (event.type === 'drop') {
-    setReadOnlyMode(event.dataTransfer);
+    DataTransferMode.setReadOnlyMode(event.dataTransfer);
   } else {
-    setProtectedMode(event.dataTransfer);
+    DataTransferMode.setProtectedMode(event.dataTransfer);
   }
 
   target.dom.dispatchEvent(event);

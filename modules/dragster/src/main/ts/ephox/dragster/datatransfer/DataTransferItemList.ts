@@ -36,7 +36,7 @@ const createDataTransferItemList = (dataTransfer: DataTransfer): DataTransferIte
           throw new Error(`Failed to execute 'add' on 'DataTransferItemList': An item already exists for type '${type}'.`);
         }
 
-        items.push(createDataTransferItemFromString(dataTransfer, type, data));
+        items.push(createDataTransferItemFromString(dataTransfer, type as string, data));
         createIndexes(list, items);
       } else {
         items.push(createDataTransferItemFromFile(dataTransfer, data));

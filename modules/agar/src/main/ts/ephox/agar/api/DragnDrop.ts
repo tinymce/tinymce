@@ -1,7 +1,7 @@
+import { DataTransfer } from '@ephox/dragster';
 import { Arr } from '@ephox/katamari';
 import { Attribute, SugarBody, SugarElement, SugarNode } from '@ephox/sugar';
 
-import { createDataTransfer, getDragImage } from '../datatransfer/DataTransfer';
 import {
   createDragendEvent, createDragenterEvent, createDragEvent, createDragoverEvent, createDragstartEvent, createDropEvent, dispatchDndEvent,
   getWindowFromElement, isDefaultPrevented
@@ -42,7 +42,7 @@ const dragnDrop = (from: SugarElement<Element>, to: SugarElement<Element>, preve
   const toWin = getWindowFromElement(to);
   const fromRect = from.dom.getBoundingClientRect();
   const toRect = from.dom.getBoundingClientRect();
-  const transfer = createDataTransfer();
+  const transfer = DataTransfer.createDataTransfer();
 
   if (isDraggable(from) === false) {
     throw new Error('Can not drag a non draggable element.');
@@ -61,7 +61,7 @@ const dragnDrop = (from: SugarElement<Element>, to: SugarElement<Element>, preve
 const drop = (to: SugarElement<Element>, prevented: boolean, addItems: (transfer: DataTransfer) => void): void => {
   const toWin = getWindowFromElement(to);
   const toRect = to.dom.getBoundingClientRect();
-  const transfer = createDataTransfer();
+  const transfer = DataTransfer.createDataTransfer();
 
   addItems(transfer);
 
@@ -126,6 +126,8 @@ const cDropItems = <T extends Element> (items: Item[], prevented?: boolean): Cha
 
 const pDropItems = <T extends Element> (elm: SugarElement<T>, items: Item[], prevented?: boolean): Promise<SugarElement<T>> =>
   Chain.toPromise(cDropItems<T>(items, prevented))(elm);
+
+const getDragImage = DataTransfer.getDragImage;
 
 export {
   isDraggable,

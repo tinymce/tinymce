@@ -1,4 +1,4 @@
-import { Fun, Id, Optional } from '@ephox/katamari';
+import { Fun, Id, Optional, Type } from '@ephox/katamari';
 
 import { isInProtectedMode } from './Mode';
 
@@ -39,7 +39,7 @@ const createDataTransferItemFromString = (dataTransfer: DataTransfer, type: stri
     kind: 'string',
     type,
     getAsString: (callback) => {
-      if (isInProtectedMode(dataTransfer) === false) {
+      if (isInProtectedMode(dataTransfer) === false && !Type.isNull(callback)) {
         callback(data);
       }
     },
