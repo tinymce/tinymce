@@ -1,3 +1,5 @@
+import { Optional } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
@@ -15,16 +17,11 @@ export const isInSummary = (editor: Editor): boolean => {
   return isSummary(node) || Boolean(editor.dom.getParent(node, isSummary));
 };
 
-export const getSelectedDetails = (editor: Editor): HTMLDetailsElement | null => {
-  const node = editor.selection.getNode();
-  if (!node) {
-    return null;
-  }
-  return editor.dom.getParent(node, isDetails);
-};
+export const getSelectedDetails = (editor: Editor): Optional<HTMLDetailsElement> =>
+  Optional.from(editor.dom.getParent(editor.selection.getNode(), isDetails));
 
 export const isDetailsSelected = (editor: Editor): boolean =>
-  Boolean(getSelectedDetails(editor));
+  getSelectedDetails(editor).isSome();
 
 export const createParagraph = (editor: Editor): HTMLParagraphElement => {
   const paragraph = editor.dom.create('p');

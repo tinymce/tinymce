@@ -40,27 +40,23 @@ const toggleDetailsElement = (details: HTMLDetailsElement, state?: boolean): boo
 };
 
 const toggleAccordion = (editor: Editor, state?: boolean): void => {
-  const details = Utils.getSelectedDetails(editor);
-  if (details) {
+  Utils.getSelectedDetails(editor).each(details => {
     Events.fireToggleAccordionEvent(editor, details, toggleDetailsElement(details, state));
-  }
+  });
 };
 
 const removeAccordion = (editor: Editor): void => {
-  const details = Utils.getSelectedDetails(editor);
-  if (!details) {
-    return;
-  }
+  Utils.getSelectedDetails(editor).each(details => {
+    const { nextSibling } = details;
+    if (nextSibling) {
+      editor.selection.select(nextSibling, true);
+      editor.selection.collapse(true);
+    } else {
+      Utils.insertAndSelectParagraphAfter(editor, details);
+    }
 
-  const { nextSibling } = details;
-  if (nextSibling) {
-    editor.selection.select(nextSibling, true);
-    editor.selection.collapse(true);
-  } else {
-    Utils.insertAndSelectParagraphAfter(editor, details);
-  }
-
-  details.remove();
+    details.remove();
+  });
 };
 
 const toggleAllAccordions = (editor: Editor, state?: boolean): void => {
