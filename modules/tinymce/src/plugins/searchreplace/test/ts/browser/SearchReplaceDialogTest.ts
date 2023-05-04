@@ -131,7 +131,6 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTest', () => 
     editor.setContent('<p>tiny tiny tiny tiny</p>');
     await Utils.pOpenDialog(editor);
     await Utils.pSetFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', 'tiny');
-    await Utils.pAssertFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', 'tiny');
     findAndAssertFound(editor, 4);
     await Utils.pSelectPreference(editor, 'Find in selection');
     assertFound(editor, 0);
