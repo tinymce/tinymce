@@ -1,6 +1,7 @@
-import { Arr, Type } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
+import * as Options from '../api/Options';
 
 const preventSummaryToggle = (editor: Editor): void => {
   editor.on('click', (e) => {
@@ -10,20 +11,30 @@ const preventSummaryToggle = (editor: Editor): void => {
   });
 };
 
-// Forces the details element to always be open within the editor
 const filterDetails = (editor: Editor): void => {
   editor.parser.addNodeFilter('details', (elms) => {
+    const initialStateOption = Options.getDetailsInitialState(editor);
     Arr.each(elms, (details) => {
-      details.attr('data-mce-open', details.attr('open'));
-      details.attr('open', 'open');
+      if (initialStateOption === 'expanded') {
+        details.attr('open', 'open');
+      } else if (initialStateOption === 'collapsed') {
+        details.attr('open', null);
+      } else if (initialStateOption === 'inherited') {
+        details.attr('open', details.attr('open'));
+      }
     });
   });
 
   editor.serializer.addNodeFilter('details', (elms) => {
+    const serializedStateOption = Options.getDetailsSerializedState(editor);
     Arr.each(elms, (details) => {
-      const open = details.attr('data-mce-open');
-      details.attr('open', Type.isString(open) ? open : null);
-      details.attr('data-mce-open', null);
+      if (serializedStateOption === 'expanded') {
+        details.attr('open', 'open');
+      } else if (serializedStateOption === 'collapsed') {
+        details.attr('open', null);
+      } else if (serializedStateOption === 'inherited') {
+        details.attr('open', details.attr('open'));
+      }
     });
   });
 };
