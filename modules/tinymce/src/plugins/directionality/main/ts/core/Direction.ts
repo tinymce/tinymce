@@ -36,7 +36,7 @@ const setDirOnElements = (dom: DOMUtils, blocks: Element[], dir: Dir): void => {
       }
 
       // TINY-9314: Set an inline direction style if computed css direction is still not as desired. This can
-      // happen when a direction style is inherited from a parent or derived from a stylesheet.
+      // happen when the direction style is derived from a stylesheet.
       if (Direction.getDirection(normalizedBlock) !== dir) {
         dom.setStyle(normalizedBlock.dom, 'direction', dir);
       }

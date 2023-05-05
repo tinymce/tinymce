@@ -10,9 +10,9 @@ describe('browser.tinymce.plugins.directionality.DirectionStyleTest', () => {
   const applyDir = (editor: Editor, dir: Dir) =>
     TinyUiActions.clickOnToolbar(editor, dir === 'ltr' ? 'button[title="Left to right"]' : 'button[title="Right to left"]');
 
-  const testDirectionStyle = (editor: Editor, content: string, dir: Dir, expected: string) => {
+  const testDirectionStyle = (editor: Editor, content: string, dir: Dir, expected: string, cursorPath: number[] = [ 0, 0 ]) => {
     editor.setContent(content);
-    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    TinySelections.setCursor(editor, cursorPath, 0);
     applyDir(editor, dir);
     TinyAssertions.assertContent(editor, expected);
   };
@@ -108,6 +108,30 @@ describe('browser.tinymce.plugins.directionality.DirectionStyleTest', () => {
       '<p dir="ltr" style="direction: rtl;">Lorem ipsum</p>',
       'rtl',
       '<p dir="rtl">Lorem ipsum</p>'
+    ));
+
+    it('TINY-9314: Applying ltr to element whose parent has direction: rtl', () => testDirectionStyle(
+      hook.editor(),
+      '<div style="direction: rtl;"><p>Lorem ipsum</p></div>',
+      'ltr',
+      [
+        '<div style="direction: rtl;">',
+        '<p dir="ltr">Lorem ipsum</p>',
+        '</div>'
+      ].join('\n'),
+      [ 0, 0, 0 ]
+    ));
+
+    it('TINY-9314: Applying rtl to element whose parent has direction: ltr', () => testDirectionStyle(
+      hook.editor(),
+      '<div style="direction: ltr;"><p>Lorem ipsum</p></div>',
+      'rtl',
+      [
+        '<div style="direction: ltr;">',
+        '<p dir="rtl">Lorem ipsum</p>',
+        '</div>'
+      ].join('\n'),
+      [ 0, 0, 0 ]
     ));
 
     it('TINY-9314: Should remove dir and direction style from selected list item and children', () => testDirectionStyle(
@@ -232,6 +256,30 @@ describe('browser.tinymce.plugins.directionality.DirectionStyleTest', () => {
       '<p class="rtl-content" dir="ltr">Lorem ipsum</p>',
       'rtl',
       '<p class="rtl-content" dir="rtl">Lorem ipsum</p>'
+    ));
+
+    it('TINY-9314: Applying ltr to element whose parent has direction: rtl', () => testDirectionStyle(
+      hook.editor(),
+      '<div class="rtl-content"><p>Lorem ipsum</p></div>',
+      'ltr',
+      [
+        '<div class="rtl-content">',
+        '<p dir="ltr">Lorem ipsum</p>',
+        '</div>'
+      ].join('\n'),
+      [ 0, 0, 0 ]
+    ));
+
+    it('TINY-9314: Applying rtl to element whose parent has direction: ltr', () => testDirectionStyle(
+      hook.editor(),
+      '<div class="ltr-content"><p>Lorem ipsum</p></div>',
+      'rtl',
+      [
+        '<div class="ltr-content">',
+        '<p dir="rtl">Lorem ipsum</p>',
+        '</div>'
+      ].join('\n'),
+      [ 0, 0, 0 ]
     ));
 
     it('TINY-9314: Should remove dir and direction style from selected list item and children', () => testDirectionStyle(
