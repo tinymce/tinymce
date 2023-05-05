@@ -343,7 +343,10 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
             removeElementWithPadding(editor.dom, state.element);
             // TINY-9601: Use dataTransfer property to determine inserted content on drop. This allows users to
             // manipulate drop content by modifying dataTransfer in the dragstart event.
-            editor.insertContent(state.dataTransfer?.getData('text/html') ?? '');
+            const content = state.dataTransfer?.getData('text/html');
+            if (!Type.isUndefined(content)) {
+              editor.insertContent(content);
+            }
             editor._selectionOverrides.hideFakeCaret();
           });
         }
