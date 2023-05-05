@@ -13,18 +13,21 @@ const insertAccordion = (editor: Editor): void => {
   const uid = Id.generate('acc');
   const summaryText = editor.dom.encode(editor.selection.getRng().toString() || editor.translate('Accordion summary...'));
   const bodyText = editor.dom.encode(editor.translate('Accordion body...'));
-  editor.insertContent(`<details data-mce-id="${uid}" class="mce-accordion" open="open"><summary class="mce-accordion-summary">${summaryText}</summary><p>${bodyText}</p></details>`);
 
-  const details = editor.dom.select(`[data-mce-id="${uid}"]`)[0];
-  if (!details) {
-    return;
-  }
-  details.removeAttribute('data-mce-id');
+  editor.undoManager.transact(() => {
+    editor.insertContent(`<details data-mce-id="${uid}" class="mce-accordion" open="open"><summary class="mce-accordion-summary">${summaryText}</summary><p>${bodyText}</p></details>`);
 
-  const summary = editor.dom.select('summary', details)[0];
-  if (summary) {
-    editor.selection.setCursorLocation(summary, 1);
-  }
+    const details = editor.dom.select(`[data-mce-id="${uid}"]`)[0];
+    if (!details) {
+      return;
+    }
+    details.removeAttribute('data-mce-id');
+
+    const summary = editor.dom.select('summary', details)[0];
+    if (summary) {
+      editor.selection.setCursorLocation(summary, 1);
+    }
+  });
 };
 
 const toggleDetailsElement = (details: HTMLDetailsElement, state?: boolean): boolean => {
