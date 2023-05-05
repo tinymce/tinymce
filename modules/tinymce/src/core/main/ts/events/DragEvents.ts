@@ -1,16 +1,17 @@
-import { DataTransfer } from '@ephox/dragster';
 import { Fun } from '@ephox/katamari';
 
 import { EditorEvent } from '../api/util/EventDispatcher';
 
-const makeDndEventFromMouseEvent = <K extends keyof MouseEvent>(type: string, mouseEvent: EditorEvent<MouseEvent>, extra: Record<K, MouseEvent[K]>): DragEvent => ({
+const getTargetProps = (target: Element) => ({ target, srcElement: target });
+
+const makeDndEventFromMouseEvent = (type: string, mouseEvent: EditorEvent<MouseEvent>, target: Element, dataTransfer: DataTransfer | null): DragEvent => ({
   ...mouseEvent,
-  dataTransfer: DataTransfer.createDataTransfer(),
+  dataTransfer,
   type,
-  ...extra
+  ...getTargetProps(target)
 });
 
-const makeDndEvent = <K extends keyof DragEvent>(type: string, props: Record<K, DragEvent[K]>): DragEvent => {
+const makeDndEvent = (type: string, target: Element, dataTransfer: DataTransfer | null): DragEvent => {
   const fail = Fun.die('Function not supported on simulated event.');
 
   const event: DragEvent = {
@@ -24,8 +25,6 @@ const makeDndEvent = <K extends keyof DragEvent>(type: string, props: Record<K, 
     eventPhase: 0,
     isTrusted: true,
     returnValue: false,
-    srcElement: null,
-    target: null,
     timeStamp: 0,
     type,
     composedPath: fail,
@@ -66,19 +65,17 @@ const makeDndEvent = <K extends keyof DragEvent>(type: string, props: Record<K, 
     getModifierState: fail,
 
     // DragEvent
-    dataTransfer: DataTransfer.createDataTransfer(),
+    dataTransfer,
 
-    ...props
+    ...getTargetProps(target)
   };
 
   return event;
 };
 
-const fallback = (target: Element) => ({ target, srcElement: target });
-
-const dndEvent = (type: string) => (target: Element): DragEvent => makeDndEvent(type, fallback(target));
-const dndEventFromMouseEvent = (type: string) => (mouseEvent: EditorEvent<MouseEvent>, target: Element): DragEvent =>
-  makeDndEventFromMouseEvent(type, mouseEvent, fallback(target));
+const dndEvent = (type: string) => (target: Element, dataTransfer: DataTransfer | null): DragEvent => makeDndEvent(type, target, dataTransfer);
+const dndEventFromMouseEvent = (type: string) => (mouseEvent: EditorEvent<MouseEvent>, target: Element, dataTransfer: DataTransfer | null): DragEvent =>
+  makeDndEventFromMouseEvent(type, mouseEvent, target, dataTransfer);
 
 export const makeDragstartEvent = dndEvent('dragstart');
 export const makeDragstartEventFromMouseEvent = dndEventFromMouseEvent('dragstart');

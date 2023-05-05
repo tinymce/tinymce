@@ -1,4 +1,4 @@
-import { DataTransferMode } from '@ephox/dragster';
+import { DataTransfer, DataTransferMode } from '@ephox/dragster';
 import { Arr, Optional, Singleton, Throttler, Type } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
@@ -34,6 +34,7 @@ const mouseRangeToTriggerScrollOutsideEditor = 16;
 
 interface State {
   element: HTMLElement;
+  dataTransfer: DataTransfer | null;
   dragging: boolean;
   screenX: number;
   screenY: number;
@@ -61,12 +62,6 @@ const isValidDropTarget = (editor: Editor, targetElement: Node | null, dragEleme
   } else {
     return editor.dom.isEditable(targetElement);
   }
-};
-
-const cloneElement = (elm: HTMLElement) => {
-  const cloneElm = elm.cloneNode(true) as HTMLElement;
-  cloneElm.removeAttribute('data-mce-selected');
-  return cloneElm;
 };
 
 const createGhost = (editor: Editor, elm: HTMLElement, width: number, height: number) => {
@@ -244,6 +239,7 @@ const start = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent
 
       state.set({
         element: ceElm,
+        dataTransfer: DataTransfer.createDataTransfer(),
         dragging: false,
         screenX: e.screenX,
         screenY: e.screenY,
@@ -300,7 +296,10 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
     const movement = Math.max(Math.abs(e.screenX - state.screenX), Math.abs(e.screenY - state.screenY));
 
     if (!state.dragging && movement > 10) {
-      const args = dispatchDragEvent(editor, DragEvents.makeDragstartEventFromMouseEvent(e, state.element));
+      state.dataTransfer?.setData('text/html', state.element.outerHTML);
+      const args = dispatchDragEvent(editor, DragEvents.makeDragstartEventFromMouseEvent(e, state.element, state.dataTransfer));
+      // TINY-9601: dataTransfer is writable in dragstart, so keep it up-to-date
+      state.dataTransfer = args.dataTransfer;
       if (args.isDefaultPrevented()) {
         return;
       }
@@ -336,21 +335,22 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
     state.intervalId.clear();
     if (state.dragging) {
       if (isValidDropTarget(editor, getRawTarget(editor.selection), state.element)) {
-        const targetClone = cloneElement(state.element);
         const dropTarget = editor.getDoc().elementFromPoint(e.clientX, e.clientY) ?? editor.getBody();
-        const args = dispatchDragEvent(editor, DragEvents.makeDropEventFromMouseEvent(e, dropTarget));
+        const args = dispatchDragEvent(editor, DragEvents.makeDropEventFromMouseEvent(e, dropTarget, state.dataTransfer));
 
         if (!args.isDefaultPrevented()) {
           editor.undoManager.transact(() => {
             removeElementWithPadding(editor.dom, state.element);
-            editor.insertContent(editor.dom.getOuterHTML(targetClone));
+            // TINY-9601: Use dataTransfer property to determine inserted content on drop. This allows users to
+            // manipulate drop content by modifying dataTransfer in the dragstart event.
+            editor.insertContent(state.dataTransfer?.getData('text/html') ?? '');
             editor._selectionOverrides.hideFakeCaret();
           });
         }
       }
 
       // Use body as the target since the element we are dragging no longer exists. Native drag/drop works in a similar way.
-      dispatchDragEvent(editor, DragEvents.makeDragendEventFromMouseEvent(e, editor.getBody()));
+      dispatchDragEvent(editor, DragEvents.makeDragendEventFromMouseEvent(e, editor.getBody(), state.dataTransfer));
     }
   });
 
@@ -362,8 +362,8 @@ const stopDragging = (state: Singleton.Value<State>, editor: Editor, e: Optional
     state.intervalId.clear();
     if (state.dragging) {
       const event = e.fold(
-        () => DragEvents.makeDragendEvent(state.element),
-        (mouseEvent) => DragEvents.makeDragendEventFromMouseEvent(mouseEvent, state.element)
+        () => DragEvents.makeDragendEvent(state.element, state.dataTransfer),
+        (mouseEvent) => DragEvents.makeDragendEventFromMouseEvent(mouseEvent, state.element, state.dataTransfer)
       );
       dispatchDragEvent(editor, event);
     }
