@@ -48,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - It was possible to remove links in noneditable contents with the 'unlink' editor command. #TINY-9739
 - Direction was not visually changing when using the Directionality plugin on an element which has the `direction` CSS property set. #TINY-9314
 - Whitespace between transparent elements would incorrectly be converted into empty paragraphs. #TINY-9761
+- Pressing arrow keys inside RTL elements would move the caret in an incorrect direction when moving over elements with the `contenteditable` attribute set to `false`. #TINY-9565
 
 ## 6.4.2 - 2023-04-26
 
