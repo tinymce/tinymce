@@ -25,12 +25,15 @@ describe('atomic.dragster.datatransfer.DataTransferItemTest', () => {
     Assert.eq('Should be null for a string kind', null, stringItem.getAsFile());
     KAssert.eqSome('Should have some data', '123', getData(stringItem));
 
-    stringItem.getAsString((text) => {
-      try {
-        Assert.eq('Should be expected contents', '123', text);
-      } catch (_) {
-        Assert.fail('Error in getAsString callback');
-      }
+    return new Promise((resolve, reject) => {
+      stringItem.getAsString((text) => {
+        try {
+          Assert.eq('Should be expected contents', '123', text);
+          resolve(undefined);
+        } catch (e) {
+          reject(e);
+        }
+      });
     });
   });
 });
