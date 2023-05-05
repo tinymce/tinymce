@@ -1,3 +1,4 @@
+import { DataTransferMode } from '@ephox/dragster';
 import { Arr, Optional, Singleton, Throttler, Type } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
@@ -274,6 +275,21 @@ const placeCaretAt = (editor: Editor, clientX: number, clientY: number) => {
   );
 };
 
+const dispatchDragEvent = (editor: Editor, event: DragEvent): EditorEvent<DragEvent> => {
+  const type = event.type;
+  if (!Type.isNull(event.dataTransfer)) {
+    if (type === 'dragstart') {
+      DataTransferMode.setReadWriteMode(event.dataTransfer);
+    } else if (type === 'drop') {
+      DataTransferMode.setReadOnlyMode(event.dataTransfer);
+    } else {
+      DataTransferMode.setProtectedMode(event.dataTransfer);
+    }
+  }
+
+  return editor.dispatch(type, event);
+};
+
 const move = (state: Singleton.Value<State>, editor: Editor) => {
   // Reduces laggy drag behavior on Gecko
   const throttledPlaceCaretAt = Throttler.first((clientX: number, clientY: number) => placeCaretAt(editor, clientX, clientY), 0);
@@ -284,7 +300,7 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
     const movement = Math.max(Math.abs(e.screenX - state.screenX), Math.abs(e.screenY - state.screenY));
 
     if (!state.dragging && movement > 10) {
-      const args = editor.dispatch('dragstart', DragEvents.makeDragstartEventFromMouseEvent(e, state.element));
+      const args = dispatchDragEvent(editor, DragEvents.makeDragstartEventFromMouseEvent(e, state.element));
       if (args.isDefaultPrevented()) {
         return;
       }
@@ -322,7 +338,7 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
       if (isValidDropTarget(editor, getRawTarget(editor.selection), state.element)) {
         const targetClone = cloneElement(state.element);
         const dropTarget = editor.getDoc().elementFromPoint(e.clientX, e.clientY) ?? editor.getBody();
-        const args = editor.dispatch('drop', DragEvents.makeDropEventFromMouseEvent(e, dropTarget));
+        const args = dispatchDragEvent(editor, DragEvents.makeDropEventFromMouseEvent(e, dropTarget));
 
         if (!args.isDefaultPrevented()) {
           editor.undoManager.transact(() => {
@@ -334,7 +350,7 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
       }
 
       // Use body as the target since the element we are dragging no longer exists. Native drag/drop works in a similar way.
-      editor.dispatch('dragend', DragEvents.makeDragendEventFromMouseEvent(e, editor.getBody()));
+      dispatchDragEvent(editor, DragEvents.makeDragendEventFromMouseEvent(e, editor.getBody()));
     }
   });
 
@@ -349,7 +365,7 @@ const stopDragging = (state: Singleton.Value<State>, editor: Editor, e: Optional
         () => DragEvents.makeDragendEvent(state.element),
         (mouseEvent) => DragEvents.makeDragendEventFromMouseEvent(mouseEvent, state.element)
       );
-      editor.dispatch('dragend', event);
+      dispatchDragEvent(editor, event);
     }
   });
   removeDragState(state);

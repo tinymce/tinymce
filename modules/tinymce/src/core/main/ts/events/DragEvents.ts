@@ -1,10 +1,11 @@
+import { DataTransfer } from '@ephox/dragster';
 import { Fun } from '@ephox/katamari';
 
 import { EditorEvent } from '../api/util/EventDispatcher';
 
 const makeDndEventFromMouseEvent = <K extends keyof MouseEvent>(type: string, mouseEvent: EditorEvent<MouseEvent>, extra: Record<K, MouseEvent[K]>): DragEvent => ({
   ...mouseEvent,
-  dataTransfer: null, // We are not supporting dataTransfer yet but DragEvent is MouseEvent + dataTransfer so the property should exist
+  dataTransfer: DataTransfer.createDataTransfer(),
   type,
   ...extra
 });
@@ -65,7 +66,7 @@ const makeDndEvent = <K extends keyof DragEvent>(type: string, props: Record<K, 
     getModifierState: fail,
 
     // DragEvent
-    dataTransfer: null, // We are not supporting dataTransfer yet but DragEvent is MouseEvent + dataTransfer so the property should exist
+    dataTransfer: DataTransfer.createDataTransfer(),
 
     ...props
   };
@@ -87,4 +88,3 @@ export const makeDropEventFromMouseEvent = dndEventFromMouseEvent('drop');
 
 export const makeDragendEvent = dndEvent('dragend');
 export const makeDragendEventFromMouseEvent = dndEventFromMouseEvent('dragend');
-
