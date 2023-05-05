@@ -24,6 +24,10 @@ const setDirOnElements = (dom: DOMUtils, blocks: Element[], dir: Dir): void => {
     const normalizedBlock = getNormalizedBlock(blockElement, isBlockElementListItem);
     const normalizedBlockParent = getParentElement(normalizedBlock);
     normalizedBlockParent.each((parent) => {
+      // TINY-9314: Remove any inline direction style to ensure that it is only set when necessary and that
+      // the dir attribute is favored
+      dom.setStyle(normalizedBlock.dom, 'direction', null);
+
       const parentDirection = Direction.getDirection(parent);
       if (parentDirection === dir) {
         Attribute.remove(normalizedBlock, 'dir');
@@ -32,13 +36,12 @@ const setDirOnElements = (dom: DOMUtils, blocks: Element[], dir: Dir): void => {
       }
 
       // TINY-9314: Set an inline direction style if computed css direction is still not as desired. This can
-      // happen either when there already is an inline direction style or a direction style is
-      // derived from the stylesheet.
+      // happen when a direction style is inherited from a parent or derived from a stylesheet.
       if (Direction.getDirection(normalizedBlock) !== dir) {
         dom.setStyle(normalizedBlock.dom, 'direction', dir);
       }
 
-      // remove dir attr and direction style from list children
+      // Remove dir attr and direction style from list children
       if (isBlockElementListItem) {
         const listItems = SelectorFilter.children(normalizedBlock, 'li[dir],li[style]');
         Arr.each(listItems, (listItem) => {
