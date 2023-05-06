@@ -4,14 +4,14 @@ import { EditorEvent } from '../api/util/EventDispatcher';
 
 const getTargetProps = (target: Element) => ({ target, srcElement: target });
 
-const makeDndEventFromMouseEvent = (type: string, mouseEvent: EditorEvent<MouseEvent>, target: Element, dataTransfer: DataTransfer | null): DragEvent => ({
+const makeDndEventFromMouseEvent = (type: string, mouseEvent: EditorEvent<MouseEvent>, target: Element, dataTransfer: DataTransfer): DragEvent => ({
   ...mouseEvent,
   dataTransfer,
   type,
   ...getTargetProps(target)
 });
 
-const makeDndEvent = (type: string, target: Element, dataTransfer: DataTransfer | null): DragEvent => {
+const makeDndEvent = (type: string, target: Element, dataTransfer: DataTransfer): DragEvent => {
   const fail = Fun.die('Function not supported on simulated event.');
 
   const event: DragEvent = {
@@ -73,8 +73,8 @@ const makeDndEvent = (type: string, target: Element, dataTransfer: DataTransfer 
   return event;
 };
 
-const dndEvent = (type: string) => (target: Element, dataTransfer: DataTransfer | null): DragEvent => makeDndEvent(type, target, dataTransfer);
-const dndEventFromMouseEvent = (type: string) => (mouseEvent: EditorEvent<MouseEvent>, target: Element, dataTransfer: DataTransfer | null): DragEvent =>
+const dndEvent = (type: string) => (target: Element, dataTransfer: DataTransfer): DragEvent => makeDndEvent(type, target, dataTransfer);
+const dndEventFromMouseEvent = (type: string) => (mouseEvent: EditorEvent<MouseEvent>, target: Element, dataTransfer: DataTransfer): DragEvent =>
   makeDndEventFromMouseEvent(type, mouseEvent, target, dataTransfer);
 
 export const makeDragstartEvent = dndEvent('dragstart');

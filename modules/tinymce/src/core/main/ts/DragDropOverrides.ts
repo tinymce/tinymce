@@ -33,7 +33,7 @@ const mouseRangeToTriggerScrollInsideEditor = 8;
 const mouseRangeToTriggerScrollOutsideEditor = 16;
 
 interface DataTransferManager {
-  getDataTransferCopy(): DataTransfer | null;
+  getDataTransferCopy(): DataTransfer;
   getDataTransferHtmlData(): string;
   setDataTransferHtmlData(html: string): void;
 }
@@ -71,18 +71,18 @@ const isValidDropTarget = (editor: Editor, targetElement: Node | null, dragEleme
 };
 
 const createDataTransferManager = (): DataTransferManager => {
-  const dataTransfer: DataTransfer | null = DataTransfer.createDataTransfer();
+  const dataTransfer: DataTransfer = DataTransfer.createDataTransfer();
 
   return {
-    getDataTransferCopy: (): DataTransfer | null =>
+    getDataTransferCopy: (): DataTransfer =>
       // TINY-9601: Get copy since original dataTransfer object can be mutated and cause unwanted behavior
-      Type.isNull(dataTransfer) ? null : { ...dataTransfer },
+      ({ ...dataTransfer }),
 
     getDataTransferHtmlData: (): string =>
-      dataTransfer?.getData('text/html') ?? '',
+      dataTransfer.getData('text/html'),
 
     setDataTransferHtmlData: (html: string): void => {
-      dataTransfer?.setData('text/html', html);
+      dataTransfer.setData('text/html', html);
     }
   };
 };
