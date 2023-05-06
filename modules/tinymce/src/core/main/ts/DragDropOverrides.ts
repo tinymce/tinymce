@@ -319,7 +319,7 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
     const movement = Math.max(Math.abs(e.screenX - state.screenX), Math.abs(e.screenY - state.screenY));
 
     if (!state.dragging && movement > 10) {
-      state.dataTransferManager.setDataTransferHtmlData(state.element.outerHTML);
+      state.dataTransferManager.setDataTransferHtmlData(editor.dom.getOuterHTML(state.element));
       const args = dispatchDragEvent(editor, DragEvents.makeDragstartEventFromMouseEvent(e, state.element, state.dataTransferManager.getDataTransferCopy()));
       // TINY-9601: dataTransfer is writable in dragstart, so keep it up-to-date
       state.dataTransferManager.setDataTransferHtmlData(args.dataTransfer?.getData('text/html') ?? '');
