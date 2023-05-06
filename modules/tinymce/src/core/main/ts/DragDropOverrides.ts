@@ -75,7 +75,6 @@ const createDataTransferManager = (): DataTransferManager => {
 
   return {
     getDataTransferCopy: (): DataTransfer =>
-      // TINY-9601: Get copy since original dataTransfer object can be mutated and cause unwanted behavior
       ({ ...dataTransfer }),
 
     getDataTransferHtmlData: (): string =>
@@ -294,9 +293,17 @@ const placeCaretAt = (editor: Editor, clientX: number, clientY: number) => {
   );
 };
 
-const dispatchDragEvent = (editor: Editor, type: 'dragstart' | 'drop' | 'dragend', target: Element, dataTransfer: DataTransfer, mouseEvent?: EditorEvent<MouseEvent>): EditorEvent<DragEvent> => {
+const dispatchDragEvent = (editor: Editor, type: 'dragstart' | 'drop' | 'dragend', target: Element, dataTransferManager: DataTransferManager, mouseEvent?: EditorEvent<MouseEvent>): EditorEvent<DragEvent> => {
   let event: DragEvent;
   const isFromMouseEvent = !Type.isUndefined(mouseEvent);
+
+  if (type === 'dragstart') {
+    dataTransferManager.setDataTransferHtmlData(editor.dom.getOuterHTML(target));
+  }
+
+  // TINY-9601: Get copy since original dataTransfer object can be mutated and cause unwanted behavior
+  const dataTransfer = dataTransferManager.getDataTransferCopy();
+
   if (type === 'dragstart') {
     DataTransferMode.setReadWriteMode(dataTransfer);
     event = isFromMouseEvent ? DragEvents.makeDragstartEventFromMouseEvent(mouseEvent, target, dataTransfer) : DragEvents.makeDragstartEvent(target, dataTransfer);
@@ -308,7 +315,14 @@ const dispatchDragEvent = (editor: Editor, type: 'dragstart' | 'drop' | 'dragend
     event = isFromMouseEvent ? DragEvents.makeDragendEventFromMouseEvent(mouseEvent, target, dataTransfer) : DragEvents.makeDragendEvent(target, dataTransfer);
   }
 
-  return editor.dispatch(type, event);
+  const args = editor.dispatch(type, event);
+
+  // TINY-9601: dataTransfer is writable in dragstart, so keep it up-to-date
+  if (type === 'dragstart') {
+    dataTransferManager.setDataTransferHtmlData(args.dataTransfer?.getData('text/html') ?? '');
+  }
+
+  return args;
 };
 
 const move = (state: Singleton.Value<State>, editor: Editor) => {
@@ -321,10 +335,7 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
     const movement = Math.max(Math.abs(e.screenX - state.screenX), Math.abs(e.screenY - state.screenY));
 
     if (!state.dragging && movement > 10) {
-      state.dataTransferManager.setDataTransferHtmlData(editor.dom.getOuterHTML(state.element));
-      const args = dispatchDragEvent(editor, 'dragstart', state.element, state.dataTransferManager.getDataTransferCopy(), e);
-      // TINY-9601: dataTransfer is writable in dragstart, so keep it up-to-date
-      state.dataTransferManager.setDataTransferHtmlData(args.dataTransfer?.getData('text/html') ?? '');
+      const args = dispatchDragEvent(editor, 'dragstart', state.element, state.dataTransferManager, e);
       if (args.isDefaultPrevented()) {
         return;
       }
@@ -361,7 +372,7 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
     if (state.dragging) {
       if (isValidDropTarget(editor, getRawTarget(editor.selection), state.element)) {
         const dropTarget = editor.getDoc().elementFromPoint(e.clientX, e.clientY) ?? editor.getBody();
-        const args = dispatchDragEvent(editor, 'drop', dropTarget, state.dataTransferManager.getDataTransferCopy(), e);
+        const args = dispatchDragEvent(editor, 'drop', dropTarget, state.dataTransferManager, e);
 
         if (!args.isDefaultPrevented()) {
           editor.undoManager.transact(() => {
@@ -378,7 +389,7 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
       }
 
       // Use body as the target since the element we are dragging no longer exists. Native drag/drop works in a similar way.
-      dispatchDragEvent(editor, 'dragend', editor.getBody(), state.dataTransferManager.getDataTransferCopy(), e);
+      dispatchDragEvent(editor, 'dragend', editor.getBody(), state.dataTransferManager, e);
     }
   });
 
@@ -390,8 +401,8 @@ const stopDragging = (state: Singleton.Value<State>, editor: Editor, e: Optional
     state.intervalId.clear();
     if (state.dragging) {
       e.fold(
-        () => dispatchDragEvent(editor, 'dragend', state.element, state.dataTransferManager.getDataTransferCopy()),
-        (mouseEvent) => dispatchDragEvent(editor, 'dragend', state.element, state.dataTransferManager.getDataTransferCopy(), mouseEvent)
+        () => dispatchDragEvent(editor, 'dragend', state.element, state.dataTransferManager),
+        (mouseEvent) => dispatchDragEvent(editor, 'dragend', state.element, state.dataTransferManager, mouseEvent)
       );
     }
   });
