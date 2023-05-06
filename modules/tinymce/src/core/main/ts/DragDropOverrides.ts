@@ -344,7 +344,7 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
             // TINY-9601: Use dataTransfer property to determine inserted content on drop. This allows users to
             // manipulate drop content by modifying dataTransfer in the dragstart event.
             const content = state.dataTransfer?.getData('text/html');
-            if (!Type.isUndefined(content)) {
+            if (!Type.isUndefined(content) && content !== '') {
               editor.insertContent(content);
             }
             editor._selectionOverrides.hideFakeCaret();
