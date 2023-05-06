@@ -1,3 +1,7 @@
-import { createDataTransfer, getDragImage } from '../datatransfer/DataTransfer';
+import { createDataTransfer, cloneDataTransfer, getDragImage } from '../datatransfer/DataTransfer';
 
-export { createDataTransfer, getDragImage };
+export {
+  createDataTransfer,
+  cloneDataTransfer,
+  getDragImage
+};

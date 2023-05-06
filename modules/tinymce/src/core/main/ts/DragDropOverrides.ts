@@ -76,7 +76,7 @@ const createDataTransferManager = (): DataTransferManager => {
 
   return {
     getDataTransferCopy: (): DataTransfer =>
-      ({ ...dataTransfer }),
+      DataTransfer.cloneDataTransfer(dataTransfer),
 
     getDataTransferHtmlData: (): string =>
       dataTransfer.getData('text/html'),

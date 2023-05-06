@@ -3,7 +3,7 @@ import { Arr, Id, Optional, Type } from '@ephox/katamari';
 import { createFileList } from '../file/FileList';
 import { getData } from './DataTransferItem';
 import { createDataTransferItemList } from './DataTransferItemList';
-import { isInProtectedMode, isInReadWriteMode, setReadWriteMode } from './Mode';
+import { Mode, isInProtectedMode, isInReadWriteMode, setReadWriteMode, getMode, setMode } from './Mode';
 
 type DropEffect = DataTransfer['dropEffect'];
 type EffectAllowed = DataTransfer['effectAllowed'];
@@ -41,9 +41,19 @@ const normalize = (format: string) => {
   }
 };
 
-const createDataTransfer = (): DataTransfer => {
-  let dropEffect: DropEffect = 'move';
-  let effectAllowed: EffectAllowed = 'all';
+interface DataTransferSpec {
+  readonly dropEffect: DropEffect;
+  readonly effectAllowed: EffectAllowed;
+  readonly items: DataTransferItemList;
+  readonly dragImageData: Optional<DragImageData>;
+  readonly mode: Optional<Mode>;
+}
+
+const createDataTransfer = (spec?: DataTransferSpec): DataTransfer => {
+  const isFromSpec = !Type.isUndefined(spec);
+
+  let dropEffect: DropEffect = isFromSpec ? spec.dropEffect : 'move';
+  let effectAllowed: EffectAllowed = isFromSpec ? spec.effectAllowed : 'all';
 
   const dataTransfer: DataTransfer = {
     get dropEffect() {
@@ -132,14 +142,29 @@ const createDataTransfer = (): DataTransfer => {
     }
   };
 
-  const items = createDataTransferItemList(dataTransfer);
+  const items = isFromSpec ? spec.items : createDataTransferItemList(dataTransfer);
 
-  setReadWriteMode(dataTransfer);
+  if (isFromSpec) {
+    spec.mode.fold(() => setReadWriteMode(dataTransfer), (mode) => setMode(dataTransfer, mode));
+    spec.dragImageData.each((imageData) => setDragImage(dataTransfer, imageData));
+  } else {
+    setReadWriteMode(dataTransfer);
+  }
 
   return dataTransfer;
 };
 
+const cloneDataTransfer = (dataTransfer: DataTransfer): DataTransfer =>
+  createDataTransfer({
+    dropEffect: dataTransfer.dropEffect,
+    effectAllowed: dataTransfer.effectAllowed,
+    items: dataTransfer.items,
+    dragImageData: getDragImage(dataTransfer),
+    mode: getMode(dataTransfer)
+  });
+
 export {
   createDataTransfer,
+  cloneDataTransfer,
   getDragImage
 };
