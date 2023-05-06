@@ -30,13 +30,13 @@ const createDataTransferItemList = (dataTransfer: DataTransfer): DataTransferIte
       }
 
       if (Type.isString(data)) {
-        const hasType = Arr.exists(items, (item) => item.type === type);
-
-        if (hasType) {
+        if (Type.isUndefined(type)) {
+          throw new Error(`Failed to execute 'add' on 'DataTransferItemList': A type must be defined when adding string data.`);
+        } else if (Arr.exists(items, (item) => item.type === type)) {
           throw new Error(`Failed to execute 'add' on 'DataTransferItemList': An item already exists for type '${type}'.`);
         }
 
-        items.push(createDataTransferItemFromString(dataTransfer, type as string, data));
+        items.push(createDataTransferItemFromString(dataTransfer, type, data));
         createIndexes(list, items);
       } else {
         items.push(createDataTransferItemFromFile(dataTransfer, data));
