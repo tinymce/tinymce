@@ -306,7 +306,7 @@ const dispatchDragEvent = (editor: Editor, type: 'dragstart' | 'drop' | 'dragend
     dataTransferManager.setDataTransferHtmlData(editor.dom.getOuterHTML(target));
   }
 
-  // TINY-9601: Get copy since original dataTransfer object can be mutated and cause unwanted behavior
+  // TINY-9601: Get copy for each new event since original dataTransfer object can be mutated and cause unwanted behavior
   const dataTransfer = dataTransferManager.getDataTransferCopy();
 
   if (type === 'dragstart') {

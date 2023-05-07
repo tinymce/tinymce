@@ -3,7 +3,7 @@ import { Arr, Id, Optional, Type } from '@ephox/katamari';
 import { createFileList } from '../file/FileList';
 import { getData } from './DataTransferItem';
 import { createDataTransferItemList } from './DataTransferItemList';
-import { Mode, isInProtectedMode, isInReadWriteMode, setReadWriteMode, getMode, setMode } from './Mode';
+import { Mode, isInProtectedMode, isInReadWriteMode, setReadWriteMode, setReadOnlyMode, getMode, setMode } from './Mode';
 
 type DropEffect = DataTransfer['dropEffect'];
 type EffectAllowed = DataTransfer['effectAllowed'];
@@ -154,14 +154,18 @@ const createDataTransfer = (spec?: DataTransferSpec): DataTransfer => {
   return dataTransfer;
 };
 
-const cloneDataTransfer = (dataTransfer: DataTransfer): DataTransfer =>
-  createDataTransfer({
+const cloneDataTransfer = (dataTransfer: DataTransfer): DataTransfer => {
+  const mode = getMode(dataTransfer);
+  setReadOnlyMode(dataTransfer);
+  // TINY-9601: Create new DataTransfer object to ensure scope is not shared between original and clone
+  return createDataTransfer({
     dropEffect: dataTransfer.dropEffect,
     effectAllowed: dataTransfer.effectAllowed,
     items: dataTransfer.items,
     dragImageData: getDragImage(dataTransfer),
-    mode: getMode(dataTransfer)
+    mode
   });
+};
 
 export {
   createDataTransfer,
