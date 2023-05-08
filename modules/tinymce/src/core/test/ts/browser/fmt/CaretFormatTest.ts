@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Keys, Mouse, StructAssert } from '@ephox/agar';
+import { ApproxStructure, Assertions, Mouse, StructAssert } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
@@ -564,43 +564,5 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
       ]
     })));
     TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0 ], 2, [ 0, 0, 0, 0 ], 2);
-  });
-
-  it.skip('TINY-9310: ', () => {
-    const editor = hook.editor();
-    editor.setContent('<p>a</p>');
-    TinySelections.setCursor(editor, [ 0 ], 1);
-    applyCaretFormat(editor, 'bold', {});
-    TinyContentActions.type(editor, 'b');
-    TinyContentActions.keystroke(editor, Keys.backspace());
-
-    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
-      return s.element('body', {
-        children: [
-          s.element('p', {
-            children: [
-              s.text(str.is('a')),
-              s.element('span', {
-                attrs: {
-                  'id': str.is('_mce_caret'),
-                  'data-mce-bogus': str.is('1')
-                },
-                children: [
-                  s.element('strong', {
-                    children: [
-                      s.text(str.is(Zwsp.ZWSP))
-                    ]
-                  })
-                ]
-              })
-            ]
-          })
-        ]
-      });
-    }));
-
-    TinyContentActions.keystroke(editor, Keys.space()); // TOFIX: this is not working
-    TinyContentActions.type(editor, 'c');
-    TinyAssertions.assertContent(editor, '<p>a c</p>');
   });
 });
