@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Deleting formatted content and then press space and then digit a test places the space at the end of the content. TINY-9310
+
 ### Added
 - New optional `defaultExpandedIds` and `onToggleExpand` options to the `tree` component config. #TINY-9653
 - New optional `defaultSelectedId` option to the `tree` component config. #TINY-9715
