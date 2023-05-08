@@ -343,8 +343,6 @@ const disableCaretContainer = (editor: Editor, keyCode: number, moveCaret: boole
 
 const endsWithNbsp = (element: Node) => {
   const elHtml = Truncate.getHtml(SugarElement.fromDom(element));
-  // eslint-disable-next-line no-console
-  console.log('elHtml: ', elHtml);
   return Strings.endsWith(elHtml, '&nbsp;');
 };
 
