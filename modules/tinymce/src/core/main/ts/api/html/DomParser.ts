@@ -64,7 +64,7 @@ export interface DomParserSettings {
   inline_styles?: boolean;
   preserve_cdata?: boolean;
   /**
-   * @deprecated filter moved to dom serializer */
+   * @deprecated filter was moved to tinymce.dom.serializer and will be removed in the next major release */
   remove_trailing_brs?: boolean;
   root_name?: string;
   sanitize?: boolean;
