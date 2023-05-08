@@ -129,7 +129,11 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
 
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('c') ]);
-      TinyAssertions.assertContent(editor, '<p>a c</p>');
+      if (isFirefox) {
+        TinyAssertions.assertContent(editor, '<p>a<strong> c</strong></p>');
+      } else {
+        TinyAssertions.assertContent(editor, '<p>a c</p>');
+      }
     });
   });
 });
