@@ -1,5 +1,5 @@
 import { Arr, Fun, Obj, Optional, Strings } from '@ephox/katamari';
-import { Attribute, Insert, Remove, SugarElement, SugarNode } from '@ephox/sugar';
+import { Attribute, Insert, Remove, SugarElement, SugarNode, Truncate } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
@@ -128,7 +128,7 @@ const removeCaretContainer = (editor: Editor, node: Node | null, moveCaret: bool
 
     if (!node) {
       while ((node = dom.get(CARET_ID))) {
-        removeCaretContainerNode(editor, node, false);
+        removeCaretContainerNode(editor, node, moveCaret);
       }
     }
   } else {
@@ -325,10 +325,10 @@ const removeCaretFormat = (editor: Editor, name: string, vars?: FormatVars, simi
   }
 };
 
-const disableCaretContainer = (editor: Editor, keyCode: number) => {
+const disableCaretContainer = (editor: Editor, keyCode: number, moveCaret: boolean) => {
   const selection = editor.selection, body = editor.getBody();
 
-  removeCaretContainer(editor, null, false);
+  removeCaretContainer(editor, null, moveCaret);
 
   // Remove caret container if it's empty
   if ((keyCode === 8 || keyCode === 46) && selection.isCollapsed() && selection.getStart().innerHTML === ZWSP) {
@@ -341,9 +341,16 @@ const disableCaretContainer = (editor: Editor, keyCode: number) => {
   }
 };
 
+const endsWithNbsp = (element: Node) => {
+  const elHtml = Truncate.getHtml(SugarElement.fromDom(element));
+  // eslint-disable-next-line no-console
+  console.log('elHtml: ', elHtml);
+  return Strings.endsWith(elHtml, '&nbsp;');
+};
+
 const setup = (editor: Editor): void => {
   editor.on('mouseup keydown', (e) => {
-    disableCaretContainer(editor, e.keyCode);
+    disableCaretContainer(editor, e.keyCode, endsWithNbsp(editor.selection.getRng().endContainer));
   });
 };
 
