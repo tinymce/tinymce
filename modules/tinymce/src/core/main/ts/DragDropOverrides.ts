@@ -35,7 +35,7 @@ const mouseRangeToTriggerScrollOutsideEditor = 16;
 interface DataTransferManager {
   getDataTransferCopy(): DataTransfer;
   getDataTransferHtmlData(): string;
-  setDataTransfer(newDataTransfer: DataTransfer): void;
+  setDataTransferCopy(newDataTransfer: DataTransfer): void;
   setDataTransferHtmlData(html: string): void;
 }
 
@@ -81,8 +81,8 @@ const createDataTransferManager = (): DataTransferManager => {
     getDataTransferHtmlData: (): string =>
       dataTransfer.getData('text/html'),
 
-    setDataTransfer: (newDataTransfer: DataTransfer): void => {
-      dataTransfer = newDataTransfer;
+    setDataTransferCopy: (newDataTransfer: DataTransfer): void => {
+      dataTransfer = DataTransfer.cloneDataTransfer(newDataTransfer);
     },
 
     setDataTransferHtmlData: (html: string): void => {
@@ -326,7 +326,7 @@ const dispatchDragEvent = (editor: Editor, type: 'dragstart' | 'drop' | 'dragend
   if (type === 'dragstart') {
     const updatedDataTransfer = args.dataTransfer;
     if (!Type.isNull(updatedDataTransfer)) {
-      dataTransferManager.setDataTransfer(updatedDataTransfer);
+      dataTransferManager.setDataTransferCopy(updatedDataTransfer);
     }
   }
 
