@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { Type } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import { assert } from 'chai';
 
@@ -49,13 +49,11 @@ describe('atomic.dragster.datatransfer.DataTransferCloneTest', () => {
     KAssert.eqOptional('Clone should have same drag image data', getDragImage(original), getDragImage(clone));
 
     // Same files as original
-    assert.strictEqual(original.files.length, clone.files.length, 'Clone should have same number of files');
-    let i = 0;
-    let currentFile = original.files.item(i);
-    while (!Type.isUndefined(currentFile)) {
-      assert.deepEqual(clone.files.item(i), currentFile);
-      currentFile = original.files.item(++i);
-    }
+    const length = clone.files.length;
+    assert.strictEqual(length, original.files.length, 'Clone should have same number of files');
+    Arr.range(length, (i) => {
+      assert.deepEqual(clone.files.item(i), original.files.item(i), 'Clone should have same file');
+    });
   };
 
   it('TINY-9601: Can create clone of dataTransfer in read-write mode', () => testCloneDataTransfer(Mode.ReadWrite));
