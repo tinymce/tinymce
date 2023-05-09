@@ -171,7 +171,7 @@ describe('browser.tinymce.plugins.directionality.DirectionStyleTest', () => {
   context('Direction style from stylesheet', () => {
     const hook = TinyHooks.bddSetup<Editor>({
       ...baseSettings,
-      content_style: '.rtl-content { direction: rtl }; .ltr-content { direction: ltr }',
+      content_style: '.rtl-content { direction: rtl; } .ltr-content { direction: ltr; }',
     }, [ Plugin ]);
 
     it('TINY-9314: Applying ltr with dir="rtl" and direction: rtl', () => testDirectionStyle(
@@ -185,7 +185,7 @@ describe('browser.tinymce.plugins.directionality.DirectionStyleTest', () => {
       hook.editor(),
       '<p class="ltr-content" dir="ltr">Lorem ipsum</p>',
       'rtl',
-      '<p class="ltr-content" dir="rtl">Lorem ipsum</p>'
+      '<p class="ltr-content" dir="rtl" style="direction: rtl;">Lorem ipsum</p>'
     ));
 
     it('TINY-9314: Applying ltr with dir="ltr" and direction: ltr', () => testDirectionStyle(
@@ -213,7 +213,7 @@ describe('browser.tinymce.plugins.directionality.DirectionStyleTest', () => {
       hook.editor(),
       '<p class="ltr-content">Lorem ipsum</p>',
       'rtl',
-      '<p class="ltr-content" dir="rtl">Lorem ipsum</p>'
+      '<p class="ltr-content" dir="rtl" style="direction: rtl;">Lorem ipsum</p>'
     ));
 
     it('TINY-9314: Applying ltr with no dir attribute and direction: ltr', () => testDirectionStyle(
@@ -241,7 +241,7 @@ describe('browser.tinymce.plugins.directionality.DirectionStyleTest', () => {
       hook.editor(),
       '<p class="ltr-content" dir="rtl">Lorem ipsum</p>',
       'rtl',
-      '<p class="ltr-content" dir="rtl">Lorem ipsum</p>'
+      '<p class="ltr-content" dir="rtl" style="direction: rtl;">Lorem ipsum</p>'
     ));
 
     it('TINY-9314: Applying ltr with dir="ltr" and direction: rtl', () => testDirectionStyle(
