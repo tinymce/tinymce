@@ -3,6 +3,7 @@ import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client
 import { DataTransfer, DataTransferMode } from '@ephox/dragster';
 import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
+import { PlatformDetection } from '@ephox/sand';
 import { Html, SelectorFind, SugarBody, SugarElement, SugarLocation, Traverse } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -164,7 +165,12 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
     };
 
     const defaultDataTransferSpec: DataTransferSpec = {
-      data: [{ type: 'text/html', value: '<p contenteditable="false" class="draggable" data-mce-selected="1">a</p>' }],
+      data: [{
+        type: 'text/html',
+        value: PlatformDetection.detect().browser.isFirefox()
+          ? '<p class="draggable" data-mce-selected="1" contenteditable="false">a</p>'
+          : '<p contenteditable="false" class="draggable" data-mce-selected="1">a</p>'
+      }],
       dropEffect: 'move',
       effectAllowed: 'all',
       files: []
