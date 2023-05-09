@@ -51,13 +51,18 @@ def gitMerge(String primaryBranch) {
   }
 }
 
-node("headless-macos") {
-  timestamps {
-    checkout scm
+timestamps {
+  // TinyMCE builds need more CPU and RAM (especially eslint)
+  // NOTE: Ensure not to go over 7.5 CPU/RAM due to EC2 node sizes and the jnlp container requirements
+  tinyPods.node([
+    resourceRequestCpu: '6',
+    resourceRequestMemory: '4Gi',
+    resourceLimitCpu: '7.5',
+    resourceLimitMemory: '4Gi'
+  ]) {
+    def props = readProperties(file: 'build.properties')
 
-    def props = readProperties file: 'build.properties'
-
-    def primaryBranch = props.primaryBranch
+    String primaryBranch = props.primaryBranch
     assert primaryBranch != null && primaryBranch != ""
     def runAllTests = env.BRANCH_NAME == primaryBranch
 
@@ -121,13 +126,18 @@ node("headless-macos") {
 
     processes["headless-and-archive"] = {
       stage("headless tests") {
-        // Prevent multiple headless tests running at once
-        lock("headless tests") {
-          // chrome-headless tests run on the same node as the pipeline
-          // we are re-using the state prepared by `ci-all` below
-          // if we ever change these tests to run on a different node, rollup is required in addition to the normal CI command
-          echo "Platform: chrome-headless tests on node: $NODE_NAME"
-          runHeadlessTests(runAllTests)
+        // TODO: Determine if this should be run on a container instead
+        node('headless-macos') {
+          // Prepare the branch on the node
+          lock('headless tests') {
+            checkout(scm)
+            gitMerge(primaryBranch)
+            cleanAndInstall()
+            exec("yarn ci -s tinymce-rollup")
+
+            echo "Platform: chrome-headless tests on node: $NODE_NAME"
+            runHeadlessTests(runAllTests)
+          }
         }
       }
 
@@ -139,11 +149,8 @@ node("headless-macos") {
       }
     }
 
-    // our linux nodes have multiple executors, sometimes yarn creates conflicts
-    lock("Don't run yarn simultaneously") {
-      stage("Install tools") {
-        cleanAndInstall()
-      }
+    stage("Install tools") {
+      cleanAndInstall()
     }
 
     stage("Type check") {
