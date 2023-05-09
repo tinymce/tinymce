@@ -271,7 +271,7 @@ const compileSchema = (type: SchemaType): SchemaLookupTable => {
   add('ul', '', 'li');
   add('li', 'value', flowContent);
   add('dl', '', 'dt dd');
-  add('a', 'href target rel media hreflang type', flowContent);
+  add('a', 'href target rel media hreflang type', type === 'html4' ? phrasingContent : flowContent);
   add('q', 'cite', phrasingContent);
   add('ins del', 'cite datetime', flowContent);
   add('img', 'src sizes srcset alt usemap ismap width height');

@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - The `caption`, `address` and `dt` elements were allowed to have non-inline children elements when the editor schema was set to `html4`. #TINY-9768
+- The `a` elements were allowed to have non-inline children elements when the editor schema was set to `html4`. #TINY-9805
 
 ### Fixed
 - Command + backspace would not add an undo level on Mac. #TINY-8910
@@ -261,6 +262,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Reverted the undo level fix in the `autolink` plugin as it caused duplicated content in some edge cases. #TINY-8936
+
 
 ## 6.1.1 - 2022-07-27
 
