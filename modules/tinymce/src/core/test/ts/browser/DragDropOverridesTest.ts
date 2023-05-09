@@ -36,7 +36,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       assert.deepEqual(eventTypes, expectedTypes);
     };
 
-    const assertDndEvent = (expectedType: string, expectedClass: string, assertMouseCords = true) => {
+    const assertDndEvent = (expectedType: string, expectedClass: string, expectedDataTransferHtml: string, assertMouseCords = true) => {
       const event = Arr.find(events, ({ type }) => type === expectedType).getOrDie(`Could not find expected event type: ${expectedType}`);
       const cordKeys = [ 'x', 'y', 'clientX', 'clientY', 'screenX', 'screenY', 'pageX', 'pageY' ] as const;
 
@@ -46,6 +46,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
 
       assert.equal((event.target as HTMLElement)?.className.trim(), expectedClass, `Expected target on "${expectedType}" event to have class`);
       assert.equal((event.srcElement as HTMLElement)?.className.trim(), expectedClass, `Expected srcElement on "${expectedType}" event to have class`);
+      assert.equal(event.dataTransfer?.getData('text/html'), expectedDataTransferHtml, `Expected dataTransfer on "${expectedType}" event to have data`);
     };
 
     const pMouseMoveToCaretChange = (editor: Editor, target: SugarElement<Element>, dx = 0, dy = 0) => {
@@ -108,7 +109,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
 
     it('TINY-7917: Dropping draggable element inside editor fires dragend event', async () => {
       const editor = hook.editor();
-      editor.setContent('<p contenteditable="false" class="draggable">a</p><p class="dest">bc123</p>');
+      editor.setContent(`<p contenteditable="false" class="draggable">a</p><p class="dest">bc123</p>`);
       const target = UiFinder.findIn(TinyDom.body(editor), '.draggable').getOrDie();
       const targetPosition = SugarLocation.viewport(target);
 
@@ -123,9 +124,11 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
 
       assertEventsDispatched([ 'dragstart', 'drop', 'dragend' ]);
 
-      assertDndEvent('dragstart', 'draggable');
-      assertDndEvent('drop', 'dest');
-      assertDndEvent('dragend', 'mce-content-body');
+      const dataTransferHtml = '<p contenteditable="false" class="draggable" data-mce-selected="1">a</p>';
+      assertDndEvent('dragstart', 'draggable', dataTransferHtml);
+      assertDndEvent('drop', 'dest', dataTransferHtml);
+      // TINY-9601: dragend event is in protected mode so cannot read html data
+      assertDndEvent('dragend', 'mce-content-body', '');
     });
 
     it('TINY-9599: Dropping draggable element should be preventable', async () => {
@@ -153,7 +156,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
 
     it('TINY-7917: Pressing escape during drag fires dragend event', async () => {
       const editor = hook.editor();
-      editor.setContent('<p class="draggable" contenteditable="false">a</p><p class="dest">bc123</p>');
+      editor.setContent('<p contenteditable="false" class="draggable">a</p><p class="dest">bc123</p>');
       const target = UiFinder.findIn(TinyDom.body(editor), '.draggable').getOrDie();
       const targetPosition = SugarLocation.viewport(target);
 
@@ -168,8 +171,10 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
 
       assertEventsDispatched([ 'dragstart', 'dragend' ]);
 
-      assertDndEvent('dragstart', 'draggable');
-      assertDndEvent('dragend', 'draggable', false);
+      const dataTransferHtml = '<p contenteditable="false" class="draggable" data-mce-selected="1">a</p>';
+      assertDndEvent('dragstart', 'draggable', dataTransferHtml);
+      // TINY-9601: dragend event is in protected mode so cannot read html data
+      assertDndEvent('dragend', 'draggable', '', false);
     });
 
     it('TINY-6027: Drag unsupported file into the editor/UI is prevented', async () => {
