@@ -111,6 +111,7 @@ const mkSerializerSettings = (editor: Editor): DomSerializerSettings => {
     ...mkSchemaSettings(editor),
     ...removeUndefined<DomSerializerSettings>({
       // SerializerSettings
+      remove_trailing_brs: getOption('remove_trailing_brs'),
       url_converter: getOption('url_converter'),
       url_converter_scope: getOption('url_converter_scope'),
 
@@ -118,7 +119,6 @@ const mkSerializerSettings = (editor: Editor): DomSerializerSettings => {
       element_format: getOption('element_format'),
       entities: getOption('entities'),
       entity_encoding: getOption('entity_encoding'),
-      remove_trailing_brs: getOption('remove_trailing_brs'),
       indent: getOption('indent'),
       indent_after: getOption('indent_after'),
       indent_before: getOption('indent_before')
