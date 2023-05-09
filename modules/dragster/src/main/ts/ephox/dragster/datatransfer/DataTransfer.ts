@@ -1,9 +1,9 @@
-import { Arr, Id, Optional, Type } from '@ephox/katamari';
+import { Arr, Id, Obj, Optional, Type } from '@ephox/katamari';
 
 import { createFileList } from '../file/FileList';
 import { getData } from './DataTransferItem';
 import { createDataTransferItemList } from './DataTransferItemList';
-import { Mode, isInProtectedMode, isInReadWriteMode, setReadWriteMode, setReadOnlyMode, getMode, setMode } from './Mode';
+import { isInProtectedMode, isInReadWriteMode, setReadWriteMode, setReadOnlyMode, getMode, setMode } from './Mode';
 
 type DropEffect = DataTransfer['dropEffect'];
 type EffectAllowed = DataTransfer['effectAllowed'];
@@ -41,19 +41,9 @@ const normalize = (format: string) => {
   }
 };
 
-interface DataTransferSpec {
-  readonly dropEffect: DropEffect;
-  readonly effectAllowed: EffectAllowed;
-  readonly items: DataTransferItemList;
-  readonly dragImageData: Optional<DragImageData>;
-  readonly mode: Optional<Mode>;
-}
-
-const createDataTransfer = (spec?: DataTransferSpec): DataTransfer => {
-  const isFromSpec = !Type.isUndefined(spec);
-
-  let dropEffect: DropEffect = isFromSpec ? spec.dropEffect : 'move';
-  let effectAllowed: EffectAllowed = isFromSpec ? spec.effectAllowed : 'all';
+const createDataTransfer = (): DataTransfer => {
+  let dropEffect: DropEffect = 'move';
+  let effectAllowed: EffectAllowed = 'all';
 
   const dataTransfer: DataTransfer = {
     get dropEffect() {
@@ -142,29 +132,46 @@ const createDataTransfer = (spec?: DataTransferSpec): DataTransfer => {
     }
   };
 
-  const items = isFromSpec ? spec.items : createDataTransferItemList(dataTransfer);
+  const items = createDataTransferItemList(dataTransfer);
 
-  if (isFromSpec) {
-    spec.mode.fold(() => setReadWriteMode(dataTransfer), (mode) => setMode(dataTransfer, mode));
-    spec.dragImageData.each((imageData) => setDragImage(dataTransfer, imageData));
-  } else {
-    setReadWriteMode(dataTransfer);
-  }
+  setReadWriteMode(dataTransfer);
 
   return dataTransfer;
 };
 
-const cloneDataTransfer = (dataTransfer: DataTransfer): DataTransfer => {
-  const mode = getMode(dataTransfer);
-  setReadOnlyMode(dataTransfer);
-  // TINY-9601: Create new DataTransfer object to ensure scope is not shared between original and clone
-  return createDataTransfer({
-    dropEffect: dataTransfer.dropEffect,
-    effectAllowed: dataTransfer.effectAllowed,
-    items: dataTransfer.items,
-    dragImageData: getDragImage(dataTransfer),
-    mode
+const cloneDataTransfer = (original: DataTransfer): DataTransfer => {
+  const mode = getMode(original);
+  setReadOnlyMode(original);
+
+  // Create new DataTransfer object to ensure scope is not shared between original and clone
+  const clone = createDataTransfer();
+
+  clone.dropEffect = original.dropEffect;
+  clone.effectAllowed = original.effectAllowed;
+  getDragImage(original).each((imageData) => clone.setDragImage(imageData.image, imageData.x, imageData.y));
+
+  // Clone dataTransfer items, indexed by an integer-as-a-string key
+  const isDataTransferItem = (v: any, k: string): v is DataTransferItem => Number.isInteger(Number(k));
+  Obj.each(original.items, (v, k) => {
+    if (isDataTransferItem(v, k)) {
+      if (v.kind === 'string') {
+        v.getAsString((data) => clone.setData(v.type, data));
+      } else if (v.kind === 'file') {
+        const file = v.getAsFile();
+        if (!Type.isNull(file)) {
+          clone.items.add(file);
+        }
+      }
+    }
   });
+
+  // Set mode last to ensure other data can be read and written as expected prior
+  mode.each((m) => {
+    setMode(original, m);
+    setMode(clone, m);
+  });
+
+  return clone;
 };
 
 export {
