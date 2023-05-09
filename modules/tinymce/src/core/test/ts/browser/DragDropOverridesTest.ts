@@ -11,11 +11,10 @@ import Editor from 'tinymce/core/api/Editor';
 
 interface DataTransferSpec {
   readonly data: { type: string; value: string }[];
-  readonly mode: 'readwrite' | 'readonly' | 'protected';
+  readonly dragImage?: { image: Element; x: number; y: number };
   readonly dropEffect: 'none' | 'copy' | 'link' | 'move';
   readonly effectAllowed: 'none' | 'copy' | 'copyLink' | 'copyMove' | 'link' | 'linkMove' | 'move' | 'all' | 'uninitialized';
   readonly files: File[];
-  readonly dragImage?: { image: Element; x: number; y: number };
 }
 
 describe('browser.tinymce.core.DragDropOverridesTest', () => {
@@ -56,17 +55,17 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       getDataTransferFromEvent(eventType).fold(
         () => assert.fail(`Expected ${eventType} event to have dataTransfer object`),
         (dataTransfer) => {
-          const isProtected = DataTransferMode.isInProtectedMode(dataTransfer);
-
-          if (spec.mode === 'readwrite') {
+          if (eventType === 'dragstart') {
             assert.isTrue(DataTransferMode.isInReadWriteMode(dataTransfer), `Expected dataTransfer of ${eventType} to be in readwrite mode`);
-          } else if (spec.mode === 'readonly') {
+          } else if (eventType === 'drop') {
             assert.isTrue(DataTransferMode.isInReadOnlyMode(dataTransfer), `Expected dataTransfer of ${eventType} event to be in readonly mode`);
           } else {
-            assert.isTrue(isProtected, `Expected dataTransfer of ${eventType} event to be in protected mode`);
+            assert.isTrue(DataTransferMode.isInProtectedMode(dataTransfer), `Expected dataTransfer of ${eventType} event to be in protected mode`);
+            // Temporarily set to readonly to allow checking of data
+            DataTransferMode.setReadOnlyMode(dataTransfer);
           }
 
-          Arr.each(spec.data, ({ type, value }) => assert.equal(dataTransfer.getData(type), isProtected ? '' : value, `Expected dataTransfer on "${eventType}" event to have ${type} data`));
+          Arr.each(spec.data, ({ type, value }) => assert.equal(dataTransfer.getData(type), value, `Expected dataTransfer on "${eventType}" event to have ${type} data`));
           assert.equal(dataTransfer.dropEffect, spec.dropEffect, `Expected dataTransfer on "${eventType}" event to have dropEffect`);
           assert.equal(dataTransfer.effectAllowed, spec.effectAllowed, `Expected dataTransfer on "${eventType}" event to have effectAllowed`);
           KAssert.eqOptional('Expected dataTransfer on "${eventType}" event to have dragImage', Optional.from(spec.dragImage), DataTransfer.getDragImage(dataTransfer));
@@ -86,6 +85,10 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
               }
               assert.isTrue(fileExists, `Expected dataTransfer on "${eventType}" event to have file ${specFile.name}`);
             });
+          }
+
+          if (eventType === 'dragend') {
+            DataTransferMode.setProtectedMode(dataTransfer);
           }
         }
       );
@@ -162,10 +165,24 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
 
     const defaultDataTransferSpec: DataTransferSpec = {
       data: [{ type: 'text/html', value: '<p contenteditable="false" class="draggable" data-mce-selected="1">a</p>' }],
-      mode: 'readwrite',
       dropEffect: 'move',
       effectAllowed: 'all',
       files: []
+    };
+
+    const assertDnDEventsDragDropElementInsideEditor = (customSpec?: DataTransferSpec) => {
+      assertDndEvent('dragstart', 'draggable', {
+        ...defaultDataTransferSpec,
+        ...customSpec
+      });
+      assertDndEvent('drop', 'dest', {
+        ...defaultDataTransferSpec,
+        ...customSpec
+      });
+      assertDndEvent('dragend', 'mce-content-body', {
+        ...defaultDataTransferSpec,
+        ...customSpec
+      });
     };
 
     it('drop draggable element outside of editor', () => {
@@ -189,18 +206,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       await pDragDropElementInsideEditor(editor);
 
       assertEventsDispatched([ 'dragstart', 'drop', 'dragend' ]);
-
-      assertDndEvent('dragstart', 'draggable', defaultDataTransferSpec);
-      assertDndEvent('drop', 'dest', {
-        ...defaultDataTransferSpec,
-        mode: 'readonly'
-      });
-      // TINY-9601: dragend event is in protected mode so cannot read html data
-      assertDndEvent('dragend', 'mce-content-body', {
-        ...defaultDataTransferSpec,
-        data: [{ type: 'text/html', value: '' }],
-        mode: 'protected'
-      });
+      assertDnDEventsDragDropElementInsideEditor();
     });
 
     it('TINY-9599: Dropping draggable element should be preventable', async () => {
@@ -243,12 +249,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
 
       assertEventsDispatched([ 'dragstart', 'dragend' ]);
       assertDndEvent('dragstart', 'draggable', defaultDataTransferSpec);
-      // TINY-9601: dragend event is in protected mode so cannot read html data
-      assertDndEvent('dragend', 'draggable', {
-        ...defaultDataTransferSpec,
-        data: [{ type: 'text/html', value: '' }],
-        mode: 'protected'
-      }, false);
+      assertDndEvent('dragend', 'draggable', defaultDataTransferSpec, false);
     });
 
     it('TINY-6027: Drag unsupported file into the editor/UI is prevented', async () => {
@@ -351,6 +352,42 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       Mouse.mouseMoveTo(TinyDom.body(editor), 2, 9); // Move the mouse close to the right edge of the editor to trigger scrolling
       await Waiter.pTryUntil('Waiting for the editor to scroll left', () => {
         assert.isBelow(editor.getWin().scrollX, initialScrollX); // Make sure scrolling happened
+      });
+    });
+
+    it('TINY-9601: dataTransfer object modified in dragstart event should persist in drop and dragend events', async () => {
+      const editor = hook.editor();
+
+      const testImage = {
+        image: document.createElement('div'),
+        x: 10,
+        y: 20
+      };
+      const testFile = createFile('test.txt', 123, new Blob([ 'content' ], { type: 'text/plain' }));
+
+      const dragstartCallback = (e: DragEvent) => {
+        const dataTransfer = e.dataTransfer;
+        if (!Type.isNull(dataTransfer)) {
+          dataTransfer.dropEffect = 'copy';
+          dataTransfer.effectAllowed = 'copy';
+          dataTransfer.setData('text/html', '<p>test</p>');
+          dataTransfer.setData('text/plain', 'test');
+          dataTransfer.setDragImage(testImage.image, testImage.x, testImage.y);
+          dataTransfer.items.add(testFile);
+        }
+      };
+
+      editor.on('dragstart', dragstartCallback);
+      await pDragDropElementInsideEditor(editor);
+      editor.off('dragstart', dragstartCallback);
+
+      assertEventsDispatched([ 'dragstart', 'drop', 'dragend' ]);
+      assertDnDEventsDragDropElementInsideEditor({
+        data: [{ type: 'text/html', value: '<p>test</p>' }, { type: 'text/plain', value: 'test' }],
+        dragImage: testImage,
+        dropEffect: 'copy',
+        effectAllowed: 'copy',
+        files: [ testFile ],
       });
     });
   });
@@ -476,7 +513,6 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
         assert.isBelow(window.scrollX, initialScrollX); // Make sure scrolling happened
       });
     });
-
   });
 
   context('Tests when CEF element are dragged on other CEF element', () => {
