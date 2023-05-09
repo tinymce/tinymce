@@ -27,10 +27,10 @@ describe('atomic.dragster.datatransfer.DataTransferCloneTest', () => {
     setMode(original, mode);
     const clone = cloneDataTransfer(original);
 
-    // Should not have same reference as original
+    // Not have same reference as original
     assert.notStrictEqual(clone, original);
 
-    // Has same mode as original
+    // Same mode as original
     KAssert.eqOptional('Clone should have same mode', getMode(original), getMode(clone));
 
     // Set to read-only mode to check other data
