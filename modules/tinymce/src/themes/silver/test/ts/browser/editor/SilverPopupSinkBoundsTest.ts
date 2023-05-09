@@ -8,6 +8,14 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
+interface Scenario {
+  readonly label: string;
+  readonly getRect: (rect: DOMRect) => {
+    readonly clientX: number;
+    readonly clientY: number;
+  };
+}
+
 describe('browser.tinymce.themes.silver.editor.SilverPopupSinkBoundsTest', () => {
   const numItems = 100;
   const sharedSettings = {
@@ -137,14 +145,6 @@ describe('browser.tinymce.themes.silver.editor.SilverPopupSinkBoundsTest', () =>
       });
     });
 
-    interface Scenario {
-      readonly label: string;
-      readonly getRect: (rect: DOMRect) => {
-        readonly clientX: number;
-        readonly clientY: number;
-      };
-    }
-
     context('ShadowDOM', () => {
       const nestedLevel = 15;
 
@@ -166,6 +166,7 @@ describe('browser.tinymce.themes.silver.editor.SilverPopupSinkBoundsTest', () =>
         Class.add(scroller, 'scrolling-wrapper');
 
         const target = SugarElement.fromTag('textarea');
+        let root = setupRoot(scroller);
 
         if (shadow === 'outside') {
           // The scroller is being outside of the ShadowRoot
@@ -177,7 +178,7 @@ describe('browser.tinymce.themes.silver.editor.SilverPopupSinkBoundsTest', () =>
           Insert.append(SugarBody.body(), scroller);
         } else {
           // The scroller is being appended to the ShadowRoot
-          const root = setupRoot(SugarBody.body());
+          root = setupRoot(SugarBody.body());
           Insert.append(scroller, target);
           Insert.append(root, scroller);
         }
@@ -186,6 +187,7 @@ describe('browser.tinymce.themes.silver.editor.SilverPopupSinkBoundsTest', () =>
           element: target,
           teardown: () => {
             Remove.remove(scroller);
+            Remove.remove(root);
           }
         };
       };

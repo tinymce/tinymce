@@ -38,7 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Formatter API `canApply` was not returning `false` when the selection was in a noneditable context. #TINY-9678
 - When dragging image elements and dropping the image in the editor the `dragend` event would sometimes not fire on firefox. #TINY-9694
 - It was possible to remove links in noneditable contents with the 'unlink' editor command. #TINY-9739
-- Popups constrained within the scrollable container in a web component. #TINY-9743
+- Popups were not constrained within the scrollable container when in a shadow root. #TINY-9743
 
 ## 6.4.2 - TBD
 
