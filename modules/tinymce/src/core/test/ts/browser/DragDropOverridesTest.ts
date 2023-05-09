@@ -69,7 +69,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
           Arr.each(spec.data, ({ type, value }) => assert.equal(dataTransfer.getData(type), value, `Expected dataTransfer on "${eventType}" event to have ${type} data`));
           assert.equal(dataTransfer.dropEffect, spec.dropEffect, `Expected dataTransfer on "${eventType}" event to have dropEffect`);
           assert.equal(dataTransfer.effectAllowed, spec.effectAllowed, `Expected dataTransfer on "${eventType}" event to have effectAllowed`);
-          KAssert.eqOptional('Expected dataTransfer on "${eventType}" event to have dragImage', Optional.from(spec.dragImage), DataTransfer.getDragImage(dataTransfer));
+          KAssert.eqOptional(`Expected dataTransfer on "${eventType}" event to have dragImage`, Optional.from(spec.dragImage), DataTransfer.getDragImage(dataTransfer));
 
           const dtFiles = dataTransfer.files;
           if (spec.files.length === 0) {
