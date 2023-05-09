@@ -390,6 +390,148 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
         files: [ testFile ],
       });
     });
+
+    it('TINY-9601: Modifying dataTransfer from one event should not affect dataTransfer of other events within a single drag-drop operation', async () => {
+      const editor = hook.editor();
+
+      let dragstartDataTransfer: DataTransfer | null = null;
+      let dropDataTransfer: DataTransfer | null = null;
+      let dragendDataTransfer: DataTransfer | null = null;
+
+      const dragstartCallback = (e: DragEvent) => dragstartDataTransfer = e.dataTransfer;
+      const dropCallback = (e: DragEvent) => dropDataTransfer = e.dataTransfer;
+      const dragendCallback = (e: DragEvent) => dragendDataTransfer = e.dataTransfer;
+
+      editor.on('dragstart', dragstartCallback);
+      editor.on('drop', dropCallback);
+      editor.on('dragend', dragendCallback);
+
+      await pDragDropElementInsideEditor(editor);
+
+      editor.off('dragstart', dragstartCallback);
+      editor.off('drop', dropCallback);
+      editor.off('dragend', dragendCallback);
+
+      assertEventsDispatched([ 'dragstart', 'drop', 'dragend' ]);
+
+      // Do this so that TypeScript does not complain about the dataTransfer objects being null
+      let nullDataTransfer = false;
+      if (Type.isNull(dragstartDataTransfer)) {
+        dragstartDataTransfer = DataTransfer.createDataTransfer();
+        nullDataTransfer = true;
+      }
+      if (Type.isNull(dropDataTransfer)) {
+        dropDataTransfer = DataTransfer.createDataTransfer();
+        nullDataTransfer = true;
+      }
+      if (Type.isNull(dragendDataTransfer)) {
+        dragendDataTransfer = DataTransfer.createDataTransfer();
+        nullDataTransfer = true;
+      }
+      if (nullDataTransfer) {
+        assert.fail('One or more dataTransfer objects from drag events were unexpectedly null');
+      }
+
+      // Ensure dataTransfer objects do not share references
+      assert.notStrictEqual(dragstartDataTransfer, dropDataTransfer, 'dragstart and drop dataTransfer objects should not share references');
+      assert.notStrictEqual(dragstartDataTransfer, dragendDataTransfer, 'dragstart and dragend dataTransfer objects should not share references');
+      assert.notStrictEqual(dropDataTransfer, dragendDataTransfer, 'drop and dragend dataTransfer objects should not share references');
+
+      // Ensure modes are as expected and have not been unexpected mutated as drag events are dispatched
+      assert.isTrue(DataTransferMode.isInReadWriteMode(dragstartDataTransfer), 'dragstart dataTransfer should be in read-write mode');
+      assert.isTrue(DataTransferMode.isInReadOnlyMode(dropDataTransfer), 'drop dataTransfer should be in read-only mode');
+      assert.isTrue(DataTransferMode.isInProtectedMode(dragendDataTransfer), 'dragend dataTransfer should be in protected mode');
+
+      // Ensure scopes are not shared between dataTransfer objects. If scopes are shared then data
+      // could be retrieved from dragend dataTransfer even though it is in protected mode.
+      assert.equal(dragendDataTransfer.getData('text/html'), '', 'dragend dataTransfer should not retrieve any data as it is in protected mode');
+
+      // Change drop & dragend datatransfer from protected to read-write for testing
+      DataTransferMode.setReadWriteMode(dropDataTransfer);
+      DataTransferMode.setReadWriteMode(dragendDataTransfer);
+
+      // Test string data
+      const initialHtmlData = dropDataTransfer.getData('text/html');
+      assert.equal(dragstartDataTransfer.getData('text/html'), initialHtmlData, 'dragstart dataTransfer should retrieve expected initial data');
+      assert.equal(dropDataTransfer.getData('text/html'), initialHtmlData, 'drop dataTransfer should retrieve expected initial data');
+      assert.equal(dragendDataTransfer.getData('text/html'), initialHtmlData, 'dragend dataTransfer should retrieve expected initial data');
+
+      const modifiedHtmlData1 = `${initialHtmlData}<p>modification1</p>`;
+      dragstartDataTransfer.setData('text/html', modifiedHtmlData1);
+      assert.equal(dragstartDataTransfer.getData('text/html'), modifiedHtmlData1, 'dragstart dataTransfer should retrieve modified data 1');
+      assert.equal(dropDataTransfer.getData('text/html'), initialHtmlData, 'drop dataTransfer should retrieve initial data');
+      assert.equal(dragendDataTransfer.getData('text/html'), initialHtmlData, 'dragend dataTransfer should retrieve initial data');
+
+      const modifiedHtmlData2 = `${initialHtmlData}<p>modification2</p>`;
+      dropDataTransfer.setData('text/html', modifiedHtmlData2);
+      assert.equal(dragstartDataTransfer.getData('text/html'), modifiedHtmlData1, 'dragstart dataTransfer should retrieve modified data 1');
+      assert.equal(dropDataTransfer.getData('text/html'), modifiedHtmlData2, 'drop dataTransfer should retrieve modified data 2');
+      assert.equal(dragendDataTransfer.getData('text/html'), initialHtmlData, 'dragend dataTransfer should retrieve initial data');
+
+      const modifiedHtmlData3 = `${initialHtmlData}<p>modification3</p>`;
+      dragendDataTransfer.setData('text/html', modifiedHtmlData3);
+      assert.equal(dragstartDataTransfer.getData('text/html'), modifiedHtmlData1, 'dragstart dataTransfer should retrieve modified data 1');
+      assert.equal(dropDataTransfer.getData('text/html'), modifiedHtmlData2, 'drop dataTransfer should retrieve modified data 2');
+      assert.equal(dragendDataTransfer.getData('text/html'), modifiedHtmlData3, 'dragend dataTransfer should retrieve modified data 3');
+
+      // Test image data
+      KAssert.eqNone('dragstart dataTransfer should have no image data', DataTransfer.getDragImage(dragstartDataTransfer));
+      KAssert.eqNone('drop dataTransfer should have no image data', DataTransfer.getDragImage(dropDataTransfer));
+      KAssert.eqNone('dragend dataTransfer should have no image data', DataTransfer.getDragImage(dragendDataTransfer));
+
+      const testImage1 = {
+        image: document.createElement('div'),
+        x: 10,
+        y: 20
+      };
+      dragstartDataTransfer.setDragImage(testImage1.image, testImage1.x, testImage1.y);
+      KAssert.eqSome('dragstart dataTransfer should have image data', testImage1, DataTransfer.getDragImage(dragstartDataTransfer));
+      KAssert.eqNone('drop dataTransfer should have no image data', DataTransfer.getDragImage(dropDataTransfer));
+      KAssert.eqNone('dragend dataTransfer should have no image data', DataTransfer.getDragImage(dragendDataTransfer));
+
+      const testImage2 = {
+        image: document.createElement('div'),
+        x: 30,
+        y: 40
+      };
+      dropDataTransfer.setDragImage(testImage2.image, testImage2.x, testImage2.y);
+      KAssert.eqSome('dragstart dataTransfer should have image data', testImage1, DataTransfer.getDragImage(dragstartDataTransfer));
+      KAssert.eqSome('drop dataTransfer should have image data', testImage2, DataTransfer.getDragImage(dropDataTransfer));
+      KAssert.eqNone('dragend dataTransfer should have no image data', DataTransfer.getDragImage(dragendDataTransfer));
+
+      const testImage3 = {
+        image: document.createElement('div'),
+        x: 50,
+        y: 60
+      };
+      dragendDataTransfer.setDragImage(testImage3.image, testImage3.x, testImage3.y);
+      KAssert.eqSome('dragstart dataTransfer should have image data', testImage1, DataTransfer.getDragImage(dragstartDataTransfer));
+      KAssert.eqSome('drop dataTransfer should have image data', testImage2, DataTransfer.getDragImage(dropDataTransfer));
+      KAssert.eqSome('dragend dataTransfer should have image data', testImage3, DataTransfer.getDragImage(dragendDataTransfer));
+
+      // Test file data
+      assert.isUndefined(dragstartDataTransfer.files.item(0), 'dragstart dataTransfer should initially have no file data');
+      assert.isUndefined(dropDataTransfer.files.item(0), 'drop dataTransfer should initially have no file data');
+      assert.isUndefined(dragendDataTransfer.files.item(0), 'dragend dataTransfer should initially have no file data');
+
+      const testFile1 = createFile('test.txt', 123, new Blob([ 'content' ], { type: 'text/plain' }));
+      dragstartDataTransfer.items.add(testFile1);
+      assert.deepEqual(dragstartDataTransfer.files.item(0), testFile1, 'dragstart dataTransfer should retrieve added file 1');
+      assert.isUndefined(dropDataTransfer.files.item(0), 'drop dataTransfer should still have no file data');
+      assert.isUndefined(dragendDataTransfer.files.item(0), 'dragend dataTransfer should still have no file data');
+
+      const testFile2 = createFile('test2.txt', 456, new Blob([ 'content2' ], { type: 'text/plain' }));
+      dropDataTransfer.items.add(testFile2);
+      assert.deepEqual(dragstartDataTransfer.files.item(0), testFile1, 'dragstart dataTransfer should retrieve added file 1');
+      assert.deepEqual(dropDataTransfer.files.item(0), testFile2, 'drop dataTransfer should retrieve added file 2');
+      assert.isUndefined(dragendDataTransfer.files.item(0), 'dragend dataTransfer should still have no file data');
+
+      const testFile3 = createFile('test3.txt', 789, new Blob([ 'content3' ], { type: 'text/plain' }));
+      dragendDataTransfer.items.add(testFile3);
+      assert.deepEqual(dragstartDataTransfer.files.item(0), testFile1, 'dragstart dataTransfer should retrieve added file 1');
+      assert.deepEqual(dropDataTransfer.files.item(0), testFile2, 'drop dataTransfer should retrieve added file 2');
+      assert.deepEqual(dragendDataTransfer.files.item(0), testFile3, 'dragend dataTransfer should retrieve added file 3');
+    });
   });
 
   context('Tests when edges of the editor are outside current viewport', () => {
