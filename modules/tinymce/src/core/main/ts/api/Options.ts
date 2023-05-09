@@ -790,6 +790,22 @@ const register = (editor: Editor): void => {
     default: true
   });
 
+  registerOption('details_initial_state', {
+    processor: (value) => {
+      const valid = Arr.contains([ 'inherited', 'collapsed', 'expanded' ], value);
+      return valid ? { value, valid } : { valid: false, message: 'Must be one of: inherited, collapsed, or expanded.' };
+    },
+    default: 'inherited'
+  });
+
+  registerOption('details_serialized_state', {
+    processor: (value) => {
+      const valid = Arr.contains([ 'inherited', 'collapsed', 'expanded' ], value);
+      return valid ? { value, valid } : { valid: false, message: 'Must be one of: inherited, collapsed, or expanded.' };
+    },
+    default: 'inherited'
+  });
+
   // These options must be registered later in the init sequence due to their default values
   editor.on('ScriptsLoaded', () => {
     registerOption('directionality', {
@@ -913,6 +929,9 @@ const getAllowedImageFileTypes = (editor: Editor): string[] =>
 
 const hasTableTabNavigation = option('table_tab_navigation');
 
+const getDetailsInitialState = option('details_initial_state');
+const getDetailsSerializedState = option('details_serialized_state');
+
 export {
   register,
 
@@ -1011,5 +1030,7 @@ export {
   hasTableTabNavigation,
   shouldPreserveCData,
   shouldHighlightOnFocus,
-  shouldSanitizeXss
+  shouldSanitizeXss,
+  getDetailsInitialState,
+  getDetailsSerializedState
 };
