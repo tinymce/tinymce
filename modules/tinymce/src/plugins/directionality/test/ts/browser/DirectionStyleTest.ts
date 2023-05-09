@@ -171,7 +171,7 @@ describe('browser.tinymce.plugins.directionality.DirectionStyleTest', () => {
   context('Direction style from stylesheet', () => {
     const hook = TinyHooks.bddSetup<Editor>({
       ...baseSettings,
-      content_style: '.rtl-content { direction: rtl } .ltr-content { direction: ltr }',
+      content_style: '.rtl-content { direction: rtl; } .ltr-content { direction: ltr; }',
     }, [ Plugin ]);
 
     it('TINY-9314: Applying ltr with dir="rtl" and direction: rtl', () => testDirectionStyle(
