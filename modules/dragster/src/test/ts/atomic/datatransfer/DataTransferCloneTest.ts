@@ -60,7 +60,7 @@ describe('atomic.dragster.datatransfer.DataTransferCloneTest', () => {
 
   it('TINY-9601: Can create clone of dataTransfer in read-write mode', () => testCloneDataTransfer(Mode.ReadWrite));
 
-  it('TINY-9601: Can create clone of dataTransfer in read-only mode', () => testCloneDataTransfer(Mode.ReadWrite));
+  it('TINY-9601: Can create clone of dataTransfer in read-only mode', () => testCloneDataTransfer(Mode.ReadOnly));
 
-  it('TINY-9601: Can create clone of dataTransfer in protected mode', () => testCloneDataTransfer(Mode.ReadWrite));
+  it('TINY-9601: Can create clone of dataTransfer in protected mode', () => testCloneDataTransfer(Mode.Protected));
 });
