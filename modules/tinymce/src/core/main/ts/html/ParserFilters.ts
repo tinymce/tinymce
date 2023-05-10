@@ -5,7 +5,7 @@ import DomParser, { DomParserSettings } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
 import Tools from '../api/util/Tools';
 import { dataUriToBlobInfo } from '../file/BlobCacheUtils';
-import * as RemoveTrailingBr from '../RemoveTrailingBr';
+import * as RemoveTrailingBr from '../dom/RemoveTrailingBr';
 
 const isBogusImage = (img: AstNode): boolean =>
   Type.isNonNullable(img.attr('data-mce-bogus'));
