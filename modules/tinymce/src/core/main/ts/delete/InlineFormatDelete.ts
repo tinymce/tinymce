@@ -23,6 +23,7 @@ const getParentsUntil = (editor: Editor, pred: (elm: SugarElement<Node>) => bool
     (index) => parents.slice(0, index)
   );
 };
+
 const hasOnlyOneChild = (elm: SugarElement<Node>): boolean =>
   Traverse.childNodesCount(elm) === 1;
 
