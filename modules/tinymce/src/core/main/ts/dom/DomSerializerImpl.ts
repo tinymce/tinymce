@@ -87,16 +87,16 @@ const toHtml = (editor: Editor | undefined, settings: HtmlSerializerSettings, sc
 };
 
 const DomSerializerImpl = (settings: DomSerializerSettings, editor?: Editor): DomSerializerImpl => {
-  const tempAttrs = [ 'data-mce-selected' ];
-
-  const dom = editor && editor.dom ? editor.dom : DOMUtils.DOM;
-  const schema = editor && editor.schema ? editor.schema : Schema(settings);
+  const tempAttrs = ['data-mce-selected'];
 
   const defaultedSettings: DomSerializerSettings = {
     entity_encoding: 'named',
     remove_trailing_brs: true,
     ...settings
   };
+
+  const dom = editor && editor.dom ? editor.dom : DOMUtils.DOM;
+  const schema = editor && editor.schema ? editor.schema : Schema(defaultedSettings);
 
   const htmlParser = DomParser(defaultedSettings, schema);
   DomSerializerFilters.register(htmlParser, defaultedSettings, dom);
