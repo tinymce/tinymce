@@ -87,7 +87,7 @@ const toHtml = (editor: Editor | undefined, settings: HtmlSerializerSettings, sc
 };
 
 const DomSerializerImpl = (settings: DomSerializerSettings, editor?: Editor): DomSerializerImpl => {
-  const tempAttrs = ['data-mce-selected'];
+  const tempAttrs = [ 'data-mce-selected' ];
 
   const defaultedSettings: DomSerializerSettings = {
     entity_encoding: 'named',
