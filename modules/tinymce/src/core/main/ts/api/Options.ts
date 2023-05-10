@@ -559,7 +559,8 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('remove_trailing_brs', {
-    processor: 'boolean'
+    processor: 'boolean',
+    default: true
   });
 
   registerOption('inline_styles', {

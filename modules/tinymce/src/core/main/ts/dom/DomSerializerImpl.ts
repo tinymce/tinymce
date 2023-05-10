@@ -17,6 +17,7 @@ import * as DomSerializerPreProcess from './DomSerializerPreProcess';
 import { isWsPreserveElement } from './ElementType';
 
 interface DomSerializerSettings extends DomParserSettings, WriterSettings, SchemaSettings, HtmlSerializerSettings {
+  remove_trailing_brs?: boolean;
   url_converter?: URLConverter;
   url_converter_scope?: {};
 }
@@ -88,20 +89,24 @@ const toHtml = (editor: Editor | undefined, settings: HtmlSerializerSettings, sc
 const DomSerializerImpl = (settings: DomSerializerSettings, editor?: Editor): DomSerializerImpl => {
   const tempAttrs = [ 'data-mce-selected' ];
 
-  const dom = editor && editor.dom ? editor.dom : DOMUtils.DOM;
-  const schema = editor && editor.schema ? editor.schema : Schema(settings);
-  settings.entity_encoding = settings.entity_encoding || 'named';
-  settings.remove_trailing_brs = 'remove_trailing_brs' in settings ? settings.remove_trailing_brs : true;
+  const defaultedSettings: DomSerializerSettings = {
+    entity_encoding: 'named',
+    remove_trailing_brs: true,
+    ...settings
+  };
 
-  const htmlParser = DomParser(settings, schema);
-  DomSerializerFilters.register(htmlParser, settings, dom);
+  const dom = editor && editor.dom ? editor.dom : DOMUtils.DOM;
+  const schema = editor && editor.schema ? editor.schema : Schema(defaultedSettings);
+
+  const htmlParser = DomParser(defaultedSettings, schema);
+  DomSerializerFilters.register(htmlParser, defaultedSettings, dom);
 
   const serialize = (node: Element, parserArgs: ParserArgs = {}): string | AstNode => {
     const args = { format: 'html', ...parserArgs };
     const targetNode = DomSerializerPreProcess.process(editor, node, args);
     const html = getHtmlFromNode(dom, targetNode, args);
     const rootNode = parseHtml(htmlParser, html, args);
-    return args.format === 'tree' ? rootNode : toHtml(editor, settings, schema, rootNode, args);
+    return args.format === 'tree' ? rootNode : toHtml(editor, defaultedSettings, schema, rootNode, args);
   };
 
   return {
