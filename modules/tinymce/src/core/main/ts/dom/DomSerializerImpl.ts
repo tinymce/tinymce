@@ -91,17 +91,22 @@ const DomSerializerImpl = (settings: DomSerializerSettings, editor?: Editor): Do
 
   const dom = editor && editor.dom ? editor.dom : DOMUtils.DOM;
   const schema = editor && editor.schema ? editor.schema : Schema(settings);
-  settings.entity_encoding = settings.entity_encoding || 'named';
 
-  const htmlParser = DomParser(settings, schema);
-  DomSerializerFilters.register(htmlParser, settings, dom);
+  const defaultedSettings: DomSerializerSettings = {
+    entity_encoding: 'named',
+    remove_trailing_brs: true,
+    ...settings
+  };
+
+  const htmlParser = DomParser(defaultedSettings, schema);
+  DomSerializerFilters.register(htmlParser, defaultedSettings, dom);
 
   const serialize = (node: Element, parserArgs: ParserArgs = {}): string | AstNode => {
     const args = { format: 'html', ...parserArgs };
     const targetNode = DomSerializerPreProcess.process(editor, node, args);
     const html = getHtmlFromNode(dom, targetNode, args);
     const rootNode = parseHtml(htmlParser, html, args);
-    return args.format === 'tree' ? rootNode : toHtml(editor, settings, schema, rootNode, args);
+    return args.format === 'tree' ? rootNode : toHtml(editor, defaultedSettings, schema, rootNode, args);
   };
 
   return {
