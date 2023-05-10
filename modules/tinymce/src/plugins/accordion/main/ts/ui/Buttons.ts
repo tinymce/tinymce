@@ -22,8 +22,8 @@ const register = (editor: Editor): void => {
   });
 
   editor.ui.registry.addToggleButton('accordionremove', {
-    text: 'Remove accordion',
-    tooltip: 'Remove accordion',
+    text: 'Delete accordion',
+    tooltip: 'Delete accordion',
     onAction: () => editor.execCommand('RemoveAccordion')
   });
 
