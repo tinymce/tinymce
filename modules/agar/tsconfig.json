@@ -18,7 +18,6 @@
     "src/test/ts"
   ],
   "references": [
-    { "path": "../dragster" },
     { "path": "../jax" },
     { "path": "../katamari" },
     { "path": "../katamari-assertions" },

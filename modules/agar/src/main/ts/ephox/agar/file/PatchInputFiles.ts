@@ -1,9 +1,9 @@
-import { FileList } from '@ephox/dragster';
 import { Singleton } from '@ephox/katamari';
 
 import { Chain } from '../api/Chain';
 import * as GeneralSteps from '../api/GeneralSteps';
 import { Step } from '../api/Step';
+import { createFileList } from './FileList';
 
 interface Props {
   files: PropertyDescriptor;
@@ -39,7 +39,7 @@ const cPatchInputElement = (files: File[]) => Chain.op<any>(() => {
   inputPrototypeState.set(currentProps);
 
   Object.defineProperty(HTMLInputElement.prototype, 'files', {
-    get: () => FileList.createFileList(files)
+    get: () => createFileList(files)
   });
 
   HTMLInputElement.prototype.click = function () {

@@ -2,9 +2,9 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 
-import { createDataTransfer, getDragImage } from 'ephox/dragster/datatransfer/DataTransfer';
-import { setProtectedMode, setReadOnlyMode } from 'ephox/dragster/datatransfer/Mode';
-import { createFile } from 'ephox/dragster/file/Files';
+import { createFile } from 'ephox/agar/api/Files';
+import { createDataTransfer, getDragImage } from 'ephox/agar/datatransfer/DataTransfer';
+import { setProtectedMode, setReadOnlyMode } from 'ephox/agar/datatransfer/Mode';
 
 UnitTest.test('DataTransfer: setEffects', () => {
   const transfer = createDataTransfer();

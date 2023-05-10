@@ -2,11 +2,11 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Type } from '@ephox/katamari';
 import { assert } from 'chai';
 
-import { createDataTransfer } from 'ephox/dragster/datatransfer/DataTransfer';
-import { getData } from 'ephox/dragster/datatransfer/DataTransferItem';
-import { createDataTransferItemList } from 'ephox/dragster/datatransfer/DataTransferItemList';
-import { setProtectedMode, setReadOnlyMode } from 'ephox/dragster/datatransfer/Mode';
-import { createFile } from 'ephox/dragster/file/Files';
+import { createFile } from 'ephox/agar/api/Files';
+import { createDataTransfer } from 'ephox/agar/datatransfer/DataTransfer';
+import { getData } from 'ephox/agar/datatransfer/DataTransferItem';
+import { createDataTransferItemList } from 'ephox/agar/datatransfer/DataTransferItemList';
+import { setProtectedMode, setReadOnlyMode } from 'ephox/agar/datatransfer/Mode';
 
 UnitTest.test('DataTransferItemListTest', () => {
   const testAdding = () => {

@@ -1,8 +1,8 @@
-import { DataTransfer } from '@ephox/dragster';
 import { Arr, Obj } from '@ephox/katamari';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 
 import { createCopyEvent, createCutEvent, createPasteEvent } from '../clipboard/ClipboardEvents';
+import { createDataTransfer } from '../datatransfer/DataTransfer';
 import { getWindowFromElement } from '../dragndrop/DndEvents';
 import { Chain } from './Chain';
 import * as ChainSequence from './ChainSequence';
@@ -11,7 +11,7 @@ import { cFindIn } from './UiFinder';
 
 const pasteDataTransfer = (target: SugarElement<Element>, mutator: (dataTransfer: DataTransfer) => void): void => {
   const win = getWindowFromElement(target);
-  const dataTransfer = DataTransfer.createDataTransfer();
+  const dataTransfer = createDataTransfer();
   const event = createPasteEvent(win, 0, 0, dataTransfer);
 
   mutator(dataTransfer);
@@ -65,7 +65,7 @@ const sPasteFiles = <T>(files: File[], selector: string): Step<T, T> =>
 
 const cut = (target: SugarElement<Element>): DataTransfer => {
   const win = getWindowFromElement(target);
-  const dataTransfer = DataTransfer.createDataTransfer();
+  const dataTransfer = createDataTransfer();
   const event = createCutEvent(win, 0, 0, dataTransfer);
 
   target.dom.dispatchEvent(event);
@@ -75,7 +75,7 @@ const cut = (target: SugarElement<Element>): DataTransfer => {
 
 const copy = (target: SugarElement<Element>): DataTransfer => {
   const win = getWindowFromElement(target);
-  const dataTransfer = DataTransfer.createDataTransfer();
+  const dataTransfer = createDataTransfer();
   const event = createCopyEvent(win, 0, 0, dataTransfer);
 
   target.dom.dispatchEvent(event);

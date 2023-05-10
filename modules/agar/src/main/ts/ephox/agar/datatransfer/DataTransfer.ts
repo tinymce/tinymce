@@ -1,9 +1,9 @@
-import { Arr, Id, Obj, Optional, Type } from '@ephox/katamari';
+import { Arr, Id, Optional, Type } from '@ephox/katamari';
 
 import { createFileList } from '../file/FileList';
 import { getData } from './DataTransferItem';
 import { createDataTransferItemList } from './DataTransferItemList';
-import { isInProtectedMode, isInReadWriteMode, setReadWriteMode, setReadOnlyMode, getMode, setMode } from './Mode';
+import { isInProtectedMode, isInReadWriteMode, setReadWriteMode } from './Mode';
 
 type DropEffect = DataTransfer['dropEffect'];
 type EffectAllowed = DataTransfer['effectAllowed'];
@@ -139,43 +139,7 @@ const createDataTransfer = (): DataTransfer => {
   return dataTransfer;
 };
 
-const cloneDataTransfer = (original: DataTransfer): DataTransfer => {
-  const mode = getMode(original);
-  setReadOnlyMode(original);
-
-  // Create new DataTransfer object to ensure scope is not shared between original and clone
-  const clone = createDataTransfer();
-
-  clone.dropEffect = original.dropEffect;
-  clone.effectAllowed = original.effectAllowed;
-  getDragImage(original).each((imageData) => clone.setDragImage(imageData.image, imageData.x, imageData.y));
-
-  // Clone dataTransfer items, indexed by an integer-as-a-string key
-  const isDataTransferItem = (v: any, k: string): v is DataTransferItem => Number.isInteger(Number(k));
-  Obj.each(original.items, (v, k) => {
-    if (isDataTransferItem(v, k)) {
-      if (v.kind === 'string') {
-        v.getAsString((data) => clone.setData(v.type, data));
-      } else if (v.kind === 'file') {
-        const file = v.getAsFile();
-        if (!Type.isNull(file)) {
-          clone.items.add(file);
-        }
-      }
-    }
-  });
-
-  // Set mode last to ensure other data can be read and written as expected prior
-  mode.each((m) => {
-    setMode(original, m);
-    setMode(clone, m);
-  });
-
-  return clone;
-};
-
 export {
   createDataTransfer,
-  cloneDataTransfer,
   getDragImage
 };
