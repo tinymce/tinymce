@@ -4,6 +4,7 @@ import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wra
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import * as CaretFormat from 'tinymce/core/fmt/CaretFormat';
 import * as InsertNewLine from 'tinymce/core/newline/InsertNewLine';
 
 describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
@@ -754,5 +755,15 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         TinyAssertions.assertContent(editor, '<p>ab</p>');
       });
     });
+  });
+
+  it('TINY-9794: Press Enter in a blockquote and then add format and then press Enter again should exit from the blockquote', () => {
+    const editor = hook.editor();
+    editor.setContent('<blockquote><p>A</p></blockquote>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    insertNewline(editor, { });
+    CaretFormat.applyCaretFormat(editor, 'bold');
+    insertNewline(editor, { });
+    TinyAssertions.assertContent(editor, '<blockquote><p>A</p></blockquote><p>&nbsp;</p>');
   });
 });

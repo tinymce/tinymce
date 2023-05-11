@@ -1,8 +1,13 @@
 import { Arr, Strings, Unicode } from '@ephox/katamari';
 
+import { ZWSP } from './Zwsp';
+
 const whiteSpaceRegExp = /^[ \t\r\n]*$/;
 
 const isWhitespaceText = (text: string): boolean => whiteSpaceRegExp.test(text);
+
+const isZwsp = (text: string): boolean => new RegExp(`^[${ZWSP}]*$`).test(text);
+
 // Don't compare other unicode spaces here, as we're only concerned about whitespace the browser would collapse
 const isCollapsibleWhitespace = (c: string): boolean => ' \f\t\v'.indexOf(c) !== -1;
 const isNewLineChar = (c: string): boolean => c === '\n' || c === '\r';
@@ -37,6 +42,7 @@ const normalize = (text: string, tabSpaces: number = 4, isStartOfContent: boolea
 
 export {
   isWhitespaceText,
+  isZwsp,
   isNewline,
   normalize
 };
