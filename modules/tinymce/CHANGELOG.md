@@ -12,14 +12,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `help_accessibility` option which displays the keyboard shortcut to access the help functionality in the statusbar. #TINY-9379
 - New `accordion` plugin with the `InsertAccordion` command. #TINY-9730
 - New `accordion` and `accordion-toggle` icons. #TINY-9789
+- New `details_initial_state` and `details_serialized_state` options. #TINY-9732
 
 ### Improved
 - Screen readers are now able to announce the highlighted menu item of link comboboxes. #TINY-9280
 - Now `icon` field for dialog footer `togglebutton`s is not mandatory. #TINY-9757
 - Toolbar buttons and menu items were not disabled when they couldn't be used on noneditable content. #TINY-9669
 - Updated toolbar "More" button tooltip text from "More..." to "Reveal or hide additional toolbar items". #TINY-9629
+- Help text displayed at **Help > Help > Keyboard Navigation** re-written. #DOC-1936
 - These characters '$', '~', '+', '|', '№', '`' are now considered as punctuation marks. Therefore, they will not increase the word count. #TINY-8122
 - Updated the `codesample` plugin dialog and `template` plugin dialog to use the 'listbox' component to match other dialogs. #TINY-9630
+
+### Changed
+- The `caption`, `address` and `dt` elements were allowed to have non-inline children elements when the editor schema was set to `html4`. #TINY-9768
 
 ### Fixed
 - Command + backspace would not add an undo level on Mac. #TINY-8910
@@ -30,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Table toolbar was visible even if the table was within a noneditable host element. #TINY-9664
 - Quickbar toolbars was shown for noneditable contents in a noneditable root. #TINY-9460
 - Show the calculated height and width of media embed elements in the `media` plugin dialog. #TINY-8714
+- Removing an image that failed to upload from an empty paragraph would leave the paragraph without a padding br. #TINY-9696
 - Allow a media embed element to be correctly resized when using the `media` plugin dialog by converting the media embed to a standalone iframe. #TINY-8714
 - Inline alert in the "Search and Replace" dialog persisted when it wasn't necessary. #TINY-9704
 - Context toolbars displayed the incorrect status for the `advlist` plugin buttons. #TINY-9680
@@ -37,13 +43,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initiating the editor with a table at the start would display resize handles even when the editor wasn't focused. #TINY-9748
 - Directionality commands was setting the `dir` attribute on noneditable elements within a noneditable root. #TINY-9662
 - The content of the dialog body could not be scrolled. #TINY-9668
+- Some toolbar items were not rendering the `not-allowed` mouse cursor. #TINY-9758
 - Formats were incorrectly applied to the closest editable element if the selection was in a noneditable context. #TINY-9678
 - Formats were incorrectly removed to the closest editable element if the selection was in a noneditable context. #TINY-9678
 - Formatter API `canApply` was not returning `false` when the selection was in a noneditable context. #TINY-9678
 - When dragging image elements and dropping the image in the editor the `dragend` event would sometimes not fire on firefox. #TINY-9694
 - It was possible to remove links in noneditable contents with the 'unlink' editor command. #TINY-9739
+- Direction was not visually changing when using the Directionality plugin on an element which has the `direction` CSS property set. #TINY-9314
+- Whitespace between transparent elements would incorrectly be converted into empty paragraphs. #TINY-9761
+- Pressing arrow keys inside RTL elements would move the caret in an incorrect direction when moving over elements with the `contenteditable` attribute set to `false`. #TINY-9565
+- Inserting table consecutively without focus in the editor would result in the table being inserted at the wrong position. #TINY-3909
 
-## 6.4.2 - TBD
+## 6.4.2 - 2023-04-26
 
 ### Fixed
 - The editor would display a notification error when it fails to retirieve a blob image uri. #TINY-9604

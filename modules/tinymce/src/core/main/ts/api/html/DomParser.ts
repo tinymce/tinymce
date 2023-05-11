@@ -63,6 +63,8 @@ export interface DomParserSettings {
   forced_root_block_attrs?: Record<string, string>;
   inline_styles?: boolean;
   preserve_cdata?: boolean;
+  /**
+   * @deprecated Remove trailing <br> tags functionality has been added to tinymce.dom.Serializer and option will be removed in the next major release */
   remove_trailing_brs?: boolean;
   root_name?: string;
   sanitize?: boolean;
@@ -173,7 +175,7 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
     return false;
   };
 
-  const isBlock = (node: AstNode) => node.name in blockElements && !TransparentElements.isTransparentAstInline(schema, node);
+  const isBlock = (node: AstNode) => node.name in blockElements || TransparentElements.isTransparentAstBlock(schema, node);
 
   const isAtEdgeOfBlock = (node: AstNode, start: boolean): boolean => {
     const neighbour = start ? node.prev : node.next;

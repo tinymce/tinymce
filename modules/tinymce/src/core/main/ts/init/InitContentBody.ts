@@ -76,7 +76,6 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
     forced_root_block: getOption('forced_root_block'),
     forced_root_block_attrs: getOption('forced_root_block_attrs'),
     preserve_cdata: getOption('preserve_cdata'),
-    remove_trailing_brs: getOption('remove_trailing_brs'),
     inline_styles: getOption('inline_styles'),
     root_name: getRootName(editor),
     sanitize: getOption('xss_sanitization'),
@@ -112,6 +111,7 @@ const mkSerializerSettings = (editor: Editor): DomSerializerSettings => {
     ...mkSchemaSettings(editor),
     ...removeUndefined<DomSerializerSettings>({
       // SerializerSettings
+      remove_trailing_brs: getOption('remove_trailing_brs'),
       url_converter: getOption('url_converter'),
       url_converter_scope: getOption('url_converter_scope'),
 
