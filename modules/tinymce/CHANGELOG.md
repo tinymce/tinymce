@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New optional `defaultSelectedId` option to the `tree` component config. #TINY-9715
 - New `help_accessibility` option which displays the keyboard shortcut to access the help functionality in the statusbar. #TINY-9379
 - New `accordion` plugin with the `InsertAccordion` command. #TINY-9730
+- New `details_initial_state` and `details_serialized_state` options. #TINY-9732
 
 ### Improved
 - Screen readers are now able to announce the highlighted menu item of link comboboxes. #TINY-9280
@@ -50,6 +51,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Direction was not visually changing when using the Directionality plugin on an element which has the `direction` CSS property set. #TINY-9314
 - Whitespace between transparent elements would incorrectly be converted into empty paragraphs. #TINY-9761
 - Popups were not constrained within the scrollable container when in a shadow root. #TINY-9743
+- Pressing arrow keys inside RTL elements would move the caret in an incorrect direction when moving over elements with the `contenteditable` attribute set to `false`. #TINY-9565
+- Inserting table consecutively without focus in the editor would result in the table being inserted at the wrong position. #TINY-3909
 
 ## 6.4.2 - 2023-04-26
 
