@@ -30,10 +30,11 @@ export const isScroller = (elem: SugarElement<Node> | any): boolean => {
 export const detect = (popupSinkElem: SugarElement<HTMLElement>): Optional<ScrollingContext> => {
   const ancestorsScrollers = PredicateFilter.ancestors(popupSinkElem, isScroller) as SugarElement<HTMLElement>[];
 
-  const shadowRoot = SugarShadowDom.getShadowRoot(popupSinkElem);
-  const scrollers = ancestorsScrollers.length === 0 && shadowRoot.isSome()
-    ? shadowRoot.map(SugarShadowDom.getShadowHost).map((x) => PredicateFilter.ancestors(x, isScroller)).getOr([]) as SugarElement<HTMLElement>[]
-    : ancestorsScrollers;
+  // If there is no scrollable container, we try to see if it's in a shadow root, and try to traverse beyond the host of shadow root to retrieve the scrollable container
+  // If it is not within a ShadowRoot, since if there's a scrollable container as the ancestors, then it would not execute the code below, or return an empty array if it's not in a ShadowRoot
+  const scrollers = ancestorsScrollers.length === 0
+    ? SugarShadowDom.getShadowRoot(popupSinkElem).map(SugarShadowDom.getShadowHost).map((x) => PredicateFilter.ancestors(x, isScroller)).getOr([]) as SugarElement<HTMLElement>[]
+    : [];
 
   return Arr.head(scrollers)
     .map(
