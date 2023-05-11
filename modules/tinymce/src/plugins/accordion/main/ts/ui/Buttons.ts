@@ -12,17 +12,17 @@ const onSetup = (editor: Editor) => (buttonApi: Toolbar.ToolbarButtonInstanceApi
 
 const register = (editor: Editor): void => {
   const onAction = () => editor.execCommand('InsertAccordion');
-  editor.ui.registry.addButton('accordion', { icon: 'accordion', text: 'Accordion', onSetup: onSetup(editor), onAction });
+  editor.ui.registry.addButton('accordion', { icon: 'accordion', tooltip: 'Insert accordion', onSetup: onSetup(editor), onAction });
   editor.ui.registry.addMenuItem('accordion', { icon: 'accordion', text: 'Accordion', onSetup: onSetup(editor), onAction });
 
   editor.ui.registry.addToggleButton('accordiontoggle', {
-    text: 'Toggle accordion',
+    icon: 'accordion-toggle',
     tooltip: 'Toggle accordion',
     onAction: () => editor.execCommand('ToggleAccordion')
   });
 
   editor.ui.registry.addToggleButton('accordionremove', {
-    text: 'Delete accordion',
+    icon: 'remove',
     tooltip: 'Delete accordion',
     onAction: () => editor.execCommand('RemoveAccordion')
   });
