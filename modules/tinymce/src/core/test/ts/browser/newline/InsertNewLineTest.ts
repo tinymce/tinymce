@@ -23,7 +23,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     const sel = editor.selection.getSel();
 
     if (Type.isNullable(sel)) {
-      throw new Error();
+      throw new Error('Sel is unexpectedly missing.');
     }
 
     const range = editor.contentDocument.createRange();
