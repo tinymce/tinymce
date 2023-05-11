@@ -1,5 +1,5 @@
-import { Arr, Fun, Obj, Optional, Strings } from '@ephox/katamari';
-import { Attribute, Insert, Remove, SugarElement, SugarNode, Truncate } from '@ephox/sugar';
+import { Arr, Fun, Obj, Optional, Strings, Unicode } from '@ephox/katamari';
+import { Attribute, Insert, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
@@ -341,10 +341,7 @@ const disableCaretContainer = (editor: Editor, keyCode: number, moveCaret: boole
   }
 };
 
-const endsWithNbsp = (element: Node) => {
-  const elHtml = Truncate.getHtml(SugarElement.fromDom(element));
-  return Strings.endsWith(elHtml, '&nbsp;');
-};
+const endsWithNbsp = (element: Node) => NodeType.isText(element) && Strings.endsWith(element.data, Unicode.nbsp);
 
 const setup = (editor: Editor): void => {
   editor.on('mouseup keydown', (e) => {
