@@ -34,7 +34,7 @@ export const detect = (popupSinkElem: SugarElement<HTMLElement>): Optional<Scrol
   // If it is not within a ShadowRoot, since if there's a scrollable container as the ancestors, then it would not execute the code below, or return an empty array if it's not in a ShadowRoot
   const scrollers = ancestorsScrollers.length === 0
     ? SugarShadowDom.getShadowRoot(popupSinkElem).map(SugarShadowDom.getShadowHost).map((x) => PredicateFilter.ancestors(x, isScroller)).getOr([]) as SugarElement<HTMLElement>[]
-    : [];
+    : ancestorsScrollers;
 
   return Arr.head(scrollers)
     .map(
