@@ -1,4 +1,5 @@
 import Editor from '../api/Editor';
+import * as Options from '../api/Options';
 import * as NewLineUtils from './NewLineUtils';
 
 export const isDetails = (node?: Node | null): node is HTMLDetailsElement =>
@@ -9,13 +10,13 @@ export const getDetailsRoot = (editor: Editor, element: Element): HTMLDetailsEle
 
 export const isLastEmptyBlockInDetails = (editor: Editor, shiftKey: boolean, element: Element): boolean =>
   !shiftKey &&
-  element.nodeName === 'P' &&
+  element.nodeName.toLowerCase() === Options.getForcedRootBlock(editor) &&
   element.parentNode?.lastChild === element &&
   editor.dom.isEmpty(element) &&
   isDetails(element.parentNode);
 
 export const insertNewLine = (editor: Editor, createNewBlock: (name: string) => Element, parentBlock: Element): void => {
-  const newBlock = createNewBlock('p');
+  const newBlock = createNewBlock(Options.getForcedRootBlock(editor));
   const root = getDetailsRoot(editor, parentBlock);
   if (!root) {
     return;
