@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New optional `defaultSelectedId` option to the `tree` component config. #TINY-9715
 - New `help_accessibility` option which displays the keyboard shortcut to access the help functionality in the statusbar. #TINY-9379
 - New `accordion` plugin with the `InsertAccordion` command. #TINY-9730
+- New `accordion` and `accordion-toggle` icons. #TINY-9789
 - New `details_initial_state` and `details_serialized_state` options. #TINY-9732
 
 ### Improved
