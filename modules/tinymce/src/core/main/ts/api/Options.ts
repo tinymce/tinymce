@@ -807,7 +807,7 @@ const register = (editor: Editor): void => {
     default: 'inherited'
   });
 
-  registerOption('document_write', {
+  registerOption('init_content_sync', {
     processor: 'boolean',
     default: false
   });
@@ -917,7 +917,7 @@ const getNonEditableRegExps = option('noneditable_regexp');
 const shouldPreserveCData = option('preserve_cdata');
 const shouldHighlightOnFocus = option('highlight_on_focus');
 const shouldSanitizeXss = option('xss_sanitization');
-const shouldUseDocumentWrite = option('document_write');
+const shouldUseDocumentWrite = option('init_content_sync');
 
 const hasTextPatternsLookup = (editor: Editor): boolean =>
   editor.options.isSet('text_patterns_lookup');

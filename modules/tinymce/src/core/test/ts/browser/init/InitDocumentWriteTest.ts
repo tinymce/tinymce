@@ -8,7 +8,7 @@ import Editor from 'tinymce/core/api/Editor';
 describe('browser.tinymce.core.init.InitDocumentWriteTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    document_write: true
+    init_content_sync: true
   }, [], true);
 
   it('TINY-9818: Should initialize the editor', () => {

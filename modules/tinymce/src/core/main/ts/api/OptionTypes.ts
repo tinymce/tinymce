@@ -284,7 +284,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   contextmenu: string[];
   custom_colors: boolean;
   document_base_url: string;
-  document_write: boolean;
+  init_content_sync: boolean;
   draggable_modal: boolean;
   editable_class: string;
   font_css: string[];
