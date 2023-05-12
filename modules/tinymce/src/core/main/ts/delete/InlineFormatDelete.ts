@@ -55,8 +55,8 @@ const deleteLastPosition = (forward: boolean, editor: Editor, target: SugarEleme
 };
 
 const deleteCaret = (editor: Editor, forward: boolean): Optional<() => void> => {
-  const parentInlines = getParentInlinesUntilMultichildInline(editor);
-  return Arr.last(Arr.filter(parentInlines, hasOnlyOneChild)).bind((target) => {
+  const parentInlines = Arr.filter(getParentInlinesUntilMultichildInline(editor), hasOnlyOneChild);
+  return Arr.last(parentInlines).bind((target) => {
     const fromPos = CaretPosition.fromRangeStart(editor.selection.getRng());
     if (DeleteUtils.willDeleteLastPositionInElement(forward, fromPos, target.dom) && !CaretFormat.isEmptyCaretFormatElement(target)) {
       return Optional.some(() => deleteLastPosition(forward, editor, target, parentInlines));
