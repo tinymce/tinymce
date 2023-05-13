@@ -1,0 +1,24 @@
+import { Id, Optional } from '@ephox/katamari';
+
+interface DragImageData {
+  image: Element;
+  x: number;
+  y: number;
+}
+
+const imageId = Id.generate('image');
+
+const getDragImage = (transfer: DataTransfer): Optional<DragImageData> => {
+  const dt: any = transfer;
+  return Optional.from(dt[imageId]);
+};
+
+const setDragImage = (transfer: DataTransfer, imageData: DragImageData): void => {
+  const dt: any = transfer;
+  dt[imageId] = imageData;
+};
+
+export {
+  getDragImage,
+  setDragImage
+};

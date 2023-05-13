@@ -1,21 +1,6 @@
-import { Arr, Id, Optional, Type } from '@ephox/katamari';
+import { Arr, Type } from '@ephox/katamari';
 
-interface DragImageData {
-  image: Element;
-  x: number;
-  y: number;
-}
-const imageId = Id.generate('image');
-
-const getDragImage = (transfer: DataTransfer): Optional<DragImageData> => {
-  const dt: any = transfer;
-  return Optional.from(dt[imageId]);
-};
-
-const setDragImage = (transfer: DataTransfer, imageData: DragImageData) => {
-  const dt: any = transfer;
-  dt[imageId] = imageData;
-};
+import { getDragImage, setDragImage } from './DragImage';
 
 const createDataTransfer = (): DataTransfer => {
   const dataTransferImpl = new window.DataTransfer();
