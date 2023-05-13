@@ -4,6 +4,7 @@ import { KAssert } from '@ephox/katamari-assertions';
 import { assert } from 'chai';
 
 import { cloneDataTransfer, createDataTransfer, getDragImage } from 'ephox/dragster/datatransfer/DataTransfer';
+import { getMode, Mode, setMode } from 'ephox/dragster/datatransfer/Mode';
 
 describe('atomic.dragster.datatransfer.DataTransferCloneTest', () => {
   const dragImage = {
@@ -27,20 +28,20 @@ describe('atomic.dragster.datatransfer.DataTransferCloneTest', () => {
     return dataTransfer;
   };
 
-  const testCloneDataTransfer = () => {
+  const testCloneDataTransfer = (mode: Mode) => {
     const original = getTestDataTransfer();
-    // setMode(original, mode);
+    setMode(original, mode);
     const clone = cloneDataTransfer(original);
 
     // Not have same reference as original
     assert.notStrictEqual(clone, original);
 
-    // // Same mode as original
-    // KAssert.eqOptional('Clone should have same mode', getMode(original), getMode(clone));
+    // Same mode as original
+    KAssert.eqOptional('Clone should have same mode', getMode(original), getMode(clone));
 
-    // // Set to read-only mode to check other data
-    // setReadOnlyMode(original);
-    // setReadOnlyMode(clone);
+    // Set to read-only mode to check other data
+    setMode(original, Mode.ReadOnly);
+    setMode(clone, Mode.ReadOnly);
 
     // Not have same items reference as original
     assert.notStrictEqual(clone.items, original.items, 'Clone should not have same items reference as original');
@@ -68,9 +69,9 @@ describe('atomic.dragster.datatransfer.DataTransferCloneTest', () => {
     });
   };
 
-  it('TINY-9601: Can create clone of dataTransfer in read-write mode', () => testCloneDataTransfer());
+  it('TINY-9601: Can create clone of dataTransfer in read-write mode', () => testCloneDataTransfer(Mode.ReadWrite));
 
-  // it('TINY-9601: Can create clone of dataTransfer in read-only mode', () => testCloneDataTransfer(Mode.ReadOnly));
+  it('TINY-9601: Can create clone of dataTransfer in read-only mode', () => testCloneDataTransfer(Mode.ReadOnly));
 
-  // it('TINY-9601: Can create clone of dataTransfer in protected mode', () => testCloneDataTransfer(Mode.Protected));
+  it('TINY-9601: Can create clone of dataTransfer in protected mode', () => testCloneDataTransfer(Mode.Protected));
 });

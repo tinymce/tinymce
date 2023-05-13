@@ -1,6 +1,7 @@
 import { Arr } from '@ephox/katamari';
 
 import { getDragImage, setDragImage } from './DragImage';
+import { getMode, isInProtectedMode, isInReadWriteMode, Mode, setMode } from './Mode';
 
 const createDataTransfer = (): DataTransfer => {
   const dataTransferImpl = new window.DataTransfer();
@@ -35,20 +36,34 @@ const createDataTransfer = (): DataTransfer => {
     },
 
     setDragImage: (image: Element, x: number, y: number): void => {
-      setDragImage(dataTransfer, { image, x, y });
-      dataTransferImpl.setDragImage(image, x, y);
+      if (isInReadWriteMode(dataTransfer)) {
+        setDragImage(dataTransfer, { image, x, y });
+        dataTransferImpl.setDragImage(image, x, y);
+      }
     },
 
     getData: (format: string): string => {
-      return dataTransferImpl.getData(format);
+      if (isInProtectedMode(dataTransfer)) {
+        return '';
+      } else {
+        return dataTransferImpl.getData(format);
+      }
     },
 
     setData: (format: string, data: string): void => {
-      dataTransferImpl.setData(format, data);
+      if (isInReadWriteMode(dataTransfer)) {
+        dataTransferImpl.setData(format, data);
+      }
     },
 
-    clearData: (format?: string | undefined): void => dataTransferImpl.clearData(format),
+    clearData: (format?: string | undefined): void => {
+      if (isInReadWriteMode(dataTransfer)) {
+        dataTransferImpl.clearData(format);
+      }
+    }
   };
+
+  setMode(dataTransfer, Mode.ReadWrite);
 
   return dataTransfer;
 };
@@ -56,6 +71,10 @@ const createDataTransfer = (): DataTransfer => {
 const cloneDataTransfer = (original: DataTransfer): DataTransfer => {
   // Create new DataTransfer object to ensure scope is not shared between original and clone
   const clone = createDataTransfer();
+
+  // Store original mode and set to read-only to copy data
+  const originalMode = getMode(original);
+  setMode(original, Mode.ReadOnly);
 
   clone.dropEffect = original.dropEffect;
   clone.effectAllowed = original.effectAllowed;
@@ -70,6 +89,12 @@ const cloneDataTransfer = (original: DataTransfer): DataTransfer => {
 
   // Copy files
   Arr.each(original.files, (file) => clone.items.add(file));
+
+  // Set mode
+  originalMode.each((mode) => {
+    setMode(original, mode);
+    setMode(clone, mode);
+  });
 
   return clone;
 };
