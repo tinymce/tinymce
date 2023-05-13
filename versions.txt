@@ -6,3 +6,4 @@ polaris@6.2.0
 robin@10.2.0
 dragster@7.2.0
 agar@7.5.0
+oxide-icons-default@2.3.0

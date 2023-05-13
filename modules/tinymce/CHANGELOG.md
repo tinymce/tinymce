@@ -6,23 +6,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Typing after deleting formatted content could remove a space at the start of the typing. TINY-9310
+
 ### Added
 - New optional `defaultExpandedIds` and `onToggleExpand` options to the `tree` component config. #TINY-9653
 - New optional `defaultSelectedId` option to the `tree` component config. #TINY-9715
 - New `help_accessibility` option which displays the keyboard shortcut to access the help functionality in the statusbar. #TINY-9379
 - New `accordion` plugin with the `InsertAccordion` command. #TINY-9730
+- New `accordion` and `accordion-toggle` icons. #TINY-9789
+- New `details_initial_state` and `details_serialized_state` options. #TINY-9732
 
 ### Improved
 - Screen readers are now able to announce the highlighted menu item of link comboboxes. #TINY-9280
 - Now `icon` field for dialog footer `togglebutton`s is not mandatory. #TINY-9757
 - Toolbar buttons and menu items were not disabled when they couldn't be used on noneditable content. #TINY-9669
 - Updated toolbar "More" button tooltip text from "More..." to "Reveal or hide additional toolbar items". #TINY-9629
+- Help text displayed at **Help > Help > Keyboard Navigation** re-written. #DOC-1936
 - These characters '$', '~', '+', '|', '№', '`' are now considered as punctuation marks. Therefore, they will not increase the word count. #TINY-8122
 - Updated the `codesample` plugin dialog and `template` plugin dialog to use the 'listbox' component to match other dialogs. #TINY-9630
 - Exposed `dataTransfer` property of drag and drop events for elements with a `contenteditable="false"` attribute. #TINY-9601
 
 ### Changed
 - The `caption`, `address` and `dt` elements were allowed to have non-inline children elements when the editor schema was set to `html4`. #TINY-9768
+- The `a` elements were allowed to have non-inline child elements when the editor schema was set to `html4`. #TINY-9805
 
 ### Fixed
 - Command + backspace would not add an undo level on Mac. #TINY-8910
@@ -47,7 +54,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Formatter API `canApply` was not returning `false` when the selection was in a noneditable context. #TINY-9678
 - When dragging image elements and dropping the image in the editor the `dragend` event would sometimes not fire on firefox. #TINY-9694
 - It was possible to remove links in noneditable contents with the 'unlink' editor command. #TINY-9739
+- Direction was not visually changing when using the Directionality plugin on an element which has the `direction` CSS property set. #TINY-9314
 - Whitespace between transparent elements would incorrectly be converted into empty paragraphs. #TINY-9761
+- Popups were not constrained within the scrollable container when in a shadow root. #TINY-9743
+- Pressing arrow keys inside RTL elements would move the caret in an incorrect direction when moving over elements with the `contenteditable` attribute set to `false`. #TINY-9565
+- Inserting table consecutively without focus in the editor would result in the table being inserted at the wrong position. #TINY-3909
 
 ## 6.4.2 - 2023-04-26
 
