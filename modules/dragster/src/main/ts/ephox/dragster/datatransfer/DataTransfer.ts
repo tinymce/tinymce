@@ -1,26 +1,39 @@
 import { Arr } from '@ephox/katamari';
 
 import { getDragImage, setDragImage } from './DragImage';
+import { DragEventType, getEvent, isInDragStartEvent, setEvent } from './Event';
 import { getMode, isInProtectedMode, isInReadWriteMode, Mode, setMode } from './Mode';
+
+type DropEffect = DataTransfer['dropEffect'];
+type EffectAllowed = DataTransfer['effectAllowed'];
+
+const validDropEffects: DropEffect[] = [ 'none', 'copy', 'link', 'move' ];
+const validEffectAlloweds: EffectAllowed[] = [ 'none', 'copy', 'copyLink', 'copyMove', 'link', 'linkMove', 'move', 'all', 'uninitialized' ];
 
 const createDataTransfer = (): DataTransfer => {
   const dataTransferImpl = new window.DataTransfer();
+  let dropEffect: DropEffect = 'move';
+  let effectAllowed: EffectAllowed = 'all';
 
   const dataTransfer: DataTransfer = {
     get dropEffect() {
-      return dataTransferImpl.dropEffect;
+      return dropEffect;
     },
 
     set dropEffect(effect: DataTransfer['dropEffect']) {
-      dataTransferImpl.dropEffect = effect;
+      if (Arr.contains(validDropEffects, effect)) {
+        dropEffect = effect;
+      }
     },
 
     get effectAllowed() {
-      return dataTransferImpl.effectAllowed;
+      return effectAllowed;
     },
 
     set effectAllowed(allowed: DataTransfer['effectAllowed']) {
-      dataTransferImpl.effectAllowed = allowed;
+      if (isInDragStartEvent(dataTransfer) && Arr.contains(validEffectAlloweds, allowed)) {
+        effectAllowed = allowed;
+      }
     },
 
     get items() {
@@ -63,18 +76,20 @@ const createDataTransfer = (): DataTransfer => {
     }
   };
 
-  setMode(dataTransfer, Mode.ReadWrite);
-
   return dataTransfer;
 };
 
 const cloneDataTransfer = (original: DataTransfer): DataTransfer => {
   // Create new DataTransfer object to ensure scope is not shared between original and clone
   const clone = createDataTransfer();
+  setMode(clone, Mode.ReadWrite);
 
   // Store original mode and set to read-only to copy data
   const originalMode = getMode(original);
   setMode(original, Mode.ReadOnly);
+
+  // Set clone event to dragstart to ensure effectAllowed can be set
+  setEvent(clone, DragEventType.dragstart);
 
   clone.dropEffect = original.dropEffect;
   clone.effectAllowed = original.effectAllowed;
@@ -89,6 +104,11 @@ const cloneDataTransfer = (original: DataTransfer): DataTransfer => {
 
   // Copy files
   Arr.each(original.files, (file) => clone.items.add(file));
+
+  // Set event
+  getEvent(original).each((event) => {
+    setEvent(clone, event);
+  });
 
   // Set mode
   originalMode.each((mode) => {
