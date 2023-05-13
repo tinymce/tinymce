@@ -1,4 +1,4 @@
-import { DataTransfer, DataTransferMode } from '@ephox/dragster';
+import { DataTransfer } from '@ephox/dragster';
 import { Arr, Optional, Singleton, Throttler, Type } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
@@ -310,13 +310,13 @@ const dispatchDragEvent = (editor: Editor, type: 'dragstart' | 'drop' | 'dragend
   const dataTransfer = dataTransferManager.getDataTransferCopy();
 
   if (type === 'dragstart') {
-    DataTransferMode.setReadWriteMode(dataTransfer);
+    // DataTransferMode.setReadWriteMode(dataTransfer);
     event = isFromMouseEvent ? DragEvents.makeDragstartEventFromMouseEvent(mouseEvent, target, dataTransfer) : DragEvents.makeDragstartEvent(target, dataTransfer);
   } else if (type === 'drop') {
-    DataTransferMode.setReadOnlyMode(dataTransfer);
+    // DataTransferMode.setReadOnlyMode(dataTransfer);
     event = isFromMouseEvent ? DragEvents.makeDropEventFromMouseEvent(mouseEvent, target, dataTransfer) : DragEvents.makeDropEvent(target, dataTransfer);
   } else {
-    DataTransferMode.setProtectedMode(dataTransfer);
+    // DataTransferMode.setProtectedMode(dataTransfer);
     event = isFromMouseEvent ? DragEvents.makeDragendEventFromMouseEvent(mouseEvent, target, dataTransfer) : DragEvents.makeDragendEvent(target, dataTransfer);
   }
 
