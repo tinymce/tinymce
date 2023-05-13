@@ -1,4 +1,4 @@
-import { Arr, Type } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 
 import { getDragImage, setDragImage } from './DragImage';
 
@@ -61,17 +61,15 @@ const cloneDataTransfer = (original: DataTransfer): DataTransfer => {
   clone.effectAllowed = original.effectAllowed;
   getDragImage(original).each((imageData) => clone.setDragImage(imageData.image, imageData.x, imageData.y));
 
-  // Clone dataTransfer items, indexed by an integer-as-a-string key
-  Arr.each(original.items, (item) => {
-    if (item.kind === 'string') {
-      clone.setData(item.type, original.getData(item.type));
-    } else if (item.kind === 'file') {
-      const file = item.getAsFile();
-      if (!Type.isNull(file)) {
-        clone.items.add(file);
-      }
+  // Copy string data
+  Arr.each(original.types, (type) => {
+    if (type !== 'Files') {
+      clone.setData(type, original.getData(type));
     }
   });
+
+  // Copy files
+  Arr.each(original.files, (file) => clone.items.add(file));
 
   return clone;
 };

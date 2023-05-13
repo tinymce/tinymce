@@ -22,6 +22,7 @@ describe('atomic.dragster.datatransfer.DataTransferCloneTest', () => {
     dataTransfer.setData('text/html', '<p>123</p>');
     dataTransfer.setDragImage(dragImage.image, dragImage.x, dragImage.y);
     dataTransfer.items.add(new window.File([ 'Lorem ipsum' ], 'test.txt', { type: 'text/plain' }));
+    dataTransfer.items.add(new window.File([ '<p>Lorem ipsum</p>' ], 'test2.html', { type: 'text/html' }));
 
     return dataTransfer;
   };
