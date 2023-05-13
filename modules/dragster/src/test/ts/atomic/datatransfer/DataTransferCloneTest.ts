@@ -1,5 +1,4 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import { assert } from 'chai';
 
@@ -13,6 +12,9 @@ describe('atomic.dragster.datatransfer.DataTransferCloneTest', () => {
     y: 20
   };
 
+  const testFile1 = new window.File([ 'Lorem ipsum' ], 'test.txt', { type: 'text/plain' });
+  const testFile2 = new window.File([ '<p>Lorem ipsum</p>' ], 'test2.html', { type: 'text/html' });
+
   const getTestDataTransfer = (): DataTransfer => {
     const dataTransfer = createDataTransfer();
 
@@ -22,10 +24,25 @@ describe('atomic.dragster.datatransfer.DataTransferCloneTest', () => {
     dataTransfer.setData('text/plain', '123');
     dataTransfer.setData('text/html', '<p>123</p>');
     dataTransfer.setDragImage(dragImage.image, dragImage.x, dragImage.y);
-    dataTransfer.items.add(new window.File([ 'Lorem ipsum' ], 'test.txt', { type: 'text/plain' }));
-    dataTransfer.items.add(new window.File([ '<p>Lorem ipsum</p>' ], 'test2.html', { type: 'text/html' }));
+    dataTransfer.items.add(testFile1);
+    dataTransfer.items.add(testFile2);
 
     return dataTransfer;
+  };
+
+  const assertTestDataTransfer = (dataTransfer: DataTransfer, isClone: boolean) => {
+    const normalizeLabel = (label: string): string => `${isClone ? 'Clone' : 'Original'} ${label}`;
+
+    // assert.strictEqual(dataTransfer.dropEffect, 'copy', normalizeLabel('should have expected dropEffect'));
+    // assert.strictEqual(dataTransfer.effectAllowed, 'copy', normalizeLabel('should have expected effectAllowed'));
+    assert.strictEqual(dataTransfer.getData('text/plain'), '123', normalizeLabel('should have expected text/plain data'));
+    assert.strictEqual(dataTransfer.getData('text/html'), '<p>123</p>', normalizeLabel('should have expected text/html data'));
+    KAssert.eqSome(normalizeLabel('should have expected drag image'), dragImage, getDragImage(dataTransfer));
+    assert.deepEqual(dataTransfer.types, [ 'text/plain', 'text/html', 'Files' ], normalizeLabel('should have expected types'));
+    const files = dataTransfer.files;
+    assert.strictEqual(files.length, 2, normalizeLabel('should have expected number of files'));
+    assert.deepEqual(files.item(0), testFile1, normalizeLabel('should have expected file 1'));
+    assert.deepEqual(files.item(1), testFile2, normalizeLabel('should have expected file 2'));
   };
 
   const testCloneDataTransfer = (mode: Mode) => {
@@ -43,30 +60,18 @@ describe('atomic.dragster.datatransfer.DataTransferCloneTest', () => {
     setMode(original, Mode.ReadOnly);
     setMode(clone, Mode.ReadOnly);
 
-    // Not have same items reference as original
+    // Original has not been modified in the cloning process
+    assertTestDataTransfer(original, false);
+
+    // Clone has expected data
+    assertTestDataTransfer(clone, true);
+
     assert.notStrictEqual(clone.items, original.items, 'Clone should not have same items reference as original');
 
-    // Same data as original
-    assert.strictEqual(clone.dropEffect, original.dropEffect, 'Clone should have same dropEffect');
-    assert.strictEqual(clone.effectAllowed, original.effectAllowed, 'Clone should have same effectAllowed');
-    assert.strictEqual(clone.getData('text/plain'), original.getData('text/plain'), 'Clone should have same data');
-    assert.strictEqual(clone.getData('text/html'), original.getData('text/html'), 'Clone should have same data');
-    assert.deepEqual(clone.types, original.types, 'Clone should have same types');
+    getDragImage(original).each((originalImage) =>
+      getDragImage(clone).each((cloneImage) => assert.notStrictEqual(cloneImage, originalImage, 'Clone drag image should not have same reference as original')));
 
-    // Same drag image as original
-    const originalDragImage = getDragImage(original);
-    KAssert.eqSome('Original should have expected drag image', dragImage, originalDragImage);
-    const cloneDragImage = getDragImage(clone);
-    KAssert.eqOptional('Clone should have same drag image data', getDragImage(original), getDragImage(clone));
-    originalDragImage.each((originalImage) =>
-      cloneDragImage.each((cloneImage) => assert.notStrictEqual(cloneImage, originalImage, 'Clone drag image should not have same reference as original')));
-
-    // Same files as original
-    const length = clone.files.length;
-    assert.strictEqual(length, original.files.length, 'Clone should have same number of files');
-    Arr.range(length, (i) => {
-      assert.deepEqual(clone.files.item(i), original.files.item(i), 'Clone should have same file');
-    });
+    assert.notStrictEqual(clone.files, original.files, 'Clone should not have same files reference as original');
   };
 
   it('TINY-9601: Can create clone of dataTransfer in read-write mode', () => testCloneDataTransfer(Mode.ReadWrite));
