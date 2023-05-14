@@ -2,8 +2,8 @@ import { Type } from '@ephox/katamari';
 
 import { isInReadWriteMode } from './Mode';
 
-export const normalizeItems = (dataTransfer: DataTransfer, itemsImpl: DataTransferItemList): DataTransferItemList => {
-  return {
+export const normalizeItems = (dataTransfer: DataTransfer, itemsImpl: DataTransferItemList): DataTransferItemList =>
+  ({
     ...itemsImpl,
 
     get length() {
@@ -34,5 +34,4 @@ export const normalizeItems = (dataTransfer: DataTransfer, itemsImpl: DataTransf
         itemsImpl.clear();
       }
     }
-  };
-};
+  });
