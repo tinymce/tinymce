@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ### Added
-- New `DataTransfer`, `DataTransferMode`, `Files`, and `FileList` APIs to handle creating and manipulating `DataTransfer` objects for the `DragEvent.dataTransfer` property. #TINY-9601
+- New `DataTransfer`, `DataTransferContent`, `DataTransferEvent`, and `DataTransferMode` APIs to handle creating and manipulating `DataTransfer` objects. #TINY-9601
 
 ## 7.1.0 - 2023-03-15
 
