@@ -1,3 +1,4 @@
+import { DragEventType } from '../core/DragEvent';
 import * as DataTransfer from './DataTransfer';
 import * as DataTransferContent from './DataTransferContent';
 import * as DataTransferDragEvent from './DataTransferDragEvent';
@@ -12,4 +13,8 @@ export {
   DragApis,
   Dragger,
   MouseDrag
+};
+
+export type {
+  DragEventType
 };

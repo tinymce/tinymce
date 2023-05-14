@@ -1,7 +1,3 @@
-import { makeDataTransferCopyForDragstart, makeDataTransferCopyForDrop, makeDataTransferCopyForDragEnd } from '../datatransfer/DragEvent';
+import { makeDataTransferCopyForDragEvent } from '../datatransfer/DragEvent';
 
-export {
-  makeDataTransferCopyForDragstart,
-  makeDataTransferCopyForDrop,
-  makeDataTransferCopyForDragEnd
-};
+export { makeDataTransferCopyForDragEvent };

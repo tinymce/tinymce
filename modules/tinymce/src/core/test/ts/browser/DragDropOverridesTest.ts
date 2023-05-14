@@ -73,7 +73,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
 
           const dtFiles = dataTransfer.files;
           if (spec.files.length === 0) {
-            assert.isUndefined(dtFiles.item(0), `Expected dataTransfer on "${eventType}" event to have no files`);
+            assert.isNull(dtFiles.item(0), `Expected dataTransfer on "${eventType}" event to have no files`);
           } else {
             Arr.each(spec.files, (specFile) => {
               let fileExists = false;

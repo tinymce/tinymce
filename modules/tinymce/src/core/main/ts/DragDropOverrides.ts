@@ -1,4 +1,4 @@
-import { DataTransfer } from '@ephox/dragster';
+import { DataTransfer, DataTransferContent, DataTransferDragEvent, DragEventType } from '@ephox/dragster';
 import { Arr, Optional, Singleton, Throttler, Type } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
@@ -32,16 +32,9 @@ const scrollIntervalValue = 100;
 const mouseRangeToTriggerScrollInsideEditor = 8;
 const mouseRangeToTriggerScrollOutsideEditor = 16;
 
-interface DataTransferManager {
-  getDataTransferCopy(): DataTransfer;
-  getDataTransferHtmlData(): string;
-  setDataTransferCopy(newDataTransfer: DataTransfer): void;
-  setDataTransferHtmlData(html: string): void;
-}
-
 interface State {
   element: HTMLElement;
-  dataTransferManager: DataTransferManager;
+  dataTransfer: DataTransfer;
   dragging: boolean;
   screenX: number;
   screenY: number;
@@ -69,26 +62,6 @@ const isValidDropTarget = (editor: Editor, targetElement: Node | null, dragEleme
   } else {
     return editor.dom.isEditable(targetElement);
   }
-};
-
-const createDataTransferManager = (): DataTransferManager => {
-  let dataTransfer: DataTransfer = DataTransfer.createDataTransfer();
-
-  return {
-    getDataTransferCopy: (): DataTransfer =>
-      DataTransfer.cloneDataTransfer(dataTransfer),
-
-    getDataTransferHtmlData: (): string =>
-      dataTransfer.getData('text/html'),
-
-    setDataTransferCopy: (newDataTransfer: DataTransfer): void => {
-      dataTransfer = DataTransfer.cloneDataTransfer(newDataTransfer);
-    },
-
-    setDataTransferHtmlData: (html: string): void => {
-      dataTransfer.setData('text/html', html);
-    }
-  };
 };
 
 const createGhost = (editor: Editor, elm: HTMLElement, width: number, height: number) => {
@@ -266,7 +239,7 @@ const start = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent
 
       state.set({
         element: ceElm,
-        dataTransferManager: createDataTransferManager(),
+        dataTransfer: DataTransfer.createDataTransfer(),
         dragging: false,
         screenX: e.screenX,
         screenY: e.screenY,
@@ -298,37 +271,15 @@ const placeCaretAt = (editor: Editor, clientX: number, clientY: number) => {
   );
 };
 
-const dispatchDragEvent = (editor: Editor, type: 'dragstart' | 'drop' | 'dragend', target: Element, dataTransferManager: DataTransferManager, mouseEvent?: EditorEvent<MouseEvent>): EditorEvent<DragEvent> => {
-  let event: DragEvent;
-  const isFromMouseEvent = !Type.isUndefined(mouseEvent);
-
+const dispatchDragEvent = (editor: Editor, type: DragEventType, target: Element, dataTransfer: DataTransfer, mouseEvent?: EditorEvent<MouseEvent>): EditorEvent<DragEvent> => {
   if (type === 'dragstart') {
-    dataTransferManager.setDataTransferHtmlData(editor.dom.getOuterHTML(target));
+    DataTransferContent.setHtmlData(dataTransfer, editor.dom.getOuterHTML(target));
   }
 
-  // TINY-9601: Get copy for each new event since original dataTransfer object can be mutated and cause unwanted behavior
-  const dataTransfer = dataTransferManager.getDataTransferCopy();
-
-  if (type === 'dragstart') {
-    // DataTransferMode.setReadWriteMode(dataTransfer);
-    event = isFromMouseEvent ? DragEvents.makeDragstartEventFromMouseEvent(mouseEvent, target, dataTransfer) : DragEvents.makeDragstartEvent(target, dataTransfer);
-  } else if (type === 'drop') {
-    // DataTransferMode.setReadOnlyMode(dataTransfer);
-    event = isFromMouseEvent ? DragEvents.makeDropEventFromMouseEvent(mouseEvent, target, dataTransfer) : DragEvents.makeDropEvent(target, dataTransfer);
-  } else {
-    // DataTransferMode.setProtectedMode(dataTransfer);
-    event = isFromMouseEvent ? DragEvents.makeDragendEventFromMouseEvent(mouseEvent, target, dataTransfer) : DragEvents.makeDragendEvent(target, dataTransfer);
-  }
-
+  // TINY-9601: Get copy for each new event to prevent undesired mutations on dispatched DataTransfer objects
+  const dataTransferForDispatch = DataTransferDragEvent.makeDataTransferCopyForDragEvent(dataTransfer, type);
+  const event = DragEvents.makeDragEvent(type, target, dataTransferForDispatch, mouseEvent);
   const args = editor.dispatch(type, event);
-
-  // TINY-9601: dataTransfer is writable in dragstart, so keep it up-to-date
-  if (type === 'dragstart') {
-    const updatedDataTransfer = args.dataTransfer;
-    if (!Type.isNull(updatedDataTransfer)) {
-      dataTransferManager.setDataTransferCopy(updatedDataTransfer);
-    }
-  }
 
   return args;
 };
@@ -343,7 +294,12 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
     const movement = Math.max(Math.abs(e.screenX - state.screenX), Math.abs(e.screenY - state.screenY));
 
     if (!state.dragging && movement > 10) {
-      const args = dispatchDragEvent(editor, 'dragstart', state.element, state.dataTransferManager, e);
+      const args = dispatchDragEvent(editor, 'dragstart', state.element, state.dataTransfer, e);
+      // TINY-9601: dataTransfer is writable in dragstart, so keep it up-to-date
+      if (Type.isNonNullable(args.dataTransfer)) {
+        state.dataTransfer = args.dataTransfer;
+      }
+
       if (args.isDefaultPrevented()) {
         return;
       }
@@ -380,24 +336,21 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
     if (state.dragging) {
       if (isValidDropTarget(editor, getRawTarget(editor.selection), state.element)) {
         const dropTarget = editor.getDoc().elementFromPoint(e.clientX, e.clientY) ?? editor.getBody();
-        const args = dispatchDragEvent(editor, 'drop', dropTarget, state.dataTransferManager, e);
+        const args = dispatchDragEvent(editor, 'drop', dropTarget, state.dataTransfer, e);
 
         if (!args.isDefaultPrevented()) {
           editor.undoManager.transact(() => {
             removeElementWithPadding(editor.dom, state.element);
             // TINY-9601: Use dataTransfer property to determine inserted content on drop. This allows users to
             // manipulate drop content by modifying dataTransfer in the dragstart event.
-            const content = state.dataTransferManager.getDataTransferHtmlData();
-            if (content !== '') {
-              editor.insertContent(content);
-            }
+            DataTransferContent.getHtmlData(state.dataTransfer).each((content) => editor.insertContent(content));
             editor._selectionOverrides.hideFakeCaret();
           });
         }
       }
 
       // Use body as the target since the element we are dragging no longer exists. Native drag/drop works in a similar way.
-      dispatchDragEvent(editor, 'dragend', editor.getBody(), state.dataTransferManager, e);
+      dispatchDragEvent(editor, 'dragend', editor.getBody(), state.dataTransfer, e);
     }
   });
 
@@ -409,8 +362,8 @@ const stopDragging = (state: Singleton.Value<State>, editor: Editor, e: Optional
     state.intervalId.clear();
     if (state.dragging) {
       e.fold(
-        () => dispatchDragEvent(editor, 'dragend', state.element, state.dataTransferManager),
-        (mouseEvent) => dispatchDragEvent(editor, 'dragend', state.element, state.dataTransferManager, mouseEvent)
+        () => dispatchDragEvent(editor, 'dragend', state.element, state.dataTransfer),
+        (mouseEvent) => dispatchDragEvent(editor, 'dragend', state.element, state.dataTransfer, mouseEvent)
       );
     }
   });

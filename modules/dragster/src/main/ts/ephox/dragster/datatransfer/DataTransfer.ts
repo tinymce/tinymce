@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
 
-import { DragEventType, getEventType, isInDragStartEvent, setEventType } from './DragEventType';
+import { getEventType, isInDragStartEvent, setEventType } from './DragEventType';
 import { getDragImage, setDragImage } from './DragImage';
 import { getMode, isInProtectedMode, isInReadWriteMode, Mode, setMode } from './Mode';
 
@@ -31,6 +31,8 @@ const createDataTransfer = (): DataTransfer => {
     },
 
     set effectAllowed(allowed: DataTransfer['effectAllowed']) {
+      // TINY-9601: Only allow setting effectAllowed to a valid value in a dragstart event
+      // https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/effectAllowed
       if (isInDragStartEvent(dataTransfer) && Arr.contains(validEffectAlloweds, allowed)) {
         effectAllowed = allowed;
       }
@@ -76,6 +78,8 @@ const createDataTransfer = (): DataTransfer => {
     }
   };
 
+  setMode(dataTransfer, Mode.ReadWrite);
+
   return dataTransfer;
 };
 
@@ -89,7 +93,7 @@ const cloneDataTransfer = (original: DataTransfer): DataTransfer => {
   setMode(original, Mode.ReadOnly);
 
   // Set clone event to dragstart to ensure effectAllowed can be set
-  setEventType(clone, DragEventType.dragstart);
+  setEventType(clone, 'dragstart');
 
   clone.dropEffect = original.dropEffect;
   clone.effectAllowed = original.effectAllowed;

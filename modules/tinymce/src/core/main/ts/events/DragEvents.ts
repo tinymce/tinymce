@@ -1,17 +1,18 @@
-import { Fun } from '@ephox/katamari';
+import { DragEventType } from '@ephox/dragster';
+import { Fun, Type } from '@ephox/katamari';
 
 import { EditorEvent } from '../api/util/EventDispatcher';
 
 const getTargetProps = (target: Element) => ({ target, srcElement: target });
 
-const makeDndEventFromMouseEvent = (type: string, mouseEvent: EditorEvent<MouseEvent>, target: Element, dataTransfer: DataTransfer): DragEvent => ({
+const makeDndEventFromMouseEvent = (type: DragEventType, mouseEvent: EditorEvent<MouseEvent>, target: Element, dataTransfer: DataTransfer): DragEvent => ({
   ...mouseEvent,
   dataTransfer,
   type,
   ...getTargetProps(target)
 });
 
-const makeDndEvent = (type: string, target: Element, dataTransfer: DataTransfer): DragEvent => {
+const makeDndEvent = (type: DragEventType, target: Element, dataTransfer: DataTransfer): DragEvent => {
   const fail = Fun.die('Function not supported on simulated event.');
 
   const event: DragEvent = {
@@ -73,15 +74,5 @@ const makeDndEvent = (type: string, target: Element, dataTransfer: DataTransfer)
   return event;
 };
 
-const dndEvent = (type: string) => (target: Element, dataTransfer: DataTransfer): DragEvent => makeDndEvent(type, target, dataTransfer);
-const dndEventFromMouseEvent = (type: string) => (mouseEvent: EditorEvent<MouseEvent>, target: Element, dataTransfer: DataTransfer): DragEvent =>
-  makeDndEventFromMouseEvent(type, mouseEvent, target, dataTransfer);
-
-export const makeDragstartEvent = dndEvent('dragstart');
-export const makeDragstartEventFromMouseEvent = dndEventFromMouseEvent('dragstart');
-
-export const makeDropEvent = dndEvent('drop');
-export const makeDropEventFromMouseEvent = dndEventFromMouseEvent('drop');
-
-export const makeDragendEvent = dndEvent('dragend');
-export const makeDragendEventFromMouseEvent = dndEventFromMouseEvent('dragend');
+export const makeDragEvent = (type: DragEventType, target: Element, dataTransfer: DataTransfer, mouseEvent?: EditorEvent<MouseEvent>): DragEvent =>
+  Type.isUndefined(mouseEvent) ? makeDndEvent(type, target, dataTransfer) : makeDndEventFromMouseEvent(type, mouseEvent, target, dataTransfer);
