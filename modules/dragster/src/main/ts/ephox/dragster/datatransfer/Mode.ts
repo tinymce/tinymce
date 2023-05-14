@@ -1,6 +1,6 @@
 import { Id, Optional } from '@ephox/katamari';
 
-export const enum DtMode {
+export const enum Mode {
   ReadWrite,
   Protected,
   ReadOnly
@@ -8,28 +8,37 @@ export const enum DtMode {
 
 const modeId = Id.generate('mode');
 
-const getMode = (transfer: DataTransfer): Optional<DtMode> => {
+const getMode = (transfer: DataTransfer): Optional<Mode> => {
   const dt: any = transfer;
   return Optional.from(dt[modeId]);
 };
 
-const setMode = (transfer: DataTransfer, mode: DtMode): void => {
+const mkSetModeFn = (mode: Mode) => (transfer: DataTransfer): void => {
   const dt: any = transfer;
   dt[modeId] = mode;
 };
 
-const checkMode = (expectedMode: DtMode) => (transfer: DataTransfer): boolean => {
+const setMode = (transfer: DataTransfer, mode: Mode): void => mkSetModeFn(mode)(transfer);
+
+const setReadWriteMode = mkSetModeFn(Mode.ReadWrite);
+const setReadOnlyMode = mkSetModeFn(Mode.ReadOnly);
+const setProtectedMode = mkSetModeFn(Mode.Protected);
+
+const checkMode = (expectedMode: Mode) => (transfer: DataTransfer): boolean => {
   const dt: any = transfer;
   return Optional.from(dt[modeId]).exists((mode) => mode === expectedMode);
 };
 
-const isInReadWriteMode = checkMode(DtMode.ReadWrite);
-const isInProtectedMode = checkMode(DtMode.Protected);
-const isInReadOnlyMode = checkMode(DtMode.ReadOnly);
+const isInReadWriteMode = checkMode(Mode.ReadWrite);
+const isInProtectedMode = checkMode(Mode.Protected);
+const isInReadOnlyMode = checkMode(Mode.ReadOnly);
 
 export {
   getMode,
   setMode,
+  setReadWriteMode,
+  setReadOnlyMode,
+  setProtectedMode,
   isInReadWriteMode,
   isInProtectedMode,
   isInReadOnlyMode

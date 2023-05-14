@@ -1,4 +1,4 @@
-import { DataTransfer, DataTransferEvent, DataTransferMode, DtEvent, DtMode } from '@ephox/dragster';
+import { DataTransfer, DataTransferEvent, DataTransferMode } from '@ephox/dragster';
 import { Fun, Type } from '@ephox/katamari';
 
 import { EditorEvent } from '../api/util/EventDispatcher';
@@ -80,14 +80,14 @@ const makeDataTransferCopyForDragEvent = (dataTransfer: DataTransfer, eventType:
   const copy = DataTransfer.cloneDataTransfer(dataTransfer);
   // TINY-9601: Set mode as per https://html.spec.whatwg.org/dev/dnd.html#concept-dnd-rw
   if (eventType === 'dragstart') {
-    DataTransferEvent.setEventType(copy, DtEvent.Dragstart);
-    DataTransferMode.setMode(copy, DtMode.ReadWrite);
+    DataTransferEvent.setDragstartEvent(copy);
+    DataTransferMode.setReadWriteMode(copy);
   } else if (eventType === 'drop') {
-    DataTransferEvent.setEventType(copy, DtEvent.Drop);
-    DataTransferMode.setMode(copy, DtMode.ReadOnly);
+    DataTransferEvent.setDropEvent(copy);
+    DataTransferMode.setReadOnlyMode(copy);
   } else {
-    DataTransferEvent.setEventType(copy, DtEvent.Dragend);
-    DataTransferMode.setMode(copy, DtMode.Protected);
+    DataTransferEvent.setDragendEvent(copy);
+    DataTransferMode.setProtectedMode(copy);
   }
   return copy;
 };

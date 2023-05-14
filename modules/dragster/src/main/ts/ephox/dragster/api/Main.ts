@@ -1,5 +1,3 @@
-import { DtEvent } from '../datatransfer/EventType';
-import { DtMode } from '../datatransfer/Mode';
 import * as DataTransfer from './DataTransfer';
 import * as DataTransferContent from './DataTransferContent';
 import * as DataTransferEvent from './DataTransferEvent';
@@ -15,7 +13,5 @@ export {
   DataTransferEvent,
   DragApis,
   Dragger,
-  MouseDrag,
-  DtMode,
-  DtEvent
+  MouseDrag
 };

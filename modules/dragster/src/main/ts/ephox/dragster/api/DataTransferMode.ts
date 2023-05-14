@@ -1,8 +1,9 @@
-import { getMode, setMode, isInReadWriteMode, isInReadOnlyMode, isInProtectedMode } from '../datatransfer/Mode';
+import { setReadWriteMode, setReadOnlyMode, setProtectedMode, isInReadWriteMode, isInReadOnlyMode, isInProtectedMode } from '../datatransfer/Mode';
 
 export {
-  getMode,
-  setMode,
+  setReadWriteMode,
+  setReadOnlyMode,
+  setProtectedMode,
   isInReadWriteMode,
   isInReadOnlyMode,
   isInProtectedMode

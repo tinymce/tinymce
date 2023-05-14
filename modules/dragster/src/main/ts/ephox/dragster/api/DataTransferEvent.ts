@@ -1,8 +1,9 @@
-import { getEventType, setEventType, isInDragStartEvent, isInDropEvent, isInDragEndEvent } from '../datatransfer/EventType';
+import { setDragstartEvent, setDropEvent, setDragendEvent, isInDragStartEvent, isInDropEvent, isInDragEndEvent } from '../datatransfer/Event';
 
 export {
-  getEventType,
-  setEventType,
+  setDragstartEvent,
+  setDropEvent,
+  setDragendEvent,
   isInDragStartEvent,
   isInDropEvent,
   isInDragEndEvent

@@ -1,6 +1,6 @@
 import { Assertions, DragnDrop, Keyboard, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { DataTransfer, DataTransferMode, DtMode } from '@ephox/dragster';
+import { DataTransfer, DataTransferMode } from '@ephox/dragster';
 import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import { PlatformDetection } from '@ephox/sand';
@@ -63,7 +63,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
           } else {
             assert.isTrue(DataTransferMode.isInProtectedMode(dataTransfer), `Expected dataTransfer of ${eventType} event to be in protected mode`);
             // Temporarily set to readonly to allow checking of data
-            DataTransferMode.setMode(dataTransfer, DtMode.ReadOnly);
+            DataTransferMode.setReadOnlyMode(dataTransfer);
           }
 
           Arr.each(spec.data, ({ type, value }) => assert.equal(dataTransfer.getData(type), value, `Expected dataTransfer on "${eventType}" event to have ${type} data`));
@@ -89,7 +89,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
           }
 
           if (eventType === 'dragend') {
-            DataTransferMode.setMode(dataTransfer, DtMode.Protected);
+            DataTransferMode.setProtectedMode(dataTransfer);
           }
         }
       );
@@ -377,8 +377,8 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       assert.equal(dragendDataTransfer.getData('text/html'), '', 'dragend dataTransfer should not retrieve any data as it is in protected mode');
 
       // Change drop & dragend datatransfer from protected to read-write for testing
-      DataTransferMode.setMode(dropDataTransfer, DtMode.ReadWrite);
-      DataTransferMode.setMode(dragendDataTransfer, DtMode.ReadWrite);
+      DataTransferMode.setReadWriteMode(dropDataTransfer);
+      DataTransferMode.setReadWriteMode(dragendDataTransfer);
 
       // Test string data
       const initialHtmlData = dropDataTransfer.getData('text/html');
