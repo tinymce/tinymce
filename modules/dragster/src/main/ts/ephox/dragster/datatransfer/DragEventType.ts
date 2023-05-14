@@ -8,12 +8,12 @@ export const enum DragEventType {
   dragend
 }
 
-const getEvent = (transfer: DataTransfer): Optional<DragEventType> => {
+const getEventType = (transfer: DataTransfer): Optional<DragEventType> => {
   const dt: any = transfer;
   return Optional.from(dt[eventId]);
 };
 
-const setEvent = (transfer: DataTransfer, event: DragEventType): void => {
+const setEventType = (transfer: DataTransfer, event: DragEventType): void => {
   const dt: any = transfer;
   dt[eventId] = event;
 };
@@ -28,8 +28,8 @@ const isInDropEvent = checkEvent(DragEventType.drop);
 const isInDragEndEvent = checkEvent(DragEventType.dragend);
 
 export {
-  getEvent,
-  setEvent,
+  getEventType,
+  setEventType,
   isInDragStartEvent,
   isInDropEvent,
   isInDragEndEvent

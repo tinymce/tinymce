@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
 
+import { DragEventType, getEventType, isInDragStartEvent, setEventType } from './DragEventType';
 import { getDragImage, setDragImage } from './DragImage';
-import { DragEventType, getEvent, isInDragStartEvent, setEvent } from './Event';
 import { getMode, isInProtectedMode, isInReadWriteMode, Mode, setMode } from './Mode';
 
 type DropEffect = DataTransfer['dropEffect'];
@@ -89,7 +89,7 @@ const cloneDataTransfer = (original: DataTransfer): DataTransfer => {
   setMode(original, Mode.ReadOnly);
 
   // Set clone event to dragstart to ensure effectAllowed can be set
-  setEvent(clone, DragEventType.dragstart);
+  setEventType(clone, DragEventType.dragstart);
 
   clone.dropEffect = original.dropEffect;
   clone.effectAllowed = original.effectAllowed;
@@ -106,8 +106,8 @@ const cloneDataTransfer = (original: DataTransfer): DataTransfer => {
   Arr.each(original.files, (file) => clone.items.add(file));
 
   // Set event
-  getEvent(original).each((event) => {
-    setEvent(clone, event);
+  getEventType(original).each((event) => {
+    setEventType(clone, event);
   });
 
   // Set mode

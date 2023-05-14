@@ -3,7 +3,7 @@ import { KAssert } from '@ephox/katamari-assertions';
 import { assert } from 'chai';
 
 import { cloneDataTransfer, createDataTransfer, getDragImage } from 'ephox/dragster/datatransfer/DataTransfer';
-import { DragEventType, getEvent, setEvent } from 'ephox/dragster/datatransfer/Event';
+import { DragEventType, getEventType, setEventType } from 'ephox/dragster/datatransfer/DragEventType';
 import { getMode, Mode, setMode } from 'ephox/dragster/datatransfer/Mode';
 
 describe('atomic.dragster.datatransfer.DataTransferCloneTest', () => {
@@ -22,7 +22,7 @@ describe('atomic.dragster.datatransfer.DataTransferCloneTest', () => {
     setMode(dataTransfer, Mode.ReadWrite);
 
     // set some test data
-    setEvent(dataTransfer, DragEventType.dragstart);
+    setEventType(dataTransfer, DragEventType.dragstart);
     dataTransfer.dropEffect = 'copy';
     dataTransfer.effectAllowed = 'copy';
     dataTransfer.setData('text/plain', '123');
@@ -40,7 +40,7 @@ describe('atomic.dragster.datatransfer.DataTransferCloneTest', () => {
   const assertTestDataTransfer = (dataTransfer: DataTransfer, isClone: boolean) => {
     const normalizeLabel = (label: string): string => `${isClone ? 'Clone' : 'Original'} ${label}`;
 
-    KAssert.eqSome(normalizeLabel('should have expected event'), DragEventType.dragstart, getEvent(dataTransfer));
+    KAssert.eqSome(normalizeLabel('should have expected event'), DragEventType.dragstart, getEventType(dataTransfer));
     assert.strictEqual(dataTransfer.dropEffect, 'copy', normalizeLabel('should have expected dropEffect'));
     assert.strictEqual(dataTransfer.effectAllowed, 'copy', normalizeLabel('should have expected effectAllowed'));
     assert.strictEqual(dataTransfer.getData('text/plain'), '123', normalizeLabel('should have expected text/plain data'));
