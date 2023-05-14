@@ -84,7 +84,7 @@ describe('atomic.dragster.datatransfer.DataTransferTest', () => {
 
       transfer.setData('text/plain', 'World');
       assert.strictEqual(transfer.getData('text/plain'), 'World', 'Should be expected plain text after overwriting original plain text data');
-      assert.strictEqual(transfer.items[1].type, 'text/plain', 'Should be expected plain text type after overwriting original plain text data');
+      assert.strictEqual(browser.isFirefox() ? transfer.items[0].type : transfer.items[1].type, 'text/plain', 'Should be expected plain text type after overwriting original plain text data');
 
       transfer.setData('text/uri-list', 'http://tiny.cloud/');
       assert.strictEqual(transfer.getData('url'), 'http://tiny.cloud/', 'Should be expected url');
@@ -180,7 +180,7 @@ describe('atomic.dragster.datatransfer.DataTransferTest', () => {
   });
 
   context('clearData', () => {
-    it('TINY-9601: clearData should clear all data', () => {
+    it('TINY-9601: clearData should clear data as expected', () => {
       const transfer = createDataTransfer();
 
       transfer.setData('text/plain', 'Hello');
@@ -192,10 +192,21 @@ describe('atomic.dragster.datatransfer.DataTransferTest', () => {
       assert.strictEqual(transfer.types.length, 4, 'Should have some types');
       assert.strictEqual(transfer.files.length, 2, 'Shoujld have some files');
 
-      transfer.clearData();
+      transfer.clearData('text/plain');
+      assert.strictEqual(transfer.getData('text/plain'), '', 'Should have cleared text/plain data');
+      assert.strictEqual(transfer.types.length, 3, 'Should have one less type');
+      assert.strictEqual(transfer.files.length, 2, 'Should have same number of files');
 
-      assert.strictEqual(transfer.types.length, 0, 'Should have no types');
-      assert.strictEqual(transfer.files.length, 0, 'Should have no files');
+      transfer.clearData();
+      if (browser.isFirefox()) {
+        // Firefox follows the spec where clearData does not remove files
+        // https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/clearData
+        assert.deepEqual(transfer.types, [ 'Files' ], 'Should have Files type remaining');
+        assert.strictEqual(transfer.files.length, 2, 'Files should not have been cleared');
+      } else {
+        assert.strictEqual(transfer.types.length, 0, 'Should have no types');
+        assert.strictEqual(transfer.files.length, 0, 'Should have no files');
+      }
     });
   });
 });
