@@ -1,5 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { KAssert } from '@ephox/katamari-assertions';
+import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
 
 import { cloneDataTransfer, createDataTransfer, getDragImage } from 'ephox/dragster/datatransfer/DataTransfer';
@@ -46,7 +47,9 @@ describe('atomic.dragster.datatransfer.DataTransferCloneTest', () => {
     assert.strictEqual(dataTransfer.getData('text/plain'), '123', normalizeLabel('should have expected text/plain data'));
     assert.strictEqual(dataTransfer.getData('text/html'), '<p>123</p>', normalizeLabel('should have expected text/html data'));
     KAssert.eqSome(normalizeLabel('should have expected drag image'), dragImage, getDragImage(dataTransfer));
-    assert.deepEqual(dataTransfer.types, [ 'text/plain', 'text/html', 'Files' ], normalizeLabel('should have expected types'));
+    assert.deepEqual(dataTransfer.types,
+      PlatformDetection.detect().browser.isSafari() ? [ 'Files', 'text/plain', 'text/html' ] : [ 'text/plain', 'text/html', 'Files' ],
+      normalizeLabel('should have expected types'));
     const files = dataTransfer.files;
     assert.strictEqual(files.length, 2, normalizeLabel('should have expected number of files'));
     assert.deepEqual(files.item(0), testFile1, normalizeLabel('should have expected file 1'));
