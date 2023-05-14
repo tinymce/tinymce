@@ -165,17 +165,15 @@ describe('atomic.dragster.datatransfer.DataTransferTest', () => {
       transfer.setData('text/uri-list', 'http://tiny.cloud/');
       assert.equal(transfer.files.length, 0, 'Should have no files after adding url');
 
-      transfer.items.add(new window.File([ 'Lorem ipsum' ], 'file.txt', { type: 'text/plain', lastModified: 123 }));
+      const testFile1 = new window.File([ 'Lorem ipsum' ], 'file1.txt', { type: 'text/plain', lastModified: 123 });
+      transfer.items.add(testFile1);
       assert.equal(transfer.files.length, 1, 'Should be expected length');
-      assert.equal(transfer.files[0].name, 'file.txt', 'Should be expected name');
-      assert.equal(transfer.files[0].type, 'text/plain', 'Should be expected type');
-      assert.equal(transfer.files[0].lastModified, 123, 'Should be expected lastModified');
+      assert.deepEqual(transfer.files.item(0), testFile1, 'Should be expected file 1');
 
-      transfer.items.add(new window.File([ '<p>Lorem ipsum</p>' ], 'file2.txt', { type: 'text/html', lastModified: 456 }));
+      const testFile2 = new window.File([ '<p>Lorem ipsum</p>' ], 'file2.txt', { type: 'text/html', lastModified: 456 });
+      transfer.items.add(testFile2);
       assert.equal(transfer.files.length, 2, 'Should be expected length');
-      assert.equal(transfer.files[1].name, 'file2.txt', 'Should be expected name');
-      assert.equal(transfer.files[1].type, 'text/html', 'Should be expected type');
-      assert.equal(transfer.files[1].lastModified, 456, 'Should be expected lastModified');
+      assert.deepEqual(transfer.files.item(1), testFile2, 'Should be expected file 2');
 
       assert.deepEqual(Arr.map(transfer.items, (x) => x.kind), [ 'string', 'string', 'string', 'file', 'file' ], 'Should have expected kinds at the end');
     });
