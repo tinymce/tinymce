@@ -1,13 +1,8 @@
 import { Arr } from '@ephox/katamari';
 
 const createFileList = (inputFiles: File[]): FileList => {
-  const files: {
-    length: number;
-    item: (idx: number) => File;
-    [key: number]: File;
-  } = {
+  const files: FileList = {
     length: inputFiles.length,
-
     item: (idx: number) => inputFiles[idx]
   };
 
