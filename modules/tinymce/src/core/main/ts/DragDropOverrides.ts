@@ -1,4 +1,4 @@
-import { DataTransfer, DataTransferContent, DataTransferDragEvent, DragEventType } from '@ephox/dragster';
+import { DataTransfer, DataTransferContent } from '@ephox/dragster';
 import { Arr, Optional, Singleton, Throttler, Type } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
@@ -271,14 +271,12 @@ const placeCaretAt = (editor: Editor, clientX: number, clientY: number) => {
   );
 };
 
-const dispatchDragEvent = (editor: Editor, type: DragEventType, target: Element, dataTransfer: DataTransfer, mouseEvent?: EditorEvent<MouseEvent>): EditorEvent<DragEvent> => {
+const dispatchDragEvent = (editor: Editor, type: DragEvents.DragEventType, target: Element, dataTransfer: DataTransfer, mouseEvent?: EditorEvent<MouseEvent>): EditorEvent<DragEvent> => {
   if (type === 'dragstart') {
     DataTransferContent.setHtmlData(dataTransfer, editor.dom.getOuterHTML(target));
   }
 
-  // TINY-9601: Get copy for each new event to prevent undesired mutations on dispatched DataTransfer objects
-  const dataTransferForDispatch = DataTransferDragEvent.makeDataTransferCopyForDragEvent(dataTransfer, type);
-  const event = DragEvents.makeDragEvent(type, target, dataTransferForDispatch, mouseEvent);
+  const event = DragEvents.makeDragEvent(type, target, dataTransfer, mouseEvent);
   const args = editor.dispatch(type, event);
 
   return args;

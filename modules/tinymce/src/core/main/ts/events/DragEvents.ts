@@ -1,7 +1,9 @@
-import { DragEventType } from '@ephox/dragster';
+import { DataTransfer, DataTransferEvent, DataTransferMode, DtEvent, DtMode } from '@ephox/dragster';
 import { Fun, Type } from '@ephox/katamari';
 
 import { EditorEvent } from '../api/util/EventDispatcher';
+
+export type DragEventType = 'dragstart' | 'drop' | 'dragend';
 
 const getTargetProps = (target: Element) => ({ target, srcElement: target });
 
@@ -74,5 +76,24 @@ const makeDndEvent = (type: DragEventType, target: Element, dataTransfer: DataTr
   return event;
 };
 
-export const makeDragEvent = (type: DragEventType, target: Element, dataTransfer: DataTransfer, mouseEvent?: EditorEvent<MouseEvent>): DragEvent =>
-  Type.isUndefined(mouseEvent) ? makeDndEvent(type, target, dataTransfer) : makeDndEventFromMouseEvent(type, mouseEvent, target, dataTransfer);
+const makeDataTransferCopyForDragEvent = (dataTransfer: DataTransfer, eventType: DragEventType): DataTransfer => {
+  const copy = DataTransfer.cloneDataTransfer(dataTransfer);
+  // TINY-9601: Set mode as per https://html.spec.whatwg.org/dev/dnd.html#concept-dnd-rw
+  if (eventType === 'dragstart') {
+    DataTransferEvent.setEventType(copy, DtEvent.Dragstart);
+    DataTransferMode.setMode(copy, DtMode.ReadWrite);
+  } else if (eventType === 'drop') {
+    DataTransferEvent.setEventType(copy, DtEvent.Drop);
+    DataTransferMode.setMode(copy, DtMode.ReadOnly);
+  } else {
+    DataTransferEvent.setEventType(copy, DtEvent.Dragend);
+    DataTransferMode.setMode(copy, DtMode.Protected);
+  }
+  return copy;
+};
+
+export const makeDragEvent = (type: DragEventType, target: Element, dataTransfer: DataTransfer, mouseEvent?: EditorEvent<MouseEvent>): DragEvent => {
+  // TINY-9601: Get copy for each new event to prevent undesired mutations on dispatched DataTransfer objects
+  const dataTransferForDispatch = makeDataTransferCopyForDragEvent(dataTransfer, type);
+  return Type.isUndefined(mouseEvent) ? makeDndEvent(type, target, dataTransferForDispatch) : makeDndEventFromMouseEvent(type, mouseEvent, target, dataTransferForDispatch);
+};

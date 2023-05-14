@@ -1,6 +1,6 @@
 import { Assertions, DragnDrop, Keyboard, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { DataTransfer } from '@ephox/dragster';
+import { DataTransfer, DataTransferMode, DtMode } from '@ephox/dragster';
 import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import { PlatformDetection } from '@ephox/sand';
@@ -57,13 +57,13 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
         () => assert.fail(`Expected ${eventType} event to have dataTransfer object`),
         (dataTransfer) => {
           if (eventType === 'dragstart') {
-            // assert.isTrue(DataTransferMode.isInReadWriteMode(dataTransfer), `Expected dataTransfer of ${eventType} to be in readwrite mode`);
+            assert.isTrue(DataTransferMode.isInReadWriteMode(dataTransfer), `Expected dataTransfer of ${eventType} to be in readwrite mode`);
           } else if (eventType === 'drop') {
-            // assert.isTrue(DataTransferMode.isInReadOnlyMode(dataTransfer), `Expected dataTransfer of ${eventType} event to be in readonly mode`);
+            assert.isTrue(DataTransferMode.isInReadOnlyMode(dataTransfer), `Expected dataTransfer of ${eventType} event to be in readonly mode`);
           } else {
-            // assert.isTrue(DataTransferMode.isInProtectedMode(dataTransfer), `Expected dataTransfer of ${eventType} event to be in protected mode`);
+            assert.isTrue(DataTransferMode.isInProtectedMode(dataTransfer), `Expected dataTransfer of ${eventType} event to be in protected mode`);
             // Temporarily set to readonly to allow checking of data
-            // DataTransferMode.setReadOnlyMode(dataTransfer);
+            DataTransferMode.setMode(dataTransfer, DtMode.ReadOnly);
           }
 
           Arr.each(spec.data, ({ type, value }) => assert.equal(dataTransfer.getData(type), value, `Expected dataTransfer on "${eventType}" event to have ${type} data`));
@@ -89,7 +89,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
           }
 
           if (eventType === 'dragend') {
-            // DataTransferMode.setProtectedMode(dataTransfer);
+            DataTransferMode.setMode(dataTransfer, DtMode.Protected);
           }
         }
       );
@@ -288,9 +288,10 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
         x: 10,
         y: 20
       };
-      const testFile = createFile('test.txt', 123, new Blob([ 'content' ], { type: 'text/plain' }));
-
+      const testFile1 = new window.File([ 'Lorem ipsum' ], 'test.txt', { type: 'text/plain' });
+      const testFile2 = new window.File([ '<p>Lorem ipsum</p>' ], 'test2.html', { type: 'text/html' });
       const newHtmlData = '<p contenteditable="false">test</p>';
+
       const dragstartCallback = (e: DragEvent) => {
         const dataTransfer = e.dataTransfer;
         if (!Type.isNull(dataTransfer)) {
@@ -299,7 +300,8 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
           dataTransfer.setData('text/html', newHtmlData);
           dataTransfer.setData('text/plain', 'test');
           dataTransfer.setDragImage(testImage.image, testImage.x, testImage.y);
-          dataTransfer.items.add(testFile);
+          dataTransfer.items.add(testFile1);
+          dataTransfer.items.add(testFile2);
         }
       };
 
@@ -313,7 +315,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
         dragImage: testImage,
         dropEffect: 'copy',
         effectAllowed: 'copy',
-        files: [ testFile ],
+        files: [ testFile1, testFile2 ],
       });
 
       TinyAssertions.assertContent(editor, `<p class="dest">bc</p>${newHtmlData}<p class="dest">123</p>`);
@@ -366,17 +368,17 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       assert.notStrictEqual(dropDataTransfer, dragendDataTransfer, 'drop and dragend dataTransfer objects should not share references');
 
       // Ensure modes are as expected and have not been unexpected mutated as drag events are dispatched
-      // assert.isTrue(DataTransferMode.isInReadWriteMode(dragstartDataTransfer), 'dragstart dataTransfer should be in read-write mode');
-      // assert.isTrue(DataTransferMode.isInReadOnlyMode(dropDataTransfer), 'drop dataTransfer should be in read-only mode');
-      // assert.isTrue(DataTransferMode.isInProtectedMode(dragendDataTransfer), 'dragend dataTransfer should be in protected mode');
+      assert.isTrue(DataTransferMode.isInReadWriteMode(dragstartDataTransfer), 'dragstart dataTransfer should be in read-write mode');
+      assert.isTrue(DataTransferMode.isInReadOnlyMode(dropDataTransfer), 'drop dataTransfer should be in read-only mode');
+      assert.isTrue(DataTransferMode.isInProtectedMode(dragendDataTransfer), 'dragend dataTransfer should be in protected mode');
 
       // Ensure scopes are not shared between dataTransfer objects. If scopes are shared then data
       // could be retrieved from dragend dataTransfer even though it is in protected mode.
       assert.equal(dragendDataTransfer.getData('text/html'), '', 'dragend dataTransfer should not retrieve any data as it is in protected mode');
 
       // Change drop & dragend datatransfer from protected to read-write for testing
-      // DataTransferMode.setReadWriteMode(dropDataTransfer);
-      // DataTransferMode.setReadWriteMode(dragendDataTransfer);
+      DataTransferMode.setMode(dropDataTransfer, DtMode.ReadWrite);
+      DataTransferMode.setMode(dragendDataTransfer, DtMode.ReadWrite);
 
       // Test string data
       const initialHtmlData = dropDataTransfer.getData('text/html');
@@ -438,23 +440,23 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       KAssert.eqSome('dragend dataTransfer should have image data', testImage3, DataTransfer.getDragImage(dragendDataTransfer));
 
       // Test file data
-      assert.isUndefined(dragstartDataTransfer.files.item(0), 'dragstart dataTransfer should initially have no file data');
-      assert.isUndefined(dropDataTransfer.files.item(0), 'drop dataTransfer should initially have no file data');
-      assert.isUndefined(dragendDataTransfer.files.item(0), 'dragend dataTransfer should initially have no file data');
+      assert.isNull(dragstartDataTransfer.files.item(0), 'dragstart dataTransfer should initially have no file data');
+      assert.isNull(dropDataTransfer.files.item(0), 'drop dataTransfer should initially have no file data');
+      assert.isNull(dragendDataTransfer.files.item(0), 'dragend dataTransfer should initially have no file data');
 
-      const testFile1 = createFile('test.txt', 123, new Blob([ 'content' ], { type: 'text/plain' }));
+      const testFile1 = new window.File([ 'Lorem ipsum' ], 'test.txt', { type: 'text/plain' });
       dragstartDataTransfer.items.add(testFile1);
       assert.deepEqual(dragstartDataTransfer.files.item(0), testFile1, 'dragstart dataTransfer should retrieve added file 1');
-      assert.isUndefined(dropDataTransfer.files.item(0), 'drop dataTransfer should still have no file data');
-      assert.isUndefined(dragendDataTransfer.files.item(0), 'dragend dataTransfer should still have no file data');
+      assert.isNull(dropDataTransfer.files.item(0), 'drop dataTransfer should still have no file data');
+      assert.isNull(dragendDataTransfer.files.item(0), 'dragend dataTransfer should still have no file data');
 
-      const testFile2 = createFile('test2.txt', 456, new Blob([ 'content2' ], { type: 'text/plain' }));
+      const testFile2 = new window.File([ '<p>Lorem ipsum</p>' ], 'test2.html', { type: 'text/html' });
       dropDataTransfer.items.add(testFile2);
       assert.deepEqual(dragstartDataTransfer.files.item(0), testFile1, 'dragstart dataTransfer should retrieve added file 1');
       assert.deepEqual(dropDataTransfer.files.item(0), testFile2, 'drop dataTransfer should retrieve added file 2');
-      assert.isUndefined(dragendDataTransfer.files.item(0), 'dragend dataTransfer should still have no file data');
+      assert.isNull(dragendDataTransfer.files.item(0), 'dragend dataTransfer should still have no file data');
 
-      const testFile3 = createFile('test3.txt', 789, new Blob([ 'content3' ], { type: 'text/plain' }));
+      const testFile3 = new window.File([ 'Lorem ipsum' ], 'test3.rtf', { type: 'text/rtf' });
       dragendDataTransfer.items.add(testFile3);
       assert.deepEqual(dragstartDataTransfer.files.item(0), testFile1, 'dragstart dataTransfer should retrieve added file 1');
       assert.deepEqual(dropDataTransfer.files.item(0), testFile2, 'drop dataTransfer should retrieve added file 2');
