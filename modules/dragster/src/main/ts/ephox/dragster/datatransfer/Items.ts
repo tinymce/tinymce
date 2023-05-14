@@ -10,28 +10,29 @@ export const normalizeItems = (dataTransfer: DataTransfer, itemsImpl: DataTransf
       return itemsImpl.length;
     },
 
-    add: (data: string | File, type?: string) => {
+    add: (data: string | File, type?: string): DataTransferItem | null => {
       if (isInReadWriteMode(dataTransfer)) {
         if (Type.isString(data)) {
           if (!Type.isUndefined(type)) {
-            itemsImpl.add(data, type);
+            return itemsImpl.add(data, type);
           }
         } else {
-          itemsImpl.add(data);
+          return itemsImpl.add(data);
         }
       }
+      return null;
     },
 
-    remove: (idx: number) => {
+    remove: (idx: number): void => {
       if (isInReadWriteMode(dataTransfer)) {
         itemsImpl.remove(idx);
       }
     },
 
-    clear: () => {
+    clear: (): void => {
       if (isInReadWriteMode(dataTransfer)) {
         itemsImpl.clear();
       }
     }
-  } as unknown as DataTransferItemList;
+  };
 };
