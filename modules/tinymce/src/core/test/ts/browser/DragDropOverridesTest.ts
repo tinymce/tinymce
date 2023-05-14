@@ -62,7 +62,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
             assert.isTrue(DataTransferMode.isInReadOnlyMode(dataTransfer), `Expected dataTransfer of ${eventType} event to be in readonly mode`);
           } else {
             assert.isTrue(DataTransferMode.isInProtectedMode(dataTransfer), `Expected dataTransfer of ${eventType} event to be in protected mode`);
-            // Temporarily set to readonly to allow checking of data
+            // Temporarily set to read-only to allow checking of data
             DataTransferMode.setReadOnlyMode(dataTransfer);
           }
 
