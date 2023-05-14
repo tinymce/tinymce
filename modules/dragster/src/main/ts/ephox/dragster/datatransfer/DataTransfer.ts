@@ -2,6 +2,8 @@ import { Arr } from '@ephox/katamari';
 
 import { getDragImage, setDragImage } from './DragImage';
 import { getEvent, isInDragStartEvent, setDragstartEvent, setEvent } from './Event';
+import { createEmptyFileList } from './Files';
+import { normalizeItems } from './Items';
 import { getMode, isInProtectedMode, isInReadWriteMode, setMode, setReadOnlyMode, setReadWriteMode } from './Mode';
 
 type DropEffect = DataTransfer['dropEffect'];
@@ -39,11 +41,15 @@ const createDataTransfer = (): DataTransfer => {
     },
 
     get items() {
-      return dataTransferImpl.items;
+      return normalizeItems(dataTransfer, dataTransferImpl.items);
     },
 
     get files() {
-      return dataTransferImpl.files;
+      if (isInProtectedMode(dataTransfer)) {
+        return createEmptyFileList();
+      } else {
+        return dataTransferImpl.files;
+      }
     },
 
     get types() {
