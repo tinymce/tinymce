@@ -178,4 +178,24 @@ describe('atomic.dragster.datatransfer.DataTransferTest', () => {
       assert.deepEqual(Arr.map(transfer.items, (x) => x.kind), [ 'string', 'string', 'string', 'file', 'file' ], 'Should have expected kinds at the end');
     });
   });
+
+  context('clearData', () => {
+    it('TINY-9601: clearData should clear all data', () => {
+      const transfer = createDataTransfer();
+
+      transfer.setData('text/plain', 'Hello');
+      transfer.setData('text/html', '<p>Hello</p>');
+      transfer.setData('text/uri-list', 'http://tiny.cloud/');
+      transfer.items.add(new window.File([ 'Lorem ipsum' ], 'file.txt', { type: 'text/plain' }));
+      transfer.items.add(new window.File([ '<p>Lorem ipsum</p>' ], 'file2.txt', { type: 'text/html' }));
+
+      assert.strictEqual(transfer.types.length, 4, 'Should have some types');
+      assert.strictEqual(transfer.files.length, 2, 'Shoujld have some files');
+
+      transfer.clearData();
+
+      assert.strictEqual(transfer.types.length, 0, 'Should have no types');
+      assert.strictEqual(transfer.files.length, 0, 'Should have no files');
+    });
+  });
 });
