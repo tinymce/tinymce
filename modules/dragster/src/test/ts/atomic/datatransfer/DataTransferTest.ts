@@ -6,6 +6,7 @@ import { assert } from 'chai';
 
 import { createDataTransfer, getDragImage } from 'ephox/dragster/datatransfer/DataTransfer';
 import { setDragendEvent, setDragstartEvent, setDropEvent } from 'ephox/dragster/datatransfer/Event';
+import { isInProtectedMode, setProtectedMode } from 'ephox/dragster/datatransfer/Mode';
 
 describe('atomic.dragster.datatransfer.DataTransferTest', () => {
   const browser = PlatformDetection.detect().browser;
@@ -139,7 +140,7 @@ describe('atomic.dragster.datatransfer.DataTransferTest', () => {
       assert.strictEqual(transfer.types.length, 4, 'Should be expected length');
       assert.strictEqual(isSafari ? transfer.types[0] : transfer.types[3], 'Files', 'Should be expected type');
 
-      transfer.items.add(new window.File([ '<p>Lorem ipsum</p>' ], 'file2.txt', { type: 'text/html' }));
+      transfer.items.add(new window.File([ '<p>Lorem ipsum</p>' ], 'file2.html', { type: 'text/html' }));
       assert.strictEqual(transfer.types.length, 4, 'Should not add another "Files" type after adding multiple files');
       assert.strictEqual(isSafari ? transfer.types[0] : transfer.types[3], 'Files', 'Should not add another "Files" type after adding multiple files');
 
@@ -150,12 +151,21 @@ describe('atomic.dragster.datatransfer.DataTransferTest', () => {
   });
 
   context('files', () => {
+    const testFile1 = new window.File([ 'Lorem ipsum' ], 'file1.txt', { type: 'text/plain', lastModified: 123 });
+    const testFile2 = new window.File([ '<p>Lorem ipsum</p>' ], 'file2.html', { type: 'text/html', lastModified: 456 });
+
+    const addAndAssertFile = (transfer: DataTransfer, file: File, expectedFilesLength: number) => {
+      transfer.items.add(file);
+      assert.strictEqual(transfer.files.length, expectedFilesLength, 'Should be expected length');
+      assert.deepEqual(transfer.files.item(expectedFilesLength - 1), file, 'Should be expected file');
+    };
+
     it('TINY-9601: Should initially have no files', () => {
       const transfer = createDataTransfer();
       assert.strictEqual(transfer.files.length, 0, 'Should be expected initial files');
     });
 
-    it('TINY-9601: Only adding files adds to files array', () => {
+    it('TINY-9601: Only adding files adds to files list', () => {
       const transfer = createDataTransfer();
 
       transfer.setData('text/plain', 'Hello');
@@ -167,17 +177,24 @@ describe('atomic.dragster.datatransfer.DataTransferTest', () => {
       transfer.setData('text/uri-list', 'http://tiny.cloud/');
       assert.strictEqual(transfer.files.length, 0, 'Should have no files after adding url');
 
-      const testFile1 = new window.File([ 'Lorem ipsum' ], 'file1.txt', { type: 'text/plain', lastModified: 123 });
-      transfer.items.add(testFile1);
-      assert.strictEqual(transfer.files.length, 1, 'Should be expected length');
-      assert.deepEqual(transfer.files.item(0), testFile1, 'Should be expected file 1');
-
-      const testFile2 = new window.File([ '<p>Lorem ipsum</p>' ], 'file2.txt', { type: 'text/html', lastModified: 456 });
-      transfer.items.add(testFile2);
-      assert.strictEqual(transfer.files.length, 2, 'Should be expected length');
-      assert.deepEqual(transfer.files.item(1), testFile2, 'Should be expected file 2');
+      addAndAssertFile(transfer, testFile1, 1);
+      addAndAssertFile(transfer, testFile2, 2);
 
       assert.deepEqual(Arr.map(transfer.items, (x) => x.kind), [ 'string', 'string', 'string', 'file', 'file' ], 'Should have expected kinds at the end');
+    });
+
+    it('TINY-9601: Files list cannot be modified', () => {
+      const transfer = createDataTransfer();
+      addAndAssertFile(transfer, testFile1, 1);
+      assert.throws(() => transfer.files[0] = testFile2, TypeError, `Failed to set an indexed property on 'FileList': Indexed property setter is not supported.`, 'Should throw error when trying to set property via index in files list');
+    });
+
+    it('TINY-9601: Files list cannot be modified when in protected mode', () => {
+      const transfer = createDataTransfer();
+      addAndAssertFile(transfer, testFile1, 1);
+      setProtectedMode(transfer);
+      assert.isTrue(isInProtectedMode(transfer), 'Should be in protected mode');
+      assert.throws(() => transfer.files[0] = testFile2, TypeError, 'Cannot add property 0, object is not extensible', 'Should throw error when trying to set property via index in files list when in protected mode');
     });
   });
 
@@ -189,7 +206,7 @@ describe('atomic.dragster.datatransfer.DataTransferTest', () => {
       transfer.setData('text/html', '<p>Hello</p>');
       transfer.setData('text/uri-list', 'http://tiny.cloud/');
       transfer.items.add(new window.File([ 'Lorem ipsum' ], 'file.txt', { type: 'text/plain' }));
-      transfer.items.add(new window.File([ '<p>Lorem ipsum</p>' ], 'file2.txt', { type: 'text/html' }));
+      transfer.items.add(new window.File([ '<p>Lorem ipsum</p>' ], 'file2.html', { type: 'text/html' }));
 
       assert.strictEqual(transfer.types.length, 4, 'Should have some types');
       assert.strictEqual(transfer.files.length, 2, 'Shoujld have some files');
