@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Fixed
-- Typing after deleting formatted content could remove a space at the start of the typing. TINY-9310
+- Typing after deleting formatted content could remove a space at the start of the typing. #TINY-9310
 
 ### Added
 - New optional `defaultExpandedIds` and `onToggleExpand` options to the `tree` component config. #TINY-9653

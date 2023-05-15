@@ -17,6 +17,9 @@ export const isInSummary = (editor: Editor): boolean => {
   return isSummary(node) || Boolean(editor.dom.getParent(node, isSummary));
 };
 
+export const isInsertAllowed = (editor: Editor): boolean =>
+  !isInSummary(editor) && editor.dom.isEditable(editor.selection.getNode());
+
 export const getSelectedDetails = (editor: Editor): Optional<HTMLDetailsElement> =>
   Optional.from(editor.dom.getParent(editor.selection.getNode(), isDetails));
 

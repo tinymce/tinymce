@@ -5,7 +5,7 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Utils from '../core/Utils';
 
 const onSetup = (editor: Editor) => (buttonApi: Toolbar.ToolbarButtonInstanceApi | Menu.MenuItemInstanceApi) => {
-  const onNodeChange = () => buttonApi.setEnabled(!Utils.isInSummary(editor));
+  const onNodeChange = () => buttonApi.setEnabled(Utils.isInsertAllowed(editor));
   editor.on('NodeChange', onNodeChange);
   return () => editor.off('NodeChange', onNodeChange);
 };
