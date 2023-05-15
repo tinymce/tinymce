@@ -19,6 +19,9 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     InsertNewLine.insert(editor, args as EditorEvent<KeyboardEvent>);
   };
 
+  /*
+  This function is used as a replacement for the TinySelections.setCursor as some changes are performed to cursor position in this setup.
+  */
   const setSelectionToBody = (editor: Editor, offset: number) => {
     const sel = editor.selection.getSel();
 
