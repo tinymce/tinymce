@@ -207,7 +207,9 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
         Attribute.remove(element, 'aria-hidden');
       });
 
-      apis.refreshToolbar(comp);
+      setTimeout(() => {
+        apis.refreshToolbar(comp);
+      }, 0);
     }
   };
 
