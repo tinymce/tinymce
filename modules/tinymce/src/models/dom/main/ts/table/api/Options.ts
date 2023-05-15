@@ -102,6 +102,11 @@ const register = (editor: Editor): void => {
     processor: 'boolean',
     default: true
   });
+
+  registerOption('table_merge_content_on_paste', {
+    processor: 'boolean',
+    default: true
+  });
 };
 
 const getTableCloneElements = (editor: Editor): Optional<string[]> => {
@@ -138,6 +143,8 @@ const hasTableResizeBars = option<boolean>('table_resize_bars');
 
 const shouldStyleWithCss = option<boolean>('table_style_by_css');
 
+const shouldMergeContentOnPaste = option<boolean>('table_merge_content_on_paste');
+
 const getTableDefaultAttributes = (editor: Editor): Record<string, string> => {
   // Note: The we don't rely on the default here as we need to dynamically lookup the widths based on the current editor state
   const options = editor.options;
@@ -169,5 +176,6 @@ export {
   hasTableResizeBars,
   getTableDefaultAttributes,
   getTableDefaultStyles,
-  tableUseColumnGroup
+  tableUseColumnGroup,
+  shouldMergeContentOnPaste
 };

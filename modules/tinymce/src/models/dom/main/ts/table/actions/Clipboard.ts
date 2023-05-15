@@ -4,6 +4,7 @@ import { SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
+import { shouldMergeContentOnPaste } from '../api/Options';
 import * as Utils from '../core/TableUtils';
 import * as TableTargets from '../queries/TableTargets';
 import * as Ephemera from '../selection/Ephemera';
@@ -55,7 +56,7 @@ const registerEvents = (editor: Editor, actions: TableActions): void => {
           });
 
           const isTable = SugarNode.isTag('table');
-          if (elements.length === 1 && isTable(elements[0])) {
+          if (shouldMergeContentOnPaste(editor) && elements.length === 1 && isTable(elements[0])) {
             e.preventDefault();
 
             const doc = SugarElement.fromDom(editor.getDoc());
