@@ -60,7 +60,7 @@ export interface HasLayoutAnchorSpec {
 
 export interface SelectionAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec {
   type: 'selection';
-  getSelection?: () => Optional<SimRange>;
+  getSelection?: () => Optional<SimRange | SugarElement<HTMLTableCellElement>[]>;
   root: SugarElement<Node>;
   bubble?: Bubble;
   overrides?: AnchorOverrides;
@@ -68,7 +68,7 @@ export interface SelectionAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSp
 }
 
 export interface SelectionAnchor extends AnchorDetail<SelectionAnchor>, HasLayoutAnchor {
-  getSelection: Optional<() => Optional<SimRange>>;
+  getSelection: Optional<() => Optional<SimRange | SugarElement<HTMLTableCellElement>[]>>;
   root: SugarElement<Node>;
   bubble: Optional<Bubble>;
   overrides: AnchorOverrides;
