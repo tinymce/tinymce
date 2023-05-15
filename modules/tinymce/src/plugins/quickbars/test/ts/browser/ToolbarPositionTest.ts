@@ -111,9 +111,6 @@ describe('browser.tinymce.plugins.quickbars.ToolbarPositionTest', () => {
     const toolbarBounds = await getToolbarBounds();
     await pAssertToolbarVisible();
 
-    // const selectedCells = editor.model.table.getSelectedCells();
-    // const selectedCellBounds = getBoundsOfSelectedCells(selectedCells);
-
     const middleOfSelectedCellBounds = selectedCellBounds.width / 2;
     const middleOfToolbarBounds = toolbarBounds.width / 2;
 
@@ -155,7 +152,7 @@ describe('browser.tinymce.plugins.quickbars.ToolbarPositionTest', () => {
       const toolbarLocation = toolbarBounds.top < selectedCellBounds.y ? 'top' : 'bottom';
 
       // When there's sufficient space to show the toolbar in the middle of the selection, it should be in the middle of the selection horizontally
-      // When there's not insufficient space to show the toolbar in the middle of the selection, it should be from the start of the selection
+      // When there's insufficient space to show the toolbar in the middle of the selection, it should be from the start of the selection
       const toolbarStartPosition = middleOfToolbarBounds < selectedCellBounds.x + middleOfSelectedCellBounds ? 'center' : 'start';
 
       return {
@@ -332,8 +329,8 @@ describe('browser.tinymce.plugins.quickbars.ToolbarPositionTest', () => {
 
         const table = SelectorFind.descendant<HTMLTableElement>(TinyDom.body(editor), 'table').getOrDie('Could not find table');
         const cells = getCells(table);
-        const startTd = Arr.find(cells, (elm) => Html.get(elm) === '9').getOrDie('Could not find start TD');
-        const tableBounds = WindowSelection.getBounds(window, SimSelection.exact(startTd, 0, startTd, 1)).getOrDie('Could not get bounds of table cell');
+        const td = Arr.find(cells, (elm) => Html.get(elm) === '9').getOrDie('Could not find TD');
+        const tableBounds = WindowSelection.getBounds(window, SimSelection.exact(td, 0, td, 1)).getOrDie('Could not get bounds of table cell');
 
         const paragraph = SelectorFind.descendant<HTMLParagraphElement>(TinyDom.body(editor), 'p').getOrDie('Could not find paragraph');
         const selP = SimSelection.exact(paragraph, 0, paragraph, 1);
