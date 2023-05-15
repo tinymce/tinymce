@@ -1,12 +1,17 @@
 import { Arr, Strings, Unicode } from '@ephox/katamari';
 
-import { ZWSP } from './Zwsp';
-
 const whiteSpaceRegExp = /^[ \t\r\n]*$/;
 
 const isWhitespaceText = (text: string): boolean => whiteSpaceRegExp.test(text);
 
-const isZwsp = (text: string): boolean => new RegExp(`^[${ZWSP}]*$`).test(text);
+const isZwsp = (text: string): boolean => {
+  for (const c of text) {
+    if (!Unicode.isZwsp(c)) {
+      return false;
+    }
+  }
+  return true;
+};
 
 // Don't compare other unicode spaces here, as we're only concerned about whitespace the browser would collapse
 const isCollapsibleWhitespace = (c: string): boolean => ' \f\t\v'.indexOf(c) !== -1;

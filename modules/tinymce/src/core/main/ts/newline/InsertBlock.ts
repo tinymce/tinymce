@@ -360,7 +360,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     }
 
     // Split the current container block element if enter is pressed inside an empty inner block element
-    if (shouldEndContainer(editor, containerBlock) && canSplitBlock(dom, containerBlock) && dom.isEmpty(parentBlock, {}, true)) {
+    if (shouldEndContainer(editor, containerBlock) && canSplitBlock(dom, containerBlock) && dom.isEmpty(parentBlock, undefined, true)) {
       // Split container block for example a BLOCKQUOTE at the current blockParent location for example a P
       block = dom.split(containerBlock, parentBlock) as Element;
     } else {
