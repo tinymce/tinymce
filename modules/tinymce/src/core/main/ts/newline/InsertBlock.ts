@@ -245,9 +245,9 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   const start = SugarElement.fromDom(rng.startContainer);
 
   const child = Traverse.child(start, rng.startOffset);
-  const isCefOpt = child.map((element) => SugarNode.isHTMLElement(element) && !ContentEditable.isEditable(element));
+  const isCef = child.exists((element) => SugarNode.isHTMLElement(element) && !ContentEditable.isEditable(element));
 
-  const inRootAndLastOrCef = isInRoot && isCefOpt.getOr(true);
+  const inRootAndLastOrCef = isInRoot && isCef;
 
   // Creates a new block element by cloning the current one or creating a new one if the name is specified
   // This function will also copy any text formatting from the parent block and add it to the new one
