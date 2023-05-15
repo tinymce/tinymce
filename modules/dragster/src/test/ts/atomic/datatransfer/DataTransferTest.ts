@@ -13,6 +13,9 @@ describe('atomic.dragster.datatransfer.DataTransferTest', () => {
   const isSafari = browser.isSafari();
   const isFirefox = browser.isFirefox();
 
+  const testFile1 = new window.File([ 'Lorem ipsum' ], 'file1.txt', { type: 'text/plain', lastModified: 123 });
+  const testFile2 = new window.File([ '<p>Lorem ipsum</p>' ], 'file2.html', { type: 'text/html', lastModified: 456 });
+
   context('dropEffect', () => {
     it('TINY-9601: Should initially have "move" dropEffect', () => {
       const transfer = createDataTransfer();
@@ -136,11 +139,11 @@ describe('atomic.dragster.datatransfer.DataTransferTest', () => {
       assert.strictEqual(transfer.types.length, 3, 'Should be expected length');
       assert.strictEqual(transfer.types[2], 'text/uri-list', 'Should be expected type');
 
-      transfer.items.add(new window.File([ 'Lorem ipsum' ], 'file.txt', { type: 'text/plain' }));
+      transfer.items.add(testFile1);
       assert.strictEqual(transfer.types.length, 4, 'Should be expected length');
       assert.strictEqual(isSafari ? transfer.types[0] : transfer.types[3], 'Files', 'Should be expected type');
 
-      transfer.items.add(new window.File([ '<p>Lorem ipsum</p>' ], 'file2.html', { type: 'text/html' }));
+      transfer.items.add(testFile2);
       assert.strictEqual(transfer.types.length, 4, 'Should not add another "Files" type after adding multiple files');
       assert.strictEqual(isSafari ? transfer.types[0] : transfer.types[3], 'Files', 'Should not add another "Files" type after adding multiple files');
 
@@ -151,9 +154,6 @@ describe('atomic.dragster.datatransfer.DataTransferTest', () => {
   });
 
   context('files', () => {
-    const testFile1 = new window.File([ 'Lorem ipsum' ], 'file1.txt', { type: 'text/plain', lastModified: 123 });
-    const testFile2 = new window.File([ '<p>Lorem ipsum</p>' ], 'file2.html', { type: 'text/html', lastModified: 456 });
-
     const addAndAssertFile = (transfer: DataTransfer, file: File, expectedFilesLength: number) => {
       transfer.items.add(file);
       assert.strictEqual(transfer.files.length, expectedFilesLength, 'Should be expected length');
@@ -205,8 +205,8 @@ describe('atomic.dragster.datatransfer.DataTransferTest', () => {
       transfer.setData('text/plain', 'Hello');
       transfer.setData('text/html', '<p>Hello</p>');
       transfer.setData('text/uri-list', 'http://tiny.cloud/');
-      transfer.items.add(new window.File([ 'Lorem ipsum' ], 'file.txt', { type: 'text/plain' }));
-      transfer.items.add(new window.File([ '<p>Lorem ipsum</p>' ], 'file2.html', { type: 'text/html' }));
+      transfer.items.add(testFile1);
+      transfer.items.add(testFile2);
 
       assert.strictEqual(transfer.types.length, 4, 'Should have some types');
       assert.strictEqual(transfer.files.length, 2, 'Shoujld have some files');
