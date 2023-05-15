@@ -39,7 +39,7 @@ const createDataTransferItemFromString = (dataTransfer: DataTransfer, type: stri
     kind: 'string',
     type,
     getAsString: (callback) => {
-      if (isInProtectedMode(dataTransfer) === false && !Type.isNull(callback)) {
+      if (!isInProtectedMode(dataTransfer) && !Type.isNull(callback)) {
         callback(data);
       }
     },
