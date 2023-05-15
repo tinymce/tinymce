@@ -53,9 +53,9 @@ const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origi
         return ContentAnchorCommon.getBox(rawRect.left, rawRect.top, rawRect.width, rawRect.height);
       });
     } else {
-      const menuRects = sel.map((x) => x.dom.getBoundingClientRect());
+      const selectionRects = sel.map((x) => x.dom.getBoundingClientRect());
 
-      const minMax = Arr.foldl(menuRects, (acc, rect) => {
+      const bounds = Arr.foldl(selectionRects, (acc, rect) => {
         return {
           left: Math.min(acc.left, rect.left),
           right: Math.max(acc.right, rect.right),
@@ -70,7 +70,7 @@ const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origi
         bottom: Number.MIN_VALUE
       });
 
-      return ContentAnchorCommon.getBox(minMax.left, minMax.top, minMax.right - minMax.left, minMax.bottom - minMax.top);
+      return ContentAnchorCommon.getBox(bounds.left, bounds.top, bounds.right - bounds.left, bounds.bottom - bounds.top);
     }
   });
 

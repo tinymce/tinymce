@@ -10,7 +10,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/quickbars/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 
-import { pAssertToolbarVisible, pGetToolBar } from '../module/test/Utils';
+import { pAssertToolbarVisible } from '../module/test/Utils';
 
 type TableSizingMode = 'relative' | 'fixed';
 
@@ -173,11 +173,11 @@ describe('browser.tinymce.plugins.quickbars.ToolbarPositionTest', () => {
   };
 
   const getToolbarBounds = async (): Promise<DOMRect> => {
-    const toolbar = await pGetToolBar();
+    const toolbar = await UiFinder.pWaitFor('Wait for toolbar to exist', SugarBody.body(), '.tox-pop__dialog .tox-toolbar');
     return toolbar.dom.getBoundingClientRect();
   };
 
-  const removeToolbar = async (editor: Editor) => {
+  const pRemoveToolbar = async (editor: Editor) => {
     TinySelections.setCursor(editor, [ 1 ], 0);
     await pAssertToolbarNotVisible();
   };
@@ -216,7 +216,7 @@ describe('browser.tinymce.plugins.quickbars.ToolbarPositionTest', () => {
               const selectedCellBounds = getBoundsOfSelectedCells(selectedCells);
 
               await pAssertToolbarPosition(selectedCellBounds);
-              await removeToolbar(editor);
+              await pRemoveToolbar(editor);
 
               currentWindowEnd++;
             }
@@ -256,7 +256,7 @@ describe('browser.tinymce.plugins.quickbars.ToolbarPositionTest', () => {
               const selectedCellBounds = getBoundsOfSelectedCells(selectedCells);
 
               await pAssertToolbarPosition(selectedCellBounds);
-              await removeToolbar(editor);
+              await pRemoveToolbar(editor);
 
               currentWindowEnd += columnSize;
             }
@@ -296,7 +296,7 @@ describe('browser.tinymce.plugins.quickbars.ToolbarPositionTest', () => {
             const selectedCellBounds = getBoundsOfSelectedCells(selectedCells);
 
             await pAssertToolbarPosition(selectedCellBounds);
-            await removeToolbar(editor);
+            await pRemoveToolbar(editor);
 
             currentWindowEnd += columnsToMove;
           }
@@ -319,7 +319,7 @@ describe('browser.tinymce.plugins.quickbars.ToolbarPositionTest', () => {
         const tableBounds = Boxes.absolute(table);
         await pAssertToolbarPosition(tableBounds);
 
-        await removeToolbar(editor);
+        await pRemoveToolbar(editor);
       });
 
       // When selection starts from last cell of the table and expands to the last paragraph in the editor, the toolbar should be displayed in the center of the table
@@ -353,7 +353,7 @@ describe('browser.tinymce.plugins.quickbars.ToolbarPositionTest', () => {
           height: mergedBounds.bottom - mergedBounds.y,
         });
 
-        await removeToolbar(editor);
+        await pRemoveToolbar(editor);
       });
     });
   });
