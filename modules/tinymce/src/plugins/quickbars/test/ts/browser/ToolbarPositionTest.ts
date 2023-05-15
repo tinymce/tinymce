@@ -186,7 +186,6 @@ describe('browser.tinymce.plugins.quickbars.ToolbarPositionTest', () => {
   Arr.each([ 'fixed', 'relative' ], (tableLayout: TableSizingMode) => {
     context(`Table layout: ${tableLayout}`, () => {
 
-
       // Traverse row to row, selects 2 cells initially, then it expands the selection to the right and once it has reaches the end, moves the starting position to the next column
       // Once convered all cells in the row, it moves to the next row
       // E.g.: selected cells for 3x3 table
@@ -306,56 +305,56 @@ describe('browser.tinymce.plugins.quickbars.ToolbarPositionTest', () => {
         }
       });
     });
-  });
 
-  context('Selection outside table', () => {
-    // When selection starts from outside the table and expands to the table, the toolbar should be displayed in the center of the table
-    it('TINY-8297: Selection starts from starting paragraph and expands to the first cell of the table in the editor', async () => {
-      const editor = hook.editor();
-      editor.setContent('<p>Some text</p>' + generateTable('fixed', 3, 3));
-      editor.focus();
+    context('Selection outside table', () => {
+      // When selection starts from outside the table and expands to the table, the toolbar should be displayed in the center of the table
+      it('TINY-8297: Selection starts from starting paragraph and expands to the first cell of the table in the editor', async () => {
+        const editor = hook.editor();
+        editor.setContent('<p>Some text</p>' + generateTable(tableLayout, 3, 3));
+        editor.focus();
 
-      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 1, 1, 0, 0 ], 1);
+        TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 1, 1, 0, 0 ], 1);
 
-      const table = SelectorFind.descendant<HTMLTableElement>(TinyDom.body(editor), 'table').getOrDie('Could not find table');
-      const tableBounds = Boxes.absolute(table);
-      await pAssertToolbarPosition(tableBounds);
+        const table = SelectorFind.descendant<HTMLTableElement>(TinyDom.body(editor), 'table').getOrDie('Could not find table');
+        const tableBounds = Boxes.absolute(table);
+        await pAssertToolbarPosition(tableBounds);
 
-      await removeToolbar(editor);
-    });
-
-    // When selection starts from last cell of the table and expands to the last paragraph in the editor, the toolbar should be displayed in the center of the table
-    it('TINY-8297: Selection starts from last cell of table and expands to the last paragraph in the editor', async () => {
-      const editor = hook.editor();
-      editor.setContent(generateTable('fixed', 3, 3) + '<p>Some Text</p>' );
-      editor.focus();
-
-      TinySelections.setSelection(editor, [ 0, 1, 2, 2 ], 0, [ 1, 0 ], 9);
-
-      const table = SelectorFind.descendant<HTMLTableElement>(TinyDom.body(editor), 'table').getOrDie('Could not find table');
-      const cells = getCells(table);
-      const startTd = Arr.find(cells, (elm) => Html.get(elm) === '9').getOrDie('Could not find start TD');
-      const tableBounds = Boxes.absolute(startTd);
-
-      const paragraph = SelectorFind.descendant<HTMLParagraphElement>(TinyDom.body(editor), 'p').getOrDie('Could not find paragraph');
-      const selP = SimSelection.exact(paragraph, 0, paragraph, 1);
-      const paragraphBounds = WindowSelection.getBounds(window, selP).getOrDie('Could not get bounds of paragraph');
-
-      // Padding within td cell, selection that extend from td to paragraph should be the bounds of the text
-      const mergedBounds = {
-        x: paragraphBounds.left,
-        right: Math.max(tableBounds.right, paragraphBounds.right),
-        bottom: paragraphBounds.bottom,
-        y: tableBounds.y + 6
-      };
-
-      await pAssertToolbarPosition({
-        ...mergedBounds,
-        width: mergedBounds.right - mergedBounds.x,
-        height: mergedBounds.bottom - mergedBounds.y,
+        await removeToolbar(editor);
       });
 
-      await removeToolbar(editor);
+      // When selection starts from last cell of the table and expands to the last paragraph in the editor, the toolbar should be displayed in the center of the table
+      it('TINY-8297: Selection starts from last cell of table and expands to the last paragraph in the editor', async () => {
+        const editor = hook.editor();
+        editor.setContent(generateTable(tableLayout, 3, 3) + '<p>Some Text</p>' );
+        editor.focus();
+
+        TinySelections.setSelection(editor, [ 0, 1, 2, 2 ], 0, [ 1, 0 ], 9);
+
+        const table = SelectorFind.descendant<HTMLTableElement>(TinyDom.body(editor), 'table').getOrDie('Could not find table');
+        const cells = getCells(table);
+        const startTd = Arr.find(cells, (elm) => Html.get(elm) === '9').getOrDie('Could not find start TD');
+        const tableBounds = WindowSelection.getBounds(window, SimSelection.exact(startTd, 0, startTd, 1)).getOrDie('Could not get bounds of table cell');
+
+        const paragraph = SelectorFind.descendant<HTMLParagraphElement>(TinyDom.body(editor), 'p').getOrDie('Could not find paragraph');
+        const selP = SimSelection.exact(paragraph, 0, paragraph, 1);
+        const paragraphBounds = WindowSelection.getBounds(window, selP).getOrDie('Could not get bounds of paragraph');
+
+        // Adding getContentAreaContainer().getBoundingClientRect().top as WindowSelection.getBounds() returns the position relative to the iframe
+        const mergedBounds = {
+          x: paragraphBounds.left,
+          right: Math.max(tableBounds.right, paragraphBounds.right),
+          bottom: paragraphBounds.bottom,
+          y: tableBounds.top + editor.getContentAreaContainer().getBoundingClientRect().top
+        };
+
+        await pAssertToolbarPosition({
+          ...mergedBounds,
+          width: mergedBounds.right - mergedBounds.x,
+          height: mergedBounds.bottom - mergedBounds.y,
+        });
+
+        await removeToolbar(editor);
+      });
     });
   });
 });
