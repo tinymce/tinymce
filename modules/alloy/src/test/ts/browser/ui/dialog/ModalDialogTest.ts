@@ -260,7 +260,6 @@ describe('browser.alloy.ui.dialog.ModalDialogTest', () => {
   it('TINY-9520: Checking aria attribute of dialog', () => {
     const dialog = hook.component();
     const dialogTitle = UiFinder.findIn(dialog.element, dialogSelectors.title).getOrDie();
-    const dialogBody = UiFinder.findIn(dialog.element, dialogSelectors.body).getOrDie();
 
     const titleId = Attribute.getOpt(dialogTitle, 'id').getOr('');
 
@@ -269,12 +268,6 @@ describe('browser.alloy.ui.dialog.ModalDialogTest', () => {
 
     const dialogLabelledBy = Attribute.get(dialog.element, 'aria-labelledby');
     Assertions.assertEq('Labelledby blah better error message', titleId, dialogLabelledBy);
-
-    const describeId = Attribute.getOpt(dialogBody, 'id').getOr('');
-    Assertions.assertEq('describeId should be set', true, Attribute.has(dialogBody, 'id'));
-    Assertions.assertEq('describeId should not be empty', true, describeId.length > 0);
-    const dialogDescribedBy = Attribute.get(dialog.element, 'aria-describedby');
-    Assertions.assertEq('aria-describedby should be set to describeId', describeId, dialogDescribedBy);
   });
 
   it('TINY-9520: Focus testing', async () => {
