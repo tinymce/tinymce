@@ -14,7 +14,7 @@ import * as InlineFormatDelete from '../delete/InlineFormatDelete';
 import * as MediaDelete from '../delete/MediaDelete';
 import * as Outdent from '../delete/Outdent';
 import * as TableDelete from '../delete/TableDelete';
-import { fireFakeBeforeInputEvent, fireFakeInputEvent } from './FakeInputEvents';
+import { fireBeforeInputEvent, fireInputEvent } from '../events/InputEvents';
 import * as MatchKeys from './MatchKeys';
 
 const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: KeyboardEvent) => {
@@ -44,11 +44,11 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: K
     .filter((_) => editor.selection.isEditable())
     .each((applyAction) => {
       evt.preventDefault();
-      const beforeInput = fireFakeBeforeInputEvent(editor, inputType);
+      const beforeInput = fireBeforeInputEvent(editor, inputType);
 
       if (!beforeInput.isDefaultPrevented()) {
         applyAction();
-        fireFakeInputEvent(editor, inputType);
+        fireInputEvent(editor, inputType);
       }
     });
 };

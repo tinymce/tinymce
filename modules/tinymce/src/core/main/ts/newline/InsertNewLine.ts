@@ -4,7 +4,7 @@ import Editor from '../api/Editor';
 import { getNewlineBehavior } from '../api/Options';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import { execEditorDeleteCommand } from '../delete/DeleteUtils';
-import { fireFakeBeforeInputEvent, fireFakeInputEvent } from '../keyboard/FakeInputEvents';
+import { fireBeforeInputEvent, fireInputEvent } from '../events/InputEvents';
 import { blockbreak } from './InsertBlock';
 import { linebreak } from './InsertBr';
 import * as NewLineAction from './NewLineAction';
@@ -21,7 +21,7 @@ const insertBreak = (breakType: BreakType, editor: Editor, evt?: EditorEvent<Key
     execEditorDeleteCommand(editor);
   }
   if (Type.isNonNullable(evt)) {
-    const event = fireFakeBeforeInputEvent(editor, breakType.fakeEventName);
+    const event = fireBeforeInputEvent(editor, breakType.fakeEventName);
     if (event.isDefaultPrevented()) {
       return;
     }
@@ -30,7 +30,7 @@ const insertBreak = (breakType: BreakType, editor: Editor, evt?: EditorEvent<Key
   breakType.insert(editor, evt);
 
   if (Type.isNonNullable(evt)) {
-    fireFakeInputEvent(editor, breakType.fakeEventName);
+    fireInputEvent(editor, breakType.fakeEventName);
   }
 };
 
