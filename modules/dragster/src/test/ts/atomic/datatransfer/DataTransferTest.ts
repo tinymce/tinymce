@@ -160,6 +160,10 @@ describe('atomic.dragster.datatransfer.DataTransferTest', () => {
       assert.deepEqual(transfer.files.item(expectedFilesLength - 1), file, 'Should be expected file');
     };
 
+    const assertFilesCannotBeModified = (transfer: DataTransfer): void => {
+      assert.throws(() => transfer.files[0] = testFile2, TypeError, undefined, 'Should throw error when trying to set property via index in files list');
+    };
+
     it('TINY-9601: Should initially have no files', () => {
       const transfer = createDataTransfer();
       assert.strictEqual(transfer.files.length, 0, 'Should be expected initial files');
@@ -186,7 +190,13 @@ describe('atomic.dragster.datatransfer.DataTransferTest', () => {
     it('TINY-9601: Files list cannot be modified', () => {
       const transfer = createDataTransfer();
       addAndAssertFile(transfer, testFile1, 1);
-      assert.throws(() => transfer.files[0] = testFile2, TypeError, `Failed to set an indexed property on 'FileList': Indexed property setter is not supported.`, 'Should throw error when trying to set property via index in files list');
+      if (isSafari) {
+        // Safari doesn't throw a TypeError on native DataTransfer.files so verify using different method
+        transfer.files[0] = testFile2;
+        assert.deepEqual(transfer.files.item(0), testFile1, 'Should still be file 1');
+      } else {
+        assertFilesCannotBeModified(transfer);
+      }
     });
 
     it('TINY-9601: Files list cannot be modified when in protected mode', () => {
@@ -194,7 +204,7 @@ describe('atomic.dragster.datatransfer.DataTransferTest', () => {
       addAndAssertFile(transfer, testFile1, 1);
       setProtectedMode(transfer);
       assert.isTrue(isInProtectedMode(transfer), 'Should be in protected mode');
-      assert.throws(() => transfer.files[0] = testFile2, TypeError, 'Cannot add property 0, object is not extensible', 'Should throw error when trying to set property via index in files list when in protected mode');
+      assertFilesCannotBeModified(transfer);
     });
   });
 
