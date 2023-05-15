@@ -9,6 +9,8 @@ import { setDragendEvent, setDragstartEvent, setDropEvent } from 'ephox/dragster
 
 describe('atomic.dragster.datatransfer.DataTransferTest', () => {
   const browser = PlatformDetection.detect().browser;
+  const isSafari = browser.isSafari();
+  const isFirefox = browser.isFirefox();
 
   context('dropEffect', () => {
     it('TINY-9601: Should initially have "move" dropEffect', () => {
@@ -84,7 +86,7 @@ describe('atomic.dragster.datatransfer.DataTransferTest', () => {
 
       transfer.setData('text/plain', 'World');
       assert.strictEqual(transfer.getData('text/plain'), 'World', 'Should be expected plain text after overwriting original plain text data');
-      assert.strictEqual(browser.isFirefox() ? transfer.items[0].type : transfer.items[1].type, 'text/plain', 'Should be expected plain text type after overwriting original plain text data');
+      assert.strictEqual(isFirefox ? transfer.items[0].type : transfer.items[1].type, 'text/plain', 'Should be expected plain text type after overwriting original plain text data');
 
       transfer.setData('text/uri-list', 'http://tiny.cloud/');
       assert.strictEqual(transfer.getData('url'), 'http://tiny.cloud/', 'Should be expected url');
@@ -135,14 +137,14 @@ describe('atomic.dragster.datatransfer.DataTransferTest', () => {
 
       transfer.items.add(new window.File([ 'Lorem ipsum' ], 'file.txt', { type: 'text/plain' }));
       assert.strictEqual(transfer.types.length, 4, 'Should be expected length');
-      assert.strictEqual(browser.isSafari() ? transfer.types[0] : transfer.types[3], 'Files', 'Should be expected type');
+      assert.strictEqual(isSafari ? transfer.types[0] : transfer.types[3], 'Files', 'Should be expected type');
 
       transfer.items.add(new window.File([ '<p>Lorem ipsum</p>' ], 'file2.txt', { type: 'text/html' }));
       assert.strictEqual(transfer.types.length, 4, 'Should not add another "Files" type after adding multiple files');
-      assert.strictEqual(browser.isSafari() ? transfer.types[0] : transfer.types[3], 'Files', 'Should not add another "Files" type after adding multiple files');
+      assert.strictEqual(isSafari ? transfer.types[0] : transfer.types[3], 'Files', 'Should not add another "Files" type after adding multiple files');
 
       assert.deepEqual(transfer.types,
-        browser.isSafari() ? [ 'Files', 'text/plain', 'text/html', 'text/uri-list' ] : [ 'text/plain', 'text/html', 'text/uri-list', 'Files' ],
+        isSafari ? [ 'Files', 'text/plain', 'text/html', 'text/uri-list' ] : [ 'text/plain', 'text/html', 'text/uri-list', 'Files' ],
         'Should have expected types array at the end');
     });
   });
@@ -198,8 +200,8 @@ describe('atomic.dragster.datatransfer.DataTransferTest', () => {
       assert.strictEqual(transfer.files.length, 2, 'Should have same number of files');
 
       transfer.clearData();
-      if (browser.isFirefox()) {
-        // Firefox follows the spec where clearData does not remove files
+      if (isFirefox || isSafari) {
+        // Firefox & Safari follows the spec where clearData does not remove files
         // https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/clearData
         assert.deepEqual(transfer.types, [ 'Files' ], 'Should have Files type remaining');
         assert.strictEqual(transfer.files.length, 2, 'Files should not have been cleared');
