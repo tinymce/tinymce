@@ -765,5 +765,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     CaretFormat.applyCaretFormat(editor, 'bold');
     insertNewline(editor, { });
     TinyAssertions.assertContent(editor, '<blockquote><p>A</p></blockquote><p>&nbsp;</p>');
+    TinyAssertions.assertCursor(editor, [ 1, 0, 0, 0 ], 0);
   });
 });
