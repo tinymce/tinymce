@@ -1,4 +1,4 @@
-import { Arr, Cell, Optional, Strings, Type } from '@ephox/katamari';
+import { Arr, Cell, Strings, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -31,9 +31,10 @@ const uniqueId = PasteUtils.createIdGenerator('mceclip');
 
 const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText: boolean): void => {
   const args = ProcessFilters.process(editor, content, internal);
-
   if (!args.cancelled) {
-    SmartPaste.insertContent(editor, args.content, pasteAsText);
+    const content = args.content;
+    SmartPaste.insertContent(editor, content, pasteAsText);
+    fireInputEvent(editor, 'insertFromPaste', { data: content });
   }
 };
 
@@ -175,7 +176,7 @@ const isBrokenAndroidClipboardEvent = (e: ClipboardEvent): boolean =>
 const isKeyboardPasteEvent = (e: KeyboardEvent): boolean =>
   (VK.metaKeyPressed(e) && e.keyCode === 86) || (e.shiftKey && e.keyCode === 45);
 
-const insertClipboardContent = (editor: Editor, clipboardContent: ClipboardContents, html: string, plainTextMode: boolean): Optional<string> => {
+const insertClipboardContent = (editor: Editor, clipboardContent: ClipboardContents, html: string, plainTextMode: boolean): void => {
   let content = PasteUtils.trimHtml(html);
 
   const isInternal = hasContentType(clipboardContent, InternalHtml.internalHtmlMime()) || InternalHtml.isMarked(html);
@@ -202,7 +203,7 @@ const insertClipboardContent = (editor: Editor, clipboardContent: ClipboardConte
 
   // If the content is the paste bin default HTML then it was impossible to get the clipboard data out.
   if (isDefaultPasteBinContent(content)) {
-    return Optional.none();
+    return;
   }
 
   if (plainTextMode) {
@@ -210,8 +211,6 @@ const insertClipboardContent = (editor: Editor, clipboardContent: ClipboardConte
   } else {
     pasteHtml(editor, content, isInternal);
   }
-
-  return Optional.some(content);
 };
 
 const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: Cell<string>): void => {
@@ -219,9 +218,6 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
 
   const getLastRng = (): Range =>
     pasteBin.getLastRng() || editor.selection.getRng();
-
-  const insertClipboardContentAndDispatchInputEvent = (editor: Editor, clipboardContent: ClipboardContents, html: string, plainTextMode: boolean): Optional<EditorEvent<InputEvent>> =>
-    insertClipboardContent(editor, clipboardContent, html, plainTextMode).map((data) => fireInputEvent(editor, 'insertFromPaste', { data }));
 
   editor.on('keydown', (e) => {
     if (isKeyboardPasteEvent(e) && !e.isDefaultPrevented()) {
@@ -246,14 +242,14 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
 
     // If the clipboard API has HTML then use that directly
     if (hasContentType(clipboardContent, 'text/html')) {
-      insertClipboardContentAndDispatchInputEvent(editor, clipboardContent, clipboardContent['text/html'], plainTextMode);
+      insertClipboardContent(editor, clipboardContent, clipboardContent['text/html'], plainTextMode);
     } else if (hasContentType(clipboardContent, 'text/plain') && hasContentType(clipboardContent, 'text/uri-list')) {
       /*
       Safari adds the uri-list attribute to links copied within it.
       When pasting something with the url-list within safari using the default functionality it will convert it from www.example.com to <a href="www.example.com">www.example.com</a> when pasting into the pasteBin-div.
       This causes issues. To solve this we bypass the default paste functionality for this situation.
        */
-      insertClipboardContentAndDispatchInputEvent(editor, clipboardContent, clipboardContent['text/plain'], plainTextMode);
+      insertClipboardContent(editor, clipboardContent, clipboardContent['text/plain'], plainTextMode);
     } else {
       // We can't extract the HTML content from the clipboard so we need to allow the paste
       // to run via the pastebin and then extract from there
@@ -262,7 +258,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
         // Get the pastebin content and then remove it so the selection is restored
         const html = pasteBin.getHtml();
         pasteBin.remove();
-        insertClipboardContentAndDispatchInputEvent(editor, clipboardContent, html, plainTextMode);
+        insertClipboardContent(editor, clipboardContent, html, plainTextMode);
       }, 0);
     }
   });

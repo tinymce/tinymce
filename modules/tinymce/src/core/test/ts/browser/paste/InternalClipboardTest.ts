@@ -277,7 +277,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
     it('TBA: Paste internal content with mark', async () => {
       const editor = hook.editor();
       paste(editor, '<p>abc</p>', { 'text/plain': 'X', 'text/html': InternalHtml.mark('<p>X</p>') }, [ 0, 0 ], 0, [ 0, 0 ], 3);
-      await pWaitForAndAssertEvents({ internal: true, content: '<p>X</p>' }, { data: '<!-- x-tinymce/html --><p>X</p>' });
+      await pWaitForAndAssertEvents({ internal: true, content: '<p>X</p>' }, { data: '<p>X</p>' });
     });
 
     it('TBA: Paste internal content with mime', async () => {
