@@ -234,13 +234,19 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
     it('TBA: Paste external content', async () => {
       const editor = hook.editor();
       paste(editor, '<p>abc</p>', { 'text/plain': 'X', 'text/html': '<p>X</p>' }, [ 0, 0 ], 0, [ 0, 0 ], 3);
-      await pWaitForAndAssertEvents({ internal: false, content: 'X' }, { data: '<p>X</p>' });
+      await pWaitForAndAssertEvents({ internal: false, content: 'X' }, { data: 'X' });
     });
 
     it('TBA: Paste external content treated as plain text', async () => {
       const editor = hook.editor();
       paste(editor, '<p>abc</p>', { 'text/html': '<p>X</p>' }, [ 0, 0 ], 0, [ 0, 0 ], 3);
-      await pWaitForAndAssertEvents({ internal: false, content: 'X' }, { data: '<p>X</p>' });
+      await pWaitForAndAssertEvents({ internal: false, content: 'X' }, { data: 'X' });
+    });
+
+    it('TINY-9829: Paste external non-html content', async () => {
+      const editor = hook.editor();
+      paste(editor, '<p>abc</p>', { 'text/plain': 'X' }, [ 0, 0 ], 0, [ 0, 0 ], 3);
+      await pWaitForAndAssertEvents({ internal: false, content: 'X' }, { data: 'X' });
     });
 
     it('TBA: Paste internal content with mark', async () => {

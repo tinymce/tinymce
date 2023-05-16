@@ -175,7 +175,7 @@ const isBrokenAndroidClipboardEvent = (e: ClipboardEvent): boolean =>
 const isKeyboardPasteEvent = (e: KeyboardEvent): boolean =>
   (VK.metaKeyPressed(e) && e.keyCode === 86) || (e.shiftKey && e.keyCode === 45);
 
-const insertClipboardContent = (editor: Editor, clipboardContent: ClipboardContents, html: string, plainTextMode: boolean): void => {
+const insertClipboardContent = (editor: Editor, clipboardContent: ClipboardContents, html: string, plainTextMode: boolean): string => {
   let content = PasteUtils.trimHtml(html);
 
   const isInternal = hasContentType(clipboardContent, InternalHtml.internalHtmlMime()) || InternalHtml.isMarked(html);
@@ -202,7 +202,7 @@ const insertClipboardContent = (editor: Editor, clipboardContent: ClipboardConte
 
   // If the content is the paste bin default HTML then it was impossible to get the clipboard data out.
   if (isDefaultPasteBinContent(content)) {
-    return;
+    return content;
   }
 
   if (plainTextMode) {
@@ -210,6 +210,8 @@ const insertClipboardContent = (editor: Editor, clipboardContent: ClipboardConte
   } else {
     pasteHtml(editor, content, isInternal);
   }
+
+  return content;
 };
 
 const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: Cell<string>): void => {
@@ -218,8 +220,8 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
   const getLastRng = (): Range =>
     pasteBin.getLastRng() || editor.selection.getRng();
 
-  const insertClipboardContentAndDispatchInputEvent = (editor: Editor, clipboardContent: ClipboardContents, data: string, plainTextMode: boolean): EditorEvent<InputEvent> => {
-    insertClipboardContent(editor, clipboardContent, data, plainTextMode);
+  const insertClipboardContentAndDispatchInputEvent = (editor: Editor, clipboardContent: ClipboardContents, html: string, plainTextMode: boolean): EditorEvent<InputEvent> => {
+    const data = insertClipboardContent(editor, clipboardContent, html, plainTextMode);
     return fireInputEvent(editor, 'insertFromPaste', { data });
   };
 
@@ -242,9 +244,10 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
       return;
     }
 
+    e.preventDefault();
+
     // If the clipboard API has HTML then use that directly
     if (hasContentType(clipboardContent, 'text/html')) {
-      e.preventDefault();
       insertClipboardContentAndDispatchInputEvent(editor, clipboardContent, clipboardContent['text/html'], plainTextMode);
     } else if (hasContentType(clipboardContent, 'text/plain') && hasContentType(clipboardContent, 'text/uri-list')) {
       /*
@@ -252,7 +255,6 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
       When pasting something with the url-list within safari using the default functionality it will convert it from www.example.com to <a href="www.example.com">www.example.com</a> when pasting into the pasteBin-div.
       This causes issues. To solve this we bypass the default paste functionality for this situation.
        */
-      e.preventDefault();
       insertClipboardContentAndDispatchInputEvent(editor, clipboardContent, clipboardContent['text/plain'], plainTextMode);
     } else {
       // We can't extract the HTML content from the clipboard so we need to allow the paste
@@ -262,7 +264,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
         // Get the pastebin content and then remove it so the selection is restored
         const html = pasteBin.getHtml();
         pasteBin.remove();
-        insertClipboardContent(editor, clipboardContent, html, plainTextMode);
+        insertClipboardContentAndDispatchInputEvent(editor, clipboardContent, html, plainTextMode);
       }, 0);
     }
   });
