@@ -8,6 +8,7 @@ import * as Options from '../api/Options';
 import Delay from '../api/util/Delay';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import VK from '../api/util/VK';
+import { fireInputEvent } from '../events/InputEvents';
 import * as Conversions from '../file/Conversions';
 import * as Whitespace from '../text/Whitespace';
 import * as InternalHtml from './InternalHtml';
@@ -217,6 +218,11 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
   const getLastRng = (): Range =>
     pasteBin.getLastRng() || editor.selection.getRng();
 
+  const insertClipboardContentAndDispatchInputEvent = (editor: Editor, clipboardContent: ClipboardContents, data: string, plainTextMode: boolean): EditorEvent<InputEvent> => {
+    insertClipboardContent(editor, clipboardContent, data, plainTextMode);
+    return fireInputEvent(editor, 'insertFromPaste', { data });
+  };
+
   editor.on('keydown', (e) => {
     if (isKeyboardPasteEvent(e) && !e.isDefaultPrevented()) {
       keyboardPastePlainTextState = e.shiftKey && e.keyCode === 86;
@@ -239,7 +245,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     // If the clipboard API has HTML then use that directly
     if (hasContentType(clipboardContent, 'text/html')) {
       e.preventDefault();
-      insertClipboardContent(editor, clipboardContent, clipboardContent['text/html'], plainTextMode);
+      insertClipboardContentAndDispatchInputEvent(editor, clipboardContent, clipboardContent['text/html'], plainTextMode);
     } else if (hasContentType(clipboardContent, 'text/plain') && hasContentType(clipboardContent, 'text/uri-list')) {
       /*
       Safari adds the uri-list attribute to links copied within it.
@@ -247,7 +253,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
       This causes issues. To solve this we bypass the default paste functionality for this situation.
        */
       e.preventDefault();
-      insertClipboardContent(editor, clipboardContent, clipboardContent['text/plain'], plainTextMode);
+      insertClipboardContentAndDispatchInputEvent(editor, clipboardContent, clipboardContent['text/plain'], plainTextMode);
     } else {
       // We can't extract the HTML content from the clipboard so we need to allow the paste
       // to run via the pastebin and then extract from there
