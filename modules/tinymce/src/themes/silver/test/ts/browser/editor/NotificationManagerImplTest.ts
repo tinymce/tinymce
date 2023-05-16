@@ -88,7 +88,7 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
               arr.has('tox-button--icon')
             ],
             children: [
-              s.element('div', {
+              s.element('span', {
                 attrs: {
                   'aria-label': str.is('Close')
                 },
