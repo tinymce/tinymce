@@ -16,6 +16,7 @@
       "tinymce/models/dom/*": ["src/models/dom/main/ts/*"],
       "tinymce/plugins/advlist/*": ["src/plugins/advlist/main/ts/*"],
       "tinymce/plugins/accordion/*": ["src/plugins/accordion/main/ts/*"],
+      "tinymce/plugins/ai/*": ["src/plugins/ai/main/ts/*"],
       "tinymce/plugins/anchor/*": ["src/plugins/anchor/main/ts/*"],
       "tinymce/plugins/autolink/*": ["src/plugins/autolink/main/ts/*"],
       "tinymce/plugins/autoresize/*": ["src/plugins/autoresize/main/ts/*"],

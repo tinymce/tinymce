@@ -38,6 +38,7 @@
       "tinymce/models/dom/*": ["modules/tinymce/src/models/dom/main/ts/*"],
       "tinymce/plugins/advlist/*": ["modules/tinymce/src/plugins/advlist/main/ts/*"],
       "tinymce/plugins/accordion/*": ["modules/tinymce/src/plugins/accordion/main/ts/*"],
+      "tinymce/plugins/ai/*": ["modules/tinymce/src/plugins/ai/main/ts/*"],
       "tinymce/plugins/anchor/*": ["modules/tinymce/src/plugins/anchor/main/ts/*"],
       "tinymce/plugins/autolink/*": ["modules/tinymce/src/plugins/autolink/main/ts/*"],
       "tinymce/plugins/autoresize/*": ["modules/tinymce/src/plugins/autoresize/main/ts/*"],
