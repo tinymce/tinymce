@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Fixed
-- Typing after deleting formatted content could remove a space at the start of the typing. TINY-9310
+- Typing after deleting formatted content could remove a space at the start of the typing. #TINY-9310
 
 ### Added
 - New optional `defaultExpandedIds` and `onToggleExpand` options to the `tree` component config. #TINY-9653
@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `accordion` plugin with the `InsertAccordion` command. #TINY-9730
 - New `accordion` and `accordion-toggle` icons. #TINY-9789
 - New `details_initial_state` and `details_serialized_state` options. #TINY-9732
+- New `init_content_sync` option that initializes the editor iframe using `document.write` instead of `srcdoc`. #TINY-9818
 
 ### Improved
 - Screen readers are now able to announce the highlighted menu item of link comboboxes. #TINY-9280
@@ -45,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Context toolbars displayed the incorrect status for the `advlist` plugin buttons. #TINY-9680
 - On iOS Safari, Korean characters were merging onto the previous line upon typing after inserting a newline by pressing Enter. #TINY-9746
 - Initiating the editor with a table at the start would display resize handles even when the editor wasn't focused. #TINY-9748
+- Backspace would in some situations delete the image after the cursor instead of before it as expected. #TINY-9807
 - Directionality commands was setting the `dir` attribute on noneditable elements within a noneditable root. #TINY-9662
 - The content of the dialog body could not be scrolled. #TINY-9668
 - Some toolbar items were not rendering the `not-allowed` mouse cursor. #TINY-9758
@@ -59,6 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pressing arrow keys inside RTL elements would move the caret in an incorrect direction when moving over elements with the `contenteditable` attribute set to `false`. #TINY-9565
 - Inserting table consecutively without focus in the editor would result in the table being inserted at the wrong position. #TINY-3909
 - Pasting content into the editor would not fire an input event. #TINY-9829
+- In some cases, the exiting a `blockquote` element could fail when the cursor was positioned at the end of the `blockquote`. #TINY-9794
 
 ## 6.4.2 - 2023-04-26
 

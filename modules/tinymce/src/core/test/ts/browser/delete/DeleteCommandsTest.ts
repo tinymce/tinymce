@@ -30,6 +30,15 @@ describe('browser.tinymce.core.delete.DeleteCommandsTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
   });
 
+  it('TINY-9807: If placed between two images the first image should be deleted, not the second one', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><img id="one" src="about:blank"><img id="two" src="about:blank"></p>');
+    TinySelections.setCursor(editor, [ 0 ], 1);
+    DeleteCommands.deleteCommand(editor, caret);
+    TinyAssertions.assertContent(editor, '<p><img id="two" src="about:blank"></p>');
+    TinyAssertions.assertCursor(editor, [ 0 ], 0);
+  });
+
   context('noneditable', () => {
     it('TINY-9477: Delete on noneditable blocks should not do anything', () => {
       const editor = hook.editor();
