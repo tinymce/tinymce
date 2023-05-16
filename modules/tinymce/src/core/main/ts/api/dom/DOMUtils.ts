@@ -181,7 +181,7 @@ interface DOMUtils {
   findCommonAncestor: (a: Node, b: Node) => Node | null;
   run <R, T extends Node>(this: DOMUtils, elm: T | T[], func: (node: T) => R, scope?: any): typeof elm extends Array<any> ? R[] : R;
   run <R, T extends Node>(this: DOMUtils, elm: RunArguments<T>, func: (node: T) => R, scope?: any): RunResult<typeof elm, R>;
-  isEmpty: (node: Node, elements?: Record<string, any>, data?: ({ includeZwsp?: boolean })) => boolean;
+  isEmpty: (node: Node, elements?: Record<string, any>, options?: ({ includeZwsp?: boolean })) => boolean;
   createRng: () => Range;
   nodeIndex: (node: Node, normalized?: boolean) => number;
   split: {
@@ -937,7 +937,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return false;
   };
 
-  const isEmpty = (node: Node, elements?: Record<string, any>, data?: ({ includeZwsp?: boolean })) => {
+  const isEmpty = (node: Node, elements?: Record<string, any>, options?: ({ includeZwsp?: boolean })) => {
     let brCount = 0;
 
     // Keep elements with data-bookmark attributes, name attributes or are named anchors
@@ -986,7 +986,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
         }
 
         // Keep non whitespace text nodes
-        if (NodeType.isText(tempNode) && !isWhitespaceText(tempNode.data) && (!data?.includeZwsp || !isZwsp(tempNode.data))) {
+        if (NodeType.isText(tempNode) && !isWhitespaceText(tempNode.data) && (!options?.includeZwsp || !isZwsp(tempNode.data))) {
           return false;
         }
 
