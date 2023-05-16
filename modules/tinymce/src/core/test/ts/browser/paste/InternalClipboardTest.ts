@@ -47,7 +47,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ TablePlugin ]);
 
-  const resetProcessEvents = () => {
+  const resetEvents = () => {
     lastPreProcessEvent = undefined;
     lastPostProcessEvent = undefined;
     lastInputEvent = undefined;
@@ -82,7 +82,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
     editor.setContent(startHtml);
     TinySelections.setSelection(editor, spath, soffset, fpath, foffset);
     editor.undoManager.add(); // Undo level would not always be properly created in some situations, so we create it manually to prevent tests from failing when they shouldn't.
-    resetProcessEvents();
+    resetEvents();
     pasteDataTransferEvent(editor, pasteData);
   };
 

@@ -148,7 +148,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
 
     editor.execCommand('mceInsertClipboardContent', false, { text: ' a ' });
-    TinyAssertions.assertContent(editor, '<p>t&nbsp;a&nbsp;xt</p>');
+    TinyAssertions.assertContent(editor, '<p>t a xt</p>');
   });
 
   it('TBA: paste plain text with linefeeds', () => {
@@ -157,7 +157,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
 
     editor.execCommand('mceInsertClipboardContent', false, { text: 'a\nb\nc ' });
-    TinyAssertions.assertContent(editor, '<p>ta<br>b<br>c&nbsp;xt</p>');
+    TinyAssertions.assertContent(editor, '<p>ta<br>b<br>c xt</p>');
   });
 
   it('TBA: paste plain text with double linefeeds', () => {
