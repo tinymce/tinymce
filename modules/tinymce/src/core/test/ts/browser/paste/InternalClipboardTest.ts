@@ -1,5 +1,6 @@
 import { Clipboard, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
+import { Type } from '@ephox/katamari';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -22,7 +23,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
   let dataTransfer: DataTransfer | undefined;
   let lastPreProcessEvent: EditorEvent<PastePreProcessEvent> | undefined;
   let lastPostProcessEvent: EditorEvent<PastePostProcessEvent> | undefined;
-  let lastPasteInputEvent: EditorEvent<InputEvent> | undefined;
+  let lastInputEvent: EditorEvent<InputEvent> | undefined;
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'table',
@@ -40,9 +41,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
       });
 
       editor.on('input', (e) => {
-        if (e.inputType === 'insertFromPaste') {
-          lastPasteInputEvent = e;
-        }
+        lastInputEvent = e;
       });
     },
     base_url: '/project/tinymce/js/tinymce'
@@ -51,7 +50,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
   const resetProcessEvents = () => {
     lastPreProcessEvent = undefined;
     lastPostProcessEvent = undefined;
-    lastPasteInputEvent = undefined;
+    lastInputEvent = undefined;
   };
 
   const cutCopyDataTransferEvent = (editor: Editor, type: 'cut' | 'copy') => {
@@ -219,7 +218,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
 
     const pWaitForInputEvent = () =>
       pWaitFor('Did not fire input event', () => {
-        assert.isDefined(lastPasteInputEvent, 'Input event object');
+        assert.isDefined(lastInputEvent, 'Input event object');
       });
 
     const pWaitForAndAssertProcessEvents = async (expectedData: ProcessEventExpectedData): Promise<void> => {
@@ -230,8 +229,8 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
 
     const pWaitForAndAssertInputEvent = async (expectedData: InputEventExpectedData): Promise<void> => {
       await pWaitForInputEvent();
-      assert.equal(lastPasteInputEvent?.inputType, 'insertFromPaste', 'Input event type should be "insertFromPaste"');
-      assert.equal(lastPasteInputEvent?.data, expectedData.data, 'Input event data should be as expected');
+      assert.equal(lastInputEvent?.inputType, 'insertFromPaste', 'Input event type should be "insertFromPaste"');
+      assert.equal(lastInputEvent?.data, expectedData.data, 'Input event data should be as expected');
     };
 
     const pWaitForAndAssertEvents = async (processExpected: ProcessEventExpectedData, inputExpected: InputEventExpectedData): Promise<void> => {
@@ -242,8 +241,8 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
     const pWaitForAndAssertNoEvents = async (): Promise<void> => {
       let thrown = false;
       try {
-        await pWaitForProcessEvents();
-        await pWaitForInputEvent();
+        await Waiter.pTryUntilPredicate('Did not fire any paste event',
+          () => !Type.isUndefined(lastPreProcessEvent) || !Type.isUndefined(lastPostProcessEvent) || !Type.isUndefined(lastInputEvent));
       } catch {
         thrown = true;
       }
