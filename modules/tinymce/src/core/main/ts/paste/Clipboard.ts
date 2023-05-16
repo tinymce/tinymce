@@ -1,4 +1,4 @@
-import { Arr, Cell, Strings, Type } from '@ephox/katamari';
+import { Arr, Cell, Optional, Strings, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -175,7 +175,7 @@ const isBrokenAndroidClipboardEvent = (e: ClipboardEvent): boolean =>
 const isKeyboardPasteEvent = (e: KeyboardEvent): boolean =>
   (VK.metaKeyPressed(e) && e.keyCode === 86) || (e.shiftKey && e.keyCode === 45);
 
-const insertClipboardContent = (editor: Editor, clipboardContent: ClipboardContents, html: string, plainTextMode: boolean): string => {
+const insertClipboardContent = (editor: Editor, clipboardContent: ClipboardContents, html: string, plainTextMode: boolean): Optional<string> => {
   let content = PasteUtils.trimHtml(html);
 
   const isInternal = hasContentType(clipboardContent, InternalHtml.internalHtmlMime()) || InternalHtml.isMarked(html);
@@ -202,7 +202,7 @@ const insertClipboardContent = (editor: Editor, clipboardContent: ClipboardConte
 
   // If the content is the paste bin default HTML then it was impossible to get the clipboard data out.
   if (isDefaultPasteBinContent(content)) {
-    return content;
+    return Optional.none();
   }
 
   if (plainTextMode) {
@@ -211,7 +211,7 @@ const insertClipboardContent = (editor: Editor, clipboardContent: ClipboardConte
     pasteHtml(editor, content, isInternal);
   }
 
-  return content;
+  return Optional.some(content);
 };
 
 const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: Cell<string>): void => {
@@ -220,10 +220,8 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
   const getLastRng = (): Range =>
     pasteBin.getLastRng() || editor.selection.getRng();
 
-  const insertClipboardContentAndDispatchInputEvent = (editor: Editor, clipboardContent: ClipboardContents, html: string, plainTextMode: boolean): EditorEvent<InputEvent> => {
-    const data = insertClipboardContent(editor, clipboardContent, html, plainTextMode);
-    return fireInputEvent(editor, 'insertFromPaste', { data });
-  };
+  const insertClipboardContentAndDispatchInputEvent = (editor: Editor, clipboardContent: ClipboardContents, html: string, plainTextMode: boolean): Optional<EditorEvent<InputEvent>> =>
+    insertClipboardContent(editor, clipboardContent, html, plainTextMode).map((data) => fireInputEvent(editor, 'insertFromPaste', { data }));
 
   editor.on('keydown', (e) => {
     if (isKeyboardPasteEvent(e) && !e.isDefaultPrevented()) {

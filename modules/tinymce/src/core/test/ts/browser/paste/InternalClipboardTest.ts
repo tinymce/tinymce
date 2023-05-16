@@ -209,19 +209,27 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
       assert.equal(lastPostProcessEvent?.node.innerHTML, expectedData.content, 'Content property should be equal');
     };
 
-    const pWaitForAndAssertProcessEvents = async (expectedData: ProcessEventExpectedData): Promise<void> => {
-      await Waiter.pTryUntil('Did not fire process events', () => {
+    const pWaitFor = (message: string, waitFn: () => void) => Waiter.pTryUntil(message, waitFn, undefined, 100);
+
+    const pWaitForProcessEvents = () =>
+      pWaitFor('Did not fire process events', () => {
         assert.isDefined(lastPreProcessEvent, 'PastePreProcess event object');
         assert.isDefined(lastPostProcessEvent, 'PastePostProcess event object');
       });
+
+    const pWaitForInputEvent = () =>
+      pWaitFor('Did not fire input event', () => {
+        assert.isDefined(lastPasteInputEvent, 'Input event object');
+      });
+
+    const pWaitForAndAssertProcessEvents = async (expectedData: ProcessEventExpectedData): Promise<void> => {
+      await pWaitForProcessEvents();
       assertLastPreProcessEvent(expectedData);
       assertLastPostProcessEvent(expectedData);
     };
 
     const pWaitForAndAssertInputEvent = async (expectedData: InputEventExpectedData): Promise<void> => {
-      await Waiter.pTryUntil('Did not fire input event', () => {
-        assert.isDefined(lastPasteInputEvent, 'Input event object');
-      });
+      await pWaitForInputEvent();
       assert.equal(lastPasteInputEvent?.inputType, 'insertFromPaste', 'Input event type should be "insertFromPaste"');
       assert.equal(lastPasteInputEvent?.data, expectedData.data, 'Input event data should be as expected');
     };
@@ -229,6 +237,17 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
     const pWaitForAndAssertEvents = async (processExpected: ProcessEventExpectedData, inputExpected: InputEventExpectedData): Promise<void> => {
       await pWaitForAndAssertProcessEvents(processExpected);
       await pWaitForAndAssertInputEvent(inputExpected);
+    };
+
+    const pWaitForAndAssertNoEvents = async (): Promise<void> => {
+      let thrown = false;
+      try {
+        await pWaitForProcessEvents();
+        await pWaitForInputEvent();
+      } catch {
+        thrown = true;
+      }
+      assert.isTrue(thrown, 'Should have no events after waiting');
     };
 
     it('TBA: Paste external content', async () => {
@@ -243,10 +262,16 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
       await pWaitForAndAssertEvents({ internal: false, content: 'X' }, { data: 'X' });
     });
 
-    it('TINY-9829: Paste external non-html content', async () => {
+    it('TINY-9829: Paste external plain-text-only content', async () => {
       const editor = hook.editor();
       paste(editor, '<p>abc</p>', { 'text/plain': 'X' }, [ 0, 0 ], 0, [ 0, 0 ], 3);
       await pWaitForAndAssertEvents({ internal: false, content: 'X' }, { data: 'X' });
+    });
+
+    it('TINY-9829: Paste external non-extractable content', async () => {
+      const editor = hook.editor();
+      paste(editor, '<p>abc</p>', { xyz: 'Invalid' }, [ 0, 0 ], 0, [ 0, 0 ], 3);
+      await pWaitForAndAssertNoEvents();
     });
 
     it('TBA: Paste internal content with mark', async () => {
