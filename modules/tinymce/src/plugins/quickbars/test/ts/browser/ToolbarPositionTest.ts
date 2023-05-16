@@ -2,6 +2,7 @@ import { Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { Boxes } from '@ephox/alloy';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { Html, SelectorFilter, SelectorFind, SimSelection, SugarBody, SugarElement, WindowSelection } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -304,8 +305,11 @@ describe('browser.tinymce.plugins.quickbars.ToolbarPositionTest', () => {
     });
 
     context('Selection outside table', () => {
+      // Skipping safari, the quickbar toolbar is positioned differently in safari and chrome, see TINY-9851
+      const skipIfSafari = PlatformDetection.detect().browser.isSafari() ? it.skip : it;
+
       // When selection starts from outside the table and expands to the table, the toolbar should be displayed in the center of the table
-      it('TINY-8297: Selection starts from starting paragraph and expands to the first cell of the table in the editor', async () => {
+      skipIfSafari('TINY-8297: Selection starts from starting paragraph and expands to the first cell of the table in the editor', async () => {
         const editor = hook.editor();
         editor.setContent('<p>Some text</p>' + generateTable(tableLayout, 3, 3));
         editor.focus();
