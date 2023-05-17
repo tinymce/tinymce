@@ -23,7 +23,7 @@ describe('browser.dragster.datatransfer.DataTransferCloneTest', () => {
 
     setReadWriteMode(dataTransfer);
 
-    // set some test data
+    // Add some test data
     setDragstartEvent(dataTransfer);
     dataTransfer.dropEffect = 'copy';
     dataTransfer.effectAllowed = 'copy';
@@ -33,7 +33,6 @@ describe('browser.dragster.datatransfer.DataTransferCloneTest', () => {
     dataTransfer.items.add(testFile1);
     dataTransfer.items.add(testFile2);
 
-    // set mode
     setMode(dataTransfer, mode);
 
     return dataTransfer;
@@ -64,7 +63,6 @@ describe('browser.dragster.datatransfer.DataTransferCloneTest', () => {
     // Not have same reference as original
     assert.notStrictEqual(clone, original);
 
-    // Same mode as original
     KAssert.eqOptional('Clone should have same mode', getMode(original), getMode(clone));
 
     // Set to read-only mode to check other data
