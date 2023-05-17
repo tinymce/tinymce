@@ -475,22 +475,20 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       assert.equal(Html.get(editorContainer), expectedHtml);
     };
 
-    const pAssertFloatingToolbarPosition = async (editor: Editor, top: number): Promise<void> => {
-      await Waiter.pTryUntil('Wait for toolbar position', () => {
-        const diff = 10;
-        const posTop = window.pageYOffset;
-        assert.approximately(posTop, top, diff, `Drawer top position ${posTop}px should be ~${top}px`);
-      });
-    };
-
     it('TINY-9814: coming back from a view when the toolbar is scrolled, should preserve the buttons in `tox-toolbar__primary`', async () => {
       const editor = hook.editor();
-      editor.setContent(`<p>${Arr.range(100, Fun.constant('some text')).join('<br>')}</p>`);
-      Scroll.to(0, 0);
-      await pAssertFloatingToolbarPosition(editor, 0);
+      editor.setContent(`<p>
+        ${Arr.range(50, Fun.constant('some text')).join('<br>')}
+        <div class="element_to_scroll_to">element to scroll to</div>
+        ${Arr.range(50, Fun.constant('some text')).join('<br>')}
+      </p>`);
 
-      Scroll.to(0, 500);
-      await pAssertFloatingToolbarPosition(editor, 500);
+      const elementToScrollTo = UiFinder.findIn(TinyDom.body(editor), '.element_to_scroll_to').getOrDie();
+      const toolbar = await TinyUiActions.pWaitForUi(editor, '.tox-toolbar__overflow');
+
+      assert.isTrue(Scroll.get().top < toolbar.dom.getBoundingClientRect().top, 'before scroll the scroll top should be before the toolbar');
+      elementToScrollTo.dom.scrollIntoView();
+      assert.isTrue(Scroll.get().top > toolbar.dom.getBoundingClientRect().top, 'after scroll the scroll top should be after the toolbar');
 
       editor.execCommand('ToggleView', true, 'myview1');
       assertViewHtml(0, '<button>myview1</button>');
