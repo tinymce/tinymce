@@ -34,7 +34,7 @@ const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText
   if (!args.cancelled) {
     const content = args.content;
     SmartPaste.insertContent(editor, content, pasteAsText);
-    InputEvents.fireInputEvent(editor, 'insertFromPaste', { data: content });
+    InputEvents.fireInputEvent(editor, 'insertFromPaste');
   }
 };
 

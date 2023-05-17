@@ -12,10 +12,6 @@ export interface ProcessEventExpectedData {
   readonly content: string;
 }
 
-export interface InputEventExpectedData {
-  readonly data: string;
-}
-
 type SingletonEvent<T> = Singleton.Value<EditorEvent<T>>;
 
 const pWaitFor = (message: string, waitFn: () => void): Promise<void> => Waiter.pTryUntil(message, waitFn, undefined, 100);
@@ -47,11 +43,11 @@ const pWaitForAndAssertProcessEvents = async (preProcessEvent: SingletonEvent<Pa
   assertLastPostProcessEvent(postProcessEvent, expectedData);
 };
 
-const pWaitForAndAssertInputEvent = async (event: SingletonEvent<InputEvent>, expectedData: InputEventExpectedData): Promise<void> => {
+const pWaitForAndAssertInputEvent = async (event: SingletonEvent<InputEvent>): Promise<void> => {
   await pWaitForInputEvent(event);
   event.on((e) => {
     assert.equal(e.inputType, 'insertFromPaste', 'Input event type should be "insertFromPaste"');
-    assert.equal(e.data, expectedData.data, 'Input event data should be as expected');
+    assert.isNull(e.data, 'Input event data should be null');
   });
 };
 

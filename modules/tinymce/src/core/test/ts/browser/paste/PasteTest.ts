@@ -493,9 +493,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
 
       editor.on('input', (e) => inputEvent.set(e));
       editor.execCommand('mceInsertClipboardContent', false, { html: '<p>Test</p>' });
-      await pWaitForAndAssertInputEvent(inputEvent, {
-        data: '<p>Test</p>'
-      });
+      await pWaitForAndAssertInputEvent(inputEvent);
     });
   });
 });

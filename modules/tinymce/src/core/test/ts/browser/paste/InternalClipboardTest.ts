@@ -196,9 +196,9 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
   });
 
   context('paste', () => {
-    const pWaitForAndAssertEvents = async (processExpected: EventUtils.ProcessEventExpectedData, inputExpected: EventUtils.InputEventExpectedData): Promise<void> => {
+    const pWaitForAndAssertEvents = async (processExpected: EventUtils.ProcessEventExpectedData): Promise<void> => {
       await EventUtils.pWaitForAndAssertProcessEvents(lastPreProcessEvent, lastPostProcessEvent, processExpected);
-      await EventUtils.pWaitForAndAssertInputEvent(lastInputEvent, inputExpected);
+      await EventUtils.pWaitForAndAssertInputEvent(lastInputEvent);
     };
 
     const pWaitForAndAssertNoEvents = async () => await EventUtils.pWaitForAndAssertEventsDoNotFire([ lastPreProcessEvent, lastPostProcessEvent, lastInputEvent ]);
@@ -206,19 +206,19 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
     it('TBA: Paste external content', async () => {
       const editor = hook.editor();
       paste(editor, '<p>abc</p>', { 'text/plain': 'X', 'text/html': '<p>X</p>' }, [ 0, 0 ], 0, [ 0, 0 ], 3);
-      await pWaitForAndAssertEvents({ internal: false, content: 'X' }, { data: 'X' });
+      await pWaitForAndAssertEvents({ internal: false, content: 'X' });
     });
 
     it('TBA: Paste external content treated as plain text', async () => {
       const editor = hook.editor();
       paste(editor, '<p>abc</p>', { 'text/html': '<p>X</p>' }, [ 0, 0 ], 0, [ 0, 0 ], 3);
-      await pWaitForAndAssertEvents({ internal: false, content: 'X' }, { data: 'X' });
+      await pWaitForAndAssertEvents({ internal: false, content: 'X' });
     });
 
     it('TINY-9829: Paste external plain-text-only content', async () => {
       const editor = hook.editor();
       paste(editor, '<p>abc</p>', { 'text/plain': 'X' }, [ 0, 0 ], 0, [ 0, 0 ], 3);
-      await pWaitForAndAssertEvents({ internal: false, content: 'X' }, { data: 'X' });
+      await pWaitForAndAssertEvents({ internal: false, content: 'X' });
     });
 
     it('TINY-9829: Paste external non-extractable content', async () => {
@@ -230,19 +230,19 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
     it('TBA: Paste internal content with mark', async () => {
       const editor = hook.editor();
       paste(editor, '<p>abc</p>', { 'text/plain': 'X', 'text/html': InternalHtml.mark('<p>X</p>') }, [ 0, 0 ], 0, [ 0, 0 ], 3);
-      await pWaitForAndAssertEvents({ internal: true, content: '<p>X</p>' }, { data: '<p>X</p>' });
+      await pWaitForAndAssertEvents({ internal: true, content: '<p>X</p>' });
     });
 
     it('TBA: Paste internal content with mime', async () => {
       const editor = hook.editor();
       paste(editor, '<p>abc</p>', { 'text/plain': 'X', 'text/html': '<p>X</p>', 'x-tinymce/html': '<p>X</p>' }, [ 0, 0 ], 0, [ 0, 0 ], 3);
-      await pWaitForAndAssertEvents({ internal: true, content: '<p>X</p>' }, { data: '<p>X</p>' });
+      await pWaitForAndAssertEvents({ internal: true, content: '<p>X</p>' });
     });
 
     it('TINY-9489: uri-list should not be pasted in as a link', async () => {
       const editor = hook.editor();
       paste(editor, '<p>X</p>', { 'text/plain': 'https://tiny.com', 'text/uri-list': 'https://tiny.com' }, [ 0, 0 ], 0, [ 0, 0 ], 1);
-      await pWaitForAndAssertEvents({ internal: false, content: 'https://tiny.com' }, { data: 'https://tiny.com' });
+      await pWaitForAndAssertEvents({ internal: false, content: 'https://tiny.com' });
       TinyAssertions.assertContent(editor, '<p><a href="https://tiny.com">X</a></p>');
     });
   });
