@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, FocusTools, Keys, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { Attribute, Css, Html, Scroll, SugarBody, SugarElement, SugarLocation, SugarShadowDom } from '@ephox/sugar';
+import { Attribute, Css, Html, Scroll, SugarBody, SugarShadowDom } from '@ephox/sugar';
 import { TinyApis, TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -475,13 +475,10 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       assert.equal(Html.get(editorContainer), expectedHtml);
     };
 
-    const pAssertFloatingToolbarPosition = async (editor: Editor, getTop: () => number): Promise<void> => {
-      const toolbar = await TinyUiActions.pWaitForUi(editor, '.tox-editor-header') as SugarElement<HTMLElement>;
+    const pAssertFloatingToolbarPosition = async (editor: Editor, top: number): Promise<void> => {
       await Waiter.pTryUntil('Wait for toolbar position', () => {
-        const top = getTop();
         const diff = 10;
-        const toolbarTop = toolbar.dom.getBoundingClientRect().top;
-        const posTop = SugarLocation.absolute(toolbar).top - toolbarTop;
+        const posTop = window.pageYOffset;
         assert.approximately(posTop, top, diff, `Drawer top position ${posTop}px should be ~${top}px`);
       });
     };
@@ -489,14 +486,11 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
     it('TINY-9814: coming back from a view when the toolbar is scrolled, should preserve the buttons in `tox-toolbar__primary`', async () => {
       const editor = hook.editor();
       editor.setContent(`<p>${Arr.range(100, Fun.constant('some text')).join('<br>')}</p>`);
-      const initialContainerPos = SugarLocation.absolute(TinyDom.contentAreaContainer(editor));
-      const offsetTop = initialContainerPos.top;
+      Scroll.to(0, 0);
+      await pAssertFloatingToolbarPosition(editor, 0);
 
-      Scroll.to(0, offsetTop);
-      await pAssertFloatingToolbarPosition(editor, Fun.constant(offsetTop));
-
-      Scroll.to(0, offsetTop + 500);
-      await pAssertFloatingToolbarPosition(editor, () => offsetTop + 500);
+      Scroll.to(0, 500);
+      await pAssertFloatingToolbarPosition(editor, 500);
 
       editor.execCommand('ToggleView', true, 'myview1');
       assertViewHtml(0, '<button>myview1</button>');
