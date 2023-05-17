@@ -489,12 +489,13 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
     it('TINY-9814: coming back from a view when the toolbar is scrolled, should preserve the buttons in `tox-toolbar__primary`', async () => {
       const editor = hook.editor();
       editor.setContent(`<p>${Arr.range(100, Fun.constant('some text')).join('<br>')}</p>`);
+      const initialContainerPos = SugarLocation.absolute(TinyDom.contentAreaContainer(editor));
 
-      Scroll.to(0, 0);
-      await pAssertFloatingToolbarPosition(editor, Fun.constant(0));
+      Scroll.to(0, initialContainerPos.top);
+      await pAssertFloatingToolbarPosition(editor, () => initialContainerPos.top);
 
-      Scroll.to(0, 500);
-      await pAssertFloatingToolbarPosition(editor, Fun.constant(500));
+      Scroll.to(0, initialContainerPos.top + 500);
+      await pAssertFloatingToolbarPosition(editor, () => initialContainerPos.top + 500);
 
       editor.execCommand('ToggleView', true, 'myview1');
       assertViewHtml(0, '<button>myview1</button>');
