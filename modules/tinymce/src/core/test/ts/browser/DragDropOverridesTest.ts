@@ -1,7 +1,7 @@
 import { Assertions, DragnDrop, Keyboard, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { DataTransfer, DataTransferMode, DragImageData } from '@ephox/dragster';
-import { Arr, Obj, Optional, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import { PlatformDetection } from '@ephox/sand';
 import { Html, SelectorFind, SugarBody, SugarElement, SugarLocation, Traverse } from '@ephox/sugar';
@@ -52,6 +52,20 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       assert.deepEqual(eventTypes, expectedTypes);
     };
 
+    const assertDataTransferFiles = (files: FileList, expectedFiles: File[], eventType: string) => {
+      if (expectedFiles.length === 0) {
+        assert.isNull(files.item(0), `Expected dataTransfer on "${eventType}" event to have no files`);
+      } else {
+        Arr.each(expectedFiles, (specFile) => {
+          Arr.find(files, (file) => Obj.equal(file as unknown as Record<string, unknown>, specFile as unknown as Record<string, unknown>))
+            .fold(
+              () => assert.fail(`Expected dataTransfer on "${eventType}" event to have file ${specFile.name}`),
+              Fun.noop
+            );
+        });
+      }
+    };
+
     const assertDndEventDataTransfer = (eventType: string, spec: DataTransferSpec) =>
       getDataTransferFromEvent(eventType).fold(
         () => assert.fail(`Expected ${eventType} event to have dataTransfer object`),
@@ -71,22 +85,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
           assert.equal(dataTransfer.effectAllowed, spec.effectAllowed, `Expected dataTransfer on "${eventType}" event to have effectAllowed`);
           KAssert.eqOptional(`Expected dataTransfer on "${eventType}" event to have dragImage`, Optional.from(spec.dragImage), DataTransfer.getDragImage(dataTransfer));
 
-          const dtFiles = dataTransfer.files;
-          if (spec.files.length === 0) {
-            assert.isNull(dtFiles.item(0), `Expected dataTransfer on "${eventType}" event to have no files`);
-          } else {
-            Arr.each(spec.files, (specFile) => {
-              let fileExists = false;
-              for (let i = 0, l = dtFiles.length; i < l; ++i) {
-                const currentFile = dtFiles.item(i);
-                if (!Type.isNull(currentFile) && Obj.equal(currentFile as unknown as Record<string, unknown>, specFile as unknown as Record<string, unknown>)) {
-                  fileExists = true;
-                  break;
-                }
-              }
-              assert.isTrue(fileExists, `Expected dataTransfer on "${eventType}" event to have file ${specFile.name}`);
-            });
-          }
+          assertDataTransferFiles(dataTransfer.files, spec.files, eventType);
 
           if (eventType === 'dragend') {
             DataTransferMode.setProtectedMode(dataTransfer);
