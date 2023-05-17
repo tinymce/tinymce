@@ -1,9 +1,9 @@
 import { Id, Optional } from '@ephox/katamari';
 
 interface DragImageData {
-  image: Element;
-  x: number;
-  y: number;
+  readonly image: Element;
+  readonly x: number;
+  readonly y: number;
 }
 
 const imageId = Id.generate('image');
