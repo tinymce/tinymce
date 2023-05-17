@@ -54,7 +54,8 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
 
     const assertDataTransferFiles = (files: FileList, expectedFiles: File[], eventType: string) => {
       if (expectedFiles.length === 0) {
-        assert.isNull(files.item(0), `Expected dataTransfer on "${eventType}" event to have no files`);
+        assert.strictEqual(files.length, 0, `length property should be 0 since dataTransfer on "${eventType}" event is expected to have no file`);
+        assert.isNull(files.item(0), `item(0) should return null since dataTransfer on "${eventType}" event is expected to have no file`);
       } else {
         Arr.each(expectedFiles, (specFile) => {
           Arr.find(files, (file) => Obj.equal(file as unknown as Record<string, unknown>, specFile as unknown as Record<string, unknown>))
