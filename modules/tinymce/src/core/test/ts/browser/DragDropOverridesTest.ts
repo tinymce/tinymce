@@ -1,6 +1,6 @@
 import { Assertions, DragnDrop, Keyboard, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { DataTransfer, DataTransferMode } from '@ephox/dragster';
+import { DataTransfer, DataTransferMode, DragImageData } from '@ephox/dragster';
 import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import { PlatformDetection } from '@ephox/sand';
@@ -283,7 +283,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
     it('TINY-9601: dataTransfer data modified in dragstart event should persist in drop and dragend events and in content inserted on drop', async () => {
       const editor = hook.editor();
 
-      const testImage = {
+      const testImage: DragImageData = {
         image: document.createElement('div'),
         x: 10,
         y: 20
