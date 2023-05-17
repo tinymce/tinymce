@@ -6,7 +6,7 @@ import { createFile } from 'ephox/agar/api/Files';
 import { createDataTransfer } from 'ephox/agar/datatransfer/DataTransfer';
 import { createDataTransferItemFromFile, createDataTransferItemFromString, getData } from 'ephox/agar/datatransfer/DataTransferItem';
 
-describe('atomic.dragster.datatransfer.DataTransferItemTest', () => {
+describe('atomic.agar.datatransfer.DataTransferItemTest', () => {
   it('Create transfer item from file', () => {
     const fileItem = createDataTransferItemFromFile(createDataTransfer(), createFile('a.txt', 1234, new Blob([ '123' ], { type: 'text/plain' })));
 
