@@ -1,6 +1,6 @@
 import { Clipboard as AgarClipboard, Waiter } from '@ephox/agar';
 import { afterEach, beforeEach, describe, it } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
+import { Fun, Singleton } from '@ephox/katamari';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -9,7 +9,7 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as Clipboard from 'tinymce/core/paste/Clipboard';
 
 describe('browser.tinymce.core.paste.ImagePasteTest', () => {
-  let lastInputEvent: EditorEvent<InputEvent> | undefined;
+  const lastInputEvent = Singleton.value<EditorEvent<InputEvent>>();
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
@@ -21,7 +21,7 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
     base_url: '/project/tinymce/js/tinymce',
     init_instance_callback: (editor: Editor) => {
       editor.on('input', (e) => {
-        lastInputEvent = e;
+        lastInputEvent.set(e);
       });
     }
   }, []);
@@ -30,7 +30,7 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>a</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
-    lastInputEvent = undefined;
+    lastInputEvent.clear();
   });
 
   afterEach(() => {
@@ -74,9 +74,11 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
 
   const pWaitForAndAssertInputEvent = async (): Promise<void> => {
     await Waiter.pTryUntil('Did not fire input event', () => {
-      assert.isDefined(lastInputEvent, 'Input event object');
+      assert.isTrue(lastInputEvent.isSet(), 'Input event fired');
     });
-    assert.equal(lastInputEvent?.inputType, 'insertFromPaste', 'Input event type should be "insertFromPaste"');
+    lastInputEvent.on((e) => {
+      assert.equal(e?.inputType, 'insertFromPaste', 'Input event type should be "insertFromPaste"');
+    });
   };
 
   it('TBA: pasteImages should set unique id in blobcache', async () => {
