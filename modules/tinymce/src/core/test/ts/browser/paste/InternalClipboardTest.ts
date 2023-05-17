@@ -1,6 +1,6 @@
 import { Clipboard, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Cell, Singleton } from '@ephox/katamari';
+import { Singleton } from '@ephox/katamari';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -10,14 +10,8 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as InternalHtml from 'tinymce/core/paste/InternalHtml';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 
-interface ProcessEventExpectedData {
-  readonly internal: boolean;
-  readonly content: string;
-}
-
-interface InputEventExpectedData {
-  readonly data: string;
-}
+import * as EventUtils from '../../module/test/EventUtils';
+import * as SingletonUtils from '../../module/test/SingletonUtils';
 
 describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
   const dataTransfer = Singleton.value<DataTransfer>();
@@ -47,9 +41,6 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ TablePlugin ]);
 
-  const assertSingletonValueIsSet = <T>(singleton: Singleton.Value<T>, message: string) =>
-    assert.isTrue(singleton.isSet(), message);
-
   const resetEventsAndDataTransfer = () => {
     lastPreProcessEvent.clear();
     lastPostProcessEvent.clear();
@@ -66,7 +57,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
     Clipboard.pasteItems(TinyDom.body(editor), data);
 
   const assertClipboardData = (expectedHtml: string, expectedText: string) => {
-    assertSingletonValueIsSet(dataTransfer, 'dataTransfer should be defined');
+    SingletonUtils.assertSingletonValueIsSet(dataTransfer, 'dataTransfer should be defined');
     dataTransfer.on((transfer) => {
       assert.equal(transfer.getData('text/html'), expectedHtml, 'text/html data should match');
       assert.equal(transfer.getData('text/plain'), expectedText, 'text/plain data should match');
@@ -205,58 +196,12 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
   });
 
   context('paste', () => {
-    const assertLastPreProcessEvent = (expectedData: ProcessEventExpectedData) =>
-      lastPreProcessEvent.on((e) => {
-        assert.equal(e.internal, expectedData.internal, 'Internal property should be equal');
-        assert.equal(e.content, expectedData.content, 'Content property should be equal');
-      });
-
-    const assertLastPostProcessEvent = (expectedData: ProcessEventExpectedData) =>
-      lastPostProcessEvent.on((e) => {
-        assert.equal(e.internal, expectedData.internal, 'Internal property should be equal');
-        assert.equal(e.node.innerHTML, expectedData.content, 'Content property should be equal');
-      });
-
-    const pWaitFor = (message: string, waitFn: () => void) => Waiter.pTryUntil(message, waitFn, undefined, 100);
-
-    const pWaitForProcessEvents = () =>
-      pWaitFor('Did not fire process events', () => {
-        assertSingletonValueIsSet(lastPreProcessEvent, 'PastePreProcess event has fired');
-        assertSingletonValueIsSet(lastPostProcessEvent, 'PastePostProcess event has fired');
-      });
-
-    const pWaitForInputEvent = () =>
-      pWaitFor('Did not fire input event', () => assertSingletonValueIsSet(lastInputEvent, 'Input event has fired'));
-
-    const pWaitForAndAssertProcessEvents = async (expectedData: ProcessEventExpectedData): Promise<void> => {
-      await pWaitForProcessEvents();
-      assertLastPreProcessEvent(expectedData);
-      assertLastPostProcessEvent(expectedData);
+    const pWaitForAndAssertEvents = async (processExpected: EventUtils.ProcessEventExpectedData, inputExpected: EventUtils.InputEventExpectedData): Promise<void> => {
+      await EventUtils.pWaitForAndAssertProcessEvents(lastPreProcessEvent, lastPostProcessEvent, processExpected);
+      await EventUtils.pWaitForAndAssertInputEvent(lastInputEvent, inputExpected);
     };
 
-    const pWaitForAndAssertInputEvent = async (expectedData: InputEventExpectedData): Promise<void> => {
-      await pWaitForInputEvent();
-      lastInputEvent.on((e) => {
-        assert.equal(e.inputType, 'insertFromPaste', 'Input event type should be "insertFromPaste"');
-        assert.equal(e.data, expectedData.data, 'Input event data should be as expected');
-      });
-    };
-
-    const pWaitForAndAssertEvents = async (processExpected: ProcessEventExpectedData, inputExpected: InputEventExpectedData): Promise<void> => {
-      await pWaitForAndAssertProcessEvents(processExpected);
-      await pWaitForAndAssertInputEvent(inputExpected);
-    };
-
-    const pWaitForAndAssertNoEvents = async (): Promise<void> => {
-      const thrown = Cell<boolean>(false);
-      try {
-        await Waiter.pTryUntilPredicate('Did not fire any paste event',
-          () => lastPreProcessEvent.isSet() || lastPostProcessEvent.isSet() || lastPostProcessEvent.isSet());
-      } catch {
-        thrown.set(true);
-      }
-      assert.isTrue(thrown.get(), 'Should have no events after waiting');
-    };
+    const pWaitForAndAssertNoEvents = async () => await EventUtils.pWaitForAndAssertEventsDoNotFire([ lastPreProcessEvent, lastPostProcessEvent, lastInputEvent ]);
 
     it('TBA: Paste external content', async () => {
       const editor = hook.editor();
