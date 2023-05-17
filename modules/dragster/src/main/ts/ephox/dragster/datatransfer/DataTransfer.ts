@@ -93,8 +93,8 @@ const cloneDataTransfer = (original: DataTransfer): DataTransfer => {
   // Create new DataTransfer object to ensure scope is not shared between original and clone
   const clone = createDataTransfer();
 
-  // Store original mode and set to read-only to copy data
   const originalMode = getMode(original);
+  // Set original to read-only to ensure data can be copied
   setReadOnlyMode(original);
 
   // Set clone event to dragstart to ensure effectAllowed can be set
@@ -104,23 +104,20 @@ const cloneDataTransfer = (original: DataTransfer): DataTransfer => {
   clone.effectAllowed = original.effectAllowed;
   getDragImage(original).each((imageData) => clone.setDragImage(imageData.image, imageData.x, imageData.y));
 
-  // Copy string data
   Arr.each(original.types, (type) => {
     if (type !== 'Files') {
       clone.setData(type, original.getData(type));
     }
   });
 
-  // Copy files
   Arr.each(original.files, (file) => clone.items.add(file));
 
-  // Set event type
   getEvent(original).each((type) => {
     setEvent(clone, type);
   });
 
-  // Set mode
   originalMode.each((mode) => {
+    // Reset original mode since it was set to read-only earlier
     setMode(original, mode);
     setMode(clone, mode);
   });
