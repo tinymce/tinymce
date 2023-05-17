@@ -389,8 +389,9 @@ const contentBodyLoaded = (editor: Editor): void => {
   // TODO: See if we actually need to disable/re-enable here
   (body as any).disabled = true;
   editor.readonly = Options.isReadOnly(editor);
+  editor._editableRoot = Options.hasEditableRoot(editor);
 
-  if (!editor.readonly) {
+  if (!editor.readonly && editor._editableRoot) {
     if (editor.inline && DOM.getStyle(body, 'position', true) === 'static') {
       body.style.position = 'relative';
     }

@@ -7,6 +7,7 @@ import * as EditorRemove from '../EditorRemove';
 import { BlobInfoImagePair } from '../file/ImageScanner';
 import * as EditorFocus from '../focus/EditorFocus';
 import * as Render from '../init/Render';
+import * as EditableRoot from '../mode/EditableRoot';
 import { NodeChange } from '../NodeChange';
 import { normalizeOptions } from '../options/NormalizeOptions';
 import SelectionOverrides from '../SelectionOverrides';
@@ -239,6 +240,7 @@ class Editor implements EditorObservable {
   public _pendingNativeEvents: string[] = [];
   public _selectionOverrides!: SelectionOverrides;
   public _skinLoaded: boolean = false;
+  public _editableRoot: boolean = true;
 
   // EditorObservable patches
   public bindPendingEventDelegates!: EditorObservable['bindPendingEventDelegates'];
@@ -1076,6 +1078,26 @@ class Editor implements EditorObservable {
    */
   public addVisual(elm?: HTMLElement): void {
     VisualAids.addVisual(this, elm);
+  }
+
+  /**
+   * Changes the editable state of the editor root element.
+   *
+   * @method setEditableRoot
+   * @param {Boolean} state State to set true for editable and false for non-editable.
+   */
+  public setEditableRoot(state: boolean): void {
+    EditableRoot.setEditableRoot(this, state);
+  }
+
+  /**
+   * Returns the current editable state of the editor root element.
+   *
+   * @method hasEditableRoot
+   * @return {Boolean} True if the root element is editable, false if it's not editable.
+   */
+  public hasEditableRoot(): boolean {
+    return EditableRoot.hasEditableRoot(this);
   }
 
   /**
