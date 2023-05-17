@@ -42,7 +42,7 @@ describe('browser.tinymce.core.EditableRootTest', () => {
       assertEditableState(hook.editor(), true);
     });
 
-    it('TINY-9839: Should be able to toggle editable root state and track it state', () => {
+    it('TINY-9839: Should be able to toggle editable root state and track the state', () => {
       const editor = hook.editor();
       const states: boolean[] = [];
 

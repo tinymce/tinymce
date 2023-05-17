@@ -17,6 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `accordion` and `accordion-toggle` icons. #TINY-9789
 - New `details_initial_state` and `details_serialized_state` options. #TINY-9732
 - New `init_content_sync` option that initializes the editor iframe using `document.write` instead of `srcdoc`. #TINY-9818
+- New `newdocument_content` option that changes the content that will be set when using the `New document` button. #TINY-9839
+- New `editable_root` option that can be set to `false` to prevent editing of the editors root element. #TINY-9839
+- New `editor.setEditableRoot` API that sets the editable state of the editor root element. #TINY-9838
+- New `editor.hasEditableRoot` API that returns `true` or `false` depending on the editable state of the editor root element. #TINY-9838
+- New `EditableRootStateChange` event that gets dispatched when the state of the editable root is changed. #TINY-9838
 
 ### Improved
 - Screen readers are now able to announce the highlighted menu item of link comboboxes. #TINY-9280
