@@ -1,10 +1,10 @@
 import { Arr } from '@ephox/katamari';
 
-import { getDragImage, setDragImage } from './DragImage';
-import { getEvent, isInDragStartEvent, setDragstartEvent, setEvent } from './Event';
-import { createEmptyFileList } from './Files';
-import { normalizeItems } from './Items';
-import { getMode, isInProtectedMode, isInReadWriteMode, setMode, setReadOnlyMode, setReadWriteMode } from './Mode';
+import * as DragImage from './DragImage';
+import * as Event from './Event';
+import * as Files from './Files';
+import * as Items from './Items';
+import * as Mode from './Mode';
 
 type DropEffect = DataTransfer['dropEffect'];
 type EffectAllowed = DataTransfer['effectAllowed'];
@@ -35,18 +35,18 @@ const createDataTransfer = (): DataTransfer => {
     set effectAllowed(allowed: DataTransfer['effectAllowed']) {
       // TINY-9601: Only allow setting effectAllowed to a valid value in a dragstart event
       // https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/effectAllowed
-      if (isInDragStartEvent(dataTransfer) && Arr.contains(validEffectAlloweds, allowed)) {
+      if (Event.isInDragStartEvent(dataTransfer) && Arr.contains(validEffectAlloweds, allowed)) {
         effectAllowed = allowed;
       }
     },
 
     get items() {
-      return normalizeItems(dataTransfer, dataTransferImpl.items);
+      return Items.normalizeItems(dataTransfer, dataTransferImpl.items);
     },
 
     get files() {
-      if (isInProtectedMode(dataTransfer)) {
-        return createEmptyFileList();
+      if (Mode.isInProtectedMode(dataTransfer)) {
+        return Files.createEmptyFileList();
       } else {
         return dataTransferImpl.files;
       }
@@ -57,14 +57,14 @@ const createDataTransfer = (): DataTransfer => {
     },
 
     setDragImage: (image: Element, x: number, y: number): void => {
-      if (isInReadWriteMode(dataTransfer)) {
-        setDragImage(dataTransfer, { image, x, y });
+      if (Mode.isInReadWriteMode(dataTransfer)) {
+        DragImage.setDragImage(dataTransfer, { image, x, y });
         dataTransferImpl.setDragImage(image, x, y);
       }
     },
 
     getData: (format: string): string => {
-      if (isInProtectedMode(dataTransfer)) {
+      if (Mode.isInProtectedMode(dataTransfer)) {
         return '';
       } else {
         return dataTransferImpl.getData(format);
@@ -72,19 +72,19 @@ const createDataTransfer = (): DataTransfer => {
     },
 
     setData: (format: string, data: string): void => {
-      if (isInReadWriteMode(dataTransfer)) {
+      if (Mode.isInReadWriteMode(dataTransfer)) {
         dataTransferImpl.setData(format, data);
       }
     },
 
     clearData: (format?: string | undefined): void => {
-      if (isInReadWriteMode(dataTransfer)) {
+      if (Mode.isInReadWriteMode(dataTransfer)) {
         dataTransferImpl.clearData(format);
       }
     }
   };
 
-  setReadWriteMode(dataTransfer);
+  Mode.setReadWriteMode(dataTransfer);
 
   return dataTransfer;
 };
@@ -93,16 +93,16 @@ const cloneDataTransfer = (original: DataTransfer): DataTransfer => {
   // Create new DataTransfer object to ensure scope is not shared between original and clone
   const clone = createDataTransfer();
 
-  const originalMode = getMode(original);
+  const originalMode = Mode.getMode(original);
   // Set original to read-only to ensure data can be copied
-  setReadOnlyMode(original);
+  Mode.setReadOnlyMode(original);
 
   // Set clone event to dragstart to ensure effectAllowed can be set
-  setDragstartEvent(clone);
+  Event.setDragstartEvent(clone);
 
   clone.dropEffect = original.dropEffect;
   clone.effectAllowed = original.effectAllowed;
-  getDragImage(original).each((imageData) => clone.setDragImage(imageData.image, imageData.x, imageData.y));
+  DragImage.getDragImage(original).each((imageData) => clone.setDragImage(imageData.image, imageData.x, imageData.y));
 
   Arr.each(original.types, (type) => {
     if (type !== 'Files') {
@@ -112,17 +112,19 @@ const cloneDataTransfer = (original: DataTransfer): DataTransfer => {
 
   Arr.each(original.files, (file) => clone.items.add(file));
 
-  getEvent(original).each((type) => {
-    setEvent(clone, type);
+  Event.getEvent(original).each((type) => {
+    Event.setEvent(clone, type);
   });
 
   originalMode.each((mode) => {
     // Reset original mode since it was set to read-only earlier
-    setMode(original, mode);
-    setMode(clone, mode);
+    Mode.setMode(original, mode);
+    Mode.setMode(clone, mode);
   });
 
   return clone;
 };
+
+const getDragImage = DragImage.getDragImage;
 
 export { createDataTransfer, cloneDataTransfer, getDragImage };

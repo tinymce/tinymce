@@ -1,6 +1,6 @@
 import { Id, Optional } from '@ephox/katamari';
 
-interface DragImageData {
+export interface DragImageData {
   readonly image: Element;
   readonly x: number;
   readonly y: number;
