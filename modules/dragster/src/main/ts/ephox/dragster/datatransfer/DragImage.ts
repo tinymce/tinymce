@@ -9,12 +9,12 @@ interface DragImageData {
 const imageId = Id.generate('image');
 
 const getDragImage = (transfer: DataTransfer): Optional<DragImageData> => {
-  const dt: any = transfer;
+  const dt: Record<string, any> = transfer;
   return Optional.from(dt[imageId]);
 };
 
 const setDragImage = (transfer: DataTransfer, imageData: DragImageData): void => {
-  const dt: any = transfer;
+  const dt: Record<string, any> = transfer;
   dt[imageId] = imageData;
 };
 

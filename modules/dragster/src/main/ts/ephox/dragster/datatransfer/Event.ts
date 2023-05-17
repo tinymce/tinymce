@@ -9,12 +9,12 @@ export const enum Event {
 const eventId = Id.generate('event');
 
 const getEvent = (transfer: DataTransfer): Optional<Event> => {
-  const dt: any = transfer;
+  const dt: Record<string, any> = transfer;
   return Optional.from(dt[eventId]);
 };
 
 const mkSetEventFn = (type: Event) => (transfer: DataTransfer): void => {
-  const dt: any = transfer;
+  const dt: Record<string, any> = transfer;
   dt[eventId] = type;
 };
 
@@ -25,7 +25,7 @@ const setDropEvent = mkSetEventFn(Event.Drop);
 const setDragendEvent = mkSetEventFn(Event.Dragend);
 
 const checkEvent = (expectedType: Event) => (transfer: DataTransfer): boolean => {
-  const dt: any = transfer;
+  const dt: Record<string, any> = transfer;
   return Optional.from(dt[eventId]).exists((type) => type === expectedType);
 };
 
