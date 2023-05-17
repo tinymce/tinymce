@@ -416,6 +416,7 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       assert.equal(Html.get(editorContainer), expectedHtml);
     };
 
+    // HERE
     it('TINY-9419: "Expand or collapse" button should not be removed if the toolbar is opened and view is opened and close', async () => {
       const editor = hook.editor();
 
@@ -490,8 +491,8 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       editor.setContent(`<p>${Arr.range(100, Fun.constant('some text')).join('<br>')}</p>`);
       const initialContainerPos = SugarLocation.absolute(TinyDom.container(editor));
 
-      Scroll.to(0, initialContainerPos.top);
-      await pAssertFloatingToolbarPosition(editor, () => initialContainerPos.top);
+      Scroll.to(0, 0);
+      await pAssertFloatingToolbarPosition(editor, Fun.constant(0));
 
       Scroll.to(0, initialContainerPos.top + 500);
       await pAssertFloatingToolbarPosition(editor, () => initialContainerPos.top + 500);
