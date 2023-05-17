@@ -486,9 +486,9 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       const elementToScrollTo = UiFinder.findIn(TinyDom.body(editor), '.element_to_scroll_to').getOrDie();
       const toolbar = await TinyUiActions.pWaitForUi(editor, '.tox-toolbar__overflow');
 
-      assert.isTrue(Scroll.get().top < toolbar.dom.getBoundingClientRect().top, 'before scroll the scroll top should be before the toolbar');
+      await Waiter.pTryUntil('Wait for scroll top to be before the toolbar', () => Scroll.get().top < toolbar.dom.getBoundingClientRect().top);
       elementToScrollTo.dom.scrollIntoView();
-      assert.isTrue(Scroll.get().top > toolbar.dom.getBoundingClientRect().top, 'after scroll the scroll top should be after the toolbar');
+      await Waiter.pTryUntil('Wait for scroll top to be after the toolbar', () => Scroll.get().top > toolbar.dom.getBoundingClientRect().top);
 
       editor.execCommand('ToggleView', true, 'myview1');
       assertViewHtml(0, '<button>myview1</button>');
