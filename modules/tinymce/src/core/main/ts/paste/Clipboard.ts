@@ -8,7 +8,7 @@ import * as Options from '../api/Options';
 import Delay from '../api/util/Delay';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import VK from '../api/util/VK';
-import { fireInputEvent } from '../events/InputEvents';
+import * as InputEvents from '../events/InputEvents';
 import * as Conversions from '../file/Conversions';
 import * as Whitespace from '../text/Whitespace';
 import * as InternalHtml from './InternalHtml';
@@ -34,7 +34,7 @@ const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText
   if (!args.cancelled) {
     const content = args.content;
     SmartPaste.insertContent(editor, content, pasteAsText);
-    fireInputEvent(editor, 'insertFromPaste', { data: content });
+    InputEvents.fireInputEvent(editor, 'insertFromPaste', { data: content });
   }
 };
 
