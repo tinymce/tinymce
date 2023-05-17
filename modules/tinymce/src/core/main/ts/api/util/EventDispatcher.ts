@@ -146,9 +146,6 @@ class EventDispatcher<T extends {}> {
    * instance.dispatch('event', {...});
    */
   public dispatch <K extends string, U extends MappedEvent<T, K>>(name: K, args?: U): EditorEvent<U> {
-    if (name === 'input') {
-      debugger;
-    }
     const lcName = name.toLowerCase();
     const event = EventUtils.normalize(lcName, args ?? {}, this.scope) as EventUtils.NormalizedEvent<U>;
 

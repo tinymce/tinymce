@@ -9,7 +9,7 @@ import { PastePostProcessEvent, PastePreProcessEvent } from 'tinymce/core/api/Ev
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as PasteUtils from 'tinymce/core/paste/PasteUtils';
 
-import { pWaitForAndAssertInputEvent } from '../../module/test/EventUtils';
+import * as PasteEventUtils from '../../module/test/PasteEventUtils';
 
 describe('browser.tinymce.core.paste.PasteTest', () => {
   const browser = PlatformDetection.detect().browser;
@@ -493,7 +493,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
 
       editor.on('input', (e) => inputEvent.set(e));
       editor.execCommand('mceInsertClipboardContent', false, { html: '<p>Test</p>' });
-      await pWaitForAndAssertInputEvent(inputEvent);
+      await PasteEventUtils.pWaitForAndAssertInputEvent(inputEvent);
     });
   });
 });

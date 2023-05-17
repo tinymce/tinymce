@@ -10,7 +10,7 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as InternalHtml from 'tinymce/core/paste/InternalHtml';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 
-import * as EventUtils from '../../module/test/EventUtils';
+import * as PasteEventUtils from '../../module/test/PasteEventUtils';
 import * as SingletonUtils from '../../module/test/SingletonUtils';
 
 describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
@@ -196,12 +196,12 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
   });
 
   context('paste', () => {
-    const pWaitForAndAssertEvents = async (processExpected: EventUtils.ProcessEventExpectedData): Promise<void> => {
-      await EventUtils.pWaitForAndAssertProcessEvents(lastPreProcessEvent, lastPostProcessEvent, processExpected);
-      await EventUtils.pWaitForAndAssertInputEvent(lastInputEvent);
+    const pWaitForAndAssertEvents = async (processExpected: PasteEventUtils.ProcessEventExpectedData): Promise<void> => {
+      await PasteEventUtils.pWaitForAndAssertProcessEvents(lastPreProcessEvent, lastPostProcessEvent, processExpected);
+      await PasteEventUtils.pWaitForAndAssertInputEvent(lastInputEvent);
     };
 
-    const pWaitForAndAssertNoEvents = async () => await EventUtils.pWaitForAndAssertEventsDoNotFire([ lastPreProcessEvent, lastPostProcessEvent, lastInputEvent ]);
+    const pWaitForAndAssertNoEvents = async () => await PasteEventUtils.pWaitForAndAssertEventsDoNotFire([ lastPreProcessEvent, lastPostProcessEvent, lastInputEvent ]);
 
     it('TBA: Paste external content', async () => {
       const editor = hook.editor();
