@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Typing after deleting formatted content could remove a space at the start of the typing. #TINY-9310
+- The floating toolbar did not occupy the entire available space when the page had a flexbox layout. #TINY-9847
 
 ### Added
 - New optional `defaultExpandedIds` and `onToggleExpand` options to the `tree` component config. #TINY-9653
