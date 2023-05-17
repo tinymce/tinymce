@@ -8,7 +8,7 @@ import { createDataTransfer, getDragImage } from 'ephox/dragster/datatransfer/Da
 import { setDragendEvent, setDragstartEvent, setDropEvent } from 'ephox/dragster/datatransfer/Event';
 import { isInProtectedMode, setProtectedMode } from 'ephox/dragster/datatransfer/Mode';
 
-describe('atomic.dragster.datatransfer.DataTransferTest', () => {
+describe('browser.dragster.datatransfer.DataTransferTest', () => {
   const browser = PlatformDetection.detect().browser;
   const isSafari = browser.isSafari();
   const isFirefox = browser.isFirefox();

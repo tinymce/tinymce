@@ -4,11 +4,12 @@ import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
 
 import { cloneDataTransfer, createDataTransfer, getDragImage } from 'ephox/dragster/datatransfer/DataTransfer';
+import { DragImageData } from 'ephox/dragster/datatransfer/DragImage';
 import { Event, getEvent, setDragstartEvent } from 'ephox/dragster/datatransfer/Event';
 import { getMode, Mode, setMode, setReadOnlyMode, setReadWriteMode } from 'ephox/dragster/datatransfer/Mode';
 
-describe('atomic.dragster.datatransfer.DataTransferCloneTest', () => {
-  const dragImage = {
+describe('browser.dragster.datatransfer.DataTransferCloneTest', () => {
+  const dragImage: DragImageData = {
     image: document.createElement('div'),
     x: 10,
     y: 20

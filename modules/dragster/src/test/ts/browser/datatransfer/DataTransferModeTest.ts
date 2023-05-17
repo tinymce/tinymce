@@ -5,7 +5,7 @@ import { assert } from 'chai';
 import { createDataTransfer } from 'ephox/dragster/datatransfer/DataTransfer';
 import { isInProtectedMode, isInReadOnlyMode, isInReadWriteMode, setProtectedMode, setReadOnlyMode } from 'ephox/dragster/datatransfer/Mode';
 
-describe('atomic.dragster.datatransfer.DataTransferModeTest', () => {
+describe('browser.dragster.datatransfer.DataTransferModeTest', () => {
   const browser = PlatformDetection.detect().browser;
 
   const testFile1 = new window.File([ 'Lorem ipsum' ], 'file1.txt', { type: 'text/plain', lastModified: 123 });
