@@ -73,7 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Typing after deleting formatted content could remove a space at the start of the typing. #TINY-9310
 - Invalid markup in Notification and Dialog close buttons. #TINY-9849
 - In dialogs, an incorrect `aria-describedby` attribute caused the body of the dialog to be announced when using a screen reader. #TINY-9816
-- Switching from a `view` to an `editor` with a `toolbar_sticky` and `toolbar_sticky_offset` and is scrolled, only the more button is showed. #TINY-9814
+- The sticky toolbar would not be rendered correctly when transitioning from the custom editor view to the main view. #TINY-9814
 
 ## 6.4.2 - 2023-04-26
 
