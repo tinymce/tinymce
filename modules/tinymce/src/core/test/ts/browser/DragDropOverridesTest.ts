@@ -1,11 +1,22 @@
 import { Assertions, DragnDrop, Keyboard, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Type } from '@ephox/katamari';
+import { DataTransfer, DataTransferMode, DragImageData } from '@ephox/dragster';
+import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
+import { KAssert } from '@ephox/katamari-assertions';
+import { PlatformDetection } from '@ephox/sand';
 import { Html, SelectorFind, SugarBody, SugarElement, SugarLocation, Traverse } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+
+interface DataTransferSpec {
+  readonly data: { type: string; value: string }[];
+  readonly dragImage?: { image: Element; x: number; y: number };
+  readonly dropEffect: 'none' | 'copy' | 'link' | 'move';
+  readonly effectAllowed: 'none' | 'copy' | 'copyLink' | 'copyMove' | 'link' | 'linkMove' | 'move' | 'all' | 'uninitialized';
+  readonly files: File[];
+}
 
 describe('browser.tinymce.core.DragDropOverridesTest', () => {
   context('Tests when the editor is inside the viewport', () => {
@@ -30,14 +41,61 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       Mouse.mouseMoveTo(SugarBody.body(), 0, 0);
     });
 
+    const findEvent = (eventType: string): Optional<DragEvent> => Arr.find(events, ({ type }) => type === eventType);
+
+    const getDataTransferFromEvent = (eventType: string): Optional<DataTransfer> =>
+      findEvent(eventType).bind((event) => Optional.from(event.dataTransfer));
+
     const assertEventsDispatched = (expectedTypes: string[]) => {
       const eventTypes = Arr.map(events, (e) => e.type);
 
       assert.deepEqual(eventTypes, expectedTypes);
     };
 
-    const assertDndEvent = (expectedType: string, expectedClass: string, assertMouseCords = true) => {
-      const event = Arr.find(events, ({ type }) => type === expectedType).getOrDie(`Could not find expected event type: ${expectedType}`);
+    const assertDataTransferFiles = (files: FileList, expectedFiles: File[], eventType: string) => {
+      if (expectedFiles.length === 0) {
+        assert.strictEqual(files.length, 0, `length property should be 0 since dataTransfer on "${eventType}" event is expected to have no file`);
+        assert.isNull(files.item(0), `item(0) should return null since dataTransfer on "${eventType}" event is expected to have no file`);
+      } else {
+        Arr.each(expectedFiles, (specFile) => {
+          Arr.find(files, (file) => Obj.equal(file as unknown as Record<string, unknown>, specFile as unknown as Record<string, unknown>))
+            .fold(
+              () => assert.fail(`Expected dataTransfer on "${eventType}" event to have file ${specFile.name}`),
+              Fun.noop
+            );
+        });
+      }
+    };
+
+    const assertDndEventDataTransfer = (eventType: string, spec: DataTransferSpec) =>
+      getDataTransferFromEvent(eventType).fold(
+        () => assert.fail(`Expected ${eventType} event to have dataTransfer object`),
+        (dataTransfer) => {
+          if (eventType === 'dragstart') {
+            assert.isTrue(DataTransferMode.isInReadWriteMode(dataTransfer), `Expected dataTransfer of ${eventType} to be in readwrite mode`);
+          } else if (eventType === 'drop') {
+            assert.isTrue(DataTransferMode.isInReadOnlyMode(dataTransfer), `Expected dataTransfer of ${eventType} event to be in readonly mode`);
+          } else {
+            assert.isTrue(DataTransferMode.isInProtectedMode(dataTransfer), `Expected dataTransfer of ${eventType} event to be in protected mode`);
+            // Temporarily set to read-only to allow checking of data
+            DataTransferMode.setReadOnlyMode(dataTransfer);
+          }
+
+          Arr.each(spec.data, ({ type, value }) => assert.equal(dataTransfer.getData(type), value, `Expected dataTransfer on "${eventType}" event to have ${type} data`));
+          assert.equal(dataTransfer.dropEffect, spec.dropEffect, `Expected dataTransfer on "${eventType}" event to have dropEffect`);
+          assert.equal(dataTransfer.effectAllowed, spec.effectAllowed, `Expected dataTransfer on "${eventType}" event to have effectAllowed`);
+          KAssert.eqOptional(`Expected dataTransfer on "${eventType}" event to have dragImage`, Optional.from(spec.dragImage), DataTransfer.getDragImage(dataTransfer));
+
+          assertDataTransferFiles(dataTransfer.files, spec.files, eventType);
+
+          if (eventType === 'dragend') {
+            DataTransferMode.setProtectedMode(dataTransfer);
+          }
+        }
+      );
+
+    const assertDndEvent = (expectedType: string, expectedClass: string, expectedDataTransferSpec: DataTransferSpec, assertMouseCords = true) => {
+      const event = findEvent(expectedType).getOrDie(`Could not find expected event type: ${expectedType}`);
       const cordKeys = [ 'x', 'y', 'clientX', 'clientY', 'screenX', 'screenY', 'pageX', 'pageY' ] as const;
 
       if (assertMouseCords) {
@@ -46,6 +104,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
 
       assert.equal((event.target as HTMLElement)?.className.trim(), expectedClass, `Expected target on "${expectedType}" event to have class`);
       assert.equal((event.srcElement as HTMLElement)?.className.trim(), expectedClass, `Expected srcElement on "${expectedType}" event to have class`);
+      assertDndEventDataTransfer(expectedType, expectedDataTransferSpec);
     };
 
     const pMouseMoveToCaretChange = (editor: Editor, target: SugarElement<Element>, dx = 0, dy = 0) => {
@@ -90,6 +149,48 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       await Waiter.pTryUntil('Wait for the notification to close', () => UiFinder.notExists(SugarBody.body(), '.tox-notification'));
     };
 
+    const pDragDropElementInsideEditor = async (editor: Editor): Promise<void> => {
+      editor.setContent(`<p contenteditable="false" class="draggable">a</p><p class="dest">bc123</p>`);
+      const target = UiFinder.findIn(TinyDom.body(editor), '.draggable').getOrDie();
+      const targetPosition = SugarLocation.viewport(target);
+
+      const dest = UiFinder.findIn(TinyDom.body(editor), '.dest').getOrDie();
+      const destPosition = SugarLocation.viewport(dest);
+      const yDelta = destPosition.top - targetPosition.top;
+
+      Mouse.mouseDown(target);
+      // Drag CE=F paragraph roughly into other paragraph in order to trigger a valid drop on mouseup
+      await pMouseMoveToCaretChange(editor, target, 15, yDelta + 5);
+      Mouse.mouseUp(dest, { dx: 5, dy: 5 });
+    };
+
+    const defaultDataTransferSpec: DataTransferSpec = {
+      data: [{
+        type: 'text/html',
+        value: PlatformDetection.detect().browser.isFirefox()
+          ? '<p class="draggable" data-mce-selected="1" contenteditable="false">a</p>'
+          : '<p contenteditable="false" class="draggable" data-mce-selected="1">a</p>'
+      }],
+      dropEffect: 'move',
+      effectAllowed: 'all',
+      files: []
+    };
+
+    const assertDnDEventsDragDropElementInsideEditor = (customSpec?: DataTransferSpec) => {
+      assertDndEvent('dragstart', 'draggable', {
+        ...defaultDataTransferSpec,
+        ...customSpec
+      });
+      assertDndEvent('drop', 'dest', {
+        ...defaultDataTransferSpec,
+        ...customSpec
+      });
+      assertDndEvent('dragend', 'mce-content-body', {
+        ...defaultDataTransferSpec,
+        ...customSpec
+      });
+    };
+
     it('drop draggable element outside of editor', () => {
       const editor = hook.editor();
       editor.setContent('<p contenteditable="false" class="draggable">a</p>');
@@ -108,24 +209,10 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
 
     it('TINY-7917: Dropping draggable element inside editor fires dragend event', async () => {
       const editor = hook.editor();
-      editor.setContent('<p contenteditable="false" class="draggable">a</p><p class="dest">bc123</p>');
-      const target = UiFinder.findIn(TinyDom.body(editor), '.draggable').getOrDie();
-      const targetPosition = SugarLocation.viewport(target);
-
-      const dest = UiFinder.findIn(TinyDom.body(editor), '.dest').getOrDie();
-      const destPosition = SugarLocation.viewport(dest);
-      const yDelta = destPosition.top - targetPosition.top;
-
-      Mouse.mouseDown(target);
-      // Drag CE=F paragraph roughly into other paragraph in order to trigger a valid drop on mouseup
-      await pMouseMoveToCaretChange(editor, target, 15, yDelta + 5);
-      Mouse.mouseUp(dest, { dx: 5, dy: 5 });
+      await pDragDropElementInsideEditor(editor);
 
       assertEventsDispatched([ 'dragstart', 'drop', 'dragend' ]);
-
-      assertDndEvent('dragstart', 'draggable');
-      assertDndEvent('drop', 'dest');
-      assertDndEvent('dragend', 'mce-content-body');
+      assertDnDEventsDragDropElementInsideEditor();
     });
 
     it('TINY-9599: Dropping draggable element should be preventable', async () => {
@@ -153,7 +240,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
 
     it('TINY-7917: Pressing escape during drag fires dragend event', async () => {
       const editor = hook.editor();
-      editor.setContent('<p class="draggable" contenteditable="false">a</p><p class="dest">bc123</p>');
+      editor.setContent('<p contenteditable="false" class="draggable">a</p><p class="dest">bc123</p>');
       const target = UiFinder.findIn(TinyDom.body(editor), '.draggable').getOrDie();
       const targetPosition = SugarLocation.viewport(target);
 
@@ -167,9 +254,8 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       Keyboard.activeKeydown(TinyDom.document(editor), Keys.escape());
 
       assertEventsDispatched([ 'dragstart', 'dragend' ]);
-
-      assertDndEvent('dragstart', 'draggable');
-      assertDndEvent('dragend', 'draggable', false);
+      assertDndEvent('dragstart', 'draggable', defaultDataTransferSpec);
+      assertDndEvent('dragend', 'draggable', defaultDataTransferSpec, false);
     });
 
     it('TINY-6027: Drag unsupported file into the editor/UI is prevented', async () => {
@@ -192,6 +278,189 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
         createFile('test.js', 123, new Blob([ 'var a = "content";' ], { type: 'application/javascript' }))
       ]);
       await pAssertNotification('Dropped file type is not supported');
+    });
+
+    it('TINY-9601: dataTransfer data modified in dragstart event should persist in drop and dragend events and in content inserted on drop', async () => {
+      const editor = hook.editor();
+
+      const testImage: DragImageData = {
+        image: document.createElement('div'),
+        x: 10,
+        y: 20
+      };
+      const testFile1 = new window.File([ 'Lorem ipsum' ], 'test.txt', { type: 'text/plain' });
+      const testFile2 = new window.File([ '<p>Lorem ipsum</p>' ], 'test2.html', { type: 'text/html' });
+      const newHtmlData = '<p contenteditable="false">test</p>';
+
+      const dragstartCallback = (e: DragEvent) => {
+        const dataTransfer = e.dataTransfer;
+        if (!Type.isNull(dataTransfer)) {
+          dataTransfer.dropEffect = 'copy';
+          dataTransfer.effectAllowed = 'copy';
+          dataTransfer.setData('text/html', newHtmlData);
+          dataTransfer.setData('text/plain', 'test');
+          dataTransfer.setDragImage(testImage.image, testImage.x, testImage.y);
+          dataTransfer.items.add(testFile1);
+          dataTransfer.items.add(testFile2);
+        }
+      };
+
+      editor.on('dragstart', dragstartCallback);
+      await pDragDropElementInsideEditor(editor);
+      editor.off('dragstart', dragstartCallback);
+
+      assertEventsDispatched([ 'dragstart', 'drop', 'dragend' ]);
+      assertDnDEventsDragDropElementInsideEditor({
+        data: [{ type: 'text/html', value: newHtmlData }, { type: 'text/plain', value: 'test' }],
+        dragImage: testImage,
+        dropEffect: 'copy',
+        effectAllowed: 'copy',
+        files: [ testFile1, testFile2 ],
+      });
+
+      TinyAssertions.assertContent(editor, `<p class="dest">bc</p>${newHtmlData}<p class="dest">123</p>`);
+    });
+
+    it('TINY-9601: Modifying dataTransfer from one event should not affect dataTransfer of other events within a single drag-drop operation', async () => {
+      const editor = hook.editor();
+
+      let dragstartDataTransfer: DataTransfer | null = null;
+      let dropDataTransfer: DataTransfer | null = null;
+      let dragendDataTransfer: DataTransfer | null = null;
+
+      const dragstartCallback = (e: DragEvent) => dragstartDataTransfer = e.dataTransfer;
+      const dropCallback = (e: DragEvent) => dropDataTransfer = e.dataTransfer;
+      const dragendCallback = (e: DragEvent) => dragendDataTransfer = e.dataTransfer;
+
+      editor.on('dragstart', dragstartCallback);
+      editor.on('drop', dropCallback);
+      editor.on('dragend', dragendCallback);
+
+      await pDragDropElementInsideEditor(editor);
+
+      editor.off('dragstart', dragstartCallback);
+      editor.off('drop', dropCallback);
+      editor.off('dragend', dragendCallback);
+
+      assertEventsDispatched([ 'dragstart', 'drop', 'dragend' ]);
+
+      // Do this so that TypeScript does not complain about the dataTransfer objects being null
+      let nullDataTransfer = false;
+      if (Type.isNull(dragstartDataTransfer)) {
+        dragstartDataTransfer = DataTransfer.createDataTransfer();
+        nullDataTransfer = true;
+      }
+      if (Type.isNull(dropDataTransfer)) {
+        dropDataTransfer = DataTransfer.createDataTransfer();
+        nullDataTransfer = true;
+      }
+      if (Type.isNull(dragendDataTransfer)) {
+        dragendDataTransfer = DataTransfer.createDataTransfer();
+        nullDataTransfer = true;
+      }
+      if (nullDataTransfer) {
+        assert.fail('One or more dataTransfer objects from drag events were unexpectedly null');
+      }
+
+      // Ensure dataTransfer objects do not share references
+      assert.notStrictEqual(dragstartDataTransfer, dropDataTransfer, 'dragstart and drop dataTransfer objects should not share references');
+      assert.notStrictEqual(dragstartDataTransfer, dragendDataTransfer, 'dragstart and dragend dataTransfer objects should not share references');
+      assert.notStrictEqual(dropDataTransfer, dragendDataTransfer, 'drop and dragend dataTransfer objects should not share references');
+
+      // Ensure modes are as expected and have not been unexpected mutated as drag events are dispatched
+      assert.isTrue(DataTransferMode.isInReadWriteMode(dragstartDataTransfer), 'dragstart dataTransfer should be in read-write mode');
+      assert.isTrue(DataTransferMode.isInReadOnlyMode(dropDataTransfer), 'drop dataTransfer should be in read-only mode');
+      assert.isTrue(DataTransferMode.isInProtectedMode(dragendDataTransfer), 'dragend dataTransfer should be in protected mode');
+
+      // Ensure scopes are not shared between dataTransfer objects. If scopes are shared then data
+      // could be retrieved from dragend dataTransfer even though it is in protected mode.
+      assert.equal(dragendDataTransfer.getData('text/html'), '', 'dragend dataTransfer should not retrieve any data as it is in protected mode');
+
+      // Change drop & dragend datatransfer from protected to read-write for testing
+      DataTransferMode.setReadWriteMode(dropDataTransfer);
+      DataTransferMode.setReadWriteMode(dragendDataTransfer);
+
+      // Test string data
+      const initialHtmlData = dropDataTransfer.getData('text/html');
+      assert.equal(dragstartDataTransfer.getData('text/html'), initialHtmlData, 'dragstart dataTransfer should retrieve expected initial data');
+      assert.equal(dropDataTransfer.getData('text/html'), initialHtmlData, 'drop dataTransfer should retrieve expected initial data');
+      assert.equal(dragendDataTransfer.getData('text/html'), initialHtmlData, 'dragend dataTransfer should retrieve expected initial data');
+
+      const modifiedHtmlData1 = `${initialHtmlData}<p contenteditable="false">modification1</p>`;
+      dragstartDataTransfer.setData('text/html', modifiedHtmlData1);
+      assert.equal(dragstartDataTransfer.getData('text/html'), modifiedHtmlData1, 'dragstart dataTransfer should retrieve modified data 1');
+      assert.equal(dropDataTransfer.getData('text/html'), initialHtmlData, 'drop dataTransfer should retrieve initial data');
+      assert.equal(dragendDataTransfer.getData('text/html'), initialHtmlData, 'dragend dataTransfer should retrieve initial data');
+
+      const modifiedHtmlData2 = `${initialHtmlData}<p contenteditable="false">modification2</p>`;
+      dropDataTransfer.setData('text/html', modifiedHtmlData2);
+      assert.equal(dragstartDataTransfer.getData('text/html'), modifiedHtmlData1, 'dragstart dataTransfer should retrieve modified data 1');
+      assert.equal(dropDataTransfer.getData('text/html'), modifiedHtmlData2, 'drop dataTransfer should retrieve modified data 2');
+      assert.equal(dragendDataTransfer.getData('text/html'), initialHtmlData, 'dragend dataTransfer should retrieve initial data');
+
+      const modifiedHtmlData3 = `${initialHtmlData}<p contenteditable="false">modification3</p>`;
+      dragendDataTransfer.setData('text/html', modifiedHtmlData3);
+      assert.equal(dragstartDataTransfer.getData('text/html'), modifiedHtmlData1, 'dragstart dataTransfer should retrieve modified data 1');
+      assert.equal(dropDataTransfer.getData('text/html'), modifiedHtmlData2, 'drop dataTransfer should retrieve modified data 2');
+      assert.equal(dragendDataTransfer.getData('text/html'), modifiedHtmlData3, 'dragend dataTransfer should retrieve modified data 3');
+
+      // Test image data
+      KAssert.eqNone('dragstart dataTransfer should have no image data', DataTransfer.getDragImage(dragstartDataTransfer));
+      KAssert.eqNone('drop dataTransfer should have no image data', DataTransfer.getDragImage(dropDataTransfer));
+      KAssert.eqNone('dragend dataTransfer should have no image data', DataTransfer.getDragImage(dragendDataTransfer));
+
+      const testImage1 = {
+        image: document.createElement('div'),
+        x: 10,
+        y: 20
+      };
+      dragstartDataTransfer.setDragImage(testImage1.image, testImage1.x, testImage1.y);
+      KAssert.eqSome('dragstart dataTransfer should have image data', testImage1, DataTransfer.getDragImage(dragstartDataTransfer));
+      KAssert.eqNone('drop dataTransfer should have no image data', DataTransfer.getDragImage(dropDataTransfer));
+      KAssert.eqNone('dragend dataTransfer should have no image data', DataTransfer.getDragImage(dragendDataTransfer));
+
+      const testImage2 = {
+        image: document.createElement('div'),
+        x: 30,
+        y: 40
+      };
+      dropDataTransfer.setDragImage(testImage2.image, testImage2.x, testImage2.y);
+      KAssert.eqSome('dragstart dataTransfer should have image data', testImage1, DataTransfer.getDragImage(dragstartDataTransfer));
+      KAssert.eqSome('drop dataTransfer should have image data', testImage2, DataTransfer.getDragImage(dropDataTransfer));
+      KAssert.eqNone('dragend dataTransfer should have no image data', DataTransfer.getDragImage(dragendDataTransfer));
+
+      const testImage3 = {
+        image: document.createElement('div'),
+        x: 50,
+        y: 60
+      };
+      dragendDataTransfer.setDragImage(testImage3.image, testImage3.x, testImage3.y);
+      KAssert.eqSome('dragstart dataTransfer should have image data', testImage1, DataTransfer.getDragImage(dragstartDataTransfer));
+      KAssert.eqSome('drop dataTransfer should have image data', testImage2, DataTransfer.getDragImage(dropDataTransfer));
+      KAssert.eqSome('dragend dataTransfer should have image data', testImage3, DataTransfer.getDragImage(dragendDataTransfer));
+
+      // Test file data
+      assert.isNull(dragstartDataTransfer.files.item(0), 'dragstart dataTransfer should initially have no file data');
+      assert.isNull(dropDataTransfer.files.item(0), 'drop dataTransfer should initially have no file data');
+      assert.isNull(dragendDataTransfer.files.item(0), 'dragend dataTransfer should initially have no file data');
+
+      const testFile1 = new window.File([ 'Lorem ipsum' ], 'test.txt', { type: 'text/plain' });
+      dragstartDataTransfer.items.add(testFile1);
+      assert.deepEqual(dragstartDataTransfer.files.item(0), testFile1, 'dragstart dataTransfer should retrieve added file 1');
+      assert.isNull(dropDataTransfer.files.item(0), 'drop dataTransfer should still have no file data');
+      assert.isNull(dragendDataTransfer.files.item(0), 'dragend dataTransfer should still have no file data');
+
+      const testFile2 = new window.File([ '<p>Lorem ipsum</p>' ], 'test2.html', { type: 'text/html' });
+      dropDataTransfer.items.add(testFile2);
+      assert.deepEqual(dragstartDataTransfer.files.item(0), testFile1, 'dragstart dataTransfer should retrieve added file 1');
+      assert.deepEqual(dropDataTransfer.files.item(0), testFile2, 'drop dataTransfer should retrieve added file 2');
+      assert.isNull(dragendDataTransfer.files.item(0), 'dragend dataTransfer should still have no file data');
+
+      const testFile3 = new window.File([ 'Lorem ipsum' ], 'test3.rtf', { type: 'text/rtf' });
+      dragendDataTransfer.items.add(testFile3);
+      assert.deepEqual(dragstartDataTransfer.files.item(0), testFile1, 'dragstart dataTransfer should retrieve added file 1');
+      assert.deepEqual(dropDataTransfer.files.item(0), testFile2, 'drop dataTransfer should retrieve added file 2');
+      assert.deepEqual(dragendDataTransfer.files.item(0), testFile3, 'dragend dataTransfer should retrieve added file 3');
     });
 
     it('TINY-8874: Dragging CEF element towards the bottom edge causes scrolling', async () => {
@@ -397,7 +666,6 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
         assert.isBelow(window.scrollX, initialScrollX); // Make sure scrolling happened
       });
     });
-
   });
 
   context('Tests when CEF element are dragged on other CEF element', () => {
