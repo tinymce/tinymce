@@ -521,6 +521,13 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
     });
   });
 
+  it('TINY-9805: html4 schema should not allow block children elements for the link element ', () => {
+    const schemaHtml4 = Schema({ schema: 'html4' });
+    Obj.each(schemaHtml4.getTextBlockElements(), (_v, child) => {
+      assert.isFalse(schemaHtml4.isValidChild('a', child));
+    });
+  });
+
   context('custom elements', () => {
     it('TBA: custom elements are added as element rules and copy the span/div rules', () => {
       const schema = Schema({

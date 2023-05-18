@@ -40,7 +40,7 @@ interface SelectedResizeHandle extends ResizeHandle {
 }
 
 const elementSelectionAttr = 'data-mce-selected';
-const controlElmSelector = 'table,img,figure.image,hr,video,span.mce-preview-object';
+const controlElmSelector = 'table,img,figure.image,hr,video,span.mce-preview-object,details';
 const abs = Math.abs;
 const round = Math.round;
 

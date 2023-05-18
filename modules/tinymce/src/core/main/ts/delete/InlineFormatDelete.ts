@@ -24,6 +24,9 @@ const getParentsUntil = (editor: Editor, pred: (elm: SugarElement<Node>) => bool
   );
 };
 
+const hasOnlyOneChild = (elm: SugarElement<Node>): boolean =>
+  Traverse.childNodesCount(elm) === 1;
+
 const getParentInlinesUntilMultichildInline = (editor: Editor): SugarElement<Node>[] =>
   getParentsUntil(editor, (elm) => ElementType.isBlock(elm) || hasMultipleChildren(elm));
 
@@ -52,7 +55,7 @@ const deleteLastPosition = (forward: boolean, editor: Editor, target: SugarEleme
 };
 
 const deleteCaret = (editor: Editor, forward: boolean): Optional<() => void> => {
-  const parentInlines = getParentInlinesUntilMultichildInline(editor);
+  const parentInlines = Arr.filter(getParentInlinesUntilMultichildInline(editor), hasOnlyOneChild);
   return Arr.last(parentInlines).bind((target) => {
     const fromPos = CaretPosition.fromRangeStart(editor.selection.getRng());
     if (DeleteUtils.willDeleteLastPositionInElement(forward, fromPos, target.dom) && !CaretFormat.isEmptyCaretFormatElement(target)) {
