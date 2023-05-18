@@ -416,7 +416,6 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       assert.equal(Html.get(editorContainer), expectedHtml);
     };
 
-    // HERE
     it('TINY-9419: "Expand or collapse" button should not be removed if the toolbar is opened and view is opened and close', async () => {
       const editor = hook.editor();
 
