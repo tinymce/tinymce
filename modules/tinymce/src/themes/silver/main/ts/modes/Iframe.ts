@@ -167,6 +167,7 @@ const render = async (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: Re
       if (Type.isNull(OuterContainer.whichView(outerContainer))) {
         editor.focus();
         editor.nodeChanged();
+        OuterContainer.refreshToolbar(outerContainer);
       }
     }
   });
