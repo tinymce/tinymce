@@ -6,10 +6,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Fixed
-- Typing after deleting formatted content could remove a space at the start of the typing. #TINY-9310
-- Invalid markup in Notification and Dialog close buttons. #TINY-9849
-
 ### Added
 - New `table_merge_content_on_paste` option which disables the merging behaviour when pasting a table inside an existing table. #TINY-9808
 - New optional `defaultExpandedIds` and `onToggleExpand` options to the `tree` component config. #TINY-9653
@@ -65,6 +61,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pressing arrow keys inside RTL elements would move the caret in an incorrect direction when moving over elements with the `contenteditable` attribute set to `false`. #TINY-9565
 - Inserting table consecutively without focus in the editor would result in the table being inserted at the wrong position. #TINY-3909
 - In some cases, the exiting a `blockquote` element could fail when the cursor was positioned at the end of the `blockquote`. #TINY-9794
+- Typing after deleting formatted content could remove a space at the start of the typing. #TINY-9310
+- Invalid markup in Notification and Dialog close buttons. #TINY-9849
 
 ## 6.4.2 - 2023-04-26
 
