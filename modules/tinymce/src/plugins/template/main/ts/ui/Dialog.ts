@@ -1,4 +1,4 @@
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Cell, Optional } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
@@ -13,6 +13,7 @@ import * as Utils from '../core/Utils';
 type UpdateDialogCallback = (dialogApi: Dialog.DialogInstanceApi<DialogData>, template: InternalTemplate, previewHtml: string) => void;
 
 const getPreviewContent = (editor: Editor, html: string): string => {
+  const previewHtml = Cell(Utils.parseAndSerialize(editor, html));
   if (html.indexOf('<html>') === -1) {
     let contentCssEntries = '';
     const contentStyle = Options.getContentStyle(editor) ?? '';
@@ -50,7 +51,7 @@ const getPreviewContent = (editor: Editor, html: string): string => {
     const directionality = editor.getBody().dir;
     const dirAttr = directionality ? ' dir="' + encode(directionality) + '"' : '';
 
-    html = (
+    previewHtml.set(
       '<!DOCTYPE html>' +
       '<html>' +
       '<head>' +
@@ -59,13 +60,13 @@ const getPreviewContent = (editor: Editor, html: string): string => {
       preventClicksOnLinksScript +
       '</head>' +
       '<body class="' + encode(bodyClass) + '"' + dirAttr + '>' +
-      Utils.parseAndSerialize(editor, html) +
+      previewHtml.get() +
       '</body>' +
       '</html>'
     );
   }
 
-  return Templates.replaceTemplateValues(html, Options.getPreviewReplaceValues(editor));
+  return Templates.replaceTemplateValues(previewHtml.get(), Options.getPreviewReplaceValues(editor));
 };
 
 const open = (editor: Editor, templateList: ExternalTemplate[]): void => {

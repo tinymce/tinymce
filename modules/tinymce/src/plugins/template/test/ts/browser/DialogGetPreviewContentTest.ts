@@ -68,7 +68,7 @@ describe('browser.tinymce.plugins.template.Dialog.getPreviewContent', () => {
 
   const checkPreview = (expected: string, html: string = '') => {
     const editor = hook.editor();
-    assert.equal(expected, getPreviewContent(editor, html));
+    assert.equal(getPreviewContent(editor, html), expected);
   };
 
   const { addSettings, cleanupSettings } = Settings(hook);
@@ -112,6 +112,7 @@ describe('browser.tinymce.plugins.template.Dialog.getPreviewContent', () => {
       content_css_cors: true,
       content_style: 'This is the style inserted into the document'
     });
-    checkPreview('<html>Custom content here', '<html>Custom content here');
+    // TINY-9867: Preview content will be parsed to minimise visual discrepancy with inserted content
+    checkPreview('<p>Custom content here</p>', '<html>Custom content here');
   });
 });
