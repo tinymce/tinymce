@@ -6,10 +6,10 @@ import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.EditableRootTest', () => {
   const assertContentEditableState = (editor: Editor, expectedState: boolean) => {
-    assert.equal(editor.getBody().contentEditable === 'true', expectedState);
+    assert.equal(editor.getBody().isContentEditable, expectedState);
   };
 
-  const assertEditableState = (editor: Editor, expectedState: boolean) => {
+  const assertRootEditableState = (editor: Editor, expectedState: boolean) => {
     assert.equal(editor.hasEditableRoot(), expectedState);
     assertContentEditableState(editor, expectedState);
   };
@@ -28,7 +28,7 @@ describe('browser.tinymce.core.EditableRootTest', () => {
     }, [], true);
 
     it('TINY-9839: Should not have an editable root state or editable body', () => {
-      assertEditableState(hook.editor(), false);
+      assertRootEditableState(hook.editor(), false);
       assert.equal(initialContentEditableState, 'inherit', 'Should not be editable early in the init process');
     });
   });
@@ -39,7 +39,7 @@ describe('browser.tinymce.core.EditableRootTest', () => {
     }, [], true);
 
     it('TINY-9839: Should have an editable root state and editable body', () => {
-      assertEditableState(hook.editor(), true);
+      assertRootEditableState(hook.editor(), true);
     });
 
     it('TINY-9839: Should be able to toggle editable root state and track the state', () => {
@@ -51,13 +51,13 @@ describe('browser.tinymce.core.EditableRootTest', () => {
       });
 
       editor.setEditableRoot(false);
-      assertEditableState(hook.editor(), false);
+      assertRootEditableState(hook.editor(), false);
 
       // Setting false when it's false should not dispatch an event
       editor.setEditableRoot(false);
 
       editor.setEditableRoot(true);
-      assertEditableState(hook.editor(), true);
+      assertRootEditableState(hook.editor(), true);
 
       // Setting true when it's true should not dispatch an event
       editor.setEditableRoot(true);
