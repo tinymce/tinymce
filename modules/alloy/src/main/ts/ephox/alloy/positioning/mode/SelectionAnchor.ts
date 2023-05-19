@@ -16,7 +16,7 @@ const descendOnce = (element: SugarElement<Node>, offset: number): Descend.Eleme
   SugarNode.isText(element) ? Descend.point(element, offset) : Descend.descendOnce(element, offset);
 
 const isSimRange = (detail: SimRange | SugarElement<Node>[]): detail is SimRange =>
-  (detail as SimRange).start !== undefined;
+  (detail as SimRange).foffset !== undefined;
 
 const getAnchorSelection = (win: Window, anchorInfo: SelectionAnchor): Optional<SimRange | SugarElement<HTMLTableCellElement>[]> => {
   // FIX TEST Test both providing a getSelection and not providing a getSelection
@@ -41,11 +41,11 @@ const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origi
     // This represents the *visual* rectangle of the selection.
     if (isSimRange(sel)) {
       const optRect = WindowSelection.getBounds(win, SimSelection.exactFromRange(sel)).orThunk(() => {
-        const x = SugarElement.fromText(Unicode.zeroWidth);
-        Insert.before(sel.start, x);
+        const zeroWidth = SugarElement.fromText(Unicode.zeroWidth);
+        Insert.before(sel.start, zeroWidth);
         // Certain things like <p><br/></p> with (p, 0) or <br>) as collapsed selection do not return a client rectangle
-        const rect = WindowSelection.getFirstRect(win, SimSelection.exact(x, 0, x, 1));
-        Remove.remove(x);
+        const rect = WindowSelection.getFirstRect(win, SimSelection.exact(zeroWidth, 0, zeroWidth, 1));
+        Remove.remove(zeroWidth);
         return rect;
       });
 
