@@ -112,7 +112,7 @@ describe('browser.tinymce.plugins.template.Dialog.getPreviewContent', () => {
       content_css_cors: true,
       content_style: 'This is the style inserted into the document'
     });
-    // TINY-9867: Preview content will be parsed to minimise visual discrepancy with inserted content
+    // TINY-9867: Preview content is parsed to minimise visual discrepancy with inserted content
     checkPreview('<p>Custom content here</p>', '<html>Custom content here');
   });
 });
