@@ -87,8 +87,7 @@ describe('browser.tinymce.plugins.template.TemplateSanityTest', () => {
         UiFinder.findIn<HTMLIFrameElement>(dialogEl, 'iframe').fold(
           () => assert.fail('Preview iframe not found'),
           (iframe) => {
-            // fallback for pre-IE 8 using contentWindow.document
-            const iframeDoc = iframe.dom.contentDocument || iframe.dom.contentWindow?.document;
+            const iframeDoc = iframe.dom.contentDocument;
             const iframeBody = SugarElement.fromDom(iframeDoc?.body as Node);
             UiFinder.exists(iframeBody, parsedPreviewHtmlSelector);
             UiFinder.notExists(iframeBody, unparsedPreviewHtmlSelector);
