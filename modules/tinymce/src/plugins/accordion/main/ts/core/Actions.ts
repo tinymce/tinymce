@@ -6,7 +6,7 @@ import * as Events from '../api/Events';
 import * as Utils from './Utils';
 
 const insertAccordion = (editor: Editor): void => {
-  if (Utils.isInSummary(editor)) {
+  if (!Utils.isInsertAllowed(editor)) {
     return;
   }
 

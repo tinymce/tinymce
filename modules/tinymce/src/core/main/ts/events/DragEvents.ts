@@ -1,15 +1,20 @@
-import { Fun } from '@ephox/katamari';
+import { DataTransfer, DataTransferEvent, DataTransferMode } from '@ephox/dragster';
+import { Fun, Type } from '@ephox/katamari';
 
 import { EditorEvent } from '../api/util/EventDispatcher';
 
-const makeDndEventFromMouseEvent = <K extends keyof MouseEvent>(type: string, mouseEvent: EditorEvent<MouseEvent>, extra: Record<K, MouseEvent[K]>): DragEvent => ({
+export type DragEventType = 'dragstart' | 'drop' | 'dragend';
+
+const getTargetProps = (target: Element) => ({ target, srcElement: target });
+
+const makeDndEventFromMouseEvent = (type: DragEventType, mouseEvent: EditorEvent<MouseEvent>, target: Element, dataTransfer: DataTransfer): DragEvent => ({
   ...mouseEvent,
-  dataTransfer: null, // We are not supporting dataTransfer yet but DragEvent is MouseEvent + dataTransfer so the property should exist
+  dataTransfer,
   type,
-  ...extra
+  ...getTargetProps(target)
 });
 
-const makeDndEvent = <K extends keyof DragEvent>(type: string, props: Record<K, DragEvent[K]>): DragEvent => {
+const makeDndEvent = (type: DragEventType, target: Element, dataTransfer: DataTransfer): DragEvent => {
   const fail = Fun.die('Function not supported on simulated event.');
 
   const event: DragEvent = {
@@ -23,8 +28,6 @@ const makeDndEvent = <K extends keyof DragEvent>(type: string, props: Record<K, 
     eventPhase: 0,
     isTrusted: true,
     returnValue: false,
-    srcElement: null,
-    target: null,
     timeStamp: 0,
     type,
     composedPath: fail,
@@ -65,26 +68,32 @@ const makeDndEvent = <K extends keyof DragEvent>(type: string, props: Record<K, 
     getModifierState: fail,
 
     // DragEvent
-    dataTransfer: null, // We are not supporting dataTransfer yet but DragEvent is MouseEvent + dataTransfer so the property should exist
+    dataTransfer,
 
-    ...props
+    ...getTargetProps(target)
   };
 
   return event;
 };
 
-const fallback = (target: Element) => ({ target, srcElement: target });
+const makeDataTransferCopyForDragEvent = (dataTransfer: DataTransfer, eventType: DragEventType): DataTransfer => {
+  const copy = DataTransfer.cloneDataTransfer(dataTransfer);
+  // TINY-9601: Set mode as per https://html.spec.whatwg.org/dev/dnd.html#concept-dnd-rw
+  if (eventType === 'dragstart') {
+    DataTransferEvent.setDragstartEvent(copy);
+    DataTransferMode.setReadWriteMode(copy);
+  } else if (eventType === 'drop') {
+    DataTransferEvent.setDropEvent(copy);
+    DataTransferMode.setReadOnlyMode(copy);
+  } else {
+    DataTransferEvent.setDragendEvent(copy);
+    DataTransferMode.setProtectedMode(copy);
+  }
+  return copy;
+};
 
-const dndEvent = (type: string) => (target: Element): DragEvent => makeDndEvent(type, fallback(target));
-const dndEventFromMouseEvent = (type: string) => (mouseEvent: EditorEvent<MouseEvent>, target: Element): DragEvent =>
-  makeDndEventFromMouseEvent(type, mouseEvent, fallback(target));
-
-export const makeDragstartEvent = dndEvent('dragstart');
-export const makeDragstartEventFromMouseEvent = dndEventFromMouseEvent('dragstart');
-
-export const makeDropEvent = dndEvent('drop');
-export const makeDropEventFromMouseEvent = dndEventFromMouseEvent('drop');
-
-export const makeDragendEvent = dndEvent('dragend');
-export const makeDragendEventFromMouseEvent = dndEventFromMouseEvent('dragend');
-
+export const makeDragEvent = (type: DragEventType, target: Element, dataTransfer: DataTransfer, mouseEvent?: EditorEvent<MouseEvent>): DragEvent => {
+  // TINY-9601: Get copy for each new event to prevent undesired mutations on dispatched DataTransfer objects
+  const dataTransferForDispatch = makeDataTransferCopyForDragEvent(dataTransfer, type);
+  return Type.isUndefined(mouseEvent) ? makeDndEvent(type, target, dataTransferForDispatch) : makeDndEventFromMouseEvent(type, mouseEvent, target, dataTransferForDispatch);
+};

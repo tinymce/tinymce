@@ -1,4 +1,5 @@
 import { Adt, Arr, Optional, Type } from '@ephox/katamari';
+import { SugarElement, Traverse, SugarNode, ContentEditable } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
@@ -75,6 +76,17 @@ const canInsertIntoEditableRoot = (editor: Editor) => {
   return Type.isNonNullable(rootEditable) && editor.schema.isValidChild(rootEditable.nodeName, forcedRootBlock);
 };
 
+const isInRootWithEmptyOrCEF = (editor: Editor) => {
+  const rng = editor.selection.getRng();
+  const isInRoot = rng.collapsed && rng.startContainer === editor.dom.getRoot();
+  const start = SugarElement.fromDom(rng.startContainer);
+
+  const child = Traverse.child(start, rng.startOffset);
+  const isCefOpt = child.map((element) => SugarNode.isHTMLElement(element) && !ContentEditable.isEditable(element));
+
+  return isInRoot && isCefOpt.getOr(true);
+};
+
 const match = (predicates: Array<(editor: Editor, shiftKey: boolean) => boolean>, action: NewLineActionAdt) => {
   return (editor: Editor, shiftKey: boolean) => {
     const isMatch = Arr.foldl(predicates, (res, p) => {
@@ -100,7 +112,8 @@ const getAction = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): NewLineAct
     match([ inListBlock(true) ], newLineAction.block()),
     match([ inBrContext ], newLineAction.br()),
     match([ hasShiftKey ], newLineAction.br()),
-    match([ canInsertIntoEditableRoot ], newLineAction.block())
+    match([ canInsertIntoEditableRoot ], newLineAction.block()),
+    match([ isInRootWithEmptyOrCEF ], newLineAction.block())
   ], [ editor, !!(evt && evt.shiftKey) ]).getOr(newLineAction.none());
 };
 

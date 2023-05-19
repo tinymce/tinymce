@@ -290,4 +290,12 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     TinyAssertions.assertContentPresence(editor, { 'details > p': 1 });
     TinyAssertions.assertCursor(editor, [ 0, 1 ], 0);
   });
+
+  it('TINY-9760: Prevent inserting an accordion into noneditable elements', () => {
+    const editor = hook.editor();
+    editor.setContent('<div contenteditable="false"><p>noneditable</p></div>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    editor.execCommand('InsertAccordion');
+    TinyAssertions.assertContentPresence(editor, { 'div[contenteditable="false"] > details': 0 });
+  });
 });

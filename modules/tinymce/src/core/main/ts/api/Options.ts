@@ -807,6 +807,11 @@ const register = (editor: Editor): void => {
     default: 'inherited'
   });
 
+  registerOption('init_content_sync', {
+    processor: 'boolean',
+    default: false
+  });
+
   // These options must be registered later in the init sequence due to their default values
   editor.on('ScriptsLoaded', () => {
     registerOption('directionality', {
@@ -912,6 +917,7 @@ const getNonEditableRegExps = option('noneditable_regexp');
 const shouldPreserveCData = option('preserve_cdata');
 const shouldHighlightOnFocus = option('highlight_on_focus');
 const shouldSanitizeXss = option('xss_sanitization');
+const shouldUseDocumentWrite = option('init_content_sync');
 
 const hasTextPatternsLookup = (editor: Editor): boolean =>
   editor.options.isSet('text_patterns_lookup');
@@ -1033,5 +1039,6 @@ export {
   shouldHighlightOnFocus,
   shouldSanitizeXss,
   getDetailsInitialState,
-  getDetailsSerializedState
+  getDetailsSerializedState,
+  shouldUseDocumentWrite
 };

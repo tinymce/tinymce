@@ -75,7 +75,14 @@ const createDataTransfer = (): DataTransfer => {
         return createFileList([]);
       }
 
-      const files = Arr.bind(Arr.from(items), (item) => item.kind === 'file' ? [ item.getAsFile() ] : []);
+      const files = Arr.bind(Arr.from(items), (item) => {
+        if (item.kind === 'file') {
+          const file = item.getAsFile();
+          return Type.isNull(file) ? [] : [ file ];
+        } else {
+          return [];
+        }
+      });
 
       return createFileList(files);
     },
