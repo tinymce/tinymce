@@ -78,7 +78,7 @@ describe('browser.tinymce.plugins.template.TemplateSanityTest', () => {
   });
 
   context('Previewing unparsed content', () => {
-    const unparsedHtml = '<html><body><img src="error" onerror="throw new Error();"></body></html>';
+    const unparsedHtml = '<img src="error" onerror="throw new Error();">';
     const unparsedPreviewHtmlSelector = 'p > img[src="error"][onerror="throw new Error();"]';
     const parsedPreviewHtmlSelector = 'p > img[src="error"][data-mce-src="error"]';
 
