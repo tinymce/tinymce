@@ -1,5 +1,6 @@
 import { UiFinder, Waiter } from '@ephox/agar';
-import { afterEach, beforeEach, describe, it } from '@ephox/bedrock-client';
+import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-client';
+import { Cell } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -76,64 +77,81 @@ describe('browser.tinymce.plugins.template.TemplateSanityTest', () => {
     TinyAssertions.assertContent(editor, '<p>Tester</p>');
   });
 
-  it('TINY-9244: Sanitized html should be shown when previewing template', async () => {
-    const editor = hook.editor();
-    const unsanitizedHtml = '<img src="error" onerror="throw new Error();">';
-    addSettings({
-      templates: [{ title: 'a', description: 'b', content: unsanitizedHtml }],
-    });
-    const unsanitizedPreviewHtmlSelector = 'p > img[src="error"][onerror="throw new Error();"]';
-    const sanitizedPreviewHtmlSelector = 'p > img[src="error"][data-mce-src="error"]';
-    const assertPreviewContent = (dialogEl: SugarElement<Node>, existsSelector: string, notExistsSelector: string): void => {
-      UiFinder.findIn<HTMLIFrameElement>(dialogEl, 'iframe').fold(
-        () => assert.fail('Preview iframe not found'),
-        (iframe) => {
-          // fallback for pre-IE 8 using contentWindow.document
-          const iframeDoc = iframe.dom.contentDocument || iframe.dom.contentWindow?.document;
-          const iframeBody = SugarElement.fromDom(iframeDoc?.body as Node);
-          UiFinder.exists(iframeBody, existsSelector);
-          UiFinder.notExists(iframeBody, notExistsSelector);
-        }
-      );
-    };
+  context('Previewing unparsed content', () => {
+    const unparsedHtml = '<html><body><img src="error" onerror="throw new Error();"></body></html>';
+    const unparsedPreviewHtmlSelector = 'p > img[src="error"][onerror="throw new Error();"]';
+    const parsedPreviewHtmlSelector = 'p > img[src="error"][data-mce-src="error"]';
 
-    try {
-      await pPreviewTemplate(editor, (dialogEl) => assertPreviewContent(dialogEl, sanitizedPreviewHtmlSelector, unsanitizedPreviewHtmlSelector));
-    } catch {
-      assert.fail('Unsanitized html read');
-    }
-  });
-
-  const assertFnDoesNotReadUnsanitizedHtmlInDom = async (editor: Editor, fn: (unsanitizedHtml: string) => void | Promise<void>): Promise<void> => {
-    const fnReadsUnsanitizedHtmlInDom = async () => {
-      const unsanitizedHtml = '<img src="error" onerror="window.document.unsanitizedHtmlFn();">';
-      let isUnsanitizedHtmlRead = false;
-      (editor.getDoc() as any).unsanitizedHtmlFn = () => {
-        isUnsanitizedHtmlRead = true;
+    const pPreviewAndAssertNoUnparsedContent = async (editor: Editor): Promise<void> => {
+      const assertNoUnparsedContent = (dialogEl: SugarElement<Node>): void => {
+        UiFinder.findIn<HTMLIFrameElement>(dialogEl, 'iframe').fold(
+          () => assert.fail('Preview iframe not found'),
+          (iframe) => {
+            // fallback for pre-IE 8 using contentWindow.document
+            const iframeDoc = iframe.dom.contentDocument || iframe.dom.contentWindow?.document;
+            const iframeBody = SugarElement.fromDom(iframeDoc?.body as Node);
+            UiFinder.exists(iframeBody, parsedPreviewHtmlSelector);
+            UiFinder.notExists(iframeBody, unparsedPreviewHtmlSelector);
+          }
+        );
       };
-      await fn(unsanitizedHtml);
-      // wait for any unsanitized html to be read and error to be thrown if it is
-      await Waiter.pWait(1);
-      return isUnsanitizedHtmlRead;
-    };
-    assert.isFalse(await fnReadsUnsanitizedHtmlInDom(), 'Unsanitized html read');
-  };
 
-  it('TINY-9244: Unsanitized html should not be read when inserting template via command', async () => {
-    const editor = hook.editor();
-    await assertFnDoesNotReadUnsanitizedHtmlInDom(editor, (unsanitizedHtml) => {
-      editor.execCommand('mceInsertTemplate', false, unsanitizedHtml);
+      try {
+        await pPreviewTemplate(editor, assertNoUnparsedContent);
+      } catch {
+        assert.fail('Unparsed html read');
+      }
+    };
+
+    it('TINY-9244: Parsed html should be shown when previewing template', async () => {
+      const editor = hook.editor();
+      addSettings({
+        templates: [{ title: 'a', description: 'b', content: unparsedHtml }],
+      });
+      await pPreviewAndAssertNoUnparsedContent(editor);
+    });
+
+    it('TINY-9867: Parsed html should be shown when previewing template containing <html> tags', async () => {
+      const editor = hook.editor();
+      addSettings({
+        templates: [{ title: 'a', description: 'b', content: `<html>${unparsedHtml}</html>` }],
+      });
+      await pPreviewAndAssertNoUnparsedContent(editor);
     });
   });
 
-  it('TINY-9244: Unsanitized html should not be read when inserting template via dialog', async () => {
-    const editor = hook.editor();
-    const unsanitizedHtml = '<img src="error" onerror="window.document.unsanitizedHtmlFn();">';
-    addSettings({
-      templates: [{ title: 'a', description: 'b', content: unsanitizedHtml }],
+  context('Inserting unparsed content', () => {
+    const assertFnDoesNotReadUnParsedHtmlInDom = async (editor: Editor, fn: (unparsedHtml: string) => void | Promise<void>): Promise<void> => {
+      const fnReadsUnparsedHtmlInDom = async () => {
+        const unparsedHtml = '<img src="error" onerror="window.document.unparsedHtmlFn();">';
+        const isUnParsedHtmlRead = Cell(false);
+        (editor.getDoc() as any).unparsedHtmlFn = () => {
+          isUnParsedHtmlRead.set(true);
+        };
+        await fn(unparsedHtml);
+        // wait for any unparsed html to be read and error to be thrown if it is
+        await Waiter.pWait(1);
+        return isUnParsedHtmlRead.get();
+      };
+      assert.isFalse(await fnReadsUnparsedHtmlInDom(), 'Unparsed html read');
+    };
+
+    it('TINY-9244: Unparsed html should not be read when inserting template via command', async () => {
+      const editor = hook.editor();
+      await assertFnDoesNotReadUnParsedHtmlInDom(editor, (unparsedHtml) => {
+        editor.execCommand('mceInsertTemplate', false, unparsedHtml);
+      });
     });
-    await assertFnDoesNotReadUnsanitizedHtmlInDom(editor, async () => {
-      await pInsertTemplate(editor);
+
+    it('TINY-9244: Unparsed html should not be read when inserting template via dialog', async () => {
+      const editor = hook.editor();
+      const unparsedHtml = '<img src="error" onerror="window.document.unparsedHtmlFn();">';
+      addSettings({
+        templates: [{ title: 'a', description: 'b', content: unparsedHtml }],
+      });
+      await assertFnDoesNotReadUnParsedHtmlInDom(editor, async () => {
+        await pInsertTemplate(editor);
+      });
     });
   });
 });
