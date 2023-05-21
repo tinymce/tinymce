@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Fixed
+- Normalize merge tag highlighting across browsers on right click. #TINY-9848
 - Typing after deleting formatted content could remove a space at the start of the typing. #TINY-9310
 - Invalid markup in Notification and Dialog close buttons. #TINY-9849
 
