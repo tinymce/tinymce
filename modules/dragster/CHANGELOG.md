@@ -6,10 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- New `DataTransfer`, `DataTransferContent`, `DataTransferEvent`, and `DataTransferMode` APIs to handle creating and manipulating `DataTransfer` objects. #TINY-9601
+
 ## 7.1.0 - 2023-03-15
 
 ### Added
-- New `isActive` api to Dragger to check if it's active or not.
+- New `isActive` API to Dragger to check if it's active or not.
 
 ## 7.0.0 - 2022-03-03
 
