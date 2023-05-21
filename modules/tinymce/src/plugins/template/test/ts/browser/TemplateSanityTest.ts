@@ -120,9 +120,9 @@ describe('browser.tinymce.plugins.template.TemplateSanityTest', () => {
   });
 
   context('Inserting unparsed content', () => {
+    const unparsedHtml = '<img src="error" onerror="window.document.unparsedHtmlFn();">';
     const assertFnDoesNotReadUnParsedHtmlInDom = async (editor: Editor, fn: (unparsedHtml: string) => void | Promise<void>): Promise<void> => {
       const fnReadsUnparsedHtmlInDom = async () => {
-        const unparsedHtml = '<img src="error" onerror="window.document.unparsedHtmlFn();">';
         const isUnParsedHtmlRead = Cell(false);
         (editor.getDoc() as any).unparsedHtmlFn = () => {
           isUnParsedHtmlRead.set(true);
@@ -144,10 +144,7 @@ describe('browser.tinymce.plugins.template.TemplateSanityTest', () => {
 
     it('TINY-9244: Unparsed html should not be read when inserting template via dialog', async () => {
       const editor = hook.editor();
-      const unparsedHtml = '<img src="error" onerror="window.document.unparsedHtmlFn();">';
-      addSettings({
-        templates: [{ title: 'a', description: 'b', content: unparsedHtml }],
-      });
+      addSettings({ templates: [{ title: 'a', description: 'b', content: unparsedHtml }] });
       await assertFnDoesNotReadUnParsedHtmlInDom(editor, async () => {
         await pInsertTemplate(editor);
       });
