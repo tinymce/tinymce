@@ -122,17 +122,15 @@ describe('browser.tinymce.plugins.template.TemplateSanityTest', () => {
   context('Inserting unparsed content', () => {
     const unparsedHtml = '<img src="error" onerror="window.document.unparsedHtmlFn();">';
     const assertFnDoesNotReadUnParsedHtmlInDom = async (editor: Editor, fn: (unparsedHtml: string) => void | Promise<void>): Promise<void> => {
-      const fnReadsUnparsedHtmlInDom = async () => {
-        const isUnParsedHtmlRead = Cell(false);
-        (editor.getDoc() as any).unparsedHtmlFn = () => {
-          isUnParsedHtmlRead.set(true);
-        };
-        await fn(unparsedHtml);
-        // wait for any unparsed html to be read and error to be thrown if it is
-        await Waiter.pWait(1);
-        return isUnParsedHtmlRead.get();
+      const isUnParsedHtmlRead = Cell(false);
+      (editor.getDoc() as any).unparsedHtmlFn = () => {
+        isUnParsedHtmlRead.set(true);
       };
-      assert.isFalse(await fnReadsUnparsedHtmlInDom(), 'Unparsed html read');
+      await fn(unparsedHtml);
+      // wait for any unparsed html to be read and error to be thrown if it is
+      await Waiter.pWait(1);
+      assert.isFalse(isUnParsedHtmlRead.get(), 'Unparsed html read');
+      (editor.getDoc() as any).unparsedHtmlFn = null;
     };
 
     it('TINY-9244: Unparsed html should not be read when inserting template via command', async () => {
