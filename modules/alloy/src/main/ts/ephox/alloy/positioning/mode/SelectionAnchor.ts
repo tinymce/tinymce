@@ -27,9 +27,9 @@ const getAnchorSelection = (win: Window, anchorInfo: SelectionAnchor): Optional<
       const modStart = descendOnce(sel.start, sel.soffset);
       const modFinish = descendOnce(sel.finish, sel.foffset);
       return SimSelection.range(modStart.element, modStart.offset, modFinish.element, modFinish.offset);
+    } else {
+      return sel;
     }
-
-    return sel;
   });
 };
 
@@ -70,9 +70,9 @@ const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origi
     .bind((sel) => {
       if (isSimRange(sel)) {
         return SugarNode.isElement(sel.start) ? Optional.some(sel.start) : Traverse.parentElement(sel.start);
+      } else {
+        return Optional.some(sel.firstCell);
       }
-
-      return Optional.some(sel.firstCell);
     });
   const elem = targetElement.getOr(component.element);
 
