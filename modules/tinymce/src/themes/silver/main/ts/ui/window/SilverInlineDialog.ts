@@ -79,8 +79,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
       classes: [ 'tox-dialog', inlineClass ],
       attributes: {
         role: 'dialog',
-        ['aria-labelledby']: dialogLabelId,
-        ['aria-describedby']: dialogContentId
+        ['aria-labelledby']: dialogLabelId
       }
     },
     eventOrder: {
