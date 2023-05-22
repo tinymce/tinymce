@@ -24,6 +24,7 @@
       "tinymce/plugins/codesample/*": ["src/plugins/codesample/main/ts/*"],
       "tinymce/plugins/directionality/*": ["src/plugins/directionality/main/ts/*"],
       "tinymce/plugins/emoticons/*": ["src/plugins/emoticons/main/ts/*"],
+      "tinymce/plugins/fsgspellchecker/*": ["src/plugins/fsgspellchecker/main/ts/*"],
       "tinymce/plugins/fullscreen/*": ["src/plugins/fullscreen/main/ts/*"],
       "tinymce/plugins/help/*": ["src/plugins/help/main/ts/*"],
       "tinymce/plugins/image/*": ["src/plugins/image/main/ts/*"],

@@ -15,6 +15,7 @@ let plugins = [
   'directionality', 'emoticons', 'help', 'fullscreen', 'image', 'importcss', 'insertdatetime',
   'link', 'lists', 'media', 'nonbreaking', 'pagebreak', 'preview', 'save', 'searchreplace',
   'table', 'template', 'visualblocks', 'visualchars', 'wordcount', 'quickbars'
+  ,'fsgspellchecker'
 ];
 
 let themes = [
