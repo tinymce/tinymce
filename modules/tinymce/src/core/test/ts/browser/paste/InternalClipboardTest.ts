@@ -192,7 +192,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
       await PasteEventUtils.pWaitForAndAssertInputEvents(lastBeforeInputEvent, lastInputEvent, beforeinputExpectedDataTransferHtml);
     };
 
-    const pWaitForAndAssertNoEvents = async () => await PasteEventUtils.pWaitForAndAssertEventsDoNotFire([ lastPreProcessEvent, lastPostProcessEvent, lastInputEvent ]);
+    const pWaitForAndAssertNoEvents = () => PasteEventUtils.pWaitForAndAssertEventsDoNotFire([ lastPreProcessEvent, lastPostProcessEvent, lastInputEvent ]);
 
     it('TBA: Paste external content', async () => {
       const editor = hook.editor();
