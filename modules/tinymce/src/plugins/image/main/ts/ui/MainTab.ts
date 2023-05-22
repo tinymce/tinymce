@@ -10,7 +10,7 @@ const makeItems = (info: ImageDialogInfo): Dialog.BodyComponentSpec[] => {
     type: 'urlinput',
     filetype: 'image',
     label: 'Source',
-    disabled: info.isSourceDisabled
+    enabled: !info.isSourceDisabled
   };
   const imageList = info.imageList.map((items) => ({
     name: 'images',
