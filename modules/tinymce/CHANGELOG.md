@@ -60,6 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Popups were not constrained within the scrollable container when in a shadow root. #TINY-9743
 - Pressing arrow keys inside RTL elements would move the caret in an incorrect direction when moving over elements with the `contenteditable` attribute set to `false`. #TINY-9565
 - Inserting table consecutively without focus in the editor would result in the table being inserted at the wrong position. #TINY-3909
+- Pasting content into the editor would not fire an input event. #TINY-9829
 - In some cases, the exiting a `blockquote` element could fail when the cursor was positioned at the end of the `blockquote`. #TINY-9794
 - Typing after deleting formatted content could remove a space at the start of the typing. #TINY-9310
 - Invalid markup in Notification and Dialog close buttons. #TINY-9849

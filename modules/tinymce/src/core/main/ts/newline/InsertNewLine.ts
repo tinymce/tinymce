@@ -1,12 +1,12 @@
 import { Fun, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
-import { getNewlineBehavior } from '../api/Options';
+import * as Options from '../api/Options';
 import { EditorEvent } from '../api/util/EventDispatcher';
-import { execEditorDeleteCommand } from '../delete/DeleteUtils';
-import { fireFakeBeforeInputEvent, fireFakeInputEvent } from '../keyboard/FakeInputEvents';
-import { blockbreak } from './InsertBlock';
-import { linebreak } from './InsertBr';
+import * as DeleteUtils from '../delete/DeleteUtils';
+import * as InputEvents from '../events/InputEvents';
+import * as InsertBlock from './InsertBlock';
+import * as InsertBr from './InsertBr';
 import * as NewLineAction from './NewLineAction';
 
 interface BreakType {
@@ -18,10 +18,10 @@ const insertBreak = (breakType: BreakType, editor: Editor, evt?: EditorEvent<Key
   if (!editor.selection.isCollapsed()) {
     // IMPORTANT: We want to use the editor execCommand here, so that our `delete` execCommand
     // overrides will be considered.
-    execEditorDeleteCommand(editor);
+    DeleteUtils.execEditorDeleteCommand(editor);
   }
   if (Type.isNonNullable(evt)) {
-    const event = fireFakeBeforeInputEvent(editor, breakType.fakeEventName);
+    const event = InputEvents.fireBeforeInputEvent(editor, breakType.fakeEventName);
     if (event.isDefaultPrevented()) {
       return;
     }
@@ -30,17 +30,17 @@ const insertBreak = (breakType: BreakType, editor: Editor, evt?: EditorEvent<Key
   breakType.insert(editor, evt);
 
   if (Type.isNonNullable(evt)) {
-    fireFakeInputEvent(editor, breakType.fakeEventName);
+    InputEvents.fireInputEvent(editor, breakType.fakeEventName);
   }
 };
 
 const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
-  const br = () => insertBreak(linebreak, editor, evt);
-  const block = () => insertBreak(blockbreak, editor, evt);
+  const br = () => insertBreak(InsertBr.linebreak, editor, evt);
+  const block = () => insertBreak(InsertBlock.blockbreak, editor, evt);
 
   const logicalAction = NewLineAction.getAction(editor, evt);
 
-  switch (getNewlineBehavior(editor)) {
+  switch (Options.getNewlineBehavior(editor)) {
     case 'linebreak':
       logicalAction.fold(br, br, Fun.noop);
       break;

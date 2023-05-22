@@ -1,5 +1,6 @@
 import { Clipboard, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
+import { Singleton } from '@ephox/katamari';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -9,32 +10,42 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as InternalHtml from 'tinymce/core/paste/InternalHtml';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 
+import * as PasteEventUtils from '../../module/test/PasteEventUtils';
+import * as SingletonUtils from '../../module/test/SingletonUtils';
+
 describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
-  let dataTransfer: DataTransfer | undefined;
-  let lastPreProcessEvent: EditorEvent<PastePreProcessEvent> | undefined;
-  let lastPostProcessEvent: EditorEvent<PastePostProcessEvent> | undefined;
+  const dataTransfer = Singleton.value<DataTransfer>();
+  const lastPreProcessEvent = Singleton.value<EditorEvent<PastePreProcessEvent>>();
+  const lastPostProcessEvent = Singleton.value<EditorEvent<PastePostProcessEvent>>();
+  const lastInputEvent = Singleton.value<EditorEvent<InputEvent>>();
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'table',
     init_instance_callback: (editor: Editor) => {
-      editor.on('PastePreProcess', (evt) => {
-        lastPreProcessEvent = evt;
+      editor.on('PastePreProcess', (e) => {
+        lastPreProcessEvent.set(e);
       });
 
-      editor.on('PastePostProcess', (evt) => {
-        lastPostProcessEvent = evt;
+      editor.on('PastePostProcess', (e) => {
+        lastPostProcessEvent.set(e);
+      });
+
+      editor.on('input', (e) => {
+        lastInputEvent.set(e);
       });
 
       editor.on('copy cut paste', (e) => {
-        dataTransfer = e.clipboardData;
+        dataTransfer.set(e.clipboardData);
       });
     },
     base_url: '/project/tinymce/js/tinymce'
   }, [ TablePlugin ]);
 
-  const resetProcessEvents = () => {
-    lastPreProcessEvent = undefined;
-    lastPostProcessEvent = undefined;
+  const resetEventsAndDataTransfer = () => {
+    lastPreProcessEvent.clear();
+    lastPostProcessEvent.clear();
+    lastInputEvent.clear();
+    dataTransfer.clear();
   };
 
   const cutCopyDataTransferEvent = (editor: Editor, type: 'cut' | 'copy') => {
@@ -46,8 +57,11 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
     Clipboard.pasteItems(TinyDom.body(editor), data);
 
   const assertClipboardData = (expectedHtml: string, expectedText: string) => {
-    assert.equal(dataTransfer?.getData('text/html'), expectedHtml, 'text/html data should match');
-    assert.equal(dataTransfer?.getData('text/plain'), expectedText, 'text/plain data should match');
+    SingletonUtils.assertSingletonValueIsSet(dataTransfer, 'dataTransfer should be defined');
+    dataTransfer.on((transfer) => {
+      assert.equal(transfer.getData('text/html'), expectedHtml, 'text/html data should match');
+      assert.equal(transfer.getData('text/plain'), expectedText, 'text/plain data should match');
+    });
   };
 
   const copy = (editor: Editor, html: string, spath: number[], soffset: number, fpath: number[], foffset: number) => {
@@ -66,7 +80,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
     editor.setContent(startHtml);
     TinySelections.setSelection(editor, spath, soffset, fpath, foffset);
     editor.undoManager.add(); // Undo level would not always be properly created in some situations, so we create it manually to prevent tests from failing when they shouldn't.
-    resetProcessEvents();
+    resetEventsAndDataTransfer();
     pasteDataTransferEvent(editor, pasteData);
   };
 
@@ -182,59 +196,53 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
   });
 
   context('paste', () => {
-    const assertLastPreProcessEvent = (expectedData: { internal: boolean; content: string }) => {
-      assert.equal(lastPreProcessEvent?.internal, expectedData.internal, 'Internal property should be equal');
-      assert.equal(lastPreProcessEvent?.content, expectedData.content, 'Content property should be equal');
+    const pWaitForAndAssertEvents = async (processExpected: PasteEventUtils.ProcessEventExpectedData): Promise<void> => {
+      await PasteEventUtils.pWaitForAndAssertProcessEvents(lastPreProcessEvent, lastPostProcessEvent, processExpected);
+      await PasteEventUtils.pWaitForAndAssertInputEvent(lastInputEvent);
     };
 
-    const assertLastPostProcessEvent = (expectedData: { internal: boolean; content: string }) => {
-      assert.equal(lastPostProcessEvent?.internal, expectedData.internal, 'Internal property should be equal');
-      assert.equal(lastPostProcessEvent?.node.innerHTML, expectedData.content, 'Content property should be equal');
-    };
-
-    const pWaitForProcessEvents = () => Waiter.pTryUntil('Did not get any events fired', () => {
-      assert.isDefined(lastPreProcessEvent, 'PastePreProcess event object');
-      assert.isDefined(lastPostProcessEvent, 'PastePostProcess event object');
-    });
+    const pWaitForAndAssertNoEvents = async () => await PasteEventUtils.pWaitForAndAssertEventsDoNotFire([ lastPreProcessEvent, lastPostProcessEvent, lastInputEvent ]);
 
     it('TBA: Paste external content', async () => {
       const editor = hook.editor();
       paste(editor, '<p>abc</p>', { 'text/plain': 'X', 'text/html': '<p>X</p>' }, [ 0, 0 ], 0, [ 0, 0 ], 3);
-      await pWaitForProcessEvents();
-      assertLastPreProcessEvent({ internal: false, content: 'X' });
-      assertLastPostProcessEvent({ internal: false, content: 'X' });
+      await pWaitForAndAssertEvents({ internal: false, content: 'X' });
     });
 
     it('TBA: Paste external content treated as plain text', async () => {
       const editor = hook.editor();
       paste(editor, '<p>abc</p>', { 'text/html': '<p>X</p>' }, [ 0, 0 ], 0, [ 0, 0 ], 3);
-      await pWaitForProcessEvents();
-      assertLastPreProcessEvent({ internal: false, content: 'X' });
-      assertLastPostProcessEvent({ internal: false, content: 'X' });
+      await pWaitForAndAssertEvents({ internal: false, content: 'X' });
+    });
+
+    it('TINY-9829: Paste external plain-text-only content', async () => {
+      const editor = hook.editor();
+      paste(editor, '<p>abc</p>', { 'text/plain': 'X' }, [ 0, 0 ], 0, [ 0, 0 ], 3);
+      await pWaitForAndAssertEvents({ internal: false, content: 'X' });
+    });
+
+    it('TINY-9829: Paste external non-extractable content', async () => {
+      const editor = hook.editor();
+      paste(editor, '<p>abc</p>', { xyz: 'Invalid' }, [ 0, 0 ], 0, [ 0, 0 ], 3);
+      await pWaitForAndAssertNoEvents();
     });
 
     it('TBA: Paste internal content with mark', async () => {
       const editor = hook.editor();
       paste(editor, '<p>abc</p>', { 'text/plain': 'X', 'text/html': InternalHtml.mark('<p>X</p>') }, [ 0, 0 ], 0, [ 0, 0 ], 3);
-      await pWaitForProcessEvents();
-      assertLastPreProcessEvent({ internal: true, content: '<p>X</p>' });
-      assertLastPostProcessEvent({ internal: true, content: '<p>X</p>' });
+      await pWaitForAndAssertEvents({ internal: true, content: '<p>X</p>' });
     });
 
     it('TBA: Paste internal content with mime', async () => {
       const editor = hook.editor();
       paste(editor, '<p>abc</p>', { 'text/plain': 'X', 'text/html': '<p>X</p>', 'x-tinymce/html': '<p>X</p>' }, [ 0, 0 ], 0, [ 0, 0 ], 3);
-      await pWaitForProcessEvents();
-      assertLastPreProcessEvent({ internal: true, content: '<p>X</p>' });
-      assertLastPostProcessEvent({ internal: true, content: '<p>X</p>' });
+      await pWaitForAndAssertEvents({ internal: true, content: '<p>X</p>' });
     });
 
     it('TINY-9489: uri-list should not be pasted in as a link', async () => {
       const editor = hook.editor();
       paste(editor, '<p>X</p>', { 'text/plain': 'https://tiny.com', 'text/uri-list': 'https://tiny.com' }, [ 0, 0 ], 0, [ 0, 0 ], 1);
-      await pWaitForProcessEvents();
-      assertLastPreProcessEvent({ internal: false, content: 'https://tiny.com' });
-      assertLastPostProcessEvent({ internal: false, content: 'https://tiny.com' });
+      await pWaitForAndAssertEvents({ internal: false, content: 'https://tiny.com' });
       TinyAssertions.assertContent(editor, '<p><a href="https://tiny.com">X</a></p>');
     });
   });
