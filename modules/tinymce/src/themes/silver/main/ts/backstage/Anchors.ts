@@ -1,5 +1,5 @@
 import { AlloyComponent, Bubble, HotspotAnchorSpec, Layout, LayoutInset, MaxHeight, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
-import { Arr, Optional } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SimSelection, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -88,7 +88,14 @@ const getCursorAnchor = (editor: Editor, bodyElement: () => SugarElement<HTMLEle
     // Only return a range if there is a selection of more than one cell.
     const selectedCells = editor.model.table.getSelectedCells();
     if (selectedCells.length > 1) {
-      return Optional.some(Arr.map(selectedCells, SugarElement.fromDom));
+      const firstCell = selectedCells[0];
+      const lastCell = selectedCells[selectedCells.length - 1];
+      const selectionTableCellRange = {
+        firstCell: SugarElement.fromDom(firstCell),
+        lastCell: SugarElement.fromDom(lastCell)
+      };
+
+      return Optional.some(selectionTableCellRange);
     }
 
     return Optional.some(

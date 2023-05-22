@@ -1,12 +1,12 @@
 import { FieldSchema } from '@ephox/boulder';
-import { Arr, Optional, Unicode } from '@ephox/katamari';
+import { Obj, Optional, Unicode } from '@ephox/katamari';
 import { Insert, Remove, SimRange, SimSelection, SugarElement, SugarNode, Traverse, WindowSelection } from '@ephox/sugar';
 
 import * as Descend from '../../alien/Descend';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
 import * as Origins from '../layout/Origins';
-import { Anchoring, SelectionAnchor } from './Anchoring';
+import { Anchoring, SelectionAnchor, SelectionTableCellRange } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 import * as ContainerOffsets from './ContainerOffsets';
 import * as ContentAnchorCommon from './ContentAnchorCommon';
@@ -15,10 +15,10 @@ import * as ContentAnchorCommon from './ContentAnchorCommon';
 const descendOnce = (element: SugarElement<Node>, offset: number): Descend.ElementAndOffset<Node> =>
   SugarNode.isText(element) ? Descend.point(element, offset) : Descend.descendOnce(element, offset);
 
-const isSimRange = (detail: SimRange | SugarElement<Node>[]): detail is SimRange =>
+const isSimRange = (detail: SimRange | SelectionTableCellRange): detail is SimRange =>
   (detail as SimRange).foffset !== undefined;
 
-const getAnchorSelection = (win: Window, anchorInfo: SelectionAnchor): Optional<SimRange | SugarElement<HTMLTableCellElement>[]> => {
+const getAnchorSelection = (win: Window, anchorInfo: SelectionAnchor): Optional<SimRange | SelectionTableCellRange> => {
   // FIX TEST Test both providing a getSelection and not providing a getSelection
   const getSelection = anchorInfo.getSelection.getOrThunk(() => () => WindowSelection.getExact(win));
 
@@ -53,22 +53,14 @@ const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origi
         return ContentAnchorCommon.getBox(rawRect.left, rawRect.top, rawRect.width, rawRect.height);
       });
     } else {
-      const selectionRects = sel.map((x) => x.dom.getBoundingClientRect());
+      const selectionRect = Obj.map(sel, (cell) => cell.dom.getBoundingClientRect());
 
-      const bounds = Arr.foldl(selectionRects, (acc, rect) => {
-        return {
-          left: Math.min(acc.left, rect.left),
-          right: Math.max(acc.right, rect.right),
-          top: Math.min(acc.top, rect.top),
-          bottom: Math.max(acc.bottom, rect.bottom)
-        };
-      },
-      {
-        left: Number.MAX_VALUE,
-        right: Number.MIN_VALUE,
-        top: Number.MAX_VALUE,
-        bottom: Number.MIN_VALUE
-      });
+      const bounds = {
+        left: Math.min(selectionRect.firstCell.left, selectionRect.lastCell.left),
+        right: Math.max(selectionRect.firstCell.right, selectionRect.lastCell.right),
+        top: Math.min(selectionRect.firstCell.top, selectionRect.lastCell.top),
+        bottom: Math.max(selectionRect.firstCell.bottom, selectionRect.lastCell.bottom)
+      };
 
       return ContentAnchorCommon.getBox(bounds.left, bounds.top, bounds.right - bounds.left, bounds.bottom - bounds.top);
     }
@@ -80,7 +72,7 @@ const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origi
         return SugarNode.isElement(sel.start) ? Optional.some(sel.start) : Traverse.parentElement(sel.start);
       }
 
-      return Arr.head(sel);
+      return Optional.some(sel.firstCell);
     });
   const elem = targetElement.getOr(component.element);
 
