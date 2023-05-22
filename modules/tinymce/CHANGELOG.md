@@ -62,6 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inserting table consecutively without focus in the editor would result in the table being inserted at the wrong position. #TINY-3909
 - Pasting content into the editor would not fire an input event. #TINY-9829
 - In some cases, the exiting a `blockquote` element could fail when the cursor was positioned at the end of the `blockquote`. #TINY-9794
+- Templates containing an `<html>` tag were not parsed before being rendered for preview. #TINY-9867
 - Typing after deleting formatted content could remove a space at the start of the typing. #TINY-9310
 - Invalid markup in Notification and Dialog close buttons. #TINY-9849
 - In dialogs, an incorrect `aria-describedby` attribute caused the body of the dialog to be announced when using a screen reader. #TINY-9816
