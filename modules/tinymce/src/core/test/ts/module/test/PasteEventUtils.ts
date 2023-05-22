@@ -1,5 +1,5 @@
 import { Waiter } from '@ephox/agar';
-import { Arr, Cell, Singleton } from '@ephox/katamari';
+import { Arr, Cell, Singleton, Type } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import { PastePostProcessEvent, PastePreProcessEvent } from 'tinymce/core/api/EventTypes';
@@ -16,39 +16,58 @@ type SingletonEvent<T> = Singleton.Value<EditorEvent<T>>;
 
 const pWaitFor = (message: string, waitFn: () => void): Promise<void> => Waiter.pTryUntil(message, waitFn, undefined, 100);
 
-const pWaitForInputEvent = (event: SingletonEvent<InputEvent>): Promise<void> =>
-  pWaitFor('Did not fire input event', () => SingletonUtils.assertSingletonValueIsSet(event, 'Input event has fired'));
-
-const assertLastPreProcessEvent = (event: SingletonEvent<PastePreProcessEvent>, expectedData: ProcessEventExpectedData) =>
-  event.on((e) => {
-    assert.equal(e.internal, expectedData.internal, 'Internal property should be equal');
-    assert.equal(e.content, expectedData.content, 'Content property should be equal');
-  });
-
-const assertLastPostProcessEvent = (event: SingletonEvent<PastePostProcessEvent>, expectedData: ProcessEventExpectedData) =>
-  event.on((e) => {
-    assert.equal(e.internal, expectedData.internal, 'Internal property should be equal');
-    assert.equal(e.node.innerHTML, expectedData.content, 'Content property should be equal');
-  });
-
-const pWaitForProcessEvents = (preProcessEvent: SingletonEvent<PastePreProcessEvent>, postProcessEvent: SingletonEvent<PastePostProcessEvent>) =>
-  pWaitFor('Did not fire process events', () => {
-    SingletonUtils.assertSingletonValueIsSet(preProcessEvent, 'PastePreProcess event has fired');
-    SingletonUtils.assertSingletonValueIsSet(postProcessEvent, 'PastePostProcess event has fired');
-  });
-
 const pWaitForAndAssertProcessEvents = async (preProcessEvent: SingletonEvent<PastePreProcessEvent>, postProcessEvent: SingletonEvent<PastePostProcessEvent>, expectedData: ProcessEventExpectedData): Promise<void> => {
-  await pWaitForProcessEvents(preProcessEvent, postProcessEvent);
-  assertLastPreProcessEvent(preProcessEvent, expectedData);
-  assertLastPostProcessEvent(postProcessEvent, expectedData);
+  const pWaitForProcessEvents = () =>
+    pWaitFor('Did not fire process events', () => {
+      SingletonUtils.assertSingletonValueIsSet(preProcessEvent, 'PastePreProcess event has fired');
+      SingletonUtils.assertSingletonValueIsSet(postProcessEvent, 'PastePostProcess event has fired');
+    });
+
+  const assertLastPreProcessEvent = () =>
+    preProcessEvent.on((e) => {
+      assert.equal(e.internal, expectedData.internal, 'Internal property should be equal');
+      assert.equal(e.content, expectedData.content, 'Content property should be equal');
+    });
+
+  const assertLastPostProcessEvent = () =>
+    postProcessEvent.on((e) => {
+      assert.equal(e.internal, expectedData.internal, 'Internal property should be equal');
+      assert.equal(e.node.innerHTML, expectedData.content, 'Content property should be equal');
+    });
+
+  await pWaitForProcessEvents();
+  assertLastPreProcessEvent();
+  assertLastPostProcessEvent();
 };
 
-const pWaitForAndAssertInputEvent = async (event: SingletonEvent<InputEvent>): Promise<void> => {
-  await pWaitForInputEvent(event);
-  event.on((e) => {
-    assert.equal(e.inputType, 'insertFromPaste', 'Input event type should be "insertFromPaste"');
-    assert.isNull(e.data, 'Input event data should be null');
-  });
+const pWaitForAndAssertInputEvents = async (beforeinputEvent: SingletonEvent<InputEvent>, inputEvent: SingletonEvent<InputEvent>, expectedBeforeinputDataTransferHtml?: string): Promise<void> => {
+  const checkDataTransferHtml = !Type.isUndefined(expectedBeforeinputDataTransferHtml);
+  const pWaitForInputEvents = (): Promise<void> =>
+    pWaitFor('Did not fire input events', () => {
+      SingletonUtils.assertSingletonValueIsSet(beforeinputEvent, 'beforeinput event has fired');
+      SingletonUtils.assertSingletonValueIsSet(inputEvent, 'input event has fired');
+    });
+
+  const assertBeforeInputEvent = (): void =>
+    beforeinputEvent.on((e) => {
+      assert.equal(e.inputType, 'insertFromPaste', 'input event type should be "insertFromPaste"');
+      assert.isNull(e.data, 'beforeinput event data should be null');
+      assert.isNotNull(e.dataTransfer, 'beforeinput event dataTransfer should not be null');
+      if (checkDataTransferHtml) {
+        assert.equal(e.dataTransfer?.getData('text/html'), expectedBeforeinputDataTransferHtml, 'beforeinput event dataTransfer should contain expected html data');
+      }
+    });
+
+  const assertInputEvent = (): void =>
+    inputEvent.on((e) => {
+      assert.equal(e.inputType, 'insertFromPaste', 'beforeinput event type should be "insertFromPaste"');
+      assert.isNull(e.data, 'input event data should be null');
+      assert.isNull(e.dataTransfer, 'input event dataTransfer should be null');
+    });
+
+  await pWaitForInputEvents();
+  assertBeforeInputEvent();
+  assertInputEvent();
 };
 
 const pWaitForAndAssertEventsDoNotFire = async (events: SingletonEvent<any>[]): Promise<void> => {
@@ -64,6 +83,6 @@ const pWaitForAndAssertEventsDoNotFire = async (events: SingletonEvent<any>[]): 
 
 export {
   pWaitForAndAssertEventsDoNotFire,
-  pWaitForAndAssertInputEvent,
+  pWaitForAndAssertInputEvents,
   pWaitForAndAssertProcessEvents
 };
