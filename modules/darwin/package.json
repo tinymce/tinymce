@@ -20,8 +20,8 @@
   ],
   "dependencies": {
     "@ephox/katamari": "^9.1.5",
-    "@ephox/phoenix": "^8.0.9",
-    "@ephox/robin": "^10.0.9",
+    "@ephox/phoenix": "^8.2.0-alpha.0",
+    "@ephox/robin": "^10.2.0-alpha.0",
     "@ephox/sand": "^6.0.9",
     "@ephox/snooker": "^11.0.10",
     "@ephox/sugar": "^9.2.1"
