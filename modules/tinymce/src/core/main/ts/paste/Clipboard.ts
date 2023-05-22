@@ -1,4 +1,4 @@
-import { DataTransfer } from '@ephox/dragster';
+import { DataTransfer, DataTransferContent } from '@ephox/dragster';
 import { Arr, Cell, Strings, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
@@ -36,7 +36,7 @@ const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText
     const content = args.content;
     SmartPaste.insertContent(editor, content, pasteAsText);
     const dataTransfer = DataTransfer.createDataTransfer();
-    dataTransfer.setData('text/html', content);
+    DataTransferContent.setHtmlData(dataTransfer, content);
     InputEvents.fireBeforeInputEvent(editor, 'insertFromPaste', { dataTransfer });
     InputEvents.fireInputEvent(editor, 'insertFromPaste');
   }
