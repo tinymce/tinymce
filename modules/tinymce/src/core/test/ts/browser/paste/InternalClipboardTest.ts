@@ -19,14 +19,25 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
   const lastPostProcessEvent = Singleton.value<EditorEvent<PastePostProcessEvent>>();
   const lastBeforeInputEvent = Singleton.value<EditorEvent<InputEvent>>();
   const lastInputEvent = Singleton.value<EditorEvent<InputEvent>>();
+  let eventTypes: string[] = [];
+  const setEventSingletonAndAddType = (singleton: Singleton.Value<EditorEvent<any>>, event: EditorEvent<any>) => {
+    singleton.set(event);
+    eventTypes.push(event.type);
+  };
+  const isInputEventInsertFromPaste = (inputEvent: EditorEvent<InputEvent>): boolean => inputEvent.inputType === 'insertFromPaste';
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'table',
     init_instance_callback: (editor: Editor) => {
-      editor.on('PastePreProcess', (e) => lastPreProcessEvent.set(e));
-      editor.on('PastePostProcess', (e) => lastPostProcessEvent.set(e));
-      editor.on('beforeinput', (e) => lastBeforeInputEvent.set(e));
-      editor.on('input', (e) => lastInputEvent.set(e));
+      editor.on('PastePreProcess', (e) => setEventSingletonAndAddType(lastPreProcessEvent, e));
+      editor.on('PastePostProcess', (e) => setEventSingletonAndAddType(lastPostProcessEvent, e));
+      editor.on('beforeinput input', (e) => {
+        // TINY-9829: Only care about input events related to paste. When pasted content replaces some
+        // existing content in the editor, a `deleteContentBackward` input event is fired which is irrelevant
+        if (isInputEventInsertFromPaste(e)) {
+          setEventSingletonAndAddType(e.type === 'beforeinput' ? lastBeforeInputEvent : lastInputEvent, e);
+        }
+      });
       editor.on('copy cut paste', (e) => dataTransfer.set(e.clipboardData));
     },
     base_url: '/project/tinymce/js/tinymce'
@@ -37,6 +48,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
     lastPostProcessEvent.clear();
     lastInputEvent.clear();
     dataTransfer.clear();
+    eventTypes = [];
   };
 
   const cutCopyDataTransferEvent = (editor: Editor, type: 'cut' | 'copy') => {
@@ -190,6 +202,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
     const pWaitForAndAssertEvents = async (processExpectedData: PasteEventUtils.ProcessEventExpectedData, beforeinputExpectedDataTransferHtml: string): Promise<void> => {
       await PasteEventUtils.pWaitForAndAssertProcessEvents(lastPreProcessEvent, lastPostProcessEvent, processExpectedData);
       await PasteEventUtils.pWaitForAndAssertInputEvents(lastBeforeInputEvent, lastInputEvent, beforeinputExpectedDataTransferHtml);
+      assert.deepEqual(eventTypes, [ 'pastepreprocess', 'pastepostprocess', 'beforeinput', 'input' ], 'Paste events should be fired in correct order');
     };
 
     const pWaitForAndAssertNoEvents = () => PasteEventUtils.pWaitForAndAssertEventsDoNotFire([ lastPreProcessEvent, lastPostProcessEvent, lastInputEvent ]);
