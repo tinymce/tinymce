@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `a` elements were allowed to have non-inline child elements when the editor schema was set to `html4`. #TINY-9805
 
 ### Fixed
+- Right clicking on a merge tag would result in different highlighting across browsers. #TINY-9848
 - Command + backspace would not add an undo level on Mac. #TINY-8910
 - Ctrl + backspace and Ctrl + delete would not restore correct caret position after redo. #TINY-8910
 - In the tree component, a selected item in a directory would not stay selected after collapsing the directory. #TINY-9715
