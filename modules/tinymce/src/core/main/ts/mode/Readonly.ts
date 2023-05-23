@@ -68,7 +68,9 @@ const toggleReadOnly = (editor: Editor, state: boolean): void => {
     switchOffContentEditableTrue(body);
   } else {
     editor.readonly = false;
-    setContentEditable(body, true);
+    if (editor.hasEditableRoot()) {
+      setContentEditable(body, true);
+    }
     switchOnContentEditableTrue(body);
     setEditorCommandState(editor, 'StyleWithCSS', false);
     setEditorCommandState(editor, 'enableInlineTableEditing', false);

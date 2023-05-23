@@ -79,4 +79,13 @@ describe('browser.tinymce.core.api.commands.ContentCommandsTest', () => {
     editor.execCommand('mceNewDocument');
     TinyAssertions.assertContent(editor, '');
   });
+
+  it('TINY-9839: mceNewDocument command with newdocument_content option', () => {
+    const editor = hook.editor();
+    editor.options.set('newdocument_content', '<p>initial</p>');
+    editor.setContent('<p>a</p>');
+    editor.execCommand('mceNewDocument');
+    TinyAssertions.assertContent(editor, '<p>initial</p>');
+    editor.options.unset('newdocument_content');
+  });
 });

@@ -4,7 +4,7 @@ import { RangeLikeObject } from '../selection/RangeTypes';
 import Editor from './Editor';
 import {
   BeforeSetContentEvent, SetContentEvent, PastePlainTextToggleEvent, PastePostProcessEvent, PastePreProcessEvent, GetContentEvent, BeforeGetContentEvent,
-  PreProcessEvent, PostProcessEvent
+  PreProcessEvent, PostProcessEvent, EditableRootStateChangeEvent
 } from './EventTypes';
 import { ParserArgs } from './html/DomParser';
 import { EditorEvent } from './util/EventDispatcher';
@@ -96,6 +96,9 @@ const firePastePostProcess = (editor: Editor, node: HTMLElement, internal: boole
 const firePastePlainTextToggle = (editor: Editor, state: boolean): EditorEvent<PastePlainTextToggleEvent> =>
   editor.dispatch('PastePlainTextToggle', { state });
 
+const fireEditableRootStateChange = (editor: Editor, state: boolean): EditorEvent<EditableRootStateChangeEvent> =>
+  editor.dispatch('EditableRootStateChange', { state });
+
 export {
   firePreProcess,
   firePostProcess,
@@ -120,5 +123,6 @@ export {
   fireAutocompleterEnd,
   firePastePlainTextToggle,
   firePastePostProcess,
-  firePastePreProcess
+  firePastePreProcess,
+  fireEditableRootStateChange
 };

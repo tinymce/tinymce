@@ -144,6 +144,10 @@ export interface PastePostProcessEvent {
   readonly internal: boolean;
 }
 
+export interface EditableRootStateChangeEvent {
+  state: boolean;
+}
+
 export interface NewTableRowEvent {
   node: HTMLTableRowElement;
 }

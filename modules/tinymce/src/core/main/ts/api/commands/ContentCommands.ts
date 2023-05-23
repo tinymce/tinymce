@@ -1,5 +1,6 @@
 import * as InsertContent from '../../content/InsertContent';
 import Editor from '../Editor';
+import * as Options from '../Options';
 
 export const registerCommands = (editor: Editor): void => {
   editor.editorCommands.addCommands({
@@ -38,7 +39,7 @@ export const registerCommands = (editor: Editor): void => {
     },
 
     mceNewDocument: () => {
-      editor.setContent('');
+      editor.setContent(Options.getNewDocumentContent(editor));
     }
   });
 };
