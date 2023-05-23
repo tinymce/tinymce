@@ -28,7 +28,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'table',
-    init_instance_callback: (editor: Editor) => {
+    setup: (editor: Editor) => {
       editor.on('PastePreProcess', (e) => setEventSingletonAndAddType(lastPreProcessEvent, e));
       editor.on('PastePostProcess', (e) => setEventSingletonAndAddType(lastPostProcessEvent, e));
       editor.on('beforeinput input', (e) => {
@@ -38,6 +38,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
           setEventSingletonAndAddType(e.type === 'beforeinput' ? lastBeforeInputEvent : lastInputEvent, e);
         }
       });
+      editor.on('paste', (e) => eventTypes.push(e.type));
       editor.on('copy cut paste', (e) => dataTransfer.set(e.clipboardData));
     },
     base_url: '/project/tinymce/js/tinymce'
@@ -202,7 +203,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
     const pWaitForAndAssertEvents = async (processExpectedData: PasteEventUtils.ProcessEventExpectedData, beforeinputExpectedDataTransferHtml: string): Promise<void> => {
       await PasteEventUtils.pWaitForAndAssertProcessEvents(lastPreProcessEvent, lastPostProcessEvent, processExpectedData);
       await PasteEventUtils.pWaitForAndAssertInputEvents(lastBeforeInputEvent, lastInputEvent, beforeinputExpectedDataTransferHtml);
-      assert.deepEqual(eventTypes, [ 'pastepreprocess', 'pastepostprocess', 'beforeinput', 'input' ], 'Paste events should be fired in correct order');
+      assert.deepEqual(eventTypes, [ 'paste', 'pastepreprocess', 'pastepostprocess', 'beforeinput', 'input' ], 'Paste events should be fired in correct order');
     };
 
     const pWaitForAndAssertNoEvents = () => PasteEventUtils.pWaitForAndAssertEventsDoNotFire([ lastPreProcessEvent, lastPostProcessEvent, lastInputEvent ]);
