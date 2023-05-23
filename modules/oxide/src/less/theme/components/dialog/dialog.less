@@ -63,6 +63,10 @@
 @dialog-table-border-color: darken(@border-color, 55%);
 @dialog-nav-focus-background-color: fade(@color-tint, 10%);
 
+@dialog-iframe-bordered-border-width: 1px;
+@dialog-iframe-bordered-border-color: @border-color;
+@dialog-iframe-bordered-border-radius: @panel-border-radius;
+
 // These get stacked on top of the global dialog z-index (1100)
 @z-index-dialogs-offset-wrap-background: 1;
 @z-index-dialogs-offset-dialog: 2;
@@ -309,6 +313,11 @@
       margin-bottom: @pad-md;
     }
 
+    .tox-form__group p small {
+      color: @text-color-muted;
+      font-size: @font-size-sm;
+    }
+
     .tox-form__group h1:first-child,
     .tox-form__group h2:first-child,
     .tox-form__group p:first-child {
@@ -369,6 +378,16 @@
   .tox-dialog__footer-start,
   .tox-dialog__footer-end {
     display: flex;
+    flex: 1 1 auto;
+  }
+
+  .tox-dialog__footer-end {
+    justify-content: flex-end;
+  }
+
+  .tox-dialog__footer-start:empty,
+  .tox-dialog__footer-end:empty {
+    display: none;
   }
 
   // Make a dialog disabled for user input
@@ -430,6 +449,37 @@
     &.tox-dialog__iframe--opaque {
       background: @edit-area-iframe-background-color;
     }
+  }
+
+  .tox-dialog__iframe--bordered {
+    border: @dialog-iframe-bordered-border-width solid @dialog-iframe-bordered-border-color;
+    border-radius: @dialog-iframe-bordered-border-radius;
+  }
+
+  // Wrapper creating a bottom shadow to indicate more content.
+  .tox-dialog__iframe-scroll-visualizer {
+    display: flex;
+    position: relative;
+
+    &::before {
+      background-image: linear-gradient(fade(@edit-area-iframe-background-color, 0%), @edit-area-iframe-background-color 80%);
+      border-radius: 0 0 @dialog-iframe-bordered-border-radius @dialog-iframe-bordered-border-radius;
+      bottom: 1px;
+      content: "";
+      height: 60px;
+      left: 1px;
+      position: absolute;
+      right: 1px;
+    }
+
+    > .tox-dialog__iframe {
+      // Make child iframe full width;
+      width: 100%;
+    }
+  }
+
+  .tox-dialog__iframe--scrollable {
+    // Iframe content will overlay any box-shadow so we make a pseudo element and move it on top instead
   }
 
   // Make popups in a dialog appear over other dialog (urlinput, colorinput etc)
@@ -502,7 +552,7 @@
   .tox-dialog__footer {
     .tox-dialog__footer-start,
     .tox-dialog__footer-end {
-      > * {
+      > *:not(:first-child) {
         margin-left: @pad-sm;
       }
     }
@@ -538,7 +588,7 @@
   .tox-dialog__footer {
     .tox-dialog__footer-start,
     .tox-dialog__footer-end {
-      > * {
+      > *:not(:first-child) {
         margin-right: @pad-sm;
       }
     }
