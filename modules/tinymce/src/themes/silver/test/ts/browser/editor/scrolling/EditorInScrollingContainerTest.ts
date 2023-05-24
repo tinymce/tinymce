@@ -175,7 +175,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
             // TINY-9408: In classic mode, the transition class isn't going away because
             // there is another transition style clobbering it. Reinstate the `arr.not` check
             // when the bug is fixed.
-            // arr.not(ui.editor.stickyHeaderTransitioning.className)
+            arr.not(ui.editor.stickyHeaderTransitioning.className)
           ]
         })),
         header
@@ -194,7 +194,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
             // TINY-9408: In classic mode, the transition class isn't going away because
             // there is another transition style clobbering it. Reinstate the `arr.not` check
             // when the bug is fixed.
-            // arr.not(ui.editor.stickyHeaderTransitioning.className)
+            arr.not(ui.editor.stickyHeaderTransitioning.className)
           ]
         })),
         header
@@ -886,10 +886,23 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
           const header = getEditorUi(editor, ui.editor.stickyHeader);
           const scroller = getAncestorUi(editor, ui.ancestors.scrollingWrapper);
 
-          scroller.dom.scrollTo(0, 0);
+          scroller.dom.scrollTo(0, heights.largeBanner);
+          await pWaitUntilAppears(header);
+
+          scroller.dom.scrollTo(0, heights.largeBanner - heights.scroller + 20);
+          await pWaitUntilAppears(header);
+
+          scroller.dom.scrollTo(0, heights.largeBanner - heights.scroller);
           await pWaitUntilDisappears(header);
 
-          scroller.dom.scrollTo(0, 10000);
+          scroller.dom.scrollTo(0, heights.largeBanner);
+
+          await pWaitUntilAppears(header);
+
+          scroller.dom.scrollTo(0, heights.editor + heights.largeBanner - header.dom.offsetHeight);
+          await pWaitUntilAppears(header);
+
+          scroller.dom.scrollTo(0, heights.editor + heights.largeBanner - header.dom.offsetHeight + 20);
           await pWaitUntilDisappears(header);
         });
       });
@@ -916,15 +929,25 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
           const header = getEditorUi(editor, ui.editor.stickyHeader);
           const scroller = getAncestorUi(editor, ui.ancestors.scrollingWrapper);
 
-          // Scroll past the orange banner to let the toolbar docked at the top of the scrollable container
-          scroller.dom.scrollTo(0, heights.largeBanner + 100);
+          scroller.dom.scrollTo(0, 0);
 
-          await pWaitUntilDockedAtPosition(header, Optional.none());
+          scroller.dom.scrollTo(0, heights.largeBanner);
+          await pWaitUntilAppears(header);
 
-          scroller.dom.scrollTo(0, 10000);
+          scroller.dom.scrollTo(0, heights.largeBanner - heights.scroller + header.dom.offsetHeight + 20);
+          await pWaitUntilAppears(header);
+
+          scroller.dom.scrollTo(0, heights.largeBanner - heights.scroller);
           await pWaitUntilDisappears(header);
 
-          scroller.dom.scrollTo(0, 0);
+          // Scroll past the orange banner to let the toolbar docked at the top of the scrollable container
+          scroller.dom.scrollTo(0, heights.largeBanner + 100);
+          await pWaitUntilDockedAtPosition(header, Optional.none());
+
+          scroller.dom.scrollTo(0, heights.largeBanner + heights.editor);
+          await pWaitUntilAppears(header);
+
+          scroller.dom.scrollTo(0, heights.largeBanner + heights.editor + 20);
           await pWaitUntilDisappears(header);
         });
       });
