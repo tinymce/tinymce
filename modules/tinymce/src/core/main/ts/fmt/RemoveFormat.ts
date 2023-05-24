@@ -445,7 +445,7 @@ const wrapAndSplit = (
   return container;
 };
 
-const removeFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range, similar?: boolean): void => {
+const removeFormatInternal = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range, similar?: boolean): void => {
   const formatList = ed.formatter.get(name) as Format[];
   const format = formatList[0];
   const dom = ed.dom;
@@ -646,7 +646,7 @@ const removeFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: 
 
 const removeFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range, similar?: boolean): void => {
   if (node || ed.selection.isEditable()) {
-    removeFormatAction(ed, name, vars, node, similar);
+    removeFormatInternal(ed, name, vars, node, similar);
   }
 };
 
