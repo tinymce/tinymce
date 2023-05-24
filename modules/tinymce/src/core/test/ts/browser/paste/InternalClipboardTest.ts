@@ -20,11 +20,10 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
   const lastBeforeInputEvent = Singleton.value<EditorEvent<InputEvent>>();
   const lastInputEvent = Singleton.value<EditorEvent<InputEvent>>();
   let eventTypes: string[] = [];
-  const setEventSingletonAndAddType = (singleton: Singleton.Value<EditorEvent<any>>, event: EditorEvent<any>) => {
+  const setEventSingletonAndAddType = <T>(singleton: Singleton.Value<EditorEvent<T>>, event: EditorEvent<T>): void => {
     singleton.set(event);
     eventTypes.push(event.type);
   };
-  const isInputEventInsertFromPaste = (inputEvent: EditorEvent<InputEvent>): boolean => inputEvent.inputType === 'insertFromPaste';
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'table',
@@ -34,7 +33,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
       editor.on('beforeinput input', (e) => {
         // TINY-9829: Only care about input events related to paste. When pasted content replaces some
         // existing content in the editor, a `deleteContentBackward` input event is fired which is irrelevant
-        if (isInputEventInsertFromPaste(e)) {
+        if (e.inputType === 'insertFromPaste') {
           setEventSingletonAndAddType(e.type === 'beforeinput' ? lastBeforeInputEvent : lastInputEvent, e);
         }
       });
