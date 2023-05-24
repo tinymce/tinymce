@@ -233,7 +233,7 @@ const removeListStyleFormats = (editor: Editor, name: string, vars: FormatVars |
   }
 };
 
-const removeFormatInternal = (ed: Editor, format: Format, vars?: FormatVars, node?: Node, compareNode?: Node | null): RemoveFormatAdt => {
+const removeNodeFormatInternal = (ed: Editor, format: Format, vars?: FormatVars, node?: Node, compareNode?: Node | null): RemoveFormatAdt => {
   const dom = ed.dom;
   const elementUtils = ElementUtils(ed);
   const schema = ed.schema;
@@ -369,8 +369,8 @@ const findFormatRoot = (editor: Editor, container: Node, name: string, vars?: Fo
   return formatRoot;
 };
 
-const removeFormatFromClone = (editor: Editor, format: Format, vars: FormatVars | undefined, clone: Node) =>
-  removeFormatInternal(editor, format, vars, clone, clone).fold(
+const removeNodeFormatFromClone = (editor: Editor, format: Format, vars: FormatVars | undefined, clone: Node) =>
+  removeNodeFormatInternal(editor, format, vars, clone, clone).fold(
     Fun.constant(clone),
     (newName) => {
       // To rename a node, it needs to be a child of another node
@@ -404,7 +404,7 @@ const wrapAndSplit = (
       let clone: Node | null = dom.clone(parent, false);
 
       for (let i = 0; i < formatList.length; i++) {
-        clone = removeFormatFromClone(editor, formatList[i], vars, clone);
+        clone = removeNodeFormatFromClone(editor, formatList[i], vars, clone);
         if (clone === null) {
           break;
         }
@@ -662,7 +662,7 @@ const removeFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node |
  * @return {Boolean} True/false if the node was removed or not.
  */
 const removeNodeFormat = (editor: Editor, format: Format, vars: FormatVars | undefined, node: Node, compareNode?: Node | null): boolean => {
-  return removeFormatInternal(editor, format, vars, node, compareNode).fold(
+  return removeNodeFormatInternal(editor, format, vars, node, compareNode).fold(
     Fun.never,
     (newName) => {
       // If renaming we are guaranteed this is a Element, so cast
