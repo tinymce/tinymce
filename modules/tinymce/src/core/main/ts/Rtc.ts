@@ -159,7 +159,7 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
     canApply: (name) => MatchFormat.canApply(editor, name),
     closest: (names) => MatchFormat.closest(editor, names),
     apply: (name, vars?, node?) => ApplyFormat.applyFormat(editor, name, vars, node),
-    remove: (name, vars, node, similar?) => RemoveFormat.remove(editor, name, vars, node, similar),
+    remove: (name, vars, node, similar?) => RemoveFormat.removeFormat(editor, name, vars, node, similar),
     toggle: (name, vars, node) => ToggleFormat.toggle(editor, name, vars, node),
     formatChanged: (registeredFormatListeners, formats, callback, similar, vars) => formatChangedInternal(editor, registeredFormatListeners, formats, callback, similar, vars)
   },

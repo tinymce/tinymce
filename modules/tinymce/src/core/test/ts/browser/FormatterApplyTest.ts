@@ -1,7 +1,8 @@
 import { Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
-import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
+import { Hierarchy } from '@ephox/sugar';
+import { LegacyUnit, TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -2513,6 +2514,15 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
       editor.formatter.apply('bold');
       TinyAssertions.assertContent(editor, initialContent);
+    });
+  });
+
+  it('TINY-9887: Should be not be noop if selection is not in an editable context but a custom editable node is specified', () => {
+    TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+      editor.setContent('<p>test</p><p contenteditable="true">editable</p>');
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
+      editor.formatter.apply('bold', {}, Hierarchy.follow(TinyDom.body(editor), [ 1 ]).getOrDie().dom);
+      TinyAssertions.assertContent(editor, '<p>test</p><p contenteditable="true"><strong>editable</strong></p>');
     });
   });
 });
