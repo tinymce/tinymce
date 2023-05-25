@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ctrl + backspace and Ctrl + delete would not restore correct caret position after redo. #TINY-8910
 - In the tree component, a selected item in a directory would not stay selected after collapsing the directory. #TINY-9715
 - Enabling or Disabling checkboxes would not set the correct classes and attributes. #TINY-4189
+- Entering a newline in some setups would place the cursor in the wrong paragraph. #TINY-9822
 - Redial would in some situations cause select elements not to have an initial value selected when they should have. #TINY-9679
 - Table toolbar was visible even if the table was within a noneditable host element. #TINY-9664
 - Quickbar toolbars was shown for noneditable contents in a noneditable root. #TINY-9460
