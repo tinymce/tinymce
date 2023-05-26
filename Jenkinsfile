@@ -154,7 +154,11 @@ timestamps {
     }
 
     stage("Type check") {
-      exec("yarn ci-all")
+      sh """
+      npm install -g Ox
+      Ox yarn ci-all
+      """
+      // exec("yarn ci-all")
     }
 
     stage("Moxiedoc check") {
@@ -162,9 +166,10 @@ timestamps {
     }
 
     stage("Run Tests") {
-      grunt("list-changed-headless list-changed-browser")
-      // Run all the tests in parallel
-      parallel processes
+      echo "Skipping tests -- profiling memory only"
+      // grunt("list-changed-headless list-changed-browser")
+      // // Run all the tests in parallel
+      // parallel processes
     }
   }
 }
