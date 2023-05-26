@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - The `caption`, `address` and `dt` elements were allowed to have non-inline children elements when the editor schema was set to `html4`. #TINY-9768
+- SVG icons for back and foreground colors now uses class instead of id to identify SVG elements that should change color. #TINY-9844
 - The `a` elements were allowed to have non-inline child elements when the editor schema was set to `html4`. #TINY-9805
 
 ### Fixed
