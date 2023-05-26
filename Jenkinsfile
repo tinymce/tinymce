@@ -154,11 +154,9 @@ timestamps {
     }
 
     stage("Type check") {
-      sh """
-      npm install -g Ox
-      Ox yarn ci-all
-      """
-      // exec("yarn ci-all")
+      withEnv(["NODE_OPTIONS=--max-old-space-size=1024"]) {
+        exec("yarn ci-all")
+      }
     }
 
     stage("Moxiedoc check") {
