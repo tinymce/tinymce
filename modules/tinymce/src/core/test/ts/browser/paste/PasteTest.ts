@@ -1,4 +1,5 @@
 import { afterEach, before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
+import { Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -7,6 +8,8 @@ import Editor from 'tinymce/core/api/Editor';
 import { PastePostProcessEvent, PastePreProcessEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as PasteUtils from 'tinymce/core/paste/PasteUtils';
+
+import * as PasteEventUtils from '../../module/test/PasteEventUtils';
 
 describe('browser.tinymce.core.paste.PasteTest', () => {
   const browser = PlatformDetection.detect().browser;
@@ -148,7 +151,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
 
     editor.execCommand('mceInsertClipboardContent', false, { text: ' a ' });
-    TinyAssertions.assertContent(editor, '<p>t&nbsp;a&nbsp;xt</p>');
+    TinyAssertions.assertContent(editor, '<p>t a xt</p>');
   });
 
   it('TBA: paste plain text with linefeeds', () => {
@@ -157,7 +160,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
 
     editor.execCommand('mceInsertClipboardContent', false, { text: 'a\nb\nc ' });
-    TinyAssertions.assertContent(editor, '<p>ta<br>b<br>c&nbsp;xt</p>');
+    TinyAssertions.assertContent(editor, '<p>ta<br>b<br>c xt</p>');
   });
 
   it('TBA: paste plain text with double linefeeds', () => {
@@ -482,6 +485,15 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
       });
 
       TinyAssertions.assertContent(editor, '<p style="color: rgb(255, 0, 0);">abc</p>');
+    });
+
+    it('TINY-9829: Paste command dispatches input event', async () => {
+      const editor = hook.editor();
+      const inputEvent = Singleton.value<EditorEvent<InputEvent>>();
+
+      editor.on('input', (e) => inputEvent.set(e));
+      editor.execCommand('mceInsertClipboardContent', false, { html: '<p>Test</p>' });
+      await PasteEventUtils.pWaitForAndAssertInputEvent(inputEvent);
     });
   });
 });

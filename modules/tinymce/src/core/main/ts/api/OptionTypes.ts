@@ -95,6 +95,7 @@ interface BaseEditorOptions {
   document_base_url?: string;
   draggable_modal?: boolean;
   editable_class?: string;
+  editable_root?: boolean;
   element_format?: 'xhtml' | 'html';
   elementpath?: boolean;
   encoding?: string;
@@ -161,6 +162,7 @@ interface BaseEditorOptions {
   min_width?: number;
   model?: string;
   model_url?: string;
+  newdocument_content?: string;
   newline_behavior?: 'block' | 'linebreak' | 'invert' | 'default';
   no_newline_selector?: string;
   noneditable_class?: string;
@@ -287,6 +289,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   init_content_sync: boolean;
   draggable_modal: boolean;
   editable_class: string;
+  editable_root: boolean;
   font_css: string[];
   font_family_formats: string;
   font_size_classes: string;
@@ -315,6 +318,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   menu: Record<string, { title: string; items: string }>;
   menubar: boolean | string;
   model: string;
+  newdocument_content: string;
   no_newline_selector: string;
   noneditable_class: string;
   noneditable_regexp: RegExp[];

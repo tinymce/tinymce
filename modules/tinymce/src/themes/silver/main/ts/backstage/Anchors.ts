@@ -84,6 +84,20 @@ const getCursorAnchor = (editor: Editor, bodyElement: () => SugarElement<HTMLEle
   root: bodyElement(),
   getSelection: () => {
     const rng = editor.selection.getRng();
+
+    // Only return a range if there is a selection of more than one cell.
+    const selectedCells = editor.model.table.getSelectedCells();
+    if (selectedCells.length > 1) {
+      const firstCell = selectedCells[0];
+      const lastCell = selectedCells[selectedCells.length - 1];
+      const selectionTableCellRange = {
+        firstCell: SugarElement.fromDom(firstCell),
+        lastCell: SugarElement.fromDom(lastCell)
+      };
+
+      return Optional.some(selectionTableCellRange);
+    }
+
     return Optional.some(
       SimSelection.range(SugarElement.fromDom(rng.startContainer), rng.startOffset, SugarElement.fromDom(rng.endContainer), rng.endOffset)
     );

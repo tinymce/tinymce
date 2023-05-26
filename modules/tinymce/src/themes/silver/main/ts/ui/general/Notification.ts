@@ -149,7 +149,7 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
     },
     components: [
       Icons.render('close', {
-        tag: 'div',
+        tag: 'span',
         classes: [ 'tox-icon' ],
         attributes: {
           'aria-label': detail.translationProvider('Close')

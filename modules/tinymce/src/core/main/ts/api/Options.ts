@@ -442,6 +442,11 @@ const register = (editor: Editor): void => {
     default: false
   });
 
+  registerOption('editable_root', {
+    processor: 'boolean',
+    default: true
+  });
+
   registerOption('plugins', {
     processor: 'string[]',
     default: []
@@ -812,6 +817,11 @@ const register = (editor: Editor): void => {
     default: false
   });
 
+  registerOption('newdocument_content', {
+    processor: 'string',
+    default: ''
+  });
+
   // These options must be registered later in the init sequence due to their default values
   editor.on('ScriptsLoaded', () => {
     registerOption('directionality', {
@@ -884,6 +894,7 @@ const shouldAddUnloadTrigger = option('add_unload_trigger');
 const getCustomUndoRedoLevels = option('custom_undo_redo_levels');
 const shouldDisableNodeChange = option('disable_nodechange');
 const isReadOnly = option('readonly');
+const hasEditableRoot = option('editable_root');
 const hasContentCssCors = option('content_css_cors');
 const getPlugins = option('plugins');
 const getExternalPlugins = option('external_plugins');
@@ -902,6 +913,7 @@ const shouldPasteBlockDrop = option('paste_block_drop');
 const shouldPasteDataImages = option('paste_data_images');
 const getPastePreProcess = option('paste_preprocess');
 const getPastePostProcess = option('paste_postprocess');
+const getNewDocumentContent = option('newdocument_content');
 const getPasteWebkitStyles = option('paste_webkit_styles');
 const shouldPasteRemoveWebKitStyles = option('paste_remove_styles_if_webkit');
 const shouldPasteMergeFormats = option('paste_merge_formats');
@@ -1001,6 +1013,7 @@ export {
   getCustomUndoRedoLevels,
   shouldDisableNodeChange,
   isReadOnly,
+  hasEditableRoot,
   hasContentCssCors,
   getPlugins,
   getExternalPlugins,
@@ -1020,6 +1033,7 @@ export {
   shouldPasteDataImages,
   getPastePreProcess,
   getPastePostProcess,
+  getNewDocumentContent,
   getPasteWebkitStyles,
   shouldPasteRemoveWebKitStyles,
   shouldPasteMergeFormats,

@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 - Select would in some situations when it was reused or otherwise reset not have an initial selected value when expected to. #TINY-9679
+- In dialogs, the `aria-describedby` element would be the body of the dialog. #TINY-9816
+
+### Improved
+- `SelectionAnchor` now uses the bounds of table cell selection, if the selection contains more than one table cell. #TINY-8297
+
+### Changed
+- Changed `SelectionAnchorSpec.getSelection` to support the selection of both `SimRange` and `SelectionTableCellRange`.
 
 ## 12.1.0 - 2023-03-15
 

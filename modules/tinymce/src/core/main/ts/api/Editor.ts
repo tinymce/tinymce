@@ -7,6 +7,7 @@ import * as EditorRemove from '../EditorRemove';
 import { BlobInfoImagePair } from '../file/ImageScanner';
 import * as EditorFocus from '../focus/EditorFocus';
 import * as Render from '../init/Render';
+import * as EditableRoot from '../mode/EditableRoot';
 import { NodeChange } from '../NodeChange';
 import { normalizeOptions } from '../options/NormalizeOptions';
 import SelectionOverrides from '../SelectionOverrides';
@@ -239,6 +240,7 @@ class Editor implements EditorObservable {
   public _pendingNativeEvents: string[] = [];
   public _selectionOverrides!: SelectionOverrides;
   public _skinLoaded: boolean = false;
+  public _editableRoot: boolean = true;
 
   // EditorObservable patches
   public bindPendingEventDelegates!: EditorObservable['bindPendingEventDelegates'];
@@ -1076,6 +1078,14 @@ class Editor implements EditorObservable {
    */
   public addVisual(elm?: HTMLElement): void {
     VisualAids.addVisual(this, elm);
+  }
+
+  public setEditableRoot(state: boolean): void {
+    EditableRoot.setEditableRoot(this, state);
+  }
+
+  public hasEditableRoot(): boolean {
+    return EditableRoot.hasEditableRoot(this);
   }
 
   /**
