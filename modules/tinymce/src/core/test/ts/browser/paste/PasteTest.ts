@@ -489,11 +489,15 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
 
     it('TINY-9829: Paste command dispatches input event', async () => {
       const editor = hook.editor();
+      const beforeinputEvent = Singleton.value<EditorEvent<InputEvent>>();
       const inputEvent = Singleton.value<EditorEvent<InputEvent>>();
 
+      editor.on('beforeinput', (e) => beforeinputEvent.set(e));
       editor.on('input', (e) => inputEvent.set(e));
-      editor.execCommand('mceInsertClipboardContent', false, { html: '<p>Test</p>' });
-      await PasteEventUtils.pWaitForAndAssertInputEvent(inputEvent);
+
+      const html = '<p>Test</p>';
+      editor.execCommand('mceInsertClipboardContent', false, { html });
+      await PasteEventUtils.pWaitForAndAssertInputEvents(beforeinputEvent, inputEvent, html);
     });
   });
 });
