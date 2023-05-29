@@ -99,7 +99,6 @@ const getUrl = (pattern: UrlPattern, url: string): string => {
 
 const matchPattern = (url: string): UrlPattern | null => {
   const patterns = urlPatterns.filter((pattern) => pattern.regex.test(url));
-  console.log(patterns);
 
   if (patterns.length > 0) {
     return Tools.extend({}, patterns[0], { url: getUrl(patterns[0], url) });
