@@ -31,6 +31,18 @@ const urlPatterns: UrlPattern[] = [
     allowFullscreen: true
   },
   {
+    regex: /vimeo\.com\/([0-9]+)\?h=(\w+)/,
+    type: 'iframe', w: 425, h: 350,
+    url: 'player.vimeo.com/video/$1?h=$2&title=0&byline=0&portrait=0&color=8dc7dc',
+    allowFullscreen: true
+  },
+  {
+    regex: /vimeo\.com\/(.*)\/([0-9]+)\?h=(\w+)/,
+    type: 'iframe', w: 425, h: 350,
+    url: 'player.vimeo.com/video/$2?h=$3&title=0&amp;byline=0',
+    allowFullscreen: true
+  },
+  {
     regex: /vimeo\.com\/([0-9]+)/,
     type: 'iframe', w: 425, h: 350,
     url: 'player.vimeo.com/video/$1?title=0&byline=0&portrait=0&color=8dc7dc',
@@ -87,6 +99,7 @@ const getUrl = (pattern: UrlPattern, url: string): string => {
 
 const matchPattern = (url: string): UrlPattern | null => {
   const patterns = urlPatterns.filter((pattern) => pattern.regex.test(url));
+  console.log(patterns);
 
   if (patterns.length > 0) {
     return Tools.extend({}, patterns[0], { url: getUrl(patterns[0], url) });
