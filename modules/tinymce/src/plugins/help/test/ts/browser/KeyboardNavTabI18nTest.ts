@@ -18,7 +18,7 @@ describe('browser.tinymce.plugins.help.KeyboardNavTabI18nTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   };
 
-  const testLanguage = async (firstWord: string, language?: string) => {
+  const testLanguage = async (firstWord: string, language?: string): Promise<void> => {
     const editor = await McEditor.pFromSettings<Editor>({ ...baseSettings, language });
     editor.execCommand('mceHelp');
     const dialogEl = await TinyUiActions.pWaitForDialog(editor);
@@ -27,7 +27,7 @@ describe('browser.tinymce.plugins.help.KeyboardNavTabI18nTest', () => {
     McEditor.remove(editor);
   };
 
-  it('TINY-9633: Can load English by default', async () => testLanguage('Begin'));
+  it('TINY-9633: Can load English by default', () => testLanguage('Begin'));
 
-  it('TINY-9633: Can load German translation', async () => testLanguage('Grundlagen', 'de'));
+  it('TINY-9633: Can load German translation', () => testLanguage('Grundlagen', 'de'));
 });
