@@ -918,6 +918,7 @@ module.exports = function (grunt) {
     'eslint',
     'globals',
     'emoji',
+    'html-i18n',
     'rollup',
     'concat',
     'copy',
@@ -937,6 +938,7 @@ module.exports = function (grunt) {
     'shell:prismjs',
     'globals',
     'emoji',
+    'html-i18n',
     // TODO: Make webpack use the oxide CSS directly
     // as well as making development easier, then we can update 'yarn dev' to run 'oxide-build' in parallel with 'tinymce-grunt dev'
     // that will save 2-3 seconds on incremental builds
