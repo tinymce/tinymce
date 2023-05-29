@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Toolbar buttons and menu items were not disabled when they couldn't be used on noneditable content. #TINY-9669
 - Updated toolbar "More" button tooltip text from "More..." to "Reveal or hide additional toolbar items". #TINY-9629
 - Help text displayed at **Help > Help > Keyboard Navigation** re-written. #DOC-1936
+- Translations added for Help text displayed at **Help > Help > Keyboard Navigation**. #TINY-9633
 - These characters '$', '~', '+', '|', '№', '`' are now considered as punctuation marks. Therefore, they will not increase the word count. #TINY-8122
 - Updated the `codesample` plugin dialog and `template` plugin dialog to use the 'listbox' component to match other dialogs. #TINY-9630
 - Quickbar toolbars are now positioned in the middle of the selection horizontally, if the selection contains more than one table cell. #TINY-8297
