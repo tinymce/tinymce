@@ -2517,7 +2517,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     });
   });
 
-  it('TINY-9887: Should be not be noop if selection is not in an editable context but a custom editable node is specified', () => {
+  it('TINY-9887: Should not be noop if selection is not in an editable context but a custom editable node is specified', () => {
     TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
       editor.setContent('<p>test</p><p contenteditable="true">editable</p>');
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
