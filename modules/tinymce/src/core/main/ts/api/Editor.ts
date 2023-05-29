@@ -1081,7 +1081,7 @@ class Editor implements EditorObservable {
   }
 
   /**
-   * Changes the editable state of the editor root element.
+   * Changes the editable state of the editor's root element.
    *
    * @method setEditableRoot
    * @param {Boolean} state State to set true for editable and false for non-editable.
@@ -1091,10 +1091,10 @@ class Editor implements EditorObservable {
   }
 
   /**
-   * Returns the current editable state of the editor root element.
+   * Returns the current editable state of the editor's root element.
    *
    * @method hasEditableRoot
-   * @return {Boolean} True if the root element is editable, false if it's not editable.
+   * @return {Boolean} True if the root element is editable, false if it is not editable.
    */
   public hasEditableRoot(): boolean {
     return EditableRoot.hasEditableRoot(this);
