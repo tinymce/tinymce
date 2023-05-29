@@ -6,6 +6,7 @@ import { clone } from './EventUtils';
 
 interface SpecificsInput {
   data?: null | string;
+  dataTransfer?: null | DataTransfer;
 }
 
 const createAndFireInputEvent = (eventType: string) =>

@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - The `caption`, `address` and `dt` elements were allowed to have non-inline children elements when the editor schema was set to `html4`. #TINY-9768
+- SVG icons for back and foreground colors now uses class instead of id to identify SVG elements that should change color. #TINY-9844
 - The `a` elements were allowed to have non-inline child elements when the editor schema was set to `html4`. #TINY-9805
 
 ### Fixed
@@ -67,12 +68,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Popups were not constrained within the scrollable container when in a shadow root. #TINY-9743
 - Pressing arrow keys inside RTL elements would move the caret in an incorrect direction when moving over elements with the `contenteditable` attribute set to `false`. #TINY-9565
 - Inserting table consecutively without focus in the editor would result in the table being inserted at the wrong position. #TINY-3909
-- Pasting content into the editor would not fire an input event. #TINY-9829
+- Pasting content into the editor would not fire `beforeinput` and `input` events. #TINY-9829
 - In some cases, the exiting a `blockquote` element could fail when the cursor was positioned at the end of the `blockquote`. #TINY-9794
 - Templates containing an `<html>` tag were not parsed before being rendered for preview. #TINY-9867
 - Typing after deleting formatted content could remove a space at the start of the typing. #TINY-9310
 - Invalid markup in Notification and Dialog close buttons. #TINY-9849
 - In dialogs, an incorrect `aria-describedby` attribute caused the body of the dialog to be announced when using a screen reader. #TINY-9816
+- The sticky toolbar would not be rendered correctly when transitioning from the custom editor view to the main view. #TINY-9814
 - Fixed the constrained bounds calculation for dismissal of toolbar when using `toolbar_location: 'bottom`. #TINY-9718
 
 ## 6.4.2 - 2023-04-26
