@@ -416,18 +416,18 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       assert.equal(Html.get(editorContainer), expectedHtml);
     };
 
-    it('TINY-9419: "Expand or collapse" button should not be removed if the toolbar is opened and view is opened and close', async () => {
+    it('TINY-9419: "More..." button should not be removed if the toolbar is opened and view is opened and close', () => {
       const editor = hook.editor();
 
       editor.setContent('<p>ab</p>');
-      TinyUiActions.clickOnToolbar(editor, '[title="Reveal or hide additional toolbar items"]');
+      TinyUiActions.clickOnToolbar(editor, '[title="More..."]');
 
       editor.execCommand('ToggleView', false, 'myview1');
       assertViewHtml(0, '<button>myview1</button>');
       editor.execCommand('ToggleView', false, 'myview1');
       assertMainViewVisible();
-      const moreButton = await TinyUiActions.pWaitForUi(editor, '[title="Reveal or hide additional toolbar items"]');
-      assert.isDefined(moreButton, '"Reveal or hide" button should be there');
+      const moreButton = UiFinder.findIn(TinyDom.container(editor), '[title="More..."]');
+      assert.isTrue(moreButton.isValue(), 'More... button should be there');
     });
   });
 
