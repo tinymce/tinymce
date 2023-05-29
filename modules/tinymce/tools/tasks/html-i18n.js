@@ -3,11 +3,12 @@ const path = require('path');
 const rimraf = require('rimraf');
 const util = require('util');
 
+const resourceBase = 'tinymce.html-i18n';
+
 const instances = {
-  'help keynav': {
+  'help-keynav': {
     srcDir: 'src/plugins/help/i18n/keynav',
-    outputDir: 'src/plugins/help/main/js/i18n/keynav',
-    resourcePrefix: 'tinymce.plugins.help.keynav.i18n'
+    outputDir: 'src/plugins/help/main/js/i18n/keynav'
   }
 };
 
@@ -35,9 +36,9 @@ const generate = (srcDir, outputDir, resourcePrefix) => {
 
 module.exports = function (grunt) {
   grunt.registerTask("html-i18n", "Register html translation files", function () {
-    Object.entries(instances).forEach(([ identifier, { srcDir, outputDir, resourcePrefix } ]) => {
+    Object.entries(instances).forEach(([ identifier, { srcDir, outputDir } ]) => {
       grunt.log.writeln(`Generating ${identifier} translation files`);
-      generate(srcDir, outputDir, resourcePrefix);
+      generate(srcDir, outputDir, `${resourceBase}.${identifier}`);
     });
   });
 }
