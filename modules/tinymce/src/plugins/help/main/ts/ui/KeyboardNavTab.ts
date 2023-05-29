@@ -1,10 +1,10 @@
+import { Fun } from '@ephox/katamari';
+
+import Resource from 'tinymce/core/api/Resource';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
+import I18n from 'tinymce/core/api/util/I18n';
 
-// TODO: When we translate this, we should pull the HTML out into a HTML file, the way TBIO does it.
-// That requires webpack and rollup changes though, so inlining it for now.
-/* eslint-disable max-len */
-const description = `<h1>Begin keyboard navigation</h1>
-
+const fallback = `<h1>Begin keyboard navigation</h1>
 <dl>
   <dt>Focus the Menu bar</dt>
   <dd>Windows or Linux: Alt+F9</dd>
@@ -87,13 +87,16 @@ const description = `<h1>Begin keyboard navigation</h1>
 <p>Navigate between interactive components of this dialog tab by pressing <strong>Tab</strong> or <strong>Shift+Tab</strong>.</p>
 
 <p>Switch to another dialog tab by giving the tab menu focus and then pressing the appropriate <strong>Arrow</strong> key to cycle through the available tabs.</p>`;
-/* eslint-enable max-len */
 
-const tab = (): Dialog.TabSpec & { name: string } => {
+const langCode = I18n.getCode();
+
+const pLoadI18nDescription = (baseUrl: string): Promise<string> => Resource.load(`tinymce.html-i18n.help-keynav.${langCode}`, `${baseUrl}/js/i18n/keynav/${langCode}.js`);
+
+const pTab = async (pluginUrl: string): Promise<Dialog.TabSpec & { name: string }> => {
   const body: Dialog.BodyComponentSpec = {
     type: 'htmlpanel',
     presets: 'document',
-    html: description
+    html: await pLoadI18nDescription(pluginUrl).catch(Fun.constant(fallback))
   };
 
   return {
@@ -104,5 +107,5 @@ const tab = (): Dialog.TabSpec & { name: string } => {
 };
 
 export {
-  tab
+  pTab
 };

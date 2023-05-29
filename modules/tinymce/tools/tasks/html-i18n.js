@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const rimraf = require('rimraf');
 const util = require('util');
 
 const resourceBase = 'tinymce.html-i18n';
@@ -12,25 +11,17 @@ const instances = {
   }
 };
 
-const createDir = (dir) => {
-  if (fs.existsSync(dir)) {
-    rimraf.sync(dir);
-  }
-  fs.mkdirSync(dir, { recursive: true });
-};
-
 const findFiles = (dir) => fs.existsSync(dir) ? fs.readdirSync(dir) : [];
 
 const createTinyMCEJs = (translation, resourceName) =>
   `tinymce.Resource.add('${resourceName}',\n${util.inspect(translation)});`
 
-const generate = (srcDir, outputDir, resourcePrefix) => {
-  createDir(outputDir);
+const generate = (grunt, srcDir, outputDir, resourcePrefix) => {
   findFiles(srcDir).forEach((file) => {
     const langCode = file.replace(path.extname(file), '');
     const translation = fs.readFileSync(path.join(srcDir, file), 'utf8');
     const content = createTinyMCEJs(translation, `${resourcePrefix}.${langCode}`);
-    fs.writeFileSync(path.join(outputDir, `${langCode}.js`), content);
+    grunt.file.write(path.join(outputDir, `${langCode}.js`), content);
   });
 };
 
@@ -38,7 +29,7 @@ module.exports = function (grunt) {
   grunt.registerTask("html-i18n", "Register html translation files", function () {
     Object.entries(instances).forEach(([ identifier, { srcDir, outputDir } ]) => {
       grunt.log.writeln(`Generating ${identifier} translation files`);
-      generate(srcDir, outputDir, `${resourceBase}.${identifier}`);
+      generate(grunt, srcDir, outputDir, `${resourceBase}.${identifier}`);
     });
   });
 }

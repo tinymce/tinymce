@@ -415,6 +415,16 @@ module.exports = function (grunt) {
         files: [
           { src: 'src/plugins/visualblocks/main/css/visualblocks.css', dest: 'js/tinymce/plugins/visualblocks/css/visualblocks.css' }
         ]
+      },
+      'html-i18n': {
+        files: [
+          {
+            expand: true,
+            cwd: 'src/plugins/help/main/js/i18n/keynav',
+            src: '**',
+            dest: 'js/tinymce/plugins/help/js/i18n/keynav'
+          }
+        ]
       }
     },
 
@@ -944,7 +954,8 @@ module.exports = function (grunt) {
     // that will save 2-3 seconds on incremental builds
     'copy:ui-skins',
     'copy:content-skins',
-    'copy:default-icons'
+    'copy:default-icons',
+    'copy:html-i18n'
   ]);
 
   grunt.registerTask('start', ['webpack-dev-server']);

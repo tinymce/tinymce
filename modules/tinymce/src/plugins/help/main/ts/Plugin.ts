@@ -13,12 +13,12 @@ export type TabSpecs = Record<string, DialogType.TabSpec>;
 export type CustomTabSpecs = Cell<TabSpecs>;
 
 export default (): void => {
-  PluginManager.add('help', (editor) => {
+  PluginManager.add('help', (editor, pluginUrl) => {
     const customTabs: CustomTabSpecs = Cell({});
     const api = Api.get(customTabs);
 
     Options.register(editor);
-    const dialogOpener = Dialog.init(editor, customTabs);
+    const dialogOpener = Dialog.init(editor, customTabs, pluginUrl);
     Buttons.register(editor, dialogOpener);
     Commands.register(editor, dialogOpener);
     editor.shortcuts.add('Alt+0', 'Open help dialog', 'mceHelp');
