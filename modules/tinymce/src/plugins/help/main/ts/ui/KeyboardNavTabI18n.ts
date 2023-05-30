@@ -88,9 +88,10 @@ const fallback = `<h1>Begin keyboard navigation</h1>
 
 <p>Switch to another dialog tab by giving the tab menu focus and then pressing the appropriate <strong>Arrow</strong> key to cycle through the available tabs.</p>`;
 
-const langCode = I18n.getCode();
-
-const pLoadI18nHtml = (baseUrl: string): Promise<string> => Resource.load(`tinymce.html-i18n.help-keynav.${langCode}`, `${baseUrl}/js/i18n/keynav/${langCode}.js`).catch(Fun.constant(fallback));
+const pLoadI18nHtml = (baseUrl: string): Promise<string> => {
+  const langCode = I18n.getCode();
+  return Resource.load(`tinymce.html-i18n.help-keynav.${langCode}`, `${baseUrl}/js/i18n/keynav/${langCode}.js`).catch(Fun.constant(fallback));
+};
 
 const initI18nLoad = (editor: Editor, baseUrl: string): void => {
   editor.on('init', () => {
