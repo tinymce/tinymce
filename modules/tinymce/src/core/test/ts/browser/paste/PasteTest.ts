@@ -500,7 +500,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
       const html = '<p>Test</p>';
       editor.execCommand('mceInsertClipboardContent', false, { html });
       await PasteEventUtils.pWaitForAndAssertInputEvents(beforeinputEvent, inputEvent, html);
-      TinyAssertions.assertContent(editor, '<p>Test</p>');
+      TinyAssertions.assertContent(editor, html);
 
       editor.off('beforeinput', setBeforeInputEvent);
       editor.off('input', setInputEvent);
@@ -517,9 +517,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
       editor.on('beforeinput', cancelInputEvent);
       editor.on('input', setInputEvent);
 
-      const html = '<p>Test</p>';
-      editor.execCommand('mceInsertClipboardContent', false, { html });
-
+      editor.execCommand('mceInsertClipboardContent', false, { html: '<p>Test</p>' });
       await PasteEventUtils.pWaitForAndAssertEventsDoNotFire([ inputEvent ]);
       TinyAssertions.assertContent(editor, '');
 
