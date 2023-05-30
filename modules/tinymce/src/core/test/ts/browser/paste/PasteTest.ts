@@ -524,6 +524,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
       TinyAssertions.assertContent(editor, '');
 
       editor.off('beforeinput', cancelInputEvent);
+      editor.off('input', setInputEvent);
     });
   });
 });
