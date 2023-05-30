@@ -354,23 +354,25 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
 
   it('contentEditable: false on start and contentEditable: true on end', () => {
     const editor = hook.editor();
+    const initialContent = '<p>abc</p><p contenteditable="false"><b>def</b></p><p><b>ghj</b></p>';
     editor.formatter.register('format', { inline: 'b' });
-    editor.setContent('<p>abc</p><p contenteditable="false"><b>def</b></p><p><b>ghj</b></p>');
+    editor.setContent(initialContent);
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('b')[0].firstChild as Text, 0);
     rng.setEnd(editor.dom.select('b')[1].firstChild as Text, 3);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
-    assert.equal(editor.getContent(), '<p>abc</p><p contenteditable="false"><b>def</b></p><p>ghj</p>', 'Text in last paragraph is not bold');
+    TinyAssertions.assertContent(editor, initialContent);
   });
 
   it('contentEditable: true on start and contentEditable: false on end', () => {
     const editor = hook.editor();
+    const initialContent = '<p>abc</p><p><b>def</b></p><p contenteditable="false"><b>ghj</b></p>';
     editor.formatter.register('format', { inline: 'b' });
-    editor.setContent('<p>abc</p><p><b>def</b></p><p contenteditable="false"><b>ghj</b></p>');
+    editor.setContent(initialContent);
     LegacyUnit.setSelection(editor, 'p:nth-child(2) b', 0, 'p:last-of-type b', 3);
     editor.formatter.remove('format');
-    assert.equal(editor.getContent(), '<p>abc</p><p>def</p><p contenteditable="false"><b>ghj</b></p>', 'Text in first paragraph is not bold');
+    TinyAssertions.assertContent(editor, initialContent);
   });
 
   it('contentEditable: true inside contentEditable: false', () => {
