@@ -30,4 +30,6 @@ describe('browser.tinymce.plugins.help.KeyboardNavTabI18nTest', () => {
   it('TINY-9633: Can load English by default', () => testLanguage('Begin'));
 
   it('TINY-9633: Can load German translation', () => testLanguage('Grundlagen', 'de'));
+
+  it('TINY-9633: Loads English fallback when invalid language code is specified', () => testLanguage('Begin', 'invalid'));
 });
