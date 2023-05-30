@@ -227,10 +227,10 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
                   ScrollingContext.getBoundsFrom(scrollEnv)
                 );
 
-                // When toolbar location set to the top, the y starts from the container, and the available height minuses the header height,
-                // so as you scroll the scrollable container/the page, it will dock at the top and when there's insufficient height/space, it will be hidden
-                // For toolbar location is at the bottom, we want to add the starting bounds to be the container + the header height, when there's insufficient height/space,
-                // it will be hidden, and when you scroll past the editor, it will be hidden
+                // When the toolbar location is set to the top, y is the top of the container and height is the available container height minus the header height, as the toolbar will be placed at the top of the container
+                // This is so that as you scroll the scrollable container/the page, it will dock at the top and when there's insufficient height/space (that's the reason of deducting the headerHeight for the available height), it will be hidden.
+                // When the toolbar location is set to the bottom, y is the top of the container plus the header height, as the toolbar will be placed at the bottom of the container, beyond the container, so that's why we need to add the headerHeight
+                // When there's insufficient height/space, it will be hidden, and when you scroll past the editor, it will be hidden
                 const constrainedBoundsY = isDockedMode(comp, 'top')
                   ? constrainedBounds.y
                   : constrainedBounds.y + headerHeight;

@@ -858,6 +858,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
       });
 
       const contextOrSkipIfIframe = scenario.settings.inline ? context : context.skip;
+      const paragraphMargin = 18.5;
 
       contextOrSkipIfIframe('toolbar should disappear in inline mode, toolbar_location: top', () => {
         const hook = TinyHooks.bddSetupFromElement<Editor>(
@@ -883,20 +884,22 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
           scroller.dom.scrollTo(0, heights.largeBanner);
           await pWaitUntilAppears(header);
 
-          scroller.dom.scrollTo(0, heights.largeBanner - heights.scroller + 20);
+          // Scrolling down enough for the toolbar to show, adding additional paragraph margin
+          scroller.dom.scrollTo(0, heights.largeBanner - heights.scroller + paragraphMargin);
           await pWaitUntilAppears(header);
 
+          // Scrolling down past the editor, until editor is not visible in view
           scroller.dom.scrollTo(0, heights.largeBanner - heights.scroller);
           await pWaitUntilDisappears(header);
 
           scroller.dom.scrollTo(0, heights.largeBanner);
-
           await pWaitUntilAppears(header);
 
           scroller.dom.scrollTo(0, heights.editor + heights.largeBanner - header.dom.offsetHeight);
           await pWaitUntilAppears(header);
 
-          scroller.dom.scrollTo(0, heights.editor + heights.largeBanner - header.dom.offsetHeight + 20);
+          // Scrolling down not entirely past the editor, but enough for the toolbar to disappear
+          scroller.dom.scrollTo(0, heights.editor + heights.largeBanner - header.dom.offsetHeight + paragraphMargin);
           await pWaitUntilDisappears(header);
         });
       });
@@ -924,11 +927,14 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
           const scroller = getAncestorUi(editor, ui.ancestors.scrollingWrapper);
 
           scroller.dom.scrollTo(0, 0);
+          await pWaitUntilDisappears(header);
 
+          // Scrolling down past the orange banner, until editor is visible in view
           scroller.dom.scrollTo(0, heights.largeBanner);
           await pWaitUntilAppears(header);
 
-          scroller.dom.scrollTo(0, heights.largeBanner - heights.scroller + header.dom.offsetHeight + 20);
+          // Scrolling down enough for the toolbar to show, adding additional paragraph margin
+          scroller.dom.scrollTo(0, heights.largeBanner - heights.scroller + header.dom.offsetHeight + paragraphMargin);
           await pWaitUntilAppears(header);
 
           scroller.dom.scrollTo(0, heights.largeBanner - heights.scroller);
@@ -938,10 +944,12 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
           scroller.dom.scrollTo(0, heights.largeBanner + 100);
           await pWaitUntilDockedAtPosition(header, Optional.none());
 
+          // There's additional paragraph margin of 18.5px, so the toolbar should still be visible
           scroller.dom.scrollTo(0, heights.largeBanner + heights.editor);
           await pWaitUntilAppears(header);
 
-          scroller.dom.scrollTo(0, heights.largeBanner + heights.editor + 20);
+          // Scrolling down past the editor, until editor is not visible in view
+          scroller.dom.scrollTo(0, heights.largeBanner + heights.editor + paragraphMargin);
           await pWaitUntilDisappears(header);
         });
       });
