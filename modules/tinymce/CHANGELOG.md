@@ -25,8 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Screen readers are now able to announce the highlighted menu item of link comboboxes. #TINY-9280
 - Now `icon` field for dialog footer `togglebutton`s is not mandatory. #TINY-9757
 - Toolbar buttons and menu items were not disabled when they couldn't be used on noneditable content. #TINY-9669
-- Updated toolbar "More" button tooltip text from "More..." to "Reveal or hide additional toolbar items". #TINY-9629
 - Help text displayed at **Help > Help > Keyboard Navigation** re-written. #DOC-1936
+- Translations added for Help text displayed at **Help > Help > Keyboard Navigation**. #TINY-9633
 - These characters '$', '~', '+', '|', '№', '`' are now considered as punctuation marks. Therefore, they will not increase the word count. #TINY-8122
 - Updated the `codesample` plugin dialog and `template` plugin dialog to use the 'listbox' component to match other dialogs. #TINY-9630
 - Quickbar toolbars are now positioned in the middle of the selection horizontally, if the selection contains more than one table cell. #TINY-8297
@@ -43,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ctrl + backspace and Ctrl + delete would not restore correct caret position after redo. #TINY-8910
 - In the tree component, a selected item in a directory would not stay selected after collapsing the directory. #TINY-9715
 - Enabling or Disabling checkboxes would not set the correct classes and attributes. #TINY-4189
+- Entering a newline in some setups would place the cursor in the wrong paragraph. #TINY-9822
 - Redial would in some situations cause select elements not to have an initial value selected when they should have. #TINY-9679
 - Table toolbar was visible even if the table was within a noneditable host element. #TINY-9664
 - Quickbar toolbars was shown for noneditable contents in a noneditable root. #TINY-9460

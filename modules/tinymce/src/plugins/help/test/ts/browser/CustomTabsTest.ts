@@ -1,8 +1,8 @@
 import { UiFinder } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Html, SugarDocument } from '@ephox/sugar';
-import { McEditor } from '@ephox/wrap-mcagar';
+import { Html } from '@ephox/sugar';
+import { McEditor, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -14,9 +14,10 @@ describe('browser.tinymce.plugins.help.CustomTabsTest', () => {
     Plugin();
   });
 
-  const compareTabNames = (editor: Editor, expectedNames: string[]) => {
+  const compareTabNames = async (editor: Editor, expectedNames: string[]): Promise<void> => {
     editor.execCommand('mceHelp');
-    const actualTabs = UiFinder.findAllIn<HTMLDivElement>(SugarDocument.getDocument(), 'div.tox-dialog__body-nav-item.tox-tab');
+    const dialogEl = await TinyUiActions.pWaitForDialog(editor);
+    const actualTabs = UiFinder.findAllIn<HTMLDivElement>(dialogEl, 'div.tox-dialog__body-nav-item.tox-tab');
     const actualNames = Arr.map(actualTabs, (tab) => Html.get(tab));
     Arr.map(expectedNames, (x, i) => {
       assert.equal(actualNames[i], x, 'Tab names did not match');
@@ -32,7 +33,7 @@ describe('browser.tinymce.plugins.help.CustomTabsTest', () => {
 
   it('TINY-3535: Default help dialog', async () => {
     const editor = await pCreateEditor({});
-    compareTabNames(editor, [ 'Handy Shortcuts', 'Keyboard Navigation', 'Plugins', 'Version' ]);
+    await compareTabNames(editor, [ 'Handy Shortcuts', 'Keyboard Navigation', 'Plugins', 'Version' ]);
     McEditor.remove(editor);
   });
 
@@ -59,7 +60,7 @@ describe('browser.tinymce.plugins.help.CustomTabsTest', () => {
         }
       ]
     });
-    compareTabNames(editor, [ 'Handy Shortcuts', 'Plugins', 'Version', 'Extra1' ]);
+    await compareTabNames(editor, [ 'Handy Shortcuts', 'Plugins', 'Version', 'Extra1' ]);
     McEditor.remove(editor);
   });
 
@@ -78,7 +79,7 @@ describe('browser.tinymce.plugins.help.CustomTabsTest', () => {
         });
       }
     });
-    compareTabNames(editor, [ 'Handy Shortcuts', 'Keyboard Navigation', 'Plugins', 'Extra1', 'Version' ]);
+    await compareTabNames(editor, [ 'Handy Shortcuts', 'Keyboard Navigation', 'Plugins', 'Extra1', 'Version' ]);
     McEditor.remove(editor);
   });
 
@@ -126,7 +127,7 @@ describe('browser.tinymce.plugins.help.CustomTabsTest', () => {
         });
       }
     });
-    compareTabNames(editor, [ 'Handy Shortcuts', 'Extra2', 'Plugins', 'Version', 'Extra1' ]);
+    await compareTabNames(editor, [ 'Handy Shortcuts', 'Extra2', 'Plugins', 'Version', 'Extra1' ]);
     McEditor.remove(editor);
   });
 
@@ -139,7 +140,7 @@ describe('browser.tinymce.plugins.help.CustomTabsTest', () => {
         'unknown'
       ]
     });
-    compareTabNames(editor, [ 'Handy Shortcuts', 'Plugins', 'Version' ]);
+    await compareTabNames(editor, [ 'Handy Shortcuts', 'Plugins', 'Version' ]);
     McEditor.remove(editor);
   });
 });
