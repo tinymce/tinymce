@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
+- Support for `h` hash parameter in vimeo video url in the Media plugin. #TINY-9830
 - New `table_merge_content_on_paste` option which disables the merging behaviour when pasting a table inside an existing table. #TINY-9808
 - New optional `defaultExpandedIds` and `onToggleExpand` options to the `tree` component config. #TINY-9653
 - New optional `defaultSelectedId` option to the `tree` component config. #TINY-9715
