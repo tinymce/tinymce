@@ -98,6 +98,34 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
     })
   ];
 
+  const statusbarResizeHandleLabelSpec = (label: string): ApproxStructure.Builder<StructAssert> =>
+    (s, str, arr) => s.element('div', {
+      classes: [ arr.has('tox-tinymce') ],
+      children: [
+        s.element('div', {
+          classes: [ arr.has('tox-editor-container') ],
+          children: [
+            s.anything(),
+            s.anything(),
+            s.element('div', {
+              classes: [ arr.has('tox-statusbar') ],
+              children: [
+                s.anything(),
+                s.element('div', {
+                  classes: [ arr.has('tox-statusbar__resize-handle') ],
+                  attrs: {
+                    'title': str.is('Resize'),
+                    'aria-label': str.is(label)
+                  }
+                })
+              ]
+            })
+          ]
+        }),
+        s.theRest()
+      ]
+    });
+
   const makeTest = (config: RawEditorOptions, structureLabel: string, editorStructure: StructAssert) => async () => {
     const editor = await McEditor.pFromSettings<Editor>({
       base_url: '/project/tinymce/js/tinymce',
@@ -312,4 +340,20 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
 
     McEditor.remove(editor);
   });
+
+  it('TINY-9793: Resize handle has correct announcement when true', makeTest(
+    { resize: true },
+    'Resize vertical only',
+    ApproxStructure.build(statusbarResizeHandleLabelSpec(
+      'Press the Up and Down arrow keys to resize the editor.'
+    ))
+  ));
+
+  it('TINY-9793: Resize handle has correct announcement when both', makeTest(
+    { resize: 'both' },
+    'Resize both',
+    ApproxStructure.build(statusbarResizeHandleLabelSpec(
+      'Press the arrow keys to resize the editor.'
+    ))
+  ));
 });
