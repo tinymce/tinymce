@@ -45,3 +45,5 @@ tinymce-*.tgz
 
 emojis*.js
 emojiimages*.js
+
+src/plugins/help/main/js/i18n/*
