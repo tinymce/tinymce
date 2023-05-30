@@ -16,8 +16,8 @@ import * as Helpers from './Helpers';
 import * as TableDialogGeneralTab from './TableDialogGeneralTab';
 import * as UiUtils from './UiUtils';
 
-type TableData = Readonly<Helpers.TableData>;
-type ModifiedTableData = Partial<TableData>;
+type TableData = Helpers.TableData;
+type ModifiedTableData = Readonly<Partial<TableData>>;
 
 // Explore the layers of the table till we find the first layer of tds or ths
 const styleTDTH = (dom: DOMUtils, elm: Element, name: string | StyleMap, value?: string | number): void => {
@@ -36,104 +36,73 @@ const styleTDTH = (dom: DOMUtils, elm: Element, name: string | StyleMap, value?:
   }
 };
 
-const applyModifiedDataToElement = (editor: Editor, tableElm: HTMLTableElement, modifiedData: ModifiedTableData): void => {
+const applyModifiedDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: TableData, shouldApplyOnCell: { border: boolean; bordercolor: boolean; cellpadding: boolean }): void => {
   const dom = editor.dom;
   const attrs: Record<string, string | number | null> = {};
-  const styles: Record<string, string> = {};
+  const styles: StyleMap = {};
 
   const shouldStyleWithCss = Options.shouldStyleWithCss(editor);
   const hasAdvancedTableTab = Options.hasAdvancedTableTab(editor);
 
-  const isModifiedBackgroundColor = !Type.isUndefined(modifiedData.backgroundcolor);
-  const isModifiedBorder = !Type.isUndefined(modifiedData.border);
-  const isModifiedBorderColor = !Type.isUndefined(modifiedData.bordercolor);
-  const isModifiedBorderStyle = !Type.isUndefined(modifiedData.borderstyle);
-  const isModifiedCellPadding = !Type.isUndefined(modifiedData.cellpadding);
-  const isModifiedCellSpacing = !Type.isUndefined(modifiedData.cellspacing);
-  const isModifiedClass = !Type.isUndefined(modifiedData.class);
-  const isModifiedHeight = !Type.isUndefined(modifiedData.height);
-  const isModifiedWidth = !Type.isUndefined(modifiedData.width);
-
-  if (isModifiedClass) {
-    attrs.class = modifiedData.class;
+  if (!Type.isUndefined(data.class)) {
+    attrs.class = data.class;
   }
 
-  if (isModifiedHeight) {
-    styles.height = Utils.addPxSuffix(modifiedData.height);
-  }
+  styles.height = Utils.addPxSuffix(data.height);
 
-  if (isModifiedWidth) {
-    if (shouldStyleWithCss) {
-      styles.width = Utils.addPxSuffix(modifiedData.width);
-    } else if (dom.getAttrib(tableElm, 'width')) {
-      attrs.width = Utils.removePxSuffix(modifiedData.width);
-    }
+  if (shouldStyleWithCss) {
+    styles.width = Utils.addPxSuffix(data.width);
+  } else if (dom.getAttrib(tableElm, 'width')) {
+    attrs.width = Utils.removePxSuffix(data.width);
   }
 
   if (shouldStyleWithCss) {
-    if (isModifiedBorder) {
-      styles['border-width'] = Utils.addPxSuffix(modifiedData.border);
-    }
-    if (isModifiedCellSpacing) {
-      styles['border-spacing'] = Utils.addPxSuffix(modifiedData.cellspacing);
-    }
+    styles['border-width'] = Utils.addPxSuffix(data.border);
+    styles['border-spacing'] = Utils.addPxSuffix(data.cellspacing);
   } else {
-    if (isModifiedBorder) {
-      attrs.border = modifiedData.border;
-    }
-    if (isModifiedCellPadding) {
-      attrs.cellpadding = modifiedData.cellpadding;
-    }
-    if (isModifiedCellSpacing) {
-      attrs.cellspacing = modifiedData.cellspacing;
-    }
+    attrs.border = data.border;
+    attrs.cellpadding = data.cellpadding;
+    attrs.cellspacing = data.cellspacing;
   }
 
-  // TODO: this has to be reworked somehow, for example by introducing dedicated option, which
-  // will control whether child TD/THs should be processed or not
-  if (shouldStyleWithCss && tableElm.children && (isModifiedBorder || isModifiedCellPadding || hasAdvancedTableTab && isModifiedBorderColor)) {
+  // TINY-9837: Data is applied on child TD/THs only if it has been modified since the previous form submission.
+  if ((shouldApplyOnCell.border || shouldApplyOnCell.cellpadding || hasAdvancedTableTab && shouldApplyOnCell.bordercolor) && shouldStyleWithCss && tableElm.children) {
     for (let i = 0; i < tableElm.children.length; i++) {
-      if (isModifiedBorder || isModifiedCellPadding) {
-        const styles: StyleMap = {};
-        if (isModifiedBorder) {
-          styles['border-width'] = Utils.addPxSuffix(modifiedData.border);
-        }
-        if (isModifiedCellPadding) {
-          styles.padding = Utils.addPxSuffix(modifiedData.cellpadding);
-        }
-        styleTDTH(dom, tableElm.children[i], styles);
+      const cellStyles: StyleMap = {};
+      if (shouldApplyOnCell.border) {
+        cellStyles['border-width'] = Utils.addPxSuffix(data.border);
       }
-      if (hasAdvancedTableTab && isModifiedBorderColor) {
-        styleTDTH(dom, tableElm.children[i], {
-          'border-color': modifiedData.bordercolor
-        });
+      if (shouldApplyOnCell.cellpadding) {
+        cellStyles.padding = Utils.addPxSuffix(data.cellpadding);
       }
+      if (hasAdvancedTableTab && shouldApplyOnCell.bordercolor) {
+        cellStyles['border-color'] = (data as Required<TableData>).bordercolor;
+      }
+      styleTDTH(dom, tableElm.children[i], cellStyles);
     }
   }
 
   if (hasAdvancedTableTab) {
-    if (isModifiedBackgroundColor) {
-      styles['background-color'] = modifiedData.backgroundcolor;
-    }
-    if (isModifiedBorderColor) {
-      styles['border-color'] = modifiedData.bordercolor;
-    }
-    if (isModifiedBorderStyle) {
-      styles['border-style'] = modifiedData.borderstyle;
-    }
+    const advData = data as Required<TableData>;
+    styles['background-color'] = advData.backgroundcolor;
+    styles['border-color'] = advData.bordercolor;
+    styles['border-style'] = advData.borderstyle;
   }
 
   attrs.style = dom.serializeStyle({ ...Options.getDefaultStyles(editor), ...styles });
   dom.setAttribs(tableElm, { ...Options.getDefaultAttributes(editor), ...attrs });
-
 };
 
 const onSubmitTableForm = (editor: Editor, tableElm: HTMLTableElement | null | undefined, oldData: TableData, api: Dialog.DialogInstanceApi<TableData>): void => {
   const dom = editor.dom;
   const data = api.getData();
-  const modifiedData: ModifiedTableData = Obj.filter(data, (value, key) => oldData[key as keyof TableData] !== value && (key !== 'class' || value !== ''));
+  const modifiedData: ModifiedTableData = Obj.filter(data, (value, key) => oldData[key as keyof TableData] !== value);
 
   api.close();
+
+  if (data.class === '') {
+    delete data.class;
+  }
 
   editor.undoManager.transact(() => {
     if (!tableElm) {
@@ -148,7 +117,11 @@ const onSubmitTableForm = (editor: Editor, tableElm: HTMLTableElement | null | u
     }
 
     if (Obj.size(modifiedData) > 0) {
-      applyModifiedDataToElement(editor, tableElm, modifiedData);
+      applyModifiedDataToElement(editor, tableElm, data, {
+        border: Obj.has(modifiedData, 'border'),
+        bordercolor: Obj.has(modifiedData, 'bordercolor'),
+        cellpadding: Obj.has(modifiedData, 'cellpadding')
+      });
 
       // Toggle caption on/off
       const captionElm = dom.select('caption', tableElm)[0];
