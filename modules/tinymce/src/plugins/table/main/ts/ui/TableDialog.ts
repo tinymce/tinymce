@@ -17,7 +17,6 @@ import * as TableDialogGeneralTab from './TableDialogGeneralTab';
 import * as UiUtils from './UiUtils';
 
 type TableData = Helpers.TableData;
-type ModifiedTableData = Readonly<Partial<TableData>>;
 
 // Explore the layers of the table till we find the first layer of tds or ths
 const styleTDTH = (dom: DOMUtils, elm: Element, name: string | StyleMap, value?: string | number): void => {
@@ -96,7 +95,7 @@ const applyModifiedDataToElement = (editor: Editor, tableElm: HTMLTableElement, 
 const onSubmitTableForm = (editor: Editor, tableElm: HTMLTableElement | null | undefined, oldData: TableData, api: Dialog.DialogInstanceApi<TableData>): void => {
   const dom = editor.dom;
   const data = api.getData();
-  const modifiedData: ModifiedTableData = Obj.filter(data, (value, key) => oldData[key as keyof TableData] !== value);
+  const modifiedData = Obj.filter(data, (value, key) => oldData[key as keyof TableData] !== value);
 
   api.close();
 
