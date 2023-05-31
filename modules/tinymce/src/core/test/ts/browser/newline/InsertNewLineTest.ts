@@ -1,6 +1,7 @@
 import { ApproxStructure } from '@ephox/agar';
 import { after, before, context, describe, it } from '@ephox/bedrock-client';
 import { Type } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -34,8 +35,12 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     range.setStart(editor.dom.getRoot(), offset);
     range.setEnd(editor.dom.getRoot(), offset);
 
-    sel.removeAllRanges();
-    sel.addRange(range);
+    if (PlatformDetection.detect().browser.isSafari()) {
+      editor.selection.setRng(range);
+    } else {
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
   };
 
   context('Enter in paragraph', () => {
@@ -178,7 +183,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       setSelectionToBody(editor, 1);
       insertNewline(editor, { });
       TinyAssertions.assertContent(editor, '<table><tbody><tr><td>&nbsp;</td></tr></tbody></table><div contenteditable="true">&nbsp;</div><div contenteditable="true">&nbsp;</div>');
-      TinyAssertions.assertCursor(editor, [ 2 ], 0);
+      TinyAssertions.assertCursor(editor, [ 1 ], 0);
     });
 
     it('TINY-9813: Placed a cursor is placed after a table, with nothing', () => {

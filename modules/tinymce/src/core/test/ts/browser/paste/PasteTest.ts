@@ -491,13 +491,38 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
       const editor = hook.editor();
       const beforeinputEvent = Singleton.value<EditorEvent<InputEvent>>();
       const inputEvent = Singleton.value<EditorEvent<InputEvent>>();
+      const setBeforeInputEvent = (e: EditorEvent<InputEvent>) => beforeinputEvent.set(e);
+      const setInputEvent = (e: EditorEvent<InputEvent>) => inputEvent.set(e);
 
-      editor.on('beforeinput', (e) => beforeinputEvent.set(e));
-      editor.on('input', (e) => inputEvent.set(e));
+      editor.on('beforeinput', setBeforeInputEvent);
+      editor.on('input', setInputEvent);
 
       const html = '<p>Test</p>';
       editor.execCommand('mceInsertClipboardContent', false, { html });
       await PasteEventUtils.pWaitForAndAssertInputEvents(beforeinputEvent, inputEvent, html);
+      TinyAssertions.assertContent(editor, html);
+
+      editor.off('beforeinput', setBeforeInputEvent);
+      editor.off('input', setInputEvent);
+    });
+
+    it('TINY-9829: Paste can be cancelled by beforeinput event', async () => {
+      const editor = hook.editor();
+      const cancelInputEvent = (e: EditorEvent<InputEvent>) => {
+        e.preventDefault();
+      };
+      const inputEvent = Singleton.value<EditorEvent<InputEvent>>();
+      const setInputEvent = (e: EditorEvent<InputEvent>) => inputEvent.set(e);
+
+      editor.on('beforeinput', cancelInputEvent);
+      editor.on('input', setInputEvent);
+
+      editor.execCommand('mceInsertClipboardContent', false, { html: '<p>Test</p>' });
+      await PasteEventUtils.pWaitForAndAssertEventsDoNotFire([ inputEvent ]);
+      TinyAssertions.assertContent(editor, '');
+
+      editor.off('beforeinput', cancelInputEvent);
+      editor.off('input', setInputEvent);
     });
   });
 });

@@ -112,20 +112,30 @@ describe('browser.tinymce.plugins.quickbars.ToolbarPositionTest', () => {
     const toolbarBounds = await getToolbarBounds();
     await pAssertToolbarVisible();
 
-    const middleOfSelectedCellBounds = selectedCellBounds.width / 2;
-    const middleOfToolbarBounds = toolbarBounds.width / 2;
+    // The exact bounds of the center of the selection
+    const middleOfSelectedCellBounds = (selectedCellBounds.width / 2) + selectedCellBounds.x;
+
+    // Getting half of the toolbar width, as we want to calculate the bounds of the center of the selection +- half of the toolbar width
+    const halfOfToolbarWidth = toolbarBounds.width / 2;
 
     const getHorizontalCenteredBounds = () => {
       return {
-        left: middleOfSelectedCellBounds - middleOfToolbarBounds + selectedCellBounds.x,
-        right: middleOfSelectedCellBounds + middleOfToolbarBounds + selectedCellBounds.x,
+        left: middleOfSelectedCellBounds - halfOfToolbarWidth,
+        right: middleOfSelectedCellBounds + halfOfToolbarWidth
       };
     };
 
-    const getHorizontalStartBounds = () => {
+    const getHorizontalLeftBounds = () => {
       return {
         left: selectedCellBounds.x,
         right: selectedCellBounds.x + toolbarBounds.width,
+      };
+    };
+
+    const getHorizontalRightBounds = () => {
+      return {
+        left: selectedCellBounds.right - toolbarBounds.width,
+        right: selectedCellBounds.right
       };
     };
 
@@ -152,13 +162,25 @@ describe('browser.tinymce.plugins.quickbars.ToolbarPositionTest', () => {
       // Checking the position of the toolbar, if the toolbar is shown at the top or bottom of the selection
       const toolbarLocation = toolbarBounds.top < selectedCellBounds.y ? 'top' : 'bottom';
 
-      // When there's sufficient space to show the toolbar in the middle of the selection, it should be in the middle of the selection horizontally
-      // When there's insufficient space to show the toolbar in the middle of the selection, it should be from the start of the selection
-      const toolbarStartPosition = middleOfToolbarBounds < selectedCellBounds.x + middleOfSelectedCellBounds ? 'center' : 'start';
+      const getHorizontalBounds = () => {
+        // When there's sufficient space to show the toolbar in the middle of the selection, it should be in the middle of the selection horizontally
+        // When there's insufficient space to show the toolbar in the middle of the selection, it should be from the left, or the right of the selection
+
+        // The exact bounds of the center of the toolbar, to determine if the toolbar is shown in the middle of the selection, or from the left of the selection or the right
+        const middleOfToolbarBounds = halfOfToolbarWidth + toolbarBounds.x;
+
+        if (Math.abs(middleOfToolbarBounds - middleOfSelectedCellBounds) < 5) {
+          return getHorizontalCenteredBounds();
+        } else if (middleOfToolbarBounds > middleOfSelectedCellBounds) {
+          return getHorizontalLeftBounds();
+        }
+
+        return getHorizontalRightBounds();
+      };
 
       return {
         ...(toolbarLocation === 'top' ? getToolbarTopBounds() : getBottomToolbarBounds()),
-        ...(toolbarStartPosition === 'center' ? getHorizontalCenteredBounds() : getHorizontalStartBounds())
+        ...(getHorizontalBounds())
       };
     };
 

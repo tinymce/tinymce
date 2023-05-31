@@ -1,4 +1,4 @@
-import { DataTransfer, DataTransferContent } from '@ephox/dragster';
+import { DataTransfer, DataTransferContent, DataTransferMode } from '@ephox/dragster';
 import { Arr, Cell, Strings, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
@@ -30,15 +30,23 @@ export interface ClipboardContents {
 
 const uniqueId = PasteUtils.createIdGenerator('mceclip');
 
+const createPasteDataTransfer = (html: string): DataTransfer => {
+  const dataTransfer = DataTransfer.createDataTransfer();
+  DataTransferContent.setHtmlData(dataTransfer, html);
+  // TINY-9829: Set to read-only mode as per https://www.w3.org/TR/input-events-2/
+  DataTransferMode.setReadOnlyMode(dataTransfer);
+  return dataTransfer;
+};
+
 const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText: boolean): void => {
-  const args = ProcessFilters.process(editor, content, internal);
-  if (!args.cancelled) {
-    const content = args.content;
-    SmartPaste.insertContent(editor, content, pasteAsText);
-    const dataTransfer = DataTransfer.createDataTransfer();
-    DataTransferContent.setHtmlData(dataTransfer, content);
-    InputEvents.fireBeforeInputEvent(editor, 'insertFromPaste', { dataTransfer });
-    InputEvents.fireInputEvent(editor, 'insertFromPaste');
+  const res = ProcessFilters.process(editor, content, internal);
+  if (!res.cancelled) {
+    const content = res.content;
+    const args = InputEvents.fireBeforeInputEvent(editor, 'insertFromPaste', { dataTransfer: createPasteDataTransfer(content) });
+    if (!args.isDefaultPrevented()) {
+      SmartPaste.insertContent(editor, content, pasteAsText);
+      InputEvents.fireInputEvent(editor, 'insertFromPaste');
+    }
   }
 };
 

@@ -1,4 +1,5 @@
 import { Waiter } from '@ephox/agar';
+import { DataTransferMode } from '@ephox/dragster';
 import { Arr, Cell, Singleton, Type } from '@ephox/katamari';
 import { assert } from 'chai';
 
@@ -52,9 +53,11 @@ const pWaitForAndAssertInputEvents = async (beforeinputEvent: SingletonEvent<Inp
     beforeinputEvent.on((e) => {
       assert.equal(e.inputType, 'insertFromPaste', 'input event type should be "insertFromPaste"');
       assert.isNull(e.data, 'beforeinput event data should be null');
-      assert.isNotNull(e.dataTransfer, 'beforeinput event dataTransfer should not be null');
+      const dataTransfer = e.dataTransfer;
+      assert.isNotNull(dataTransfer, 'beforeinput event dataTransfer should not be null');
+      assert.isTrue(!Type.isNull(dataTransfer) && DataTransferMode.isInReadOnlyMode(dataTransfer), 'beforeinput event dataTransfer should be in read-only mode');
       if (checkDataTransferHtml) {
-        assert.equal(e.dataTransfer?.getData('text/html'), expectedBeforeinputDataTransferHtml, 'beforeinput event dataTransfer should contain expected html data');
+        assert.equal(dataTransfer?.getData('text/html'), expectedBeforeinputDataTransferHtml, 'beforeinput event dataTransfer should contain expected html data');
       }
     });
 
