@@ -18,6 +18,12 @@ import * as UiUtils from './UiUtils';
 
 type TableData = Helpers.TableData;
 
+interface ApplicableCellProperties {
+  readonly border: boolean;
+  readonly bordercolor: boolean;
+  readonly cellpadding: boolean;
+}
+
 // Explore the layers of the table till we find the first layer of tds or ths
 const styleTDTH = (dom: DOMUtils, elm: Element, name: string | StyleMap, value?: string | number): void => {
   if (elm.tagName === 'TD' || elm.tagName === 'TH') {
@@ -35,7 +41,7 @@ const styleTDTH = (dom: DOMUtils, elm: Element, name: string | StyleMap, value?:
   }
 };
 
-const applyModifiedDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: TableData, shouldApplyOnCell: { border: boolean; bordercolor: boolean; cellpadding: boolean }): void => {
+const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: TableData, shouldApplyOnCell: ApplicableCellProperties): void => {
   const dom = editor.dom;
   const attrs: Record<string, string | number | null> = {};
   const styles: StyleMap = {};
@@ -116,7 +122,7 @@ const onSubmitTableForm = (editor: Editor, tableElm: HTMLTableElement | null | u
     }
 
     if (Obj.size(modifiedData) > 0) {
-      applyModifiedDataToElement(editor, tableElm, data, {
+      applyDataToElement(editor, tableElm, data, {
         border: Obj.has(modifiedData, 'border'),
         bordercolor: Obj.has(modifiedData, 'bordercolor'),
         cellpadding: Obj.has(modifiedData, 'cellpadding')
