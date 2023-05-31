@@ -281,12 +281,6 @@ const register = (editor: Editor): void => {
   registerOption('sidebar_show', {
     processor: 'string'
   });
-
-  // This option is being registered in the theme instead of the help plugin as it cannot be accessed from the theme when registered there
-  registerOption('help_accessibility', {
-    processor: 'boolean',
-    default: editor.hasPlugin('help')
-  });
 };
 
 const isReadOnly = option('readonly');
@@ -325,7 +319,6 @@ const getResize = option('resize');
 const getPasteAsText = option('paste_as_text');
 const getSidebarShow = option('sidebar_show');
 const promotionEnabled = option('promotion');
-const useHelpAccessibility = option('help_accessibility');
 
 const isSkinDisabled = (editor: Editor): boolean =>
   editor.options.get('skin') === false;
@@ -475,6 +468,5 @@ export {
   useBranding,
   getResize,
   getPasteAsText,
-  getSidebarShow,
-  useHelpAccessibility
+  getSidebarShow
 };

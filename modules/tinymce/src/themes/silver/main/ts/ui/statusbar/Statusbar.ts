@@ -1,4 +1,4 @@
-import { Behaviour, Focusing, GuiFactory, SimpleSpec } from '@ephox/alloy';
+import { Behaviour, Focusing, SimpleSpec } from '@ephox/alloy';
 
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
@@ -6,7 +6,6 @@ import { Logo } from 'tinymce/themes/silver/resources/StatusbarLogo';
 
 import * as Options from '../../api/Options';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import * as ConvertShortcut from '../alien/ConvertShortcut';
 import * as ElementPath from './ElementPath';
 import * as ResizeHandler from './ResizeHandle';
 import { renderWordCount } from './WordCount';
@@ -39,38 +38,6 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
     };
   };
 
-  const renderHelpAccessibility = (): SimpleSpec => {
-    return {
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-statusbar__help-text' ],
-      },
-      components: [
-        GuiFactory.text(`Press ${ConvertShortcut.convertText('Alt+0')} for help`)
-      ]
-    };
-  };
-
-  const renderRightContainer = () => {
-    const components: SimpleSpec[] = [];
-
-    if (editor.hasPlugin('wordcount')) {
-      components.push(renderWordCount(editor, providersBackstage));
-    }
-
-    if (Options.useBranding(editor)) {
-      components.push(renderBranding());
-    }
-
-    return {
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-statusbar__right-container' ]
-      },
-      components
-    };
-  };
-
   const getTextComponents = (): SimpleSpec[] => {
     const components: SimpleSpec[] = [];
 
@@ -78,12 +45,12 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
       components.push(ElementPath.renderElementPath(editor, { }, providersBackstage));
     }
 
-    if (Options.useHelpAccessibility(editor)) {
-      components.push(renderHelpAccessibility());
+    if (editor.hasPlugin('wordcount')) {
+      components.push(renderWordCount(editor, providersBackstage));
     }
 
-    if (Options.useBranding(editor) || editor.hasPlugin('wordcount')) {
-      components.push(renderRightContainer());
+    if (Options.useBranding(editor)) {
+      components.push(renderBranding());
     }
 
     if (components.length > 0) {
