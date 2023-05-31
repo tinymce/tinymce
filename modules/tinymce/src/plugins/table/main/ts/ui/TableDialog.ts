@@ -70,7 +70,7 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
     attrs.cellspacing = data.cellspacing;
   }
 
-  // TINY-9837: Data is applied on child TD/THs only if it has been modified since the previous dialog submission
+  // TINY-9837: Relevant data are applied on child TD/THs only if they have been modified since the previous dialog submission
   if (shouldStyleWithCss && tableElm.children && (shouldApplyOnCell.border || shouldApplyOnCell.cellpadding || hasAdvancedTableTab && shouldApplyOnCell.bordercolor)) {
     for (let i = 0; i < tableElm.children.length; i++) {
       const cellStyles: StyleMap = {};
