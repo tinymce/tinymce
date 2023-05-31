@@ -28,9 +28,11 @@ describe('browser.tinymce.plugins.help.DialogKeyboardNavTest', () => {
 
   const selectTab = (selector: string) => Mouse.trueClickOn(SugarBody.body(), selector);
 
-  before(() => {
+  before(async () => {
     // Open the help dialog
-    hook.editor().execCommand('mceHelp');
+    const editor = hook.editor();
+    editor.execCommand('mceHelp');
+    await TinyUiActions.pWaitForDialog(editor);
   });
 
   it('TBA: test the tab key navigation cycles through all focusable fields in Handy Shortcuts tab', async () => {

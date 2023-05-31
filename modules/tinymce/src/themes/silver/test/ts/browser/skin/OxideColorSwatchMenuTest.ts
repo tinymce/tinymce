@@ -315,10 +315,10 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
     editor.setContent('<p>black</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2, true);
     await pOpenAndGetMenuColorMenu(editor);
-    UiFinder.pWaitFor('The color should be black in the icon', TinyUiActions.getUiRoot(editor), 'path[id="tox-icon-highlight-bg-color__color"][fill="#000000"]');
+    await UiFinder.pWaitFor('The color should be black in the icon', TinyUiActions.getUiRoot(editor), 'path[class="tox-icon-highlight-bg-color__color"][fill="#000000"]');
     TinyUiActions.clickOnUi(editor, '[role="menuitemradio"][title="red"]');
     await pOpenAndGetMenuColorMenu(editor);
-    UiFinder.pWaitFor('The color should be red in the icon', TinyUiActions.getUiRoot(editor), 'path[id="tox-icon-highlight-bg-color__color"][fill="#E03E2D"]');
+    await UiFinder.pWaitFor('The color should be red in the icon', TinyUiActions.getUiRoot(editor), 'path[class="tox-icon-highlight-bg-color__color"][fill="#E03E2D"]');
     closeMenuColorMenu(editor);
   });
 });

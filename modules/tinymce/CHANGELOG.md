@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
+- Support for `h` hash parameter in vimeo video url in the Media plugin. #TINY-9830
 - New `table_merge_content_on_paste` option which disables the merging behaviour when pasting a table inside an existing table. #TINY-9808
 - New optional `defaultExpandedIds` and `onToggleExpand` options to the `tree` component config. #TINY-9653
 - New optional `defaultSelectedId` option to the `tree` component config. #TINY-9715
@@ -25,8 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Screen readers are now able to announce the highlighted menu item of link comboboxes. #TINY-9280
 - Now `icon` field for dialog footer `togglebutton`s is not mandatory. #TINY-9757
 - Toolbar buttons and menu items were not disabled when they couldn't be used on noneditable content. #TINY-9669
-- Updated toolbar "More" button tooltip text from "More..." to "Reveal or hide additional toolbar items". #TINY-9629
 - Help text displayed at **Help > Help > Keyboard Navigation** re-written. #DOC-1936
+- Translations added for Help text displayed at **Help > Help > Keyboard Navigation**. #TINY-9633
 - These characters '$', '~', '+', '|', '№', '`' are now considered as punctuation marks. Therefore, they will not increase the word count. #TINY-8122
 - Updated the `codesample` plugin dialog and `template` plugin dialog to use the 'listbox' component to match other dialogs. #TINY-9630
 - Quickbar toolbars are now positioned in the middle of the selection horizontally, if the selection contains more than one table cell. #TINY-8297
@@ -34,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - The `caption`, `address` and `dt` elements were allowed to have non-inline children elements when the editor schema was set to `html4`. #TINY-9768
+- SVG icons for back and foreground colors now uses class instead of id to identify SVG elements that should change color. #TINY-9844
 - The `a` elements were allowed to have non-inline child elements when the editor schema was set to `html4`. #TINY-9805
 
 ### Fixed
@@ -42,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ctrl + backspace and Ctrl + delete would not restore correct caret position after redo. #TINY-8910
 - In the tree component, a selected item in a directory would not stay selected after collapsing the directory. #TINY-9715
 - Enabling or Disabling checkboxes would not set the correct classes and attributes. #TINY-4189
+- Entering a newline in some setups would place the cursor in the wrong paragraph. #TINY-9822
 - Redial would in some situations cause select elements not to have an initial value selected when they should have. #TINY-9679
 - Table toolbar was visible even if the table was within a noneditable host element. #TINY-9664
 - Quickbar toolbars was shown for noneditable contents in a noneditable root. #TINY-9460
@@ -67,7 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Popups were not constrained within the scrollable container when in a shadow root. #TINY-9743
 - Pressing arrow keys inside RTL elements would move the caret in an incorrect direction when moving over elements with the `contenteditable` attribute set to `false`. #TINY-9565
 - Inserting table consecutively without focus in the editor would result in the table being inserted at the wrong position. #TINY-3909
-- Pasting content into the editor would not fire an input event. #TINY-9829
+- Pasting content into the editor would not fire `beforeinput` and `input` events. #TINY-9829
 - In some cases, the exiting a `blockquote` element could fail when the cursor was positioned at the end of the `blockquote`. #TINY-9794
 - Templates containing an `<html>` tag were not parsed before being rendered for preview. #TINY-9867
 - Typing after deleting formatted content could remove a space at the start of the typing. #TINY-9310
