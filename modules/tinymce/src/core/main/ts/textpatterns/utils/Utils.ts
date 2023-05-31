@@ -13,7 +13,7 @@ const cleanEmptyNodes = (dom: DOMUtils, node: Node | null, isRoot: (e: Node) => 
     const parent = node.parentNode;
 
     if (NodeType.isText(node.firstChild) && isWhitespaceText(node.firstChild.data)) {
-      dom.replace(document.createTextNode(node.firstChild.data), node);
+      dom.replace(dom.createTextNode(node.firstChild.data), node);
     } else {
       dom.remove(node);
     }
