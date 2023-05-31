@@ -1,5 +1,5 @@
 import { ApproxStructure, UiFinder } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { after, before, context, describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
@@ -440,5 +440,164 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
       editor.execCommand('mceInsertTableDialog');
       UiFinder.notExists(SugarBody.body(), '.tox-dialog');
     });
+  });
+
+  context('Applying data to cells (TD/TH)', () => {
+    const baseHtml = [
+      '<table style="border-collapse: collapse; width: 500px; height: 500px; border-width: 2px; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
+      '<tbody>',
+      '<tr>',
+      '<td style="border-color: rgb(224, 62, 45); border-width: 5px; border-style: double;">&nbsp;</td>',
+      '<td style="border-width: 2px;">&nbsp;</td>',
+      '</tr>',
+      '<tr>',
+      '<td style="border-width: 2px;">&nbsp;</td>',
+      '<td style="border-width: 2px;">&nbsp;</td>',
+      '</tr>',
+      '</tbody>',
+      '</table>'
+    ].join('');
+
+    const baseData = {
+      width: '500px',
+      height: '500px',
+      cellspacing: '',
+      cellpadding: '',
+      border: '2px',
+      caption: false,
+      align: '',
+      borderstyle: 'dotted',
+      bordercolor: '',
+      backgroundcolor: ''
+    };
+
+    before(() => hook.editor().options.set('table_advtab', true));
+    after(() => hook.editor().options.unset('table_advtab'));
+
+    const testApplyDataToCells = async (newData: Record<string, string | boolean>, expectedHtml: string): Promise<void> => {
+      const editor = hook.editor();
+      editor.setContent(baseHtml);
+      setCursor(editor);
+      editor.execCommand('mceTableProps');
+      TableTestUtils.assertDialogValues(baseData, true, generalSelectors);
+      TableTestUtils.setDialogValues({ ...baseData, ...newData }, true, generalSelectors);
+      await TableTestUtils.pClickDialogButton(editor, true);
+      TinyAssertions.assertContent(editor, expectedHtml);
+    };
+
+    it('TINY-9837: Should not apply border, cellpadding or bordercolor data to cells if none of them has been modified',
+      () => testApplyDataToCells({ caption: true }, baseHtml));
+
+    it('TINY-9837: Should apply border to cells if it has been modified',
+      () => testApplyDataToCells({ border: '3px' }, [
+        '<table style="border-collapse: collapse; width: 500px; height: 500px; border-width: 3px; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
+        '<tbody>',
+        '<tr>',
+        '<td style="border-color: rgb(224, 62, 45); border-width: 3px; border-style: double;">&nbsp;</td>',
+        '<td style="border-width: 3px;">&nbsp;</td>',
+        '</tr>',
+        '<tr>',
+        '<td style="border-width: 3px;">&nbsp;</td>',
+        '<td style="border-width: 3px;">&nbsp;</td>',
+        '</tr>',
+        '</tbody>',
+        '</table>'
+      ].join('')));
+
+    it('TINY-9837: Should apply cellpadding to cells if it has been modified',
+      () => testApplyDataToCells({ cellpadding: '3px' }, [
+        '<table style="border-collapse: collapse; width: 500px; height: 500px; border-width: 2px; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
+        '<tbody>',
+        '<tr>',
+        '<td style="border-color: rgb(224, 62, 45); border-width: 5px; padding: 3px; border-style: double;">&nbsp;</td>',
+        '<td style="border-width: 2px; padding: 3px;">&nbsp;</td>',
+        '</tr>',
+        '<tr>',
+        '<td style="border-width: 2px; padding: 3px;">&nbsp;</td>',
+        '<td style="border-width: 2px; padding: 3px;">&nbsp;</td>',
+        '</tr>',
+        '</tbody>',
+        '</table>'
+      ].join('')));
+
+    it('TINY-9837: Should apply bordercolor to cells if it has been modified',
+      () => testApplyDataToCells({ bordercolor: '#FF0000' }, [
+        '<table style="border-collapse: collapse; width: 500px; height: 500px; border-width: 2px; border-color: #FF0000; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
+        '<tbody>',
+        '<tr>',
+        '<td style="border-color: rgb(255, 0, 0); border-width: 5px; border-style: double;">&nbsp;</td>',
+        '<td style="border-color: rgb(255, 0, 0); border-width: 2px;">&nbsp;</td>',
+        '</tr>',
+        '<tr>',
+        '<td style="border-color: rgb(255, 0, 0); border-width: 2px;">&nbsp;</td>',
+        '<td style="border-color: rgb(255, 0, 0); border-width: 2px;">&nbsp;</td>',
+        '</tr>',
+        '</tbody>',
+        '</table>'
+      ].join('')));
+
+    it('TINY-9837: Should apply border and cellpadding to cells if they have been modified',
+      () => testApplyDataToCells({ border: '3px', cellpadding: '3px' }, [
+        '<table style="border-collapse: collapse; width: 500px; height: 500px; border-width: 3px; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
+        '<tbody>',
+        '<tr>',
+        '<td style="border-color: rgb(224, 62, 45); border-width: 3px; padding: 3px; border-style: double;">&nbsp;</td>',
+        '<td style="border-width: 3px; padding: 3px;">&nbsp;</td>',
+        '</tr>',
+        '<tr>',
+        '<td style="border-width: 3px; padding: 3px;">&nbsp;</td>',
+        '<td style="border-width: 3px; padding: 3px;">&nbsp;</td>',
+        '</tr>',
+        '</tbody>',
+        '</table>'
+      ].join('')));
+
+    it('TINY-9837: Should apply border and bordercolor to cells if they have been modified',
+      () => testApplyDataToCells({ border: '3px', bordercolor: '#FF0000' }, [
+        '<table style="border-collapse: collapse; width: 500px; height: 500px; border-width: 3px; border-color: #FF0000; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
+        '<tbody>',
+        '<tr>',
+        '<td style="border-color: rgb(255, 0, 0); border-width: 3px; border-style: double;">&nbsp;</td>',
+        '<td style="border-color: rgb(255, 0, 0); border-width: 3px;">&nbsp;</td>',
+        '</tr>',
+        '<tr>',
+        '<td style="border-color: rgb(255, 0, 0); border-width: 3px;">&nbsp;</td>',
+        '<td style="border-color: rgb(255, 0, 0); border-width: 3px;">&nbsp;</td>',
+        '</tr>',
+        '</tbody>',
+        '</table>'
+      ].join('')));
+
+    it('TINY-9837: Should apply cellpadding and bordercolor to cells if they have been modified',
+      () => testApplyDataToCells({ cellpadding: '3px', bordercolor: '#FF0000' }, [
+        '<table style="border-collapse: collapse; width: 500px; height: 500px; border-width: 2px; border-color: #FF0000; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
+        '<tbody>',
+        '<tr>',
+        '<td style="border-color: rgb(255, 0, 0); border-width: 5px; padding: 3px; border-style: double;">&nbsp;</td>',
+        '<td style="border-color: rgb(255, 0, 0); border-width: 2px; padding: 3px;">&nbsp;</td>',
+        '</tr>',
+        '<tr>',
+        '<td style="border-color: rgb(255, 0, 0); border-width: 2px; padding: 3px;">&nbsp;</td>',
+        '<td style="border-color: rgb(255, 0, 0); border-width: 2px; padding: 3px;">&nbsp;</td>',
+        '</tr>',
+        '</tbody>',
+        '</table>'
+      ].join('')));
+
+    it('TINY-9837: Should apply border, cellpadding and bordercolor to cells if they have been modified',
+      () => testApplyDataToCells({ border: '3px', cellpadding: '3px', bordercolor: '#FF0000' }, [
+        '<table style="border-collapse: collapse; width: 500px; height: 500px; border-width: 3px; border-color: #FF0000; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
+        '<tbody>',
+        '<tr>',
+        '<td style="border-color: rgb(255, 0, 0); border-width: 3px; padding: 3px; border-style: double;">&nbsp;</td>',
+        '<td style="border-color: rgb(255, 0, 0); border-width: 3px; padding: 3px;">&nbsp;</td>',
+        '</tr>',
+        '<tr>',
+        '<td style="border-color: rgb(255, 0, 0); border-width: 3px; padding: 3px;">&nbsp;</td>',
+        '<td style="border-color: rgb(255, 0, 0); border-width: 3px; padding: 3px;">&nbsp;</td>',
+        '</tr>',
+        '</tbody>',
+        '</table>'
+      ].join('')));
   });
 });
