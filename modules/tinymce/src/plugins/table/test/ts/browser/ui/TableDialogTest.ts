@@ -1,5 +1,6 @@
 import { ApproxStructure, UiFinder } from '@ephox/agar';
 import { after, before, context, describe, it } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
 import { SugarBody } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
@@ -46,6 +47,8 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     caption: false,
     align: ''
   };
+
+  const isSafari = PlatformDetection.detect().browser.isSafari();
 
   it('TBA: Table properties dialog standard ok', async () => {
     const editor = hook.editor();
@@ -493,7 +496,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
         '<table style="border-collapse: collapse; width: 500px; height: 500px; border-width: 3px; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
         '<tbody>',
         '<tr>',
-        '<td style="border-color: rgb(224, 62, 45); border-width: 3px; border-style: double;">&nbsp;</td>',
+        isSafari ? '<td style="border: 3px double rgb(224, 62, 45);">&nbsp;</td>' : '<td style="border-color: rgb(224, 62, 45); border-width: 3px; border-style: double;">&nbsp;</td>',
         '<td style="border-width: 3px;">&nbsp;</td>',
         '</tr>',
         '<tr>',
@@ -509,7 +512,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
         '<table style="border-collapse: collapse; width: 500px; height: 500px; border-width: 2px; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
         '<tbody>',
         '<tr>',
-        '<td style="border-color: rgb(224, 62, 45); border-width: 5px; padding: 3px; border-style: double;">&nbsp;</td>',
+        isSafari ? '<td style="border: 5px double rgb(224, 62, 45); padding: 3px;">&nbsp;</td>' : '<td style="border-color: rgb(224, 62, 45); border-width: 5px; padding: 3px; border-style: double;">&nbsp;</td>',
         '<td style="border-width: 2px; padding: 3px;">&nbsp;</td>',
         '</tr>',
         '<tr>',
@@ -525,7 +528,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
         '<table style="border-collapse: collapse; width: 500px; height: 500px; border-width: 2px; border-color: #FF0000; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
         '<tbody>',
         '<tr>',
-        '<td style="border-color: rgb(255, 0, 0); border-width: 5px; border-style: double;">&nbsp;</td>',
+        isSafari ? '<td style="border: 5px double rgb(255, 0, 0);">&nbsp;</td>' : '<td style="border-color: rgb(255, 0, 0); border-width: 5px; border-style: double;">&nbsp;</td>',
         '<td style="border-color: rgb(255, 0, 0); border-width: 2px;">&nbsp;</td>',
         '</tr>',
         '<tr>',
@@ -541,7 +544,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
         '<table style="border-collapse: collapse; width: 500px; height: 500px; border-width: 3px; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
         '<tbody>',
         '<tr>',
-        '<td style="border-color: rgb(224, 62, 45); border-width: 3px; padding: 3px; border-style: double;">&nbsp;</td>',
+        isSafari ? '<td style="border: 3px double rgb(224, 62, 45); padding: 3px;">&nbsp;</td>' : '<td style="border-color: rgb(224, 62, 45); border-width: 3px; padding: 3px; border-style: double;">&nbsp;</td>',
         '<td style="border-width: 3px; padding: 3px;">&nbsp;</td>',
         '</tr>',
         '<tr>',
@@ -557,7 +560,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
         '<table style="border-collapse: collapse; width: 500px; height: 500px; border-width: 3px; border-color: #FF0000; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
         '<tbody>',
         '<tr>',
-        '<td style="border-color: rgb(255, 0, 0); border-width: 3px; border-style: double;">&nbsp;</td>',
+        isSafari ? '<td style="border: 3px double rgb(255, 0, 0);">&nbsp;</td>' : '<td style="border-color: rgb(255, 0, 0); border-width: 3px; border-style: double;">&nbsp;</td>',
         '<td style="border-color: rgb(255, 0, 0); border-width: 3px;">&nbsp;</td>',
         '</tr>',
         '<tr>',
@@ -573,7 +576,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
         '<table style="border-collapse: collapse; width: 500px; height: 500px; border-width: 2px; border-color: #FF0000; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
         '<tbody>',
         '<tr>',
-        '<td style="border-color: rgb(255, 0, 0); border-width: 5px; padding: 3px; border-style: double;">&nbsp;</td>',
+        isSafari ? '<td style="border: 5px double rgb(255, 0, 0); padding: 3px;">&nbsp;</td>' : '<td style="border-color: rgb(255, 0, 0); border-width: 5px; padding: 3px; border-style: double;">&nbsp;</td>',
         '<td style="border-color: rgb(255, 0, 0); border-width: 2px; padding: 3px;">&nbsp;</td>',
         '</tr>',
         '<tr>',
@@ -589,7 +592,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
         '<table style="border-collapse: collapse; width: 500px; height: 500px; border-width: 3px; border-color: #FF0000; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
         '<tbody>',
         '<tr>',
-        '<td style="border-color: rgb(255, 0, 0); border-width: 3px; padding: 3px; border-style: double;">&nbsp;</td>',
+        isSafari ? '<td style="border: 3px double rgb(255, 0, 0); padding: 3px;">&nbsp;</td>' : '<td style="border-color: rgb(255, 0, 0); border-width: 3px; padding: 3px; border-style: double;">&nbsp;</td>',
         '<td style="border-color: rgb(255, 0, 0); border-width: 3px; padding: 3px;">&nbsp;</td>',
         '</tr>',
         '<tr>',
