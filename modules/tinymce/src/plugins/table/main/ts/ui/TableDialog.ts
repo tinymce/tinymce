@@ -65,7 +65,7 @@ const applyModifiedDataToElement = (editor: Editor, tableElm: HTMLTableElement, 
   }
 
   // TINY-9837: Data is applied on child TD/THs only if it has been modified since the previous form submission.
-  if ((shouldApplyOnCell.border || shouldApplyOnCell.cellpadding || hasAdvancedTableTab && shouldApplyOnCell.bordercolor) && shouldStyleWithCss && tableElm.children) {
+  if (shouldStyleWithCss && tableElm.children && (shouldApplyOnCell.border || shouldApplyOnCell.cellpadding || hasAdvancedTableTab && shouldApplyOnCell.bordercolor)) {
     for (let i = 0; i < tableElm.children.length; i++) {
       const cellStyles: StyleMap = {};
       if (shouldApplyOnCell.border) {
