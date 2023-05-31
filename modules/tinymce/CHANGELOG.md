@@ -11,7 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `table_merge_content_on_paste` option which disables the merging behaviour when pasting a table inside an existing table. #TINY-9808
 - New optional `defaultExpandedIds` and `onToggleExpand` options to the `tree` component config. #TINY-9653
 - New optional `defaultSelectedId` option to the `tree` component config. #TINY-9715
-- New `help_accessibility` option which displays the keyboard shortcut to access the help functionality in the statusbar. #TINY-9379
 - New `accordion` plugin with the `InsertAccordion` command. #TINY-9730
 - New `accordion` and `accordion-toggle` icons. #TINY-9789
 - New `details_initial_state` and `details_serialized_state` options. #TINY-9732
@@ -32,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the `codesample` plugin dialog and `template` plugin dialog to use the 'listbox' component to match other dialogs. #TINY-9630
 - Quickbar toolbars are now positioned in the middle of the selection horizontally, if the selection contains more than one table cell. #TINY-8297
 - Exposed `dataTransfer` property of drag and drop events for elements with a `contenteditable="false"` attribute. #TINY-9601
+- Screen readers now announce instructions for resizing the editor using arrow keys, when the resize handle is focused. #TINY-9793
 
 ### Changed
 - The `caption`, `address` and `dt` elements were allowed to have non-inline children elements when the editor schema was set to `html4`. #TINY-9768
@@ -78,6 +78,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In dialogs, an incorrect `aria-describedby` attribute caused the body of the dialog to be announced when using a screen reader. #TINY-9816
 - The sticky toolbar would not be rendered correctly when transitioning from the custom editor view to the main view. #TINY-9814
 - Saving the Table Properties dialog after changing properties unrelated to cells would overwrite cell properties set by the Cell Properties dialog. #TINY-9837
+- Fixed the constrained bounds calculation for dismissal of toolbar when using `toolbar_location: 'bottom'`. #TINY-9718
 
 ## 6.4.2 - 2023-04-26
 
