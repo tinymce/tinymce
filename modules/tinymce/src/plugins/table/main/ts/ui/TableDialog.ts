@@ -64,7 +64,7 @@ const applyModifiedDataToElement = (editor: Editor, tableElm: HTMLTableElement, 
     attrs.cellspacing = data.cellspacing;
   }
 
-  // TINY-9837: Data is applied on child TD/THs only if it has been modified since the previous form submission
+  // TINY-9837: Data is applied on child TD/THs only if it has been modified since the previous dialog submission
   if (shouldStyleWithCss && tableElm.children && (shouldApplyOnCell.border || shouldApplyOnCell.cellpadding || hasAdvancedTableTab && shouldApplyOnCell.bordercolor)) {
     for (let i = 0; i < tableElm.children.length; i++) {
       const cellStyles: StyleMap = {};
