@@ -209,10 +209,7 @@ const applyList = (editor: Editor, listName: string, detail: ListDetail): void =
 
   const bookmark = Bookmark.createBookmark(rng);
 
-  const selectedTextBlocks = Arr.filter(
-    getSelectedTextBlocks(editor, rng, root),
-    (element) => element.getAttribute('contenteditable') !== 'false'
-  );
+  const selectedTextBlocks = Arr.filter(getSelectedTextBlocks(editor, rng, root), editor.dom.isEditable);
 
   Tools.each(selectedTextBlocks, (block) => {
     let listBlock: HTMLElement;
