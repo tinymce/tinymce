@@ -9,13 +9,13 @@ const fallback = `<h1>Begin keyboard navigation</h1>
 <dl>
   <dt>Focus the Menu bar</dt>
   <dd>Windows or Linux: Alt+F9</dd>
-  <dd>macOS: ⌥F9</dd>
+  <dd>macOS: &#x2325;F9</dd>
   <dt>Focus the Toolbar</dt>
   <dd>Windows or Linux: Alt+F10</dd>
-  <dd>macOS: ⌥F10</dd>
+  <dd>macOS: &#x2325;F10</dd>
   <dt>Focus the footer</dt>
   <dd>Windows or Linux: Alt+F11</dd>
-  <dd>macOS: ⌥F11</dd>
+  <dd>macOS: &#x2325;F11</dd>
   <dt>Focus a contextual toolbar</dt>
   <dd>Windows, Linux or macOS: Ctrl+F9
 </dd></dl>
