@@ -25,14 +25,14 @@ const setup = (editor: Editor): void => {
   });
 
   editor.on('keydown', (e) => {
-    if (e.keyCode === VK.BACKSPACE) {
+    if (e.keyCode === VK.BACKSPACE || e.keyCode === VK.DELETE) {
       const prevNode = new DomTreeWalker(editor.selection.getNode(), editor.getBody()).prev2(true);
       if (!prevNode) {
         return;
       }
       if (Utils.isDetails(prevNode) || editor.dom.getParent(prevNode, 'details')) {
         e.preventDefault();
-        editor.execCommand('Delete');
+        editor.execCommand(e.keyCode === VK.BACKSPACE ? 'Delete' : 'ForwardDelete');
         Utils.normalizeDetails(editor);
       }
     }
