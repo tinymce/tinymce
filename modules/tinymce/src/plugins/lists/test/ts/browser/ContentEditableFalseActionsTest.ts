@@ -142,7 +142,7 @@ ${listContent}
   it('TINY-9823: InsertOrderedList command should ignore noneditable blocks', () => {
     testNonEditableBlocksIgnore('InsertOrderedList');
   });
-  
+
   it('TINY-9823: InsertUnorderedList command should ignore noneditable blocks', () => {
     testNonEditableBlocksIgnore('InsertUnorderedList');
   });
