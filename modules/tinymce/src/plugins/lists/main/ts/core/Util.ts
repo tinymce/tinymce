@@ -27,9 +27,6 @@ const isWithinNonEditableList = (editor: Editor, element: Element | null): boole
   return isWithinNonEditable(editor, parentList);
 };
 
-const isInNonEditableRoot = (editor: Editor): boolean =>
-  editor.getBody().getAttribute('contenteditable') === 'false';
-
 const setNodeChangeHandler = (editor: Editor, nodeChangeHandler: (e: NodeChangeEvent) => void): () => void => {
   const initialNode = editor.selection.getNode();
   // Set the initial state
@@ -46,6 +43,5 @@ export {
   inList,
   selectionIsWithinNonEditableList,
   isWithinNonEditableList,
-  isInNonEditableRoot,
   setNodeChangeHandler
 };
