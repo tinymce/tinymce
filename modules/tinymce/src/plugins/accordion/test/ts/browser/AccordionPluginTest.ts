@@ -282,13 +282,31 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     TinyAssertions.assertCursor(editor, [ 1 ], 0);
   });
 
-  it('TINY-9731: Prevent BACKSPACE from removing accordion body', () => {
+  it('TINY-9731: Prevent BACKSPACE from removing accordion body if a cursor is after the accordion', () => {
     const editor = hook.editor();
     editor.setContent(createAccordion({ body: '<p><br/></p>' }) + '<p><br/></p>');
     TinySelections.setCursor(editor, [ 1, 0 ], 0);
     TinyContentActions.keystroke(editor, Keys.backspace());
     TinyAssertions.assertContentPresence(editor, { 'details > p': 1 });
     TinyAssertions.assertCursor(editor, [ 0, 1 ], 0);
+  });
+
+  it('TINY-9884: Prevent BACKSPACE from removing accordion body if a cursor is in the accordion body', () => {
+    const editor = hook.editor();
+    editor.setContent(createAccordion({ body: '<p><br/></p>' }));
+    TinySelections.setCursor(editor, [ 0, 1 ], 0);
+    TinyContentActions.keystroke(editor, Keys.backspace());
+    TinyAssertions.assertContentPresence(editor, { 'details > p': 1 });
+    TinyAssertions.assertCursor(editor, [ 0, 1 ], 0);
+  });
+
+  it('TINY-9884: Prevent BACKSPACE from removing summary', () => {
+    const editor = hook.editor();
+    editor.setContent(createAccordion({ summary: '' }));
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    TinyContentActions.keystroke(editor, Keys.backspace());
+    TinyAssertions.assertContentPresence(editor, { 'details > summary': 1 });
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
   });
 
   it('TINY-9760: Prevent inserting an accordion into noneditable elements', () => {

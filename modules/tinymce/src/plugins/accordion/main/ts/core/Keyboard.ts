@@ -27,7 +27,10 @@ const setup = (editor: Editor): void => {
   editor.on('keydown', (e) => {
     if (e.keyCode === VK.BACKSPACE) {
       const prevNode = new DomTreeWalker(editor.selection.getNode(), editor.getBody()).prev2(true);
-      if (Utils.isDetails(prevNode)) {
+      if (!prevNode) {
+        return;
+      }
+      if (Utils.isDetails(prevNode) || editor.dom.getParent(prevNode, 'details')) {
         e.preventDefault();
         editor.execCommand('Delete');
         Utils.normalizeDetails(editor);
