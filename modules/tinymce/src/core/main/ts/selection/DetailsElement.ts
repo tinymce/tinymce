@@ -1,4 +1,5 @@
 import { Arr } from '@ephox/katamari';
+import { Replication, Class, SugarElement } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
@@ -39,6 +40,7 @@ const filterDetails = (editor: Editor): void => {
   });
 };
 
+<<<<<<< HEAD
 const isCaretInTheBeginning = (editor: Editor, element: HTMLElement): boolean =>
   CaretFinder.firstPositionIn(element).exists((pos) => pos.isEqual(CaretPosition.fromRangeStart(editor.selection.getRng())));
 
@@ -76,10 +78,26 @@ const preventDeletingSummary = (editor: Editor): void => {
   });
 };
 
+const preventSplittingSummary = (editor: Editor): void => {
+  editor.on('NodeChange', () => {
+    Arr.each(Arr.from(editor.getBody().querySelectorAll('details')), (accordion) => {
+      const summaries = Arr.from(accordion.querySelectorAll('summary'));
+      if (summaries.length > 1) {
+        Arr.each(summaries.slice(1), (summary) => {
+          const element = SugarElement.fromDom(summary);
+          Class.remove(element, 'mce-accordion-summary');
+          Replication.mutate(element, 'p');
+        });
+      }
+    });
+  });
+};
+
 const setup = (editor: Editor): void => {
   preventSummaryToggle(editor);
   filterDetails(editor);
   preventDeletingSummary(editor);
+  preventSplittingSummary(editor);
 };
 
 export {
