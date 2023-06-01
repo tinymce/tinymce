@@ -71,19 +71,21 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
   }
 
   // TINY-9837: Relevant data are applied on child TD/THs only if they have been modified since the previous dialog submission
-  if (shouldStyleWithCss && tableElm.children && (shouldApplyOnCell.border || shouldApplyOnCell.cellpadding || hasAdvancedTableTab && shouldApplyOnCell.bordercolor)) {
-    for (let i = 0; i < tableElm.children.length; i++) {
-      const cellStyles: StyleMap = {};
-      if (shouldApplyOnCell.border) {
-        cellStyles['border-width'] = Utils.addPxSuffix(data.border);
+  if (shouldStyleWithCss && tableElm.children) {
+    const cellStyles: StyleMap = {};
+    if (shouldApplyOnCell.border) {
+      cellStyles['border-width'] = Utils.addPxSuffix(data.border);
+    }
+    if (shouldApplyOnCell.cellpadding) {
+      cellStyles.padding = Utils.addPxSuffix(data.cellpadding);
+    }
+    if (hasAdvancedTableTab && shouldApplyOnCell.bordercolor) {
+      cellStyles['border-color'] = (data as Required<TableData>).bordercolor;
+    }
+    if (!Obj.isEmpty(cellStyles)) {
+      for (let i = 0; i < tableElm.children.length; i++) {
+        styleTDTH(dom, tableElm.children[i], cellStyles);
       }
-      if (shouldApplyOnCell.cellpadding) {
-        cellStyles.padding = Utils.addPxSuffix(data.cellpadding);
-      }
-      if (hasAdvancedTableTab && shouldApplyOnCell.bordercolor) {
-        cellStyles['border-color'] = (data as Required<TableData>).bordercolor;
-      }
-      styleTDTH(dom, tableElm.children[i], cellStyles);
     }
   }
 
@@ -122,11 +124,13 @@ const onSubmitTableForm = (editor: Editor, tableElm: HTMLTableElement | null | u
     }
 
     if (Obj.size(modifiedData) > 0) {
-      applyDataToElement(editor, tableElm, data, {
+      const applicableCellProperties: ApplicableCellProperties = {
         border: Obj.has(modifiedData, 'border'),
         bordercolor: Obj.has(modifiedData, 'bordercolor'),
         cellpadding: Obj.has(modifiedData, 'cellpadding')
-      });
+      };
+
+      applyDataToElement(editor, tableElm, data, applicableCellProperties);
 
       // Toggle caption on/off
       const captionElm = dom.select('caption', tableElm)[0];
