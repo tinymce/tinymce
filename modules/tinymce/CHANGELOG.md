@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `editor.setEditableRoot` API that sets the editable state of the editor root element. #TINY-9839
 - New `editor.hasEditableRoot` API that returns `true` or `false` depending on the editable state of the editor root element. #TINY-9839
 - New `EditableRootStateChange` event that gets dispatched when the state of the editable root is changed. #TINY-9839
+- Added Oxide styles for `dl`, `dt`, `dd`, `ol`, and `strong` elements in dialog body content. #TINY-9919
 
 ### Improved
 - Screen readers are now able to announce the highlighted menu item of link comboboxes. #TINY-9280
