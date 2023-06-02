@@ -80,6 +80,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The sticky toolbar would not be rendered correctly when transitioning from the custom editor view to the main view. #TINY-9814
 - Saving the Table Properties dialog after changing properties unrelated to cells would overwrite cell properties set by the Cell Properties dialog. #TINY-9837
 - Fixed the constrained bounds calculation for dismissal of toolbar when using `toolbar_location: 'bottom'`. #TINY-9718
+- The floating toolbar did not occupy the entire available space when the page had a flexbox layout. #TINY-9847
 
 ## 6.4.2 - 2023-04-26
 
