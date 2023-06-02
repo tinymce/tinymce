@@ -68,9 +68,9 @@ describe('browser.tinymce.selection.DetailsElementTest', () => {
 
   it('TINY-9885: Should prevent 2 summaries appearing in details elements', () => {
     const editor = hook.editor();
-    editor.setContent([ createAccordion({ summary: 'helloworld', open: true }) ].join(''));
+    editor.setContent([ createAccordion({ summary: 'helloworld', body: '<p>body</p>', open: true }) ].join(''));
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 'hello'.length);
     editor.execCommand('InsertHorizontalRule');
-    TinyAssertions.assertContentPresence(editor, { 'details > summary:first-child': 1 });
+    TinyAssertions.assertContent(editor, createAccordion({ summary: 'hello', body: '<hr><p>world</p><p>body</p>', open: true }));
   });
 });
