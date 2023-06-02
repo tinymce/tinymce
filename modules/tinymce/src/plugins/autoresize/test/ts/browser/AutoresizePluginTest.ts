@@ -67,12 +67,7 @@ describe('browser.tinymce.plugins.autoresize.AutoresizePluginTest', () => {
               classes: [ arr.has('tox-statusbar__text-container') ],
               children: [
                 s.element('div', { classes: [ arr.has('tox-statusbar__path') ] }),
-                s.element('div', {
-                  classes: [ arr.has('tox-statusbar__right-container') ],
-                  children: [
-                    s.element('span', { classes: [ arr.has('tox-statusbar__branding') ] })
-                  ]
-                })
+                s.element('span', { classes: [ arr.has('tox-statusbar__branding') ] })
               ]
             })
           ]

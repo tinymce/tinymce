@@ -18,6 +18,12 @@ import * as UiUtils from './UiUtils';
 
 type TableData = Helpers.TableData;
 
+interface ApplicableCellProperties {
+  readonly border: boolean;
+  readonly bordercolor: boolean;
+  readonly cellpadding: boolean;
+}
+
 // Explore the layers of the table till we find the first layer of tds or ths
 const styleTDTH = (dom: DOMUtils, elm: Element, name: string | StyleMap, value?: string | number): void => {
   if (elm.tagName === 'TD' || elm.tagName === 'TH') {
@@ -35,10 +41,13 @@ const styleTDTH = (dom: DOMUtils, elm: Element, name: string | StyleMap, value?:
   }
 };
 
-const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: TableData): void => {
+const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: TableData, shouldApplyOnCell: ApplicableCellProperties): void => {
   const dom = editor.dom;
   const attrs: Record<string, string | number | null> = {};
-  const styles: Record<string, string> = {};
+  const styles: StyleMap = {};
+
+  const shouldStyleWithCss = Options.shouldStyleWithCss(editor);
+  const hasAdvancedTableTab = Options.hasAdvancedTableTab(editor);
 
   if (!Type.isUndefined(data.class)) {
     attrs.class = data.class;
@@ -46,13 +55,13 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
 
   styles.height = Utils.addPxSuffix(data.height);
 
-  if (Options.shouldStyleWithCss(editor)) {
+  if (shouldStyleWithCss) {
     styles.width = Utils.addPxSuffix(data.width);
   } else if (dom.getAttrib(tableElm, 'width')) {
     attrs.width = Utils.removePxSuffix(data.width);
   }
 
-  if (Options.shouldStyleWithCss(editor)) {
+  if (shouldStyleWithCss) {
     styles['border-width'] = Utils.addPxSuffix(data.border);
     styles['border-spacing'] = Utils.addPxSuffix(data.cellspacing);
   } else {
@@ -61,23 +70,26 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
     attrs.cellspacing = data.cellspacing;
   }
 
-  // TODO: this has to be reworked somehow, for example by introducing dedicated option, which
-  // will control whether child TD/THs should be processed or not
-  if (Options.shouldStyleWithCss(editor) && tableElm.children) {
-    for (let i = 0; i < tableElm.children.length; i++) {
-      styleTDTH(dom, tableElm.children[i], {
-        'border-width': Utils.addPxSuffix(data.border),
-        'padding': Utils.addPxSuffix(data.cellpadding)
-      });
-      if (Options.hasAdvancedTableTab(editor)) {
-        styleTDTH(dom, tableElm.children[i], {
-          'border-color': (data as Required<TableData>).bordercolor
-        });
+  // TINY-9837: Relevant data are applied on child TD/THs only if they have been modified since the previous dialog submission
+  if (shouldStyleWithCss && tableElm.children) {
+    const cellStyles: StyleMap = {};
+    if (shouldApplyOnCell.border) {
+      cellStyles['border-width'] = Utils.addPxSuffix(data.border);
+    }
+    if (shouldApplyOnCell.cellpadding) {
+      cellStyles.padding = Utils.addPxSuffix(data.cellpadding);
+    }
+    if (hasAdvancedTableTab && shouldApplyOnCell.bordercolor) {
+      cellStyles['border-color'] = (data as Required<TableData>).bordercolor;
+    }
+    if (!Obj.isEmpty(cellStyles)) {
+      for (let i = 0; i < tableElm.children.length; i++) {
+        styleTDTH(dom, tableElm.children[i], cellStyles);
       }
     }
   }
 
-  if (Options.hasAdvancedTableTab(editor)) {
+  if (hasAdvancedTableTab) {
     const advData = data as Required<TableData>;
     styles['background-color'] = advData.backgroundcolor;
     styles['border-color'] = advData.bordercolor;
@@ -86,7 +98,6 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
 
   attrs.style = dom.serializeStyle({ ...Options.getDefaultStyles(editor), ...styles });
   dom.setAttribs(tableElm, { ...Options.getDefaultAttributes(editor), ...attrs });
-
 };
 
 const onSubmitTableForm = (editor: Editor, tableElm: HTMLTableElement | null | undefined, oldData: TableData, api: Dialog.DialogInstanceApi<TableData>): void => {
@@ -113,7 +124,13 @@ const onSubmitTableForm = (editor: Editor, tableElm: HTMLTableElement | null | u
     }
 
     if (Obj.size(modifiedData) > 0) {
-      applyDataToElement(editor, tableElm, data);
+      const applicableCellProperties: ApplicableCellProperties = {
+        border: Obj.has(modifiedData, 'border'),
+        bordercolor: Obj.has(modifiedData, 'bordercolor'),
+        cellpadding: Obj.has(modifiedData, 'cellpadding')
+      };
+
+      applyDataToElement(editor, tableElm, data, applicableCellProperties);
 
       // Toggle caption on/off
       const captionElm = dom.select('caption', tableElm)[0];

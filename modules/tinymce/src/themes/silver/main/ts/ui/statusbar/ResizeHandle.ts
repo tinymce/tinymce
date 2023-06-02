@@ -33,11 +33,16 @@ export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactor
     return Optional.none();
   }
 
+  const resizeLabel = resizeType === ResizeTypes.Both
+    ? 'Press the arrow keys to resize the editor.'
+    : 'Press the Up and Down arrow keys to resize the editor.';
+
   return Optional.some(Icons.render('resize-handle', {
     tag: 'div',
     classes: [ 'tox-statusbar__resize-handle' ],
     attributes: {
-      title: providersBackstage.translate('Resize'), // TODO: tooltips AP-213
+      'title': providersBackstage.translate('Resize'), // TODO: tooltips AP-213
+      'aria-label': providersBackstage.translate(resizeLabel),
     },
     behaviours: [
       Dragging.config({

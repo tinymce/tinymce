@@ -373,7 +373,7 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
 };
 
 const applyFormat = (editor: Editor, name: string, vars?: FormatVars, node?: Node | RangeLikeObject | null): void => {
-  if (editor.selection.isEditable()) {
+  if (node || editor.selection.isEditable()) {
     applyFormatAction(editor, name, vars, node);
   }
 };

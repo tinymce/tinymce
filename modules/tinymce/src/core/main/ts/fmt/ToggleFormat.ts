@@ -8,7 +8,7 @@ const toggle = (editor: Editor, name: string, vars?: FormatVars, node?: Node): v
   const fmt = editor.formatter.get(name);
   if (fmt) {
     if (MatchFormat.match(editor, name, vars, node) && (!('toggle' in fmt[0]) || fmt[0].toggle)) {
-      RemoveFormat.remove(editor, name, vars, node);
+      RemoveFormat.removeFormat(editor, name, vars, node);
     } else {
       ApplyFormat.applyFormat(editor, name, vars, node);
     }

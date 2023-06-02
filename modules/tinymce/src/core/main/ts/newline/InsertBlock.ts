@@ -478,7 +478,8 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   } else if (isCaretAtStartOrEndOfBlock(true) && parentBlockParent) {
     // Insert new block before
     newBlock = parentBlockParent.insertBefore(createNewBlock(), parentBlock);
-    NewLineUtils.moveToCaretPosition(editor, containerAndSiblingName(parentBlock, 'HR') ? newBlock : parentBlock);
+    const isNearChildren = Traverse.hasChildNodes(SugarElement.fromDom(rng.startContainer)) && rng.collapsed;
+    NewLineUtils.moveToCaretPosition(editor, (containerAndSiblingName(parentBlock, 'HR') || isNearChildren) ? newBlock : parentBlock);
   } else {
     // Extract after fragment and insert it after the current block
     const tmpRng = includeZwspInRange(rng).cloneRange();

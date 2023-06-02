@@ -274,13 +274,34 @@
       fill: @dialog-body-text-color;
     }
 
+    strong {
+      font-weight: @font-weight-bold;
+    }
+
     ul {
-      display: block;
       list-style-type: disc;
+    }
+
+    ul,
+    ol,
+    dd {
+      padding-inline-start: 2.5rem;
+    }
+
+    ul,
+    ol,
+    dl {
       margin-bottom: @pad-md;
+    }
+
+    ul,
+    ol,
+    dl,
+    dd,
+    dt {
+      display: block;
       margin-inline-end: 0;
       margin-inline-start: 0;
-      padding-inline-start: 2.5rem;
     }
 
     .tox-form__group h1 {

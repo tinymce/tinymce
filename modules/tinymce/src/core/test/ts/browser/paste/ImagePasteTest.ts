@@ -11,6 +11,7 @@ import * as Clipboard from 'tinymce/core/paste/Clipboard';
 import * as PasteEventUtils from '../../module/test/PasteEventUtils';
 
 describe('browser.tinymce.core.paste.ImagePasteTest', () => {
+  const lastBeforeInputEvent = Singleton.value<EditorEvent<InputEvent>>();
   const lastInputEvent = Singleton.value<EditorEvent<InputEvent>>();
 
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -22,9 +23,8 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
     paste_data_images: true,
     base_url: '/project/tinymce/js/tinymce',
     init_instance_callback: (editor: Editor) => {
-      editor.on('input', (e) => {
-        lastInputEvent.set(e);
-      });
+      editor.on('beforeinput', (e) => lastBeforeInputEvent.set(e));
+      editor.on('input', (e) => lastInputEvent.set(e));
     }
   }, []);
 
@@ -85,7 +85,7 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
     ]);
     Clipboard.pasteImageData(editor, event, editor.selection.getRng());
 
-    await PasteEventUtils.pWaitForAndAssertInputEvent(lastInputEvent);
+    await PasteEventUtils.pWaitForAndAssertInputEvents(lastBeforeInputEvent, lastInputEvent);
     await pWaitForSelector(editor, 'img');
     await Waiter.pTryUntilPredicate('Wait for image to be cached', () => hasCachedItem('mceclip0') && hasCachedItem('mceclip1'));
 
@@ -103,7 +103,7 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
     ]);
     Clipboard.pasteImageData(editor, event, editor.selection.getRng());
 
-    await PasteEventUtils.pWaitForAndAssertInputEvent(lastInputEvent);
+    await PasteEventUtils.pWaitForAndAssertInputEvents(lastBeforeInputEvent, lastInputEvent);
     await pWaitForSelector(editor, 'img');
     TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '">a</p>');
     assert.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
@@ -131,7 +131,7 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
     ]);
     Clipboard.pasteImageData(editor, event, editor.selection.getRng());
 
-    await PasteEventUtils.pWaitForAndAssertInputEvent(lastInputEvent);
+    await PasteEventUtils.pWaitForAndAssertInputEvents(lastBeforeInputEvent, lastInputEvent);
     await pWaitForSelector(editor, 'img');
     TinyAssertions.assertContent(editor, '<p><img src="data:image/jpeg;base64,' + base64ImgSrc + '">a</p>');
     assert.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
@@ -151,7 +151,7 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
     ]);
     Clipboard.pasteImageData(editor, event, editor.selection.getRng());
 
-    await PasteEventUtils.pWaitForAndAssertInputEvent(lastInputEvent);
+    await PasteEventUtils.pWaitForAndAssertInputEvents(lastBeforeInputEvent, lastInputEvent);
     await pWaitForSelector(editor, 'img');
     TinyAssertions.assertContent(editor, '<p><img src=\"data:image/tiff;base64,' + base64ImgSrc + '">a</p>');
     assert.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
@@ -167,7 +167,7 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
       dataTransfer.items.add(base64ToBlob(base64ImgSrc, 'image/gif', 'image.gif'));
     });
 
-    await PasteEventUtils.pWaitForAndAssertInputEvent(lastInputEvent);
+    await PasteEventUtils.pWaitForAndAssertInputEvents(lastBeforeInputEvent, lastInputEvent);
     await pWaitForSelector(editor, 'img');
     TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '">a</p>');
   });
