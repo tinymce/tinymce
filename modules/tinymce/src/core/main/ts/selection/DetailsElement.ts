@@ -59,7 +59,7 @@ const preventDeletingSummary = (editor: Editor): void => {
         e.preventDefault();
       } else if (e.keyCode === VK.DELETE && node === editor.dom.getParent(node, 'details')?.lastChild && isCaretInTheEnding(editor, node)) {
         e.preventDefault();
-      } else if (prevNode?.nodeName === 'DETAILS') {
+      } else if (node?.nodeName !== 'SUMMARY' && prevNode?.nodeName === 'DETAILS') {
         e.preventDefault();
         CaretFinder.lastPositionIn(prevNode).each((position) => {
           const node = position.getNode();
