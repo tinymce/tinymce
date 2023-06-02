@@ -40,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `a` elements were allowed to have non-inline child elements when the editor schema was set to `html4`. #TINY-9805
 
 ### Fixed
+- Returning an empty string in custom context menu update function would result in a small white line appearing on right click and the native browser context menu would not show up. #TINY-9842
 - Right clicking on a merge tag would result in different highlighting across browsers. #TINY-9848
 - Command + backspace would not add an undo level on Mac. #TINY-8910
 - Ctrl + backspace and Ctrl + delete would not restore correct caret position after redo. #TINY-8910
