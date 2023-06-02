@@ -83,6 +83,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The floating toolbar did not occupy the entire available space when the page had a flexbox layout. #TINY-9847
 - Fixed backspace and delete keypresses within details elements. #TINY-9884
 - Applying lists did not work if the selection included a `contenteditable=false` block element. #TINY-9823
+- Inserting elements in the middle of the summary caused the appearance of 2 summaries within details elements. #TINY-9885
 
 ## 6.4.2 - 2023-04-26
 
