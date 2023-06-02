@@ -50,8 +50,12 @@ const preventDeletingSummary = (editor: Editor): void => {
     if (e.keyCode === VK.BACKSPACE || e.keyCode === VK.DELETE) {
       const node = editor.selection.getNode();
       const prevNode = new DomTreeWalker(node, editor.getBody()).prev2(true);
+      const startElement = editor.selection.getStart();
+      const endElement = editor.selection.getEnd();
 
-      if (e.keyCode === VK.BACKSPACE && node?.nodeName === 'SUMMARY' && isCaretInTheBeginning(editor, node)) {
+      if (startElement?.nodeName === 'SUMMARY' && startElement !== endElement && editor.dom.getParent(endElement, 'details')) {
+        e.preventDefault();
+      } else if (e.keyCode === VK.BACKSPACE && node?.nodeName === 'SUMMARY' && isCaretInTheBeginning(editor, node)) {
         e.preventDefault();
       } else if (e.keyCode === VK.DELETE && node?.nodeName === 'SUMMARY' && isCaretInTheEnding(editor, node)) {
         e.preventDefault();

@@ -309,6 +309,14 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
   });
 
+  it('TINY-9884: Prevent BACKSPACE from removing summary when summary and details content are selected', () => {
+    const editor = hook.editor();
+    editor.setContent(createAccordion({ summary: 'summary', body: '<p>body</p>' }));
+    TinySelections.setSelection(editor, [ 0, 0, 0 ], 'sum'.length, [ 0, 1, 0 ], 'bo'.length);
+    TinyContentActions.keystroke(editor, Keys.backspace());
+    TinyAssertions.assertContentPresence(editor, { 'details > summary': 1, 'details > p': 1 });
+  });
+
   it('TINY-9760: Prevent inserting an accordion into noneditable elements', () => {
     const editor = hook.editor();
     editor.setContent('<div contenteditable="false"><p>noneditable</p></div>');
