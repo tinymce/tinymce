@@ -1,4 +1,3 @@
-import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
 
@@ -21,17 +20,6 @@ const setup = (editor: Editor): void => {
     const cmd = e.command.toLowerCase();
     if ((cmd === 'delete' || cmd === 'forwarddelete') && Utils.isDetailsSelected(editor)) {
       Utils.normalizeDetails(editor);
-    }
-  });
-
-  editor.on('keydown', (e) => {
-    if (e.keyCode === VK.BACKSPACE) {
-      const prevNode = new DomTreeWalker(editor.selection.getNode(), editor.getBody()).prev2(true);
-      if (Utils.isDetails(prevNode)) {
-        e.preventDefault();
-        editor.execCommand('Delete');
-        Utils.normalizeDetails(editor);
-      }
     }
   });
 };

@@ -26,11 +26,16 @@ export const getSelectedDetails = (editor: Editor): Optional<HTMLDetailsElement>
 export const isDetailsSelected = (editor: Editor): boolean =>
   getSelectedDetails(editor).isSome();
 
-export const createParagraph = (editor: Editor): HTMLParagraphElement => {
-  const paragraph = editor.dom.create('p');
-  paragraph.innerHTML = '<br data-mce-bogus="1" />';
-  return paragraph;
+export const insertBogus = <T extends HTMLElement>(element: T): T => {
+  element.innerHTML = '<br data-mce-bogus="1" />';
+  return element;
 };
+
+export const createParagraph = (editor: Editor): HTMLParagraphElement =>
+  insertBogus(editor.dom.create('p'));
+
+export const createSummary = (editor: Editor): HTMLElement =>
+  insertBogus(editor.dom.create('summary'));
 
 export const insertAndSelectParagraphAfter = (editor: Editor, target: HTMLElement): void => {
   const paragraph = createParagraph(editor);
@@ -38,12 +43,25 @@ export const insertAndSelectParagraphAfter = (editor: Editor, target: HTMLElemen
   editor.selection.setCursorLocation(paragraph, 0);
 };
 
-export const normalizeAccordion = (editor: Editor) => (accordion: HTMLDetailsElement): void => {
+export const normalizeContent = (editor: Editor, accordion: HTMLDetailsElement): void => {
   if (isSummary(accordion?.lastChild)) {
     const paragraph = createParagraph(editor);
     accordion.appendChild(paragraph);
     editor.selection.setCursorLocation(paragraph, 0);
   }
+};
+
+export const normalizeSummary = (editor: Editor, accordion: HTMLDetailsElement): void => {
+  if (!isSummary(accordion?.firstChild)) {
+    const summary = createSummary(editor);
+    accordion.prepend(summary);
+    editor.selection.setCursorLocation(summary, 0);
+  }
+};
+
+export const normalizeAccordion = (editor: Editor) => (accordion: HTMLDetailsElement): void => {
+  normalizeContent(editor, accordion);
+  normalizeSummary(editor, accordion);
 };
 
 export const normalizeDetails = (editor: Editor): void => {
