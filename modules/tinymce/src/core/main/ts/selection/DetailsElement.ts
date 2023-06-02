@@ -1,11 +1,10 @@
 import { Arr } from '@ephox/katamari';
 
-import * as CaretFinder from '../caret/CaretFinder';
 import DomTreeWalker from '../api/dom/TreeWalker';
-import VK from '../api/util/VK';
-
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
+import VK from '../api/util/VK';
+import * as CaretFinder from '../caret/CaretFinder';
 
 const preventSummaryToggle = (editor: Editor): void => {
   editor.on('click', (e) => {
