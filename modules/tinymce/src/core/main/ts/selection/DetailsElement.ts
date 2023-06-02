@@ -1,5 +1,9 @@
 import { Arr } from '@ephox/katamari';
 
+import * as CaretFinder from '../caret/CaretFinder';
+import DomTreeWalker from '../api/dom/TreeWalker';
+import VK from '../api/util/VK';
+
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
 
@@ -35,9 +39,34 @@ const filterDetails = (editor: Editor): void => {
   });
 };
 
+const preventDeletingSummary = (editor: Editor): void => {
+  editor.on('keydown', (e) => {
+    if (e.keyCode === VK.BACKSPACE || e.keyCode === VK.DELETE) {
+      const node = editor.selection.getNode();
+      const prevNode = new DomTreeWalker(node, editor.getBody()).prev2(true);
+      if (node?.nodeName === 'SUMMARY' || prevNode?.nodeName === 'SUMMARY') {
+        CaretFinder.positionIn(e.keyCode === VK.DELETE, node).each((position) => {
+          if (position.isAtStart()) {
+            e.preventDefault();
+          }
+        });
+      } else if (prevNode?.nodeName === 'DETAILS') {
+        e.preventDefault();
+        CaretFinder.lastPositionIn(prevNode).each((position) => {
+          const node = position.getNode();
+          if (node) {
+            editor.selection.setCursorLocation(node, position.offset());
+          }
+        });
+      }
+    }
+  });
+};
+
 const setup = (editor: Editor): void => {
   preventSummaryToggle(editor);
   filterDetails(editor);
+  preventDeletingSummary(editor);
 };
 
 export {
