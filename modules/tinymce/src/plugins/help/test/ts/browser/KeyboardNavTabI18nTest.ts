@@ -37,11 +37,11 @@ describe('browser.tinymce.plugins.help.KeyboardNavTabI18nTest', () => {
     };
 
     it('TINY-9633: Can load English by default', () => testLanguage('Begin'));
-    it('TINY-9633: Can load German translation', () => testLanguage('Grundlagen', 'de'));
-    it('TINY-9633: Loads English fallback when invalid language code is specified', () => testLanguage('Begin', 'invalid'));
+    it('TINY-9633: Can load English', () => testLanguage('Begin', 'en'));
+    it('TINY-9633: Can load German', () => testLanguage('Grundlagen', 'de'));
   });
 
-  it('TINY-9920: Fallback HTML is the same as the one loaded from English HTML file', async () => {
+  it('TINY-9920: Fallback HTML is the same as the HTML loaded from English file', async () => {
     const getKeyboardNavHtml = async (language: string): Promise<string> => {
       const editor = await createEditorWithLanguage(language);
       const dialogEl = await openHelpDialogKeyboardNavigationTab(editor);
