@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- New `pad_empty_with_br` option that can be set to `true` to pad empty block elements with `<br>` tag instead of nbsp character. #TINY-9861
+
 ### Changed
 - The pattern replacement removes spaces if they were contained in a tag that only contains a space and the text to replace. #TINY-9744
 

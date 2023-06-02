@@ -735,12 +735,25 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         assert.equal(serializer.serialize(root), '<ul><li>\u00a0</li></ul><ul><li>\u00a0</li></ul>');
       });
 
+      it('TINY-9861: Pad empty with br', () => {
+        const schema = Schema();
+        const serializer = HtmlSerializer({ }, schema);
+
+        const parser1 = DomParser({ pad_empty_with_br: true }, schema);
+        const root1 = parser1.parse('<p>a</p><p></p>');
+        assert.equal(serializer.serialize(root1), '<p>a</p><p><br></p>');
+
+        const parser2 = DomParser({ pad_empty_with_br: false }, schema);
+        const root2 = parser2.parse('<p>a</p><p></p>');
+        assert.equal(serializer.serialize(root2), '<p>a</p><p>\u00A0</p>');
+      });
+
       it('Pad empty and prefer br on insert', () => {
         const schema = Schema();
 
         const parser = DomParser(scenario.settings, schema);
         const root = parser.parse('<ul><li></li><li> </li><li><br /></li><li>\u00a0</li><li>a</li></ul>', { insert: true });
-        assert.equal(serializer.serialize(root), '<ul><li><br data-mce-bogus="1"></li><li><br data-mce-bogus="1"></li><li><br></li><li><br data-mce-bogus="1"></li><li>a</li></ul>');
+        assert.equal(serializer.serialize(root), '<ul><li><br></li><li><br></li><li><br></li><li><br></li><li>a</li></ul>');
       });
 
       it('Preserve space in inline span', () => {
