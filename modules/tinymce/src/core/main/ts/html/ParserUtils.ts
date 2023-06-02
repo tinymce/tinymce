@@ -8,6 +8,9 @@ const paddEmptyNode = (settings: DomParserSettings, args: ParserArgs, isBlock: (
   const brPreferred = settings.pad_empty_with_br || args.insert;
   if (brPreferred && isBlock(node)) {
     const astNode = new AstNode('br', 1);
+    if (args.insert) {
+      astNode.attr('data-mce-bogus', '1');
+    }
     node.empty().append(astNode);
   } else {
     node.empty().append(new AstNode('#text', 3)).value = Unicode.nbsp;
