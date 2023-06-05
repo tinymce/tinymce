@@ -128,7 +128,6 @@ interface DOMUtils {
     <K extends keyof HTMLElementTagNameMap>(name: K, attrs?: Record<string, string | boolean | number | null>, html?: string | Node | null): HTMLElementTagNameMap[K];
     (name: string, attrs?: Record<string, string | boolean | number | null>, html?: string | Node | null): HTMLElement;
   };
-  createTextNode: (data: string) => Text;
   createHTML: (name: string, attrs?: Record<string, string | null>, html?: string) => string;
   createFragment: (html?: string) => DocumentFragment;
   remove: {
@@ -685,8 +684,6 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       return outHtml + '>' + html + '</' + name + '>';
     }
   };
-
-  const createTextNode = (data: string): Text => doc.createTextNode(data);
 
   const createFragment = (html?: string): DocumentFragment => {
     const container = doc.createElement('div');
@@ -1347,8 +1344,6 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      * tinymce.activeEditor.selection.setContent(tinymce.activeEditor.dom.createHTML('a', { href: 'test.html' }, 'some line'));
      */
     createHTML,
-
-    createTextNode,
 
     /**
      * Creates a document fragment out of the specified HTML string.

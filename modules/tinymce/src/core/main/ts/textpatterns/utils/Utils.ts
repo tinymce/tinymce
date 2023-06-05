@@ -12,11 +12,8 @@ const cleanEmptyNodes = (dom: DOMUtils, node: Node | null, isRoot: (e: Node) => 
   if (node && dom.isEmpty(node) && !isRoot(node)) {
     const parent = node.parentNode;
 
-    if (NodeType.isText(node.firstChild) && isWhitespaceText(node.firstChild.data)) {
-      dom.replace(dom.createTextNode(node.firstChild.data), node);
-    } else {
-      dom.remove(node);
-    }
+    dom.remove(node, NodeType.isText(node.firstChild) && isWhitespaceText(node.firstChild.data));
+
     cleanEmptyNodes(dom, parent, isRoot);
   }
 };
