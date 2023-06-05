@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Type } from '@ephox/katamari';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
@@ -47,27 +47,27 @@ const isCaretInTheEnding = (editor: Editor, element: HTMLElement): boolean =>
 
 const preventDeletingSummary = (editor: Editor): void => {
   editor.on('keydown', (e) => {
-    if (e.keyCode === VK.BACKSPACE || e.keyCode === VK.DELETE) {
+    if ((e.keyCode === VK.BACKSPACE || e.keyCode === VK.DELETE) && editor.selection.isCollapsed()) {
       const node = editor.selection.getNode();
       const prevNode = new DomTreeWalker(node, editor.getBody()).prev2(true);
       const startElement = editor.selection.getStart();
       const endElement = editor.selection.getEnd();
+      const isCaretAtStart = isCaretInTheBeginning(editor, node);
+      const isBackspaceAndCaretAtStart = e.keyCode === VK.BACKSPACE && isCaretAtStart;
+      const isDeleteAndCaretAtEnd = e.keyCode === VK.DELETE && isCaretInTheEnding(editor, node);
 
-      if (startElement?.nodeName === 'SUMMARY' && startElement !== endElement && editor.dom.getParent(endElement, 'details')) {
+      if (
+        startElement.nodeName === 'SUMMARY' && startElement !== endElement && !Type.isNull(editor.dom.getParent(endElement, 'details'))
+        || (isBackspaceAndCaretAtStart || isDeleteAndCaretAtEnd) && node.nodeName === 'SUMMARY'
+        || isBackspaceAndCaretAtStart && prevNode?.nodeName === 'SUMMARY'
+        || isDeleteAndCaretAtEnd && node === editor.dom.getParent(node, 'details')?.lastChild
+      ) {
         e.preventDefault();
-      } else if (e.keyCode === VK.BACKSPACE && node?.nodeName === 'SUMMARY' && isCaretInTheBeginning(editor, node)) {
-        e.preventDefault();
-      } else if (e.keyCode === VK.DELETE && node?.nodeName === 'SUMMARY' && isCaretInTheEnding(editor, node)) {
-        e.preventDefault();
-      } else if (e.keyCode === VK.BACKSPACE && prevNode?.nodeName === 'SUMMARY' && isCaretInTheBeginning(editor, node)) {
-        e.preventDefault();
-      } else if (e.keyCode === VK.DELETE && node === editor.dom.getParent(node, 'details')?.lastChild && isCaretInTheEnding(editor, node)) {
-        e.preventDefault();
-      } else if (node?.nodeName !== 'SUMMARY' && prevNode?.nodeName === 'DETAILS') {
+      } else if (node.nodeName !== 'SUMMARY' && prevNode?.nodeName === 'DETAILS' && (isBackspaceAndCaretAtStart || e.keyCode === VK.DELETE && isCaretAtStart && editor.dom.isEmpty(node))) {
         e.preventDefault();
         CaretFinder.lastPositionIn(prevNode).each((position) => {
           const node = position.getNode();
-          if (node) {
+          if (!Type.isUndefined(node)) {
             editor.selection.setCursorLocation(node, position.offset());
           }
         });
