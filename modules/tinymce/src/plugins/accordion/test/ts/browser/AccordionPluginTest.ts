@@ -1,6 +1,5 @@
-import { Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks, TinySelections, TinyContentActions, TinyAssertions } from '@ephox/wrap-mcagar';
+import { TinyHooks, TinySelections, TinyAssertions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -232,50 +231,6 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
       assert.equal(event.elements[0].nodeName, 'DETAILS');
       assert.isFalse(event.state);
     }, false);
-  });
-
-  it('TINY-9731: Toggle summary with ENTER keypress', () => {
-    const editor = hook.editor();
-    editor.setContent(AccordionUtils.createAccordion({ summary: 'tiny' }));
-    TinySelections.setCursor(editor, [ 0, 0, 0 ], 'tiny'.length);
-    TinyContentActions.keystroke(editor, Keys.enter());
-    TinyAssertions.assertContentPresence(editor, { 'details:not([open="open"])': 1 });
-    TinyContentActions.keystroke(editor, Keys.enter());
-    TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 1 });
-  });
-
-  it('TINY-9731: Leave accordion body with ENTER keypress within an empty paragraph', () => {
-    const editor = hook.editor();
-    editor.setContent(AccordionUtils.createAccordion({ body: '<p>tiny</p>' }));
-    TinySelections.setCursor(editor, [ 0, 1, 0 ], 'tiny'.length);
-    TinyContentActions.keystroke(editor, Keys.enter());
-    TinyAssertions.assertContentPresence(editor, { 'details > p': 2 });
-    TinyContentActions.keystroke(editor, Keys.enter());
-    TinyAssertions.assertContentPresence(editor, { 'details > p': 1 });
-    TinyAssertions.assertContentPresence(editor, { 'details + p': 1 });
-    TinyAssertions.assertCursor(editor, [ 1 ], 0);
-  });
-
-  it('TINY-9731: Do not remove the only empty paragraph when leaving accordion body with ENTER keypress', () => {
-    const editor = hook.editor();
-    editor.setContent(AccordionUtils.createAccordion({ body: '<p></p>' }));
-    TinySelections.setCursor(editor, [ 0, 1 ], 0);
-    TinyContentActions.keystroke(editor, Keys.enter());
-    TinyAssertions.assertContentPresence(editor, { 'details > p': 1 });
-    TinyAssertions.assertContentPresence(editor, { 'details + p': 1 });
-    TinyAssertions.assertCursor(editor, [ 1 ], 0);
-  });
-
-  it('TINY-9731: Leave accordion body with ENTER keypress within an empty paragraph for deprecated details', () => {
-    const editor = hook.editor();
-    editor.setContent(`<details open="open"><summary>summary</summary><p>tiny</p></details>`);
-    TinySelections.setCursor(editor, [ 0, 1, 0 ], 'tiny'.length);
-    TinyContentActions.keystroke(editor, Keys.enter());
-    TinyAssertions.assertContentPresence(editor, { 'details > p': 2 });
-    TinyContentActions.keystroke(editor, Keys.enter());
-    TinyAssertions.assertContentPresence(editor, { 'details > p': 1 });
-    TinyAssertions.assertContentPresence(editor, { 'details + p': 1 });
-    TinyAssertions.assertCursor(editor, [ 1 ], 0);
   });
 
   it('TINY-9760: Prevent inserting an accordion into noneditable elements', () => {
