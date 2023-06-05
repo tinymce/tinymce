@@ -49,11 +49,11 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
       TinyAssertions.assertCursor(editor, [ 0, 1 ], 0);
     });
 
-    it('TINY-9884: Prevent BACKSPACE from removing summary', async () => {
+    it('TINY-9884: Prevent BACKSPACE from removing summary', async function () {
       if (PlatformDetection.detect().browser.isFirefox()) {
         // TODO - TINY-9949: Firefox performs an incorrect selection which causes the summary to be
         // removed unexpectedly, even though it should not be possible.
-        return;
+        this.skip();
       }
       const editor = hook.editor();
       editor.setContent(AccordionUtils.createAccordion({ summary: '' }));
