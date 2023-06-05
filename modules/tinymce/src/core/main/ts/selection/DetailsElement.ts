@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Type } from '@ephox/katamari';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
@@ -52,22 +52,21 @@ const preventDeletingSummary = (editor: Editor): void => {
       const prevNode = new DomTreeWalker(node, editor.getBody()).prev2(true);
       const startElement = editor.selection.getStart();
       const endElement = editor.selection.getEnd();
+      const isBackspaceAndCaretAtStart = e.keyCode === VK.BACKSPACE && isCaretInTheBeginning(editor, node);
+      const isDeleteAndCaretAtEnd = e.keyCode === VK.DELETE && isCaretInTheEnding(editor, node);
 
-      if (startElement?.nodeName === 'SUMMARY' && startElement !== endElement && editor.dom.getParent(endElement, 'details')) {
+      if (
+        startElement.nodeName === 'SUMMARY' && startElement !== endElement && !Type.isNull(editor.dom.getParent(endElement, 'details'))
+        || (isBackspaceAndCaretAtStart || isDeleteAndCaretAtEnd) && node.nodeName === 'SUMMARY'
+        || isBackspaceAndCaretAtStart && prevNode?.nodeName === 'SUMMARY'
+        || isDeleteAndCaretAtEnd && node === editor.dom.getParent(node, 'details')?.lastChild
+      ) {
         e.preventDefault();
-      } else if (e.keyCode === VK.BACKSPACE && node?.nodeName === 'SUMMARY' && isCaretInTheBeginning(editor, node)) {
-        e.preventDefault();
-      } else if (e.keyCode === VK.DELETE && node?.nodeName === 'SUMMARY' && isCaretInTheEnding(editor, node)) {
-        e.preventDefault();
-      } else if (e.keyCode === VK.BACKSPACE && prevNode?.nodeName === 'SUMMARY' && isCaretInTheBeginning(editor, node)) {
-        e.preventDefault();
-      } else if (e.keyCode === VK.DELETE && node === editor.dom.getParent(node, 'details')?.lastChild && isCaretInTheEnding(editor, node)) {
-        e.preventDefault();
-      } else if (node.nodeName !== 'SUMMARY' && prevNode?.nodeName === 'DETAILS' && editor.selection.isCollapsed() && (e.keyCode === VK.BACKSPACE && isCaretInTheBeginning(editor, node) || e.keyCode === VK.DELETE && editor.dom.isEmpty(node))) {
+      } else if (node.nodeName !== 'SUMMARY' && prevNode?.nodeName === 'DETAILS' && editor.selection.isCollapsed() && (isBackspaceAndCaretAtStart || e.keyCode === VK.DELETE && editor.dom.isEmpty(node))) {
         e.preventDefault();
         CaretFinder.lastPositionIn(prevNode).each((position) => {
           const node = position.getNode();
-          if (node) {
+          if (!Type.isUndefined(node)) {
             editor.selection.setCursorLocation(node, position.offset());
           }
         });
