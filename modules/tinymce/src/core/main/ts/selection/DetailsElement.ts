@@ -52,7 +52,8 @@ const preventDeletingSummary = (editor: Editor): void => {
       const prevNode = new DomTreeWalker(node, editor.getBody()).prev2(true);
       const startElement = editor.selection.getStart();
       const endElement = editor.selection.getEnd();
-      const isBackspaceAndCaretAtStart = e.keyCode === VK.BACKSPACE && isCaretInTheBeginning(editor, node);
+      const isCaretAtStart = isCaretInTheBeginning(editor, node);
+      const isBackspaceAndCaretAtStart = e.keyCode === VK.BACKSPACE && isCaretAtStart;
       const isDeleteAndCaretAtEnd = e.keyCode === VK.DELETE && isCaretInTheEnding(editor, node);
 
       if (
@@ -62,7 +63,7 @@ const preventDeletingSummary = (editor: Editor): void => {
         || isDeleteAndCaretAtEnd && node === editor.dom.getParent(node, 'details')?.lastChild
       ) {
         e.preventDefault();
-      } else if (node.nodeName !== 'SUMMARY' && prevNode?.nodeName === 'DETAILS' && (isBackspaceAndCaretAtStart || e.keyCode === VK.DELETE && editor.dom.isEmpty(node))) {
+      } else if (node.nodeName !== 'SUMMARY' && prevNode?.nodeName === 'DETAILS' && (isBackspaceAndCaretAtStart || e.keyCode === VK.DELETE && isCaretAtStart && editor.dom.isEmpty(node))) {
         e.preventDefault();
         CaretFinder.lastPositionIn(prevNode).each((position) => {
           const node = position.getNode();
