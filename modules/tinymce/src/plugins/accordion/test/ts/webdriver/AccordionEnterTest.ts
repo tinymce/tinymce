@@ -7,7 +7,7 @@ import Editor from 'tinymce/core/api/Editor';
 import AccordionPlugin from '../../../main/ts/Plugin';
 import * as AccordionUtils from '../module/AccordionUtils';
 
-describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () => {
+describe('webdriver.tinymce.plugins.accordion.AccordionEnterTest', () => {
   const hook = TinyHooks.bddSetup<Editor>(
     {
       plugins: 'accordion',
