@@ -7,11 +7,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import type { ToggledAccordionEvent, ToggledAllAccordionsEvent } from '../../../main/ts/api/Events';
 import AccordionPlugin from '../../../main/ts/Plugin';
-
-const createAccordion = (
-  { open = true, summary = 'Accordion summary...', body = '<p>Accordion body...</p>' }:
-  { open?: boolean; summary?: string; body?: string } = {}): string =>
-  `<details class="mce-accordion"${open ? ` open="open"` : ''}><summary class="mce-accordion-summary">${summary}</summary>${body}</details>`;
+import * as AccordionUtils from '../module/AccordionUtils';
 
 interface InsertAccordionTest {
   readonly initialContent: string;
@@ -57,7 +53,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<p>tiny</p>',
       initialCursor: [[ 0, 0 ], 'tiny'.length ],
-      assertContent: '<p>tiny</p>' + createAccordion(),
+      assertContent: '<p>tiny</p>' + AccordionUtils.createAccordion(),
       assertCursor: [[ 1, 0 ], 1 ],
     });
   });
@@ -66,7 +62,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<p><br></p>',
       initialCursor: [[ 0, 0 ], 0 ],
-      assertContent: createAccordion(),
+      assertContent: AccordionUtils.createAccordion(),
       assertCursor: [[ 0, 0 ], 1 ],
     });
   });
@@ -75,7 +71,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<ol><li>tiny</li></ol>',
       initialCursor: [[ 0, 0, 0 ], 'tiny'.length ],
-      assertContent: `<ol><li>tiny${createAccordion()}</li></ol>`,
+      assertContent: `<ol><li>tiny${AccordionUtils.createAccordion()}</li></ol>`,
       assertCursor: [[ 0, 0, 1, 0 ], 1 ],
     });
   });
@@ -84,7 +80,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<dl><dt>tiny</dt></dl>',
       initialCursor: [[ 0, 0, 0 ], 'tiny'.length ],
-      assertContent: `<dl><dt>tiny${createAccordion()}</dt></dl>`,
+      assertContent: `<dl><dt>tiny${AccordionUtils.createAccordion()}</dt></dl>`,
       assertCursor: [[ 0, 0, 1, 0 ], 1 ],
     });
   });
@@ -93,7 +89,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<dl><dd>tiny</dd></dl>',
       initialCursor: [[ 0, 0, 0 ], 'tiny'.length ],
-      assertContent: `<dl><dd>tiny${createAccordion()}</dd></dl>`,
+      assertContent: `<dl><dd>tiny${AccordionUtils.createAccordion()}</dd></dl>`,
       assertCursor: [[ 0, 0, 1, 0 ], 1 ],
     });
   });
@@ -102,25 +98,25 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<table><colgroup><col></colgroup><tbody><tr><td>&nbsp;</td></tr></tbody></table>',
       initialCursor: [[ 0, 1, 0, 0, 0 ], 0 ],
-      assertContent: `<table><colgroup><col></colgroup><tbody><tr><td>${createAccordion()}</td></tr></tbody></table>`,
+      assertContent: `<table><colgroup><col></colgroup><tbody><tr><td>${AccordionUtils.createAccordion()}</td></tr></tbody></table>`,
       assertCursor: [[ 0, 1, 0, 0, 0, 0 ], 1 ],
     });
   });
 
   it('TINY-9730: Insert an accordion into an accordion body', () => {
     testInsertingAccordion(hook.editor(), {
-      initialContent: createAccordion({ summary: 'summary', body: '<p>body</p>' }),
+      initialContent: AccordionUtils.createAccordion({ summary: 'summary', body: '<p>body</p>' }),
       initialCursor: [[ 0, 1, 0 ], 'body'.length ],
-      assertContent: createAccordion({ summary: 'summary', body: `<p>body</p>${createAccordion()}` }),
+      assertContent: AccordionUtils.createAccordion({ summary: 'summary', body: `<p>body</p>${AccordionUtils.createAccordion()}` }),
       assertCursor: [[ 0, 2, 0 ], 1 ],
     });
   });
 
   it('TINY-9730: Do not insert an accordion inside another accordion if selection is in summary', () => {
     testInsertingAccordion(hook.editor(), {
-      initialContent: createAccordion({ summary: 'title', body: '<p>body</p>' }),
+      initialContent: AccordionUtils.createAccordion({ summary: 'title', body: '<p>body</p>' }),
       initialCursor: [[ 0, 0, 0 ], 'title'.length ],
-      assertContent: createAccordion({ summary: 'title', body: '<p>body</p>' }),
+      assertContent: AccordionUtils.createAccordion({ summary: 'title', body: '<p>body</p>' }),
       assertCursor: [[ 0, 0, 0 ], 'title'.length ],
     });
   });
@@ -130,14 +126,14 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     editor.setContent('<p>tiny</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 'tiny'.length);
     editor.execCommand('InsertAccordion');
-    TinyAssertions.assertContent(editor, createAccordion({ summary: 'tiny' }));
+    TinyAssertions.assertContent(editor, AccordionUtils.createAccordion({ summary: 'tiny' }));
     assert.equal(editor.selection.getNode().nodeName, 'SUMMARY');
     TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
   });
 
   it('TINY-9731: Remove an accordion element under the cursor', () => {
     const editor = hook.editor();
-    editor.setContent(`${createAccordion()}<p>tiny</p>`);
+    editor.setContent(`${AccordionUtils.createAccordion()}<p>tiny</p>`);
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 'tiny'.length);
     editor.execCommand('RemoveAccordion');
     TinyAssertions.assertContent(editor, '<p>tiny</p>');
@@ -146,7 +142,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
 
   it('TINY-9731: Toggle an accordion element under the cursor', () => {
     const editor = hook.editor();
-    editor.setContent(`${createAccordion({ open: true })}<p>tiny</p>`);
+    editor.setContent(`${AccordionUtils.createAccordion({ open: true })}<p>tiny</p>`);
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
     editor.execCommand('ToggleAccordion');
     TinyAssertions.assertContentPresence(editor, { 'details:not([open="open"])': 1 });
@@ -158,7 +154,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
 
   it('TINY-9731: Toggle an accordion element under the cursor with an argument', () => {
     const editor = hook.editor();
-    editor.setContent(`${createAccordion({ open: true })}<p>tiny</p>`);
+    editor.setContent(`${AccordionUtils.createAccordion({ open: true })}<p>tiny</p>`);
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
     editor.execCommand('ToggleAccordion', false, false);
     TinyAssertions.assertContentPresence(editor, { 'details:not([open="open"])': 1 });
@@ -173,7 +169,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
 
   it('TINY-9731: Toggle all accordion elements', () => {
     const editor = hook.editor();
-    editor.setContent([ createAccordion({ open: true }), createAccordion({ open: true }) ].join(''));
+    editor.setContent([ AccordionUtils.createAccordion({ open: true }), AccordionUtils.createAccordion({ open: true }) ].join(''));
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
     editor.execCommand('ToggleAllAccordions');
     TinyAssertions.assertContentPresence(editor, { 'details:not([open="open"])': 2 });
@@ -185,7 +181,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
 
   it('TINY-9731: Toggle all accordion elements with an argument', () => {
     const editor = hook.editor();
-    editor.setContent([ createAccordion({ open: true }), createAccordion({ open: true }) ].join(''));
+    editor.setContent([ AccordionUtils.createAccordion({ open: true }), AccordionUtils.createAccordion({ open: true }) ].join(''));
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
     editor.execCommand('ToggleAllAccordions', false, false);
     TinyAssertions.assertContentPresence(editor, { 'details:not([open="open"])': 2 });
@@ -200,7 +196,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
 
   it('TINY-9731: Emit the "ToggledAccordion" event', () => {
     const editor = hook.editor();
-    editor.setContent(createAccordion({ summary: 'tiny' }));
+    editor.setContent(AccordionUtils.createAccordion({ summary: 'tiny' }));
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 'tiny'.length);
     testEvent(editor, 'ToggledAccordion', 'ToggleAccordion', (event: ToggledAccordionEvent) => {
       assert.equal(event.element.nodeName, 'DETAILS');
@@ -214,7 +210,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
 
   it('TINY-9731: Emit the "ToggledAllAccordions" event', () => {
     const editor = hook.editor();
-    editor.setContent([ createAccordion({ open: true }), createAccordion({ open: false }) ].join(''));
+    editor.setContent([ AccordionUtils.createAccordion({ open: true }), AccordionUtils.createAccordion({ open: false }) ].join(''));
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 'tiny'.length);
     testEvent(editor, 'ToggledAllAccordions', 'ToggleAllAccordions', (event: ToggledAllAccordionsEvent) => {
       assert.equal(event.elements.length, 2);
@@ -240,7 +236,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
 
   it('TINY-9731: Toggle summary with ENTER keypress', () => {
     const editor = hook.editor();
-    editor.setContent(createAccordion({ summary: 'tiny' }));
+    editor.setContent(AccordionUtils.createAccordion({ summary: 'tiny' }));
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 'tiny'.length);
     TinyContentActions.keystroke(editor, Keys.enter());
     TinyAssertions.assertContentPresence(editor, { 'details:not([open="open"])': 1 });
@@ -250,7 +246,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
 
   it('TINY-9731: Leave accordion body with ENTER keypress within an empty paragraph', () => {
     const editor = hook.editor();
-    editor.setContent(createAccordion({ body: '<p>tiny</p>' }));
+    editor.setContent(AccordionUtils.createAccordion({ body: '<p>tiny</p>' }));
     TinySelections.setCursor(editor, [ 0, 1, 0 ], 'tiny'.length);
     TinyContentActions.keystroke(editor, Keys.enter());
     TinyAssertions.assertContentPresence(editor, { 'details > p': 2 });
@@ -262,7 +258,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
 
   it('TINY-9731: Do not remove the only empty paragraph when leaving accordion body with ENTER keypress', () => {
     const editor = hook.editor();
-    editor.setContent(createAccordion({ body: '<p></p>' }));
+    editor.setContent(AccordionUtils.createAccordion({ body: '<p></p>' }));
     TinySelections.setCursor(editor, [ 0, 1 ], 0);
     TinyContentActions.keystroke(editor, Keys.enter());
     TinyAssertions.assertContentPresence(editor, { 'details > p': 1 });
@@ -284,7 +280,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
 
   it('TINY-9731: Prevent BACKSPACE from removing accordion body if a cursor is after the accordion', () => {
     const editor = hook.editor();
-    editor.setContent(createAccordion({ body: '<p><br/></p>' }) + '<p><br/></p>');
+    editor.setContent(AccordionUtils.createAccordion({ body: '<p><br/></p>' }) + '<p><br/></p>');
     TinySelections.setCursor(editor, [ 1, 0 ], 0);
     TinyContentActions.keystroke(editor, Keys.backspace());
     TinyAssertions.assertContentPresence(editor, { 'details > p': 1 });
@@ -293,7 +289,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
 
   it('TINY-9884: Prevent BACKSPACE from removing accordion body if a cursor is in the accordion body', () => {
     const editor = hook.editor();
-    editor.setContent(createAccordion({ body: '<p><br/></p>' }));
+    editor.setContent(AccordionUtils.createAccordion({ body: '<p><br/></p>' }));
     TinySelections.setCursor(editor, [ 0, 1 ], 0);
     TinyContentActions.keystroke(editor, Keys.backspace());
     TinyAssertions.assertContentPresence(editor, { 'details > p': 1 });
@@ -302,7 +298,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
 
   it('TINY-9884: Prevent BACKSPACE from removing summary', () => {
     const editor = hook.editor();
-    editor.setContent(createAccordion({ summary: '' }));
+    editor.setContent(AccordionUtils.createAccordion({ summary: '' }));
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     TinyContentActions.keystroke(editor, Keys.backspace());
     TinyAssertions.assertContentPresence(editor, { 'details > summary': 1 });
@@ -311,7 +307,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
 
   it('TINY-9884: Prevent BACKSPACE from removing summary when summary and details content are selected', () => {
     const editor = hook.editor();
-    editor.setContent(createAccordion({ summary: 'summary', body: '<p>body</p>' }));
+    editor.setContent(AccordionUtils.createAccordion({ summary: 'summary', body: '<p>body</p>' }));
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 'sum'.length, [ 0, 1, 0 ], 'bo'.length);
     TinyContentActions.keystroke(editor, Keys.backspace());
     TinyAssertions.assertContentPresence(editor, { 'details > summary': 1, 'details > p': 1 });
