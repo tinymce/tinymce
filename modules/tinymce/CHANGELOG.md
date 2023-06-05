@@ -80,7 +80,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The sticky toolbar did not render correctly when transitioning from the custom editor view to the main view. #TINY-9814
 - Saving the Table Properties dialog after changing properties unrelated to cells would overwrite cell properties set by the Cell Properties dialog. #TINY-9837
 - Fixed the constrained bounds calculation for dismissal of the toolbar when using `toolbar_location: 'bottom'`. #TINY-9718
-- The floating toolbar did not occupy the entire available space when the page used a CSS flexible box layout (aka a Flexbox layout). #TINY-9847
 - Pressing the Backspace or Delete key when the insertion point was within a `details` element resulted in broken markup. #TINY-9884
 - Making the selection into a list did not work if the selection included a block element with a `contenteditable="false"` attribute. #TINY-9823
 - Inserting elements in the middle of the summary caused two summaries to appear within `details` elements. #TINY-9885
