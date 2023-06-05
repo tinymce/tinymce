@@ -29,6 +29,43 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
   const pDoBackspace = () => pDoBackspaceDelete('Backspace');
   const pDoDelete = () => pDoBackspaceDelete('Delete');
 
+  context('Backspace should not remove accordion elements', () => {
+    it('TINY-9731: Prevent BACKSPACE from removing accordion body if a cursor is after the accordion', async () => {
+      const editor = hook.editor();
+      editor.setContent(AccordionUtils.createAccordion({ body: '<p><br/></p>' }) + '<p><br/></p>');
+      TinySelections.setCursor(editor, [ 1, 0 ], 0);
+      await pDoBackspace();
+      TinyAssertions.assertContentPresence(editor, { 'details > p': 1 });
+      TinyAssertions.assertCursor(editor, [ 0, 1 ], 0);
+    });
+
+    it('TINY-9884: Prevent BACKSPACE from removing accordion body if a cursor is in the accordion body', async () => {
+      const editor = hook.editor();
+      editor.setContent(AccordionUtils.createAccordion({ body: '<p><br/></p>' }));
+      TinySelections.setCursor(editor, [ 0, 1 ], 0);
+      await pDoBackspace();
+      TinyAssertions.assertContentPresence(editor, { 'details > p': 1 });
+      TinyAssertions.assertCursor(editor, [ 0, 1 ], 0);
+    });
+
+    it('TINY-9884: Prevent BACKSPACE from removing summary', async () => {
+      const editor = hook.editor();
+      editor.setContent(AccordionUtils.createAccordion({ summary: '' }));
+      TinySelections.setCursor(editor, [ 0, 0 ], 0);
+      await pDoBackspace();
+      TinyAssertions.assertContentPresence(editor, { 'details > summary': 1 });
+      TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
+    });
+
+    it('TINY-9884: Prevent BACKSPACE from removing summary when summary and details content are selected', async () => {
+      const editor = hook.editor();
+      editor.setContent(AccordionUtils.createAccordion({ summary: 'summary', body: '<p>body</p>' }));
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 'sum'.length, [ 0, 1, 0 ], 'bo'.length);
+      await pDoBackspace();
+      TinyAssertions.assertContentPresence(editor, { 'details > summary': 1, 'details > p': 1 });
+    });
+  });
+
   context('Deleting content in summary or body', () => {
     const createAccordionAndSelectAll = (editor: Editor, location: ContentLocation) => {
       editor.setContent(AccordionUtils.createAccordion({ summary: 'summary', body: '<p>body</p>' }));
