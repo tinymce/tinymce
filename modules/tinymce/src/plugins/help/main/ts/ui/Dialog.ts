@@ -79,7 +79,7 @@ const init = (editor: Editor, customTabs: CustomTabSpecs, pluginUrl: string) => 
     editor.windowManager.open(
       {
         title: 'Help',
-        size: 'normal',
+        size: 'medium',
         body,
         buttons: [
           {
