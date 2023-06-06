@@ -30,6 +30,13 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
   const pDoBackspace = () => pDoBackspaceDelete('Backspace');
   const pDoDelete = () => pDoBackspaceDelete('Delete');
 
+  const getAccordion = (): string =>
+    `${AccordionUtils.createAccordion({ summary: 'summary', body: '<p>body</p>' })}`;
+  const assertAccordion = (editor: Editor) =>
+    TinyAssertions.assertContent(editor, getAccordion());
+  const assertAccordionStructure = (editor: Editor) =>
+    TinyAssertions.assertContentPresence(editor, { 'details > summary': 1, 'details > p': 1 });
+
   context('Backspace should not remove accordion elements', () => {
     it('TINY-9731: Prevent BACKSPACE from removing accordion body if a cursor is after the accordion', async () => {
       const editor = hook.editor();
@@ -96,14 +103,17 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
   });
 
   context('Backspace/delete in element immediately after accordion', () => {
+    const getAccordionWithParagraphAfter = (content: string): string =>
+      `${getAccordion()}<p>${content}</p>`;
+
     const createAccordionWithParagraphAfter = (editor: Editor, content: string) =>
-      editor.setContent(`${AccordionUtils.createAccordion({ summary: 'summary', body: '<p>body</p>' })}<p>${content}</p>`);
+      editor.setContent(getAccordionWithParagraphAfter(content));
     const createAccordionWithSingleCharacterParagraphAfter = (editor: Editor) => createAccordionWithParagraphAfter(editor, 'a');
     const createAccordionWithThreeCharacterParagraphAfter = (editor: Editor) => createAccordionWithParagraphAfter(editor, 'abc');
     const createAccordionWithEmptyParagraphAfter = (editor: Editor) => createAccordionWithParagraphAfter(editor, '');
 
     const assertAccordionWithParagraphAfter = (editor: Editor, content: string) =>
-      TinyAssertions.assertContent(editor, `${AccordionUtils.createAccordion({ summary: 'summary', body: '<p>body</p>' })}<p>${content}</p>`);
+      TinyAssertions.assertContent(editor, getAccordionWithParagraphAfter(content));
     const assertAccordionWithSingleCharacterParagraphAfter = (editor: Editor) => assertAccordionWithParagraphAfter(editor, 'a');
     const assertAccordionWithEmptyParagraphAfter = (editor: Editor) => assertAccordionWithParagraphAfter(editor, '');
 
@@ -208,6 +218,43 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
       assertAccordionWithParagraphAfterStructure(editor);
       assertAccordionWithEmptyParagraphAfter(editor);
       TinyAssertions.assertCursor(editor, [ 1 ], 0);
+    });
+
+    context('Backspace/delete in element immediately before accordion', () => {
+      const getAccordionWithParagraphBefore = (content: string): string =>
+        `<p>${content}</p>${getAccordion()}`;
+
+      const createAccordionWithParagraphBefore = (editor: Editor, content: string) =>
+        editor.setContent(getAccordionWithParagraphBefore(content));
+      const createAccordionWithEmptyParagraphBefore = (editor: Editor) => createAccordionWithParagraphBefore(editor, '');
+      const createAccordionWithSingleCharacterParagraphBefore = (editor: Editor) => createAccordionWithParagraphBefore(editor, 'a');
+
+      const assertAccordionWithParagraphBefore = (editor: Editor, content: string) =>
+        TinyAssertions.assertContent(editor, getAccordionWithParagraphBefore(content));
+      const assertAccordionWithSingleCharacterParagraphBefore = (editor: Editor) => assertAccordionWithParagraphBefore(editor, 'a');
+
+      const assertAccordionWithParagraphBeforeStructure = (editor: Editor) =>
+        TinyAssertions.assertContentPresence(editor, { 'details > summary': 1, 'details > p': 1, 'p': 2 });
+
+      it('TINY-9950: Nothing happens after pressing DELETE in non-empty element immediately before accordion if caret at the end of element', async () => {
+        const editor = hook.editor();
+        createAccordionWithSingleCharacterParagraphBefore(editor);
+        TinySelections.setCursor(editor, [ 0, 0 ], 'a'.length);
+        await pDoDelete();
+        assertAccordionWithParagraphBeforeStructure(editor);
+        assertAccordionWithSingleCharacterParagraphBefore(editor);
+        TinyAssertions.assertCursor(editor, [ 0, 0 ], 'a'.length);
+      });
+
+      it('TINY-9950: Empty paragraph is deleted and caret moves to start of summary after pressing DELETE in empty element immediately before accordion', async () => {
+        const editor = hook.editor();
+        createAccordionWithEmptyParagraphBefore(editor);
+        TinySelections.setCursor(editor, [ 0, 0 ], 0);
+        await pDoDelete();
+        assertAccordionStructure(editor);
+        assertAccordion(editor);
+        TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
+      });
     });
   });
 });

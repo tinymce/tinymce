@@ -49,7 +49,8 @@ const preventDeletingSummary = (editor: Editor): void => {
   editor.on('keydown', (e) => {
     if (e.keyCode === VK.BACKSPACE || e.keyCode === VK.DELETE) {
       const node = editor.selection.getNode();
-      const prevNode = new DomTreeWalker(node, editor.getBody()).prev2(true);
+      const body = editor.getBody();
+      const prevNode = new DomTreeWalker(node, body).prev2(true);
       const startElement = editor.selection.getStart();
       const endElement = editor.selection.getEnd();
       const isCaretAtStart = isCaretInTheBeginning(editor, node);
@@ -59,10 +60,12 @@ const preventDeletingSummary = (editor: Editor): void => {
 
       if (
         !isCollapsed && startElement.nodeName === 'SUMMARY' && startElement !== endElement && !Type.isNull(editor.dom.getParent(endElement, 'details'))
-        || isCollapsed &&
-          ((isBackspaceAndCaretAtStart || isDeleteAndCaretAtEnd) && node.nodeName === 'SUMMARY'
+        || isCollapsed && (
+          (isBackspaceAndCaretAtStart || isDeleteAndCaretAtEnd) && node.nodeName === 'SUMMARY'
           || isBackspaceAndCaretAtStart && prevNode?.nodeName === 'SUMMARY'
-          || isDeleteAndCaretAtEnd && node === editor.dom.getParent(node, 'details')?.lastChild)
+          || isDeleteAndCaretAtEnd && node === editor.dom.getParent(node, 'details')?.lastChild
+          || isDeleteAndCaretAtEnd && new DomTreeWalker(node, body).next(true)?.nodeName === 'DETAILS' && !editor.dom.isEmpty(node)
+        )
       ) {
         e.preventDefault();
       } else if (isCollapsed && node.nodeName !== 'SUMMARY' && prevNode?.nodeName === 'DETAILS' && (isBackspaceAndCaretAtStart || e.keyCode === VK.DELETE && isCaretAtStart && editor.dom.isEmpty(node))) {
