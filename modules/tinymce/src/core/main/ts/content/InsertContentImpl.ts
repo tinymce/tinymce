@@ -1,5 +1,5 @@
 import { Arr, Optional, Type } from '@ephox/katamari';
-import { Remove, SugarElement } from '@ephox/sugar';
+import { Replication, Class, Remove, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
@@ -226,6 +226,19 @@ const findMarkerNode = (scope: AstNode): Optional<AstNode> => {
   return Optional.none();
 };
 
+const preventSplittingSummary = (editor: Editor): void => {
+  Arr.each(Arr.from(editor.getBody().querySelectorAll('details')), (accordion) => {
+    const summaries = Arr.filter(Arr.from(accordion.children), (node) => node.nodeName === 'SUMMARY');
+    if (summaries.length > 1) {
+      Arr.each(summaries.slice(1), (summary) => {
+        const element = SugarElement.fromDom(summary);
+        Class.remove(element, 'mce-accordion-summary');
+        Replication.mutate(element, 'p');
+      });
+    }
+  });
+};
+
 export const insertHtmlAtCaret = (editor: Editor, value: string, details: InsertContentDetails): string => {
   const selection = editor.selection;
   const dom = editor.dom;
@@ -357,6 +370,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
   moveSelectionToMarker(editor, dom.get('mce_marker'));
   unmarkFragmentElements(editor.getBody());
   trimBrsFromTableCell(dom, selection.getStart());
+  preventSplittingSummary(editor);
   TransparentElements.updateCaret(editor.schema, editor.getBody(), selection.getStart());
 
   return value;
