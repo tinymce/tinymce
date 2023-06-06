@@ -190,16 +190,6 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
       TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 'body'.length);
     });
 
-    it('TINY-9945: Caret should move to end of details in accordion after pressing DELETE in empty element immediately after accordion', async () => {
-      const editor = hook.editor();
-      createAccordionWithEmptyParagraphAfter(editor);
-      TinySelections.setCursor(editor, [ 1, 0 ], 0);
-      await pDoDelete();
-      assertAccordionWithParagraphAfterStructure(editor);
-      assertAccordionWithEmptyParagraphAfter(editor);
-      TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 'body'.length);
-    });
-
     it('TINY-9950: Selected text should be removed as expected after pressing BACKSPACE in non-empty element immediately after accordion if making a selection from start', async () => {
       const editor = hook.editor();
       createAccordionWithThreeCharacterParagraphAfter(editor);
@@ -214,6 +204,26 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
       const editor = hook.editor();
       createAccordionWithThreeCharacterParagraphAfter(editor);
       TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 'abc'.length);
+      await pDoDelete();
+      assertAccordionWithParagraphAfterStructure(editor);
+      assertAccordionWithEmptyParagraphAfter(editor);
+      TinyAssertions.assertCursor(editor, [ 1 ], 0);
+    });
+
+    it('TINY-9950: Should forward delete element after pressing DELETE in empty element immediately after accordion if the element is not the last element of the editor', async () => {
+      const editor = hook.editor();
+      editor.setContent(`${getAccordionWithParagraphAfter('')}<p>xyz</p>`);
+      TinySelections.setCursor(editor, [ 1, 0 ], 0);
+      await pDoDelete();
+      assertAccordionWithParagraphAfterStructure(editor);
+      assertAccordionWithParagraphAfter(editor, 'xyz');
+      TinyAssertions.assertCursor(editor, [ 1, 0 ], 0);
+    });
+
+    it('TINY-9950: Should do nothing after pressing DELETE in empty element immediately after accordion if the element is the last element of the editor', async () => {
+      const editor = hook.editor();
+      createAccordionWithEmptyParagraphAfter(editor);
+      TinySelections.setCursor(editor, [ 1, 0 ], 0);
       await pDoDelete();
       assertAccordionWithParagraphAfterStructure(editor);
       assertAccordionWithEmptyParagraphAfter(editor);
