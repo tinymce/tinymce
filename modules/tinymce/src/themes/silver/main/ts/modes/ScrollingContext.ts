@@ -14,7 +14,7 @@ export interface ScrollingContext {
 // TINY-9385: Investigate exactly what makes an element possibly
 // scrollable. This approach does not seem exhaustive. What about:
 // overflow-x, overflow-y etc.
-const nonScrollingOverflows = [ 'visible', 'hidden' ];
+const nonScrollingOverflows = [ 'visible', 'hidden', 'clip' ];
 
 export const isScroller = (elem: SugarElement<Node> | any): boolean => {
   if (SugarNode.isHTMLElement(elem)) {

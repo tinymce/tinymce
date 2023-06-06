@@ -25,6 +25,16 @@ describe('headless.modes.ScrollingContextTest', () => {
       assert.isFalse(ScrollingContext.isScroller(div), 'Should not be a scroller');
     });
 
+    it('TINY-9226: overflow: hidden - not a scroller', () => {
+      const div = SugarElement.fromHtml('<div style="overflow: hidden;">A</div>');
+      assert.isFalse(ScrollingContext.isScroller(div), 'Should be a scroller');
+    });
+
+    it('TINY-9226: overflow: clip - not a scroller', () => {
+      const div = SugarElement.fromHtml('<div style="overflow: clip;">A</div>');
+      assert.isFalse(ScrollingContext.isScroller(div), 'Should be a scroller');
+    });
+
     it('TINY-9226: overflow: auto - a scroller', () => {
       const div = SugarElement.fromHtml('<div style="overflow: auto;">A</div>');
       assert.isTrue(ScrollingContext.isScroller(div), 'Should be a scroller');
