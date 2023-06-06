@@ -242,10 +242,31 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
 
     const assertAccordionWithParagraphBefore = (editor: Editor, content: string) =>
       TinyAssertions.assertContent(editor, getAccordionWithParagraphBefore(content));
+    const assertAccordionWithEmptyParagraphBefore = (editor: Editor) => assertAccordionWithParagraphBefore(editor, '');
     const assertAccordionWithSingleCharacterParagraphBefore = (editor: Editor) => assertAccordionWithParagraphBefore(editor, 'a');
 
     const assertAccordionWithParagraphBeforeStructure = (editor: Editor) =>
       TinyAssertions.assertContentPresence(editor, { 'details > summary': 1, 'details > p': 1, 'p': 2 });
+
+    it('TINY-9950: Element is deleted after pressing BACKSPACE in empty element immediately before accordion and element is not the first element of the editor', async () => {
+      const editor = hook.editor();
+      editor.setContent(`<p>xyz</p>${getAccordionWithParagraphBefore('')}`);
+      TinySelections.setCursor(editor, [ 1, 0 ], 0);
+      await pDoBackspace();
+      assertAccordionWithParagraphBeforeStructure(editor);
+      assertAccordionWithParagraphBefore(editor, 'xyz');
+      TinyAssertions.assertCursor(editor, [ 0, 0 ], 'xyz'.length);
+    });
+
+    it('TINY-9950: Nothing happens after pressing BACKSPACE in empty element immediately before accordion and element is the first element of the editor', async () => {
+      const editor = hook.editor();
+      createAccordionWithEmptyParagraphBefore(editor);
+      TinySelections.setCursor(editor, [ 0, 0 ], 0);
+      await pDoBackspace();
+      assertAccordionWithParagraphBeforeStructure(editor);
+      assertAccordionWithEmptyParagraphBefore(editor);
+      TinyAssertions.assertCursor(editor, [ 0 ], 0);
+    });
 
     it('TINY-9950: Nothing happens after pressing DELETE in non-empty element immediately before accordion if caret at the end of element', async () => {
       const editor = hook.editor();
