@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Exposed `dataTransfer` property of drag and drop events for elements with a `contenteditable="false"` attribute. #TINY-9601
 - Screen readers now announce instructions for resizing the editor using arrow keys, when the resize handle is focused. #TINY-9793
 - Dialog `tabpanel` tab labels are now allowed to word wrap for better readability with long labels #TINY-9947
+- Improved isScroller function to include elements with overflow-x or overflow-y set to scroll or auto as scrollable. #TINY-9385
 
 ### Changed
 - The `caption`, `address` and `dt` elements no longer incorrectly allow non-inline child elements when the editor schema is set to _HTML 4_. #TINY-9768
