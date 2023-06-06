@@ -56,6 +56,7 @@ const preventDeletingSummary = (editor: Editor): void => {
       const isBackspaceAndCaretAtStart = e.keyCode === VK.BACKSPACE && isCaretInTheBeginning(editor, node);
       const isDeleteAndCaretAtEnd = e.keyCode === VK.DELETE && isCaretInTheEnding(editor, node);
       const isCollapsed = editor.selection.isCollapsed();
+      const isEmpty = editor.dom.isEmpty(node);
 
       if (
         !isCollapsed && startElement.nodeName === 'SUMMARY' && startElement !== endElement && !Type.isNull(editor.dom.getParent(endElement, 'details'))
@@ -63,12 +64,15 @@ const preventDeletingSummary = (editor: Editor): void => {
           (isBackspaceAndCaretAtStart || isDeleteAndCaretAtEnd) && node.nodeName === 'SUMMARY'
           || isBackspaceAndCaretAtStart && prevNode?.nodeName === 'SUMMARY'
           || isDeleteAndCaretAtEnd && node === editor.dom.getParent(node, 'details')?.lastChild
-          || isDeleteAndCaretAtEnd && new DomTreeWalker(node, body).next(true)?.nodeName === 'DETAILS' && !editor.dom.isEmpty(node)
+          || isDeleteAndCaretAtEnd && new DomTreeWalker(node, body).next(true)?.nodeName === 'DETAILS' && !isEmpty
         )
       ) {
         e.preventDefault();
-      } else if (isCollapsed && node.nodeName !== 'SUMMARY' && prevNode?.nodeName === 'DETAILS' && isBackspaceAndCaretAtStart) {
+      } else if (isCollapsed && isBackspaceAndCaretAtStart && node.nodeName !== 'SUMMARY' && prevNode?.nodeName === 'DETAILS') {
         e.preventDefault();
+        if (isEmpty) {
+          editor.dom.remove(node, false);
+        }
         CaretFinder.lastPositionIn(prevNode).each((position) => {
           const node = position.getNode();
           if (!Type.isUndefined(node)) {

@@ -170,17 +170,17 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
       TinyAssertions.assertCursor(editor, [ 1, 0 ], 'a'.length);
     });
 
-    it('TINY-9945: Caret should move to end of details in accordion after pressing BACKSPACE in empty element immediately after accordion', async () => {
+    it('TINY-9945: Caret should move to end of accordion details and delete element after pressing BACKSPACE in empty element immediately after accordion', async () => {
       const editor = hook.editor();
       createAccordionWithEmptyParagraphAfter(editor);
       TinySelections.setCursor(editor, [ 1, 0 ], 0);
       await pDoBackspace();
-      assertAccordionWithParagraphAfterStructure(editor);
-      assertAccordionWithEmptyParagraphAfter(editor);
+      assertAccordionStructure(editor);
+      assertAccordion(editor);
       TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 'body'.length);
     });
 
-    it('TINY-9945: Caret should move to end of details in accordion after pressing BACKSPACE in non-empty element immediately after accordion if caret is at start', async () => {
+    it('TINY-9945: Caret should move to end of accordion details after pressing BACKSPACE in non-empty element immediately after accordion if caret is at start', async () => {
       const editor = hook.editor();
       createAccordionWithSingleCharacterParagraphAfter(editor);
       TinySelections.setCursor(editor, [ 1, 0 ], 0);
@@ -257,7 +257,7 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
       TinyAssertions.assertCursor(editor, [ 0, 0 ], 'a'.length);
     });
 
-    it('TINY-9950: Empty paragraph is deleted and caret moves to start of summary after pressing DELETE in empty element immediately before accordion', async () => {
+    it('TINY-9950: Empty element is deleted and caret moves to start of summary after pressing DELETE in empty element immediately before accordion', async () => {
       const editor = hook.editor();
       createAccordionWithEmptyParagraphBefore(editor);
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
