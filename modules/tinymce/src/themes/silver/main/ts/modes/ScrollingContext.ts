@@ -19,7 +19,13 @@ const nonScrollingOverflows = [ 'visible', 'hidden' ];
 export const isScroller = (elem: SugarElement<Node> | any): boolean => {
   if (SugarNode.isHTMLElement(elem)) {
     const overflow = Css.get(elem, 'overflow');
-    return Strings.trim(overflow).length > 0 && !Arr.contains(nonScrollingOverflows, overflow);
+    const overflowX = Css.get(elem, 'overflow-x');
+    const overflowY = Css.get(elem, 'overflow-y');
+    const hasVisibleOverflow = Strings.trim(overflow).length > 0 && !Arr.contains(nonScrollingOverflows, overflow);
+    const hasVisibleOverflowX = Strings.trim(overflowX).length > 0 && !Arr.contains(nonScrollingOverflows, overflowX);
+    const hasVisibleOverflowY = Strings.trim(overflowY).length > 0 && !Arr.contains(nonScrollingOverflows, overflowY);
+
+    return hasVisibleOverflow || hasVisibleOverflowX || hasVisibleOverflowY;
   } else {
     return false;
   }
