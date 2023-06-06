@@ -222,6 +222,7 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
       editor.setContent(getAccordionWithParagraphBefore(content));
     const createAccordionWithEmptyParagraphBefore = (editor: Editor) => createAccordionWithParagraphBefore(editor, '');
     const createAccordionWithSingleCharacterParagraphBefore = (editor: Editor) => createAccordionWithParagraphBefore(editor, 'a');
+    const createAccordionWithThreeCharacterParagraphBefore = (editor: Editor) => createAccordionWithParagraphBefore(editor, 'abc');
 
     const assertAccordionWithParagraphBefore = (editor: Editor, content: string) =>
       TinyAssertions.assertContent(editor, getAccordionWithParagraphBefore(content));
@@ -280,6 +281,24 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
       await pDoDelete();
       assertAccordionContent(editor);
       TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
+    });
+
+    it('TINY-9950: Selected text is deleted as expected after pressing BACKSPACE in non-empty element immediately before accordion when making selection from start to end', async () => {
+      const editor = hook.editor();
+      createAccordionWithThreeCharacterParagraphBefore(editor);
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 'abc'.length);
+      await pDoBackspace();
+      assertAccordionWithEmptyParagraphBefore(editor);
+      TinyAssertions.assertCursor(editor, [ 0 ], 0);
+    });
+
+    it('TINY-9950: Selected text is deleted as expected after pressing DELETE in non-empty element immediately before accordion when making selection from start to end', async () => {
+      const editor = hook.editor();
+      createAccordionWithThreeCharacterParagraphBefore(editor);
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 'abc'.length);
+      await pDoDelete();
+      assertAccordionWithEmptyParagraphBefore(editor);
+      TinyAssertions.assertCursor(editor, [ 0 ], 0);
     });
   });
 });
