@@ -62,7 +62,6 @@
 
 @dialog-table-border-color: darken(@border-color, 55%);
 @dialog-nav-focus-background-color: fade(@color-tint, 10%);
-@dialog-tab-width: 15em;
 
 // These get stacked on top of the global dialog z-index (1100)
 @z-index-dialogs-offset-wrap-background: 1;
@@ -194,8 +193,9 @@
     align-items: flex-start;
     display: flex;
     flex-direction: column;
+    flex-shrink: 0;
+    max-width: 11em;
     padding: @dialog-body-padding;
-    width: @dialog-tab-width;
 
     @media @breakpoint-sm {
       body:not(.tox-force-desktop) & {
