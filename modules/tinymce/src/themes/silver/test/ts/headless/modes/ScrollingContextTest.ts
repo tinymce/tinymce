@@ -25,12 +25,12 @@ describe('headless.modes.ScrollingContextTest', () => {
       assert.isFalse(ScrollingContext.isScroller(div), 'Should not be a scroller');
     });
 
-    it('TINY-9226: overflow: hidden - not a scroller', () => {
+    it('TINY-9385: overflow: hidden - not a scroller', () => {
       const div = SugarElement.fromHtml('<div style="overflow: hidden;">A</div>');
       assert.isFalse(ScrollingContext.isScroller(div), 'Should be a scroller');
     });
 
-    it('TINY-9226: overflow: clip - not a scroller', () => {
+    it('TINY-9385: overflow: clip - not a scroller', () => {
       const div = SugarElement.fromHtml('<div style="overflow: clip;">A</div>');
       assert.isFalse(ScrollingContext.isScroller(div), 'Should be a scroller');
     });
@@ -45,22 +45,22 @@ describe('headless.modes.ScrollingContextTest', () => {
       assert.isTrue(ScrollingContext.isScroller(div), 'Should be a scroller');
     });
 
-    it('TINY-9226: overflow-x: scroll - a scroller', () => {
+    it('TINY-9385: overflow-x: scroll - a scroller', () => {
       const div = SugarElement.fromHtml('<div style="overflow-x: scroll;">A</div>');
       assert.isTrue(ScrollingContext.isScroller(div), 'Should be a scroller');
     });
 
-    it('TINY-9226: overflow-y: scroll - a scroller', () => {
+    it('TINY-9385: overflow-y: scroll - a scroller', () => {
       const div = SugarElement.fromHtml('<div style="overflow-y: scroll;">A</div>');
       assert.isTrue(ScrollingContext.isScroller(div), 'Should be a scroller');
     });
 
-    it('TINY-9226: overflow-x: auto - a scroller', () => {
+    it('TINY-9385: overflow-x: auto - a scroller', () => {
       const div = SugarElement.fromHtml('<div style="overflow-x: auto;">A</div>');
       assert.isTrue(ScrollingContext.isScroller(div), 'Should be a scroller');
     });
 
-    it('TINY-9226: overflow-y: auto - a scroller', () => {
+    it('TINY-9385: overflow-y: auto - a scroller', () => {
       const div = SugarElement.fromHtml('<div style="overflow-y: auto;">A</div>');
       assert.isTrue(ScrollingContext.isScroller(div), 'Should be a scroller');
     });
