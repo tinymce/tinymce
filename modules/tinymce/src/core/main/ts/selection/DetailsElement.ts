@@ -68,14 +68,17 @@ const preventDeletingSummary = (editor: Editor): void => {
       const nextNode = new DomTreeWalker(node, body).next(true);
       const startElement = editor.selection.getStart();
       const endElement = editor.selection.getEnd();
-      const isBackspaceAndCaretAtStart = e.keyCode === VK.BACKSPACE && isCaretInTheBeginning(editor, node);
+      const isBackspace = e.keyCode === VK.BACKSPACE;
+      const isBackspaceAndCaretAtStart = isBackspace && isCaretInTheBeginning(editor, node);
       const isDelete = e.keyCode === VK.DELETE;
       const isDeleteAndCaretAtEnd = isDelete && isCaretInTheEnding(editor, node);
       const isCollapsed = editor.selection.isCollapsed();
       const isEmpty = editor.dom.isEmpty(node);
       const isNotInSummaryAndIsPrevNodeDetails = node.nodeName !== 'SUMMARY' && prevNode?.nodeName === 'DETAILS';
+      const hasPrevNode = Type.isNonNullable(prevNode);
       const hasNextNode = Type.isNonNullable(nextNode);
-      const isDeleteInEmptyNodeAfterDetails = isDelete && isEmpty && isNotInSummaryAndIsPrevNodeDetails;
+      const isDeleteInEmptyNodeAfterAccordion = isDelete && isEmpty && isNotInSummaryAndIsPrevNodeDetails;
+      const isBackspaceInEmptyNodeBeforeAccordion = isBackspace && isEmpty && node.nodeName !== 'SUMMARY' && node.nodeName !== 'DETAILS' && nextNode?.nodeName === 'DETAILS';
 
       if (
         !isCollapsed && startElement.nodeName === 'SUMMARY' && startElement !== endElement && !Type.isNull(editor.dom.getParent(endElement, 'details'))
@@ -84,7 +87,8 @@ const preventDeletingSummary = (editor: Editor): void => {
           || isBackspaceAndCaretAtStart && prevNode?.nodeName === 'SUMMARY'
           || isDeleteAndCaretAtEnd && node === editor.dom.getParent(node, 'details')?.lastChild
           || isDeleteAndCaretAtEnd && nextNode?.nodeName === 'DETAILS' && !isEmpty
-          || isFirefox && isDeleteInEmptyNodeAfterDetails && !hasNextNode
+          || isFirefox && isDeleteInEmptyNodeAfterAccordion && !hasNextNode
+          || isFirefox && isBackspaceInEmptyNodeBeforeAccordion && !hasPrevNode
         )
       ) {
         e.preventDefault();
@@ -94,7 +98,7 @@ const preventDeletingSummary = (editor: Editor): void => {
           removeNode(editor, node);
         }
         CaretFinder.lastPositionIn(prevNode).each(setCaretToPosition(editor));
-      } else if (isFirefox && isCollapsed && isDeleteInEmptyNodeAfterDetails && hasNextNode) {
+      } else if (isFirefox && isCollapsed && isDeleteInEmptyNodeAfterAccordion && hasNextNode) {
         e.preventDefault();
         removeNode(editor, node);
         CaretFinder.firstPositionIn(nextNode).each(setCaretToPosition(editor));
