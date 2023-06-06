@@ -48,16 +48,19 @@ const isCaretInTheEnding = (editor: Editor, element: HTMLElement): boolean =>
 
 const removeNode = (editor: Editor, node: Node) => editor.dom.remove(node, false);
 
-// TINY-9950: Firefox has some situations where its native behavior does not match what we expect, so
-// we have to perform Firefox-specific overrides.
-const isFirefox = PlatformDetection.detect().browser.isFirefox();
-
 const setCaretToPosition = (editor: Editor) => (position: CaretPosition): void => {
   const node = position.getNode();
   if (!Type.isUndefined(node)) {
     editor.selection.setCursorLocation(node, position.offset());
   }
 };
+
+const isSummary = (node: Node | null | undefined): boolean => node?.nodeName === 'SUMMARY';
+const isDetails = (node: Node | null | undefined): boolean => node?.nodeName === 'DETAILS';
+
+// TINY-9950: Firefox has some situations where its native behavior does not match what we expect, so
+// we have to perform Firefox-specific overrides.
+const isFirefox = PlatformDetection.detect().browser.isFirefox();
 
 const preventDeletingSummary = (editor: Editor): void => {
   editor.on('keydown', (e) => {
@@ -74,19 +77,19 @@ const preventDeletingSummary = (editor: Editor): void => {
       const isDeleteAndCaretAtEnd = isDelete && isCaretInTheEnding(editor, node);
       const isCollapsed = editor.selection.isCollapsed();
       const isEmpty = editor.dom.isEmpty(node);
-      const isNotInSummaryAndIsPrevNodeDetails = node.nodeName !== 'SUMMARY' && prevNode?.nodeName === 'DETAILS';
       const hasPrevNode = Type.isNonNullable(prevNode);
       const hasNextNode = Type.isNonNullable(nextNode);
+      const isNotInSummaryAndIsPrevNodeDetails = hasPrevNode && !isSummary(node) && isDetails(prevNode);
       const isDeleteInEmptyNodeAfterAccordion = isDelete && isEmpty && isNotInSummaryAndIsPrevNodeDetails;
-      const isBackspaceInEmptyNodeBeforeAccordion = isBackspace && isEmpty && node.nodeName !== 'SUMMARY' && node.nodeName !== 'DETAILS' && nextNode?.nodeName === 'DETAILS';
+      const isBackspaceInEmptyNodeBeforeAccordion = isBackspace && isEmpty && !isSummary(node) && !isDetails(node) && isDetails(nextNode);
 
       if (
-        !isCollapsed && startElement.nodeName === 'SUMMARY' && startElement !== endElement && !Type.isNull(editor.dom.getParent(endElement, 'details'))
+        !isCollapsed && isSummary(startElement) && startElement !== endElement && !Type.isNull(editor.dom.getParent(endElement, 'details'))
         || isCollapsed && (
-          (isBackspaceAndCaretAtStart || isDeleteAndCaretAtEnd) && node.nodeName === 'SUMMARY'
-          || isBackspaceAndCaretAtStart && prevNode?.nodeName === 'SUMMARY'
+          (isBackspaceAndCaretAtStart || isDeleteAndCaretAtEnd) && isSummary(node)
+          || isBackspaceAndCaretAtStart && isSummary(prevNode)
           || isDeleteAndCaretAtEnd && node === editor.dom.getParent(node, 'details')?.lastChild
-          || isDeleteAndCaretAtEnd && nextNode?.nodeName === 'DETAILS' && !isEmpty
+          || isDeleteAndCaretAtEnd && isDetails(nextNode) && !isEmpty
           || isFirefox && isDeleteInEmptyNodeAfterAccordion && !hasNextNode
           || isFirefox && isBackspaceInEmptyNodeBeforeAccordion && !hasPrevNode
         )
