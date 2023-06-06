@@ -246,6 +246,24 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
       TinyAssertions.assertCursor(editor, [ 0 ], 0);
     });
 
+    it('TINY-9950: Nothing happens after pressing BACKSPACE in non-empty element immediately before accordion if caret is at start', async () => {
+      const editor = hook.editor();
+      createAccordionWithSingleCharacterParagraphBefore(editor);
+      TinySelections.setCursor(editor, [ 0, 0 ], 0);
+      await pDoBackspace();
+      assertAccordionWithSingleCharacterParagraphBefore(editor);
+      TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
+    });
+
+    it('TINY-9950: Content is deleted as expected after pressing BACKSPACE in non-empty element immediately before accordion if caret is at end', async () => {
+      const editor = hook.editor();
+      createAccordionWithSingleCharacterParagraphBefore(editor);
+      TinySelections.setCursor(editor, [ 0, 0 ], 'a'.length);
+      await pDoBackspace();
+      assertAccordionWithEmptyParagraphBefore(editor);
+      TinyAssertions.assertCursor(editor, [ 0 ], 0);
+    });
+
     it('TINY-9950: Nothing happens after pressing DELETE in non-empty element immediately before accordion if caret at the end of element', async () => {
       const editor = hook.editor();
       createAccordionWithSingleCharacterParagraphBefore(editor);
