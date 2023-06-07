@@ -108,6 +108,15 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
         TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 'summar'.length);
       });
 
+      it('TINY-9951: Deleting content in summary by pressing BACKSPACE should work as expected if caret at the end of summary content and content is a single character', async () => {
+        const editor = hook.editor();
+        createAccordion(editor, { summary: 's', body: '<p>body</p>' });
+        TinySelections.setCursor(editor, [ 0, 0, 0 ], 's'.length);
+        await pDoBackspace();
+        assertAccordionContent(editor, { summary: '', body: '<p>body</p>' });
+        TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
+      });
+
       it('TINY-9951: Deleting content in summary by pressing BACKSPACE should work as expected if caret in middle of summary content', async () => {
         const editor = hook.editor();
         createAccordion(editor);
@@ -133,6 +142,15 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
         await pDoDelete();
         assertAccordionContent(editor, { summary: 'ummary', body: '<p>body</p>' });
         TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
+      });
+
+      it('TINY-9951: Deleting content in summary by pressing DELETE should work as expected if caret at the beginning of summary content and content is a single character', async () => {
+        const editor = hook.editor();
+        createAccordion(editor, { summary: 's', body: '<p>body</p>' });
+        TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+        await pDoDelete();
+        assertAccordionContent(editor, { summary: '', body: '<p>body</p>' });
+        TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
       });
 
       it('TINY-9951: Deleting content in summary by pressing DELETE should work as expected if caret in middle of summary content', async () => {
