@@ -1,4 +1,4 @@
-import { Arr, Type } from '@ephox/katamari';
+import { Arr, Singleton, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { SugarElement } from '@ephox/sugar';
 
@@ -67,8 +67,11 @@ const platform = PlatformDetection.detect();
 const browser = platform.browser;
 const isFirefox = browser.isFirefox();
 const isSafari = browser.isSafari();
+const isMacOS = platform.os.isMacOS();
 
 const preventDeletingSummary = (editor: Editor): void => {
+  const summaryAfterShortcutRangedDeletion = Singleton.value<HTMLElement>();
+
   editor.on('keydown', (e) => {
     if (e.keyCode === VK.BACKSPACE || e.keyCode === VK.DELETE) {
       const node = editor.selection.getNode();
@@ -116,39 +119,55 @@ const preventDeletingSummary = (editor: Editor): void => {
       } else if (isSafari && isSummary(node)) {
         // TINY-9951: Safari has a bug where upon pressing Backspace/Delete when the caret is directly within the summary,
         // all content is removed and the caret is prevented from being placed back into the summary.
-        e.preventDefault();
-
-        if (!isCollapsed && rng.startOffset === 0 && rng.endOffset === node.textContent?.length || DeleteUtils.willDeleteLastPositionInElement(isDelete, CaretPosition.fromRangeStart(rng), node)) {
-          PaddingBr.fillWithPaddingBr(SugarElement.fromDom(node));
+        if (isMacOS && (e.altKey || e.metaKey) || e.ctrlKey) {
+          // Allow ranged deletion by keyboard shortcuts natively, pad summary and relocate caret on keyup if needed
+          summaryAfterShortcutRangedDeletion.set(node);
         } else {
-          // Wrap all summary children in a temporary container to execute Backspace/Delete there, then unwrap
-          const selection = editor.selection.getSel();
-          let { anchorNode, anchorOffset, focusNode, focusOffset } = selection ?? {};
-          const applySelection = () => {
-            if (Type.isNonNullable(anchorNode) && Type.isNonNullable(anchorOffset) && Type.isNonNullable(focusNode) && Type.isNonNullable(focusOffset)) {
-              selection?.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
-            }
-          };
-          const updateSelection = () => {
-            anchorNode = selection?.anchorNode;
-            anchorOffset = selection?.anchorOffset;
-            focusNode = selection?.focusNode;
-            focusOffset = selection?.focusOffset;
-          };
+          e.preventDefault();
+          if (!isCollapsed && rng.startOffset === 0 && rng.endOffset === node.textContent?.length || DeleteUtils.willDeleteLastPositionInElement(isDelete, CaretPosition.fromRangeStart(rng), node)) {
+            PaddingBr.fillWithPaddingBr(SugarElement.fromDom(node));
+          } else {
+            // Wrap all summary children in a temporary container to execute Backspace/Delete there, then unwrap
+            const selection = editor.selection.getSel();
+            let { anchorNode, anchorOffset, focusNode, focusOffset } = selection ?? {};
+            const applySelection = () => {
+              if (Type.isNonNullable(anchorNode) && Type.isNonNullable(anchorOffset) && Type.isNonNullable(focusNode) && Type.isNonNullable(focusOffset)) {
+                selection?.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
+              }
+            };
+            const updateSelection = () => {
+              anchorNode = selection?.anchorNode;
+              anchorOffset = selection?.anchorOffset;
+              focusNode = selection?.focusNode;
+              focusOffset = selection?.focusOffset;
+            };
 
-          const container = editor.dom.create('span');
-          Arr.each(node.childNodes, (child) => container.appendChild(child));
-          node.appendChild(container);
-          applySelection();
-          editor.execCommand(isBackspace ? 'Delete' : 'ForwardDelete');
-          updateSelection();
-          Arr.each(container.childNodes, (child) => node.appendChild(child));
-          editor.dom.remove(container);
-          applySelection();
+            const container = editor.dom.create('span');
+            Arr.each(node.childNodes, (child) => container.appendChild(child));
+            node.appendChild(container);
+            applySelection();
+            editor.execCommand(isBackspace ? 'Delete' : 'ForwardDelete');
+            updateSelection();
+            Arr.each(container.childNodes, (child) => node.appendChild(child));
+            editor.dom.remove(container);
+            applySelection();
+          }
         }
       }
     }
   });
+
+  if (isSafari) {
+    editor.on('keyup', (_) => {
+      summaryAfterShortcutRangedDeletion.on((summary) => {
+        if (!isSummary(editor.selection.getNode())) {
+          PaddingBr.fillWithPaddingBr(SugarElement.fromDom(summary));
+          editor.selection.setCursorLocation(summary, 0);
+        }
+      });
+      summaryAfterShortcutRangedDeletion.clear();
+    });
+  }
 };
 
 const setup = (editor: Editor): void => {
