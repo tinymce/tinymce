@@ -1,5 +1,6 @@
 import { Arr, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+import { SugarElement } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
@@ -7,6 +8,8 @@ import * as Options from '../api/Options';
 import VK from '../api/util/VK';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
+import * as DeleteUtils from '../delete/DeleteUtils';
+import * as PaddingBr from '../dom/PaddingBr';
 
 const preventSummaryToggle = (editor: Editor): void => {
   editor.on('click', (e) => {
@@ -60,7 +63,9 @@ const isDetails = (node: Node | null | undefined): boolean => node?.nodeName ===
 
 // TINY-9950: Firefox has some situations where its native behavior does not match what we expect, so
 // we have to perform Firefox-specific overrides.
-const isFirefox = PlatformDetection.detect().browser.isFirefox();
+const browser = PlatformDetection.detect().browser;
+const isFirefox = browser.isFirefox();
+const isSafari = browser.isSafari();
 
 const preventDeletingSummary = (editor: Editor): void => {
   editor.on('keydown', (e) => {
@@ -108,6 +113,27 @@ const preventDeletingSummary = (editor: Editor): void => {
       }
     }
   });
+
+  if (isSafari) {
+    // TINY-9951: Safari has a bug where upon pressing Backspace/Delete when the caret is directly within the summary,
+    // all content is removed and the caret is prevented from being placed back into the summary.
+    editor.on('keydown', (e) => {
+      const node = editor.selection.getNode();
+      const isDelete = e.keyCode === VK.DELETE;
+      if ((e.keyCode === VK.BACKSPACE || isDelete) && isSummary(node)) {
+        if (isDelete && isCaretInTheBeginning(editor, node)) {
+          e.preventDefault();
+        } else {
+          const fromPos = CaretPosition.fromRangeStart(editor.selection.getRng());
+          if (e.altKey || e.metaKey || DeleteUtils.willDeleteLastPositionInElement(isDelete, fromPos, node)) {
+            PaddingBr.fillWithPaddingBr(SugarElement.fromDom(node));
+          } else {
+            editor.selection.getBookmark();
+          }
+        }
+      }
+    });
+  }
 };
 
 const setup = (editor: Editor): void => {
