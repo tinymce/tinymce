@@ -43,11 +43,11 @@ const filterDetails = (editor: Editor): void => {
   });
 };
 
-const isCaretInTheBeginning = (editor: Editor, element: HTMLElement): boolean =>
-  CaretFinder.firstPositionIn(element).exists((pos) => pos.isEqual(CaretPosition.fromRangeStart(editor.selection.getRng())));
+const isCaretInTheBeginning = (rng: Range, element: HTMLElement): boolean =>
+  CaretFinder.firstPositionIn(element).exists((pos) => pos.isEqual(CaretPosition.fromRangeStart(rng)));
 
-const isCaretInTheEnding = (editor: Editor, element: HTMLElement): boolean =>
-  CaretFinder.lastPositionIn(element).exists((pos) => pos.isEqual(CaretPosition.fromRangeStart(editor.selection.getRng())));
+const isCaretInTheEnding = (rng: Range, element: HTMLElement): boolean =>
+  CaretFinder.lastPositionIn(element).exists((pos) => pos.isEqual(CaretPosition.fromRangeStart(rng)));
 
 const removeNode = (editor: Editor, node: Node) => editor.dom.remove(node, false);
 
@@ -76,10 +76,11 @@ const preventDeletingSummary = (editor: Editor): void => {
       const nextNode = new DomTreeWalker(node, body).next(true);
       const startElement = editor.selection.getStart();
       const endElement = editor.selection.getEnd();
+      const rng = editor.selection.getRng();
       const isBackspace = e.keyCode === VK.BACKSPACE;
-      const isBackspaceAndCaretAtStart = isBackspace && isCaretInTheBeginning(editor, node);
+      const isBackspaceAndCaretAtStart = isBackspace && isCaretInTheBeginning(rng, node);
       const isDelete = e.keyCode === VK.DELETE;
-      const isDeleteAndCaretAtEnd = isDelete && isCaretInTheEnding(editor, node);
+      const isDeleteAndCaretAtEnd = isDelete && isCaretInTheEnding(rng, node);
       const isCollapsed = editor.selection.isCollapsed();
       const isEmpty = editor.dom.isEmpty(node);
       const hasPrevNode = Type.isNonNullable(prevNode);
@@ -91,7 +92,7 @@ const preventDeletingSummary = (editor: Editor): void => {
       if (
         !isCollapsed && isSummary(startElement) && startElement !== endElement && !Type.isNull(editor.dom.getParent(endElement, 'details'))
         || isCollapsed && (
-          (isBackspaceAndCaretAtStart || isDeleteAndCaretAtEnd) && isSummary(node)
+          (isBackspaceAndCaretAtStart || isDeleteAndCaretAtEnd || isEmpty) && isSummary(node)
           || isBackspaceAndCaretAtStart && isSummary(prevNode)
           || isDeleteAndCaretAtEnd && node === editor.dom.getParent(node, 'details')?.lastChild
           || isDeleteAndCaretAtEnd && isDetails(nextNode) && !isEmpty
@@ -121,7 +122,7 @@ const preventDeletingSummary = (editor: Editor): void => {
       const node = editor.selection.getNode();
       const isDelete = e.keyCode === VK.DELETE;
       if ((e.keyCode === VK.BACKSPACE || isDelete) && isSummary(node)) {
-        if (isDelete && isCaretInTheBeginning(editor, node)) {
+        if (isDelete && isCaretInTheBeginning(editor.selection.getRng(), node)) {
           e.preventDefault();
         } else {
           const fromPos = CaretPosition.fromRangeStart(editor.selection.getRng());
