@@ -64,7 +64,8 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
       TinyAssertions.assertCursor(editor, [ 0, 1 ], 0);
     });
 
-    const testPreventBodyDeletion = async (editor: Editor, deletionKey: DeletionKey) => {
+    const testPreventBodyDeletion = (deletionKey: DeletionKey) => async () => {
+      const editor = hook.editor();
       createAccordion(editor, { body: '<p><br></p>' });
       TinySelections.setCursor(editor, [ 0, 1 ], 0);
       await pDoBackspaceDelete(deletionKey);
@@ -72,10 +73,11 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
       TinyAssertions.assertCursor(editor, [ 0, 1 ], 0);
     };
 
-    it('TINY-9884: Prevent BACKSPACE from removing accordion body if a cursor is in the accordion body', () => testPreventBodyDeletion(hook.editor(), 'Backspace'));
-    it('TINY-9951: Prevent DELETE from removing accordion body if a cursor is in the accordion body', () => testPreventBodyDeletion(hook.editor(), 'Delete'));
+    it('TINY-9884: Prevent BACKSPACE from removing accordion body if a cursor is in the accordion body', testPreventBodyDeletion('Backspace'));
+    it('TINY-9951: Prevent DELETE from removing accordion body if a cursor is in the accordion body', testPreventBodyDeletion('Delete'));
 
-    const testPreventSummaryDeletion = async (editor: Editor, deletionKey: DeletionKey) => {
+    const testPreventSummaryDeletion = (deletionKey: DeletionKey) => async () => {
+      const editor = hook.editor();
       createAccordion(editor, { summary: '' });
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
       await pDoBackspaceDelete(deletionKey);
@@ -83,18 +85,19 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
       TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
     };
 
-    it('TINY-9884: Prevent BACKSPACE from removing summary', () => testPreventSummaryDeletion(hook.editor(), 'Backspace'));
-    it('TINY-9951: Prevent DELETE from removing summary', () => testPreventSummaryDeletion(hook.editor(), 'Delete'));
+    it('TINY-9884: Prevent BACKSPACE from removing summary', testPreventSummaryDeletion('Backspace'));
+    it('TINY-9951: Prevent DELETE from removing summary', testPreventSummaryDeletion('Delete'));
 
-    const testPreventSummaryBodyDeletion = async (editor: Editor, deletionKey: DeletionKey) => {
+    const testPreventSummaryBodyDeletion = (deletionKey: DeletionKey) => async () => {
+      const editor = hook.editor();
       createAccordion(editor);
       TinySelections.setSelection(editor, [ 0, 0, 0 ], 'sum'.length, [ 0, 1, 0 ], 'bo'.length);
       await pDoBackspaceDelete(deletionKey);
       TinyAssertions.assertContentPresence(editor, { 'details > summary': 1, 'details > p': 1 });
     };
 
-    it('TINY-9884: Prevent BACKSPACE from removing summary when summary and details content are selected', () => testPreventSummaryBodyDeletion(hook.editor(), 'Backspace'));
-    it('TINY-9951: Prevent DELETE from removing summary when summary and details content are selected', () => testPreventSummaryBodyDeletion(hook.editor(), 'Delete'));
+    it('TINY-9884: Prevent BACKSPACE from removing summary when summary and details content are selected', testPreventSummaryBodyDeletion('Backspace'));
+    it('TINY-9951: Prevent DELETE from removing summary when summary and details content are selected', testPreventSummaryBodyDeletion('Delete'));
   });
 
   context('Deleting content in summary or body', () => {
@@ -236,7 +239,8 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
         }
       };
 
-      const testDeleteAllContentInAccordion = async (editor: Editor, contentLocation: ContentLocation, deletionKey: DeletionKey) => {
+      const testDeleteAllContentInAccordion = (contentLocation: ContentLocation, deletionKey: DeletionKey) => async () => {
+        const editor = hook.editor();
         createAccordionAndSelectAll(editor, contentLocation);
         await pDoBackspaceDelete(deletionKey);
         const isLocationSummary = contentLocation === 'summary';
@@ -244,12 +248,13 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
         TinyAssertions.assertCursor(editor, isLocationSummary ? [ 0, 0 ] : [ 0, 1 ], 0);
       };
 
-      it('TINY-9945: Can select all content in summary and delete it using Backspace', () => testDeleteAllContentInAccordion(hook.editor(), 'summary', 'Backspace'));
-      it('TINY-9945: Can select all content in summary and delete it using Delete', () => testDeleteAllContentInAccordion(hook.editor(), 'summary', 'Delete'));
-      it('TINY-9945: Can select all content in body and delete it using Backspace', () => testDeleteAllContentInAccordion(hook.editor(), 'body', 'Backspace'));
-      it('TINY-9945: Can select all content in body and delete it using Delete', () => testDeleteAllContentInAccordion(hook.editor(), 'body', 'Delete'));
+      it('TINY-9945: Can select all content in summary and delete it using Backspace', testDeleteAllContentInAccordion('summary', 'Backspace'));
+      it('TINY-9945: Can select all content in summary and delete it using Delete', testDeleteAllContentInAccordion('summary', 'Delete'));
+      it('TINY-9945: Can select all content in body and delete it using Backspace', testDeleteAllContentInAccordion('body', 'Backspace'));
+      it('TINY-9945: Can select all content in body and delete it using Delete', testDeleteAllContentInAccordion('body', 'Delete'));
 
-      const testDeleteSelectionFromStartInSummary = async (editor: Editor, deletionKey: DeletionKey) => {
+      const testDeleteSelectionFromStartInSummary = (deletionKey: DeletionKey) => async () => {
+        const editor = hook.editor();
         createAccordion(editor);
         TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 'sum'.length);
         await pDoBackspaceDelete(deletionKey);
@@ -257,10 +262,11 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
         TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
       };
 
-      it('TINY-9951: Can select content from start in summary and delete it using Backspace', () => testDeleteSelectionFromStartInSummary(hook.editor(), 'Backspace'));
-      it('TINY-9951: Can select content from start in summary and delete it using Delete', () => testDeleteSelectionFromStartInSummary(hook.editor(), 'Delete'));
+      it('TINY-9951: Can select content from start in summary and delete it using Backspace', testDeleteSelectionFromStartInSummary('Backspace'));
+      it('TINY-9951: Can select content from start in summary and delete it using Delete', testDeleteSelectionFromStartInSummary('Delete'));
 
-      const testDeleteSelectionInMiddleInSummary = async (editor: Editor, deletionKey: DeletionKey) => {
+      const testDeleteSelectionInMiddleInSummary = (deletionKey: DeletionKey) => async () => {
+        const editor = hook.editor();
         createAccordion(editor);
         TinySelections.setSelection(editor, [ 0, 0, 0 ], 'su'.length, [ 0, 0, 0 ], 'summ'.length);
         await pDoBackspaceDelete(deletionKey);
@@ -268,10 +274,11 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
         TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 'su'.length);
       };
 
-      it('TINY-9951: Can select content in middle in summary and delete it using Backspace', () => testDeleteSelectionInMiddleInSummary(hook.editor(), 'Backspace'));
-      it('TINY-9951: Can select content in middle in summary and delete it using Delete', () => testDeleteSelectionInMiddleInSummary(hook.editor(), 'Delete'));
+      it('TINY-9951: Can select content in middle in summary and delete it using Backspace', testDeleteSelectionInMiddleInSummary('Backspace'));
+      it('TINY-9951: Can select content in middle in summary and delete it using Delete', testDeleteSelectionInMiddleInSummary('Delete'));
 
-      const testDeleteSelectionFromEndInSummary = async (editor: Editor, deletionKey: DeletionKey) => {
+      const testDeleteSelectionFromEndInSummary = (deletionKey: DeletionKey) => async () => {
+        const editor = hook.editor();
         createAccordion(editor);
         TinySelections.setSelection(editor, [ 0, 0, 0 ], 'sum'.length, [ 0, 0, 0 ], 'summary'.length);
         await pDoBackspaceDelete(deletionKey);
@@ -279,10 +286,11 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
         TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 'sum'.length);
       };
 
-      it('TINY-9951: Can select content from end in summary and delete it using Backspace', () => testDeleteSelectionFromEndInSummary(hook.editor(), 'Backspace'));
-      it('TINY-9951: Can select content from end in summary and delete it using Delete', () => testDeleteSelectionFromEndInSummary(hook.editor(), 'Delete'));
+      it('TINY-9951: Can select content from end in summary and delete it using Backspace', testDeleteSelectionFromEndInSummary('Backspace'));
+      it('TINY-9951: Can select content from end in summary and delete it using Delete', testDeleteSelectionFromEndInSummary('Delete'));
 
-      const testDeleteSelectionFromStartInBody = async (editor: Editor, deletionKey: DeletionKey) => {
+      const testDeleteSelectionFromStartInBody = (deletionKey: DeletionKey) => async () => {
+        const editor = hook.editor();
         createAccordion(editor);
         TinySelections.setSelection(editor, [ 0, 1, 0 ], 0, [ 0, 1, 0 ], 'bo'.length);
         await pDoBackspaceDelete(deletionKey);
@@ -290,10 +298,11 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
         TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 0);
       };
 
-      it('TINY-9951: Can select content from start in body and delete it using Backspace', () => testDeleteSelectionFromStartInBody(hook.editor(), 'Backspace'));
-      it('TINY-9951: Can select content from start in body and delete it using Delete', () => testDeleteSelectionFromStartInBody(hook.editor(), 'Delete'));
+      it('TINY-9951: Can select content from start in body and delete it using Backspace', testDeleteSelectionFromStartInBody('Backspace'));
+      it('TINY-9951: Can select content from start in body and delete it using Delete', testDeleteSelectionFromStartInBody('Delete'));
 
-      const testDeleteSelectionInMiddleInBody = async (editor: Editor, deletionKey: DeletionKey) => {
+      const testDeleteSelectionInMiddleInBody = (deletionKey: DeletionKey) => async () => {
+        const editor = hook.editor();
         createAccordion(editor);
         TinySelections.setSelection(editor, [ 0, 1, 0 ], 'b'.length, [ 0, 1, 0 ], 'bod'.length);
         await pDoBackspaceDelete(deletionKey);
@@ -301,10 +310,11 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
         TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 'b'.length);
       };
 
-      it('TINY-9951: Can select content in middle in body and delete it using Backspace', () => testDeleteSelectionInMiddleInBody(hook.editor(), 'Backspace'));
-      it('TINY-9951: Can select content in middle in body and delete it using Delete', () => testDeleteSelectionInMiddleInBody(hook.editor(), 'Delete'));
+      it('TINY-9951: Can select content in middle in body and delete it using Backspace', testDeleteSelectionInMiddleInBody('Backspace'));
+      it('TINY-9951: Can select content in middle in body and delete it using Delete', testDeleteSelectionInMiddleInBody('Delete'));
 
-      const testDeleteSelectionFromEndInBody = async (editor: Editor, deletionKey: DeletionKey) => {
+      const testDeleteSelectionFromEndInBody = (deletionKey: DeletionKey) => async () => {
+        const editor = hook.editor();
         createAccordion(editor);
         TinySelections.setSelection(editor, [ 0, 1, 0 ], 'bo'.length, [ 0, 1, 0 ], 'body'.length);
         await pDoBackspaceDelete(deletionKey);
@@ -312,14 +322,15 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
         TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 'bo'.length);
       };
 
-      it('TINY-9951: Can select content from end in body and delete it using Backspace', () => testDeleteSelectionFromEndInBody(hook.editor(), 'Backspace'));
-      it('TINY-9951: Can select content from end in body and delete it using Delete', () => testDeleteSelectionFromEndInBody(hook.editor(), 'Delete'));
+      it('TINY-9951: Can select content from end in body and delete it using Backspace', testDeleteSelectionFromEndInBody('Backspace'));
+      it('TINY-9951: Can select content from end in body and delete it using Delete', testDeleteSelectionFromEndInBody('Delete'));
     });
 
     context('Using ranged deletion keyboard shortcuts', () => {
       const pDoCtrlBackspaceDelete = (deletionKey: DeletionKey) => pDoBackspaceDelete(deletionKey, isMacOS ? { altKey: true } : { ctrlKey: true });
 
-      const testCtrlDeletion = async (editor: Editor, deletionKey: DeletionKey, location: ContentLocation) => {
+      const testCtrlDeletion = (deletionKey: DeletionKey, location: ContentLocation) => async () => {
+        const editor = hook.editor();
         const isBackspace = deletionKey === 'Backspace';
         const isSummary = location === 'summary';
         const initialContent = 'word1 word2';
@@ -352,13 +363,13 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
         TinyAssertions.assertCursor(editor, expectedPath, expectedOffset);
       };
 
-      const testCtrlDeletionInSummary = (editor: Editor, deletionKey: DeletionKey) => testCtrlDeletion(editor, deletionKey, 'summary');
-      it('TINY-9951: Can delete summary using Ctrl+Backspace', () => testCtrlDeletionInSummary(hook.editor(), 'Backspace'));
-      it('TINY-9951: Can delete summary using Ctrl+Delete', () => testCtrlDeletionInSummary(hook.editor(), 'Delete'));
+      const testCtrlDeletionInSummary = (deletionKey: DeletionKey) => testCtrlDeletion(deletionKey, 'summary');
+      it('TINY-9951: Can delete summary using Ctrl+Backspace', testCtrlDeletionInSummary('Backspace'));
+      it('TINY-9951: Can delete summary using Ctrl+Delete', testCtrlDeletionInSummary('Delete'));
 
-      const testCtrlDeletionInBody = (editor: Editor, deletionKey: DeletionKey) => testCtrlDeletion(editor, deletionKey, 'body');
-      it('TINY-9951: Can delete body using Ctrl+Backspace', () => testCtrlDeletionInBody(hook.editor(), 'Backspace'));
-      it('TINY-9951: Can delete body using Ctrl+Delete', () => testCtrlDeletionInBody(hook.editor(), 'Delete'));
+      const testCtrlDeletionInBody = (deletionKey: DeletionKey) => testCtrlDeletion(deletionKey, 'body');
+      it('TINY-9951: Can delete body using Ctrl+Backspace', testCtrlDeletionInBody('Backspace'));
+      it('TINY-9951: Can delete body using Ctrl+Delete', testCtrlDeletionInBody('Delete'));
     });
   });
 
