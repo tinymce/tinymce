@@ -103,6 +103,15 @@ const create = (cyclicField: FieldProcessor): KeyingType.KeyingType<TabbingConfi
     return go(component, simulatedEvent, tabbingConfig, navigate);
   };
 
+  const isFirstChild = (node: Node): boolean => node.parentNode?.firstChild === node;
+
+  const goFromPseudoTabstop: KeyRuleHandler<TabbingConfig, Stateless> = (component, simulatedEvent, tabbingConfig, state) =>
+    findCurrent(component, tabbingConfig).filter((elem) => !tabbingConfig.useTabstopAt(elem))
+      .fold(
+        () => Optional.none(),
+        (elem) => (isFirstChild(elem.dom) ? goBackwards : goForwards)(component, simulatedEvent, tabbingConfig, state)
+      );
+
   const execute: KeyRuleHandler<TabbingConfig, Stateless> = (component, simulatedEvent, tabbingConfig) =>
     tabbingConfig.onEnter.bind((f) => f(component, simulatedEvent));
 
@@ -116,7 +125,9 @@ const create = (cyclicField: FieldProcessor): KeyingType.KeyingType<TabbingConfi
   ]);
 
   const getKeyupRules = Fun.constant([
-    KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE), exit)
+    KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE), exit),
+    KeyRules.rule(KeyMatch.inSet(Keys.TAB), goFromPseudoTabstop),
+
   ]);
 
   return KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Optional.some(focusIn));
