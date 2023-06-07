@@ -18,9 +18,8 @@ interface AccordionSpec {
 }
 
 interface BackspaceDeleteModifier {
-  ctrl?: boolean;
-  alt?: boolean;
-  meta?: boolean;
+  ctrlKey?: boolean;
+  altKey?: boolean;
 }
 
 describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () => {
@@ -316,7 +315,7 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
     });
 
     context('Using ranged deletion keyboard shortcuts', () => {
-      const pDoCtrlBackspaceDelete = (deletionKey: DeletionKey) => pDoBackspaceDelete(deletionKey, isMacOS ? { alt: true } : { ctrl: true });
+      const pDoCtrlBackspaceDelete = (deletionKey: DeletionKey) => pDoBackspaceDelete(deletionKey, isMacOS ? { altKey: true } : { ctrlKey: true });
 
       const testCtrlDeletionInSummary = async (editor: Editor, deletionKey: DeletionKey) => {
         createAccordion(editor);
