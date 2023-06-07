@@ -52,6 +52,8 @@ const isCaretInTheEnding = (rng: Range, element: HTMLElement): boolean =>
 
 const removeNode = (editor: Editor, node: Node) => editor.dom.remove(node, false);
 
+const emptyNodeContents = (node: Node) => PaddingBr.fillWithPaddingBr(SugarElement.fromDom(node));
+
 const setCaretToPosition = (editor: Editor) => (position: CaretPosition): void => {
   const node = position.getNode();
   if (!Type.isUndefined(node)) {
@@ -65,8 +67,6 @@ const isDetails = (node: Node | null | undefined): boolean => node?.nodeName ===
 const isEntireNodeSelected = (rng: Range, node: Node): boolean =>
   rng.startOffset === 0 && rng.endOffset === node.textContent?.length;
 
-// TINY-9950: Firefox has some situations where its native behavior does not match what we expect, so
-// we have to perform Firefox-specific overrides.
 const platform = PlatformDetection.detect();
 const browser = platform.browser;
 const isFirefox = browser.isFirefox();
@@ -125,7 +125,7 @@ const preventDeletingSummary = (editor: Editor): void => {
         e.preventDefault();
 
         if (!isCollapsed && isEntireNodeSelected(rng, node) || DeleteUtils.willDeleteLastPositionInElement(isDelete, CaretPosition.fromRangeStart(rng), node)) {
-          PaddingBr.fillWithPaddingBr(SugarElement.fromDom(node));
+          emptyNodeContents(node);
         } else {
           // Wrap all summary children in a temporary container to execute Backspace/Delete there, then unwrap
           const sel = selection.getSel();
@@ -153,12 +153,12 @@ const preventDeletingSummary = (editor: Editor): void => {
           appendAllChildNodes(node, container);
           node.appendChild(container);
           applySelection();
-          // Allow ranged deletion by keyboard shortcuts
+          // Manually perform ranged deletion by keyboard shortcuts
           if (isCollapsed && (isMacOS && (e.altKey || isBackspace && e.metaKey) || !isMacOS && e.ctrlKey)) {
             sel?.modify('extend', isBackspace ? 'left' : 'right', e.metaKey ? 'line' : 'word');
           }
           if (!selection.isCollapsed() && isEntireNodeSelected(selection.getRng(), container)) {
-            PaddingBr.fillWithPaddingBr(SugarElement.fromDom(node));
+            emptyNodeContents(node);
           } else {
             editor.execCommand(isBackspace ? 'Delete' : 'ForwardDelete');
             updateSelection();
