@@ -1,4 +1,5 @@
 import { Arr, Type } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
@@ -45,34 +46,65 @@ const isCaretInTheBeginning = (editor: Editor, element: HTMLElement): boolean =>
 const isCaretInTheEnding = (editor: Editor, element: HTMLElement): boolean =>
   CaretFinder.lastPositionIn(element).exists((pos) => pos.isEqual(CaretPosition.fromRangeStart(editor.selection.getRng())));
 
+const removeNode = (editor: Editor, node: Node) => editor.dom.remove(node, false);
+
+const setCaretToPosition = (editor: Editor) => (position: CaretPosition): void => {
+  const node = position.getNode();
+  if (!Type.isUndefined(node)) {
+    editor.selection.setCursorLocation(node, position.offset());
+  }
+};
+
+const isSummary = (node: Node | null | undefined): boolean => node?.nodeName === 'SUMMARY';
+const isDetails = (node: Node | null | undefined): boolean => node?.nodeName === 'DETAILS';
+
+// TINY-9950: Firefox has some situations where its native behavior does not match what we expect, so
+// we have to perform Firefox-specific overrides.
+const isFirefox = PlatformDetection.detect().browser.isFirefox();
+
 const preventDeletingSummary = (editor: Editor): void => {
   editor.on('keydown', (e) => {
     if (e.keyCode === VK.BACKSPACE || e.keyCode === VK.DELETE) {
       const node = editor.selection.getNode();
-      const prevNode = new DomTreeWalker(node, editor.getBody()).prev2(true);
+      const body = editor.getBody();
+      const prevNode = new DomTreeWalker(node, body).prev2(true);
+      const nextNode = new DomTreeWalker(node, body).next(true);
       const startElement = editor.selection.getStart();
       const endElement = editor.selection.getEnd();
-      const isCaretAtStart = isCaretInTheBeginning(editor, node);
-      const isBackspaceAndCaretAtStart = e.keyCode === VK.BACKSPACE && isCaretAtStart;
-      const isDeleteAndCaretAtEnd = e.keyCode === VK.DELETE && isCaretInTheEnding(editor, node);
+      const isBackspace = e.keyCode === VK.BACKSPACE;
+      const isBackspaceAndCaretAtStart = isBackspace && isCaretInTheBeginning(editor, node);
+      const isDelete = e.keyCode === VK.DELETE;
+      const isDeleteAndCaretAtEnd = isDelete && isCaretInTheEnding(editor, node);
       const isCollapsed = editor.selection.isCollapsed();
+      const isEmpty = editor.dom.isEmpty(node);
+      const hasPrevNode = Type.isNonNullable(prevNode);
+      const hasNextNode = Type.isNonNullable(nextNode);
+      const isNotInSummaryAndIsPrevNodeDetails = hasPrevNode && !isSummary(node) && isDetails(prevNode);
+      const isDeleteInEmptyNodeAfterAccordion = isDelete && isEmpty && isNotInSummaryAndIsPrevNodeDetails;
+      const isBackspaceInEmptyNodeBeforeAccordion = isBackspace && isEmpty && !isSummary(node) && !isDetails(node) && isDetails(nextNode);
 
       if (
-        !isCollapsed && startElement.nodeName === 'SUMMARY' && startElement !== endElement && !Type.isNull(editor.dom.getParent(endElement, 'details'))
-        || isCollapsed &&
-          ((isBackspaceAndCaretAtStart || isDeleteAndCaretAtEnd) && node.nodeName === 'SUMMARY'
-          || isBackspaceAndCaretAtStart && prevNode?.nodeName === 'SUMMARY'
-          || isDeleteAndCaretAtEnd && node === editor.dom.getParent(node, 'details')?.lastChild)
+        !isCollapsed && isSummary(startElement) && startElement !== endElement && !Type.isNull(editor.dom.getParent(endElement, 'details'))
+        || isCollapsed && (
+          (isBackspaceAndCaretAtStart || isDeleteAndCaretAtEnd) && isSummary(node)
+          || isBackspaceAndCaretAtStart && isSummary(prevNode)
+          || isDeleteAndCaretAtEnd && node === editor.dom.getParent(node, 'details')?.lastChild
+          || isDeleteAndCaretAtEnd && isDetails(nextNode) && !isEmpty
+          || isFirefox && isDeleteInEmptyNodeAfterAccordion && !hasNextNode
+          || isFirefox && isBackspaceInEmptyNodeBeforeAccordion && !hasPrevNode
+        )
       ) {
         e.preventDefault();
-      } else if (node.nodeName !== 'SUMMARY' && prevNode?.nodeName === 'DETAILS' && (isBackspaceAndCaretAtStart || e.keyCode === VK.DELETE && isCaretAtStart && editor.dom.isEmpty(node))) {
+      } else if (isCollapsed && isBackspaceAndCaretAtStart && isNotInSummaryAndIsPrevNodeDetails) {
         e.preventDefault();
-        CaretFinder.lastPositionIn(prevNode).each((position) => {
-          const node = position.getNode();
-          if (!Type.isUndefined(node)) {
-            editor.selection.setCursorLocation(node, position.offset());
-          }
-        });
+        if (isEmpty) {
+          removeNode(editor, node);
+        }
+        CaretFinder.lastPositionIn(prevNode).each(setCaretToPosition(editor));
+      } else if (isFirefox && isCollapsed && isDeleteInEmptyNodeAfterAccordion && hasNextNode) {
+        e.preventDefault();
+        removeNode(editor, node);
+        CaretFinder.firstPositionIn(nextNode).each(setCaretToPosition(editor));
       }
     }
   });
