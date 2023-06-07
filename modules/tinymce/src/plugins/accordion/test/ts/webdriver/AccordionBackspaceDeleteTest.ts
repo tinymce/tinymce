@@ -317,29 +317,36 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
     context('Using ranged deletion keyboard shortcuts', () => {
       const pDoCtrlBackspaceDelete = (deletionKey: DeletionKey) => pDoBackspaceDelete(deletionKey, isMacOS ? { altKey: true } : { ctrlKey: true });
 
-      const testCtrlDeletionInSummary = async (editor: Editor, deletionKey: DeletionKey) => {
-        createAccordion(editor);
-        TinySelections.setCursor(editor, [ 0, 0, 0 ], deletionKey === 'Backspace' ? 'summary'.length : 0);
+      const testCtrlDeletion = async (editor: Editor, deletionKey: DeletionKey, location: ContentLocation) => {
+        const isBackspace = deletionKey === 'Backspace';
+        const isSummary = location === 'summary';
+        const initialContent = 'word1 word2';
+        const getSummarySpec = (content: string): AccordionSpec => isSummary ? { summary: content, body: '<p>body</p>' } : { summary: 'summary', body: `<p>${content}</p>` };
+        createAccordion(editor, getSummarySpec(initialContent));
+        TinySelections.setCursor(editor, isSummary ? [ 0, 0, 0 ] : [ 0, 1, 0 ], isBackspace ? 'word1 wo'.length : 'wo'.length);
         await pDoCtrlBackspaceDelete(deletionKey);
-        assertAccordionContent(editor, { summary: '', body: '<p>body</p>' });
+        const assertionContent = isBackspace ? 'word1 rd2' : 'wo word2';
+        assertAccordionContent(editor, getSummarySpec(assertionContent));
         // TINY-9302: Extra format caret added when using keyboard shortcut ranged deletion, except on Safari
         // due to TINY-9951 workaround
-        TinyAssertions.assertCursor(editor, isSafari ? [ 0, 0 ] : [ 0, 0, 0, 0 ], 0);
+        let expectedPath: number[];
+        let expectedOffset: number;
+        if (isSafari) {
+          expectedPath = isSummary ? [ 0, 0, 0 ] : [ 0, 1, 0 ];
+          expectedOffset = isBackspace ? 'word1 '.length : 'wo'.length;
+        } else {
+          expectedPath = isSummary ? [ 0, 0, 1, 0 ] : [ 0, 1, 1, 0 ];
+          // 0 offset as selection positioned within format caret
+          expectedOffset = 0;
+        }
+        TinyAssertions.assertCursor(editor, expectedPath, expectedOffset);
       };
 
+      const testCtrlDeletionInSummary = (editor: Editor, deletionKey: DeletionKey) => testCtrlDeletion(editor, deletionKey, 'summary');
       it('TINY-9951: Can delete summary using Ctrl+Backspace', () => testCtrlDeletionInSummary(hook.editor(), 'Backspace'));
       it('TINY-9951: Can delete summary using Ctrl+Delete', () => testCtrlDeletionInSummary(hook.editor(), 'Delete'));
 
-      const testCtrlDeletionInBody = async (editor: Editor, deletionKey: DeletionKey) => {
-        createAccordion(editor);
-        TinySelections.setCursor(editor, [ 0, 1, 0 ], deletionKey === 'Backspace' ? 'body'.length : 0);
-        await pDoCtrlBackspaceDelete(deletionKey);
-        assertAccordionContent(editor, { summary: 'summary', body: '<p></p>' });
-        // TINY-9302: Extra format caret added when using keyboard shortcut ranged deletion, except on Safari
-        // due to TINY-9951 workaround
-        TinyAssertions.assertCursor(editor, isSafari ? [ 0, 1 ] : [ 0, 1, 0, 0 ], 0);
-      };
-
+      const testCtrlDeletionInBody = (editor: Editor, deletionKey: DeletionKey) => testCtrlDeletion(editor, deletionKey, 'body');
       it('TINY-9951: Can delete body using Ctrl+Backspace', () => testCtrlDeletionInBody(hook.editor(), 'Backspace'));
       it('TINY-9951: Can delete body using Ctrl+Delete', () => testCtrlDeletionInBody(hook.editor(), 'Delete'));
     });
