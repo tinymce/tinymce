@@ -21,11 +21,16 @@ export const isScroller = (elem: SugarElement<Node> | any): boolean => {
     const overflow = Css.get(elem, 'overflow');
     const overflowX = Css.get(elem, 'overflow-x');
     const overflowY = Css.get(elem, 'overflow-y');
-    const hasVisibleOverflow = Strings.trim(overflow).length > 0 && !Arr.contains(nonScrollingOverflows, overflow);
-    const hasVisibleOverflowX = Strings.trim(overflowX).length > 0 && !Arr.contains(nonScrollingOverflows, overflowX);
-    const hasVisibleOverflowY = Strings.trim(overflowY).length > 0 && !Arr.contains(nonScrollingOverflows, overflowY);
 
-    return hasVisibleOverflow || hasVisibleOverflowX || hasVisibleOverflowY;
+    // If overflow-x and overflow-y have different values, ignore 'overflow'
+    if (overflowX !== overflowY) {
+      return (Strings.trim(overflowX).length > 0 && !Arr.contains(nonScrollingOverflows, overflowX)) ||
+        (Strings.trim(overflowY).length > 0 && !Arr.contains(nonScrollingOverflows, overflowY));
+    }
+
+    return (Strings.trim(overflow).length > 0 && !Arr.contains(nonScrollingOverflows, overflow)) ||
+      (Strings.trim(overflowX).length > 0 && !Arr.contains(nonScrollingOverflows, overflowX)) ||
+      (Strings.trim(overflowY).length > 0 && !Arr.contains(nonScrollingOverflows, overflowY));
   } else {
     return false;
   }
