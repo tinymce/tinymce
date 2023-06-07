@@ -120,8 +120,8 @@ const preventDeletingSummary = (editor: Editor): void => {
         removeNode(editor, node);
         CaretFinder.firstPositionIn(nextNode).each(setCaretToPosition(editor));
       } else if (isSafari && isSummary(node)) {
-        // TINY-9951: Safari has a bug where upon pressing Backspace/Delete when the caret is directly within the summary,
-        // all content is removed and the caret is prevented from being placed back into the summary.
+        // TINY-9951: Safari bug, deleting within the summary causes all content to be removed and no caret position to be left
+        // https://bugs.webkit.org/show_bug.cgi?id=257745
         e.preventDefault();
 
         if (!isCollapsed && isEntireNodeSelected(rng, node) || DeleteUtils.willDeleteLastPositionInElement(isDelete, CaretPosition.fromRangeStart(rng), node)) {
