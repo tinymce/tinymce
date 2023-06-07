@@ -36,8 +36,10 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
   );
 
   const platform = PlatformDetection.detect();
+  const os = platform.os;
   const isSafari = platform.browser.isSafari();
-  const isMacOS = platform.os.isMacOS();
+  const isMacOS = os.isMacOS();
+  const isWindows = os.isWindows();
 
   const pDoBackspaceDelete = async (key: DeletionKey, modifier?: BackspaceDeleteModifier): Promise<void> => {
     await RealKeys.pSendKeysOn('iframe => body', [ Type.isUndefined(modifier) ? RealKeys.text(key) : RealKeys.combo(modifier, key) ]);
@@ -325,7 +327,15 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
         createAccordion(editor, getSummarySpec(initialContent));
         TinySelections.setCursor(editor, isSummary ? [ 0, 0, 0 ] : [ 0, 1, 0 ], isBackspace ? 'word1 wo'.length : 'wo'.length);
         await pDoCtrlBackspaceDelete(deletionKey);
-        const assertionContent = isBackspace ? 'word1 rd2' : 'wo word2';
+        let assertionContent: string;
+        if (isBackspace) {
+          assertionContent = 'word1 rd2';
+        } else if (isWindows) {
+          // Difference in native behavior for Ctrl + Delete on Windows
+          assertionContent = 'woword2';
+        } else {
+          assertionContent = 'wo word2';
+        }
         assertAccordionContent(editor, getSummarySpec(assertionContent));
         // TINY-9302: Extra format caret added when using keyboard shortcut ranged deletion, except on Safari
         // due to TINY-9951 workaround
