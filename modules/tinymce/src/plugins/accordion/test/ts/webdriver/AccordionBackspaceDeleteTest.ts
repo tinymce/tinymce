@@ -79,8 +79,7 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
       await pDoBackspaceDelete(deletionKey);
       TinyAssertions.assertContentPresence(editor, { 'details > summary': 1 });
-      // TINY-9951: Safari override results in a different cursor position due to bookmark
-      TinyAssertions.assertCursor(editor, isSafari ? [ 0, 0, 0 ] : [ 0, 0 ], 0);
+      TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
     };
 
     it('TINY-9884: Prevent BACKSPACE from removing summary', () => testPreventSummaryDeletion(hook.editor(), 'Backspace'));
@@ -324,8 +323,9 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
         TinySelections.setCursor(editor, [ 0, 0, 0 ], deletionKey === 'Backspace' ? 'summary'.length : 0);
         await pDoCtrlBackspaceDelete(deletionKey);
         assertAccordionContent(editor, { summary: '', body: '<p>body</p>' });
-        // TINY-9302: Extra format caret added when using keyboard shortcut ranged deletion
-        TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0 ], 0);
+        // TINY-9302: Extra format caret added when using keyboard shortcut ranged deletion, except on Safari
+        // due to TINY-9951 workaround
+        TinyAssertions.assertCursor(editor, isSafari ? [ 0, 0 ] : [ 0, 0, 0, 0 ], 0);
       };
 
       it('TINY-9951: Can delete summary using Ctrl+Backspace', () => testCtrlDeletionInSummary(hook.editor(), 'Backspace'));
@@ -336,8 +336,9 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
         TinySelections.setCursor(editor, [ 0, 1, 0 ], deletionKey === 'Backspace' ? 'body'.length : 0);
         await pDoCtrlBackspaceDelete(deletionKey);
         assertAccordionContent(editor, { summary: 'summary', body: '<p></p>' });
-        // TINY-9302: Extra format caret added when using keyboard shortcut ranged deletion
-        TinyAssertions.assertCursor(editor, [ 0, 1, 0, 0 ], 0);
+        // TINY-9302: Extra format caret added when using keyboard shortcut ranged deletion, except on Safari
+        // due to TINY-9951 workaround
+        TinyAssertions.assertCursor(editor, isSafari ? [ 0, 1 ] : [ 0, 1, 0, 0 ], 0);
       };
 
       it('TINY-9951: Can delete body using Ctrl+Backspace', () => testCtrlDeletionInBody(hook.editor(), 'Backspace'));
