@@ -1,9 +1,9 @@
 import { Arr, Optional, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
-import Schema from 'tinymce/core/api/html/Schema';
 import Tools from 'tinymce/core/api/util/Tools';
 
+import * as Options from '../api/Options';
 import * as NodeType from './NodeType';
 
 const listNames = [ 'OL', 'UL', 'DL' ];
@@ -57,12 +57,12 @@ const getClosestEditingHost = (editor: Editor, elm: Element): HTMLElement => {
   return parentTableCell.length > 0 ? parentTableCell[0] : editor.getBody();
 };
 
-const isListHost = (schema: Schema, node: Node): boolean =>
-  !NodeType.isListNode(node) && !NodeType.isListItemNode(node) && Arr.exists(listNames, (listName) => schema.isValidChild(node.nodeName, listName));
+const isListHost = (editor: Editor, node: Node): boolean =>
+  !NodeType.isListNode(node) && !NodeType.isListItemNode(node) && Arr.exists(listNames, (listName) => editor.schema.isValidChild(node.nodeName, listName)) && node.nodeName !== Options.getForcedRootBlock(editor).toUpperCase();
 
 const getClosestListHost = (editor: Editor, elm: Node): HTMLElement => {
   const parentBlocks = editor.dom.getParents<HTMLElement>(elm, editor.dom.isBlock);
-  const parentBlock = Arr.find(parentBlocks, (elm) => isListHost(editor.schema, elm));
+  const parentBlock = Arr.find(parentBlocks, (elm) => isListHost(editor, elm));
 
   return parentBlock.getOr(editor.getBody());
 };
