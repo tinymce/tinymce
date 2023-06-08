@@ -1,8 +1,11 @@
 import { Id, Arr } from '@ephox/katamari';
+import { DomDescent } from '@ephox/phoenix';
+import { Attribute, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Events from '../api/Events';
+import * as Identifiers from './Identifiers';
 import * as Utils from './Utils';
 
 const insertAccordion = (editor: Editor): void => {
@@ -10,23 +13,33 @@ const insertAccordion = (editor: Editor): void => {
     return;
   }
 
+  const editorBody = SugarElement.fromDom(editor.getBody());
   const uid = Id.generate('acc');
   const summaryText = editor.dom.encode(editor.selection.getRng().toString() || editor.translate('Accordion summary...'));
   const bodyText = editor.dom.encode(editor.translate('Accordion body...'));
 
+  const accordionSummaryHtml = `<summary class="${Identifiers.accordionSummaryClass}">${summaryText}</summary>`;
+  const accordionBodyHtml = `<${Identifiers.accordionBodyWrapperTag} class="${Identifiers.accordionBodyWrapperClass}"><p>${bodyText}</p></${Identifiers.accordionBodyWrapperTag}>`;
+
   editor.undoManager.transact(() => {
-    editor.insertContent(`<details data-mce-id="${uid}" class="mce-accordion" open="open"><summary class="mce-accordion-summary">${summaryText}</summary><p>${bodyText}</p></details>`);
+    editor.insertContent([
+      `<details data-mce-id="${uid}" class="${Identifiers.accordionDetailsClass}" open="open">`,
+      accordionSummaryHtml,
+      accordionBodyHtml,
+      `</details>`
+    ].join(''));
 
-    const details = editor.dom.select(`[data-mce-id="${uid}"]`)[0];
-    if (!details) {
-      return;
-    }
-    details.removeAttribute('data-mce-id');
-
-    const summary = editor.dom.select('summary', details)[0];
-    if (summary) {
-      editor.selection.setCursorLocation(summary, 1);
-    }
+    SelectorFind.descendant(editorBody, `[data-mce-id="${uid}"]`).each((detailsElm) => {
+      Attribute.remove(detailsElm, 'data-mce-id');
+      SelectorFind.descendant(detailsElm, `summary`).each((summaryElm) => {
+        // Set the cursor locaiton to be at the end of the summary text
+        const rng = editor.dom.createRng();
+        const des = DomDescent.freefallRtl(summaryElm);
+        rng.setStart(des.element.dom as Node, des.offset);
+        rng.setEnd(des.element.dom as Node, des.offset);
+        editor.selection.setRng(rng);
+      });
+    });
   });
 };
 

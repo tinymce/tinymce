@@ -6,6 +6,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 export const isSummary = (node?: Node | null): node is HTMLElement =>
   node?.nodeName === 'SUMMARY';
 
+// TODO: Do we need to check the for the accordion class here too?
 export const isDetails = (node?: Node | null): node is HTMLDetailsElement =>
   node?.nodeName === 'DETAILS';
 
