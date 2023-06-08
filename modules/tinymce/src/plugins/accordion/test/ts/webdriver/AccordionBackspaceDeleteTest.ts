@@ -23,17 +23,14 @@ interface BackspaceDeleteModifier {
 }
 
 describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () => {
-  const hook = TinyHooks.bddSetup<Editor>(
-    {
-      plugins: 'accordion',
-      indent: false,
-      entities: 'raw',
-      extended_valid_elements: 'details[class|open|data-mce-open],summary[class],div[class],p',
-      base_url: '/project/tinymce/js/tinymce',
-    },
-    [ AccordionPlugin ],
-    true
-  );
+  const settings = {
+    plugins: 'accordion',
+    indent: false,
+    entities: 'raw',
+    extended_valid_elements: 'details[class|open|data-mce-open],summary[class],div[class],p',
+    base_url: '/project/tinymce/js/tinymce'
+  };
+  const hook = TinyHooks.bddSetup<Editor>(settings, [ AccordionPlugin ], true);
 
   const platform = PlatformDetection.detect();
   const os = platform.os;
@@ -53,6 +50,53 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
     TinyAssertions.assertContent(editor, getAccordionContent(spec));
   const createAccordion = (editor: Editor, spec?: AccordionSpec) =>
     editor.setContent(getAccordionContent(spec));
+
+  context('Undo/redo backspace/delete', () => {
+    const doUndoRedo = (editor: Editor, action: 'undo' | 'redo') => action === 'undo' ? editor.undoManager.undo() : editor.undoManager.redo();
+    const doUndo = (editor: Editor) => doUndoRedo(editor, 'undo');
+    const doRedo = (editor: Editor) => doUndoRedo(editor, 'redo');
+
+    const testUndoRedo = (deletionKey: DeletionKey, location: ContentLocation) => async () => {
+      const isBackspace = deletionKey === 'Backspace';
+      const isSummary = location === 'summary';
+      const editor = hook.editor();
+      createAccordion(editor);
+      const path = isSummary ? [ 0, 0, 0 ] : [ 0, 1, 0 ];
+      const initialOffset = isSummary ? 'sum'.length : 'bo'.length;
+      TinySelections.setCursor(editor, path, initialOffset);
+      await pDoBackspaceDelete(deletionKey);
+
+      let expectedContent: string;
+      if (isBackspace) {
+        expectedContent = isSummary ? 'sumary' : '<p>bdy</p>';
+      } else {
+        expectedContent = isSummary ? 'sumary' : '<p>boy</p>';
+      }
+      const expectedAccordionSpec = isSummary ? { summary: expectedContent, body: '<p>body</p>' } : { summary: 'summary', body: expectedContent };
+      assertAccordionContent(editor, expectedAccordionSpec);
+
+      let expectedOffset: number;
+      if (isBackspace) {
+        expectedOffset = isSummary ? 'su'.length : 'b'.length;
+      } else {
+        expectedOffset = isSummary ? 'sum'.length : 'bo'.length;
+      }
+      TinyAssertions.assertCursor(editor, path, expectedOffset);
+
+      doUndo(editor);
+      assertAccordionContent(editor);
+      TinyAssertions.assertCursor(editor, path, initialOffset);
+
+      doRedo(editor);
+      assertAccordionContent(editor, expectedAccordionSpec);
+      TinyAssertions.assertCursor(editor, path, expectedOffset);
+    };
+
+    it('TINY-9951: Can undo/redo BACKSPACE in summary', testUndoRedo('Backspace', 'summary'));
+    it('TINY-9951: Can undo/redo DELETE in summary', testUndoRedo('Delete', 'summary'));
+    it('TINY-9951: Can undo/redo BACKSPACE in body', testUndoRedo('Backspace', 'body'));
+    it('TINY-9951: Can undo/redo DELETE in body', testUndoRedo('Delete', 'body'));
+  });
 
   context('Backspace should not remove accordion elements', () => {
     it('TINY-9731: Prevent BACKSPACE from removing accordion body if a cursor is after the accordion', async () => {
@@ -338,16 +382,18 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
         createAccordion(editor, getSummarySpec(initialContent));
         TinySelections.setCursor(editor, isSummary ? [ 0, 0, 0 ] : [ 0, 1, 0 ], isBackspace ? 'word1 wo'.length : 'wo'.length);
         await pDoCtrlBackspaceDelete(deletionKey);
-        let assertionContent: string;
+
+        let expectedContent: string;
         if (isBackspace) {
-          assertionContent = 'word1 rd2';
+          expectedContent = 'word1 rd2';
         } else if (isWindows) {
           // Difference in native behavior for Ctrl + Delete on Windows
-          assertionContent = 'woword2';
+          expectedContent = 'woword2';
         } else {
-          assertionContent = 'wo word2';
+          expectedContent = 'wo word2';
         }
-        assertAccordionContent(editor, getSummarySpec(assertionContent));
+        assertAccordionContent(editor, getSummarySpec(expectedContent));
+
         // TINY-9302: Extra format caret added when using keyboard shortcut ranged deletion, except on Safari
         // due to TINY-9951 workaround
         let expectedPath: number[];

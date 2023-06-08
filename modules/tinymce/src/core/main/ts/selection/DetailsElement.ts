@@ -128,45 +128,47 @@ const preventDeletingSummary = (editor: Editor): void => {
         if (!isCollapsed && isEntireNodeSelected(rng, node) || DeleteUtils.willDeleteLastPositionInElement(isDelete, CaretPosition.fromRangeStart(rng), node)) {
           emptyNodeContents(node);
         } else {
-          // Wrap all summary children in a temporary container to execute Backspace/Delete there, then unwrap
-          const sel = selection.getSel();
-          let { anchorNode, anchorOffset, focusNode, focusOffset } = sel ?? {};
-          const applySelection = () => {
-            if (Type.isNonNullable(anchorNode) && Type.isNonNullable(anchorOffset) && Type.isNonNullable(focusNode) && Type.isNonNullable(focusOffset)) {
-              sel?.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
-            }
-          };
-          const updateSelection = () => {
-            anchorNode = sel?.anchorNode;
-            anchorOffset = sel?.anchorOffset;
-            focusNode = sel?.focusNode;
-            focusOffset = sel?.focusOffset;
-          };
-          const appendAllChildNodes = (from: Node, to: Node) => {
-            Arr.each(from.childNodes, (child) => {
-              if (FormatUtils.isNode(child)) {
-                to.appendChild(child);
+          editor.undoManager.transact(() => {
+            // Wrap all summary children in a temporary container to execute Backspace/Delete there, then unwrap
+            const sel = selection.getSel();
+            let { anchorNode, anchorOffset, focusNode, focusOffset } = sel ?? {};
+            const applySelection = () => {
+              if (Type.isNonNullable(anchorNode) && Type.isNonNullable(anchorOffset) && Type.isNonNullable(focusNode) && Type.isNonNullable(focusOffset)) {
+                sel?.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
               }
-            });
-          };
+            };
+            const updateSelection = () => {
+              anchorNode = sel?.anchorNode;
+              anchorOffset = sel?.anchorOffset;
+              focusNode = sel?.focusNode;
+              focusOffset = sel?.focusOffset;
+            };
+            const appendAllChildNodes = (from: Node, to: Node) => {
+              Arr.each(from.childNodes, (child) => {
+                if (FormatUtils.isNode(child)) {
+                  to.appendChild(child);
+                }
+              });
+            };
 
-          const container = editor.dom.create('span');
-          appendAllChildNodes(node, container);
-          node.appendChild(container);
-          applySelection();
-          // Manually perform ranged deletion by keyboard shortcuts
-          if (isCollapsed && (isMacOSOriOS && (e.altKey || isBackspace && e.metaKey) || !isMacOSOriOS && e.ctrlKey)) {
-            sel?.modify('extend', isBackspace ? 'left' : 'right', e.metaKey ? 'line' : 'word');
-          }
-          if (!selection.isCollapsed() && isEntireNodeSelected(selection.getRng(), container)) {
-            emptyNodeContents(node);
-          } else {
-            editor.execCommand(isBackspace ? 'Delete' : 'ForwardDelete');
-            updateSelection();
-            appendAllChildNodes(container, node);
+            const container = editor.dom.create('span', { 'data-mce-bogus': 'all' });
+            appendAllChildNodes(node, container);
+            node.appendChild(container);
             applySelection();
-          }
-          editor.dom.remove(container);
+            // Manually perform ranged deletion by keyboard shortcuts
+            if (isCollapsed && (isMacOSOriOS && (e.altKey || isBackspace && e.metaKey) || !isMacOSOriOS && e.ctrlKey)) {
+              sel?.modify('extend', isBackspace ? 'left' : 'right', e.metaKey ? 'line' : 'word');
+            }
+            if (!selection.isCollapsed() && isEntireNodeSelected(selection.getRng(), container)) {
+              emptyNodeContents(node);
+            } else {
+              editor.execCommand(isBackspace ? 'Delete' : 'ForwardDelete');
+              updateSelection();
+              appendAllChildNodes(container, node);
+              applySelection();
+            }
+            editor.dom.remove(container);
+          });
         }
       }
     }
