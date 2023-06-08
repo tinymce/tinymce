@@ -52,10 +52,6 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
     editor.setContent(getAccordionContent(spec));
 
   context('Undo/redo backspace/delete', () => {
-    const doUndoRedo = (editor: Editor, action: 'undo' | 'redo') => action === 'undo' ? editor.undoManager.undo() : editor.undoManager.redo();
-    const doUndo = (editor: Editor) => doUndoRedo(editor, 'undo');
-    const doRedo = (editor: Editor) => doUndoRedo(editor, 'redo');
-
     const testUndoRedo = (deletionKey: DeletionKey, location: ContentLocation) => async () => {
       const isBackspace = deletionKey === 'Backspace';
       const isSummary = location === 'summary';
@@ -83,11 +79,11 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
       }
       TinyAssertions.assertCursor(editor, path, expectedOffset);
 
-      doUndo(editor);
+      editor.undoManager.undo();
       assertAccordionContent(editor);
       TinyAssertions.assertCursor(editor, path, initialOffset);
 
-      doRedo(editor);
+      editor.undoManager.redo();
       assertAccordionContent(editor, expectedAccordionSpec);
       TinyAssertions.assertCursor(editor, path, expectedOffset);
     };
