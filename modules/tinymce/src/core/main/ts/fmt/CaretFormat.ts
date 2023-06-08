@@ -366,9 +366,9 @@ const replaceWithCaretFormat = (targetNode: Node, formatNodes: Node[]): CaretPos
   return caretPosition;
 };
 
-const createCaretFormatAtStart = (editor: Editor, formatNodes: Node[]): CaretPosition => {
+const createCaretFormatAtStart = (rng: Range, formatNodes: Node[]): CaretPosition => {
   const { caretContainer, caretPosition } = createCaretFormat(formatNodes);
-  editor.selection.getRng().insertNode(caretContainer.dom);
+  rng.insertNode(caretContainer.dom);
 
   return caretPosition;
 };
