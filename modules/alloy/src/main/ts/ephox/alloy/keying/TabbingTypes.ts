@@ -9,7 +9,7 @@ import { NativeSimulatedEvent } from '../events/SimulatedEvent';
 import * as ArrNavigation from '../navigation/ArrNavigation';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
-import { KeyRuleHandler, TabbingConfig } from './KeyingModeTypes';
+import { KeyRuleStatelessHandler, TabbingConfig } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 
 const create = (cyclicField: FieldProcessor): KeyingType.KeyingType<TabbingConfig, Stateless> => {
@@ -93,29 +93,29 @@ const create = (cyclicField: FieldProcessor): KeyingType.KeyingType<TabbingConfi
     });
   };
 
-  const goBackwards: KeyRuleHandler<TabbingConfig, Stateless> = (component, simulatedEvent, tabbingConfig) => {
+  const goBackwards: KeyRuleStatelessHandler<TabbingConfig> = (component, simulatedEvent, tabbingConfig) => {
     const navigate = tabbingConfig.cyclic ? ArrNavigation.cyclePrev : ArrNavigation.tryPrev;
     return go(component, simulatedEvent, tabbingConfig, navigate);
   };
 
-  const goForwards: KeyRuleHandler<TabbingConfig, Stateless> = (component, simulatedEvent, tabbingConfig) => {
+  const goForwards: KeyRuleStatelessHandler<TabbingConfig> = (component, simulatedEvent, tabbingConfig) => {
     const navigate = tabbingConfig.cyclic ? ArrNavigation.cycleNext : ArrNavigation.tryNext;
     return go(component, simulatedEvent, tabbingConfig, navigate);
   };
 
   const isFirstChild = (node: Node): boolean => node.parentNode?.firstChild === node;
 
-  const goFromPseudoTabstop: KeyRuleHandler<TabbingConfig, Stateless> = (component, simulatedEvent, tabbingConfig, state) =>
+  const goFromPseudoTabstop: KeyRuleStatelessHandler<TabbingConfig> = (component, simulatedEvent, tabbingConfig) =>
     findCurrent(component, tabbingConfig).filter((elem) => !tabbingConfig.useTabstopAt(elem))
       .fold(
         () => Optional.none(),
-        (elem) => (isFirstChild(elem.dom) ? goBackwards : goForwards)(component, simulatedEvent, tabbingConfig, state)
+        (elem) => (isFirstChild(elem.dom) ? goBackwards : goForwards)(component, simulatedEvent, tabbingConfig)
       );
 
-  const execute: KeyRuleHandler<TabbingConfig, Stateless> = (component, simulatedEvent, tabbingConfig) =>
+  const execute: KeyRuleStatelessHandler<TabbingConfig> = (component, simulatedEvent, tabbingConfig) =>
     tabbingConfig.onEnter.bind((f) => f(component, simulatedEvent));
 
-  const exit: KeyRuleHandler<TabbingConfig, Stateless> = (component, simulatedEvent, tabbingConfig) =>
+  const exit: KeyRuleStatelessHandler<TabbingConfig> = (component, simulatedEvent, tabbingConfig) =>
     tabbingConfig.onEscape.bind((f) => f(component, simulatedEvent));
 
   const getKeydownRules = Fun.constant([
@@ -127,7 +127,6 @@ const create = (cyclicField: FieldProcessor): KeyingType.KeyingType<TabbingConfi
   const getKeyupRules = Fun.constant([
     KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE), exit),
     KeyRules.rule(KeyMatch.inSet(Keys.TAB), goFromPseudoTabstop),
-
   ]);
 
   return KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Optional.some(focusIn));
