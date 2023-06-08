@@ -7,7 +7,7 @@ import * as ElementType from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 import * as Parents from '../dom/Parents';
 import * as CaretFormat from '../fmt/CaretFormat';
-import { isCaretNode } from '../fmt/FormatContainer';
+import * as FormatContainer from '../fmt/FormatContainer';
 import * as DeleteElement from './DeleteElement';
 import * as DeleteUtils from './DeleteUtils';
 
@@ -80,7 +80,7 @@ const createCaretFormatAtStart = (editor: Editor, formatNodes: Node[]): void => 
   // otherwise create new caret format at start
   const pos = isBrInEmptyElement(editor, startElm) || isEmptyCaret(startElm)
     ? CaretFormat.replaceWithCaretFormat(startElm, formatNodes)
-    : CaretFormat.createCaretFormatAtStart(editor, formatNodes);
+    : CaretFormat.createCaretFormatAtStart(editor.selection.getRng(), formatNodes);
   editor.selection.setRng(pos.toRange());
 };
 
@@ -145,7 +145,7 @@ const backspaceDelete = (editor: Editor, forward: boolean): Optional<() => void>
   editor.selection.isCollapsed() ? deleteCaret(editor, forward) : deleteRange(editor);
 
 const hasAncestorInlineCaret = (elm: SugarElement<Node>): boolean =>
-  PredicateExists.ancestor(elm, (node) => isCaretNode(node.dom), ElementType.isBlock);
+  PredicateExists.ancestor(elm, (node) => FormatContainer.isCaretNode(node.dom), ElementType.isBlock);
 
 const hasAncestorInlineCaretAtStart = (editor: Editor): boolean =>
   hasAncestorInlineCaret(SugarElement.fromDom(editor.selection.getStart()));

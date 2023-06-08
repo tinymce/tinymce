@@ -1,5 +1,6 @@
 import { Arr, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+import { SugarElement } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
@@ -7,6 +8,9 @@ import * as Options from '../api/Options';
 import VK from '../api/util/VK';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
+import * as DeleteUtils from '../delete/DeleteUtils';
+import * as PaddingBr from '../dom/PaddingBr';
+import * as FormatUtils from '../fmt/FormatUtils';
 
 const preventSummaryToggle = (editor: Editor): void => {
   editor.on('click', (e) => {
@@ -40,13 +44,15 @@ const filterDetails = (editor: Editor): void => {
   });
 };
 
-const isCaretInTheBeginning = (editor: Editor, element: HTMLElement): boolean =>
-  CaretFinder.firstPositionIn(element).exists((pos) => pos.isEqual(CaretPosition.fromRangeStart(editor.selection.getRng())));
+const isCaretInTheBeginning = (rng: Range, element: HTMLElement): boolean =>
+  CaretFinder.firstPositionIn(element).exists((pos) => pos.isEqual(CaretPosition.fromRangeStart(rng)));
 
-const isCaretInTheEnding = (editor: Editor, element: HTMLElement): boolean =>
-  CaretFinder.lastPositionIn(element).exists((pos) => pos.isEqual(CaretPosition.fromRangeStart(editor.selection.getRng())));
+const isCaretInTheEnding = (rng: Range, element: HTMLElement): boolean =>
+  CaretFinder.lastPositionIn(element).exists((pos) => pos.isEqual(CaretPosition.fromRangeStart(rng)));
 
 const removeNode = (editor: Editor, node: Node) => editor.dom.remove(node, false);
+
+const emptyNodeContents = (node: Node) => PaddingBr.fillWithPaddingBr(SugarElement.fromDom(node));
 
 const setCaretToPosition = (editor: Editor) => (position: CaretPosition): void => {
   const node = position.getNode();
@@ -58,23 +64,32 @@ const setCaretToPosition = (editor: Editor) => (position: CaretPosition): void =
 const isSummary = (node: Node | null | undefined): boolean => node?.nodeName === 'SUMMARY';
 const isDetails = (node: Node | null | undefined): boolean => node?.nodeName === 'DETAILS';
 
-// TINY-9950: Firefox has some situations where its native behavior does not match what we expect, so
-// we have to perform Firefox-specific overrides.
-const isFirefox = PlatformDetection.detect().browser.isFirefox();
+const isEntireNodeSelected = (rng: Range, node: Node): boolean =>
+  rng.startOffset === 0 && rng.endOffset === node.textContent?.length;
+
+const platform = PlatformDetection.detect();
+const browser = platform.browser;
+const os = platform.os;
+const isFirefox = browser.isFirefox();
+const isSafari = browser.isSafari();
+const isMacOSOriOS = os.isMacOS() || os.isiOS();
 
 const preventDeletingSummary = (editor: Editor): void => {
   editor.on('keydown', (e) => {
     if (e.keyCode === VK.BACKSPACE || e.keyCode === VK.DELETE) {
-      const node = editor.selection.getNode();
+      const selection = editor.selection;
+      const node = selection.getNode();
       const body = editor.getBody();
       const prevNode = new DomTreeWalker(node, body).prev2(true);
       const nextNode = new DomTreeWalker(node, body).next(true);
-      const startElement = editor.selection.getStart();
-      const endElement = editor.selection.getEnd();
+      const startElement = selection.getStart();
+      const endElement = selection.getEnd();
+      const rng = selection.getRng();
       const isBackspace = e.keyCode === VK.BACKSPACE;
-      const isBackspaceAndCaretAtStart = isBackspace && isCaretInTheBeginning(editor, node);
+      const isCaretAtStart = isCaretInTheBeginning(rng, node);
+      const isBackspaceAndCaretAtStart = isBackspace && isCaretAtStart;
       const isDelete = e.keyCode === VK.DELETE;
-      const isDeleteAndCaretAtEnd = isDelete && isCaretInTheEnding(editor, node);
+      const isDeleteAndCaretAtEnd = isDelete && isCaretInTheEnding(rng, node);
       const isCollapsed = editor.selection.isCollapsed();
       const isEmpty = editor.dom.isEmpty(node);
       const hasPrevNode = Type.isNonNullable(prevNode);
@@ -86,7 +101,7 @@ const preventDeletingSummary = (editor: Editor): void => {
       if (
         !isCollapsed && isSummary(startElement) && startElement !== endElement && !Type.isNull(editor.dom.getParent(endElement, 'details'))
         || isCollapsed && (
-          (isBackspaceAndCaretAtStart || isDeleteAndCaretAtEnd) && isSummary(node)
+          (isBackspaceAndCaretAtStart || isDeleteAndCaretAtEnd || isEmpty) && isSummary(node)
           || isBackspaceAndCaretAtStart && isSummary(prevNode)
           || isDeleteAndCaretAtEnd && node === editor.dom.getParent(node, 'details')?.lastChild
           || isDeleteAndCaretAtEnd && isDetails(nextNode) && !isEmpty
@@ -105,6 +120,56 @@ const preventDeletingSummary = (editor: Editor): void => {
         e.preventDefault();
         removeNode(editor, node);
         CaretFinder.firstPositionIn(nextNode).each(setCaretToPosition(editor));
+      } else if (isSafari && isSummary(node)) {
+        // TINY-9951: Safari bug, deleting within the summary causes all content to be removed and no caret position to be left
+        // https://bugs.webkit.org/show_bug.cgi?id=257745
+        e.preventDefault();
+
+        if (!isCollapsed && isEntireNodeSelected(rng, node) || DeleteUtils.willDeleteLastPositionInElement(isDelete, CaretPosition.fromRangeStart(rng), node)) {
+          emptyNodeContents(node);
+        } else {
+          editor.undoManager.transact(() => {
+            // Wrap all summary children in a temporary container to execute Backspace/Delete there, then unwrap
+            const sel = selection.getSel();
+            let { anchorNode, anchorOffset, focusNode, focusOffset } = sel ?? {};
+            const applySelection = () => {
+              if (Type.isNonNullable(anchorNode) && Type.isNonNullable(anchorOffset) && Type.isNonNullable(focusNode) && Type.isNonNullable(focusOffset)) {
+                sel?.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
+              }
+            };
+            const updateSelection = () => {
+              anchorNode = sel?.anchorNode;
+              anchorOffset = sel?.anchorOffset;
+              focusNode = sel?.focusNode;
+              focusOffset = sel?.focusOffset;
+            };
+            const appendAllChildNodes = (from: Node, to: Node) => {
+              Arr.each(from.childNodes, (child) => {
+                if (FormatUtils.isNode(child)) {
+                  to.appendChild(child);
+                }
+              });
+            };
+
+            const container = editor.dom.create('span', { 'data-mce-bogus': 'all' });
+            appendAllChildNodes(node, container);
+            node.appendChild(container);
+            applySelection();
+            // Manually perform ranged deletion by keyboard shortcuts
+            if (isCollapsed && (isMacOSOriOS && (e.altKey || isBackspace && e.metaKey) || !isMacOSOriOS && e.ctrlKey)) {
+              sel?.modify('extend', isBackspace ? 'left' : 'right', e.metaKey ? 'line' : 'word');
+            }
+            if (!selection.isCollapsed() && isEntireNodeSelected(selection.getRng(), container)) {
+              emptyNodeContents(node);
+            } else {
+              editor.execCommand(isBackspace ? 'Delete' : 'ForwardDelete');
+              updateSelection();
+              appendAllChildNodes(container, node);
+              applySelection();
+            }
+            editor.dom.remove(container);
+          });
+        }
       }
     }
   });
