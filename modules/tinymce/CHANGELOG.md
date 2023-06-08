@@ -40,6 +40,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SVG icons for back and foreground colors now use `class` instead of `id` to identify SVG elements that should change color. #TINY-9844
 - Anchor tag elements — `<a>` — no longer incorrectly allow non-inline child elements when the editor schema is set to _HTML 4_. #TINY-9805
 - Help dialog was restored to `medium` width for better readability #TINY-9947
+- Updated DOM logic to exclude `data-mce-bogus` attribute in empty table cells #TINY-9860.
+
 
 ### Fixed
 - Right-clicking on a merge tag instance presented different highlighting depending on the host browser. #TINY-9848
