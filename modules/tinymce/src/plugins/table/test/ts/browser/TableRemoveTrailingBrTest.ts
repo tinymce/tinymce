@@ -40,6 +40,21 @@ describe('browser.tinymce.plugins.table.TableRemoveTrailingBrTest', () => {
       await TableTestUtils.pInsertTableViaGrid(editor, 2, 2);
       TinyAssertions.assertCursor(editor, [ 0, 1, 0, 0, 0, 1, 0, 0 ], 0);
     });
+
+    it('TINY-9860: last table cell is br, not removing br', async () => {
+      const editor = hookWithoutTrailingBr.editor();
+      editor.setContent('');
+      await TableTestUtils.pInsertTableViaGrid(editor, 2, 2);
+      TinyAssertions.assertContentPresence(editor, { br: 4 });
+    });
+
+    it('TINY-9860: nested table, last table cell is br, not removing br', async () => {
+      const editor = hookWithoutTrailingBr.editor();
+      editor.setContent('');
+      await TableTestUtils.pInsertTableViaGrid(editor, 2, 2);
+      await TableTestUtils.pInsertTableViaGrid(editor, 2, 2);
+      TinyAssertions.assertContentPresence(editor, { br: 7 });
+    });
   });
 
 });
