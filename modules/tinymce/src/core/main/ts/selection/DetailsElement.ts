@@ -69,9 +69,10 @@ const isEntireNodeSelected = (rng: Range, node: Node): boolean =>
 
 const platform = PlatformDetection.detect();
 const browser = platform.browser;
+const os = platform.os;
 const isFirefox = browser.isFirefox();
 const isSafari = browser.isSafari();
-const isMacOS = platform.os.isMacOS();
+const isMacOSOriOS = os.isMacOS() || os.isiOS();
 
 const preventDeletingSummary = (editor: Editor): void => {
   editor.on('keydown', (e) => {
@@ -154,7 +155,7 @@ const preventDeletingSummary = (editor: Editor): void => {
           node.appendChild(container);
           applySelection();
           // Manually perform ranged deletion by keyboard shortcuts
-          if (isCollapsed && (isMacOS && (e.altKey || isBackspace && e.metaKey) || !isMacOS && e.ctrlKey)) {
+          if (isCollapsed && (isMacOSOriOS && (e.altKey || isBackspace && e.metaKey) || !isMacOSOriOS && e.ctrlKey)) {
             sel?.modify('extend', isBackspace ? 'left' : 'right', e.metaKey ? 'line' : 'word');
           }
           if (!selection.isCollapsed() && isEntireNodeSelected(selection.getRng(), container)) {
