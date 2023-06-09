@@ -28,6 +28,10 @@ const register = (editor: Editor, pasteFormat: Cell<string>): void => {
     if (value.text) {
       Clipboard.pasteText(editor, value.text);
     }
+
+    if (value.imageEvent) {
+      Clipboard.pasteImageData(editor, value.imageEvent, value.rng);
+    }
   });
 };
 
