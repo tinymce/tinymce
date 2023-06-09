@@ -1,6 +1,7 @@
 import { ApproxStructure, StructAssert, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Type, Unicode } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -22,6 +23,7 @@ interface ContentStructure {
 }
 
 describe('browser.tinymce.plugins.accordion.FilterContentTest', () => {
+  const browser = PlatformDetection.detect().browser;
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'accordion',
     toolbar: 'accordion',
@@ -112,11 +114,11 @@ describe('browser.tinymce.plugins.accordion.FilterContentTest', () => {
       TinyAssertions.assertContentStructure(
         editor,
         buildContentStructure({
-          before: () => ApproxStructure.fromHtml(`<p>blah1${Unicode.nbsp}</p>`),
+          before: () => ApproxStructure.fromHtml(`<p>blah1${browser.isSafari() ? ' ' : Unicode.nbsp}</p>`),
           accordion: buildAccordionStructure({
             summary: 'Test'
           }),
-          after: () => ApproxStructure.fromHtml('<p> blah2</p>'),
+          after: () => ApproxStructure.fromHtml(`<p>${browser.isSafari() ? Unicode.nbsp : ' '}blah2</p>`),
         })
       );
     });
