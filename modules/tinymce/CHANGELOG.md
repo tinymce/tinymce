@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The pattern replacement removes spaces if they were contained in a tag that only contains a space and the text to replace. #TINY-9744
 
 ### Fixed
+- When making lists and selecting divs the lists would in some situations only be partially applied. #TINY-9872
 - Tab navigation incorrectly stopped around `iframe` dialog component. #TINY-9815
 
 ## 6.5.0 - 2023-06-12

@@ -191,10 +191,19 @@ const hasCompatibleStyle = (dom: DOMUtils, sib: Element, detail: ListDetail): bo
   return sibStyle === detailStyle;
 };
 
+const getRootSearchStart = (editor: Editor, range: Range): Node => {
+  const start = editor.selection.getStart(true);
+  if (start.parentNode === range.commonAncestorContainer) {
+    return range.commonAncestorContainer;
+  } else {
+    return start;
+  }
+};
+
 const applyList = (editor: Editor, listName: string, detail: ListDetail): void => {
   const rng = editor.selection.getRng();
   let listItemName = 'LI';
-  const root = Selection.getClosestListHost(editor, editor.selection.getStart(true));
+  const root = Selection.getClosestListHost(editor, getRootSearchStart(editor, rng));
   const dom = editor.dom;
 
   if (dom.getContentEditable(editor.selection.getNode()) === 'false') {
