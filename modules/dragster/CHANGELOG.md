@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 7.2.0 - 2023-06-12
+
 ### Added
 - New `DataTransfer`, `DataTransferContent`, `DataTransferEvent`, and `DataTransferMode` APIs to handle creating and manipulating `DataTransfer` objects. #TINY-9601
 
