@@ -1,7 +1,7 @@
 import { ApproxStructure, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Unicode } from '@ephox/katamari';
-import { TinyHooks, TinyUiActions, TinySelections, TinyAssertions } from '@ephox/wrap-mcagar';
+import { TinyHooks, TinyUiActions, TinySelections, TinyAssertions, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -90,36 +90,32 @@ describe('browser.tinymce.plugins.visualchars.PluginTest', () => {
   });
 
   it('TINY-9474: should not process noneditable elements in a noneditable root', async () => {
-    const editor = hook.editor();
-
-    editor.getBody().contentEditable = 'false';
-    editor.setContent('<p>abc&nbsp;&nbsp;</p><p contenteditable="true">123&nbsp;&nbsp;</p>');
-    TinyUiActions.clickOnToolbar(editor, 'button');
-    await Waiter.pTryUntil('wait for visual chars to appear', () => {
-      TinyAssertions.assertContentPresence(editor, {
-        'span.mce-nbsp': 2
+    await TinyState.withNoneditableRootEditorAsync(hook.editor(), async (editor) => {
+      editor.setContent('<p>abc&nbsp;&nbsp;</p><p contenteditable="true">123&nbsp;&nbsp;</p>');
+      TinyUiActions.clickOnToolbar(editor, 'button');
+      await Waiter.pTryUntil('wait for visual chars to appear', () => {
+        TinyAssertions.assertContentPresence(editor, {
+          'span.mce-nbsp': 2
+        });
       });
+      TinyUiActions.clickOnToolbar(editor, 'button');
     });
-    editor.getBody().contentEditable = 'true';
-    TinyUiActions.clickOnToolbar(editor, 'button');
   });
 
   it('TINY-9685: should add "mce-nbsp" to "mce-nbsp-wrap" elements in editable context', async () => {
-    const editor = hook.editor();
-
-    editor.getBody().contentEditable = 'false';
-    editor.setContent(`
-      <p><span class="mce-nbsp-wrap" contenteditable="false">&nbsp;</span></p>
-      <p contenteditable="true"><span class="mce-nbsp-wrap" contenteditable="false">&nbsp;</span></p>
-    `);
-    TinyUiActions.clickOnToolbar(editor, 'button');
-    await Waiter.pTryUntil('wait for visual chars to appear', () => {
-      TinyAssertions.assertContentPresence(editor, {
-        'span.mce-nbsp': 1,
-        '[contenteditable="true"] span.mce-nbsp': 1
+    await TinyState.withNoneditableRootEditorAsync(hook.editor(), async (editor) => {
+      editor.setContent(`
+        <p><span class="mce-nbsp-wrap" contenteditable="false">&nbsp;</span></p>
+        <p contenteditable="true"><span class="mce-nbsp-wrap" contenteditable="false">&nbsp;</span></p>
+      `);
+      TinyUiActions.clickOnToolbar(editor, 'button');
+      await Waiter.pTryUntil('wait for visual chars to appear', () => {
+        TinyAssertions.assertContentPresence(editor, {
+          'span.mce-nbsp': 1,
+          '[contenteditable="true"] span.mce-nbsp': 1
+        });
       });
+      TinyUiActions.clickOnToolbar(editor, 'button');
     });
-    editor.getBody().contentEditable = 'true';
-    TinyUiActions.clickOnToolbar(editor, 'button');
   });
 });

@@ -1,7 +1,6 @@
 import { Id, Singleton } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 
-import * as AriaDescribe from '../../aria/AriaDescribe';
 import * as AriaLabel from '../../aria/AriaLabel';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ModalDialogSchema from '../../ui/schema/ModalDialogSchema';
@@ -116,7 +115,6 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
         AddEventsBehaviour.config(modalEventsId, [
           AlloyEvents.runOnAttached((c) => {
             AriaLabel.labelledBy(c.element, AlloyParts.getPartOrDie(c, detail, 'title').element);
-            AriaDescribe.describedBy(c.element, AlloyParts.getPartOrDie(c, detail, 'body').element);
           })
         ])
       ]

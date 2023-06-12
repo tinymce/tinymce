@@ -194,7 +194,7 @@ const canApply = (editor: Editor, name: string): boolean => {
   const formatList = editor.formatter.get(name);
   const dom = editor.dom;
 
-  if (formatList) {
+  if (formatList && editor.selection.isEditable()) {
     const startNode = editor.selection.getStart();
     const parents = FormatUtils.getParents(dom, startNode);
 

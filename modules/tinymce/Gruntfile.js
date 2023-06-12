@@ -11,7 +11,7 @@ let swag = require('@ephox/swag');
 let path = require('path');
 
 let plugins = [
-  'advlist', 'anchor', 'autolink', 'autoresize', 'autosave', 'charmap', 'code', 'codesample',
+  'accordion', 'advlist', 'anchor', 'autolink', 'autoresize', 'autosave', 'charmap', 'code', 'codesample',
   'directionality', 'emoticons', 'help', 'fullscreen', 'image', 'importcss', 'insertdatetime',
   'link', 'lists', 'media', 'nonbreaking', 'pagebreak', 'preview', 'save', 'searchreplace',
   'table', 'template', 'visualblocks', 'visualchars', 'wordcount', 'quickbars'
@@ -414,6 +414,16 @@ module.exports = function (grunt) {
       'visualblocks-plugin': {
         files: [
           { src: 'src/plugins/visualblocks/main/css/visualblocks.css', dest: 'js/tinymce/plugins/visualblocks/css/visualblocks.css' }
+        ]
+      },
+      'html-i18n': {
+        files: [
+          {
+            expand: true,
+            cwd: 'src/plugins/help/main/js/i18n/keynav',
+            src: '**',
+            dest: 'js/tinymce/plugins/help/js/i18n/keynav'
+          }
         ]
       }
     },
@@ -918,6 +928,7 @@ module.exports = function (grunt) {
     'eslint',
     'globals',
     'emoji',
+    'html-i18n',
     'rollup',
     'concat',
     'copy',
@@ -937,12 +948,14 @@ module.exports = function (grunt) {
     'shell:prismjs',
     'globals',
     'emoji',
+    'html-i18n',
     // TODO: Make webpack use the oxide CSS directly
     // as well as making development easier, then we can update 'yarn dev' to run 'oxide-build' in parallel with 'tinymce-grunt dev'
     // that will save 2-3 seconds on incremental builds
     'copy:ui-skins',
     'copy:content-skins',
-    'copy:default-icons'
+    'copy:default-icons',
+    'copy:html-i18n'
   ]);
 
   grunt.registerTask('start', ['webpack-dev-server']);

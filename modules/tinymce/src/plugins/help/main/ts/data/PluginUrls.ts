@@ -19,6 +19,7 @@ export interface PluginUrl extends PartialPluginUrl {
 
 // These lists are automatically sorted when generating the dialog.
 const urls = Arr.map<PartialPluginUrl, PluginUrl>([
+  { key: 'accordion', name: 'Accordion' },
   { key: 'advlist', name: 'Advanced List' },
   { key: 'anchor', name: 'Anchor' },
   { key: 'autolink', name: 'Autolink' },

@@ -2,10 +2,11 @@ import { Fun } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import { EditorEvent } from '../api/util/EventDispatcher';
-import { clone } from '../events/EventUtils';
+import { clone } from './EventUtils';
 
 interface SpecificsInput {
   data?: null | string;
+  dataTransfer?: null | DataTransfer;
 }
 
 const createAndFireInputEvent = (eventType: string) =>
@@ -35,11 +36,11 @@ const createAndFireInputEvent = (eventType: string) =>
     return editor.dispatch(eventType, { ...input, ...overrides, ...specifics });
   };
 
-const fireFakeInputEvent = createAndFireInputEvent('input');
+const fireInputEvent = createAndFireInputEvent('input');
 
-const fireFakeBeforeInputEvent = createAndFireInputEvent('beforeinput');
+const fireBeforeInputEvent = createAndFireInputEvent('beforeinput');
 
 export {
-  fireFakeInputEvent,
-  fireFakeBeforeInputEvent
+  fireInputEvent,
+  fireBeforeInputEvent
 };

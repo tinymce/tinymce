@@ -1,6 +1,6 @@
 import { Bounds, Boxes } from '@ephox/alloy';
 import { Arr, Optional, Strings } from '@ephox/katamari';
-import { Css, PredicateFilter, SugarElement, SugarNode } from '@ephox/sugar';
+import { Css, PredicateFilter, SugarElement, SugarNode, SugarShadowDom } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -27,9 +27,14 @@ export const isScroller = (elem: SugarElement<Node> | any): boolean => {
 
 // NOTE: Calculating the list of scrolling ancestors each time this function is called might
 // be unnecessary. It will depend on its usage.
-export const detect = (poupSinkElem: SugarElement<HTMLElement>): Optional<ScrollingContext> => {
-  // We don't want to include popupSinkElem in the list of scrollers, so we just use "ancestors"
-  const scrollers: SugarElement<HTMLElement>[] = PredicateFilter.ancestors(poupSinkElem, isScroller) as SugarElement<HTMLElement>[];
+export const detect = (popupSinkElem: SugarElement<HTMLElement>): Optional<ScrollingContext> => {
+  const ancestorsScrollers = PredicateFilter.ancestors(popupSinkElem, isScroller) as SugarElement<HTMLElement>[];
+
+  // If there is no scrollable container, we try to see if it's in a shadow root, and try to traverse beyond the host of shadow root to retrieve the scrollable container
+  // If it is not within a ShadowRoot, since if there's a scrollable container as the ancestors, then it would not execute the code below, or return an empty array if it's not in a ShadowRoot
+  const scrollers = ancestorsScrollers.length === 0
+    ? SugarShadowDom.getShadowRoot(popupSinkElem).map(SugarShadowDom.getShadowHost).map((x) => PredicateFilter.ancestors(x, isScroller)).getOr([]) as SugarElement<HTMLElement>[]
+    : ancestorsScrollers;
 
   return Arr.head(scrollers)
     .map(

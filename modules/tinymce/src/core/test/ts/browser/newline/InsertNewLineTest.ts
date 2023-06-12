@@ -1,9 +1,12 @@
 import { ApproxStructure } from '@ephox/agar';
 import { after, before, context, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { Type } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
+import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import * as CaretFormat from 'tinymce/core/fmt/CaretFormat';
 import * as InsertNewLine from 'tinymce/core/newline/InsertNewLine';
 
 describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
@@ -16,6 +19,28 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
   const insertNewline = (editor: Editor, args: Partial<EditorEvent<KeyboardEvent>>) => {
     InsertNewLine.insert(editor, args as EditorEvent<KeyboardEvent>);
+  };
+
+  /*
+  This function is used as a replacement for the TinySelections.setCursor as some changes are performed to cursor position in this setup.
+  */
+  const setSelectionToBody = (editor: Editor, offset: number) => {
+    const sel = editor.selection.getSel();
+
+    if (Type.isNullable(sel)) {
+      throw new Error('Sel is unexpectedly missing.');
+    }
+
+    const range = editor.contentDocument.createRange();
+    range.setStart(editor.dom.getRoot(), offset);
+    range.setEnd(editor.dom.getRoot(), offset);
+
+    if (PlatformDetection.detect().browser.isSafari()) {
+      editor.selection.setRng(range);
+    } else {
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
   };
 
   context('Enter in paragraph', () => {
@@ -107,24 +132,22 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     });
 
     it('TINY-9461: should not split editing host in noneditable root', () => {
-      const editor = hook.editor();
-      const initialContent = '<p contenteditable="true">ab</p>';
-      editor.getBody().contentEditable = 'false';
-      editor.setContent(initialContent);
-      TinySelections.setCursor(editor, [ 0, 0 ], 1);
-      insertNewline(editor, { });
-      TinyAssertions.assertContent(editor, initialContent);
-      editor.getBody().contentEditable = 'true';
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+        const initialContent = '<p contenteditable="true">ab</p>';
+        editor.setContent(initialContent);
+        TinySelections.setCursor(editor, [ 0, 0 ], 1);
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, initialContent);
+      });
     });
 
     it('TINY-9461: should wrap div contents in paragraph and split inner paragraph in a div editing host inside a noneditable root', () => {
-      const editor = hook.editor();
-      editor.getBody().contentEditable = 'false';
-      editor.setContent('<div contenteditable="true">ab</div>');
-      TinySelections.setCursor(editor, [ 0, 0 ], 1);
-      insertNewline(editor, { });
-      TinyAssertions.assertContent(editor, '<div contenteditable="true"><p>a</p><p>b</p></div>');
-      editor.getBody().contentEditable = 'true';
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+        editor.setContent('<div contenteditable="true">ab</div>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 1);
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<div contenteditable="true"><p>a</p><p>b</p></div>');
+      });
     });
 
     it('TINY-9461: should not split editing host', () => {
@@ -137,13 +160,39 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     });
 
     it('TINY-9461: should wrap div contents in paragraph and split inner paragraph in a div editing host', () => {
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+        editor.setContent('<div contenteditable="false"><div contenteditable="true">ab</div></div>');
+        TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<div contenteditable="false"><div contenteditable="true"><p>a</p><p>b</p></div></div>');
+      });
+    });
+
+    it('TINY-9813: Placed a cursor is placed after a table, with a noneditable afterwards', () => {
       const editor = hook.editor();
-      editor.getBody().contentEditable = 'false';
-      editor.setContent('<div contenteditable="false"><div contenteditable="true">ab</div></div>');
-      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      editor.setContent('<table><tbody><tr><td><br></td></tr></tbody></table><div contenteditable="false"></div>');
+      setSelectionToBody(editor, 1);
       insertNewline(editor, { });
-      TinyAssertions.assertContent(editor, '<div contenteditable="false"><div contenteditable="true"><p>a</p><p>b</p></div></div>');
-      editor.getBody().contentEditable = 'true';
+      TinyAssertions.assertContent(editor, '<table><tbody><tr><td>&nbsp;</td></tr></tbody></table><p>&nbsp;</p><div contenteditable="false">&nbsp;</div>');
+      TinyAssertions.assertCursor(editor, [ 1 ], 0);
+    });
+
+    it('TINY-9813: Placed a cursor is placed after a table, with an editable afterwards', () => {
+      const editor = hook.editor();
+      editor.setContent('<table><tbody><tr><td><br></td></tr></tbody></table><div contenteditable="true">&nbsp;</div>');
+      setSelectionToBody(editor, 1);
+      insertNewline(editor, { });
+      TinyAssertions.assertContent(editor, '<table><tbody><tr><td>&nbsp;</td></tr></tbody></table><div contenteditable="true">&nbsp;</div><div contenteditable="true">&nbsp;</div>');
+      TinyAssertions.assertCursor(editor, [ 1 ], 0);
+    });
+
+    it('TINY-9813: Placed a cursor is placed after a table, with nothing', () => {
+      const editor = hook.editor();
+      editor.setContent('<table><tbody><tr><td><br></td></tr></tbody></table>');
+      setSelectionToBody(editor, 1);
+      insertNewline(editor, { });
+      TinyAssertions.assertContent(editor, '<table><tbody><tr><td>&nbsp;</td></tr></tbody></table><p>&nbsp;</p>');
+      TinyAssertions.assertCursor(editor, [ 1 ], 0);
     });
   });
 
@@ -757,5 +806,16 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         TinyAssertions.assertContent(editor, '<p>ab</p>');
       });
     });
+  });
+
+  it('TINY-9794: Press Enter in a blockquote and then add format and then press Enter again should exit from the blockquote', () => {
+    const editor = hook.editor();
+    editor.setContent('<blockquote><p>A</p></blockquote>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    insertNewline(editor, { });
+    CaretFormat.applyCaretFormat(editor, 'bold');
+    insertNewline(editor, { });
+    TinyAssertions.assertContent(editor, '<blockquote><p>A</p></blockquote><p>&nbsp;</p>');
+    TinyAssertions.assertCursor(editor, [ 1, 0, 0, 0 ], 0);
   });
 });

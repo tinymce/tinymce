@@ -233,7 +233,7 @@ const removeListStyleFormats = (editor: Editor, name: string, vars: FormatVars |
   }
 };
 
-const removeFormatInternal = (ed: Editor, format: Format, vars?: FormatVars, node?: Node, compareNode?: Node | null): RemoveFormatAdt => {
+const removeNodeFormatInternal = (ed: Editor, format: Format, vars?: FormatVars, node?: Node, compareNode?: Node | null): RemoveFormatAdt => {
   const dom = ed.dom;
   const elementUtils = ElementUtils(ed);
   const schema = ed.schema;
@@ -349,28 +349,6 @@ const removeFormatInternal = (ed: Editor, format: Format, vars?: FormatVars, nod
   return removeResult.keep();
 };
 
-/**
- * Removes the specified format for the specified node. It will also remove the node if it doesn't have
- * any attributes if the format specifies it to do so.
- *
- * @private
- * @param {Object} format Format object with items to remove from node.
- * @param {Object} vars Name/value object with variables to apply to format.
- * @param {Node} node Node to remove the format styles on.
- * @param {Node} compareNode Optional compare node, if specified the styles will be compared to that node.
- * @return {Boolean} True/false if the node was removed or not.
- */
-const removeFormat = (ed: Editor, format: Format, vars: FormatVars | undefined, node: Node, compareNode?: Node | null): boolean =>
-  removeFormatInternal(ed, format, vars, node, compareNode).fold(
-    Fun.never,
-    (newName) => {
-      // If renaming we are guaranteed this is a Element, so cast
-      ed.dom.rename(node as Element, newName);
-      return true;
-    },
-    Fun.always
-  );
-
 const findFormatRoot = (editor: Editor, container: Node, name: string, vars?: FormatVars, similar?: boolean) => {
   let formatRoot: Node | undefined;
 
@@ -391,8 +369,8 @@ const findFormatRoot = (editor: Editor, container: Node, name: string, vars?: Fo
   return formatRoot;
 };
 
-const removeFormatFromClone = (editor: Editor, format: Format, vars: FormatVars | undefined, clone: Node) =>
-  removeFormatInternal(editor, format, vars, clone, clone).fold(
+const removeNodeFormatFromClone = (editor: Editor, format: Format, vars: FormatVars | undefined, clone: Node) =>
+  removeNodeFormatInternal(editor, format, vars, clone, clone).fold(
     Fun.constant(clone),
     (newName) => {
       // To rename a node, it needs to be a child of another node
@@ -426,7 +404,7 @@ const wrapAndSplit = (
       let clone: Node | null = dom.clone(parent, false);
 
       for (let i = 0; i < formatList.length; i++) {
-        clone = removeFormatFromClone(editor, formatList[i], vars, clone);
+        clone = removeNodeFormatFromClone(editor, formatList[i], vars, clone);
         if (clone === null) {
           break;
         }
@@ -467,7 +445,7 @@ const wrapAndSplit = (
   return container;
 };
 
-const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range, similar?: boolean): void => {
+const removeFormatInternal = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range, similar?: boolean): void => {
   const formatList = ed.formatter.get(name) as Format[];
   const format = formatList[0];
   const dom = ed.dom;
@@ -483,8 +461,8 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
   const isRemoveBookmarkNode = (node: Node | null): node is Element =>
     Bookmarks.isBookmarkNode(node) && NodeType.isElement(node) && (node.id === '_start' || node.id === '_end');
 
-  const removeNodeFormat = (node: Node) =>
-    Arr.exists(formatList, (fmt) => removeFormat(ed, fmt, vars, node, node));
+  const removeFormatOnNode = (node: Node) =>
+    Arr.exists(formatList, (fmt) => removeNodeFormat(ed, fmt, vars, node, node));
 
   // Merges the styles for each node
   const process = (node: Node) => {
@@ -493,13 +471,13 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
     const children = Arr.from(node.childNodes);
 
     // Process current node
-    const removed = removeNodeFormat(node);
+    const removed = removeFormatOnNode(node);
 
     // TINY-6567/TINY-7393: Include the parent if using an expanded selector format and no match was found for the current node
     const currentNodeMatches = removed || Arr.exists(formatList, (f) => MatchFormat.matchName(dom, node, f));
     const parentNode = node.parentNode;
     if (!currentNodeMatches && Type.isNonNullable(parentNode) && FormatUtils.shouldExpandToSelector(format)) {
-      removeNodeFormat(parentNode);
+      removeFormatOnNode(parentNode);
     }
 
     // Process the children
@@ -518,7 +496,7 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
     Arr.each(textDecorations, (decoration) => {
       if (NodeType.isElement(node) && ed.dom.getStyle(node, 'text-decoration') === decoration &&
         node.parentNode && FormatUtils.getTextDecoration(dom, node.parentNode) === decoration) {
-        removeFormat(ed, {
+        removeNodeFormat(ed, {
           deep: false,
           exact: true,
           inline: 'span',
@@ -663,9 +641,39 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
   removeListStyleFormats(ed, name, vars);
 
   Events.fireFormatRemove(ed, name, node, vars);
+
+};
+
+const removeFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range, similar?: boolean): void => {
+  if (node || ed.selection.isEditable()) {
+    removeFormatInternal(ed, name, vars, node, similar);
+  }
+};
+
+/**
+ * Removes the specified format for the specified node. It will also remove the node if it doesn't have
+ * any attributes if the format specifies it to do so.
+ *
+ * @private
+ * @param {Object} format Format object with items to remove from node.
+ * @param {Object} vars Name/value object with variables to apply to format.
+ * @param {Node} node Node to remove the format styles on.
+ * @param {Node} compareNode Optional compare node, if specified the styles will be compared to that node.
+ * @return {Boolean} True/false if the node was removed or not.
+ */
+const removeNodeFormat = (editor: Editor, format: Format, vars: FormatVars | undefined, node: Node, compareNode?: Node | null): boolean => {
+  return removeNodeFormatInternal(editor, format, vars, node, compareNode).fold(
+    Fun.never,
+    (newName) => {
+      // If renaming we are guaranteed this is a Element, so cast
+      editor.dom.rename(node as Element, newName);
+      return true;
+    },
+    Fun.always
+  );
 };
 
 export {
   removeFormat,
-  remove
+  removeNodeFormat
 };

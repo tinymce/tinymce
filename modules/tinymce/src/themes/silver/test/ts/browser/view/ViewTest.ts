@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, FocusTools, Keys, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { Attribute, Css, Html, SugarBody, SugarShadowDom } from '@ephox/sugar';
+import { Attribute, Css, Html, Scroll, SugarBody, SugarShadowDom } from '@ephox/sugar';
 import { TinyApis, TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -428,6 +428,78 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       assertMainViewVisible();
       const moreButton = UiFinder.findIn(TinyDom.container(editor), '[title="More..."]');
       assert.isTrue(moreButton.isValue(), 'More... button should be there');
+    });
+  });
+
+  context('Sticky toolbar', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      toolbar: Arr.range(10, Fun.constant('bold | italic ')).join(''),
+      width: 500,
+      toolbar_mode: 'sliding',
+      plugins: 'autoresize',
+      toolbar_sticky: true,
+      toolbar_sticky_offset: 1,
+      setup: (editor: Editor) => {
+        editor.ui.registry.addView('myview1', {
+          buttons: [
+            {
+              type: 'button',
+              text: 'Button 1',
+              onAction: () => {
+                editor.execCommand('ToggleView', false, 'myview1');
+              }
+            }
+          ],
+          onShow: (api) => {
+            api.getContainer().innerHTML = '<button>myview1</button>';
+          },
+          onHide: Fun.noop
+        });
+      }
+    }, []);
+
+    const assertMainViewVisible = () => {
+      const editor = hook.editor();
+      const editorContainer = UiFinder.findIn(TinyDom.container(editor), '.tox-editor-container').getOrDie();
+
+      assert.isFalse(Attribute.has(editorContainer, 'aria-hidden'), 'Should not have aria-hidden');
+      assert.isTrue(Css.getRaw(editorContainer, 'display').isNone(), 'Should not have display none');
+    };
+
+    const assertViewHtml = (viewIndex: number, expectedHtml: string) => {
+      const editor = hook.editor();
+      const editorContainer = UiFinder.findIn<HTMLElement>(TinyDom.container(editor), `.tox-view:nth-child(${viewIndex + 1}) .tox-view__pane`).getOrDie();
+
+      assert.equal(Html.get(editorContainer), expectedHtml);
+    };
+
+    it('TINY-9814: coming back from a view when the toolbar is scrolled, should preserve the buttons in `tox-toolbar__primary`', async () => {
+      const editor = hook.editor();
+      editor.setContent(`<p>
+        ${Arr.range(50, Fun.constant('some text')).join('<br>')}
+        <div class="element_to_scroll_to">element to scroll to</div>
+        ${Arr.range(50, Fun.constant('some text')).join('<br>')}
+      </p>`);
+
+      const elementToScrollTo = UiFinder.findIn(TinyDom.body(editor), '.element_to_scroll_to').getOrDie();
+      const toolbar = await TinyUiActions.pWaitForUi(editor, '.tox-toolbar__overflow');
+
+      await Waiter.pTryUntil('Wait for scroll top to be before the toolbar', () => Scroll.get().top < toolbar.dom.getBoundingClientRect().top);
+      elementToScrollTo.dom.scrollIntoView();
+      await Waiter.pTryUntil('Wait for scroll top to be after the toolbar', () => Scroll.get().top > toolbar.dom.getBoundingClientRect().top);
+
+      editor.execCommand('ToggleView', true, 'myview1');
+      assertViewHtml(0, '<button>myview1</button>');
+
+      // this is needed because otherwise the bug is not reproduced
+      await Waiter.pWait(0);
+
+      editor.execCommand('ToggleView', false, 'myview1');
+      assertMainViewVisible();
+
+      const boldButton = await TinyUiActions.pWaitForUi(editor, '.tox-toolbar__primary [title="Bold"]');
+      assert.isDefined(boldButton, 'Bold button should be in `tox-toolbar__primary`');
     });
   });
 });

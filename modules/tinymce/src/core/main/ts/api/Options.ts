@@ -260,13 +260,13 @@ const register = (editor: Editor): void => {
   registerOption('indent_before', {
     processor: 'string',
     default: 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,th,ul,ol,li,dl,dt,dd,area,table,thead,' +
-      'tfoot,tbody,tr,section,summary,article,hgroup,aside,figure,figcaption,option,optgroup,datalist'
+      'tfoot,tbody,tr,section,details,summary,article,hgroup,aside,figure,figcaption,option,optgroup,datalist'
   });
 
   registerOption('indent_after', {
     processor: 'string',
     default: 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,th,ul,ol,li,dl,dt,dd,area,table,thead,' +
-      'tfoot,tbody,tr,section,summary,article,hgroup,aside,figure,figcaption,option,optgroup,datalist'
+      'tfoot,tbody,tr,section,details,summary,article,hgroup,aside,figure,figcaption,option,optgroup,datalist'
   });
 
   registerOption('indent_use_margin', {
@@ -442,6 +442,11 @@ const register = (editor: Editor): void => {
     default: false
   });
 
+  registerOption('editable_root', {
+    processor: 'boolean',
+    default: true
+  });
+
   registerOption('plugins', {
     processor: 'string[]',
     default: []
@@ -559,7 +564,8 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('remove_trailing_brs', {
-    processor: 'boolean'
+    processor: 'boolean',
+    default: true
   });
 
   registerOption('inline_styles', {
@@ -790,6 +796,32 @@ const register = (editor: Editor): void => {
     default: true
   });
 
+  registerOption('details_initial_state', {
+    processor: (value) => {
+      const valid = Arr.contains([ 'inherited', 'collapsed', 'expanded' ], value);
+      return valid ? { value, valid } : { valid: false, message: 'Must be one of: inherited, collapsed, or expanded.' };
+    },
+    default: 'inherited'
+  });
+
+  registerOption('details_serialized_state', {
+    processor: (value) => {
+      const valid = Arr.contains([ 'inherited', 'collapsed', 'expanded' ], value);
+      return valid ? { value, valid } : { valid: false, message: 'Must be one of: inherited, collapsed, or expanded.' };
+    },
+    default: 'inherited'
+  });
+
+  registerOption('init_content_sync', {
+    processor: 'boolean',
+    default: false
+  });
+
+  registerOption('newdocument_content', {
+    processor: 'string',
+    default: ''
+  });
+
   // These options must be registered later in the init sequence due to their default values
   editor.on('ScriptsLoaded', () => {
     registerOption('directionality', {
@@ -862,6 +894,7 @@ const shouldAddUnloadTrigger = option('add_unload_trigger');
 const getCustomUndoRedoLevels = option('custom_undo_redo_levels');
 const shouldDisableNodeChange = option('disable_nodechange');
 const isReadOnly = option('readonly');
+const hasEditableRoot = option('editable_root');
 const hasContentCssCors = option('content_css_cors');
 const getPlugins = option('plugins');
 const getExternalPlugins = option('external_plugins');
@@ -880,6 +913,7 @@ const shouldPasteBlockDrop = option('paste_block_drop');
 const shouldPasteDataImages = option('paste_data_images');
 const getPastePreProcess = option('paste_preprocess');
 const getPastePostProcess = option('paste_postprocess');
+const getNewDocumentContent = option('newdocument_content');
 const getPasteWebkitStyles = option('paste_webkit_styles');
 const shouldPasteRemoveWebKitStyles = option('paste_remove_styles_if_webkit');
 const shouldPasteMergeFormats = option('paste_merge_formats');
@@ -895,6 +929,7 @@ const getNonEditableRegExps = option('noneditable_regexp');
 const shouldPreserveCData = option('preserve_cdata');
 const shouldHighlightOnFocus = option('highlight_on_focus');
 const shouldSanitizeXss = option('xss_sanitization');
+const shouldUseDocumentWrite = option('init_content_sync');
 
 const hasTextPatternsLookup = (editor: Editor): boolean =>
   editor.options.isSet('text_patterns_lookup');
@@ -912,6 +947,9 @@ const getAllowedImageFileTypes = (editor: Editor): string[] =>
   Tools.explode(editor.options.get('images_file_types'));
 
 const hasTableTabNavigation = option('table_tab_navigation');
+
+const getDetailsInitialState = option('details_initial_state');
+const getDetailsSerializedState = option('details_serialized_state');
 
 export {
   register,
@@ -975,6 +1013,7 @@ export {
   getCustomUndoRedoLevels,
   shouldDisableNodeChange,
   isReadOnly,
+  hasEditableRoot,
   hasContentCssCors,
   getPlugins,
   getExternalPlugins,
@@ -994,6 +1033,7 @@ export {
   shouldPasteDataImages,
   getPastePreProcess,
   getPastePostProcess,
+  getNewDocumentContent,
   getPasteWebkitStyles,
   shouldPasteRemoveWebKitStyles,
   shouldPasteMergeFormats,
@@ -1011,5 +1051,8 @@ export {
   hasTableTabNavigation,
   shouldPreserveCData,
   shouldHighlightOnFocus,
-  shouldSanitizeXss
+  shouldSanitizeXss,
+  getDetailsInitialState,
+  getDetailsSerializedState,
+  shouldUseDocumentWrite
 };

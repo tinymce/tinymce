@@ -1,4 +1,4 @@
-import { AlloyComponent, SketchSpec, TieredData } from '@ephox/alloy';
+import { AlloyComponent, Disabling, SketchSpec, TieredData } from '@ephox/alloy';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -179,6 +179,7 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
   const onSetup = onSetupEvent(editor, 'NodeChange', (api: BespokeSelectApi) => {
     const comp = api.getComponent();
     spec.updateText(comp);
+    Disabling.set(api.getComponent(), !editor.selection.isEditable());
   });
 
   return renderCommonDropdown(

@@ -1,12 +1,10 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Css, Dimension, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
-import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
+import { TinyDom, TinyHooks, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-
-import * as TableTestUtils from '../../../module/table/TableTestUtils';
 
 interface PartialTableModifiedEvent {
   readonly type: string;
@@ -179,7 +177,7 @@ describe('browser.tinymce.models.dom.table.command.MergeCellCommandTest', () => 
   });
 
   it('TINY-9459: Should not merge cells in table inside noneditable root', () => {
-    TableTestUtils.withNoneditableRootEditor(hook.editor(), (editor) => {
+    TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
       testMerge(editor, {
         before: (
           '<table>' +

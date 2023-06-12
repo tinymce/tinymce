@@ -36,7 +36,7 @@ export interface ScriptLoaderSettings {
 export interface ScriptLoaderConstructor {
   readonly prototype: ScriptLoader;
 
-  new (): ScriptLoader;
+  new(): ScriptLoader;
 
   ScriptLoader: ScriptLoader;
 }
@@ -271,7 +271,9 @@ class ScriptLoader {
     const uniqueScripts = Unique.stringArray(scripts);
     if (self.loading) {
       return new Promise((resolve, reject) => {
-        self.queueLoadedCallbacks.push(() => processQueue(uniqueScripts).then(resolve, reject));
+        self.queueLoadedCallbacks.push(() => {
+          processQueue(uniqueScripts).then(resolve, reject);
+        });
       });
     } else {
       return processQueue(uniqueScripts);

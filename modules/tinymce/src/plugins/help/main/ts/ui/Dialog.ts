@@ -48,9 +48,9 @@ const getNamesFromTabs = (tabs: TabSpecs): TabData => {
   return { tabs, names };
 };
 
-const parseCustomTabs = (editor: Editor, customTabs: CustomTabSpecs): TabData => {
+const pParseCustomTabs = async (editor: Editor, customTabs: CustomTabSpecs, pluginUrl: string): Promise<TabData> => {
   const shortcuts = KeyboardShortcutsTab.tab();
-  const nav = KeyboardNavTab.tab();
+  const nav = await KeyboardNavTab.pTab(pluginUrl);
   const plugins = PluginsTab.tab(editor);
   const versions = VersionTab.tab();
   const tabs = {
@@ -67,31 +67,32 @@ const parseCustomTabs = (editor: Editor, customTabs: CustomTabSpecs): TabData =>
   );
 };
 
-const init = (editor: Editor, customTabs: CustomTabSpecs) => (): void => {
-  const { tabs, names } = parseCustomTabs(editor, customTabs);
-  const foundTabs: Optional<Dialog.TabSpec>[] = Arr.map(names, (name) => Obj.get(tabs, name));
-  const dialogTabs: Dialog.TabSpec[] = Optionals.cat(foundTabs);
+const init = (editor: Editor, customTabs: CustomTabSpecs, pluginUrl: string) => (): void => {
+  pParseCustomTabs(editor, customTabs, pluginUrl).then(({ tabs, names }) => {
+    const foundTabs: Optional<Dialog.TabSpec>[] = Arr.map(names, (name) => Obj.get(tabs, name));
+    const dialogTabs: Dialog.TabSpec[] = Optionals.cat(foundTabs);
 
-  const body: Dialog.TabPanelSpec = {
-    type: 'tabpanel',
-    tabs: dialogTabs
-  };
-  editor.windowManager.open(
-    {
-      title: 'Help',
-      size: 'normal',
-      body,
-      buttons: [
-        {
-          type: 'cancel',
-          name: 'close',
-          text: 'Close',
-          primary: true
-        }
-      ],
-      initialData: {}
-    }
-  );
+    const body: Dialog.TabPanelSpec = {
+      type: 'tabpanel',
+      tabs: dialogTabs
+    };
+    editor.windowManager.open(
+      {
+        title: 'Help',
+        size: 'medium',
+        body,
+        buttons: [
+          {
+            type: 'cancel',
+            name: 'close',
+            text: 'Close',
+            primary: true
+          }
+        ],
+        initialData: {}
+      }
+    );
+  });
 };
 
 export { init };

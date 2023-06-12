@@ -9,7 +9,7 @@ const isRoot = (root: SugarElement<Node>) => (node: SugarElement<Node>) =>
 
 // Given the current editor selection, identify the uid of any current
 // annotation
-const identify = (editor: Editor, annotationName: Optional<string>): Optional<{ uid: string; name: string; elements: any[] }> => {
+const identify = (editor: Editor, annotationName: Optional<string>): Optional<{ uid: string; name: string; elements: SugarElement<Element>[] }> => {
   const rng = editor.selection.getRng();
 
   const start = SugarElement.fromDom(rng.startContainer);

@@ -40,7 +40,7 @@ interface SelectedResizeHandle extends ResizeHandle {
 }
 
 const elementSelectionAttr = 'data-mce-selected';
-const controlElmSelector = 'table,img,figure.image,hr,video,span.mce-preview-object';
+const controlElmSelector = 'table,img,figure.image,hr,video,span.mce-preview-object,details';
 const abs = Math.abs;
 const round = Math.round;
 
@@ -429,7 +429,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
       img.removeAttribute(elementSelectionAttr);
     });
 
-    if (Type.isNonNullable(controlElm) && isChildOrEqual(controlElm, rootElement)) {
+    if (Type.isNonNullable(controlElm) && isChildOrEqual(controlElm, rootElement) && editor.hasFocus()) {
       disableGeckoResize();
       const startElm = selection.getStart(true);
 

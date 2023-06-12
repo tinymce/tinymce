@@ -39,9 +39,19 @@ describe('atomic.tinymce.plugins.media.core.UrlPatternsTest', () => {
     'https://player.vimeo.com/video/12345?title=0&byline=0&portrait=0&color=8dc7dc'
   ));
 
+  it('Matches vimeo ID with hash parameter URL', () => check(
+    'https://vimeo.com/12345?h=abcd',
+    'https://player.vimeo.com/video/12345?h=abcd&title=0&byline=0&portrait=0&color=8dc7dc'
+  ));
+
   it('Matches vimeo channel with ID URL', () => check(
     'https://vimeo.com/channels/staffpicks/12345',
     'https://player.vimeo.com/video/12345?title=0&amp;byline=0'
+  ));
+
+  it('Matches vimeo channel with ID and hash parameter URL', () => check(
+    'https://vimeo.com/channels/staffpicks/12345?h=abcd',
+    'https://player.vimeo.com/video/12345?h=abcd&title=0&amp;byline=0'
   ));
 
   it('Matches dailymotion URL', () => check(

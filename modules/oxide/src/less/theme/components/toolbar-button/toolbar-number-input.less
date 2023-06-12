@@ -44,6 +44,14 @@
         background: @color-white;
         color: @color-black;
       }
+
+      &:disabled {
+        background: @toolbar-button-disabled-background-color;
+        border: @toolbar-button-disabled-border;
+        box-shadow: @toolbar-button-disabled-box-shadow;
+        color: @toolbar-button-disabled-text-color;
+        cursor: not-allowed;
+      }
     }
 
     button {
@@ -83,6 +91,18 @@
 
         svg {
           fill: @toolbar-button-active-icon-color;
+        }
+      }
+
+      &:disabled {
+        background: @toolbar-button-disabled-background-color;
+        border: @toolbar-button-disabled-border;
+        box-shadow: @toolbar-button-disabled-box-shadow;
+        color: @toolbar-button-disabled-text-color;
+        cursor: not-allowed;
+
+        svg {
+          fill: @toolbar-button-disabled-icon-color;
         }
       }
     }

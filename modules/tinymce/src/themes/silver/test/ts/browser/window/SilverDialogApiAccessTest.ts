@@ -124,7 +124,7 @@ describe('browser.tinymce.themes.silver.window.SilverDialogApiAccessTest', () =>
         DialogUtils.close(editor);
       });
 
-      it('TINY-9696: opening menu button in footer should not throw error after a redial', async () => {
+      it('TINY-9686: opening menu button in footer should not throw error after a redial', async () => {
         const editor = hook.editor();
 
         const pTestMenuButtonItem = async (expectedState: boolean) => {

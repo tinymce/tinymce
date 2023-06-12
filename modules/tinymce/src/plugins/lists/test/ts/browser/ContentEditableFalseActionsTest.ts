@@ -127,13 +127,23 @@ ${listContent}
     })
   );
 
-  it('TINY-9458: InsertOrderedList command should noop if noneditable blocks are selected', () => {
+  const testNonEditableBlocksIgnore = (command: 'InsertOrderedList' | 'InsertUnorderedList'): void => {
     const editor = hook.editor();
     const initialContent = '<p>a</p>\n<p contenteditable="false">b</p>\n<p>c</p>';
+    const tag = command === 'InsertOrderedList' ? 'ol' : 'ul';
+    const expectedContent = `<${tag}>\n<li>a</li>\n</${tag}>\n<p contenteditable="false">b</p>\n<${tag}>\n<li>c</li>\n</${tag}>`;
 
     editor.setContent(initialContent);
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 2, 0 ], 1);
-    editor.execCommand('InsertOrderedList');
-    TinyAssertions.assertContent(editor, initialContent);
+    editor.execCommand(command);
+    TinyAssertions.assertContent(editor, expectedContent);
+  };
+
+  it('TINY-9823: InsertOrderedList command should ignore noneditable blocks', () => {
+    testNonEditableBlocksIgnore('InsertOrderedList');
+  });
+
+  it('TINY-9823: InsertUnorderedList command should ignore noneditable blocks', () => {
+    testNonEditableBlocksIgnore('InsertUnorderedList');
   });
 });

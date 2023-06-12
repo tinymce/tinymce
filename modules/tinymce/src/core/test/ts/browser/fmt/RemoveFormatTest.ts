@@ -1,5 +1,6 @@
 import { context, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { Hierarchy } from '@ephox/sugar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Format } from 'tinymce/core/fmt/FormatTypes';
@@ -25,7 +26,7 @@ describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {
 
   const doRemoveFormat = (editor: Editor, format: Format[]) => {
     editor.formatter.register('format', format);
-    RemoveFormat.remove(editor, 'format');
+    RemoveFormat.removeFormat(editor, 'format');
     editor.formatter.unregister('format');
   };
 
@@ -157,7 +158,7 @@ describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {
       );
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 1, 1, 1 ], 0);
 
-      RemoveFormat.remove(editor, 'aligncenter');
+      RemoveFormat.removeFormat(editor, 'aligncenter');
       TinyAssertions.assertContent(editor,
         '<ul>' +
           '<li>a</li>' +
@@ -192,7 +193,7 @@ describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {
       );
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 1, 1, 1, 1, 1 ], 0);
 
-      RemoveFormat.remove(editor, 'aligncenter');
+      RemoveFormat.removeFormat(editor, 'aligncenter');
       TinyAssertions.assertContent(editor,
         '<ul>' +
           '<li>1</li>' +
@@ -244,7 +245,7 @@ describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {
       editor.setContent('<p style="text-align: right;">Test text<img src="link" width="40" height="40"></p>');
       TinySelections.setSelection(editor, [ 0 ], 1, [ 0 ], 2);
 
-      RemoveFormat.remove(editor, 'alignright');
+      RemoveFormat.removeFormat(editor, 'alignright');
 
       TinyAssertions.assertContent(editor, '<p style="text-align: right;">Test text<img src="link" width="40" height="40"></p>');
       TinyAssertions.assertSelection(editor, [ 0 ], 1, [ 0 ], 2);
@@ -255,10 +256,29 @@ describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {
       editor.setContent('<p style="text-align: right;">Test text<img src="link" width="40" height="40" style="float: right"></p>');
       TinySelections.setSelection(editor, [ 0 ], 1, [ 0 ], 2);
 
-      RemoveFormat.remove(editor, 'alignright');
+      RemoveFormat.removeFormat(editor, 'alignright');
 
       TinyAssertions.assertContent(editor, '<p style="text-align: right;">Test text<img src="link" width="40" height="40"></p>');
       TinyAssertions.assertSelection(editor, [ 0 ], 1, [ 0 ], 2);
+    });
+  });
+
+  it('TINY-9678: Should be a noop if selection is not in an editable context', () => {
+    TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+      const initialContent = '<p><strong>test</strong></p><p contenteditable="true"><strong>editable</strong></p>';
+      editor.setContent(initialContent);
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 4);
+      editor.formatter.remove('bold');
+      TinyAssertions.assertContent(editor, initialContent);
+    });
+  });
+
+  it('TINY-9887: Should not be a noop if selection is not in an editable context but a custom editable node is specified', () => {
+    TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+      editor.setContent('<p><strong>test</strong></p><p contenteditable="true"><strong>editable</strong></p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 4);
+      editor.formatter.remove('bold', {}, Hierarchy.follow(TinyDom.body(editor), [ 1, 0 ]).getOrDie().dom);
+      TinyAssertions.assertContent(editor, '<p><strong>test</strong></p><p contenteditable="true">editable</p>');
     });
   });
 });

@@ -1,5 +1,5 @@
 import { Keys } from '@ephox/agar';
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, FocusInsideModes, Input, Keying, Memento, NativeEvents, Representing } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Disabling, Focusing, FocusInsideModes, Input, Keying, Memento, NativeEvents, Representing } from '@ephox/alloy';
 import { Arr, Cell, Fun, Id, Optional } from '@ephox/katamari';
 import { Focus, SugarElement, Traverse } from '@ephox/sugar';
 
@@ -26,6 +26,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
     const comp = api.getComponent();
     currentComp = Optional.some(comp);
     spec.updateInputValue(comp);
+    Disabling.set(comp, !editor.selection.isEditable());
   });
 
   const getApi = (comp: AlloyComponent): BespokeSelectApi => ({ getComponent: Fun.constant(comp) });
@@ -73,8 +74,15 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
   const makeStepperButton = (action: (focusBack: boolean) => void, title: string, tooltip: string, classes: string[]) => {
     const translatedTooltip = backstage.shared.providers.translate(tooltip);
     const altExecuting = Id.generate('altExecuting');
+    const onSetup = onSetupEvent(editor, 'NodeChange', (api: BespokeSelectApi) => {
+      Disabling.set(api.getComponent(), !editor.selection.isEditable());
+    });
 
-    const onClick = () => action(true);
+    const onClick = (comp: AlloyComponent) => {
+      if (!Disabling.isDisabled(comp)) {
+        action(true);
+      }
+    };
 
     return Button.sketch({
       dom: {
@@ -89,10 +97,15 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
         renderIconFromPack(title, backstage.shared.providers.icons)
       ],
       buttonBehaviours: Behaviour.derive([
+        Disabling.config({}),
         AddEventsBehaviour.config(altExecuting, [
-          AlloyEvents.run(NativeEvents.keydown(), (_comp, se) => {
+          onControlAttached({ onSetup, getApi }, editorOffCell),
+          onControlDetached({ getApi }, editorOffCell),
+          AlloyEvents.run(NativeEvents.keydown(), (comp, se) => {
             if (se.event.raw.keyCode === Keys.space() || se.event.raw.keyCode === Keys.enter()) {
-              action(false);
+              if (!Disabling.isDisabled(comp)) {
+                action(false);
+              }
             }
           }),
           AlloyEvents.run(NativeEvents.click(), onClick),
@@ -118,6 +131,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
     components: [
       Input.sketch({
         inputBehaviours: Behaviour.derive([
+          Disabling.config({}),
           AddEventsBehaviour.config(customEvents, [
             onControlAttached({ onSetup, getApi }, editorOffCell),
             onControlDetached({ getApi }, editorOffCell)

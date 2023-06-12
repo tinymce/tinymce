@@ -1,5 +1,6 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Cell, Fun, Optional } from '@ephox/katamari';
+import { Attribute } from '@ephox/sugar';
 
 import { Coupling } from '../../api/behaviour/Coupling';
 import { Focusing } from '../../api/behaviour/Focusing';
@@ -82,6 +83,14 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
               if (detail.model.populateFromBrowse) {
                 setValueFromItem(detail.model, input, item);
               }
+
+              // The focus is retained on the input element when the menu is shown, unlike the combobox, in which the focus is passed to the menu.
+              // This results in screen readers not being able to announce the menu or highlighted item.
+              // The solution is to tell screen readers which menu item is highlighted using the `aria-activedescendant` attribute.
+              // TINY-9280: The aria attribute is removed when the menu is closed.
+              // Since `onDehighlight` is called only when highlighting a new menu item, this will be handled in
+              // https://github.com/tinymce/tinymce/blob/2d8c1c034e8aa484b868a0c44605489ee0ca9cd4/modules/alloy/src/main/ts/ephox/alloy/ui/composite/TypeaheadSpec.ts#L282
+              Attribute.getOpt(item.element, 'id').each((id) => Attribute.set(input.element, 'aria-activedescendant', id));
             });
           } else {
             // ASSUMPTION: Currently, any interaction with the menu via the keyboard or the mouse

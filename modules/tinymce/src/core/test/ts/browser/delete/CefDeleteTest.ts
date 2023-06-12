@@ -1,7 +1,7 @@
 import { ApproxStructure, Keys } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -261,15 +261,14 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
       });
 
       it(`TINY-9477: should not delete anything between editables in a noneditable root when ${label} is pressed`, () => {
-        const editor = hook.editor();
-        const initialContent = '<p>a</p><p>b</p>';
-        editor.getBody().contentEditable = 'false';
-        editor.setContent(initialContent);
-        TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 1, 0 ], 1);
-        TinyContentActions.keystroke(editor, key());
-        TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 1, 0 ], 1);
-        TinyAssertions.assertContent(editor, initialContent);
-        editor.getBody().contentEditable = 'true';
+        TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+          const initialContent = '<p>a</p><p>b</p>';
+          editor.setContent(initialContent);
+          TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 1, 0 ], 1);
+          TinyContentActions.keystroke(editor, key());
+          TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 1, 0 ], 1);
+          TinyAssertions.assertContent(editor, initialContent);
+        });
       });
     });
   });

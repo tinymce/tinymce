@@ -183,4 +183,26 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
     // Checking 2 events fired verifies the event handlers finished running, so an exception shouldn't have been raised
     assertKeydownCount(2);
   });
+
+  it('TINY-9565: Should navigate CEFs in reverse if the element has a dir attribute of rtl', () => {
+    const editor = hook.editor();
+    editor.setContent('<p dir="rtl">&#x5e2;&#x5b4;&#x5d1;<span contenteditable="false">CEF</span><span contenteditable="false">CEF</span>&#x5e2;&#x5b4;&#x5d1;</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 3);
+    TinyContentActions.keystroke(editor, Keys.left());
+    TinyAssertions.assertSelection(editor, [ 0 ], 1, [ 0 ], 2);
+    TinyContentActions.keystroke(editor, Keys.left());
+    TinyAssertions.assertCursor(editor, [ 0, 2 ], 0);
+    TinyContentActions.keystroke(editor, Keys.left());
+    TinyAssertions.assertSelection(editor, [ 0 ], 2, [ 0 ], 3);
+    TinyContentActions.keystroke(editor, Keys.left());
+    TinyAssertions.assertCursor(editor, [ 0, 3 ], 1);
+    TinyContentActions.keystroke(editor, Keys.right());
+    TinyAssertions.assertSelection(editor, [ 0 ], 2, [ 0 ], 3);
+    TinyContentActions.keystroke(editor, Keys.right());
+    TinyAssertions.assertCursor(editor, [ 0, 2 ], 0);
+    TinyContentActions.keystroke(editor, Keys.right());
+    TinyAssertions.assertSelection(editor, [ 0 ], 1, [ 0 ], 2);
+    TinyContentActions.keystroke(editor, Keys.right());
+    TinyAssertions.assertCursor(editor, [ 0, 1 ], 0);
+  });
 });

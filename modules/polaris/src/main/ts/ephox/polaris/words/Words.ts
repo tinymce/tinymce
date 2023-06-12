@@ -1,4 +1,4 @@
-import { Unicode } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 
 import { CharacterMap, classify } from './StringMapper';
 import * as UnicodeData from './UnicodeData';
@@ -26,9 +26,22 @@ const findUrlEnd = (characters: string[], startIndex: number): number => {
   return peakedWord.substr(0, 3) === '://' ? endIndex : startIndex;
 };
 
-const findWords = <T>(chars: T[], sChars: string[], characterMap: CharacterMap, options: WordOptions): T[][] => {
-  const words: T[][] = [];
-  let word: T[] = [];
+export type Word<T> = T[];
+
+interface WordIndex {
+  readonly start: number;
+  readonly end: number;
+}
+
+export interface WordsWithIndices<T> {
+  readonly words: Word<T>[];
+  readonly indices: WordIndex[];
+}
+
+const findWordsWithIndices = <T>(chars: Word<T>, sChars: string[], characterMap: CharacterMap, options: WordOptions): WordsWithIndices<T> => {
+  const words: Word<T>[] = [];
+  const indices: WordIndex[] = [];
+  let word: Word<T> = [];
 
   // Loop through each character in the classification map and determine whether
   // it precedes a word boundary, building an array of distinct words as we go.
@@ -57,13 +70,17 @@ const findWords = <T>(chars: T[], sChars: string[], characterMap: CharacterMap, 
         }
 
         words.push(word);
+        indices.push({
+          start: startOfWord,
+          end: endOfWord
+        });
       }
 
       word = [];
     }
   }
 
-  return words;
+  return { words, indices };
 };
 
 export interface WordOptions {
@@ -76,28 +93,20 @@ const getDefaultOptions = (): WordOptions => ({
   includePunctuation: false
 });
 
-const getWords = <T>(chars: T[], extract: (char: T) => string, options?: WordOptions): T[][] => {
+const getWordsWithIndices = <T>(chars: Word<T>, extract: (char: T) => string, options?: WordOptions): WordsWithIndices<T> => {
   options = {
     ...getDefaultOptions(),
     ...options
   };
-
-  const filteredChars: T[] = [];
-  const extractedChars: string[] = [];
-
-  // tslint:disable-next-line:prefer-for-of
-  for (let i = 0; i < chars.length; i++) {
-    const ch = extract(chars[i]);
-    if (ch !== Unicode.zeroWidth) {
-      filteredChars.push(chars[i]);
-      extractedChars.push(ch);
-    }
-  }
-
+  const extractedChars: string[] = Arr.map(chars, extract);
   const characterMap: CharacterMap = classify(extractedChars);
-  return findWords(filteredChars, extractedChars, characterMap, options);
+  return findWordsWithIndices(chars, extractedChars, characterMap, options);
 };
 
+const getWords = <T>(chars: Word<T>, extract: (char: T) => string, options?: WordOptions): Word<T>[] =>
+  getWordsWithIndices(chars, extract, options).words;
+
 export {
-  getWords
+  getWords,
+  getWordsWithIndices
 };

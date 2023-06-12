@@ -507,6 +507,27 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
     });
   });
 
+  it('TINY-9768: html4 schema should not allow non-inline children for caption, address and dt elements ', () => {
+    const schemaHtml4 = Schema({ schema: 'html4' });
+    const schemaHtml5 = Schema({ schema: 'html5' });
+    Arr.each([ 'caption', 'address', 'dt' ], (parent) => {
+      Obj.each(schemaHtml4.getTextBlockElements(), (_v, child) => {
+        assert.isFalse(schemaHtml4.isValidChild(parent, child));
+      });
+      Obj.each(schemaHtml5.getTextBlockElements(), (_v, child) => {
+        assert.isTrue(schemaHtml5.isValidChild(parent, child));
+      });
+
+    });
+  });
+
+  it('TINY-9805: html4 schema should not allow block children elements for the link element ', () => {
+    const schemaHtml4 = Schema({ schema: 'html4' });
+    Obj.each(schemaHtml4.getTextBlockElements(), (_v, child) => {
+      assert.isFalse(schemaHtml4.isValidChild('a', child));
+    });
+  });
+
   context('custom elements', () => {
     it('TBA: custom elements are added as element rules and copy the span/div rules', () => {
       const schema = Schema({

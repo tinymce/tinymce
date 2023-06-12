@@ -1,4 +1,4 @@
-import { Arr, Fun, Obj, Optional, Strings } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Strings, Unicode } from '@ephox/katamari';
 import { Attribute, Insert, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
@@ -128,7 +128,7 @@ const removeCaretContainer = (editor: Editor, node: Node | null, moveCaret: bool
 
     if (!node) {
       while ((node = dom.get(CARET_ID))) {
-        removeCaretContainerNode(editor, node, false);
+        removeCaretContainerNode(editor, node, moveCaret);
       }
     }
   } else {
@@ -325,10 +325,10 @@ const removeCaretFormat = (editor: Editor, name: string, vars?: FormatVars, simi
   }
 };
 
-const disableCaretContainer = (editor: Editor, keyCode: number) => {
+const disableCaretContainer = (editor: Editor, keyCode: number, moveCaret: boolean) => {
   const selection = editor.selection, body = editor.getBody();
 
-  removeCaretContainer(editor, null, false);
+  removeCaretContainer(editor, null, moveCaret);
 
   // Remove caret container if it's empty
   if ((keyCode === 8 || keyCode === 46) && selection.isCollapsed() && selection.getStart().innerHTML === ZWSP) {
@@ -341,9 +341,11 @@ const disableCaretContainer = (editor: Editor, keyCode: number) => {
   }
 };
 
+const endsWithNbsp = (element: Node) => NodeType.isText(element) && Strings.endsWith(element.data, Unicode.nbsp);
+
 const setup = (editor: Editor): void => {
   editor.on('mouseup keydown', (e) => {
-    disableCaretContainer(editor, e.keyCode);
+    disableCaretContainer(editor, e.keyCode, endsWithNbsp(editor.selection.getRng().endContainer));
   });
 };
 
@@ -364,9 +366,9 @@ const replaceWithCaretFormat = (targetNode: Node, formatNodes: Node[]): CaretPos
   return caretPosition;
 };
 
-const createCaretFormatAtStart = (editor: Editor, formatNodes: Node[]): CaretPosition => {
+const createCaretFormatAtStart = (rng: Range, formatNodes: Node[]): CaretPosition => {
   const { caretContainer, caretPosition } = createCaretFormat(formatNodes);
-  editor.selection.getRng().insertNode(caretContainer.dom);
+  rng.insertNode(caretContainer.dom);
 
   return caretPosition;
 };

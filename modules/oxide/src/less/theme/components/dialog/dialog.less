@@ -62,6 +62,8 @@
 
 @dialog-table-border-color: darken(@border-color, 55%);
 @dialog-nav-focus-background-color: fade(@color-tint, 10%);
+@dialog-tab-max-width: 13em;
+@dialog-tab-column-max-width: 11em;
 
 // These get stacked on top of the global dialog z-index (1100)
 @z-index-dialogs-offset-wrap-background: 1;
@@ -193,7 +195,12 @@
     align-items: flex-start;
     display: flex;
     flex-direction: column;
+    flex-shrink: 0;
     padding: @dialog-body-padding;
+
+    @media @breakpoint-gt-sm {
+      max-width: @dialog-tab-column-max-width;
+    }
 
     @media @breakpoint-sm {
       body:not(.tox-force-desktop) & {
@@ -209,11 +216,12 @@
     border-bottom: 2px solid transparent;
     color: @text-color-muted;
     display: inline-block;
+    flex-shrink: 0;
     font-size: @font-size-sm;
     line-height: @line-height-base;
     margin-bottom: @pad-sm;
+    max-width: @dialog-tab-max-width;
     text-decoration: none;
-    white-space: nowrap;
 
     &:focus {
       background-color: @dialog-nav-focus-background-color;
@@ -230,7 +238,7 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    max-height: 650px; // TODO (verify max-height for dialogs)
+    max-height: ~"min(650px, calc(100vh - 110px))"; // TODO (verify max-height for dialogs)
     overflow: auto; //overflow controls all scrolling in the dialogs
     -webkit-overflow-scrolling: touch;
     padding: @dialog-body-padding;
@@ -274,13 +282,34 @@
       fill: @dialog-body-text-color;
     }
 
+    strong {
+      font-weight: @font-weight-bold;
+    }
+
     ul {
-      display: block;
       list-style-type: disc;
+    }
+
+    ul,
+    ol,
+    dd {
+      padding-inline-start: 2.5rem;
+    }
+
+    ul,
+    ol,
+    dl {
       margin-bottom: @pad-md;
+    }
+
+    ul,
+    ol,
+    dl,
+    dd,
+    dt {
+      display: block;
       margin-inline-end: 0;
       margin-inline-start: 0;
-      padding-inline-start: 2.5rem;
     }
 
     .tox-form__group h1 {

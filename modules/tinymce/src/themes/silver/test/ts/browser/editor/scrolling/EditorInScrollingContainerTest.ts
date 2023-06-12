@@ -172,10 +172,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
             // The first time it appears, it doesn't get fade-in, so we just look for non-fadeout
             // for now.
             arr.not(ui.editor.stickyHeaderInvisible.className),
-            // TINY-9408: In classic mode, the transition class isn't going away because
-            // there is another transition style clobbering it. Reinstate the `arr.not` check
-            // when the bug is fixed.
-            // arr.not(ui.editor.stickyHeaderTransitioning.className)
+            arr.not(ui.editor.stickyHeaderTransitioning.className)
           ]
         })),
         header
@@ -191,10 +188,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
         ApproxStructure.build((s, str, arr) => s.element('div', {
           classes: [
             arr.has(ui.editor.stickyHeaderInvisible.className),
-            // TINY-9408: In classic mode, the transition class isn't going away because
-            // there is another transition style clobbering it. Reinstate the `arr.not` check
-            // when the bug is fixed.
-            // arr.not(ui.editor.stickyHeaderTransitioning.className)
+            arr.not(ui.editor.stickyHeaderTransitioning.className)
           ]
         })),
         header
@@ -864,6 +858,7 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
       });
 
       const contextOrSkipIfIframe = scenario.settings.inline ? context : context.skip;
+      const paragraphMargin = 18.5;
 
       contextOrSkipIfIframe('toolbar should disappear in inline mode, toolbar_location: top', () => {
         const hook = TinyHooks.bddSetupFromElement<Editor>(
@@ -886,10 +881,25 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
           const header = getEditorUi(editor, ui.editor.stickyHeader);
           const scroller = getAncestorUi(editor, ui.ancestors.scrollingWrapper);
 
-          scroller.dom.scrollTo(0, 0);
+          scroller.dom.scrollTo(0, heights.largeBanner);
+          await pWaitUntilAppears(header);
+
+          // Scrolling down enough for the toolbar to show, adding additional paragraph margin
+          scroller.dom.scrollTo(0, heights.largeBanner - heights.scroller + paragraphMargin);
+          await pWaitUntilAppears(header);
+
+          // Scrolling down past the editor, until editor is not visible in view
+          scroller.dom.scrollTo(0, heights.largeBanner - heights.scroller);
           await pWaitUntilDisappears(header);
 
-          scroller.dom.scrollTo(0, 10000);
+          scroller.dom.scrollTo(0, heights.largeBanner);
+          await pWaitUntilAppears(header);
+
+          scroller.dom.scrollTo(0, heights.editor + heights.largeBanner - header.dom.offsetHeight);
+          await pWaitUntilAppears(header);
+
+          // Scrolling down not entirely past the editor, but enough for the toolbar to disappear
+          scroller.dom.scrollTo(0, heights.editor + heights.largeBanner - header.dom.offsetHeight + paragraphMargin);
           await pWaitUntilDisappears(header);
         });
       });
@@ -916,15 +926,30 @@ describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContai
           const header = getEditorUi(editor, ui.editor.stickyHeader);
           const scroller = getAncestorUi(editor, ui.ancestors.scrollingWrapper);
 
-          // Scroll past the orange banner to let the toolbar docked at the top of the scrollable container
-          scroller.dom.scrollTo(0, heights.largeBanner + 100);
-
-          await pWaitUntilDockedAtPosition(header, Optional.none());
-
-          scroller.dom.scrollTo(0, 10000);
+          scroller.dom.scrollTo(0, 0);
           await pWaitUntilDisappears(header);
 
-          scroller.dom.scrollTo(0, 0);
+          // Scrolling down past the orange banner, until editor is visible in view
+          scroller.dom.scrollTo(0, heights.largeBanner);
+          await pWaitUntilAppears(header);
+
+          // Scrolling down enough for the toolbar to show, adding additional paragraph margin
+          scroller.dom.scrollTo(0, heights.largeBanner - heights.scroller + header.dom.offsetHeight + paragraphMargin);
+          await pWaitUntilAppears(header);
+
+          scroller.dom.scrollTo(0, heights.largeBanner - heights.scroller);
+          await pWaitUntilDisappears(header);
+
+          // Scroll past the orange banner to let the toolbar docked at the top of the scrollable container
+          scroller.dom.scrollTo(0, heights.largeBanner + 100);
+          await pWaitUntilDockedAtPosition(header, Optional.none());
+
+          // There's additional paragraph margin of 18.5px, so the toolbar should still be visible
+          scroller.dom.scrollTo(0, heights.largeBanner + heights.editor);
+          await pWaitUntilAppears(header);
+
+          // Scrolling down past the editor, until editor is not visible in view
+          scroller.dom.scrollTo(0, heights.largeBanner + heights.editor + paragraphMargin);
           await pWaitUntilDisappears(header);
         });
       });

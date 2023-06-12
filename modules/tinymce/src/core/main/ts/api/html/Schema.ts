@@ -263,14 +263,15 @@ const compileSchema = (type: SchemaType): SchemaLookupTable => {
   add('body', 'onafterprint onbeforeprint onbeforeunload onblur onerror onfocus ' +
     'onhashchange onload onmessage onoffline ononline onpagehide onpageshow ' +
     'onpopstate onresize onscroll onstorage onunload', flowContent);
-  add('address dt dd div caption', '', flowContent);
+  add('dd div', '', flowContent);
+  add('address dt caption', '', type === 'html4' ? phrasingContent : flowContent);
   add('h1 h2 h3 h4 h5 h6 pre p abbr code var samp kbd sub sup i b u bdo span legend em strong small s cite dfn', '', phrasingContent);
   add('blockquote', 'cite', flowContent);
   add('ol', 'reversed start type', 'li');
   add('ul', '', 'li');
   add('li', 'value', flowContent);
   add('dl', '', 'dt dd');
-  add('a', 'href target rel media hreflang type', flowContent);
+  add('a', 'href target rel media hreflang type', type === 'html4' ? phrasingContent : flowContent);
   add('q', 'cite', phrasingContent);
   add('ins del', 'cite datetime', flowContent);
   add('img', 'src sizes srcset alt usemap ismap width height');
@@ -828,8 +829,10 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     });
 
     // Padd these by default
-    each(split('p h1 h2 h3 h4 h5 h6 th td pre div address caption li'), (name) => {
-      elements[name].paddEmpty = true;
+    each(split('p h1 h2 h3 h4 h5 h6 th td pre div address caption li summary'), (name) => {
+      if (elements[name]) {
+        elements[name].paddEmpty = true;
+      }
     });
 
     // Remove these if they have no attributes

@@ -1,4 +1,5 @@
 import { UiControls, UiFinder, Waiter } from '@ephox/agar';
+import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { SugarElement } from '@ephox/sugar';
 import { TinyContentActions, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -17,6 +18,11 @@ const fakeEvent = (elm: SugarElement<HTMLElement>, name: string): void => {
 const pFindInDialog = async <T extends HTMLElement>(editor: Editor, selector: string): Promise<SugarElement<T>> => {
   const dialog = await TinyUiActions.pWaitForDialog(editor);
   return UiFinder.findIn<T>(dialog, selector).getOrDie();
+};
+
+const pAssertAlertInDialog = async (editor: Editor): Promise<boolean> => {
+  const dialog = await TinyUiActions.pWaitForDialog(editor);
+  return UiFinder.findIn(dialog, '.tox-notification--error').fold(Fun.never, Fun.always);
 };
 
 const pAssertFieldValue = async (editor: Editor, selector: string, value: string): Promise<void> => {
@@ -65,6 +71,7 @@ export {
   pOpenDialog,
   pOpenDialogWithKeyboard,
   pAssertFieldValue,
+  pAssertAlertInDialog,
   pSelectPreference,
   pSetFieldValue
 };

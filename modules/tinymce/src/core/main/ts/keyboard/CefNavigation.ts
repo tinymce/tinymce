@@ -1,6 +1,7 @@
 import { Fun, Optional } from '@ephox/katamari';
 import { Insert, SugarElement } from '@ephox/sugar';
 
+import EditorSelection from '../api/dom/Selection';
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import CaretPosition from '../caret/CaretPosition';
@@ -10,6 +11,7 @@ import { CaretWalker, HDirection } from '../caret/CaretWalker';
 import * as LineWalker from '../caret/LineWalker';
 import * as NodeType from '../dom/NodeType';
 import { getEdgeCefPosition } from './CefUtils';
+import * as InlineUtils from './InlineUtils';
 import * as NavigationUtils from './NavigationUtils';
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
@@ -75,8 +77,13 @@ const getVerticalRange = (editor: Editor, down: boolean): Optional<Range> => {
   });
 };
 
+const flipDirection = (selection: EditorSelection, forward: boolean) => {
+  const elm = forward ? selection.getEnd(true) : selection.getStart(true);
+  return InlineUtils.isRtl(elm) ? !forward : forward;
+};
+
 const moveH = (editor: Editor, forward: boolean): boolean =>
-  getHorizontalRange(editor, forward).exists((newRange) => {
+  getHorizontalRange(editor, flipDirection(editor.selection, forward)).exists((newRange) => {
     NavigationUtils.moveToRange(editor, newRange);
     return true;
   });

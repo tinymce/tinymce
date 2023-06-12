@@ -1,3 +1,4 @@
+import { DataTransfer, DataTransferContent, DataTransferMode } from '@ephox/dragster';
 import { Arr, Cell, Strings, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
@@ -8,6 +9,7 @@ import * as Options from '../api/Options';
 import Delay from '../api/util/Delay';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import VK from '../api/util/VK';
+import * as InputEvents from '../events/InputEvents';
 import * as Conversions from '../file/Conversions';
 import * as Whitespace from '../text/Whitespace';
 import * as InternalHtml from './InternalHtml';
@@ -28,11 +30,23 @@ export interface ClipboardContents {
 
 const uniqueId = PasteUtils.createIdGenerator('mceclip');
 
-const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText: boolean): void => {
-  const args = ProcessFilters.process(editor, content, internal);
+const createPasteDataTransfer = (html: string): DataTransfer => {
+  const dataTransfer = DataTransfer.createDataTransfer();
+  DataTransferContent.setHtmlData(dataTransfer, html);
+  // TINY-9829: Set to read-only mode as per https://www.w3.org/TR/input-events-2/
+  DataTransferMode.setReadOnlyMode(dataTransfer);
+  return dataTransfer;
+};
 
-  if (!args.cancelled) {
-    SmartPaste.insertContent(editor, args.content, pasteAsText);
+const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText: boolean): void => {
+  const res = ProcessFilters.process(editor, content, internal);
+  if (!res.cancelled) {
+    const content = res.content;
+    const args = InputEvents.fireBeforeInputEvent(editor, 'insertFromPaste', { dataTransfer: createPasteDataTransfer(content) });
+    if (!args.isDefaultPrevented()) {
+      SmartPaste.insertContent(editor, content, pasteAsText);
+      InputEvents.fireInputEvent(editor, 'insertFromPaste');
+    }
   }
 };
 
@@ -236,9 +250,10 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
       return;
     }
 
+    e.preventDefault();
+
     // If the clipboard API has HTML then use that directly
     if (hasContentType(clipboardContent, 'text/html')) {
-      e.preventDefault();
       insertClipboardContent(editor, clipboardContent, clipboardContent['text/html'], plainTextMode);
     } else if (hasContentType(clipboardContent, 'text/plain') && hasContentType(clipboardContent, 'text/uri-list')) {
       /*
@@ -246,7 +261,6 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
       When pasting something with the url-list within safari using the default functionality it will convert it from www.example.com to <a href="www.example.com">www.example.com</a> when pasting into the pasteBin-div.
       This causes issues. To solve this we bypass the default paste functionality for this situation.
        */
-      e.preventDefault();
       insertClipboardContent(editor, clipboardContent, clipboardContent['text/plain'], plainTextMode);
     } else {
       // We can't extract the HTML content from the clipboard so we need to allow the paste

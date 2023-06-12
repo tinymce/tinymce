@@ -20,7 +20,7 @@ const open = (editor: Editor): void => {
       type: 'panel',
       items: [
         {
-          type: 'selectbox',
+          type: 'listbox',
           name: 'language',
           label: 'Language',
           items: languages

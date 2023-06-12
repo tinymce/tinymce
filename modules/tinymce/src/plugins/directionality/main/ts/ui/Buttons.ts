@@ -9,8 +9,10 @@ const getNodeChangeHandler = (editor: Editor, dir: 'ltr' | 'rtl') => (api: Toolb
   const nodeChangeHandler = (e: EditorEvent<NodeChangeEvent>) => {
     const element = SugarElement.fromDom(e.element);
     api.setActive(Direction.getDirection(element) === dir);
+    api.setEnabled(editor.selection.isEditable());
   };
   editor.on('NodeChange', nodeChangeHandler);
+  api.setEnabled(editor.selection.isEditable());
 
   return () => editor.off('NodeChange', nodeChangeHandler);
 };

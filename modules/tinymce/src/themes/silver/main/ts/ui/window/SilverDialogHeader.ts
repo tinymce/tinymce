@@ -30,7 +30,7 @@ const renderClose = (providersBackstage: UiFactoryBackstageProviders) => Button.
     Tabstopping.config({ })
   ]),
   components: [
-    Icons.render('close', { tag: 'div', classes: [ 'tox-icon' ] }, providersBackstage.icons)
+    Icons.render('close', { tag: 'span', classes: [ 'tox-icon' ] }, providersBackstage.icons)
   ],
   action: (comp) => {
     AlloyTriggers.emit(comp, formCancelEvent);

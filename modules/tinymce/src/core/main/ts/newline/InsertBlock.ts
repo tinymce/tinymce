@@ -1,5 +1,5 @@
 import { Arr, Obj, Optional, Optionals, Type } from '@ephox/katamari';
-import { Css, PredicateFilter, SugarElement, SugarNode } from '@ephox/sugar';
+import { ContentEditable, Css, Insert, PredicateFilter, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
@@ -15,6 +15,7 @@ import { isCaretNode } from '../fmt/FormatContainer';
 import * as NormalizeRange from '../selection/NormalizeRange';
 import { isWhitespaceText } from '../text/Whitespace';
 import * as Zwsp from '../text/Zwsp';
+import * as InsertDetailsNewLine from './InsertDetailsNewLine';
 import * as InsertLi from './InsertLi';
 import * as NewLineUtils from './NewLineUtils';
 
@@ -241,6 +242,14 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   const rng = editor.selection.getRng();
   const newBlockName = Options.getForcedRootBlock(editor);
 
+  const isInRoot = rng.collapsed && rng.startContainer === editor.dom.getRoot();
+  const start = SugarElement.fromDom(rng.startContainer);
+
+  const child = Traverse.child(start, rng.startOffset);
+  const isCef = child.exists((element) => SugarNode.isHTMLElement(element) && !ContentEditable.isEditable(element));
+
+  const inRootAndLastOrCef = isInRoot && isCef;
+
   // Creates a new block element by cloning the current one or creating a new one if the name is specified
   // This function will also copy any text formatting from the parent block and add it to the new one
   const createNewBlock = (name?: string): Element => {
@@ -360,7 +369,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     }
 
     // Split the current container block element if enter is pressed inside an empty inner block element
-    if (shouldEndContainer(editor, containerBlock) && canSplitBlock(dom, containerBlock) && dom.isEmpty(parentBlock)) {
+    if (shouldEndContainer(editor, containerBlock) && canSplitBlock(dom, containerBlock) && dom.isEmpty(parentBlock, undefined, { includeZwsp: true })) {
       // Split container block for example a BLOCKQUOTE at the current blockParent location for example a P
       block = dom.split(containerBlock, parentBlock) as Element;
     } else {
@@ -383,7 +392,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   const ctrlKey = !!(evt && evt.ctrlKey);
 
   // Resolve node index
-  if (NodeType.isElement(container) && container.hasChildNodes()) {
+  if (NodeType.isElement(container) && container.hasChildNodes() && !inRootAndLastOrCef) {
     isAfterLastNodeInContainer = offset > container.childNodes.length - 1;
 
     container = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;
@@ -425,6 +434,10 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     parentBlockName = containerBlockName;
   }
 
+  if (NodeType.isElement(containerBlock) && InsertDetailsNewLine.isLastEmptyBlockInDetails(editor, shiftKey, parentBlock)) {
+    return InsertDetailsNewLine.insertNewLine(editor, createNewBlock, parentBlock);
+  }
+
   // Handle enter in list item
   if (/^(LI|DT|DD)$/.test(parentBlockName) && NodeType.isElement(containerBlock)) {
     // Handle enter inside an empty list item
@@ -435,14 +448,25 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   }
 
   // Never split the body or blocks that we can't split like noneditable host elements
-  if (parentBlock === editor.getBody() || !canSplitBlock(dom, parentBlock)) {
+  if (!inRootAndLastOrCef && (parentBlock === editor.getBody() || !canSplitBlock(dom, parentBlock))) {
     return;
   }
   const parentBlockParent = parentBlock.parentNode;
 
   // Insert new block before/after the parent block depending on caret location
   let newBlock: Element;
-  if (CaretContainer.isCaretContainerBlock(parentBlock)) {
+  if (inRootAndLastOrCef) {
+    newBlock = createNewBlock(newBlockName);
+    child.fold(
+      () => {
+        Insert.append(start, SugarElement.fromDom(newBlock));
+      },
+      (child) => {
+        Insert.before(child, SugarElement.fromDom(newBlock));
+      }
+    );
+    editor.selection.setCursorLocation(newBlock, 0);
+  } else if (CaretContainer.isCaretContainerBlock(parentBlock)) {
     newBlock = CaretContainer.showCaretContainerBlock(parentBlock) as Element;
     if (dom.isEmpty(parentBlock)) {
       emptyBlock(parentBlock);
@@ -454,7 +478,8 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   } else if (isCaretAtStartOrEndOfBlock(true) && parentBlockParent) {
     // Insert new block before
     newBlock = parentBlockParent.insertBefore(createNewBlock(), parentBlock);
-    NewLineUtils.moveToCaretPosition(editor, containerAndSiblingName(parentBlock, 'HR') ? newBlock : parentBlock);
+    const isNearChildren = Traverse.hasChildNodes(SugarElement.fromDom(rng.startContainer)) && rng.collapsed;
+    NewLineUtils.moveToCaretPosition(editor, (containerAndSiblingName(parentBlock, 'HR') || isNearChildren) ? newBlock : parentBlock);
   } else {
     // Extract after fragment and insert it after the current block
     const tmpRng = includeZwspInRange(rng).cloneRange();

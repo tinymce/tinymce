@@ -1,6 +1,6 @@
 import { Waiter } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -185,5 +185,27 @@ describe('browser.tinymce.core.annotate.AnnotationRemovedTest', () => {
     TinyAssertions.assertContentPresence(editor, { 'span[data-mce-annotation="alpha"]': 1 });
     editor.annotator.remove('alpha');
     TinyAssertions.assertContentPresence(editor, { 'span[data-mce-annotation="alpha"]': 0 });
+  });
+
+  it('TINY-9467: Should remove annotations even if the selection is in a noneditable root', () => {
+    TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+      editor.setContent('<p>test</p>');
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
+      annotate(editor, 'alpha', 'id-one', { anything: 'comment-1' });
+      TinyAssertions.assertContentPresence(editor, { 'span[data-mce-annotation="alpha"]': 1 });
+      editor.annotator.remove('alpha');
+      TinyAssertions.assertContentPresence(editor, { 'span[data-mce-annotation="alpha"]': 0 });
+    });
+  });
+
+  it('TINY-9467: Should remove all annotations even if the selection is in a noneditable root', () => {
+    TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+      editor.setContent('<p>test</p>');
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
+      annotate(editor, 'alpha', 'id-one', { anything: 'comment-1' });
+      TinyAssertions.assertContentPresence(editor, { 'span[data-mce-annotation="alpha"]': 1 });
+      editor.annotator.removeAll('alpha');
+      TinyAssertions.assertContentPresence(editor, { 'span[data-mce-annotation="alpha"]': 0 });
+    });
   });
 });

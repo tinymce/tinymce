@@ -116,6 +116,12 @@
     }
   }
 
+  .tox-tbtn--disabled .tox-tbtn--enabled {
+    svg {
+      fill: @toolbar-button-disabled-icon-color;
+    }
+  }
+
   .tox-tbtn--disabled,
   .tox-tbtn--disabled:hover,
   .tox-tbtn:disabled,
@@ -149,6 +155,12 @@
     // since they need to be kept the same/use the same rules
     svg { /* stylelint-disable-line no-descending-specificity */
       fill: @toolbar-button-enabled-icon-color;
+    }
+
+    &.tox-tbtn--disabled {
+      svg {
+        fill: @toolbar-button-disabled-icon-color;
+      }
     }
   }
 

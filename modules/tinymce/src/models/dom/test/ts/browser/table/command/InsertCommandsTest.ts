@@ -1,12 +1,10 @@
 import { context, describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { TableModifiedEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-
-import * as TableTestUtils from '../../../module/table/TableTestUtils';
 
 describe('browser.tinymce.models.dom.table.command.InsertCommandsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -169,7 +167,7 @@ describe('browser.tinymce.models.dom.table.command.InsertCommandsTest', () => {
 
   context('Noneditable root', () => {
     const testNoopExecCommand = (cmd: string) => () => {
-      TableTestUtils.withNoneditableRootEditor(hook.editor(), (editor) => {
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
         const initalContent = '<table><tbody><tr><td>cell</td></tr></tbody></table>';
         editor.setContent(initalContent);
         TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);

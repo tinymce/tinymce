@@ -1,4 +1,4 @@
-import { Optional, Type, Unicode } from '@ephox/katamari';
+import { Arr, Optional, Type, Unicode } from '@ephox/katamari';
 
 import BookmarkManager from 'tinymce/core/api/dom/BookmarkManager';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -11,7 +11,7 @@ import * as Bookmark from '../core/Bookmark';
 import { listToggleActionFromListName } from '../core/ListAction';
 import * as NodeType from '../core/NodeType';
 import * as Selection from '../core/Selection';
-import { hasNonEditableBlocksSelected, isCustomList, isWithinNonEditableList } from '../core/Util';
+import { isCustomList, isWithinNonEditableList } from '../core/Util';
 import { flattenListSelection } from './Indendation';
 
 interface ListDetail {
@@ -208,7 +208,8 @@ const applyList = (editor: Editor, listName: string, detail: ListDetail): void =
   }
 
   const bookmark = Bookmark.createBookmark(rng);
-  const selectedTextBlocks = getSelectedTextBlocks(editor, rng, root);
+
+  const selectedTextBlocks = Arr.filter(getSelectedTextBlocks(editor, rng, root), editor.dom.isEditable);
 
   Tools.each(selectedTextBlocks, (block) => {
     let listBlock: HTMLElement;
@@ -344,7 +345,7 @@ const toggleSingleList = (editor: Editor, parentList: HTMLElement | null, listNa
 
 const toggleList = (editor: Editor, listName: 'UL' | 'OL' | 'DL', _detail: ListDetail | null): void => {
   const parentList = Selection.getParentList(editor);
-  if (isWithinNonEditableList(editor, parentList) || hasNonEditableBlocksSelected(editor)) {
+  if (isWithinNonEditableList(editor, parentList) || !editor.hasEditableRoot()) {
     return;
   }
 

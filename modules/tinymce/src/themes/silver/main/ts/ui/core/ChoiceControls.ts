@@ -6,6 +6,7 @@ import { ContentLanguage } from 'tinymce/core/api/OptionTypes';
 import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 
 import * as Options from '../../api/Options';
+import { composeUnbinders, onSetupEditableToggle } from './ControlUtils';
 
 interface ControlSpec<T> {
   readonly name: string;
@@ -70,7 +71,7 @@ const registerController = <T>(editor: Editor, spec: ControlSpec<T>) => {
   });
 };
 
-const lineHeightSpec: ControlSpec<string> = {
+const lineHeightSpec = (editor: Editor): ControlSpec<string> => ({
   name: 'lineheight',
   text: 'Line height',
   icon: 'line-height',
@@ -82,8 +83,10 @@ const lineHeightSpec: ControlSpec<string> = {
   watcher: (editor, value, callback) =>
     editor.formatter.formatChanged('lineheight', callback, false, { value }).unbind,
   getCurrent: (editor) => Optional.from(editor.queryCommandValue('LineHeight')),
-  setCurrent: (editor, value) => editor.execCommand('LineHeight', false, value)
-};
+  setCurrent: (editor, value) => editor.execCommand('LineHeight', false, value),
+  onToolbarSetup: onSetupEditableToggle(editor),
+  onMenuSetup: onSetupEditableToggle(editor)
+});
 
 const languageSpec = (editor: Editor): Optional<ControlSpec<ContentLanguage>> => {
   const settingsOpt = Optional.from(Options.getContentLanguages(editor));
@@ -118,13 +121,14 @@ const languageSpec = (editor: Editor): Optional<ControlSpec<ContentLanguage>> =>
       const unbinder = Singleton.unbindable();
       api.setActive(editor.formatter.match('lang', {}, undefined, true));
       unbinder.set(editor.formatter.formatChanged('lang', api.setActive, true));
-      return unbinder.clear;
-    }
+      return composeUnbinders(unbinder.clear, onSetupEditableToggle(editor)(api));
+    },
+    onMenuSetup: onSetupEditableToggle(editor)
   }));
 };
 
 const register = (editor: Editor): void => {
-  registerController(editor, lineHeightSpec);
+  registerController(editor, lineHeightSpec(editor));
   languageSpec(editor).each((spec) => registerController(editor, spec));
 };
 

@@ -3,6 +3,7 @@
 //
 
 @toolbar-split-button-chevron-touch-padding: 4px;
+@toolbar-split-color-preview-opacity: .6;
 
 .tox {
   .tox-split-button {
@@ -62,5 +63,10 @@
     .tox-split-button__chevron {
       width: @toolbar-button-chevron-width + @toolbar-split-button-chevron-touch-padding;
     }
+  }
+
+  .tox-split-button.tox-tbtn--disabled svg #tox-icon-text-color__color,
+  .tox-split-button.tox-tbtn--disabled svg #tox-icon-highlight-bg-color__color {
+    opacity: @toolbar-split-color-preview-opacity;
   }
 }

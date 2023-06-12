@@ -1,5 +1,5 @@
 import { context, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -753,26 +753,23 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     });
 
     it('TINY-9462: insertContent in normal element in noneditable root should be a noop', () => {
-      const editor = hook.editor();
-      const content = '<div>text</div>';
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+        const content = '<div>text</div>';
 
-      editor.getBody().contentEditable = 'false';
-      editor.setContent(content);
-      TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
-      editor.insertContent('hello');
-      TinyAssertions.assertContent(editor, content);
-      editor.getBody().contentEditable = 'true';
+        editor.setContent(content);
+        TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
+        editor.insertContent('hello');
+        TinyAssertions.assertContent(editor, content);
+      });
     });
 
     it('TINY-9462: insertContent in editable element in noneditable root should insert content', () => {
-      const editor = hook.editor();
-
-      editor.getBody().contentEditable = 'false';
-      editor.setContent('<div contenteditable="true">text</div>');
-      TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
-      editor.insertContent('hello');
-      TinyAssertions.assertContent(editor, '<div contenteditable="true">thelloxt</div>');
-      editor.getBody().contentEditable = 'true';
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+        editor.setContent('<div contenteditable="true">text</div>');
+        TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
+        editor.insertContent('hello');
+        TinyAssertions.assertContent(editor, '<div contenteditable="true">thelloxt</div>');
+      });
     });
 
     it('TINY-9595: insert paragraphs in a paragraph editing host paragraph should unwrap the paragraphs and not split the div and em', () => {
@@ -798,15 +795,14 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     });
 
     it('TINY-9595: insert paragraphs in a paragraph editing host in a noneditable root editor should unwrap the paragraphs', () => {
-      const editor = hook.editor();
-      const content = '<p contenteditable="true"><em>ad</em></p>';
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+        const content = '<p contenteditable="true"><em>ad</em></p>';
 
-      editor.getBody().contentEditable = 'false';
-      editor.setContent(content);
-      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
-      editor.insertContent('<p>b</p><p>c</p>');
-      editor.getBody().contentEditable = 'true';
-      TinyAssertions.assertContent(editor, '<p contenteditable="true"><em>abcd</em></p>');
+        editor.setContent(content);
+        TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+        editor.insertContent('<p>b</p><p>c</p>');
+        TinyAssertions.assertContent(editor, '<p contenteditable="true"><em>abcd</em></p>');
+      });
     });
   });
 });

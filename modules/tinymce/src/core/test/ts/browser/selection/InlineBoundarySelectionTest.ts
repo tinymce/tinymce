@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -33,11 +33,10 @@ describe('browser.tinymce.selection.InlineBoundarySelectionTest', () => {
   });
 
   it('TINY-9471: Should not have a inline boundary when caret is inside an noneditable root', () => {
-    const editor = hook.editor();
-    editor.getBody().contentEditable = 'false';
-    editor.setContent('<p><a href="#">a</a></p>');
-    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
-    assertNoInlineBoundarySelection(editor);
-    editor.getBody().contentEditable = 'true';
+    TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+      editor.setContent('<p><a href="#">a</a></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+      assertNoInlineBoundarySelection(editor);
+    });
   });
 });
