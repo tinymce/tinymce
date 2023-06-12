@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 6.5.0 - 2023-06-12
+
 ### Added
 - Support for the `h` hash parameter in Vimeo video URLs in the Media plugin. #TINY-9830
 - New `table_merge_content_on_paste` option which disables the merging behaviour when pasting a table inside an existing table. #TINY-9808
