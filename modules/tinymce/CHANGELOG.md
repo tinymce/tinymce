@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Returning an empty string in custom context menu update function would result in a small white line appearing on right click and the native browser context menu would not show up. #TINY-9842
 - Tab navigation incorrectly stopped around `iframe` dialog component. #TINY-9815
-- `backspaceDeleteIntoListCaret` try to use a pointer to a removed element. #TINY-6888
+- deleting `li` with only `br`s in it sometimes caused a crush. #TINY-6888
 
 ## 6.5.0 - 2023-06-12
 
