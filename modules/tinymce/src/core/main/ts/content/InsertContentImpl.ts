@@ -191,11 +191,7 @@ const moveSelectionToMarker = (editor: Editor, marker: HTMLElement | null): void
       dom.remove(parentBlock);
     } else {
       // If parentBlock is a table cell, add a br without 'data-mce-bogus' attribute.
-      if (isTableCell(parentBlock)) {
-        dom.add(parentBlock, dom.create('br'));
-      } else {
-        dom.add(parentBlock, dom.create('br', { 'data-mce-bogus': '1' }));
-      }
+      dom.add(parentBlock, dom.create('br', isTableCell(parentBlock) ? {} : { 'data-mce-bogus': '1' }));
     }
   }
 
