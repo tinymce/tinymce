@@ -37,11 +37,11 @@ describe('webdriver.tinymce.plugins.accordion.AccordionEnterTest', () => {
   it('TINY-9731: Leave accordion body with ENTER keypress within an empty paragraph', async () => {
     const editor = hook.editor();
     editor.setContent(AccordionUtils.createAccordion({ body: '<p>tiny</p>' }));
-    TinySelections.setCursor(editor, [ 0, 1, 0 ], 'tiny'.length);
+    TinySelections.setCursor(editor, [ 0, 1, 0, 0 ], 'tiny'.length);
     await pDoEnter();
-    TinyAssertions.assertContentPresence(editor, { 'details > p': 2 });
+    TinyAssertions.assertContentPresence(editor, { 'details > div > p': 2 });
     await pDoEnter();
-    TinyAssertions.assertContentPresence(editor, { 'details > p': 1 });
+    TinyAssertions.assertContentPresence(editor, { 'details > div > p': 1 });
     TinyAssertions.assertContentPresence(editor, { 'details + p': 1 });
     TinyAssertions.assertCursor(editor, [ 1 ], 0);
   });
@@ -49,9 +49,9 @@ describe('webdriver.tinymce.plugins.accordion.AccordionEnterTest', () => {
   it('TINY-9731: Do not remove the only empty paragraph when leaving accordion body with ENTER keypress', async () => {
     const editor = hook.editor();
     editor.setContent(AccordionUtils.createAccordion({ body: '<p></p>' }));
-    TinySelections.setCursor(editor, [ 0, 1 ], 0);
+    TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
     await pDoEnter();
-    TinyAssertions.assertContentPresence(editor, { 'details > p': 1 });
+    TinyAssertions.assertContentPresence(editor, { 'details > div > p': 1 });
     TinyAssertions.assertContentPresence(editor, { 'details + p': 1 });
     TinyAssertions.assertCursor(editor, [ 1 ], 0);
   });

@@ -110,6 +110,8 @@ const isTableCell = matchNodeNames<HTMLTableCellElement>([ 'td', 'th' ]);
 const isTableCellOrCaption = matchNodeNames<HTMLTableCellElement>([ 'td', 'th', 'caption' ]);
 const isMedia = matchNodeNames<HTMLElement>([ 'video', 'audio', 'object', 'embed' ]);
 const isListItem = matchNodeName<HTMLLIElement>('li');
+const isDetails = matchNodeName<HTMLDetailsElement>('details');
+const isSummary = matchNodeName<HTMLElement>('summary');
 
 export {
   isText,
@@ -136,5 +138,7 @@ export {
   isBogusAll,
   isTable,
   isTextareaOrInput,
-  isListItem
+  isListItem,
+  isDetails,
+  isSummary
 };
