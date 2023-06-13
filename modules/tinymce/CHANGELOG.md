@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - The pattern replacement removes spaces if they were contained in a tag that only contains a space and the text to replace. #TINY-9744
+- Now `mceInsertClipboardContent` also manage image pasting. #TINY-9776
 
 ## 6.5.0 - 2023-06-12
 
