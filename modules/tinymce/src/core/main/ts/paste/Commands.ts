@@ -1,4 +1,4 @@
-import { Cell } from '@ephox/katamari';
+import { Arr, Cell, Strings } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Events from '../api/Events';
@@ -29,8 +29,12 @@ const register = (editor: Editor, pasteFormat: Cell<string>): void => {
       Clipboard.pasteText(editor, value.text);
     }
 
-    if (value.imageEvent) {
-      Clipboard.pasteImageData(editor, value.imageEvent, value.rng);
+    if (value.event as ClipboardEvent) {
+      const hasAnImage = Arr.exists((value.event.dataTransfer ?? value.event.clipboardData).files, (file) => Strings.startsWith(file.type, 'image/'));
+
+      if (hasAnImage) {
+        Clipboard.pasteImageData(editor, value.event, value.rng);
+      }
     }
   });
 };
