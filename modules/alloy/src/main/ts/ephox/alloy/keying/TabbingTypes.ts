@@ -1,6 +1,6 @@
 import { FieldProcessor, FieldSchema } from '@ephox/boulder';
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Compare, Height, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Compare, Height, SelectorFilter, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
 import { AlloyComponent } from '../api/component/ComponentApi';
@@ -103,14 +103,12 @@ const create = (cyclicField: FieldProcessor): KeyingType.KeyingType<TabbingConfi
     return go(component, simulatedEvent, tabbingConfig, navigate);
   };
 
-  const isFirstChild = (node: Node): boolean => node.parentNode?.firstChild === node;
+  const isFirstChild = (elem: SugarElement<HTMLElement>): boolean =>
+    Traverse.parentNode(elem).bind(Traverse.firstChild).exists((child) => Compare.eq(child, elem));
 
   const goFromPseudoTabstop: KeyRuleStatelessHandler<TabbingConfig> = (component, simulatedEvent, tabbingConfig) =>
     findCurrent(component, tabbingConfig).filter((elem) => !tabbingConfig.useTabstopAt(elem))
-      .fold(
-        () => Optional.none(),
-        (elem) => (isFirstChild(elem.dom) ? goBackwards : goForwards)(component, simulatedEvent, tabbingConfig)
-      );
+      .bind((elem) => (isFirstChild(elem) ? goBackwards : goForwards)(component, simulatedEvent, tabbingConfig));
 
   const execute: KeyRuleStatelessHandler<TabbingConfig> = (component, simulatedEvent, tabbingConfig) =>
     tabbingConfig.onEnter.bind((f) => f(component, simulatedEvent));
