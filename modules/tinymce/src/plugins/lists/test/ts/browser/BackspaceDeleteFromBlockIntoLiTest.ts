@@ -133,5 +133,15 @@ describe('Browser Test: .RemoveTrailingBlockquoteTest', () => {
     TinySelections.setCursor(editor, [ 0, 1 ], 0);
     TinyContentActions.keystroke(editor, Keys.delete());
     TinyAssertions.assertContent(editor, '<ol><li>aaa</li><li>ccc</li></ol>');
+
+    editor.setContent('<ol><li>aaa</li><li>foo<br><br></li><li>ccc</li></ol>', { format: 'raw' });
+    TinySelections.setSelection(editor, [ 0, 1 ], 0, [ 0, 2 ], 0);
+    TinyContentActions.keystroke(editor, Keys.delete());
+    TinyAssertions.assertContent(editor, '<ol><li>aaa</li><li>ccc</li></ol>');
+
+    editor.setContent('<ol><li>aaa</li><li>foo<br><br><br></li><li>ccc</li></ol>', { format: 'raw' });
+    TinySelections.setSelection(editor, [ 0, 1 ], 0, [ 0, 2 ], 0);
+    TinyContentActions.keystroke(editor, Keys.delete());
+    TinyAssertions.assertContent(editor, '<ol><li>aaa</li><li>ccc</li></ol>');
   });
 });
