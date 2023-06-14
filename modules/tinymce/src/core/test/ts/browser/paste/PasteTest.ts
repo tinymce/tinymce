@@ -1,6 +1,6 @@
 import { UiFinder } from '@ephox/agar';
 import { afterEach, before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Fun, Singleton } from '@ephox/katamari';
+import { Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -13,14 +13,6 @@ import * as PasteUtils from 'tinymce/core/paste/PasteUtils';
 import * as PasteEventUtils from '../../module/test/PasteEventUtils';
 
 describe('browser.tinymce.core.paste.PasteTest', () => {
-  const mockEvent = <K extends 'drop' | 'paste'>(type: K, files: File[]): K extends 'drop' ? DragEvent : ClipboardEvent => {
-    const transferName = type === 'drop' ? 'dataTransfer' : 'clipboardData';
-    return {
-      type,
-      preventDefault: Fun.noop,
-      [transferName]: { files }
-    } as any;
-  };
   const base64ToBlob = (base64: string, type: string, filename: string): File => {
     const buff = atob(base64);
     const bytes = new Uint8Array(buff.length);
@@ -377,15 +369,10 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     editor.setContent('<p>text</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
 
-    const event = mockEvent('paste', [
-      base64ToBlob(base64ImgSrc, 'image/gif', 'image.gif')
-    ]);
-
     TinyAssertions.assertContentPresence(editor, { img: 0 });
 
     editor.execCommand('mceInsertClipboardContent', false, {
-      event,
-      rng: editor.selection.getRng()
+      files: [ base64ToBlob(base64ImgSrc, 'image/gif', 'image.gif') ]
     });
 
     await UiFinder.pWaitForVisible('the image should be pasted', TinyDom.body(editor), 'img');

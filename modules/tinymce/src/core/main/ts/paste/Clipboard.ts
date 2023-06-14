@@ -14,7 +14,7 @@ import * as Conversions from '../file/Conversions';
 import * as Whitespace from '../text/Whitespace';
 import * as InternalHtml from './InternalHtml';
 import * as Newlines from './Newlines';
-import { PasteBin, isDefaultPasteBinContent } from './PasteBin';
+import { isDefaultPasteBinContent, PasteBin } from './PasteBin';
 import * as PasteUtils from './PasteUtils';
 import * as ProcessFilters from './ProcessFilters';
 import * as SmartPaste from './SmartPaste';
@@ -150,6 +150,24 @@ const getImagesFromDataTransfer = (editor: Editor, dataTransfer: DataTransfer): 
   return Arr.filter(items.length > 0 ? items : files, isImage(editor));
 };
 
+const pasteImageFiles = (editor: Editor, files: File[], rng: Range | undefined): boolean => {
+  if (Options.shouldPasteDataImages(editor) && files.length > 0) {
+    readFilesAsDataUris(files).then((fileResults) => {
+      if (rng) {
+        editor.selection.setRng(rng);
+      }
+
+      Arr.each(fileResults, (result) => {
+        pasteImage(editor, result);
+      });
+    });
+
+    return true;
+  }
+
+  return false;
+};
+
 /*
  * Checks if the clipboard contains image data if it does it will take that data
  * and convert it into a data url image and paste that image at the caret location.
@@ -163,15 +181,7 @@ const pasteImageData = (editor: Editor, e: ClipboardEvent | DragEvent, rng: Rang
     if (images.length > 0) {
       e.preventDefault();
 
-      readFilesAsDataUris(images).then((fileResults) => {
-        if (rng) {
-          editor.selection.setRng(rng);
-        }
-
-        Arr.each(fileResults, (result) => {
-          pasteImage(editor, result);
-        });
-      });
+      pasteImageFiles(editor, images, rng);
 
       return true;
     }
@@ -327,6 +337,7 @@ export {
   pasteText,
   pasteImageData,
   getDataTransferItems,
+  pasteImageFiles,
   hasHtmlOrText,
   hasContentType
 };
