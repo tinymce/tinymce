@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Tab navigation incorrectly stopped around `iframe` dialog component. #TINY-9815
+- It was not possible to press space to insert a space character inside a summary element on Firefox. #TINY-9954
 
 ## 6.5.0 - 2023-06-12
 
