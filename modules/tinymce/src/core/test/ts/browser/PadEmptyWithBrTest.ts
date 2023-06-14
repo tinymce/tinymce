@@ -4,7 +4,7 @@ import { TinyAssertions, TinySelections, TinyHooks } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-describe('browser.tinymce.core.EditorPaddEmptyWithBrTest', () => {
+describe('browser.tinymce.core.EditorPadEmptyWithBrTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     disable_nodechange: true,
