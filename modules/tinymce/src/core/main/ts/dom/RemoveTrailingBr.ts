@@ -17,7 +17,7 @@ export const addNodeFilter = (settings: DomSerializerSettings, htmlParser: DomPa
     // Remove brs from body element as well
     blockElements.body = 1;
 
-    const isBlock = (node: AstNode) => node.name in blockElements || TransparentElements.isTransparentAstInline(schema, node);
+    const isBlock = (node: AstNode) => node.name in blockElements || TransparentElements.isTransparentAstBlock(schema, node);
 
     // Must loop forwards since it will otherwise remove all brs in <p>a<br><br><br></p>
     for (let i = 0, l = nodes.length; i < l; i++) {
