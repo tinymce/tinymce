@@ -34,20 +34,57 @@
     text-transform: @statusbar-text-transform;
   }
 
-  .tox-statusbar__text-container {
-    display: flex;
-    flex: 1 1 auto;
-    justify-content: flex-end;
-    overflow: hidden;
-  }
-
   .tox-statusbar__path {
     display: flex;
     flex: 1 1 auto;
-    margin-right: auto;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .tox-statusbar__right-container {
+    display: flex;
+    justify-content: flex-end;
+    white-space: nowrap;
+  }
+
+  .tox-statusbar__help-text {
+    text-align: center;
+  }
+
+  .tox-statusbar__text-container {
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: space-between;
+    overflow: hidden;
+
+    @media @breakpoint-gt-sm {
+      &:has(.tox-statusbar__right-container:only-child) {
+        justify-content: flex-end;
+      }
+
+      &:has(.tox-statusbar__help-text:only-child) {
+        justify-content: space-around;
+      }
+
+      &:has(.tox-statusbar__help-text) {
+        justify-content: flex-start;
+
+        &:has(.tox-statusbar__right-container) {
+          justify-content: flex-end;
+        }
+
+        &:has(.tox-statusbar__path):has(.tox-statusbar__right-container) {
+          justify-content: space-between;
+        }
+
+        & .tox-statusbar__path,
+        & .tox-statusbar__help-text,
+        & .tox-statusbar__right-container {
+          flex: 0 0 calc(100% / 3);
+        }
+      }
+    }
   }
 
   .tox-statusbar__path > * {
@@ -58,6 +95,31 @@
   .tox-statusbar__wordcount {
     flex: 0 0 auto;
     margin-left: 1ch;
+  }
+
+  @media @breakpoint-sm {
+    .tox-statusbar__text-container {
+      & .tox-statusbar__help-text {
+        display: none;
+      }
+
+      & .tox-statusbar__right-container {
+        display: flex;
+        flex: 0 0 auto;
+      }
+
+      &:has(.tox-statusbar__right-container) {
+        justify-content: flex-end;
+      }
+
+      &:has(.tox-statusbar__help-text:only-child) {
+        justify-content: space-around;
+
+        & .tox-statusbar__help-text {
+          display: block;
+        }
+      }
+    }
   }
 
   .tox-statusbar a,
