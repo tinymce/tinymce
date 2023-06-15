@@ -188,5 +188,8 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
     await pAssertInputEvents();
     await pWaitForSelector(editor, 'img');
     TinyAssertions.assertContent(editor, `<p><img src="${imageUrl}">a</p>`);
+
+    editor.undoManager.undo();
+    TinyAssertions.assertContent(editor, `<p>${imageUrl}a</p>`);
   });
 });
