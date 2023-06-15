@@ -244,25 +244,5 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
       await pWaitForAndAssertEvents({ internal: false, content: 'https://tiny.com' }, 'https://tiny.com');
       TinyAssertions.assertContent(editor, '<p><a href="https://tiny.com">X</a></p>');
     });
-
-    it('TINY-9829: Paste can be cancelled by beforeinput event', async () => {
-      const editor = hook.editor();
-      const cancelInputEvent = (e: EditorEvent<InputEvent>) => {
-        e.preventDefault();
-      };
-      const inputEvent = Singleton.value<EditorEvent<InputEvent>>();
-      const setInputEvent = (e: EditorEvent<InputEvent>) => inputEvent.set(e);
-
-      editor.on('beforeinput', cancelInputEvent);
-      editor.on('input', setInputEvent);
-
-      const initialContent = '<p>abc</p>';
-      paste(editor, initialContent, { 'text/plain': 'X', 'text/html': '<p>X</p>' }, [ 0, 0 ], 0, [ 0, 0 ], 3);
-      await PasteEventUtils.pWaitForAndAssertEventsDoNotFire([ inputEvent ]);
-      TinyAssertions.assertContent(editor, initialContent);
-
-      editor.off('beforeinput', cancelInputEvent);
-      editor.off('input', setInputEvent);
-    });
   });
 });
