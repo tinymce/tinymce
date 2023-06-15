@@ -3,6 +3,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
@@ -13,6 +14,11 @@ import * as PasteEventUtils from '../../module/test/PasteEventUtils';
 describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
   const lastBeforeInputEvent = Singleton.value<EditorEvent<InputEvent>>();
   const lastInputEvent = Singleton.value<EditorEvent<InputEvent>>();
+  let inputEventTypes: string[] = [];
+  const setInputEventSingleTonAndAddType = (singleton: Singleton.Value<EditorEvent<InputEvent>>, event: EditorEvent<InputEvent>): void => {
+    singleton.set(event);
+    inputEventTypes.push(event.type);
+  };
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     plugins: 'code',
@@ -21,11 +27,7 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
     setup: (editor: Editor) => {
       editor.on('beforeinput input', (e) => {
         if (e.inputType === 'insertFromPaste') {
-          if (e.type === 'beforeinput') {
-            lastBeforeInputEvent.set(e);
-          } else {
-            lastInputEvent.set(e);
-          }
+          setInputEventSingleTonAndAddType(e.type === 'beforeinput' ? lastBeforeInputEvent : lastInputEvent, e);
         }
       });
     }
@@ -33,8 +35,10 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
 
   const pAssertInputEvents = async (clipboardHtml: string, isNative?: boolean): Promise<void> => {
     await PasteEventUtils.pWaitForAndAssertInputEvents(lastBeforeInputEvent, lastInputEvent, clipboardHtml, isNative);
+    assert.deepEqual(inputEventTypes, [ 'beforeinput', 'input' ], 'Should have fired exactly 1 beforeinput event and 1 input event in order');
     lastBeforeInputEvent.clear();
     lastInputEvent.clear();
+    inputEventTypes = [];
   };
 
   const pCopyAndPaste = async (editor: Editor, source: Cursors.CursorPath, target: Cursors.CursorPath): Promise<void> => {
