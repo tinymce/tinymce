@@ -181,17 +181,19 @@ const moveSelectionToMarker = (editor: Editor, marker: HTMLElement | null): void
   dom.remove(marker);
 
   if (parentBlock && dom.isEmpty(parentBlock)) {
+    const isCell = isTableCell(parentBlock);
+
     Remove.empty(SugarElement.fromDom(parentBlock));
 
     rng.setStart(parentBlock, 0);
     rng.setEnd(parentBlock, 0);
 
-    if (!isTableCell(parentBlock) && !isPartOfFragment(parentBlock) && (nextRng = findNextCaretRng(rng))) {
+    if (!isCell && !isPartOfFragment(parentBlock) && (nextRng = findNextCaretRng(rng))) {
       rng = nextRng;
       dom.remove(parentBlock);
     } else {
       // If parentBlock is a table cell, add a br without 'data-mce-bogus' attribute.
-      dom.add(parentBlock, dom.create('br', isTableCell(parentBlock) ? {} : { 'data-mce-bogus': '1' }));
+      dom.add(parentBlock, dom.create('br', isCell ? {} : { 'data-mce-bogus': '1' }));
     }
   }
 
