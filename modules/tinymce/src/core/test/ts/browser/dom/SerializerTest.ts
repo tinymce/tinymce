@@ -317,6 +317,11 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(ser.serialize(getTestElement()), '<p>a</p><p><br></p>');
     setTestHtml('<p>a</p><table><tr><td><br></td></tr></table>');
     assert.equal(ser.serialize(getTestElement()), '<p>a</p><table><tr><td><br></td></tr></table>');
+
+    // pad empty transparent <del> element with br
+    ser.setRules('-p,br,#del');
+    setTestHtml('<del><p></p><br></del>');
+    assert.equal(ser.serialize(getTestElement()), '<del><br></del>');
   });
 
   it('Do not padd empty elements with padded children', () => {

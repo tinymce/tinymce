@@ -24,7 +24,7 @@ export const addNodeFilter = (settings: DomSerializerSettings, htmlParser: DomPa
       let node: AstNode | null = nodes[i];
       let parent = node.parent;
 
-      if (parent && blockElements[parent.name] && node === parent.lastChild) {
+      if (parent && isBlock(parent) && node === parent.lastChild) {
         // Loop all nodes to the left of the current node and check for other BR elements
         // excluding bookmarks since they are invisible
         let prev = node.prev;
