@@ -11,9 +11,7 @@ export interface ScrollingContext {
   readonly others: SugarElement<HTMLElement>[];
 }
 
-// TINY-9385: Investigate exactly what makes an element possibly
-// scrollable. This approach does not seem exhaustive. What about:
-// overflow-x, overflow-y etc.
+// See https://developer.mozilla.org/en-US/docs/Glossary/Scroll_container for what makes an element scrollable
 const nonScrollingOverflows = [ 'visible', 'hidden', 'clip' ];
 
 const isScrollingOverflowValue = (value: string): boolean =>
