@@ -16,21 +16,14 @@ export interface ScrollingContext {
 // overflow-x, overflow-y etc.
 const nonScrollingOverflows = [ 'visible', 'hidden', 'clip' ];
 
+const isScrollingOverflowValue = (value: string): boolean =>
+  Strings.trim(value).length > 0 && !Arr.contains(nonScrollingOverflows, value);
+
 export const isScroller = (elem: SugarElement<Node> | any): boolean => {
   if (SugarNode.isHTMLElement(elem)) {
-    const overflow = Css.get(elem, 'overflow');
     const overflowX = Css.get(elem, 'overflow-x');
     const overflowY = Css.get(elem, 'overflow-y');
-
-    // If overflow-x and overflow-y have different values, ignore 'overflow'
-    if (overflowX !== overflowY) {
-      return (Strings.trim(overflowX).length > 0 && !Arr.contains(nonScrollingOverflows, overflowX)) ||
-        (Strings.trim(overflowY).length > 0 && !Arr.contains(nonScrollingOverflows, overflowY));
-    }
-
-    return (Strings.trim(overflow).length > 0 && !Arr.contains(nonScrollingOverflows, overflow)) ||
-      (Strings.trim(overflowX).length > 0 && !Arr.contains(nonScrollingOverflows, overflowX)) ||
-      (Strings.trim(overflowY).length > 0 && !Arr.contains(nonScrollingOverflows, overflowY));
+    return isScrollingOverflowValue(overflowX) || isScrollingOverflowValue(overflowY);
   } else {
     return false;
   }
