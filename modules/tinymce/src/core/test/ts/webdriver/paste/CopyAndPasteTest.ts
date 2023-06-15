@@ -12,6 +12,10 @@ import CodePlugin from 'tinymce/plugins/code/Plugin';
 import * as PasteEventUtils from '../../module/test/PasteEventUtils';
 
 describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
+  const platform = PlatformDetection.detect();
+  const os = platform.os;
+  const browser = platform.browser;
+
   const lastBeforeInputEvent = Singleton.value<EditorEvent<InputEvent>>();
   const lastInputEvent = Singleton.value<EditorEvent<InputEvent>>();
   let inputEventTypes: string[] = [];
@@ -208,12 +212,12 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
     editor.execCommand('mceCodeEditor');
     await TinyUiActions.pWaitForDialog(editor);
     const textareaSelector = 'div[role="dialog"] textarea';
-    await RealKeys.pSendKeysOn(textareaSelector, [ RealKeys.combo(PlatformDetection.detect().os.isMacOS() ? { meta: true } : { ctrl: true }, 'A') ]);
+    await RealKeys.pSendKeysOn(textareaSelector, [ RealKeys.combo(os.isMacOS() ? { meta: true } : { ctrl: true }, 'A') ]);
     await RealClipboard.pCopy(textareaSelector);
     TinyUiActions.cancelDialog(editor);
 
     await RealClipboard.pPaste('iframe => body');
-    await pAssertInputEvents('', true);
+    await pAssertInputEvents(browser.isSafari() ? '&lt;p&gt;abc&lt;/p&gt;' : '', true);
     TinyAssertions.assertContent(editor, '<p>&lt;p&gt;abc&lt;/p&gt;abc</p>');
   });
 

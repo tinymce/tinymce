@@ -1,6 +1,7 @@
 import { Waiter } from '@ephox/agar';
 import { DataTransferMode } from '@ephox/dragster';
 import { Arr, Cell, Singleton, Type } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
 
 import { PastePostProcessEvent, PastePreProcessEvent } from 'tinymce/core/api/EventTypes';
@@ -14,6 +15,8 @@ export interface ProcessEventExpectedData {
 }
 
 type SingletonEvent<T> = Singleton.Value<EditorEvent<T>>;
+
+const browser = PlatformDetection.detect().browser;
 
 const pWaitFor = (message: string, waitFn: () => void): Promise<void> => Waiter.pTryUntil(message, waitFn, undefined, 100);
 
@@ -54,9 +57,10 @@ const pWaitForAndAssertInputEvents = async (beforeinputEvent: SingletonEvent<Inp
       assert.equal(e.inputType, 'insertFromPaste', 'input event type should be "insertFromPaste"');
       assert.isNull(e.data, 'beforeinput event data should be null');
       const dataTransfer = e.dataTransfer;
-      assert.isNotNull(dataTransfer, 'beforeinput event dataTransfer should not be null');
-      if (!isNative) {
-        assert.isTrue(!Type.isNull(dataTransfer) && DataTransferMode.isInReadOnlyMode(dataTransfer), 'beforeinput event dataTransfer should be in read-only mode');
+      if (isNative) {
+        assert.isNotNull(dataTransfer, 'beforeinput event dataTransfer should not be null');
+      } else {
+        assert.isTrue(!Type.isNull(dataTransfer) && DataTransferMode.isInReadOnlyMode(dataTransfer), 'beforeinput event dataTransfer should not be null and should be in read-only mode');
       }
       if (checkDataTransferHtml) {
         assert.equal(dataTransfer?.getData('text/html'), expectedBeforeinputDataTransferHtml, 'beforeinput event dataTransfer should contain expected html data');
@@ -67,7 +71,12 @@ const pWaitForAndAssertInputEvents = async (beforeinputEvent: SingletonEvent<Inp
     inputEvent.on((e) => {
       assert.equal(e.inputType, 'insertFromPaste', 'beforeinput event type should be "insertFromPaste"');
       assert.isNull(e.data, 'input event data should be null');
-      assert.isNull(e.dataTransfer, 'input event dataTransfer should be null');
+      const dataTransfer = e.dataTransfer;
+      if (isNative && (browser.isFirefox() || browser.isSafari())) {
+        assert.equal(dataTransfer?.getData('text/html'), expectedBeforeinputDataTransferHtml, 'input event dataTransfer should contain expected html data');
+      } else {
+        assert.isNull(dataTransfer, 'input event dataTransfer should be null');
+      }
     });
 
   await pWaitForInputEvents();
