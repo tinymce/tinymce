@@ -37,6 +37,7 @@ describe('browser.tinymce.core.paste.ImagePasteTest', () => {
   afterEach(() => {
     const editor = hook.editor();
     editor.editorUpload.destroy();
+    lastBeforeInputEvent.clear();
     lastInputEvent.clear();
   });
 
