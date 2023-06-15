@@ -91,9 +91,6 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
     await FocusTools.pTryOnSelector('focus should be on iframe', SugarDocument.getDocument(), 'iframe');
     await pPressTab('iframe => body', false);
 
-    await FocusTools.pTryOnSelector('focus should be on the "after" tabstop', SugarDocument.getDocument(), 'div[class*="alloy-fake-after-tabstop"]');
-    await pPressTab('div[class*="alloy-fake-after-tabstop"]', false);
-
     await FocusTools.pTryOnSelector('focus should be on button (cancel)', SugarDocument.getDocument(), 'button:contains("Close")');
     await pPressTab('button.tox-button--secondary', true);
 
@@ -106,9 +103,6 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
       await FocusTools.pTryOnSelector('focus should be on the iframe', SugarDocument.getDocument(), 'iframe');
       await pPressTab('iframe', true);
     }
-
-    await FocusTools.pTryOnSelector('focus should be on the "before" tabstop', SugarDocument.getDocument(), 'div[class*="alloy-fake-before-tabstop"]');
-    await pPressTab('div[class*="alloy-fake-before-tabstop"]', true);
 
     await FocusTools.pTryOnSelector('focus should move back to input (iframe >> input)', SugarDocument.getDocument(), 'input');
   });
