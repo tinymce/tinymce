@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Fixed a regression where pasting an image url would result in the url being inserted as plain text instead of the image being inserted. #TINY-9997
+
 ## 6.5.0 - 2023-06-12
 
 ### Added
