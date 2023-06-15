@@ -60,8 +60,8 @@ const position = (button: AlloyComponent, toolbar: AlloyComponent, detail: Float
 };
 
 const setGroups = (button: AlloyComponent, toolbar: AlloyComponent, detail: FloatingToolbarButtonDetail, layouts: Layouts | undefined, groups: AlloySpec[]) => {
-  position(button, toolbar, detail, layouts);
   Toolbar.setGroups(toolbar, groups);
+  position(button, toolbar, detail, layouts);
   Toggling.on(button);
 };
 

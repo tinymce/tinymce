@@ -62,6 +62,8 @@
 
 @dialog-table-border-color: darken(@border-color, 55%);
 @dialog-nav-focus-background-color: fade(@color-tint, 10%);
+@dialog-tab-max-width: 13em;
+@dialog-tab-column-max-width: 11em;
 
 // These get stacked on top of the global dialog z-index (1100)
 @z-index-dialogs-offset-wrap-background: 1;
@@ -193,7 +195,12 @@
     align-items: flex-start;
     display: flex;
     flex-direction: column;
+    flex-shrink: 0;
     padding: @dialog-body-padding;
+
+    @media @breakpoint-gt-sm {
+      max-width: @dialog-tab-column-max-width;
+    }
 
     @media @breakpoint-sm {
       body:not(.tox-force-desktop) & {
@@ -209,11 +216,12 @@
     border-bottom: 2px solid transparent;
     color: @text-color-muted;
     display: inline-block;
+    flex-shrink: 0;
     font-size: @font-size-sm;
     line-height: @line-height-base;
     margin-bottom: @pad-sm;
+    max-width: @dialog-tab-max-width;
     text-decoration: none;
-    white-space: nowrap;
 
     &:focus {
       background-color: @dialog-nav-focus-background-color;

@@ -829,8 +829,10 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     });
 
     // Padd these by default
-    each(split('p h1 h2 h3 h4 h5 h6 th td pre div address caption li'), (name) => {
-      elements[name].paddEmpty = true;
+    each(split('p h1 h2 h3 h4 h5 h6 th td pre div address caption li summary'), (name) => {
+      if (elements[name]) {
+        elements[name].paddEmpty = true;
+      }
     });
 
     // Remove these if they have no attributes

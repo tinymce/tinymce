@@ -6,8 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- The pattern replacement removes spaces if they were contained in a tag that only contains a space and the text to replace. #TINY-9744
+
+### Fixed
+- Returning an empty string in custom context menu update function would result in a small white line appearing on right click and the native browser context menu would not show up. #TINY-9842
+- Tab navigation incorrectly stopped around `iframe` dialog component. #TINY-9815
+
+## 6.5.0 - 2023-06-12
+
 ### Added
-- Support for `h` hash parameter in vimeo video url in the Media plugin. #TINY-9830
+- Support for the `h` hash parameter in Vimeo video URLs in the Media plugin. #TINY-9830
 - New `table_merge_content_on_paste` option which disables the merging behaviour when pasting a table inside an existing table. #TINY-9808
 - New optional `defaultExpandedIds` and `onToggleExpand` options to the `tree` component config. #TINY-9653
 - New optional `defaultSelectedId` option to the `tree` component config. #TINY-9715
@@ -15,89 +24,92 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `accordion` and `accordion-toggle` icons. #TINY-9789
 - New `details_initial_state` and `details_serialized_state` options. #TINY-9732
 - New `init_content_sync` option that initializes the editor iframe using `document.write` instead of `srcdoc`. #TINY-9818
-- New `newdocument_content` option that changes the content that will be set when using the `New document` button. #TINY-9839
-- New `editable_root` option that can be set to `false` to prevent editing of the editors root element. #TINY-9839
+- New `newdocument_content` option that sets the content presented in the editor on choosing *File -> New document* or pressing the *New document* toolbar button. #TINY-9839
+- New `editable_root` option that can be set to `false` to prevent editing of the editor’s root element. #TINY-9839
 - New `editor.setEditableRoot` API that sets the editable state of the editor root element. #TINY-9839
 - New `editor.hasEditableRoot` API that returns `true` or `false` depending on the editable state of the editor root element. #TINY-9839
 - New `EditableRootStateChange` event that gets dispatched when the state of the editable root is changed. #TINY-9839
 - Added Oxide styles for `dl`, `dt`, `dd`, `ol`, and `strong` elements in dialog body content. #TINY-9919
 
 ### Improved
-- Screen readers are now able to announce the highlighted menu item of link comboboxes. #TINY-9280
-- Now `icon` field for dialog footer `togglebutton`s is not mandatory. #TINY-9757
-- Toolbar buttons and menu items were not disabled when they couldn't be used on noneditable content. #TINY-9669
-- Help text displayed at **Help > Help > Keyboard Navigation** re-written. #DOC-1936
-- Translations added for Help text displayed at **Help > Help > Keyboard Navigation**. #TINY-9633
-- These characters '$', '~', '+', '|', '№', '`' are now considered as punctuation marks. Therefore, they will not increase the word count. #TINY-8122
-- Updated the `codesample` plugin dialog and `template` plugin dialog to use the 'listbox' component to match other dialogs. #TINY-9630
-- Quickbar toolbars are now positioned in the middle of the selection horizontally, if the selection contains more than one table cell. #TINY-8297
+- Screen readers can now announce highlighted items listed in the Link dialog’s link combobox. #TINY-9280
+- The `icon` field for a dialog’s footer `togglebutton` is no longer mandatory. #TINY-9757
+- Toolbar buttons and menu items now present as disabled when they cannot be used because a selected element has a `contenteditable="false"` attribute. #TINY-9669
+- Help text displayed at *Help -> Help -> Keyboard Navigation* re-written. #DOC-1936
+- Translations added for Help text displayed at *Help > Help > Keyboard Navigation*. #TINY-9633
+- For word count purposes these characters are now considered punctuation marks: *$*, *~*, *+*, *|*, *№*, and *`*. They no longer increase a document’s word count. #TINY-8122
+- Updated the `codesample` plugin dialog and the `template` plugin dialog to use the `listbox` component to match other dialogs. #TINY-9630
+- If the selection contains more than one table cell, Quickbar toolbars are now positioned in the middle of the selection horizontally. #TINY-8297
 - Exposed `dataTransfer` property of drag and drop events for elements with a `contenteditable="false"` attribute. #TINY-9601
 - Screen readers now announce instructions for resizing the editor using arrow keys, when the resize handle is focused. #TINY-9793
+- Dialog `tabpanel` tab labels are now allowed to word wrap for better readability with long labels. #TINY-9947
+- Added newlines before and after `details` elements in the output HTML. #TINY-9959
+- Added padding for empty `summary` elements so that they can be properly edited. #TINY-9959
 
 ### Changed
-- The `caption`, `address` and `dt` elements were allowed to have non-inline children elements when the editor schema was set to `html4`. #TINY-9768
-- SVG icons for back and foreground colors now uses class instead of id to identify SVG elements that should change color. #TINY-9844
-- The `a` elements were allowed to have non-inline child elements when the editor schema was set to `html4`. #TINY-9805
+- The `caption`, `address` and `dt` elements no longer incorrectly allow non-inline child elements when the editor schema is set to _HTML 4_. #TINY-9768
+- SVG icons for back and foreground colors now use `class` instead of `id` to identify SVG elements that should change color. #TINY-9844
+- Anchor tag elements — `<a>` — no longer incorrectly allow non-inline child elements when the editor schema is set to _HTML 4_. #TINY-9805
+- Help dialog was restored to `medium` width for better readability. #TINY-9947
 
 ### Fixed
-- Right clicking on a merge tag would result in different highlighting across browsers. #TINY-9848
-- Command + backspace would not add an undo level on Mac. #TINY-8910
-- Ctrl + backspace and Ctrl + delete would not restore correct caret position after redo. #TINY-8910
-- In the tree component, a selected item in a directory would not stay selected after collapsing the directory. #TINY-9715
+- Right-clicking on a merge tag instance presented different highlighting depending on the host browser. #TINY-9848
+- When macOS was the host operating system, pressing *Command+backspace* did not add an undo level. #TINY-8910
+- *Ctrl+backspace* and *Ctrl+delete* did not restore the correct insertion point position after a redo operation. #TINY-8910
+- In the `tree` component, a selected item in a directory would not stay selected after collapsing the directory. #TINY-9715
 - Enabling or Disabling checkboxes would not set the correct classes and attributes. #TINY-4189
-- Entering a newline in some setups would place the cursor in the wrong paragraph. #TINY-9822
-- Redial would in some situations cause select elements not to have an initial value selected when they should have. #TINY-9679
-- Table toolbar was visible even if the table was within a noneditable host element. #TINY-9664
-- Quickbar toolbars was shown for noneditable contents in a noneditable root. #TINY-9460
-- Adding a newline in Chrome when the cursor was placed after a table could in some specific situations not generate the expected newline. #TINY-9813
-- Show the calculated height and width of media embed elements in the `media` plugin dialog. #TINY-8714
-- Removing an image that failed to upload from an empty paragraph would leave the paragraph without a padding br. #TINY-9696
-- Allow a media embed element to be correctly resized when using the `media` plugin dialog by converting the media embed to a standalone iframe. #TINY-8714
-- Inline alert in the "Search and Replace" dialog persisted when it wasn't necessary. #TINY-9704
+- Entering a newline would, in some setups, place the insertion point in the wrong paragraph. #TINY-9822
+- Redial would, in some situations, cause select elements not to have an initial value selected when they should have. #TINY-9679
+- The Table toolbar was visible even if the table was within a host element with a `contenteditable="false"` attribute set. #TINY-9664
+- Quickbar toolbars were incorrectly shown for elements with a `contenteditable="false"` attribute set in a root with a `contenteditable="false"` attribute set. #TINY-9460
+- When Chrome was the host browser, adding a newline when the insertion point was placed after a table could, in some specific situations, not generate the expected newline. #TINY-9813
+- Show the calculated height and width of Media Embed elements in the `media` plugin dialog. #TINY-8714
+- Removing an image that failed to upload from an empty paragraph left the paragraph without a padding `<br>` tag. #TINY-9696
+- Allow a Media Embed element to be correctly resized when using the `media` plugin dialog by converting the Media Embed element to a standalone iframe. #TINY-8714
+- In some circumstances, an inline alert in the _Search and Replace_ dialog persisted when it was not necessary. #TINY-9704
 - Context toolbars displayed the incorrect status for the `advlist` plugin buttons. #TINY-9680
-- On iOS Safari, Korean characters were merging onto the previous line upon typing after inserting a newline by pressing Enter. #TINY-9746
-- Initiating the editor with a table at the start would display resize handles even when the editor wasn't focused. #TINY-9748
-- Backspace would in some situations delete the image after the cursor instead of before it as expected. #TINY-9807
-- Directionality commands was setting the `dir` attribute on noneditable elements within a noneditable root. #TINY-9662
+- In Safari running on iOS, Korean characters merged onto the previous line upon typing after inserting a newline by pressing Enter. #TINY-9746
+- Initiating the editor with a table as the first element resulted in resize handles being displayed around the table even when the editor did not have focus. #TINY-9748
+- If the insertion point was between two images, pressing the Backspace key would, in some situations, delete the image after the insertion point instead of the image before the insertion point. #TINY-9807
+- Directionality commands could set the `dir` attribute on elements with a `contenteditable="false"` attribute set when these elements were within a root with a `contenteditable="false"` attribute set. #TINY-9662
 - The content of the dialog body could not be scrolled. #TINY-9668
-- Some toolbar items were not rendering the `not-allowed` mouse cursor. #TINY-9758
-- Formats were incorrectly applied to the closest editable element if the selection was in a noneditable context. #TINY-9678
-- Formats were incorrectly removed to the closest editable element if the selection was in a noneditable context. #TINY-9678
-- Formatter API `canApply` was not returning `false` when the selection was in a noneditable context. #TINY-9678
-- When dragging image elements and dropping the image in the editor the `dragend` event would sometimes not fire on firefox. #TINY-9694
-- It was possible to remove links in noneditable contents with the 'unlink' editor command. #TINY-9739
-- Direction was not visually changing when using the Directionality plugin on an element which has the `direction` CSS property set. #TINY-9314
-- Whitespace between transparent elements would incorrectly be converted into empty paragraphs. #TINY-9761
+- Some toolbar items, when in a not-enabled state, did not render the `not-allowed` mouse pointer. #TINY-9758
+- Formats were incorrectly applied to the closest editable element if the selection was in a `contenteditable="false"` context. #TINY-9678
+- Formats were incorrectly removed from the closest editable element if the selection was in a `contenteditable="false"` context. #TINY-9678
+- Formatter API, `canApply`, was not returning `false` when the selection was in a `contenteditable="false"` context. #TINY-9678
+- When dragging image elements and dropping the image in the editor the `dragend` event would sometimes not fire when Firefox was the host browser. #TINY-9694
+- It was possible to remove links in noneditable contents with the `unlink` editor command. #TINY-9739
+- Direction was not visually changing when using the Directionality plugin on an element which had the `direction` CSS property set. #TINY-9314
+- Whitespace between transparent elements was incorrectly converted into empty paragraphs. #TINY-9761
 - Popups were not constrained within the scrollable container when in a shadow root. #TINY-9743
-- Pressing arrow keys inside RTL elements would move the caret in an incorrect direction when moving over elements with the `contenteditable` attribute set to `false`. #TINY-9565
-- Inserting table consecutively without focus in the editor would result in the table being inserted at the wrong position. #TINY-3909
-- Pasting content into the editor would not fire `beforeinput` and `input` events. #TINY-9829
-- In some cases, the exiting a `blockquote` element could fail when the cursor was positioned at the end of the `blockquote`. #TINY-9794
+- Pressing arrow keys inside RTL elements would move the insertion point in an incorrect direction when moving over elements with the `contenteditable` attribute set to `false`. #TINY-9565
+- Inserting two tables consecutively without focus in the editor resulted in the second table being inserted at the wrong position. #TINY-3909
+- Pasting content into the editor did not fire `beforeinput` and `input` events. #TINY-9829
+- In some cases, exiting a `blockquote` element could fail when the insertion point was positioned at the end of the `blockquote`. #TINY-9794
 - Templates containing an `<html>` tag were not parsed before being rendered for preview. #TINY-9867
 - Typing after deleting formatted content could remove a space at the start of the typing. #TINY-9310
 - Invalid markup in Notification and Dialog close buttons. #TINY-9849
-- In dialogs, an incorrect `aria-describedby` attribute caused the body of the dialog to be announced when using a screen reader. #TINY-9816
-- The sticky toolbar would not be rendered correctly when transitioning from the custom editor view to the main view. #TINY-9814
+- In dialogs, an incorrect `aria-describedby` attribute caused the dialog body to be announced when using a screen reader. #TINY-9816
+- The sticky toolbar did not render correctly when transitioning from the custom editor view to the main view. #TINY-9814
 - Saving the Table Properties dialog after changing properties unrelated to cells would overwrite cell properties set by the Cell Properties dialog. #TINY-9837
-- Fixed the constrained bounds calculation for dismissal of toolbar when using `toolbar_location: 'bottom'`. #TINY-9718
-- The floating toolbar did not occupy the entire available space when the page had a flexbox layout. #TINY-9847
-- Fixed backspace and delete keypresses within details elements. #TINY-9884
-- Applying lists did not work if the selection included a `contenteditable=false` block element. #TINY-9823
-- Inserting elements in the middle of the summary caused the appearance of 2 summaries within details elements. #TINY-9885
+- Fixed the constrained bounds calculation for dismissal of the toolbar when using `toolbar_location: 'bottom'`. #TINY-9718
+- Pressing the Backspace or Delete key when the insertion point was within a `details` element resulted in broken markup. #TINY-9884
+- Making the selection into a list did not work if the selection included a block element with a `contenteditable="false"` attribute. #TINY-9823
+- Inserting elements in the middle of the summary caused two summaries to appear within `details` elements. #TINY-9885
 
 ## 6.4.2 - 2023-04-26
 
 ### Fixed
-- The editor would display a notification error when it fails to retirieve a blob image uri. #TINY-9604
-- Menu buttons would have the Tabstopping behaviour in toolbar. #TINY-9723
-- The `urlinput` dialog component would not open the typeahead dropdown when the input value was reset to an empty string. #TINY-9717
-- Redial would in some situations cause select elements not to have an initial value selected when they should have. #TINY-9679
-- Fixed the mouse pointer style from a text cursor to a default arrow pointer when hovering over the tree dialog component items. #TINY-9692
-- Enabled variant of togglable `tox-button` and `tox-button--secondary` now supports `hover`/`active`/`focus`/`disabled` states. #TINY-9713
-- Setting an invalid unit in the `fontsizeinput` would change it do the default value instead of reverting it back to the previous valid value. #TINY-9754
+- The editor displayed a notification error when it failed to retrieve a blob image uri. #TINY-9604
+- Tab navigation no longer incorrectly stops at menu buttons within toolbar groups. #TINY-9723
+- The `urlinput` dialog component would not open the type-ahead dropdown when the input value was reset to an empty string. #TINY-9717
+- Redial would, in some circumstances, cause elements to not have an initial value selected when they should have. #TINY-9679
+- When hovering over tree dialog components the mouse pointer rendered incorrectly. #TINY-9692
+- The `tox-button` and `tox-button-secondary` buttons now support the `hover`, `active`, `focus`, and `disabled` states. #TINY-9713
+- Setting an invalid unit in the `fontsizeinput` changed it to the default value instead of reverting it to the previous, and valid, value. #TINY-9754
 - Selection was not correctly scrolled horizontally into view when using the `selection.scrollIntoView` API. #TINY-9747
-- Context toolbars displayed the incorrect status for the `advlist` plugin buttons. #TINY-9680
-- The image would not be inserted when using the `quickimage` button on Chrome. #TINY-9769
+- The contextual toolbar displayed the status of Advanced List Premium plugin icons incorrectly. #TINY-9680
+- The `quickimage` toolbar button failed to insert images selected from the local computer when running on Google Chrome for macOS. #TINY-9769
 
 ## 6.4.1 - 2023-03-29
 
