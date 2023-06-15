@@ -27,7 +27,6 @@ const insertInlineBoundarySpaceOrNbsp = (root: SugarElement<Node>, pos: CaretPos
 const setSelection = (editor: Editor) => (pos: CaretPosition) => {
   editor.selection.setRng(pos.toRange());
   editor.nodeChanged();
-  return true;
 };
 
 const isInsideSummary = (domUtils: DOMUtils, node: Node) => domUtils.isEditable(domUtils.getParent(node, 'summary'));
@@ -59,7 +58,7 @@ const insertSpaceInSummaryAtSelectionOnFirefox = (editor: Editor): Optional<() =
     }
 
     const pos = CaretPosition.fromRangeStart(editor.selection.getRng());
-    insertSpaceOrNbspAtPosition(root, pos).each((pos) => editor.selection.setRng(pos.toRange()));
+    insertSpaceOrNbspAtPosition(root, pos).each(setSelection(editor));
   };
 
   return Optionals.someIf(Env.browser.isFirefox() && editor.selection.isEditable() && isInsideSummary(editor.dom, editor.selection.getRng().startContainer), insertSpaceThunk);
