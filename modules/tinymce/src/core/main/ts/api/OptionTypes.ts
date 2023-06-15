@@ -323,6 +323,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   noneditable_class: string;
   noneditable_regexp: RegExp[];
   object_resizing: string;
+  pad_empty_with_br: boolean;
   paste_as_text: boolean;
   preview_styles: string;
   promotion: boolean;
