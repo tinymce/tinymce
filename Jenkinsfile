@@ -154,7 +154,9 @@ timestamps {
     }
 
     stage("Type check") {
-      exec("yarn ci-all")
+      withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
+        exec("yarn ci-all-seq")
+      }
     }
 
     stage("Moxiedoc check") {

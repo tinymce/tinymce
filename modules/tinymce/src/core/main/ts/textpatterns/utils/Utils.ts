@@ -3,6 +3,7 @@ import { Optional } from '@ephox/katamari';
 import DOMUtils from '../../api/dom/DOMUtils';
 import Editor from '../../api/Editor';
 import * as NodeType from '../../dom/NodeType';
+import { isWhitespaceText } from '../../text/Whitespace';
 import { getBlockPatterns, getInlinePatterns } from '../core/Pattern';
 import { PatternSet } from '../core/PatternTypes';
 
@@ -10,7 +11,9 @@ const cleanEmptyNodes = (dom: DOMUtils, node: Node | null, isRoot: (e: Node) => 
   // Recursively walk up the tree while we have a parent and the node is empty. If the node is empty, then remove it.
   if (node && dom.isEmpty(node) && !isRoot(node)) {
     const parent = node.parentNode;
-    dom.remove(node);
+
+    dom.remove(node, NodeType.isText(node.firstChild) && isWhitespaceText(node.firstChild.data));
+
     cleanEmptyNodes(dom, parent, isRoot);
   }
 };

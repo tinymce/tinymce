@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- The pattern replacement removes spaces if they were contained in a tag that only contains a space and the text to replace. #TINY-9744
+
+### Fixed
+- Tab navigation incorrectly stopped around `iframe` dialog component. #TINY-9815
+
+## 6.5.0 - 2023-06-12
+
 ### Added
 - Support for the `h` hash parameter in Vimeo video URLs in the Media plugin. #TINY-9830
 - New `table_merge_content_on_paste` option which disables the merging behaviour when pasting a table inside an existing table. #TINY-9808
@@ -33,14 +41,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - If the selection contains more than one table cell, Quickbar toolbars are now positioned in the middle of the selection horizontally. #TINY-8297
 - Exposed `dataTransfer` property of drag and drop events for elements with a `contenteditable="false"` attribute. #TINY-9601
 - Screen readers now announce instructions for resizing the editor using arrow keys, when the resize handle is focused. #TINY-9793
-- Dialog `tabpanel` tab labels are now allowed to word wrap for better readability with long labels #TINY-9947
+- Dialog `tabpanel` tab labels are now allowed to word wrap for better readability with long labels. #TINY-9947
+- Added newlines before and after `details` elements in the output HTML. #TINY-9959
+- Added padding for empty `summary` elements so that they can be properly edited. #TINY-9959
 - Improved detection of scrollable containers when the `ui_mode: 'split'` option is set. #TINY-9385
 
 ### Changed
 - The `caption`, `address` and `dt` elements no longer incorrectly allow non-inline child elements when the editor schema is set to _HTML 4_. #TINY-9768
 - SVG icons for back and foreground colors now use `class` instead of `id` to identify SVG elements that should change color. #TINY-9844
 - Anchor tag elements — `<a>` — no longer incorrectly allow non-inline child elements when the editor schema is set to _HTML 4_. #TINY-9805
-- Help dialog was restored to `medium` width for better readability #TINY-9947
+- Help dialog was restored to `medium` width for better readability. #TINY-9947
 
 ### Fixed
 - Right-clicking on a merge tag instance presented different highlighting depending on the host browser. #TINY-9848
@@ -90,16 +100,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 6.4.2 - 2023-04-26
 
 ### Fixed
-- The editor would display a notification error when it fails to retirieve a blob image uri. #TINY-9604
-- Menu buttons would have the Tabstopping behaviour in toolbar. #TINY-9723
-- The `urlinput` dialog component would not open the typeahead dropdown when the input value was reset to an empty string. #TINY-9717
-- Redial would in some situations cause select elements not to have an initial value selected when they should have. #TINY-9679
-- Fixed the mouse pointer style from a text cursor to a default arrow pointer when hovering over the tree dialog component items. #TINY-9692
-- Enabled variant of togglable `tox-button` and `tox-button--secondary` now supports `hover`/`active`/`focus`/`disabled` states. #TINY-9713
-- Setting an invalid unit in the `fontsizeinput` would change it do the default value instead of reverting it back to the previous valid value. #TINY-9754
+- The editor displayed a notification error when it failed to retrieve a blob image uri. #TINY-9604
+- Tab navigation no longer incorrectly stops at menu buttons within toolbar groups. #TINY-9723
+- The `urlinput` dialog component would not open the type-ahead dropdown when the input value was reset to an empty string. #TINY-9717
+- Redial would, in some circumstances, cause elements to not have an initial value selected when they should have. #TINY-9679
+- When hovering over tree dialog components the mouse pointer rendered incorrectly. #TINY-9692
+- The `tox-button` and `tox-button-secondary` buttons now support the `hover`, `active`, `focus`, and `disabled` states. #TINY-9713
+- Setting an invalid unit in the `fontsizeinput` changed it to the default value instead of reverting it to the previous, and valid, value. #TINY-9754
 - Selection was not correctly scrolled horizontally into view when using the `selection.scrollIntoView` API. #TINY-9747
-- Context toolbars displayed the incorrect status for the `advlist` plugin buttons. #TINY-9680
-- The image would not be inserted when using the `quickimage` button on Chrome. #TINY-9769
+- The contextual toolbar displayed the status of Advanced List Premium plugin icons incorrectly. #TINY-9680
+- The `quickimage` toolbar button failed to insert images selected from the local computer when running on Google Chrome for macOS. #TINY-9769
 
 ## 6.4.1 - 2023-03-29
 
