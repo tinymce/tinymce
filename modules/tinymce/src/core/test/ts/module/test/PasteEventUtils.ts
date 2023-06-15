@@ -41,7 +41,7 @@ const pWaitForAndAssertProcessEvents = async (preProcessEvent: SingletonEvent<Pa
   assertLastPostProcessEvent();
 };
 
-const pWaitForAndAssertInputEvents = async (beforeinputEvent: SingletonEvent<InputEvent>, inputEvent: SingletonEvent<InputEvent>, expectedBeforeinputDataTransferHtml?: string): Promise<void> => {
+const pWaitForAndAssertInputEvents = async (beforeinputEvent: SingletonEvent<InputEvent>, inputEvent: SingletonEvent<InputEvent>, expectedBeforeinputDataTransferHtml?: string, isNative: boolean = false): Promise<void> => {
   const checkDataTransferHtml = !Type.isUndefined(expectedBeforeinputDataTransferHtml);
   const pWaitForInputEvents = (): Promise<void> =>
     pWaitFor('Did not fire input events', () => {
@@ -55,7 +55,9 @@ const pWaitForAndAssertInputEvents = async (beforeinputEvent: SingletonEvent<Inp
       assert.isNull(e.data, 'beforeinput event data should be null');
       const dataTransfer = e.dataTransfer;
       assert.isNotNull(dataTransfer, 'beforeinput event dataTransfer should not be null');
-      assert.isTrue(!Type.isNull(dataTransfer) && DataTransferMode.isInReadOnlyMode(dataTransfer), 'beforeinput event dataTransfer should be in read-only mode');
+      if (!isNative) {
+        assert.isTrue(!Type.isNull(dataTransfer) && DataTransferMode.isInReadOnlyMode(dataTransfer), 'beforeinput event dataTransfer should be in read-only mode');
+      }
       if (checkDataTransferHtml) {
         assert.equal(dataTransfer?.getData('text/html'), expectedBeforeinputDataTransferHtml, 'beforeinput event dataTransfer should contain expected html data');
       }

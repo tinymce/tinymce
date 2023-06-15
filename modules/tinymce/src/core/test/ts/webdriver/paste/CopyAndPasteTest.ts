@@ -1,15 +1,41 @@
-import { Cursors, RealClipboard } from '@ephox/agar';
+import { Cursors, RealClipboard, RealKeys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { Singleton } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
+import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import CodePlugin from 'tinymce/plugins/code/Plugin';
+
+import * as PasteEventUtils from '../../module/test/PasteEventUtils';
 
 describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
+  const lastBeforeInputEvent = Singleton.value<EditorEvent<InputEvent>>();
+  const lastInputEvent = Singleton.value<EditorEvent<InputEvent>>();
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
+    plugins: 'code',
     toolbar: false,
-    statusbar: false
-  }, [], true);
+    statusbar: false,
+    setup: (editor: Editor) => {
+      editor.on('beforeinput input', (e) => {
+        if (e.inputType === 'insertFromPaste') {
+          if (e.type === 'beforeinput') {
+            lastBeforeInputEvent.set(e);
+          } else {
+            lastInputEvent.set(e);
+          }
+        }
+      });
+    }
+  }, [ CodePlugin ], true);
+
+  const pAssertInputEvents = async (clipboardHtml: string, isNative?: boolean): Promise<void> => {
+    await PasteEventUtils.pWaitForAndAssertInputEvents(lastBeforeInputEvent, lastInputEvent, clipboardHtml, isNative);
+    lastBeforeInputEvent.clear();
+    lastInputEvent.clear();
+  };
 
   const pCopyAndPaste = async (editor: Editor, source: Cursors.CursorPath, target: Cursors.CursorPath): Promise<void> => {
     TinySelections.setSelection(editor, source.startPath, source.soffset, source.finishPath, source.foffset);
@@ -32,11 +58,13 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
         { startPath: [ 0, 0 ], soffset: 0, finishPath: [ 0, 0 ], foffset: 3 },
         { startPath: [ 2, 0 ], soffset: 1, finishPath: [ 2, 0 ], foffset: 3 }
       );
+      await pAssertInputEvents(`<${tagName}>abc</${tagName}>`);
       await pCopyAndPaste(
         editor,
         { startPath: [ 0, 0 ], soffset: 0, finishPath: [ 0, 0 ], foffset: 3 },
         { startPath: [ 1, 0 ], soffset: 1, finishPath: [ 1, 0 ], foffset: 4 }
       );
+      await pAssertInputEvents(`<${tagName}>abc</${tagName}>`);
       TinyAssertions.assertContent(editor,
         `<${tagName}>abc</${tagName}>\n` +
         '<p>o</p>\n' +
@@ -67,11 +95,13 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
         { startPath: [ 0, 0 ], soffset: 0, finishPath: [ 0, 0 ], foffset: 3 },
         { startPath: [ 2, 0 ], soffset: 1, finishPath: [ 2, 0 ], foffset: 3 }
       );
+      await pAssertInputEvents(`<${tagName}>abc</${tagName}>`);
       await pCopyAndPaste(
         editor,
         { startPath: [ 0, 0 ], soffset: 0, finishPath: [ 0, 0 ], foffset: 3 },
         { startPath: [ 1, 0 ], soffset: 1, finishPath: [ 1, 0 ], foffset: 4 }
       );
+      await pAssertInputEvents(`<${tagName}>abc</${tagName}>`);
       TinyAssertions.assertContent(editor,
         `<${tagName}>abc</${tagName}>\n` +
         '<p>o</p>\n' +
@@ -100,6 +130,7 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
         { startPath: [ 0, 0 ], soffset: 0, finishPath: [ 1, 0 ], foffset: 5 },
         { startPath: [ 2, 0 ], soffset: 1, finishPath: [ 2, 0 ], foffset: 3 }
       );
+      await pAssertInputEvents(`<${tagName}>abc</${tagName}><p>other</p>`);
       TinyAssertions.assertContent(editor,
         `<${tagName}>abc</${tagName}>\n` +
         '<p>other kind of tag</p>\n' +
@@ -113,6 +144,7 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
         { startPath: [ 2, 0 ], soffset: 0, finishPath: [ 3, 0 ], foffset: 3 },
         { startPath: [ 5, 0 ], soffset: 1, finishPath: [ 5, 0 ], foffset: 3 }
       );
+      await pAssertInputEvents(`<${tagName}>s</${tagName}><${tagName}>abc</${tagName}>`);
       TinyAssertions.assertContent(editor,
         `<${tagName}>abc</${tagName}>\n` +
         '<p>other kind of tag</p>\n' +
@@ -145,6 +177,7 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
         { startPath: [ 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 0 ], foffset: 3 },
         { startPath: [ 1, 0 ], soffset: 1, finishPath: [ 1, 0 ], foffset: 4 }
       );
+      await pAssertInputEvents(`<${tagName} class="someclass">abc</${tagName}>`);
       TinyAssertions.assertContent(editor,
         `<p><${tagName} class="someclass">abc</${tagName}></p>\n` +
         `<h1>s<${tagName} class="someclass">abc</${tagName}>thing</h1>\n` +
@@ -161,5 +194,22 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
     for (const tagName of inlineElements) {
       await pTestInlineTags(tagName);
     }
+  });
+
+  it('TINY-9829: Paste external plain-text-only content should fire native input events', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>abc</p>');
+
+    // Copy from code dialog for external plain-text-only content
+    editor.execCommand('mceCodeEditor');
+    await TinyUiActions.pWaitForDialog(editor);
+    const textareaSelector = 'div[role="dialog"] textarea';
+    await RealKeys.pSendKeysOn(textareaSelector, [ RealKeys.combo(PlatformDetection.detect().os.isMacOS() ? { meta: true } : { ctrl: true }, 'A') ]);
+    await RealClipboard.pCopy(textareaSelector);
+    TinyUiActions.cancelDialog(editor);
+
+    await RealClipboard.pPaste('iframe => body');
+    await pAssertInputEvents('', true);
+    TinyAssertions.assertContent(editor, '<p>&lt;p&gt;abc&lt;/p&gt;abc</p>');
   });
 });
