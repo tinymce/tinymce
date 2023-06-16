@@ -22,11 +22,13 @@ const register = (editor: Editor, pasteFormat: Cell<string>): void => {
 
   editor.addCommand('mceInsertClipboardContent', (ui, value) => {
     if (value.html) {
-      Clipboard.pasteHtml(editor, value.html, value.internal);
+      // TINY-9997: Input events are not simulated when using paste commands, similar to how the 'mceInsertContent'
+      // and 'Delete' commands work.
+      Clipboard.pasteHtml(editor, value.html, value.internal, false);
     }
 
     if (value.text) {
-      Clipboard.pasteText(editor, value.text);
+      Clipboard.pasteText(editor, value.text, false);
     }
   });
 };
