@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Returning an empty string in custom context menu update function would result in a small white line appearing on right click and the native browser context menu would not show up. #TINY-9842
 - Tab navigation incorrectly stopped around `iframe` dialog component. #TINY-9815
 
+## 6.5.1 - TBA
+
+### Fixed
+- Fixed a regression where pasting an image url would result in the url being inserted as plain text instead of the image being inserted. #TINY-9997
+
 ## 6.5.0 - 2023-06-12
 
 ### Added

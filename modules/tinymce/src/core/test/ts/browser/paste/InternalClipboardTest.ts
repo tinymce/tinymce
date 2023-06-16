@@ -46,6 +46,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
   const resetEventsAndDataTransfer = () => {
     lastPreProcessEvent.clear();
     lastPostProcessEvent.clear();
+    lastBeforeInputEvent.clear();
     lastInputEvent.clear();
     dataTransfer.clear();
     eventTypes = [];
@@ -216,12 +217,6 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
     it('TBA: Paste external content treated as plain text', async () => {
       const editor = hook.editor();
       paste(editor, '<p>abc</p>', { 'text/html': '<p>X</p>' }, [ 0, 0 ], 0, [ 0, 0 ], 3);
-      await pWaitForAndAssertEvents({ internal: false, content: 'X' }, 'X');
-    });
-
-    it('TINY-9829: Paste external plain-text-only content', async () => {
-      const editor = hook.editor();
-      paste(editor, '<p>abc</p>', { 'text/plain': 'X' }, [ 0, 0 ], 0, [ 0, 0 ], 3);
       await pWaitForAndAssertEvents({ internal: false, content: 'X' }, 'X');
     });
 
