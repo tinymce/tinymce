@@ -88,7 +88,7 @@ describe('browser.tinymce.core.keyboard.SpaceKeyTest', () => {
       TinyAssertions.assertContent(editor, '<p>a<a href="#">b &nbsp;</a>c</p>');
     });
 
-    it('TINY-9954: Pressing space inside a summary should insert a space character on Firefox', function () {
+    it('TINY-9964: Pressing space inside a summary should insert a space character on Firefox', function () {
       if (!isFirefox) {
         this.skip();
       }
@@ -100,7 +100,7 @@ describe('browser.tinymce.core.keyboard.SpaceKeyTest', () => {
       TinyAssertions.assertContent(editor, '<details><summary>a b</summary><div>content</div></details>');
     });
 
-    it('TINY-9954: Pressing space on selected contents inside a summary should insert a space character on Firefox', function () {
+    it('TINY-9964: Pressing space on selected contents inside a summary should insert a space character on Firefox', function () {
       if (!isFirefox) {
         this.skip();
       }
@@ -112,7 +112,7 @@ describe('browser.tinymce.core.keyboard.SpaceKeyTest', () => {
       TinyAssertions.assertContent(editor, '<details><summary>a c</summary><div>content</div></details>');
     });
 
-    it('TINY-9954: Pressing space on selected contents inside non-editable content inside a summary should not insert a space character on Firefox', function () {
+    it('TINY-9964: Pressing space on selected contents inside non-editable content inside a summary should not insert a space character on Firefox', function () {
       if (!isFirefox) {
         this.skip();
       }
@@ -125,7 +125,7 @@ describe('browser.tinymce.core.keyboard.SpaceKeyTest', () => {
       });
     });
 
-    it('TINY-9954: Pressing space two times inside a summary should insert a space character and produce a single undo level on Firefox', function () {
+    it('TINY-9964: Pressing space two times inside a summary should insert a space character and produce a single undo level on Firefox', function () {
       if (!isFirefox) {
         this.skip();
       }
