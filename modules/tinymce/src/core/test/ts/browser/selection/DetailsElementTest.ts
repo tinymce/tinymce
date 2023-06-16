@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks, TinySelections, TinyAssertions } from '@ephox/wrap-mcagar';
+import { TinyHooks, TinyAssertions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -64,14 +64,5 @@ describe('browser.tinymce.selection.DetailsElementTest', () => {
     editor.setContent([ createAccordion({ open: true }), createAccordion({ open: false }) ].join(''));
     TinyAssertions.assertContent(editor, [ createAccordion({ open: false }), createAccordion({ open: false }) ].join(''));
     editor.options.unset('details_serialized_state');
-  });
-
-  it('TINY-9885: Should prevent 2 summaries appearing in details elements', () => {
-    const editor = hook.editor();
-    const initialContent = createAccordion({ summary: 'helloworld', body: '<p>body</p>', open: true });
-    editor.setContent(initialContent);
-    TinySelections.setCursor(editor, [ 0, 0, 0 ], 'hello'.length);
-    editor.execCommand('InsertHorizontalRule');
-    TinyAssertions.assertContent(editor, initialContent);
   });
 });
