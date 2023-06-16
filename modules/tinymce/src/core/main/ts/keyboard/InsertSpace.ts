@@ -1,7 +1,9 @@
-import { Fun, Optional } from '@ephox/katamari';
+import { Fun, Optional, Optionals } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
+import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
+import Env from '../api/Env';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import { insertNbspAtPosition, insertSpaceAtPosition } from '../caret/InsertText';
@@ -25,8 +27,9 @@ const insertInlineBoundarySpaceOrNbsp = (root: SugarElement<Node>, pos: CaretPos
 const setSelection = (editor: Editor) => (pos: CaretPosition) => {
   editor.selection.setRng(pos.toRange());
   editor.nodeChanged();
-  return true;
 };
+
+const isInsideSummary = (domUtils: DOMUtils, node: Node) => domUtils.isEditable(domUtils.getParent(node, 'summary'));
 
 const insertSpaceOrNbspAtSelection = (editor: Editor): Optional<() => void> => {
   const pos = CaretPosition.fromRangeStart(editor.selection.getRng());
@@ -45,7 +48,24 @@ const insertSpaceOrNbspAtSelection = (editor: Editor): Optional<() => void> => {
   }
 };
 
+// TINY-9964: Firefox has a bug where the space key is toggling the open state instead of inserting a space in a summary element
+const insertSpaceInSummaryAtSelectionOnFirefox = (editor: Editor): Optional<() => void> => {
+  const insertSpaceThunk = () => {
+    const root = SugarElement.fromDom(editor.getBody());
+
+    if (!editor.selection.isCollapsed()) {
+      editor.getDoc().execCommand('Delete');
+    }
+
+    const pos = CaretPosition.fromRangeStart(editor.selection.getRng());
+    insertSpaceOrNbspAtPosition(root, pos).each(setSelection(editor));
+  };
+
+  return Optionals.someIf(Env.browser.isFirefox() && editor.selection.isEditable() && isInsideSummary(editor.dom, editor.selection.getRng().startContainer), insertSpaceThunk);
+};
+
 export {
   insertSpaceOrNbspAtPosition,
-  insertSpaceOrNbspAtSelection
+  insertSpaceOrNbspAtSelection,
+  insertSpaceInSummaryAtSelectionOnFirefox
 };
