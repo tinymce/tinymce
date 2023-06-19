@@ -142,6 +142,16 @@ describe('browser.tinymce.core.html.StylesTest', () => {
       styles.serialize(styles.parse('border-width: 1px; border-color: red')),
       'border-width: 1px; border-color: red;'
     );
+
+    assert.equal(
+      styles.serialize(styles.parse('border-width: 1px; border-color: rgb(1, 2, 3)')),
+      'border-width: 1px; border-color: rgb(1, 2, 3);'
+    );
+
+    assert.equal(
+      styles.serialize(styles.parse('border-width: 1px; border-color: rgb(1, 2, 3); border-style: dashed')),
+      'border: 1px dashed rgb(1, 2, 3);'
+    );
   });
 
   it('Font weight', () => {

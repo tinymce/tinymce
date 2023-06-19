@@ -1,6 +1,5 @@
 import { ApproxStructure, UiFinder } from '@ephox/agar';
 import { after, before, context, describe, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
 import { SugarBody } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
@@ -47,8 +46,6 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     caption: false,
     align: ''
   };
-
-  const isSafari = PlatformDetection.detect().browser.isSafari();
 
   it('TBA: Table properties dialog standard ok', async () => {
     const editor = hook.editor();
@@ -389,7 +386,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     TableTestUtils.assertDialogValues(getExpectedData(1), false, generalSelectors);
     TableTestUtils.setDialogValues({ border: '2px' }, false, generalSelectors);
     await TableTestUtils.pClickDialogButton(editor, true);
-    TinyAssertions.assertContent(editor, '<table style="border-collapse: collapse; width: 60%; border-width: 2px;" border="1" width="60%"><tbody><tr><td style="border-width: 2px;">&nbsp;</td></tr></tbody></table>');
+    TinyAssertions.assertContent(editor, '<table style="width: 60%; border-width: 2px; border-collapse: collapse;" border="1" width="60%"><tbody><tr><td style="border-width: 2px;">&nbsp;</td></tr></tbody></table>');
     await TableTestUtils.pOpenTableDialog(editor);
     TableTestUtils.assertDialogValues(getExpectedData(2), false, generalSelectors);
     await TableTestUtils.pClickDialogButton(editor, false);
@@ -413,9 +410,38 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     TableTestUtils.assertDialogValues(getExpectedData(1, ''), false, generalSelectors);
     TableTestUtils.setDialogValues({ border: '2px' }, false, generalSelectors);
     await TableTestUtils.pClickDialogButton(editor, true);
-    TinyAssertions.assertContent(editor, '<table style="border-collapse: collapse; border-width: 2px;" border="1"><tbody><tr><td style="border-width: 2px;">&nbsp;</td></tr></tbody></table>');
+    TinyAssertions.assertContent(editor, '<table style="border-width: 2px; border-collapse: collapse;" border="1"><tbody><tr><td style="border-width: 2px;">&nbsp;</td></tr></tbody></table>');
     await TableTestUtils.pOpenTableDialog(editor);
     TableTestUtils.assertDialogValues(getExpectedData(2, ''), false, generalSelectors);
+    await TableTestUtils.pClickDialogButton(editor, false);
+  });
+
+  it('TINY-9843: Should accept border in shorthand form', async () => {
+    const getExpectedData = (borderWidth: number, width: string) => ({
+      width,
+      height: '',
+      cellspacing: '',
+      cellpadding: '',
+      border: borderWidth + 'px',
+      caption: false,
+      align: ''
+    });
+
+    const inputHtml = '<table style="border: 1px dotted rgb(255, 0, 0); border-collapse: collapse;" border="1px"><tbody><tr><td>&nbsp;</td></tr></tbody></table>';
+
+    const editor = hook.editor();
+    editor.setContent(inputHtml);
+    // No change to the table html
+    TinyAssertions.assertContent(editor, inputHtml);
+    setCursor(editor);
+    await TableTestUtils.pOpenTableDialog(editor);
+    TableTestUtils.assertDialogValues(getExpectedData(1, ''), false, generalSelectors);
+    TableTestUtils.setDialogValues({ border: '3px' }, false, generalSelectors);
+    await TableTestUtils.pClickDialogButton(editor, true);
+    // shorthand form is retained
+    TinyAssertions.assertContent(editor, '<table style="border: 3px dotted rgb(255, 0, 0); border-collapse: collapse;" border="1"><tbody><tr><td style="border-width: 3px;">&nbsp;</td></tr></tbody></table>');
+    await TableTestUtils.pOpenTableDialog(editor);
+    TableTestUtils.assertDialogValues(getExpectedData(3, ''), false, generalSelectors);
     await TableTestUtils.pClickDialogButton(editor, false);
   });
 
@@ -447,7 +473,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
 
   context('Applying data to cells (TD/TH)', () => {
     const baseHtml = [
-      '<table style="border-collapse: collapse; width: 500px; height: 500px; border-width: 2px; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
+      '<table style="width: 500px; height: 500px; border-width: 2px; border-collapse: collapse; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
       '<tbody>',
       '<tr>',
       '<td style="border-color: rgb(224, 62, 45); border-width: 5px; border-style: double;">&nbsp;</td>',
@@ -489,14 +515,31 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     };
 
     it('TINY-9837: Should not apply border, cellpadding or bordercolor data to cells if none of them has been modified',
-      () => testApplyDataToCells({ caption: true }, baseHtml));
+      () => {
+        const expectedHtml = [
+          '<table style="width: 500px; height: 500px; border-width: 2px; border-collapse: collapse; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
+          '<tbody>',
+          '<tr>',
+          '<td style="border: 5px double rgb(224, 62, 45);">&nbsp;</td>',
+          '<td style="border-width: 2px;">&nbsp;</td>',
+          '</tr>',
+          '<tr>',
+          '<td style="border-width: 2px;">&nbsp;</td>',
+          '<td style="border-width: 2px;">&nbsp;</td>',
+          '</tr>',
+          '</tbody>',
+          '</table>'
+        ].join('');
+
+        testApplyDataToCells({ caption: true }, expectedHtml);
+      });
 
     it('TINY-9837: Should apply border to cells if it has been modified',
       () => testApplyDataToCells({ border: '3px' }, [
-        '<table style="border-collapse: collapse; width: 500px; height: 500px; border-width: 3px; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
+        '<table style="width: 500px; height: 500px; border-width: 3px; border-collapse: collapse; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
         '<tbody>',
         '<tr>',
-        isSafari ? '<td style="border: 3px double rgb(224, 62, 45);">&nbsp;</td>' : '<td style="border-color: rgb(224, 62, 45); border-width: 3px; border-style: double;">&nbsp;</td>',
+        '<td style="border: 3px double rgb(224, 62, 45);">&nbsp;</td>',
         '<td style="border-width: 3px;">&nbsp;</td>',
         '</tr>',
         '<tr>',
@@ -509,10 +552,10 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
 
     it('TINY-9837: Should apply cellpadding to cells if it has been modified',
       () => testApplyDataToCells({ cellpadding: '3px' }, [
-        '<table style="border-collapse: collapse; width: 500px; height: 500px; border-width: 2px; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
+        '<table style="width: 500px; height: 500px; border-width: 2px; border-collapse: collapse; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
         '<tbody>',
         '<tr>',
-        isSafari ? '<td style="border: 5px double rgb(224, 62, 45); padding: 3px;">&nbsp;</td>' : '<td style="border-color: rgb(224, 62, 45); border-width: 5px; padding: 3px; border-style: double;">&nbsp;</td>',
+        '<td style="border: 5px double rgb(224, 62, 45); padding: 3px;">&nbsp;</td>',
         '<td style="border-width: 2px; padding: 3px;">&nbsp;</td>',
         '</tr>',
         '<tr>',
@@ -525,10 +568,10 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
 
     it('TINY-9837: Should apply bordercolor to cells if it has been modified',
       () => testApplyDataToCells({ bordercolor: '#FF0000' }, [
-        '<table style="border-collapse: collapse; width: 500px; height: 500px; border-width: 2px; border-color: #FF0000; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
+        '<table style="width: 500px; height: 500px; border: 2px dotted rgb(255, 0, 0); border-collapse: collapse;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
         '<tbody>',
         '<tr>',
-        isSafari ? '<td style="border: 5px double rgb(255, 0, 0);">&nbsp;</td>' : '<td style="border-color: rgb(255, 0, 0); border-width: 5px; border-style: double;">&nbsp;</td>',
+        '<td style="border: 5px double rgb(255, 0, 0);">&nbsp;</td>',
         '<td style="border-color: rgb(255, 0, 0); border-width: 2px;">&nbsp;</td>',
         '</tr>',
         '<tr>',
@@ -541,10 +584,10 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
 
     it('TINY-9837: Should apply border and cellpadding to cells if they have been modified',
       () => testApplyDataToCells({ border: '3px', cellpadding: '3px' }, [
-        '<table style="border-collapse: collapse; width: 500px; height: 500px; border-width: 3px; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
+        '<table style="width: 500px; height: 500px; border-width: 3px; border-collapse: collapse; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
         '<tbody>',
         '<tr>',
-        isSafari ? '<td style="border: 3px double rgb(224, 62, 45); padding: 3px;">&nbsp;</td>' : '<td style="border-color: rgb(224, 62, 45); border-width: 3px; padding: 3px; border-style: double;">&nbsp;</td>',
+        '<td style="border: 3px double rgb(224, 62, 45); padding: 3px;">&nbsp;</td>',
         '<td style="border-width: 3px; padding: 3px;">&nbsp;</td>',
         '</tr>',
         '<tr>',
@@ -557,10 +600,10 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
 
     it('TINY-9837: Should apply border and bordercolor to cells if they have been modified',
       () => testApplyDataToCells({ border: '3px', bordercolor: '#FF0000' }, [
-        '<table style="border-collapse: collapse; width: 500px; height: 500px; border-width: 3px; border-color: #FF0000; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
+        '<table style="width: 500px; height: 500px; border: 3px dotted rgb(255, 0, 0); border-collapse: collapse;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
         '<tbody>',
         '<tr>',
-        isSafari ? '<td style="border: 3px double rgb(255, 0, 0);">&nbsp;</td>' : '<td style="border-color: rgb(255, 0, 0); border-width: 3px; border-style: double;">&nbsp;</td>',
+        '<td style="border: 3px double rgb(255, 0, 0);">&nbsp;</td>',
         '<td style="border-color: rgb(255, 0, 0); border-width: 3px;">&nbsp;</td>',
         '</tr>',
         '<tr>',
@@ -573,10 +616,10 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
 
     it('TINY-9837: Should apply cellpadding and bordercolor to cells if they have been modified',
       () => testApplyDataToCells({ cellpadding: '3px', bordercolor: '#FF0000' }, [
-        '<table style="border-collapse: collapse; width: 500px; height: 500px; border-width: 2px; border-color: #FF0000; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
+        '<table style="width: 500px; height: 500px; border: 2px dotted rgb(255, 0, 0); border-collapse: collapse;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
         '<tbody>',
         '<tr>',
-        isSafari ? '<td style="border: 5px double rgb(255, 0, 0); padding: 3px;">&nbsp;</td>' : '<td style="border-color: rgb(255, 0, 0); border-width: 5px; padding: 3px; border-style: double;">&nbsp;</td>',
+        '<td style="border: 5px double rgb(255, 0, 0); padding: 3px;">&nbsp;</td>',
         '<td style="border-color: rgb(255, 0, 0); border-width: 2px; padding: 3px;">&nbsp;</td>',
         '</tr>',
         '<tr>',
@@ -589,10 +632,10 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
 
     it('TINY-9837: Should apply border, cellpadding and bordercolor to cells if they have been modified',
       () => testApplyDataToCells({ border: '3px', cellpadding: '3px', bordercolor: '#FF0000' }, [
-        '<table style="border-collapse: collapse; width: 500px; height: 500px; border-width: 3px; border-color: #FF0000; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
+        '<table style="width: 500px; height: 500px; border: 3px dotted rgb(255, 0, 0); border-collapse: collapse;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
         '<tbody>',
         '<tr>',
-        isSafari ? '<td style="border: 3px double rgb(255, 0, 0); padding: 3px;">&nbsp;</td>' : '<td style="border-color: rgb(255, 0, 0); border-width: 3px; padding: 3px; border-style: double;">&nbsp;</td>',
+        '<td style="border: 3px double rgb(255, 0, 0); padding: 3px;">&nbsp;</td>',
         '<td style="border-color: rgb(255, 0, 0); border-width: 3px; padding: 3px;">&nbsp;</td>',
         '</tr>',
         '<tr>',
