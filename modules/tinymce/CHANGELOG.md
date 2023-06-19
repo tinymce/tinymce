@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Tab navigation incorrectly stopped around `iframe` dialog component. #TINY-9815
+- The border style of table was splitted into a longhand form after table updates, resulting a difference when being emitted during `getContent()`. #TINY-9843
 
 ## 6.5.0 - 2023-06-12
 
