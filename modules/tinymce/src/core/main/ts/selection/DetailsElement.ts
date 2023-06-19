@@ -130,13 +130,14 @@ const getParentDetailsElementAtPos = (dom: DOMUtils, pos: CaretPosition) => Opti
 
 const isInDetailsElement = (dom: DOMUtils, pos: CaretPosition) => getParentDetailsElementAtPos(dom, pos).isSome();
 
-const moveCaretToDetailsPos = (editor: Editor, pos: CaretPosition) => {
+const moveCaretToDetailsPos = (editor: Editor, pos: CaretPosition, forward: boolean) => {
   const details = editor.dom.getParent(pos.container(), 'details');
 
   if (details && !details.open) {
     const summary = editor.dom.select('summary', details)[0];
     if (summary) {
-      CaretFinder.lastPositionIn(summary).each((pos) => setCaretToPosition(editor, pos));
+      const newPos = forward ? CaretFinder.firstPositionIn(summary) : CaretFinder.lastPositionIn(summary);
+      newPos.each((pos) => setCaretToPosition(editor, pos));
     }
   } else {
     setCaretToPosition(editor, pos);
@@ -176,7 +177,7 @@ const preventDeleteIntoDetails = (editor: Editor, forward: boolean) => {
 
         if (isInDetailsElement(dom, pos) && !Optionals.equals(parentDetailsAtCaret, parentDetailsAtNewPos)) {
           if (!forward) {
-            moveCaretToDetailsPos(editor, pos);
+            moveCaretToDetailsPos(editor, pos, false);
           }
 
           if (parentBlock && inEmptyParentBlock) {
@@ -186,6 +187,7 @@ const preventDeleteIntoDetails = (editor: Editor, forward: boolean) => {
               return true;
             }
 
+            moveCaretToDetailsPos(editor, pos, forward);
             editor.dom.remove(parentBlock);
           }
 
