@@ -142,7 +142,7 @@ const isImage = (editor: Editor) => {
   });
 };
 
-const getFilesFromDataTransfer = (editor: Editor, dataTransfer: DataTransfer): File[] => {
+const getFilesFromDataTransfer = (dataTransfer: DataTransfer): File[] => {
   const items = dataTransfer.items ? Arr.bind(Arr.from(dataTransfer.items), (item) => {
     return item.kind === 'file' ? [ item.getAsFile() as File ] : [];
   }) : [];
@@ -179,7 +179,7 @@ const pasteImageData = (editor: Editor, e: ClipboardEvent | DragEvent, rng: Rang
   const dataTransfer = isClipboardEvent(e) ? e.clipboardData : e.dataTransfer;
 
   if (Options.shouldPasteDataImages(editor) && dataTransfer) {
-    if (pasteImageFiles(editor, getFilesFromDataTransfer(editor, dataTransfer), rng)) {
+    if (pasteImageFiles(editor, getFilesFromDataTransfer(dataTransfer), rng)) {
       e.preventDefault();
 
       return true;
