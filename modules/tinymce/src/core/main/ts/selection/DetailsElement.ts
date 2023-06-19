@@ -198,7 +198,7 @@ const preventDeleteIntoDetails = (editor: Editor, forward: boolean) => {
   }
 };
 
-const preventDeleteSummaryAction = (editor: Editor, detailElements: DetailsElements, e: KeyboardEvent): boolean => {
+const safariDeleteInSummaryAction = (editor: Editor, e: KeyboardEvent): boolean => {
   const selection = editor.selection;
   const node = selection.getNode();
   const rng = selection.getRng();
@@ -206,19 +206,8 @@ const preventDeleteSummaryAction = (editor: Editor, detailElements: DetailsEleme
   const isDelete = e.keyCode === VK.DELETE;
   const isCollapsed = editor.selection.isCollapsed();
   const caretPos = CaretPosition.fromRangeStart(rng);
-  const root = editor.getBody();
 
-  if (!isCollapsed && isPartialDelete(rng, detailElements)) {
-    return true;
-  } else if (isCollapsed && isBackspace && isCaretAtStartOfSummary(caretPos, detailElements)) {
-    return true;
-  } else if (isCollapsed && isDelete && isCaretAtEndOfSummary(caretPos, detailElements)) {
-    return true;
-  } else if (isCollapsed && isBackspace && isCaretInFirstPositionInBody(caretPos, detailElements)) {
-    return true;
-  } else if (isCollapsed && isDelete && isCaretInLastPositionInBody(root, caretPos, detailElements)) {
-    return true;
-  } else if (isSafari && NodeType.isSummary(node)) {
+  if (isSafari && NodeType.isSummary(node)) {
     // TINY-9951: Safari bug, deleting within the summary causes all content to be removed and no caret position to be left
     // https://bugs.webkit.org/show_bug.cgi?id=257745
     if (!isCollapsed && isEntireNodeSelected(rng, node) || DeleteUtils.willDeleteLastPositionInElement(isDelete, caretPos, node)) {
@@ -271,12 +260,34 @@ const preventDeleteSummaryAction = (editor: Editor, detailElements: DetailsEleme
   }
 
   return false;
+
+};
+
+const preventDeleteSummaryAction = (editor: Editor, detailElements: DetailsElements, forward: boolean): boolean => {
+  const selection = editor.selection;
+  const rng = selection.getRng();
+  const isCollapsed = editor.selection.isCollapsed();
+  const caretPos = CaretPosition.fromRangeStart(rng);
+  const root = editor.getBody();
+
+  if (!isCollapsed && isPartialDelete(rng, detailElements)) {
+    return true;
+  } else if (isCollapsed && !forward && isCaretAtStartOfSummary(caretPos, detailElements)) {
+    return true;
+  } else if (isCollapsed && forward && isCaretAtEndOfSummary(caretPos, detailElements)) {
+    return true;
+  } else if (isCollapsed && !forward && isCaretInFirstPositionInBody(caretPos, detailElements)) {
+    return true;
+  } else if (isCollapsed && forward && isCaretInLastPositionInBody(root, caretPos, detailElements)) {
+    return true;
+  }
+
+  return false;
 };
 
 export const handleKeyboardEvent = (editor: Editor, e: KeyboardEvent): void => {
-  const forward = e.keyCode === VK.DELETE;
-
   if (e.keyCode === VK.BACKSPACE || e.keyCode === VK.DELETE) {
+    const forward = e.keyCode === VK.DELETE;
     getDetailsElements(editor.dom, editor.selection.getRng()).fold(
       () => {
         if (preventDeleteIntoDetails(editor, forward)) {
@@ -284,7 +295,7 @@ export const handleKeyboardEvent = (editor: Editor, e: KeyboardEvent): void => {
         }
       },
       (detailsElements) => {
-        if (preventDeleteSummaryAction(editor, detailsElements, e) || preventDeleteIntoDetails(editor, forward)) {
+        if (preventDeleteSummaryAction(editor, detailsElements, forward) || safariDeleteInSummaryAction(editor, e) || preventDeleteIntoDetails(editor, forward)) {
           e.preventDefault();
         }
       }
