@@ -263,7 +263,7 @@ context('scrollToMarker should not scroll the container', () => {
   const insertNewline = (editor: Editor, args: Partial<EditorEvent<KeyboardEvent>>) => {
     InsertNewLine.insert(editor, args as EditorEvent<KeyboardEvent>);
   };
-  const container: SugarElement<HTMLButtonElement> = SugarElement.fromHtml('<div id="ephox-ui" style="border: 2px solid red; margin-top: 4000px; margin-bottom: 4000px"></div>');
+  const container: SugarElement<HTMLElement> = SugarElement.fromHtml('<div id="ephox-ui" style="border: 2px solid red; margin-top: 4000px; margin-bottom: 4000px"></div>');
 
   const setupElement = () => {
     const element = SugarElement.fromTag('textarea');
