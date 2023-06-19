@@ -7,11 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Changed
+- Change UndoLevelType from enum to union type so that it can be easier to use. #TINY-9764
 - The pattern replacement removes spaces if they were contained in a tag that only contains a space and the text to replace. #TINY-9744
 
 ### Fixed
+- Returning an empty string in custom context menu update function would result in a small white line appearing on right click and the native browser context menu would not show up. #TINY-9842
 - Tab navigation incorrectly stopped around `iframe` dialog component. #TINY-9815
 - The border style of table was splitted into a longhand form after table updates, resulting a difference when being emitted during `getContent()`. #TINY-9843
+- It was not possible to press space to insert a space character inside a summary element on Firefox. #TINY-9964
+
+## 6.5.1 - TBA
+
+### Fixed
+- Fixed a regression where pasting an image url would result in the url being inserted as plain text instead of the image being inserted. #TINY-9997
 
 ## 6.5.0 - 2023-06-12
 

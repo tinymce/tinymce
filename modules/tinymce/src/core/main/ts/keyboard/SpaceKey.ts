@@ -7,7 +7,8 @@ import * as MatchKeys from './MatchKeys';
 
 const executeKeydownOverride = (editor: Editor, evt: KeyboardEvent) => {
   MatchKeys.executeWithDelayedAction([
-    { keyCode: VK.SPACEBAR, action: MatchKeys.action(InsertSpace.insertSpaceOrNbspAtSelection, editor) }
+    { keyCode: VK.SPACEBAR, action: MatchKeys.action(InsertSpace.insertSpaceOrNbspAtSelection, editor) },
+    { keyCode: VK.SPACEBAR, action: MatchKeys.action(InsertSpace.insertSpaceInSummaryAtSelectionOnFirefox, editor) }
   ], evt).each((applyAction) => {
     evt.preventDefault();
     const event = InputEvents.fireBeforeInputEvent(editor, 'insertText', { data: ' ' });
