@@ -274,19 +274,13 @@ const preventDeleteSummaryAction = (editor: Editor, detailElements: DetailsEleme
   const caretPos = CaretPosition.fromRangeStart(rng);
   const root = editor.getBody();
 
-  if (!isCollapsed && isPartialDelete(rng, detailElements)) {
-    return true;
-  } else if (isCollapsed && !forward && isCaretAtStartOfSummary(caretPos, detailElements)) {
-    return true;
-  } else if (isCollapsed && forward && isCaretAtEndOfSummary(caretPos, detailElements)) {
-    return true;
-  } else if (isCollapsed && !forward && isCaretInFirstPositionInBody(caretPos, detailElements)) {
-    return true;
-  } else if (isCollapsed && forward && isCaretInLastPositionInBody(root, caretPos, detailElements)) {
-    return true;
+  if (!isCollapsed) {
+    return isPartialDelete(rng, detailElements);
+  } else if (!forward) {
+    return isCaretAtStartOfSummary(caretPos, detailElements) || isCaretInFirstPositionInBody(caretPos, detailElements);
+  } else {
+    return isCaretAtEndOfSummary(caretPos, detailElements) || isCaretInLastPositionInBody(root, caretPos, detailElements);
   }
-
-  return false;
 };
 
 export const deleteAction = (editor: Editor, forward: boolean): boolean => {
