@@ -1,4 +1,4 @@
-import { Cursors, Keys } from '@ephox/agar';
+import { Cursors } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -26,9 +26,8 @@ describe('browser.tinymce.core.delete.DeleteDetailsTest', () => {
 
     editor.setContent(testCase.html);
     TinySelections.setSelection(editor, testCase.selection.startPath, testCase.selection.soffset, testCase.selection.finishPath, testCase.selection.foffset);
-    const evt = new KeyboardEvent('keydown', { keyCode: forward ? Keys.delete() : Keys.backspace(), cancelable: true });
-    DetailsElement.handleKeyboardEvent(editor, evt);
-    assert.equal(evt.defaultPrevented, testCase.expectedPrevented);
+    const prevented = DetailsElement.deleteAction(editor, forward);
+    assert.equal(prevented, testCase.expectedPrevented);
     TinyAssertions.assertSelection(editor, testCase.expectedSelection.startPath, testCase.expectedSelection.soffset, testCase.expectedSelection.finishPath, testCase.expectedSelection.foffset);
   };
 

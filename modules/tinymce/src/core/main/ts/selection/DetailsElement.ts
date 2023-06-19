@@ -285,26 +285,25 @@ const preventDeleteSummaryAction = (editor: Editor, detailElements: DetailsEleme
   return false;
 };
 
-export const handleKeyboardEvent = (editor: Editor, e: KeyboardEvent): void => {
-  if (e.keyCode === VK.BACKSPACE || e.keyCode === VK.DELETE) {
-    const forward = e.keyCode === VK.DELETE;
-    getDetailsElements(editor.dom, editor.selection.getRng()).fold(
-      () => {
-        if (preventDeleteIntoDetails(editor, forward)) {
-          e.preventDefault();
-        }
-      },
-      (detailsElements) => {
-        if (preventDeleteSummaryAction(editor, detailsElements, forward) || safariDeleteInSummaryAction(editor, e) || preventDeleteIntoDetails(editor, forward)) {
-          e.preventDefault();
-        }
-      }
-    );
-  }
+export const deleteAction = (editor: Editor, forward: boolean): boolean => {
+  return getDetailsElements(editor.dom, editor.selection.getRng()).fold(
+    () => preventDeleteIntoDetails(editor, forward),
+    (detailsElements) => preventDeleteSummaryAction(editor, detailsElements, forward) || preventDeleteIntoDetails(editor, forward)
+  );
 };
 
 const preventDeletingSummary = (editor: Editor): void => {
-  editor.on('keydown', (e) => handleKeyboardEvent(editor, e));
+  editor.on('keydown', (e) => {
+    if (e.keyCode === VK.BACKSPACE || e.keyCode === VK.DELETE) {
+      if (deleteAction(editor, e.keyCode === VK.DELETE)) {
+        e.preventDefault();
+      }
+
+      if (safariDeleteInSummaryAction(editor, e)) {
+        e.preventDefault();
+      }
+    }
+  });
 };
 
 export const setup = (editor: Editor): void => {
