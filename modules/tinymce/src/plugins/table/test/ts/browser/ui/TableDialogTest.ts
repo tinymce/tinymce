@@ -476,7 +476,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
       '<table style="width: 500px; height: 500px; border-width: 2px; border-collapse: collapse; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
       '<tbody>',
       '<tr>',
-      '<td style="border-color: rgb(224, 62, 45); border-width: 5px; border-style: double;">&nbsp;</td>',
+      '<td style="border: 5px double rgb(224, 62, 45);">&nbsp;</td>',
       '<td style="border-width: 2px;">&nbsp;</td>',
       '</tr>',
       '<tr>',
@@ -515,24 +515,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     };
 
     it('TINY-9837: Should not apply border, cellpadding or bordercolor data to cells if none of them has been modified',
-      () => {
-        const expectedHtml = [
-          '<table style="width: 500px; height: 500px; border-width: 2px; border-collapse: collapse; border-style: dotted;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
-          '<tbody>',
-          '<tr>',
-          '<td style="border: 5px double rgb(224, 62, 45);">&nbsp;</td>',
-          '<td style="border-width: 2px;">&nbsp;</td>',
-          '</tr>',
-          '<tr>',
-          '<td style="border-width: 2px;">&nbsp;</td>',
-          '<td style="border-width: 2px;">&nbsp;</td>',
-          '</tr>',
-          '</tbody>',
-          '</table>'
-        ].join('');
-
-        testApplyDataToCells({ caption: true }, expectedHtml);
-      });
+      () => testApplyDataToCells({ caption: true }, baseHtml));
 
     it('TINY-9837: Should apply border to cells if it has been modified',
       () => testApplyDataToCells({ border: '3px' }, [
