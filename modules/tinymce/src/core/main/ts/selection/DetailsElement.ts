@@ -297,9 +297,7 @@ const preventDeletingSummary = (editor: Editor): void => {
     if (e.keyCode === VK.BACKSPACE || e.keyCode === VK.DELETE) {
       if (deleteAction(editor, e.keyCode === VK.DELETE)) {
         e.preventDefault();
-      }
-
-      if (safariDeleteInSummaryAction(editor, e)) {
+      } else if (safariDeleteInSummaryAction(editor, e)) {
         e.preventDefault();
       }
     }
