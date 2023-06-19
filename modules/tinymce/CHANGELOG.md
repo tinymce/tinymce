@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 6.5.1 - 2023-06-19
+
 ### Fixed
 - Fixed a regression where pasting an image url would result in the url being inserted as plain text instead of the image being inserted. #TINY-9997
 - It was not possible to press space to insert a space character inside a summary element on Firefox. #TINY-9964
