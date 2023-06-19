@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Returning an empty string in custom context menu update function would result in a small white line appearing on right click and the native browser context menu would not show up. #TINY-9842
 - Tab navigation incorrectly stopped around `iframe` dialog component. #TINY-9815
+- It was possible to delete the first or last empty block just before a details element if it was within a another details element. #TINY-9965
 
 ## 6.5.1 - 2023-06-19
 

@@ -277,7 +277,7 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
         TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 0);
       });
 
-      it('TINY-9965: Backspace should only move the caret to the end of the details body if you backspace in last block after a details', async () => {
+      it('TINY-9965: Backspace should only move the caret to the end of the details body if you backspace in last block after a nested details', async () => {
         const editor = hook.editor();
         const initialContent = AccordionUtils.createAccordion({ summary: 's1', body: AccordionUtils.createAccordion({ summary: 's2', body: 'body' }) + '\n<div>&nbsp;</div>\n' });
         editor.setContent(initialContent);
