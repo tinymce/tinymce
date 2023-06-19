@@ -52,6 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dialog `tabpanel` tab labels are now allowed to word wrap for better readability with long labels. #TINY-9947
 - Added newlines before and after `details` elements in the output HTML. #TINY-9959
 - Added padding for empty `summary` elements so that they can be properly edited. #TINY-9959
+- Updated toolbar "More" button tooltip text from "More..." to "Reveal or hide additional toolbar items". #TINY-9629
 
 ### Changed
 - The `caption`, `address` and `dt` elements no longer incorrectly allow non-inline child elements when the editor schema is set to _HTML 4_. #TINY-9768
