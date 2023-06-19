@@ -152,10 +152,12 @@ const preventDeleteIntoDetails = (editor: Editor, forward: boolean) => {
     const parentBlock = dom.getParent(caretPos.container(), dom.isBlock);
     const parentDetailsAtCaret = getParentDetailsElementAtPos(dom, caretPos);
     const inEmptyParentBlock = parentBlock && dom.isEmpty(parentBlock);
+    const isFirstBlock = parentBlock && Type.isNull(parentBlock.previousSibling);
+    const isLastBlock = parentBlock && Type.isNull(parentBlock?.nextSibling);
 
     // Pressing backspace or delete in an first or last empty block before or after details
     if (inEmptyParentBlock) {
-      const firstOrLast = forward ? Type.isNull(parentBlock.nextSibling) : Type.isNull(parentBlock.previousSibling);
+      const firstOrLast = forward ? isLastBlock : isFirstBlock;
       if (firstOrLast) {
         const isBeforeAfterDetails = CaretFinder.navigate(!forward, root, caretPos).exists((pos) => {
           return isInDetailsElement(dom, pos) && !Optionals.equals(parentDetailsAtCaret, getParentDetailsElementAtPos(dom, pos));
@@ -178,9 +180,9 @@ const preventDeleteIntoDetails = (editor: Editor, forward: boolean) => {
           }
 
           if (parentBlock && inEmptyParentBlock) {
-            if (forward && Type.isNull(parentBlock.previousSibling)) {
+            if (forward && isFirstBlock) {
               return true;
-            } else if (!forward && Type.isNull(parentBlock.nextSibling)) {
+            } else if (!forward && isLastBlock) {
               return true;
             }
 
