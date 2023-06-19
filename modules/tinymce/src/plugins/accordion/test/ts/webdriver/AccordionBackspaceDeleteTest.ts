@@ -267,7 +267,7 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
         TinyAssertions.assertCursor(editor, [ 0, 1, 0, 0 ], 'body'.length);
       });
 
-      it('TINY-9965: Nothing should happend if you delete before nested details inside details', async () => {
+      it('TINY-9965: Nothing should happen if you delete before nested details inside details', async () => {
         const editor = hook.editor();
         const initialContent = AccordionUtils.createAccordion({ summary: 's1', body: `<div>&nbsp;</div>\n${AccordionUtils.createAccordion({ summary: 's2', body: 'body' })}\n` });
         editor.setContent(initialContent);

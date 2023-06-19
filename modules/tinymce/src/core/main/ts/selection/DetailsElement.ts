@@ -151,6 +151,21 @@ const preventDeleteIntoDetails = (editor: Editor, forward: boolean) => {
     const caretPos = CaretPosition.fromRangeStart(selection.getRng());
     const parentBlock = dom.getParent(caretPos.container(), dom.isBlock);
     const parentDetailsAtCaret = getParentDetailsElementAtPos(dom, caretPos);
+    const inEmptyParentBlock = parentBlock && dom.isEmpty(parentBlock);
+
+    // Pressing backspace or delete in an first or last empty block before or after details
+    if (inEmptyParentBlock) {
+      const firstOrLast = forward ? Type.isNull(parentBlock.nextSibling) : Type.isNull(parentBlock.previousSibling);
+      if (firstOrLast) {
+        const isBeforeAfterDetails = CaretFinder.navigate(!forward, root, caretPos).exists((pos) => {
+          return isInDetailsElement(dom, pos) && !Optionals.equals(parentDetailsAtCaret, getParentDetailsElementAtPos(dom, pos));
+        });
+
+        if (isBeforeAfterDetails) {
+          return true;
+        }
+      }
+    }
 
     return CaretFinder.navigate(forward, root, caretPos).fold(
       Fun.never,
@@ -162,7 +177,7 @@ const preventDeleteIntoDetails = (editor: Editor, forward: boolean) => {
             moveCaretToDetailsPos(editor, pos);
           }
 
-          if (parentBlock && dom.isEmpty(parentBlock)) {
+          if (parentBlock && inEmptyParentBlock) {
             if (forward && Type.isNull(parentBlock.previousSibling)) {
               return true;
             } else if (!forward && Type.isNull(parentBlock.nextSibling)) {
@@ -258,31 +273,31 @@ const preventDeleteSummaryAction = (editor: Editor, detailElements: DetailsEleme
   return false;
 };
 
-const preventDeletingSummary = (editor: Editor): void => {
-  editor.on('keydown', (e) => {
-    if (e.keyCode === VK.BACKSPACE || e.keyCode === VK.DELETE) {
-      getDetailsElements(editor.dom, editor.selection.getRng()).fold(
-        () => {
-          if (preventDeleteIntoDetails(editor, e.keyCode === VK.DELETE)) {
-            e.preventDefault();
-          }
-        },
-        (detailsElements) => {
-          if (preventDeleteSummaryAction(editor, detailsElements, e) || preventDeleteIntoDetails(editor, e.keyCode === VK.DELETE)) {
-            e.preventDefault();
-          }
+export const handleKeyboardEvent = (editor: Editor, e: KeyboardEvent): void => {
+  const forward = e.keyCode === VK.DELETE;
+
+  if (e.keyCode === VK.BACKSPACE || e.keyCode === VK.DELETE) {
+    getDetailsElements(editor.dom, editor.selection.getRng()).fold(
+      () => {
+        if (preventDeleteIntoDetails(editor, forward)) {
+          e.preventDefault();
         }
-      );
-    }
-  });
+      },
+      (detailsElements) => {
+        if (preventDeleteSummaryAction(editor, detailsElements, e) || preventDeleteIntoDetails(editor, forward)) {
+          e.preventDefault();
+        }
+      }
+    );
+  }
 };
 
-const setup = (editor: Editor): void => {
+const preventDeletingSummary = (editor: Editor): void => {
+  editor.on('keydown', (e) => handleKeyboardEvent(editor, e));
+};
+
+export const setup = (editor: Editor): void => {
   preventSummaryToggle(editor);
   filterDetails(editor);
   preventDeletingSummary(editor);
-};
-
-export {
-  setup
 };

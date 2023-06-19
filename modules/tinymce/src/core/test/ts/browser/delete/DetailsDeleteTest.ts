@@ -4,6 +4,7 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import * as DetailsElement from 'tinymce/core/selection/DetailsElement';
 
 interface TestCase {
   readonly html: string;
@@ -25,8 +26,9 @@ describe('browser.tinymce.core.delete.DeleteDetailsTest', () => {
 
     editor.setContent(testCase.html);
     TinySelections.setSelection(editor, testCase.selection.startPath, testCase.selection.soffset, testCase.selection.finishPath, testCase.selection.foffset);
-    const evt = editor.dispatch('keydown', new KeyboardEvent('keydown', { keyCode: forward ? Keys.delete() : Keys.backspace() }));
-    assert.equal(evt.isDefaultPrevented(), testCase.expectedPrevented);
+    const evt = new KeyboardEvent('keydown', { keyCode: forward ? Keys.delete() : Keys.backspace(), cancelable: true });
+    DetailsElement.handleKeyboardEvent(editor, evt);
+    assert.equal(evt.defaultPrevented, testCase.expectedPrevented);
     TinyAssertions.assertSelection(editor, testCase.expectedSelection.startPath, testCase.expectedSelection.soffset, testCase.expectedSelection.finishPath, testCase.expectedSelection.foffset);
   };
 
@@ -83,6 +85,34 @@ describe('browser.tinymce.core.delete.DeleteDetailsTest', () => {
       selection: caret([ 1 ], 0),
       expectedSelection: caret([ 0, 1, 0, 0 ], 'body'.length),
       expectedPrevented: true
+    }));
+
+    it('Delete forward in last empty block after details should do nothing', () => testDeleteForward({
+      html: '<details open><summary>s1</summary><div><p>&nbsp;</p></details><p>&nbsp;</p>',
+      selection: caret([ 1 ], 0),
+      expectedSelection: caret([ 1 ], 0),
+      expectedPrevented: true
+    }));
+
+    it('Delete backward in first empty block before details should do nothing', () => testDeleteBackward({
+      html: '<p>&nbsp;</p><details open><summary>s1</summary><div><p>&nbsp;</p></details>',
+      selection: caret([ 0 ], 0),
+      expectedSelection: caret([ 0 ], 0),
+      expectedPrevented: true
+    }));
+
+    it('Delete forward in empty block after details should do normal delete', () => testDeleteForward({
+      html: '<details open><summary>s1</summary><div><p>&nbsp;</p></details><p>&nbsp;</p><p>abc</p>',
+      selection: caret([ 1 ], 0),
+      expectedSelection: caret([ 1 ], 0),
+      expectedPrevented: false
+    }));
+
+    it('Delete backward in empty block before details should do nothing', () => testDeleteBackward({
+      html: '<p>abc</p><p>&nbsp;</p><details open><summary>s1</summary><div><p>&nbsp;</p></details>',
+      selection: caret([ 1 ], 0),
+      expectedSelection: caret([ 1 ], 0),
+      expectedPrevented: false
     }));
   });
 
