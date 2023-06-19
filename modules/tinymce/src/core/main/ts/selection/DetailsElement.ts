@@ -1,4 +1,4 @@
-import { Arr, Fun, Optional, Type } from '@ephox/katamari';
+import { Arr, Fun, Optional, Optionals, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { SugarElement } from '@ephox/sugar';
 
@@ -126,8 +126,9 @@ const isCaretInLastPositionInBody = (root: HTMLElement, caretPos: CaretPosition,
     )
   );
 
-const isInDetailsElement = (dom: DOMUtils, pos: CaretPosition) =>
-  Type.isNonNullable(dom.getParent(pos.container(), 'details'));
+const getParentDetailsElementAtPos = (dom: DOMUtils, pos: CaretPosition) => Optional.from(dom.getParent(pos.container(), 'details'));
+
+const isInDetailsElement = (dom: DOMUtils, pos: CaretPosition) => getParentDetailsElementAtPos(dom, pos).isSome();
 
 const moveCaretToDetailsPos = (editor: Editor, pos: CaretPosition) => {
   const details = editor.dom.getParent(pos.container(), 'details');
@@ -149,39 +150,28 @@ const preventDeleteIntoDetails = (editor: Editor, forward: boolean) => {
   if (editor.selection.isCollapsed()) {
     const caretPos = CaretPosition.fromRangeStart(selection.getRng());
     const parentBlock = dom.getParent(caretPos.container(), dom.isBlock);
-
-    // Prevent backspace/delete if the paragraph is empty and the start or end of it's parent container
-    // TODO: Clean this up!
-    if (parentBlock && dom.isEmpty(parentBlock)) {
-      if (Type.isNull(parentBlock.nextSibling)) {
-        const pos = CaretFinder.prevPosition(root, caretPos).filter((pos) => isInDetailsElement(dom, pos));
-        if (pos.isSome()) {
-          pos.each((pos) => {
-            if (!forward) {
-              moveCaretToDetailsPos(editor, pos);
-            }
-          });
-          return true;
-        }
-      } else if (Type.isNull(parentBlock.previousSibling)) {
-        const pos = CaretFinder.nextPosition(root, caretPos).filter((pos) => isInDetailsElement(dom, pos));
-        if (pos) {
-          return true;
-        }
-      }
-    }
+    const parentDetailsAtCaret = getParentDetailsElementAtPos(dom, caretPos);
 
     return CaretFinder.navigate(forward, root, caretPos).fold(
       Fun.never,
       (pos) => {
-        if (isInDetailsElement(dom, pos)) {
-          if (parentBlock && dom.isEmpty(parentBlock)) {
-            editor.dom.remove(parentBlock);
-          }
+        const parentDetailsAtNewPos = getParentDetailsElementAtPos(dom, pos);
 
+        if (isInDetailsElement(dom, pos) && !Optionals.equals(parentDetailsAtCaret, parentDetailsAtNewPos)) {
           if (!forward) {
             moveCaretToDetailsPos(editor, pos);
           }
+
+          if (parentBlock && dom.isEmpty(parentBlock)) {
+            if (forward && Type.isNull(parentBlock.previousSibling)) {
+              return true;
+            } else if (!forward && Type.isNull(parentBlock.nextSibling)) {
+              return true;
+            }
+
+            editor.dom.remove(parentBlock);
+          }
+
           return true;
         } else {
           return false;
@@ -278,7 +268,7 @@ const preventDeletingSummary = (editor: Editor): void => {
           }
         },
         (detailsElements) => {
-          if (preventDeleteSummaryAction(editor, detailsElements, e)) {
+          if (preventDeleteSummaryAction(editor, detailsElements, e) || preventDeleteIntoDetails(editor, e.keyCode === VK.DELETE)) {
             e.preventDefault();
           }
         }
