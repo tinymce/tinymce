@@ -372,7 +372,10 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     TinyAssertions.assertContentPresence(editor, { img: 0 });
 
     editor.execCommand('mceInsertClipboardContent', false, {
-      files: [ base64ToBlob(base64ImgSrc, 'image/gif', 'image.gif') ]
+      files: [
+        base64ToBlob(base64ImgSrc, 'image/gif', 'image.gif'),
+        base64ToBlob(base64ImgSrc, 'someKindOfFile/abc', 'foo.bar')
+      ]
     });
 
     await UiFinder.pWaitForVisible('the image should be pasted', TinyDom.body(editor), 'img');

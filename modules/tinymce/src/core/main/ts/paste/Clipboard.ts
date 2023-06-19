@@ -142,17 +142,20 @@ const isImage = (editor: Editor) => {
   });
 };
 
-const getImagesFromDataTransfer = (editor: Editor, dataTransfer: DataTransfer): File[] => {
+const getFilesFromDataTransfer = (editor: Editor, dataTransfer: DataTransfer): File[] => {
   const items = dataTransfer.items ? Arr.bind(Arr.from(dataTransfer.items), (item) => {
     return item.kind === 'file' ? [ item.getAsFile() as File ] : [];
   }) : [];
   const files = dataTransfer.files ? Arr.from(dataTransfer.files) : [];
-  return Arr.filter(items.length > 0 ? items : files, isImage(editor));
+  return items.length > 0 ? items : files;
 };
+
+const getImagesFromFiles = (editor: Editor, files: File[]): File[] =>
+  Arr.filter(files, isImage(editor));
 
 const pasteImageFiles = (editor: Editor, files: File[], rng: Range | undefined): boolean => {
   if (Options.shouldPasteDataImages(editor) && files.length > 0) {
-    readFilesAsDataUris(files).then((fileResults) => {
+    readFilesAsDataUris(getImagesFromFiles(editor, files)).then((fileResults) => {
       if (rng) {
         editor.selection.setRng(rng);
       }
@@ -176,12 +179,8 @@ const pasteImageData = (editor: Editor, e: ClipboardEvent | DragEvent, rng: Rang
   const dataTransfer = isClipboardEvent(e) ? e.clipboardData : e.dataTransfer;
 
   if (Options.shouldPasteDataImages(editor) && dataTransfer) {
-    const images = getImagesFromDataTransfer(editor, dataTransfer);
-
-    if (images.length > 0) {
+    if (pasteImageFiles(editor, getFilesFromDataTransfer(editor, dataTransfer), rng)) {
       e.preventDefault();
-
-      pasteImageFiles(editor, images, rng);
 
       return true;
     }
