@@ -154,9 +154,10 @@ const getImagesFromFiles = (editor: Editor, files: File[]): File[] =>
   Arr.filter(files, isImage(editor));
 
 const pasteImageFiles = (editor: Editor, files: File[], rng: Range | undefined): boolean => {
-  if (Options.shouldPasteDataImages(editor) && files.length > 0) {
-    readFilesAsDataUris(getImagesFromFiles(editor, files)).then((fileResults) => {
-      if (rng) {
+  const images = getImagesFromFiles(editor, files);
+  if (Options.shouldPasteDataImages(editor) && images.length > 0) {
+    readFilesAsDataUris(images).then((fileResults) => {
+      if (rng && fileResults.length > 0) {
         editor.selection.setRng(rng);
       }
 
