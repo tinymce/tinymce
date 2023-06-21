@@ -8,10 +8,10 @@ import * as Options from '../api/Options';
 import Delay from '../api/util/Delay';
 import * as TransparentElements from '../content/TransparentElements';
 import * as NodeType from '../dom/NodeType';
+import * as PaddingBr from '../dom/PaddingBr';
 import * as Clipboard from './Clipboard';
 import * as InternalHtml from './InternalHtml';
 import * as PasteUtils from './PasteUtils';
-import * as PaddingBr from '../dom/PaddingBr';
 
 const getCaretRangeFromEvent = (editor: Editor, e: MouseEvent): Range | undefined =>
   // TODO: TINY-7075 Remove the "?? 0" here when agar passes valid client coords
