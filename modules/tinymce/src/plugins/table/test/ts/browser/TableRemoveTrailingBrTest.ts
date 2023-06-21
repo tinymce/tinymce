@@ -45,7 +45,7 @@ describe('browser.tinymce.plugins.table.TableRemoveTrailingBrTest', () => {
       await TableTestUtils.pInsertTableViaGrid(editor, 2, 2);
       TinyAssertions.assertCursor(editor, [ 0, 1, 0, 0, 0, 1, 0, 0 ], 0);
     });
-    it('TINY-9860: should have correct number of non-bogus brs for single table, no brs', async () => {
+    it('TINY-9860: should have correct number of non-bogus brs for single table', async () => {
       const editor = hook.editor();
       editor.setContent('');
       await TableTestUtils.pInsertTableViaGrid(editor, 2, 2);
