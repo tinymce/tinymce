@@ -10,6 +10,7 @@ describe('browser.tinymce.plugins.table.TableRemoveTrailingBrTest', () => {
     plugins: 'table code',
     base_url: '/project/tinymce/js/tinymce'
   };
+
   context('remove_trailing_brs: true', () => {
     const hook = TinyHooks.bddSetup<Editor>({ ...baseSettings, remove_trailing_brs: true }, [ Plugin ], true);
     const tableOutputHtmlStr = [
