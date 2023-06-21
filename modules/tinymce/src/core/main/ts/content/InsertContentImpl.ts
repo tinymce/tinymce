@@ -192,7 +192,7 @@ const moveSelectionToMarker = (editor: Editor, marker: HTMLElement | null): void
       rng = nextRng;
       dom.remove(parentBlock);
     } else {
-      // If parentBlock is a table cell, add a br without 'data-mce-bogus' attribute.
+      // TINY-9860: If parentBlock is a table cell, add a br without 'data-mce-bogus' attribute.
       dom.add(parentBlock, dom.create('br', isCell ? {} : { 'data-mce-bogus': '1' }));
     }
   }
