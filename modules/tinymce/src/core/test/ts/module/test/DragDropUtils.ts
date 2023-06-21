@@ -5,9 +5,9 @@ import { Hierarchy, SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 export const dragDropHtmlInternallyToElement = (editor: Editor, html: string, target: SugarElement<Element>): void => {
-  editor.fire('dragstart');
+  editor.dispatch('dragstart');
   DragnDrop.dropItems([{ data: html, type: 'text/html' }], target);
-  editor.fire('dragend');
+  editor.dispatch('dragend');
 };
 
 export const dragDropHtmlInternallyToPath = (editor: Editor, html: string, path: number[]): void => {

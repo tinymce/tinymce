@@ -105,8 +105,10 @@ const setup = (editor: Editor, draggingInternallyState: Cell<boolean>): void => 
 
     const internalContent = dropContent[InternalHtml.internalHtmlMime()];
     const content = internalContent || dropContent['text/html'] || dropContent['text/plain'];
+    const needsInternalDrop = needsCustomInternalDrop(editor.dom, editor.schema, rng.startContainer, dropContent);
+    const isInternalDrop = draggingInternallyState.get();
 
-    if (draggingInternallyState.get() && !needsCustomInternalDrop(editor.dom, editor.schema, rng.startContainer, dropContent)) {
+    if (isInternalDrop && !needsInternalDrop) {
       return;
     }
 
@@ -116,7 +118,7 @@ const setup = (editor: Editor, draggingInternallyState: Cell<boolean>): void => 
       // FF 45 doesn't paint a caret when dragging in text in due to focus call by execCommand
       Delay.setEditorTimeout(editor, () => {
         editor.undoManager.transact(() => {
-          if (internalContent) {
+          if (internalContent || (isInternalDrop && needsInternalDrop)) {
             editor.execCommand('Delete');
           }
 

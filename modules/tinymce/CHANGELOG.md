@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tab navigation incorrectly stopped around `iframe` dialog component. #TINY-9815
 - deleting `li` with only `br`s in it sometimes caused a crush. #TINY-6888
 - It was possible to remove the summary element from a details element by drag and dropping. #TINY-9960
+- It was possible to break summary elements if contents containing blocks was dropped inside them. #TINY-9960
+- Contents would not be removed from the drag start source if dragging and dropping internally into a transparent block element. #TINY-9960
 
 ## 6.5.1 - 2023-06-19
 
