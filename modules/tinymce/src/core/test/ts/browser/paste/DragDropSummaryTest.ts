@@ -5,6 +5,7 @@ import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 
 import * as DragDropUtils from '../../module/test/DragDropUtils';
+import * as InputEventUtils from '../../module/test/InputEventUtils';
 
 describe('browser.tinymce.core.paste.DragDropSummaryTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -39,7 +40,7 @@ describe('browser.tinymce.core.paste.DragDropSummaryTest', () => {
 
     editor.setContent('<details><div>body</div></details>', { format: 'raw' });
     TinyAssertions.assertContentPresence(editor, { 'summary': 0, 'summary > br': 0 });
-    editor.dispatch('input', new InputEvent('input', { inputType: 'deleteByDrag' }));
+    editor.dispatch('input', InputEventUtils.makeInputEvent('input', { inputType: 'deleteByDrag' }));
     TinyAssertions.assertContentPresence(editor, { 'summary': 1, 'summary > br': 1 });
     TinyAssertions.assertContent(editor, '<details><summary>&nbsp;</summary><div>body</div></details>');
   });
@@ -49,7 +50,7 @@ describe('browser.tinymce.core.paste.DragDropSummaryTest', () => {
 
     editor.setContent('<details><br><div>body</div></details>', { format: 'raw' });
     TinyAssertions.assertContentPresence(editor, { 'summary': 0, 'details > br': 1, 'summary > br': 0 });
-    editor.dispatch('input', new InputEvent('input', { inputType: 'deleteByDrag' }));
+    editor.dispatch('input', InputEventUtils.makeInputEvent('input', { inputType: 'deleteByDrag' }));
     TinyAssertions.assertContentPresence(editor, { 'summary': 1, 'details > br': 0, 'summary > br': 1 });
     TinyAssertions.assertContent(editor, '<details><summary>&nbsp;</summary><div>body</div></details>');
   });
