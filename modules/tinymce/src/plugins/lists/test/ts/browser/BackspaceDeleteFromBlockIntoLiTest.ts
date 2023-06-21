@@ -126,4 +126,22 @@ describe('Browser Test: .RemoveTrailingBlockquoteTest', () => {
     TinyContentActions.keystroke(editor, Keys.backspace());
     TinyAssertions.assertContent(editor, '<ul><li>a</li></ul>');
   });
+
+  it('TINY-6888: delete a `li` with a `br` and a `br` with `data-mce-bogus', () => {
+    const editor = hook.editor();
+    editor.setContent('<ol><li>aaa</li><li><br><br data-mce-bogus="1"></li><li>ccc</li></ol>', { format: 'raw' });
+    TinySelections.setCursor(editor, [ 0, 1 ], 0);
+    TinyContentActions.keystroke(editor, Keys.delete());
+    TinyAssertions.assertContent(editor, '<ol><li>aaa</li><li>ccc</li></ol>');
+
+    editor.setContent('<ol><li>aaa</li><li>foo<br><br></li><li>ccc</li></ol>', { format: 'raw' });
+    TinySelections.setSelection(editor, [ 0, 1 ], 0, [ 0, 2 ], 0);
+    TinyContentActions.keystroke(editor, Keys.delete());
+    TinyAssertions.assertContent(editor, '<ol><li>aaa</li><li>ccc</li></ol>');
+
+    editor.setContent('<ol><li>aaa</li><li>foo<br><br><br></li><li>ccc</li></ol>', { format: 'raw' });
+    TinySelections.setSelection(editor, [ 0, 1 ], 0, [ 0, 2 ], 0);
+    TinyContentActions.keystroke(editor, Keys.delete());
+    TinyAssertions.assertContent(editor, '<ol><li>aaa</li><li>ccc</li></ol>');
+  });
 });
