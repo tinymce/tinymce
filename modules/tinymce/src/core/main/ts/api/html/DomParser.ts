@@ -62,6 +62,7 @@ export interface DomParserSettings {
   forced_root_block?: boolean | string;
   forced_root_block_attrs?: Record<string, string>;
   inline_styles?: boolean;
+  pad_empty_with_br?: boolean;
   preserve_cdata?: boolean;
   /**
    * @deprecated Remove trailing <br> tags functionality has been added to tinymce.dom.Serializer and option will be removed in the next major release */
@@ -216,7 +217,7 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
         const isNodeEmpty = isEmpty(schema, nonEmptyElements, whitespaceElements, node);
 
         if (elementRule.paddInEmptyBlock && isNodeEmpty && isTextRootBlockEmpty(node)) {
-          paddEmptyNode(args, isBlock, node);
+          paddEmptyNode(settings, args, isBlock, node);
         } else if (elementRule.removeEmpty && isNodeEmpty) {
           if (isBlock(node)) {
             node.remove();
@@ -224,7 +225,7 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
             node.unwrap();
           }
         } else if (elementRule.paddEmpty && (isNodeEmpty || isPaddedWithNbsp(node))) {
-          paddEmptyNode(args, isBlock, node);
+          paddEmptyNode(settings, args, isBlock, node);
         }
       }
     } else if (node.type === 3) {
