@@ -288,7 +288,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
         const hook = TinyHooks.bddSetup<Editor>({
           base_url: '/project/tinymce/js/tinymce',
           resize: 'both',
-          height: 500,
+          height: 400,
           width: 650,
         }, []);
 
