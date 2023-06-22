@@ -87,6 +87,8 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
   const open = <T extends Dialog.DialogData>(config: Dialog.DialogSpec<T>, params: WindowParams | undefined, closeWindow: (dialogApi: Dialog.DialogInstanceApi<T>) => void): Dialog.DialogInstanceApi<T> => {
     if (params !== undefined && params.inline === 'toolbar') {
       return openInlineDialog(config, extras.backstages.popup.shared.anchors.inlineDialog(), closeWindow, params.ariaAttrs);
+    } else if (params !== undefined && params.inline === 'bottom') {
+      return openBottomInlineDialog(config, extras.backstages.popup.shared.anchors.inlineBottomDialog(), closeWindow, params.ariaAttrs);
     } else if (params !== undefined && params.inline === 'cursor') {
       return openInlineDialog(config, extras.backstages.popup.shared.anchors.cursor(), closeWindow, params.ariaAttrs);
     } else {
@@ -233,6 +235,134 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
         // 'ResizeWindow` as that's handled by docking already.
         editor.on('ResizeEditor', refreshDocking);
       }
+
+      // Set the initial data in the dialog and focus the first focusable item
+      dialogUi.instanceApi.setData(initialData);
+      Keying.focusIn(dialogUi.dialog);
+
+      return dialogUi.instanceApi;
+    };
+
+    return DialogManager.DialogManager.open<T>(factory, config);
+  };
+
+  const openBottomInlineDialog = <T extends Dialog.DialogData>(config: Dialog.DialogSpec<T>, anchor: InlineDialogAnchor, closeWindow: (dialogApi: Dialog.DialogInstanceApi<T>) => void, ariaAttrs: boolean = false): Dialog.DialogInstanceApi<T> => {
+    const factory = (contents: Dialog.Dialog<T>, internalInitialData: Partial<T>, dataValidator: StructureProcessor): Dialog.DialogInstanceApi<T> => {
+      const initialData = validateData<T>(internalInitialData, dataValidator);
+      const inlineDialog = Singleton.value<AlloyComponent>();
+      const isToolbarLocationTop = extras.backstages.popup.shared.header.isPositionedAtTop();
+
+      const dialogInit = {
+        dataValidator,
+        initialData,
+        internalDialog: contents
+      };
+
+      const refreshDocking = () => inlineDialog.on((dialog) => {
+        InlineView.reposition(dialog);
+        Docking.refresh(dialog);
+      });
+
+      const dialogUi = renderInlineDialog<T>(
+        dialogInit,
+        {
+          redial: DialogManager.DialogManager.redial,
+          closeWindow: () => {
+            inlineDialog.on(InlineView.hide);
+            editor.off('ResizeEditor ScrollWindow ElementScroll', refreshDocking);
+            inlineDialog.clear();
+            closeWindow(dialogUi.instanceApi);
+          }
+        },
+        extras.backstages.popup,
+        ariaAttrs
+      );
+
+      const inlineAdditionalBehaviours = (editor: Editor): Behaviour.NamedConfiguredBehaviour<any, any>[] => {
+        return [
+          Docking.config({
+            contextual: {
+              lazyContext: () => Optional.some(Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()))),
+              fadeInClass: 'tox-dialog-dock-fadein',
+              fadeOutClass: 'tox-dialog-dock-fadeout',
+              transitionClass: 'tox-dialog-dock-transition'
+            },
+            modes: [ 'top', 'bottom' ],
+            lazyViewport: (comp) => {
+              const optScrollingContext = ScrollingContext.detectWhenSplitUiMode(editor, comp.element);
+              return optScrollingContext
+                .map(
+                  (sc) => {
+                    const combinedBounds = ScrollingContext.getBoundsFrom(sc);
+                    return {
+                      bounds: combinedBounds,
+                      optScrollEnv: Optional.some({
+                        currentScrollTop: sc.element.dom.scrollTop,
+                        scrollElmTop: SugarLocation.absolute(sc.element).top
+                      })
+                    };
+                  }
+                ).getOrThunk(
+                  () => {
+                    return {
+                      bounds: Boxes.win(),
+                      optScrollEnv: Optional.none()
+                    };
+                  }
+                );
+            }
+          })
+        ];
+      };
+
+      const inlineDialogComp = GuiFactory.build(InlineView.sketch({
+        lazySink: extras.backstages.popup.shared.getSink,
+        dom: {
+          tag: 'div',
+          classes: [ ]
+        },
+        // Fires the default dismiss event.
+        fireDismissalEventInstead: { },
+        ...isToolbarLocationTop ? { } : { fireRepositionEventInstead: { }},
+        inlineBehaviours: Behaviour.derive([
+          AddEventsBehaviour.config('window-manager-inline-events', [
+            AlloyEvents.run(SystemEvents.dismissRequested(), (_comp, _se) => {
+              AlloyTriggers.emit(dialogUi.dialog, formCancelEvent);
+            })
+          ]),
+          ...inlineAdditionalBehaviours(editor)
+        ]),
+        // Treat alert or confirm dialogs as part of the inline dialog
+        isExtraPart: (_comp, target) => isAlertOrConfirmDialog(target)
+      }));
+      inlineDialog.set(inlineDialogComp);
+
+      const getInlineDialogBounds = (): Optional<Boxes.Bounds> => {
+        return extras.backstages.popup.shared.getSink().toOptional().bind((s) => {
+          const optScrollingContext = ScrollingContext.detectWhenSplitUiMode(editor, s.element);
+
+          // margin bottom of the screen/editor content area container
+          const margin = 15;
+
+          const bounds = optScrollingContext.map((sc) => ScrollingContext.getBoundsFrom(sc)).getOr(Boxes.win());
+          const contentAreaContainer = Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()));
+
+          const constrainedBounds = Boxes.constrain(contentAreaContainer, bounds);
+
+          return Optional.some(Boxes.bounds(constrainedBounds.x, constrainedBounds.y, constrainedBounds.width, constrainedBounds.height - margin));
+        });
+      };
+
+      // Position the inline dialog
+      InlineView.showWithinBounds(
+        inlineDialogComp,
+        GuiFactory.premade(dialogUi.dialog),
+        { anchor },
+        getInlineDialogBounds
+      );
+
+      Docking.refresh(inlineDialogComp);
+      editor.on('ResizeEditor ScrollWindow ElementScroll', refreshDocking);
 
       // Set the initial data in the dialog and focus the first focusable item
       dialogUi.instanceApi.setData(initialData);

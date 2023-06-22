@@ -1,7 +1,8 @@
 import { Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { Boxes } from '@ephox/alloy';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Css, Height, Insert, Remove, Scroll, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
+import { Class, Css, Height, Insert, Remove, Scroll, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -40,8 +41,8 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
       assert.approximately(left, x, diff, `Dialog left position (${left}px) should be ~${x}px`);
     });
 
-  const openDialog = (editor: Editor): SugarElement<HTMLElement> => {
-    DialogUtils.open(editor, dialogSpec, { inline: 'toolbar' });
+  const openDialog = (editor: Editor, inline: 'toolbar' | 'bottom' = 'toolbar'): SugarElement<HTMLElement> => {
+    DialogUtils.open(editor, dialogSpec, { inline });
     const dialog = UiFinder.findIn(SugarBody.body(), '.tox-dialog-inline').getOrDie();
     return Traverse.parent(dialog).getOr(dialog) as SugarElement<HTMLElement>;
   };
@@ -268,6 +269,180 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
           await pAssertPos(dialog, 'fixed', 106, 0);
 
           DialogUtils.close(editor);
+        });
+      });
+    });
+  });
+
+  context('Inline dialog bottom', () => {
+    const getDialogOffsetLeft = (editor: Editor) => {
+      const dialogWidth = 480;
+      const halfOfEditorWidth = TinyDom.contentAreaContainer(editor).dom.getBoundingClientRect().width / 2;
+      const dialogOffsetLeft = halfOfEditorWidth - (dialogWidth / 2);
+
+      return dialogOffsetLeft;
+    };
+
+    context('editor height does not exceed viewport', () => {
+      context('iframe editor', () => {
+        const hook = TinyHooks.bddSetup<Editor>({
+          base_url: '/project/tinymce/js/tinymce',
+          resize: 'both',
+          height: 500,
+          width: 650,
+        }, []);
+
+        const dialogHeight = 124, margin = 15;
+
+        it('TINY-9888: Test bottom inline dialog position', async () => {
+          const editor = hook.editor();
+          const dialog = openDialog(editor, 'bottom');
+
+          const sinkBottom = UiFinder.findIn(SugarBody.body(), '.tox-silver-sink').getOrDie().dom.getBoundingClientRect().top;
+          const containerBottom = TinyDom.contentAreaContainer(editor).dom.getBoundingClientRect().bottom;
+          const offsetTop = containerBottom - sinkBottom - dialogHeight - margin;
+          await pAssertPos(dialog, 'absolute', getDialogOffsetLeft(editor), offsetTop);
+
+          DialogUtils.close(editor);
+        });
+      });
+
+      context('inline editor', () => {
+        const hook = TinyHooks.bddSetup<Editor>({
+          base_url: '/project/tinymce/js/tinymce',
+          resize: 'both',
+          width: 650,
+          inline: true
+        }, []);
+
+        const dialogHeight = 124, margin = 15;
+
+        it('TINY-9888: Test bottom inline dialog position', async () => {
+          const editor = hook.editor();
+
+          const content = Arr.range(10, (_) => '<p>test</p>').join('\n');
+          editor.insertContent(content);
+
+          const dialog = openDialog(editor, 'bottom');
+          const sinkBottom = UiFinder.findIn(SugarBody.body(), '.tox-silver-sink').getOrDie().dom.getBoundingClientRect().top;
+          const containerBottom = TinyDom.contentAreaContainer(editor).dom.getBoundingClientRect().bottom;
+          const offsetTop = containerBottom - sinkBottom - dialogHeight - margin;
+          await pAssertPos(dialog, 'absolute', getDialogOffsetLeft(editor), offsetTop);
+
+          DialogUtils.close(editor);
+        });
+      });
+    });
+
+    context('editor height exceeds viewport', () => {
+      context('iframe', () => {
+        const hook = TinyHooks.bddSetup<Editor>({
+          base_url: '/project/tinymce/js/tinymce',
+          resize: 'both',
+          height: 3000,
+          width: 650,
+        }, []);
+
+        const dialogHeight = 124, margin = 15;
+
+        it('TINY-9888: Test bottom inline dialog position when scrolling', async () => {
+          const editor = hook.editor();
+          const dialog = openDialog(editor, 'bottom');
+
+          const pAssertPosition = () =>
+            Waiter.pTryUntil('Wait for dialog position to update', () => {
+              const top = dialog.dom.getBoundingClientRect().top;
+
+              // Use the height of the viewport to calculate the expected position
+              const y = Boxes.win().height - dialogHeight - margin;
+              assert.approximately(top, y, 5, `Dialog top position (${top}px) should be ~${y}px`);
+            });
+
+          Scroll.to(0, 0);
+          await pAssertPosition();
+
+          Scroll.to(0, 200);
+          await pAssertPosition();
+
+          Scroll.to(0, 400);
+          await pAssertPosition();
+
+          Scroll.to(0, 600);
+          await pAssertPosition();
+
+          Scroll.to(0, 5000);
+          const sinkBottom = UiFinder.findIn(SugarBody.body(), '.tox-silver-sink').getOrDie().dom.getBoundingClientRect().top;
+          const containerBottom = TinyDom.contentAreaContainer(editor).dom.getBoundingClientRect().bottom;
+          const offsetTop = containerBottom - sinkBottom - dialogHeight - margin;
+          await pAssertPos(dialog, 'absolute', getDialogOffsetLeft(editor), offsetTop);
+
+          DialogUtils.close(editor);
+        });
+      });
+
+      Arr.each([ 'inline', 'iframe toolbar sticky' ], (editorType: string) => {
+        context(editorType, () => {
+          const hook = TinyHooks.bddSetup<Editor>({
+            base_url: '/project/tinymce/js/tinymce',
+            height: 3000,
+            width: 650,
+            inline: editorType === 'inline',
+            toolbar_sticky: true
+          }, []);
+
+          it('TINY-9888: Test bottom inline dialog position when scrolling', async () => {
+            const editor = hook.editor();
+
+            editor.insertContent('<p>test</p>');
+
+            const dialog = openDialog(editor, 'bottom');
+
+            const dialogHeight = 124, margin = 15;
+            const pAssertPosition = () => {
+              return Waiter.pTryUntil('Wait for dialog position to update', () => {
+                const top = dialog.dom.getBoundingClientRect().top;
+
+                // Use the height of the viewport to calculate the expected position
+                const y = Boxes.win().height - dialogHeight - margin;
+                assert.approximately(top, y, 5, `Dialog top position (${top}px) should be ~${y}px`);
+              });
+            };
+
+            const assertFn = (dialog: SugarElement<HTMLElement>) => {
+              const bottom = Boxes.win().height - margin - dialogHeight;
+              const fixedSink = Class.has(TinyDom.container(editor), 'tox-tinymce--toolbar-sticky-on');
+              return fixedSink ? async () => await pAssertPos(dialog, 'fixed', getDialogOffsetLeft(editor), bottom) : async () => await pAssertPosition();
+            };
+
+            Scroll.to(0, 0);
+            assertFn(dialog);
+
+            if (editorType === 'inline') {
+              const content = Arr.range(50, (_) => '<p>test</p><p>test</p><p>test</p>').join('\n');
+              editor.insertContent(content);
+            }
+
+            DialogUtils.close(editor);
+            const dialog2 = openDialog(editor, 'bottom');
+            Scroll.to(0, 200);
+            assertFn(dialog2);
+
+            Scroll.to(0, 400);
+            assertFn(dialog2);
+
+            Scroll.to(0, 600);
+            assertFn(dialog2);
+
+            Scroll.to(0, 1500);
+            assertFn(dialog2);
+
+            Scroll.to(0, 5000);
+            // Use content area container instead of screen height, because the editor might not be full screen when it's scrolled to the bottom
+            const bottom2 = TinyDom.contentAreaContainer(editor).dom.getBoundingClientRect().bottom - dialogHeight - margin;
+            await pAssertPos(dialog2, 'fixed', getDialogOffsetLeft(editor), bottom2);
+
+            DialogUtils.close(editor);
+          });
         });
       });
     });
