@@ -153,8 +153,8 @@ const preventDeleteIntoDetails = (editor: Editor, forward: boolean) => {
     const parentBlock = dom.getParent(caretPos.container(), dom.isBlock);
     const parentDetailsAtCaret = getParentDetailsElementAtPos(dom, caretPos);
     const inEmptyParentBlock = parentBlock && dom.isEmpty(parentBlock);
-    const isFirstBlock = parentBlock && Type.isNull(parentBlock.previousSibling);
-    const isLastBlock = parentBlock && Type.isNull(parentBlock?.nextSibling);
+    const isFirstBlock = Type.isNull(parentBlock?.previousSibling);
+    const isLastBlock = Type.isNull(parentBlock?.nextSibling);
 
     // Pressing backspace or delete in an first or last empty block before or after details
     if (inEmptyParentBlock) {
