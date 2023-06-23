@@ -24,7 +24,7 @@ interface RenderedDialog<T extends Dialog.DialogData> {
   readonly instanceApi: Dialog.DialogInstanceApi<T>;
 }
 
-const getDialogSizeClasses = (size: Dialog.DialogSize): string[] => {
+const getInlineDialogSizeClasses = (size: Dialog.DialogSize): string[] => {
   switch (size) {
     case 'large':
       return [ 'tox-dialog--width-lg--inline' ];
@@ -40,7 +40,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
   const dialogLabelId = Id.generate('dialog-label');
   const dialogContentId = Id.generate('dialog-content');
   const internalDialog = dialogInit.internalDialog;
-  const dialogSize = getDialogSizeClasses(internalDialog.size);
+  const dialogSize = getInlineDialogSizeClasses(internalDialog.size);
 
   const updateState = (_comp: AlloyComponent, incoming: DialogManager.DialogInit<T>) => Optional.some(incoming);
 
