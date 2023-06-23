@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+- Alert icon in alertbanner component is not clickable when `url` is not provided. #TINY-10013
+
 ## 4.3.0 - 2023-03-15
 
 ### Added
