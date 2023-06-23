@@ -14,7 +14,7 @@ import * as Conversions from '../file/Conversions';
 import * as Whitespace from '../text/Whitespace';
 import * as InternalHtml from './InternalHtml';
 import * as Newlines from './Newlines';
-import { PasteBin, isDefaultPasteBinContent } from './PasteBin';
+import { isDefaultPasteBinContent, PasteBin } from './PasteBin';
 import * as PasteUtils from './PasteUtils';
 import * as ProcessFilters from './ProcessFilters';
 import * as SmartPaste from './SmartPaste';
@@ -147,12 +147,34 @@ const isImage = (editor: Editor) => {
   });
 };
 
-const getImagesFromDataTransfer = (editor: Editor, dataTransfer: DataTransfer): File[] => {
+const getFilesFromDataTransfer = (dataTransfer: DataTransfer): File[] => {
   const items = dataTransfer.items ? Arr.bind(Arr.from(dataTransfer.items), (item) => {
     return item.kind === 'file' ? [ item.getAsFile() as File ] : [];
   }) : [];
   const files = dataTransfer.files ? Arr.from(dataTransfer.files) : [];
-  return Arr.filter(items.length > 0 ? items : files, isImage(editor));
+  return items.length > 0 ? items : files;
+};
+
+const getImagesFromFiles = (editor: Editor, files: File[]): File[] =>
+  Arr.filter(files, isImage(editor));
+
+const pasteImageFiles = (editor: Editor, files: File[], rng: Range | undefined): boolean => {
+  const images = getImagesFromFiles(editor, files);
+  if (Options.shouldPasteDataImages(editor) && images.length > 0) {
+    readFilesAsDataUris(images).then((fileResults) => {
+      if (rng && fileResults.length > 0) {
+        editor.selection.setRng(rng);
+      }
+
+      Arr.each(fileResults, (result) => {
+        pasteImage(editor, result);
+      });
+    });
+
+    return true;
+  }
+
+  return false;
 };
 
 /*
@@ -163,20 +185,8 @@ const pasteImageData = (editor: Editor, e: ClipboardEvent | DragEvent, rng: Rang
   const dataTransfer = isClipboardEvent(e) ? e.clipboardData : e.dataTransfer;
 
   if (Options.shouldPasteDataImages(editor) && dataTransfer) {
-    const images = getImagesFromDataTransfer(editor, dataTransfer);
-
-    if (images.length > 0) {
+    if (pasteImageFiles(editor, getFilesFromDataTransfer(dataTransfer), rng)) {
       e.preventDefault();
-
-      readFilesAsDataUris(images).then((fileResults) => {
-        if (rng) {
-          editor.selection.setRng(rng);
-        }
-
-        Arr.each(fileResults, (result) => {
-          pasteImage(editor, result);
-        });
-      });
 
       return true;
     }
@@ -332,6 +342,7 @@ export {
   pasteText,
   pasteImageData,
   getDataTransferItems,
+  pasteImageFiles,
   hasHtmlOrText,
   hasContentType
 };
