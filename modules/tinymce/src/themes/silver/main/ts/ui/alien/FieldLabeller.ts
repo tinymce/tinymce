@@ -5,13 +5,13 @@ import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 
 type FormFieldSpec = Parameters<typeof AlloyFormField['sketch']>[0];
 
-const renderFormFieldWith = (pLabel: Optional<AlloySpec>, pField: AlloySpec, extraClasses: string[], extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[]): SketchSpec => {
-  const spec = renderFormFieldSpecWith(pLabel, pField, extraClasses, extraBehaviours);
+const renderFormFieldWith = (pLabel: Optional<AlloySpec>, pField: AlloySpec, pValidation: Optional<AlloySpec>, extraClasses: string[], extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[]): SketchSpec => {
+  const spec = renderFormFieldSpecWith(pLabel, pField, pValidation, extraClasses, extraBehaviours);
   return AlloyFormField.sketch(spec);
 };
 
 const renderFormField = (pLabel: Optional<AlloySpec>, pField: AlloySpec): SketchSpec =>
-  renderFormFieldWith(pLabel, pField, [ ], [ ]);
+  renderFormFieldWith(pLabel, pField, Optional.none(), [ ], [ ]);
 
 const renderFormFieldSpec = (pLabel: Optional<AlloySpec>, pField: AlloySpec): FormFieldSpec => ({
   dom: renderFormFieldDom(),
@@ -21,11 +21,12 @@ const renderFormFieldSpec = (pLabel: Optional<AlloySpec>, pField: AlloySpec): Fo
 const renderFormFieldSpecWith = (
   pLabel: Optional<AlloySpec>,
   pField: AlloySpec,
+  pValidation: Optional<AlloySpec>,
   extraClasses: string[],
   extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[]
 ): FormFieldSpec => ({
   dom: renderFormFieldDomWith(extraClasses),
-  components: pLabel.toArray().concat([ pField ]),
+  components: pLabel.toArray().concat([ pField ]).concat(pValidation.toArray()),
   fieldBehaviours: Behaviour.derive(extraBehaviours)
 });
 

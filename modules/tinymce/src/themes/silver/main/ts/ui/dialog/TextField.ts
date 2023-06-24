@@ -1,6 +1,6 @@
 import {
-  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Disabling, FormField as AlloyFormField, Input as AlloyInput, Invalidating, Keying,
-  NativeEvents, Representing, SketchSpec, SystemEvents, Tabstopping
+  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Disabling, FormField as AlloyFormField, GuiFactory, Input as AlloyInput, Invalidating, Keying,
+  NativeEvents, Replacing, Representing, SimpleSpec, SketchSpec, SystemEvents, Tabstopping
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Arr, Fun, Future, Optional, Result } from '@ephox/katamari';
@@ -66,7 +66,21 @@ const renderTextField = (spec: TextField, providersBackstage: UiFactoryBackstage
       return Traverse.parentElement(input.element);
     },
     invalidClass: 'tox-invalid',
+    notify: {
+      onValid: (inputComp) => {
+        Traverse.nextSibling(inputComp.element).each((ele) =>
+          inputComp.getSystem().getByDom(ele).each((cmp) => Replacing.set(cmp, []))
+        );
+      },
+      onInvalid: (inputComp, err) => {
+        Traverse.nextSibling(inputComp.element).each((ele) =>
+          inputComp.getSystem().getByDom(ele).each((cmp) => Replacing.set(cmp, [ GuiFactory.text(err) ]))
+        );
+      }
+    },
     validator: {
+      // basically disable automatic validation
+      onEvent: '',
       validate: (input) => {
         const v = Representing.getValue(input);
         const result = vl.validator(v);
@@ -95,8 +109,11 @@ const renderTextField = (spec: TextField, providersBackstage: UiFactoryBackstage
         validatingBehaviours
       ])
     ),
+    eventOrder: {
+      [NativeEvents.input()]: [ 'alloy.base.behaviour', 'representing', 'streaming', 'invalidating', 'textfield-change' ],
+    },
     selectOnFocus: false,
-    factory: AlloyInput
+    factory: AlloyInput,
   });
 
   // TINY-9331: This wrapper is needed to avoid border-radius rendering issues when the textarea has a scrollbar
@@ -107,6 +124,19 @@ const renderTextField = (spec: TextField, providersBackstage: UiFactoryBackstage
     },
     components: [ pField ]
   } : pField;
+
+  const pValidation: Optional<SimpleSpec> = spec.validation.map(() => (
+    {
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-textfield-validation-message' ]
+      },
+      components: [],
+      behaviours: Behaviour.derive([
+        Replacing.config({})
+      ])
+    }
+  ));
 
   const extraClasses = spec.flex ? [ 'tox-form__group--stretched' ] : [];
   const extraClasses2 = extraClasses.concat(spec.maximized ? [ 'tox-form-group--maximize' ] : []);
@@ -124,7 +154,7 @@ const renderTextField = (spec: TextField, providersBackstage: UiFactoryBackstage
     ReadOnly.receivingConfig()
   ];
 
-  return renderFormFieldWith(pLabel, pTextField, extraClasses2, extraBehaviours);
+  return renderFormFieldWith(pLabel, pTextField, pValidation, extraClasses2, extraBehaviours);
 };
 
 const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProviders, initialData: Optional<string>): SketchSpec => renderTextField({
@@ -136,7 +166,7 @@ const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProv
   flex: false,
   disabled: !spec.enabled,
   classname: 'tox-textfield',
-  validation: Optional.none(),
+  validation: spec.validation,
   maximized: spec.maximized,
   data: initialData
 }, providersBackstage);

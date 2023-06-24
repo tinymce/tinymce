@@ -159,5 +159,5 @@ export const renderCollection = (
 
   const extraClasses = [ 'tox-form__group--collection' ];
 
-  return renderFormFieldWith(pLabel, pField, extraClasses, [ ]);
+  return renderFormFieldWith(pLabel, pField, Optional.none(), extraClasses, [ ]);
 };

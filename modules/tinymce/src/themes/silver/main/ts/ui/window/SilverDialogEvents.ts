@@ -1,7 +1,7 @@
-import { AlloyComponent, AlloyEvents, AlloyTriggers, CustomEvent, Keying, NativeEvents, Reflecting, Representing } from '@ephox/alloy';
+import { AlloyComponent, AlloyEvents, AlloyTriggers, CustomEvent, Invalidating, Keying, NativeEvents, Reflecting, Representing } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
-import { Result, Fun } from '@ephox/katamari';
-import { Attribute, Compare, Focus, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { Result, Fun, Cell } from '@ephox/katamari';
+import { Attribute, Compare, Focus, SelectorFind, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import {
   formActionEvent, FormActionEvent, formBlockEvent, FormBlockEvent, FormCancelEvent, formCancelEvent, FormChangeEvent, formChangeEvent,
@@ -85,13 +85,36 @@ const initDialog = <T extends Dialog.DialogData>(getInstanceApi: () => Dialog.Di
     });
   };
 
+  const firstSubmission = Cell(true);
+
+  const validateForm = (comp: AlloyComponent, callback: () => void) => {
+    firstSubmission.set(false);
+    const dialogBodyComp = comp.components()[1].components()[0];
+    const inputElements = SelectorFind.descendants(dialogBodyComp.element, 'input.tox-textfield');
+    const needValidation = inputElements
+      .map((ele) => comp.getSystem().getByDom(ele).getOrDie())
+      .filter((cmp) => cmp.hasConfigured(Invalidating));
+    const validationState = needValidation.map((cmp) => Invalidating.run(cmp).toPromise());
+    Promise.allSettled(validationState).then((results) => {
+      const failures = results.filter((res) => res.status === 'fulfilled' && res.value.isError());
+      if (failures.length === 0) {
+        callback();
+      }
+    });
+  };
+
   return [
     ...initCommonEvents<Dialog.DialogInstanceApi<T>, Dialog.Dialog<T>>(fireApiEvent, extras),
 
-    fireApiEvent<FormSubmitEvent>(formSubmitEvent, (api, spec) => spec.onSubmit(api)),
+    fireApiEvent<FormSubmitEvent>(formSubmitEvent, (api, spec, _event, comp) => {
+      validateForm(comp, () => spec.onSubmit(api));
+    }),
 
-    fireApiEvent<FormChangeEvent<T>>(formChangeEvent, (api, spec, event) => {
+    fireApiEvent<FormChangeEvent<T>>(formChangeEvent, (api, spec, event, comp) => {
       spec.onChange(api, { name: event.name });
+      if (!firstSubmission.get()) {
+        validateForm(comp, () => spec.onChange(api, { name: event.name }));
+      }
     }),
 
     fireApiEvent<FormActionEvent>(formActionEvent, (api, spec, event, component) => {

@@ -19,6 +19,7 @@ describe('headless.tinymce.themes.silver.components.input.InputTest', () => {
       placeholder: Optional.none(),
       maximized: false,
       enabled: true,
+      validation: Optional.none(),
     }, TestProviders, Optional.none())
   ));
 

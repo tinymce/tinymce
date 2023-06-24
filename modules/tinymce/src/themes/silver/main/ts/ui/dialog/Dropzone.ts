@@ -150,5 +150,5 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
     factory: { sketch: renderField }
   });
 
-  return renderFormFieldWith(pLabel, pField, [ 'tox-form__group--stretched' ], [ ]);
+  return renderFormFieldWith(pLabel, pField, Optional.none(), [ 'tox-form__group--stretched' ], [ ]);
 };

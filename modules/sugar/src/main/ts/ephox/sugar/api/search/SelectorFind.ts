@@ -22,6 +22,9 @@ const child = <T extends Element = Element> (scope: SugarElement<Node>, selector
 const descendant = <T extends Element = Element> (scope: SugarElement<Node>, selector: string): Optional<SugarElement<T>> =>
   Selectors.one<T>(selector, scope);
 
+const descendants = <T extends Element = Element> (scope: SugarElement<Node>, selector: string): SugarElement<T>[] =>
+  Selectors.all<T>(selector, scope);
+
 // Returns Some(closest ancestor element (sugared)) matching 'selector' up to isRoot, or None() otherwise
 const closest = <T extends Element = Element> (scope: SugarElement<Node>, selector: string, isRoot?: (e: SugarElement<Node>) => boolean): Optional<SugarElement<T>> => {
   const is = (element: SugarElement<Node>, selector: string): element is SugarElement<T> => Selectors.is<T>(element, selector);
@@ -34,5 +37,6 @@ export {
   sibling,
   child,
   descendant,
+  descendants,
   closest
 };
