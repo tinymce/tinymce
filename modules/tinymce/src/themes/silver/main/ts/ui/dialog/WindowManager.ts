@@ -278,41 +278,6 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
         ariaAttrs
       );
 
-      const inlineAdditionalBehaviours = (editor: Editor): Behaviour.NamedConfiguredBehaviour<any, any>[] => {
-        return [
-          Docking.config({
-            contextual: {
-              lazyContext: () => Optional.some(Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()))),
-              fadeInClass: 'tox-dialog-dock-fadein',
-              fadeOutClass: 'tox-dialog-dock-fadeout',
-              transitionClass: 'tox-dialog-dock-transition'
-            },
-            modes: [ 'top', 'bottom' ],
-            lazyViewport: (comp) => {
-              const optScrollingContext = ScrollingContext.detectWhenSplitUiMode(editor, comp.element);
-              return optScrollingContext
-                .map(
-                  (sc) => {
-                    const combinedBounds = ScrollingContext.getBoundsFrom(sc);
-                    return {
-                      bounds: combinedBounds,
-                      optScrollEnv: Optional.some({
-                        currentScrollTop: sc.element.dom.scrollTop,
-                        scrollElmTop: SugarLocation.absolute(sc.element).top
-                      })
-                    };
-                  }
-                ).getOrThunk(
-                () => ({
-                    bounds: Boxes.win(),
-                    optScrollEnv: Optional.none()
-                })
-                );
-            }
-          })
-        ];
-      };
-
       const inlineDialogComp = GuiFactory.build(InlineView.sketch({
         lazySink: extras.backstages.popup.shared.getSink,
         dom: {
@@ -328,7 +293,31 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
               AlloyTriggers.emit(dialogUi.dialog, formCancelEvent);
             })
           ]),
-          ...inlineAdditionalBehaviours(editor)
+          Docking.config({
+            contextual: {
+              lazyContext: () => Optional.some(Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()))),
+              fadeInClass: 'tox-dialog-dock-fadein',
+              fadeOutClass: 'tox-dialog-dock-fadeout',
+              transitionClass: 'tox-dialog-dock-transition'
+            },
+            modes: [ 'top', 'bottom' ],
+            lazyViewport: (comp) => {
+              const optScrollingContext = ScrollingContext.detectWhenSplitUiMode(editor, comp.element);
+              return optScrollingContext.map((sc) => {
+                const combinedBounds = ScrollingContext.getBoundsFrom(sc);
+                return {
+                  bounds: combinedBounds,
+                  optScrollEnv: Optional.some({
+                    currentScrollTop: sc.element.dom.scrollTop,
+                    scrollElmTop: SugarLocation.absolute(sc.element).top
+                  })
+                };
+              }).getOrThunk(() => ({
+                bounds: Boxes.win(),
+                optScrollEnv: Optional.none()
+              }));
+            }
+          })
         ]),
         // Treat alert or confirm dialogs as part of the inline dialog
         isExtraPart: (_comp, target) => isAlertOrConfirmDialog(target)
