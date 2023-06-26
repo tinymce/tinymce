@@ -303,12 +303,10 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
                     };
                   }
                 ).getOrThunk(
-                  () => {
-                    return {
-                      bounds: Boxes.win(),
-                      optScrollEnv: Optional.none()
-                    };
-                  }
+                () => ({
+                    bounds: Boxes.win(),
+                    optScrollEnv: Optional.none()
+                })
                 );
             }
           })
