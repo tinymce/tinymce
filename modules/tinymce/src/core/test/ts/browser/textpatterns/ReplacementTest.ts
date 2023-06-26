@@ -15,8 +15,7 @@ describe('browser.tinymce.core.textpatterns.ReplacementTest', () => {
       { start: 'complex pattern', replacement: '<h1>Text</h1><p>More text</p>' },
       { start: '*', end: '*', format: 'italic' },
       { start: '#', format: 'h1' },
-      { start: 'text_pattern', replacement: 'wow' },
-      { start: 'world ', replacement: 'World ' }
+      { start: 'text_pattern', replacement: 'wow' }
     ],
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
@@ -129,12 +128,6 @@ describe('browser.tinymce.core.textpatterns.ReplacementTest', () => {
     const editor = hook.editor();
     Utils.setContentAndPressEnter(editor, '<span data-mce-spelling="invalid">#</span>*brb<span data-mce-spelling="invalid">*</span>', 3, [ 0 ]);
     assertContentAndCursor(editor, '<h1><em>be right back</em></h1><p>&nbsp;|</p>');
-  });
-
-  it('TINY-9744: replacing the content of a tag that has also a space before should remove the tag but preserve the space', () => {
-    const editor = hook.editor();
-    Utils.setContentAndPressSpace(editor, 'Hello.<strong> world</strong>&nbsp;', 1, [ 0, 2 ]);
-    TinyAssertions.assertContent(editor, '<p>Hello. World &nbsp;</p>');
   });
 
   context('Fragmented text nodes in a paragraph', () => {

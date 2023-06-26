@@ -237,7 +237,7 @@ describe('browser.alloy.behaviour.docking.DockingTest', () => {
       assertInitialStructures('After Docking.refresh', { static: staticBox, absolute: absoluteBox });
     });
 
-    it('External Scroll event', () => {
+    it('External Scroll event', async () => {
       const store = hook.store();
       const component = hook.component();
 
@@ -247,8 +247,6 @@ describe('browser.alloy.behaviour.docking.DockingTest', () => {
       store.assertEq('Store should start empty', [ ]);
       // Firstly, check things are where we expect them to be to start the test
       assertInitialStructures('Before docking', { static: staticBox, absolute: absoluteBox });
-
-      window.scrollTo(0, 2000);
 
       // Now, dock to the bottom, and check that it worked.
       Docking.forceDockToBottom(absoluteBox);
@@ -266,10 +264,12 @@ describe('browser.alloy.behaviour.docking.DockingTest', () => {
       // Now, broadcast an external scroll event to the mothership, and check that it triggers
       // refresh and puts the box back where it should be.
       hook.gui().broadcastEvent(SystemEvents.externalElementScroll(), { } as any);
-      assertInitialStructures(
-        'After broadcasting external scroll event',
-        { static: staticBox, absolute: absoluteBox }
-      );
+      await Waiter.pTryUntil('Waited for initial structure', () => {
+        assertInitialStructures(
+          'After broadcasting external scroll event',
+          { static: staticBox, absolute: absoluteBox }
+        );
+      });
     });
   });
 });

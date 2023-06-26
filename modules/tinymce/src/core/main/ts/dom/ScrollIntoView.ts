@@ -16,7 +16,7 @@ interface MarkerInfo {
   readonly cleanup: () => void;
 }
 
-type ScrollFunc = (editor: Editor, doc: SugarElement<Document>, scrollTop: number, marker: MarkerInfo, alignToTop?: boolean) => void;
+type ScrollFunc = (doc: SugarElement<Document>, scrollTop: number, marker: MarkerInfo, alignToTop?: boolean) => void;
 
 const excludeFromDescend = (element: SugarElement<Node>) => SugarNode.name(element) === 'textarea';
 
@@ -83,7 +83,7 @@ const withScrollEvents = (editor: Editor, doc: SugarElement<Document>, f: Scroll
     return;
   }
   const scrollTop = Scroll.get(doc).top;
-  f(editor, doc, scrollTop, marker, alignToTop);
+  f(doc, scrollTop, marker, alignToTop);
   fireAfterScrollIntoViewEvent(editor, data);
 };
 
@@ -117,47 +117,38 @@ const preserveWith = (editor: Editor, f: (startElement: SugarElement<Node>, endE
   editor.selection.setRng(rng);
 };
 
-const scrollToMarker = (editor: Editor, marker: MarkerInfo, viewHeight: number, alignToTop: boolean, doc?: SugarElement<Document>) => {
-  const pos = marker.pos;
-  if (alignToTop) {
-    Scroll.to(pos.left, pos.top, doc);
-  } else {
-    // The position we want to scroll to is the...
-    // (absolute position of the marker, minus the view height) plus (the height of the marker)
-    const y = (pos.top - viewHeight) + marker.height;
-    Scroll.to(-editor.getBody().getBoundingClientRect().left, y, doc);
-  }
-};
+const scrollToMarker = (marker: MarkerInfo, alignToTop: boolean) =>
+  marker.element.dom.scrollIntoView({ block: alignToTop ? 'start' : 'end' });
 
-const intoWindowIfNeeded = (editor: Editor, doc: SugarElement<Document>, scrollTop: number, viewHeight: number, marker: MarkerInfo, alignToTop?: boolean) => {
+const intoWindowIfNeeded = (scrollTop: number, viewHeight: number, marker: MarkerInfo, alignToTop?: boolean) => {
   const viewportBottom = viewHeight + scrollTop;
   const markerTop = marker.pos.top;
   const markerBottom = marker.bottom;
   const largerThanViewport = markerBottom - markerTop >= viewHeight;
   // above the screen, scroll to top by default
   if (markerTop < scrollTop) {
-    scrollToMarker(editor, marker, viewHeight, alignToTop !== false, doc);
+    scrollToMarker(marker, alignToTop !== false);
   // completely below the screen. Default scroll to the top if element height is larger
   // than the viewport, otherwise default to scrolling to the bottom
   } else if (markerTop > viewportBottom) {
     const align = largerThanViewport ? alignToTop !== false : alignToTop === true;
-    scrollToMarker(editor, marker, viewHeight, align, doc);
+    scrollToMarker(marker, align);
   // partially below the bottom, only scroll if element height is less than viewport
   } else if (markerBottom > viewportBottom && !largerThanViewport) {
-    scrollToMarker(editor, marker, viewHeight, alignToTop === true, doc);
+    scrollToMarker(marker, alignToTop === true);
   }
 };
 
-const intoWindow = (editor: Editor, doc: SugarElement<Document>, scrollTop: number, marker: MarkerInfo, alignToTop?: boolean) => {
+const intoWindow = (doc: SugarElement<Document>, scrollTop: number, marker: MarkerInfo, alignToTop?: boolean) => {
   const viewHeight = Traverse.defaultView(doc).dom.innerHeight;
-  intoWindowIfNeeded(editor, doc, scrollTop, viewHeight, marker, alignToTop);
+  intoWindowIfNeeded(scrollTop, viewHeight, marker, alignToTop);
 };
 
-const intoFrame = (editor: Editor, doc: SugarElement<Document>, scrollTop: number, marker: MarkerInfo, alignToTop?: boolean) => {
+const intoFrame = (doc: SugarElement<Document>, scrollTop: number, marker: MarkerInfo, alignToTop?: boolean) => {
   const frameViewHeight = Traverse.defaultView(doc).dom.innerHeight; // height of iframe container
 
   // If the position is outside the iframe viewport, scroll to it
-  intoWindowIfNeeded(editor, doc, scrollTop, frameViewHeight, marker, alignToTop);
+  intoWindowIfNeeded(scrollTop, frameViewHeight, marker, alignToTop);
 
   // If the new position is outside the window viewport, scroll to it
   const op = OuterPosition.find(marker.element);

@@ -7,8 +7,6 @@ import Schema from '../api/html/Schema';
 import * as Options from '../api/Options';
 import Delay from '../api/util/Delay';
 import * as TransparentElements from '../content/TransparentElements';
-import * as NodeType from '../dom/NodeType';
-import * as PaddingBr from '../dom/PaddingBr';
 import * as Clipboard from './Clipboard';
 import * as InternalHtml from './InternalHtml';
 import * as PasteUtils from './PasteUtils';
@@ -32,38 +30,14 @@ const setFocusedRange = (editor: Editor, rng: Range | undefined): void => {
 const hasImage = (dataTransfer: DataTransfer): boolean =>
   Arr.exists(dataTransfer.files, (file) => /^image\//.test(file.type));
 
-const needsCustomInternalDrop = (dom: DOMUtils, schema: Schema, target: Node, dropContent: Clipboard.ClipboardContents) => {
+const isTransparentBlockDrop = (dom: DOMUtils, schema: Schema, target: Node, dropContent: Clipboard.ClipboardContents) => {
   const parentTransparent = dom.getParent(target, (node) => TransparentElements.isTransparentBlock(schema, node));
-  const inSummary = !Type.isNull(dom.getParent(target, 'summary'));
-
-  if (inSummary) {
-    return true;
-  } else if (parentTransparent && Obj.has(dropContent, 'text/html')) {
+  if (parentTransparent && Obj.has(dropContent, 'text/html')) {
     const fragment = new DOMParser().parseFromString(dropContent['text/html'], 'text/html').body;
     return !Type.isNull(fragment.querySelector(parentTransparent.nodeName.toLowerCase()));
   } else {
     return false;
   }
-};
-
-const setupSummaryDeleteByDragFix = (editor: Editor) => {
-  editor.on('input', (e) => {
-    const hasNoSummary = (el: Element) => Type.isNull(el.querySelector('summary'));
-
-    if (e.inputType === 'deleteByDrag') {
-      const brokenDetailElements = Arr.filter(editor.dom.select('details'), hasNoSummary);
-      Arr.each(brokenDetailElements, (details) => {
-        // Firefox leaves a BR
-        if (NodeType.isBr(details.firstChild)) {
-          details.firstChild.remove();
-        }
-
-        const summary = editor.dom.create('summary');
-        summary.appendChild(PaddingBr.createPaddingBr().dom);
-        details.prepend(summary);
-      });
-    }
-  });
 };
 
 const setup = (editor: Editor, draggingInternallyState: Cell<boolean>): void => {
@@ -105,10 +79,9 @@ const setup = (editor: Editor, draggingInternallyState: Cell<boolean>): void => 
 
     const internalContent = dropContent[InternalHtml.internalHtmlMime()];
     const content = internalContent || dropContent['text/html'] || dropContent['text/plain'];
-    const needsInternalDrop = needsCustomInternalDrop(editor.dom, editor.schema, rng.startContainer, dropContent);
-    const isInternalDrop = draggingInternallyState.get();
+    const transparentElementDrop = isTransparentBlockDrop(editor.dom, editor.schema, rng.startContainer, dropContent);
 
-    if (isInternalDrop && !needsInternalDrop) {
+    if (draggingInternallyState.get() && !transparentElementDrop) {
       return;
     }
 
@@ -118,7 +91,7 @@ const setup = (editor: Editor, draggingInternallyState: Cell<boolean>): void => 
       // FF 45 doesn't paint a caret when dragging in text in due to focus call by execCommand
       Delay.setEditorTimeout(editor, () => {
         editor.undoManager.transact(() => {
-          if (internalContent || (isInternalDrop && needsInternalDrop)) {
+          if (internalContent) {
             editor.execCommand('Delete');
           }
 
@@ -150,8 +123,6 @@ const setup = (editor: Editor, draggingInternallyState: Cell<boolean>): void => 
       draggingInternallyState.set(false);
     }
   });
-
-  setupSummaryDeleteByDragFix(editor);
 };
 
 export {

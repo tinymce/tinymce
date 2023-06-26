@@ -1,16 +1,13 @@
 import { Optional, Type, Unicode } from '@ephox/katamari';
 
-import { DomParserSettings, ParserArgs } from '../api/html/DomParser';
+import { ParserArgs } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
 import Schema, { SchemaMap } from '../api/html/Schema';
 
-const paddEmptyNode = (settings: DomParserSettings, args: ParserArgs, isBlock: (node: AstNode) => boolean, node: AstNode): void => {
-  const brPreferred = settings.pad_empty_with_br || args.insert;
-  if (brPreferred && isBlock(node)) {
+const paddEmptyNode = (args: ParserArgs, isBlock: (node: AstNode) => boolean, node: AstNode): void => {
+  if (args.insert && isBlock(node)) {
     const astNode = new AstNode('br', 1);
-    if (args.insert) {
-      astNode.attr('data-mce-bogus', '1');
-    }
+    astNode.attr('data-mce-bogus', '1');
     node.empty().append(astNode);
   } else {
     node.empty().append(new AstNode('#text', 3)).value = Unicode.nbsp;

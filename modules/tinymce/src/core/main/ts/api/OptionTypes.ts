@@ -168,7 +168,6 @@ interface BaseEditorOptions {
   noneditable_regexp?: RegExp | RegExp[];
   nowrap?: boolean;
   object_resizing?: boolean | string;
-  pad_empty_with_br?: boolean;
   paste_as_text?: boolean;
   paste_block_drop?: boolean;
   paste_data_images?: boolean;
@@ -323,7 +322,6 @@ export interface EditorOptions extends NormalizedEditorOptions {
   noneditable_class: string;
   noneditable_regexp: RegExp[];
   object_resizing: string;
-  pad_empty_with_br: boolean;
   paste_as_text: boolean;
   preview_styles: string;
   promotion: boolean;

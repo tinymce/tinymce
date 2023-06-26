@@ -1,4 +1,4 @@
-import { Arr, Fun, Optional, Optionals, Type } from '@ephox/katamari';
+import { Arr, Fun, Optional, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { SugarElement } from '@ephox/sugar';
 
@@ -126,18 +126,16 @@ const isCaretInLastPositionInBody = (root: HTMLElement, caretPos: CaretPosition,
     )
   );
 
-const getParentDetailsElementAtPos = (dom: DOMUtils, pos: CaretPosition) => Optional.from(dom.getParent(pos.container(), 'details'));
+const isInDetailsElement = (dom: DOMUtils, pos: CaretPosition) =>
+  Type.isNonNullable(dom.getParent(pos.container(), 'details'));
 
-const isInDetailsElement = (dom: DOMUtils, pos: CaretPosition) => getParentDetailsElementAtPos(dom, pos).isSome();
-
-const moveCaretToDetailsPos = (editor: Editor, pos: CaretPosition, forward: boolean) => {
+const moveCaretToDetailsPos = (editor: Editor, pos: CaretPosition) => {
   const details = editor.dom.getParent(pos.container(), 'details');
 
   if (details && !details.open) {
     const summary = editor.dom.select('summary', details)[0];
     if (summary) {
-      const newPos = forward ? CaretFinder.firstPositionIn(summary) : CaretFinder.lastPositionIn(summary);
-      newPos.each((pos) => setCaretToPosition(editor, pos));
+      CaretFinder.lastPositionIn(summary).each((pos) => setCaretToPosition(editor, pos));
     }
   } else {
     setCaretToPosition(editor, pos);
@@ -151,20 +149,23 @@ const preventDeleteIntoDetails = (editor: Editor, forward: boolean) => {
   if (editor.selection.isCollapsed()) {
     const caretPos = CaretPosition.fromRangeStart(selection.getRng());
     const parentBlock = dom.getParent(caretPos.container(), dom.isBlock);
-    const parentDetailsAtCaret = getParentDetailsElementAtPos(dom, caretPos);
-    const inEmptyParentBlock = parentBlock && dom.isEmpty(parentBlock);
-    const isFirstBlock = Type.isNull(parentBlock?.previousSibling);
-    const isLastBlock = Type.isNull(parentBlock?.nextSibling);
 
-    // Pressing backspace or delete in an first or last empty block before or after details
-    if (inEmptyParentBlock) {
-      const firstOrLast = forward ? isLastBlock : isFirstBlock;
-      if (firstOrLast) {
-        const isBeforeAfterDetails = CaretFinder.navigate(!forward, root, caretPos).exists((pos) => {
-          return isInDetailsElement(dom, pos) && !Optionals.equals(parentDetailsAtCaret, getParentDetailsElementAtPos(dom, pos));
-        });
-
-        if (isBeforeAfterDetails) {
+    // Prevent backspace/delete if the paragraph is empty and the start or end of it's parent container
+    // TODO: Clean this up!
+    if (parentBlock && dom.isEmpty(parentBlock)) {
+      if (Type.isNull(parentBlock.nextSibling)) {
+        const pos = CaretFinder.prevPosition(root, caretPos).filter((pos) => isInDetailsElement(dom, pos));
+        if (pos.isSome()) {
+          pos.each((pos) => {
+            if (!forward) {
+              moveCaretToDetailsPos(editor, pos);
+            }
+          });
+          return true;
+        }
+      } else if (Type.isNull(parentBlock.previousSibling)) {
+        const pos = CaretFinder.nextPosition(root, caretPos).filter((pos) => isInDetailsElement(dom, pos));
+        if (pos) {
           return true;
         }
       }
@@ -173,24 +174,14 @@ const preventDeleteIntoDetails = (editor: Editor, forward: boolean) => {
     return CaretFinder.navigate(forward, root, caretPos).fold(
       Fun.never,
       (pos) => {
-        const parentDetailsAtNewPos = getParentDetailsElementAtPos(dom, pos);
-
-        if (isInDetailsElement(dom, pos) && !Optionals.equals(parentDetailsAtCaret, parentDetailsAtNewPos)) {
-          if (!forward) {
-            moveCaretToDetailsPos(editor, pos, false);
-          }
-
-          if (parentBlock && inEmptyParentBlock) {
-            if (forward && isFirstBlock) {
-              return true;
-            } else if (!forward && isLastBlock) {
-              return true;
-            }
-
-            moveCaretToDetailsPos(editor, pos, forward);
+        if (isInDetailsElement(dom, pos)) {
+          if (parentBlock && dom.isEmpty(parentBlock)) {
             editor.dom.remove(parentBlock);
           }
 
+          if (!forward) {
+            moveCaretToDetailsPos(editor, pos);
+          }
           return true;
         } else {
           return false;
@@ -202,7 +193,7 @@ const preventDeleteIntoDetails = (editor: Editor, forward: boolean) => {
   }
 };
 
-const safariDeleteInSummaryAction = (editor: Editor, e: KeyboardEvent): boolean => {
+const preventDeleteSummaryAction = (editor: Editor, detailElements: DetailsElements, e: KeyboardEvent): boolean => {
   const selection = editor.selection;
   const node = selection.getNode();
   const rng = selection.getRng();
@@ -210,8 +201,19 @@ const safariDeleteInSummaryAction = (editor: Editor, e: KeyboardEvent): boolean 
   const isDelete = e.keyCode === VK.DELETE;
   const isCollapsed = editor.selection.isCollapsed();
   const caretPos = CaretPosition.fromRangeStart(rng);
+  const root = editor.getBody();
 
-  if (isSafari && NodeType.isSummary(node)) {
+  if (!isCollapsed && isPartialDelete(rng, detailElements)) {
+    return true;
+  } else if (isCollapsed && isBackspace && isCaretAtStartOfSummary(caretPos, detailElements)) {
+    return true;
+  } else if (isCollapsed && isDelete && isCaretAtEndOfSummary(caretPos, detailElements)) {
+    return true;
+  } else if (isCollapsed && isBackspace && isCaretInFirstPositionInBody(caretPos, detailElements)) {
+    return true;
+  } else if (isCollapsed && isDelete && isCaretInLastPositionInBody(root, caretPos, detailElements)) {
+    return true;
+  } else if (isSafari && NodeType.isSummary(node)) {
     // TINY-9951: Safari bug, deleting within the summary causes all content to be removed and no caret position to be left
     // https://bugs.webkit.org/show_bug.cgi?id=257745
     if (!isCollapsed && isEntireNodeSelected(rng, node) || DeleteUtils.willDeleteLastPositionInElement(isDelete, caretPos, node)) {
@@ -264,46 +266,33 @@ const safariDeleteInSummaryAction = (editor: Editor, e: KeyboardEvent): boolean 
   }
 
   return false;
-
-};
-
-const preventDeleteSummaryAction = (editor: Editor, detailElements: DetailsElements, forward: boolean): boolean => {
-  const selection = editor.selection;
-  const rng = selection.getRng();
-  const isCollapsed = editor.selection.isCollapsed();
-  const caretPos = CaretPosition.fromRangeStart(rng);
-  const root = editor.getBody();
-
-  if (!isCollapsed) {
-    return isPartialDelete(rng, detailElements);
-  } else if (!forward) {
-    return isCaretAtStartOfSummary(caretPos, detailElements) || isCaretInFirstPositionInBody(caretPos, detailElements);
-  } else {
-    return isCaretAtEndOfSummary(caretPos, detailElements) || isCaretInLastPositionInBody(root, caretPos, detailElements);
-  }
-};
-
-export const deleteAction = (editor: Editor, forward: boolean): boolean => {
-  return getDetailsElements(editor.dom, editor.selection.getRng()).fold(
-    () => preventDeleteIntoDetails(editor, forward),
-    (detailsElements) => preventDeleteSummaryAction(editor, detailsElements, forward) || preventDeleteIntoDetails(editor, forward)
-  );
 };
 
 const preventDeletingSummary = (editor: Editor): void => {
   editor.on('keydown', (e) => {
     if (e.keyCode === VK.BACKSPACE || e.keyCode === VK.DELETE) {
-      if (deleteAction(editor, e.keyCode === VK.DELETE)) {
-        e.preventDefault();
-      } else if (safariDeleteInSummaryAction(editor, e)) {
-        e.preventDefault();
-      }
+      getDetailsElements(editor.dom, editor.selection.getRng()).fold(
+        () => {
+          if (preventDeleteIntoDetails(editor, e.keyCode === VK.DELETE)) {
+            e.preventDefault();
+          }
+        },
+        (detailsElements) => {
+          if (preventDeleteSummaryAction(editor, detailsElements, e)) {
+            e.preventDefault();
+          }
+        }
+      );
     }
   });
 };
 
-export const setup = (editor: Editor): void => {
+const setup = (editor: Editor): void => {
   preventSummaryToggle(editor);
   filterDetails(editor);
   preventDeletingSummary(editor);
+};
+
+export {
+  setup
 };

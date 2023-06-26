@@ -4,7 +4,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as Levels from 'tinymce/core/undo/Levels';
-import { UndoLevel } from 'tinymce/core/undo/UndoManagerTypes';
+import { UndoLevel, UndoLevelType } from 'tinymce/core/undo/UndoManagerTypes';
 
 describe('browser.tinymce.core.undo.LevelsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -25,7 +25,7 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
       bookmark: null,
       content: '',
       fragments: [ 'a', 'b' ],
-      type: 'fragmented'
+      type: UndoLevelType.Fragmented
     });
   });
 
@@ -35,7 +35,7 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
       bookmark: null,
       content: 'a',
       fragments: null,
-      type: 'complete'
+      type: UndoLevelType.Complete
     });
   });
 
@@ -46,7 +46,7 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
       bookmark: null,
       content: '<p><br data-mce-bogus="1"></p>',
       fragments: null,
-      type: 'complete'
+      type: UndoLevelType.Complete
     });
 
     editor.getBody().innerHTML = '<iframe src="about:blank"></iframe>a<!--b-->c';
@@ -56,7 +56,7 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
       bookmark: null,
       content: '',
       fragments: [ '<iframe src="about:blank"></iframe>', 'a', '<!--b-->', 'c' ],
-      type: 'fragmented'
+      type: UndoLevelType.Fragmented
     });
   });
 
@@ -69,7 +69,7 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
       bookmark: null,
       content: ' <span>b</span>',
       fragments: null,
-      type: 'complete'
+      type: UndoLevelType.Complete
     });
   });
 
@@ -87,7 +87,7 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
         ' ',
         '<span>b</span>'
       ],
-      type: 'fragmented'
+      type: UndoLevelType.Fragmented
     });
   });
 

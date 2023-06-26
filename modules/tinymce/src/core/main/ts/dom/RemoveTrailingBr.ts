@@ -6,9 +6,8 @@ import Schema from '../api/html/Schema';
 import Tools from '../api/util/Tools';
 import * as TransparentElements from '../content/TransparentElements';
 import { isEmpty, paddEmptyNode } from '../html/ParserUtils';
-import { DomSerializerSettings } from './DomSerializerImpl';
 
-export const addNodeFilter = (settings: DomSerializerSettings, htmlParser: DomParser, schema: Schema): void => {
+export const addNodeFilter = (htmlParser: DomParser, schema: Schema): void => {
   htmlParser.addNodeFilter('br', (nodes, _, args) => {
     const blockElements = Tools.extend({}, schema.getBlockElements());
     const nonEmptyElements = schema.getNonEmptyElements();
@@ -17,14 +16,14 @@ export const addNodeFilter = (settings: DomSerializerSettings, htmlParser: DomPa
     // Remove brs from body element as well
     blockElements.body = 1;
 
-    const isBlock = (node: AstNode) => node.name in blockElements || TransparentElements.isTransparentAstBlock(schema, node);
+    const isBlock = (node: AstNode) => node.name in blockElements && TransparentElements.isTransparentAstInline(schema, node);
 
     // Must loop forwards since it will otherwise remove all brs in <p>a<br><br><br></p>
     for (let i = 0, l = nodes.length; i < l; i++) {
       let node: AstNode | null = nodes[i];
       let parent = node.parent;
 
-      if (parent && isBlock(parent) && node === parent.lastChild) {
+      if (parent && blockElements[parent.name] && node === parent.lastChild) {
         // Loop all nodes to the left of the current node and check for other BR elements
         // excluding bookmarks since they are invisible
         let prev = node.prev;
@@ -55,7 +54,7 @@ export const addNodeFilter = (settings: DomSerializerSettings, htmlParser: DomPa
               if (elementRule.removeEmpty) {
                 parent.remove();
               } else if (elementRule.paddEmpty) {
-                paddEmptyNode(settings, args, isBlock, parent);
+                paddEmptyNode(args, isBlock, parent);
               }
             }
           }

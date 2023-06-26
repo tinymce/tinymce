@@ -24,23 +24,11 @@ interface RenderedDialog<T extends Dialog.DialogData> {
   readonly instanceApi: Dialog.DialogInstanceApi<T>;
 }
 
-const getInlineDialogSizeClasses = (size: Dialog.DialogSize): string[] => {
-  switch (size) {
-    case 'large':
-      return [ 'tox-dialog--width-lg--inline' ];
-    case 'medium':
-      return [ 'tox-dialog--width-md' ];
-    default:
-      return [];
-  }
-};
-
 const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra<T>, backstage: UiFactoryBackstage, ariaAttrs: boolean): RenderedDialog<T> => {
   const dialogId = Id.generate('dialog');
   const dialogLabelId = Id.generate('dialog-label');
   const dialogContentId = Id.generate('dialog-content');
   const internalDialog = dialogInit.internalDialog;
-  const dialogSize = getInlineDialogSizeClasses(internalDialog.size);
 
   const updateState = (_comp: AlloyComponent, incoming: DialogManager.DialogInit<T>) => Optional.some(incoming);
 
@@ -88,7 +76,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
   const dialog = GuiFactory.build({
     dom: {
       tag: 'div',
-      classes: [ 'tox-dialog', inlineClass ].concat(dialogSize),
+      classes: [ 'tox-dialog', inlineClass ],
       attributes: {
         role: 'dialog',
         ['aria-labelledby']: dialogLabelId

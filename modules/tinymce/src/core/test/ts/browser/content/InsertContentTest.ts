@@ -805,23 +805,4 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       });
     });
   });
-
-  context('Summary elements', () => {
-    it('TINY-9885: Should not be able to insert HR block into summary', () => {
-      const editor = hook.editor();
-      const initialContent = '<details><summary>helloworld</summary><div>body</div></details>';
-      editor.setContent(initialContent);
-      TinySelections.setCursor(editor, [ 0, 0, 0 ], 'hello'.length);
-      editor.execCommand('InsertHorizontalRule');
-      TinyAssertions.assertContent(editor, initialContent);
-    });
-
-    it('TINY-9885: Should unwrap H1 element when inserting into summary element', () => {
-      const editor = hook.editor();
-      editor.setContent('<details><summary>helloworld</summary><div>body</div></details>');
-      TinySelections.setCursor(editor, [ 0, 0, 0 ], 'hello'.length);
-      editor.insertContent('<h1>wonderful</h1>');
-      TinyAssertions.assertContent(editor, '<details><summary>hellowonderfulworld</summary><div>body</div></details>');
-    });
-  });
 });

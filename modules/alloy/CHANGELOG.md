@@ -6,9 +6,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
-### Fixed
-- Tab navigation did not forward focus over pseudo tab stops. #TINY-9815
-
 ## 12.2.0 - 2023-06-12
 
 ### Fixed

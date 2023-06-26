@@ -568,11 +568,6 @@ const register = (editor: Editor): void => {
     default: true
   });
 
-  registerOption('pad_empty_with_br', {
-    processor: 'boolean',
-    default: false,
-  });
-
   registerOption('inline_styles', {
     processor: 'boolean',
     default: true,

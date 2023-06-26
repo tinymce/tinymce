@@ -25,7 +25,7 @@ const cleanInvalidNodes = (nodes: AstNode[], schema: Schema, rootNode: AstNode, 
   const textBlockElements = schema.getTextBlockElements();
   const nonEmptyElements = schema.getNonEmptyElements();
   const whitespaceElements = schema.getWhitespaceElements();
-  const nonSplittableElements = Tools.makeMap('tr,td,th,tbody,thead,tfoot,table,summary');
+  const nonSplittableElements = Tools.makeMap('tr,td,th,tbody,thead,tfoot,table');
   const fixed = new Set<AstNode>();
   const isSplittableElement = (node: AstNode) => node !== rootNode && !nonSplittableElements[node.name];
 

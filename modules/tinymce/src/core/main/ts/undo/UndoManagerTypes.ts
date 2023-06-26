@@ -3,7 +3,10 @@ import { Cell, Singleton } from '@ephox/katamari';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import { Bookmark } from '../bookmark/BookmarkTypes';
 
-export type UndoLevelType = 'fragmented' | 'complete';
+export const enum UndoLevelType {
+  Fragmented = 'fragmented',
+  Complete = 'complete'
+}
 
 interface BaseUndoLevel {
   type: UndoLevelType;
@@ -12,13 +15,13 @@ interface BaseUndoLevel {
 }
 
 export interface FragmentedUndoLevel extends BaseUndoLevel {
-  type: 'fragmented';
+  type: UndoLevelType.Fragmented;
   fragments: string[];
   content: '';
 }
 
 export interface CompleteUndoLevel extends BaseUndoLevel {
-  type: 'complete';
+  type: UndoLevelType.Complete;
   fragments: null;
   content: string;
 }

@@ -36,7 +36,7 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
   const schema = parser.schema;
 
   if (settings.remove_trailing_brs) {
-    RemoveTrailingBr.addNodeFilter(settings, parser, schema);
+    RemoveTrailingBr.addNodeFilter(parser, schema);
   }
 
   parser.addAttributeFilter('href', (nodes) => {
