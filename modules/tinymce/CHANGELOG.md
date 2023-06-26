@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - It was possible to break summary elements if contents containing blocks was dropped inside them. #TINY-9960
 - Contents would not be removed from the drag start source if dragging and dropping internally into a transparent block element. #TINY-9960
 - In some cases pressing enter would scroll the entire page. #TINY-9828
-- It was not possible to press space to insert a space character inside a summary element on Firefox. #TINY-9964
+- The border styles of a table were incorrectly split into a longhand form after table dialog updates. #TINY-9843
 
 ## 6.5.1 - 2023-06-19
 
