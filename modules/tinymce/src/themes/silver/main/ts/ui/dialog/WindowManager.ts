@@ -328,7 +328,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
         return extras.backstages.popup.shared.getSink().toOptional().bind((s) => {
           const optScrollingContext = ScrollingContext.detectWhenSplitUiMode(editor, s.element);
 
-          // margin bottom of the screen/editor content area container
+          // Margin between element and the bottom of the screen or the editor content area container
           const margin = 15;
 
           const bounds = optScrollingContext.map((sc) => ScrollingContext.getBoundsFrom(sc)).getOr(Boxes.win());
