@@ -92,6 +92,7 @@ const DomSerializerImpl = (settings: DomSerializerSettings, editor?: Editor): Do
   const defaultedSettings: DomSerializerSettings = {
     entity_encoding: 'named',
     remove_trailing_brs: true,
+    pad_empty_with_br: false,
     ...settings
   };
 
