@@ -10,6 +10,7 @@ import { NativeSimulatedEvent, SimulatedEvent } from '../events/SimulatedEvent';
 export type KeyHandlerApi = (comp: AlloyComponent, se: NativeSimulatedEvent<KeyboardEvent>) => Optional<boolean>;
 
 export type KeyRuleHandler<C, S> = (comp: AlloyComponent, se: NativeSimulatedEvent<KeyboardEvent>, config: C, state: S) => Optional<boolean>;
+export type KeyRuleStatelessHandler<C> = (comp: AlloyComponent, se: NativeSimulatedEvent<KeyboardEvent>, config: C) => Optional<boolean>;
 
 export enum FocusInsideModes {
   OnFocusMode = 'onFocus',
