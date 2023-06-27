@@ -12,7 +12,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Change UndoLevelType from enum to union type so that it can be easier to use. #TINY-9764
 - The pattern replacement removes spaces if they were contained in a tag that only contains a space and the text to replace. #TINY-9744
-- The `mceInsertClipboardContent` command will now also accept a `files` property to insert images. #TINY-9776
 
 ### Fixed
 - Returning an empty string in custom context menu update function would result in a small white line appearing on right click and the native browser context menu would not show up. #TINY-9842
