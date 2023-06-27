@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Fixed
-- Corrected the implementation of the size parameter in inline dialog. #TINY-10015
+- Corrected the implementation of the `size` parameter in inline dialogs. #TINY-10015
 
 ## 6.5.1 - 2023-06-19
 
