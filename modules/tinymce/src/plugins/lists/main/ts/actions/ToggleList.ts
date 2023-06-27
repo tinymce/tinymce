@@ -1,4 +1,5 @@
 import { Arr, Optional, Type, Unicode } from '@ephox/katamari';
+import { Has, SugarElement } from '@ephox/sugar';
 
 import BookmarkManager from 'tinymce/core/api/dom/BookmarkManager';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -191,9 +192,16 @@ const hasCompatibleStyle = (dom: DOMUtils, sib: Element, detail: ListDetail): bo
   return sibStyle === detailStyle;
 };
 
+/*
+  Find the first element we would transform into a li-element if given no constraints.
+  If the common ancestor is higher up than that provide it as the starting-point for the search for the root instead of the first selected element.
+  This helps avoid issues with divs that should become li-elements are detected as the root when they should not be.
+*/
 const getRootSearchStart = (editor: Editor, range: Range): Node => {
   const start = editor.selection.getStart(true);
-  if (start.parentNode === range.commonAncestorContainer) {
+  const startPoint = getEndPointNode(editor, range, true, editor.getBody());
+
+  if (Has.ancestor(SugarElement.fromDom(startPoint), SugarElement.fromDom(range.commonAncestorContainer))) {
     return range.commonAncestorContainer;
   } else {
     return start;
