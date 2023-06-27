@@ -88,7 +88,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
   const dialog = GuiFactory.build({
     dom: {
       tag: 'div',
-      classes: [ 'tox-dialog', inlineClass ].concat(dialogSize),
+      classes: [ 'tox-dialog', inlineClass, ...dialogSize ],
       attributes: {
         role: 'dialog',
         ['aria-labelledby']: dialogLabelId
