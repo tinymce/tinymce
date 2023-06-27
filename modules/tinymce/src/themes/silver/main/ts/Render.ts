@@ -100,6 +100,13 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
     }
   });
 
+  const memBottomAnchorBar = Memento.record({
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-bottom-anchorbar' ]
+    }
+  });
+
   const lazyHeader = () => lazyUiRefs.mainUi.get()
     .map((ui) => ui.outerContainer)
     .bind(OuterContainer.getHeader);
@@ -117,6 +124,11 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
   const lazyAnchorBar = lazyUiRefs.lazyGetInOuterOrDie(
     'anchor bar',
     memAnchorBar.getOpt
+  );
+
+  const lazyBottomAnchorBar = lazyUiRefs.lazyGetInOuterOrDie(
+    'bottom anchor bar',
+    memBottomAnchorBar.getOpt
   );
 
   const lazyToolbar = lazyUiRefs.lazyGetInOuterOrDie(
@@ -137,7 +149,8 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
       dialog: lazyDialogSinkResult
     },
     editor,
-    lazyAnchorBar
+    lazyAnchorBar,
+    lazyBottomAnchorBar
   );
 
   const makeHeaderPart = (): AlloyParts.ConfiguredPart => {
@@ -375,7 +388,7 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
       components: Arr.flatten<AlloySpec>([
         editorComponents,
         // Inline mode does not have a status bar
-        isInline ? [ ] : statusbar.toArray()
+        isInline ? [ ] : [ memBottomAnchorBar.asSpec(), ...statusbar.toArray() ]
       ])
     });
 
