@@ -22,71 +22,84 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
     '.tox-dialog { background: white; border: 2px solid black; padding: 1em; margin: 1em; }'
   ]);
 
-  const dialogSpec: Dialog.DialogSpec<{ fred: string }> = {
-    title: 'Silver Test Inline (Toolbar) Dialog',
-    body: {
-      type: 'panel',
-      items: [
+  const dialogSize: Dialog.DialogSize = 'normal';
+
+  const createDialogSpec = (size?: Dialog.DialogSize): Dialog.DialogSpec<{ fred: string }> & { size?: Dialog.DialogSize } => {
+    return {
+      title: 'Silver Test Inline (Toolbar) Dialog',
+      size: size || dialogSize,
+      body: {
+        type: 'panel',
+        items: [
+          {
+            type: 'input',
+            name: 'fred',
+            label: 'Freds Input'
+          }
+        ]
+      },
+      buttons: [
         {
-          type: 'input',
-          name: 'fred',
-          label: 'Freds Input'
+          type: 'custom',
+          name: 'barny',
+          text: 'Barny Text',
+          align: 'start',
+          primary: true
+        },
+        {
+          type: 'custom',
+          name: 'alert',
+          text: 'Alert'
+        },
+        {
+          type: 'custom',
+          name: 'confirm',
+          text: 'Confirm'
         }
-      ]
-    },
-    buttons: [
-      {
-        type: 'custom',
-        name: 'barny',
-        text: 'Barny Text',
-        align: 'start',
-        primary: true
+      ],
+      initialData: {
+        fred: 'said hello pebbles'
       },
-      {
-        type: 'custom',
-        name: 'alert',
-        text: 'Alert'
-      },
-      {
-        type: 'custom',
-        name: 'confirm',
-        text: 'Confirm'
+      onAction: (api, action) => {
+        const editor = hook.editor();
+        store.adder('onAction')();
+        switch (action.name) {
+          case 'alert':
+            editor.windowManager.alert('Alert!');
+            break;
+          case 'confirm':
+            editor.windowManager.confirm('Confirm!');
+            break;
+        }
       }
-    ],
-    initialData: {
-      fred: 'said hello pebbles'
-    },
-    onAction: (api, action) => {
-      const editor = hook.editor();
-      store.adder('onAction')();
-      switch (action.name) {
-        case 'alert':
-          editor.windowManager.alert('Alert!');
-          break;
-        case 'confirm':
-          editor.windowManager.confirm('Alert!');
-          break;
-      }
-    }
+    };
   };
 
-  const openDialog = (editor: Editor, params: WindowParams) => {
-    const api = DialogUtils.openWithStore(editor, dialogSpec, params, store);
-    assert.deepEqual(api.getData(), {
-      fred: 'said hello pebbles'
-    }, 'Initial data');
+  const dialogSpec = createDialogSpec();
+
+  const openDialog = (
+    editor: Editor,
+    params: WindowParams,
+    dialog: Dialog.DialogSpec<{ fred: string }> & { size?: Dialog.DialogSize } = dialogSpec
+  ) => {
+    const api = DialogUtils.openWithStore(editor, dialog, params, store);
+    const { fred } = api.getData();
+    assert.deepEqual({ fred }, { fred: 'said hello pebbles' }, 'Initial data');
     return api;
   };
 
   const pTestAlertOrConfirm = async (editor: Editor, type: 'alert' | 'confirm') => {
     const buttonSelector = Strings.capitalize(type);
     const dialogSelector = `.tox-${type}-dialog`;
+    const body = SugarBody.body();
+
     store.clear();
-    Mouse.trueClickOn(SugarBody.body(), '[role=dialog] button:contains(' + buttonSelector + ')');
+    Mouse.trueClickOn(body, `[role=dialog] button:contains(${buttonSelector})`);
     await TinyUiActions.pWaitForDialog(editor);
+
     store.assertEq('Checking onAction called', [ 'onAction' ]);
-    Mouse.trueClickOn(SugarBody.body(), dialogSelector + ' .tox-dialog__footer button');
-    await Waiter.pTryUntil('Wait for dialog to close', () => UiFinder.notExists(SugarBody.body(), dialogSelector));
+    Mouse.trueClickOn(body, `${dialogSelector} .tox-dialog__footer button`);
+    await Waiter.pTryUntil('Wait for dialog to close', () => UiFinder.notExists(body, dialogSelector));
   };
 
   beforeEach(() => {
@@ -181,6 +194,20 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
         SugarDocument.getDocument(),
         '.tox-button[title="Close"]'
       );
+      DialogUtils.close(editor);
+    });
+  });
+
+  Arr.each([
+    { label: 'normal', size: 'normal' as Dialog.DialogSize, selector: '.tox-dialog-inline' },
+    { label: 'medium', size: 'medium' as Dialog.DialogSize, selector: '.tox-dialog--width-md' },
+    { label: 'large', size: 'large' as Dialog.DialogSize, selector: '.tox-dialog--width-lg--inline' },
+  ], (test) => {
+    it('inline dialog size tests, ' + test.label, () => {
+      const editor = hook.editor();
+      openDialog(editor, { inline: 'toolbar' }, createDialogSpec(test.size));
+      UiFinder.exists(SugarBody.body(), test.selector);
+      DialogUtils.close(editor);
     });
   });
 });
