@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Added new `bottom` to inline dialog type. This new inline dialog option allows the inline dialog to be positioned at the bottom of the editor. #TINY-9888
-- Added new `persistent` option to `WindowParams`. This new option allows the inline dialog to be persistent, meaning that it will not be closed when the user clicks outside of the window. #TINY-9991
+- Added new `persistent` option to `WindowParams`. This new option allows the inline dialog to be persistent, meaning that it will not be closed when the user clicks outside of the dialog. #TINY-9991
 
 ## 6.5.1 - 2023-06-19
 
