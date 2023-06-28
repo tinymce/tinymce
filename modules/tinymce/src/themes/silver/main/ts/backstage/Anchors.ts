@@ -1,6 +1,6 @@
 import { AlloyComponent, Bubble, HotspotAnchorSpec, Layout, LayoutInset, MaxHeight, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
-import { SimSelection, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { Height, SimSelection, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -8,6 +8,7 @@ import { useFixedContainer } from '../api/Options';
 
 export interface UiFactoryBackstageAnchors {
   readonly inlineDialog: () => HotspotAnchorSpec | NodeAnchorSpec;
+  readonly inlineBottomDialog: () => HotspotAnchorSpec | NodeAnchorSpec;
   readonly banner: () => HotspotAnchorSpec | NodeAnchorSpec;
   readonly cursor: () => SelectionAnchorSpec;
   readonly node: (elem: Optional<SugarElement>) => NodeAnchorSpec;
@@ -52,6 +53,56 @@ const getInlineDialogAnchor = (contentAreaElement: () => SugarElement<HTMLElemen
     },
     overrides
   });
+
+  return () => lazyUseEditableAreaAnchor() ? editableAreaAnchor() : standardAnchor();
+};
+
+const getInlineBottomDialogAnchor = (
+  inline: boolean,
+  contentAreaElement: () => SugarElement<HTMLElement>,
+  lazyBottomAnchorBar: () => AlloyComponent,
+  lazyUseEditableAreaAnchor: () => boolean
+): () => HotspotAnchorSpec | NodeAnchorSpec => {
+  const bubbleSize = 12;
+  const overrides = {
+    maxHeightFunction: MaxHeight.expandable()
+  };
+
+  const editableAreaAnchor = (): NodeAnchorSpec => ({
+    type: 'node',
+    root: SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(contentAreaElement())),
+    node: Optional.from(contentAreaElement()),
+    bubble: Bubble.nu(bubbleSize, bubbleSize, bubbleAlignments),
+    layouts: {
+      onRtl: () => [ LayoutInset.north ],
+      onLtr: () => [ LayoutInset.north ]
+    },
+    overrides
+  });
+
+  const standardAnchor = (): HotspotAnchorSpec | NodeAnchorSpec =>
+    inline ?
+      ({
+        type: 'node',
+        root: SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(contentAreaElement())),
+        node: Optional.from(contentAreaElement()),
+        bubble: Bubble.nu(0, -Height.getOuter(contentAreaElement()), bubbleAlignments),
+        layouts: {
+          onRtl: () => [ Layout.north ],
+          onLtr: () => [ Layout.north ]
+        },
+        overrides
+      })
+      : ({
+        type: 'hotspot',
+        hotspot: lazyBottomAnchorBar(),
+        bubble: Bubble.nu(0, 0, bubbleAlignments),
+        layouts: {
+          onRtl: () => [ Layout.north ],
+          onLtr: () => [ Layout.north ]
+        },
+        overrides
+      });
 
   return () => lazyUseEditableAreaAnchor() ? editableAreaAnchor() : standardAnchor();
 };
@@ -110,7 +161,7 @@ const getNodeAnchor = (bodyElement: () => SugarElement<HTMLElement>) => (element
   node: element
 });
 
-const getAnchors = (editor: Editor, lazyAnchorbar: () => AlloyComponent, isToolbarTop: () => boolean): UiFactoryBackstageAnchors => {
+const getAnchors = (editor: Editor, lazyAnchorbar: () => AlloyComponent, lazyBottomAnchorBar: () => AlloyComponent, isToolbarTop: () => boolean): UiFactoryBackstageAnchors => {
   const useFixedToolbarContainer = useFixedContainer(editor);
   const bodyElement = (): SugarElement<HTMLElement> => SugarElement.fromDom(editor.getBody());
   const contentAreaElement = (): SugarElement<HTMLElement> => SugarElement.fromDom(editor.getContentAreaContainer());
@@ -121,6 +172,7 @@ const getAnchors = (editor: Editor, lazyAnchorbar: () => AlloyComponent, isToolb
 
   return {
     inlineDialog: getInlineDialogAnchor(contentAreaElement, lazyAnchorbar, lazyUseEditableAreaAnchor),
+    inlineBottomDialog: getInlineBottomDialogAnchor(editor.inline, contentAreaElement, lazyBottomAnchorBar, lazyUseEditableAreaAnchor),
     banner: getBannerAnchor(contentAreaElement, lazyAnchorbar, lazyUseEditableAreaAnchor),
     cursor: getCursorAnchor(editor, bodyElement),
     node: getNodeAnchor(bodyElement)
