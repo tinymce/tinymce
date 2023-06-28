@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, TestStore, UiFind
 import { TestHelpers } from '@ephox/alloy';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Arr, Strings } from '@ephox/katamari';
-import { SugarBody, SugarDocument } from '@ephox/sugar';
+import { SugarBody, SugarDocument, Css } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -24,7 +24,19 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
 
   const dialogSize: Dialog.DialogSize = 'normal';
 
-  const createDialogSpec = (size?: Dialog.DialogSize): Dialog.DialogSpec<{ fred: string }> & { size?: Dialog.DialogSize } => {
+  const createDialogSpec = (size?: Dialog.DialogSize, dummy: boolean = false): Dialog.DialogSpec<{ fred: string }> & { size?: Dialog.DialogSize } => {
+
+    const dummyItems = dummy ? Array(100).fill(0).map((_, index) => ({
+      type: 'input',
+      name: `dummy${index}`,
+      label: `Dummy Input ${index}`
+    } as Dialog.BodyComponentSpec)) : [];
+
+    const initialDummyData = dummy ? Array(100).fill(0).reduce((data, _, index) => {
+      data[`dummy${index}`] = `dummy value ${index}`;
+      return data;
+    }, {}) : {};
+
     return {
       title: 'Silver Test Inline (Toolbar) Dialog',
       size: size || dialogSize,
@@ -35,7 +47,8 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
             type: 'input',
             name: 'fred',
             label: 'Freds Input'
-          }
+          },
+          ...dummyItems
         ]
       },
       buttons: [
@@ -58,7 +71,8 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
         }
       ],
       initialData: {
-        fred: 'said hello pebbles'
+        fred: 'said hello pebbles',
+        ...initialDummyData
       },
       onAction: (api, action) => {
         const editor = hook.editor();
@@ -76,6 +90,16 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
   };
 
   const dialogSpec = createDialogSpec();
+
+  const getDialog = (selector: string) => UiFinder.findIn(SugarBody.body(), selector).getOrDie();
+
+  const getEditorHeight = (editor: Editor) => {
+    return editor.getContainer().offsetHeight;
+  };
+
+  const getDialogHeight = (selector: string) => {
+    return parseInt(Css.get(getDialog(selector), 'height'), 10);
+  };
 
   const openDialog = (
     editor: Editor,
@@ -203,10 +227,12 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
     { label: 'medium', size: 'medium' as Dialog.DialogSize, selector: '.tox-dialog--width-md' },
     { label: 'large', size: 'large' as Dialog.DialogSize, selector: '.tox-dialog-inline--width-lg' },
   ], (test) => {
-    it('inline dialog size tests, ' + test.label, () => {
+    it('inline dialog size tests, ' + test.label, async () => {
       const editor = hook.editor();
-      openDialog(editor, { inline: 'toolbar' }, createDialogSpec(test.size));
+      openDialog(editor, { inline: 'toolbar' }, createDialogSpec(test.size, true));
+      await TinyUiActions.pWaitForDialog(editor);
       UiFinder.exists(SugarBody.body(), test.selector);
+      assert.isTrue(getDialogHeight(test.selector) < getEditorHeight(editor), 'Dialog should be smaller than editor');
       DialogUtils.close(editor);
     });
   });
