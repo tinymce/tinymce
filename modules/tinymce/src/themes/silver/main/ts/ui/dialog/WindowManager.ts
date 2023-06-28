@@ -4,7 +4,7 @@ import {
 } from '@ephox/alloy';
 import { StructureProcessor, StructureSchema } from '@ephox/boulder';
 import { Dialog, DialogManager } from '@ephox/bridge';
-import { Fun, Optional, Singleton, Type } from '@ephox/katamari';
+import { Optional, Singleton, Type } from '@ephox/katamari';
 import { SelectorExists, SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -190,7 +190,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
           classes: [ ]
         },
         // Fires the default dismiss event.
-        fireDismissalEventInstead: { },
+        fireDismissalEventInstead: (windowParams.persistent ? { event: 'doNotDismissYet' } : { }),
         // TINY-9412: The docking behaviour for inline dialogs is inconsistent
         // for toolbar_location: bottom. We need to clarify exactly what the behaviour
         // should be. The intent here might have been that they shouldn't automatically
@@ -201,7 +201,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
         inlineBehaviours: Behaviour.derive([
           AddEventsBehaviour.config('window-manager-inline-events', [
             AlloyEvents.run(SystemEvents.dismissRequested(), (_comp, _se) => {
-              windowParams.persistent ? Fun.noop() : AlloyTriggers.emit(dialogUi.dialog, formCancelEvent);
+              AlloyTriggers.emit(dialogUi.dialog, formCancelEvent);
             })
           ]),
           ...inlineAdditionalBehaviours(editor, isStickyToolbar, isToolbarLocationTop)
@@ -285,12 +285,12 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
           classes: [ ]
         },
         // Fires the default dismiss event.
-        fireDismissalEventInstead: { },
+        fireDismissalEventInstead: (windowParams.persistent ? { event: 'doNotDismissYet' } : { }),
         ...isToolbarLocationTop ? { } : { fireRepositionEventInstead: { }},
         inlineBehaviours: Behaviour.derive([
           AddEventsBehaviour.config('window-manager-inline-events', [
             AlloyEvents.run(SystemEvents.dismissRequested(), (_comp, _se) => {
-              windowParams.persistent ? Fun.noop() : AlloyTriggers.emit(dialogUi.dialog, formCancelEvent);
+              AlloyTriggers.emit(dialogUi.dialog, formCancelEvent);
             })
           ]),
           Docking.config({
