@@ -5,7 +5,7 @@ import Editor from '../api/Editor';
 import { isPathBookmark } from '../bookmark/BookmarkTypes';
 import * as TrimHtml from '../dom/TrimHtml';
 import * as Fragments from './Fragments';
-import { CompleteUndoLevel, FragmentedUndoLevel, NewUndoLevel, UndoLevel, UndoLevelType } from './UndoManagerTypes';
+import { CompleteUndoLevel, FragmentedUndoLevel, NewUndoLevel, UndoLevel } from './UndoManagerTypes';
 
 // We need to create a temporary document instead of using the global document since
 // innerHTML on a detached element will still make http requests to the images
@@ -17,7 +17,7 @@ const hasIframes = (html: string) => {
 
 const createFragmentedLevel = (fragments: string[]): FragmentedUndoLevel => {
   return {
-    type: UndoLevelType.Fragmented,
+    type: 'fragmented',
     fragments,
     content: '',
     bookmark: null,
@@ -27,7 +27,7 @@ const createFragmentedLevel = (fragments: string[]): FragmentedUndoLevel => {
 
 const createCompleteLevel = (content: string): CompleteUndoLevel => {
   return {
-    type: UndoLevelType.Complete,
+    type: 'complete',
     fragments: null,
     content,
     bookmark: null,
@@ -49,7 +49,7 @@ const createFromEditor = (editor: Editor): NewUndoLevel => {
 const applyToEditor = (editor: Editor, level: UndoLevel, before: boolean): void => {
   const bookmark = before ? level.beforeBookmark : level.bookmark;
 
-  if (level.type === UndoLevelType.Fragmented) {
+  if (level.type === 'fragmented') {
     Fragments.write(level.fragments, editor.getBody());
   } else {
     editor.setContent(level.content, {
@@ -69,7 +69,7 @@ const applyToEditor = (editor: Editor, level: UndoLevel, before: boolean): void 
 };
 
 const getLevelContent = (level: NewUndoLevel): string => {
-  return level.type === UndoLevelType.Fragmented ? level.fragments.join('') : level.content;
+  return level.type === 'fragmented' ? level.fragments.join('') : level.content;
 };
 
 const getCleanLevelContent = (level: NewUndoLevel): string => {

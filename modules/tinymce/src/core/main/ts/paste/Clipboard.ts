@@ -14,7 +14,7 @@ import * as Conversions from '../file/Conversions';
 import * as Whitespace from '../text/Whitespace';
 import * as InternalHtml from './InternalHtml';
 import * as Newlines from './Newlines';
-import { PasteBin, isDefaultPasteBinContent } from './PasteBin';
+import { isDefaultPasteBinContent, PasteBin } from './PasteBin';
 import * as PasteUtils from './PasteUtils';
 import * as ProcessFilters from './ProcessFilters';
 import * as SmartPaste from './SmartPaste';
@@ -38,14 +38,19 @@ const createPasteDataTransfer = (html: string): DataTransfer => {
   return dataTransfer;
 };
 
-const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText: boolean): void => {
+const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText: boolean, shouldSimulateInputEvent: boolean): void => {
   const res = ProcessFilters.process(editor, content, internal);
   if (!res.cancelled) {
     const content = res.content;
-    const args = InputEvents.fireBeforeInputEvent(editor, 'insertFromPaste', { dataTransfer: createPasteDataTransfer(content) });
-    if (!args.isDefaultPrevented()) {
-      SmartPaste.insertContent(editor, content, pasteAsText);
-      InputEvents.fireInputEvent(editor, 'insertFromPaste');
+    const doPasteAction = () => SmartPaste.insertContent(editor, content, pasteAsText);
+    if (shouldSimulateInputEvent) {
+      const args = InputEvents.fireBeforeInputEvent(editor, 'insertFromPaste', { dataTransfer: createPasteDataTransfer(content) });
+      if (!args.isDefaultPrevented()) {
+        doPasteAction();
+        InputEvents.fireInputEvent(editor, 'insertFromPaste');
+      }
+    } else {
+      doPasteAction();
     }
   }
 };
@@ -55,20 +60,20 @@ const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText
  * inserted at the current selection in the editor. It will also fire paste events
  * for custom user filtering.
  */
-const pasteHtml = (editor: Editor, html: string, internalFlag: boolean): void => {
+const pasteHtml = (editor: Editor, html: string, internalFlag: boolean, shouldSimulateInputEvent: boolean): void => {
   const internal = internalFlag ? internalFlag : InternalHtml.isMarked(html);
-  doPaste(editor, InternalHtml.unmark(html), internal, false);
+  doPaste(editor, InternalHtml.unmark(html), internal, false, shouldSimulateInputEvent);
 };
 
 /*
  * Pastes the specified text. This means that the plain text is processed
  * and converted into BR and P elements. It will fire paste events for custom filtering.
  */
-const pasteText = (editor: Editor, text: string): void => {
+const pasteText = (editor: Editor, text: string, shouldSimulateInputEvent: boolean): void => {
   const encodedText = editor.dom.encode(text).replace(/\r\n/g, '\n');
   const normalizedText = Whitespace.normalize(encodedText, Options.getPasteTabSpaces(editor));
   const html = Newlines.toBlockElements(normalizedText, Options.getForcedRootBlock(editor), Options.getForcedRootBlockAttrs(editor));
-  doPaste(editor, html, false, true);
+  doPaste(editor, html, false, true, shouldSimulateInputEvent);
 };
 
 /*
@@ -123,7 +128,7 @@ const pasteImage = (editor: Editor, imageItem: FileResult): void => {
     const existingBlobInfo = blobCache.getByData(base64, type);
     const blobInfo = existingBlobInfo ?? createBlobInfo(editor, blobCache, file, base64);
 
-    pasteHtml(editor, `<img src="${blobInfo.blobUri()}">`, false);
+    pasteHtml(editor, `<img src="${blobInfo.blobUri()}">`, false, true);
   });
 };
 
@@ -142,12 +147,34 @@ const isImage = (editor: Editor) => {
   });
 };
 
-const getImagesFromDataTransfer = (editor: Editor, dataTransfer: DataTransfer): File[] => {
+const getFilesFromDataTransfer = (dataTransfer: DataTransfer): File[] => {
   const items = dataTransfer.items ? Arr.bind(Arr.from(dataTransfer.items), (item) => {
     return item.kind === 'file' ? [ item.getAsFile() as File ] : [];
   }) : [];
   const files = dataTransfer.files ? Arr.from(dataTransfer.files) : [];
-  return Arr.filter(items.length > 0 ? items : files, isImage(editor));
+  return items.length > 0 ? items : files;
+};
+
+const getImagesFromFiles = (editor: Editor, files: File[]): File[] =>
+  Arr.filter(files, isImage(editor));
+
+const pasteImageFiles = (editor: Editor, files: File[], rng: Range | undefined): boolean => {
+  const images = getImagesFromFiles(editor, files);
+  if (Options.shouldPasteDataImages(editor) && images.length > 0) {
+    readFilesAsDataUris(images).then((fileResults) => {
+      if (rng && fileResults.length > 0) {
+        editor.selection.setRng(rng);
+      }
+
+      Arr.each(fileResults, (result) => {
+        pasteImage(editor, result);
+      });
+    });
+
+    return true;
+  }
+
+  return false;
 };
 
 /*
@@ -158,20 +185,8 @@ const pasteImageData = (editor: Editor, e: ClipboardEvent | DragEvent, rng: Rang
   const dataTransfer = isClipboardEvent(e) ? e.clipboardData : e.dataTransfer;
 
   if (Options.shouldPasteDataImages(editor) && dataTransfer) {
-    const images = getImagesFromDataTransfer(editor, dataTransfer);
-
-    if (images.length > 0) {
+    if (pasteImageFiles(editor, getFilesFromDataTransfer(dataTransfer), rng)) {
       e.preventDefault();
-
-      readFilesAsDataUris(images).then((fileResults) => {
-        if (rng) {
-          editor.selection.setRng(rng);
-        }
-
-        Arr.each(fileResults, (result) => {
-          pasteImage(editor, result);
-        });
-      });
 
       return true;
     }
@@ -188,7 +203,7 @@ const isBrokenAndroidClipboardEvent = (e: ClipboardEvent): boolean =>
 const isKeyboardPasteEvent = (e: KeyboardEvent): boolean =>
   (VK.metaKeyPressed(e) && e.keyCode === 86) || (e.shiftKey && e.keyCode === 45);
 
-const insertClipboardContent = (editor: Editor, clipboardContent: ClipboardContents, html: string, plainTextMode: boolean): void => {
+const insertClipboardContent = (editor: Editor, clipboardContent: ClipboardContents, html: string, plainTextMode: boolean, shouldSimulateInputEvent: boolean): void => {
   let content = PasteUtils.trimHtml(html);
 
   const isInternal = hasContentType(clipboardContent, InternalHtml.internalHtmlMime()) || InternalHtml.isMarked(html);
@@ -219,9 +234,9 @@ const insertClipboardContent = (editor: Editor, clipboardContent: ClipboardConte
   }
 
   if (plainTextMode) {
-    pasteText(editor, content);
+    pasteText(editor, content, shouldSimulateInputEvent);
   } else {
-    pasteHtml(editor, content, isInternal);
+    pasteHtml(editor, content, isInternal, shouldSimulateInputEvent);
   }
 };
 
@@ -250,18 +265,18 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
       return;
     }
 
-    e.preventDefault();
-
     // If the clipboard API has HTML then use that directly
     if (hasContentType(clipboardContent, 'text/html')) {
-      insertClipboardContent(editor, clipboardContent, clipboardContent['text/html'], plainTextMode);
+      e.preventDefault();
+      insertClipboardContent(editor, clipboardContent, clipboardContent['text/html'], plainTextMode, true);
     } else if (hasContentType(clipboardContent, 'text/plain') && hasContentType(clipboardContent, 'text/uri-list')) {
       /*
       Safari adds the uri-list attribute to links copied within it.
       When pasting something with the url-list within safari using the default functionality it will convert it from www.example.com to <a href="www.example.com">www.example.com</a> when pasting into the pasteBin-div.
       This causes issues. To solve this we bypass the default paste functionality for this situation.
        */
-      insertClipboardContent(editor, clipboardContent, clipboardContent['text/plain'], plainTextMode);
+      e.preventDefault();
+      insertClipboardContent(editor, clipboardContent, clipboardContent['text/plain'], plainTextMode, true);
     } else {
       // We can't extract the HTML content from the clipboard so we need to allow the paste
       // to run via the pastebin and then extract from there
@@ -270,7 +285,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
         // Get the pastebin content and then remove it so the selection is restored
         const html = pasteBin.getHtml();
         pasteBin.remove();
-        insertClipboardContent(editor, clipboardContent, html, plainTextMode);
+        insertClipboardContent(editor, clipboardContent, html, plainTextMode, false);
       }, 0);
     }
   });
@@ -327,6 +342,7 @@ export {
   pasteText,
   pasteImageData,
   getDataTransferItems,
+  pasteImageFiles,
   hasHtmlOrText,
   hasContentType
 };

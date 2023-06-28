@@ -1,6 +1,7 @@
 import { Keys } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { PlatformDetection } from '@ephox/sand';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -10,6 +11,8 @@ describe('browser.tinymce.core.keyboard.SpaceKeyTest', () => {
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
   }, []);
+
+  const isFirefox = PlatformDetection.detect().browser.isFirefox();
 
   beforeEach(() => {
     hook.editor().focus();
@@ -84,5 +87,58 @@ describe('browser.tinymce.core.keyboard.SpaceKeyTest', () => {
       TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 3, [ 0, 1, 0 ], 3);
       TinyAssertions.assertContent(editor, '<p>a<a href="#">b &nbsp;</a>c</p>');
     });
+
+    it('TINY-9964: Pressing space inside a summary should insert a space character on Firefox', function () {
+      if (!isFirefox) {
+        this.skip();
+      }
+
+      const editor = hook.editor();
+      editor.setContent('<details><summary>ab</summary><div>content</div></details>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      TinyContentActions.keystroke(editor, Keys.space());
+      TinyAssertions.assertContent(editor, '<details><summary>a b</summary><div>content</div></details>');
+    });
+
+    it('TINY-9964: Pressing space on selected contents inside a summary should insert a space character on Firefox', function () {
+      if (!isFirefox) {
+        this.skip();
+      }
+
+      const editor = hook.editor();
+      editor.setContent('<details><summary>abc</summary><div>content</div></details>');
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 2);
+      TinyContentActions.keystroke(editor, Keys.space());
+      TinyAssertions.assertContent(editor, '<details><summary>a c</summary><div>content</div></details>');
+    });
+
+    it('TINY-9964: Pressing space on selected contents inside non-editable content inside a summary should not insert a space character on Firefox', function () {
+      if (!isFirefox) {
+        this.skip();
+      }
+
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+        editor.setContent('<details><summary>abc</summary><div>content</div></details>');
+        TinySelections.setSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 2);
+        TinyContentActions.keystroke(editor, Keys.space());
+        TinyAssertions.assertContent(editor, '<details><summary>abc</summary><div>content</div></details>');
+      });
+    });
+
+    it('TINY-9964: Pressing space two times inside a summary should insert a space character and produce a single undo level on Firefox', function () {
+      if (!isFirefox) {
+        this.skip();
+      }
+
+      const editor = hook.editor();
+      editor.setContent('<details><summary>ab</summary><div>content</div></details>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      TinyContentActions.keystroke(editor, Keys.space());
+      TinyContentActions.keystroke(editor, Keys.space());
+      TinyAssertions.assertContent(editor, '<details><summary>a &nbsp;b</summary><div>content</div></details>');
+      editor.undoManager.undo();
+      TinyAssertions.assertContent(editor, '<details><summary>ab</summary><div>content</div></details>');
+    });
+
   });
 });

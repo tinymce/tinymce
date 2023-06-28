@@ -1,7 +1,8 @@
+import { UiFinder } from '@ephox/agar';
 import { afterEach, before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -12,6 +13,26 @@ import * as PasteUtils from 'tinymce/core/paste/PasteUtils';
 import * as PasteEventUtils from '../../module/test/PasteEventUtils';
 
 describe('browser.tinymce.core.paste.PasteTest', () => {
+  const base64ToBlob = (base64: string, type: string, filename: string): File => {
+    const buff = atob(base64);
+    const bytes = new Uint8Array(buff.length);
+
+    for (let i = 0; i < bytes.length; i++) {
+      bytes[i] = buff.charCodeAt(i);
+    }
+
+    return new window.File([ bytes ], filename, { type });
+  };
+  const base64ImgSrc = [
+    'R0lGODdhZABkAHcAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQECgAAACwAAAAAZABkAIEAAAD78jY/',
+    'P3SsMjIC/4SPqcvtD6OctNqLs968+w+G4kiW5ommR8C27gvHrxrK9g3TIM7f+tcL5n4doZFFLB6F',
+    'Sc6SCRFIp9SqVTp6BiPXbjer5XG95Ck47IuWy2e0bLz2tt3DR5w8p7vgd2tej6TW5ycCGMM3aFZo',
+    'OCOYqFjDuOf4KPAHiPh4qZeZuEnXOfjpFto3ilZ6dxqWGreq1br2+hTLtigZaFcJuYOb67DLC+Qb',
+    'UIt3i2sshyzZtEFc7JwBLT1NXI2drb3N3e39DR4uPk5ebn6Onq6+zu488A4fLz9P335Aj58fb2+g',
+    '71/P759AePwADBxY8KDAhAr9MWyY7yFEgPYmRgxokWK7jEYa2XGcJ/HjgJAfSXI0mRGlRZUTWUJ0',
+    '2RCmQpkHaSLEKPKdzYU4c+78VzCo0KFEixo9ijSp0qVMmzp9CjWq1KlUq1q9eqEAADs='
+  ].join('');
+
   const browser = PlatformDetection.detect().browser;
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
@@ -151,7 +172,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
 
     editor.execCommand('mceInsertClipboardContent', false, { text: ' a ' });
-    TinyAssertions.assertContent(editor, '<p>t a xt</p>');
+    TinyAssertions.assertContent(editor, '<p>t&nbsp;a&nbsp;xt</p>');
   });
 
   it('TBA: paste plain text with linefeeds', () => {
@@ -160,7 +181,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
 
     editor.execCommand('mceInsertClipboardContent', false, { text: 'a\nb\nc ' });
-    TinyAssertions.assertContent(editor, '<p>ta<br>b<br>c xt</p>');
+    TinyAssertions.assertContent(editor, '<p>ta<br>b<br>c&nbsp;xt</p>');
   });
 
   it('TBA: paste plain text with double linefeeds', () => {
@@ -343,6 +364,25 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     assert.equal(PasteUtils.trimHtml('<span class="Apple-converted-space">\u00a0<\/span>'), ' ');
   });
 
+  it('TINY-9776: it should be possible to paste an image via mceInsertClipboardContent', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>text</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
+
+    TinyAssertions.assertContentPresence(editor, { img: 0 });
+
+    editor.execCommand('mceInsertClipboardContent', false, {
+      files: [
+        base64ToBlob(base64ImgSrc, 'image/gif', 'image.gif'),
+        base64ToBlob(base64ImgSrc, 'someKindOfFile/abc', 'foo.bar')
+      ]
+    });
+
+    await UiFinder.pWaitForVisible('the image should be pasted', TinyDom.body(editor), 'img');
+
+    TinyAssertions.assertContentPresence(editor, { img: 1 });
+  });
+
   context('paste_webkit_styles', () => {
     before(function () {
       if (!browser.isChromium() && !browser.isSafari()) {
@@ -487,7 +527,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
       TinyAssertions.assertContent(editor, '<p style="color: rgb(255, 0, 0);">abc</p>');
     });
 
-    it('TINY-9829: Paste command dispatches input event', async () => {
+    it('TINY-9997: Paste command does not dispatch input events', async () => {
       const editor = hook.editor();
       const beforeinputEvent = Singleton.value<EditorEvent<InputEvent>>();
       const inputEvent = Singleton.value<EditorEvent<InputEvent>>();
@@ -499,29 +539,10 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
 
       const html = '<p>Test</p>';
       editor.execCommand('mceInsertClipboardContent', false, { html });
-      await PasteEventUtils.pWaitForAndAssertInputEvents(beforeinputEvent, inputEvent, html);
+      await PasteEventUtils.pWaitForAndAssertEventsDoNotFire([ beforeinputEvent, inputEvent ]);
       TinyAssertions.assertContent(editor, html);
 
       editor.off('beforeinput', setBeforeInputEvent);
-      editor.off('input', setInputEvent);
-    });
-
-    it('TINY-9829: Paste can be cancelled by beforeinput event', async () => {
-      const editor = hook.editor();
-      const cancelInputEvent = (e: EditorEvent<InputEvent>) => {
-        e.preventDefault();
-      };
-      const inputEvent = Singleton.value<EditorEvent<InputEvent>>();
-      const setInputEvent = (e: EditorEvent<InputEvent>) => inputEvent.set(e);
-
-      editor.on('beforeinput', cancelInputEvent);
-      editor.on('input', setInputEvent);
-
-      editor.execCommand('mceInsertClipboardContent', false, { html: '<p>Test</p>' });
-      await PasteEventUtils.pWaitForAndAssertEventsDoNotFire([ inputEvent ]);
-      TinyAssertions.assertContent(editor, '');
-
-      editor.off('beforeinput', cancelInputEvent);
       editor.off('input', setInputEvent);
     });
   });

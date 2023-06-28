@@ -6,12 +6,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- New `pad_empty_with_br` option that can be set to `true` to pad empty block elements with `<br>` tag instead of nbsp character. #TINY-9861
+
 ### Changed
+- Change UndoLevelType from enum to union type so that it can be easier to use. #TINY-9764
 - The pattern replacement removes spaces if they were contained in a tag that only contains a space and the text to replace. #TINY-9744
+- The `mceInsertClipboardContent` command will now also accept a `files` property to insert images. #TINY-9776
 
 ### Fixed
+- Returning an empty string in custom context menu update function would result in a small white line appearing on right click and the native browser context menu would not show up. #TINY-9842
 - When making lists and selecting divs the lists would in some situations only be partially applied. #TINY-9872
 - Tab navigation incorrectly stopped around `iframe` dialog component. #TINY-9815
+- It was possible to delete the sole empty block just before a details element if it was nested within another details element. #TINY-9965
+- deleting `li` with only `br`s in it sometimes caused a crush. #TINY-6888
+- It was possible to remove the summary element from a details element by drag and dropping. #TINY-9960
+- It was possible to break summary elements if contents containing blocks was dropped inside them. #TINY-9960
+- Contents would not be removed from the drag start source if dragging and dropping internally into a transparent block element. #TINY-9960
+- In some cases pressing enter would scroll the entire page. #TINY-9828
+
+## 6.5.1 - 2023-06-19
+
+### Fixed
+- Fixed a regression where pasting an image url would result in the url being inserted as plain text instead of the image being inserted. #TINY-9997
+- It was not possible to press space to insert a space character inside a summary element on Firefox. #TINY-9964
 
 ## 6.5.0 - 2023-06-12
 

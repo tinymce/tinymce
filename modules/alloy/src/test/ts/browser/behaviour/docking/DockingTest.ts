@@ -248,6 +248,8 @@ describe('browser.alloy.behaviour.docking.DockingTest', () => {
       // Firstly, check things are where we expect them to be to start the test
       assertInitialStructures('Before docking', { static: staticBox, absolute: absoluteBox });
 
+      window.scrollTo(0, 2000);
+
       // Now, dock to the bottom, and check that it worked.
       Docking.forceDockToBottom(absoluteBox);
       Assertions.assertStructure(
