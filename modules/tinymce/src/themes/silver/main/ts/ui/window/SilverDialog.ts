@@ -40,9 +40,9 @@ const renderDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.Dia
 
   const objOfCells = SilverDialogCommon.extractCellsToObject(storedMenuButtons);
 
-  const footer = renderModalFooter({
-    buttons: storedMenuButtons
-  }, dialogId, backstage);
+  const footer = storedMenuButtons.length === 0
+    ? Optional.none()
+    : Optional.some(renderModalFooter({ buttons: storedMenuButtons }, dialogId, backstage));
 
   const dialogEvents = SilverDialogEvents.initDialog<T>(
     () => instanceApi,
@@ -56,7 +56,7 @@ const renderDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.Dia
     id: dialogId,
     header,
     body,
-    footer: Optional.some(footer),
+    footer,
     extraClasses: dialogSize,
     extraBehaviours: [],
     extraStyles: {}
