@@ -85,15 +85,17 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
   const confirmDialog = ConfirmDialog.setup(extras.backstages.dialog);
 
   const open = <T extends Dialog.DialogData>(config: Dialog.DialogSpec<T>, params: WindowParams | undefined, closeWindow: (dialogApi: Dialog.DialogInstanceApi<T>) => void): Dialog.DialogInstanceApi<T> => {
-    if (!Type.isUndefined(params) && params.inline === 'toolbar') {
-      return openInlineDialog(config, extras.backstages.popup.shared.anchors.inlineDialog(), closeWindow, params);
-    } else if (!Type.isUndefined(params) && params.inline === 'bottom') {
-      return openBottomInlineDialog(config, extras.backstages.popup.shared.anchors.inlineBottomDialog(), closeWindow, params);
-    } else if (!Type.isUndefined(params) && params.inline === 'cursor') {
-      return openInlineDialog(config, extras.backstages.popup.shared.anchors.cursor(), closeWindow, params);
-    } else {
-      return openModalDialog(config, closeWindow);
+    if (!Type.isUndefined(params)) {
+      if (params.inline === 'toolbar') {
+        return openInlineDialog(config, extras.backstages.popup.shared.anchors.inlineDialog(), closeWindow, params);
+      } else if (params.inline === 'bottom') {
+        return openBottomInlineDialog(config, extras.backstages.popup.shared.anchors.inlineBottomDialog(), closeWindow, params);
+      } else if (params.inline === 'cursor') {
+        return openInlineDialog(config, extras.backstages.popup.shared.anchors.cursor(), closeWindow, params);
+      }
     }
+
+    return openModalDialog(config, closeWindow);
   };
 
   const openUrl = (config: Dialog.UrlDialogSpec, closeWindow: (dialogApi: Dialog.UrlDialogInstanceApi) => void) =>
