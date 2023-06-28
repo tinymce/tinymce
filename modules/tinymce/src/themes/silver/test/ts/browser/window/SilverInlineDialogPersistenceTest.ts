@@ -150,7 +150,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPersistenceTest
             api.close();
           });
 
-          it('TINY-9991: Inline toolbar dialog persistent - clicking on the editor contet to show context toolbar', async () => {
+          it('TINY-9991: Inline toolbar dialog persistent - clicking on the editor content to show context toolbar', async () => {
             const editor = hook.editor();
             const api = DialogUtils.open(editor, dialogSpec, { inline: dialogLocation.location, persistent: persistentMode.persistent });
             await TinyUiActions.pWaitForDialog(editor);
