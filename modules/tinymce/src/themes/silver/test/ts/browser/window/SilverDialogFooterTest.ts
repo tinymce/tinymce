@@ -50,32 +50,20 @@ describe('browser.tinymce.themes.silver.window.SilverDialogFooterTest', () => {
     const dialog = await TinyUiActions.pWaitForDialog(editor);
     Assertions.assertStructure(
       'Checking dialog structure to see if footer is rendered',
-      hasFooter
-        ? ApproxStructure.build((s, _, arr) => s.element('div', {
-          classes: [ arr.has('tox-dialog') ],
-          children: [
-            s.element('div', {
-              classes: [ arr.has('tox-dialog__header') ]
-            }),
-            s.element('div', {
-              classes: [ arr.has('tox-dialog__content-js') ]
-            }),
-            s.element('div', {
-              classes: [ arr.has('tox-dialog__footer') ]
-            })
-          ]
-        }))
-        : ApproxStructure.build((s, _, arr) => s.element('div', {
-          classes: [ arr.has('tox-dialog') ],
-          children: [
-            s.element('div', {
-              classes: [ arr.has('tox-dialog__header') ]
-            }),
-            s.element('div', {
-              classes: [ arr.has('tox-dialog__content-js') ]
-            })
-          ]
-        })),
+      ApproxStructure.build((s, _, arr) => s.element('div', {
+        classes: [ arr.has('tox-dialog') ],
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-dialog__header') ]
+          }),
+          s.element('div', {
+            classes: [ arr.has('tox-dialog__content-js') ]
+          }),
+          ...hasFooter ? [ s.element('div', {
+            classes: [ arr.has('tox-dialog__footer') ]
+          }) ] : []
+        ]
+      })),
       dialog
     );
   };
