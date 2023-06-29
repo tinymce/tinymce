@@ -15,7 +15,7 @@ describe('headless.tinymce.themes.silver.components.alertbanner.AlertBannerTest'
     })
   };
 
-  const render = (spec: any) => TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+  const render = (spec: Record<string, any>) => TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderAlertBanner({
       level: 'warn',
       text: 'I am a banner',
