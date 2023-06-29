@@ -21,7 +21,7 @@ describe('headless.tinymce.themes.silver.components.alertbanner.AlertBannerTest'
       text: 'I am a banner',
       icon: 'helpA',
       iconTooltip: 'Go',
-      ...spec
+      url: spec.url
     }, providers)
   ));
 

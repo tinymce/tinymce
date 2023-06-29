@@ -47,7 +47,7 @@ export const renderAlertBanner = (spec: AlertBannerWrapper, providersBackstage: 
               Icons.addFocusableBehaviour()
             ])
           })
-        ] : []
+        ] : undefined
       },
       {
         dom: {
