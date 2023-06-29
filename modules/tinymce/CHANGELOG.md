@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - The icon in `alertbanner` dialog component is not clickable if `url` field is not specified. #TINY-10013
 
+### Added
+- Added new `bottom` to inline dialog type. This new inline dialog option allows the inline dialog to be positioned at the bottom of the editor. #TINY-9888
+
 ## 6.5.1 - 2023-06-19
 
 ### Fixed

@@ -22,6 +22,7 @@ export default (sink?: AlloyComponent): UiFactoryBackstage => {
       interpreter: Fun.identity as any,
       anchors: {
         inlineDialog: hotspotAnchorFn,
+        inlineBottomDialog: hotspotAnchorFn,
         banner: hotspotAnchorFn,
         cursor: () => ({
           type: 'selection',
