@@ -9,7 +9,7 @@ type ButtonName = 'buttons-undefined' | 'buttons-empty' | 'buttons-nonempty';
 
 describe('browser.tinymce.themes.silver.window.SilverDialogFooterTest', () => {
   let testDialogApi: Dialog.DialogInstanceApi<{}>;
-  const addTestButton = (editor: Editor, name: string, buttons?: Dialog.DialogFooterButtonSpec[]): void =>
+  const addTestButton = (editor: Editor, name: ButtonName, buttons?: Dialog.DialogFooterButtonSpec[]): void =>
     editor.ui.registry.addButton(name, {
       type: 'button',
       text: name,
