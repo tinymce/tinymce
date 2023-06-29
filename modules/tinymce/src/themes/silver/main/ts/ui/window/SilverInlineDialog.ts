@@ -50,11 +50,13 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
 
   const objOfCells = SilverDialogCommon.extractCellsToObject(storagedMenuButtons);
 
-  const memFooter = Memento.record(
-    renderInlineFooter({
-      buttons: storagedMenuButtons
-    }, dialogId, backstage)
-  );
+  const optMemFooter = storagedMenuButtons.length === 0
+    ? Optional.none()
+    : Optional.some(Memento.record(
+      renderInlineFooter({
+        buttons: storagedMenuButtons
+      }, dialogId, backstage)
+    ));
 
   const dialogEvents = SilverDialogEvents.initDialog(
     () => instanceApi,
@@ -125,7 +127,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
     components: [
       memHeader.asSpec(),
       memBody.asSpec(),
-      memFooter.asSpec()
+      ...optMemFooter.map((memFooter) => [ memFooter.asSpec() ]).getOr([])
     ]
   });
 
@@ -145,7 +147,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
   const instanceApi = getDialogApi<T>({
     getId: Fun.constant(dialogId),
     getRoot: Fun.constant(dialog),
-    getFooter: () => memFooter.get(dialog),
+    getFooter: () => optMemFooter.map((memFooter) => memFooter.get(dialog)),
     getBody: () => memBody.get(dialog),
     getFormWrapper: () => {
       const body = memBody.get(dialog);
