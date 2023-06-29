@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- The icon in `alertbanner` dialog component is not clickable if `url` field is not specified. #TINY-10013
+
 ## 6.5.1 - 2023-06-19
 
 ### Fixed
