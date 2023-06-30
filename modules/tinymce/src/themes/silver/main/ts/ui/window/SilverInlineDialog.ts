@@ -4,7 +4,7 @@ import {
   Receiving, Reflecting, Replacing, SystemEvents
 } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
-import { Fun, Id, Optional } from '@ephox/katamari';
+import { Fun, Id, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Classes, SugarElement, SugarNode } from '@ephox/sugar';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
@@ -62,11 +62,13 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
 
   const objOfCells = SilverDialogCommon.extractCellsToObject(storagedMenuButtons);
 
-  const memFooter = Memento.record(
-    renderInlineFooter({
-      buttons: storagedMenuButtons
-    }, dialogId, backstage)
-  );
+  const optMemFooter = Optionals.someIf(
+    storagedMenuButtons.length !== 0,
+    Memento.record(
+      renderInlineFooter({
+        buttons: storagedMenuButtons
+      }, dialogId, backstage)
+    ));
 
   const dialogEvents = SilverDialogEvents.initDialog(
     () => instanceApi,
@@ -137,7 +139,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
     components: [
       memHeader.asSpec(),
       memBody.asSpec(),
-      memFooter.asSpec()
+      ...optMemFooter.map((memFooter) => memFooter.asSpec()).toArray()
     ]
   });
 
@@ -157,7 +159,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
   const instanceApi = getDialogApi<T>({
     getId: Fun.constant(dialogId),
     getRoot: Fun.constant(dialog),
-    getFooter: () => memFooter.get(dialog),
+    getFooter: () => optMemFooter.map((memFooter) => memFooter.get(dialog)),
     getBody: () => memBody.get(dialog),
     getFormWrapper: () => {
       const body = memBody.get(dialog);

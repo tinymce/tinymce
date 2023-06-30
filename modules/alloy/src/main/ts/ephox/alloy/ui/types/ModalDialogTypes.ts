@@ -59,7 +59,7 @@ export interface ModalDialogApis {
   show: (dialog: AlloyComponent) => void;
   hide: (dialog: AlloyComponent) => void;
   getBody: (dialog: AlloyComponent) => AlloyComponent;
-  getFooter: (dialog: AlloyComponent) => AlloyComponent;
+  getFooter: (dialog: AlloyComponent) => Optional<AlloyComponent>;
   setBusy: (dialog: AlloyComponent, getBusySpec: GetBusySpec) => void;
   setIdle: (dialog: AlloyComponent) => void;
 }
