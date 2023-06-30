@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Improved
+- When defining a modal or inline dialog, if the `buttons` property is `undefined` or an empty array, the footer will now no longer be rendered. #TINY-9996
+
 ### Added
 - Added new `bottom` to inline dialog type. This new inline dialog option allows the inline dialog to be positioned at the bottom of the editor. #TINY-9888
 

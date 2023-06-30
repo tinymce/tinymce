@@ -211,7 +211,14 @@ describe('headless.tinymce.themes.silver.window.WindowManagerTest', () => {
           type: 'panel',
           items: []
         },
-        buttons: []
+        // TINY-9996: buttons must be non-empty array for footer to be rendered
+        buttons: [
+          {
+            type: 'cancel',
+            name: 'cancel',
+            text: 'Cancel'
+          }
+        ]
       });
 
       const structHeaderWithDrag = ApproxStructure.build((s, str, arr) => {
