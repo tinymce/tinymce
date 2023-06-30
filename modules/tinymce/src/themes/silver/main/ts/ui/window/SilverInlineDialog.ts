@@ -127,7 +127,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
     components: [
       memHeader.asSpec(),
       memBody.asSpec(),
-      ...optMemFooter.map((memFooter) => [ memFooter.asSpec() ]).getOr([])
+      ...optMemFooter.map((memFooter) => memFooter.asSpec()).toArray()
     ]
   });
 
