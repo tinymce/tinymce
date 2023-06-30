@@ -93,10 +93,6 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
 
   const getDialog = (selector: string) => UiFinder.findIn(SugarBody.body(), selector).getOrDie();
 
-  const getEditorHeight = (editor: Editor) => {
-    return editor.getContainer().offsetHeight;
-  };
-
   const getDialogHeight = (selector: string) => {
     return parseInt(Css.get(getDialog(selector), 'height'), 10);
   };
@@ -223,16 +219,16 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
   });
 
   Arr.each([
-    { label: 'normal', size: 'normal' as Dialog.DialogSize, selector: '.tox-dialog-inline' },
-    { label: 'medium', size: 'medium' as Dialog.DialogSize, selector: '.tox-dialog--width-md' },
-    { label: 'large', size: 'large' as Dialog.DialogSize, selector: '.tox-dialog-inline--width-lg' },
+    { label: 'normal', size: 'normal' as Dialog.DialogSize, selector: '.tox-dialog-inline', body: '.tox-dialog__body' },
+    { label: 'medium', size: 'medium' as Dialog.DialogSize, selector: '.tox-dialog--width-md', body: '.tox-dialog__body' },
+    { label: 'large', size: 'large' as Dialog.DialogSize, selector: '.tox-dialog-inline--width-lg', body: '.tox-dialog__body' },
   ], (test) => {
     it('inline dialog size tests, ' + test.label, async () => {
       const editor = hook.editor();
       openDialog(editor, { inline: 'toolbar' }, createDialogSpec(test.size, true));
       await TinyUiActions.pWaitForDialog(editor);
       UiFinder.exists(SugarBody.body(), test.selector);
-      assert.isTrue(getDialogHeight(test.selector) < getEditorHeight(editor), 'Dialog should be smaller than editor');
+      assert.isTrue(getDialogHeight(test.body) < Math.min(650, window.innerHeight - 110), 'Dialog should not exceed the max height');
       DialogUtils.close(editor);
     });
   });
