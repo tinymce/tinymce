@@ -228,7 +228,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
       openDialog(editor, { inline: 'toolbar' }, createDialogSpec(test.size, true));
       await TinyUiActions.pWaitForDialog(editor);
       UiFinder.exists(SugarBody.body(), test.selector);
-      assert.isTrue(getDialogHeight(test.body) < Math.min(650, window.innerHeight - 110), 'Dialog should not exceed the max height');
+      assert.isTrue(getDialogHeight(test.body) <= Math.min(650, window.innerHeight - 110), 'Dialog should not exceed the max height');
       DialogUtils.close(editor);
     });
   });
