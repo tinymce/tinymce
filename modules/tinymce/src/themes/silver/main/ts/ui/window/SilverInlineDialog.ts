@@ -24,7 +24,7 @@ interface RenderedDialog<T extends Dialog.DialogData> {
   readonly instanceApi: Dialog.DialogInstanceApi<T>;
 }
 
-const getInlineDialogSizeClasses = (size: Dialog.DialogSize): string[] => {
+const getInlineDialogSizeClasses = (size: Dialog.DialogSize): Optional<string> => {
   switch (size) {
     case 'large':
       return [ 'tox-dialog-inline--width-lg' ];
