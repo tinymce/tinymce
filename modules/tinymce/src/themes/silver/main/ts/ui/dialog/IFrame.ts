@@ -27,12 +27,20 @@ const getDynamicSource = (initialData: Optional<string>, scrollToBottom: boolean
       if (cachedValue.get() !== html) {
         const iframeElement = frameComponent.element as SugarElement<HTMLIFrameElement>;
         const iframe = iframeElement.dom;
-        const iframeDocument = Optional.from(iframe.contentDocument);
+        const iframeDoc = Optional.from(iframe.contentDocument);
         const iframeWindow = Optional.from(iframe.contentWindow);
         const setSrcdocValue = () => Attribute.set(iframeElement, 'srcdoc', html);
 
+        let isAtBottom = false;
+        if (scrollToBottom) {
+          iframeDoc.map((doc) => doc.documentElement).each((docEl) => {
+            const { scrollTop, scrollHeight, clientHeight } = docEl;
+            isAtBottom = scrollTop + clientHeight >= scrollHeight;
+          });
+        }
+
         if (useDocumentWrite) {
-          iframeDocument.fold(
+          iframeDoc.fold(
             setSrcdocValue,
             (doc) => {
               doc.open();
@@ -44,8 +52,8 @@ const getDynamicSource = (initialData: Optional<string>, scrollToBottom: boolean
           setSrcdocValue();
         }
 
-        if (scrollToBottom) {
-          iframeDocument.map((doc) => doc.body).each((body) => iframeWindow.each((win) => win.scrollTo(0, body.scrollHeight)));
+        if (scrollToBottom && isAtBottom) {
+          iframeDoc.map((doc) => doc.body).each((body) => iframeWindow.each((win) => win.scrollTo(0, body.scrollHeight)));
         }
       }
       cachedValue.set(html);
