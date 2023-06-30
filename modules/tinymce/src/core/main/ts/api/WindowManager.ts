@@ -29,7 +29,7 @@ import { Dialog } from './ui/Ui';
  */
 
 export interface WindowParams {
-  readonly inline?: 'cursor' | 'toolbar';
+  readonly inline?: 'cursor' | 'toolbar' | 'bottom';
   readonly ariaAttrs?: boolean;
 }
 

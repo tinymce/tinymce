@@ -17,7 +17,7 @@ const getCompByName = (access: DialogAccess, name: string): Optional<AlloyCompon
     const form = Composing.getCurrent(access.getFormWrapper()).getOr(access.getFormWrapper());
     return Form.getField(form, name).orThunk(() => {
       const footer = access.getFooter();
-      const footerState: Optional<FooterState> = Reflecting.getState(footer).get();
+      const footerState: Optional<FooterState> = footer.bind((f) => Reflecting.getState(f).get());
       return footerState.bind((f) => f.lookupByName(name));
     });
   } else {
@@ -36,7 +36,7 @@ export interface DialogAccess {
   getId: () => string;
   getRoot: () => AlloyComponent;
   getBody: () => AlloyComponent;
-  getFooter: () => AlloyComponent;
+  getFooter: () => Optional<AlloyComponent>;
   getFormWrapper: () => AlloyComponent;
   toggleFullscreen: () => void;
 }
