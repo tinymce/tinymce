@@ -1,7 +1,7 @@
 import { AlloyComponent, Behaviour, Focusing, FormField, SketchSpec, Tabstopping } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Cell, Optional } from '@ephox/katamari';
-import { Attribute } from '@ephox/sugar';
+import { Attribute, SugarElement } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
@@ -15,7 +15,7 @@ interface IFrameSourcing {
 
 type IframeSpec = Omit<Dialog.Iframe, 'type'>;
 
-const getDynamicSource = (initialData: Optional<string>): IFrameSourcing => {
+const getDynamicSource = (initialData: Optional<string>, scrollToBottom: boolean, useDocumentWrite: boolean): IFrameSourcing => {
   const cachedValue = Cell(initialData.getOr(''));
   return {
     getValue: (_frameComponent: AlloyComponent): string =>
@@ -25,7 +25,28 @@ const getDynamicSource = (initialData: Optional<string>): IFrameSourcing => {
       // TINY-3769: We need to use srcdoc here, instead of src with a data URI, otherwise browsers won't retain the Origin.
       // See https://bugs.chromium.org/p/chromium/issues/detail?id=58999#c11
       if (cachedValue.get() !== html) {
-        Attribute.set(frameComponent.element, 'srcdoc', html);
+        const iframeElement = frameComponent.element as SugarElement<HTMLIFrameElement>;
+        const iframe = iframeElement.dom;
+        const iframeDocument = Optional.from(iframe.contentDocument);
+        const iframeWindow = Optional.from(iframe.contentWindow);
+        const setSrcdocValue = () => Attribute.set(iframeElement, 'srcdoc', html);
+
+        if (useDocumentWrite) {
+          iframeDocument.fold(
+            setSrcdocValue,
+            (doc) => {
+              doc.open();
+              doc.write(html);
+              doc.close();
+            }
+          );
+        } else {
+          setSrcdocValue();
+        }
+
+        if (scrollToBottom) {
+          iframeDocument.map((doc) => doc.body).each((body) => iframeWindow.each((win) => win.scrollTo(0, body.scrollHeight)));
+        }
       }
       cachedValue.set(html);
     }
@@ -43,7 +64,7 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstagePr
     ...isSandbox ? { sandbox: 'allow-scripts allow-same-origin' } : { },
   };
 
-  const sourcing = getDynamicSource(initialData);
+  const sourcing = getDynamicSource(initialData, spec.scrollToBottom, spec.useDocumentWrite);
 
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 

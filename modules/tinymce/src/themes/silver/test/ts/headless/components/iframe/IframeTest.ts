@@ -18,13 +18,17 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
           name: 'frame-a',
           label: Optional.some('iframe label'),
           sandboxed: true,
-          transparent: true
+          scrollToBottom: false,
+          transparent: true,
+          useDocumentWrite: false
         }, TestProviders, Optional.none()),
         renderIFrame({
           name: 'frame-b',
           label: Optional.some('iframe label'),
           sandboxed: true,
-          transparent: false
+          scrollToBottom: false,
+          transparent: false,
+          useDocumentWrite: false
         }, TestProviders, Optional.none()),
       ]
     })

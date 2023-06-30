@@ -6,18 +6,24 @@ import { FormComponentWithLabel, formComponentWithLabelFields, FormComponentWith
 export interface IframeSpec extends FormComponentWithLabelSpec {
   type: 'iframe';
   sandboxed?: boolean;
+  scrollToBottom?: boolean;
   transparent?: boolean;
+  useDocumentWrite?: boolean;
 }
 
 export interface Iframe extends FormComponentWithLabel {
   type: 'iframe';
   sandboxed: boolean;
+  scrollToBottom: boolean;
   transparent: boolean;
+  useDocumentWrite: boolean;
 }
 
 const iframeFields = formComponentWithLabelFields.concat([
+  FieldSchema.defaultedBoolean('scrollToBottom', false),
   FieldSchema.defaultedBoolean('sandboxed', true),
-  FieldSchema.defaultedBoolean('transparent', true)
+  FieldSchema.defaultedBoolean('transparent', true),
+  FieldSchema.defaultedBoolean('useDocumentWrite', false)
 ]);
 
 export const iframeSchema = StructureSchema.objOf(iframeFields);
