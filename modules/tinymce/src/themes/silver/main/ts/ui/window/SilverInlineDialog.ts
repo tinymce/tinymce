@@ -27,11 +27,11 @@ interface RenderedDialog<T extends Dialog.DialogData> {
 const getInlineDialogSizeClasses = (size: Dialog.DialogSize): Optional<string> => {
   switch (size) {
     case 'large':
-      return [ 'tox-dialog-inline--width-lg' ];
+      return Optional.some('tox-dialog-inline--width-lg');
     case 'medium':
-      return [ 'tox-dialog--width-md' ];
+      return Optional.some('tox-dialog--width-md');
     default:
-      return [];
+      return Optional.none();
   }
 };
 
