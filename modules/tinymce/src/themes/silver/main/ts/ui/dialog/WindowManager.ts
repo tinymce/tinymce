@@ -4,7 +4,7 @@ import {
 } from '@ephox/alloy';
 import { StructureProcessor, StructureSchema } from '@ephox/boulder';
 import { Dialog, DialogManager } from '@ephox/bridge';
-import { Optional, Singleton } from '@ephox/katamari';
+import { Optional, Singleton, Type } from '@ephox/katamari';
 import { SelectorExists, SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -85,15 +85,17 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
   const confirmDialog = ConfirmDialog.setup(extras.backstages.dialog);
 
   const open = <T extends Dialog.DialogData>(config: Dialog.DialogSpec<T>, params: WindowParams | undefined, closeWindow: (dialogApi: Dialog.DialogInstanceApi<T>) => void): Dialog.DialogInstanceApi<T> => {
-    if (params !== undefined && params.inline === 'toolbar') {
-      return openInlineDialog(config, extras.backstages.popup.shared.anchors.inlineDialog(), closeWindow, params.ariaAttrs);
-    } else if (params !== undefined && params.inline === 'bottom') {
-      return openBottomInlineDialog(config, extras.backstages.popup.shared.anchors.inlineBottomDialog(), closeWindow, params.ariaAttrs);
-    } else if (params !== undefined && params.inline === 'cursor') {
-      return openInlineDialog(config, extras.backstages.popup.shared.anchors.cursor(), closeWindow, params.ariaAttrs);
-    } else {
-      return openModalDialog(config, closeWindow);
+    if (!Type.isUndefined(params)) {
+      if (params.inline === 'toolbar') {
+        return openInlineDialog(config, extras.backstages.popup.shared.anchors.inlineDialog(), closeWindow, params);
+      } else if (params.inline === 'bottom') {
+        return openBottomInlineDialog(config, extras.backstages.popup.shared.anchors.inlineBottomDialog(), closeWindow, params);
+      } else if (params.inline === 'cursor') {
+        return openInlineDialog(config, extras.backstages.popup.shared.anchors.cursor(), closeWindow, params);
+      }
     }
+
+    return openModalDialog(config, closeWindow);
   };
 
   const openUrl = (config: Dialog.UrlDialogSpec, closeWindow: (dialogApi: Dialog.UrlDialogInstanceApi) => void) =>
@@ -151,7 +153,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
     return DialogManager.DialogManager.open<T>(factory, config);
   };
 
-  const openInlineDialog = <T extends Dialog.DialogData>(config: Dialog.DialogSpec<T>, anchor: InlineDialogAnchor, closeWindow: (dialogApi: Dialog.DialogInstanceApi<T>) => void, ariaAttrs: boolean = false): Dialog.DialogInstanceApi<T> => {
+  const openInlineDialog = <T extends Dialog.DialogData>(config: Dialog.DialogSpec<T>, anchor: InlineDialogAnchor, closeWindow: (dialogApi: Dialog.DialogInstanceApi<T>) => void, windowParams: WindowParams): Dialog.DialogInstanceApi<T> => {
     const factory = (contents: Dialog.Dialog<T>, internalInitialData: Partial<T>, dataValidator: StructureProcessor): Dialog.DialogInstanceApi<T> => {
       const initialData = validateData<T>(internalInitialData, dataValidator);
       const inlineDialog = Singleton.value<AlloyComponent>();
@@ -180,7 +182,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
           }
         },
         extras.backstages.popup,
-        ariaAttrs
+        windowParams.ariaAttrs
       );
 
       const inlineDialogComp = GuiFactory.build(InlineView.sketch({
@@ -190,7 +192,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
           classes: [ ]
         },
         // Fires the default dismiss event.
-        fireDismissalEventInstead: { },
+        fireDismissalEventInstead: (windowParams.persistent ? { event: 'doNotDismissYet' } : { }),
         // TINY-9412: The docking behaviour for inline dialogs is inconsistent
         // for toolbar_location: bottom. We need to clarify exactly what the behaviour
         // should be. The intent here might have been that they shouldn't automatically
@@ -246,7 +248,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
     return DialogManager.DialogManager.open<T>(factory, config);
   };
 
-  const openBottomInlineDialog = <T extends Dialog.DialogData>(config: Dialog.DialogSpec<T>, anchor: InlineDialogAnchor, closeWindow: (dialogApi: Dialog.DialogInstanceApi<T>) => void, ariaAttrs: boolean = false): Dialog.DialogInstanceApi<T> => {
+  const openBottomInlineDialog = <T extends Dialog.DialogData>(config: Dialog.DialogSpec<T>, anchor: InlineDialogAnchor, closeWindow: (dialogApi: Dialog.DialogInstanceApi<T>) => void, windowParams: WindowParams): Dialog.DialogInstanceApi<T> => {
     const factory = (contents: Dialog.Dialog<T>, internalInitialData: Partial<T>, dataValidator: StructureProcessor): Dialog.DialogInstanceApi<T> => {
       const initialData = validateData<T>(internalInitialData, dataValidator);
       const inlineDialog = Singleton.value<AlloyComponent>();
@@ -275,7 +277,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
           }
         },
         extras.backstages.popup,
-        ariaAttrs
+        windowParams.ariaAttrs
       );
 
       const inlineDialogComp = GuiFactory.build(InlineView.sketch({
@@ -285,7 +287,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
           classes: [ ]
         },
         // Fires the default dismiss event.
-        fireDismissalEventInstead: { },
+        fireDismissalEventInstead: (windowParams.persistent ? { event: 'doNotDismissYet' } : { }),
         ...isToolbarLocationTop ? { } : { fireRepositionEventInstead: { }},
         inlineBehaviours: Behaviour.derive([
           AddEventsBehaviour.config('window-manager-inline-events', [
