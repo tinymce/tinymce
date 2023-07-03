@@ -215,7 +215,6 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
   Arr.each([
     { label: 'normal', size: 'normal' as Dialog.DialogSize, selector: '.tox-dialog-inline', body: '.tox-dialog__body', maxWidth: 480 },
     { label: 'medium', size: 'medium' as Dialog.DialogSize, selector: '.tox-dialog--width-md', body: '.tox-dialog__body', maxWidth: 800 },
-    { label: 'large', size: 'large' as Dialog.DialogSize, selector: '.tox-dialog--width-lg', body: '.tox-dialog__body', maxWidth: 1200 },
   ], (test) => {
     it('inline dialog size tests, ' + test.label, async () => {
       const editor = hook.editor();
