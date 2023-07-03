@@ -24,10 +24,10 @@ interface RenderedDialog<T extends Dialog.DialogData> {
   readonly instanceApi: Dialog.DialogInstanceApi<T>;
 }
 
-const getInlineDialogSizeClasses = (size: Dialog.DialogSize): Optional<string> => {
+const getInlineDialogSizeClasse = (size: Dialog.DialogSize): Optional<string> => {
   switch (size) {
     case 'large':
-      return Optional.some('tox-dialog-inline--width-lg');
+      return Optional.some('tox-dialog--width-lg');// TODO: TINY-10039
     case 'medium':
       return Optional.some('tox-dialog--width-md');
     default:
@@ -40,7 +40,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
   const dialogLabelId = Id.generate('dialog-label');
   const dialogContentId = Id.generate('dialog-content');
   const internalDialog = dialogInit.internalDialog;
-  const dialogSize = getInlineDialogSizeClasses(internalDialog.size);
+  const dialogSize = getInlineDialogSizeClasse(internalDialog.size);
 
   const updateState = (_comp: AlloyComponent, incoming: DialogManager.DialogInit<T>) => Optional.some(incoming);
 
