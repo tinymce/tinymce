@@ -35,7 +35,7 @@ const getInlineDialogSizeClass = (size: Dialog.DialogSize): Optional<string> => 
   }
 };
 
-const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra<T>, backstage: UiFactoryBackstage, ariaAttrs: boolean): RenderedDialog<T> => {
+const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra<T>, backstage: UiFactoryBackstage, ariaAttrs: boolean = false): RenderedDialog<T> => {
   const dialogId = Id.generate('dialog');
   const dialogLabelId = Id.generate('dialog-label');
   const dialogContentId = Id.generate('dialog-content');
