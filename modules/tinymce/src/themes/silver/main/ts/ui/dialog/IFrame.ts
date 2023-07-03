@@ -27,6 +27,7 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
       if (cachedValue.get() !== html) {
         const iframeElement = frameComponent.element as SugarElement<HTMLIFrameElement>;
         const setSrcdocValue = () => Attribute.set(iframeElement, 'srcdoc', html);
+
         if (stream) {
           const iframe = iframeElement.dom;
           const iframeDoc = Optional.from(iframe.contentDocument);
