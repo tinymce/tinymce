@@ -15,7 +15,7 @@ interface IFrameSourcing {
 
 type IframeSpec = Omit<Dialog.Iframe, 'type'>;
 
-const getDynamicSource = (initialData: Optional<string>, scrollToBottom: boolean, useDocumentWrite: boolean): IFrameSourcing => {
+const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFrameSourcing => {
   const cachedValue = Cell(initialData.getOr(''));
   return {
     getValue: (_frameComponent: AlloyComponent): string =>
@@ -26,20 +26,18 @@ const getDynamicSource = (initialData: Optional<string>, scrollToBottom: boolean
       // See https://bugs.chromium.org/p/chromium/issues/detail?id=58999#c11
       if (cachedValue.get() !== html) {
         const iframeElement = frameComponent.element as SugarElement<HTMLIFrameElement>;
-        const iframe = iframeElement.dom;
-        const iframeDoc = Optional.from(iframe.contentDocument);
-        const iframeWindow = Optional.from(iframe.contentWindow);
         const setSrcdocValue = () => Attribute.set(iframeElement, 'srcdoc', html);
+        if (stream) {
+          const iframe = iframeElement.dom;
+          const iframeDoc = Optional.from(iframe.contentDocument);
+          const iframeWindow = Optional.from(iframe.contentWindow);
 
-        let isAtBottom = false;
-        if (scrollToBottom) {
-          iframeDoc.map((doc) => doc.documentElement).each((docEl) => {
-            const { scrollTop, scrollHeight, clientHeight } = docEl;
-            isAtBottom = scrollTop + clientHeight >= scrollHeight;
-          });
-        }
+          const isScrollAtBottom = () => {
+            const isElementScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) => scrollTop + clientHeight >= scrollHeight;
+            return iframeDoc.map((doc) => doc.documentElement).map((docEl) => isElementScrollAtBottom(docEl)).getOr(false);
+          };
+          const isAtBottom = isScrollAtBottom();
 
-        if (useDocumentWrite) {
           iframeDoc.fold(
             setSrcdocValue,
             (doc) => {
@@ -48,12 +46,12 @@ const getDynamicSource = (initialData: Optional<string>, scrollToBottom: boolean
               doc.close();
             }
           );
+
+          if (isAtBottom) {
+            iframeDoc.map((doc) => doc.body).each((body) => iframeWindow.each((win) => win.scrollTo(0, body.scrollHeight)));
+          }
         } else {
           setSrcdocValue();
-        }
-
-        if (scrollToBottom && isAtBottom) {
-          iframeDoc.map((doc) => doc.body).each((body) => iframeWindow.each((win) => win.scrollTo(0, body.scrollHeight)));
         }
       }
       cachedValue.set(html);
@@ -72,7 +70,7 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstagePr
     ...isSandbox ? { sandbox: 'allow-scripts allow-same-origin' } : { },
   };
 
-  const sourcing = getDynamicSource(initialData, spec.scrollToBottom, spec.useDocumentWrite);
+  const sourcing = getDynamicSource(initialData, spec.streamContent);
 
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
