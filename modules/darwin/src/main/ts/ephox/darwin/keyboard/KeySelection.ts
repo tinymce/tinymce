@@ -42,7 +42,7 @@ const detect = (
       if (boxes.length > 1) {
         selectRange(container, boxes, cellSel.start, cellSel.finish);
         return Optional.some(Response.create(
-          Optional.some(Util.makeSitus(start, 0, start, Awareness.getEnd(start))),
+          Optional.some(Util.makeSitus(start, 0, finish, Awareness.getEnd(finish))),
           true
         ));
       } else {
