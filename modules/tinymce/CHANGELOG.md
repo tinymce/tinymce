@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Contents would not be removed from the drag start source if dragging and dropping internally into a transparent block element. #TINY-9960
 - In some cases pressing enter would scroll the entire page. #TINY-9828
 - The border styles of a table were incorrectly split into a longhand form after table dialog updates. #TINY-9843
+- The `selection.getRng()` returned an incorrect value by selecting multiple rows of the table both with the keyboard and with the mouse. #TINY-9952
 
 ## 6.6.0 - TBA
 
