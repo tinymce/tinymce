@@ -1,5 +1,5 @@
 import { Optional, Optionals, Singleton } from '@ephox/katamari';
-import { Compare, ContentEditable, EventArgs, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
+import { Awareness, Compare, ContentEditable, EventArgs, SelectorFind, Situ, SugarElement, Traverse } from '@ephox/sugar';
 
 import { SelectionAnnotation } from '../api/SelectionAnnotation';
 import { WindowBridge } from '../api/WindowBridge';
@@ -44,7 +44,7 @@ export const MouseSelection = (bridge: WindowBridge, container: SugarElement<Nod
             annotations.selectRange(container, boxes, cellSel.start, cellSel.finish);
 
             // stop the browser from creating a big text selection, select the cell where the cursor is
-            bridge.selectContents(finish);
+            bridge.setRelativeSelection(Situ.on(start, 0), Situ.on(finish, Awareness.getEnd(finish))); // <--- THIS?
           }
         });
       });

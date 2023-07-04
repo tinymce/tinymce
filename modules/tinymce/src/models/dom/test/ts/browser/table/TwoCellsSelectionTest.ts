@@ -1,5 +1,5 @@
 import { Mouse, UiFinder } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -110,5 +110,30 @@ describe('browser.tinymce.models.dom.table.TwoCellsSelectionTest', () => {
       '</tbody>' +
       '</table>'
     );
+  });
+
+  context('TINY-9952: 2 rows selection', () => {
+    it('TINY-9952: selecting 2 rows via mouse should set the correct range', () => {
+      const editor = hook.editor();
+      editor.setContent(
+        '<table>' +
+        '<tbody>' +
+        '<tr><td>A1</td></tr>' +
+        '<tr><td>A2</td></tr>' +
+        '</tbody>' +
+        '</table>'
+      );
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 0);
+      const startCell = UiFinder.findIn(TinyDom.body(editor), 'td:contains(A1)').getOrDie();
+      const endCell = UiFinder.findIn(TinyDom.body(editor), 'td:contains(A2)').getOrDie();
+
+      Mouse.mouseOver(startCell);
+      Mouse.mouseDown(startCell);
+      Mouse.mouseOver(startCell);
+      Mouse.mouseOver(endCell);
+      Mouse.mouseUp(endCell);
+
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0 ], 0, [ 0, 0, 1, 0 ], 1);
+    });
   });
 });
