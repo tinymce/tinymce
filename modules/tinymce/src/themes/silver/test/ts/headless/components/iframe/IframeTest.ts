@@ -131,14 +131,15 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
   });
 
   context('Autoscrolling to bottom', () => {
-    const longContent = '<p>1</p>'.repeat(100);
+    const initialLongContent = '<p>1</p>'.repeat(50);
+    const newLongContent = `${initialLongContent}${'<p>2</p>'.repeat(50)}`;
 
     const testStreamScrollToBottom = (initialScrollAtBottom: boolean, shouldScrollToBottom: boolean) => () => {
       const isScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) => scrollTop + clientHeight >= scrollHeight;
       const isScrollAtTop = ({ scrollTop }: HTMLElement) => scrollTop === 0;
 
       const frame = getFrameFromFrameNumber(2);
-      Representing.setValue(frame, longContent);
+      Representing.setValue(frame, initialLongContent);
 
       const iframe = frame.element.dom as HTMLIFrameElement;
       Optional.from(iframe.contentWindow).fold(
@@ -155,7 +156,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
                 assert.isTrue(isScrollAtTop(docEl), 'iframe should be scrolled to top initially');
               }
 
-              Representing.setValue(frame, longContent);
+              Representing.setValue(frame, newLongContent);
               if (shouldScrollToBottom) {
                 assert.isTrue(isScrollAtBottom(docEl), 'iframe should be scrolled to bottom after setting value');
               } else {
@@ -174,7 +175,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
 
     it('TINY-10032: Should not scroll to bottom when stream: false', () => {
       const frame = getFrameFromFrameNumber(0);
-      Representing.setValue(frame, longContent);
+      Representing.setValue(frame, newLongContent);
       Optional.from(frame.element.dom.contentWindow).fold(
         () => assert.fail('Could not find iframe document element'),
         (win) => assert.equal(win.scrollY, 0, 'iframe scroll should be at top')

@@ -30,27 +30,20 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
 
         if (stream) {
           const iframe = iframeElement.dom;
-          const iframeDoc = Optional.from(iframe.contentDocument);
-          const iframeWindow = Optional.from(iframe.contentWindow);
-
-          const isScrollAtBottom = () => {
-            const isElementScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) => scrollTop + clientHeight >= scrollHeight;
-            return iframeDoc.map((doc) => doc.documentElement).map((docEl) => isElementScrollAtBottom(docEl)).getOr(false);
-          };
-          const isAtBottom = isScrollAtBottom();
-
-          iframeDoc.fold(
+          Optional.from(iframe.contentDocument).fold(
             setSrcdocValue,
             (doc) => {
+              const isElementScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) => scrollTop + clientHeight >= scrollHeight;
+              const isScrollAtBottom = isElementScrollAtBottom(doc.documentElement);
+
               doc.open();
               doc.write(html);
               doc.close();
-            }
-          );
 
-          if (isAtBottom) {
-            iframeDoc.map((doc) => doc.body).each((body) => iframeWindow.each((win) => win.scrollTo(0, body.scrollHeight)));
-          }
+              if (isScrollAtBottom) {
+                Optional.from(iframe.contentWindow).each((win) => win.scrollTo(0, doc.body.scrollHeight));
+              }
+            });
         } else {
           setSrcdocValue();
         }
