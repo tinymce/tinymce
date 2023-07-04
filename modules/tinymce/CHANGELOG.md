@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added new `bottom` to inline dialog type. This new inline dialog option allows the inline dialog to be positioned at the bottom of the editor. #TINY-9888
 - Added new `persistent` option to `WindowParams`. This new option allows the inline dialog to be persistent, meaning that it will not be closed when the user clicks outside of the dialog. #TINY-9991
-- New `streamContent` property for `iframe` dialog component. When set to `true`, content is updated using `document.write` instead of `srcdoc` to prevent flickering at short update intervals, and the iframe automatically scrolls to the bottom on each update if the scroll position was at the bottom before the update. #TINY-10032
+- New `streamContent` property for the `iframe` dialog component which controls dialog `setData()` behavior. With the property set to `true`, frame content will update with `document.write()` to avoid reloading the frame, and end scroll positions will be maintained as new content streams in. #TINY-10032
 
 ### Improved
 - When defining a modal or inline dialog, if the `buttons` property is `undefined` or an empty array, the footer will now no longer be rendered. #TINY-9996
