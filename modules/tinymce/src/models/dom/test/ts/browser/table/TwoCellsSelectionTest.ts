@@ -123,7 +123,7 @@ describe('browser.tinymce.models.dom.table.TwoCellsSelectionTest', () => {
         '</tbody>' +
         '</table>'
       );
-      TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 0);
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
       const startCell = UiFinder.findIn(TinyDom.body(editor), 'td:contains(A1)').getOrDie();
       const endCell = UiFinder.findIn(TinyDom.body(editor), 'td:contains(A2)').getOrDie();
 
