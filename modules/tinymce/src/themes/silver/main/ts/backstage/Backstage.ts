@@ -46,7 +46,7 @@ export interface UiFactoryBackstagePair {
   readonly dialog: UiFactoryBackstage;
 }
 
-const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: () => Result<AlloyComponent, string> }, editor: Editor, lazyAnchorbar: () => AlloyComponent): UiFactoryBackstagePair => {
+const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: () => Result<AlloyComponent, string> }, editor: Editor, lazyAnchorbar: () => AlloyComponent, lazyBottomAnchorBar: () => AlloyComponent): UiFactoryBackstagePair => {
   const contextMenuState = Cell(false);
   const toolbar = HeaderBackstage(editor);
 
@@ -68,7 +68,7 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
   const commonBackstage = {
     shared: {
       providers,
-      anchors: Anchors.getAnchors(editor, lazyAnchorbar, toolbar.isPositionedAtTop),
+      anchors: Anchors.getAnchors(editor, lazyAnchorbar, lazyBottomAnchorBar, toolbar.isPositionedAtTop),
       header: toolbar,
     },
     urlinput,

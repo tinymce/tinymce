@@ -254,7 +254,7 @@ describe('browser.alloy.ui.dialog.ModalDialogTest', () => {
     const footer = ModalDialog.getFooter(dialog);
     Assertions.assertStructure('Checking footer of dialog', ApproxStructure.build((s, _str, arr) => s.element('div', {
       classes: [ arr.has('test-dialog-footer') ]
-    })), footer.element);
+    })), footer.getOrDie().element);
   });
 
   it('TINY-9520: Checking aria attribute of dialog', () => {
