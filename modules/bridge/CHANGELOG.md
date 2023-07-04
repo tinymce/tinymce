@@ -6,8 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- Added `streamContent` optional property to `IframeSpec` that defaults to `false`. #TINY-10032
+
 ### Changed
-- Make `buttons` an optional property of `DialogSpec` that defaults to an empty array. #TINY-9996
+- Made `buttons` an optional property of `DialogSpec` that defaults to an empty array. #TINY-9996
 
 ## 4.3.0 - 2023-03-15
 
