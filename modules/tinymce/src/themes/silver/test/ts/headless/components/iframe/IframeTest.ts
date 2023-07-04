@@ -1,7 +1,8 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { AlloyComponent, Composing, Container, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
-import { describe, it } from '@ephox/bedrock-client';
+import { describe, context, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
+import { assert } from 'chai';
 
 import { renderIFrame } from 'tinymce/themes/silver/ui/dialog/IFrame';
 
@@ -18,17 +19,31 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
           name: 'frame-a',
           label: Optional.some('iframe label'),
           sandboxed: true,
+          streamContent: false,
           transparent: true
         }, TestProviders, Optional.none()),
         renderIFrame({
           name: 'frame-b',
           label: Optional.some('iframe label'),
           sandboxed: true,
+          streamContent: false,
           transparent: false
         }, TestProviders, Optional.none()),
+        renderIFrame({
+          name: 'frame-c',
+          label: Optional.some('iframe label'),
+          sandboxed: true,
+          streamContent: true,
+          transparent: true
+        }, TestProviders, Optional.none())
       ]
     })
   ));
+
+  const getFrameFromFrameNumber = (frameNumber: number) => {
+    const frame = hook.component().components()[frameNumber];
+    return Composing.getCurrent(frame).getOrDie('Could not find internal frame field');
+  };
 
   const assertInitialIframeStructure = (component: AlloyComponent, transparent: boolean) => Assertions.assertStructure(
     'Checking initial structure',
@@ -72,31 +87,99 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
     component.element
   );
 
-  const assertSandboxedIframeContent = (frame: AlloyComponent, content: string) =>
-    // Can't check content inside the iframe due to permission issues.
-    // So instead, check that there is a source tag now.
-    Assertions.assertStructure(
-      'Checking to see that the src tag is now set on the iframe',
-      ApproxStructure.build((s, str, _arr) => s.element('iframe', {
-        classes: [ ],
-        attrs: {
-          srcdoc: str.contains(content)
-        }
-      })),
-      frame.element
-    );
-
   it('Check basic structure', () => {
-    const [ frame1, frame2 ] = hook.component().components();
+    const [ frame1, frame2, frame3 ] = hook.component().components();
     assertInitialIframeStructure(frame1, true);
     assertInitialIframeStructure(frame2, false);
+    assertInitialIframeStructure(frame3, true);
   });
 
-  it('Check iframe content structure', () => {
-    const frame1 = hook.component().components()[0];
-    const frame = Composing.getCurrent(frame1).getOrDie('Could not find internal frame field');
-    const content = '<p><span class="me">Me</span></p>';
-    Representing.setValue(frame, content);
-    assertSandboxedIframeContent(frame, content);
+  context('iframe content', () => {
+    const assertSandboxedIframeContent = (frame: AlloyComponent, content: string) =>
+      Optional.from(frame.element.dom.contentDocument?.body).fold(
+        () => assert.fail('Could not find iframe document body'),
+        (body) => assert.equal(body.innerHTML, content, 'iframe content should match')
+      );
+
+    const assertSandboxIframeSrcdoc = (frame: AlloyComponent, content: string) =>
+      // Can't check content inside the iframe due to permission issues.
+      // So instead, check that there is a source tag now.
+      Assertions.assertStructure(
+        'Checking to see that the src tag is now set on the iframe',
+        ApproxStructure.build((s, str, _arr) => s.element('iframe', {
+          classes: [ ],
+          attrs: {
+            srcdoc: str.contains(content)
+          }
+        })),
+        frame.element
+      );
+
+    const testSandboxedIframeContent = (frameNumber: number, assertUsingSrcdoc: boolean) => () => {
+      const frame = getFrameFromFrameNumber(frameNumber);
+      const content = '<p><span class="me">Me</span></p>';
+      Representing.setValue(frame, content);
+      if (assertUsingSrcdoc) {
+        assertSandboxIframeSrcdoc(frame, content);
+      } else {
+        assertSandboxedIframeContent(frame, content);
+      }
+    };
+
+    it('Check iframe content', testSandboxedIframeContent(0, true));
+    it('TINY-10032: Check iframe content with streamContent: true', testSandboxedIframeContent(2, false));
+  });
+
+  context('Autoscrolling to bottom', () => {
+    const initialLongContent = '<p>1</p>'.repeat(50);
+    const newLongContent = `${initialLongContent}${'<p>2</p>'.repeat(50)}`;
+
+    const testStreamScrollToBottom = (initialScrollAtBottom: boolean, shouldScrollToBottom: boolean) => () => {
+      const isScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) => scrollTop + clientHeight >= scrollHeight;
+      const isScrollAtTop = ({ scrollTop }: HTMLElement) => scrollTop === 0;
+
+      const frame = getFrameFromFrameNumber(2);
+      Representing.setValue(frame, initialLongContent);
+
+      const iframe = frame.element.dom as HTMLIFrameElement;
+      Optional.from(iframe.contentWindow).fold(
+        () => assert.fail('Could not find iframe document element'),
+        (win) =>
+          Optional.from(iframe.contentDocument?.documentElement).fold(
+            () => assert.fail('Could not find iframe document element'),
+            (docEl) => {
+              if (initialScrollAtBottom) {
+                win.scrollTo(0, Number.MAX_SAFE_INTEGER);
+                assert.isTrue(isScrollAtBottom(docEl), 'iframe should be scrolled to bottom initially');
+              } else {
+                win.scrollTo(0, 0);
+                assert.isTrue(isScrollAtTop(docEl), 'iframe should be scrolled to top initially');
+              }
+
+              Representing.setValue(frame, newLongContent);
+              if (shouldScrollToBottom) {
+                assert.isTrue(isScrollAtBottom(docEl), 'iframe should be scrolled to bottom after setting value');
+              } else {
+                assert.isTrue(isScrollAtTop(docEl), 'iframe scroll should be at top after setting value');
+              }
+            }
+          )
+      );
+    };
+
+    it('TINY-10032: Should not scroll to bottom when streamContent: true and iframe is not already scrolled to bottom',
+      testStreamScrollToBottom(false, false));
+
+    it('TINY-10032: Should scroll to bottom when streamContent: true and iframe is already scrolled to bottom',
+      testStreamScrollToBottom(true, true));
+
+    it('TINY-10032: Should not scroll to bottom when stream: false', () => {
+      const frame = getFrameFromFrameNumber(0);
+      Representing.setValue(frame, newLongContent);
+      Optional.from(frame.element.dom.contentWindow).fold(
+        () => assert.fail('Could not find iframe document element'),
+        (win) => assert.equal(win.scrollY, 0, 'iframe scroll should be at top')
+      );
+    });
   });
 });
