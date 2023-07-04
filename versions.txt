@@ -1,3 +1,5 @@
 # List of packages to bump:
 # Format: [package_name]@[new_version]
+alloy@12.3.0
+oxide-icons-default@2.5.0
 bridge@4.5.0
