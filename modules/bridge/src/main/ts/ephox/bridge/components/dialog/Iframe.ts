@@ -20,7 +20,7 @@ export interface Iframe extends FormComponentWithLabel {
 const iframeFields = formComponentWithLabelFields.concat([
   FieldSchema.defaultedBoolean('sandboxed', true),
   FieldSchema.defaultedBoolean('streamContent', false),
-  FieldSchema.defaultedBoolean('transparent', true),
+  FieldSchema.defaultedBoolean('transparent', true)
 ]);
 
 export const iframeSchema = StructureSchema.objOf(iframeFields);
