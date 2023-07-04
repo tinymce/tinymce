@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 6.6.0 - TBA
 
 ### Fixed
-- Corrected the implementation of the `size` parameter in inline dialogs. #TINY-10015
+- Fixed an issue that prevented setting the inline dialog `size` to 'medium' or 'normal'. #TINY-10015
 
 ### Added
 - Added new `bottom` to inline dialog type. This new inline dialog option allows the inline dialog to be positioned at the bottom of the editor. #TINY-9888
