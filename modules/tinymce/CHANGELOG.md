@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Returning an empty string in custom context menu update function would result in a small white line appearing on right click and the native browser context menu would not show up. #TINY-9842
+- Creating a list from multiple div elements would only create a partial list. #TINY-9872
 - Tab navigation incorrectly stopped around `iframe` dialog component. #TINY-9815
 - It was possible to delete the sole empty block just before a details element if it was nested within another details element. #TINY-9965
 - deleting `li` with only `br`s in it sometimes caused a crush. #TINY-6888
