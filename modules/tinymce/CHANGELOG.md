@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `mceInsertClipboardContent` command will now also accept a `files` property to insert images. #TINY-9776
 
 ### Fixed
+- Creating lists is possible when the selection is in an editable area inside a non-editable area. #TINY-10000
 - Returning an empty string in custom context menu update function would result in a small white line appearing on right click and the native browser context menu would not show up. #TINY-9842
 - Creating a list from multiple div elements would only create a partial list. #TINY-9872
 - Tab navigation incorrectly stopped around `iframe` dialog component. #TINY-9815
