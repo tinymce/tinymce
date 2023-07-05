@@ -33,6 +33,9 @@ const defaultToolbar = [
     name: 'history', items: [ 'undo', 'redo' ]
   },
   {
+    name: 'ai', items: [ 'aidialog', 'aishortcuts' ]
+  },
+  {
     name: 'styles', items: [ 'styles' ]
   },
   {
