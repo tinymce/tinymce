@@ -468,6 +468,10 @@
   .tox-dialog__iframe--bordered {
     border: @dialog-iframe-bordered-border-width solid @dialog-iframe-bordered-border-color;
     border-radius: @dialog-iframe-bordered-border-radius;
+
+    &:focus-within {
+      &:extend(.tox .tox-textfield:focus);
+    }
   }
 
   // Make popups in a dialog appear over other dialog (urlinput, colorinput etc)
