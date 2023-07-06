@@ -1,6 +1,6 @@
 import { AlloyComponent, Composing, ModalDialog } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
-import { Fun, Id, Optional } from '@ephox/katamari';
+import { Fun, Id, Optionals } from '@ephox/katamari';
 import { Class, Classes, SugarElement } from '@ephox/sugar';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
@@ -40,9 +40,10 @@ const renderDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.Dia
 
   const objOfCells = SilverDialogCommon.extractCellsToObject(storedMenuButtons);
 
-  const footer = renderModalFooter({
-    buttons: storedMenuButtons
-  }, dialogId, backstage);
+  const footer = Optionals.someIf(
+    storedMenuButtons.length !== 0,
+    renderModalFooter({ buttons: storedMenuButtons }, dialogId, backstage)
+  );
 
   const dialogEvents = SilverDialogEvents.initDialog<T>(
     () => instanceApi,
@@ -56,7 +57,7 @@ const renderDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.Dia
     id: dialogId,
     header,
     body,
-    footer: Optional.some(footer),
+    footer,
     extraClasses: dialogSize,
     extraBehaviours: [],
     extraStyles: {}
