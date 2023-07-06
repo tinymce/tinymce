@@ -54,9 +54,12 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
 };
 
 const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstageProviders, initialData: Optional<string>): SketchSpec => {
+  const isBordered = spec.border;
   const isSandbox = spec.sandboxed;
-  const isTransparent = spec.transparent;
+  const isOpaque = !spec.transparent;
   const baseClass = 'tox-dialog__iframe';
+  const getModClassIf = (condition: boolean, mod: string): string [] =>
+    condition ? [ `${baseClass}--${mod}` ] : [];
 
   const attributes = {
     ...spec.label.map<{ title?: string }>((title) => ({ title })).getOr({}),
@@ -75,7 +78,11 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstagePr
       dom: {
         tag: 'iframe',
         attributes,
-        classes: (isTransparent ? [ baseClass ] : [ baseClass, `${baseClass}--opaque` ])
+        classes: [
+          baseClass,
+          ...getModClassIf(isOpaque, 'opaque'),
+          ...getModClassIf(isBordered, 'bordered')
+        ]
       },
       behaviours: Behaviour.derive([
         Tabstopping.config({ }),
