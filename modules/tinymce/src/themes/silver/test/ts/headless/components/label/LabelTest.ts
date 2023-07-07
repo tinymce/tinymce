@@ -35,6 +35,12 @@ describe('headless.tinymce.themes.silver.components.label.LabelTest', () => {
     align: 'start'
   }, sharedBackstage));
 
+  const memCenterLabel = Memento.record(renderLabel({
+    label: 'Group of Options',
+    items,
+    align: 'center'
+  }, sharedBackstage));
+
   const memEndLabel = Memento.record(renderLabel({
     label: 'Group of Options',
     items,
@@ -43,10 +49,10 @@ describe('headless.tinymce.themes.silver.components.label.LabelTest', () => {
 
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build({
     dom: { tag: 'div' },
-    components: [ memBasicLabel.asSpec(), memHtmlLabel.asSpec(), memEndLabel.asSpec() ]
+    components: [ memBasicLabel.asSpec(), memHtmlLabel.asSpec(), memCenterLabel.asSpec(), memEndLabel.asSpec() ]
   }));
 
-  const assertLabelStructure = (component: AlloyComponent, alignEnd: boolean) => Assertions.assertStructure(
+  const assertLabelStructure = (component: AlloyComponent, alignment: 'start' | 'center' | 'end') => Assertions.assertStructure(
     'Checking initial structure',
     ApproxStructure.build((s, str, arr) => {
       const baseClass = 'tox-label';
@@ -56,7 +62,8 @@ describe('headless.tinymce.themes.silver.components.label.LabelTest', () => {
           s.element('label', {
             classes: [
               arr.has(baseClass),
-              (alignEnd ? arr.has : arr.not)(`${baseClass}--end`)
+              (alignment === 'center' ? arr.has : arr.not)(`${baseClass}--center`),
+              (alignment === 'end' ? arr.has : arr.not)(`${baseClass}--end`)
             ],
             children: [
               s.text(str.is('Group of Options'))
@@ -73,7 +80,7 @@ describe('headless.tinymce.themes.silver.components.label.LabelTest', () => {
 
   it('Check basic structure', () => {
     const label = memBasicLabel.get(hook.component());
-    assertLabelStructure(label, false);
+    assertLabelStructure(label, 'start');
   });
 
   it('TINY-7524: HTML like content should be rendered as plain text', () => {
@@ -98,8 +105,13 @@ describe('headless.tinymce.themes.silver.components.label.LabelTest', () => {
     );
   });
 
+  it('TINY-10058: Check label with center alignment', () => {
+    const label = memCenterLabel.get(hook.component());
+    assertLabelStructure(label, 'center');
+  });
+
   it('TINY-10058: Check label with end alignment', () => {
     const label = memEndLabel.get(hook.component());
-    assertLabelStructure(label, true);
+    assertLabelStructure(label, 'end');
   });
 });
