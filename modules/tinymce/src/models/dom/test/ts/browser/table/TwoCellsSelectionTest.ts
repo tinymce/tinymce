@@ -1,5 +1,6 @@
 import { Mouse, UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -113,6 +114,8 @@ describe('browser.tinymce.models.dom.table.TwoCellsSelectionTest', () => {
   });
 
   context('TINY-9952: 2 rows selection', () => {
+    const platform = PlatformDetection.detect();
+
     it('TINY-9952: selecting 2 rows via mouse should set the correct range', () => {
       const editor = hook.editor();
       editor.setContent(
@@ -123,7 +126,7 @@ describe('browser.tinymce.models.dom.table.TwoCellsSelectionTest', () => {
         '</tbody>' +
         '</table>'
       );
-      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 0);
       const startCell = UiFinder.findIn(TinyDom.body(editor), 'td:contains(A1)').getOrDie();
       const endCell = UiFinder.findIn(TinyDom.body(editor), 'td:contains(A2)').getOrDie();
 
@@ -133,7 +136,12 @@ describe('browser.tinymce.models.dom.table.TwoCellsSelectionTest', () => {
       Mouse.mouseOver(endCell);
       Mouse.mouseUp(endCell);
 
-      TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0 ], 0, [ 0, 0, 1, 0 ], 1);
+      // this is difference is caused because mouse selection on table is using the native setting for range
+      if (!platform.browser.isSafari()) {
+        TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0 ], 0, [ 0, 0, 1, 0 ], 1);
+      } else {
+        TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 1, 0, 0 ], 'A2'.length);
+      }
     });
   });
 });

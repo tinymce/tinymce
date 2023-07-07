@@ -44,7 +44,7 @@ export const MouseSelection = (bridge: WindowBridge, container: SugarElement<Nod
             annotations.selectRange(container, boxes, cellSel.start, cellSel.finish);
 
             // stop the browser from creating a big text selection, select the cell where the cursor is
-            bridge.setRelativeSelection(Situ.on(start, 0), Situ.on(finish, Awareness.getEnd(finish))); // <--- THIS?
+            bridge.setRelativeSelection(Situ.on(start, 0), Situ.on(finish, Awareness.getEnd(finish)));
           }
         });
       });
