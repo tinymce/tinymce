@@ -18,6 +18,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
         renderIFrame({
           name: 'frame-a',
           label: Optional.some('iframe label'),
+          border: false,
           sandboxed: true,
           streamContent: false,
           transparent: true
@@ -25,6 +26,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
         renderIFrame({
           name: 'frame-b',
           label: Optional.some('iframe label'),
+          border: false,
           sandboxed: true,
           streamContent: false,
           transparent: false
@@ -32,10 +34,19 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
         renderIFrame({
           name: 'frame-c',
           label: Optional.some('iframe label'),
+          border: false,
           sandboxed: true,
           streamContent: true,
           transparent: true
-        }, TestProviders, Optional.none())
+        }, TestProviders, Optional.none()),
+        renderIFrame({
+          name: 'frame-d',
+          label: Optional.some('iframe label'),
+          border: true,
+          sandboxed: true,
+          streamContent: false,
+          transparent: true
+        }, TestProviders, Optional.none()),
       ]
     })
   ));
@@ -45,7 +56,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
     return Composing.getCurrent(frame).getOrDie('Could not find internal frame field');
   };
 
-  const assertInitialIframeStructure = (component: AlloyComponent, transparent: boolean) => Assertions.assertStructure(
+  const assertInitialIframeStructure = (component: AlloyComponent, transparent: boolean, border: boolean) => Assertions.assertStructure(
     'Checking initial structure',
     ApproxStructure.build((s, str, arr) => {
       const labelStructure = s.element('label', {
@@ -53,6 +64,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
         html: str.is('iframe label')
       });
 
+      const baseClassPrefix = 'tox-dialog__iframe--';
       const iframeStructure = s.element('div', {
         classes: [ arr.has('tox-navobj') ],
         children: [
@@ -64,7 +76,8 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
           s.element('iframe', {
             classes: [
               arr.has('tox-dialog__iframe'),
-              transparent ? arr.not('tox-dialog__iframe--opaque') : arr.has('tox-dialog__iframe--opaque')
+              (transparent ? arr.not : arr.has)(`${baseClassPrefix}opaque`),
+              (border ? arr.has : arr.not)(`${baseClassPrefix}bordered`)
             ],
             attrs: {
               // Should be no source.
@@ -88,10 +101,11 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
   );
 
   it('Check basic structure', () => {
-    const [ frame1, frame2, frame3 ] = hook.component().components();
-    assertInitialIframeStructure(frame1, true);
-    assertInitialIframeStructure(frame2, false);
-    assertInitialIframeStructure(frame3, true);
+    const [ frame1, frame2, frame3, frame4 ] = hook.component().components();
+    assertInitialIframeStructure(frame1, true, false);
+    assertInitialIframeStructure(frame2, false, false);
+    assertInitialIframeStructure(frame3, true, false);
+    assertInitialIframeStructure(frame4, true, true);
   });
 
   context('iframe content', () => {
