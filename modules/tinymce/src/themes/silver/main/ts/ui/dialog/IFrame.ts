@@ -54,17 +54,14 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
 };
 
 const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstageProviders, initialData: Optional<string>): SketchSpec => {
-  const isBordered = spec.border;
-  const isSandbox = spec.sandboxed;
-  const isOpaque = !spec.transparent;
   const baseClass = 'tox-dialog__iframe';
-  const getModClassIf = (condition: boolean, mod: string): string [] =>
-    condition ? [ `${baseClass}--${mod}` ] : [];
+  const borderedClass = spec.border ? [ `${baseClass}--bordered` ] : [];
+  const opaqueClass = spec.transparent ? [] : [ `${baseClass}--opaque` ];
 
   const attributes = {
     ...spec.label.map<{ title?: string }>((title) => ({ title })).getOr({}),
     ...initialData.map((html) => ({ srcdoc: html })).getOr({}),
-    ...isSandbox ? { sandbox: 'allow-scripts allow-same-origin' } : { },
+    ...spec.sandboxed ? { sandbox: 'allow-scripts allow-same-origin' } : { },
   };
 
   const sourcing = getDynamicSource(initialData, spec.streamContent);
@@ -80,8 +77,8 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstagePr
         attributes,
         classes: [
           baseClass,
-          ...getModClassIf(isOpaque, 'opaque'),
-          ...getModClassIf(isBordered, 'bordered')
+          ...borderedClass,
+          ...opaqueClass
         ]
       },
       behaviours: Behaviour.derive([
