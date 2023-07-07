@@ -20,6 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `border` property for the `iframe` dialog component which controls the visibility of its border. #TINY-10049
 - New `align` property for the label dialog component that controls text alignment. #TINY-10058
 
+### Changed
+- The icon in `alertbanner` dialog component is not clickable if `url` field is not specified. #TINY-10013
+
 ### Improved
 - When defining a modal or inline dialog, if the `buttons` property is `undefined` or an empty array, the footer will now no longer be rendered. #TINY-9996
 

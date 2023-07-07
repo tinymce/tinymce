@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Made `buttons` an optional property of `DialogSpec` that defaults to an empty array. #TINY-9996
+- Alert icon in alertbanner component is not clickable when `url` is not provided. #TINY-10013
 
 ## 4.3.0 - 2023-03-15
 
