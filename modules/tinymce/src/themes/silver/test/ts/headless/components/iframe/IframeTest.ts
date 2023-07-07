@@ -76,8 +76,8 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
           s.element('iframe', {
             classes: [
               arr.has('tox-dialog__iframe'),
-              transparent ? arr.not(`${baseClassPrefix}opaque`) : arr.has(`${baseClassPrefix}opaque`),
-              border ? arr.has(`${baseClassPrefix}bordered`) : arr.not(`${baseClassPrefix}bordered`)
+              (transparent ? arr.not : arr.has)(`${baseClassPrefix}opaque`),
+              (border ? arr.has : arr.not)(`${baseClassPrefix}bordered`)
             ],
             attrs: {
               // Should be no source.
