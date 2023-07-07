@@ -458,19 +458,19 @@
     }
   }
 
-  // Allow iframes to have consistent BG with Editor iframe
   .tox-dialog__iframe {
+    // Allow iframes to have consistent BG with Editor iframe
     &.tox-dialog__iframe--opaque {
       background: @edit-area-iframe-background-color;
     }
-  }
 
-  .tox-dialog__iframe--bordered {
-    border: @dialog-iframe-bordered-border-width solid @dialog-iframe-bordered-border-color;
-    border-radius: @dialog-iframe-bordered-border-radius;
+    &.tox-dialog__iframe--bordered {
+      border: @dialog-iframe-bordered-border-width solid @dialog-iframe-bordered-border-color;
+      border-radius: @dialog-iframe-bordered-border-radius;
 
-    &:focus-within {
-      &:extend(.tox .tox-textfield:focus);
+      &:focus-within {
+        &:extend(.tox .tox-textfield:focus);
+      }
     }
   }
 
