@@ -65,6 +65,10 @@
 @dialog-tab-max-width: 13em;
 @dialog-tab-column-max-width: 11em;
 
+@dialog-iframe-bordered-border-width: 1px;
+@dialog-iframe-bordered-border-color: @border-color;
+@dialog-iframe-bordered-border-radius: @panel-border-radius;
+
 // These get stacked on top of the global dialog z-index (1100)
 @z-index-dialogs-offset-wrap-background: 1;
 @z-index-dialogs-offset-dialog: 2;
@@ -460,10 +464,19 @@
     }
   }
 
-  // Allow iframes to have consistent BG with Editor iframe
   .tox-dialog__iframe {
+    // Allow iframes to have consistent BG with Editor iframe
     &.tox-dialog__iframe--opaque {
       background: @edit-area-iframe-background-color;
+    }
+
+    &.tox-dialog__iframe--bordered {
+      border: @dialog-iframe-bordered-border-width solid @dialog-iframe-bordered-border-color;
+      border-radius: @dialog-iframe-bordered-border-radius;
+
+      &:focus-within {
+        &:extend(.tox .tox-textfield:focus);
+      }
     }
   }
 

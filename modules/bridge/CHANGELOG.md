@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Added `streamContent` optional property to `IframeSpec` that defaults to `false`. #TINY-10032
+- Added `border` optional property to `IframeSpec` that defaults to `false`. #TINY-10049
 - Added `align` optional property to `LabelSpec` that defaults to `start`. #TINY-10058
 
 ### Changed
