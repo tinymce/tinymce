@@ -136,7 +136,7 @@ describe('browser.tinymce.models.dom.table.TwoCellsSelectionTest', () => {
       Mouse.mouseOver(endCell);
       Mouse.mouseUp(endCell);
 
-      // this is difference is caused because mouse selection on table is using the native setting for range
+      // this difference is caused because mouse selection on tables using the native setting for ranges
       if (!platform.browser.isSafari()) {
         TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0 ], 0, [ 0, 0, 1, 0 ], 1);
       } else {
