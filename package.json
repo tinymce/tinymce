@@ -81,7 +81,7 @@
     "rollup-plugin-string": "^3.0.0",
     "source-map-loader": "^4.0.1",
     "string-replace-loader": "^3.0.3",
-    "stylelint": "^13.2.1",
+    "stylelint": "^15.10.1",
     "stylelint-config-standard": "^20.0.0",
     "stylelint-order": "^5.0.0",
     "terser": "^5.17.4",
