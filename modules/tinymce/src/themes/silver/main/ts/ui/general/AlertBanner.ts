@@ -12,9 +12,11 @@ export interface AlertBannerWrapper extends AlertBannerSpec {
   readonly iconTooltip?: string;
 }
 
-export const renderAlertBanner = (spec: AlertBannerWrapper, providersBackstage: UiFactoryBackstageProviders): SketchSpec =>
+export const renderAlertBanner = (spec: AlertBannerWrapper, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
+  const icon = Icons.get(spec.icon, providersBackstage.icons);
+
   // For using the alert banner inside a dialog
-  Container.sketch({
+  return Container.sketch({
     dom: {
       tag: 'div',
       attributes: {
@@ -26,27 +28,26 @@ export const renderAlertBanner = (spec: AlertBannerWrapper, providersBackstage: 
       {
         dom: {
           tag: 'div',
-          classes: [ 'tox-notification__icon' ]
+          classes: [ 'tox-notification__icon' ],
+          innerHtml: !spec.url ? icon : undefined
         },
-        components: [
+        components: spec.url ? [
           Button.sketch({
             dom: {
               tag: 'button',
               classes: [ 'tox-button', 'tox-button--naked', 'tox-button--icon' ],
-              innerHtml: Icons.get(spec.icon, providersBackstage.icons),
+              innerHtml: icon,
               attributes: {
                 title: providersBackstage.translate(spec.iconTooltip)
               }
             },
             // TODO: aria label this button!
-            action: (comp) => {
-              AlloyTriggers.emitWith(comp, formActionEvent, { name: 'alert-banner', value: spec.url });
-            },
+            action: (comp) => AlloyTriggers.emitWith(comp, formActionEvent, { name: 'alert-banner', value: spec.url }),
             buttonBehaviours: Behaviour.derive([
               Icons.addFocusableBehaviour()
             ])
           })
-        ]
+        ] : undefined
       },
       {
         dom: {
@@ -58,3 +59,4 @@ export const renderAlertBanner = (spec: AlertBannerWrapper, providersBackstage: 
       }
     ]
   });
+};

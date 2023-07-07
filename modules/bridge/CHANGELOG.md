@@ -8,9 +8,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Added `streamContent` optional property to `IframeSpec` that defaults to `false`. #TINY-10032
+- Added `border` optional property to `IframeSpec` that defaults to `false`. #TINY-10049
+- Added `align` optional property to `LabelSpec` that defaults to `start`. #TINY-10058
 
 ### Changed
 - Made `buttons` an optional property of `DialogSpec` that defaults to an empty array. #TINY-9996
+- Alert icon in alertbanner component is not clickable when `url` is not provided. #TINY-10013
 
 ## 4.3.0 - 2023-03-15
 

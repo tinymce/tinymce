@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+- `ModalDialogApis.getFooter` now returns an `Optional<AlloyComponent>` instead of `AlloyComponent`. #TINY-9996
+
 ### Fixed
 - Tab navigation did not forward focus over pseudo tab stops. #TINY-9815
 
