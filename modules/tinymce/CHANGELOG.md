@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new property — `bottom` — for inline dialog configurations. #TINY-9888
 - Added a new property — `persistent` — for inline dialog configurations that controls dialog persistence when not in focus. #TINY-9991
 - New `ai`, `ai-prompt` and `send` icons. #TINY-9942
-- Added a new property — `streamContent` — for the `iframe` dialog component which controls dialog `setData()` behavior. #TINY-10032
+- Added a new property — `streamContent` — for the `iframe` dialog component. This causes `setData()` to update content without reloading the frame, and end scroll positions will be maintained as new content streams in. #TINY-10032
 - AI plugin toolbar items added to the default toolbar and AI plugin menu items added to the default menu bar. #TINY-9939
 - Added a new property — `border` — for the `iframe` dialog component that controls border visibility. #TINY-10049
 - Added a new property — `align` — for the label dialog component that controls text alignment. #TINY-10058
