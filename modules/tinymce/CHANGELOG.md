@@ -8,23 +8,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 6.6.0 - TBA
 
-### Fixed
-- Fixed an issue that prevented setting the inline dialog `size` to 'medium' or 'normal'. #TINY-10015
-
 ### Added
-- Added new `bottom` to inline dialog type. This new inline dialog option allows the inline dialog to be positioned at the bottom of the editor. #TINY-9888
-- Added new `persistent` option to `WindowParams`. This new option allows the inline dialog to be persistent, meaning that it will not be closed when the user clicks outside of the dialog. #TINY-9991
+- Added a new property — `bottom` — for inline dialog configurations. #TINY-9888
+- Added a new property — `persistent` — for inline dialog configurations that controls dialog persistence when not in focus. #TINY-9991
 - New `ai`, `ai-prompt` and `send` icons. #TINY-9942
-- New `streamContent` property for the `iframe` dialog component which controls dialog `setData()` behavior. With the property set to `true`, frame content will update with `document.write()` to avoid reloading the frame, and end scroll positions will be maintained as new content streams in. #TINY-10032
-- Add `ai` buttons to the default toolbar and menubar. #TINY-9939
-- New `border` property for the `iframe` dialog component which controls the visibility of its border. #TINY-10049
-- New `align` property for the label dialog component that controls text alignment. #TINY-10058
-
-### Changed
-- The icon in `alertbanner` dialog component is not clickable if `url` field is not specified. #TINY-10013
+- Added a new property — `streamContent` — for the `iframe` dialog component which controls dialog `setData()` behavior. #TINY-10032
+- AI plugin toolbar items added to the default toolbar and AI plugin menu items added to the default menu bar. #TINY-9939
+- Added a new property — `border` — for the `iframe` dialog component that controls border visibility. #TINY-10049
+- Added a new property — `align` — for the label dialog component that controls text alignment. #TINY-10058
 
 ### Improved
-- When defining a modal or inline dialog, if the `buttons` property is `undefined` or an empty array, the footer will now no longer be rendered. #TINY-9996
+- Displaying the footer section of a modal or inline dialog is now optional. #TINY-9996
+
+### Changed
+- The icon in an `alertbanner` dialog component is not clickable if the _URL_ field is not specified. #TINY-10013
+
+### Fixed
+- Fixed an issue that prevented setting the inline dialog `size` to _medium_ or _normal_. #TINY-10015
 
 ## 6.5.1 - 2023-06-19
 
