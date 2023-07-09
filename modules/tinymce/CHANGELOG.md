@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The icon in an `alertbanner` dialog component is not clickable if the _URL_ field is not specified. #TINY-10013
 
 ### Fixed
-- Fixed an issue that prevented setting the inline dialog `size` to _medium_ or _normal_. #TINY-10015
+- Fixed an issue that caused the inline dialog `size` setting to have no effect. #TINY-10015
 
 ## 6.5.1 - 2023-06-19
 
