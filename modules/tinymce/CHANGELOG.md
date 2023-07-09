@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Displaying the footer section of a modal or inline dialog is now optional. #TINY-9996
 
 ### Changed
-- The icon in an `alertbanner` dialog component is not clickable if the _URL_ field is not specified. #TINY-10013
+- The icon in an `alertbanner` dialog component is no longer clickable if the _URL_ field is not specified. #TINY-10013
 
 ### Fixed
 - Fixed an issue that caused the inline dialog `size` setting to have no effect. #TINY-10015
