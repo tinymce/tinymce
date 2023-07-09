@@ -47,8 +47,11 @@ describe('browser.tinymce.themes.silver.window.SilverDialogBlockTest', () => {
     onAction: store.adder('clicked')
   };
 
-  const pClick = async (editor: Editor) => {
-    const button = await TinyUiActions.pWaitForUi(editor, 'button:contains("Clickable?")') as SugarElement<HTMLButtonElement>;
+  const clickableButtonSelector = 'button:contains("Clickable?")';
+  const closeButtonSelector = '.tox-button[title="Close"]';
+
+  const pClick = async (editor: Editor, selector: string) => {
+    const button = await TinyUiActions.pWaitForUi(editor, selector) as SugarElement<HTMLButtonElement>;
     const coords = SugarLocation.absolute(button);
     const centerX = coords.left + 0.5 * Width.get(button);
     const centerY = coords.top + 0.5 * Height.get(button);
@@ -93,7 +96,7 @@ describe('browser.tinymce.themes.silver.window.SilverDialogBlockTest', () => {
       it('TINY-6487: Ensure the button clicks when unblocked', async () => {
         const editor = hook.editor();
         DialogUtils.open(editor, dialogSpec, test.params);
-        await pClick(editor);
+        await pClick(editor, clickableButtonSelector);
         store.assertEq(`Ensure that it clicks (${test.label})`, [ 'clicked' ]);
         DialogUtils.close(editor);
       });
@@ -102,7 +105,7 @@ describe('browser.tinymce.themes.silver.window.SilverDialogBlockTest', () => {
         const editor = hook.editor();
         const api = DialogUtils.open(editor, dialogSpec, test.params);
         api.block('Block message');
-        await pClick(editor);
+        await pClick(editor, clickableButtonSelector);
         store.cAssertEq(`Ensure that it has not clicked (${test.label})`, []);
         DialogUtils.close(editor);
       });
@@ -112,7 +115,7 @@ describe('browser.tinymce.themes.silver.window.SilverDialogBlockTest', () => {
         const api = DialogUtils.open(editor, dialogSpec, test.params);
         api.block('Block message');
         api.unblock();
-        await pClick(editor);
+        await pClick(editor, clickableButtonSelector);
         store.cAssertEq(`Ensure that it has not clicked (${test.label})`, [ 'clicked' ]);
         DialogUtils.close(editor);
       });
@@ -139,6 +142,14 @@ describe('browser.tinymce.themes.silver.window.SilverDialogBlockTest', () => {
         assertBusyStructure('Bild hochladen');
         DialogUtils.close(editor);
         I18n.setCode('en');
+      });
+
+      it('TINY-6487: Ensure close button is clickable ', async () => {
+        const editor = hook.editor();
+        const api = DialogUtils.open(editor, dialogSpec, test.params);
+        api.block('Block message');
+        await pClick(editor, closeButtonSelector);
+        store.cAssertEq(`Ensure that it has clicked (${test.label})`, [ 'clicked' ]);
       });
     });
   });

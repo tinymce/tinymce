@@ -4,6 +4,7 @@ import {
 } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
 import { Arr, Cell, Obj, Optional } from '@ephox/katamari';
+import { Height, SelectorFind } from '@ephox/sugar';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
@@ -37,31 +38,36 @@ const getHeader = (title: string, dialogId: string, backstage: UiFactoryBackstag
   draggable: backstage.dialog.isDraggableModal()
 }, dialogId, backstage.shared.providers);
 
-const getBusySpec = (message: string, bs: Behaviour.AlloyBehaviourRecord, providers: UiFactoryBackstageProviders): AlloySpec => ({
-  dom: {
-    tag: 'div',
-    classes: [ 'tox-dialog__busy-spinner' ],
-    attributes: {
-      'aria-label': providers.translate(message)
+const getBusySpec = (message: string, bs: Behaviour.AlloyBehaviourRecord, providers: UiFactoryBackstageProviders, headerHeight: Optional<number>): AlloySpec => {
+  return {
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-dialog__busy-spinner' ],
+      attributes: {
+        'aria-label': providers.translate(message)
+      },
+      styles: {
+        left: '0px',
+        right: '0px',
+        bottom: '0px',
+        top: `${headerHeight.getOr('0')}px`,
+        position: 'absolute'
+      }
     },
-    styles: {
-      left: '0px',
-      right: '0px',
-      bottom: '0px',
-      top: '0px',
-      position: 'absolute'
-    }
-  },
-  behaviours: bs,
-  components: [{
-    dom: DomFactory.fromHtml('<div class="tox-spinner"><div></div><div></div><div></div></div>')
-  }]
-});
+    behaviours: bs,
+    components: [{
+      dom: DomFactory.fromHtml('<div class="tox-spinner"><div></div><div></div><div></div></div>')
+    }]
+  };
+};
 
 const getEventExtras = (lazyDialog: () => AlloyComponent, providers: UiFactoryBackstageProviders, extra: SharedWindowExtra): ExtraListeners => ({
   onClose: () => extra.closeWindow(),
   onBlock: (blockEvent: FormBlockEvent) => {
-    ModalDialog.setBusy(lazyDialog(), (_comp, bs) => getBusySpec(blockEvent.message, bs, providers));
+    const headerHeight = SelectorFind.descendant<HTMLElement>(lazyDialog().element, '.tox-dialog__header').map((header) => Height.get(header) + 2);
+    ModalDialog.setBusy(lazyDialog(), (_comp, bs) => {
+      return getBusySpec(blockEvent.message, bs, providers, headerHeight);
+    });
   },
   onUnblock: () => {
     ModalDialog.setIdle(lazyDialog());
