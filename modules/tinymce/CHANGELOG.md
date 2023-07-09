@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `ai`, `ai-prompt` and `send` icons. #TINY-9942
 - Added a new property — `streamContent` — for the `iframe` dialog component. This causes `setData()` to update content without reloading the frame, and end scroll positions will be maintained as new content streams in. #TINY-10032
 - AI plugin toolbar items added to the default toolbar and AI plugin menu items added to the default menu bar. #TINY-9939
-- Added a new property — `border` — for the `iframe` dialog component that controls border visibility. #TINY-10049
+- Added a new property — `border` — for the `iframe` dialog component that allows a border to be added. #TINY-10049
 - Added a new property — `align` — for the label dialog component that controls text alignment. #TINY-10058
 
 ### Improved
