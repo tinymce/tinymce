@@ -30,10 +30,6 @@ const register = (editor: Editor, pasteFormat: Cell<string>): void => {
     if (value.text) {
       Clipboard.pasteText(editor, value.text, false);
     }
-
-    if (value.files) {
-      Clipboard.pasteImageFiles(editor, value.files, editor.selection.getRng());
-    }
   });
 };
 
