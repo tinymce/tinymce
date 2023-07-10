@@ -1,6 +1,6 @@
 import { AlloyComponent, Behaviour, Focusing, FormField, SketchSpec, Tabstopping } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Cell, Optional } from '@ephox/katamari';
+import { Cell, Fun, Optional } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -34,14 +34,18 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
             setSrcdocValue,
             (doc) => {
               const isElementScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) => scrollTop + clientHeight >= scrollHeight;
-              const isScrollAtBottom = isElementScrollAtBottom(doc.documentElement);
+              // TINY-10032: If documentElement is null, we assume document is empty and so scroll is at bottom.
+              const isScrollAtBottom = Optional.from(doc.documentElement).fold(Fun.always, isElementScrollAtBottom);
 
               doc.open();
               doc.write(html);
               doc.close();
 
-              if (isScrollAtBottom) {
-                Optional.from(iframe.contentWindow).each((win) => win.scrollTo(0, doc.body.scrollHeight));
+              const win = iframe.contentWindow;
+              const body = doc.body;
+              // TINY-10032: Do not attempt to scroll if body has not been loaded yet
+              if (isScrollAtBottom && win && body) {
+                win.scrollTo(0, body.scrollHeight);
               }
             });
         } else {
