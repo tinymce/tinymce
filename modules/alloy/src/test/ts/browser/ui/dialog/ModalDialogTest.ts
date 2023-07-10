@@ -318,6 +318,8 @@ describe('browser.alloy.ui.dialog.ModalDialogTest', () => {
 
     Mouse.clickOn(doc, '.test-dialog');
     await FocusTools.pTryOnSelector('Focus should move to first focusable element when clicking the blocker', doc, '.test-busy-class');
+
+    ModalDialog.setIdle(dialog);
   });
 
   // it('TINY-10056: Close button still clickable when dialog is busy', () => {
