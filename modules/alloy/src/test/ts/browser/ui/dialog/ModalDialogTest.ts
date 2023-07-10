@@ -322,24 +322,6 @@ describe('browser.alloy.ui.dialog.ModalDialogTest', () => {
     ModalDialog.setIdle(dialog);
   });
 
-  // it('TINY-10056: Close button still clickable when dialog is busy', () => {
-  //   debugger;
-  //   const dialog = hook.component();
-  //   const doc = SugarDocument.getDocument();
-
-  //   ModalDialog.setBusy(dialog, (_d, bs) => ({
-  //     dom: {
-  //       tag: 'div',
-  //       classes: [ 'test-busy-class' ],
-  //       innerHtml: 'Loading',
-  //     },
-  //     behaviours: bs
-  //   }));
-
-  //   Mouse.clickOn(doc, dialogSelectors.close);
-  //   UiFinder.notExists(SugarBody.body(), dialogSelectors.dialog);
-  // });
-
   it('TINY-9520: Dialog busy test', async () => {
     const dialog = hook.component();
     const doc = SugarDocument.getDocument();

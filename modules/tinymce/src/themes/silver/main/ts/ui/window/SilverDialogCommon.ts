@@ -64,7 +64,7 @@ const getBusySpec = (message: string, bs: Behaviour.AlloyBehaviourRecord, provid
 const getEventExtras = (lazyDialog: () => AlloyComponent, providers: UiFactoryBackstageProviders, extra: SharedWindowExtra): ExtraListeners => ({
   onClose: () => extra.closeWindow(),
   onBlock: (blockEvent: FormBlockEvent) => {
-    const headerHeight = SelectorFind.descendant<HTMLElement>(lazyDialog().element, '.tox-dialog__header').map((header) => Height.get(header) + 2);
+    const headerHeight = SelectorFind.descendant<HTMLElement>(lazyDialog().element, '.tox-dialog__header').map((header) => Height.get(header));
     ModalDialog.setBusy(lazyDialog(), (_comp, bs) => {
       return getBusySpec(blockEvent.message, bs, providers, headerHeight);
     });

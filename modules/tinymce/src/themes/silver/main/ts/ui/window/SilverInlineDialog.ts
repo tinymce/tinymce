@@ -73,7 +73,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
     {
       onBlock: (event) => {
         Blocking.block(dialog, (_comp, bs) => {
-          const headerHeight = memHeader.getOpt(dialog).map((dialog) => Height.get(dialog.element) + 2);
+          const headerHeight = memHeader.getOpt(dialog).map((dialog) => Height.get(dialog.element));
           return SilverDialogCommon.getBusySpec(event.message, bs, backstage.shared.providers, headerHeight);
         });
       },

@@ -144,12 +144,25 @@ describe('browser.tinymce.themes.silver.window.SilverDialogBlockTest', () => {
         I18n.setCode('en');
       });
 
-      it('TINY-6487: Ensure close button is clickable ', async () => {
+      it('TINY-10056: Ensure close button is clickable when dialog is blocked', async () => {
         const editor = hook.editor();
         const api = DialogUtils.open(editor, dialogSpec, test.params);
         api.block('Block message');
         await pClick(editor, closeButtonSelector);
         store.cAssertEq(`Ensure that it has clicked (${test.label})`, [ 'clicked' ]);
+      });
+
+      it('TINY-10056: Asserting blocker offsetTop, should left dialog header unblocked', async () => {
+        const editor = hook.editor();
+        const api = DialogUtils.open(editor, dialogSpec, test.params);
+
+        const dialog = await TinyUiActions.pWaitForDialog(editor);
+        api.block('Block message');
+
+        const headerHeight = Height.get(UiFinder.findIn<HTMLElement>(dialog, '.tox-dialog__header').getOrDie());
+        const blocker = UiFinder.findIn<HTMLElement>(dialog, '.tox-dialog__busy-spinner').getOrDie();
+        assert.equal(blocker.dom.offsetTop, headerHeight, 'Ensure that the blocker is the same height as the header');
+        DialogUtils.close(editor);
       });
     });
   });
