@@ -1,8 +1,8 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Button, Container, DomFactory, Focusing, Keying, ModalDialog,
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Blocking, Button, Container, DomFactory, Focusing, Keying, ModalDialog,
   NativeEvents, SketchSpec, SystemEvents, Tabstopping
 } from '@ephox/alloy';
-import { Optional, Result } from '@ephox/katamari';
+import { Fun, Optional, Result } from '@ephox/katamari';
 import { Class, SugarBody } from '@ephox/sugar';
 
 import Env from 'tinymce/core/api/Env';
@@ -174,7 +174,7 @@ const renderDialog = (spec: DialogSpec): SketchSpec => {
           // Note: `runOnSource` here will only listen to the event at the outer component level.
           // Using just `run` instead will cause an infinite loop as `focusIn` would fire a `focusin` which would then get responded to and so forth.
           AlloyEvents.runOnSource(NativeEvents.focusin(), (comp, _se) => {
-            Keying.focusIn(comp);
+            Blocking.isBlocked(comp) ? Fun.noop() : Keying.focusIn(comp);
           })
         ])),
         AddEventsBehaviour.config('scroll-lock', [

@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
-import { GuiFactory, Memento, TestHelpers } from '@ephox/alloy';
+import { AlloyComponent, GuiFactory, Memento, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 
@@ -25,28 +25,46 @@ describe('headless.tinymce.themes.silver.components.label.LabelTest', () => {
 
   const memBasicLabel = Memento.record(renderLabel({
     label: 'Group of Options',
-    items
+    items,
+    align: 'start'
   }, sharedBackstage));
 
   const memHtmlLabel = Memento.record(renderLabel({
     label: 'Some <html> like content',
-    items
+    items,
+    align: 'start'
+  }, sharedBackstage));
+
+  const memCenterLabel = Memento.record(renderLabel({
+    label: 'Group of Options',
+    items,
+    align: 'center'
+  }, sharedBackstage));
+
+  const memEndLabel = Memento.record(renderLabel({
+    label: 'Group of Options',
+    items,
+    align: 'end'
   }, sharedBackstage));
 
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build({
     dom: { tag: 'div' },
-    components: [ memBasicLabel.asSpec(), memHtmlLabel.asSpec() ]
+    components: [ memBasicLabel.asSpec(), memHtmlLabel.asSpec(), memCenterLabel.asSpec(), memEndLabel.asSpec() ]
   }));
 
-  it('Check basic structure', () => {
-    const label = memBasicLabel.get(hook.component());
-    Assertions.assertStructure(
-      'Checking initial structure',
-      ApproxStructure.build((s, str, arr) => s.element('div', {
+  const assertLabelStructure = (component: AlloyComponent, alignment: 'start' | 'center' | 'end') => Assertions.assertStructure(
+    'Checking initial structure',
+    ApproxStructure.build((s, str, arr) => {
+      const baseClass = 'tox-label';
+      return s.element('div', {
         classes: [ arr.has('tox-form__group') ],
         children: [
           s.element('label', {
-            classes: [ arr.has('tox-label') ],
+            classes: [
+              arr.has(baseClass),
+              (alignment === 'center' ? arr.has : arr.not)(`${baseClass}--center`),
+              (alignment === 'end' ? arr.has : arr.not)(`${baseClass}--end`)
+            ],
             children: [
               s.text(str.is('Group of Options'))
             ]
@@ -55,9 +73,14 @@ describe('headless.tinymce.themes.silver.components.label.LabelTest', () => {
             classes: [ arr.has('tox-checkbox') ]
           })
         ]
-      })),
-      label.element
-    );
+      });
+    }),
+    component.element
+  );
+
+  it('Check basic structure', () => {
+    const label = memBasicLabel.get(hook.component());
+    assertLabelStructure(label, 'start');
   });
 
   it('TINY-7524: HTML like content should be rendered as plain text', () => {
@@ -80,5 +103,15 @@ describe('headless.tinymce.themes.silver.components.label.LabelTest', () => {
       })),
       htmlLabel.element
     );
+  });
+
+  it('TINY-10058: Check label with center alignment', () => {
+    const label = memCenterLabel.get(hook.component());
+    assertLabelStructure(label, 'center');
+  });
+
+  it('TINY-10058: Check label with end alignment', () => {
+    const label = memEndLabel.get(hook.component());
+    assertLabelStructure(label, 'end');
   });
 });
