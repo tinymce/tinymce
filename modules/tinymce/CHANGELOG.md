@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 6.6.0 - TBA
 
 ### Added
-- Added a new property — `bottom` — for inline dialog configurations that anchors the dialog to the bottom of the editor. #TINY-9888
+- Added a new property value — `bottom` — for inline dialog configurations that anchors the dialog to the bottom of the editor. #TINY-9888
 - Added a new property — `persistent` — for inline dialog configurations that will stop the dialog closing when clicking away from it. #TINY-9991
 - New `ai`, `ai-prompt` and `send` icons. #TINY-9942
 - Added a new property — `streamContent` — for the `iframe` dialog component. This causes `setData()` to update content without reloading the frame, and end scroll positions will be maintained as new content streams in. #TINY-10032
