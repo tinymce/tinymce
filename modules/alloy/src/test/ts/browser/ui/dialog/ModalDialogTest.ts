@@ -314,10 +314,10 @@ describe('browser.alloy.ui.dialog.ModalDialogTest', () => {
     }));
 
     Mouse.clickOn(doc, '.test-dialog-blocker');
-    await FocusTools.pTryOnSelector('Focus should move to first focusable element when clicking the blocker', doc, '.test-busy-class');
+    await FocusTools.pTryOnSelector('Focus should move to blocker element when clicking the blocker', doc, '.test-busy-class');
 
     Mouse.clickOn(doc, '.test-dialog');
-    await FocusTools.pTryOnSelector('Focus should move to first focusable element when clicking the blocker', doc, '.test-busy-class');
+    await FocusTools.pTryOnSelector('Focus should move to blocker element when clicking the blocker', doc, '.test-busy-class');
 
     ModalDialog.setIdle(dialog);
   });
