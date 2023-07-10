@@ -17,6 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `ai`, `ai-prompt` and `send` icons. #TINY-9942
 - New `streamContent` property for the `iframe` dialog component which controls dialog `setData()` behavior. With the property set to `true`, frame content will update with `document.write()` to avoid reloading the frame, and end scroll positions will be maintained as new content streams in. #TINY-10032
 - Add `ai` buttons to the default toolbar and menubar. #TINY-9939
+- New `border` property for the `iframe` dialog component which controls the visibility of its border. #TINY-10049
+- New `align` property for the label dialog component that controls text alignment. #TINY-10058
+
+### Changed
+- The icon in `alertbanner` dialog component is not clickable if `url` field is not specified. #TINY-10013
 
 ### Improved
 - When defining a modal or inline dialog, if the `buttons` property is `undefined` or an empty array, the footer will now no longer be rendered. #TINY-9996
