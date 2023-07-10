@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fixed an issue that prevented setting the inline dialog `size` to 'medium' or 'normal'. #TINY-10015
-- Fixed an issue that prevented close button to be clicked when dialog is blocked. #TINY-10056
+- Fixed an issue that prevented the close button from being clicked when the dialog was blocked. #TINY-10056
 
 ### Added
 - Added new `bottom` to inline dialog type. This new inline dialog option allows the inline dialog to be positioned at the bottom of the editor. #TINY-9888
