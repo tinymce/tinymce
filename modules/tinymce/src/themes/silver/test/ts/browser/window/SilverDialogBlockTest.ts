@@ -150,6 +150,7 @@ describe('browser.tinymce.themes.silver.window.SilverDialogBlockTest', () => {
         api.block('Block message');
         await pClick(editor, closeButtonSelector);
         store.cAssertEq(`Ensure that it has clicked (${test.label})`, [ 'clicked' ]);
+        UiFinder.notExists(SugarBody.body(), '[role="dialog"]');
       });
 
       it('TINY-10056: Asserting blocker offsetTop, should left dialog header unblocked', async () => {
