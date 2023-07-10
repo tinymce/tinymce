@@ -345,7 +345,7 @@ const toggleSingleList = (editor: Editor, parentList: HTMLElement | null, listNa
 
 const toggleList = (editor: Editor, listName: 'UL' | 'OL' | 'DL', _detail: ListDetail | null): void => {
   const parentList = Selection.getParentList(editor);
-  if (isWithinNonEditableList(editor, parentList) || !editor.hasEditableRoot()) {
+  if (isWithinNonEditableList(editor, parentList)) {
     return;
   }
 
