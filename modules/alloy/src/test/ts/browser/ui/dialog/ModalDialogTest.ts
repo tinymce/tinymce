@@ -300,6 +300,28 @@ describe('browser.alloy.ui.dialog.ModalDialogTest', () => {
     await FocusTools.pTryOnSelector('Focus should move to first focusable element when clicking the blocker', doc, dialogSelectors.body);
   });
 
+  it('TINY-10056: Clicking on blocker shouldn\'t focus first focusable when dialog is blocked', async () => {
+    const dialog = hook.component();
+    const doc = SugarDocument.getDocument();
+
+    ModalDialog.setBusy(dialog, (_d, bs) => ({
+      dom: {
+        tag: 'div',
+        classes: [ 'test-busy-class' ],
+        innerHtml: 'Loading',
+      },
+      behaviours: bs
+    }));
+
+    Mouse.clickOn(doc, '.test-dialog-blocker');
+    await FocusTools.pTryOnSelector('Focus should move to blocker element when clicking the blocker', doc, '.test-busy-class');
+
+    Mouse.clickOn(doc, '.test-dialog');
+    await FocusTools.pTryOnSelector('Focus should move to blocker element when clicking the blocker', doc, '.test-busy-class');
+
+    ModalDialog.setIdle(dialog);
+  });
+
   it('TINY-9520: Dialog busy test', async () => {
     const dialog = hook.component();
     const doc = SugarDocument.getDocument();

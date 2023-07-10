@@ -5,7 +5,7 @@ import {
 } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
 import { Fun, Id, Optional, Optionals } from '@ephox/katamari';
-import { Attribute, Classes, SugarElement, SugarNode } from '@ephox/sugar';
+import { Attribute, Classes, Height, SugarElement, SugarNode } from '@ephox/sugar';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
@@ -72,7 +72,10 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
     () => instanceApi,
     {
       onBlock: (event) => {
-        Blocking.block(dialog, (_comp, bs) => SilverDialogCommon.getBusySpec(event.message, bs, backstage.shared.providers));
+        Blocking.block(dialog, (_comp, bs) => {
+          const headerHeight = memHeader.getOpt(dialog).map((dialog) => Height.get(dialog.element));
+          return SilverDialogCommon.getBusySpec(event.message, bs, backstage.shared.providers, headerHeight);
+        });
       },
       onUnblock: () => {
         Blocking.unblock(dialog);
