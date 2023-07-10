@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ### Added
-- Added new `isBlocked` API to the `Blocking`.
+- Added new `isBlocked` API to the `Blocking` behaviour.
 
 ### Changed
 - `ModalDialogApis.getFooter` now returns an `Optional<AlloyComponent>` instead of `AlloyComponent`. #TINY-9996
