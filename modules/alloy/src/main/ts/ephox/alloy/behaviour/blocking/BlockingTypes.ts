@@ -39,4 +39,5 @@ export interface BlockingState extends BehaviourState {
 export interface BlockingBehaviour extends Behaviour.AlloyBehaviour<BlockingConfigSpec, BlockingConfig, BlockingState> {
   readonly block: WrappedApiFunc<BlockFn>;
   readonly unblock: WrappedApiFunc<UnblockFn>;
+  readonly isBlocked: (component: AlloyComponent) => boolean;
 }
