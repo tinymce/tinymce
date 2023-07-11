@@ -1,6 +1,6 @@
 import { AlloyComponent, Behaviour, Focusing, FormField, SketchSpec, Tabstopping } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Cell, Fun, Optional, Type } from '@ephox/katamari';
+import { Cell, Optional, Type } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
