@@ -8,10 +8,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 6.6.0 - TBA
 
-### Fixed
-- Fixed an issue that prevented setting the inline dialog `size` to 'medium' or 'normal'. #TINY-10015
-- Fixed an issue that prevented the close button from being clicked when the dialog was blocked. #TINY-10056
-
 ### Added
 - Added new `bottom` to inline dialog type. This new inline dialog option allows the inline dialog to be positioned at the bottom of the editor. #TINY-9888
 - Added new `persistent` option to `WindowParams`. This new option allows the inline dialog to be persistent, meaning that it will not be closed when the user clicks outside of the dialog. #TINY-9991
@@ -27,6 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - The icon in `alertbanner` dialog component is not clickable if `url` field is not specified. #TINY-10013
+
+### Fixed
+- Fixed an issue that prevented setting the inline dialog `size` to 'medium' or 'normal'. #TINY-10015
+- Fixed an issue that prevented the close button from being clicked when the dialog was blocked. #TINY-10056
 
 ## 6.5.1 - 2023-06-19
 
