@@ -1,6 +1,6 @@
 import { AlloyComponent, Behaviour, Focusing, FormField, SketchSpec, Tabstopping } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Cell, Fun, Optional } from '@ephox/katamari';
+import { Cell, Fun, Optional, Type } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -44,7 +44,7 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
               const win = iframe.contentWindow;
               const body = doc.body;
               // TINY-10032: Do not attempt to scroll if body has not been loaded yet
-              if (isScrollAtBottom && win && body) {
+              if (isScrollAtBottom && Type.isNonNullable(win) && Type.isNonNullable(body)) {
                 win.scrollTo(0, body.scrollHeight);
               }
             });
