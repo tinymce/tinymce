@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - New `pad_empty_with_br` option that can be set to `true` to pad empty block elements with `<br>` tag instead of nbsp character. #TINY-9861
 
+### Improved
+- Updated toolbar "More" button tooltip text from "More..." to "Reveal or hide additional toolbar items". #TINY-9629
+
 ### Changed
 - Change UndoLevelType from enum to union type so that it can be easier to use. #TINY-9764
 - The pattern replacement removes spaces if they were contained in a tag that only contains a space and the text to replace. #TINY-9744
@@ -28,9 +31,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 6.6.0 - TBA
 
-### Fixed
-- Fixed an issue that prevented setting the inline dialog `size` to 'medium' or 'normal'. #TINY-10015
-
 ### Added
 - Added new `bottom` to inline dialog type. This new inline dialog option allows the inline dialog to be positioned at the bottom of the editor. #TINY-9888
 - Added new `persistent` option to `WindowParams`. This new option allows the inline dialog to be persistent, meaning that it will not be closed when the user clicks outside of the dialog. #TINY-9991
@@ -40,14 +40,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `border` property for the `iframe` dialog component which controls the visibility of its border. #TINY-10049
 - New `align` property for the label dialog component that controls text alignment. #TINY-10058
 
+### Improved
+- When defining a modal or inline dialog, if the `buttons` property is `undefined` or an empty array, the footer will now no longer be rendered. #TINY-9996
+- The `iframe` dialog component now has a minimum height of 200px. #TINY-10059
+
 ### Changed
 - The icon in `alertbanner` dialog component is not clickable if `url` field is not specified. #TINY-10013
 
-### Improved
-- When defining a modal or inline dialog, if the `buttons` property is `undefined` or an empty array, the footer will now no longer be rendered. #TINY-9996
-
-### Improved
-- Updated toolbar "More" button tooltip text from "More..." to "Reveal or hide additional toolbar items". #TINY-9629
+### Fixed
+- Fixed an issue that prevented setting the inline dialog `size` to 'medium' or 'normal'. #TINY-10015
+- Fixed an issue that prevented the close button from being clicked when the dialog was blocked. #TINY-10056
 
 ## 6.5.1 - 2023-06-19
 
