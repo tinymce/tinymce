@@ -35,7 +35,7 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
             (doc) => {
               const isElementScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) => scrollTop + clientHeight >= scrollHeight;
               // TINY-10032: If documentElement is null, we assume document is empty and so scroll is at bottom.
-              const isScrollAtBottom = Optional.from(doc.documentElement).fold(Fun.always, isElementScrollAtBottom);
+              const isScrollAtBottom = Optional.from(doc.documentElement).forall(isElementScrollAtBottom);
 
               doc.open();
               doc.write(html);
