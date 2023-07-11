@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-## 6.6.0 - TBA
+## 6.6.0 - 2023-07-12
 
 ### Added
 - Added a new property value — `bottom` — for inline dialog configurations that anchors the dialog to the bottom of the editor. #TINY-9888
@@ -20,11 +20,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Improved
 - Displaying the footer section of a modal or inline dialog is now optional. #TINY-9996
 
+### Improved
+- When defining a modal or inline dialog, if the `buttons` property is `undefined` or an empty array, the footer will now no longer be rendered. #TINY-9996
+- The `iframe` dialog component now has a minimum height of 200px. #TINY-10059
+
 ### Changed
 - The icon in an `alertbanner` dialog component is no longer clickable if the _URL_ field is not specified. #TINY-10013
 
 ### Fixed
 - Fixed an issue that caused the inline dialog `size` setting to have no effect. #TINY-10015
+- Fixed an issue that prevented the close button from being clicked when the dialog was blocked. #TINY-10056
 
 ## 6.5.1 - 2023-06-19
 

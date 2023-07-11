@@ -56,6 +56,7 @@ const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'advcode', name: 'Advanced Code Editor', type: PluginType.Premium },
   { key: 'advtable', name: 'Advanced Tables', type: PluginType.Premium },
   { key: 'advtemplate', name: 'Advanced Templates', type: PluginType.Premium, slug: 'advanced-templates' },
+  { key: 'ai', name: 'AI Assistant', type: PluginType.Premium },
   { key: 'casechange', name: 'Case Change', type: PluginType.Premium },
   { key: 'checklist', name: 'Checklist', type: PluginType.Premium },
   { key: 'editimage', name: 'Enhanced Image Editing', type: PluginType.Premium },
