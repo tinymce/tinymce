@@ -46,7 +46,7 @@ const register = (editor: Editor): void => {
   });
 
   editor.ui.registry.addContextMenu('image', {
-    update: (element): string[] => isFigure(element) || (isImage(element) && !Utils.isPlaceholderImage(element)) ? [ 'image' ] : []
+    update: (element): string[] => editor.selection.isEditable() && (isFigure(element) || (isImage(element) && !Utils.isPlaceholderImage(element))) ? [ 'image' ] : []
   });
 
 };
