@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 13.0.0 - 2023-07-12
+
 ### Added
 - Added new `isBlocked` API to the `Blocking` behaviour.
 
