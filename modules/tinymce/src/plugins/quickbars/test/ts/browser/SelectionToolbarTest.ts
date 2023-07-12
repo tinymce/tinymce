@@ -15,7 +15,7 @@ enum Alignment {
 
 describe('browser.tinymce.plugins.quickbars.SelectionToolbarTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
-    plugins: 'quickbars link',
+    plugins: 'quickbars link pagebreak',
     inline: true,
     toolbar: false,
     menubar: false,
@@ -90,5 +90,15 @@ describe('browser.tinymce.plugins.quickbars.SelectionToolbarTest', () => {
     await pSetImageAndAssertToolbarState(editor, true, Alignment.Left);
     await pSetImageAndAssertToolbarState(editor, true, Alignment.Center);
     await pSetImageAndAssertToolbarState(editor, true, Alignment.Right);
+  });
+
+  it('TINY-10054: Pagebreak should not toggle toolbar', async () => {
+    const editor = hook.editor();
+    editor.setContent('<!-- pagebreak -->');
+    TinySelections.select(editor, 'img', []);
+    await Waiter.pWait(50); // Give the toolbar a chance to appear. If not present this test will pass even when it shouldn't.
+    await Waiter.pTryUntil('Wait for toolbar button state', () => {
+      UiFinder.notExists(SugarBody.body(), `.tox-toolbar button[aria-label="Align left"]`);
+    });
   });
 });
