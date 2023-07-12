@@ -23,6 +23,7 @@ export interface ToolbarSpec extends CompositeSketchSpec {
 
 export interface ToolbarApis {
   setGroups: (toolbar: AlloyComponent, groups: AlloySpec []) => void;
+  refresh?: () => void;
 }
 
 export interface ToolbarSketcher extends CompositeSketch<ToolbarSpec>, ToolbarApis { }
