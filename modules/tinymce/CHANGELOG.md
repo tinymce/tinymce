@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The pattern replacement removes spaces if they were contained in a tag that only contains a space and the text to replace. #TINY-9744
 
 ### Fixed
+- Right-clicking on an image that was in a non-editable area would open the image context menu. #TINY-10016
 - When an editable area was nested inside a non-editable area, creating lists was not possible. #TINY-10000
 - Returning an empty string in custom context menu update function would result in a small white line appearing on right click and the native browser context menu would not show up. #TINY-9842
 - Creating a list from multiple div elements would only create a partial list. #TINY-9872
