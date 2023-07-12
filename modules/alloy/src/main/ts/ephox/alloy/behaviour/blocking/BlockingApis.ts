@@ -5,8 +5,9 @@ import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
 import { Keying } from '../../api/behaviour/Keying';
 import { Replacing } from '../../api/behaviour/Replacing';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as GuiFactory from '../../api/component/GuiFactory';
-import { BlockFn, UnblockFn } from './BlockingTypes';
+import { BlockFn, BlockingConfig, BlockingState, UnblockFn } from './BlockingTypes';
 
 // Mark this component as busy, or blocked.
 export const block: BlockFn = (
@@ -54,3 +55,6 @@ export const unblock: UnblockFn = (component, config, state) => {
   }
   state.clear();
 };
+
+export const isBlocked = (component: AlloyComponent, blockingConfig: BlockingConfig, blockingState: BlockingState): boolean =>
+  blockingState.isBlocked();

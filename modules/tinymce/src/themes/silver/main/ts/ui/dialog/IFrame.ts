@@ -1,7 +1,7 @@
 import { AlloyComponent, Behaviour, Focusing, FormField, SketchSpec, Tabstopping } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Cell, Optional } from '@ephox/katamari';
-import { Attribute } from '@ephox/sugar';
+import { Cell, Optional, Type } from '@ephox/katamari';
+import { Attribute, SugarElement } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
@@ -15,7 +15,7 @@ interface IFrameSourcing {
 
 type IframeSpec = Omit<Dialog.Iframe, 'type'>;
 
-const getDynamicSource = (initialData: Optional<string>): IFrameSourcing => {
+const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFrameSourcing => {
   const cachedValue = Cell(initialData.getOr(''));
   return {
     getValue: (_frameComponent: AlloyComponent): string =>
@@ -25,7 +25,32 @@ const getDynamicSource = (initialData: Optional<string>): IFrameSourcing => {
       // TINY-3769: We need to use srcdoc here, instead of src with a data URI, otherwise browsers won't retain the Origin.
       // See https://bugs.chromium.org/p/chromium/issues/detail?id=58999#c11
       if (cachedValue.get() !== html) {
-        Attribute.set(frameComponent.element, 'srcdoc', html);
+        const iframeElement = frameComponent.element as SugarElement<HTMLIFrameElement>;
+        const setSrcdocValue = () => Attribute.set(iframeElement, 'srcdoc', html);
+
+        if (stream) {
+          const iframe = iframeElement.dom;
+          Optional.from(iframe.contentDocument).fold(
+            setSrcdocValue,
+            (doc) => {
+              const isElementScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) => Math.ceil(scrollTop) + clientHeight >= scrollHeight;
+              // TINY-10032: If documentElement is null, we assume document is empty and so scroll is at bottom.
+              const isScrollAtBottom = Optional.from(doc.documentElement).forall(isElementScrollAtBottom);
+
+              doc.open();
+              doc.write(html);
+              doc.close();
+
+              const win = iframe.contentWindow;
+              const body = doc.body;
+              // TINY-10032: Do not attempt to scroll if body has not been loaded yet
+              if (isScrollAtBottom && Type.isNonNullable(win) && Type.isNonNullable(body)) {
+                win.scrollTo(0, body.scrollHeight);
+              }
+            });
+        } else {
+          setSrcdocValue();
+        }
       }
       cachedValue.set(html);
     }
@@ -33,17 +58,17 @@ const getDynamicSource = (initialData: Optional<string>): IFrameSourcing => {
 };
 
 const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstageProviders, initialData: Optional<string>): SketchSpec => {
-  const isSandbox = spec.sandboxed;
-  const isTransparent = spec.transparent;
   const baseClass = 'tox-dialog__iframe';
+  const borderedClass = spec.border ? [ `${baseClass}--bordered` ] : [];
+  const opaqueClass = spec.transparent ? [] : [ `${baseClass}--opaque` ];
 
   const attributes = {
     ...spec.label.map<{ title?: string }>((title) => ({ title })).getOr({}),
     ...initialData.map((html) => ({ srcdoc: html })).getOr({}),
-    ...isSandbox ? { sandbox: 'allow-scripts allow-same-origin' } : { },
+    ...spec.sandboxed ? { sandbox: 'allow-scripts allow-same-origin' } : { },
   };
 
-  const sourcing = getDynamicSource(initialData);
+  const sourcing = getDynamicSource(initialData, spec.streamContent);
 
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
@@ -54,7 +79,11 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstagePr
       dom: {
         tag: 'iframe',
         attributes,
-        classes: (isTransparent ? [ baseClass ] : [ baseClass, `${baseClass}--opaque` ])
+        classes: [
+          baseClass,
+          ...borderedClass,
+          ...opaqueClass
+        ]
       },
       behaviours: Behaviour.derive([
         Tabstopping.config({ }),

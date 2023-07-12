@@ -6,6 +6,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 6.6.0 - 2023-07-12
+
+### Added
+- Added a new property value — `bottom` — for inline dialog configurations that anchors the dialog to the bottom of the editor. #TINY-9888
+- Added a new property — `persistent` — for inline dialog configurations that will stop the dialog closing when clicking away from it. #TINY-9991
+- New `ai`, `ai-prompt` and `send` icons. #TINY-9942
+- Added a new property — `streamContent` — for the `iframe` dialog component. This causes `setData()` to update content without reloading the frame, and end scroll positions will be maintained as new content streams in. #TINY-10032
+- AI Assistant plugin toolbar items added to the default toolbar and AI Assistant plugin menu items added to the default menu bar. #TINY-9939
+- Added a new property — `border` — for the `iframe` dialog component that allows a border to be added. #TINY-10049
+- Added a new property — `align` — for the label dialog component that controls text alignment. #TINY-10058
+
+### Improved
+- When defining a modal or inline dialog, if the buttons property is an empty array, or is not defined at all, the footer will now no longer be rendered. #TINY-9996
+- The `iframe` dialog component now has a minimum height of 200px. #TINY-10059
+
+### Changed
+- The icon in an `alertbanner` dialog component is no longer clickable if the _URL_ field is not specified. #TINY-10013
+
+### Fixed
+- Fixed an issue that caused the inline dialog `size` setting to have no effect. #TINY-10015
+- Fixed an issue that prevented the close button from being clicked when the dialog was blocked. #TINY-10056
+
 ## 6.5.1 - 2023-06-19
 
 ### Fixed

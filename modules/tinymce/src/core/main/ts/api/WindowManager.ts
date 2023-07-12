@@ -29,8 +29,9 @@ import { Dialog } from './ui/Ui';
  */
 
 export interface WindowParams {
-  readonly inline?: 'cursor' | 'toolbar';
+  readonly inline?: 'cursor' | 'toolbar' | 'bottom';
   readonly ariaAttrs?: boolean;
+  readonly persistent?: boolean;
 }
 
 interface WindowManager {
@@ -143,7 +144,10 @@ const WindowManager = (editor: Editor): WindowManager => {
      * Opens a new window.
      *
      * @method open
-     * @param {Object} args For a list of options, see: <a href="https://www.tiny.cloud/docs/tinymce/6/dialog-configuration/#configurationoptions">Dialog - Configuration options</a>.
+     * @param {Object} config For information on the available options, see: <a href="https://www.tiny.cloud/docs/tinymce/6/dialog-configuration/#options">Dialog - Configuration options</a>.
+options</a>.
+     * @param {Object} params (Optional) For information on the available options, see: <a href="https://www.tiny.cloud/docs/tinymce/6/dialog-configuration/#configuration-parameters">Dialog - Configuration parameters</a>.
+     * @returns {WindowManager.DialogInstanceApi} A new dialog instance.
      */
     open,
 
@@ -151,7 +155,8 @@ const WindowManager = (editor: Editor): WindowManager => {
      * Opens a new window for the specified url.
      *
      * @method openUrl
-     * @param {Object} args For a list of options, see: <a href="https://www.tiny.cloud/docs/tinymce/6/urldialog/#configuration">URL dialog configuration</a>.
+     * @param {Object} config For information on the available options, see: <a href="https://www.tiny.cloud/docs/tinymce/6/urldialog/#configuration">URL dialog - Configuration</a>.
+     * @returns {WindowManager.UrlDialogInstanceApi} A new URL dialog instance.
      */
     openUrl,
 

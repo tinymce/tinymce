@@ -4,6 +4,7 @@ import {
 } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
 import { Arr, Cell, Obj, Optional } from '@ephox/katamari';
+import { Height, SelectorFind } from '@ephox/sugar';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
@@ -37,7 +38,7 @@ const getHeader = (title: string, dialogId: string, backstage: UiFactoryBackstag
   draggable: backstage.dialog.isDraggableModal()
 }, dialogId, backstage.shared.providers);
 
-const getBusySpec = (message: string, bs: Behaviour.AlloyBehaviourRecord, providers: UiFactoryBackstageProviders): AlloySpec => ({
+const getBusySpec = (message: string, bs: Behaviour.AlloyBehaviourRecord, providers: UiFactoryBackstageProviders, headerHeight: Optional<number>): AlloySpec => ({
   dom: {
     tag: 'div',
     classes: [ 'tox-dialog__busy-spinner' ],
@@ -48,7 +49,7 @@ const getBusySpec = (message: string, bs: Behaviour.AlloyBehaviourRecord, provid
       left: '0px',
       right: '0px',
       bottom: '0px',
-      top: '0px',
+      top: `${headerHeight.getOr(0)}px`,
       position: 'absolute'
     }
   },
@@ -61,7 +62,8 @@ const getBusySpec = (message: string, bs: Behaviour.AlloyBehaviourRecord, provid
 const getEventExtras = (lazyDialog: () => AlloyComponent, providers: UiFactoryBackstageProviders, extra: SharedWindowExtra): ExtraListeners => ({
   onClose: () => extra.closeWindow(),
   onBlock: (blockEvent: FormBlockEvent) => {
-    ModalDialog.setBusy(lazyDialog(), (_comp, bs) => getBusySpec(blockEvent.message, bs, providers));
+    const headerHeight = SelectorFind.descendant<HTMLElement>(lazyDialog().element, '.tox-dialog__header').map((header) => Height.get(header));
+    ModalDialog.setBusy(lazyDialog(), (_comp, bs) => getBusySpec(blockEvent.message, bs, providers, headerHeight));
   },
   onUnblock: () => {
     ModalDialog.setIdle(lazyDialog());

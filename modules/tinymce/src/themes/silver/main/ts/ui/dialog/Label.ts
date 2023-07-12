@@ -9,15 +9,20 @@ import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 type LabelSpec = Omit<Dialog.Label, 'type'>;
 
 export const renderLabel = (spec: LabelSpec, backstageShared: UiFactoryBackstageShared): SimpleSpec => {
+  const baseClass = 'tox-label';
+  const centerClass = spec.align === 'center' ? [ `${baseClass}--center` ] : [];
+  const endClass = spec.align === 'end' ? [ `${baseClass}--end` ] : [];
+
   const label: AlloySpec = {
     dom: {
       tag: 'label',
-      classes: [ 'tox-label' ]
+      classes: [ baseClass, ...centerClass, ...endClass ]
     },
     components: [
       GuiFactory.text(backstageShared.providers.translate(spec.label))
     ]
   };
+
   const comps = Arr.map(spec.items, backstageShared.interpreter);
   return {
     dom: {

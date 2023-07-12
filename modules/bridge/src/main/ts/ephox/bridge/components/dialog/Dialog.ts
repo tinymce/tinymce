@@ -47,7 +47,7 @@ export interface DialogSpec<T extends DialogData> {
   title: string;
   size?: DialogSize;
   body: TabPanel.TabPanelSpec | Panel.PanelSpec;
-  buttons: FooterButton.DialogFooterButtonSpec[];
+  buttons?: FooterButton.DialogFooterButtonSpec[];
   initialData?: Partial<T>;
 
   // Gets fired when a component within the dialog has an action used by some components
@@ -93,7 +93,7 @@ export const dialogSchema = StructureSchema.objOf([
     tabpanel: TabPanel.tabPanelSchema
   })),
   FieldSchema.defaultedString('size', 'normal'),
-  FieldSchema.requiredArrayOf('buttons', dialogButtonSchema),
+  FieldSchema.defaultedArrayOf('buttons', [], dialogButtonSchema),
   FieldSchema.defaulted('initialData', {}),
   FieldSchema.defaultedFunction('onAction', Fun.noop),
   FieldSchema.defaultedFunction('onChange', Fun.noop),
