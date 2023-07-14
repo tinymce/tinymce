@@ -40,7 +40,7 @@ def runBrowserTests(String name, String browser, String os, Integer bucket, Inte
 }
 
 def runHeadlessTests(Boolean runAll) {
-  def bedrockCommand = "yarn grunt headless-auto --useSelenium";
+  def bedrockCommand = "yarn grunt headless-auto";
   runTests("chrome-headless", bedrockCommand, runAll);
 }
 
@@ -72,12 +72,12 @@ timestamps {
     }
 
     def platforms = [
-      // [ os: "windows", browser: "chrome" ],
-      // [ os: "windows", browser: "firefox" ],
-      // [ os: "windows", browser: "MicrosoftEdge" ],
-      // [ os: "macos", browser: "safari" ],
-      // [ os: "macos", browser: "chrome" ],
-      // [ os: "macos", browser: "firefox" ]
+      [ os: "windows", browser: "chrome" ],
+      [ os: "windows", browser: "firefox" ],
+      [ os: "windows", browser: "MicrosoftEdge" ],
+      [ os: "macos", browser: "safari" ],
+      [ os: "macos", browser: "chrome" ],
+      [ os: "macos", browser: "firefox" ]
     ]
 
     def cleanAndInstall = {
@@ -127,7 +127,6 @@ timestamps {
     processes["headless-and-archive"] = {
       stage("headless tests") {
         runHeadlessTests(runAllTests)
-        // TODO: Determine if this should be run on a container instead
       }
 
       if (env.BRANCH_NAME != primaryBranch) {

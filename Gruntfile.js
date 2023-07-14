@@ -155,7 +155,7 @@ module.exports = function (grunt) {
     }
   };
 
-  console.log(JSON.stringify(gruntConfig, null, 2))
+  // console.log(JSON.stringify(gruntConfig, null, 2))
 
   grunt.initConfig(gruntConfig);
 
