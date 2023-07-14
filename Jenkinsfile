@@ -40,7 +40,7 @@ def runBrowserTests(String name, String browser, String os, Integer bucket, Inte
 }
 
 def runHeadlessTests(Boolean runAll) {
-  def bedrockCommand = "yarn grunt headless-auto";
+  def bedrockCommand = "yarn grunt headless-auto --useSelenium";
   runTests("chrome-headless", bedrockCommand, runAll);
 }
 
