@@ -25,7 +25,6 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
   const dialogSize: Dialog.DialogSize = 'normal';
 
   const createDialogSpec = (size?: Dialog.DialogSize, dummy: boolean = false, iframe: boolean = false): Dialog.DialogSpec<{ fred: string }> & { size?: Dialog.DialogSize } => {
-
     const dummyItems = dummy ? Array(100).fill(0).map((_, index) => ({
       type: 'input',
       name: `dummy${index}`,
@@ -45,29 +44,35 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
           type: 'panel',
           items: [
             {
+              name: 'preview',
+              type: 'iframe',
+            },
+          ],
+        }
+        : {
+          type: 'panel',
+          items: [
+            {
               type: 'input',
               name: 'fred',
               label: 'Freds Input'
             },
             ...dummyItems
           ]
-        }
-        : {
-          type: 'panel',
-          items: [
-            {
-              type: 'iframe',
-              name: 'preview',
-            },
-            ...dummyItems,
-          ],
         },
-      buttons: [
-        {
+      buttons: iframe
+        ? [{
           type: 'custom',
           name: 'random',
           text: 'random',
           buttonType: 'primary',
+        }]
+        : [{
+          type: 'custom',
+          name: 'barny',
+          text: 'Barny Text',
+          align: 'start',
+          primary: true
         },
         {
           type: 'custom',
@@ -79,24 +84,26 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
           name: 'confirm',
           text: 'Confirm'
         }
-      ],
+        ],
       initialData: {
         fred: 'said hello pebbles',
+        preview: 'said hello pebbles',
         ...initialDummyData
       },
       onAction: (api, action) => {
         if (iframe) {
           api.close();
-        }
-        const editor = hook.editor();
-        store.adder('onAction')();
-        switch (action.name) {
-          case 'alert':
-            editor.windowManager.alert('Alert!');
-            break;
-          case 'confirm':
-            editor.windowManager.confirm('Confirm!');
-            break;
+        } else {
+          const editor = hook.editor();
+          store.adder('onAction')();
+          switch (action.name) {
+            case 'alert':
+              editor.windowManager.alert('Alert!');
+              break;
+            case 'confirm':
+              editor.windowManager.confirm('Confirm!');
+              break;
+          }
         }
       }
     };
@@ -107,11 +114,14 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
   const openDialog = (
     editor: Editor,
     params: WindowParams,
-    dialog: Dialog.DialogSpec<{ fred: string }> & { size?: Dialog.DialogSize } = dialogSpec
+    dialog: Dialog.DialogSpec<{ fred: string }> & { size?: Dialog.DialogSize } = dialogSpec,
+    iframe: boolean = false
   ) => {
     const api = DialogUtils.openWithStore(editor, dialog, params, store);
-    const { fred } = api.getData();
-    assert.deepEqual({ fred }, { fred: 'said hello pebbles' }, 'Initial data');
+    if (!iframe) {
+      const { fred } = api.getData();
+      assert.deepEqual({ fred }, { fred: 'said hello pebbles' }, 'Initial data');
+    }
     return api;
   };
 
@@ -242,16 +252,13 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
   // TINY-10070, precautionary test, making sure the focus is on the iframe after closing the dialog
   it('Editor focus should be on text area after closing dialog', async () => {
     const editor = hook.editor();
-    openDialog(editor, { inline: 'toolbar' }, createDialogSpec('normal', true, true));
+    openDialog(editor, { inline: 'toolbar' }, createDialogSpec('normal', true, true), true);
     TinyUiActions.clickOnUi(editor, 'button[title="random"]');
-    // dialog should be closed
     UiFinder.notExists(SugarBody.body(), 'tox-dialog-inline');
-    // focus should be on the editor text area
     await FocusTools.pTryOnSelector(
       'Focus should be on iframe',
       SugarDocument.getDocument(),
       'iframe[title="Rich Text Area"]'
     );
-    DialogUtils.close(editor);
   });
 });
