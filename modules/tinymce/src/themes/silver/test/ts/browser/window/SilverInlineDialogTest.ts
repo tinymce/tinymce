@@ -24,7 +24,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
 
   const dialogSize: Dialog.DialogSize = 'normal';
 
-  const createDialogSpec = (size?: Dialog.DialogSize, dummy: boolean = false): Dialog.DialogSpec<{ fred: string }> & { size?: Dialog.DialogSize } => {
+  const createDialogSpec = (size?: Dialog.DialogSize, dummy: boolean = false, iframe: boolean = false): Dialog.DialogSpec<{ fred: string }> & { size?: Dialog.DialogSize } => {
 
     const dummyItems = dummy ? Array(100).fill(0).map((_, index) => ({
       type: 'input',
@@ -40,24 +40,34 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
     return {
       title: 'Silver Test Inline (Toolbar) Dialog',
       size: size || dialogSize,
-      body: {
-        type: 'panel',
-        items: [
-          {
-            type: 'input',
-            name: 'fred',
-            label: 'Freds Input'
-          },
-          ...dummyItems
-        ]
-      },
+      body: iframe
+        ? {
+          type: 'panel',
+          items: [
+            {
+              type: 'input',
+              name: 'fred',
+              label: 'Freds Input'
+            },
+            ...dummyItems
+          ]
+        }
+        : {
+          type: 'panel',
+          items: [
+            {
+              type: 'iframe',
+              name: 'preview',
+            },
+            ...dummyItems,
+          ],
+        },
       buttons: [
         {
           type: 'custom',
-          name: 'barny',
-          text: 'Barny Text',
-          align: 'start',
-          primary: true
+          name: 'random',
+          text: 'random',
+          buttonType: 'primary',
         },
         {
           type: 'custom',
@@ -75,6 +85,9 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
         ...initialDummyData
       },
       onAction: (api, action) => {
+        if (iframe) {
+          api.close();
+        }
         const editor = hook.editor();
         store.adder('onAction')();
         switch (action.name) {
@@ -224,5 +237,21 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
       assert.equal(Css.get(dialog, 'max-width'), test.maxWidth + 'px', 'Dialog should have the correct max width');
       DialogUtils.close(editor);
     });
+  });
+
+  // TINY-10070, precautionary test, making sure the focus is on the iframe after closing the dialog
+  it('Editor focus should be on text area after closing dialog', async () => {
+    const editor = hook.editor();
+    openDialog(editor, { inline: 'toolbar' }, createDialogSpec('normal', true, true));
+    TinyUiActions.clickOnUi(editor, 'button[title="random"]');
+    // dialog should be closed
+    UiFinder.notExists(SugarBody.body(), 'tox-dialog-inline');
+    // focus should be on the editor text area
+    await FocusTools.pTryOnSelector(
+      'Focus should be on iframe',
+      SugarDocument.getDocument(),
+      'iframe[title="Rich Text Area"]'
+    );
+    DialogUtils.close(editor);
   });
 });

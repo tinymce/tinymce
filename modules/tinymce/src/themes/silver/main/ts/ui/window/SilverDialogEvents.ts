@@ -95,7 +95,7 @@ const initDialog = <T extends Dialog.DialogData>(getInstanceApi: () => Dialog.Di
     }),
 
     fireApiEvent<FormActionEvent>(formActionEvent, (api, spec, event, component) => {
-      const focusIn = () => Keying.focusIn(component);
+      const focusIn = () => component.getSystem().isConnected() ? Keying.focusIn(component) : Fun.noop();
       const isDisabled = (focused: SugarElement<HTMLElement>) => Attribute.has(focused, 'disabled') || Attribute.getOpt(focused, 'aria-disabled').exists((val) => val === 'true');
       const rootNode = SugarShadowDom.getRootNode(component.element);
       const current = Focus.active(rootNode);
