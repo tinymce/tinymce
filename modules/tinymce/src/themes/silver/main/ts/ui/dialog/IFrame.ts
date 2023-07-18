@@ -64,7 +64,8 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
       });
   };
 
-  const writeValueThrottler = Throttler.first(writeValue, 500);
+  // TINY-10078: Throttle to reduce flickering, as the document.write() method still observes significant flickering on Safari.
+  const writeValueThrottler = isSafari ? Optional.some(Throttler.first(writeValue, 500)) : Optional.none();
 
   return {
     getValue: (_frameComponent: AlloyComponent): string =>
@@ -79,13 +80,7 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
 
         if (stream) {
           const args = [ iframeElement, html, setSrcdocValue ] as const;
-          if (isSafari) {
-            // TINY-10078: Throttle to reduce flickering, as the document.write() method still observes significant flickering
-            // on Safari.
-            writeValueThrottler.throttle(...args);
-          } else {
-            writeValue(...args);
-          }
+          writeValueThrottler.fold(() => writeValue(...args), (throttler) => throttler.throttle(...args));
         } else {
           setSrcdocValue();
         }
