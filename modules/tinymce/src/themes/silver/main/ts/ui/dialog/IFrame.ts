@@ -17,8 +17,12 @@ interface IFrameSourcing {
 type IframeSpec = Omit<Dialog.Iframe, 'type'>;
 
 const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFrameSourcing => {
-  const isFirefox = PlatformDetection.detect().browser.isFirefox();
   const cachedValue = Cell(initialData.getOr(''));
+
+  const browser = PlatformDetection.detect().browser;
+  const isFirefox = browser.isFirefox();
+  const isSafari = browser.isSafari();
+
   const lastScrollTop = Cell(0);
   const isElementScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) =>
     Math.ceil(scrollTop) + clientHeight >= scrollHeight;
@@ -54,9 +58,13 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
               if (Type.isNonNullable(win)) {
                 // TINY-10032: Do not attempt to scroll if body has not been loaded yet
                 if (isScrollAtBottom && Type.isNonNullable(body)) {
-                  win.scrollTo(0, body.scrollHeight);
-                } else if (isFirefox && !isScrollAtBottom) {
-                  // TINY-10078: Firefox resets scroll to top on each document.write(), so we need to restore scroll manually
+                  if (isSafari) {
+                    setTimeout(() => win.scrollTo(0, body.scrollHeight), 1);
+                  } else {
+                    win.scrollTo(0, body.scrollHeight);
+                  }
+                } else if (!isScrollAtBottom && (isSafari || isFirefox)) {
+                  // TINY-10078: Safari and Firefox reset scroll to top on each document.write(), so we need to restore scroll manually
                   win.scrollTo(0, lastScrollTop.get());
                 }
               }
