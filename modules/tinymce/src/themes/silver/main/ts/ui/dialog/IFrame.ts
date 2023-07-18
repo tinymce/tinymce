@@ -1,6 +1,7 @@
 import { AlloyComponent, Behaviour, Focusing, FormField, SketchSpec, Tabstopping } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Cell, Optional, Type } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { Attribute, SugarElement } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -16,7 +17,12 @@ interface IFrameSourcing {
 type IframeSpec = Omit<Dialog.Iframe, 'type'>;
 
 const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFrameSourcing => {
+  const isFirefox = PlatformDetection.detect().browser.isFirefox();
   const cachedValue = Cell(initialData.getOr(''));
+  const lastScrollTop = Cell(0);
+  const isElementScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) =>
+    Math.ceil(scrollTop) + clientHeight >= scrollHeight;
+
   return {
     getValue: (_frameComponent: AlloyComponent): string =>
       // Ideally we should fetch data from the iframe...innerHtml, this triggers Cors errors
@@ -33,9 +39,11 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
           Optional.from(iframe.contentDocument).fold(
             setSrcdocValue,
             (doc) => {
-              const isElementScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) => Math.ceil(scrollTop) + clientHeight >= scrollHeight;
               // TINY-10032: If documentElement is null, we assume document is empty and so scroll is at bottom.
-              const isScrollAtBottom = Optional.from(doc.documentElement).forall(isElementScrollAtBottom);
+              const isScrollAtBottom = Optional.from(doc.documentElement).map((docEl) => {
+                lastScrollTop.set(docEl.scrollTop);
+                return docEl;
+              }).forall(isElementScrollAtBottom);
 
               doc.open();
               doc.write(html);
@@ -43,9 +51,14 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
 
               const win = iframe.contentWindow;
               const body = doc.body;
-              // TINY-10032: Do not attempt to scroll if body has not been loaded yet
-              if (isScrollAtBottom && Type.isNonNullable(win) && Type.isNonNullable(body)) {
-                win.scrollTo(0, body.scrollHeight);
+              if (Type.isNonNullable(win)) {
+                // TINY-10032: Do not attempt to scroll if body has not been loaded yet
+                if (isScrollAtBottom && Type.isNonNullable(body)) {
+                  win.scrollTo(0, body.scrollHeight);
+                } else if (isFirefox && !isScrollAtBottom) {
+                  // TINY-10078: Firefox resets scroll to top on each document.write(), so we need to restore scroll manually
+                  win.scrollTo(0, lastScrollTop.get());
+                }
               }
             });
         } else {
