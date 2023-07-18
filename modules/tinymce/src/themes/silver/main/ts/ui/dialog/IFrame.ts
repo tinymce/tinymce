@@ -1,6 +1,6 @@
 import { AlloyComponent, Behaviour, Focusing, FormField, SketchSpec, Tabstopping } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Cell, Optional, Type } from '@ephox/katamari';
+import { Cell, Optional, Throttler, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, SugarElement } from '@ephox/sugar';
 
@@ -23,9 +23,46 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
   const isFirefox = browser.isFirefox();
   const isSafari = browser.isSafari();
 
-  const lastScrollTop = Cell(0);
   const isElementScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) =>
     Math.ceil(scrollTop) + clientHeight >= scrollHeight;
+
+  const writeValue = (iframeElement: SugarElement<HTMLIFrameElement>, html: string, fallbackFn: () => void): void => {
+    const iframe = iframeElement.dom;
+    Optional.from(iframe.contentDocument).fold(
+      fallbackFn,
+      (doc) => {
+        let lastScrollTop;
+        // TINY-10032: If documentElement is null, we assume document is empty and so scroll is at bottom.
+        const isScrollAtBottom = Optional.from(doc.documentElement).map((docEl) => {
+          lastScrollTop = docEl.scrollTop;
+          return docEl;
+        }).forall(isElementScrollAtBottom);
+
+        doc.open();
+        doc.write(html);
+        doc.close();
+
+        const win = iframe.contentWindow;
+        const body = doc.body;
+        if (Type.isNonNullable(win)) {
+          // TINY-10032: Do not attempt to scroll if body has not been loaded yet
+          if (isScrollAtBottom && Type.isNonNullable(body)) {
+            if (isSafari) {
+              // TINY-10078: Safari needs a small delay after document.write() to ensure scroll does not reset to
+              // near-top unexpectedly
+              setTimeout(() => win.scrollTo(0, body.scrollHeight), 4);
+            } else {
+              win.scrollTo(0, body.scrollHeight);
+            }
+          } else if (!isScrollAtBottom && (isSafari || isFirefox) && !Type.isUndefined(lastScrollTop)) {
+            // TINY-10078: Safari and Firefox reset scroll to top on each document.write(), so we need to restore scroll manually
+            win.scrollTo(0, lastScrollTop);
+          }
+        }
+      });
+  };
+
+  const writeValueThrottler = Throttler.first(writeValue, 500);
 
   return {
     getValue: (_frameComponent: AlloyComponent): string =>
@@ -39,36 +76,14 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
         const setSrcdocValue = () => Attribute.set(iframeElement, 'srcdoc', html);
 
         if (stream) {
-          const iframe = iframeElement.dom;
-          Optional.from(iframe.contentDocument).fold(
-            setSrcdocValue,
-            (doc) => {
-              // TINY-10032: If documentElement is null, we assume document is empty and so scroll is at bottom.
-              const isScrollAtBottom = Optional.from(doc.documentElement).map((docEl) => {
-                lastScrollTop.set(docEl.scrollTop);
-                return docEl;
-              }).forall(isElementScrollAtBottom);
-
-              doc.open();
-              doc.write(html);
-              doc.close();
-
-              const win = iframe.contentWindow;
-              const body = doc.body;
-              if (Type.isNonNullable(win)) {
-                // TINY-10032: Do not attempt to scroll if body has not been loaded yet
-                if (isScrollAtBottom && Type.isNonNullable(body)) {
-                  if (isSafari) {
-                    setTimeout(() => win.scrollTo(0, body.scrollHeight), 1);
-                  } else {
-                    win.scrollTo(0, body.scrollHeight);
-                  }
-                } else if (!isScrollAtBottom && (isSafari || isFirefox)) {
-                  // TINY-10078: Safari and Firefox reset scroll to top on each document.write(), so we need to restore scroll manually
-                  win.scrollTo(0, lastScrollTop.get());
-                }
-              }
-            });
+          const args = [ iframeElement, html, setSrcdocValue ] as const;
+          if (isSafari) {
+            // TINY-10078: Throttle to reduce flickering, as the document.write() method still observes significant flickering
+            // on Safari.
+            writeValueThrottler.throttle(...args);
+          } else {
+            writeValue(...args);
+          }
         } else {
           setSrcdocValue();
         }
