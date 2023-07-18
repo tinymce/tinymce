@@ -26,6 +26,8 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
   const isElementScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) =>
     Math.ceil(scrollTop) + clientHeight >= scrollHeight;
 
+  const scrollToBottom = (win: Window, body: HTMLElement) => win.scrollTo(0, body.scrollHeight);
+
   const writeValue = (iframeElement: SugarElement<HTMLIFrameElement>, html: string, fallbackFn: () => void): void => {
     const iframe = iframeElement.dom;
     Optional.from(iframe.contentDocument).fold(
@@ -50,9 +52,9 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
             if (isSafari) {
               // TINY-10078: Safari needs a small delay after document.write() to ensure scroll does not reset to
               // near-top unexpectedly
-              setTimeout(() => win.scrollTo(0, body.scrollHeight), 4);
+              setTimeout(() => scrollToBottom(win, body), 4);
             } else {
-              win.scrollTo(0, body.scrollHeight);
+              scrollToBottom(win, body);
             }
           } else if (!isScrollAtBottom && (isSafari || isFirefox) && !Type.isUndefined(lastScrollTop)) {
             // TINY-10078: Safari and Firefox reset scroll to top on each document.write(), so we need to restore scroll manually
