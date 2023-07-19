@@ -52,7 +52,8 @@ class NodeChange {
     // When the contextmenu event fires the selection is located at the right location
     editor.on('contextmenu', (e) => {
       if (platform.browser.isFirefox()) {
-        editor.selection.setCursorLocation(e.target, (e as any).rangeOffset);
+        // editor.selection.setCursorLocation(e.target, (e as any).rangeOffset);
+        editor.selection.select(e.target);
       }
 
       editor.dispatch('SelectionChange');
