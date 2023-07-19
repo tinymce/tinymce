@@ -26,14 +26,20 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
   const isElementScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) =>
     Math.ceil(scrollTop) + clientHeight >= scrollHeight;
 
-  const scrollToBottom = (win: Window, body: HTMLElement) => win.scrollTo(0, body.scrollHeight);
+  const scrollToY = (win: Window, scrollY: number) =>
+    win.scrollTo(0, scrollY);
+
+  const delayedScrollForSafari = (win: Window, scrollY: number) =>
+    // TINY-10078: Safari needs a small delay when performing scrolling actions after document.write()
+    // to ensure scroll does not reset to near-top unexpectedly
+    setTimeout(() => scrollToY(win, scrollY), 6);
 
   const writeValue = (iframeElement: SugarElement<HTMLIFrameElement>, html: string, fallbackFn: () => void): void => {
     const iframe = iframeElement.dom;
     Optional.from(iframe.contentDocument).fold(
       fallbackFn,
       (doc) => {
-        let lastScrollTop;
+        let lastScrollTop = 0;
         // TINY-10032: If documentElement is null, we assume document is empty and so scroll is at bottom.
         const isScrollAtBottom = Optional.from(doc.documentElement).map((docEl) => {
           lastScrollTop = docEl.scrollTop;
@@ -45,20 +51,23 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
         doc.close();
 
         const win = iframe.contentWindow;
-        const body = doc.body;
         if (Type.isNonNullable(win)) {
-          // TINY-10032: Do not attempt to scroll if body has not been loaded yet
-          if (isScrollAtBottom && Type.isNonNullable(body)) {
+          if (isScrollAtBottom) {
+            const body = doc.body;
+            // TINY-10078: Fallback for when the iframe body is not yet available on Safari
+            const scrollY = body?.scrollHeight ?? 9999;
             if (isSafari) {
-              // TINY-10078: Safari needs a small delay after document.write() to ensure scroll does not reset to
-              // near-top unexpectedly
-              setTimeout(() => scrollToBottom(win, body), 4);
+              delayedScrollForSafari(win, scrollY);
             } else {
-              scrollToBottom(win, body);
+              scrollToY(win, scrollY);
             }
-          } else if (!isScrollAtBottom && (isSafari || isFirefox) && !Type.isUndefined(lastScrollTop)) {
+          } else if (!isScrollAtBottom && (isSafari || isFirefox) && lastScrollTop !== 0) {
             // TINY-10078: Safari and Firefox reset scroll to top on each document.write(), so we need to restore scroll manually
-            win.scrollTo(0, lastScrollTop);
+            if (isSafari) {
+              delayedScrollForSafari(win, lastScrollTop);
+            } else {
+              scrollToY(win, lastScrollTop);
+            }
           }
         }
       });
