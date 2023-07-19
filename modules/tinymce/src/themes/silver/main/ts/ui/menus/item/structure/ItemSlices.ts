@@ -4,8 +4,8 @@ import { Optional } from '@ephox/katamari';
 
 import I18n from 'tinymce/core/api/util/I18n';
 
+import * as ConvertShortcut from '../../../alien/ConvertShortcut';
 import * as Icons from '../../../icons/Icons';
-import * as ConvertShortcut from '../alien/ConvertShortcut';
 import * as ItemClasses from '../ItemClasses';
 
 const renderIcon = (name: string, icons: Icons.IconProvider, classes: string[] = [ ItemClasses.iconClass ]): SimpleSpec =>

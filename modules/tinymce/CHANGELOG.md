@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - New `pad_empty_with_br` option that can be set to `true` to pad empty block elements with `<br>` tag instead of nbsp character. #TINY-9861
+- New `help_accessibility` option which displays the keyboard shortcut to access the help functionality in the statusbar. #TINY-9379
 
 ### Improved
 - Adding a newline after a table would in some specific cases not work. #TINY-9863
