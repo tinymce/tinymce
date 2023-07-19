@@ -96,7 +96,7 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
     styles['border-style'] = advData.borderstyle;
   }
 
-  attrs.style = dom.serializeStyle({ ...Options.getDefaultStyles(editor), ...styles });
+  dom.setStyles(tableElm, { ...Options.getDefaultStyles(editor), ...styles });
   dom.setAttribs(tableElm, { ...Options.getDefaultAttributes(editor), ...attrs });
 };
 

@@ -4,8 +4,8 @@ import {
   Receiving, Reflecting, Replacing, SystemEvents
 } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
-import { Fun, Id, Optional } from '@ephox/katamari';
-import { Attribute, Classes, SugarElement, SugarNode } from '@ephox/sugar';
+import { Fun, Id, Optional, Optionals } from '@ephox/katamari';
+import { Attribute, Classes, Height, SugarElement, SugarNode } from '@ephox/sugar';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
@@ -24,11 +24,21 @@ interface RenderedDialog<T extends Dialog.DialogData> {
   readonly instanceApi: Dialog.DialogInstanceApi<T>;
 }
 
-const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra<T>, backstage: UiFactoryBackstage, ariaAttrs: boolean): RenderedDialog<T> => {
+const getInlineDialogSizeClass = (size: Dialog.DialogSize): Optional<string> => {
+  switch (size) {
+    case 'medium':
+      return Optional.some('tox-dialog--width-md');
+    default:
+      return Optional.none();
+  }
+};
+
+const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra<T>, backstage: UiFactoryBackstage, ariaAttrs: boolean = false): RenderedDialog<T> => {
   const dialogId = Id.generate('dialog');
   const dialogLabelId = Id.generate('dialog-label');
   const dialogContentId = Id.generate('dialog-content');
   const internalDialog = dialogInit.internalDialog;
+  const dialogSize = getInlineDialogSizeClass(internalDialog.size);
 
   const updateState = (_comp: AlloyComponent, incoming: DialogManager.DialogInit<T>) => Optional.some(incoming);
 
@@ -50,17 +60,22 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
 
   const objOfCells = SilverDialogCommon.extractCellsToObject(storagedMenuButtons);
 
-  const memFooter = Memento.record(
-    renderInlineFooter({
-      buttons: storagedMenuButtons
-    }, dialogId, backstage)
-  );
+  const optMemFooter = Optionals.someIf(
+    storagedMenuButtons.length !== 0,
+    Memento.record(
+      renderInlineFooter({
+        buttons: storagedMenuButtons
+      }, dialogId, backstage)
+    ));
 
   const dialogEvents = SilverDialogEvents.initDialog(
     () => instanceApi,
     {
       onBlock: (event) => {
-        Blocking.block(dialog, (_comp, bs) => SilverDialogCommon.getBusySpec(event.message, bs, backstage.shared.providers));
+        Blocking.block(dialog, (_comp, bs) => {
+          const headerHeight = memHeader.getOpt(dialog).map((dialog) => Height.get(dialog.element));
+          return SilverDialogCommon.getBusySpec(event.message, bs, backstage.shared.providers, headerHeight);
+        });
       },
       onUnblock: () => {
         Blocking.unblock(dialog);
@@ -76,7 +91,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
   const dialog = GuiFactory.build({
     dom: {
       tag: 'div',
-      classes: [ 'tox-dialog', inlineClass ],
+      classes: [ 'tox-dialog', inlineClass, ...dialogSize.toArray() ],
       attributes: {
         role: 'dialog',
         ['aria-labelledby']: dialogLabelId
@@ -125,7 +140,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
     components: [
       memHeader.asSpec(),
       memBody.asSpec(),
-      memFooter.asSpec()
+      ...optMemFooter.map((memFooter) => memFooter.asSpec()).toArray()
     ]
   });
 
@@ -145,7 +160,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
   const instanceApi = getDialogApi<T>({
     getId: Fun.constant(dialogId),
     getRoot: Fun.constant(dialog),
-    getFooter: () => memFooter.get(dialog),
+    getFooter: () => optMemFooter.map((memFooter) => memFooter.get(dialog)),
     getBody: () => memBody.get(dialog),
     getFormWrapper: () => {
       const body = memBody.get(dialog);

@@ -81,9 +81,9 @@ const generateContextMenu = (contextMenus: Record<string, Menu.ContextMenuApi>, 
     // Either read and convert the list of items out of the plugin, or assume it's a standard menu item reference
     return Obj.get(contextMenus, name.toLowerCase()).map((menu) => {
       const items = menu.update(selectedElement);
-      if (Type.isString(items)) {
+      if (Type.isString(items) && Strings.isNotEmpty(Strings.trim(items))) {
         return addContextMenuGroup(acc, items.split(' '));
-      } else if (items.length > 0) {
+      } else if (Type.isArray(items) && items.length > 0) {
         // TODO: Should we add a StructureSchema check here?
         const allItems = Arr.map(items, makeContextItem);
         return addContextMenuGroup(acc, allItems);

@@ -79,5 +79,9 @@ describe('browser.tinymce.themes.silver.window.SilverDialogPositioningTest', () 
     it('TINY-9588: Inline toolbar dialog positioning', async () =>
       await pTestOpenDialogAssertPosition({ inline: 'toolbar' })
     );
+
+    it('TINY-9888: Inline toolbar (bottom) dialog positioning', async () =>
+      await pTestOpenDialogAssertPosition({ inline: 'bottom' })
+    );
   }))));
 });

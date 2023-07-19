@@ -15,6 +15,7 @@ describe('headless.modes.ScrollingContextTest', () => {
   };
 
   context('isScroller', () => {
+    // Default and single value tests
     it('TINY-9226: overflow default - not a scroller', () => {
       const div = SugarElement.fromHtml('<div>A</div>');
       assert.isFalse(ScrollingContext.isScroller(div), 'Should not be a scroller');
@@ -22,6 +23,16 @@ describe('headless.modes.ScrollingContextTest', () => {
 
     it('TINY-9226: overflow: visible - not a scroller', () => {
       const div = SugarElement.fromHtml('<div style="overflow: visible;">A</div>');
+      assert.isFalse(ScrollingContext.isScroller(div), 'Should not be a scroller');
+    });
+
+    it('TINY-9385: overflow: hidden - not a scroller', () => {
+      const div = SugarElement.fromHtml('<div style="overflow: hidden;">A</div>');
+      assert.isFalse(ScrollingContext.isScroller(div), 'Should not be a scroller');
+    });
+
+    it('TINY-9385: overflow: clip - not a scroller', () => {
+      const div = SugarElement.fromHtml('<div style="overflow: clip;">A</div>');
       assert.isFalse(ScrollingContext.isScroller(div), 'Should not be a scroller');
     });
 
@@ -33,6 +44,95 @@ describe('headless.modes.ScrollingContextTest', () => {
     it('TINY-9226: overflow: scroll - a scroller', () => {
       const div = SugarElement.fromHtml('<div style="overflow: scroll;">A</div>');
       assert.isTrue(ScrollingContext.isScroller(div), 'Should be a scroller');
+    });
+
+    it('TINY-9385: overflow-x: scroll - a scroller', () => {
+      const div = SugarElement.fromHtml('<div style="overflow-x: scroll;">A</div>');
+      assert.isTrue(ScrollingContext.isScroller(div), 'Should be a scroller');
+    });
+
+    it('TINY-9385: overflow-y: scroll - a scroller', () => {
+      const div = SugarElement.fromHtml('<div style="overflow-y: scroll;">A</div>');
+      assert.isTrue(ScrollingContext.isScroller(div), 'Should be a scroller');
+    });
+
+    it('TINY-9385: overflow-x: auto - a scroller', () => {
+      const div = SugarElement.fromHtml('<div style="overflow-x: auto;">A</div>');
+      assert.isTrue(ScrollingContext.isScroller(div), 'Should be a scroller');
+    });
+
+    it('TINY-9385: overflow-y: auto - a scroller', () => {
+      const div = SugarElement.fromHtml('<div style="overflow-y: auto;">A</div>');
+      assert.isTrue(ScrollingContext.isScroller(div), 'Should be a scroller');
+    });
+
+    // Mixed value tests
+    it('TINY-9385: overflow-x: scroll, overflow-y: hidden - a scroller', () => {
+      const div = SugarElement.fromHtml('<div style="overflow-x: scroll; overflow-y: hidden;">A</div>');
+      assert.isTrue(ScrollingContext.isScroller(div), 'Should be a scroller');
+    });
+
+    it('TINY-9385: overflow-x: hidden, overflow-y: scroll - a scroller', () => {
+      const div = SugarElement.fromHtml('<div style="overflow-x: hidden; overflow-y: scroll;">A</div>');
+      assert.isTrue(ScrollingContext.isScroller(div), 'Should be a scroller');
+    });
+
+    it('TINY-9385: overflow-x: auto, overflow-y: hidden - a scroller', () => {
+      const div = SugarElement.fromHtml('<div style="overflow-x: auto; overflow-y: hidden;">A</div>');
+      assert.isTrue(ScrollingContext.isScroller(div), 'Should be a scroller');
+    });
+
+    it('TINY-9385: overflow-x: hidden, overflow-y: auto - a scroller', () => {
+      const div = SugarElement.fromHtml('<div style="overflow-x: hidden; overflow-y: auto;">A</div>');
+      assert.isTrue(ScrollingContext.isScroller(div), 'Should be a scroller');
+    });
+
+    // Edge cases
+    it('TINY-9385: overflow-x: auto, overflow-y: clip - a scroller', () => {
+      const div = SugarElement.fromHtml('<div style="overflow-x: auto; overflow-y: clip;">A</div>');
+      assert.isTrue(ScrollingContext.isScroller(div), 'Should be a scroller');
+    });
+
+    it('TINY-9385: overflow-x: clip, overflow-y: auto - a scroller', () => {
+      const div = SugarElement.fromHtml('<div style="overflow-x: clip; overflow-y: auto;">A</div>');
+      assert.isTrue(ScrollingContext.isScroller(div), 'Should be a scroller');
+    });
+
+    it('TINY-9385: overflow-x: hidden, overflow-y: clip - not a scroller', () => {
+      const div = SugarElement.fromHtml('<div style="overflow-x: hidden; overflow-y: clip;">A</div>');
+      assert.isFalse(ScrollingContext.isScroller(div), 'Should not be a scroller');
+    });
+
+    it('TINY-9385: overflow-x: clip, overflow-y: hidden - not a scroller', () => {
+      const div = SugarElement.fromHtml('<div style="overflow-x: clip; overflow-y: hidden;">A</div>');
+      assert.isFalse(ScrollingContext.isScroller(div), 'Should not be a scroller');
+    });
+
+    it('TINY-9385: overflow: auto with larger content - a scroller', () => {
+      const div = SugarElement.fromHtml('<div style="overflow: auto; width: 100px; height: 100px;">' + 'A'.repeat(1000) + '</div>');
+      assert.isTrue(ScrollingContext.isScroller(div), 'Should be a scroller');
+    });
+
+    it('TINY-9385: nested div with parent overflow: hidden - not a scroller', () => {
+      const div = SugarElement.fromHtml('<div style="overflow: hidden;"><div style="overflow: scroll;">A</div></div>');
+      assert.isFalse(ScrollingContext.isScroller(div), 'Should not be a scroller');
+    });
+
+    // Test case for invalid values
+    it('TINY-9385: invalid overflow value - not a scroller', () => {
+      const div = SugarElement.fromHtml('<div style="overflow: ( ͡° ͜ʖ ͡°) ;">A</div>');
+      assert.isFalse(ScrollingContext.isScroller(div), 'Should not be a scroller');
+    });
+
+    // Tests for 'visible' value in overflow-x and overflow-y
+    it('TINY-9385: overflow-x: visible - not a scroller', () => {
+      const div = SugarElement.fromHtml('<div style="overflow-x: visible;">A</div>');
+      assert.isFalse(ScrollingContext.isScroller(div), 'Should not be a scroller');
+    });
+
+    it('TINY-9385: overflow-y: visible - not a scroller', () => {
+      const div = SugarElement.fromHtml('<div style="overflow-y: visible;">A</div>');
+      assert.isFalse(ScrollingContext.isScroller(div), 'Should not be a scroller');
     });
   });
 

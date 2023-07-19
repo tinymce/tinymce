@@ -123,7 +123,8 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
           return;
         }
 
-        const values = value.split(' ');
+        // Make sure not to split values like 'rgb(100, 50, 100);
+        const values = value.indexOf(',') > -1 ? [ value ] : value.split(' ');
         let i = values.length;
         while (i--) {
           if (values[i] !== values[0]) {

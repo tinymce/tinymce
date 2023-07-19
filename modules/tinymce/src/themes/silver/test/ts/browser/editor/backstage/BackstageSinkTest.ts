@@ -104,6 +104,7 @@ describe('browser.tinymce.themes.silver.editor.backstage.BackstageSinkTest', () 
             dialog: () => Result.value(dialogSink)
           },
           editor,
+          Fun.die('No lazy bottom anchor bar in this test'),
           Fun.die('No lazy anchor bar in this test')
         );
       });

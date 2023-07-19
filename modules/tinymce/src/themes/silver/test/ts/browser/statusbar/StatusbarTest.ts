@@ -107,6 +107,7 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
           children: [
             s.anything(),
             s.anything(),
+            s.anything(),
             s.element('div', {
               classes: [ arr.has('tox-statusbar') ],
               children: [
@@ -148,6 +149,7 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
           children: [
             s.anything(),
             s.anything(),
+            s.anything(),
             s.element('div', {
               classes: [ arr.has('tox-statusbar') ],
               children: fullStatusbarSpec(s, str, arr)
@@ -168,6 +170,7 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
         s.element('div', {
           classes: [ arr.has('tox-editor-container') ],
           children: [
+            s.anything(),
             s.anything(),
             s.anything(),
             s.element('div', {
@@ -225,6 +228,7 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
           children: [
             s.anything(),
             s.anything(),
+            s.anything(),
             s.element('div', {
               classes: [ arr.has('tox-statusbar') ],
               children: statusbarWithoutResizeSpec(s, str, arr)
@@ -276,6 +280,7 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
             children: [
               s.anything(),
               s.anything(),
+              s.anything(),
               s.element('div', {
                 classes: [ arr.has('tox-statusbar') ],
                 children: [
@@ -312,6 +317,7 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
           s.element('div', {
             classes: [ arr.has('tox-editor-container') ],
             children: [
+              s.anything(),
               s.anything(),
               s.anything(),
               s.element('div', {
