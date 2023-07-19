@@ -195,6 +195,7 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
           children: [
             s.anything(),
             s.anything(),
+            s.anything(),
             s.element('div', {
               classes: [ arr.has('tox-statusbar') ],
               children: [
