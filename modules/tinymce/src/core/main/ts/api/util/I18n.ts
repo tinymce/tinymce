@@ -66,7 +66,13 @@ const add = (code: string, items: Record<string, string>): void => {
   }
 
   Obj.each(items, (translation, name) => {
-    langData[name.toLowerCase()] = translation;
+    const lowercaseName = name.toLowerCase();
+    if (lowercaseName !== name && Obj.has(items, lowercaseName)) {
+      // The language specifies a different string for the lowercase equivalent, so store this one without changing it
+      langData[name] = translation;
+    } else {
+      langData[lowercaseName] = translation;
+    }
   });
 };
 
@@ -103,7 +109,9 @@ const translate = (text: Untranslated): TranslatedString => {
   const getLangData = (text: Untranslated) => {
     // make sure we work on a string and return a string
     const textstr = toString(text);
-    return Obj.get(langData, textstr.toLowerCase()).map(toString).getOr(textstr);
+    // check for one without lowercasing it first
+    const data = Obj.get(langData, textstr).or(Obj.get(langData, textstr.toLowerCase()));
+    return data.map(toString).getOr(textstr);
   };
 
   const removeContext = (str: string) => str.replace(/{context:\w+}$/, '');

@@ -14,7 +14,8 @@ describe('browser.tinymce.core.util.I18nTest', () => {
       'value:{0}{1}': 'value translation:{0}{1}',
       'text{context:something}': 'text translation with context',
       'value:{0}{1}{context:something}': 'value translation:{0}{1} with context',
-      'empty string': ''
+      'empty string': '',
+      'Empty String': 'haha tricked you'
     });
 
     I18n.setCode('code');
@@ -29,6 +30,7 @@ describe('browser.tinymce.core.util.I18nTest', () => {
 
     // check if translate survives some awkward cases
     assert.deepEqual(translate('empty string'), '');
+    assert.equal(translate('Empty String'), 'haha tricked you');
     assert.equal(translate([ 'untranslated value:{0}{1}', 'a' ]), 'untranslated value:a{1}',
       `Do not strip tokens that weren't replaced.`);
 
