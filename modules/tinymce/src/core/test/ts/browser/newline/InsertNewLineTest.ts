@@ -1,8 +1,8 @@
-import { ApproxStructure } from '@ephox/agar';
+import { ApproxStructure, Cursors } from '@ephox/agar';
 import { after, before, context, describe, it } from '@ephox/bedrock-client';
 import { Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
@@ -24,16 +24,25 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
   /*
   This function is used as a replacement for the TinySelections.setCursor as some changes are performed to cursor position in this setup.
   */
-  const setSelectionToBody = (editor: Editor, offset: number) => {
+  const setSelectionTo = (editor: Editor, path: number[], offset: number) => {
     const sel = editor.selection.getSel();
 
     if (Type.isNullable(sel)) {
       throw new Error('Sel is unexpectedly missing.');
     }
 
+    const cursorPath = Cursors.path({
+      startPath: path,
+      soffset: offset,
+      finishPath: path,
+      foffset: offset
+    });
+
+    const cursorRange = Cursors.calculate(TinyDom.body(editor), cursorPath);
+
     const range = editor.contentDocument.createRange();
-    range.setStart(editor.dom.getRoot(), offset);
-    range.setEnd(editor.dom.getRoot(), offset);
+    range.setStart(cursorRange.start.dom, cursorRange.soffset);
+    range.setEnd(cursorRange.finish.dom, cursorRange.foffset);
 
     if (PlatformDetection.detect().browser.isSafari()) {
       editor.selection.setRng(range);
@@ -171,7 +180,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     it('TINY-9813: Placed a cursor is placed after a table, with a noneditable afterwards', () => {
       const editor = hook.editor();
       editor.setContent('<table><tbody><tr><td><br></td></tr></tbody></table><div contenteditable="false"></div>');
-      setSelectionToBody(editor, 1);
+      setSelectionTo(editor, [], 1);
       insertNewline(editor, { });
       TinyAssertions.assertContent(editor, '<table><tbody><tr><td>&nbsp;</td></tr></tbody></table><p>&nbsp;</p><div contenteditable="false">&nbsp;</div>');
       TinyAssertions.assertCursor(editor, [ 1 ], 0);
@@ -180,7 +189,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     it('TINY-9813: Placed a cursor is placed after a table, with an editable afterwards', () => {
       const editor = hook.editor();
       editor.setContent('<table><tbody><tr><td><br></td></tr></tbody></table><div contenteditable="true">&nbsp;</div>');
-      setSelectionToBody(editor, 1);
+      setSelectionTo(editor, [], 1);
       insertNewline(editor, { });
       TinyAssertions.assertContent(editor, '<table><tbody><tr><td>&nbsp;</td></tr></tbody></table><div contenteditable="true">&nbsp;</div><div contenteditable="true">&nbsp;</div>');
       TinyAssertions.assertCursor(editor, [ 1 ], 0);
@@ -189,10 +198,19 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     it('TINY-9813: Placed a cursor is placed after a table, with nothing', () => {
       const editor = hook.editor();
       editor.setContent('<table><tbody><tr><td><br></td></tr></tbody></table>');
-      setSelectionToBody(editor, 1);
+      setSelectionTo(editor, [], 1);
       insertNewline(editor, { });
       TinyAssertions.assertContent(editor, '<table><tbody><tr><td>&nbsp;</td></tr></tbody></table><p>&nbsp;</p>');
       TinyAssertions.assertCursor(editor, [ 1 ], 0);
+    });
+
+    it('TINY-9813: Placed a cursor is placed after a table, with a noneditable afterwards, wrapped in div', () => {
+      const editor = hook.editor();
+      editor.setContent('<div><table><tbody><tr><td><br></td></tr></tbody></table><div contenteditable="false"></div></div>');
+      setSelectionTo(editor, [ 0 ], 1);
+      insertNewline(editor, { });
+      TinyAssertions.assertContent(editor, '<div><table><tbody><tr><td>&nbsp;</td></tr></tbody></table><p>&nbsp;</p><div contenteditable="false">&nbsp;</div></div>');
+      TinyAssertions.assertCursor(editor, [ 0, 1 ], 0);
     });
   });
 

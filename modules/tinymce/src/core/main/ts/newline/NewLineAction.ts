@@ -78,13 +78,12 @@ const canInsertIntoEditableRoot = (editor: Editor) => {
 
 const isInRootWithEmptyOrCEF = (editor: Editor) => {
   const rng = editor.selection.getRng();
-  const isInRoot = rng.collapsed && rng.startContainer === editor.dom.getRoot();
   const start = SugarElement.fromDom(rng.startContainer);
 
   const child = Traverse.child(start, rng.startOffset);
   const isCefOpt = child.map((element) => SugarNode.isHTMLElement(element) && !ContentEditable.isEditable(element));
 
-  return isInRoot && isCefOpt.getOr(true);
+  return rng.collapsed && isCefOpt.getOr(true);
 };
 
 const match = (predicates: Array<(editor: Editor, shiftKey: boolean) => boolean>, action: NewLineActionAdt) => {

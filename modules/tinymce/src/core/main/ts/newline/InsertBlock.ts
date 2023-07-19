@@ -242,13 +242,12 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   const rng = editor.selection.getRng();
   const newBlockName = Options.getForcedRootBlock(editor);
 
-  const isInRoot = rng.collapsed && rng.startContainer === editor.dom.getRoot();
   const start = SugarElement.fromDom(rng.startContainer);
 
   const child = Traverse.child(start, rng.startOffset);
   const isCef = child.exists((element) => SugarNode.isHTMLElement(element) && !ContentEditable.isEditable(element));
 
-  const inRootAndLastOrCef = isInRoot && isCef;
+  const collapsedAndCef = rng.collapsed && isCef;
 
   // Creates a new block element by cloning the current one or creating a new one if the name is specified
   // This function will also copy any text formatting from the parent block and add it to the new one
@@ -392,7 +391,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   const ctrlKey = !!(evt && evt.ctrlKey);
 
   // Resolve node index
-  if (NodeType.isElement(container) && container.hasChildNodes() && !inRootAndLastOrCef) {
+  if (NodeType.isElement(container) && container.hasChildNodes() && !collapsedAndCef) {
     isAfterLastNodeInContainer = offset > container.childNodes.length - 1;
 
     container = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;
@@ -448,14 +447,14 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
   }
 
   // Never split the body or blocks that we can't split like noneditable host elements
-  if (!inRootAndLastOrCef && (parentBlock === editor.getBody() || !canSplitBlock(dom, parentBlock))) {
+  if (!collapsedAndCef && (parentBlock === editor.getBody() || !canSplitBlock(dom, parentBlock))) {
     return;
   }
   const parentBlockParent = parentBlock.parentNode;
 
   // Insert new block before/after the parent block depending on caret location
   let newBlock: Element;
-  if (inRootAndLastOrCef) {
+  if (collapsedAndCef) {
     newBlock = createNewBlock(newBlockName);
     child.fold(
       () => {
