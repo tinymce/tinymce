@@ -95,8 +95,6 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
       // Ideally we should fetch data from the iframe...innerHtml, this triggers Cors errors
       cachedValue.get(),
     setValue: (frameComponent: AlloyComponent, html: string) => {
-      // TINY-3769: We need to use srcdoc here, instead of src with a data URI, otherwise browsers won't retain the Origin.
-      // See https://bugs.chromium.org/p/chromium/issues/detail?id=58999#c11
       if (cachedValue.get() !== html) {
         const iframeElement = frameComponent.element as SugarElement<HTMLIFrameElement>;
         const setSrcdocValue = () => Attribute.set(iframeElement, 'srcdoc', html);
@@ -105,6 +103,8 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
           const args = [ iframeElement, html, setSrcdocValue ] as const;
           writeValueThrottler.fold(() => writeValue(...args), (throttler) => throttler.throttle(...args));
         } else {
+          // TINY-3769: We need to use srcdoc here, instead of src with a data URI, otherwise browsers won't retain the Origin.
+          // See https://bugs.chromium.org/p/chromium/issues/detail?id=58999#c11
           setSrcdocValue();
         }
       }
