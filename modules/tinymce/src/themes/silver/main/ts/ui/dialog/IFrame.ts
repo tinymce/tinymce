@@ -16,23 +16,44 @@ interface IFrameSourcing {
 
 type IframeSpec = Omit<Dialog.Iframe, 'type'>;
 
+const browser = PlatformDetection.detect().browser;
+const isSafari = browser.isSafari();
+const isFirefox = browser.isFirefox();
+
 const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFrameSourcing => {
   const cachedValue = Cell(initialData.getOr(''));
-
-  const browser = PlatformDetection.detect().browser;
-  const isFirefox = browser.isFirefox();
-  const isSafari = browser.isSafari();
 
   const isElementScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) =>
     Math.ceil(scrollTop) + clientHeight >= scrollHeight;
 
-  const scrollToY = (win: Window, scrollY: number) =>
-    win.scrollTo(0, scrollY);
+  const scrollToY = (win: Window, scrollY: number | 'bottom') => {
+    const scrollToYInternal = (body: HTMLElement) => win.scrollTo(0, scrollY === 'bottom' ? body.scrollHeight : scrollY);
 
-  const delayedScrollForSafari = (win: Window, scrollY: number) =>
-    // TINY-10078: Safari needs a small delay when performing scrolling actions after document.write()
-    // to ensure scroll does not reset to near-top unexpectedly
-    setTimeout(() => scrollToY(win, scrollY), 6);
+    if (isSafari) {
+      // TINY-10078: On Safari, the body not immediately available after document.write(), meaning the iframe has not finished updating.
+      // Wait for the body to ensure scroll does not reset to near-top unexpectedly once the update operation is complete.
+      const waitForBody = (): Promise<HTMLElement> => new Promise((resolve, reject) => {
+        let retries = 0;
+        const interval = setInterval(() => {
+          if (Type.isNonNullable(win.document.body)) {
+            clearInterval(interval);
+            resolve(win.document.body);
+          } else {
+            retries++;
+          }
+        });
+
+        if (retries > 100) {
+          clearInterval(interval);
+          reject();
+        }
+      });
+
+      waitForBody().then(scrollToYInternal);
+    } else {
+      scrollToYInternal(win.document.body);
+    }
+  };
 
   const writeValue = (iframeElement: SugarElement<HTMLIFrameElement>, html: string, fallbackFn: () => void): void => {
     const iframe = iframeElement.dom;
@@ -53,27 +74,16 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
         const win = iframe.contentWindow;
         if (Type.isNonNullable(win)) {
           if (isScrollAtBottom) {
-            const body = doc.body;
-            // TINY-10078: Fallback for when the iframe body is not yet available on Safari
-            const scrollY = body?.scrollHeight ?? 9999;
-            if (isSafari) {
-              delayedScrollForSafari(win, scrollY);
-            } else {
-              scrollToY(win, scrollY);
-            }
+            scrollToY(win, 'bottom');
           } else if (!isScrollAtBottom && (isSafari || isFirefox) && lastScrollTop !== 0) {
             // TINY-10078: Safari and Firefox reset scroll to top on each document.write(), so we need to restore scroll manually
-            if (isSafari) {
-              delayedScrollForSafari(win, lastScrollTop);
-            } else {
-              scrollToY(win, lastScrollTop);
-            }
+            scrollToY(win, lastScrollTop);
           }
         }
       });
   };
 
-  // TINY-10078: Throttle to reduce flickering, as the document.write() method still observes significant flickering on Safari.
+  // TINY-10097: Throttle to reduce flickering, as the document.write() method still observes significant flickering on Safari.
   const writeValueThrottler = isSafari ? Optional.some(Throttler.first(writeValue, 500)) : Optional.none();
 
   return {
