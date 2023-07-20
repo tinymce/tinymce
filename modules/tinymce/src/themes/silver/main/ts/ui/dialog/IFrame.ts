@@ -26,8 +26,8 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
   const isElementScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) =>
     Math.ceil(scrollTop) + clientHeight >= scrollHeight;
 
-  const scrollToY = (win: Window, scrollY: number | 'bottom') => {
-    const scrollToYInternal = (body: HTMLElement) => win.scrollTo(0, scrollY === 'bottom' ? body.scrollHeight : scrollY);
+  const scrollToYAfterWrite = (win: Window, scrollY: number | 'bottom') => {
+    const scrollToY = (body: HTMLElement) => win.scrollTo(0, scrollY === 'bottom' ? body.scrollHeight : scrollY);
 
     if (isSafari) {
       // TINY-10078: On Safari, the body not immediately available after document.write(), meaning the iframe has not finished updating.
@@ -49,9 +49,9 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
         }
       });
 
-      waitForBody().then(scrollToYInternal);
+      waitForBody().then(scrollToY);
     } else {
-      scrollToYInternal(win.document.body);
+      scrollToY(win.document.body);
     }
   };
 
@@ -74,10 +74,10 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
         const win = iframe.contentWindow;
         if (Type.isNonNullable(win)) {
           if (isScrollAtBottom) {
-            scrollToY(win, 'bottom');
+            scrollToYAfterWrite(win, 'bottom');
           } else if (!isScrollAtBottom && (isSafari || isFirefox) && lastScrollTop !== 0) {
             // TINY-10078: Safari and Firefox reset scroll to top on each document.write(), so we need to restore scroll manually
-            scrollToY(win, lastScrollTop);
+            scrollToYAfterWrite(win, lastScrollTop);
           }
         }
       });
