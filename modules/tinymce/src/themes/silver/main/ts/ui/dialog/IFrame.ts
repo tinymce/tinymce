@@ -63,9 +63,9 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
         let lastScrollTop = 0;
         // TINY-10032: If documentElement (or body) is nullable, we assume document is empty and so scroll is at bottom.
         const isScrollAtBottom = Optional.from(
-          // TINY-10078: On Firefox, if the HTML does not begin with a document type declaration, the body holds the scroll position,
+          // TINY-10078: On Firefox, if the HTML does not begin with an HTML document type declaration, the body holds the scroll position,
           // not the documentElement.
-          isFirefox && !html.startsWith('<!DOCTYPE') ? doc.body : doc.documentElement
+          isFirefox && !/^<!DOCTYPE (html|HTML)/.test(html) ? doc.body : doc.documentElement
         ).map((el) => {
           lastScrollTop = el.scrollTop;
           return el;
