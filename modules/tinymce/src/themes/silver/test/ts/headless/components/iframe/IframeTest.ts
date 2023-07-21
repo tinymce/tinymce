@@ -146,33 +146,43 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
     const initialLongContent = '<p>1</p>'.repeat(50);
     const newLongContent = `${initialLongContent}${'<p>2</p>'.repeat(50)}`;
 
-    const testStreamScrollToBottom = (initialScrollAtBottom: boolean, shouldScrollToBottom: boolean) => () => {
-      const isScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) => scrollTop + clientHeight >= scrollHeight;
-      const isScrollAtTop = ({ scrollTop }: HTMLElement) => scrollTop === 0;
+    const isScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) => Math.ceil(scrollTop) + clientHeight >= scrollHeight;
+    const isScrollAtTop = ({ scrollTop }: HTMLElement) => scrollTop === 0;
 
+    const testStreamScrollToBottom = (initialScrollAtBottom: boolean, shouldScrollToBottom: boolean) => async () => {
       const frame = getFrameFromFrameNumber(2);
-      Representing.setValue(frame, initialLongContent);
-
       const iframe = frame.element.dom as HTMLIFrameElement;
-      Optional.from(iframe.contentWindow).fold(
-        () => assert.fail('Could not find iframe document element'),
+
+      let isIframeLoaded = false;
+      iframe.onload = () => isIframeLoaded = true;
+      const setValueAndWaitForLoad = (content: string) => {
+        isIframeLoaded = false;
+        Representing.setValue(frame, content);
+        return Waiter.pTryUntilPredicate('Wait for iframe to finish loading', () => isIframeLoaded);
+      };
+
+      await setValueAndWaitForLoad(initialLongContent);
+
+      await Optional.from(iframe.contentWindow).fold(
+        () => assert.fail('Could not find iframe window'),
         (win) =>
-          Optional.from(iframe.contentDocument?.documentElement).fold(
-            () => assert.fail('Could not find iframe document element'),
-            (docEl) => {
+          Optional.from(iframe.contentDocument?.body).fold(
+            () => assert.fail('Could not find iframe body'),
+            async (body) => {
               if (initialScrollAtBottom) {
-                win.scrollTo(0, Number.MAX_SAFE_INTEGER);
-                assert.isTrue(isScrollAtBottom(docEl), 'iframe should be scrolled to bottom initially');
+                win.scrollTo(0, body.scrollHeight);
+                assert.isTrue(isScrollAtBottom(body), 'iframe should be scrolled to bottom initially');
               } else {
                 win.scrollTo(0, 0);
-                assert.isTrue(isScrollAtTop(docEl), 'iframe should be scrolled to top initially');
+                assert.isTrue(isScrollAtTop(body), 'iframe should be scrolled to top initially');
               }
 
-              Representing.setValue(frame, newLongContent);
+              await setValueAndWaitForLoad(newLongContent);
+
               if (shouldScrollToBottom) {
-                assert.isTrue(isScrollAtBottom(docEl), 'iframe should be scrolled to bottom after setting value');
+                assert.isTrue(isScrollAtBottom(body), 'iframe should be scrolled to bottom after setting value');
               } else {
-                assert.isTrue(isScrollAtTop(docEl), 'iframe scroll should be at top after setting value');
+                assert.isTrue(isScrollAtTop(body), 'iframe scroll should be at top after setting value');
               }
             }
           )
