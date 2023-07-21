@@ -26,34 +26,8 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
   const isElementScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) =>
     Math.ceil(scrollTop) + clientHeight >= scrollHeight;
 
-  const scrollToYAfterWrite = (win: Window, scrollY: number | 'bottom') => {
-    const scrollToY = (body: HTMLElement) => win.scrollTo(0, scrollY === 'bottom' ? body.scrollHeight : scrollY);
-
-    if (isSafari) {
-      // TINY-10078: On Safari, the body not immediately available after document.write(), meaning the iframe has not finished updating.
-      // Wait for the body to ensure scroll does not reset to near-top unexpectedly once the update operation is complete.
-      const waitForBody = (): Promise<HTMLElement> => new Promise((resolve, reject) => {
-        let retries = 0;
-        const interval = setInterval(() => {
-          if (Type.isNonNullable(win.document.body)) {
-            clearInterval(interval);
-            resolve(win.document.body);
-          } else {
-            retries++;
-          }
-        });
-
-        if (retries > 100) {
-          clearInterval(interval);
-          reject();
-        }
-      });
-
-      waitForBody().then(scrollToY);
-    } else {
-      scrollToY(win.document.body);
-    }
-  };
+  const scrollToY = (win: Window, y: number | 'bottom') =>
+    win.scrollTo(0, y === 'bottom' ? win.document.body.scrollHeight : y);
 
   const writeValue = (iframeElement: SugarElement<HTMLIFrameElement>, html: string, fallbackFn: () => void): void => {
     const iframe = iframeElement.dom;
@@ -71,18 +45,30 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
           return el;
         }).forall(isElementScrollAtBottom);
 
+        const scrollAfterWrite = (): void => {
+          const win = iframe.contentWindow;
+          if (Type.isNonNullable(win)) {
+            if (isScrollAtBottom) {
+              scrollToY(win, 'bottom');
+            } else if (!isScrollAtBottom && (isSafari || isFirefox) && lastScrollTop !== 0) {
+              // TINY-10078: Safari and Firefox reset scroll to top on each document.write(), so we need to restore scroll manually
+              scrollToY(win, lastScrollTop);
+            }
+          }
+        };
+
+        // TINY-10078: On Safari, attempting to scroll before iframe has finished loading will cause scroll to reset to top upon load.
+        // We won't do this for all browsers since this does introduce a slight visual lag.
+        if (isSafari) {
+          iframe.addEventListener('load', scrollAfterWrite, { once: true });
+        }
+
         doc.open();
         doc.write(html);
         doc.close();
 
-        const win = iframe.contentWindow;
-        if (Type.isNonNullable(win)) {
-          if (isScrollAtBottom) {
-            scrollToYAfterWrite(win, 'bottom');
-          } else if (!isScrollAtBottom && (isSafari || isFirefox) && lastScrollTop !== 0) {
-            // TINY-10078: Safari and Firefox reset scroll to top on each document.write(), so we need to restore scroll manually
-            scrollToYAfterWrite(win, lastScrollTop);
-          }
+        if (!isSafari) {
+          scrollAfterWrite();
         }
       });
   };
