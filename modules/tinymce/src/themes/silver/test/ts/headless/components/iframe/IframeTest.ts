@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions } from '@ephox/agar';
+import { ApproxStructure, Assertions, Waiter } from '@ephox/agar';
 import { AlloyComponent, Composing, Container, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { describe, context, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
@@ -109,11 +109,8 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
   });
 
   context('iframe content', () => {
-    const assertSandboxedIframeContent = (frame: AlloyComponent, content: string) =>
-      Optional.from(frame.element.dom.contentDocument?.body).fold(
-        () => assert.fail('Could not find iframe document body'),
-        (body) => assert.equal(body.innerHTML, content, 'iframe content should match')
-      );
+    const assertSandboxedIframeContent = (iframeBody: HTMLElement, content: string) =>
+      assert.equal(iframeBody.innerHTML, content, 'iframe content should match');
 
     const assertSandboxIframeSrcdoc = (frame: AlloyComponent, content: string) =>
       // Can't check content inside the iframe due to permission issues.
@@ -129,14 +126,15 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
         frame.element
       );
 
-    const testSandboxedIframeContent = (frameNumber: number, assertUsingSrcdoc: boolean) => () => {
+    const testSandboxedIframeContent = (frameNumber: number, assertUsingSrcdoc: boolean) => async () => {
       const frame = getFrameFromFrameNumber(frameNumber);
       const content = '<p><span class="me">Me</span></p>';
       Representing.setValue(frame, content);
       if (assertUsingSrcdoc) {
         assertSandboxIframeSrcdoc(frame, content);
       } else {
-        assertSandboxedIframeContent(frame, content);
+        await Waiter.pTryUntil('Waiting for iframe body to be set', () =>
+          assertSandboxedIframeContent(frame.element.dom.contentDocument?.body, content));
       }
     };
 
