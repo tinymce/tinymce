@@ -143,13 +143,20 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
   });
 
   context('Autoscrolling to bottom', () => {
+    const enum ScrollPosition {
+      Top,
+      Middle,
+      Bottom
+    }
+
     const initialLongContent = '<p>1</p>'.repeat(50);
     const newLongContent = `${initialLongContent}${'<p>2</p>'.repeat(50)}`;
 
-    const isScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) => Math.ceil(scrollTop) + clientHeight >= scrollHeight;
-    const isScrollAtTop = ({ scrollTop }: HTMLElement) => scrollTop === 0;
+    const assertScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement, label: string) => assert.isAtLeast(Math.ceil(scrollTop) + clientHeight, scrollHeight, label);
+    const assertScrollAtMiddle = ({ scrollTop, scrollHeight }: HTMLElement, label: string) => assert.approximately(scrollTop, scrollHeight / 2, 1, label);
+    const assertScrollAtTop = ({ scrollTop }: HTMLElement, label: string) => assert.strictEqual(scrollTop, 0, label);
 
-    const testStreamScrollToBottom = (initialScrollAtBottom: boolean, shouldScrollToBottom: boolean) => async () => {
+    const testStreamScrollToBottom = (initialScroll: ScrollPosition) => async () => {
       const frame = getFrameFromFrameNumber(2);
       const iframe = frame.element.dom as HTMLIFrameElement;
 
@@ -169,31 +176,39 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
           Optional.from(iframe.contentDocument?.body).fold(
             () => assert.fail('Could not find iframe body'),
             async (body) => {
-              if (initialScrollAtBottom) {
-                win.scrollTo(0, body.scrollHeight);
-                assert.isTrue(isScrollAtBottom(body), 'iframe should be scrolled to bottom initially');
-              } else {
+              if (initialScroll === ScrollPosition.Top) {
                 win.scrollTo(0, 0);
-                assert.isTrue(isScrollAtTop(body), 'iframe should be scrolled to top initially');
+                assertScrollAtTop(body, 'iframe should be scrolled to top initially');
+              } else if (initialScroll === ScrollPosition.Middle) {
+                win.scrollTo(0, body.scrollHeight / 2);
+                assertScrollAtMiddle(body, 'iframe should be scrolled to middle initially');
+              } else {
+                win.scrollTo(0, body.scrollHeight);
+                assertScrollAtBottom(body, 'iframe should be scrolled to bottom initially');
               }
 
               await setValueAndWaitForLoad(newLongContent);
 
-              if (shouldScrollToBottom) {
-                assert.isTrue(isScrollAtBottom(body), 'iframe should be scrolled to bottom after setting value');
+              if (initialScroll === ScrollPosition.Top) {
+                assertScrollAtTop(body, 'iframe scroll should be at top after setting value');
+              } else if (initialScroll === ScrollPosition.Middle) {
+                assertScrollAtMiddle(body, 'iframe scroll should be at middle after setting value');
               } else {
-                assert.isTrue(isScrollAtTop(body), 'iframe scroll should be at top after setting value');
+                assertScrollAtBottom(body, 'iframe should be at bottom after setting value');
               }
             }
           )
       );
     };
 
-    it('TINY-10032: Should not scroll to bottom when streamContent: true and iframe is not already scrolled to bottom',
-      testStreamScrollToBottom(false, false));
+    it('TINY-10032: Should keep scroll at top when streamContent: true and iframe is at top',
+      testStreamScrollToBottom(ScrollPosition.Top));
+
+    it('TINY-10078: Should keep scroll at middle when streamContent: true and iframe is at middle',
+      testStreamScrollToBottom(ScrollPosition.Middle));
 
     it('TINY-10032: Should scroll to bottom when streamContent: true and iframe is already scrolled to bottom',
-      testStreamScrollToBottom(true, true));
+      testStreamScrollToBottom(ScrollPosition.Bottom));
 
     it('TINY-10032: Should not scroll to bottom when stream: false', () => {
       const frame = getFrameFromFrameNumber(0);
