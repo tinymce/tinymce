@@ -162,7 +162,7 @@ options</a>.
 
     /**
      * Creates an alert dialog. Please don't use the blocking behavior of this
-     * native version use the callback method instead then it can be extended.
+     * native version. Use the callback method instead; then it can be extended.
      *
      * @method alert
      * @param {String} message Text to display in the new alert dialog.
@@ -175,8 +175,8 @@ options</a>.
     alert,
 
     /**
-     * Creates a confirm dialog. Please don't use the blocking behavior of this
-     * native version use the callback method instead then it can be extended.
+     * Creates an alert dialog. Please don't use the blocking behavior of this
+     * native version. Use the callback method instead; then it can be extended.
      *
      * @method confirm
      * @param {String} message Text to display in the new confirm dialog.
