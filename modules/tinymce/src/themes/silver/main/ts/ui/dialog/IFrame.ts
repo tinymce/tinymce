@@ -32,7 +32,7 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
 
   const getScrollingElement = (doc: Document, html: string): Optional<HTMLElement> => {
     // TINY-10078: The scrolling element can change between body and documentElement depending on whether there
-    // is a doctype declaration. However, the doctype behavior is inconsistent on Chrome and Safari checking for
+    // is a doctype declaration. However, this behavior is inconsistent on Chrome and Safari so checking for
     // the scroll properties is the most reliable way to determine which element is the scrolling element, at
     // least for the purposes of determining whether scroll is at bottom.
     const body = doc.body;

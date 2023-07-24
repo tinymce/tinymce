@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Improved
+- On the Safari browser, content updates for iframe dialog components with the `streamContent` property set to `true` were throttled to 500ms intervals to reduce the visual impact of flickering when rapidly updating iframe content. #TINY-10097
+
+### Fixed
+- On Safari and Firefox browsers, non-end scroll positions were not maintained when updating the content of an iframe dialog component with the `streamContent` property set to `true`. #TINY-10078
+
 ## 6.6.0 - 2023-07-12
 
 ### Added
