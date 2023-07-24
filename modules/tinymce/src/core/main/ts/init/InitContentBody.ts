@@ -330,8 +330,6 @@ const preInit = (editor: Editor) => {
 
   editor.quirks = Quirks(editor);
 
-  Events.firePostRender(editor);
-
   const directionality = Options.getDirectionality(editor);
   if (directionality !== undefined) {
     body.dir = directionality;
@@ -391,6 +389,12 @@ const contentBodyLoaded = (editor: Editor): void => {
   (body as any).disabled = true;
   editor.readonly = Options.isReadOnly(editor);
   editor._editableRoot = Options.hasEditableRoot(editor);
+
+  if (!editor.readonly && editor.hasEditableRoot()) {
+    if (editor.inline && DOM.getStyle(body, 'position', true) === 'static') {
+      body.style.position = 'relative';
+    }
+  }
 
   (body as any).disabled = false;
 
@@ -460,12 +464,10 @@ const contentBodyLoaded = (editor: Editor): void => {
   });
 
   if (!editor.readonly && editor.hasEditableRoot()) {
-    if (editor.inline && DOM.getStyle(body, 'position', true) === 'static') {
-      body.style.position = 'relative';
-    }
-
     body.contentEditable = 'true';
   }
+
+  Events.firePostRender(editor);
 };
 
 export {
