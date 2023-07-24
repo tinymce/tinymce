@@ -119,6 +119,19 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
 
   const getDoctypeLabel = (hasDoctype: boolean) => hasDoctype ? 'content has doctype' : 'content does not have doctype';
 
+  const maxIterations = 10;
+  const testIterativeContentChange = (frameNumber: number, assertFn: (iframe: HTMLIFrameElement, it: number) => void, shouldContentHaveDoctype: boolean) => async () => {
+    const frame = getFrameFromFrameNumber(frameNumber);
+
+    for (let i = 0, content = ''; i < maxIterations; ++i) {
+      content += testContent;
+      await setContentAndWaitForLoad(frame, content, shouldContentHaveDoctype);
+      assertFn(frame.element.dom as HTMLIFrameElement, i);
+    }
+  };
+
+  const streamContentFrameNumber = 2;
+
   it('Check basic structure', () => {
     const [ frame1, frame2, frame3, frame4 ] = hook.component().components();
     assertInitialIframeStructure(frame1, true, false);
@@ -158,7 +171,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
     };
 
     it('Check iframe content', testSandboxedIframeContent(0, true));
-    it('TINY-10032: Check iframe content with streamContent: true', testSandboxedIframeContent(2, false));
+    it('TINY-10032: Check iframe content with streamContent: true', testSandboxedIframeContent(streamContentFrameNumber, false));
   });
 
   context('Autoscrolling', () => {
@@ -172,7 +185,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
     const newLongContent = `${initialLongContent}${'<p>2</p>'.repeat(50)}`;
 
     const testStreamScroll = (initialScrollPosition: ScrollPosition, shouldContentHaveDoctype: boolean) => async () => {
-      const frame = getFrameFromFrameNumber(2);
+      const frame = getFrameFromFrameNumber(streamContentFrameNumber);
       const iframe = frame.element.dom as HTMLIFrameElement;
 
       await setContentAndWaitForLoad(frame, initialLongContent, shouldContentHaveDoctype);
@@ -233,6 +246,11 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
 
       it(`TINY-10032: Should scroll to bottom when streamContent: true, iframe is already scrolled to bottom, and ${doctypeLabel}}`,
         testStreamScroll(ScrollPosition.Bottom, shouldContentHaveDoctype));
+
+      it(`TINY-10078: Check that scroll is kept at bottom when changing content iteratively and ${doctypeLabel}`,
+        testIterativeContentChange(streamContentFrameNumber, (iframe, it) =>
+          assertScrollAtBottom((shouldContentHaveDoctype ? iframe.contentDocument?.documentElement : iframe.contentDocument?.body) as HTMLElement,
+            `iframe should be scrolled to bottom on iteration ${it}`), shouldContentHaveDoctype));
     });
 
     it('TINY-10032: Should not scroll to bottom when stream: false', () => {
@@ -242,26 +260,6 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
         () => assert.fail('Could not find iframe document element'),
         (win) => assert.equal(win.scrollY, 0, 'iframe scroll should be at top')
       );
-    });
-  });
-
-  context('Iterative content change with streamContent: true', () => {
-    const maxIterations = 10;
-    const testIterativeContentChange = (assertFn: (iframe: HTMLIFrameElement, it: number) => void, shouldContentHaveDoctype: boolean) => async () => {
-      const frame = getFrameFromFrameNumber(2);
-
-      for (let i = 0, content = ''; i < maxIterations; ++i) {
-        content += testContent;
-        await setContentAndWaitForLoad(frame, content, shouldContentHaveDoctype);
-        assertFn(frame.element.dom as HTMLIFrameElement, i);
-      }
-    };
-
-    Arr.each([ true, false ], (shouldContentHaveDoctype) => {
-      it(`TINY-10078: Check that scroll is kept at bottom when changing content iteratively and ${getDoctypeLabel(shouldContentHaveDoctype)}`,
-        testIterativeContentChange((iframe, it) =>
-          assertScrollAtBottom((shouldContentHaveDoctype ? iframe.contentDocument?.documentElement : iframe.contentDocument?.body) as HTMLElement,
-            `iframe should be scrolled to bottom on iteration ${it}`), shouldContentHaveDoctype));
     });
   });
 });
