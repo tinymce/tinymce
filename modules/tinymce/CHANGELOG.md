@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - On Safari and Firefox browsers, non-end scroll positions were not maintained when updating the content of an iframe dialog component with the `streamContent` property set to `true`. #TINY-10078
+- On the Safari browser, end scroll positions were not consistently maintained when updating the content of an iframe dialog component with the `streamContent` property set to `true`. #TINY-10109
 
 ## 6.6.0 - 2023-07-12
 
