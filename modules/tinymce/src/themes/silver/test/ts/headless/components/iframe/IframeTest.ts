@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Waiter } from '@ephox/agar';
 import { AlloyComponent, Composing, Container, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { describe, context, it } from '@ephox/bedrock-client';
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import { renderIFrame } from 'tinymce/themes/silver/ui/dialog/IFrame';
@@ -112,9 +112,10 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
   let isIframeLoaded = false;
   const setContentAndWaitForLoad = (frame: AlloyComponent, content: string, shouldContentHaveDoctype: boolean) => {
     isIframeLoaded = false;
-    (frame.element.dom as HTMLIFrameElement).onload = () => isIframeLoaded = true;
+    const iframe = frame.element.dom as HTMLIFrameElement;
+    iframe.onload = () => isIframeLoaded = true;
     Representing.setValue(frame, normalizeContent(content, shouldContentHaveDoctype));
-    return Waiter.pTryUntilPredicate('Wait for iframe to finish loading', () => isIframeLoaded);
+    return Waiter.pTryUntilPredicate('Wait for iframe to finish loading', () => isIframeLoaded).then(() => iframe.onload = Fun.noop);
   };
 
   const getDoctypeLabel = (hasDoctype: boolean) => hasDoctype ? 'content has doctype' : 'content does not have doctype';
@@ -251,6 +252,18 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
         testIterativeContentChange(streamContentFrameNumber, (iframe, it) =>
           assertScrollAtBottom((shouldContentHaveDoctype ? iframe.contentDocument?.documentElement : iframe.contentDocument?.body) as HTMLElement,
             `iframe should be scrolled to bottom on iteration ${it}`), shouldContentHaveDoctype));
+
+      it(`TINY-10078: Should scroll to bottom when adding overflowing content in an empty iframe and ${doctypeLabel}`, async () => {
+        const frame = getFrameFromFrameNumber(streamContentFrameNumber);
+        const iframe = frame.element.dom as HTMLIFrameElement;
+        await Waiter.pTryUntil('Waiting for iframe content to be set to empty initially', () => {
+          Representing.setValue(frame, '');
+          assert.equal(iframe.contentDocument?.body.innerHTML, '', 'iframe should be empty initially');
+        });
+        await setContentAndWaitForLoad(frame, initialLongContent, shouldContentHaveDoctype);
+        assertScrollAtBottom((shouldContentHaveDoctype ? iframe.contentDocument?.documentElement : iframe.contentDocument?.body) as HTMLElement,
+          'iframe should be scrolled to bottom after setting value');
+      });
     });
 
     it('TINY-10032: Should not scroll to bottom when stream: false', () => {
