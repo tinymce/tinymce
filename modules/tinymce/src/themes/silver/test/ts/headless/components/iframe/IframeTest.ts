@@ -100,6 +100,25 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
     component.element
   );
 
+  const testContent = '<p><span class="me">Me</span></p>';
+
+  const assertScrollAtTop = ({ scrollTop }: HTMLElement, label: string) => assert.strictEqual(scrollTop, 0, label);
+  const assertScrollAtMiddle = ({ scrollTop, scrollHeight }: HTMLElement, label: string) => assert.approximately(scrollTop, scrollHeight / 2, 1, label);
+  const assertScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement, label: string) => assert.isAtLeast(Math.ceil(scrollTop) + clientHeight, scrollHeight, label);
+  const assertScrollApproximatelyAt = ({ scrollTop }: HTMLElement, expectedScrollTop: number, label: string) => assert.approximately(scrollTop, expectedScrollTop, 1, label);
+
+  const normalizeContent = (content: string, hasDoctype: boolean) => hasDoctype ? `<!DOCTYPE html><html><body>${content}</body></html>` : content;
+
+  let isIframeLoaded = false;
+  const setContentAndWaitForLoad = (frame: AlloyComponent, content: string, shouldContentHaveDoctype: boolean) => {
+    isIframeLoaded = false;
+    (frame.element.dom as HTMLIFrameElement).onload = () => isIframeLoaded = true;
+    Representing.setValue(frame, normalizeContent(content, shouldContentHaveDoctype));
+    return Waiter.pTryUntilPredicate('Wait for iframe to finish loading', () => isIframeLoaded);
+  };
+
+  const getDoctypeLabel = (hasDoctype: boolean) => hasDoctype ? 'content has doctype' : 'content does not have doctype';
+
   it('Check basic structure', () => {
     const [ frame1, frame2, frame3, frame4 ] = hook.component().components();
     assertInitialIframeStructure(frame1, true, false);
@@ -128,13 +147,13 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
 
     const testSandboxedIframeContent = (frameNumber: number, assertUsingSrcdoc: boolean) => async () => {
       const frame = getFrameFromFrameNumber(frameNumber);
-      const content = '<p><span class="me">Me</span></p>';
-      Representing.setValue(frame, content);
+
+      Representing.setValue(frame, testContent);
       if (assertUsingSrcdoc) {
-        assertSandboxIframeSrcdoc(frame, content);
+        assertSandboxIframeSrcdoc(frame, testContent);
       } else {
         await Waiter.pTryUntil('Waiting for iframe body to be set', () =>
-          assertSandboxedIframeContent(frame.element.dom.contentDocument?.body, content));
+          assertSandboxedIframeContent(frame.element.dom.contentDocument?.body, testContent));
       }
     };
 
@@ -142,7 +161,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
     it('TINY-10032: Check iframe content with streamContent: true', testSandboxedIframeContent(2, false));
   });
 
-  context('Autoscrolling to bottom', () => {
+  context('Autoscrolling', () => {
     const enum ScrollPosition {
       Top,
       Middle,
@@ -152,26 +171,11 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
     const initialLongContent = '<p>1</p>'.repeat(50);
     const newLongContent = `${initialLongContent}${'<p>2</p>'.repeat(50)}`;
 
-    const assertScrollAtTop = ({ scrollTop }: HTMLElement, label: string) => assert.strictEqual(scrollTop, 0, label);
-    const assertScrollAtMiddle = ({ scrollTop, scrollHeight }: HTMLElement, label: string) => assert.approximately(scrollTop, scrollHeight / 2, 1, label);
-    const assertScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement, label: string) => assert.isAtLeast(Math.ceil(scrollTop) + clientHeight, scrollHeight, label);
-    const assertScrollApproximatelyAt = ({ scrollTop }: HTMLElement, expectedScrollTop: number, label: string) => assert.approximately(scrollTop, expectedScrollTop, 1, label);
-
     const testStreamScroll = (initialScrollPosition: ScrollPosition, shouldContentHaveDoctype: boolean) => async () => {
-      const normalizeContent = (content: string) => shouldContentHaveDoctype ? `<!DOCTYPE html><html><body>${content}</body></html>` : content;
-
       const frame = getFrameFromFrameNumber(2);
       const iframe = frame.element.dom as HTMLIFrameElement;
 
-      let isIframeLoaded = false;
-      iframe.onload = () => isIframeLoaded = true;
-      const setContentAndWaitForLoad = (content: string) => {
-        isIframeLoaded = false;
-        Representing.setValue(frame, normalizeContent(content));
-        return Waiter.pTryUntilPredicate('Wait for iframe to finish loading', () => isIframeLoaded);
-      };
-
-      await setContentAndWaitForLoad(initialLongContent);
+      await setContentAndWaitForLoad(frame, initialLongContent, shouldContentHaveDoctype);
 
       const doc = iframe.contentDocument;
       await Optional.from(iframe.contentWindow).fold(
@@ -199,7 +203,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
                 assertScrollAtBottom(el, 'iframe should be scrolled to bottom initially');
               }
 
-              await setContentAndWaitForLoad(newLongContent);
+              await setContentAndWaitForLoad(frame, newLongContent, shouldContentHaveDoctype);
 
               Optional.from(shouldContentHaveDoctype ? doc?.documentElement : doc?.body).fold(
                 () => assert.fail(`Could not find updated iframe ${shouldContentHaveDoctype ? 'documentElement' : 'body'}`),
@@ -219,7 +223,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
     };
 
     Arr.each([ true, false ], (shouldContentHaveDoctype) => {
-      const doctypeLabel = shouldContentHaveDoctype ? 'content has doctype' : 'content does not have doctype';
+      const doctypeLabel = getDoctypeLabel(shouldContentHaveDoctype);
 
       it(`TINY-10032: Should keep scroll at top when streamContent: true, iframe is at top, and ${doctypeLabel}`,
         testStreamScroll(ScrollPosition.Top, shouldContentHaveDoctype));
@@ -238,6 +242,26 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
         () => assert.fail('Could not find iframe document element'),
         (win) => assert.equal(win.scrollY, 0, 'iframe scroll should be at top')
       );
+    });
+  });
+
+  context('Iterative content change with streamContent: true', () => {
+    const maxIterations = 10;
+    const testIterativeContentChange = (assertFn: (iframe: HTMLIFrameElement, it: number) => void, shouldContentHaveDoctype: boolean) => async () => {
+      const frame = getFrameFromFrameNumber(2);
+
+      for (let i = 0, content = ''; i < maxIterations; ++i) {
+        content += testContent;
+        await setContentAndWaitForLoad(frame, content, shouldContentHaveDoctype);
+        assertFn(frame.element.dom as HTMLIFrameElement, i);
+      }
+    };
+
+    Arr.each([ true, false ], (shouldContentHaveDoctype) => {
+      it(`TINY-10078: Check that scroll is kept at bottom when changing content iteratively and ${getDoctypeLabel(shouldContentHaveDoctype)}`,
+        testIterativeContentChange((iframe, it) =>
+          assertScrollAtBottom((shouldContentHaveDoctype ? iframe.contentDocument?.documentElement : iframe.contentDocument?.body) as HTMLElement,
+            `iframe should be scrolled to bottom on iteration ${it}`), shouldContentHaveDoctype));
     });
   });
 });
