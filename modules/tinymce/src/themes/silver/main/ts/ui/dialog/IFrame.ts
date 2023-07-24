@@ -19,6 +19,7 @@ type IframeSpec = Omit<Dialog.Iframe, 'type'>;
 const browser = PlatformDetection.detect().browser;
 const isSafari = browser.isSafari();
 const isFirefox = browser.isFirefox();
+const isChromium = browser.isChromium();
 
 const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFrameSourcing => {
   const cachedValue = Cell(initialData.getOr(''));
@@ -29,6 +30,17 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
   const scrollToY = (win: Window, y: number | 'bottom') =>
     win.scrollTo(0, y === 'bottom' ? win.document.body.scrollHeight : y);
 
+  const getScrollingElement = (doc: Document, html: string): Optional<HTMLElement> => {
+    // TINY-10078: The scrolling element can change between body and documentElement depending on whether there
+    // is a doctype declaration. However, the doctype behavior is inconsistent on Chrome and Safari checking for
+    // the scroll properties is the most reliable way to determine which element is the scrolling element, at
+    // least for the purposes of determining whether scroll is at bottom.
+    const body = doc.body;
+    return !/^<!DOCTYPE (html|HTML)/.test(html) &&
+      (!isChromium && !isSafari || Type.isNonNullable(body) && (body.scrollTop !== 0 || Math.abs(body.scrollHeight - body.clientHeight) > 1))
+      ? Optional.from(body) : Optional.from(doc.documentElement);
+  };
+
   const writeValue = (iframeElement: SugarElement<HTMLIFrameElement>, html: string, fallbackFn: () => void): void => {
     const iframe = iframeElement.dom;
     Optional.from(iframe.contentDocument).fold(
@@ -36,11 +48,7 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
       (doc) => {
         let lastScrollTop = 0;
         // TINY-10032: If documentElement (or body) is nullable, we assume document is empty and so scroll is at bottom.
-        const isScrollAtBottom = Optional.from(
-          // TINY-10078: On Firefox, if the HTML does not begin with an HTML document type declaration, the body holds the scroll position,
-          // not the documentElement.
-          isFirefox && !/^<!DOCTYPE (html|HTML)/.test(html) ? doc.body : doc.documentElement
-        ).map((el) => {
+        const isScrollAtBottom = getScrollingElement(doc, html).map((el) => {
           lastScrollTop = el.scrollTop;
           return el;
         }).forall(isElementScrollAtBottom);

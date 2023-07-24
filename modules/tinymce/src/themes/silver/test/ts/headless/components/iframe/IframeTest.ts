@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Waiter } from '@ephox/agar';
 import { AlloyComponent, Composing, Container, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { describe, context, it } from '@ephox/bedrock-client';
-import { Optional } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import { renderIFrame } from 'tinymce/themes/silver/ui/dialog/IFrame';
@@ -152,63 +152,84 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
     const initialLongContent = '<p>1</p>'.repeat(50);
     const newLongContent = `${initialLongContent}${'<p>2</p>'.repeat(50)}`;
 
-    const assertScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement, label: string) => assert.isAtLeast(Math.ceil(scrollTop) + clientHeight, scrollHeight, label);
-    const assertScrollAtMiddle = ({ scrollTop, scrollHeight }: HTMLElement, label: string) => assert.approximately(scrollTop, scrollHeight / 2, 1, label);
     const assertScrollAtTop = ({ scrollTop }: HTMLElement, label: string) => assert.strictEqual(scrollTop, 0, label);
+    const assertScrollAtMiddle = ({ scrollTop, scrollHeight }: HTMLElement, label: string) => assert.approximately(scrollTop, scrollHeight / 2, 1, label);
+    const assertScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement, label: string) => assert.isAtLeast(Math.ceil(scrollTop) + clientHeight, scrollHeight, label);
+    const assertScrollApproximatelyAt = ({ scrollTop }: HTMLElement, expectedScrollTop: number, label: string) => assert.approximately(scrollTop, expectedScrollTop, 1, label);
 
-    const testStreamScrollToBottom = (initialScroll: ScrollPosition) => async () => {
+    const testStreamScroll = (initialScrollPosition: ScrollPosition, shouldContentHaveDoctype: boolean) => async () => {
+      const normalizeContent = (content: string) => shouldContentHaveDoctype ? `<!DOCTYPE html><html><body>${content}</body></html>` : content;
+
       const frame = getFrameFromFrameNumber(2);
       const iframe = frame.element.dom as HTMLIFrameElement;
 
       let isIframeLoaded = false;
       iframe.onload = () => isIframeLoaded = true;
-      const setValueAndWaitForLoad = (content: string) => {
+      const setContentAndWaitForLoad = (content: string) => {
         isIframeLoaded = false;
-        Representing.setValue(frame, content);
+        Representing.setValue(frame, normalizeContent(content));
         return Waiter.pTryUntilPredicate('Wait for iframe to finish loading', () => isIframeLoaded);
       };
 
-      await setValueAndWaitForLoad(initialLongContent);
+      await setContentAndWaitForLoad(initialLongContent);
 
+      const doc = iframe.contentDocument;
       await Optional.from(iframe.contentWindow).fold(
         () => assert.fail('Could not find iframe window'),
         (win) =>
-          Optional.from(iframe.contentDocument?.body).fold(
-            () => assert.fail('Could not find iframe body'),
-            async (body) => {
-              if (initialScroll === ScrollPosition.Top) {
-                win.scrollTo(0, 0);
-                assertScrollAtTop(body, 'iframe should be scrolled to top initially');
-              } else if (initialScroll === ScrollPosition.Middle) {
-                win.scrollTo(0, body.scrollHeight / 2);
-                assertScrollAtMiddle(body, 'iframe should be scrolled to middle initially');
+          Optional.from(shouldContentHaveDoctype ? doc?.documentElement : doc?.body).fold(
+            () => assert.fail(`Could not find iframe ${shouldContentHaveDoctype ? 'documentElement' : 'body'}`),
+            async (el) => {
+              let initialScroll: number;
+              if (initialScrollPosition === ScrollPosition.Top) {
+                initialScroll = 0;
+              } else if (initialScrollPosition === ScrollPosition.Middle) {
+                initialScroll = el.scrollHeight / 2;
               } else {
-                win.scrollTo(0, body.scrollHeight);
-                assertScrollAtBottom(body, 'iframe should be scrolled to bottom initially');
+                initialScroll = el.scrollHeight;
               }
 
-              await setValueAndWaitForLoad(newLongContent);
+              win.scrollTo(0, initialScroll);
 
-              if (initialScroll === ScrollPosition.Top) {
-                assertScrollAtTop(body, 'iframe scroll should be at top after setting value');
-              } else if (initialScroll === ScrollPosition.Middle) {
-                assertScrollAtMiddle(body, 'iframe scroll should be at middle after setting value');
+              if (initialScrollPosition === ScrollPosition.Top) {
+                assertScrollAtTop(el, 'iframe should be scrolled to top initially');
+              } else if (initialScrollPosition === ScrollPosition.Middle) {
+                assertScrollAtMiddle(el, 'iframe should be scrolled to middle initially');
               } else {
-                assertScrollAtBottom(body, 'iframe should be at bottom after setting value');
+                assertScrollAtBottom(el, 'iframe should be scrolled to bottom initially');
               }
+
+              await setContentAndWaitForLoad(newLongContent);
+
+              Optional.from(shouldContentHaveDoctype ? doc?.documentElement : doc?.body).fold(
+                () => assert.fail(`Could not find updated iframe ${shouldContentHaveDoctype ? 'documentElement' : 'body'}`),
+                (updatedEl) => {
+                  if (initialScrollPosition === ScrollPosition.Top) {
+                    assertScrollAtTop(updatedEl, 'iframe scroll should be at top after setting value');
+                  } else if (initialScrollPosition === ScrollPosition.Middle) {
+                    assertScrollApproximatelyAt(updatedEl, initialScroll, 'iframe scroll should be at previous middle after setting value');
+                  } else {
+                    assertScrollAtBottom(updatedEl, 'iframe should be at bottom after setting value');
+                  }
+                }
+              );
             }
           )
       );
     };
 
-    it('TINY-10032: Should keep scroll at top when streamContent: true and iframe is at top',
-      testStreamScrollToBottom(ScrollPosition.Top));
+    Arr.each([ true, false ], (shouldContentHaveDoctype) => {
+      const doctypeLabel = shouldContentHaveDoctype ? 'content has doctype' : 'content does not have doctype';
 
-    it('TINY-10078: Should keep scroll at middle when streamContent: true and iframe is at middle',
-      testStreamScrollToBottom(ScrollPosition.Middle));
+      it(`TINY-10032: Should keep scroll at top when streamContent: true, iframe is at top, and ${doctypeLabel}`,
+        testStreamScroll(ScrollPosition.Top, shouldContentHaveDoctype));
 
-    it('TINY-10032: Should scroll to bottom when streamContent: true and iframe is already scrolled to bottom',
-      testStreamScrollToBottom(ScrollPosition.Bottom));
+      it(`TINY-10078: Should keep scroll at middle when streamContent: true, iframe is at middle, and ${doctypeLabel}`,
+        testStreamScroll(ScrollPosition.Middle, shouldContentHaveDoctype));
+
+      it(`TINY-10032: Should scroll to bottom when streamContent: true, iframe is already scrolled to bottom, and ${doctypeLabel}}`,
+        testStreamScroll(ScrollPosition.Bottom, shouldContentHaveDoctype));
+    });
 
     it('TINY-10032: Should not scroll to bottom when stream: false', () => {
       const frame = getFrameFromFrameNumber(0);
