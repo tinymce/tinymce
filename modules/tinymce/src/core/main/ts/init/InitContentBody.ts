@@ -392,14 +392,6 @@ const contentBodyLoaded = (editor: Editor): void => {
   editor.readonly = Options.isReadOnly(editor);
   editor._editableRoot = Options.hasEditableRoot(editor);
 
-  if (!editor.readonly && editor.hasEditableRoot()) {
-    if (editor.inline && DOM.getStyle(body, 'position', true) === 'static') {
-      body.style.position = 'relative';
-    }
-
-    body.contentEditable = 'true';
-  }
-
   (body as any).disabled = false;
 
   editor.editorUpload = EditorUpload(editor);
@@ -466,6 +458,14 @@ const contentBodyLoaded = (editor: Editor): void => {
       });
     });
   });
+
+  if (!editor.readonly && editor.hasEditableRoot()) {
+    if (editor.inline && DOM.getStyle(body, 'position', true) === 'static') {
+      body.style.position = 'relative';
+    }
+
+    body.contentEditable = 'true';
+  }
 };
 
 export {
