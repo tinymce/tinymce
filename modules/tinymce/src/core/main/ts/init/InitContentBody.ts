@@ -361,6 +361,10 @@ const loadInitialContent = (editor: Editor) => {
   }
 
   editor.startContent = editor.getContent({ format: 'raw' });
+
+  if (!editor.readonly && editor.hasEditableRoot()) {
+    editor.getBody().contentEditable = 'true';
+  }
 };
 
 const initEditorWithInitialContent = (editor: Editor) => {
@@ -462,10 +466,6 @@ const contentBodyLoaded = (editor: Editor): void => {
       });
     });
   });
-
-  if (!editor.readonly && editor.hasEditableRoot()) {
-    body.contentEditable = 'true';
-  }
 
   Events.firePostRender(editor);
 };
