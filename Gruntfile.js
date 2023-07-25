@@ -62,6 +62,7 @@ const bedrockHeadless = (tests, browser, auto) => {
         ...bedrockDefaults,
         name: 'headless-tests',
         browser,
+        useSelenium: true,
         testfiles: testFolders(tests, auto),
 
         // we have a few tests that don't play nicely when combined together in the monorepo

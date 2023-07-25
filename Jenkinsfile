@@ -54,7 +54,7 @@ def gitMerge(String primaryBranch) {
 timestamps {
   // TinyMCE builds need more CPU and RAM (especially eslint)
   // NOTE: Ensure not to go over 7.5 CPU/RAM due to EC2 node sizes and the jnlp container requirements
-  tinyPods.node([
+  tinyPods.nodeBrowser([
     resourceRequestCpu: '6',
     resourceRequestMemory: '4Gi',
     resourceLimitCpu: '7.5',
@@ -126,19 +126,7 @@ timestamps {
 
     processes["headless-and-archive"] = {
       stage("headless tests") {
-        // TODO: Determine if this should be run on a container instead
-        node('headless-macos') {
-          // Prepare the branch on the node
-          lock('headless tests') {
-            checkout(scm)
-            gitMerge(primaryBranch)
-            cleanAndInstall()
-            exec("yarn ci -s tinymce-rollup")
-
-            echo "Platform: chrome-headless tests on node: $NODE_NAME"
-            runHeadlessTests(runAllTests)
-          }
-        }
+        runHeadlessTests(runAllTests)
       }
 
       if (env.BRANCH_NAME != primaryBranch) {
