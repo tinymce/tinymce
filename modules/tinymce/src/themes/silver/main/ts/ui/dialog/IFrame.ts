@@ -1,6 +1,7 @@
 import { AlloyComponent, Behaviour, Focusing, FormField, SketchSpec, Tabstopping } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Cell, Optional, Type } from '@ephox/katamari';
+import { Cell, Fun, Optional, Throttler, Type } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { Attribute, SugarElement } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -15,40 +16,88 @@ interface IFrameSourcing {
 
 type IframeSpec = Omit<Dialog.Iframe, 'type'>;
 
+const browser = PlatformDetection.detect().browser;
+const isSafari = browser.isSafari();
+const isFirefox = browser.isFirefox();
+const isChromium = browser.isChromium();
+
 const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFrameSourcing => {
   const cachedValue = Cell(initialData.getOr(''));
+
+  const isElementScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) =>
+    Math.ceil(scrollTop) + clientHeight >= scrollHeight;
+
+  const scrollToY = (win: Window, y: number | 'bottom') =>
+    win.scrollTo(0, y === 'bottom' ? win.document.body.scrollHeight : y);
+
+  const getScrollingElement = (doc: Document, html: string): Optional<HTMLElement> => {
+    // TINY-10110: The scrolling element can change between body and documentElement depending on whether there
+    // is a doctype declaration. However, this behavior is inconsistent on Chrome and Safari so checking for
+    // the scroll properties is the most reliable way to determine which element is the scrolling element, at
+    // least for the purposes of determining whether scroll is at bottom.
+    const body = doc.body;
+    return Optional.from(!/^<!DOCTYPE (html|HTML)/.test(html) &&
+        (!isChromium && !isSafari || Type.isNonNullable(body) && (body.scrollTop !== 0 || Math.abs(body.scrollHeight - body.clientHeight) > 1))
+      ? body : doc.documentElement);
+  };
+
+  const writeValue = (iframeElement: SugarElement<HTMLIFrameElement>, html: string, fallbackFn: () => void): void => {
+    const iframe = iframeElement.dom;
+    Optional.from(iframe.contentDocument).fold(
+      fallbackFn,
+      (doc) => {
+        let lastScrollTop = 0;
+        // TINY-10032: If documentElement (or body) is nullable, we assume document is empty and so scroll is at bottom.
+        const isScrollAtBottom = getScrollingElement(doc, html).map((el) => {
+          lastScrollTop = el.scrollTop;
+          return el;
+        }).forall(isElementScrollAtBottom);
+
+        const scrollAfterWrite = (): void => {
+          const win = iframe.contentWindow;
+          if (Type.isNonNullable(win)) {
+            if (isScrollAtBottom) {
+              scrollToY(win, 'bottom');
+            } else if (!isScrollAtBottom && (isSafari || isFirefox) && lastScrollTop !== 0) {
+              // TINY-10078: Safari and Firefox reset scroll to top on each document.write(), so we need to restore scroll manually
+              scrollToY(win, lastScrollTop);
+            }
+          }
+        };
+
+        // TINY-10078: On Safari, attempting to scroll before iframe has finished loading will cause scroll to reset to top upon load.
+        // We won't do this for all browsers since this does introduce a slight visual lag.
+        if (isSafari) {
+          iframe.addEventListener('load', scrollAfterWrite, { once: true });
+        }
+
+        doc.open();
+        doc.write(html);
+        doc.close();
+
+        if (!isSafari) {
+          scrollAfterWrite();
+        }
+      });
+  };
+
+  // TINY-10097: Throttle to reduce flickering, as the document.write() method still observes significant flickering on Safari.
+  const writeValueThrottler = isSafari ? Optional.some(Throttler.first(writeValue, 500)) : Optional.none();
+
   return {
     getValue: (_frameComponent: AlloyComponent): string =>
       // Ideally we should fetch data from the iframe...innerHtml, this triggers Cors errors
       cachedValue.get(),
     setValue: (frameComponent: AlloyComponent, html: string) => {
-      // TINY-3769: We need to use srcdoc here, instead of src with a data URI, otherwise browsers won't retain the Origin.
-      // See https://bugs.chromium.org/p/chromium/issues/detail?id=58999#c11
       if (cachedValue.get() !== html) {
         const iframeElement = frameComponent.element as SugarElement<HTMLIFrameElement>;
         const setSrcdocValue = () => Attribute.set(iframeElement, 'srcdoc', html);
 
         if (stream) {
-          const iframe = iframeElement.dom;
-          Optional.from(iframe.contentDocument).fold(
-            setSrcdocValue,
-            (doc) => {
-              const isElementScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) => Math.ceil(scrollTop) + clientHeight >= scrollHeight;
-              // TINY-10032: If documentElement is null, we assume document is empty and so scroll is at bottom.
-              const isScrollAtBottom = Optional.from(doc.documentElement).forall(isElementScrollAtBottom);
-
-              doc.open();
-              doc.write(html);
-              doc.close();
-
-              const win = iframe.contentWindow;
-              const body = doc.body;
-              // TINY-10032: Do not attempt to scroll if body has not been loaded yet
-              if (isScrollAtBottom && Type.isNonNullable(win) && Type.isNonNullable(body)) {
-                win.scrollTo(0, body.scrollHeight);
-              }
-            });
+          writeValueThrottler.fold(Fun.constant(writeValue), (throttler) => throttler.throttle)(iframeElement, html, setSrcdocValue);
         } else {
+          // TINY-3769: We need to use srcdoc here, instead of src with a data URI, otherwise browsers won't retain the Origin.
+          // See https://bugs.chromium.org/p/chromium/issues/detail?id=58999#c11
           setSrcdocValue();
         }
       }
