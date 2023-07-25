@@ -7,11 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Improved
-- On the Safari browser, content updates for `streamContent: true` iframe dialog components were throttled to 500ms intervals to reduce the visual impact of flickering when rapidly updating iframe content. #TINY-10097
+- Content updates for `streamContent: true` iframe dialog components on Safari are now throttled to 500ms intervals to reduce the visual impact of flickering when rapidly updating iframe content. #TINY-10097
 
 ### Fixed
-- On Safari and Firefox browsers, non-end scroll positions were not maintained when updating the content of a `streamContent: true` iframe dialog component. #TINY-10078
-- On the Safari browser, end scroll positions were not consistently maintained when updating the content of a `streamContent: true` iframe dialog component. #TINY-10109
+- On Safari and Firefox browsers, scroll positions were not always maintained when updating the content of a `streamContent: true` iframe dialog component. #TINY-10078 #TINY-10109
 - Scrolling behavior was inconsistent when updating a `streamContent: true` iframe dialog component with content lacking an HTML document type declaration. #TINY-10110
 
 ## 6.6.0 - 2023-07-12

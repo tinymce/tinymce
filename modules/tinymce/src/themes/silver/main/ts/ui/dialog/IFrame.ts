@@ -1,6 +1,6 @@
 import { AlloyComponent, Behaviour, Focusing, FormField, SketchSpec, Tabstopping } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Cell, Optional, Throttler, Type } from '@ephox/katamari';
+import { Cell, Fun, Optional, Throttler, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, SugarElement } from '@ephox/sugar';
 
@@ -36,9 +36,9 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
     // the scroll properties is the most reliable way to determine which element is the scrolling element, at
     // least for the purposes of determining whether scroll is at bottom.
     const body = doc.body;
-    return !/^<!DOCTYPE (html|HTML)/.test(html) &&
-      (!isChromium && !isSafari || Type.isNonNullable(body) && (body.scrollTop !== 0 || Math.abs(body.scrollHeight - body.clientHeight) > 1))
-      ? Optional.from(body) : Optional.from(doc.documentElement);
+    return Optional.from(!/^<!DOCTYPE (html|HTML)/.test(html) &&
+        (!isChromium && !isSafari || Type.isNonNullable(body) && (body.scrollTop !== 0 || Math.abs(body.scrollHeight - body.clientHeight) > 1))
+      ? body : doc.documentElement);
   };
 
   const writeValue = (iframeElement: SugarElement<HTMLIFrameElement>, html: string, fallbackFn: () => void): void => {
@@ -94,8 +94,7 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
         const setSrcdocValue = () => Attribute.set(iframeElement, 'srcdoc', html);
 
         if (stream) {
-          const args = [ iframeElement, html, setSrcdocValue ] as const;
-          writeValueThrottler.fold(() => writeValue(...args), (throttler) => throttler.throttle(...args));
+          writeValueThrottler.fold(Fun.constant(writeValue), (throttler) => throttler.throttle)(iframeElement, html, setSrcdocValue);
         } else {
           // TINY-3769: We need to use srcdoc here, instead of src with a data URI, otherwise browsers won't retain the Origin.
           // See https://bugs.chromium.org/p/chromium/issues/detail?id=58999#c11
