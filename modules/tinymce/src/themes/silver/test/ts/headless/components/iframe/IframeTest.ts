@@ -311,6 +311,9 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
       }, interval);
     };
 
+    const assertIframeContentAfterIntervals = (iframe: HTMLIFrameElement, maxNumIntervals: number) =>
+      assert.equal(iframe.contentDocument?.body.innerHTML, testContent.repeat(maxNumIntervals + 1), 'iframe content should match');
+
     Arr.each([ true, false ], (shouldContentHaveDoctype) => {
       const doctypeLabel = getDoctypeLabel(shouldContentHaveDoctype);
       it(`TINY-10078 & TINY-10097: Check for throttled iframe load on Safari and iframe scroll position is at bottom after streaming when ${doctypeLabel}`, async () => {
@@ -333,7 +336,21 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
           } else {
             assert.strictEqual(loadCount, expectedLoads, `iframe should have exactly ${expectedLoads} loads`);
           }
-          assert.equal(iframe.contentDocument?.body.innerHTML, testContent.repeat(maxNumIntervals + 1), 'iframe content should match');
+          assertIframeContentAfterIntervals(iframe, maxNumIntervals);
+          assertNullableScrollAtBottomOverflow((shouldContentHaveDoctype ? iframe.contentDocument?.documentElement : iframe.contentDocument?.body) as HTMLElement, 'iframe should be scrolled to bottom');
+        });
+
+        iframe.onload = Fun.noop;
+      });
+
+      it(`TINY-10078 & TINY-10097: Artificial throttles should not impact content completeness when ${doctypeLabel}`, async () => {
+        const frame = getFrameFromFrameNumber(streamFrameNumber);
+        const maxNumIntervals = 10;
+        setValueInIntervals(frame, 50, maxNumIntervals, shouldContentHaveDoctype);
+
+        const iframe = frame.element.dom as HTMLIFrameElement;
+        await Waiter.pTryUntil('Wait for update intervals to finish', () => {
+          assertIframeContentAfterIntervals(iframe, maxNumIntervals);
           assertNullableScrollAtBottomOverflow((shouldContentHaveDoctype ? iframe.contentDocument?.documentElement : iframe.contentDocument?.body) as HTMLElement, 'iframe should be scrolled to bottom');
         });
       });

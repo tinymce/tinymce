@@ -86,8 +86,7 @@ const writeValue = (iframeElement: SugarElement<HTMLIFrameElement>, html: string
 const throttleInterval = isSafariOrFirefox ? Optional.some(isSafari ? 500 : 200) : Optional.none();
 
 // TINY-10078: Use Throttler.adaptable to ensure that any content added during the waiting period is not lost.
-// On Firefox, using Throttler.adaptable results in some scrolling issues, but Throttler.first is unexpectedly sufficient to ensure content completeness.
-const writeValueThrottler = throttleInterval.map((interval) => isFirefox ? Throttler.first(writeValue, interval) : Throttler.adaptable(writeValue, interval));
+const writeValueThrottler = throttleInterval.map((interval) => Throttler.adaptable(writeValue, interval));
 
 const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFrameSourcing => {
   const cachedValue = Cell(initialData.getOr(''));
