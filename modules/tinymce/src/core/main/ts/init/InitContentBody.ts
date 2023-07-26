@@ -248,6 +248,9 @@ const initEditor = (editor: Editor) => {
   editor.initialized = true;
   Events.fireInit(editor);
   editor.focus(true);
+  if (!editor.readonly && editor.hasEditableRoot()) {
+    editor.getBody().contentEditable = 'true';
+  }
   moveSelectionToFirstCaretPosition(editor);
   editor.nodeChanged({ initial: true });
   const initInstanceCallback = Options.getInitInstanceCallback(editor);
@@ -329,6 +332,8 @@ const preInit = (editor: Editor) => {
   }
 
   editor.quirks = Quirks(editor);
+
+  Events.firePostRender(editor);
 
   const directionality = Options.getDirectionality(editor);
   if (directionality !== undefined) {
@@ -462,12 +467,6 @@ const contentBodyLoaded = (editor: Editor): void => {
       });
     });
   });
-
-  if (!editor.readonly && editor.hasEditableRoot()) {
-    body.contentEditable = 'true';
-  }
-
-  Events.firePostRender(editor);
 };
 
 export {
