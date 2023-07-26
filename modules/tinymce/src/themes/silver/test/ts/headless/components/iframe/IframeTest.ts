@@ -300,7 +300,18 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
   });
 
   context('Updating iframe content in intervals (streaming simulation)', () => {
-    const interval = 100;
+    const setValueInIntervals = (frame: AlloyComponent, interval: number, maxNumIntervals: number, shouldContentHaveDoctype: boolean): void => {
+      let iterations = 0;
+      let content = '';
+      const intervalId = setInterval(() => {
+        content += testContent;
+        Representing.setValue(frame, normalizeContent(content, shouldContentHaveDoctype));
+
+        if (++iterations > maxNumIntervals) {
+          clearInterval(intervalId);
+        }
+      }, interval);
+    };
 
     Arr.each([ true, false ], (shouldContentHaveDoctype) => {
       const doctypeLabel = getDoctypeLabel(shouldContentHaveDoctype);
@@ -311,27 +322,20 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
         let loadCount = 0;
         iframe.onload = () => loadCount++;
 
-        let iterations = 0;
-        let content = '';
-        const intervalId = setInterval(() => {
-          content += testContent;
-          Representing.setValue(frame, normalizeContent(content, shouldContentHaveDoctype));
-
-          if (++iterations > maxIterations) {
-            clearInterval(intervalId);
-          }
-        }, interval);
+        const interval = 100;
+        const maxNumIntervals = 10;
+        setValueInIntervals(frame, interval, maxNumIntervals, shouldContentHaveDoctype);
 
         await Waiter.pTryUntil('Wait for update intervals to finish', () => {
           // TINY-10078: Artificial 200ms throttle on Firefox to improve scrolling.
           // TINY-10097: Artificial 500ms throttle on Safari to reduce flickering and improve scrolling.
-          const expectedLoads = (isSafariOrFirefox ? interval * maxIterations / (isSafari ? 500 : 200) : maxIterations) + 1;
+          const expectedLoads = (isSafariOrFirefox ? interval * maxIterations / (isSafari ? 500 : 200) : maxNumIntervals) + 1;
           if (isFirefox) {
             assert.approximately(loadCount, expectedLoads, 1, `iframe should have approximately ${expectedLoads} loads`);
           } else {
             assert.strictEqual(loadCount, expectedLoads, `iframe should have exactly ${expectedLoads} loads`);
           }
-          assert.equal(iframe.contentDocument?.body.innerHTML, content, 'iframe content should match');
+          assert.equal(iframe.contentDocument?.body.innerHTML, testContent.repeat(maxNumIntervals + 1), 'iframe content should match');
           assertNullableScrollAtBottomOverflow((shouldContentHaveDoctype ? iframe.contentDocument?.documentElement : iframe.contentDocument?.body) as HTMLElement, 'iframe should be scrolled to bottom');
         });
       });
