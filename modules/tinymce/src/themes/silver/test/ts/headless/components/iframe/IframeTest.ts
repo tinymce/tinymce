@@ -137,8 +137,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
 
   const getDoctypeLabel = (hasDoctype: boolean) => hasDoctype ? 'content has doctype' : 'content does not have doctype';
 
-  const maxIterations = 10;
-  const testIterativeContentChange = (frameNumber: number, assertFn: (iframe: HTMLIFrameElement, it: number) => void, shouldContentHaveDoctype: boolean) => async () => {
+  const testIterativeContentChange = (frameNumber: number, shouldContentHaveDoctype: boolean, assertFn: (iframe: HTMLIFrameElement, it: number) => void, maxIterations: number = 10) => async () => {
     const frame = getFrameFromFrameNumber(frameNumber);
 
     for (let i = 0, content = ''; i < maxIterations; ++i) {
@@ -269,10 +268,9 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
         testStreamScroll(ScrollPosition.Bottom, shouldContentHaveDoctype));
 
       it(`TINY-10078: Check that scroll is kept at bottom when changing content iteratively and ${doctypeLabel}`,
-        testIterativeContentChange(streamFrameNumber, (iframe, it) =>
+        testIterativeContentChange(streamFrameNumber, shouldContentHaveDoctype, (iframe, it) =>
           assertNullableScrollAtBottom((shouldContentHaveDoctype ? iframe.contentDocument?.documentElement : iframe.contentDocument?.body) as HTMLElement,
-            `iframe should be scrolled to bottom on iteration ${it}`),
-        shouldContentHaveDoctype));
+            `iframe should be scrolled to bottom on iteration ${it}`)));
 
       it(`TINY-10078: Should scroll to bottom when adding overflowing content in an empty iframe and ${doctypeLabel}`, async () => {
         const frame = getFrameFromFrameNumber(streamFrameNumber);
@@ -329,7 +327,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
         await Waiter.pTryUntil('Wait for update intervals to finish', () => {
           // TINY-10078: Artificial 200ms throttle on Firefox to improve scrolling.
           // TINY-10097: Artificial 500ms throttle on Safari to reduce flickering and improve scrolling.
-          const expectedLoads = (isSafariOrFirefox ? interval * maxIterations / (isSafari ? 500 : 200) : maxNumIntervals) + 1;
+          const expectedLoads = (isSafariOrFirefox ? interval * maxNumIntervals / (isSafari ? 500 : 200) : maxNumIntervals) + 1;
           if (isFirefox) {
             assert.approximately(loadCount, expectedLoads, 1, `iframe should have approximately ${expectedLoads} loads`);
           } else {
