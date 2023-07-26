@@ -115,12 +115,13 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
     assert.notStrictEqual(el.scrollTop, 0, label);
     assertScrollAtBottom(el, label);
   };
-  const assertNullableScroll = (el: HTMLElement | null | undefined, assertFn: (el: HTMLElement) => void) => Optional.from(el).fold(
-    () => assert.fail(`Could not find element`),
-    (el: HTMLElement) => assertFn(el)
-  );
-  const assertNullableScrollAtBottom = (el: HTMLElement | null | undefined, label: string) => assertNullableScroll(el, (el: HTMLElement) => assertScrollAtBottom(el, label));
-  const assertNullableScrollAtBottomOverflow = (el: HTMLElement | null | undefined, label: string) => assertNullableScroll(el, (el: HTMLElement) => assertScrollAtBottomOverflow(el, label));
+  const assertIframeScroll = (iframe: HTMLIFrameElement, hasDoctype: boolean, assertFn: (scrollingEl: HTMLElement) => void) =>
+    Optional.from(hasDoctype ? iframe.contentDocument?.documentElement : iframe.contentDocument?.body).fold(
+      () => assert.fail(`Could not find element`),
+      (el: HTMLElement) => assertFn(el)
+    );
+  const assertIframeScrollAtBottom = (iframe: HTMLIFrameElement, hasDoctype: boolean, label: string) => assertIframeScroll(iframe, hasDoctype, (el: HTMLElement) => assertScrollAtBottom(el, label));
+  const assertIframeScrollAtBottomOverflow = (iframe: HTMLIFrameElement, hasDoctype: boolean, label: string) => assertIframeScroll(iframe, hasDoctype, (el: HTMLElement) => assertScrollAtBottomOverflow(el, label));
 
   const assertScrollApproximatelyAt = ({ scrollTop }: HTMLElement, expectedScrollTop: number, label: string) => assert.approximately(scrollTop, expectedScrollTop, 1, label);
 
@@ -269,8 +270,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
 
       it(`TINY-10078: Check that scroll is kept at bottom when changing content iteratively and ${doctypeLabel}`,
         testIterativeContentChange(streamFrameNumber, shouldContentHaveDoctype, (iframe, it) =>
-          assertNullableScrollAtBottom((shouldContentHaveDoctype ? iframe.contentDocument?.documentElement : iframe.contentDocument?.body) as HTMLElement,
-            `iframe should be scrolled to bottom on iteration ${it}`)));
+          assertIframeScrollAtBottom(iframe, shouldContentHaveDoctype, `iframe should be scrolled to bottom on iteration ${it}`)));
 
       it(`TINY-10078: Should scroll to bottom when adding overflowing content in an empty iframe and ${doctypeLabel}`, async () => {
         const frame = getFrameFromFrameNumber(streamFrameNumber);
@@ -281,8 +281,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
         });
         await setContentAndWaitForLoad(frame, initialLongContent, shouldContentHaveDoctype);
         await Waiter.pTryUntil('Waiting for iframe to be scrolled to bottom', () => {
-          assertNullableScrollAtBottomOverflow((shouldContentHaveDoctype ? iframe.contentDocument?.documentElement : iframe.contentDocument?.body) as HTMLElement,
-            'iframe should be scrolled to bottom after setting value');
+          assertIframeScrollAtBottomOverflow(iframe, shouldContentHaveDoctype, 'iframe should be scrolled to bottom after setting value');
         });
       });
     });
@@ -337,7 +336,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
             assert.strictEqual(loadCount, expectedLoads, `iframe should have exactly ${expectedLoads} loads`);
           }
           assertIframeContentAfterIntervals(iframe, maxNumIntervals);
-          assertNullableScrollAtBottomOverflow((shouldContentHaveDoctype ? iframe.contentDocument?.documentElement : iframe.contentDocument?.body) as HTMLElement, 'iframe should be scrolled to bottom');
+          assertIframeScrollAtBottomOverflow(iframe, shouldContentHaveDoctype, 'iframe should be scrolled to bottom');
         });
 
         iframe.onload = Fun.noop;
@@ -351,7 +350,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
         const iframe = frame.element.dom as HTMLIFrameElement;
         await Waiter.pTryUntil('Wait for update intervals to finish', () => {
           assertIframeContentAfterIntervals(iframe, maxNumIntervals);
-          assertNullableScrollAtBottomOverflow((shouldContentHaveDoctype ? iframe.contentDocument?.documentElement : iframe.contentDocument?.body) as HTMLElement, 'iframe should be scrolled to bottom');
+          assertIframeScrollAtBottomOverflow(iframe, shouldContentHaveDoctype, 'iframe should be scrolled to bottom');
         });
       });
     });
