@@ -54,6 +54,8 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
 
   const browser = PlatformDetection.detect().browser;
   const isSafari = browser.isSafari();
+  const isFirefox = browser.isFirefox();
+  const isSafariOrFirefox = isSafari || isFirefox;
 
   const getFrameFromFrameNumber = (frameNumber: number) => {
     const frame = hook.component().components()[frameNumber];
@@ -280,8 +282,10 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
           assert.equal(iframe.contentDocument?.body.innerHTML, '', 'iframe should be empty initially');
         });
         await setContentAndWaitForLoad(frame, initialLongContent, shouldContentHaveDoctype);
-        assertNullableScrollAtBottomOverflow((shouldContentHaveDoctype ? iframe.contentDocument?.documentElement : iframe.contentDocument?.body) as HTMLElement,
-          'iframe should be scrolled to bottom after setting value');
+        await Waiter.pTryUntil('Waiting for iframe to be scrolled to bottom', () => {
+          assertNullableScrollAtBottomOverflow((shouldContentHaveDoctype ? iframe.contentDocument?.documentElement : iframe.contentDocument?.body) as HTMLElement,
+            'iframe should be scrolled to bottom after setting value');
+        });
       });
     });
 
@@ -318,10 +322,15 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
           }
         }, interval);
 
-        await Waiter.pTryUntil('Wait for iframe to finish loading', () => {
-          // TINY-10097: Artificial 500ms throttle on Safari to reduce flickering.
-          const expectedLoads = (isSafari ? interval * maxIterations / 500 : maxIterations) + 1;
-          assert.strictEqual(loadCount, expectedLoads, `iframe should have exactly ${expectedLoads} loads`);
+        await Waiter.pTryUntil('Wait for update intervals to finish', () => {
+          // TINY-10078: Artificial 200ms throttle on Firefox to improve scrolling.
+          // TINY-10097: Artificial 500ms throttle on Safari to reduce flickering and improve scrolling.
+          const expectedLoads = (isSafariOrFirefox ? interval * maxIterations / (isSafari ? 500 : 200) : maxIterations) + 1;
+          if (isFirefox) {
+            assert.approximately(loadCount, expectedLoads, 1, `iframe should have approximately ${expectedLoads} loads`);
+          } else {
+            assert.strictEqual(loadCount, expectedLoads, `iframe should have exactly ${expectedLoads} loads`);
+          }
           assert.equal(iframe.contentDocument?.body.innerHTML, content, 'iframe content should match');
           assertNullableScrollAtBottomOverflow((shouldContentHaveDoctype ? iframe.contentDocument?.documentElement : iframe.contentDocument?.body) as HTMLElement, 'iframe should be scrolled to bottom');
         });
