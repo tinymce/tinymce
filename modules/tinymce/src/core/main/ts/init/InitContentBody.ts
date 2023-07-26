@@ -248,9 +248,6 @@ const initEditor = (editor: Editor) => {
   editor.initialized = true;
   Events.fireInit(editor);
   editor.focus(true);
-  if (!editor.readonly && editor.hasEditableRoot()) {
-    editor.getBody().contentEditable = 'true';
-  }
   moveSelectionToFirstCaretPosition(editor);
   editor.nodeChanged({ initial: true });
   const initInstanceCallback = Options.getInitInstanceCallback(editor);
@@ -361,6 +358,9 @@ const preInit = (editor: Editor) => {
 };
 
 const loadInitialContent = (editor: Editor) => {
+  if (!editor.readonly && editor.hasEditableRoot()) {
+    editor.getBody().contentEditable = 'true';
+  }
   if (!Rtc.isRtc(editor)) {
     editor.load({ initial: true, format: 'html' });
   }
