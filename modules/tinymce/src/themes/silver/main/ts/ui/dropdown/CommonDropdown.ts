@@ -1,10 +1,10 @@
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Dropdown as AlloyDropdown, Focusing, GuiFactory, Highlighting,
-  Keying, Memento, Replacing, Representing, SimulatedEvent, SketchSpec, SystemEvents, TieredData, Unselecting
+  Keying, MaxHeight, Memento, Replacing, Representing, SimulatedEvent, SketchSpec, SystemEvents, TieredData, Unselecting
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
-import { EventArgs } from '@ephox/sugar';
+import { EventArgs, SugarElement } from '@ephox/sugar';
 
 import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button/ButtonEvents';
 
@@ -243,6 +243,14 @@ const renderCommonDropdown = <T>(
           },
           onDehighlightItem: updateAriaOnDehighlight
         }
+      },
+
+      getAnchorOverrides: () => {
+        return {
+          maxHeightFunction: (element: SugarElement<HTMLElement>, available: number): void => {
+            MaxHeight.anchored()(element, available - 10);
+          },
+        };
       },
 
       fetch: (comp) => Future.nu(Fun.curry(spec.fetch, comp))

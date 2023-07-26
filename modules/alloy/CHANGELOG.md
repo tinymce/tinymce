@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ### Fixed
+- Incorrect typing on `DropdownSpec`, `getAnchorOverrides`. Function returns an object, not another function. #TINY-9978
 - Going back from a view to the editor in mobile caused an error. #TINY-10003
 
 ## 13.0.0 - 2023-07-12

@@ -58,7 +58,7 @@ export interface DropdownSpec extends CompositeSketchSpec, HasLayoutAnchorSpec {
   sandboxClasses?: string[];
   sandboxBehaviours?: AlloyBehaviourRecord;
   getHotspot?: (comp: AlloyComponent) => Optional<AlloyComponent>;
-  getAnchorOverrides?: () => () => AnchorOverrides;
+  getAnchorOverrides?: () => AnchorOverrides;
 
   toggleClass: string;
   lazySink?: LazySink;
