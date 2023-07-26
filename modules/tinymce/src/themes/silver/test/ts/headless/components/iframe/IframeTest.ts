@@ -282,8 +282,10 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
           assert.equal(iframe.contentDocument?.body.innerHTML, '', 'iframe should be empty initially');
         });
         await setContentAndWaitForLoad(frame, initialLongContent, shouldContentHaveDoctype);
-        assertNullableScrollAtBottomOverflow((shouldContentHaveDoctype ? iframe.contentDocument?.documentElement : iframe.contentDocument?.body) as HTMLElement,
-          'iframe should be scrolled to bottom after setting value');
+        await Waiter.pTryUntil('Waiting for iframe to be scrolled to bottom', () => {
+          assertNullableScrollAtBottomOverflow((shouldContentHaveDoctype ? iframe.contentDocument?.documentElement : iframe.contentDocument?.body) as HTMLElement,
+            'iframe should be scrolled to bottom after setting value');
+        });
       });
     });
 
