@@ -21,72 +21,72 @@ const isSafari = browser.isSafari();
 const isSafariOrFirefox = isSafari || browser.isFirefox();
 const isChromium = browser.isChromium();
 
+const isElementScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) =>
+  Math.ceil(scrollTop) + clientHeight >= scrollHeight;
+
+const scrollToY = (win: Window, y: number | 'bottom') =>
+  win.scrollTo(0, y === 'bottom' ? win.document.body.scrollHeight : y);
+
+const getScrollingElement = (doc: Document, html: string): Optional<HTMLElement> => {
+  // TINY-10110: The scrolling element can change between body and documentElement depending on whether there
+  // is a doctype declaration. However, this behavior is inconsistent on Chrome and Safari so checking for
+  // the scroll properties is the most reliable way to determine which element is the scrolling element, at
+  // least for the purposes of determining whether scroll is at bottom.
+  const body = doc.body;
+  return Optional.from(!/^<!DOCTYPE (html|HTML)/.test(html) &&
+      (!isChromium && !isSafari || Type.isNonNullable(body) && (body.scrollTop !== 0 || Math.abs(body.scrollHeight - body.clientHeight) > 1))
+    ? body : doc.documentElement);
+};
+
+const writeValue = (iframeElement: SugarElement<HTMLIFrameElement>, html: string, fallbackFn: () => void): void => {
+  const iframe = iframeElement.dom;
+  Optional.from(iframe.contentDocument).fold(
+    fallbackFn,
+    (doc) => {
+      let lastScrollTop = 0;
+      // TINY-10032: If documentElement (or body) is nullable, we assume document is empty and so scroll is at bottom.
+      const isScrollAtBottom = getScrollingElement(doc, html).map((el) => {
+        lastScrollTop = el.scrollTop;
+        return el;
+      }).forall(isElementScrollAtBottom);
+
+      const scrollAfterWrite = (): void => {
+        const win = iframe.contentWindow;
+        if (Type.isNonNullable(win)) {
+          if (isScrollAtBottom) {
+            scrollToY(win, 'bottom');
+          } else if (!isScrollAtBottom && isSafariOrFirefox && lastScrollTop !== 0) {
+            // TINY-10078: Safari and Firefox reset scroll to top on each document.write(), so we need to restore scroll manually
+            scrollToY(win, lastScrollTop);
+          }
+        }
+      };
+
+      // TINY-10109: On Safari, attempting to scroll before iframe has finished loading will cause scroll to reset to top upon load.
+      // We won't do this for all browsers since this does introduce a slight visual lag.
+      if (isSafari) {
+        iframe.addEventListener('load', scrollAfterWrite, { once: true });
+      }
+
+      doc.open();
+      doc.write(html);
+      doc.close();
+
+      if (!isSafari) {
+        scrollAfterWrite();
+      }
+    });
+};
+
+// TINY-10078: On Firefox, throttle to 200ms allow improve scrolling experience. Since we are manually maintaining previous scroll
+// position on each update, when updating too rapidly, attempting to scroll around the iframe can feel stuck.
+// TINY-10097: On Safari, throttle to 500ms reduce flickering as the document.write() method still observes significant flickering.
+// Also improves scrolling, as scroll positions are maintained manually similar to Firefox.
+const throttleInterval = isSafariOrFirefox ? Optional.some(isSafari ? 500 : 200) : Optional.none();
+const writeValueThrottler = throttleInterval.map((interval) => Throttler.first(writeValue, interval));
+
 const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFrameSourcing => {
   const cachedValue = Cell(initialData.getOr(''));
-
-  const isElementScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) =>
-    Math.ceil(scrollTop) + clientHeight >= scrollHeight;
-
-  const scrollToY = (win: Window, y: number | 'bottom') =>
-    win.scrollTo(0, y === 'bottom' ? win.document.body.scrollHeight : y);
-
-  const getScrollingElement = (doc: Document, html: string): Optional<HTMLElement> => {
-    // TINY-10110: The scrolling element can change between body and documentElement depending on whether there
-    // is a doctype declaration. However, this behavior is inconsistent on Chrome and Safari so checking for
-    // the scroll properties is the most reliable way to determine which element is the scrolling element, at
-    // least for the purposes of determining whether scroll is at bottom.
-    const body = doc.body;
-    return Optional.from(!/^<!DOCTYPE (html|HTML)/.test(html) &&
-        (!isChromium && !isSafari || Type.isNonNullable(body) && (body.scrollTop !== 0 || Math.abs(body.scrollHeight - body.clientHeight) > 1))
-      ? body : doc.documentElement);
-  };
-
-  const writeValue = (iframeElement: SugarElement<HTMLIFrameElement>, html: string, fallbackFn: () => void): void => {
-    const iframe = iframeElement.dom;
-    Optional.from(iframe.contentDocument).fold(
-      fallbackFn,
-      (doc) => {
-        let lastScrollTop = 0;
-        // TINY-10032: If documentElement (or body) is nullable, we assume document is empty and so scroll is at bottom.
-        const isScrollAtBottom = getScrollingElement(doc, html).map((el) => {
-          lastScrollTop = el.scrollTop;
-          return el;
-        }).forall(isElementScrollAtBottom);
-
-        const scrollAfterWrite = (): void => {
-          const win = iframe.contentWindow;
-          if (Type.isNonNullable(win)) {
-            if (isScrollAtBottom) {
-              scrollToY(win, 'bottom');
-            } else if (!isScrollAtBottom && isSafariOrFirefox && lastScrollTop !== 0) {
-              // TINY-10078: Safari and Firefox reset scroll to top on each document.write(), so we need to restore scroll manually
-              scrollToY(win, lastScrollTop);
-            }
-          }
-        };
-
-        // TINY-10109: On Safari, attempting to scroll before iframe has finished loading will cause scroll to reset to top upon load.
-        // We won't do this for all browsers since this does introduce a slight visual lag.
-        if (isSafari) {
-          iframe.addEventListener('load', scrollAfterWrite, { once: true });
-        }
-
-        doc.open();
-        doc.write(html);
-        doc.close();
-
-        if (!isSafari) {
-          scrollAfterWrite();
-        }
-      });
-  };
-
-  // TINY-10078: On Firefox, throttle to 200ms allow improve scrolling experience. Since we are manually maintaining previous scroll
-  // position on each update, when updating too rapidly, attempting to scroll around the iframe can feel stuck.
-  // TINY-10097: On Safari, throttle to 500ms reduce flickering as the document.write() method still observes significant flickering.
-  // Also improves scrolling, as scroll positions are maintained manually similar to Firefox.
-  const writeValueThrottler = isSafariOrFirefox ? Optional.some(Throttler.first(writeValue, isSafari ? 500 : 200)) : Optional.none();
-
   return {
     getValue: (_frameComponent: AlloyComponent): string =>
       // Ideally we should fetch data from the iframe...innerHtml, this triggers Cors errors
