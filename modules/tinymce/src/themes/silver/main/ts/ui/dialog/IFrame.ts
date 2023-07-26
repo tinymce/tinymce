@@ -18,7 +18,7 @@ type IframeSpec = Omit<Dialog.Iframe, 'type'>;
 
 const browser = PlatformDetection.detect().browser;
 const isSafari = browser.isSafari();
-const isFirefox = browser.isFirefox();
+const isSafariOrFirefox = isSafari || browser.isFirefox();
 const isChromium = browser.isChromium();
 
 const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFrameSourcing => {
@@ -58,14 +58,14 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
           if (Type.isNonNullable(win)) {
             if (isScrollAtBottom) {
               scrollToY(win, 'bottom');
-            } else if (!isScrollAtBottom && (isSafari || isFirefox) && lastScrollTop !== 0) {
+            } else if (!isScrollAtBottom && isSafariOrFirefox && lastScrollTop !== 0) {
               // TINY-10078: Safari and Firefox reset scroll to top on each document.write(), so we need to restore scroll manually
               scrollToY(win, lastScrollTop);
             }
           }
         };
 
-        // TINY-10078: On Safari, attempting to scroll before iframe has finished loading will cause scroll to reset to top upon load.
+        // TINY-10109: On Safari, attempting to scroll before iframe has finished loading will cause scroll to reset to top upon load.
         // We won't do this for all browsers since this does introduce a slight visual lag.
         if (isSafari) {
           iframe.addEventListener('load', scrollAfterWrite, { once: true });
@@ -81,8 +81,11 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
       });
   };
 
-  // TINY-10097: Throttle to reduce flickering, as the document.write() method still observes significant flickering on Safari.
-  const writeValueThrottler = isSafari ? Optional.some(Throttler.first(writeValue, 500)) : Optional.none();
+  // TINY-10078: On Firefox, throttle to 200ms allow improve scrolling experience. Since we are manually maintaining previous scroll
+  // position on each update, when updating too rapidly, attempting to scroll around the iframe can feel stuck.
+  // TINY-10097: On Safari, throttle to 500ms reduce flickering as the document.write() method still observes significant flickering.
+  // Also improves scrolling, as scroll positions are maintained manually similar to Firefox.
+  const writeValueThrottler = isSafariOrFirefox ? Optional.some(Throttler.first(writeValue, isSafari ? 500 : 200)) : Optional.none();
 
   return {
     getValue: (_frameComponent: AlloyComponent): string =>
