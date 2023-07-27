@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - On Safari and Firefox browsers, scroll positions were not always maintained when updating the content of a `streamContent: true` iframe dialog component. #TINY-10078 #TINY-10109
 - Scrolling behavior was inconsistent when updating a `streamContent: true` iframe dialog component with content lacking an HTML document type declaration. #TINY-10110
+- The `color_cols` option was not respected when a custom `color_map` is defined. #TINY-10098
+- The `color_cols` options were were not rounded to the nearest number when set to a decimal number. #TINY-9737
 
 ## 6.6.0 - 2023-07-12
 
