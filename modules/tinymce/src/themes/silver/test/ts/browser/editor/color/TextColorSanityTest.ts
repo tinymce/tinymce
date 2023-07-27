@@ -292,7 +292,28 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     });
   });
 
-  context('Custom Color Map Columns Test', () => {
+  context('Decimal color_cols', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      toolbar: 'forecolor backcolor fontsize',
+      color_cols_foreground: 8.6,
+      color_cols_background: 4.3
+    }, [], true);
+
+    it('TINY-9737: ', async () => {
+      const editor = hook.editor();
+      setupContent(editor);
+      TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+      await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
+      // Background Color swatch should have Math.sqrt(36) = 6 columns
+      Assert.eq('Cols is the expected value', getColorCols(editor, 'forecolor'), 9);
+      TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+      await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
+      // Background Color swatch should have Math.sqrt(49) = 7 columns
+      Assert.eq('Cols is the expected value', getColorCols(editor, 'hilitecolor'), 4);
+    });
+  });
+
+  context('Custom Color Map Default Columns Test', () => {
     const colorMap = [
       '#2DC26B', 'Green',
       '#F1C40F', 'Yellow',
@@ -326,6 +347,37 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       // Background Color swatch should have Math.sqrt(49) = 7 columns
       Assert.eq('Cols is the expected value', getColorCols(editor, 'hilitecolor'), 7);
+    });
+  });
+
+  context('Custom Color Map Columns Test', () => {
+    const colorMap = [
+      '#2DC26B', 'Green',
+      '#F1C40F', 'Yellow',
+      '#E03E2D', 'Red',
+      '#B96AD9', 'Purple',
+      '#3598DB', 'Blue',
+      '#E67E23', 'Orange'
+    ];
+    const thirtySixColors = Arr.flatten([ colorMap, colorMap, colorMap, colorMap, colorMap, colorMap ]);
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      toolbar: 'forecolor backcolor fontsize',
+      base_url: '/project/tinymce/js/tinymce',
+      color_cols: 8,
+      color_map: thirtySixColors,
+    }, [], true);
+
+    it('TINY-10098: color_cols works as expected with custom color_map', async () => {
+      const editor = hook.editor();
+      setupContent(editor);
+      TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+      await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
+      // Background Color swatch should have Math.sqrt(36) = 6 columns
+      Assert.eq('Cols is the expected value', getColorCols(editor, 'forecolor'), 8);
+      TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+      await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
+      // Background Color swatch should have Math.sqrt(49) = 7 columns
+      Assert.eq('Cols is the expected value', getColorCols(editor, 'hilitecolor'), 8);
     });
   });
 
