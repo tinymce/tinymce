@@ -448,11 +448,11 @@ const contentBodyLoaded = (editor: Editor): void => {
 
   const setupRtcThunk = Rtc.setup(editor);
 
-  preInit(editor);
-
   if (editor.removed !== true) {
     loadInitialContent(editor);
   }
+
+  preInit(editor);
 
   setupRtcThunk.fold(() => {
     loadContentCss(editor).then(() => initEditorWithInitialContent(editor));
