@@ -330,6 +330,10 @@ const preInit = (editor: Editor) => {
 
   editor.quirks = Quirks(editor);
 
+  if (!editor.readonly && editor.hasEditableRoot()) {
+    body.contentEditable = 'true';
+  }
+
   Events.firePostRender(editor);
 
   const directionality = Options.getDirectionality(editor);
@@ -351,10 +355,6 @@ const preInit = (editor: Editor) => {
   editor.on('SetContent', () => {
     editor.addVisual(editor.getBody());
   });
-
-  if (!editor.readonly && editor.hasEditableRoot()) {
-    body.contentEditable = 'true';
-  }
 
   if (editor.removed !== true) {
     loadInitialContent(editor);
