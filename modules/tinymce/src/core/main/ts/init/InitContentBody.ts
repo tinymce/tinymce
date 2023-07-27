@@ -358,15 +358,15 @@ const preInit = (editor: Editor) => {
 };
 
 const loadInitialContent = (editor: Editor) => {
+  if (!editor.readonly && editor.hasEditableRoot()) {
+    editor.getBody().contentEditable = 'true';
+  }
+
   if (!Rtc.isRtc(editor)) {
     editor.load({ initial: true, format: 'html' });
   }
 
   editor.startContent = editor.getContent({ format: 'raw' });
-
-  if (!editor.readonly && editor.hasEditableRoot()) {
-    editor.getBody().contentEditable = 'true';
-  }
 };
 
 const initEditorWithInitialContent = (editor: Editor) => {
