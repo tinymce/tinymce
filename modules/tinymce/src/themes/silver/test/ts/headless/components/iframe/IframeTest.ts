@@ -262,17 +262,17 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
       it(`TINY-10032: Should keep scroll at top when streamContent: true, iframe is at top, and ${doctypeLabel}`,
         testStreamScroll(ScrollPosition.Top, shouldContentHaveDoctype));
 
-      it(`TINY-10078: Should keep scroll at middle when streamContent: true, iframe is at middle, and ${doctypeLabel}`,
+      it(`TINY-10032: Should keep scroll at middle when streamContent: true, iframe is at middle, and ${doctypeLabel}`,
         testStreamScroll(ScrollPosition.Middle, shouldContentHaveDoctype));
 
       it(`TINY-10032: Should scroll to bottom when streamContent: true, iframe is already scrolled to bottom, and ${doctypeLabel}}`,
         testStreamScroll(ScrollPosition.Bottom, shouldContentHaveDoctype));
 
-      it(`TINY-10078: Check that scroll is kept at bottom when changing content iteratively and ${doctypeLabel}`,
+      it(`TINY-10109: Check that scroll is kept at bottom when changing content iteratively and ${doctypeLabel}`,
         testIterativeContentChange(streamFrameNumber, shouldContentHaveDoctype, (iframe, it) =>
           assertIframeScrollAtBottom(iframe, shouldContentHaveDoctype, `iframe should be scrolled to bottom on iteration ${it}`)));
 
-      it(`TINY-10078: Should scroll to bottom when adding overflowing content in an empty iframe and ${doctypeLabel}`, async () => {
+      it(`TINY-10032: Should scroll to bottom when adding overflowing content in an empty iframe and ${doctypeLabel}`, async () => {
         const frame = getFrameFromFrameNumber(streamFrameNumber);
         const iframe = frame.element.dom as HTMLIFrameElement;
         await Waiter.pTryUntil('Waiting for iframe content to be set to empty initially', () => {
