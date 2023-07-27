@@ -299,7 +299,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
       color_cols_background: 4.3
     }, [], true);
 
-    it('TINY-9737: ', async () => {
+    it('TINY-9737: Color_cols is rounded to nearest number', async () => {
       const editor = hook.editor();
       setupContent(editor);
       TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
