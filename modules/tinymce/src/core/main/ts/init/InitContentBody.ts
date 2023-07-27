@@ -352,16 +352,20 @@ const preInit = (editor: Editor) => {
     editor.addVisual(editor.getBody());
   });
 
+  if (!editor.readonly && editor.hasEditableRoot()) {
+    body.contentEditable = 'true';
+  }
+
+  if (editor.removed !== true) {
+    loadInitialContent(editor);
+  }
+
   editor.on('compositionstart compositionend', (e) => {
     editor.composing = e.type === 'compositionstart';
   });
 };
 
 const loadInitialContent = (editor: Editor) => {
-  if (!editor.readonly && editor.hasEditableRoot()) {
-    editor.getBody().contentEditable = 'true';
-  }
-
   if (!Rtc.isRtc(editor)) {
     editor.load({ initial: true, format: 'html' });
   }
@@ -447,10 +451,6 @@ const contentBodyLoaded = (editor: Editor): void => {
   Paste.setup(editor);
 
   const setupRtcThunk = Rtc.setup(editor);
-
-  if (editor.removed !== true) {
-    loadInitialContent(editor);
-  }
 
   preInit(editor);
 
