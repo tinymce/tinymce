@@ -249,7 +249,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
     });
   });
 
-  // TINY-10070, precautionary test, making sure the focus is on the iframe after closing the dialog
+  // TINY-10070, precautionary test, making sure the focus is on the editor iframe after closing the dialog
   it('Editor focus should be on text area after closing dialog', async () => {
     const editor = hook.editor();
     openDialog(editor, { inline: 'toolbar' }, createDialogSpec('normal', true, true), true);
