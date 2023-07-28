@@ -330,9 +330,9 @@ const preInit = (editor: Editor) => {
 
   editor.quirks = Quirks(editor);
 
-  if (!editor.readonly && editor.hasEditableRoot()) {
-    body.contentEditable = 'true';
-  }
+  // if (!editor.readonly && editor.hasEditableRoot()) {
+  //   body.contentEditable = 'true';
+  // }
 
   Events.firePostRender(editor);
 
@@ -356,9 +356,9 @@ const preInit = (editor: Editor) => {
     editor.addVisual(editor.getBody());
   });
 
-  if (editor.removed !== true) {
-    loadInitialContent(editor);
-  }
+  // if (editor.removed !== true) {
+  //   loadInitialContent(editor);
+  // }
 
   editor.on('compositionstart compositionend', (e) => {
     editor.composing = e.type === 'compositionstart';
@@ -375,8 +375,21 @@ const loadInitialContent = (editor: Editor) => {
 
 const initEditorWithInitialContent = (editor: Editor) => {
   if (editor.removed !== true) {
+    loadInitialContent(editor); // TODO: remove this if we chose to move it
     initEditor(editor);
   }
+};
+
+const startProgress = (editor: Editor) => {
+  let canceled = false;
+  setTimeout(() => {
+    if (!canceled) {
+      editor.setProgressState(true);
+    }
+  }, 300);
+  return () => {
+    canceled = true;
+  };
 };
 
 const contentBodyLoaded = (editor: Editor): void => {
@@ -403,6 +416,7 @@ const contentBodyLoaded = (editor: Editor): void => {
     if (editor.inline && DOM.getStyle(body, 'position', true) === 'static') {
       body.style.position = 'relative';
     }
+    body.contentEditable = 'true'; // TODO: remove this if we chose to move it
   }
 
   (body as any).disabled = false;
@@ -455,7 +469,12 @@ const contentBodyLoaded = (editor: Editor): void => {
   preInit(editor);
 
   setupRtcThunk.fold(() => {
-    loadContentCss(editor).then(() => initEditorWithInitialContent(editor));
+    const cancelProgress = startProgress(editor);
+    loadContentCss(editor).then(() => {
+      initEditorWithInitialContent(editor);
+      cancelProgress();
+      editor.setProgressState(false);
+    });
   }, (setupRtc) => {
     editor.setProgressState(true);
 
