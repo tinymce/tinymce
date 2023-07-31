@@ -10,6 +10,7 @@ import Env from 'tinymce/core/api/Env';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as HtmlSanitizer from '../core/HtmlSanitizer';
 import * as NavigableObject from '../general/NavigableObject';
+import { dialogFocusShiftedChannel } from '../window/DialogChannels';
 
 const isTouch = Env.deviceType.isTouch();
 
@@ -175,6 +176,11 @@ const renderDialog = (spec: DialogSpec): SketchSpec => {
           // Using just `run` instead will cause an infinite loop as `focusIn` would fire a `focusin` which would then get responded to and so forth.
           AlloyEvents.runOnSource(NativeEvents.focusin(), (comp, _se) => {
             Blocking.isBlocked(comp) ? Fun.noop() : Keying.focusIn(comp);
+          }),
+          AlloyEvents.run<SystemEvents.AlloyFocusShiftedEvent>(SystemEvents.focusShifted(), (comp, se) => {
+            comp.getSystem().broadcastOn([ dialogFocusShiftedChannel ], {
+              newFocus: se.event.newFocus
+            });
           })
         ])),
         AddEventsBehaviour.config('scroll-lock', [

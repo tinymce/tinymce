@@ -1,5 +1,5 @@
 import { AlloyComponent, AlloySpec, AlloyTriggers, Behaviour, Focusing, NativeEvents, SimpleSpec, Tabstopping } from '@ephox/alloy';
-import { Fun, Id } from '@ephox/katamari';
+import { Fun, Id, Optional } from '@ephox/katamari';
 import { Class, SelectorExists, SugarElement } from '@ephox/sugar';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
@@ -28,11 +28,11 @@ const craftWithClasses = (classes: string[]): SimpleSpec => {
   };
 };
 
-const craft = (spec: AlloySpec): SimpleSpec => {
+const craft = (containerClasses: Optional<string[]>, spec: AlloySpec): SimpleSpec => {
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tox-navobj' ]
+      classes: [ 'tox-navobj', ...containerClasses.getOr([]) ]
     },
     components: [
       craftWithClasses([ beforeObject ]),

@@ -11,7 +11,7 @@ import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { formCloseEvent } from '../general/FormEvents';
 import * as NavigableObject from '../general/NavigableObject';
-import { dialogChannel } from './DialogChannels';
+import { dialogChannel, dialogFocusShiftedChannel } from './DialogChannels';
 import { renderInlineBody } from './SilverDialogBody';
 import * as SilverDialogCommon from './SilverDialogCommon';
 import { SilverDialogEvents } from './SilverDialogEvents';
@@ -129,6 +129,11 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
           // Using just `run` instead will cause an infinite loop as `focusIn` would fire a `focusin` which would then get responded to and so forth.
           AlloyEvents.runOnSource(NativeEvents.focusin(), (comp, _se) => {
             Keying.focusIn(comp);
+          }),
+          AlloyEvents.run<SystemEvents.AlloyFocusShiftedEvent>(SystemEvents.focusShifted(), (comp, se) => {
+            comp.getSystem().broadcastOn([ dialogFocusShiftedChannel ], {
+              newFocus: se.event.newFocus
+            });
           })
         ])
       ),
