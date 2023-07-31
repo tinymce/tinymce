@@ -5,8 +5,8 @@ import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Focus, SelectorFind, SugarDocument } from '@ephox/sugar';
 import { assert } from 'chai';
-import { Dialog } from 'tinymce/core/api/ui/Ui';
 
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
