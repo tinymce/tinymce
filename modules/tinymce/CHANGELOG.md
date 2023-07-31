@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - On Safari and Firefox browsers, scroll positions were not always maintained when updating the content of a `streamContent: true` iframe dialog component. #TINY-10078 #TINY-10109
 - Scrolling behavior was inconsistent when updating a `streamContent: true` iframe dialog component with content lacking an HTML document type declaration. #TINY-10110
+- Console may display warning message when closing dialog with an iframe component. #TINY-10070
 
 ## 6.6.0 - 2023-07-12
 
@@ -73,6 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dialog `tabpanel` tab labels are now allowed to word wrap for better readability with long labels. #TINY-9947
 - Added newlines before and after `details` elements in the output HTML. #TINY-9959
 - Added padding for empty `summary` elements so that they can be properly edited. #TINY-9959
+- Improved detection of scrollable containers when the `ui_mode: 'split'` option is set. #TINY-9385
 
 ### Changed
 - The `caption`, `address` and `dt` elements no longer incorrectly allow non-inline child elements when the editor schema is set to _HTML 4_. #TINY-9768

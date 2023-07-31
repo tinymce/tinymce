@@ -89,6 +89,34 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
     };
   };
 
+  const createDialogWithIframeSpec = (): Dialog.DialogSpec<{ fred: string }> => {
+    return {
+      title: 'Silver Test Inline (Toolbar) Dialog with iframe',
+      body: {
+        type: 'panel',
+        items: [
+          {
+            type: 'iframe',
+            name: 'fred',
+          }
+        ]
+      },
+      buttons: [
+        {
+          type: 'custom',
+          name: 'random',
+          text: 'Random'
+        }
+      ],
+      initialData: {
+        fred: 'said hello pebbles'
+      },
+      onAction: (api) => {
+        api.close();
+      }
+    };
+  };
+
   const dialogSpec = createDialogSpec();
 
   const openDialog = (
@@ -224,5 +252,19 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
       assert.equal(Css.get(dialog, 'max-width'), test.maxWidth + 'px', 'Dialog should have the correct max width');
       DialogUtils.close(editor);
     });
+  });
+
+  // TINY-10070, precautionary test, making sure the focus is on the editor iframe after closing the dialog
+  it('TINY-10070: Editor focus should be on text area after closing dialog', async () => {
+    const editor = hook.editor();
+    openDialog(editor, { inline: 'toolbar' }, createDialogWithIframeSpec());
+    await TinyUiActions.pWaitForDialog(editor);
+    TinyUiActions.clickOnUi(editor, 'button[title="Random"]');
+    UiFinder.notExists(SugarBody.body(), 'tox-dialog-inline');
+    await FocusTools.pTryOnSelector(
+      'Focus should be on iframe',
+      SugarDocument.getDocument(),
+      'iframe[title="Rich Text Area"]'
+    );
   });
 });
