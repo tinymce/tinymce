@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - New `help_accessibility` option which displays the keyboard shortcut to access the help functionality in the statusbar. #TINY-9379
+- Now if `loadContentCss` takes more then 500ms a loading is inserted. #TINY-10008
 
 ### Improved
 - Adding a newline after a table would in some specific cases not work. #TINY-9863
