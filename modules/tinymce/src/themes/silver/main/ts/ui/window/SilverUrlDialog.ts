@@ -10,7 +10,7 @@ import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { bodySendMessageChannel } from './DialogChannels';
 import { renderIframeBody } from './SilverDialogBody';
 import { DialogSpec, getEventExtras, getHeader, renderModalDialog, SharedWindowExtra } from './SilverDialogCommon';
-import { SilverDialogEvents } from './SilverDialogEvents';
+import * as SilverDialogEvents from './SilverDialogEvents';
 import { renderModalFooter } from './SilverDialogFooter';
 import { getUrlDialogApi } from './SilverUrlDialogInstanceApi';
 
