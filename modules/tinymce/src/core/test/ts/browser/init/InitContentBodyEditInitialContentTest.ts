@@ -14,21 +14,22 @@ describe('browser.tinymce.core.init.InitContentBodyEditInitialContentTest', () =
       base_url: '/project/tinymce/js/tinymce',
       setup: (ed: Editor) => {
         ed.on('PreInit', () => {
-          ed.ui.styleSheetLoader.loadAll = (_urls: string[]): Promise<string[]> => {
+          const realLoadAll = ed.ui.styleSheetLoader?.loadAll;
+          ed.ui.styleSheetLoader.loadAll = (urls: string[]): Promise<string[]> => {
+            const result = realLoadAll.call(ed.ui.styleSheetLoader, urls);
+            ed.ui.styleSheetLoader.loadAll = realLoadAll;
             return new Promise((resolve, reject) => {
-              let resolved = false;
+              const rejectTimeout = setTimeout(() => {
+                reject('the progress state is not showed');
+                Assert.fail('the progress state is not showed');
+              }, loadTime);
+
               ed.on('ProgressState', ({ state }) => {
                 if (state) {
-                  resolved = true;
-                  resolve([]);
+                  clearTimeout(rejectTimeout);
+                  resolve(result);
                 }
               });
-              setTimeout(() => {
-                reject('the progress state is not showed');
-                if (!resolved) {
-                  Assert.fail('the progress state is not showed');
-                }
-              }, loadTime);
             });
           };
         });

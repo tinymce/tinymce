@@ -374,12 +374,13 @@ const initEditorWithInitialContent = (editor: Editor) => {
 
 const startProgress = (editor: Editor) => {
   let canceled = false;
-  setTimeout(() => {
+  const progressTimeout = setTimeout(() => {
     if (!canceled) {
       editor.setProgressState(true);
     }
   }, 500);
   return () => {
+    clearTimeout(progressTimeout);
     canceled = true;
   };
 };
