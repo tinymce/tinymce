@@ -4,11 +4,11 @@ import { Cell, Fun, Optional, Throttler, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Class, Compare, SugarElement, Traverse } from '@ephox/sugar';
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
-import { RepresentingConfigs } from '../alien/RepresentingConfigs';
+import * as Backstage from '../../backstage/Backstage';
+import * as FieldLabeller from '../alien/FieldLabeller';
+import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 import * as NavigableObject from '../general/NavigableObject';
-import { dialogFocusShiftedChannel } from '../window/DialogChannels';
+import * as DialogChannels from '../window/DialogChannels';
 
 interface IFrameSourcing {
   readonly getValue: (frame: AlloyComponent) => string;
@@ -114,7 +114,7 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
   };
 };
 
-const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstageProviders, initialData: Optional<string>): SketchSpec => {
+const renderIFrame = (spec: IframeSpec, providersBackstage: Backstage.UiFactoryBackstageProviders, initialData: Optional<string>): SketchSpec => {
   const baseClass = 'tox-dialog__iframe';
   const opaqueClass = spec.transparent ? [] : [ `${baseClass}--opaque` ];
   const containerBorderedClass = spec.border ? [ `tox-navobj-bordered` ] : [];
@@ -127,7 +127,7 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstagePr
 
   const sourcing = getDynamicSource(initialData, spec.streamContent);
 
-  const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
+  const pLabel = spec.label.map((label) => FieldLabeller.renderLabel(label, providersBackstage));
 
   const factory = (newSpec: { uid: string }) => NavigableObject.craft(
     Optional.from(containerBorderedClass),
@@ -148,7 +148,7 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstagePr
         RepresentingConfigs.withComp(initialData, sourcing.getValue, sourcing.setValue),
         Receiving.config({
           channels: {
-            [dialogFocusShiftedChannel]: {
+            [DialogChannels.dialogFocusShiftedChannel]: {
               onReceive: (comp, message: DialogFocusShiftedEvent) => {
                 message.newFocus.each((newFocus) => {
                   Traverse.parentElement(comp.element).each((parent) => {
@@ -169,7 +169,7 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstagePr
     factory: { sketch: factory }
   });
 
-  return renderFormFieldWith(pLabel, pField, [ 'tox-form__group--stretched' ], [ ]);
+  return FieldLabeller.renderFormFieldWith(pLabel, pField, [ 'tox-form__group--stretched' ], [ ]);
 };
 
 export {

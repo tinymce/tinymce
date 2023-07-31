@@ -7,17 +7,17 @@ import { Dialog, DialogManager } from '@ephox/bridge';
 import { Fun, Id, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Classes, Height, SugarElement, SugarNode } from '@ephox/sugar';
 
-import { UiFactoryBackstage } from '../../backstage/Backstage';
-import { RepresentingConfigs } from '../alien/RepresentingConfigs';
-import { formCloseEvent } from '../general/FormEvents';
+import * as Backstage from '../../backstage/Backstage';
+import * as RepresentingConfigs from '../alien/RepresentingConfigs';
+import * as FormEvents from '../general/FormEvents';
 import * as NavigableObject from '../general/NavigableObject';
-import { dialogChannel, dialogFocusShiftedChannel } from './DialogChannels';
-import { renderInlineBody } from './SilverDialogBody';
+import * as DialogChannels from './DialogChannels';
+import * as SilverDialogBody from './SilverDialogBody';
 import * as SilverDialogCommon from './SilverDialogCommon';
-import { SilverDialogEvents } from './SilverDialogEvents';
-import { renderInlineFooter } from './SilverDialogFooter';
-import { renderInlineHeader } from './SilverDialogHeader';
-import { getDialogApi } from './SilverDialogInstanceApi';
+import * as SilverDialogEvents from './SilverDialogEvents';
+import * as SilverDialogFooter from './SilverDialogFooter';
+import * as SilverDialogHeader from './SilverDialogHeader';
+import * as SilverDialogInstanceApi from './SilverDialogInstanceApi';
 
 interface RenderedDialog<T extends Dialog.DialogData> {
   readonly dialog: AlloyComponent;
@@ -33,7 +33,7 @@ const getInlineDialogSizeClass = (size: Dialog.DialogSize): Optional<string> => 
   }
 };
 
-const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra<T>, backstage: UiFactoryBackstage, ariaAttrs: boolean = false): RenderedDialog<T> => {
+const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra<T>, backstage: Backstage.UiFactoryBackstage, ariaAttrs: boolean = false): RenderedDialog<T> => {
   const dialogId = Id.generate('dialog');
   const dialogLabelId = Id.generate('dialog-label');
   const dialogContentId = Id.generate('dialog-content');
@@ -43,14 +43,14 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
   const updateState = (_comp: AlloyComponent, incoming: DialogManager.DialogInit<T>) => Optional.some(incoming);
 
   const memHeader = Memento.record(
-    renderInlineHeader({
+    SilverDialogHeader.renderInlineHeader({
       title: internalDialog.title,
       draggable: true
     }, dialogId, dialogLabelId, backstage.shared.providers)
   );
 
   const memBody = Memento.record(
-    renderInlineBody({
+    SilverDialogBody.renderInlineBody({
       body: internalDialog.body,
       initialData: internalDialog.initialData,
     }, dialogId, dialogContentId, backstage, ariaAttrs)
@@ -63,7 +63,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
   const optMemFooter = Optionals.someIf(
     storagedMenuButtons.length !== 0,
     Memento.record(
-      renderInlineFooter({
+      SilverDialogFooter.renderInlineFooter({
         buttons: storagedMenuButtons
       }, dialogId, backstage)
     ));
@@ -108,7 +108,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
       Keying.config({
         mode: 'cyclic',
         onEscape: (c) => {
-          AlloyTriggers.emit(c, formCloseEvent);
+          AlloyTriggers.emit(c, FormEvents.formCloseEvent);
           return Optional.some(true);
         },
         useTabstopAt: (elem) => !NavigableObject.isPseudoStop(elem) && (
@@ -117,7 +117,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
         firstTabstop: 1
       }),
       Reflecting.config({
-        channel: `${dialogChannel}-${dialogId}`,
+        channel: `${DialogChannels.dialogChannel}-${dialogId}`,
         updateState,
         initialData: dialogInit
       }),
@@ -131,7 +131,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
             Keying.focusIn(comp);
           }),
           AlloyEvents.run<SystemEvents.AlloyFocusShiftedEvent>(SystemEvents.focusShifted(), (comp, se) => {
-            comp.getSystem().broadcastOn([ dialogFocusShiftedChannel ], {
+            comp.getSystem().broadcastOn([ DialogChannels.dialogFocusShiftedChannel ], {
               newFocus: se.event.newFocus
             });
           })
@@ -162,7 +162,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
   };
 
   // TODO: Clean up the dupe between this (InlineDialog) and SilverDialog
-  const instanceApi = getDialogApi<T>({
+  const instanceApi = SilverDialogInstanceApi.getDialogApi<T>({
     getId: Fun.constant(dialogId),
     getRoot: Fun.constant(dialog),
     getFooter: () => optMemFooter.map((memFooter) => memFooter.get(dialog)),
