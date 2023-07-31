@@ -188,7 +188,7 @@ const shouldPreventDeleteAction = (editor: Editor, forward: boolean, granularity
     (detailsElements) => shouldPreventDeleteSummaryAction(editor, detailsElements, forward, granularity) || shouldPreventDeleteIntoDetails(editor, forward, granularity)
   );
 
-const shouldPreventDeleteActionSafari = (editor: Editor, forward: boolean, granularity: Granularity): boolean => {
+const handleDeleteActionSafari = (editor: Editor, forward: boolean, granularity: Granularity): boolean => {
   const selection = editor.selection;
   const node = selection.getNode();
   const rng = selection.getRng();
@@ -229,7 +229,7 @@ const shouldPreventDeleteActionSafari = (editor: Editor, forward: boolean, granu
         applySelection();
         // Manually perform deletion with modified granularities
         if (granularity === 'word' || granularity === 'line') {
-          sel?.modify('extend', granularity);
+          sel?.modify('extend', forward ? 'right' : 'left', granularity);
         }
         if (!selection.isCollapsed() && isEntireNodeSelected(selection.getRng(), container)) {
           emptyNodeContents(node);
@@ -250,7 +250,7 @@ const shouldPreventDeleteActionSafari = (editor: Editor, forward: boolean, granu
 };
 
 const backspaceDelete = (editor: Editor, forward: boolean, granularity: 'character' | 'word' | 'line' | 'selection'): Optional<() => void> =>
-  isSafari && shouldPreventDeleteActionSafari(editor, forward, granularity) || shouldPreventDeleteAction(editor, forward, granularity)
+  shouldPreventDeleteAction(editor, forward, granularity) || isSafari && handleDeleteActionSafari(editor, forward, granularity)
     ? Optional.some(Fun.noop) : Optional.none();
 
 export {
