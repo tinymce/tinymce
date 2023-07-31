@@ -22,8 +22,6 @@ type Granularity = 'character' | 'word' | 'line' | 'selection';
 const browser = PlatformDetection.detect().browser;
 const isSafari = browser.isSafari();
 
-const noop = Optional.some(Fun.noop);
-
 const emptyNodeContents = (node: Node) => PaddingBr.fillWithPaddingBr(SugarElement.fromDom(node));
 
 const isEntireNodeSelected = (rng: Range, node: Node): boolean =>
@@ -184,13 +182,13 @@ const shouldPreventDeleteSummaryAction = (editor: Editor, detailElements: Detail
   }
 };
 
-const deleteAction = (editor: Editor, forward: boolean, granularity: Granularity): Optional<() => void> =>
+const shouldPreventDeleteAction = (editor: Editor, forward: boolean, granularity: Granularity): boolean =>
   getDetailsElements(editor.dom, editor.selection.getRng()).fold(
     () => shouldPreventDeleteIntoDetails(editor, forward, granularity),
     (detailsElements) => shouldPreventDeleteSummaryAction(editor, detailsElements, forward, granularity) || shouldPreventDeleteIntoDetails(editor, forward, granularity)
-  ) ? noop : Optional.none();
+  );
 
-const safariDeleteAction = (editor: Editor, forward: boolean, granularity: Granularity): Optional<() => void> => {
+const shouldPreventDeleteActionSafari = (editor: Editor, forward: boolean, granularity: Granularity): boolean => {
   const selection = editor.selection;
   const node = selection.getNode();
   const rng = selection.getRng();
@@ -245,14 +243,15 @@ const safariDeleteAction = (editor: Editor, forward: boolean, granularity: Granu
       });
     }
 
-    return noop;
+    return true;
   } else {
-    return Optional.none();
+    return false;
   }
 };
 
 const backspaceDelete = (editor: Editor, forward: boolean, granularity: 'character' | 'word' | 'line' | 'selection'): Optional<() => void> =>
-  (isSafari ? safariDeleteAction : deleteAction)(editor, forward, granularity);
+  isSafari && shouldPreventDeleteActionSafari(editor, forward, granularity) || shouldPreventDeleteAction(editor, forward, granularity)
+    ? Optional.some(Fun.noop) : Optional.none();
 
 export {
   backspaceDelete
