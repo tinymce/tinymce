@@ -1,10 +1,11 @@
 import { Cursors } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
+import { Fun, Optional, Optionals } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import * as DetailsElement from 'tinymce/core/selection/DetailsElement';
+import * as DetailsDelete from 'tinymce/core/delete/DetailsDelete';
 
 interface TestCase {
   readonly html: string;
@@ -28,7 +29,7 @@ describe('browser.tinymce.core.delete.DeleteDetailsTest', () => {
 
     editor.setContent(testCase.html);
     TinySelections.setSelection(editor, testCase.selection.startPath, testCase.selection.soffset, testCase.selection.finishPath, testCase.selection.foffset);
-    const prevented = DetailsElement.deleteAction(editor, forward);
+    const prevented = Optionals.equals(DetailsDelete.backspaceDelete(editor, forward, 'character'), Optional.some(Fun.noop));
     assert.equal(prevented, testCase.expectedPrevented);
     TinyAssertions.assertContent(editor, expectedHtml);
     TinyAssertions.assertSelection(editor, testCase.expectedSelection.startPath, testCase.expectedSelection.soffset, testCase.expectedSelection.finishPath, testCase.expectedSelection.foffset);

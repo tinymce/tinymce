@@ -28,6 +28,13 @@ const isFirefox = browser.isFirefox();
 const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: KeyboardEvent) => {
   const inputType = evt.keyCode === VK.BACKSPACE ? 'deleteContentBackward' : 'deleteContentForward';
   const unmodifiedGranularity = editor.selection.isCollapsed() ? 'character' : 'selection';
+  const getModifiedGranularity = (isWord: boolean) => {
+    if (editor.selection.isCollapsed()) {
+      return isWord ? 'word' : 'character';
+    } else {
+      return 'selection';
+    }
+  };
 
   MatchKeys.executeWithDelayedAction([
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(Outdent.backspaceDelete, editor) },
@@ -42,12 +49,12 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: K
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(DetailsDelete.backspaceDelete, editor, false, unmodifiedGranularity) },
     { keyCode: VK.DELETE, action: MatchKeys.action(DetailsDelete.backspaceDelete, editor, true, unmodifiedGranularity) },
     ...isMacOSOriOS ? [
-      { keyCode: VK.BACKSPACE, altKey: true, action: MatchKeys.action(DetailsDelete.backspaceDelete, editor, false, 'word') },
-      { keyCode: VK.DELETE, altKey: true, action: MatchKeys.action(DetailsDelete.backspaceDelete, editor, true, 'word') },
-      { keyCode: VK.BACKSPACE, metaKey: true, action: MatchKeys.action(DetailsDelete.backspaceDelete, editor, false, 'line') },
+      { keyCode: VK.BACKSPACE, altKey: true, action: MatchKeys.action(DetailsDelete.backspaceDelete, editor, false, getModifiedGranularity(true)) },
+      { keyCode: VK.DELETE, altKey: true, action: MatchKeys.action(DetailsDelete.backspaceDelete, editor, true, getModifiedGranularity(true)) },
+      { keyCode: VK.BACKSPACE, metaKey: true, action: MatchKeys.action(DetailsDelete.backspaceDelete, editor, false, getModifiedGranularity(false)) },
     ] : [
-      { keyCode: VK.BACKSPACE, ctrlKey: true, action: MatchKeys.action(DetailsDelete.backspaceDelete, editor, false, 'word') },
-      { keyCode: VK.DELETE, ctrlKey: true, action: MatchKeys.action(DetailsDelete.backspaceDelete, editor, true, 'word') }
+      { keyCode: VK.BACKSPACE, ctrlKey: true, action: MatchKeys.action(DetailsDelete.backspaceDelete, editor, false, getModifiedGranularity(true)) },
+      { keyCode: VK.DELETE, ctrlKey: true, action: MatchKeys.action(DetailsDelete.backspaceDelete, editor, true, getModifiedGranularity(true)) }
     ],
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(ImageBlockDelete.backspaceDelete, editor, false) },
     { keyCode: VK.DELETE, action: MatchKeys.action(ImageBlockDelete.backspaceDelete, editor, true) },
