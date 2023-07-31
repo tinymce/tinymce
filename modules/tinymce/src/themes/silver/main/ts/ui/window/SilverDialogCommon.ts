@@ -7,7 +7,7 @@ import { Arr, Cell, Obj, Optional } from '@ephox/katamari';
 import { Height, SelectorFind } from '@ephox/sugar';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { RepresentingConfigs } from '../alien/RepresentingConfigs';
+import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 import { StoredMenuButton, StoredMenuItem } from '../button/MenuButton';
 import * as Dialogs from '../dialog/Dialogs';
 import { FormBlockEvent, formCancelEvent } from '../general/FormEvents';
