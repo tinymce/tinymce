@@ -14,7 +14,7 @@ describe('browser.tinymce.core.init.InitContentBodyEditInitialContentTest', () =
       base_url: '/project/tinymce/js/tinymce',
       setup: (ed: Editor) => {
         ed.on('PreInit', () => {
-          const realLoadAll = ed.ui.styleSheetLoader?.loadAll;
+          const realLoadAll = ed.ui.styleSheetLoader.loadAll;
           ed.ui.styleSheetLoader.loadAll = (urls: string[]): Promise<string[]> => {
             const result = realLoadAll.call(ed.ui.styleSheetLoader, urls);
             ed.ui.styleSheetLoader.loadAll = realLoadAll;
