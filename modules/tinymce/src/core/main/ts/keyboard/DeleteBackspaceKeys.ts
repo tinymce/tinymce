@@ -27,10 +27,11 @@ const isFirefox = browser.isFirefox();
 
 const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: KeyboardEvent) => {
   const inputType = evt.keyCode === VK.BACKSPACE ? 'deleteContentBackward' : 'deleteContentForward';
-  const unmodifiedGranularity = editor.selection.isCollapsed() ? 'character' : 'selection';
+  const isCollapsed = editor.selection.isCollapsed();
+  const unmodifiedGranularity = isCollapsed ? 'character' : 'selection';
   const getModifiedGranularity = (isWord: boolean) => {
-    if (editor.selection.isCollapsed()) {
-      return isWord ? 'word' : 'character';
+    if (isCollapsed) {
+      return isWord ? 'word' : 'line';
     } else {
       return 'selection';
     }
