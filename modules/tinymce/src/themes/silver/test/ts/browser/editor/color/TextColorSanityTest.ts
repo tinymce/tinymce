@@ -313,6 +313,40 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     });
   });
 
+  context('Custom Color Map With Fewer Than Default Custom Color Cols Test', () => {
+    const colorMap = [
+      '#2DC26B', 'Green',
+      '#F1C40F', 'Yellow',
+      '#E03E2D', 'Red',
+      '#B96AD9', 'Purple',
+      '#3598DB', 'Blue',
+      '#E67E23', 'Orange'
+    ];
+    const thirtySixColors = Arr.flatten([ colorMap, colorMap, colorMap, colorMap, colorMap, colorMap ]);
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      toolbar: 'forecolor backcolor fontsize',
+      base_url: '/project/tinymce/js/tinymce',
+      color_cols: 3,
+      color_map: thirtySixColors
+    }, [], true);
+
+    it('TINY-10098: color_map_foreground works as expected', async () => {
+      const editor = hook.editor();
+      setupContent(editor);
+      TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+      await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
+      Assert.eq('Cols is the expected value', getColorCols(editor, 'forecolor'), 3);
+    });
+
+    it('TINY-10098: color_map_background works as expected', async () => {
+      const editor = hook.editor();
+      setupContent(editor);
+      TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+      await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
+      Assert.eq('Cols is the expected value', getColorCols(editor, 'hilitecolor'), 3);
+    });
+  });
+
   context('Custom Color Map Default Columns Test', () => {
     const colorMap = [
       '#2DC26B', 'Green',
