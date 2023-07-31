@@ -330,10 +330,6 @@ const preInit = (editor: Editor) => {
 
   editor.quirks = Quirks(editor);
 
-  // if (!editor.readonly && editor.hasEditableRoot()) {
-  //   body.contentEditable = 'true';
-  // }
-
   Events.firePostRender(editor);
 
   const directionality = Options.getDirectionality(editor);
@@ -356,10 +352,6 @@ const preInit = (editor: Editor) => {
     editor.addVisual(editor.getBody());
   });
 
-  // if (editor.removed !== true) {
-  //   loadInitialContent(editor);
-  // }
-
   editor.on('compositionstart compositionend', (e) => {
     editor.composing = e.type === 'compositionstart';
   });
@@ -375,7 +367,7 @@ const loadInitialContent = (editor: Editor) => {
 
 const initEditorWithInitialContent = (editor: Editor) => {
   if (editor.removed !== true) {
-    loadInitialContent(editor); // TODO: remove this if we chose to move it
+    loadInitialContent(editor);
     initEditor(editor);
   }
 };
@@ -386,7 +378,7 @@ const startProgress = (editor: Editor) => {
     if (!canceled) {
       editor.setProgressState(true);
     }
-  }, 300);
+  }, 500);
   return () => {
     canceled = true;
   };
@@ -416,7 +408,8 @@ const contentBodyLoaded = (editor: Editor): void => {
     if (editor.inline && DOM.getStyle(body, 'position', true) === 'static') {
       body.style.position = 'relative';
     }
-    body.contentEditable = 'true'; // TODO: remove this if we chose to move it
+
+    body.contentEditable = 'true';
   }
 
   (body as any).disabled = false;
