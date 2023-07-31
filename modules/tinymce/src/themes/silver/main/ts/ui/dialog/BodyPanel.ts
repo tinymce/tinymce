@@ -58,7 +58,7 @@ const renderBodyPanel = (spec: BodyPanelSpec, dialogData: Dialog.DialogData, bac
         )
       }),
       AddEventsBehaviour.config('dialog-body-panel', [
-        // TINY-10101: This is to cater the case where clicks are made into the dialog instead using keyboard navigaton, as FocusShifted would not be triggered in that case.
+        // TINY-10101: This is to cater for the case where clicks are made into the dialog instead using keyboard navigation, as FocusShifted would not be triggered in that case.
         AlloyEvents.run(NativeEvents.focusin(), (comp, se) => {
           comp.getSystem().broadcastOn([ dialogFocusShiftedChannel ], {
             newFocus: Optional.some(se.event.target)
