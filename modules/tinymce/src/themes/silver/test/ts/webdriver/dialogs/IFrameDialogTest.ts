@@ -111,7 +111,6 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
     }
 
     await FocusTools.pTryOnSelector('focus should move back to input (iframe >> input)', SugarDocument.getDocument(), 'input');
-    await pPressTab('div[class*="alloy-fake-before-tabstop"]', true);
     windowManager.close(dialogInstance);
   });
 
@@ -141,10 +140,6 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
     await assertContainerBorderFocus(true);
 
     await pPressTab('iframe => body', false);
-    await FocusTools.pTryOnSelector('focus should be on the "after" tabstop', SugarDocument.getDocument(), 'div[class*="alloy-fake-after-tabstop"]');
-    await assertContainerBorderFocus(false);
-
-    await pPressTab('div[class*="alloy-fake-after-tabstop"]', false);
     await FocusTools.pTryOnSelector('focus should be on button (cancel)', SugarDocument.getDocument(), 'button:contains("Close")');
     await assertContainerBorderFocus(false);
     await pPressTab('button.tox-button--secondary', true);
@@ -158,8 +153,6 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
       await assertContainerBorderFocus(true);
       await pPressTab('iframe', true);
     }
-    await FocusTools.pTryOnSelector('focus should be on the "before" tabstop', SugarDocument.getDocument(), 'div[class*="alloy-fake-before-tabstop"]');
-    await assertContainerBorderFocus(false);
 
     await pPressTab('input', false);
     await FocusTools.pTryOnSelector('focus should be on iframe', SugarDocument.getDocument(), 'iframe');
