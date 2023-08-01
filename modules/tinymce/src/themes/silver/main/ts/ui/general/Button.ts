@@ -14,7 +14,7 @@ import * as ReadOnly from '../../ReadOnly';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderFormField } from '../alien/FieldLabeller';
-import { RepresentingConfigs } from '../alien/RepresentingConfigs';
+import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 import { renderIconFromPack, renderReplaceableIconFromPack } from '../button/ButtonSlices';
 import { getFetch, renderMenuButton, StoredMenuButton } from '../button/MenuButton';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';

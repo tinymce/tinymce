@@ -4,7 +4,7 @@ import { Cell, Optional, Type } from '@ephox/katamari';
 import { Attribute, Class, Css, Height, Ready, SugarElement, Width } from '@ephox/sugar';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
-import { RepresentingConfigs } from '../alien/RepresentingConfigs';
+import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 
 type ImagePreviewSpec = Omit<Dialog.ImagePreview, 'type'>;
 
