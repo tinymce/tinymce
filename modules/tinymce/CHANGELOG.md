@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Improved
 - Content updates for `streamContent: true` iframe dialog components on Safari are now throttled to 500ms intervals to reduce the visual impact of flickering when rapidly updating iframe content. #TINY-10097
 
+### Changed
+- API comments/documentation corrected: a typo correction and run-on sentences fixed. #TINY-10073
+
 ### Fixed
 - Right-clicking on an image that was in a non-editable area would open the image context menu. #TINY-10016
 - When an editable area was nested inside a non-editable area, creating lists was not possible. #TINY-10000
