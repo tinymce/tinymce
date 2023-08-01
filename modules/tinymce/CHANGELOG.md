@@ -7,7 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- New `pad_empty_with_br` option that can be set to `true` to pad empty block elements with `<br>` tag instead of nbsp character. #TINY-9861
 - New `help_accessibility` option which displays the keyboard shortcut to access the help functionality in the statusbar. #TINY-9379
 
 ### Improved
@@ -20,8 +19,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The pattern replacement removes spaces if they were contained in a tag that only contains a space and the text to replace. #TINY-9744
 
 ### Fixed
-- Right-clicking on an image that was in a non-editable area would open the image context menu. #TINY-10016
-- When an editable area was nested inside a non-editable area, creating lists was not possible. #TINY-10000
 - Returning an empty string in custom context menu update function would result in a small white line appearing on right click and the native browser context menu would not show up. #TINY-9842
 - Autocompletion of url for links would on sufficiently long links and wide screens leave out middle parts of the url from view. #TINY-10017
 - Quick Toolbar plugin would show text alignment buttons on pagebreaks. #TINY-10054
@@ -34,6 +31,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Contents would not be removed from the drag start source if dragging and dropping internally into a transparent block element. #TINY-9960
 - In some cases pressing enter would scroll the entire page. #TINY-9828
 - The border styles of a table were incorrectly split into a longhand form after table dialog updates. #TINY-9843
+
+# 6.6.1 - TBD
+
+### Added
+- New `pad_empty_with_br` option that can be set to `true` to pad empty block elements with `<br>` tag instead of nbsp character. #TINY-9861
+
+### Improved
+- Content updates for `streamContent: true` iframe dialog components on Safari are now throttled to 500ms intervals to reduce the visual impact of flickering when rapidly updating iframe content. #TINY-10097
+
+### Fixed
+- Right-clicking on an image that was in a non-editable area would open the image context menu. #TINY-10016
+- When an editable area was nested inside a non-editable area, creating lists was not possible. #TINY-10000
+- On Safari and Firefox browsers, scroll positions were not always maintained when updating the content of a `streamContent: true` iframe dialog component. #TINY-10078 #TINY-10109
+- Scrolling behavior was inconsistent when updating a `streamContent: true` iframe dialog component with content lacking an HTML document type declaration. #TINY-10110
+- Console may display warning message when closing dialog with an iframe component. #TINY-10070
+- On Safari and Firefox browsers, the border around the `iframe` dialog component was not highlighted when focused. #TINY-10101
+- The `color_cols` option was not respected when a custom `color_map` was defined. #TINY-10098
+- The `color_cols` options were were not rounded to the nearest number when set to a decimal number. #TINY-9737
 
 ## 6.6.0 - 2023-07-12
 
@@ -49,6 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Improved
 - When defining a modal or inline dialog, if the buttons property is an empty array, or is not defined at all, the footer will now no longer be rendered. #TINY-9996
 - The `iframe` dialog component now has a minimum height of 200px. #TINY-10059
+- Improved detection of scrollable containers when the `ui_mode: 'split'` option is set. #TINY-9385
 
 ### Changed
 - The icon in an `alertbanner` dialog component is no longer clickable if the _URL_ field is not specified. #TINY-10013

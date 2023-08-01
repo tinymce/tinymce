@@ -5,7 +5,7 @@ import { Obj, Optional, Singleton } from '@ephox/katamari';
 import Resource from 'tinymce/core/api/Resource';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
-import { RepresentingConfigs } from '../alien/RepresentingConfigs';
+import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 
 type CustomEditorSpec = Dialog.CustomEditor;
 type CustomEditorInitFn = Dialog.CustomEditorInitFn;

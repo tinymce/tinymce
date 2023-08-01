@@ -5,7 +5,7 @@ import { Arr, Optional, Strings } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
-import { RepresentingConfigs } from '../alien/RepresentingConfigs';
+import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 import { formActionEvent } from '../general/FormEvents';
 
 const english: Record<string, string> = {

@@ -86,18 +86,20 @@ const renderIframeBody = (spec: Dialog.UrlDialog): AlloyParts.ConfiguredPart => 
           classes: [ 'tox-dialog__body-iframe' ]
         },
         components: [
-          NavigableObject.craft({
-            dom: {
-              tag: 'iframe',
-              attributes: {
-                src: spec.url
-              }
-            },
-            behaviours: Behaviour.derive([
-              Tabstopping.config({ }),
-              Focusing.config({ })
-            ])
-          })
+          NavigableObject.craft(
+            Optional.none(),
+            {
+              dom: {
+                tag: 'iframe',
+                attributes: {
+                  src: spec.url
+                }
+              },
+              behaviours: Behaviour.derive([
+                Tabstopping.config({ }),
+                Focusing.config({ })
+              ])
+            })
         ]
       }
     ],

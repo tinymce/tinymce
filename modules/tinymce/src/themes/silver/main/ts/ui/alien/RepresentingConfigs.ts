@@ -65,7 +65,7 @@ const memory = (initialValue: any): RepresentingBehaviour => Representing.config
   }
 });
 
-export const RepresentingConfigs = {
+export {
   memento,
   withElement,
   withComp,
