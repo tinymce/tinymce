@@ -8,7 +8,7 @@ import { Attribute } from '@ephox/sugar';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderLabel } from '../alien/FieldLabeller';
-import { RepresentingConfigs } from '../alien/RepresentingConfigs';
+import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 import { renderCommonDropdown, updateMenuText } from '../dropdown/CommonDropdown';
 import { formChangeEvent } from '../general/FormEvents';
 import ItemResponse from '../menus/item/ItemResponse';
