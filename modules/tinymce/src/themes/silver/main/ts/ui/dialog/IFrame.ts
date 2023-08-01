@@ -18,7 +18,8 @@ type IframeSpec = Omit<Dialog.Iframe, 'type'>;
 
 const browser = PlatformDetection.detect().browser;
 const isSafari = browser.isSafari();
-const isSafariOrFirefox = isSafari || browser.isFirefox();
+const isFirefox = browser.isFirefox();
+const isSafariOrFirefox = isSafari || isFirefox;
 const isChromium = browser.isChromium();
 
 const isElementScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) =>
@@ -83,7 +84,9 @@ const writeValue = (iframeElement: SugarElement<HTMLIFrameElement>, html: string
 // TINY-10097: On Safari, throttle to 500ms reduce flickering as the document.write() method still observes significant flickering.
 // Also improves scrolling, as scroll positions are maintained manually similar to Firefox.
 const throttleInterval = isSafariOrFirefox ? Optional.some(isSafari ? 500 : 200) : Optional.none();
-const writeValueThrottler = throttleInterval.map((interval) => Throttler.first(writeValue, interval));
+
+// TINY-10078: Use Throttler.adaptable to ensure that any content added during the waiting period is not lost.
+const writeValueThrottler = throttleInterval.map((interval) => Throttler.adaptable(writeValue, interval));
 
 const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFrameSourcing => {
   const cachedValue = Cell(initialData.getOr(''));
