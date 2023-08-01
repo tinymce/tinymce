@@ -9,7 +9,7 @@ import { Checked, Class, Traverse } from '@ephox/sugar';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
-import { RepresentingConfigs } from '../alien/RepresentingConfigs';
+import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 import * as Icons from '../icons/Icons';
 import { formChangeEvent } from './FormEvents';
 

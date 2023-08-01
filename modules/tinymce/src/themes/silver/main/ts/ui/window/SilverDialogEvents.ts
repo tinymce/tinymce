@@ -130,7 +130,7 @@ const initDialog = <T extends Dialog.DialogData>(getInstanceApi: () => Dialog.Di
   ];
 };
 
-export const SilverDialogEvents = {
+export {
   initUrlDialog,
   initDialog
 };

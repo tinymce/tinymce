@@ -72,7 +72,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
 
       const baseClassPrefix = 'tox-dialog__iframe--';
       const iframeStructure = s.element('div', {
-        classes: [ arr.has('tox-navobj') ],
+        classes: [ arr.has('tox-navobj'), (border ? arr.has : arr.not)('tox-navobj-bordered') ],
         children: [
           s.element('div', {
             attrs: {
@@ -82,8 +82,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
           s.element('iframe', {
             classes: [
               arr.has('tox-dialog__iframe'),
-              (transparent ? arr.not : arr.has)(`${baseClassPrefix}opaque`),
-              (border ? arr.has : arr.not)(`${baseClassPrefix}bordered`)
+              (transparent ? arr.not : arr.has)(`${baseClassPrefix}opaque`)
             ],
             attrs: {
               // Should be no source.
@@ -115,12 +114,13 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
     assert.notStrictEqual(el.scrollTop, 0, label);
     assertScrollAtBottom(el, label);
   };
-  const assertNullableScroll = (el: HTMLElement | null | undefined, assertFn: (el: HTMLElement) => void) => Optional.from(el).fold(
-    () => assert.fail(`Could not find element`),
-    (el: HTMLElement) => assertFn(el)
-  );
-  const assertNullableScrollAtBottom = (el: HTMLElement | null | undefined, label: string) => assertNullableScroll(el, (el: HTMLElement) => assertScrollAtBottom(el, label));
-  const assertNullableScrollAtBottomOverflow = (el: HTMLElement | null | undefined, label: string) => assertNullableScroll(el, (el: HTMLElement) => assertScrollAtBottomOverflow(el, label));
+  const assertIframeScroll = (iframe: HTMLIFrameElement, hasDoctype: boolean, assertFn: (scrollingEl: HTMLElement) => void) =>
+    Optional.from(hasDoctype ? iframe.contentDocument?.documentElement : iframe.contentDocument?.body).fold(
+      () => assert.fail(`Could not find element`),
+      (el: HTMLElement) => assertFn(el)
+    );
+  const assertIframeScrollAtBottom = (iframe: HTMLIFrameElement, hasDoctype: boolean, label: string) => assertIframeScroll(iframe, hasDoctype, (el: HTMLElement) => assertScrollAtBottom(el, label));
+  const assertIframeScrollAtBottomOverflow = (iframe: HTMLIFrameElement, hasDoctype: boolean, label: string) => assertIframeScroll(iframe, hasDoctype, (el: HTMLElement) => assertScrollAtBottomOverflow(el, label));
 
   const assertScrollApproximatelyAt = ({ scrollTop }: HTMLElement, expectedScrollTop: number, label: string) => assert.approximately(scrollTop, expectedScrollTop, 1, label);
 
@@ -137,8 +137,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
 
   const getDoctypeLabel = (hasDoctype: boolean) => hasDoctype ? 'content has doctype' : 'content does not have doctype';
 
-  const maxIterations = 10;
-  const testIterativeContentChange = (frameNumber: number, assertFn: (iframe: HTMLIFrameElement, it: number) => void, shouldContentHaveDoctype: boolean) => async () => {
+  const testIterativeContentChange = (frameNumber: number, shouldContentHaveDoctype: boolean, assertFn: (iframe: HTMLIFrameElement, it: number) => void, maxIterations: number = 10) => async () => {
     const frame = getFrameFromFrameNumber(frameNumber);
 
     for (let i = 0, content = ''; i < maxIterations; ++i) {
@@ -262,19 +261,17 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
       it(`TINY-10032: Should keep scroll at top when streamContent: true, iframe is at top, and ${doctypeLabel}`,
         testStreamScroll(ScrollPosition.Top, shouldContentHaveDoctype));
 
-      it(`TINY-10078: Should keep scroll at middle when streamContent: true, iframe is at middle, and ${doctypeLabel}`,
+      it(`TINY-10032: Should keep scroll at middle when streamContent: true, iframe is at middle, and ${doctypeLabel}`,
         testStreamScroll(ScrollPosition.Middle, shouldContentHaveDoctype));
 
       it(`TINY-10032: Should scroll to bottom when streamContent: true, iframe is already scrolled to bottom, and ${doctypeLabel}}`,
         testStreamScroll(ScrollPosition.Bottom, shouldContentHaveDoctype));
 
-      it(`TINY-10078: Check that scroll is kept at bottom when changing content iteratively and ${doctypeLabel}`,
-        testIterativeContentChange(streamFrameNumber, (iframe, it) =>
-          assertNullableScrollAtBottom((shouldContentHaveDoctype ? iframe.contentDocument?.documentElement : iframe.contentDocument?.body) as HTMLElement,
-            `iframe should be scrolled to bottom on iteration ${it}`),
-        shouldContentHaveDoctype));
+      it(`TINY-10109: Check that scroll is kept at bottom when changing content iteratively and ${doctypeLabel}`,
+        testIterativeContentChange(streamFrameNumber, shouldContentHaveDoctype, (iframe, it) =>
+          assertIframeScrollAtBottom(iframe, shouldContentHaveDoctype, `iframe should be scrolled to bottom on iteration ${it}`)));
 
-      it(`TINY-10078: Should scroll to bottom when adding overflowing content in an empty iframe and ${doctypeLabel}`, async () => {
+      it(`TINY-10032: Should scroll to bottom when adding overflowing content in an empty iframe and ${doctypeLabel}`, async () => {
         const frame = getFrameFromFrameNumber(streamFrameNumber);
         const iframe = frame.element.dom as HTMLIFrameElement;
         await Waiter.pTryUntil('Waiting for iframe content to be set to empty initially', () => {
@@ -283,8 +280,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
         });
         await setContentAndWaitForLoad(frame, initialLongContent, shouldContentHaveDoctype);
         await Waiter.pTryUntil('Waiting for iframe to be scrolled to bottom', () => {
-          assertNullableScrollAtBottomOverflow((shouldContentHaveDoctype ? iframe.contentDocument?.documentElement : iframe.contentDocument?.body) as HTMLElement,
-            'iframe should be scrolled to bottom after setting value');
+          assertIframeScrollAtBottomOverflow(iframe, shouldContentHaveDoctype, 'iframe should be scrolled to bottom after setting value');
         });
       });
     });
@@ -300,7 +296,21 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
   });
 
   context('Updating iframe content in intervals (streaming simulation)', () => {
-    const interval = 100;
+    const setValueInIntervals = (frame: AlloyComponent, interval: number, maxNumIntervals: number, shouldContentHaveDoctype: boolean): void => {
+      let iterations = 0;
+      let content = '';
+      const intervalId = setInterval(() => {
+        content += testContent;
+        Representing.setValue(frame, normalizeContent(content, shouldContentHaveDoctype));
+
+        if (++iterations > maxNumIntervals) {
+          clearInterval(intervalId);
+        }
+      }, interval);
+    };
+
+    const assertIframeContentAfterIntervals = (iframe: HTMLIFrameElement, maxNumIntervals: number) =>
+      assert.equal(iframe.contentDocument?.body.innerHTML, testContent.repeat(maxNumIntervals + 1), 'iframe content should match');
 
     Arr.each([ true, false ], (shouldContentHaveDoctype) => {
       const doctypeLabel = getDoctypeLabel(shouldContentHaveDoctype);
@@ -311,28 +321,35 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
         let loadCount = 0;
         iframe.onload = () => loadCount++;
 
-        let iterations = 0;
-        let content = '';
-        const intervalId = setInterval(() => {
-          content += testContent;
-          Representing.setValue(frame, normalizeContent(content, shouldContentHaveDoctype));
-
-          if (++iterations > maxIterations) {
-            clearInterval(intervalId);
-          }
-        }, interval);
+        const interval = 100;
+        const maxNumIntervals = 10;
+        setValueInIntervals(frame, interval, maxNumIntervals, shouldContentHaveDoctype);
 
         await Waiter.pTryUntil('Wait for update intervals to finish', () => {
           // TINY-10078: Artificial 200ms throttle on Firefox to improve scrolling.
           // TINY-10097: Artificial 500ms throttle on Safari to reduce flickering and improve scrolling.
-          const expectedLoads = (isSafariOrFirefox ? interval * maxIterations / (isSafari ? 500 : 200) : maxIterations) + 1;
+          const expectedLoads = (isSafariOrFirefox ? interval * maxNumIntervals / (isSafari ? 500 : 200) : maxNumIntervals) + 1;
           if (isFirefox) {
             assert.approximately(loadCount, expectedLoads, 1, `iframe should have approximately ${expectedLoads} loads`);
           } else {
             assert.strictEqual(loadCount, expectedLoads, `iframe should have exactly ${expectedLoads} loads`);
           }
-          assert.equal(iframe.contentDocument?.body.innerHTML, content, 'iframe content should match');
-          assertNullableScrollAtBottomOverflow((shouldContentHaveDoctype ? iframe.contentDocument?.documentElement : iframe.contentDocument?.body) as HTMLElement, 'iframe should be scrolled to bottom');
+          assertIframeContentAfterIntervals(iframe, maxNumIntervals);
+          assertIframeScrollAtBottomOverflow(iframe, shouldContentHaveDoctype, 'iframe should be scrolled to bottom');
+        });
+
+        iframe.onload = Fun.noop;
+      });
+
+      it(`TINY-10078 & TINY-10097: Artificial throttles should not impact content completeness when ${doctypeLabel}`, async () => {
+        const frame = getFrameFromFrameNumber(streamFrameNumber);
+        const maxNumIntervals = 10;
+        setValueInIntervals(frame, 50, maxNumIntervals, shouldContentHaveDoctype);
+
+        const iframe = frame.element.dom as HTMLIFrameElement;
+        await Waiter.pTryUntil('Wait for update intervals to finish', () => {
+          assertIframeContentAfterIntervals(iframe, maxNumIntervals);
+          assertIframeScrollAtBottomOverflow(iframe, shouldContentHaveDoctype, 'iframe should be scrolled to bottom');
         });
       });
     });

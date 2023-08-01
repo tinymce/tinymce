@@ -1,24 +1,30 @@
-import { AlloyComponent, Behaviour, Focusing, FormField, SketchSpec, Tabstopping } from '@ephox/alloy';
+import { AlloyComponent, Behaviour, Focusing, FormField, Receiving, SketchSpec, Tabstopping } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Cell, Fun, Optional, Throttler, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Attribute, SugarElement } from '@ephox/sugar';
+import { Attribute, Class, Compare, SugarElement, Traverse } from '@ephox/sugar';
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
-import { RepresentingConfigs } from '../alien/RepresentingConfigs';
+import * as Backstage from '../../backstage/Backstage';
+import * as FieldLabeller from '../alien/FieldLabeller';
+import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 import * as NavigableObject from '../general/NavigableObject';
+import * as DialogChannels from '../window/DialogChannels';
 
 interface IFrameSourcing {
   readonly getValue: (frame: AlloyComponent) => string;
   readonly setValue: (frame: AlloyComponent, value: string) => void;
 }
 
+export interface DialogFocusShiftedEvent extends CustomEvent {
+  readonly newFocus: Optional<SugarElement<HTMLElement>>;
+}
+
 type IframeSpec = Omit<Dialog.Iframe, 'type'>;
 
 const browser = PlatformDetection.detect().browser;
 const isSafari = browser.isSafari();
-const isSafariOrFirefox = isSafari || browser.isFirefox();
+const isFirefox = browser.isFirefox();
+const isSafariOrFirefox = isSafari || isFirefox;
 const isChromium = browser.isChromium();
 
 const isElementScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTMLElement) =>
@@ -83,7 +89,9 @@ const writeValue = (iframeElement: SugarElement<HTMLIFrameElement>, html: string
 // TINY-10097: On Safari, throttle to 500ms reduce flickering as the document.write() method still observes significant flickering.
 // Also improves scrolling, as scroll positions are maintained manually similar to Firefox.
 const throttleInterval = isSafariOrFirefox ? Optional.some(isSafari ? 500 : 200) : Optional.none();
-const writeValueThrottler = throttleInterval.map((interval) => Throttler.first(writeValue, interval));
+
+// TINY-10078: Use Throttler.adaptable to ensure that any content added during the waiting period is not lost.
+const writeValueThrottler = throttleInterval.map((interval) => Throttler.adaptable(writeValue, interval));
 
 const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFrameSourcing => {
   const cachedValue = Cell(initialData.getOr(''));
@@ -109,22 +117,23 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
   };
 };
 
-const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstageProviders, initialData: Optional<string>): SketchSpec => {
+const renderIFrame = (spec: IframeSpec, providersBackstage: Backstage.UiFactoryBackstageProviders, initialData: Optional<string>): SketchSpec => {
   const baseClass = 'tox-dialog__iframe';
-  const borderedClass = spec.border ? [ `${baseClass}--bordered` ] : [];
   const opaqueClass = spec.transparent ? [] : [ `${baseClass}--opaque` ];
+  const containerBorderedClass = spec.border ? [ `tox-navobj-bordered` ] : [];
 
   const attributes = {
     ...spec.label.map<{ title?: string }>((title) => ({ title })).getOr({}),
     ...initialData.map((html) => ({ srcdoc: html })).getOr({}),
-    ...spec.sandboxed ? { sandbox: 'allow-scripts allow-same-origin' } : { },
+    ...spec.sandboxed ? { sandbox: 'allow-scripts allow-same-origin' } : { }
   };
 
   const sourcing = getDynamicSource(initialData, spec.streamContent);
 
-  const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
+  const pLabel = spec.label.map((label) => FieldLabeller.renderLabel(label, providersBackstage));
 
   const factory = (newSpec: { uid: string }) => NavigableObject.craft(
+    Optional.from(containerBorderedClass),
     {
       // We need to use the part uid or the label and field won't be linked with ARIA
       uid: newSpec.uid,
@@ -133,14 +142,27 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstagePr
         attributes,
         classes: [
           baseClass,
-          ...borderedClass,
           ...opaqueClass
         ]
       },
       behaviours: Behaviour.derive([
         Tabstopping.config({ }),
         Focusing.config({ }),
-        RepresentingConfigs.withComp(initialData, sourcing.getValue, sourcing.setValue)
+        RepresentingConfigs.withComp(initialData, sourcing.getValue, sourcing.setValue),
+        Receiving.config({
+          channels: {
+            [DialogChannels.dialogFocusShiftedChannel]: {
+              onReceive: (comp, message: DialogFocusShiftedEvent) => {
+                message.newFocus.each((newFocus) => {
+                  Traverse.parentElement(comp.element).each((parent) => {
+                    const f = Compare.eq(comp.element, newFocus) ? Class.add : Class.remove;
+                    f(parent, 'tox-navobj-bordered-focus');
+                  });
+                });
+              }
+            }
+          }
+        })
       ])
     }
   );
@@ -150,7 +172,7 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstagePr
     factory: { sketch: factory }
   });
 
-  return renderFormFieldWith(pLabel, pField, [ 'tox-form__group--stretched' ], [ ]);
+  return FieldLabeller.renderFormFieldWith(pLabel, pField, [ 'tox-form__group--stretched' ], [ ]);
 };
 
 export {

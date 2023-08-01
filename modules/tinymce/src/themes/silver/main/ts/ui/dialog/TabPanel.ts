@@ -11,7 +11,7 @@ import { interpretInForm } from 'tinymce/themes/silver/ui/general/UiFactory';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import * as DialogTabHeight from '../alien/DialogTabHeight';
-import { RepresentingConfigs } from '../alien/RepresentingConfigs';
+import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 import { formTabChangeEvent } from '../general/FormEvents';
 import * as NavigableObject from '../general/NavigableObject';
 
