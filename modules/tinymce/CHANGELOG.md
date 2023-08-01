@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Scrolling behavior was inconsistent when updating a `streamContent: true` iframe dialog component with content lacking an HTML document type declaration. #TINY-10110
 - Console may display warning message when closing dialog with an iframe component. #TINY-10070
 - On Safari and Firefox browsers, the border around the `iframe` dialog component was not highlighted when focused. #TINY-10101
+- The `color_cols` option was not respected when a custom `color_map` was defined. #TINY-10098
+- The `color_cols` options were were not rounded to the nearest number when set to a decimal number. #TINY-9737
 
 ## 6.6.0 - 2023-07-12
 
@@ -29,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Improved
 - When defining a modal or inline dialog, if the buttons property is an empty array, or is not defined at all, the footer will now no longer be rendered. #TINY-9996
 - The `iframe` dialog component now has a minimum height of 200px. #TINY-10059
+- Improved detection of scrollable containers when the `ui_mode: 'split'` option is set. #TINY-9385
 
 ### Changed
 - The icon in an `alertbanner` dialog component is no longer clickable if the _URL_ field is not specified. #TINY-10013
@@ -75,7 +78,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dialog `tabpanel` tab labels are now allowed to word wrap for better readability with long labels. #TINY-9947
 - Added newlines before and after `details` elements in the output HTML. #TINY-9959
 - Added padding for empty `summary` elements so that they can be properly edited. #TINY-9959
-- Improved detection of scrollable containers when the `ui_mode: 'split'` option is set. #TINY-9385
 
 ### Changed
 - The `caption`, `address` and `dt` elements no longer incorrectly allow non-inline child elements when the editor schema is set to _HTML 4_. #TINY-9768
