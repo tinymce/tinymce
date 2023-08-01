@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - On Safari and Firefox browsers, scroll positions were not always maintained when updating the content of a `streamContent: true` iframe dialog component. #TINY-10078 #TINY-10109
 - Scrolling behavior was inconsistent when updating a `streamContent: true` iframe dialog component with content lacking an HTML document type declaration. #TINY-10110
 - Console may display warning message when closing dialog with an iframe component. #TINY-10070
+- On Safari and Firefox browsers, the border around the `iframe` dialog component was not highlighted when focused. #TINY-10101
 
 ## 6.6.0 - 2023-07-12
 

@@ -6,7 +6,7 @@ import { Class, Classes, SugarElement } from '@ephox/sugar';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderModalBody } from './SilverDialogBody';
 import * as SilverDialogCommon from './SilverDialogCommon';
-import { SilverDialogEvents } from './SilverDialogEvents';
+import * as SilverDialogEvents from './SilverDialogEvents';
 import { renderModalFooter } from './SilverDialogFooter';
 import { DialogAccess, getDialogApi } from './SilverDialogInstanceApi';
 

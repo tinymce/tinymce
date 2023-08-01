@@ -72,7 +72,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
 
       const baseClassPrefix = 'tox-dialog__iframe--';
       const iframeStructure = s.element('div', {
-        classes: [ arr.has('tox-navobj') ],
+        classes: [ arr.has('tox-navobj'), (border ? arr.has : arr.not)('tox-navobj-bordered') ],
         children: [
           s.element('div', {
             attrs: {
@@ -82,8 +82,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
           s.element('iframe', {
             classes: [
               arr.has('tox-dialog__iframe'),
-              (transparent ? arr.not : arr.has)(`${baseClassPrefix}opaque`),
-              (border ? arr.has : arr.not)(`${baseClassPrefix}bordered`)
+              (transparent ? arr.not : arr.has)(`${baseClassPrefix}opaque`)
             ],
             attrs: {
               // Should be no source.
