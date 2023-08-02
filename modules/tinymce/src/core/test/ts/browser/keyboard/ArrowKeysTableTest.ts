@@ -246,5 +246,21 @@ describe('browser.tinymce.core.keyboard.ArrowKeysTableTest', () => {
       TinyContentActions.keystroke(editor, Keys.up());
       TinyAssertions.assertSelection(editor, [ 0, 0, 1, 1, 1, 0 ], 0, [ 0, 0, 1, 1, 1, 0 ], 0);
     });
+
+    it('TINY-9952: selecting multiple tr via keyboard should preserve the correct range', () => {
+      const editor = hook.editor();
+      editor.setContent(`
+        <table>
+          <tbody>
+            <tr><td>1</td></tr>
+            <tr><td>2</td></tr>
+          </tbody>
+        </table>
+      `);
+
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 0);
+      TinyContentActions.keystroke(editor, Keys.down(), { shift: true });
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0 ], 0, [ 0, 0, 1, 0 ], 1);
+    });
   });
 });
