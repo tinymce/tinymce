@@ -32,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In some cases pressing enter would scroll the entire page. #TINY-9828
 - The border styles of a table were incorrectly split into a longhand form after table dialog updates. #TINY-9843
 
-# 6.6.1 - TBD
+# 6.6.1 - 2023-08-02
 
 ### Added
 - Restored filtering option, `pad_empty_with_br`. Set to `true` to pad empty block elements with `<br>` tags instead of the `&nbsp;` character entity. #TINY-9861
@@ -115,7 +115,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dialog `tabpanel` tab labels are now allowed to word wrap for better readability with long labels. #TINY-9947
 - Added newlines before and after `details` elements in the output HTML. #TINY-9959
 - Added padding for empty `summary` elements so that they can be properly edited. #TINY-9959
-- Improved detection of scrollable containers when the `ui_mode: 'split'` option is set. #TINY-9385
 
 ### Changed
 - The `caption`, `address` and `dt` elements no longer incorrectly allow non-inline child elements when the editor schema is set to _HTML 4_. #TINY-9768
