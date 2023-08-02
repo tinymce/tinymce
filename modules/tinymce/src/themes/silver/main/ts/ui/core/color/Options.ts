@@ -8,17 +8,6 @@ import { Menu } from 'tinymce/core/api/ui/Ui';
 const foregroundId = 'forecolor';
 const backgroundId = 'hilitecolor';
 
-const DEFAULT_COLS = 5;
-
-const calcCols = (colors: number): number =>
-  Math.max(DEFAULT_COLS, Math.ceil(Math.sqrt(colors)));
-
-const calcColsOption = (editor: Editor, numColors: number): number => {
-  const calculatedCols = calcCols(numColors);
-  const fallbackCols = option('color_cols')(editor);
-  return fallbackCols !== DEFAULT_COLS ? fallbackCols : calculatedCols;
-};
-
 const mapColors = (colorMap: string[]): Menu.ChoiceMenuItemSpec[] => {
   const colors: Menu.ChoiceMenuItemSpec[] = [];
 
@@ -95,7 +84,7 @@ const register = (editor: Editor): void => {
 
   registerOption('color_cols', {
     processor: 'number',
-    default: calcCols(getColors(editor, 'default').length)
+    default: calcCols(editor, getColors(editor, 'default').length)
   });
 
   registerOption('color_cols_foreground', {
@@ -124,6 +113,34 @@ const register = (editor: Editor): void => {
   });
 };
 
+const calcCols = (editor: Editor, colors: number): number => {
+  // Sensible default based on the amount of colors in 'color_map'
+  const defaultCols = Math.ceil(Math.sqrt(option('color_map')(editor).length));
+  return Math.max(defaultCols, Math.ceil(Math.sqrt(colors)));
+};
+
+const getColors = (editor: Editor, id: string): Menu.ChoiceMenuItemSpec[] => {
+  if (id === foregroundId && editor.options.isSet('color_map_foreground')) {
+    return option<Menu.ChoiceMenuItemSpec[]>('color_map_foreground')(editor);
+  } else if (id === backgroundId && editor.options.isSet('color_map_background')) {
+    return option<Menu.ChoiceMenuItemSpec[]>('color_map_background')(editor);
+  } else {
+    return option<Menu.ChoiceMenuItemSpec[]>('color_map')(editor);
+  }
+};
+
+const calcColsOption = (editor: Editor, numColors: number): number => {
+  const defaultCols = option('color_cols')(editor);
+  const calculatedCols = calcCols(editor, numColors);
+  if (defaultCols === Math.ceil(Math.sqrt(option('color_map')(editor).length))) {
+    return calculatedCols;
+  } else {
+    return defaultCols;
+  }
+};
+
+const hasCustomColors = option('custom_colors');
+
 const colorColsOption = (editor: Editor, id: string): number => {
   if (id === foregroundId) {
     return option('color_cols_foreground')(editor);
@@ -135,20 +152,10 @@ const colorColsOption = (editor: Editor, id: string): number => {
 };
 
 const getColorCols = (editor: Editor, id: string): number => {
+  // Sensible default based on the amount of colors in 'color_map'
+  const defaultCols = Math.ceil(Math.sqrt(option('color_map')(editor).length));
   const colorCols = Math.round(colorColsOption(editor, id));
-  return colorCols > 0 ? colorCols : DEFAULT_COLS;
-};
-
-const hasCustomColors = option('custom_colors');
-
-const getColors = (editor: Editor, id: string): Menu.ChoiceMenuItemSpec[] => {
-  if (id === foregroundId && editor.options.isSet('color_map_foreground')) {
-    return option<Menu.ChoiceMenuItemSpec[]>('color_map_foreground')(editor);
-  } else if (id === backgroundId && editor.options.isSet('color_map_background')) {
-    return option<Menu.ChoiceMenuItemSpec[]>('color_map_background')(editor);
-  } else {
-    return option<Menu.ChoiceMenuItemSpec[]>('color_map')(editor);
-  }
+  return colorCols > 0 ? colorCols : defaultCols;
 };
 
 const getDefaultForegroundColor = option<string>('color_default_foreground');

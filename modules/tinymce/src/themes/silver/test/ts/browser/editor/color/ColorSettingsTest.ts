@@ -64,7 +64,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorSettingsTest', () => {
   };
 
   const assertCalcCols = (editor: Editor, colors: number, expected: number) => {
-    const sqrt = Options.calcCols(colors);
+    const sqrt = Options.calcCols(editor, colors);
     assert.equal(sqrt, expected, 'Calced cols should be the same');
   };
 

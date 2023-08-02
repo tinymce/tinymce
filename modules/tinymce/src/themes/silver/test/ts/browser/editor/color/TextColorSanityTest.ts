@@ -181,7 +181,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
       setupContent(editor);
       TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
-      Assert.eq('Cols is the expected value', getColorCols(editor, 'forecolor'), 3);
+      Assert.eq('Cols is the expected value', 3, getColorCols(editor, 'forecolor'));
     });
 
     it('TINY-9560: color_map_background has correct number of columns', async () => {
@@ -189,7 +189,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
       setupContent(editor);
       TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
-      Assert.eq('Cols is the expected value', getColorCols(editor, 'hilitecolor'), 3);
+      Assert.eq('Cols is the expected value', 3, getColorCols(editor, 'hilitecolor'));
     });
   });
 
@@ -211,7 +211,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       assertUiElementDoesNotExist(editor, 'div[data-mce-color="#0000FF"]');
       assertUiElementDoesNotExist(editor, 'div[data-mce-color="#FF0000"]');
-      Assert.eq('Cols is the expected value', getColorCols(editor, 'forecolor'), 4);
+      Assert.eq('Cols is the expected value', 4, getColorCols(editor, 'forecolor'));
     });
 
     it('TINY-9184: color_map_background works as expected', async () => {
@@ -221,7 +221,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       assertUiElementDoesNotExist(editor, 'div[data-mce-color="#FF0000"]');
       TinyUiActions.clickOnUi(editor, 'div[data-mce-color="#0000FF"]');
-      Assert.eq('Cols is the expected value', getColorCols(editor, 'hilitecolor'), 3);
+      Assert.eq('Cols is the expected value', 3, getColorCols(editor, 'hilitecolor'));
     });
   });
 
