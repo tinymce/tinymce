@@ -15,9 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - API comments/documentation: a markup typo and run-on sentences both corrected. #TINY-10073
 
-### Changed
-- API comments/documentation corrected: a typo correction and run-on sentences fixed. #TINY-10073
-
 ### Fixed
 - On Safari and Firefox, scroll positions were not always maintained when updating the content of a `streamContent: true` iframe dialog component. #TINY-10078
 - On Safari, iframe dialog components did not consistently autoscroll to the end of the scrollable area when `streamContent: true` was set. #TINY-10109
