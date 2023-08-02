@@ -35,18 +35,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 # 6.6.1 - TBD
 
 ### Added
-- New `pad_empty_with_br` option that can be set to `true` to pad empty block elements with `<br>` tag instead of nbsp character. #TINY-9861
+- Restored filtering option, `pad_empty_with_br`. Set to `true` to pad empty block elements with `<br>` tags instead of the `&nbsp;` character entity. #TINY-9861
 
 ### Improved
-- Content updates for `streamContent: true` iframe dialog components on Safari are now throttled to 500ms intervals to reduce the visual impact of flickering when rapidly updating iframe content. #TINY-10097
+- When Safari is the host browser, content updates for iframe dialog components with `streamContent: true` set are now throttled to 500ms intervals. #TINY-10097
+
+### Changed
+- API comments/documentation: a markup typo and run-on sentences both corrected. #TINY-10073
 
 ### Fixed
-- Right-clicking on an image that was in a non-editable area would open the image context menu. #TINY-10016
-- When an editable area was nested inside a non-editable area, creating lists was not possible. #TINY-10000
-- On Safari and Firefox browsers, scroll positions were not always maintained when updating the content of a `streamContent: true` iframe dialog component. #TINY-10078 #TINY-10109
+- On Safari and Firefox, scroll positions were not always maintained when updating the content of a `streamContent: true` iframe dialog component. #TINY-10078
+- On Safari, iframe dialog components did not consistently autoscroll to the end of the scrollable area when `streamContent: true` was set. #TINY-10109
 - Scrolling behavior was inconsistent when updating a `streamContent: true` iframe dialog component with content lacking an HTML document type declaration. #TINY-10110
-- Console may display warning message when closing dialog with an iframe component. #TINY-10070
-- On Safari and Firefox browsers, the border around the `iframe` dialog component was not highlighted when focused. #TINY-10101
+- A warning message was sometimes printed to the browser console when closing a dialog that contained an iframe component. #TINY-10070
+- Lists could not be created within editable areas nested inside non-editable areas. #TINY-10000
+- On Safari and Firefox, the border around `iframe` dialog components did not highlight when focused. #TINY-10101
+- Right-clicking on an image in a non-editable context opened the Image context menu. #TINY-10016
 - The `color_cols` option was not respected when a custom `color_map` was defined. #TINY-10098
 - The `color_cols` options were were not rounded to the nearest number when set to a decimal number. #TINY-9737
 
