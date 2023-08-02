@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 6.6.1 - 2023-08-02
+
 ### Added
 - Restored filtering option, `pad_empty_with_br`. Set to `true` to pad empty block elements with `<br>` tags instead of the `&nbsp;` character entity. #TINY-9861
 
