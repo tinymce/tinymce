@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- New filtering option, `pad_empty_with_br`. Set to `true` to pad empty block elements with `<br>` tags instead of the `&nbsp;` character entity. #TINY-9861
+- Restored filtering option, `pad_empty_with_br`. Set to `true` to pad empty block elements with `<br>` tags instead of the `&nbsp;` character entity. #TINY-9861
 
 ### Improved
 - When Safari is the host browser, content updates for iframe dialog components with `streamContent: true` set are now throttled to 500ms intervals. #TINY-10097
