@@ -382,6 +382,7 @@ const startProgress = (editor: Editor) => {
   return () => {
     clearTimeout(progressTimeout);
     canceled = true;
+    editor.setProgressState(false);
   };
 };
 
@@ -467,7 +468,6 @@ const contentBodyLoaded = (editor: Editor): void => {
     loadContentCss(editor).then(() => {
       initEditorWithInitialContent(editor);
       cancelProgress();
-      editor.setProgressState(false);
     });
   }, (setupRtc) => {
     editor.setProgressState(true);
