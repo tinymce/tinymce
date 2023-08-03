@@ -372,6 +372,20 @@ const initEditorWithInitialContent = (editor: Editor) => {
   }
 };
 
+const startProgress = (editor: Editor) => {
+  let canceled = false;
+  const progressTimeout = setTimeout(() => {
+    if (!canceled) {
+      editor.setProgressState(true);
+    }
+  }, 500);
+  return () => {
+    clearTimeout(progressTimeout);
+    canceled = true;
+    editor.setProgressState(false);
+  };
+};
+
 const contentBodyLoaded = (editor: Editor): void => {
   const targetElm = editor.getElement();
   let doc = editor.getDoc();
@@ -450,7 +464,11 @@ const contentBodyLoaded = (editor: Editor): void => {
   preInit(editor);
 
   setupRtcThunk.fold(() => {
-    loadContentCss(editor).then(() => initEditorWithInitialContent(editor));
+    const cancelProgress = startProgress(editor);
+    loadContentCss(editor).then(() => {
+      initEditorWithInitialContent(editor);
+      cancelProgress();
+    });
   }, (setupRtc) => {
     editor.setProgressState(true);
 
