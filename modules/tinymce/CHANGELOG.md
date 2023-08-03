@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Right-clicking on an image in a non-editable context opened the Image context menu. #TINY-10016
 - The `color_cols` option was not respected when a custom `color_map` was defined. #TINY-10098
 - The `color_cols` options were were not rounded to the nearest number when set to a decimal number. #TINY-9737
+- An "Uncaught TypeError: Cannot read properties of null" error would sometimes be thrown when updating the content of a `streamContent: true` iframe dialog component. #TINY-10128
 
 ## 6.6.0 - 2023-07-12
 
