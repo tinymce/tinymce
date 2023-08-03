@@ -31,7 +31,10 @@ const isElementScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTML
   Math.ceil(scrollTop) + clientHeight >= scrollHeight;
 
 const scrollToY = (win: Window, y: number | 'bottom') =>
-  win.scrollTo(0, y === 'bottom' ? win.document.body.scrollHeight : y);
+  // TINY-10128: The iframe body is occasionally null when we attempt to scroll, so use a fallback value of 999999999. This is the
+  // maximum value Window.scrollTo would take on Safari, Number.MAX_SAFE_INTEGER does not work. We also do not want to wait for the
+  // body to load as doing so can cause a visual lag.
+  win.scrollTo(0, y === 'bottom' ? (win.document.body?.scrollHeight ?? 999999999) : y);
 
 const getScrollingElement = (doc: Document, html: string): Optional<HTMLElement> => {
   // TINY-10110: The scrolling element can change between body and documentElement depending on whether there
