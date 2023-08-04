@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - New `help_accessibility` option which displays the keyboard shortcut to access the help functionality in the statusbar. #TINY-9379
-- Added a new `InsertNewBlockBefore` command, which inserts an empty block before the current one where the cursor is placed. #TINY-10022
-- Added a new `InsertNewBlockAfter` command, which inserts an empty block after the current one where selection is placed. #TINY-10022
+- Added a new `InsertNewBlockBefore` command, which inserts an empty block before the one containing the current selection. #TINY-10022
+- Added a new `InsertNewBlockAfter` command, which inserts an empty block after the one containing the current selection. #TINY-10022
 
 ### Improved
 - Adding a newline after a table would in some specific cases not work. #TINY-9863

@@ -10,7 +10,6 @@ describe('browser.tinymce.core.api.commands.NewBlockCommandsTest', () => {
   }, [], true);
 
   context('InsertNewBlockBefore command', () => {
-
     it('TINY-10022: empty editor', () => {
       const editor = hook.editor();
       editor.execCommand('InsertNewBlockBefore');
@@ -120,7 +119,6 @@ describe('browser.tinymce.core.api.commands.NewBlockCommandsTest', () => {
   });
 
   context('InsertNewBlockAfter command', () => {
-
     it('TINY-10022: empty editor', () => {
       const editor = hook.editor();
       editor.resetContent();

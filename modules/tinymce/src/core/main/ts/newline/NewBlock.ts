@@ -1,10 +1,11 @@
+import { Optional } from '@ephox/katamari';
 import { Insert, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import * as NewLineUtils from './NewLineUtils';
 
-const getTopParentBlock = (node: Node, root: Element, container: Node): Node => {
+const getTopParentBlock = (node: Node, root: Element, container: Node): Optional<SugarElement<Node>> => {
   let parentBlock = node;
 
   if (node === root) {
@@ -15,7 +16,7 @@ const getTopParentBlock = (node: Node, root: Element, container: Node): Node => 
     parentBlock = parentBlock.parentElement;
   }
 
-  return parentBlock;
+  return Optional.from(SugarElement.fromDom(parentBlock));
 };
 
 const insert = (editor: Editor, before: boolean): void => {
@@ -23,20 +24,21 @@ const insert = (editor: Editor, before: boolean): void => {
   const rng = editor.selection.getRng();
   const node = before ? editor.selection.getStart() : editor.selection.getEnd();
   const container = before ? rng.startContainer : rng.endContainer;
-  const editableRoot = NewLineUtils.getEditableRoot(dom, container);
-  const root = editableRoot ?? dom.getRoot();
-
-  const parentBlock = getTopParentBlock(node, root, container);
-
-  const newBlockName = Options.getForcedRootBlock(editor);
-  const newBlock = dom.create(newBlockName);
-  newBlock.innerHTML = '<br data-mce-bogus="1">';
-  const insert = before ? Insert.before : Insert.after;
-  if (parentBlock) {
-    insert(SugarElement.fromDom(parentBlock), SugarElement.fromDom(newBlock));
+  const root = NewLineUtils.getEditableRoot(dom, container);
+  if (!root) {
+    return;
   }
+  const insertFn = before ? Insert.before : Insert.after;
+  const newBlockName = Options.getForcedRootBlock(editor);
 
-  NewLineUtils.moveToCaretPosition(editor, newBlock);
+  getTopParentBlock(node, root, container).each((parentBlock) => {
+    const newBlock = SugarElement.fromTag(newBlockName);
+    Insert.append(newBlock, SugarElement.fromHtml('<br data-mce-bogus="1">'));
+
+    insertFn(parentBlock, newBlock);
+    editor.selection.setCursorLocation(newBlock.dom, 0);
+    editor.dispatch('NewBlock', { newBlock: newBlock.dom });
+  });
 };
 
 const insertBefore = (editor: Editor): void => insert(editor, true);
