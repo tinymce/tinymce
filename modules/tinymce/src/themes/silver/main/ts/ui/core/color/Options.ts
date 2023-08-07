@@ -8,6 +8,8 @@ import { Menu } from 'tinymce/core/api/ui/Ui';
 const foregroundId = 'forecolor';
 const backgroundId = 'hilitecolor';
 
+const fallbackCols = 5;
+
 const mapColors = (colorMap: string[]): Menu.ChoiceMenuItemSpec[] => {
   const colors: Menu.ChoiceMenuItemSpec[] = [];
 
@@ -131,7 +133,7 @@ const getColors = (editor: Editor, id: string): Menu.ChoiceMenuItemSpec[] => {
   }
 };
 
-const calcCols = (editor: Editor, id: string = 'default'): number => Math.ceil(Math.sqrt(getColors(editor, id).length));
+const calcCols = (editor: Editor, id: string = 'default'): number => Math.max(fallbackCols, Math.ceil(Math.sqrt(getColors(editor, id).length)));
 
 const defaultCols = (editor: Editor, id: string) => {
   const defaultCols = option('color_cols')(editor);
