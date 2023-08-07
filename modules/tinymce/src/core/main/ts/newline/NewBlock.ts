@@ -3,6 +3,7 @@ import { Insert, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
+import * as InputEvents from '../events/InputEvents';
 import * as NewLineUtils from './NewLineUtils';
 
 const getTopParentBlock = (node: Node, root: Element, container: Node): Optional<SugarElement<Node>> => {
@@ -32,12 +33,12 @@ const insert = (editor: Editor, before: boolean): void => {
   const newBlockName = Options.getForcedRootBlock(editor);
 
   getTopParentBlock(node, root, container).each((parentBlock) => {
-    const newBlock = SugarElement.fromTag(newBlockName);
-    Insert.append(newBlock, SugarElement.fromHtml('<br data-mce-bogus="1">'));
+    const newBlock = NewLineUtils.createNewBlock(editor, container, parentBlock.dom, root, false, newBlockName);
 
-    insertFn(parentBlock, newBlock);
-    editor.selection.setCursorLocation(newBlock.dom, 0);
-    editor.dispatch('NewBlock', { newBlock: newBlock.dom });
+    insertFn(parentBlock, SugarElement.fromDom(newBlock));
+    editor.selection.setCursorLocation(newBlock, 0);
+    editor.dispatch('NewBlock', { newBlock });
+    InputEvents.fireInputEvent(editor, 'insertParagraph');
   });
 };
 
