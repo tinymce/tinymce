@@ -42,6 +42,14 @@ const register = (editor: Editor): void => {
     }
   };
 
+  const colorColsProcessor = (value: any): any => {
+    if (Type.isNumber(value) && value > 0) {
+      return { value, valid: true };
+    } else {
+      return { valid: false, message: 'Must be a positive number.' };
+    }
+  };
+
   registerOption('color_map', {
     processor: colorProcessor,
     default: [
@@ -83,18 +91,18 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('color_cols', {
-    processor: 'number',
-    default: calcCols(editor, getColors(editor, 'default').length)
+    processor: colorColsProcessor,
+    default: calcCols(editor)
   });
 
   registerOption('color_cols_foreground', {
-    processor: 'number',
-    default: calcColsOption(editor, getColors(editor, foregroundId).length)
+    processor: colorColsProcessor,
+    default: defaultCols(editor, foregroundId)
   });
 
   registerOption('color_cols_background', {
-    processor: 'number',
-    default: calcColsOption(editor, getColors(editor, backgroundId).length)
+    processor: colorColsProcessor,
+    default: defaultCols(editor, backgroundId)
   });
 
   registerOption('custom_colors', {
@@ -113,12 +121,6 @@ const register = (editor: Editor): void => {
   });
 };
 
-const calcCols = (editor: Editor, colors: number): number => {
-  // Sensible default based on the amount of colors in 'color_map'
-  const defaultCols = Math.ceil(Math.sqrt(option('color_map')(editor).length));
-  return Math.max(defaultCols, Math.ceil(Math.sqrt(colors)));
-};
-
 const getColors = (editor: Editor, id: string): Menu.ChoiceMenuItemSpec[] => {
   if (id === foregroundId && editor.options.isSet('color_map_foreground')) {
     return option<Menu.ChoiceMenuItemSpec[]>('color_map_foreground')(editor);
@@ -129,34 +131,32 @@ const getColors = (editor: Editor, id: string): Menu.ChoiceMenuItemSpec[] => {
   }
 };
 
-const calcColsOption = (editor: Editor, numColors: number): number => {
+const calcCols = (editor: Editor, id: string = 'default'): number => Math.ceil(Math.sqrt(getColors(editor, id).length));
+
+const defaultCols = (editor: Editor, id: string) => {
   const defaultCols = option('color_cols')(editor);
-  const calculatedCols = calcCols(editor, numColors);
-  if (defaultCols === Math.ceil(Math.sqrt(option('color_map')(editor).length))) {
+  const calculatedCols = calcCols(editor, id);
+  if (defaultCols === calcCols(editor)) {
     return calculatedCols;
   } else {
     return defaultCols;
   }
 };
 
+const getColorCols = (editor: Editor, id: string = 'default'): number => {
+  const getCols = () => {
+    if (id === foregroundId) {
+      return option('color_cols_foreground')(editor);
+    } else if (id === backgroundId) {
+      return option('color_cols_background')(editor);
+    } else {
+      return option('color_cols')(editor);
+    }
+  };
+  return Math.round(getCols());
+};
+
 const hasCustomColors = option('custom_colors');
-
-const colorColsOption = (editor: Editor, id: string): number => {
-  if (id === foregroundId) {
-    return option('color_cols_foreground')(editor);
-  } else if (id === backgroundId) {
-    return option('color_cols_background')(editor);
-  } else {
-    return option('color_cols')(editor);
-  }
-};
-
-const getColorCols = (editor: Editor, id: string): number => {
-  // Sensible default based on the amount of colors in 'color_map'
-  const defaultCols = Math.ceil(Math.sqrt(option('color_map')(editor).length));
-  const colorCols = Math.round(colorColsOption(editor, id));
-  return colorCols > 0 ? colorCols : defaultCols;
-};
 
 const getDefaultForegroundColor = option<string>('color_default_foreground');
 const getDefaultBackgroundColor = option<string>('color_default_background');
@@ -164,7 +164,6 @@ const getDefaultBackgroundColor = option<string>('color_default_background');
 export {
   register,
   mapColors,
-  calcCols,
   getColorCols,
   hasCustomColors,
   getColors,
