@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Change UndoLevelType from enum to union type so that it can be easier to use. #TINY-9764
 - The pattern replacement removes spaces if they were contained in a tag that only contains a space and the text to replace. #TINY-9744
+- When loading content CSS takes more than half a second, the editor will be set to the "in progress" state until the CSS is ready. #TINY-10008
 
 ### Fixed
 - Returning an empty string in custom context menu update function would result in a small white line appearing on right click and the native browser context menu would not show up. #TINY-9842
@@ -31,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Contents would not be removed from the drag start source if dragging and dropping internally into a transparent block element. #TINY-9960
 - In some cases pressing enter would scroll the entire page. #TINY-9828
 - The border styles of a table were incorrectly split into a longhand form after table dialog updates. #TINY-9843
+- Links in `help dialog` -> `plugins` and `version` were not navigable via keyboard. #TINY-10071
 - The `color_cols` option was not respected when set to the value 5 with a custom `color_map` specified. #TINY-10126
 
 # 6.6.1 - 2023-08-02

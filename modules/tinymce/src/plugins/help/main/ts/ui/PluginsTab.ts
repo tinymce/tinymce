@@ -25,17 +25,19 @@ const tab = (editor: Editor): Dialog.TabSpec & { name: string } => {
     );
 
     const premiumPluginList = Arr.map(sortedPremiumPlugins, (pluginName) => `<li>${pluginName}</li>`).join('');
-    return '<div data-mce-tabstop="1" tabindex="-1">' +
+    return '<div>' +
       '<p><b>' + I18n.translate('Premium plugins:') + '</b></p>' +
       '<ul>' +
       premiumPluginList +
-      '<li class="tox-help__more-link" "><a href="https://www.tiny.cloud/pricing/?utm_campaign=editor_referral&utm_medium=help_dialog&utm_source=tinymce" rel="noopener" target="_blank">' + I18n.translate('Learn more...') + '</a></li>' +
+      '<li class="tox-help__more-link" ">' +
+      '<a href="https://www.tiny.cloud/pricing/?utm_campaign=editor_referral&utm_medium=help_dialog&utm_source=tinymce" rel="noopener" target="_blank"' +
+      ' data-alloy-tabstop="true" tabindex="-1">' + I18n.translate('Learn more...') + '</a></li>' +
       '</ul>' +
       '</div>';
   };
 
   const makeLink = (p: { name: string; url: string }): string =>
-    `<a href="${p.url}" target="_blank" rel="noopener">${p.name}</a>`;
+    `<a data-alloy-tabstop="true" tabindex="-1" href="${p.url}" target="_blank" rel="noopener">${p.name}</a>`;
 
   const identifyUnknownPlugin = (editor: Editor, key: string): PluginData => {
     const getMetadata = editor.plugins[key].getMetadata;
@@ -90,7 +92,7 @@ const tab = (editor: Editor): Dialog.TabSpec & { name: string } => {
     if (editor == null) {
       return '';
     }
-    return '<div data-mce-tabstop="1" tabindex="-1">' +
+    return '<div>' +
       pluginLister(editor) +
       '</div>';
   };
