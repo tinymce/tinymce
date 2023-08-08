@@ -1,6 +1,6 @@
 import { AlloyComponent, Behaviour, Focusing, FormField, Receiving, SketchSpec, Tabstopping } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Cell, Fun, Optional, Throttler, Type } from '@ephox/katamari';
+import { Cell, Fun, Optional, Optionals, Throttler, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Class, Compare, SugarElement, Traverse } from '@ephox/sugar';
 
@@ -88,7 +88,7 @@ const writeValue = (iframeElement: SugarElement<HTMLIFrameElement>, html: string
 // the scroll jumping caused by the delay.
 // TINY-10097: On Safari, throttle to 500ms reduce flickering as the document.write() method still observes significant flickering.
 // Also improves scrolling, as scroll positions are maintained manually similar to Firefox.
-const throttleInterval = isSafariOrFirefox ? Optional.some(500) : Optional.none();
+const throttleInterval = Optionals.someIf(isSafariOrFirefox, 500);
 
 // TINY-10078: Use Throttler.adaptable to ensure that any content added during the waiting period is not lost.
 const writeValueThrottler = throttleInterval.map((interval) => Throttler.adaptable(writeValue, interval));
