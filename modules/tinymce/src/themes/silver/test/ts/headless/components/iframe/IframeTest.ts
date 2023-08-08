@@ -309,8 +309,10 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
       }, interval);
     };
 
-    const assertIframeContentAfterIntervals = (iframe: HTMLIFrameElement, maxNumIntervals: number) =>
+    const assertIframeStateAfterIntervals = (iframe: HTMLIFrameElement, maxNumIntervals: number, shouldContentHaveDoctype: boolean) => {
       assert.equal(iframe.contentDocument?.body.innerHTML, testContent.repeat(maxNumIntervals + 1), 'iframe content should match');
+      assertIframeScrollAtBottomOverflow(iframe, shouldContentHaveDoctype, 'iframe should be scrolled to bottom');
+    };
 
     Arr.each([ true, false ], (shouldContentHaveDoctype) => {
       const doctypeLabel = getDoctypeLabel(shouldContentHaveDoctype);
@@ -326,31 +328,27 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
         setValueInIntervals(frame, interval, maxNumIntervals, shouldContentHaveDoctype);
 
         await Waiter.pTryUntil('Wait for update intervals to finish', () => {
-          // TINY-10078: Artificial 200ms throttle on Firefox to improve scrolling.
-          // TINY-10097: Artificial 500ms throttle on Safari to reduce flickering and improve scrolling.
-          const expectedLoads = (isSafariOrFirefox ? interval * maxNumIntervals / (isSafari ? 500 : 200) : maxNumIntervals) + 1;
+          // TINY-10078, TINY-10097, TINY-10128: Artificial 500ms throttles on Safari and Firefox.
+          const expectedLoads = (isSafariOrFirefox ? interval * maxNumIntervals / 500 : maxNumIntervals) + 1;
           if (isFirefox) {
             assert.approximately(loadCount, expectedLoads, 1, `iframe should have approximately ${expectedLoads} loads`);
           } else {
             assert.strictEqual(loadCount, expectedLoads, `iframe should have exactly ${expectedLoads} loads`);
           }
-          assertIframeContentAfterIntervals(iframe, maxNumIntervals);
-          assertIframeScrollAtBottomOverflow(iframe, shouldContentHaveDoctype, 'iframe should be scrolled to bottom');
+          assertIframeStateAfterIntervals(iframe, maxNumIntervals, shouldContentHaveDoctype);
         });
 
         iframe.onload = Fun.noop;
       });
 
-      it(`TINY-10078 & TINY-10097: Artificial throttles should not impact content completeness when ${doctypeLabel}`, async () => {
+      it(`TINY-10078, TINY-10097, TINY-10128: When updating rapidly and ${doctypeLabel}, artificial throttles should not impact content completeness and scroll should be kept at bottom`, async () => {
         const frame = getFrameFromFrameNumber(streamFrameNumber);
         const maxNumIntervals = 10;
-        setValueInIntervals(frame, 50, maxNumIntervals, shouldContentHaveDoctype);
+        setValueInIntervals(frame, 0, maxNumIntervals, shouldContentHaveDoctype);
 
         const iframe = frame.element.dom as HTMLIFrameElement;
-        await Waiter.pTryUntil('Wait for update intervals to finish', () => {
-          assertIframeContentAfterIntervals(iframe, maxNumIntervals);
-          assertIframeScrollAtBottomOverflow(iframe, shouldContentHaveDoctype, 'iframe should be scrolled to bottom');
-        });
+        await Waiter.pTryUntil('Wait for update intervals to finish', () =>
+          assertIframeStateAfterIntervals(iframe, maxNumIntervals, shouldContentHaveDoctype));
       });
     });
   });
