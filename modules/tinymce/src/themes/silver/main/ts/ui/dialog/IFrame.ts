@@ -73,7 +73,7 @@ const writeValue = (iframeElement: SugarElement<HTMLIFrameElement>, html: string
         }
       };
 
-      // TINY-10128: Attempting to scroll before the iframe has finished loading will not work
+      // TINY-10128: Attempting to scroll before the iframe has finished loading will not work.
       iframe.addEventListener('load', scrollAfterWrite, { once: true });
 
       doc.open();
@@ -82,7 +82,7 @@ const writeValue = (iframeElement: SugarElement<HTMLIFrameElement>, html: string
     });
 };
 
-// TINY-10078: On Firefox, throttle to 500ms allow improve scrolling experience. Since we are manually maintaining previous scroll
+// TINY-10078, TINY-10128: On Firefox, throttle to 500ms allow improve scrolling experience. Since we are manually maintaining previous scroll
 // position on each update, when updating too rapidly, attempting to scroll around the iframe can feel stuck. Also, Firefox takes a
 // longer time to fire the iframe load event. Since we attach the scroll functionality to the load handler, throttling reduces
 // the scroll jumping caused by the delay.

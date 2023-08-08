@@ -326,9 +326,8 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
         setValueInIntervals(frame, interval, maxNumIntervals, shouldContentHaveDoctype);
 
         await Waiter.pTryUntil('Wait for update intervals to finish', () => {
-          // TINY-10078: Artificial 200ms throttle on Firefox to improve scrolling.
-          // TINY-10097: Artificial 500ms throttle on Safari to reduce flickering and improve scrolling.
-          const expectedLoads = (isSafariOrFirefox ? interval * maxNumIntervals / (isSafari ? 500 : 200) : maxNumIntervals) + 1;
+          // TINY-10078, TINY-10097, TINY-10128: Artificial 500ms throttles on Safari and Firefox.
+          const expectedLoads = (isSafariOrFirefox ? interval * maxNumIntervals / 500 : maxNumIntervals) + 1;
           if (isFirefox) {
             assert.approximately(loadCount, expectedLoads, 1, `iframe should have approximately ${expectedLoads} loads`);
           } else {
