@@ -9,8 +9,8 @@ import * as NewLineUtils from './NewLineUtils';
 const getTopParentBlock = (editor: Editor, node: Node, root: Element, container: Node): Optional<SugarElement<Node>> => {
   const dom = editor.dom;
   const selector = (node: Node) => dom.isBlock(node) && node.parentElement === root;
-  const parentBlock = selector(node) ? node : dom.getParent(container, selector, root);
-  return Optional.from(parentBlock).map(SugarElement.fromDom);
+  const topParentBlock = selector(node) ? node : dom.getParent(container, selector, root);
+  return Optional.from(topParentBlock).map(SugarElement.fromDom);
 };
 
 const insert = (editor: Editor, before: boolean): void => {
