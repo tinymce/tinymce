@@ -309,8 +309,10 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
       }, interval);
     };
 
-    const assertIframeContentAfterIntervals = (iframe: HTMLIFrameElement, maxNumIntervals: number) =>
+    const assertIframeStateAfterIntervals = (iframe: HTMLIFrameElement, maxNumIntervals: number, shouldContentHaveDoctype: boolean) => {
       assert.equal(iframe.contentDocument?.body.innerHTML, testContent.repeat(maxNumIntervals + 1), 'iframe content should match');
+      assertIframeScrollAtBottomOverflow(iframe, shouldContentHaveDoctype, 'iframe should be scrolled to bottom');
+    };
 
     Arr.each([ true, false ], (shouldContentHaveDoctype) => {
       const doctypeLabel = getDoctypeLabel(shouldContentHaveDoctype);
@@ -333,23 +335,20 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
           } else {
             assert.strictEqual(loadCount, expectedLoads, `iframe should have exactly ${expectedLoads} loads`);
           }
-          assertIframeContentAfterIntervals(iframe, maxNumIntervals);
-          assertIframeScrollAtBottomOverflow(iframe, shouldContentHaveDoctype, 'iframe should be scrolled to bottom');
+          assertIframeStateAfterIntervals(iframe, maxNumIntervals, shouldContentHaveDoctype);
         });
 
         iframe.onload = Fun.noop;
       });
 
-      it(`TINY-10078 & TINY-10097: Artificial throttles should not impact content completeness when ${doctypeLabel}`, async () => {
+      it(`TINY-10078, TINY-10097, TINY-10128: When updating rapidly and ${doctypeLabel}, artificial throttles should not impact content completeness and scroll should be kept at bottom`, async () => {
         const frame = getFrameFromFrameNumber(streamFrameNumber);
         const maxNumIntervals = 10;
-        setValueInIntervals(frame, 50, maxNumIntervals, shouldContentHaveDoctype);
+        setValueInIntervals(frame, 0, maxNumIntervals, shouldContentHaveDoctype);
 
         const iframe = frame.element.dom as HTMLIFrameElement;
-        await Waiter.pTryUntil('Wait for update intervals to finish', () => {
-          assertIframeContentAfterIntervals(iframe, maxNumIntervals);
-          assertIframeScrollAtBottomOverflow(iframe, shouldContentHaveDoctype, 'iframe should be scrolled to bottom');
-        });
+        await Waiter.pTryUntil('Wait for update intervals to finish', () =>
+          assertIframeStateAfterIntervals(iframe, maxNumIntervals, shouldContentHaveDoctype));
       });
     });
   });
