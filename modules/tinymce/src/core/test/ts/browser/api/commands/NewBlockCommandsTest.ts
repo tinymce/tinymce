@@ -1,5 +1,5 @@
 import { context, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -107,14 +107,24 @@ describe('browser.tinymce.core.api.commands.NewBlockCommandsTest', () => {
       TinyAssertions.assertContent(editor, '<p>X</p><p contenteditable="false">AAA</p><p>BBB</p>');
     });
 
-    it('TINY-10022: insert new empty block before text in CET nested within CEF', () => {
-      const editor = hook.editor();
-      editor.setContent('<div contenteditable="false">AAA<div contenteditable="true">BBB</div></div>');
-      // actual content: <p><br data-mce-bogus="1"> </p><div contenteditable="false">AAA<div contenteditable="true">BBB</div></div>
-      TinySelections.setCursor(editor, [ 1, 1, 0 ], 2);
-      editor.execCommand('InsertNewBlockBefore');
-      TinyAssertions.assertContent(editor, '<div contenteditable="false">AAA<div contenteditable="true"><p>&nbsp;</p>BBB</div></div>');
-      TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 0);
+    it('TINY-10022: should not split editing host in noneditable root', () => {
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+        const initialContent = '<p contenteditable="true">ab</p>';
+        editor.setContent(initialContent);
+        TinySelections.setCursor(editor, [ 0, 0 ], 1);
+        editor.execCommand('InsertNewBlockBefore');
+        TinyAssertions.assertContent(editor, initialContent);
+      });
+    });
+
+    it('TINY-10022: should not insert new block in in noneditable root', () => {
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+        const initialContent = '<p>ab</p>';
+        editor.setContent(initialContent);
+        TinySelections.setCursor(editor, [ 0, 0 ], 1);
+        editor.execCommand('InsertNewBlockBefore');
+        TinyAssertions.assertContent(editor, initialContent);
+      });
     });
   });
 
@@ -217,14 +227,24 @@ describe('browser.tinymce.core.api.commands.NewBlockCommandsTest', () => {
       TinyAssertions.assertContent(editor, '<p contenteditable="false">AAA</p><p>X</p><p>BBB</p>');
     });
 
-    it('TINY-10022: insert new empty block after text in CET nested within CEF', () => {
-      const editor = hook.editor();
-      editor.setContent('<div contenteditable="false">AAA<div contenteditable="true">BBB</div></div>');
-      // actual content: <p><br data-mce-bogus="1"> </p><div contenteditable="false">AAA<div contenteditable="true">BBB</div></div>
-      TinySelections.setCursor(editor, [ 1, 1, 0 ], 2);
-      editor.execCommand('InsertNewBlockAfter');
-      TinyAssertions.assertContent(editor, '<div contenteditable="false">AAA<div contenteditable="true">BBB<p>&nbsp;</p></div></div>');
-      TinyAssertions.assertCursor(editor, [ 0, 1, 1 ], 0);
+    it('TINY-10022: should not split editing host in noneditable root', () => {
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+        const initialContent = '<p contenteditable="true">ab</p>';
+        editor.setContent(initialContent);
+        TinySelections.setCursor(editor, [ 0, 0 ], 1);
+        editor.execCommand('InsertNewBlockAfter');
+        TinyAssertions.assertContent(editor, initialContent);
+      });
+    });
+
+    it('TINY-10022: should not insert new block in in noneditable root', () => {
+      TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+        const initialContent = '<p>ab</p>';
+        editor.setContent(initialContent);
+        TinySelections.setCursor(editor, [ 0, 0 ], 1);
+        editor.execCommand('InsertNewBlockAfter');
+        TinyAssertions.assertContent(editor, initialContent);
+      });
     });
   });
 });

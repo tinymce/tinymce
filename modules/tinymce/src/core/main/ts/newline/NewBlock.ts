@@ -6,18 +6,11 @@ import * as Options from '../api/Options';
 import * as InputEvents from '../events/InputEvents';
 import * as NewLineUtils from './NewLineUtils';
 
-const getTopParentBlock = (node: Node, root: Element, container: Node): Optional<SugarElement<Node>> => {
-  let parentBlock = node;
-
-  if (node === root) {
-    parentBlock = container;
-  }
-
-  while (parentBlock.parentElement && parentBlock.parentElement !== root) {
-    parentBlock = parentBlock.parentElement;
-  }
-
-  return Optional.from(SugarElement.fromDom(parentBlock));
+const getTopParentBlock = (editor: Editor, node: Node, root: Element, container: Node): Optional<SugarElement<Node>> => {
+  const dom = editor.dom;
+  const selector = (node: Node) => dom.isBlock(node) && node.parentElement === root;
+  const parentBlock = selector(node) ? node : dom.getParent(container, selector, root);
+  return Optional.from(parentBlock).map(SugarElement.fromDom);
 };
 
 const insert = (editor: Editor, before: boolean): void => {
@@ -26,13 +19,13 @@ const insert = (editor: Editor, before: boolean): void => {
   const node = before ? editor.selection.getStart() : editor.selection.getEnd();
   const container = before ? rng.startContainer : rng.endContainer;
   const root = NewLineUtils.getEditableRoot(dom, container);
-  if (!root) {
+  if (!root || !root.isContentEditable) {
     return;
   }
   const insertFn = before ? Insert.before : Insert.after;
   const newBlockName = Options.getForcedRootBlock(editor);
 
-  getTopParentBlock(node, root, container).each((parentBlock) => {
+  getTopParentBlock(editor, node, root, container).each((parentBlock) => {
     const newBlock = NewLineUtils.createNewBlock(editor, container, parentBlock.dom, root, false, newBlockName);
 
     insertFn(parentBlock, SugarElement.fromDom(newBlock));
