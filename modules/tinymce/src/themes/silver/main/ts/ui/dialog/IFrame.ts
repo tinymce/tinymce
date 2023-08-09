@@ -74,10 +74,11 @@ const writeValue = (iframeElement: SugarElement<HTMLIFrameElement>, html: string
         }
       };
 
-      // TINY-10128: Attempting to scroll before the iframe has finished loading will not work. However, on Firefox, waiting for load
-      // event before scrolling will cause the scroll to jump around erratically, causing an unpleasant UX. Therefore we will not do
-      // this for Firefox, with the trade-off of potentially losing bottom scroll when updating at a very rapid rate.
-      if (!isFirefox) {
+      // TINY-10109: On Safari, attempting to scroll before the iframe has finished loading will cause scroll to reset to top upon load.
+      // TINY-10128: We will not wait for the load event on Chrome and Firefox since doing so causes the scroll to jump around erratically,
+      // especially on Firefox. However, not waiting for load has the trade-off of potentially losing bottom scroll when updating at a very
+      // rapid rate, as attempting to scroll before the iframe body is loaded will not work.
+      if (isSafari) {
         iframe.addEventListener('load', scrollAfterWrite, { once: true });
       }
 
@@ -85,14 +86,14 @@ const writeValue = (iframeElement: SugarElement<HTMLIFrameElement>, html: string
       doc.write(html);
       doc.close();
 
-      if (isFirefox) {
+      if (!isSafari) {
         scrollAfterWrite();
       }
     });
 };
 
-// TINY-10078, TINY-10128: On Firefox, throttle to 200ms to improve scrolling experience. Since we are manually maintaining previous scroll
-// position on each update, when updating rapidly without a throttle, attempting to scroll around the iframe can feel stuck.
+// TINY-10078: On Firefox, throttle to 200ms to improve scrolling experience. Since we are manually maintaining previous scroll position
+// on each update, when updating rapidly without a throttle, attempting to scroll around the iframe can feel stuck.
 // TINY-10097: On Safari, throttle to 500ms to reduce flickering as the document.write() method still observes significant flickering.
 // Also improves scrolling, as scroll positions are maintained manually similar to Firefox.
 const throttleInterval = Optionals.someIf(isSafariOrFirefox, isSafari ? 500 : 200);
