@@ -1,6 +1,6 @@
 import { AlloyComponent, Behaviour, Focusing, FormField, Receiving, SketchSpec, Tabstopping } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Cell, Fun, Optional, Throttler, Type } from '@ephox/katamari';
+import { Cell, Fun, Optional, Optionals, Throttler, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Class, Compare, SugarElement, Traverse } from '@ephox/sugar';
 
@@ -31,7 +31,13 @@ const isElementScrollAtBottom = ({ scrollTop, scrollHeight, clientHeight }: HTML
   Math.ceil(scrollTop) + clientHeight >= scrollHeight;
 
 const scrollToY = (win: Window, y: number | 'bottom') =>
-  win.scrollTo(0, y === 'bottom' ? win.document.body.scrollHeight : y);
+  // TINY-10128: The iframe body is occasionally null when we attempt to scroll, so instead of using body.scrollHeight, use a
+  // fallback value of 99999999. To minimise the potential impact of future browser changes, this fallback is significantly smaller
+  // than the minimum of the maximum value Window.scrollTo would take on supported browsers:
+  // Chromium: > Number.MAX_SAFE_INTEGER
+  // Safari: 2^31 - 1 = 2147483647
+  // Firefox: 2147483583
+  win.scrollTo(0, y === 'bottom' ? 99999999 : y);
 
 const getScrollingElement = (doc: Document, html: string): Optional<HTMLElement> => {
   // TINY-10110: The scrolling element can change between body and documentElement depending on whether there
@@ -68,8 +74,10 @@ const writeValue = (iframeElement: SugarElement<HTMLIFrameElement>, html: string
         }
       };
 
-      // TINY-10109: On Safari, attempting to scroll before iframe has finished loading will cause scroll to reset to top upon load.
-      // We won't do this for all browsers since this does introduce a slight visual lag.
+      // TINY-10109: On Safari, attempting to scroll before the iframe has finished loading will cause scroll to reset to top upon load.
+      // TINY-10128: We will not wait for the load event on Chrome and Firefox since doing so causes the scroll to jump around erratically,
+      // especially on Firefox. However, not waiting for load has the trade-off of potentially losing bottom scroll when updating at a very
+      // rapid rate, as attempting to scroll before the iframe body is loaded will not work.
       if (isSafari) {
         iframe.addEventListener('load', scrollAfterWrite, { once: true });
       }
@@ -84,11 +92,11 @@ const writeValue = (iframeElement: SugarElement<HTMLIFrameElement>, html: string
     });
 };
 
-// TINY-10078: On Firefox, throttle to 200ms allow improve scrolling experience. Since we are manually maintaining previous scroll
-// position on each update, when updating too rapidly, attempting to scroll around the iframe can feel stuck.
-// TINY-10097: On Safari, throttle to 500ms reduce flickering as the document.write() method still observes significant flickering.
+// TINY-10078: On Firefox, throttle to 200ms to improve scrolling experience. Since we are manually maintaining previous scroll position
+// on each update, when updating rapidly without a throttle, attempting to scroll around the iframe can feel stuck.
+// TINY-10097: On Safari, throttle to 500ms to reduce flickering as the document.write() method still observes significant flickering.
 // Also improves scrolling, as scroll positions are maintained manually similar to Firefox.
-const throttleInterval = isSafariOrFirefox ? Optional.some(isSafari ? 500 : 200) : Optional.none();
+const throttleInterval = Optionals.someIf(isSafariOrFirefox, isSafari ? 500 : 200);
 
 // TINY-10078: Use Throttler.adaptable to ensure that any content added during the waiting period is not lost.
 const writeValueThrottler = throttleInterval.map((interval) => Throttler.adaptable(writeValue, interval));
