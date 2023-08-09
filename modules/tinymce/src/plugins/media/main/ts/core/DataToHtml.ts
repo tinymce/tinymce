@@ -64,10 +64,6 @@ const getVideoHtml = (data: MediaData, videoTemplateCallback: DataToHtmlCallback
   }
 };
 
-const getScriptHtml = (data: MediaData): string => {
-  return '<script src="' + data.source + '"></script>';
-};
-
 const dataToHtml = (editor: Editor, dataIn: MediaData): string => {
   const data: MediaData = Tools.extend({}, dataIn);
 
@@ -122,8 +118,6 @@ const dataToHtml = (editor: Editor, dataIn: MediaData): string => {
       return getFlashHtml(data);
     } else if (data.sourcemime.indexOf('audio') !== -1) {
       return getAudioHtml(data, audioTemplateCallback);
-    } else if (data.type === 'script') {
-      return getScriptHtml(data);
     } else {
       return getVideoHtml(data, videoTemplateCallback);
     }
