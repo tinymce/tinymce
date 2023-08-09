@@ -1,10 +1,12 @@
 import { Cursors } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
+import { Fun, Optional, Optionals } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import * as DetailsElement from 'tinymce/core/selection/DetailsElement';
+import * as DetailsDelete from 'tinymce/core/delete/DetailsDelete';
 
 interface TestCase {
   readonly html: string;
@@ -28,7 +30,7 @@ describe('browser.tinymce.core.delete.DeleteDetailsTest', () => {
 
     editor.setContent(testCase.html);
     TinySelections.setSelection(editor, testCase.selection.startPath, testCase.selection.soffset, testCase.selection.finishPath, testCase.selection.foffset);
-    const prevented = DetailsElement.deleteAction(editor, forward);
+    const prevented = Optionals.equals(DetailsDelete.backspaceDelete(editor, forward, 'character'), Optional.some(Fun.noop));
     assert.equal(prevented, testCase.expectedPrevented);
     TinyAssertions.assertContent(editor, expectedHtml);
     TinyAssertions.assertSelection(editor, testCase.expectedSelection.startPath, testCase.expectedSelection.soffset, testCase.expectedSelection.finishPath, testCase.expectedSelection.foffset);
@@ -36,6 +38,8 @@ describe('browser.tinymce.core.delete.DeleteDetailsTest', () => {
 
   const testDeleteForward = testDeleteDetails(true);
   const testDeleteBackward = testDeleteDetails(false);
+
+  const isSafari = PlatformDetection.detect().browser.isSafari();
 
   context('Summary', () => {
     it('Delete forward at the end of summary should do nothing', () => testDeleteForward({
@@ -56,15 +60,23 @@ describe('browser.tinymce.core.delete.DeleteDetailsTest', () => {
       html: '<details open=""><summary>s1</summary><div><p>&nbsp;</p></div></details>',
       selection: caret([ 0, 0, 0 ], 1),
       expectedSelection: caret([ 0, 0, 0 ], 1),
-      expectedPrevented: false
+      // TINY-9951: Safari override for accordion summary
+      expectedPrevented: isSafari ? true : false,
+      expectedHtml: `<details open=""><summary>s${isSafari ? '' : '1'}</summary><div><p>&nbsp;</p></div></details>`
     }));
 
-    it('Delete backward in middle of summary should not be prevented', () => testDeleteBackward({
-      html: '<details open=""><summary>s1</summary><div><p>&nbsp;</p></div></details>',
-      selection: caret([ 0, 0, 0 ], 1),
-      expectedSelection: caret([ 0, 0, 0 ], 1),
-      expectedPrevented: false
-    }));
+    it('Delete backward in middle of summary should not be prevented', function () {
+      // TODO - TINY-10123: On Safari, deleting backwards in summary in accordion with empty body deletes entire accordion
+      if (isSafari) {
+        this.skip();
+      }
+      testDeleteBackward({
+        html: '<details open=""><summary>s1</summary><div><p>&nbsp;</p></div></details>',
+        selection: caret([ 0, 0, 0 ], 1),
+        expectedSelection: caret([ 0, 0, 0 ], 1),
+        expectedPrevented: false
+      });
+    });
 
     it('Delete backward in details body should not delete into summary', () => testDeleteBackward({
       html: '<details open=""><summary>s1</summary><div><p>&nbsp;</p></div></details>',

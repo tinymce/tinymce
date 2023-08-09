@@ -8,6 +8,7 @@ import * as BlockBoundaryDelete from '../delete/BlockBoundaryDelete';
 import * as BlockRangeDelete from '../delete/BlockRangeDelete';
 import * as CaretBoundaryDelete from '../delete/CaretBoundaryDelete';
 import * as CefDelete from '../delete/CefDelete';
+import * as DetailsDelete from '../delete/DetailsDelete';
 import * as ImageBlockDelete from '../delete/ImageBlockDelete';
 import * as InlineBoundaryDelete from '../delete/InlineBoundaryDelete';
 import * as InlineFormatDelete from '../delete/InlineFormatDelete';
@@ -17,8 +18,24 @@ import * as TableDelete from '../delete/TableDelete';
 import * as InputEvents from '../events/InputEvents';
 import * as MatchKeys from './MatchKeys';
 
+const platform = PlatformDetection.detect();
+const os = platform.os;
+const isMacOSOriOS = os.isMacOS() || os.isiOS();
+
+const browser = platform.browser;
+const isFirefox = browser.isFirefox();
+
 const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: KeyboardEvent) => {
   const inputType = evt.keyCode === VK.BACKSPACE ? 'deleteContentBackward' : 'deleteContentForward';
+  const isCollapsed = editor.selection.isCollapsed();
+  const unmodifiedGranularity = isCollapsed ? 'character' : 'selection';
+  const getModifiedGranularity = (isWord: boolean) => {
+    if (isCollapsed) {
+      return isWord ? 'word' : 'line';
+    } else {
+      return 'selection';
+    }
+  };
 
   MatchKeys.executeWithDelayedAction([
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(Outdent.backspaceDelete, editor) },
@@ -30,6 +47,16 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: K
     { keyCode: VK.DELETE, action: MatchKeys.action(InlineBoundaryDelete.backspaceDelete, editor, caret, true) },
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(TableDelete.backspaceDelete, editor, false) },
     { keyCode: VK.DELETE, action: MatchKeys.action(TableDelete.backspaceDelete, editor, true) },
+    { keyCode: VK.BACKSPACE, action: MatchKeys.action(DetailsDelete.backspaceDelete, editor, false, unmodifiedGranularity) },
+    { keyCode: VK.DELETE, action: MatchKeys.action(DetailsDelete.backspaceDelete, editor, true, unmodifiedGranularity) },
+    ...isMacOSOriOS ? [
+      { keyCode: VK.BACKSPACE, altKey: true, action: MatchKeys.action(DetailsDelete.backspaceDelete, editor, false, getModifiedGranularity(true)) },
+      { keyCode: VK.DELETE, altKey: true, action: MatchKeys.action(DetailsDelete.backspaceDelete, editor, true, getModifiedGranularity(true)) },
+      { keyCode: VK.BACKSPACE, metaKey: true, action: MatchKeys.action(DetailsDelete.backspaceDelete, editor, false, getModifiedGranularity(false)) },
+    ] : [
+      { keyCode: VK.BACKSPACE, ctrlKey: true, action: MatchKeys.action(DetailsDelete.backspaceDelete, editor, false, getModifiedGranularity(true)) },
+      { keyCode: VK.DELETE, ctrlKey: true, action: MatchKeys.action(DetailsDelete.backspaceDelete, editor, true, getModifiedGranularity(true)) }
+    ],
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(ImageBlockDelete.backspaceDelete, editor, false) },
     { keyCode: VK.DELETE, action: MatchKeys.action(ImageBlockDelete.backspaceDelete, editor, true) },
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(MediaDelete.backspaceDelete, editor, false) },
@@ -53,35 +80,26 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: K
     });
 };
 
-const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent, isBackspaceKeydown: boolean) => {
-  const platform = PlatformDetection.detect();
-  const os = platform.os;
-  const browser = platform.browser;
-  const multiDeleteKeyPatterns: MatchKeys.KeyPattern[] = os.isMacOS() ? [
-    { keyCode: VK.BACKSPACE, altKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor) },
-    { keyCode: VK.DELETE, altKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor) }
-  ] : [
-    { keyCode: VK.BACKSPACE, ctrlKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor) },
-    { keyCode: VK.DELETE, ctrlKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor) }
-  ];
-
-  // macOS surpresses keyup events for most keys including Backspace when Meta key is engaged
-  // To emulate Meta + Backspace on macOS, add a pattern for the meta key when backspace was
-  // detected on keydown
-  if (os.isMacOS() && isBackspaceKeydown) {
-    multiDeleteKeyPatterns.push({
-      // firefox detects macOS Command keycode as "Command" not "Meta"
-      keyCode: browser.isFirefox() ? 224 : 91,
-      action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor)
-    });
-  }
-
+const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent, isBackspaceKeydown: boolean) =>
   MatchKeys.execute([
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) },
     { keyCode: VK.DELETE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) },
-    ...multiDeleteKeyPatterns
+    ...isMacOSOriOS ? [
+      { keyCode: VK.BACKSPACE, altKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor) },
+      { keyCode: VK.DELETE, altKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor) },
+      // macOS surpresses keyup events for most keys including Backspace when Meta key is engaged
+      // To emulate Meta + Backspace on macOS, add a pattern for the meta key when backspace was
+      // detected on keydown
+      ...isBackspaceKeydown ? [{
+        // Firefox detects macOS Command key code as "Command" not "Meta"
+        keyCode: isFirefox ? 224 : 91,
+        action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor)
+      }] : []
+    ] : [
+      { keyCode: VK.BACKSPACE, ctrlKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor) },
+      { keyCode: VK.DELETE, ctrlKey: true, action: MatchKeys.action(InlineFormatDelete.refreshCaret, editor) }
+    ]
   ], evt);
-};
 
 const setup = (editor: Editor, caret: Cell<Text | null>): void => {
   // track backspace keydown state for emulating Meta + Backspace keyup detection on macOS
