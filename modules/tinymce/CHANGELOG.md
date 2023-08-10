@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - New `help_accessibility` option which displays the keyboard shortcut to access the help functionality in the statusbar. #TINY-9379
+- Added a new `InsertNewBlockBefore` command, which inserts an empty block before the one containing the current selection. #TINY-10022
+- Added a new `InsertNewBlockAfter` command, which inserts an empty block after the one containing the current selection. #TINY-10022
 
 ### Improved
 - Adding a newline after a table would in some specific cases not work. #TINY-9863
@@ -35,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Links in `help dialog` -> `plugins` and `version` were not navigable via keyboard. #TINY-10071
 - The `color_cols` option was not respected when set to the value 5 with a custom `color_map` specified. #TINY-10126
 
-## 6.6.2 - TBD
+## 6.6.2 - 2023-08-09
 
 ### Fixed
 - An "Uncaught TypeError: Cannot read properties of null" error would sometimes be thrown when updating the content of a `streamContent: true` iframe dialog component. #TINY-10128
