@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In some cases pressing enter would scroll the entire page. #TINY-9828
 - The border styles of a table were incorrectly split into a longhand form after table dialog updates. #TINY-9843
 - Links in `help dialog` -> `plugins` and `version` were not navigable via keyboard. #TINY-10071
+- An empty `contenteditable="true"` element within a noneditable root was deleted upon pressing the Backspace key. #TINY-10011
 
 ## 6.6.2 - 2023-08-09
 
