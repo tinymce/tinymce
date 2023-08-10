@@ -1,7 +1,7 @@
-import { FocusTools, Keys, Mouse, UiControls, UiFinder } from '@ephox/agar';
+import { FocusTools, Keys, Mouse, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
-import { SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { SugarBody, SugarElement, SugarShadowDom, Value } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -23,7 +23,7 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    toolbar: [ 'undo', 'fontsizeinput', 'redo' ]
+    toolbar: [ 'fontsizeinput' ]
   }, []);
 
   it('TINY-9429: plus and minus should increase and decrease font size of the current selection', () => {
@@ -42,6 +42,44 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
 
     TinyUiActions.tapOnToolbar(editor, '.tox-number-input .minus');
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 16px;">b</span>c</p>');
+  });
+
+  it('TINY-10129: plus and minus should not increase and decrease font size when the editor is readonly', () => {
+    const editor = hook.editor();
+    editor.setContent('<p style="font-size: 16px;">abc</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
+    editor.mode.set('readonly');
+
+    TinyUiActions.clickOnToolbar(editor, '.tox-number-input .plus');
+    TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">abc</p>');
+    assert.equal(Value.get(UiFinder.findIn(TinyUiActions.getUiRoot(editor), '.tox-number-input input').getOrDie() as any), '16px');
+
+    TinyUiActions.clickOnToolbar(editor, '.tox-number-input .minus');
+    TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">abc</p>');
+  });
+
+  it('TINY-10129: Toolbar buttons should be properly disabled', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p style="font-size: 16px;">abc</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
+
+    Waiter.pTryUntil('Disabled should not exist', () => UiFinder.exists(TinyUiActions.getUiRoot(editor), '.tox-number-input .plus[disabled="disabled"]'));
+    Waiter.pTryUntil('Disabled should not exist', () => UiFinder.exists(TinyUiActions.getUiRoot(editor), '.tox-number-input .minus[disabled="disabled"]'));
+    Waiter.pTryUntil('Disabled should not exist', () => UiFinder.exists(TinyUiActions.getUiRoot(editor), '.tox-number-input .input[disabled="disabled"]'));
+
+    editor.mode.set('readonly');
+
+    await UiFinder.pWaitFor('Plus button should be disabled', TinyUiActions.getUiRoot(editor), '.tox-number-input .plus[disabled="disabled"]');
+
+    await UiFinder.pWaitFor('Plus button should be disabled', TinyUiActions.getUiRoot(editor), '.tox-number-input .minus[disabled="disabled"]');
+
+    await UiFinder.pWaitFor('Plus button should be disabled', TinyUiActions.getUiRoot(editor), '.tox-number-input input[disabled="disabled"]');
+
+    editor.mode.set('design');
+
+    Waiter.pTryUntil('Disabled should not exist', () => UiFinder.exists(TinyUiActions.getUiRoot(editor), '.tox-number-input .plus[disabled="disabled"]'));
+    Waiter.pTryUntil('Disabled should not exist', () => UiFinder.exists(TinyUiActions.getUiRoot(editor), '.tox-number-input .minus[disabled="disabled"]'));
+    Waiter.pTryUntil('Disabled should not exist', () => UiFinder.exists(TinyUiActions.getUiRoot(editor), '.tox-number-input .input[disabled="disabled"]'));
   });
 
   it('TINY-9429: should be possible to change the font size from the input', async () => {
