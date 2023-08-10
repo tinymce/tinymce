@@ -270,6 +270,17 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
           TinyAssertions.assertContent(editor, initialContent);
         });
       });
+
+      it(`TINY-10011: should not delete empty CET in a noneditable root when ${label} is pressed`, () => {
+        TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+          const initialContent = '<div contenteditable="true">&nbsp;</div>';
+          editor.setContent(initialContent);
+          TinySelections.setCursor(editor, [ 0 ], 0);
+          TinyContentActions.keystroke(editor, key());
+          TinyAssertions.assertCursor(editor, [ 0 ], 0);
+          TinyAssertions.assertContent(editor, initialContent);
+        });
+      });
     });
   });
 });

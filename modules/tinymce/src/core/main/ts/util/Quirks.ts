@@ -1,4 +1,5 @@
 import { Fun, Type } from '@ephox/katamari';
+import { SelectorExists, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -83,6 +84,11 @@ const Quirks = (editor: Editor): Quirks => {
       return selection === allSelection;
     };
 
+    const hasPreservedEmptyElements = (node: Node) => {
+      const scope = SugarElement.fromDom(node);
+      return SelectorExists.descendant(scope, '[contenteditable="true"]');
+    };
+
     editor.on('keydown', (e) => {
       const keyCode = e.keyCode;
 
@@ -92,7 +98,8 @@ const Quirks = (editor: Editor): Quirks => {
         const body = editor.getBody();
 
         // Selection is collapsed but the editor isn't empty
-        if (isCollapsed && !dom.isEmpty(body)) {
+        // TINY-10011: empty CET elements should be preserved
+        if (isCollapsed && (!dom.isEmpty(body) || hasPreservedEmptyElements(body))) {
           return;
         }
 
