@@ -63,9 +63,9 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     editor.setContent('<p style="font-size: 16px;">abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
 
-    Waiter.pTryUntil('Disabled should not exist', () => UiFinder.exists(TinyUiActions.getUiRoot(editor), '.tox-number-input .plus[disabled="disabled"]'));
-    Waiter.pTryUntil('Disabled should not exist', () => UiFinder.exists(TinyUiActions.getUiRoot(editor), '.tox-number-input .minus[disabled="disabled"]'));
-    Waiter.pTryUntil('Disabled should not exist', () => UiFinder.exists(TinyUiActions.getUiRoot(editor), '.tox-number-input .input[disabled="disabled"]'));
+    await Waiter.pTryUntil('Disabled should not exist', () => UiFinder.notExists(TinyUiActions.getUiRoot(editor), '.tox-number-input .plus[disabled="disabled"]'));
+    await Waiter.pTryUntil('Disabled should not exist', () => UiFinder.notExists(TinyUiActions.getUiRoot(editor), '.tox-number-input .minus[disabled="disabled"]'));
+    await Waiter.pTryUntil('Disabled should not exist', () => UiFinder.notExists(TinyUiActions.getUiRoot(editor), '.tox-number-input .input[disabled="disabled"]'));
 
     editor.mode.set('readonly');
 
@@ -77,9 +77,9 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
 
     editor.mode.set('design');
 
-    Waiter.pTryUntil('Disabled should not exist', () => UiFinder.exists(TinyUiActions.getUiRoot(editor), '.tox-number-input .plus[disabled="disabled"]'));
-    Waiter.pTryUntil('Disabled should not exist', () => UiFinder.exists(TinyUiActions.getUiRoot(editor), '.tox-number-input .minus[disabled="disabled"]'));
-    Waiter.pTryUntil('Disabled should not exist', () => UiFinder.exists(TinyUiActions.getUiRoot(editor), '.tox-number-input .input[disabled="disabled"]'));
+    await Waiter.pTryUntil('Disabled should not exist', () => UiFinder.notExists(TinyUiActions.getUiRoot(editor), '.tox-number-input .plus[disabled="disabled"]'));
+    await Waiter.pTryUntil('Disabled should not exist', () => UiFinder.notExists(TinyUiActions.getUiRoot(editor), '.tox-number-input .minus[disabled="disabled"]'));
+    await Waiter.pTryUntil('Disabled should not exist', () => UiFinder.notExists(TinyUiActions.getUiRoot(editor), '.tox-number-input .input[disabled="disabled"]'));
   });
 
   it('TINY-9429: should be possible to change the font size from the input', async () => {
