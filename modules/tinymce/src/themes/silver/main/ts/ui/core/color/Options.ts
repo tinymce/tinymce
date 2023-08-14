@@ -36,7 +36,7 @@ const fallbackColor = '#000000';
 const register = (editor: Editor): void => {
   const registerOption = editor.options.register;
 
-  const colorProcessor = (value: any): any => {
+  const colorProcessor = (value: unknown): any => {
     if (Type.isArrayOf(value, Type.isString)) {
       return { value: mapColors(value), valid: true };
     } else {
@@ -44,7 +44,7 @@ const register = (editor: Editor): void => {
     }
   };
 
-  const colorColsProcessor = (value: any): any => {
+  const colorColsProcessor = (value: unknown): any => {
     if (Type.isNumber(value) && value > 0) {
       return { value, valid: true };
     } else {
