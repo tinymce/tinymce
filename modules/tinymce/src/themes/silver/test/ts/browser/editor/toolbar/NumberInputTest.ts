@@ -21,6 +21,12 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     }
   );
 
+  const pDisabledShouldNotExist = (editor: Editor, selector: string) =>
+    Waiter.pTryUntil('Disabled should not exist', () => UiFinder.notExists(TinyUiActions.getUiRoot(editor), `.tox-number-input ${selector}[disabled="disabled"]`));
+
+  const pDisabledShouldExist = (editor: Editor, selector: string) =>
+    UiFinder.pWaitFor('Plus button should be disabled', TinyUiActions.getUiRoot(editor), `.tox-number-input ${selector}[disabled="disabled"]`);
+
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     toolbar: [ 'fontsizeinput' ]
@@ -52,7 +58,7 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
 
     TinyUiActions.clickOnToolbar(editor, '.tox-number-input .plus');
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">abc</p>');
-    assert.equal(Value.get(UiFinder.findIn(TinyUiActions.getUiRoot(editor), '.tox-number-input input').getOrDie() as any), '16px');
+    assert.equal(Value.get(UiFinder.findIn<HTMLInputElement>(TinyUiActions.getUiRoot(editor), '.tox-number-input input').getOrDie()), '16px');
 
     TinyUiActions.clickOnToolbar(editor, '.tox-number-input .minus');
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">abc</p>');
@@ -63,23 +69,21 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     editor.setContent('<p style="font-size: 16px;">abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
 
-    await Waiter.pTryUntil('Disabled should not exist', () => UiFinder.notExists(TinyUiActions.getUiRoot(editor), '.tox-number-input .plus[disabled="disabled"]'));
-    await Waiter.pTryUntil('Disabled should not exist', () => UiFinder.notExists(TinyUiActions.getUiRoot(editor), '.tox-number-input .minus[disabled="disabled"]'));
-    await Waiter.pTryUntil('Disabled should not exist', () => UiFinder.notExists(TinyUiActions.getUiRoot(editor), '.tox-number-input .input[disabled="disabled"]'));
+    await pDisabledShouldNotExist(editor, '.plus');
+    await pDisabledShouldNotExist(editor, '.minus');
+    await pDisabledShouldNotExist(editor, 'input');
 
     editor.mode.set('readonly');
 
-    await UiFinder.pWaitFor('Plus button should be disabled', TinyUiActions.getUiRoot(editor), '.tox-number-input .plus[disabled="disabled"]');
-
-    await UiFinder.pWaitFor('Plus button should be disabled', TinyUiActions.getUiRoot(editor), '.tox-number-input .minus[disabled="disabled"]');
-
-    await UiFinder.pWaitFor('Plus button should be disabled', TinyUiActions.getUiRoot(editor), '.tox-number-input input[disabled="disabled"]');
+    await pDisabledShouldExist(editor, '.plus');
+    await pDisabledShouldExist(editor, '.minus');
+    await pDisabledShouldExist(editor, 'input');
 
     editor.mode.set('design');
 
-    await Waiter.pTryUntil('Disabled should not exist', () => UiFinder.notExists(TinyUiActions.getUiRoot(editor), '.tox-number-input .plus[disabled="disabled"]'));
-    await Waiter.pTryUntil('Disabled should not exist', () => UiFinder.notExists(TinyUiActions.getUiRoot(editor), '.tox-number-input .minus[disabled="disabled"]'));
-    await Waiter.pTryUntil('Disabled should not exist', () => UiFinder.notExists(TinyUiActions.getUiRoot(editor), '.tox-number-input .input[disabled="disabled"]'));
+    await pDisabledShouldNotExist(editor, '.plus');
+    await pDisabledShouldNotExist(editor, '.minus');
+    await pDisabledShouldNotExist(editor, 'input');
   });
 
   it('TINY-9429: should be possible to change the font size from the input', async () => {
