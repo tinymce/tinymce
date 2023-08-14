@@ -19,14 +19,6 @@ const setup = (editor: Editor): void => {
     }
   });
 
-  editor.on('ObjectSelected', (e) => {
-    const objectType = e.target.getAttribute('data-mce-object');
-
-    if (objectType === 'script') {
-      e.preventDefault();
-    }
-  });
-
   editor.on('ObjectResized', (e) => {
     const target = e.target;
 
