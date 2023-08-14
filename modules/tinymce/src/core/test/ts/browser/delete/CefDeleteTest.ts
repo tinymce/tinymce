@@ -281,6 +281,15 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
           TinyAssertions.assertContent(editor, initialContent);
         });
       });
+
+      it(`TINY-10011: should delete empty CET in a editable root when ${label} is pressed`, () => {
+        const editor = hook.editor();
+        editor.setContent('<div contenteditable="true">&nbsp;</div>');
+        TinySelections.setCursor(editor, [ 0 ], 0);
+        TinyContentActions.keystroke(editor, key());
+        TinyAssertions.assertCursor(editor, [ 0 ], 0);
+        TinyAssertions.assertContent(editor, '');
+      });
     });
   });
 });
