@@ -54,13 +54,6 @@ const htmlToData = (html: string, schema?: Schema): MediaData => {
           data = Tools.extend(node.attributes!.map, data);
         }
 
-        if (name === 'script') {
-          data = {
-            type: 'script',
-            source: node.attr('src')
-          };
-        }
-
         if (name === 'source') {
           if (!data.source) {
             data.source = node.attr('src');
