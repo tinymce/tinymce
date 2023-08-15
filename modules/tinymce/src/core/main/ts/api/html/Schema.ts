@@ -2,6 +2,7 @@ import { Arr, Fun, Obj, Type, Global } from '@ephox/katamari';
 
 import * as SchemaLookupTableCache from '../../schema/SchemaLookupTableCache';
 import { SchemaType, Attribute, AttributePattern, ElementSettings, SchemaElement, SchemaMap, SchemaRegExpMap, SchemaSettings } from '../../schema/SchemaTypes';
+import * as SchemaUtils from '../../schema/SchemaUtils';
 import Tools from '../util/Tools';
 
 Global.getSchema = SchemaLookupTableCache.getLookupTable;
@@ -53,11 +54,6 @@ interface Schema {
 
 const mapCache: Record<string, SchemaMap> = {};
 const makeMap = Tools.makeMap, each = Tools.each, extend = Tools.extend, explode = Tools.explode, inArray = Tools.inArray;
-
-const split = (items: string | undefined, delim?: string): string[] => {
-  items = Tools.trim(items);
-  return items ? items.split(delim || ' ') : [];
-};
 
 const createMap = (defaultValue: string, extendWith: SchemaMap = {}): SchemaMap => {
   const value = makeMap(defaultValue, ' ', makeMap(defaultValue.toUpperCase(), ' '));
@@ -177,7 +173,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
 
     if (validElements) {
       // Split valid elements into an array with rules
-      const validElementsArr = split(validElements, ',');
+      const validElementsArr = SchemaUtils.split(validElements, ',');
 
       let globalAttributes: Record<string, Attribute> | undefined;
       let globalAttributesOrder: string[] | undefined;
@@ -234,7 +230,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
 
           // Attributes defined
           if (attrData) {
-            const attrDatas = split(attrData, '|');
+            const attrDatas = SchemaUtils.split(attrData, '|');
             for (let ai = 0, al = attrDatas.length; ai < al; ai++) {
               matches = attrRuleRegExp.exec(attrDatas[ai]);
               if (matches) {
@@ -343,7 +339,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
       delete mapCache.text_block_elements;
       delete mapCache.block_elements;
 
-      each(split(customElements, ','), (rule) => {
+      each(SchemaUtils.split(customElements, ','), (rule) => {
         const matches = customElementRegExp.exec(rule);
         if (matches) {
           const inline = matches[1] === '~';
@@ -392,7 +388,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     const childRuleRegExp = /^([+\-]?)([A-Za-z0-9_\-.\u00b7\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u037d\u037f-\u1fff\u200c-\u200d\u203f-\u2040\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd]+)\[([^\]]+)]$/; // from w3c's custom grammar (above)
 
     if (validChildren) {
-      each(split(validChildren, ','), (rule) => {
+      each(SchemaUtils.split(validChildren, ','), (rule) => {
         const matches = childRuleRegExp.exec(rule);
 
         if (matches) {
@@ -406,7 +402,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
             parent[name] = { '#comment': {}};
           }
 
-          each(split(matches[3], '|'), (child) => {
+          each(SchemaUtils.split(matches[3], '|'), (child) => {
             if (prefix === '-') {
               delete parent[child];
             } else {
@@ -453,8 +449,8 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     });
 
     // Prefer strong/em over b/i
-    each(split('strong/b em/i'), (item) => {
-      const items = split(item, '/');
+    each(SchemaUtils.split('strong/b em/i'), (item) => {
+      const items = SchemaUtils.split(item, '/');
       elements[items[1]].outputName = items[0];
     });
 
@@ -474,21 +470,21 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     });
 
     // Remove these if they are empty by default
-    each(split('ol ul blockquote a table tbody'), (name) => {
+    each(SchemaUtils.split('ol ul blockquote a table tbody'), (name) => {
       if (elements[name]) {
         elements[name].removeEmpty = true;
       }
     });
 
     // Padd these by default
-    each(split('p h1 h2 h3 h4 h5 h6 th td pre div address caption li summary'), (name) => {
+    each(SchemaUtils.split('p h1 h2 h3 h4 h5 h6 th td pre div address caption li summary'), (name) => {
       if (elements[name]) {
         elements[name].paddEmpty = true;
       }
     });
 
     // Remove these if they have no attributes
-    each(split('span'), (name) => {
+    each(SchemaUtils.split('span'), (name) => {
       elements[name].removeEmptyAttrs = true;
     });
 
@@ -528,7 +524,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     param: 'video audio object'
   }, (parents, item) => {
     if (elements[item]) {
-      elements[item].parentsRequired = split(parents);
+      elements[item].parentsRequired = SchemaUtils.split(parents);
     }
   });
 

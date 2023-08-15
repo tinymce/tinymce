@@ -1,8 +1,8 @@
 import { Arr, Fun } from '@ephox/katamari';
 
-import Tools from '../api/util/Tools';
 import * as SchemaElementSets from './SchemaElementSets';
 import { SchemaType } from './SchemaTypes';
+import * as SchemaUtils from './SchemaUtils';
 
 export interface SchemaLookupTable {
   [key: string]: {
@@ -12,21 +12,16 @@ export interface SchemaLookupTable {
   };
 }
 
-const split = (items: string | undefined, delim?: string): string[] => {
-  items = Tools.trim(items);
-  return items ? items.split(delim || ' ') : [];
-};
-
 export const makeSchema = (type: SchemaType): SchemaLookupTable => {
   const { globalAttributes, phrasingContent, flowContent } = SchemaElementSets.getElementSets(type);
   const schema: SchemaLookupTable = {};
 
   const add = (name: string, attributes: string = '', children: string = '') => {
-    const childNames = split(children);
-    const names = split(name);
+    const childNames = SchemaUtils.split(children);
+    const names = SchemaUtils.split(name);
     let ni = names.length;
     while (ni--) {
-      const attributesOrder = split([ globalAttributes, attributes ].join(' '));
+      const attributesOrder = SchemaUtils.split([ globalAttributes, attributes ].join(' '));
 
       schema[names[ni]] = {
         attributes: Arr.mapToObject(attributesOrder, () => ({})),
@@ -37,8 +32,8 @@ export const makeSchema = (type: SchemaType): SchemaLookupTable => {
   };
 
   const addAttrs = (name: string, attributes?: string) => {
-    const names = split(name);
-    const attrs = split(attributes);
+    const names = SchemaUtils.split(name);
+    const attrs = SchemaUtils.split(attributes);
     let ni = names.length;
     while (ni--) {
       const schemaItem = schema[names[ni]];
@@ -52,13 +47,13 @@ export const makeSchema = (type: SchemaType): SchemaLookupTable => {
   if (type !== 'html5-strict') {
     const html4PhrasingContent = 'acronym applet basefont big font strike tt';
 
-    Arr.each(split(html4PhrasingContent), (name) => {
+    Arr.each(SchemaUtils.split(html4PhrasingContent), (name) => {
       add(name, '', phrasingContent);
     });
 
     const html4BlockContent = 'center dir isindex noframes';
 
-    Arr.each(split(html4BlockContent), (name) => {
+    Arr.each(SchemaUtils.split(html4BlockContent), (name) => {
       add(name, '', flowContent);
     });
   }
@@ -202,7 +197,7 @@ export const makeSchema = (type: SchemaType): SchemaLookupTable => {
 
   // Delete children of the same name from it's parent
   // For example: form can't have a child of the name form
-  Arr.each(split('a form meter progress dfn'), (name) => {
+  Arr.each(SchemaUtils.split('a form meter progress dfn'), (name) => {
     if (schema[name]) {
       delete schema[name].children[name];
     }
