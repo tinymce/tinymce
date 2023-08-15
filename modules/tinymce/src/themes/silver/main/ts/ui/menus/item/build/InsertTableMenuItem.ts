@@ -77,8 +77,13 @@ export const renderInsertTableMenuItem = (spec: Menu.InsertTableMenuItem, backst
   const sizeLabelId = Id.generate('size-label');
   const cells = makeCells(sizeLabelId, numRows, numColumns);
 
-  const makeLabelText = (row: number, col: number): PremadeSpec =>
-    GuiFactory.text(backstage.shared.providers.translate(`${col} columns and ${row} rows`));
+  const makeLabelText = (row: number, col: number): PremadeSpec => {
+    // TINY-10141: Add each of these strings to be translated?
+    const columnsText = backstage.shared.providers.translate(col > 1 ? `columns and` : `column and`);
+    const rowsText = backstage.shared.providers.translate(row > 1 ? `rows` : `row`);
+    const labelText = `${col} ${columnsText} ${row} ${rowsText}`;
+    return GuiFactory.text(labelText);
+  };
 
   const emptyLabelText = makeLabelText(0, 0);
 

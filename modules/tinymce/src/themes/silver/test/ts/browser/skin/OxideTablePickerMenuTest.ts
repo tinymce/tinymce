@@ -109,7 +109,7 @@ describe('browser.tinymce.themes.silver.skin.OxideTablePickerMenuTest', () => {
     const item = UiFinder.findIn(firstPicker, 'div[role="button"]').getOrDie();
     Mouse.mouseOver(item);
     UiFinder.exists(firstPicker, 'div.tox-insert-table-picker__selected');
-    UiFinder.exists(firstPicker, 'span.tox-insert-table-picker__label:contains("1x1")');
+    UiFinder.exists(firstPicker, 'span.tox-insert-table-picker__label:contains("1 column and 1 row")');
 
     TinyUiActions.keyup(editor, Keys.escape());
     await Waiter.pTryUntil('Wait for menu to be hidden', () => UiFinder.notExists(SugarBody.body(), 'div.tox-fancymenuitem'));
