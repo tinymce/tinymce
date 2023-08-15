@@ -79,9 +79,7 @@ export const renderInsertTableMenuItem = (spec: Menu.InsertTableMenuItem, backst
 
   const makeLabelText = (row: number, col: number): PremadeSpec => {
     // TINY-10141: Add each of these strings to be translated?
-    const columnsText = backstage.shared.providers.translate(col > 1 ? `columns and` : `column and`);
-    const rowsText = backstage.shared.providers.translate(row > 1 ? `rows` : `row`);
-    const labelText = `${col} ${columnsText} ${row} ${rowsText}`;
+    const labelText = backstage.shared.providers.translate(`${col} ${col === 1 ? 'column' : 'columns'} and ${row} ${row === 1 ? 'row' : 'rows'}`);
     return GuiFactory.text(labelText);
   };
 

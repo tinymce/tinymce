@@ -22,6 +22,9 @@ const tableCellsApprox = (s: ApproxStructure.StructApi, str: ApproxStructure.Str
   return cells;
 };
 
+const expectedLabelText = (cols: number, rows: number) =>
+  `${cols} ${cols === 1 ? 'column' : 'columns'} and ${rows} ${rows === 1 ? 'row' : 'rows'}`;
+
 const insertTablePickerApprox = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi, selectedRows: number, selectedCols: number) =>
   s.element('div', {
     classes: [ arr.has('tox-menu'), arr.has('tox-collection'), arr.has('tox-collection--list') ],
@@ -36,7 +39,7 @@ const insertTablePickerApprox = (s: ApproxStructure.StructApi, str: ApproxStruct
                 classes: [ arr.has('tox-insert-table-picker') ],
                 children: tableCellsApprox(s, str, arr, selectedRows, selectedCols).concat(s.element('span', {
                   classes: [ arr.has('tox-insert-table-picker__label') ],
-                  html: str.is(`${selectedCols} columns and ${selectedRows} rows`)
+                  html: str.is(expectedLabelText(selectedCols, selectedRows))
                 }))
               })
             ]
@@ -116,7 +119,7 @@ describe('browser.tinymce.themes.silver.skin.OxideTablePickerMenuTest', () => {
 
     const secondPicker = await pOpenTablePicker();
     UiFinder.notExists(secondPicker, 'div.tox-insert-table-picker__selected');
-    UiFinder.exists(secondPicker, 'span.tox-insert-table-picker__label:contains("0x0")');
+    UiFinder.exists(secondPicker, 'span.tox-insert-table-picker__label:contains("0 columns and 0 rows")');
     TinyUiActions.keyup(editor, Keys.escape());
     TinyUiActions.keyup(editor, Keys.escape());
   });
