@@ -5,6 +5,8 @@ import {
 import { Menu } from '@ephox/bridge';
 import { Arr, Id } from '@ephox/katamari';
 
+import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+
 const cellOverEvent = Id.generate('cell-over');
 const cellExecuteEvent = Id.generate('cell-execute');
 
@@ -69,29 +71,34 @@ const selectCells = (cells: AlloyComponent[][], selectedRow: number, selectedCol
 const makeComponents = (cells: AlloyComponent[][]): AlloySpec[] =>
   Arr.bind(cells, (cellRow) => Arr.map(cellRow, GuiFactory.premade));
 
-const makeLabelText = (row: number, col: number): PremadeSpec =>
-  GuiFactory.text(`${col}x${row}`);
-
-export const renderInsertTableMenuItem = (spec: Menu.InsertTableMenuItem): ItemTypes.WidgetItemSpec => {
+export const renderInsertTableMenuItem = (spec: Menu.InsertTableMenuItem, backstage: UiFactoryBackstage): ItemTypes.WidgetItemSpec => {
   const numRows = 10;
   const numColumns = 10;
   const sizeLabelId = Id.generate('size-label');
   const cells = makeCells(sizeLabelId, numRows, numColumns);
-  const emptyLabelText = makeLabelText(0, 0);
 
-  const memLabel = Memento.record({
+  const makeLabelText = (row: number, col: number): PremadeSpec =>
+    GuiFactory.text(`${col}x${row}`);
+
+  const makeAnnouncementText = (row: number, col: number): string =>
+    backstage.shared.providers.translate(`${col} columns x ${row} rows`);
+
+  const makeLabel = (row: number, col: number) => Memento.record({
     dom: {
       tag: 'span',
       classes: [ 'tox-insert-table-picker__label' ],
       attributes: {
-        id: sizeLabelId
+        id: sizeLabelId,
+        ['aria-label']: makeAnnouncementText(row, col)
       }
     },
-    components: [ emptyLabelText ],
+    components: [ makeLabelText(row, col) ],
     behaviours: Behaviour.derive([
       Replacing.config({})
     ])
   });
+
+  const memLabel = makeLabel(0, 0);
 
   return {
     type: 'widget',
@@ -111,12 +118,12 @@ export const renderInsertTableMenuItem = (spec: Menu.InsertTableMenuItem): ItemT
         AddEventsBehaviour.config('insert-table-picker', [
           AlloyEvents.runOnAttached((c) => {
             // Restore the empty label when opened, otherwise it may still be using an old label from last time it was opened
-            Replacing.set(memLabel.get(c), [ emptyLabelText ]);
+            Replacing.set(memLabel.get(c), [ makeLabel(0, 0).asSpec() ]);
           }),
           AlloyEvents.runWithTarget<CellEvent>(cellOverEvent, (c, t, e) => {
             const { row, col } = e.event;
             selectCells(cells, row, col, numRows, numColumns);
-            Replacing.set(memLabel.get(c), [ makeLabelText(row + 1, col + 1) ]);
+            Replacing.set(memLabel.get(c), [ makeLabel(row + 1, col + 1).asSpec() ]);
           }),
           AlloyEvents.runWithTarget<CellEvent>(cellExecuteEvent, (c, _, e) => {
             const { row, col } = e.event;
