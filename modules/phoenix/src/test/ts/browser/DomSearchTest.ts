@@ -5,8 +5,8 @@ import { Attribute, Html, Insert, InsertAll, Remove, SugarElement } from '@ephox
 import * as DomSearch from 'ephox/phoenix/api/dom/DomSearch';
 import * as DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
 
-export interface EntitiesMap {
-  [name: string]: string;
+interface EntitiesMap {
+  readonly [name: string]: string;
 }
 
 describe('browser.phoenix.api.DomSearchTest', () => {
