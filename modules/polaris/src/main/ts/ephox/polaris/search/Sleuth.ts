@@ -13,8 +13,8 @@ const removeOverlapped = <T extends PRange>(array: T[]): T[] => {
     const overlaps = Arr.exists(acc, (a) => item.start >= a.start && item.finish <= a.finish);
     const matchingStartIndex = Arr.findIndex(acc, (a) => item.start === a.start);
 
-    // If the start is not the same and it is not within the start and finish, then we skip, else we append the item
-    // If start is the same, but it's not within finish, so we take the greater finish
+    // If there's no item with matching start in acc and within the start and finish, then we append, else we skip the item
+    // If there's a matching item with the same start in the acc, but it's not within finish, so we take the greater finish
     // No need to get the ending part of the array as it's sorted, so we replace the item at the index with the greater finish item
     return matchingStartIndex.fold(() => {
       return overlaps ? acc : [ ...acc, item ];
