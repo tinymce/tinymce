@@ -63,6 +63,14 @@ const getEndPointNode = (editor: Editor, rng: Range, start: Boolean, root: Node)
     container = container.nextSibling;
   }
 
+  const findBlockAncestor = (node: Node) => {
+    while (!NodeType.isBlock(node, editor.schema.getBlockElements()) && node.parentNode && root !== node) {
+      node = node.parentNode;
+    }
+
+    return node;
+  };
+
   // The reason why the next two if statements exist is because when the root node is a table cell (possibly some other node types)
   // then the highest we can go up the dom hierarchy is one level below the table cell.
   // So what happens when we have a bunch of inline nodes and text nodes in the table cell
@@ -76,9 +84,12 @@ const getEndPointNode = (editor: Editor, rng: Range, start: Boolean, root: Node)
   const findBetterContainer = (container: Node, forward: boolean): Optional<Node> => {
     const walker = new DomTreeWalker(container, root);
     const dir = forward ? 'next' : 'prev';
+    const blockParent = SugarElement.fromDom(findBlockAncestor(container));
     let node;
     while ((node = walker[dir]())) {
-      if (!(NodeType.isVoid(editor, node) || Unicode.isZwsp(node.textContent as string) || node.textContent?.length === 0)) {
+      const suitableType = !(NodeType.isVoid(editor, node) || Unicode.isZwsp(node.textContent as string) || node.textContent?.length === 0);
+      const isWithinParent = Has.ancestor(SugarElement.fromDom(node), blockParent);
+      if (suitableType && isWithinParent) {
         return Optional.some(node);
       }
     }

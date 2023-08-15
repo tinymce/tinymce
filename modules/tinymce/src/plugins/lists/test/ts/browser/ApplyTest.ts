@@ -900,6 +900,17 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
     TinyAssertions.assertRawContent(editor, expected);
   });
 
+  it('TINY-10136: Do not list-convert too many elements', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><strong>a</strong></p><p><strong></strong></p><p><strong>b</strong></p>');
+
+    TinySelections.setCursor(editor, [ 1, 0 ], 0);
+
+    editor.execCommand('bold');
+    editor.execCommand('InsertUnorderedList');
+    TinyAssertions.assertContent(editor, '<p><strong>a</strong></p><ul><li></li></ul><p><strong>b</strong></p>');
+  });
+
   context('Parent context', () => {
     const testApplyOLAtTextPath = (inputHtml: string, path: number[], expectedHtml: string) => () => {
       const editor = hook.editor();
