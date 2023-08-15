@@ -11,20 +11,21 @@ const removeOverlapped = <T extends PRange>(array: T[]): T[] => {
 
   return Arr.foldl(sorted, (acc, item) => {
     const overlaps = Arr.exists(acc, (a) => item.start >= a.start && item.finish <= a.finish);
-    const matchingStartIndex = Arr.findIndex(acc, (a) => item.start === a.start).getOr(-1);
+    const matchingStartIndex = Arr.findIndex(acc, (a) => item.start === a.start);
 
-    if (!overlaps && matchingStartIndex === -1) {
-      return [ ...acc, item ];
-    }
-
-    // We want to take the greater finish point in the acc if the start matches
-    if (matchingStartIndex !== -1 && item.finish > acc[matchingStartIndex].finish) {
-      const before = acc.slice(0, matchingStartIndex);
-      const after = acc.slice(matchingStartIndex + 1);
-      return [ ...before, item, ...after ];
-    }
-
-    return acc;
+    // If the start is not the same and it is not within the start and finish, then we skip, else we append the item
+    // If start is the same, but it's not within finish, so we take the greater finish
+    // No need to get the ending part of the array as it's sorted, so we replace the item at the index with the greater finish item
+    return matchingStartIndex.fold(() => {
+      return overlaps ? acc : [ ...acc, item ];
+    },
+    (index) => {
+      if (item.finish > acc[index].finish) {
+        const before = acc.slice(0, index);
+        return [ ...before, item ];
+      }
+      return acc;
+    });
   }, [] as T[]);
 };
 
