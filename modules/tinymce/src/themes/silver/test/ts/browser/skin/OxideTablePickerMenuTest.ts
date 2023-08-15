@@ -36,7 +36,7 @@ const insertTablePickerApprox = (s: ApproxStructure.StructApi, str: ApproxStruct
                 classes: [ arr.has('tox-insert-table-picker') ],
                 children: tableCellsApprox(s, str, arr, selectedRows, selectedCols).concat(s.element('span', {
                   classes: [ arr.has('tox-insert-table-picker__label') ],
-                  html: str.is(`${selectedCols}x${selectedRows}`)
+                  html: str.is(`${selectedCols} columns and ${selectedRows} rows`)
                 }))
               })
             ]

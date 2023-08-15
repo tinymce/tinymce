@@ -78,27 +78,23 @@ export const renderInsertTableMenuItem = (spec: Menu.InsertTableMenuItem, backst
   const cells = makeCells(sizeLabelId, numRows, numColumns);
 
   const makeLabelText = (row: number, col: number): PremadeSpec =>
-    GuiFactory.text(`${col}x${row}`);
+    GuiFactory.text(backstage.shared.providers.translate(`${col} columns and ${row} rows`));
 
-  const makeAnnouncementText = (row: number, col: number): string =>
-    backstage.shared.providers.translate(`${col} columns x ${row} rows`);
+  const emptyLabelText = makeLabelText(0, 0);
 
-  const makeLabel = (row: number, col: number) => Memento.record({
+  const memLabel = Memento.record({
     dom: {
       tag: 'span',
       classes: [ 'tox-insert-table-picker__label' ],
       attributes: {
-        id: sizeLabelId,
-        ['aria-label']: makeAnnouncementText(row, col)
+        id: sizeLabelId
       }
     },
-    components: [ makeLabelText(row, col) ],
+    components: [ emptyLabelText ],
     behaviours: Behaviour.derive([
       Replacing.config({})
     ])
   });
-
-  const memLabel = makeLabel(0, 0);
 
   return {
     type: 'widget',
@@ -118,12 +114,13 @@ export const renderInsertTableMenuItem = (spec: Menu.InsertTableMenuItem, backst
         AddEventsBehaviour.config('insert-table-picker', [
           AlloyEvents.runOnAttached((c) => {
             // Restore the empty label when opened, otherwise it may still be using an old label from last time it was opened
-            Replacing.set(memLabel.get(c), [ makeLabel(0, 0).asSpec() ]);
+            Replacing.set(memLabel.get(c), [ emptyLabelText ]);
           }),
           AlloyEvents.runWithTarget<CellEvent>(cellOverEvent, (c, t, e) => {
             const { row, col } = e.event;
             selectCells(cells, row, col, numRows, numColumns);
-            Replacing.set(memLabel.get(c), [ makeLabel(row + 1, col + 1).asSpec() ]);
+            const labelComp = memLabel.get(c);
+            Replacing.set(labelComp, [ makeLabelText(row + 1, col + 1) ]);
           }),
           AlloyEvents.runWithTarget<CellEvent>(cellExecuteEvent, (c, _, e) => {
             const { row, col } = e.event;
