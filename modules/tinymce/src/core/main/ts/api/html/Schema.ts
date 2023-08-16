@@ -5,6 +5,7 @@ import { SchemaType, Attribute, AttributePattern, ElementSettings, SchemaElement
 import * as SchemaUtils from '../../schema/SchemaUtils';
 import Tools from '../util/Tools';
 
+// TODO: Remove this debugging code before PR
 Global.getSchema = SchemaLookupTableCache.getLookupTable;
 
 export * from '../../schema/SchemaTypes';
