@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In some cases pressing enter would scroll the entire page. #TINY-9828
 - The border styles of a table were incorrectly split into a longhand form after table dialog updates. #TINY-9843
 - Links in `help dialog` -> `plugins` and `version` were not navigable via keyboard. #TINY-10071
+- The `color_cols` option was not respected when set to the value 5 with a custom `color_map` specified. #TINY-10126
 
 ## 6.6.2 - 2023-08-09
 

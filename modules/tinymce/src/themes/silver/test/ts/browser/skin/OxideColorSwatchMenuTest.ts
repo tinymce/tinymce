@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
-import { before, describe, it } from '@ephox/bedrock-client';
+import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -138,7 +138,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
     ':focus { transform: scale(0.8) }'
   ]);
 
-  before(() => {
+  beforeEach(() => {
     LocalStorage.clear();
   });
 
@@ -292,6 +292,19 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
     closeBackcolorMenu();
   });
 
+  it('TINY-9497: Opening the menu with different colors should display in the menu', async () => {
+    const editor = hook.editor();
+
+    editor.setContent('<p>black</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2, true);
+    await pOpenAndGetMenuColorMenu(editor);
+    await UiFinder.pWaitFor('The color should be black in the icon', TinyUiActions.getUiRoot(editor), 'path[class="tox-icon-highlight-bg-color__color"][fill="#000000"]');
+    TinyUiActions.clickOnUi(editor, '[role="menuitemradio"][title="red"]');
+    await pOpenAndGetMenuColorMenu(editor);
+    await UiFinder.pWaitFor('The color should be red in the icon', TinyUiActions.getUiRoot(editor), 'path[class="tox-icon-highlight-bg-color__color"][fill="#E03E2D"]');
+    closeMenuColorMenu(editor);
+  });
+
   it('TINY-9439: selecting color from menubar is successfully marked', async () => {
     const editor = hook.editor();
     editor.setContent('<p>black</p><p style="color: rgb(224, 62, 45);">red</p>');
@@ -307,18 +320,5 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
     await openAndGetForecolorMenu();
     assertFocusIsOnColor('rgb(236, 240, 241)');
     await pCloseMenuForecolorMenu(editor);
-  });
-
-  it('TINY-9497: Opening the menu with different colors should display in the menu', async () => {
-    const editor = hook.editor();
-
-    editor.setContent('<p>black</p>');
-    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2, true);
-    await pOpenAndGetMenuColorMenu(editor);
-    await UiFinder.pWaitFor('The color should be black in the icon', TinyUiActions.getUiRoot(editor), 'path[class="tox-icon-highlight-bg-color__color"][fill="#000000"]');
-    TinyUiActions.clickOnUi(editor, '[role="menuitemradio"][title="red"]');
-    await pOpenAndGetMenuColorMenu(editor);
-    await UiFinder.pWaitFor('The color should be red in the icon', TinyUiActions.getUiRoot(editor), 'path[class="tox-icon-highlight-bg-color__color"][fill="#E03E2D"]');
-    closeMenuColorMenu(editor);
   });
 });
