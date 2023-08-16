@@ -197,54 +197,43 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
 
   // Adds custom non HTML elements to the schema
   const addCustomElements = (customElements: string | undefined) => {
-    const customElementRegExp = /^(~)?(.+)$/;
+    // Flush cached items since we are altering the default maps
+    delete mapCache.text_block_elements;
+    delete mapCache.block_elements;
 
-    if (customElements) {
-      // Flush cached items since we are altering the default maps
-      delete mapCache.text_block_elements;
-      delete mapCache.block_elements;
+    Arr.each(SchemaRuleParser.parseCustomElementsRules(customElements ?? ''), ({ inline, name, cloneName }) => {
+      children[name] = children[cloneName];
+      customElementsMap[name] = cloneName;
 
-      each(SchemaUtils.split(customElements, ','), (rule) => {
-        const matches = customElementRegExp.exec(rule);
-        if (matches) {
-          const inline = matches[1] === '~';
-          const cloneName = inline ? 'span' : 'div';
-          const name = matches[2];
+      // Treat all custom elements as being non-empty by default
+      nonEmptyElementsMap[name.toUpperCase()] = {};
+      nonEmptyElementsMap[name] = {};
 
-          children[name] = children[cloneName];
-          customElementsMap[name] = cloneName;
+      // If it's not marked as inline then add it to valid block elements
+      if (!inline) {
+        blockElementsMap[name.toUpperCase()] = {};
+        blockElementsMap[name] = {};
+      }
 
-          // Treat all custom elements as being non-empty by default
-          nonEmptyElementsMap[name.toUpperCase()] = {};
-          nonEmptyElementsMap[name] = {};
+      // Add elements clone if needed
+      if (!elements[name]) {
+        let customRule = elements[cloneName];
 
-          // If it's not marked as inline then add it to valid block elements
-          if (!inline) {
-            blockElementsMap[name.toUpperCase()] = {};
-            blockElementsMap[name] = {};
-          }
+        customRule = extend({}, customRule);
+        delete customRule.removeEmptyAttrs;
+        delete customRule.removeEmpty;
 
-          // Add elements clone if needed
-          if (!elements[name]) {
-            let customRule = elements[cloneName];
+        elements[name] = customRule;
+      }
 
-            customRule = extend({}, customRule);
-            delete customRule.removeEmptyAttrs;
-            delete customRule.removeEmpty;
-
-            elements[name] = customRule;
-          }
-
-          // Add custom elements at span/div positions
-          each(children, (element, elmName) => {
-            if (element[cloneName]) {
-              children[elmName] = element = extend({}, children[elmName]);
-              element[name] = element[cloneName];
-            }
-          });
+      // Add custom elements at span/div positions
+      Obj.each(children, (element, elmName) => {
+        if (element[cloneName]) {
+          children[elmName] = element = extend({}, children[elmName]);
+          element[name] = element[cloneName];
         }
       });
-    }
+    });
   };
 
   // Adds valid children to the schema object
