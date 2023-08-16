@@ -1,7 +1,9 @@
 import { Arr, Fun, Obj, Type, Global, Optional } from '@ephox/katamari';
 
+import * as CustomElementsRuleParser from '../../schema/CustomElementsRuleParser';
+import * as ValidElementsRuleParser from '../../schema/ValidElementsRuleParser';
+import * as ValidChildrenRuleParser from '../../schema/ValidChildrenRuleParser';
 import * as SchemaLookupTableCache from '../../schema/SchemaLookupTableCache';
-import * as SchemaRuleParser from '../../schema/SchemaRuleParser';
 import { SchemaType, ElementSettings, SchemaElement, SchemaMap, SchemaRegExpMap, SchemaSettings } from '../../schema/SchemaTypes';
 import * as SchemaUtils from '../../schema/SchemaUtils';
 import Tools from '../util/Tools';
@@ -168,7 +170,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     const globalElement = Optional.from(elements['@']);
     const hasPatternsRegExp = /[*?+]/;
 
-    Arr.each(SchemaRuleParser.parseValidElementsRules(globalElement, validElements ?? ''), ({ name, element, outputName }) => {
+    Arr.each(ValidElementsRuleParser.parseValidElementsRules(globalElement, validElements ?? ''), ({ name, element, outputName }) => {
       if (outputName) {
         elements[outputName] = element;
       }
@@ -201,7 +203,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     delete mapCache.text_block_elements;
     delete mapCache.block_elements;
 
-    Arr.each(SchemaRuleParser.parseCustomElementsRules(customElements ?? ''), ({ inline, name, cloneName }) => {
+    Arr.each(CustomElementsRuleParser.parseCustomElementsRules(customElements ?? ''), ({ inline, name, cloneName }) => {
       children[name] = children[cloneName];
       customElementsMap[name] = cloneName;
 
@@ -238,7 +240,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
 
   // Adds valid children to the schema object
   const addValidChildren = (validChildren: string | undefined) => {
-    Arr.each(SchemaRuleParser.parseValidChildrenRules(validChildren ?? ''), ({ operation, name, validChildren }) => {
+    Arr.each(ValidChildrenRuleParser.parseValidChildrenRules(validChildren ?? ''), ({ operation, name, validChildren }) => {
       // We need to clone here since it might be pointing to a cached schema reference
       const parent = operation === 'replace' ? { '#comment': {}} : Obj.map(children[name], Fun.identity);
 

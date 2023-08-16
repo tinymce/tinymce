@@ -4,62 +4,11 @@ import Tools from '../api/util/Tools';
 import { Attribute, AttributePattern, SchemaElement } from './SchemaTypes';
 import * as SchemaUtils from './SchemaUtils';
 
-export interface CustomElementRules {
-  readonly inline: boolean;
-  readonly cloneName: 'div' | 'span';
-  readonly name: string;
-}
-
-export type ValidChildrenOperation = 'replace' | 'add' | 'remove';
-
-export interface ValidChildrenRule {
-  readonly operation: ValidChildrenOperation;
-  readonly name: string;
-  readonly validChildren: string[];
-}
-
 export interface SchemaElementPair {
   readonly name: string;
   readonly element: SchemaElement;
   readonly outputName?: string;
 }
-
-export const parseCustomElementsRules = (value: string): CustomElementRules[] => {
-  const customElementRegExp = /^(~)?(.+)$/;
-  return Arr.bind(SchemaUtils.split(value, ','), (rule) => {
-    const matches = customElementRegExp.exec(rule);
-    if (matches) {
-      const inline = matches[1] === '~';
-      const cloneName = inline ? 'span' : 'div';
-      const name = matches[2];
-
-      return [{ inline, cloneName, name }];
-    } else {
-      return [];
-    }
-  });
-};
-
-const prefixToOperation = (prefix: string): ValidChildrenOperation => prefix === '-' ? 'remove' : 'add';
-
-export const parseValidChildrenRules = (value: string): ValidChildrenRule[] => {
-  // see: https://html.spec.whatwg.org/#valid-custom-element-name
-  const childRuleRegExp = /^([+\-]?)([A-Za-z0-9_\-.\u00b7\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u037d\u037f-\u1fff\u200c-\u200d\u203f-\u2040\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd]+)\[([^\]]+)]$/; // from w3c's custom grammar (above)
-  return Arr.bind(SchemaUtils.split(value, ','), (rule) => {
-    const matches = childRuleRegExp.exec(rule);
-
-    if (matches) {
-      const prefix = matches[1];
-      const operation = prefix ? prefixToOperation(prefix) : 'replace';
-      const name = matches[2];
-      const validChildren = SchemaUtils.split(matches[3], '|');
-
-      return [{ operation, name, validChildren }];
-    } else {
-      return [];
-    }
-  });
-};
 
 const parseValidElementsAttrDataIntoElement = (attrData: string, targetElement: SchemaElement) => {
   const attrRuleRegExp = /^([!\-])?(\w+[\\:]:\w+|[^=~<]+)?(?:([=~<])(.*))?$/;
@@ -144,12 +93,9 @@ export const parseValidElementsRules = (globalElement: Optional<SchemaElement>, 
       const attrsPrefix = matches[4];
       const attrData = matches[5];
 
-      const attributes: Record<string, Attribute> = {};
-      const attributesOrder: string[] = [];
-
       const element: SchemaElement = {
-        attributes,
-        attributesOrder
+        attributes: {},
+        attributesOrder: []
       };
 
       globalElement.each((el) => cloneAttributesInto(el, element));
@@ -178,9 +124,10 @@ export const parseValidElementsRules = (globalElement: Optional<SchemaElement>, 
         globalElement = Optional.some(element);
       }
 
-      return [{ name: elementName, element, outputName }];
+      return [ outputName ? { name: elementName, element, outputName } : { name: elementName, element } ];
     } else {
       return [];
     }
   });
 };
+
