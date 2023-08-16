@@ -1,7 +1,8 @@
-import { Arr, Fun, Obj, Type, Global } from '@ephox/katamari';
+import { Arr, Fun, Obj, Type, Global, Optional } from '@ephox/katamari';
 
 import * as SchemaLookupTableCache from '../../schema/SchemaLookupTableCache';
-import { SchemaType, Attribute, AttributePattern, ElementSettings, SchemaElement, SchemaMap, SchemaRegExpMap, SchemaSettings } from '../../schema/SchemaTypes';
+import * as SchemaRuleParser from '../../schema/SchemaRuleParser';
+import { SchemaType, ElementSettings, SchemaElement, SchemaMap, SchemaRegExpMap, SchemaSettings } from '../../schema/SchemaTypes';
 import * as SchemaUtils from '../../schema/SchemaUtils';
 import Tools from '../util/Tools';
 
@@ -54,7 +55,7 @@ interface Schema {
  */
 
 const mapCache: Record<string, SchemaMap> = {};
-const makeMap = Tools.makeMap, each = Tools.each, extend = Tools.extend, explode = Tools.explode, inArray = Tools.inArray;
+const makeMap = Tools.makeMap, each = Tools.each, extend = Tools.extend, explode = Tools.explode;
 
 const createMap = (defaultValue: string, extendWith: SchemaMap = {}): SchemaMap => {
   const value = makeMap(defaultValue, ' ', makeMap(defaultValue.toUpperCase(), ' '));
@@ -165,156 +166,23 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
   // Parses the specified valid_elements string and adds to the current rules
   // This function is a bit hard to read since it's heavily optimized for speed
   const addValidElements = (validElements: string | undefined) => {
-    const elementRuleRegExp = /^([#+\-])?([^\[!\/]+)(?:\/([^\[!]+))?(?:(!?)\[([^\]]+)])?$/;
-    const attrRuleRegExp = /^([!\-])?(\w+[\\:]:\w+|[^=~<]+)?(?:([=~<])(.*))?$/;
+    const globalElement = Optional.from(elements['@']);
     const hasPatternsRegExp = /[*?+]/;
 
-    if (validElements) {
-      // Split valid elements into an array with rules
-      const validElementsArr = SchemaUtils.split(validElements, ',');
-
-      let globalAttributes: Record<string, Attribute> | undefined;
-      let globalAttributesOrder: string[] | undefined;
-      if (elements['@']) {
-        globalAttributes = elements['@'].attributes;
-        globalAttributesOrder = elements['@'].attributesOrder;
+    Arr.each(SchemaRuleParser.parseValidElementsRules(globalElement, validElements ?? ''), ({ name, element }) => {
+      if (element.outputName) {
+        elements[element.outputName] = element;
       }
 
-      // Loop all rules
-      for (let ei = 0, el = validElementsArr.length; ei < el; ei++) {
-        // Parse element rule
-        let matches = elementRuleRegExp.exec(validElementsArr[ei]);
-        if (matches) {
-          // Setup local names for matches
-          const prefix = matches[1];
-          const elementName = matches[2];
-          const outputName = matches[3];
-          const attrData = matches[5];
-
-          // Create new attributes and attributesOrder
-          const attributes: Record<string, Attribute> = {};
-          const attributesOrder: string[] = [];
-
-          // Create the new element
-          const element = {
-            attributes,
-            attributesOrder
-          } as SchemaElement;
-
-          // Padd empty elements prefix
-          if (prefix === '#') {
-            element.paddEmpty = true;
-          }
-
-          // Remove empty elements prefix
-          if (prefix === '-') {
-            element.removeEmpty = true;
-          }
-
-          if (matches[4] === '!') {
-            element.removeEmptyAttrs = true;
-          }
-
-          // Copy attributes from global rule into current rule
-          if (globalAttributes) {
-            Obj.each(globalAttributes, (value, key) => {
-              attributes[key] = value;
-            });
-
-            if (globalAttributesOrder) {
-              attributesOrder.push(...globalAttributesOrder);
-            }
-          }
-
-          // Attributes defined
-          if (attrData) {
-            const attrDatas = SchemaUtils.split(attrData, '|');
-            for (let ai = 0, al = attrDatas.length; ai < al; ai++) {
-              matches = attrRuleRegExp.exec(attrDatas[ai]);
-              if (matches) {
-                const attr: Attribute = {};
-                const attrType = matches[1];
-                const attrName = matches[2].replace(/[\\:]:/g, ':');
-                const attrPrefix = matches[3];
-                const value = matches[4];
-
-                // Required
-                if (attrType === '!') {
-                  element.attributesRequired = element.attributesRequired || [];
-                  element.attributesRequired.push(attrName);
-                  attr.required = true;
-                }
-
-                // Denied from global
-                if (attrType === '-') {
-                  delete attributes[attrName];
-                  attributesOrder.splice(inArray(attributesOrder, attrName), 1);
-                  continue;
-                }
-
-                // Default value
-                if (attrPrefix) {
-                  // Default value
-                  if (attrPrefix === '=') {
-                    element.attributesDefault = element.attributesDefault || [];
-                    element.attributesDefault.push({ name: attrName, value });
-                    attr.defaultValue = value;
-                  }
-
-                  // Forced value
-                  if (attrPrefix === '~') {
-                    element.attributesForced = element.attributesForced || [];
-                    element.attributesForced.push({ name: attrName, value });
-                    attr.forcedValue = value;
-                  }
-
-                  // Required values
-                  if (attrPrefix === '<') {
-                    attr.validValues = makeMap(value, '?');
-                  }
-                }
-
-                // Check for attribute patterns
-                if (hasPatternsRegExp.test(attrName)) {
-                  const attrPattern = attr as AttributePattern;
-                  element.attributePatterns = element.attributePatterns || [];
-                  attrPattern.pattern = SchemaUtils.patternToRegExp(attrName);
-                  element.attributePatterns.push(attrPattern);
-                } else {
-                  // Add attribute to order list if it doesn't already exist
-                  if (!attributes[attrName]) {
-                    attributesOrder.push(attrName);
-                  }
-
-                  attributes[attrName] = attr;
-                }
-              }
-            }
-          }
-
-          // Global rule, store away these for later usage
-          if (!globalAttributes && elementName === '@') {
-            globalAttributes = attributes;
-            globalAttributesOrder = attributesOrder;
-          }
-
-          // Handle substitute elements such as b/strong
-          if (outputName) {
-            element.outputName = elementName;
-            elements[outputName] = element;
-          }
-
-          // Add pattern or exact element
-          if (hasPatternsRegExp.test(elementName)) {
-            const patternElement = element as (SchemaElement & { pattern: RegExp });
-            patternElement.pattern = SchemaUtils.patternToRegExp(elementName);
-            patternElements.push(patternElement);
-          } else {
-            elements[elementName] = element;
-          }
-        }
+      // Add pattern or exact element
+      if (hasPatternsRegExp.test(name)) {
+        const patternElement = element as (SchemaElement & { pattern: RegExp });
+        patternElement.pattern = SchemaUtils.patternToRegExp(name);
+        patternElements.push(patternElement);
+      } else {
+        elements[name] = element;
       }
-    }
+    });
   };
 
   const setValidElements = (validElements: string) => {
