@@ -15,7 +15,7 @@ export type ValidChildrenOperation = 'replace' | 'add' | 'remove';
 export interface ValidChildrenRule {
   readonly operation: ValidChildrenOperation;
   readonly name: string;
-  readonly children: string[];
+  readonly validChildren: string[];
 }
 
 export interface SchemaElementPair {
@@ -52,9 +52,9 @@ export const parseValidChildrenRules = (value: string): ValidChildrenRule[] => {
       const prefix = matches[1];
       const operation = prefix ? prefixToOperation(prefix) : 'replace';
       const name = matches[2];
-      const children = SchemaUtils.split(matches[3], '|');
+      const validChildren = SchemaUtils.split(matches[3], '|');
 
-      return [{ operation, name, children }];
+      return [{ operation, name, validChildren }];
     } else {
       return [];
     }

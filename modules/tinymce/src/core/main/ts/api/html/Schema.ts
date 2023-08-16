@@ -249,32 +249,20 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
 
   // Adds valid children to the schema object
   const addValidChildren = (validChildren: string | undefined) => {
-    // see: https://html.spec.whatwg.org/#valid-custom-element-name
-    const childRuleRegExp = /^([+\-]?)([A-Za-z0-9_\-.\u00b7\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u037d\u037f-\u1fff\u200c-\u200d\u203f-\u2040\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd]+)\[([^\]]+)]$/; // from w3c's custom grammar (above)
+    Arr.each(SchemaRuleParser.parseValidChildrenRules(validChildren ?? ''), ({ operation, name, validChildren }) => {
+      // We need to clone here since it might be pointing to a cached schema reference
+      const parent = operation === 'replace' ? { '#comment': {}} : Obj.map(children[name], Fun.identity);
 
-    if (validChildren) {
-      each(SchemaUtils.split(validChildren, ','), (rule) => {
-        const matches = childRuleRegExp.exec(rule);
-
-        if (matches) {
-          const prefix = matches[1];
-          const name = matches[2];
-
-          // We need to clone here since it might be pointing to a cached schema reference
-          const parent = prefix ? Obj.map(children[name], Fun.identity) : { '#comment': {}};
-
-          each(SchemaUtils.split(matches[3], '|'), (child) => {
-            if (prefix === '-') {
-              delete parent[child];
-            } else {
-              parent[child] = {};
-            }
-          });
-
-          children[name] = parent;
+      Arr.each(validChildren, (child) => {
+        if (operation === 'remove') {
+          delete parent[child];
+        } else {
+          parent[child] = {};
         }
       });
-    }
+
+      children[name] = parent;
+    });
   };
 
   const getElementRule = (name: string): SchemaElement | undefined => {
