@@ -7,7 +7,7 @@ import * as SchemaUtils from './SchemaUtils';
 export interface SchemaElementPair {
   readonly name: string;
   readonly element: SchemaElement;
-  readonly outputName?: string;
+  readonly aliasName?: string;
 }
 
 const parseValidElementsAttrDataIntoElement = (attrData: string, targetElement: SchemaElement) => {
@@ -120,11 +120,16 @@ export const parseValidElementsRules = (globalElement: Optional<SchemaElement>, 
       }
 
       // Mutate the local globalElement option state if we find a global @ rule
-      if (globalElement.isNone() && elementName === '@') {
-        globalElement = Optional.some(element);
+      if (elementName === '@') {
+        // We only care about the first one
+        if (globalElement.isNone()) {
+          globalElement = Optional.some(element);
+        } else {
+          return [];
+        }
       }
 
-      return [ outputName ? { name: elementName, element, outputName } : { name: elementName, element } ];
+      return [ outputName ? { name: elementName, element, aliasName: outputName } : { name: elementName, element } ];
     } else {
       return [];
     }

@@ -170,9 +170,9 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     const globalElement = Optional.from(elements['@']);
     const hasPatternsRegExp = /[*?+]/;
 
-    Arr.each(ValidElementsRuleParser.parseValidElementsRules(globalElement, validElements ?? ''), ({ name, element, outputName }) => {
-      if (outputName) {
-        elements[outputName] = element;
+    Arr.each(ValidElementsRuleParser.parseValidElementsRules(globalElement, validElements ?? ''), ({ name, element, aliasName }) => {
+      if (aliasName) {
+        elements[aliasName] = element;
       }
 
       // Add pattern or exact element
