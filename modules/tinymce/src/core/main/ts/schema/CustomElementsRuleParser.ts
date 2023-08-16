@@ -2,13 +2,13 @@ import { Arr } from '@ephox/katamari';
 
 import * as SchemaUtils from './SchemaUtils';
 
-export interface CustomElementRules {
+export interface CustomElementRule {
   readonly inline: boolean;
   readonly cloneName: 'div' | 'span';
   readonly name: string;
 }
 
-export const parseCustomElementsRules = (value: string): CustomElementRules[] => {
+export const parseCustomElementsRules = (value: string): CustomElementRule[] => {
   const customElementRegExp = /^(~)?(.+)$/;
   return Arr.bind(SchemaUtils.split(value, ','), (rule) => {
     const matches = customElementRegExp.exec(rule);
