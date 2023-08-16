@@ -161,9 +161,6 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     specialElements[name] = new RegExp('<\/' + name + '[^>]*>', 'gi');
   });
 
-  // Converts a wildcard expression string to a regexp for example *a will become /.*a/.
-  const patternToRegExp = (str: string) => new RegExp('^' + str.replace(/([?+*])/g, '.$1') + '$');
-
   // Parses the specified valid_elements string and adds to the current rules
   // This function is a bit hard to read since it's heavily optimized for speed
   const addValidElements = (validElements: string | undefined) => {
@@ -280,7 +277,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
                 if (hasPatternsRegExp.test(attrName)) {
                   const attrPattern = attr as AttributePattern;
                   element.attributePatterns = element.attributePatterns || [];
-                  attrPattern.pattern = patternToRegExp(attrName);
+                  attrPattern.pattern = SchemaUtils.patternToRegExp(attrName);
                   element.attributePatterns.push(attrPattern);
                 } else {
                   // Add attribute to order list if it doesn't already exist
@@ -309,7 +306,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
           // Add pattern or exact element
           if (hasPatternsRegExp.test(elementName)) {
             const patternElement = element as (SchemaElement & { pattern: RegExp });
-            patternElement.pattern = patternToRegExp(elementName);
+            patternElement.pattern = SchemaUtils.patternToRegExp(elementName);
             patternElements.push(patternElement);
           } else {
             elements[elementName] = element;

@@ -5,3 +5,6 @@ export const split = (items: string | undefined, delim?: string): string[] => {
   return items ? items.split(delim || ' ') : [];
 };
 
+// Converts a wildcard expression string to a regexp for example *a will become /.*a/.
+export const patternToRegExp = (str: string): RegExp => new RegExp('^' + str.replace(/([?+*])/g, '.$1') + '$');
+
