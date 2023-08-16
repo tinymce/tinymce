@@ -261,11 +261,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
           const name = matches[2];
 
           // We need to clone here since it might be pointing to a cached schema reference
-          const parent = Obj.map(children[name], Fun.identity);
-
-          if (!prefix) {
-            parent[name] = { '#comment': {}};
-          }
+          const parent = prefix ? Obj.map(children[name], Fun.identity) : { '#comment': {}};
 
           each(SchemaUtils.split(matches[3], '|'), (child) => {
             if (prefix === '-') {
