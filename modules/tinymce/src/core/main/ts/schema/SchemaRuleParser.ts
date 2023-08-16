@@ -21,6 +21,7 @@ export interface ValidChildrenRule {
 export interface SchemaElementPair {
   readonly name: string;
   readonly element: SchemaElement;
+  readonly outputName?: string;
 }
 
 export const parseCustomElementsRules = (value: string): CustomElementRules[] => {
@@ -177,7 +178,7 @@ export const parseValidElementsRules = (globalElement: Optional<SchemaElement>, 
         globalElement = Optional.some(element);
       }
 
-      return [{ name: elementName, element }];
+      return [{ name: elementName, element, outputName }];
     } else {
       return [];
     }

@@ -164,14 +164,13 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
   });
 
   // Parses the specified valid_elements string and adds to the current rules
-  // This function is a bit hard to read since it's heavily optimized for speed
   const addValidElements = (validElements: string | undefined) => {
     const globalElement = Optional.from(elements['@']);
     const hasPatternsRegExp = /[*?+]/;
 
-    Arr.each(SchemaRuleParser.parseValidElementsRules(globalElement, validElements ?? ''), ({ name, element }) => {
-      if (element.outputName) {
-        elements[element.outputName] = element;
+    Arr.each(SchemaRuleParser.parseValidElementsRules(globalElement, validElements ?? ''), ({ name, element, outputName }) => {
+      if (outputName) {
+        elements[outputName] = element;
       }
 
       // Add pattern or exact element
