@@ -1,11 +1,11 @@
 import { Arr, Fun, Obj, Type, Global, Optional } from '@ephox/katamari';
 
 import * as CustomElementsRuleParser from '../../schema/CustomElementsRuleParser';
-import * as ValidElementsRuleParser from '../../schema/ValidElementsRuleParser';
-import * as ValidChildrenRuleParser from '../../schema/ValidChildrenRuleParser';
 import * as SchemaLookupTableCache from '../../schema/SchemaLookupTableCache';
 import { SchemaType, ElementSettings, SchemaElement, SchemaMap, SchemaRegExpMap, SchemaSettings } from '../../schema/SchemaTypes';
 import * as SchemaUtils from '../../schema/SchemaUtils';
+import * as ValidChildrenRuleParser from '../../schema/ValidChildrenRuleParser';
+import * as ValidElementsRuleParser from '../../schema/ValidElementsRuleParser';
 import Tools from '../util/Tools';
 
 // TODO: Remove this debugging code before PR
