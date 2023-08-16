@@ -13,7 +13,7 @@ export interface SchemaLookupTable {
 }
 
 export const makeSchema = (type: SchemaType): SchemaLookupTable => {
-  const { globalAttributes, phrasingContent, flowContent } = SchemaElementSets.getElementSets(type);
+  const { globalAttributes, phrasingContent, flowContent } = SchemaElementSets.getElementSetsAsStrings(type);
   const schema: SchemaLookupTable = {};
 
   const add = (name: string, attributes: string = '', children: string = '') => {

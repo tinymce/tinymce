@@ -1,13 +1,13 @@
 import { SchemaType } from './SchemaTypes';
 
-export interface ElementSets {
-  globalAttributes: string;
-  blockContent: string;
-  phrasingContent: string;
-  flowContent: string;
+export interface ElementSets<T> {
+  globalAttributes: T;
+  blockContent: T;
+  phrasingContent: T;
+  flowContent: T;
 }
 
-export const getElementSets = (type: SchemaType): ElementSets => {
+export const getElementSetsAsStrings = (type: SchemaType): ElementSets<string> => {
   let globalAttributes: string, blockContent: string;
   let phrasingContent: string, flowContent: string | undefined;
 
@@ -53,4 +53,3 @@ export const getElementSets = (type: SchemaType): ElementSets => {
 
   return { globalAttributes, blockContent, phrasingContent, flowContent };
 };
-
