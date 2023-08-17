@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+- `Search.findmany` now removes overlapped indices. #TINY-10062
+
 ## 6.2.0 - 2023-06-12
 
 ### Added
