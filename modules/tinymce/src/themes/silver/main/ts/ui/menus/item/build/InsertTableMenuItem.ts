@@ -15,7 +15,10 @@ interface CellEvent extends CustomEvent {
   readonly row: number;
 }
 
-const makeCell = (row: number, col: number, labelId: string): AlloyComponent => {
+const makeAnnouncementText = (backstage: UiFactoryBackstage) => (row: number, col: number): string =>
+  backstage.shared.providers.translate(`${col} columns, ${row} rows`);
+
+const makeCell = (row: number, col: number, label: string): AlloyComponent => {
   const emitCellOver = (c: AlloyComponent) => AlloyTriggers.emitWith(c, cellOverEvent, { row, col } );
   const emitExecute = (c: AlloyComponent) => AlloyTriggers.emitWith(c, cellExecuteEvent, { row, col } );
 
@@ -29,7 +32,7 @@ const makeCell = (row: number, col: number, labelId: string): AlloyComponent => 
       tag: 'div',
       attributes: {
         role: 'button',
-        ['aria-labelledby']: labelId
+        ['aria-label']: label
       }
     },
     behaviours: Behaviour.derive([
@@ -48,12 +51,13 @@ const makeCell = (row: number, col: number, labelId: string): AlloyComponent => 
   });
 };
 
-const makeCells = (labelId: string, numRows: number, numCols: number): AlloyComponent[][] => {
+const makeCells = (getCellLabel: (r: number, c: number) => string, numRows: number, numCols: number): AlloyComponent[][] => {
   const cells: AlloyComponent[][] = [];
   for (let i = 0; i < numRows; i++) {
     const row = [];
     for (let j = 0; j < numCols; j++) {
-      row.push(makeCell(i, j, labelId));
+      const label = getCellLabel(i + 1, j + 1);
+      row.push(makeCell(i, j, label));
     }
     cells.push(row);
   }
@@ -74,14 +78,11 @@ const makeComponents = (cells: AlloyComponent[][]): AlloySpec[] =>
 export const renderInsertTableMenuItem = (spec: Menu.InsertTableMenuItem, backstage: UiFactoryBackstage): ItemTypes.WidgetItemSpec => {
   const numRows = 10;
   const numColumns = 10;
-  const sizeLabelId = Id.generate('size-label');
-  const cells = makeCells(sizeLabelId, numRows, numColumns);
+  const getCellLabel = makeAnnouncementText(backstage);
+  const cells = makeCells(getCellLabel, numRows, numColumns);
 
-  const makeLabelText = (row: number, col: number): PremadeSpec => {
-    // TINY-10141: Add each of these strings to be translated?
-    const labelText = backstage.shared.providers.translate(`${col} ${col === 1 ? 'column' : 'columns'} and ${row} ${row === 1 ? 'row' : 'rows'}`);
-    return GuiFactory.text(labelText);
-  };
+  const makeLabelText = (row: number, col: number): PremadeSpec =>
+    GuiFactory.text(`${col}x${row}`);
 
   const emptyLabelText = makeLabelText(0, 0);
 
@@ -89,9 +90,6 @@ export const renderInsertTableMenuItem = (spec: Menu.InsertTableMenuItem, backst
     dom: {
       tag: 'span',
       classes: [ 'tox-insert-table-picker__label' ],
-      attributes: {
-        id: sizeLabelId
-      }
     },
     components: [ emptyLabelText ],
     behaviours: Behaviour.derive([

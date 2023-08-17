@@ -13,7 +13,8 @@ const tableCellsApprox = (s: ApproxStructure.StructApi, str: ApproxStructure.Str
     for (let j = 1; j <= 10; j++) {
       cells.push(s.element('div', {
         attrs: {
-          role: str.is('button')
+          role: str.is('button'),
+          ['aria-label']: str.is(`${j} columns, ${i} rows`)
         },
         classes: i <= selectedRows && j <= selectedCols ? [ arr.has('tox-insert-table-picker__selected') ] : [ arr.not('tox-insert-table-picker__selected') ]
       }));
@@ -21,9 +22,6 @@ const tableCellsApprox = (s: ApproxStructure.StructApi, str: ApproxStructure.Str
   }
   return cells;
 };
-
-const expectedLabelText = (cols: number, rows: number) =>
-  `${cols} ${cols === 1 ? 'column' : 'columns'} and ${rows} ${rows === 1 ? 'row' : 'rows'}`;
 
 const insertTablePickerApprox = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi, selectedRows: number, selectedCols: number) =>
   s.element('div', {
@@ -39,7 +37,7 @@ const insertTablePickerApprox = (s: ApproxStructure.StructApi, str: ApproxStruct
                 classes: [ arr.has('tox-insert-table-picker') ],
                 children: tableCellsApprox(s, str, arr, selectedRows, selectedCols).concat(s.element('span', {
                   classes: [ arr.has('tox-insert-table-picker__label') ],
-                  html: str.is(expectedLabelText(selectedCols, selectedRows))
+                  html: str.is(`${selectedCols}x${selectedRows}`)
                 }))
               })
             ]
@@ -112,14 +110,14 @@ describe('browser.tinymce.themes.silver.skin.OxideTablePickerMenuTest', () => {
     const item = UiFinder.findIn(firstPicker, 'div[role="button"]').getOrDie();
     Mouse.mouseOver(item);
     UiFinder.exists(firstPicker, 'div.tox-insert-table-picker__selected');
-    UiFinder.exists(firstPicker, 'span.tox-insert-table-picker__label:contains("1 column and 1 row")');
+    UiFinder.exists(firstPicker, 'span.tox-insert-table-picker__label:contains("1x1")');
 
     TinyUiActions.keyup(editor, Keys.escape());
     await Waiter.pTryUntil('Wait for menu to be hidden', () => UiFinder.notExists(SugarBody.body(), 'div.tox-fancymenuitem'));
 
     const secondPicker = await pOpenTablePicker();
     UiFinder.notExists(secondPicker, 'div.tox-insert-table-picker__selected');
-    UiFinder.exists(secondPicker, 'span.tox-insert-table-picker__label:contains("0 columns and 0 rows")');
+    UiFinder.exists(secondPicker, 'span.tox-insert-table-picker__label:contains("0x0")');
     TinyUiActions.keyup(editor, Keys.escape());
     TinyUiActions.keyup(editor, Keys.escape());
   });
