@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Returning an empty string in custom context menu update function would result in a small white line appearing on right click and the native browser context menu would not show up. #TINY-9842
 - Autocompletion of url for links would on sufficiently long links and wide screens leave out middle parts of the url from view. #TINY-10017
+- Toolbar number input would not properly disable upon changing mode. #TINY-10129
 - Quick Toolbar plugin would show text alignment buttons on pagebreaks. #TINY-10054
 - Creating a list from multiple div elements would only create a partial list. #TINY-9872
 - Tab navigation incorrectly stopped around `iframe` dialog component. #TINY-9815
@@ -32,10 +33,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - It was possible to remove the summary element from a details element by drag and dropping. #TINY-9960
 - It was possible to break summary elements if contents containing blocks was dropped inside them. #TINY-9960
 - Contents would not be removed from the drag start source if dragging and dropping internally into a transparent block element. #TINY-9960
+- Using the Media plugin would change scripts in the body to images unexpectedly. #TINY-10007
 - In some cases pressing enter would scroll the entire page. #TINY-9828
 - The border styles of a table were incorrectly split into a longhand form after table dialog updates. #TINY-9843
 - Links in `help dialog` -> `plugins` and `version` were not navigable via keyboard. #TINY-10071
 - Fixed the inability to insert content next to the `details` element when it is the first or last content element. Now pressing the `Up` or `Down` arrow key will insert a block element before or after the `details` element. #TINY-9827
+- The `color_cols` option was not respected when set to the value 5 with a custom `color_map` specified. #TINY-10126
 
 ## 6.6.2 - 2023-08-09
 

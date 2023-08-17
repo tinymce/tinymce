@@ -31,7 +31,7 @@ const setup = (editor: Editor): void => {
     });
 
     // Converts iframe, video etc into placeholder images
-    parser.addNodeFilter('iframe,video,audio,object,embed,script', Nodes.placeHolderConverter(editor));
+    parser.addNodeFilter('iframe,video,audio,object,embed', Nodes.placeHolderConverter(editor));
 
     // Replaces placeholder images with real elements for video, object, iframe etc
     serializer.addAttributeFilter('data-mce-object', (nodes, name) => {
@@ -46,7 +46,7 @@ const setup = (editor: Editor): void => {
         const realElm = new AstNode(realElmName, 1);
 
         // Add width/height to everything but audio
-        if (realElmName !== 'audio' && realElmName !== 'script') {
+        if (realElmName !== 'audio') {
           const className = node.attr('class');
           if (className && className.indexOf('mce-preview-object') !== -1 && node.firstChild) {
             realElm.attr({
@@ -74,10 +74,6 @@ const setup = (editor: Editor): void => {
           if (attrName.indexOf('data-mce-p-') === 0) {
             realElm.attr(attrName.substr(11), attribs[ai].value);
           }
-        }
-
-        if (realElmName === 'script') {
-          realElm.attr('type', 'text/javascript');
         }
 
         // Inject innerhtml

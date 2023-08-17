@@ -40,13 +40,15 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
   };
 
   const renderHelpAccessibility = (): SimpleSpec => {
+    const shortcutText = ConvertShortcut.convertText('Alt+0');
+    const text = `Press {0} for help`;
     return {
       dom: {
         tag: 'div',
         classes: [ 'tox-statusbar__help-text' ],
       },
       components: [
-        GuiFactory.text(`Press ${ConvertShortcut.convertText('Alt+0')} for help`)
+        GuiFactory.text(I18n.translate([ text, shortcutText ]))
       ]
     };
   };
