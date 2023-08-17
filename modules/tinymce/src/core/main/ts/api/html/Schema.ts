@@ -238,8 +238,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
   // Adds valid children to the schema object
   const addValidChildren = (validChildren: string | undefined) => {
     Arr.each(ValidChildrenRuleParser.parseValidChildrenRules(validChildren ?? ''), ({ operation, name, validChildren }) => {
-      // We need to clone here since it might be pointing to a cached schema reference
-      const parent = operation === 'replace' ? { '#comment': {}} : Obj.map(children[name], Fun.identity);
+      const parent = operation === 'replace' ? { '#comment': {}} : children[name];
 
       Arr.each(validChildren, (child) => {
         if (operation === 'remove') {

@@ -24,7 +24,7 @@ export const makeSchema = (type: SchemaType): SchemaLookupTable => {
       const attributesOrder = SchemaUtils.split([ globalAttributes, attributes ].join(' '));
 
       schema[names[ni]] = {
-        attributes: Arr.mapToObject(attributesOrder, () => ({})),
+        attributes: Arr.mapToObject(attributesOrder, Fun.constant({})),
         attributesOrder,
         children: Arr.mapToObject(childNames, Fun.constant({}))
       };
