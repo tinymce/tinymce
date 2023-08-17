@@ -75,16 +75,41 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
 
   const getTextComponents = (): SimpleSpec[] => {
     const components: SimpleSpec[] = [];
+    const shouldRenderHelp = Options.useHelpAccessibility(editor);
+    const shouldRenderElementPath = Options.useElementPath(editor);
+    const shouldRenderRightContainer = Options.useBranding(editor) || editor.hasPlugin('wordcount');
 
-    if (Options.useElementPath(editor)) {
+    const getTextComponentClass = () => {
+      const flexStart = 'tox-statusbar__text-container--flex-start';
+      const flexEnd = 'tox-statusbar__text-container--flex-end';
+      const spaceAround = 'tox-statusbar__text-container--space-around';
+
+      if (shouldRenderHelp) {
+        const container3Columns = 'tox-statusbar__text-container-3-cols';
+
+        if (!shouldRenderRightContainer && !shouldRenderElementPath) {
+          return [ container3Columns, spaceAround ];
+        }
+
+        if (shouldRenderRightContainer && !shouldRenderElementPath) {
+          return [ container3Columns, flexEnd ];
+        }
+
+        return [ container3Columns, flexStart ];
+      }
+
+      return [ shouldRenderRightContainer && !shouldRenderElementPath ? flexEnd : flexStart ];
+    };
+
+    if (shouldRenderElementPath) {
       components.push(ElementPath.renderElementPath(editor, { }, providersBackstage));
     }
 
-    if (Options.useHelpAccessibility(editor)) {
+    if (shouldRenderHelp) {
       components.push(renderHelpAccessibility());
     }
 
-    if (Options.useBranding(editor) || editor.hasPlugin('wordcount')) {
+    if (shouldRenderRightContainer) {
       components.push(renderRightContainer());
     }
 
@@ -92,7 +117,7 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
       return [{
         dom: {
           tag: 'div',
-          classes: [ 'tox-statusbar__text-container' ]
+          classes: [ 'tox-statusbar__text-container', ...getTextComponentClass() ]
         },
         components
       }];
