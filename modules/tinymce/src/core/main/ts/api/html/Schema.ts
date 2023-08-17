@@ -1,4 +1,4 @@
-import { Arr, Fun, Obj, Type, Global, Optional } from '@ephox/katamari';
+import { Arr, Fun, Obj, Type, Optional } from '@ephox/katamari';
 
 import * as CustomElementsRuleParser from '../../schema/CustomElementsRuleParser';
 import * as SchemaLookupTableCache from '../../schema/SchemaLookupTableCache';
@@ -7,9 +7,6 @@ import * as SchemaUtils from '../../schema/SchemaUtils';
 import * as ValidChildrenRuleParser from '../../schema/ValidChildrenRuleParser';
 import * as ValidElementsRuleParser from '../../schema/ValidElementsRuleParser';
 import Tools from '../util/Tools';
-
-// TODO: Remove this debugging code before PR
-Global.getSchema = SchemaLookupTableCache.getLookupTable;
 
 export * from '../../schema/SchemaTypes';
 
