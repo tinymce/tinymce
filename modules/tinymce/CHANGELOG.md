@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The border styles of a table were incorrectly split into a longhand form after table dialog updates. #TINY-9843
 - Links in `help dialog` -> `plugins` and `version` were not navigable via keyboard. #TINY-10071
 - Fixed the inability to insert content next to the `details` element when it is the first or last content element. Now pressing the `Up` or `Down` arrow key will insert a block element before or after the `details` element. #TINY-9827
+- An empty `contenteditable="true"` element within a noneditable root was deleted upon pressing the Backspace key. #TINY-10011
 - The `color_cols` option was not respected when set to the value 5 with a custom `color_map` specified. #TINY-10126
 
 ## 6.6.2 - 2023-08-09
