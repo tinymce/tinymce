@@ -1,4 +1,5 @@
-import { Fun, Type } from '@ephox/katamari';
+import { Arr, Fun, Type } from '@ephox/katamari';
+import { ContentEditable, SelectorFilter, SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -83,6 +84,12 @@ const Quirks = (editor: Editor): Quirks => {
       return selection === allSelection;
     };
 
+    const hasPreservedEmptyElements = (elm: HTMLElement) => {
+      const scope = SugarElement.fromDom(elm);
+      const isEditableHost = (elm: SugarElement<HTMLElement>) => Traverse.parentElement(elm).exists((elm) => !ContentEditable.isEditable(elm));
+      return Arr.exists(SelectorFilter.descendants<HTMLElement>(scope, '[contenteditable="true"]'), isEditableHost);
+    };
+
     editor.on('keydown', (e) => {
       const keyCode = e.keyCode;
 
@@ -92,7 +99,8 @@ const Quirks = (editor: Editor): Quirks => {
         const body = editor.getBody();
 
         // Selection is collapsed but the editor isn't empty
-        if (isCollapsed && !dom.isEmpty(body)) {
+        // TINY-10011: empty CET elements should be preserved
+        if (isCollapsed && (!dom.isEmpty(body) || hasPreservedEmptyElements(body))) {
           return;
         }
 
