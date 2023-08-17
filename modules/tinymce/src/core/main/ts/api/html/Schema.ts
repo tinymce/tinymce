@@ -1,7 +1,7 @@
 import { Arr, Fun, Obj, Type, Optional } from '@ephox/katamari';
 
 import * as CustomElementsRuleParser from '../../schema/CustomElementsRuleParser';
-import * as SchemaLookupTableCache from '../../schema/SchemaLookupTableCache';
+import * as SchemaLookupTable from '../../schema/SchemaLookupTable';
 import { SchemaType, ElementSettings, SchemaElement, SchemaMap, SchemaRegExpMap, SchemaSettings } from '../../schema/SchemaTypes';
 import * as SchemaUtils from '../../schema/SchemaUtils';
 import * as ValidChildrenRuleParser from '../../schema/ValidChildrenRuleParser';
@@ -121,7 +121,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
   };
 
   const schemaType = settings.schema ?? 'html5';
-  const schemaItems = SchemaLookupTableCache.getLookupTable(schemaType);
+  const schemaItems = SchemaLookupTable.makeSchema(schemaType);
 
   // Allow all elements and attributes if verify_html is set to false
   if (settings.verify_html === false) {
