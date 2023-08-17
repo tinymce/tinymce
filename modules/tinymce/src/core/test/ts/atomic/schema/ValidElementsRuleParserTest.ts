@@ -169,7 +169,7 @@ describe('atomic.tinymce.core.schema.ValidElementsRuleParserTest', () => {
       ]
     }));
 
-    it('Required attribute values', () => testValidElementsParser({
+    it('Valid attribute values', () => testValidElementsParser({
       input: 'a[href<foo?bar?baz]',
       expected: [
         {
@@ -182,7 +182,21 @@ describe('atomic.tinymce.core.schema.ValidElementsRuleParserTest', () => {
       ]
     }));
 
-    it('Unescpae escaped xml prefixes', () => testValidElementsParser({
+    it('Required attribute', () => testValidElementsParser({
+      input: 'a[!href]',
+      expected: [
+        {
+          name: 'a',
+          element: {
+            attributes: { href: { required: true }},
+            attributesOrder: [ 'href' ],
+            attributesRequired: [ 'href' ]
+          }
+        }
+      ]
+    }));
+
+    it('Unescape escaped xml prefixes', () => testValidElementsParser({
       input: 'a[prefix\\:href]',
       expected: [
         {
