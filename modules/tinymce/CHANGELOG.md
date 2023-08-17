@@ -35,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In some cases pressing enter would scroll the entire page. #TINY-9828
 - The border styles of a table were incorrectly split into a longhand form after table dialog updates. #TINY-9843
 - Links in `help dialog` -> `plugins` and `version` were not navigable via keyboard. #TINY-10071
-- Fixed the inability to insert content before the `details` element, when it is the first element in the editor's content. Now possible by pressing the `Up` arrow key when the cursor is at the start of the `details` element content. #TINY-9827
+- Fixed the inability to insert content next to the `details` element when it is the first or last content element. Now pressing the `Up` or `Down` arrow key will insert a block element before or after the `details` element. #TINY-9827
 
 ## 6.6.2 - 2023-08-09
 
