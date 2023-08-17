@@ -63,11 +63,6 @@ describe('browser.tinymce.themes.silver.editor.color.ColorSettingsTest', () => {
     assert.equal(colors, expected, 'Color cols should be the same');
   };
 
-  const assertCalcCols = (editor: Editor, colors: number, expected: number) => {
-    const sqrt = Options.calcCols(colors);
-    assert.equal(sqrt, expected, 'Calced cols should be the same');
-  };
-
   const mappedColors: ExpectedColor[] = [
     {
       text: 'Black',
@@ -116,21 +111,5 @@ describe('browser.tinymce.themes.silver.editor.color.ColorSettingsTest', () => {
     assertCols(editor, 'default', 5);
     assertCols(editor, 'forecolor', 5);
     assertCols(editor, 'hilitecolor', 5);
-  });
-
-  it('TBA: calcCols', () => {
-    const editor = hook.editor();
-    assertCalcCols(editor, 1, 5);
-    assertCalcCols(editor, 2, 5);
-    assertCalcCols(editor, 3, 5);
-    assertCalcCols(editor, 4, 5);
-    assertCalcCols(editor, 5, 5);
-    assertCalcCols(editor, 8, 5);
-    assertCalcCols(editor, 9, 5);
-    assertCalcCols(editor, 10, 5);
-    assertCalcCols(editor, 25, 5);
-    assertCalcCols(editor, 26, 6);
-    assertCalcCols(editor, 36, 6);
-    assertCalcCols(editor, 37, 7);
   });
 });

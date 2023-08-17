@@ -8,16 +8,7 @@ import { Menu } from 'tinymce/core/api/ui/Ui';
 const foregroundId = 'forecolor';
 const backgroundId = 'hilitecolor';
 
-const DEFAULT_COLS = 5;
-
-const calcCols = (colors: number): number =>
-  Math.max(DEFAULT_COLS, Math.ceil(Math.sqrt(colors)));
-
-const calcColsOption = (editor: Editor, numColors: number): number => {
-  const calculatedCols = calcCols(numColors);
-  const fallbackCols = option('color_cols')(editor);
-  return fallbackCols !== DEFAULT_COLS ? fallbackCols : calculatedCols;
-};
+const fallbackCols = 5;
 
 const mapColors = (colorMap: string[]): Menu.ChoiceMenuItemSpec[] => {
   const colors: Menu.ChoiceMenuItemSpec[] = [];
@@ -45,11 +36,19 @@ const fallbackColor = '#000000';
 const register = (editor: Editor): void => {
   const registerOption = editor.options.register;
 
-  const colorProcessor = (value: any): any => {
+  const colorProcessor = (value: unknown): any => {
     if (Type.isArrayOf(value, Type.isString)) {
       return { value: mapColors(value), valid: true };
     } else {
       return { valid: false, message: 'Must be an array of strings.' };
+    }
+  };
+
+  const colorColsProcessor = (value: unknown): any => {
+    if (Type.isNumber(value) && value > 0) {
+      return { value, valid: true };
+    } else {
+      return { valid: false, message: 'Must be a positive number.' };
     }
   };
 
@@ -94,18 +93,18 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('color_cols', {
-    processor: 'number',
-    default: calcCols(getColors(editor, 'default').length)
+    processor: colorColsProcessor,
+    default: calcCols(editor)
   });
 
   registerOption('color_cols_foreground', {
-    processor: 'number',
-    default: calcColsOption(editor, getColors(editor, foregroundId).length)
+    processor: colorColsProcessor,
+    default: defaultCols(editor, foregroundId)
   });
 
   registerOption('color_cols_background', {
-    processor: 'number',
-    default: calcColsOption(editor, getColors(editor, backgroundId).length)
+    processor: colorColsProcessor,
+    default: defaultCols(editor, backgroundId)
   });
 
   registerOption('custom_colors', {
@@ -124,23 +123,6 @@ const register = (editor: Editor): void => {
   });
 };
 
-const colorColsOption = (editor: Editor, id: string): number => {
-  if (id === foregroundId) {
-    return option('color_cols_foreground')(editor);
-  } else if (id === backgroundId) {
-    return option('color_cols_background')(editor);
-  } else {
-    return option('color_cols')(editor);
-  }
-};
-
-const getColorCols = (editor: Editor, id: string): number => {
-  const colorCols = Math.round(colorColsOption(editor, id));
-  return colorCols > 0 ? colorCols : DEFAULT_COLS;
-};
-
-const hasCustomColors = option('custom_colors');
-
 const getColors = (editor: Editor, id: string): Menu.ChoiceMenuItemSpec[] => {
   if (id === foregroundId && editor.options.isSet('color_map_foreground')) {
     return option<Menu.ChoiceMenuItemSpec[]>('color_map_foreground')(editor);
@@ -151,13 +133,39 @@ const getColors = (editor: Editor, id: string): Menu.ChoiceMenuItemSpec[] => {
   }
 };
 
+const calcCols = (editor: Editor, id: string = 'default'): number => Math.max(fallbackCols, Math.ceil(Math.sqrt(getColors(editor, id).length)));
+
+const defaultCols = (editor: Editor, id: string) => {
+  const defaultCols = option('color_cols')(editor);
+  const calculatedCols = calcCols(editor, id);
+  if (defaultCols === calcCols(editor)) {
+    return calculatedCols;
+  } else {
+    return defaultCols;
+  }
+};
+
+const getColorCols = (editor: Editor, id: string = 'default'): number => {
+  const getCols = () => {
+    if (id === foregroundId) {
+      return option('color_cols_foreground')(editor);
+    } else if (id === backgroundId) {
+      return option('color_cols_background')(editor);
+    } else {
+      return option('color_cols')(editor);
+    }
+  };
+  return Math.round(getCols());
+};
+
+const hasCustomColors = option('custom_colors');
+
 const getDefaultForegroundColor = option<string>('color_default_foreground');
 const getDefaultBackgroundColor = option<string>('color_default_background');
 
 export {
   register,
   mapColors,
-  calcCols,
   getColorCols,
   hasCustomColors,
   getColors,
