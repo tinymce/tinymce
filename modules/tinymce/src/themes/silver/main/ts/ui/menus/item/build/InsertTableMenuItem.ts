@@ -75,14 +75,14 @@ const selectCells = (cells: AlloyComponent[][], selectedRow: number, selectedCol
 const makeComponents = (cells: AlloyComponent[][]): AlloySpec[] =>
   Arr.bind(cells, (cellRow) => Arr.map(cellRow, GuiFactory.premade));
 
+const makeLabelText = (row: number, col: number): PremadeSpec =>
+  GuiFactory.text(`${col}x${row}`);
+
 export const renderInsertTableMenuItem = (spec: Menu.InsertTableMenuItem, backstage: UiFactoryBackstage): ItemTypes.WidgetItemSpec => {
   const numRows = 10;
   const numColumns = 10;
   const getCellLabel = makeAnnouncementText(backstage);
   const cells = makeCells(getCellLabel, numRows, numColumns);
-
-  const makeLabelText = (row: number, col: number): PremadeSpec =>
-    GuiFactory.text(`${col}x${row}`);
 
   const emptyLabelText = makeLabelText(0, 0);
 
@@ -120,8 +120,7 @@ export const renderInsertTableMenuItem = (spec: Menu.InsertTableMenuItem, backst
           AlloyEvents.runWithTarget<CellEvent>(cellOverEvent, (c, t, e) => {
             const { row, col } = e.event;
             selectCells(cells, row, col, numRows, numColumns);
-            const labelComp = memLabel.get(c);
-            Replacing.set(labelComp, [ makeLabelText(row + 1, col + 1) ]);
+            Replacing.set(memLabel.get(c), [ makeLabelText(row + 1, col + 1) ]);
           }),
           AlloyEvents.runWithTarget<CellEvent>(cellExecuteEvent, (c, _, e) => {
             const { row, col } = e.event;
