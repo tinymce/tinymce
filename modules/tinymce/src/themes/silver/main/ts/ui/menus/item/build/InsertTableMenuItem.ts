@@ -5,7 +5,7 @@ import {
 import { Menu } from '@ephox/bridge';
 import { Arr, Id } from '@ephox/katamari';
 
-import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+import { UiFactoryBackstage } from '../../../../backstage/Backstage';
 
 const cellOverEvent = Id.generate('cell-over');
 const cellExecuteEvent = Id.generate('cell-execute');
