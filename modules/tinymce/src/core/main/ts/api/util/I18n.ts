@@ -1,4 +1,4 @@
-import { Cell, Obj, Type } from '@ephox/katamari';
+import { Arr, Cell, Obj, Type } from '@ephox/katamari';
 
 /**
  * I18n class that handles translation of TinyMCE UI.
@@ -65,8 +65,15 @@ const add = (code: string, items: Record<string, string>): void => {
     data[code] = langData = {};
   }
 
+  const lcNames = Arr.map(Obj.keys(items), (name) => name.toLowerCase());
   Obj.each(items, (translation, name) => {
-    langData[name.toLowerCase()] = translation;
+    const lcName = name.toLowerCase();
+    let count = 0;
+    if (lcName !== name && Arr.exists(lcNames, (lc) => (lc === lcName ? ++count : count) > 1)) {
+      langData[name] = translation;
+    } else {
+      langData[lcName] = translation;
+    }
   });
 };
 
@@ -103,7 +110,7 @@ const translate = (text: Untranslated): TranslatedString => {
   const getLangData = (text: Untranslated) => {
     // make sure we work on a string and return a string
     const textstr = toString(text);
-    return Obj.get(langData, textstr.toLowerCase()).map(toString).getOr(textstr);
+    return Obj.get(langData, textstr).or(Obj.get(langData, textstr.toLowerCase())).map(toString).getOr(textstr);
   };
 
   const removeContext = (str: string) => str.replace(/{context:\w+}$/, '');
