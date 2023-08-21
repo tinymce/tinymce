@@ -1,0 +1,152 @@
+#!groovy
+@Library('waluigi@release/7') _
+
+properties([
+  parameters([
+    string(name: 'name', defaultValue: 'bedorck-run', desciption: 'Name of the testing run', trim: true),
+    string(name: 'browser', defaultValue: 'chrome', desciption: 'Testing browser', trim: true),
+    string(name: 'provider', defaultValue: 'lambdatest', desciption: 'Remote testing provider', trim: true),
+    string(name: 'bucket', defaultValue: '1', desciption: 'Current testing bucket', trim: true),
+    string(name: 'buckets', defaultValue: '1', desciption: 'Testing buckets', trim: true),
+    string(name: 'branch', defaultValue: 'develop', desciption: 'Testing branch', trim: true)
+  ])
+])
+
+// bedrock-auto test on TinyMCE for given browser/provider
+def testRemote(browser, provider) {
+  BUCKETS = 1
+  dir('tinymce') {
+    pwd
+    // Test other browsers even if one fails.
+    catchError(stageResult: 'FAILURE') {
+      remoteCredentials(provider) {
+        for (i = 1; i <= BUCKETS; i++) { // 1-indexed
+          sh 'yarn browser-test --bedrock-browser=' + browser + ' --remote=' + provider +
+            ' --buckets=15 --bucket=' + i + ' --chunk=50'
+        }
+      }
+    }
+  }
+}
+
+def runBedrockTest(String name, String browser, String provider, String bucket, String buckets) {
+  def bedrockCommand =
+  "yarn browser-test" +
+    " --chunk=50" +
+    " --bedrock-browser=" + browser +
+    " --remote=" + provider +
+    " --bucket=" + bucket +
+    " --buckets=" + buckets +
+    " --name=" + name
+    echo "Running: ${bedrockCommand}"
+    def testStatus = sh(script: bedrockCommand, returnStatus: true)
+    echo "Writing JUnit results for ${name}"
+    // junit allowEmptyResults: true, testResults: 'scratch/'
+    if (testStatus == 4) {
+      unstable("Test failed for ${name}")
+    } else if (testStatus != 0) {
+      error("Error running tests for ${name}")
+    }
+}
+
+def withRemoteCreds(String provider, Closure body) {
+  if (provider == 'aws') {
+    withAwsCreds {
+      body()
+    }
+  }
+  if (provider == 'lambdatest') {
+    withLtCreds {
+      body()
+    }
+  }
+}
+
+def withAwsCreds(Closure body) {
+  tinyAws.withAWSWebIdentityToken {
+    tinyAws.withAWSRoleARN('arn:aws:iam::103651136441:role/ci/build/tinymce_devicefarm') {
+      body()
+    }
+  }
+}
+
+def withLtCreds(Closure body) {
+  withCredentials([usernamePassword(credentialsId: 'lambda-engci', usernameVariable: 'LT_USERNAME', passwordVariable: 'LT_ACCESS_KEY')]) {
+    body()
+  }
+}
+
+String name = params.name
+String browser = params.browser
+String provider = params.provider
+String bucket = params.bucket
+String buckets = params.buckets
+String branch = 'spike/TINY-10006'
+
+timestamps {
+  podTemplate(
+    cloud: '',
+    containers: [
+      [
+        name: 'node',
+        image: 'public.ecr.aws/docker/library/node:lts',
+        runAsGroup: '1000',
+        runAsUser: '1000',
+        command: 'sleep',
+        args: 'infinity',
+        alwaysPullImage: true,
+        resourceRequestCpu: '6',
+        resourceRequestMemory: '4Gi',
+        resourceLimitCpu: '7.5',
+        resourceLimitMemory: '4Gi'
+      ]
+    ]
+  ) {
+    node(POD_LABEL) {
+      // Once bedrock is release we can move this into pulling only Tinymce, in the meantime...
+      container('jnlp') {
+        stage('checkout') {
+          echo 'Checking out...'
+          dir('bedrock') {
+            pwd
+            git url: 'https://github.com/tinymce/bedrock.git', branch: 'feature/TINY-10006'
+          }
+          dir('tinymce') {
+            pwd
+            git url: 'https://github.com/tinymce/tinymce.git', branch: branch
+          }
+        }
+      }
+      container('node') {
+        stage('Build') {
+          echo 'Building...'
+          dir('bedrock') {
+            pwd
+            sh 'yarn && yarn build'
+          }
+          dir ('tinymce') {
+            pwd
+            sh 'yarn && yarn dev'
+          }
+        }
+
+        stage('Tunnel') {
+          // Tunnel network setup
+          withAwsCreds {
+            echo 'Adding sish tunnel to known_hosts'
+            sh 'mkdir ~/.ssh'
+            sh 'echo "sish.osu.tiny.work ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKl0pmqRdhKQksLYj9k3FUVdrkD/GWXJ/YhHJ3KWRDvz" >> ~/.ssh/known_hosts'
+          }
+        }
+
+        stage('Tests') {
+          dir('tinymce') {
+            withRemoteCreds(provider) {
+              runBedrockTest(name, browser, provider, bucket, buckets)
+            }
+          }
+        }
+      }
+    }
+  }
+}
