@@ -64,7 +64,7 @@ const getEndPointNode = (editor: Editor, rng: Range, start: Boolean, root: Node)
   }
 
   const findBlockAncestor = (node: Node) => {
-    while (!NodeType.isBlock(node, editor.schema.getBlockElements()) && node.parentNode && root !== node) {
+    while (!editor.dom.isBlock(node) && node.parentNode && root !== node) {
       node = node.parentNode;
     }
 
@@ -82,14 +82,11 @@ const getEndPointNode = (editor: Editor, rng: Range, start: Boolean, root: Node)
   // For more info look at #TINY-6853
 
   const findBetterContainer = (container: Node, forward: boolean): Optional<Node> => {
-    const walker = new DomTreeWalker(container, root);
+    const walker = new DomTreeWalker(container, findBlockAncestor(container));
     const dir = forward ? 'next' : 'prev';
-    const blockParent = SugarElement.fromDom(findBlockAncestor(container));
     let node;
     while ((node = walker[dir]())) {
-      const suitableType = !(NodeType.isVoid(editor, node) || Unicode.isZwsp(node.textContent as string) || node.textContent?.length === 0);
-      const isWithinParent = Has.ancestor(SugarElement.fromDom(node), blockParent);
-      if (suitableType && isWithinParent) {
+      if (!(NodeType.isVoid(editor, node) || Unicode.isZwsp(node.textContent as string) || node.textContent?.length === 0)) {
         return Optional.some(node);
       }
     }

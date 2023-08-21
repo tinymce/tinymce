@@ -900,7 +900,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
     TinyAssertions.assertRawContent(editor, expected);
   });
 
-  it('TINY-10136: Do not list-convert too many elements', () => {
+  it('TINY-10136: Ensure that the list does not expand its search past the nearest parent block to prevent it from converting unexpected elements into list elements', () => {
     const editor = hook.editor();
     editor.setContent('<p><strong>a</strong></p><p><strong></strong></p><p><strong>b</strong></p>');
 

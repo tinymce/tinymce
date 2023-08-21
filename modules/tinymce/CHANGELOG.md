@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Autocompletion of url for links would on sufficiently long links and wide screens leave out middle parts of the url from view. #TINY-10017
 - Toolbar number input would not properly disable upon changing mode. #TINY-10129
 - Quick Toolbar plugin would show text alignment buttons on pagebreaks. #TINY-10054
-- Creating lists would in some situations include unexpected elements into the list. #TINY-10136
+- Creating lists in empty blocks would sometimes include adjacent blocks. #TINY-10136
 - Creating a list from multiple div elements would only create a partial list. #TINY-9872
 - Tab navigation incorrectly stopped around `iframe` dialog component. #TINY-9815
 - It was possible to delete the sole empty block just before a details element if it was nested within another details element. #TINY-9965
