@@ -117,7 +117,7 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
       return [{
         dom: {
           tag: 'div',
-          classes: [ 'tox-statusbar__text-container', ...getTextComponentClass() ]
+          classes: [ 'tox-statusbar__text-container', ...getTextComponentClasses() ]
         },
         components
       }];
