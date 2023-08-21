@@ -19,6 +19,11 @@ export type Untranslated = Primitive | TokenisedString | RawString | null | unde
 
 export type TranslatedString = string;
 
+const isDuplicated = (items: string[], item: string) => {
+  let count = 0;
+  return Arr.exists(items, (x) => (x === item ? ++count : count) > 1);
+};
+
 const isRaw = (str: any): str is RawString => Type.isObject(str) && Obj.has(str, 'raw');
 
 const isTokenised = (str: any): str is TokenisedString => Type.isArray(str) && str.length > 1;
@@ -68,8 +73,10 @@ const add = (code: string, items: Record<string, string>): void => {
   const lcNames = Arr.map(Obj.keys(items), (name) => name.toLowerCase());
   Obj.each(items, (translation, name) => {
     const lcName = name.toLowerCase();
-    let count = 0;
-    if (lcName !== name && Arr.exists(lcNames, (lc) => (lc === lcName ? ++count : count) > 1)) {
+    if (lcName !== name && isDuplicated(lcNames, lcName)) {
+      if (!Obj.has(items, lcName)) {
+        langData[lcName] = translation;
+      }
       langData[name] = translation;
     } else {
       langData[lcName] = translation;
