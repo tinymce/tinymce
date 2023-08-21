@@ -56,7 +56,7 @@ describe('browser.tinymce.core.delete.DeleteDetailsTest', () => {
       expectedPrevented: true
     }));
 
-    it('Delete forward in middle of summary should not be prevented', () => testDeleteForward({
+    it('Delete forward in middle of summary should be prevented on Safari', () => testDeleteForward({
       html: '<details open=""><summary>s1</summary><div><p>&nbsp;</p></div></details>',
       selection: caret([ 0, 0, 0 ], 1),
       expectedSelection: caret([ 0, 0, 0 ], 1),
@@ -65,16 +65,13 @@ describe('browser.tinymce.core.delete.DeleteDetailsTest', () => {
       expectedHtml: `<details open=""><summary>s${isSafari ? '' : '1'}</summary><div><p>&nbsp;</p></div></details>`
     }));
 
-    it('Delete backward in middle of summary should not be prevented', function () {
-      // TODO - TINY-10123: On Safari, deleting backwards in summary in accordion with empty body deletes entire accordion
-      if (isSafari) {
-        this.skip();
-      }
+    it('TINY-10123: Delete backward in middle of summary should prevented on Safari', () => {
       testDeleteBackward({
         html: '<details open=""><summary>s1</summary><div><p>&nbsp;</p></div></details>',
         selection: caret([ 0, 0, 0 ], 1),
-        expectedSelection: caret([ 0, 0, 0 ], 1),
-        expectedPrevented: false
+        expectedSelection: caret([ 0, 0, 0 ], isSafari ? 0 : 1),
+        expectedPrevented: isSafari ? true : false,
+        expectedHtml: `<details open=""><summary>${isSafari ? '1' : 's1'}</summary><div><p>&nbsp;</p></div></details>`
       });
     });
 

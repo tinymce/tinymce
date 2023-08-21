@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Menus will now have a slight margin at the top and bottom to more clearly separate them from the edge of frame. #TINY-9978
 - Updated toolbar "More" button tooltip text from "More..." to "Reveal or hide additional toolbar items". #TINY-9629
 - Where multiple case sensitive variants of a translation key are provided, they will now all be preserved in the translation object instead of just the lowercase variant. #TINY-10115
+- Improved screen reader announcements of currently selected columns and rows in insert table menu item grid. #TINY-10140
 
 ### Changed
 - Change UndoLevelType from enum to union type so that it can be easier to use. #TINY-9764
@@ -38,8 +39,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In some cases pressing enter would scroll the entire page. #TINY-9828
 - The border styles of a table were incorrectly split into a longhand form after table dialog updates. #TINY-9843
 - Links in `help dialog` -> `plugins` and `version` were not navigable via keyboard. #TINY-10071
+- Fixed the inability to insert content next to the `details` element when it is the first or last content element. Now pressing the `Up` or `Down` arrow key will insert a block element before or after the `details` element. #TINY-9827
 - An empty `contenteditable="true"` element within a noneditable root was deleted upon pressing the Backspace key. #TINY-10011
 - The `color_cols` option was not respected when set to the value 5 with a custom `color_map` specified. #TINY-10126
+- On Safari, deleting backwards within a `summary` element would remove the entire `details` element if it had no other content. #TINY-10123
 
 ## 6.6.2 - 2023-08-09
 

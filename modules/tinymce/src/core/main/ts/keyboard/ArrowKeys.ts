@@ -6,6 +6,7 @@ import VK from '../api/util/VK';
 import * as BoundarySelection from './BoundarySelection';
 import * as CefNavigation from './CefNavigation';
 import * as ContentEndpointNavigation from './ContentEndpointNavigation';
+import * as DetailsNavigation from './DetailsNavigation';
 import * as MatchKeys from './MatchKeys';
 import * as MediaNavigation from './MediaNavigation';
 import * as TableNavigation from './TableNavigation';
@@ -26,6 +27,9 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: K
     { keyCode: VK.LEFT, action: MatchKeys.action(TableNavigation.moveH, editor, false) },
     { keyCode: VK.UP, action: MatchKeys.action(TableNavigation.moveV, editor, false) },
     { keyCode: VK.DOWN, action: MatchKeys.action(TableNavigation.moveV, editor, true) },
+    { keyCode: VK.UP, action: MatchKeys.action(TableNavigation.moveV, editor, false) },
+    { keyCode: VK.UP, action: MatchKeys.action(DetailsNavigation.moveV, editor, false) },
+    { keyCode: VK.DOWN, action: MatchKeys.action(DetailsNavigation.moveV, editor, true) },
     { keyCode: VK.RIGHT, action: MatchKeys.action(MediaNavigation.moveH, editor, true) },
     { keyCode: VK.LEFT, action: MatchKeys.action(MediaNavigation.moveH, editor, false) },
     { keyCode: VK.UP, action: MatchKeys.action(MediaNavigation.moveV, editor, false) },

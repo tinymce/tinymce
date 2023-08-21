@@ -1,7 +1,7 @@
 {
   "name": "@ephox/snooker",
   "description": "This project implements the table model.",
-  "version": "11.0.12",
+  "version": "11.1.0-alpha.0",
   "files": [
     "lib/main",
     "lib/demo",
@@ -22,7 +22,7 @@
     "@ephox/dragster": "^7.2.1",
     "@ephox/katamari": "^9.1.5",
     "@ephox/porkbun": "^7.0.9",
-    "@ephox/robin": "^10.2.1",
+    "@ephox/robin": "10.3.0-alpha.0",
     "@ephox/sugar": "^9.2.1"
   },
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",

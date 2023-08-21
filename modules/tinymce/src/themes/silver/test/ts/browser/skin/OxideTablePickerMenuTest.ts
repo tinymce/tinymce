@@ -13,7 +13,8 @@ const tableCellsApprox = (s: ApproxStructure.StructApi, str: ApproxStructure.Str
     for (let j = 1; j <= 10; j++) {
       cells.push(s.element('div', {
         attrs: {
-          role: str.is('button')
+          role: str.is('button'),
+          ['aria-label']: str.is(`${j} columns, ${i} rows`)
         },
         classes: i <= selectedRows && j <= selectedCols ? [ arr.has('tox-insert-table-picker__selected') ] : [ arr.not('tox-insert-table-picker__selected') ]
       }));
