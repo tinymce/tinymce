@@ -79,7 +79,7 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
     const shouldRenderElementPath = Options.useElementPath(editor);
     const shouldRenderRightContainer = Options.useBranding(editor) || editor.hasPlugin('wordcount');
 
-    const getTextComponentClass = () => {
+    const getTextComponentClasses = () => {
       const flexStart = 'tox-statusbar__text-container--flex-start';
       const flexEnd = 'tox-statusbar__text-container--flex-end';
       const spaceAround = 'tox-statusbar__text-container--space-around';
