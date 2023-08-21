@@ -223,7 +223,7 @@ const handleDeleteActionSafari = (editor: Editor, forward: boolean, granularity:
           });
         };
 
-        const container = editor.dom.create('span', { 'data-mce-bogus': 'all' });
+        const container = editor.dom.create('span', { 'data-mce-bogus': '1' });
         appendAllChildNodes(node, container);
         node.appendChild(container);
         applySelection();

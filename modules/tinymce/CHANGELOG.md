@@ -41,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the inability to insert content next to the `details` element when it is the first or last content element. Now pressing the `Up` or `Down` arrow key will insert a block element before or after the `details` element. #TINY-9827
 - An empty `contenteditable="true"` element within a noneditable root was deleted upon pressing the Backspace key. #TINY-10011
 - The `color_cols` option was not respected when set to the value 5 with a custom `color_map` specified. #TINY-10126
+- On Safari, deleting backwards within a `summary` element would remove the entire `details` element if it had no other content. #TINY-10123
 
 ## 6.6.2 - 2023-08-09
 
