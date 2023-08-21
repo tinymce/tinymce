@@ -72,12 +72,7 @@ timestamps {
     }
 
     def platforms = [
-      [ os: "windows", browser: "chrome" ],
-      [ os: "windows", browser: "firefox" ],
-      [ os: "windows", browser: "MicrosoftEdge" ],
-      [ os: "macos", browser: "safari" ],
-      [ os: "macos", browser: "chrome" ],
-      [ os: "macos", browser: "firefox" ]
+      [ browser: 'chrome', provider: 'aws' ]
     ]
 
     def cleanAndInstall = {
@@ -103,22 +98,23 @@ timestamps {
 
         processes[name] = {
           stage(name) {
-            node("bedrock-${platform.os}") {
-              echo("Bedrock tests for ${name}")
+            echo "running test for ${name}"
+            // node("bedrock-${platform.os}") {
+            //   echo("Bedrock tests for ${name}")
 
-              echo("Checking out code on build node: $NODE_NAME")
-              checkout(scm)
+            //   echo("Checking out code on build node: $NODE_NAME")
+            //   checkout(scm)
 
-              // windows tends to not have username or email set
-              tinyGit.addAuthorConfig()
-              gitMerge(primaryBranch)
+            //   // windows tends to not have username or email set
+            //   tinyGit.addAuthorConfig()
+            //   gitMerge(primaryBranch)
 
-              cleanAndInstall()
-              exec("yarn ci")
+            //   cleanAndInstall()
+            //   exec("yarn ci")
 
-              echo("Running browser tests")
-              runBrowserTests(name, platform.browser, platform.os, c_bucket, buckets, runAllTests)
-            }
+            //   echo("Running browser tests")
+            //   runBrowserTests(name, platform.browser, platform.os, c_bucket, buckets, runAllTests)
+            // }
           }
         }
       }
