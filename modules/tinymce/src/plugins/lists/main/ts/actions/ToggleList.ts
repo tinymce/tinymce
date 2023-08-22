@@ -63,6 +63,14 @@ const getEndPointNode = (editor: Editor, rng: Range, start: Boolean, root: Node)
     container = container.nextSibling;
   }
 
+  const findBlockAncestor = (node: Node) => {
+    while (!editor.dom.isBlock(node) && node.parentNode && root !== node) {
+      node = node.parentNode;
+    }
+
+    return node;
+  };
+
   // The reason why the next two if statements exist is because when the root node is a table cell (possibly some other node types)
   // then the highest we can go up the dom hierarchy is one level below the table cell.
   // So what happens when we have a bunch of inline nodes and text nodes in the table cell
@@ -74,7 +82,7 @@ const getEndPointNode = (editor: Editor, rng: Range, start: Boolean, root: Node)
   // For more info look at #TINY-6853
 
   const findBetterContainer = (container: Node, forward: boolean): Optional<Node> => {
-    const walker = new DomTreeWalker(container, root);
+    const walker = new DomTreeWalker(container, findBlockAncestor(container));
     const dir = forward ? 'next' : 'prev';
     let node;
     while ((node = walker[dir]())) {
