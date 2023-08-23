@@ -61,7 +61,7 @@ timestamps {
     resourceLimitMemory: '4Gi'
   ]) {
     def props = readProperties(file: 'build.properties')
-
+    String testingJob = 'tinymce-remote-testing'
     String primaryBranch = props.primaryBranch
     assert primaryBranch != null && primaryBranch != ""
     def runAllTests = env.BRANCH_NAME == primaryBranch
@@ -72,7 +72,8 @@ timestamps {
     }
 
     def platforms = [
-      [ browser: 'chrome', provider: 'aws' ]
+      [ browser: 'chrome', provider: 'aws' ],
+      [ browser: 'safari', provider: 'lambdatest']
     ]
 
     def cleanAndInstall = {
@@ -98,23 +99,18 @@ timestamps {
 
         processes[name] = {
           stage(name) {
-            echo "running test for ${name}"
-            // node("bedrock-${platform.os}") {
-            //   echo("Bedrock tests for ${name}")
-
-            //   echo("Checking out code on build node: $NODE_NAME")
-            //   checkout(scm)
-
-            //   // windows tends to not have username or email set
-            //   tinyGit.addAuthorConfig()
-            //   gitMerge(primaryBranch)
-
-            //   cleanAndInstall()
-            //   exec("yarn ci")
-
-            //   echo("Running browser tests")
-            //   runBrowserTests(name, platform.browser, platform.os, c_bucket, buckets, runAllTests)
-            // }
+            echo "running test for ${name} with params: [${platform.browser},${platform.provider},${c_bucket},${buckets},${env.BRANCH_NAME}]"
+            def test = build(
+              job: testingJob,
+              parameters: [
+                string(name: 'name', value: name),
+                string(name: 'browser', value: platform.browser),
+                string(name: 'provider', value: platform.provider),
+                string(name: 'bucket', value: c_bucket),
+                string(name: 'buckets', value: buckets),
+                string(name: 'branch', value: 'spike/TINY-10006'),
+              ]
+            )
           }
         }
       }
