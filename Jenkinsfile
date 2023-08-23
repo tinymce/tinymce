@@ -95,7 +95,7 @@ timestamps {
         // closure variable - don't inline
         def c_bucket = bucket
 
-        def name = "${platform.os}-${platform.browser}${suffix}"
+        def name = "${platform.browser}-${platform.provider}-${suffix}"
 
         processes[name] = {
           stage(name) {
@@ -106,8 +106,8 @@ timestamps {
                 string(name: 'name', value: name),
                 string(name: 'browser', value: platform.browser),
                 string(name: 'provider', value: platform.provider),
-                string(name: 'bucket', value: c_bucket),
-                string(name: 'buckets', value: buckets),
+                string(name: 'bucket', value: c_bucket.toString()),
+                string(name: 'buckets', value: buckets.toString()),
                 string(name: 'branch', value: 'spike/TINY-10006'),
               ]
             )
