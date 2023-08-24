@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When loading content CSS takes more than half a second, the editor will be set to the "in progress" state until the CSS is ready. #TINY-10008
 
 ### Fixed
+- Clicking in the bullist toolbar button on a selected checklist would turn the list into paragraphs instead of a bulleted list. #TINY-9975
 - Returning an empty string in custom context menu update function would result in a small white line appearing on right click and the native browser context menu would not show up. #TINY-9842
 - Autocompletion of url for links would on sufficiently long links and wide screens leave out middle parts of the url from view. #TINY-10017
 - Toolbar number input would not properly disable upon changing mode. #TINY-10129
