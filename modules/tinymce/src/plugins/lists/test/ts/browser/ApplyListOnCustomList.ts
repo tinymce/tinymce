@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import {Strings} from '@ephox/katamari';
+import { Strings } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
