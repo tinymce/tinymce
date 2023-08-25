@@ -20,8 +20,8 @@ export type Untranslated = Primitive | TokenisedString | RawString | null | unde
 export type TranslatedString = string;
 
 const isDuplicated = (items: string[], item: string) => {
-  let count = 0;
-  return Arr.exists(items, (x) => (x === item ? ++count : count) > 1);
+  const firstIndex = items.indexOf(item);
+  return firstIndex !== -1 && items.indexOf(item, firstIndex + 1) > firstIndex;
 };
 
 const isRaw = (str: any): str is RawString => Type.isObject(str) && Obj.has(str, 'raw');
