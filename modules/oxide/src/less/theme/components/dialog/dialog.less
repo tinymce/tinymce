@@ -41,11 +41,11 @@
 
 @dialog-body-link-color: @color-tint;
 @dialog-body-link-text-decoration: underline;
-@dialog-body-link-hover-color: darken(@color-tint, 20%);
+@dialog-body-link-hover-color: darken(@dialog-body-link-color, 20%);
 @dialog-body-link-hover-text-decoration: underline;
-@dialog-body-link-active-color: darken(@color-tint, 30%);
+@dialog-body-link-active-color: darken(@dialog-body-link-color, 30%);
 @dialog-body-link-active-text-decoration: underline;
-@dialog-body-link-focus-outline-color: @color-tint;
+@dialog-body-link-focus-outline-color: @dialog-body-link-color;
 @dialog-body-link-focus-outline-border-radius: 1px;
 
 @dialog-body-h1-font-size: @font-size-lg;
@@ -235,8 +235,8 @@
   }
 
   .tox-dialog__body-nav-item--active {
-    border-bottom: 2px solid @color-tint;
-    color: @color-tint;
+    border-bottom: 2px solid @dialog-body-link-color;
+    color: @dialog-body-link-color;
   }
 
   .tox-dialog__body-content {
