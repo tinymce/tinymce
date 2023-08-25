@@ -117,7 +117,9 @@ const translate = (text: Untranslated): TranslatedString => {
   const getLangData = (text: Untranslated) => {
     // make sure we work on a string and return a string
     const textStr = toString(text);
-    return Obj.get(langData, Obj.has(langData, textStr) ? textStr : textStr.toLowerCase()).map(toString).getOr(textStr);
+    return Obj.has(langData, textStr)
+      ? langData[textStr].toString()
+      : Obj.get(langData, textStr.toLowerCase()).map(toString).getOr(textStr);
   };
 
   const removeContext = (str: string) => str.replace(/{context:\w+}$/, '');
