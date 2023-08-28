@@ -1,4 +1,4 @@
-import { Arr, Optional, Strings, Type, Unicode } from '@ephox/katamari';
+import { Arr, Optional, Type, Unicode } from '@ephox/katamari';
 import { Has, SugarElement } from '@ephox/sugar';
 
 import BookmarkManager from 'tinymce/core/api/dom/BookmarkManager';
@@ -317,10 +317,11 @@ const updateList = (editor: Editor, list: Element, listName: 'UL' | 'OL' | 'DL',
 };
 
 const updateCustomList = (editor: Editor, list: Element, listName: 'UL' | 'OL' | 'DL', detail: ListDetail): void => {
-  list.className = list.className.split(' ').filter((cls) => !/\btox\-/.test(cls)).join(' ');
-  if (Strings.isEmpty(list.className.trim()) ) {
-    list.removeAttribute('class');
-  }
+  list.classList.forEach((cls, _, classList) => {
+    if (!/\btox\-/.test(cls)) {
+      classList.remove(cls);
+    }
+  });
   if (list.nodeName !== listName) {
     const newList = editor.dom.rename(list, listName);
     updateListWithDetails(editor.dom, newList, detail);
@@ -365,10 +366,11 @@ const toggleSingleList = (editor: Editor, parentList: HTMLElement | null, listNa
     } else {
       const bookmark = Bookmark.createBookmark(editor.selection.getRng());
       if (isCustomList(parentList)) {
-        parentList.className = parentList.className.split(' ').filter((cls) => !/\btox\-/.test(cls)).join(' ');
-        if (Strings.isEmpty(parentList.className.trim()) ) {
-          parentList.removeAttribute('class');
-        }
+        parentList.classList.forEach((cls, _, classList) => {
+          if (!/\btox\-/.test(cls)) {
+            classList.remove(cls);
+          }
+        });
       }
       updateListWithDetails(editor.dom, parentList, detail);
       const newList = editor.dom.rename(parentList, listName) as HTMLElement;
