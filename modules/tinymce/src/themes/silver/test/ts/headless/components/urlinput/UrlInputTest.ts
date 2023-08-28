@@ -296,5 +296,5 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
     assert.equal(Attribute.get(getPicker(true).element, 'title'), 'UrlInput picker text'));
 
   it('TINY-10155: Title attribute of picker button should fall back to label when picker_text property is not specified', () =>
-    assert.equal(Attribute.get(getPicker(false).element, 'title'), 'col1'));
+    assert.equal(Attribute.get(getPicker(false).element, 'title'), 'UrlInput label'));
 });
