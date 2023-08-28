@@ -199,6 +199,7 @@ interface BaseEditorOptions {
   sidebar_show?: string;
   skin?: boolean | string;
   skin_url?: string;
+  skin_key?: string;
   smart_paste?: boolean;
   statusbar?: boolean;
   style_formats?: AllowedFormat[];

@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Improved
 - Adding a newline after a table would in some specific cases not work. #TINY-9863
 - Menus will now have a slight margin at the top and bottom to more clearly separate them from the edge of frame. #TINY-9978
+- Added option `skin_key` to improve custom bundling in relation to css files. #TINY-9911
 - Updated toolbar "More" button tooltip text from "More..." to "Reveal or hide additional toolbar items". #TINY-9629
 - Improved screen reader announcements of currently selected columns and rows in insert table menu item grid. #TINY-10140
 
