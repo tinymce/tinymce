@@ -236,7 +236,7 @@ export const renderUrlInput = (
   const memUrlPickerButton = Memento.record(renderButton({
     name: spec.name,
     icon: Optional.some('browse'),
-    text: spec.picker_text.getOr(''),
+    text: spec.picker_text.getOr(spec.name),
     enabled: spec.enabled,
     primary: false,
     buttonType: Optional.none(),

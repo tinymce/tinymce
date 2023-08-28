@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Keyboard, Keys, Mouse, UiControls, UiFinde
 import { Disabling, Focusing, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Future, Optional } from '@ephox/katamari';
-import { SelectorFind, SugarDocument, Value } from '@ephox/sugar';
+import { Attribute, SelectorFind, SugarDocument, Value } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import { ApiUrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
@@ -61,6 +61,13 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
     const component = hook.component();
     return component.getSystem().getByDom(
       SelectorFind.descendant(component.element, 'input').getOrDie('Could not find input')
+    ).getOrDie();
+  };
+
+  const getPicker = () => {
+    const component = hook.component();
+    return component.getSystem().getByDom(
+      SelectorFind.descendant(component.element, 'button').getOrDie('Could not find picker button')
     ).getOrDie();
   };
 
@@ -270,4 +277,7 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
     await pOpenMenu();
     closeMenu();
   });
+
+  it('TINY-10155: Title attribute of picker button should be specified by picker_text property', () =>
+    assert.equal(Attribute.get(getPicker().element, 'title'), 'UrlInput picker text'));
 });
