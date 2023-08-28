@@ -16,6 +16,7 @@ describe('webdriver.tinymce.themes.silver.components.urlinput.UrlInputTest', () 
   const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
     renderUrlInput({
       label: Optional.some('UrlInput label'),
+      text: Optional.some('UrlInput text'),
       name: 'col1',
       filetype: 'file',
       enabled: true
