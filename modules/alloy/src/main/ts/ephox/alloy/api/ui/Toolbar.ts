@@ -26,9 +26,9 @@ const factory: CompositeSketchFactory<ToolbarDetail, ToolbarSpec> = (detail, com
 
   const getGroupContainer = (component: AlloyComponent) => detail.shell ? Optional.some(component) : AlloyParts.getPart(component, detail, 'groups');
 
-  const refresh = (toolbar: AlloyComponent) => {
-    const toolbarApi: ToolbarApis = toolbar.getApis();
-    if (toolbarApi.refresh) {
+  const refresh = (toolbar: AlloyComponent | undefined) => {
+    const toolbarApi: ToolbarApis | undefined = toolbar?.getApis();
+    if (toolbarApi?.refresh) {
       toolbarApi.refresh();
     }
   };
