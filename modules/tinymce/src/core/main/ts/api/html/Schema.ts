@@ -1,78 +1,14 @@
-import { Arr, Fun, Obj, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Type, Optional } from '@ephox/katamari';
 
+import * as CustomElementsRuleParser from '../../schema/CustomElementsRuleParser';
+import * as SchemaLookupTable from '../../schema/SchemaLookupTable';
+import { SchemaType, ElementSettings, SchemaElement, SchemaMap, SchemaRegExpMap, SchemaSettings } from '../../schema/SchemaTypes';
+import * as SchemaUtils from '../../schema/SchemaUtils';
+import * as ValidChildrenRuleParser from '../../schema/ValidChildrenRuleParser';
+import * as ValidElementsRuleParser from '../../schema/ValidElementsRuleParser';
 import Tools from '../util/Tools';
 
-export type SchemaType = 'html4' | 'html5' | 'html5-strict';
-
-interface ElementSettings {
-  block_elements?: string;
-  boolean_attributes?: string;
-  move_caret_before_on_enter_elements?: string;
-  non_empty_elements?: string;
-  self_closing_elements?: string;
-  text_block_elements?: string;
-  text_inline_elements?: string;
-  void_elements?: string;
-  whitespace_elements?: string;
-  transparent_elements?: string;
-}
-
-export interface SchemaSettings extends ElementSettings {
-  custom_elements?: string;
-  extended_valid_elements?: string;
-  invalid_elements?: string;
-  invalid_styles?: string | Record<string, string>;
-  schema?: SchemaType;
-  valid_children?: string;
-  valid_classes?: string | Record<string, string>;
-  valid_elements?: string;
-  valid_styles?: string | Record<string, string>;
-  verify_html?: boolean;
-  padd_empty_block_inline_children?: boolean;
-}
-
-export interface Attribute {
-  required?: boolean;
-  defaultValue?: string;
-  forcedValue?: string;
-  validValues?: Record<string, {}>;
-}
-
-export interface DefaultAttribute {
-  name: string;
-  value: string;
-}
-
-export interface AttributePattern extends Attribute {
-  pattern: RegExp;
-}
-
-export interface ElementRule {
-  attributes: Record<string, Attribute>;
-  attributesDefault?: DefaultAttribute[];
-  attributesForced?: DefaultAttribute[];
-  attributesOrder: string[];
-  attributePatterns?: AttributePattern[];
-  attributesRequired?: string[];
-  paddEmpty?: boolean;
-  removeEmpty?: boolean;
-  removeEmptyAttrs?: boolean;
-  paddInEmptyBlock?: boolean;
-}
-
-export interface SchemaElement extends ElementRule {
-  outputName?: string;
-  parentsRequired?: string[];
-  pattern?: RegExp;
-}
-
-export interface SchemaMap {
-  [name: string]: {};
-}
-
-export interface SchemaRegExpMap {
-  [name: string]: RegExp;
-}
+export * from '../../schema/SchemaTypes';
 
 interface Schema {
   type: SchemaType;
@@ -102,14 +38,6 @@ interface Schema {
   addValidChildren: (validChildren: any) => void;
 }
 
-interface SchemaLookupTable {
-  [key: string]: {
-    attributes: Record<string, {}>;
-    attributesOrder: string[];
-    children: Record<string, {}>;
-  };
-}
-
 /**
  * Schema validator class.
  *
@@ -125,15 +53,8 @@ interface SchemaLookupTable {
  * }
  */
 
-const lookupCache: Record<string, SchemaLookupTable> = {};
 const mapCache: Record<string, SchemaMap> = {};
-const dummyObj = {};
-const makeMap = Tools.makeMap, each = Tools.each, extend = Tools.extend, explode = Tools.explode, inArray = Tools.inArray;
-
-const split = (items: string | undefined, delim?: string): string[] => {
-  items = Tools.trim(items);
-  return items ? items.split(delim || ' ') : [];
-};
+const makeMap = Tools.makeMap, each = Tools.each, extend = Tools.extend, explode = Tools.explode;
 
 const createMap = (defaultValue: string, extendWith: SchemaMap = {}): SchemaMap => {
   const value = makeMap(defaultValue, ' ', makeMap(defaultValue.toUpperCase(), ' '));
@@ -147,271 +68,6 @@ export const getTextRootBlockElements = (schema: Schema): SchemaMap =>
     'td th li dt dd figcaption caption details summary',
     schema.getTextBlockElements()
   );
-
-/**
- * Builds a schema lookup table
- *
- * @private
- * @param {String} type html4, html5 or html5-strict schema type.
- * @return {Object} Schema lookup table.
- */
-const compileSchema = (type: SchemaType): SchemaLookupTable => {
-  const schema: SchemaLookupTable = {};
-  let globalAttributes: string, blockContent: string;
-  let phrasingContent: string, flowContent: string | undefined;
-
-  const add = (name: string, attributes: string = '', children: string = '') => {
-    const childNames = split(children);
-    const names = split(name);
-    let ni = names.length;
-    while (ni--) {
-      const attributesOrder = split([ globalAttributes, attributes ].join(' '));
-
-      schema[names[ni]] = {
-        attributes: Arr.mapToObject(attributesOrder, () => ({})),
-        attributesOrder,
-        children: Arr.mapToObject(childNames, Fun.constant(dummyObj))
-      };
-    }
-  };
-
-  const addAttrs = (name: string, attributes?: string) => {
-    const names = split(name);
-    const attrs = split(attributes);
-    let ni = names.length;
-    while (ni--) {
-      const schemaItem = schema[names[ni]];
-      for (let i = 0, l = attrs.length; i < l; i++) {
-        schemaItem.attributes[attrs[i]] = {};
-        schemaItem.attributesOrder.push(attrs[i]);
-      }
-    }
-  };
-
-  // Use cached schema
-  if (lookupCache[type]) {
-    return lookupCache[type];
-  }
-
-  // Attributes present on all elements
-  globalAttributes = 'id accesskey class dir lang style tabindex title role';
-
-  // Event attributes can be opt-in/opt-out
-  /* eventAttributes = split("onabort onblur oncancel oncanplay oncanplaythrough onchange onclick onclose oncontextmenu oncuechange " +
-   "ondblclick ondrag ondragend ondragenter ondragleave ondragover ondragstart ondrop ondurationchange onemptied onended " +
-   "onerror onfocus oninput oninvalid onkeydown onkeypress onkeyup onload onloadeddata onloadedmetadata onloadstart " +
-   "onmousedown onmousemove onmouseout onmouseover onmouseup onmousewheel onpause onplay onplaying onprogress onratechange " +
-   "onreset onscroll onseeked onseeking onseeking onselect onshow onstalled onsubmit onsuspend ontimeupdate onvolumechange " +
-   "onwaiting"
-   );*/
-
-  // Block content elements
-  blockContent =
-    'address blockquote div dl fieldset form h1 h2 h3 h4 h5 h6 hr menu ol p pre table ul';
-
-  // Phrasing content elements from the HTML5 spec (inline)
-  phrasingContent =
-    'a abbr b bdo br button cite code del dfn em embed i iframe img input ins kbd ' +
-    'label map noscript object q s samp script select small span strong sub sup ' +
-    'textarea u var #text #comment';
-
-  // Add HTML5 items to globalAttributes, blockContent, phrasingContent
-  if (type !== 'html4') {
-    const transparentContent = 'a ins del canvas map';
-    globalAttributes += ' contenteditable contextmenu draggable dropzone ' +
-      'hidden spellcheck translate';
-    blockContent += ' article aside details dialog figure main header footer hgroup section nav ' + transparentContent;
-    phrasingContent += ' audio canvas command datalist mark meter output picture ' +
-      'progress time wbr video ruby bdi keygen';
-  }
-
-  // Add HTML4 elements unless it's html5-strict
-  if (type !== 'html5-strict') {
-    globalAttributes += ' xml:lang';
-
-    const html4PhrasingContent = 'acronym applet basefont big font strike tt';
-    phrasingContent = [ phrasingContent, html4PhrasingContent ].join(' ');
-
-    each(split(html4PhrasingContent), (name) => {
-      add(name, '', phrasingContent);
-    });
-
-    const html4BlockContent = 'center dir isindex noframes';
-    blockContent = [ blockContent, html4BlockContent ].join(' ');
-
-    // Flow content elements from the HTML5 spec (block+inline)
-    flowContent = [ blockContent, phrasingContent ].join(' ');
-
-    each(split(html4BlockContent), (name) => {
-      add(name, '', flowContent);
-    });
-  }
-
-  // Flow content elements from the HTML5 spec (block+inline)
-  flowContent = flowContent || [ blockContent, phrasingContent ].join(' ');
-
-  // HTML4 base schema TODO: Move HTML5 specific attributes to HTML5 specific if statement
-  // Schema items <element name>, <specific attributes>, <children ..>
-  add('html', 'manifest', 'head body');
-  add('head', '', 'base command link meta noscript script style title');
-  add('title hr noscript br');
-  add('base', 'href target');
-  add('link', 'href rel media hreflang type sizes hreflang');
-  add('meta', 'name http-equiv content charset');
-  add('style', 'media type scoped');
-  add('script', 'src async defer type charset');
-  add('body', 'onafterprint onbeforeprint onbeforeunload onblur onerror onfocus ' +
-    'onhashchange onload onmessage onoffline ononline onpagehide onpageshow ' +
-    'onpopstate onresize onscroll onstorage onunload', flowContent);
-  add('dd div', '', flowContent);
-  add('address dt caption', '', type === 'html4' ? phrasingContent : flowContent);
-  add('h1 h2 h3 h4 h5 h6 pre p abbr code var samp kbd sub sup i b u bdo span legend em strong small s cite dfn', '', phrasingContent);
-  add('blockquote', 'cite', flowContent);
-  add('ol', 'reversed start type', 'li');
-  add('ul', '', 'li');
-  add('li', 'value', flowContent);
-  add('dl', '', 'dt dd');
-  add('a', 'href target rel media hreflang type', type === 'html4' ? phrasingContent : flowContent);
-  add('q', 'cite', phrasingContent);
-  add('ins del', 'cite datetime', flowContent);
-  add('img', 'src sizes srcset alt usemap ismap width height');
-  add('iframe', 'src name width height', flowContent);
-  add('embed', 'src type width height');
-  add('object', 'data type typemustmatch name usemap form width height', [ flowContent, 'param' ].join(' '));
-  add('param', 'name value');
-  add('map', 'name', [ flowContent, 'area' ].join(' '));
-  add('area', 'alt coords shape href target rel media hreflang type');
-  add('table', 'border', 'caption colgroup thead tfoot tbody tr' + (type === 'html4' ? ' col' : ''));
-  add('colgroup', 'span', 'col');
-  add('col', 'span');
-  add('tbody thead tfoot', '', 'tr');
-  add('tr', '', 'td th');
-  add('td', 'colspan rowspan headers', flowContent);
-  add('th', 'colspan rowspan headers scope abbr', flowContent);
-  add('form', 'accept-charset action autocomplete enctype method name novalidate target', flowContent);
-  add('fieldset', 'disabled form name', [ flowContent, 'legend' ].join(' '));
-  add('label', 'form for', phrasingContent);
-  add('input', 'accept alt autocomplete checked dirname disabled form formaction formenctype formmethod formnovalidate ' +
-    'formtarget height list max maxlength min multiple name pattern readonly required size src step type value width'
-  );
-  add('button', 'disabled form formaction formenctype formmethod formnovalidate formtarget name type value',
-    type === 'html4' ? flowContent : phrasingContent);
-  add('select', 'disabled form multiple name required size', 'option optgroup');
-  add('optgroup', 'disabled label', 'option');
-  add('option', 'disabled label selected value');
-  add('textarea', 'cols dirname disabled form maxlength name readonly required rows wrap');
-  add('menu', 'type label', [ flowContent, 'li' ].join(' '));
-  add('noscript', '', flowContent);
-
-  // Extend with HTML5 elements
-  if (type !== 'html4') {
-    add('wbr');
-    add('ruby', '', [ phrasingContent, 'rt rp' ].join(' '));
-    add('figcaption', '', flowContent);
-    add('mark rt rp summary bdi', '', phrasingContent);
-    add('canvas', 'width height', flowContent);
-    add('video', 'src crossorigin poster preload autoplay mediagroup loop ' +
-      'muted controls width height buffered', [ flowContent, 'track source' ].join(' '));
-    add('audio', 'src crossorigin preload autoplay mediagroup loop muted controls ' +
-      'buffered volume', [ flowContent, 'track source' ].join(' '));
-    add('picture', '', 'img source');
-    add('source', 'src srcset type media sizes');
-    add('track', 'kind src srclang label default');
-    add('datalist', '', [ phrasingContent, 'option' ].join(' '));
-    add('article section nav aside main header footer', '', flowContent);
-    add('hgroup', '', 'h1 h2 h3 h4 h5 h6');
-    add('figure', '', [ flowContent, 'figcaption' ].join(' '));
-    add('time', 'datetime', phrasingContent);
-    add('dialog', 'open', flowContent);
-    add('command', 'type label icon disabled checked radiogroup command');
-    add('output', 'for form name', phrasingContent);
-    add('progress', 'value max', phrasingContent);
-    add('meter', 'value min max low high optimum', phrasingContent);
-    add('details', 'open', [ flowContent, 'summary' ].join(' '));
-    add('keygen', 'autofocus challenge disabled form keytype name');
-  }
-
-  // Extend with HTML4 attributes unless it's html5-strict
-  if (type !== 'html5-strict') {
-    addAttrs('script', 'language xml:space');
-    addAttrs('style', 'xml:space');
-    addAttrs('object', 'declare classid code codebase codetype archive standby align border hspace vspace');
-    addAttrs('embed', 'align name hspace vspace');
-    addAttrs('param', 'valuetype type');
-    addAttrs('a', 'charset name rev shape coords');
-    addAttrs('br', 'clear');
-    addAttrs('applet', 'codebase archive code object alt name width height align hspace vspace');
-    addAttrs('img', 'name longdesc align border hspace vspace');
-    addAttrs('iframe', 'longdesc frameborder marginwidth marginheight scrolling align');
-    addAttrs('font basefont', 'size color face');
-    addAttrs('input', 'usemap align');
-    addAttrs('select');
-    addAttrs('textarea');
-    addAttrs('h1 h2 h3 h4 h5 h6 div p legend caption', 'align');
-    addAttrs('ul', 'type compact');
-    addAttrs('li', 'type');
-    addAttrs('ol dl menu dir', 'compact');
-    addAttrs('pre', 'width xml:space');
-    addAttrs('hr', 'align noshade size width');
-    addAttrs('isindex', 'prompt');
-    addAttrs('table', 'summary width frame rules cellspacing cellpadding align bgcolor');
-    addAttrs('col', 'width align char charoff valign');
-    addAttrs('colgroup', 'width align char charoff valign');
-    addAttrs('thead', 'align char charoff valign');
-    addAttrs('tr', 'align char charoff valign bgcolor');
-    addAttrs('th', 'axis align char charoff valign nowrap bgcolor width height');
-    addAttrs('form', 'accept');
-    addAttrs('td', 'abbr axis scope align char charoff valign nowrap bgcolor width height');
-    addAttrs('tfoot', 'align char charoff valign');
-    addAttrs('tbody', 'align char charoff valign');
-    addAttrs('area', 'nohref');
-    addAttrs('body', 'background bgcolor text link vlink alink');
-  }
-
-  // Extend with HTML5 attributes unless it's html4
-  if (type !== 'html4') {
-    addAttrs('input button select textarea', 'autofocus');
-    addAttrs('input textarea', 'placeholder');
-    addAttrs('a', 'download');
-    addAttrs('link script img', 'crossorigin');
-    addAttrs('img', 'loading');
-    addAttrs('iframe', 'sandbox seamless allow allowfullscreen loading'); // Excluded: srcdoc
-  }
-
-  // Special: iframe, ruby, video, audio, label
-  if (type !== 'html4') {
-    // Video/audio elements cannot have nested children
-    Arr.each([ schema.video, schema.audio ], (item) => {
-      delete item.children.audio;
-      delete item.children.video;
-    });
-  }
-
-  // Delete children of the same name from it's parent
-  // For example: form can't have a child of the name form
-  each(split('a form meter progress dfn'), (name) => {
-    if (schema[name]) {
-      delete schema[name].children[name];
-    }
-  });
-
-  // Delete header, footer, sectioning and heading content descendants
-  /* each('dt th address', function(name) {
-   delete schema[name].children[name];
-   });*/
-
-  // Caption can't have tables
-  delete schema.caption.children.table;
-
-  // Delete scripts by default due to possible XSS
-  delete schema.script;
-
-  // TODO: LI:s can only have value if parent is OL
-
-  lookupCache[type] = schema;
-
-  return schema;
-};
 
 const compileElementMap: {
   (value: string | Record<string, string> | undefined, mode: 'map'): Record<string, SchemaMap> | undefined;
@@ -465,7 +121,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
   };
 
   const schemaType = settings.schema ?? 'html5';
-  const schemaItems = compileSchema(schemaType);
+  const schemaItems = SchemaLookupTable.makeSchema(schemaType);
 
   // Allow all elements and attributes if verify_html is set to false
   if (settings.verify_html === false) {
@@ -506,162 +162,25 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     specialElements[name] = new RegExp('<\/' + name + '[^>]*>', 'gi');
   });
 
-  // Converts a wildcard expression string to a regexp for example *a will become /.*a/.
-  const patternToRegExp = (str: string) => new RegExp('^' + str.replace(/([?+*])/g, '.$1') + '$');
-
   // Parses the specified valid_elements string and adds to the current rules
-  // This function is a bit hard to read since it's heavily optimized for speed
   const addValidElements = (validElements: string | undefined) => {
-    const elementRuleRegExp = /^([#+\-])?([^\[!\/]+)(?:\/([^\[!]+))?(?:(!?)\[([^\]]+)])?$/;
-    const attrRuleRegExp = /^([!\-])?(\w+[\\:]:\w+|[^=~<]+)?(?:([=~<])(.*))?$/;
+    const globalElement = Optional.from(elements['@']);
     const hasPatternsRegExp = /[*?+]/;
 
-    if (validElements) {
-      // Split valid elements into an array with rules
-      const validElementsArr = split(validElements, ',');
-
-      let globalAttributes: Record<string, Attribute> | undefined;
-      let globalAttributesOrder: string[] | undefined;
-      if (elements['@']) {
-        globalAttributes = elements['@'].attributes;
-        globalAttributesOrder = elements['@'].attributesOrder;
+    Arr.each(ValidElementsRuleParser.parseValidElementsRules(globalElement, validElements ?? ''), ({ name, element, aliasName }) => {
+      if (aliasName) {
+        elements[aliasName] = element;
       }
 
-      // Loop all rules
-      for (let ei = 0, el = validElementsArr.length; ei < el; ei++) {
-        // Parse element rule
-        let matches = elementRuleRegExp.exec(validElementsArr[ei]);
-        if (matches) {
-          // Setup local names for matches
-          const prefix = matches[1];
-          const elementName = matches[2];
-          const outputName = matches[3];
-          const attrData = matches[5];
-
-          // Create new attributes and attributesOrder
-          const attributes: Record<string, Attribute> = {};
-          const attributesOrder: string[] = [];
-
-          // Create the new element
-          const element = {
-            attributes,
-            attributesOrder
-          } as SchemaElement;
-
-          // Padd empty elements prefix
-          if (prefix === '#') {
-            element.paddEmpty = true;
-          }
-
-          // Remove empty elements prefix
-          if (prefix === '-') {
-            element.removeEmpty = true;
-          }
-
-          if (matches[4] === '!') {
-            element.removeEmptyAttrs = true;
-          }
-
-          // Copy attributes from global rule into current rule
-          if (globalAttributes) {
-            Obj.each(globalAttributes, (value, key) => {
-              attributes[key] = value;
-            });
-
-            if (globalAttributesOrder) {
-              attributesOrder.push(...globalAttributesOrder);
-            }
-          }
-
-          // Attributes defined
-          if (attrData) {
-            const attrDatas = split(attrData, '|');
-            for (let ai = 0, al = attrDatas.length; ai < al; ai++) {
-              matches = attrRuleRegExp.exec(attrDatas[ai]);
-              if (matches) {
-                const attr: Attribute = {};
-                const attrType = matches[1];
-                const attrName = matches[2].replace(/[\\:]:/g, ':');
-                const attrPrefix = matches[3];
-                const value = matches[4];
-
-                // Required
-                if (attrType === '!') {
-                  element.attributesRequired = element.attributesRequired || [];
-                  element.attributesRequired.push(attrName);
-                  attr.required = true;
-                }
-
-                // Denied from global
-                if (attrType === '-') {
-                  delete attributes[attrName];
-                  attributesOrder.splice(inArray(attributesOrder, attrName), 1);
-                  continue;
-                }
-
-                // Default value
-                if (attrPrefix) {
-                  // Default value
-                  if (attrPrefix === '=') {
-                    element.attributesDefault = element.attributesDefault || [];
-                    element.attributesDefault.push({ name: attrName, value });
-                    attr.defaultValue = value;
-                  }
-
-                  // Forced value
-                  if (attrPrefix === '~') {
-                    element.attributesForced = element.attributesForced || [];
-                    element.attributesForced.push({ name: attrName, value });
-                    attr.forcedValue = value;
-                  }
-
-                  // Required values
-                  if (attrPrefix === '<') {
-                    attr.validValues = makeMap(value, '?');
-                  }
-                }
-
-                // Check for attribute patterns
-                if (hasPatternsRegExp.test(attrName)) {
-                  const attrPattern = attr as AttributePattern;
-                  element.attributePatterns = element.attributePatterns || [];
-                  attrPattern.pattern = patternToRegExp(attrName);
-                  element.attributePatterns.push(attrPattern);
-                } else {
-                  // Add attribute to order list if it doesn't already exist
-                  if (!attributes[attrName]) {
-                    attributesOrder.push(attrName);
-                  }
-
-                  attributes[attrName] = attr;
-                }
-              }
-            }
-          }
-
-          // Global rule, store away these for later usage
-          if (!globalAttributes && elementName === '@') {
-            globalAttributes = attributes;
-            globalAttributesOrder = attributesOrder;
-          }
-
-          // Handle substitute elements such as b/strong
-          if (outputName) {
-            element.outputName = elementName;
-            elements[outputName] = element;
-          }
-
-          // Add pattern or exact element
-          if (hasPatternsRegExp.test(elementName)) {
-            const patternElement = element as (SchemaElement & { pattern: RegExp });
-            patternElement.pattern = patternToRegExp(elementName);
-            patternElements.push(patternElement);
-          } else {
-            elements[elementName] = element;
-          }
-        }
+      // Add pattern or exact element
+      if (hasPatternsRegExp.test(name)) {
+        const patternElement = element as (SchemaElement & { pattern: RegExp });
+        patternElement.pattern = SchemaUtils.patternToRegExp(name);
+        patternElements.push(patternElement);
+      } else {
+        elements[name] = element;
       }
-    }
+    });
   };
 
   const setValidElements = (validElements: string) => {
@@ -673,99 +192,64 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     });
 
     addValidElements(validElements);
-
-    each(schemaItems, (element, name) => {
-      children[name] = element.children;
-    });
   };
 
   // Adds custom non HTML elements to the schema
   const addCustomElements = (customElements: string | undefined) => {
-    const customElementRegExp = /^(~)?(.+)$/;
+    // Flush cached items since we are altering the default maps
+    delete mapCache.text_block_elements;
+    delete mapCache.block_elements;
 
-    if (customElements) {
-      // Flush cached items since we are altering the default maps
-      delete mapCache.text_block_elements;
-      delete mapCache.block_elements;
+    Arr.each(CustomElementsRuleParser.parseCustomElementsRules(customElements ?? ''), ({ inline, name, cloneName }) => {
+      children[name] = children[cloneName];
+      customElementsMap[name] = cloneName;
 
-      each(split(customElements, ','), (rule) => {
-        const matches = customElementRegExp.exec(rule);
-        if (matches) {
-          const inline = matches[1] === '~';
-          const cloneName = inline ? 'span' : 'div';
-          const name = matches[2];
+      // Treat all custom elements as being non-empty by default
+      nonEmptyElementsMap[name.toUpperCase()] = {};
+      nonEmptyElementsMap[name] = {};
 
-          children[name] = children[cloneName];
-          customElementsMap[name] = cloneName;
+      // If it's not marked as inline then add it to valid block elements
+      if (!inline) {
+        blockElementsMap[name.toUpperCase()] = {};
+        blockElementsMap[name] = {};
+      }
 
-          // Treat all custom elements as being non-empty by default
-          nonEmptyElementsMap[name.toUpperCase()] = {};
-          nonEmptyElementsMap[name] = {};
+      // Add elements clone if needed
+      if (!elements[name]) {
+        let customRule = elements[cloneName];
 
-          // If it's not marked as inline then add it to valid block elements
-          if (!inline) {
-            blockElementsMap[name.toUpperCase()] = {};
-            blockElementsMap[name] = {};
-          }
+        customRule = extend({}, customRule);
+        delete customRule.removeEmptyAttrs;
+        delete customRule.removeEmpty;
 
-          // Add elements clone if needed
-          if (!elements[name]) {
-            let customRule = elements[cloneName];
+        elements[name] = customRule;
+      }
 
-            customRule = extend({}, customRule);
-            delete customRule.removeEmptyAttrs;
-            delete customRule.removeEmpty;
-
-            elements[name] = customRule;
-          }
-
-          // Add custom elements at span/div positions
-          each(children, (element, elmName) => {
-            if (element[cloneName]) {
-              children[elmName] = element = extend({}, children[elmName]);
-              element[name] = element[cloneName];
-            }
-          });
+      // Add custom elements at span/div positions
+      Obj.each(children, (element, elmName) => {
+        if (element[cloneName]) {
+          children[elmName] = element = extend({}, children[elmName]);
+          element[name] = element[cloneName];
         }
       });
-    }
+    });
   };
 
   // Adds valid children to the schema object
   const addValidChildren = (validChildren: string | undefined) => {
-    // see: https://html.spec.whatwg.org/#valid-custom-element-name
-    const childRuleRegExp = /^([+\-]?)([A-Za-z0-9_\-.\u00b7\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u037d\u037f-\u1fff\u200c-\u200d\u203f-\u2040\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd]+)\[([^\]]+)]$/; // from w3c's custom grammar (above)
+    Arr.each(ValidChildrenRuleParser.parseValidChildrenRules(validChildren ?? ''), ({ operation, name, validChildren }) => {
+      const parent = operation === 'replace' ? { '#comment': {}} : children[name];
 
-    // Invalidate the schema cache if the schema is mutated
-    delete lookupCache[schemaType];
-
-    if (validChildren) {
-      each(split(validChildren, ','), (rule) => {
-        const matches = childRuleRegExp.exec(rule);
-
-        if (matches) {
-          const prefix = matches[1];
-          let parent: SchemaMap;
-
-          // Add/remove items from default
-          if (prefix) {
-            parent = children[matches[2]];
-          } else {
-            parent = children[matches[2]] = { '#comment': {}};
-          }
-
-          parent = children[matches[2]];
-
-          each(split(matches[3], '|'), (child) => {
-            if (prefix === '-') {
-              delete parent[child];
-            } else {
-              parent[child] = {};
-            }
-          });
+      Arr.each(validChildren, (child) => {
+        if (operation === 'remove') {
+          delete parent[child];
+        } else {
+          parent[child] = {};
         }
       });
-    }
+
+      children[name] = parent;
+    });
   };
 
   const getElementRule = (name: string): SchemaElement | undefined => {
@@ -801,8 +285,8 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     });
 
     // Prefer strong/em over b/i
-    each(split('strong/b em/i'), (item) => {
-      const items = split(item, '/');
+    each(SchemaUtils.split('strong/b em/i'), (item) => {
+      const items = SchemaUtils.split(item, '/');
       elements[items[1]].outputName = items[0];
     });
 
@@ -822,21 +306,21 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     });
 
     // Remove these if they are empty by default
-    each(split('ol ul blockquote a table tbody'), (name) => {
+    each(SchemaUtils.split('ol ul blockquote a table tbody'), (name) => {
       if (elements[name]) {
         elements[name].removeEmpty = true;
       }
     });
 
     // Padd these by default
-    each(split('p h1 h2 h3 h4 h5 h6 th td pre div address caption li summary'), (name) => {
+    each(SchemaUtils.split('p h1 h2 h3 h4 h5 h6 th td pre div address caption li summary'), (name) => {
       if (elements[name]) {
         elements[name].paddEmpty = true;
       }
     });
 
     // Remove these if they have no attributes
-    each(split('span'), (name) => {
+    each(SchemaUtils.split('span'), (name) => {
       elements[name].removeEmptyAttrs = true;
     });
 
@@ -847,6 +331,10 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
      });*/
   } else {
     setValidElements(settings.valid_elements);
+
+    each(schemaItems, (element, name) => {
+      children[name] = element.children;
+    });
   }
 
   addCustomElements(settings.custom_elements);
@@ -872,7 +360,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     param: 'video audio object'
   }, (parents, item) => {
     if (elements[item]) {
-      elements[item].parentsRequired = split(parents);
+      elements[item].parentsRequired = SchemaUtils.split(parents);
     }
   });
 

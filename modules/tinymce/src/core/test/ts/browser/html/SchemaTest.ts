@@ -348,7 +348,7 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
     assert.isTrue(schema.isValidChild('p', 'inline'));
   });
 
-  it('addValidChildren', () => {
+  it('addValidChildren add, remove', () => {
     let schema = Schema();
     assert.isTrue(schema.isValidChild('body', 'p'));
     assert.isFalse(schema.isValidChild('body', 'body'));
@@ -361,6 +361,18 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
     assert.isTrue(schema.isValidChild('body', 'p'));
     schema.addValidChildren('-body[p]');
     assert.isFalse(schema.isValidChild('body', 'p'));
+  });
+
+  it('addValidChildren replace should remove all children except the specified ones', () => {
+    const schema = Schema();
+
+    assert.isTrue(schema.isValidChild('a', 'span'));
+    assert.isTrue(schema.isValidChild('a', 'b'));
+
+    schema.addValidChildren('a[span]');
+
+    assert.isTrue(schema.isValidChild('a', 'span'));
+    assert.isFalse(schema.isValidChild('a', 'b'));
   });
 
   it('addCustomElements/getCustomElements', () => {
