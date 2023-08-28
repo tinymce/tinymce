@@ -2,3 +2,4 @@
 # Format: [package_name]@[new_version]
 
 polaris@6.2.2
+bridge@4.6.0
