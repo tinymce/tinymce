@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated toolbar "More" button tooltip text from "More..." to "Reveal or hide additional toolbar items". #TINY-9629
 - Where multiple case sensitive variants of a translation key are provided, they will now all be preserved in the translation object instead of just the lowercase variant. #TINY-10115
 - Improved screen reader announcements of currently selected columns and rows in insert table menu item grid. #TINY-10140
+- Improved the keyboard focus visibility for links inside dialogs, including the dark skin #TINY-10124
 
 ### Changed
 - Change UndoLevelType from enum to union type so that it can be easier to use. #TINY-9764
