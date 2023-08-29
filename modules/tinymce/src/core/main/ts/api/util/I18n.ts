@@ -118,7 +118,7 @@ const translate = (text: Untranslated): TranslatedString => {
     // make sure we work on a string and return a string
     const textStr = toString(text);
     return Obj.has(langData, textStr)
-      ? langData[textStr].toString()
+      ? toString(langData[textStr])
       : Obj.get(langData, textStr.toLowerCase()).map(toString).getOr(textStr);
   };
 
