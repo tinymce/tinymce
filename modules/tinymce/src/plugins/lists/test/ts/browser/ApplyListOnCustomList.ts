@@ -14,7 +14,7 @@ describe('browser.tinymce.plugins.lists.ApplyListOnParagraphWithStylesTest', () 
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ]);
 
-  it('TINY-9998: Apply list to custom list should keep the original list structure', () => {
+  it('TINY-9998: Apply list to nested custom list should keep the original list structure', () => {
     const editor = hook.editor();
     const multilistContent = ( className: string, listType: 'ul' | 'ol' = 'ul' ) =>
       // eslint-disable-next-line max-len
@@ -27,6 +27,10 @@ describe('browser.tinymce.plugins.lists.ApplyListOnParagraphWithStylesTest', () 
     editor.execCommand('SelectAll');
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Numbered list"]');
     TinyAssertions.assertContent(editor, multilistContent('', 'ol'));
+  });
+
+  it('TINY-9998: Apply list to flat custom list should keep the original list structure', () => {
+    const editor = hook.editor();
     const singleListContent = ( className: string, listType: 'ul' | 'ol' = 'ul' ) =>
       `<${listType}${Strings.isEmpty(className) ? '' : ` class="${className}"`}><li>a</li><li>b</li></${listType}>`;
     editor.setContent(singleListContent('tox-checklist'));

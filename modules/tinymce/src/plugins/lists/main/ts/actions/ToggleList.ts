@@ -318,8 +318,11 @@ const updateList = (editor: Editor, list: Element, listName: 'UL' | 'OL' | 'DL',
 
 const updateCustomList = (editor: Editor, list: Element, listName: 'UL' | 'OL' | 'DL', detail: ListDetail): void => {
   list.classList.forEach((cls, _, classList) => {
-    if (!/\btox\-/.test(cls)) {
+    if (cls.startsWith('tox-')) {
       classList.remove(cls);
+      if (classList.length === 0) {
+        list.removeAttribute('class');
+      }
     }
   });
   if (list.nodeName !== listName) {
@@ -367,8 +370,11 @@ const toggleSingleList = (editor: Editor, parentList: HTMLElement | null, listNa
       const bookmark = Bookmark.createBookmark(editor.selection.getRng());
       if (isCustomList(parentList)) {
         parentList.classList.forEach((cls, _, classList) => {
-          if (!/\btox\-/.test(cls)) {
+          if (cls.startsWith('tox-')) {
             classList.remove(cls);
+            if (classList.length === 0) {
+              parentList.removeAttribute('class');
+            }
           }
         });
       }
