@@ -1,4 +1,4 @@
-import { Fun, Optional } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ToolbarSchema from '../../ui/schema/ToolbarSchema';
@@ -42,8 +42,7 @@ const factory: CompositeSketchFactory<ToolbarDetail, ToolbarSpec> = (detail, com
       extra.behaviours
     ),
     apis: {
-      setGroups,
-      refresh: Fun.noop
+      setGroups
     },
     domModification: {
       attributes: {
