@@ -324,17 +324,38 @@ const updateList = (editor: Editor, list: Element, listName: 'UL' | 'OL' | 'DL',
   }
 };
 
+const updateCustomList = (editor: Editor, list: Element, listName: 'UL' | 'OL' | 'DL', detail: ListDetail): void => {
+  list.classList.forEach((cls, _, classList) => {
+    if (cls.startsWith('tox-')) {
+      classList.remove(cls);
+      if (classList.length === 0) {
+        list.removeAttribute('class');
+      }
+    }
+  });
+  if (list.nodeName !== listName) {
+    const newList = editor.dom.rename(list, listName);
+    updateListWithDetails(editor.dom, newList, detail);
+    fireListEvent(editor, listToggleActionFromListName(listName), newList);
+  } else {
+    updateListWithDetails(editor.dom, list, detail);
+    fireListEvent(editor, listToggleActionFromListName(listName), list);
+  }
+};
+
 const toggleMultipleLists = (editor: Editor, parentList: HTMLElement | null, lists: HTMLElement[], listName: 'UL' | 'OL' | 'DL', detail: ListDetail): void => {
   const parentIsList = NodeType.isListNode(parentList);
-  if (parentIsList && parentList.nodeName === listName && !hasListStyleDetail(detail)) {
+  if (parentIsList && parentList.nodeName === listName && !hasListStyleDetail(detail) && !isCustomList(parentList)) {
     flattenListSelection(editor);
   } else {
     applyList(editor, listName, detail);
     const bookmark = Bookmark.createBookmark(editor.selection.getRng());
     const allLists = parentIsList ? [ parentList, ...lists ] : lists;
 
+    const updateFunction = (parentIsList && isCustomList(parentList)) ? updateCustomList : updateList;
+
     Tools.each(allLists, (elm) => {
-      updateList(editor, elm, listName, detail);
+      updateFunction(editor, elm, listName, detail);
     });
 
     editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
@@ -355,6 +376,16 @@ const toggleSingleList = (editor: Editor, parentList: HTMLElement | null, listNa
       flattenListSelection(editor);
     } else {
       const bookmark = Bookmark.createBookmark(editor.selection.getRng());
+      if (isCustomList(parentList)) {
+        parentList.classList.forEach((cls, _, classList) => {
+          if (cls.startsWith('tox-')) {
+            classList.remove(cls);
+            if (classList.length === 0) {
+              parentList.removeAttribute('class');
+            }
+          }
+        });
+      }
       updateListWithDetails(editor.dom, parentList, detail);
       const newList = editor.dom.rename(parentList, listName) as HTMLElement;
       mergeWithAdjacentLists(editor.dom, newList);
