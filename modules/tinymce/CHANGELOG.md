@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 6.7.0 - 2023-08-30
+
 ### Added
 - New `help_accessibility` option displays the keyboard shortcut to open the in-application help in the status bar. #TINY-9379
 - Added a new `InsertNewBlockBefore` command which inserts an empty block before the block containing the current selection. #TINY-10022
