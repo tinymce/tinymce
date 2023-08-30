@@ -81,9 +81,9 @@ interface OuterContainerApis {
 
 interface ToolbarApis {
   readonly setGroups: (toolbar: AlloyComponent, groups: SketchSpec[]) => void;
-  readonly refresh?: (toolbar: AlloyComponent) => void;
-  readonly toggle?: (toolbar: AlloyComponent) => void;
-  readonly toggleWithoutFocusing?: (toolbar: AlloyComponent) => void;
+  readonly refresh: (toolbar: AlloyComponent) => void;
+  readonly toggle: (toolbar: AlloyComponent) => void;
+  readonly toggleWithoutFocusing: (toolbar: AlloyComponent) => void;
   readonly isOpen?: (toolbar: AlloyComponent) => boolean;
 }
 
@@ -129,7 +129,7 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
     },
     refreshToolbar: (comp) => {
       const toolbar = Composite.parts.getPart(comp, detail, 'toolbar');
-      toolbar.each((toolbar) => Optionals.mapFrom(toolbar.getApis<ToolbarApis>().refresh, (refresh) => refresh(toolbar)));
+      toolbar.each((toolbar) => toolbar.getApis<ToolbarApis>().refresh(toolbar));
     },
     toggleToolbarDrawer: (comp) => {
       Composite.parts.getPart(comp, detail, 'toolbar').each((toolbar) => {
