@@ -7,45 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- New `help_accessibility` option which displays the keyboard shortcut to access the help functionality in the statusbar. #TINY-9379
-- Added a new `InsertNewBlockBefore` command, which inserts an empty block before the one containing the current selection. #TINY-10022
-- Added a new `InsertNewBlockAfter` command, which inserts an empty block after the one containing the current selection. #TINY-10022
+- New `help_accessibility` option displays the keyboard shortcut to open the in-application help in the status bar. #TINY-9379
+- Added a new `InsertNewBlockBefore` command which inserts an empty block before the block containing the current selection. #TINY-10022
+- Added a new `InsertNewBlockAfter` command which inserts an empty block after the block containing the current selection. #TINY-10022
 
 ### Improved
-- Adding a newline after a table would in some specific cases not work. #TINY-9863
-- Menus will now have a slight margin at the top and bottom to more clearly separate them from the edge of frame. #TINY-9978
-- Updated toolbar "More" button tooltip text from "More..." to "Reveal or hide additional toolbar items". #TINY-9629
+- Adding a newline after a table would, in some specific cases, not work. #TINY-9863
+- Menus now have a slight margin at the top and bottom to more clearly separate them from the frame edge. #TINY-9978
+- Updated **More** toolbar button tooltip text from *More...* to *Reveal or hide additional toolbar items*. #TINY-9629
 - Where multiple case sensitive variants of a translation key are provided, they will now all be preserved in the translation object instead of just the lowercase variant. #TINY-10115
-- Improved screen reader announcements of currently selected columns and rows in insert table menu item grid. #TINY-10140
-- Improved the keyboard focus visibility for links inside dialogs, including the dark skin #TINY-10124
+- Improved screen reader announcements of the column and row selection in the grid presented by the **Table** menu and toolbar item. #TINY-10140
+- Improved the keyboard focus visibility for links inside dialogs. #TINY-10124
 
 ### Changed
-- Change UndoLevelType from enum to union type so that it can be easier to use. #TINY-9764
-- The pattern replacement removes spaces if they were contained in a tag that only contains a space and the text to replace. #TINY-9744
-- When loading content CSS takes more than half a second, the editor will be set to the "in progress" state until the CSS is ready. #TINY-10008
+- Change `UndoLevelType` from `enum` to union type so that it is easier to use. #TINY-9764
+- The pattern replacement removed spaces if they were contained within a tag that only contained a space and the text to replace. #TINY-9744
+- If loading content CSS takes more than 500ms, the editor will be set to an *in progress* state until the CSS is ready. #TINY-10008
 
 ### Fixed
-- Applying an ordered or unordered list to a selected checklist would incorrectly turn the list into paragraphs. #TINY-9975
-- Returning an empty string in custom context menu update function would result in a small white line appearing on right click and the native browser context menu would not show up. #TINY-9842
-- Autocompletion of url for links would on sufficiently long links and wide screens leave out middle parts of the url from view. #TINY-10017
-- Toolbar number input would not properly disable upon changing mode. #TINY-10129
-- Quick Toolbar plugin would show text alignment buttons on pagebreaks. #TINY-10054
-- Creating lists in empty blocks would sometimes include adjacent blocks. #TINY-10136
-- Creating a list from multiple div elements would only create a partial list. #TINY-9872
-- Tab navigation incorrectly stopped around `iframe` dialog component. #TINY-9815
-- It was possible to delete the sole empty block just before a details element if it was nested within another details element. #TINY-9965
-- deleting `li` with only `br`s in it sometimes caused a crush. #TINY-6888
-- It was possible to remove the summary element from a details element by drag and dropping. #TINY-9960
-- It was possible to break summary elements if contents containing blocks was dropped inside them. #TINY-9960
-- Contents would not be removed from the drag start source if dragging and dropping internally into a transparent block element. #TINY-9960
-- Using the Media plugin would change scripts in the body to images unexpectedly. #TINY-10007
-- In some cases pressing enter would scroll the entire page. #TINY-9828
+- Applying an ordered or unordered list to a selected checklist incorrectly turned the list into paragraphs. #TINY-9975
+- Returning an empty string in a custom context menu update function resulted in a small white line appearing on right-click and the browser-native context menu would not present. #TINY-9842
+- For sufficiently long URLs and sufficiently wide windows, URL autocompletion hid middle portions of the URL from view. #TINY-10017
+- Numeric input in toolbar items did not disable when a switching from edit to read-only mode. #TINY-10129
+- The Quick Toolbars plugin showed text alignment buttons on pagebreaks. #TINY-10054
+- Creating lists in empty blocks sometimes, and incorrectly, converted adjacent block elements into list items. #TINY-10136
+- Creating a list from multiple `<div>` elements only created a partial list. #TINY-9872
+- Tab navigation incorrectly stopped around `iframe` dialog components. #TINY-9815
+- It was possible to delete the sole empty block immediately before a `<details>` element if it was nested within another `<details>` element. #TINY-9965
+- Deleting `<li>` elements that only contained `<br>` tags sometimes caused a crash. #TINY-6888
+- It was possible to remove the `<summary>` element from a `<details>` element by dragging and dropping. #TINY-9960
+- It was possible to break `<summary>` elements if content containing block elements was dragged-and-dropped inside them. #TINY-9960
+- Contents were not removed from the drag start source if dragging and dropping internally into a transparent block element. #TINY-9960
+- Using the Media plugin unexpectedly changed `<script>` tags in the editor body to `<image>` tags. #TINY-10007
+- In some circumstances, pressing the **Enter** key scrolled the entire page. #TINY-9828
 - The border styles of a table were incorrectly split into a longhand form after table dialog updates. #TINY-9843
-- Links in `help dialog` -> `plugins` and `version` were not navigable via keyboard. #TINY-10071
-- Fixed the inability to insert content next to the `details` element when it is the first or last content element. Now pressing the `Up` or `Down` arrow key will insert a block element before or after the `details` element. #TINY-9827
-- An empty `contenteditable="true"` element within a noneditable root was deleted upon pressing the Backspace key. #TINY-10011
+- Links in **Help → Help → Plugins** and **Help → Help → Version** were not navigable by keyboard. #TINY-10071
+- Fixed the inability to insert content next to the `<details>` element when it is the first or last content element. Pressing the **Up** or **Down** arrow key now inserts a block element before or after the `<details>` element. #TINY-9827
+- An empty element with a `contenteditable="true"` attribute within a noneditable root was deleted when the Backspace key was pressed. #TINY-10011
 - The `color_cols` option was not respected when set to the value 5 with a custom `color_map` specified. #TINY-10126
-- On Safari, deleting backwards within a `summary` element would remove the entire `details` element if it had no other content. #TINY-10123
+- In Safari on macOS, deleting backwards within a `<summary>` element removed the entire `<details>` element if it had no other content. #TINY-10123
 
 ## 6.6.2 - 2023-08-09
 
