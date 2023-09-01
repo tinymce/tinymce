@@ -15,25 +15,54 @@ const loadStylesheet = (editor: Editor, stylesheetUrl: string, styleSheetLoader:
   return styleSheetLoader.load(stylesheetUrl);
 };
 
+const loadRawCss = (editor: Editor, key: string, css: string, styleSheetLoader: StyleSheetLoader): void => {
+  // Ensure the stylesheet is cleaned up when the editor is destroyed
+  editor.on('remove', () => styleSheetLoader.unloadRawCss(key));
+  return styleSheetLoader.loadRawCss(key, css);
+};
+
 const loadUrlUiSkins = (editor: Editor, skinUrl: string): Promise<void> => {
-  const skinUiCss = skinUrl + '/skin.min.css';
-  return loadStylesheet(editor, skinUiCss, editor.ui.styleSheetLoader);
+  const skinUiCss = skinUrl + '/skin.css';
+  const css = EditorManager.resources.get(skinUiCss);
+
+  if (Type.isString(css)) {
+    loadRawCss(editor, skinUiCss, css, editor.ui.styleSheetLoader);
+    return Promise.resolve();
+  } else {
+    const skinUiCss = skinUrl + '/skin.min.css';
+    return loadStylesheet(editor, skinUiCss, editor.ui.styleSheetLoader);
+  }
 };
 
 const loadShadowDomUrlUiSkins = (editor: Editor, skinUrl: string): Promise<void> => {
   const isInShadowRoot = SugarShadowDom.isInShadowRoot(SugarElement.fromDom(editor.getElement()));
   if (isInShadowRoot) {
-    const shadowDomSkinCss = skinUrl + '/skin.shadowdom.min.css';
-    return loadStylesheet(editor, shadowDomSkinCss, DOMUtils.DOM.styleSheetLoader);
+
+    const shadowDomSkinCss = skinUrl + '/skin.shadowdom.css';
+    const css = EditorManager.resources.get(shadowDomSkinCss);
+
+    if (Type.isString(css)) {
+      loadRawCss(editor, shadowDomSkinCss, css, DOMUtils.DOM.styleSheetLoader);
+      return Promise.resolve();
+    } else {
+      const shadowDomSkinCss = skinUrl + '/skin.shadowdom.min.css';
+      return loadStylesheet(editor, shadowDomSkinCss, DOMUtils.DOM.styleSheetLoader);
+    }
   } else {
     return Promise.resolve();
   }
 };
 
-const loadUrlSkin = (isInline: boolean, editor: Editor): Promise<void | [void, void]> => {
+const loadUrlSkin = (isInline: boolean, editor: Editor): Promise<void> => {
   const skinUrl = Options.getSkinUrl(editor);
   if (skinUrl) {
-    editor.contentCSS.push(skinUrl + (isInline ? '/content.inline' : '/content') + '.min.css');
+    const css = EditorManager.resources.get(skinUrl + (isInline ? '/content.inline' : '/content') + '.css');
+
+    if (Type.isString(css)) {
+      loadRawCss(editor, skinUrl, css, editor.ui.styleSheetLoader);
+    } else {
+      editor.contentCSS.push(skinUrl + (isInline ? '/content.inline' : '/content') + '.min.css');
+    }
   }
 
   // In Modern Inline, this is explicitly called in editor.on('focus', ...) as well as in render().
@@ -42,67 +71,14 @@ const loadUrlSkin = (isInline: boolean, editor: Editor): Promise<void | [void, v
     return Promise.all([
       loadUrlUiSkins(editor, skinUrl),
       loadShadowDomUrlUiSkins(editor, skinUrl)
-    ]);
+    ]).then();
   } else {
     return Promise.resolve();
   }
 };
 
-const loadRawCss = (editor: Editor, key: string, css: string, styleSheetLoader: StyleSheetLoader): void => {
-  // Ensure the stylesheet is cleaned up when the editor is destroyed
-  editor.on('remove', () => styleSheetLoader.unloadRawCss(key));
-  return styleSheetLoader.loadRawCss(key, css);
-};
-
-const loadRawUiSkins = (editor: Editor, skinKey: string): void => {
-  const skinUiCss = skinKey + '/skin.css';
-  const css = EditorManager.resources.get(skinUiCss);
-
-  if (Type.isString(css)) {
-    return loadRawCss(editor, skinUiCss, css, editor.ui.styleSheetLoader);
-  }
-};
-
-const loadShadowDomRawUiSkins = (editor: Editor, skinKey: string): void => {
-  const isInShadowRoot = SugarShadowDom.isInShadowRoot(SugarElement.fromDom(editor.getElement()));
-  if (isInShadowRoot) {
-    const shadowDomSkinCss = skinKey + '/skin.shadowdom.css';
-    const css = EditorManager.resources.get(shadowDomSkinCss);
-
-    if (Type.isString(css)) {
-      return loadRawCss(editor, shadowDomSkinCss, css, DOMUtils.DOM.styleSheetLoader);
-    }
-  }
-};
-
-const loadKeySkin = (isInline: boolean, editor: Editor): Promise<void | [void, void]> => {
-  const skinKey = Options.getSkinKey(editor);
-
-  if (skinKey) {
-    // eslint-disable-next-line no-debugger
-    debugger;
-    const css = EditorManager.resources.get(skinKey + (isInline ? '/content.inline' : '/content') + '.css');
-
-    if (Type.isString(css)) {
-      loadRawCss(editor, skinKey, css, editor.ui.styleSheetLoader);
-    }
-  }
-
-  // In Modern Inline, this is explicitly called in editor.on('focus', ...) as well as in render().
-  // Seems to work without, but adding a note in case things break later
-  if (!Options.isSkinDisabled(editor) && Type.isString(skinKey)) {
-    loadRawUiSkins(editor, skinKey);
-    loadShadowDomRawUiSkins(editor, skinKey);
-  }
-
-  return Promise.resolve();
-};
-
 const loadSkin = (isInline: boolean, editor: Editor): Promise<void> => {
-  return Promise.all([
-    loadUrlSkin(isInline, editor),
-    loadKeySkin(isInline, editor)
-  ]).then(SkinLoaded.fireSkinLoaded(editor), SkinLoaded.fireSkinLoadError(editor, 'Skin could not be loaded'));
+  return loadUrlSkin(isInline, editor).then(SkinLoaded.fireSkinLoaded(editor), SkinLoaded.fireSkinLoadError(editor, 'Skin could not be loaded'));
 };
 
 const iframe = Fun.curry(loadSkin, false);

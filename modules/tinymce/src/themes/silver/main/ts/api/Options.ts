@@ -48,10 +48,6 @@ const register = (editor: Editor): void => {
     processor: 'string'
   });
 
-  registerOption('skin_key', {
-    processor: 'string'
-  });
-
   registerOption('height', {
     processor: stringOrNumberProcessor,
     default: Math.max(editor.getElement().offsetHeight, 400)
@@ -352,8 +348,6 @@ const getSkinUrl = (editor: Editor): string | undefined => {
   }
 };
 
-const getSkinKey = option('skin_key');
-
 const getLineHeightFormats = (editor: Editor): string[] =>
   editor.options.get('line_height_formats').split(' ');
 
@@ -435,7 +429,6 @@ const getMenus = (editor: Editor): Record<string, { title: string; items: string
 export {
   register,
   getSkinUrl,
-  getSkinKey,
   isReadOnly,
   isSkinDisabled,
   getHeightOption,
