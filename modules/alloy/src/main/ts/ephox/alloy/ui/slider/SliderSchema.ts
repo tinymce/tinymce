@@ -18,6 +18,7 @@ interface SliderModelSpec {
 
 const SliderSchema: FieldProcessor[] = [
   FieldSchema.defaulted('stepSize', 1),
+  FieldSchema.defaulted('speedMultiplier', 10),
   FieldSchema.defaulted('onChange', Fun.noop),
   FieldSchema.defaulted('onChoose', Fun.noop),
   FieldSchema.defaulted('onInit', Fun.noop),

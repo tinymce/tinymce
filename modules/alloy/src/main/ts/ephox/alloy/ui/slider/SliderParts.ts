@@ -5,6 +5,7 @@ import { EventArgs, SugarPosition } from '@ephox/sugar';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
 import { Keying } from '../../api/behaviour/Keying';
+import { Tabstopping } from '../../api/behaviour/Tabstopping';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { OptionalDomSchema } from '../../api/component/SpecTypes';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
@@ -90,6 +91,8 @@ const thumbPart = PartType.required<SliderDetail, { dom: OptionalDomSchema; even
   }
 });
 
+const isShift = (event: any) => event.raw ? event.raw.shiftKey : false;
+
 const spectrumPart = PartType.required({
   schema: [
     FieldSchema.customField('mouseIsDown', () => Cell(false))
@@ -108,12 +111,13 @@ const spectrumPart = PartType.required({
         Keying.config(
           {
             mode: 'special',
-            onLeft: (spectrum) => model.onLeft(spectrum, detail),
-            onRight: (spectrum) => model.onRight(spectrum, detail),
-            onUp: (spectrum) => model.onUp(spectrum, detail),
-            onDown: (spectrum) => model.onDown(spectrum, detail)
+            onLeft: (spectrum, event) => model.onLeft(spectrum, detail, isShift(event.event)),
+            onRight: (spectrum, event) => model.onRight(spectrum, detail, isShift(event.event)),
+            onUp: (spectrum, event) => model.onUp(spectrum, detail, isShift(event.event)),
+            onDown: (spectrum, event) => model.onDown(spectrum, detail, isShift(event.event))
           }
         ),
+        Tabstopping.config({ }),
         Focusing.config({})
       ]),
 
