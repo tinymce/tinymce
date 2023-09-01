@@ -124,12 +124,17 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
   const purify = createDompurify();
 
   // We use this to add new tags to the allow-list as we parse, if we notice that a tag has been banned but it's still in the schema
+  let initialOrder: Attr[] = [];
   purify.addHook('uponSanitizeElement', (ele, evt) => {
+    initialOrder = [];
     processNode(ele, settings, schema, evt);
   });
 
   // Let's do the same thing for attributes
   purify.addHook('uponSanitizeAttribute', (ele, evt) => {
+    if (initialOrder.length === 0) {
+      initialOrder = Arr.from(ele.attributes);
+    }
     const tagName = ele.tagName.toLowerCase();
     const { attrName, attrValue } = evt;
 
@@ -149,6 +154,25 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
     // For internal elements always keep the attribute if the attribute name is id, class or style
     } else if (isRequiredAttributeOfInternalElement(ele, attrName)) {
       evt.forceKeepAttr = true;
+    }
+  });
+
+  purify.addHook('afterSanitizeAttributes', (node) => {
+    const { attributes } = node;
+    const currentOrder = Arr.from(attributes);
+    if (!attributes || attributes.length < 2) {
+      return;
+    }
+
+    for (let l = 0; l <= (initialOrder.length - 1); l++) {
+      const indexOpt = Arr.findIndex(currentOrder, (attr) => attr.name === initialOrder[l].name);
+      indexOpt.each((index) => {
+        const attr = currentOrder[index];
+
+        const { name, value } = attr;
+        node.removeAttribute(name);
+        node.setAttribute(name, value);
+      });
     }
   });
 
