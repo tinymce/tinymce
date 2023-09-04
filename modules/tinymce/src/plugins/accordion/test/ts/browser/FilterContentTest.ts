@@ -27,7 +27,8 @@ describe('browser.tinymce.plugins.accordion.FilterContentTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'accordion',
     toolbar: 'accordion',
-    base_url: '/project/tinymce/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce',
+    indent: false
   }, [ Plugin ], true);
 
   const buildAccordionStructure = (details: AccordionDetails): ApproxStructure.Builder<StructAssert> => (s, str, _arr) => {

@@ -12,6 +12,7 @@ describe('browser.tinymce.plugins.accordion.AccordionNavigationTest', () => {
     {
       plugins: 'accordion',
       base_url: '/project/tinymce/js/tinymce',
+      indent: false
     },
     [ Plugin ]
   );
@@ -22,16 +23,17 @@ describe('browser.tinymce.plugins.accordion.AccordionNavigationTest', () => {
     editor.execCommand('InsertAccordion');
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     TinyContentActions.keystroke(editor, Keys.up());
-    TinyAssertions.assertContent(editor, `<p>&nbsp;</p>\n` + AccordionUtils.createAccordion());
+    TinyAssertions.assertContent(editor, `<p>&nbsp;</p>` + AccordionUtils.createAccordion());
     TinyAssertions.assertCursor(editor, [ 0 ], 0);
   });
 
   it('TINY-9827: should move cursor below the last child accordion on ArrowDown key pressing', () => {
     const editor = hook.editor();
+    editor.resetContent();
     editor.execCommand('InsertAccordion');
     TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
     TinyContentActions.keystroke(editor, Keys.down());
-    TinyAssertions.assertContent(editor, AccordionUtils.createAccordion() + `\n<p>&nbsp;</p>`);
+    TinyAssertions.assertContent(editor, AccordionUtils.createAccordion() + `<p>&nbsp;</p>`);
     TinyAssertions.assertCursor(editor, [ 1 ], 0);
   });
 });
