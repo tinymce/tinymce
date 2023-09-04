@@ -285,8 +285,8 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
           testGetContentTreeWithContentAlteredInGetContent(editor, '<p>replaced</p>', 'Should be replaced html');
         });
 
-        it('TINY-10088: Preserve attributes with HTML elements that end in />', () => {
-          const content = '<div data-some-attribut="title=<br/>">abc</div>';
+        it('TINY-10088: Preserve attributes with self closed HTML tag', () => {
+          const content = '<div data-some-attribute="title=<br/>">abc</div>';
           const editor = hook.editor();
           editor.setContent(content);
           TinyAssertions.assertContent(editor, content, { format: 'raw' });
