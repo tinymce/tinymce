@@ -159,15 +159,14 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
 
   purify.addHook('afterSanitizeAttributes', (node) => {
     const { attributes } = node;
-    const currentOrder = Arr.from(attributes);
     if (!attributes || attributes.length < 2) {
       return;
     }
 
     for (let l = 0; l <= (initialOrder.length - 1); l++) {
-      const indexOpt = Arr.findIndex(currentOrder, (attr) => attr.name === initialOrder[l].name);
+      const indexOpt = Arr.findIndex(attributes, (attr) => attr.name === initialOrder[l].name);
       indexOpt.each((index) => {
-        const attr = currentOrder[index];
+        const attr = attributes[index];
 
         const { name, value } = attr;
         node.removeAttribute(name);
