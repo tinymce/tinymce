@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Applying heading formatting to the content of the `summary` element extended its application to the content of the parent `details` element. #TINY-10154
+
 ## 6.7.0 - 2023-08-30
 
 ### Added
