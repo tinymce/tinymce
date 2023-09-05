@@ -1,15 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Plugin: code Demo Page</title>
-  </head>
 
-  <body>
-    <h2>Plugin: code Demo Page</h2>
-    <div id="ephox-ui">
-      <textarea cols="30" rows="10" class="tinymce"></textarea>
-    </div>
-    <script src="../../../../../js/tinymce/tinymce.js"></script>
-    <script src="../../../../../scratch/demos/plugins/code/demo.js"></script>
-  </body>
+<head>
+  <title>Plugin: code Demo Page</title>
+</head>
+
+<body>
+  <h2>Plugin: code Demo Page</h2>
+  <div id="ephox-ui">
+    <textarea cols="30" rows="10" class="tinymce">
+        <p>Paragraph</p>
+        <details class="mce-accordion" open="open">
+          <summary>Accordion summary...</summary>
+          <p>Accordion body...</p>
+        </details>
+        <ul>
+          <li>AAA
+            <ul>
+              <li>a1</li>
+            </ul>
+          </li>
+          <li>BBB
+            <ul>
+              <li>b1</li>
+            </ul>
+          </li>
+          <li>CCC</li>
+        </ul>
+        <table style="border-collapse: collapse; width: 100%; height: 59.5625px;" border="1">
+          <colgroup>
+            <col style="width: 49.9661%;">
+            <col style="width: 49.9661%;">
+          </colgroup>
+          <tbody>
+            <tr style="height: 22.3906px;">
+              <td style="height: 22.3906px;">A1</td>
+              <td style="height: 22.3906px;">A2</td>
+            </tr>
+            <tr style="height: 37.1719px;">
+              <td style="height: 37.1719px;">B1</td>
+              <td style="height: 37.1719px;">
+                <table style="border-collapse: collapse; width: 100.111%;" border="1">
+                  <colgroup>
+                    <col style="width: 49.9308%;">
+                    <col style="width: 49.9308%;">
+                  </colgroup>
+                  <tbody>
+                    <tr>
+                      <td>B2_1</td>
+                      <td>B2_2</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div contenteditable="false">
+          <p>CEF</p>
+          <div contenteditable="true">
+            <p>CET</p>
+          </div>
+        </div>
+      </textarea>
+  </div>
+  <script src="../../../../../js/tinymce/tinymce.js"></script>
+  <script src="../../../../../scratch/demos/plugins/code/demo.js"></script>
+</body>
+
 </html>

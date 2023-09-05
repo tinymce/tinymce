@@ -9,6 +9,7 @@ import * as IndentCommands from './IndentCommands';
 import * as LinkCommands from './LinkCommands';
 import * as ListCommands from './ListCommands';
 import * as NewBlockCommands from './NewBlockCommands';
+import * as MoveBlockCommands from './MoveBlockCommands';
 import * as NewlineCommands from './NewlineCommands';
 import * as SelectionCommands from './SelectionCommands';
 
@@ -49,6 +50,7 @@ export const registerCommands = (editor: Editor): void => {
   LinkCommands.registerCommands(editor);
   IndentCommands.registerCommands(editor);
   NewBlockCommands.registerCommands(editor);
+  MoveBlockCommands.registerCommands(editor);
   NewlineCommands.registerCommands(editor);
   ListCommands.registerCommands(editor);
   FormatCommands.registerCommands(editor);
