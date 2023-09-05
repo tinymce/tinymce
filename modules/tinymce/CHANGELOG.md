@@ -6,9 +6,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Improved
-- Added more usecases to option `skin_url` to improve custom bundling in relation to css files. #TINY-9911
-
 ## 6.7.0 - 2023-08-30
 
 ### Added
