@@ -1,0 +1,62 @@
+diff --git a/node_modules/dompurify/dist/purify.js b/node_modules/dompurify/dist/purify.js
+index ba807e1..c6512fc 100644
+--- a/node_modules/dompurify/dist/purify.js
++++ b/node_modules/dompurify/dist/purify.js
+@@ -1196,6 +1196,7 @@
+           namespaceURI
+         } = attr;
+         value = name === 'value' ? attr.value : stringTrim(attr.value);
++        const initValue = value;
+         lcName = transformCaseFunc(name);
+         /* Execute a hook if present */
+ 
+@@ -1215,11 +1216,10 @@
+         /* Remove attribute */
+ 
+ 
+-        _removeAttribute(name, currentNode);
+         /* Did the hooks approve of the attribute? */
+ 
+-
+         if (!hookEvent.keepAttr) {
++          _removeAttribute(name, currentNode);
+           continue;
+         }
+         /* Work around a security issue in jQuery 3.0 */
+@@ -1244,6 +1244,7 @@
+         const lcTag = transformCaseFunc(currentNode.nodeName);
+ 
+         if (!_isValidAttribute(lcTag, lcName, value)) {
++          _removeAttribute(name, currentNode);
+           continue;
+         }
+         /* Full DOM Clobbering protection via namespace isolation,
+@@ -1280,17 +1281,18 @@
+         }
+         /* Handle invalid data-* attribute set by try-catching it */
+ 
+-
+-        try {
+-          if (namespaceURI) {
+-            currentNode.setAttributeNS(namespaceURI, name, value);
+-          } else {
+-            /* Fallback to setAttribute() for browser-unrecognized namespaces e.g. "x-schema". */
+-            currentNode.setAttribute(name, value);
++        if (value !== initValue) {
++          try {
++            if (namespaceURI) {
++              currentNode.setAttributeNS(namespaceURI, name, value);
++            } else {
++              /* Fallback to setAttribute() for browser-unrecognized namespaces e.g. "x-schema". */
++              currentNode.setAttribute(name, value);
++            }
++          } catch (_) {
++            _removeAttribute(name, currentNode);
+           }
+-
+-          arrayPop(DOMPurify.removed);
+-        } catch (_) {}
++        }
+       }
+       /* Execute a hook if present */
+ 
