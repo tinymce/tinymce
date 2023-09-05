@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Fixed
-- Setting the content with an attribute that contains a self closed HTML tag did not preserve the tag. #TINY-10088
+- Setting the content with an attribute that contains a self-closing HTML tag did not preserve the tag. #TINY-10088
 
 ## 6.7.0 - 2023-08-30
 
