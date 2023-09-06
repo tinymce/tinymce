@@ -13,7 +13,7 @@ describe('browser.tinymce.core.paste.DragDropSummaryTest', () => {
     indent: false
   }, [], true);
 
-  it('TINY-9960: Dropping a H1 internally into a summary element should unwrap it', async () => {
+  it('TINY-9960: Dropping a H1 internally into a summary element should not unwrap it', async () => {
     const editor = hook.editor();
 
     editor.setContent('<details><summary>cd</summary><div>body</div></details><h1>a</h1><p>b</p>');
@@ -21,11 +21,11 @@ describe('browser.tinymce.core.paste.DragDropSummaryTest', () => {
     DragDropUtils.dragDropHtmlInternallyToPath(editor, '<h1>a</h1><p>b</p>', [ 0, 0 ]);
 
     await Waiter.pTryUntil('Waited for content to be inserted', () => {
-      TinyAssertions.assertContent(editor, '<details><summary>abcd</summary><div>body</div></details><p>&nbsp;</p>');
+      TinyAssertions.assertContent(editor, '<details><summary><h1>a</h1>bcd</summary><div>body</div></details><p>&nbsp;</p>');
     });
   });
 
-  it('TINY-9960: Dropping a H1 externally into a summary element should unwrap it', async () => {
+  it('TINY-9960: Dropping a H1 externally into a summary element should not unwrap it', async () => {
     const editor = hook.editor();
 
     editor.setContent('<details><summary>bc</summary><div>body</div></details><p>d</p>');
@@ -33,7 +33,7 @@ describe('browser.tinymce.core.paste.DragDropSummaryTest', () => {
     DragDropUtils.dragDropHtmlExternallyToPath(editor, '<h1>a</h1>', [ 0, 0 ]);
 
     await Waiter.pTryUntil('Waited for content to be inserted', () => {
-      TinyAssertions.assertContent(editor, '<details><summary>abc</summary><div>body</div></details><p>d</p>');
+      TinyAssertions.assertContent(editor, '<details><summary><h1>a</h1>bc</summary><div>body</div></details><p>d</p>');
     });
   });
 

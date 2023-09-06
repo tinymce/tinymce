@@ -116,8 +116,8 @@ export const makeSchema = (type: SchemaType): SchemaLookupTable => {
     add('wbr');
     add('ruby', '', [ phrasingContent, 'rt rp' ].join(' '));
     add('figcaption', '', flowContent);
-    add('mark rt rp summary bdi', '', phrasingContent);
-    add('summary', '', 'h1 h2 h3 h4 h5 h6');
+    add('mark rt rp bdi', '', phrasingContent);
+    add('summary', '', [ phrasingContent, 'h1 h2 h3 h4 h5 h6' ].join(' '));
     add('canvas', 'width height', flowContent);
     add('video', 'src crossorigin poster preload autoplay mediagroup loop ' +
       'muted controls width height buffered', [ flowContent, 'track source' ].join(' '));
