@@ -16,7 +16,7 @@ describe('browser.tinymce.plugins.accordion.AccordionFormattingTest', () => {
     [ Plugin ]
   );
 
-  it('TINY-10154: should apply heading to the  summary', () => {
+  it('TINY-10154: should apply heading to the summary', () => {
     const editor = hook.editor();
     editor.setContent(AccordionUtils.createAccordion({ summary: 'heading' }));
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
