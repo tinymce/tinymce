@@ -1,5 +1,5 @@
 import { HexColour, RgbaColour } from '@ephox/acid';
-import { Cell, Fun, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Cell, Fun, Optional, Optionals } from '@ephox/katamari';
 import { Css, SugarElement, SugarNode, TransformFind } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -128,9 +128,15 @@ const select = (editor: Editor, format: ColorFormat) =>
     return Optionals.is(optCurrentHex, value.toUpperCase());
   };
 
-const registerTextColorButton = (editor: Editor, name: string, format: ColorFormat, tooltip: string, lastColor: Cell<string>) => {
+const getToolTipText = (editor: Editor, format: ColorFormat, color: string) => {
+  const colors = getColors(Options.getColors(editor, format), format, false);
+  const tooltipText = Arr.find(colors, (c) => c.value === color).getOr({ text: '' });
+  return editor.translate([ format === 'forecolor' ? 'Text color {0}' : 'Background color {0}', editor.translate(tooltipText.text) ]);
+};
+
+const registerTextColorButton = (editor: Editor, name: string, format: ColorFormat, lastColor: Cell<string>) => {
   editor.ui.registry.addSplitButton(name, {
-    tooltip,
+    tooltip: editor.translate(getToolTipText(editor, format, lastColor.get())),
     presets: 'color',
     icon: name === 'forecolor' ? 'text-color' : 'highlight-bg-color',
     select: select(editor, format),
@@ -155,6 +161,7 @@ const registerTextColorButton = (editor: Editor, name: string, format: ColorForm
       const handler = (e: EditorEvent<{ name: string; color: string }>) => {
         if (e.name === name) {
           setIconColor(splitButtonApi, e.name, e.color);
+          splitButtonApi.setTooltip(getToolTipText(editor, format, e.color));
         }
       };
 
@@ -267,8 +274,8 @@ const register = (editor: Editor): void => {
   const fallbackColorBackground = Options.getDefaultBackgroundColor(editor);
   const lastForeColor = Cell(fallbackColorForeground);
   const lastBackColor = Cell(fallbackColorBackground);
-  registerTextColorButton(editor, 'forecolor', 'forecolor', 'Text color', lastForeColor);
-  registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background color', lastBackColor);
+  registerTextColorButton(editor, 'forecolor', 'forecolor', lastForeColor);
+  registerTextColorButton(editor, 'backcolor', 'hilitecolor', lastBackColor);
 
   registerTextColorMenuItem(editor, 'forecolor', 'forecolor', 'Text color', lastForeColor);
   registerTextColorMenuItem(editor, 'backcolor', 'hilitecolor', 'Background color', lastBackColor);

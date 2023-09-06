@@ -17,9 +17,9 @@ describe('browser.tinymce.themes.silver.editor.color.NoneditableRootTest', () =>
       TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
         editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
         TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
-        UiFinder.exists(SugarBody.body(), `[aria-label="${title}"][aria-disabled="true"]`);
+        UiFinder.exists(SugarBody.body(), `[aria-label^="${title}"][aria-disabled="true"]`);
         TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
-        UiFinder.exists(SugarBody.body(), `[aria-label="${title}"][aria-disabled="false"]`);
+        UiFinder.exists(SugarBody.body(), `[aria-label^="${title}"][aria-disabled="false"]`);
       });
     };
 
