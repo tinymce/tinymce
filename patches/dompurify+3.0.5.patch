@@ -1,56 +1,40 @@
 diff --git a/node_modules/dompurify/dist/purify.es.js b/node_modules/dompurify/dist/purify.es.js
-index 009cfd7..828e17e 100644
+index ee9246e..d297e22 100644
 --- a/node_modules/dompurify/dist/purify.es.js
 +++ b/node_modules/dompurify/dist/purify.es.js
 @@ -1190,6 +1190,7 @@ function createDOMPurify() {
-           namespaceURI = _attr.namespaceURI;
+         namespaceURI
+       } = attr;
        value = name === 'value' ? attr.value : stringTrim(attr.value);
++      const initValue = value;
        lcName = transformCaseFunc(name);
-+      var initValue = value;
        /* Execute a hook if present */
  
-       hookEvent.attrName = lcName;
-@@ -1205,19 +1206,14 @@ function createDOMPurify() {
-       if (hookEvent.forceKeepAttr) {
-         continue;
-       }
--      /* Remove attribute */
--
--
+@@ -1209,11 +1210,11 @@ function createDOMPurify() {
+       /* Remove attribute */
+ 
+ 
 -      _removeAttribute(name, currentNode);
        /* Did the hooks approve of the attribute? */
  
--
+ 
        if (!hookEvent.keepAttr) {
 +        _removeAttribute(name, currentNode);
          continue;
        }
        /* Work around a security issue in jQuery 3.0 */
- 
--
-       if (regExpTest(/\/>/i, value)) {
-         _removeAttribute(name, currentNode);
- 
-@@ -1225,32 +1221,31 @@ function createDOMPurify() {
-       }
-       /* Sanitize attribute content to be template-safe */
- 
--
-       if (SAFE_FOR_TEMPLATES) {
-         value = stringReplace(value, MUSTACHE_EXPR$1, ' ');
-         value = stringReplace(value, ERB_EXPR$1, ' ');
-       }
-       /* Is `value` valid for this attribute? */
- 
--
-       var lcTag = transformCaseFunc(currentNode.nodeName);
+@@ -1238,6 +1239,7 @@ function createDOMPurify() {
+       const lcTag = transformCaseFunc(currentNode.nodeName);
  
        if (!_isValidAttribute(lcTag, lcName, value)) {
 +        _removeAttribute(name, currentNode);
          continue;
        }
+       /* Full DOM Clobbering protection via namespace isolation,
+@@ -1274,17 +1276,18 @@ function createDOMPurify() {
+       }
        /* Handle invalid data-* attribute set by try-catching it */
--
+ 
 -
 -      try {
 -        if (namespaceURI) {
@@ -77,24 +61,21 @@ index 009cfd7..828e17e 100644
      /* Execute a hook if present */
  
 diff --git a/node_modules/dompurify/dist/purify.js b/node_modules/dompurify/dist/purify.js
-index f270dcc..4d21b8b 100644
+index ba807e1..c6512fc 100644
 --- a/node_modules/dompurify/dist/purify.js
 +++ b/node_modules/dompurify/dist/purify.js
 @@ -1196,6 +1196,7 @@
-             namespaceURI = _attr.namespaceURI;
+           namespaceURI
+         } = attr;
          value = name === 'value' ? attr.value : stringTrim(attr.value);
++        const initValue = value;
          lcName = transformCaseFunc(name);
-+        var initValue = value;
          /* Execute a hook if present */
  
-         hookEvent.attrName = lcName;
-@@ -1211,19 +1212,14 @@
-         if (hookEvent.forceKeepAttr) {
-           continue;
-         }
--        /* Remove attribute */
--
--
+@@ -1215,11 +1216,10 @@
+         /* Remove attribute */
+ 
+ 
 -        _removeAttribute(name, currentNode);
          /* Did the hooks approve of the attribute? */
  
@@ -104,31 +85,18 @@ index f270dcc..4d21b8b 100644
            continue;
          }
          /* Work around a security issue in jQuery 3.0 */
- 
--
-         if (regExpTest(/\/>/i, value)) {
-           _removeAttribute(name, currentNode);
- 
-@@ -1231,32 +1227,31 @@
-         }
-         /* Sanitize attribute content to be template-safe */
- 
--
-         if (SAFE_FOR_TEMPLATES) {
-           value = stringReplace(value, MUSTACHE_EXPR$1, ' ');
-           value = stringReplace(value, ERB_EXPR$1, ' ');
-         }
-         /* Is `value` valid for this attribute? */
- 
--
-         var lcTag = transformCaseFunc(currentNode.nodeName);
+@@ -1244,6 +1244,7 @@
+         const lcTag = transformCaseFunc(currentNode.nodeName);
  
          if (!_isValidAttribute(lcTag, lcName, value)) {
 +          _removeAttribute(name, currentNode);
            continue;
          }
+         /* Full DOM Clobbering protection via namespace isolation,
+@@ -1280,17 +1281,18 @@
+         }
          /* Handle invalid data-* attribute set by try-catching it */
--
+ 
 -
 -        try {
 -          if (namespaceURI) {
