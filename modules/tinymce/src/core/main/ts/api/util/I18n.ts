@@ -1,4 +1,4 @@
-import { Cell, Obj, Type } from '@ephox/katamari';
+import { Arr, Cell, Obj, Type } from '@ephox/katamari';
 
 /**
  * I18n class that handles translation of TinyMCE UI.
@@ -18,6 +18,11 @@ export type TokenisedString = [ string, ...Primitive[] ];
 export type Untranslated = Primitive | TokenisedString | RawString | null | undefined;
 
 export type TranslatedString = string;
+
+const isDuplicated = (items: string[], item: string) => {
+  const firstIndex = items.indexOf(item);
+  return firstIndex !== -1 && items.indexOf(item, firstIndex + 1) > firstIndex;
+};
 
 const isRaw = (str: any): str is RawString => Type.isObject(str) && Obj.has(str, 'raw');
 
@@ -65,8 +70,17 @@ const add = (code: string, items: Record<string, string>): void => {
     data[code] = langData = {};
   }
 
+  const lcNames = Arr.map(Obj.keys(items), (name) => name.toLowerCase());
   Obj.each(items, (translation, name) => {
-    langData[name.toLowerCase()] = translation;
+    const lcName = name.toLowerCase();
+    if (lcName !== name && isDuplicated(lcNames, lcName)) {
+      if (!Obj.has(items, lcName)) {
+        langData[lcName] = translation;
+      }
+      langData[name] = translation;
+    } else {
+      langData[lcName] = translation;
+    }
   });
 };
 
@@ -102,8 +116,10 @@ const translate = (text: Untranslated): TranslatedString => {
 
   const getLangData = (text: Untranslated) => {
     // make sure we work on a string and return a string
-    const textstr = toString(text);
-    return Obj.get(langData, textstr.toLowerCase()).map(toString).getOr(textstr);
+    const textStr = toString(text);
+    return Obj.has(langData, textStr)
+      ? toString(langData[textStr])
+      : Obj.get(langData, textStr.toLowerCase()).map(toString).getOr(textStr);
   };
 
   const removeContext = (str: string) => str.replace(/{context:\w+}$/, '');

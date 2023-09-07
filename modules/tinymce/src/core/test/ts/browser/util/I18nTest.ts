@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { assert } from 'chai';
 
@@ -87,5 +87,38 @@ describe('browser.tinymce.core.util.I18nTest', () => {
     assert.equal(I18n.translate('text'), 'translation2', 'Should be get code2 translation');
 
     I18n.setCode('en');
+  });
+
+  context('Case sensitive translations', () => {
+    const addTranslationsAndSetCode = (code: string, translations: Record<string, string>) => {
+      I18n.add(code, translations);
+      I18n.setCode(code);
+    };
+
+    const assertTranslation = (key: string, expectedTranslation: string) =>
+      assert.equal(I18n.translate(key), expectedTranslation);
+
+    it('All case sensitive variants of duplicate keys should be preserved where a lowercase variant is already present', () => {
+      addTranslationsAndSetCode('code-ci1', {
+        test: 'test',
+        Test: 'Test',
+        TEST: 'TEST'
+      });
+
+      assertTranslation('test', 'test');
+      assertTranslation('Test', 'Test');
+      assertTranslation('TEST', 'TEST');
+    });
+
+    it('All case sensitive variants of duplicate keys should be preserved and a lowercase variant should be added where a lowercase variant is not present', () => {
+      addTranslationsAndSetCode('code-ci1', {
+        Test: 'Test',
+        TEST: 'TEST'
+      });
+
+      assert.oneOf(I18n.translate('test'), [ 'Test', 'TEST' ]);
+      assertTranslation('Test', 'Test');
+      assertTranslation('TEST', 'TEST');
+    });
   });
 });
