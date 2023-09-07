@@ -11,7 +11,6 @@ import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 import { StoredMenuButton, StoredMenuItem } from '../button/MenuButton';
 import * as Dialogs from '../dialog/Dialogs';
 import { FormBlockEvent, formCancelEvent } from '../general/FormEvents';
-import { dialogChannel } from './DialogChannels';
 import { ExtraListeners } from './SilverDialogEvents';
 import { renderModalHeader } from './SilverDialogHeader';
 
@@ -70,36 +69,24 @@ const getEventExtras = (lazyDialog: () => AlloyComponent, providers: UiFactoryBa
   }
 });
 
-const renderModalDialog = <T>(spec: DialogSpec, initialData: T, dialogEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[], backstage: UiFactoryBackstage): AlloyComponent => {
-  const updateState = (_comp: AlloyComponent, incoming: T) => Optional.some(incoming);
-
-  return GuiFactory.build(Dialogs.renderDialog({
-    ...spec,
-    firstTabstop: 1,
-    lazySink: backstage.shared.getSink,
-    extraBehaviours: [
-      // Because this doesn't define `renderComponents`, all this does is update the state.
-      // We use the state for the initialData. The other parts (body etc.) render the
-      // components based on what reflecting receives.
-      Reflecting.config({
-        channel: `${dialogChannel}-${spec.id}`,
-        updateState,
-        initialData
-      }),
-      RepresentingConfigs.memory({ }),
-      ...spec.extraBehaviours
-    ],
-    onEscape: (comp) => {
-      AlloyTriggers.emit(comp, formCancelEvent);
-    },
-    dialogEvents,
-    eventOrder: {
-      [SystemEvents.receive()]: [ Reflecting.name(), Receiving.name() ],
-      [SystemEvents.attachedToDom()]: [ 'scroll-lock', Reflecting.name(), 'messages', 'dialog-events', 'alloy.base.behaviour' ],
-      [SystemEvents.detachedFromDom()]: [ 'alloy.base.behaviour', 'dialog-events', 'messages', Reflecting.name(), 'scroll-lock' ]
-    }
-  }));
-};
+const renderModalDialog = (spec: DialogSpec, dialogEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[], backstage: UiFactoryBackstage): AlloyComponent => GuiFactory.build(Dialogs.renderDialog({
+  ...spec,
+  firstTabstop: 1,
+  lazySink: backstage.shared.getSink,
+  extraBehaviours: [
+    RepresentingConfigs.memory({ }),
+    ...spec.extraBehaviours
+  ],
+  onEscape: (comp) => {
+    AlloyTriggers.emit(comp, formCancelEvent);
+  },
+  dialogEvents,
+  eventOrder: {
+    [SystemEvents.receive()]: [ Reflecting.name(), Receiving.name() ],
+    [SystemEvents.attachedToDom()]: [ 'scroll-lock', Reflecting.name(), 'messages', 'dialog-events', 'alloy.base.behaviour' ],
+    [SystemEvents.detachedFromDom()]: [ 'alloy.base.behaviour', 'dialog-events', 'messages', Reflecting.name(), 'scroll-lock' ]
+  }
+}));
 
 const mapMenuButtons = (buttons: Dialog.DialogFooterButton[], menuItemStates: Record<string, Cell<boolean>> = {}): (Dialog.DialogFooterButton | StoredMenuButton)[] => {
   const mapItems = (button: Dialog.DialogFooterMenuButton): StoredMenuButton => {

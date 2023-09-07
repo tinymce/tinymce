@@ -4,7 +4,7 @@ import {
   Receiving, Reflecting, Replacing, SystemEvents
 } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
-import { Fun, Id, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Fun, Id, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Classes, Height, SugarElement, SugarNode } from '@ephox/sugar';
 
 import * as Backstage from '../../backstage/Backstage';
@@ -24,25 +24,40 @@ interface RenderedDialog<T extends Dialog.DialogData> {
   readonly instanceApi: Dialog.DialogInstanceApi<T>;
 }
 
-const getInlineDialogSizeClass = (size: Dialog.DialogSize): Optional<string> => {
-  switch (size) {
-    case 'large':
-      return Optional.some('tox-dialog--width-lg--inline');
-    case 'medium':
-      return Optional.some('tox-dialog--width-md');
-    default:
-      return Optional.none();
-  }
-};
-
 const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra<T>, backstage: Backstage.UiFactoryBackstage, ariaAttrs: boolean = false): RenderedDialog<T> => {
   const dialogId = Id.generate('dialog');
   const dialogLabelId = Id.generate('dialog-label');
   const dialogContentId = Id.generate('dialog-content');
   const internalDialog = dialogInit.internalDialog;
-  const dialogSize = getInlineDialogSizeClass(internalDialog.size);
 
-  const updateState = (_comp: AlloyComponent, incoming: DialogManager.DialogInit<T>) => Optional.some(incoming);
+  const largeInlineDialogClass = 'tox-dialog--width-lg--inline';
+  const mediumInlineDialogClass = 'tox-dialog--width-md';
+
+  const getInlineDialogSizeClasses = (size: Dialog.DialogSize): Optional<string> => {
+    switch (size) {
+      case 'large':
+        return Optional.some(largeInlineDialogClass);
+      case 'medium':
+        return Optional.some(mediumInlineDialogClass);
+      default:
+        return Optional.none();
+    }
+  };
+
+  const dialogSize = getInlineDialogSizeClasses(internalDialog.size);
+
+  const updateState = (comp: AlloyComponent, incoming: DialogManager.DialogInit<T>) => {
+    getInlineDialogSizeClasses(incoming.internalDialog.size).map((dialogSizeClass) => {
+      const sugarBody = SugarElement.fromDom(comp.element.dom);
+      if (!Classes.hasAny(sugarBody, [ dialogSizeClass ])) {
+        const classes = Classes.get(sugarBody);
+        const currentSizeClass = Arr.find(classes, (c) => c === largeInlineDialogClass || c === mediumInlineDialogClass);
+        currentSizeClass.map((sizeClass) => Classes.remove(sugarBody, [ sizeClass ]));
+        Classes.add(sugarBody, [ dialogSizeClass ]);
+      }
+    });
+    return Optional.some(incoming);
+  };
 
   const memHeader = Memento.record(
     SilverDialogHeader.renderInlineHeader({
