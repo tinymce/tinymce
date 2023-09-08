@@ -1,7 +1,6 @@
 import { AlloyComponent, Composing, ModalDialog, Reflecting } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
-import { Arr, Fun, Id, Optional, Optionals } from '@ephox/katamari';
-import { Class, Classes, SugarElement } from '@ephox/sugar';
+import { Cell, Fun, Id, Optional, Optionals } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { dialogChannel } from './DialogChannels';
@@ -21,32 +20,13 @@ const renderDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.Dia
   const internalDialog = dialogInit.internalDialog;
   const header = SilverDialogCommon.getHeader(internalDialog.title, dialogId, backstage);
 
-  const largeDialogClass = 'tox-dialog--width-lg';
-  const mediumDialogClass = 'tox-dialog--width-md';
+  const dialogSize = Cell<Dialog.DialogSize>(internalDialog.size);
 
-  const getDialogSizeClasses = (size: Dialog.DialogSize): Optional<string> => {
-    switch (size) {
-      case 'large':
-        return Optional.some(largeDialogClass);
-      case 'medium':
-        return Optional.some(mediumDialogClass);
-      default:
-        return Optional.none();
-    }
-  };
-
-  const dialogSize = getDialogSizeClasses(internalDialog.size);
+  const dialogSizeClasses = SilverDialogCommon.getDialogSizeClasses(dialogSize.get()).toArray();
 
   const updateState = (comp: AlloyComponent, incoming: DialogManager.DialogInit<T>) => {
-    getDialogSizeClasses(incoming.internalDialog.size).map((dialogSizeClass) => {
-      const sugarBody = SugarElement.fromDom(comp.element.dom);
-      if (!Classes.hasAny(sugarBody, [ dialogSizeClass ])) {
-        const classes = Classes.get(sugarBody);
-        const currentSizeClass = Arr.find(classes, (c) => c === largeDialogClass || c === mediumDialogClass);
-        currentSizeClass.map((c) => Classes.remove(sugarBody, [ c ]));
-        Classes.add(sugarBody, [ dialogSizeClass ]);
-      }
-    });
+    dialogSize.set(incoming.internalDialog.size);
+    SilverDialogCommon.updateDialogSizeClass(incoming.internalDialog.size, comp);
     return Optional.some(incoming);
   };
 
@@ -75,7 +55,7 @@ const renderDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.Dia
     header,
     body,
     footer,
-    extraClasses: dialogSize.toArray(),
+    extraClasses: dialogSizeClasses,
     extraBehaviours: [
       // Because this doesn't define `renderComponents`, all this does is update the state.
       // We use the state for the initialData. The other parts (body etc.) render the
@@ -98,16 +78,7 @@ const renderDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.Dia
     };
 
     const toggleFullscreen = (): void => {
-      const fullscreenClass = 'tox-dialog--fullscreen';
-      const sugarBody = SugarElement.fromDom(dialog.element.dom);
-
-      if (!Class.has(sugarBody, fullscreenClass)) {
-        dialogSize.map((sizeClass) => Classes.remove(sugarBody, [ sizeClass ]));
-        Class.add(sugarBody, fullscreenClass);
-      } else {
-        Class.remove(sugarBody, fullscreenClass);
-        dialogSize.map((sizeClass) => Classes.add(sugarBody, [ sizeClass ]));
-      }
+      SilverDialogCommon.toggleFullscreen(dialog, dialogSize.get());
     };
 
     return {

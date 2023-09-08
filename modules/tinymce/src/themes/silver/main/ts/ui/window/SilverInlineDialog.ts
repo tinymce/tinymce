@@ -4,8 +4,8 @@ import {
   Receiving, Reflecting, Replacing, SystemEvents
 } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
-import { Arr, Fun, Id, Optional, Optionals } from '@ephox/katamari';
-import { Attribute, Classes, Height, SugarElement, SugarNode } from '@ephox/sugar';
+import { Cell, Fun, Id, Optional, Optionals } from '@ephox/katamari';
+import { Attribute, Height, SugarNode } from '@ephox/sugar';
 
 import * as Backstage from '../../backstage/Backstage';
 import * as RepresentingConfigs from '../alien/RepresentingConfigs';
@@ -30,32 +30,13 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
   const dialogContentId = Id.generate('dialog-content');
   const internalDialog = dialogInit.internalDialog;
 
-  const largeInlineDialogClass = 'tox-dialog--width-lg--inline';
-  const mediumInlineDialogClass = 'tox-dialog--width-md';
+  const dialogSize = Cell<Dialog.DialogSize>(internalDialog.size);
 
-  const getInlineDialogSizeClasses = (size: Dialog.DialogSize): Optional<string> => {
-    switch (size) {
-      case 'large':
-        return Optional.some(largeInlineDialogClass);
-      case 'medium':
-        return Optional.some(mediumInlineDialogClass);
-      default:
-        return Optional.none();
-    }
-  };
-
-  const dialogSize = getInlineDialogSizeClasses(internalDialog.size);
+  const dialogSizeClasses = SilverDialogCommon.getDialogSizeClasses(dialogSize.get()).toArray();
 
   const updateState = (comp: AlloyComponent, incoming: DialogManager.DialogInit<T>) => {
-    getInlineDialogSizeClasses(incoming.internalDialog.size).map((dialogSizeClass) => {
-      const sugarBody = SugarElement.fromDom(comp.element.dom);
-      if (!Classes.hasAny(sugarBody, [ dialogSizeClass ])) {
-        const classes = Classes.get(sugarBody);
-        const currentSizeClass = Arr.find(classes, (c) => c === largeInlineDialogClass || c === mediumInlineDialogClass);
-        currentSizeClass.map((sizeClass) => Classes.remove(sugarBody, [ sizeClass ]));
-        Classes.add(sugarBody, [ dialogSizeClass ]);
-      }
-    });
+    dialogSize.set(incoming.internalDialog.size);
+    SilverDialogCommon.updateDialogSizeClass(incoming.internalDialog.size, comp);
     return Optional.some(incoming);
   };
 
@@ -108,7 +89,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
   const dialog = GuiFactory.build({
     dom: {
       tag: 'div',
-      classes: [ 'tox-dialog', inlineClass, ...dialogSize.toArray() ],
+      classes: [ 'tox-dialog', inlineClass, ...dialogSizeClasses ],
       attributes: {
         role: 'dialog',
         ['aria-labelledby']: dialogLabelId
@@ -167,15 +148,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
   });
 
   const toggleFullscreen = (): void => {
-    const fullscreenClass = 'tox-dialog--fullscreen';
-    const sugarBody = SugarElement.fromDom(dialog.element.dom);
-    if (!Classes.hasAll(sugarBody, [ fullscreenClass ])) {
-      Classes.remove(sugarBody, [ inlineClass ]);
-      Classes.add(sugarBody, [ fullscreenClass ]);
-    } else {
-      Classes.remove(sugarBody, [ fullscreenClass ]);
-      Classes.add(sugarBody, [ inlineClass ]);
-    }
+    SilverDialogCommon.toggleFullscreen(dialog, dialogSize.get());
   };
 
   // TODO: Clean up the dupe between this (InlineDialog) and SilverDialog

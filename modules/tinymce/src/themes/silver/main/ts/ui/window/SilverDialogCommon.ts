@@ -4,7 +4,7 @@ import {
 } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
 import { Arr, Cell, Obj, Optional } from '@ephox/katamari';
-import { Height, SelectorFind } from '@ephox/sugar';
+import { Classes, Height, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as RepresentingConfigs from '../alien/RepresentingConfigs';
@@ -69,6 +69,36 @@ const getEventExtras = (lazyDialog: () => AlloyComponent, providers: UiFactoryBa
   }
 });
 
+const largeDialogClass = 'tox-dialog--width-lg';
+const mediumDialogClass = 'tox-dialog--width-md';
+
+const getDialogSizeClasses = (size: Dialog.DialogSize): Optional<string> => {
+  switch (size) {
+    case 'large':
+      return Optional.some(largeDialogClass);
+    case 'medium':
+      return Optional.some(mediumDialogClass);
+    default:
+      return Optional.none();
+  }
+};
+
+const updateDialogSizeClass = (size: Dialog.DialogSize, component: AlloyComponent): void => {
+  const sugarBody = SugarElement.fromDom(component.element.dom);
+  const classes = Classes.get(sugarBody);
+  const currentSizeClass = Arr.find(classes, (c) => c === largeDialogClass || c === mediumDialogClass);
+  currentSizeClass.map((c) => Classes.remove(sugarBody, [ c ]));
+  getDialogSizeClasses(size).map((dialogSizeClass) => Classes.add(sugarBody, [ dialogSizeClass ]));
+};
+
+const toggleFullscreen = (comp: AlloyComponent, currentSize: Dialog.DialogSize): void => {
+  const fullscreenClass = 'tox-dialog--fullscreen';
+  const sugarBody = SugarElement.fromDom(comp.element.dom);
+  const classes = Classes.get(sugarBody);
+  const currentSizeClass = Arr.find(classes, (c) => c === largeDialogClass || c === mediumDialogClass).or(getDialogSizeClasses(currentSize));
+  Classes.toggle(sugarBody, [ fullscreenClass, ...currentSizeClass.toArray() ]);
+};
+
 const renderModalDialog = (spec: DialogSpec, dialogEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[], backstage: UiFactoryBackstage): AlloyComponent => GuiFactory.build(Dialogs.renderDialog({
   ...spec,
   firstTabstop: 1,
@@ -124,6 +154,9 @@ export {
   getBusySpec,
   getHeader,
   getEventExtras,
+  updateDialogSizeClass,
+  getDialogSizeClasses,
+  toggleFullscreen,
   renderModalDialog,
   mapMenuButtons,
   extractCellsToObject
