@@ -1,8 +1,8 @@
-import { ApproxStructure, Assertions, Keyboard, Keys, Mouse, UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { Disabling, Focusing, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
+import { ApproxStructure, Assertions, Keyboard, Keys, Mouse, TestStore, UiControls, UiFinder, Waiter } from '@ephox/agar';
+import { Container, Disabling, Focusing, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Future, Optional } from '@ephox/katamari';
-import { SelectorFind, SugarDocument, Value } from '@ephox/sugar';
+import { Attribute, SelectorFind, SugarDocument, Value } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import { ApiUrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
@@ -14,9 +14,10 @@ import * as TestExtras from '../../../module/TestExtras';
 describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () => {
   const extrasHook = TestExtras.bddSetup();
 
-  const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
+  const renderUrlInputWithPickerText = (store: TestStore<string>, pickerText?: string) =>
     renderUrlInput({
       label: Optional.some('UrlInput label'),
+      picker_text: Optional.from(pickerText),
       name: 'col1',
       filetype: 'file',
       enabled: true
@@ -48,7 +49,18 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
         store.adder('urlpicker')();
         return Future.pure({ value: 'http://tiny.cloud', meta: { before: entry.value }, fieldname: 'test' });
       })
-    }, Optional.none())
+    }, Optional.none());
+
+  const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
+    Container.sketch({
+      dom: {
+        tag: 'div'
+      },
+      components: [
+        renderUrlInputWithPickerText(store, 'UrlInput picker text'),
+        renderUrlInputWithPickerText(store)
+      ]
+    })
   ), () => extrasHook.access().getPopupMothership());
 
   TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
@@ -56,10 +68,20 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
     '.tox-collection__item--active { background: #cadbee }'
   ]);
 
+  const getFirstComponent = () =>
+    hook.component().components()[0];
+
   const getInput = () => {
-    const component = hook.component();
+    const component = getFirstComponent();
     return component.getSystem().getByDom(
       SelectorFind.descendant(component.element, 'input').getOrDie('Could not find input')
+    ).getOrDie();
+  };
+
+  const getPicker = (specificText: boolean) => {
+    const component = hook.component().components()[specificText ? 0 : 1];
+    return component.getSystem().getByDom(
+      SelectorFind.descendant(component.element, 'button').getOrDie('Could not find picker button')
     ).getOrDie();
   };
 
@@ -87,7 +109,7 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
   });
 
   it('Disabling state', () => {
-    const component = hook.component();
+    const component = getFirstComponent();
     assert.isFalse(Disabling.isDisabled(component), 'Initial disabled state');
     Disabling.set(component, true);
     assert.isTrue(Disabling.isDisabled(component), 'enabled > disabled');
@@ -207,7 +229,7 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
   });
 
   it('Click urlpicker and assert input state is updated', async () => {
-    const component = hook.component();
+    const component = getFirstComponent();
     const store = hook.store();
     const input = getInput();
 
@@ -264,9 +286,15 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
   });
 
   it('TINY-9717: it should open dropdown after the input value was reset to an empty string', async () => {
-    const component = hook.component();
+    const component = getFirstComponent();
     Representing.setValue(component, { value: '' });
     await pOpenMenu();
     closeMenu();
   });
+
+  it('TINY-10155: Title attribute of picker button should be specified by picker_text property', () =>
+    assert.equal(Attribute.get(getPicker(true).element, 'title'), 'UrlInput picker text'));
+
+  it('TINY-10155: Title attribute of picker button should fall back to label when picker_text property is not specified', () =>
+    assert.equal(Attribute.get(getPicker(false).element, 'title'), 'UrlInput label'));
 });

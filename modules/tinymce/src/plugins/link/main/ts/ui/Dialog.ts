@@ -81,7 +81,8 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInsta
       name: 'url',
       type: 'urlinput',
       filetype: 'file',
-      label: 'URL'
+      label: 'URL',
+      picker_text: 'Browse links'
     }
   ];
 
