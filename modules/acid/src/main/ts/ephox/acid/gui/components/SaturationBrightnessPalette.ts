@@ -20,7 +20,11 @@ export interface SaturationBrightnessPaletteSketcher extends Sketcher.SingleSket
   setThumb: (slider: AlloyComponent, hex: Hex) => void;
 }
 
-const paletteFactory = (_translate: (key: string) => string, getClass: (key: string) => string): SaturationBrightnessPaletteSketcher => {
+const paletteFactory = (translate: (key: string) => string, getClass: (key: string) => string): SaturationBrightnessPaletteSketcher => {
+  const translateReplace = (key: string, value1: number, value2: number): string => {
+    return translate(key).replace('{0}', value1 + '').replace('{1}', value2 + '');
+  };
+
   const spectrumPart = Slider.parts.spectrum({
     dom: {
       tag: 'canvas',
@@ -75,7 +79,7 @@ const paletteFactory = (_translate: (key: string) => string, getClass: (key: str
   const setPaletteThumb = (slider: AlloyComponent, hex: Hex): void => {
     const hsv = HsvColour.fromRgb(RgbaColour.fromHex(hex));
     Slider.setValue(slider, { x: hsv.saturation, y: 100 - hsv.value });
-    Attribute.set(slider.element, 'aria-valuetext', `Saturation ${hsv.saturation}%, Brightness ${hsv.value}%`);
+    Attribute.set(slider.element, 'aria-valuetext', translateReplace('Saturation {0}%, Brightness {1}%', hsv.saturation, hsv.value));
   };
 
   const factory: UiSketcher.SingleSketchFactory<SaturationBrightnessPaletteDetail, SaturationBrightnessPaletteSpec> = (_detail): SketchSpec => {
