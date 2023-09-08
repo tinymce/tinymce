@@ -94,7 +94,7 @@ gulp.task('minifyCss', function() {
     .pipe(cleanCSS({ rebase: false }))
     .pipe(through2.obj(function(file, _, cb) {
       if (file.isBuffer()) {
-        const contents = `tinymce.resources.add('${file.relative}', '${file.contents.toString().replace(/'/g, "\\'")}')`;
+        const contents = `tinymce.resources.add('${file.relative}', '${JSON.stringify(file.contents.toString())}')`;
         file.contents = Buffer.from(contents)
       }
       cb(null, file);
