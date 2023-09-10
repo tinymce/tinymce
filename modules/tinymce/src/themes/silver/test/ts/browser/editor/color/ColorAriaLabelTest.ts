@@ -174,13 +174,13 @@ describe('browser.tinymce.themes.silver.editor.color.ColorAriaLabelTest', () => 
         await pSelectCustomAndAssertToolbar(editor, selectors.backcolorSplitButton(scenario.buttonColor), selectors.backcolorSplitButton('#123123'));
       });
 
-      it('TINY-9697: Forecolor - Remove color should use default color', async () => {
+      it('TINY-9697: Forecolor - Remove color should remove color in aria-label', async () => {
         const editor = hook.editor();
         await pSelectToolbarColorAndAssert(editor, selectors.forecolorSplitButton(scenario.buttonColor), '#BFEDD2', selectors.forecolorSplitButton(scenario.expectedColor));
         await pRemoveColorAndAssert(editor, selectors.forecolorSplitButton(scenario.expectedColor), selectors.forecolorSplitButton());
       });
 
-      it('TINY-9697: Backcolor - Remove color should use default color', async () => {
+      it('TINY-9697: Backcolor - Remove color should remove color in aria-label', async () => {
         const editor = hook.editor();
         await pSelectToolbarColorAndAssert(editor, selectors.backcolorSplitButton(scenario.buttonColor), '#BFEDD2', selectors.backcolorSplitButton(scenario.expectedColor));
         await pRemoveColorAndAssert(editor, selectors.backcolorSplitButton(scenario.expectedColor), selectors.backcolorSplitButton());
@@ -247,16 +247,16 @@ describe('browser.tinymce.themes.silver.editor.color.ColorAriaLabelTest', () => 
         UiFinder.exists(SugarBody.body(), selectors.backcolorMenuItem(scenario.buttonColor));
       });
 
-      it('TINY-9697: Backcolor - aria-label changes when color is selected  ', async () => {
-        const editor = hook.editor();
-        await pOpenMenuAndSwatch(editor, selectors.backcolorMenu, selectors.backcolorMenuItem(scenario.buttonColor));
-        await pOpenMenuAndSelectColor(editor, '#BFEDD2', selectors.backcolorMenu, selectors.backcolorMenuItem(scenario.expectedColor));
-      });
-
       it('TINY-9697: Forecolor - aria-label changes when color is selected  ', async () => {
         const editor = hook.editor();
         await pOpenMenuAndSwatch(editor, selectors.forecolorMenu, selectors.forecolorMenuItem(scenario.buttonColor));
         await pOpenMenuAndSelectColor(editor, '#BFEDD2', selectors.forecolorMenu, selectors.forecolorMenuItem(scenario.expectedColor));
+      });
+
+      it('TINY-9697: Backcolor - aria-label changes when color is selected  ', async () => {
+        const editor = hook.editor();
+        await pOpenMenuAndSwatch(editor, selectors.backcolorMenu, selectors.backcolorMenuItem(scenario.buttonColor));
+        await pOpenMenuAndSelectColor(editor, '#BFEDD2', selectors.backcolorMenu, selectors.backcolorMenuItem(scenario.expectedColor));
       });
 
       it('TINY-9697: Backcolor - aria-label changes when custom color is selected  ', async () => {
@@ -269,13 +269,13 @@ describe('browser.tinymce.themes.silver.editor.color.ColorAriaLabelTest', () => 
         await pSelectCustomAndAssertMenu(editor, selectors.forecolorMenu, selectors.forecolorMenuItem(scenario.buttonColor), selectors.forecolorMenuItem('#123123'));
       });
 
-      it('TINY-9697: Forecolor - Remove color should use default color', async () => {
+      it('TINY-9697: Forecolor - Remove color should remove color in aria-label', async () => {
         const editor = hook.editor();
         await pOpenMenuAndSwatch(editor, selectors.forecolorMenu, selectors.forecolorMenuItem(scenario.buttonColor));
         await pOpenMenuAndRemoveColor(editor, selectors.forecolorMenu, selectors.forecolorMenuItem());
       });
 
-      it('TINY-9697: Backcolor - Remove color should use default color', async () => {
+      it('TINY-9697: Backcolor - Remove color should remove color in aria-label', async () => {
         const editor = hook.editor();
         await pOpenMenuAndSwatch(editor, selectors.backcolorMenu, selectors.backcolorMenuItem(scenario.buttonColor));
         await pOpenMenuAndRemoveColor(editor, selectors.backcolorMenu, selectors.backcolorMenuItem());

@@ -64,8 +64,7 @@ const getButtonApi = (component: AlloyComponent): Toolbar.ToolbarButtonInstanceA
   }),
   setIcon: (icon: string) => AlloyTriggers.emitWith(component, updateMenuIcon, {
     icon
-  }),
-  setTooltip: (tooltip: string) => Attribute.setAll(component.element, { 'title': tooltip, 'aria-label': tooltip })
+  })
 });
 
 const getToggleApi = (component: AlloyComponent): Toolbar.ToolbarToggleButtonInstanceApi => ({
@@ -80,8 +79,7 @@ const getToggleApi = (component: AlloyComponent): Toolbar.ToolbarToggleButtonIns
   }),
   setIcon: (icon: string) => AlloyTriggers.emitWith(component, updateMenuIcon, {
     icon
-  }),
-  setTooltip: (tooltip: string) => Attribute.setAll(component.element, { 'title': tooltip, 'aria-label': tooltip })
+  })
 });
 
 const getTooltipAttributes = (tooltip: Optional<string>, providersBackstage: UiFactoryBackstageProviders) => tooltip.map<{}>((tooltip) => ({

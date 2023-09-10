@@ -17,14 +17,11 @@ const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse,
     isEnabled: () => !Disabling.isDisabled(component),
     setEnabled: (state: boolean) => Disabling.set(component, !state),
     setIconFill: (id, value) => {
-      console.log('setting icon fill...');
-      console.trace()
       SelectorFind.descendant(component.element, `svg path[class="${id}"], rect[class="${id}"]`).each((underlinePath) => {
         Attribute.set(underlinePath, 'fill', value);
       });
     },
     setTooltip: (tooltip: string) => {
-      console.log('nested item here setting tooltip', tooltip)
       const translatedTooltip = providersBackstage.translate(tooltip);
       Attribute.setAll(component.element, { 'aria-label': translatedTooltip, 'title': translatedTooltip });
     }

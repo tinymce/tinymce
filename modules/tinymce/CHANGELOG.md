@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Setting the content with an attribute that contains a self-closing HTML tag did not preserve the tag. #TINY-10088
+- Screen readers now announce the selected color of `forecolor` and `backcolor` buttons. #TINY-9796
 
 ## 6.7.0 - 2023-08-30
 

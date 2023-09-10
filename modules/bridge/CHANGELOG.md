@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ### Added
-- Added `setTooltip` function to `ToolbarSplitButtonInstanceApi`. #TINY-9796
+- Added `setTooltip` function to `ToolbarSplitButtonInstanceApi` and `NestedMenuItemInstanceApi`. #TINY-9796
 
 ## 4.5.0 - 2023-07-12
 

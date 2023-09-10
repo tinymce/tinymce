@@ -92,7 +92,6 @@ const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemSpec[] => {
 };
 
 const applyColor = (editor: Editor, format: ColorFormat, value: string, onChoice: (v: string) => void) => {
-  console.log('applyColor', value);
   if (value === 'custom') {
     const dialog = colorPickerDialog(editor);
     dialog((colorOpt) => {
@@ -133,8 +132,7 @@ const select = (editor: Editor, format: ColorFormat) =>
     return Optionals.is(optCurrentHex, value.toUpperCase());
   };
 
-// If 'remove color' is selected, remove the format and return the default color.
-// Otherwise, return the selected color.
+// Selecting `Remove Color` would set the lastColor to ''
 const getToolTipText = (editor: Editor, format: ColorFormat, lastColor: string) => {
   if (Strings.isEmpty(lastColor)) {
     return format === 'forecolor' ? 'Text color' : 'Background color';
@@ -290,8 +288,6 @@ const register = (editor: Editor): void => {
   const lastBackColor = Cell(fallbackColorBackground);
   registerTextColorButton(editor, 'forecolor', 'forecolor', lastForeColor);
   registerTextColorButton(editor, 'backcolor', 'hilitecolor', lastBackColor);
-
-  console.log('fallback color background', fallbackColorBackground);
 
   registerTextColorMenuItem(editor, 'forecolor', 'forecolor', 'Text color', lastForeColor);
   registerTextColorMenuItem(editor, 'backcolor', 'hilitecolor', 'Background color', lastBackColor);

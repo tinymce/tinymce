@@ -16,7 +16,6 @@ export interface BaseToolbarButtonInstanceApi {
   setEnabled: (state: boolean) => void;
   setText: (text: string) => void;
   setIcon: (icon: string) => void;
-  setTooltip: (tooltip: string) => void;
 }
 
 export interface ToolbarButtonSpec extends BaseToolbarButtonSpec<ToolbarButtonInstanceApi> {
