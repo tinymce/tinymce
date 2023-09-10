@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Added `setTooltip` function to `ToolbarSplitButtonInstanceApi` and `NestedMenuItemInstanceApi`. #TINY-9796
+- Added `picker_text` optional property to `UrlInputSpec`. #TINY-10155
 
 ## 4.5.0 - 2023-07-12
 
