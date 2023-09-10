@@ -7,8 +7,8 @@ import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.color.TextColorCommandsTest', () => {
   const selectors = {
-    backcolorToolbar: '[aria-label^="Background color"] > .tox-tbtn + .tox-split-button__chevron',
-    forecolorToolbar: '[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron'
+    backcolorSplitButton: '[aria-label^="Background color"] > .tox-tbtn + .tox-split-button__chevron',
+    forecolorSplitButton: '[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron'
   };
 
   const state = Cell<string | null>(null);
@@ -36,12 +36,12 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorCommandsTest', () 
     const editor = hook.editor();
     editor.setContent('hello test');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 5);
-    TinyUiActions.clickOnToolbar(editor, selectors.forecolorToolbar);
+    TinyUiActions.clickOnToolbar(editor, selectors.forecolorSplitButton);
     await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
     TinyUiActions.clickOnUi(editor, 'div[data-mce-color="#169179"]');
     assertState('mceApplyTextcolor');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 5);
-    TinyUiActions.clickOnToolbar(editor, selectors.forecolorToolbar);
+    TinyUiActions.clickOnToolbar(editor, selectors.forecolorSplitButton);
     await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
     TinyUiActions.clickOnUi(editor, '.tox-swatch--remove');
     assertState('mceRemoveTextcolor');
@@ -51,12 +51,12 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorCommandsTest', () 
     const editor = hook.editor();
     editor.setContent('hello test');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 5);
-    TinyUiActions.clickOnToolbar(editor, selectors.backcolorToolbar);
+    TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton);
     await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
     TinyUiActions.clickOnUi(editor, 'div[data-mce-color="#169179"]');
     assertState('mceApplyTextcolor');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 5);
-    TinyUiActions.clickOnToolbar(editor, selectors.backcolorToolbar);
+    TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton);
     await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
     TinyUiActions.clickOnUi(editor, '.tox-swatch--remove');
     assertState('mceRemoveTextcolor');

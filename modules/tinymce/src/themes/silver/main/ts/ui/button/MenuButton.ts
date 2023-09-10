@@ -47,7 +47,8 @@ const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonI
   },
   setIcon: (icon: string) => AlloyTriggers.emitWith(component, updateMenuIcon, {
     icon
-  })
+  }),
+  setTooltip: (tooltip: string) => Attribute.setAll(component.element, { 'title': tooltip, 'aria-label': tooltip })
 });
 
 const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Optional<string>, tabstopping = true): SketchSpec => {

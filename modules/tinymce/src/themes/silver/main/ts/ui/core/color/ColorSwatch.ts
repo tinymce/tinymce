@@ -1,5 +1,5 @@
 import { HexColour, RgbaColour } from '@ephox/acid';
-import { Arr, Cell, Fun, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Cell, Fun, Optional, Optionals, Strings } from '@ephox/katamari';
 import { Css, SugarElement, SugarNode, TransformFind } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -92,6 +92,7 @@ const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemSpec[] => {
 };
 
 const applyColor = (editor: Editor, format: ColorFormat, value: string, onChoice: (v: string) => void) => {
+  console.log('applyColor', value);
   if (value === 'custom') {
     const dialog = colorPickerDialog(editor);
     dialog((colorOpt) => {
@@ -122,21 +123,33 @@ const setIconColor = (splitButtonApi: Toolbar.ToolbarSplitButtonInstanceApi | Me
   splitButtonApi.setIconFill(id, newColor);
 };
 
+const setTooltip = (buttonApi: Toolbar.ToolbarSplitButtonInstanceApi | Menu.NestedMenuItemInstanceApi, newColor: string) => {
+  buttonApi.setTooltip(newColor);
+};
+
 const select = (editor: Editor, format: ColorFormat) =>
   (value: string) => {
     const optCurrentHex = getCurrentColor(editor, format);
     return Optionals.is(optCurrentHex, value.toUpperCase());
   };
 
-const getToolTipText = (editor: Editor, format: ColorFormat, color: string) => {
+// If 'remove color' is selected, remove the format and return the default color.
+// Otherwise, return the selected color.
+const getToolTipText = (editor: Editor, format: ColorFormat, lastColor: string) => {
+  if (Strings.isEmpty(lastColor)) {
+    return format === 'forecolor' ? 'Text color' : 'Background color';
+  }
+
+  const tooltipPrefix = format === 'forecolor' ? 'Text color {0}' : 'Background color {0}';
   const colors = getColors(Options.getColors(editor, format), format, false);
-  const tooltipText = Arr.find(colors, (c) => c.value === color).getOr({ text: '' });
-  return editor.translate([ format === 'forecolor' ? 'Text color {0}' : 'Background color {0}', editor.translate(tooltipText.text) ]);
+  const colorText = Arr.find(colors, (c) => c.value === lastColor).getOr({ text: '' }).text;
+
+  return editor.translate([ tooltipPrefix, editor.translate(colorText) ]);
 };
 
 const registerTextColorButton = (editor: Editor, name: string, format: ColorFormat, lastColor: Cell<string>) => {
   editor.ui.registry.addSplitButton(name, {
-    tooltip: editor.translate(getToolTipText(editor, format, lastColor.get())),
+    tooltip: getToolTipText(editor, format, lastColor.get()),
     presets: 'color',
     icon: name === 'forecolor' ? 'text-color' : 'highlight-bg-color',
     select: select(editor, format),
@@ -161,7 +174,7 @@ const registerTextColorButton = (editor: Editor, name: string, format: ColorForm
       const handler = (e: EditorEvent<{ name: string; color: string }>) => {
         if (e.name === name) {
           setIconColor(splitButtonApi, e.name, e.color);
-          splitButtonApi.setTooltip(getToolTipText(editor, format, e.color));
+          setTooltip(splitButtonApi, getToolTipText(editor, format, e.color));
         }
       };
 
@@ -182,6 +195,7 @@ const registerTextColorMenuItem = (editor: Editor, name: string, format: ColorFo
     text,
     icon: name === 'forecolor' ? 'text-color' : 'highlight-bg-color',
     onSetup: (api) => {
+      setTooltip(api, getToolTipText(editor, format, lastColor.get()));
       setIconColor(api, name, lastColor.get());
       return onSetupEditableToggle(editor)(api);
     },
@@ -276,6 +290,8 @@ const register = (editor: Editor): void => {
   const lastBackColor = Cell(fallbackColorBackground);
   registerTextColorButton(editor, 'forecolor', 'forecolor', lastForeColor);
   registerTextColorButton(editor, 'backcolor', 'hilitecolor', lastBackColor);
+
+  console.log('fallback color background', fallbackColorBackground);
 
   registerTextColorMenuItem(editor, 'forecolor', 'forecolor', 'Text color', lastForeColor);
   registerTextColorMenuItem(editor, 'backcolor', 'hilitecolor', 'Background color', lastBackColor);
