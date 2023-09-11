@@ -165,10 +165,14 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
         internalDialog: contents
       };
 
-      const refreshDocking = () => inlineDialog.on((dialog) => {
-        InlineView.reposition(dialog);
-        Docking.refresh(dialog);
-      });
+      const refresh = (comp: AlloyComponent) => {
+        InlineView.reposition(comp);
+        Docking.refresh(comp);
+      };
+
+      const refreshDocking = () => inlineDialog.on(refresh);
+
+      const refreshView = () => refresh(inlineDialogComp);
 
       const dialogUi = renderInlineDialog<T>(
         dialogInit,
@@ -182,7 +186,8 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
           }
         },
         extras.backstages.popup,
-        windowParams.ariaAttrs
+        windowParams.ariaAttrs,
+        refreshView
       );
 
       const inlineDialogComp = GuiFactory.build(InlineView.sketch({
@@ -260,10 +265,14 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
         internalDialog: contents
       };
 
-      const refreshDocking = () => inlineDialog.on((dialog) => {
-        InlineView.reposition(dialog);
-        Docking.refresh(dialog);
-      });
+      const refresh = (comp: AlloyComponent) => {
+        InlineView.reposition(comp);
+        Docking.refresh(comp);
+      };
+
+      const refreshDocking = () => inlineDialog.on(refresh);
+
+      const refreshView = () => refresh(inlineDialogComp);
 
       const dialogUi = renderInlineDialog<T>(
         dialogInit,
@@ -277,7 +286,8 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
           }
         },
         extras.backstages.popup,
-        windowParams.ariaAttrs
+        windowParams.ariaAttrs,
+        refreshView
       );
 
       const inlineDialogComp = GuiFactory.build(InlineView.sketch({
@@ -319,7 +329,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
                 optScrollEnv: Optional.none()
               }));
             }
-          })
+          }),
         ]),
         // Treat alert or confirm dialogs as part of the inline dialog
         isExtraPart: (_comp, target) => isAlertOrConfirmDialog(target)

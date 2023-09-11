@@ -69,6 +69,7 @@ const getEventExtras = (lazyDialog: () => AlloyComponent, providers: UiFactoryBa
   }
 });
 
+const fullscreenClass = 'tox-dialog--fullscreen';
 const largeDialogClass = 'tox-dialog--width-lg';
 const mediumDialogClass = 'tox-dialog--width-md';
 
@@ -86,13 +87,14 @@ const getDialogSizeClasses = (size: Dialog.DialogSize): Optional<string> => {
 const updateDialogSizeClass = (size: Dialog.DialogSize, component: AlloyComponent): void => {
   const sugarBody = SugarElement.fromDom(component.element.dom);
   const classes = Classes.get(sugarBody);
-  const currentSizeClass = Arr.find(classes, (c) => c === largeDialogClass || c === mediumDialogClass);
-  currentSizeClass.map((c) => Classes.remove(sugarBody, [ c ]));
-  getDialogSizeClasses(size).map((dialogSizeClass) => Classes.add(sugarBody, [ dialogSizeClass ]));
+  if (!Arr.contains(classes, fullscreenClass)) {
+    const currentSizeClass = Arr.find(classes, (c) => c === largeDialogClass || c === mediumDialogClass);
+    currentSizeClass.map((c) => Classes.remove(sugarBody, [ c ]));
+    getDialogSizeClasses(size).map((dialogSizeClass) => Classes.add(sugarBody, [ dialogSizeClass ]));
+  }
 };
 
 const toggleFullscreen = (comp: AlloyComponent, currentSize: Dialog.DialogSize): void => {
-  const fullscreenClass = 'tox-dialog--fullscreen';
   const sugarBody = SugarElement.fromDom(comp.element.dom);
   const classes = Classes.get(sugarBody);
   const currentSizeClass = Arr.find(classes, (c) => c === largeDialogClass || c === mediumDialogClass).or(getDialogSizeClasses(currentSize));

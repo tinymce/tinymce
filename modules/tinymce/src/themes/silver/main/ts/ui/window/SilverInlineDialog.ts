@@ -24,7 +24,13 @@ interface RenderedDialog<T extends Dialog.DialogData> {
   readonly instanceApi: Dialog.DialogInstanceApi<T>;
 }
 
-const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra<T>, backstage: Backstage.UiFactoryBackstage, ariaAttrs: boolean = false): RenderedDialog<T> => {
+const renderInlineDialog = <T extends Dialog.DialogData>(
+  dialogInit: DialogManager.DialogInit<T>,
+  extra: SilverDialogCommon.WindowExtra<T>,
+  backstage: Backstage.UiFactoryBackstage,
+  ariaAttrs: boolean = false,
+  refreshView: () => void
+): RenderedDialog<T> => {
   const dialogId = Id.generate('dialog');
   const dialogLabelId = Id.generate('dialog-label');
   const dialogContentId = Id.generate('dialog-content');
@@ -37,6 +43,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
   const updateState = (comp: AlloyComponent, incoming: DialogManager.DialogInit<T>) => {
     dialogSize.set(incoming.internalDialog.size);
     SilverDialogCommon.updateDialogSizeClass(incoming.internalDialog.size, comp);
+    refreshView();
     return Optional.some(incoming);
   };
 
