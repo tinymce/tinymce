@@ -6,8 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Inline dialog will now respect `size: 'large'` argument in the dialog spec. #TINY-10209
+
 ### Fixed
 - Setting the content with an attribute that contains a self-closing HTML tag did not preserve the tag. #TINY-10088
+- The dialog size was not updated when the `size` argument was changed when redialling a dialog. #TINY-10209
 
 ## 6.7.0 - 2023-08-30
 
