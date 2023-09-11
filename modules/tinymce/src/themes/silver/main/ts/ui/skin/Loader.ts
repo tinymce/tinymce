@@ -4,7 +4,7 @@ import { SugarElement, SugarShadowDom } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import StyleSheetLoader from 'tinymce/core/api/dom/StyleSheetLoader';
 import Editor from 'tinymce/core/api/Editor';
-import EditorManager from 'tinymce/core/api/EditorManager';
+import { tinymce } from 'tinymce/core/api/Tinymce';
 
 import * as Options from '../../api/Options';
 import * as SkinLoaded from './SkinLoaded';
@@ -21,9 +21,9 @@ const loadRawCss = (editor: Editor, key: string, css: string, styleSheetLoader: 
   return styleSheetLoader.loadRawCss(key, css);
 };
 
-const loadUrlUiSkins = (editor: Editor, skinUrl: string): Promise<void> => {
+const loadUiSkins = async (editor: Editor, skinUrl: string): Promise<void> => {
   const skinUiCss = skinUrl + '/skin.css';
-  const css = EditorManager.resources.get(skinUiCss);
+  const css = await tinymce.Resource.get(skinUiCss);
 
   if (Type.isString(css)) {
     loadRawCss(editor, skinUiCss, css, editor.ui.styleSheetLoader);
@@ -34,12 +34,12 @@ const loadUrlUiSkins = (editor: Editor, skinUrl: string): Promise<void> => {
   }
 };
 
-const loadShadowDomUrlUiSkins = (editor: Editor, skinUrl: string): Promise<void> => {
+const loadShadowDomUiSkins = async (editor: Editor, skinUrl: string): Promise<void> => {
   const isInShadowRoot = SugarShadowDom.isInShadowRoot(SugarElement.fromDom(editor.getElement()));
   if (isInShadowRoot) {
 
     const shadowDomSkinCss = skinUrl + '/skin.shadowdom.css';
-    const css = EditorManager.resources.get(shadowDomSkinCss);
+    const css = await tinymce.Resource.get(shadowDomSkinCss);
 
     if (Type.isString(css)) {
       loadRawCss(editor, shadowDomSkinCss, css, DOMUtils.DOM.styleSheetLoader);
@@ -53,10 +53,10 @@ const loadShadowDomUrlUiSkins = (editor: Editor, skinUrl: string): Promise<void>
   }
 };
 
-const loadUrlSkin = (isInline: boolean, editor: Editor): Promise<void> => {
+const loadUrlSkin = async (isInline: boolean, editor: Editor): Promise<void> => {
   const skinUrl = Options.getSkinUrl(editor);
   if (skinUrl) {
-    const css = EditorManager.resources.get(skinUrl + (isInline ? '/content.inline' : '/content') + '.css');
+    const css = await tinymce.Resource.get(skinUrl + (isInline ? '/content.inline' : '/content') + '.css');
 
     if (Type.isString(css)) {
       loadRawCss(editor, skinUrl, css, editor.ui.styleSheetLoader);
@@ -69,8 +69,8 @@ const loadUrlSkin = (isInline: boolean, editor: Editor): Promise<void> => {
   // Seems to work without, but adding a note in case things break later
   if (!Options.isSkinDisabled(editor) && Type.isString(skinUrl)) {
     return Promise.all([
-      loadUrlUiSkins(editor, skinUrl),
-      loadShadowDomUrlUiSkins(editor, skinUrl)
+      loadUiSkins(editor, skinUrl),
+      loadShadowDomUiSkins(editor, skinUrl)
     ]).then();
   } else {
     return Promise.resolve();

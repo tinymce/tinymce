@@ -9,7 +9,6 @@ import Editor from './Editor';
 import Env from './Env';
 import { EditorManagerEventMap } from './EventTypes';
 import { RawEditorOptions } from './OptionTypes';
-import EditorResources from './resources/Resources';
 import I18n, { TranslatedString, Untranslated } from './util/I18n';
 import Observable from './util/Observable';
 import Tools from './util/Tools';
@@ -90,7 +89,6 @@ const purgeDestroyedEditor = (editor: Editor | null): void => {
 
 interface EditorManager extends Observable<EditorManagerEventMap> {
   defaultOptions: RawEditorOptions;
-  resources: EditorResources;
   majorVersion: string;
   minorVersion: string;
   releaseDate: string;
@@ -128,8 +126,6 @@ const EditorManager: EditorManager = {
 
   baseURI: null as any,
   baseURL: null as any,
-
-  resources: EditorResources(),
 
   /**
    * Object containing the options that will be passed by default to the <code>init</code> method upon each initialization of an editor. These defaults will be shallow merged with other options passed to <code>init</code>.
