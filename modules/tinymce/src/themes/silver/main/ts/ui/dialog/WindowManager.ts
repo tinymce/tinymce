@@ -167,7 +167,9 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
 
       const refreshDocking = () => inlineDialog.on((dialog) => {
         InlineView.reposition(dialog);
-        Docking.refresh(dialog);
+        if (!isStickyToolbar || !isToolbarLocationTop) {
+          Docking.refresh(dialog);
+        }
       });
 
       const dialogUi = renderInlineDialog<T>(
@@ -321,7 +323,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
                 optScrollEnv: Optional.none()
               }));
             }
-          }),
+          })
         ]),
         // Treat alert or confirm dialogs as part of the inline dialog
         isExtraPart: (_comp, target) => isAlertOrConfirmDialog(target)

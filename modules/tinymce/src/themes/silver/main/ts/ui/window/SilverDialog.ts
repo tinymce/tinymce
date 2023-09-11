@@ -57,9 +57,6 @@ const renderDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.Dia
     footer,
     extraClasses: dialogSizeClasses,
     extraBehaviours: [
-      // Because this doesn't define `renderComponents`, all this does is update the state.
-      // We use the state for the initialData. The other parts (body etc.) render the
-      // components based on what reflecting receives.
       Reflecting.config({
         channel: `${dialogChannel}-${dialogId}`,
         updateState,
