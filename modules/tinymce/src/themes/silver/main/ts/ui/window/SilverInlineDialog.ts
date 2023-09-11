@@ -29,7 +29,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(
   extra: SilverDialogCommon.WindowExtra<T>,
   backstage: Backstage.UiFactoryBackstage,
   ariaAttrs: boolean = false,
-  refreshView: () => void
+  refreshDocking: () => void
 ): RenderedDialog<T> => {
   const dialogId = Id.generate('dialog');
   const dialogLabelId = Id.generate('dialog-label');
@@ -40,10 +40,12 @@ const renderInlineDialog = <T extends Dialog.DialogData>(
 
   const dialogSizeClasses = SilverDialogCommon.getDialogSizeClasses(dialogSize.get()).toArray();
 
+  // Reflecting behaviour broadcasts on dialog channel only on redial.
   const updateState = (comp: AlloyComponent, incoming: DialogManager.DialogInit<T>) => {
+    // Update dialog size and position upon redial.
     dialogSize.set(incoming.internalDialog.size);
     SilverDialogCommon.updateDialogSizeClass(incoming.internalDialog.size, comp);
-    refreshView();
+    refreshDocking();
     return Optional.some(incoming);
   };
 
