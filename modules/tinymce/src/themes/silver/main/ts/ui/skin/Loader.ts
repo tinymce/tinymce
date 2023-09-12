@@ -4,7 +4,9 @@ import { SugarElement, SugarShadowDom } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import StyleSheetLoader from 'tinymce/core/api/dom/StyleSheetLoader';
 import Editor from 'tinymce/core/api/Editor';
-import { tinymce } from 'tinymce/core/api/Tinymce';
+import { TinyMCE } from 'tinymce/core/api/Tinymce';
+
+declare let tinymce: TinyMCE;
 
 import * as Options from '../../api/Options';
 import * as SkinLoaded from './SkinLoaded';
