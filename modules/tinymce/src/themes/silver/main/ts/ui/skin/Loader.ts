@@ -29,7 +29,6 @@ const loadUiSkins = async (editor: Editor, skinUrl: string): Promise<void> => {
 
   if (Type.isString(css)) {
     loadRawCss(editor, skinUiCss, css, editor.ui.styleSheetLoader);
-    return Promise.resolve();
   } else {
     const skinUiCss = skinUrl + '/skin.min.css';
     return loadStylesheet(editor, skinUiCss, editor.ui.styleSheetLoader);
@@ -50,8 +49,6 @@ const loadShadowDomUiSkins = async (editor: Editor, skinUrl: string): Promise<vo
       const shadowDomSkinCss = skinUrl + '/skin.shadowdom.min.css';
       return loadStylesheet(editor, shadowDomSkinCss, DOMUtils.DOM.styleSheetLoader);
     }
-  } else {
-    return Promise.resolve();
   }
 };
 
@@ -74,8 +71,6 @@ const loadUrlSkin = async (isInline: boolean, editor: Editor): Promise<void> => 
       loadUiSkins(editor, skinUrl),
       loadShadowDomUiSkins(editor, skinUrl)
     ]).then();
-  } else {
-    return Promise.resolve();
   }
 };
 
