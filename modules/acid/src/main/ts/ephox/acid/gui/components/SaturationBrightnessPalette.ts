@@ -2,6 +2,7 @@ import { AlloyComponent, AlloyTriggers, Behaviour, Composing, Focusing, Sketcher
 import { Fun, Optional, Type } from '@ephox/katamari';
 import { Attribute } from '@ephox/sugar';
 
+import { Untranslated } from '../../alien/I18n';
 import { Hex } from '../../api/colour/ColourTypes';
 import * as HsvColour from '../../api/colour/HsvColour';
 import * as RgbaColour from '../../api/colour/RgbaColour';
@@ -20,10 +21,7 @@ export interface SaturationBrightnessPaletteSketcher extends Sketcher.SingleSket
   setThumb: (slider: AlloyComponent, hex: Hex) => void;
 }
 
-const paletteFactory = (translate: (key: string) => string, getClass: (key: string) => string): SaturationBrightnessPaletteSketcher => {
-  const translateReplace = (key: string, value1: number, value2: number): string => {
-    return translate(key).replace('{0}', value1 + '').replace('{1}', value2 + '');
-  };
+const paletteFactory = (translate: (key: Untranslated) => string, getClass: (key: string) => string): SaturationBrightnessPaletteSketcher => {
 
   const spectrumPart = Slider.parts.spectrum({
     dom: {
@@ -79,7 +77,7 @@ const paletteFactory = (translate: (key: string) => string, getClass: (key: stri
   const setPaletteThumb = (slider: AlloyComponent, hex: Hex): void => {
     const hsv = HsvColour.fromRgb(RgbaColour.fromHex(hex));
     Slider.setValue(slider, { x: hsv.saturation, y: 100 - hsv.value });
-    Attribute.set(slider.element, 'aria-valuetext', translateReplace('Saturation {0}%, Brightness {1}%', hsv.saturation, hsv.value));
+    Attribute.set(slider.element, 'aria-valuetext', translate([ 'Saturation {0}%, Brightness {1}%', hsv.saturation, hsv.value ]));
   };
 
   const factory: UiSketcher.SingleSketchFactory<SaturationBrightnessPaletteDetail, SaturationBrightnessPaletteSpec> = (_detail): SketchSpec => {
