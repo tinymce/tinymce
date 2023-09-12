@@ -9,7 +9,8 @@ const makeItems = (info: ImageDialogInfo): Dialog.BodyComponentSpec[] => {
     name: 'src',
     type: 'urlinput',
     filetype: 'image',
-    label: 'Source'
+    label: 'Source',
+    picker_text: 'Browse files'
   };
   const imageList = info.imageList.map((items) => ({
     name: 'images',

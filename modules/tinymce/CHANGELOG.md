@@ -6,8 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Setting the content with an attribute that contains a self-closing HTML tag did not preserve the tag. #TINY-10088
+- Resize handles would not appear on editable images in a non-editable context. #TINY-10118
+
 ### Improved
 - Colorpicker now includes the Brightness/Saturation selector and hue slider in the keyboard navigable items. #TINY-9287
+- Improved the tooltips of picker buttons for the urlinput components in the "Insert/Edit Image" and "Insert/Edit Link" dialogs. #TINY-10155
 
 ## 6.7.0 - 2023-08-30
 
