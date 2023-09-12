@@ -21,7 +21,8 @@ describe('browser.tinymce.plugins.lists.ListModelTest', () => {
       content: arbitraryContent,
       listType: fc.constantFrom(ListType.OL, ListType.UL),
       listAttributes: fc.constantFrom({}, { style: 'list-style-type: lower-alpha;' }),
-      itemAttributes: fc.constantFrom({}, { style: 'color: red;' })
+      itemAttributes: fc.constantFrom({}, { style: 'color: red;' }),
+      isInPreviousLi: fc.constant(false)
     });
 
     const arbitraryEntries = fc.array(arbitraryEntry);

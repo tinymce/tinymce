@@ -70,13 +70,25 @@ const appendItem = (segment: Segment, item: SugarElement): void => {
   segment.item = item;
 };
 
+const createInPreviousLiItem = (scope: Document, attr: Record<string, any>, content: SugarElement[], tag: string): SugarElement => {
+  const item = SugarElement.fromTag(tag, scope);
+  Attribute.setAll(item, attr);
+  InsertAll.append(item, content);
+  return item;
+};
+
 const writeShallow = (scope: Document, cast: Segment[], entry: Entry): Segment[] => {
   const newCast = cast.slice(0, entry.depth);
 
   Arr.last(newCast).each((segment) => {
-    const item = createItem(scope, entry.itemAttributes, entry.content);
-    appendItem(segment, item);
-    normalizeSegment(segment, entry);
+    if (entry.isInPreviousLi) {
+      const item = createInPreviousLiItem(scope, entry.itemAttributes, entry.content, entry.listType);
+      Insert.append(segment.item, item);
+    } else {
+      const item = createItem(scope, entry.itemAttributes, entry.content);
+      appendItem(segment, item);
+      normalizeSegment(segment, entry);
+    }
   });
 
   return newCast;

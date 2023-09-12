@@ -26,6 +26,7 @@ export interface Entry {
   listType: ListType;
   listAttributes: Record<string, any>;
   itemAttributes: Record<string, any>;
+  isInPreviousLi: boolean;
 }
 
 const isIndented = (entry: Entry): boolean => entry.depth > 0;
@@ -45,7 +46,8 @@ const createEntry = (li: SugarElement, depth: number, isSelected: boolean): Opti
   content: cloneItemContent(li),
   itemAttributes: Attribute.clone(li),
   listAttributes: Attribute.clone(list),
-  listType: SugarNode.name(list) as ListType
+  listType: SugarNode.name(list) as ListType,
+  isInPreviousLi: false
 }));
 
 export {
