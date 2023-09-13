@@ -22,7 +22,7 @@ const renderDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.Dia
 
   const dialogSize = Cell<Dialog.DialogSize>(internalDialog.size);
 
-  const dialogSizeClasses = SilverDialogCommon.getDialogSizeClasses(dialogSize.get()).toArray();
+  const dialogSizeClasses = SilverDialogCommon.getDialogSizeClass(dialogSize.get()).toArray();
 
   const updateState = (comp: AlloyComponent, incoming: DialogManager.DialogInit<T>) => {
     dialogSize.set(incoming.internalDialog.size);
