@@ -1,7 +1,7 @@
 import { Arr, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Css, Insert, InsertAll, Replication, SugarElement, SugarNode } from '@ephox/sugar';
 
-import { Entry } from './Entry';
+import { Entry, EntryList, isEntryList } from './Entry';
 import { ListType } from './Util';
 
 interface Segment {
@@ -32,7 +32,7 @@ const createSegment = (scope: Document, listType: ListType): Segment => {
   return segment;
 };
 
-const createSegments = (scope: Document, entry: Entry, size: number): Segment[] => {
+const createSegments = (scope: Document, entry: EntryList, size: number): Segment[] => {
   const segments: Segment[] = [];
   for (let i = 0; i < size; i++) {
     segments.push(createSegment(scope, entry.listType));
@@ -40,7 +40,7 @@ const createSegments = (scope: Document, entry: Entry, size: number): Segment[] 
   return segments;
 };
 
-const populateSegments = (segments: Segment[], entry: Entry): void => {
+const populateSegments = (segments: Segment[], entry: EntryList): void => {
   for (let i = 0; i < segments.length - 1; i++) {
     Css.set(segments[i].item, 'list-style-type', 'none');
   }
@@ -51,7 +51,7 @@ const populateSegments = (segments: Segment[], entry: Entry): void => {
   });
 };
 
-const normalizeSegment = (segment: Segment, entry: Entry): void => {
+const normalizeSegment = (segment: Segment, entry: EntryList): void => {
   if (SugarNode.name(segment.list) !== entry.listType) {
     segment.list = Replication.mutate(segment.list, entry.listType);
   }
@@ -81,20 +81,22 @@ const writeShallow = (scope: Document, cast: Segment[], entry: Entry): Segment[]
   const newCast = cast.slice(0, entry.depth);
 
   Arr.last(newCast).each((segment) => {
-    if (entry.isInPreviousLi) {
-      const item = createInPreviousLiItem(scope, entry.itemAttributes, entry.content, entry.listType);
-      Insert.append(segment.item, item);
-    } else {
+    if (isEntryList(entry)) {
       const item = createItem(scope, entry.itemAttributes, entry.content);
       appendItem(segment, item);
       normalizeSegment(segment, entry);
+    } else {
+      if (entry.isInPreviousLi) {
+        const item = createInPreviousLiItem(scope, entry.attributes, entry.content, entry.type);
+        Insert.append(segment.item, item);
+      }
     }
   });
 
   return newCast;
 };
 
-const writeDeep = (scope: Document, cast: Segment[], entry: Entry): Segment[] => {
+const writeDeep = (scope: Document, cast: Segment[], entry: EntryList): Segment[] => {
   const segments = createSegments(scope, entry, entry.depth - cast.length);
   joinSegments(segments);
   populateSegments(segments, entry);
@@ -105,7 +107,11 @@ const writeDeep = (scope: Document, cast: Segment[], entry: Entry): Segment[] =>
 
 const composeList = (scope: Document, entries: Entry[]): Optional<SugarElement<HTMLElement>> => {
   const cast = Arr.foldl(entries, (cast, entry) => {
-    return entry.depth > cast.length ? writeDeep(scope, cast, entry) : writeShallow(scope, cast, entry);
+    if (isEntryList(entry)) {
+      return entry.depth > cast.length ? writeDeep(scope, cast, entry) : writeShallow(scope, cast, entry);
+    } else {
+      return writeShallow(scope, cast, entry);
+    }
   }, [] as Segment[]);
 
   return Arr.head(cast).map((segment) => segment.list);
