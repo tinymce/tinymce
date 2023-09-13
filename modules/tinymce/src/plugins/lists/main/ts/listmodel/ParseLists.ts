@@ -1,4 +1,4 @@
-import { Arr, Cell, Fun, Optional } from '@ephox/katamari';
+import { Arr, Cell, Optional } from '@ephox/katamari';
 import { Compare, SugarElement, Traverse } from '@ephox/sugar';
 
 import { createEntry, Entry } from './Entry';
@@ -50,17 +50,20 @@ const parseItem: Parser = (depth: number, itemSelection: Optional<ItemSelection>
         return parseList(depth, itemSelection, selectionState, list);
       } else {
         const result = parseList(depth, itemSelection, selectionState, list);
-
-        return Traverse.child(item, 1).fold(
-          Fun.constant(result),
-          (s) => {
-            return result.concat(parseSingleItem(depth, itemSelection, selectionState, s).map((e) => ({
+        const parsedSiblings = Arr.foldl(Traverse.children(item), (acc: Entry[], s, i) => {
+          if (i === 0) {
+            return acc;
+          } else {
+            const parsedSibling = parseSingleItem(depth, itemSelection, selectionState, s).map((e) => ({
               ...e,
               isInPreviousLi: true,
               listType: (s.dom.nodeName.toLowerCase() as any)
-            })));
+            }));
+            return acc.concat(parsedSibling);
           }
-        );
+        }, []);
+
+        return result.concat(parsedSiblings);
       }
     });
 

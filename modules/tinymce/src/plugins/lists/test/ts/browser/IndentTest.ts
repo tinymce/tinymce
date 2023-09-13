@@ -458,7 +458,8 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
       '<ol>' +
       '<li>b</li>' +
       '</ol>' +
-      '<p>p</p>' +
+      '<p>p1</p>' +
+      '<p>p2</p>' +
       '</li>' +
       '</ol>'
     );
@@ -473,7 +474,8 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
       '<ol>' +
       '<li>b</li>' +
       '</ol>' +
-      '<p>p</p>' +
+      '<p>p1</p>' +
+      '<p>p2</p>' +
       '</li>' +
       '</ol>'
     );
@@ -487,7 +489,8 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
       '<ol start="5">' +
       '<li>b</li>' +
       '</ol>' +
-      '<p>p</p>' +
+      '<p>p1</p>' +
+      '<p>p2</p>' +
       '</li>' +
       '</ol>'
     );
@@ -502,7 +505,8 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
       '<li>a</li>' +
       '<li>b</li>' +
       '</ol>' +
-      '<p>p</p>' +
+      '<p>p1</p>' +
+      '<p>p2</p>' +
       '</li>' +
       '</ol>'
     );
