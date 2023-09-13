@@ -62,23 +62,18 @@ const parseItem: Parser = (depth: number, itemSelection: Optional<ItemSelection>
   Traverse.firstChild(item).filter(isList).fold(
     () => parseSingleItem(depth, itemSelection, selectionState, item),
     (list) => {
-      if (Traverse.childNodesCount(item) === 1) {
-        return parseList(depth, itemSelection, selectionState, list);
-      } else {
-        const result = parseList(depth, itemSelection, selectionState, list);
-        const parsedSiblings = Arr.foldl(Traverse.children(item), (acc: Entry[], s, i) => {
-          if (i === 0) {
-            return acc;
-          } else {
-            const parsedSibling = parseSingleItem(depth, itemSelection, selectionState, s)
-              .map((e) => entryToEntryNoList(e, s.dom.nodeName.toLowerCase(), true));
+      const parsedSiblings = Arr.foldl(Traverse.children(item), (acc: Entry[], s, i) => {
+        if (i === 0) {
+          return acc;
+        } else {
+          const parsedSibling = parseSingleItem(depth, itemSelection, selectionState, s)
+            .map((e) => entryToEntryNoList(e, s.dom.nodeName.toLowerCase(), true));
 
-            return acc.concat(parsedSibling);
-          }
-        }, []);
+          return acc.concat(parsedSibling);
+        }
+      }, []);
 
-        return result.concat(parsedSiblings);
-      }
+      return parseList(depth, itemSelection, selectionState, list).concat(parsedSiblings);
     });
 
 const parseList: Parser = (depth: number, itemSelection: Optional<ItemSelection>, selectionState: Cell<boolean>, list: SugarElement<HTMLElement>): Entry[] =>
