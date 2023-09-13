@@ -73,7 +73,7 @@ const fullscreenClass = 'tox-dialog--fullscreen';
 const largeDialogClass = 'tox-dialog--width-lg';
 const mediumDialogClass = 'tox-dialog--width-md';
 
-const getDialogSizeClasses = (size: Dialog.DialogSize): Optional<string> => {
+const getDialogSizeClass = (size: Dialog.DialogSize): Optional<string> => {
   switch (size) {
     case 'large':
       return Optional.some(largeDialogClass);
@@ -90,14 +90,14 @@ const updateDialogSizeClass = (size: Dialog.DialogSize, component: AlloyComponen
   if (!Arr.contains(classes, fullscreenClass)) {
     const currentSizeClass = Arr.find(classes, (c) => c === largeDialogClass || c === mediumDialogClass);
     currentSizeClass.map((c) => Classes.remove(sugarBody, [ c ]));
-    getDialogSizeClasses(size).map((dialogSizeClass) => Classes.add(sugarBody, [ dialogSizeClass ]));
+    getDialogSizeClass(size).map((dialogSizeClass) => Classes.add(sugarBody, [ dialogSizeClass ]));
   }
 };
 
 const toggleFullscreen = (comp: AlloyComponent, currentSize: Dialog.DialogSize): void => {
   const sugarBody = SugarElement.fromDom(comp.element.dom);
   const classes = Classes.get(sugarBody);
-  const currentSizeClass = Arr.find(classes, (c) => c === largeDialogClass || c === mediumDialogClass).or(getDialogSizeClasses(currentSize));
+  const currentSizeClass = Arr.find(classes, (c) => c === largeDialogClass || c === mediumDialogClass).or(getDialogSizeClass(currentSize));
   Classes.toggle(sugarBody, [ fullscreenClass, ...currentSizeClass.toArray() ]);
 };
 
@@ -157,7 +157,7 @@ export {
   getHeader,
   getEventExtras,
   updateDialogSizeClass,
-  getDialogSizeClasses,
+  getDialogSizeClass,
   toggleFullscreen,
   renderModalDialog,
   mapMenuButtons,

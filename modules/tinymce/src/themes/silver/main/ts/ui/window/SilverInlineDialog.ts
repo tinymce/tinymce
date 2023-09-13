@@ -38,7 +38,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(
 
   const dialogSize = Cell<Dialog.DialogSize>(internalDialog.size);
 
-  const dialogSizeClasses = SilverDialogCommon.getDialogSizeClasses(dialogSize.get()).toArray();
+  const dialogSizeClass = SilverDialogCommon.getDialogSizeClass(dialogSize.get()).toArray();
 
   // Reflecting behaviour broadcasts on dialog channel only on redial.
   const updateState = (comp: AlloyComponent, incoming: DialogManager.DialogInit<T>) => {
@@ -98,7 +98,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(
   const dialog = GuiFactory.build({
     dom: {
       tag: 'div',
-      classes: [ 'tox-dialog', inlineClass, ...dialogSizeClasses ],
+      classes: [ 'tox-dialog', inlineClass, ...dialogSizeClass ],
       attributes: {
         role: 'dialog',
         ['aria-labelledby']: dialogLabelId
