@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Setting the content with an attribute that contains a self-closing HTML tag did not preserve the tag. #TINY-10088
 - Resize handles would not appear on editable images in a non-editable context. #TINY-10118
 - The dialog size was not updated when the `size` argument was changed when redialling a dialog. #TINY-10209
+- Indent/Undent a list that contains a not `li` with a `ul`/`ol` as first element make disappear all others elements inside the `li`. #TINY-10213
 
 ### Improved
 - Improved the tooltips of picker buttons for the urlinput components in the "Insert/Edit Image" and "Insert/Edit Link" dialogs. #TINY-10155
