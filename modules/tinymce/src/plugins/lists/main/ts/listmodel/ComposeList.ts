@@ -1,7 +1,7 @@
 import { Arr, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Css, Insert, InsertAll, Replication, SugarElement, SugarNode } from '@ephox/sugar';
 
-import { Entry, EntryList, isEntryList } from './Entry';
+import { Entry, EntryList, isEntryComment, isEntryList, isEntryNoList } from './Entry';
 import { ListType } from './Util';
 
 interface Segment {
@@ -85,11 +85,14 @@ const writeShallow = (scope: Document, cast: Segment[], entry: Entry): Segment[]
       const item = createItem(scope, entry.itemAttributes, entry.content);
       appendItem(segment, item);
       normalizeSegment(segment, entry);
-    } else {
+    } else if (isEntryNoList(entry)) {
       if (entry.isInPreviousLi) {
         const item = createInPreviousLiItem(scope, entry.attributes, entry.content, entry.type);
         Insert.append(segment.item, item);
       }
+    } else {
+      const item = SugarElement.fromHtml(`<!--${entry.content}-->`);
+      Insert.append(segment.list, item);
     }
   });
 
@@ -106,13 +109,27 @@ const writeDeep = (scope: Document, cast: Segment[], entry: EntryList): Segment[
 };
 
 const composeList = (scope: Document, entries: Entry[]): Optional<SugarElement<HTMLElement>> => {
-  const cast = Arr.foldl(entries, (cast, entry) => {
+  let firstCommentEntryOpt: Optional<Entry> = Optional.none();
+
+  const cast = Arr.foldl(entries, (cast, entry, i) => {
     if (isEntryList(entry)) {
       return entry.depth > cast.length ? writeDeep(scope, cast, entry) : writeShallow(scope, cast, entry);
     } else {
+      if (i === 0 && isEntryComment(entry)) {
+        firstCommentEntryOpt = Optional.some(entry);
+        return cast;
+      }
+
       return writeShallow(scope, cast, entry);
     }
   }, [] as Segment[]);
+
+  firstCommentEntryOpt.each((firstCommentEntry) => {
+    const item = SugarElement.fromHtml(`<!--${firstCommentEntry.content}-->`);
+    Arr.head(cast).each((fistCast) => {
+      Insert.prepend(fistCast.list, item);
+    });
+  });
 
   return Arr.head(cast).map((segment) => segment.list);
 };

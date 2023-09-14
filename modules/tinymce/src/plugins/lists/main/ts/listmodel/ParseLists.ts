@@ -1,7 +1,7 @@
 import { Arr, Cell, Optional } from '@ephox/katamari';
-import { Compare, SugarElement, Traverse } from '@ephox/sugar';
+import { Compare, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
-import { createEntry, Entry, EntryNoList, isEntryList } from './Entry';
+import { createEntry, Entry, EntryComment, EntryNoList, isEntryList } from './Entry';
 import { isList } from './Util';
 
 type Parser = (depth: number, itemSelection: Optional<ItemSelection>, selectionState: Cell<boolean>, element: SugarElement) => Entry[];
@@ -16,7 +16,7 @@ export interface EntrySet {
   readonly sourceList: SugarElement<HTMLElement>;
 }
 
-const entryToEntryNoList = (entry: Entry, type: string, isInPreviousLi: boolean): EntryNoList => {
+const entryToEntryNoList = (entry: Entry, type: string, isInPreviousLi: boolean): EntryNoList | EntryComment => {
   if (isEntryList(entry)) {
     return ({
       depth: entry.depth,
@@ -24,7 +24,7 @@ const entryToEntryNoList = (entry: Entry, type: string, isInPreviousLi: boolean)
       content: entry.content,
       isSelected: entry.isSelected,
       type,
-      attributes: entry.listAttributes,
+      attributes: entry.itemAttributes,
       isInPreviousLi
     });
   } else {
@@ -33,8 +33,16 @@ const entryToEntryNoList = (entry: Entry, type: string, isInPreviousLi: boolean)
 };
 
 const parseSingleItem: Parser = (depth: number, itemSelection: Optional<ItemSelection>, selectionState: Cell<boolean>, item: SugarElement<HTMLElement>): Entry[] => {
+  if (SugarNode.isComment(item)) {
+    return [{
+      depth: depth + 1,
+      content: item.dom.nodeValue ?? '',
+      dirty: false,
+      isSelected: false,
+      isComment: true
+    }];
+  }
 
-  // Update selectionState (start)
   itemSelection.each((selection) => {
     if (Compare.eq(selection.start, item)) {
       selectionState.set(true);

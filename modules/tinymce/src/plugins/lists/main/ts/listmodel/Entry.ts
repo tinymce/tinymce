@@ -18,7 +18,7 @@ General workflow: Parse lists to entries -> Manipulate entries -> Compose entrie
 0-------1---2--------->Depth
 */
 
-export type Entry = EntryList | EntryNoList;
+export type Entry = EntryList | EntryNoList | EntryComment;
 
 export interface EntryList {
   depth: number;
@@ -40,7 +40,19 @@ export interface EntryNoList {
   isInPreviousLi: boolean;
 }
 
+export interface EntryComment {
+  depth: number;
+  content: string;
+  dirty: boolean;
+  isSelected: boolean;
+  isComment: true;
+}
+
 const isEntryList = (entry: Entry): entry is EntryList => 'listAttributes' in entry;
+
+const isEntryNoList = (entry: Entry): entry is EntryNoList => 'isInPreviousLi' in entry;
+
+const isEntryComment = (entry: Entry): entry is EntryComment => 'isComment' in entry;
 
 const isIndented = (entry: Entry): boolean => entry.depth > 0;
 
@@ -65,7 +77,9 @@ const createEntry = (li: SugarElement, depth: number, isSelected: boolean): Opti
 
 export {
   createEntry,
+  isEntryComment,
   isEntryList,
+  isEntryNoList,
   isIndented,
   isSelected
 };

@@ -7,17 +7,6 @@ const cloneListProperties = (target: Entry, source: Entry): void => {
     target.listType = source.listType;
     target.listAttributes = { ...source.listAttributes };
   }
-  if (!isEntryList(target) && isEntryList(source)) {
-    target.type = source.listType;
-    target.attributes = { ...source.listAttributes };
-  }
-  if (!isEntryList(target) && !isEntryList(source)) {
-    target.type = source.type;
-    target.attributes = { ...source.attributes };
-  }
-  if (isEntryList(target) && !isEntryList(source)) {
-    target.listAttributes = { ...source.attributes };
-  }
 };
 
 const cleanListProperties = (entry: EntryList): void => {

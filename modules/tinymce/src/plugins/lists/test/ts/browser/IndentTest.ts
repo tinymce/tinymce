@@ -454,13 +454,15 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
     editor.setContent(
       '<ol>' +
       '<li>a</li>' +
+      '<!-- c1 -->' +
       '<li>' +
       '<ol>' +
       '<li>b</li>' +
       '</ol>' +
-      '<p>p1</p>' +
-      '<p>p2</p>' +
+      '<p data-fake-attr="something">p1</p>' +
+      '<p data-fake-attr="something">p2</p>' +
       '</li>' +
+      '<!-- c2 -->' +
       '</ol>'
     );
 
@@ -470,13 +472,15 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
     TinyAssertions.assertContent(editor,
       '<p>a</p>' +
       '<ol>' +
+      '<!-- c1 -->' +
       '<li style="list-style-type: none;">' +
       '<ol>' +
       '<li>b</li>' +
       '</ol>' +
-      '<p>p1</p>' +
-      '<p>p2</p>' +
+      '<p data-fake-attr="something">p1</p>' +
+      '<p data-fake-attr="something">p2</p>' +
       '</li>' +
+      '<!-- c2 -->' +
       '</ol>'
     );
 
@@ -485,13 +489,15 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
     editor.setContent(
       '<ol start="2">' +
       '<li>a</li>' +
+      '<!-- c1 -->' +
       '<li>' +
       '<ol start="5">' +
       '<li>b</li>' +
       '</ol>' +
-      '<p>p1</p>' +
-      '<p>p2</p>' +
+      '<p data-fake-attr="something">p1</p>' +
+      '<p data-fake-attr="something">p2</p>' +
       '</li>' +
+      '<!-- c2 -->' +
       '</ol>'
     );
 
@@ -503,11 +509,13 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
       '<li style="list-style-type: none;">' +
       '<ol start="5">' +
       '<li>a</li>' +
+      '<!-- c1 -->' +
       '<li>b</li>' +
       '</ol>' +
-      '<p>p1</p>' +
-      '<p>p2</p>' +
+      '<p data-fake-attr="something">p1</p>' +
+      '<p data-fake-attr="something">p2</p>' +
       '</li>' +
+      '<!-- c2 -->' +
       '</ol>'
     );
 
