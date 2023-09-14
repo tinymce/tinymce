@@ -3,7 +3,8 @@ import { Html, Remove, SelectorFilter, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import { isPathBookmark } from '../bookmark/BookmarkTypes';
-import * as TrimHtml from '../dom/TrimHtml';
+import * as TrimBody from '../dom/TrimBody';
+import * as Zwsp from '../text/Zwsp';
 import * as Fragments from './Fragments';
 import { CompleteUndoLevel, FragmentedUndoLevel, NewUndoLevel, UndoLevel } from './UndoManagerTypes';
 
@@ -11,9 +12,7 @@ import { CompleteUndoLevel, FragmentedUndoLevel, NewUndoLevel, UndoLevel } from 
 // innerHTML on a detached element will still make http requests to the images
 const lazyTempDocument = Thunk.cached(() => document.implementation.createHTMLDocument('undo'));
 
-const hasIframes = (html: string) => {
-  return html.indexOf('</iframe>') !== -1;
-};
+const hasIframes = (body: HTMLElement) => body.querySelector('iframe') !== null;
 
 const createFragmentedLevel = (fragments: string[]): FragmentedUndoLevel => {
   return {
@@ -36,14 +35,21 @@ const createCompleteLevel = (content: string): CompleteUndoLevel => {
 };
 
 const createFromEditor = (editor: Editor): NewUndoLevel => {
-  const fragments = Fragments.read(editor.getBody());
-  const trimmedFragments = Arr.bind(fragments, (html) => {
-    const trimmed = TrimHtml.trimInternal(editor.serializer, html);
-    return trimmed.length > 0 ? [ trimmed ] : [];
-  });
-  const content = trimmedFragments.join('');
+  const tempAttrs = editor.serializer.getTempAttrs();
+  let body = editor.getBody();
 
-  return hasIframes(content) ? createFragmentedLevel(trimmedFragments) : createCompleteLevel(content);
+  if (TrimBody.hasComments(body)) {
+    body = body.cloneNode(true) as HTMLElement;
+    TrimBody.removeCommentsContainingZwsp(body);
+    if (TrimBody.hasTemporaryNodes(body, tempAttrs)) {
+      TrimBody.trimTemporaryNodes(body, tempAttrs);
+    }
+  } else if (TrimBody.hasTemporaryNodes(body, tempAttrs)) {
+    body = body.cloneNode(true) as HTMLElement;
+    TrimBody.trimTemporaryNodes(body, tempAttrs);
+  }
+
+  return hasIframes(body) ? createFragmentedLevel(Fragments.read(body, true)) : createCompleteLevel(Zwsp.trim(body.innerHTML));
 };
 
 const applyToEditor = (editor: Editor, level: UndoLevel, before: boolean): void => {
