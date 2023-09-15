@@ -199,6 +199,28 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     await UiFinder.pWaitForVisible('Wait for resize handlers to show', TinyDom.body(editor), '#mceResizeHandlese');
   });
 
+  it('TINY-10118: data-mce-selected should be set synchronously when selecting control elements', async () => {
+    const editor = hook.editor();
+    editor.setContent(`<p contenteditable="false"><img contenteditable="false" src="${imgSrc}" width="100" height="100"></p>`);
+    Mouse.trueClickOn(TinyDom.body(editor), 'img');
+    TinySelections.setRawSelection(editor, [ 0 ], 0, [ 0 ], 1); // Triggers a `selectionchange` on Firefox
+    Waiter.pTryUntil('correct selection', () =>
+      TinyAssertions.assertContentPresence(editor, {
+        'img[data-mce-selected="1"]': 0
+      })
+    );
+
+    editor.setContent(`<p contenteditable="false"><img contenteditable="true" src="${imgSrc}" width="100" height="100"></p>`);
+    Mouse.trueClickOn(TinyDom.body(editor), 'img');
+    TinySelections.setRawSelection(editor, [ 0 ], 0, [ 0 ], 1); // Triggers a `selectionchange` on Firefox
+    Waiter.pTryUntil('correct selection', () =>
+      TinyAssertions.assertContentPresence(editor, {
+        'img[data-mce-selected="1"]': 1
+      })
+    );
+    await UiFinder.pWaitForVisible('Wait for resize handlers to show', TinyDom.body(editor), '#mceResizeHandlese');
+  });
+
   it('TINY-9731: data-mce-selected should appear on selected details element', () => {
     const editor = hook.editor();
     editor.setContent(`<details><summary>hoy</summary><p>tiny</p></details>`);

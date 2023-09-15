@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Fixed
+
 - Applying heading formatting to the content of the `summary` element extended its application to the content of the parent `details` element. #TINY-10154
+- Setting the content with an attribute that contains a self-closing HTML tag did not preserve the tag. #TINY-10088
+- Resize handles would not appear on editable images in a non-editable context. #TINY-10118
+
+### Improved
+- Improved the tooltips of picker buttons for the urlinput components in the "Insert/Edit Image", "Insert/Edit Link" and "Insert/Edit Media" dialogs. #TINY-10155
 
 ## 6.7.0 - 2023-08-30
 
