@@ -71,7 +71,7 @@ const cleanInvalidNodes = (nodes: AstNode[], schema: Schema, rootNode: AstNode, 
     // Found a suitable parent
     if (parent && parents.length > 1) {
       // If the node is a valid child of the parent, then try to move it. Otherwise unwrap it
-      if (schema.isValidChild(parent.name, node.name)) {
+      if (!isInvalid(schema, node, true, parent)) {
         // Reverse the array since it makes looping easier
         parents.reverse();
 
@@ -159,17 +159,31 @@ const hasClosest = (node: AstNode, parentName: string): boolean => {
   return false;
 };
 
-const isInvalid = (schema: Schema, node: AstNode, parent: AstNode | null | undefined = node.parent): boolean => {
-  // Check if the node is a valid child of the parent node. If the child is
-  // unknown we don't collect it since it's probably a custom element
-  if (parent && schema.children[node.name] && !schema.isValidChild(parent.name, node.name)) {
-    return true;
-  // Anchors are a special case and cannot be nested
-  } else if (parent && node.name === 'a' && hasClosest(parent, 'a')) {
-    return true;
-  } else {
+const isInvalid = (schema: Schema, node: AstNode, isInsert: boolean, parent: AstNode | null | undefined = node.parent): boolean => {
+  if (!parent) {
     return false;
   }
+
+  // Check if the node is a valid child of the parent node. If the child is
+  // unknown we don't collect it since it's probably a custom element
+  if (schema.children[node.name] && !schema.isValidChild(parent.name, node.name)) {
+    return true;
+  }
+
+  // Anchors are a special case and cannot be nested
+  if (node.name === 'a' && hasClosest(parent, 'a')) {
+    return true;
+  }
+
+  // heading element is valid if it is the only one child of summary (though on inserting it is still invalid)
+  if ([ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ].includes(node.name) && hasClosest(node, 'summary')) {
+    if (parent.firstChild === node) {
+      return isInsert;
+    }
+    return true;
+  }
+
+  return false;
 };
 
 export { cleanInvalidNodes, isInvalid };

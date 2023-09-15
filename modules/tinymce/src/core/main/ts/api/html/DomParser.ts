@@ -80,7 +80,7 @@ interface DomParser {
   addNodeFilter: (name: string, callback: ParserFilterCallback) => void;
   getNodeFilters: () => ParserFilter[];
   removeNodeFilter: (name: string, callback?: ParserFilterCallback) => void;
-  parse: (html: string, args?: ParserArgs) => AstNode;
+  parse: (html: string, args?: ParserArgs, isInsert?: boolean) => AstNode;
 }
 
 type WalkerCallback = (node: AstNode) => void;
@@ -353,8 +353,8 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
    */
   const removeAttributeFilter = attributeFilterRegistry.removeFilter;
 
-  const findInvalidChildren = (node: AstNode, invalidChildren: AstNode[]): void => {
-    if (InvalidNodes.isInvalid(schema, node)) {
+  const findInvalidChildren = (node: AstNode, invalidChildren: AstNode[], isInsert: boolean): void => {
+    if (InvalidNodes.isInvalid(schema, node, isInsert)) {
       invalidChildren.push(node);
     }
   };
@@ -424,11 +424,12 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
    * @method parse
    * @param {String} html Html string to sax parse.
    * @param {Object} args Optional args object that gets passed to all filter functions.
+   * @param {Boolean} isInsert Optional denoting whether the current action involves inserting content into the editor.
    * @return {tinymce.html.Node} Root node containing the tree.
    * @example
    * const rootNode = tinymce.html.DomParser({...}).parse('<b>text</b>');
    */
-  const parse = (html: string, args: ParserArgs = {}): AstNode => {
+  const parse = (html: string, args: ParserArgs = {}, isInsert: boolean = false): AstNode => {
     const validate = defaultedSettings.validate;
     const rootName = args.context ?? defaultedSettings.root_name;
 
@@ -450,7 +451,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
 
     // Find the invalid children in the tree
     const invalidChildren: AstNode[] = [];
-    const invalidFinder = validate ? (node: AstNode) => findInvalidChildren(node, invalidChildren) : Fun.noop;
+    const invalidFinder = validate ? (node: AstNode) => findInvalidChildren(node, invalidChildren, isInsert) : Fun.noop;
 
     // Set up attribute and node matching
     const matches: FilterNode.FilterMatches = { nodes: {}, attributes: {}};

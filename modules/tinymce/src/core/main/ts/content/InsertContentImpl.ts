@@ -272,7 +272,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
 
   // Parse the fragment within the context of the parent node
   const parserArgs: ParserArgs = { context: parentNode.nodeName.toLowerCase(), data: details.data, insert: true };
-  const fragment = parser.parse(value, parserArgs);
+  const fragment = parser.parse(value, parserArgs, true);
 
   // Custom handling of lists
   if (details.paste === true && InsertList.isListFragment(editor.schema, fragment) && InsertList.isParentBlockLi(dom, parentNode)) {
@@ -343,7 +343,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
     const toExtract = fragment.children();
     const parent = fragment.parent ?? root;
     fragment.unwrap();
-    const invalidChildren = Arr.filter(toExtract, (node) => InvalidNodes.isInvalid(editor.schema, node, parent));
+    const invalidChildren = Arr.filter(toExtract, (node) => InvalidNodes.isInvalid(editor.schema, node, true, parent));
     InvalidNodes.cleanInvalidNodes(invalidChildren, editor.schema, editingHost);
     FilterNode.filter(parser.getNodeFilters(), parser.getAttributeFilters(), root);
     value = serializer.serialize(root);
