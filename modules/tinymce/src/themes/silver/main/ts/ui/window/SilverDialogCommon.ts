@@ -4,7 +4,7 @@ import {
 } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
 import { Arr, Cell, Obj, Optional } from '@ephox/katamari';
-import { Classes, Height, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Class, Classes, Height, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as RepresentingConfigs from '../alien/RepresentingConfigs';
@@ -85,20 +85,18 @@ const getDialogSizeClass = (size: Dialog.DialogSize): Optional<string> => {
 };
 
 const updateDialogSizeClass = (size: Dialog.DialogSize, component: AlloyComponent): void => {
-  const sugarBody = SugarElement.fromDom(component.element.dom);
-  const classes = Classes.get(sugarBody);
-  if (!Arr.contains(classes, fullscreenClass)) {
-    const currentSizeClass = Arr.find(classes, (c) => c === largeDialogClass || c === mediumDialogClass);
-    currentSizeClass.map((c) => Classes.remove(sugarBody, [ c ]));
-    getDialogSizeClass(size).map((dialogSizeClass) => Classes.add(sugarBody, [ dialogSizeClass ]));
+  const dialogBody = SugarElement.fromDom(component.element.dom);
+  if (!Class.has(dialogBody, fullscreenClass)) {
+    Classes.remove(dialogBody, [ largeDialogClass, mediumDialogClass ]);
+    getDialogSizeClass(size).each((dialogSizeClass) => Class.add(dialogBody, dialogSizeClass));
   }
 };
 
 const toggleFullscreen = (comp: AlloyComponent, currentSize: Dialog.DialogSize): void => {
-  const sugarBody = SugarElement.fromDom(comp.element.dom);
-  const classes = Classes.get(sugarBody);
+  const dialogBody = SugarElement.fromDom(comp.element.dom);
+  const classes = Classes.get(dialogBody);
   const currentSizeClass = Arr.find(classes, (c) => c === largeDialogClass || c === mediumDialogClass).or(getDialogSizeClass(currentSize));
-  Classes.toggle(sugarBody, [ fullscreenClass, ...currentSizeClass.toArray() ]);
+  Classes.toggle(dialogBody, [ fullscreenClass, ...currentSizeClass.toArray() ]);
 };
 
 const renderModalDialog = (spec: DialogSpec, dialogEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[], backstage: UiFactoryBackstage): AlloyComponent => GuiFactory.build(Dialogs.renderDialog({

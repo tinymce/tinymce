@@ -355,7 +355,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
       );
 
       Docking.refresh(inlineDialogComp);
-      editor.on('ResizeEditor ScrollWindow ElementScroll', refreshDocking);
+      editor.on('ResizeEditor ScrollWindow ElementScroll ResizeWindow', refreshDocking);
 
       // Set the initial data in the dialog and focus the first focusable item
       dialogUi.instanceApi.setData(initialData);
