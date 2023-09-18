@@ -3,6 +3,7 @@ import { Fun } from '@ephox/katamari';
 import AstNode from '../api/html/Node';
 import Schema from '../api/html/Schema';
 import Tools from '../api/util/Tools';
+import * as AstNodeType from './AstNodeType';
 import { hasOnlyChild, isEmpty } from './ParserUtils';
 
 const removeOrUnwrapInvalidNode = (node: AstNode, schema: Schema, originalNodeParent: AstNode | null | undefined = node.parent) => {
@@ -176,7 +177,7 @@ const isInvalid = (schema: Schema, node: AstNode, isInsert: boolean, parent: Ast
   }
 
   // heading element is valid if it is the only one child of summary (though on inserting it is still invalid)
-  if ([ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ].includes(node.name) && hasClosest(node, 'summary')) {
+  if (AstNodeType.isHeading(node) && hasClosest(node, 'summary')) {
     if (parent.firstChild === node) {
       return isInsert;
     }

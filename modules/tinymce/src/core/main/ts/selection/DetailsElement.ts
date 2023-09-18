@@ -1,8 +1,9 @@
-import { Arr, Optionals } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import AstNode from '../api/html/Node';
 import * as Options from '../api/Options';
+import * as AstNodeType from '../html/AstNodeType';
 
 const preventSummaryToggle = (editor: Editor): void => {
   editor.on('click', (e) => {
@@ -12,14 +13,12 @@ const preventSummaryToggle = (editor: Editor): void => {
   });
 };
 
-const isHeading = (node: AstNode) => [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ].includes(node.name);
-
 // If the `summary` element contains multiple heading elements,
 // merge their contents into the first heading element.
-const handleSummaryHeadings = (details: AstNode) =>
-  Arr.findMap(details.children(), (node: AstNode) => Optionals.someIf(node.name === 'summary', node))
+const mergeSummaryHeadings = (details: AstNode) =>
+  Arr.find(details.children(), AstNodeType.isSummary)
     .each((summary) => {
-      if (summary.firstChild && isHeading(summary.firstChild) && summary.children().length > 1) {
+      if (summary.firstChild && AstNodeType.isHeading(summary.firstChild) && summary.children().length > 1) {
         const h = summary.firstChild;
         for (let node = h.next; node;) {
           const next = node.next;
@@ -38,7 +37,7 @@ const filterDetails = (editor: Editor): void => {
       } else if (initialStateOption === 'collapsed') {
         details.attr('open', null);
       }
-      handleSummaryHeadings(details);
+      mergeSummaryHeadings(details);
     });
   });
 
