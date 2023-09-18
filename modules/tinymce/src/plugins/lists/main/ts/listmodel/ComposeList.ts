@@ -115,6 +115,7 @@ const composeList = (scope: Document, entries: Entry[]): Optional<SugarElement<H
     if (isEntryList(entry)) {
       return entry.depth > cast.length ? writeDeep(scope, cast, entry) : writeShallow(scope, cast, entry);
     } else {
+      // this is needed becuase if the first element of the list is a comment we would not have the data to create the new list
       if (i === 0 && isEntryComment(entry)) {
         firstCommentEntryOpt = Optional.some(entry);
         return cast;
