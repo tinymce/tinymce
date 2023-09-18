@@ -1,6 +1,6 @@
-import { Boxes, Gui, GuiFactory, InlineView, Layout, MaxHeight, NodeAnchorSpec } from '@ephox/alloy';
+import { Behaviour, Boxes, Gui, GuiFactory, InlineView, Keying, Layout, MaxHeight, NodeAnchorSpec } from '@ephox/alloy';
 import { Arr, Num, Optional, Type } from '@ephox/katamari';
-import { SugarBody, SugarElement } from '@ephox/sugar';
+import { Focus, SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { NotificationApi, NotificationManagerImpl, NotificationSpec } from 'tinymce/core/api/NotificationManager';
@@ -60,6 +60,34 @@ export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): No
           tag: 'div',
           classes: [ 'tox-notifications-container' ]
         },
+        inlineBehaviours: Behaviour.derive([
+          Keying.config({
+            // Special handling for tabbing between notifications
+            mode: 'special',
+            onShiftTab: () => {
+              const allNotifications = editor.notificationManager.getNotifications();
+              if (allNotifications.length > 0) {
+                Arr.indexOf(allNotifications, thisNotification).each((index) => {
+                  Focus.focus(SugarElement.fromDom(allNotifications[index === 0 ? allNotifications.length - 1 : index - 1].getEl()));
+                });
+                return Optional.some(true);
+              }
+
+              return Optional.none();
+            },
+            onTab: () => {
+              const allNotifications = editor.notificationManager.getNotifications();
+              if (allNotifications.length > 0) {
+                Arr.indexOf(allNotifications, thisNotification).each((index) => {
+                  Focus.focus(SugarElement.fromDom(allNotifications[index === allNotifications.length - 1 ? 0 : index + 1].getEl()));
+                });
+                return Optional.some(true);
+              }
+
+              return Optional.none();
+            }
+          })
+        ]),
         lazySink: sharedBackstage.getSink,
         fireDismissalEventInstead: {},
         ...sharedBackstage.header.isPositionedAtTop() ? {} : { fireRepositionEventInstead: {}}

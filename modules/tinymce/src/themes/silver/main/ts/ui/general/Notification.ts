@@ -1,9 +1,11 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, GuiFactory, Memento, NativeEvents, Replacing, Sketcher,
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, GuiFactory, Keying, Memento, NativeEvents, Replacing, Sketcher,
+  Tabstopping,
   UiSketcher
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Optional } from '@ephox/katamari';
+import { Class, Focus } from '@ephox/sugar';
 
 import { TranslatedString, Untranslated } from 'tinymce/core/api/util/I18n';
 
@@ -156,6 +158,9 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
         }
       }, detail.iconProvider)
     ],
+    buttonBehaviours: Behaviour.derive([
+      Tabstopping.config({ })
+    ]),
     action: (comp) => {
       detail.onAction(comp);
     }
@@ -190,9 +195,24 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
     },
     behaviours: Behaviour.derive([
       Focusing.config({ }),
+      Tabstopping.config({ }),
+      Keying.config({
+        mode: 'special',
+        onEscape: () => {
+          detail.onAction();
+          return Optional.some(true);
+        }
+      }),
       AddEventsBehaviour.config('notification-events', [
         AlloyEvents.run(NativeEvents.focusin(), (comp) => {
+          if (Focus.hasFocus(comp.element)) {
+            Class.add(comp.element, 'tox-notification--focus');
+          }
+
           memButton.getOpt(comp).each(Focusing.focus);
+        }),
+        AlloyEvents.run(NativeEvents.focusout(), (comp) => {
+          Class.remove(comp.element, 'tox-notification--focus');
         })
       ])
     ]),
