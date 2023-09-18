@@ -7,7 +7,7 @@
   "scripts": {
     "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('You must use Yarn to install, not NPM')\"",
     "postinstall": "patch-package",
-    "tinymce-grunt": "grunt --gruntfile modules/tinymce/Gruntfile.js",
+    "tinymce-grunt": "yarn run grunt --gruntfile modules/tinymce/Gruntfile.js",
     "tinymce-rollup": "run-s \"tinymce-grunt dev rollup\"",
     "oxide-icons-build": "yarn -s --cwd modules/oxide-icons-default build",
     "oxide-icons-ci": "yarn --cwd modules/oxide-icons-default ci",
@@ -17,7 +17,7 @@
     "tsc": "tsc -b",
     "watch": "tsc -b -w",
     "eslint": "lerna exec --stream --no-bail -- eslint --max-warnings=0 src/**/*.ts",
-    "start": "yarn -s tinymce-grunt start",
+    "start": "yarn tinymce-grunt start",
     "dev": "npm-run-all oxide-icons-build oxide-build -p tsc \"tinymce-grunt dev\"",
     "ci": "npm-run-all -p oxide-ci oxide-icons-ci -p tsc \"tinymce-grunt dev\"",
     "ci-seq": "npm-run-all oxide-ci oxide-icons-ci tsc \"tinymce-grunt dev\"",
@@ -32,7 +32,7 @@
     "headless-test": "yarn -s grunt headless-auto",
     "headless-test-firefox": "yarn -s grunt headless-auto --bedrock-browser=firefox-headless",
     "headless-test-manual": "yarn -s grunt headless-manual",
-    "bedrock": "bedrock --customRoutes modules/tinymce/src/core/test/json/routes.json",
+    "bedrock": "yarn run bedrock --customRoutes modules/tinymce/src/core/test/json/routes.json",
     "test-one": "yarn tsc && yarn bedrock-auto -b chrome-headless -f"
   },
   "devDependencies": {
