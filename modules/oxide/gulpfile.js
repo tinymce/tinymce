@@ -10,6 +10,8 @@ const rename = require('gulp-rename');
 const chalk = require('chalk');
 const fs = require('fs');
 const path = require('path');
+const through2 = require('through2');
+
 
 const autoprefix = new lessAutoprefix({
   browsers: ['last 2 Safari versions', 'iOS 14.0', 'last 2 Chrome versions', 'Firefox ESR'],
@@ -90,7 +92,14 @@ gulp.task('minifyCss', function() {
   return gulp.src(['./build/skins/**/*.css', '!**/*.min.css'])
     .pipe(sourcemaps.init())
     .pipe(cleanCSS({ rebase: false }))
-    .pipe(rename({ extname: '.min.css' }))
+    .pipe(through2.obj(function(file, _, cb) {
+      if (file.isBuffer()) {
+        const contents = `tinymce.resources.add('${file.relative}', '${JSON.stringify(file.contents.toString())}')`;
+        file.contents = Buffer.from(contents)
+      }
+      cb(null, file);
+    }))
+    .pipe(rename({ extname: '.js' }))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./build/skins'))
     .pipe(connect.reload());
