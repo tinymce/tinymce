@@ -177,7 +177,7 @@ const isInvalid = (schema: Schema, node: AstNode, isInsert: boolean, parent: Ast
   }
 
   // heading element is valid if it is the only one child of summary (though on inserting it is still invalid)
-  if (AstNodeType.isHeading(node) && hasClosest(node, 'summary')) {
+  if (AstNodeType.isSummary(parent) && AstNodeType.isHeading(node)) {
     if (parent.firstChild === node) {
       return isInsert;
     }
