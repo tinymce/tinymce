@@ -72,7 +72,7 @@ const cleanInvalidNodes = (nodes: AstNode[], schema: Schema, rootNode: AstNode, 
     // Found a suitable parent
     if (parent && parents.length > 1) {
       // If the node is a valid child of the parent, then try to move it. Otherwise unwrap it
-      if (!isInvalid(schema, node, true, parent)) {
+      if (!isInvalid(schema, node, parent)) {
         // Reverse the array since it makes looping easier
         parents.reverse();
 
@@ -160,7 +160,7 @@ const hasClosest = (node: AstNode, parentName: string): boolean => {
   return false;
 };
 
-const isInvalid = (schema: Schema, node: AstNode, isInsert: boolean, parent: AstNode | null | undefined = node.parent): boolean => {
+const isInvalid = (schema: Schema, node: AstNode, parent: AstNode | null | undefined = node.parent): boolean => {
   if (!parent) {
     return false;
   }
@@ -176,12 +176,9 @@ const isInvalid = (schema: Schema, node: AstNode, isInsert: boolean, parent: Ast
     return true;
   }
 
-  // heading element is valid if it is the only one child of summary (though on inserting it is still invalid)
+  // heading element is valid if it is the only one child of summary
   if (AstNodeType.isSummary(parent) && AstNodeType.isHeading(node)) {
-    if (parent.firstChild === node) {
-      return isInsert;
-    }
-    return true;
+    return !hasOnlyChild(parent, node.name);
   }
 
   return false;

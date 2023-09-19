@@ -122,18 +122,18 @@ describe('browser.tinymce.selection.DetailsElementTest', () => {
       TinyAssertions.assertContent(editor, content);
     });
 
-    it('TINY-10154: Should append content of several heading elemens content to the first one', () => {
+    it('TINY-10154: Should treat several headings in summary as invalid and unwrap it', () => {
       const editor = hook.editor();
       const content = '<details><summary><h2>hello</h2><h3><em>world</em></h3></summary><div>body</div></details>';
       editor.setContent(content);
-      TinyAssertions.assertContent(editor, '<details><summary><h2>hello<em>world</em></h2></summary><div>body</div></details>');
+      TinyAssertions.assertContent(editor, '<details><summary>hello<em>world</em></summary><div>body</div></details>');
     });
 
-    it('TINY-10154: Should append text content to the first heading element content', () => {
+    it('TINY-10154: Should unwrap heading if it is not the only child of summary', () => {
       const editor = hook.editor();
       const content = '<details><summary><h2>helloworld</h2>GoodBye</summary><div>body</div></details>';
       editor.setContent(content);
-      TinyAssertions.assertContent(editor, '<details><summary><h2>helloworldGoodBye</h2></summary><div>body</div></details>');
+      TinyAssertions.assertContent(editor, '<details><summary>helloworldGoodBye</summary><div>body</div></details>');
     });
   });
 });
