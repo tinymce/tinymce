@@ -277,7 +277,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
 
   // Parse the fragment within the context of the parent node
   const parserArgs: ParserArgs = { context: parentNode.nodeName.toLowerCase(), data: details.data, insert: true };
-  const fragment = parser.parse(value, parserArgs, true);
+  const fragment = parser.parse(value, parserArgs);
 
   // Custom handling of lists
   if (details.paste === true && InsertList.isListFragment(editor.schema, fragment) && InsertList.isParentBlockLi(dom, parentNode)) {
