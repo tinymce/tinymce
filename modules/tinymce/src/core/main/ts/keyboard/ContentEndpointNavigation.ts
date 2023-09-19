@@ -11,7 +11,7 @@ const isTarget = (node: SugarElement<Node>) => Arr.contains([ 'figcaption' ], Su
 
 const getClosestTargetBlock = (pos: CaretPosition, root: SugarElement<HTMLElement>) => {
   const isRoot = Fun.curry(Compare.eq, root);
-  return PredicateFind.closest(SugarElement.fromDom(pos.container()), ElementType.isBlock, isRoot).filter(isTarget);
+  return PredicateFind.closest(SugarElement.fromDom(pos.container()), ElementType.isBlock(), isRoot).filter(isTarget);
 };
 
 const isAtFirstOrLastLine = (root: SugarElement<HTMLElement>, forward: boolean, pos: CaretPosition) =>

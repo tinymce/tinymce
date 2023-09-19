@@ -28,10 +28,10 @@ const hasOnlyOneChild = (elm: SugarElement<Node>): boolean =>
   Traverse.childNodesCount(elm) === 1;
 
 const getParentInlinesUntilMultichildInline = (editor: Editor): SugarElement<Node>[] =>
-  getParentsUntil(editor, (elm) => ElementType.isBlock(elm) || hasMultipleChildren(elm));
+  getParentsUntil(editor, (elm) => ElementType.isBlock()(elm) || hasMultipleChildren(elm));
 
 const getParentInlines = (editor: Editor): SugarElement<Node>[] =>
-  getParentsUntil(editor, ElementType.isBlock);
+  getParentsUntil(editor, ElementType.isBlock());
 
 const getFormatNodes = (editor: Editor, parentInlines: SugarElement<Node>[]): Node[] => {
   const isFormatElement = Fun.curry(CaretFormat.isFormatElement, editor);
@@ -145,7 +145,7 @@ const backspaceDelete = (editor: Editor, forward: boolean): Optional<() => void>
   editor.selection.isCollapsed() ? deleteCaret(editor, forward) : deleteRange(editor);
 
 const hasAncestorInlineCaret = (elm: SugarElement<Node>): boolean =>
-  PredicateExists.ancestor(elm, (node) => FormatContainer.isCaretNode(node.dom), ElementType.isBlock);
+  PredicateExists.ancestor(elm, (node) => FormatContainer.isCaretNode(node.dom), ElementType.isBlock());
 
 const hasAncestorInlineCaretAtStart = (editor: Editor): boolean =>
   hasAncestorInlineCaret(SugarElement.fromDom(editor.selection.getStart()));

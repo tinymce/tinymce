@@ -11,7 +11,7 @@ const normalize = (node: Text, offset: number, count: number): void => {
     return;
   }
   const elm = SugarElement.fromDom(node);
-  const root = PredicateFind.ancestor(elm, ElementType.isBlock).getOr(elm);
+  const root = PredicateFind.ancestor(elm, ElementType.isBlock()).getOr(elm);
 
   // Get the whitespace
   const whitespace = node.data.slice(offset, offset + count);

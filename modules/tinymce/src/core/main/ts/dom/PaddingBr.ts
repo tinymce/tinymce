@@ -45,7 +45,7 @@ const isPaddedElement = (elm: SugarElement<Node>): boolean => {
 const trimBlockTrailingBr = (elm: SugarElement<Node>): void => {
   Traverse.lastChild(elm).each((lastChild) => {
     Traverse.prevSibling(lastChild).each((lastChildPrevSibling) => {
-      if (ElementType.isBlock(elm) && ElementType.isBr(lastChild) && ElementType.isBlock(lastChildPrevSibling)) {
+      if (ElementType.isBlock()(elm) && ElementType.isBr(lastChild) && ElementType.isBlock()(lastChildPrevSibling)) {
         Remove.remove(lastChild);
       }
     });

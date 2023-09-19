@@ -11,7 +11,7 @@ const isBr = (pos: CaretPosition): boolean =>
   getElementFromPosition(pos).exists(ElementType.isBr);
 
 const findBr = (forward: boolean, root: SugarElement<Node>, pos: CaretPosition): Optional<CaretPosition> => {
-  const parentBlocks = Arr.filter(Parents.parentsAndSelf(SugarElement.fromDom(pos.container()), root), ElementType.isBlock);
+  const parentBlocks = Arr.filter(Parents.parentsAndSelf(SugarElement.fromDom(pos.container()), root), ElementType.isBlock());
   const scope = Arr.head(parentBlocks).getOr(root);
   return CaretFinder.fromPosition(forward, scope.dom, pos).filter(isBr);
 };

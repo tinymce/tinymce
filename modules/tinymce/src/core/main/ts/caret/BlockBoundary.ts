@@ -12,7 +12,7 @@ const navigateIgnoreEmptyTextNodes = (forward: boolean, root: Node, from: CaretP
   CaretFinder.navigateIgnore(forward, root, from, isEmptyText);
 
 const getClosestBlock = (root: SugarElement<Node>, pos: CaretPosition): Optional<SugarElement<Element>> =>
-  Arr.find(Parents.parentsAndSelf(SugarElement.fromDom(pos.container()), root), ElementType.isBlock);
+  Arr.find(Parents.parentsAndSelf(SugarElement.fromDom(pos.container()), root), ElementType.isBlock());
 
 const isAtBeforeAfterBlockBoundary = (forward: boolean, root: SugarElement<Node>, pos: CaretPosition) =>
   navigateIgnoreEmptyTextNodes(forward, root.dom, pos)

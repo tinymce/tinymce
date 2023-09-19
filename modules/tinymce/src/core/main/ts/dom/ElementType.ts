@@ -1,6 +1,8 @@
 import { Arr, Fun, Obj } from '@ephox/katamari';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 
+import Schema from '../api/html/Schema';
+
 const blocks = [
   'article', 'aside', 'details', 'div', 'dt', 'figcaption', 'footer',
   'form', 'fieldset', 'header', 'hgroup', 'html', 'main', 'nav',
@@ -39,10 +41,12 @@ const lazyLookup = <T extends Node = HTMLElement>(items: string[]) => {
   };
 };
 
+const getBlockElements = (schema?: Schema) => schema ? Obj.mapToArray(schema.getBlockElements(), (_v, k) => k) : [];
+
 const isHeading = lazyLookup<HTMLHeadingElement>(headings);
-const isBlock = lazyLookup(blocks);
+const isBlock = (schema?: Schema): any => schema ? lazyLookup(blocks.concat(getBlockElements(schema))) : lazyLookup(blocks);
 const isTable = (node: SugarElement<Node>): node is SugarElement<HTMLTableElement> => SugarNode.name(node) === 'table';
-const isInline = (node: SugarElement<Node>): node is SugarElement<HTMLElement> => SugarNode.isElement(node) && !isBlock(node);
+const isInline = (node: SugarElement<Node>, schema?: Schema): node is SugarElement<HTMLElement> => SugarNode.isElement(node) && !isBlock(schema)(node);
 const isBr = (node: SugarElement<Node>): node is SugarElement<HTMLBRElement> => SugarNode.isElement(node) && SugarNode.name(node) === 'br';
 const isTextBlock = lazyLookup(textBlocks);
 const isList = lazyLookup(lists);
@@ -52,7 +56,7 @@ const isTableSection = lazyLookup(tableSections);
 const isTableCell = lazyLookup<HTMLTableCellElement>(tableCells);
 const isWsPreserveElement = lazyLookup(wsElements);
 const isWrapBlockElement = lazyLookup(wrapBlockElements);
-const isWrapElement = (node: SugarElement<Node>): boolean => isWrapBlockElement(node) || isInline(node);
+const isWrapElement = (node: SugarElement<Node>, schema?: Schema): boolean => isWrapBlockElement(node) || isInline(node, schema);
 
 export {
   isBlock,

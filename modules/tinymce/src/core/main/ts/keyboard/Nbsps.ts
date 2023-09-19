@@ -17,7 +17,7 @@ import { isContent, isNbsp, isWhiteSpace } from '../text/CharType';
 const isInMiddleOfText = (pos: CaretPosition) => CaretPosition.isTextPosition(pos) && !pos.isAtStart() && !pos.isAtEnd();
 
 const getClosestBlock = (root: SugarElement<Node>, pos: CaretPosition): SugarElement<Node> => {
-  const parentBlocks = Arr.filter(Parents.parentsAndSelf(SugarElement.fromDom(pos.container()), root), ElementType.isBlock);
+  const parentBlocks = Arr.filter(Parents.parentsAndSelf(SugarElement.fromDom(pos.container()), root), ElementType.isBlock());
   return Arr.head(parentBlocks).getOr(root);
 };
 

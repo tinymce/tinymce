@@ -14,12 +14,12 @@ describe('browser.tinymce.core.dom.ElementTypeTest', () => {
   };
 
   it('Check block elements', () => {
-    checkElement('p', ElementType.isBlock, true);
-    checkElement('h1', ElementType.isBlock, true);
-    checkElement('table', ElementType.isBlock, true);
-    checkElement('span', ElementType.isBlock, false);
-    checkElement('b', ElementType.isBlock, false);
-    checkText(ElementType.isBlock);
+    checkElement('p', ElementType.isBlock(), true);
+    checkElement('h1', ElementType.isBlock(), true);
+    checkElement('table', ElementType.isBlock(), true);
+    checkElement('span', ElementType.isBlock(), false);
+    checkElement('b', ElementType.isBlock(), false);
+    checkText(ElementType.isBlock());
   });
 
   it('Check inline elements', () => {
