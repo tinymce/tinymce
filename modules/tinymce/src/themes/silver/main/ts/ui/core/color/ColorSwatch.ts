@@ -122,8 +122,8 @@ const setIconColor = (splitButtonApi: Toolbar.ToolbarSplitButtonInstanceApi | Me
   splitButtonApi.setIconFill(id, newColor);
 };
 
-const setTooltip = (buttonApi: Toolbar.ToolbarSplitButtonInstanceApi | Menu.NestedMenuItemInstanceApi, newColor: string) => {
-  buttonApi.setTooltip(newColor);
+const setTooltip = (buttonApi: Toolbar.ToolbarSplitButtonInstanceApi | Menu.NestedMenuItemInstanceApi, tooltip: string) => {
+  buttonApi.setTooltip(tooltip);
 };
 
 const select = (editor: Editor, format: ColorFormat) =>
