@@ -44,7 +44,7 @@ const lazyLookup = <T extends Node = HTMLElement>(items: string[]) => {
 const getBlockElements = (schema?: Schema) => schema ? Obj.mapToArray(schema.getBlockElements(), (_v, k) => k) : [];
 
 const isHeading = lazyLookup<HTMLHeadingElement>(headings);
-const isBlock = (schema?: Schema): any => schema ? lazyLookup(blocks.concat(getBlockElements(schema))) : lazyLookup(blocks);
+const isBlock = (schema?: Schema): (node: SugarElement<Node>) => node is SugarElement<HTMLElement> => schema ? lazyLookup(blocks.concat(getBlockElements(schema))) : lazyLookup(blocks);
 const isTable = (node: SugarElement<Node>): node is SugarElement<HTMLTableElement> => SugarNode.name(node) === 'table';
 const isInline = (node: SugarElement<Node>, schema?: Schema): node is SugarElement<HTMLElement> => SugarNode.isElement(node) && !isBlock(schema)(node);
 const isBr = (node: SugarElement<Node>): node is SugarElement<HTMLBRElement> => SugarNode.isElement(node) && SugarNode.name(node) === 'br';
