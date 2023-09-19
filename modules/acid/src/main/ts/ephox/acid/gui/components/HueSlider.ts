@@ -30,8 +30,7 @@ const sliderFactory = (translate: (key: string) => string, getClass: (key: strin
       tag: 'div',
       classes: [ getClass('hue-slider') ],
       attributes: {
-        'role': 'presentation',
-        'aria-role': 'slider',
+        'role': 'slider',
         'aria-valuemin': 0,
         'aria-valuemax': 360,
         'aria-valuenow': 120,

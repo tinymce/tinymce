@@ -88,7 +88,7 @@ const paletteFactory = (translate: (key: Untranslated) => string, getClass: (key
 
     const onChange = (slider: AlloyComponent, _thumb: AlloyComponent, value: number | SliderTypes.SliderValue) => {
       if (!Type.isNumber(value)) {
-        Attribute.set(slider.element, 'aria-valuetext', `Saturation ${Math.floor(value.x)}%, Brightness ${Math.floor(100 - value.y)}%`);
+        Attribute.set(slider.element, 'aria-valuetext', translate([ 'Saturation {0}%, Brightness {1}%', Math.floor(value.x), Math.floor(100 - value.y) ]));
       }
       AlloyTriggers.emitWith(slider, ColourEvents.paletteUpdate, {
         value
@@ -111,8 +111,8 @@ const paletteFactory = (translate: (key: Untranslated) => string, getClass: (key
       dom: {
         tag: 'div',
         attributes: {
-          'role': 'presentation',
-          'aria-valuetext': 'Saturation 0%, Brightness 0%'
+          'role': 'slider',
+          'aria-valuetext': translate([ 'Saturation {0}%, Brightness {1}%', 0, 0 ])
         },
         classes: [ getClass('sv-palette') ]
       },

@@ -11,6 +11,7 @@ import { OptionalDomSchema } from '../../api/component/SpecTypes';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import * as KeyMatch from '../../navigation/KeyMatch';
 import * as PartType from '../../parts/PartType';
 import { EdgeActions, SliderDetail } from '../types/SliderTypes';
 
@@ -91,7 +92,7 @@ const thumbPart = PartType.required<SliderDetail, { dom: OptionalDomSchema; even
   }
 });
 
-const isShift = (event: any) => event.raw ? event.raw.shiftKey : false;
+const isShift = (event: NativeSimulatedEvent<KeyboardEvent>) => KeyMatch.isShift(event.event);
 
 const spectrumPart = PartType.required({
   schema: [
@@ -111,10 +112,10 @@ const spectrumPart = PartType.required({
         Keying.config(
           {
             mode: 'special',
-            onLeft: (spectrum, event) => model.onLeft(spectrum, detail, isShift(event.event)),
-            onRight: (spectrum, event) => model.onRight(spectrum, detail, isShift(event.event)),
-            onUp: (spectrum, event) => model.onUp(spectrum, detail, isShift(event.event)),
-            onDown: (spectrum, event) => model.onDown(spectrum, detail, isShift(event.event))
+            onLeft: (spectrum, event) => model.onLeft(spectrum, detail, isShift(event)),
+            onRight: (spectrum, event) => model.onRight(spectrum, detail, isShift(event)),
+            onUp: (spectrum, event) => model.onUp(spectrum, detail, isShift(event)),
+            onDown: (spectrum, event) => model.onDown(spectrum, detail, isShift(event))
           }
         ),
         Tabstopping.config({ }),
