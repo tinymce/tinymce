@@ -4,8 +4,8 @@ import {
   Receiving, Reflecting, Replacing, SystemEvents
 } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
-import { Fun, Id, Optional, Optionals } from '@ephox/katamari';
-import { Attribute, Classes, Height, SugarElement, SugarNode } from '@ephox/sugar';
+import { Cell, Fun, Id, Optional, Optionals } from '@ephox/katamari';
+import { Attribute, Height, SugarNode } from '@ephox/sugar';
 
 import * as Backstage from '../../backstage/Backstage';
 import * as RepresentingConfigs from '../alien/RepresentingConfigs';
@@ -24,23 +24,30 @@ interface RenderedDialog<T extends Dialog.DialogData> {
   readonly instanceApi: Dialog.DialogInstanceApi<T>;
 }
 
-const getInlineDialogSizeClass = (size: Dialog.DialogSize): Optional<string> => {
-  switch (size) {
-    case 'medium':
-      return Optional.some('tox-dialog--width-md');
-    default:
-      return Optional.none();
-  }
-};
-
-const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra<T>, backstage: Backstage.UiFactoryBackstage, ariaAttrs: boolean = false): RenderedDialog<T> => {
+const renderInlineDialog = <T extends Dialog.DialogData>(
+  dialogInit: DialogManager.DialogInit<T>,
+  extra: SilverDialogCommon.WindowExtra<T>,
+  backstage: Backstage.UiFactoryBackstage,
+  ariaAttrs: boolean = false,
+  refreshDocking: () => void
+): RenderedDialog<T> => {
   const dialogId = Id.generate('dialog');
   const dialogLabelId = Id.generate('dialog-label');
   const dialogContentId = Id.generate('dialog-content');
   const internalDialog = dialogInit.internalDialog;
-  const dialogSize = getInlineDialogSizeClass(internalDialog.size);
 
-  const updateState = (_comp: AlloyComponent, incoming: DialogManager.DialogInit<T>) => Optional.some(incoming);
+  const dialogSize = Cell<Dialog.DialogSize>(internalDialog.size);
+
+  const dialogSizeClass = SilverDialogCommon.getDialogSizeClass(dialogSize.get()).toArray();
+
+  // Reflecting behaviour broadcasts on dialog channel only on redial.
+  const updateState = (comp: AlloyComponent, incoming: DialogManager.DialogInit<T>) => {
+    // Update dialog size and position upon redial.
+    dialogSize.set(incoming.internalDialog.size);
+    SilverDialogCommon.updateDialogSizeClass(incoming.internalDialog.size, comp);
+    refreshDocking();
+    return Optional.some(incoming);
+  };
 
   const memHeader = Memento.record(
     SilverDialogHeader.renderInlineHeader({
@@ -91,7 +98,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
   const dialog = GuiFactory.build({
     dom: {
       tag: 'div',
-      classes: [ 'tox-dialog', inlineClass, ...dialogSize.toArray() ],
+      classes: [ 'tox-dialog', inlineClass, ...dialogSizeClass ],
       attributes: {
         role: 'dialog',
         ['aria-labelledby']: dialogLabelId
@@ -150,15 +157,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManag
   });
 
   const toggleFullscreen = (): void => {
-    const fullscreenClass = 'tox-dialog--fullscreen';
-    const sugarBody = SugarElement.fromDom(dialog.element.dom);
-    if (!Classes.hasAll(sugarBody, [ fullscreenClass ])) {
-      Classes.remove(sugarBody, [ inlineClass ]);
-      Classes.add(sugarBody, [ fullscreenClass ]);
-    } else {
-      Classes.remove(sugarBody, [ fullscreenClass ]);
-      Classes.add(sugarBody, [ inlineClass ]);
-    }
+    SilverDialogCommon.toggleFullscreen(dialog, dialogSize.get());
   };
 
   // TODO: Clean up the dupe between this (InlineDialog) and SilverDialog
