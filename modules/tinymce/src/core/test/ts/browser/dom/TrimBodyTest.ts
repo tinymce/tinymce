@@ -4,6 +4,29 @@ import { assert } from 'chai';
 import * as TrimBody from 'tinymce/core/dom/TrimBody';
 
 describe('browser.tinymce.core.dom.TrimBodyTest', () => {
+  context('trim', () => {
+    it('trim should trim body containing temporary nodes', () => {
+      const tempAttrs = [ 'data-mce-bogus', 'data-mce-selected' ];
+      const body = document.createElement('div');
+      const initialHtml = '<p>Test</p><span data-mce-bogus="all">bogus</span><p>Test</p><span data-mce-selected="true">tempAttr</span><p>Test</p>';
+      body.innerHTML = initialHtml;
+      const trimmedBody = TrimBody.trim(body, tempAttrs);
+      assert.strictEqual(trimmedBody.innerHTML, '<p>Test</p><p>Test</p><span>tempAttr</span><p>Test</p>', 'Should trim temporary nodes');
+      assert.strictEqual(body.innerHTML, initialHtml, 'Should not modify original body');
+      assert.notStrictEqual(trimmedBody, body, 'Should trim and return a new body when body is trimmable');
+    });
+
+    it('trim should not trim body without temporary nodes', () => {
+      const tempAttrs = [ 'data-mce-bogus', 'data-mce-selected' ];
+      const body = document.createElement('div');
+      const initialHtml = '<p>Test</p><p>Test</p>';
+      body.innerHTML = initialHtml;
+      const trimmedBody = TrimBody.trim(body, tempAttrs);
+      assert.strictEqual(trimmedBody.innerHTML, initialHtml, 'Should not trim body without temporary nodes');
+      assert.strictEqual(trimmedBody, body, 'Should return the original body when body is not trimmable');
+    });
+  });
+
   context('Comments', () => {
     it('hasComments', () => {
       const commentDiv = document.createElement('div');
