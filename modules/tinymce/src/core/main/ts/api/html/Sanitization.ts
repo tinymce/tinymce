@@ -1,6 +1,6 @@
 import { Arr, Obj, Strings, Type } from '@ephox/katamari';
 import { Attribute, NodeTypes, Remove, Replication, SugarElement } from '@ephox/sugar';
-import createDompurify, { Config, DOMPurifyI, SanitizeElementHookEvent } from 'dompurify';
+import createDompurify, { Config, DOMPurifyI, SanitizeAttributeHookEvent, SanitizeElementHookEvent } from 'dompurify';
 
 import * as NodeType from '../../dom/NodeType';
 import Tools from '../util/Tools';
@@ -96,6 +96,29 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, ev
   }
 };
 
+const processAttr = (ele: Element, settings: DomParserSettings, schema: Schema, evt: SanitizeAttributeHookEvent) => {
+  const tagName = ele.tagName.toLowerCase();
+  const { attrName, attrValue } = evt;
+
+  evt.keepAttr = shouldKeepAttribute(settings, schema, tagName, attrName, attrValue);
+
+  if (evt.keepAttr) {
+    evt.allowedAttributes[attrName] = true;
+
+    if (isBooleanAttribute(attrName, schema)) {
+      evt.attrValue = attrName;
+    }
+
+    // We need to tell DOMPurify to forcibly keep the attribute if it's an SVG data URI and svg data URIs are allowed
+    if (settings.allow_svg_data_urls && Strings.startsWith(attrValue, 'data:image/svg+xml')) {
+      evt.forceKeepAttr = true;
+    }
+    // For internal elements always keep the attribute if the attribute name is id, class or style
+  } else if (isRequiredAttributeOfInternalElement(ele, attrName)) {
+    evt.forceKeepAttr = true;
+  }
+};
+
 const shouldKeepAttribute = (settings: DomParserSettings, schema: Schema, tagName: string, attrName: string, attrValue: string): boolean =>
   !(attrName in filteredUrlAttrs && URI.isInvalidUri(settings, attrValue, tagName)) &&
   (!settings.validate || schema.isValid(tagName, attrName) || Strings.startsWith(attrName, 'data-') || Strings.startsWith(attrName, 'aria-'));
@@ -130,26 +153,7 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
 
   // Let's do the same thing for attributes
   purify.addHook('uponSanitizeAttribute', (ele, evt) => {
-    const tagName = ele.tagName.toLowerCase();
-    const { attrName, attrValue } = evt;
-
-    evt.keepAttr = shouldKeepAttribute(settings, schema, tagName, attrName, attrValue);
-
-    if (evt.keepAttr) {
-      evt.allowedAttributes[attrName] = true;
-
-      if (isBooleanAttribute(attrName, schema)) {
-        evt.attrValue = attrName;
-      }
-
-      // We need to tell DOMPurify to forcibly keep the attribute if it's an SVG data URI and svg data URIs are allowed
-      if (settings.allow_svg_data_urls && Strings.startsWith(attrValue, 'data:image/svg+xml')) {
-        evt.forceKeepAttr = true;
-      }
-    // For internal elements always keep the attribute if the attribute name is id, class or style
-    } else if (isRequiredAttributeOfInternalElement(ele, attrName)) {
-      evt.forceKeepAttr = true;
-    }
+    processAttr(ele, settings, schema, evt);
   });
 
   return purify;
