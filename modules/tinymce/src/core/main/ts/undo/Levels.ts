@@ -43,19 +43,7 @@ const createCompleteLevel = (content: string): UndoLevel => {
 
 const createFromEditor = (editor: Editor): UndoLevel => {
   const tempAttrs = editor.serializer.getTempAttrs();
-  let body = editor.getBody();
-
-  if (TrimBody.hasComments(body)) {
-    body = body.cloneNode(true) as HTMLElement;
-    TrimBody.removeCommentsContainingZwsp(body);
-    if (TrimBody.hasTemporaryNodes(body, tempAttrs)) {
-      TrimBody.trimTemporaryNodes(body, tempAttrs);
-    }
-  } else if (TrimBody.hasTemporaryNodes(body, tempAttrs)) {
-    body = body.cloneNode(true) as HTMLElement;
-    TrimBody.trimTemporaryNodes(body, tempAttrs);
-  }
-
+  const body = TrimBody.trim(editor.getBody(), tempAttrs);
   return hasIframes(body) ? createFragmentedLevel(Fragments.read(body, true)) : createCompleteLevel(Zwsp.trim(body.innerHTML));
 };
 

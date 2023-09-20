@@ -1,6 +1,6 @@
 import { Keys } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Cell, Fun } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { LegacyUnit, TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -618,10 +618,10 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
     const testContentMxssOnRestore = (content: string) => () => {
       const editor = hook.editor();
-      const hasXssOccurred = Cell(false);
-      (editor.getWin() as any)[xssFnName] = () => hasXssOccurred.set(true);
+      let hasXssOccurred = false;
+      (editor.getWin() as any)[xssFnName] = () => hasXssOccurred = true;
       addAndRestoreLevel(editor, content);
-      assert.isFalse(hasXssOccurred.get(), 'XSS should not have occurred');
+      assert.isFalse(hasXssOccurred, 'XSS should not have occurred');
       (editor.getWin() as any)[xssFnName] = null;
     };
 

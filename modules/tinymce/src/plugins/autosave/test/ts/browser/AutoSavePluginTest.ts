@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -89,9 +89,41 @@ describe('browser.tinymce.plugins.autosave.AutoSavePluginTest', () => {
     editor.plugins.autosave.storeDraft();
 
     window.location.hash = 'test' + Math.random().toString(36).substring(7);
-
     assert.isFalse(editor.plugins.autosave.hasDraft(), 'Check if it notices a hash change');
-
     window.history.replaceState('', document.title, window.location.pathname + window.location.search);
+    editor.plugins.autosave.removeDraft();
+  });
+
+  context('Content XSS', () => {
+    const xssFnName = 'xssfn';
+
+    const storeAndRestoreDraft = (editor: Editor, content: string): void => {
+      assert.isFalse(editor.plugins.autosave.hasDraft(), 'Check if it starts with a draft');
+      editor.setContent(content);
+      editor.undoManager.add();
+      editor.plugins.autosave.storeDraft();
+      editor.setContent('New');
+      editor.undoManager.add();
+      editor.plugins.autosave.restoreDraft();
+      editor.plugins.autosave.removeDraft();
+    };
+
+    const testContentMxssOnRestoreDraft = (content: string) => () => {
+      const editor = hook.editor();
+      let hasXssOccurred = false;
+      (editor.getWin() as any)[xssFnName] = () => hasXssOccurred = true;
+      storeAndRestoreDraft(editor, content);
+      assert.isFalse(hasXssOccurred, 'XSS should not have occurred');
+      (editor.getWin() as any)[xssFnName] = null;
+    };
+
+    it('TINY-10236: Excluding data-mce-bogus="all" elements does not cause comment node mXSS',
+      testContentMxssOnRestoreDraft(`<!--<br data-mce-bogus="all">><iframe onload="window.${xssFnName}();">->`));
+
+    it('TINY-10236: Excluding temporary attributes does not cause comment node mXSS',
+      testContentMxssOnRestoreDraft(`<!--data-mce-selected="x"><iframe onload="window.${xssFnName}();">->`));
+
+    it('TINY-10236: Excluding ZWNBSP does not cause comment node mXSS',
+      testContentMxssOnRestoreDraft(`<!--\uFEFF><iframe onload="window.${xssFnName}();">->`));
   });
 });

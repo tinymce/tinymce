@@ -59,7 +59,27 @@ const removeCommentsContainingZwsp = (body: HTMLElement): void => {
   }
 };
 
+const deepClone = (body: HTMLElement): HTMLElement => body.cloneNode(true) as HTMLElement;
+
+const trim = (body: HTMLElement, tempAttrs: string[]): HTMLElement => {
+  let trimmed = body;
+
+  if (hasComments(body)) {
+    trimmed = deepClone(body);
+    removeCommentsContainingZwsp(trimmed);
+    if (hasTemporaryNodes(trimmed, tempAttrs)) {
+      trimTemporaryNodes(trimmed, tempAttrs);
+    }
+  } else if (hasTemporaryNodes(body, tempAttrs)) {
+    trimmed = deepClone(body);
+    trimTemporaryNodes(trimmed, tempAttrs);
+  }
+
+  return trimmed;
+};
+
 export {
+  trim,
   hasComments,
   hasTemporaryNodes,
   removeCommentsContainingZwsp,
