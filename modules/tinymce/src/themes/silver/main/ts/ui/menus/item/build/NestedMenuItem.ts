@@ -21,6 +21,10 @@ const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse,
         Attribute.set(underlinePath, 'fill', value);
       });
     },
+    setTooltip: (tooltip: string) => {
+      const translatedTooltip = providersBackstage.translate(tooltip);
+      Attribute.setAll(component.element, { 'aria-label': translatedTooltip, 'title': translatedTooltip });
+    }
   });
 
   const structure = renderItemStructure({

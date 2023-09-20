@@ -9,6 +9,11 @@ import Editor from 'tinymce/core/api/Editor';
 import * as ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
 
 describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () => {
+  const selectors = {
+    backcolorToolbar: '[aria-label^="Background color"] > .tox-tbtn + .tox-split-button__chevron',
+    forecolorToolbar: '[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron'
+  };
+
   Arr.each([
     { label: 'Iframe Editor', setup: TinyHooks.bddSetup },
     { label: 'Shadow Dom Editor', setup: TinyHooks.bddSetupInShadowRoot }
@@ -24,7 +29,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         const editor = hook.editor();
         editor.setContent('<p>Text</p>');
         TinySelections.setCursor(editor, [ 0, 0 ], 2);
-        TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+        TinyUiActions.clickOnToolbar(editor, selectors.backcolorToolbar);
         await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
         TinyUiActions.clickOnUi(editor, 'button[title="Custom color"]');
         const backgroundDialog = await TinyUiActions.pWaitForDialog(editor);
@@ -36,7 +41,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
       it('TINY-9213: Color detected on color, foreground', async () => {
         const editor = hook.editor();
         editor.setContent('<p>Text</p>');
-        TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+        TinyUiActions.clickOnToolbar(editor, selectors.forecolorToolbar);
         await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
         TinyUiActions.clickOnUi(editor, 'button[title="Custom color"]');
         const textDialog = await TinyUiActions.pWaitForDialog(editor);
@@ -156,7 +161,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         const editor = hook.editor();
         editor.setContent('<p style="color: #FF00FF;background-color: #00FF00;">Text</p>', { format: 'raw' });
         TinySelections.setCursor(editor, [ 0, 0 ], 2);
-        TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+        TinyUiActions.clickOnToolbar(editor, selectors.backcolorToolbar);
         await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
         TinyUiActions.clickOnUi(editor, 'button[title="Custom color"]');
         const backgroundDialog = await TinyUiActions.pWaitForDialog(editor);
@@ -168,7 +173,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
       it('TINY-9213: Color detected on color, foreground', async () => {
         const editor = hook.editor();
         editor.setContent('<p style="color: #FF00FF;background-color: #00FF00;">Text</p>', { format: 'raw' });
-        TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+        TinyUiActions.clickOnToolbar(editor, selectors.forecolorToolbar);
         await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
         TinyUiActions.clickOnUi(editor, 'button[title="Custom color"]');
         const textDialog = await TinyUiActions.pWaitForDialog(editor);
