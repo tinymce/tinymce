@@ -144,7 +144,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     'noshade nowrap readonly selected autoplay loop controls allowfullscreen');
 
   const nonEmptyOrMoveCaretBeforeOnEnter = 'td th iframe video audio object script code';
-  const nonEmptyElementsMap = createLookupTable('non_empty_elements', nonEmptyOrMoveCaretBeforeOnEnter + ' pre', voidElementsMap);
+  const nonEmptyElementsMap = createLookupTable('non_empty_elements', nonEmptyOrMoveCaretBeforeOnEnter + ' pre svg', voidElementsMap);
   const moveCaretBeforeOnEnterElementsMap = createLookupTable('move_caret_before_on_enter_elements', nonEmptyOrMoveCaretBeforeOnEnter + ' table', voidElementsMap);
 
   const textBlockElementsMap = createLookupTable('text_block_elements', 'h1 h2 h3 h4 h5 h6 p div address pre form ' +
@@ -336,6 +336,9 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
       children[name] = element.children;
     });
   }
+
+  // Opt in is done with options like `extended_valid_elements`
+  delete elements.svg;
 
   addCustomElements(settings.custom_elements);
   addValidChildren(settings.valid_children);

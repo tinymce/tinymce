@@ -253,12 +253,12 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
       INPUT: {}, IMG: {}, HR: {}, FRAME: {}, COL: {}, BR: {},
       BASEFONT: {}, BASE: {}, AREA: {}, SOURCE: {},
       TD: {}, TH: {}, IFRAME: {}, VIDEO: {}, AUDIO: {}, OBJECT: {},
-      WBR: {}, TRACK: {}, SCRIPT: {}, PRE: {}, CODE: {},
+      WBR: {}, TRACK: {}, SCRIPT: {}, PRE: {}, CODE: {}, SVG: {},
       embed: {}, param: {}, meta: {}, link: {}, isindex: {},
       input: {}, img: {}, hr: {}, frame: {}, col: {}, br: {},
       basefont: {}, base: {}, area: {}, source: {},
       td: {}, th: {}, iframe: {}, video: {}, audio: {}, object: {},
-      wbr: {}, track: {}, script: {}, pre: {}, code: {}
+      wbr: {}, track: {}, script: {}, pre: {}, code: {}, svg: {}
     });
   });
 
