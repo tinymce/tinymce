@@ -7,6 +7,7 @@ import Schema from '../api/html/Schema';
 import Tools from '../api/util/Tools';
 import * as URI from '../api/util/URI';
 import * as NodeType from '../dom/NodeType';
+import * as Namespace from './Namespace';
 
 export type MimeType = 'text/html' | 'application/xhtml+xml';
 
@@ -20,7 +21,7 @@ const filteredUrlAttrs = Tools.makeMap('src,href,data,background,action,formacti
 const internalElementAttr = 'data-mce-type';
 
 let uid = 0;
-const processNode = (node: Node, settings: DomParserSettings, schema: Schema, evt?: SanitizeElementHookEvent): void => {
+const processNode = (node: Node, settings: DomParserSettings, schema: Schema, scope: Namespace.NamespaceType, evt?: SanitizeElementHookEvent): void => {
   const validate = settings.validate;
   const specialElements = schema.getSpecialElements();
 
@@ -30,6 +31,13 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, ev
   }
 
   const lcTagName = evt?.tagName ?? node.nodeName.toLowerCase();
+
+  if (scope !== 'html' && schema.isValid(scope)) {
+    if (Type.isNonNullable(evt)) {
+      evt.allowedTags[lcTagName] = true;
+    }
+    return;
+  }
 
   // Just leave non-elements such as text and comments up to dompurify
   if (node.nodeType !== NodeTypes.ELEMENT || lcTagName === 'body') {
@@ -100,11 +108,11 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, ev
   }
 };
 
-const processAttr = (ele: Element, settings: DomParserSettings, schema: Schema, evt: SanitizeAttributeHookEvent) => {
+const processAttr = (ele: Element, settings: DomParserSettings, schema: Schema, scope: Namespace.NamespaceType, evt: SanitizeAttributeHookEvent) => {
   const tagName = ele.tagName.toLowerCase();
   const { attrName, attrValue } = evt;
 
-  evt.keepAttr = shouldKeepAttribute(settings, schema, tagName, attrName, attrValue);
+  evt.keepAttr = shouldKeepAttribute(settings, schema, scope, tagName, attrName, attrValue);
 
   if (evt.keepAttr) {
     evt.allowedAttributes[attrName] = true;
@@ -123,9 +131,15 @@ const processAttr = (ele: Element, settings: DomParserSettings, schema: Schema, 
   }
 };
 
-const shouldKeepAttribute = (settings: DomParserSettings, schema: Schema, tagName: string, attrName: string, attrValue: string): boolean =>
-  !(attrName in filteredUrlAttrs && URI.isInvalidUri(settings, attrValue, tagName)) &&
-  (!settings.validate || schema.isValid(tagName, attrName) || Strings.startsWith(attrName, 'data-') || Strings.startsWith(attrName, 'aria-'));
+const shouldKeepAttribute = (settings: DomParserSettings, schema: Schema, scope: Namespace.NamespaceType, tagName: string, attrName: string, attrValue: string): boolean => {
+  // All attributes within non HTML namespaces elements are considered valid
+  if (scope !== 'html' && !Namespace.isNonHtmlElementRootName(tagName)) {
+    return true;
+  }
+
+  return !(attrName in filteredUrlAttrs && URI.isInvalidUri(settings, attrValue, tagName)) &&
+    (!settings.validate || schema.isValid(tagName, attrName) || Strings.startsWith(attrName, 'data-') || Strings.startsWith(attrName, 'aria-'));
+};
 
 const isRequiredAttributeOfInternalElement = (ele: Element, attrName: string): boolean =>
   ele.hasAttribute(internalElementAttr) && (attrName === 'id' || attrName === 'class' || attrName === 'style');
@@ -133,13 +147,13 @@ const isRequiredAttributeOfInternalElement = (ele: Element, attrName: string): b
 const isBooleanAttribute = (attrName: string, schema: Schema): boolean =>
   attrName in schema.getBoolAttrs();
 
-const filterAttributes = (ele: Element, settings: DomParserSettings, schema: Schema): void => {
+const filterAttributes = (ele: Element, settings: DomParserSettings, schema: Schema, scope: Namespace.NamespaceType): void => {
   const { attributes } = ele;
   for (let i = attributes.length - 1; i >= 0; i--) {
     const attr = attributes[i];
     const attrName = attr.name;
     const attrValue = attr.value;
-    if (!shouldKeepAttribute(settings, schema, ele.tagName.toLowerCase(), attrName, attrValue) && !isRequiredAttributeOfInternalElement(ele, attrName)) {
+    if (!shouldKeepAttribute(settings, schema, scope, ele.tagName.toLowerCase(), attrName, attrValue) && !isRequiredAttributeOfInternalElement(ele, attrName)) {
       ele.removeAttribute(attrName);
     } else if (isBooleanAttribute(attrName, schema)) {
       ele.setAttribute(attrName, attrName);
@@ -147,17 +161,17 @@ const filterAttributes = (ele: Element, settings: DomParserSettings, schema: Sch
   }
 };
 
-const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI => {
+const setupPurify = (settings: DomParserSettings, schema: Schema, namespaceTracker: Namespace.NamespaceTracker): DOMPurifyI => {
   const purify = createDompurify();
 
   // We use this to add new tags to the allow-list as we parse, if we notice that a tag has been banned but it's still in the schema
   purify.addHook('uponSanitizeElement', (ele, evt) => {
-    processNode(ele, settings, schema, evt);
+    processNode(ele, settings, schema, namespaceTracker.track(ele), evt);
   });
 
   // Let's do the same thing for attributes
   purify.addHook('uponSanitizeAttribute', (ele, evt) => {
-    processAttr(ele, settings, schema, evt);
+    processAttr(ele, settings, schema, namespaceTracker.current(), evt);
   });
 
   return purify;
@@ -208,11 +222,14 @@ const sanitizeNamespaceElement = (ele: Element) => {
 };
 
 const getSanitizer = (settings: DomParserSettings, schema: Schema): Sanitizer => {
+  const namespaceTracker = Namespace.createNamespaceTracker();
+
   if (settings.sanitize) {
-    const purify = setupPurify(settings, schema);
+    const purify = setupPurify(settings, schema, namespaceTracker);
     const sanitizeHtmlElement = (body: HTMLElement, mimeType: MimeType) => {
       purify.sanitize(body, getPurifyConfig(settings, mimeType));
       purify.removed = [];
+      namespaceTracker.reset();
     };
 
     return {
@@ -225,11 +242,15 @@ const getSanitizer = (settings: DomParserSettings, schema: Schema): Sanitizer =>
       const nodeIterator = document.createNodeIterator(body, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_TEXT);
       let node;
       while ((node = nodeIterator.nextNode())) {
-        processNode(node, settings, schema);
+        const currentScope = namespaceTracker.track(node);
+
+        processNode(node, settings, schema, currentScope);
         if (NodeType.isElement(node)) {
-          filterAttributes(node, settings, schema);
+          filterAttributes(node, settings, schema, currentScope);
         }
       }
+
+      namespaceTracker.reset();
     };
 
     const sanitizeNamespaceElement = Fun.noop;

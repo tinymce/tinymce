@@ -1588,4 +1588,30 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       ], { valid_elements: '*[*]' });
     });
   });
+
+  context('SVG elements', () => {
+    it('TINY-10237: Should not wrap SVGs', () => {
+      const schema = Schema();
+      schema.addValidElements('svg[*]');
+      const input = '<svg></svg>foo';
+      const serializedHtml = HtmlSerializer({}, schema).serialize(DomParser({ forced_root_block: 'p' }, schema).parse(input));
+      assert.equal(serializedHtml, '<svg></svg><p>foo</p>');
+    });
+
+    it('TINY-10237: Should retain SVG elements as is but filter out scripts', () => {
+      const schema = Schema();
+      schema.addValidElements('svg[*]');
+      const input = '<svg><circle><desc><b>foo</b><script>alert(1)</script></desc></circle></svg>foo';
+      const serializedHtml = HtmlSerializer({}, schema).serialize(DomParser({ forced_root_block: 'p' }, schema).parse(input));
+      assert.equal(serializedHtml, '<svg><circle><desc><b>foo</b></desc></circle></svg><p>foo</p>');
+    });
+
+    it('TINY-10237: Should retain SVG elements and keep scripts if sanitize is set to false', () => {
+      const schema = Schema();
+      schema.addValidElements('svg[*]');
+      const input = '<svg><circle><desc>foo<script>alert(1)</script></desc></circle></svg>foo';
+      const serializedHtml = HtmlSerializer({}, schema).serialize(DomParser({ forced_root_block: 'p', sanitize: false }, schema).parse(input));
+      assert.equal(serializedHtml, '<svg><circle><desc>foo<script>alert(1)</script></desc></circle></svg><p>foo</p>');
+    });
+  });
 });

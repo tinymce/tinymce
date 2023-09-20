@@ -6,6 +6,7 @@ import * as FilterNode from '../../html/FilterNode';
 import * as FilterRegistry from '../../html/FilterRegistry';
 import * as InvalidNodes from '../../html/InvalidNodes';
 import * as LegacyFilter from '../../html/LegacyFilter';
+import * as Namespace from '../../html/Namespace';
 import * as ParserFilters from '../../html/ParserFilters';
 import { isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../../html/ParserUtils';
 import { getSanitizer, internalElementAttr } from '../../html/Sanitization';
@@ -85,7 +86,7 @@ interface DomParser {
 
 type WalkerCallback = (node: AstNode) => void;
 
-const transferChildren = (parent: AstNode, nativeParent: Node, specialElements: SchemaRegExpMap) => {
+const transferChildren = (parent: AstNode, nativeParent: Node, specialElements: SchemaRegExpMap, nsSanitizer: (el: Element) => void) => {
   const parentName = parent.name;
   // Exclude the special elements where the content is RCDATA as their content needs to be parsed instead of being left as plain text
   // See: https://html.spec.whatwg.org/multipage/parsing.html#parsing-html-fragments
@@ -102,6 +103,11 @@ const transferChildren = (parent: AstNode, nativeParent: Node, specialElements: 
         const attr = attributes[ai];
         child.attr(attr.name, attr.value);
       }
+
+      if (Namespace.isNonHtmlElementRootName(child.name)) {
+        nsSanitizer(nativeChild);
+        child.value = nativeChild.innerHTML;
+      }
     } else if (NodeType.isText(nativeChild)) {
       child.value = nativeChild.data;
       if (isSpecial) {
@@ -111,7 +117,10 @@ const transferChildren = (parent: AstNode, nativeParent: Node, specialElements: 
       child.value = nativeChild.data;
     }
 
-    transferChildren(child, nativeChild, specialElements);
+    if (!Namespace.isNonHtmlElementRootName(child.name)) {
+      transferChildren(child, nativeChild, specialElements, nsSanitizer);
+    }
+
     parent.append(child);
   }
 };
@@ -361,7 +370,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
 
   const isWrappableNode = (blockElements: SchemaMap, node: AstNode) => {
     const isInternalElement = Type.isString(node.attr(internalElementAttr));
-    const isInlineElement = node.type === 1 && (!Obj.has(blockElements, node.name) && !TransparentElements.isTransparentAstBlock(schema, node));
+    const isInlineElement = node.type === 1 && (!Obj.has(blockElements, node.name) && !TransparentElements.isTransparentAstBlock(schema, node)) && !Namespace.isNonHtmlElementRootName(node.name);
 
     return node.type === 3 || (isInlineElement && !isInternalElement);
   };
@@ -439,7 +448,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
 
     // Create the AST representation
     const rootNode = new AstNode(rootName, 11);
-    transferChildren(rootNode, element, schema.getSpecialElements());
+    transferChildren(rootNode, element, schema.getSpecialElements(), sanitizer.sanitizeNamespaceElement);
 
     // This next line is needed to fix a memory leak in chrome and firefox.
     // For more information see TINY-9186
