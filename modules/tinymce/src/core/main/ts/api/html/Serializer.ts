@@ -1,4 +1,5 @@
 import { Type } from '@ephox/katamari';
+
 import * as Namespace from '../../html/Namespace';
 import AstNode, { Attributes } from './Node';
 import Schema from './Schema';
@@ -167,3 +168,4 @@ const HtmlSerializer = (settings: HtmlSerializerSettings = {}, schema: Schema = 
 };
 
 export default HtmlSerializer;
+
