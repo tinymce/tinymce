@@ -2,13 +2,13 @@ import { Arr, Obj, Strings, Type } from '@ephox/katamari';
 import { Attribute, NodeTypes, Remove, Replication, SugarElement } from '@ephox/sugar';
 import createDompurify, { Config, DOMPurifyI, SanitizeAttributeHookEvent, SanitizeElementHookEvent } from 'dompurify';
 
-import * as NodeType from '../../dom/NodeType';
-import Tools from '../util/Tools';
-import * as URI from '../util/URI';
-import { DomParserSettings } from './DomParser';
-import Schema from './Schema';
+import { DomParserSettings } from '../api/html/DomParser';
+import Schema from '../api/html/Schema';
+import Tools from '../api/util/Tools';
+import * as URI from '../api/util/URI';
+import * as NodeType from '../dom/NodeType';
 
-type MimeType = 'text/html' | 'application/xhtml+xml';
+export type MimeType = 'text/html' | 'application/xhtml+xml';
 type Sanitizer = (body: HTMLElement, mimeType: MimeType) => void;
 
 // A list of attributes that should be filtered further based on the parser settings
