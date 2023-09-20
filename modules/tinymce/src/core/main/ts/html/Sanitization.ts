@@ -1,4 +1,4 @@
-import { Arr, Obj, Strings, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Strings, Type } from '@ephox/katamari';
 import { Attribute, NodeTypes, Remove, Replication, SugarElement } from '@ephox/sugar';
 import createDompurify, { Config, DOMPurifyI, SanitizeAttributeHookEvent, SanitizeElementHookEvent } from 'dompurify';
 
@@ -9,7 +9,11 @@ import * as URI from '../api/util/URI';
 import * as NodeType from '../dom/NodeType';
 
 export type MimeType = 'text/html' | 'application/xhtml+xml';
-type Sanitizer = (body: HTMLElement, mimeType: MimeType) => void;
+
+interface Sanitizer {
+  readonly sanitizeHtmlElement: (body: HTMLElement, mimeType: MimeType) => void;
+  readonly sanitizeNamespaceElement: (el: Element) => void;
+}
 
 // A list of attributes that should be filtered further based on the parser settings
 const filteredUrlAttrs = Tools.makeMap('src,href,data,background,action,formaction,poster,xlink:href');
@@ -185,15 +189,38 @@ const getPurifyConfig = (settings: DomParserSettings, mimeType: string): Config 
   return config;
 };
 
+const sanitizeNamespaceElement = (ele: Element) => {
+  // xlink:href used to be the way to do links in SVG 1.x https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/xlink:href
+  const xlinkAttrs = [ 'type', 'href', 'role', 'arcrole', 'title', 'show', 'actuate', 'label', 'from', 'to' ].map((name) => `xlink:${name}`);
+  const config: Config = {
+    IN_PLACE: true,
+    USE_PROFILES: {
+      html: true,
+      svg: true,
+      svgFilters: true
+    },
+    ALLOWED_ATTR: xlinkAttrs
+  };
+
+  createDompurify().sanitize(ele, config);
+
+  return ele.innerHTML;
+};
+
 const getSanitizer = (settings: DomParserSettings, schema: Schema): Sanitizer => {
   if (settings.sanitize) {
     const purify = setupPurify(settings, schema);
-    return (body, mimeType) => {
+    const sanitizeHtmlElement = (body: HTMLElement, mimeType: MimeType) => {
       purify.sanitize(body, getPurifyConfig(settings, mimeType));
       purify.removed = [];
     };
+
+    return {
+      sanitizeHtmlElement,
+      sanitizeNamespaceElement
+    };
   } else {
-    return (body, _) => {
+    const sanitizeHtmlElement = (body: HTMLElement, _mimeType: MimeType) => {
       // eslint-disable-next-line no-bitwise
       const nodeIterator = document.createNodeIterator(body, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_TEXT);
       let node;
@@ -203,6 +230,13 @@ const getSanitizer = (settings: DomParserSettings, schema: Schema): Sanitizer =>
           filterAttributes(node, settings, schema);
         }
       }
+    };
+
+    const sanitizeNamespaceElement = Fun.noop;
+
+    return {
+      sanitizeHtmlElement,
+      sanitizeNamespaceElement
     };
   }
 };

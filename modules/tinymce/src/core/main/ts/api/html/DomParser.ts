@@ -272,7 +272,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
   };
 
   const parser = new DOMParser();
-  const sanitize = getSanitizer(defaultedSettings, schema);
+  const sanitizer = getSanitizer(defaultedSettings, schema);
 
   const parseAndSanitizeWithContext = (html: string, rootName: string, format: string = 'html'): Element => {
     const mimeType = format === 'xhtml' ? 'application/xhtml+xml' : 'text/html';
@@ -283,7 +283,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     // If parsing XHTML then the content must contain the xmlns declaration, see https://www.w3.org/TR/xhtml1/normative.html#strict
     const wrappedHtml = format === 'xhtml' ? `<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body>${content}</body></html>` : `<body>${content}</body>`;
     const body = parser.parseFromString(wrappedHtml, mimeType).body;
-    sanitize(body, mimeType);
+    sanitizer.sanitizeHtmlElement(body, mimeType);
     return isSpecialRoot ? body.firstChild as Element : body;
   };
 
