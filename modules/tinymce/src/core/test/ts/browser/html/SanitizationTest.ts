@@ -22,7 +22,7 @@ describe('browser.tinymce.core.html.SanitizationTest', () => {
     it('Sanitize iframe HTML', () => testHtmlSanitizer({
       input: '<iframe src="x"><script>alert(1)</script></iframe><iframe src="javascript:alert(1)"></iframe>',
       // Safari seems to encode the contents of iframes
-      expected: isSafari ? '<iframe src="x">&lt;script&gt;alert(1)&lt;/script&gt;</iframe>' : '<iframe></iframe>',
+      expected: isSafari ? '<iframe src="x">&lt;script&gt;alert(1)&lt;/script&gt;</iframe><iframe></iframe>' : '<iframe></iframe>',
       mimeType: 'text/html'
     }));
 
