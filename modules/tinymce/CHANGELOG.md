@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The dialog size was not updated when the `size` argument was changed when redialling a dialog. #TINY-10209
 
 ### Improved
+- Colorpicker now includes the Brightness/Saturation selector and hue slider in the keyboard navigable items. #TINY-9287
 - Improved the tooltips of picker buttons for the urlinput components in the "Insert/Edit Image" and "Insert/Edit Link" dialogs. #TINY-10155
 - Inline dialog will now respect `size: 'large'` argument in the dialog spec. #TINY-10209
 
