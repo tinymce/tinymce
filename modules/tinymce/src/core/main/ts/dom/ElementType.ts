@@ -3,11 +3,6 @@ import { SugarElement, SugarNode } from '@ephox/sugar';
 
 import Schema from '../api/html/Schema';
 
-const voids = [
-  'area', 'base', 'basefont', 'br', 'col', 'frame', 'hr', 'img', 'input',
-  'isindex', 'link', 'meta', 'param', 'embed', 'source', 'wbr', 'track'
-];
-
 const tableCells = [ 'td', 'th' ];
 const tableSections = [ 'thead', 'tbody', 'tfoot' ];
 
@@ -32,7 +27,6 @@ const lazyLookup = <T extends Node = HTMLElement>(items: string[]) => {
   };
 };
 
-const isHeading = lazyLookup<HTMLHeadingElement>(headings);
 const isBlock = (node: SugarElement<Node>, schema: Schema): node is SugarElement<Element> => schema.isBlock(SugarNode.name(node));
 const isTable = (node: SugarElement<Node>): node is SugarElement<HTMLTableElement> => SugarNode.name(node) === 'table';
 const isInline = (node: SugarElement<Node>, schema: Schema): node is SugarElement<HTMLElement> => SugarNode.isElement(node) && !isBlock(node, schema);
@@ -40,7 +34,6 @@ const isBr = (node: SugarElement<Node>): node is SugarElement<HTMLBRElement> => 
 const isTextBlock = lazyLookup(textBlocks);
 const isList = lazyLookup(lists);
 const isListItem = lazyLookup(listItems);
-const isVoid = lazyLookup(voids);
 const isTableSection = lazyLookup(tableSections);
 const isTableCell = lazyLookup<HTMLTableCellElement>(tableCells);
 const isWsPreserveElement = lazyLookup(wsElements);
@@ -51,11 +44,9 @@ export {
   isBlock,
   isTable,
   isInline,
-  isHeading,
   isTextBlock,
   isList,
   isListItem,
-  isVoid,
   isTableSection,
   isTableCell,
   isBr,

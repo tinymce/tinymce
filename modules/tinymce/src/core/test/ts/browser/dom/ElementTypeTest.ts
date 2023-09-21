@@ -40,27 +40,11 @@ describe('browser.tinymce.core.dom.ElementTypeTest', () => {
     checkText(ElementType.isTable);
   });
 
-  it('Check heading elements', () => {
-    checkElement('h1', ElementType.isHeading, true);
-    checkElement('h2', ElementType.isHeading, true);
-    checkElement('span', ElementType.isHeading, false);
-    checkElement('table', ElementType.isHeading, false);
-    checkText(ElementType.isHeading);
-  });
-
   it('Check text block elements', () => {
     checkElement('p', ElementType.isTextBlock, true);
     checkElement('h1', ElementType.isTextBlock, true);
     checkElement('table', ElementType.isTextBlock, false);
     checkText(ElementType.isTextBlock);
-  });
-
-  it('Check void elements', () => {
-    checkElement('img', ElementType.isVoid, true);
-    checkElement('hr', ElementType.isVoid, true);
-    checkElement('h1', ElementType.isVoid, false);
-    checkElement('span', ElementType.isVoid, false);
-    checkText(ElementType.isVoid);
   });
 
   it('Check table cell elements', () => {
