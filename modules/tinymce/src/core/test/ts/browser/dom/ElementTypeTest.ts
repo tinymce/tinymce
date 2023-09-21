@@ -2,6 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
+import Schema from 'tinymce/core/api/html/Schema';
 import * as ElementType from 'tinymce/core/dom/ElementType';
 
 describe('browser.tinymce.core.dom.ElementTypeTest', () => {
@@ -9,25 +10,27 @@ describe('browser.tinymce.core.dom.ElementTypeTest', () => {
     assert.equal(predicate(SugarElement.fromTag(name)), expectedValue, 'Should be the expected value for specified element');
   };
 
+  const baseSchema = Schema();
+
   const checkText = (predicate: (elm: SugarElement<Node>) => boolean) => {
     assert.isFalse(predicate(SugarElement.fromText('text')), 'Should be false for non element');
   };
 
   it('Check block elements', () => {
-    checkElement('p', ElementType.isBlock(), true);
-    checkElement('h1', ElementType.isBlock(), true);
-    checkElement('table', ElementType.isBlock(), true);
-    checkElement('span', ElementType.isBlock(), false);
-    checkElement('b', ElementType.isBlock(), false);
-    checkText(ElementType.isBlock());
+    checkElement('p', (el) => ElementType.isBlock(el, baseSchema), true);
+    checkElement('h1', (el) => ElementType.isBlock(el, baseSchema), true);
+    checkElement('table', (el) => ElementType.isBlock(el, baseSchema), true);
+    checkElement('span', (el) => ElementType.isBlock(el, baseSchema), false);
+    checkElement('b', (el) => ElementType.isBlock(el, baseSchema), false);
+    checkText((el) => ElementType.isBlock(el, baseSchema));
   });
 
   it('Check inline elements', () => {
-    checkElement('b', ElementType.isInline, true);
-    checkElement('span', ElementType.isInline, true);
-    checkElement('p', ElementType.isInline, false);
-    checkElement('h1', ElementType.isInline, false);
-    checkText(ElementType.isInline);
+    checkElement('b', (el) => ElementType.isInline(el, baseSchema), true);
+    checkElement('span', (el) => ElementType.isInline(el, baseSchema), true);
+    checkElement('p', (el) => ElementType.isInline(el, baseSchema), false);
+    checkElement('h1', (el) => ElementType.isInline(el, baseSchema), false);
+    checkText((el) => ElementType.isInline(el, baseSchema));
   });
 
   it('Check tables', () => {

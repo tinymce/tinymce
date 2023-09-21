@@ -5,6 +5,7 @@ import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import { ParserArgs } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
+import Schema from '../api/html/Schema';
 import HtmlSerializer from '../api/html/Serializer';
 import * as StyleUtils from '../api/html/StyleUtils';
 import Tools from '../api/util/Tools';
@@ -73,8 +74,8 @@ const validInsertion = (editor: Editor, value: string, parentNode: Element): voi
   }
 };
 
-const trimBrsFromTableCell = (dom: DOMUtils, elm: Element): void => {
-  Optional.from(dom.getParent(elm, 'td,th')).map(SugarElement.fromDom).each(PaddingBr.trimBlockTrailingBr);
+const trimBrsFromTableCell = (dom: DOMUtils, elm: Element, schema: Schema): void => {
+  Optional.from(dom.getParent(elm, 'td,th')).map(SugarElement.fromDom).each((el) => PaddingBr.trimBlockTrailingBr(el, schema));
 };
 
 // Remove children nodes that are exactly the same as a parent node - name, attributes, styles
@@ -364,7 +365,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
   reduceInlineTextElements(editor, merge);
   moveSelectionToMarker(editor, dom.get('mce_marker'));
   unmarkFragmentElements(editor.getBody());
-  trimBrsFromTableCell(dom, selection.getStart());
+  trimBrsFromTableCell(dom, selection.getStart(), editor.schema);
   TransparentElements.updateCaret(editor.schema, editor.getBody(), selection.getStart());
 
   return value;

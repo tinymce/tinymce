@@ -41,7 +41,7 @@ const trimOrPad = (editor: Editor, value: string): string => {
 
   // Check for whitespace before/after value
   if (/^ | $/.test(value)) {
-    return trimOrPadLeftRight(dom, selection.getRng(), value);
+    return trimOrPadLeftRight(dom, selection.getRng(), value, editor.schema);
   } else {
     return value;
   }

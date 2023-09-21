@@ -1,6 +1,7 @@
 import { Adt, Fun, Optional, Type } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
+import Schema from '../api/html/Schema';
 import { findNextBr, findPreviousBr, isAfterBr, isBeforeBr } from '../caret/CaretBr';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
@@ -44,8 +45,8 @@ const isAtContentEditableBlockCaret = (forward: boolean, from: CaretPosition): b
   return NodeType.isElement(elm) && elm.getAttribute('data-mce-caret') === caretLocation;
 };
 
-const isDeleteFromCefDifferentBlocks = (root: Node, forward: boolean, from: CaretPosition, to: CaretPosition): boolean => {
-  const inSameBlock = (elm: Element) => ElementType.isInline(SugarElement.fromDom(elm)) && !CaretUtils.isInSameBlock(from, to, root);
+const isDeleteFromCefDifferentBlocks = (root: Node, forward: boolean, from: CaretPosition, to: CaretPosition, schema: Schema): boolean => {
+  const inSameBlock = (elm: Element) => ElementType.isInline(SugarElement.fromDom(elm), schema) && !CaretUtils.isInSameBlock(from, to, root);
 
   return CaretUtils.getRelativeCefElm(!forward, from).fold(
     () => CaretUtils.getRelativeCefElm(forward, to).fold(Fun.never, inSameBlock),
@@ -61,11 +62,11 @@ const deleteEmptyBlockOrMoveToCef = (root: Node, forward: boolean, from: CaretPo
   ).orThunk(() => Optional.some(DeleteAction.moveToElement(toCefElm)));
 };
 
-const findCefPosition = (root: Node, forward: boolean, from: CaretPosition): Optional<DeleteActionAdt> =>
+const findCefPosition = (root: Node, forward: boolean, from: CaretPosition, schema: Schema): Optional<DeleteActionAdt> =>
   CaretFinder.fromPosition(forward, root, from).bind((to) => {
     if (isCompoundElement(to.getNode())) {
       return Optional.none();
-    } else if (isDeleteFromCefDifferentBlocks(root, forward, from, to)) {
+    } else if (isDeleteFromCefDifferentBlocks(root, forward, from, to, schema)) {
       return Optional.none();
     } else if (forward && NodeType.isContentEditableFalse(to.getNode())) {
       return deleteEmptyBlockOrMoveToCef(root, forward, from, to);
@@ -105,18 +106,18 @@ const skipMoveToActionFromInlineCefToContent = (root: Node, from: CaretPosition,
     }
   );
 
-const getContentEditableAction = (root: Node, forward: boolean, from: CaretPosition): Optional<DeleteActionAdt> => {
+const getContentEditableAction = (root: Node, forward: boolean, from: CaretPosition, schema: Schema): Optional<DeleteActionAdt> => {
   if (isAtContentEditableBlockCaret(forward, from)) {
     return getContentEditableBlockAction(forward, from.getNode(!forward))
-      .orThunk(() => findCefPosition(root, forward, from));
+      .orThunk(() => findCefPosition(root, forward, from, schema));
   } else {
-    return findCefPosition(root, forward, from).bind((deleteAction) =>
+    return findCefPosition(root, forward, from, schema).bind((deleteAction) =>
       skipMoveToActionFromInlineCefToContent(root, from, deleteAction)
     );
   }
 };
 
-const read = (root: Node, forward: boolean, rng: Range): Optional<DeleteActionAdt> => {
+const read = (root: Node, forward: boolean, rng: Range, schema: Schema): Optional<DeleteActionAdt> => {
   const normalizedRange = CaretUtils.normalizeRange(forward ? 1 : -1, root, rng);
   const from = CaretPosition.fromRangeStart(normalizedRange);
   const rootElement = SugarElement.fromDom(root);
@@ -126,12 +127,12 @@ const read = (root: Node, forward: boolean, rng: Range): Optional<DeleteActionAd
     return Optional.some(DeleteAction.remove(from.getNode(true) as Node));
   } else if (forward && isBeforeContentEditableFalse(from)) {
     return Optional.some(DeleteAction.remove(from.getNode() as Node));
-  } else if (!forward && isBeforeContentEditableFalse(from) && isAfterBr(rootElement, from)) {
-    return findPreviousBr(rootElement, from).map((br) => DeleteAction.remove(br.getNode() as Node));
-  } else if (forward && isAfterContentEditableFalse(from) && isBeforeBr(rootElement, from)) {
-    return findNextBr(rootElement, from).map((br) => DeleteAction.remove(br.getNode() as Node));
+  } else if (!forward && isBeforeContentEditableFalse(from) && isAfterBr(rootElement, from, schema)) {
+    return findPreviousBr(rootElement, from, schema).map((br) => DeleteAction.remove(br.getNode() as Node));
+  } else if (forward && isAfterContentEditableFalse(from) && isBeforeBr(rootElement, from, schema)) {
+    return findNextBr(rootElement, from, schema).map((br) => DeleteAction.remove(br.getNode() as Node));
   } else {
-    return getContentEditableAction(root, forward, from);
+    return getContentEditableAction(root, forward, from, schema);
   }
 };
 

@@ -219,13 +219,14 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
   it('getBlockElements', () => {
     const schema = Schema();
     assert.deepEqual(schema.getBlockElements(), {
-      SUMMARY: {}, MAIN: {}, DETAILS: {}, ASIDE: {}, HGROUP: {}, SECTION: {}, ARTICLE: {}, FOOTER: {}, HEADER: {},
+      LISTING: {}, MULTICOL: {}, BODY: {}, HTML: {}, SUMMARY: {}, MAIN: {},
+      DETAILS: {}, ASIDE: {}, HGROUP: {}, SECTION: {}, ARTICLE: {}, FOOTER: {}, HEADER: {},
       ISINDEX: {}, MENU: {}, NOSCRIPT: {}, FIELDSET: {}, FIGCAPTION: {}, DIR: {}, DD: {}, DT: {},
       DL: {}, CENTER: {}, BLOCKQUOTE: {}, CAPTION: {}, UL: {}, OL: {}, LI: {},
       TD: {}, TR: {}, TH: {}, TFOOT: {}, THEAD: {}, TBODY: {}, TABLE: {}, FORM: {},
       PRE: {}, ADDRESS: {}, DIV: {}, P: {}, HR: {}, H6: {}, H5: {}, H4: {}, H3: {},
       H2: {}, H1: {}, NAV: {}, FIGURE: {}, DATALIST: {}, OPTGROUP: {}, OPTION: {}, SELECT: {},
-      details: {}, summary: {}, main: {}, aside: {}, hgroup: {}, section: {}, article: {}, footer: {}, header: {},
+      details: {}, listing: {}, multicol: {}, body: {}, html: {}, summary: {}, main: {}, aside: {}, hgroup: {}, section: {}, article: {}, footer: {}, header: {},
       isindex: {}, menu: {}, noscript: {}, fieldset: {}, dir: {}, dd: {}, dt: {}, dl: {}, center: {},
       blockquote: {}, caption: {}, ul: {}, ol: {}, li: {}, td: {}, tr: {}, th: {}, tfoot: {}, thead: {},
       tbody: {}, table: {}, form: {}, pre: {}, address: {}, div: {}, p: {}, hr: {}, h6: {},

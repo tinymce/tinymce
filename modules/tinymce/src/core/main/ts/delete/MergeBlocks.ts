@@ -1,6 +1,7 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Compare, Insert, Remove, Replication, SugarElement, Traverse } from '@ephox/sugar';
 
+import Schema from '../api/html/Schema';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';
@@ -8,16 +9,16 @@ import * as Empty from '../dom/Empty';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as Parents from '../dom/Parents';
 
-const getChildrenUntilBlockBoundary = (block: SugarElement<Element>): SugarElement<Node>[] => {
+const getChildrenUntilBlockBoundary = (block: SugarElement<Element>, schema: Schema): SugarElement<Node>[] => {
   const children = Traverse.children(block);
-  return Arr.findIndex(children, ElementType.isBlock()).fold(
+  return Arr.findIndex(children, (el) => ElementType.isBlock(el, schema)).fold(
     Fun.constant(children),
     (index) => children.slice(0, index)
   );
 };
 
-const extractChildren = (block: SugarElement<Element>): SugarElement<Node>[] => {
-  const children = getChildrenUntilBlockBoundary(block);
+const extractChildren = (block: SugarElement<Element>, schema: Schema): SugarElement<Node>[] => {
+  const children = getChildrenUntilBlockBoundary(block, schema);
   Arr.each(children, Remove.remove);
   return children;
 };
@@ -34,6 +35,7 @@ const nestedBlockMerge = (
   rootNode: SugarElement<Node>,
   fromBlock: SugarElement<Element>,
   toBlock: SugarElement<Element>,
+  schema: Schema,
   insertionPoint: SugarElement<Node>
 ): Optional<CaretPosition> => {
   if (Empty.isEmpty(toBlock)) {
@@ -46,21 +48,21 @@ const nestedBlockMerge = (
   }
 
   const position = CaretFinder.prevPosition(toBlock.dom, CaretPosition.before(insertionPoint.dom));
-  Arr.each(extractChildren(fromBlock), (child) => {
+  Arr.each(extractChildren(fromBlock, schema), (child) => {
     Insert.before(insertionPoint, child);
   });
   removeEmptyRoot(rootNode, fromBlock);
   return position;
 };
 
-const sidelongBlockMerge = (rootNode: SugarElement<Node>, fromBlock: SugarElement<Element>, toBlock: SugarElement<Element>): Optional<CaretPosition> => {
+const sidelongBlockMerge = (rootNode: SugarElement<Node>, fromBlock: SugarElement<Element>, toBlock: SugarElement<Element>, schema: Schema): Optional<CaretPosition> => {
   if (Empty.isEmpty(toBlock)) {
     if (Empty.isEmpty(fromBlock)) {
       const getInlineToBlockDescendants = (el: SugarElement<Element>) => {
         const helper = (node: SugarElement<Element>, elements: SugarElement<Element>[]): SugarElement<Element>[] =>
           Traverse.firstChild(node).fold(
             () => elements,
-            (child) => ElementType.isInline(child) ? helper(child, elements.concat(Replication.shallow(child))) : elements
+            (child) => ElementType.isInline(child, schema) ? helper(child, elements.concat(Replication.shallow(child))) : elements
           );
         return helper(el, []);
       };
@@ -83,7 +85,7 @@ const sidelongBlockMerge = (rootNode: SugarElement<Node>, fromBlock: SugarElemen
   }
 
   const position = CaretFinder.lastPositionIn(toBlock.dom);
-  Arr.each(extractChildren(fromBlock), (child) => {
+  Arr.each(extractChildren(fromBlock, schema), (child) => {
     Insert.append(toBlock, child);
   });
   removeEmptyRoot(rootNode, fromBlock);
@@ -106,18 +108,18 @@ const trimBr = (first: boolean, block: SugarElement<Element>) => {
     .each(Remove.remove);
 };
 
-const mergeBlockInto = (rootNode: SugarElement<Node>, fromBlock: SugarElement<Element>, toBlock: SugarElement<Element>): Optional<CaretPosition> => {
+const mergeBlockInto = (rootNode: SugarElement<Node>, fromBlock: SugarElement<Element>, toBlock: SugarElement<Element>, schema: Schema): Optional<CaretPosition> => {
   trimBr(true, fromBlock);
   trimBr(false, toBlock);
 
   return getInsertionPoint(fromBlock, toBlock).fold(
-    Fun.curry(sidelongBlockMerge, rootNode, fromBlock, toBlock),
-    Fun.curry(nestedBlockMerge, rootNode, fromBlock, toBlock)
+    Fun.curry(sidelongBlockMerge, rootNode, fromBlock, toBlock, schema),
+    Fun.curry(nestedBlockMerge, rootNode, fromBlock, toBlock, schema)
   );
 };
 
-const mergeBlocks = (rootNode: SugarElement<Node>, forward: boolean, block1: SugarElement<Element>, block2: SugarElement<Element>): Optional<CaretPosition> =>
-  forward ? mergeBlockInto(rootNode, block2, block1) : mergeBlockInto(rootNode, block1, block2);
+const mergeBlocks = (rootNode: SugarElement<Node>, forward: boolean, block1: SugarElement<Element>, block2: SugarElement<Element>, schema: Schema): Optional<CaretPosition> =>
+  forward ? mergeBlockInto(rootNode, block2, block1, schema) : mergeBlockInto(rootNode, block1, block2, schema);
 
 export {
   mergeBlocks

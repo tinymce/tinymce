@@ -2,6 +2,7 @@ import { Arr, Fun, Optional, Type } from '@ephox/katamari';
 import { PredicateExists, SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
+import Schema from '../api/html/Schema';
 import CaretPosition from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
@@ -28,10 +29,10 @@ const hasOnlyOneChild = (elm: SugarElement<Node>): boolean =>
   Traverse.childNodesCount(elm) === 1;
 
 const getParentInlinesUntilMultichildInline = (editor: Editor): SugarElement<Node>[] =>
-  getParentsUntil(editor, (elm) => ElementType.isBlock()(elm) || hasMultipleChildren(elm));
+  getParentsUntil(editor, (elm) => ElementType.isBlock(elm, editor.schema) || hasMultipleChildren(elm));
 
 const getParentInlines = (editor: Editor): SugarElement<Node>[] =>
-  getParentsUntil(editor, ElementType.isBlock());
+  getParentsUntil(editor, (el) => ElementType.isBlock(el, editor.schema));
 
 const getFormatNodes = (editor: Editor, parentInlines: SugarElement<Node>[]): Node[] => {
   const isFormatElement = Fun.curry(CaretFormat.isFormatElement, editor);
@@ -144,11 +145,11 @@ const deleteRange = (editor: Editor): Optional<() => void> => {
 const backspaceDelete = (editor: Editor, forward: boolean): Optional<() => void> =>
   editor.selection.isCollapsed() ? deleteCaret(editor, forward) : deleteRange(editor);
 
-const hasAncestorInlineCaret = (elm: SugarElement<Node>): boolean =>
-  PredicateExists.ancestor(elm, (node) => FormatContainer.isCaretNode(node.dom), ElementType.isBlock());
+const hasAncestorInlineCaret = (elm: SugarElement<Node>, schema: Schema): boolean =>
+  PredicateExists.ancestor(elm, (node) => FormatContainer.isCaretNode(node.dom), (el) => ElementType.isBlock(el, schema));
 
 const hasAncestorInlineCaretAtStart = (editor: Editor): boolean =>
-  hasAncestorInlineCaret(SugarElement.fromDom(editor.selection.getStart()));
+  hasAncestorInlineCaret(SugarElement.fromDom(editor.selection.getStart()), editor.schema);
 
 const requiresRefreshCaretOverride = (editor: Editor): boolean => {
   const rng = editor.selection.getRng();

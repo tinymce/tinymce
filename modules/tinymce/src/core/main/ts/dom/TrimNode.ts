@@ -3,6 +3,7 @@ import { SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
+import Schema from '../api/html/Schema';
 import * as ElementType from './ElementType';
 import { isContent } from './Empty';
 import * as NodeType from './NodeType';
@@ -10,15 +11,15 @@ import * as NodeType from './NodeType';
 const isSpan = (node: Node): node is HTMLSpanElement =>
   node.nodeName.toLowerCase() === 'span';
 
-const isInlineContent = (node: Node | null, root: Node): boolean =>
-  Type.isNonNullable(node) && (isContent(node, root) || ElementType.isInline(SugarElement.fromDom(node)));
+const isInlineContent = (node: Node | null, root: Node, schema: Schema): boolean =>
+  Type.isNonNullable(node) && (isContent(node, root) || ElementType.isInline(SugarElement.fromDom(node), schema));
 
-const surroundedByInlineContent = (node: Node, root: Node): boolean => {
+const surroundedByInlineContent = (node: Node, root: Node, schema: Schema): boolean => {
   const prev = new DomTreeWalker(node, root).prev(false);
   const next = new DomTreeWalker(node, root).next(false);
   // Check if the next/previous is either inline content or the start/end (eg is undefined)
-  const prevIsInline = Type.isUndefined(prev) || isInlineContent(prev, root);
-  const nextIsInline = Type.isUndefined(next) || isInlineContent(next, root);
+  const prevIsInline = Type.isUndefined(prev) || isInlineContent(prev, root, schema);
+  const nextIsInline = Type.isUndefined(next) || isInlineContent(next, root, schema);
   return prevIsInline && nextIsInline;
 };
 
@@ -27,8 +28,8 @@ const isBookmarkNode = (node: Node): boolean =>
 
 // Keep text nodes with only spaces if surrounded by spans.
 // eg. "<p><span>a</span> <span>b</span></p>" should keep space between a and b
-const isKeepTextNode = (node: Node, root: Node): boolean =>
-  NodeType.isText(node) && node.data.length > 0 && surroundedByInlineContent(node, root);
+const isKeepTextNode = (node: Node, root: Node, schema: Schema): boolean =>
+  NodeType.isText(node) && node.data.length > 0 && surroundedByInlineContent(node, root, schema);
 
 // Keep elements as long as they have any children
 const isKeepElement = (node: Node): boolean =>
@@ -45,7 +46,7 @@ const isDocument = (node: Node): boolean =>
 //   <p>text 1<span></span></p><b>CHOP</b><p><span></span>text 2</p>
 // this function will then trim off empty edges and produce:
 //   <p>text 1</p><b>CHOP</b><p>text 2</p>
-const trimNode = <T extends Node>(dom: DOMUtils, node: T, root?: Node): T => {
+const trimNode = <T extends Node>(dom: DOMUtils, node: T, schema: Schema, root?: Node): T => {
   const rootNode = root || node;
   if (NodeType.isElement(node) && isBookmarkNode(node)) {
     return node;
@@ -53,7 +54,7 @@ const trimNode = <T extends Node>(dom: DOMUtils, node: T, root?: Node): T => {
 
   const children = node.childNodes;
   for (let i = children.length - 1; i >= 0; i--) {
-    trimNode(dom, children[i], rootNode);
+    trimNode(dom, children[i], schema, rootNode);
   }
 
   // If the only child is a bookmark then move it up
@@ -65,7 +66,7 @@ const trimNode = <T extends Node>(dom: DOMUtils, node: T, root?: Node): T => {
   }
 
   // Remove any empty nodes
-  if (!isDocument(node) && !isContent(node, rootNode) && !isKeepElement(node) && !isKeepTextNode(node, rootNode)) {
+  if (!isDocument(node) && !isContent(node, rootNode) && !isKeepElement(node) && !isKeepTextNode(node, rootNode, schema)) {
     dom.remove(node);
   }
 

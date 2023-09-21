@@ -1,8 +1,8 @@
-import { Arr, Fun, Obj, Type, Optional } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 
 import * as CustomElementsRuleParser from '../../schema/CustomElementsRuleParser';
 import * as SchemaLookupTable from '../../schema/SchemaLookupTable';
-import { SchemaType, ElementSettings, SchemaElement, SchemaMap, SchemaRegExpMap, SchemaSettings } from '../../schema/SchemaTypes';
+import { ElementSettings, SchemaElement, SchemaMap, SchemaRegExpMap, SchemaSettings, SchemaType } from '../../schema/SchemaTypes';
 import * as SchemaUtils from '../../schema/SchemaUtils';
 import * as ValidChildrenRuleParser from '../../schema/ValidChildrenRuleParser';
 import * as ValidElementsRuleParser from '../../schema/ValidElementsRuleParser';
@@ -31,6 +31,7 @@ interface Schema {
   getSpecialElements: () => SchemaRegExpMap;
   isValidChild: (name: string, child: string) => boolean;
   isValid: (name: string, attr?: string) => boolean;
+  isBlock: (name: string) => boolean;
   getCustomElements: () => SchemaMap;
   addValidElements: (validElements: string) => void;
   setValidElements: (validElements: string) => void;
@@ -151,7 +152,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     'blockquote center dir fieldset header footer article section hgroup aside main nav figure');
   const blockElementsMap = createLookupTable('block_elements', 'hr table tbody thead tfoot ' +
     'th tr td li ol ul caption dl dt dd noscript menu isindex option ' +
-    'datalist select optgroup figcaption details summary', textBlockElementsMap);
+    'datalist select optgroup figcaption details summary html body multicol listing', textBlockElementsMap);
   const textInlineElementsMap = createLookupTable('text_inline_elements', 'span strong b em i font s strike u var cite ' +
     'dfn code mark q sup sub samp');
 
@@ -558,6 +559,8 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     return false;
   };
 
+  const isBlock = (name: string): boolean => Obj.has(getBlockElements(), name);
+
   /**
    * Returns true/false if the specified element is valid or not
    * according to the schema.
@@ -629,6 +632,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     getSpecialElements,
     isValidChild,
     isValid,
+    isBlock,
     getCustomElements,
     addValidElements,
     setValidElements,
