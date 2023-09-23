@@ -1,5 +1,5 @@
 import { Fun } from '@ephox/katamari';
-import { Compare, SelectorExists, SugarElement } from '@ephox/sugar';
+import { Attribute, Compare, ContentEditable, SelectorExists, SugarNode, SugarElement, Traverse } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import * as CaretCandidate from '../caret/CaretCandidate';
@@ -28,7 +28,7 @@ const isBookmark = NodeType.hasAttribute('data-mce-bookmark');
 const isBogus = NodeType.hasAttribute('data-mce-bogus');
 const isBogusAll = NodeType.hasAttributeValue('data-mce-bogus', 'all');
 
-const isEmptyNode = (targetNode: Node, skipBogus: boolean): boolean => {
+const isEmptyNode = (targetNode: Node, skipBogus: boolean, skipEmptyCET: boolean): boolean => {
   let brCount = 0;
 
   if (isContent(targetNode, targetNode)) {
@@ -52,6 +52,14 @@ const isEmptyNode = (targetNode: Node, skipBogus: boolean): boolean => {
           continue;
         }
       }
+      if (!skipEmptyCET) {
+        const elm = SugarElement.fromDom(node);
+        if (SugarNode.isElement(elm)
+          && Attribute.get(elm, 'contenteditable') === 'true'
+          && Traverse.parentElement(elm).exists((elm) => !ContentEditable.isEditable(elm))) {
+          return false;
+        }
+      }
 
       if (NodeType.isBr(node)) {
         brCount++;
@@ -70,8 +78,8 @@ const isEmptyNode = (targetNode: Node, skipBogus: boolean): boolean => {
   }
 };
 
-const isEmpty = (elm: SugarElement<Node>, skipBogus: boolean = true): boolean =>
-  isEmptyNode(elm.dom, skipBogus);
+const isEmpty = (elm: SugarElement<Node>, skipBogus: boolean = true, skipEmptyCET: boolean = false): boolean =>
+  isEmptyNode(elm.dom, skipBogus, skipEmptyCET);
 
 export {
   isEmpty,
