@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Setting the content with an attribute that contains a self-closing HTML tag did not preserve the tag. #TINY-10088
 - Resize handles would not appear on editable images in a non-editable context. #TINY-10118
 - The dialog size was not updated when the `size` argument was changed when redialling a dialog. #TINY-10209
+- An empty element with a `contenteditable="true"` attribute within a table cell and noneditable root was deleted when the Backspace key was pressed. #TINY-10010
 
 ### Improved
 - Colorpicker now includes the Brightness/Saturation selector and hue slider in the keyboard navigable items. #TINY-9287
