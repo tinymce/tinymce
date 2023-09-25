@@ -568,7 +568,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
 
   const isBlock = (name: string): boolean => Obj.has(getBlockElements(), name);
 
-  const isInline = (name: string): boolean => Obj.has(getTextInlineElements(), name);
+  const isInline = (name: string): boolean => isValid(name) && !isBlock(name);
 
   const isWrapElement = (name: string): boolean => Obj.has(getWrapBlockElements(), name) || isInline(name);
 
