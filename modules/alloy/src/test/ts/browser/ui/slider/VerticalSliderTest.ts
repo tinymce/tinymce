@@ -118,11 +118,11 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
 
     const cCheckValue = (expected: number) => Chain.op((parts: any) => {
       const v = Representing.getValue(parts.sliderComp);
-      Assert.eq('Checking slider value', expected, v.y());
+      Assert.eq('Checking slider value', expected, v.y);
     });
 
     const sAssertValue = (label: string, expected: number) => Logger.t(label, Step.sync(() => {
-      Assert.eq(label, expected, Representing.getValue(component).y());
+      Assert.eq(label, expected, Representing.getValue(component).y);
     }));
 
     return [
