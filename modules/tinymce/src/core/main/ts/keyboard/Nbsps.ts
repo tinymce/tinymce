@@ -10,7 +10,6 @@ import * as CaretFinder from '../caret/CaretFinder';
 import { CaretPosition } from '../caret/CaretPosition';
 import { isAfterSpace, isBeforeSpace } from '../caret/CaretPositionPredicates';
 import { getElementFromPosition, isBlockLike } from '../caret/CaretUtils';
-import * as ElementType from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 import * as Parents from '../dom/Parents';
 import { isContent, isNbsp, isWhiteSpace } from '../text/CharType';
@@ -18,7 +17,7 @@ import { isContent, isNbsp, isWhiteSpace } from '../text/CharType';
 const isInMiddleOfText = (pos: CaretPosition) => CaretPosition.isTextPosition(pos) && !pos.isAtStart() && !pos.isAtEnd();
 
 const getClosestBlock = (root: SugarElement<Node>, pos: CaretPosition, schema: Schema): SugarElement<Node> => {
-  const parentBlocks = Arr.filter(Parents.parentsAndSelf(SugarElement.fromDom(pos.container()), root), (el) => ElementType.isBlock(el, schema));
+  const parentBlocks = Arr.filter(Parents.parentsAndSelf(SugarElement.fromDom(pos.container()), root), (el) => schema.isBlock(SugarNode.name(el)));
   return Arr.head(parentBlocks).getOr(root);
 };
 

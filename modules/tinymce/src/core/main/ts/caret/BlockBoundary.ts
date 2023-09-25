@@ -1,8 +1,7 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Compare, SugarElement } from '@ephox/sugar';
+import { Compare, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Schema from '../api/html/Schema';
-import * as ElementType from '../dom/ElementType';
 import * as Parents from '../dom/Parents';
 import * as CaretFinder from './CaretFinder';
 import { CaretPosition } from './CaretPosition';
@@ -12,7 +11,7 @@ import { isInSameBlock } from './CaretUtils';
 const navigateIgnoreEmptyTextNodes = (forward: boolean, root: Node, from: CaretPosition): Optional<CaretPosition> =>
   CaretFinder.navigateIgnore(forward, root, from, isEmptyText);
 
-const isBlock = (schema: Schema) => (el: SugarElement<Node>): el is SugarElement<Element> => ElementType.isBlock(el, schema);
+const isBlock = (schema: Schema) => (el: SugarElement<Node>): el is SugarElement<Element> => schema.isBlock(SugarNode.name(el));
 
 const getClosestBlock = (root: SugarElement<Node>, pos: CaretPosition, schema: Schema): Optional<SugarElement<Element>> =>
   Arr.find(Parents.parentsAndSelf(SugarElement.fromDom(pos.container()), root), isBlock(schema));

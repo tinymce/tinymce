@@ -5,14 +5,13 @@ import Editor from '../api/Editor';
 import Schema from '../api/html/Schema';
 import CaretPosition from '../caret/CaretPosition';
 import { isAtFirstLine, isAtLastLine } from '../caret/LineReader';
-import * as ElementType from '../dom/ElementType';
 import * as ForceBlocks from '../ForceBlocks';
 
 const isTarget = (node: SugarElement<Node>) => Arr.contains([ 'figcaption' ], SugarNode.name(node));
 
 const getClosestTargetBlock = (pos: CaretPosition, root: SugarElement<HTMLElement>, schema: Schema) => {
   const isRoot = Fun.curry(Compare.eq, root);
-  return PredicateFind.closest(SugarElement.fromDom(pos.container()), (el) => ElementType.isBlock(el, schema), isRoot).filter(isTarget);
+  return PredicateFind.closest(SugarElement.fromDom(pos.container()), (el) => schema.isBlock(SugarNode.name(el)), isRoot).filter(isTarget);
 };
 
 const isAtFirstOrLastLine = (root: SugarElement<HTMLElement>, forward: boolean, pos: CaretPosition) =>

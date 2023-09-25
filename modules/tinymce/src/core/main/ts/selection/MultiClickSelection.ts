@@ -1,11 +1,10 @@
-import { Compare, PredicateFind, SugarElement } from '@ephox/sugar';
+import { Compare, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import Schema from '../api/html/Schema';
 import { isCaretCandidate } from '../caret/CaretCandidate';
 import { CaretPosition } from '../caret/CaretPosition';
-import { isBlock } from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 import * as RangeNormalizer from './RangeNormalizer';
 
@@ -16,7 +15,7 @@ const isContentEditableTrue = (elm: SugarElement<Node>): boolean => NodeType.isC
 const isRoot = (rootNode: Node) => (elm: SugarElement<Node>): boolean => Compare.eq(SugarElement.fromDom(rootNode), elm);
 
 const getClosestScope = (node: Node, rootNode: Node, schema: Schema): Node =>
-  PredicateFind.closest(SugarElement.fromDom(node), (elm) => isContentEditableTrue(elm) || isBlock(elm, schema), isRoot(rootNode))
+  PredicateFind.closest(SugarElement.fromDom(node), (elm) => isContentEditableTrue(elm) || schema.isBlock(SugarNode.name(elm)), isRoot(rootNode))
     .getOr(SugarElement.fromDom(rootNode)).dom;
 
 const getClosestCef = (node: Node, rootNode: Node) =>

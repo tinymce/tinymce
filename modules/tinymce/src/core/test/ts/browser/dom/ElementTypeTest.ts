@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { SugarElement } from '@ephox/sugar';
+import { SugarElement, SugarNode } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Schema from 'tinymce/core/api/html/Schema';
@@ -17,12 +17,12 @@ describe('browser.tinymce.core.dom.ElementTypeTest', () => {
   };
 
   it('Check block elements', () => {
-    checkElement('p', (el) => ElementType.isBlock(el, baseSchema), true);
-    checkElement('h1', (el) => ElementType.isBlock(el, baseSchema), true);
-    checkElement('table', (el) => ElementType.isBlock(el, baseSchema), true);
-    checkElement('span', (el) => ElementType.isBlock(el, baseSchema), false);
-    checkElement('b', (el) => ElementType.isBlock(el, baseSchema), false);
-    checkText((el) => ElementType.isBlock(el, baseSchema));
+    checkElement('p', (el) => baseSchema.isBlock(SugarNode.name(el)), true);
+    checkElement('h1', (el) => baseSchema.isBlock(SugarNode.name(el)), true);
+    checkElement('table', (el) => baseSchema.isBlock(SugarNode.name(el)), true);
+    checkElement('span', (el) => baseSchema.isBlock(SugarNode.name(el)), false);
+    checkElement('b', (el) => baseSchema.isBlock(SugarNode.name(el)), false);
+    checkText((el) => baseSchema.isBlock(SugarNode.name(el)));
   });
 
   it('Check inline elements', () => {

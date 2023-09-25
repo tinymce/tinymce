@@ -1,9 +1,8 @@
 import { Strings } from '@ephox/katamari';
-import { PredicateFind, Remove, SugarElement } from '@ephox/sugar';
+import { PredicateFind, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Schema from '../api/html/Schema';
 import CaretPosition from '../caret/CaretPosition';
-import * as ElementType from '../dom/ElementType';
 import * as Nbsps from '../keyboard/Nbsps';
 import * as Whitespace from '../text/Whitespace';
 
@@ -12,7 +11,7 @@ const normalize = (node: Text, offset: number, count: number, schema: Schema): v
     return;
   }
   const elm = SugarElement.fromDom(node);
-  const root = PredicateFind.ancestor(elm, (el) => ElementType.isBlock(el, schema)).getOr(elm);
+  const root = PredicateFind.ancestor(elm, (el) => schema.isBlock(SugarNode.name(el))).getOr(elm);
 
   // Get the whitespace
   const whitespace = node.data.slice(offset, offset + count);

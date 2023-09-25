@@ -1,5 +1,5 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { SugarElement, SugarNode } from '@ephox/sugar';
 
 import Schema from '../api/html/Schema';
 import * as ElementType from '../dom/ElementType';
@@ -12,7 +12,7 @@ const isBr = (pos: CaretPosition): boolean =>
   getElementFromPosition(pos).exists(ElementType.isBr);
 
 const findBr = (forward: boolean, root: SugarElement<Node>, pos: CaretPosition, schema: Schema): Optional<CaretPosition> => {
-  const parentBlocks = Arr.filter(Parents.parentsAndSelf(SugarElement.fromDom(pos.container()), root), (el) => ElementType.isBlock(el, schema));
+  const parentBlocks = Arr.filter(Parents.parentsAndSelf(SugarElement.fromDom(pos.container()), root), (el) => schema.isBlock(SugarNode.name(el)));
   const scope = Arr.head(parentBlocks).getOr(root);
   return CaretFinder.fromPosition(forward, scope.dom, pos).filter(isBr);
 };

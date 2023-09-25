@@ -1,5 +1,5 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Compare, Insert, Remove, Replication, SugarElement, Traverse } from '@ephox/sugar';
+import { Compare, Insert, Remove, Replication, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import Schema from '../api/html/Schema';
 import * as CaretFinder from '../caret/CaretFinder';
@@ -11,7 +11,7 @@ import * as Parents from '../dom/Parents';
 
 const getChildrenUntilBlockBoundary = (block: SugarElement<Element>, schema: Schema): SugarElement<Node>[] => {
   const children = Traverse.children(block);
-  return Arr.findIndex(children, (el) => ElementType.isBlock(el, schema)).fold(
+  return Arr.findIndex(children, (el) => schema.isBlock(SugarNode.name(el))).fold(
     Fun.constant(children),
     (index) => children.slice(0, index)
   );
