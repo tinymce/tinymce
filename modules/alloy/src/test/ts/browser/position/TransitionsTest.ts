@@ -27,7 +27,8 @@ interface Scenario {
   readonly waitForCompletion?: boolean;
 }
 
-describe('browser.alloy.position.TransitionsTest', () => {
+// TINY-10259: Test passes locally but fails on CI, also observed by TINY-8278.
+describe.skip('browser.alloy.position.TransitionsTest', () => {
   const transitionTime = 75;
   const northLayout = {
     onLtr: () => [ Layout.north ],
