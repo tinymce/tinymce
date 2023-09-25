@@ -1,4 +1,3 @@
-// Tests either run in PhantomJs or real browsers
 const runsHeadless = [
   '@ephox/alloy',
   '@ephox/mcagar',
@@ -64,7 +63,7 @@ const bedrockHeadless = (tests, browser, auto) => {
         ...bedrockDefaults,
         name: 'headless-tests',
         browser,
-        // useSelenium: true,
+        useSelenium: true,
         testfiles: testFolders(tests, auto),
         retries: 3
       }
