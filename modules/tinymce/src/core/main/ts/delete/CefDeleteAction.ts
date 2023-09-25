@@ -46,7 +46,7 @@ const isAtContentEditableBlockCaret = (forward: boolean, from: CaretPosition): b
 };
 
 const isDeleteFromCefDifferentBlocks = (root: Node, forward: boolean, from: CaretPosition, to: CaretPosition, schema: Schema): boolean => {
-  const inSameBlock = (elm: Element) => ElementType.isInline(SugarElement.fromDom(elm), schema) && !CaretUtils.isInSameBlock(from, to, root);
+  const inSameBlock = (elm: Element) => schema.isInline(elm.nodeName.toLowerCase()) && !CaretUtils.isInSameBlock(from, to, root);
 
   return CaretUtils.getRelativeCefElm(!forward, from).fold(
     () => CaretUtils.getRelativeCefElm(forward, to).fold(Fun.never, inSameBlock),

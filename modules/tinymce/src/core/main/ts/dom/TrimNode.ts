@@ -1,10 +1,8 @@
 import { Type } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Schema from '../api/html/Schema';
-import * as ElementType from './ElementType';
 import { isContent } from './Empty';
 import * as NodeType from './NodeType';
 
@@ -12,7 +10,7 @@ const isSpan = (node: Node): node is HTMLSpanElement =>
   node.nodeName.toLowerCase() === 'span';
 
 const isInlineContent = (node: Node | null, root: Node, schema: Schema): boolean =>
-  Type.isNonNullable(node) && (isContent(node, root) || ElementType.isInline(SugarElement.fromDom(node), schema));
+  Type.isNonNullable(node) && (isContent(node, root) || schema.isInline(node.nodeName.toLowerCase()));
 
 const surroundedByInlineContent = (node: Node, root: Node, schema: Schema): boolean => {
   const prev = new DomTreeWalker(node, root).prev(false);

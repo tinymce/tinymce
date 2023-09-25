@@ -26,11 +26,11 @@ describe('browser.tinymce.core.dom.ElementTypeTest', () => {
   });
 
   it('Check inline elements', () => {
-    checkElement('b', (el) => ElementType.isInline(el, baseSchema), true);
-    checkElement('span', (el) => ElementType.isInline(el, baseSchema), true);
-    checkElement('p', (el) => ElementType.isInline(el, baseSchema), false);
-    checkElement('h1', (el) => ElementType.isInline(el, baseSchema), false);
-    checkText((el) => ElementType.isInline(el, baseSchema));
+    checkElement('b', (el) => baseSchema.isInline(SugarNode.name(el)), true);
+    checkElement('span', (el) => baseSchema.isInline(SugarNode.name(el)), true);
+    checkElement('p', (el) => baseSchema.isInline(SugarNode.name(el)), false);
+    checkElement('h1', (el) => baseSchema.isInline(SugarNode.name(el)), false);
+    checkText((el) => baseSchema.isInline(SugarNode.name(el)));
   });
 
   it('Check tables', () => {

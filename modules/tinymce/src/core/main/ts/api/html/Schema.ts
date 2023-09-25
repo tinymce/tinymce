@@ -32,6 +32,7 @@ interface Schema {
   isValidChild: (name: string, child: string) => boolean;
   isValid: (name: string, attr?: string) => boolean;
   isBlock: (name: string) => boolean;
+  isInline: (name: string) => boolean;
   getCustomElements: () => SchemaMap;
   addValidElements: (validElements: string) => void;
   setValidElements: (validElements: string) => void;
@@ -561,6 +562,8 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
 
   const isBlock = (name: string): boolean => Obj.has(getBlockElements(), name);
 
+  const isInline = (name: string): boolean => Obj.has(getTextInlineElements(), name);
+
   /**
    * Returns true/false if the specified element is valid or not
    * according to the schema.
@@ -633,6 +636,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     isValidChild,
     isValid,
     isBlock,
+    isInline,
     getCustomElements,
     addValidElements,
     setValidElements,

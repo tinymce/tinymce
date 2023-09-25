@@ -28,7 +28,6 @@ const lazyLookup = <T extends Node = HTMLElement>(items: string[]) => {
 };
 
 const isTable = (node: SugarElement<Node>): node is SugarElement<HTMLTableElement> => SugarNode.name(node) === 'table';
-const isInline = (node: SugarElement<Node>, schema: Schema): node is SugarElement<HTMLElement> => SugarNode.isElement(node) && !schema.isBlock(SugarNode.name(node));
 const isBr = (node: SugarElement<Node>): node is SugarElement<HTMLBRElement> => SugarNode.isElement(node) && SugarNode.name(node) === 'br';
 const isTextBlock = lazyLookup(textBlocks);
 const isList = lazyLookup(lists);
@@ -37,11 +36,10 @@ const isTableSection = lazyLookup(tableSections);
 const isTableCell = lazyLookup<HTMLTableCellElement>(tableCells);
 const isWsPreserveElement = lazyLookup(wsElements);
 const isWrapBlockElement = lazyLookup(wrapBlockElements);
-const isWrapElement = (node: SugarElement<Node>, schema: Schema): boolean => isWrapBlockElement(node) || isInline(node, schema);
+const isWrapElement = (node: SugarElement<Node>, schema: Schema): boolean => isWrapBlockElement(node) || schema.isInline(SugarNode.name(node));
 
 export {
   isTable,
-  isInline,
   isTextBlock,
   isList,
   isListItem,
