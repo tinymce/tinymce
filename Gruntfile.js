@@ -161,8 +161,8 @@ module.exports = function (grunt) {
 
   //TODO: remove duplication
   if (headlessTests.length > 0) {
-    grunt.registerTask('list-changed-phantom', () => {
-      const changeList = JSON.stringify(phantomTests.reduce((acc, change) => acc.concat(change.name), []), null, 2);
+    grunt.registerTask('list-changed-headless', () => {
+      const changeList = JSON.stringify(headlessTests.reduce((acc, change) => acc.concat(change.name), []), null, 2);
       grunt.log.writeln('Changed projects for headless testing:', changeList);
     });
     grunt.registerTask('headless-auto', ['list-changed-headless', 'shell:tsc', 'bedrock-auto:headless']);
