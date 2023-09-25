@@ -1,4 +1,4 @@
-import { PhantomSkipper, RealMouse, Waiter } from '@ephox/agar';
+import { RealMouse, Waiter } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -11,7 +11,7 @@ describe('webdriver.tinymce.plugins.paste.CutTest', () => {
   before(function () {
     // Cut doesn't seem to work in webdriver mode on ie
     const platform = PlatformDetection.detect();
-    if (platform.browser.isIE() || PhantomSkipper.detect()) {
+    if (platform.browser.isIE()) {
       this.skip();
     }
   });

@@ -1,4 +1,4 @@
-import { Keys, PhantomSkipper } from '@ephox/agar';
+import { Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
@@ -20,11 +20,6 @@ describe('browser.tinymce.plugins.charmap.AutocompletionTest', () => {
     TinyContentActions.keypress(editor, 'o'.charCodeAt(0));
     await TinyUiActions.pWaitForPopup(editor, '.tox-autocompleter');
     TinyContentActions.keydown(editor, Keys.enter());
-
-    // This assertion does not pass on Phantom. The editor content
-    // is empty. Not sure if it's an encoding issue for entities.
-    if (!PhantomSkipper.detect()) {
-      TinyAssertions.assertContent(editor, '<p>₡</p>');
-    }
+    TinyAssertions.assertContent(editor, '<p>₡</p>');
   });
 });

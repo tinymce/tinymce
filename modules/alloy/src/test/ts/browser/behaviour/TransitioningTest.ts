@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, PhantomSkipper, Step, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Css } from '@ephox/sugar';
 
@@ -8,10 +8,6 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('TransitioningTest', (success, failure) => {
-
-  if (PhantomSkipper.detect()) {
-    return success();
-  }
 
   GuiSetup.setup((store, _doc, _body) => GuiFactory.build({
     dom: {
