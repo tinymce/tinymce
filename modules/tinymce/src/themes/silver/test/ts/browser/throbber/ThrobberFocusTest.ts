@@ -239,7 +239,6 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberFocusTest', () => {
       const maxScrollY = doc.documentElement.scrollHeight - doc.documentElement.clientHeight;
       doc.defaultView?.scroll({
         top: maxScrollY - 200,
-        behavior: 'smooth'
       });
       const initialScroll = doc.defaultView?.scrollY;
       await pEnableThrobber(editor, pAssertThrobberFocus);
