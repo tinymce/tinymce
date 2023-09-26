@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, PhantomSkipper, StructAssert, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, StructAssert, UiFinder } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { before, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional, Optionals } from '@ephox/katamari';
@@ -137,11 +137,7 @@ describe('browser.tinymce.themes.silver.skin.OxideCollectionComponentTest', () =
       await FocusTools.pTryOnSelector('Focus should be on C', doc, '.tox-collection__item:contains(C)');
     });
 
-    it('Checking the second collection: columns = auto', async function () {
-      // NOTE: We need a layout engine to use flex-wrap navigation.
-      if (PhantomSkipper.detect()) {
-        this.skip();
-      }
+    it('Checking the second collection: columns = auto', async () => {
       const editor = hook.editor();
       const doc = SugarDocument.getDocument();
       FocusTools.setFocus(SugarBody.body(), '.tox-collection__item:contains("C")');

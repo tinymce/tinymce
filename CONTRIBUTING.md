@@ -92,18 +92,18 @@ https://yarnpkg.com/blog/2018/05/18/focused-workspaces/
 
 ## Testing
 
-Testing relies on `yarn lerna changed` to determine which modules need testing, and a grunt script then separates them into two groups depending on whether they need GUI browser testing or can be tested with phantomjs.
+Testing relies on `yarn lerna changed` to determine which modules need testing, and a grunt script then separates them into two groups depending on whether they need GUI browser testing or can be tested with chrome-headless.
 
 ### CI test scripts
 ```
 yarn browser-test
-yarn phantomjs-test
+yarn headless-test
 ```
 
 ### Dev test scripts
 ```
 yarn browser-test-manual
-yarn phantomjs-test-manual
+yarn headless-test-manual
 ```
 
 Development testing will be adjusted in future so that there's only one manual entry point for ease of development. They are still separate for now because there are two projects that use bedrock route configurations; a route config combination process is required to run them at the same time.
