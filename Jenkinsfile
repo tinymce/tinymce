@@ -54,7 +54,7 @@ def gitMerge(String primaryBranch) {
 timestamps {
   // TinyMCE builds need more CPU and RAM (especially eslint)
   // NOTE: Ensure not to go over 7.5 CPU/RAM due to EC2 node sizes and the jnlp container requirements
-  tinyPods.node([
+  tinyPods.nodeBrowser([
     resourceRequestCpu: '6',
     resourceRequestMemory: '4Gi',
     resourceLimitCpu: '7.5',
