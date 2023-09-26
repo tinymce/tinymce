@@ -3,6 +3,7 @@ import { Fun } from '@ephox/katamari';
 import AstNode from '../api/html/Node';
 import Schema from '../api/html/Schema';
 import Tools from '../api/util/Tools';
+import * as AstNodeType from './AstNodeType';
 import { hasOnlyChild, isEmpty } from './ParserUtils';
 
 const removeOrUnwrapInvalidNode = (node: AstNode, schema: Schema, originalNodeParent: AstNode | null | undefined = node.parent) => {
@@ -71,7 +72,7 @@ const cleanInvalidNodes = (nodes: AstNode[], schema: Schema, rootNode: AstNode, 
     // Found a suitable parent
     if (parent && parents.length > 1) {
       // If the node is a valid child of the parent, then try to move it. Otherwise unwrap it
-      if (schema.isValidChild(parent.name, node.name)) {
+      if (!isInvalid(schema, node, parent)) {
         // Reverse the array since it makes looping easier
         parents.reverse();
 
@@ -160,16 +161,27 @@ const hasClosest = (node: AstNode, parentName: string): boolean => {
 };
 
 const isInvalid = (schema: Schema, node: AstNode, parent: AstNode | null | undefined = node.parent): boolean => {
-  // Check if the node is a valid child of the parent node. If the child is
-  // unknown we don't collect it since it's probably a custom element
-  if (parent && schema.children[node.name] && !schema.isValidChild(parent.name, node.name)) {
-    return true;
-  // Anchors are a special case and cannot be nested
-  } else if (parent && node.name === 'a' && hasClosest(parent, 'a')) {
-    return true;
-  } else {
+  if (!parent) {
     return false;
   }
+
+  // Check if the node is a valid child of the parent node. If the child is
+  // unknown we don't collect it since it's probably a custom element
+  if (schema.children[node.name] && !schema.isValidChild(parent.name, node.name)) {
+    return true;
+  }
+
+  // Anchors are a special case and cannot be nested
+  if (node.name === 'a' && hasClosest(parent, 'a')) {
+    return true;
+  }
+
+  // heading element is valid if it is the only one child of summary
+  if (AstNodeType.isSummary(parent) && AstNodeType.isHeading(node)) {
+    return !hasOnlyChild(parent, node.name);
+  }
+
+  return false;
 };
 
 export { cleanInvalidNodes, isInvalid };

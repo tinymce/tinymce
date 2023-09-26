@@ -57,15 +57,15 @@ const setToMax = (spectrum: AlloyComponent, detail: HorizontalSliderDetail): voi
 };
 
 // move in a direction by step size. Fire change at the end
-const moveBy = (direction: number, spectrum: AlloyComponent, detail: HorizontalSliderDetail): Optional<number> => {
+const moveBy = (direction: number, spectrum: AlloyComponent, detail: HorizontalSliderDetail, useMultiplier?: boolean): Optional<number> => {
   const f = (direction > 0) ? SliderModel.increaseBy : SliderModel.reduceBy;
-  const xValue = f(currentValue(detail), minX(detail), maxX(detail), step(detail));
+  const xValue = f(currentValue(detail), minX(detail), maxX(detail), step(detail, useMultiplier));
   fireSliderChange(spectrum, xValue);
   return Optional.some(xValue);
 };
 
-const handleMovement = (direction: number) => (spectrum: AlloyComponent, detail: HorizontalSliderDetail): Optional<boolean> =>
-  moveBy(direction, spectrum, detail).map<boolean>(Fun.always);
+const handleMovement = (direction: number) => (spectrum: AlloyComponent, detail: HorizontalSliderDetail, useMultiplier?: boolean): Optional<boolean> =>
+  moveBy(direction, spectrum, detail, useMultiplier).map<boolean>(Fun.always);
 
 // get x offset from event
 const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent<MouseEvent | TouchEvent>): Optional<number> => {

@@ -4,6 +4,7 @@ import {
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Cell, Fun } from '@ephox/katamari';
 
+import { Untranslated } from '../alien/I18n';
 import { Hex } from '../api/colour/ColourTypes';
 import * as HsvColour from '../api/colour/HsvColour';
 import * as RgbaColour from '../api/colour/RgbaColour';
@@ -29,7 +30,7 @@ export interface ColourPickerSketcher extends Sketcher.SingleSketch<ColourPicker
 }
 
 const makeFactory = (
-  translate: (key: string) => string,
+  translate: (key: Untranslated) => string,
   getClass: (key: string) => string
 ): ColourPickerSketcher => {
   const factory = (detail: ColourPickerDetail) => {

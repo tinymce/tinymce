@@ -8,11 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Calling the `setProgressState` API would cause the window to be scrolled when editor wasn't fully visible. #TINY-10172
+- Applying heading formatting to the content of the `summary` element extended its application to the content of the parent `details` element. #TINY-10154
 - Setting the content with an attribute that contains a self-closing HTML tag did not preserve the tag. #TINY-10088
+- Screen readers now announce the selected color of `forecolor` and `backcolor` buttons. #TINY-9796
 - Resize handles would not appear on editable images in a non-editable context. #TINY-10118
+- The dialog size was not updated when the `size` argument was changed when redialling a dialog. #TINY-10209
+- Toggling a list that contains an LI element having another list as its first child would remove the remaining content within that LI element. #TINY-10213
 
 ### Improved
-- Improved the tooltips of picker buttons for the urlinput components in the "Insert/Edit Image", "Insert/Edit Link" and "Insert/Edit Media" dialogs. #TINY-10155
+- Colorpicker now includes the Brightness/Saturation selector and hue slider in the keyboard navigable items. #TINY-9287
+- Improved the tooltips of picker buttons for the urlinput components in the "Insert/Edit Image" and "Insert/Edit Link" dialogs. #TINY-10155
+- Inline dialog will now respect `size: 'large'` argument in the dialog spec. #TINY-10209
 
 ## 6.7.0 - 2023-08-30
 

@@ -2525,4 +2525,12 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
       TinyAssertions.assertContent(editor, '<p>test</p><p contenteditable="true"><strong>editable</strong></p>');
     });
   });
+
+  it('TINY-10154: should apply heading formatting to summary content', () => {
+    const editor = hook.editor();
+    editor.setContent('<details><summary>hello<em>world</em></summary>body</details>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    editor.formatter.apply('h1');
+    TinyAssertions.assertContent(editor, '<details><summary><h1>hello<em>world</em></h1></summary>body</details>');
+  });
 });

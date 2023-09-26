@@ -449,6 +449,79 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
+  it('TINY-10213: Indent an LI with a list inside should not delete the rest of the content', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<ol>' +
+      '<li>a</li>' +
+      '<!-- c1 -->' +
+      '<li>' +
+      '<ol>' +
+      '<li>b</li>' +
+      '</ol>' +
+      '<p data-fake-attr="something">p1</p>' +
+      '<p data-fake-attr="something">p2</p>' +
+      '</li>' +
+      '<!-- c2 -->' +
+      '</ol>'
+    );
+
+    LegacyUnit.setSelection(editor, 'li', 0);
+    editor.execCommand('Outdent');
+
+    TinyAssertions.assertContent(editor,
+      '<p>a</p>' +
+      '<ol>' +
+      '<!-- c1 -->' +
+      '<li style="list-style-type: none;">' +
+      '<ol>' +
+      '<li>b</li>' +
+      '</ol>' +
+      '<p data-fake-attr="something">p1</p>' +
+      '<p data-fake-attr="something">p2</p>' +
+      '</li>' +
+      '<!-- c2 -->' +
+      '</ol>'
+    );
+
+    assert.equal(editor.selection.getNode().nodeName, 'P');
+
+    editor.setContent(
+      '<ol start="2">' +
+      '<li>a</li>' +
+      '<!-- c1 -->' +
+      '<li>' +
+      '<ol start="5">' +
+      '<li>b</li>' +
+      '</ol>' +
+      '<p data-fake-attr="something">p1</p>' +
+      '<p data-fake-attr="something">p2</p>' +
+      '</li>' +
+      '<!-- c2 -->' +
+      '</ol>'
+    );
+
+    LegacyUnit.setSelection(editor, 'li', 0);
+    editor.execCommand('Indent');
+
+    TinyAssertions.assertContent(editor,
+      '<ol>' +
+      '<li style="list-style-type: none;">' +
+      '<ol start="5">' +
+      '<li>a</li>' +
+      '<!-- c1 -->' +
+      '<li>b</li>' +
+      '</ol>' +
+      '<p data-fake-attr="something">p1</p>' +
+      '<p data-fake-attr="something">p2</p>' +
+      '</li>' +
+      '<!-- c2 -->' +
+      '</ol>'
+    );
+
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
+  });
+
   context('Parent context', () => {
     const testCommandAtTextPath = (command: string) => (inputHtml: string, path: number[], expectedHtml: string) => () => {
       const editor = hook.editor();
