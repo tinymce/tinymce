@@ -15,9 +15,9 @@ describe('webdriver.tinymce.themes.silver.dialogs.DialogFocusTest', () => {
 
   let windowManager: WindowManagerImpl;
   before(function () {
-    // This test won't work on all Mac OS browsers (webdriver actions appear to be ignored)
+    // This test won't work on all macOS browsers other than Chrome (webdriver actions appear to be ignored)
     const platform = PlatformDetection.detect();
-    if (platform.os.isOSX()) {
+    if (platform.os.isOSX() && !platform.browser.isChrome()) {
       this.skip();
     }
 
