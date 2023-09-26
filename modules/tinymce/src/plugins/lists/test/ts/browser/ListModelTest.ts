@@ -5,7 +5,7 @@ import { SugarElement } from '@ephox/sugar';
 import * as fc from 'fast-check';
 
 import { composeList } from 'tinymce/plugins/lists/listmodel/ComposeList';
-import { Entry } from 'tinymce/plugins/lists/listmodel/Entry';
+import { Entry, isEntryList } from 'tinymce/plugins/lists/listmodel/Entry';
 import { normalizeEntries } from 'tinymce/plugins/lists/listmodel/NormalizeEntries';
 import { parseLists } from 'tinymce/plugins/lists/listmodel/ParseLists';
 import { ListType } from 'tinymce/plugins/lists/listmodel/Util';
@@ -21,7 +21,8 @@ describe('browser.tinymce.plugins.lists.ListModelTest', () => {
       content: arbitraryContent,
       listType: fc.constantFrom(ListType.OL, ListType.UL),
       listAttributes: fc.constantFrom({}, { style: 'list-style-type: lower-alpha;' }),
-      itemAttributes: fc.constantFrom({}, { style: 'color: red;' })
+      itemAttributes: fc.constantFrom({}, { style: 'color: red;' }),
+      isInPreviousLi: fc.constant(false)
     });
 
     const arbitraryEntries = fc.array(arbitraryEntry);
@@ -48,14 +49,14 @@ describe('browser.tinymce.plugins.lists.ListModelTest', () => {
 
     const stringifyEntries = (entries: Entry[]): string => Arr.map(entries, stringifyEntry).join(',');
 
-    const stringifyEntry = (entry: Entry): string => `\n  {
+    const stringifyEntry = (entry: Entry): string => isEntryList(entry) ? `\n  {
         depth: ${entry.depth}
         content: ${entry.content.length > 0 ? serializeElements(entry.content) : '[Empty]'}
         listType: ${entry.listType}
         isSelected: ${entry.isSelected}
         listAttributes: ${JSON.stringify(entry.listAttributes)}
         itemAttributes: ${JSON.stringify(entry.itemAttributes)}
-      }`;
+      }` : '';
 
     const serializeElements = (elms: SugarElement[]): string => Arr.map(elms, (el) => el.dom.outerHTML).join('');
 
