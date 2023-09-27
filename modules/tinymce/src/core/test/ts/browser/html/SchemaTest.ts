@@ -1,5 +1,6 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Obj, Type } from '@ephox/katamari';
+import { SugarElement, SugarNode } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Schema, { AttributePattern, SchemaElement } from 'tinymce/core/api/html/Schema';
@@ -542,6 +543,14 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
   });
 
   context('custom elements', () => {
+    const checkElement = (name: string, predicate: (elm: SugarElement<Node>) => boolean, expectedValue: boolean) => {
+      assert.equal(predicate(SugarElement.fromTag(name)), expectedValue, `Should be ${expectedValue} for ${name}`);
+    };
+
+    const checkText = (predicate: (elm: SugarElement<Node>) => boolean) => {
+      assert.isFalse(predicate(SugarElement.fromText('text')), 'Should be false for non element');
+    };
+
     it('TBA: custom elements are added as element rules and copy the span/div rules', () => {
       const schema = Schema({
         custom_elements: '~foo-bar,bar-foo'
@@ -566,6 +575,35 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
       });
 
       assert.hasAnyKeys(schema.getNonEmptyElements(), [ 'foo-bar', 'FOO-BAR', 'bar-foo', 'BAR-FOO' ]);
+    });
+
+    it('TINY-10139: Check block elements', () => {
+      const schema = Schema({
+        custom_elements: 'foo,bar'
+      });
+      checkElement('p', (el) => schema.isBlock(SugarNode.name(el)), true);
+      checkElement('h1', (el) => schema.isBlock(SugarNode.name(el)), true);
+      checkElement('table', (el) => schema.isBlock(SugarNode.name(el)), true);
+      checkElement('span', (el) => schema.isBlock(SugarNode.name(el)), false);
+      checkElement('b', (el) => schema.isBlock(SugarNode.name(el)), false);
+      checkText((el) => schema.isBlock(SugarNode.name(el)));
+
+      checkElement('foo', (el) => schema.isBlock(SugarNode.name(el)), true);
+      checkElement('bar', (el) => schema.isBlock(SugarNode.name(el)), true);
+    });
+
+    it('TINY-10139: Check inline elements', () => {
+      const schema = Schema({
+        custom_elements: '~foo,~bar'
+      });
+      checkElement('b', (el) => schema.isInline(SugarNode.name(el)), true);
+      checkElement('span', (el) => schema.isInline(SugarNode.name(el)), true);
+      checkElement('p', (el) => schema.isInline(SugarNode.name(el)), false);
+      checkElement('h1', (el) => schema.isInline(SugarNode.name(el)), false);
+      checkText((el) => schema.isInline(SugarNode.name(el)));
+
+      checkElement('foo', (el) => schema.isInline(SugarNode.name(el)), true);
+      checkElement('bar', (el) => schema.isInline(SugarNode.name(el)), true);
     });
   });
 
