@@ -10,6 +10,13 @@ import * as ColorCache from 'tinymce/themes/silver/ui/core/color/ColorCache';
 import { getColorCols } from 'tinymce/themes/silver/ui/core/color/Options';
 
 describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () => {
+  const selectors = {
+    backcolorButton: 'div[title^="Background color"] .tox-tbtn',
+    forecolorButton: 'div[title^="Text color"] .tox-tbtn',
+    backcolorSplitButton: '[aria-label^="Background color"] > .tox-tbtn + .tox-split-button__chevron',
+    forecolorSplitButton: '[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron'
+  };
+
   const assertUiElementDoesNotExist = (editor: Editor, selector: string) =>
     UiFinder.notExists(SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(TinyDom.targetElement((editor)))), selector);
 
@@ -112,20 +119,20 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     it('TINY-7836: Initial color is set to black for both buttons', () => {
       const editor = hook.editor();
       setupContent(editor);
-      TinyUiActions.clickOnUi(editor, 'div[title="Text color"] .tox-tbtn');
+      TinyUiActions.clickOnUi(editor, selectors.forecolorButton);
       TinyAssertions.assertContentStructure(editor, forecolorStruct('rgb(0, 0, 0)'));
       setupContent(editor);
-      TinyUiActions.clickOnUi(editor, 'div[title="Background color"] .tox-tbtn');
+      TinyUiActions.clickOnUi(editor, selectors.backcolorButton);
       TinyAssertions.assertContentStructure(editor, backcolorStruct('rgb(0, 0, 0)'));
     });
 
     it('TBA: forecolor', async () => {
       const editor = hook.editor();
       setupContent(editor);
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.forecolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       TinyUiActions.clickOnUi(editor, 'div[data-mce-color="#2DC26B"]');
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.forecolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       TinyUiActions.clickOnUi(editor, 'div[data-mce-color="#236FA1"]');
       TinyAssertions.assertContentStructure(editor, forecolorStruct('rgb(35, 111, 161)'));
@@ -134,10 +141,10 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     it('TBA: backcolor', async () => {
       const editor = hook.editor();
       setupContent(editor);
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       TinyUiActions.clickOnUi(editor, 'div[data-mce-color="#2DC26B"]');
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       TinyUiActions.clickOnUi(editor, 'div[data-mce-color="#236FA1"]');
       TinyAssertions.assertContentStructure(editor, backcolorStruct('rgb(35, 111, 161)'));
@@ -147,7 +154,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
       LocalStorage.clear();
       const editor = hook.editor();
       setupContent(editor);
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       UiFinder.notExists(SugarBody.body(), 'div[data-mce-color="#FF0000"]');
       TinyUiActions.clickOnUi(editor, 'button[title="Custom color"]');
@@ -162,7 +169,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
       const dialogResult = UiFinder.findIn<HTMLInputElement>(dialog, 'label:contains("#") + input').getOrDie();
       await Waiter.pTryUntil('Dialog has changed', () => dialogResult.dom.value === 'FF0000');
       TinyUiActions.clickOnUi(editor, 'button[title="Save"]');
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       UiFinder.exists(SugarBody.body(), 'div[data-mce-color="#FF0000"]');
       LocalStorage.clear();
@@ -179,7 +186,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     it('TINY-9560: color_map_foreground has correct number of columns', async () => {
       const editor = hook.editor();
       setupContent(editor);
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.forecolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       Assert.eq('Cols is the expected value', 3, getColorCols(editor, 'forecolor'));
     });
@@ -187,7 +194,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     it('TINY-9560: color_map_background has correct number of columns', async () => {
       const editor = hook.editor();
       setupContent(editor);
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       Assert.eq('Cols is the expected value', 3, getColorCols(editor, 'hilitecolor'));
     });
@@ -207,7 +214,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     it('TINY-9184: color_map_foreground works as expected', async () => {
       const editor = hook.editor();
       setupContent(editor);
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.forecolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       assertUiElementDoesNotExist(editor, 'div[data-mce-color="#0000FF"]');
       assertUiElementDoesNotExist(editor, 'div[data-mce-color="#FF0000"]');
@@ -217,7 +224,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     it('TINY-9184: color_map_background works as expected', async () => {
       const editor = hook.editor();
       setupContent(editor);
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       assertUiElementDoesNotExist(editor, 'div[data-mce-color="#FF0000"]');
       TinyUiActions.clickOnUi(editor, 'div[data-mce-color="#0000FF"]');
@@ -239,7 +246,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     it('TINY-9184: color_map_foreground works as expected', async () => {
       const editor = hook.editor();
       setupContent(editor);
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.forecolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       assertUiElementDoesNotExist(editor, 'div[data-mce-color="#0000FF"]');
       TinyUiActions.clickOnUi(editor, 'div[data-mce-color="#FF0000"]');
@@ -249,7 +256,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     it('TINY-9184: color_map_background fallbacks as expected', async () => {
       const editor = hook.editor();
       setupContent(editor);
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       assertUiElementDoesNotExist(editor, 'div[data-mce-color="#FF0000"]');
       assertUiElementDoesNotExist(editor, 'div[data-mce-color="#0000FF"]');
@@ -274,7 +281,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     it('TINY-9184: color_map_foreground works as expected', async () => {
       const editor = hook.editor();
       setupContent(editor);
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.forecolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       assertUiElementDoesNotExist(editor, 'div[data-mce-color="#0000FF"]');
       TinyUiActions.clickOnUi(editor, 'div[data-mce-color="#FF0000"]');
@@ -284,7 +291,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     it('TINY-9184: color_map_background works as expected', async () => {
       const editor = hook.editor();
       setupContent(editor);
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       assertUiElementDoesNotExist(editor, 'div[data-mce-color="#FF0000"]');
       TinyUiActions.clickOnUi(editor, 'div[data-mce-color="#0000FF"]');
@@ -302,11 +309,11 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     it('TINY-9737: Color_cols is rounded to nearest number', async () => {
       const editor = hook.editor();
       setupContent(editor);
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.forecolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       // Background Color swatch should have Math.sqrt(36) = 6 columns
       Assert.eq('Cols is the expected value', getColorCols(editor, 'forecolor'), 9);
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       // Background Color swatch should have Math.sqrt(49) = 7 columns
       Assert.eq('Cols is the expected value', getColorCols(editor, 'hilitecolor'), 4);
@@ -333,7 +340,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     it('TINY-10098: color_map_foreground works as expected', async () => {
       const editor = hook.editor();
       setupContent(editor);
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.forecolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       Assert.eq('Cols is the expected value', getColorCols(editor, 'forecolor'), 3);
     });
@@ -341,7 +348,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     it('TINY-10098: color_map_background works as expected', async () => {
       const editor = hook.editor();
       setupContent(editor);
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       Assert.eq('Cols is the expected value', getColorCols(editor, 'hilitecolor'), 3);
     });
@@ -368,7 +375,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     it('TINY-9184: color_map_foreground works as expected', async () => {
       const editor = hook.editor();
       setupContent(editor);
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.forecolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       // Background Color swatch should have Math.sqrt(36) = 6 columns
       Assert.eq('Cols is the expected value', getColorCols(editor, 'forecolor'), 6);
@@ -377,7 +384,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     it('TINY-9184: color_map_background works as expected', async () => {
       const editor = hook.editor();
       setupContent(editor);
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       // Background Color swatch should have Math.sqrt(49) = 7 columns
       Assert.eq('Cols is the expected value', getColorCols(editor, 'hilitecolor'), 7);
@@ -404,7 +411,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     it('TINY-10126: color_map_foreground works as expected', async () => {
       const editor = hook.editor();
       setupContent(editor);
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.forecolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       Assert.eq('Cols is the expected value', getColorCols(editor, 'forecolor'), 5);
     });
@@ -412,7 +419,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     it('TINY-10126: color_map_background works as expected', async () => {
       const editor = hook.editor();
       setupContent(editor);
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       Assert.eq('Cols is the expected value', getColorCols(editor, 'hilitecolor'), 5);
     });
@@ -438,11 +445,11 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     it('TINY-10098: color_cols works as expected with custom color_map', async () => {
       const editor = hook.editor();
       setupContent(editor);
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.forecolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       // Background Color swatch should have Math.sqrt(36) = 6 columns
       Assert.eq('Cols is the expected value', getColorCols(editor, 'forecolor'), 8);
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       // Background Color swatch should have Math.sqrt(49) = 7 columns
       Assert.eq('Cols is the expected value', getColorCols(editor, 'hilitecolor'), 8);
@@ -460,7 +467,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     it('TINY-9560: color_map_foreground has correct number of columns', async () => {
       const editor = hook.editor();
       setupContent(editor);
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.forecolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       // Foreground color gets value from `color_cols_foreground` which should be replaced when set to 0
       Assert.eq('Cols is the expected value', getColorCols(editor, 'forecolor'), 5);
@@ -469,7 +476,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     it('TINY-9560: color_map_background has correct number of columns', async () => {
       const editor = hook.editor();
       setupContent(editor);
-      TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+      TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       // Background color should get default value from `color_cols` which should be replaced when set to 0
       Assert.eq('Cols is the expected value', getColorCols(editor, 'hilitecolor'), 5);
@@ -487,10 +494,10 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
     it('TINY-9183: Initial color is set to yellow for text color and to cyan for background color', () => {
       const editor = hook.editor();
       setupContent(editor);
-      TinyUiActions.clickOnUi(editor, 'div[title="Text color"] .tox-tbtn');
+      TinyUiActions.clickOnUi(editor, selectors.forecolorButton);
       TinyAssertions.assertContentStructure(editor, forecolorStruct('yellow'));
       setupContent(editor);
-      TinyUiActions.clickOnUi(editor, 'div[title="Background color"] .tox-tbtn');
+      TinyUiActions.clickOnUi(editor, selectors.backcolorButton);
       TinyAssertions.assertContentStructure(editor, backcolorStruct('cyan'));
     });
   });

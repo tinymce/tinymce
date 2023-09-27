@@ -87,7 +87,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
 
   const openAndGetMenu = (title: string) =>
     () => {
-      Mouse.clickOn(SugarBody.body(), `[title="${title}"] .tox-split-button__chevron`);
+      Mouse.clickOn(SugarBody.body(), `[title^="${title}"] .tox-split-button__chevron`);
       return Waiter.pTryUntil('Waiting for menu', () =>
         UiFinder.findIn(SugarBody.body(), '[role="menu"]').getOrDie()
       );
@@ -95,7 +95,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
 
   const closeMenu = (title: string) =>
     () => {
-      Mouse.clickOn(SugarBody.body(), `[title="${title}"] .tox-split-button__chevron`);
+      Mouse.clickOn(SugarBody.body(), `[title^="${title}"] .tox-split-button__chevron`);
       return Waiter.pTryUntil('Waiting for menu', () =>
         UiFinder.notExists(SugarBody.body(), '[role="menu"]')
       );
@@ -107,7 +107,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
   const closeForecolorMenu = closeMenu('Text color');
   const pOpenAndGetMenuColorMenu = async (editor: Editor) => {
     const mainButton = 'button:contains("Color")';
-    const submenuButton = '[role="menu"] div[title="Background color"]';
+    const submenuButton = '[role="menu"] div[title^="Background color"]';
     TinyUiActions.clickOnMenu(editor, mainButton);
     await TinyUiActions.pWaitForUi(editor, submenuButton);
     TinyUiActions.clickOnUi(editor, submenuButton);
@@ -118,7 +118,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
 
   const pOpenAndGetMenuForecolorMenu = async (editor: Editor) => {
     const mainButton = 'button:contains("Forecolor")';
-    const submenuButton = '[role="menu"] div[title="Text color"]';
+    const submenuButton = '[role="menu"] div[title^="Text color"]';
     TinyUiActions.clickOnMenu(editor, mainButton);
     await TinyUiActions.pWaitForUi(editor, submenuButton);
     TinyUiActions.clickOnUi(editor, submenuButton);
@@ -128,7 +128,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
   const pCloseMenuForecolorMenu = (editor: Editor) => {
     const mainButton = 'button:contains("Forecolor")';
     TinyUiActions.clickOnMenu(editor, mainButton);
-    return Waiter.pTryUntil('The menu should have closed', () => UiFinder.notExists(TinyUiActions.getUiRoot(editor), '[role="menu"] div[title="Text color"]'));
+    return Waiter.pTryUntil('The menu should have closed', () => UiFinder.notExists(TinyUiActions.getUiRoot(editor), '[role="menu"] div[title^="Text color"]'));
   };
 
   const openAndGetBackcolorMenu = openAndGetMenu('Background color');
