@@ -1,4 +1,4 @@
-import { Arbitraries, Assertions, PhantomSkipper, Pipeline, Step } from '@ephox/agar';
+import { Arbitraries, Assertions, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { SugarNode } from '@ephox/sugar';
@@ -11,12 +11,6 @@ import { TinyScenarios } from 'ephox/mcagar/api/pipeline/TinyScenarios';
 UnitTest.asynctest('TinyScenariosTest', (success, failure) => {
 
   const platform = PlatformDetection.detect();
-  if (PhantomSkipper.detect()) {
-    // eslint-disable-next-line no-console
-    console.log('Skipping TinyScenariosTest as PhantomJS has dodgy selection/style implementation and returns false positives.');
-    success();
-    return;
-  }
   if (platform.browser.isFirefox()) {
     // eslint-disable-next-line no-console
     console.log('Skipping TinyScenariosTest as it triggers a tinymce bug in Firefox');

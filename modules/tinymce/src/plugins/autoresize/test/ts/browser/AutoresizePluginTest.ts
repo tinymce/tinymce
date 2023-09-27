@@ -1,4 +1,4 @@
-import { PhantomSkipper, Waiter } from '@ephox/agar';
+import { Waiter } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
@@ -10,8 +10,6 @@ import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.autoresize.AutoresizePluginTest', () => {
-  PhantomSkipper.bddSetup();
-
   const resizeEventsCount = Cell(0);
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'autoresize fullscreen',
