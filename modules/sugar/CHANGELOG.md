@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Improved
+- The `Focus.focus` function now takes an additional parameter of type boolean that when passed with the value `true` then the element would be focused without being scrolled.
+
 ## 9.2.0 - 2023-03-15
 
 ### Changed
