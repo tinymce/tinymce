@@ -49,7 +49,7 @@
     "emojilib": "^2.4.0",
     "eslint": "^7.0.0",
     "eslint-plugin-notice": "^0.9.10",
-    "fast-check": "^1.18.1",
+    "fast-check": "^2.23.0",
     "grunt": "^1.0.2",
     "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-concat": "^1.0.1",
