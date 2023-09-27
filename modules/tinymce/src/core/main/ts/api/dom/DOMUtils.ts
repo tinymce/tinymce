@@ -1,7 +1,6 @@
 import { Arr, Fun, Obj, Optionals, Strings, Type } from '@ephox/katamari';
 import { Attribute, Class, ContentEditable, Css, Html, Insert, Remove, Selectors, SugarElement, SugarNode, Traverse, WindowVisualViewport } from '@ephox/sugar';
 
-import Schema from '../../api/html/Schema';
 import * as TransparentElements from '../../content/TransparentElements';
 import * as NodeType from '../../dom/NodeType';
 import * as Position from '../../dom/Position';
@@ -10,6 +9,7 @@ import * as TrimNode from '../../dom/TrimNode';
 import { isWhitespaceText, isZwsp } from '../../text/Whitespace';
 import { GeomRect } from '../geom/Rect';
 import Entities from '../html/Entities';
+import Schema from '../html/Schema';
 import Styles, { StyleMap } from '../html/Styles';
 import { URLConverter } from '../OptionTypes';
 import { MappedEvent } from '../util/EventDispatcher';
@@ -1004,7 +1004,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
 
   const createRng = () => doc.createRange();
 
-  const split = (schema: Schema) => <T extends Node>(parentElm: Node, splitElm: T, replacementElm?: T): T | undefined => {
+  const split = <T extends Node>(parentElm: Node, splitElm: T, replacementElm?: T): T | undefined => {
     let range = createRng();
     let beforeFragment: DocumentFragment;
     let afterFragment: DocumentFragment;
@@ -1783,7 +1783,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      * @param {Element} replacementElm Optional replacement element to replace the split element with.
      * @return {Element} Returns the split element or the replacement element if that is specified.
      */
-    split: split(schema),
+    split,
 
     /**
      * Adds an event handler to the specified object.
