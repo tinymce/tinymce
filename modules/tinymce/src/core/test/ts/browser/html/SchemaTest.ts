@@ -543,14 +543,6 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
   });
 
   context('custom elements', () => {
-    const checkElement = (name: string, predicate: (elm: SugarElement<Node>) => boolean, expectedValue: boolean) => {
-      assert.equal(predicate(SugarElement.fromTag(name)), expectedValue, `Should be ${expectedValue} for ${name}`);
-    };
-
-    const checkText = (predicate: (elm: SugarElement<Node>) => boolean) => {
-      assert.isFalse(predicate(SugarElement.fromText('text')), 'Should be false for non element');
-    };
-
     it('TBA: custom elements are added as element rules and copy the span/div rules', () => {
       const schema = Schema({
         custom_elements: '~foo-bar,bar-foo'
@@ -576,8 +568,17 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
 
       assert.hasAnyKeys(schema.getNonEmptyElements(), [ 'foo-bar', 'FOO-BAR', 'bar-foo', 'BAR-FOO' ]);
     });
+  });
 
-    it('TINY-10139: Check block elements', () => {
+  context('TINY-10139: check elements', () => {
+    const checkElement = (name: string, predicate: (elm: SugarElement<Node>) => boolean, expectedValue: boolean) => {
+      assert.equal(predicate(SugarElement.fromTag(name)), expectedValue, `Should be ${expectedValue} for ${name}`);
+    };
+
+    const checkText = (predicate: (elm: SugarElement<Node>) => boolean) => {
+      assert.isFalse(predicate(SugarElement.fromText('text')), 'Should be false for non element');
+    };
+    it('TINY-10139: check block elements', () => {
       const schema = Schema({
         custom_elements: 'foo,bar'
       });
@@ -592,7 +593,7 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
       checkElement('bar', (el) => schema.isBlock(SugarNode.name(el)), true);
     });
 
-    it('TINY-10139: Check inline elements', () => {
+    it('TINY-10139: check inline elements', () => {
       const schema = Schema({
         custom_elements: '~foo,~bar'
       });
