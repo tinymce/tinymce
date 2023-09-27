@@ -22,6 +22,7 @@ const lazyLookup = <T extends Node = HTMLElement>(items: string[]) => {
   };
 };
 
+// WARNING: don't add anything to this file, the intention is to move these checks into the Schema
 const isTable = (node: SugarElement<Node>): node is SugarElement<HTMLTableElement> => SugarNode.name(node) === 'table';
 const isBr = (node: SugarElement<Node>): node is SugarElement<HTMLBRElement> => SugarNode.isElement(node) && SugarNode.name(node) === 'br';
 const isTextBlock = lazyLookup(textBlocks);
