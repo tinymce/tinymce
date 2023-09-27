@@ -178,7 +178,7 @@ const isInvalid = (schema: Schema, node: AstNode, parent: AstNode | null | undef
 
   // heading element is valid if it is the only one child of summary
   if (AstNodeType.isSummary(parent) && AstNodeType.isHeading(node)) {
-    return !hasOnlyChild(parent, node.name);
+    return !(parent?.firstChild === node && parent?.lastChild === node);
   }
 
   return false;

@@ -115,6 +115,14 @@ describe('browser.tinymce.selection.DetailsElementTest', () => {
       TinyAssertions.assertContent(editor, '<details><summary><h4>hellowonderfulworld</h4></summary><div>body</div></details>');
     });
 
+    it('TINY-10154: Should keep formatting if summary contained heading element (insert the same heading level h4)', () => {
+      const editor = hook.editor();
+      editor.setContent('<details><summary><h4>helloworld</h4></summary><div>body</div></details>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 'hello'.length);
+      editor.insertContent('<h4>wonderful</h4>');
+      TinyAssertions.assertContent(editor, '<details><summary><h4>hellowonderfulworld</h4></summary><div>body</div></details>');
+    });
+
     it('TINY-10154: Should allow heading element in summary if it is the only child', () => {
       const editor = hook.editor();
       const content = '<details><summary><h2>helloworld</h2></summary><div>body</div></details>';
@@ -134,6 +142,14 @@ describe('browser.tinymce.selection.DetailsElementTest', () => {
       const content = '<details><summary><h2>helloworld</h2>GoodBye</summary><div>body</div></details>';
       editor.setContent(content);
       TinyAssertions.assertContent(editor, '<details><summary>helloworldGoodBye</summary><div>body</div></details>');
+    });
+
+    it('TINY-10154: should unwrap the heading element while pasting in summary', () => {
+      const editor = hook.editor();
+      editor.setContent('<details><summary><h4>helloworld</h4></summary><div>body</div></details>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 'hello'.length);
+      editor.execCommand('mceInsertClipboardContent', false, { html: '<meta charset="utf-8/"><!-- x-tinymce/html --><h2>wonderful</h2>' });
+      TinyAssertions.assertContent(editor, '<details><summary><h4>hellowonderfulworld</h4></summary><div>body</div></details>');
     });
   });
 });
