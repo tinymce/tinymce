@@ -100,7 +100,6 @@ const render = async (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: Re
   const outerContainer = mainUi.outerContainer;
 
   loadIframeSkin(editor);
-  await new Promise((r) => r('')); // TODO: remove is just for a test
 
   const eTargetNode = SugarElement.fromDom(args.targetNode);
   const uiRoot = SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(eTargetNode));
@@ -197,6 +196,8 @@ const render = async (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: Re
     },
     isEnabled: () => !Disabling.isDisabled(outerContainer)
   };
+
+  await new Promise((r) => r('')); // TODO: remove is just for a test
 
   return {
     iframeContainer: socket.element.dom,
