@@ -94,7 +94,7 @@ const attachUiMotherships = (editor: Editor, uiRoot: SugarElement<HTMLElement | 
   Attachment.attachSystem(uiRoot, uiRefs.dialogUi.mothership);
 };
 
-const render = async (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): Promise<ModeRenderInfo> => {
+const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   const { mainUi, uiMotherships } = uiRefs;
   const lastToolbarWidth = Cell(0);
   const outerContainer = mainUi.outerContainer;
@@ -117,7 +117,9 @@ const render = async (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: Re
       Options.getSidebarShow(editor)
     );
 
-    setToolbar(editor, uiRefs, rawUiConfig, backstage);
+    editor.once('SkinLoaded', () => {
+      setToolbar(editor, uiRefs, rawUiConfig, backstage);
+    });
     lastToolbarWidth.set(editor.getWin().innerWidth);
 
     OuterContainer.setMenubar(
@@ -196,8 +198,6 @@ const render = async (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: Re
     },
     isEnabled: () => !Disabling.isDisabled(outerContainer)
   };
-
-  await new Promise((r) => r('')); // TODO: remove is just for a test
 
   return {
     iframeContainer: socket.element.dom,
