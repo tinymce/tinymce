@@ -1,5 +1,6 @@
+import { Clipboard } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { TinyHooks, TinyAssertions, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyHooks, TinyAssertions, TinyDom, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -148,7 +149,7 @@ describe('browser.tinymce.selection.DetailsElementTest', () => {
       const editor = hook.editor();
       editor.setContent('<details><summary><h4>helloworld</h4></summary><div>body</div></details>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 'hello'.length);
-      editor.execCommand('mceInsertClipboardContent', false, { html: '<meta charset="utf-8/"><!-- x-tinymce/html --><h2>wonderful</h2>' });
+      Clipboard.pasteItems(TinyDom.body(editor), { 'text/html': '<h2>wonderful</h2>' });
       TinyAssertions.assertContent(editor, '<details><summary><h4>hellowonderfulworld</h4></summary><div>body</div></details>');
     });
   });
