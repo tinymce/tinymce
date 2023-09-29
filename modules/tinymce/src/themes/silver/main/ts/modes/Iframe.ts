@@ -94,12 +94,13 @@ const attachUiMotherships = (editor: Editor, uiRoot: SugarElement<HTMLElement | 
   Attachment.attachSystem(uiRoot, uiRefs.dialogUi.mothership);
 };
 
-const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
+const render = async (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): Promise<ModeRenderInfo> => {
   const { mainUi, uiMotherships } = uiRefs;
   const lastToolbarWidth = Cell(0);
   const outerContainer = mainUi.outerContainer;
 
   loadIframeSkin(editor);
+  await new Promise((r) => r('')); // TODO: remove is just for a test
 
   const eTargetNode = SugarElement.fromDom(args.targetNode);
   const uiRoot = SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(eTargetNode));
