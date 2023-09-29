@@ -41,7 +41,6 @@ import { NormalizedEditorOptions, RawEditorOptions } from './OptionTypes';
 import PluginManager, { Plugin } from './PluginManager';
 import Shortcuts from './Shortcuts';
 import { Theme } from './ThemeManager';
-import { tinymce } from './Tinymce';
 import { registry } from './ui/Registry';
 import { EditorUi } from './ui/Ui';
 import EventDispatcher, { NativeEventMap } from './util/EventDispatcher';
@@ -1059,7 +1058,7 @@ class Editor implements EditorObservable {
       return url;
     }
 
-    const urlObject = new tinymce.util.URI(url);
+    const urlObject = new URI(url);
 
     if (urlObject.protocol !== 'http' && urlObject.protocol !== 'https' && urlObject.protocol !== '') {
       return url;
