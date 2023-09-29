@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Editor would convert urls that are not http/s or relative resulting in broken links. #TINY-10153
 - Applying heading formatting to the content of the `summary` element extended its application to the content of the parent `details` element. #TINY-10154
 - Setting the content with an attribute that contains a self-closing HTML tag did not preserve the tag. #TINY-10088
 - Screen readers now announce the selected color of `forecolor` and `backcolor` buttons. #TINY-9796
