@@ -9,11 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Editor would convert urls that are not http/s or relative resulting in broken links. #TINY-10153
+- Calling the `setProgressState` API would cause the window to be scrolled when the editor wasn't fully visible. #TINY-10172
 - Applying heading formatting to the content of the `summary` element extended its application to the content of the parent `details` element. #TINY-10154
 - Setting the content with an attribute that contains a self-closing HTML tag did not preserve the tag. #TINY-10088
 - Screen readers now announce the selected color of `forecolor` and `backcolor` buttons. #TINY-9796
 - Resize handles would not appear on editable images in a non-editable context. #TINY-10118
 - The dialog size was not updated when the `size` argument was changed when redialling a dialog. #TINY-10209
+- Toggling a list that contains an LI element having another list as its first child would remove the remaining content within that LI element. #TINY-10213
 
 ### Improved
 - Colorpicker now includes the Brightness/Saturation selector and hue slider in the keyboard navigable items. #TINY-9287
