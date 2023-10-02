@@ -33,7 +33,7 @@ interface Schema {
   isValid: (name: string, attr?: string) => boolean;
   isBlock: (name: string) => boolean;
   isInline: (name: string) => boolean;
-  isWrapElement: (name: string) => boolean;
+  isWrapper: (name: string) => boolean;
   getCustomElements: () => SchemaMap;
   addValidElements: (validElements: string) => void;
   setValidElements: (validElements: string) => void;
@@ -570,7 +570,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
 
   const isInline = (name: string): boolean => isValid(name) && !isBlock(name);
 
-  const isWrapElement = (name: string): boolean => Obj.has(getWrapBlockElements(), name) || isInline(name);
+  const isWrapper = (name: string): boolean => Obj.has(getWrapBlockElements(), name) || isInline(name);
 
   /**
    * Returns true/false if the specified element is valid or not
@@ -645,7 +645,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     isValid,
     isBlock,
     isInline,
-    isWrapElement,
+    isWrapper,
     getCustomElements,
     addValidElements,
     setValidElements,
