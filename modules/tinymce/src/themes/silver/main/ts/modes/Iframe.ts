@@ -107,6 +107,10 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   Attachment.attachSystemAfter(eTargetNode, mainUi.mothership);
   attachUiMotherships(editor, uiRoot, uiRefs);
 
+  editor.on('SkinLoaded', () => {
+    setToolbar(editor, uiRefs, rawUiConfig, backstage);
+  });
+
   editor.on('PostRender', () => {
     // Set the sidebar before the toolbar and menubar
     // - each sidebar has an associated toggle toolbar button that needs to check the
@@ -117,9 +121,8 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
       Options.getSidebarShow(editor)
     );
 
-    editor.once('SkinLoaded', () => {
-      setToolbar(editor, uiRefs, rawUiConfig, backstage);
-    });
+    setToolbar(editor, uiRefs, rawUiConfig, backstage);
+
     lastToolbarWidth.set(editor.getWin().innerWidth);
 
     OuterContainer.setMenubar(
