@@ -10,6 +10,7 @@ import * as NodeType from './dom/NodeType';
 import * as PaddingBr from './dom/PaddingBr';
 import * as Parents from './dom/Parents';
 import * as EditorFocus from './focus/EditorFocus';
+import * as Namespace from './html/Namespace';
 
 /**
  * Makes sure that everything gets wrapped in paragraphs.
@@ -25,7 +26,8 @@ const isValidTarget = (schema: Schema, node: Node) => {
   if (NodeType.isText(node)) {
     return true;
   } else if (NodeType.isElement(node)) {
-    return !isBlockElement(schema.getBlockElements(), node) && !Bookmarks.isBookmarkNode(node) && !TransparentElements.isTransparentBlock(schema, node);
+    return !isBlockElement(schema.getBlockElements(), node) && !Bookmarks.isBookmarkNode(node) &&
+      !TransparentElements.isTransparentBlock(schema, node) && !Namespace.isNonHtmlElementRoot(node);
   } else {
     return false;
   }

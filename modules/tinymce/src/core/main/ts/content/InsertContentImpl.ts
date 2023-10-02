@@ -16,6 +16,7 @@ import * as CefUtils from '../dom/CefUtils';
 import ElementUtils from '../dom/ElementUtils';
 import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
+import * as AstNodeType from '../html/AstNodeType';
 import * as FilterNode from '../html/FilterNode';
 import * as InvalidNodes from '../html/InvalidNodes';
 import * as ParserUtils from '../html/ParserUtils';
@@ -229,6 +230,10 @@ const findMarkerNode = (scope: AstNode): Optional<AstNode> => {
   return Optional.none();
 };
 
+const notHeadingsInSummary = (dom: DOMUtils, node: Element, fragment: AstNode) => {
+  return Arr.exists(fragment.children(), AstNodeType.isHeading) && dom.getParent(node, dom.isBlock)?.nodeName === 'SUMMARY';
+};
+
 export const insertHtmlAtCaret = (editor: Editor, value: string, details: InsertContentDetails): string => {
   const selection = editor.selection;
   const dom = editor.dom;
@@ -307,7 +312,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
   editor._selectionOverrides.showBlockCaretContainer(parentNode);
 
   // If parser says valid we can insert the contents into that parent
-  if (!parserArgs.invalid) {
+  if (!parserArgs.invalid && !notHeadingsInSummary(dom, parentNode, fragment)) {
     value = serializer.serialize(fragment);
     validInsertion(editor, value, parentNode);
   } else {

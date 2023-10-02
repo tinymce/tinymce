@@ -88,7 +88,7 @@ const getNode = (root: HTMLElement, rng: Range | undefined): HTMLElement => {
   }
 
   const elm = NodeType.isText(node) ? node.parentNode : node;
-  return NodeType.isElement(elm) ? elm : root;
+  return NodeType.isHTMLElement(elm) ? elm : root;
 };
 
 const getSelectedBlocks = (dom: DOMUtils, rng: Range, startElm?: Element, endElm?: Element): Element[] => {
