@@ -55,7 +55,7 @@ const nestedBlockMerge = (
   return position;
 };
 
-const isInline = (schema: Schema) => (node: SugarElement<Node>): node is SugarElement<HTMLElement> => schema.isInline(SugarNode.name(node));
+const isInline = (schema: Schema, node: SugarElement<Node>): node is SugarElement<HTMLElement> => schema.isInline(SugarNode.name(node));
 
 const sidelongBlockMerge = (rootNode: SugarElement<Node>, fromBlock: SugarElement<Element>, toBlock: SugarElement<Element>, schema: Schema): Optional<CaretPosition> => {
   if (Empty.isEmpty(toBlock)) {
@@ -64,7 +64,7 @@ const sidelongBlockMerge = (rootNode: SugarElement<Node>, fromBlock: SugarElemen
         const helper = (node: SugarElement<Element>, elements: SugarElement<Element>[]): SugarElement<Element>[] =>
           Traverse.firstChild(node).fold(
             () => elements,
-            (child) => isInline(schema)(child) ? helper(child, elements.concat(Replication.shallow(child))) : elements
+            (child) => isInline(schema, child) ? helper(child, elements.concat(Replication.shallow(child))) : elements
           );
         return helper(el, []);
       };
