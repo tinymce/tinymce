@@ -97,6 +97,7 @@ const attachUiMotherships = (editor: Editor, uiRoot: SugarElement<HTMLElement | 
 const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   const { mainUi, uiMotherships } = uiRefs;
   const lastToolbarWidth = Cell(0);
+  const postRenderOrSkinLoadedAlreadyTriggered = Cell(false);
   const outerContainer = mainUi.outerContainer;
 
   loadIframeSkin(editor);
@@ -107,33 +108,37 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   Attachment.attachSystemAfter(eTargetNode, mainUi.mothership);
   attachUiMotherships(editor, uiRoot, uiRefs);
 
-  editor.on('SkinLoaded', () => {
-    setToolbar(editor, uiRefs, rawUiConfig, backstage);
-  });
+  const postPostRenderAndSkinLoadedHandler = () => {
+    if (postRenderOrSkinLoadedAlreadyTriggered.get()) {
+      // Set the sidebar before the toolbar and menubar
+      // - each sidebar has an associated toggle toolbar button that needs to check the
+      //   sidebar that is set to determine its active state on setup
+      OuterContainer.setSidebar(
+        outerContainer,
+        rawUiConfig.sidebar,
+        Options.getSidebarShow(editor)
+      );
 
-  editor.on('PostRender', () => {
-    // Set the sidebar before the toolbar and menubar
-    // - each sidebar has an associated toggle toolbar button that needs to check the
-    //   sidebar that is set to determine its active state on setup
-    OuterContainer.setSidebar(
-      outerContainer,
-      rawUiConfig.sidebar,
-      Options.getSidebarShow(editor)
-    );
+      setToolbar(editor, uiRefs, rawUiConfig, backstage);
 
-    setToolbar(editor, uiRefs, rawUiConfig, backstage);
+      lastToolbarWidth.set(editor.getWin().innerWidth);
 
-    lastToolbarWidth.set(editor.getWin().innerWidth);
+      OuterContainer.setMenubar(
+        outerContainer,
+        identifyMenus(editor, rawUiConfig)
+      );
 
-    OuterContainer.setMenubar(
-      outerContainer,
-      identifyMenus(editor, rawUiConfig)
-    );
+      OuterContainer.setViews(outerContainer, rawUiConfig.views);
 
-    OuterContainer.setViews(outerContainer, rawUiConfig.views);
+      setupEvents(editor, uiRefs);
+      postRenderOrSkinLoadedAlreadyTriggered.set(false);
+    } else {
+      postRenderOrSkinLoadedAlreadyTriggered.set(true);
+    }
+  };
 
-    setupEvents(editor, uiRefs);
-  });
+  editor.on('PostRender', postPostRenderAndSkinLoadedHandler);
+  editor.on('SkinLoaded', postPostRenderAndSkinLoadedHandler);
 
   const socket = OuterContainer.getSocket(outerContainer).getOrDie('Could not find expected socket element');
 
