@@ -97,7 +97,6 @@ const attachUiMotherships = (editor: Editor, uiRoot: SugarElement<HTMLElement | 
 const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   const { mainUi, uiMotherships } = uiRefs;
   const lastToolbarWidth = Cell(0);
-  const postRenderOrSkinLoadedAlreadyTriggered = Cell(false);
   const outerContainer = mainUi.outerContainer;
 
   loadIframeSkin(editor);
@@ -108,8 +107,8 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   Attachment.attachSystemAfter(eTargetNode, mainUi.mothership);
   attachUiMotherships(editor, uiRoot, uiRefs);
 
-  const postPostRenderAndSkinLoadedHandler = () => {
-    if (postRenderOrSkinLoadedAlreadyTriggered.get()) {
+  const postPostRenderAndSkinLoadedHandler = Throttler.last(() => {
+    if (editor.getWin()) {
       // Set the sidebar before the toolbar and menubar
       // - each sidebar has an associated toggle toolbar button that needs to check the
       //   sidebar that is set to determine its active state on setup
@@ -131,14 +130,11 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
       OuterContainer.setViews(outerContainer, rawUiConfig.views);
 
       setupEvents(editor, uiRefs);
-      postRenderOrSkinLoadedAlreadyTriggered.set(false);
-    } else {
-      postRenderOrSkinLoadedAlreadyTriggered.set(true);
     }
-  };
+  }, 150);
 
-  editor.on('PostRender', postPostRenderAndSkinLoadedHandler);
-  editor.on('SkinLoaded', postPostRenderAndSkinLoadedHandler);
+  editor.on('PostRender', postPostRenderAndSkinLoadedHandler.throttle);
+  editor.on('SkinLoaded', postPostRenderAndSkinLoadedHandler.throttle);
 
   const socket = OuterContainer.getSocket(outerContainer).getOrDie('Could not find expected socket element');
 
