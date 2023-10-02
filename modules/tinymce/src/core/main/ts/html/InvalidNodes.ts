@@ -160,6 +160,8 @@ const hasClosest = (node: AstNode, parentName: string): boolean => {
   return false;
 };
 
+// The `parent` parameter of `isInvalid` function represents the closest valid parent
+// under which the `node` is intended to be moved.
 const isInvalid = (schema: Schema, node: AstNode, parent: AstNode | null | undefined = node.parent): boolean => {
   if (!parent) {
     return false;
@@ -178,7 +180,7 @@ const isInvalid = (schema: Schema, node: AstNode, parent: AstNode | null | undef
 
   // heading element is valid if it is the only one child of summary
   if (AstNodeType.isSummary(parent) && AstNodeType.isHeading(node)) {
-    return !hasOnlyChild(parent, node.name);
+    return !(parent?.firstChild === node && parent?.lastChild === node);
   }
 
   return false;
