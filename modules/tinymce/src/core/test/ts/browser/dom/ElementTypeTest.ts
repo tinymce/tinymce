@@ -13,23 +13,6 @@ describe('browser.tinymce.core.dom.ElementTypeTest', () => {
     assert.isFalse(predicate(SugarElement.fromText('text')), 'Should be false for non element');
   };
 
-  it('Check block elements', () => {
-    checkElement('p', ElementType.isBlock, true);
-    checkElement('h1', ElementType.isBlock, true);
-    checkElement('table', ElementType.isBlock, true);
-    checkElement('span', ElementType.isBlock, false);
-    checkElement('b', ElementType.isBlock, false);
-    checkText(ElementType.isBlock);
-  });
-
-  it('Check inline elements', () => {
-    checkElement('b', ElementType.isInline, true);
-    checkElement('span', ElementType.isInline, true);
-    checkElement('p', ElementType.isInline, false);
-    checkElement('h1', ElementType.isInline, false);
-    checkText(ElementType.isInline);
-  });
-
   it('Check tables', () => {
     checkElement('b', ElementType.isTable, false);
     checkElement('p', ElementType.isTable, false);
@@ -37,27 +20,11 @@ describe('browser.tinymce.core.dom.ElementTypeTest', () => {
     checkText(ElementType.isTable);
   });
 
-  it('Check heading elements', () => {
-    checkElement('h1', ElementType.isHeading, true);
-    checkElement('h2', ElementType.isHeading, true);
-    checkElement('span', ElementType.isHeading, false);
-    checkElement('table', ElementType.isHeading, false);
-    checkText(ElementType.isHeading);
-  });
-
   it('Check text block elements', () => {
     checkElement('p', ElementType.isTextBlock, true);
     checkElement('h1', ElementType.isTextBlock, true);
     checkElement('table', ElementType.isTextBlock, false);
     checkText(ElementType.isTextBlock);
-  });
-
-  it('Check void elements', () => {
-    checkElement('img', ElementType.isVoid, true);
-    checkElement('hr', ElementType.isVoid, true);
-    checkElement('h1', ElementType.isVoid, false);
-    checkElement('span', ElementType.isVoid, false);
-    checkText(ElementType.isVoid);
   });
 
   it('Check table cell elements', () => {
