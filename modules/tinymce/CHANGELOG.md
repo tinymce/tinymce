@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Fixed
+
+- Editor would convert urls that are not http/s or relative resulting in broken links. #TINY-10153
 - Calling the `setProgressState` API would cause the window to be scrolled when the editor wasn't fully visible. #TINY-10172
 - Applying heading formatting to the content of the `summary` element extended its application to the content of the parent `details` element. #TINY-10154
 - Setting the content with an attribute that contains a self-closing HTML tag did not preserve the tag. #TINY-10088
