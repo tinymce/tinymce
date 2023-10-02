@@ -578,6 +578,7 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
     const checkText = (predicate: (elm: SugarElement<Node>) => boolean) => {
       assert.isFalse(predicate(SugarElement.fromText('text')), 'Should be false for non element');
     };
+
     it('TINY-10139: check block elements', () => {
       const schema = Schema({
         custom_elements: 'foo,bar'
