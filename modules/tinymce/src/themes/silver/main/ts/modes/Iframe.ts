@@ -94,6 +94,8 @@ const attachUiMotherships = (editor: Editor, uiRoot: SugarElement<HTMLElement | 
   Attachment.attachSystem(uiRoot, uiRefs.dialogUi.mothership);
 };
 
+const setToolbarThrottled = Throttler.last(setToolbar, 50);
+
 const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
   const { mainUi, uiMotherships } = uiRefs;
   const lastToolbarWidth = Cell(0);
@@ -107,7 +109,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   Attachment.attachSystemAfter(eTargetNode, mainUi.mothership);
   attachUiMotherships(editor, uiRoot, uiRefs);
 
-  const postPostRenderAndSkinLoadedHandler = Throttler.last(() => {
+  editor.on('PostRender', () => {
     if (editor.getWin()) {
       // Set the sidebar before the toolbar and menubar
       // - each sidebar has an associated toggle toolbar button that needs to check the
@@ -118,7 +120,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
         Options.getSidebarShow(editor)
       );
 
-      setToolbar(editor, uiRefs, rawUiConfig, backstage);
+      setToolbarThrottled.throttle(editor, uiRefs, rawUiConfig, backstage);
 
       lastToolbarWidth.set(editor.getWin().innerWidth);
 
@@ -131,10 +133,9 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
 
       setupEvents(editor, uiRefs);
     }
-  }, 150);
+  });
 
-  editor.on('PostRender', postPostRenderAndSkinLoadedHandler.throttle);
-  editor.on('SkinLoaded', postPostRenderAndSkinLoadedHandler.throttle);
+  editor.on('SkinLoaded', () => setToolbarThrottled.throttle(editor, uiRefs, rawUiConfig, backstage));
 
   const socket = OuterContainer.getSocket(outerContainer).getOrDie('Could not find expected socket element');
 
