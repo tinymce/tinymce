@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Resize handles would not appear on editable images in a non-editable context. #TINY-10118
 - The dialog size was not updated when the `size` argument was changed when redialling a dialog. #TINY-10209
 - Toggling a list that contains an LI element having another list as its first child would remove the remaining content within that LI element. #TINY-10213
-- An empty element with a `contenteditable="true"` attribute within a table cell and noneditable root was deleted when the Backspace key was pressed. #TINY-10010
+- An empty element with a `contenteditable="true"` attribute within a table cell would not be treated as content and get removed if backspace or delete was being pressed. #TINY-10010
 
 ### Improved
 - Colorpicker now includes the Brightness/Saturation selector and hue slider in the keyboard navigable items. #TINY-9287
