@@ -1,5 +1,6 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Obj, Type } from '@ephox/katamari';
+import { SugarElement, SugarNode } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Schema, { AttributePattern, SchemaElement } from 'tinymce/core/api/html/Schema';
@@ -219,13 +220,14 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
   it('getBlockElements', () => {
     const schema = Schema();
     assert.deepEqual(schema.getBlockElements(), {
-      SUMMARY: {}, MAIN: {}, DETAILS: {}, ASIDE: {}, HGROUP: {}, SECTION: {}, ARTICLE: {}, FOOTER: {}, HEADER: {},
+      LISTING: {}, MULTICOL: {}, BODY: {}, HTML: {}, SUMMARY: {}, MAIN: {},
+      DETAILS: {}, ASIDE: {}, HGROUP: {}, SECTION: {}, ARTICLE: {}, FOOTER: {}, HEADER: {},
       ISINDEX: {}, MENU: {}, NOSCRIPT: {}, FIELDSET: {}, FIGCAPTION: {}, DIR: {}, DD: {}, DT: {},
       DL: {}, CENTER: {}, BLOCKQUOTE: {}, CAPTION: {}, UL: {}, OL: {}, LI: {},
       TD: {}, TR: {}, TH: {}, TFOOT: {}, THEAD: {}, TBODY: {}, TABLE: {}, FORM: {},
       PRE: {}, ADDRESS: {}, DIV: {}, P: {}, HR: {}, H6: {}, H5: {}, H4: {}, H3: {},
       H2: {}, H1: {}, NAV: {}, FIGURE: {}, DATALIST: {}, OPTGROUP: {}, OPTION: {}, SELECT: {},
-      details: {}, summary: {}, main: {}, aside: {}, hgroup: {}, section: {}, article: {}, footer: {}, header: {},
+      details: {}, listing: {}, multicol: {}, body: {}, html: {}, summary: {}, main: {}, aside: {}, hgroup: {}, section: {}, article: {}, footer: {}, header: {},
       isindex: {}, menu: {}, noscript: {}, fieldset: {}, dir: {}, dd: {}, dt: {}, dl: {}, center: {},
       blockquote: {}, caption: {}, ul: {}, ol: {}, li: {}, td: {}, tr: {}, th: {}, tfoot: {}, thead: {},
       tbody: {}, table: {}, form: {}, pre: {}, address: {}, div: {}, p: {}, hr: {}, h6: {},
@@ -565,6 +567,45 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
       });
 
       assert.hasAnyKeys(schema.getNonEmptyElements(), [ 'foo-bar', 'FOO-BAR', 'bar-foo', 'BAR-FOO' ]);
+    });
+  });
+
+  context('TINY-10139: check elements', () => {
+    const checkElement = (name: string, predicate: (elm: SugarElement<Node>) => boolean, expectedValue: boolean) => {
+      assert.equal(predicate(SugarElement.fromTag(name)), expectedValue, `Should be ${expectedValue} for ${name}`);
+    };
+
+    const checkText = (predicate: (elm: SugarElement<Node>) => boolean) => {
+      assert.isFalse(predicate(SugarElement.fromText('text')), 'Should be false for non element');
+    };
+
+    it('TINY-10139: check block elements', () => {
+      const schema = Schema({
+        custom_elements: 'foo,bar'
+      });
+      checkElement('p', (el) => schema.isBlock(SugarNode.name(el)), true);
+      checkElement('h1', (el) => schema.isBlock(SugarNode.name(el)), true);
+      checkElement('table', (el) => schema.isBlock(SugarNode.name(el)), true);
+      checkElement('span', (el) => schema.isBlock(SugarNode.name(el)), false);
+      checkElement('b', (el) => schema.isBlock(SugarNode.name(el)), false);
+      checkText((el) => schema.isBlock(SugarNode.name(el)));
+
+      checkElement('foo', (el) => schema.isBlock(SugarNode.name(el)), true);
+      checkElement('bar', (el) => schema.isBlock(SugarNode.name(el)), true);
+    });
+
+    it('TINY-10139: check inline elements', () => {
+      const schema = Schema({
+        custom_elements: '~foo,~bar'
+      });
+      checkElement('b', (el) => schema.isInline(SugarNode.name(el)), true);
+      checkElement('span', (el) => schema.isInline(SugarNode.name(el)), true);
+      checkElement('p', (el) => schema.isInline(SugarNode.name(el)), false);
+      checkElement('h1', (el) => schema.isInline(SugarNode.name(el)), false);
+      checkText((el) => schema.isInline(SugarNode.name(el)));
+
+      checkElement('foo', (el) => schema.isInline(SugarNode.name(el)), true);
+      checkElement('bar', (el) => schema.isInline(SugarNode.name(el)), true);
     });
   });
 

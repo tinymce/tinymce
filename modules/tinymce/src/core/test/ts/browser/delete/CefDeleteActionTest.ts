@@ -4,6 +4,7 @@ import { Fun, Optional } from '@ephox/katamari';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
+import Schema from 'tinymce/core/api/html/Schema';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as CefDeleteAction from 'tinymce/core/delete/CefDeleteAction';
 
@@ -16,6 +17,8 @@ describe('browser.tinymce.core.delete.CefDeleteActionTest', () => {
 
   const setHtml = viewBlock.update;
 
+  const baseSchema = Schema();
+
   beforeEach(() => {
     viewBlock.get().contentEditable = 'true';
   });
@@ -25,7 +28,7 @@ describe('browser.tinymce.core.delete.CefDeleteActionTest', () => {
     const rng = document.createRange();
     rng.setStart(container.dom, cursorOffset);
     rng.setEnd(container.dom, cursorOffset);
-    return CefDeleteAction.read(viewBlock.get(), forward, rng);
+    return CefDeleteAction.read(viewBlock.get(), forward, rng, baseSchema);
   };
 
   const assertRemoveElementAction = (actionOpt: Optional<DeleteActionAdt>, elementPath: number[]) => {

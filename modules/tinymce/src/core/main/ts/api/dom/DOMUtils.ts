@@ -1023,7 +1023,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       afterFragment = range.extractContents();
 
       // Insert before chunk
-      parentNode.insertBefore(TrimNode.trimNode(self, beforeFragment), parentElm);
+      parentNode.insertBefore(TrimNode.trimNode(self, beforeFragment, schema), parentElm);
 
       // Insert middle chunk
       if (replacementElm) {
@@ -1034,7 +1034,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       }
 
       // Insert after chunk
-      parentNode.insertBefore(TrimNode.trimNode(self, afterFragment), parentElm);
+      parentNode.insertBefore(TrimNode.trimNode(self, afterFragment, schema), parentElm);
       remove(parentElm);
 
       return replacementElm || splitElm;
