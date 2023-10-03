@@ -110,29 +110,27 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   attachUiMotherships(editor, uiRoot, uiRefs);
 
   editor.on('PostRender', () => {
-    if (editor.getWin()) {
-      // Set the sidebar before the toolbar and menubar
-      // - each sidebar has an associated toggle toolbar button that needs to check the
-      //   sidebar that is set to determine its active state on setup
-      OuterContainer.setSidebar(
-        outerContainer,
-        rawUiConfig.sidebar,
-        Options.getSidebarShow(editor)
-      );
+    // Set the sidebar before the toolbar and menubar
+    // - each sidebar has an associated toggle toolbar button that needs to check the
+    //   sidebar that is set to determine its active state on setup
+    OuterContainer.setSidebar(
+      outerContainer,
+      rawUiConfig.sidebar,
+      Options.getSidebarShow(editor)
+    );
 
-      setToolbarThrottled.throttle(editor, uiRefs, rawUiConfig, backstage);
+    setToolbarThrottled.throttle(editor, uiRefs, rawUiConfig, backstage);
 
-      lastToolbarWidth.set(editor.getWin().innerWidth);
+    lastToolbarWidth.set(editor.getWin().innerWidth);
 
-      OuterContainer.setMenubar(
-        outerContainer,
-        identifyMenus(editor, rawUiConfig)
-      );
+    OuterContainer.setMenubar(
+      outerContainer,
+      identifyMenus(editor, rawUiConfig)
+    );
 
-      OuterContainer.setViews(outerContainer, rawUiConfig.views);
+    OuterContainer.setViews(outerContainer, rawUiConfig.views);
 
-      setupEvents(editor, uiRefs);
-    }
+    setupEvents(editor, uiRefs);
   });
 
   editor.on('SkinLoaded', () => setToolbarThrottled.throttle(editor, uiRefs, rawUiConfig, backstage));
