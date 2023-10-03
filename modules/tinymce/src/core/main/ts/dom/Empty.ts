@@ -28,6 +28,9 @@ const isBookmark = NodeType.hasAttribute('data-mce-bookmark');
 const isBogus = NodeType.hasAttribute('data-mce-bogus');
 const isBogusAll = NodeType.hasAttributeValue('data-mce-bogus', 'all');
 
+const hasNonEditableParent = (node: Node) =>
+  Traverse.parentElement(SugarElement.fromDom(node)).exists((parent) => !ContentEditable.isEditable(parent));
+
 const isEmptyNode = (targetNode: Node, skipBogus: boolean): boolean => {
   let brCount = 0;
 
@@ -52,8 +55,7 @@ const isEmptyNode = (targetNode: Node, skipBogus: boolean): boolean => {
           continue;
         }
       }
-      if (NodeType.isContentEditableTrue(node)
-        && Traverse.parentElement(SugarElement.fromDom(node)).exists((parent) => !ContentEditable.isEditable(parent))) {
+      if (NodeType.isContentEditableTrue(node) && hasNonEditableParent(node)) {
         return false;
       }
 
