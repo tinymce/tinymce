@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Custom block element wasn't considered block element in some cases. #TINY-10139
 - Search and replace plugin would incorrectly find matching text inside non-editable root elements. #TINY-10162
 - Search and replace plugin would incorrectly find matching text inside SVG elements. #TINY-10162
-- Using `render` with `async` makes editor's refresh slow causing a blink when the editor is removed and put back. #TINY-10249
+- Removed use of `async` for editor rendering which caused visual blinking when reloading the editor in-place. #TINY-10249
 
 ### Improved
 - Colorpicker now includes the Brightness/Saturation selector and hue slider in the keyboard navigable items. #TINY-9287
