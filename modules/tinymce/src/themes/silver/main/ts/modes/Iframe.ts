@@ -99,6 +99,10 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   const lastToolbarWidth = Cell(0);
   const outerContainer = mainUi.outerContainer;
 
+  editor.on('SkinLoaded', () => {
+    setToolbar(editor, uiRefs, rawUiConfig, backstage);
+  });
+
   loadIframeSkin(editor);
 
   const eTargetNode = SugarElement.fromDom(args.targetNode);
@@ -106,10 +110,6 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
 
   Attachment.attachSystemAfter(eTargetNode, mainUi.mothership);
   attachUiMotherships(editor, uiRoot, uiRefs);
-
-  editor.on('SkinLoaded', () => {
-    setToolbar(editor, uiRefs, rawUiConfig, backstage);
-  });
 
   editor.on('PostRender', () => {
     // Set the sidebar before the toolbar and menubar
