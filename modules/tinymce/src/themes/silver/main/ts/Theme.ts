@@ -40,6 +40,7 @@ export default (): void => {
 
     // We wrap the `renderModeUI` function being returned by Render so that we can update
     // the getPopupSinkBounds mutable variable if required.
+    // DON'T define this function as `async`, otherwise it slows down the render ad it causes flickering if the editor is removed and re-init repeatedly
     const renderUI = (): RenderResult => {
       const renderResult = renderModeUI();
 
