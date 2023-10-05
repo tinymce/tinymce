@@ -5,6 +5,7 @@ import AstNode from '../api/html/Node';
 import Schema, { SchemaMap } from '../api/html/Schema';
 import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
+import * as Namespace from '../html/Namespace';
 
 export const transparentBlockAttr = 'data-mce-block';
 
@@ -12,7 +13,11 @@ export const transparentBlockAttr = 'data-mce-block';
 // This method is to avoid having to specify all possible valid characters other than lowercase a-z such as '-' or ':' etc.
 export const elementNames = (map: SchemaMap): string[] => Arr.filter(Obj.keys(map), (key) => !/[A-Z]/.test(key));
 
-const makeSelectorFromSchemaMap = (map: SchemaMap) => elementNames(map).join(',');
+const makeSelectorFromSchemaMap = (map: SchemaMap) =>
+  Arr.map(elementNames(map), (name) => {
+    // Exclude namespace elements from processing
+    return `${name}:` + Arr.map(Namespace.namespaceElements, (ns) => `not(${ns} ${name})`).join(':');
+  }).join(',');
 
 const updateTransparent = (blocksSelector: string, transparent: Element) => {
   if (Type.isNonNullable(transparent.querySelector(blocksSelector))) {
