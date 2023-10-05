@@ -3,6 +3,7 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Hierarchy, Html, Insert, SugarElement } from '@ephox/sugar';
 
+import Schema from 'tinymce/core/api/html/Schema';
 import * as FragmentReader from 'tinymce/core/selection/FragmentReader';
 
 import * as ViewBlock from '../../module/test/ViewBlock';
@@ -20,7 +21,7 @@ describe('browser.tinymce.core.selection.FragmentReaderTest', () => {
     rng.setStart(sc.dom, startOffset);
     rng.setEnd(ec.dom, endOffset);
 
-    return FragmentReader.read(SugarElement.fromDom(viewBlock.get()), [ rng ]);
+    return FragmentReader.read(SugarElement.fromDom(viewBlock.get()), [ rng ], Schema());
   };
 
   const readFragmentCells = (paths: number[][]) => {
@@ -31,7 +32,7 @@ describe('browser.tinymce.core.selection.FragmentReaderTest', () => {
       return rng;
     });
 
-    return FragmentReader.read(SugarElement.fromDom(viewBlock.get()), ranges);
+    return FragmentReader.read(SugarElement.fromDom(viewBlock.get()), ranges, Schema());
   };
 
   const getFragmentHtml = (fragment: SugarElement<Node>) => {
