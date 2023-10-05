@@ -1,5 +1,5 @@
 import { Arr, Optionals } from '@ephox/katamari';
-import { Compare, PredicateFind, Remove, SugarElement, SugarNode } from '@ephox/sugar';
+import { Compare, ContentEditable, PredicateFind, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
@@ -61,8 +61,12 @@ const hasOnlyOneBlockChild = (dom: DOMUtils, elm: Element): boolean => {
   return childNodes.length === 1 && !NodeType.isListNode(childNodes[0]) && dom.isBlock(childNodes[0]);
 };
 
+const isUnwrappable = (elm: HTMLElement): boolean =>
+  ContentEditable.isEditable(SugarElement.fromDom(elm))
+    && !Arr.contains([ 'DETAILS' ], elm.nodeName);
+
 const unwrapSingleBlockChild = (dom: DOMUtils, elm: Element): void => {
-  if (hasOnlyOneBlockChild(dom, elm)) {
+  if (hasOnlyOneBlockChild(dom, elm) && isUnwrappable(elm.firstChild as HTMLElement)) {
     dom.remove(elm.firstChild as HTMLElement, true);
   }
 };
