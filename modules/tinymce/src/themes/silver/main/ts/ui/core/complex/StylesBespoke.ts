@@ -12,8 +12,10 @@ import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect
 import { AdvancedSelectDataset, BasicSelectItem, SelectDataset } from './SelectDatasets';
 import { getStyleFormats, isFormatReference, isNestedFormat, StyleFormatType } from './StyleFormat';
 import { findNearest } from './utils/FormatDetection';
+import * as Tooltip from './utils/Tooltip';
 
 const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
+  const tooltipPrefix = 'Formats';
   const fallbackFormat = 'Paragraph';
 
   const isSelectedFor = (format: string) => () => editor.formatter.match(format);
@@ -45,7 +47,7 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
   };
 
   return {
-    tooltip: 'Formats',
+    tooltip: Tooltip.getTooltipText(editor, tooltipPrefix, fallbackFormat),
     text: Optional.some(fallbackFormat),
     icon: Optional.none(),
     isSelectedFor,
