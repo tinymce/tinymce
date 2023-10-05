@@ -5,6 +5,7 @@ import { Dimension } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as Options from 'tinymce/themes/silver/api/Options';
 
+import * as Events from '../../../api/Events';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { onSetupEditableToggle } from '../ControlUtils';
@@ -12,6 +13,7 @@ import { createBespokeNumberInput } from './BespokeNumberInput';
 import { createMenuItems, createSelectButton, FormatterFormatItem, SelectedFormat, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import * as FormatRegister from './utils/FormatRegister';
+import * as Tooltip from './utils/Tooltip';
 
 interface Config {
   readonly step: number;
@@ -22,6 +24,9 @@ export interface NumberInputSpec {
   updateInputValue: (comp: AlloyComponent) => void;
   getNewValue: (text: string, updateFunction: (value: number, step: number) => number) => string;
 }
+
+const title = 'Font sizes';
+const fallbackFontSize = '12pt';
 
 // See https://websemantics.uk/articles/font-size-conversion/ for conversions
 const legacyFontSizes: Record<string, string> = {
@@ -102,13 +107,14 @@ const getSpec = (editor: Editor): SelectSpec => {
     AlloyTriggers.emitWith(comp, updateMenuText, {
       text
     });
+    Events.fireFontSizeTextUpdate(editor, { value: text });
   };
 
   const dataset = buildBasicSettingsDataset(editor, 'font_size_formats', Delimiter.Space);
 
   return {
-    tooltip: 'Font sizes',
-    text: Optional.some('12pt'),
+    tooltip: Tooltip.getTooltipText(editor, title, fallbackFontSize),
+    text: Optional.some(fallbackFontSize),
     icon: Optional.none(),
     isSelectedFor,
     getPreviewFor,
@@ -122,7 +128,7 @@ const getSpec = (editor: Editor): SelectSpec => {
 };
 
 const createFontSizeButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
-  createSelectButton(editor, backstage, getSpec(editor));
+  createSelectButton(editor, backstage, getSpec(editor), title, 'FontSizeTextUpdate');
 
 const getConfigFromUnit = (unit: string): Config => {
   const baseConfig = { step: 1 };
@@ -174,7 +180,7 @@ const createFontSizeInputButton = (editor: Editor, backstage: UiFactoryBackstage
 const createFontSizeMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('fontsize', {
-    text: 'Font sizes',
+    text: title,
     onSetup: onSetupEditableToggle(editor),
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   });
