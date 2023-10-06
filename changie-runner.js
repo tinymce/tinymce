@@ -4,6 +4,7 @@ const path = require('path');
 
 const modules = process.argv[2];
 const command = process.argv.slice(3).join(' ');
+const changieConfigSrc = './.changie.yaml';
 
 if (!modules || !command) {
     console.error('Module and command are required.');
@@ -20,12 +21,18 @@ function executeChangie(modulePath, command) {
 
 if (modules === 'all') {
     // Run the command for all folders in the modules directory
-    const modulesDir = './modules';
-    const folders = fs.readdirSync(modulesDir).filter(dir => fs.statSync(path.join(modulesDir, dir)).isDirectory());
+    const modulesDir = 'modules';
+    const folders = fs.readdirSync(modulesDir)
+        .filter(dir => fs.statSync(path.join(modulesDir, dir)).isDirectory())
+        .filter(dir => !dir.startsWith('oxide'));
     
     folders.forEach(folder => {
-        console.log(`Executing changie ${command} for module: ${folder}`);
+        const modulePath = path.join(modulesDir, folder);
+        const changieConfigDest = path.join(modulePath, '.changie.yaml');
+
+        fs.copyFileSync(changieConfigSrc, changieConfigDest);
         executeChangie(path.join(modulesDir, folder), command);
+        fs.unlinkSync(changieConfigDest);
     });
 } else {
     executeChangie(`./modules/${modules}`, command);
