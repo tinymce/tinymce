@@ -1,0 +1,5 @@
+kind: Fixed
+body: Resize handles would not appear on editable images in a non-editable context.
+time: 2023-09-20T07:49:36.589726+08:00
+custom:
+  Issue: TINY-10118

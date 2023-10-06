@@ -1,0 +1,5 @@
+kind: Added
+body: Added `picker_text` optional property to `UrlInputSpec`
+time: 2023-10-06T12:20:17.339955+11:00
+custom:
+  Issue: TINY-10155

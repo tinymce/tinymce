@@ -1,0 +1,34 @@
+changesDir: .changes
+unreleasedDir: unreleased
+headerPath: ./header.tpl.md
+changelogPath: ./modules/tinymce/CHANGELOG.md
+versionExt: md
+versionFormat: '## {{.Version}} - {{.Time.Format "2006-01-02"}}'
+kindFormat: '### {{.Kind}}'
+changeFormat: '- {{.Body}} #{{.Custom.Issue}}'
+kinds:
+- label: Added
+  auto: minor
+- label: Changed
+  auto: major
+- label: Deprecated
+  auto: minor
+- label: Removed
+  auto: major
+- label: Fixed
+  auto: patch
+- label: Security
+  auto: patch
+- label: Improved
+  auto: minor
+newlines:
+  afterChangelogHeader: 1
+  afterChangelogVersion: 1
+  endOfVersion: 1
+  beforeKind: 1
+envPrefix: CHANGIE_
+custom:
+- key: Issue
+  label: Issue (TINY-XXXX+) 
+  type: string
+  minLength: 7

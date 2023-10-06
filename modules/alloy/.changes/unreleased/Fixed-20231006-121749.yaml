@@ -1,0 +1,6 @@
+kind: Fixed
+body: Incorrect typing on `DropdownSpec`, `getAnchorOverrides`. Function returns an
+  object, not another function.
+time: 2023-10-06T12:17:49.995122+11:00
+custom:
+  Issue: TINY-9978
