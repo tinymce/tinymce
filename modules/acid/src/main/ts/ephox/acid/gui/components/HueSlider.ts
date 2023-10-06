@@ -1,4 +1,4 @@
-import { AlloyComponent, AlloyTriggers, Behaviour, Focusing, SketchSpec, Slider, Tabstopping } from '@ephox/alloy';
+import { AlloyComponent, AlloyTriggers, Behaviour, Focusing, SketchSpec, Slider } from '@ephox/alloy';
 import { Fun } from '@ephox/katamari';
 import { Attribute } from '@ephox/sugar';
 
@@ -46,7 +46,6 @@ const sliderFactory = (translate: (key: string) => string, getClass: (key: strin
       thumb
     ],
     sliderBehaviours: Behaviour.derive([
-      Tabstopping.config({ }),
       Focusing.config({ })
     ]),
 
