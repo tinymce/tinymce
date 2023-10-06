@@ -30,7 +30,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
   const pAssertFocusOnAlignToolbarButton = () => FocusTools.pTryOnSelector(
     'Focus should be on Align',
     SugarDocument.getDocument(),
-    '.tox-toolbar__group button[aria-label="Align"]'
+    '.tox-toolbar__group button[aria-label^="Align"].tox-tbtn--select'
   );
 
   const assertItemTicks = (label: string, expectedTicks: boolean[]) => {
@@ -326,9 +326,9 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
       TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
         editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
         TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
-        UiFinder.exists(SugarBody.body(), `[aria-label="${title}"]:disabled`);
+        UiFinder.exists(SugarBody.body(), `[aria-label^="${title}"]:disabled`);
         TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
-        UiFinder.exists(SugarBody.body(), `[aria-label="${title}"]:not(:disabled)`);
+        UiFinder.exists(SugarBody.body(), `[aria-label^="${title}"]:not(:disabled)`);
       });
     };
 
