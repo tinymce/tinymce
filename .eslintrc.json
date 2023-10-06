@@ -24,5 +24,6 @@
     "prefer-rest-params": "off",
     "prefer-spread": "off",
     "max-len": ["warn", 260]
-  }
+  },
+  "ignorePatterns":["changie-runner.js"]
 }
