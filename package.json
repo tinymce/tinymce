@@ -34,8 +34,6 @@
     "headless-test-manual": "yarn -s grunt headless-manual",
     "bedrock": "bedrock --customRoutes modules/tinymce/src/core/test/json/routes.json",
     "test-one": "yarn tsc && yarn bedrock-auto -b chrome-headless -f",
-    "change": "changie new",
-    "change-merge": "changie batch auto && changie merge",
     "changie": "node changie-runner.js"
   },
   "devDependencies": {
