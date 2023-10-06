@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Toggling a list that contains an LI element having another list as its first child would remove the remaining content within that LI element. #TINY-10213
 - Custom block element wasn't considered block element in some cases. #TINY-10139
 - An empty element with a `contenteditable="true"` attribute within a table cell would not be treated as content and get removed if backspace or delete was being pressed. #TINY-10010
+- Search and replace plugin would incorrectly find matching text inside non-editable root elements. #TINY-10162
+- Search and replace plugin would incorrectly find matching text inside SVG elements. #TINY-10162
+- Removed use of `async` for editor rendering which caused visual blinking when reloading the editor in-place. #TINY-10249
 
 ### Improved
 - Colorpicker now includes the Brightness/Saturation selector and hue slider in the keyboard navigable items. #TINY-9287

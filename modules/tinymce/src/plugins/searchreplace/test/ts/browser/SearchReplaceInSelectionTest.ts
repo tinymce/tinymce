@@ -18,6 +18,7 @@ interface FindScenario {
   };
   readonly wholeWords?: boolean;
   readonly matchCase?: boolean;
+  readonly editableRoot?: boolean;
 }
 
 interface ReplaceScenario extends FindScenario {
@@ -32,15 +33,17 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceInSelectionTest', (
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'searchreplace',
     base_url: '/project/tinymce/js/tinymce',
-    extended_valid_elements: 'b,i'
+    extended_valid_elements: 'b,i,svg'
   }, [ Plugin ], true);
 
   const isReplaceScenario = (scenario: FindScenario | ReplaceScenario): scenario is ReplaceScenario => Obj.has(scenario as Record<string, any>, 'replace');
 
   const testReplace = (editor: Editor, scenario: ReplaceScenario) => {
+    editor.setEditableRoot(scenario.editableRoot ?? true);
     const moreMatches = editor.plugins.searchreplace.replace(scenario.replace, scenario.backwards || true, scenario.replaceAll || false);
     assert.equal(scenario.moreMatches, moreMatches);
     TinyAssertions.assertContent(editor, scenario.expectedContent);
+    editor.setEditableRoot(true);
   };
 
   const testInSelection = (scenario: FindScenario | ReplaceScenario) => () => {
@@ -49,12 +52,14 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceInSelectionTest', (
     if (scenario.sel) {
       TinySelections.setSelection(editor, scenario.sel.sPath, scenario.sel.sOffset, scenario.sel.fPath || scenario.sel.sPath, scenario.sel.fOffset || scenario.sel.sOffset);
     }
+    editor.setEditableRoot(scenario.editableRoot ?? true);
     const matches = editor.plugins.searchreplace.find(scenario.find, scenario.matchCase || false, scenario.wholeWords || false, true);
     assert.equal(scenario.matches, matches);
 
     if (isReplaceScenario(scenario)) {
       testReplace(editor, scenario);
     }
+    editor.setEditableRoot(true);
   };
 
   it('TINY-4549: Find no match', testInSelection({ content: 'a', find: 'x', matches: 0, sel: { sPath: [ 0, 0 ], sOffset: 0, fOffset: 1 }}));
@@ -80,6 +85,21 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceInSelectionTest', (
     content: 'a<span contenteditable="false">a</span>a',
     find: 'a',
     matches: 2,
+    sel: { sPath: [ 0, 0 ], sOffset: 0, fPath: [ 0, 2 ], fOffset: 1 }
+  }));
+
+  it('TINY-10162: Find match ignores SVG elements', testInSelection({
+    content: '<p>a<svg>a</svg>a</p>',
+    find: 'a',
+    matches: 2,
+    sel: { sPath: [ 0, 0 ], sOffset: 0, fPath: [ 0, 2 ], fOffset: 1 }
+  }));
+
+  it('TINY-10162: Find match ignores non-editable elements if editable root is set to false', testInSelection({
+    editableRoot: false,
+    content: '<p>a<span contenteditable="true">a</span>a</p>',
+    find: 'a',
+    matches: 1,
     sel: { sPath: [ 0, 0 ], sOffset: 0, fPath: [ 0, 2 ], fOffset: 1 }
   }));
 
