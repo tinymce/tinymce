@@ -1,6 +1,0 @@
-kind: Improved
-body: Improved the tooltips of picker buttons for the urlinput components in the "Insert/Edit
-  Image", "Insert/Edit Link" and "Insert/Edit Media" dialogs.
-time: 2023-09-20T07:49:56.622974+08:00
-custom:
-  Issue: TINY-10155

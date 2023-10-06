@@ -1,6 +1,0 @@
-kind: Fixed
-body: Setting the content with an attribute that contains a self-closing HTML tag
-  did not preserve the tag.
-time: 2023-09-20T07:49:19.759215+08:00
-custom:
-  Issue: TINY-10088
