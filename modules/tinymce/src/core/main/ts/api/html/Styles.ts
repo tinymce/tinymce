@@ -16,6 +16,7 @@
  * console.log(tinymce.html.Styles().serialize(styles));
  */
 
+import { Transformations } from '@ephox/acid';
 import { Obj, Unicode } from '@ephox/katamari';
 
 import { URLConverter } from '../OptionTypes';
@@ -28,6 +29,7 @@ export interface StylesSettings {
   allow_svg_data_urls?: boolean;
   url_converter?: URLConverter;
   url_converter_scope?: any;
+  force_hex_color?: boolean;
 }
 
 interface Styles {
@@ -39,6 +41,7 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
   /* jshint maxlen:255 */
   /* eslint max-len:0 */
   const urlOrStrRegExp = /(?:url(?:(?:\(\s*\"([^\"]+)\"\s*\))|(?:\(\s*\'([^\']+)\'\s*\))|(?:\(\s*([^)\s]+)\s*\))))|(?:\'([^\']+)\')|(?:\"([^\"]+)\")/gi;
+  const rgbRegExp = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/gi;
   const styleRegExp = /\s*([^:]+):\s*([^;]+);?/g;
   const trimRightRegExp = /\s+$/;
   const encodingLookup: Record<string, string> = {};
@@ -261,6 +264,11 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
               value = 'bold';
             } else if (name === 'color' || name === 'background-color') { // Lowercase colors like RED
               value = value.toLowerCase();
+            }
+
+            // Convert RGB colors to HEX
+            if (settings.force_hex_color) {
+              value = value.replace(rgbRegExp, Transformations.rgbaToHexString);
             }
 
             // Convert URLs and force them into url('value') format

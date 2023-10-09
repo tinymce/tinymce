@@ -300,6 +300,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   font_size_style_values: string;
   forced_root_block: string;
   forced_root_block_attrs: Record<string, string>;
+  force_hex_color: boolean;
   format_noneditable_selector: string;
   height: number | string;
   highlight_on_focus: boolean;
