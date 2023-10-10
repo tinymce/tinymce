@@ -122,7 +122,7 @@ const escapeSearchText = (text: string, wholeWord: boolean, useRegex: boolean): 
 };
 
 const isRegexPattern = (text: string): boolean => {
-  const regexPattern = /^\\\/.*\/\\$/;
+  const regexPattern = /\\\/.*\/\\/;
   const detected = regexPattern.test(text);
 
   if (detected) {
