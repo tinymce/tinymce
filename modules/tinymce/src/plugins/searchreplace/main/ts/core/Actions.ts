@@ -17,7 +17,7 @@ export interface SearchState {
   readonly wholeWord: boolean;
   readonly inSelection: boolean;
   readonly useRegex: boolean;
-  }
+}
 
 const getElmIndex = (elm: Element): string | null => {
   return elm.getAttribute('data-mce-index');
@@ -114,7 +114,7 @@ const removeNode = (dom: DOMUtils, node: Node): void => {
 
 const escapeSearchText = (text: string, wholeWord: boolean, useRegex: boolean): string => {
   if (useRegex) {
-    const regexPatternMatch = text.match(/\\\/(.*?)\/\\/);
+    const regexPatternMatch = text.match(/\/(.*?)\//);
     if (regexPatternMatch && regexPatternMatch[1]) {
       const regexPattern = regexPatternMatch[1].replace(/\\\\/g, '\\');
       try {
@@ -184,6 +184,8 @@ const replace = (editor: Editor, currentSearchState: Cell<SearchState>, text: st
   const currentIndex = searchState.index;
   let currentMatchIndex, nextIndex = currentIndex;
 
+  const patternToFind = new RegExp(searchState.text.slice(3, -3), 'g');
+
   forward = forward !== false;
 
   const node = editor.getBody();
@@ -194,7 +196,12 @@ const replace = (editor: Editor, currentSearchState: Cell<SearchState>, text: st
     let matchIndex = currentMatchIndex = parseInt(nodeIndex, 10);
     if (all || matchIndex === searchState.index) {
       if (text.length) {
-        nodes[i].innerText = text;
+        if (searchState.useRegex && patternToFind.test(nodes[i].innerText)) {
+          nodes[i].innerText = nodes[i].innerText.replace(patternToFind, text);
+
+        } else {
+          nodes[i].innerText = text;
+        }
         unwrap(nodes[i]);
       } else {
         removeNode(editor.dom, nodes[i]);
