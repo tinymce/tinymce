@@ -184,7 +184,7 @@ const replace = (editor: Editor, currentSearchState: Cell<SearchState>, text: st
   const currentIndex = searchState.index;
   let currentMatchIndex, nextIndex = currentIndex;
 
-  const patternToFind = new RegExp(searchState.text.slice(3, -3), 'g');
+  const patternToFind = new RegExp(searchState.text.slice(1, -1), 'g');
 
   forward = forward !== false;
 
