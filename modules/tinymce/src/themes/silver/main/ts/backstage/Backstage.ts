@@ -19,7 +19,7 @@ export interface UiFactoryBackstageProviders {
   readonly icons: IconProvider;
   readonly menuItems: () => Record<string, Menu.MenuItemSpec | Menu.NestedMenuItemSpec | Menu.ToggleMenuItemSpec>;
   readonly translate: (text: Untranslated) => TranslatedString;
-  readonly isDisabled: (enabledInReadOnly?: boolean) => boolean;
+  readonly isDisabled: () => boolean;
   readonly getOption: Editor['options']['get'];
 }
 
@@ -54,7 +54,7 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
     icons: () => editor.ui.registry.getAll().icons,
     menuItems: () => editor.ui.registry.getAll().menuItems,
     translate: I18n.translate,
-    isDisabled: (enabledInReadOnly) => (editor.mode.isReadOnly() || !editor.ui.isEnabled()) && !enabledInReadOnly,
+    isDisabled: () => editor.mode.isReadOnly() || !editor.ui.isEnabled(),
     getOption: editor.options.get
   };
 

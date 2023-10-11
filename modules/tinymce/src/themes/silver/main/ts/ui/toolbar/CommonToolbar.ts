@@ -4,13 +4,12 @@ import {
   SplitFloatingToolbar as AlloySplitFloatingToolbar,
   SplitSlidingToolbar as AlloySplitSlidingToolbar, Tabstopping, Toolbar as AlloyToolbar, ToolbarGroup as AlloyToolbarGroup
 } from '@ephox/alloy';
-import { Arr, Optional, Result } from '@ephox/katamari';
+import { Arr, Fun, Optional, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 
 import { ToolbarMode } from '../../api/Options';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as Channels from '../../Channels';
-import * as ReadOnly from '../../ReadOnly';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderIconButtonSpec } from '../general/Button';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
@@ -81,8 +80,7 @@ const getToolbarBehaviours = (toolbarSpec: ToolbarSpec, modeName: 'cyclic' | 'ac
   });
 
   return Behaviour.derive([
-    DisablingConfigs.toolbarButton(toolbarSpec.providers.isDisabled),
-    ReadOnly.receivingConfig(),
+    DisablingConfigs.toolbarButton(Fun.never),
     Keying.config({
       // Tabs between groups
       mode: modeName,

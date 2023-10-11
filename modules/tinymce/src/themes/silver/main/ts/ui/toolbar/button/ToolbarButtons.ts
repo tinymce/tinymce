@@ -126,8 +126,8 @@ const renderCommonStructure = (
 
     buttonBehaviours: Behaviour.derive(
       [
-        DisablingConfigs.toolbarButton(() => providersBackstage.isDisabled(enabledInReadOnly)),
-        ReadOnly.receivingConfig(),
+        DisablingConfigs.toolbarButton(enabledInReadOnly ? Fun.never : providersBackstage.isDisabled),
+        ...enabledInReadOnly ? [] : [ ReadOnly.receivingConfig() ],
         AddEventsBehaviour.config(commonButtonDisplayEvent, [
           AlloyEvents.runOnAttached((comp, _se) => UiUtils.forceInitialSize(comp)),
           AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
@@ -206,8 +206,8 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
             onControlDetached(specialisation, editorOffCell)
           ]),
           // Enable toolbar buttons by default
-          DisablingConfigs.toolbarButton(() => !spec.enabled || providersBackstage.isDisabled(spec.enabled_in_readonly)),
-          ReadOnly.receivingConfig()
+          DisablingConfigs.toolbarButton(spec.enabled_in_readonly ? Fun.never : () => !spec.enabled || providersBackstage.isDisabled()),
+          ...spec.enabled_in_readonly ? [] : [ ReadOnly.receivingConfig() ]
         ].concat(specialisation.toolbarButtonBehaviours)
       ),
       // Here we add the commonButtonDisplayEvent behaviour from the structure so we can listen
