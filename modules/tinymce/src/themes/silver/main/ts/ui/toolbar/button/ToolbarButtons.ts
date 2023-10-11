@@ -46,6 +46,7 @@ interface GeneralToolbarButton<T> {
   readonly tooltip: Optional<string>;
   readonly onAction: (api: T) => void;
   readonly enabled: boolean;
+  readonly enabled_in_readonly: boolean;
 }
 
 interface ChoiceFetcher {
@@ -93,6 +94,7 @@ const renderCommonStructure = (
   optIcon: Optional<string>,
   optText: Optional<string>,
   tooltip: Optional<string>,
+  enabledInReadOnly: boolean,
   behaviours: Optional<Behaviours>,
   providersBackstage: UiFactoryBackstageProviders
 ): AlloyButtonSpec => {
@@ -124,7 +126,7 @@ const renderCommonStructure = (
 
     buttonBehaviours: Behaviour.derive(
       [
-        DisablingConfigs.toolbarButton(providersBackstage.isDisabled),
+        DisablingConfigs.toolbarButton(() => providersBackstage.isDisabled(enabledInReadOnly)),
         ReadOnly.receivingConfig(),
         AddEventsBehaviour.config(commonButtonDisplayEvent, [
           AlloyEvents.runOnAttached((comp, _se) => UiUtils.forceInitialSize(comp)),
@@ -172,7 +174,7 @@ const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage
       toggledClass: ToolbarButtonClasses.Ticked
     },
     parts: {
-      button: renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.some(behaviours), sharedBackstage.providers),
+      button: renderCommonStructure(spec.icon, spec.text, spec.tooltip, spec.enabled_in_readonly, Optional.some(behaviours), sharedBackstage.providers),
       toolbar: {
         dom: {
           tag: 'div',
@@ -186,7 +188,7 @@ const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage
 
 const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisation: Specialisation<T>, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   const editorOffCell = Cell(Fun.noop);
-  const structure = renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.none(), providersBackstage);
+  const structure = renderCommonStructure(spec.icon, spec.text, spec.tooltip, spec.enabled_in_readonly, Optional.none(), providersBackstage);
   return AlloyButton.sketch({
     dom: structure.dom,
     components: structure.components,
@@ -204,7 +206,7 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
             onControlDetached(specialisation, editorOffCell)
           ]),
           // Enable toolbar buttons by default
-          DisablingConfigs.toolbarButton(() => !spec.enabled || providersBackstage.isDisabled()),
+          DisablingConfigs.toolbarButton(() => !spec.enabled || providersBackstage.isDisabled(spec.enabled_in_readonly)),
           ReadOnly.receivingConfig()
         ].concat(specialisation.toolbarButtonBehaviours)
       ),
@@ -366,7 +368,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
 
     components: [
       AlloySplitDropdown.parts.button(
-        renderCommonStructure(spec.icon, spec.text, Optional.none(), Optional.some([
+        renderCommonStructure(spec.icon, spec.text, Optional.none(), false, Optional.some([
           Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, toggleOnExecute: false })
         ]), sharedBackstage.providers)
       ),

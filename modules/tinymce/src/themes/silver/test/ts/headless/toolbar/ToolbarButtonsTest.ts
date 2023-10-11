@@ -31,6 +31,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
           renderToolbarButton({
             type: 'button',
             enabled: true,
+            enabled_in_readonly: false,
             tooltip: Optional.some('tooltip'),
             icon: Optional.none(),
             text: Optional.some('button1'),
@@ -55,6 +56,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
           renderToolbarToggleButton({
             type: 'togglebutton',
             enabled: true,
+            enabled_in_readonly: false,
             active: false,
             tooltip: Optional.some('tooltip'),
             icon: Optional.none(),

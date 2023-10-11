@@ -5,6 +5,7 @@ import * as ComponentSchema from '../../core/ComponentSchema';
 
 export interface BaseToolbarButtonSpec<I extends BaseToolbarButtonInstanceApi> {
   enabled?: boolean;
+  enabled_in_readonly?: boolean;
   tooltip?: string;
   icon?: string;
   text?: string;
@@ -30,6 +31,7 @@ export interface ToolbarButtonInstanceApi extends BaseToolbarButtonInstanceApi {
 
 export interface BaseToolbarButton<I extends BaseToolbarButtonInstanceApi> {
   enabled: boolean;
+  enabled_in_readonly: boolean;
   tooltip: Optional<string>;
   icon: Optional<string>;
   text: Optional<string>;
@@ -43,6 +45,7 @@ export interface ToolbarButton extends BaseToolbarButton<ToolbarButtonInstanceAp
 
 export const baseToolbarButtonFields = [
   ComponentSchema.enabled,
+  ComponentSchema.enabledInReadOnly,
   ComponentSchema.optionalTooltip,
   ComponentSchema.optionalIcon,
   ComponentSchema.optionalText,
