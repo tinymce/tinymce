@@ -13,7 +13,11 @@ if (!modules || !command) {
 
 function executeChangie(modulePath, command) {
     try {
+        const changieConfigDest = path.join(modulePath, '.changie.yaml');
+
+        fs.copyFileSync(changieConfigSrc, changieConfigDest);
         execSync(`cd ${modulePath} && changie ${command}`, { stdio: 'inherit' });
+        fs.unlinkSync(changieConfigDest);
     } catch (error) {
         console.error(`Error executing changie ${command} in ${modulePath}:`, error);
     }
@@ -28,11 +32,8 @@ if (modules === 'all') {
     
     folders.forEach(folder => {
         const modulePath = path.join(modulesDir, folder);
-        const changieConfigDest = path.join(modulePath, '.changie.yaml');
 
-        fs.copyFileSync(changieConfigSrc, changieConfigDest);
         executeChangie(path.join(modulesDir, folder), command);
-        fs.unlinkSync(changieConfigDest);
     });
 } else {
     executeChangie(`./modules/${modules}`, command);
