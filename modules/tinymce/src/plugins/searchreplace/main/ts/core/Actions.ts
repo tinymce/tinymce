@@ -115,17 +115,14 @@ const removeNode = (dom: DOMUtils, node: Node): void => {
 const escapeSearchText = (text: string, wholeWord: boolean, useRegex: boolean): string => {
   if (useRegex) {
     const regexPatternMatch = text.match(/\\\/(.*?)\/\\/);
-    console.log('regexPatternMatch ', regexPatternMatch, text, ' regexPatternMatch');
     if (regexPatternMatch && regexPatternMatch[1]) {
       const regexPattern = regexPatternMatch[1].replace(/\\\\/g, '\\');
-
-      // try {
-      //   new RegExp(regexPattern);
-      //   return regexPattern;
-      // } catch (e) {
-      //   console.error('Invalid regex pattern provided:', regexPattern);
-      //   return text;
-      // }
+      try {
+        new RegExp(regexPattern);
+        return regexPattern;
+      } catch (e) {
+        return text;
+      }
     }
   }
   const escapedText = text.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&').replace(/\s/g, '[^\\S\\r\\n\\uFEFF]');
@@ -138,10 +135,13 @@ const find = (editor: Editor, currentSearchState: Cell<SearchState>, text: strin
   const escapedText = escapeSearchText(text, wholeWord, useRegex);
   const isForwardSelection = selection.isForward();
 
+  const isRegexPattern = useRegex && /^\/.*\/[gimuy]*$/.test(escapedText);
+
   const pattern = {
-    regex: new RegExp(escapedText, matchCase ? 'g' : 'gi'),
+    regex: isRegexPattern ? new RegExp(escapedText.slice(1, -1), matchCase ? 'g' : 'gi') : new RegExp(escapedText, matchCase ? 'g' : 'gi'),
     matchIndex: 1
   };
+
   const count = markAllMatches(editor, currentSearchState, pattern, inSelection);
 
   // Safari has a bug whereby splitting text nodes breaks the selection (which is done when marking matches).

@@ -13,7 +13,7 @@ const find = (text: string, pattern: Pattern, start = 0, finish = text.length): 
   const results = [];
   let match;
   while ((match = regex.exec(text))) {
-    const matchedText = match[pattern.matchIndex];
+    const matchedText = match[0];
     const matchStart = match.index + match[0].indexOf(matchedText);
     const matchFinish = matchStart + matchedText.length;
 

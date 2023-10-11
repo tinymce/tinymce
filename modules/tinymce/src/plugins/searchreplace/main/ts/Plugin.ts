@@ -16,7 +16,7 @@ export default (): void => {
       matchCase: false,
       wholeWord: false,
       inSelection: false,
-      useRegex: false
+      useRegex: true
     });
 
     Commands.register(editor, currentSearchState);
