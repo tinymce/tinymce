@@ -17,8 +17,8 @@ const get = (editor: Editor, currentState: Cell<Actions.SearchState>): Api => {
     return Actions.done(editor, currentState, keepEditorSelection);
   };
 
-  const find = (text: string, matchCase: boolean, wholeWord: boolean, inSelection: boolean = false) => {
-    return Actions.find(editor, currentState, text, matchCase, wholeWord, inSelection);
+  const find = (text: string, matchCase: boolean, wholeWord: boolean, inSelection: boolean = false, useRegex = false) => {
+    return Actions.find(editor, currentState, text, matchCase, wholeWord, inSelection, useRegex);
   };
 
   const next = () => {

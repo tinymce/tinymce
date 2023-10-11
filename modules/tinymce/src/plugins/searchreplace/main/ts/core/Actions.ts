@@ -16,7 +16,7 @@ export interface SearchState {
   readonly matchCase: boolean;
   readonly wholeWord: boolean;
   readonly inSelection: boolean;
-  readonly useRegex?: boolean;
+  readonly useRegex: boolean;
 }
 
 const getElmIndex = (elm: Element): string | null => {
@@ -114,32 +114,28 @@ const removeNode = (dom: DOMUtils, node: Node): void => {
 
 const escapeSearchText = (text: string, wholeWord: boolean, useRegex: boolean): string => {
   if (useRegex) {
-    return text; // Use the raw regex pattern if useRegex is true
+    const regexPatternMatch = text.match(/\\\/(.*?)\/\\/);
+    console.log('regexPatternMatch ', regexPatternMatch, text, ' regexPatternMatch');
+    if (regexPatternMatch && regexPatternMatch[1]) {
+      const regexPattern = regexPatternMatch[1].replace(/\\\\/g, '\\');
+
+      // try {
+      //   new RegExp(regexPattern);
+      //   return regexPattern;
+      // } catch (e) {
+      //   console.error('Invalid regex pattern provided:', regexPattern);
+      //   return text;
+      // }
+    }
   }
   const escapedText = text.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&').replace(/\s/g, '[^\\S\\r\\n\\uFEFF]');
   const wordRegex = '(' + escapedText + ')';
   return wholeWord ? `(?:^|\\s|${PolarisPattern.punctuation()})` + wordRegex + `(?=$|\\s|${PolarisPattern.punctuation()})` : wordRegex;
 };
 
-const isRegexPattern = (text: string): boolean => {
-  const regexPattern = /\\\/.*\/\\/;
-  const detected = regexPattern.test(text);
-
-  if (detected) {
-    // eslint-disable-next-line no-console
-    console.log(`Regex pattern detected: ${text}`); // Print message when pattern is detected
-  }
-  return regexPattern.test(text);
-};
-
-const find = (editor: Editor, currentSearchState: Cell<SearchState>, text: string, matchCase: boolean, wholeWord: boolean, inSelection: boolean): number => {
+const find = (editor: Editor, currentSearchState: Cell<SearchState>, text: string, matchCase: boolean, wholeWord: boolean, inSelection: boolean, useRegex: boolean): number => {
   const selection = editor.selection;
-  const useRegex = isRegexPattern(text); // Check if the text is in the regex format
-
-  // Extract the actual regex pattern from the text if useRegex is true
-  const searchText = useRegex ? text.slice(2, -2) : text;
-
-  const escapedText = escapeSearchText(searchText, wholeWord, useRegex);
+  const escapedText = escapeSearchText(text, wholeWord, useRegex);
   const isForwardSelection = selection.isForward();
 
   const pattern = {
@@ -148,6 +144,8 @@ const find = (editor: Editor, currentSearchState: Cell<SearchState>, text: strin
   };
   const count = markAllMatches(editor, currentSearchState, pattern, inSelection);
 
+  // Safari has a bug whereby splitting text nodes breaks the selection (which is done when marking matches).
+  // As such we need to manually reset it after doing a find action. See https://bugs.webkit.org/show_bug.cgi?id=230594
   if (Env.browser.isSafari()) {
     selection.setRng(selection.getRng(), isForwardSelection);
   }
@@ -157,7 +155,7 @@ const find = (editor: Editor, currentSearchState: Cell<SearchState>, text: strin
     currentSearchState.set({
       index: newIndex,
       count,
-      text: searchText, // Use the extracted pattern for state
+      text,
       matchCase,
       wholeWord,
       inSelection,

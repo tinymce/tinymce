@@ -15,7 +15,8 @@ export default (): void => {
       text: '',
       matchCase: false,
       wholeWord: false,
-      inSelection: false
+      inSelection: false,
+      useRegex: false
     });
 
     Commands.register(editor, currentSearchState);

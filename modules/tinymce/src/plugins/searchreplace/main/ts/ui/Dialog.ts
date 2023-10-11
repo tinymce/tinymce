@@ -13,6 +13,7 @@ export interface DialogData {
   readonly matchcase: boolean;
   readonly wholewords: boolean;
   readonly inselection: boolean;
+  readonly useRegex: boolean;
 }
 
 const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): void => {
@@ -34,7 +35,8 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
       ...current,
       matchCase: data.matchcase,
       wholeWord: data.wholewords,
-      inSelection: data.inselection
+      inSelection: data.inselection,
+      useRegex: data.useRegex
     });
   };
 
@@ -75,11 +77,11 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
     }
 
     // Same search text, so treat the find as a next click instead
-    if (last.text === data.findtext && last.matchCase === data.matchcase && last.wholeWord === data.wholewords) {
+    if (last.text === data.findtext && last.matchCase === data.matchcase && last.wholeWord === data.wholewords && last.useRegex === data.useRegex) {
       Actions.next(editor, currentSearchState);
     } else {
       // Find new matches
-      const count = Actions.find(editor, currentSearchState, data.findtext, data.matchcase, data.wholewords, data.inselection);
+      const count = Actions.find(editor, currentSearchState, data.findtext, data.matchcase, data.wholewords, data.inselection, data.useRegex);
       if (count <= 0) {
         toggleNotFoundAlert(true, api);
       }
@@ -96,7 +98,8 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
     replacetext: '',
     wholewords: initialState.wholeWord,
     matchcase: initialState.matchCase,
-    inselection: initialState.inSelection
+    inselection: initialState.inSelection,
+    useRegex: initialState.useRegex
   };
 
   const getPanelItems = (error: boolean): Dialog.BodyComponentSpec[] => {
@@ -175,6 +178,11 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
             type: 'togglemenuitem',
             name: 'inselection',
             text: 'Find in selection'
+          },
+          {
+            type: 'togglemenuitem',
+            name: 'useRegex',
+            text: 'Use regular expression'
           }
         ]
       },
@@ -234,6 +242,7 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
         case 'matchcase':
         case 'wholewords':
         case 'inselection':
+        case 'useRegex':
           toggleNotFoundAlert(false, api);
           updateSearchState(api);
           reset(api);
