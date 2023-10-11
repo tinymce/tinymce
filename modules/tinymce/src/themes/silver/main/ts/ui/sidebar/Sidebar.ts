@@ -32,6 +32,7 @@ const setup = (editor: Editor): void => {
     editor.ui.registry.addToggleButton(name, {
       icon: spec.icon,
       tooltip: spec.tooltip,
+      enabled_in_readonly: spec.enabled_in_readonly,
       onAction: (buttonApi) => {
         editor.execCommand('ToggleSidebar', false, name);
         buttonApi.setActive(isActive());

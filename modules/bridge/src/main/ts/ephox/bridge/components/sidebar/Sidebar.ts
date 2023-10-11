@@ -10,6 +10,7 @@ export interface SidebarInstanceApi {
 export interface SidebarSpec {
   icon?: string;
   tooltip?: string;
+  enabled_in_readonly?: boolean;
   onShow?: (api: SidebarInstanceApi) => void;
   onSetup?: (api: SidebarInstanceApi) => (api: SidebarInstanceApi) => void;
   onHide?: (api: SidebarInstanceApi) => void;
@@ -18,6 +19,7 @@ export interface SidebarSpec {
 export interface Sidebar {
   icon: Optional<string>;
   tooltip: Optional<string>;
+  enabled_in_readonly: boolean;
   onShow: (api: SidebarInstanceApi) => void;
   onSetup: (api: SidebarInstanceApi) => (api: SidebarInstanceApi) => void;
   onHide: (api: SidebarInstanceApi) => void;
@@ -26,6 +28,7 @@ export interface Sidebar {
 export const sidebarSchema = StructureSchema.objOf([
   ComponentSchema.optionalIcon,
   ComponentSchema.optionalTooltip,
+  ComponentSchema.enabledInReadOnly,
   FieldSchema.defaultedFunction('onShow', Fun.noop),
   FieldSchema.defaultedFunction('onHide', Fun.noop),
   ComponentSchema.onSetup
