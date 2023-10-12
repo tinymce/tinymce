@@ -935,6 +935,7 @@ const shouldPreserveCData = option('preserve_cdata');
 const shouldHighlightOnFocus = option('highlight_on_focus');
 const shouldSanitizeXss = option('xss_sanitization');
 const shouldUseDocumentWrite = option('init_content_sync');
+const canCommentInReadOnly = option('tinycomments_allow_readonly_commenting');
 
 const hasTextPatternsLookup = (editor: Editor): boolean =>
   editor.options.isSet('text_patterns_lookup');
@@ -1059,5 +1060,6 @@ export {
   shouldSanitizeXss,
   getDetailsInitialState,
   getDetailsSerializedState,
-  shouldUseDocumentWrite
+  shouldUseDocumentWrite,
+  canCommentInReadOnly
 };

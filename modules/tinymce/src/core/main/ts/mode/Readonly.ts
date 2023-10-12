@@ -2,6 +2,7 @@ import { Arr, Optional, Strings } from '@ephox/katamari';
 import { Attribute, Class, Compare, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
+import * as Options from '../api/Options';
 import VK from '../api/util/VK';
 import * as EditorFocus from '../focus/EditorFocus';
 
@@ -60,11 +61,13 @@ const toggleReadOnly = (editor: Editor, state: boolean): void => {
   toggleClass(body, 'mce-content-readonly', state);
 
   if (state) {
+    editor.readonly = true;
     editor.selection.controlSelection.hideResizeRect();
     editor._selectionOverrides.hideFakeCaret();
     removeFakeSelection(editor);
-    editor.readonly = true;
-    setContentEditable(body, false);
+    if (!Options.canCommentInReadOnly(editor)) {
+      setContentEditable(body, false);
+    }
     switchOffContentEditableTrue(body);
   } else {
     editor.readonly = false;
