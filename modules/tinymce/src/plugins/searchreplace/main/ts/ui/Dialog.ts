@@ -102,7 +102,8 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
     useRegex: initialState.useRegex
   };
 
-  const getPanelItems = (error: boolean): Dialog.BodyComponentSpec[] => {
+  const getPanelItems = (error: boolean, useRegex: boolean): Dialog.BodyComponentSpec[] => {
+    const findPlaceholder = useRegex ? 'When using find with regex, wrap regex in "/"' : 'Find';
     const items: Dialog.BodyComponentSpec[] = [
       {
         type: 'bar',
@@ -110,7 +111,7 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
           {
             type: 'input',
             name: 'findtext',
-            placeholder: 'Find',
+            placeholder: findPlaceholder,
             maximized: true,
             inputMode: 'search'
           },
@@ -155,7 +156,7 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
     size: 'normal',
     body: {
       type: 'panel',
-      items: getPanelItems(showNoMatchesAlertBanner)
+      items: getPanelItems(showNoMatchesAlertBanner, initialData.useRegex)
     },
     buttons: [
       {
@@ -242,10 +243,16 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
         case 'matchcase':
         case 'wholewords':
         case 'inselection':
+          toggleNotFoundAlert(false, api);
+          updateSearchState(api);
+          reset(api);
+          break;
         case 'useRegex':
           toggleNotFoundAlert(false, api);
           updateSearchState(api);
           reset(api);
+          const newData = api.getData();
+          api.redial(getDialogSpec(false, { ...newData, useRegex: newData.useRegex === true }));
           break;
         default:
           break;
