@@ -62,11 +62,9 @@ const receivingConfig = (): Behaviour.NamedConfiguredBehaviour<any, any> =>
   createReceivingConfig((comp, data: ReadOnlyData) => Disabling.set(comp, data.readonly));
 
 const receivingEnableParentConfig = (parentSelector: string): Behaviour.NamedConfiguredBehaviour<any, any> =>
-  createReceivingConfig((comp, data: ReadOnlyData) => {
-    if (data.readonly) {
-      SelectorFind.ancestor(comp.element, parentSelector).each((parent) =>
-        comp.getSystem().getByDom(parent).each((parentComp) => Disabling.set(parentComp, false)));
-    }
+  createReceivingConfig((comp, _: ReadOnlyData) => {
+    SelectorFind.ancestor(comp.element, parentSelector).each((parent) =>
+      comp.getSystem().getByDom(parent).each((parentComp) => Disabling.set(parentComp, false)));
   });
 
 export {
