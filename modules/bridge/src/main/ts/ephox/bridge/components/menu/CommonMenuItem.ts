@@ -5,6 +5,7 @@ import * as ComponentSchema from '../../core/ComponentSchema';
 
 export interface CommonMenuItemSpec {
   enabled?: boolean;
+  enabled_in_readonly?: boolean;
   text?: string;
   value?: string;
   meta?: Record<string, any>;
@@ -18,6 +19,7 @@ export interface CommonMenuItemInstanceApi {
 
 export interface CommonMenuItem {
   enabled: boolean;
+  enabled_in_readonly: boolean;
   text: Optional<string>;
   value: string;
   meta: Record<string, any>;
@@ -26,6 +28,7 @@ export interface CommonMenuItem {
 
 export const commonMenuItemFields: FieldProcessor[] = [
   ComponentSchema.enabled,
+  ComponentSchema.enabledInReadOnly,
   ComponentSchema.optionalText,
   ComponentSchema.optionalShortcut,
   ComponentSchema.generatedValue('menuitem'),

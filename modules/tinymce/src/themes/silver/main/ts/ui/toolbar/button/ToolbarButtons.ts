@@ -206,7 +206,7 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
             onControlDetached(specialisation, editorOffCell)
           ]),
           // Enable toolbar buttons by default
-          DisablingConfigs.toolbarButton(spec.enabled_in_readonly ? Fun.never : () => !spec.enabled || providersBackstage.isDisabled()),
+          DisablingConfigs.toolbarButton(() => !spec.enabled_in_readonly && (!spec.enabled || providersBackstage.isDisabled())),
           ...spec.enabled_in_readonly ? [] : [ ReadOnly.receivingConfig() ]
         ].concat(specialisation.toolbarButtonBehaviours)
       ),

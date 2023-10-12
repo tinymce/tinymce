@@ -30,6 +30,7 @@ const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, provi
     data: buildData(spec),
     getApi,
     enabled: spec.enabled,
+    enabled_in_readonly: spec.enabled_in_readonly,
     onAction: spec.onAction,
     onSetup: spec.onSetup,
     triggersSubmenu: false,

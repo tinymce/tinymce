@@ -49,6 +49,7 @@ const renderChoiceItem = (
     renderCommonItem({
       data: buildData(spec),
       enabled: spec.enabled,
+      enabled_in_readonly: spec.enabled_in_readonly,
       getApi,
       onAction: (_api) => onItemValueHandler(spec.value),
       onSetup: (api) => {

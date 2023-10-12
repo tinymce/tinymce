@@ -75,6 +75,7 @@ export const renderCardMenuItem = (
   return renderCommonItem({
     data: buildData({ text: Optional.none(), ...spec }),
     enabled: spec.enabled,
+    enabled_in_readonly: spec.enabled_in_readonly,
     getApi,
     onAction: spec.onAction,
     onSetup: spec.onSetup,
