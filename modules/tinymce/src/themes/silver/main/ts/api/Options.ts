@@ -421,7 +421,7 @@ const isStickyToolbar = (editor: Editor): boolean => {
 const isSplitUiMode = (editor: Editor): boolean =>
   !useFixedContainer(editor) && editor.options.get('ui_mode') === 'split';
 
-const getMenus = (editor: Editor): Record<string, { title: string; items: string }> => {
+const getMenus = (editor: Editor): Record<string, { title: string; items: string; enabled_in_readonly: boolean }> => {
   const menu = editor.options.get('menu');
   return Obj.map(menu, (menu) => ({ ...menu, items: menu.items }));
 };

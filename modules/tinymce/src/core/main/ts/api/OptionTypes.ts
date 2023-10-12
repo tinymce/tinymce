@@ -156,7 +156,7 @@ interface BaseEditorOptions {
   line_height_formats?: string;
   max_height?: number;
   max_width?: number;
-  menu?: Record<string, { title: string; items: string }>;
+  menu?: Record<string, { title: string; items: string; enabled_in_readonly?: boolean }>;
   menubar?: boolean | string;
   min_height?: number;
   min_width?: number;
@@ -316,7 +316,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   language_load: boolean;
   language_url: string;
   line_height_formats: string;
-  menu: Record<string, { title: string; items: string }>;
+  menu: Record<string, { title: string; items: string; enabled_in_readonly: boolean }>;
   menubar: boolean | string;
   model: string;
   newdocument_content: string;

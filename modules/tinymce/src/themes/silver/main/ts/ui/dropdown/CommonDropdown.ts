@@ -36,6 +36,7 @@ export interface CommonDropdownSpec<T> {
   readonly text: Optional<string>;
   readonly icon: Optional<string>;
   readonly disabled?: boolean;
+  readonly enabled_in_readonly?: boolean;
   readonly tooltip: Optional<string>;
   readonly role: Optional<string>;
   readonly fetch: (comp: AlloyComponent, callback: (tdata: Optional<TieredData>) => void) => void;
@@ -152,8 +153,8 @@ const renderCommonDropdown = <T>(
 
       dropdownBehaviours: Behaviour.derive([
         ...spec.dropdownBehaviours,
-        DisablingConfigs.button(() => spec.disabled || sharedBackstage.providers.isDisabled()),
-        ReadOnly.receivingConfig(),
+        DisablingConfigs.button(() => !spec.enabled_in_readonly && (spec.disabled || sharedBackstage.providers.isDisabled())),
+        ...spec.enabled_in_readonly ? [] : [ ReadOnly.receivingConfig() ],
         // INVESTIGATE (TINY-9012): There was a old comment here about something not quite working, and that
         // we can still get the button focused. It was probably related to Unselecting.
         Unselecting.config({}),

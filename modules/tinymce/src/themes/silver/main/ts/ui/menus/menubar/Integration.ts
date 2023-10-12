@@ -9,6 +9,7 @@ import { MenubarItemSpec } from './SilverMenubar';
 interface MenuSpec {
   readonly title: string;
   readonly items: string;
+  readonly enabled_in_readonly: boolean;
 }
 
 export interface MenuRegistry {
@@ -20,20 +21,25 @@ export interface MenuRegistry {
 const defaultMenubar = 'file edit view insert format tools table help';
 
 const defaultMenus: Record<string, MenuSpec> = {
-  file: { title: 'File', items: 'newdocument restoredraft | preview | export print | deleteallconversations' },
-  edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall | searchreplace' },
-  view: { title: 'View', items: 'code | visualaid visualchars visualblocks | spellchecker | preview fullscreen | showcomments' },
-  insert: { title: 'Insert', items: 'image link media addcomment pageembed template inserttemplate codesample inserttable accordion | charmap emoticons hr | pagebreak nonbreaking anchor tableofcontents footnotes | mergetags | insertdatetime' },
-  format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript codeformat | styles blocks fontfamily fontsize align lineheight | forecolor backcolor | language | removeformat' },
-  tools: { title: 'Tools', items: 'aidialog aishortcuts | spellchecker spellcheckerlanguage | autocorrect capitalization | a11ycheck code typography wordcount addtemplate' },
-  table: { title: 'Table', items: 'inserttable | cell row column | advtablesort | tableprops deletetable' },
-  help: { title: 'Help', items: 'help' }
+  file: { title: 'File', items: 'newdocument restoredraft | preview | export print | deleteallconversations', enabled_in_readonly: false },
+  edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall | searchreplace', enabled_in_readonly: false },
+  view: { title: 'View', items: 'code | visualaid visualchars visualblocks | spellchecker | preview fullscreen | showcomments', enabled_in_readonly: false },
+  insert: {
+    title: 'Insert',
+    items: 'image link media addcomment pageembed template inserttemplate codesample inserttable accordion | charmap emoticons hr | pagebreak nonbreaking anchor tableofcontents footnotes | mergetags | insertdatetime',
+    enabled_in_readonly: false
+  },
+  format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript codeformat | styles blocks fontfamily fontsize align lineheight | forecolor backcolor | language | removeformat', enabled_in_readonly: false },
+  tools: { title: 'Tools', items: 'aidialog aishortcuts | spellchecker spellcheckerlanguage | autocorrect capitalization | a11ycheck code typography wordcount addtemplate', enabled_in_readonly: false },
+  table: { title: 'Table', items: 'inserttable | cell row column | advtablesort | tableprops deletetable', enabled_in_readonly: false },
+  help: { title: 'Help', items: 'help', enabled_in_readonly: false }
 };
 
-const make = (menu: { title: string; items: string[] }, registry: MenuRegistry, editor: Editor): MenubarItemSpec => {
+const make = (menu: { title: string; items: string[]; enabled_in_readonly: boolean }, registry: MenuRegistry, editor: Editor): MenubarItemSpec => {
   const removedMenuItems = Options.getRemovedMenuItems(editor).split(/[ ,]/);
   return {
     text: menu.title,
+    enabled_in_readonly: menu.enabled_in_readonly,
     getItems: () => Arr.bind(menu.items, (i): Menu.NestedMenuItemContents[] => {
       const itemName = i.toLowerCase();
       if (itemName.trim().length === 0) {
@@ -73,7 +79,7 @@ const identifyMenus = (editor: Editor, registry: MenuRegistry): MenubarItemSpec[
 
   const menus: MenubarItemSpec[] = Arr.map(validMenus, (menuName) => {
     const menuData = rawMenuData[menuName];
-    return make({ title: menuData.title, items: parseItemsString(menuData.items) }, registry, editor);
+    return make({ title: menuData.title, items: parseItemsString(menuData.items), enabled_in_readonly: menuData.enabled_in_readonly }, registry, editor);
   });
 
   return Arr.filter(menus, (menu) => {

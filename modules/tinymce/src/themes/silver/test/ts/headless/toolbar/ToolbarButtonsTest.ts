@@ -125,6 +125,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
             icon: Optional.none(),
             text: Optional.some('button4'),
             search: Optional.none(),
+            enabled_in_readonly: false,
             fetch: (callback) => {
               callback([
                 {

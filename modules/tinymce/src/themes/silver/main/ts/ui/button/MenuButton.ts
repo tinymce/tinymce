@@ -58,6 +58,7 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
     searchable: spec.search.isSome(),
     // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
     role,
+    enabled_in_readonly: spec.enabled_in_readonly,
     fetch: (dropdownComp, callback) => {
       const fetchContext: Toolbar.MenuButtonFetchContext = {
         pattern: spec.search.isSome() ? getSearchPattern(dropdownComp) : ''

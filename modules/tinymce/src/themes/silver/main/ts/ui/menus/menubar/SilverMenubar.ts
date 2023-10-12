@@ -38,6 +38,7 @@ export interface SilverMenubarSketch extends Sketcher.SingleSketch<SilverMenubar
 
 export interface MenubarItemSpec {
   text: TranslatedString;
+  enabled_in_readonly: boolean;
   getItems: () => Menu.NestedMenuItemContents[];
 }
 
@@ -47,6 +48,7 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
       const buttonSpec: Toolbar.ToolbarMenuButtonSpec = {
         type: 'menubutton',
         text: m.text,
+        enabled_in_readonly: m.enabled_in_readonly,
         fetch: (callback) => {
           callback(m.getItems());
         }

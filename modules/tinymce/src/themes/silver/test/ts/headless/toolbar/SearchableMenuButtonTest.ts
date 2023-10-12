@@ -33,6 +33,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
           text: Optional.some('MailMerge'),
           icon: Optional.none(),
           tooltip: Optional.none(),
+          enabled_in_readonly: false,
           onSetup: Fun.constant(Fun.noop),
           search: Optional.some({ placeholder: Optional.none() }),
           fetch: fetchMailMergeData({

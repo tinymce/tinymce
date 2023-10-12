@@ -140,6 +140,7 @@ describe('headless.tinymce.themes.silver.sketchers.SilverMenubar Test', () => {
       SilverMenubar.setMenus(getMenubar(), [
         {
           text: 'Changes',
+          enabled_in_readonly: false,
           getItems: () => [
             {
               type: 'togglemenuitem',
@@ -156,6 +157,7 @@ describe('headless.tinymce.themes.silver.sketchers.SilverMenubar Test', () => {
         },
         {
           text: 'Basic Menu Button',
+          enabled_in_readonly: false,
           getItems: () => [
             {
               type: 'menuitem',

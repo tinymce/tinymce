@@ -2,6 +2,7 @@ import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Fun, Optional, Type } from '@ephox/katamari';
 
 import { NestedMenuItemContents } from '../components/menu/NestedMenuItem';
+import * as ComponentSchema from '../core/ComponentSchema';
 
 export type MenuButtonItemTypes = NestedMenuItemContents;
 export type SuccessCallback = (menu: string | MenuButtonItemTypes[]) => void;
@@ -16,6 +17,7 @@ export interface BaseMenuButtonSpec {
   tooltip?: string;
   icon?: string;
   search?: boolean | { placeholder?: string };
+  enabled_in_readonly?: boolean;
   // In order to avoid breaking APIs with pre 6.2 releases, the fetchContext was added
   // as an additional argument to fetch.
   fetch: (success: SuccessCallback, fetchContext: MenuButtonFetchContext, api: BaseMenuButtonInstanceApi) => void;
@@ -27,6 +29,7 @@ export interface BaseMenuButton {
   tooltip: Optional<string>;
   icon: Optional<string>;
   search: Optional<{ placeholder: Optional<string> }>;
+  enabled_in_readonly: boolean;
   fetch: (success: SuccessCallback, fetchContext: MenuButtonFetchContext, api: BaseMenuButtonInstanceApi) => void;
   onSetup: (api: BaseMenuButtonInstanceApi) => (api: BaseMenuButtonInstanceApi) => void;
 }
@@ -72,7 +75,7 @@ export const baseMenuButtonFields = [
       }
     )
   ),
-
+  ComponentSchema.enabledInReadOnly,
   FieldSchema.requiredFunction('fetch'),
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop)
 ];
