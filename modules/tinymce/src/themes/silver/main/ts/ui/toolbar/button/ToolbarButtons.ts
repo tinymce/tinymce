@@ -127,7 +127,7 @@ const renderCommonStructure = (
     buttonBehaviours: Behaviour.derive(
       [
         DisablingConfigs.toolbarButton(enabledInReadOnly ? Fun.never : providersBackstage.isDisabled),
-        ...enabledInReadOnly ? [] : [ ReadOnly.receivingConfig() ],
+        ...enabledInReadOnly ? [ ReadOnly.receivingEnableParentConfig('.tox-toolbar-overlord') ] : [ ReadOnly.receivingConfig() ],
         AddEventsBehaviour.config(commonButtonDisplayEvent, [
           AlloyEvents.runOnAttached((comp, _se) => UiUtils.forceInitialSize(comp)),
           AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
@@ -207,7 +207,7 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
           ]),
           // Enable toolbar buttons by default
           DisablingConfigs.toolbarButton(() => !spec.enabled_in_readonly && (!spec.enabled || providersBackstage.isDisabled())),
-          ...spec.enabled_in_readonly ? [] : [ ReadOnly.receivingConfig() ]
+          ...spec.enabled_in_readonly ? [ ReadOnly.receivingEnableParentConfig('.tox-toolbar-overlord') ] : [ ReadOnly.receivingConfig() ]
         ].concat(specialisation.toolbarButtonBehaviours)
       ),
       // Here we add the commonButtonDisplayEvent behaviour from the structure so we can listen

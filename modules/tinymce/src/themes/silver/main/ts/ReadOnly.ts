@@ -1,6 +1,7 @@
-import { Behaviour, Channels, Disabling, Receiving } from '@ephox/alloy';
+import { AlloyComponent, Behaviour, Channels, Disabling, Receiving } from '@ephox/alloy';
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Arr } from '@ephox/katamari';
+import { SelectorFind } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -48,20 +49,30 @@ const setupReadonlyModeSwitch = (editor: Editor, uiRefs: ReadyUiReferences): voi
   }
 };
 
-const receivingConfig = (): Behaviour.NamedConfiguredBehaviour<any, any> => Receiving.config({
+const createReceivingConfig = (onReceive: (comp: AlloyComponent, data: ReadOnlyData) => void): Behaviour.NamedConfiguredBehaviour<any, any> => Receiving.config({
   channels: {
     [ReadOnlyChannel]: {
       schema: ReadOnlyDataSchema,
-      onReceive: (comp, data: ReadOnlyData) => {
-        Disabling.set(comp, data.readonly);
-      }
+      onReceive
     }
   }
 });
+
+const receivingConfig = (): Behaviour.NamedConfiguredBehaviour<any, any> =>
+  createReceivingConfig((comp, data: ReadOnlyData) => Disabling.set(comp, data.readonly));
+
+const receivingEnableParentConfig = (parentSelector: string): Behaviour.NamedConfiguredBehaviour<any, any> =>
+  createReceivingConfig((comp, data: ReadOnlyData) => {
+    if (data.readonly) {
+      SelectorFind.ancestor(comp.element, parentSelector).each((parent) =>
+        comp.getSystem().getByDom(parent).each((parentComp) => Disabling.set(parentComp, false)));
+    }
+  });
 
 export {
   ReadOnlyDataSchema,
   setupReadonlyModeSwitch,
   receivingConfig,
+  receivingEnableParentConfig,
   broadcastReadonly
 };
