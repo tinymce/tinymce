@@ -41,7 +41,7 @@ const backspaceDeleteCaret = (editor: Editor, forward: boolean): Optional<() => 
   // 5. CEF ancestor -> return true
 
   return getAncestorCe(editor, selectedNode).filter(NodeType.isContentEditableFalse).fold(
-    () => CefDeleteAction.read(editor.getBody(), forward, editor.selection.getRng()).map((deleteAction) =>
+    () => CefDeleteAction.read(editor.getBody(), forward, editor.selection.getRng(), editor.schema).map((deleteAction) =>
       () =>
         deleteAction.fold(
           deleteElement(editor, forward),

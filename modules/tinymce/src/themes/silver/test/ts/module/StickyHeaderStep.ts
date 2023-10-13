@@ -131,7 +131,7 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
         await StickyUtils.pOpenMenuAndTestScrolling(() => MenuUtils.pOpenNestedMenus([
           {
             label: 'Open splitmenu item, color palette',
-            selector: 'div[title="Text color"][aria-expanded=false]'
+            selector: 'div[title^="Text color"][aria-expanded=false]'
           }
         ]), 1, isToolbarTop);
       });

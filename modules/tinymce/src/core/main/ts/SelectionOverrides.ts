@@ -126,7 +126,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
           setRange(range);
 
           // Set the focus after the range has been set to avoid potential issues where the body has no selection
-          if (NodeType.isElement(closestContentEditable)) {
+          if (NodeType.isHTMLElement(closestContentEditable)) {
             closestContentEditable.focus();
           } else {
             editor.getBody().focus();

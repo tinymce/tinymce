@@ -1,7 +1,9 @@
 import { ColourPicker } from '@ephox/acid';
 import { AlloyComponent, AlloyTriggers, Behaviour, Composing, Form, Memento, NativeEvents, Representing, SimpleSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Arr, Optional, Strings } from '@ephox/katamari';
+import { Arr, Optional, Strings, Type } from '@ephox/katamari';
+
+import { Untranslated } from 'tinymce/core/api/util/I18n';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
@@ -22,8 +24,12 @@ const english: Record<string, string> = {
   'aria.input.invalid': 'Invalid input'
 };
 
-const translate = (providerBackstage: UiFactoryBackstageProviders) => (key: string) => {
-  return providerBackstage.translate(english[key]);
+const translate = (providerBackstage: UiFactoryBackstageProviders) => (key: Untranslated) => {
+  if (Type.isString(key)) {
+    return providerBackstage.translate(english[key]);
+  } else {
+    return providerBackstage.translate(key);
+  }
 };
 
 type ColorPickerSpec = Omit<Dialog.ColorPicker, 'type'>;

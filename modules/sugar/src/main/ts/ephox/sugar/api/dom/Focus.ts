@@ -6,8 +6,8 @@ import * as SugarShadowDom from '../node/SugarShadowDom';
 
 type RootNode = SugarShadowDom.RootNode;
 
-const focus = (element: SugarElement<HTMLElement>): void =>
-  element.dom.focus();
+const focus = (element: SugarElement<HTMLElement>, preventScroll: boolean = false): void =>
+  element.dom.focus({ preventScroll });
 
 const blur = (element: SugarElement<HTMLElement>): void =>
   element.dom.blur();

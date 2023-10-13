@@ -9,7 +9,7 @@ export interface ElementSets<T> {
 
 export const getElementSetsAsStrings = (type: SchemaType): ElementSets<string> => {
   let globalAttributes: string, blockContent: string;
-  let phrasingContent: string, flowContent: string | undefined;
+  let phrasingContent: string;
 
   // Attributes present on all elements
   globalAttributes = 'id accesskey class dir lang style tabindex title role';
@@ -31,7 +31,7 @@ export const getElementSetsAsStrings = (type: SchemaType): ElementSets<string> =
       'hidden spellcheck translate';
     blockContent += ' article aside details dialog figure main header footer hgroup section nav ' + transparentContent;
     phrasingContent += ' audio canvas command datalist mark meter output picture ' +
-      'progress time wbr video ruby bdi keygen';
+      'progress time wbr video ruby bdi keygen svg';
   }
 
   // Add HTML4 elements unless it's html5-strict
@@ -43,13 +43,10 @@ export const getElementSetsAsStrings = (type: SchemaType): ElementSets<string> =
 
     const html4BlockContent = 'center dir isindex noframes';
     blockContent = [ blockContent, html4BlockContent ].join(' ');
-
-    // Flow content elements from the HTML5 spec (block+inline)
-    flowContent = [ blockContent, phrasingContent ].join(' ');
   }
 
   // Flow content elements from the HTML5 spec (block+inline)
-  flowContent = flowContent || [ blockContent, phrasingContent ].join(' ');
+  const flowContent = [ blockContent, phrasingContent ].join(' ');
 
   return { globalAttributes, blockContent, phrasingContent, flowContent };
 };

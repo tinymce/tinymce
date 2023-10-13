@@ -1,8 +1,8 @@
-import { Arr, Fun, Obj, Type, Optional } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 
 import * as CustomElementsRuleParser from '../../schema/CustomElementsRuleParser';
 import * as SchemaLookupTable from '../../schema/SchemaLookupTable';
-import { SchemaType, ElementSettings, SchemaElement, SchemaMap, SchemaRegExpMap, SchemaSettings } from '../../schema/SchemaTypes';
+import { ElementSettings, SchemaElement, SchemaMap, SchemaRegExpMap, SchemaSettings, SchemaType } from '../../schema/SchemaTypes';
 import * as SchemaUtils from '../../schema/SchemaUtils';
 import * as ValidChildrenRuleParser from '../../schema/ValidChildrenRuleParser';
 import * as ValidElementsRuleParser from '../../schema/ValidElementsRuleParser';
@@ -31,6 +31,9 @@ interface Schema {
   getSpecialElements: () => SchemaRegExpMap;
   isValidChild: (name: string, child: string) => boolean;
   isValid: (name: string, attr?: string) => boolean;
+  isBlock: (name: string) => boolean;
+  isInline: (name: string) => boolean;
+  isWrapper: (name: string) => boolean;
   getCustomElements: () => SchemaMap;
   addValidElements: (validElements: string) => void;
   setValidElements: (validElements: string) => void;
@@ -144,18 +147,21 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     'noshade nowrap readonly selected autoplay loop controls allowfullscreen');
 
   const nonEmptyOrMoveCaretBeforeOnEnter = 'td th iframe video audio object script code';
-  const nonEmptyElementsMap = createLookupTable('non_empty_elements', nonEmptyOrMoveCaretBeforeOnEnter + ' pre', voidElementsMap);
+  const nonEmptyElementsMap = createLookupTable('non_empty_elements', nonEmptyOrMoveCaretBeforeOnEnter + ' pre svg', voidElementsMap);
   const moveCaretBeforeOnEnterElementsMap = createLookupTable('move_caret_before_on_enter_elements', nonEmptyOrMoveCaretBeforeOnEnter + ' table', voidElementsMap);
 
-  const textBlockElementsMap = createLookupTable('text_block_elements', 'h1 h2 h3 h4 h5 h6 p div address pre form ' +
+  const headings = 'h1 h2 h3 h4 h5 h6';
+  const textBlockElementsMap = createLookupTable('text_block_elements', headings + ' p div address pre form ' +
     'blockquote center dir fieldset header footer article section hgroup aside main nav figure');
   const blockElementsMap = createLookupTable('block_elements', 'hr table tbody thead tfoot ' +
     'th tr td li ol ul caption dl dt dd noscript menu isindex option ' +
-    'datalist select optgroup figcaption details summary', textBlockElementsMap);
+    'datalist select optgroup figcaption details summary html body multicol listing', textBlockElementsMap);
   const textInlineElementsMap = createLookupTable('text_inline_elements', 'span strong b em i font s strike u var cite ' +
     'dfn code mark q sup sub samp');
 
   const transparentElementsMap = createLookupTable('transparent_elements', 'a ins del canvas map');
+
+  const wrapBlockElementsMap = createLookupTable('wrap_block_elements', 'pre ' + headings);
 
   // See https://html.spec.whatwg.org/multipage/parsing.html#parsing-html-fragments
   each(('script noscript iframe noframes noembed title style textarea xmp plaintext').split(' '), (name) => {
@@ -337,6 +343,9 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     });
   }
 
+  // Opt in is done with options like `extended_valid_elements`
+  delete elements.svg;
+
   addCustomElements(settings.custom_elements);
   addValidChildren(settings.valid_children);
   addValidElements(settings.extended_valid_elements);
@@ -495,6 +504,8 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
    */
   const getTransparentElements = Fun.constant(transparentElementsMap);
 
+  const getWrapBlockElements = Fun.constant(wrapBlockElementsMap);
+
   /**
    * Returns a map with special elements. These are elements that needs to be parsed
    * in a special way such as script, style, textarea etc. The map object values
@@ -557,6 +568,12 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     // No match
     return false;
   };
+
+  const isBlock = (name: string): boolean => Obj.has(getBlockElements(), name);
+
+  const isInline = (name: string): boolean => isValid(name) && !isBlock(name);
+
+  const isWrapper = (name: string): boolean => Obj.has(getWrapBlockElements(), name) || isInline(name);
 
   /**
    * Returns true/false if the specified element is valid or not
@@ -629,6 +646,9 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     getSpecialElements,
     isValidChild,
     isValid,
+    isBlock,
+    isInline,
+    isWrapper,
     getCustomElements,
     addValidElements,
     setValidElements,

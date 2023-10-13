@@ -1,7 +1,8 @@
 import { Channels, Debugging, Gui, GuiFactory } from '@ephox/alloy';
-import { Fun, Optional } from '@ephox/katamari';
+import { Fun, Optional, Type } from '@ephox/katamari';
 import { Class, DomEvent, Insert, SugarElement } from '@ephox/sugar';
 
+import { Untranslated } from 'ephox/acid/alien/I18n';
 import * as ColourPicker from 'ephox/acid/gui/ColourPicker';
 
 import { strings } from '../../../../i18n/en';
@@ -19,12 +20,17 @@ DomEvent.bind(SugarElement.fromDom(document), 'mouseup', (evt) => {
   }
 });
 
-const fakeTranslate = (key: string): string =>
-  Optional.from(strings[key]).getOrThunk(() => {
+const fakeTranslate = (key: Untranslated): string => {
+  if (Type.isString(key)) {
+    return Optional.from(strings[key]).getOrThunk(() => {
     // eslint-disable-next-line no-console
-    console.error('Missing translation for ' + key);
-    return key;
-  });
+      console.error('Missing translation for ' + key);
+      return key;
+    });
+  } else {
+    return 'Untranslated, complex string';
+  }
+};
 
 const colourPickerFactory = ColourPicker.makeFactory(fakeTranslate, Fun.identity);
 

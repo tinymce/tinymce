@@ -5,6 +5,7 @@ import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import { ParserArgs } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
+import Schema from '../api/html/Schema';
 import HtmlSerializer from '../api/html/Serializer';
 import * as StyleUtils from '../api/html/StyleUtils';
 import Tools from '../api/util/Tools';
@@ -16,6 +17,7 @@ import * as CefUtils from '../dom/CefUtils';
 import ElementUtils from '../dom/ElementUtils';
 import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
+import * as AstNodeType from '../html/AstNodeType';
 import * as FilterNode from '../html/FilterNode';
 import * as InvalidNodes from '../html/InvalidNodes';
 import * as ParserUtils from '../html/ParserUtils';
@@ -72,8 +74,8 @@ const validInsertion = (editor: Editor, value: string, parentNode: Element): voi
   }
 };
 
-const trimBrsFromTableCell = (dom: DOMUtils, elm: Element): void => {
-  Optional.from(dom.getParent(elm, 'td,th')).map(SugarElement.fromDom).each(PaddingBr.trimBlockTrailingBr);
+const trimBrsFromTableCell = (dom: DOMUtils, elm: Element, schema: Schema): void => {
+  Optional.from(dom.getParent(elm, 'td,th')).map(SugarElement.fromDom).each((el) => PaddingBr.trimBlockTrailingBr(el, schema));
 };
 
 // Remove children nodes that are exactly the same as a parent node - name, attributes, styles
@@ -229,6 +231,10 @@ const findMarkerNode = (scope: AstNode): Optional<AstNode> => {
   return Optional.none();
 };
 
+const notHeadingsInSummary = (dom: DOMUtils, node: Element, fragment: AstNode) => {
+  return Arr.exists(fragment.children(), AstNodeType.isHeading) && dom.getParent(node, dom.isBlock)?.nodeName === 'SUMMARY';
+};
+
 export const insertHtmlAtCaret = (editor: Editor, value: string, details: InsertContentDetails): string => {
   const selection = editor.selection;
   const dom = editor.dom;
@@ -307,7 +313,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
   editor._selectionOverrides.showBlockCaretContainer(parentNode);
 
   // If parser says valid we can insert the contents into that parent
-  if (!parserArgs.invalid) {
+  if (!parserArgs.invalid && !notHeadingsInSummary(dom, parentNode, fragment)) {
     value = serializer.serialize(fragment);
     validInsertion(editor, value, parentNode);
   } else {
@@ -359,7 +365,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
   reduceInlineTextElements(editor, merge);
   moveSelectionToMarker(editor, dom.get('mce_marker'));
   unmarkFragmentElements(editor.getBody());
-  trimBrsFromTableCell(dom, selection.getStart());
+  trimBrsFromTableCell(dom, selection.getStart(), editor.schema);
   TransparentElements.updateCaret(editor.schema, editor.getBody(), selection.getStart());
 
   return value;
