@@ -1,7 +1,7 @@
 import { DomSerializerImpl, DomSerializerSettings } from '../../dom/DomSerializerImpl';
 import Editor from '../Editor';
 
-export { DomSerializerSettings } from '../../dom/DomSerializerImpl';
+export { type DomSerializerSettings } from '../../dom/DomSerializerImpl';
 
 interface DomSerializer extends DomSerializerImpl { }
 

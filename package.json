@@ -33,18 +33,23 @@
     "headless-test-firefox": "yarn -s grunt headless-auto --bedrock-browser=firefox-headless",
     "headless-test-manual": "yarn -s grunt headless-manual",
     "bedrock": "bedrock --customRoutes modules/tinymce/src/core/test/json/routes.json",
-    "test-one": "yarn tsc && yarn bedrock-auto -b chrome-headless -f"
+    "test-one": "yarn tsc && yarn bedrock-auto -b chrome-headless -f",
+    "web-test-runner": "web-test-runner",
+    "web-test-runner-watch": "web-test-runner --watch"
   },
   "devDependencies": {
     "@ephox/bedrock-client": "^13.0.0",
     "@ephox/bedrock-server": "^13.5.0",
     "@ephox/oxide-icons-tools": "^3.1.1",
     "@ephox/swag": "^4.6.0",
+    "@esm-bundle/chai": "^4.3.4-fix.0",
     "@tinymce/eslint-plugin": "^2.3.0",
     "@tinymce/moxiedoc": "^0.3.0",
     "@types/chai": "^4.3.3",
     "@types/dompurify": "3.0.2",
     "@types/prismjs": "^1.16.6",
+    "@web/dev-server-esbuild": "^0.4.1",
+    "@web/test-runner": "^0.17.2",
     "chai": "^4.3.3",
     "chalk": "^4.1.0",
     "emojilib": "^2.4.0",
@@ -79,6 +84,7 @@
     "resolve": "^1.18.1",
     "rollup": "^3.22.0",
     "rollup-plugin-string": "^3.0.0",
+    "rollup-plugin-tsconfig-paths": "^1.5.1",
     "source-map-loader": "^4.0.1",
     "string-replace-loader": "^3.0.3",
     "stylelint": "^13.2.1",
@@ -93,5 +99,8 @@
     "webpack": "^5.74.0",
     "webpack-cli": "^5.1.1",
     "webpack-dev-server": "^4.11.0"
+  },
+  "dependencies": {
+    "@web/test-runner-playwright": "^0.10.1"
   }
 }
