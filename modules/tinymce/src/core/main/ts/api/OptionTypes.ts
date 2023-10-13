@@ -117,6 +117,7 @@ interface BaseEditorOptions {
   font_size_style_values?: string;
   font_size_formats?: string;
   font_size_input_default_unit?: string;
+  force_hex_color?: boolean;
   forced_root_block?: string;
   forced_root_block_attrs?: Record<string, string>;
   formats?: Formats;
