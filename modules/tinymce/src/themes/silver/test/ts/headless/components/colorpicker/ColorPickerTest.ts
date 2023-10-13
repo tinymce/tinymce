@@ -4,8 +4,8 @@ import { AlloyComponent, GuiFactory, TestHelpers } from '@ephox/alloy';
 import { describe, it, context } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
-import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
-import { assert, expect } from 'chai';
+import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { renderColorPicker } from 'tinymce/themes/silver/ui/dialog/ColorPicker';
@@ -165,30 +165,25 @@ describe('headless.tinymce.themes.silver.components.colorpicker.ColorPickerTest'
 
   });
 
-  context('TINY-9819, force_hex_color option set to default (false)', () => {
+  context('force_hex_color option set to default (false)', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       base_url: '/project/tinymce/js/tinymce',
     }, []);
 
-    it('should not affect data-mce-style attribute', () => {
+    it('TINY-9819: should not affect data-mce-style attribute', () => {
       const editor = hook.editor();
       assert.isFalse(editor.options.get('force_hex_color'), 'force_hex_color must be false');
 
       editor.setContent('<p>colour me</p>');
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 'color me'.length);
 
-      const hexColor = '#E03E2D';
-      editor.execCommand('mceApplyTextcolor', 'forecolor' as any, hexColor);
+      editor.execCommand('mceApplyTextcolor', 'forecolor' as any, '#E03E2D');
 
-      const outerHTML = editor.dom.getOuterHTML(editor.getBody());
-      const dataMceStyle = outerHTML.match(/data-mce-style="[^"]+"/)?.[0];
-      assert.isString(dataMceStyle, `Can't find data-mce-style in "${outerHTML}"`);
-      const expectedColor = 'color: rgb(224, 62, 45);';
-      expect(dataMceStyle).to.include(expectedColor, `"${dataMceStyle}" does not include expected color: "${expectedColor}".`);
+      TinyAssertions.assertContentPresence(editor, { [`span[data-mce-style="color: rgb(224, 62, 45);"]`]: 1 });
     });
   });
 
-  context('TINY-9819, force_hex_color option set to true', () => {
+  context('force_hex_color option set to true', () => {
     const color_map = [ '#E03E2D', 'Red' ];
     const hook = TinyHooks.bddSetupLight<Editor>({
       base_url: '/project/tinymce/js/tinymce',
@@ -197,7 +192,7 @@ describe('headless.tinymce.themes.silver.components.colorpicker.ColorPickerTest'
       color_map,
     }, []);
 
-    it('force_hex_color option will always set data-mce-style colors to hex', () => {
+    it('TINY-9819: will always set data-mce-style colors to hex', () => {
       const editor = hook.editor();
       assert.isTrue(editor.options.get('force_hex_color'), 'force_hex_color must be true');
 
@@ -206,10 +201,7 @@ describe('headless.tinymce.themes.silver.components.colorpicker.ColorPickerTest'
 
       editor.execCommand('mceApplyTextcolor', 'forecolor' as any, color_map[0]);
 
-      const outerHTML = editor.dom.getOuterHTML(editor.getBody());
-      const dataMceStyle = outerHTML.match(/data-mce-style="[^"]+"/)?.[0];
-      const expectedColor = `color: ${color_map[0]};`;
-      expect(dataMceStyle).to.include(expectedColor, `"${dataMceStyle}" does not include expected color: "${expectedColor}".`);
+      TinyAssertions.assertContentPresence(editor, { [`span[data-mce-style="color: ${color_map[0]};"]`]: 1 });
     });
 
     it('TINY-9819: changing fore-color with toolbar', async () => {
@@ -219,14 +211,11 @@ describe('headless.tinymce.themes.silver.components.colorpicker.ColorPickerTest'
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       TinyUiActions.clickOnUi(editor, `div[data-mce-color="${color_map[0]}"]`);
 
-      const outerHTML = editor.dom.getOuterHTML(editor.getBody());
-      const dataMceStyle = outerHTML.match(/data-mce-style="[^"]+"/)?.[0];
-      const expectedColor = `color: ${color_map[0]};`;
-      expect(dataMceStyle).to.include(expectedColor, `"${dataMceStyle}" does not include expected color: "${expectedColor}".`);
+      TinyAssertions.assertContentPresence(editor, { [`span[data-mce-style="color: ${color_map[0]};"]`]: 1 });
     });
   });
 
-  context('Force_hex_color option set to true without color_map', () => {
+  context('force_hex_color option set to true without color_map', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       base_url: '/project/tinymce/js/tinymce',
       force_hex_color: true,
@@ -239,10 +228,8 @@ describe('headless.tinymce.themes.silver.components.colorpicker.ColorPickerTest'
 
       const hexColor = '#00FF00';
       editor.execCommand('mceApplyTextcolor', 'forecolor' as any, hexColor);
-      const outerHTML = editor.dom.getOuterHTML(editor.getBody());
-      const dataMceStyle = outerHTML.match(/data-mce-style="[^"]+"/)?.[0];
-      const expectedColor = `color: ${hexColor};`;
-      expect(dataMceStyle).to.include(expectedColor, `"${dataMceStyle}" does not include expected color: "${expectedColor}".`);
+
+      TinyAssertions.assertContentPresence(editor, { [`span[data-mce-style="color: ${hexColor};"]`]: 1 });
     });
 
     it('TINY-9819: color will still be hex even with RGB value', () => {
@@ -250,10 +237,8 @@ describe('headless.tinymce.themes.silver.components.colorpicker.ColorPickerTest'
 
       const rgbColor = 'rgb(55, 155, 55)';
       editor.execCommand('mceApplyTextcolor', 'forecolor' as any, rgbColor);
-      const outerHTML = editor.dom.getOuterHTML(editor.getBody());
-      const dataMceStyle = outerHTML.match(/data-mce-style="[^"]+"/)?.[0];
-      const expectedColor = `color: ${Transformations.rgbaToHexString(rgbColor)};`;
-      expect(dataMceStyle).to.include(expectedColor, `"${dataMceStyle}" does not include expected color: "${expectedColor}".`);
+
+      TinyAssertions.assertContentPresence(editor, { [`span[data-mce-style="color: ${Transformations.rgbaToHexString(rgbColor)};"]`]: 1 });
     });
 
     it('TINY-9819: changing fore-color with toolbar', async () => {
@@ -264,10 +249,7 @@ describe('headless.tinymce.themes.silver.components.colorpicker.ColorPickerTest'
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       TinyUiActions.clickOnUi(editor, `div[data-mce-color="${hexColor}"]`);
 
-      const outerHTML = editor.dom.getOuterHTML(editor.getBody());
-      const dataMceStyle = outerHTML.match(/data-mce-style="[^"]+"/)?.[0];
-      const expectedColor = `color: ${hexColor};`;
-      expect(dataMceStyle).to.include(expectedColor, `"${dataMceStyle}" does not include expected color: "${expectedColor}".`);
+      TinyAssertions.assertContentPresence(editor, { [`span[data-mce-style="color: ${hexColor};"]`]: 1 });
     });
   });
 });
