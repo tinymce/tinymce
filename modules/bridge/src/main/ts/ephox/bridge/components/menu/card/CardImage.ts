@@ -5,23 +5,26 @@ import * as ComponentSchema from '../../../core/ComponentSchema';
 
 export interface CardImageSpec {
   type: 'cardimage';
-  src: string;
+  src?: string;
   alt?: string;
   classes?: string[];
+  icon?: string;
 }
 
 export interface CardImage {
   type: 'cardimage';
-  src: string;
+  src: Optional<string>;
   alt: Optional<string>;
   classes: string[];
+  icon: Optional<string>;
 }
 
 const cardImageFields = [
   ComponentSchema.type,
-  FieldSchema.requiredString('src'),
+  FieldSchema.optionString('src'),
   FieldSchema.optionString('alt'),
-  FieldSchema.defaultedArrayOf('classes', [], ValueType.string)
+  FieldSchema.defaultedArrayOf('classes', [], ValueType.string),
+  FieldSchema.optionString('icon')
 ];
 
 export const cardImageSchema = StructureSchema.objOf(cardImageFields);

@@ -8,7 +8,7 @@ import { renderItemDomStructure } from 'tinymce/themes/silver/ui/menus/item/stru
 
 import * as ItemClasses from '../ItemClasses';
 import ItemResponse from '../ItemResponse';
-import { renderContainer, renderHtml, renderImage } from '../structure/ItemSlices';
+import { renderContainer, renderHtml, renderIcon, renderImage } from '../structure/ItemSlices';
 import { replaceText } from './AutocompleteMenuItem';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
@@ -21,13 +21,13 @@ export interface CardExtras {
   };
 }
 
-const render = (items: Menu.CardItem[], extras: CardExtras): Array<AlloySpec> => Arr.map(items, (item) => {
+const render = (items: Menu.CardItem[], extras: CardExtras, sharedBackstage: UiFactoryBackstageShared): Array<AlloySpec> => Arr.map(items, (item) => {
   switch (item.type) {
     case 'cardcontainer':
-      return renderContainer(item, render(item.items, extras));
+      return renderContainer(item, render(item.items, extras, sharedBackstage));
 
     case 'cardimage':
-      return renderImage(item.src, item.classes, item.alt);
+      return item.src.map((src) => renderImage(src, item.classes, item.alt)).getOrThunk(() => renderIcon(item.icon.getOr(''), sharedBackstage.providers.icons));
 
     case 'cardtext':
       // Only highlight targeted text components
@@ -67,7 +67,7 @@ export const renderCardMenuItem = (
           tag: 'div',
           classes: [ ItemClasses.containerClass, ItemClasses.containerRowClass ]
         },
-        components: render(spec.items, extras)
+        components: render(spec.items, extras, sharedBackstage)
       })
     ]
   };
