@@ -1,5 +1,5 @@
-import { FieldProcessor } from '../core/FieldProcessor';
-import { StructureProcessor } from '../core/StructureProcessor';
+import { type FieldProcessor } from '../core/FieldProcessor';
+import { type StructureProcessor } from '../core/StructureProcessor';
 import * as ValueType from '../core/ValueType';
 import * as FieldPresence from './FieldPresence';
 import * as FieldSchema from './FieldSchema';

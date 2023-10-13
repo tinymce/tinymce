@@ -73,8 +73,26 @@
 
       "@ephox/oxide-icons-default": ["modules/oxide-icons-default/dist/js/Main.d.js"],
 
-      // Alias so the ts files gets recompiled in watch mode
+      // Alias so the ts files gets recompiled in watch mode (didn't enable all of them since there is a lot of work to annotate all the types)
+      "@ephox/acid": ["modules/acid/src/main/ts/ephox/acid/api/Main.ts"],
+      "@ephox/agar": ["modules/agar/src/main/ts/ephox/agar/api/Main.ts"],
+      "@ephox/alloy": ["modules/agar/src/main/ts/ephox/alloy/api/Main.ts"],
+      // "@ephox/boss": ["modules/boss/src/main/ts/ephox/boss/api/Main.ts"],
+      // "@ephox/boulder": ["modules/boulder/src/main/ts/ephox/boulder/api/Main.ts"],
+      // "@ephox/bridge": ["modules/bridge/src/main/ts/ephox/bridge/api/Main.ts"],
+      // "@ephox/darwin": ["modules/darwin/src/main/ts/ephox/darwin/api/Main.ts"],
+      // "@ephox/dragster": ["modules/dragster/src/main/ts/ephox/dragster/api/Main.ts"],
+      // "@ephox/jax": ["modules/jax/src/main/ts/ephox/jax/api/Main.ts"],
       "@ephox/katamari": ["modules/katamari/src/main/ts/ephox/katamari/api/Main.ts"],
+      // "@ephox/katamari-assertions": ["modules/katamari-assertions/src/main/ts/ephox/katamari-assertions/api/Main.ts"],
+      // "@ephox/mcagar": ["modules/mcagar/src/main/ts/ephox/mcagar/api/Main.ts"],
+      // "@ephox/phoenix": ["modules/phoenix/src/main/ts/ephox/phoenix/api/Main.ts"],
+      // "@ephox/polaris": ["modules/polaris/src/main/ts/ephox/polaris/api/Main.ts"],
+      // "@ephox/porkbun": ["modules/porkbun/src/main/ts/ephox/porkbun/api/Main.ts"],
+      // "@ephox/robin": ["modules/robin/src/main/ts/ephox/robin/api/Main.ts"],
+      // "@ephox/sand": ["modules/sand/src/main/ts/ephox/sand/api/Main.ts"],
+      // "@ephox/snooker": ["modules/snooker/src/main/ts/ephox/snooker/api/Main.ts"],
+      "@ephox/sugar": ["modules/sugar/src/main/ts/ephox/sugar/api/Main.ts"],
 
       "ephox/acid/test/*": ["modules/acid/src/test/ts/module/ephox/acid/test/*"],
       "ephox/acid/demo/*": ["modules/acid/src/demo/ts/ephox/acid/demo/*"],

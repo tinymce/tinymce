@@ -1,4 +1,4 @@
-import { ArrayAssert, StringAssert, StructAssert, StructAssertAdv, StructAssertBasic } from '../assertions/ApproxStructures';
+import { type ArrayAssert, type StringAssert, type StructAssert, type StructAssertAdv, type StructAssertBasic } from '../assertions/ApproxStructures';
 import * as ApproxStructure from './ApproxStructure';
 import * as Arbitraries from './Arbitraries';
 import * as Assertions from './Assertions';
@@ -25,7 +25,7 @@ import { NamedChain } from './NamedChain';
 import { Pipeline } from './Pipeline';
 import * as PropertySteps from './PropertySteps';
 import * as RealClipboard from './RealClipboard';
-import { KeyPressAdt, RealKeys } from './RealKeys';
+import { type KeyPressAdt, RealKeys } from './RealKeys';
 import * as RealMouse from './RealMouse';
 import { Step } from './Step';
 import * as StepSequence from './StepSequence';
