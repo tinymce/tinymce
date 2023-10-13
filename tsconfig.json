@@ -26,6 +26,7 @@
   ],
 
   "compilerOptions": {
+    "baseUrl": ".", // extends doesn't seem to be supported
     "paths": {
       // duplicate paths, copied from each individual tsconfig.json
       // once there is a webpack path plugin that supports project references this can be deleted
@@ -71,6 +72,9 @@
       "@ephox/wrap-mcagar": ["modules/tinymce/src/core/test/ts/module/McAgar"],
 
       "@ephox/oxide-icons-default": ["modules/oxide-icons-default/dist/js/Main.d.js"],
+
+      // Alias so the ts files gets recompiled in watch mode
+      "@ephox/katamari": ["modules/katamari/src/main/ts/ephox/katamari/api/Main.ts"],
 
       "ephox/acid/test/*": ["modules/acid/src/test/ts/module/ephox/acid/test/*"],
       "ephox/acid/demo/*": ["modules/acid/src/demo/ts/ephox/acid/demo/*"],
@@ -131,7 +135,7 @@
       "ephox/sugar/*": ["modules/sugar/src/main/ts/ephox/sugar/*"],
       "ephox/tinymce/test/*": ["modules/tinymce/src/test/ts/module/ephox/tinymce/test/*"],
       "ephox/tinymce/demo/*": ["modules/tinymce/src/demo/ts/ephox/tinymce/demo/*"],
-      "ephox/tinymce/*": ["modules/tinymce/src/main/ts/ephox/tinymce/*"],
+      "ephox/tinymce/*": ["modules/tinymce/src/main/ts/ephox/tinymce/*"]
     }
   }
 }

@@ -84,7 +84,7 @@
     "resolve": "^1.18.1",
     "rollup": "^3.22.0",
     "rollup-plugin-string": "^3.0.0",
-    "rollup-plugin-tsconfig-paths": "^1.5.1",
+    "rollup-plugin-typescript-paths": "^1.4.0",
     "source-map-loader": "^4.0.1",
     "string-replace-loader": "^3.0.3",
     "stylelint": "^13.2.1",
