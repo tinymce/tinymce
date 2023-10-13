@@ -228,7 +228,7 @@ const findParentContainer = (
 
 const isSelfOrParentBookmark = (container: Node) => isBookmarkNode(container.parentNode) || isBookmarkNode(container);
 
-const expandRng = (dom: DOMUtils, rng: Range, formatList: Format[], includeTrailingSpace: boolean = false): RangeLikeObject => {
+const expandRng = (dom: DOMUtils, rng: Range, formatList: Format[], includeTrailingSpace: boolean = false, expandToNonEditable: boolean = true): RangeLikeObject => {
   let { startContainer, startOffset, endContainer, endOffset } = rng;
   const format = formatList[0];
 
@@ -249,8 +249,10 @@ const expandRng = (dom: DOMUtils, rng: Range, formatList: Format[], includeTrail
   }
 
   // Expand to closest contentEditable element
-  startContainer = findParentContentEditable(dom, startContainer);
-  endContainer = findParentContentEditable(dom, endContainer);
+  if (expandToNonEditable) {
+    startContainer = findParentContentEditable(dom, startContainer);
+    endContainer = findParentContentEditable(dom, endContainer);
+  }
 
   // Exclude bookmark nodes if possible
   if (isSelfOrParentBookmark(startContainer)) {

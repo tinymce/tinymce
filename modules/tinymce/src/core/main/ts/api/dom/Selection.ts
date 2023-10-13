@@ -570,7 +570,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * @method expand
    * @param {Object} options Optional options provided to the expansion. Defaults to { type: 'word' }
    */
-  const expand = (options: { type: 'word' } = { type: 'word' }) =>
+  const expand = (options: { type: 'word'; expandToNonEditable: boolean } = { type: 'word', expandToNonEditable: true }) =>
     setRng(RangeUtils(dom).expand(getRng(), options));
 
   const exports = {

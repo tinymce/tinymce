@@ -14,7 +14,7 @@ interface RangeUtils {
   walk: (rng: Range, callback: (nodes: Node[]) => void) => void;
   split: (rng: Range) => RangeLikeObject;
   normalize: (rng: Range) => boolean;
-  expand: (rng: Range, options?: { type: 'word' }) => Range;
+  expand: (rng: Range, options?: { type: 'word'; expandToNonEditable: boolean }) => Range;
 }
 
 /**
@@ -70,9 +70,9 @@ const RangeUtils = (dom: DOMUtils): RangeUtils => {
    * @param {Object} options Optional options provided to the expansion. Defaults to { type: 'word' }
    * @return {Range} Returns the expanded range.
    */
-  const expand = (rng: Range, options: { type: 'word' } = { type: 'word' }): Range => {
+  const expand = (rng: Range, options: { type: 'word'; expandToNonEditable: boolean } = { type: 'word', expandToNonEditable: true }): Range => {
     if (options.type === 'word') {
-      const rangeLike = ExpandRange.expandRng(dom, rng, [{ inline: 'span' }]);
+      const rangeLike = ExpandRange.expandRng(dom, rng, [{ inline: 'span' }], false, options.expandToNonEditable);
       const newRange = dom.createRng();
       newRange.setStart(rangeLike.startContainer, rangeLike.startOffset);
       newRange.setEnd(rangeLike.endContainer, rangeLike.endOffset);
