@@ -56,6 +56,7 @@ export const renderButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryB
     tooltip: spec.tooltip,
     icon: spec.icon,
     enabled: true,
+    enabled_in_readonly: false,
     borderless: spec.borderless
   };
 

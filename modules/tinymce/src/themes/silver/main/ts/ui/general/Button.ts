@@ -46,8 +46,8 @@ export const renderCommonSpec = (
 
   const common = {
     buttonBehaviours: Behaviour.derive([
-      DisablingConfigs.button(() => !spec.enabled || providersBackstage.isDisabled()),
-      ReadOnly.receivingConfig(),
+      DisablingConfigs.button(() => !spec.enabled_in_readonly && (!spec.enabled || providersBackstage.isDisabled())),
+      ...spec.enabled_in_readonly ? [] : [ ReadOnly.receivingConfig() ],
       Tabstopping.config({}),
       AddEventsBehaviour.config('button press', [
         AlloyEvents.preventDefault('click'),
@@ -251,7 +251,6 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
       type: 'menubutton',
       // Currently, dialog-based menu buttons cannot be searchable.
       search: Optional.none(),
-      enabled_in_readonly: false,
       onSetup: (api) => {
         api.setEnabled(spec.enabled);
         return Fun.noop;

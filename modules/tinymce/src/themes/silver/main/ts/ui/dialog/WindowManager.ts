@@ -367,8 +367,8 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
     return DialogManager.DialogManager.open<T>(factory, config);
   };
 
-  const confirm = (message: string, callback: (state: boolean) => void) => {
-    confirmDialog.open(message, callback);
+  const confirm = (message: string, callback: (state: boolean) => void, enabledInReadOnly: boolean = false) => {
+    confirmDialog.open(message, callback, enabledInReadOnly);
   };
 
   const alert = (message: string, callback: () => void) => {

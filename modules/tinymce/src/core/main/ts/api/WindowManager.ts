@@ -38,7 +38,7 @@ interface WindowManager {
   open: <T extends Dialog.DialogData>(config: Dialog.DialogSpec<T>, params?: WindowParams) => Dialog.DialogInstanceApi<T>;
   openUrl: (config: Dialog.UrlDialogSpec) => Dialog.UrlDialogInstanceApi;
   alert: (message: string, callback?: () => void, scope?: any) => void;
-  confirm: (message: string, callback?: (state: boolean) => void, scope?: any) => void;
+  confirm: (message: string, callback?: (state: boolean) => void, scope?: any, enabledInReadOnly?: boolean) => void;
   close: () => void;
 }
 
@@ -48,7 +48,7 @@ export interface WindowManagerImpl {
   open: <T extends Dialog.DialogData>(config: Dialog.DialogSpec<T>, params: WindowParams | undefined, closeWindow: (dialog: Dialog.DialogInstanceApi<T>) => void) => Dialog.DialogInstanceApi<T>;
   openUrl: (config: Dialog.UrlDialogSpec, closeWindow: (dialog: Dialog.UrlDialogInstanceApi) => void) => Dialog.UrlDialogInstanceApi;
   alert: (message: string, callback: () => void) => void;
-  confirm: (message: string, callback: (state: boolean) => void) => void;
+  confirm: (message: string, callback: (state: boolean) => void, enabledInReadOnly: boolean) => void;
   close: (dialog: InstanceApi<any>) => void;
 }
 
@@ -121,9 +121,9 @@ const WindowManager = (editor: Editor): WindowManager => {
     windowManagerImpl.alert(message, funcBind(scope ? scope : windowManagerImpl, callback));
   };
 
-  const confirm = (message: string, callback?: (state: boolean) => void, scope?: any) => {
+  const confirm = (message: string, callback?: (state: boolean) => void, scope?: any, enabledInReadOnly: boolean = false) => {
     const windowManagerImpl = getImplementation();
-    windowManagerImpl.confirm(message, funcBind(scope ? scope : windowManagerImpl, callback));
+    windowManagerImpl.confirm(message, funcBind(scope ? scope : windowManagerImpl, callback), enabledInReadOnly);
   };
 
   const close = () => {

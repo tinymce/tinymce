@@ -25,7 +25,7 @@ describe('headless.tinymce.themes.silver.window.WindowManagerConfirmTest', () =>
   };
 
   const createConfirm = (message: string, callback: (state: boolean) => void) => {
-    windowManager.confirm(message, callback);
+    windowManager.confirm(message, callback, false);
   };
 
   const pWaitForDialog = () => Waiter.pTryUntil(
@@ -166,7 +166,7 @@ describe('headless.tinymce.themes.silver.window.WindowManagerConfirmTest', () =>
     const testCallback = () => {
       calls++;
     };
-    windowManager.confirm('confirm', testCallback);
+    windowManager.confirm('confirm', testCallback, false);
     assert.equal(calls, 0, 'callback should not have been called yet');
     Mouse.clickOn(SugarBody.body(), '.tox-button--icon[aria-label="Close"]');
     await Waiter.pTryUntil(

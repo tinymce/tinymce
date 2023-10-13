@@ -238,6 +238,7 @@ export const renderUrlInput = (
     icon: Optional.some('browse'),
     text: spec.picker_text.or(spec.label).getOr(''),
     enabled: spec.enabled,
+    enabled_in_readonly: false,
     primary: false,
     buttonType: Optional.none(),
     borderless: true

@@ -41,6 +41,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
           primary: false,
           buttonType: Optional.some('secondary'),
           enabled: true,
+          enabled_in_readonly: false,
           icon: Optional.none()
         },
         {
@@ -51,6 +52,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
           primary: true,
           buttonType: Optional.some('primary'),
           enabled: true,
+          enabled_in_readonly: false,
           icon: Optional.none()
         }
       ],

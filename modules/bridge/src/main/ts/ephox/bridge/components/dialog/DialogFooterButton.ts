@@ -14,6 +14,7 @@ interface BaseDialogFooterButtonSpec {
   /** @deprecated use `buttonType: "primary"` instead */
   primary?: boolean;
   enabled?: boolean;
+  enabled_in_readonly?: boolean;
   icon?: string;
   buttonType?: 'primary' | 'secondary';
 }
@@ -47,6 +48,7 @@ interface BaseDialogFooterButton {
   /** @deprecated use `buttonType: "primary"` instead */
   primary: boolean;
   enabled: boolean;
+  enabled_in_readonly: boolean;
   icon: Optional<string>;
   buttonType: Optional<'primary' | 'secondary'>;
 }
@@ -80,6 +82,7 @@ const baseFooterButtonFields = [
   // this should be removed, but must live here because FieldSchema doesn't have a way to manage deprecated fields
   ComponentSchema.primary,
   ComponentSchema.enabled,
+  ComponentSchema.enabledInReadOnly,
   // this should be defaulted to `secondary` but the implementation needs to manage the deprecation
   FieldSchema.optionStringEnum('buttonType', [ 'primary', 'secondary' ])
 ];

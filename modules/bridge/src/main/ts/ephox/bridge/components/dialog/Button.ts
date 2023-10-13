@@ -7,6 +7,7 @@ export interface ButtonSpec {
   type: 'button';
   text: string;
   enabled?: boolean;
+  enabled_in_readonly?: boolean;
   /** @deprecated use `buttonType: "primary"` instead */
   primary?: boolean;
   name?: string;
@@ -19,6 +20,7 @@ export interface Button {
   type: 'button';
   text: string;
   enabled: boolean;
+  enabled_in_readonly: boolean;
   /** @deprecated use `buttonType: "primary"` instead */
   primary: boolean;
   name: string;
@@ -31,6 +33,7 @@ const buttonFields = [
   ComponentSchema.type,
   ComponentSchema.text,
   ComponentSchema.enabled,
+  ComponentSchema.enabledInReadOnly,
   ComponentSchema.generatedName('button'),
   ComponentSchema.optionalIcon,
   ComponentSchema.borderless,

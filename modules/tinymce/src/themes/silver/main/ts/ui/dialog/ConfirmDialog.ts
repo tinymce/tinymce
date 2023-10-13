@@ -7,13 +7,13 @@ import { formCancelEvent, FormCancelEvent, formSubmitEvent, FormSubmitEvent } fr
 import * as Dialogs from './Dialogs';
 
 interface ConfirmDialogApi {
-  readonly open: (message: string, callback: (state: boolean) => void) => void;
+  readonly open: (message: string, callback: (state: boolean) => void, enabledInReadOnly: boolean) => void;
 }
 
 export const setup = (backstage: UiFactoryBackstage): ConfirmDialogApi => {
   const sharedBackstage = backstage.shared;
   // FIX: Extreme dupe with Alert dialog
-  const open = (message: string, callback: (state: boolean) => void) => {
+  const open = (message: string, callback: (state: boolean) => void, enabledInReadOnly: boolean) => {
 
     const closeDialog = (state: boolean) => {
       ModalDialog.hide(confirmDialog);
@@ -28,6 +28,7 @@ export const setup = (backstage: UiFactoryBackstage): ConfirmDialogApi => {
         buttonType: Optional.some('primary'),
         align: 'end',
         enabled: true,
+        enabled_in_readonly: enabledInReadOnly,
         icon: Optional.none()
       }, 'submit', backstage)
     );
@@ -39,6 +40,7 @@ export const setup = (backstage: UiFactoryBackstage): ConfirmDialogApi => {
       buttonType: Optional.some('secondary'),
       align: 'end',
       enabled: true,
+      enabled_in_readonly: enabledInReadOnly,
       icon: Optional.none()
     }, 'cancel', backstage);
 
