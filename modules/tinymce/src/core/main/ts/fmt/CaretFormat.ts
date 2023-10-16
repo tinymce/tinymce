@@ -274,6 +274,10 @@ const removeCaretFormat = (editor: Editor, name: string, vars?: FormatVars, simi
   while (node) {
     if (MatchFormat.matchNode(editor, node, name, vars, similar)) {
       formatNode = node as Element;
+      const caretContainer = getParentCaretContainer(editor.getBody(), formatNode);
+      if (caretContainer?.nextSibling) {
+        hasContentAfter = true;
+      }
       break;
     }
 
