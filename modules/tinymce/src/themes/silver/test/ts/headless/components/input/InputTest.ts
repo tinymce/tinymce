@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions } from '@ephox/agar';
 import { Disabling, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { renderInput } from 'tinymce/themes/silver/ui/dialog/TextField';
 

@@ -1,6 +1,6 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Schema from 'tinymce/core/api/html/Schema';
 import { getSanitizer, MimeType } from 'tinymce/core/html/Sanitization';

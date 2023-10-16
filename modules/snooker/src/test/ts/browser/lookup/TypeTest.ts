@@ -2,7 +2,7 @@ import { UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Html, SugarElement } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { Warehouse } from 'ephox/snooker/api/Warehouse';
 import * as Type from 'ephox/snooker/lookup/Type';

@@ -1,7 +1,7 @@
 import { context, describe, it, before, afterEach, after } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Insert, Remove, Selectors, SugarBody, SugarElement } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import 'tinymce';
 import Editor from 'tinymce/core/api/Editor';

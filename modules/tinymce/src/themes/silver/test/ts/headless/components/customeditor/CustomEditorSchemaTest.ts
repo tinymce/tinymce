@@ -2,7 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { StructureSchema } from '@ephox/boulder';
 import { Dialog } from '@ephox/bridge';
 import { Fun } from '@ephox/katamari';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 describe('headless.tinymce.themes.silver.components.customeditor.CustomEditorSchemaTest', () => {
   const schema = Dialog.customEditorSchema;

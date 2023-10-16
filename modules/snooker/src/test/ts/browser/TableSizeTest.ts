@@ -1,7 +1,7 @@
 import { Assert, context, describe, it } from '@ephox/bedrock-client';
 import { Optional, OptionalInstances } from '@ephox/katamari';
 import { Css, Insert, InsertAll, Remove, SelectorFind, SugarBody, SugarElement, Width } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 import * as fc from 'fast-check';
 
 import { TableSize } from 'ephox/snooker/api/TableSize';

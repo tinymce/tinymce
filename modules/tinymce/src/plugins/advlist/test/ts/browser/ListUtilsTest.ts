@@ -1,6 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { SugarElement } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { isTableCellNode, isListNode } from 'tinymce/plugins/advlist/core/ListUtils';
 

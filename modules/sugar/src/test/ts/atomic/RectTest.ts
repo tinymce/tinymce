@@ -1,5 +1,5 @@
 import { UnitTest } from '@ephox/bedrock-client';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 import * as fc from 'fast-check';
 
 import { Rect } from 'ephox/sugar/api/selection/Rect';

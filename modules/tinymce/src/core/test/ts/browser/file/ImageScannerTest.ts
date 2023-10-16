@@ -1,6 +1,6 @@
 import { before, describe, it } from '@ephox/bedrock-client';
 import { LegacyUnit } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Env from 'tinymce/core/api/Env';
 import { BlobCache } from 'tinymce/core/api/file/BlobCache';

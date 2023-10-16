@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, UiFinder } from '@ephox/agar';
 import { AlloyTriggers, Composing, GuiFactory, NativeEvents, Representing, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { renderDropZone } from 'tinymce/themes/silver/ui/dialog/Dropzone';
 

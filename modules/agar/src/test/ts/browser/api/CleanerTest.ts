@@ -1,5 +1,5 @@
 import { UnitTest } from '@ephox/bedrock-client';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { Cleaner } from 'ephox/agar/api/Cleaner';
 

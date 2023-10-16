@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Type } from '@ephox/katamari';
 import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 import fc from 'fast-check';
 
 import Editor from 'tinymce/core/api/Editor';

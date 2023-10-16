@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, it } from '@ephox/bedrock-client';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import EditorManager from 'tinymce/core/api/EditorManager';
 

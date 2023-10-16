@@ -2,7 +2,7 @@ import { TestStore, Waiter } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Optional, Result } from '@ephox/katamari';
 import { Css, SelectorFind, Selectors, SugarElement, SugarLocation } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import * as Boxes from 'ephox/alloy/alien/Boxes';
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';

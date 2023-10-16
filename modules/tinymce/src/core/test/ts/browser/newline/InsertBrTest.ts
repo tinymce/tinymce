@@ -3,7 +3,7 @@ import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Height, Scroll, WindowVisualViewport } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { linebreak } from 'tinymce/core/newline/InsertBr';

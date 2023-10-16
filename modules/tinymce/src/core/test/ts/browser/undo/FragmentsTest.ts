@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import * as Fragments from 'tinymce/core/undo/Fragments';
 

@@ -3,7 +3,7 @@ import { GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Future, Optional } from '@ephox/katamari';
 import { SelectorFind, SugarDocument, Value } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { ApiUrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
 import { renderUrlInput } from 'tinymce/themes/silver/ui/dialog/UrlInput';

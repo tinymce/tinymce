@@ -2,7 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { InlineContent } from '@ephox/bridge';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { ContextType } from 'tinymce/themes/silver/ui/context/ContextToolbar';
 import { matchStartNode } from 'tinymce/themes/silver/ui/context/ContextToolbarLookup';

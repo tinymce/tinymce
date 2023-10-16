@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import * as BlockPattern from 'tinymce/core/textpatterns/core/BlockPattern';
 import * as Pattern from 'tinymce/core/textpatterns/core/Pattern';

@@ -1,7 +1,7 @@
 import { Assertions, Mouse, UiFinder } from '@ephox/agar';
 import { Obj, Optional, Type } from '@ephox/katamari';
 import { Attribute, Checked, Class, Focus, SugarBody, SugarElement, Traverse, Value } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Editor from 'tinymce/core/api/Editor';
 

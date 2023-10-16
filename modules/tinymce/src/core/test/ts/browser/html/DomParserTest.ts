@@ -1,7 +1,7 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Obj } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Env from 'tinymce/core/api/Env';
 import { BlobCache, BlobInfo } from 'tinymce/core/api/file/BlobCache';

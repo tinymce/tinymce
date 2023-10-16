@@ -3,7 +3,7 @@ import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Strings } from '@ephox/katamari';
 import { SelectorFind, Selectors, SugarDocument } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import SilverMenubar from 'tinymce/themes/silver/ui/menus/menubar/SilverMenubar';
 

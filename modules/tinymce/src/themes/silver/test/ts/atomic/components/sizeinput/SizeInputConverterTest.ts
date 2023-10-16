@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 import * as fc from 'fast-check';
 
 import {

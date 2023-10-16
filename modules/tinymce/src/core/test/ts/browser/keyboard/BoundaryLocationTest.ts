@@ -2,7 +2,7 @@ import { Assertions } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { Hierarchy, SelectorFind, Selectors, SugarElement } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as BoundaryLocation from 'tinymce/core/keyboard/BoundaryLocation';

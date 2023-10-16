@@ -1,6 +1,6 @@
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import DomSerializer from 'tinymce/core/api/dom/Serializer';

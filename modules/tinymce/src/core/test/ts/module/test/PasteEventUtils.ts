@@ -2,7 +2,7 @@ import { Waiter } from '@ephox/agar';
 import { DataTransferMode } from '@ephox/dragster';
 import { Arr, Cell, Singleton, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { PastePostProcessEvent, PastePreProcessEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';

@@ -1,6 +1,6 @@
 import { Assert, describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional, OptionalInstances } from '@ephox/katamari';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 import fc from 'fast-check';
 
 import { parseStartValue, parseDetail, ListDetail } from 'tinymce/plugins/lists/core/ListNumbering';

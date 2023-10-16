@@ -2,7 +2,7 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import { PlatformDetection } from '@ephox/sand';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { createDataTransfer, getDragImage } from 'ephox/dragster/datatransfer/DataTransfer';
 import { setDragendEvent, setDragstartEvent, setDropEvent } from 'ephox/dragster/datatransfer/Event';

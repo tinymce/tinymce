@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Observable from 'tinymce/core/api/util/Observable';
 import Tools from 'tinymce/core/api/util/Tools';

@@ -4,7 +4,7 @@ import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Menu, Toolbar } from '@ephox/bridge';
 import { Cell, Fun, Optional } from '@ephox/katamari';
 import { Attribute, Class, SelectorFind } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { renderMenuButton } from 'tinymce/themes/silver/ui/button/MenuButton';
 import { renderSplitButton, renderToolbarButton, renderToolbarToggleButton } from 'tinymce/themes/silver/ui/toolbar/button/ToolbarButtons';

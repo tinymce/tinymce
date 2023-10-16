@@ -1,6 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr, Result } from '@ephox/katamari';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 import * as fc from 'fast-check';
 
 import { nuSize, parseSize, Size, SizeUnit } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';

@@ -1,6 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { SugarDocument, SugarElement, SugarShadowDom } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import StyleSheetLoader from 'tinymce/core/api/dom/StyleSheetLoader';
 import * as StyleSheetLoaderRegistry from 'tinymce/core/dom/StyleSheetLoaderRegistry';

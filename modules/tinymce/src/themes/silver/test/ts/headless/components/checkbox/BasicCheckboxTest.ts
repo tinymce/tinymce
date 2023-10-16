@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Keyboard, Keys, UiFinder } from '@ephox/ag
 import { AlloyComponent, Disabling, Form, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
 

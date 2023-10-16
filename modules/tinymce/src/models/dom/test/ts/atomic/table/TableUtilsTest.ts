@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 import * as fc from 'fast-check';
 
 import { isPercentage, isPixel } from 'tinymce/models/dom/table/core/TableUtils';

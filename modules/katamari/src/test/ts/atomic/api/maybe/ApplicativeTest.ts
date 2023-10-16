@@ -1,5 +1,5 @@
 import { context, describe } from '@ephox/bedrock-client';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Maybe } from 'ephox/katamari/api/Maybe';

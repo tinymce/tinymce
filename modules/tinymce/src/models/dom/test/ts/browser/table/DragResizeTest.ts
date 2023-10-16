@@ -3,7 +3,7 @@ import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { Attribute, Height, Hierarchy, SelectorFind, SugarElement, Width } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Editor from 'tinymce/core/api/Editor';
 

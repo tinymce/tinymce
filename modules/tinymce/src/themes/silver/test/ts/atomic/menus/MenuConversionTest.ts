@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { Menu } from 'tinymce/core/api/ui/Ui';
 import * as MenuConversion from 'tinymce/themes/silver/ui/menus/menu/MenuConversion';

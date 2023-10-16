@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, UiFinder, Waiter } from '@ephox/agar';
 import { SugarBody, SugarElement, TextContent } from '@ephox/sugar';
 import { TinyUiActions } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Editor from 'tinymce/core/api/Editor';
 

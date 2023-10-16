@@ -2,7 +2,7 @@ import { Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { AnnotationListenerApi } from 'tinymce/core/api/Annotator';
 import Editor from 'tinymce/core/api/Editor';

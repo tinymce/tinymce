@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { InlineContent } from '@ephox/bridge';
 import { Arr, Fun } from '@ephox/katamari';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { ContextType } from 'tinymce/themes/silver/ui/context/ContextToolbar';
 import { filterByPositionForAncestorNode, filterByPositionForStartNode } from 'tinymce/themes/silver/ui/context/ContextToolbarLookup';

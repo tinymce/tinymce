@@ -1,5 +1,5 @@
 import { Testable } from '@ephox/dispute';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { Result } from 'ephox/katamari/api/Result';
 import { tResult } from 'ephox/katamari/api/ResultInstances';

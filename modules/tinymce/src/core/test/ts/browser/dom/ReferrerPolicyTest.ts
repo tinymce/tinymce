@@ -1,6 +1,6 @@
 import { after, describe, it } from '@ephox/bedrock-client';
 import { McEditor } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';

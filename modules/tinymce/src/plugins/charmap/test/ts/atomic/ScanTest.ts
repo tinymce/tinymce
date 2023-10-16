@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { CharMap } from 'tinymce/plugins/charmap/core/CharMap';
 import * as Scan from 'tinymce/plugins/charmap/core/Scan';

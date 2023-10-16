@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Unicode } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import * as DomTextZones from 'ephox/robin/api/dom/DomTextZones';
 import { ZoneViewports } from 'ephox/robin/api/general/ZoneViewports';

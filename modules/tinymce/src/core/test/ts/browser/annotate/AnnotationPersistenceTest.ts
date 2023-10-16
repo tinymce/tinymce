@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { McEditor, TinyAssertions, TinySelections } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { AnnotatorSettings } from 'tinymce/core/api/Annotator';
 import Editor from 'tinymce/core/api/Editor';

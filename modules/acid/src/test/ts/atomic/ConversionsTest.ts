@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import * as HexColour from 'ephox/acid/api/colour/HexColour';
 import * as RgbaColour from 'ephox/acid/api/colour/RgbaColour';

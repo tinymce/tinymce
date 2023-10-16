@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Html, SugarElement } from '@ephox/sugar';
 import { LegacyUnit } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as LineWalker from 'tinymce/core/caret/LineWalker';

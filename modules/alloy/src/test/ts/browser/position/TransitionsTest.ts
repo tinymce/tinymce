@@ -2,7 +2,7 @@ import { Waiter } from '@ephox/agar';
 import { afterEach, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { Attribute, Classes, SugarDocument } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';

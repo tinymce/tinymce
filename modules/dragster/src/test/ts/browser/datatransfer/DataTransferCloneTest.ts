@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { KAssert } from '@ephox/katamari-assertions';
 import { PlatformDetection } from '@ephox/sand';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { cloneDataTransfer, createDataTransfer, getDragImage } from 'ephox/dragster/datatransfer/DataTransfer';
 import { DragImageData } from 'ephox/dragster/datatransfer/DragImage';

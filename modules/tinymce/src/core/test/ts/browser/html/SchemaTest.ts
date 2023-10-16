@@ -1,7 +1,7 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Obj, Type } from '@ephox/katamari';
 import { SugarElement, SugarNode } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Schema, { AttributePattern, SchemaElement } from 'tinymce/core/api/html/Schema';
 

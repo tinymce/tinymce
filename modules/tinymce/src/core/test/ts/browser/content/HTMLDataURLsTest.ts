@@ -1,6 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { McEditor } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 describe('browser.tinymce.core.content.HTMLDataURLsTest', () => {
 

@@ -2,7 +2,7 @@ import { Assertions } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Unicode } from '@ephox/katamari';
 import { Html, SugarElement, SugarNode } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import * as Nodes from 'tinymce/plugins/visualchars/core/Nodes';
 

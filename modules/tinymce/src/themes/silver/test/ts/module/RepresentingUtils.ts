@@ -1,5 +1,5 @@
 import { AlloyComponent, Composing, Representing } from '@ephox/alloy';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 const assertComposedValue = (component: AlloyComponent, expected: any): void => {
   const c = Composing.getCurrent(component).getOrDie('Trying to get the composed component');

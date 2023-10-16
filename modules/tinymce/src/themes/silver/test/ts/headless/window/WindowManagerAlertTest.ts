@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, FocusTools, Mouse, UiFinder, Waiter } from
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { SelectorFind, SugarBody, SugarDocument } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';

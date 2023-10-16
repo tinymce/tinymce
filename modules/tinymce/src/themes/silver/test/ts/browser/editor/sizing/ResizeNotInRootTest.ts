@@ -2,7 +2,7 @@ import { UiFinder } from '@ephox/agar';
 import { after, before, describe, it } from '@ephox/bedrock-client';
 import { Insert, Remove, SugarBody, SugarElement, Width } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Editor from 'tinymce/core/api/Editor';
 

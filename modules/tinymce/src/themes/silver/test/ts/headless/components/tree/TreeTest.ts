@@ -4,7 +4,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { StructureSchema } from '@ephox/boulder';
 import { Dialog } from '@ephox/bridge';
 import { Class, SelectorFind, SugarBody, SugarDocument } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { renderTree } from 'tinymce/themes/silver/ui/dialog/Tree';
 

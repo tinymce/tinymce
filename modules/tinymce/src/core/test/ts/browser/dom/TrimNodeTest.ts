@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Schema from 'tinymce/core/api/html/Schema';

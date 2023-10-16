@@ -1,6 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Pprint, Testable } from '@ephox/dispute';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 import fc from 'fast-check';
 
 import { Result } from 'ephox/katamari/api/Result';

@@ -1,6 +1,6 @@
 import { after, afterEach, before, describe, it } from '@ephox/bedrock-client';
 import { Arr, Global } from '@ephox/katamari';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
 

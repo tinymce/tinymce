@@ -1,6 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { LegacyUnit } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import * as NodePath from 'tinymce/core/dom/NodePath';
 

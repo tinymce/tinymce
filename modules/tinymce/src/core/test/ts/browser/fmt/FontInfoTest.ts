@@ -1,6 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import * as FontInfo from 'tinymce/core/fmt/FontInfo';
 

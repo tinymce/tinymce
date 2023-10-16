@@ -1,6 +1,6 @@
 import { before, describe, it } from '@ephox/bedrock-client';
 import { TinyHooks } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import EditorManager from 'tinymce/core/api/EditorManager';
 import I18n from 'tinymce/core/api/util/I18n';

@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Mouse, StructAssert } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as CaretFormat from 'tinymce/core/fmt/CaretFormat';

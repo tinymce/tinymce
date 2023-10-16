@@ -3,7 +3,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Scroll, SugarElement, Traverse } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { isCaretContainerBlock } from 'tinymce/core/caret/CaretContainer';

@@ -4,7 +4,7 @@ import { Arr, Cell } from '@ephox/katamari';
 import { TableGridSize } from '@ephox/snooker';
 import { Html, Insert, Remove, SelectorExists, SugarBody, SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { ObjectResizeEvent, TableModifiedEvent } from 'tinymce/core/api/EventTypes';

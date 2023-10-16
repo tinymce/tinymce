@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Obj, Type } from '@ephox/katamari';
 import { Attribute, SugarElement, TextContent } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import * as Structs from 'ephox/snooker/api/Structs';
 import { Warehouse } from 'ephox/snooker/api/Warehouse';

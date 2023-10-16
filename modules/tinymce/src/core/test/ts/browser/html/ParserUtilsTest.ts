@@ -1,6 +1,6 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import AstNode from 'tinymce/core/api/html/Node';
 import * as ParserUtils from 'tinymce/core/html/ParserUtils';

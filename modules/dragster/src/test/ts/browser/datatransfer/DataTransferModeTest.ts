@@ -1,6 +1,6 @@
 import { describe, context, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { createDataTransfer } from 'ephox/dragster/datatransfer/DataTransfer';
 import { isInProtectedMode, isInReadOnlyMode, isInReadWriteMode, setProtectedMode, setReadOnlyMode } from 'ephox/dragster/datatransfer/Mode';

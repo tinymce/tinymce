@@ -9,7 +9,7 @@ import { ApproxStructure, Assertions, Cursors, Mouse, StructAssert, UiFinder, Wa
 import { Arr, Obj } from '@ephox/katamari';
 import { Attribute, Checked, Class, Insert, SelectorFind, SugarBody, SugarElement, TextContent, Value } from '@ephox/sugar';
 import { TinyDom, TinyUiActions } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Editor from 'tinymce/core/api/Editor';
 

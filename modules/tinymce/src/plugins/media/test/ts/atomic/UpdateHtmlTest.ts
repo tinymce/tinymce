@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { MediaData } from 'tinymce/plugins/media/core/Types';
 import * as UpdateHtml from 'tinymce/plugins/media/core/UpdateHtml';

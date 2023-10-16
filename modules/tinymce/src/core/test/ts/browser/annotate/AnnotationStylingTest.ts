@@ -3,7 +3,7 @@ import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client
 import { Arr } from '@ephox/katamari';
 import { Class, Compare, Css, SelectorFilter, SugarElement, SugarNode } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Editor from 'tinymce/core/api/Editor';
 

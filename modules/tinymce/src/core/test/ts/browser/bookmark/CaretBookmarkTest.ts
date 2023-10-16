@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import * as CaretBookmark from 'tinymce/core/bookmark/CaretBookmark';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';

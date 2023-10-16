@@ -1,6 +1,6 @@
 import { after, before, describe, it } from '@ephox/bedrock-client';
 import { Global } from '@ephox/katamari';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Resource from 'tinymce/core/api/Resource';
 

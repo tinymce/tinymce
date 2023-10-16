@@ -1,6 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { PlatformDetection } from 'ephox/sand/core/PlatformDetection';
 import { UserAgentData, UserAgentDataBrand } from 'ephox/sand/detect/UaData';

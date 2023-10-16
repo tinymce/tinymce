@@ -1,6 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Pprint, Testable } from '@ephox/dispute';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { Optional } from 'ephox/katamari/api/Optional';
 import { tOptional } from 'ephox/katamari/api/OptionalInstances';

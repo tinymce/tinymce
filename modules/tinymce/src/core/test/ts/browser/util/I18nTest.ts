@@ -1,6 +1,6 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import I18n from 'tinymce/core/api/util/I18n';
 

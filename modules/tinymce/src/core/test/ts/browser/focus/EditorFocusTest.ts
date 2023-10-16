@@ -2,7 +2,7 @@ import { Assertions } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Focus, Hierarchy, SugarBody, SugarNode } from '@ephox/sugar';
 import { McEditor, TinyAssertions, TinyDom, TinySelections } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as EditorFocus from 'tinymce/core/focus/EditorFocus';

@@ -4,7 +4,7 @@ import { after, before, beforeEach, context, describe, it } from '@ephox/bedrock
 import { Arr, Strings } from '@ephox/katamari';
 import { Class, Css, Insert, Remove, SelectorFind, SugarBody, SugarDocument, SugarElement, Traverse } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Editor from 'tinymce/core/api/Editor';
 

@@ -2,7 +2,7 @@ import { Cursors } from '@ephox/agar';
 import { Boxes } from '@ephox/alloy';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Css, Insert, InsertAll, Remove, SugarBody, SugarElement } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import * as ScrollingContext from 'tinymce/themes/silver/modes/ScrollingContext';
 

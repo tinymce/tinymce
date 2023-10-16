@@ -1,7 +1,7 @@
 import { Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { SugarElement } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import * as CaretContainerRemove from 'tinymce/core/caret/CaretContainerRemove';

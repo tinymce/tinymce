@@ -1,6 +1,6 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Unicode } from '@ephox/katamari';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import * as Html from 'tinymce/plugins/visualchars/core/Html';
 

@@ -1,5 +1,5 @@
 import { Waiter } from '@ephox/agar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Editor from 'tinymce/core/api/Editor';
 

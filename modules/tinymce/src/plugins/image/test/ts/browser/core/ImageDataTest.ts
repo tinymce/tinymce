@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, StructAssert } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
 import { SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import * as ImageData from 'tinymce/plugins/image/core/ImageData';

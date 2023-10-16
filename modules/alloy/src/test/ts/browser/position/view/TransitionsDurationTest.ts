@@ -1,6 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Css, SugarElement } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { getTransitionDuration } from 'ephox/alloy/positioning/view/Transitions';
 

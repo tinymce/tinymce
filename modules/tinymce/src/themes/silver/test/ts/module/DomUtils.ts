@@ -1,7 +1,7 @@
 import { FocusTools, UiFinder } from '@ephox/agar';
 import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
 import { Traverse, Value } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 const assertValue = (label: string, component: AlloyComponent, selector: string, expected: string): void => {
   const elem = UiFinder.findIn<HTMLSelectElement>(component.element, selector).getOrDie();

@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SelectorFind, SugarElement } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import * as CaretCandidate from 'tinymce/core/caret/CaretCandidate';
 import * as Zwsp from 'tinymce/core/text/Zwsp';

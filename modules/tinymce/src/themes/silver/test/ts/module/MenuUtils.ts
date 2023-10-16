@@ -2,7 +2,7 @@ import { Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { Boxes } from '@ephox/alloy';
 import { Arr } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { ToolbarMode } from 'tinymce/themes/silver/api/Options';
 

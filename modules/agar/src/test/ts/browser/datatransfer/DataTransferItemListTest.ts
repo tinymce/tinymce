@@ -1,6 +1,6 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Type } from '@ephox/katamari';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { createFile } from 'ephox/agar/api/Files';
 import { createDataTransfer } from 'ephox/agar/datatransfer/DataTransfer';

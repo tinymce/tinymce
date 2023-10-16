@@ -3,7 +3,7 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
 import * as LineReader from 'tinymce/core/caret/LineReader';

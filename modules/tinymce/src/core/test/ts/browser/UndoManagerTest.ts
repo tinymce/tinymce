@@ -4,7 +4,7 @@ import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Scroll } from '@ephox/sugar';
 import { TinyDom, LegacyUnit, TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { AddUndoEvent } from 'tinymce/core/api/EventTypes';

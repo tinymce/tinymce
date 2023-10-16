@@ -3,7 +3,7 @@ import { AlloyComponent, GuiFactory, Memento, Representing, TestHelpers } from '
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { Ready } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { ImagePreviewDataSpec, renderImagePreview } from 'tinymce/themes/silver/ui/dialog/ImagePreview';
 

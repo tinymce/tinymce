@@ -1,7 +1,7 @@
 import { Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Html, SugarElement } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Schema from 'tinymce/core/api/html/Schema';
 import * as PaddingBr from 'tinymce/core/dom/PaddingBr';

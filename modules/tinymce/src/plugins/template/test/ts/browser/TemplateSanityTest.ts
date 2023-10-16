@@ -3,7 +3,7 @@ import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-cli
 import { Cell } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/template/Plugin';

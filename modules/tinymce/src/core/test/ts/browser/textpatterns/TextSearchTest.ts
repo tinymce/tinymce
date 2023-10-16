@@ -3,7 +3,7 @@ import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { SpotPoint } from 'tinymce/core/alien/Spot';
 import * as TextSearch from 'tinymce/core/alien/TextSearch';

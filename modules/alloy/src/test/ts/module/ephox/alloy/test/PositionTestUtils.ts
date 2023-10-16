@@ -1,7 +1,7 @@
 import { Chain, Guard, NamedChain, Waiter } from '@ephox/agar';
 import { Optional, Result } from '@ephox/katamari';
 import { Css, Scroll, Traverse } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { Bounds } from 'ephox/alloy/alien/Boxes';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';

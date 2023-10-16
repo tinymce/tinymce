@@ -1,6 +1,6 @@
 import { Assert } from '@ephox/bedrock-client';
 import { Type } from '@ephox/katamari';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';

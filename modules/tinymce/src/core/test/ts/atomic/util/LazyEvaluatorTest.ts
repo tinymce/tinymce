@@ -1,6 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import * as LazyEvaluator from 'tinymce/core/util/LazyEvaluator';
 

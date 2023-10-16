@@ -1,6 +1,6 @@
 import { after, afterEach, before, describe, it } from '@ephox/bedrock-client';
 import { Remove, Selectors } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 import 'tinymce';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';

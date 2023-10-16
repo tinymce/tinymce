@@ -2,7 +2,7 @@ import { Cursors } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { ContentEditable, Css, Html, Insert, Remove, SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { FakeCaretPosition, closestCaretCandidateNodeRect, closestFakeCaretCandidate } from 'tinymce/core/caret/ClosestCaretCandidate';
 

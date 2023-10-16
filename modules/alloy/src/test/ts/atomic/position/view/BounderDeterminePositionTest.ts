@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import * as Boxes from 'ephox/alloy/alien/Boxes';
 import * as Bounder from 'ephox/alloy/positioning/view/Bounder';

@@ -1,7 +1,7 @@
 import { describe, it, before, after } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';

@@ -1,6 +1,6 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { SchemaElement } from 'tinymce/core/schema/SchemaTypes';
 import * as ValidElementsRuleParser from 'tinymce/core/schema/ValidElementsRuleParser';

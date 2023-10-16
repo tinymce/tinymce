@@ -3,7 +3,7 @@ import { AlloyComponent, AlloyTriggers, Container, GuiFactory, Invalidating, Nat
 import { describe, it } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
 import { SelectorFind, SugarDocument, Traverse } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import { renderColorInput } from 'tinymce/themes/silver/ui/dialog/ColorInput';
 

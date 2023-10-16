@@ -2,7 +2,7 @@ import { FocusTools, Mouse, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { Obj } from '@ephox/katamari';
 import { Attribute, Class, SugarBody, SugarDocument, SugarElement, Traverse, Value } from '@ephox/sugar';
 import { TinyAssertions, TinyUiActions } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Editor from 'tinymce/core/api/Editor';
 

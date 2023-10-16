@@ -1,6 +1,6 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import * as ColourTypes from 'ephox/acid/api/colour/ColourTypes';
 import * as HexColour from 'ephox/acid/api/colour/HexColour';

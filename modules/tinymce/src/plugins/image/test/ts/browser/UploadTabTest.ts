@@ -3,7 +3,7 @@ import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Strings } from '@ephox/katamari';
 import { SugarBody, Value } from '@ephox/sugar';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as Conversions from 'tinymce/core/file/Conversions';

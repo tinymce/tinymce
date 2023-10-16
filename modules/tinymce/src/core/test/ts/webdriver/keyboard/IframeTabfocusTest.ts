@@ -2,7 +2,7 @@ import { FocusTools, RealKeys, RealMouse } from '@ephox/agar';
 import { after, afterEach, before, context, describe, it } from '@ephox/bedrock-client';
 import { Class, SugarDocument } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import Editor from 'tinymce/core/api/Editor';
 

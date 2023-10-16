@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
-import { assert } from 'chai';
+import { assert } from '@esm-bundle/chai';
 
 import * as Structs from 'ephox/snooker/api/Structs';
 import * as TableGrid from 'ephox/snooker/model/TableGrid';
