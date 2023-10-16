@@ -1,3 +1,4 @@
+project: alloy
 kind: Fixed
 body: Going back from a view to the editor in mobile caused an error.
 time: 2023-10-06T12:18:11.763823+11:00

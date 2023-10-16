@@ -1,3 +1,4 @@
+project: alloy
 kind: Fixed
 body: Incorrect typing on `DropdownSpec`, `getAnchorOverrides`. Function returns an
   object, not another function.

@@ -1,3 +1,4 @@
+project: tinymce
 kind: Improved
 body: Improved the tooltips of picker buttons for the urlinput components in the "Insert/Edit
   Image", "Insert/Edit Link" and "Insert/Edit Media" dialogs.

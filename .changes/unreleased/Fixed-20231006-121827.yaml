@@ -1,3 +1,4 @@
+project: alloy
 kind: Fixed
 body: Going back from a view to the editor in mobile visualization on browser caused
   an error.

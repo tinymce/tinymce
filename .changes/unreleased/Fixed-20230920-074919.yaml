@@ -1,3 +1,4 @@
+project: tinymce
 kind: Fixed
 body: Setting the content with an attribute that contains a self-closing HTML tag
   did not preserve the tag.
