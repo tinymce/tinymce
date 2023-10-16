@@ -5,6 +5,7 @@ versionExt: md
 versionFormat: '## {{.Version}} - {{.Time.Format "2006-01-02"}}'
 kindFormat: '### {{.Kind}}'
 changeFormat: '- {{.Body}} #{{.Custom.Issue}}'
+fragmentFileFormat: "{{.Kind}}-{{.Custom.Issue}}-{{.Project}}"
 projects:
   - label: acid
     key: acid
