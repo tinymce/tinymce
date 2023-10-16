@@ -16,8 +16,8 @@
  * console.log(tinymce.html.Styles().serialize(styles));
  */
 
-import { Transformations } from '@ephox/acid';
-import { Obj, Unicode } from '@ephox/katamari';
+import { RgbaColour, Transformations } from '@ephox/acid';
+import { Fun, Obj, Unicode } from '@ephox/katamari';
 
 import { URLConverter } from '../OptionTypes';
 import Schema, { SchemaMap } from './Schema';
@@ -41,7 +41,6 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
   /* jshint maxlen:255 */
   /* eslint max-len:0 */
   const urlOrStrRegExp = /(?:url(?:(?:\(\s*\"([^\"]+)\"\s*\))|(?:\(\s*\'([^\']+)\'\s*\))|(?:\(\s*([^)\s]+)\s*\))))|(?:\'([^\']+)\')|(?:\"([^\"]+)\")/gi;
-  const rgbRegExp = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/gi;
   const styleRegExp = /\s*([^:]+):\s*([^;]+);?/g;
   const trimRightRegExp = /\s+$/;
   const encodingLookup: Record<string, string> = {};
@@ -268,7 +267,9 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
 
             // Convert RGB colors to HEX
             if (settings.force_hex_color) {
-              value = value.replace(rgbRegExp, Transformations.rgbaToHexString);
+              RgbaColour.fromString(value).each((rgba) => {
+                value = Fun.pipe(rgba, RgbaColour.toString, Transformations.rgbaToHexString);
+              });
             }
 
             // Convert URLs and force them into url('value') format
