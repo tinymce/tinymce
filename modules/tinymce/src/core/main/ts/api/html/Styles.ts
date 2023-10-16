@@ -17,7 +17,7 @@
  */
 
 import { RgbaColour, Transformations } from '@ephox/acid';
-import { Fun, Obj, Unicode } from '@ephox/katamari';
+import { Obj, Unicode } from '@ephox/katamari';
 
 import { URLConverter } from '../OptionTypes';
 import Schema, { SchemaMap } from './Schema';
@@ -268,7 +268,7 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
             // Convert RGB colors to HEX
             if (settings.force_hex_color) {
               RgbaColour.fromString(value).each((rgba) => {
-                value = Fun.pipe(rgba, RgbaColour.toString, Transformations.rgbaToHexString);
+                value = Transformations.rgbaToHexString(RgbaColour.toString(rgba));
               });
             }
 
