@@ -6,8 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Fixed
+### Improved
+- Colorpicker now includes the Brightness/Saturation selector and hue slider in the keyboard navigable items. #TINY-9287
+- Improved the tooltips of picker buttons for the urlinput components in the "Insert/Edit Image" and "Insert/Edit Link" dialogs. #TINY-10155
+- Inline dialog will now respect `size: 'large'` argument in the dialog spec. #TINY-10209
+- SVG elements and their children are now retained when configured as valid elements. #TINY-10237
+- Bespoke dropdown toolbar buttons including `align`, `fontfamily`, `fontsize`, `blocks`, and `styles` did not include their visible text labels in their accessible names. #TINY-10147
 
+### Fixed
 - Editor would convert urls that are not http/s or relative resulting in broken links. #TINY-10153
 - Calling the `setProgressState` API would cause the window to be scrolled when the editor wasn't fully visible. #TINY-10172
 - Applying heading formatting to the content of the `summary` element extended its application to the content of the parent `details` element. #TINY-10154
@@ -17,12 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The dialog size was not updated when the `size` argument was changed when redialling a dialog. #TINY-10209
 - Toggling a list that contains an LI element having another list as its first child would remove the remaining content within that LI element. #TINY-10213
 - Custom block element wasn't considered block element in some cases. #TINY-10139
-
-### Improved
-- Colorpicker now includes the Brightness/Saturation selector and hue slider in the keyboard navigable items. #TINY-9287
-- Improved the tooltips of picker buttons for the urlinput components in the "Insert/Edit Image" and "Insert/Edit Link" dialogs. #TINY-10155
-- Inline dialog will now respect `size: 'large'` argument in the dialog spec. #TINY-10209
-- SVG elements and their children are now retained when configured as valid elements. #TINY-10237
 
 ## 6.7.0 - 2023-08-30
 
