@@ -1,12 +1,19 @@
 /* eslint-disable no-console */
+import { Global } from '@ephox/bedrock-common';
 import { Merger } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
-import { Editor, RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
+import { default as tinymce, Editor, RawEditorOptions } from 'tinymce/core/api/PublicApi';
+import CodePlugin from 'tinymce/plugins/code/Plugin';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
-declare let tinymce: TinyMCE;
+Global.tinymce = tinymce;
 
-export default (): void => {
+// We need to list them all here it will fallback to the `js/tinymce` .js files if not included into this one
+SilverTheme();
+CodePlugin();
+
+const init = (): void => {
 
   const makeSidebar = (ed: Editor, name: string, background: string, width: number) => {
     ed.ui.registry.addSidebar(name, {
@@ -60,8 +67,7 @@ export default (): void => {
   };
 
   const settings: RawEditorOptions = {
-    skin_url: '../../../../js/tinymce/skins/ui/oxide',
-    content_css: '../../../../js/tinymce/skins/content/default/content.css',
+    base_url: '/tinymce',
     content_langs: [
       { title: 'English (US)', code: 'en_us' },
       { title: 'Spanish', code: 'es' },
@@ -167,7 +173,7 @@ export default (): void => {
     //   }
     // ],
     toolbar_mode: 'floating',
-    emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js',
+    emoticons_database_url: '/tinymce/plugins/emoticons/js/emojis.js',
     resize_img_proportional: true,
     format_empty_lines: true
   };
@@ -175,3 +181,7 @@ export default (): void => {
   tinymce.init(settings);
   tinymce.init(Merger.deepMerge(settings, { inline: true, selector: 'div.tinymce' }));
 };
+
+init();
+
+export default init;
