@@ -8,8 +8,8 @@ import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
-import * as MergeText from './MergeText';
 import { ZWSP } from '../text/Zwsp';
+import * as MergeText from './MergeText';
 
 const needsReposition = (pos: CaretPosition, elm: Node): boolean => {
   const container = pos.container();
