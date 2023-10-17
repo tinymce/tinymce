@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Search and replace plugin would incorrectly find matching text inside non-editable root elements. #TINY-10162
 - Search and replace plugin would incorrectly find matching text inside SVG elements. #TINY-10162
 - Removed use of `async` for editor rendering which caused visual blinking when reloading the editor in-place. #TINY-10249
+- A `list` inside a `li` surrounded by 2 not `li` elements was just considered a `content` of that `li`. #TINY-10268
 
 ## 6.7.1 - 2023-10-19
 
