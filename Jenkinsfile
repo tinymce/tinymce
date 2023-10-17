@@ -69,6 +69,9 @@ timestamps {
     stage("Merge") {
       // cancel build if primary branch doesn't merge cleanly
       gitMerge(primaryBranch)
+      
+      // batch build and merge changelog using makefile
+      exec("make")
     }
 
     def platforms = [
