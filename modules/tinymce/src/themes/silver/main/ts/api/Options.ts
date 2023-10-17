@@ -335,7 +335,6 @@ const isMenubarEnabled = (editor: Editor): boolean =>
 
 const getSkinUrl = (editor: Editor): string | undefined => {
   const skinUrl = editor.options.get('skin_url');
-  console.log(skinUrl);
 
   if (isSkinDisabled(editor)) {
     return skinUrl;
@@ -344,9 +343,9 @@ const getSkinUrl = (editor: Editor): string | undefined => {
       return editor.documentBaseURI.toAbsolute(skinUrl);
     } else {
       const skin = editor.options.get('skin');
-      let baseUrl = editor.editorManager.baseURL;
-      baseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, baseUrl.length - 1) : baseUrl;
-      return baseUrl + '/skins/ui/' + skin;
+      // let baseUrl = editor.editorManager.baseURL;
+      // baseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, baseUrl.length - 1) : baseUrl;
+      return '/modules/oxide/build/skins/ui/' + (skin === 'oxide' ? 'default' : skin);
     }
   }
 };

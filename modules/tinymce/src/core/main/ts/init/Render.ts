@@ -19,6 +19,7 @@ import * as NodeType from '../dom/NodeType';
 import * as StyleSheetLoaderRegistry from '../dom/StyleSheetLoaderRegistry';
 import * as ErrorReporter from '../ErrorReporter';
 import * as Init from './Init';
+import {ModuleNamespace} from 'vite/types/hot';
 
 interface UrlMeta {
   readonly url: string;
@@ -85,27 +86,25 @@ const getIconsUrlMetaFromUrl = (editor: Editor): Optional<UrlMeta> => Optional.f
 const getIconsUrlMetaFromName = (editor: Editor, name: string | undefined, suffix: string): Optional<UrlMeta> => Optional.from(name)
   .filter((name) => Strings.isNotEmpty(name) && !IconManager.has(name))
   .map((name) => {
-    let baseUrl = editor.editorManager.baseURL;
-    baseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, baseUrl.length - 1) : baseUrl;
     return ({
-      url: `${baseUrl}/icons/${name}/icons${suffix}.js`,
+      url: `/modules/oxide-icons-default/dist/icons/${name}/icons${suffix}.js`,
       name: Optional.some(name)
     });
   });
 
 const loadIcons = async (scriptLoader: ScriptLoader, editor: Editor, suffix: string) => {
-  // const defaultIconsUrl = getIconsUrlMetaFromName(editor, 'default', suffix);
-  await import('../../../../../../oxide-icons-default/dist/js/icons.js');
+  const defaultIconsUrl = getIconsUrlMetaFromName(editor, 'default', suffix);
+  // await import('../../../../../../oxide-icons-default/dist/js/icons.js');
   const customIconsUrl = getIconsUrlMetaFromUrl(editor).orThunk(() => getIconsUrlMetaFromName(editor, Options.getIconPackName(editor), ''));
 
-  Arr.each(Optionals.cat([customIconsUrl]), (urlMeta) => {
+  Arr.each(Optionals.cat([defaultIconsUrl, customIconsUrl]), (urlMeta) => {
     scriptLoader.add(urlMeta.url).catch(() => {
       ErrorReporter.iconsLoadError(editor, urlMeta.url, urlMeta.name.getOrUndefined());
     });
   });
 };
 
-const loadPlugins = (editor: Editor) => {
+const loadPlugins = async (editor: Editor) => {
   const loadPlugin = (name: string, url: string) => {
     PluginManager.load(name, url).catch(() => {
       ErrorReporter.pluginLoadError(editor, url, name);
@@ -117,14 +116,17 @@ const loadPlugins = (editor: Editor) => {
     editor.options.set('plugins', Options.getPlugins(editor).concat(name));
   });
 
-  Arr.each(Options.getPlugins(editor), (plugin) => {
+  const promises: Array<Promise<ModuleNamespace>> = []
+
+  Options.getPlugins(editor).forEach((plugin) => {
     plugin = Tools.trim(plugin);
 
     if (plugin && !PluginManager.urls[plugin] && !hasSkipLoadPrefix(plugin)) {
-      import(`../../../../plugins/${plugin}/main/ts/Main.ts`);
+      promises.push(import(`../../../../plugins/${plugin}/main/ts/Main.ts`));
       // loadPlugin(plugin, `plugins/${plugin}/plugin${suffix}.js`);
     }
   });
+  await Promise.all(promises);
 };
 
 const isThemeLoaded = (editor: Editor): boolean => {
@@ -152,7 +154,7 @@ const loadScripts = async (editor: Editor, suffix: string) => {
   await loadModel(editor);
   loadLanguage(scriptLoader, editor);
   await loadIcons(scriptLoader, editor, suffix);
-  loadPlugins(editor);
+  await loadPlugins(editor);
   scriptLoader.loadQueue().then(initEditor, initEditor);
 };
 

@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import {Arr} from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
@@ -14,7 +14,7 @@ const getFontCssUrls = (editor: Editor): string[] => {
 };
 
 const transformToUrls = (editor: Editor, cssLinks: string[]): string[] => {
-  const skinUrl = editor.editorManager.baseURL + '/skins/content';
+  const skinUrl = '/modules/oxide/build/skins/content';
   const suffix = editor.editorManager.suffix;
   const contentCssFile = `content${suffix}.css`;
 
