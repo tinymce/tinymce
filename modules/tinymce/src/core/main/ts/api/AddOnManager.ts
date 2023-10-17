@@ -188,7 +188,7 @@ const AddOnManager = <T>(): AddOnManager<T> => {
     let urlString = Type.isString(addOnUrl) ? addOnUrl : addOnUrl.prefix + addOnUrl.resource + addOnUrl.suffix;
 
     if (urlString.indexOf('/') !== 0 && urlString.indexOf('://') === -1) {
-      urlString = AddOnManager.baseURL + '/' + urlString;
+      urlString = AddOnManager.baseURL + AddOnManager.baseURL.substring(AddOnManager.baseURL.length - 1) === '/' ? '' : '/' + urlString;
     }
 
     urls[name] = urlString.substring(0, urlString.lastIndexOf('/'));

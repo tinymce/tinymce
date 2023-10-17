@@ -1,5 +1,5 @@
-import { Arr, Obj, Optional, Optionals, Strings, Type } from '@ephox/katamari';
-import { Attribute, SugarElement } from '@ephox/sugar';
+import {Arr, Obj, Optional, Optionals, Strings, Type} from '@ephox/katamari';
+import {Attribute, SugarElement} from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import EventUtils from '../api/dom/EventUtils';
@@ -42,28 +42,36 @@ const loadLanguage = (scriptLoader: ScriptLoader, editor: Editor) => {
   }
 };
 
-const loadTheme = (editor: Editor, suffix: string): void => {
+const loadTheme = async (editor: Editor): Promise<void> => {
   const theme = Options.getTheme(editor);
 
   if (Type.isString(theme) && !hasSkipLoadPrefix(theme) && !Obj.has(ThemeManager.urls, theme)) {
     const themeUrl = Options.getThemeUrl(editor);
-    const url = themeUrl ? editor.documentBaseURI.toAbsolute(themeUrl) : `themes/${theme}/theme${suffix}.js`;
-    ThemeManager.load(theme, url).catch(() => {
-      ErrorReporter.themeLoadError(editor, url, theme);
-    });
+    if (themeUrl) {
+      const url = editor.documentBaseURI.toAbsolute(themeUrl);
+      return ThemeManager.load(theme, url).catch(() => {
+        ErrorReporter.themeLoadError(editor, url, theme);
+      });
+    } else {
+      return import(`../../../../themes/${theme}/main/ts/Main.ts`);
+    }
   }
 };
 
-const loadModel = (editor: Editor, suffix: string): void => {
+const loadModel = async (editor: Editor): Promise<void> => {
   // Special case the 'wait for model' code if a plugin is responsible for it
   // as the plugin will provide the instance instead
   const model = Options.getModel(editor);
   if (model !== 'plugin' && !Obj.has(ModelManager.urls, model)) {
     const modelUrl = Options.getModelUrl(editor);
-    const url = Type.isString(modelUrl) ? editor.documentBaseURI.toAbsolute(modelUrl) : `models/${model}/model${suffix}.js`;
-    ModelManager.load(model, url).catch(() => {
-      ErrorReporter.modelLoadError(editor, url, model);
-    });
+    if (Type.isString(modelUrl)) {
+      const url = editor.documentBaseURI.toAbsolute(modelUrl);
+      return ModelManager.load(model, url).catch(() => {
+        ErrorReporter.modelLoadError(editor, url, model);
+      });
+    } else {
+      return import(`../../../../models/${model}/main/ts/Main.ts`);
+    }
   }
 };
 
@@ -76,23 +84,28 @@ const getIconsUrlMetaFromUrl = (editor: Editor): Optional<UrlMeta> => Optional.f
 
 const getIconsUrlMetaFromName = (editor: Editor, name: string | undefined, suffix: string): Optional<UrlMeta> => Optional.from(name)
   .filter((name) => Strings.isNotEmpty(name) && !IconManager.has(name))
-  .map((name) => ({
-    url: `${editor.editorManager.baseURL}/icons/${name}/icons${suffix}.js`,
-    name: Optional.some(name)
-  }));
+  .map((name) => {
+    let baseUrl = editor.editorManager.baseURL;
+    baseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, baseUrl.length - 1) : baseUrl;
+    return ({
+      url: `${baseUrl}/icons/${name}/icons${suffix}.js`,
+      name: Optional.some(name)
+    });
+  });
 
-const loadIcons = (scriptLoader: ScriptLoader, editor: Editor, suffix: string) => {
-  const defaultIconsUrl = getIconsUrlMetaFromName(editor, 'default', suffix);
+const loadIcons = async (scriptLoader: ScriptLoader, editor: Editor, suffix: string) => {
+  // const defaultIconsUrl = getIconsUrlMetaFromName(editor, 'default', suffix);
+  await import('../../../../../../oxide-icons-default/dist/js/icons.js');
   const customIconsUrl = getIconsUrlMetaFromUrl(editor).orThunk(() => getIconsUrlMetaFromName(editor, Options.getIconPackName(editor), ''));
 
-  Arr.each(Optionals.cat([ defaultIconsUrl, customIconsUrl ]), (urlMeta) => {
+  Arr.each(Optionals.cat([customIconsUrl]), (urlMeta) => {
     scriptLoader.add(urlMeta.url).catch(() => {
       ErrorReporter.iconsLoadError(editor, urlMeta.url, urlMeta.name.getOrUndefined());
     });
   });
 };
 
-const loadPlugins = (editor: Editor, suffix: string) => {
+const loadPlugins = (editor: Editor) => {
   const loadPlugin = (name: string, url: string) => {
     PluginManager.load(name, url).catch(() => {
       ErrorReporter.pluginLoadError(editor, url, name);
@@ -108,7 +121,8 @@ const loadPlugins = (editor: Editor, suffix: string) => {
     plugin = Tools.trim(plugin);
 
     if (plugin && !PluginManager.urls[plugin] && !hasSkipLoadPrefix(plugin)) {
-      loadPlugin(plugin, `plugins/${plugin}/plugin${suffix}.js`);
+      import(`../../../../plugins/${plugin}/main/ts/Main.ts`);
+      // loadPlugin(plugin, `plugins/${plugin}/plugin${suffix}.js`);
     }
   });
 };
@@ -123,7 +137,7 @@ const isModelLoaded = (editor: Editor): boolean => {
   return Type.isNonNullable(ModelManager.get(model));
 };
 
-const loadScripts = (editor: Editor, suffix: string) => {
+const loadScripts = async (editor: Editor, suffix: string) => {
   const scriptLoader = ScriptLoader.ScriptLoader;
 
   const initEditor = () => {
@@ -134,11 +148,11 @@ const loadScripts = (editor: Editor, suffix: string) => {
     }
   };
 
-  loadTheme(editor, suffix);
-  loadModel(editor, suffix);
+  await loadTheme(editor);
+  await loadModel(editor);
   loadLanguage(scriptLoader, editor);
-  loadIcons(scriptLoader, editor, suffix);
-  loadPlugins(editor, suffix);
+  await loadIcons(scriptLoader, editor, suffix);
+  loadPlugins(editor);
   scriptLoader.loadQueue().then(initEditor, initEditor);
 };
 
@@ -197,7 +211,7 @@ const render = (editor: Editor): void => {
 
     // Add hidden input for non input elements inside form elements
     if (Options.hasHiddenInput(editor) && !NodeType.isTextareaOrInput(editor.getElement())) {
-      DOM.insertAfter(DOM.create('input', { type: 'hidden', name: id }), id);
+      DOM.insertAfter(DOM.create('input', {type: 'hidden', name: id}), id);
       editor.hasHiddenInput = true;
     }
 
@@ -247,7 +261,7 @@ const render = (editor: Editor): void => {
   if (Options.shouldAddUnloadTrigger(editor)) {
     editor._beforeUnload = () => {
       if (editor.initialized && !editor.destroyed && !editor.isHidden()) {
-        editor.save({ format: 'raw', no_events: true, set_dirty: false });
+        editor.save({format: 'raw', no_events: true, set_dirty: false});
       }
     };
 

@@ -1,11 +1,11 @@
-import { Arr, Fun, Obj, Optional, Optionals, Type } from '@ephox/katamari';
-import { SelectorFind, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import {Arr, Fun, Obj, Optional, Optionals, Type} from '@ephox/katamari';
+import {SelectorFind, SugarBody, SugarElement, SugarShadowDom} from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
-import { EditorOptions, ToolbarGroup } from 'tinymce/core/api/OptionTypes';
+import {EditorOptions, ToolbarGroup} from 'tinymce/core/api/OptionTypes';
 
 export type ToolbarGroupOption = ToolbarGroup;
 
@@ -160,9 +160,9 @@ const register = (editor: Editor): void => {
   registerOption('toolbar', {
     processor: (value) => {
       if (Type.isBoolean(value) || Type.isString(value) || Type.isArray(value)) {
-        return { value, valid: true };
+        return {value, valid: true};
       } else {
-        return { valid: false, message: 'Must be a boolean, string or array.' };
+        return {valid: false, message: 'Must be a boolean, string or array.'};
       }
     },
     default: true
@@ -335,6 +335,7 @@ const isMenubarEnabled = (editor: Editor): boolean =>
 
 const getSkinUrl = (editor: Editor): string | undefined => {
   const skinUrl = editor.options.get('skin_url');
+  console.log(skinUrl);
 
   if (isSkinDisabled(editor)) {
     return skinUrl;
@@ -343,7 +344,9 @@ const getSkinUrl = (editor: Editor): string | undefined => {
       return editor.documentBaseURI.toAbsolute(skinUrl);
     } else {
       const skin = editor.options.get('skin');
-      return EditorManager.baseURL + '/skins/ui/' + skin;
+      let baseUrl = editor.editorManager.baseURL;
+      baseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, baseUrl.length - 1) : baseUrl;
+      return baseUrl + '/skins/ui/' + skin;
     }
   }
 };
@@ -421,9 +424,9 @@ const isStickyToolbar = (editor: Editor): boolean => {
 const isSplitUiMode = (editor: Editor): boolean =>
   !useFixedContainer(editor) && editor.options.get('ui_mode') === 'split';
 
-const getMenus = (editor: Editor): Record<string, { title: string; items: string }> => {
+const getMenus = (editor: Editor): Record<string, {title: string; items: string}> => {
   const menu = editor.options.get('menu');
-  return Obj.map(menu, (menu) => ({ ...menu, items: menu.items }));
+  return Obj.map(menu, (menu) => ({...menu, items: menu.items}));
 };
 
 export {

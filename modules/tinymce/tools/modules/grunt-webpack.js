@@ -30,11 +30,11 @@ let create = (entries, tsConfig, outDir = '.') => {
       /export .* was not found in/
     ],
     resolve: {
-      extensions: [ '.ts', '.js' ],
+      extensions: ['.ts', '.js'],
       plugins: [
         new TsConfigPathsPlugin({
           configFile: tsConfigPath,
-          extensions: [ '.ts', '.js' ]
+          extensions: ['.ts', '.js']
         })
       ]
     },
@@ -61,7 +61,7 @@ let create = (entries, tsConfig, outDir = '.') => {
         },
         {
           test: /\.(js|mjs|ts)$/,
-          use: [ '@ephox/swag/webpack/remapper' ]
+          use: ['@ephox/swag/webpack/remapper']
         },
         {
           test: /\.ts$/,
@@ -125,7 +125,7 @@ let create = (entries, tsConfig, outDir = '.') => {
 const buildDemoEntries = (typeNames, type, demo, pathPrefix = '') => typeNames.reduce(
   (acc, name) => {
     const tsfile = `src/${type}/${name}/demo/ts/demo/${demo}`;
-    if (fs.existsSync(tsfile)) { acc[`${pathPrefix}${type}/${name}/demo.js`] = tsfile; }
+    if (fs.existsSync(tsfile)) {acc[`${pathPrefix}${type}/${name}/demo.js`] = tsfile;}
     return acc;
   }, {}
 );
@@ -159,6 +159,7 @@ const all = (plugins, themes, models) => {
 
 const generateDemoIndex = (grunt, app, plugins, themes, models) => {
   const demoList = grunt.file.expand(['src/**/demo/html/*.html', 'src/**/demo/html/**/*.html']);
+  console.log(demoList);
   const sortedDemos = demoList.reduce((acc, link) => {
     const type = link.split('/')[1];
 
@@ -177,7 +178,7 @@ const generateDemoIndex = (grunt, app, plugins, themes, models) => {
     <ul>
       ${sortedDemos[type].map(
       link => `<li>${type !== 'core' ? `<strong>${link.split('/')[2]}</strong> - ` : ''}<a href="${link}">${path.basename(link)}</a></li>`).join('')
-    }
+      }
     </ul>`
   ).join('');
   const html = `

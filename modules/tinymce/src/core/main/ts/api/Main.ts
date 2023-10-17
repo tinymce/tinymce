@@ -21,3 +21,4 @@ const exportToWindowGlobal = (tinymce: TinyMCE) => {
 
 exportToWindowGlobal(tinymce);
 exportToModuleLoaders(tinymce);
+
