@@ -1,7 +1,7 @@
 PROJECTS := $(filter-out .changes/unreleased .changes/header.tpl.md,$(wildcard .changes/*))
 PROJECT_NAMES := $(notdir $(PROJECTS))
 
-all: batch merge
+all: $(PROJECT_NAMES)
 
 batch: $(PROJECTS)
 	@for project in $(PROJECTS); do \
