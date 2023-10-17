@@ -1,4 +1,4 @@
-import { Fun, Obj, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Optionals } from '@ephox/katamari';
 import { Insert, PredicateFind, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
@@ -9,6 +9,7 @@ import CaretPosition from '../caret/CaretPosition';
 import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
 import * as MergeText from './MergeText';
+import { ZWSP } from '../text/Zwsp';
 
 const needsReposition = (pos: CaretPosition, elm: Node): boolean => {
   const container = pos.container();
@@ -87,7 +88,13 @@ const isBlock = (editor: Editor, elm: SugarElement<Node>): boolean =>
 const paddEmptyBlock = (elm: SugarElement<Node>): Optional<CaretPosition> => {
   if (Empty.isEmpty(elm)) {
     const br = SugarElement.fromHtml('<br data-mce-bogus="1">');
-    Remove.empty(elm);
+    // Remove all bogus elements except caret
+    Arr.each(Traverse.children(elm), (node) => {
+      if (node.dom.textContent !== ZWSP) {
+        Remove.remove(node);
+      }
+    });
+    // Remove.empty(elm);
     Insert.append(elm, br);
     return Optional.some(CaretPosition.before(br.dom));
   } else {
@@ -149,3 +156,4 @@ const deleteElement = (editor: Editor, forward: boolean, elm: SugarElement<Node>
 export {
   deleteElement
 };
+
