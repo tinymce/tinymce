@@ -30,7 +30,7 @@ const yRange = (detail: VerticalSliderDetail): number => range(detail, maxY, min
 const halfX = (detail: HorizontalSliderDetail): number => xRange(detail) / 2;
 const halfY = (detail: VerticalSliderDetail): number => yRange(detail) / 2;
 
-const step = (detail: SliderDetail): number => detail.stepSize;
+const step = (detail: SliderDetail, useMultiplier?: boolean): number => useMultiplier ? detail.stepSize * detail.speedMultiplier : detail.stepSize;
 const snap = (detail: SliderDetail): boolean => detail.snapToGrid;
 const snapStart = (detail: SliderDetail): Optional<number> => detail.snapStart;
 const rounded = (detail: SliderDetail): boolean => detail.rounded;

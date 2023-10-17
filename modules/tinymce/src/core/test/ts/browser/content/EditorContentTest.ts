@@ -423,4 +423,56 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
       });
     });
   });
+
+  context('SVG elements not enabled by default', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      base_url: '/project/tinymce/js/tinymce'
+    }, []);
+
+    it('TINY-10237: SVGs is not allowed by default', () => {
+      const editor = hook.editor();
+      editor.setContent('<svg width="100" height="100"><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"><script>alert(1)</script></circle></svg>');
+      TinyAssertions.assertContent(editor, '');
+    });
+  });
+
+  context('SVG elements', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      extended_valid_elements: 'svg[width|height]'
+    }, []);
+
+    it('TINY-10237: Retain SVG content if SVGs are allowed but sanitize them', () => {
+      const editor = hook.editor();
+      editor.setContent('<svg width="100" height="100" onload="alert(1)"><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"><script>alert(1)</script></circle></svg>');
+      TinyAssertions.assertContent(editor, '<svg width="100" height="100"><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"></circle></svg>');
+    });
+
+    it('TINY-10237: Retain SVG content white space', () => {
+      const editor = hook.editor();
+      const svgHtml = `
+        <svg width="100" height="100">
+          <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red">
+            <desc>foo</desc>
+          </circle>
+        </svg>
+      `.trim();
+      editor.setContent(svgHtml);
+      TinyAssertions.assertContent(editor, svgHtml);
+    });
+  });
+
+  context('SVG elements xss_sanitization: false', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      extended_valid_elements: 'svg[width|height]',
+      xss_sanitization: false
+    }, []);
+
+    it('TINY-10237: Retain SVG content and scripts if sanitization is disabled', () => {
+      const editor = hook.editor();
+      editor.setContent('<svg width="100" height="100"><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"><script>alert(1)</script></circle></svg>');
+      TinyAssertions.assertContent(editor, '<svg width="100" height="100"><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"><script>alert(1)</script></circle></svg>');
+    });
+  });
 });

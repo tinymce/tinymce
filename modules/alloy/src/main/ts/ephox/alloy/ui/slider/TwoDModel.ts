@@ -33,19 +33,19 @@ const setValueFrom = (spectrum: AlloyComponent, detail: TwoDSliderDetail, value:
 };
 
 // move in a direction by step size. Fire change at the end
-const moveBy = (direction: number, isVerticalMovement: boolean, spectrum: AlloyComponent, detail: TwoDSliderDetail): Optional<number> => {
+const moveBy = (direction: number, isVerticalMovement: boolean, spectrum: AlloyComponent, detail: TwoDSliderDetail, useMultiplier?: boolean): Optional<number> => {
   const f = (direction > 0) ? SliderModel.increaseBy : SliderModel.reduceBy;
   const xValue = isVerticalMovement ? currentValue(detail).x :
-    f(currentValue(detail).x, minX(detail), maxX(detail), step(detail));
+    f(currentValue(detail).x, minX(detail), maxX(detail), step(detail, useMultiplier));
   const yValue = !isVerticalMovement ? currentValue(detail).y :
-    f(currentValue(detail).y, minY(detail), maxY(detail), step(detail));
+    f(currentValue(detail).y, minY(detail), maxY(detail), step(detail, useMultiplier));
 
   fireSliderChange(spectrum, sliderValue(xValue, yValue));
   return Optional.some(xValue);
 };
 
-const handleMovement = (direction: number, isVerticalMovement: boolean) => (spectrum: AlloyComponent, detail: TwoDSliderDetail): Optional<boolean> =>
-  moveBy(direction, isVerticalMovement, spectrum, detail).map<boolean>(Fun.always);
+const handleMovement = (direction: number, isVerticalMovement: boolean) => (spectrum: AlloyComponent, detail: TwoDSliderDetail, useMultiplier?: boolean): Optional<boolean> =>
+  moveBy(direction, isVerticalMovement, spectrum, detail, useMultiplier).map<boolean>(Fun.always);
 
 // fire a slider change event with the minimum value
 const setToMin = (spectrum: AlloyComponent, detail: TwoDSliderDetail): void => {

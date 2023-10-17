@@ -167,7 +167,9 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
 
       const refreshDocking = () => inlineDialog.on((dialog) => {
         InlineView.reposition(dialog);
-        Docking.refresh(dialog);
+        if (!isStickyToolbar || !isToolbarLocationTop) {
+          Docking.refresh(dialog);
+        }
       });
 
       const dialogUi = renderInlineDialog<T>(
@@ -182,7 +184,8 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
           }
         },
         extras.backstages.popup,
-        windowParams.ariaAttrs
+        windowParams.ariaAttrs,
+        refreshDocking
       );
 
       const inlineDialogComp = GuiFactory.build(InlineView.sketch({
@@ -277,7 +280,8 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
           }
         },
         extras.backstages.popup,
-        windowParams.ariaAttrs
+        windowParams.ariaAttrs,
+        refreshDocking
       );
 
       const inlineDialogComp = GuiFactory.build(InlineView.sketch({
@@ -351,7 +355,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
       );
 
       Docking.refresh(inlineDialogComp);
-      editor.on('ResizeEditor ScrollWindow ElementScroll', refreshDocking);
+      editor.on('ResizeEditor ScrollWindow ElementScroll ResizeWindow', refreshDocking);
 
       // Set the initial data in the dialog and focus the first focusable item
       dialogUi.instanceApi.setData(initialData);

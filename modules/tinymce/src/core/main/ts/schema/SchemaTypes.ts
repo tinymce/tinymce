@@ -11,6 +11,7 @@ export interface ElementSettings {
   void_elements?: string;
   whitespace_elements?: string;
   transparent_elements?: string;
+  wrap_block_elements?: string;
 }
 
 export interface SchemaSettings extends ElementSettings {

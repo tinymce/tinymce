@@ -15,6 +15,7 @@ export interface NestedMenuItemSpec extends CommonMenuItemSpec {
 }
 
 export interface NestedMenuItemInstanceApi extends CommonMenuItemInstanceApi {
+  setTooltip: (tooltip: string) => void;
   setIconFill: (id: string, value: string) => void;
 }
 

@@ -312,6 +312,10 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
             icon
           }))
       ),
+    setTooltip: (tooltip: string) => {
+      const translatedTooltip = sharedBackstage.providers.translate(tooltip);
+      Attribute.setAll(comp.element, { 'aria-label': translatedTooltip, 'title': translatedTooltip });
+    }
   });
 
   const editorOffCell = Cell(Fun.noop);
