@@ -1613,5 +1613,21 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       const serializedHtml = HtmlSerializer({}, schema).serialize(DomParser({ forced_root_block: 'p', sanitize: false }, schema).parse(input));
       assert.equal(serializedHtml, '<svg><circle><desc>foo<script>alert(1)</script></desc></circle></svg><p>foo</p>');
     });
+
+    it('TINY-10273: Trim whitespace before/after but not inside SVG elements at root level', () => {
+      const schema = Schema();
+      schema.addValidElements('svg[*]');
+      const input = '  <svg> <circle> </circle> </svg>  <svg> <circle> </circle> </svg>  ';
+      const serializedHtml = HtmlSerializer({}, schema).serialize(DomParser({ forced_root_block: 'p' }, schema).parse(input));
+      assert.equal(serializedHtml, '<svg> <circle> </circle> </svg><svg> <circle> </circle> </svg>');
+    });
+
+    it('TINY-10273: Trim whitespace before/after but between or inside SVG elements when inside a block element', () => {
+      const schema = Schema();
+      schema.addValidElements('svg[*]');
+      const input = '<div>  <svg> <circle> </circle> </svg>  <svg> <circle> </circle> </svg>  </div>';
+      const serializedHtml = HtmlSerializer({}, schema).serialize(DomParser({ forced_root_block: 'p' }, schema).parse(input));
+      assert.equal(serializedHtml, '<div><svg> <circle> </circle> </svg> <svg> <circle> </circle> </svg></div>');
+    });
   });
 });
