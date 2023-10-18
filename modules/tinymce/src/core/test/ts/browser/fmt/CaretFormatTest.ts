@@ -565,4 +565,80 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     })));
     TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0 ], 2, [ 0, 0, 0, 0 ], 2);
   });
+
+  it('TINY-10132: Apply and remove multiple format to caret at the beginning of a paragraph', () => {
+    const editor = hook.editor();
+    editor.setContent('<p></p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    applyCaretFormat(editor, 'bold', {});
+    applyCaretFormat(editor, 'italic', {});
+    applyCaretFormat(editor, 'underline', {});
+    removeCaretFormat(editor, 'bold', {});
+    TinyContentActions.type(editor, 'x');
+    TinyAssertions.assertContent(editor, '<p><span style="text-decoration: underline;"><em>x</em></span></p>');
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) =>
+      s.element('body', {
+        children: [
+          s.element('p', {
+            children: [
+              s.element('span', {
+                attrs: {
+                  'id': str.is('_mce_caret'),
+                  'data-mce-bogus': str.is('1') },
+                children: [
+                  s.element('span', {
+                    styles: { 'text-decoration': str.is('underline') },
+                    children: [
+                      s.element('em', {
+                        children: [ s.text(str.is(Zwsp.ZWSP + 'x')) ]
+                      })
+                    ]
+                  })
+                ]
+              }),
+              s.element('br', {})
+            ]
+          })
+        ]
+      })));
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0 ], 2);
+  });
+
+  it('TINY-10132: Apply and remove multiple format to caret in an empty editor', () => {
+    const editor = hook.editor();
+    editor.setContent('');
+    TinySelections.setCursor(editor, [ 0 ], 0);
+    applyCaretFormat(editor, 'bold', {});
+    applyCaretFormat(editor, 'italic', {});
+    applyCaretFormat(editor, 'underline', {});
+    removeCaretFormat(editor, 'bold', {});
+    removeCaretFormat(editor, 'underline', {});
+    TinyContentActions.type(editor, 'x');
+    TinyAssertions.assertContent(editor, '<p><em>x</em></p>');
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
+      return s.element('body', {
+        children: [
+          s.element('p', {
+            children: [
+              s.element('span', {
+                attrs: {
+                  'id': str.is('_mce_caret'),
+                  'data-mce-bogus': str.is('1')
+                },
+                children: [
+                  s.element('em', {
+                    children: [
+                      s.text(str.is(Zwsp.ZWSP + 'x'))
+                    ]
+                  })
+                ]
+              }),
+              s.element('br', {})
+            ]
+          })
+        ]
+      });
+    }));
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0 ], 2);
+  });
 });
