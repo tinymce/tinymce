@@ -156,7 +156,7 @@ describe('browser.tinymce.core.ForceBlocksTest', () => {
     TinyAssertions.assertRawContent(editor, '<svg></svg><p>foo</p>');
   });
 
-  it('TINY-10273: Should create empty paragraphs for whitespace around SVG elements', () => {
+  it('TINY-10273: Should not create empty paragraphs for whitespace around SVG elements', () => {
     const editor = hook.editor();
 
     editor.setContent(' <svg></svg> <svg></svg> ', { format: 'raw' });
