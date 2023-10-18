@@ -535,7 +535,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
       </li>
     </ul>`);
 
-    LegacyUnit.setSelection(editor, '.to-indent', 0);
+    TinySelections.setCursor(editor, [ 0, 0, 1, 0 ], 0);
     editor.execCommand('Indent');
 
     TinyAssertions.assertContent(editor, '<ul>' +
@@ -549,7 +549,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
       '</li>' +
     '</ul>');
 
-    LegacyUnit.setSelection(editor, '.to-indent', 0);
+    TinySelections.setCursor(editor, [ 0, 0, 1, 0, 0, 0 ], 0);
     editor.execCommand('Outdent');
 
     TinyAssertions.assertContent(editor, '<ul>' +
