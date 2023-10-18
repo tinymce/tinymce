@@ -522,7 +522,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  it('TINY-10268: a `list` inside a `li` surrounded by 2 not element should allow the user to intend/outdent its `li`', () => {
+  it('TINY-10268: a `list` inside a `li` surrounded by 2 not element should allow the user to indent/outdent its `li`', () => {
     const editor = hook.editor();
     editor.setContent(`<ul>
       <li>
