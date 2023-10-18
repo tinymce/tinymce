@@ -225,15 +225,13 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         const element = TinyDom.targetElement(editor);
         const doc = SugarShadowDom.getShadowRoot(element).getOrThunk(() => SugarDocument.getDocument());
         await pOpenDialog(editor);
-        await FocusTools.pTryOnSelector('Should have selected the main view', doc, 'canvas');
+        await FocusTools.pTryOnSelector('Should have started on the main view', doc, 'canvas');
         let targetElement = UiFinder.findIn(TinyUiActions.getUiRoot(editor), '.tox-hue-slider-spectrum').getOrDie();
         Mouse.mouseDown(targetElement);
-        TinyUiActions.clickOnUi(editor, '.tox-hue-slider-spectrum');
         await FocusTools.pTryOnSelector('Should have selected the hue slider', doc, '.tox-hue-slider-spectrum');
-        targetElement = UiFinder.findIn(TinyUiActions.getUiRoot(editor), '.tox-hue-slider-spectrum').getOrDie();
+        targetElement = UiFinder.findIn(TinyUiActions.getUiRoot(editor), 'canvas').getOrDie();
         Mouse.mouseDown(targetElement);
-        TinyUiActions.clickOnUi(editor, '.tox-hue-slider-spectrum');
-        await FocusTools.pTryOnSelector('Should have selected the main view', doc, 'canvas');
+        await FocusTools.pTryOnSelector('Should have ended on the main view', doc, 'canvas');
         await pCancelDialog(editor);
       });
     });
