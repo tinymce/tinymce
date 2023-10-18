@@ -69,9 +69,9 @@ const getClosestListHost = (editor: Editor, elm: Node): HTMLElement => {
 };
 
 const isListInsideLiWithSiblings = (list: SugarElement<Node>): boolean =>
-  Traverse.prevSibling(list).filter((sibling) => !NodeType.isListItemNode(sibling.dom)).isSome() &&
-  Traverse.nextSibling(list).filter((sibling) => !NodeType.isListItemNode(sibling.dom)).isSome() &&
-  Traverse.parent(list).filter((parent) => NodeType.isListItemNode(parent.dom)).isSome();
+  Traverse.prevSibling(list).exists((sibling) => !NodeType.isListItemNode(sibling.dom))
+  && Traverse.nextSibling(list).exists((sibling) => !NodeType.isListItemNode(sibling.dom))
+  && Traverse.parent(list).exists((parent) => NodeType.isListItemNode(parent.dom));
 
 const findLastParentListNode = (editor: Editor, elm: Element): Optional<HTMLOListElement | HTMLUListElement> => {
   const parentLists = editor.dom.getParents<HTMLOListElement | HTMLUListElement>(elm, 'ol,ul', getClosestListHost(editor, elm));
