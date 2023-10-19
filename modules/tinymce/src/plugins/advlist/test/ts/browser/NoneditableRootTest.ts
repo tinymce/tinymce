@@ -19,15 +19,15 @@ describe('browser.tinymce.plugins.advlist.NoneditableRootTest', () => {
     const initialListContent = '<ol><li>a</li></ol>';
     const setupEditor = (editor: Editor) => {
       editor.setContent(initialListContent);
-      TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
     };
 
-    it('TINY-9458: List buttons numlist/bullist should be disabled', () => {
-      TinyState.withNoneditableRootEditor<Editor>(hook.editor(), (editor) => {
+    it('TINY-9458: List buttons numlist/bullist should be disabled', async () => {
+      await TinyState.withNoneditableRootEditorAsync<Editor>(hook.editor(), async (editor) => {
         setupEditor(editor);
 
-        UiFinder.exists(SugarBody.body(), 'div[title="Numbered list"][aria-disabled="true"]');
-        UiFinder.exists(SugarBody.body(), 'div[title="Bullet list"][aria-disabled="true"]');
+        await UiFinder.pWaitFor('Waited for number list to be disabled', SugarBody.body(), 'div[title="Numbered list"][aria-disabled="true"]');
+        await UiFinder.pWaitFor('Waited for bullet list to be disabled', SugarBody.body(), 'div[title="Bullet list"][aria-disabled="true"]');
       });
     });
 
