@@ -4,7 +4,7 @@ import { assert } from 'chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import DomSerializer from 'tinymce/core/api/dom/Serializer';
-import * as TrimHtml from 'tinymce/core/dom/TrimHtml';
+import * as TrimBody from 'tinymce/core/dom/TrimBody';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 
 import * as ViewBlock from '../../module/test/ViewBlock';
@@ -16,15 +16,21 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   const viewBlock = ViewBlock.bddSetup();
   viewBlock.get().id = 'test';
 
-  afterEach(() => {
-    viewBlock.update('');
-  });
-
   const setTestHtml = (html: string) =>
     DOM.setHTML('test', html);
 
   const getTestElement = () =>
     DOM.get('test') as HTMLElement;
+
+  const trim = (ser: DomSerializer, html: string) => {
+    const container = DOM.create('div', {}, html);
+    const trimmed = TrimBody.trim(container, ser.getTempAttrs());
+    return Zwsp.trim(trimmed.innerHTML);
+  };
+
+  afterEach(() => {
+    viewBlock.update('');
+  });
 
   it('Schema rules', () => {
     let ser = DomSerializer({ fix_list_elements: true });
@@ -752,7 +758,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
 
     setTestHtml('<p data-x="1" data-y="2" data-z="3">a</p>');
     assert.equal(ser.serialize(getTestElement(), { getInner: 1 }), '<p data-z="3">a</p>');
-    assert.equal(TrimHtml.trimExternal(ser, '<p data-x="1" data-y="2" data-z="3">a</p>'), '<p data-z="3">a</p>');
+    assert.equal(trim(ser, '<p data-x="1" data-y="2" data-z="3">a</p>'), '<p data-z="3">a</p>');
   });
 
   it('addTempAttr same attr twice', () => {
@@ -764,9 +770,9 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
 
     setTestHtml('<p data-x="1" data-z="3">a</p>');
     assert.equal(ser1.serialize(getTestElement(), { getInner: 1 }), '<p data-z="3">a</p>');
-    assert.equal(TrimHtml.trimExternal(ser1, '<p data-x="1" data-z="3">a</p>'), '<p data-z="3">a</p>');
+    assert.equal(trim(ser1, '<p data-x="1" data-z="3">a</p>'), '<p data-z="3">a</p>');
     assert.equal(ser2.serialize(getTestElement(), { getInner: 1 }), '<p data-z="3">a</p>');
-    assert.equal(TrimHtml.trimExternal(ser2, '<p data-x="1" data-z="3">a</p>'), '<p data-z="3">a</p>');
+    assert.equal(trim(ser2, '<p data-x="1" data-z="3">a</p>'), '<p data-z="3">a</p>');
   });
 
   it('trim data-mce-bogus="all"', () => {
@@ -774,7 +780,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
 
     setTestHtml('a<p data-mce-bogus="all">b</p>c');
     assert.equal(ser.serialize(getTestElement(), { getInner: 1 }), 'ac');
-    assert.equal(TrimHtml.trimExternal(ser, 'a<p data-mce-bogus="all">b</p>c'), 'ac');
+    assert.equal(trim(ser, 'a<p data-mce-bogus="all">b</p>c'), 'ac');
   });
 
   it('zwsp should not be treated as contents', () => {

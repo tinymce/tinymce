@@ -53,9 +53,14 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
           s.element('div', {
             classes: [ arr.has('tox-notification__body') ],
             children: [
-              s.element('p', {
-                children: [ s.text(str.is(message)) ]
-              })
+              s.either([
+                s.element('p', {
+                  children: [ s.text(str.is(message)) ]
+                }),
+                s.element('p', {
+                  html: str.is(message)
+                })
+              ])
             ]
           }),
           ...progress !== undefined ? [
@@ -188,6 +193,30 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
       assertPosition('Last notification is outside the content area', notifications[notifications.length - 1], 220, 192);
 
       Arr.each(notifications, (notification) => notification.close());
+    });
+
+    it('TINY-10286: Notification displays plain text', () => {
+      const editor = hook.editor();
+
+      const notification = openNotification(editor, 'success', 'This is a basic notification');
+      assertStructure('Check notification structure', notification, 'success', 'This is a basic notification');
+      notification.close();
+    });
+
+    it('TINY-10286: Notification displays link', () => {
+      const editor = hook.editor();
+
+      const notification = openNotification(editor, 'success', 'This notification contains a <a href="example.com">link</a>');
+      assertStructure('Check notification structure', notification, 'success', 'This notification contains a <a href="example.com">link</a>');
+      notification.close();
+    });
+
+    it('TINY-10286: Notification displays sanitized html', () => {
+      const editor = hook.editor();
+
+      const notification = openNotification(editor, 'success', 'This contains an image <img src="" onerror=alert("alert")>');
+      assertStructure('Check notification structure', notification, 'success', 'This contains an image <img src="">');
+      notification.close();
     });
   });
 

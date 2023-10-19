@@ -12,6 +12,8 @@ export const isNonHtmlElementRoot = (node: Node): boolean => isNonHtmlElementRoo
 
 export const toScopeType = (node: Node | undefined): NamespaceType => node?.nodeName === 'svg' ? 'svg' : 'html';
 
+export const namespaceElements = [ 'svg' ];
+
 export const createNamespaceTracker = (): NamespaceTracker => {
   let scopes: Node[] = [];
 
