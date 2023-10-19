@@ -5,10 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 
 import Entities from '../api/html/Entities';
 import * as NodeType from '../dom/NodeType';
+import * as Zwsp from '../text/Zwsp';
 import * as Diff from './Diff';
 
 /**
@@ -78,11 +79,10 @@ const applyDiff = (diff, elm: Element) => {
   });
 };
 
-const read = (elm: Element): string[] => {
-  return Arr.filter(Arr.map(Arr.from(elm.childNodes), getOuterHtml), (item) => {
+const read = (elm: Element, trimZwsp?: boolean): string[] =>
+  Arr.filter(Arr.map(Arr.from(elm.childNodes), trimZwsp ? Fun.compose(Zwsp.trim, getOuterHtml) : getOuterHtml), (item) => {
     return item.length > 0;
   });
-};
 
 const write = (fragments: string[], elm: Element): Element => {
   const currentFragments = Arr.map(Arr.from(elm.childNodes), getOuterHtml);

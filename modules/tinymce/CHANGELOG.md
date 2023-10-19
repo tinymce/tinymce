@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 5.10.8 - 2023-10-19
+
+### Fixed
+- Specific HTML content caused mXSS when using undo/redo. #TINY-10215
+- Specific HTML content caused mXSS when using the `getContent` and `setContent` APIs with the `format: 'raw'` option, which also affected the `resetContent` API and the draft restoration feature of the Autosave plugin. #TINY-10236
+- Notification messages containing HTML were not properly XSS sanitized before being displayed. #TINY-10286
+
 ## 5.10.7 - 2022-12-06
 
 ### Fixed
