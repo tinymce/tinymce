@@ -27,7 +27,7 @@ describe('browser.tinymce.plugins.advlist.NoneditableRootTest', () => {
       await TinyState.withNoneditableRootEditorAsync<Editor>(hook.editor(), async (editor) => {
         setupEditor(editor);
 
-        await UiFinder.pWaitFor('Waited for number list to be disabled', TinyDom.container(editor), 'div[title="Numbered list"][aria-disabled="true"]');
+        await UiFinder.pWaitFor('Waited for number list to be disabled' + document.body.innerHTML, TinyDom.container(editor), 'div[title="Numbered list"][aria-disabled="true"]');
         await UiFinder.pWaitFor('Waited for bullet list to be disabled', TinyDom.container(editor), 'div[title="Bullet list"][aria-disabled="true"]');
       });
     });
