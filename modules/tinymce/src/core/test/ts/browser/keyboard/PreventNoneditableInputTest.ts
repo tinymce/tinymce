@@ -1,4 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -7,13 +8,20 @@ import Editor from 'tinymce/core/api/Editor';
 import * as InputEventUtils from '../../module/test/InputEventUtils';
 
 describe('browser.tinymce.core.keyboard.PreventNoneditableInputTest', () => {
+  const isSafari = PlatformDetection.detect().browser.isSafari();
+
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
     extended_valid_elements: 'svg[*]'
   }, []);
 
-  it('TINY-10271: Prevent input events inside a SVG element', () => {
+  it('TINY-10271: Prevent input events inside a SVG element', function () {
+    // Safari normalizes the selection so that it is outside the SVG so we can't setup a test that fails
+    if (isSafari) {
+      this.skip();
+    }
+
     const inputEvents: Array<{ inputType: string; defaultPrevented: boolean }> = [];
     const editor = hook.editor();
     const collect = ({ inputType, defaultPrevented }: InputEvent) => {
