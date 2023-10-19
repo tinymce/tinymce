@@ -828,8 +828,11 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('force_hex_color', {
-    processor: 'boolean',
-    default: false,
+    processor: (value) => {
+      const valid = Arr.contains([ 'always', 'rgb_only', 'off' ], value);
+      return valid ? { value, valid } : { valid: false, message: 'Must be one of: always, rgb_only, or off.' };
+    },
+    default: 'off',
   });
 
   // These options must be registered later in the init sequence due to their default values

@@ -117,7 +117,7 @@ interface BaseEditorOptions {
   font_size_style_values?: string;
   font_size_formats?: string;
   font_size_input_default_unit?: string;
-  force_hex_color?: boolean;
+  force_hex_color?: 'always' | 'rgb_only' | 'off';
   forced_root_block?: string;
   forced_root_block_attrs?: Record<string, string>;
   formats?: Formats;
@@ -301,7 +301,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   font_size_style_values: string;
   forced_root_block: string;
   forced_root_block_attrs: Record<string, string>;
-  force_hex_color: boolean;
+  force_hex_color: 'always' | 'rgb_only' | 'off';
   format_noneditable_selector: string;
   height: number | string;
   highlight_on_focus: boolean;

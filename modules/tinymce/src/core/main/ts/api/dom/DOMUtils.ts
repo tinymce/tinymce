@@ -65,7 +65,7 @@ export interface DOMUtilsSettings {
   onSetAttrib: (event: SetAttribEvent) => void;
   contentCssCors: boolean;
   referrerPolicy: ReferrerPolicy;
-  force_hex_color: boolean;
+  force_hex_color: 'always' | 'rgb_only' | 'off';
 }
 
 export type Target = Node | Window;
