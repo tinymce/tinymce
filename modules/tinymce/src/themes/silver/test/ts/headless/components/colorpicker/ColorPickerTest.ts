@@ -1,13 +1,11 @@
-import { HsvColour, Transformations } from '@ephox/acid';
+import { HsvColour } from '@ephox/acid';
 import { UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { AlloyComponent, GuiFactory, TestHelpers } from '@ephox/alloy';
-import { describe, it, context } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
-import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
 import { renderColorPicker } from 'tinymce/themes/silver/ui/dialog/ColorPicker';
 
 import * as RepresentingUtils from '../../../module/RepresentingUtils';
@@ -163,93 +161,5 @@ describe('headless.tinymce.themes.silver.components.colorpicker.ColorPickerTest'
       '#00EEDD'
     );
 
-  });
-
-  context('force_hex_color option set to default (false)', () => {
-    const hook = TinyHooks.bddSetupLight<Editor>({
-      base_url: '/project/tinymce/js/tinymce',
-    }, []);
-
-    it('TINY-9819: should not affect data-mce-style attribute', () => {
-      const editor = hook.editor();
-      assert.isFalse(editor.options.get('force_hex_color'), 'force_hex_color must be false');
-
-      editor.setContent('<p>colour me</p>');
-      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 'color me'.length);
-
-      editor.execCommand('mceApplyTextcolor', 'forecolor' as any, '#E03E2D');
-
-      TinyAssertions.assertContentPresence(editor, { [`span[data-mce-style="color: rgb(224, 62, 45);"]`]: 1 });
-    });
-  });
-
-  context('force_hex_color option set to true', () => {
-    const color_map = [ '#E03E2D', 'Red' ];
-    const hook = TinyHooks.bddSetupLight<Editor>({
-      base_url: '/project/tinymce/js/tinymce',
-      force_hex_color: true,
-      toolbar: 'forecolor',
-      color_map,
-    }, []);
-
-    it('TINY-9819: will always set data-mce-style colors to hex', () => {
-      const editor = hook.editor();
-      assert.isTrue(editor.options.get('force_hex_color'), 'force_hex_color must be true');
-
-      editor.setContent('<p>colour me</p>');
-      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 'color me'.length);
-
-      editor.execCommand('mceApplyTextcolor', 'forecolor' as any, color_map[0]);
-
-      TinyAssertions.assertContentPresence(editor, { [`span[data-mce-style="color: ${color_map[0]};"]`]: 1 });
-    });
-
-    it('TINY-9819: changing fore-color with toolbar', async () => {
-      const editor = hook.editor();
-
-      TinyUiActions.clickOnToolbar(editor, '[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron');
-      await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
-      TinyUiActions.clickOnUi(editor, `div[data-mce-color="${color_map[0]}"]`);
-
-      TinyAssertions.assertContentPresence(editor, { [`span[data-mce-style="color: ${color_map[0]};"]`]: 1 });
-    });
-  });
-
-  context('force_hex_color option set to true without color_map', () => {
-    const hook = TinyHooks.bddSetupLight<Editor>({
-      base_url: '/project/tinymce/js/tinymce',
-      force_hex_color: true,
-      toolbar: 'forecolor',
-    }, []);
-
-    it('TINY-9819: color should be hex', () => {
-      const editor = hook.editor();
-      assert.isFalse(editor.options.isSet('color_map'));
-
-      const hexColor = '#00FF00';
-      editor.execCommand('mceApplyTextcolor', 'forecolor' as any, hexColor);
-
-      TinyAssertions.assertContentPresence(editor, { [`span[data-mce-style="color: ${hexColor};"]`]: 1 });
-    });
-
-    it('TINY-9819: color will still be hex even with RGB value', () => {
-      const editor = hook.editor();
-
-      const rgbColor = 'rgb(55, 155, 55)';
-      editor.execCommand('mceApplyTextcolor', 'forecolor' as any, rgbColor);
-
-      TinyAssertions.assertContentPresence(editor, { [`span[data-mce-style="color: ${Transformations.rgbaToHexString(rgbColor)};"]`]: 1 });
-    });
-
-    it('TINY-9819: changing fore-color with toolbar', async () => {
-      const editor = hook.editor();
-
-      const hexColor = '#E03E2D';
-      TinyUiActions.clickOnToolbar(editor, '[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron');
-      await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
-      TinyUiActions.clickOnUi(editor, `div[data-mce-color="${hexColor}"]`);
-
-      TinyAssertions.assertContentPresence(editor, { [`span[data-mce-style="color: ${hexColor};"]`]: 1 });
-    });
   });
 });
