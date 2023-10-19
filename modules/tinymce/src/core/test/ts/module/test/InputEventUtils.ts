@@ -24,9 +24,14 @@ const clone = <T extends Event>(originalEvent: T): T => {
     event.composedPath = () => originalEvent.composedPath!();
   }
 
+  event.preventDefault = () => {
+    originalEvent.preventDefault();
+    event.defaultPrevented = true;
+  };
+
   return event as T;
 };
 
 export const makeInputEvent = <A extends InputEvent>(name: 'beforeinput' | 'input', overrides: { [K in keyof A]?: A[K] }): InputEvent => {
-  return { ...clone(new InputEvent(name)), ...overrides };
+  return { ...clone(new InputEvent(name, { cancelable: true })), ...overrides };
 };
