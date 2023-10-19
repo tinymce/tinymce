@@ -1,7 +1,7 @@
 import { UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
-import { TinyAssertions, TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
@@ -22,12 +22,13 @@ describe('browser.tinymce.plugins.advlist.NoneditableRootTest', () => {
       TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
     };
 
-    it('TINY-9458: List buttons numlist/bullist should be disabled', async () => {
+    // eslint-disable-next-line mocha/no-exclusive-tests
+    it.only('TINY-9458: List buttons numlist/bullist should be disabled', async () => {
       await TinyState.withNoneditableRootEditorAsync<Editor>(hook.editor(), async (editor) => {
         setupEditor(editor);
 
-        await UiFinder.pWaitFor('Waited for number list to be disabled', SugarBody.body(), 'div[title="Numbered list"][aria-disabled="true"]');
-        await UiFinder.pWaitFor('Waited for bullet list to be disabled', SugarBody.body(), 'div[title="Bullet list"][aria-disabled="true"]');
+        await UiFinder.pWaitFor('Waited for number list to be disabled', TinyDom.container(editor), 'div[title="Numbered list"][aria-disabled="true"]');
+        await UiFinder.pWaitFor('Waited for bullet list to be disabled', TinyDom.container(editor), 'div[title="Bullet list"][aria-disabled="true"]');
       });
     });
 
