@@ -68,10 +68,11 @@ const getClosestListHost = (editor: Editor, elm: Node): HTMLElement => {
   return parentBlock.getOr(editor.getBody());
 };
 
-const isListInsideLiWithSiblings = (list: SugarElement<Node>): boolean =>
-  Traverse.prevSibling(list).exists((sibling) => !NodeType.isListItemNode(sibling.dom))
-  && Traverse.nextSibling(list).exists((sibling) => !NodeType.isListItemNode(sibling.dom))
-  && Traverse.parent(list).exists((parent) => NodeType.isListItemNode(parent.dom));
+const isListInsideAnLiWithFirstAndLastNotListElement = (list: SugarElement<Node>): boolean =>
+  Traverse.parent(list).exists((parent) => NodeType.isListItemNode(parent.dom)
+    && Traverse.firstChild(parent).exists((firstChild) => !NodeType.isListNode(firstChild.dom))
+    && Traverse.lastChild(parent).exists((lastChild) => !NodeType.isListNode(lastChild.dom))
+  );
 
 const findLastParentListNode = (editor: Editor, elm: Element): Optional<HTMLOListElement | HTMLUListElement> => {
   const parentLists = editor.dom.getParents<HTMLOListElement | HTMLUListElement>(elm, 'ol,ul', getClosestListHost(editor, elm));
@@ -93,7 +94,7 @@ const getParentLists = (editor: Editor) => {
 const getSelectedListRoots = (editor: Editor): HTMLElement[] => {
   const selectedLists = getSelectedLists(editor);
   const parentLists = getParentLists(editor);
-  return Arr.find(parentLists, (p) => isListInsideLiWithSiblings(SugarElement.fromDom(p))).fold(
+  return Arr.find(parentLists, (p) => isListInsideAnLiWithFirstAndLastNotListElement(SugarElement.fromDom(p))).fold(
     () => getUniqueListRoots(editor, selectedLists),
     (l) => [ l ]
   );
