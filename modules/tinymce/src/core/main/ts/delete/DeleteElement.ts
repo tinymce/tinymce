@@ -8,7 +8,7 @@ import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
-import { ZWSP } from '../text/Zwsp';
+import { isCaretNode } from '../fmt/FormatContainer';
 import * as MergeText from './MergeText';
 
 const needsReposition = (pos: CaretPosition, elm: Node): boolean => {
@@ -90,7 +90,7 @@ const paddEmptyBlock = (elm: SugarElement<Node>): Optional<CaretPosition> => {
     const br = SugarElement.fromHtml('<br data-mce-bogus="1">');
     // Remove all bogus elements except caret
     Arr.each(Traverse.children(elm), (node) => {
-      if (node.dom.textContent !== ZWSP) {
+      if (!isCaretNode(node.dom)) {
         Remove.remove(node);
       }
     });
