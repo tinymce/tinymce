@@ -4,7 +4,8 @@ import { SugarBody } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Plugin from 'tinymce/plugins/lists/Plugin';
+import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
+import ListPlugin from 'tinymce/plugins/lists/Plugin';
 
 describe('browser.tinymce.plugins.advlist.NoneditableRootTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
@@ -13,7 +14,7 @@ describe('browser.tinymce.plugins.advlist.NoneditableRootTest', () => {
     contextmenu: 'lists',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin ], true);
+  }, [ ListPlugin, AdvListPlugin ], true);
 
   context('List ui controls', () => {
     const initialListContent = '<ol><li>a</li></ol>';
