@@ -1,6 +1,6 @@
 import { Assertions } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks } from '@ephox/wrap-mcagar';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { McEditor, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -44,5 +44,29 @@ describe('browser.tinymce.core.content.EditorResetContentTest', () => {
     assert.isTrue(editor.undoManager.hasUndo(), 'UndoManager should have some undo levels');
     editor.resetContent('<p>html</p>');
     assertEditorState(editor, '<p>html</p>');
+  });
+
+  context('Content XSS', () => {
+    const xssFnName = 'xssfn';
+
+    const testResetContentMxss = (content: string) => async () => {
+      const editor = await McEditor.pFromHtml<Editor>(`<textarea>${content}</textarea>`, {
+        base_url: '/project/tinymce/js/tinymce'
+      });
+      let hasXssOccurred = false;
+      (editor.getWin() as any)[xssFnName] = () => hasXssOccurred = true;
+      editor.resetContent();
+      assert.isFalse(hasXssOccurred, 'XSS should not have occurred');
+      (editor.getWin() as any)[xssFnName] = null;
+    };
+
+    it('TINY-10236: Excluding data-mce-bogus="all" elements does not cause mXSS',
+      testResetContentMxss(`<!--<br data-mce-bogus="all">><iframe onload="window.${xssFnName}();">->`));
+
+    it('TINY-10236: Excluding temporary attributes does not cause mXSS',
+      testResetContentMxss(`<!--data-mce-selected="x"><iframe onload="window.${xssFnName}();">->`));
+
+    it('TINY-10236: Excluding ZWNBSP does not cause mXSS',
+      testResetContentMxss(`<!--\uFEFF><iframe onload="window.${xssFnName}();">->`));
   });
 });
