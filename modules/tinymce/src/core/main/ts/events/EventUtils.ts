@@ -70,7 +70,7 @@ const clone = <T extends PartialEvent>(originalEvent: T, data?: T): T => {
     event.composedPath = () => originalEvent.composedPath!();
   }
 
-  // The composed path can't be cloned, so delegate instead
+  // The getModifierState won't work when cloned, so delegate instead
   if (Type.isNonNullable(originalEvent.getModifierState)) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     event.getModifierState = (keyArg: string) => originalEvent.getModifierState!(keyArg);
