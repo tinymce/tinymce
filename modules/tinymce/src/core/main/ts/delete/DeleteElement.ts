@@ -94,7 +94,6 @@ const paddEmptyBlock = (elm: SugarElement<Node>): Optional<CaretPosition> => {
         Remove.remove(node);
       }
     });
-    // Remove.empty(elm);
     Insert.append(elm, br);
     return Optional.some(CaretPosition.before(br.dom));
   } else {

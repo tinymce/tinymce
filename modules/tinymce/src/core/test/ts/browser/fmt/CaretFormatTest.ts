@@ -568,14 +568,14 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
 
   it('TINY-10132: Apply and remove multiple format to caret at the beginning of a paragraph', () => {
     const editor = hook.editor();
-    editor.setContent('<p></p>');
+    editor.setContent('<p>abc</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     applyCaretFormat(editor, 'bold', {});
     applyCaretFormat(editor, 'italic', {});
     applyCaretFormat(editor, 'underline', {});
     removeCaretFormat(editor, 'bold', {});
     TinyContentActions.type(editor, 'x');
-    TinyAssertions.assertContent(editor, '<p><span style="text-decoration: underline;"><em>x</em></span></p>');
+    TinyAssertions.assertContent(editor, '<p><span style="text-decoration: underline;"><em>x</em></span>abc</p>');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) =>
       s.element('body', {
         children: [
@@ -596,7 +596,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
                   })
                 ]
               }),
-              s.element('br', {})
+              s.text(str.is('abc'))
             ]
           })
         ]
