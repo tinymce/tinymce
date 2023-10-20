@@ -1,4 +1,4 @@
-import { Obj, Type } from '@ephox/katamari';
+import { Arr, Obj, Type } from '@ephox/katamari';
 import { Attribute, Insert, Remove, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import Annotator from '../api/Annotator';
@@ -14,6 +14,7 @@ import DomParser, { DomParserSettings } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
 import Schema, { SchemaSettings } from '../api/html/Schema';
 import * as Options from '../api/Options';
+import { TinyMCE } from '../api/Tinymce';
 import UndoManager from '../api/UndoManager';
 import Delay from '../api/util/Delay';
 import Tools from '../api/util/Tools';
@@ -37,6 +38,7 @@ import * as TextPattern from '../textpatterns/TextPatterns';
 import Quirks from '../util/Quirks';
 
 declare const escape: any;
+declare let tinymce: TinyMCE;
 
 const DOM = DOMUtils.DOM;
 
@@ -261,8 +263,15 @@ const getStyleSheetLoader = (editor: Editor): StyleSheetLoader =>
   editor.inline ? editor.ui.styleSheetLoader : editor.dom.styleSheetLoader;
 
 const makeStylesheetLoadingPromises = (editor: Editor, css: string[], framedFonts: string[]): Promise<unknown>[] => {
-  const promises = [
-    getStyleSheetLoader(editor).loadAll(css)
+  const { pass: bundledCss, fail: normalCss } = Arr.partition(css, (name) => tinymce.Resource.has('content/' + name + '/content.css'));
+  const bundledPromises = bundledCss.map(async (url) => {
+    const css = await tinymce.Resource.get('content/' + url + '/content.css');
+    if (Type.isString(css)) {
+      return getStyleSheetLoader(editor).loadRawCss(url, css);
+    }
+  });
+  const promises = [ ...bundledPromises,
+    getStyleSheetLoader(editor).loadAll(normalCss),
   ];
 
   if (editor.inline) {

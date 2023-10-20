@@ -3,6 +3,7 @@ import ScriptLoader from './dom/ScriptLoader';
 interface Resource {
   load: <T = any>(id: string, url: string) => Promise<T>;
   add: (id: string, data: any) => void;
+  has: (id: string) => boolean;
   get: (id: string) => Promise<string | null>;
   unload: (id: string) => void;
 }
@@ -62,6 +63,10 @@ const create = (): Resource => {
     tasks[id] = Promise.resolve(data);
   };
 
+  const has = (id: string) => {
+    return id in tasks;
+  };
+
   const unload = (id: string) => {
     delete tasks[id];
   };
@@ -77,6 +82,7 @@ const create = (): Resource => {
   return {
     load,
     add,
+    has,
     get,
     unload
   };

@@ -24,11 +24,11 @@ const loadRawCss = (editor: Editor, key: string, css: string, styleSheetLoader: 
 };
 
 const loadUiSkins = async (editor: Editor, skinUrl: string): Promise<void> => {
-  const skinUiCss = skinUrl + '/skin.css';
+  const skinUrl_ = Options.getSkinUrlOpt(editor).getOr('default');
+  const skinUiCss = 'ui/' + skinUrl_ + '/skin.css';
   const css = await tinymce.Resource.get(skinUiCss);
-
   if (Type.isString(css)) {
-    loadRawCss(editor, skinUiCss, css, editor.ui.styleSheetLoader);
+    return Promise.resolve(loadRawCss(editor, skinUiCss, css, editor.ui.styleSheetLoader));
   } else {
     const skinUiCss = skinUrl + '/skin.min.css';
     return loadStylesheet(editor, skinUiCss, editor.ui.styleSheetLoader);
@@ -53,16 +53,20 @@ const loadShadowDomUiSkins = async (editor: Editor, skinUrl: string): Promise<vo
 };
 
 const loadUrlSkin = async (isInline: boolean, editor: Editor): Promise<void> => {
-  const skinUrl = Options.getSkinUrl(editor);
-  if (skinUrl) {
-    const css = await tinymce.Resource.get(skinUrl + (isInline ? '/content.inline' : '/content') + '.css');
-
+  Options.getSkinUrlOpt(editor).fold(Fun.noop, async (skinUrl) => {
+    const skinContentCss = 'ui/' + skinUrl + (isInline ? '/content.inline' : '/content') + '.css';
+    const css = await tinymce.Resource.get(skinContentCss);
     if (Type.isString(css)) {
-      loadRawCss(editor, skinUrl, css, editor.ui.styleSheetLoader);
+      loadRawCss(editor, skinContentCss, css, editor.ui.styleSheetLoader);
     } else {
-      editor.contentCSS.push(skinUrl + (isInline ? '/content.inline' : '/content') + '.min.css');
+      const skinUrl_ = Options.getSkinUrl(editor);
+      if (skinUrl_) {
+        editor.contentCSS.push(skinUrl_ + (isInline ? 'content.inline' : 'content') + '.min.css');
+      }
     }
-  }
+  });
+
+  const skinUrl = Options.getSkinUrl(editor);
 
   // In Modern Inline, this is explicitly called in editor.on('focus', ...) as well as in render().
   // Seems to work without, but adding a note in case things break later
