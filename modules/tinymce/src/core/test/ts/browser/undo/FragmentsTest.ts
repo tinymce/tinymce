@@ -20,6 +20,9 @@ describe('browser.tinymce.core.undo.FragmentsTest', () => {
     assert.deepEqual(Fragments.read(div('<!--a-->')), [ '<!--a-->' ]);
     assert.deepEqual(Fragments.read(div('<b>a</b>')), [ '<b>a</b>' ]);
     assert.deepEqual(Fragments.read(div('a<!--b--><b>c</b>')), [ 'a', '<!--b-->', '<b>c</b>' ]);
+    assert.deepEqual(Fragments.read(div('<b>a\ufeff</b><b>c</b>'), true), [ '<b>a</b>', '<b>c</b>' ]);
+    assert.deepEqual(Fragments.read(div('<b>a\ufeff</b><b>c</b>'), false), [ '<b>a\ufeff</b>', '<b>c</b>' ]);
+    assert.deepEqual(Fragments.read(div('<b>a\ufeff</b><b>c</b>')), [ '<b>a\ufeff</b>', '<b>c</b>' ]);
   });
 
   it('read and exclude zero length text nodes', () => {

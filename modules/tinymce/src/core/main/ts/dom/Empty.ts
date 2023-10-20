@@ -1,5 +1,5 @@
 import { Fun } from '@ephox/katamari';
-import { Compare, SelectorExists, SugarElement } from '@ephox/sugar';
+import { Compare, ContentEditable, SelectorExists, SugarElement, Traverse } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import * as CaretCandidate from '../caret/CaretCandidate';
@@ -28,6 +28,9 @@ const isBookmark = NodeType.hasAttribute('data-mce-bookmark');
 const isBogus = NodeType.hasAttribute('data-mce-bogus');
 const isBogusAll = NodeType.hasAttributeValue('data-mce-bogus', 'all');
 
+const hasNonEditableParent = (node: Node) =>
+  Traverse.parentElement(SugarElement.fromDom(node)).exists((parent) => !ContentEditable.isEditable(parent));
+
 const isEmptyNode = (targetNode: Node, skipBogus: boolean): boolean => {
   let brCount = 0;
 
@@ -51,6 +54,9 @@ const isEmptyNode = (targetNode: Node, skipBogus: boolean): boolean => {
           node = walker.next();
           continue;
         }
+      }
+      if (NodeType.isContentEditableTrue(node) && hasNonEditableParent(node)) {
+        return false;
       }
 
       if (NodeType.isBr(node)) {
