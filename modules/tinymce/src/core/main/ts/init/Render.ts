@@ -1,5 +1,6 @@
-import {Arr, Obj, Optional, Optionals, Strings, Type} from '@ephox/katamari';
-import {Attribute, SugarElement} from '@ephox/sugar';
+import { Arr, Obj, Optional, Optionals, Strings, Type } from '@ephox/katamari';
+import { Attribute, SugarElement } from '@ephox/sugar';
+import { ModuleNamespace } from 'vite/types/hot';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import EventUtils from '../api/dom/EventUtils';
@@ -19,7 +20,6 @@ import * as NodeType from '../dom/NodeType';
 import * as StyleSheetLoaderRegistry from '../dom/StyleSheetLoaderRegistry';
 import * as ErrorReporter from '../ErrorReporter';
 import * as Init from './Init';
-import {ModuleNamespace} from 'vite/types/hot';
 
 interface UrlMeta {
   readonly url: string;
@@ -83,7 +83,7 @@ const getIconsUrlMetaFromUrl = (editor: Editor): Optional<UrlMeta> => Optional.f
     name: Optional.none()
   }));
 
-const getIconsUrlMetaFromName = (editor: Editor, name: string | undefined, suffix: string): Optional<UrlMeta> => Optional.from(name)
+const getIconsUrlMetaFromName = (name: string | undefined, suffix: string): Optional<UrlMeta> => Optional.from(name)
   .filter((name) => Strings.isNotEmpty(name) && !IconManager.has(name))
   .map((name) => {
     return ({
@@ -92,12 +92,12 @@ const getIconsUrlMetaFromName = (editor: Editor, name: string | undefined, suffi
     });
   });
 
-const loadIcons = async (scriptLoader: ScriptLoader, editor: Editor, suffix: string) => {
-  const defaultIconsUrl = getIconsUrlMetaFromName(editor, 'default', suffix);
+const loadIcons = (scriptLoader: ScriptLoader, editor: Editor, suffix: string) => {
+  const defaultIconsUrl = getIconsUrlMetaFromName('default', suffix);
   // await import('../../../../../../oxide-icons-default/dist/js/icons.js');
-  const customIconsUrl = getIconsUrlMetaFromUrl(editor).orThunk(() => getIconsUrlMetaFromName(editor, Options.getIconPackName(editor), ''));
+  const customIconsUrl = getIconsUrlMetaFromUrl(editor).orThunk(() => getIconsUrlMetaFromName(Options.getIconPackName(editor), ''));
 
-  Arr.each(Optionals.cat([defaultIconsUrl, customIconsUrl]), (urlMeta) => {
+  Arr.each(Optionals.cat([ defaultIconsUrl, customIconsUrl ]), (urlMeta) => {
     scriptLoader.add(urlMeta.url).catch(() => {
       ErrorReporter.iconsLoadError(editor, urlMeta.url, urlMeta.name.getOrUndefined());
     });
@@ -116,7 +116,7 @@ const loadPlugins = async (editor: Editor) => {
     editor.options.set('plugins', Options.getPlugins(editor).concat(name));
   });
 
-  const promises: Array<Promise<ModuleNamespace>> = []
+  const promises: Array<Promise<ModuleNamespace>> = [];
 
   Options.getPlugins(editor).forEach((plugin) => {
     plugin = Tools.trim(plugin);
@@ -153,7 +153,7 @@ const loadScripts = async (editor: Editor, suffix: string) => {
   await loadTheme(editor);
   await loadModel(editor);
   loadLanguage(scriptLoader, editor);
-  await loadIcons(scriptLoader, editor, suffix);
+  loadIcons(scriptLoader, editor, suffix);
   await loadPlugins(editor);
   scriptLoader.loadQueue().then(initEditor, initEditor);
 };
@@ -213,7 +213,7 @@ const render = (editor: Editor): void => {
 
     // Add hidden input for non input elements inside form elements
     if (Options.hasHiddenInput(editor) && !NodeType.isTextareaOrInput(editor.getElement())) {
-      DOM.insertAfter(DOM.create('input', {type: 'hidden', name: id}), id);
+      DOM.insertAfter(DOM.create('input', { type: 'hidden', name: id }), id);
       editor.hasHiddenInput = true;
     }
 
@@ -263,7 +263,7 @@ const render = (editor: Editor): void => {
   if (Options.shouldAddUnloadTrigger(editor)) {
     editor._beforeUnload = () => {
       if (editor.initialized && !editor.destroyed && !editor.isHidden()) {
-        editor.save({format: 'raw', no_events: true, set_dirty: false});
+        editor.save({ format: 'raw', no_events: true, set_dirty: false });
       }
     };
 
