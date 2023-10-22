@@ -1,5 +1,5 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, GuiFactory, Memento, NativeEvents, Replacing, Sketcher,
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, DomFactory, Focusing, GuiFactory, Memento, NativeEvents, Replacing, Sketcher,
   UiSketcher
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
@@ -7,6 +7,7 @@ import { Arr, Optional } from '@ephox/katamari';
 
 import { TranslatedString, Untranslated } from 'tinymce/core/api/util/I18n';
 
+import * as HtmlSanitizer from '../core/HtmlSanitizer';
 import * as Icons from '../icons/Icons';
 
 export interface NotificationSketchApis {
@@ -54,10 +55,7 @@ const notificationIconMap = {
 const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, NotificationSketchSpec> = (detail) => {
   // For using the alert banner as a standalone banner
   const memBannerText = Memento.record({
-    dom: {
-      tag: 'p',
-      innerHtml: detail.translationProvider(detail.text)
-    },
+    dom: DomFactory.fromHtml(`<p>${HtmlSanitizer.sanitizeHtmlString(detail.translationProvider(detail.text))}</p>`),
     behaviours: Behaviour.derive([
       Replacing.config({ })
     ])
