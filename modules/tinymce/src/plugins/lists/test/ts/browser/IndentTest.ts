@@ -522,6 +522,102 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
+  it('TINY-10268: a `list` inside a `li` surrounded by 2 not element should allow the user to indent/outdent its `li`', () => {
+    const editor = hook.editor();
+    editor.setContent(`<ul>
+      <li>
+        Dedent me
+        <ul>
+          <li>or try to dedent me 1</li>
+          <li>or try to dedent me 2</li>
+        </ul>
+        <span>abc</span>
+      </li>
+    </ul>`);
+
+    TinySelections.setCursor(editor, [ 0, 0, 1, 0 ], 0);
+    editor.execCommand('Indent');
+
+    TinyAssertions.assertContent(editor, '<ul>' +
+      '<li>' +
+        'Dedent me' +
+        '<ul>' +
+          '<li style="list-style-type: none;"><ul><li>or try to dedent me 1</li></ul></li>' +
+          '<li>or try to dedent me 2</li>' +
+        '</ul>' +
+        '<span>abc</span>' +
+      '</li>' +
+    '</ul>');
+
+    TinySelections.setCursor(editor, [ 0, 0, 1, 0, 0, 0 ], 0);
+    editor.execCommand('Outdent');
+
+    TinyAssertions.assertContent(editor, '<ul>' +
+      '<li>' +
+        'Dedent me' +
+        '<ul>' +
+          '<li>or try to dedent me 1</li>' +
+          '<li>or try to dedent me 2</li>' +
+        '</ul>' +
+        '<span>abc</span>' +
+      '</li>' +
+    '</ul>');
+  });
+
+  it('TINY-10268: in a `list` inside a `li` with another list as sibling and 2 not `list` elements as first and last element of the parent `li` indent/outdent should work as expected', () => {
+    const editor = hook.editor();
+    editor.setContent(`<ul>
+      <li>
+        Dedent me
+        <ul>
+          <li>or try to dedent me 1</li>
+          <li>or try to dedent me 2</li>
+        </ul>
+        <ul>
+          <li>or try to dedent me 1</li>
+          <li>or try to dedent me 2</li>
+        </ul>
+        <span>abc</span>
+      </li>
+    </ul>`);
+
+    TinySelections.setCursor(editor, [ 0, 0, 1, 0 ], 0);
+    editor.execCommand('Indent');
+
+    TinyAssertions.assertContent(editor, '<ul>' +
+      '<li>' +
+        'Dedent me' +
+        '<ul>' +
+          '<li style="list-style-type: none;"><ul><li>or try to dedent me 1</li></ul></li>' +
+          '<li>or try to dedent me 2</li>' +
+        '</ul>' +
+        '<ul>' +
+          '<li>or try to dedent me 1</li>' +
+          '<li>or try to dedent me 2</li>' +
+        '</ul>' +
+        '<span>abc</span>' +
+      '</li>' +
+    '</ul>');
+
+    TinySelections.setCursor(editor, [ 0, 0, 1, 0, 0, 0 ], 0);
+    editor.execCommand('Outdent');
+
+    TinyAssertions.assertContent(editor, '<ul>' +
+      '<li>' +
+        'Dedent me' +
+        '<ul>' +
+          '<li>or try to dedent me 1</li>' +
+          '<li>or try to dedent me 2</li>' +
+        '</ul>' +
+        '<ul>' +
+          '<li>or try to dedent me 1</li>' +
+          '<li>or try to dedent me 2</li>' +
+        '</ul>' +
+        '<span>abc</span>' +
+      '</li>' +
+    '</ul>');
+  });
+
   context('Parent context', () => {
     const testCommandAtTextPath = (command: string) => (inputHtml: string, path: number[], expectedHtml: string) => () => {
       const editor = hook.editor();
