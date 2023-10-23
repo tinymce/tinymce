@@ -1,4 +1,4 @@
-import { FocusTools, Keys, UiFinder, Waiter } from '@ephox/agar';
+import { FocusTools, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
 import { Attribute, SelectorFilter, SugarDocument, SugarElement, SugarShadowDom } from '@ephox/sugar';
@@ -200,6 +200,38 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         await FocusTools.pTryOnSelector('Should have selected the hue slider', doc, '.tox-hue-slider-spectrum');
         TinyUiActions.keydown(editor, Keys.tab());
         await FocusTools.pTryOnSelector('Should have selected the next input', doc, '.tox-textfield');
+        await pCancelDialog(editor);
+      });
+
+      it('TINY-9287: Keyboard tab navigation works as expected, starting at the canvas, shift-tab should go backwards', async () => {
+        const editor = hook.editor();
+        const elem = TinyDom.targetElement(editor);
+        const doc = SugarShadowDom.getShadowRoot(elem).getOrThunk(() => SugarDocument.getDocument());
+        await pOpenDialog(editor);
+        await FocusTools.pTryOnSelector('Should have selected the main view', doc, 'canvas');
+        TinyUiActions.keydown(editor, Keys.tab());
+        await FocusTools.pTryOnSelector('Should have selected the hue slider', doc, '.tox-hue-slider-spectrum');
+        TinyUiActions.keydown(editor, Keys.tab());
+        await FocusTools.pTryOnSelector('Should have selected the next input', doc, '.tox-textfield');
+        TinyUiActions.keydown(editor, Keys.tab(), { shiftKey: true });
+        await FocusTools.pTryOnSelector('Should have selected the hue slider', doc, '.tox-hue-slider-spectrum');
+        TinyUiActions.keydown(editor, Keys.tab(), { shiftKey: true });
+        await FocusTools.pTryOnSelector('Should have selected the main view', doc, 'canvas');
+        await pCancelDialog(editor);
+      });
+
+      it('TINY-9287: Clicking changes focus as expected', async () => {
+        const editor = hook.editor();
+        const element = TinyDom.targetElement(editor);
+        const doc = SugarShadowDom.getShadowRoot(element).getOrThunk(() => SugarDocument.getDocument());
+        await pOpenDialog(editor);
+        await FocusTools.pTryOnSelector('Should have started on the main view', doc, 'canvas');
+        let targetElement = UiFinder.findIn(TinyUiActions.getUiRoot(editor), '.tox-hue-slider-spectrum').getOrDie();
+        Mouse.mouseDown(targetElement);
+        await FocusTools.pTryOnSelector('Should have selected the hue slider', doc, '.tox-hue-slider-spectrum');
+        targetElement = UiFinder.findIn(TinyUiActions.getUiRoot(editor), 'canvas').getOrDie();
+        Mouse.mouseDown(targetElement);
+        await FocusTools.pTryOnSelector('Should have ended on the main view', doc, 'canvas');
         await pCancelDialog(editor);
       });
     });
