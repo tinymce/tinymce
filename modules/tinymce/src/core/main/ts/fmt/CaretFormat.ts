@@ -270,18 +270,23 @@ const removeCaretFormat = (editor: Editor, name: string, vars?: FormatVars, simi
   }
 
   const parents: Node[] = [];
+  let noMatch = true;
   let formatNode: Element | undefined;
-  while (node) {
+  while (node && (isFormatElement(editor, SugarElement.fromDom(node)) || isFormatCaret(editor, SugarElement.fromDom(node)))) {
     if (MatchFormat.matchNode(editor, node, name, vars, similar)) {
-      formatNode = node as Element;
-      break;
+      if (noMatch) {
+        formatNode = node as Element;
+        noMatch = false;
+      }
+    } else {
+      if (node.nextSibling && noMatch) {
+        hasContentAfter = true;
+      }
+      if (!isFormatCaret(editor, SugarElement.fromDom(node))) {
+        parents.push(node);
+      }
     }
 
-    if (node.nextSibling) {
-      hasContentAfter = true;
-    }
-
-    parents.push(node);
     node = node.parentNode;
   }
 
@@ -378,6 +383,11 @@ const isFormatElement = (editor: Editor, element: SugarElement<Node>): boolean =
   return Obj.has(inlineElements, SugarNode.name(element)) && !isCaretNode(element.dom) && !NodeType.isBogus(element.dom);
 };
 
+const isFormatCaret = (editor: Editor, element: SugarElement<Node>): boolean => {
+  const inlineElements = editor.schema.getTextInlineElements();
+  return Obj.has(inlineElements, SugarNode.name(element)) && isCaretNode(element.dom);
+};
+
 const isEmptyCaretFormatElement = (element: SugarElement<Node>): boolean => {
   return isCaretNode(element.dom) && isCaretContainerEmpty(element.dom);
 };
@@ -389,5 +399,6 @@ export {
   replaceWithCaretFormat,
   createCaretFormatAtStart,
   isFormatElement,
+  isFormatCaret,
   isEmptyCaretFormatElement
 };
