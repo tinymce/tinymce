@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Search and replace plugin would incorrectly find matching text inside non-editable root elements. #TINY-10162
 - Search and replace plugin would incorrectly find matching text inside SVG elements. #TINY-10162
 - Removed use of `async` for editor rendering which caused visual blinking when reloading the editor in-place. #TINY-10249
-- Toggling the formatting on the caret at the start of the editor, which initially has multiple styles applied, results in the incorrect removal of other formatting styles. #TINY-10132
+- Toggling off one format on the caret when multiple formats was toggled on would toggle all of them off. #TINY-10132
 
 ### Improved
 - Colorpicker now includes the Brightness/Saturation selector and hue slider in the keyboard navigable items. #TINY-9287
