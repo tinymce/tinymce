@@ -270,21 +270,18 @@ const removeCaretFormat = (editor: Editor, name: string, vars?: FormatVars, simi
   }
 
   const parents: Node[] = [];
-  let noMatch = true;
   let formatNode: Element | undefined;
-  while (node && isFormatElement(editor, SugarElement.fromDom(node))) {
+  while (node) {
     if (MatchFormat.matchNode(editor, node, name, vars, similar)) {
-      if (noMatch) {
-        formatNode = node as Element;
-        noMatch = false;
-      }
-    } else {
-      if (node.nextSibling) {
-        hasContentAfter = true;
-      }
-      parents.push(node);
+      formatNode = node as Element;
+      break;
     }
 
+    if (node.nextSibling) {
+      hasContentAfter = true;
+    }
+
+    parents.push(node);
     node = node.parentNode;
   }
 
