@@ -44,13 +44,7 @@ const shouldRemoveTextNode = (blockElements: SchemaMap, node: Node) => {
     if (node.data.length === 0) {
       return true;
     } else if (/^\s+$/.test(node.data)) {
-      if (!node.nextSibling) {
-        return true;
-      } else if (isBlockElement(blockElements, node.nextSibling)) {
-        return true;
-      } else if (Namespace.isNonHtmlElementRoot(node.nextSibling)) {
-        return true;
-      }
+      return !node.nextSibling || isBlockElement(blockElements, node.nextSibling) || Namespace.isNonHtmlElementRoot(node.nextSibling);
     }
   }
 
