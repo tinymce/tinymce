@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { SugarElement } from '@ephox/sugar';
+import { SugarElement, SelectorFind } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import * as Empty from 'tinymce/core/dom/Empty';
@@ -42,6 +42,22 @@ describe('browser.tinymce.core.dom.EmptyTest', () => {
     testEmpty('<p><i><b></b></i><b><i><img src="#"></i></b></p>', false);
     testEmpty('<span data-mce-bookmark="x"></span>', false);
     testEmpty('<span contenteditable="false"></span>', false);
+    testEmpty('<div contenteditable="false"><span contenteditable="true"></span></div>', false);
     testEmpty('<a id="anchor"></a>', false);
+  });
+
+  it('TINY-10010: table cell with empty CET should not be treated as empty', () => {
+    const html = `<table style="border-collapse: collapse; width: 100%;" border="1">
+        <tbody>
+        <tr>
+          <td>
+            <div contenteditable="true" style="border: 2px solid red"></div>
+          </td>
+        </tr>
+        </tbody>
+      </table>`;
+    const table = SugarElement.fromHtml(html);
+    const td = SelectorFind.descendant(table, 'td').getOrDie();
+    assert.isFalse(Empty.isEmpty(td));
   });
 });

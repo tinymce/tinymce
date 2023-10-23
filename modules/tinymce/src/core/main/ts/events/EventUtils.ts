@@ -11,6 +11,7 @@ export interface PartialEvent {
   readonly isImmediatePropagationStopped?: () => boolean;
   readonly stopImmediatePropagation?: () => void;
   readonly composedPath?: () => EventTarget[];
+  readonly getModifierState?: (keyArg: string) => boolean;
   returnValue?: boolean;
   defaultPrevented?: boolean;
   cancelBubble?: boolean;
@@ -67,6 +68,12 @@ const clone = <T extends PartialEvent>(originalEvent: T, data?: T): T => {
   if (Type.isNonNullable(originalEvent.composedPath)) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     event.composedPath = () => originalEvent.composedPath!();
+  }
+
+  // The getModifierState won't work when cloned, so delegate instead
+  if (Type.isNonNullable(originalEvent.getModifierState)) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    event.getModifierState = (keyArg: string) => originalEvent.getModifierState!(keyArg);
   }
 
   return event as T;
