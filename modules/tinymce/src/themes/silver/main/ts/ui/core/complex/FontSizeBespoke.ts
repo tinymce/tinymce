@@ -160,15 +160,20 @@ const getNumberInputSpec = (editor: Editor): NumberInputSpec => {
     getNewValue: (text, updateFunction) => {
       Dimension.parse(text, [ 'unsupportedLength', 'empty' ]);
 
+      const currentValue = getCurrentValue();
       const parsedText = Dimension.parse(text, [ 'unsupportedLength', 'empty' ]).or(
-        Dimension.parse(getCurrentValue(), [ 'unsupportedLength', 'empty' ])
+        Dimension.parse(currentValue, [ 'unsupportedLength', 'empty' ])
       );
       const value = parsedText.map((res) => res.value).getOr(defaultValue);
       const defaultUnit = Options.getFontSizeInputDefaultUnit(editor);
       const unit = parsedText.map((res) => res.unit).filter((u) => u !== '').getOr(defaultUnit);
 
       const newValue = updateFunction(value, getConfigFromUnit(unit).step);
-      return `${isValidValue(newValue) ? newValue : value}${unit}`;
+      const res = `${isValidValue(newValue) ? newValue : value}${unit}`;
+      if (res !== currentValue) {
+        Events.fireFontSizeInputTextUpdate(editor, { value: res });
+      }
+      return res;
     }
   };
 };

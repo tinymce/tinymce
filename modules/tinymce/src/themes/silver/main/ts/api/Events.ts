@@ -51,6 +51,10 @@ const fireFontSizeTextUpdate = (editor: Editor, data: { value: string }): void =
   editor.dispatch('FontSizeTextUpdate', data);
 };
 
+const fireFontSizeInputTextUpdate = (editor: Editor, data: { value: string }): void => {
+  editor.dispatch('FontSizeInputTextUpdate', data);
+};
+
 const fireBlocksTextUpdate = (editor: Editor, data: { value: string }): void => {
   editor.dispatch('BlocksTextUpdate', data);
 };
@@ -72,6 +76,7 @@ export {
   fireStylesTextUpdate,
   fireAlignTextUpdate,
   fireFontSizeTextUpdate,
+  fireFontSizeInputTextUpdate,
   fireBlocksTextUpdate,
   fireFontFamilyTextUpdate
 };
