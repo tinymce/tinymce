@@ -9,6 +9,9 @@ import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
+  let eventCount = 0;
+  let lastEventValue = '';
+
   const setInputSelection = (toolbarInput: Optional<HTMLInputElement>, index: number) => toolbarInput.each((input) => {
     input.selectionStart = index;
     input.selectionEnd = index;
@@ -28,50 +31,53 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
   const pDisabledShouldExist = (editor: Editor, selector: string) =>
     UiFinder.pWaitFor('Plus button should be disabled', TinyUiActions.getUiRoot(editor), `.tox-number-input ${selector}[disabled="disabled"]`);
 
+  const testWithEvents = (testFn: (editor: Editor) => void | Promise<void>) => async () => {
+    const eventTester = (e: EditorEvent<{ value: string }>) => {
+      eventCount++;
+      lastEventValue = e.value;
+    };
+
+    eventCount = 0;
+    lastEventValue = '';
+    const editor = hook.editor();
+    editor.on('FontSizeInputTextUpdate', eventTester);
+    await testFn(editor);
+    editor.off('FontSizeInputTextUpdate', eventTester);
+  };
+
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     toolbar: [ 'fontsizeinput' ]
   }, []);
 
-  it('TINY-9429: plus and minus should increase and decrease font size of the current selection', () => {
-    const editor = hook.editor();
+  it('TINY-9429: plus and minus should increase and decrease font size of the current selection',
+    testWithEvents((editor) => {
+      editor.setContent('<p style="font-size: 16px;">abc</p>');
+      TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
 
-    let eventCount = 0;
-    let lastEventValue = '';
-    const handler = (e: EditorEvent<{ value: string }>) => {
-      eventCount++;
-      lastEventValue = e.value;
-    };
-    editor.on('FontSizeInputTextUpdate', handler);
+      assert.equal(eventCount, 0);
+      assert.equal(lastEventValue, '');
 
-    editor.setContent('<p style="font-size: 16px;">abc</p>');
-    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
+      TinyUiActions.clickOnToolbar(editor, '.tox-number-input .plus');
+      TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 17px;">b</span>c</p>');
+      assert.equal(eventCount, 1);
+      assert.equal(lastEventValue, '17px');
 
-    assert.equal(eventCount, 0);
-    assert.equal(lastEventValue, '');
+      TinyUiActions.clickOnToolbar(editor, '.tox-number-input .minus');
+      TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 16px;">b</span>c</p>');
+      assert.equal(eventCount, 2);
+      assert.equal(lastEventValue, '16px');
 
-    TinyUiActions.clickOnToolbar(editor, '.tox-number-input .plus');
-    TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 17px;">b</span>c</p>');
-    assert.equal(eventCount, 1);
-    assert.equal(lastEventValue, '17px');
+      TinyUiActions.tapOnToolbar(editor, '.tox-number-input .plus');
+      TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 17px;">b</span>c</p>');
+      assert.equal(eventCount, 3);
+      assert.equal(lastEventValue, '17px');
 
-    TinyUiActions.clickOnToolbar(editor, '.tox-number-input .minus');
-    TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 16px;">b</span>c</p>');
-    assert.equal(eventCount, 2);
-    assert.equal(lastEventValue, '16px');
-
-    TinyUiActions.tapOnToolbar(editor, '.tox-number-input .plus');
-    TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 17px;">b</span>c</p>');
-    assert.equal(eventCount, 3);
-    assert.equal(lastEventValue, '17px');
-
-    TinyUiActions.tapOnToolbar(editor, '.tox-number-input .minus');
-    TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 16px;">b</span>c</p>');
-    assert.equal(eventCount, 4);
-    assert.equal(lastEventValue, '16px');
-
-    editor.off('FontSizeInputTextUpdate', handler);
-  });
+      TinyUiActions.tapOnToolbar(editor, '.tox-number-input .minus');
+      TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 16px;">b</span>c</p>');
+      assert.equal(eventCount, 4);
+      assert.equal(lastEventValue, '16px');
+    }));
 
   it('TINY-10129: plus and minus should not increase and decrease font size when the editor is readonly', () => {
     const editor = hook.editor();
@@ -109,36 +115,26 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     await pDisabledShouldNotExist(editor, 'input');
   });
 
-  it('TINY-9429: should be possible to change the font size from the input', async () => {
-    const editor = hook.editor();
-    editor.setContent('<p style="font-size: 16px;">abc</p>');
-    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
+  it('TINY-9429: should be possible to change the font size from the input',
+    testWithEvents(async (editor) => {
+      editor.setContent('<p style="font-size: 16px;">abc</p>');
+      TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
 
-    let eventCount = 0;
-    let lastEventValue = '';
-    const handler = (e: EditorEvent<{ value: string }>) => {
-      eventCount++;
-      lastEventValue = e.value;
-    };
-    editor.on('FontSizeInputTextUpdate', handler);
+      TinyUiActions.clickOnToolbar(editor, '.tox-number-input input');
+      assert.equal(eventCount, 0);
+      assert.equal(lastEventValue, '');
 
-    TinyUiActions.clickOnToolbar(editor, '.tox-number-input input');
-    assert.equal(eventCount, 0);
-    assert.equal(lastEventValue, '');
+      const input: SugarElement<HTMLInputElement> = TinyUiActions.clickOnToolbar(editor, '.tox-number-input input');
+      UiControls.setValue(input, '15px');
+      const root = SugarShadowDom.getRootNode(TinyDom.targetElement(editor));
+      FocusTools.setFocus(root, '.tox-number-input input');
+      await FocusTools.pTryOnSelector('Focus should be on input', root, '.tox-number-input input');
+      TinyUiActions.keystroke(editor, Keys.enter());
 
-    const input: SugarElement<HTMLInputElement> = TinyUiActions.clickOnToolbar(editor, '.tox-number-input input');
-    UiControls.setValue(input, '15px');
-    const root = SugarShadowDom.getRootNode(TinyDom.targetElement(editor));
-    FocusTools.setFocus(root, '.tox-number-input input');
-    await FocusTools.pTryOnSelector('Focus should be on input', root, '.tox-number-input input');
-    TinyUiActions.keystroke(editor, Keys.enter());
-
-    TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 15px;">b</span>c</p>');
-    assert.equal(eventCount, 1);
-    assert.equal(lastEventValue, '15px');
-
-    editor.off('FontSizeInputTextUpdate', handler);
-  });
+      TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">a<span style="font-size: 15px;">b</span>c</p>');
+      assert.equal(eventCount, 1);
+      assert.equal(lastEventValue, '15px');
+    }));
 
   it('TINY-9429: when input is selected arrow up should increase the size and arrow down decrease it', async () => {
     const editor = hook.editor();
