@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Removed use of `async` for editor rendering which caused visual blinking when reloading the editor in-place. #TINY-10249
+
 ## 6.7.1 - 2023-10-19
 
 ### Fixed
