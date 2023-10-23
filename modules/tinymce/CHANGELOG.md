@@ -23,6 +23,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The dialog size was not updated when the `size` argument was changed when redialling a dialog. #TINY-10209
 - Toggling a list that contains an LI element having another list as its first child would remove the remaining content within that LI element. #TINY-10213
 - Custom block element wasn't considered block element in some cases. #TINY-10139
+- An empty element with a `contenteditable="true"` attribute within a table cell would not be treated as content and get removed if backspace or delete was being pressed. #TINY-10010
+- Removing an LI element containing a `details` element would incorrectly merge its content. #TINY-10133
+- The function `getModifierState` did not work on events passed through the editor as expected. #TINY-10263
+- Search and replace plugin would incorrectly find matching text inside non-editable root elements. #TINY-10162
+- Search and replace plugin would incorrectly find matching text inside SVG elements. #TINY-10162
+- Removed use of `async` for editor rendering which caused visual blinking when reloading the editor in-place. #TINY-10249
+- List items containing a list element surrounded by non list nodes would cause some list operations to fail. #TINY-10268
+
+## 6.7.1 - 2023-10-19
+
+### Fixed
+- Specific HTML content caused mXSS when using undo/redo. #TINY-10180
+- Specific HTML content caused mXSS when using the `getContent` and `setContent` APIs with the `format: 'raw'` option, which also affected the `resetContent` API and the draft restoration feature of the Autosave plugin. #TINY-10236
+- Notification messages containing HTML were not properly XSS sanitized before being displayed. #TINY-10286
 
 ## 6.7.0 - 2023-08-30
 
