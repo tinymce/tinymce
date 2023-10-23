@@ -641,4 +641,49 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     }));
     TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0 ], 2);
   });
+
+  it('TINY-10132: Apply and remove multiple format to caret after formatted text', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><s><span style="text-decoration: underline;"><em><strong>abc</strong></em></span></s></p>');
+    TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0, 0 ], 3);
+    removeCaretFormat(editor, 'bold', {});
+    TinyContentActions.type(editor, 'x');
+    TinyAssertions.assertContent(editor, '<p><s><span style="text-decoration: underline;"><em><strong>abc</strong>x</em></span></s></p>');
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) =>
+      s.element('body', {
+        children: [
+          s.element('p', {
+            children: [
+              s.element('s', {
+                children: [
+                  s.element('span', {
+                    styles: { 'text-decoration': str.is('underline') },
+                    children: [
+                      s.element('em', {
+                        children: [
+                          s.element('strong', {
+                            children: [
+                              s.text(str.is('abc'))
+                            ]
+                          }),
+                          s.element('span', {
+                            attrs: {
+                              'id': str.is('_mce_caret'),
+                              'data-mce-bogus': str.is('1')
+                            },
+                            children: [
+                              s.text(str.is(Zwsp.ZWSP + 'x'))
+                            ]
+                          })
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              })
+            ]
+          })
+        ]
+      })));
+  });
 });
