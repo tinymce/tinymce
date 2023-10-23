@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Applying heading formatting to the content of the `summary` element extended its application to the content of the parent `details` element. #TINY-10154
+- Removed use of `async` for editor rendering which caused visual blinking when reloading the editor in-place. #TINY-10249
 
 ## 6.7.1 - 2023-10-19
 
