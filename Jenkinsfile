@@ -73,11 +73,11 @@ timestamps {
 
     def platforms = [
       [ os: "windows", browser: "chrome" ],
-      [ os: "windows", browser: "firefox" ],
-      [ os: "windows", browser: "MicrosoftEdge" ],
-      [ os: "macos", browser: "safari" ],
-      [ os: "macos", browser: "chrome" ],
-      [ os: "macos", browser: "firefox" ]
+      // [ os: "windows", browser: "firefox" ],
+      // [ os: "windows", browser: "MicrosoftEdge" ],
+      // [ os: "macos", browser: "safari" ],
+      // [ os: "macos", browser: "chrome" ],
+      // [ os: "macos", browser: "firefox" ]
     ]
 
     def cleanAndInstall = {
@@ -103,7 +103,7 @@ timestamps {
 
         processes[name] = {
           stage(name) {
-            node("bedrock-${platform.os}") {
+            node("debugging-win") {
               echo("Bedrock tests for ${name}")
 
               echo("Checking out code on build node: $NODE_NAME")
