@@ -2,6 +2,7 @@ import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Focus, SugarElement } from '@ephox/sugar';
 
 import * as EditorView from '../EditorView';
+import { hasEditorOrUiFocus } from '../focus/EditorFocus';
 import NotificationManagerImpl from '../ui/NotificationManagerImpl';
 import Editor from './Editor';
 import * as Options from './Options';
@@ -105,12 +106,14 @@ const NotificationManager = (editor: Editor): NotificationManager => {
       const notification = getImplementation().open(spec, () => {
         closeNotification(notification);
         reposition();
-        // Move focus back to editor when the last notification is closed,
-        // otherwise focus the top notification
-        getTopNotification().fold(
-          () => editor.focus(),
-          (top) => Focus.focus(SugarElement.fromDom(top.getEl()))
-        );
+        if (hasEditorOrUiFocus(editor)) { // Prevent focus to move to the editor if it is not in the editor.
+          // Move focus back to editor when the last notification is closed,
+          // otherwise focus the top notification
+          getTopNotification().fold(
+            () => editor.focus(),
+            (top) => Focus.focus(SugarElement.fromDom(top.getEl()))
+          );
+        }
       });
 
       addNotification(notification);

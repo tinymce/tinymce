@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The dialog size was not updated when the `size` argument was changed when redialling a dialog. #TINY-10209
 - Toggling a list that contains an LI element having another list as its first child would remove the remaining content within that LI element. #TINY-10213
 - Custom block element wasn't considered block element in some cases. #TINY-10139
+- The editor no longer forcefully takes focus when a notification closes while the focus is outside of the editor. #TINY-10282
 - An empty element with a `contenteditable="true"` attribute within a table cell would not be treated as content and get removed if backspace or delete was being pressed. #TINY-10010
 - Removing an LI element containing a `details` element would incorrectly merge its content. #TINY-10133
 - The function `getModifierState` did not work on events passed through the editor as expected. #TINY-10263
