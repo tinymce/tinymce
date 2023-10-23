@@ -250,6 +250,7 @@ const removeCaretFormat = (editor: Editor, name: string, vars?: FormatVars, simi
   const dom = editor.dom;
   const selection = editor.selection;
   let hasContentAfter = false;
+  let hasContentBefore = false;
 
   const formatList = editor.formatter.get(name);
   if (!formatList) {
@@ -269,25 +270,45 @@ const removeCaretFormat = (editor: Editor, name: string, vars?: FormatVars, simi
     node = node.parentNode;
   }
 
+  if (offset > 1 || (NodeType.isText(container) && container.parentElement?.localName === 'p')) {
+    hasContentBefore = true;
+  }
   const parents: Node[] = [];
   let noMatch = true;
   let formatNode: Element | undefined;
-  while (node && (isFormatElement(editor, SugarElement.fromDom(node)) || isFormatCaret(editor, SugarElement.fromDom(node)))) {
-    if (MatchFormat.matchNode(editor, node, name, vars, similar)) {
-      if (noMatch) {
+
+  if (hasContentBefore) {
+    while (node) {
+      if (MatchFormat.matchNode(editor, node, name, vars, similar)) {
         formatNode = node as Element;
-        noMatch = false;
+        break;
       }
-    } else {
-      if (node.nextSibling && noMatch) {
+
+      if (node.nextSibling) {
         hasContentAfter = true;
       }
-      if (!isFormatCaret(editor, SugarElement.fromDom(node))) {
-        parents.push(node);
-      }
-    }
 
-    node = node.parentNode;
+      parents.push(node);
+      node = node.parentNode;
+    }
+  } else {
+    while (node && (isFormatElement(editor, SugarElement.fromDom(node)) || isFormatCaret(editor, SugarElement.fromDom(node)))) {
+      if (MatchFormat.matchNode(editor, node, name, vars, similar)) {
+        if (noMatch) {
+          formatNode = node as Element;
+          noMatch = false;
+        }
+      } else {
+        if (node.nextSibling && noMatch) {
+          hasContentAfter = true;
+        }
+        if (!isFormatCaret(editor, SugarElement.fromDom(node))) {
+          parents.push(node);
+        }
+      }
+
+      node = node.parentNode;
+    }
   }
 
   // Node doesn't have the specified format
@@ -318,7 +339,6 @@ const removeCaretFormat = (editor: Editor, name: string, vars?: FormatVars, simi
 
     const cleanedFormatNode = cleanFormatNode(editor, newCaretContainer, formatNode, name, vars, similar);
     const caretTextNode = insertFormatNodesIntoCaretContainer(parents.concat(cleanedFormatNode.toArray()), newCaretContainer);
-
     if (caretContainer) {
       removeCaretContainerNode(editor, caretContainer, false);
     }
