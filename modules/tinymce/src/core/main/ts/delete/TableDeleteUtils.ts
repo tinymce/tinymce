@@ -8,6 +8,7 @@ export type IsRootFn = (e: SugarElement<Node>) => boolean;
 export interface TableSelectionDetails {
   readonly startTable: Optional<SugarElement<HTMLTableElement>>;
   readonly endTable: Optional<SugarElement<HTMLTableElement>>;
+  readonly commonAncestorContainerTable: Optional<SugarElement<HTMLTableElement>>;
   readonly isStartInTable: boolean;
   readonly isEndInTable: boolean;
   readonly isSameTable: boolean;
@@ -22,6 +23,7 @@ const getTableCells = (table: SugarElement<HTMLTableElement>): SugarElement<HTML
 
 const getTableDetailsFromRange = (rng: Range, isRoot: IsRootFn): TableSelectionDetails => {
   const getTable = (node: Node) => TableCellSelection.getClosestTable(SugarElement.fromDom(node), isRoot);
+  const commonAncestorContainerTable = getTable(rng.commonAncestorContainer);
   const startTable = getTable(rng.startContainer);
   const endTable = getTable(rng.endContainer);
   const isStartInTable = startTable.isSome();
@@ -33,6 +35,7 @@ const getTableDetailsFromRange = (rng: Range, isRoot: IsRootFn): TableSelectionD
   return {
     startTable,
     endTable,
+    commonAncestorContainerTable,
     isStartInTable,
     isEndInTable,
     isSameTable,
