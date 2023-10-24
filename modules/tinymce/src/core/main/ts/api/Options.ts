@@ -827,6 +827,14 @@ const register = (editor: Editor): void => {
     default: ''
   });
 
+  registerOption('force_hex_color', {
+    processor: (value) => {
+      const valid = Arr.contains([ 'always', 'rgb_only', 'off' ], value);
+      return valid ? { value, valid } : { valid: false, message: 'Must be one of: always, rgb_only, or off.' };
+    },
+    default: 'off',
+  });
+
   // These options must be registered later in the init sequence due to their default values
   editor.on('ScriptsLoaded', () => {
     registerOption('directionality', {
@@ -956,6 +964,8 @@ const hasTableTabNavigation = option('table_tab_navigation');
 const getDetailsInitialState = option('details_initial_state');
 const getDetailsSerializedState = option('details_serialized_state');
 
+const shouldForceHexColor = option('force_hex_color');
+
 export {
   register,
 
@@ -1059,5 +1069,6 @@ export {
   shouldSanitizeXss,
   getDetailsInitialState,
   getDetailsSerializedState,
-  shouldUseDocumentWrite
+  shouldUseDocumentWrite,
+  shouldForceHexColor
 };

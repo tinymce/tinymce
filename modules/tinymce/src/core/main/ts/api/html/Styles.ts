@@ -16,6 +16,7 @@
  * console.log(tinymce.html.Styles().serialize(styles));
  */
 
+import { RgbaColour, Transformations } from '@ephox/acid';
 import { Obj, Unicode } from '@ephox/katamari';
 
 import { URLConverter } from '../OptionTypes';
@@ -28,6 +29,7 @@ export interface StylesSettings {
   allow_svg_data_urls?: boolean;
   url_converter?: URLConverter;
   url_converter_scope?: any;
+  force_hex_color?: 'always' | 'rgb_only' | 'off';
 }
 
 interface Styles {
@@ -261,6 +263,20 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
               value = 'bold';
             } else if (name === 'color' || name === 'background-color') { // Lowercase colors like RED
               value = value.toLowerCase();
+            }
+
+            // Convert RGB/RGBA colors to HEX
+            if (typeof settings.force_hex_color === 'string' && settings.force_hex_color !== 'off') {
+              RgbaColour.fromString(value).each((rgba) => {
+                if (
+                  // Always convert,
+                  settings.force_hex_color === 'always' ||
+                  // or only convert if there will be no loss of information from the alpha channel:
+                  rgba.alpha === 1
+                ) {
+                  value = Transformations.rgbaToHexString(RgbaColour.toString(rgba));
+                }
+              });
             }
 
             // Convert URLs and force them into url('value') format

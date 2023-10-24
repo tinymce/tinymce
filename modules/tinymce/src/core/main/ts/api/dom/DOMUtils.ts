@@ -65,6 +65,7 @@ export interface DOMUtilsSettings {
   onSetAttrib: (event: SetAttribEvent) => void;
   contentCssCors: boolean;
   referrerPolicy: ReferrerPolicy;
+  force_hex_color: 'always' | 'rgb_only' | 'off';
 }
 
 export type Target = Node | Window;
@@ -338,7 +339,8 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   const schema = settings.schema ? settings.schema : Schema({});
   const styles = Styles({
     url_converter: settings.url_converter,
-    url_converter_scope: settings.url_converter_scope
+    url_converter_scope: settings.url_converter_scope,
+    force_hex_color: settings.force_hex_color,
   }, settings.schema);
 
   const events = settings.ownEvents ? new EventUtils() : EventUtils.Event;
