@@ -73,7 +73,7 @@ const pPasteUrlItems = async (target: SugarElement<Element>, items: PasteUrlItem
     const resp = await window.fetch(item.url);
     const blob = await resp.blob();
     const fileName = Arr.last(item.url.split('/')).getOr('filename.dat');
-    const mime = blob.type.split(';')[0];
+    const mime = blob.type.split(';')[0]; // Only grab mime type not charset encoding
 
     if (item.kind === 'string') {
       const reader = new window.FileReader();
