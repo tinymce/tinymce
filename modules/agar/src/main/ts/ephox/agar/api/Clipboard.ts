@@ -1,4 +1,4 @@
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr, Obj, Type } from '@ephox/katamari';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 
 import { createCopyEvent, createCutEvent, createPasteEvent } from '../clipboard/ClipboardEvents';
@@ -8,6 +8,11 @@ import { Chain } from './Chain';
 import * as ChainSequence from './ChainSequence';
 import { Step } from './Step';
 import { cFindIn } from './UiFinder';
+
+export interface PasteUrlItem {
+  readonly kind: 'string' | 'file';
+  readonly url: string;
+}
 
 const pasteDataTransfer = (target: SugarElement<Element>, mutator: (dataTransfer: DataTransfer) => void): void => {
   const win = getWindowFromElement(target);
@@ -63,6 +68,41 @@ const sPasteFiles = <T>(files: File[], selector: string): Step<T, T> =>
     cPasteFiles(files)
   ]));
 
+const pPasteUrlItems = async (target: SugarElement<Element>, items: PasteUrlItem[]): Promise<void> => {
+  const dataItems = await Promise.all(Arr.map(items, async (item) => {
+    const resp = await window.fetch(item.url);
+    const blob = await resp.blob();
+    const fileName = Arr.last(item.url.split('/')).getOr('filename.dat');
+    const mime = blob.type.split(';')[0];
+
+    if (item.kind === 'string') {
+      const reader = new window.FileReader();
+      return new Promise<{ kind: 'string'; mime: string; text: string }>((resolve, reject) => {
+        reader.addEventListener('loadend', () => {
+          if (Type.isString(reader.result)) {
+            resolve({ kind: 'string', mime, text: reader.result });
+          } else {
+            reject(new Error('Failed to read blob as string'));
+          }
+        });
+        reader.readAsText(blob);
+      });
+    } else {
+      return { kind: item.kind, file: new window.File([ blob ], fileName, { type: mime }) };
+    }
+  }));
+
+  pasteDataTransfer(target, (dataTransfer) => {
+    Arr.each(dataItems, (dataItem) => {
+      if (dataItem.kind === 'string') {
+        dataTransfer.items.add(dataItem.text, dataItem.mime);
+      } else {
+        dataTransfer.items.add(dataItem.file);
+      }
+    });
+  });
+};
+
 const cut = (target: SugarElement<Element>): DataTransfer => {
   const win = getWindowFromElement(target);
   const dataTransfer = createDataTransfer();
@@ -99,6 +139,7 @@ export {
   sPasteDataTransfer,
   sPasteItems,
   sPasteFiles,
+  pPasteUrlItems,
   cut,
   copy,
   cCut,
