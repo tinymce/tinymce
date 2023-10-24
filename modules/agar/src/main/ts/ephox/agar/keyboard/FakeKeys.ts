@@ -1,3 +1,4 @@
+import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { SugarElement } from '@ephox/sugar';
 
@@ -84,6 +85,7 @@ const safari = (type: string, doc: SugarElement<Document>, value: number, modifi
   (oEvent as any).ctrlKey = modifiers.ctrlKey === true;
   (oEvent as any).metaKey = modifiers.metaKey === true;
   (oEvent as any).altKey = modifiers.altKey === true;
+  (oEvent as any).getModifierState = Fun.never;
 
   dispatcher.dom.dispatchEvent(oEvent);
 };
