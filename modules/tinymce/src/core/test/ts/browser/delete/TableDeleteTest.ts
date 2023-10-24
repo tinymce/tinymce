@@ -210,6 +210,8 @@ describe('browser.tinymce.core.delete.TableDeleteTest', () => {
           </tr>
         </tbody>
       </table>`);
+      // this `setCursor` is needed for FireFox since otherwinse the `setSelection` triggers an error
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 1, 0, 0, 1, 0 ], 0);
       TinySelections.setSelection(editor, [ 0, 0, 0, 0, 1, 0, 0, 1, 0 ], 1, [ 0, 0, 0, 0, 2, 0 ], 3);
       editor.execCommand('Delete');
       TinyAssertions.assertContent(editor,
