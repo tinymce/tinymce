@@ -8,7 +8,6 @@ export type IsRootFn = (e: SugarElement<Node>) => boolean;
 export interface TableSelectionDetails {
   readonly startTable: Optional<SugarElement<HTMLTableElement>>;
   readonly endTable: Optional<SugarElement<HTMLTableElement>>;
-  readonly commonAncestorContainerTable: Optional<SugarElement<HTMLTableElement>>;
   readonly isStartInTable: boolean;
   readonly isEndInTable: boolean;
   readonly isSameTable: boolean;
@@ -38,16 +37,16 @@ const getTableDetailsFromRange = (rng: Range, isRoot: IsRootFn): TableSelectionD
   const isEndTableSameAsCommonAncestorTable = areSameTable(endTable, commonAncestorContainerTable) && !isSameTableAtTheStart;
   endTable = endTable.filter(Fun.constant(!isEndTableSameAsCommonAncestorTable));
 
-  const noTableSameAsCommonAncestorTable = !isStartTableSameAsCommonAncestorTable && !isEndTableSameAsCommonAncestorTable;
-  const isSameTable = areSameTable(startTable, endTable) && noTableSameAsCommonAncestorTable;
   const isStartInTable = startTable.isSome();
   const isEndInTable = endTable.isSome();
+  const noTableSameAsCommonAncestorTable = !isStartTableSameAsCommonAncestorTable && !isEndTableSameAsCommonAncestorTable;
+
+  const isSameTable = areSameTable(startTable, endTable) && noTableSameAsCommonAncestorTable;
   const isMultiTable = !isSameTable && isStartInTable && isEndInTable && noTableSameAsCommonAncestorTable;
 
   return {
     startTable,
     endTable,
-    commonAncestorContainerTable,
     isStartInTable,
     isEndInTable,
     isSameTable,
