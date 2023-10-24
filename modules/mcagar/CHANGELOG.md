@@ -7,7 +7,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ### Fixed
-
 - Changed so `TinyState.withNoneditableRootEditor` and `TinyState.withNoneditableRootEditorAsync` calls the setEditableRoot API instead of using direct dom mutation. #TINY-10304
 
 ## 8.4.0 - 2023-06-12

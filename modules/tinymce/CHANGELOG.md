@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the tooltips of picker buttons for the urlinput components in the "Insert/Edit Image" and "Insert/Edit Link" dialogs. #TINY-10155
 - Inline dialog will now respect `size: 'large'` argument in the dialog spec. #TINY-10209
 - SVG elements and their children are now retained when configured as valid elements. #TINY-10237
+- Bespoke dropdown toolbar buttons including `align`, `fontfamily`, `fontsize`, `blocks`, and `styles` did not include their visible text labels in their accessible names. #TINY-10147
 
 ### Fixed
 - Editor would convert urls that are not http/s or relative resulting in broken links. #TINY-10153
@@ -27,9 +28,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Custom block element wasn't considered block element in some cases. #TINY-10139
 - An empty element with a `contenteditable="true"` attribute within a table cell would not be treated as content and get removed if backspace or delete was being pressed. #TINY-10010
 - Removing an LI element containing a `details` element would incorrectly merge its content. #TINY-10133
+- The function `getModifierState` did not work on events passed through the editor as expected. #TINY-10263
 - Search and replace plugin would incorrectly find matching text inside non-editable root elements. #TINY-10162
 - Search and replace plugin would incorrectly find matching text inside SVG elements. #TINY-10162
 - Removed use of `async` for editor rendering which caused visual blinking when reloading the editor in-place. #TINY-10249
+- List items containing a list element surrounded by non list nodes would cause some list operations to fail. #TINY-10268
 - Hex colors are no longer always converted to RGB. #TINY-9819
 
 ## 6.7.1 - 2023-10-19
