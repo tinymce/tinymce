@@ -51,7 +51,19 @@ def gitMerge(String primaryBranch) {
   }
 }
 
-Map nodeC = [ name: 'node', image: 'public.ecr.aws/docker/library/node:lts', runAsGroup: '1000', runAsUser: '1000']
+Map nodeC = [
+    name: 'node',
+    image: "public.ecr.aws/docker/library/node:lts",
+    command: 'sleep',
+    args: 'infinity',
+    alwaysPullImage: true,
+    resourceRequestCpu: '500m',
+    resourceRequestMemory: '1Gi',
+    resourceLimitCpu: '2',
+    resourceLimitMemory: '1Gi',
+    runAsGroup: '1000',
+    runAsUser: '1000'
+  ]
 
 Map seleniumC = [
     name: "selenium",
@@ -70,13 +82,26 @@ Map seleniumC = [
     resourceLimitMemory: '1Gi'
   ]
 
-Map changieC = [ name: 'changie', image: 'ghcr.io/miniscruff/changie:v1.14.0' ]
+Map changieC = [
+    name: 'node',
+    image: "ghcr.io/miniscruff/changie:v1.14.0",
+    alwaysPullImage: true,
+    resourceRequestCpu: '500m',
+    resourceRequestMemory: '1Gi',
+    resourceLimitCpu: '2',
+    resourceLimitMemory: '1Gi',
+    runAsGroup: '1000',
+    runAsUser: '1000'
+  ]
 
 timestamps {
-  tinyPods.custom([
-    nodeC,
-    seleniumC,
-    changieC
+  podTemplate([
+    cloud: 'builds',
+    containers: [
+      nodeC,
+      seleniumC,
+      changieC
+    ]
   ]) {
     node(POD_LABEL) {
       // JNLP
