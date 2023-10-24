@@ -51,28 +51,62 @@ def gitMerge(String primaryBranch) {
   }
 }
 
+Map nodeC = [ name: 'node', image: 'public.ecr.aws/docker/library/node:lts', runAsGroup: '1000', runAsUser: '1000']
+
+Map seleniumC = [
+    name: "selenium",
+    image: "selenium/standalone-chrome:latest",
+    livenessProbe: [
+      execArgs: "curl --fail --silent --output /dev/null http://localhost:4444/wd/hub/status",
+      initialDelaySeconds: 30,
+      periodSeconds: 5,
+      timeoutSeconds: 15,
+      failureThreshold: 6
+    ],
+    alwaysPullImage: true,
+    resourceRequestCpu: '500m',
+    resourceRequestMemory: '1Gi',
+    resourceLimitCpu: '2',
+    resourceLimitMemory: '1Gi'
+  ]
+
+Map changieC = [ name: 'changie', image: 'ghcr.io/miniscruff/changie:v1.14.0' ]
+
 timestamps {
-  // TinyMCE builds need more CPU and RAM (especially eslint)
-  // NOTE: Ensure not to go over 7.5 CPU/RAM due to EC2 node sizes and the jnlp container requirements
-  tinyPods.nodeBrowser([
-    resourceRequestCpu: '6',
-    resourceRequestMemory: '4Gi',
-    resourceLimitCpu: '7.5',
-    resourceLimitMemory: '4Gi'
+  tinyPods.custom([
+    nodeC,
+    seleniumC,
+    changieC
   ]) {
-    def props = readProperties(file: 'build.properties')
+    node(POD_LABEL) {
+      // JNLP
+      conainer('jnlp') {
+        stage('checkout') {
+          tinyGit.addGitHubToKnownHosts()
+          checkout localBranch(scm)
+        }
+      }
 
-    String primaryBranch = props.primaryBranch
-    assert primaryBranch != null && primaryBranch != ""
-    def runAllTests = env.BRANCH_NAME == primaryBranch
+      // NODE
+      container('node') {
+        stage('environment') {
+          sh('yarn config --silent set registry https://registry.npmjs.org/')
+          tinyGit.addAuthorConfig()
+          tinyGit.addGitHubToKnownHosts()
+        }
+      }
 
-    stage("Merge") {
-      // cancel build if primary branch doesn't merge cleanly
-      gitMerge(primaryBranch)
-      
-      // batch build and merge changelog using makefile
-      exec("make")
-    }
+      def props = readProperties(file: 'build.properties')
+      String primaryBranch = props.primaryBranch
+      assert primaryBranch != null && primaryBranch != ""
+      def runAllTests = env.BRANCH_NAME == primaryBranch
+
+      container('changie') {
+        stage('merge') {
+          gitMerge(primaryBranch)
+          exec('make')
+        }
+      }
 
     def platforms = [
       [ os: "windows", browser: "chrome" ],
@@ -140,24 +174,138 @@ timestamps {
       }
     }
 
-    stage("Install tools") {
-      cleanAndInstall()
-    }
+      container('node') {
+        stage("Install tools") {
+          cleanAndInstall()
+        }
 
-    stage("Type check") {
-      withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
-        exec("yarn ci-all-seq")
+        stage("Type check") {
+          withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
+            exec("yarn ci-all-seq")
+          }
+        }
+
+        stage("Moxiedoc check") {
+          exec("yarn tinymce-grunt shell:moxiedoc")
+        }
+
+        stage("Run Tests") {
+          grunt("list-changed-headless list-changed-browser")
+          // Run all the tests in parallel
+          parallel processes
+        }
+
       }
-    }
-
-    stage("Moxiedoc check") {
-      exec("yarn tinymce-grunt shell:moxiedoc")
-    }
-
-    stage("Run Tests") {
-      grunt("list-changed-headless list-changed-browser")
-      // Run all the tests in parallel
-      parallel processes
     }
   }
 }
+
+// timestamps {
+//   // TinyMCE builds need more CPU and RAM (especially eslint)
+//   // NOTE: Ensure not to go over 7.5 CPU/RAM due to EC2 node sizes and the jnlp container requirements
+//   tinyPods.nodeBrowser([
+//     resourceRequestCpu: '6',
+//     resourceRequestMemory: '4Gi',
+//     resourceLimitCpu: '7.5',
+//     resourceLimitMemory: '4Gi'
+//   ]) {
+//     def props = readProperties(file: 'build.properties')
+
+//     String primaryBranch = props.primaryBranch
+//     assert primaryBranch != null && primaryBranch != ""
+//     def runAllTests = env.BRANCH_NAME == primaryBranch
+
+//     stage("Merge") {
+//       // cancel build if primary branch doesn't merge cleanly
+//       gitMerge(primaryBranch)
+//       // batch build and merge changelog using makefile
+//       exec("make")
+//     }
+
+//     def platforms = [
+//       [ os: "windows", browser: "chrome" ],
+//       [ os: "windows", browser: "firefox" ],
+//       [ os: "windows", browser: "MicrosoftEdge" ],
+//       [ os: "macos", browser: "safari" ],
+//       [ os: "macos", browser: "chrome" ],
+//       [ os: "macos", browser: "firefox" ]
+//     ]
+
+//     def cleanAndInstall = {
+//       echo "Installing tools"
+//       exec("git clean -fdx modules scratch js dist")
+//       yarnInstall()
+//     }
+
+//     def processes = [:]
+
+//     // Browser tests
+//     for (int i = 0; i < platforms.size(); i++) {
+//       def platform = platforms.get(i)
+
+//       def buckets = platform.buckets ?: 1
+//       for (int bucket = 1; bucket <= buckets; bucket++) {
+//         def suffix = buckets == 1 ? "" : "-" + bucket
+
+//         // closure variable - don't inline
+//         def c_bucket = bucket
+
+//         def name = "${platform.os}-${platform.browser}${suffix}"
+
+//         processes[name] = {
+//           stage(name) {
+//             node("bedrock-${platform.os}") {
+//               echo("Bedrock tests for ${name}")
+
+//               echo("Checking out code on build node: $NODE_NAME")
+//               checkout(scm)
+
+//               // windows tends to not have username or email set
+//               tinyGit.addAuthorConfig()
+//               gitMerge(primaryBranch)
+
+//               cleanAndInstall()
+//               exec("yarn ci")
+
+//               echo("Running browser tests")
+//               runBrowserTests(name, platform.browser, platform.os, c_bucket, buckets, runAllTests)
+//             }
+//           }
+//         }
+//       }
+//     }
+
+//     processes["headless-and-archive"] = {
+//       stage("headless tests") {
+//         runHeadlessTests(runAllTests)
+//       }
+
+//       if (env.BRANCH_NAME != primaryBranch) {
+//         stage("Archive Build") {
+//           exec("yarn tinymce-grunt prodBuild symlink:js")
+//           archiveArtifacts artifacts: 'js/**', onlyIfSuccessful: true
+//         }
+//       }
+//     }
+
+//     stage("Install tools") {
+//       cleanAndInstall()
+//     }
+
+//     stage("Type check") {
+//       withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
+//         exec("yarn ci-all-seq")
+//       }
+//     }
+
+//     stage("Moxiedoc check") {
+//       exec("yarn tinymce-grunt shell:moxiedoc")
+//     }
+
+//     stage("Run Tests") {
+//       grunt("list-changed-headless list-changed-browser")
+//       // Run all the tests in parallel
+//       parallel processes
+//     }
+//   }
+// }
