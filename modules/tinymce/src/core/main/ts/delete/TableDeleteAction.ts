@@ -119,15 +119,9 @@ const getTableSelections = (cellRng: Optional<TableCellRng>, selectionDetails: S
       end: sameTableSelection
     });
   } else {
-    const isClosestTableIsNotTheCommonAncestor = (currentTable: Optional<SugarElement<HTMLTableElement>>) => {
-      const isTableDifferentFromTheAncestor =
-        !Optionals.lift2(selectionDetails.commonAncestorContainerTable, currentTable, Compare.eq).getOr(false);
-
-      return !selectionDetails.isSameTable && isTableDifferentFromTheAncestor;
-    };
     // Covers partial table selection (either start or end will have a tableSelection) and multitable selection (both start and end will have a tableSelection)
-    const startCell = getClosestCell(rng.startContainer, isRoot).filter(() => isClosestTableIsNotTheCommonAncestor(selectionDetails.startTable));
-    const endCell = getClosestCell(rng.endContainer, isRoot).filter(() => isClosestTableIsNotTheCommonAncestor(selectionDetails.endTable));
+    const startCell = getClosestCell(rng.startContainer, isRoot);
+    const endCell = getClosestCell(rng.endContainer, isRoot);
     const startTableSelection = startCell
       .bind(getCellRangeFromStartTable(isRoot))
       .bind(getTableSelectionFromCellRng(isRoot));
