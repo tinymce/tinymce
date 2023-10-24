@@ -40,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Toggling a list that contains an LI element having another list as its first child would remove the remaining content within that LI element. #TINY-10213
 - List items containing a list element surrounded by non list nodes would cause some list operations to fail. #TINY-10268
 - The `accordion` toggling with the Enter key press would behave incorrectly on Safari. #TINY-10177
+- Deleting a range that includes a part of a `table` and a `text`, both inside a `td` removed the entire content of the `td`. #TINY-10254
 
 ## 6.7.1 - 2023-10-19
 
