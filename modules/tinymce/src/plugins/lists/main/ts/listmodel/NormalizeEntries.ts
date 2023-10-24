@@ -1,13 +1,15 @@
 import { Arr, Obj, Optional } from '@ephox/katamari';
 
-import { Entry } from './Entry';
+import { Entry, EntryList, isEntryList } from './Entry';
 
 const cloneListProperties = (target: Entry, source: Entry): void => {
-  target.listType = source.listType;
-  target.listAttributes = { ...source.listAttributes };
+  if (isEntryList(target) && isEntryList(source)) {
+    target.listType = source.listType;
+    target.listAttributes = { ...source.listAttributes };
+  }
 };
 
-const cleanListProperties = (entry: Entry): void => {
+const cleanListProperties = (entry: EntryList): void => {
   // Remove the start attribute if generating a new list
   entry.listAttributes = Obj.filter(entry.listAttributes, (_value, key) => key !== 'start');
 };
@@ -29,7 +31,7 @@ const normalizeEntries = (entries: Entry[]): Entry[] => {
   Arr.each(entries, (entry, i) => {
     closestSiblingEntry(entries, i).fold(
       () => {
-        if (entry.dirty) {
+        if (entry.dirty && isEntryList(entry)) {
           cleanListProperties(entry);
         }
       },
