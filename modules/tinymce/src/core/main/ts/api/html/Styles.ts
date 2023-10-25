@@ -268,12 +268,8 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
             // Convert RGB/RGBA colors to HEX
             if (typeof settings.force_hex_color === 'string' && settings.force_hex_color !== 'off') {
               RgbaColour.fromString(value).each((rgba) => {
-                if (
-                  // Always convert,
-                  settings.force_hex_color === 'always' ||
-                  // or only convert if there will be no loss of information from the alpha channel:
-                  rgba.alpha === 1
-                ) {
+                //  Always convert or only convert if there will be no loss of information from the alpha channel
+                if (settings.force_hex_color === 'always' || rgba.alpha === 1) {
                   value = Transformations.rgbaToHexString(RgbaColour.toString(rgba));
                 }
               });
