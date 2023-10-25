@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 6.7.2 - 2023-10-25
+
 ### Fixed
 - The function `getModifierState` did not work on events passed through the editor as expected. #TINY-10263
 - Removed use of `async` for editor rendering which caused visual blinking when reloading the editor in-place. #TINY-10249
