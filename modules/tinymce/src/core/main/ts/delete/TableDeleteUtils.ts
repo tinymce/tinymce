@@ -23,35 +23,55 @@ const getTableCells = (table: SugarElement<HTMLTableElement>): SugarElement<HTML
 const areSameTable = (table1: Optional<SugarElement<HTMLTableElement>>, table2: Optional<SugarElement<HTMLTableElement>>): boolean =>
   Optionals.lift2(table1, table2, Compare.eq).getOr(false);
 
-const getTableDetailsFromRange = (rng: Range, isRoot: IsRootFn): TableSelectionDetails => {
-  const getTable = (node: Node) => TableCellSelection.getClosestTable(SugarElement.fromDom(node), isRoot);
-  const commonAncestorContainerTable = getTable(rng.commonAncestorContainer);
-  let startTable = getTable(rng.startContainer);
-  let endTable = getTable(rng.endContainer);
+const getTable = (node: Node, isRoot: IsRootFn) => TableCellSelection.getClosestTable(SugarElement.fromDom(node), isRoot);
 
-  const isSameTableAtTheStart = areSameTable(startTable, endTable);
+const selectionInTableWithNestedTable = (details: TableSelectionDetails, rng: Range, isRoot: IsRootFn): TableSelectionDetails => {
+  const commonAncestorContainerTable = getTable(rng.commonAncestorContainer, isRoot);
 
-  const isStartTableSameAsCommonAncestorTable = areSameTable(startTable, commonAncestorContainerTable) && !isSameTableAtTheStart;
-  startTable = startTable.filter(Fun.constant(!isStartTableSameAsCommonAncestorTable));
+  const areTheSameTableAtTheStart = areSameTable(details.startTable, details.endTable);
+  const isStartTableSameAsCommonAncestorTable = areSameTable(details.startTable, commonAncestorContainerTable) && !areTheSameTableAtTheStart;
+  const isEndTableSameAsCommonAncestorTable = areSameTable(details.endTable, commonAncestorContainerTable) && !areTheSameTableAtTheStart;
 
-  const isEndTableSameAsCommonAncestorTable = areSameTable(endTable, commonAncestorContainerTable) && !isSameTableAtTheStart;
-  endTable = endTable.filter(Fun.constant(!isEndTableSameAsCommonAncestorTable));
+  if (!isStartTableSameAsCommonAncestorTable && !isEndTableSameAsCommonAncestorTable) {
+    return details;
+  }
 
-  const isStartInTable = startTable.isSome();
-  const isEndInTable = endTable.isSome();
-  const noTableSameAsCommonAncestorTable = !isStartTableSameAsCommonAncestorTable && !isEndTableSameAsCommonAncestorTable;
-
-  const isSameTable = areSameTable(startTable, endTable) && noTableSameAsCommonAncestorTable;
-  const isMultiTable = !isSameTable && isStartInTable && isEndInTable && noTableSameAsCommonAncestorTable;
+  const startTable = details.startTable.filter(Fun.constant(!isStartTableSameAsCommonAncestorTable));
+  const endTable = details.endTable.filter(Fun.constant(!isEndTableSameAsCommonAncestorTable));
+  const isSameTable = false;
+  const isMultiTable = false;
 
   return {
+    ...details,
+    startTable,
+    endTable,
+    isSameTable,
+    isMultiTable
+  };
+};
+
+const adjustQuirksInDetails = (details: TableSelectionDetails, rng: Range, isRoot: IsRootFn): TableSelectionDetails => {
+  return selectionInTableWithNestedTable(details, rng, isRoot);
+};
+
+const getTableDetailsFromRange = (rng: Range, isRoot: IsRootFn): TableSelectionDetails => {
+  const getTable = (node: Node) => TableCellSelection.getClosestTable(SugarElement.fromDom(node), isRoot);
+  const startTable = getTable(rng.startContainer);
+  const endTable = getTable(rng.endContainer);
+  const isStartInTable = startTable.isSome();
+  const isEndInTable = endTable.isSome();
+  // Partial selection - selection is not within the same table
+  const isSameTable = Optionals.lift2(startTable, endTable, Compare.eq).getOr(false);
+  const isMultiTable = !isSameTable && isStartInTable && isEndInTable;
+
+  return adjustQuirksInDetails({
     startTable,
     endTable,
     isStartInTable,
     isEndInTable,
     isSameTable,
     isMultiTable
-  };
+  }, rng, isRoot);
 };
 
 export {
