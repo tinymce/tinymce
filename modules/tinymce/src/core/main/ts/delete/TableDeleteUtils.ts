@@ -55,9 +55,8 @@ const adjustQuirksInDetails = (details: TableSelectionDetails, rng: Range, isRoo
 };
 
 const getTableDetailsFromRange = (rng: Range, isRoot: IsRootFn): TableSelectionDetails => {
-  const getTable = (node: Node) => TableCellSelection.getClosestTable(SugarElement.fromDom(node), isRoot);
-  const startTable = getTable(rng.startContainer);
-  const endTable = getTable(rng.endContainer);
+  const startTable = getTable(rng.startContainer, isRoot);
+  const endTable = getTable(rng.endContainer, isRoot);
   const isStartInTable = startTable.isSome();
   const isEndInTable = endTable.isSome();
   // Partial selection - selection is not within the same table
