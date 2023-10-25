@@ -13,16 +13,19 @@ describe('browser.tinymce.themes.silver.editor.ForceHexColorTest', () => {
     return {
       /** Apply color using 'mceApplyTextcolor' command. */
       usingCommand: () => {
-        TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 'color me'.length);
+        TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 'color me'.length + 1);
         editor.execCommand('mceApplyTextcolor', 'forecolor' as any, appliedColor);
         TinyAssertions.assertContentPresence(editor, { [`span[data-mce-style="color: ${expectedColor};"]`]: 1 });
+        TinyAssertions.assertContent(editor, `<p><span style="color: ${expectedColor};">colour me</span></p>`);
       },
       /** Apply color using the 'forecolor' part of the toolbar. */
       usingToolbar: async () => {
+        TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 'color me'.length + 1);
         TinyUiActions.clickOnToolbar(editor, '[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron');
         await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
         TinyUiActions.clickOnUi(editor, `div[data-mce-color="${appliedColor}"]`);
         TinyAssertions.assertContentPresence(editor, { [`span[data-mce-style="color: ${expectedColor};"]`]: 1 });
+        TinyAssertions.assertContent(editor, `<p><span style="color: ${expectedColor};">colour me</span></p>`);
       },
     };
   };
