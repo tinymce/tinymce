@@ -161,15 +161,15 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
       });
 
       context('focus is placed outside of the editor', () => {
-        const page = SugarElement.fromHtml<HTMLDivElement>('<input class="test-input" />');
+        const input = SugarElement.fromHtml<HTMLInputElement>('<input class="test-input" />');
 
         beforeEach(() => {
           const body = SugarElement.fromDom(document.body);
-          Insert.append(body, page);
+          Insert.append(body, input);
         });
 
         afterEach(() => {
-          Remove.remove(page);
+          Remove.remove(input);
         });
 
         it('TINY-10282: Should not move focus around if the focus is not in the editor', () => {
@@ -187,15 +187,15 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
           const n2 = editor.notificationManager.open(testMsg2);
           assert.lengthOf(notifications, 2, 'Should have two messages added.');
 
-          Focus.focus(page);
+          Focus.focus(input);
 
-          assert.isTrue(hasFocus(page), 'Focus should remain on the input');
+          assert.isTrue(hasFocus(input), 'Focus should remain on the input');
 
           n2.close();
-          assert.isTrue(hasFocus(page), 'Focus should remain on the input');
+          assert.isTrue(hasFocus(input), 'Focus should remain on the input');
 
           n1.close();
-          assert.isTrue(hasFocus(page), 'Focus should remain on the input');
+          assert.isTrue(hasFocus(input), 'Focus should remain on the input');
           assert.isTrue(!editor.hasFocus(), 'Focus should not be on the editor');
         });
       });
