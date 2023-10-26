@@ -26,6 +26,7 @@ export interface BaseFormat<T> {
   split?: boolean;
   deep?: boolean;
   preserve_attributes?: string[];
+  caret?: boolean;
 }
 
 interface Block {

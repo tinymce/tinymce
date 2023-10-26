@@ -536,9 +536,11 @@ const removeFormatInternal = (ed: Editor, name: string, vars?: FormatVars, node?
     let startContainer: Node;
     let endContainer: Node;
 
+    const isCaret = rng.startOffset === rng.endOffset && rng.startContainer === rng.endContainer;
+
     let expandedRng = ExpandRange.expandRng(dom, rng, formatList, rng.collapsed);
 
-    if (format.split) {
+    if (format.split && !isCaret) {
       // Split text nodes
       expandedRng = SplitRange.split(expandedRng);
 
