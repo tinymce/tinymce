@@ -16,7 +16,6 @@ import * as RangeWalk from '../selection/RangeWalk';
 import * as SelectionUtils from '../selection/SelectionUtils';
 import * as SplitRange from '../selection/SplitRange';
 import * as TableCellSelection from '../selection/TableCellSelection';
-import * as CaretFormat from './CaretFormat';
 import * as ExpandRange from './ExpandRange';
 import { Format, FormatAttrOrStyleValue, FormatVars } from './FormatTypes';
 import { normalizeStyleValue } from './FormatUtils';
@@ -635,7 +634,25 @@ const removeFormatInternal = (ed: Editor, name: string, vars?: FormatVars, node?
 
     ed.nodeChanged();
   } else {
-    CaretFormat.removeCaretFormat(ed, name, vars, similar);
+    // Remove formatting on caret position, this is a special case, it should work similar to the if above, but does not extend the selection
+
+    FormatUtils.preserveSelection(ed, () => {
+      const rng = selection.getRng();
+      const startContainer = rng.startContainer;
+      const endContainer = rng.endContainer;
+      const startOffset = rng.startOffset;
+      const endOffset = rng.endOffset;
+
+      // Remove formatting on the selection
+      removeRngStyle(rng);
+
+      // Restore selection
+      rng.setStart(startContainer, startOffset);
+      rng.setEnd(endContainer, endOffset);
+      selection.setRng(rng);
+    }, (startNode: Node) => {
+      return FormatUtils.isInlineFormat(format) && MatchFormat.match(ed, name, vars, startNode);
+    });
   }
 
   removeListStyleFormats(ed, name, vars);
