@@ -3128,6 +3128,11 @@ chalk@^4.0.0, chalk@^4.1.0, chalk@^4.1.1, chalk@^4.1.2, chalk@~4.1.0:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
 
+changie@^1.14.0:
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/changie/-/changie-1.14.0.tgz#eaad831812442df94af8431cc3f447a473053ab7"
+  integrity sha512-NtVSR6N77Cp52sNcItJyVxJJXlyLrGlr58SAPT+W9lugmkG3HJ/em5RmwIFBdnN82injJIjtDGkSVhLWhjonPg==
+
 character-entities-legacy@^1.0.0:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/character-entities-legacy/-/character-entities-legacy-1.1.4.tgz#94bc1845dce70a5bb9d2ecc748725661293d8fc1"

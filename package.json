@@ -47,6 +47,7 @@
     "@types/prismjs": "^1.16.6",
     "chai": "^4.3.3",
     "chalk": "^4.1.0",
+    "changie": "^1.14.0",
     "emojilib": "^2.4.0",
     "eslint-plugin-only-warn": "^1.1.0",
     "fast-check": "^2.23.0",
