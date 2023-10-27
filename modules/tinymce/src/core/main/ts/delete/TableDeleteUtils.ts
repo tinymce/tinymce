@@ -1,4 +1,4 @@
-import { Fun, Optional, Optionals } from '@ephox/katamari';
+import { Optional, Optionals } from '@ephox/katamari';
 import { Compare, SelectorFilter, SugarElement } from '@ephox/sugar';
 
 import * as TableCellSelection from '../selection/TableCellSelection';
@@ -20,34 +20,22 @@ const isRootFromElement = (root: SugarElement<Node>): IsRootFn =>
 const getTableCells = (table: SugarElement<HTMLTableElement>): SugarElement<HTMLTableCellElement>[] =>
   SelectorFilter.descendants<HTMLTableCellElement>(table, 'td,th');
 
-const areSameTable = (table1: Optional<SugarElement<HTMLTableElement>>, table2: Optional<SugarElement<HTMLTableElement>>): boolean =>
-  Optionals.lift2(table1, table2, Compare.eq).getOr(false);
-
 const getTable = (node: Node, isRoot: IsRootFn) => TableCellSelection.getClosestTable(SugarElement.fromDom(node), isRoot);
 
 const selectionInTableWithNestedTable = (details: TableSelectionDetails, rng: Range, isRoot: IsRootFn): TableSelectionDetails => {
-  const commonAncestorContainerTable = getTable(rng.commonAncestorContainer, isRoot);
+  return Optionals.lift3(details.startTable, details.endTable, getTable(rng.commonAncestorContainer, isRoot), (startTable, endTable, ancestorTable) => {
+    const areTheSameTableAtTheStart = Compare.eq(startTable, endTable);
+    const isStartTableSameAsCommonAncestorTable = Compare.eq(startTable, ancestorTable) && !areTheSameTableAtTheStart;
+    const isEndTableSameAsCommonAncestorTable = Compare.eq(endTable, ancestorTable) && !areTheSameTableAtTheStart;
 
-  const areTheSameTableAtTheStart = areSameTable(details.startTable, details.endTable);
-  const isStartTableSameAsCommonAncestorTable = areSameTable(details.startTable, commonAncestorContainerTable) && !areTheSameTableAtTheStart;
-  const isEndTableSameAsCommonAncestorTable = areSameTable(details.endTable, commonAncestorContainerTable) && !areTheSameTableAtTheStart;
-
-  if (!isStartTableSameAsCommonAncestorTable && !isEndTableSameAsCommonAncestorTable) {
-    return details;
-  }
-
-  const startTable = details.startTable.filter(Fun.constant(!isStartTableSameAsCommonAncestorTable));
-  const endTable = details.endTable.filter(Fun.constant(!isEndTableSameAsCommonAncestorTable));
-  const isSameTable = false;
-  const isMultiTable = false;
-
-  return {
-    ...details,
-    startTable,
-    endTable,
-    isSameTable,
-    isMultiTable
-  };
+    return !isStartTableSameAsCommonAncestorTable && !isEndTableSameAsCommonAncestorTable ? details : {
+      ...details,
+      startTable: !isStartTableSameAsCommonAncestorTable ? details.startTable : Optional.none(),
+      endTable: !isEndTableSameAsCommonAncestorTable ? details.endTable : Optional.none(),
+      isSameTable: false,
+      isMultiTable: false
+    };
+  }).getOr(details);
 };
 
 const adjustQuirksInDetails = (details: TableSelectionDetails, rng: Range, isRoot: IsRootFn): TableSelectionDetails => {
