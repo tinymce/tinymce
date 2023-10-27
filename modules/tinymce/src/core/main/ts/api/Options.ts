@@ -5,7 +5,7 @@ import * as Pattern from '../textpatterns/core/Pattern';
 import * as PatternTypes from '../textpatterns/core/PatternTypes';
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
-import { EditorOptions } from './OptionTypes';
+import { EditorOptions, ForceHexColor } from './OptionTypes';
 import I18n from './util/I18n';
 import Tools from './util/Tools';
 
@@ -829,8 +829,9 @@ const register = (editor: Editor): void => {
 
   registerOption('force_hex_color', {
     processor: (value) => {
-      const valid = Arr.contains([ 'always', 'rgb_only', 'off' ], value);
-      return valid ? { value, valid } : { valid: false, message: 'Must be one of: always, rgb_only, or off.' };
+      const options: ForceHexColor[] = [ 'always', 'rgb_only', 'off' ];
+      const valid = Arr.contains(options, value);
+      return valid ? { value, valid } : { valid: false, message: `Must be one of: ${options.join(', ')}.` };
     },
     default: 'off',
   });
