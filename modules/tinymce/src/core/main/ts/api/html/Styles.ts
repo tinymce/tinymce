@@ -19,7 +19,7 @@
 import { RgbaColour, Transformations } from '@ephox/acid';
 import { Obj, Unicode } from '@ephox/katamari';
 
-import { URLConverter } from '../OptionTypes';
+import { ForceHexColor, URLConverter } from '../OptionTypes';
 import Schema, { SchemaMap } from './Schema';
 
 export type StyleMap = Record<string, string | number>;
@@ -29,7 +29,7 @@ export interface StylesSettings {
   allow_svg_data_urls?: boolean;
   url_converter?: URLConverter;
   url_converter_scope?: any;
-  force_hex_color?: 'always' | 'rgb_only' | 'off';
+  force_hex_color?: ForceHexColor;
 }
 
 interface Styles {

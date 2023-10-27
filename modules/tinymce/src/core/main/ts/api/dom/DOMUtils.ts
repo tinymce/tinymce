@@ -11,7 +11,7 @@ import { GeomRect } from '../geom/Rect';
 import Entities from '../html/Entities';
 import Schema from '../html/Schema';
 import Styles, { StyleMap } from '../html/Styles';
-import { URLConverter } from '../OptionTypes';
+import { ForceHexColor, URLConverter } from '../OptionTypes';
 import { MappedEvent } from '../util/EventDispatcher';
 import Tools from '../util/Tools';
 import EventUtils, { EventUtilsCallback } from './EventUtils';
@@ -65,7 +65,7 @@ export interface DOMUtilsSettings {
   onSetAttrib: (event: SetAttribEvent) => void;
   contentCssCors: boolean;
   referrerPolicy: ReferrerPolicy;
-  force_hex_color: 'always' | 'rgb_only' | 'off';
+  force_hex_color: ForceHexColor;
 }
 
 export type Target = Node | Window;
