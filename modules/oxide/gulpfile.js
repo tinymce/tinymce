@@ -97,6 +97,18 @@ gulp.task('minifyCss', function() {
 });
 
 //
+// Copy the build to tinyMce-custom folder in root folder of the project
+//
+
+gulp.task('copyFiles', function () {
+  const src = '../../modules/oxide/build/**/*';
+  const dest = '../../tinyMce-custom';
+
+  return gulp.src(src)
+    .pipe(gulp.dest(dest));
+});
+
+//
 // watch and rebuild CSS for Oxide demos
 //
 gulp.task('monitor', function (done) {
@@ -108,26 +120,41 @@ gulp.task('monitor', function (done) {
     this.server.on('close', done);
   });
 
-  gulp.watch('./src/**/*').on('change', gulp.series('css', 'buildDemos', 'buildSkinSwitcher', 'copyTinymce'));
+  gulp.task('monitor', function (done) {
+    // ...
+    gulp.watch('./src/**/*').on('change', gulp.series('css', 'buildDemos', 'copyFiles', 'buildSkinSwitcher', 'copyTinymce'));
+  });
 });
 
 //
-// clean builds
+// Clean builds
 //
 gulp.task('clean', function () {
-  return gulp.src('./build', {
+  const buildPath = './build';
+  const customFolderPath = '../../tinyMce-custom';
+
+  // Clean the build folder
+  gulp.src(buildPath, {
     read: false,
     allowEmpty: true
   })
-  .pipe(clean());
+    .pipe(clean());
+
+  // Clean the tinyMce-custom folder
+  return gulp.src(customFolderPath, {
+    read: false,
+    allowEmpty: true
+  })
+    .pipe(clean({ force: true }));
 });
+
 
 //
 // Build project and watch LESS file changes
 //
 gulp.task('css', gulp.series('lint', 'less', 'minifyCss'));
-gulp.task('build', gulp.series('clean', 'css'));
+gulp.task('build', gulp.series('clean', 'css', 'copyFiles'));
 gulp.task('default', gulp.series('build'));
 
 gulp.task('demo-build', gulp.series('css', 'less', 'minifyCss', 'buildDemos', 'buildSkinSwitcher'));
-gulp.task('watch', gulp.series('build', 'buildDemos', 'buildSkinSwitcher', 'copyTinymce', 'monitor'));
+gulp.task('watch', gulp.series('build', 'buildDemos', 'buildSkinSwitcher', 'monitor'));

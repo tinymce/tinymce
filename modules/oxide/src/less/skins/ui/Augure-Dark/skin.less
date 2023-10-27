@@ -1,0 +1,46 @@
+@import '../../../theme/theme';
+@import '../tinymce-5/skin';
+
+//
+// Place your variables here
+//
+
+@background-color: #424242;
+@color-black: #5A5A5A;
+@color-white: #ffffff;
+@button-hover-color: #737373;
+@border-white-color: #cccccc;
+
+@toolbar-button-hover-background-color: multiply(white, contrast(@background-color, fade(@color-black, 15), fade(@color-black, 85)));
+@toolbar-button-enabled-background-color: multiply(white, contrast(@background-color, fade(@color-black, 25), fade(@color-black, 65)));
+@toolbar-group-separator-color: @border-white-color;
+@toolbar-separator-color: @border-white-color;
+@toolbar-button-width: 26px;
+@toolbar-button-height: 26px;
+@toolbar-button-border-radius: 3px;
+@font-size-base: 14px;
+@button-background-color: #524a73;
+@button-naked-hover-background-color: @button-hover-color;
+@border-color: @color-white;
+@toolbar-background: url("data:image/svg+xml;charset=utf8,%3Csvg height='@{_toolbar-height}' viewBox='0 0 40 @{_toolbar-height}' width='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='@{_toolbar-divider-height}' width='100' height='1' fill='@{_toolbar-row-separator-color}'/%3E%3C/svg%3E") left 0 top @toolbar-padding-y @toolbar-background-color;
+
+.tox {
+  .tox-tbtn,
+  .tox-number-input,
+  .tox-tbtn--select,
+  .tox-split-button {
+    margin: @toolbar-button-spacing-y @toolbar-button-spacing-x (@toolbar-button-spacing-y + 1px) 0;
+  }
+
+  .tox-toolbar,
+  .tox-toolbar__primary,
+  .tox-toolbar__overflow {
+    background: @toolbar-background !important;
+    min-width: calc (100% + 5px);
+    padding-right: 5px;
+  }
+
+  &.tox-tinymce-inline .tox-editor-container {
+    width: calc(100% + 10px);
+  }
+}
