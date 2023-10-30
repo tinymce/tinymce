@@ -18,7 +18,7 @@ describe('webdriver.tinymce.plugins.lists.DeleteTest', () => {
 
       const initialContent = '<ol>' +
           '<li>' +
-            '<span>List 1</span>' +
+            'List 1' +
           '</li>' +
           '<li>' +
             '<h2>Header</h2>' +
@@ -29,27 +29,27 @@ describe('webdriver.tinymce.plugins.lists.DeleteTest', () => {
           '</li>' +
         '</ol>';
 
-      const expectedContent = '<ol>' +
+      const expectedContent = '<ol>\n' +
           '<li>' +
-            '<span>List 1</span>' +
-          '</li>' +
-          '<li>' +
-            '<h2>Header</h2>' +
-            '<ol>' +
-              '<li>List 1-1Place custor at the start of this line and hit backspace.</li>' +
-            '</ol>' +
-          '</li>' +
+            'List 1' +
+          '</li>\n' +
+          '<li>\n' +
+            '<h2>Header</h2>\n' +
+            '<ol>\n' +
+              '<li>List 1-1Place custor at the start of this line and hit backspace.</li>\n' +
+            '</ol>\n' +
+          '</li>\n' +
         '</ol>';
 
-      editor.setContent(initialContent, { format: 'raw' });
+      editor.setContent(initialContent);
       TinySelections.setCursor(editor, [ 0, 1, 2 ], 0);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.backspace() ]);
-      TinyAssertions.assertContent(editor, expectedContent, { format: 'raw' });
+      TinyAssertions.assertContent(editor, expectedContent);
 
-      editor.setContent(initialContent, { format: 'raw' });
+      editor.setContent(initialContent);
       TinySelections.setCursor(editor, [ 0, 1, 1, 0, 0 ], 'List 1-1'.length);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({}, 'Delete') ]);
-      TinyAssertions.assertContent(editor, expectedContent, { format: 'raw' });
+      TinyAssertions.assertContent(editor, expectedContent);
     });
   });
 });
