@@ -1,17 +1,15 @@
 PROJECTS := $(filter-out .changes/unreleased .changes/header.tpl.md,$(wildcard .changes/*))
 PROJECT_NAMES := $(notdir $(PROJECTS))
 
+default: dev
 
-batch: $(PROJECTS)
-	@for project in $(PROJECTS); do \
-		yarn changie batch auto --project $$(basename $$project) >/dev/null 2>&1; \
-	done
+$(PROJECT_NAMES):
+	changie batch auto --project $(basename $@)
 
 merge:
 	yarn changie merge
 
-all: batch merge
+dev:
+	yarn changie merge -u "## Unreleased"
 
-.PHONY: all batch merge $(PROJECT_NAMES)
-
-default: all
+.PHONY: all merge $(PROJECT_NAMES)
