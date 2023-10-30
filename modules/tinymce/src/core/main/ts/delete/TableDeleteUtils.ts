@@ -29,8 +29,8 @@ const selectionInTableWithNestedTable = (details: TableSelectionDetails): TableS
 
     return !isStartTableParentOfEndTable && !isEndTableParentOfStartTable ? details : {
       ...details,
-      startTable: !isStartTableParentOfEndTable ? details.startTable : Optional.none(),
-      endTable: !isEndTableParentOfStartTable ? details.endTable : Optional.none(),
+      startTable: isStartTableParentOfEndTable ? Optional.none() : details.startTable,
+      endTable: isEndTableParentOfStartTable ? Optional.none() : details.endTable,
       isSameTable: false,
       isMultiTable: false
     };
