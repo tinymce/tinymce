@@ -1,14 +1,16 @@
-import { Arr } from '@ephox/katamari';
+import {Arr} from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
-import { TinyMCE } from '../api/Tinymce';
+import {TinyMCE} from '../api/Tinymce';
 
 declare let tinymce: TinyMCE;
 
 const isContentCssSkinName = (url: string) => /^[a-z0-9\-]+$/i.test(url);
 
-const isBundledCssSkinName = (url: string) => tinymce.Resource.has('content/' + url + '/content.css');
+const toContentSkinResourceName = (url: string): string => 'content/' + url + '/content.css';
+
+const isBundledCssSkinName = (url: string) => tinymce.Resource.has(toContentSkinResourceName(url));
 
 const getContentCssUrls = (editor: Editor): string[] => {
   return transformToUrls(editor, Options.getContentCss(editor));
@@ -39,5 +41,6 @@ const appendContentCssFromSettings = (editor: Editor): void => {
 };
 
 export {
+  toContentSkinResourceName,
   appendContentCssFromSettings
 };

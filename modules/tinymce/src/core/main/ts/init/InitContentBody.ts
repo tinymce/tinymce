@@ -36,6 +36,7 @@ import { hasAnyRanges } from '../selection/SelectionUtils';
 import SelectionOverrides from '../SelectionOverrides';
 import * as TextPattern from '../textpatterns/TextPatterns';
 import Quirks from '../util/Quirks';
+import * as ContentCss from './ContentCss';
 
 declare const escape: any;
 declare let tinymce: TinyMCE;
@@ -263,12 +264,13 @@ const getStyleSheetLoader = (editor: Editor): StyleSheetLoader =>
   editor.inline ? editor.ui.styleSheetLoader : editor.dom.styleSheetLoader;
 
 const makeStylesheetLoadingPromises = (editor: Editor, css: string[], framedFonts: string[]): Promise<unknown>[] => {
-  const { pass: bundledCss, fail: normalCss } = Arr.partition(css, (name) => tinymce.Resource.has('content/' + name + '/content.css'));
-  const bundledPromises = bundledCss.map(async (url) => {
-    const css = await tinymce.Resource.get('content/' + url + '/content.css');
+  const { pass: bundledCss, fail: normalCss } = Arr.partition(css, (name) => tinymce.Resource.has(ContentCss.toContentSkinResourceName(name)));
+  const bundledPromises = bundledCss.map((url) => {
+    const css = tinymce.Resource.get(ContentCss.toContentSkinResourceName(url));
     if (Type.isString(css)) {
-      return getStyleSheetLoader(editor).loadRawCss(url, css);
+      return Promise.resolve(getStyleSheetLoader(editor).loadRawCss(url, css));
     }
+    return Promise.resolve();
   });
   const promises = [ ...bundledPromises,
     getStyleSheetLoader(editor).loadAll(normalCss),

@@ -4,7 +4,7 @@ interface Resource {
   load: <T = any>(id: string, url: string) => Promise<T>;
   add: (id: string, data: any) => void;
   has: (id: string) => boolean;
-  get: (id: string) => Promise<string | null>;
+  get: (id: string) => any;
   unload: (id: string) => void;
 }
 
@@ -38,6 +38,7 @@ const awaiter = (resolveCb: (data: any) => void, rejectCb: (err?: any) => void, 
 const create = (): Resource => {
   const tasks: Record<string, Promise<any>> = {};
   const resultFns: Record<string, (data: any) => void> = {};
+  const resources: Record<string, any> = {};
 
   const load = <T>(id: string, url: string): Promise<T> => {
     const loadErrMsg = `Script at URL "${url}" failed to load`;
@@ -61,23 +62,18 @@ const create = (): Resource => {
       delete resultFns[id];
     }
     tasks[id] = Promise.resolve(data);
+    resources[id] = data;
   };
 
   const has = (id: string) => {
-    return id in tasks;
+    return id in resources;
   };
 
   const unload = (id: string) => {
     delete tasks[id];
   };
 
-  const get = (id: string) => {
-    if (tasks[id] === undefined) {
-      return Promise.resolve(null);
-    }
-
-    return tasks[id];
-  };
+  const get = (id: string) => resources[id];
 
   return {
     load,

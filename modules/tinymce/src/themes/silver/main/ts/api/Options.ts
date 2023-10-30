@@ -348,7 +348,7 @@ const getSkinUrl = (editor: Editor): string | undefined => {
   }
 };
 
-const getSkinUrlOpt = (editor: Editor): Optional<string> => Optional.from(editor.options.get('skin_url'));
+const getSkinUrlOption = (editor: Editor): Optional<string> => Optional.from(editor.options.get('skin_url'));
 
 const getLineHeightFormats = (editor: Editor): string[] =>
   editor.options.get('line_height_formats').split(' ');
@@ -431,7 +431,7 @@ const getMenus = (editor: Editor): Record<string, { title: string; items: string
 export {
   register,
   getSkinUrl,
-  getSkinUrlOpt,
+  getSkinUrlOption,
   isReadOnly,
   isSkinDisabled,
   getHeightOption,

@@ -24,9 +24,9 @@ const loadRawCss = (editor: Editor, key: string, css: string, styleSheetLoader: 
 };
 
 const loadUiSkins = async (editor: Editor, skinUrl: string): Promise<void> => {
-  const skinUrl_ = Options.getSkinUrlOpt(editor).getOr('default');
+  const skinUrl_ = Options.getSkinUrlOption(editor).getOr('default');
   const skinUiCss = 'ui/' + skinUrl_ + '/skin.css';
-  const css = await tinymce.Resource.get(skinUiCss);
+  const css = tinymce.Resource.get(skinUiCss);
   if (Type.isString(css)) {
     return Promise.resolve(loadRawCss(editor, skinUiCss, css, editor.ui.styleSheetLoader));
   } else {
@@ -40,7 +40,7 @@ const loadShadowDomUiSkins = async (editor: Editor, skinUrl: string): Promise<vo
   if (isInShadowRoot) {
 
     const shadowDomSkinCss = skinUrl + '/skin.shadowdom.css';
-    const css = await tinymce.Resource.get(shadowDomSkinCss);
+    const css = tinymce.Resource.get(shadowDomSkinCss);
 
     if (Type.isString(css)) {
       loadRawCss(editor, shadowDomSkinCss, css, DOMUtils.DOM.styleSheetLoader);
@@ -53,9 +53,9 @@ const loadShadowDomUiSkins = async (editor: Editor, skinUrl: string): Promise<vo
 };
 
 const loadUrlSkin = async (isInline: boolean, editor: Editor): Promise<void> => {
-  Options.getSkinUrlOpt(editor).fold(Fun.noop, async (skinUrl) => {
+  Options.getSkinUrlOption(editor).fold(Fun.noop, (skinUrl) => {
     const skinContentCss = 'ui/' + skinUrl + (isInline ? '/content.inline' : '/content') + '.css';
-    const css = await tinymce.Resource.get(skinContentCss);
+    const css = tinymce.Resource.get(skinContentCss);
     if (Type.isString(css)) {
       loadRawCss(editor, skinContentCss, css, editor.ui.styleSheetLoader);
     } else {
