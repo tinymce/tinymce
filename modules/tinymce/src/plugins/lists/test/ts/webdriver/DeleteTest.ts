@@ -52,7 +52,7 @@ describe('webdriver.tinymce.plugins.lists.DeleteTest', () => {
 
       editor.setContent(initialContent, { format: 'raw' });
       TinySelections.setCursor(editor, [ 0, 1, 1, 0, 0 ], 'List 1-1'.length);
-      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.deleteKey() ]);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({}, 'Delete') ]);
       TinyAssertions.assertContent(editor, expectedContent, { format: 'raw' });
     });
   });
