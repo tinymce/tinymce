@@ -829,36 +829,21 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
                         children: [
                           s.text(str.is('x'))
                         ]
-                      }),
-                      s.element('span', {
-                        attrs: {
-                          'id': str.is('_mce_caret'),
-                          'data-mce-bogus': str.is('1'),
-                          'data-mce-type': str.is('format-caret')
-                        },
-                        children: [
-                          s.text(str.is('\uFEFF'))
-                        ]
                       })
                     ]
-                  }),
-                  s.element('span', {
-                    attrs: {
-                      'id': str.is('_mce_caret'),
-                      'data-mce-bogus': str.is('1'),
-                      'data-mce-type': str.is('format-caret')
-                    },
+                  })
+                ]
+              }),
+              s.element('span', {
+                attrs: {
+                  'id': str.is('_mce_caret'),
+                  'data-mce-bogus': str.is('1'),
+                  'data-mce-type': str.is('format-caret')
+                },
+                children: [
+                  s.element('s', {
                     children: [
-                      s.element('span', {
-                        attrs: {
-                          'id': str.is('_mce_caret'),
-                          'data-mce-bogus': str.is('1'),
-                          'data-mce-type': str.is('format-caret')
-                        },
-                        children: [
-                          s.text(str.is('\uFEFF'))
-                        ]
-                      })
+                      s.text(str.is(Zwsp.ZWSP))
                     ]
                   })
                 ]
