@@ -10,6 +10,7 @@ import * as NodeType from './dom/NodeType';
 import * as PaddingBr from './dom/PaddingBr';
 import * as Parents from './dom/Parents';
 import * as EditorFocus from './focus/EditorFocus';
+import * as Namespace from './html/Namespace';
 
 /**
  * Makes sure that everything gets wrapped in paragraphs.
@@ -25,7 +26,8 @@ const isValidTarget = (schema: Schema, node: Node) => {
   if (NodeType.isText(node)) {
     return true;
   } else if (NodeType.isElement(node)) {
-    return !isBlockElement(schema.getBlockElements(), node) && !Bookmarks.isBookmarkNode(node) && !TransparentElements.isTransparentBlock(schema, node);
+    return !isBlockElement(schema.getBlockElements(), node) && !Bookmarks.isBookmarkNode(node) &&
+      !TransparentElements.isTransparentBlock(schema, node) && !Namespace.isNonHtmlElementRoot(node);
   } else {
     return false;
   }
@@ -41,8 +43,8 @@ const shouldRemoveTextNode = (blockElements: SchemaMap, node: Node) => {
   if (NodeType.isText(node)) {
     if (node.data.length === 0) {
       return true;
-    } else if (/^\s+$/.test(node.data) && (!node.nextSibling || isBlockElement(blockElements, node.nextSibling))) {
-      return true;
+    } else if (/^\s+$/.test(node.data)) {
+      return !node.nextSibling || isBlockElement(blockElements, node.nextSibling) || Namespace.isNonHtmlElementRoot(node.nextSibling);
     }
   }
 

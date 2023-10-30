@@ -99,6 +99,11 @@ describe('browser.tinymce.core.EditorTest', () => {
 
     editor.setContent('<p><a href="//www.somesite.com/test/file.htm">test</a></p>');
     assert.equal(editor.getContent(), '<p><a href="//www.somesite.com/test/file.htm">test</a></p>', 'urls - relativeURLs');
+
+    const nonHttpLink = 'onenote:///D:\Anote\New%20Section%201.one';
+
+    editor.setContent(`<p><a href="${nonHttpLink}">test</a></p>`);
+    assert.equal(editor.getContent(), `<p><a href="${nonHttpLink}">test</a></p>`, 'urls - relativeURLs: TINY-10153');
   });
 
   it('TBA: urls - absoluteURLs', () => {
@@ -118,6 +123,11 @@ describe('browser.tinymce.core.EditorTest', () => {
 
     editor.setContent('<p><a href="http://www.somesite.com/test/file.htm">test</a></p>');
     assert.equal(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>', 'urls - absoluteURLs');
+
+    const nonHttpLink = 'onenote:///D:\Anote\New%20Section%201.one';
+
+    editor.setContent(`<p><a href="${nonHttpLink}">test</a></p>`);
+    assert.equal(editor.getContent(), `<p><a href="${nonHttpLink}">test</a></p>`, 'urls - absoluteURLs: TINY-10153');
 
     editor.options.set('relative_urls', false);
     editor.options.set('remove_script_host', false);
@@ -139,6 +149,9 @@ describe('browser.tinymce.core.EditorTest', () => {
 
     editor.setContent('<p><a href="//www.somesite.com/test/file.htm">test</a></p>');
     assert.equal(editor.getContent(), '<p><a href="//www.somesite.com/test/file.htm">test</a></p>', 'urls - absoluteURLs');
+
+    editor.setContent(`<p><a href="${nonHttpLink}">test</a></p>`);
+    assert.equal(editor.getContent(), `<p><a href="${nonHttpLink}">test</a></p>`, 'urls - absoluteURLs: TINY-10153');
   });
 
   it('TBA: WebKit Serialization range bug', function () {

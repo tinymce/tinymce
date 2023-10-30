@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
+import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -14,7 +14,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
     entities: 'raw',
     valid_elements:
       'li[style|class|data-custom],ol[style|class|data-custom],' +
-      'ul[style|class|data-custom],dl,dt,dd,em,strong,span,#p,div,br',
+      'ul[style|class|data-custom],dl,dt,dd,em,strong,span,#p,div[contenteditable],br,details,summary',
     valid_styles: {
       '*': 'color,font-size,font-family,background-color,font-weight,' +
         'font-style,text-decoration,float,margin,margin-top,margin-right,' +
@@ -796,6 +796,75 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
       '</ul>'
     );
     assert.equal(editor.selection.getNode().nodeName, 'LI');
+  });
+
+  it('TINY-10133: Backspace at the CEF inside li', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul>' +
+        '<li>1</li>' +
+        '<li><div contenteditable="false">2</div></li>' +
+        '<li>3</li>' +
+      '</ul>');
+    TinySelections.setCursor(editor, [ 0, 1 ], 0);
+    editor.plugins.lists.backspaceDelete(false);
+
+    TinyAssertions.assertContent(editor, '<ul>' +
+        '<li>1<div contenteditable="false">2</div></li>' +
+        '<li>3</li>' +
+      '</ul>');
+    // caret in the fake cursor paragraph before CEF div
+    TinyAssertions.assertCursor(editor, [ 0, 0, 1 ], 0);
+  });
+
+  it('TINY-10133: Delete at the end of li content when next li contains CEF', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul>' +
+        '<li>1</li>' +
+        '<li><div contenteditable="false">2</div></li>' +
+        '<li>3</li>' +
+      '</ul>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+    editor.plugins.lists.backspaceDelete(true);
+
+    TinyAssertions.assertContent(editor, '<ul>' +
+        '<li>1<div contenteditable="false">2</div></li>' +
+        '<li>3</li>' +
+      '</ul>');
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 1);
+  });
+
+  it('TINY-10133: Backspace at the beginning of `summary` inside li', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul>' +
+        '<li>1</li>' +
+        '<li><details><summary>2a</summary><p>2b</p></details></li>' +
+        '<li>3</li>' +
+      '</ul>');
+    TinySelections.setCursor(editor, [ 0, 1, 0, 0 ], 0);
+    editor.plugins.lists.backspaceDelete(false);
+
+    TinyAssertions.assertContent(editor, '<ul>' +
+        '<li>1<details><summary>2a</summary><p>2b</p></details></li>' +
+        '<li>3</li>' +
+      '</ul>');
+    TinyAssertions.assertCursor(editor, [ 0, 0, 1, 0, 0 ], 0);
+  });
+
+  it('TINY-10133: Delete at the end of li content when next li contains `details`', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul>' +
+        '<li>1</li>' +
+        '<li><details><summary>2a</summary><p>2b</p></details></li>' +
+        '<li>3</li>' +
+      '</ul>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+    editor.plugins.lists.backspaceDelete(true);
+
+    TinyAssertions.assertContent(editor, '<ul>' +
+        '<li>1<details><summary>2a</summary><p>2b</p></details></li>' +
+        '<li>3</li>' +
+      '</ul>');
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 1);
   });
 
   it('Backspace from indented list', () => {

@@ -6,7 +6,7 @@ import AstNode from '../api/html/Node';
 import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';
 import * as ElementType from '../dom/ElementType';
-import * as TrimHtml from '../dom/TrimHtml';
+import * as TrimBody from '../dom/TrimBody';
 import * as Zwsp from '../text/Zwsp';
 import { cleanupBogusElements, cleanupInputNames } from './ContentCleanup';
 import { Content, GetContentArgs } from './ContentTypes';
@@ -46,7 +46,7 @@ const getContentFromBody = (editor: Editor, args: GetContentArgs, body: HTMLElem
   let content: Content;
 
   if (args.format === 'raw') {
-    content = Tools.trim(TrimHtml.trimExternal(editor.serializer, body.innerHTML));
+    content = Tools.trim(Zwsp.trim(TrimBody.trim(body, editor.serializer.getTempAttrs()).innerHTML));
   } else if (args.format === 'text') {
     content = getPlainTextContent(editor, body);
   } else if (args.format === 'tree') {

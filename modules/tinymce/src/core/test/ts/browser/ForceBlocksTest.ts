@@ -146,4 +146,22 @@ describe('browser.tinymce.core.ForceBlocksTest', () => {
       assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), expectedInnerHtml);
     });
   });
+
+  it('TINY-10237: Should not wrap SVG elements', () => {
+    const editor = hook.editor();
+
+    editor.setContent('<svg></svg>foo', { format: 'raw' });
+    TinySelections.setCursor(editor, [ 1 ], 0);
+    pressArrowKey(editor);
+    TinyAssertions.assertRawContent(editor, '<svg></svg><p>foo</p>');
+  });
+
+  it('TINY-10273: Should not create empty paragraphs for whitespace around SVG elements', () => {
+    const editor = hook.editor();
+
+    editor.setContent(' <svg></svg> <svg></svg> ', { format: 'raw' });
+    TinySelections.setCursor(editor, [ 0 ], 0);
+    pressArrowKey(editor);
+    TinyAssertions.assertRawContent(editor, '<svg></svg><svg></svg>');
+  });
 });

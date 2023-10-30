@@ -1,10 +1,10 @@
-import { Compare, PredicateFind, SugarElement } from '@ephox/sugar';
+import { Compare, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
+import Schema from '../api/html/Schema';
 import { isCaretCandidate } from '../caret/CaretCandidate';
 import { CaretPosition } from '../caret/CaretPosition';
-import { isBlock } from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 import * as RangeNormalizer from './RangeNormalizer';
 
@@ -14,8 +14,8 @@ const isContentEditableFalse = (elm: SugarElement<Node>): boolean => NodeType.is
 const isContentEditableTrue = (elm: SugarElement<Node>): boolean => NodeType.isContentEditableTrue(elm.dom);
 const isRoot = (rootNode: Node) => (elm: SugarElement<Node>): boolean => Compare.eq(SugarElement.fromDom(rootNode), elm);
 
-const getClosestScope = (node: Node, rootNode: Node): Node =>
-  PredicateFind.closest(SugarElement.fromDom(node), (elm) => isContentEditableTrue(elm) || isBlock(elm), isRoot(rootNode))
+const getClosestScope = (node: Node, rootNode: Node, schema: Schema): Node =>
+  PredicateFind.closest(SugarElement.fromDom(node), (elm) => isContentEditableTrue(elm) || schema.isBlock(SugarNode.name(elm)), isRoot(rootNode))
     .getOr(SugarElement.fromDom(rootNode)).dom;
 
 const getClosestCef = (node: Node, rootNode: Node) =>
@@ -33,11 +33,11 @@ const findEdgeCaretCandidate = (startNode: Node, scope: Node, forward: boolean):
   return result;
 };
 
-const findClosestBlockRange = (startRng: Range, rootNode: Node): Range => {
+const findClosestBlockRange = (startRng: Range, rootNode: Node, schema: Schema): Range => {
   const startPos = CaretPosition.fromRangeStart(startRng);
   // TODO: TINY-8865 - This may not be safe to cast as Node and alternative solutions need to be looked into
   const clickNode = startPos.getNode() as Node;
-  const scope = getClosestScope(clickNode, rootNode);
+  const scope = getClosestScope(clickNode, rootNode, schema);
   const startNode = findEdgeCaretCandidate(clickNode, scope, false);
   const endNode = findEdgeCaretCandidate(clickNode, scope, true);
 
@@ -67,7 +67,7 @@ const findClosestBlockRange = (startRng: Range, rootNode: Node): Range => {
 };
 
 const onTripleClickSelect = (editor: Editor): void => {
-  const rng = findClosestBlockRange(editor.selection.getRng(), editor.getBody());
+  const rng = findClosestBlockRange(editor.selection.getRng(), editor.getBody(), editor.schema);
   editor.selection.setRng(RangeNormalizer.normalize(rng));
 };
 

@@ -6,6 +6,11 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.color.TextColorCommandsTest', () => {
+  const selectors = {
+    backcolorSplitButton: '[aria-label^="Background color"] > .tox-tbtn + .tox-split-button__chevron',
+    forecolorSplitButton: '[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron'
+  };
+
   const state = Cell<string | null>(null);
   const hook = TinyHooks.bddSetupLight<Editor>({
     toolbar: 'forecolor backcolor',
@@ -31,12 +36,12 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorCommandsTest', () 
     const editor = hook.editor();
     editor.setContent('hello test');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 5);
-    TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+    TinyUiActions.clickOnToolbar(editor, selectors.forecolorSplitButton);
     await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
     TinyUiActions.clickOnUi(editor, 'div[data-mce-color="#169179"]');
     assertState('mceApplyTextcolor');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 5);
-    TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+    TinyUiActions.clickOnToolbar(editor, selectors.forecolorSplitButton);
     await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
     TinyUiActions.clickOnUi(editor, '.tox-swatch--remove');
     assertState('mceRemoveTextcolor');
@@ -46,12 +51,12 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorCommandsTest', () 
     const editor = hook.editor();
     editor.setContent('hello test');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 5);
-    TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+    TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton);
     await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
     TinyUiActions.clickOnUi(editor, 'div[data-mce-color="#169179"]');
     assertState('mceApplyTextcolor');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 5);
-    TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+    TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton);
     await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
     TinyUiActions.clickOnUi(editor, '.tox-swatch--remove');
     assertState('mceRemoveTextcolor');

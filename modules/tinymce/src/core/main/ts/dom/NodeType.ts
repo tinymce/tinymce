@@ -1,4 +1,5 @@
 import { Arr, Type } from '@ephox/katamari';
+import { SugarElement, SugarNode } from '@ephox/sugar';
 
 type NullableNode = Node | null | undefined;
 
@@ -12,7 +13,9 @@ const isNodeType = <T extends Node>(type: number) => {
 // won't implement the Object prototype, so Object.getPrototypeOf() will return null or something similar.
 const isRestrictedNode = (node: NullableNode): boolean => !!node && !Object.getPrototypeOf(node);
 
-const isElement = isNodeType<HTMLElement>(1);
+const isElement = isNodeType<Element>(1);
+const isHTMLElement = (node: NullableNode): node is HTMLElement => isElement(node) && SugarNode.isHTMLElement(SugarElement.fromDom(node));
+const isSVGElement = (node: NullableNode): node is SVGElement => isElement(node) && node.namespaceURI === 'http://www.w3.org/2000/svg';
 
 const matchNodeName = <T extends Node>(name: string): (node: NullableNode) => node is T => {
   const lowerCasedName = name.toLowerCase();
@@ -55,12 +58,6 @@ const matchStyleValues = (name: string, values: string): (node: NullableNode) =>
   };
 };
 
-const hasPropValue = (propName: keyof HTMLElement, propValue: any) => {
-  return (node: NullableNode): boolean => {
-    return isElement(node) && node[propName] === propValue;
-  };
-};
-
 const hasAttribute = (attrName: string) => {
   return (node: NullableNode): boolean => {
     return isElement(node) && node.hasAttribute(attrName);
@@ -79,7 +76,7 @@ const isTable = (node: NullableNode): node is HTMLTableElement => isElement(node
 
 const hasContentEditableState = (value: string) => {
   return (node: NullableNode): node is HTMLElement => {
-    if (isElement(node)) {
+    if (isHTMLElement(node)) {
       if (node.contentEditable === value) {
         return true;
       }
@@ -116,6 +113,8 @@ const isSummary = matchNodeName<HTMLElement>('summary');
 export {
   isText,
   isElement,
+  isHTMLElement,
+  isSVGElement,
   isCData,
   isPi,
   isComment,
@@ -130,7 +129,6 @@ export {
   isTableCellOrCaption,
   isRestrictedNode,
   matchNodeNames,
-  hasPropValue,
   hasAttribute,
   hasAttributeValue,
   matchStyleValues,

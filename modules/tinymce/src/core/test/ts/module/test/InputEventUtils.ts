@@ -6,8 +6,12 @@ const deprecated = new Set([
   'keyIdentifier', 'mozPressure'
 ]);
 
-const clone = <T extends Event>(originalEvent: T): T => {
-  const event: Record<string, any> = {};
+type Mutable<T> = {
+  -readonly [K in keyof T]: T[K];
+};
+
+const cloneEvent = <T extends Event>(originalEvent: T): T => {
+  const event: Mutable<T> = {} as Mutable<T>;
 
   // Copy all properties from the original event
   for (const name in originalEvent) {
@@ -24,9 +28,15 @@ const clone = <T extends Event>(originalEvent: T): T => {
     event.composedPath = () => originalEvent.composedPath!();
   }
 
-  return event as T;
+  // The preventDefault can't be cloned, so delegate instead
+  event.preventDefault = () => {
+    originalEvent.preventDefault();
+    event.defaultPrevented = true;
+  };
+
+  return event;
 };
 
 export const makeInputEvent = <A extends InputEvent>(name: 'beforeinput' | 'input', overrides: { [K in keyof A]?: A[K] }): InputEvent => {
-  return { ...clone(new InputEvent(name)), ...overrides };
+  return { ...cloneEvent(new InputEvent(name, { cancelable: true })), ...overrides };
 };

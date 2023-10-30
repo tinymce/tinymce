@@ -48,7 +48,7 @@ export interface RenderInfo {
     readonly getMothership: () => Gui.GuiSystem;
     readonly backstage: Backstage.UiFactoryBackstage;
   };
-  readonly renderUI: () => Promise<ModeRenderInfo>;
+  readonly renderUI: () => ModeRenderInfo;
 }
 
 export type ToolbarConfig = Array<string | Options.ToolbarGroupOption> | string | boolean;
@@ -484,7 +484,7 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
     editor.addQueryStateHandler('ToggleToolbarDrawer', () => OuterContainer.isToolbarDrawerToggled(outerContainer));
   };
 
-  const renderUIWithRefs = (uiRefs: ReadyUiReferences): Promise<ModeRenderInfo> => {
+  const renderUIWithRefs = (uiRefs: ReadyUiReferences): ModeRenderInfo => {
     const { mainUi, popupUi, uiMotherships } = uiRefs;
     Obj.map(Options.getToolbarGroups(editor), (toolbarGroupButtonConfig, name) => {
       editor.ui.registry.addGroupToolbarButton(name, toolbarGroupButtonConfig);
@@ -530,7 +530,7 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
     return dialogUi;
   };
 
-  const renderUI = (): Promise<ModeRenderInfo> => {
+  const renderUI = (): ModeRenderInfo => {
     const mainUi = renderMainUi();
     const dialogUi = renderDialogUi();
     // If dialogUi and popupUi are the same, LazyUiReferences should handle deduplicating then

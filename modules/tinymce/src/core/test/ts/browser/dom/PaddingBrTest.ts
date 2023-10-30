@@ -3,9 +3,11 @@ import { describe, it } from '@ephox/bedrock-client';
 import { Html, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
+import Schema from 'tinymce/core/api/html/Schema';
 import * as PaddingBr from 'tinymce/core/dom/PaddingBr';
 
 describe('browser.tinymce.core.dom.PaddingBrTest', () => {
+  const baseSchema = Schema();
 
   const testRemoveTrailingBr = (label: string, inputHtml: string, expectedHtml: string) => {
     const elm = SugarElement.fromHtml(inputHtml);
@@ -15,7 +17,7 @@ describe('browser.tinymce.core.dom.PaddingBrTest', () => {
 
   const testTrimBlockTrailingBr = (label: string, inputHtml: string, expectedHtml: string) => {
     const elm = SugarElement.fromHtml(inputHtml);
-    PaddingBr.trimBlockTrailingBr(elm);
+    PaddingBr.trimBlockTrailingBr(elm, baseSchema);
     Assertions.assertHtml(label, expectedHtml, Html.getOuter(elm));
   };
 

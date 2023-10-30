@@ -11,7 +11,7 @@ const backspaceDelete = (editor: Editor, forward: boolean): Optional<() => void>
   const position = BlockMergeBoundary.read(rootNode.dom, forward, editor.selection.getRng())
     .map((blockBoundary) =>
       () => {
-        MergeBlocks.mergeBlocks(rootNode, forward, blockBoundary.from.block, blockBoundary.to.block)
+        MergeBlocks.mergeBlocks(rootNode, forward, blockBoundary.from.block, blockBoundary.to.block, editor.schema)
           .each((pos) => {
             editor.selection.setRng(pos.toRange());
           });
