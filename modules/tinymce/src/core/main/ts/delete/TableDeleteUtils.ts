@@ -24,8 +24,8 @@ const getTable = (node: Node, isRoot: IsRootFn) => TableCellSelection.getClosest
 
 const selectionInTableWithNestedTable = (details: TableSelectionDetails): TableSelectionDetails => {
   return Optionals.lift2(details.startTable, details.endTable, (startTable, endTable) => {
-    const isStartTableParentOfEndTable = PredicateExists.descendant(startTable, (t) => Compare.eq(t, endTable)) && !details.isSameTable;
-    const isEndTableParentOfStartTable = PredicateExists.descendant(endTable, (t) => Compare.eq(t, startTable)) && !details.isSameTable;
+    const isStartTableParentOfEndTable = PredicateExists.descendant(startTable, (t) => Compare.eq(t, endTable));
+    const isEndTableParentOfStartTable = PredicateExists.descendant(endTable, (t) => Compare.eq(t, startTable));
 
     return !isStartTableParentOfEndTable && !isEndTableParentOfStartTable ? details : {
       ...details,
