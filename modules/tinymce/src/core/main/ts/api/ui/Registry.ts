@@ -86,8 +86,8 @@ const registry = (): Registry.Registry => {
     addContextToolbar: bridge.addContextToolbar,
 
     /**
-     * Registers a new SVG icon, the icon name reference can be configured by any
-     * TinyMCE 5 Ui components that can display an icon. The icon is only available
+     * Registers a new SVG icon. The icon name reference can be configured by any
+     * TinyMCE UI components that can display an icon. The icon is only available
      * to the editor instance it was configured for.
      *
      * @method addIcon
