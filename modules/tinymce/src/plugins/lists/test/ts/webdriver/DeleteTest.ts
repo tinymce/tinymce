@@ -15,10 +15,6 @@ describe('webdriver.tinymce.plugins.lists.DeleteTest', () => {
   context('backspace and delete', () => {
     it('TINY-10289: backspace from a `p` after an `ol` or delete from the last `li` inside the `ol` should merge the `p` inside the `li`', async () => {
       const editor = hook.editor();
-      editor.on('keyup keydown', (e) => {
-        // eslint-disable-next-line no-console
-        console.log('e: ', e.isDefaultPrevented());
-      });
 
       const initialContent = '<ol>' +
           '<li>' +
