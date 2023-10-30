@@ -1,7 +1,7 @@
-import { ApproxStructure, Keys } from '@ephox/agar';
+import { ApproxStructure, Assertions, Keys } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinyDom, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -279,6 +279,32 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
           TinyContentActions.keystroke(editor, key());
           TinyAssertions.assertCursor(editor, [ 0 ], 0);
           TinyAssertions.assertContent(editor, initialContent);
+        });
+      });
+
+      it(`TINY-10010: should not delete empty CET in a table cell and noneditable root when ${label} is pressed`, () => {
+        TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
+          const initialContent = `
+            <table style="border-collapse: collapse; width: 100%;" border="1">
+              <tbody>
+              <tr>
+                <td>
+                  <div contenteditable="true" style="border: 2px solid red"></div>
+                </td>
+                <td>&nbsp;</td>
+              </tr>
+              </tbody>
+            </table>`;
+          editor.setContent(initialContent);
+          TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+          TinyContentActions.keystroke(editor, key());
+          Assertions.assertPresence(
+            'empty CET should not be deleted from the table cell',
+            {
+              'td div[contenteditable="true"]': 1,
+            },
+            TinyDom.body(editor)
+          );
         });
       });
 

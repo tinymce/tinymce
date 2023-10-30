@@ -1,10 +1,11 @@
 import { UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
-import { TinyAssertions, TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Plugin from 'tinymce/plugins/lists/Plugin';
+import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
+import ListPlugin from 'tinymce/plugins/lists/Plugin';
 
 describe('browser.tinymce.plugins.advlist.NoneditableRootTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
@@ -13,21 +14,21 @@ describe('browser.tinymce.plugins.advlist.NoneditableRootTest', () => {
     contextmenu: 'lists',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin ], true);
+  }, [ ListPlugin, AdvListPlugin ], true);
 
   context('List ui controls', () => {
     const initialListContent = '<ol><li>a</li></ol>';
     const setupEditor = (editor: Editor) => {
       editor.setContent(initialListContent);
-      TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
     };
 
     it('TINY-9458: List buttons numlist/bullist should be disabled', () => {
       TinyState.withNoneditableRootEditor<Editor>(hook.editor(), (editor) => {
         setupEditor(editor);
 
-        UiFinder.exists(SugarBody.body(), 'div[title="Numbered list"][aria-disabled="true"]');
-        UiFinder.exists(SugarBody.body(), 'div[title="Bullet list"][aria-disabled="true"]');
+        UiFinder.exists(TinyDom.container(editor), 'div[title="Numbered list"][aria-disabled="true"]');
+        UiFinder.exists(TinyDom.container(editor), 'div[title="Bullet list"][aria-disabled="true"]');
       });
     });
 

@@ -1,4 +1,4 @@
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyParts, Receiving } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyParts, Receiving, Reflecting } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Id, Obj, Optional, Singleton, Type } from '@ephox/katamari';
 import { DomEvent, EventUnbinder, SelectorFind, SugarElement } from '@ephox/sugar';
@@ -7,9 +7,9 @@ import Editor from 'tinymce/core/api/Editor';
 import URI from 'tinymce/core/api/util/URI';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
-import { bodySendMessageChannel } from './DialogChannels';
+import { bodySendMessageChannel, dialogChannel } from './DialogChannels';
 import { renderIframeBody } from './SilverDialogBody';
-import { DialogSpec, getEventExtras, getHeader, renderModalDialog, SharedWindowExtra } from './SilverDialogCommon';
+import * as SilverDialogCommon from './SilverDialogCommon';
 import * as SilverDialogEvents from './SilverDialogEvents';
 import { renderModalFooter } from './SilverDialogFooter';
 import { getUrlDialogApi } from './SilverUrlDialogInstanceApi';
@@ -50,9 +50,9 @@ const handleMessage = (editor: Editor, api: Dialog.UrlDialogInstanceApi, data: a
   }
 };
 
-const renderUrlDialog = (internalDialog: Dialog.UrlDialog, extra: SharedWindowExtra, editor: Editor, backstage: UiFactoryBackstage): RenderedUrlDialog => {
+const renderUrlDialog = (internalDialog: Dialog.UrlDialog, extra: SilverDialogCommon.SharedWindowExtra, editor: Editor, backstage: UiFactoryBackstage): RenderedUrlDialog => {
   const dialogId = Id.generate('dialog');
-  const header = getHeader(internalDialog.title, dialogId, backstage);
+  const header = SilverDialogCommon.getHeader(internalDialog.title, dialogId, backstage);
   const body = renderIframeBody(internalDialog);
   const footer = internalDialog.buttons.bind((buttons) => {
     // Don't render a footer if no buttons are specified
@@ -65,7 +65,7 @@ const renderUrlDialog = (internalDialog: Dialog.UrlDialog, extra: SharedWindowEx
 
   const dialogEvents = SilverDialogEvents.initUrlDialog(
     () => instanceApi,
-    getEventExtras(() => dialog, backstage.shared.providers, extra)
+    SilverDialogCommon.getEventExtras(() => dialog, backstage.shared.providers, extra)
   );
 
   // Add the styles for the modal width/height
@@ -82,8 +82,18 @@ const renderUrlDialog = (internalDialog: Dialog.UrlDialog, extra: SharedWindowEx
   const iframeDomain = `${iframeUri.protocol}://${iframeUri.host}${iframeUri.port ? ':' + iframeUri.port : ''}`;
   const messageHandlerUnbinder = Singleton.unbindable<EventUnbinder>();
 
+  const updateState = (_comp: AlloyComponent, incoming: Dialog.UrlDialog) => Optional.some(incoming);
+
   // Setup the behaviours for dealing with messages between the iframe and current window
   const extraBehaviours = [
+    // Because this doesn't define `renderComponents`, all this does is update the state.
+    // We use the state for the initialData. The other parts (body etc.) render the
+    // components based on what reflecting receives.
+    Reflecting.config({
+      channel: `${dialogChannel}-${dialogId}`,
+      updateState,
+      initialData: internalDialog
+    }),
     AddEventsBehaviour.config('messages', [
       // When the dialog is opened, bind a window message listener for the spec url
       AlloyEvents.runOnAttached(() => {
@@ -123,7 +133,7 @@ const renderUrlDialog = (internalDialog: Dialog.UrlDialog, extra: SharedWindowEx
     })
   ];
 
-  const spec: DialogSpec = {
+  const spec: SilverDialogCommon.DialogSpec = {
     id: dialogId,
     header,
     body,
@@ -133,7 +143,7 @@ const renderUrlDialog = (internalDialog: Dialog.UrlDialog, extra: SharedWindowEx
     extraStyles: styles
   };
 
-  const dialog = renderModalDialog(spec, internalDialog, dialogEvents, backstage);
+  const dialog = SilverDialogCommon.renderModalDialog(spec, dialogEvents, backstage);
 
   const instanceApi = getUrlDialogApi(dialog);
 

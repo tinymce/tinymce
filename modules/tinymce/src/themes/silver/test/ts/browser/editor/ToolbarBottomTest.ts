@@ -47,11 +47,11 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
         toolbar: 'styles'
       },
       initial: [{
-        clickOn: 'button[title="Formats"]',
+        clickOn: 'button[title^="Formats"]',
         waitFor: 'div[role="menu"]'
       }],
       assertAbove: 'div[role="menu"]',
-      assertBelow: 'button[title="Formats"]'
+      assertBelow: 'button[title^="Formats"]'
     }));
 
     it('SplitButton menu should open above button', () => pTest({
@@ -107,12 +107,12 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
           clickOn: 'button[title="Reveal or hide additional toolbar items"]',
           waitFor: '.tox-toolbar__overflow'
         }, {
-          clickOn: 'button[title="Align"]',
+          clickOn: 'button[title^="Align"]',
           waitFor: 'div[role="menu"]'
         }
       ],
       assertAbove: 'div[role="menu"]',
-      assertBelow: 'button[title="Align"]'
+      assertBelow: 'button[title^="Align"]'
     }));
 
     it('Menubar menu should open above button', () => pTest({

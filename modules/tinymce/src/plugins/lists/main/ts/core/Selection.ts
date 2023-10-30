@@ -1,4 +1,5 @@
 import { Arr, Optional, Type } from '@ephox/katamari';
+import { SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Schema from 'tinymce/core/api/html/Schema';
@@ -67,6 +68,12 @@ const getClosestListHost = (editor: Editor, elm: Node): HTMLElement => {
   return parentBlock.getOr(editor.getBody());
 };
 
+const isListInsideAnLiWithFirstAndLastNotListElement = (list: SugarElement<Node>): boolean =>
+  Traverse.parent(list).exists((parent) => NodeType.isListItemNode(parent.dom)
+    && Traverse.firstChild(parent).exists((firstChild) => !NodeType.isListNode(firstChild.dom))
+    && Traverse.lastChild(parent).exists((lastChild) => !NodeType.isListNode(lastChild.dom))
+  );
+
 const findLastParentListNode = (editor: Editor, elm: Element): Optional<HTMLOListElement | HTMLUListElement> => {
   const parentLists = editor.dom.getParents<HTMLOListElement | HTMLUListElement>(elm, 'ol,ul', getClosestListHost(editor, elm));
   return Arr.last(parentLists);
@@ -79,9 +86,18 @@ const getSelectedLists = (editor: Editor): Array<HTMLOListElement | HTMLUListEle
   return firstList.toArray().concat(subsequentLists);
 };
 
+const getParentLists = (editor: Editor) => {
+  const elm = editor.selection.getStart();
+  return editor.dom.getParents<HTMLOListElement | HTMLUListElement>(elm, 'ol,ul', getClosestListHost(editor, elm));
+};
+
 const getSelectedListRoots = (editor: Editor): HTMLElement[] => {
   const selectedLists = getSelectedLists(editor);
-  return getUniqueListRoots(editor, selectedLists);
+  const parentLists = getParentLists(editor);
+  return Arr.find(parentLists, (p) => isListInsideAnLiWithFirstAndLastNotListElement(SugarElement.fromDom(p))).fold(
+    () => getUniqueListRoots(editor, selectedLists),
+    (l) => [ l ]
+  );
 };
 
 const getUniqueListRoots = (editor: Editor, lists: HTMLElement[]): HTMLElement[] => {

@@ -16,18 +16,21 @@ export const makeSchema = (type: SchemaType): SchemaLookupTable => {
   const { globalAttributes, phrasingContent, flowContent } = SchemaElementSets.getElementSetsAsStrings(type);
   const schema: SchemaLookupTable = {};
 
+  const addElement = (name: string, attributes: string[], children: string[]) => {
+    schema[name] = {
+      attributes: Arr.mapToObject(attributes, Fun.constant({})),
+      attributesOrder: attributes,
+      children: Arr.mapToObject(children, Fun.constant({}))
+    };
+  };
+
   const add = (name: string, attributes: string = '', children: string = '') => {
     const childNames = SchemaUtils.split(children);
     const names = SchemaUtils.split(name);
     let ni = names.length;
+    const allAttributes = SchemaUtils.split([ globalAttributes, attributes ].join(' '));
     while (ni--) {
-      const attributesOrder = SchemaUtils.split([ globalAttributes, attributes ].join(' '));
-
-      schema[names[ni]] = {
-        attributes: Arr.mapToObject(attributesOrder, Fun.constant({})),
-        attributesOrder,
-        children: Arr.mapToObject(childNames, Fun.constant({}))
-      };
+      addElement(names[ni], allAttributes.slice(), childNames);
     }
   };
 
@@ -116,7 +119,8 @@ export const makeSchema = (type: SchemaType): SchemaLookupTable => {
     add('wbr');
     add('ruby', '', [ phrasingContent, 'rt rp' ].join(' '));
     add('figcaption', '', flowContent);
-    add('mark rt rp summary bdi', '', phrasingContent);
+    add('mark rt rp bdi', '', phrasingContent);
+    add('summary', '', [ phrasingContent, 'h1 h2 h3 h4 h5 h6' ].join(' '));
     add('canvas', 'width height', flowContent);
     add('video', 'src crossorigin poster preload autoplay mediagroup loop ' +
       'muted controls width height buffered', [ flowContent, 'track source' ].join(' '));
@@ -137,6 +141,9 @@ export const makeSchema = (type: SchemaType): SchemaLookupTable => {
     add('meter', 'value min max low high optimum', phrasingContent);
     add('details', 'open', [ flowContent, 'summary' ].join(' '));
     add('keygen', 'autofocus challenge disabled form keytype name');
+
+    // SVGs only support a subset of the global attributes
+    addElement('svg', 'id tabindex lang xml:space class style x y width height viewBox preserveAspectRatio zoomAndPan transform'.split(' '), []);
   }
 
   // Extend with HTML4 attributes unless it's html5-strict

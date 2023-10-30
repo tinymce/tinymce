@@ -4,6 +4,7 @@ import { Optional } from '@ephox/katamari';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
+import Schema from 'tinymce/core/api/html/Schema';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as MergeBlocks from 'tinymce/core/delete/MergeBlocks';
 
@@ -14,6 +15,8 @@ describe('browser.tinymce.core.delete.MergeBlocksTest', () => {
 
   const setHtml = viewBlock.update;
 
+  const baseSchema = Schema();
+
   const assertHtml = (expectedHtml: string) => {
     Assertions.assertHtml('Should equal html', expectedHtml, viewBlock.get().innerHTML);
   };
@@ -21,7 +24,7 @@ describe('browser.tinymce.core.delete.MergeBlocksTest', () => {
   const mergeBlocks = (forward: boolean, block1Path: number[], block2Path: number[]) => {
     const block1 = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), block1Path).getOrDie() as SugarElement<Element>;
     const block2 = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), block2Path).getOrDie() as SugarElement<Element>;
-    return MergeBlocks.mergeBlocks(SugarElement.fromDom(viewBlock.get()), forward, block1, block2);
+    return MergeBlocks.mergeBlocks(SugarElement.fromDom(viewBlock.get()), forward, block1, block2, baseSchema);
   };
 
   const assertPosition = (position: Optional<CaretPosition>, expectedPath: number[], expectedOffset: number) => {

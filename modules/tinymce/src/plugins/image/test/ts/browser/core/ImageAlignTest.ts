@@ -116,9 +116,9 @@ describe('browser.tinymce.plugins.image.ImageAlignTest', () => {
     // Justify is the default for figures so it never gets highlighted
     const ariaPressed = isFigure && !isSelectAll && alignment === 'justify' ? 'false' : 'true';
 
-    await TinyUiActions.pWaitForUi(editor, `button[aria-label="${ariaLabel}"][aria-pressed="${ariaPressed}"]`);
+    await TinyUiActions.pWaitForUi(editor, `button[aria-label="${ariaLabel}"][aria-pressed="${ariaPressed}"]:not(.tox-tbtn--select)`);
     await Arr.foldl(otherLabels, (p, label) => p.then(async () => {
-      await TinyUiActions.pWaitForUi(editor, `button[aria-label="${label}"][aria-pressed="false"]`);
+      await TinyUiActions.pWaitForUi(editor, `button[aria-label="${label}"][aria-pressed="false"]:not(.tox-tbtn--select)`);
     }), Promise.resolve());
   };
 
@@ -131,7 +131,7 @@ describe('browser.tinymce.plugins.image.ImageAlignTest', () => {
     };
     const ariaLabel = ariaLabels[alignment];
 
-    TinyUiActions.clickOnToolbar(editor, `button[aria-label="Align"]`);
+    TinyUiActions.clickOnToolbar(editor, `button[aria-label^="Align"].tox-tbtn--select`);
     await TinyUiActions.pWaitForUi(editor, `div[title="${ariaLabel}"]`);
     TinyUiActions.clickOnUi(editor, `div[title="${ariaLabel}"]`);
   };
@@ -144,7 +144,7 @@ describe('browser.tinymce.plugins.image.ImageAlignTest', () => {
       justify: 'Justify'
     };
     const ariaLabel = ariaLabels[alignment];
-    TinyUiActions.clickOnToolbar(editor, `button[aria-label="${ariaLabel}"]`);
+    TinyUiActions.clickOnToolbar(editor, `button[aria-label="${ariaLabel}"]:not(.tox-tbtn--select)`);
     return Promise.resolve();
   };
 

@@ -36,9 +36,6 @@ const isElementDirectlySelected = (dom: DOMUtils, node: Node): boolean => {
   }
 };
 
-const isEditable = (elm: HTMLElement): boolean =>
-  elm.isContentEditable === true;
-
 // TODO: TINY-9130 Look at making SelectionUtils.preserve maintain the noneditable selection instead
 const preserveSelection = (editor: Editor, action: () => void, shouldMoveStart: (startNode: Node) => boolean): void => {
   const { selection, dom } = editor;
@@ -313,7 +310,6 @@ const shouldExpandToSelector = (format: Format): boolean =>
 export {
   isNode,
   isElementNode,
-  isEditable,
   preserveSelection,
   getNonWhiteSpaceSibling,
   isTextBlock,

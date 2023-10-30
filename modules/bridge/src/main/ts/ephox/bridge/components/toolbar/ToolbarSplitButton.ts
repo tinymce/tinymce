@@ -47,6 +47,7 @@ export interface ToolbarSplitButtonInstanceApi {
   setIconFill: (id: string, value: string) => void;
   isActive: () => boolean;
   setActive: (state: boolean) => void;
+  setTooltip: (tooltip: string) => void;
   setText: (text: string) => void;
   setIcon: (icon: string) => void;
 }

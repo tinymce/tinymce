@@ -28,7 +28,7 @@ const getBusySpec = (providerBackstage: UiFactoryBackstageProviders) => (_root: 
 });
 
 const focusBusyComponent = (throbber: AlloyComponent): void =>
-  Composing.getCurrent(throbber).each((comp) => Focus.focus(comp.element));
+  Composing.getCurrent(throbber).each((comp) => Focus.focus(comp.element, true));
 
 // When the throbber is enabled, prevent the iframe from being part of the sequential keyboard navigation when Tabbing
 // TODO: TINY-7500 Only works for iframe mode at this stage

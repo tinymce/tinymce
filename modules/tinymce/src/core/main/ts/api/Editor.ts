@@ -1054,8 +1054,13 @@ class Editor implements EditorObservable {
       elm === 'link' ||
       (Type.isObject(elm) && (elm as HTMLElement).nodeName === 'LINK') ||
       url.indexOf('file:') === 0 ||
-      url.length === 0
-    ) {
+      url.length === 0 ) {
+      return url;
+    }
+
+    const urlObject = new URI(url);
+
+    if (urlObject.protocol !== 'http' && urlObject.protocol !== 'https' && urlObject.protocol !== '') {
       return url;
     }
 
