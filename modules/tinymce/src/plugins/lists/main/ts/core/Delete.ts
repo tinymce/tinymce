@@ -171,7 +171,7 @@ const backspaceDeleteFromListToListCaret = (editor: Editor, isForward: boolean):
 
     const rng = ListRangeUtils.normalizeRange(selection.getRng());
     const otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward, root), 'LI', root) as HTMLLIElement;
-    const willMergeParentIntoChild = li && otherLi && (isForward ? dom.isChildOf(li, otherLi) : dom.isChildOf(otherLi, li));
+    const willMergeParentIntoChild = otherLi && (isForward ? dom.isChildOf(li, otherLi) : dom.isChildOf(otherLi, li));
 
     if (otherLi && otherLi !== li && !willMergeParentIntoChild) {
       editor.undoManager.transact(() => {
