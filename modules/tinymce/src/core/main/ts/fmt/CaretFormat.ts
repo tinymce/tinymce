@@ -1,4 +1,4 @@
-import { Arr, Fun, Obj, Optional, Strings, Unicode } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Strings, Type, Unicode } from '@ephox/katamari';
 import { Attribute, Insert, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
@@ -84,12 +84,12 @@ const trimZwspFromCaretContainer = (caretContainerNode: Node) => {
 
   return textNode;
 };
-
-const removeCaretContainerNode = (editor: Editor, node: Node, moveCaret: boolean = true) => {
+// TODO: Can we us InlineFormatDelete.ts instead
+const removeCaretContainerNode = (editor: Editor, node: Node, moveCaret: boolean) => {
   const dom = editor.dom, selection = editor.selection;
 
   if (isCaretContainerEmpty(node)) {
-    DeleteElement.deleteElement(editor, false, SugarElement.fromDom(node), moveCaret);
+    DeleteElement.deleteElement(editor, false, SugarElement.fromDom(node), moveCaret, true);
   } else {
     const rng = selection.getRng();
     const block = dom.getParent(node, dom.isBlock);
@@ -121,7 +121,7 @@ const removeCaretContainerNode = (editor: Editor, node: Node, moveCaret: boolean
 };
 
 // Removes the caret container for the specified node or all on the current document
-const removeCaretContainer = (editor: Editor, node: Node | null, moveCaret: boolean = true) => {
+const removeCaretContainer = (editor: Editor, node: Node | null, moveCaret: boolean) => {
   const dom = editor.dom, selection = editor.selection;
   if (!node) {
     node = getParentCaretContainer(editor.getBody(), selection.getStart());
@@ -250,7 +250,6 @@ const removeCaretFormat = (editor: Editor, name: string, vars?: FormatVars, simi
   const dom = editor.dom;
   const selection = editor.selection;
   let hasContentAfter = false;
-  let hasContentBefore = false;
 
   const formatList = editor.formatter.get(name);
   if (!formatList) {
@@ -270,45 +269,20 @@ const removeCaretFormat = (editor: Editor, name: string, vars?: FormatVars, simi
     node = node.parentNode;
   }
 
-  if (offset > 1 || (NodeType.isText(container) && container.parentElement?.localName === 'p')) {
-    hasContentBefore = true;
-  }
   const parents: Node[] = [];
-  let noMatch = true;
   let formatNode: Element | undefined;
-
-  if (hasContentBefore) {
-    while (node) {
-      if (MatchFormat.matchNode(editor, node, name, vars, similar)) {
-        formatNode = node as Element;
-        break;
-      }
-
-      if (node.nextSibling) {
-        hasContentAfter = true;
-      }
-
-      parents.push(node);
-      node = node.parentNode;
+  while (node) {
+    if (MatchFormat.matchNode(editor, node, name, vars, similar)) {
+      formatNode = node as Element;
+      break;
     }
-  } else {
-    while (node && (isFormatElement(editor, SugarElement.fromDom(node)) || isFormatCaret(editor, SugarElement.fromDom(node)))) {
-      if (MatchFormat.matchNode(editor, node, name, vars, similar)) {
-        if (noMatch) {
-          formatNode = node as Element;
-          noMatch = false;
-        }
-      } else {
-        if (node.nextSibling && noMatch) {
-          hasContentAfter = true;
-        }
-        if (!isFormatCaret(editor, SugarElement.fromDom(node))) {
-          parents.push(node);
-        }
-      }
 
-      node = node.parentNode;
+    if (node.nextSibling) {
+      hasContentAfter = true;
     }
+
+    parents.push(node);
+    node = node.parentNode;
   }
 
   // Node doesn't have the specified format
@@ -333,14 +307,17 @@ const removeCaretFormat = (editor: Editor, name: string, vars?: FormatVars, simi
     selection.moveToBookmark(bookmark);
   } else {
     const caretContainer = getParentCaretContainer(editor.getBody(), formatNode);
+    // TODO: Verify is this will always return true
+    const isCollapsedInCaretContainer = Type.isNonNullable(caretContainer) && editor.selection.isCollapsed();
+    const parentsAfter = isCollapsedInCaretContainer ? dom.getParents(formatNode.parentNode, Fun.always, caretContainer) : [];
     const newCaretContainer = createCaretContainer(false).dom;
 
     insertCaretContainerNode(editor, newCaretContainer, caretContainer ?? formatNode);
 
     const cleanedFormatNode = cleanFormatNode(editor, newCaretContainer, formatNode, name, vars, similar);
-    const caretTextNode = insertFormatNodesIntoCaretContainer(parents.concat(cleanedFormatNode.toArray()), newCaretContainer);
+    const caretTextNode = insertFormatNodesIntoCaretContainer(parents.concat(cleanedFormatNode.toArray()).concat(parentsAfter), newCaretContainer);
     if (caretContainer) {
-      removeCaretContainerNode(editor, caretContainer, false);
+      removeCaretContainerNode(editor, caretContainer, isCollapsedInCaretContainer);
     }
     selection.setCursorLocation(caretTextNode, 1);
 
@@ -357,12 +334,12 @@ const disableCaretContainer = (editor: Editor, keyCode: number, moveCaret: boole
 
   // Remove caret container if it's empty
   if ((keyCode === 8 || keyCode === 46) && selection.isCollapsed() && selection.getStart().innerHTML === ZWSP) {
-    removeCaretContainer(editor, getParentCaretContainer(body, selection.getStart()));
+    removeCaretContainer(editor, getParentCaretContainer(body, selection.getStart()), true);
   }
 
   // Remove caret container on keydown and it's left/right arrow keys
   if (keyCode === 37 || keyCode === 39) {
-    removeCaretContainer(editor, getParentCaretContainer(body, selection.getStart()));
+    removeCaretContainer(editor, getParentCaretContainer(body, selection.getStart()), true);
   }
 };
 
