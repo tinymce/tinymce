@@ -3,8 +3,10 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as MenuUtils from '../../../module/MenuUtils';
 
@@ -30,7 +32,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
   const pAssertFocusOnAlignToolbarButton = () => FocusTools.pTryOnSelector(
     'Focus should be on Align',
     SugarDocument.getDocument(),
-    '.tox-toolbar__group button[aria-label="Align"]'
+    '.tox-toolbar__group button[aria-label^="Align"].tox-tbtn--select'
   );
 
   const assertItemTicks = (label: string, expectedTicks: boolean[]) => {
@@ -74,232 +76,283 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
     (text) => MenuUtils.pOpenMenu('', text)
   );
 
-  it('TBA: Checking alignment ticks and updating', async () => {
+  let eventCount = 0;
+  let lastEventValue = '';
+  const testWithEvents = (eventName: string, testFn: (editor: Editor) => Promise<void>) => async () => {
+    const eventTester = (e: EditorEvent<{ value: string }>) => {
+      eventCount++;
+      lastEventValue = e.value;
+    };
+
+    eventCount = 0;
+    lastEventValue = '';
     const editor = hook.editor();
-    editor.setContent('<p>First paragraph</p><p>Second paragraph</p>');
-    TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
-    await MenuUtils.pOpenAlignMenu('Align');
-    await pAssertFocusOnItem('Left');
-    TinyUiActions.keydown(editor, Keys.down());
-    await pAssertFocusOnItem('Center');
-    TinyUiActions.keydown(editor, Keys.enter());
-    UiFinder.notExists(SugarBody.body(), '[role="menu"]');
+    editor.on(eventName, eventTester);
+    await testFn(editor);
+    editor.off(eventName, eventTester);
+  };
 
-    await pCheckAlignItemsAtLocation(
-      'First paragraph after "centering"',
-      editor,
-      [ false, true, false, false ],
-      'Center',
-      [ 0, 0 ], 'Fi'.length
-    );
+  const assertNoEvent = () => {
+    assert.equal(eventCount, 0);
+    assert.equal(lastEventValue, '');
+  };
 
-    await pCheckAlignItemsAtLocation(
-      'Second paragraph with no set alignment',
-      editor,
-      [ false, false, false, false ],
-      'Align',
-      [ 1, 0 ], 'Se'.length
-    );
+  const assertEvent = (count: number, value: string) => {
+    assert.equal(eventCount, count);
+    assert.equal(lastEventValue, value);
+  };
 
-    await pCheckAlignItemsAtLocation(
-      'First paragraph with the alignment set to "center" previously',
-      editor,
-      [ false, true, false, false ],
-      'Center',
-      [ 0, 0 ], 'Fi'.length
-    );
-  });
+  it('TBA: Checking alignment ticks and updating',
+    testWithEvents('AlignTextUpdate', async (editor) => {
+      editor.setContent('<p>First paragraph</p><p>Second paragraph</p>');
+      assertNoEvent();
+      TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
+      assertEvent(1, 'left');
+      await MenuUtils.pOpenAlignMenu('Align');
+      assertEvent(2, 'left');
+      await pAssertFocusOnItem('Left');
+      TinyUiActions.keydown(editor, Keys.down());
+      await pAssertFocusOnItem('Center');
+      assertEvent(2, 'left');
+      TinyUiActions.keydown(editor, Keys.enter());
+      assertEvent(8, 'center');
+      UiFinder.notExists(SugarBody.body(), '[role="menu"]');
 
-  it('TBA: Checking fontfamily ticks and updating', async () => {
-    const editor = hook.editor();
-    editor.setContent('<p>First paragraph</p><p>Second paragraph</p>');
-    TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
-    await MenuUtils.pOpenMenu('FontSelect', 'Verdana');
-    await pAssertFocusOnItem('Andale Mono');
-    TinyUiActions.keydown(editor, Keys.enter());
-    UiFinder.notExists(SugarBody.body(), '[role="menu"]');
+      await pCheckAlignItemsAtLocation(
+        'First paragraph after "centering"',
+        editor,
+        [ false, true, false, false ],
+        'Center',
+        [ 0, 0 ], 'Fi'.length
+      );
 
-    await pCheckItemsAtLocation(
-      'First paragraph after "Andale Mono"',
-      editor,
-      [ true ].concat(Arr.range(16, Fun.never)),
-      'Andale Mono',
-      [ 0, 0, 0 ], 'Fi'.length
-    );
+      await pCheckAlignItemsAtLocation(
+        'Second paragraph with no set alignment',
+        editor,
+        [ false, false, false, false ],
+        'Align',
+        [ 1, 0 ], 'Se'.length
+      );
 
-    await pCheckItemsAtLocation(
-      'Second paragraph with no set font',
-      editor,
-      Arr.range<boolean>(14, Fun.never).concat([ true ]).concat(Arr.range(2, Fun.never)),
-      'Verdana',
-      [ 1, 0 ], 'Se'.length
-    );
+      await pCheckAlignItemsAtLocation(
+        'First paragraph with the alignment set to "center" previously',
+        editor,
+        [ false, true, false, false ],
+        'Center',
+        [ 0, 0 ], 'Fi'.length
+      );
+    }));
 
-    await pCheckItemsAtLocation(
-      'First paragraph with the font set to "Andale Mono" previously',
-      editor,
-      [ true ].concat(Arr.range(16, Fun.never)),
-      'Andale Mono',
-      [ 0, 0, 0 ], 'Fi'.length
-    );
-  });
+  it('TBA: Checking fontfamily ticks and updating',
+    testWithEvents('FontFamilyTextUpdate', async (editor) => {
+      editor.setContent('<p>First paragraph</p><p>Second paragraph</p>');
+      assertNoEvent();
+      TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
+      assertEvent(1, 'Verdana');
+      await MenuUtils.pOpenMenu('FontSelect', 'Verdana');
+      assertEvent(2, 'Verdana');
+      await pAssertFocusOnItem('Andale Mono');
+      assertEvent(2, 'Verdana');
+      TinyUiActions.keydown(editor, Keys.enter());
+      assertEvent(4, 'Andale Mono');
+      UiFinder.notExists(SugarBody.body(), '[role="menu"]');
 
-  it('TBA: Checking fontsize ticks and updating', async () => {
-    const editor = hook.editor();
-    editor.setContent('<p>First paragraph</p><p>Second paragraph</p>');
-    TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
-    await MenuUtils.pOpenMenu('FontSelect', '12pt'); // This might be fragile.
-    await pAssertFocusOnItem('8pt');
-    TinyUiActions.keydown(editor, Keys.enter());
-    UiFinder.notExists(SugarBody.body(), '[role="menu"]');
+      await pCheckItemsAtLocation(
+        'First paragraph after "Andale Mono"',
+        editor,
+        [ true ].concat(Arr.range(16, Fun.never)),
+        'Andale Mono',
+        [ 0, 0, 0 ], 'Fi'.length
+      );
 
-    await pCheckItemsAtLocation(
-      'First paragraph after "8pt',
-      editor,
-      [ true ].concat(Arr.range(6, Fun.never)),
-      '8pt',
-      [ 0, 0, 0 ], 'Fi'.length
-    );
+      await pCheckItemsAtLocation(
+        'Second paragraph with no set font',
+        editor,
+        Arr.range<boolean>(14, Fun.never).concat([ true ]).concat(Arr.range(2, Fun.never)),
+        'Verdana',
+        [ 1, 0 ], 'Se'.length
+      );
 
-    await pCheckItemsAtLocation(
-      'Second paragraph with no set font size',
-      editor,
-      Arr.range<boolean>(2, Fun.never).concat([ true ]).concat(Arr.range(4, Fun.never)),
-      '12pt',
-      [ 1, 0 ], 'Se'.length
-    );
+      await pCheckItemsAtLocation(
+        'First paragraph with the font set to "Andale Mono" previously',
+        editor,
+        [ true ].concat(Arr.range(16, Fun.never)),
+        'Andale Mono',
+        [ 0, 0, 0 ], 'Fi'.length
+      );
+    }));
 
-    await pCheckItemsAtLocation(
-      'First paragraph with the font set to "8pt" previously',
-      editor,
-      [ true ].concat(Arr.range(6, Fun.never)),
-      '8pt',
-      [ 0, 0, 0 ], 'Fi'.length
-    );
-  });
+  it('TBA: Checking fontsize ticks and updating',
+    testWithEvents('FontSizeTextUpdate', async (editor) => {
+      editor.setContent('<p>First paragraph</p><p>Second paragraph</p>');
+      assertNoEvent();
+      TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
+      assertEvent(1, '12pt');
+      await MenuUtils.pOpenMenu('FontSelect', '12pt'); // This might be fragile.
+      assertEvent(2, '12pt');
+      await pAssertFocusOnItem('8pt');
+      assertEvent(2, '12pt');
+      TinyUiActions.keydown(editor, Keys.enter());
+      assertEvent(4, '8pt');
+      UiFinder.notExists(SugarBody.body(), '[role="menu"]');
 
-  it('TBA: Checking format ticks and updating', async () => {
-    const editor = hook.editor();
-    editor.setContent('<p>First paragraph</p><p>Second paragraph</p>');
-    TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
-    await MenuUtils.pOpenMenu('Format', 'Paragraph:first');
-    await pAssertFocusOnItem('Paragraph');
-    TinyUiActions.keydown(editor, Keys.down());
-    await pAssertFocusOnItem('Heading 1');
-    TinyUiActions.keydown(editor, Keys.enter());
-    UiFinder.notExists(SugarBody.body(), '[role="menu"]');
+      await pCheckItemsAtLocation(
+        'First paragraph after "8pt',
+        editor,
+        [ true ].concat(Arr.range(6, Fun.never)),
+        '8pt',
+        [ 0, 0, 0 ], 'Fi'.length
+      );
 
-    await pCheckItemsAtLocation(
-      'First block after "h1',
-      editor,
-      [ false, true ].concat(Arr.range(6, Fun.never)),
-      'Heading 1:first',
-      [ 0, 0 ], 'Fi'.length
-    );
+      await pCheckItemsAtLocation(
+        'Second paragraph with no set font size',
+        editor,
+        Arr.range<boolean>(2, Fun.never).concat([ true ]).concat(Arr.range(4, Fun.never)),
+        '12pt',
+        [ 1, 0 ], 'Se'.length
+      );
 
-    await pCheckItemsAtLocation(
-      'Second paragraph with no set format',
-      editor,
-      [ true ].concat(Arr.range(7, Fun.never)),
-      'Paragraph:first',
-      [ 1, 0 ], 'Se'.length
-    );
+      await pCheckItemsAtLocation(
+        'First paragraph with the font set to "8pt" previously',
+        editor,
+        [ true ].concat(Arr.range(6, Fun.never)),
+        '8pt',
+        [ 0, 0, 0 ], 'Fi'.length
+      );
+    }));
 
-    await pCheckItemsAtLocation(
-      'First block with the "h1" set previously',
-      editor,
-      [ false, true ].concat(Arr.range(6, Fun.never)),
-      'Heading 1:first',
-      [ 0, 0 ], 'Fi'.length
-    );
+  it('TBA: Checking format ticks and updating',
+    testWithEvents('BlocksTextUpdate', async (editor) => {
+      editor.setContent('<p>First paragraph</p><p>Second paragraph</p>');
+      assertNoEvent();
+      TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
+      assertEvent(1, 'Paragraph');
+      await MenuUtils.pOpenMenu('Format', 'Paragraph:first');
+      assertEvent(2, 'Paragraph');
+      await pAssertFocusOnItem('Paragraph');
+      TinyUiActions.keydown(editor, Keys.down());
+      await pAssertFocusOnItem('Heading 1');
+      assertEvent(2, 'Paragraph');
+      TinyUiActions.keydown(editor, Keys.enter());
+      assertEvent(5, 'Heading 1');
+      UiFinder.notExists(SugarBody.body(), '[role="menu"]');
 
-    // Check that the menus are working also
-    Mouse.clickOn(SugarBody.body(), '[role="menubar"] [role="menuitem"]:contains("Format")');
-    await pAssertFocusOnItem('Bold');
-    TinyUiActions.keydown(editor, Keys.down());
-    await pAssertFocusOnItem('Italic');
-    TinyUiActions.keydown(editor, Keys.down());
-    await pAssertFocusOnItem('Underline');
-    TinyUiActions.keydown(editor, Keys.down());
-    await pAssertFocusOnItem('Strikethrough');
-    TinyUiActions.keydown(editor, Keys.down());
-    await pAssertFocusOnItem('Superscript');
-    TinyUiActions.keydown(editor, Keys.down());
-    await pAssertFocusOnItem('Subscript');
-    TinyUiActions.keydown(editor, Keys.down());
-    await pAssertFocusOnItem('Code');
-    TinyUiActions.keydown(editor, Keys.down());
-    await pAssertFocusOnItem('Formats');
-    TinyUiActions.keydown(editor, Keys.down());
-    await pAssertFocusOnItem('Blocks');
-    TinyUiActions.keydown(editor, Keys.right());
-    await pAssertFocusOnItem('Paragraph');
-    assertItemTicks('Checking blocks in menu', [ false, true ].concat(Arr.range(6, Fun.never)));
-    TinyUiActions.keyup(editor, Keys.escape());
-    TinyUiActions.keyup(editor, Keys.escape());
-  });
+      await pCheckItemsAtLocation(
+        'First block after "h1',
+        editor,
+        [ false, true ].concat(Arr.range(6, Fun.never)),
+        'Heading 1:first',
+        [ 0, 0 ], 'Fi'.length
+      );
 
-  it('TBA: Checking style ticks and updating', async () => {
-    const editor = hook.editor();
-    editor.setContent('<p>First paragraph</p><p>Second paragraph</p>');
-    TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
-    await MenuUtils.pOpenMenu('Format', 'Paragraph:last');
-    await pAssertFocusOnItem('Headings');
-    TinyUiActions.keydown(editor, Keys.right());
-    await pAssertFocusOnItem('Heading 1');
-    TinyUiActions.keydown(editor, Keys.enter());
-    UiFinder.notExists(SugarBody.body(), '[role="menu"]');
+      await pCheckItemsAtLocation(
+        'Second paragraph with no set format',
+        editor,
+        [ true ].concat(Arr.range(7, Fun.never)),
+        'Paragraph:first',
+        [ 1, 0 ], 'Se'.length
+      );
 
-    await pCheckSubItemsAtLocation('Heading 1')(
-      'First block after "h1',
-      editor,
-      [ true ].concat(Arr.range(5, Fun.never)),
-      'Heading 1:last',
-      [ 0, 0 ], 'Fi'.length
-    );
+      await pCheckItemsAtLocation(
+        'First block with the "h1" set previously',
+        editor,
+        [ false, true ].concat(Arr.range(6, Fun.never)),
+        'Heading 1:first',
+        [ 0, 0 ], 'Fi'.length
+      );
 
-    await pCheckSubItemsAtLocation('Heading 1')(
-      'Second paragraph with no set format',
-      editor,
-      Arr.range(6, Fun.never),
-      'Paragraph:last',
-      [ 1, 0 ], 'Se'.length
-    );
+      // Check that the menus are working also
+      Mouse.clickOn(SugarBody.body(), '[role="menubar"] [role="menuitem"]:contains("Format")');
+      await pAssertFocusOnItem('Bold');
+      TinyUiActions.keydown(editor, Keys.down());
+      await pAssertFocusOnItem('Italic');
+      TinyUiActions.keydown(editor, Keys.down());
+      await pAssertFocusOnItem('Underline');
+      TinyUiActions.keydown(editor, Keys.down());
+      await pAssertFocusOnItem('Strikethrough');
+      TinyUiActions.keydown(editor, Keys.down());
+      await pAssertFocusOnItem('Superscript');
+      TinyUiActions.keydown(editor, Keys.down());
+      await pAssertFocusOnItem('Subscript');
+      TinyUiActions.keydown(editor, Keys.down());
+      await pAssertFocusOnItem('Code');
+      TinyUiActions.keydown(editor, Keys.down());
+      await pAssertFocusOnItem('Formats');
+      TinyUiActions.keydown(editor, Keys.down());
+      await pAssertFocusOnItem('Blocks');
+      TinyUiActions.keydown(editor, Keys.right());
+      await pAssertFocusOnItem('Paragraph');
+      assertItemTicks('Checking blocks in menu', [ false, true ].concat(Arr.range(6, Fun.never)));
+      TinyUiActions.keyup(editor, Keys.escape());
+      TinyUiActions.keyup(editor, Keys.escape());
+    }));
 
-    await pCheckSubItemsAtLocation('Heading 1')(
-      'First block with the "h1" set previously',
-      editor,
-      [ true ].concat(Arr.range(5, Fun.never)),
-      'Heading 1:last',
-      [ 0, 0 ], 'Fi'.length
-    );
+  it('TBA: Checking style ticks and updating',
+    testWithEvents('StylesTextUpdate', async (editor) => {
+      editor.setContent('<p>First paragraph</p><p>Second paragraph</p>');
+      assertNoEvent();
+      TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
+      assertEvent(1, 'Paragraph');
+      await MenuUtils.pOpenMenu('Format', 'Paragraph:last');
+      assertEvent(2, 'Paragraph');
+      await pAssertFocusOnItem('Headings');
+      TinyUiActions.keydown(editor, Keys.right());
+      await pAssertFocusOnItem('Heading 1');
+      assertEvent(2, 'Paragraph');
+      TinyUiActions.keydown(editor, Keys.enter());
+      assertEvent(4, 'Heading 1');
+      UiFinder.notExists(SugarBody.body(), '[role="menu"]');
 
-    // Check that the menus are working also
-    Mouse.clickOn(SugarBody.body(), '[role="menubar"] [role="menuitem"]:contains("Format")');
-    await pAssertFocusOnItem('Bold');
-    TinyUiActions.keydown(editor, Keys.down());
-    await pAssertFocusOnItem('Italic');
-    TinyUiActions.keydown(editor, Keys.down());
-    await pAssertFocusOnItem('Underline');
-    TinyUiActions.keydown(editor, Keys.down());
-    await pAssertFocusOnItem('Strikethrough');
-    TinyUiActions.keydown(editor, Keys.down());
-    await pAssertFocusOnItem('Superscript');
-    TinyUiActions.keydown(editor, Keys.down());
-    await pAssertFocusOnItem('Subscript');
-    TinyUiActions.keydown(editor, Keys.down());
-    await pAssertFocusOnItem('Code');
-    TinyUiActions.keydown(editor, Keys.down());
-    await pAssertFocusOnItem('Formats');
-    TinyUiActions.keydown(editor, Keys.right());
-    await pAssertFocusOnItem('Headings');
-    TinyUiActions.keydown(editor, Keys.right());
-    await pAssertFocusOnItem('Heading 1');
-    assertItemTicks('Checking headings in menu', [ true ].concat(Arr.range(5, Fun.never)));
-    TinyUiActions.keyup(editor, Keys.escape());
-    TinyUiActions.keyup(editor, Keys.escape());
-    TinyUiActions.keyup(editor, Keys.escape());
-  });
+      await pCheckSubItemsAtLocation('Heading 1')(
+        'First block after "h1',
+        editor,
+        [ true ].concat(Arr.range(5, Fun.never)),
+        'Heading 1:last',
+        [ 0, 0 ], 'Fi'.length
+      );
+
+      await pCheckSubItemsAtLocation('Heading 1')(
+        'Second paragraph with no set format',
+        editor,
+        Arr.range(6, Fun.never),
+        'Paragraph:last',
+        [ 1, 0 ], 'Se'.length
+      );
+
+      await pCheckSubItemsAtLocation('Heading 1')(
+        'First block with the "h1" set previously',
+        editor,
+        [ true ].concat(Arr.range(5, Fun.never)),
+        'Heading 1:last',
+        [ 0, 0 ], 'Fi'.length
+      );
+
+      // Check that the menus are working also
+      Mouse.clickOn(SugarBody.body(), '[role="menubar"] [role="menuitem"]:contains("Format")');
+      await pAssertFocusOnItem('Bold');
+      TinyUiActions.keydown(editor, Keys.down());
+      await pAssertFocusOnItem('Italic');
+      TinyUiActions.keydown(editor, Keys.down());
+      await pAssertFocusOnItem('Underline');
+      TinyUiActions.keydown(editor, Keys.down());
+      await pAssertFocusOnItem('Strikethrough');
+      TinyUiActions.keydown(editor, Keys.down());
+      await pAssertFocusOnItem('Superscript');
+      TinyUiActions.keydown(editor, Keys.down());
+      await pAssertFocusOnItem('Subscript');
+      TinyUiActions.keydown(editor, Keys.down());
+      await pAssertFocusOnItem('Code');
+      TinyUiActions.keydown(editor, Keys.down());
+      await pAssertFocusOnItem('Formats');
+      TinyUiActions.keydown(editor, Keys.right());
+      await pAssertFocusOnItem('Headings');
+      TinyUiActions.keydown(editor, Keys.right());
+      await pAssertFocusOnItem('Heading 1');
+      assertItemTicks('Checking headings in menu', [ true ].concat(Arr.range(5, Fun.never)));
+      TinyUiActions.keyup(editor, Keys.escape());
+      TinyUiActions.keyup(editor, Keys.escape());
+      TinyUiActions.keyup(editor, Keys.escape());
+    }));
 
   it('TBA: Checking toolbar keyboard navigation', async () => {
     const editor = hook.editor();
@@ -326,9 +379,9 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
       TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
         editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
         TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
-        UiFinder.exists(SugarBody.body(), `[aria-label="${title}"]:disabled`);
+        UiFinder.exists(SugarBody.body(), `[aria-label^="${title}"]:disabled`);
         TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
-        UiFinder.exists(SugarBody.body(), `[aria-label="${title}"]:not(:disabled)`);
+        UiFinder.exists(SugarBody.body(), `[aria-label^="${title}"]:not(:disabled)`);
       });
     };
 

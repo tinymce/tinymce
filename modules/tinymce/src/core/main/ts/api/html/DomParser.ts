@@ -185,7 +185,8 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
     return false;
   };
 
-  const isBlock = (node: AstNode) => node.name in blockElements || TransparentElements.isTransparentAstBlock(schema, node);
+  const isBlock = (node: AstNode) =>
+    node.name in blockElements || TransparentElements.isTransparentAstBlock(schema, node) || (Namespace.isNonHtmlElementRootName(node.name) && node.parent === root);
 
   const isAtEdgeOfBlock = (node: AstNode, start: boolean): boolean => {
     const neighbour = start ? node.prev : node.next;
