@@ -1,5 +1,5 @@
 import { Optional, Optionals } from '@ephox/katamari';
-import { Compare, SelectorFilter, SugarElement } from '@ephox/sugar';
+import { Compare, PredicateExists, SelectorFilter, SugarElement } from '@ephox/sugar';
 
 import * as TableCellSelection from '../selection/TableCellSelection';
 
@@ -22,23 +22,23 @@ const getTableCells = (table: SugarElement<HTMLTableElement>): SugarElement<HTML
 
 const getTable = (node: Node, isRoot: IsRootFn) => TableCellSelection.getClosestTable(SugarElement.fromDom(node), isRoot);
 
-const selectionInTableWithNestedTable = (details: TableSelectionDetails, rng: Range, isRoot: IsRootFn): TableSelectionDetails => {
-  return Optionals.lift3(details.startTable, details.endTable, getTable(rng.commonAncestorContainer, isRoot), (startTable, endTable, ancestorTable) => {
-    const isStartTableSameAsCommonAncestorTable = Compare.eq(startTable, ancestorTable) && !details.isSameTable;
-    const isEndTableSameAsCommonAncestorTable = Compare.eq(endTable, ancestorTable) && !details.isSameTable;
+const selectionInTableWithNestedTable = (details: TableSelectionDetails): TableSelectionDetails => {
+  return Optionals.lift2(details.startTable, details.endTable, (startTable, endTable) => {
+    const isStartTableParentOfEndTable = PredicateExists.descendant(startTable, (t) => Compare.eq(t, endTable)) && !details.isSameTable;
+    const isEndTableParentOfStartTable = PredicateExists.descendant(endTable, (t) => Compare.eq(t, startTable)) && !details.isSameTable;
 
-    return !isStartTableSameAsCommonAncestorTable && !isEndTableSameAsCommonAncestorTable ? details : {
+    return !isStartTableParentOfEndTable && !isEndTableParentOfStartTable ? details : {
       ...details,
-      startTable: !isStartTableSameAsCommonAncestorTable ? details.startTable : Optional.none(),
-      endTable: !isEndTableSameAsCommonAncestorTable ? details.endTable : Optional.none(),
+      startTable: !isStartTableParentOfEndTable ? details.startTable : Optional.none(),
+      endTable: !isEndTableParentOfStartTable ? details.endTable : Optional.none(),
       isSameTable: false,
       isMultiTable: false
     };
   }).getOr(details);
 };
 
-const adjustQuirksInDetails = (details: TableSelectionDetails, rng: Range, isRoot: IsRootFn): TableSelectionDetails => {
-  return selectionInTableWithNestedTable(details, rng, isRoot);
+const adjustQuirksInDetails = (details: TableSelectionDetails): TableSelectionDetails => {
+  return selectionInTableWithNestedTable(details);
 };
 
 const getTableDetailsFromRange = (rng: Range, isRoot: IsRootFn): TableSelectionDetails => {
@@ -57,7 +57,7 @@ const getTableDetailsFromRange = (rng: Range, isRoot: IsRootFn): TableSelectionD
     isEndInTable,
     isSameTable,
     isMultiTable
-  }, rng, isRoot);
+  });
 };
 
 export {
