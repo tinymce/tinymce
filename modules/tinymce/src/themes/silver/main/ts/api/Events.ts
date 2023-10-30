@@ -39,6 +39,30 @@ const fireToggleToolbarDrawer = (editor: Editor, state: boolean): void => {
   editor.dispatch('ToggleToolbarDrawer', { state });
 };
 
+const fireStylesTextUpdate = (editor: Editor, data: { value: string }): void => {
+  editor.dispatch('StylesTextUpdate', data);
+};
+
+const fireAlignTextUpdate = (editor: Editor, data: { value: string }): void => {
+  editor.dispatch('AlignTextUpdate', data);
+};
+
+const fireFontSizeTextUpdate = (editor: Editor, data: { value: string }): void => {
+  editor.dispatch('FontSizeTextUpdate', data);
+};
+
+const fireFontSizeInputTextUpdate = (editor: Editor, data: { value: string }): void => {
+  editor.dispatch('FontSizeInputTextUpdate', data);
+};
+
+const fireBlocksTextUpdate = (editor: Editor, data: { value: string }): void => {
+  editor.dispatch('BlocksTextUpdate', data);
+};
+
+const fireFontFamilyTextUpdate = (editor: Editor, data: { value: string }): void => {
+  editor.dispatch('FontFamilyTextUpdate', data);
+};
+
 export {
   fireSkinLoaded,
   fireSkinLoadError,
@@ -48,5 +72,11 @@ export {
   fireTextColorChange,
   fireAfterProgressState,
   fireResolveName,
-  fireToggleToolbarDrawer
+  fireToggleToolbarDrawer,
+  fireStylesTextUpdate,
+  fireAlignTextUpdate,
+  fireFontSizeTextUpdate,
+  fireFontSizeInputTextUpdate,
+  fireBlocksTextUpdate,
+  fireFontFamilyTextUpdate
 };

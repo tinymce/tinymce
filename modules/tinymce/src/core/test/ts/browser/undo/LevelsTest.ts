@@ -60,22 +60,22 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
     });
   });
 
-  it('createFromEditor removes bogus=al', () => {
+  it('createFromEditor removes bogus=all and temporary attributes from content without iframes', () => {
     const editor = hook.editor();
-    editor.getBody().innerHTML = '<p data-mce-bogus="all">a</p> <span>b</span>';
+    editor.getBody().innerHTML = '<p data-mce-bogus="all">a</p> <span>b</span> <span data-mce-selected="true">c</span>';
 
     assert.deepEqual(Levels.createFromEditor(editor), {
       beforeBookmark: null,
       bookmark: null,
-      content: ' <span>b</span>',
+      content: ' <span>b</span> <span>c</span>',
       fragments: null,
       type: 'complete'
     });
   });
 
-  it('createFromEditor removes bogus=all', () => {
+  it('createFromEditor removes bogus=all and temporary attributes from content with iframes', () => {
     const editor = hook.editor();
-    editor.getBody().innerHTML = '<iframe src="about:blank"></iframe> <p data-mce-bogus="all">a</p> <span>b</span>';
+    editor.getBody().innerHTML = '<iframe src="about:blank"></iframe> <p data-mce-bogus="all">a</p> <span>b</span> <span data-mce-selected="true">c</span>';
 
     assert.deepEqual(Levels.createFromEditor(editor), {
       beforeBookmark: null,
@@ -85,9 +85,24 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
         '<iframe src="about:blank"></iframe>',
         ' ',
         ' ',
-        '<span>b</span>'
+        '<span>b</span>',
+        ' ',
+        '<span>c</span>'
       ],
       type: 'fragmented'
+    });
+  });
+
+  it('TINY-10180: createFromEditor removes comments containing ZWNBSP', () => {
+    const editor = hook.editor();
+    editor.getBody().innerHTML = '<p>a</p> <!-- \ufeff --> <p>b</p> <!-- c --> <!-- d\ufeff -->';
+
+    assert.deepEqual(Levels.createFromEditor(editor), {
+      beforeBookmark: null,
+      bookmark: null,
+      content: '<p>a</p>  <p>b</p> <!-- c --> ',
+      fragments: null,
+      type: 'complete'
     });
   });
 
