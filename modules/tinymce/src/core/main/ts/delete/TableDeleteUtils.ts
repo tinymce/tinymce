@@ -24,9 +24,8 @@ const getTable = (node: Node, isRoot: IsRootFn) => TableCellSelection.getClosest
 
 const selectionInTableWithNestedTable = (details: TableSelectionDetails, rng: Range, isRoot: IsRootFn): TableSelectionDetails => {
   return Optionals.lift3(details.startTable, details.endTable, getTable(rng.commonAncestorContainer, isRoot), (startTable, endTable, ancestorTable) => {
-    const areTheSameTableAtTheStart = Compare.eq(startTable, endTable);
-    const isStartTableSameAsCommonAncestorTable = Compare.eq(startTable, ancestorTable) && !areTheSameTableAtTheStart;
-    const isEndTableSameAsCommonAncestorTable = Compare.eq(endTable, ancestorTable) && !areTheSameTableAtTheStart;
+    const isStartTableSameAsCommonAncestorTable = Compare.eq(startTable, ancestorTable) && !details.isSameTable;
+    const isEndTableSameAsCommonAncestorTable = Compare.eq(endTable, ancestorTable) && !details.isSameTable;
 
     return !isStartTableSameAsCommonAncestorTable && !isEndTableSameAsCommonAncestorTable ? details : {
       ...details,
