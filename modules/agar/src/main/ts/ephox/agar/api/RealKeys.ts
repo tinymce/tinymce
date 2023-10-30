@@ -5,11 +5,12 @@ import * as SeleniumAction from '../server/SeleniumAction';
 import { Step } from './Step';
 
 export interface KeyPressAdt {
-  fold: <T> (combo: (modifiers: Modifiers, letters: string) => T, text: (s: string) => T, backspace: () => T) => T;
+  fold: <T> (combo: (modifiers: Modifiers, letters: string) => T, text: (s: string) => T, backspace: () => T, deleteKey: () => T) => T;
   match: <T>(branches: {
     combo: (modifiers: Modifiers, letters: string) => T;
     text: (s: string) => T;
     backspace: () => T;
+    deleteKey: () => T;
   }) => T;
   log: (label: string) => void;
 }
@@ -18,10 +19,12 @@ const adt: {
   combo: (modifiers: Modifiers, letter: string) => KeyPressAdt;
   text: (s: string) => KeyPressAdt;
   backspace: () => KeyPressAdt;
+  deleteKey: () => KeyPressAdt;
 } = Adt.generate([
   { combo: [ 'modifiers', 'letter' ] },
   { text: [ 's' ] },
-  { backspace: [] }
+  { backspace: [] },
+  { deleteKey: [] },
 ]);
 
 interface Modifiers {
@@ -47,7 +50,7 @@ const toSimpleFormat = (keys: KeyPressAdt[]) =>
       altKey: modifiers.altKey.getOr(false),
       key: letter
     }
-  }), (s: string) => ({ text: s }), () => ({ text: '\u0008' })));
+  }), (s: string) => ({ text: s }), () => ({ text: '\u0008' }), () => ({ text: '\u007F' })));
 
 const sSendKeysOn = <T>(selector: string, keys: KeyPressAdt[]): Step<T, T> =>
   SeleniumAction.sPerform<T>('/keys', {
@@ -67,12 +70,14 @@ const combo = (modifiers: MixedKeyModifiers, letter: string): KeyPressAdt => {
 };
 
 const backspace = adt.backspace;
+const deleteKey = adt.deleteKey;
 
 const text = adt.text;
 
 export const RealKeys = {
   combo,
   backspace,
+  deleteKey,
   text,
   sSendKeysOn,
   pSendKeysOn
