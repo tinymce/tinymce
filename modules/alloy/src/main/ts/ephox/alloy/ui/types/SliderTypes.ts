@@ -48,10 +48,10 @@ export interface Manager {
   setToMax: (spectrum: AlloyComponent, detail: SliderDetail) => void;
   getValueFromEvent: (simulatedEvent: NativeSimulatedEvent<MouseEvent | TouchEvent>) => Optional<number | SugarPosition>;
   setPositionFromValue: (slider: AlloyComponent, thumb: AlloyComponent, detail: SliderDetail, parts: SliderModelDetailParts) => void;
-  onLeft: (spectrum: AlloyComponent, detail: SliderDetail) => Optional<boolean>;
-  onRight: (spectrum: AlloyComponent, detail: SliderDetail) => Optional<boolean>;
-  onUp: (spectrum: AlloyComponent, detail: SliderDetail) => Optional<boolean>;
-  onDown: (spectrum: AlloyComponent, detail: SliderDetail) => Optional<boolean>;
+  onLeft: (spectrum: AlloyComponent, detail: SliderDetail, useMultiplier?: boolean) => Optional<boolean>;
+  onRight: (spectrum: AlloyComponent, detail: SliderDetail, useMultiplier?: boolean) => Optional<boolean>;
+  onUp: (spectrum: AlloyComponent, detail: SliderDetail, useMultiplier?: boolean) => Optional<boolean>;
+  onDown: (spectrum: AlloyComponent, detail: SliderDetail, useMultiplier?: boolean) => Optional<boolean>;
   edgeActions: EdgeActions;
 }
 
@@ -91,6 +91,7 @@ export interface SliderDetail extends CompositeSketchDetail {
   model: SliderModelDetail;
   rounded: boolean;
   stepSize: number;
+  speedMultiplier: number;
   snapToGrid: boolean;
   snapStart: Optional<number>;
 

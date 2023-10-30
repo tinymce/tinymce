@@ -1,7 +1,7 @@
-import { UiFinder, Waiter } from '@ephox/agar';
+import { FocusTools, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
-import { SelectorFilter, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { Attribute, SelectorFilter, SugarDocument, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -9,6 +9,11 @@ import Editor from 'tinymce/core/api/Editor';
 import * as ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
 
 describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () => {
+  const selectors = {
+    backcolorToolbar: '[aria-label^="Background color"] > .tox-tbtn + .tox-split-button__chevron',
+    forecolorToolbar: '[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron'
+  };
+
   Arr.each([
     { label: 'Iframe Editor', setup: TinyHooks.bddSetup },
     { label: 'Shadow Dom Editor', setup: TinyHooks.bddSetupInShadowRoot }
@@ -24,7 +29,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         const editor = hook.editor();
         editor.setContent('<p>Text</p>');
         TinySelections.setCursor(editor, [ 0, 0 ], 2);
-        TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+        TinyUiActions.clickOnToolbar(editor, selectors.backcolorToolbar);
         await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
         TinyUiActions.clickOnUi(editor, 'button[title="Custom color"]');
         const backgroundDialog = await TinyUiActions.pWaitForDialog(editor);
@@ -36,7 +41,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
       it('TINY-9213: Color detected on color, foreground', async () => {
         const editor = hook.editor();
         editor.setContent('<p>Text</p>');
-        TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+        TinyUiActions.clickOnToolbar(editor, selectors.forecolorToolbar);
         await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
         TinyUiActions.clickOnUi(editor, 'button[title="Custom color"]');
         const textDialog = await TinyUiActions.pWaitForDialog(editor);
@@ -112,6 +117,13 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         await Waiter.pTryUntil('Dialog should close', () => UiFinder.notExists(getBody(editor), dialogSelector));
       };
 
+      const assertAriaValues = (editor: Editor, hue: number, saturation: number, brightness: number) => {
+        const palette = UiFinder.findIn(getBody(editor), '.tox-sv-palette').getOrDie();
+        const slider = UiFinder.findIn(getBody(editor), '.tox-hue-slider').getOrDie();
+        assert.equal(Attribute.get(palette, 'aria-valuetext'), `Saturation ${saturation}%, Brightness ${brightness}%`);
+        assert.equal(Attribute.get(slider, 'aria-valuenow'), '' + hue);
+      };
+
       it('TBA: Open dialog, click Save and assert color is white', async () => {
         const editor = hook.editor();
         await pOpenDialog(editor);
@@ -134,11 +146,13 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         // Change color to black
         await pOpenDialog(editor);
         await pSetHexBlack(editor);
+        assertAriaValues(editor, 120, 0, 0);
         TinyUiActions.submitDialog(editor);
         await pWaitForDialogClose(editor);
         // Change color in the dialog but cancel
         await pOpenDialog(editor);
         await pSetHexWhite(editor);
+        assertAriaValues(editor, 120, 0, 100);
         await pCancelDialog(editor);
         assertColorBlack();
       });
@@ -147,7 +161,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         const editor = hook.editor();
         editor.setContent('<p style="color: #FF00FF;background-color: #00FF00;">Text</p>', { format: 'raw' });
         TinySelections.setCursor(editor, [ 0, 0 ], 2);
-        TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+        TinyUiActions.clickOnToolbar(editor, selectors.backcolorToolbar);
         await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
         TinyUiActions.clickOnUi(editor, 'button[title="Custom color"]');
         const backgroundDialog = await TinyUiActions.pWaitForDialog(editor);
@@ -159,7 +173,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
       it('TINY-9213: Color detected on color, foreground', async () => {
         const editor = hook.editor();
         editor.setContent('<p style="color: #FF00FF;background-color: #00FF00;">Text</p>', { format: 'raw' });
-        TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+        TinyUiActions.clickOnToolbar(editor, selectors.forecolorToolbar);
         await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
         TinyUiActions.clickOnUi(editor, 'button[title="Custom color"]');
         const textDialog = await TinyUiActions.pWaitForDialog(editor);
@@ -174,6 +188,51 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         await pSetHex('invalid')(editor);
         TinyUiActions.submitDialog(editor);
         await pAssertExpectedAlert(editor, 'Invalid hex color code: #invalid');
+      });
+
+      it('TINY-9287: Keyboard tab navigation works as expected, starting at the canvas', async () => {
+        const editor = hook.editor();
+        const elem = TinyDom.targetElement(editor);
+        const doc = SugarShadowDom.getShadowRoot(elem).getOrThunk(() => SugarDocument.getDocument());
+        await pOpenDialog(editor);
+        await FocusTools.pTryOnSelector('Should have selected the main view', doc, 'canvas');
+        TinyUiActions.keydown(editor, Keys.tab());
+        await FocusTools.pTryOnSelector('Should have selected the hue slider', doc, '.tox-hue-slider-spectrum');
+        TinyUiActions.keydown(editor, Keys.tab());
+        await FocusTools.pTryOnSelector('Should have selected the next input', doc, '.tox-textfield');
+        await pCancelDialog(editor);
+      });
+
+      it('TINY-9287: Keyboard tab navigation works as expected, starting at the canvas, shift-tab should go backwards', async () => {
+        const editor = hook.editor();
+        const elem = TinyDom.targetElement(editor);
+        const doc = SugarShadowDom.getShadowRoot(elem).getOrThunk(() => SugarDocument.getDocument());
+        await pOpenDialog(editor);
+        await FocusTools.pTryOnSelector('Should have selected the main view', doc, 'canvas');
+        TinyUiActions.keydown(editor, Keys.tab());
+        await FocusTools.pTryOnSelector('Should have selected the hue slider', doc, '.tox-hue-slider-spectrum');
+        TinyUiActions.keydown(editor, Keys.tab());
+        await FocusTools.pTryOnSelector('Should have selected the next input', doc, '.tox-textfield');
+        TinyUiActions.keydown(editor, Keys.tab(), { shiftKey: true });
+        await FocusTools.pTryOnSelector('Should have selected the hue slider', doc, '.tox-hue-slider-spectrum');
+        TinyUiActions.keydown(editor, Keys.tab(), { shiftKey: true });
+        await FocusTools.pTryOnSelector('Should have selected the main view', doc, 'canvas');
+        await pCancelDialog(editor);
+      });
+
+      it('TINY-9287: Clicking changes focus as expected', async () => {
+        const editor = hook.editor();
+        const element = TinyDom.targetElement(editor);
+        const doc = SugarShadowDom.getShadowRoot(element).getOrThunk(() => SugarDocument.getDocument());
+        await pOpenDialog(editor);
+        await FocusTools.pTryOnSelector('Should have started on the main view', doc, 'canvas');
+        let targetElement = UiFinder.findIn(TinyUiActions.getUiRoot(editor), '.tox-hue-slider-spectrum').getOrDie();
+        Mouse.mouseDown(targetElement);
+        await FocusTools.pTryOnSelector('Should have selected the hue slider', doc, '.tox-hue-slider-spectrum');
+        targetElement = UiFinder.findIn(TinyUiActions.getUiRoot(editor), 'canvas').getOrDie();
+        Mouse.mouseDown(targetElement);
+        await FocusTools.pTryOnSelector('Should have ended on the main view', doc, 'canvas');
+        await pCancelDialog(editor);
       });
     });
   });

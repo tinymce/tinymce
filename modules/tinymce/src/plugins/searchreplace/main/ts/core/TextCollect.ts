@@ -21,11 +21,10 @@ interface CollectCallbacks {
 const isSimpleBoundary = (dom: DOMUtils, node: Node) =>
   dom.isBlock(node) || Obj.has(dom.schema.getVoidElements(), node.nodeName);
 
-const isContentEditableFalse = (dom: DOMUtils, node: Node) =>
-  dom.getContentEditable(node) === 'false';
+const isContentEditableFalse = (dom: DOMUtils, node: Node) => !dom.isEditable(node);
 
 const isContentEditableTrueInCef = (dom: DOMUtils, node: Node) =>
-  dom.getContentEditable(node) === 'true' && node.parentNode && dom.getContentEditableParent(node.parentNode) === 'false';
+  dom.getContentEditable(node) === 'true' && node.parentNode && !dom.isEditable(node.parentNode);
 
 const isHidden = (dom: DOMUtils, node: Node) =>
   !dom.isBlock(node) && Obj.has(dom.schema.getWhitespaceElements(), node.nodeName);

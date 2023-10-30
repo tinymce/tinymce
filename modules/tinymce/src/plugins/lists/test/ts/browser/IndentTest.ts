@@ -449,6 +449,175 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
+  it('TINY-10213: Indent an LI with a list inside should not delete the rest of the content', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<ol>' +
+      '<li>a</li>' +
+      '<!-- c1 -->' +
+      '<li>' +
+      '<ol>' +
+      '<li>b</li>' +
+      '</ol>' +
+      '<p data-fake-attr="something">p1</p>' +
+      '<p data-fake-attr="something">p2</p>' +
+      '</li>' +
+      '<!-- c2 -->' +
+      '</ol>'
+    );
+
+    LegacyUnit.setSelection(editor, 'li', 0);
+    editor.execCommand('Outdent');
+
+    TinyAssertions.assertContent(editor,
+      '<p>a</p>' +
+      '<ol>' +
+      '<!-- c1 -->' +
+      '<li style="list-style-type: none;">' +
+      '<ol>' +
+      '<li>b</li>' +
+      '</ol>' +
+      '<p data-fake-attr="something">p1</p>' +
+      '<p data-fake-attr="something">p2</p>' +
+      '</li>' +
+      '<!-- c2 -->' +
+      '</ol>'
+    );
+
+    assert.equal(editor.selection.getNode().nodeName, 'P');
+
+    editor.setContent(
+      '<ol start="2">' +
+      '<li>a</li>' +
+      '<!-- c1 -->' +
+      '<li>' +
+      '<ol start="5">' +
+      '<li>b</li>' +
+      '</ol>' +
+      '<p data-fake-attr="something">p1</p>' +
+      '<p data-fake-attr="something">p2</p>' +
+      '</li>' +
+      '<!-- c2 -->' +
+      '</ol>'
+    );
+
+    LegacyUnit.setSelection(editor, 'li', 0);
+    editor.execCommand('Indent');
+
+    TinyAssertions.assertContent(editor,
+      '<ol>' +
+      '<li style="list-style-type: none;">' +
+      '<ol start="5">' +
+      '<li>a</li>' +
+      '<!-- c1 -->' +
+      '<li>b</li>' +
+      '</ol>' +
+      '<p data-fake-attr="something">p1</p>' +
+      '<p data-fake-attr="something">p2</p>' +
+      '</li>' +
+      '<!-- c2 -->' +
+      '</ol>'
+    );
+
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
+  });
+
+  it('TINY-10268: a `list` inside a `li` surrounded by 2 not element should allow the user to indent/outdent its `li`', () => {
+    const editor = hook.editor();
+    editor.setContent(`<ul>
+      <li>
+        Dedent me
+        <ul>
+          <li>or try to dedent me 1</li>
+          <li>or try to dedent me 2</li>
+        </ul>
+        <span>abc</span>
+      </li>
+    </ul>`);
+
+    TinySelections.setCursor(editor, [ 0, 0, 1, 0 ], 0);
+    editor.execCommand('Indent');
+
+    TinyAssertions.assertContent(editor, '<ul>' +
+      '<li>' +
+        'Dedent me' +
+        '<ul>' +
+          '<li style="list-style-type: none;"><ul><li>or try to dedent me 1</li></ul></li>' +
+          '<li>or try to dedent me 2</li>' +
+        '</ul>' +
+        '<span>abc</span>' +
+      '</li>' +
+    '</ul>');
+
+    TinySelections.setCursor(editor, [ 0, 0, 1, 0, 0, 0 ], 0);
+    editor.execCommand('Outdent');
+
+    TinyAssertions.assertContent(editor, '<ul>' +
+      '<li>' +
+        'Dedent me' +
+        '<ul>' +
+          '<li>or try to dedent me 1</li>' +
+          '<li>or try to dedent me 2</li>' +
+        '</ul>' +
+        '<span>abc</span>' +
+      '</li>' +
+    '</ul>');
+  });
+
+  it('TINY-10268: in a `list` inside a `li` with another list as sibling and 2 not `list` elements as first and last element of the parent `li` indent/outdent should work as expected', () => {
+    const editor = hook.editor();
+    editor.setContent(`<ul>
+      <li>
+        Dedent me
+        <ul>
+          <li>or try to dedent me 1</li>
+          <li>or try to dedent me 2</li>
+        </ul>
+        <ul>
+          <li>or try to dedent me 1</li>
+          <li>or try to dedent me 2</li>
+        </ul>
+        <span>abc</span>
+      </li>
+    </ul>`);
+
+    TinySelections.setCursor(editor, [ 0, 0, 1, 0 ], 0);
+    editor.execCommand('Indent');
+
+    TinyAssertions.assertContent(editor, '<ul>' +
+      '<li>' +
+        'Dedent me' +
+        '<ul>' +
+          '<li style="list-style-type: none;"><ul><li>or try to dedent me 1</li></ul></li>' +
+          '<li>or try to dedent me 2</li>' +
+        '</ul>' +
+        '<ul>' +
+          '<li>or try to dedent me 1</li>' +
+          '<li>or try to dedent me 2</li>' +
+        '</ul>' +
+        '<span>abc</span>' +
+      '</li>' +
+    '</ul>');
+
+    TinySelections.setCursor(editor, [ 0, 0, 1, 0, 0, 0 ], 0);
+    editor.execCommand('Outdent');
+
+    TinyAssertions.assertContent(editor, '<ul>' +
+      '<li>' +
+        'Dedent me' +
+        '<ul>' +
+          '<li>or try to dedent me 1</li>' +
+          '<li>or try to dedent me 2</li>' +
+        '</ul>' +
+        '<ul>' +
+          '<li>or try to dedent me 1</li>' +
+          '<li>or try to dedent me 2</li>' +
+        '</ul>' +
+        '<span>abc</span>' +
+      '</li>' +
+    '</ul>');
+  });
+
   context('Parent context', () => {
     const testCommandAtTextPath = (command: string) => (inputHtml: string, path: number[], expectedHtml: string) => () => {
       const editor = hook.editor();

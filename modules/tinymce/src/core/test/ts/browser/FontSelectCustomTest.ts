@@ -20,16 +20,15 @@ describe('browser.tinymce.core.FontSelectCustomTest', () => {
     font_size_formats: '8pt=1 12pt 12.75pt 13pt 24pt 32pt'
   }, []);
 
-  const assertSelectBoxDisplayValue = (editor: Editor, title: string, expectedValue: string) => {
-    const selectBox = UiFinder.findIn(SugarBody.body(), '*[title="' + title + '"]').getOrDie();
+  const assertSelectBoxDisplayValue = (title: string, expectedValue: string) => {
+    const selectBox = UiFinder.findIn(SugarBody.body(), '*[title^="' + title + '"]').getOrDie();
     const value = Strings.trim(TextContent.get(selectBox) ?? '');
     assert.equal(value, expectedValue, 'Should be the expected display value');
   };
 
   it('Font family and font size on initial page load', () => {
-    const editor = hook.editor();
-    assertSelectBoxDisplayValue(editor, 'Font sizes', '12px');
-    assertSelectBoxDisplayValue(editor, 'Fonts', 'Arial');
+    assertSelectBoxDisplayValue('Font sizes', '12px');
+    assertSelectBoxDisplayValue('Fonts', 'Arial');
   });
 
   it('Font family with spaces and numbers in the name with legacy font elements', () => {
@@ -38,8 +37,8 @@ describe('browser.tinymce.core.FontSelectCustomTest', () => {
     editor.focus();
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
     editor.nodeChanged();
-    assertSelectBoxDisplayValue(editor, 'Font sizes', '8pt');
-    assertSelectBoxDisplayValue(editor, 'Fonts', 'Bookshelf Symbol 7');
+    assertSelectBoxDisplayValue('Font sizes', '8pt');
+    assertSelectBoxDisplayValue('Fonts', 'Bookshelf Symbol 7');
   });
 
   it('Font family with spaces and numbers in the name', () => {
@@ -48,8 +47,8 @@ describe('browser.tinymce.core.FontSelectCustomTest', () => {
     editor.focus();
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     editor.nodeChanged();
-    assertSelectBoxDisplayValue(editor, 'Font sizes', '12px');
-    assertSelectBoxDisplayValue(editor, 'Fonts', 'Bookshelf Symbol 7');
+    assertSelectBoxDisplayValue('Font sizes', '12px');
+    assertSelectBoxDisplayValue('Fonts', 'Bookshelf Symbol 7');
   });
 
   it('Font family with quoted font names', () => {
@@ -58,7 +57,7 @@ describe('browser.tinymce.core.FontSelectCustomTest', () => {
     editor.focus();
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     editor.nodeChanged();
-    assertSelectBoxDisplayValue(editor, 'Font sizes', '12px');
-    assertSelectBoxDisplayValue(editor, 'Fonts', 'Bauhaus 93');
+    assertSelectBoxDisplayValue('Font sizes', '12px');
+    assertSelectBoxDisplayValue('Fonts', 'Bauhaus 93');
   });
 });

@@ -3,13 +3,14 @@ import { Compare, PredicateFind, SugarElement } from '@ephox/sugar';
 
 import EditorSelection from '../api/dom/Selection';
 import Editor from '../api/Editor';
+import Schema from '../api/html/Schema';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';
 import * as DeleteUtils from './DeleteUtils';
 import * as MergeBlocks from './MergeBlocks';
 
-const deleteRangeMergeBlocks = (rootNode: SugarElement<Node>, selection: EditorSelection): Optional<() => void> => {
+const deleteRangeMergeBlocks = (rootNode: SugarElement<Node>, selection: EditorSelection, schema: Schema): Optional<() => void> => {
   const rng = selection.getRng();
 
   return Optionals.lift2(
@@ -20,7 +21,7 @@ const deleteRangeMergeBlocks = (rootNode: SugarElement<Node>, selection: EditorS
         return Optional.some(() => {
           rng.deleteContents();
 
-          MergeBlocks.mergeBlocks(rootNode, true, block1, block2).each((pos) => {
+          MergeBlocks.mergeBlocks(rootNode, true, block1, block2, schema).each((pos) => {
             selection.setRng(pos.toRange());
           });
 
@@ -56,7 +57,7 @@ const emptyEditor = (editor: Editor): Optional<() => void> => {
 const deleteRange = (editor: Editor): Optional<() => void> => {
   const rootNode = SugarElement.fromDom(editor.getBody());
   const rng = editor.selection.getRng();
-  return isEverythingSelected(rootNode, rng) ? emptyEditor(editor) : deleteRangeMergeBlocks(rootNode, editor.selection);
+  return isEverythingSelected(rootNode, rng) ? emptyEditor(editor) : deleteRangeMergeBlocks(rootNode, editor.selection, editor.schema);
 };
 
 const backspaceDelete = (editor: Editor, _forward: boolean): Optional<() => void> =>

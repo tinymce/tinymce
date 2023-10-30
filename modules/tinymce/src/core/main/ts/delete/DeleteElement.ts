@@ -2,6 +2,7 @@ import { Fun, Obj, Optional, Optionals } from '@ephox/katamari';
 import { Insert, PredicateFind, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
+import Schema from '../api/html/Schema';
 import * as CaretCandidate from '../caret/CaretCandidate';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
@@ -94,7 +95,7 @@ const paddEmptyBlock = (elm: SugarElement<Node>): Optional<CaretPosition> => {
   }
 };
 
-const deleteNormalized = (elm: SugarElement<Node>, afterDeletePosOpt: Optional<CaretPosition>, normalizeWhitespace?: boolean): Optional<CaretPosition> => {
+const deleteNormalized = (elm: SugarElement<Node>, afterDeletePosOpt: Optional<CaretPosition>, schema: Schema, normalizeWhitespace?: boolean): Optional<CaretPosition> => {
   const prevTextOpt = Traverse.prevSibling(elm).filter(SugarNode.isText);
   const nextTextOpt = Traverse.nextSibling(elm).filter(SugarNode.isText);
 
@@ -106,13 +107,13 @@ const deleteNormalized = (elm: SugarElement<Node>, afterDeletePosOpt: Optional<C
   return Optionals.lift3(prevTextOpt, nextTextOpt, afterDeletePosOpt, (prev, next, pos) => {
     const prevNode = prev.dom, nextNode = next.dom;
     const offset = prevNode.data.length;
-    MergeText.mergeTextNodes(prevNode, nextNode, normalizeWhitespace);
+    MergeText.mergeTextNodes(prevNode, nextNode, schema, normalizeWhitespace);
     // Update the cursor position if required
     return pos.container() === nextNode ? CaretPosition(prevNode, offset) : pos;
   }).orThunk(() => {
     if (normalizeWhitespace) {
-      prevTextOpt.each((elm) => MergeText.normalizeWhitespaceBefore(elm.dom, elm.dom.length));
-      nextTextOpt.each((elm) => MergeText.normalizeWhitespaceAfter(elm.dom, 0));
+      prevTextOpt.each((elm) => MergeText.normalizeWhitespaceBefore(elm.dom, elm.dom.length, schema));
+      nextTextOpt.each((elm) => MergeText.normalizeWhitespaceAfter(elm.dom, 0, schema));
     }
     return afterDeletePosOpt;
   });
@@ -124,7 +125,7 @@ const isInlineElement = (editor: Editor, element: SugarElement<Node>): boolean =
 const deleteElement = (editor: Editor, forward: boolean, elm: SugarElement<Node>, moveCaret: boolean = true): void => {
   const afterDeletePos = findCaretPosOutsideElmAfterDelete(forward, editor.getBody(), elm.dom);
   const parentBlock = PredicateFind.ancestor(elm, Fun.curry(isBlock, editor), eqRawNode(editor.getBody()));
-  const normalizedAfterDeletePos = deleteNormalized(elm, afterDeletePos, isInlineElement(editor, elm));
+  const normalizedAfterDeletePos = deleteNormalized(elm, afterDeletePos, editor.schema, isInlineElement(editor, elm));
 
   if (editor.dom.isEmpty(editor.getBody())) {
     editor.setContent('');

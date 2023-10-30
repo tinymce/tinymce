@@ -17,9 +17,9 @@ describe('browser.tinymce.themes.silver.editor.color.NoneditableRootTest', () =>
       TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
         editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
         TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
-        UiFinder.exists(SugarBody.body(), `[aria-label="${title}"][aria-disabled="true"]`);
+        UiFinder.exists(SugarBody.body(), `[aria-label^="${title}"][aria-disabled="true"]`);
         TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
-        UiFinder.exists(SugarBody.body(), `[aria-label="${title}"][aria-disabled="false"]`);
+        UiFinder.exists(SugarBody.body(), `[aria-label^="${title}"][aria-disabled="false"]`);
       });
     };
 
@@ -33,11 +33,11 @@ describe('browser.tinymce.themes.silver.editor.color.NoneditableRootTest', () =>
         editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
         TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
         TinyUiActions.clickOnMenu(editor, `button:contains("${menu}")`);
-        await TinyUiActions.pWaitForUi(editor, `[role="menu"] [title="${menuitem}"][aria-disabled="true"]`);
+        await TinyUiActions.pWaitForUi(editor, `[role="menu"] [title^="${menuitem}"][aria-disabled="true"]`);
         TinyUiActions.keystroke(editor, Keys.escape());
         TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
         TinyUiActions.clickOnMenu(editor, `button:contains("${menu}")`);
-        await TinyUiActions.pWaitForUi(editor, `[role="menu"] [title="${menuitem}"][aria-disabled="false"]`);
+        await TinyUiActions.pWaitForUi(editor, `[role="menu"] [title^="${menuitem}"][aria-disabled="false"]`);
         TinyUiActions.keystroke(editor, Keys.escape());
       });
     };

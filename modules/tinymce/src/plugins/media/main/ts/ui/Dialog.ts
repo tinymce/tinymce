@@ -221,7 +221,8 @@ const showDialog = (editor: Editor): void => {
     name: 'source',
     type: 'urlinput',
     filetype: 'media',
-    label: 'Source'
+    label: 'Source',
+    picker_text: 'Browse files'
   }];
   const sizeInput: Dialog.SizeInputSpec[] = !Options.hasDimensions(editor) ? [] : [{
     type: 'sizeinput',

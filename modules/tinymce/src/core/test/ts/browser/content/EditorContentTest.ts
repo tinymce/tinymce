@@ -285,6 +285,13 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
           testGetContentTreeWithContentAlteredInGetContent(editor, '<p>replaced</p>', 'Should be replaced html');
         });
 
+        it('TINY-10088: Preserve attributes with self closed HTML tag', () => {
+          const content = '<div data-some-attribute="title=<br/>">abc</div>';
+          const editor = hook.editor();
+          editor.setContent(content);
+          TinyAssertions.assertContent(editor, content, { format: 'raw' });
+        });
+
         const initialContent = '<p>initial</p>';
         const newContent = '<p>new content</p>';
         const manipulatedContent = '<p>manipulated</p>';
@@ -414,6 +421,58 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         const editor = hook.editor();
         testGetContentTreeWithContentAlteredInGetContent(editor, unsanitizedHtml, 'Replaced content should be unaltered unsanitized html');
       });
+    });
+  });
+
+  context('SVG elements not enabled by default', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      base_url: '/project/tinymce/js/tinymce'
+    }, []);
+
+    it('TINY-10237: SVGs is not allowed by default', () => {
+      const editor = hook.editor();
+      editor.setContent('<svg width="100" height="100"><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"><script>alert(1)</script></circle></svg>');
+      TinyAssertions.assertContent(editor, '');
+    });
+  });
+
+  context('SVG elements', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      extended_valid_elements: 'svg[width|height]'
+    }, []);
+
+    it('TINY-10237: Retain SVG content if SVGs are allowed but sanitize them', () => {
+      const editor = hook.editor();
+      editor.setContent('<svg width="100" height="100" onload="alert(1)"><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"><script>alert(1)</script></circle></svg>');
+      TinyAssertions.assertContent(editor, '<svg width="100" height="100"><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"></circle></svg>');
+    });
+
+    it('TINY-10237: Retain SVG content white space', () => {
+      const editor = hook.editor();
+      const svgHtml = `
+        <svg width="100" height="100">
+          <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red">
+            <desc>foo</desc>
+          </circle>
+        </svg>
+      `.trim();
+      editor.setContent(svgHtml);
+      TinyAssertions.assertContent(editor, svgHtml);
+    });
+  });
+
+  context('SVG elements xss_sanitization: false', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      extended_valid_elements: 'svg[width|height]',
+      xss_sanitization: false
+    }, []);
+
+    it('TINY-10237: Retain SVG content and scripts if sanitization is disabled', () => {
+      const editor = hook.editor();
+      editor.setContent('<svg width="100" height="100"><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"><script>alert(1)</script></circle></svg>');
+      TinyAssertions.assertContent(editor, '<svg width="100" height="100"><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"><script>alert(1)</script></circle></svg>');
     });
   });
 });

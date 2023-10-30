@@ -1,6 +1,7 @@
 import { Arr, Fun, Obj, Optional, Strings } from '@ephox/katamari';
 import { Compare, Css, Insert, Replication, SelectorFind, SugarElement, SugarFragment, SugarNode, Traverse } from '@ephox/sugar';
 
+import Schema from '../api/html/Schema';
 import * as ElementType from '../dom/ElementType';
 import * as Parents from '../dom/Parents';
 import * as SelectionUtils from './SelectionUtils';
@@ -45,10 +46,10 @@ const directListWrappers = (commonAnchorContainer: SugarElement<Node>) => {
   }
 };
 
-const getWrapElements = (rootNode: SugarElement<Node>, rng: Range) => {
+const getWrapElements = (rootNode: SugarElement<Node>, rng: Range, schema: Schema) => {
   const commonAnchorContainer = SugarElement.fromDom(rng.commonAncestorContainer);
   const parents = Parents.parentsAndSelf(commonAnchorContainer, rootNode);
-  const wrapElements = Arr.filter(parents, ElementType.isWrapElement);
+  const wrapElements = Arr.filter(parents, (el) => schema.isWrapper(SugarNode.name(el)));
   const listWrappers = getFullySelectedListWrappers(parents, rng);
   const allWrappers = wrapElements.concat(listWrappers.length ? listWrappers : directListWrappers(commonAnchorContainer));
   return Arr.map(allWrappers, Replication.shallow);
@@ -56,8 +57,8 @@ const getWrapElements = (rootNode: SugarElement<Node>, rng: Range) => {
 
 const emptyFragment = () => SugarFragment.fromElements([]);
 
-const getFragmentFromRange = (rootNode: SugarElement<Node>, rng: Range) =>
-  wrap(SugarElement.fromDom(rng.cloneContents()), getWrapElements(rootNode, rng));
+const getFragmentFromRange = (rootNode: SugarElement<Node>, rng: Range, schema: Schema) =>
+  wrap(SugarElement.fromDom(rng.cloneContents()), getWrapElements(rootNode, rng, schema));
 
 const getParentTable = (rootElm: SugarElement<Node>, cell: SugarElement<HTMLTableCellElement>): Optional<SugarElement<HTMLTableElement>> =>
   SelectorFind.ancestor(cell, 'table', Fun.curry(Compare.eq, rootElm));
@@ -73,12 +74,12 @@ const getTableFragment = (rootNode: SugarElement<Node>, selectedTableCells: Suga
     );
   }).getOrThunk(emptyFragment);
 
-const getSelectionFragment = (rootNode: SugarElement<Node>, ranges: Range[]) =>
-  ranges.length > 0 && ranges[0].collapsed ? emptyFragment() : getFragmentFromRange(rootNode, ranges[0]);
+const getSelectionFragment = (rootNode: SugarElement<Node>, ranges: Range[], schema: Schema) =>
+  ranges.length > 0 && ranges[0].collapsed ? emptyFragment() : getFragmentFromRange(rootNode, ranges[0], schema);
 
-const read = (rootNode: SugarElement<Element>, ranges: Range[]): SugarElement<Node> => {
+const read = (rootNode: SugarElement<Element>, ranges: Range[], schema: Schema): SugarElement<Node> => {
   const selectedCells = TableCellSelection.getCellsFromElementOrRanges(ranges, rootNode);
-  return selectedCells.length > 0 ? getTableFragment(rootNode, selectedCells) : getSelectionFragment(rootNode, ranges);
+  return selectedCells.length > 0 ? getTableFragment(rootNode, selectedCells) : getSelectionFragment(rootNode, ranges, schema);
 };
 
 export {

@@ -4,6 +4,7 @@ import { Arr, Fun, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { BlockFormat, InlineFormat } from 'tinymce/core/api/fmt/Format';
 
+import * as Events from '../../../api/Events';
 import * as Options from '../../../api/Options';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
@@ -12,6 +13,9 @@ import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect
 import { AdvancedSelectDataset, BasicSelectItem, SelectDataset } from './SelectDatasets';
 import { getStyleFormats, isFormatReference, isNestedFormat, StyleFormatType } from './StyleFormat';
 import { findNearest } from './utils/FormatDetection';
+import * as Tooltip from './utils/Tooltip';
+
+const title = 'Formats';
 
 const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
   const fallbackFormat = 'Paragraph';
@@ -42,10 +46,11 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
     AlloyTriggers.emitWith(comp, updateMenuText, {
       text
     });
+    Events.fireStylesTextUpdate(editor, { value: text });
   };
 
   return {
-    tooltip: 'Formats',
+    tooltip: Tooltip.getTooltipText(editor, title, fallbackFormat),
     text: Optional.some(fallbackFormat),
     icon: Optional.none(),
     isSelectedFor,
@@ -61,14 +66,14 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
 
 const createStylesButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec => {
   const dataset: AdvancedSelectDataset = { type: 'advanced', ...backstage.styles };
-  return createSelectButton(editor, backstage, getSpec(editor, dataset));
+  return createSelectButton(editor, backstage, getSpec(editor, dataset), title, 'StylesTextUpdate');
 };
 
 const createStylesMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
   const dataset: AdvancedSelectDataset = { type: 'advanced', ...backstage.styles };
   const menuItems = createMenuItems(editor, backstage, getSpec(editor, dataset));
   editor.ui.registry.addNestedMenuItem('styles', {
-    text: 'Formats',
+    text: title,
     onSetup: onSetupEditableToggle(editor),
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   });

@@ -1,6 +1,6 @@
-import { afterEach, context, describe, it } from '@ephox/bedrock-client';
+import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Focus, SugarElement } from '@ephox/sugar';
+import { Focus, Insert, Remove, SugarElement } from '@ephox/sugar';
 import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -158,6 +158,46 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
 
         n1.close();
         assert.isTrue(editor.hasFocus(), 'Focus should be on the editor');
+      });
+
+      context('focus is placed outside of the editor', () => {
+        const input = SugarElement.fromHtml<HTMLInputElement>('<input class="test-input" />');
+
+        beforeEach(() => {
+          const body = SugarElement.fromDom(document.body);
+          Insert.append(body, input);
+        });
+
+        afterEach(() => {
+          Remove.remove(input);
+        });
+
+        it('TINY-10282: Should not move focus around if the focus is not in the editor', () => {
+          const editor = hook.editor();
+          resetNotifications();
+
+          const testMsg1: NotificationSpec = { type: 'warning', text: 'test message 1' };
+          const testMsg2: NotificationSpec = { type: 'error', text: 'test message 2' };
+          const notifications = editor.notificationManager.getNotifications();
+
+          const hasFocus = (node: SugarElement<Node>) =>
+            Focus.search(node).isSome();
+
+          const n1 = editor.notificationManager.open(testMsg1);
+          const n2 = editor.notificationManager.open(testMsg2);
+          assert.lengthOf(notifications, 2, 'Should have two messages added.');
+
+          Focus.focus(input);
+
+          assert.isTrue(hasFocus(input), 'Focus should remain on the input');
+
+          n2.close();
+          assert.isTrue(hasFocus(input), 'Focus should remain on the input');
+
+          n1.close();
+          assert.isTrue(hasFocus(input), 'Focus should remain on the input');
+          assert.isTrue(!editor.hasFocus(), 'Focus should not be on the editor');
+        });
       });
 
       it('TINY-6528: Notification manager should throw events for notification modification', () => {

@@ -1,18 +1,21 @@
 import { AlloyComponent, Disabling, SketchSpec, TieredData } from '@ephox/alloy';
 import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Attribute } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
 import { renderCommonDropdown } from '../../dropdown/CommonDropdown';
 import ItemResponse from '../../menus/item/ItemResponse';
 import * as NestedMenus from '../../menus/menu/NestedMenus';
 import { ToolbarButtonClasses } from '../../toolbar/button/ButtonClasses';
-import { onSetupEvent } from '../ControlUtils';
+import { composeUnbinders, onSetupEvent } from '../ControlUtils';
 import { SelectDataset } from './SelectDatasets';
 import { NestedStyleFormat } from './StyleFormat';
 import * as FormatRegister from './utils/FormatRegister';
+import * as Tooltip from './utils/Tooltip';
 
 export interface PreviewSpec {
   readonly tag: string;
@@ -70,6 +73,7 @@ export interface SelectSpec {
 
 interface BespokeSelectApi {
   readonly getComponent: () => AlloyComponent;
+  readonly setTooltip: (tooltip: string) => void;
 }
 
 interface BespokeMenuItems {
@@ -170,17 +174,31 @@ const createMenuItems = (editor: Editor, backstage: UiFactoryBackstage, spec: Se
   };
 };
 
-const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec): SketchSpec => {
+const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec, title: string, textUpdateEventName: string): SketchSpec => {
   const { items, getStyleItems } = createMenuItems(editor, backstage, spec);
 
-  const getApi = (comp: AlloyComponent): BespokeSelectApi => ({ getComponent: Fun.constant(comp) });
+  const getApi = (comp: AlloyComponent): BespokeSelectApi => ({
+    getComponent: Fun.constant(comp),
+    setTooltip: (tooltip: string) => {
+      const translatedTooltip = backstage.shared.providers.translate(tooltip);
+      Attribute.setAll(comp.element, { 'aria-label': translatedTooltip, 'title': translatedTooltip });
+    }
+  });
 
   // Set the initial text when the component is attached and then update on node changes
-  const onSetup = onSetupEvent(editor, 'NodeChange', (api: BespokeSelectApi) => {
-    const comp = api.getComponent();
-    spec.updateText(comp);
-    Disabling.set(api.getComponent(), !editor.selection.isEditable());
-  });
+  const onSetup = (api: BespokeSelectApi) => {
+    const handler = (e: EditorEvent<{ value: string }>) =>
+      api.setTooltip(Tooltip.getTooltipText(editor, title, e.value));
+    editor.on(textUpdateEventName, handler);
+    return composeUnbinders(
+      onSetupEvent(editor, 'NodeChange', (api: BespokeSelectApi) => {
+        const comp = api.getComponent();
+        spec.updateText(comp);
+        Disabling.set(api.getComponent(), !editor.selection.isEditable());
+      })(api),
+      () => editor.off(textUpdateEventName, handler)
+    );
+  };
 
   return renderCommonDropdown(
     {

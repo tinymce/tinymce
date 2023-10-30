@@ -1,6 +1,7 @@
 import { Arr, Unicode } from '@ephox/katamari';
 import { Attribute, Insert, Remove, SelectorFilter, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 
+import Schema from '../api/html/Schema';
 import * as ElementType from './ElementType';
 
 const getLastChildren = (elm: SugarElement<Node>): SugarElement<Node>[] => {
@@ -42,10 +43,10 @@ const isPaddedElement = (elm: SugarElement<Node>): boolean => {
   return Arr.filter(Traverse.children(elm), isPaddingContents).length === 1;
 };
 
-const trimBlockTrailingBr = (elm: SugarElement<Node>): void => {
+const trimBlockTrailingBr = (elm: SugarElement<Node>, schema: Schema): void => {
   Traverse.lastChild(elm).each((lastChild) => {
     Traverse.prevSibling(lastChild).each((lastChildPrevSibling) => {
-      if (ElementType.isBlock(elm) && ElementType.isBr(lastChild) && ElementType.isBlock(lastChildPrevSibling)) {
+      if (schema.isBlock(SugarNode.name(elm)) && ElementType.isBr(lastChild) && schema.isBlock(SugarNode.name(lastChildPrevSibling))) {
         Remove.remove(lastChild);
       }
     });

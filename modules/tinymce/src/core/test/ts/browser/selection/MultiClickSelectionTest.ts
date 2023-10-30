@@ -6,6 +6,7 @@ import { assert } from 'chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
+import Schema from 'tinymce/core/api/html/Schema';
 import { findClosestBlockRange } from 'tinymce/core/selection/MultiClickSelection';
 
 import * as ViewBlock from '../../module/test/ViewBlock';
@@ -16,6 +17,7 @@ describe('browser.tinymce.core.selection.MultiClickSelectionTest', () => {
     const viewBlock = ViewBlock.bddSetup();
     const getRoot = viewBlock.get;
     const setupHtml = viewBlock.update;
+    const baseSchema = Schema();
 
     const toDomRange = (path: Cursors.CursorPath): Range => {
       const root = SugarElement.fromDom(getRoot());
@@ -34,7 +36,7 @@ describe('browser.tinymce.core.selection.MultiClickSelectionTest', () => {
     };
 
     const testFindClosestBlockRange = (startRngPath: Cursors.CursorPath, expectedRngPath: Cursors.CursorPath) =>
-      assertRange(toDomRange(expectedRngPath), findClosestBlockRange(toDomRange(startRngPath), getRoot()));
+      assertRange(toDomRange(expectedRngPath), findClosestBlockRange(toDomRange(startRngPath), getRoot(), baseSchema));
 
     it('TINY-8215: Should return the range with the whole text content of the block', () => {
       setupHtml('<p>aaa bIb ccc</p>');
