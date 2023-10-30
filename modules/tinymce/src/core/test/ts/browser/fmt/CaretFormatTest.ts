@@ -686,4 +686,188 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
         ]
       })));
   });
+
+  it('TINY-10132: Remove and reapply format to caret after formatted text', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><s><span style="text-decoration: underline;"><em><strong>abc</strong></em></span></s></p>');
+    TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0, 0 ], 3);
+    removeCaretFormat(editor, 'bold', {});
+    removeCaretFormat(editor, 'underline', {});
+    removeCaretFormat(editor, 'italic', {});
+    removeCaretFormat(editor, 'strikethrough', {});
+    applyCaretFormat(editor, 'bold', {});
+    applyCaretFormat(editor, 'underline', {});
+    applyCaretFormat(editor, 'italic', {});
+    applyCaretFormat(editor, 'strikethrough', {});
+    removeCaretFormat(editor, 'bold', {});
+    TinyContentActions.type(editor, 'x');
+    TinyAssertions.assertContent(editor, '<p><s><span style="text-decoration: underline;"><em><strong>abc</strong></em></span></s><s><em><span style="text-decoration: underline;">x</span></em></s></p>');
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
+      return s.element('body', {
+        children: [
+          s.element('p', {
+            children: [
+              s.element('s', {
+                children: [
+                  s.element('span', {
+                    styles: { 'text-decoration': str.is('underline') },
+                    children: [
+                      s.element('em', {
+                        children: [
+                          s.element('strong', {
+                            children: [
+                              s.text(str.is('abc'))
+                            ]
+                          }),
+                          s.element('span', {
+                            attrs: {
+                              'id': str.is('_mce_caret'),
+                              'data-mce-bogus': str.is('1'),
+                              'data-mce-type': str.is('format-caret')
+                            },
+                            children: [
+                              s.text(str.is('\uFEFF'))
+                            ]
+                          })
+                        ]
+                      })
+                    ]
+                  }),
+                  s.element('span', {
+                    attrs: {
+                      'id': str.is('_mce_caret'),
+                      'data-mce-bogus': str.is('1'),
+                      'data-mce-type': str.is('format-caret')
+                    },
+                    children: [
+                      s.element('span', {
+                        attrs: {
+                          'id': str.is('_mce_caret'),
+                          'data-mce-bogus': str.is('1'),
+                          'data-mce-type': str.is('format-caret')
+                        },
+                        children: [
+                          s.text(str.is('\uFEFF'))
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              }),
+              s.element('span', {
+                attrs: {
+                  'id': str.is('_mce_caret'),
+                  'data-mce-bogus': str.is('1'),
+                  'data-mce-type': str.is('format-caret')
+                },
+                children: [
+                  s.element('span', {
+                    attrs: {
+                      'id': str.is('_mce_caret'),
+                      'data-mce-bogus': str.is('1'),
+                      'data-mce-type': str.is('format-caret')
+                    },
+                    children: [
+                      s.element('span', {
+                        attrs: {
+                          'id': str.is('_mce_caret'),
+                          'data-mce-bogus': str.is('1'),
+                          'data-mce-type': str.is('format-caret')
+                        },
+                        children: [
+                          s.element('s', {
+                            children: [
+                              s.element('em', {
+                                children: [
+                                  s.element('span', {
+                                    styles: { 'text-decoration': str.is('underline') },
+                                    children: [
+                                      s.text(str.is('\uFEFFx'))
+                                    ]
+                                  })
+                                ]
+                              })
+                            ]
+                          })
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              })
+            ]
+          })
+        ]
+      });
+    }));
+  });
+
+  it('TINY-10132: apply format to caret after text, before space, insert text then remove format', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>abc aaa</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 3);
+    applyCaretFormat(editor, 'bold', {});
+    applyCaretFormat(editor, 'underline', {});
+    applyCaretFormat(editor, 'strikethrough', {});
+    TinyContentActions.type(editor, 'x');
+    TinyAssertions.assertContent(editor, '<p>abc<s><span style="text-decoration: underline;"><strong>x</strong></span></s> aaa</p>');
+    removeCaretFormat(editor, 'bold', {});
+    removeCaretFormat(editor, 'underline', {});
+    TinyAssertions.assertContent(editor, '<p>abc<s><span style="text-decoration: underline;"><strong>x</strong></span></s> aaa</p>');
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
+      return s.element('body', {
+        children: [
+          s.element('p', {
+            children: [
+              s.text(str.is('abc')),
+              s.element('s', {
+                children: [
+                  s.element('span', {
+                    styles: { 'text-decoration': str.is('underline') },
+                    children: [
+                      s.element('strong', {
+                        children: [
+                          s.text(str.is('x'))
+                        ]
+                      }),
+                      s.element('span', {
+                        attrs: {
+                          'id': str.is('_mce_caret'),
+                          'data-mce-bogus': str.is('1'),
+                          'data-mce-type': str.is('format-caret')
+                        },
+                        children: [
+                          s.text(str.is('\uFEFF'))
+                        ]
+                      })
+                    ]
+                  }),
+                  s.element('span', {
+                    attrs: {
+                      'id': str.is('_mce_caret'),
+                      'data-mce-bogus': str.is('1'),
+                      'data-mce-type': str.is('format-caret')
+                    },
+                    children: [
+                      s.element('span', {
+                        attrs: {
+                          'id': str.is('_mce_caret'),
+                          'data-mce-bogus': str.is('1'),
+                          'data-mce-type': str.is('format-caret')
+                        },
+                        children: [
+                          s.text(str.is('\uFEFF'))
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              }),
+              s.text(str.is(' aaa'))
+            ]
+          })
+        ]
+      });
+    }));
+  });
 });
