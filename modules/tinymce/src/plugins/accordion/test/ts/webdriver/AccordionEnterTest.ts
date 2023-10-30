@@ -34,6 +34,16 @@ describe('webdriver.tinymce.plugins.accordion.AccordionEnterTest', () => {
     TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 1 });
   });
 
+  it('TINY-10177: Toggle accordion with ENTER keypress when selection is before the summary', async () => {
+    const editor = hook.editor();
+    editor.setContent(AccordionUtils.createAccordion({ summary: 'tiny' }));
+    TinySelections.setCursor(editor, [ 0 ], 0);
+    await pDoEnter();
+    TinyAssertions.assertContentPresence(editor, { 'details:not([open="open"])': 1 });
+    await pDoEnter();
+    TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 1 });
+  });
+
   it('TINY-9731: Leave accordion body with ENTER keypress within an empty paragraph', async () => {
     const editor = hook.editor();
     editor.setContent(AccordionUtils.createAccordion({ body: '<p>tiny</p>' }));
