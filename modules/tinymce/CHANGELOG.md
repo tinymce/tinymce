@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed use of `async` for editor rendering which caused visual blinking when reloading the editor in-place. #TINY-10249
 - Toggling a list that contains an LI element having another list as its first child would remove the remaining content within that LI element. #TINY-10213
 - List items containing a list element surrounded by non list nodes would cause some list operations to fail. #TINY-10268
+- The `accordion` toggling with the Enter key press would behave incorrectly on Safari. #TINY-10177
 
 ## 6.7.1 - 2023-10-19
 
