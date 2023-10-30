@@ -75,7 +75,9 @@ const pPasteUrlItems = async (target: SugarElement<Element>, items: PasteUrlItem
     const fileName = Arr.last(item.url.split('/')).getOr('filename.dat');
     const mime = blob.type.split(';')[0]; // Only grab mime type not charset encoding
 
-    if (item.kind === 'string') {
+    if (resp.status >= 400) {
+      return Promise.reject(new Error(`Failed to load paste URL item: "${item.url}", status: ${resp.status}`));
+    } else if (item.kind === 'string') {
       const reader = new window.FileReader();
       return new Promise<{ kind: 'string'; mime: string; text: string }>((resolve, reject) => {
         reader.addEventListener('loadend', () => {
