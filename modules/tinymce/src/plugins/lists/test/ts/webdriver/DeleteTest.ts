@@ -9,6 +9,7 @@ describe('webdriver.tinymce.plugins.lists.DeleteTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'lists',
     toolbar: 'numlist bullist',
+    indent: false,
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ], true);
 
@@ -29,16 +30,16 @@ describe('webdriver.tinymce.plugins.lists.DeleteTest', () => {
           '</li>' +
         '</ol>';
 
-      const expectedContent = '<ol>\n' +
+      const expectedContent = '<ol>' +
           '<li>' +
             'List 1' +
-          '</li>\n' +
-          '<li>\n' +
-            '<h2>Header</h2>\n' +
-            '<ol>\n' +
-              '<li>List 1-1Place custor at the start of this line and hit backspace.</li>\n' +
-            '</ol>\n' +
-          '</li>\n' +
+          '</li>' +
+          '<li>' +
+            '<h2>Header</h2>' +
+            '<ol>' +
+              '<li>List 1-1Place custor at the start of this line and hit backspace.</li>' +
+            '</ol>' +
+          '</li>' +
         '</ol>';
 
       editor.setContent(initialContent);
