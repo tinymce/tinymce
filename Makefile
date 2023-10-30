@@ -8,7 +8,7 @@ batch: $(PROJECTS)
 	done
 
 merge:
-  yarn changie merge
+	yarn changie merge
 
 all: batch merge
 
