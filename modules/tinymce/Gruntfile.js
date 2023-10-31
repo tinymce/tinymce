@@ -1,4 +1,4 @@
-/* eslint-env node */
+/*eslint-env node */
 const { string: PluginString } = require('rollup-plugin-string');
 const FilesAsStrings = PluginString({
   include: '**/*.svg'
@@ -61,7 +61,7 @@ module.exports = function (grunt) {
     },
 
     eslint: {
-      target: ['src/**/*.ts']
+      target: [ 'src/**/*.ts' ]
     },
 
     globals: {
@@ -90,7 +90,7 @@ module.exports = function (grunt) {
               swag.remapImports()
             ]
           },
-          files: [
+          files:[
             {
               src: 'lib/core/main/ts/api/Main.js',
               dest: 'js/tinymce/tinymce.js'
@@ -111,7 +111,7 @@ module.exports = function (grunt) {
               FilesAsStrings,
               swag.dts({
                 respectExternal: true,
-                keepVariables: ['tinymce'],
+                keepVariables: [ 'tinymce' ],
                 keepComments: false
               })
             ]
@@ -147,7 +147,7 @@ module.exports = function (grunt) {
               swag.remapImports()
             ]
           },
-          files: [{ src: `lib/plugins/${name}/main/ts/Main.js`, dest: `js/tinymce/plugins/${name}/plugin.js` }]
+          files:[ { src: `lib/plugins/${name}/main/ts/Main.js`, dest: `js/tinymce/plugins/${name}/plugin.js` } ]
         };
       }),
       gruntUtils.generate(themes, 'theme', (name) => {
@@ -174,7 +174,7 @@ module.exports = function (grunt) {
               swag.remapImports()
             ]
           },
-          files: [
+          files:[
             {
               src: `lib/themes/${name}/main/ts/Main.js`,
               dest: `js/tinymce/themes/${name}/theme.js`
@@ -205,7 +205,7 @@ module.exports = function (grunt) {
               swag.remapImports()
             ]
           },
-          files: [
+          files:[
             {
               src: `lib/models/${name}/main/ts/Main.js`,
               dest: `js/tinymce/models/${name}/model.js`
@@ -270,12 +270,12 @@ module.exports = function (grunt) {
       }),
       gruntUtils.generate(themes, 'theme', (name) => {
         return {
-          files: [{ src: `js/tinymce/themes/${name}/theme.js`, dest: `js/tinymce/themes/${name}/theme.min.js` }]
+          files: [ { src: `js/tinymce/themes/${name}/theme.js`, dest: `js/tinymce/themes/${name}/theme.min.js` } ]
         };
       }),
       gruntUtils.generate(models, 'model', (name) => {
         return {
-          files: [{ src: `js/tinymce/models/${name}/model.js`, dest: `js/tinymce/models/${name}/model.min.js` }]
+          files: [ { src: `js/tinymce/models/${name}/model.js`, dest: `js/tinymce/models/${name}/model.min.js` } ]
         };
       })
     ),
@@ -302,21 +302,21 @@ module.exports = function (grunt) {
     },
 
     concat: Object.assign({
-      options: {
-        process: function (content) {
-          return content.
-            replace(/@@version@@/g, packageData.version).
-            replace(/@@releaseDate@@/g, packageData.date);
+        options: {
+          process: function(content) {
+            return content.
+              replace(/@@version@@/g, packageData.version).
+              replace(/@@releaseDate@@/g, packageData.date);
+          }
+        },
+        core: {
+          src: [
+            'src/core/text/build-header.js',
+            'js/tinymce/tinymce.js'
+          ],
+          dest: 'js/tinymce/tinymce.js'
         }
       },
-      core: {
-        src: [
-          'src/core/text/build-header.js',
-          'js/tinymce/tinymce.js'
-        ],
-        dest: 'js/tinymce/tinymce.js'
-      }
-    },
       gruntUtils.generate(plugins, 'plugin', function (name) {
         return {
           src: [
@@ -739,12 +739,12 @@ module.exports = function (grunt) {
           authors: 'Ephox Corporation DBA Tiny Technologies, Inc',
           owners: 'Ephox Corporation DBA Tiny Technologies, Inc',
           description: 'The best WYSIWYG editor! TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor ' +
-            'control released as Open Source under MIT by Tiny Technologies, Inc. TinyMCE has the ability to convert HTML ' +
-            'TEXTAREA fields or other HTML elements to editor instances. TinyMCE is very easy to integrate ' +
-            'into other Content Management Systems.',
+          'control released as Open Source under MIT by Tiny Technologies, Inc. TinyMCE has the ability to convert HTML ' +
+          'TEXTAREA fields or other HTML elements to editor instances. TinyMCE is very easy to integrate ' +
+          'into other Content Management Systems.',
           releaseNotes: 'Release notes for my package.',
           summary: 'TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor ' +
-            'control released as Open Source under MIT by Tiny Technologies, Inc.',
+          'control released as Open Source under MIT by Tiny Technologies, Inc.',
           projectUrl: 'https://www.tiny.cloud/',
           iconUrl: 'https://www.tiny.cloud/favicon-32x32.png',
           licenseUrl: 'https://www.tiny.cloud/license',
