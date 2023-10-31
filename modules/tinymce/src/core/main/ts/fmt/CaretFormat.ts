@@ -84,12 +84,11 @@ const trimZwspFromCaretContainer = (caretContainerNode: Node) => {
 
   return textNode;
 };
-// TODO: Can we us InlineFormatDelete.ts instead
 const removeCaretContainerNode = (editor: Editor, node: Node, moveCaret: boolean) => {
   const dom = editor.dom, selection = editor.selection;
 
   if (isCaretContainerEmpty(node)) {
-    DeleteElement.deleteElement(editor, false, SugarElement.fromDom(node), moveCaret, true);
+    DeleteElement.deleteElement(editor, false, SugarElement.fromDom(node), moveCaret);
   } else {
     const rng = selection.getRng();
     const block = dom.getParent(node, dom.isBlock);
@@ -307,9 +306,7 @@ const removeCaretFormat = (editor: Editor, name: string, vars?: FormatVars, simi
     selection.moveToBookmark(bookmark);
   } else {
     const caretContainer = getParentCaretContainer(editor.getBody(), formatNode);
-    // TODO: Verify is this will always return true
-    const isCollapsedInCaretContainer = Type.isNonNullable(caretContainer) && editor.selection.isCollapsed();
-    const parentsAfter = isCollapsedInCaretContainer ? dom.getParents(formatNode.parentNode, Fun.always, caretContainer) : [];
+    const parentsAfter = Type.isNonNullable(caretContainer) ? dom.getParents(formatNode.parentNode, Fun.always, caretContainer) : [];
     const newCaretContainer = createCaretContainer(false).dom;
 
     insertCaretContainerNode(editor, newCaretContainer, caretContainer ?? formatNode);
@@ -317,7 +314,7 @@ const removeCaretFormat = (editor: Editor, name: string, vars?: FormatVars, simi
     const cleanedFormatNode = cleanFormatNode(editor, newCaretContainer, formatNode, name, vars, similar);
     const caretTextNode = insertFormatNodesIntoCaretContainer(parents.concat(cleanedFormatNode.toArray()).concat(parentsAfter), newCaretContainer);
     if (caretContainer) {
-      removeCaretContainerNode(editor, caretContainer, isCollapsedInCaretContainer);
+      removeCaretContainerNode(editor, caretContainer, Type.isNonNullable(caretContainer));
     }
     selection.setCursorLocation(caretTextNode, 1);
 

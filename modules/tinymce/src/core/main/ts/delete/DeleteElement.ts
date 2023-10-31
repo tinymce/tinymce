@@ -1,4 +1,4 @@
-import { Fun, Obj, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Optionals } from '@ephox/katamari';
 import { Insert, PredicateFind, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
@@ -8,6 +8,7 @@ import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
+import { ZWSP } from '../text/Zwsp';
 import * as MergeText from './MergeText';
 
 const needsReposition = (pos: CaretPosition, elm: Node): boolean => {
@@ -88,7 +89,11 @@ const paddEmptyBlock = (elm: SugarElement<Node>): Optional<CaretPosition> => {
   if (Empty.isEmpty(elm)) {
     const br = SugarElement.fromHtml('<br data-mce-bogus="1">');
     // Remove all bogus elements except caret
-    Remove.empty(elm);
+    Arr.each(Traverse.children(elm), (node) => {
+      if (node.dom.textContent !== ZWSP) {
+        Remove.remove(node);
+      }
+    });
     Insert.append(elm, br);
     return Optional.some(CaretPosition.before(br.dom));
   } else {
@@ -123,20 +128,12 @@ const deleteNormalized = (elm: SugarElement<Node>, afterDeletePosOpt: Optional<C
 const isInlineElement = (editor: Editor, element: SugarElement<Node>): boolean =>
   Obj.has(editor.schema.getTextInlineElements(), SugarNode.name(element));
 
-const deleteElement = (
-  editor: Editor,
-  forward: boolean,
-  elm: SugarElement<Node>,
-  moveCaret: boolean = true,
-  ignoreEmpty: boolean = false
-): void => {
+const deleteElement = (editor: Editor, forward: boolean, elm: SugarElement<Node>, moveCaret: boolean = true): void => {
   const afterDeletePos = findCaretPosOutsideElmAfterDelete(forward, editor.getBody(), elm.dom);
   const parentBlock = PredicateFind.ancestor(elm, Fun.curry(isBlock, editor), eqRawNode(editor.getBody()));
   const normalizedAfterDeletePos = deleteNormalized(elm, afterDeletePos, editor.schema, isInlineElement(editor, elm));
 
-  if (ignoreEmpty && moveCaret) {
-    setSelection(editor, forward, normalizedAfterDeletePos);
-  } else if (editor.dom.isEmpty(editor.getBody())) {
+  if (editor.dom.isEmpty(editor.getBody())) {
     editor.setContent('');
     editor.selection.setCursorLocation();
   } else {
@@ -158,4 +155,3 @@ const deleteElement = (
 export {
   deleteElement
 };
-
