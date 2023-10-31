@@ -21,7 +21,7 @@ const autoprefix = new lessAutoprefix({
 //
 // Lint less files using stylelint
 //
-gulp.task('lint', function () {
+gulp.task('lint', function() {
   return gulp.src('./src/less/**/*.less')
     .pipe(gulpStylelint({
       failAfterError: true,
@@ -35,7 +35,7 @@ gulp.task('lint', function () {
 //
 // Build HTML demos
 //
-gulp.task('buildDemos', function () {
+gulp.task('buildDemos', function() {
   return gulp.src(['./src/demo/**/*'])
     .pipe(gulp.dest('./build'));
 });
@@ -44,11 +44,11 @@ gulp.task('buildDemos', function () {
 // Copy TinyMCE from modules/tinymce to the build folder.
 // NOTE. This task must be run after the buildDemos task
 //
-gulp.task('copyTinymce', function (done) {
+gulp.task('copyTinymce', function(done) {
   if (fs.existsSync('../tinymce/js/tinymce/tinymce.min.js')) {
     return gulp.src(['../tinymce/js/tinymce/**/*'], {
-      base: '../tinymce/js/'
-    })
+        base: '../tinymce/js/'
+      })
       .pipe(gulp.dest('./build'));
   } else {
     console.log(chalk.red('Local TinyMCE does not exist. Using cloud version instead'));
@@ -75,7 +75,7 @@ gulp.task('buildSkinSwitcher', (done) => {
 //
 // Build CSS
 //
-gulp.task('less', function () {
+gulp.task('less', function() {
   return gulp.src('./src/less/skins/**/*.less')
     .pipe(less({
       math: 'always',
@@ -88,18 +88,18 @@ gulp.task('less', function () {
 //
 // Minify CSS
 //
-gulp.task('minifyCss', function () {
+gulp.task('minifyCss', function() {
   return gulp.src(['./build/skins/**/*.css', '!**/*.min.css'])
     .pipe(sourcemaps.init())
-    .pipe(cleanCSS({rebase: false}))
-    .pipe(through2.obj(function (file, _, cb) {
+    .pipe(cleanCSS({ rebase: false }))
+    .pipe(through2.obj(function(file, _, cb) {
       if (file.isBuffer()) {
-        const contents = `tinymce.Resource.add('${file.relative}', ${JSON.stringify(file.contents.toString())})`;
+        const contents = `tinymce.Resource.add('${file.relative}', '${JSON.stringify(file.contents.toString())}')`;
         file.contents = Buffer.from(contents)
       }
       cb(null, file);
     }))
-    .pipe(rename({extname: '.js'}))
+    .pipe(rename({ extname: '.js' }))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./build/skins'))
     .pipe(connect.reload());
@@ -128,7 +128,7 @@ gulp.task('clean', function () {
     read: false,
     allowEmpty: true
   })
-    .pipe(clean());
+  .pipe(clean());
 });
 
 //
