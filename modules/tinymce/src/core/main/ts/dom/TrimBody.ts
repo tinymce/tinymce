@@ -1,25 +1,44 @@
-import { Arr, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Type } from '@ephox/katamari';
 import { Attribute, Remove, SugarElement } from '@ephox/sugar';
 
+import Tools from '../api/util/Tools';
 import * as Zwsp from '../text/Zwsp';
+
+// TINY-10305: Map over array for faster lookup.
+const unescapedTextParents = Tools.makeMap('NOSCRIPT STYLE SCRIPT XMP IFRAME NOEMBED NOFRAMES PLAINTEXT', ' ');
+
+const containsZwsp = (node: Node): boolean => Type.isString(node.nodeValue) && node.nodeValue.includes(Zwsp.ZWSP);
 
 const getTemporaryNodeSelector = (tempAttrs: string[]): string =>
   `${tempAttrs.length === 0 ? '' : `${Arr.map(tempAttrs, (attr) => `[${attr}]`).join(',')},`}[data-mce-bogus="all"]`;
 
-const getTemporaryNodes = (body: HTMLElement, tempAttrs: string[]): NodeListOf<Element> =>
+const getTemporaryNodes = (tempAttrs: string[], body: HTMLElement): NodeListOf<Element> =>
   body.querySelectorAll(getTemporaryNodeSelector(tempAttrs));
 
-const createCommentWalker = (body: HTMLElement): TreeWalker =>
-  document.createTreeWalker(body, NodeFilter.SHOW_COMMENT, null);
+const createZwspCommentWalker = (body: HTMLElement): TreeWalker =>
+  document.createTreeWalker(body, NodeFilter.SHOW_COMMENT, (node) => containsZwsp(node) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP);
 
-const hasComments = (body: HTMLElement): boolean =>
-  createCommentWalker(body).nextNode() !== null;
+const createUnescapedZwspTextWalker = (body: HTMLElement): TreeWalker =>
+  document.createTreeWalker(body, NodeFilter.SHOW_TEXT, (node) => {
+    if (containsZwsp(node)) {
+      const parent = node.parentNode;
+      return parent && Obj.has(unescapedTextParents, parent.nodeName) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+    } else {
+      return NodeFilter.FILTER_SKIP;
+    }
+  });
 
-const hasTemporaryNodes = (body: HTMLElement, tempAttrs: string[]): boolean =>
+const hasZwspComment = (body: HTMLElement): boolean =>
+  createZwspCommentWalker(body).nextNode() !== null;
+
+const hasUnescapedZwspText = (body: HTMLElement): boolean =>
+  createUnescapedZwspTextWalker(body).nextNode() !== null;
+
+const hasTemporaryNode = (tempAttrs: string[], body: HTMLElement): boolean =>
   body.querySelector(getTemporaryNodeSelector(tempAttrs)) !== null;
 
-const trimTemporaryNodes = (body: HTMLElement, tempAttrs: string[]): void => {
-  Arr.each(getTemporaryNodes(body, tempAttrs), (elm) => {
+const trimTemporaryNodes = (tempAttrs: string[], body: HTMLElement): void => {
+  Arr.each(getTemporaryNodes(tempAttrs, body), (elm) => {
     const element = SugarElement.fromDom(elm);
     if (Attribute.get(element, 'data-mce-bogus') === 'all') {
       Remove.remove(element);
@@ -33,41 +52,56 @@ const trimTemporaryNodes = (body: HTMLElement, tempAttrs: string[]): void => {
   });
 };
 
-const removeCommentsContainingZwsp = (body: HTMLElement): void => {
-  const walker = createCommentWalker(body);
-  let nextNode = walker.nextNode();
-  while (nextNode !== null) {
-    const comment = walker.currentNode as Comment;
-    nextNode = walker.nextNode();
-    if (Type.isString(comment.nodeValue) && comment.nodeValue.includes(Zwsp.ZWSP)) {
-      Remove.remove(SugarElement.fromDom(comment));
-    }
+const emptyAllNodeValuesInWalker = (walker: TreeWalker): void => {
+  let curr = walker.nextNode();
+  while (curr !== null) {
+    curr.nodeValue = null;
+    curr = walker.nextNode();
   }
 };
 
-const deepClone = (body: HTMLElement): HTMLElement => body.cloneNode(true) as HTMLElement;
+const emptyZwspComments = Fun.compose(emptyAllNodeValuesInWalker, createZwspCommentWalker);
+
+const emptyUnescapedZwspTexts = Fun.compose(emptyAllNodeValuesInWalker, createUnescapedZwspTextWalker);
 
 const trim = (body: HTMLElement, tempAttrs: string[]): HTMLElement => {
-  let trimmed = body;
-
-  if (hasComments(body)) {
-    trimmed = deepClone(body);
-    removeCommentsContainingZwsp(trimmed);
-    if (hasTemporaryNodes(trimmed, tempAttrs)) {
-      trimTemporaryNodes(trimmed, tempAttrs);
+  const conditionalTrims: { condition: (elm: HTMLElement) => boolean; action: (elm: HTMLElement) => void }[] = [
+    {
+      condition: Fun.curry(hasTemporaryNode, tempAttrs),
+      action: Fun.curry(trimTemporaryNodes, tempAttrs)
+    },
+    {
+      condition: hasZwspComment,
+      action: emptyZwspComments
+    },
+    {
+      condition: hasUnescapedZwspText,
+      action: emptyUnescapedZwspTexts
     }
-  } else if (hasTemporaryNodes(body, tempAttrs)) {
-    trimmed = deepClone(body);
-    trimTemporaryNodes(trimmed, tempAttrs);
-  }
+  ];
+
+  let trimmed = body;
+  let cloned = false;
+
+  Arr.each(conditionalTrims, ({ condition, action }) => {
+    if (condition(trimmed)) {
+      if (!cloned) {
+        trimmed = body.cloneNode(true) as HTMLElement;
+        cloned = true;
+      }
+      action(trimmed);
+    }
+  });
 
   return trimmed;
 };
 
 export {
   trim,
-  hasComments,
-  hasTemporaryNodes,
-  removeCommentsContainingZwsp,
-  trimTemporaryNodes
+  hasTemporaryNode,
+  hasZwspComment,
+  hasUnescapedZwspText,
+  trimTemporaryNodes,
+  emptyZwspComments,
+  emptyUnescapedZwspTexts
 };

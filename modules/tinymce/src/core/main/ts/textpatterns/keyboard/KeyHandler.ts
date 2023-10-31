@@ -1,8 +1,9 @@
 import { Unicode } from '@ephox/katamari';
 
-import { textBefore } from '../../alien/TextSearch';
+import * as TextSearch from '../../alien/TextSearch';
 import Editor from '../../api/Editor';
 import VK from '../../api/util/VK';
+import * as Zwsp from '../../text/Zwsp';
 import * as BlockPattern from '../core/BlockPattern';
 import * as InlinePattern from '../core/InlinePattern';
 import { PatternSet } from '../core/PatternTypes';
@@ -25,12 +26,12 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
         },
         () => {
           // create a cursor position that we can move to avoid the inline formats
-          editor.insertContent(Unicode.zeroWidth);
+          Zwsp.insert(editor);
           InlinePattern.applyMatches(editor, inlineMatches);
           BlockPattern.applyMatches(editor, blockMatches);
           // find the spot before the cursor position
           const range = editor.selection.getRng();
-          const spot = textBefore(range.startContainer, range.startOffset, editor.dom.getRoot());
+          const spot = TextSearch.textBefore(range.startContainer, range.startOffset, editor.dom.getRoot());
           editor.execCommand('mceInsertNewLine');
           // clean up the cursor position we used to preserve the format
           spot.each((s) => {
