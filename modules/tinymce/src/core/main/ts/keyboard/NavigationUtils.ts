@@ -88,9 +88,9 @@ const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, i
   const peekCaretPosition = getNextPosFn(nextCaretPosition);
   if (peekCaretPosition && isBeforeFn(peekCaretPosition)) {
     if (CaretUtils.isMoveInsideSameBlock(nextCaretPosition, peekCaretPosition)) {
-      return getAdjacentFloating(peekCaretPosition, direction).fold(
+      return getAdjacentFloating(nextCaretPosition, direction).fold(
         () => FakeCaretUtils.showCaret(direction, editor, peekCaretPosition.getNode(!forwards) as HTMLElement, forwards, false),
-        (_el) => Optional.from(nextCaretPosition).map((p) => p.toRange())
+        (el) => Optional.some(elementToRange(el))
       );
     }
   }
