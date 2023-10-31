@@ -1,5 +1,5 @@
-/*eslint-env node */
-const {string: PluginString} = require('rollup-plugin-string');
+/* eslint-env node */
+const { string: PluginString } = require('rollup-plugin-string');
 const FilesAsStrings = PluginString({
   include: '**/*.svg'
 });
@@ -55,9 +55,9 @@ module.exports = function (grunt) {
     pkg: packageData,
 
     shell: {
-      prismjs: {command: 'node ./bin/build-prism.js', cwd: '../../'},
-      tsc: {command: 'tsc -b'},
-      moxiedoc: {command: 'moxiedoc "src/core/main/ts" -t tinymcenext --fail-on-warning --dry'}
+      prismjs: { command: 'node ./bin/build-prism.js', cwd: '../../' },
+      tsc: { command: 'tsc -b' },
+      moxiedoc: { command: 'moxiedoc "src/core/main/ts" -t tinymcenext --fail-on-warning --dry' }
     },
 
     eslint: {
@@ -147,7 +147,7 @@ module.exports = function (grunt) {
               swag.remapImports()
             ]
           },
-          files: [{src: `lib/plugins/${name}/main/ts/Main.js`, dest: `js/tinymce/plugins/${name}/plugin.js`}]
+          files: [{ src: `lib/plugins/${name}/main/ts/Main.js`, dest: `js/tinymce/plugins/${name}/plugin.js` }]
         };
       }),
       gruntUtils.generate(themes, 'theme', (name) => {
@@ -236,8 +236,8 @@ module.exports = function (grunt) {
         },
         core: {
           files: [
-            {src: 'js/tinymce/tinymce.js', dest: 'js/tinymce/tinymce.min.js'},
-            {src: 'js/tinymce/icons/default/icons.js', dest: 'js/tinymce/icons/default/icons.min.js'},
+            { src: 'js/tinymce/tinymce.js', dest: 'js/tinymce/tinymce.min.js' },
+            { src: 'js/tinymce/icons/default/icons.js', dest: 'js/tinymce/icons/default/icons.min.js' },
           ]
         },
         // very similar to the emoticons plugin, except mangle is off
@@ -250,32 +250,32 @@ module.exports = function (grunt) {
             }
           },
           files: [
-            {src: 'src/plugins/emoticons/main/js/emojis.js', dest: 'js/tinymce/plugins/emoticons/js/emojis.js'},
-            {src: 'src/plugins/emoticons/main/js/emojiimages.js', dest: 'js/tinymce/plugins/emoticons/js/emojiimages.js'}
+            { src: 'src/plugins/emoticons/main/js/emojis.js', dest: 'js/tinymce/plugins/emoticons/js/emojis.js' },
+            { src: 'src/plugins/emoticons/main/js/emojiimages.js', dest: 'js/tinymce/plugins/emoticons/js/emojiimages.js' }
           ]
         }
       },
       gruntUtils.generate(plugins, 'plugin', (name) => {
         var pluginExtras = {
           emoticons: [
-            {src: 'src/plugins/emoticons/main/js/emojis.js', dest: 'js/tinymce/plugins/emoticons/js/emojis.min.js'},
-            {src: 'src/plugins/emoticons/main/js/emojiimages.js', dest: 'js/tinymce/plugins/emoticons/js/emojiimages.min.js'}
+            { src: 'src/plugins/emoticons/main/js/emojis.js', dest: 'js/tinymce/plugins/emoticons/js/emojis.min.js' },
+            { src: 'src/plugins/emoticons/main/js/emojiimages.js', dest: 'js/tinymce/plugins/emoticons/js/emojiimages.min.js' }
           ]
         };
         return {
           files: [
-            {src: `js/tinymce/plugins/${name}/plugin.js`, dest: `js/tinymce/plugins/${name}/plugin.min.js`}
+            { src: `js/tinymce/plugins/${name}/plugin.js`, dest: `js/tinymce/plugins/${name}/plugin.min.js` }
           ].concat(pluginExtras.hasOwnProperty(name) ? pluginExtras[name] : [])
         };
       }),
       gruntUtils.generate(themes, 'theme', (name) => {
         return {
-          files: [{src: `js/tinymce/themes/${name}/theme.js`, dest: `js/tinymce/themes/${name}/theme.min.js`}]
+          files: [{ src: `js/tinymce/themes/${name}/theme.js`, dest: `js/tinymce/themes/${name}/theme.min.js` }]
         };
       }),
       gruntUtils.generate(models, 'model', (name) => {
         return {
-          files: [{src: `js/tinymce/models/${name}/model.js`, dest: `js/tinymce/models/${name}/model.min.js`}]
+          files: [{ src: `js/tinymce/models/${name}/model.js`, dest: `js/tinymce/models/${name}/model.min.js` }]
         };
       })
     ),
@@ -413,7 +413,7 @@ module.exports = function (grunt) {
       },
       'visualblocks-plugin': {
         files: [
-          {src: 'src/plugins/visualblocks/main/css/visualblocks.css', dest: 'js/tinymce/plugins/visualblocks/css/visualblocks.css'}
+          { src: 'src/plugins/visualblocks/main/css/visualblocks.css', dest: 'js/tinymce/plugins/visualblocks/css/visualblocks.css' }
         ]
       },
       'html-i18n': {
@@ -650,7 +650,7 @@ module.exports = function (grunt) {
               'license': 'MIT',
               'keywords': keywords,
               'homepage': 'https://www.tiny.cloud/',
-              'bugs': {'url': 'https://github.com/tinymce/tinymce/issues'}
+              'bugs': { 'url': 'https://github.com/tinymce/tinymce/issues' }
             }));
 
             zip.addData('composer.json', jsonToBuffer({
@@ -766,17 +766,17 @@ module.exports = function (grunt) {
           outputDir: 'dist'
         },
         files: [
-          {src: 'js/tinymce/langs', dest: '/content/scripts/tinymce/langs'},
-          {src: 'js/tinymce/plugins', dest: '/content/scripts/tinymce/plugins'},
-          {src: 'js/tinymce/themes', dest: '/content/scripts/tinymce/themes'},
-          {src: 'js/tinymce/models', dest: '/content/scripts/tinymce/models'},
-          {src: 'js/tinymce/skins', dest: '/content/scripts/tinymce/skins'},
-          {src: 'js/tinymce/icons', dest: '/content/scripts/tinymce/icons'},
-          {src: 'js/tinymce/tinymce.js', dest: '/content/scripts/tinymce/tinymce.js'},
-          {src: 'js/tinymce/tinymce.d.ts', dest: '/content/scripts/tinymce/tinymce.d.ts'},
-          {src: 'js/tinymce/tinymce.min.js', dest: '/content/scripts/tinymce/tinymce.min.js'},
-          {src: 'js/tinymce/license.txt', dest: '/content/scripts/tinymce/license.txt'},
-          {src: 'tools/nuget/build/TinyMCE.targets', dest: '/build/TinyMCE.targets'}
+          { src: 'js/tinymce/langs', dest: '/content/scripts/tinymce/langs' },
+          { src: 'js/tinymce/plugins', dest: '/content/scripts/tinymce/plugins' },
+          { src: 'js/tinymce/themes', dest: '/content/scripts/tinymce/themes' },
+          { src: 'js/tinymce/models', dest: '/content/scripts/tinymce/models' },
+          { src: 'js/tinymce/skins', dest: '/content/scripts/tinymce/skins' },
+          { src: 'js/tinymce/icons', dest: '/content/scripts/tinymce/icons' },
+          { src: 'js/tinymce/tinymce.js', dest: '/content/scripts/tinymce/tinymce.js' },
+          { src: 'js/tinymce/tinymce.d.ts', dest: '/content/scripts/tinymce/tinymce.d.ts' },
+          { src: 'js/tinymce/tinymce.min.js', dest: '/content/scripts/tinymce/tinymce.min.js' },
+          { src: 'js/tinymce/license.txt', dest: '/content/scripts/tinymce/license.txt' },
+          { src: 'tools/nuget/build/TinyMCE.targets', dest: '/build/TinyMCE.targets' }
         ]
       },
     },
@@ -900,8 +900,8 @@ module.exports = function (grunt) {
   grunt.registerTask('symlink-dist', 'Links built dist content to the root directory', function () {
     // Windows doesn't support symlinks, so copy instead of linking
     if (process.platform === "win32") {
-      if (grunt.file.exists('../../dist')) grunt.file.delete('../../dist', {force: true});
-      if (grunt.file.exists('../../js')) grunt.file.delete('../../js', {force: true});
+      if (grunt.file.exists('../../dist')) grunt.file.delete('../../dist', { force: true });
+      if (grunt.file.exists('../../js')) grunt.file.delete('../../js', { force: true });
       grunt.file.copy('dist', '../../dist');
       grunt.file.copy('js', '../../js');
       grunt.log.write('Copied 2 directories');
