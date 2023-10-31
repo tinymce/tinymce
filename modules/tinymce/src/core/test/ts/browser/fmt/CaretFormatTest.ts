@@ -584,10 +584,10 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
 
   it('TINY-10132: Apply and remove multiple format to caret at the beginning of a paragraph', () => {
     const formatActions: Action[] = [
-      { type: 'apply', format: 'bold', options: {} },
-      { type: 'apply', format: 'italic', options: {} },
-      { type: 'apply', format: 'underline', options: {} },
-      { type: 'remove', format: 'bold', options: {} },
+      { type: 'apply', format: 'bold', options: {}},
+      { type: 'apply', format: 'italic', options: {}},
+      { type: 'apply', format: 'underline', options: {}},
+      { type: 'remove', format: 'bold', options: {}},
     ];
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
@@ -625,11 +625,11 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
 
   it('TINY-10132: Apply and remove multiple format to caret in an empty editor', () => {
     const formatActions: Action[] = [
-      { type: 'apply', format: 'bold', options: {} },
-      { type: 'apply', format: 'italic', options: {} },
-      { type: 'apply', format: 'underline', options: {} },
-      { type: 'remove', format: 'bold', options: {} },
-      { type: 'remove', format: 'underline', options: {} },
+      { type: 'apply', format: 'bold', options: {}},
+      { type: 'apply', format: 'italic', options: {}},
+      { type: 'apply', format: 'underline', options: {}},
+      { type: 'remove', format: 'bold', options: {}},
+      { type: 'remove', format: 'underline', options: {}},
     ];
     const editor = hook.editor();
     editor.setContent('');
@@ -712,15 +712,15 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
 
   it('TINY-10132: Remove and reapply format to caret after formatted text', () => {
     const formatActions: Action[] = [
-      { type: 'remove', format: 'bold', options: {} },
-      { type: 'remove', format: 'underline', options: {} },
-      { type: 'remove', format: 'italic', options: {} },
-      { type: 'remove', format: 'strikethrough', options: {} },
-      { type: 'apply', format: 'bold', options: {} },
-      { type: 'apply', format: 'underline', options: {} },
-      { type: 'apply', format: 'italic', options: {} },
-      { type: 'apply', format: 'strikethrough', options: {} },
-      { type: 'remove', format: 'bold', options: {} },
+      { type: 'remove', format: 'bold', options: {}},
+      { type: 'remove', format: 'underline', options: {}},
+      { type: 'remove', format: 'italic', options: {}},
+      { type: 'remove', format: 'strikethrough', options: {}},
+      { type: 'apply', format: 'bold', options: {}},
+      { type: 'apply', format: 'underline', options: {}},
+      { type: 'apply', format: 'italic', options: {}},
+      { type: 'apply', format: 'strikethrough', options: {}},
+      { type: 'remove', format: 'bold', options: {}},
     ];
 
     const editor = hook.editor();
@@ -831,14 +831,14 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
 
   it('TINY-10132: apply format to caret after text, before space, insert text then remove format', () => {
     const applyAction: Action[] = [
-      { type: 'apply', format: 'bold', options: {} },
-      { type: 'apply', format: 'underline', options: {} },
-      { type: 'apply', format: 'strikethrough', options: {} },
+      { type: 'apply', format: 'bold', options: {}},
+      { type: 'apply', format: 'underline', options: {}},
+      { type: 'apply', format: 'strikethrough', options: {}},
     ];
 
     const removeAction: Action[] = [
-      { type: 'remove', format: 'bold', options: {} },
-      { type: 'remove', format: 'underline', options: {} },
+      { type: 'remove', format: 'bold', options: {}},
+      { type: 'remove', format: 'underline', options: {}},
     ];
 
     const editor = hook.editor();
