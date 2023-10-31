@@ -1,10 +1,10 @@
-import { after, before, describe, it } from '@ephox/bedrock-client';
+import { after, before, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Singleton } from '@ephox/katamari';
 import { DomEvent, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import { copy, cut, pasteDataTransfer, pasteFiles, pasteItems, pPasteUrlItems } from 'ephox/agar/api/Clipboard';
-import { createFileFromString } from 'ephox/agar/api/Files';
+import { createFileFromString, getFileDataAsString } from 'ephox/agar/api/Files';
 
 describe('ClipboardTest', () => {
   const pasteState = Singleton.value<DataTransfer>();
@@ -12,11 +12,15 @@ describe('ClipboardTest', () => {
   const unbinderState = Singleton.value<() => void>();
 
   const getItemData = async (item: DataTransferItem) => {
-    return new Promise((resolve) => {
-      item.getAsString((data) => {
-        resolve(data);
+    if (item.kind === 'string') {
+      return new Promise((resolve) => {
+        item.getAsString((data) => {
+          resolve(data);
+        });
       });
-    });
+    } else {
+      return getFileDataAsString(item.getAsFile());
+    }
   };
 
   const assertStringItem = async (item: DataTransferItem, expected: { type: string; data: string }): Promise<void> => {
@@ -62,6 +66,10 @@ describe('ClipboardTest', () => {
     });
   });
 
+  beforeEach(() => {
+    pasteState.clear();
+  });
+
   after(() => {
     pastebinState.on(Remove.remove);
     pastebinState.clear();
@@ -69,7 +77,7 @@ describe('ClipboardTest', () => {
     unbinderState.clear();
   });
 
-  it('Paste text and html items', () => {
+  it('Paste text and html items', async () => {
     const pastebin = pastebinState.get().getOrDie('Could not get pastebin from state');
 
     pasteItems(pastebin, {
@@ -80,11 +88,11 @@ describe('ClipboardTest', () => {
     const dataTransfer = pasteState.get().getOrDie('Could not get dataTransfer from state');
 
     assert.equal(dataTransfer.items.length, 2);
-    assertStringItem(dataTransfer.items[0], { type: 'text/plain', data: 'Hello world!' });
-    assertStringItem(dataTransfer.items[1], { type: 'text/html', data: '<b>Hello world!</b>' });
+    await assertStringItem(dataTransfer.items[0], { type: 'text/plain', data: 'Hello world!' });
+    await assertStringItem(dataTransfer.items[1], { type: 'text/html', data: '<b>Hello world!</b>' });
   });
 
-  it('Paste text and html files', () => {
+  it('Paste text and html files', async () => {
     const pastebin = pastebinState.get().getOrDie('Could not get pastebin from state');
 
     pasteFiles(pastebin, [
@@ -95,11 +103,11 @@ describe('ClipboardTest', () => {
     const dataTransfer = pasteState.get().getOrDie('Could not get dataTransfer from state');
 
     assert.equal(dataTransfer.items.length, 2);
-    assertFileItem(dataTransfer.items[0], { type: 'text/plain', name: 'a.txt', data: 'Hello world!' });
-    assertFileItem(dataTransfer.items[1], { type: 'text/html', name: 'a.html', data: '<b>Hello world!</b>' });
+    await assertFileItem(dataTransfer.items[1], { type: 'text/html', name: 'a.html', data: '<b>Hello world!</b>' });
+    await assertFileItem(dataTransfer.items[0], { type: 'text/plain', name: 'a.txt', data: 'Hello world!' });
   });
 
-  it('Paste using dataTransfer mutator', () => {
+  it('Paste using dataTransfer mutator', async () => {
     const pastebin = pastebinState.get().getOrDie('Could not get pastebin from state');
 
     pasteDataTransfer(pastebin, (dataTransfer) => {
@@ -110,24 +118,24 @@ describe('ClipboardTest', () => {
     const dataTransfer = pasteState.get().getOrDie('Could not get dataTransfer from state');
 
     assert.equal(dataTransfer.items.length, 2);
-    assertFileItem(dataTransfer.items[0], { type: 'text/plain', name: 'a.txt', data: 'Hello world!' });
-    assertStringItem(dataTransfer.items[1], { type: 'text/html', data: '<b>Hello world!</b>' });
+    await assertFileItem(dataTransfer.items[0], { type: 'text/plain', name: 'a.txt', data: 'Hello world!' });
+    await assertStringItem(dataTransfer.items[1], { type: 'text/html', data: '<b>Hello world!</b>' });
   });
 
-  it('Cut', () => {
+  it('Cut', async () => {
     const pastebin = pastebinState.get().getOrDie('Could not get pastebin from state');
     const dataTransfer = cut(pastebin);
 
     assert.equal(dataTransfer.items.length, 1);
-    assertStringItem(dataTransfer.items[0], { type: 'text/plain', data: 'cut-data' });
+    await assertStringItem(dataTransfer.items[0], { type: 'text/plain', data: 'cut-data' });
   });
 
-  it('Copy', () => {
+  it('Copy', async () => {
     const pastebin = pastebinState.get().getOrDie('Could not get pastebin from state');
     const dataTransfer = copy(pastebin);
 
     assert.equal(dataTransfer.items.length, 1);
-    assertStringItem(dataTransfer.items[0], { type: 'text/plain', data: 'copy-data' });
+    await assertStringItem(dataTransfer.items[0], { type: 'text/plain', data: 'copy-data' });
   });
 
   it('PasteUrlItems as strings', async () => {
@@ -156,7 +164,7 @@ describe('ClipboardTest', () => {
     const dataTransfer = pasteState.get().getOrDie('Could not get dataTransfer from state');
 
     assert.equal(dataTransfer.items.length, 2);
-    assertFileItem(dataTransfer.items[0], { type: 'text/html', name: 'clipboard.html', data: '<!DOCTYPE html>\n<html>\n<body>\n<p>Hello world</p>\n</body>\n</html>\n' });
-    assertFileItem(dataTransfer.items[1], { type: 'text/plain', name: 'clipboard.txt', data: 'Hello world\n' });
+    await assertFileItem(dataTransfer.items[0], { type: 'text/html', name: 'clipboard.html', data: '<!DOCTYPE html>\n<html>\n<body>\n<p>Hello world</p>\n</body>\n</html>\n' });
+    await assertFileItem(dataTransfer.items[1], { type: 'text/plain', name: 'clipboard.txt', data: 'Hello world\n' });
   });
 });

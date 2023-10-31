@@ -1,9 +1,10 @@
-import { Arr, Obj, Type } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 
 import { createCopyEvent, createCutEvent, createPasteEvent } from '../clipboard/ClipboardEvents';
 import { createDataTransfer } from '../datatransfer/DataTransfer';
 import { getWindowFromElement } from '../dragndrop/DndEvents';
+import * as BlobReader from '../file/BlobReader';
 import { Chain } from './Chain';
 import * as ChainSequence from './ChainSequence';
 import { Step } from './Step';
@@ -78,17 +79,7 @@ const pPasteUrlItems = async (target: SugarElement<Element>, items: PasteUrlItem
     if (resp.status >= 400) {
       return Promise.reject(new Error(`Failed to load paste URL item: "${item.url}", status: ${resp.status}`));
     } else if (item.kind === 'string') {
-      const reader = new window.FileReader();
-      return new Promise<{ kind: 'string'; mime: string; text: string }>((resolve, reject) => {
-        reader.addEventListener('loadend', () => {
-          if (Type.isString(reader.result)) {
-            resolve({ kind: 'string', mime, text: reader.result });
-          } else {
-            reject(new Error('Failed to read blob as string'));
-          }
-        });
-        reader.readAsText(blob);
-      });
+      return { kind: 'string', mime, text: await BlobReader.readBlobAsString(blob) };
     } else {
       return { kind: item.kind, file: new window.File([ blob ], fileName, { type: mime }) };
     }
