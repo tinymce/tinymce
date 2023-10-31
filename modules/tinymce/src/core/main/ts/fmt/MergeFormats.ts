@@ -14,7 +14,7 @@ const each = Tools.each;
 
 const mergeTextDecorationsAndColor = (dom: DOMUtils, format: ApplyFormat, vars: FormatVars | undefined, node: Node): void => {
   const processTextDecorationsAndColor = (n: Node) => {
-    if (NodeType.isElement(n) && NodeType.isElement(n.parentNode) && FormatUtils.isEditable(n)) {
+    if (NodeType.isHTMLElement(n) && NodeType.isElement(n.parentNode) && dom.isEditable(n)) {
       const parentTextDecoration = FormatUtils.getTextDecoration(dom, n.parentNode);
       if (dom.getStyle(n, 'color') && parentTextDecoration) {
         dom.setStyle(n, 'text-decoration', parentTextDecoration);
@@ -36,7 +36,7 @@ const mergeBackgroundColorAndFontSize = (dom: DOMUtils, format: ApplyFormat, var
   if (format.styles && format.styles.backgroundColor) {
     const hasFontSize = hasStyle(dom, 'fontSize');
     processChildElements(node,
-      (elm) => hasFontSize(elm) && FormatUtils.isEditable(elm),
+      (elm) => hasFontSize(elm) && dom.isEditable(elm),
       applyStyle(dom, 'backgroundColor', FormatUtils.replaceVars(format.styles.backgroundColor, vars))
     );
   }
@@ -47,11 +47,11 @@ const mergeSubSup = (dom: DOMUtils, format: ApplyFormat, vars: FormatVars | unde
   if (FormatUtils.isInlineFormat(format) && (format.inline === 'sub' || format.inline === 'sup')) {
     const hasFontSize = hasStyle(dom, 'fontSize');
     processChildElements(node,
-      (elm) => hasFontSize(elm) && FormatUtils.isEditable(elm),
+      (elm) => hasFontSize(elm) && dom.isEditable(elm),
       applyStyle(dom, 'fontSize', '')
     );
 
-    const inverseTagDescendants = Arr.filter(dom.select(format.inline === 'sup' ? 'sub' : 'sup', node), FormatUtils.isEditable);
+    const inverseTagDescendants = Arr.filter(dom.select(format.inline === 'sup' ? 'sub' : 'sup', node), dom.isEditable);
     dom.remove(inverseTagDescendants, true);
   }
 };

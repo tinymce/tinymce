@@ -41,6 +41,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     {
       plugins: 'accordion',
       base_url: '/project/tinymce/js/tinymce',
+      indent: false
     },
     [ Plugin ]
   );
@@ -49,7 +50,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<p>tiny</p>',
       initialCursor: [[ 0, 0 ], 'tiny'.length ],
-      assertContent: '<p>tiny</p>\n' + AccordionUtils.createAccordion(),
+      assertContent: '<p>tiny</p>' + AccordionUtils.createAccordion(),
       assertCursor: [[ 1, 0, 0 ], 'Accordion summary...'.length ],
     });
   });
@@ -67,7 +68,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<ol><li>tiny</li></ol>',
       initialCursor: [[ 0, 0, 0 ], 'tiny'.length ],
-      assertContent: `<ol>\n<li>tiny\n${AccordionUtils.createAccordion()}\n</li>\n</ol>`,
+      assertContent: `<ol><li>tiny${AccordionUtils.createAccordion()}</li></ol>`,
       assertCursor: [[ 0, 0, 1, 0, 0 ], 'Accordion summary...'.length ],
     });
   });
@@ -76,7 +77,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<dl><dt>tiny</dt></dl>',
       initialCursor: [[ 0, 0, 0 ], 'tiny'.length ],
-      assertContent: `<dl>\n<dt>tiny\n${AccordionUtils.createAccordion()}\n</dt>\n</dl>`,
+      assertContent: `<dl><dt>tiny${AccordionUtils.createAccordion()}</dt></dl>`,
       assertCursor: [[ 0, 0, 1, 0, 0 ], 'Accordion summary...'.length ],
     });
   });
@@ -85,7 +86,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<dl><dd>tiny</dd></dl>',
       initialCursor: [[ 0, 0, 0 ], 'tiny'.length ],
-      assertContent: `<dl>\n<dd>tiny\n${AccordionUtils.createAccordion()}\n</dd>\n</dl>`,
+      assertContent: `<dl><dd>tiny${AccordionUtils.createAccordion()}</dd></dl>`,
       assertCursor: [[ 0, 0, 1, 0, 0 ], 'Accordion summary...'.length ],
     });
   });
@@ -94,7 +95,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: '<table><colgroup><col></colgroup><tbody><tr><td>&nbsp;</td></tr></tbody></table>',
       initialCursor: [[ 0, 1, 0, 0, 0 ], 0 ],
-      assertContent: `<table><colgroup><col></colgroup>\n<tbody>\n<tr>\n<td>\n${AccordionUtils.createAccordion()}\n</td>\n</tr>\n</tbody>\n</table>`,
+      assertContent: `<table><colgroup><col></colgroup><tbody><tr><td>${AccordionUtils.createAccordion()}</td></tr></tbody></table>`,
       assertCursor: [[ 0, 1, 0, 0, 0, 0, 0 ], 'Accordion summary...'.length ],
     });
   });
@@ -103,7 +104,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: AccordionUtils.createAccordion({ summary: 'summary', body: '<p>body</p>' }),
       initialCursor: [[ 0, 1, 0, 0 ], 'body'.length ],
-      assertContent: AccordionUtils.createAccordion({ summary: 'summary', body: `<p>body</p>\n${AccordionUtils.createAccordion()}\n` }),
+      assertContent: AccordionUtils.createAccordion({ summary: 'summary', body: `<p>body</p>${AccordionUtils.createAccordion()}` }),
       assertCursor: [[ 0, 1, 1, 0, 0 ], 'Accordion summary...'.length ],
     });
   });
@@ -112,7 +113,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     testInsertingAccordion(hook.editor(), {
       initialContent: AccordionUtils.createAccordion({ summary: 'title', body: '<p>body</p>' }),
       initialCursor: [[ 0, 0, 0 ], 'title'.length ],
-      assertContent: AccordionUtils.createAccordion({ summary: 'title', body: '<p>body</p>\n' }),
+      assertContent: AccordionUtils.createAccordion({ summary: 'title', body: '<p>body</p>' }),
       assertCursor: [[ 0, 0, 0 ], 'title'.length ],
     });
   });

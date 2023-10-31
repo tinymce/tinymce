@@ -2,16 +2,18 @@ import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Schema from 'tinymce/core/api/html/Schema';
 import * as TrimNode from 'tinymce/core/dom/TrimNode';
 
 describe('browser.tinymce.core.dom.TrimNodeTest', () => {
   const dom = DOMUtils(document, {});
+  const baseSchema = Schema();
 
   const testTrim = (label: string, inputHtml: string, expectedTrimmedHtml: string) => {
     it(label, () => {
       const elm = document.createElement('div');
       elm.innerHTML = inputHtml;
-      TrimNode.trimNode(dom, elm.firstChild as Node);
+      TrimNode.trimNode(dom, elm.firstChild as Node, baseSchema);
 
       const actual = elm.innerHTML;
       assert.equal(actual, expectedTrimmedHtml, 'is correct trimmed html');
@@ -36,14 +38,14 @@ describe('browser.tinymce.core.dom.TrimNodeTest', () => {
     elm.insertBefore(emptyTextNode, elm.lastChild);
     elm.insertBefore(emptyTextNode.cloneNode(), elm.firstChild);
 
-    const actual = TrimNode.trimNode(dom, elm);
+    const actual = TrimNode.trimNode(dom, elm, baseSchema);
 
     assert.equal(actual.innerHTML, ' <strong>abc</strong> abc', 'Empty text node shouldn\'t be trimmed');
   });
 
   it('Document node', () => {
     const expected = document.implementation.createHTMLDocument('test');
-    const actual = TrimNode.trimNode(dom, expected);
+    const actual = TrimNode.trimNode(dom, expected, baseSchema);
 
     assert.strictEqual(actual, expected, 'Should return document as is');
   });

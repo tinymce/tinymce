@@ -1,5 +1,5 @@
 import { Cursors, RealClipboard, RealKeys } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -7,6 +7,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import * as InsertNewLine from 'tinymce/core/newline/InsertNewLine';
 import CodePlugin from 'tinymce/plugins/code/Plugin';
 
 import * as PasteEventUtils from '../../module/test/PasteEventUtils';
@@ -28,6 +29,7 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
     plugins: 'code',
     toolbar: false,
     statusbar: false,
+    custom_elements: 'custom-block',
     setup: (editor: Editor) => {
       editor.on('beforeinput input', (e) => {
         if (e.inputType === 'insertFromPaste') {
@@ -245,5 +247,20 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
 
     editor.off('beforeinput', cancelInputEvent);
     editor.off('input', setInputEvent);
+  });
+
+  context('TINY-10139', () => {
+    it('TINY-10139: copy an element inside a custom block insert a new line and then paste it should not create a new custom block', async () => {
+      const editor = hook.editor();
+      const initialContent = '<custom-block><p>to copy</p></custom-block>';
+      editor.setContent(initialContent);
+
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 'to copy'.length);
+      await RealClipboard.pCopy('iframe => body');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 'to copy'.length);
+      InsertNewLine.insert(editor);
+      await RealClipboard.pPaste('iframe => body');
+      TinyAssertions.assertContent(editor, '<custom-block>\n<p>to copy</p>\n<p>to copy</p>\n</custom-block>');
+    });
   });
 });

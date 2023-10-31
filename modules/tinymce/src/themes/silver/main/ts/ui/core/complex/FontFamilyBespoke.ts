@@ -3,11 +3,16 @@ import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
+import * as Events from '../../../api/Events';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { onSetupEditableToggle } from '../ControlUtils';
 import { createMenuItems, createSelectButton, FormatterFormatItem, PreviewSpec, SelectedFormat, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
+import * as Tooltip from './utils/Tooltip';
+
+const title = 'Fonts';
+const systemFont = 'System Font';
 
 // A list of fonts that must be in a font family for the font to be recognised as the system stack
 // Note: Don't include 'BlinkMacSystemFont', as Chrome on Mac converts it to different names
@@ -33,7 +38,6 @@ const isSystemFontStack = (fontFamily: string): boolean => {
 };
 
 const getSpec = (editor: Editor): SelectSpec => {
-  const systemFont = 'System Font';
 
   const getMatchingValue = () => {
     const getFirstFont = (fontFamily: string | undefined) => fontFamily ? splitFonts(fontFamily)[0] : '';
@@ -81,12 +85,13 @@ const getSpec = (editor: Editor): SelectSpec => {
     AlloyTriggers.emitWith(comp, updateMenuText, {
       text
     });
+    Events.fireFontFamilyTextUpdate(editor, { value: text });
   };
 
   const dataset = buildBasicSettingsDataset(editor, 'font_family_formats', Delimiter.SemiColon);
 
   return {
-    tooltip: 'Fonts',
+    tooltip: Tooltip.getTooltipText(editor, title, systemFont),
     text: Optional.some(systemFont),
     icon: Optional.none(),
     isSelectedFor,
@@ -101,13 +106,13 @@ const getSpec = (editor: Editor): SelectSpec => {
 };
 
 const createFontFamilyButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
-  createSelectButton(editor, backstage, getSpec(editor));
+  createSelectButton(editor, backstage, getSpec(editor), title, 'FontFamilyTextUpdate');
 
 // TODO: Test this!
 const createFontFamilyMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('fontfamily', {
-    text: backstage.shared.providers.translate('Fonts'),
+    text: backstage.shared.providers.translate(title),
     onSetup: onSetupEditableToggle(editor),
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   });

@@ -2,6 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
 import DomParser from 'tinymce/core/api/html/DomParser';
+import AstNode from 'tinymce/core/api/html/Node';
 import Schema from 'tinymce/core/api/html/Schema';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 
@@ -56,5 +57,14 @@ describe('browser.tinymce.core.html.SerializerTest', () => {
       serializer.serialize(DomParser({ validate: false }, schema).parse('<textarea>\n\ncontent</textarea>')),
       '<textarea>\n\ncontent</textarea>'
     );
+  });
+
+  it('TINY-10237: Serialize svg node', () => {
+    const schema = Schema({ valid_elements: 'textarea' });
+    const serializer = HtmlSerializer({}, schema);
+    const svgNode = AstNode.create('svg');
+    svgNode.value = '<circle>';
+
+    assert.equal(serializer.serialize(svgNode), '<svg><circle></svg>');
   });
 });

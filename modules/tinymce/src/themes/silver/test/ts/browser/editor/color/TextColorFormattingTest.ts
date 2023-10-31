@@ -6,6 +6,11 @@ import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.color.TextColorFormattingTest', () => {
+  const selectors = {
+    backcolorSplitButton: '[aria-label^="Background color"] > .tox-tbtn + .tox-split-button__chevron',
+    forecolorSplitButton: '[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron'
+  };
+
   const hook = TinyHooks.bddSetupLight<Editor>({
     toolbar: 'forecolor backcolor',
     base_url: '/project/tinymce/js/tinymce'
@@ -110,7 +115,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorFormattingTest', (
     const editor = hook.editor();
     editor.setContent(`Hello${Unicode.nbsp}world`);
     TinySelections.setSelection(editor, [ 0, 0 ], 5, [ 0, 0 ], 6);
-    TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+    TinyUiActions.clickOnToolbar(editor, selectors.forecolorSplitButton);
     await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
     TinyUiActions.clickOnUi(editor, 'div[data-mce-color="#3598DB"]');
     TinyAssertions.assertContentStructure(editor, forecolorStruct);
@@ -120,7 +125,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorFormattingTest', (
     const editor = hook.editor();
     editor.setContent(`Hello${Unicode.nbsp}world`);
     TinySelections.setSelection(editor, [ 0, 0 ], 5, [ 0, 0 ], 6);
-    TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+    TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton);
     await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
     TinyUiActions.clickOnUi(editor, 'div[data-mce-color="#3598DB"]');
     TinyAssertions.assertContentStructure(editor, backcolorStruct);
@@ -130,7 +135,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorFormattingTest', (
     const editor = hook.editor();
     editor.setContent('圓');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
-    TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+    TinyUiActions.clickOnToolbar(editor, selectors.forecolorSplitButton);
     await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
     TinyUiActions.clickOnUi(editor, 'div[title="Red"]');
     TinyAssertions.assertContentStructure(editor, forecolorTitleStruct);
@@ -140,7 +145,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorFormattingTest', (
     const editor = hook.editor();
     editor.setContent('<p>&#142037;</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
-    TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+    TinyUiActions.clickOnToolbar(editor, '[aria-label^="Background color"] > .tox-tbtn + .tox-split-button__chevron');
     await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
     TinyUiActions.clickOnUi(editor, 'div[title="Red"]');
     TinyAssertions.assertContentStructure(editor, backcolorTitleStruct);
@@ -150,11 +155,11 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorFormattingTest', (
     const editor = hook.editor();
     editor.setContent(`Hello${Unicode.nbsp}world`);
     TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
-    TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+    TinyUiActions.clickOnToolbar(editor, '[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron');
     await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
     TinyUiActions.clickOnUi(editor, 'div[data-mce-color="#3598DB"]');
     TinyAssertions.assertContentStructure(editor, forecolorTextStruct);
-    TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+    TinyUiActions.clickOnToolbar(editor, '[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron');
     await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
     TinyUiActions.clickOnUi(editor, 'div[title="Remove color"]');
     TinyAssertions.assertContent(editor, '<p>Hello&nbsp;world</p>');

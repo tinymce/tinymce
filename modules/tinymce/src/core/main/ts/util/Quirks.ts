@@ -1,5 +1,5 @@
-import { Arr, Fun, Type } from '@ephox/katamari';
-import { ContentEditable, SelectorFilter, SugarElement, Traverse } from '@ephox/sugar';
+import { Fun, Type } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -9,6 +9,7 @@ import { EditorEvent } from '../api/util/EventDispatcher';
 import Tools from '../api/util/Tools';
 import VK from '../api/util/VK';
 import * as CaretContainer from '../caret/CaretContainer';
+import * as Empty from '../dom/Empty';
 import * as Rtc from '../Rtc';
 
 /**
@@ -84,12 +85,6 @@ const Quirks = (editor: Editor): Quirks => {
       return selection === allSelection;
     };
 
-    const hasPreservedEmptyElements = (elm: HTMLElement) => {
-      const scope = SugarElement.fromDom(elm);
-      const isEditableHost = (elm: SugarElement<HTMLElement>) => Traverse.parentElement(elm).exists((elm) => !ContentEditable.isEditable(elm));
-      return Arr.exists(SelectorFilter.descendants<HTMLElement>(scope, '[contenteditable="true"]'), isEditableHost);
-    };
-
     editor.on('keydown', (e) => {
       const keyCode = e.keyCode;
 
@@ -99,8 +94,7 @@ const Quirks = (editor: Editor): Quirks => {
         const body = editor.getBody();
 
         // Selection is collapsed but the editor isn't empty
-        // TINY-10011: empty CET elements should be preserved
-        if (isCollapsed && (!dom.isEmpty(body) || hasPreservedEmptyElements(body))) {
+        if (isCollapsed && !Empty.isEmpty(SugarElement.fromDom(body))) {
           return;
         }
 
@@ -243,7 +237,7 @@ const Quirks = (editor: Editor): Quirks => {
       // Workaround for bug, http://bugs.webkit.org/show_bug.cgi?id=12250
       // WebKit can't even do simple things like selecting an image
       // Needs to be the setBaseAndExtend or it will fail to select floated images
-      if (/^(IMG|HR)$/.test(target.nodeName) && dom.isEditable(target.parentNode)) {
+      if (/^(IMG|HR)$/.test(target.nodeName) && dom.isEditable(target)) {
         e.preventDefault();
         editor.selection.select(target);
         editor.nodeChanged();

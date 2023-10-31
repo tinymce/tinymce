@@ -4,6 +4,7 @@ import { SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import Env from '../api/Env';
+import Schema from '../api/html/Schema';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import { insertNbspAtPosition, insertSpaceAtPosition } from '../caret/InsertText';
@@ -11,8 +12,8 @@ import * as BoundaryLocation from './BoundaryLocation';
 import * as InlineUtils from './InlineUtils';
 import { needsToHaveNbsp } from './Nbsps';
 
-const insertSpaceOrNbspAtPosition = (root: SugarElement<Node>, pos: CaretPosition): Optional<CaretPosition> =>
-  needsToHaveNbsp(root, pos) ? insertNbspAtPosition(pos) : insertSpaceAtPosition(pos);
+const insertSpaceOrNbspAtPosition = (root: SugarElement<Node>, pos: CaretPosition, schema: Schema): Optional<CaretPosition> =>
+  needsToHaveNbsp(root, pos, schema) ? insertNbspAtPosition(pos) : insertSpaceAtPosition(pos);
 
 const locationToCaretPosition = (root: SugarElement<Node>) => (location: BoundaryLocation.LocationAdt) => location.fold(
   (element) => CaretFinder.prevPosition(root.dom, CaretPosition.before(element)),
@@ -21,8 +22,8 @@ const locationToCaretPosition = (root: SugarElement<Node>) => (location: Boundar
   (element) => CaretFinder.nextPosition(root.dom, CaretPosition.after(element))
 );
 
-const insertInlineBoundarySpaceOrNbsp = (root: SugarElement<Node>, pos: CaretPosition) => (checkPos: CaretPosition) =>
-  needsToHaveNbsp(root, checkPos) ? insertNbspAtPosition(pos) : insertSpaceAtPosition(pos);
+const insertInlineBoundarySpaceOrNbsp = (root: SugarElement<Node>, pos: CaretPosition, schema: Schema) => (checkPos: CaretPosition) =>
+  needsToHaveNbsp(root, checkPos, schema) ? insertNbspAtPosition(pos) : insertSpaceAtPosition(pos);
 
 const setSelection = (editor: Editor) => (pos: CaretPosition) => {
   editor.selection.setRng(pos.toRange());
@@ -42,7 +43,7 @@ const insertSpaceOrNbspAtSelection = (editor: Editor): Optional<() => void> => {
     return BoundaryLocation.readLocation(isInlineTarget, editor.getBody(), caretPosition)
       .bind(locationToCaretPosition(root))
       .map((checkPos) => () =>
-        insertInlineBoundarySpaceOrNbsp(root, pos)(checkPos).each(setSelection(editor)));
+        insertInlineBoundarySpaceOrNbsp(root, pos, editor.schema)(checkPos).each(setSelection(editor)));
   } else {
     return Optional.none();
   }
@@ -58,7 +59,7 @@ const insertSpaceInSummaryAtSelectionOnFirefox = (editor: Editor): Optional<() =
     }
 
     const pos = CaretPosition.fromRangeStart(editor.selection.getRng());
-    insertSpaceOrNbspAtPosition(root, pos).each(setSelection(editor));
+    insertSpaceOrNbspAtPosition(root, pos, editor.schema).each(setSelection(editor));
   };
 
   return Optionals.someIf(Env.browser.isFirefox() && editor.selection.isEditable() && isInsideSummary(editor.dom, editor.selection.getRng().startContainer), insertSpaceThunk);
