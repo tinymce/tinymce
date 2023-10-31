@@ -69,9 +69,6 @@ timestamps {
     stage("Merge") {
       // cancel build if primary branch doesn't merge cleanly
       gitMerge(primaryBranch)
-      
-      // batch build and merge changelog using makefile
-      exec("make")
     }
 
     def platforms = [
@@ -142,6 +139,11 @@ timestamps {
 
     stage("Install tools") {
       cleanAndInstall()
+    }
+
+    stage("Validate changelog") {
+      // we use a changelog to run changie
+      exec("yarn changie-merge")
     }
 
     stage("Type check") {
