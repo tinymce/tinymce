@@ -1,8 +1,8 @@
-import {Arr} from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
-import {TinyMCE} from '../api/Tinymce';
+import { TinyMCE } from '../api/Tinymce';
 
 declare let tinymce: TinyMCE;
 
