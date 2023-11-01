@@ -1,5 +1,5 @@
 {
-  "name": "root",
+  "name": "tinymce-monorepo",
   "private": true,
   "workspaces": [
     "modules/*"
