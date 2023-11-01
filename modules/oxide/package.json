@@ -35,5 +35,8 @@
   "dependencies": {
     "prism-themes": "^1.9.0",
     "prismjs": "^1.27.0"
+  },
+  "devDependencies": {
+    "gulp": "^4.0.2"
   }
 }
