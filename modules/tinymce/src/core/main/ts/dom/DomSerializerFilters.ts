@@ -197,6 +197,13 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
   if (settings.remove_trailing_brs) {
     RemoveTrailingBr.addNodeFilter(settings, htmlParser, htmlParser.schema);
   }
+
+  // TINY-10206: Restore and remove internal iframe sandbox attribute
+  htmlParser.addAttributeFilter('data-mce-sandbox', (nodes, name) =>
+    Arr.each((nodes), (node) => {
+      node.attr('sandbox', node.attr(name));
+      node.attr(name, null);
+    }));
 };
 
 /**
