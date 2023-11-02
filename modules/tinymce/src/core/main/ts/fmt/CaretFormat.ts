@@ -382,9 +382,6 @@ const isFormatCaret = (editor: Editor, element: SugarElement<Node>): boolean => 
   return Obj.has(inlineElements, SugarNode.name(element)) && isCaretNode(element.dom);
 };
 
-const isEmptyCaretFormatElement = (element: SugarElement<Node>): boolean => {
-  return isCaretNode(element.dom) && isCaretContainerEmpty(element.dom);
-};
 
 export {
   setup,
@@ -394,5 +391,5 @@ export {
   createCaretFormatAtStart,
   isFormatElement,
   isFormatCaret,
-  isEmptyCaretFormatElement
+  isCaretContainerEmpty
 };

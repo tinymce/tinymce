@@ -13,6 +13,7 @@ import * as TransparentElements from '../content/TransparentElements';
 import * as NodeType from '../dom/NodeType';
 import * as SelectionUtils from '../selection/SelectionUtils';
 import * as Whitespace from '../text/Whitespace';
+import { isCaretContainerEmpty } from './CaretFormat';
 import { isCaretNode } from './FormatContainer';
 import { BlockFormat, Format, FormatAttrOrStyleValue, FormatVars, InlineFormat, MixedFormat, SelectorFormat } from './FormatTypes';
 
@@ -307,6 +308,10 @@ const isMixedFormat = (format: any): format is MixedFormat =>
 const shouldExpandToSelector = (format: Format): boolean =>
   isSelectorFormat(format) && format.expand !== false && !isInlineFormat(format);
 
+const isEmptyCaretFormatElement = (element: SugarElement<Node>): boolean => {
+  return isCaretNode(element.dom) && isCaretContainerEmpty(element.dom);
+};
+
 export {
   isNode,
   isElementNode,
@@ -331,5 +336,6 @@ export {
   isWrappingBlockFormat,
   isNonWrappingBlockFormat,
   isMixedFormat,
-  shouldExpandToSelector
+  shouldExpandToSelector,
+  isEmptyCaretFormatElement
 };
