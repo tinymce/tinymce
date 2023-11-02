@@ -1,5 +1,4 @@
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
 
@@ -34,15 +33,6 @@ describe('browser.tinymce.core.html.SanitizationTest', () => {
       mimeType: 'text/html',
       sanitize: false
     }));
-
-    Arr.each([ true, false ], (sanitize) => {
-      it(`TINY-10206: Svg iframes should be disallowed when sanitize: ${sanitize}`, testHtmlSanitizer({
-        input: '<iframe src="https://example.com/test.svg"></iframe>',
-        expected: '<iframe></iframe>',
-        mimeType: 'text/html',
-        sanitize
-      }));
-    });
   });
 
   context('Santitize non-html', () => {

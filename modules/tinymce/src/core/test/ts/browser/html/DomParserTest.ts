@@ -822,8 +822,8 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         );
       });
 
-      // TODO: TINY-9624 - the iframe innerHTML on safari is `&lt;textarea&gt;` whereas on other browsers
-      //       is `<textarea>`. This causes the mXSS cleaner in DOMPurify to run and causes the different assertions below
+      // TINY-9624: Safari encodes the iframe innerHTML is `&lt;textarea&gt;`. On Chrome and Firefox, the innerHTML is `<textarea>`, causing
+      // the mXSS cleaner in DOMPurify to run and remove the iframe.
       it('parse iframe XSS', () => {
         const serializer = HtmlSerializer();
 
@@ -1529,6 +1529,13 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
               forced_root_block: 'p'
             }
           }));
+
+          it('TINY-10206: Svg iframes should be disallowed', () => {
+            const parser = DomParser(scenario.settings);
+            const html = '<iframe src="https://example.com/test.svg""></iframe>';
+            const serializedHtml = serializer.serialize(parser.parse(html));
+            assert.equal(serializedHtml, '<iframe></iframe>');
+          });
         });
       });
     });

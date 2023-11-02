@@ -310,6 +310,12 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
             TinyAssertions.assertContent(editor, result);
           });
         });
+
+        it('TINY-10206: Svg iframes should be disallowed', () => {
+          const editor = hook.editor();
+          editor.setContent('<iframe src="https://example.com/test.svg"></iframe>');
+          TinyAssertions.assertContent(editor, '<p><iframe></iframe></p>');
+        });
       });
     }
   );
