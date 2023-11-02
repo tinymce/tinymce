@@ -37,6 +37,7 @@ interface SafeUriOptions {
   readonly allow_html_data_urls?: boolean;
   readonly allow_script_urls?: boolean;
   readonly allow_svg_data_urls?: boolean;
+  readonly allow_svg_iframes?: boolean;
 }
 
 const safeSvgDataUrlElements = [ 'img', 'video' ];
@@ -73,7 +74,7 @@ export const isInvalidUri = (settings: SafeUriOptions, uri: string, tagName?: st
     return false;
   } else if (/^data:image\//i.test(decodedUri)) {
     return blockSvgDataUris(settings.allow_svg_data_urls, tagName) && /^data:image\/svg\+xml/i.test(decodedUri);
-  } else if (tagName === 'iframe' && Strings.endsWith(decodedUri, '.svg')) {
+  } else if (!settings.allow_svg_iframes && tagName === 'iframe' && Strings.endsWith(decodedUri, '.svg')) {
     return true;
   } else {
     return /^data:/i.test(decodedUri);

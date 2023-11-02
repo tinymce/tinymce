@@ -1530,11 +1530,27 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
             }
           }));
 
-          it('TINY-10206: Svg iframes should be disallowed', () => {
-            const parser = DomParser(scenario.settings);
-            const html = '<iframe src="https://example.com/test.svg""></iframe>';
-            const serializedHtml = serializer.serialize(parser.parse(html));
-            assert.equal(serializedHtml, '<iframe></iframe>');
+          context('Svg iframes', () => {
+            it('TINY-10206: Svg iframes should be disallowed by default', () => {
+              const parser = DomParser(scenario.settings);
+              const html = '<iframe src="https://example.com/test.svg"></iframe>';
+              const serializedHtml = serializer.serialize(parser.parse(html));
+              assert.equal(serializedHtml, '<iframe></iframe>');
+            });
+
+            it('TINY-10206: Svg iframes should be disallowed if allow_svg_iframes: false', () => {
+              const parser = DomParser({ ...scenario.settings, allow_svg_iframes: false });
+              const html = '<iframe src="https://example.com/test.svg"></iframe>';
+              const serializedHtml = serializer.serialize(parser.parse(html));
+              assert.equal(serializedHtml, '<iframe></iframe>');
+            });
+
+            it('TINY-10206: Svg iframes should be allowed if allow_svg_iframes: true', () => {
+              const parser = DomParser({ ...scenario.settings, allow_svg_iframes: true });
+              const html = '<iframe src="https://example.com/test.svg"></iframe>';
+              const serializedHtml = serializer.serialize(parser.parse(html));
+              assert.equal(serializedHtml, '<iframe src="https://example.com/test.svg"></iframe>');
+            });
           });
         });
       });
