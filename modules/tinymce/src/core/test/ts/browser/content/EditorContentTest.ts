@@ -392,7 +392,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         editor.setContent('<p><iframe><p>test</p></iframe></p>');
         const content = editor.getContent();
         assert.equal(content,
-          // TINY-9624: Investigate Safari-specific HTML output
+          // Safari seems to encode the contents of iframes
           PlatformDetection.detect().browser.isSafari()
             ? '<p><iframe>&lt;p&gt;test&lt;/p&gt;</iframe></p>'
             : '<p><iframe><p>test</p></iframe></p>',

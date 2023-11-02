@@ -1,4 +1,4 @@
-import { Arr, Type } from '@ephox/katamari';
+import { Arr, Strings, Type } from '@ephox/katamari';
 
 import Entities from '../html/Entities';
 import Tools from './Tools';
@@ -73,6 +73,8 @@ export const isInvalidUri = (settings: SafeUriOptions, uri: string, tagName?: st
     return false;
   } else if (/^data:image\//i.test(decodedUri)) {
     return blockSvgDataUris(settings.allow_svg_data_urls, tagName) && /^data:image\/svg\+xml/i.test(decodedUri);
+  } else if (tagName === 'iframe' && Strings.endsWith(decodedUri, '.svg')) {
+    return true;
   } else {
     return /^data:/i.test(decodedUri);
   }
