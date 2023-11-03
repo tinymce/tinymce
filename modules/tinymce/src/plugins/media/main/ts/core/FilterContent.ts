@@ -52,8 +52,14 @@ const setup = (editor: Editor): void => {
             realElm.attr({
               width: node.firstChild.attr('width'),
               height: node.firstChild.attr('height'),
-              sandbox: realElmName === 'iframe' ? node.firstChild.attr('sandbox') : undefined
             });
+
+            // TINY-10206: Normalize internal iframe sandbox attribute
+            if (realElmName === 'iframe') {
+              const sandboxVal = node.firstChild.attr('data-mce-sandbox');
+              realElm.attr('sandbox', sandboxVal === 'none' ? null : sandboxVal);
+              realElm.attr('data-mce-sandbox', null);
+            }
           } else {
             realElm.attr({
               width: node.attr('width'),

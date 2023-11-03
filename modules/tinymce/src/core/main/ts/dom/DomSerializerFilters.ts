@@ -198,7 +198,7 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
     RemoveTrailingBr.addNodeFilter(settings, htmlParser, htmlParser.schema);
   }
 
-  // TINY-10206: Restore and remove internal iframe sandbox attribute
+  // TINY-10206: Normalize internal iframe sandbox attribute
   htmlParser.addAttributeFilter('data-mce-sandbox', (nodes, name) =>
     Arr.each((nodes), (node) => {
       const value = node.attr(name);
