@@ -156,7 +156,7 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
 
   parser.addNodeFilter('iframe', (nodes) =>
     Arr.each(nodes, (node) => {
-      node.attr('data-mce-sandbox', node.attr('sandbox'));
+      node.attr('data-mce-sandbox', node.attr('sandbox') ?? 'none');
       node.attr('sandbox', 'allow-scripts');
     }));
 };

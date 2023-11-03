@@ -51,7 +51,8 @@ const setup = (editor: Editor): void => {
           if (className && className.indexOf('mce-preview-object') !== -1 && node.firstChild) {
             realElm.attr({
               width: node.firstChild.attr('width'),
-              height: node.firstChild.attr('height')
+              height: node.firstChild.attr('height'),
+              sandbox: realElmName === 'iframe' ? node.firstChild.attr('sandbox') : undefined
             });
           } else {
             realElm.attr({

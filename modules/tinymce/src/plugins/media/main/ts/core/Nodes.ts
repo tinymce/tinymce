@@ -90,8 +90,10 @@ const createPreviewNode = (editor: Editor, node: AstNode): AstNode => {
 
   if (name === 'iframe') {
     previewNode.attr({
-      allowfullscreen: node.attr('allowfullscreen'),
-      frameborder: '0'
+      'allowfullscreen': node.attr('allowfullscreen'),
+      'frameborder': '0',
+      'sandbox': node.attr('sandbox'),
+      'data-mce-sandbox': node.attr('data-mce-sandbox')
     });
   } else {
     // Exclude autoplay as we don't want video/audio to play by default
@@ -125,7 +127,7 @@ const retainAttributesAndInnerHtml = (editor: Editor, sourceNode: AstNode, targe
     const attrName = attribs[ai].name;
     let attrValue = attribs[ai].value;
 
-    if (attrName !== 'width' && attrName !== 'height' && attrName !== 'style' && !Strings.startsWith(attrName, 'data-mce-')) {
+    if (attrName !== 'width' && attrName !== 'height' && attrName !== 'style' && attrName !== 'sandbox' && !Strings.startsWith(attrName, 'data-mce-')) {
       if (attrName === 'data' || attrName === 'src') {
         attrValue = editor.convertURL(attrValue, attrName);
       }
