@@ -92,9 +92,22 @@ gulp.task('minifyCss', function() {
   return gulp.src(['./build/skins/**/*.css', '!**/*.min.css'])
     .pipe(sourcemaps.init())
     .pipe(cleanCSS({ rebase: false }))
+    .pipe(rename({ extname: '.min.css' }))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('./build/skins'))
+    .pipe(connect.reload());
+});
+
+//
+// Generate JS
+//
+gulp.task('generateJs', function() {
+  return gulp.src(['./build/skins/**/*.css', '!**/*.min.css'])
+    .pipe(sourcemaps.init())
+    .pipe(cleanCSS({ rebase: false }))
     .pipe(through2.obj(function(file, _, cb) {
       if (file.isBuffer()) {
-        const contents = `tinymce.Resource.add('${file.relative}', '${JSON.stringify(file.contents.toString())}')`;
+        const contents = `tinymce.Resource.add('${file.relative}', ${JSON.stringify(file.contents.toString())})`;
         file.contents = Buffer.from(contents)
       }
       cb(null, file);
@@ -134,7 +147,7 @@ gulp.task('clean', function () {
 //
 // Build project and watch LESS file changes
 //
-gulp.task('css', gulp.series('lint', 'less', 'minifyCss'));
+gulp.task('css', gulp.series('lint', 'less', 'generateJs', 'minifyCss'));
 gulp.task('build', gulp.series('clean', 'css'));
 gulp.task('default', gulp.series('build'));
 
