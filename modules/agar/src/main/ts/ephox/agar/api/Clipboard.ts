@@ -72,16 +72,19 @@ const sPasteFiles = <T>(files: File[], selector: string): Step<T, T> =>
 const pPasteUrlItems = async (target: SugarElement<Element>, items: PasteUrlItem[]): Promise<void> => {
   const dataItems = await Promise.all(Arr.map(items, async (item) => {
     const resp = await window.fetch(item.url);
-    const blob = await resp.blob();
-    const fileName = Arr.last(item.url.split('/')).getOr('filename.dat');
-    const mime = blob.type.split(';')[0]; // Only grab mime type not charset encoding
 
-    if (resp.status >= 400) {
-      return Promise.reject(new Error(`Failed to load paste URL item: "${item.url}", status: ${resp.status}`));
-    } else if (item.kind === 'string') {
-      return { kind: 'string', mime, text: await BlobReader.readBlobAsString(blob) };
+    if (resp.ok) {
+      const blob = await resp.blob();
+      const fileName = Arr.last(item.url.split('/')).getOr('filename.dat');
+      const mime = blob.type.split(';')[0]; // Only grab mime type not charset encoding
+
+      if (item.kind === 'string') {
+        return { kind: 'string', mime, text: await BlobReader.readBlobAsString(blob) };
+      } else {
+        return { kind: item.kind, file: new window.File([ blob ], fileName, { type: mime }) };
+      }
     } else {
-      return { kind: item.kind, file: new window.File([ blob ], fileName, { type: mime }) };
+      return Promise.reject(new Error(`Failed to load paste URL item: "${item.url}", status: ${resp.status}`));
     }
   }));
 
