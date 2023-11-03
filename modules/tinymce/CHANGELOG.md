@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed use of `async` for editor rendering which caused visual blinking when reloading the editor in-place. #TINY-10249
 - Hex colors are no longer always converted to RGB. #TINY-9819
 - Merging an external `p` inside a `list` via delete or backspace would incorrectly try to move a parent element inside a child element. #TINY-10289
+- The `fontsizeinput` triggered a console warning from `NoContextApi`. #TINY-10330
 
 ## 6.7.2 - 2023-10-25
 
