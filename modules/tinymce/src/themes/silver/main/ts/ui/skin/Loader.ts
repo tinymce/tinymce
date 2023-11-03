@@ -53,7 +53,12 @@ const loadShadowDomUiSkins = async (editor: Editor, skinUrl: string): Promise<vo
 };
 
 const loadUrlSkin = async (isInline: boolean, editor: Editor): Promise<void> => {
-  Options.getSkinUrlOption(editor).fold(Fun.noop, (skinUrl) => {
+  Options.getSkinUrlOption(editor).fold(() => {
+    const skinUrl_ = Options.getSkinUrl(editor);
+    if (skinUrl_) {
+      editor.contentCSS.push(skinUrl_ + (isInline ? '/content.inline' : '/content') + '.min.css');
+    }
+  }, (skinUrl) => {
     const skinContentCss = 'ui/' + skinUrl + (isInline ? '/content.inline' : '/content') + '.css';
     const css = tinymce.Resource.get(skinContentCss);
     if (Type.isString(css)) {
@@ -61,7 +66,7 @@ const loadUrlSkin = async (isInline: boolean, editor: Editor): Promise<void> => 
     } else {
       const skinUrl_ = Options.getSkinUrl(editor);
       if (skinUrl_) {
-        editor.contentCSS.push(skinUrl_ + (isInline ? 'content.inline' : 'content') + '.min.css');
+        editor.contentCSS.push(skinUrl_ + (isInline ? '/content.inline' : '/content') + '.min.css');
       }
     }
   });
