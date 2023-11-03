@@ -432,7 +432,8 @@ const contentBodyLoaded = (editor: Editor): void => {
     referrerPolicy: Options.getReferrerPolicy(editor),
     onSetAttrib: (e) => {
       editor.dispatch('SetAttrib', e);
-    }
+    },
+    force_hex_color: Options.shouldForceHexColor(editor),
   });
 
   editor.parser = createParser(editor);

@@ -234,4 +234,36 @@ describe('browser.tinymce.core.html.StylesTest', () => {
     assertStyles(styles, 'background:url(javascript:alert(1)', `background: url('javascript:alert(1');`);
     assertStyles(styles, 'background:url(vbscript:alert(1)', `background: url('vbscript:alert(1');`);
   });
+
+  it('TINY-9819: force_hex_color set to "off" (the default)', () => {
+    const styles = Styles();
+    for (const color of [
+      '#aabbcc',
+      'rgb(1, 2, 3)',
+      'rgba(1, 2, 3, 0.5)',
+      `rgba(200, 150, 100, 0.95)`
+    ]) {
+      // All colors are unchanged:
+      assertStyles(styles, `color: ${color};`, `color: ${color};`);
+    }
+  });
+
+  it('TINY-9819: force_hex_color set to "always"', () => {
+    const styles = Styles({ force_hex_color: 'always' });
+    assertStyles(styles, 'color: #aabbcc;', 'color: #aabbcc;');
+    assertStyles(styles, 'color: rgb(1, 2, 3);', 'color: #010203;');
+    assertStyles(styles, 'color: rgba(1, 2, 3, 1);', 'color: #010203;');
+    assertStyles(styles, 'color: rgba(1, 2, 3, 0);', 'color: #010203;');
+    assertStyles(styles, 'color: rgba(1, 2, 3, 0.5);', 'color: #010203;');
+  });
+
+  it('TINY-9819: force_hex_color set to "rgb_only"', () => {
+    const styles = Styles({ force_hex_color: 'rgb_only' });
+    assertStyles(styles, 'color: #aabbcc;', 'color: #aabbcc;');
+    assertStyles(styles, 'color: rgb(1, 2, 3);', 'color: #010203;');
+    assertStyles(styles, 'color: rgba(1, 2, 3, 1);', 'color: #010203;');
+    assertStyles(styles, 'color: rgba(1, 2, 3, 0);', 'color: rgba(1, 2, 3, 0);');
+    assertStyles(styles, 'color: rgba(1, 2, 3, 0.5);', 'color: rgba(1, 2, 3, 0.5);');
+  });
+
 });

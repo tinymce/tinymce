@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Added `force_hex_color` editor option. Option `'always'` converts all RGB & RGBA colours to hex, `'rgb_only'` will only convert RGB and *not* RGBA colours to hex, `'off'` won't convert any colours to hex. #TINY-9819
+
 ### Improved
 - Colorpicker now includes the Brightness/Saturation selector and hue slider in the keyboard navigable items. #TINY-9287
 - Improved the tooltips of picker buttons for the urlinput components in the "Insert/Edit Image" and "Insert/Edit Link" dialogs. #TINY-10155
@@ -32,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Search and replace plugin would incorrectly find matching text inside SVG elements. #TINY-10162
 - Removed use of `async` for editor rendering which caused visual blinking when reloading the editor in-place. #TINY-10249
 - Toggling off one format on the caret when multiple formats was toggled on would toggle all of them off. #TINY-10132
+- Hex colors are no longer always converted to RGB. #TINY-9819
 - Merging an external `p` inside a `list` via delete or backspace would incorrectly try to move a parent element inside a child element. #TINY-10289
 
 ## 6.7.2 - 2023-10-25
