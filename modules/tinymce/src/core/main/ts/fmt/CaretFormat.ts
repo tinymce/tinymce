@@ -358,7 +358,6 @@ const isFormatCaret = (editor: Editor, element: SugarElement<Node>): boolean => 
   return Obj.has(inlineElements, SugarNode.name(element)) && isCaretNode(element.dom);
 };
 
-
 export {
   setup,
   applyCaretFormat,
