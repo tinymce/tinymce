@@ -1,6 +1,7 @@
-import { createFile, createFileFromString } from '../file/Files';
+import { createFile, createFileFromString, getFileDataAsString } from '../file/Files';
 
 export {
   createFile,
-  createFileFromString
+  createFileFromString,
+  getFileDataAsString
 };
