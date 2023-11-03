@@ -316,6 +316,24 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
           editor.setContent('<iframe src="https://example.com/test.svg"></iframe>');
           TinyAssertions.assertContent(editor, '<p><iframe></iframe></p>');
         });
+
+        context('iframe sandboxing', () => {
+          const sandboxValue = 'allow-scripts';
+
+          it('TINY-10206: Iframe without sandbox attribute should be sandboxed when in editor', () => {
+            const editor = hook.editor();
+            editor.setContent('<iframe src="https://example.com/"></iframe>');
+            TinyAssertions.assertRawContent(editor, `<p><iframe src="https://example.com/" data-mce-sandbox="none" sandbox="${sandboxValue}" data-mce-src="https://example.com/"></iframe></p>`);
+            TinyAssertions.assertContent(editor, '<p><iframe src="https://example.com/"></iframe></p>');
+          });
+
+          it('TINY-10206: Iframe with sandbox attribute should be sandboxed when in editor and original sandbox attribute should be preserved', () => {
+            const editor = hook.editor();
+            editor.setContent('<iframe src="https://example.com/" sandbox="allow-forms"></iframe>');
+            TinyAssertions.assertRawContent(editor, `<p><iframe src="https://example.com/" sandbox="${sandboxValue}" data-mce-sandbox="allow-forms" data-mce-src="https://example.com/"></iframe></p>`);
+            TinyAssertions.assertContent(editor, '<p><iframe src="https://example.com/" sandbox="allow-forms"></iframe></p>');
+          });
+        });
       });
     }
   );
