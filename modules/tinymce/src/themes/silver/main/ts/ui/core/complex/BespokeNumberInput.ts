@@ -25,8 +25,10 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
   const onSetup = onSetupEvent(editor, 'NodeChange SwitchMode', (api: BespokeSelectApi) => {
     const comp = api.getComponent();
     currentComp = Optional.some(comp);
-    spec.updateInputValue(comp);
-    Disabling.set(comp, !editor.selection.isEditable());
+    if (comp.getSystem().isConnected()) {
+      spec.updateInputValue(comp);
+      Disabling.set(comp, !editor.selection.isEditable());
+    }
   });
 
   const getApi = (comp: AlloyComponent): BespokeSelectApi => ({ getComponent: Fun.constant(comp) });

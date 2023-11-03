@@ -3,7 +3,8 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { SugarBody, SugarElement, SugarShadowDom, Value } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import chai, { assert, expect } from 'chai';
+import spies from 'chai-spies';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
@@ -95,6 +96,8 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
 
     TinyUiActions.clickOnToolbar(editor, '.tox-number-input .minus');
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">abc</p>');
+
+    editor.mode.set('design');
   });
 
   it('TINY-10129: Toolbar buttons should be properly disabled', async () => {
@@ -416,6 +419,19 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
 
     assert.equal(input.dom.value, originalFontSize, 'the value in the input should go back to the previous value');
     TinyAssertions.assertContent(editor, `<p style="font-size: ${originalFontSize};">a<span style="font-size: ${originalFontSize};">b</span>c</p>`);
+  });
+
+  it('TINY-10330: the presence and updates of fontsizeinput should not trigger warnings', async () => {
+    chai.use(spies);
+    const spy = chai.spy.on(console, 'warn');
+
+    const editor = hook.editor();
+    editor.setContent('<p style="font-size: 20px;">abc</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
+    const input = TinyUiActions.clickOnToolbar<HTMLInputElement>(editor, '.tox-number-input input');
+    await Waiter.pTryUntilPredicate(`Wait for the new input value is setted`, () => input.dom.value === '20px');
+
+    expect(spy).to.not.have.been.called();
   });
 
   context('Noneditable root', () => {
