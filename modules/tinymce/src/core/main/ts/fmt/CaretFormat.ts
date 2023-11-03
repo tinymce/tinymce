@@ -21,30 +21,6 @@ const importNode = (ownerDocument: Document, node: Node) => {
   return ownerDocument.importNode(node, true);
 };
 
-const getEmptyCaretContainers = (node: Node) => {
-  const nodes: Element[] = [];
-
-  let tempNode: Node | null = node;
-  while (tempNode) {
-    if ((NodeType.isText(tempNode) && tempNode.data !== ZWSP) || tempNode.childNodes.length > 1) {
-      return [];
-    }
-
-    // Collect nodes
-    if (NodeType.isElement(tempNode)) {
-      nodes.push(tempNode);
-    }
-
-    tempNode = tempNode.firstChild;
-  }
-
-  return nodes;
-};
-
-const isCaretContainerEmpty = (node: Node): boolean => {
-  return getEmptyCaretContainers(node).length > 0;
-};
-
 const findFirstTextNode = (node: Node | null): Text | null => {
   if (node) {
     const walker = new DomTreeWalker(node, node);
@@ -87,7 +63,7 @@ const trimZwspFromCaretContainer = (caretContainerNode: Node) => {
 const removeCaretContainerNode = (editor: Editor, node: Node, moveCaret: boolean) => {
   const dom = editor.dom, selection = editor.selection;
 
-  if (isCaretContainerEmpty(node)) {
+  if (FormatUtils.isCaretContainerEmpty(node)) {
     DeleteElement.deleteElement(editor, false, SugarElement.fromDom(node), moveCaret);
   } else {
     const rng = selection.getRng();
@@ -390,6 +366,5 @@ export {
   replaceWithCaretFormat,
   createCaretFormatAtStart,
   isFormatElement,
-  isFormatCaret,
-  isCaretContainerEmpty
+  isFormatCaret
 };
