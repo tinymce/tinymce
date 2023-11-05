@@ -90,7 +90,7 @@ const paddEmptyBlock = (elm: SugarElement<Node>): Optional<CaretPosition> => {
     const br = SugarElement.fromHtml('<br data-mce-bogus="1">');
     // Remove all bogus elements except caret
     Arr.each(Traverse.children(elm), (node) => {
-      if (isEmptyCaretFormatElement(node)) {
+      if (!isEmptyCaretFormatElement(node)) {
         Remove.remove(node);
       }
     });
