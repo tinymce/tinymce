@@ -201,8 +201,10 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
   // TINY-10206: Normalize internal iframe sandbox attribute
   htmlParser.addAttributeFilter('data-mce-sandbox,data-mce-no-sandbox', (nodes, name) =>
     Arr.each((nodes), (node) => {
-      node.attr('sandbox', name === 'data-mce-no-sandbox' ? null : node.attr(name));
-      node.attr(name, null);
+      if (node.name === 'iframe') {
+        node.attr('sandbox', name === 'data-mce-no-sandbox' ? null : node.attr(name));
+        node.attr(name, null);
+      }
     }));
 };
 

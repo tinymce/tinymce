@@ -90,10 +90,9 @@ const createPreviewNode = (editor: Editor, node: AstNode): AstNode => {
 
   if (name === 'iframe') {
     previewNode.attr({
-      'allowfullscreen': node.attr('allowfullscreen'),
-      'frameborder': '0',
-      'sandbox': node.attr('sandbox'),
-      'data-mce-sandbox': node.attr('data-mce-sandbox')
+      allowfullscreen: node.attr('allowfullscreen'),
+      frameborder: '0',
+      sandbox: node.attr('sandbox')
     });
   } else {
     // Exclude autoplay as we don't want video/audio to play by default
@@ -119,20 +118,24 @@ const createPreviewNode = (editor: Editor, node: AstNode): AstNode => {
 };
 
 const retainAttributesAndInnerHtml = (editor: Editor, sourceNode: AstNode, targetNode: AstNode): void => {
-  // Prefix all attributes except internal (data-mce-*), width, height and style since we
-  // will add these to the placeholder
   const attribs = sourceNode.attributes ?? [];
   let ai = attribs.length;
   while (ai--) {
     const attrName = attribs[ai].name;
     let attrValue = attribs[ai].value;
 
+    // Prefix all attributes except internal (data-mce-*), width, height, style, and sandbox since we
+    // will add these to the placeholder
     if (attrName !== 'width' && attrName !== 'height' && attrName !== 'style' && attrName !== 'sandbox' && !Strings.startsWith(attrName, 'data-mce-')) {
       if (attrName === 'data' || attrName === 'src') {
         attrValue = editor.convertURL(attrValue, attrName);
       }
 
       targetNode.attr('data-mce-p-' + attrName, attrValue);
+    }
+
+    if (attrName === 'data-mce-sandbox' || attrName === 'data-mce-no-sandbox') {
+      targetNode.attr(attrName, attrValue);
     }
   }
 

@@ -57,6 +57,14 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     );
   });
 
+  it('TBA: Iframe retained as is', () => {
+    const editor = hook.editor();
+    editor.setContent('<iframe src="320x240.ogg" allowfullscreen></iframe>');
+    TinyAssertions.assertContent(editor,
+      '<p><iframe src="320x240.ogg" width="300" height="150" allowfullscreen="allowfullscreen"></iframe></p>'
+    );
+  });
+
   it('TBA: Iframe with innerHTML retained as is with xss_sanitization: false', async () => {
     // TINY-8363: Iframe with innerHTML is removed by DOMPurify, so disable sanitization for this test
     const editor = await McEditor.pFromSettings<Editor>({
@@ -70,6 +78,22 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
       '<p><iframe src="320x240.ogg" width="300" height="150" allowfullscreen="allowfullscreen">text<a href="#">link</a></iframe></p>'
     );
     McEditor.remove(editor);
+  });
+
+  it('TINY-10206: Iframe with empty string sandbox attribute retained as is', () => {
+    const editor = hook.editor();
+    editor.setContent('<iframe src="320x240.ogg" sandbox="" allowfullscreen></iframe>');
+    TinyAssertions.assertContent(editor,
+      '<p><iframe src="320x240.ogg" width="300" height="150" sandbox="" allowfullscreen="allowfullscreen"></iframe></p>'
+    );
+  });
+
+  it('TINY-10206: Iframe with sandbox attribute retained as is', () => {
+    const editor = hook.editor();
+    editor.setContent('<iframe src="320x240.ogg" sandbox="allow-forms" allowfullscreen></iframe>');
+    TinyAssertions.assertContent(editor,
+      '<p><iframe src="320x240.ogg" width="300" height="150" sandbox="allow-forms" allowfullscreen="allowfullscreen"></iframe></p>'
+    );
   });
 
   it('TBA: Audio retained as is', () => {

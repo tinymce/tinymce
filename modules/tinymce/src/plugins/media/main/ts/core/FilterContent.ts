@@ -53,13 +53,6 @@ const setup = (editor: Editor): void => {
               width: node.firstChild.attr('width'),
               height: node.firstChild.attr('height'),
             });
-
-            // TINY-10206: Normalize internal iframe sandbox attribute
-            if (realElmName === 'iframe') {
-              const sandboxVal = node.firstChild.attr('data-mce-sandbox');
-              realElm.attr('sandbox', sandboxVal === 'none' ? null : sandboxVal);
-              realElm.attr('data-mce-sandbox', null);
-            }
           } else {
             realElm.attr({
               width: node.attr('width'),
@@ -72,14 +65,19 @@ const setup = (editor: Editor): void => {
           style: node.attr('style')
         });
 
-        // Unprefix all placeholder attributes
         const attribs = node.attributes ?? [];
         let ai = attribs.length;
         while (ai--) {
           const attrName = attribs[ai].name;
 
+          // Unprefix all placeholder attributes and
+          // TINY-10206: Normalize internal iframe sandbox attribute
           if (attrName.indexOf('data-mce-p-') === 0) {
             realElm.attr(attrName.substr(11), attribs[ai].value);
+          } else if (attrName === 'data-mce-sandbox') {
+            realElm.attr('sandbox', attribs[ai].value);
+          } else if (attrName === 'data-mce-no-sandbox') {
+            realElm.attr('sandbox', null);
           }
         }
 
