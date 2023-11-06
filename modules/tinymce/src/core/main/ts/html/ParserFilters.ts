@@ -156,9 +156,15 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
 
   parser.addNodeFilter('iframe', (nodes) =>
     Arr.each(nodes, (node) => {
-      if (Type.isNullable(node.attr('data-mce-sandbox'))) {
-        node.attr('data-mce-sandbox', node.attr('sandbox') ?? 'none');
-        node.attr('sandbox', 'allow-scripts');
+      if (Type.isNullable(node.attr('data-mce-sandbox')) && Type.isNullable(node.attr('data-mce-no-sandbox'))) {
+        const sandboxAttr = node.attr('sandbox');
+        if (Type.isNullable(sandboxAttr)) {
+          node.attr('data-mce-no-sandbox', '');
+          node.attr('sandbox', 'allow-scripts');
+        } else {
+          node.attr('data-mce-sandbox', sandboxAttr);
+          node.attr('sandbox', sandboxAttr.includes('allow-scripts') ? 'allow-scripts' : '');
+        }
       }
     }));
 };

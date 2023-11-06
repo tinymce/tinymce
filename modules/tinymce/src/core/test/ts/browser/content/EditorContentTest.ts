@@ -318,19 +318,27 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         });
 
         context('iframe sandboxing', () => {
-          const sandboxValue = 'allow-scripts';
+          const standardSandbox = 'allow-scripts';
+          const strictSandbox = '';
 
           it('TINY-10206: Iframe without sandbox attribute should be sandboxed when in editor', () => {
             const editor = hook.editor();
             editor.setContent('<iframe src="https://example.com/"></iframe>');
-            TinyAssertions.assertRawContent(editor, `<p><iframe src="https://example.com/" data-mce-sandbox="none" sandbox="${sandboxValue}" data-mce-src="https://example.com/"></iframe></p>`);
+            TinyAssertions.assertRawContent(editor, `<p><iframe src="https://example.com/" data-mce-no-sandbox="" sandbox="${standardSandbox}" data-mce-src="https://example.com/"></iframe></p>`);
             TinyAssertions.assertContent(editor, '<p><iframe src="https://example.com/"></iframe></p>');
           });
 
-          it('TINY-10206: Iframe with sandbox attribute should be sandboxed when in editor and original sandbox attribute should be preserved', () => {
+          it('TINY-10206: Iframe with sandbox attribute that includes allow-scripts should be sandboxed when in editor', () => {
+            const editor = hook.editor();
+            editor.setContent('<iframe src="https://example.com/" sandbox="allow-forms allow-scripts"></iframe>');
+            TinyAssertions.assertRawContent(editor, `<p><iframe src="https://example.com/" sandbox="${standardSandbox}" data-mce-sandbox="allow-forms allow-scripts" data-mce-src="https://example.com/"></iframe></p>`);
+            TinyAssertions.assertContent(editor, '<p><iframe src="https://example.com/" sandbox="allow-forms allow-scripts"></iframe></p>');
+          });
+
+          it('TINY-10206: Iframe with sandbox attribute that does not include allow-scripts should be strictly sandboxed when in editor', () => {
             const editor = hook.editor();
             editor.setContent('<iframe src="https://example.com/" sandbox="allow-forms"></iframe>');
-            TinyAssertions.assertRawContent(editor, `<p><iframe src="https://example.com/" sandbox="${sandboxValue}" data-mce-sandbox="allow-forms" data-mce-src="https://example.com/"></iframe></p>`);
+            TinyAssertions.assertRawContent(editor, `<p><iframe src="https://example.com/" sandbox="${strictSandbox}" data-mce-sandbox="allow-forms" data-mce-src="https://example.com/"></iframe></p>`);
             TinyAssertions.assertContent(editor, '<p><iframe src="https://example.com/" sandbox="allow-forms"></iframe></p>');
           });
         });
@@ -416,7 +424,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         editor.setContent('<p><iframe><p>test</p></iframe></p>');
         const content = editor.getContent();
         assert.equal(content,
-          // Safari seems to encode the contents of iframes
+          // TINY-9624: Safari seems to encode the contents of iframes
           PlatformDetection.detect().browser.isSafari()
             ? '<p><iframe>&lt;p&gt;test&lt;/p&gt;</iframe></p>'
             : '<p><iframe><p>test</p></iframe></p>',
