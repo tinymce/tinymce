@@ -2,5 +2,7 @@
 # Format: [package_name]@[new_version]
 
 agar@8.0.0
+mcagar@9.0.0
+alloy@14.0.0
 bridge@4.7.0
 sugar@9.3.0
