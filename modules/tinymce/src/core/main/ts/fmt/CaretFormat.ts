@@ -64,7 +64,7 @@ const removeCaretContainerNode = (editor: Editor, node: Node, moveCaret: boolean
   const dom = editor.dom, selection = editor.selection;
 
   if (FormatUtils.isCaretContainerEmpty(node)) {
-    DeleteElement.deleteElement(editor, false, SugarElement.fromDom(node), moveCaret);
+    DeleteElement.deleteElement(editor, false, SugarElement.fromDom(node), moveCaret, true);
   } else {
     const rng = selection.getRng();
     const block = dom.getParent(node, dom.isBlock);

@@ -8,7 +8,7 @@ import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
-import { isEmptyCaretFormatElement } from '../fmt/FormatUtils';
+import * as FormatUtils from '../fmt/FormatUtils';
 import * as MergeText from './MergeText';
 
 const needsReposition = (pos: CaretPosition, elm: Node): boolean => {
@@ -85,15 +85,19 @@ const eqRawNode = (rawNode: Node) => (elm: SugarElement<Node>): boolean =>
 const isBlock = (editor: Editor, elm: SugarElement<Node>): boolean =>
   elm && Obj.has(editor.schema.getBlockElements(), SugarNode.name(elm));
 
-const paddEmptyBlock = (elm: SugarElement<Node>): Optional<CaretPosition> => {
+const paddEmptyBlock = (elm: SugarElement<Node>, preserveEmptyCaret: boolean): Optional<CaretPosition> => {
   if (Empty.isEmpty(elm)) {
     const br = SugarElement.fromHtml('<br data-mce-bogus="1">');
     // Remove all bogus elements except caret
-    Arr.each(Traverse.children(elm), (node) => {
-      if (!isEmptyCaretFormatElement(node)) {
-        Remove.remove(node);
-      }
-    });
+    if (preserveEmptyCaret) {
+      Arr.each(Traverse.children(elm), (node) => {
+        if (!FormatUtils.isEmptyCaretFormatElement(node)) {
+          Remove.remove(node);
+        }
+      });
+    } else {
+      Remove.empty(elm);
+    }
     Insert.append(elm, br);
     return Optional.some(CaretPosition.before(br.dom));
   } else {
@@ -128,7 +132,14 @@ const deleteNormalized = (elm: SugarElement<Node>, afterDeletePosOpt: Optional<C
 const isInlineElement = (editor: Editor, element: SugarElement<Node>): boolean =>
   Obj.has(editor.schema.getTextInlineElements(), SugarNode.name(element));
 
-const deleteElement = (editor: Editor, forward: boolean, elm: SugarElement<Node>, moveCaret: boolean = true): void => {
+const deleteElement = (
+  editor: Editor,
+  forward: boolean,
+  elm: SugarElement<Node>,
+  moveCaret: boolean = true,
+  preserveEmptyCaret: boolean = false
+): void => {
+  // Existing delete logic
   const afterDeletePos = findCaretPosOutsideElmAfterDelete(forward, editor.getBody(), elm.dom);
   const parentBlock = PredicateFind.ancestor(elm, Fun.curry(isBlock, editor), eqRawNode(editor.getBody()));
   const normalizedAfterDeletePos = deleteNormalized(elm, afterDeletePos, editor.schema, isInlineElement(editor, elm));
@@ -137,7 +148,7 @@ const deleteElement = (editor: Editor, forward: boolean, elm: SugarElement<Node>
     editor.setContent('');
     editor.selection.setCursorLocation();
   } else {
-    parentBlock.bind(paddEmptyBlock).fold(
+    parentBlock.bind((elm) => paddEmptyBlock(elm, preserveEmptyCaret)).fold(
       () => {
         if (moveCaret) {
           setSelection(editor, forward, normalizedAfterDeletePos);
