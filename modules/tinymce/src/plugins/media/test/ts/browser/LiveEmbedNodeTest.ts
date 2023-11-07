@@ -132,32 +132,26 @@ describe('browser.tinymce.plugins.media.core.LiveEmbedNodeTest', () => {
     ]);
   });
 
-  context('sandboxed iframes', () => {
-    const iframeStandardSandbox = 'allow-scripts';
-    const iframeStrictSandbox = '';
+  context('Sandboxing iframes', () => {
+    const standardSandbox = 'allow-scripts';
+    const strictSandbox = '';
+
+    const testSandboxedIframes = (originalSandbox: string, expectedSandbox: string) => () => {
+      const editor = hook.editor();
+      editor.setContent(`<iframe src="about:blank" sandbox="${originalSandbox}"></iframe>`);
+      assertStructure(editor, 'iframe', [ ], { sandbox: expectedSandbox }, { });
+    };
 
     it('TINY-10206: iframe with no sandbox attribute', () => {
       const editor = hook.editor();
       editor.setContent('<iframe src="about:blank"></iframe>');
-      assertStructure(editor, 'iframe', [ ], { sandbox: iframeStandardSandbox }, { });
+      assertStructure(editor, 'iframe', [ ], { sandbox: standardSandbox }, { });
     });
 
-    it('TINY-10206: iframe with sandbox attribute containing allow-scripts', () => {
-      const editor = hook.editor();
-      editor.setContent('<iframe src="about:blank" sandbox="allow-scripts allow-forms"></iframe>');
-      assertStructure(editor, 'iframe', [ ], { sandbox: iframeStandardSandbox }, { });
-    });
+    it('TINY-10206: iframe with sandbox attribute containing allow-scripts', testSandboxedIframes('allow-scripts allow-forms', standardSandbox));
 
-    it('TINY-10206: iframe with sandbox attribute without allow-scripts', () => {
-      const editor = hook.editor();
-      editor.setContent('<iframe src="about:blank" sandbox="allow-forms"></iframe>');
-      assertStructure(editor, 'iframe', [ ], { sandbox: iframeStrictSandbox }, { });
-    });
+    it('TINY-10206: iframe with sandbox attribute without allow-scripts', testSandboxedIframes('allow-forms', strictSandbox));
 
-    it('TINY-10206: iframe with empty sandbox attribute', () => {
-      const editor = hook.editor();
-      editor.setContent('<iframe src="about:blank" sandbox=""></iframe>');
-      assertStructure(editor, 'iframe', [ ], { sandbox: iframeStrictSandbox }, { });
-    });
+    it('TINY-10206: iframe with empty sandbox attribute', testSandboxedIframes('', strictSandbox));
   });
 });

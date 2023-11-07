@@ -1552,6 +1552,31 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
               assert.equal(serializedHtml, '<iframe src="https://example.com/test.svg"></iframe>');
             });
           });
+
+          context('Sandboxing iframes', () => {
+            const standardSandbox = 'allow-scripts';
+            const strictSandbox = '';
+
+            const testSandboxedIframes = (originalSandbox: string, expectedSandbox: string) => () => {
+              const parser = DomParser(scenario.settings);
+              const html = `<iframe src="about:blank" sandbox="${originalSandbox}"></iframe>`;
+              const serializedHtml = serializer.serialize(parser.parse(html));
+              assert.equal(serializedHtml, `<iframe src="about:blank" sandbox="${expectedSandbox}" data-mce-sandbox="${originalSandbox}"></iframe>`);
+            };
+
+            it('TINY-10206: iframe without sandbox attribute', () => {
+              const parser = DomParser(scenario.settings);
+              const html = '<iframe src="about:blank"></iframe>';
+              const serializedHtml = serializer.serialize(parser.parse(html));
+              assert.equal(serializedHtml, `<iframe src="about:blank" data-mce-no-sandbox="" sandbox="${standardSandbox}"></iframe>`);
+            });
+
+            it('TINY-10206: iframe with sandbox attribute containing allow-scripts', testSandboxedIframes('allow-scripts', standardSandbox));
+
+            it('TINY-10206: iframe with sandbox attribute that does not contain allow-scripts', testSandboxedIframes('allow-popups', strictSandbox));
+
+            it('TINY-10206: iframe with empty sandbox attribute', testSandboxedIframes('', strictSandbox));
+          });
         });
       });
     });
