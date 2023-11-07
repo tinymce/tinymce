@@ -1,4 +1,4 @@
-import { afterEach, describe, it } from '@ephox/bedrock-client';
+import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { assert } from 'chai';
 
@@ -921,6 +921,55 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
       ser.serialize(getTestElement(), { getInner: true }),
       '',
       'Should remove br');
+  });
+
+  context('Normalizing sandboxed iframes', () => {
+    const ser = DomSerializer({});
+
+    it('TINY-10206: iframe with data-mce-no-sandbox attribute', () => {
+      setTestHtml('<iframe src="about:blank" data-mce-no-sandbox="" sandbox="allow-scripts"></iframe>');
+      assert.equal(
+        ser.serialize(getTestElement(), { getInner: true }),
+        '<iframe src="about:blank"></iframe>',
+        'Should remove sandbox attribute'
+      );
+    });
+
+    it('TINY-10206: iframe with data-mce-no-sandbox attribute and no existing sandbox attribute', () => {
+      setTestHtml('<iframe src="about:blank" data-mce-no-sandbox=""></iframe>');
+      assert.equal(
+        ser.serialize(getTestElement(), { getInner: true }),
+        '<iframe src="about:blank"></iframe>',
+        'Should not add any sandbox attribute'
+      );
+    });
+
+    it('TINY-10206: iframe with data-mce-sandbox attribute', () => {
+      setTestHtml('<iframe src="about:blank" data-mce-sandbox="allow-forms allow-scripts" sandbox="allow-scripts"></iframe>');
+      assert.equal(
+        ser.serialize(getTestElement(), { getInner: true }),
+        '<iframe src="about:blank" sandbox="allow-forms allow-scripts"></iframe>',
+        'Should overwrite sandbox attribute'
+      );
+    });
+
+    it('TINY-10206: iframe with empty data-mce-sandbox attribute', () => {
+      setTestHtml('<iframe src="about:blank" data-mce-sandbox="" sandbox="allow-scripts allow-forms"></iframe>');
+      assert.equal(
+        ser.serialize(getTestElement(), { getInner: true }),
+        '<iframe src="about:blank" sandbox=""></iframe>',
+        'Should overwrite sandbox attribute'
+      );
+    });
+
+    it('TINY-10206: iframe with data-mce-sandbox attribute and no existing sandbox attribute', () => {
+      setTestHtml('<iframe src="about:blank" data-mce-sandbox="allow-forms allow-scripts"></iframe>');
+      assert.equal(
+        ser.serialize(getTestElement(), { getInner: true }),
+        '<iframe src="about:blank" sandbox="allow-forms allow-scripts"></iframe>',
+        'Should add sandbox attribute'
+      );
+    });
   });
 });
 
