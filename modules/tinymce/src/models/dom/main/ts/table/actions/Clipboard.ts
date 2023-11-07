@@ -1,6 +1,7 @@
 import { Arr, Optional } from '@ephox/katamari';
 import { CopySelected, TableFill, TableLookup } from '@ephox/snooker';
 import { SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
+import * as d3 from 'd3-dsv';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -28,6 +29,24 @@ const serializeElements = (editor: Editor, elements: SugarElement<HTMLElement>[]
 const getTextContent = (elements: SugarElement<HTMLElement>[]): string =>
   Arr.map(elements, (element) => element.dom.innerText).join('');
 
+const isSpecialTable = (content: string): boolean => {
+  return content.includes(',') || content.includes('\t');
+};
+
+const parseSpecialTable = (content: string): d3.DSVParsedArray<d3.DSVRowString<string>> | null => {
+  const delimiter = content.includes('\t') ? '\t' : ',';
+  const parser = delimiter === '\t' ? d3.tsvParse : d3.csvParse;
+
+  console.log('delimiter', delimiter)
+  try {
+    const parsedData = parser(content);
+    return parsedData;
+  } catch (e) {
+    console.log('Error parsing table', e);
+    return null;
+  }
+};
+
 const registerEvents = (editor: Editor, actions: TableActions): void => {
   editor.on('BeforeGetContent', (e) => {
     const multiCellContext = (cells: SugarElement<HTMLTableCellElement>[]) => {
@@ -48,14 +67,16 @@ const registerEvents = (editor: Editor, actions: TableActions): void => {
   editor.on('BeforeSetContent', (e) => {
     if (e.selection === true && e.paste === true) {
       const selectedCells = TableSelection.getCellsFromSelection(editor);
+      console.log('selectedCells', selectedCells);
+      console.log('e.content', e.content);
       Arr.head(selectedCells).each((cell) => {
         TableLookup.table(cell).each((table) => {
-
           const elements = Arr.filter(SugarElements.fromHtml(e.content), (content) => {
             return SugarNode.name(content) !== 'meta';
           });
 
           const isTable = SugarNode.isTag('table');
+          console.log('test', e.content);
           if (Options.shouldMergeContentOnPaste(editor) && elements.length === 1 && isTable(elements[0])) {
             e.preventDefault();
 
@@ -68,6 +89,15 @@ const registerEvents = (editor: Editor, actions: TableActions): void => {
           }
         });
       });
+      if (isSpecialTable(e.content)) {
+        console.log('isSpecialTable')
+        const parsedData = parseSpecialTable(e.content);
+        console.log('parsedData', parsedData);
+        if (parsedData?.columns) {
+          const tableHtml = Utils.convertToTable(parsedData.columns);
+          e.content = tableHtml;
+        }
+      }
     }
   });
 };

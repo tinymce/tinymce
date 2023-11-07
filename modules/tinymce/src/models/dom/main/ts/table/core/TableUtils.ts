@@ -8,6 +8,7 @@
 import { Arr, Optional, Strings } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { Attribute, Compare, ContentEditable, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
+import * as d3 from 'd3-dsv';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -50,6 +51,35 @@ const isPixel = (value: string): boolean => /^(\d+(\.\d+)?)px$/.test(value);
 const isInEditableContext = (cell: SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>): boolean =>
   PredicateFind.closest(cell, SugarNode.isTag('table')).exists(ContentEditable.isEditable);
 
+// This function should be implemented in your Utils module.
+const convertToTable = (parsedData: string[]) => {
+  let table = '<table>';
+  let row = '<tr>';
+
+  parsedData.forEach((cell) => {
+    if (cell.includes('<br>')) {
+      const parts = cell.split('<br>');
+      parts.forEach((part, index) => {
+        row += `<td>${part}</td>`;
+        if (index < parts.length - 1) {
+          row += '</tr>';
+          table += row;
+          row = '<tr>';
+        }
+      });
+    } else {
+      row += `<td>${cell}</td>`;
+    }
+  });
+
+  // Close the last row and the table
+  row += '</tr>';
+  table += row;
+  table += '</table>';
+
+  return table;
+};
+
 export {
   getBody,
   getIsRoot,
@@ -61,5 +91,6 @@ export {
   getPixelWidth,
   getPixelHeight,
   getRawWidth,
-  isInEditableContext
+  isInEditableContext,
+  convertToTable
 };
