@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, StructAssert, UiFinder } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Obj } from '@ephox/katamari';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
@@ -130,5 +130,34 @@ describe('browser.tinymce.plugins.media.core.LiveEmbedNodeTest', () => {
         }
       })
     ]);
+  });
+
+  context('sandboxed iframes', () => {
+    const iframeStandardSandbox = 'allow-scripts';
+    const iframeStrictSandbox = '';
+
+    it('TINY-10206: iframe with no sandbox attribute', () => {
+      const editor = hook.editor();
+      editor.setContent('<iframe src="about:blank"></iframe>');
+      assertStructure(editor, 'iframe', [ ], { sandbox: iframeStandardSandbox }, { });
+    });
+
+    it('TINY-10206: iframe with sandbox attribute containing allow-scripts', () => {
+      const editor = hook.editor();
+      editor.setContent('<iframe src="about:blank" sandbox="allow-scripts allow-forms"></iframe>');
+      assertStructure(editor, 'iframe', [ ], { sandbox: iframeStandardSandbox }, { });
+    });
+
+    it('TINY-10206: iframe with sandbox attribute without allow-scripts', () => {
+      const editor = hook.editor();
+      editor.setContent('<iframe src="about:blank" sandbox="allow-forms"></iframe>');
+      assertStructure(editor, 'iframe', [ ], { sandbox: iframeStrictSandbox }, { });
+    });
+
+    it('TINY-10206: iframe with empty sandbox attribute', () => {
+      const editor = hook.editor();
+      editor.setContent('<iframe src="about:blank" sandbox=""></iframe>');
+      assertStructure(editor, 'iframe', [ ], { sandbox: iframeStrictSandbox }, { });
+    });
   });
 });
