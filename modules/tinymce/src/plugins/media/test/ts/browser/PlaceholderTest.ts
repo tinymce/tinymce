@@ -25,14 +25,17 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
     editor.setContent('');
   };
 
-  const placeholderStructure = ApproxStructure.build((s, str) => {
+  const createPlaceholderStructure = (hasSandboxPlaceholder: boolean) => ApproxStructure.build((s, str) => {
     return s.element('body', {
       children: [
         s.element('p', {
           children: [
             s.element('img', {
               attrs: {
-                src: str.is(Env.transparentSrc)
+                src: str.is(Env.transparentSrc),
+                ...hasSandboxPlaceholder
+                  ? { 'data-mce-no-sandbox': str.is(''), 'data-mce-sandbox': str.none() }
+                  : { 'data-mce-no-sandbox': str.none(), 'data-mce-sandbox': str.none() }
               }
             })
           ]
@@ -70,20 +73,20 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
       'https://www.youtube.com/watch?v=P_205ZY52pY',
       '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
       'height="314" allowfullscreen="allowfullscreen"></iframe></p>',
-      placeholderStructure
+      createPlaceholderStructure(true)
     ));
 
     it('TBA: Set and assert video placeholder structure', () => pTestPlaceholder(hook.editor(),
       '/custom/video.mp4',
       '<p><video controls="controls" width="300" height="150">\n' +
       '<source src="custom/video.mp4" type="video/mp4"></video></p>',
-      placeholderStructure
+      createPlaceholderStructure(false)
     ));
 
     it('TBA: Set and assert audio placeholder structure', () => pTestPlaceholder(hook.editor(),
       '/custom/audio.mp3',
       '<p><audio src="custom/audio.mp3" controls="controls"></audio></p>',
-      placeholderStructure
+      createPlaceholderStructure(false)
     ));
   });
 
