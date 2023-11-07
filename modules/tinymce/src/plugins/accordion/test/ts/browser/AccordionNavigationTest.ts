@@ -41,7 +41,7 @@ describe('browser.tinymce.plugins.accordion.AccordionNavigationTest', () => {
     TinyAssertions.assertCursor(editor, [ 1 ], 0);
   });
 
-  it('TINY-10291: status bar should not represent accordion body div in element path', async () => {
+  it('TINY-10291: status bar should not represent accordion body div in element path', () => {
     const editor = hook.editor();
     editor.execCommand('InsertAccordion');
     TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
