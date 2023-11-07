@@ -51,7 +51,6 @@ const isPixel = (value: string): boolean => /^(\d+(\.\d+)?)px$/.test(value);
 const isInEditableContext = (cell: SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>): boolean =>
   PredicateFind.closest(cell, SugarNode.isTag('table')).exists(ContentEditable.isEditable);
 
-// This function should be implemented in your Utils module.
 const convertToTable = (parsedData: string[]) => {
   let table = '<table>';
   let row = '<tr>';
@@ -72,7 +71,6 @@ const convertToTable = (parsedData: string[]) => {
     }
   });
 
-  // Close the last row and the table
   row += '</tr>';
   table += row;
   table += '</table>';
