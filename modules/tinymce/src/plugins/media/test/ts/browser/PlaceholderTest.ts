@@ -45,24 +45,6 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
     });
   });
 
-  const iframeStructure = ApproxStructure.build((s) => {
-    return s.element('body', {
-      children: [
-        s.element('p', {
-          children: [
-            s.element('span', {
-              children: [
-                s.element('iframe', {}),
-                s.element('span', {})
-              ]
-            })
-          ]
-        }),
-        s.theRest()
-      ]
-    });
-  });
-
   context('media_live_embeds=false', () => {
     before(() => {
       const editor = hook.editor();
@@ -91,6 +73,28 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
   });
 
   context('media_live_embeds=true', () => {
+    const createIframeStructure = (sandbox: string) => ApproxStructure.build((s, str) => {
+      return s.element('body', {
+        children: [
+          s.element('p', {
+            children: [
+              s.element('span', {
+                children: [
+                  s.element('iframe', {
+                    attrs: {
+                      sandbox: str.is(sandbox)
+                    }
+                  }),
+                  s.element('span', {})
+                ]
+              })
+            ]
+          }),
+          s.theRest()
+        ]
+      });
+    });
+
     before(() => {
       const editor = hook.editor();
       editor.options.set('media_live_embeds', true);
@@ -100,7 +104,7 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
       'https://www.youtube.com/watch?v=P_205ZY52pY',
       '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
       'height="314" allowfullscreen="allowfullscreen"></iframe></p>',
-      iframeStructure
+      createIframeStructure('allow-scripts')
     ));
   });
 });
