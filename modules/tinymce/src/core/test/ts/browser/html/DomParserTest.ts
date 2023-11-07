@@ -829,7 +829,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
         assert.equal(
           serializer.serialize(DomParser(scenario.settings).parse('<iframe><textarea></iframe><img src="a" onerror="alert(document.domain)" />')),
-          browser.isSafari() || !scenario.isSanitizeEnabled ? '<iframe><textarea></iframe><img src="a">' : '<img src="a">'
+          browser.isSafari() || !scenario.isSanitizeEnabled ? '<iframe sandbox="allow-scripts" data-mce-no-sandbox=""><textarea></iframe><img src="a">' : '<img src="a">'
         );
       });
 
@@ -945,7 +945,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
           '<video poster="data:image/svg+xml;base64,x"></video>'
         ));
         assert.equal(serializedHtml,
-          '<iframe></iframe>' +
+          '<iframe data-mce-no-sandbox="" sandbox="allow-scripts"></iframe>' +
           '<a>1</a>' +
           '<object></object>' +
           '<img src="data:image/svg+xml;base64,x">' +
@@ -964,7 +964,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
           '<video poster="data:image/svg+xml;base64,x"></video>'
         ));
         assert.equal(serializedHtml,
-          '<iframe src="data:image/svg+xml;base64,x"></iframe>' +
+          '<iframe src="data:image/svg+xml;base64,x" data-mce-no-sandbox="" sandbox="allow-scripts"></iframe>' +
           '<a href="data:image/svg+xml;base64,x">1</a>' +
           '<object data="data:image/svg+xml;base64,x"></object>' +
           '<img src="data:image/svg+xml;base64,x">' +
@@ -982,7 +982,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
           '<video poster="data:image/svg+xml;base64,x"></video>'
         ));
         assert.equal(serializedHtml,
-          '<iframe></iframe>' +
+          '<iframe data-mce-no-sandbox="" sandbox="allow-scripts"></iframe>' +
           '<a>1</a>' +
           '<object></object>' +
           '<img>' +
@@ -1535,21 +1535,21 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
               const parser = DomParser(scenario.settings);
               const html = '<iframe src="https://example.com/test.svg"></iframe>';
               const serializedHtml = serializer.serialize(parser.parse(html));
-              assert.equal(serializedHtml, '<iframe></iframe>');
+              assert.equal(serializedHtml, '<iframe data-mce-no-sandbox="" sandbox="allow-scripts"></iframe>');
             });
 
             it('TINY-10206: Svg iframes should be disallowed if allow_svg_iframes: false', () => {
               const parser = DomParser({ ...scenario.settings, allow_svg_iframes: false });
               const html = '<iframe src="https://example.com/test.svg"></iframe>';
               const serializedHtml = serializer.serialize(parser.parse(html));
-              assert.equal(serializedHtml, '<iframe></iframe>');
+              assert.equal(serializedHtml, '<iframe data-mce-no-sandbox="" sandbox="allow-scripts"></iframe>');
             });
 
             it('TINY-10206: Svg iframes should be allowed if allow_svg_iframes: true', () => {
               const parser = DomParser({ ...scenario.settings, allow_svg_iframes: true });
               const html = '<iframe src="https://example.com/test.svg"></iframe>';
               const serializedHtml = serializer.serialize(parser.parse(html));
-              assert.equal(serializedHtml, '<iframe src="https://example.com/test.svg"></iframe>');
+              assert.equal(serializedHtml, '<iframe src="https://example.com/test.svg" data-mce-no-sandbox="" sandbox="allow-scripts"></iframe>');
             });
           });
 
@@ -1619,8 +1619,8 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     context('with default schema', () => {
       testDisablingSanitization([
         '',
-        '<iframe src="https://example.com"><p>Lorem ipsum</p></iframe>',
-        '<iframe></iframe>',
+        '<iframe src="https://example.com" sandbox="allow-scripts" data-mce-no-sandbox=""><p>Lorem ipsum</p></iframe>',
+        '<iframe sandbox="allow-scripts" data-mce-no-sandbox=""></iframe>',
         '<p><a>XSS</a></p>',
         ''
       ], {});
@@ -1629,8 +1629,8 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     context('with valid_elements: \'*[*]\' schema', () => {
       testDisablingSanitization([
         '<script>alert(1)</script>',
-        '<iframe src="https://example.com"><p>Lorem ipsum</p></iframe>',
-        '<iframe srcdoc="Lorem ipsum"></iframe>',
+        '<iframe src="https://example.com" data-mce-no-sandbox="" sandbox="allow-scripts"><p>Lorem ipsum</p></iframe>',
+        '<iframe srcdoc="Lorem ipsum" data-mce-no-sandbox="" sandbox="allow-scripts"></iframe>',
         '<p><a>XSS</a></p>',
         '<svg><circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow"></circle></svg>'
       ], { valid_elements: '*[*]' });

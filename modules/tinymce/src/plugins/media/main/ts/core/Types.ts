@@ -15,6 +15,9 @@ export type MediaData = {
   allowfullscreen?: string | boolean;
   src?: string;
   'data-ephox-embed'?: string;
+  sandbox?: string;
+  'data-mce-sandbox'?: string;
+  'data-mce-no-sandbox'?: string;
 };
 
 export type MediaDataType = 'ephox-embed-iri' | 'object' | 'iframe' | 'embed' | 'video' | 'audio';

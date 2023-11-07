@@ -40,56 +40,64 @@ describe('atomic.tinymce.plugins.media.core.HtmlToDataTest', () => {
     it('Convert iframe with URL without protocol to data', () => testHtmlToData(
       '<iframe src="www.youtube.com/embed/b3XFjWInBog" width="560" height="314" allowFullscreen="1"></iframe>',
       {
-        src: 'www.youtube.com/embed/b3XFjWInBog',
-        width: '560',
-        height: '314',
-        allowfullscreen: 'allowfullscreen',
-        type: 'iframe',
-        source: 'www.youtube.com/embed/b3XFjWInBog',
-        altsource: '',
-        poster: ''
+        'src': 'www.youtube.com/embed/b3XFjWInBog',
+        'width': '560',
+        'height': '314',
+        'allowfullscreen': 'allowfullscreen',
+        'type': 'iframe',
+        'source': 'www.youtube.com/embed/b3XFjWInBog',
+        'altsource': '',
+        'poster': '',
+        'sandbox': 'allow-scripts',
+        'data-mce-no-sandbox': ''
       }
     ));
 
     it('Convert iframe with protocol relative URL to data', () => testHtmlToData(
       '<iframe src="//www.youtube.com/embed/b3XFjWInBog" width="560" height="314" allowFullscreen="1"></iframe>',
       {
-        src: '//www.youtube.com/embed/b3XFjWInBog',
-        width: '560',
-        height: '314',
-        allowfullscreen: 'allowfullscreen',
-        type: 'iframe',
-        source: '//www.youtube.com/embed/b3XFjWInBog',
-        altsource: '',
-        poster: ''
+        'src': '//www.youtube.com/embed/b3XFjWInBog',
+        'width': '560',
+        'height': '314',
+        'allowfullscreen': 'allowfullscreen',
+        'type': 'iframe',
+        'source': '//www.youtube.com/embed/b3XFjWInBog',
+        'altsource': '',
+        'poster': '',
+        'sandbox': 'allow-scripts',
+        'data-mce-no-sandbox': ''
       }
     ));
 
     it('Convert iframe with http URL to data', () => testHtmlToData(
       '<iframe src="http://www.youtube.com/embed/b3XFjWInBog" width="560" height="314" allowFullscreen="1"></iframe>',
       {
-        src: 'http://www.youtube.com/embed/b3XFjWInBog',
-        width: '560',
-        height: '314',
-        allowfullscreen: 'allowfullscreen',
-        type: 'iframe',
-        source: 'http://www.youtube.com/embed/b3XFjWInBog',
-        altsource: '',
-        poster: ''
+        'src': 'http://www.youtube.com/embed/b3XFjWInBog',
+        'width': '560',
+        'height': '314',
+        'allowfullscreen': 'allowfullscreen',
+        'type': 'iframe',
+        'source': 'http://www.youtube.com/embed/b3XFjWInBog',
+        'altsource': '',
+        'poster': '',
+        'sandbox': 'allow-scripts',
+        'data-mce-no-sandbox': ''
       }
     ));
 
     it('Convert iframe with https URL to data', () => testHtmlToData(
       '<iframe src="https://www.youtube.com/embed/b3XFjWInBog" width="560" height="314" allowFullscreen="1"></iframe>',
       {
-        src: 'https://www.youtube.com/embed/b3XFjWInBog',
-        width: '560',
-        height: '314',
-        allowfullscreen: 'allowfullscreen',
-        type: 'iframe',
-        source: 'https://www.youtube.com/embed/b3XFjWInBog',
-        altsource: '',
-        poster: ''
+        'src': 'https://www.youtube.com/embed/b3XFjWInBog',
+        'width': '560',
+        'height': '314',
+        'allowfullscreen': 'allowfullscreen',
+        'type': 'iframe',
+        'source': 'https://www.youtube.com/embed/b3XFjWInBog',
+        'altsource': '',
+        'poster': '',
+        'sandbox': 'allow-scripts',
+        'data-mce-no-sandbox': ''
       }
     ));
   });
