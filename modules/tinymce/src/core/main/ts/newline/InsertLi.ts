@@ -1,4 +1,5 @@
-import { Type } from '@ephox/katamari';
+import { Arr, Obj, Type } from '@ephox/katamari';
+import { Css, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
@@ -49,8 +50,13 @@ const isFirstOrLastLi = (containerBlock: Element, parentBlock: Element, first: b
   return node === parentBlock;
 };
 
+const getStyles = (elm: HTMLElement): string => Arr.foldl(
+  Obj.mapToArray(Css.getAllRaw(SugarElement.fromDom(elm)), (style, styleName) => `${styleName}: ${style};`),
+  (acc, s) => acc + s,
+  '');
+
 // Inserts a block or br before/after or in the middle of a split list of the LI is empty
-const insert = (editor: Editor, createNewBlock: (name: string) => Element, containerBlock: Element, parentBlock: Element, newBlockName: string): void => {
+const insert = (editor: Editor, createNewBlock: (name: string, styles?: Record<string, string>) => Element, containerBlock: Element, parentBlock: Element, newBlockName: string): void => {
   const dom = editor.dom;
   const rng = editor.selection.getRng();
   const containerParent = containerBlock.parentNode;
@@ -64,6 +70,10 @@ const insert = (editor: Editor, createNewBlock: (name: string) => Element, conta
   }
 
   let newBlock = createNewBlock(newBlockName);
+  const parentBlockStyles = isListItem(parentBlock) ? getStyles(parentBlock) : undefined;
+  if (parentBlockStyles) {
+    newBlock = createNewBlock(newBlockName, { style: parentBlockStyles });
+  }
 
   if (isFirstOrLastLi(containerBlock, parentBlock, true) && isFirstOrLastLi(containerBlock, parentBlock, false)) {
     if (hasParent(containerBlock, 'LI')) {
@@ -105,8 +115,18 @@ const insert = (editor: Editor, createNewBlock: (name: string) => Element, conta
     const fragment = tmpRng.extractContents();
 
     if (newBlockName === 'LI' && hasFirstChild(fragment, 'LI')) {
+      const previousChildren = Arr.filter(
+        Arr.map(Arr.from(newBlock.children), SugarElement.fromDom),
+        (child) => !SugarNode.isTag('br')(child)
+      );
+
       newBlock = fragment.firstChild as HTMLLIElement;
       dom.insertAfter(fragment, containerBlock);
+
+      Arr.each(previousChildren, (child) => newBlock.prepend(child.dom));
+      if (parentBlockStyles) {
+        newBlock.setAttribute('style', parentBlockStyles);
+      }
     } else {
       dom.insertAfter(fragment, containerBlock);
       dom.insertAfter(newBlock, containerBlock);
