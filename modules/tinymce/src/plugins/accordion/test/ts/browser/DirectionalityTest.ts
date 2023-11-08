@@ -3,7 +3,8 @@ import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { TinyHooks, TinySelections, TinyAssertions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Plugin from 'tinymce/plugins/accordion/Plugin';
+import AccordionPlugin from 'tinymce/plugins/accordion/Plugin';
+import DirectionalityPlugin from 'tinymce/plugins/directionality/Plugin';
 
 describe('browser.tinymce.plugins.accordion.DirectionalityTest', () => {
   const hook = TinyHooks.bddSetup<Editor>(
@@ -12,7 +13,7 @@ describe('browser.tinymce.plugins.accordion.DirectionalityTest', () => {
       base_url: '/project/tinymce/js/tinymce',
       indent: false,
     },
-    [ Plugin ]
+    [ AccordionPlugin, DirectionalityPlugin ]
   );
 
   beforeEach(() => {
