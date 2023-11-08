@@ -287,6 +287,17 @@ const register = (editor: Editor): void => {
     processor: 'boolean',
     default: editor.hasPlugin('help')
   });
+
+  registerOption('default_font_stack', {
+    processor: (value) => {
+      if (Type.isArray(value) && Arr.forall(value, Type.isString)) {
+        return { value, valid: true };
+      } else {
+        return { valid: false, message: 'Must be an array with font family names.' };
+      }
+    },
+    default: []
+  });
 };
 
 const isReadOnly = option('readonly');
@@ -326,6 +337,7 @@ const getPasteAsText = option('paste_as_text');
 const getSidebarShow = option('sidebar_show');
 const promotionEnabled = option('promotion');
 const useHelpAccessibility = option('help_accessibility');
+const getDefaultFontStack = option('default_font_stack');
 
 const isSkinDisabled = (editor: Editor): boolean =>
   editor.options.get('skin') === false;
@@ -476,5 +488,6 @@ export {
   getResize,
   getPasteAsText,
   getSidebarShow,
-  useHelpAccessibility
+  useHelpAccessibility,
+  getDefaultFontStack
 };
