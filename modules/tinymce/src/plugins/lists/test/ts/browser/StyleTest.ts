@@ -41,9 +41,9 @@ describe('browser.tinymce.plugins.lists.StyleTest', () => {
       <li style="color: black; list-style-type: square;">1</li>
       <li style="color: green; list-style-type: disc;">parent
         <ol>
-          <li style="color: red;"><span style="color: blue;">nested</span></li>
+          <li style="color: red;"><span style="color: blue;">nested 1</span></li>
           <li style="color: yellow;"><span style="color: purple;">nested mid</span></li>
-          <li style="color: red;"><span style="color: blue;">nested</span></li>
+          <li style="color: red;"><span style="color: blue;">nested 2</span></li>
         </ol>
       </li>
     </ol>`);
@@ -55,12 +55,12 @@ describe('browser.tinymce.plugins.lists.StyleTest', () => {
       '<li style="color: black; list-style-type: square;">1</li>' +
       '<li style="color: green; list-style-type: disc;">parent' +
         '<ol>' +
-          '<li style="color: red;"><span style="color: blue;">nested</span></li>' +
+          '<li style="color: red;"><span style="color: blue;">nested 1</span></li>' +
           '<li style="color: yellow;"><span style="color: purple;">nested mid</span></li>' +
         '</ol>' +
       '</li>' +
       '<li style="color: green; list-style-type: disc;"><span style="color: purple;">abc</span>' +
-        '<ol><li style="color: red;"><span style="color: blue;">nested</span></li></ol>' +
+        '<ol><li style="color: red;"><span style="color: blue;">nested 2</span></li></ol>' +
       '</li>' +
     '</ol>');
   });
