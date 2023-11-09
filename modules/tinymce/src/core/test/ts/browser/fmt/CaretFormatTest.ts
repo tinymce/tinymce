@@ -51,7 +51,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
   }
 
   const handleCaretFormat = (editor: Editor, actions: Action[]) => {
-    actions.forEach(({ type, format, options }) => {
+    Arr.each(actions, ({ type, format, options }) => {
       if (type === 'apply') {
         applyCaretFormat(editor, format, options);
       } else if (type === 'remove') {
