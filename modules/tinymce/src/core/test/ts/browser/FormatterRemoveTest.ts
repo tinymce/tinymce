@@ -306,7 +306,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     const editor = hook.editor();
     editor.setContent('<p><em><b>abc</b></em></p>');
     editor.formatter.register('format', { inline: 'b' });
-    LegacyUnit.setSelection(editor, 'b', 3, 'b', 3);
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
     editor.formatter.remove('format');
     KeyUtils.type(editor, 'd');
     TinyAssertions.assertContent(editor, '<p><em><b>abc</b>d</em></p>');
@@ -316,7 +316,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     const editor = hook.editor();
     editor.setContent('<p><em><b>abc</b></em>e</p>');
     editor.formatter.register('format', { inline: 'b' });
-    LegacyUnit.setSelection(editor, 'b', 3, 'b', 3);
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
     editor.formatter.remove('format');
     KeyUtils.type(editor, 'd');
     TinyAssertions.assertContent(editor, '<p><em><b>abc</b>d</em>e</p>');

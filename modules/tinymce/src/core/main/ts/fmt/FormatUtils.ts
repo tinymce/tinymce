@@ -13,6 +13,7 @@ import * as TransparentElements from '../content/TransparentElements';
 import * as NodeType from '../dom/NodeType';
 import * as SelectionUtils from '../selection/SelectionUtils';
 import * as Whitespace from '../text/Whitespace';
+import { ZWSP } from '../text/Zwsp';
 import { isCaretNode } from './FormatContainer';
 import { BlockFormat, Format, FormatAttrOrStyleValue, FormatVars, InlineFormat, MixedFormat, SelectorFormat } from './FormatTypes';
 
@@ -307,6 +308,34 @@ const isMixedFormat = (format: any): format is MixedFormat =>
 const shouldExpandToSelector = (format: Format): boolean =>
   isSelectorFormat(format) && format.expand !== false && !isInlineFormat(format);
 
+const getEmptyCaretContainers = (node: Node) => {
+  const nodes: Element[] = [];
+
+  let tempNode: Node | null = node;
+  while (tempNode) {
+    if ((NodeType.isText(tempNode) && tempNode.data !== ZWSP) || tempNode.childNodes.length > 1) {
+      return [];
+    }
+
+    // Collect nodes
+    if (NodeType.isElement(tempNode)) {
+      nodes.push(tempNode);
+    }
+
+    tempNode = tempNode.firstChild;
+  }
+
+  return nodes;
+};
+
+const isCaretContainerEmpty = (node: Node): boolean => {
+  return getEmptyCaretContainers(node).length > 0;
+};
+
+const isEmptyCaretFormatElement = (element: SugarElement<Node>): boolean => {
+  return isCaretNode(element.dom) && isCaretContainerEmpty(element.dom);
+};
+
 export {
   isNode,
   isElementNode,
@@ -331,5 +360,7 @@ export {
   isWrappingBlockFormat,
   isNonWrappingBlockFormat,
   isMixedFormat,
-  shouldExpandToSelector
+  shouldExpandToSelector,
+  isCaretContainerEmpty,
+  isEmptyCaretFormatElement
 };
