@@ -288,7 +288,10 @@ const removeCaretFormat = (editor: Editor, name: string, vars?: FormatVars, simi
     insertCaretContainerNode(editor, newCaretContainer, caretContainer ?? formatNode);
 
     const cleanedFormatNode = cleanFormatNode(editor, newCaretContainer, formatNode, name, vars, similar);
-    const caretTextNode = insertFormatNodesIntoCaretContainer(parents.concat(cleanedFormatNode.toArray()).concat(parentsAfter), newCaretContainer);
+    const caretTextNode = insertFormatNodesIntoCaretContainer([
+    ...parents,
+    ...cleanedFormatNode.toArray(),
+    ...parentsAfter ], newCaretContainer);
     if (caretContainer) {
       removeCaretContainerNode(editor, caretContainer, Type.isNonNullable(caretContainer));
     }
