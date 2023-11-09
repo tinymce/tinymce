@@ -427,8 +427,6 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
 
     // eslint-disable-next-line no-console
     console.warn = (a) => {
-      // eslint-disable-next-line no-console
-      console.log('a: ', a);
       storedConsoleWarn(a);
       warnings.push(a);
     };
