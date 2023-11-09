@@ -25,10 +25,8 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
   const onSetup = onSetupEvent(editor, 'NodeChange SwitchMode', (api: BespokeSelectApi) => {
     const comp = api.getComponent();
     currentComp = Optional.some(comp);
-    if (comp.getSystem().isConnected()) {
-      spec.updateInputValue(comp);
-      Disabling.set(comp, !editor.selection.isEditable());
-    }
+    spec.updateInputValue(comp);
+    Disabling.set(comp, !editor.selection.isEditable());
   });
 
   const getApi = (comp: AlloyComponent): BespokeSelectApi => ({ getComponent: Fun.constant(comp) });
@@ -74,6 +72,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
   };
 
   const makeStepperButton = (action: (focusBack: boolean) => void, title: string, tooltip: string, classes: string[]) => {
+    const editorOffCellStepButton = Cell(Fun.noop);
     const translatedTooltip = backstage.shared.providers.translate(tooltip);
     const altExecuting = Id.generate('altExecuting');
     const onSetup = onSetupEvent(editor, 'NodeChange SwitchMode', (api: BespokeSelectApi) => {
@@ -101,8 +100,8 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
       buttonBehaviours: Behaviour.derive([
         Disabling.config({}),
         AddEventsBehaviour.config(altExecuting, [
-          onControlAttached({ onSetup, getApi }, editorOffCell),
-          onControlDetached({ getApi }, editorOffCell),
+          onControlAttached({ onSetup, getApi }, editorOffCellStepButton),
+          onControlDetached({ getApi }, editorOffCellStepButton),
           AlloyEvents.run(NativeEvents.keydown(), (comp, se) => {
             if (se.event.raw.keyCode === Keys.space() || se.event.raw.keyCode === Keys.enter()) {
               if (!Disabling.isDisabled(comp)) {
