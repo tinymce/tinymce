@@ -1454,18 +1454,6 @@
     "@types/node" "*"
     "@types/responselike" "^1.0.0"
 
-"@types/chai-spies@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@types/chai-spies/-/chai-spies-1.0.5.tgz#d8a9a6c76daa8bb8080469941552055c1cd99f79"
-  integrity sha512-WPZ4jhg5plJsfErWnI9/K1aZUkxfq0Nd/aEWQzpn8lIZvny1Kay5Je1JzYiIcDZ0yqyTRa0nPx6pz3AXFph8dQ==
-  dependencies:
-    "@types/chai" "*"
-
-"@types/chai@*":
-  version "4.3.9"
-  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.3.9.tgz#144d762491967db8c6dea38e03d2206c2623feec"
-  integrity sha512-69TtiDzu0bcmKQv3yg1Zx409/Kd7r0b5F1PfpYJfSHzLGtB53547V4u+9iqKYsTu/O2ai6KTb0TInNpvuQ3qmg==
-
 "@types/chai@^4.3.3":
   version "4.3.5"
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.3.5.tgz#ae69bcbb1bebb68c4ac0b11e9d8ed04526b3562b"
@@ -3090,11 +3078,6 @@ caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha512-4tYFyifaFfGacoiObjJegolkwSU4xQNGbVgUiNYVUxbQ2x2lUsFvY4hVgVzGiIe6WLOPqycWXA40l+PWsxthUw==
-
-chai-spies@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/chai-spies/-/chai-spies-1.1.0.tgz#a6c270bc708c70716fed667d771f910902a5fb31"
-  integrity sha512-ikaUhQvQWchRYj2K54itFp3nrcxaFRpSDQxDlRzSn9aWgu9Pi7lD8yFxTso4WnQ39+WZ69oB/qOvqp+isJIIWA==
 
 chai@^4.3.3:
   version "4.3.7"

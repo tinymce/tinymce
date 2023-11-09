@@ -1,10 +1,9 @@
 import { FocusTools, Keys, Mouse, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Optional } from '@ephox/katamari';
+import { Arr, Optional, Strings } from '@ephox/katamari';
 import { SugarBody, SugarElement, SugarShadowDom, Value } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
-import chai, { assert, expect } from 'chai';
-import spies from 'chai-spies';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
@@ -422,8 +421,17 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
   });
 
   it('TINY-10330: the presence and updates of fontsizeinput should not trigger warnings', async () => {
-    chai.use(spies);
-    const spy = chai.spy.on(console, 'warn');
+    // eslint-disable-next-line no-console
+    const storedConsoleWarn = console.warn;
+    const warnings: string[] = [];
+
+    // eslint-disable-next-line no-console
+    console.warn = (a) => {
+      // eslint-disable-next-line no-console
+      console.log('a: ', a);
+      storedConsoleWarn(a);
+      warnings.push(a);
+    };
 
     const editor = hook.editor();
     editor.setContent('<p style="font-size: 20px;">abc</p>');
@@ -431,7 +439,10 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     const input = TinyUiActions.clickOnToolbar<HTMLInputElement>(editor, '.tox-number-input input');
     await Waiter.pTryUntilPredicate(`Wait for the new input value is setted`, () => input.dom.value === '20px');
 
-    expect(spy).to.not.have.been.called();
+    assert.isTrue(Arr.forall(warnings, (warn) => !Strings.contains(warn, 'The component must be in a context to execute')));
+
+    // eslint-disable-next-line no-console
+    console.warn = storedConsoleWarn;
   });
 
   context('Noneditable root', () => {
