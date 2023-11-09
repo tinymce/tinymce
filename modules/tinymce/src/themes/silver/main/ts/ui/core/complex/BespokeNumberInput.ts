@@ -121,13 +121,13 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
     });
   };
 
-  const memMinus = Memento.record(makeStepperButton((focusBack) => decrease(false, focusBack), 'minus', 'Decrease font size', [ 'highlight-on-focus' ]));
-  const memPlus = Memento.record(makeStepperButton((focusBack) => increase(false, focusBack), 'plus', 'Increase font size', [ 'highlight-on-focus' ]));
+  const memMinus = Memento.record(makeStepperButton((focusBack) => decrease(false, focusBack), 'minus', 'Decrease font size', []));
+  const memPlus = Memento.record(makeStepperButton((focusBack) => increase(false, focusBack), 'plus', 'Increase font size', []));
 
   const memInput = Memento.record({
     dom: {
       tag: 'div',
-      classes: [ 'tox-input-wrapper', 'highlight-on-focus' ]
+      classes: [ 'tox-input-wrapper' ]
     },
     components: [
       Input.sketch({
