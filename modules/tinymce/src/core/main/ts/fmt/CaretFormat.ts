@@ -289,9 +289,9 @@ const removeCaretFormat = (editor: Editor, name: string, vars?: FormatVars, simi
 
     const cleanedFormatNode = cleanFormatNode(editor, newCaretContainer, formatNode, name, vars, similar);
     const caretTextNode = insertFormatNodesIntoCaretContainer([
-    ...parents,
-    ...cleanedFormatNode.toArray(),
-    ...parentsAfter ], newCaretContainer);
+      ...parents,
+      ...cleanedFormatNode.toArray(),
+      ...parentsAfter ], newCaretContainer);
     if (caretContainer) {
       removeCaretContainerNode(editor, caretContainer, Type.isNonNullable(caretContainer));
     }
@@ -352,6 +352,9 @@ const createCaretFormatAtStart = (rng: Range, formatNodes: Node[]): CaretPositio
 };
 
 const isFormatElement = (editor: Editor, element: SugarElement<Node>): boolean => {
+  if (isCaretNode(element.dom)) {
+    return false;
+  }
   const inlineElements = editor.schema.getTextInlineElements();
   return Obj.has(inlineElements, SugarNode.name(element)) && !isCaretNode(element.dom) && !NodeType.isBogus(element.dom);
 };
