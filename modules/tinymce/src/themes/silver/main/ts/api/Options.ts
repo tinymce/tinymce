@@ -289,13 +289,7 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('default_font_stack', {
-    processor: (value) => {
-      if (Type.isArray(value) && Arr.forall(value, Type.isString)) {
-        return { value, valid: true };
-      } else {
-        return { valid: false, message: 'Must be an array with font family names.' };
-      }
-    },
+    processor: 'string[]',
     default: []
   });
 };
