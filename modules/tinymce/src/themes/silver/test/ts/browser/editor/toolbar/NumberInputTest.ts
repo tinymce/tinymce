@@ -1,6 +1,6 @@
 import { FocusTools, Keys, Mouse, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Optional } from '@ephox/katamari';
+import { Arr, Optional, Strings } from '@ephox/katamari';
 import { SugarBody, SugarElement, SugarShadowDom, Value } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -95,6 +95,8 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
 
     TinyUiActions.clickOnToolbar(editor, '.tox-number-input .minus');
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">abc</p>');
+
+    editor.mode.set('design');
   });
 
   it('TINY-10129: Toolbar buttons should be properly disabled', async () => {
@@ -416,6 +418,29 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
 
     assert.equal(input.dom.value, originalFontSize, 'the value in the input should go back to the previous value');
     TinyAssertions.assertContent(editor, `<p style="font-size: ${originalFontSize};">a<span style="font-size: ${originalFontSize};">b</span>c</p>`);
+  });
+
+  it('TINY-10330: the presence and updates of fontsizeinput should not trigger warnings', async () => {
+    // eslint-disable-next-line no-console
+    const storedConsoleWarn = console.warn;
+    const warnings: string[] = [];
+
+    // eslint-disable-next-line no-console
+    console.warn = (a) => {
+      storedConsoleWarn(a);
+      warnings.push(a);
+    };
+
+    const editor = hook.editor();
+    editor.setContent('<p style="font-size: 20px;">abc</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
+    const input = TinyUiActions.clickOnToolbar<HTMLInputElement>(editor, '.tox-number-input input');
+    await Waiter.pTryUntilPredicate(`Wait for the new input value is setted`, () => input.dom.value === '20px');
+
+    assert.isTrue(Arr.forall(warnings, (warn) => !Strings.contains(warn, 'The component must be in a context to execute')));
+
+    // eslint-disable-next-line no-console
+    console.warn = storedConsoleWarn;
   });
 
   context('Noneditable root', () => {
