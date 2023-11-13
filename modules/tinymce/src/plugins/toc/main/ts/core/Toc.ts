@@ -19,6 +19,7 @@ interface Header {
   readonly level: number;
   readonly title: string;
   readonly element: HTMLHeadingElement;
+  readonly prefixLevelText: string;
 }
 
 const tocId = Guid.create('mcetoc_');
@@ -32,8 +33,7 @@ const generateSelector = (depth: number): string => {
   return selector.join(',');
 };
 
-const hasHeaders = (editor: Editor): boolean =>
-  readHeaders(editor).length > 0;
+const hasHeaders = (editor: Editor): boolean => readHeaders(editor).length > 0;
 
 const readHeaders = (editor: Editor): Header[] => {
   const tocClass = Settings.getTocClass(editor);
@@ -48,13 +48,33 @@ const readHeaders = (editor: Editor): Header[] => {
     });
   }
 
+  const levelArrayCache = new Array(6).fill(0);
+
+  let prevLevel;
+
   return Tools.map(headers, (h) => {
     const id = h.id;
+    const level = parseInt(h.nodeName.replace(/^H/i, ''), 10);
+
+    if (level < prevLevel) {
+      const length = levelArrayCache.length - prevLevel;
+
+      for (let i = prevLevel; i < length; i++) {
+        levelArrayCache[i] = 0;
+      }
+    }
+    prevLevel = level;
+
+    levelArrayCache[level]++;
+
+    const prefixLevelText = levelArrayCache.filter((v) => v !== 0).join('.');
+
     return {
+      level,
+      prefixLevelText,
       id: id ? id : tocId(),
-      level: parseInt(h.nodeName.replace(/^H/i, ''), 10),
       title: editor.$.text(h),
-      element: h
+      element: h,
     };
   });
 };
@@ -90,6 +110,7 @@ const generateTocContentHtml = (editor: Editor): string => {
   let html = '';
   const headers = readHeaders(editor);
   let prevLevel = getMinLevel(headers) - 1;
+  const enableTocPrefixOrder = Settings.getTocOrderList(editor);
 
   if (!headers.length) {
     return '';
@@ -110,7 +131,10 @@ const generateTocContentHtml = (editor: Editor): string => {
       }
     }
 
-    html += '<a href="#' + h.id + '">' + h.title + '</a>';
+    // If the tableofcontents_orderedlist option is configured, display the title level order prefix
+    const prefixLevelText = enableTocPrefixOrder ? h.prefixLevelText + ' ' : '';
+
+    html += '<a href="#' + h.id + '">' + prefixLevelText + h.title + '</a>';
 
     if (nextLevel === h.level || !nextLevel) {
       html += '</li>';
