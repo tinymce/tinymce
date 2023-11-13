@@ -33,4 +33,5 @@ export interface InsertContentDetails {
   readonly data?: {
     readonly paste: boolean;
   };
+  readonly preserve_zwsp?: boolean;
 }

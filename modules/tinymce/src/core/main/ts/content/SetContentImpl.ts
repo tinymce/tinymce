@@ -18,6 +18,7 @@ import { isWsPreserveElement } from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 import * as EditorFocus from '../focus/EditorFocus';
 import * as FilterNode from '../html/FilterNode';
+import * as Zwsp from '../text/Zwsp';
 import { Content, SetContentArgs } from './ContentTypes';
 
 const defaultFormat = 'html';
@@ -43,6 +44,9 @@ const setEditorHtml = (editor: Editor, html: string, noSelection: boolean | unde
 };
 
 const setContentString = (editor: Editor, body: HTMLElement, content: string, args: SetContentArgs): string => {
+  // TINY-10337: Remove all user-input zwsp to avoid impacting caret removal from content.
+  content = Zwsp.trim(content);
+
   // Padd empty content in Gecko and Safari. Commands will otherwise fail on the content
   // It will also be impossible to place the caret in the editor unless there is a BR element present
   if (content.length === 0 || /^\s+$/.test(content)) {
@@ -95,7 +99,7 @@ const setContentTree = (editor: Editor, body: HTMLElement, content: AstNode, arg
 
   const html = HtmlSerializer({ validate: editor.validate }, editor.schema).serialize(content);
 
-  args.content = isWsPreserveElement(SugarElement.fromDom(body)) ? html : Tools.trim(html);
+  args.content = Zwsp.trim(isWsPreserveElement(SugarElement.fromDom(body)) ? html : Tools.trim(html));
   setEditorHtml(editor, args.content, args.no_selection);
 
   if (!args.no_events) {

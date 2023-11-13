@@ -26,6 +26,7 @@ import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as RangeNormalizer from '../selection/RangeNormalizer';
 import * as SelectionUtils from '../selection/SelectionUtils';
+import * as Zwsp from '../text/Zwsp';
 import { InsertContentDetails } from './ContentTypes';
 import * as InsertList from './InsertList';
 import { trimOrPadLeftRight } from './NbspTrim';
@@ -232,6 +233,11 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
   }
 
   value = args.content;
+
+  // TINY-10337: Remove all user-input zwsp to avoid impacting caret removal from content.
+  if (!details.preserve_zwsp) {
+    value = Zwsp.trim(value);
+  }
 
   // Add caret at end of contents if it's missing
   if (value.indexOf('{$caret}') === -1) {
