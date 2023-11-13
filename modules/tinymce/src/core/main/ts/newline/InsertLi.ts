@@ -1,5 +1,5 @@
-import { Arr, Obj, Type } from '@ephox/katamari';
-import { Css, SugarElement, SugarNode } from '@ephox/sugar';
+import { Arr, Fun, Obj, Type } from '@ephox/katamari';
+import { Css, Insert, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
@@ -69,11 +69,10 @@ const insert = (editor: Editor, createNewBlock: (name: string, styles?: Record<s
     newBlockName = 'LI';
   }
 
-  let newBlock = createNewBlock(newBlockName);
   const parentBlockStyles = isListItem(parentBlock) ? getStyles(parentBlock) : undefined;
-  if (parentBlockStyles) {
-    newBlock = createNewBlock(newBlockName, { style: parentBlockStyles });
-  }
+  let newBlock = isListItem(parentBlock) && parentBlockStyles
+    ? createNewBlock(newBlockName, { style: getStyles(parentBlock) })
+    : createNewBlock(newBlockName);
 
   if (isFirstOrLastLi(containerBlock, parentBlock, true) && isFirstOrLastLi(containerBlock, parentBlock, false)) {
     if (hasParent(containerBlock, 'LI')) {
@@ -116,14 +115,14 @@ const insert = (editor: Editor, createNewBlock: (name: string, styles?: Record<s
 
     if (newBlockName === 'LI' && hasFirstChild(fragment, 'LI')) {
       const previousChildren = Arr.filter(
-        Arr.map(Arr.from(newBlock.children), SugarElement.fromDom),
-        (child) => !SugarNode.isTag('br')(child)
+        Arr.map(newBlock.children, SugarElement.fromDom),
+        Fun.not(SugarNode.isTag('br'))
       );
 
       newBlock = fragment.firstChild as HTMLLIElement;
       dom.insertAfter(fragment, containerBlock);
 
-      Arr.each(previousChildren, (child) => newBlock.prepend(child.dom));
+      Arr.each(previousChildren, (child) => Insert.prepend(SugarElement.fromDom(newBlock), child));
       if (parentBlockStyles) {
         newBlock.setAttribute('style', parentBlockStyles);
       }
