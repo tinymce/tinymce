@@ -107,7 +107,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   Attachment.attachSystemAfter(eTargetNode, mainUi.mothership);
   attachUiMotherships(editor, uiRoot, uiRefs);
 
-  // TINY-10343: here is used `SkinLoaded` instead of `PostRender` because if the skin load takes too much time it gives some rendering problem
+  // TINY-10343: Using `SkinLoaded` instead of `PostRender` because if the skin loading takes too long you run in to rendering problems since things are measured before the CSS is being applied
   editor.on('SkinLoaded', () => {
     // Set the sidebar before the toolbar and menubar
     // - each sidebar has an associated toggle toolbar button that needs to check the
