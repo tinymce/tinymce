@@ -19,7 +19,7 @@ const insertAccordion = (editor: Editor): void => {
   const bodyText = editor.dom.encode(editor.translate('Accordion body...'));
 
   const accordionSummaryHtml = `<summary class="${Identifiers.accordionSummaryClass}">${summaryText}</summary>`;
-  const accordionBodyHtml = `<${Identifiers.accordionBodyWrapperTag} data-mce-bogus="1" class="${Identifiers.accordionBodyWrapperClass}"><p>${bodyText}</p></${Identifiers.accordionBodyWrapperTag}>`;
+  const accordionBodyHtml = `<${Identifiers.accordionBodyWrapperTag} class="${Identifiers.accordionBodyWrapperClass}"><p>${bodyText}</p></${Identifiers.accordionBodyWrapperTag}>`;
 
   editor.undoManager.transact(() => {
     editor.insertContent([
