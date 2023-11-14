@@ -29,7 +29,7 @@ const splitFonts = (fontFamily: string): string[] => {
   return Arr.map(fonts, (font) => font.replace(/^['"]+|['"]+$/g, ''));
 };
 
-const matchesStack = (fonts: string[], stack: string[]): boolean => Arr.forall(stack, (font) => fonts.indexOf(font.toLowerCase()) > -1);
+const matchesStack = (fonts: string[], stack: string[]): boolean => stack.length > 0 && Arr.forall(stack, (font) => fonts.indexOf(font.toLowerCase()) > -1);
 
 const isSystemFontStack = (fontFamily: string, userStack: string[]): boolean => {
   if (fontFamily.indexOf('-apple-system') === 0 || userStack.length > 0) {
