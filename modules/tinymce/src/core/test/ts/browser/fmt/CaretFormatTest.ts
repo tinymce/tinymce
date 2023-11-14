@@ -1,5 +1,6 @@
 import { ApproxStructure, Assertions, Mouse, StructAssert } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -42,6 +43,22 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
       expected,
       SugarElement.fromDom(rawBody)
     );
+  };
+
+  interface Action {
+    type: 'apply' | 'remove';
+    format: string;
+    options: Record<string, any>;
+  }
+
+  const handleCaretFormat = (editor: Editor, actions: Action[]) => {
+    Arr.each(actions, ({ type, format, options }) => {
+      if (type === 'apply') {
+        applyCaretFormat(editor, format, options);
+      } else if (type === 'remove') {
+        removeCaretFormat(editor, format, options);
+      }
+    });
   };
 
   it('Apply bold to caret and type bold text after the unformatted text', () => {
@@ -564,5 +581,314 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
       ]
     })));
     TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0 ], 2, [ 0, 0, 0, 0 ], 2);
+  });
+
+  it('TINY-10132: Apply and remove multiple format to caret at the beginning of a paragraph', () => {
+    const formatActions: Action[] = [
+      { type: 'apply', format: 'bold', options: {}},
+      { type: 'apply', format: 'italic', options: {}},
+      { type: 'apply', format: 'underline', options: {}},
+      { type: 'remove', format: 'bold', options: {}},
+    ];
+    const editor = hook.editor();
+    editor.setContent('<p>abc</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    handleCaretFormat(editor, formatActions);
+    TinyContentActions.type(editor, 'x');
+    TinyAssertions.assertContent(editor, '<p><span style="text-decoration: underline;"><em>x</em></span>abc</p>');
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) =>
+      s.element('body', {
+        children: [
+          s.element('p', {
+            children: [
+              s.element('span', {
+                attrs: {
+                  'id': str.is('_mce_caret'),
+                  'data-mce-bogus': str.is('1') },
+                children: [
+                  s.element('span', {
+                    styles: { 'text-decoration': str.is('underline') },
+                    children: [
+                      s.element('em', {
+                        children: [ s.text(str.is(Zwsp.ZWSP + 'x')) ]
+                      })
+                    ]
+                  })
+                ]
+              }),
+              s.text(str.is('abc'))
+            ]
+          })
+        ]
+      })));
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0 ], 2);
+  });
+
+  it('TINY-10132: Apply and remove multiple format to caret in an empty editor', () => {
+    const formatActions: Action[] = [
+      { type: 'apply', format: 'bold', options: {}},
+      { type: 'apply', format: 'italic', options: {}},
+      { type: 'apply', format: 'underline', options: {}},
+      { type: 'remove', format: 'bold', options: {}},
+      { type: 'remove', format: 'underline', options: {}},
+    ];
+    const editor = hook.editor();
+    editor.setContent('');
+    TinySelections.setCursor(editor, [ 0 ], 0);
+    handleCaretFormat(editor, formatActions);
+    TinyContentActions.type(editor, 'x');
+    TinyAssertions.assertContent(editor, '<p><em>x</em></p>');
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
+      return s.element('body', {
+        children: [
+          s.element('p', {
+            children: [
+              s.element('span', {
+                attrs: {
+                  'id': str.is('_mce_caret'),
+                  'data-mce-bogus': str.is('1')
+                },
+                children: [
+                  s.element('em', {
+                    children: [
+                      s.text(str.is(Zwsp.ZWSP + 'x'))
+                    ]
+                  })
+                ]
+              }),
+              s.element('br', {})
+            ]
+          })
+        ]
+      });
+    }));
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0 ], 2);
+  });
+
+  // This test may or maynot be valid in the future, depending on how we want to handle the caret.
+  it('TINY-10132: Apply and remove multiple format to caret after formatted text', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><s><span style="text-decoration: underline;"><em><strong>abc</strong></em></span></s></p>');
+    TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0, 0 ], 3);
+    removeCaretFormat(editor, 'bold', {});
+    TinyContentActions.type(editor, 'x');
+    TinyAssertions.assertContent(editor, '<p><s><span style="text-decoration: underline;"><em><strong>abc</strong>x</em></span></s></p>');
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) =>
+      s.element('body', {
+        children: [
+          s.element('p', {
+            children: [
+              s.element('s', {
+                children: [
+                  s.element('span', {
+                    styles: { 'text-decoration': str.is('underline') },
+                    children: [
+                      s.element('em', {
+                        children: [
+                          s.element('strong', {
+                            children: [
+                              s.text(str.is('abc'))
+                            ]
+                          }),
+                          s.element('span', {
+                            attrs: {
+                              'id': str.is('_mce_caret'),
+                              'data-mce-bogus': str.is('1')
+                            },
+                            children: [
+                              s.text(str.is(Zwsp.ZWSP + 'x'))
+                            ]
+                          })
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              })
+            ]
+          })
+        ]
+      })));
+  });
+
+  it('TINY-10132: Remove and reapply format to caret after formatted text', () => {
+    const formatActions: Action[] = [
+      { type: 'remove', format: 'bold', options: {}},
+      { type: 'remove', format: 'underline', options: {}},
+      { type: 'remove', format: 'italic', options: {}},
+      { type: 'remove', format: 'strikethrough', options: {}},
+      { type: 'apply', format: 'bold', options: {}},
+      { type: 'apply', format: 'underline', options: {}},
+      { type: 'apply', format: 'italic', options: {}},
+      { type: 'apply', format: 'strikethrough', options: {}},
+      { type: 'remove', format: 'bold', options: {}},
+    ];
+
+    const editor = hook.editor();
+    editor.setContent('<p><s><span style="text-decoration: underline;"><em><strong>abc</strong></em></span></s></p>');
+    TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0, 0 ], 3);
+    handleCaretFormat(editor, formatActions);
+    TinyContentActions.type(editor, 'x');
+    TinyAssertions.assertContent(editor, '<p><s><span style="text-decoration: underline;"><em><strong>abc</strong></em></span></s><s><em><span style="text-decoration: underline;">x</span></em></s></p>');
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
+      return s.element('body', {
+        children: [
+          s.element('p', {
+            children: [
+              s.element('s', {
+                children: [
+                  s.element('span', {
+                    styles: { 'text-decoration': str.is('underline') },
+                    children: [
+                      s.element('em', {
+                        children: [
+                          s.element('strong', {
+                            children: [
+                              s.text(str.is('abc'))
+                            ]
+                          }),
+                          s.element('span', {
+                            attrs: {
+                              'id': str.is('_mce_caret'),
+                              'data-mce-bogus': str.is('1'),
+                              'data-mce-type': str.is('format-caret')
+                            },
+                            children: [
+                              s.text(str.is('\uFEFF'))
+                            ]
+                          })
+                        ]
+                      })
+                    ]
+                  }),
+                  s.element('span', {
+                    attrs: {
+                      'id': str.is('_mce_caret'),
+                      'data-mce-bogus': str.is('1'),
+                      'data-mce-type': str.is('format-caret')
+                    },
+                    children: [
+                      s.element('span', {
+                        attrs: {
+                          'id': str.is('_mce_caret'),
+                          'data-mce-bogus': str.is('1'),
+                          'data-mce-type': str.is('format-caret')
+                        },
+                        children: [
+                          s.text(str.is('\uFEFF'))
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              }),
+              s.element('span', {
+                attrs: {
+                  'id': str.is('_mce_caret'),
+                  'data-mce-bogus': str.is('1'),
+                  'data-mce-type': str.is('format-caret')
+                },
+                children: [
+                  s.element('span', {
+                    attrs: {
+                      'id': str.is('_mce_caret'),
+                      'data-mce-bogus': str.is('1'),
+                      'data-mce-type': str.is('format-caret')
+                    },
+                    children: [
+                      s.element('span', {
+                        attrs: {
+                          'id': str.is('_mce_caret'),
+                          'data-mce-bogus': str.is('1'),
+                          'data-mce-type': str.is('format-caret')
+                        },
+                        children: [
+                          s.element('s', {
+                            children: [
+                              s.element('em', {
+                                children: [
+                                  s.element('span', {
+                                    styles: { 'text-decoration': str.is('underline') },
+                                    children: [
+                                      s.text(str.is('\uFEFFx'))
+                                    ]
+                                  })
+                                ]
+                              })
+                            ]
+                          })
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              })
+            ]
+          })
+        ]
+      });
+    }));
+  });
+
+  it('TINY-10132: apply format to caret after text, before space, insert text then remove format', () => {
+    const applyAction: Action[] = [
+      { type: 'apply', format: 'bold', options: {}},
+      { type: 'apply', format: 'underline', options: {}},
+      { type: 'apply', format: 'strikethrough', options: {}},
+    ];
+
+    const removeAction: Action[] = [
+      { type: 'remove', format: 'bold', options: {}},
+      { type: 'remove', format: 'underline', options: {}},
+    ];
+
+    const editor = hook.editor();
+    editor.setContent('<p>abc aaa</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 3);
+    handleCaretFormat(editor, applyAction);
+    TinyContentActions.type(editor, 'x');
+    TinyAssertions.assertContent(editor, '<p>abc<s><span style="text-decoration: underline;"><strong>x</strong></span></s> aaa</p>');
+    handleCaretFormat(editor, removeAction);
+    TinyAssertions.assertContent(editor, '<p>abc<s><span style="text-decoration: underline;"><strong>x</strong></span></s> aaa</p>');
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
+      return s.element('body', {
+        children: [
+          s.element('p', {
+            children: [
+              s.text(str.is('abc')),
+              s.element('s', {
+                children: [
+                  s.element('span', {
+                    styles: { 'text-decoration': str.is('underline') },
+                    children: [
+                      s.element('strong', {
+                        children: [
+                          s.text(str.is('x'))
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              }),
+              s.element('span', {
+                attrs: {
+                  'id': str.is('_mce_caret'),
+                  'data-mce-bogus': str.is('1'),
+                  'data-mce-type': str.is('format-caret')
+                },
+                children: [
+                  s.element('s', {
+                    children: [
+                      s.text(str.is(Zwsp.ZWSP))
+                    ]
+                  })
+                ]
+              }),
+              s.text(str.is(' aaa'))
+            ]
+          })
+        ]
+      });
+    }));
   });
 });

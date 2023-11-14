@@ -8,7 +8,7 @@
     "directory": "modules/acid"
   },
   "dependencies": {
-    "@ephox/alloy": "^13.1.1",
+    "@ephox/alloy": "^14.0.0-alpha.0",
     "@ephox/boulder": "^7.1.5",
     "@ephox/katamari": "^9.1.5",
     "@ephox/sugar": "^9.2.1"

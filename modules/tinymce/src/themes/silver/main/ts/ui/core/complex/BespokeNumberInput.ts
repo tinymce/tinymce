@@ -72,6 +72,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
   };
 
   const makeStepperButton = (action: (focusBack: boolean) => void, title: string, tooltip: string, classes: string[]) => {
+    const editorOffCellStepButton = Cell(Fun.noop);
     const translatedTooltip = backstage.shared.providers.translate(tooltip);
     const altExecuting = Id.generate('altExecuting');
     const onSetup = onSetupEvent(editor, 'NodeChange SwitchMode', (api: BespokeSelectApi) => {
@@ -99,8 +100,8 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
       buttonBehaviours: Behaviour.derive([
         Disabling.config({}),
         AddEventsBehaviour.config(altExecuting, [
-          onControlAttached({ onSetup, getApi }, editorOffCell),
-          onControlDetached({ getApi }, editorOffCell),
+          onControlAttached({ onSetup, getApi }, editorOffCellStepButton),
+          onControlDetached({ getApi }, editorOffCellStepButton),
           AlloyEvents.run(NativeEvents.keydown(), (comp, se) => {
             if (se.event.raw.keyCode === Keys.space() || se.event.raw.keyCode === Keys.enter()) {
               if (!Disabling.isDisabled(comp)) {
@@ -120,13 +121,13 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
     });
   };
 
-  const memMinus = Memento.record(makeStepperButton((focusBack) => decrease(false, focusBack), 'minus', 'Decrease font size', [ 'highlight-on-focus' ]));
-  const memPlus = Memento.record(makeStepperButton((focusBack) => increase(false, focusBack), 'plus', 'Increase font size', [ 'highlight-on-focus' ]));
+  const memMinus = Memento.record(makeStepperButton((focusBack) => decrease(false, focusBack), 'minus', 'Decrease font size', []));
+  const memPlus = Memento.record(makeStepperButton((focusBack) => increase(false, focusBack), 'plus', 'Increase font size', []));
 
   const memInput = Memento.record({
     dom: {
       tag: 'div',
-      classes: [ 'tox-input-wrapper', 'highlight-on-focus' ]
+      classes: [ 'tox-input-wrapper' ]
     },
     components: [
       Input.sketch({

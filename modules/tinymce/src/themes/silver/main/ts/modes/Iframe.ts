@@ -101,6 +101,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
 
   editor.on('SkinLoaded', () => {
     setToolbar(editor, uiRefs, rawUiConfig, backstage);
+    lastToolbarWidth.set(editor.getWin().innerWidth);
   });
 
   loadIframeSkin(editor);
@@ -120,10 +121,6 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
       rawUiConfig.sidebar,
       Options.getSidebarShow(editor)
     );
-
-    setToolbar(editor, uiRefs, rawUiConfig, backstage);
-
-    lastToolbarWidth.set(editor.getWin().innerWidth);
 
     OuterContainer.setMenubar(
       outerContainer,
