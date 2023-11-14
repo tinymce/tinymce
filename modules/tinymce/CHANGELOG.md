@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Hex colors are no longer always converted to RGB. #TINY-9819
 - Merging an external `p` inside a `list` via delete or backspace would incorrectly try to move a parent element inside a child element. #TINY-10289
 - The `fontsizeinput` toolbar item was causing console warnings when toolbar items were clicked. #TINY-10330
+- Menubar's button with more than 1 word sometime were rendered with one word above the other. #TINY-10343
 
 ## 6.7.2 - 2023-10-25
 
