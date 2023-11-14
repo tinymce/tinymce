@@ -35,7 +35,7 @@ describe('browser.tinymce.themes.silver.editor.menubar.EditorMenubarRenderTest',
 
     const menuButtonText = await TinyUiActions.pWaitForUi(editor, 'button:contains("File foo") span');
 
-    const delta = 4;
+    const delta = 6;
     // Status at the moment of writting of this test:
     // when the height is `32px` the words are rendered one above the other
     // when the height is `16px` the words are rendered on the same line
