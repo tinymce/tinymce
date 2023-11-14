@@ -30,9 +30,13 @@ describe('browser.tinymce.themes.silver.editor.menubar.EditorMenubarRenderTest',
   it('TINY-10343: editor menu button with more that one word should not render the word one above the other', async () => {
     const editor = hook.editor();
 
-    const menuButton = await TinyUiActions.pWaitForUi(editor, 'button:contains("File foo")');
-    // when the width is `59.7109px` the words are rendered one above the other
-    // when the width is `63.8672px` the words are rendered on the same line
-    assert.isAtLeast(parseFloat(Css.get(menuButton, 'width')), 61);
+    const menuButtonText = await TinyUiActions.pWaitForUi(editor, 'button:contains("File foo") span');
+
+    const delta = 4;
+    // Status at the moment of writting of this test:
+    // when the height is `32px` the words are rendered one above the other
+    // when the height is `16px` the words are rendered on the same line
+    // font-size is 14px so I added a delta for the test
+    assert.isBelow(parseFloat(Css.get(menuButtonText, 'height')), parseInt(Css.get(menuButtonText, 'font-size'), 10) + delta);
   });
 });
