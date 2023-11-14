@@ -1,7 +1,7 @@
 import { AddEventsBehaviour, AlloyEvents, Behaviour, GuiFactory, Highlighting, InlineView, ItemTypes, SystemEvents } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
 import { Arr, Cell, Id, Optional } from '@ephox/katamari';
-import { Attribute, Replication, SugarElement } from '@ephox/sugar';
+import { Attribute, Css, Replication, SelectorFilter, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -158,9 +158,24 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared): vo
     if (!editor.inline) {
       const rootElement = editor.getBody();
 
+      const top = editor.selection.getNode().offsetTop;
+
       const newElm = Replication.deep<Element>(autocompleter.element);
       editor.dom.add(rootElement, newElm.dom, {
-        tabindex: -1,
+        style: `border: 0;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+        top: ${top}px;`
+      });
+
+      SelectorFind.descendant(newElm, '.tox-collection--list').each((child) => {
+        Css.remove(child, 'position')
+        Css.remove(child, 'max-height')
       });
     }
   });
@@ -171,10 +186,25 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared): vo
     if (!editor.inline) {
       const rootElement = editor.getBody();
 
+      const top = editor.selection.getNode().offsetTop;
+
       editor.dom.remove(autocompleterId, false);
       const newElm = Replication.deep<Element>(autocompleter.element);
       editor.dom.add(rootElement, newElm.dom, {
-        tabindex: -1,
+        style: `border: 0;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+        top: ${top}px;`
+      });
+
+      SelectorFind.descendant(newElm, '.tox-collection--list').each((child) => {
+        Css.remove(child, 'position')
+        Css.remove(child, 'max-height')
       });
     }
   });
