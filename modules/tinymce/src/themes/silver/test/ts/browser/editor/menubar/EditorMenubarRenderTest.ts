@@ -1,10 +1,9 @@
-import { after, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { Css } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { tinymce } from 'tinymce/core/api/Tinymce';
 
 describe('browser.tinymce.themes.silver.editor.menubar.EditorMenubarRenderTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
@@ -20,17 +19,16 @@ describe('browser.tinymce.themes.silver.editor.menubar.EditorMenubarRenderTest',
           });
         };
       });
-    }
+      editor.ui.registry.addMenuItem('fakeItem', {
+        text: 'some text',
+        onAction: () => undefined
+      });
+    },
+    menubar: 'menutest file',
+    menu: {
+      menutest: { title: 'File foo', items: 'fakeItem' }
+    },
   }, []);
-
-  tinymce.addI18n('en', {
-    File: 'File foo'
-  });
-  after(() => {
-    tinymce.addI18n('en', {
-      File: 'File'
-    });
-  });
 
   it('TINY-10343: editor menu button with more that one word should not render the word one above the other', async () => {
     const editor = hook.editor();
