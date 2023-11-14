@@ -19,14 +19,10 @@ describe('browser.tinymce.themes.silver.editor.menubar.EditorMenubarRenderTest',
           });
         };
       });
-      editor.ui.registry.addMenuItem('fakeItem', {
-        text: 'some text',
-        onAction: () => undefined
-      });
     },
     menubar: 'menutest file',
     menu: {
-      menutest: { title: 'File foo', items: 'fakeItem' }
+      menutest: { title: 'File foo', items: 'cut' }
     },
   }, []);
 
