@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { after, describe, it } from '@ephox/bedrock-client';
 import { Css } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -25,6 +25,11 @@ describe('browser.tinymce.themes.silver.editor.menubar.EditorMenubarRenderTest',
 
   tinymce.addI18n('en', {
     File: 'File foo'
+  });
+  after(() => {
+    tinymce.addI18n('en', {
+      File: 'File'
+    });
   });
 
   it('TINY-10343: editor menu button with more that one word should not render the word one above the other', async () => {
