@@ -1,7 +1,7 @@
 import { AddEventsBehaviour, AlloyEvents, Behaviour, GuiFactory, Highlighting, InlineView, ItemTypes, SystemEvents } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
-import { Arr, Cell, Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { Arr, Cell, Id, Optional } from '@ephox/katamari';
+import { Attribute, Replication, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -23,6 +23,8 @@ const getAutocompleterRange = (dom: DOMUtils, initRange: Range): Optional<Range>
 };
 
 const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared): void => {
+  const autocompleterId = Id.generate('autocompleter');
+
   const processingAction = Cell<boolean>(false);
   const activeState = Cell<boolean>(false);
 
@@ -30,13 +32,19 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared): vo
     InlineView.sketch({
       dom: {
         tag: 'div',
-        classes: [ 'tox-autocompleter' ]
+        classes: [ 'tox-autocompleter' ],
+        attributes: {
+          id: autocompleterId
+        }
       },
       components: [ ],
       fireDismissalEventInstead: { },
       inlineBehaviours: Behaviour.derive([
         AddEventsBehaviour.config('dismissAutocompleter', [
-          AlloyEvents.run(SystemEvents.dismissRequested(), () => cancelIfNecessary())
+          AlloyEvents.run(SystemEvents.dismissRequested(), () => cancelIfNecessary()),
+          AlloyEvents.run(SystemEvents.highlight(), (_, se) => {
+            Attribute.getOpt(se.event.target, 'id').each((id: string) => Attribute.set(SugarElement.fromDom(editor.getBody()), 'aria-activedescendant', id));
+          }),
         ])
       ]),
       lazySink: sharedBackstage.getSink
@@ -49,6 +57,11 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared): vo
   const hideIfNecessary = () => {
     if (isMenuOpen()) {
       InlineView.hide(autocompleter);
+      editor.dom.remove(autocompleterId, false);
+
+      const editorBody = SugarElement.fromDom(editor.getBody());
+      Attribute.remove(editorBody, 'aria-owns');
+      Attribute.remove(editorBody, 'aria-activedescendant');
     }
   };
 
@@ -140,9 +153,31 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared): vo
     activeState.set(true);
     processingAction.set(false);
     updateDisplay(lookupData);
+    Attribute.setAll(SugarElement.fromDom(editor.getBody()), { 'aria-owns': autocompleterId });
+
+    if (!editor.inline) {
+      const rootElement = editor.getBody();
+
+      const newElm = Replication.deep<Element>(autocompleter.element);
+      editor.dom.add(rootElement, newElm.dom, {
+        tabindex: -1,
+      });
+    }
   });
 
-  editor.on('AutocompleterUpdate', ({ lookupData }) => updateDisplay(lookupData));
+  editor.on('AutocompleterUpdate', ({ lookupData }) => {
+    updateDisplay(lookupData);
+
+    if (!editor.inline) {
+      const rootElement = editor.getBody();
+
+      editor.dom.remove(autocompleterId, false);
+      const newElm = Replication.deep<Element>(autocompleter.element);
+      editor.dom.add(rootElement, newElm.dom, {
+        tabindex: -1,
+      });
+    }
+  });
 
   editor.on('AutocompleterEnd', () => {
     // Hide the menu and reset
