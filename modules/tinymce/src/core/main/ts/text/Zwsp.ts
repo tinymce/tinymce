@@ -22,7 +22,6 @@ import { Unicode } from '@ephox/katamari';
 const ZWSP = Unicode.zeroWidth;
 const isZwsp = Unicode.isZwsp;
 const trim = Unicode.removeZwsp;
-
 export {
   isZwsp,
   ZWSP,

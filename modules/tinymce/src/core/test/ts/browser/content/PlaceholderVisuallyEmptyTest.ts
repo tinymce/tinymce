@@ -1,6 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Unicode } from '@ephox/katamari';
-import { TinyHooks } from '@ephox/wrap-mcagar';
+import { TinyApis, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -19,12 +19,12 @@ describe('browser.tinymce.core.content.PlaceholderVisuallyEmptyTest', () => {
   };
 
   const testEmpty = (editor: Editor, content: string, forcedRootBlockFalse: boolean = false) => {
-    editor.setContent(content, { format: 'raw' });
+    TinyApis(editor).setRawContent(content);
     assertEmpty(`Check "${content}" is empty`, editor, true, forcedRootBlockFalse);
   };
 
   const testNotEmpty = (editor: Editor, content: string, forcedRootBlockFalse: boolean = false) => {
-    editor.setContent(content, { format: 'raw' });
+    TinyApis(editor).setRawContent(content);
     assertEmpty(`Check "${content}" is not empty`, editor, false, forcedRootBlockFalse);
   };
 

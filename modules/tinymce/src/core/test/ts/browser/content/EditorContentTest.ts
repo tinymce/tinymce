@@ -1,6 +1,6 @@
 import { Assertions } from '@ephox/agar';
-import { beforeEach, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
+import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
+import { TinyApis, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -194,5 +194,73 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>html</p>', { no_events: true });
     assertEventsFiredInOrder([]);
+  });
+
+  context('ZWNBSP', () => {
+    const initial = '<p>te\uFEFFst</p>';
+    const final = '<p>test</p>';
+
+    it('TINY-10337: setContent html should strip ZWNBSP', () => {
+      const editor = hook.editor();
+      editor.setContent(initial);
+      TinyAssertions.assertRawContent(editor, final);
+    });
+
+    it('TINY-10337: setContent raw should strip ZWNBSP', () => {
+      const editor = hook.editor();
+      editor.setContent(initial, { format: 'raw' });
+      TinyAssertions.assertRawContent(editor, final);
+    });
+
+    it('TINY-10337: setContent tree should strip ZWNBSP', () => {
+      const editor = hook.editor();
+
+      const tree = new AstNode('body', 11);
+      const p = new AstNode('p', 1);
+      const text = new AstNode('#text', 3);
+      text.value = 'te\uFEFFst';
+      p.append(text);
+      tree.append(p);
+
+      editor.setContent(tree);
+      TinyAssertions.assertRawContent(editor, final);
+    });
+
+    it('TINY-10337: getContent html should strip ZWNBSP', () => {
+      const editor = hook.editor();
+      TinyApis(editor).setRawContent(initial);
+      const content = editor.getContent();
+      assert.equal(content, final, 'ZWNBSP should be stripped');
+    });
+  });
+
+  context('Content that can cause mXSS via ZWNBSP trimming', () => {
+    it('TINY-10337: setContent html should sanitize content that can cause mXSS via ZWNBSP trimming', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>test</p><!--\ufeff><iframe onload=alert(document.domain)>-></body>-->');
+      TinyAssertions.assertRawContent(editor, '<p>test</p><!-- ><iframe onload=alert(document.domain)>-></body>-->');
+    });
+
+    it('TINY-10337: setContent tree should sanitize content that can cause mXSS via ZWNBSP trimming', () => {
+      const editor = hook.editor();
+
+      const tree = new AstNode('body', 11);
+
+      const paragraph = new AstNode('p', 1);
+      const pText = new AstNode('#text', 3);
+      pText.value = 'test';
+      paragraph.append(pText);
+
+      const comment = new AstNode('#comment', 8);
+      const cText = new AstNode('#text', 3);
+      cText.value = '\ufeff><iframe onload=alert(document.domain)>-></body>';
+      comment.append(cText);
+
+      tree.append(paragraph);
+      tree.append(comment);
+
+      editor.setContent(tree);
+      TinyAssertions.assertRawContent(editor, '<p>test</p><!---->');
+    });
   });
 });

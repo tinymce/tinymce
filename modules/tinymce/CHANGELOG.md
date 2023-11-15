@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 5.10.9 - 2023-11-15
+
+### Changed
+- Zero width no-break space (U+FEFF) characters are removed from content passed to `setContent`, `insertContent`, and `resetContent` APIs. #TINY-10337
+- Zero width no-break space (U+FEFF) characters in initial content are not loaded into the editor upon initialization. #TINY-10337
+
+### Fixed
+- Specific HTML content containing unescaped text nodes caused mXSS when using undo/redo. #TINY-10337
+- Specific HTML content containing unescaped text nodes caused mXSS when using the `getContent` and `setContent` APIs with the `format: 'raw'` option, which also affected the `resetContent` API and the draft restoration feature of the Autosave plugin. #TINY-10337
+
 ## 5.10.8 - 2023-10-19
 
 ### Fixed

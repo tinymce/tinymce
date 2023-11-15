@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -11,6 +11,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.content.InsertContentTest', () => {
   const browser = PlatformDetection.detect().browser;
+  const isIE = browser.isIE();
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
@@ -585,7 +586,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       '</table>'
     );
 
-    if (browser.isIE()) {
+    if (isIE) {
       // IE renders this verbatim and other browsers remove nested buttons
       TinyAssertions.assertContent(
         editor,
@@ -647,5 +648,23 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       '</div>'
     );
     TinyAssertions.assertCursor(editor, [ 1, 1, 0, 0 ], 16);
+  });
+
+  context('ZWNBSP', () => {
+    it('TINY-10337: Should strip all ZWNBSP characters before inserting content', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>initial</p>');
+      TinySelections.setCursor(editor, [ 0 ], 0);
+      editor.insertContent('<p>inser\uFEFFtion</p>');
+      TinyAssertions.assertRawContent(editor, '<p>insertion</p><p>initial</p>');
+    });
+
+    it('TINY-10337: Should sanitize content that can cause mXSS via ZWNBSP trimming', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>initial</p>');
+      TinySelections.setCursor(editor, [ 0 ], 0);
+      editor.insertContent('<!--\ufeff><iframe onload=alert(document.domain)>-></body>-->');
+      TinyAssertions.assertRawContent(editor, '<p><!-- ><iframe onload=alert(document.domain)>-></body>-->initial</p>');
+    });
   });
 });

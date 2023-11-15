@@ -13,8 +13,8 @@ import VK from 'tinymce/core/api/util/VK';
 import * as BlockPattern from '../core/BlockPattern';
 import * as InlinePattern from '../core/InlinePattern';
 import { PatternSet } from '../core/PatternTypes';
-import { textBefore } from '../text/TextSearch';
-import { cleanEmptyNodes } from '../utils/Utils';
+import * as TextSearch from '../text/TextSearch';
+import * as Utils from '../utils/Utils';
 
 const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
   // Skip checking when the selection isn't collapsed
@@ -33,19 +33,19 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
       },
       () => {
         // create a cursor position that we can move to avoid the inline formats
-        editor.insertContent(Unicode.zeroWidth);
+        editor.insertContent(Unicode.zeroWidth, { preserve_zwsp: true });
         InlinePattern.applyMatches(editor, inlineMatches);
         BlockPattern.applyMatches(editor, blockMatches);
         // find the spot before the cursor position
         const range = editor.selection.getRng();
-        const spot = textBefore(range.startContainer, range.startOffset, editor.dom.getRoot());
+        const spot = TextSearch.textBefore(range.startContainer, range.startOffset, editor.dom.getRoot());
         editor.execCommand('mceInsertNewLine');
         // clean up the cursor position we used to preserve the format
         spot.each((s) => {
           const node = s.container;
           if (node.data.charAt(s.offset - 1) === Unicode.zeroWidth) {
             node.deleteData(s.offset - 1, 1);
-            cleanEmptyNodes(editor.dom, node.parentNode, (e: Node) => e === editor.dom.getRoot());
+            Utils.cleanEmptyNodes(editor.dom, node.parentNode, (e: Node) => e === editor.dom.getRoot());
           }
         });
       }
