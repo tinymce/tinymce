@@ -1,7 +1,7 @@
 import { Assertions } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
-import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
+import { TinyApis, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -178,28 +178,28 @@ describe('browser.tinymce.core.fmt.ExpandRangeTest', () => {
 
     it('TINY-6268: Does not extend over space before', () => {
       const editor = hook.editor();
-      editor.setContent('<p>ab<u> <span data-mce-type="bookmark">' + ZWSP + '</span>cd</u></p>');
+      TinyApis(editor).setRawContent('<p>ab<u> <span data-mce-type="bookmark">' + ZWSP + '</span>cd</u></p>');
       const rng = expandRng(editor, [ 0, 1, 2 ], 0, [ 0, 1, 2 ], 2, inlineFormat, false);
       assertRange(editor, rng, [ 0, 1, 2 ], 0, [], 1);
     });
 
     it('TINY-6268: Does not extend over space after', () => {
       const editor = hook.editor();
-      editor.setContent('<p><u>ab<span data-mce-type="bookmark">' + ZWSP + '</span> </u>cd</p>');
+      TinyApis(editor).setRawContent('<p><u>ab<span data-mce-type="bookmark">' + ZWSP + '</span> </u>cd</p>');
       const rng = expandRng(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 2, inlineFormat, false);
       assertRange(editor, rng, [], 0, [ 0, 0, 0 ], 2);
     });
 
     it('TINY-6268: Does extend over collapsible space at start of block', () => {
       const editor = hook.editor();
-      editor.setContent('<p><u> <span data-mce-type="bookmark">' + ZWSP + '</span>ab</u></p>');
+      TinyApis(editor).setRawContent('<p><u> <span data-mce-type="bookmark">' + ZWSP + '</span>ab</u></p>');
       const rng = expandRng(editor, [ 0, 0, 2 ], 0, [ 0, 0, 2 ], 2, inlineFormat, false);
       assertRange(editor, rng, [], 0, [], 1);
     });
 
     it('TINY-6268: Does extend over collapsible space at end of block', () => {
       const editor = hook.editor();
-      editor.setContent('<p><u>ab<span data-mce-type="bookmark">' + ZWSP + '</span> </u></p>');
+      TinyApis(editor).setRawContent('<p><u>ab<span data-mce-type="bookmark">' + ZWSP + '</span> </u></p>');
       const rng = expandRng(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 2, inlineFormat, false);
       assertRange(editor, rng, [], 0, [], 1);
     });
