@@ -20,8 +20,13 @@ const getTocDepth = (editor: Editor): number => {
   return depth >= 1 && depth <= 9 ? depth : 3;
 };
 
+const getTocOrderList = (editor: Editor): boolean => {
+  return editor.getParam('tableofcontents_orderedlist', false);
+};
+
 export {
   getTocClass,
   getTocHeader,
-  getTocDepth
+  getTocDepth,
+  getTocOrderList
 };

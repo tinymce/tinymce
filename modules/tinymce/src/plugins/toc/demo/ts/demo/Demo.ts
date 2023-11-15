@@ -5,7 +5,8 @@ tinymce.init({
   plugins: 'toc code',
   toolbar: 'toc code formatselect',
   skin_url: '../../../../../js/tinymce/skins/ui/oxide',
-  height: 600
+  height: 600,
+  tableofcontents_orderedlist: true
 });
 
 export {};
