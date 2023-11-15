@@ -40,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Merging an external `p` inside a `list` via delete or backspace would incorrectly try to move a parent element inside a child element. #TINY-10289
 - Directionality would not be consistently applied to the entire `accordion` block. #TINY-10291
 - The `fontsizeinput` toolbar item was causing console warnings when toolbar items were clicked. #TINY-10330
+- Menubar buttons with more than one word would sometimes wrap into two lines. #TINY-10343
 
 ## 6.7.3 - 2023-11-15
 
