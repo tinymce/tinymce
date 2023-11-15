@@ -43,14 +43,22 @@ describe('webdriver.tinymce.plugins.lists.DeleteTest', () => {
         '</ol>';
 
       editor.setContent(initialContent);
+      editor.undoManager.add();
       TinySelections.setCursor(editor, [ 0, 1, 2 ], 0);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.backspace() ]);
+      TinyAssertions.assertCursor(editor, [ 0, 1, 1, 0, 0 ], 'List 1-1'.length);
       TinyAssertions.assertContent(editor, expectedContent);
+      editor.execCommand('undo');
+      TinyAssertions.assertContent(editor, initialContent);
 
       editor.setContent(initialContent);
+      editor.undoManager.add();
       TinySelections.setCursor(editor, [ 0, 1, 1, 0, 0 ], 'List 1-1'.length);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({}, 'Delete') ]);
+      TinyAssertions.assertCursor(editor, [ 0, 1, 1, 0, 0 ], 'List 1-1'.length);
       TinyAssertions.assertContent(editor, expectedContent);
+      editor.execCommand('undo');
+      TinyAssertions.assertContent(editor, initialContent);
     });
   });
 });
