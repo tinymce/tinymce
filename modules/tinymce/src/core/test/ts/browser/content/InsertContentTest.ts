@@ -1,4 +1,5 @@
 import { context, describe, it } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -8,6 +9,8 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as InsertContent from 'tinymce/core/content/InsertContent';
 
 describe('browser.tinymce.core.content.InsertContentTest', () => {
+  const isSafari = PlatformDetection.detect().browser.isSafari();
+
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     disable_nodechange: true,
@@ -822,6 +825,27 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 'hello'.length);
       editor.insertContent('<h1>wonderful</h1>');
       TinyAssertions.assertContent(editor, '<details><summary>hellowonderfulworld</summary><div>body</div></details>');
+    });
+  });
+
+  context('ZWNBSP', () => {
+    it('TINY-10305: Should strip all ZWNBSP characters before inserting content', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>initial</p>');
+      TinySelections.setCursor(editor, [ 0 ], 0);
+      editor.insertContent('<p>inser\uFEFFtion</p>');
+      TinyAssertions.assertRawContent(editor, '<p>insertion</p><p>initial</p>');
+    });
+
+    it('TINY-10305: Should sanitize content that can cause mXSS via ZWNBSP trimming', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>initial</p>');
+      TinySelections.setCursor(editor, [ 0 ], 0);
+      editor.insertContent('<!--\ufeff><iframe onload=alert(document.domain)>-></body>-->');
+      // TINY-10305: Safari escapes text nodes within <iframe>.
+      TinyAssertions.assertRawContent(editor, isSafari
+        ? '<p><!----><iframe>-&gt;&lt;/body&gt;--&gt;&lt;span id="mce_marker" data-mce-type="bookmark"&gt;&amp;#xFEFF;&lt;/span&gt;&lt;/body&gt;</iframe>initial</p>'
+        : '<p><!---->initial</p>');
     });
   });
 

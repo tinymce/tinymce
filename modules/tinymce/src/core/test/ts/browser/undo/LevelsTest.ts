@@ -1,5 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
+import { Arr } from '@ephox/katamari';
+import { LegacyUnit, TinyApis, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -49,7 +50,7 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
       type: 'complete'
     });
 
-    editor.getBody().innerHTML = '<iframe src="about:blank"></iframe>a<!--b-->c';
+    TinyApis(editor).setRawContent('<iframe src="about:blank"></iframe>a<!--b-->c');
 
     assert.deepEqual(Levels.createFromEditor(editor), {
       beforeBookmark: null,
@@ -62,7 +63,7 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
 
   it('createFromEditor removes bogus=all and temporary attributes from content without iframes', () => {
     const editor = hook.editor();
-    editor.getBody().innerHTML = '<p data-mce-bogus="all">a</p> <span>b</span> <span data-mce-selected="true">c</span>';
+    TinyApis(editor).setRawContent('<p data-mce-bogus="all">a</p> <span>b</span> <span data-mce-selected="true">c</span>');
 
     assert.deepEqual(Levels.createFromEditor(editor), {
       beforeBookmark: null,
@@ -75,7 +76,7 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
 
   it('createFromEditor removes bogus=all and temporary attributes from content with iframes', () => {
     const editor = hook.editor();
-    editor.getBody().innerHTML = '<iframe src="about:blank"></iframe> <p data-mce-bogus="all">a</p> <span>b</span> <span data-mce-selected="true">c</span>';
+    TinyApis(editor).setRawContent('<iframe src="about:blank"></iframe> <p data-mce-bogus="all">a</p> <span>b</span> <span data-mce-selected="true">c</span>');
 
     assert.deepEqual(Levels.createFromEditor(editor), {
       beforeBookmark: null,
@@ -93,14 +94,55 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
     });
   });
 
-  it('TINY-10180: createFromEditor removes comments containing ZWNBSP', () => {
+  it('TINY-10180: createFromEditor empties comments containing ZWNBSP', () => {
     const editor = hook.editor();
-    editor.getBody().innerHTML = '<p>a</p> <!-- \ufeff --> <p>b</p> <!-- c --> <!-- d\ufeff -->';
+    TinyApis(editor).setRawContent('<p>a</p> <!-- \ufeff --> <p>b</p> <!-- c --> <!-- d\ufeff -->');
 
     assert.deepEqual(Levels.createFromEditor(editor), {
       beforeBookmark: null,
       bookmark: null,
-      content: '<p>a</p>  <p>b</p> <!-- c --> ',
+      content: '<p>a</p> <!----> <p>b</p> <!-- c --> <!---->',
+      fragments: null,
+      type: 'complete'
+    });
+  });
+
+  Arr.each([ 'noscript', 'style', 'script', 'xmp', 'noembed', 'noframes' ], (parent) => {
+    it(`TINY-10305: createFromEditor empties ${parent} containing ZWNBSP`, () => {
+      const editor = hook.editor();
+      TinyApis(editor).setRawContent(`<p>a</p> <${parent}>b\ufeffc</${parent}> <p>d</p> <${parent}>e</${parent}>`);
+
+      assert.deepEqual(Levels.createFromEditor(editor), {
+        beforeBookmark: null,
+        bookmark: null,
+        content: `<p>a</p> <${parent}></${parent}> <p>d</p> <${parent}>e</${parent}>`,
+        fragments: null,
+        type: 'complete'
+      });
+    });
+  });
+
+  it('TINY-10305: createFromEditor empties iframe containing ZWNBSP', () => {
+    const editor = hook.editor();
+    TinyApis(editor).setRawContent('<p>a</p> <iframe>b\ufeffc</iframe> <p>d</p> <iframe>e</iframe>');
+
+    assert.deepEqual(Levels.createFromEditor(editor), {
+      beforeBookmark: null,
+      bookmark: null,
+      content: '',
+      fragments: [ '<p>a</p>', ' ', '<iframe></iframe>', ' ', '<p>d</p>', ' ', '<iframe>e</iframe>' ],
+      type: 'fragmented'
+    });
+  });
+
+  it('TINY-10305: createFromEditor empties plaintext containing ZWNBSP', () => {
+    const editor = hook.editor();
+    TinyApis(editor).setRawContent('<p>a</p> <plaintext>b\ufeffc <p>d</p> e');
+
+    assert.deepEqual(Levels.createFromEditor(editor), {
+      beforeBookmark: null,
+      bookmark: null,
+      content: '<p>a</p> <plaintext></plaintext>',
       fragments: null,
       type: 'complete'
     });
@@ -111,11 +153,11 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
     const level = Levels.createCompleteLevel('<p>a</p>') as UndoLevel;
     level.bookmark = { start: [ 1, 0, 0 ], forward: true };
 
-    editor.getBody().innerHTML = '<p>a</p>';
+    TinyApis(editor).setRawContent('<p>a</p>');
     LegacyUnit.setSelection(editor, 'p', 0);
     Levels.applyToEditor(editor, level, false);
 
-    assert.strictEqual(editor.getBody().innerHTML, '<p>a</p>');
+    TinyAssertions.assertRawContent(editor, '<p>a</p>');
     assert.deepEqual(getBookmark(editor), { start: [ 1, 0, 0 ], forward: true });
   });
 
@@ -124,11 +166,11 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
     const level = Levels.createCompleteLevel('<p>b</p>') as UndoLevel;
     level.bookmark = { start: [ 1, 0, 0 ], forward: true };
 
-    editor.getBody().innerHTML = '<p>a</p>';
+    TinyApis(editor).setRawContent('<p>a</p>');
     LegacyUnit.setSelection(editor, 'p', 0);
     Levels.applyToEditor(editor, level, false);
 
-    assert.strictEqual(editor.getBody().innerHTML, '<p>b</p>');
+    TinyAssertions.assertRawContent(editor, '<p>b</p>');
     assert.deepEqual(getBookmark(editor), { start: [ 1, 0, 0 ], forward: true });
   });
 
@@ -137,11 +179,11 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
     const level = Levels.createFragmentedLevel([ '<p>a</p>', '<p>b</p>' ]) as UndoLevel;
     level.bookmark = { start: [ 1, 0, 0 ], forward: true };
 
-    editor.getBody().innerHTML = '<p>c</p>';
+    TinyApis(editor).setRawContent('<p>c</p>');
     LegacyUnit.setSelection(editor, 'p', 0);
     Levels.applyToEditor(editor, level, false);
 
-    assert.strictEqual(editor.getBody().innerHTML, '<p>a</p><p>b</p>');
+    TinyAssertions.assertRawContent(editor, '<p>a</p><p>b</p>');
     assert.deepEqual(getBookmark(editor), { start: [ 1, 0, 0 ], forward: true });
   });
 

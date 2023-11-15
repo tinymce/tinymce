@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - It is now possible to bundle tinymce into a single js file. #TINY-10352
+- Added `force_hex_color` editor option. Option `'always'` converts all RGB & RGBA colours to hex, `'rgb_only'` will only convert RGB and *not* RGBA colours to hex, `'off'` won't convert any colours to hex. #TINY-9819
+- Added `default_font_stack` editor option that makes it possible to define what is considered a system font stack. #TINY-10290
+
 
 ### Improved
 - Colorpicker now includes the Brightness/Saturation selector and hue slider in the keyboard navigable items. #TINY-9287
@@ -23,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Setting the content with an attribute that contains a self-closing HTML tag did not preserve the tag. #TINY-10088
 - Screen readers now announce the selected color of `forecolor` and `backcolor` buttons. #TINY-9796
 - Resize handles would not appear on editable images in a non-editable context. #TINY-10118
+- Corrections and copy-edits to the `addIcon` API documentation. #TINY-10230
 - The dialog size was not updated when the `size` argument was changed when redialling a dialog. #TINY-10209
 - Toggling a list that contains an LI element having another list as its first child would remove the remaining content within that LI element. #TINY-10213
 - Custom block element wasn't considered block element in some cases. #TINY-10139
@@ -33,6 +37,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Search and replace plugin would incorrectly find matching text inside non-editable root elements. #TINY-10162
 - Search and replace plugin would incorrectly find matching text inside SVG elements. #TINY-10162
 - Removed use of `async` for editor rendering which caused visual blinking when reloading the editor in-place. #TINY-10249
+- Toggling off one format on the caret when multiple formats was toggled on would toggle all of them off. #TINY-10132
+- Hex colors are no longer always converted to RGB. #TINY-9819
+- Merging an external `p` inside a `list` via delete or backspace would incorrectly try to move a parent element inside a child element. #TINY-10289
+- Directionality would not be consistently applied to the entire `accordion` block. #TINY-10291
+- The `fontsizeinput` toolbar item was causing console warnings when toolbar items were clicked. #TINY-10330
+
+## 6.7.3 - 2023-11-15
+
+### Changed
+- Zero width no-break space (U+FEFF) characters are removed from content passed to `setContent`, `insertContent`, and `resetContent` APIs. #TINY-10305
+- Zero width no-break space (U+FEFF) characters in initial content are not loaded into the editor upon initialization. #TINY-10305
+
+### Fixed
+- Specific HTML content containing unescaped text nodes caused mXSS when using undo/redo. #TINY-10305
+- Specific HTML content containing unescaped text nodes caused mXSS when using the `getContent` and `setContent` APIs with the `format: 'raw'` option, which also affected the `resetContent` API and the draft restoration feature of the Autosave plugin. #TINY-10305
 
 ## 6.7.2 - 2023-10-25
 
@@ -41,6 +60,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed use of `async` for editor rendering which caused visual blinking when reloading the editor in-place. #TINY-10249
 - Toggling a list that contains an LI element having another list as its first child would remove the remaining content within that LI element. #TINY-10213
 - List items containing a list element surrounded by non list nodes would cause some list operations to fail. #TINY-10268
+- The `accordion` toggling with the Enter key press would behave incorrectly on Safari. #TINY-10177
+- Deleting a range that included both text of a cell and a nested table in that cell removed the entire content of the cell. #TINY-10254
 
 ## 6.7.1 - 2023-10-19
 

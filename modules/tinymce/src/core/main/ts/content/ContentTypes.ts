@@ -47,6 +47,7 @@ export interface InsertContentDetails {
   readonly data?: {
     readonly paste: boolean;
   };
+  readonly preserve_zwsp?: boolean;
 }
 
 export const isTreeNode = (content: unknown): content is AstNode =>

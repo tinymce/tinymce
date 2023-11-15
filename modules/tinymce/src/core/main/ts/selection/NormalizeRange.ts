@@ -175,6 +175,10 @@ const normalizeEndPoint = (dom: DOMUtils, collapsed: boolean, start: boolean, rn
         return Optional.none();
       }
 
+      if (NodeType.isDetails(container)) {
+        return Optional.none();
+      }
+
       // Don't walk into elements that doesn't have any child nodes like a IMG
       if (container.hasChildNodes() && !NodeType.isTable(container)) {
         // Walk the DOM to find a text node to place the caret at or a BR
