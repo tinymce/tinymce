@@ -1,7 +1,7 @@
 import { AddEventsBehaviour, AlloyEvents, Behaviour, GuiFactory, Highlighting, InlineView, ItemTypes, SystemEvents } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
 import { Arr, Cell, Id, Optional } from '@ephox/katamari';
-import { Attribute, Css, Replication, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
+import { Attribute, Css, Replication, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -158,29 +158,27 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared): vo
       editor.dom.remove(autocompleterId, false);
     }
 
-    const rootElement = Traverse.parentElement(SugarElement.fromDom(editor.getBody()));
-    rootElement.each((root) => {
-      const selection = editor.selection.getNode();
-      const newElm = Replication.deep<Element>(autocompleter.element);
-      Css.setAll(newElm, {
-        border: '0',
-        clip: 'rect(0 0 0 0)',
-        height: '1px',
-        margin: '-1px',
-        overflow: 'hidden',
-        padding: '0',
-        position: 'absolute',
-        width: '1px',
-        top: `${selection.offsetTop}px`,
-        left: `${selection.offsetLeft}px`,
-      });
-      editor.dom.add(root.dom, newElm.dom);
+    const docElm = editor.getDoc().documentElement;
+    const selection = editor.selection.getNode();
+    const newElm = Replication.deep<Element>(autocompleter.element);
+    Css.setAll(newElm, {
+      border: '0',
+      clip: 'rect(0 0 0 0)',
+      height: '1px',
+      margin: '-1px',
+      overflow: 'hidden',
+      padding: '0',
+      position: 'absolute',
+      width: '1px',
+      top: `${selection.offsetTop}px`,
+      left: `${selection.offsetLeft}px`,
+    });
+    editor.dom.add(docElm, newElm.dom);
 
-      // Clean up positioning styles so that the "hidden" autocompleter is around the selection
-      SelectorFind.descendant(newElm, '[role="menu"]').each((child) => {
-        Css.remove(child, 'position');
-        Css.remove(child, 'max-height');
-      });
+    // Clean up positioning styles so that the "hidden" autocompleter is around the selection
+    SelectorFind.descendant(newElm, '[role="menu"]').each((child) => {
+      Css.remove(child, 'position');
+      Css.remove(child, 'max-height');
     });
   };
 
