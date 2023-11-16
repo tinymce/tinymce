@@ -117,6 +117,15 @@ describe('browser.tinymce.core.FontSelectTest', () => {
         assertSelectBoxDisplayValue('Fonts', 'System Font');
       });
     });
+
+    it('TINY-10290: Should not display "System Font" since Arial is not part of the default stack', () => {
+      const editor = hook.editor();
+      editor.setContent('<p style="font-family: -apple-system, Arial;">a</p>');
+      editor.focus();
+      TinySelections.setCursor(editor, [ 0, 0 ], 0);
+      editor.nodeChanged();
+      assertSelectBoxDisplayValue('Fonts', '-apple-system,Arial');
+    });
   });
 
   context('Custom default font stack', () => {

@@ -188,9 +188,18 @@ const backspaceDeleteFromListToListCaret = (editor: Editor, isForward: boolean):
 
       return true;
     } else if (willMergeParentIntoChild && !isForward && otherLi !== li) {
-      if (rng.commonAncestorContainer.parentElement) {
-        moveChildren(dom, rng.commonAncestorContainer.parentElement, otherLi);
-      }
+      editor.undoManager.transact(() => {
+        if (rng.commonAncestorContainer.parentElement) {
+          const bookmark = Bookmark.createBookmark(rng);
+          const oldParentElRef = rng.commonAncestorContainer.parentElement;
+          moveChildren(dom, rng.commonAncestorContainer.parentElement, otherLi);
+          oldParentElRef.remove();
+          const resolvedBookmark = Bookmark.resolveBookmark(bookmark);
+          editor.selection.setRng(resolvedBookmark);
+        }
+      });
+
+      return true;
     } else if (!otherLi) {
       if (!isForward && rng.startOffset === 0 && rng.endOffset === 0) {
         editor.undoManager.transact(() => {

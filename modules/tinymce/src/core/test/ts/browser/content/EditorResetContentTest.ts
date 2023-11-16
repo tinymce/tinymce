@@ -1,14 +1,17 @@
 import { Assertions } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { McEditor, TinyHooks } from '@ephox/wrap-mcagar';
+import { Arr } from '@ephox/katamari';
+import { McEditor, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.content.EditorResetContentTest', () => {
-  const hook = TinyHooks.bddSetupLight<Editor>({
+  const baseSettings = {
     base_url: '/project/tinymce/js/tinymce'
-  }, []);
+  };
+
+  const hook = TinyHooks.bddSetupLight<Editor>(baseSettings, []);
 
   const assertEditorState = (editor: Editor, content: string) => {
     const html = editor.getContent();
@@ -51,7 +54,8 @@ describe('browser.tinymce.core.content.EditorResetContentTest', () => {
 
     const testResetContentMxss = (content: string) => async () => {
       const editor = await McEditor.pFromHtml<Editor>(`<textarea>${content}</textarea>`, {
-        base_url: '/project/tinymce/js/tinymce'
+        ...baseSettings,
+        valid_elements: '*'
       });
       let hasXssOccurred = false;
       (editor.getWin() as any)[xssFnName] = () => hasXssOccurred = true;
@@ -66,7 +70,28 @@ describe('browser.tinymce.core.content.EditorResetContentTest', () => {
     it('TINY-10236: Excluding temporary attributes does not cause mXSS',
       testResetContentMxss(`<!--data-mce-selected="x"><iframe onload="window.${xssFnName}();">->`));
 
-    it('TINY-10236: Excluding ZWNBSP does not cause mXSS',
+    it('TINY-10236: Excluding ZWNBSP in comment nodes does not cause mXSS',
       testResetContentMxss(`<!--\uFEFF><iframe onload="window.${xssFnName}();">->`));
+
+    Arr.each([ 'noscript', 'script', 'xmp', 'iframe', 'noembed', 'noframes' ], (parent) => {
+      it(`TINY-10305: Excluding ZWNBSP in ${parent} does not cause mXSS`,
+        testResetContentMxss(`<${parent}><\uFEFF/${parent}><\uFEFFiframe onload="window.${xssFnName}();"></${parent}>`));
+    });
+  });
+
+  context('ZWNBSP', () => {
+    it('TINY-10305: Should remove ZWNBSP from initial content in target element', async () => {
+      const editor = await McEditor.pFromHtml<Editor>('<textarea><p>te\uFEFFst</p></textarea>', baseSettings);
+      editor.setContent('<p>some</p><p>content</p>');
+      editor.resetContent();
+      TinyAssertions.assertRawContent(editor, '<p>test</p>');
+    });
+
+    it('TINY-10305: Should remove ZWNBSP from initial content as parameter', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>some</p><p>content</p>');
+      editor.resetContent('<p>te\uFEFFst</p>');
+      TinyAssertions.assertRawContent(editor, '<p>test</p>');
+    });
   });
 });

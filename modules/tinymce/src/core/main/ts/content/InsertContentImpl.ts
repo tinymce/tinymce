@@ -23,6 +23,7 @@ import * as InvalidNodes from '../html/InvalidNodes';
 import * as ParserUtils from '../html/ParserUtils';
 import * as RangeNormalizer from '../selection/RangeNormalizer';
 import * as SelectionUtils from '../selection/SelectionUtils';
+import * as Zwsp from '../text/Zwsp';
 import { InsertContentDetails } from './ContentTypes';
 import * as InsertList from './InsertList';
 
@@ -247,6 +248,11 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
     validate: true
   }, editor.schema);
   const bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;</span>';
+
+  // TINY-10305: Remove all user-input zwsp to avoid impacting caret removal from content.
+  if (!details.preserve_zwsp) {
+    value = Zwsp.trim(value);
+  }
 
   // Add caret at end of contents if it's missing
   if (value.indexOf('{$caret}') === -1) {
