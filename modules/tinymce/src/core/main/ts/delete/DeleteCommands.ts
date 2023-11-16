@@ -35,8 +35,10 @@ const deleteCommand = (editor: Editor, caret: Cell<Text | null>): void => {
     () => {
       // We can't use an `execEditorDeleteCommand` here, otherwise we'd get
       // possible infinite recursion (as it would trigger `deleteCommand` again)
-      DeleteUtils.execNativeDeleteCommand(editor);
-      DeleteUtils.paddEmptyBody(editor);
+      if (editor.selection.isEditable()) {
+        DeleteUtils.execNativeDeleteCommand(editor);
+        DeleteUtils.paddEmptyBody(editor);
+      }
     },
     Fun.call
   );
@@ -46,7 +48,11 @@ const forwardDeleteCommand = (editor: Editor, caret: Cell<Text | null>): void =>
   const result = findAction(editor, caret, true);
 
   result.fold(
-    () => DeleteUtils.execNativeForwardDeleteCommand(editor),
+    () => {
+      if (editor.selection.isEditable()) {
+        DeleteUtils.execNativeForwardDeleteCommand(editor);
+      }
+    },
     Fun.call
   );
 };
