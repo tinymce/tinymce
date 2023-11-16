@@ -23,7 +23,7 @@ describe('browser.tinymce.plugins.accordion.QuirksTest', () => {
     }
   });
 
-  it('TINY-10177:  should override the selection to the beginning of `summary` after clicking on it.', () => {
+  it('TINY-10177: should override the selection to the beginning of `summary` after clicking on it.', () => {
     const editor = hook.editor();
     editor.setContent('<p>Hello</p> ' + AccordionUtils.createAccordion());
     // set selection before the `summary`
