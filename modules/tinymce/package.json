@@ -15,7 +15,8 @@
   "engines": {
     "node": ">=0.10.26"
   },
-  "main": "tinymce.js",
+  "main": "js/tinymce/tinymce.js",
+  "types": "js/tinymce/tinymce.d.ts",
   "scripts": {
     "test": "grunt test",
     "lint": "grunt eslint",
