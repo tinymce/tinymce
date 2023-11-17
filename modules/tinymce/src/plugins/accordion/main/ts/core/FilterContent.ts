@@ -101,6 +101,7 @@ const setup = (editor: Editor): void => {
 
           const hasWrapperNode = Type.isNonNullable(wrapperNode);
           const newWrapperNode = hasWrapperNode ? wrapperNode : new AstNode(Identifiers.accordionBodyWrapperTag, 1);
+          newWrapperNode.attr('data-mce-bogus', '1');
           addClasses(newWrapperNode, [ Identifiers.accordionBodyWrapperClass ]);
           if (otherNodes.length > 0) {
             for (let j = 0; j < otherNodes.length; j++) {

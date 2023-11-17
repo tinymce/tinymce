@@ -91,6 +91,7 @@ interface BaseEditorOptions {
   custom_elements?: string;
   custom_ui_selector?: string;
   custom_undo_redo_levels?: number;
+  default_font_stack?: string[];
   deprecation_warnings?: boolean;
   directionality?: 'ltr' | 'rtl';
   doctype?: string;
@@ -289,6 +290,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   content_css: string[];
   contextmenu: string[];
   custom_colors: boolean;
+  default_font_stack: string[];
   document_base_url: string;
   init_content_sync: boolean;
   draggable_modal: boolean;
