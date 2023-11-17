@@ -180,6 +180,8 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'blur': { focusedEditor: Editor | null };
   'resize': UIEvent;
   'scroll': UIEvent;
+  'input': InputEvent;
+  'beforeinput': InputEvent;
   'detach': { };
   'remove': { };
   'init': { };
