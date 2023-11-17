@@ -1592,7 +1592,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
             testConversion('<embed src="about:blank" type="application/pdf">', '<iframe src="about:blank"></iframe>'));
         });
 
-        context('convert_unsafe_embeds: true and sandbox_iframes: true', () => {
+        context('convert_unsafe_embeds: true, sandbox_iframes: true', () => {
           const testSandboxedConversion = (embedHtml: string, expectedHtml: string) => () => {
             const parser = DomParser({ ...scenario.settings, convert_unsafe_embeds: true, sandbox_iframes: true });
             const serializedHtml = serializer.serialize(parser.parse(embedHtml));

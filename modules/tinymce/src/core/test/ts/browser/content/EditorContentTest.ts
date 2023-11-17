@@ -457,7 +457,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
               testConversion(hook, '<embed src="about:blank">', '<iframe src="about:blank"></iframe>'));
           });
 
-          context('convert_unsafe_embeds: true and sandbox_iframes: true', () => {
+          context('convert_unsafe_embeds: true, sandbox_iframes: true', () => {
             const hook = TinyHooks.bddSetupLight<Editor>({
               ...options,
               base_url: '/project/tinymce/js/tinymce',
