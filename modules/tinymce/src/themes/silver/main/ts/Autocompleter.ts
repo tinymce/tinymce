@@ -60,8 +60,12 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared): vo
 
       editor.dom.remove(autocompleterId, false);
       const editorBody = SugarElement.fromDom(editor.getBody());
-      Attribute.remove(editorBody, 'aria-owns');
-      Attribute.remove(editorBody, 'aria-activedescendant');
+      Attribute.getOpt(editorBody, 'aria-owns')
+        .filter((ariaOwnsAttr) => ariaOwnsAttr === autocompleterId)
+        .each(() => {
+          Attribute.remove(editorBody, 'aria-owns');
+          Attribute.remove(editorBody, 'aria-activedescendant');
+        });
     }
   };
 
@@ -146,14 +150,14 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared): vo
       display(lookupData, combinedItems);
       Attribute.set(SugarElement.fromDom(editor.getBody()), 'aria-owns', autocompleterId);
       if (!editor.inline) {
-        cloneAutocompleterToBody();
+        cloneAutocompleterToEditorDoc();
       }
     } else {
       hideIfNecessary();
     }
   };
 
-  const cloneAutocompleterToBody = () => {
+  const cloneAutocompleterToEditorDoc = () => {
     if (editor.dom.get(autocompleterId)) {
       editor.dom.remove(autocompleterId, false);
     }
