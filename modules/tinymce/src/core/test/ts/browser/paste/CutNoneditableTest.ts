@@ -5,7 +5,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('webdriver.tinymce.core.paste.CutTest', () => {
+describe('browser.tinymce.core.paste.CutNoneditableTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     toolbar: false,
