@@ -153,6 +153,10 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
   }
 
   registerBase64ImageFilter(parser, settings);
+
+  if (settings.sandbox_iframes) {
+    parser.addNodeFilter('iframe', (nodes) => Arr.each(nodes, (node) => node.attr('sandbox', '')));
+  }
 };
 
 export {

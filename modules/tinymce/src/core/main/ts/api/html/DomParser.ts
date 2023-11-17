@@ -69,6 +69,7 @@ export interface DomParserSettings {
    * @deprecated Remove trailing <br> tags functionality has been added to tinymce.dom.Serializer and option will be removed in the next major release */
   remove_trailing_brs?: boolean;
   root_name?: string;
+  sandbox_iframes?: boolean;
   sanitize?: boolean;
   validate?: boolean;
 }

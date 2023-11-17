@@ -822,8 +822,8 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         );
       });
 
-      // TODO: TINY-9624 - the iframe innerHTML on safari is `&lt;textarea&gt;` whereas on other browsers
-      //       is `<textarea>`. This causes the mXSS cleaner in DOMPurify to run and causes the different assertions below
+      // TINY-9624: Safari encodes the iframe innerHTML is `&lt;textarea&gt;`. On Chrome and Firefox, the innerHTML is `<textarea>`, causing
+      // the mXSS cleaner in DOMPurify to run and remove the iframe.
       it('parse iframe XSS', () => {
         const serializer = HtmlSerializer();
 
@@ -1530,6 +1530,22 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
             }
           }));
         });
+      });
+
+      context('Sandboxing iframes', () => {
+        const serializeIframeHtml = (sandbox?: boolean): string => {
+          const parser = DomParser({ ...scenario.settings, sandbox_iframes: sandbox });
+          return serializer.serialize(parser.parse('<iframe src="about:blank"></iframe>'));
+        };
+
+        it('TINY-10348: iframes should not be sandboxed by default', () =>
+          assert.equal(serializeIframeHtml(), '<iframe src="about:blank"></iframe>'));
+
+        it('TINY-10348: iframes should be sandboxed when sandbox_iframes: false', () =>
+          assert.equal(serializeIframeHtml(false), '<iframe src="about:blank"></iframe>'));
+
+        it('TINY-10348: iframes should be sandboxed when sandbox_iframes: true', () =>
+          assert.equal(serializeIframeHtml(true), '<iframe src="about:blank" sandbox=""></iframe>'));
       });
     });
   });

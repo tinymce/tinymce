@@ -78,6 +78,7 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
     preserve_cdata: getOption('preserve_cdata'),
     inline_styles: getOption('inline_styles'),
     root_name: getRootName(editor),
+    sandbox_iframes: getOption('sandbox_iframes'),
     sanitize: getOption('xss_sanitization'),
     validate: true,
     blob_cache: blobCache,

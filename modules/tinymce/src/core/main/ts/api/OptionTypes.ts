@@ -197,6 +197,7 @@ interface BaseEditorOptions {
   resize?: boolean | 'both';
   resize_img_proportional?: boolean;
   root_name?: string;
+  sandbox_iframes?: boolean;
   schema?: SchemaType;
   selector?: string;
   setup?: SetupCallback;
@@ -336,6 +337,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   promotion: boolean;
   readonly: boolean;
   removed_menuitems: string;
+  sandbox_iframes: boolean;
   toolbar: boolean | string | string[] | Array<ToolbarGroup>;
   toolbar_groups: Record<string, Toolbar.GroupToolbarButtonSpec>;
   toolbar_location: ToolbarLocation;

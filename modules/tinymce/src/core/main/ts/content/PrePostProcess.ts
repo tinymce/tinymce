@@ -2,7 +2,7 @@ import { Result } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Events from '../api/Events';
-import DomParser from '../api/html/DomParser';
+import DomParser, { DomParserSettings } from '../api/html/DomParser';
 import HtmlSerializer from '../api/html/Serializer';
 import * as Options from '../api/Options';
 import { EditorEvent } from '../api/util/EventDispatcher';
@@ -11,7 +11,7 @@ import { Content, GetContentArgs, isTreeNode, SetContentArgs } from './ContentTy
 const serializeContent = (content: Content): string =>
   isTreeNode(content) ? HtmlSerializer({ validate: false }).serialize(content) : content;
 
-const withSerializedContent = <R extends EditorEvent<{ content: string }>>(content: Content, fireEvent: (content: string) => R, sanitize: boolean): R & { content: Content } => {
+const withSerializedContent = <R extends EditorEvent<{ content: string }>>(content: Content, fireEvent: (content: string) => R, parserSettings: DomParserSettings): R & { content: Content } => {
   const serializedContent = serializeContent(content);
   const eventArgs = fireEvent(serializedContent);
   if (eventArgs.isDefaultPrevented()) {
@@ -20,7 +20,7 @@ const withSerializedContent = <R extends EditorEvent<{ content: string }>>(conte
     // Restore the content type back to being an AstNode. If the content has changed we need to
     // re-parse the new content, otherwise we can return the input.
     if (eventArgs.content !== serializedContent) {
-      const rootNode = DomParser({ validate: false, forced_root_block: false, sanitize }).parse(eventArgs.content, { context: content.name });
+      const rootNode = DomParser({ validate: false, forced_root_block: false, ...parserSettings }).parse(eventArgs.content, { context: content.name });
       return { ...eventArgs, content: rootNode };
     } else {
       return { ...eventArgs, content };
@@ -47,7 +47,7 @@ const postProcessGetContent = <T extends GetContentArgs>(editor: Editor, content
   if (args.no_events) {
     return content;
   } else {
-    const processedEventArgs = withSerializedContent(content, (content) => Events.fireGetContent(editor, { ...args, content }), Options.shouldSanitizeXss(editor));
+    const processedEventArgs = withSerializedContent(content, (content) => Events.fireGetContent(editor, { ...args, content }), { sanitize: Options.shouldSanitizeXss(editor), sandbox_iframes: Options.shouldSandboxIframes(editor) });
     return processedEventArgs.content;
   }
 };
@@ -56,7 +56,7 @@ const preProcessSetContent = <T extends SetContentArgs>(editor: Editor, args: T)
   if (args.no_events) {
     return Result.value(args);
   } else {
-    const processedEventArgs = withSerializedContent(args.content, (content) => Events.fireBeforeSetContent(editor, { ...args, content }), Options.shouldSanitizeXss(editor));
+    const processedEventArgs = withSerializedContent(args.content, (content) => Events.fireBeforeSetContent(editor, { ...args, content }), { sanitize: Options.shouldSanitizeXss(editor), sandbox_iframes: Options.shouldSandboxIframes(editor) });
     if (processedEventArgs.isDefaultPrevented()) {
       Events.fireSetContent(editor, processedEventArgs);
       return Result.error(undefined);

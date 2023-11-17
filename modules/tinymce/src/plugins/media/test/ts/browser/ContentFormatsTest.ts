@@ -57,6 +57,24 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     );
   });
 
+  it('TINY-10348: Iframe retained as is with sandbox_iframes: false', async () => {
+    const editor = await McEditor.pFromSettings({ ...settings, sandbox_iframes: false });
+    editor.setContent('<iframe src="320x240.ogg" allowfullscreen></iframe>');
+    TinyAssertions.assertContent(editor,
+      '<p><iframe src="320x240.ogg" width="300" height="150" allowfullscreen="allowfullscreen"></iframe></p>'
+    );
+    McEditor.remove(editor);
+  });
+
+  it('TINY-10348: Iframe retained as is with sandbox_iframes: true', async () => {
+    const editor = await McEditor.pFromSettings({ ...settings, sandbox_iframes: true });
+    editor.setContent('<iframe src="320x240.ogg" allowfullscreen></iframe>');
+    TinyAssertions.assertContent(editor,
+      '<p><iframe src="320x240.ogg" width="300" height="150" sandbox="" allowfullscreen="allowfullscreen"></iframe></p>'
+    );
+    McEditor.remove(editor);
+  });
+
   it('TBA: Iframe with innerHTML retained as is with xss_sanitization: false', async () => {
     // TINY-8363: Iframe with innerHTML is removed by DOMPurify, so disable sanitization for this test
     const editor = await McEditor.pFromSettings<Editor>({

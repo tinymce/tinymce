@@ -91,7 +91,8 @@ const createPreviewNode = (editor: Editor, node: AstNode): AstNode => {
   if (name === 'iframe') {
     previewNode.attr({
       allowfullscreen: node.attr('allowfullscreen'),
-      frameborder: '0'
+      frameborder: '0',
+      sandbox: node.attr('sandbox')
     });
   } else {
     // Exclude autoplay as we don't want video/audio to play by default
