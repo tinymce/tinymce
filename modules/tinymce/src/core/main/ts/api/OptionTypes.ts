@@ -86,6 +86,7 @@ interface BaseEditorOptions {
   contextmenu?: string | string[] | false;
   contextmenu_never_use_native?: boolean;
   convert_fonts_to_spans?: boolean;
+  convert_unsafe_embeds?: boolean;
   convert_urls?: boolean;
   custom_colors?: boolean;
   custom_elements?: string;
@@ -290,6 +291,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   color_default_foreground: string;
   content_css: string[];
   contextmenu: string[];
+  convert_unsafe_embeds: boolean;
   custom_colors: boolean;
   default_font_stack: string[];
   document_base_url: string;

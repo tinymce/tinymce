@@ -57,6 +57,7 @@ export interface DomParserSettings {
   allow_unsafe_link_target?: boolean;
   blob_cache?: BlobCache;
   convert_fonts_to_spans?: boolean;
+  convert_unsafe_embeds?: boolean;
   document?: Document;
   fix_list_elements?: boolean;
   font_size_legacy_values?: string;

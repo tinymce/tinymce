@@ -1533,19 +1533,78 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       });
 
       context('Sandboxing iframes', () => {
-        const serializeIframeHtml = (sandbox?: boolean): string => {
+        const serializeIframeHtml = (sandbox: boolean): string => {
           const parser = DomParser({ ...scenario.settings, sandbox_iframes: sandbox });
           return serializer.serialize(parser.parse('<iframe src="about:blank"></iframe>'));
         };
-
-        it('TINY-10348: iframes should not be sandboxed by default', () =>
-          assert.equal(serializeIframeHtml(), '<iframe src="about:blank"></iframe>'));
 
         it('TINY-10348: iframes should be sandboxed when sandbox_iframes: false', () =>
           assert.equal(serializeIframeHtml(false), '<iframe src="about:blank"></iframe>'));
 
         it('TINY-10348: iframes should be sandboxed when sandbox_iframes: true', () =>
           assert.equal(serializeIframeHtml(true), '<iframe src="about:blank" sandbox=""></iframe>'));
+      });
+
+      context('Convert unsafe embeds', () => {
+        const serializeEmbedHtml = (embedHtml: string, convert: boolean): string => {
+          const parser = DomParser({ ...scenario.settings, convert_unsafe_embeds: convert });
+          return serializer.serialize(parser.parse(embedHtml));
+        };
+
+        context('convert_unsafe_embeds: false', () => {
+          const testNoConversion = (embedHtml: string) => () => {
+            const serializedHtml = serializeEmbedHtml(embedHtml, false);
+            assert.equal(serializedHtml, embedHtml);
+          };
+
+          it('TINY-10349: Object elements should not be converted', testNoConversion('<object data="about:blank"></object>'));
+          it('TINY-10349: Object elements with a mime type should not be converted', testNoConversion('<object data="about:blank" type="image/png"></object>'));
+          it('TINY-10349: Embed elements should notr be converted', testNoConversion('<embed src="about:blank">'));
+          it('TINY-10349: Embed elements with a mime type should not be converted', testNoConversion('<embed src="about:blank" type="image/png">'));
+        });
+
+        context('convert_unsafe_embeds: true', () => {
+          const testConversion = (embedHtml: string, expectedHtml: string) => () => {
+            const serializedHtml = serializeEmbedHtml(embedHtml, true);
+            assert.equal(serializedHtml, expectedHtml);
+          };
+
+          it('TINY-10349: Object elements without a mime type should be converted to iframe',
+            testConversion('<object data="about:blank"></object>', '<iframe src="about:blank"></iframe>'));
+          it('TINY-10349: Object elements with an image mime type should be converted to img',
+            testConversion('<object data="about:blank" type="image/png"></object>', '<img src="about:blank">'));
+          it('TINY-10349: Object elements with a video mime type should be converted to video',
+            testConversion('<object data="about:blank" type="video/mp4"></object>', '<video src="about:blank" controls=""></video>'));
+          it('TINY-10349: Object elements with an audio mime type should be converted to audio',
+            testConversion('<object data="about:blank" type="audio/mpeg"></object>', '<audio src="about:blank" controls=""></audio>'));
+          it('TINY-10349: Object elements with other mime type should be converted to iframe',
+            testConversion('<object data="about:blank" type="application/pdf"></object>', '<iframe src="about:blank"></iframe>'));
+
+          it('TINY-10349: Embed elements without a mime type should be converted to iframe',
+            testConversion('<embed src="about:blank">', '<iframe src="about:blank"></iframe>'));
+          it('TINY-10349: Embed elements with an image mime type should be converted to img',
+            testConversion('<embed src="about:blank" type="image/png">', '<img src="about:blank">'));
+          it('TINY-10349: Embed elements with a video mime type should be converted to video',
+            testConversion('<embed src="about:blank" type="video/mp4">', '<video src="about:blank" controls=""></video>'));
+          it('TINY-10349: Embed elements with an audio mime type should be converted to audio',
+            testConversion('<embed src="about:blank" type="audio/mpeg">', '<audio src="about:blank" controls=""></audio>'));
+          it('TINY-10349: Embed elements with other mime type should be converted to iframe',
+            testConversion('<embed src="about:blank" type="application/pdf">', '<iframe src="about:blank"></iframe>'));
+        });
+
+        context('convert_unsafe_embeds: true and sandbox_iframes: true', () => {
+          const testSandboxedConversion = (embedHtml: string, expectedHtml: string) => () => {
+            const parser = DomParser({ ...scenario.settings, convert_unsafe_embeds: true, sandbox_iframes: true });
+            const serializedHtml = serializer.serialize(parser.parse(embedHtml));
+            assert.equal(serializedHtml, expectedHtml);
+          };
+
+          it('TINY-10349: Object elements without a mime type should be converted to sandboxed iframe',
+            testSandboxedConversion('<object data="about:blank"></object>', '<iframe src="about:blank" sandbox=""></iframe>'));
+
+          it('TINY-10349: Embed elements without a mime type should be converted to sandboxed iframe',
+            testSandboxedConversion('<embed src="about:blank">', '<iframe src="about:blank" sandbox=""></iframe>'));
+        });
       });
     });
   });

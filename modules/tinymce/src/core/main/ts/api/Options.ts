@@ -841,6 +841,11 @@ const register = (editor: Editor): void => {
     default: false
   });
 
+  registerOption('convert_unsafe_embeds', {
+    processor: 'boolean',
+    default: false
+  });
+
   // These options must be registered later in the init sequence due to their default values
   editor.on('ScriptsLoaded', () => {
     registerOption('directionality', {
@@ -959,6 +964,7 @@ const getDetailsInitialState = option('details_initial_state');
 const getDetailsSerializedState = option('details_serialized_state');
 const shouldForceHexColor = option('force_hex_color');
 const shouldSandboxIframes = option('sandbox_iframes');
+const shouldConvertUnsafeEmbeds = option('convert_unsafe_embeds');
 
 export {
   register,
@@ -1065,5 +1071,6 @@ export {
   getDetailsSerializedState,
   shouldUseDocumentWrite,
   shouldForceHexColor,
-  shouldSandboxIframes
+  shouldSandboxIframes,
+  shouldConvertUnsafeEmbeds
 };

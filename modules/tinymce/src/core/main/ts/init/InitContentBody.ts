@@ -70,6 +70,7 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
     allow_html_in_named_anchor: getOption('allow_html_in_named_anchor'),
     allow_script_urls: getOption('allow_script_urls'),
     allow_unsafe_link_target: getOption('allow_unsafe_link_target'),
+    convert_unsafe_embeds: getOption('convert_unsafe_embeds'),
     convert_fonts_to_spans: getOption('convert_fonts_to_spans'),
     fix_list_elements: getOption('fix_list_elements'),
     font_size_legacy_values: getOption('font_size_legacy_values'),
