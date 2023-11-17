@@ -9,6 +9,7 @@ import * as ScrollIntoView from '../../dom/ScrollIntoView';
 import * as EditorFocus from '../../focus/EditorFocus';
 import { ClientRect } from '../../geom/ClientRect';
 import * as CaretRangeFromPoint from '../../selection/CaretRangeFromPoint';
+import * as EditableRange from '../../selection/EditableRange';
 import * as ElementSelection from '../../selection/ElementSelection';
 import * as EventProcessRanges from '../../selection/EventProcessRanges';
 import * as GetSelectionContent from '../../selection/GetSelectionContent';
@@ -269,10 +270,8 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
 
     if (fakeSelectedElements.length > 0) {
       return Arr.forall(fakeSelectedElements, (el) => dom.isEditable(el.parentElement));
-    } else if (rng.startContainer === rng.endContainer) {
-      return dom.isEditable(rng.startContainer);
     } else {
-      return dom.isEditable(rng.startContainer) && dom.isEditable(rng.endContainer);
+      return EditableRange.isEditableRange(dom, rng);
     }
   };
 
