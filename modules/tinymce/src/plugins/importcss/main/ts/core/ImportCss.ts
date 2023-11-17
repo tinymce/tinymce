@@ -95,7 +95,7 @@ const getSelectors = (editor: Editor, doc: Document, fileFilter: Filter | undefi
     }
 
     Tools.each(rules, (cssRule) => {
-      if (isCssImportRule(cssRule)) {
+      if (isCssImportRule(cssRule) && cssRule.styleSheet) {
         append(cssRule.styleSheet, true);
       } else if (isCssPageRule(cssRule)) {
         Tools.each(cssRule.selectorText.split(','), (selector) => {
