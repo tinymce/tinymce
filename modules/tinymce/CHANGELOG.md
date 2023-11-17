@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added `force_hex_color` editor option. Option `'always'` converts all RGB & RGBA colours to hex, `'rgb_only'` will only convert RGB and *not* RGBA colours to hex, `'off'` won't convert any colours to hex. #TINY-9819
 - Added `default_font_stack` editor option that makes it possible to define what is considered a system font stack. #TINY-10290
+- New `sandbox_iframes` option that controls whether iframe elements will be added a `sandbox=""` attribute to mitigate malicious intent. #TINY-10348
+- New `convert_unsafe_embeds` option that controls whether `<object>` and `<embed>` elements will be converted to more restrictive alternatives, namely `<img>` for image MIME types, `<video>` for video MIME types, `<audio>` audio MIME types, or `<iframe>` for other or unspecified MIME types. #TINY-10349
 
 ### Improved
 - Colorpicker now includes the Brightness/Saturation selector and hue slider in the keyboard navigable items. #TINY-9287
