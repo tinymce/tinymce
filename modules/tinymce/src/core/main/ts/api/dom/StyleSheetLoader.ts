@@ -11,8 +11,10 @@ import Tools from '../util/Tools';
 
 interface StyleSheetLoader {
   load: (url: string) => Promise<void>;
+  loadRawCss: (key: string, css: string) => void;
   loadAll: (urls: string[]) => Promise<string[]>;
   unload: (url: string) => void;
+  unloadRawCss: (key: string) => void;
   unloadAll: (urls: string[]) => void;
   _setReferrerPolicy: (referrerPolicy: ReferrerPolicy) => void;
   _setContentCssCors: (contentCssCors: boolean) => void;
@@ -149,6 +151,24 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
       Attribute.set(linkElem, 'href', urlWithSuffix);
     });
 
+  const loadRawCss = (key: string, css: string): void => {
+    const state = getOrCreateState(key);
+    loadedStates[key] = state;
+    state.count++;
+
+    // Start loading
+    const styleElem = SugarElement.fromTag('style', doc.dom);
+    Attribute.setAll(styleElem, {
+      rel: 'stylesheet',
+      type: 'text/css',
+      id: state.id
+    });
+
+    styleElem.dom.innerHTML = css;
+
+    addStyle(styleElem);
+  };
+
   /**
    * Loads the specified CSS files and returns a Promise that is resolved when all stylesheets are loaded or rejected if any failed to load.
    *
@@ -187,6 +207,22 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
   };
 
   /**
+   * Unloads the specified CSS file if no resources currently depend on it.
+   *
+   * @method unload
+   * @param {String} url URL to unload or remove.
+   */
+  const unloadRawCss = (key: string) => {
+    Obj.get(loadedStates, key).each((state) => {
+      const count = --state.count;
+      if (count === 0) {
+        delete loadedStates[key];
+        removeStyle(state.id);
+      }
+    });
+  };
+
+  /**
    * Unloads each specified CSS file if no resources currently depend on it.
    *
    * @method unloadAll
@@ -200,8 +236,10 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
 
   return {
     load,
+    loadRawCss,
     loadAll,
     unload,
+    unloadRawCss,
     unloadAll,
     _setReferrerPolicy,
     _setContentCssCors
