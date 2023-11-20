@@ -39,7 +39,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removing an LI element containing a `details` element would incorrectly merge its content. #TINY-10133
 - The function `getModifierState` did not work on events passed through the editor as expected. #TINY-10263
 - Search and replace plugin would incorrectly find matching text inside non-editable root elements. #TINY-10162
-- Search and replace plugin would incorrectly find matching text inside SVG elements. #TINY-10162
 - Removed use of `async` for editor rendering which caused visual blinking when reloading the editor in-place. #TINY-10249
 - Toggling off one format on the caret when multiple formats was toggled on would toggle all of them off. #TINY-10132
 - Hex colors are no longer always converted to RGB. #TINY-9819
