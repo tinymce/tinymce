@@ -47,6 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `fontsizeinput` toolbar item was causing console warnings when toolbar items were clicked. #TINY-10330
 - Menubar buttons with more than one word would sometimes wrap into two lines. #TINY-10343
 - Creating a new `li` via enter inside a nested list would not inherit styles from the source `li`. #TINY-10316
+- Screen readers now announce the active autocompleter item. #TINY-9393
 - Dialog collection items would not display any icons chosen from icon pack. #TINY-10174
 
 ## 6.7.3 - 2023-11-15
