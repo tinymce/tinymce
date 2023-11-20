@@ -8,8 +8,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - CSS files are now also generated as separate JS files to improve bundling of all resources. #TINY-10352
-- Added new `Resource.has` API that can be used to check if a resource has been loaded or not. #TINY-10352
-- Added new `Resource.get` API that can be used to get a resource if it exists. #TINY-10352
 - Added new `StylesheetLoader.loadRawCss` API that can be used to load CSS into a style element. #TINY-10352
 - Added new `StylesheetLoader.unloadRawCss` API that can be used to unload CSS that was loaded into a style element. #TINY-10352
 - Added `force_hex_color` editor option. Option `'always'` converts all RGB & RGBA colours to hex, `'rgb_only'` will only convert RGB and *not* RGBA colours to hex, `'off'` won't convert any colours to hex. #TINY-9819
