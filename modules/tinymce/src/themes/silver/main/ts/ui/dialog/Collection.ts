@@ -29,6 +29,11 @@ export const renderCollection = (
   // DUPE with TextField.
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
+  const icons = providersBackstage.icons();
+
+  // TINY-10174: Icon string is either in icon pack or displayed directly
+  const getIcon = (icon: string) => icons[icon] ?? icon;
+
   const runOnItem = <T extends EventFormat>(f: ItemCallback<T>) => (comp: AlloyComponent, se: SimulatedEvent<T>) => {
     SelectorFind.closest<HTMLElement>(se.event.target, '[data-collection-item-value]').each((target) => {
       f(comp, se, target, Attribute.get(target, 'data-collection-item-value'));
@@ -40,7 +45,7 @@ export const renderCollection = (
       const itemText = I18n.translate(item.text);
       const textContent = spec.columns === 1 ? `<div class="tox-collection__item-label">${itemText}</div>` : '';
 
-      const iconContent = `<div class="tox-collection__item-icon">${item.icon}</div>`;
+      const iconContent = `<div class="tox-collection__item-icon">${getIcon(item.icon)}</div>`;
 
       // Replacing the hyphens and underscores in collection items with spaces
       // to ensure the screen readers pronounce the words correctly.
