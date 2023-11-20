@@ -1,4 +1,4 @@
-import { afterEach, describe, it } from '@ephox/bedrock-client';
+import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -79,5 +79,50 @@ describe('browser.tinymce.models.dom.table.command.TableDeleteColumnTest', () =>
     TinySelections.setCursor(editor, [ 1, 0, 0, 0, 0 ], 0); // Index off by one due to cef fake caret
     editor.execCommand('mceTableDeleteCol');
     TinyAssertions.assertContent(editor, initalContent);
+  });
+
+  /** Create `rows` number of `tr` elements, with `cols` number of `td` elements inside each.  */
+  const tr = (rows: number, cols: number): string[] =>
+    Arr.range(rows, (r) => '<tr>' + Arr.range(cols, (c) => `<td>${r}-${c}</td>`).join('') + '</tr>');
+
+  Arr.each([
+    {
+      label: 'no colgroup',
+      pathToBody: [ 0, 0 ],
+      createTable: (tbody: string) => `<table><tbody>${tbody}</tbody></table>`,
+    },
+    {
+      label: 'with colgroup',
+      pathToBody: [ 0, 1 ],
+      createTable: (tbody: string) => `<table><colgroup><col><col><col><col></colgroup><tbody>${tbody}</tbody></table>`,
+    }
+  ], ({ label, pathToBody, createTable }) => {
+    context(label, () => {
+      it('TINY-6309: Should place cursor in adjacent cell when deleting the first and last column.', () => {
+        const editor = hook.editor();
+        const originalTBody = tr(3, 4);
+        editor.setContent(createTable(originalTBody.join('')));
+
+        // Delete last column:
+        TinySelections.setCursor(editor, [ ...pathToBody, 1, 3, 0 ], 0);
+        editor.execCommand('mceTableDeleteCol');
+        TinyAssertions.assertCursor(editor, [ ...pathToBody, 1, 2, 0 ], 3);
+        TinyAssertions.assertContent(
+          editor,
+          createTable(originalTBody.join('').replace(/<td>\d-3<\/td>/g, '')).replace('<col>', '')
+        );
+
+        // Delete first column:
+        TinySelections.setCursor(editor, [ ...pathToBody, 1, 0, 0 ], 0);
+        editor.execCommand('mceTableDeleteCol');
+        TinyAssertions.assertCursor(editor, [ ...pathToBody, 1, 0, 0 ], 3);
+        TinyAssertions.assertContent(
+          editor,
+          createTable(originalTBody.join('').replace(/<td>\d-[03]<\/td>/g, '')).replace('<col><col>', '')
+        );
+
+        assertEvents(2);
+      });
+    });
   });
 });
