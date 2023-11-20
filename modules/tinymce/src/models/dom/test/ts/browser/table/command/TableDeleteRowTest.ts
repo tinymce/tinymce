@@ -101,7 +101,7 @@ describe('browser.tinymce.models.dom.table.command.TableDeleteRowTest', () => {
       it('TINY-6309: Should place cursor in adjacent cell when deleting the first and last row.', () => {
         const editor = hook.editor();
         const originalTBody = tr(4, 3);
-        editor.setContent(createTable(originalTBody.slice().join('')));
+        editor.setContent(createTable(originalTBody.join('')));
 
         // Delete last row:
         TinySelections.setCursor(editor, [ ...pathToBody, 3, 1, 0 ], 0);
