@@ -1,4 +1,4 @@
-import { afterEach, describe, it } from '@ephox/bedrock-client';
+import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -85,49 +85,38 @@ describe('browser.tinymce.models.dom.table.command.TableDeleteRowTest', () => {
   const tr = (rows: number, cols: number): string[] =>
     Arr.range(rows, (r) => '<tr>' + Arr.range(cols, (c) => `<td>${r}-${c}</td>`).join('') + '</tr>');
 
-  it('TINY-6309: Should place cursor in adjacent cell above or below when deleting first and last row', () => {
-    const editor = hook.editor();
-    const originalTBody = tr(4, 3);
-    editor.setContent(`<table><tbody>${originalTBody.slice().join('')}</tbody></table>`);
+  Arr.each([
+    {
+      label: 'no colgroup',
+      pathToBody: [ 0, 0 ],
+      createTable: (tbody: string) => `<table><tbody>${tbody}</tbody></table>`,
+    },
+    {
+      label: 'with colgroup',
+      pathToBody: [ 0, 1 ],
+      createTable: (tbody: string) => `<table><colgroup><col><col><col></colgroup><tbody>${tbody}</tbody></table>`,
+    }
+  ], ({ label, pathToBody, createTable }) => {
+    context(label, () => {
+      it('TINY-6309: Should place cursor in adjacent cell when deleting the first and last row.', () => {
+        const editor = hook.editor();
+        const originalTBody = tr(4, 3);
+        editor.setContent(createTable(originalTBody.slice().join('')));
 
-    // Delete last row:
-    TinySelections.setCursor(editor, [ 0, 0, 3, 1, 0 ], 0);
-    editor.execCommand('mceTableDeleteRow');
-    TinyAssertions.assertCursor(editor, [ 0, 0, 2, 1, 0 ], 3);
-    TinyAssertions.assertContent(editor, `<table><tbody>${originalTBody.slice(0, -1).join('')}</tbody></table>`);
+        // Delete last row:
+        TinySelections.setCursor(editor, [ ...pathToBody, 3, 1, 0 ], 0);
+        editor.execCommand('mceTableDeleteRow');
+        TinyAssertions.assertCursor(editor, [ ...pathToBody, 2, 1, 0 ], 3);
+        TinyAssertions.assertContent(editor, createTable(originalTBody.slice(0, -1).join('')));
 
-    // Delete first row:
-    TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0 ], 0);
-    editor.execCommand('mceTableDeleteRow');
-    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 0 ], 3);
-    TinyAssertions.assertContent(editor, `<table><tbody>${originalTBody.slice(1, -1).join('')}</tbody></table>`);
+        // Delete first row:
+        TinySelections.setCursor(editor, [ ...pathToBody, 0, 1, 0 ], 0);
+        editor.execCommand('mceTableDeleteRow');
+        TinyAssertions.assertCursor(editor, [ ...pathToBody, 0, 1, 0 ], 3);
+        TinyAssertions.assertContent(editor, createTable(originalTBody.slice(1, -1).join('')));
 
-    assertEvents(2);
-  });
-
-  it('TINY-6309: Should place cursor in adjacent cell above or below when deleting first and last row (table with colgroup)', () => {
-    const editor = hook.editor();
-    const originalTBody: readonly string[] = tr(4, 3);
-    editor.setContent(`<table><colgroup><col><col><col></colgroup><tbody>${originalTBody.slice().join('')}</tbody></table>`);
-
-    // Delete last row:
-    TinySelections.setCursor(editor, [ 0, 1, 3, 1, 0 ], 0);
-    editor.execCommand('mceTableDeleteRow');
-    TinyAssertions.assertCursor(editor, [ 0, 1, 2, 1, 0 ], 3);
-    TinyAssertions.assertContent(
-      editor,
-      `<table><colgroup><col><col><col></colgroup><tbody>${originalTBody.slice(0, -1).join('')}</tbody></table>`
-    );
-
-    // Delete first row:
-    TinySelections.setCursor(editor, [ 0, 1, 0, 1, 0 ], 0);
-    editor.execCommand('mceTableDeleteRow');
-    TinyAssertions.assertCursor(editor, [ 0, 1, 0, 1, 0 ], 3);
-    TinyAssertions.assertContent(
-      editor,
-      `<table><colgroup><col><col><col></colgroup><tbody>${originalTBody.slice(1, -1).join('')}</tbody></table>`
-    );
-
-    assertEvents(2);
+        assertEvents(2);
+      });
+    });
   });
 });
