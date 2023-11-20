@@ -31,7 +31,7 @@ export const renderCollection = (
 
   const icons = providersBackstage.icons();
 
-  // icon string is either in icon pack or displayed directly
+  // TINY-10174: Icon string is either in icon pack or displayed directly
   const getIcon = (icon: string) => icons[icon] ?? icon;
 
   const runOnItem = <T extends EventFormat>(f: ItemCallback<T>) => (comp: AlloyComponent, se: SimulatedEvent<T>) => {

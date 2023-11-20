@@ -98,10 +98,12 @@ describe('browser.tinymce.themes.silver.skin.OxideCollectionComponentTest', () =
     ]);
 
     before(function () {
-      this.skip();
       // const editor = hook.editor();
       // TinyUiActions.clickOnToolbar(editor, 'button');
       // await TinyUiActions.pWaitForDialog(editor);
+
+      // TODO: TINY-3229 implement collection columns properly
+      this.skip();
     });
 
     it('Checking the first collection: columns = 1, list', async () => {
