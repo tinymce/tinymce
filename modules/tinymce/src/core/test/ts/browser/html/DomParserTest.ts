@@ -1551,6 +1551,11 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
           return serializer.serialize(parser.parse(embedHtml));
         };
 
+        const testConversion = (embedHtml: string, expectedHtml: string) => () => {
+          const serializedHtml = serializeEmbedHtml(embedHtml, true);
+          assert.equal(serializedHtml, expectedHtml);
+        };
+
         context('convert_unsafe_embeds: false', () => {
           const testNoConversion = (embedHtml: string) => () => {
             const serializedHtml = serializeEmbedHtml(embedHtml, false);
@@ -1564,11 +1569,6 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         });
 
         context('convert_unsafe_embeds: true', () => {
-          const testConversion = (embedHtml: string, expectedHtml: string) => () => {
-            const serializedHtml = serializeEmbedHtml(embedHtml, true);
-            assert.equal(serializedHtml, expectedHtml);
-          };
-
           it('TINY-10349: Object elements without a mime type should be converted to iframe',
             testConversion('<object data="about:blank"></object>', '<iframe src="about:blank"></iframe>'));
           it('TINY-10349: Object elements with an image mime type should be converted to img',
@@ -1604,6 +1604,30 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
           it('TINY-10349: Embed elements without a mime type should be converted to sandboxed iframe',
             testSandboxedConversion('<embed src="about:blank">', '<iframe src="about:blank" sandbox=""></iframe>'));
+        });
+
+        context('convert_unsafe_embeds: true, attribute preservation', () => {
+          it('TINY-10349: Object elements should perserve width and height attributes only',
+            testConversion('<object data="about:blank" width="100" height="100" style="color: red;"></object>', '<iframe src="about:blank" width="100" height="100"></iframe>'));
+          it('TINY-10349: Object elements with an image mime type should perserve width and height attributes only',
+            testConversion('<object data="about:blank" type="image/png" width="100" height="100" style="color: red;"></object>', '<img src="about:blank" width="100" height="100">'));
+          it('TINY-10349: Object elements with a video mime type should perserve width and height attributes only',
+            testConversion('<object data="about:blank" type="video/mp4" width="100" height="100" style="color: red;"></object>', '<video src="about:blank" width="100" height="100" controls=""></video>'));
+          it('TINY-10349: Object elements with an audio mime type should not perserve other attributes only',
+            testConversion('<object data="about:blank" type="audio/mpeg" width="100" height="100" style="color: red;"></object>', '<audio src="about:blank" controls=""></audio>'));
+          it('TINY-10349: Object elements with other mime type should perserve width and height attributes only',
+            testConversion('<object data="about:blank" type="application/pdf" width="100" height="100" style="color: red;"></object>', '<iframe src="about:blank" width="100" height="100"></iframe>'));
+
+          it('TINY-10349: Embed elements should preserve width and heigth attributes only',
+            testConversion('<embed src="about:blank" width="100" height="100" style="color: red;">', '<iframe src="about:blank" width="100" height="100"></iframe>'));
+          it('TINY-10349: Embed elements with an image mime type should preserve width and height attributes only',
+            testConversion('<embed src="about:blank" type="image/png" width="100" height="100" style="color: red;">', '<img src="about:blank" width="100" height="100">'));
+          it('TINY-10349: Embed elements with a video mime type should preserve width and height attributes only',
+            testConversion('<embed src="about:blank" type="video/mp4" width="100" height="100" style="color: red;">', '<video src="about:blank" width="100" height="100" controls=""></video>'));
+          it('TINY-10349: Embed elements with an audio mime type should not preserve other attributes',
+            testConversion('<embed src="about:blank" type="audio/mpeg" width="100" height="100" style="color: red;">', '<audio src="about:blank" controls=""></audio>'));
+          it('TINY-10349: Embed elements with other mime type should preserve width and height attributes only',
+            testConversion('<embed src="about:blank" type="application/pdf" width="100" height="100" style="color: red;">', '<iframe src="about:blank" width="100" height="100"></iframe>'));
         });
       });
     });
