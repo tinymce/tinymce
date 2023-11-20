@@ -5,7 +5,7 @@ labels: type:feature
 
 ---
 
-## **📝 Provide a description of the new feature or improvement**
+## 📝 Provide a description of the new feature or improvement
 *Describe your idea for the new feature or improvement*
 
 ### 🫶 What is the motivation?
