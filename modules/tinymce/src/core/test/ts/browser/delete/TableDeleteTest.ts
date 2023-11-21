@@ -182,6 +182,66 @@ describe('browser.tinymce.core.delete.TableDeleteTest', () => {
       });
       TinyAssertions.assertContent(editor, '<table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td><td>c</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>f</td></tr></tbody></table>');
     });
+
+    it('TINY-10254: Delete a selection that involve a table and some content both inside another table should not delete the first table as well', () => {
+      const editor = hook.editor();
+      editor.setContent(`<table>
+        <tbody>
+          <tr>
+            <td>
+              <table>
+                <tbody>
+                  <tr>
+                    <td>table 1</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                </tbody>
+              </table>
+              <table>
+                <tbody>
+                  <tr>
+                    <td>table 2</td>
+                    <td>abc</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p>content</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>`);
+      // this `setCursor` is needed for FireFox since otherwinse the `setSelection` triggers an error
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 1, 0, 0, 1, 0 ], 0);
+      TinySelections.setSelection(editor, [ 0, 0, 0, 0, 1, 0, 0, 1, 0 ], 1, [ 0, 0, 0, 0, 2, 0 ], 3);
+      editor.execCommand('Delete');
+      TinyAssertions.assertContent(editor,
+        '<table>' +
+        '<tbody>' +
+          '<tr>' +
+            '<td>' +
+              '<table>' +
+                '<tbody>' +
+                  '<tr>' +
+                    '<td>table 1</td>' +
+                    '<td>&nbsp;</td>' +
+                  '</tr>' +
+                '</tbody>' +
+              '</table>' +
+              '<table>' +
+                '<tbody>' +
+                  '<tr>' +
+                    '<td>table 2</td>' +
+                    '<td>a</td>' +
+                  '</tr>' +
+                '</tbody>' +
+              '</table>' +
+              '<p>tent</p>' +
+            '</td>' +
+          '</tr>' +
+        '</tbody>' +
+      '</table>'
+      );
+    });
   });
 
   context('Delete all single cell content', () => {

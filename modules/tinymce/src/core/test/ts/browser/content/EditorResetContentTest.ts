@@ -1,14 +1,17 @@
 import { Assertions } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks } from '@ephox/wrap-mcagar';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
+import { McEditor, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.content.EditorResetContentTest', () => {
-  const hook = TinyHooks.bddSetupLight<Editor>({
+  const baseSettings = {
     base_url: '/project/tinymce/js/tinymce'
-  }, []);
+  };
+
+  const hook = TinyHooks.bddSetupLight<Editor>(baseSettings, []);
 
   const assertEditorState = (editor: Editor, content: string) => {
     const html = editor.getContent();
@@ -44,5 +47,51 @@ describe('browser.tinymce.core.content.EditorResetContentTest', () => {
     assert.isTrue(editor.undoManager.hasUndo(), 'UndoManager should have some undo levels');
     editor.resetContent('<p>html</p>');
     assertEditorState(editor, '<p>html</p>');
+  });
+
+  context('Content XSS', () => {
+    const xssFnName = 'xssfn';
+
+    const testResetContentMxss = (content: string) => async () => {
+      const editor = await McEditor.pFromHtml<Editor>(`<textarea>${content}</textarea>`, {
+        ...baseSettings,
+        valid_elements: '*'
+      });
+      let hasXssOccurred = false;
+      (editor.getWin() as any)[xssFnName] = () => hasXssOccurred = true;
+      editor.resetContent();
+      assert.isFalse(hasXssOccurred, 'XSS should not have occurred');
+      (editor.getWin() as any)[xssFnName] = null;
+    };
+
+    it('TINY-10236: Excluding data-mce-bogus="all" elements does not cause mXSS',
+      testResetContentMxss(`<!--<br data-mce-bogus="all">><iframe onload="window.${xssFnName}();">->`));
+
+    it('TINY-10236: Excluding temporary attributes does not cause mXSS',
+      testResetContentMxss(`<!--data-mce-selected="x"><iframe onload="window.${xssFnName}();">->`));
+
+    it('TINY-10236: Excluding ZWNBSP in comment nodes does not cause mXSS',
+      testResetContentMxss(`<!--\uFEFF><iframe onload="window.${xssFnName}();">->`));
+
+    Arr.each([ 'noscript', 'script', 'xmp', 'iframe', 'noembed', 'noframes' ], (parent) => {
+      it(`TINY-10305: Excluding ZWNBSP in ${parent} does not cause mXSS`,
+        testResetContentMxss(`<${parent}><\uFEFF/${parent}><\uFEFFiframe onload="window.${xssFnName}();"></${parent}>`));
+    });
+  });
+
+  context('ZWNBSP', () => {
+    it('TINY-10305: Should remove ZWNBSP from initial content in target element', async () => {
+      const editor = await McEditor.pFromHtml<Editor>('<textarea><p>te\uFEFFst</p></textarea>', baseSettings);
+      editor.setContent('<p>some</p><p>content</p>');
+      editor.resetContent();
+      TinyAssertions.assertRawContent(editor, '<p>test</p>');
+    });
+
+    it('TINY-10305: Should remove ZWNBSP from initial content as parameter', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>some</p><p>content</p>');
+      editor.resetContent('<p>te\uFEFFst</p>');
+      TinyAssertions.assertRawContent(editor, '<p>test</p>');
+    });
   });
 });

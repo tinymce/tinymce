@@ -80,7 +80,7 @@ const hasSelectedContent = (editor: Editor): boolean =>
   !editor.selection.isCollapsed() || isTableSelection(editor);
 
 const cut = (editor: Editor) => (evt: EditorEvent<ClipboardEvent>): void => {
-  if (!evt.isDefaultPrevented() && hasSelectedContent(editor)) {
+  if (!evt.isDefaultPrevented() && hasSelectedContent(editor) && editor.selection.isEditable()) {
     setClipboardData(evt, getData(editor), fallback(editor), () => {
       if (Env.browser.isChromium() || Env.browser.isFirefox()) {
         const rng = editor.selection.getRng();

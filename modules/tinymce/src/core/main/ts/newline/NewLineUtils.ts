@@ -172,7 +172,8 @@ const createNewBlock = (
   parentBlock: Node,
   editableRoot: HTMLElement | undefined,
   keepStyles: boolean = true,
-  name?: string
+  name?: string,
+  styles?: Record<string, string>
 ): Element => {
   const dom = editor.dom;
   const schema = editor.schema;
@@ -183,7 +184,7 @@ const createNewBlock = (
 
   let block: Element;
   if (name || parentBlockName === 'TABLE' || parentBlockName === 'HR') {
-    block = dom.create(name || newBlockName);
+    block = dom.create(name || newBlockName, styles || {});
   } else {
     block = parentBlock.cloneNode(false) as Element;
   }

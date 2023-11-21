@@ -4,10 +4,16 @@ import { SugarBody, SugarElement } from '@ephox/sugar';
 import { createCopyEvent, createCutEvent, createPasteEvent } from '../clipboard/ClipboardEvents';
 import { createDataTransfer } from '../datatransfer/DataTransfer';
 import { getWindowFromElement } from '../dragndrop/DndEvents';
+import * as BlobReader from '../file/BlobReader';
 import { Chain } from './Chain';
 import * as ChainSequence from './ChainSequence';
 import { Step } from './Step';
 import { cFindIn } from './UiFinder';
+
+export interface PasteUrlItem {
+  readonly kind: 'string' | 'file';
+  readonly url: string;
+}
 
 const pasteDataTransfer = (target: SugarElement<Element>, mutator: (dataTransfer: DataTransfer) => void): void => {
   const win = getWindowFromElement(target);
@@ -63,6 +69,36 @@ const sPasteFiles = <T>(files: File[], selector: string): Step<T, T> =>
     cPasteFiles(files)
   ]));
 
+const pPasteUrlItems = async (target: SugarElement<Element>, items: PasteUrlItem[]): Promise<void> => {
+  const dataItems = await Promise.all(Arr.map(items, async (item) => {
+    const resp = await window.fetch(item.url);
+
+    if (resp.ok) {
+      const blob = await resp.blob();
+      const fileName = Arr.last(item.url.split('/')).getOr('filename.dat');
+      const mime = blob.type.split(';')[0]; // Only grab mime type not charset encoding
+
+      if (item.kind === 'string') {
+        return { kind: 'string', mime, text: await BlobReader.readBlobAsString(blob) };
+      } else {
+        return { kind: item.kind, file: new window.File([ blob ], fileName, { type: mime }) };
+      }
+    } else {
+      return Promise.reject(new Error(`Failed to load paste URL item: "${item.url}", status: ${resp.status}`));
+    }
+  }));
+
+  pasteDataTransfer(target, (dataTransfer) => {
+    Arr.each(dataItems, (dataItem) => {
+      if (dataItem.kind === 'string') {
+        dataTransfer.items.add(dataItem.text, dataItem.mime);
+      } else {
+        dataTransfer.items.add(dataItem.file);
+      }
+    });
+  });
+};
+
 const cut = (target: SugarElement<Element>): DataTransfer => {
   const win = getWindowFromElement(target);
   const dataTransfer = createDataTransfer();
@@ -99,6 +135,7 @@ export {
   sPasteDataTransfer,
   sPasteItems,
   sPasteFiles,
+  pPasteUrlItems,
   cut,
   copy,
   cCut,

@@ -207,14 +207,15 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
 
   const collapsedAndCef = rng.collapsed && isCef;
 
-  const createNewBlock = (name?: string) => {
+  const createNewBlock = (name?: string, styles?: Record<string, string>) => {
     return NewLineUtils.createNewBlock(
       editor,
       container,
       parentBlock,
       editableRoot,
       Options.shouldKeepStyles(editor),
-      name);
+      name,
+      styles);
   };
 
   // Returns true/false if the caret is at the start/end of the parent block element

@@ -35,7 +35,7 @@ const pCloseMore = async (type: ToolbarMode): Promise<void> => {
 };
 
 const pOpenAlignMenu = (label: string): Promise<void> => {
-  const selector = 'button[aria-label="Align"]';
+  const selector = 'button[aria-label^="Align"].tox-tbtn--select';
   return pOpenMenuWithSelector(label, selector);
 };
 

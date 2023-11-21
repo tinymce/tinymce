@@ -287,6 +287,11 @@ const register = (editor: Editor): void => {
     processor: 'boolean',
     default: editor.hasPlugin('help')
   });
+
+  registerOption('default_font_stack', {
+    processor: 'string[]',
+    default: []
+  });
 };
 
 const isReadOnly = option('readonly');
@@ -326,6 +331,7 @@ const getPasteAsText = option('paste_as_text');
 const getSidebarShow = option('sidebar_show');
 const promotionEnabled = option('promotion');
 const useHelpAccessibility = option('help_accessibility');
+const getDefaultFontStack = option('default_font_stack');
 
 const isSkinDisabled = (editor: Editor): boolean =>
   editor.options.get('skin') === false;
@@ -347,6 +353,8 @@ const getSkinUrl = (editor: Editor): string | undefined => {
     }
   }
 };
+
+const getSkinUrlOption = (editor: Editor): Optional<string> => Optional.from(editor.options.get('skin_url'));
 
 const getLineHeightFormats = (editor: Editor): string[] =>
   editor.options.get('line_height_formats').split(' ');
@@ -429,6 +437,7 @@ const getMenus = (editor: Editor): Record<string, { title: string; items: string
 export {
   register,
   getSkinUrl,
+  getSkinUrlOption,
   isReadOnly,
   isSkinDisabled,
   getHeightOption,
@@ -476,5 +485,6 @@ export {
   getResize,
   getPasteAsText,
   getSidebarShow,
-  useHelpAccessibility
+  useHelpAccessibility,
+  getDefaultFontStack
 };

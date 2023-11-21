@@ -6,27 +6,76 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Fixed
+### Added
+- CSS files are now also generated as separate JS files to improve bundling of all resources. #TINY-10352
+- Added new `Resource.has` API that can be used to check if a resource has been loaded or not. #TINY-10352
+- Added new `Resource.get` API that can be used to get a resource if it exists. #TINY-10352
+- Added new `StylesheetLoader.loadRawCss` API that can be used to load CSS into a style element. #TINY-10352
+- Added new `StylesheetLoader.unloadRawCss` API that can be used to unload CSS that was loaded into a style element. #TINY-10352
+- Added `force_hex_color` editor option. Option `'always'` converts all RGB & RGBA colours to hex, `'rgb_only'` will only convert RGB and *not* RGBA colours to hex, `'off'` won't convert any colours to hex. #TINY-9819
+- Added `default_font_stack` editor option that makes it possible to define what is considered a system font stack. #TINY-10290
 
-- Editor would convert urls that are not http/s or relative resulting in broken links. #TINY-10153
-- Calling the `setProgressState` API would cause the window to be scrolled when the editor wasn't fully visible. #TINY-10172
-- Applying heading formatting to the content of the `summary` element extended its application to the content of the parent `details` element. #TINY-10154
-- Setting the content with an attribute that contains a self-closing HTML tag did not preserve the tag. #TINY-10088
-- Screen readers now announce the selected color of `forecolor` and `backcolor` buttons. #TINY-9796
-- Resize handles would not appear on editable images in a non-editable context. #TINY-10118
-- The dialog size was not updated when the `size` argument was changed when redialling a dialog. #TINY-10209
-- Toggling a list that contains an LI element having another list as its first child would remove the remaining content within that LI element. #TINY-10213
-- Custom block element wasn't considered block element in some cases. #TINY-10139
-- Removing an LI element containing a `details` element would incorrectly merge its content. #TINY-10133
-- Search and replace plugin would incorrectly find matching text inside non-editable root elements. #TINY-10162
-- Search and replace plugin would incorrectly find matching text inside SVG elements. #TINY-10162
-- Removed use of `async` for editor rendering which caused visual blinking when reloading the editor in-place. #TINY-10249
 
 ### Improved
 - Colorpicker now includes the Brightness/Saturation selector and hue slider in the keyboard navigable items. #TINY-9287
 - Improved the tooltips of picker buttons for the urlinput components in the "Insert/Edit Image" and "Insert/Edit Link" dialogs. #TINY-10155
 - Inline dialog will now respect `size: 'large'` argument in the dialog spec. #TINY-10209
 - SVG elements and their children are now retained when configured as valid elements. #TINY-10237
+- Bespoke dropdown toolbar buttons including `align`, `fontfamily`, `fontsize`, `blocks`, and `styles` did not include their visible text labels in their accessible names. #TINY-10147
+
+### Fixed
+- Editor would convert urls that are not http/s or relative resulting in broken links. #TINY-10153
+- Calling the `setProgressState` API would cause the window to be scrolled when the editor wasn't fully visible. #TINY-10172
+- Applying heading formatting to the content of the `summary` element extended its application to the content of the parent `details` element. #TINY-10154
+- Setting the content with an attribute that contains a self-closing HTML tag did not preserve the tag. #TINY-10088
+- Screen readers now announce the selected color of `forecolor` and `backcolor` buttons. #TINY-9796
+- Resize handles would not appear on editable images in a non-editable context. #TINY-10118
+- Corrections and copy-edits to the `addIcon` API documentation. #TINY-10230
+- The dialog size was not updated when the `size` argument was changed when redialling a dialog. #TINY-10209
+- Toggling a list that contains an LI element having another list as its first child would remove the remaining content within that LI element. #TINY-10213
+- Custom block element wasn't considered block element in some cases. #TINY-10139
+- The editor no longer forcefully takes focus when a notification closes while the focus is outside of the editor. #TINY-10282
+- An empty element with a `contenteditable="true"` attribute within a table cell would not be treated as content and get removed if backspace or delete was being pressed. #TINY-10010
+- Removing an LI element containing a `details` element would incorrectly merge its content. #TINY-10133
+- The function `getModifierState` did not work on events passed through the editor as expected. #TINY-10263
+- Search and replace plugin would incorrectly find matching text inside non-editable root elements. #TINY-10162
+- Removed use of `async` for editor rendering which caused visual blinking when reloading the editor in-place. #TINY-10249
+- Toggling off one format on the caret when multiple formats was toggled on would toggle all of them off. #TINY-10132
+- Hex colors are no longer always converted to RGB. #TINY-9819
+- Merging an external `p` inside a `list` via delete or backspace would incorrectly try to move a parent element inside a child element. #TINY-10289
+- Directionality would not be consistently applied to the entire `accordion` block. #TINY-10291
+- The `fontsizeinput` toolbar item was causing console warnings when toolbar items were clicked. #TINY-10330
+- Menubar buttons with more than one word would sometimes wrap into two lines. #TINY-10343
+- Creating a new `li` via enter inside a nested list would not inherit styles from the source `li`. #TINY-10316
+- Screen readers now announce the active autocompleter item. #TINY-9393
+- Dialog collection items would not display any icons chosen from icon pack. #TINY-10174
+
+## 6.7.3 - 2023-11-15
+
+### Changed
+- Zero width no-break space (U+FEFF) characters are removed from content passed to `setContent`, `insertContent`, and `resetContent` APIs. #TINY-10305
+- Zero width no-break space (U+FEFF) characters in initial content are not loaded into the editor upon initialization. #TINY-10305
+
+### Fixed
+- Specific HTML content containing unescaped text nodes caused mXSS when using undo/redo. #TINY-10305
+- Specific HTML content containing unescaped text nodes caused mXSS when using the `getContent` and `setContent` APIs with the `format: 'raw'` option, which also affected the `resetContent` API and the draft restoration feature of the Autosave plugin. #TINY-10305
+
+## 6.7.2 - 2023-10-25
+
+### Fixed
+- The function `getModifierState` did not work on events passed through the editor as expected. #TINY-10263
+- Removed use of `async` for editor rendering which caused visual blinking when reloading the editor in-place. #TINY-10249
+- Toggling a list that contains an LI element having another list as its first child would remove the remaining content within that LI element. #TINY-10213
+- List items containing a list element surrounded by non list nodes would cause some list operations to fail. #TINY-10268
+- The `accordion` toggling with the Enter key press would behave incorrectly on Safari. #TINY-10177
+- Deleting a range that included both text of a cell and a nested table in that cell removed the entire content of the cell. #TINY-10254
+
+## 6.7.1 - 2023-10-19
+
+### Fixed
+- Specific HTML content caused mXSS when using undo/redo. #TINY-10180
+- Specific HTML content caused mXSS when using the `getContent` and `setContent` APIs with the `format: 'raw'` option, which also affected the `resetContent` API and the draft restoration feature of the Autosave plugin. #TINY-10236
+- Notification messages containing HTML were not properly XSS sanitized before being displayed. #TINY-10286
 
 ## 6.7.0 - 2023-08-30
 

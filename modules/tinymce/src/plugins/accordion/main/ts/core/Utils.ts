@@ -17,6 +17,13 @@ export const isInSummary = (editor: Editor): boolean => {
   return isSummary(node) || Boolean(editor.dom.getParent(node, isSummary));
 };
 
+export const isAtDetailsStart = (editor: Editor): boolean => {
+  const rng = editor.selection.getRng();
+  return isDetails(rng.startContainer)
+    && rng.collapsed
+    && rng.startOffset === 0;
+};
+
 export const isInsertAllowed = (editor: Editor): boolean =>
   !isInSummary(editor) && editor.dom.isEditable(editor.selection.getNode());
 

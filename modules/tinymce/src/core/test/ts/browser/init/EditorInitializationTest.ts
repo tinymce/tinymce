@@ -238,4 +238,8 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
   it('Initialize on list item with initial content', (done) => {
     initAndAssertContent('<ul><li>Initial Content</li></ul>', 'li', 'Initial Content', done);
   });
+
+  it('TINY-10305: Should remove ZWNBSP from content when initializing', (done) => {
+    initAndAssertContent('<textarea>te\uFEFFst</textarea>', 'textarea', 'test', done);
+  });
 });

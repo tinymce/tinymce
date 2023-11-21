@@ -1,16 +1,19 @@
-import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks } from '@ephox/wrap-mcagar';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
+import { TinyApis, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/autosave/Plugin';
 
 describe('browser.tinymce.plugins.autosave.AutoSavePluginTest', () => {
-  const hook = TinyHooks.bddSetupLight<Editor>({
+  const baseSettings = {
     plugins: 'autosave',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin ]);
+  };
+
+  const hook = TinyHooks.bddSetupLight<Editor>(baseSettings, [ Plugin ]);
 
   const checkIfEmpty = (editor: Editor, html: string, isEmpty: boolean): void => {
     const result = isEmpty ? 'empty.' : 'not empty.';
@@ -88,9 +91,51 @@ describe('browser.tinymce.plugins.autosave.AutoSavePluginTest', () => {
     editor.plugins.autosave.storeDraft();
 
     window.location.hash = 'test' + Math.random().toString(36).substring(7);
-
     assert.isFalse(editor.plugins.autosave.hasDraft(), 'Check if it notices a hash change');
-
     window.history.replaceState('', document.title, window.location.pathname + window.location.search);
+    editor.plugins.autosave.removeDraft();
+  });
+
+  context('Content XSS', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      ...baseSettings,
+      valid_elements: '*'
+    }, [ Plugin ]);
+
+    const xssFnName = 'xssfn';
+
+    const storeAndRestoreDraft = (editor: Editor, content: string): void => {
+      assert.isFalse(editor.plugins.autosave.hasDraft(), 'Check if it starts with a draft');
+      TinyApis(editor).setRawContent(content);
+      editor.undoManager.add();
+      editor.plugins.autosave.storeDraft();
+      editor.setContent('New');
+      editor.undoManager.add();
+      editor.plugins.autosave.restoreDraft();
+      editor.plugins.autosave.removeDraft();
+    };
+
+    const testContentMxssOnRestoreDraft = (content: string) => () => {
+      const editor = hook.editor();
+      let hasXssOccurred = false;
+      (editor.getWin() as any)[xssFnName] = () => hasXssOccurred = true;
+      storeAndRestoreDraft(editor, content);
+      assert.isFalse(hasXssOccurred, 'XSS should not have occurred');
+      (editor.getWin() as any)[xssFnName] = null;
+    };
+
+    it('TINY-10236: Excluding data-mce-bogus="all" elements does not cause mXSS',
+      testContentMxssOnRestoreDraft(`<!--<br data-mce-bogus="all">><iframe onload="window.${xssFnName}();">->`));
+
+    it('TINY-10236: Excluding temporary attributes does not cause mXSS',
+      testContentMxssOnRestoreDraft(`<!--data-mce-selected="x"><iframe onload="window.${xssFnName}();">->`));
+
+    it('TINY-10236: Excluding ZWNBSP in comment nodes does not cause mXSS',
+      testContentMxssOnRestoreDraft(`<!--\uFEFF><iframe onload="window.${xssFnName}();">->`));
+
+    Arr.each([ 'noscript', 'script', 'xmp', 'iframe', 'noembed', 'noframes' ], (parent) => {
+      it(`TINY-10305: Excluding ZWNBSP in ${parent} does not cause mXSS`,
+        testContentMxssOnRestoreDraft(`<${parent}><\uFEFF/${parent}><\uFEFFiframe onload="window.${xssFnName}();"></${parent}>`));
+    });
   });
 });

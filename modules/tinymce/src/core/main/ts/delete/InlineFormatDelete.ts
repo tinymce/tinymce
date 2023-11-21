@@ -8,6 +8,7 @@ import * as NodeType from '../dom/NodeType';
 import * as Parents from '../dom/Parents';
 import * as CaretFormat from '../fmt/CaretFormat';
 import * as FormatContainer from '../fmt/FormatContainer';
+import * as FormatUtils from '../fmt/FormatUtils';
 import * as DeleteElement from './DeleteElement';
 import * as DeleteUtils from './DeleteUtils';
 
@@ -58,7 +59,7 @@ const deleteCaret = (editor: Editor, forward: boolean): Optional<() => void> => 
   const parentInlines = Arr.filter(getParentInlinesUntilMultichildInline(editor), hasOnlyOneChild);
   return Arr.last(parentInlines).bind((target) => {
     const fromPos = CaretPosition.fromRangeStart(editor.selection.getRng());
-    if (DeleteUtils.willDeleteLastPositionInElement(forward, fromPos, target.dom) && !CaretFormat.isEmptyCaretFormatElement(target)) {
+    if (DeleteUtils.willDeleteLastPositionInElement(forward, fromPos, target.dom) && !FormatUtils.isEmptyCaretFormatElement(target)) {
       return Optional.some(() => deleteLastPosition(forward, editor, target, parentInlines));
     } else {
       return Optional.none();
@@ -72,7 +73,7 @@ const isBrInEmptyElement = (editor: Editor, elm: Element): boolean => {
 };
 
 const isEmptyCaret = (elm: Element): boolean =>
-  CaretFormat.isEmptyCaretFormatElement(SugarElement.fromDom(elm));
+  FormatUtils.isEmptyCaretFormatElement(SugarElement.fromDom(elm));
 
 const createCaretFormatAtStart = (editor: Editor, formatNodes: Node[]): void => {
   const startElm = editor.selection.getStart();

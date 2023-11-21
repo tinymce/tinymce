@@ -1,5 +1,5 @@
 import { Optional, Optionals } from '@ephox/katamari';
-import { Compare, SelectorFilter, SugarElement } from '@ephox/sugar';
+import { Compare, PredicateExists, SelectorFilter, SugarElement } from '@ephox/sugar';
 
 import * as TableCellSelection from '../selection/TableCellSelection';
 
@@ -20,24 +20,44 @@ const isRootFromElement = (root: SugarElement<Node>): IsRootFn =>
 const getTableCells = (table: SugarElement<HTMLTableElement>): SugarElement<HTMLTableCellElement>[] =>
   SelectorFilter.descendants<HTMLTableCellElement>(table, 'td,th');
 
+const getTable = (node: Node, isRoot: IsRootFn) => TableCellSelection.getClosestTable(SugarElement.fromDom(node), isRoot);
+
+const selectionInTableWithNestedTable = (details: TableSelectionDetails): TableSelectionDetails => {
+  return Optionals.lift2(details.startTable, details.endTable, (startTable, endTable) => {
+    const isStartTableParentOfEndTable = PredicateExists.descendant(startTable, (t) => Compare.eq(t, endTable));
+    const isEndTableParentOfStartTable = PredicateExists.descendant(endTable, (t) => Compare.eq(t, startTable));
+
+    return !isStartTableParentOfEndTable && !isEndTableParentOfStartTable ? details : {
+      ...details,
+      startTable: isStartTableParentOfEndTable ? Optional.none() : details.startTable,
+      endTable: isEndTableParentOfStartTable ? Optional.none() : details.endTable,
+      isSameTable: false,
+      isMultiTable: false
+    };
+  }).getOr(details);
+};
+
+const adjustQuirksInDetails = (details: TableSelectionDetails): TableSelectionDetails => {
+  return selectionInTableWithNestedTable(details);
+};
+
 const getTableDetailsFromRange = (rng: Range, isRoot: IsRootFn): TableSelectionDetails => {
-  const getTable = (node: Node) => TableCellSelection.getClosestTable(SugarElement.fromDom(node), isRoot);
-  const startTable = getTable(rng.startContainer);
-  const endTable = getTable(rng.endContainer);
+  const startTable = getTable(rng.startContainer, isRoot);
+  const endTable = getTable(rng.endContainer, isRoot);
   const isStartInTable = startTable.isSome();
   const isEndInTable = endTable.isSome();
   // Partial selection - selection is not within the same table
   const isSameTable = Optionals.lift2(startTable, endTable, Compare.eq).getOr(false);
   const isMultiTable = !isSameTable && isStartInTable && isEndInTable;
 
-  return {
+  return adjustQuirksInDetails({
     startTable,
     endTable,
     isStartInTable,
     isEndInTable,
     isSameTable,
     isMultiTable
-  };
+  });
 };
 
 export {
