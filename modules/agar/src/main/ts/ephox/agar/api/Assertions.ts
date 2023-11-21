@@ -1,4 +1,5 @@
 import { Assert, TestError, TestLabel } from '@ephox/bedrock-client';
+import { Testable } from '@ephox/dispute';
 import { Obj, Optional } from '@ephox/katamari';
 import { Compare, SugarElement, Truncate } from '@ephox/sugar';
 
@@ -64,8 +65,7 @@ const assertPresence = (label: TestLabel, expected: Record<string, number>, cont
     Assert.eq(TestLabel.concat('Did not find ' + num + ' of ' + selector + ', found: ' + actual + '. Test: ', label), num, actual);
   });
 };
-
-const assertEq = Assert.eq;
+const assertEq: <T>(message: TestLabel, expected: T, actual: T, tt?: Testable.Testable<T>) => void = Assert.eq;
 
 const assertDomEq = (label: TestLabel, expected: SugarElement<Node>, actual: SugarElement<Node>): void => {
   Assert.eq(
