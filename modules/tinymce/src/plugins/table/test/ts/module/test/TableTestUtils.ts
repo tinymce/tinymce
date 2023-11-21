@@ -239,6 +239,14 @@ const createRow = (cellContents: string[]): SugarElement<HTMLTableRowElement> =>
   return tr;
 };
 
+/** Opens the table properties dialog, selects the class called `tableClassTitle`, confirms changes and closes dialog. */
+const selectClassViaTablePropsDialog = async (editor: Editor, tableClassTitle: string): Promise<void> => {
+  await pOpenTableDialog(editor);
+  TinyUiActions.clickOnUi(editor, 'button[title="Class"]');
+  await TinyUiActions.pWaitForUi(editor, 'div.tox-menu');
+  TinyUiActions.clickOnUi(editor, `div[title="${tableClassTitle}"]`);
+};
+
 export {
   pAssertDialogPresence,
   pAssertListBoxValue,
@@ -254,5 +262,6 @@ export {
   pClickDialogButton,
   assertElementStructure,
   assertApproxElementStructure,
-  createRow
+  createRow,
+  selectClassViaTablePropsDialog
 };
