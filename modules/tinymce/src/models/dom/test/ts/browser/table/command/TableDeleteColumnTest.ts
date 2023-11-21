@@ -1,5 +1,5 @@
-import { afterEach, context, describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
+import { afterEach, before, context, describe, it } from '@ephox/bedrock-client';
+import { Arr, Fun } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -84,44 +84,70 @@ describe('browser.tinymce.models.dom.table.command.TableDeleteColumnTest', () =>
   /** Create `rows` number of `tr` elements, with `cols` number of `td` elements inside each.  */
   const tr = (rows: number, cols: number): string[] =>
     Arr.range(rows, (r) => '<tr>' + Arr.range(cols, (c) => `<td>${r}-${c}</td>`).join('') + '</tr>');
+  const textOffset = (row: number, col: number) => `${row}-${col}`.length;
 
   Arr.each([
     {
-      label: 'no colgroup',
-      pathToBody: [ 0, 0 ],
-      createTable: (tbody: string) => `<table><tbody>${tbody}</tbody></table>`,
+      rows: 3,
+      cols: 4,
+      options: {}
     },
     {
-      label: 'with colgroup',
-      pathToBody: [ 0, 1 ],
-      createTable: (tbody: string) => `<table><colgroup><col><col><col><col></colgroup><tbody>${tbody}</tbody></table>`,
+      rows: 3,
+      cols: 4,
+      options: { colgroup: true }
+    },
+    {
+      rows: 20,
+      cols: 20,
+      options: {}
+    },
+    {
+      rows: 20,
+      cols: 20,
+      options: { colgroup: true }
     }
-  ], ({ label, pathToBody, createTable }) => {
-    context(label, () => {
-      it('TINY-6309: Should place cursor in adjacent cell when deleting the first and last column.', () => {
-        const editor = hook.editor();
-        const originalTBody = tr(3, 4);
-        editor.setContent(createTable(originalTBody.join('')));
+  ], ({ rows, cols, options }) => {
+    context(`${rows}x${cols} ${options.colgroup ? 'with colgroup' : ''}`, () => {
+      const createTable = (tbody: string) => {
+        const colgroup = options.colgroup ? `<colgroup>${Arr.range(cols, Fun.constant('<col>')).join('')}</colgroup>` : '';
+        return `<table>${colgroup}<tbody>${tbody}</tbody></table>`;
+      };
+      const originalTBody = tr(rows, cols);
+      const lastColIndex = cols - 1;
+      const pathToBody = [ 0, options.colgroup ? 1 : 0 ];
 
-        // Delete last column:
-        TinySelections.setCursor(editor, [ ...pathToBody, 1, 3, 0 ], 0);
+      before(() => {
+        const editor = hook.editor();
+        editor.setContent(createTable(originalTBody.join('')));
+      });
+
+      it('TINY-6309: Should place cursor in adjacent cell when deleting the last column', () => {
+        const editor = hook.editor();
+        TinySelections.setCursor(editor, [ ...pathToBody, 1, lastColIndex, 0 ], 0);
         editor.execCommand('mceTableDeleteCol');
-        TinyAssertions.assertCursor(editor, [ ...pathToBody, 1, 2, 0 ], 3);
+        TinyAssertions.assertCursor(editor, [ ...pathToBody, 1, lastColIndex - 1, 0 ], textOffset(1, lastColIndex - 1));
+        const lastColTds = new RegExp(`<td>\\d+-${lastColIndex}</td>`, 'g');
         TinyAssertions.assertContent(
           editor,
-          createTable(originalTBody.join('').replace(/<td>\d-3<\/td>/g, '')).replace('<col>', '')
+          createTable(originalTBody.join('').replace(lastColTds, '')).replace('<col>', '')
         );
 
-        // Delete first column:
+        assertEvents(1);
+      });
+
+      it('TINY-6309: Should place cursor in adjacent cell when deleting the first column', () => {
+        const editor = hook.editor();
         TinySelections.setCursor(editor, [ ...pathToBody, 1, 0, 0 ], 0);
         editor.execCommand('mceTableDeleteCol');
-        TinyAssertions.assertCursor(editor, [ ...pathToBody, 1, 0, 0 ], 3);
+        TinyAssertions.assertCursor(editor, [ ...pathToBody, 1, 0, 0 ], textOffset(1, 0));
+        const firstAndLastColTds = new RegExp(`<td>\\d+-(${lastColIndex}|0)</td>`, 'g');
         TinyAssertions.assertContent(
           editor,
-          createTable(originalTBody.join('').replace(/<td>\d-[03]<\/td>/g, '')).replace('<col><col>', '')
+          createTable(originalTBody.join('').replace(firstAndLastColTds, '')).replace('<col><col>', '')
         );
 
-        assertEvents(2);
+        assertEvents(1);
       });
     });
   });
