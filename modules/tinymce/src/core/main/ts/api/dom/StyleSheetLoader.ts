@@ -151,6 +151,13 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
       Attribute.set(linkElem, 'href', urlWithSuffix);
     });
 
+  /**
+   * Loads the specified css string in as a style element with an unique key.
+   *
+   * @method loadRawCss
+   * @param {String} key Unique key for the style element.
+   * @param {String} css Css style content to add.
+   */
   const loadRawCss = (key: string, css: string): void => {
     const state = getOrCreateState(key);
     loadedStates[key] = state;
@@ -207,10 +214,10 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
   };
 
   /**
-   * Unloads the specified CSS file if no resources currently depend on it.
+   * Unloads the specified CSS style element by key.
    *
-   * @method unload
-   * @param {String} url URL to unload or remove.
+   * @method unloadRawCss
+   * @param {String} key Key of CSS style resource to unload.
    */
   const unloadRawCss = (key: string) => {
     Obj.get(loadedStates, key).each((state) => {
