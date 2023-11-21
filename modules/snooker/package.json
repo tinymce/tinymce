@@ -25,6 +25,9 @@
     "@ephox/robin": "^10.4.0",
     "@ephox/sugar": "^9.3.0"
   },
+  "devDependencies": {
+    "@ephox/agar": "^8.0.0-alpha.0"
+  },
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "MIT",
   "main": "./lib/main/ts/ephox/snooker/api/Main.js",

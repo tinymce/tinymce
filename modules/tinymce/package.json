@@ -18,7 +18,7 @@
   "main": "js/tinymce/tinymce.js",
   "types": "js/tinymce/tinymce.d.ts",
   "scripts": {
-    "build": "grunt build",
+    "build": "grunt",
     "test": "grunt test",
     "lint": "grunt eslint",
     "silver-test": "grunt bedrock-auto:silver",
@@ -28,5 +28,14 @@
     "dompurify": "^3.0.5",
     "prismjs": "^1.27.0",
     "tslib": "^2.0.0"
+  },
+  "devDependencies": {
+    "@ephox/acid": "^5.2.1",
+    "@ephox/agar": "^8.0.0-alpha.0",
+    "@ephox/alloy": "^14.0.0-alpha.0",
+    "@ephox/bridge": "^4.6.0",
+    "@ephox/darwin": "^8.1.0",
+    "@tinymce/oxide": "^2.7.0",
+    "@tinymce/oxide-icons-default": "^2.6.0"
   }
 }
