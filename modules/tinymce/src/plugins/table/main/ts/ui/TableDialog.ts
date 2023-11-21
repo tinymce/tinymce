@@ -107,10 +107,6 @@ const onSubmitTableForm = (editor: Editor, tableElm: HTMLTableElement | null | u
 
   api.close();
 
-  if (data.class === '') {
-    delete data.class;
-  }
-
   editor.undoManager.transact(() => {
     if (!tableElm) {
       const cols = Strings.toInt(data.cols as string).getOr(1);
