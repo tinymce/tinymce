@@ -40,4 +40,22 @@ describe('browser.tinymce.plugins.table.TableClassListTest', () => {
     await TableTestUtils.pClickDialogButton(editor, true);
     TinyAssertions.assertContentPresence(editor, { 'table.test': 1 });
   });
+
+  it('TINY-6653: Selecting a table class that has no value should remove a previously applied class', async () => {
+    const editor = hook.editor();
+    editor.options.set('table_class_list', [
+      { title: 'none', value: '' }, // Empty value, as in no class should be applied.
+      { title: 'test', value: 'test' }
+    ]);
+    editor.setContent(tableHtml);
+    TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1);
+
+    await TableTestUtils.selectClassViaTablePropsDialog(editor, 'test');
+    await TableTestUtils.pClickDialogButton(editor, true);
+    TinyAssertions.assertContentPresence(editor, { 'table.test': 1 });
+
+    await TableTestUtils.selectClassViaTablePropsDialog(editor, 'none');
+    await TableTestUtils.pClickDialogButton(editor, true);
+    TinyAssertions.assertContentPresence(editor, { 'table.test': 0, 'table': 1 });
+  });
 });
