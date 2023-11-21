@@ -32,6 +32,7 @@
   "types": "./lib/main/ts/ephox/snooker/api/Main.d.ts",
   "scripts": {
     "prepublishOnly": "tsc -b",
+    "build": "tsc",
     "test": "bedrock-auto -b chrome-headless -d src/test/ts",
     "test-manual": "bedrock -d src/test/ts",
     "lint": "eslint --config ../../.eslintrc.json src/**/*.ts"

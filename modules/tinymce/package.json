@@ -18,6 +18,7 @@
   "main": "js/tinymce/tinymce.js",
   "types": "js/tinymce/tinymce.d.ts",
   "scripts": {
+    "build": "grunt build",
     "test": "grunt test",
     "lint": "grunt eslint",
     "silver-test": "grunt bedrock-auto:silver",
