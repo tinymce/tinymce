@@ -1,6 +1,5 @@
 import { AlloyComponent, AlloyTriggers, Behaviour, Focusing, SketchSpec, Slider } from '@ephox/alloy';
 import { Fun } from '@ephox/katamari';
-import { Attribute } from '@ephox/sugar';
 
 import { sliderUpdate } from '../ColourEvents';
 
@@ -30,10 +29,7 @@ const sliderFactory = (translate: (key: string) => string, getClass: (key: strin
       tag: 'div',
       classes: [ getClass('hue-slider') ],
       attributes: {
-        'role': 'slider',
-        'aria-valuemin': 0,
-        'aria-valuemax': 360,
-        'aria-valuenow': 120,
+        role: 'presentation'
       }
     },
     rounded: false,
@@ -50,7 +46,6 @@ const sliderFactory = (translate: (key: string) => string, getClass: (key: strin
     ]),
 
     onChange: (slider: AlloyComponent, _thumb: any, value: any) => {
-      Attribute.set(slider.element, 'aria-valuenow', Math.floor(360 - (value * 3.6)));
       AlloyTriggers.emitWith(slider, sliderUpdate, {
         value
       });
