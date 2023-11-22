@@ -1,6 +1,6 @@
 import { after, before, describe, it } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
-import { Attribute, ContentEditable, Html, Insert, SelectorFilter, SelectorFind, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { Arr, Fun } from '@ephox/katamari';
+import { Attribute, ContentEditable, Css, Html, Insert, SelectorFilter, SelectorFind, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -121,5 +121,23 @@ describe('browser.tinymce.core.caret.FakeCaretTest', () => {
     assert.isTrue(isFakeCaretTarget(createElement('<p contenteditable="false"></p>').dom), 'Should always need a fake caret');
     assert.isFalse(isFakeCaretTarget(createElement('<p contenteditable="false"></p>', false).dom), 'Should not have fake caret since context is noneditable');
     assert.equal(isFakeCaretTarget(createElement('<table></table>').dom), isFakeCaretTableBrowser(), 'Should on some browsers need a fake caret');
+  });
+
+  it('TINY-10314: fakeCaretContainer after/before a block should have caret-color setted to `transparent` to avoid double caret in FireFox', () => {
+    Arr.each([ true, false ], (before) => {
+      Html.set(getRoot(), '<div>a</div><div id="nonEditable" contenteditable="false">b</div>');
+
+      const rng = fakeCaret.show(before, SelectorFind.descendant(getRoot(), '#nonEditable').getOrDie().dom) as Range;
+      const fakeCaretElm = Traverse.children(getRoot())[before ? 1 : 2] as SugarElement<HTMLElement>;
+
+      assert.equal(SugarNode.name(fakeCaretElm), 'p');
+      assert.equal(Attribute.get(fakeCaretElm, 'data-mce-caret'), before ? 'before' : 'after');
+      assert.equal(fakeCaretElm.dom.style.getPropertyValue('caret-color'), 'transparent', `is not transparent for before: ${before}`);
+      assert.equal(Css.getRaw(fakeCaretElm, 'caret-color').getOr(''), 'transparent', `is not transparent for before: ${before}`);
+      CaretAsserts.assertRange(rng, CaretAsserts.createRange(fakeCaretElm.dom, 0, fakeCaretElm.dom, 0));
+
+      fakeCaret.hide();
+      assert.lengthOf(SelectorFilter.descendants(getRoot(), '*[data-mce-caret]'), 0);
+    });
   });
 });

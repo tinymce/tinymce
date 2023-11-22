@@ -114,6 +114,7 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
       const caretContainer = CaretContainer.insertBlock(caretBlock, element, before);
       const clientRect = getAbsoluteClientRect(root, element, before);
       dom.setStyle(caretContainer, 'top', clientRect.top);
+      dom.setStyle(caretContainer, 'caret-color', 'transparent');
       caretContainerNode = caretContainer;
 
       const caret = dom.create('div', { 'class': 'mce-visual-caret', 'data-mce-bogus': 'all' });
