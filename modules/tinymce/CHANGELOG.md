@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 6.8.0 - 2023-11-22
+
 ### Added
 - CSS files are now also generated as separate JS files to improve bundling of all resources. #TINY-10352
 - Added new `StylesheetLoader.loadRawCss` API that can be used to load CSS into a style element. #TINY-10352
