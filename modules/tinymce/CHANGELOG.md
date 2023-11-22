@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Accessible names of bespoke select toolbar buttons including `align`, `fontfamily`, `fontsize`, `blocks`, and `styles` were incorrectly translated. #TINY-10426 #TINY-10435
 - Clicking inside table cells with heavily nested content could cause the browser to hang. #TINY-10380
 - Toggling a list that contains an LI element having another list as its first child would remove the remaining content within that LI element. #TINY-10414
+- By clicking to the left or right of a non-editable `div` in Firefox we get 2 carets. #TINY-10314
 
 ## 6.8.1 - 2023-11-29
 
