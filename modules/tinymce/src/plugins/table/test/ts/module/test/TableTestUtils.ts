@@ -239,13 +239,14 @@ const createRow = (cellContents: string[]): SugarElement<HTMLTableRowElement> =>
   return tr;
 };
 
-/** Opens the table properties dialog, selects the class called `tableClassTitle`, confirms changes and closes dialog. */
-const selectClassViaTablePropsDialog = async (editor: Editor, tableClassTitle: string): Promise<void> => {
-  editor.execCommand('mceTableProps');
+/** Opens the specified properties dialog, selects the class called `classTitle`, confirms changes and closes dialog. */
+const selectClassViaPropsDialog = async (editor: Editor, dialogCommand: `mceTable${'' | 'Cell' | 'Row'}Props`, classTitle: string): Promise<void> => {
+  editor.execCommand(dialogCommand);
   await TinyUiActions.pWaitForDialog(editor);
   TinyUiActions.clickOnUi(editor, 'button[title="Class"].tox-listbox--select');
   await TinyUiActions.pWaitForUi(editor, 'div[role="menu"].tox-menu.tox-collection--list');
-  TinyUiActions.clickOnUi(editor, `div[title="${tableClassTitle}"].tox-collection__item`);
+  TinyUiActions.clickOnUi(editor, `div[title="${classTitle}"].tox-collection__item`);
+  await pClickDialogButton(editor, true);
 };
 
 export {
@@ -264,5 +265,5 @@ export {
   assertElementStructure,
   assertApproxElementStructure,
   createRow,
-  selectClassViaTablePropsDialog
+  selectClassViaPropsDialog
 };
