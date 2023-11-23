@@ -19,6 +19,13 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [], true);
 
+  const testPasteHtml = (hook: TinyHooks.Hook<Editor>, html: string, expected: string) => () => {
+    const editor = hook.editor();
+    editor.setContent('');
+    editor.execCommand('mceInsertClipboardContent', false, { html });
+    TinyAssertions.assertContent(editor, expected);
+  };
+
   beforeEach(() => {
     const editor = hook.editor();
     editor.setContent('');
@@ -504,6 +511,70 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
 
       editor.off('beforeinput', setBeforeInputEvent);
       editor.off('input', setInputEvent);
+    });
+
+    context('iframe sandboxing', () => {
+      context('sandbox_iframes: false', () => {
+        const hook = TinyHooks.bddSetupLight<Editor>({
+          base_url: '/project/tinymce/js/tinymce',
+          sandbox_iframes: false
+        });
+
+        it('TINY-10348: Pasted iframe should not be sandboxed',
+          testPasteHtml(hook, '<iframe src="about:blank"></iframe>', '<p><iframe src="about:blank"></iframe></p>'));
+      });
+
+      context('sandbox_iframes: true', () => {
+        const hook = TinyHooks.bddSetupLight<Editor>({
+          base_url: '/project/tinymce/js/tinymce',
+          sandbox_iframes: true
+        });
+
+        it('TINY-10348: Pasted iframe should be sandboxed',
+          testPasteHtml(hook, '<iframe src="about:blank"></iframe>', '<p><iframe src="about:blank" sandbox=""></iframe></p>'));
+      });
+    });
+
+    context('Convert unsafe embeds', () => {
+      context('convert_unsafe_embeds: false', () => {
+        const hook = TinyHooks.bddSetupLight<Editor>({
+          base_url: '/project/tinymce/js/tinymce',
+          convert_unsafe_embeds: false
+        });
+
+        it('TINY-10349: Pasted object element should not be converted',
+          testPasteHtml(hook, '<object data="about:blank"></object>', '<p><object data="about:blank"></object></p>'));
+
+        it('TINY-10349: Pasted embed element should not be converted',
+          testPasteHtml(hook, '<embed src="about:blank">', '<p><embed src="about:blank"></p>'));
+      });
+
+      context('convert_unsafe_embeds: true', () => {
+        const hook = TinyHooks.bddSetupLight<Editor>({
+          base_url: '/project/tinymce/js/tinymce',
+          convert_unsafe_embeds: true
+        });
+
+        it('TINY-10349: Pasted object element should be converted to iframe',
+          testPasteHtml(hook, '<object data="about:blank">', '<p><iframe src="about:blank"></iframe></p>'));
+
+        it('TINY-10349: Pasted embed element should be converted to iframe',
+          testPasteHtml(hook, '<embed src="about:blank">', '<p><iframe src="about:blank"></iframe></p>'));
+      });
+
+      context('convert_unsafe_embeds: true, sandbox_iframes: true', () => {
+        const hook = TinyHooks.bddSetupLight<Editor>({
+          base_url: '/project/tinymce/js/tinymce',
+          convert_unsafe_embeds: true,
+          sandbox_iframes: true
+        });
+
+        it('TINY-10349: Pasted object element should be converted to sandboxed iframe',
+          testPasteHtml(hook, '<object data="about:blank"></object>', '<p><iframe src="about:blank" sandbox=""></iframe></p>'));
+
+        it('TINY-10349: Pasted embed element should be converted to sandboxed iframe',
+          testPasteHtml(hook, '<embed src="about:blank">', '<p><iframe src="about:blank" sandbox=""></iframe></p>'));
+      });
     });
   });
 });

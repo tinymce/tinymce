@@ -1,10 +1,4 @@
 # List of packages to bump:
 # Format: [package_name]@[new_version]
 
-acid@6.0.0
-agar@8.0.0
-mcagar@9.0.0
-alloy@14.0.0
-bridge@4.7.0
-sugar@9.3.0
 snooker@11.1.1

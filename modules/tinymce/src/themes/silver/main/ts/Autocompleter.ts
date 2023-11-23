@@ -1,7 +1,7 @@
 import { AddEventsBehaviour, AlloyEvents, Behaviour, GuiFactory, Highlighting, InlineView, ItemTypes, SystemEvents } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
-import { Arr, Cell, Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { Arr, Cell, Id, Optional } from '@ephox/katamari';
+import { Attribute, Css, Replication, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -23,6 +23,8 @@ const getAutocompleterRange = (dom: DOMUtils, initRange: Range): Optional<Range>
 };
 
 const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared): void => {
+  const autocompleterId = Id.generate('autocompleter');
+
   const processingAction = Cell<boolean>(false);
   const activeState = Cell<boolean>(false);
 
@@ -30,13 +32,19 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared): vo
     InlineView.sketch({
       dom: {
         tag: 'div',
-        classes: [ 'tox-autocompleter' ]
+        classes: [ 'tox-autocompleter' ],
+        attributes: {
+          id: autocompleterId
+        }
       },
       components: [ ],
       fireDismissalEventInstead: { },
       inlineBehaviours: Behaviour.derive([
         AddEventsBehaviour.config('dismissAutocompleter', [
-          AlloyEvents.run(SystemEvents.dismissRequested(), () => cancelIfNecessary())
+          AlloyEvents.run(SystemEvents.dismissRequested(), () => cancelIfNecessary()),
+          AlloyEvents.run(SystemEvents.highlight(), (_, se) => {
+            Attribute.getOpt(se.event.target, 'id').each((id: string) => Attribute.set(SugarElement.fromDom(editor.getBody()), 'aria-activedescendant', id));
+          }),
         ])
       ]),
       lazySink: sharedBackstage.getSink
@@ -49,6 +57,15 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared): vo
   const hideIfNecessary = () => {
     if (isMenuOpen()) {
       InlineView.hide(autocompleter);
+
+      editor.dom.remove(autocompleterId, false);
+      const editorBody = SugarElement.fromDom(editor.getBody());
+      Attribute.getOpt(editorBody, 'aria-owns')
+        .filter((ariaOwnsAttr) => ariaOwnsAttr === autocompleterId)
+        .each(() => {
+          Attribute.remove(editorBody, 'aria-owns');
+          Attribute.remove(editorBody, 'aria-activedescendant');
+        });
     }
   };
 
@@ -131,9 +148,42 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared): vo
     // Open the autocompleter if there are items to show
     if (combinedItems.length > 0) {
       display(lookupData, combinedItems);
+      Attribute.set(SugarElement.fromDom(editor.getBody()), 'aria-owns', autocompleterId);
+      if (!editor.inline) {
+        cloneAutocompleterToEditorDoc();
+      }
     } else {
       hideIfNecessary();
     }
+  };
+
+  const cloneAutocompleterToEditorDoc = () => {
+    if (editor.dom.get(autocompleterId)) {
+      editor.dom.remove(autocompleterId, false);
+    }
+
+    const docElm = editor.getDoc().documentElement;
+    const selection = editor.selection.getNode();
+    const newElm = Replication.deep<Element>(autocompleter.element);
+    Css.setAll(newElm, {
+      border: '0',
+      clip: 'rect(0 0 0 0)',
+      height: '1px',
+      margin: '-1px',
+      overflow: 'hidden',
+      padding: '0',
+      position: 'absolute',
+      width: '1px',
+      top: `${selection.offsetTop}px`,
+      left: `${selection.offsetLeft}px`,
+    });
+    editor.dom.add(docElm, newElm.dom);
+
+    // Clean up positioning styles so that the "hidden" autocompleter is around the selection
+    SelectorFind.descendant(newElm, '[role="menu"]').each((child) => {
+      Css.remove(child, 'position');
+      Css.remove(child, 'max-height');
+    });
   };
 
   editor.on('AutocompleterStart', ({ lookupData }) => {

@@ -1,5 +1,4 @@
-import { Optional } from '@ephox/katamari';
-import { EventArgs } from '@ephox/sugar';
+import { Fun, Optional } from '@ephox/katamari';
 
 import { Keying } from '../../api/behaviour/Keying';
 import { Receiving } from '../../api/behaviour/Receiving';
@@ -87,10 +86,6 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
     choose(slider);
   };
 
-  const focusWidget = (component: AlloyComponent) => {
-    AlloyParts.getPart(component, detail, 'spectrum').map(Keying.focusIn);
-  };
-
   return {
     uid: detail.uid,
     dom: detail.dom,
@@ -101,7 +96,9 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
       [
         Keying.config({
           mode: 'special',
-          focusIn: focusWidget
+          focusIn: (slider) => {
+            return AlloyParts.getPart(slider, detail, 'spectrum').map(Keying.focusIn).map(Fun.always);
+          }
         }),
         Representing.config({
           store: {
@@ -142,8 +139,7 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
       AlloyEvents.run(NativeEvents.touchstart(), onDragStart),
       AlloyEvents.run(NativeEvents.touchend(), onDragEnd),
       AlloyEvents.run(NativeEvents.mousedown(), onDragStart),
-      AlloyEvents.run(NativeEvents.mouseup(), onDragEnd),
-      AlloyEvents.run<EventArgs>(NativeEvents.mousedown(), focusWidget)
+      AlloyEvents.run(NativeEvents.mouseup(), onDragEnd)
     ]),
 
     apis: {
