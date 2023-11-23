@@ -39,4 +39,31 @@ describe('browser.tinymce.plugins.table.TableRowClassListTest', () => {
     await TableTestUtils.pClickDialogButton(editor, true);
     TinyAssertions.assertContentPresence(editor, { 'tr.test': 1 });
   });
+
+  it('TINY-6653: Selecting a row class that has no value should remove a previously applied class', async () => {
+    const editor = hook.editor();
+    editor.options.set('table_row_class_list', [
+      { title: 'none', value: '' },
+      { title: 'test', value: 'test' }
+    ]);
+    editor.setContent(tableHtml);
+    TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1);
+    await TableTestUtils.selectClassViaPropsDialog(editor, 'mceTableRowProps', 'test');
+    TinyAssertions.assertContentPresence(editor, { 'tr[class="test"]': 1 });
+
+    await TableTestUtils.selectClassViaPropsDialog(editor, 'mceTableRowProps', 'none');
+    TinyAssertions.assertContentPresence(editor, { 'tr[class]': 0, 'tr': 1 });
+  });
+
+  it('TINY-6653: Selecting the "none" selection will remove all classes from a row that has an unrelated class', async () => {
+    const editor = hook.editor();
+    editor.options.set('table_row_class_list', [
+      { title: 'none', value: '' },
+      { title: 'test', value: 'test' }
+    ]);
+    editor.setContent('<table><tbody><tr class="something"><td>x</td></tr></tbody></table>');
+    TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1);
+    await TableTestUtils.selectClassViaPropsDialog(editor, 'mceTableRowProps', 'none');
+    TinyAssertions.assertContentPresence(editor, { 'tr[class]': 0, 'tr': 1 });
+  });
 });
