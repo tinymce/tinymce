@@ -1,6 +1,7 @@
-import { Assert, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
+import { assert } from 'chai';
 
 import { createFile } from 'ephox/agar/api/Files';
 import { createDataTransfer, getDragImage } from 'ephox/agar/datatransfer/DataTransfer';
@@ -10,40 +11,40 @@ describe('DataTransfer', () => {
   it('DataTransfer: setEffects', () => {
     const transfer = createDataTransfer();
 
-    Assert.eq('Should be expected initial dropEffect', 'move', transfer.dropEffect);
-    Assert.eq('Should be expected initial effectAllowed', 'all', transfer.effectAllowed);
+    assert.equal(transfer.dropEffect, 'move', 'Should be expected initial dropEffect');
+    assert.equal(transfer.effectAllowed, 'all', 'Should be expected initial effectAllowed');
 
     transfer.dropEffect = 'copy';
-    Assert.eq('Should be expected new value', 'copy', transfer.dropEffect);
+    assert.equal(transfer.dropEffect, 'copy', 'Should be expected new value');
 
     transfer.dropEffect = 'xyz' as any;
-    Assert.eq('Should be unchanged', 'copy', transfer.dropEffect);
+    assert.equal(transfer.dropEffect, 'copy', 'Should be unchanged');
 
     transfer.effectAllowed = 'copyLink';
-    Assert.eq('Should be expected new value', 'copyLink', transfer.effectAllowed);
+    assert.equal(transfer.effectAllowed, 'copyLink', 'Should be expected new value');
 
     transfer.effectAllowed = 'xyz' as any;
-    Assert.eq('Should be unchanged', 'copyLink', transfer.effectAllowed);
+    assert.equal(transfer.effectAllowed, 'copyLink', 'Should be unchanged');
   });
 
   it('DataTransfer: setData', () => {
     const transfer = createDataTransfer();
 
     transfer.setData('text/plain', '123');
-    Assert.eq('Should the expected text', '123', transfer.getData('text/plain'));
-    Assert.eq('Should the expected type in items', 'text/plain', transfer.items[0].type);
+    assert.equal(transfer.getData('text/plain'), '123', 'Should the expected text');
+    assert.equal(transfer.items[0].type, 'text/plain', 'Should the expected type in items');
 
     transfer.setData('text/plain', '1234');
-    Assert.eq('Should the expected new text', '1234', transfer.getData('text/plain'));
-    Assert.eq('Should the expected type in items', 'text/plain', transfer.items[0].type);
+    assert.equal(transfer.getData('text/plain'), '1234', 'Should the expected new text');
+    assert.equal(transfer.items[0].type, 'text/plain', 'Should the expected type in items');
 
     transfer.setData('text', '12345');
-    Assert.eq('Should the expected text', '12345', transfer.getData('text/plain'));
-    Assert.eq('Should the expected type in items', 'text/plain', transfer.items[0].type);
+    assert.equal(transfer.getData('text/plain'), '12345', 'Should the expected text');
+    assert.equal(transfer.items[0].type, 'text/plain', 'Should the expected type in items');
 
     transfer.setData('url', 'http://tiny.cloud');
-    Assert.eq('Should the expected url', 'http://tiny.cloud', transfer.getData('text/uri-list'));
-    Assert.eq('Should the expected type in items', 'text/uri-list', transfer.items[1].type);
+    assert.equal(transfer.getData('text/uri-list'), 'http://tiny.cloud', 'Should the expected url');
+    assert.equal(transfer.items[1].type, 'text/uri-list', 'Should the expected type in items');
   });
 
   it('DataTransfer: setDragImage', () => {
@@ -63,22 +64,22 @@ describe('DataTransfer', () => {
 
     transfer.setData('text/plain', '123');
 
-    Assert.eq('Should the length', 1, transfer.types.length);
-    Assert.eq('Should the expected type', 'text/plain', transfer.types[0]);
+    assert.equal(transfer.types.length, 1, 'Should the length');
+    assert.equal(transfer.types[0], 'text/plain', 'Should the expected type');
 
     transfer.setData('text/html', '123');
 
-    Assert.eq('Should the length', 2, transfer.types.length);
-    Assert.eq('Should the expected type', 'text/plain', transfer.types[0]);
-    Assert.eq('Should the expected type', 'text/html', transfer.types[1]);
+    assert.equal(transfer.types.length, 2, 'Should the length');
+    assert.equal(transfer.types[0], 'text/plain', 'Should the expected type');
+    assert.equal(transfer.types[1], 'text/html', 'Should the expected type');
 
     transfer.items.add(createFile('test.gif', 1234, new Blob([ '123' ], { type: 'image/gif' })));
 
-    Assert.eq('Should the length', 4, transfer.types.length);
-    Assert.eq('Should the expected type 1', 'text/plain', transfer.types[0]);
-    Assert.eq('Should the expected type 2', 'text/html', transfer.types[1]);
-    Assert.eq('Should the expected type 3', 'image/gif', transfer.types[2]);
-    Assert.eq('Should the expected type 4', 'Files', transfer.types[3]);
+    assert.equal(transfer.types.length, 4, 'Should the length');
+    assert.equal(transfer.types[0], 'text/plain', 'Should the expected type 1');
+    assert.equal(transfer.types[1], 'text/html', 'Should the expected type 2');
+    assert.equal(transfer.types[2], 'image/gif', 'Should the expected type 3');
+    assert.equal(transfer.types[3], 'Files', 'Should the expected type 4');
   });
 
   it('DataTransfer: mutation in protected mode', () => {
@@ -90,21 +91,21 @@ describe('DataTransfer', () => {
     setProtectedMode(transfer);
 
     transfer.setData('text/plain', '123');
-    Assert.eq('Should not be any text/plain data', '', transfer.getData('text/plain'));
-    Assert.eq('Should not be any text/html data', '', transfer.getData('text/html'));
+    assert.equal(transfer.getData('text/plain'), '', 'Should not be any text/plain data');
+    assert.equal(transfer.getData('text/html'), '', 'Should not be any text/html data');
 
-    Assert.eq('Should only expected length', 3, transfer.types.length);
-    Assert.eq('Should only expected mime', 'text/html', transfer.types[0]);
-    Assert.eq('Should only expected mime', 'image/gif', transfer.types[1]);
-    Assert.eq('Should only expected Files', 'Files', transfer.types[2]);
+    assert.equal(transfer.types.length, 3, 'Should only expected length');
+    assert.equal(transfer.types[0], 'text/html', 'Should only expected mime');
+    assert.equal(transfer.types[1], 'image/gif', 'Should only expected mime');
+    assert.equal(transfer.types[2], 'Files', 'Should only expected Files');
 
     transfer.clearData();
 
-    Assert.eq('Should still be expected items', 3, transfer.types.length);
+    assert.equal(transfer.types.length, 3, 'Should still be expected items');
 
     transfer.clearData('text/html');
 
-    Assert.eq('Should still be expected items', 3, transfer.types.length);
+    assert.equal(transfer.types.length, 3, 'Should still be expected items');
   });
 
   it('DataTransfer: mutation in read-only mode', () => {
@@ -116,25 +117,25 @@ describe('DataTransfer', () => {
     setReadOnlyMode(transfer);
 
     transfer.setData('text/plain', '123');
-    Assert.eq('Should not be any text/plain data', '', transfer.getData('text/plain'));
-    Assert.eq('Should not be any text/html data', '123', transfer.getData('text/html'));
+    assert.equal(transfer.getData('text/plain'), '', 'Should not be any text/plain data');
+    assert.equal(transfer.getData('text/html'), '123', 'Should not be any text/html data');
 
-    Assert.eq('Should only expected length', 3, transfer.types.length);
-    Assert.eq('Should only expected mime', 'text/html', transfer.types[0]);
-    Assert.eq('Should only expected mime', 'image/gif', transfer.types[1]);
-    Assert.eq('Should only expected Files', 'Files', transfer.types[2]);
+    assert.equal(transfer.types.length, 3, 'Should only expected length');
+    assert.equal(transfer.types[0], 'text/html', 'Should only expected mime');
+    assert.equal(transfer.types[1], 'image/gif', 'Should only expected mime');
+    assert.equal(transfer.types[2], 'Files', 'Should only expected Files');
 
-    Assert.eq('Should be able to access files length', 1, transfer.files.length);
-    Assert.eq('Should be able to access name', 'test.gif', transfer.files[0].name);
-    Assert.eq('Should be able to access type', 'image/gif', transfer.files[0].type);
+    assert.equal(transfer.files.length, 1, 'Should be able to access files length');
+    assert.equal(transfer.files[0].name, 'test.gif', 'Should be able to access name');
+    assert.equal(transfer.files[0].type, 'image/gif', 'Should be able to access type');
 
     transfer.clearData();
 
-    Assert.eq('Should still be expected items', 3, transfer.types.length);
+    assert.equal(transfer.types.length, 3, 'Should still be expected items');
 
     transfer.clearData('text/html');
 
-    Assert.eq('Should still be expected items', 3, transfer.types.length);
+    assert.equal(transfer.types.length, 3, 'Should still be expected items');
   });
 
   it('DataTransfer: add files', () => {
@@ -142,13 +143,12 @@ describe('DataTransfer', () => {
 
     transfer.items.add(createFile('test.gif', 123, new Blob([ '' ], { type: 'image/gif' })));
 
-    Assert.eq('Should be able to access files length', 1, transfer.files.length);
-    Assert.eq('Types', [ 'image/gif' ], Arr.map(transfer.files, (x) => x.type));
+    assert.equal(transfer.files.length, 1, 'Should be able to access files length');
+    assert.equal(Arr.map(transfer.files, (x) => x.type), [ 'image/gif' ], 'Types');
 
     transfer.items.add(createFile('test.jpg', 123, new Blob([ '' ], { type: 'image/jpg' })));
 
-    Assert.eq('Expected file types', [ 'image/gif', 'image/jpg' ], Arr.map(transfer.files, (x) => x.type));
-    Assert.eq('Expected file kinds', [ 'file', 'file' ], Arr.map(transfer.items, (x) => x.kind));
+    assert.equal(Arr.map(transfer.files, (x) => x.type), [ 'image/gif', 'image/jpg' ], 'Expected file types');
+    assert.equal(Arr.map(transfer.items, (x) => x.kind), [ 'file', 'file' ], 'Expected file kinds');
   });
 });
-
