@@ -13,7 +13,7 @@ properties([
 ])
 
 def runBedrockTest(String name, String browser, String provider, String bucket, String buckets) {
-  def awsOpts = " --sishDomain sish.osu.tiny.work --devicefarmArn arn:aws:devicefarm:us-west-2:103651136441:testgrid-project:79ff2b40-fe26-440f-9539-53163c25442e"
+  def awsOpts = " --sishDomain=sish.osu.tiny.work --devicefarmArn=arn:aws:devicefarm:us-west-2:103651136441:testgrid-project:79ff2b40-fe26-440f-9539-53163c25442e"
   def bedrockCommand =
   "yarn browser-test" +
     " --chunk=50" +
