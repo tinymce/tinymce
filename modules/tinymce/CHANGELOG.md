@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Allow removing table classes via the table props dialog to keep consistent with how the cell and row class selecting works. #TINY-6653
+
 ## 6.8.0 - 2023-11-22
 
 ### Added
