@@ -12,24 +12,8 @@ properties([
   ])
 ])
 
-// bedrock-auto test on TinyMCE for given browser/provider
-def testRemote(browser, provider) {
-  BUCKETS = 1
-  dir('tinymce') {
-    pwd
-    // Test other browsers even if one fails.
-    catchError(stageResult: 'FAILURE') {
-      remoteCredentials(provider) {
-        for (i = 1; i <= BUCKETS; i++) { // 1-indexed
-          sh 'yarn browser-test --bedrock-browser=' + browser + ' --remote=' + provider +
-            ' --buckets=15 --bucket=' + i + ' --chunk=50'
-        }
-      }
-    }
-  }
-}
-
 def runBedrockTest(String name, String browser, String provider, String bucket, String buckets) {
+  def awsOpts = " --sishDomain sish.osu.tiny.work --devicefarmArn arn:aws:devicefarm:us-west-2:103651136441:testgrid-project:79ff2b40-fe26-440f-9539-53163c25442e"
   def bedrockCommand =
   "yarn browser-test" +
     " --chunk=50" +
@@ -37,7 +21,8 @@ def runBedrockTest(String name, String browser, String provider, String bucket, 
     " --remote=" + provider +
     " --bucket=" + bucket +
     " --buckets=" + buckets +
-    " --name=" + name
+    " --name=" + name +
+    "${provider == 'aws' ? awsOpts : ''}"
     echo "Running: ${bedrockCommand}"
     def testStatus = sh(script: bedrockCommand, returnStatus: true)
     echo "Writing JUnit results for ${name}"
