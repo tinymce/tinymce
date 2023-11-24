@@ -5,7 +5,7 @@ versionExt: md
 versionFormat: '## {{.Version}} - {{.Time.Format "2006-01-02"}}'
 kindFormat: '### {{.Kind}}'
 changeFormat: '- {{.Body}} #{{.Custom.Issue}}'
-fragmentFileFormat: "{{.Kind}}-{{.Custom.Issue}}-{{.Project}}"
+fragmentFileFormat: '{{.Project}}-{{.Custom.Issue}}-{{.Time.Format "2006-01-02"}}'
 projects:
   - label: acid
     key: acid
@@ -90,6 +90,6 @@ newlines:
 envPrefix: CHANGIE_
 custom:
 - key: Issue
-  label: Issue (TINY-XXXX+) 
+  label: Issue (TINY-XXXX+)
   type: string
   minLength: 7
