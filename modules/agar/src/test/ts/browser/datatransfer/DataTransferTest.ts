@@ -155,4 +155,11 @@ describe('DataTransfer', () => {
   it('TINY-10386: DataTransfer instanceof window.DataTransfer', () => {
     assert.instanceOf(createDataTransfer(), window.DataTransfer);
   });
+
+  it('TINY-10386: DataTransfer passed into DragEvent/ClipboardEvent should not throw an error', () => {
+    assert.doesNotThrow(() => {
+      new window.DragEvent('drop', { dataTransfer: createDataTransfer() });
+      new window.ClipboardEvent('paste', { clipboardData: createDataTransfer() });
+    });
+  });
 });
