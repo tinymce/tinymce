@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+- Simulating cut on Firefox would fail if the DataTransfer wasn't an instance of a actual DataTransfer. #TINY-10386
+
 ## 8.0.0 - 2023-11-22
 
 ### Added

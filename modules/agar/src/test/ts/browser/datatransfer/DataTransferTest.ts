@@ -144,11 +144,15 @@ describe('DataTransfer', () => {
     transfer.items.add(createFile('test.gif', 123, new Blob([ '' ], { type: 'image/gif' })));
 
     assert.equal(transfer.files.length, 1, 'Should be able to access files length');
-    assert.equal(Arr.map(transfer.files, (x) => x.type), [ 'image/gif' ], 'Types');
+    assert.deepEqual(Arr.map(transfer.files, (x) => x.type), [ 'image/gif' ], 'Types');
 
     transfer.items.add(createFile('test.jpg', 123, new Blob([ '' ], { type: 'image/jpg' })));
 
-    assert.equal(Arr.map(transfer.files, (x) => x.type), [ 'image/gif', 'image/jpg' ], 'Expected file types');
-    assert.equal(Arr.map(transfer.items, (x) => x.kind), [ 'file', 'file' ], 'Expected file kinds');
+    assert.deepEqual(Arr.map(transfer.files, (x) => x.type), [ 'image/gif', 'image/jpg' ], 'Expected file types');
+    assert.deepEqual(Arr.map(transfer.items, (x) => x.kind), [ 'file', 'file' ], 'Expected file kinds');
+  });
+
+  it('TINY-10386: DataTransfer instanceof window.DataTransfer', () => {
+    assert.instanceOf(createDataTransfer(), window.DataTransfer);
   });
 });
