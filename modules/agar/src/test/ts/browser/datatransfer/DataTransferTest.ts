@@ -162,4 +162,17 @@ describe('DataTransfer', () => {
       new window.ClipboardEvent('paste', { clipboardData: createDataTransfer() });
     });
   });
+
+  it('TINY-10386: DataTransfer on native event should work as a regular dataTransfer', () => {
+    assert.doesNotThrow(() => {
+      const dataTransfer = createDataTransfer();
+
+      dataTransfer.setData('text/plain', '123');
+      dataTransfer.items.add(createFile('test.gif', 123, new Blob([ '' ], { type: 'image/gif' })));
+
+      const dragEvent = new window.DragEvent('drop', { dataTransfer });
+      assert.equal(dragEvent.dataTransfer.files.length, 1, 'Should be able to access files length');
+      assert.equal(dragEvent.dataTransfer.getData('text/plain'), '123', 'Should be able to access data');
+    });
+  });
 });
