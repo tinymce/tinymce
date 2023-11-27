@@ -573,7 +573,10 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
 
   const isInline = (name: string): boolean => isValid(name) && !isBlock(name);
 
-  const isWrapper = (name: string): boolean => Obj.has(getWrapBlockElements(), name) || isInline(name);
+  const isWrapper = (name: string): boolean => {
+    const isNotWrapperElements = Arr.exists([ '#comment', '#text' ], (eName) => eName === name);
+    return (Obj.has(getWrapBlockElements(), name) || isInline(name)) && !isNotWrapperElements;
+  };
 
   /**
    * Returns true/false if the specified element is valid or not
