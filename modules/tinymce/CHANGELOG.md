@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- New `label` component available in the `buttons` header of the `View` UI API, along with two size options (`normal` and `large`). #TINY-10339
+
 ## 6.8.0 - 2023-11-22
 
 ### Added
