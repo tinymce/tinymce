@@ -1,4 +1,4 @@
-import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
 
 import * as CustomElementsRuleParser from '../../schema/CustomElementsRuleParser';
 import * as SchemaLookupTable from '../../schema/SchemaLookupTable';
@@ -571,12 +571,9 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
 
   const isBlock = (name: string): boolean => Obj.has(getBlockElements(), name);
 
-  const isInline = (name: string): boolean => isValid(name) && !isBlock(name);
+  const isInline = (name: string): boolean => !Strings.startsWith(name, '#') && isValid(name) && !isBlock(name);
 
-  const isWrapper = (name: string): boolean => {
-    const isNotWrapperElements = Arr.exists([ '#comment', '#text' ], (eName) => eName === name);
-    return (Obj.has(getWrapBlockElements(), name) || isInline(name)) && !isNotWrapperElements;
-  };
+  const isWrapper = (name: string): boolean => Obj.has(getWrapBlockElements(), name) || isInline(name);
 
   /**
    * Returns true/false if the specified element is valid or not
