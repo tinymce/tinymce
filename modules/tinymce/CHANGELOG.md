@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - When deleting the last row in a table, the cursor would jump to the first cell (top left), instead of moving to the next adjacent cell in some cases. #TINY-6309
+- The function `schema.isWrapper` isen't exlcudin the elements that are not elegible as a wrapper. #TINY-10385
 
 ## 6.8.0 - 2023-11-22
 
