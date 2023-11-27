@@ -11,7 +11,25 @@ import { ViewButtonWithoutGroup } from './View';
 
 type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];
 
+const labelSizeClass = {
+  normal: 'tox-view__label--normal',
+  large: 'tox-view__label--large',
+};
+
 export const renderButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
+  if (spec.type === 'label') {
+    const sizeClass = labelSizeClass[spec.size];
+    return {
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-view__label', sizeClass ]
+      },
+      components: [
+        GuiFactory.text(spec.text)
+      ]
+    };
+  }
+
   const isToggleButton = spec.type === 'togglebutton';
 
   const optMemIcon = spec.icon
