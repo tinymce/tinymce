@@ -3,7 +3,7 @@ import { Optional } from '@ephox/katamari';
 
 import * as TableOperations from 'ephox/snooker/api/TableOperations';
 import * as Assertions from 'ephox/snooker/test/Assertions';
-import { generateTestTable } from 'ephox/snooker/test/CreateTableUtils';
+import { generateTestTableBody, generateTestTable } from 'ephox/snooker/test/CreateTableUtils';
 
 UnitTest.test('EraseOperationsTest', () => {
   const deleteExpected1 = '<table><tbody>' +
@@ -876,6 +876,102 @@ UnitTest.test('EraseOperationsTest', () => {
     [
       { section: 0, row: 0, column: 1 },
       { section: 0, row: 1, column: 1 }
+    ]
+  );
+
+  const deleteExpected33 = generateTestTable(
+    generateTestTableBody(3, 4), [], [], { numCols: 1, colgroup: false, lockedColumns: [] }
+  );
+  Assertions.checkDelete(
+    'TINY-6309: Deleting the last row (row 3) should keep the cursor in the new last row (row 2)',
+    Optional.some({ section: 0, row: 2, column: 1 }),
+    Optional.some(deleteExpected33),
+
+    generateTestTable(
+      generateTestTableBody(4, 4), [], [], { numCols: 4, colgroup: false, lockedColumns: [] }
+    ),
+
+    TableOperations.eraseRows,
+    [
+      { section: 0, row: 3, column: 1 },
+    ]
+  );
+
+  const deleteExpected34 = generateTestTable(
+    generateTestTableBody(3, 4), [], [], { numCols: 4, colgroup: true, lockedColumns: [] }
+  );
+  Assertions.checkDelete(
+    'TINY-6309: Within a table that has a colgroup element, deleting the last row should keep the cursor in the new last row',
+    Optional.some({ section: 1, row: 2, column: 1 }),
+    Optional.some(deleteExpected34),
+
+    generateTestTable(
+      generateTestTableBody(4, 4), [], [], { numCols: 4, colgroup: true, lockedColumns: [] }
+    ),
+
+    TableOperations.eraseRows,
+    [
+      { section: 1, row: 3, column: 1 },
+    ]
+  );
+
+  const deleteExpected35 = generateTestTable(
+    generateTestTableBody(2, 4), [], [], { numCols: 4, colgroup: true, lockedColumns: [] }
+  );
+  Assertions.checkDelete(
+    'TINY-6309: Within a table that has a colgroup element, deleting the last two rows should keep the cursor in the new last row',
+    Optional.some({ section: 1, row: 1, column: 1 }),
+    Optional.some(deleteExpected35),
+
+    generateTestTable(
+      generateTestTableBody(4, 4), [], [], { numCols: 4, colgroup: true, lockedColumns: [] }
+    ),
+
+    TableOperations.eraseRows,
+    [
+      { section: 1, row: 2, column: 1 },
+      { section: 1, row: 3, column: 1 },
+    ]
+  );
+
+  const deleteExpected36 = generateTestTable(
+    generateTestTableBody(3, 4), [], [], { numCols: 4, colgroup: true, lockedColumns: [] }
+  );
+  Assertions.checkDelete(
+    'TINY-6309: Within a table that has a colgroup element, selecting and deleting the whole last row should keep the ' +
+    'cursor in the new last row',
+    Optional.some({ section: 1, row: 2, column: 0 }),
+    Optional.some(deleteExpected36),
+
+    generateTestTable(
+      generateTestTableBody(4, 4), [], [], { numCols: 4, colgroup: true, lockedColumns: [] }
+    ),
+
+    TableOperations.eraseRows,
+    [
+      { section: 1, row: 3, column: 0 },
+      { section: 1, row: 3, column: 0 },
+      { section: 1, row: 3, column: 0 },
+      { section: 1, row: 3, column: 0 },
+    ]
+  );
+
+  const deleteExpected37 = generateTestTable(
+    generateTestTableBody(4, 4).slice(1), [], [], { numCols: 4, colgroup: true, lockedColumns: [] }
+  );
+  Assertions.checkDelete(
+    'TINY-6309: Within a table that has a colgroup element, deleting the first row should keep the ' +
+    'cursor in the new first row',
+    Optional.some({ section: 1, row: 0, column: 1 }),
+    Optional.some(deleteExpected37),
+
+    generateTestTable(
+      generateTestTableBody(4, 4), [], [], { numCols: 4, colgroup: true, lockedColumns: [] }
+    ),
+
+    TableOperations.eraseRows,
+    [
+      { section: 1, row: 0, column: 1 },
     ]
   );
 });

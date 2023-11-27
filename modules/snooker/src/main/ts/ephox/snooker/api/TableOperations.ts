@@ -250,7 +250,7 @@ const opEraseRows = (grid: Structs.RowCells[], details: Structs.DetailExt[], _co
   const rows = uniqueRows(details);
 
   const newGrid = ModificationOperations.deleteRowsAt(grid, rows[0].row, rows[rows.length - 1].row);
-  const maxRowIndex = newGrid.length > 0 ? newGrid.length - 1 : 0;
+  const maxRowIndex = Math.max(GridRow.extractGridDetails(newGrid).rows.length - 1, 0);
   return bundle(newGrid, Math.min(details[0].row, maxRowIndex), details[0].column);
 };
 
