@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ### Fixed
-- Creating native events using DragEvent or ClipboardEvent constructors using agar DataTransfer instances would fail on Firefo. #TINY-10386
+- Creating native events using DragEvent or ClipboardEvent constructors using agar DataTransfer instances would fail on Firefox. #TINY-10386
 
 ## 8.0.0 - 2023-11-22
 
