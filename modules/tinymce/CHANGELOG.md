@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Translation syntax for announcement text in the table grid was incorrectly formatted. #TINY-10141
+- The functions `schema.isWrapper` and `schema.isInline` didn't exclude element names that started with `#` those should not be considered elements. #TINY-10385
 
 ## 6.8.0 - 2023-11-22
 
