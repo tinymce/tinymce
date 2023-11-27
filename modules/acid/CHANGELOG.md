@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 6.0.0 - 2023-11-22
+
 ### Changed
 - Updated alloy to latest major. #TINY-10275
 

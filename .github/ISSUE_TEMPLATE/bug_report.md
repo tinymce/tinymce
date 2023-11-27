@@ -1,13 +1,31 @@
 ---
-name: Bug report
+name: "\U0001F41B Bug report"
 about: Create a bug report to help us improve
+labels: type:bug
 
 ---
 
-**What is the current behavior? Describe the bug**
+## 📝 Provide detailed reproduction steps (if any)
+Please provide the steps to reproduce and if possible a minimal demo of the problem via [fiddle.tiny.cloud](fiddle.tiny.cloud) or similar.
+1. …
+2. …
+3. …
 
-**Please provide the steps to reproduce and if possible a minimal demo of the problem via [fiddle.tiny.cloud](https://fiddle.tiny.cloud/) or similar.**
+### ✔️ Expected result
+*What is the expected result of the above steps?*
 
-**What is the expected behavior?**
+### ❌ Actual result
+*What is the actual result of the above steps?*
 
-**Which versions of TinyMCE, and which browser / OS are affected by this issue? Did this work in previous versions of TinyMCE?**
+### ❓ Possible solution
+*If you have ideas, you can list them here. Otherwise, you can delete this section.*
+
+## 📃 Other details
+- Browser: …
+- OS: …
+- First affected version: …
+- Worked in version: …
+
+---
+
+If you'd like to see this fixed sooner, add a 👍 reaction to this post.

@@ -1,5 +1,7 @@
 import { Unicode } from '@ephox/katamari';
 
+import Editor from '../api/Editor';
+
 /**
  * Utility functions for working with zero width space
  * characters used as character containers etc.
@@ -15,9 +17,11 @@ import { Unicode } from '@ephox/katamari';
 const ZWSP = Unicode.zeroWidth;
 const isZwsp = Unicode.isZwsp;
 const trim = Unicode.removeZwsp;
+const insert = (editor: Editor): void => editor.insertContent(ZWSP, { preserve_zwsp: true });
 
 export {
   isZwsp,
   ZWSP,
-  trim
+  trim,
+  insert
 };

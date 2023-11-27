@@ -99,11 +99,6 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   const lastToolbarWidth = Cell(0);
   const outerContainer = mainUi.outerContainer;
 
-  editor.on('SkinLoaded', () => {
-    setToolbar(editor, uiRefs, rawUiConfig, backstage);
-    lastToolbarWidth.set(editor.getWin().innerWidth);
-  });
-
   loadIframeSkin(editor);
 
   const eTargetNode = SugarElement.fromDom(args.targetNode);
@@ -112,7 +107,8 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   Attachment.attachSystemAfter(eTargetNode, mainUi.mothership);
   attachUiMotherships(editor, uiRoot, uiRefs);
 
-  editor.on('PostRender', () => {
+  // TINY-10343: Using `SkinLoaded` instead of `PostRender` because if the skin loading takes too long you run in to rendering problems since things are measured before the CSS is being applied
+  editor.on('SkinLoaded', () => {
     // Set the sidebar before the toolbar and menubar
     // - each sidebar has an associated toggle toolbar button that needs to check the
     //   sidebar that is set to determine its active state on setup
@@ -121,6 +117,9 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
       rawUiConfig.sidebar,
       Options.getSidebarShow(editor)
     );
+
+    setToolbar(editor, uiRefs, rawUiConfig, backstage);
+    lastToolbarWidth.set(editor.getWin().innerWidth);
 
     OuterContainer.setMenubar(
       outerContainer,

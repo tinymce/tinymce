@@ -1,8 +1,6 @@
 import { AlloyComponent, AlloyTriggers, Behaviour, Composing, Focusing, Sketcher, SketchSpec, Slider, SliderTypes, UiSketcher } from '@ephox/alloy';
-import { Fun, Optional, Type } from '@ephox/katamari';
-import { Attribute } from '@ephox/sugar';
+import { Fun, Optional } from '@ephox/katamari';
 
-import { Untranslated } from '../../alien/I18n';
 import { Hex } from '../../api/colour/ColourTypes';
 import * as HsvColour from '../../api/colour/HsvColour';
 import * as RgbaColour from '../../api/colour/RgbaColour';
@@ -21,8 +19,7 @@ export interface SaturationBrightnessPaletteSketcher extends Sketcher.SingleSket
   setThumb: (slider: AlloyComponent, hex: Hex) => void;
 }
 
-const paletteFactory = (translate: (key: Untranslated) => string, getClass: (key: string) => string): SaturationBrightnessPaletteSketcher => {
-
+const paletteFactory = (_translate: (key: string) => string, getClass: (key: string) => string): SaturationBrightnessPaletteSketcher => {
   const spectrumPart = Slider.parts.spectrum({
     dom: {
       tag: 'canvas',
@@ -77,7 +74,6 @@ const paletteFactory = (translate: (key: Untranslated) => string, getClass: (key
   const setPaletteThumb = (slider: AlloyComponent, hex: Hex): void => {
     const hsv = HsvColour.fromRgb(RgbaColour.fromHex(hex));
     Slider.setValue(slider, { x: hsv.saturation, y: 100 - hsv.value });
-    Attribute.set(slider.element, 'aria-valuetext', translate([ 'Saturation {0}%, Brightness {1}%', hsv.saturation, hsv.value ]));
   };
 
   const factory: UiSketcher.SingleSketchFactory<SaturationBrightnessPaletteDetail, SaturationBrightnessPaletteSpec> = (_detail): SketchSpec => {
@@ -87,9 +83,6 @@ const paletteFactory = (translate: (key: Untranslated) => string, getClass: (key
     });
 
     const onChange = (slider: AlloyComponent, _thumb: AlloyComponent, value: number | SliderTypes.SliderValue) => {
-      if (!Type.isNumber(value)) {
-        Attribute.set(slider.element, 'aria-valuetext', translate([ 'Saturation {0}%, Brightness {1}%', Math.floor(value.x), Math.floor(100 - value.y) ]));
-      }
       AlloyTriggers.emitWith(slider, ColourEvents.paletteUpdate, {
         value
       });
@@ -111,8 +104,7 @@ const paletteFactory = (translate: (key: Untranslated) => string, getClass: (key
       dom: {
         tag: 'div',
         attributes: {
-          'role': 'slider',
-          'aria-valuetext': translate([ 'Saturation {0}%, Brightness {1}%', 0, 0 ])
+          role: 'presentation'
         },
         classes: [ getClass('sv-palette') ]
       },

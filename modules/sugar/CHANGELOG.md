@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 9.3.0 - 2023-11-22
+
 ### Improved
 - The `Focus.focus` function now takes an additional `preventScroll` parameter to allow focus on an element without scrolling.
 

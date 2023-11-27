@@ -11,8 +11,12 @@ describe('browser.tinymce.core.keyboard.EnterKeyAnchorTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [], true);
 
+  const zwspPlaceholder = '{ZWSP}';
+
   const setup = (editor: Editor, html: string, elementPath: number[], offset: number) => {
     editor.setContent(html);
+    const body = editor.getBody();
+    body.innerHTML = body.innerHTML.replace(zwspPlaceholder, Zwsp.ZWSP);
     TinySelections.setCursor(editor, elementPath, offset);
   };
 
@@ -28,7 +32,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyAnchorTest', () => {
 
   it('Enter at start of anchor zwsp', () => {
     const editor = hook.editor();
-    setup(editor, '<p><a href="#">' + Zwsp.ZWSP + 'a</a></p>', [ 0, 0, 0 ], 1);
+    setup(editor, '<p><a href="#">' + zwspPlaceholder + 'a</a></p>', [ 0, 0, 0 ], 1);
     enterKey(editor);
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, _arr) => {
@@ -65,7 +69,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyAnchorTest', () => {
 
   it('Enter at end of anchor zwsp', () => {
     const editor = hook.editor();
-    setup(editor, '<p><a href="#">a' + Zwsp.ZWSP + '</a></p>', [ 0, 0, 0 ], 2);
+    setup(editor, '<p><a href="#">a' + zwspPlaceholder + '</a></p>', [ 0, 0, 0 ], 2);
     enterKey(editor);
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, _arr) => {
@@ -102,7 +106,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyAnchorTest', () => {
 
   it('Enter at start of anchor zwsp with adjacent content', () => {
     const editor = hook.editor();
-    setup(editor, '<p>a<a href="#">' + Zwsp.ZWSP + 'b</a>c</p>', [ 0, 1, 0 ], 1);
+    setup(editor, '<p>a<a href="#">' + zwspPlaceholder + 'b</a>c</p>', [ 0, 1, 0 ], 1);
     enterKey(editor);
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, _arr) => {
@@ -142,7 +146,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyAnchorTest', () => {
 
   it('Enter at end of anchor zwsp with adjacent content', () => {
     const editor = hook.editor();
-    setup(editor, '<p>a<a href="#">b' + Zwsp.ZWSP + '</a>c</p>', [ 0, 1, 0 ], 1);
+    setup(editor, '<p>a<a href="#">b' + zwspPlaceholder + '</a>c</p>', [ 0, 1, 0 ], 1);
     enterKey(editor);
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, _arr) => {
