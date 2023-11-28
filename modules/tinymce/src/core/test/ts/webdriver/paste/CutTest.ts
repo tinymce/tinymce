@@ -21,7 +21,7 @@ describe('webdriver.tinymce.core.paste.CutTest', () => {
     await Waiter.pTryUntil('Cut is async now, so need to wait for content', () => TinyAssertions.assertContent(editor, '<p>ac</p>'));
   });
 
-  context('TINY-10385: cutting a text at the first level with `valid_elements` `*[*]` should not make the editor crush', () => {
+  context('TINY-10385: cutting text at the first level with `valid_elements` `*[*]` should not make the editor crash', () => {
     const hook = TinyHooks.bddSetup<Editor>({
       base_url: '/project/tinymce/js/tinymce',
       toolbar: false,
