@@ -607,6 +607,31 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
       checkElement('foo', (el) => schema.isInline(SugarNode.name(el)), true);
       checkElement('bar', (el) => schema.isInline(SugarNode.name(el)), true);
     });
+
+    it('TINY-10385: with valid_elements: "*[*]" elements that starts with # should not be valid', () => {
+      const schema = Schema({
+        valid_elements: '*[*]'
+      });
+
+      const cases: ({ elementName: string; expectedValue: boolean })[] = [
+        { elementName: '#text', expectedValue: false },
+        { elementName: '#comment', expectedValue: false },
+        { elementName: '#cdata', expectedValue: false },
+        { elementName: '#pi', expectedValue: false },
+        { elementName: '#doctype', expectedValue: false },
+        { elementName: '#document-fragment', expectedValue: false }
+      ];
+
+      Arr.each(cases, (c) => {
+        assert.equal(schema.isInline(c.elementName), c.expectedValue, `For schema.isInline should be ${c.expectedValue} for ${c.elementName}`);
+        assert.equal(schema.isBlock(c.elementName), c.expectedValue, `For schema.isBlock should be ${c.expectedValue} for ${c.elementName}`);
+        assert.equal(schema.isWrapper(c.elementName), c.expectedValue, `For schema.isWrapper should be ${c.expectedValue} for ${c.elementName}`);
+      });
+
+      assert.equal(schema.isInline('some-fake-element'), true, `For schema.isInline should be 'some-fake-element' for true`);
+      assert.equal(schema.isBlock('some-fake-element'), false, `For schema.isBlock should be 'some-fake-element' for false`);
+      assert.equal(schema.isWrapper('some-fake-element'), true, `For schema.isWrapper should be 'some-fake-element' for true`);
+    });
   });
 
   context('paddInEmptyBlock', () => {
