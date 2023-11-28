@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - New `label` component available in the `buttons` header of the `View` UI API, along with two size options (`normal` and `large`). #TINY-10339
 
+### Fixed
+- When deleting the last row in a table, the cursor would jump to the first cell (top left), instead of moving to the next adjacent cell in some cases. #TINY-6309
+- The functions `schema.isWrapper` and `schema.isInline` didn't exclude element names that started with `#` those should not be considered elements. #TINY-10385
+
 ## 6.8.0 - 2023-11-22
 
 ### Added
@@ -21,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `convert_unsafe_embeds` option that controls whether `<object>` and `<embed>` elements will be converted to more restrictive alternatives, namely `<img>` for image MIME types, `<video>` for video MIME types, `<audio>` audio MIME types, or `<iframe>` for other or unspecified MIME types. #TINY-10349
 
 ### Improved
+- Colorpicker now includes the Brightness/Saturation selector and hue slider in the keyboard navigable items. #TINY-9287
 - Improved the tooltips of picker buttons for the urlinput components in the "Insert/Edit Image" and "Insert/Edit Link" dialogs. #TINY-10155
 - Inline dialog will now respect `size: 'large'` argument in the dialog spec. #TINY-10209
 - SVG elements and their children are now retained when configured as valid elements. #TINY-10237
