@@ -7,7 +7,7 @@ import { renderReplaceableIconFromPack } from '../button/ButtonSlices';
 import { calculateClassesFromButtonType, IconButtonWrapper, renderCommonSpec } from '../general/Button';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import { ViewButtonClasses } from '../toolbar/button/ButtonClasses';
-import { ViewButtonWithoutGroup } from './View';
+import { ViewButtonWithoutGroup, ViewLabel } from './View';
 
 type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];
 
@@ -16,18 +16,22 @@ const labelSizeClass = {
   large: 'tox-view__label--large',
 };
 
+const renderLabel = (spec: ViewLabel, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
+  const sizeClass = labelSizeClass[spec.size];
+  return {
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-view__label', sizeClass ]
+    },
+    components: [
+      GuiFactory.text(providers.translate(spec.text))
+    ]
+  };
+};
+
 export const renderButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryBackstageProviders): SimpleOrSketchSpec => {
   if (spec.type === 'label') {
-    const sizeClass = labelSizeClass[spec.size];
-    return {
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-view__label', sizeClass ]
-      },
-      components: [
-        GuiFactory.text(spec.text)
-      ]
-    };
+    return renderLabel(spec, providers);
   }
 
   const isToggleButton = spec.type === 'togglebutton';
