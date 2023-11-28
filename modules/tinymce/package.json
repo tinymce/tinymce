@@ -30,11 +30,11 @@
     "tslib": "^2.0.0"
   },
   "devDependencies": {
-    "@ephox/acid": "^5.2.1",
-    "@ephox/agar": "^8.0.0-alpha.0",
-    "@ephox/alloy": "^14.0.0-alpha.0",
-    "@ephox/bridge": "^4.6.0",
-    "@ephox/darwin": "^8.1.0",
+    "@ephox/acid": "^6.0.0",
+    "@ephox/agar": "^8.0.0",
+    "@ephox/alloy": "^14.0.0",
+    "@ephox/bridge": "^4.7.0",
+    "@ephox/darwin": "^8.2.0",
     "@tinymce/oxide": "^2.7.0",
     "@tinymce/oxide-icons-default": "^2.6.0"
   }

@@ -26,7 +26,7 @@
     "@ephox/sugar": "^9.3.0"
   },
   "devDependencies": {
-    "@ephox/agar": "^8.0.0-alpha.0",
+    "@ephox/agar": "^8.0.0",
     "@ephox/katamari-assertions": "^4.0.9"
   },
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
