@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Improved
+- Colorpicker now includes the Brightness/Saturation selector and hue slider in the keyboard navigable items. #TINY-9287
+
 ### Fixed
 - Translation syntax for announcement text in the table grid was incorrectly formatted. #TINY-10141
 - The functions `schema.isWrapper` and `schema.isInline` did not exclude node names that started with `#` which should not be considered as elements. #TINY-10385
