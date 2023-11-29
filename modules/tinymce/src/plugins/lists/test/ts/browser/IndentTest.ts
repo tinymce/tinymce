@@ -522,6 +522,45 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
+  it('TINY-10414: toggle a list inside a `li` with non-list siblings should not delete the siblings', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<ul>' +
+        '<li>A' +
+          '<ul>' +
+            '<li style="list-style-type: none;">' +
+              '<ul>' +
+                '<li>B</li>' +
+              '</ul>' +
+              '<p>C</p>' +
+              '<p>D</p>' +
+            '</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>'
+    );
+
+    TinySelections.setCursor(editor, [ 0, 0, 1, 0, 0, 0 ], 0);
+    editor.execCommand('InsertUnorderedList');
+
+    TinyAssertions.assertContent(editor,
+      '<ul>' +
+        '<li>A</li>' +
+      '</ul>' +
+      '<p>B</p>' +
+      '<ul>' +
+        '<li style="list-style-type: none;">' +
+          '<ul>' +
+            '<li>' +
+              'C' +
+              '<p>D</p>' +
+            '</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>'
+    );
+  });
+
   it('TINY-10268: a `list` inside a `li` surrounded by 2 not element should allow the user to indent/outdent its `li`', () => {
     const editor = hook.editor();
     editor.setContent(`<ul>

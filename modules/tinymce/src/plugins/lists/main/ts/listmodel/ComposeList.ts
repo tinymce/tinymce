@@ -1,7 +1,7 @@
 import { Arr, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Css, Insert, InsertAll, Replication, SugarElement, SugarNode } from '@ephox/sugar';
 
-import { Entry, EntryList, isEntryComment, isEntryList, isEntryNoList } from './Entry';
+import { Entry, EntryList, EntryNoList, isEntryComment, isEntryList, isEntryNoList } from './Entry';
 import { ListType } from './Util';
 
 interface Segment {
@@ -32,22 +32,26 @@ const createSegment = (scope: Document, listType: ListType): Segment => {
   return segment;
 };
 
-const createSegments = (scope: Document, entry: EntryList, size: number): Segment[] => {
+const createSegments = (scope: Document, entry: EntryList | EntryNoList, size: number): Segment[] => {
   const segments: Segment[] = [];
   for (let i = 0; i < size; i++) {
-    segments.push(createSegment(scope, entry.listType));
+    segments.push(createSegment(scope, isEntryList(entry) ? entry.listType : entry.parentListType ));
   }
   return segments;
 };
 
-const populateSegments = (segments: Segment[], entry: EntryList): void => {
+const populateSegments = (segments: Segment[], entry: Entry): void => {
   for (let i = 0; i < segments.length - 1; i++) {
     Css.set(segments[i].item, 'list-style-type', 'none');
   }
   Arr.last(segments).each((segment) => {
-    Attribute.setAll(segment.list, entry.listAttributes);
-    Attribute.setAll(segment.item, entry.itemAttributes);
-    InsertAll.append(segment.item, entry.content);
+    if (isEntryList(entry)) {
+      Attribute.setAll(segment.list, entry.listAttributes);
+      Attribute.setAll(segment.item, entry.itemAttributes);
+    }
+    if (isEntryList(entry) || isEntryNoList(entry)) {
+      InsertAll.append(segment.item, entry.content);
+    }
   });
 };
 
@@ -99,7 +103,7 @@ const writeShallow = (scope: Document, cast: Segment[], entry: Entry): Segment[]
   return newCast;
 };
 
-const writeDeep = (scope: Document, cast: Segment[], entry: EntryList): Segment[] => {
+const writeDeep = (scope: Document, cast: Segment[], entry: EntryList | EntryNoList): Segment[] => {
   const segments = createSegments(scope, entry, entry.depth - cast.length);
   joinSegments(segments);
   populateSegments(segments, entry);
@@ -121,7 +125,9 @@ const composeList = (scope: Document, entries: Entry[]): Optional<SugarElement<H
         return cast;
       }
 
-      return writeShallow(scope, cast, entry);
+      return (entry.depth > cast.length && !isEntryComment(entry))
+        ? writeDeep(scope, cast, entry)
+        : writeShallow(scope, cast, entry);
     }
   }, [] as Segment[]);
 

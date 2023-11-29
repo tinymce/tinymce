@@ -2,7 +2,7 @@ import { Arr, Cell, Optional } from '@ephox/katamari';
 import { Compare, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import { createEntry, Entry, EntryComment, EntryNoList, isEntryList } from './Entry';
-import { isList } from './Util';
+import { isList, ListType } from './Util';
 
 type Parser = (depth: number, itemSelection: Optional<ItemSelection>, selectionState: Cell<boolean>, element: SugarElement) => Entry[];
 
@@ -16,7 +16,7 @@ export interface EntrySet {
   readonly sourceList: SugarElement<HTMLElement>;
 }
 
-const entryToEntryNoList = (entry: Entry, type: string, isInPreviousLi: boolean): EntryNoList | EntryComment => {
+const entryToEntryNoList = (entry: Entry, type: string, isInPreviousLi: boolean, parentListType: ListType): EntryNoList | EntryComment => {
   if (isEntryList(entry)) {
     return ({
       depth: entry.depth,
@@ -25,7 +25,8 @@ const entryToEntryNoList = (entry: Entry, type: string, isInPreviousLi: boolean)
       isSelected: entry.isSelected,
       type,
       attributes: entry.itemAttributes,
-      isInPreviousLi
+      isInPreviousLi,
+      parentListType
     });
   } else {
     return entry;
@@ -75,8 +76,12 @@ const parseItem: Parser = (depth: number, itemSelection: Optional<ItemSelection>
           return acc;
         } else {
           const parsedSibling = parseSingleItem(depth, itemSelection, selectionState, s)
-            .map((e) => entryToEntryNoList(e, s.dom.nodeName.toLowerCase(), true));
-
+            .map((e) => entryToEntryNoList(
+              e,
+              s.dom.nodeName.toLowerCase(),
+              true,
+              Traverse.parent(item).filter(SugarNode.isElement).map(SugarNode.name).getOr(ListType.UL) as ListType
+            ));
           return acc.concat(parsedSibling);
         }
       }, []);

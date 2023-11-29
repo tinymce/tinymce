@@ -37,6 +37,7 @@ export interface EntryNoList {
   isSelected: boolean;
   type: string;
   attributes: Record<string, any>;
+  parentListType: ListType;
   isInPreviousLi: boolean;
 }
 
