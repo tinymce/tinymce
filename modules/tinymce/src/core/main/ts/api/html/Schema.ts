@@ -571,6 +571,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
 
   const isBlock = (name: string): boolean => Obj.has(getBlockElements(), name);
 
+  // Check if name starts with # to detect non-element node names like #text and #comment
   const isInline = (name: string): boolean => !Strings.startsWith(name, '#') && isValid(name) && !isBlock(name);
 
   const isWrapper = (name: string): boolean => Obj.has(getWrapBlockElements(), name) || isInline(name);
