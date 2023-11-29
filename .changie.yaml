@@ -70,6 +70,8 @@ projects:
 kinds:
 - label: Added
   auto: minor
+- label: Improved
+  auto: minor
 - label: Changed
   auto: major
 - label: Deprecated
@@ -80,8 +82,7 @@ kinds:
   auto: patch
 - label: Security
   auto: patch
-- label: Improved
-  auto: minor
+
 newlines:
   afterChangelogHeader: 1
   afterChangelogVersion: 1
