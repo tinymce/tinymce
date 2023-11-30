@@ -8,7 +8,7 @@ def withLtCreds(Closure body) {
 }
 
 def inPod(name, browser, provider, bucket, buckets) {
-  stage(name) {
+  return { stage(name) {
     tinyPods.node([resourceRequestCpu: '6', resourceRequestMemory: '4Gi', resourceLimitCpu: '7.5', resourceLimitMemory: '4Gi']) {
       stage('test - ' + name) {
         sh 'yarn && yarn dev'
@@ -34,7 +34,7 @@ def inPod(name, browser, provider, bucket, buckets) {
 
       }
     }
-  }
+  }}
 }
 
 def platforms = [
