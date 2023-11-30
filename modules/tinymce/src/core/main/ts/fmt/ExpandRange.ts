@@ -333,10 +333,16 @@ const expandRng = (dom: DOMUtils, rng: Range, formatList: Format[], includeTrail
     if (FormatUtils.isBlockFormat(format)) {
       if (!dom.isBlock(startContainer)) {
         startContainer = findParentContainer(dom, formatList, startContainer, startOffset, true);
+        if (NodeType.isText(startContainer)) {
+          startOffset = 0;
+        }
       }
 
       if (!dom.isBlock(endContainer)) {
         endContainer = findParentContainer(dom, formatList, endContainer, endOffset, false);
+        if (NodeType.isText(endContainer)) {
+          endOffset = endContainer.data.length;
+        }
       }
     }
   }
