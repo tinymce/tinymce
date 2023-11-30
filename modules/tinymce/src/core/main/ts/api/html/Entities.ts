@@ -40,7 +40,7 @@ const asciiMap: Record<number, string> = {
 // Raw entities
 const baseEntities: EntitiesMap = {
   '\"': '&quot;', // Needs to be escaped since the YUI compressor would otherwise break the code
-  '\'': '&#39;',
+  '\'': '&apos;',
   '<': '&lt;',
   '>': '&gt;',
   '&': '&amp;',
