@@ -40,7 +40,7 @@ const createSegments = (scope: Document, entry: EntryList | EntryNoList, size: n
   return segments;
 };
 
-const populateSegments = (segments: Segment[], entry: Entry): void => {
+const populateSegments = (segments: Segment[], entry: EntryList | EntryNoList): void => {
   for (let i = 0; i < segments.length - 1; i++) {
     Css.set(segments[i].item, 'list-style-type', 'none');
   }
@@ -49,8 +49,7 @@ const populateSegments = (segments: Segment[], entry: Entry): void => {
       Attribute.setAll(segment.list, entry.listAttributes);
       Attribute.setAll(segment.item, entry.itemAttributes);
       InsertAll.append(segment.item, entry.content);
-    }
-    if (isEntryNoList(entry)) {
+    } else {
       const item = SugarElement.fromTag(entry.type);
       Attribute.setAll(item, entry.attributes);
       InsertAll.append(item, entry.content);
