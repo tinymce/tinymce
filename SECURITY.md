@@ -18,7 +18,7 @@ Tiny Technologies, Inc. supports the following community versions of TinyMCE:
 
 | Version | Supported                      |
 |---------| ------------------------------ |
-| 6.7.x   | &#10004;                       |
+| 6.8.x   | &#10004;                       |
 | 5.10.x  | &#10006;                       |
 | Other   | &#10006;                       |
 

@@ -6,18 +6,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- When deleting the last row in a table, the cursor would jump to the first cell (top left), instead of moving to the next adjacent cell in some cases. #TINY-6309
+- The functions `schema.isWrapper` and `schema.isInline` didn't exclude element names that started with `#` those should not be considered elements. #TINY-10385
+
+## 6.8.1 - 2023-11-29
+
+### Improved
+- Colorpicker now includes the Brightness/Saturation selector and hue slider in the keyboard navigable items. #TINY-9287
+
+### Fixed
+- Translation syntax for announcement text in the table grid was incorrectly formatted. #TINY-10141
+- The functions `schema.isWrapper` and `schema.isInline` did not exclude node names that started with `#` which should not be considered as elements. #TINY-10385
+
+## 6.8.0 - 2023-11-22
+
 ### Added
 - CSS files are now also generated as separate JS files to improve bundling of all resources. #TINY-10352
-- Added new `Resource.has` API that can be used to check if a resource has been loaded or not. #TINY-10352
-- Added new `Resource.get` API that can be used to get a resource if it exists. #TINY-10352
 - Added new `StylesheetLoader.loadRawCss` API that can be used to load CSS into a style element. #TINY-10352
 - Added new `StylesheetLoader.unloadRawCss` API that can be used to unload CSS that was loaded into a style element. #TINY-10352
 - Added `force_hex_color` editor option. Option `'always'` converts all RGB & RGBA colours to hex, `'rgb_only'` will only convert RGB and *not* RGBA colours to hex, `'off'` won't convert any colours to hex. #TINY-9819
 - Added `default_font_stack` editor option that makes it possible to define what is considered a system font stack. #TINY-10290
-
+- New `sandbox_iframes` option that controls whether iframe elements will be added a `sandbox=""` attribute to mitigate malicious intent. #TINY-10348
+- New `convert_unsafe_embeds` option that controls whether `<object>` and `<embed>` elements will be converted to more restrictive alternatives, namely `<img>` for image MIME types, `<video>` for video MIME types, `<audio>` audio MIME types, or `<iframe>` for other or unspecified MIME types. #TINY-10349
 
 ### Improved
-- Colorpicker now includes the Brightness/Saturation selector and hue slider in the keyboard navigable items. #TINY-9287
 - Improved the tooltips of picker buttons for the urlinput components in the "Insert/Edit Image" and "Insert/Edit Link" dialogs. #TINY-10155
 - Inline dialog will now respect `size: 'large'` argument in the dialog spec. #TINY-10209
 - SVG elements and their children are now retained when configured as valid elements. #TINY-10237
@@ -39,15 +52,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removing an LI element containing a `details` element would incorrectly merge its content. #TINY-10133
 - The function `getModifierState` did not work on events passed through the editor as expected. #TINY-10263
 - Search and replace plugin would incorrectly find matching text inside non-editable root elements. #TINY-10162
-- Search and replace plugin would incorrectly find matching text inside SVG elements. #TINY-10162
 - Removed use of `async` for editor rendering which caused visual blinking when reloading the editor in-place. #TINY-10249
 - Toggling off one format on the caret when multiple formats was toggled on would toggle all of them off. #TINY-10132
-- Hex colors are no longer always converted to RGB. #TINY-9819
 - Merging an external `p` inside a `list` via delete or backspace would incorrectly try to move a parent element inside a child element. #TINY-10289
 - Directionality would not be consistently applied to the entire `accordion` block. #TINY-10291
 - The `fontsizeinput` toolbar item was causing console warnings when toolbar items were clicked. #TINY-10330
 - Menubar buttons with more than one word would sometimes wrap into two lines. #TINY-10343
 - Creating a new `li` via enter inside a nested list would not inherit styles from the source `li`. #TINY-10316
+- Screen readers now announce the active autocompleter item. #TINY-9393
+- Dialog collection items would not display any icons chosen from icon pack. #TINY-10174
 
 ## 6.7.3 - 2023-11-15
 

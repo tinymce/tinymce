@@ -1,15 +1,18 @@
 import { ApproxStructure, Assertions, StructAssert, UiFinder } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
-import { Arr, Fun, Obj } from '@ephox/katamari';
-import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { Arr, Fun, Obj, Type } from '@ephox/katamari';
+import { McEditor, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
 
 describe('browser.tinymce.plugins.media.core.LiveEmbedNodeTest', () => {
-  const hook = TinyHooks.bddSetupLight<Editor>({
+  const baseSettings = {
     plugins: [ 'media' ],
-    toolbar: 'media',
+    toolbar: 'media'
+  };
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    ...baseSettings,
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ]);
 
@@ -17,7 +20,7 @@ describe('browser.tinymce.plugins.media.core.LiveEmbedNodeTest', () => {
     editor: Editor,
     tag: string,
     classes: string[],
-    attrs: Record<string, string>,
+    attrs: Record<string, string | null>,
     styles: Record<string, string>,
     getChildren: ApproxStructure.Builder<StructAssert[]> = Fun.constant([])
   ) => {
@@ -36,7 +39,7 @@ describe('browser.tinymce.plugins.media.core.LiveEmbedNodeTest', () => {
           attrs: {
             height: str.none('should not have height'),
             width: str.none('should not have width'),
-            ...Obj.map(attrs, (value) => str.is(value))
+            ...Obj.map(attrs, (value) => Type.isNull(value) ? str.none() : str.is(value))
           },
           styles: {
             height: str.none('should not have height style'),
@@ -130,5 +133,21 @@ describe('browser.tinymce.plugins.media.core.LiveEmbedNodeTest', () => {
         }
       })
     ]);
+  });
+
+  context('Sandboxing iframes', () => {
+    const initialIframeHtml = '<iframe src="about:blank"></iframe>';
+
+    it('TINY-10348: sandbox_iframes: false should not have sandbox attribute in live embed', async () => {
+      const editor = await McEditor.pFromSettings<Editor>({ ...baseSettings, sandbox_iframes: false });
+      editor.setContent(initialIframeHtml);
+      assertStructure(editor, 'iframe', [ ], { sandbox: null }, { });
+    });
+
+    it('TINY-10348: sandbox_iframes: true should havce sandbox attribute in live embed', async () => {
+      const editor = await McEditor.pFromSettings<Editor>({ ...baseSettings, sandbox_iframes: true });
+      editor.setContent(initialIframeHtml);
+      assertStructure(editor, 'iframe', [ ], { sandbox: '' }, { });
+    });
   });
 });

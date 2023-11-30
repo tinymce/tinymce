@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+- Slider could not be dragged as expected. TINY-10383
+
+## 14.0.0 - 2023-11-22
+
 ### Changed
 - Updated agar to latest major. #TINY-10275
 

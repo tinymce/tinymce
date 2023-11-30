@@ -1,5 +1,4 @@
 import { Optional } from '@ephox/katamari';
-import { EventArgs } from '@ephox/sugar';
 
 import { Keying } from '../../api/behaviour/Keying';
 import { Receiving } from '../../api/behaviour/Receiving';
@@ -141,9 +140,11 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
       }),
       AlloyEvents.run(NativeEvents.touchstart(), onDragStart),
       AlloyEvents.run(NativeEvents.touchend(), onDragEnd),
-      AlloyEvents.run(NativeEvents.mousedown(), onDragStart),
+      AlloyEvents.run(NativeEvents.mousedown(), (component, event: NativeSimulatedEvent<DragEvent>) => {
+        focusWidget(component);
+        onDragStart(component, event);
+      }),
       AlloyEvents.run(NativeEvents.mouseup(), onDragEnd),
-      AlloyEvents.run<EventArgs>(NativeEvents.mousedown(), focusWidget)
     ]),
 
     apis: {
