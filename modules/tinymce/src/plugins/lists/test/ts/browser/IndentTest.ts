@@ -552,7 +552,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
         '<li style="list-style-type: none;">' +
           '<ul>' +
             '<li>' +
-              'C' +
+              '<p>C</p>' +
               '<p>D</p>' +
             '</li>' +
           '</ul>' +

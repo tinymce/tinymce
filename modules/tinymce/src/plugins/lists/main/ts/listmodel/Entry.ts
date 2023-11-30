@@ -51,7 +51,7 @@ export interface EntryComment {
 
 const isEntryList = (entry: Entry): entry is EntryList => 'listAttributes' in entry;
 
-const isEntryNoList = (entry: Entry): entry is EntryNoList => 'isInPreviousLi' in entry;
+const isEntryNoList = (entry: Entry): entry is EntryNoList => 'parentListType' in entry;
 
 const isEntryComment = (entry: Entry): entry is EntryComment => 'isComment' in entry;
 

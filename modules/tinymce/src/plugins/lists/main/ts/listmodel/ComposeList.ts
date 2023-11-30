@@ -48,9 +48,13 @@ const populateSegments = (segments: Segment[], entry: Entry): void => {
     if (isEntryList(entry)) {
       Attribute.setAll(segment.list, entry.listAttributes);
       Attribute.setAll(segment.item, entry.itemAttributes);
-    }
-    if (isEntryList(entry) || isEntryNoList(entry)) {
       InsertAll.append(segment.item, entry.content);
+    }
+    if (isEntryNoList(entry)) {
+      const item = SugarElement.fromTag(entry.type);
+      Attribute.setAll(item, entry.attributes);
+      InsertAll.append(item, entry.content);
+      InsertAll.append(segment.item, [ item ]);
     }
   });
 };
