@@ -540,7 +540,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
       '</ul>'
     );
 
-    TinySelections.setCursor(editor, [ 0, 0, 1, 0, 0, 0 ], 0);
+    TinySelections.setCursor(editor, [ 0, 0, 1, 0, 0, 0, 0 ], 0);
     editor.execCommand('InsertUnorderedList');
 
     TinyAssertions.assertContent(editor,
