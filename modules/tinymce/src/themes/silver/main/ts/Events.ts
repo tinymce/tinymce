@@ -98,6 +98,9 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMotherships: Gui.Gui
     broadcastOn(Channels.dismissPopups(), { target: SugarElement.fromDom(event.relatedTarget.getContainer()) });
   };
 
+  const onFocusIn = (event: FocusEvent) => editor.dispatch('focusin', event);
+  const onFocusOut = (event: FocusEvent) => editor.dispatch('focusout', event);
+
   // Don't start listening to events until the UI has rendered
   editor.on('PostRender', () => {
     editor.on('click', onContentClick);
@@ -109,6 +112,11 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMotherships: Gui.Gui
     editor.on('ResizeEditor', onEditorResize);
     editor.on('AfterProgressState', onEditorProgress);
     editor.on('DismissPopups', onDismissPopups);
+
+    Arr.each([ mothership, ...uiMotherships ], (gui) => {
+      gui.element.dom.addEventListener('focusin', onFocusIn);
+      gui.element.dom.addEventListener('focusout', onFocusOut);
+    });
   });
 
   editor.on('remove', () => {
@@ -122,6 +130,11 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMotherships: Gui.Gui
     editor.off('ResizeEditor', onEditorResize);
     editor.off('AfterProgressState', onEditorProgress);
     editor.off('DismissPopups', onDismissPopups);
+
+    Arr.each([ mothership, ...uiMotherships ], (gui) => {
+      gui.element.dom.removeEventListener('focusin', onFocusIn);
+      gui.element.dom.removeEventListener('focusout', onFocusOut);
+    });
 
     onMousedown.unbind();
     onTouchstart.unbind();
