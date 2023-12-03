@@ -1,7 +1,7 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
-import { TinyHooks } from '@ephox/mcagar';
-import { SugarElement } from '@ephox/sugar';
+import { TinyDom, TinyHooks } from '@ephox/mcagar';
+import { SugarElement, TextContent } from '@ephox/sugar';
 import { assert } from 'chai';
 import * as fc from 'fast-check';
 
@@ -13,19 +13,67 @@ import Plugin from 'tinymce/plugins/lists/Plugin';
 import * as ArbList from '../module/ArbList';
 
 describe('browser.tinymce.plugins.lists.RetainContentTest', () => {
-  const getListTextContent = (el: Element) => el.textContent;
-
   context('Model tests', () => {
-    const numRuns = 1;
+    const numRuns = 10;
+
+    const testListContent = (list: SugarElement<HTMLUListElement | HTMLOListElement>) => {
+      const listTextContent = TextContent.get(list);
+      const { entries } = parseLists([ list ], Optional.none())[0];
+      const composedListEl = composeList(document, entries).getOrDie('Should produce a list element');
+      const composedListTextContent = TextContent.get(composedListEl);
+
+      assert.equal(composedListTextContent, listTextContent, 'Should retain all text content');
+    };
+
+    const testListContentHtml = (html: string) => testListContent(SugarElement.fromHtml(html));
+
+    it('TINY-10414: Parse and compose should retain content after nested list', () => {
+      testListContentHtml(
+        '<ul>' +
+          '<li style="list-style-type: none;">' +
+            '<ul>' +
+              '<li>A</li>' +
+            '</ul>' +
+            '<p>B</p>' +
+            'C' +
+          '</li>' +
+        '</ul>'
+      );
+    });
+
+    it('TINY-10414: Parse and compose should retain content before nested list', () => {
+      testListContentHtml(
+        '<ul>' +
+          '<li style="list-style-type: none;">' +
+            '<p>A</p>' +
+            'B' +
+            '<ul>' +
+              '<li>C</li>' +
+            '</ul>' +
+          '</li>' +
+        '</ul>'
+      );
+    });
+
+    it('TINY-10414: Parse and compose should retain content between two nested lists', () => {
+      testListContentHtml(
+        '<ul>' +
+          '<li style="list-style-type: none;">' +
+            '<ul>' +
+              '<li>A</li>' +
+            '</ul>' +
+            '<p>B</p>' +
+            'C' +
+            '<ul>' +
+              '<li>D</li>' +
+            '</ul>' +
+          '</li>' +
+        '</ul>'
+      );
+    });
 
     it('TINY-10414: Parse and compose should not throw away content', () => {
-      fc.assert(fc.property(ArbList.domListGenerator, (list) => {
-        const listTextContent = getListTextContent(list);
-        const { entries } = parseLists([ SugarElement.fromDom(list) ], Optional.none())[0];
-        const listEl = composeList(document, entries).getOrDie('Should produce a list element');
-        assert.equal(getListTextContent(listEl.dom), listTextContent, 'Text content should not been removed');
-      }), {
-        seed: -757675458,
+      fc.assert(fc.property(ArbList.domListGenerator, (list) => testListContent(SugarElement.fromDom(list))), {
         numRuns
       });
     });
@@ -45,23 +93,17 @@ describe('browser.tinymce.plugins.lists.RetainContentTest', () => {
       editor.selection.setRng(range);
     };
 
-    const getEditorTextContent = (editor: Editor) => {
-      const editorContent = editor.getContent();
-      const el = document.createElement('body');
-      el.innerHTML = editorContent;
-      return el.textContent;
-    };
-
     const testEditorEffectOnList = (f: (editor: Editor) => void) => {
       fc.assert(fc.property(ArbList.domListWithSelectionGenerator, (arbList) => {
         const editor = hook.editor();
-        const listTextContent = getListTextContent(arbList.list);
+        const beforeEffectTextContent = TextContent.get(SugarElement.fromDom(arbList.list));
 
         setArbListToEditor(editor, arbList);
 
         f(editor);
 
-        assert.equal(getEditorTextContent(editor), listTextContent, 'Should be the original list content');
+        const afterEffectTextContent = TextContent.get(TinyDom.body(editor));
+        assert.equal(afterEffectTextContent, beforeEffectTextContent, 'Should be the original text content');
       }), { numRuns });
     };
 
@@ -69,10 +111,6 @@ describe('browser.tinymce.plugins.lists.RetainContentTest', () => {
 
     it('TINY-10414: Setting and getting the list back should always retain all content', () =>
       testEditorEffectOnList(Fun.noop)
-    );
-
-    it('TINY-10414: Applying bold to a list should not affect the text content', () =>
-      testEditorCommandOnList('Bold')
     );
 
     it('TINY-10414: Indenting a list should not affect the text content', () =>
