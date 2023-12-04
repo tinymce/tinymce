@@ -69,27 +69,23 @@ const closestChildCaretCandidateNodeRect = (children: ChildNode[], clientX: numb
 
   // If an element and a text node has nearly equal distance then favor the text node over the element to make it easier to select text
   // since setting the selection range will cancel any text select operation.
-  const getClosestTextNode = (rects: NodeClientRect[], distance: DistanceFn) => {
-    if (rects.length >= 2) {
-      const r1 = caretCandidateRect(rects[0]).getOr(rects[0]);
-      const r2 = caretCandidateRect(rects[1]).getOr(rects[1]);
-      const deltaDistance = Math.abs(distance(r1, clientX, clientY) - distance(r2, clientX, clientY));
-
-      if (deltaDistance < 2) {
-        if (NodeType.isText(r1.node)) {
-          return Optional.some(r1);
-        } else if (NodeType.isText(r2.node)) {
-          return Optional.some(r2);
-        }
-      }
-    }
-
-    return Optional.none();
+  const tryFindSecondBestTextNode = (closest: NodeClientRect, sndClosest: NodeClientRect, distance: DistanceFn) => {
+    return caretCandidateRect(sndClosest).filter((rect) => {
+      const deltaDistance = Math.abs(distance(closest, clientX, clientY) - distance(rect, clientX, clientY));
+      return deltaDistance < 2 && NodeType.isText(rect.node);
+    });
   };
 
   const findClosestCaretCandidateNodeRect = (rects: NodeClientRect[], distance: DistanceFn): Optional<NodeClientRect> => {
     const sortedRects = Arr.sort(rects, (r1, r2) => distance(r1, clientX, clientY) - distance(r2, clientX, clientY));
-    return getClosestTextNode(sortedRects, distance).orThunk(() => Arr.findMap(sortedRects, caretCandidateRect));
+    return Arr.findMap(sortedRects, caretCandidateRect).map((closest) => {
+      // If the closest rect is not a text node then lets try to see if the second rect has a text node that is close enough
+      if (!NodeType.isText(closest.node) && sortedRects.length > 1) {
+        return tryFindSecondBestTextNode(closest, sortedRects[1], distance).getOr(closest);
+      } else {
+        return closest;
+      }
+    });
   };
 
   const [ horizontalRects, verticalRects ] = splitRectsPerAxis(getClientRects(children), clientY);
