@@ -12,7 +12,7 @@ import { createMenuItems, createSelectButton, FormatterFormatItem, PreviewSpec, 
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import * as Tooltip from './utils/Tooltip';
 
-const title = 'Fonts';
+const title = 'Font';
 const systemFont = 'System Font';
 
 // A list of fonts that must be in a font family for the font to be recognised as the system stack

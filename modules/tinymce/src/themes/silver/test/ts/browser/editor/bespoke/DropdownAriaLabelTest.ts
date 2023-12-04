@@ -89,13 +89,13 @@ describe('browser.tinymce.themes.silver.editor.bespoke.DropdownAriaLabelTest', (
   }));
 
   it('TINY-10147: Font family menu should not update aria-label if displayed text does not change', testStandardDropdownAriaLabel({
-    menuLabel: 'Fonts',
+    menuLabel: 'Font',
     initialItem: 'Verdana',
     finalItem: 'Verdana'
   }));
 
   it('TINY-10147: Font family menu should update aria-label if displayed text changes', testStandardDropdownAriaLabel({
-    menuLabel: 'Fonts',
+    menuLabel: 'Font',
     initialItem: 'Verdana',
     finalItem: 'Arial'
   }));
