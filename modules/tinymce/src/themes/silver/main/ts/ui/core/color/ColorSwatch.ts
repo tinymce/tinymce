@@ -138,10 +138,11 @@ const getToolTipText = (editor: Editor, format: ColorFormat, lastColor: string) 
     return format === 'forecolor' ? 'Text color' : 'Background color';
   }
 
+  const tooltipPrefix = format === 'forecolor' ? 'Text color {0}' : 'Background color {0}';
   const colors = getColors(Options.getColors(editor, format), format, false);
   const colorText = Arr.find(colors, (c) => c.value === lastColor).getOr({ text: '' }).text;
 
-  return editor.translate([ `${format === 'forecolor' ? 'Text color' : 'Background color'} {0}`, colorText ]);
+  return editor.translate([ tooltipPrefix, editor.translate(colorText) ]);
 };
 
 const registerTextColorButton = (editor: Editor, name: string, format: ColorFormat, lastColor: Cell<string>) => {
