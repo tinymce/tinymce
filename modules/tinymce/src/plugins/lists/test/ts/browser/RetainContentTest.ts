@@ -1,7 +1,7 @@
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Fun, Optional } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { TinyDom, TinyHooks } from '@ephox/mcagar';
-import { SugarElement, TextContent } from '@ephox/sugar';
+import { PredicateFilter, SugarElement, SugarNode, TextContent } from '@ephox/sugar';
 import { assert } from 'chai';
 import * as fc from 'fast-check';
 
@@ -93,17 +93,41 @@ describe('browser.tinymce.plugins.lists.RetainContentTest', () => {
       editor.selection.setRng(range);
     };
 
+    const getNodeNameCount = (el: SugarElement<HTMLElement>) => {
+      const names = Arr.map(PredicateFilter.descendants(el, (node) => !Arr.contains([ 'ul', 'ol', 'li' ], SugarNode.name(node))), SugarNode.name);
+      const namesRecord = Arr.foldl(names, (record, name) => {
+        if (Obj.has(record, name)) {
+          record[name] = record[name] + 1;
+        } else {
+          record[name] = 1;
+        }
+
+        return record;
+      }, {} as Record<string, number>);
+
+      return namesRecord;
+    };
+
     const testEditorEffectOnList = (f: (editor: Editor) => void) => {
       fc.assert(fc.property(ArbList.domListWithSelectionGenerator, (arbList) => {
+        const list = SugarElement.fromDom(arbList.list);
         const editor = hook.editor();
-        const beforeEffectTextContent = TextContent.get(SugarElement.fromDom(arbList.list));
+        const beforeEffectTextContent = TextContent.get(list);
+        const beforeEffectNodeNameCount = getNodeNameCount(list);
 
         setArbListToEditor(editor, arbList);
 
         f(editor);
 
-        const afterEffectTextContent = TextContent.get(TinyDom.body(editor));
-        assert.equal(afterEffectTextContent, beforeEffectTextContent, 'Should be the original text content');
+        const body = TinyDom.body(editor);
+        const afterEffectTextContent = TextContent.get(body);
+        const afterEffectNodeNameCount = getNodeNameCount(body);
+
+        assert.equal(afterEffectTextContent, beforeEffectTextContent, 'Should be the original text content separate check since this could have been normalized');
+        assert.equal(afterEffectNodeNameCount.strong, beforeEffectNodeNameCount.strong, 'Should have retained all strong');
+        assert.equal(afterEffectNodeNameCount.em, beforeEffectNodeNameCount.em, 'Should have retained all em');
+        assert.equal(afterEffectNodeNameCount['#comment'], beforeEffectNodeNameCount['#comment'], 'Should have retained all comments');
+        assert.equal(afterEffectNodeNameCount.h3, beforeEffectNodeNameCount.h3, 'Should have retained all h3');
       }), { numRuns });
     };
 
