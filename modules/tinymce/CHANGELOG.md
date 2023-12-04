@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Bespoke dropdown toolbar buttons including `fontfamily`, `fontsize`, `blocks`, and `styles` incorrectly used plural words in their accessible names. #TINY-10426
+
 ## 6.8.1 - 2023-11-29
 
 ### Improved
