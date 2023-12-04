@@ -13,16 +13,41 @@ import Plugin from 'tinymce/plugins/lists/Plugin';
 import * as ArbList from '../module/ArbList';
 
 describe('browser.tinymce.plugins.lists.RetainContentTest', () => {
+  const getNodeNameCount = (el: SugarElement<HTMLElement>) => {
+    const names = Arr.map(PredicateFilter.descendants(el, (node) => !Arr.contains([ 'ul', 'ol', 'li' ], SugarNode.name(node))), SugarNode.name);
+    const namesRecord = Arr.foldl(names, (record, name) => {
+      if (Obj.has(record, name)) {
+        record[name] = record[name] + 1;
+      } else {
+        record[name] = 1;
+      }
+
+      return record;
+    }, {} as Record<string, number>);
+
+    return namesRecord;
+  };
+
+  const assertNodeNameCounts = (actual: Record<string, number>, expected: Record<string, number>) => {
+    assert.equal(actual.strong, expected.strong, 'Should have retained all strong');
+    assert.equal(actual.em, expected.em, 'Should have retained all em');
+    assert.equal(actual['#comment'], expected['#comment'], 'Should have retained all comments');
+    assert.equal(actual.h3, expected.h3, 'Should have retained all h3');
+  };
+
   context('Model tests', () => {
     const numRuns = 10;
 
     const testListContent = (list: SugarElement<HTMLUListElement | HTMLOListElement>) => {
       const listTextContent = TextContent.get(list);
+      const listNameCounts = getNodeNameCount(list);
       const { entries } = parseLists([ list ], Optional.none())[0];
       const composedListEl = composeList(document, entries).getOrDie('Should produce a list element');
       const composedListTextContent = TextContent.get(composedListEl);
+      const composedNameCounts = getNodeNameCount(composedListEl);
 
       assert.equal(composedListTextContent, listTextContent, 'Should retain all text content');
+      assertNodeNameCounts(composedNameCounts, listNameCounts);
     };
 
     const testListContentHtml = (html: string) => testListContent(SugarElement.fromHtml(html));
@@ -93,21 +118,6 @@ describe('browser.tinymce.plugins.lists.RetainContentTest', () => {
       editor.selection.setRng(range);
     };
 
-    const getNodeNameCount = (el: SugarElement<HTMLElement>) => {
-      const names = Arr.map(PredicateFilter.descendants(el, (node) => !Arr.contains([ 'ul', 'ol', 'li' ], SugarNode.name(node))), SugarNode.name);
-      const namesRecord = Arr.foldl(names, (record, name) => {
-        if (Obj.has(record, name)) {
-          record[name] = record[name] + 1;
-        } else {
-          record[name] = 1;
-        }
-
-        return record;
-      }, {} as Record<string, number>);
-
-      return namesRecord;
-    };
-
     const testEditorEffectOnList = (f: (editor: Editor) => void) => {
       fc.assert(fc.property(ArbList.domListWithSelectionGenerator, (arbList) => {
         const list = SugarElement.fromDom(arbList.list);
@@ -124,10 +134,7 @@ describe('browser.tinymce.plugins.lists.RetainContentTest', () => {
         const afterEffectNodeNameCount = getNodeNameCount(body);
 
         assert.equal(afterEffectTextContent, beforeEffectTextContent, 'Should be the original text content separate check since this could have been normalized');
-        assert.equal(afterEffectNodeNameCount.strong, beforeEffectNodeNameCount.strong, 'Should have retained all strong');
-        assert.equal(afterEffectNodeNameCount.em, beforeEffectNodeNameCount.em, 'Should have retained all em');
-        assert.equal(afterEffectNodeNameCount['#comment'], beforeEffectNodeNameCount['#comment'], 'Should have retained all comments');
-        assert.equal(afterEffectNodeNameCount.h3, beforeEffectNodeNameCount.h3, 'Should have retained all h3');
+        assertNodeNameCounts(afterEffectNodeNameCount, beforeEffectNodeNameCount);
       }), { numRuns });
     };
 
