@@ -48,10 +48,8 @@ const populateSegments = (segments: Segment[], entry: EntryList | EntryFragment)
     if (isEntryList(entry)) {
       Attribute.setAll(segment.list, entry.listAttributes);
       Attribute.setAll(segment.item, entry.itemAttributes);
-      InsertAll.append(segment.item, entry.content);
-    } else {
-      InsertAll.append(segment.item, entry.content);
     }
+    InsertAll.append(segment.item, entry.content);
   });
 };
 
@@ -106,18 +104,16 @@ const composeList = (scope: Document, entries: Entry[]): Optional<SugarElement<H
   let firstCommentEntryOpt: Optional<Entry> = Optional.none();
 
   const cast = Arr.foldl(entries, (cast, entry, i) => {
-    if (isEntryList(entry)) {
+    if (!isEntryComment(entry)) {
       return entry.depth > cast.length ? writeDeep(scope, cast, entry) : writeShallow(scope, cast, entry);
     } else {
       // this is needed becuase if the first element of the list is a comment we would not have the data to create the new list
-      if (i === 0 && isEntryComment(entry)) {
+      if (i === 0) {
         firstCommentEntryOpt = Optional.some(entry);
         return cast;
       }
 
-      return (entry.depth > cast.length && !isEntryComment(entry))
-        ? writeDeep(scope, cast, entry)
-        : writeShallow(scope, cast, entry);
+      return writeShallow(scope, cast, entry);
     }
   }, [] as Segment[]);
 
