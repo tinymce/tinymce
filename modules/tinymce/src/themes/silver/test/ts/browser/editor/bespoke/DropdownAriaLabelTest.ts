@@ -66,7 +66,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.DropdownAriaLabelTest', (
       (item) => `${scenario.menuLabel} ${item}`,
       Fun.curry(MenuUtils.pOpenMenuWithSelector, scenario.menuLabel),
       (editor) => {
-        const submenuSelector = 'div[title="Block"]';
+        const submenuSelector = 'div[title="Blocks"]';
         return TinyUiActions.pWaitForUi(editor, submenuSelector).then(() => TinyUiActions.clickOnUi(editor, submenuSelector));
       }
     );

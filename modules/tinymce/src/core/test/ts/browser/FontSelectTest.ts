@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.FontSelectTest', () => {
   const assertSelectBoxDisplayValue = (title: string, expectedValue: string) => {
-    const selectBox = UiFinder.findIn(SugarBody.body(), '*[title^="' + title + '"]').getOrDie();
+    const selectBox = UiFinder.findIn(SugarBody.body(), `*[title^="${title}"]`).getOrDie();
     const value = Strings.trim(TextContent.get(selectBox) ?? '');
     assert.equal(value, expectedValue, 'Should be the expected display value');
   };
@@ -17,7 +17,7 @@ describe('browser.tinymce.core.FontSelectTest', () => {
   context('Default font stack', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       base_url: '/project/tinymce/js/tinymce',
-      toolbar: 'fontsize fontfamily',
+      toolbar: 'fontfamily fontsize',
       content_style: [
         '.mce-content-body { font-family: Helvetica; font-size: 42px; }',
         '.mce-content-body p { font-family: Arial; font-size: 12px; }',
@@ -131,7 +131,7 @@ describe('browser.tinymce.core.FontSelectTest', () => {
   context('Custom default font stack', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       base_url: '/project/tinymce/js/tinymce',
-      toolbar: 'fontsize fontfamily',
+      toolbar: 'fontfamily fontsize',
       content_style: [
         '.mce-content-body { font-family: -apple-system, Arial; }',
         '.mce-content-body h1 { font-family: Helvetica; }',
