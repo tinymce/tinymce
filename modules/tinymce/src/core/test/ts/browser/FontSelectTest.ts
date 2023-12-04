@@ -33,7 +33,7 @@ describe('browser.tinymce.core.FontSelectTest', () => {
     ];
 
     it('TBA: Font family and font size on initial page load', () => {
-      assertSelectBoxDisplayValue('Font sizes', '12px');
+      assertSelectBoxDisplayValue('Font size', '12px');
       assertSelectBoxDisplayValue('Fonts', 'Arial');
     });
 
@@ -43,7 +43,7 @@ describe('browser.tinymce.core.FontSelectTest', () => {
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
       editor.nodeChanged();
       // p content style is 12px which does not match any pt values in the font size select values
-      assertSelectBoxDisplayValue('Font sizes', '12px');
+      assertSelectBoxDisplayValue('Font size', '12px');
       assertSelectBoxDisplayValue('Fonts', 'Arial');
     });
 
@@ -54,7 +54,7 @@ describe('browser.tinymce.core.FontSelectTest', () => {
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
       editor.nodeChanged();
       // h1 content style is 32px which matches 24pt in the font size select values so it should be converted
-      assertSelectBoxDisplayValue('Font sizes', '24pt');
+      assertSelectBoxDisplayValue('Font size', '24pt');
       assertSelectBoxDisplayValue('Fonts', 'Arial');
     });
 
@@ -64,7 +64,7 @@ describe('browser.tinymce.core.FontSelectTest', () => {
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
       editor.nodeChanged();
       // the following should be converted and pick up 12.75pt, although there's a rounded 13pt in the dropdown as well
-      assertSelectBoxDisplayValue('Font sizes', '12.75pt');
+      assertSelectBoxDisplayValue('Font size', '12.75pt');
       assertSelectBoxDisplayValue('Fonts', 'Times');
     });
 
@@ -75,7 +75,7 @@ describe('browser.tinymce.core.FontSelectTest', () => {
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
       editor.nodeChanged();
       // the following should stay as 18px because there's no matching pt value in the font size select values
-      assertSelectBoxDisplayValue('Font sizes', '18px');
+      assertSelectBoxDisplayValue('Font size', '18px');
       assertSelectBoxDisplayValue('Fonts', 'Times');
     });
 
@@ -84,7 +84,7 @@ describe('browser.tinymce.core.FontSelectTest', () => {
       editor.setContent('<p><font face="Times" size="1">a</font></p>', { format: 'raw' });
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
       editor.nodeChanged();
-      assertSelectBoxDisplayValue('Font sizes', '8pt');
+      assertSelectBoxDisplayValue('Font size', '8pt');
       assertSelectBoxDisplayValue('Fonts', 'Times');
     });
 
@@ -94,7 +94,7 @@ describe('browser.tinymce.core.FontSelectTest', () => {
       editor.setContent('<p style="font-family: Times; font-size: medium;">a</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
       editor.nodeChanged();
-      assertSelectBoxDisplayValue('Font sizes', '12pt');
+      assertSelectBoxDisplayValue('Font size', '12pt');
       assertSelectBoxDisplayValue('Fonts', 'Times');
     });
 
@@ -104,7 +104,7 @@ describe('browser.tinymce.core.FontSelectTest', () => {
       editor.focus();
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
       editor.nodeChanged();
-      assertSelectBoxDisplayValue('Font sizes', 'xx-small');
+      assertSelectBoxDisplayValue('Font size', 'xx-small');
       assertSelectBoxDisplayValue('Fonts', 'Times');
     });
 

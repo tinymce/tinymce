@@ -101,13 +101,13 @@ describe('browser.tinymce.themes.silver.editor.bespoke.DropdownAriaLabelTest', (
   }));
 
   it('TINY-10147: Font size menu should not update aria-label if displayed text does not change', testStandardDropdownAriaLabel({
-    menuLabel: 'Font sizes',
+    menuLabel: 'Font size',
     initialItem: '12pt',
     finalItem: '12pt'
   }));
 
   it('TINY-10147: Font size menu should update aria-label if displayed text changes', testStandardDropdownAriaLabel({
-    menuLabel: 'Font sizes',
+    menuLabel: 'Font size',
     initialItem: '12pt',
     finalItem: '8pt'
   }));

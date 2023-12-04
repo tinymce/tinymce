@@ -25,7 +25,7 @@ export interface NumberInputSpec {
   getNewValue: (text: string, updateFunction: (value: number, step: number) => number) => string;
 }
 
-const title = 'Font sizes';
+const title = 'Font size';
 const fallbackFontSize = '12pt';
 
 // See https://websemantics.uk/articles/font-size-conversion/ for conversions

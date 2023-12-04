@@ -387,7 +387,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
 
     it('TINY-9669: Disable align on noneditable content', testDisableOnNoneditable('Align'));
     it('TINY-9669: Disable fontfamily on noneditable content', testDisableOnNoneditable('Fonts'));
-    it('TINY-9669: Disable fontsize on noneditable content', testDisableOnNoneditable('Font sizes'));
+    it('TINY-9669: Disable fontsize on noneditable content', testDisableOnNoneditable('Font size'));
     it('TINY-9669: Disable blocks on noneditable content', testDisableOnNoneditable('Blocks'));
     it('TINY-9669: Disable styles on noneditable content', testDisableOnNoneditable('Formats'));
   });

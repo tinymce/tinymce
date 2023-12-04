@@ -27,7 +27,7 @@ describe('browser.tinymce.core.FontSelectCustomTest', () => {
   };
 
   it('Font family and font size on initial page load', () => {
-    assertSelectBoxDisplayValue('Font sizes', '12px');
+    assertSelectBoxDisplayValue('Font size', '12px');
     assertSelectBoxDisplayValue('Fonts', 'Arial');
   });
 
@@ -37,7 +37,7 @@ describe('browser.tinymce.core.FontSelectCustomTest', () => {
     editor.focus();
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
     editor.nodeChanged();
-    assertSelectBoxDisplayValue('Font sizes', '8pt');
+    assertSelectBoxDisplayValue('Font size', '8pt');
     assertSelectBoxDisplayValue('Fonts', 'Bookshelf Symbol 7');
   });
 
@@ -47,7 +47,7 @@ describe('browser.tinymce.core.FontSelectCustomTest', () => {
     editor.focus();
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     editor.nodeChanged();
-    assertSelectBoxDisplayValue('Font sizes', '12px');
+    assertSelectBoxDisplayValue('Font size', '12px');
     assertSelectBoxDisplayValue('Fonts', 'Bookshelf Symbol 7');
   });
 
@@ -57,7 +57,7 @@ describe('browser.tinymce.core.FontSelectCustomTest', () => {
     editor.focus();
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     editor.nodeChanged();
-    assertSelectBoxDisplayValue('Font sizes', '12px');
+    assertSelectBoxDisplayValue('Font size', '12px');
     assertSelectBoxDisplayValue('Fonts', 'Bauhaus 93');
   });
 });
