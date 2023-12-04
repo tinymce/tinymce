@@ -267,15 +267,13 @@ describe('browser.tinymce.core.ClosestCaretCandidateTest', () => {
           return child;
         }, el);
 
-        const expectedPath = Arr.range(depth + 2, Fun.constant(0));
-
         Insert.append(innerMost, SugarElement.fromText('xx xx'));
 
         testClosestCaretCandidate({
           html: Html.getOuter(el),
           targetPath: [ 0 ],
           dx: 10, dy: 60,
-          expected: Optional.some(expectedPath)
+          expected: Optional.some(Arr.range(depth + 2, Fun.constant(0)))
         });
       });
     });
