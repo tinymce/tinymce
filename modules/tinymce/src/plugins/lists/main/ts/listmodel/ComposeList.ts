@@ -1,7 +1,7 @@
 import { Arr, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Css, Insert, InsertAll, Replication, SugarElement, SugarNode } from '@ephox/sugar';
 
-import { Entry, EntryList, EntryNoList, isEntryComment, isEntryList, isEntryNoList } from './Entry';
+import { Entry, EntryFragment, EntryList, isEntryComment, isEntryFragment, isEntryList } from './Entry';
 import { ListType } from './Util';
 
 interface Segment {
@@ -32,15 +32,15 @@ const createSegment = (scope: Document, listType: ListType): Segment => {
   return segment;
 };
 
-const createSegments = (scope: Document, entry: EntryList | EntryNoList, size: number): Segment[] => {
+const createSegments = (scope: Document, entry: EntryList | EntryFragment, size: number): Segment[] => {
   const segments: Segment[] = [];
   for (let i = 0; i < size; i++) {
-    segments.push(createSegment(scope, isEntryList(entry) ? entry.listType : entry.parentListType ));
+    segments.push(createSegment(scope, isEntryList(entry) ? entry.listType : entry.parentListType));
   }
   return segments;
 };
 
-const populateSegments = (segments: Segment[], entry: EntryList | EntryNoList): void => {
+const populateSegments = (segments: Segment[], entry: EntryList | EntryFragment): void => {
   for (let i = 0; i < segments.length - 1; i++) {
     Css.set(segments[i].item, 'list-style-type', 'none');
   }
@@ -50,10 +50,7 @@ const populateSegments = (segments: Segment[], entry: EntryList | EntryNoList): 
       Attribute.setAll(segment.item, entry.itemAttributes);
       InsertAll.append(segment.item, entry.content);
     } else {
-      const item = SugarElement.fromTag(entry.type);
-      Attribute.setAll(item, entry.attributes);
-      InsertAll.append(item, entry.content);
-      InsertAll.append(segment.item, [ item ]);
+      InsertAll.append(segment.item, entry.content);
     }
   });
 };
@@ -77,13 +74,6 @@ const appendItem = (segment: Segment, item: SugarElement): void => {
   segment.item = item;
 };
 
-const createInPreviousLiItem = (scope: Document, attr: Record<string, any>, content: SugarElement[], tag: string): SugarElement => {
-  const item = SugarElement.fromTag(tag, scope);
-  Attribute.setAll(item, attr);
-  InsertAll.append(item, content);
-  return item;
-};
-
 const writeShallow = (scope: Document, cast: Segment[], entry: Entry): Segment[] => {
   const newCast = cast.slice(0, entry.depth);
 
@@ -92,11 +82,8 @@ const writeShallow = (scope: Document, cast: Segment[], entry: Entry): Segment[]
       const item = createItem(scope, entry.itemAttributes, entry.content);
       appendItem(segment, item);
       normalizeSegment(segment, entry);
-    } else if (isEntryNoList(entry)) {
-      if (entry.isInPreviousLi) {
-        const item = createInPreviousLiItem(scope, entry.attributes, entry.content, entry.type);
-        Insert.append(segment.item, item);
-      }
+    } else if (isEntryFragment(entry)) {
+      InsertAll.append(segment.item, entry.content);
     } else {
       const item = SugarElement.fromHtml(`<!--${entry.content}-->`);
       Insert.append(segment.list, item);
@@ -106,7 +93,7 @@ const writeShallow = (scope: Document, cast: Segment[], entry: Entry): Segment[]
   return newCast;
 };
 
-const writeDeep = (scope: Document, cast: Segment[], entry: EntryList | EntryNoList): Segment[] => {
+const writeDeep = (scope: Document, cast: Segment[], entry: EntryList | EntryFragment): Segment[] => {
   const segments = createSegments(scope, entry, entry.depth - cast.length);
   joinSegments(segments);
   populateSegments(segments, entry);

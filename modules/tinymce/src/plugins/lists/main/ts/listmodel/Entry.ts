@@ -18,7 +18,7 @@ General workflow: Parse lists to entries -> Manipulate entries -> Compose entrie
 0-------1---2--------->Depth
 */
 
-export type Entry = EntryList | EntryNoList | EntryComment;
+export type Entry = EntryList | EntryComment | EntryFragment;
 
 export interface EntryList {
   depth: number;
@@ -30,15 +30,13 @@ export interface EntryList {
   itemAttributes: Record<string, any>;
 }
 
-export interface EntryNoList {
+export interface EntryFragment {
+  isFragment: true;
   depth: number;
-  dirty: boolean;
   content: SugarElement<Node>[];
   isSelected: boolean;
-  type: string;
-  attributes: Record<string, any>;
+  dirty: boolean;
   parentListType: ListType;
-  isInPreviousLi: boolean;
 }
 
 export interface EntryComment {
@@ -51,9 +49,9 @@ export interface EntryComment {
 
 const isEntryList = (entry: Entry): entry is EntryList => 'listAttributes' in entry;
 
-const isEntryNoList = (entry: Entry): entry is EntryNoList => 'parentListType' in entry;
-
 const isEntryComment = (entry: Entry): entry is EntryComment => 'isComment' in entry;
+
+const isEntryFragment = (entry: Entry): entry is EntryFragment => 'isFragment' in entry;
 
 const isIndented = (entry: Entry): boolean => entry.depth > 0;
 
@@ -79,8 +77,8 @@ const createEntry = (li: SugarElement, depth: number, isSelected: boolean): Opti
 export {
   createEntry,
   isEntryComment,
+  isEntryFragment,
   isEntryList,
-  isEntryNoList,
   isIndented,
   isSelected
 };
