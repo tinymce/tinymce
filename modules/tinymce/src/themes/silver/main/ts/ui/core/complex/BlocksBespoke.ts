@@ -13,7 +13,7 @@ import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import { findNearest } from './utils/FormatDetection';
 import * as Tooltip from './utils/Tooltip';
 
-const title = 'Blocks';
+const title = 'Block';
 const fallbackFormat = 'Paragraph';
 
 const getSpec = (editor: Editor): SelectSpec => {

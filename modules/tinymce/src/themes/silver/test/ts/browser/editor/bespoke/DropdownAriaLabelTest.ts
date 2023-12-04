@@ -66,7 +66,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.DropdownAriaLabelTest', (
       (item) => `${scenario.menuLabel} ${item}`,
       Fun.curry(MenuUtils.pOpenMenuWithSelector, scenario.menuLabel),
       (editor) => {
-        const submenuSelector = 'div[title="Blocks"]';
+        const submenuSelector = 'div[title="Block"]';
         return TinyUiActions.pWaitForUi(editor, submenuSelector).then(() => TinyUiActions.clickOnUi(editor, submenuSelector));
       }
     );
@@ -76,61 +76,61 @@ describe('browser.tinymce.themes.silver.editor.bespoke.DropdownAriaLabelTest', (
     editor.setContent('');
   });
 
-  it('TINY-10147: Align menu should not update aria-label if displayed text does not change', testAlignDropdownAriaLabel({
+  it('TINY-10147: align menu should not update aria-label if displayed text does not change', testAlignDropdownAriaLabel({
     menuLabel: 'Align',
     initialItem: 'Left',
     finalItem: 'Left'
   }));
 
-  it('TINY-10147: Align menu should update aria-label if displayed text changes', testAlignDropdownAriaLabel({
+  it('TINY-10147: align menu should update aria-label if displayed text changes', testAlignDropdownAriaLabel({
     menuLabel: 'Align',
     initialItem: 'Left',
     finalItem: 'Right'
   }));
 
-  it('TINY-10147: Font family menu should not update aria-label if displayed text does not change', testStandardDropdownAriaLabel({
+  it('TINY-10147: fontfamily menu should not update aria-label if displayed text does not change', testStandardDropdownAriaLabel({
     menuLabel: 'Font',
     initialItem: 'Verdana',
     finalItem: 'Verdana'
   }));
 
-  it('TINY-10147: Font family menu should update aria-label if displayed text changes', testStandardDropdownAriaLabel({
+  it('TINY-10147: fontfamily menu should update aria-label if displayed text changes', testStandardDropdownAriaLabel({
     menuLabel: 'Font',
     initialItem: 'Verdana',
     finalItem: 'Arial'
   }));
 
-  it('TINY-10147: Font size menu should not update aria-label if displayed text does not change', testStandardDropdownAriaLabel({
+  it('TINY-10147: fontsize menu should not update aria-label if displayed text does not change', testStandardDropdownAriaLabel({
     menuLabel: 'Font size',
     initialItem: '12pt',
     finalItem: '12pt'
   }));
 
-  it('TINY-10147: Font size menu should update aria-label if displayed text changes', testStandardDropdownAriaLabel({
+  it('TINY-10147: fontsize menu should update aria-label if displayed text changes', testStandardDropdownAriaLabel({
     menuLabel: 'Font size',
     initialItem: '12pt',
     finalItem: '8pt'
   }));
 
-  it('TINY-10147: Blocks menu should not update aria-label if displayed text does not change', testStandardDropdownAriaLabel({
-    menuLabel: 'Blocks',
+  it('TINY-10147: blocks menu should not update aria-label if displayed text does not change', testStandardDropdownAriaLabel({
+    menuLabel: 'Block',
     initialItem: 'Paragraph',
     finalItem: 'Paragraph'
   }));
 
-  it('TINY-10147: Blocks menu should update aria-label if displayed text changes', testStandardDropdownAriaLabel({
-    menuLabel: 'Blocks',
+  it('TINY-10147: blocks menu should update aria-label if displayed text changes', testStandardDropdownAriaLabel({
+    menuLabel: 'Block',
     initialItem: 'Paragraph',
     finalItem: 'Heading 1'
   }));
 
-  it('TINY-10147: Styles menu should not update aria-label if displayed text does not change', testFormatsDropdownAriaLabel({
+  it('TINY-10147: styles menu should not update aria-label if displayed text does not change', testFormatsDropdownAriaLabel({
     menuLabel: 'Formats',
     initialItem: 'Paragraph',
     finalItem: 'Paragraph'
   }));
 
-  it('TINY-10147: Styles menu should update aria-label if displayed text changes', testFormatsDropdownAriaLabel({
+  it('TINY-10147: styles menu should update aria-label if displayed text changes', testFormatsDropdownAriaLabel({
     menuLabel: 'Formats',
     initialItem: 'Paragraph',
     finalItem: 'Div'

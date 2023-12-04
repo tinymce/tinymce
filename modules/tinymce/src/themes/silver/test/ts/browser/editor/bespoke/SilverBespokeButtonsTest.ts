@@ -279,7 +279,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
       TinyUiActions.keydown(editor, Keys.down());
       await pAssertFocusOnItem('Formats');
       TinyUiActions.keydown(editor, Keys.down());
-      await pAssertFocusOnItem('Blocks');
+      await pAssertFocusOnItem('Block');
       TinyUiActions.keydown(editor, Keys.right());
       await pAssertFocusOnItem('Paragraph');
       assertItemTicks('Checking blocks in menu', [ false, true ].concat(Arr.range(6, Fun.never)));
@@ -388,7 +388,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
     it('TINY-9669: Disable align on noneditable content', testDisableOnNoneditable('Align'));
     it('TINY-9669: Disable fontfamily on noneditable content', testDisableOnNoneditable('Font'));
     it('TINY-9669: Disable fontsize on noneditable content', testDisableOnNoneditable('Font size'));
-    it('TINY-9669: Disable blocks on noneditable content', testDisableOnNoneditable('Blocks'));
+    it('TINY-9669: Disable blocks on noneditable content', testDisableOnNoneditable('Block'));
     it('TINY-9669: Disable styles on noneditable content', testDisableOnNoneditable('Formats'));
   });
 });
