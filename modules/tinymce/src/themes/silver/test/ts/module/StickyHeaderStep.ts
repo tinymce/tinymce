@@ -100,7 +100,7 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
           {
             // first open this menu
             label: 'Open nested formats dropdown',
-            selector: 'button[aria-label^=Formats]'
+            selector: 'button[aria-label^=Format]'
           },
           {
             // opening the first menu should reveal the next menu which contains Align, open Align

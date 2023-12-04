@@ -25,7 +25,8 @@ export interface NumberInputSpec {
   getNewValue: (text: string, updateFunction: (value: number, step: number) => number) => string;
 }
 
-const title = 'Font size';
+const btnTitle = 'Font size';
+const menuTitle = 'Font sizes';
 const fallbackFontSize = '12pt';
 
 // See https://websemantics.uk/articles/font-size-conversion/ for conversions
@@ -113,7 +114,7 @@ const getSpec = (editor: Editor): SelectSpec => {
   const dataset = buildBasicSettingsDataset(editor, 'font_size_formats', Delimiter.Space);
 
   return {
-    tooltip: Tooltip.getTooltipText(editor, title, fallbackFontSize),
+    tooltip: Tooltip.getTooltipText(editor, btnTitle, fallbackFontSize),
     text: Optional.some(fallbackFontSize),
     icon: Optional.none(),
     isSelectedFor,
@@ -128,7 +129,7 @@ const getSpec = (editor: Editor): SelectSpec => {
 };
 
 const createFontSizeButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
-  createSelectButton(editor, backstage, getSpec(editor), title, 'FontSizeTextUpdate');
+  createSelectButton(editor, backstage, getSpec(editor), btnTitle, 'FontSizeTextUpdate');
 
 const getConfigFromUnit = (unit: string): Config => {
   const baseConfig = { step: 1 };
@@ -185,7 +186,7 @@ const createFontSizeInputButton = (editor: Editor, backstage: UiFactoryBackstage
 const createFontSizeMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('fontsize', {
-    text: title,
+    text: menuTitle,
     onSetup: onSetupEditableToggle(editor),
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   });
