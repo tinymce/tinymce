@@ -15,7 +15,7 @@ import { getStyleFormats, isFormatReference, isNestedFormat, StyleFormatType } f
 import { findNearest } from './utils/FormatDetection';
 import * as Tooltip from './utils/Tooltip';
 
-const title = 'Formats';
+const title = 'Format';
 
 const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
   const fallbackFormat = 'Paragraph';

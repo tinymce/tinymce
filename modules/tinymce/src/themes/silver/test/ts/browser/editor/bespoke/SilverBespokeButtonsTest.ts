@@ -277,7 +277,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
       TinyUiActions.keydown(editor, Keys.down());
       await pAssertFocusOnItem('Code');
       TinyUiActions.keydown(editor, Keys.down());
-      await pAssertFocusOnItem('Formats');
+      await pAssertFocusOnItem('Format');
       TinyUiActions.keydown(editor, Keys.down());
       await pAssertFocusOnItem('Block');
       TinyUiActions.keydown(editor, Keys.right());
@@ -343,7 +343,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
       TinyUiActions.keydown(editor, Keys.down());
       await pAssertFocusOnItem('Code');
       TinyUiActions.keydown(editor, Keys.down());
-      await pAssertFocusOnItem('Formats');
+      await pAssertFocusOnItem('Format');
       TinyUiActions.keydown(editor, Keys.right());
       await pAssertFocusOnItem('Headings');
       TinyUiActions.keydown(editor, Keys.right());
@@ -389,6 +389,6 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
     it('TINY-9669: Disable fontfamily on noneditable content', testDisableOnNoneditable('Font'));
     it('TINY-9669: Disable fontsize on noneditable content', testDisableOnNoneditable('Font size'));
     it('TINY-9669: Disable blocks on noneditable content', testDisableOnNoneditable('Block'));
-    it('TINY-9669: Disable styles on noneditable content', testDisableOnNoneditable('Formats'));
+    it('TINY-9669: Disable styles on noneditable content', testDisableOnNoneditable('Format'));
   });
 });

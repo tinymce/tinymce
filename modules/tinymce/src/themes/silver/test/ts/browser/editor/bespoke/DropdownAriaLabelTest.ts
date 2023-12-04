@@ -125,13 +125,13 @@ describe('browser.tinymce.themes.silver.editor.bespoke.DropdownAriaLabelTest', (
   }));
 
   it('TINY-10147: styles menu should not update aria-label if displayed text does not change', testFormatsDropdownAriaLabel({
-    menuLabel: 'Formats',
+    menuLabel: 'Format',
     initialItem: 'Paragraph',
     finalItem: 'Paragraph'
   }));
 
   it('TINY-10147: styles menu should update aria-label if displayed text changes', testFormatsDropdownAriaLabel({
-    menuLabel: 'Formats',
+    menuLabel: 'Format',
     initialItem: 'Paragraph',
     finalItem: 'Div'
   }));
