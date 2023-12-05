@@ -260,7 +260,7 @@ describe('browser.tinymce.core.ClosestCaretCandidateTest', () => {
 
       it('TINY-10380: should not take long to find the text candidate in next to a deeply nested structure', () => {
         const el: SugarElement<HTMLElement> = SugarElement.fromHtml('<div style="height: 100px; width: 20px"></div>');
-        const depth = 10;
+        const depth = 32;
 
         const innerMost = Arr.foldl(Arr.range(depth, (_) => SugarElement.fromTag('em')), (el, child) => {
           Insert.append(el, child);
@@ -280,7 +280,7 @@ describe('browser.tinymce.core.ClosestCaretCandidateTest', () => {
 
       it('TINY-10380: should not take long to find the img candidate in next to a deeply nested structure', () => {
         const el: SugarElement<HTMLElement> = SugarElement.fromHtml('<div style="height: 100px; width: 20px"></div>');
-        const depth = 10;
+        const depth = 32;
 
         const innerMost = Arr.foldl(Arr.range(depth, (_) => SugarElement.fromTag('em')), (el, child) => {
           Insert.append(el, child);
