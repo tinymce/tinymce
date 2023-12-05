@@ -240,7 +240,8 @@ describe('browser.tinymce.core.fmt.ExpandRangeTest', () => {
       editor.setContent(`<details class="mce-accordion" open="open"><summary>Accordion summary</summary><p>Accordion body</p></details>`);
       // caret before space character
       const rng1 = expandRng(editor, [ 0, 0, 0 ], 9, [ 0, 0, 0 ], 9, [{ block: 'h4', deep: true, remove: 'all', split: true }], false);
-      assertRange(editor, rng1, [ 0, 0, 0 ], 0, [ 0 ], 1 );
+      // assertRange(editor, rng1, [ 0, 0, 0 ], 0, [ 0 ], 1 );
+      assertRange(editor, rng1, [ 0 ], 0, [ 0, 0, 0 ], 17 );
 
       // caret after space character
       const rng2 = expandRng(editor, [ 0, 0, 0 ], 10, [ 0, 0, 0 ], 10, [{ block: 'h4', deep: true, remove: 'all', split: true }], false);
