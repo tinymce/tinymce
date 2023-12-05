@@ -114,7 +114,7 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
         await StickyUtils.pOpenMenuAndTestScrolling(() => MenuUtils.pOpenNestedMenus([
           {
             label: 'Open menu bar Formats menu',
-            selector: 'button:contains(Format)[role=menuitem]'
+            selector: 'button:contains(Formats)[role=menuitem]'
           },
           {
             label: 'then Formats submenu',
