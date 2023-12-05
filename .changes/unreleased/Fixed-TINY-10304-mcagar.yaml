@@ -1,7 +1,0 @@
-project: mcagar
-kind: Fixed
-body: '`TinyState.withNoneditableRootEditor` and `TinyState.withNoneditableRootEditorAsync`
-  now call the setEditableRoot API instead of using direct dom mutation.'
-time: 2023-10-30T16:40:00.031516+11:00
-custom:
-  Issue: TINY-10304

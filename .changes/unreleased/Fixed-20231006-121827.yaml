@@ -1,7 +1,0 @@
-project: alloy
-kind: Fixed
-body: Going back from a view to the editor in mobile visualization on browser caused
-  an error.
-time: 2023-10-06T12:18:27.056023+11:00
-custom:
-  Issue: TINY-10165
