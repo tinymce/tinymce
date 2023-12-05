@@ -15,7 +15,7 @@ endef
 define process_file
 	$(call echo_project_info,$(1)) \
 	changie batch $$version --project $$project_name; \
-	changie merge -u '## Unreleased'; \
+	yarn changie-merge; \
 	echo "Updated changelog $$project_name with version $$version";
 endef
 
