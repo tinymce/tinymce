@@ -25,8 +25,8 @@ export interface NumberInputSpec {
   getNewValue: (text: string, updateFunction: (value: number, step: number) => number) => string;
 }
 
-const btnTitle = 'Font size';
 const menuTitle = 'Font sizes';
+const btnTooltip = 'Font size {0}';
 const fallbackFontSize = '12pt';
 
 // See https://websemantics.uk/articles/font-size-conversion/ for conversions
@@ -114,7 +114,7 @@ const getSpec = (editor: Editor): SelectSpec => {
   const dataset = buildBasicSettingsDataset(editor, 'font_size_formats', Delimiter.Space);
 
   return {
-    tooltip: Tooltip.makeTooltipText(editor, `${btnTitle} {0}`, fallbackFontSize),
+    tooltip: Tooltip.makeTooltipText(editor, btnTooltip, fallbackFontSize),
     text: Optional.some(fallbackFontSize),
     icon: Optional.none(),
     isSelectedFor,
@@ -129,7 +129,7 @@ const getSpec = (editor: Editor): SelectSpec => {
 };
 
 const createFontSizeButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
-  createSelectButton(editor, backstage, getSpec(editor), btnTitle, 'FontSizeTextUpdate');
+  createSelectButton(editor, backstage, getSpec(editor), btnTooltip, 'FontSizeTextUpdate');
 
 const getConfigFromUnit = (unit: string): Config => {
   const baseConfig = { step: 1 };

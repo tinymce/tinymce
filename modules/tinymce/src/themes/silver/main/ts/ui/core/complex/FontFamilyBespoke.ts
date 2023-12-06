@@ -12,8 +12,8 @@ import { createMenuItems, createSelectButton, FormatterFormatItem, PreviewSpec, 
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import * as Tooltip from './utils/Tooltip';
 
-const btnTitle = 'Font';
 const menuTitle = 'Fonts';
+const btnTooltip = 'Font {0}';
 const systemFont = 'System Font';
 
 // A list of fonts that must be in a font family for the font to be recognised as the system stack
@@ -95,7 +95,7 @@ const getSpec = (editor: Editor): SelectSpec => {
   const dataset = buildBasicSettingsDataset(editor, 'font_family_formats', Delimiter.SemiColon);
 
   return {
-    tooltip: Tooltip.makeTooltipText(editor, `${btnTitle} {0}`, systemFont),
+    tooltip: Tooltip.makeTooltipText(editor, btnTooltip, systemFont),
     text: Optional.some(systemFont),
     icon: Optional.none(),
     isSelectedFor,
@@ -110,7 +110,7 @@ const getSpec = (editor: Editor): SelectSpec => {
 };
 
 const createFontFamilyButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
-  createSelectButton(editor, backstage, getSpec(editor), btnTitle, 'FontFamilyTextUpdate');
+  createSelectButton(editor, backstage, getSpec(editor), btnTooltip, 'FontFamilyTextUpdate');
 
 // TODO: Test this!
 const createFontFamilyMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
