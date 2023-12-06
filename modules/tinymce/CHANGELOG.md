@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Clicking inside table cells with heavily nested content could cause the browser to hang. #TINY-10380
+
 ## 6.8.1 - 2023-11-29
 
 ### Improved
