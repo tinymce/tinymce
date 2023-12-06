@@ -100,7 +100,7 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
           {
             // first open this menu
             label: 'Open nested formats dropdown',
-            selector: 'button[aria-label^=Formats]'
+            selector: 'button[aria-label^=Format]'
           },
           {
             // opening the first menu should reveal the next menu which contains Align, open Align
@@ -113,7 +113,7 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
       it('Open menubar Formats menu => Formats => Inline => check sticky states', async () => {
         await StickyUtils.pOpenMenuAndTestScrolling(() => MenuUtils.pOpenNestedMenus([
           {
-            label: 'Open menu bar Formats menu',
+            label: 'Open menu bar Format menu',
             selector: 'button:contains(Format)[role=menuitem]'
           },
           {
