@@ -72,7 +72,7 @@ const bedrockHeadless = (tests, browser, auto) => {
   }
 };
 
-const bedrockBrowser = (tests, browserName, osName, bucket, buckets, chunk, auto, opts) => {
+const bedrockBrowser = (tests, browserName, osName, bucket, buckets, chunk, remote, auto, opts) => {
   if (tests.length === 0) {
     return {};
   } else {
@@ -86,6 +86,7 @@ const bedrockBrowser = (tests, browserName, osName, bucket, buckets, chunk, auto
         bucket: bucket,
         buckets: buckets,
         chunk: chunk,
+        remote: remote,
 
         // we have a few tests that don't play nicely when combined together in the monorepo
         retries: 3,
@@ -161,7 +162,7 @@ module.exports = function (grunt) {
     },
     'bedrock-auto': {
       ...bedrockHeadless(headlessTests, headlessBrowser, true),
-      ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, chunk, true, opts)
+      ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, chunk, remote, true, opts)
     },
     'bedrock-manual': {
       ...bedrockHeadless(headlessTests, headlessBrowser, false),
