@@ -1,5 +1,5 @@
 import { UiFinder } from '@ephox/agar';
-import { after, afterEach, before, context, describe, it } from '@ephox/bedrock-client';
+import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { Attribute, SugarBody, SugarElement } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -149,28 +149,24 @@ describe('browser.tinymce.themes.silver.editor.bespoke.DropdownAriaLabelTest', (
   });
 
   context('With translations', () => {
-    const hook = TinyHooks.bddSetup<Editor>(settings);
-
-    before(() => {
-      I18n.add('test', {
-        'left': 'left translated',
-        'right': 'right translated',
-        'Left': 'Left translated',
-        'Right': 'Right translated',
-        'Verdana': 'Verdana translated',
-        'Arial': 'Arial translated',
-        '12pt': '12pt translated',
-        '8pt': '8pt translated',
-        'Paragraph': 'Paragraph translated',
-        'Heading 1': 'Heading 1 translated',
-        'Div': 'Div translated'
-      });
-
-      I18n.setCode('test');
-    });
-
-    after(() => {
-      I18n.setCode('en');
+    const hook = TinyHooks.bddSetup<Editor>({
+      ...settings,
+      language: 'test',
+      setup: () => {
+        I18n.add('test', {
+          'left': 'left translated',
+          'right': 'right translated',
+          'Left': 'Left translated',
+          'Right': 'Right translated',
+          'Verdana': 'Verdana translated',
+          'Arial': 'Arial translated',
+          '12pt': '12pt translated',
+          '8pt': '8pt translated',
+          'Paragraph': 'Paragraph translated',
+          'Heading 1': 'Heading 1 translated',
+          'Div': 'Div translated'
+        });
+      }
     });
 
     afterEach(makeCleanupFn(hook));
