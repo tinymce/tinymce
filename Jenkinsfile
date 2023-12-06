@@ -89,16 +89,11 @@ def runTestPod(String name, String browser, String provider, String bucket, Stri
   }
 }
 
-def getProcesses(plats) {
-  return plats.collectEntries { target ->
-    return runTest(target)
+def gitMerge(String primaryBranch) {
+  if (env.BRANCH_NAME != primaryBranch) {
+    echo "Merging ${primaryBranch} into this branch to run tests"
+    exec("git merge --no-commit --no-ff origin/${primaryBranch}")
   }
-}
-
-def isPrimary() {
-  def props = readProperties(file: 'build.properties')
-  String primaryBranch = props.primaryBranch
-  assert primaryBranch != null && primaryBranch != ""
 }
 
 def props
