@@ -44,7 +44,7 @@ const getSpec = (editor: Editor): SelectSpec => {
       .each((item) => editor.execCommand(item.command));
 
   return {
-    tooltip: Tooltip.getTooltipText(editor, title, fallbackAlignment),
+    tooltip: Tooltip.makeTooltipText(editor, `${title} {0}`, fallbackAlignment),
     text: Optional.none(),
     icon: Optional.some('align-left'),
     isSelectedFor,

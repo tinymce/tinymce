@@ -45,7 +45,7 @@ const getSpec = (editor: Editor): SelectSpec => {
   const dataset = buildBasicSettingsDataset(editor, 'block_formats', Delimiter.SemiColon);
 
   return {
-    tooltip: Tooltip.getTooltipText(editor, btnTitle, fallbackFormat),
+    tooltip: Tooltip.makeTooltipText(editor, `${btnTitle} {0}`, fallbackFormat),
     text: Optional.some(fallbackFormat),
     icon: Optional.none(),
     isSelectedFor,

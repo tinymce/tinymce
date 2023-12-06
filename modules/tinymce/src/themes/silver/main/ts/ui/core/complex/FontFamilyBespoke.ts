@@ -95,7 +95,7 @@ const getSpec = (editor: Editor): SelectSpec => {
   const dataset = buildBasicSettingsDataset(editor, 'font_family_formats', Delimiter.SemiColon);
 
   return {
-    tooltip: Tooltip.getTooltipText(editor, btnTitle, systemFont),
+    tooltip: Tooltip.makeTooltipText(editor, `${btnTitle} {0}`, systemFont),
     text: Optional.some(systemFont),
     icon: Optional.none(),
     isSelectedFor,

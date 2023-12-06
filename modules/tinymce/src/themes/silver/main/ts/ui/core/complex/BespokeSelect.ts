@@ -188,7 +188,7 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
   // Set the initial text when the component is attached and then update on node changes
   const onSetup = (api: BespokeSelectApi) => {
     const handler = (e: EditorEvent<{ value: string }>) =>
-      api.setTooltip(Tooltip.getTooltipText(editor, title, e.value));
+      api.setTooltip(Tooltip.makeTooltipText(editor, `${title} {0}`, e.value));
     editor.on(textUpdateEventName, handler);
     return composeUnbinders(
       onSetupEvent(editor, 'NodeChange', (api: BespokeSelectApi) => {

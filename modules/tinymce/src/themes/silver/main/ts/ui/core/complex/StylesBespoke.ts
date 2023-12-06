@@ -51,7 +51,7 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
   };
 
   return {
-    tooltip: Tooltip.getTooltipText(editor, btnTitle, fallbackFormat),
+    tooltip: Tooltip.makeTooltipText(editor, `${btnTitle} {0}`, fallbackFormat),
     text: Optional.some(fallbackFormat),
     icon: Optional.none(),
     isSelectedFor,

@@ -114,7 +114,7 @@ const getSpec = (editor: Editor): SelectSpec => {
   const dataset = buildBasicSettingsDataset(editor, 'font_size_formats', Delimiter.Space);
 
   return {
-    tooltip: Tooltip.getTooltipText(editor, btnTitle, fallbackFontSize),
+    tooltip: Tooltip.makeTooltipText(editor, `${btnTitle} {0}`, fallbackFontSize),
     text: Optional.some(fallbackFontSize),
     icon: Optional.none(),
     isSelectedFor,
