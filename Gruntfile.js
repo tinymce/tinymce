@@ -72,7 +72,7 @@ const bedrockHeadless = (tests, browser, auto) => {
   }
 };
 
-const bedrockBrowser = (tests, browserName, osName, bucket, buckets, chunk, auto) => {
+const bedrockBrowser = (tests, browserName, osName, bucket, buckets, chunk, auto, opts) => {
   if (tests.length === 0) {
     return {};
   } else {
@@ -139,6 +139,8 @@ module.exports = function (grunt) {
   const activeBrowser = grunt.option('bedrock-browser') || 'chrome-headless';
   const headlessBrowser = activeBrowser.endsWith("-headless") ? activeBrowser : 'chrome-headless';
   const activeOs = grunt.option('bedrock-os') || 'tests';
+
+  const remote = grunt.option('remote');
 
   const bedrockOpts = (grunt, availableOpts) => {
     return availableOpts.reduce((opts, opt) => {
