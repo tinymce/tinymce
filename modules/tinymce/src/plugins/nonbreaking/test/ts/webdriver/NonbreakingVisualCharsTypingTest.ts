@@ -47,7 +47,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest
     })));
   });
 
-  it('TINY-3647: Add text to editor, click on the nbsp button, and assert content is correct', () => {
+  it.skip('TINY-3647: Add text to editor, click on the nbsp button, and assert content is correct', () => {
     const editor = hook.editor();
     editor.setContent('test');
     TinySelections.setCursor(editor, [ 0, 0 ], 4);

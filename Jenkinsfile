@@ -131,9 +131,10 @@ timestamps {
   //
 
   def platforms = [
-    [ browser: 'chrome', provider: 'lambdatest', buckets: 2 ],
-    [ browser: 'safari', provider: 'lambdatest', buckets: 2 ],
-    [ browser: 'firefox', provider: 'aws', buckets: 2 ]
+    [ browser: 'chrome', provider: 'aws', buckets: 2 ],
+    [ browser: 'edge', provider: 'aws', buckets: 2 ],
+    [ browser: 'firefox', provider: 'aws', buckets: 2 ],
+    [ browser: 'safari', provider: 'lambdatest', buckets: 2 ]
   ];
 
   def processes = [:]

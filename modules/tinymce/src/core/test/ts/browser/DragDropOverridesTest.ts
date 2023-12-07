@@ -207,7 +207,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       assertEventsDispatched([ 'dragstart', 'dragend' ]);
     });
 
-    it('TINY-7917: Dropping draggable element inside editor fires dragend event', async () => {
+    it.skip('TINY-7917: Dropping draggable element inside editor fires dragend event', async () => {
       const editor = hook.editor();
       await pDragDropElementInsideEditor(editor);
 
@@ -238,7 +238,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
       TinyAssertions.assertContent(editor, initialContent);
     });
 
-    it('TINY-7917: Pressing escape during drag fires dragend event', async () => {
+    it.skip('TINY-7917: Pressing escape during drag fires dragend event', async () => {
       const editor = hook.editor();
       editor.setContent('<p contenteditable="false" class="draggable">a</p><p class="dest">bc123</p>');
       const target = UiFinder.findIn(TinyDom.body(editor), '.draggable').getOrDie();
