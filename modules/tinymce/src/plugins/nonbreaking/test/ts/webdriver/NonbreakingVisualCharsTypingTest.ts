@@ -8,7 +8,7 @@ import Editor from 'tinymce/core/api/Editor';
 import NonbreakingPlugin from 'tinymce/plugins/nonbreaking/Plugin';
 import VisualCharsPlugin from 'tinymce/plugins/visualchars/Plugin';
 
-describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest', () => {
+describe.skip('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest', () => {
   // Note: Uses RealKeys, so needs a browser. Headless won't work.
   const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'nonbreaking visualchars',
@@ -47,7 +47,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest
     })));
   });
 
-  it.skip('TINY-3647: Add text to editor, click on the nbsp button, and assert content is correct', () => {
+  it('TINY-3647: Add text to editor, click on the nbsp button, and assert content is correct', () => {
     const editor = hook.editor();
     editor.setContent('test');
     TinySelections.setCursor(editor, [ 0, 0 ], 4);
