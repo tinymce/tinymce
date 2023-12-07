@@ -9,14 +9,17 @@ import * as Options from '../../../api/Options';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { onActionToggleFormat, onSetupEditableToggle } from '../ControlUtils';
-import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
+import { BespokeSelectTooltip, createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
 import { AdvancedSelectDataset, BasicSelectItem, SelectDataset } from './SelectDatasets';
 import { getStyleFormats, isFormatReference, isNestedFormat, StyleFormatType } from './StyleFormat';
 import { findNearest } from './utils/FormatDetection';
 import * as Tooltip from './utils/Tooltip';
 
 const menuTitle = 'Formats';
-const btnTooltip = 'Format {0}';
+const btnTooltip: BespokeSelectTooltip = {
+  tooltip: 'Format {0}',
+  hasPlaceholder: true
+};
 
 const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
   const fallbackFormat = 'Paragraph';
@@ -51,7 +54,7 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
   };
 
   return {
-    tooltip: Tooltip.makeTooltipText(editor, btnTooltip, fallbackFormat),
+    tooltip: Tooltip.makeTooltip(editor, btnTooltip, fallbackFormat),
     text: Optional.some(fallbackFormat),
     icon: Optional.none(),
     isSelectedFor,

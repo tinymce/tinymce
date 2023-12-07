@@ -7,12 +7,15 @@ import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import * as Events from '../../../api/Events';
 import { updateMenuIcon } from '../../dropdown/CommonDropdown';
 import { onSetupEditableToggle } from '../ControlUtils';
-import { createMenuItems, createSelectButton, FormatterFormatItem, SelectedFormat, SelectSpec } from './BespokeSelect';
+import { BespokeSelectTooltip, createMenuItems, createSelectButton, FormatterFormatItem, SelectedFormat, SelectSpec } from './BespokeSelect';
 import { buildBasicStaticDataset } from './SelectDatasets';
 import * as Tooltip from './utils/Tooltip';
 
 const title = 'Align';
-const tooltip = 'Align {0}';
+const btnTooltip: BespokeSelectTooltip = {
+  tooltip: title,
+  hasPlaceholder: false
+};
 const fallbackAlignment = 'left';
 
 const alignMenuItems = [
@@ -45,7 +48,7 @@ const getSpec = (editor: Editor): SelectSpec => {
       .each((item) => editor.execCommand(item.command));
 
   return {
-    tooltip: Tooltip.makeTooltipText(editor, tooltip, fallbackAlignment),
+    tooltip: Tooltip.makeTooltip(editor, btnTooltip, fallbackAlignment),
     text: Optional.none(),
     icon: Optional.some('align-left'),
     isSelectedFor,
@@ -60,7 +63,7 @@ const getSpec = (editor: Editor): SelectSpec => {
 };
 
 const createAlignButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
-  createSelectButton(editor, backstage, getSpec(editor), tooltip, 'AlignTextUpdate');
+  createSelectButton(editor, backstage, getSpec(editor), btnTooltip, 'AlignTextUpdate');
 
 const createAlignMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
