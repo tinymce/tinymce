@@ -561,6 +561,77 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
     );
   });
 
+  it('TINY-10414: it should be possible to indent/togle elements of a list inside an `li` with a list and other elements', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<ul>' +
+        '<li>A' +
+          '<ul>' +
+            '<li style="list-style-type: none;">' +
+              '<ul>' +
+                '<li>B</li>' +
+              '</ul>' +
+              '<p>C</p>' +
+              '<p>D</p>' +
+              '<ul>' +
+                '<li>E1</li>' +
+                '<li>E2</li>' +
+              '</ul>' +
+            '</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>'
+    );
+
+    TinySelections.setCursor(editor, [ 0, 0, 1, 0, 3, 0, 0 ], 0);
+    editor.execCommand('Outdent');
+
+    TinyAssertions.assertContent(editor,
+      '<ul>' +
+        '<li>A' +
+          '<ul>' +
+            '<li style="list-style-type: none;">' +
+              '<ul>' +
+                '<li>B</li>' +
+              '</ul>' +
+              '<p>C</p>' +
+              '<p>D</p>' +
+            '</li>' +
+            '<li>' +
+              'E1' +
+              '<ul>' +
+                '<li>E2</li>' +
+              '</ul>' +
+            '</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>'
+    );
+
+    TinySelections.setCursor(editor, [ 0, 0, 1, 1, 1, 0, 0 ], 0);
+    editor.execCommand('InsertUnorderedList');
+
+    TinyAssertions.assertContent(editor,
+      '<ul>' +
+        '<li>A' +
+          '<ul>' +
+            '<li style="list-style-type: none;">' +
+              '<ul>' +
+                '<li>B</li>' +
+              '</ul>' +
+              '<p>C</p>' +
+              '<p>D</p>' +
+            '</li>' +
+            '<li>' +
+              'E1' +
+            '</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>' +
+      '<p>E2</p>'
+    );
+  });
+
   it('TINY-10268: a `list` inside a `li` surrounded by 2 not element should allow the user to indent/outdent its `li`', () => {
     const editor = hook.editor();
     editor.setContent(`<ul>

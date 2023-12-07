@@ -60,6 +60,8 @@ const parseItem: Parser = (depth: number, itemSelection: Optional<ItemSelection>
         } else {
           if (isListItem(liChild)) {
             return acc.concat(parseSingleItem(depth, itemSelection, selectionState, liChild));
+          } else if (isList(liChild)) {
+            return acc.concat(parseList(depth, itemSelection, selectionState, liChild));
           } else {
             const fragment: EntryFragment = {
               isFragment: true,
