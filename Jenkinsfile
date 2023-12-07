@@ -40,7 +40,7 @@ def runBedrockTest(String command, Boolean runAll, int retry = 0, int timeout = 
     if (retry > 0) {
       echo "Running retry [${retry}] after [${timeout}]"
       sleep(timeout)
-      runBedrockTest(command, runAll, retry - 1)
+      runBedrockTest(command, runAll, retry - 1, timeout)
     } else {
       error("Unexpected error")
     }
@@ -56,7 +56,7 @@ def runRemoteTests(String name, String browser, String provider, String bucket, 
   def awsOpts = " --sishDomain=sish.osu.tiny.work --devicefarmArn=arn:aws:devicefarm:us-west-2:103651136441:testgrid-project:79ff2b40-fe26-440f-9539-53163c25442e"
   def bedrockCommand =
   "yarn browser-test" +
-    " --chunk=50" +
+    " --chunk=400" +
     " --bedrock-browser=" + browser +
     " --remote=" + provider +
     " --bucket=" + bucket +
@@ -138,9 +138,9 @@ timestamps {
   //
 
   def platforms = [
-    [ browser: 'chrome', provider: 'aws', buckets: 2 ],
-    [ browser: 'edge', provider: 'aws', buckets: 2 ],
-    [ browser: 'firefox', provider: 'aws', buckets: 2 ],
+    [ browser: 'chrome', provider: 'aws', buckets: 3 ],
+    [ browser: 'edge', provider: 'aws', buckets: 3 ],
+    [ browser: 'firefox', provider: 'aws', buckets: 3 ],
     [ browser: 'safari', provider: 'lambdatest', buckets: 2 ]
   ];
 
