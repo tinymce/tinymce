@@ -8,15 +8,12 @@ import * as Options from '../../../api/Options';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { onSetupEditableToggle } from '../ControlUtils';
-import { BespokeSelectTooltip, createMenuItems, createSelectButton, FormatterFormatItem, PreviewSpec, SelectedFormat, SelectSpec } from './BespokeSelect';
+import { createMenuItems, createSelectButton, FormatterFormatItem, PreviewSpec, SelectedFormat, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import * as Tooltip from './utils/Tooltip';
 
 const menuTitle = 'Fonts';
-const btnTooltip: BespokeSelectTooltip = {
-  tooltip: 'Font {0}',
-  hasPlaceholder: true
-};
+const btnTooltip = 'Font {0}';
 const systemFont = 'System Font';
 
 // A list of fonts that must be in a font family for the font to be recognised as the system stack
@@ -98,7 +95,7 @@ const getSpec = (editor: Editor): SelectSpec => {
   const dataset = buildBasicSettingsDataset(editor, 'font_family_formats', Delimiter.SemiColon);
 
   return {
-    tooltip: Tooltip.makeTooltip(editor, btnTooltip, systemFont),
+    tooltip: Tooltip.makeTooltipText(editor, btnTooltip, systemFont),
     text: Optional.some(systemFont),
     icon: Optional.none(),
     isSelectedFor,
