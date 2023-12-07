@@ -98,7 +98,7 @@ describe('browser.tinymce.plugins.lists.RetainContentTest', () => {
     });
 
     it('TINY-10414: Parse and compose should not throw away content', () => {
-      fc.assert(fc.property(ArbList.domListGenerator, (list) => testListContent(SugarElement.fromDom(list))), {
+      fc.assert(fc.property(ArbList.createDomListGenerator(), (list) => testListContent(SugarElement.fromDom(list))), {
         numRuns
       });
     });
@@ -119,7 +119,7 @@ describe('browser.tinymce.plugins.lists.RetainContentTest', () => {
     };
 
     const testEditorEffectOnList = (f: (editor: Editor) => void) => {
-      fc.assert(fc.property(ArbList.domListWithSelectionGenerator, (arbList) => {
+      fc.assert(fc.property(ArbList.createDomListWithSelectionGenerator(), (arbList) => {
         const list = SugarElement.fromDom(arbList.list);
         const editor = hook.editor();
         const beforeEffectTextContent = TextContent.get(list);

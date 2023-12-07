@@ -39,6 +39,10 @@ export interface ArbDomListElementWithSelection {
   readonly range: Range;
 }
 
+export interface ArbListGeneratorOptions {
+  readonly contentElements?: string[];
+}
+
 const isArbListElement = (arb: ArbListItemChildNode): arb is ArbListElement => arb.type === 'ol' || arb.type === 'ul';
 const isArbTextNode = (arb: ArbListItemChildNode): arb is ArbTextNode => arb.type === '#text';
 const isArbCommentNode = (arb: ArbListItemChildNode): arb is ArbCommentNode => arb.type === '#comment';
@@ -55,37 +59,41 @@ const commentNodeGenerator: fc.Arbitrary<ArbCommentNode> = fc.record({
   value: textGenerator
 });
 
-const elementNodeGenerator: fc.Arbitrary<ArbElementNode> = fc.record({
-  type: fc.constantFrom('strong', 'em', 'h3', 'div'),
-  children: fc.array(fc.oneof(textNodeGenerator, commentNodeGenerator), { minLength: 1, maxLength: 5 })
-});
+const createElementNodeGenerator = (options: ArbListGeneratorOptions): fc.Arbitrary<ArbElementNode> => {
+  return fc.record({
+    type: fc.constantFrom.apply(fc, options.contentElements ?? [ 'strong', 'em', 'h3', 'div' ]),
+    children: fc.array(fc.oneof(textNodeGenerator, commentNodeGenerator), { minLength: 1, maxLength: 5 })
+  });
+};
 
 const depthIdentifier = fc.createDepthIdentifier();
 
-const listElementGenerator = fc.letrec((tie) => ({
-  node: fc.record({
-    type: fc.constantFrom('ul', 'ol'),
-    children: fc.array(
-      fc.oneof(
-        { maxDepth: 5, depthIdentifier },
-        fc.record({
-          type: fc.constant('li'),
-          children: fc.array(
-            fc.oneof(
-              { maxDepth: 5, depthIdentifier },
-              textNodeGenerator,
-              commentNodeGenerator,
-              elementNodeGenerator,
-              tie('node')
-            ),
-            { minLength: 1, maxLength: 5 }
-          )
-        })
+const createListElementGenerator = (options: ArbListGeneratorOptions): fc.Arbitrary<ArbListElement> => {
+  return fc.letrec((tie) => ({
+    node: fc.record({
+      type: fc.constantFrom('ul', 'ol'),
+      children: fc.array(
+        fc.oneof(
+          { maxDepth: 5, depthIdentifier },
+          fc.record({
+            type: fc.constant('li'),
+            children: fc.array(
+              fc.oneof(
+                { maxDepth: 5, depthIdentifier },
+                textNodeGenerator,
+                commentNodeGenerator,
+                createElementNodeGenerator(options),
+                tie('node')
+              ),
+              { minLength: 1, maxLength: 5 }
+            )
+          })
+        ),
+        { minLength: 1, maxLength: 5 }
       ),
-      { minLength: 1, maxLength: 5 }
-    ),
-  }),
-})).node as unknown as fc.Arbitrary<ArbListElement>; // Need magic lie here since tie are unknowns but they are not in the generated output
+    }),
+  })).node as unknown as fc.Arbitrary<ArbListElement>; // Need magic lie here since tie are unknowns but they are not in the generated output
+};
 
 const getTextNodes = (list: ArbListElement) => {
   const textNodes: ArbTextNode[] = [];
@@ -117,18 +125,20 @@ const getTextNodes = (list: ArbListElement) => {
   return textNodes;
 };
 
-const listElementWithSelectionGenerator: fc.Arbitrary<ArbListElementWithSelection> = listElementGenerator.chain((list) => {
-  const textNodes = getTextNodes(list);
-  const numTextNodes = textNodes.length;
+const createListElementWithSelectionGenerator = (options: ArbListGeneratorOptions): fc.Arbitrary<ArbListElementWithSelection> => {
+  return createListElementGenerator(options).chain((list) => {
+    const textNodes = getTextNodes(list);
+    const numTextNodes = textNodes.length;
 
-  return fc.record<ArbListElementWithSelection>({
-    list: fc.constant(list),
-    startTextNodeIndex: fc.nat(numTextNodes),
-    endTextNodeIndex: fc.nat(numTextNodes)
+    return fc.record<ArbListElementWithSelection>({
+      list: fc.constant(list),
+      startTextNodeIndex: fc.nat(numTextNodes),
+      endTextNodeIndex: fc.nat(numTextNodes)
+    });
+  }).filter(({ startTextNodeIndex, endTextNodeIndex }) => startTextNodeIndex > 0 && endTextNodeIndex > 0).map((list) => {
+    return { ...list, startTextNodeIndex: list.startTextNodeIndex - 1, endTextNodeIndex: list.endTextNodeIndex - 1 };
   });
-}).filter(({ startTextNodeIndex, endTextNodeIndex }) => startTextNodeIndex > 0 && endTextNodeIndex > 0).map((list) => {
-  return { ...list, startTextNodeIndex: list.startTextNodeIndex - 1, endTextNodeIndex: list.endTextNodeIndex - 1 };
-});
+};
 
 const toDomListElementWithSelection = (arbList: ArbListElementWithSelection) => {
   const textNodes: Text[] = [];
@@ -186,19 +196,23 @@ const toDomListElementWithSelection = (arbList: ArbListElementWithSelection) => 
   return { listElement, startContainer, startOffset, endContainer, endOffset };
 };
 
-// TODO: This can be optimized so that it doesn't produce a DOM Range and then just throws it away
-export const domListGenerator: fc.Arbitrary<HTMLUListElement | HTMLOListElement> = listElementWithSelectionGenerator.chain((arbList) => fc.constant(toDomListElementWithSelection(arbList).listElement));
+export const createDomListGenerator = (options: ArbListGeneratorOptions = {}): fc.Arbitrary<HTMLUListElement | HTMLOListElement> => {
+  // TODO: This can be optimized so that it doesn't produce a DOM Range and then just throws it away
+  return createListElementWithSelectionGenerator(options).chain((arbList) => fc.constant(toDomListElementWithSelection(arbList).listElement));
+};
 
-export const domListWithSelectionGenerator: fc.Arbitrary<ArbDomListElementWithSelection> = listElementWithSelectionGenerator.chain((arbList) => {
-  const { listElement, startContainer, startOffset, endContainer, endOffset } = toDomListElementWithSelection(arbList);
+export const createDomListWithSelectionGenerator = (options: ArbListGeneratorOptions = {}): fc.Arbitrary<ArbDomListElementWithSelection> => {
+  return createListElementWithSelectionGenerator(options).chain((arbList) => {
+    const { listElement, startContainer, startOffset, endContainer, endOffset } = toDomListElementWithSelection(arbList);
 
-  const range = document.createRange();
-  range.setStart(startContainer, startOffset);
-  range.setEnd(endContainer, endOffset);
+    const range = document.createRange();
+    range.setStart(startContainer, startOffset);
+    range.setEnd(endContainer, endOffset);
 
-  return fc.record<ArbDomListElementWithSelection>({
-    list: fc.constant(listElement),
-    range: fc.constant(range)
+    return fc.record<ArbDomListElementWithSelection>({
+      list: fc.constant(listElement),
+      range: fc.constant(range)
+    });
   });
-});
+};
 
