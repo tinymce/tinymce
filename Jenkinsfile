@@ -28,7 +28,7 @@ def withLtCreds(Closure body) {
   }
 }
 
-def runBedrockTest(String command, Boolean runAll) {
+def runBedrockTest(String command, Boolean runAll, int retry = 0, int timeout = 0) {
   def bedrockCmd = command + (runAll ? " --ignore-lerna-changed=true" : "")
   echo "Running Bedrock cmd: ${command}"
   def testStatus = sh(script: command, returnStatus: true)
@@ -37,7 +37,13 @@ def runBedrockTest(String command, Boolean runAll) {
   if (testStatus == 4) {
     unstable("Test failed")
   } else if (testStatus != 0) {
-    error("Unexpected error")
+    if (retry > 0) {
+      echo "Running retry [${retry}] after [${timeout}]"
+      sleep(timeout)
+      runBedrockTest(command, runAll, retry - 1)
+    } else {
+      error("Unexpected error")
+    }
   }
 }
 
@@ -46,7 +52,7 @@ def runHeadlessTests(Boolean runAll) {
   runBedrockTest(bedrockCmd, runAll)
 }
 
-def runRemoteTests(String name, String browser, String provider, String bucket, String buckets, Boolean runAll) {
+def runRemoteTests(String name, String browser, String provider, String bucket, String buckets, Boolean runAll, int retry = 0, int timeout = 0) {
   def awsOpts = " --sishDomain=sish.osu.tiny.work --devicefarmArn=arn:aws:devicefarm:us-west-2:103651136441:testgrid-project:79ff2b40-fe26-440f-9539-53163c25442e"
   def bedrockCommand =
   "yarn browser-test" +
@@ -57,7 +63,7 @@ def runRemoteTests(String name, String browser, String provider, String bucket, 
     " --buckets=" + buckets +
     " --name=" + name +
     "${provider == 'aws' ? awsOpts : ''}"
-    runBedrockTest(bedrockCommand, runAll)
+    runBedrockTest(bedrockCommand, runAll, retry, timeout)
 }
 
 def runTestPod(String name, String browser, String provider, String bucket, String buckets, Boolean runAll) {
@@ -82,7 +88,8 @@ def runTestPod(String name, String browser, String provider, String bucket, Stri
         sh 'yarn ci'
         grunt('list-changed-browser')
         withRemoteCreds(provider) {
-          runRemoteTests(name, browser, provider, bucket, buckets, runAll)
+          int retry = provider == 'lambdatest' ? 3 : 0
+          runRemoteTests(name, browser, provider, bucket, buckets, runAll, retry, 180)
         }
       }
     }
@@ -161,7 +168,9 @@ timestamps {
     ]) {
       stage('Test-headless') {
         yarnInstall()
-        sh 'yarn ci-all-seq'
+        withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
+          sh "yarn ci-all-seq"
+        }
       }
 
       stage('test') {
