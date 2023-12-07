@@ -7,7 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Fixed
-- Bespoke dropdown toolbar buttons including `fontfamily`, `fontsize`, `blocks`, and `styles` incorrectly used plural words in their accessible names. #TINY-10426
 - Clicking inside table cells with heavily nested content could cause the browser to hang. #TINY-10380
 - Toggling a list that contains an LI element having another list as its first child would remove the remaining content within that LI element. #TINY-10414
 

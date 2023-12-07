@@ -13,8 +13,7 @@ import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import { findNearest } from './utils/FormatDetection';
 import * as Tooltip from './utils/Tooltip';
 
-const menuTitle = 'Blocks';
-const btnTooltip = 'Block {0}';
+const title = 'Blocks';
 const fallbackFormat = 'Paragraph';
 
 const getSpec = (editor: Editor): SelectSpec => {
@@ -45,7 +44,7 @@ const getSpec = (editor: Editor): SelectSpec => {
   const dataset = buildBasicSettingsDataset(editor, 'block_formats', Delimiter.SemiColon);
 
   return {
-    tooltip: Tooltip.makeTooltipText(editor, btnTooltip, fallbackFormat),
+    tooltip: Tooltip.getTooltipText(editor, title, fallbackFormat),
     text: Optional.some(fallbackFormat),
     icon: Optional.none(),
     isSelectedFor,
@@ -60,13 +59,13 @@ const getSpec = (editor: Editor): SelectSpec => {
 };
 
 const createBlocksButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
-  createSelectButton(editor, backstage, getSpec(editor), btnTooltip, 'BlocksTextUpdate');
+  createSelectButton(editor, backstage, getSpec(editor), title, 'BlocksTextUpdate');
 
 // FIX: Test this!
 const createBlocksMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('blocks', {
-    text: menuTitle,
+    text: title,
     onSetup: onSetupEditableToggle(editor),
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   });

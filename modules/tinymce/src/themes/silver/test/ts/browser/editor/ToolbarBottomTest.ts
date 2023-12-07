@@ -47,11 +47,11 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
         toolbar: 'styles'
       },
       initial: [{
-        clickOn: 'button[title^="Format"]',
+        clickOn: 'button[title^="Formats"]',
         waitFor: 'div[role="menu"]'
       }],
       assertAbove: 'div[role="menu"]',
-      assertBelow: 'button[title^="Format"]'
+      assertBelow: 'button[title^="Formats"]'
     }));
 
     it('SplitButton menu should open above button', () => pTest({

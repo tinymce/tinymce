@@ -1,30 +1,28 @@
 import { UiFinder } from '@ephox/agar';
-import { afterEach, context, describe, it } from '@ephox/bedrock-client';
+import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { Attribute, SugarBody, SugarElement } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import I18n from 'tinymce/core/api/util/I18n';
 
 import * as MenuUtils from '../../../module/MenuUtils';
 
 interface Scenario {
-  readonly label: string;
+  readonly menuLabel: string;
   readonly initialItem: string;
   readonly finalItem: string;
 }
 
 describe('browser.tinymce.themes.silver.editor.bespoke.DropdownAriaLabelTest', () => {
-  const settings = {
+  const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     content_css: '/project/tinymce/src/themes/silver/test/css/content.css',
     toolbar: 'align fontfamily fontsize blocks styles'
-  };
+  });
 
   const testDropdownAriaLabel = (
-    hook: TinyHooks.Hook<Editor>,
     initialItem: string,
     finalItem: string,
     makeLabel: (item: string) => string,
@@ -33,202 +31,108 @@ describe('browser.tinymce.themes.silver.editor.bespoke.DropdownAriaLabelTest', (
   ) => async () => {
     const editor = hook.editor();
     const buttonSelector = `button[title="${makeLabel(initialItem)}"]`;
+    const button = UiFinder.findIn(SugarBody.body(), `.tox-toolbar__group ${buttonSelector}`).getOrDie();
 
     await pOpenMenu(buttonSelector);
     const itemSelector = `div[role="menuitemcheckbox"][title="${finalItem}"]`;
     await pWaitForMenu(editor, itemSelector);
-
-    const button = UiFinder.findIn(SugarBody.body(), `.tox-toolbar__group ${buttonSelector}`).getOrDie();
     assert.equal(Attribute.get(button, 'aria-label'), makeLabel(initialItem));
     TinyUiActions.clickOnUi(editor, itemSelector);
     assert.equal(Attribute.get(button, 'aria-label'), makeLabel(finalItem));
   };
 
-  const testStandardDropdownAriaLabel = (hook: TinyHooks.Hook<Editor>, scenario: Scenario) =>
+  const testStandardDropdownAriaLabel = (scenario: Scenario) =>
     testDropdownAriaLabel(
-      hook,
       scenario.initialItem,
       scenario.finalItem,
-      (item) => `${scenario.label} ${item}`,
-      Fun.curry(MenuUtils.pOpenMenuWithSelector, scenario.label),
+      (item) => `${scenario.menuLabel} ${item}`,
+      Fun.curry(MenuUtils.pOpenMenuWithSelector, scenario.menuLabel),
       TinyUiActions.pWaitForUi
     );
 
-  const testAlignDropdownAriaLabel = (hook: TinyHooks.Hook<Editor>, scenario: Scenario) =>
+  const testAlignDropdownAriaLabel = (scenario: Scenario) =>
     testDropdownAriaLabel(
-      hook,
       scenario.initialItem,
       scenario.finalItem,
-      (item) => `${scenario.label} ${item.toLowerCase()}`,
-      () => MenuUtils.pOpenAlignMenu(scenario.label),
+      (item) => `${scenario.menuLabel} ${item.toLowerCase()}`,
+      () => MenuUtils.pOpenAlignMenu(scenario.menuLabel),
       TinyUiActions.pWaitForUi
     );
 
-  const testFormatsDropdownAriaLabel = (hook: TinyHooks.Hook<Editor>, scenario: Scenario) =>
+  const testFormatsDropdownAriaLabel = (scenario: Scenario) =>
     testDropdownAriaLabel(
-      hook,
       scenario.initialItem,
       scenario.finalItem,
-      (item) => `${scenario.label} ${item}`,
-      Fun.curry(MenuUtils.pOpenMenuWithSelector, scenario.label),
+      (item) => `${scenario.menuLabel} ${item}`,
+      Fun.curry(MenuUtils.pOpenMenuWithSelector, scenario.menuLabel),
       (editor) => {
         const submenuSelector = 'div[title="Blocks"]';
         return TinyUiActions.pWaitForUi(editor, submenuSelector).then(() => TinyUiActions.clickOnUi(editor, submenuSelector));
       }
     );
 
-  const makeCleanupFn = (hook: TinyHooks.Hook<Editor>) => () => {
+  afterEach(() => {
     const editor = hook.editor();
     editor.setContent('');
-  };
-
-  context('No translation', () => {
-    const hook = TinyHooks.bddSetup<Editor>(settings);
-
-    afterEach(makeCleanupFn(hook));
-
-    it('TINY-10147: align dropdown should not update aria-label if displayed text does not change', testAlignDropdownAriaLabel(hook, {
-      label: 'Align',
-      initialItem: 'Left',
-      finalItem: 'Left'
-    }));
-
-    it('TINY-10147: align dropdown should update aria-label if displayed text changes', testAlignDropdownAriaLabel(hook, {
-      label: 'Align',
-      initialItem: 'Left',
-      finalItem: 'Right'
-    }));
-
-    it('TINY-10147: fontfamily dropdown should not update aria-label if displayed text does not change', testStandardDropdownAriaLabel(hook, {
-      label: 'Font',
-      initialItem: 'Verdana',
-      finalItem: 'Verdana'
-    }));
-
-    it('TINY-10147: fontfamily dropdown should update aria-label if displayed text changes', testStandardDropdownAriaLabel(hook, {
-      label: 'Font',
-      initialItem: 'Verdana',
-      finalItem: 'Arial'
-    }));
-
-    it('TINY-10147: fontsize dropdown should not update aria-label if displayed text does not change', testStandardDropdownAriaLabel(hook, {
-      label: 'Font size',
-      initialItem: '12pt',
-      finalItem: '12pt'
-    }));
-
-    it('TINY-10147: fontsize dropdown should update aria-label if displayed text changes', testStandardDropdownAriaLabel(hook, {
-      label: 'Font size',
-      initialItem: '12pt',
-      finalItem: '8pt'
-    }));
-
-    it('TINY-10147: blocks dropdown should not update aria-label if displayed text does not change', testStandardDropdownAriaLabel(hook, {
-      label: 'Block',
-      initialItem: 'Paragraph',
-      finalItem: 'Paragraph'
-    }));
-
-    it('TINY-10147: blocks dropdown should update aria-label if displayed text changes', testStandardDropdownAriaLabel(hook, {
-      label: 'Block',
-      initialItem: 'Paragraph',
-      finalItem: 'Heading 1'
-    }));
-
-    it('TINY-10147: styles dropdown should not update aria-label if displayed text does not change', testFormatsDropdownAriaLabel(hook, {
-      label: 'Format',
-      initialItem: 'Paragraph',
-      finalItem: 'Paragraph'
-    }));
-
-    it('TINY-10147: styles dropdown should update aria-label if displayed text changes', testFormatsDropdownAriaLabel(hook, {
-      label: 'Format',
-      initialItem: 'Paragraph',
-      finalItem: 'Div'
-    }));
   });
 
-  context('With translations', () => {
-    const hook = TinyHooks.bddSetup<Editor>({
-      ...settings,
-      language: 'test',
-      setup: () => {
-        I18n.add('test', {
-          'left': 'left translated',
-          'right': 'right translated',
-          'Left': 'Left translated',
-          'Right': 'Right translated',
-          'Verdana': 'Verdana translated',
-          'Arial': 'Arial translated',
-          '12pt': '12pt translated',
-          '8pt': '8pt translated',
-          'Paragraph': 'Paragraph translated',
-          'Heading 1': 'Heading 1 translated',
-          'Div': 'Div translated'
-        });
-      }
-    });
+  it('TINY-10147: Align menu should not update aria-label if displayed text does not change', testAlignDropdownAriaLabel({
+    menuLabel: 'Align',
+    initialItem: 'Left',
+    finalItem: 'Left'
+  }));
 
-    afterEach(makeCleanupFn(hook));
+  it('TINY-10147: Align menu should update aria-label if displayed text changes', testAlignDropdownAriaLabel({
+    menuLabel: 'Align',
+    initialItem: 'Left',
+    finalItem: 'Right'
+  }));
 
-    it('TINY-10426: align dropdown should not update aria-label if displayed text does not change', testAlignDropdownAriaLabel(hook, {
-      label: 'Align',
-      initialItem: 'Left translated',
-      finalItem: 'Left translated'
-    }));
+  it('TINY-10147: Font family menu should not update aria-label if displayed text does not change', testStandardDropdownAriaLabel({
+    menuLabel: 'Fonts',
+    initialItem: 'Verdana',
+    finalItem: 'Verdana'
+  }));
 
-    it('TINY-10426: align dropdown should update aria-label if displayed text changes', testAlignDropdownAriaLabel(hook, {
-      label: 'Align',
-      initialItem: 'Left translated',
-      finalItem: 'Right translated'
-    }));
+  it('TINY-10147: Font family menu should update aria-label if displayed text changes', testStandardDropdownAriaLabel({
+    menuLabel: 'Fonts',
+    initialItem: 'Verdana',
+    finalItem: 'Arial'
+  }));
 
-    it('TINY-10426: fontfamily dropdown should not update aria-label if displayed text does not change', testStandardDropdownAriaLabel(hook, {
-      label: 'Font',
-      initialItem: 'Verdana translated',
-      finalItem: 'Verdana translated'
-    }));
+  it('TINY-10147: Font size menu should not update aria-label if displayed text does not change', testStandardDropdownAriaLabel({
+    menuLabel: 'Font sizes',
+    initialItem: '12pt',
+    finalItem: '12pt'
+  }));
 
-    it('TINY-10426: fontfamily dropdown should update aria-label if displayed text changes', testStandardDropdownAriaLabel(hook, {
-      label: 'Font',
-      initialItem: 'Verdana translated',
-      finalItem: 'Arial translated'
-    }));
+  it('TINY-10147: Font size menu should update aria-label if displayed text changes', testStandardDropdownAriaLabel({
+    menuLabel: 'Font sizes',
+    initialItem: '12pt',
+    finalItem: '8pt'
+  }));
 
-    it('TINY-10426: fontsize dropdown should not update aria-label if displayed text does not change', testStandardDropdownAriaLabel(hook, {
-      label: 'Font size',
-      initialItem: '12pt translated',
-      finalItem: '12pt translated'
-    }));
+  it('TINY-10147: Blocks menu should not update aria-label if displayed text does not change', testStandardDropdownAriaLabel({
+    menuLabel: 'Blocks',
+    initialItem: 'Paragraph',
+    finalItem: 'Paragraph'
+  }));
 
-    it('TINY-10426: fontsize dropdown should update aria-label if displayed text changes', testStandardDropdownAriaLabel(hook, {
-      label: 'Font size',
-      initialItem: '12pt translated',
-      finalItem: '8pt translated'
-    }));
+  it('TINY-10147: Blocks menu should update aria-label if displayed text changes', testStandardDropdownAriaLabel({
+    menuLabel: 'Blocks',
+    initialItem: 'Paragraph',
+    finalItem: 'Heading 1'
+  }));
 
-    it('TINY-10426: blocks dropdown should not update aria-label if displayed text does not change', testStandardDropdownAriaLabel(hook, {
-      label: 'Block',
-      initialItem: 'Paragraph translated',
-      finalItem: 'Paragraph translated'
-    }));
+  it('TINY-10147: Styles menu should not update aria-label if displayed text does not change', testFormatsDropdownAriaLabel({
+    menuLabel: 'Formats',
+    initialItem: 'Paragraph',
+    finalItem: 'Paragraph'
+  }));
 
-    it('TINY-10426: blocks dropdown should update aria-label if displayed text changes', testStandardDropdownAriaLabel(hook, {
-      label: 'Block',
-      initialItem: 'Paragraph translated',
-      finalItem: 'Heading 1 translated'
-    }));
-
-    it('TINY-10426: styles dropdown should not update aria-label if displayed text does not change', testFormatsDropdownAriaLabel(hook, {
-      label: 'Format',
-      initialItem: 'Paragraph translated',
-      finalItem: 'Paragraph translated'
-    }));
-
-    it('TINY-10426: styles dropdown should update aria-label if displayed text changes', testFormatsDropdownAriaLabel(hook, {
-      label: 'Format',
-      initialItem: 'Paragraph translated',
-      finalItem: 'Div translated'
-    }));
-  });
+  it('TINY-10147: Styles menu should update aria-label if displayed text changes', testFormatsDropdownAriaLabel({
+    menuLabel: 'Formats',
+    initialItem: 'Paragraph',
+    finalItem: 'Div'
+  }));
 });
