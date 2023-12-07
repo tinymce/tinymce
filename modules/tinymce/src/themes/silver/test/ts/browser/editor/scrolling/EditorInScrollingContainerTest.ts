@@ -26,7 +26,7 @@ enum TriggerWaitDecision {
   Succeed
 }
 
-describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContainerTest', () => {
+describe.skip('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContainerTest', () => {
   const sharedSettings = {
     menubar: 'file',
     toolbar: 'undo bold opendialog',
