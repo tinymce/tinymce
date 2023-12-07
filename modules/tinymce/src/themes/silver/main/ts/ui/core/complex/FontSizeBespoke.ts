@@ -10,7 +10,7 @@ import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { onSetupEditableToggle } from '../ControlUtils';
 import { createBespokeNumberInput } from './BespokeNumberInput';
-import { createMenuItems, createSelectButton, FormatterFormatItem, SelectedFormat, SelectSpec } from './BespokeSelect';
+import { BespokeSelectTooltip, createMenuItems, createSelectButton, FormatterFormatItem, SelectedFormat, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import * as FormatRegister from './utils/FormatRegister';
 import * as Tooltip from './utils/Tooltip';
@@ -26,7 +26,10 @@ export interface NumberInputSpec {
 }
 
 const menuTitle = 'Font sizes';
-const btnTooltip = 'Font size {0}';
+const btnTooltip: BespokeSelectTooltip = {
+  tooltip: 'Font size {0}',
+  hasPlaceholder: true
+};
 const fallbackFontSize = '12pt';
 
 // See https://websemantics.uk/articles/font-size-conversion/ for conversions
@@ -114,7 +117,7 @@ const getSpec = (editor: Editor): SelectSpec => {
   const dataset = buildBasicSettingsDataset(editor, 'font_size_formats', Delimiter.Space);
 
   return {
-    tooltip: Tooltip.makeTooltipText(editor, btnTooltip, fallbackFontSize),
+    tooltip: Tooltip.makeTooltip(editor, btnTooltip, fallbackFontSize),
     text: Optional.some(fallbackFontSize),
     icon: Optional.none(),
     isSelectedFor,
