@@ -16,7 +16,7 @@ interface Scenario {
   readonly finalItem: string;
 }
 
-describe('browser.tinymce.themes.silver.editor.bespoke.DropdownAriaLabelTest', () => {
+describe('browser.tinymce.themes.silver.editor.bespoke.BespokeSelectAriaLabelTest', () => {
   const settings = {
     base_url: '/project/tinymce/js/tinymce',
     content_css: '/project/tinymce/src/themes/silver/test/css/content.css',
