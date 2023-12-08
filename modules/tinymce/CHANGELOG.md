@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- New `label` component available in the `buttons` header of the `View` UI API, along with two size options (`normal` and `large`). #TINY-10339
+
 ### Fixed
 - When deleting the last row in a table, the cursor would jump to the first cell (top left), instead of moving to the next adjacent cell in some cases. #TINY-6309
 - The functions `schema.isWrapper` and `schema.isInline` didn't exclude element names that started with `#` those should not be considered elements. #TINY-10385
