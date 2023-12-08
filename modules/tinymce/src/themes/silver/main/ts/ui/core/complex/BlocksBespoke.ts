@@ -8,16 +8,13 @@ import * as Events from '../../../api/Events';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { onActionToggleFormat, onSetupEditableToggle } from '../ControlUtils';
-import { BespokeSelectTooltip, createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
+import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import { findNearest } from './utils/FormatDetection';
 import * as Tooltip from './utils/Tooltip';
 
 const menuTitle = 'Blocks';
-const btnTooltip: BespokeSelectTooltip = {
-  tooltip: 'Block {0}',
-  hasPlaceholder: true
-};
+const btnTooltip = 'Block {0}';
 const fallbackFormat = 'Paragraph';
 
 const getSpec = (editor: Editor): SelectSpec => {
@@ -48,7 +45,7 @@ const getSpec = (editor: Editor): SelectSpec => {
   const dataset = buildBasicSettingsDataset(editor, 'block_formats', Delimiter.SemiColon);
 
   return {
-    tooltip: Tooltip.makeTooltip(editor, btnTooltip, fallbackFormat),
+    tooltip: Tooltip.makeTooltipText(editor, btnTooltip, fallbackFormat),
     text: Optional.some(fallbackFormat),
     icon: Optional.none(),
     isSelectedFor,

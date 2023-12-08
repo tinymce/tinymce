@@ -60,7 +60,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.DropdownAriaLabelTest', (
       scenario.initialItem,
       scenario.finalItem,
       (item) => `${scenario.label} ${item.toLowerCase()}`,
-      Fun.curry(MenuUtils.pOpenMenuWithSelector, scenario.label),
+      () => MenuUtils.pOpenAlignMenu(scenario.label),
       TinyUiActions.pWaitForUi
     );
 
@@ -154,21 +154,14 @@ describe('browser.tinymce.themes.silver.editor.bespoke.DropdownAriaLabelTest', (
       language: 'test',
       setup: () => {
         I18n.add('test', {
+          'left': 'left translated',
+          'right': 'right translated',
           'Left': 'Left translated',
           'Right': 'Right translated',
-          'Align left': 'Aalign left translated',
-          'Align right': 'Aalign right translated',
-
-          'Font {0}': 'Ffont {0}',
           'Verdana': 'Verdana translated',
           'Arial': 'Arial translated',
-
-          'Font size {0}': 'Ffont size {0}',
           '12pt': '12pt translated',
           '8pt': '8pt translated',
-
-          'Block {0}': 'Bblock {0}',
-          'Format {0}': 'Fformat {0}',
           'Paragraph': 'Paragraph translated',
           'Heading 1': 'Heading 1 translated',
           'Div': 'Div translated'
@@ -179,61 +172,61 @@ describe('browser.tinymce.themes.silver.editor.bespoke.DropdownAriaLabelTest', (
     afterEach(makeCleanupFn(hook));
 
     it('TINY-10426: align dropdown should not update aria-label if displayed text does not change', testAlignDropdownAriaLabel(hook, {
-      label: 'Aalign',
+      label: 'Align',
       initialItem: 'Left translated',
       finalItem: 'Left translated'
     }));
 
     it('TINY-10426: align dropdown should update aria-label if displayed text changes', testAlignDropdownAriaLabel(hook, {
-      label: 'Aalign',
+      label: 'Align',
       initialItem: 'Left translated',
       finalItem: 'Right translated'
     }));
 
     it('TINY-10426: fontfamily dropdown should not update aria-label if displayed text does not change', testStandardDropdownAriaLabel(hook, {
-      label: 'Ffont',
+      label: 'Font',
       initialItem: 'Verdana translated',
       finalItem: 'Verdana translated'
     }));
 
     it('TINY-10426: fontfamily dropdown should update aria-label if displayed text changes', testStandardDropdownAriaLabel(hook, {
-      label: 'Ffont',
+      label: 'Font',
       initialItem: 'Verdana translated',
       finalItem: 'Arial translated'
     }));
 
     it('TINY-10426: fontsize dropdown should not update aria-label if displayed text does not change', testStandardDropdownAriaLabel(hook, {
-      label: 'Ffont size',
+      label: 'Font size',
       initialItem: '12pt translated',
       finalItem: '12pt translated'
     }));
 
     it('TINY-10426: fontsize dropdown should update aria-label if displayed text changes', testStandardDropdownAriaLabel(hook, {
-      label: 'Ffont size',
+      label: 'Font size',
       initialItem: '12pt translated',
       finalItem: '8pt translated'
     }));
 
     it('TINY-10426: blocks dropdown should not update aria-label if displayed text does not change', testStandardDropdownAriaLabel(hook, {
-      label: 'Bblock',
+      label: 'Block',
       initialItem: 'Paragraph translated',
       finalItem: 'Paragraph translated'
     }));
 
     it('TINY-10426: blocks dropdown should update aria-label if displayed text changes', testStandardDropdownAriaLabel(hook, {
-      label: 'Bblock',
+      label: 'Block',
       initialItem: 'Paragraph translated',
       finalItem: 'Heading 1 translated'
     }));
 
     it('TINY-10426: styles dropdown should not update aria-label if displayed text does not change', testFormatsDropdownAriaLabel(hook, {
-      label: 'Fformat',
+      label: 'Format',
       initialItem: 'Paragraph translated',
       finalItem: 'Paragraph translated'
     }));
 
     it('TINY-10426: styles dropdown should update aria-label if displayed text changes', testFormatsDropdownAriaLabel(hook, {
-      label: 'Fformat',
+      label: 'Format',
       initialItem: 'Paragraph translated',
       finalItem: 'Div translated'
     }));
