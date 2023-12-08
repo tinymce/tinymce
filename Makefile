@@ -5,6 +5,7 @@ CHANGELOGS := $(addprefix modules/,$(addsuffix /changelog.md,$(PROJECTS)))
 VERSION_FILE := versions.txt
 
 extract_first_word = $(firstword $(subst -, ,$1))
+get_tiny_version = $(shell jq -r '.version' modules/tinymce/package.json)
 get_version = $(shell grep '^$(call extract_first_word,$1)@' $(VERSION_FILE) | cut -d '@' -f 2)
 
 .PHONY: all check_files preview dry_run confirm update_projects update_changelogs
@@ -26,7 +27,11 @@ preview: $(UNRELEASED_FILES)
 
 preview-%: .changes/unreleased/%
 	@project_name=$(call extract_first_word,$(notdir $<)); \
-	version=$(call get_version,$(notdir $<)); \
+	if [ $$project_name == "tinymce" ]; then \
+		version=$(call get_tiny_version); \
+	else \
+		version=$(call get_version,$(notdir $<)); \
+	fi; \
 	if [ -z "$$version" ]; then \
 		echo "Error: No version found for $$project_name in $(VERSION_FILE)"; \
 		exit 1; \
@@ -43,7 +48,11 @@ update_changelogs: $(CHANGELOGS)
 
 modules/%/changelog.md: .changes/unreleased/%
 	@project_name=$(call extract_first_word,$(notdir $<)); \
-	version=$(call get_version,$(notdir $<)); \
+	if [ $$project_name == "tinymce" ]; then \
+		version=$(call get_tiny_version); \
+	else \
+		version=$(call get_version,$(notdir $<)); \
+	fi; \
 	changie batch $$version --project $$project_name; \
 	yarn changie-merge; \
 	echo "Updated changelog $$project_name with version $$version"
