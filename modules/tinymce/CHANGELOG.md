@@ -7,8 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Fixed
-- Bespoke dropdown toolbar buttons including `fontfamily`, `fontsize`, `blocks`, and `styles` incorrectly used plural words in their accessible names. #TINY-10426
-- Tooltips of bespoke dropdown toolbar buttons including `align`, `fontfamily`, `fontsize`, `blocks`, and `styles` were incorrectly translated. #TINY-10435
+- Bespoke select toolbar buttons including `fontfamily`, `fontsize`, `blocks`, and `styles` incorrectly used plural words in their accessible names. #TINY-10426
+- The `align` bespoke select toolbar button had an accessible name that was misleading and grammatically incorrect in certain cases. #TINY-10435
+- Accessible names of bespoke select toolbar buttons including `align`, `fontfamily`, `fontsize`, `blocks`, and `styles` were incorrectly translated. #TINY-10426 #TINY-10435
 - Clicking inside table cells with heavily nested content could cause the browser to hang. #TINY-10380
 - Toggling a list that contains an LI element having another list as its first child would remove the remaining content within that LI element. #TINY-10414
 
@@ -36,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the tooltips of picker buttons for the urlinput components in the "Insert/Edit Image" and "Insert/Edit Link" dialogs. #TINY-10155
 - Inline dialog will now respect `size: 'large'` argument in the dialog spec. #TINY-10209
 - SVG elements and their children are now retained when configured as valid elements. #TINY-10237
-- Bespoke dropdown toolbar buttons including `align`, `fontfamily`, `fontsize`, `blocks`, and `styles` did not include their visible text labels in their accessible names. #TINY-10147
+- Bespoke select toolbar buttons including `align`, `fontfamily`, `fontsize`, `blocks`, and `styles` did not include their visible text labels in their accessible names. #TINY-10147
 
 ### Fixed
 - Editor would convert urls that are not http/s or relative resulting in broken links. #TINY-10153

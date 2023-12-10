@@ -16,7 +16,7 @@ interface Scenario {
   readonly finalItem: string;
 }
 
-describe('browser.tinymce.themes.silver.editor.bespoke.DropdownAriaLabelTest', () => {
+describe('browser.tinymce.themes.silver.editor.bespoke.BespokeSelectAriaLabelTest', () => {
   const settings = {
     base_url: '/project/tinymce/js/tinymce',
     content_css: '/project/tinymce/src/themes/silver/test/css/content.css',
@@ -88,13 +88,13 @@ describe('browser.tinymce.themes.silver.editor.bespoke.DropdownAriaLabelTest', (
     afterEach(makeCleanupFn(hook));
 
     it('TINY-10147: align dropdown should not update aria-label if displayed text does not change', testAlignDropdownAriaLabel(hook, {
-      label: 'Align',
+      label: 'Alignment',
       initialItem: 'Left',
       finalItem: 'Left'
     }));
 
     it('TINY-10147: align dropdown should update aria-label if displayed text changes', testAlignDropdownAriaLabel(hook, {
-      label: 'Align',
+      label: 'Alignment',
       initialItem: 'Left',
       finalItem: 'Right'
     }));
@@ -154,10 +154,11 @@ describe('browser.tinymce.themes.silver.editor.bespoke.DropdownAriaLabelTest', (
       language: 'test',
       setup: () => {
         I18n.add('test', {
+          'Alignment {0}': 'Aalignment {0}',
+          'left': 'left translated',
+          'right': 'right translated',
           'Left': 'Left translated',
           'Right': 'Right translated',
-          'Align left': 'Aalign left translated',
-          'Align right': 'Aalign right translated',
 
           'Font {0}': 'Ffont {0}',
           'Verdana': 'Verdana translated',
@@ -179,13 +180,13 @@ describe('browser.tinymce.themes.silver.editor.bespoke.DropdownAriaLabelTest', (
     afterEach(makeCleanupFn(hook));
 
     it('TINY-10426: align dropdown should not update aria-label if displayed text does not change', testAlignDropdownAriaLabel(hook, {
-      label: 'Aalign',
+      label: 'Aalignment',
       initialItem: 'Left translated',
       finalItem: 'Left translated'
     }));
 
     it('TINY-10426: align dropdown should update aria-label if displayed text changes', testAlignDropdownAriaLabel(hook, {
-      label: 'Aalign',
+      label: 'Aalignment',
       initialItem: 'Left translated',
       finalItem: 'Right translated'
     }));
