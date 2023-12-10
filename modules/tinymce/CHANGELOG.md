@@ -11,14 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - When deleting the last row in a table, the cursor would jump to the first cell (top left), instead of moving to the next adjacent cell in some cases. #TINY-6309
-- The functions `schema.isWrapper` and `schema.isInline` didn't exclude element names that started with `#` those should not be considered elements. #TINY-10385
 - Heading formatting would be partially applied to the content within the `summary` element when the caret was positioned between words. #TINY-10312
 - Moving focus to the outside of the editor after having clicked a menu would not fire a `blur` event as expected. #TINY-10310
-- Bespoke dropdown toolbar buttons including `fontfamily`, `fontsize`, `blocks`, and `styles` incorrectly used plural words in their accessible names. #TINY-10426
-- Tooltips of bespoke dropdown toolbar buttons including `align`, `fontfamily`, `fontsize`, `blocks`, and `styles` were incorrectly translated. #TINY-10435
+
+## 6.8.2 - TBA
+
+### Fixed
+- Bespoke select toolbar buttons including `fontfamily`, `fontsize`, `blocks`, and `styles` incorrectly used plural words in their accessible names. #TINY-10426
+- The `align` bespoke select toolbar button had an accessible name that was misleading and grammatically incorrect in certain cases. #TINY-10435
+- Accessible names of bespoke select toolbar buttons including `align`, `fontfamily`, `fontsize`, `blocks`, and `styles` were incorrectly translated. #TINY-10426 #TINY-10435
 - Clicking inside table cells with heavily nested content could cause the browser to hang. #TINY-10380
 - Toggling a list that contains an LI element having another list as its first child would remove the remaining content within that LI element. #TINY-10414
-
 
 ## 6.8.1 - 2023-11-29
 
@@ -44,7 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the tooltips of picker buttons for the urlinput components in the "Insert/Edit Image" and "Insert/Edit Link" dialogs. #TINY-10155
 - Inline dialog will now respect `size: 'large'` argument in the dialog spec. #TINY-10209
 - SVG elements and their children are now retained when configured as valid elements. #TINY-10237
-- Bespoke dropdown toolbar buttons including `align`, `fontfamily`, `fontsize`, `blocks`, and `styles` did not include their visible text labels in their accessible names. #TINY-10147
+- Bespoke select toolbar buttons including `align`, `fontfamily`, `fontsize`, `blocks`, and `styles` did not include their visible text labels in their accessible names. #TINY-10147
 
 ### Fixed
 - Editor would convert urls that are not http/s or relative resulting in broken links. #TINY-10153

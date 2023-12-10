@@ -179,7 +179,7 @@ const createMenuItems = (editor: Editor, backstage: UiFactoryBackstage, spec: Se
   };
 };
 
-const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec, bespokeTooltip: BespokeSelectTooltip, textUpdateEventName: string): SketchSpec => {
+const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec, tooltipWithPlaceholder: string, textUpdateEventName: string): SketchSpec => {
   const { items, getStyleItems } = createMenuItems(editor, backstage, spec);
 
   const getApi = (comp: AlloyComponent): BespokeSelectApi => ({
@@ -192,8 +192,8 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
 
   // Set the initial text when the component is attached and then update on node changes
   const onSetup = (api: BespokeSelectApi) => {
-    const handler = ({ value }: EditorEvent<{ value: string }>) =>
-      api.setTooltip(Tooltip.makeTooltip(editor, bespokeTooltip, value));
+    const handler = (e: EditorEvent<{ value: string }>) =>
+      api.setTooltip(Tooltip.makeTooltipText(editor, tooltipWithPlaceholder, e.value));
     editor.on(textUpdateEventName, handler);
     return composeUnbinders(
       onSetupEvent(editor, 'NodeChange', (api: BespokeSelectApi) => {
