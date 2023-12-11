@@ -79,5 +79,5 @@ modules/%/changelog.md: .changes/unreleased/%
 		version=$(call get_version,$(notdir $<)); \
 	fi; \
 	changie batch $$version --project $$project_name; \
-	yarn changie-merge; \
+	yarn changie merge; \
 	echo "Updated changelog $$project_name with version $$version"
