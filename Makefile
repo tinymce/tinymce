@@ -1,6 +1,9 @@
 UNRELEASED_FILES := $(wildcard .changes/unreleased/*)
 PROJECTS := $(patsubst .changes/unreleased/%,%,$(UNRELEASED_FILES))
-CHANGELOGS := $(addprefix modules/,$(addsuffix /changelog.md,$(PROJECTS)))
+PUBLIC_PROJECTS := $(filter-out tinymce%,$(PROJECTS))
+TINY_PROJECTS := $(filter tinymce%,$(PROJECTS))
+CHANGELOGS_PUBLIC := $(addprefix modules/,$(addsuffix /changelog.md,$(PUBLIC_PROJECTS)))
+CHANGELOGS_TINY := $(addprefix modules/,$(addsuffix /changelog.md,$(TINY_PROJECTS)))
 
 VERSION_FILE := versions.txt
 
@@ -8,22 +11,40 @@ extract_first_word = $(firstword $(subst -, ,$1))
 get_tiny_version = $(shell jq -r '.version' modules/tinymce/package.json)
 get_version = $(shell grep '^$(call extract_first_word,$1)@' $(VERSION_FILE) | cut -d '@' -f 2)
 
-.PHONY: all check_files preview dry_run confirm update_projects update_changelogs
+.PHONY: public tiny check_files preview dry_run confirm update_projects update_changelogs
 
-all: check_files
+public: check_files_public
 
-check_files:
+tiny: check_files_tiny
+
+check_files_common:
 	@if [ -z "$(UNRELEASED_FILES)" ]; then \
 		echo "No unreleased files found. Exiting..."; \
-	else \
-		$(MAKE) preview confirm update_changelogs; \
 	fi
 
-preview: $(UNRELEASED_FILES)
+check_files_public: check_files_common
+	@if [ ! -z "$(PUBLIC_PROJECTS)" ]; then \
+		$(MAKE) preview_public confirm update_changelogs_public; \
+	fi
+
+check_files_tiny: check_files_common
+	@if [ ! -z "$(TINY_PROJECTS)" ]; then \
+		$(MAKE) preview_tiny confirm update_changelogs_tiny; \
+	fi
+
+preview: preview_public preview_tiny
+
+preview_public: $(addprefix .changes/unreleased/,$(PUBLIC_PROJECTS))
 	@echo "----------------------------------------"
-	@echo "Overview of packages to be processed:"
+	@echo "Overview of public packages to be processed:"
 	@echo "----------------------------------------"
-	@$(MAKE) $(addprefix preview-,$(PROJECTS))
+	@$(MAKE) $(addprefix preview-,$(PUBLIC_PROJECTS))
+
+preview_tiny: $(addprefix .changes/unreleased/,$(TINY_PROJECTS))
+	@echo "----------------------------------------"
+	@echo "Overview of tinymce package to be processed:"
+	@echo "----------------------------------------"
+	@$(MAKE) $(addprefix preview-,$(TINY_PROJECTS))
 
 preview-%: .changes/unreleased/%
 	@project_name=$(call extract_first_word,$(notdir $<)); \
@@ -44,7 +65,11 @@ confirm:
 	@echo "Press Enter to continue with updating changelog or Ctrl+C to cancel..."
 	@read
 
-update_changelogs: $(CHANGELOGS)
+update_changelogs: update_changelogs_public update_changelogs_tiny
+
+update_changelogs_public: $(CHANGELOGS_PUBLIC)
+
+update_changelogs_tiny: $(CHANGELOGS_TINY)
 
 modules/%/changelog.md: .changes/unreleased/%
 	@project_name=$(call extract_first_word,$(notdir $<)); \
