@@ -184,7 +184,7 @@ const createFontSizeInputButton = (editor: Editor, backstage: UiFactoryBackstage
 
 // TODO: Test this!
 const createFontSizeMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
-  const menuItems = createMenuItems(editor, backstage, getSpec(editor));
+  const menuItems = createMenuItems(backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('fontsize', {
     text: menuTitle,
     onSetup: onSetupEditableToggle(editor),
