@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Heading formatting would be partially applied to the content within the `summary` element when the caret was positioned between words. #TINY-10312
 - Moving focus to the outside of the editor after having clicked a menu would not fire a `blur` event as expected. #TINY-10310
 
-## 6.8.2 - TBA
+## 6.8.2 - 2023-12-11
 
 ### Fixed
 - Bespoke select toolbar buttons including `fontfamily`, `fontsize`, `blocks`, and `styles` incorrectly used plural words in their accessible names. #TINY-10426
