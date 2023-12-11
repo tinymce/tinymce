@@ -3129,9 +3129,9 @@ chalk@^4.0.0, chalk@^4.1.0, chalk@^4.1.1, chalk@^4.1.2, chalk@~4.1.0:
     supports-color "^7.1.0"
 
 changie@^1.14.0:
-  version "1.15.1"
-  resolved "https://registry.yarnpkg.com/changie/-/changie-1.15.1.tgz#60d078cc13658606d1f0fb8d58179ab70bd560b1"
-  integrity sha512-qqXpmVjzq/TN0/4j8MpwAEshRWA2L2Ajh3zu+6IHQ3RupJj/CZE6lRGDlKRXRQ8F8yvPYSiyifcFS9CGxSo0Vw==
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/changie/-/changie-1.16.1.tgz#9a846f4303f569ed695dcbc9afa60a47465f0c97"
+  integrity sha512-oQp1ic8S8adpDHuqEQYdd9aHRayf/bXlDAlvfZ7U9IxeKmBXOB2QMhrpeY52n64Tzn7vXtlxCcYUwJMfpnwqDQ==
 
 character-entities-legacy@^1.0.0:
   version "1.1.4"
