@@ -7,15 +7,12 @@ import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import * as Events from '../../../api/Events';
 import { updateMenuIcon } from '../../dropdown/CommonDropdown';
 import { onSetupEditableToggle } from '../ControlUtils';
-import { BespokeSelectTooltip, createMenuItems, createSelectButton, FormatterFormatItem, SelectedFormat, SelectSpec } from './BespokeSelect';
+import { createMenuItems, createSelectButton, FormatterFormatItem, SelectedFormat, SelectSpec } from './BespokeSelect';
 import { buildBasicStaticDataset } from './SelectDatasets';
 import * as Tooltip from './utils/Tooltip';
 
-const title = 'Align';
-const btnTooltip: BespokeSelectTooltip = {
-  tooltip: title,
-  hasPlaceholder: false
-};
+const menuTitle = 'Align';
+const btnTooltip = 'Alignment {0}';
 const fallbackAlignment = 'left';
 
 const alignMenuItems = [
@@ -48,7 +45,7 @@ const getSpec = (editor: Editor): SelectSpec => {
       .each((item) => editor.execCommand(item.command));
 
   return {
-    tooltip: Tooltip.makeTooltip(editor, btnTooltip, fallbackAlignment),
+    tooltip: Tooltip.makeTooltipText(editor, btnTooltip, fallbackAlignment),
     text: Optional.none(),
     icon: Optional.some('align-left'),
     isSelectedFor,
@@ -68,7 +65,7 @@ const createAlignButton = (editor: Editor, backstage: UiFactoryBackstage): Sketc
 const createAlignMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('align', {
-    text: backstage.shared.providers.translate(title),
+    text: backstage.shared.providers.translate(menuTitle),
     onSetup: onSetupEditableToggle(editor),
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   });
