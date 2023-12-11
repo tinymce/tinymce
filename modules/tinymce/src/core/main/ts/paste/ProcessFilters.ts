@@ -11,7 +11,7 @@ interface ProcessResult {
 }
 
 const preProcess = (editor: Editor, html: string): string => {
-  const parser = DomParser({ sanitize: Options.shouldSanitizeXss(editor) }, editor.schema);
+  const parser = DomParser({ sanitize: Options.shouldSanitizeXss(editor), sandbox_iframes: Options.shouldSandboxIframes(editor) }, editor.schema);
 
   // Strip meta elements
   parser.addNodeFilter('meta', (nodes) => {

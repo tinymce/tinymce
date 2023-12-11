@@ -1,4 +1,4 @@
-import { Obj, Type } from '@ephox/katamari';
+import { Arr, Obj, Type } from '@ephox/katamari';
 import { Attribute, Insert, Remove, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import Annotator from '../api/Annotator';
@@ -14,6 +14,7 @@ import DomParser, { DomParserSettings } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
 import Schema, { SchemaSettings } from '../api/html/Schema';
 import * as Options from '../api/Options';
+import { TinyMCE } from '../api/Tinymce';
 import UndoManager from '../api/UndoManager';
 import Delay from '../api/util/Delay';
 import Tools from '../api/util/Tools';
@@ -35,8 +36,10 @@ import { hasAnyRanges } from '../selection/SelectionUtils';
 import SelectionOverrides from '../SelectionOverrides';
 import * as TextPattern from '../textpatterns/TextPatterns';
 import Quirks from '../util/Quirks';
+import * as ContentCss from './ContentCss';
 
 declare const escape: any;
+declare let tinymce: TinyMCE;
 
 const DOM = DOMUtils.DOM;
 
@@ -70,6 +73,7 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
     allow_html_in_named_anchor: getOption('allow_html_in_named_anchor'),
     allow_script_urls: getOption('allow_script_urls'),
     allow_unsafe_link_target: getOption('allow_unsafe_link_target'),
+    convert_unsafe_embeds: getOption('convert_unsafe_embeds'),
     convert_fonts_to_spans: getOption('convert_fonts_to_spans'),
     fix_list_elements: getOption('fix_list_elements'),
     font_size_legacy_values: getOption('font_size_legacy_values'),
@@ -78,6 +82,7 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
     preserve_cdata: getOption('preserve_cdata'),
     inline_styles: getOption('inline_styles'),
     root_name: getRootName(editor),
+    sandbox_iframes: getOption('sandbox_iframes'),
     sanitize: getOption('xss_sanitization'),
     validate: true,
     blob_cache: blobCache,
@@ -261,8 +266,16 @@ const getStyleSheetLoader = (editor: Editor): StyleSheetLoader =>
   editor.inline ? editor.ui.styleSheetLoader : editor.dom.styleSheetLoader;
 
 const makeStylesheetLoadingPromises = (editor: Editor, css: string[], framedFonts: string[]): Promise<unknown>[] => {
-  const promises = [
-    getStyleSheetLoader(editor).loadAll(css)
+  const { pass: bundledCss, fail: normalCss } = Arr.partition(css, (name) => tinymce.Resource.has(ContentCss.toContentSkinResourceName(name)));
+  const bundledPromises = bundledCss.map((url) => {
+    const css = tinymce.Resource.get(ContentCss.toContentSkinResourceName(url));
+    if (Type.isString(css)) {
+      return Promise.resolve(getStyleSheetLoader(editor).loadRawCss(url, css));
+    }
+    return Promise.resolve();
+  });
+  const promises = [ ...bundledPromises,
+    getStyleSheetLoader(editor).loadAll(normalCss),
   ];
 
   if (editor.inline) {
@@ -432,7 +445,8 @@ const contentBodyLoaded = (editor: Editor): void => {
     referrerPolicy: Options.getReferrerPolicy(editor),
     onSetAttrib: (e) => {
       editor.dispatch('SetAttrib', e);
-    }
+    },
+    force_hex_color: Options.shouldForceHexColor(editor),
   });
 
   editor.parser = createParser(editor);

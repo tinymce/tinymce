@@ -5,11 +5,11 @@ import * as Utils from './Utils';
 
 const setupEnterKeyInSummary = (editor: Editor): void => {
   editor.on('keydown', (event): void => {
-    if (event.shiftKey || event.keyCode !== VK.ENTER || !Utils.isInSummary(editor)) {
-      return;
+    if (!event.shiftKey && event.keyCode === VK.ENTER
+      && Utils.isInSummary(editor) || Utils.isAtDetailsStart(editor)) {
+      event.preventDefault();
+      editor.execCommand('ToggleAccordion');
     }
-    event.preventDefault();
-    editor.execCommand('ToggleAccordion');
   });
 };
 

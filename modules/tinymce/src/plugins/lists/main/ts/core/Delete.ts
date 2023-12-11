@@ -171,8 +171,9 @@ const backspaceDeleteFromListToListCaret = (editor: Editor, isForward: boolean):
 
     const rng = ListRangeUtils.normalizeRange(selection.getRng());
     const otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward, root), 'LI', root) as HTMLLIElement;
+    const willMergeParentIntoChild = otherLi && (isForward ? dom.isChildOf(li, otherLi) : dom.isChildOf(otherLi, li));
 
-    if (otherLi && otherLi !== li) {
+    if (otherLi && otherLi !== li && !willMergeParentIntoChild) {
       editor.undoManager.transact(() => {
         if (isForward) {
           mergeForward(editor, rng, otherLi, li);
@@ -182,6 +183,19 @@ const backspaceDeleteFromListToListCaret = (editor: Editor, isForward: boolean):
           } else {
             mergeBackward(editor, rng, li, otherLi);
           }
+        }
+      });
+
+      return true;
+    } else if (willMergeParentIntoChild && !isForward && otherLi !== li) {
+      editor.undoManager.transact(() => {
+        if (rng.commonAncestorContainer.parentElement) {
+          const bookmark = Bookmark.createBookmark(rng);
+          const oldParentElRef = rng.commonAncestorContainer.parentElement;
+          moveChildren(dom, rng.commonAncestorContainer.parentElement, otherLi);
+          oldParentElRef.remove();
+          const resolvedBookmark = Bookmark.resolveBookmark(bookmark);
+          editor.selection.setRng(resolvedBookmark);
         }
       });
 

@@ -9,7 +9,8 @@ describe('browser.tinymce.core.delete.DeleteCommandsTest', () => {
   const caret = Cell<Text | null>(null);
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    indent: false
+    indent: false,
+    extended_valid_elements: 'svg[*]'
   }, [], true);
 
   it('Delete should merge blocks', () => {
@@ -80,6 +81,26 @@ describe('browser.tinymce.core.delete.DeleteCommandsTest', () => {
         TinyAssertions.assertContent(editor, initialContent);
         TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 1, 0 ], 1);
       });
+    });
+
+    it('TINY-10346: Delete on noneditable svg element', () => {
+      const editor = hook.editor();
+      const initialContent = '<svg width="200" height="100"><text x="20" y="60" font-family="Arial" font-size="24" fill="blue">text</text></svg>';
+
+      editor.setContent(initialContent);
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
+      DeleteCommands.deleteCommand(editor, caret);
+      TinyAssertions.assertContent(editor, initialContent);
+    });
+
+    it('TINY-10346: ForwardDelete on noneditable svg element', () => {
+      const editor = hook.editor();
+      const initialContent = '<svg width="200" height="100"><text x="20" y="60" font-family="Arial" font-size="24" fill="blue">text</text></svg>';
+
+      editor.setContent(initialContent);
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
+      DeleteCommands.forwardDeleteCommand(editor, caret);
+      TinyAssertions.assertContent(editor, initialContent);
     });
   });
 });

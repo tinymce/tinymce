@@ -1,8 +1,8 @@
 import Editor from 'tinymce/core/api/Editor';
 
-const getTooltipText = (editor: Editor, prefix: string, value: string): string =>
-  editor.translate([ `${prefix} {0}`, editor.translate(value) ]);
+const makeTooltipText = (editor: Editor, labelWithPlaceholder: string, value: string): string =>
+  editor.translate([ labelWithPlaceholder, editor.translate(value) ]);
 
 export {
-  getTooltipText
+  makeTooltipText
 };

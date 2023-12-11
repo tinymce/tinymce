@@ -11,7 +11,8 @@ import { createMenuItems, createSelectButton, FormatterFormatItem, SelectedForma
 import { buildBasicStaticDataset } from './SelectDatasets';
 import * as Tooltip from './utils/Tooltip';
 
-const title = 'Align';
+const menuTitle = 'Align';
+const btnTooltip = 'Alignment {0}';
 const fallbackAlignment = 'left';
 
 const alignMenuItems = [
@@ -44,7 +45,7 @@ const getSpec = (editor: Editor): SelectSpec => {
       .each((item) => editor.execCommand(item.command));
 
   return {
-    tooltip: Tooltip.getTooltipText(editor, title, fallbackAlignment),
+    tooltip: Tooltip.makeTooltipText(editor, btnTooltip, fallbackAlignment),
     text: Optional.none(),
     icon: Optional.some('align-left'),
     isSelectedFor,
@@ -59,12 +60,12 @@ const getSpec = (editor: Editor): SelectSpec => {
 };
 
 const createAlignButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
-  createSelectButton(editor, backstage, getSpec(editor), title, 'AlignTextUpdate');
+  createSelectButton(editor, backstage, getSpec(editor), btnTooltip, 'AlignTextUpdate');
 
 const createAlignMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('align', {
-    text: backstage.shared.providers.translate(title),
+    text: backstage.shared.providers.translate(menuTitle),
     onSetup: onSetupEditableToggle(editor),
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   });

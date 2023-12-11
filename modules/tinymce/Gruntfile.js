@@ -454,6 +454,7 @@ module.exports = function (grunt) {
         src: [
           'js/tinymce/langs',
           'js/tinymce/plugins',
+          'js/tinymce/skins/**/*.js',
           'js/tinymce/skins/**/*.min.css',
           'js/tinymce/skins/**/*.woff',
           'js/tinymce/icons',
