@@ -309,7 +309,7 @@ const opPasteColsAfter = (grid: Structs.RowCells[], pasteDetails: ExtractPasteRo
   const context = rows[pasteDetails.cells[0].row];
   const gridB = gridifyRows(pasteDetails.clipboard, pasteDetails.generators, context);
   const mergedGrid = TableMerge.insertCols(index, grid, gridB, pasteDetails.generators, comparator);
-  return bundle(mergedGrid, pasteDetails.cells[0].row, pasteDetails.cells[0].column);
+  return bundle(mergedGrid, pasteDetails.cells[0].row, index);
 };
 
 const opPasteRowsBefore = (grid: Structs.RowCells[], pasteDetails: ExtractPasteRows, comparator: CompElm, _genWrappers: GeneratorsModification) => {
@@ -327,7 +327,7 @@ const opPasteRowsAfter = (grid: Structs.RowCells[], pasteDetails: ExtractPasteRo
   const context = rows[pasteDetails.cells[0].row];
   const gridB = gridifyRows(pasteDetails.clipboard, pasteDetails.generators, context);
   const mergedGrid = TableMerge.insertRows(index, grid, gridB, pasteDetails.generators, comparator);
-  return bundle(mergedGrid, pasteDetails.cells[0].row, pasteDetails.cells[0].column);
+  return bundle(mergedGrid, index, pasteDetails.cells[0].column);
 };
 
 const opGetColumnsType = (table: SugarElement<HTMLTableElement>, target: TargetSelection): string => {
