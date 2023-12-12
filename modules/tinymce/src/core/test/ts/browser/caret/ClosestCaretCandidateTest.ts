@@ -1,6 +1,6 @@
 import { Cursors } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { ContentEditable, Css, Html, Insert, Remove, SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -257,6 +257,46 @@ describe('browser.tinymce.core.ClosestCaretCandidateTest', () => {
           expected: Optional.some([ 0 ])
         })
       );
+
+      it('TINY-10380: should not take long to find the text candidate in next to a deeply nested structure', () => {
+        const el: SugarElement<HTMLElement> = SugarElement.fromHtml('<div style="height: 100px; width: 20px"></div>');
+        const depth = 32;
+
+        const innerMost = Arr.foldl(Arr.range(depth, (_) => SugarElement.fromTag('em')), (el, child) => {
+          Insert.append(el, child);
+          Insert.append(el, SugarElement.fromTag('b'));
+          return child;
+        }, el);
+
+        Insert.append(innerMost, SugarElement.fromText('xx xx'));
+
+        testClosestCaretCandidate({
+          html: Html.getOuter(el),
+          targetPath: [ 0 ],
+          dx: 10, dy: 60,
+          expected: Optional.some(Arr.range(depth + 2, Fun.constant(0)))
+        });
+      });
+
+      it('TINY-10380: should not take long to find the img candidate in next to a deeply nested structure', () => {
+        const el: SugarElement<HTMLElement> = SugarElement.fromHtml('<div style="height: 100px; width: 20px"></div>');
+        const depth = 32;
+
+        const innerMost = Arr.foldl(Arr.range(depth, (_) => SugarElement.fromTag('em')), (el, child) => {
+          Insert.append(el, child);
+          Insert.append(el, SugarElement.fromTag('b'));
+          return child;
+        }, el);
+
+        Insert.append(innerMost, SugarElement.fromHtml('<img src="#">'));
+
+        testClosestCaretCandidate({
+          html: Html.getOuter(el),
+          targetPath: [ 0 ],
+          dx: 10, dy: 60,
+          expected: Optional.some(Arr.range(depth + 2, Fun.constant(0)))
+        });
+      });
     });
   });
 

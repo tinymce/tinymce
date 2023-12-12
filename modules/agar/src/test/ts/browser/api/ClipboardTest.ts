@@ -1,4 +1,4 @@
-import { after, before, beforeEach, describe, it } from '@ephox/bedrock-client';
+import { after, before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Singleton } from '@ephox/katamari';
 import { DomEvent, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
@@ -166,5 +166,26 @@ describe('ClipboardTest', () => {
     assert.equal(dataTransfer.items.length, 2);
     await assertFileItem(dataTransfer.items[0], { type: 'text/html', name: 'clipboard.html', data: '<!DOCTYPE html>\n<html>\n<body>\n<p>Hello world</p>\n</body>\n</html>\n' });
     await assertFileItem(dataTransfer.items[1], { type: 'text/plain', name: 'clipboard.txt', data: 'Hello world\n' });
+  });
+
+  context('DataTransfer instance type', () => {
+    const testDataTransferInstance = (eventName: 'cut' | 'copy', operation: (target: SugarElement<HTMLElement>) => DataTransfer) => {
+      const pastebin = pastebinState.get().getOrDie('Could not get pastebin from state');
+      let event: ClipboardEvent = null;
+
+      const unbinder = DomEvent.bind(pastebin, eventName, (evt) => {
+        event = evt.raw;
+      });
+
+      const dataTransfer = operation(pastebin);
+
+      assert.instanceOf(event.clipboardData, window.DataTransfer);
+      assert.instanceOf(dataTransfer, window.DataTransfer);
+
+      unbinder.unbind();
+    };
+
+    it('TINY-10386: Cut dataTransfer should be an instanceof DataTransfer', () => testDataTransferInstance('cut', cut));
+    it('TINY-10386: Copy dataTransfer should be an instanceof DataTransfer', () => testDataTransferInstance('copy', copy));
   });
 });

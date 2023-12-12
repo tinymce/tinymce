@@ -1,5 +1,5 @@
 import { Assertions } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
 import { Hierarchy } from '@ephox/sugar';
 import { LegacyUnit, TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
@@ -2533,4 +2533,31 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('h1');
     TinyAssertions.assertContent(editor, '<details><summary><h1>hello<em>world</em></h1></summary>body</details>');
   });
+
+  context('TINY-10312: should not partially apply block format when caret is positioned between words', () => {
+    it('TINY-10312: should apply heading formatting to whole `summary` content', () => {
+      const editor = hook.editor();
+      editor.setContent('<details><summary>a bc d</summary>body</details>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      editor.formatter.apply('h1');
+      TinyAssertions.assertContent(editor, '<details><summary><h1>a bc d</h1></summary>body</details>');
+    });
+
+    it('TINY-10312: should apply `pre` formatting to whole table cell content', () => {
+      const editor = hook.editor();
+      editor.setContent('<table><tbody><tr><td>a bc d</td></tr></tbody></table>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 2);
+      editor.formatter.apply('pre');
+      TinyAssertions.assertContent(editor, '<table><tbody><tr><td><pre>a bc d</pre></td></tr></tbody></table>');
+    });
+
+    it('TINY-10312: should apply `blockquote` formatting to whole list item content', () => {
+      const editor = hook.editor();
+      editor.setContent('<ul><li>a bc d</li></ul>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 4);
+      editor.formatter.apply('blockquote');
+      TinyAssertions.assertContent(editor, '<ul><li><blockquote>a bc d</blockquote></li></ul>');
+    });
+  });
+
 });

@@ -6,10 +6,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- New `label` component available in the `buttons` header of the `View` UI API, along with two size options (`normal` and `large`). #TINY-10339
+
 ### Fixed
 - When deleting the last row in a table, the cursor would jump to the first cell (top left), instead of moving to the next adjacent cell in some cases. #TINY-6309
 - Autocomplete would sometimes cause corrupt data when starting during text composition. Autocomplete no longer starts during composition. #TINY-10317
-- The functions `schema.isWrapper` and `schema.isInline` didn't exclude element names that started with `#` those should not be considered elements. #TINY-10385
+- Heading formatting would be partially applied to the content within the `summary` element when the caret was positioned between words. #TINY-10312
+- Moving focus to the outside of the editor after having clicked a menu would not fire a `blur` event as expected. #TINY-10310
+
+## 6.8.2 - 2023-12-11
+
+### Fixed
+- Bespoke select toolbar buttons including `fontfamily`, `fontsize`, `blocks`, and `styles` incorrectly used plural words in their accessible names. #TINY-10426
+- The `align` bespoke select toolbar button had an accessible name that was misleading and grammatically incorrect in certain cases. #TINY-10435
+- Accessible names of bespoke select toolbar buttons including `align`, `fontfamily`, `fontsize`, `blocks`, and `styles` were incorrectly translated. #TINY-10426 #TINY-10435
+- Clicking inside table cells with heavily nested content could cause the browser to hang. #TINY-10380
+- Toggling a list that contains an LI element having another list as its first child would remove the remaining content within that LI element. #TINY-10414
+
+## 6.8.1 - 2023-11-29
+
+### Improved
+- Colorpicker now includes the Brightness/Saturation selector and hue slider in the keyboard navigable items. #TINY-9287
+
+### Fixed
+- Translation syntax for announcement text in the table grid was incorrectly formatted. #TINY-10141
+- The functions `schema.isWrapper` and `schema.isInline` did not exclude node names that started with `#` which should not be considered as elements. #TINY-10385
 
 ## 6.8.0 - 2023-11-22
 
@@ -23,11 +45,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `convert_unsafe_embeds` option that controls whether `<object>` and `<embed>` elements will be converted to more restrictive alternatives, namely `<img>` for image MIME types, `<video>` for video MIME types, `<audio>` audio MIME types, or `<iframe>` for other or unspecified MIME types. #TINY-10349
 
 ### Improved
-- Colorpicker now includes the Brightness/Saturation selector and hue slider in the keyboard navigable items. #TINY-9287
 - Improved the tooltips of picker buttons for the urlinput components in the "Insert/Edit Image" and "Insert/Edit Link" dialogs. #TINY-10155
 - Inline dialog will now respect `size: 'large'` argument in the dialog spec. #TINY-10209
 - SVG elements and their children are now retained when configured as valid elements. #TINY-10237
-- Bespoke dropdown toolbar buttons including `align`, `fontfamily`, `fontsize`, `blocks`, and `styles` did not include their visible text labels in their accessible names. #TINY-10147
+- Bespoke select toolbar buttons including `align`, `fontfamily`, `fontsize`, `blocks`, and `styles` did not include their visible text labels in their accessible names. #TINY-10147
 
 ### Fixed
 - Editor would convert urls that are not http/s or relative resulting in broken links. #TINY-10153
