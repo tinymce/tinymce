@@ -61,7 +61,8 @@ export const setup = (editor: Editor): void => {
   };
 
   const commenceIfNecessary = (context: AutocompleteContext) => {
-    if (!isActive()) {
+    /* Autocompleter works by moving the content into a newly generated element. When combined with composing this creates issues where unexpected data input and visual issues */
+    if (!isActive() && !editor.composing) {
       // Create the wrapper
       Rtc.addAutocompleterDecoration(editor, context.range);
 

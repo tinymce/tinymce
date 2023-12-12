@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - When deleting the last row in a table, the cursor would jump to the first cell (top left), instead of moving to the next adjacent cell in some cases. #TINY-6309
+- Autocomplete would sometimes cause corrupt data when starting during text composition. Autocomplete no longer starts during composition. #TINY-10317
 - Heading formatting would be partially applied to the content within the `summary` element when the caret was positioned between words. #TINY-10312
 - Moving focus to the outside of the editor after having clicked a menu would not fire a `blur` event as expected. #TINY-10310
 
@@ -22,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Accessible names of bespoke select toolbar buttons including `align`, `fontfamily`, `fontsize`, `blocks`, and `styles` were incorrectly translated. #TINY-10426 #TINY-10435
 - Clicking inside table cells with heavily nested content could cause the browser to hang. #TINY-10380
 - Toggling a list that contains an LI element having another list as its first child would remove the remaining content within that LI element. #TINY-10414
+- Clicking to the left or right of a non-editable `div` in Firefox would show two cursors. #TINY-10314
 
 ## 6.8.1 - 2023-11-29
 
