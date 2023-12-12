@@ -123,7 +123,7 @@ describe('browser.tinymce.core.caret.FakeCaretTest', () => {
     assert.equal(isFakeCaretTarget(createElement('<table></table>').dom), isFakeCaretTableBrowser(), 'Should on some browsers need a fake caret');
   });
 
-  it('TINY-10314: fakeCaretContainer after/before a block should have caret-color setted to `transparent` to avoid double caret in FireFox', () => {
+  it('TINY-10314: fakeCaretContainer after/before a block should have caret-color set to `transparent` to avoid double caret in FireFox', () => {
     Arr.each([ true, false ], (before) => {
       Html.set(getRoot(), '<div>a</div><div id="nonEditable" contenteditable="false">b</div>');
 
