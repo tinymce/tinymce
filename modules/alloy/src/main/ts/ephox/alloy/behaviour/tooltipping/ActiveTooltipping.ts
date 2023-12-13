@@ -18,9 +18,11 @@ import { TooltippingConfig, TooltippingState } from './TooltippingTypes';
 const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): AlloyEvents.AlloyEventRecord => {
   const hide = (comp: AlloyComponent) => {
     state.getTooltip().each((p) => {
-      Attachment.detach(p);
-      tooltipConfig.onHide(comp, p);
-      state.clearTooltip();
+      if (p.getSystem().isConnected()) {
+        Attachment.detach(p);
+        tooltipConfig.onHide(comp, p);
+        state.clearTooltip();
+      }
     });
     state.clearTimer();
   };
