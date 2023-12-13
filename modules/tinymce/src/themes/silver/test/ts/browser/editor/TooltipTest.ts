@@ -5,13 +5,15 @@ import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import ImagePlugin from 'tinymce/plugins/image/Plugin';
+import LinkPlugin from 'tinymce/plugins/link/Plugin';
 
 describe('browser.tinymce.themes.silver.editor.Tooltip', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     plugins: [ 'link', 'image' ],
     toolbar: 'link image | fontsize'
-  });
+  }, [ ImagePlugin, LinkPlugin ]);
 
   const tooltipSelector = '.tox-silver-sink .tox-tooltip__body';
   const insertLinkSelector = 'button.tox-tbtn[aria-label="Insert/edit link"]';
