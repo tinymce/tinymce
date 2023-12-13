@@ -32,7 +32,7 @@ describe('browser.tinymce.themes.silver.editor.Tooltip', () => {
     await assertTooltip(editor, 'Font size 12pt');
 
     // Then move mouse over the insert link button
-    const insertLinkButton = UiFinder.findIn(TinyDom.container(editor), insertLinkSelector).getOrDie();
+    const insertLinkButton = UiFinder.findIn(SugarBody.body(), insertLinkSelector).getOrDie();
     Mouse.mouseOver(insertLinkButton);
 
     await Waiter.pWait(500);
@@ -50,7 +50,7 @@ describe('browser.tinymce.themes.silver.editor.Tooltip', () => {
   it('TINY-9275: should be rendered immediately when navigating by keyboard', async () => {
     const editor = hook.editor();
     // Focus on the first toolbar button
-    FocusTools.setFocus(TinyDom.container(editor), insertLinkSelector);
+    FocusTools.setFocus(SugarBody.body(), insertLinkSelector);
     // Wait for the tooltip to be visible. Notice that the waiting is significant less
     await Waiter.pWait(500);
     await assertTooltip(editor, 'Insert/edit link');
