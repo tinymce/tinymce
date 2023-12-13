@@ -52,8 +52,9 @@ def runHeadlessTests(Boolean runAll) {
   runBedrockTest(bedrockCmd, runAll)
 }
 
-def runRemoteTests(String name, String browser, String provider, String bucket, String buckets, Boolean runAll, int retry = 0, int timeout = 0) {
-  def awsOpts = " --sishDomain=sish.osu.tiny.work --devicefarmArn=arn:aws:devicefarm:us-west-2:103651136441:testgrid-project:79ff2b40-fe26-440f-9539-53163c25442e"
+def runRemoteTests(String name, String browser, String provider, String os, String arn, String bucket, String buckets, Boolean runAll, int retry = 0, int timeout = 0) {
+  def awsOpts = " --sishDomain=sish.osu.tiny.work --devicefarmArn=${arn}"
+  def platformName = os != null " --platformName='${os}'" : ""
   def bedrockCommand =
   "yarn browser-test" +
     " --chunk=400" +
@@ -62,11 +63,12 @@ def runRemoteTests(String name, String browser, String provider, String bucket, 
     " --bucket=" + bucket +
     " --buckets=" + buckets +
     " --name=" + name +
-    "${provider == 'aws' ? awsOpts : ''}"
+    "${provider == 'aws' ? awsOpts : ''}" +
+    "${platformName}"
     runBedrockTest(bedrockCommand, runAll, retry, timeout)
 }
 
-def runTestPod(String name, String browser, String provider, String bucket, String buckets, Boolean runAll) {
+def runTestPod(String name, String browser, String provider, String os, String bucket, String buckets, Boolean runAll) {
   return {
     tinyPods.node([
       resourceRequestCpu: '6',
@@ -77,9 +79,9 @@ def runTestPod(String name, String browser, String provider, String bucket, Stri
       if (provider == 'aws') {
         stage('Tunnel') {
           echo 'Adding Tunnel'
-          sh """
-          echo "sish.osu.tiny.work ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKl0pmqRdhKQksLYj9k3FUVdrkD/GWXJ/YhHJ3KWRDvz" >> ~/.ssh/known_hosts
-          """
+          withCredentials([string(credentialsId: 'sish-publickey', variable: 'SISH_KEY')]) {
+            sh 'echo "sish.osu.tiny.work ssh-ed25519 $SISH_KEY" >> ~/.ssh/known_hosts'
+          }
         }
       }
 
@@ -89,7 +91,9 @@ def runTestPod(String name, String browser, String provider, String bucket, Stri
         grunt('list-changed-browser')
         withRemoteCreds(provider) {
           int retry = provider == 'lambdatest' ? 3 : 0
-          runRemoteTests(name, browser, provider, bucket, buckets, runAll, retry, 180)
+          withCredentials([string(credentialsId: 'devicefarm-testgridarn', variable: 'DF_ARN')]) {
+            runRemoteTests(name, browser, provider, os, DF_ARN, bucket, buckets, runAll, retry, 180)
+          }
         }
       }
     }
@@ -141,7 +145,8 @@ timestamps {
     [ browser: 'chrome', provider: 'aws', buckets: 3 ],
     [ browser: 'edge', provider: 'aws', buckets: 3 ],
     [ browser: 'firefox', provider: 'aws', buckets: 3 ],
-    [ browser: 'safari', provider: 'lambdatest', buckets: 2 ]
+    [ browser: 'safari', provider: 'lambdatest', buckets: 2 ],
+    [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 2]
   ];
 
   def processes = [:]
@@ -155,7 +160,7 @@ timestamps {
       def s_bucket = "${bucket}"
       def s_buckets = "${buckets}"
       def name = "${platform.browser}-${platform.provider}${suffix}"
-      processes[name] = runTestPod(name, platform.browser, platform.provider, s_bucket, s_buckets, runAllTests)
+      processes[name] = runTestPod(name, platform.browser, platform.provider, platform.os, s_bucket, s_buckets, runAllTests)
     }
   }
 
