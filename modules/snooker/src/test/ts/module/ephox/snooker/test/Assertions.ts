@@ -203,7 +203,8 @@ const checkDelete = (
   Insert.append(container, table);
   Insert.append(SugarBody.body(), container);
   const cellz = Arr.map(cells, (cell) =>
-    Hierarchy.follow(table, [ cell.section, cell.row, cell.column, 0 ]).getOrDie(label + ': could not find cell')
+    Hierarchy.follow(table, [ cell.section, cell.row, cell.column, 0 ])
+      .getOrDie(label + `: could not find cell: { section: ${cell.section}, row: ${cell.row}, column: ${cell.column} }`)
   );
 
   const result = operation(table, {

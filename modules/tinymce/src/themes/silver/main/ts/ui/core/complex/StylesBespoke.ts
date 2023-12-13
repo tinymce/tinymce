@@ -15,7 +15,8 @@ import { getStyleFormats, isFormatReference, isNestedFormat, StyleFormatType } f
 import { findNearest } from './utils/FormatDetection';
 import * as Tooltip from './utils/Tooltip';
 
-const title = 'Formats';
+const menuTitle = 'Formats';
+const btnTooltip = 'Format {0}';
 
 const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
   const fallbackFormat = 'Paragraph';
@@ -50,7 +51,7 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
   };
 
   return {
-    tooltip: Tooltip.getTooltipText(editor, title, fallbackFormat),
+    tooltip: Tooltip.makeTooltipText(editor, btnTooltip, fallbackFormat),
     text: Optional.some(fallbackFormat),
     icon: Optional.none(),
     isSelectedFor,
@@ -66,14 +67,14 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
 
 const createStylesButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec => {
   const dataset: AdvancedSelectDataset = { type: 'advanced', ...backstage.styles };
-  return createSelectButton(editor, backstage, getSpec(editor, dataset), title, 'StylesTextUpdate');
+  return createSelectButton(editor, backstage, getSpec(editor, dataset), btnTooltip, 'StylesTextUpdate');
 };
 
 const createStylesMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
   const dataset: AdvancedSelectDataset = { type: 'advanced', ...backstage.styles };
-  const menuItems = createMenuItems(editor, backstage, getSpec(editor, dataset));
+  const menuItems = createMenuItems(backstage, getSpec(editor, dataset));
   editor.ui.registry.addNestedMenuItem('styles', {
-    text: title,
+    text: menuTitle,
     onSetup: onSetupEditableToggle(editor),
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   });

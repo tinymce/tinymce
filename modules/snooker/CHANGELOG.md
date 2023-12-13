@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+- `TableOperations.opEraseRows` did not calculate the correct row index for colgroup tables. #TINY-6309
+
 ## 11.0.9 - 2023-03-15
 
 ### Fixed
