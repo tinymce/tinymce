@@ -41,7 +41,7 @@ describe('PasteColumnOperationsTest', () => {
 
       '<tr><td>X1</td></tr><tr><td>X2</td></tr><tr><td>X3</td></tr><tr><td>X4</td></tr>',
 
-      TableOperations.pasteColsAfter, 0, 0, 0
+      TableOperations.pasteColsAfter, [ 0, 0, 0 ]
     )
   );
 
@@ -81,7 +81,7 @@ describe('PasteColumnOperationsTest', () => {
 
       '<tr><td>X1</td></tr><tr><td>X2</td></tr><tr><td>X3</td></tr><tr><td>X4</td></tr>',
 
-      TableOperations.pasteColsAfter, 1, 1, 1
+      TableOperations.pasteColsAfter, [ 1, 1, 1 ]
     )
   );
 
@@ -121,7 +121,7 @@ describe('PasteColumnOperationsTest', () => {
 
       '<tr><td>X1</td></tr><tr><td>X2</td></tr><tr><td>X3</td></tr><tr><td>X4</td></tr>',
 
-      TableOperations.pasteColsBefore, 0, 0, 0
+      TableOperations.pasteColsBefore, [ 0, 0, 0 ]
     )
   );
 
@@ -161,7 +161,7 @@ describe('PasteColumnOperationsTest', () => {
 
       '<tr><td>X1</td></tr><tr><td>X2</td></tr><tr><td>X3</td></tr><tr><td>X4</td></tr>',
 
-      TableOperations.pasteColsBefore, 1, 1, 1
+      TableOperations.pasteColsBefore, [ 1, 1, 1 ]
     )
   );
 
@@ -202,7 +202,7 @@ describe('PasteColumnOperationsTest', () => {
 
       '<tr><td colspan="2">X1</td></tr><tr><td>X2</td><td>Y2</td></tr><tr><td>X3</td><td>Y3</td></tr><tr><td>X4</td><td>Y4</td></tr>',
 
-      TableOperations.pasteColsAfter, 0, 0, 0
+      TableOperations.pasteColsAfter, [ 0, 0, 0 ]
     )
   );
 
@@ -243,7 +243,7 @@ describe('PasteColumnOperationsTest', () => {
 
       '<tr><td>X1</td></tr><tr><td rowspan="2">X2</td></tr><tr></tr><tr><td>X4</td></tr>',
 
-      TableOperations.pasteColsBefore, 1, 0, 1
+      TableOperations.pasteColsBefore, [ 1, 0, 1 ]
     )
   );
 
@@ -271,7 +271,7 @@ describe('PasteColumnOperationsTest', () => {
 
       '<tr><td>X1</td></tr>',
 
-      TableOperations.pasteColsBefore, 0, 0, 1
+      TableOperations.pasteColsBefore, [ 0, 0, 1 ]
     )
   );
 
@@ -299,7 +299,7 @@ describe('PasteColumnOperationsTest', () => {
 
       '<tr><td>X1</td></tr>',
 
-      TableOperations.pasteColsAfter, 0, 0, 0
+      TableOperations.pasteColsAfter, [ 0, 0, 0 ]
     )
   );
 
@@ -329,7 +329,7 @@ describe('PasteColumnOperationsTest', () => {
 
       '<tr><td>X1</td></tr><tr><td>X2</td></tr><tr><td>X3</td></tr><tr><td>X4</td></tr>',
 
-      TableOperations.pasteColsBefore, 0, 0, 0
+      TableOperations.pasteColsBefore, [ 0, 0, 0 ]
     )
   );
 
@@ -359,7 +359,7 @@ describe('PasteColumnOperationsTest', () => {
 
       '<tr><td>X1</td></tr><tr><td>X2</td></tr><tr><td>X3</td></tr><tr><td>X4</td></tr>',
 
-      TableOperations.pasteColsAfter, 0, 0, 1
+      TableOperations.pasteColsAfter, [ 0, 0, 1 ]
     )
   );
 
@@ -387,7 +387,7 @@ describe('PasteColumnOperationsTest', () => {
 
       '<tr><td>X1</td></tr><tr><td>X2</td></tr>',
 
-      TableOperations.pasteColsBefore, 0, 0, 0
+      TableOperations.pasteColsBefore, [ 0, 0, 0 ]
     )
   );
 
@@ -415,7 +415,7 @@ describe('PasteColumnOperationsTest', () => {
 
       '<tr><td>X1</td></tr><tr><td>X2</td></tr>',
 
-      TableOperations.pasteColsAfter, 0, 0, 0
+      TableOperations.pasteColsAfter, [ 0, 0, 0 ]
     )
   );
 
@@ -443,7 +443,7 @@ describe('PasteColumnOperationsTest', () => {
 
       '<tr><td>X1</td></tr><tr><td>X2</td></tr>',
 
-      TableOperations.pasteColsBefore, 0, 0, 1
+      TableOperations.pasteColsBefore, [ 0, 0, 1 ]
     )
   );
 
@@ -471,7 +471,7 @@ describe('PasteColumnOperationsTest', () => {
 
       '<tr><td>X1</td></tr><tr><td>X2</td></tr>',
 
-      TableOperations.pasteColsAfter, 0, 0, 1
+      TableOperations.pasteColsAfter, [ 0, 0, 1 ]
     )
   );
 
@@ -499,7 +499,7 @@ describe('PasteColumnOperationsTest', () => {
 
       '<tr><td>X1</td></tr><tr><td>X2</td></tr>',
 
-      TableOperations.pasteColsBefore, 0, 0, 1
+      TableOperations.pasteColsBefore, [ 0, 0, 1 ]
     )
   );
 
@@ -527,7 +527,7 @@ describe('PasteColumnOperationsTest', () => {
 
       '<tr><td>X1</td></tr><tr><td>X2</td></tr>',
 
-      TableOperations.pasteColsAfter, 0, 0, 1
+      TableOperations.pasteColsAfter, [ 0, 0, 1 ]
     )
   );
 
@@ -564,7 +564,7 @@ describe('PasteColumnOperationsTest', () => {
         '<tr></tr>'
       ),
 
-      TableOperations.pasteColsAfter, 0, 0, 5
+      TableOperations.pasteColsAfter, [ 0, 0, 5 ]
     )
   );
 
@@ -601,7 +601,7 @@ describe('PasteColumnOperationsTest', () => {
         '<tr></tr>'
       ),
 
-      TableOperations.pasteColsBefore, 0, 0, 5
+      TableOperations.pasteColsBefore, [ 0, 0, 5 ]
     )
   );
 
@@ -638,7 +638,7 @@ describe('PasteColumnOperationsTest', () => {
         '<tr></tr>'
       ),
 
-      TableOperations.pasteColsBefore, 0, 0, 5
+      TableOperations.pasteColsBefore, [ 0, 0, 5 ]
     )
   );
 
@@ -675,7 +675,7 @@ describe('PasteColumnOperationsTest', () => {
         '<tr></tr>'
       ),
 
-      TableOperations.pasteColsBefore, 0, 0, 5
+      TableOperations.pasteColsBefore, [ 0, 0, 5 ]
     )
   );
 
@@ -712,7 +712,61 @@ describe('PasteColumnOperationsTest', () => {
         '<tr></tr>'
       ),
 
-      TableOperations.pasteColsBefore, 0, 0, 5
+      TableOperations.pasteColsBefore, [ 0, 0, 5 ]
+    )
+  );
+
+  it('TINY-6460: Cursor should move to the new column after pasting after the current one', () =>
+    Assertions.checkPaste(
+      'Test pasteColsAfter cursor position',
+
+      generateTestTable(
+        [
+          '<tr><td>A1</td><td>pasted</td><td>A2</td></tr>',
+        ],
+        [], [],
+        { numCols: 2, colgroup: false, lockedColumns: [] }
+      ),
+
+      generateTestTable(
+        [
+          '<tr><td>A1</td><td>A2</td></tr>',
+        ],
+        [], [],
+        { numCols: 2, colgroup: false, lockedColumns: [] }
+      ),
+
+      '<tr><td>pasted</td></tr>',
+
+      TableOperations.pasteColsAfter, [ 0, 0, 0 ],
+      [ 0, 0, 1 ]
+    )
+  );
+
+  it('TINY-6460: Cursor should move to the new column after pasting before the current one', () =>
+    Assertions.checkPaste(
+      'Test pasteColsBefore',
+
+      generateTestTable(
+        [
+          '<tr><td>A1</td><td>pasted</td><td>A2</td></tr>',
+        ],
+        [], [],
+        { numCols: 2, colgroup: false, lockedColumns: [] }
+      ),
+
+      generateTestTable(
+        [
+          '<tr><td>A1</td><td>A2</td></tr>',
+        ],
+        [], [],
+        { numCols: 2, colgroup: false, lockedColumns: [] }
+      ),
+
+      '<tr><td>pasted</td></tr>',
+
+      TableOperations.pasteColsBefore, [ 0, 0, 1 ],
+      [ 0, 0, 1 ]
     )
   );
 

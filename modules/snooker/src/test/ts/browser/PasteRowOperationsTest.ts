@@ -41,7 +41,7 @@ UnitTest.test('PasteRowOperationsTest', () => {
 
     '<tr><td>X1</td><td>X2</td></tr>',
 
-    TableOperations.pasteRowsAfter, 0, 0, 0
+    TableOperations.pasteRowsAfter, [ 0, 0, 0 ]
   );
 
   Assertions.checkPaste(
@@ -80,7 +80,7 @@ UnitTest.test('PasteRowOperationsTest', () => {
 
     '<tr><td>X1</td><td>X2</td></tr>',
 
-    TableOperations.pasteRowsAfter, 1, 1, 0
+    TableOperations.pasteRowsAfter, [ 1, 1, 0 ]
   );
 
   Assertions.checkPaste(
@@ -119,7 +119,7 @@ UnitTest.test('PasteRowOperationsTest', () => {
 
     '<tr><td>X1</td><td>X2</td></tr>',
 
-    TableOperations.pasteRowsAfter, 2, 0, 0
+    TableOperations.pasteRowsAfter, [ 2, 0, 0 ]
   );
 
   Assertions.checkPaste(
@@ -158,7 +158,7 @@ UnitTest.test('PasteRowOperationsTest', () => {
 
     '<tr><td>X1</td><td>X2</td></tr>',
 
-    TableOperations.pasteRowsBefore, 0, 0, 0
+    TableOperations.pasteRowsBefore, [ 0, 0, 0 ]
   );
 
   Assertions.checkPaste(
@@ -197,7 +197,7 @@ UnitTest.test('PasteRowOperationsTest', () => {
 
     '<tr><td>X1</td><td>X2</td></tr>',
 
-    TableOperations.pasteRowsBefore, 1, 1, 0
+    TableOperations.pasteRowsBefore, [ 1, 1, 0 ]
   );
 
   Assertions.checkPaste(
@@ -236,7 +236,7 @@ UnitTest.test('PasteRowOperationsTest', () => {
 
     '<tr><td>X1</td><td>X2</td></tr>',
 
-    TableOperations.pasteRowsBefore, 2, 0, 0
+    TableOperations.pasteRowsBefore, [ 2, 0, 0 ]
   );
 
   Assertions.checkPaste(
@@ -263,7 +263,7 @@ UnitTest.test('PasteRowOperationsTest', () => {
 
     '<tr><td>X1</td></tr>',
 
-    TableOperations.pasteRowsBefore, 0, 0, 0
+    TableOperations.pasteRowsBefore, [ 0, 0, 0 ]
   );
 
   Assertions.checkPaste(
@@ -290,7 +290,7 @@ UnitTest.test('PasteRowOperationsTest', () => {
 
     '<tr><td>X1</td></tr>',
 
-    TableOperations.pasteRowsAfter, 0, 0, 0
+    TableOperations.pasteRowsAfter, [ 0, 0, 0 ]
   );
 
   Assertions.checkPaste(
@@ -317,7 +317,7 @@ UnitTest.test('PasteRowOperationsTest', () => {
 
     '<tr><td>X1</td><td>X2</td><td>X3</td><td>X4</td></tr>',
 
-    TableOperations.pasteRowsBefore, 0, 0, 0
+    TableOperations.pasteRowsBefore, [ 0, 0, 0 ]
   );
 
   Assertions.checkPaste(
@@ -344,7 +344,7 @@ UnitTest.test('PasteRowOperationsTest', () => {
 
     '<tr><td>X1</td><td>X2</td><td>X3</td><td>X4</td></tr>',
 
-    TableOperations.pasteRowsAfter, 0, 1, 0
+    TableOperations.pasteRowsAfter, [ 0, 1, 0 ]
   );
 
   Assertions.checkPaste(
@@ -371,7 +371,7 @@ UnitTest.test('PasteRowOperationsTest', () => {
 
     '<tr><td>X1</td><td>X2</td></tr>',
 
-    TableOperations.pasteRowsBefore, 0, 1, 0
+    TableOperations.pasteRowsBefore, [ 0, 1, 0 ]
   );
 
   Assertions.checkPaste(
@@ -398,7 +398,7 @@ UnitTest.test('PasteRowOperationsTest', () => {
 
     '<tr><td>X1</td><td>X2</td></tr>',
 
-    TableOperations.pasteRowsAfter, 0, 1, 0
+    TableOperations.pasteRowsAfter, [ 0, 1, 0 ]
   );
 
   Assertions.checkPaste(
@@ -425,7 +425,7 @@ UnitTest.test('PasteRowOperationsTest', () => {
 
     '<tr><td>X1</td><td>X2</td></tr>',
 
-    TableOperations.pasteRowsAfter, 0, 0, 0
+    TableOperations.pasteRowsAfter, [ 0, 0, 0 ]
   );
 
   Assertions.checkPaste(
@@ -452,6 +452,62 @@ UnitTest.test('PasteRowOperationsTest', () => {
 
     '<tr><td>X1</td><td>X2</td></tr>',
 
-    TableOperations.pasteRowsBefore, 0, 1, 0
+    TableOperations.pasteRowsBefore, [ 0, 1, 0 ]
+  );
+
+  Assertions.checkPaste(
+    'TINY-6460: Cursor should move to the new row after pasting after the current one',
+
+    generateTestTable(
+      [
+        '<tr><td>A2</td><td>B2</td><td>C2</td></tr>',
+        '<tr><td>A3</td><td>B3</td><td>C3</td></tr>',
+        '<tr><td>X1</td><td>X2</td><td>X3</td></tr>',
+      ],
+      [], [],
+      { numCols: 3, colgroup: true, lockedColumns: [] }
+    ),
+
+    generateTestTable(
+      [
+        '<tr><td>A2</td><td>B2</td><td>C2</td></tr>',
+        '<tr><td>A3</td><td>B3</td><td>C3</td></tr>'
+      ],
+      [], [],
+      { numCols: 3, colgroup: true, lockedColumns: [] }
+    ),
+
+    '<tr><td>X1</td><td>X2</td><td>X3</td></tr>',
+
+    TableOperations.pasteRowsAfter, [ 1, 1, 0 ],
+    [ 1, 2, 0 ]
+  );
+
+  Assertions.checkPaste(
+    'TINY-6460: Cursor should move to the new row after pasting before the current one',
+
+    generateTestTable(
+      [
+        '<tr><td>A2</td><td>B2</td><td>C2</td></tr>',
+        '<tr><td>X1</td><td>X2</td><td>X3</td></tr>',
+        '<tr><td>A3</td><td>B3</td><td>C3</td></tr>',
+      ],
+      [], [],
+      { numCols: 3, colgroup: true, lockedColumns: [] }
+    ),
+
+    generateTestTable(
+      [
+        '<tr><td>A2</td><td>B2</td><td>C2</td></tr>',
+        '<tr><td>A3</td><td>B3</td><td>C3</td></tr>'
+      ],
+      [], [],
+      { numCols: 3, colgroup: true, lockedColumns: [] }
+    ),
+
+    '<tr><td>X1</td><td>X2</td><td>X3</td></tr>',
+
+    TableOperations.pasteRowsBefore, [ 1, 1, 0 ],
+    [ 1, 1, 0 ]
   );
 });
