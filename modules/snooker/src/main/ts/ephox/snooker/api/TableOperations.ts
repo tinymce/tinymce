@@ -250,7 +250,7 @@ const opEraseRows = (grid: Structs.RowCells[], details: Structs.DetailExt[], _co
   const rows = uniqueRows(details);
 
   const newGrid = ModificationOperations.deleteRowsAt(grid, rows[0].row, rows[rows.length - 1].row);
-  const maxRowIndex = newGrid.length > 0 ? newGrid.length - 1 : 0;
+  const maxRowIndex = Math.max(GridRow.extractGridDetails(newGrid).rows.length - 1, 0);
   return bundle(newGrid, Math.min(details[0].row, maxRowIndex), details[0].column);
 };
 
@@ -309,7 +309,7 @@ const opPasteColsAfter = (grid: Structs.RowCells[], pasteDetails: ExtractPasteRo
   const context = rows[pasteDetails.cells[0].row];
   const gridB = gridifyRows(pasteDetails.clipboard, pasteDetails.generators, context);
   const mergedGrid = TableMerge.insertCols(index, grid, gridB, pasteDetails.generators, comparator);
-  return bundle(mergedGrid, pasteDetails.cells[0].row, pasteDetails.cells[0].column);
+  return bundle(mergedGrid, pasteDetails.cells[0].row, index);
 };
 
 const opPasteRowsBefore = (grid: Structs.RowCells[], pasteDetails: ExtractPasteRows, comparator: CompElm, _genWrappers: GeneratorsModification) => {
@@ -327,7 +327,7 @@ const opPasteRowsAfter = (grid: Structs.RowCells[], pasteDetails: ExtractPasteRo
   const context = rows[pasteDetails.cells[0].row];
   const gridB = gridifyRows(pasteDetails.clipboard, pasteDetails.generators, context);
   const mergedGrid = TableMerge.insertRows(index, grid, gridB, pasteDetails.generators, comparator);
-  return bundle(mergedGrid, pasteDetails.cells[0].row, pasteDetails.cells[0].column);
+  return bundle(mergedGrid, index, pasteDetails.cells[0].column);
 };
 
 const opGetColumnsType = (table: SugarElement<HTMLTableElement>, target: TargetSelection): string => {

@@ -22,6 +22,16 @@ const generateTestTable = (bodyContent: string[], headerContent: string[], foote
     '</table>';
 };
 
+const generateTestTableBody = (rows: number, cols: number, tdContent: (row: number, column: number) => string = (r, c) => `${r}-${c}`): string[] =>
+  Arr.range(
+    rows,
+    (row) =>
+      '<tr>' +
+      Arr.range(cols, (column) => '<td>' + tdContent(row, column) + '</td>').join('') +
+      '</tr>'
+  );
+
 export {
-  generateTestTable
+  generateTestTable,
+  generateTestTableBody
 };

@@ -329,6 +329,22 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
     scenario.assertion(editor);
   };
 
+  it('TINY-10317: Should not trigger during composing', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>+</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    editor.dispatch('compositionstart');
+    TinyContentActions.keypress(editor, '+'.charCodeAt(0));
+    await Waiter.pWait(250);
+    UiFinder.notExists(SugarBody.body(), '.tox-autocompleter div[role="menu"]');
+    editor.dispatch('compositionend');
+    TinyContentActions.keypress(editor, '+'.charCodeAt(0));
+    await pWaitForAutocompleteToOpen();
+    TinyContentActions.keydown(editor, Keys.down());
+    TinyContentActions.keydown(editor, Keys.enter());
+    TinyAssertions.assertContent(editor, '<p>plus-bB</p>');
+  });
+
   it('Checking first autocomplete (columns = 1) trigger: "+"', () => pTestAutocompleter({
     triggerChar: '+',
     structure: {

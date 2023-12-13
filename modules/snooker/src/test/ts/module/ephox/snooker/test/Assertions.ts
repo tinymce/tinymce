@@ -20,6 +20,8 @@ interface ExpCell {
   readonly column: number;
 }
 
+type CellTuple = [section: number, row: number, column: number];
+
 const makeContainer = () =>
   SugarElement.fromHtml<HTMLDivElement>('<div contenteditable="true"></div>');
 
@@ -104,9 +106,8 @@ const checkPaste = (
   input: string,
   pasteHtml: string,
   operation: OperationCallback<TargetPasteRows>,
-  section: number,
-  row: number,
-  column: number
+  pasteAtCursor: CellTuple,
+  expCursor?: CellTuple
 ): void => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   const container = makeContainer();
@@ -114,15 +115,26 @@ const checkPaste = (
   Insert.append(SugarBody.body(), container);
 
   const pasteTable = SugarElement.fromHtml<HTMLTableElement>('<table><tbody>' + pasteHtml + '</tbody></table>');
-  operation(
+  const result = operation(
     table,
     {
-      selection: [ Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie(label + ': could not follow selection') ],
+      selection: [
+        Hierarchy.follow(table, [ ...pasteAtCursor, 0 ])
+          .getOrDie(label + `: could not follow selection [${pasteAtCursor}]`)
+      ],
       clipboard: SelectorFilter.descendants(pasteTable, 'tr'),
       generators: Bridge.pasteGenerators
     },
     Bridge.generators
   );
+
+  // Optionally check for the cursor position after the paste operation:
+  if (expCursor) {
+    const actualCursor = result.getOrDie(label + ': could not get table operation result')
+      .cursor.getOrDie(label + ': could not get cursor');
+    const actualPath = Hierarchy.path(table, actualCursor).getOrDie(label + ': could not find path to cursor');
+    Assert.eq('Cursor is not in expected cell.', expCursor, actualPath);
+  }
 
   Assertions.assertHtml(label, expectedHtml, Html.getOuter(table));
   Remove.remove(container);
@@ -203,7 +215,8 @@ const checkDelete = (
   Insert.append(container, table);
   Insert.append(SugarBody.body(), container);
   const cellz = Arr.map(cells, (cell) =>
-    Hierarchy.follow(table, [ cell.section, cell.row, cell.column, 0 ]).getOrDie(label + ': could not find cell')
+    Hierarchy.follow(table, [ cell.section, cell.row, cell.column, 0 ])
+      .getOrDie(label + `: could not find cell: { section: ${cell.section}, row: ${cell.row}, column: ${cell.column} }`)
   );
 
   const result = operation(table, {

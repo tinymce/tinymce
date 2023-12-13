@@ -226,6 +226,27 @@ describe('browser.tinymce.core.fmt.ExpandRangeTest', () => {
       const rng = expandRng(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1, blockFormat, false);
       assertRange(editor, rng, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
     });
+
+    it('TINY-10154: should expand over the nested summary content instead of parent details body element', () => {
+      const editor = hook.editor();
+      // eslint-disable-next-line max-len
+      editor.setContent(`<details class="mce-accordion" open="open"><summary class="mce-accordion-summary">Accordion summary 1</summary><div class="mce-accordion-body"><p>Accordion body1</p><details class="mce-accordion" open="open"><summary class="mce-accordion-summary">Accordion summary1.1</summary><div class="mce-accordion-body"><p>Accordion body 1.1</p></div></details></div></details>`);
+      const rng = expandRng(editor, [ 0, 1, 1, 0, 0 ], 2, [ 0, 1, 1, 0, 0 ], 2, [{ block: 'h1', deep: true, remove: 'all', split: true }], false);
+      assertRange(editor, rng, [ 0, 1, 1 ], 0, [ 0, 1, 1, 0, 0 ], 20);
+    });
+
+    it('TINY-10312: should expand over the whole `summary` content when the caret positioned between the words', () => {
+      const editor = hook.editor();
+      editor.setContent(`<details class="mce-accordion" open="open"><summary>Accordion summary</summary><p>Accordion body</p></details>`);
+      // caret before space character
+      const rng1 = expandRng(editor, [ 0, 0, 0 ], 9, [ 0, 0, 0 ], 9, [{ block: 'h4', deep: true, remove: 'all', split: true }], false);
+      // assertRange(editor, rng1, [ 0, 0, 0 ], 0, [ 0 ], 1 );
+      assertRange(editor, rng1, [ 0 ], 0, [ 0, 0, 0 ], 17 );
+
+      // caret after space character
+      const rng2 = expandRng(editor, [ 0, 0, 0 ], 10, [ 0, 0, 0 ], 10, [{ block: 'h4', deep: true, remove: 'all', split: true }], false);
+      assertRange(editor, rng2, [ 0, 0, 0 ], 0, [ 0 ], 1 );
+    });
   });
 
   context('TBA: Expand selector format', () => {
@@ -269,14 +290,6 @@ describe('browser.tinymce.core.fmt.ExpandRangeTest', () => {
       editor.setContent('<div>ab</div>');
       const rng = expandRng(editor, [ 0, 0 ], 1, [ 0, 0 ], 2, selectorFormat, false);
       assertRange(editor, rng, [], 0, [], 1);
-    });
-
-    it('TINY-10154: should expand over the nested summary content instead of parent details body element', () => {
-      const editor = hook.editor();
-      // eslint-disable-next-line max-len
-      editor.setContent(`<details class="mce-accordion" open="open"><summary class="mce-accordion-summary">Accordion summary 1</summary><div class="mce-accordion-body"><p>Accordion body1</p><details class="mce-accordion" open="open"><summary class="mce-accordion-summary">Accordion summary1.1</summary><div class="mce-accordion-body"><p>Accordion body 1.1</p></div></details></div></details>`);
-      const rng = expandRng(editor, [ 0, 1, 1, 0, 0 ], 2, [ 0, 1, 1, 0, 0 ], 2, [{ block: 'h1', deep: true, remove: 'all', split: true }], false);
-      assertRange(editor, rng, [ 0, 1, 1 ], 0, [ 0, 1, 1, 0, 0 ], 9);
     });
   });
 
