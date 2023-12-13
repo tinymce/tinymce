@@ -151,7 +151,7 @@ module.exports = function (grunt) {
     }, {});
   };
 
-  const opts = bedrockOpts(grunt, ['username', 'accesskey', 'sishDomain', 'devicefarmArn', 'devicefarmRegion']);
+  const opts = bedrockOpts(grunt, ['username', 'accesskey', 'sishDomain', 'devicefarmArn', 'devicefarmRegion', 'platformName', 'browserVersion']);
 
   const gruntConfig = {
     shell: {
