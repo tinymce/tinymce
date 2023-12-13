@@ -1,6 +1,8 @@
 import { AlloySpec, RawDomSchema } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
-import { Fun, Obj, Optional, Type } from '@ephox/katamari';
+import { Fun, Id, Obj, Optional, Type } from '@ephox/katamari';
+
+import I18n from 'tinymce/core/api/util/I18n';
 
 import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import * as Icons from '../../../icons/Icons';
@@ -34,7 +36,9 @@ const renderColorStructure = (item: ItemStructureSpec, providerBackstage: UiFact
 
   const attributes = item.ariaLabel.map(
     (al) => ({
-      'aria-label': providerBackstage.translate(al)
+      'aria-label': providerBackstage.translate(al),
+      // TINY-10453: Remove this tooltip, we don't want duplicate tooltips and until we figured a better way to test, it's here now so that tests would pass
+      'title': providerBackstage.translate(al)
     })
   ).getOr({ });
 
@@ -42,26 +46,30 @@ const renderColorStructure = (item: ItemStructureSpec, providerBackstage: UiFact
     const common = ItemClasses.colorClass;
     const icon = iconSvg.getOr('');
 
+    const baseDom = {
+      tag: 'div',
+      attributes,
+      classes: [ common ]
+    };
+
     if (itemValue === colorPickerCommand) {
       return {
+        ...baseDom,
         tag: 'button',
-        attributes,
-        classes: [ common, 'tox-swatches__picker-btn' ],
+        classes: [ ...baseDom.classes, 'tox-swatches__picker-btn' ],
         innerHtml: icon
       };
     } else if (itemValue === removeColorCommand) {
       return {
-        tag: 'div',
-        attributes,
-        classes: [ common, 'tox-swatch--remove' ],
+        ...baseDom,
+        classes: [ ...baseDom.classes, 'tox-swatch--remove' ],
         innerHtml: icon
       };
     } else if (Type.isNonNullable(itemValue)) {
       return {
-        tag: 'div',
-        classes: [ common ],
+        ...baseDom,
         attributes: {
-          ...attributes,
+          ...baseDom.attributes,
           'data-mce-color': itemValue
         },
         styles: {
@@ -70,17 +78,30 @@ const renderColorStructure = (item: ItemStructureSpec, providerBackstage: UiFact
         innerHtml: icon
       };
     } else {
-      return {
-        tag: 'div',
-        classes: [ common ],
-        attributes
-      };
+      return baseDom;
     }
   };
 
   return {
     dom: getDom(),
     optComponents: [ ]
+  };
+};
+
+const renderItemDomStructure = (ariaLabel: Optional<string>): RawDomSchema => {
+  const domTitle = ariaLabel.map((label): { attributes?: { title: string; id?: string; 'aria-label': string }} => ({
+    attributes: {
+      // TINY-10453: Remove this tooltip, we don't want duplicate tooltips and until we figured a better way to test, it's here now so that tests would pass
+      'title': I18n.translate(label),
+      'id': Id.generate('menu-item'),
+      'aria-label': I18n.translate(label)
+    }
+  })).getOr({});
+
+  return {
+    tag: 'div',
+    classes: [ ItemClasses.navClass, ItemClasses.selectableClass ],
+    ...domTitle
   };
 };
 
@@ -93,12 +114,6 @@ const renderNormalItemStructure = (info: ItemStructureSpec, providersBackstage: 
   const leftIcon = renderIcons ? info.iconContent.map(renderIcon).orThunk(renderEmptyIcon) : Optional.none();
   // TINY-3345: Dedicated columns for icon and checkmark if applicable
   const checkmark = info.checkMark;
-  const attributes = info.ariaLabel.fold(
-    Fun.constant({}),
-    (text) => {
-      return { 'aria-label': providersBackstage.translate(text) };
-    }
-  );
 
   // Style items and autocompleter both have meta. Need to branch on style
   // This could probably be more stable...
@@ -113,11 +128,7 @@ const renderNormalItemStructure = (info: ItemStructureSpec, providersBackstage: 
   );
 
   const menuItem = {
-    dom: {
-      tag: 'div',
-      classes: [ ItemClasses.navClass, ItemClasses.selectableClass ],
-      attributes
-    },
+    dom: renderItemDomStructure(info.ariaLabel),
     optComponents: [
       leftIcon,
       content,
@@ -138,4 +149,4 @@ const renderItemStructure = (info: ItemStructureSpec, providersBackstage: UiFact
   }
 };
 
-export { renderItemStructure };
+export { renderItemStructure, renderItemDomStructure };

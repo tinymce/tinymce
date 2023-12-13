@@ -84,7 +84,9 @@ const getToggleApi = (component: AlloyComponent): Toolbar.ToolbarToggleButtonIns
 });
 
 const getTooltipAttributes = (tooltip: Optional<string>, providersBackstage: UiFactoryBackstageProviders) => tooltip.map<{}>((tooltip) => ({
-  'aria-label': providersBackstage.translate(tooltip)
+  'aria-label': providersBackstage.translate(tooltip),
+  // TINY-10453: Remove this tooltip, we don't want duplicate tooltips and until we figured a better way to test, it's here now so that tests would pass
+  'title': providersBackstage.translate(tooltip)
 })).getOr({});
 
 const focusButtonEvent = Id.generate('focus-button');

@@ -29,7 +29,7 @@ describe('browser.tinymce.themes.silver.editor.Tooltip', () => {
     UiFinder.notExists(SugarBody.body(), tooltipSelector);
     // This is a slightly higher than the default delay for showing a tooltip to take renderinging time into account
     await Waiter.pWait(1000);
-    assertTooltip('Font sizes');
+    assertTooltip('Font size 12pt');
 
     // Then move mouse over the insert link button
     const insertLinkButton = UiFinder.findIn(TinyDom.container(editor), insertLinkSelector).getOrDie();
@@ -57,6 +57,6 @@ describe('browser.tinymce.themes.silver.editor.Tooltip', () => {
     // Navigate to another button in the toolbar
     TinyUiActions.keydown(editor, Keys.tab());
     await Waiter.pWait(300);
-    assertTooltip('Font sizes');
+    assertTooltip('Font size 12pt');
   });
 });

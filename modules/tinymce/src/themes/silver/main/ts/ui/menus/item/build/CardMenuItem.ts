@@ -4,6 +4,7 @@ import { Arr, Optional } from '@ephox/katamari';
 import { SelectorFilter } from '@ephox/sugar';
 
 import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
+import { renderItemDomStructure } from 'tinymce/themes/silver/ui/menus/item/structure/ItemStructure';
 
 import * as ItemClasses from '../ItemClasses';
 import ItemResponse from '../ItemResponse';
@@ -59,12 +60,7 @@ export const renderCardMenuItem = (
   });
 
   const structure = {
-    // TINY-9125: we used to create attributes.title here, but we aren't any more
-    // What is CardMenuItem being used for, anyway?
-    dom: {
-      tag: 'div',
-      classes: [ ItemClasses.navClass, ItemClasses.selectableClass ]
-    },
+    dom: renderItemDomStructure(spec.label),
     optComponents: [
       Optional.some({
         dom: {
