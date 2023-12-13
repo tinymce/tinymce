@@ -20,7 +20,7 @@ describe('browser.tinymce.themes.silver.editor.Tooltip', () => {
     assert.equal(tooltip.dom.textContent, text);
   };
 
-  //TODO: TINY-10465 - Improve tests
+  // TODO: TINY-10465 - Improve tests
   it('TINY-9275: should be rendered after a delay on mouse over', async () => {
     const editor = hook.editor();
 
