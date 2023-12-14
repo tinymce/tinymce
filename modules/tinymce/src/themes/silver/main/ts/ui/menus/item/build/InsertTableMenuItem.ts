@@ -16,7 +16,7 @@ interface CellEvent extends CustomEvent {
 }
 
 const makeAnnouncementText = (backstage: UiFactoryBackstage) => (row: number, col: number): string =>
-  backstage.shared.providers.translate(`${col} columns, ${row} rows`);
+  backstage.shared.providers.translate([ '{0} columns, {1} rows', col, row ]);
 
 const makeCell = (row: number, col: number, label: string): AlloyComponent => {
   const emitCellOver = (c: AlloyComponent) => AlloyTriggers.emitWith(c, cellOverEvent, { row, col } );

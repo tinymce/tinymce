@@ -1,4 +1,4 @@
-import { Arr, Type } from '@ephox/katamari';
+import { Arr, Strings, Type } from '@ephox/katamari';
 
 import Env from '../api/Env';
 import DomParser, { DomParserSettings } from '../api/html/DomParser';
@@ -30,6 +30,36 @@ const registerBase64ImageFilter = (parser: DomParser, settings: DomParserSetting
 
     parser.addAttributeFilter('src', (nodes) => Arr.each(nodes, processImage));
   }
+};
+
+const isMimeType = (mime: string, type: 'image' | 'video' | 'audio'): boolean => Strings.startsWith(mime, `${type}/`);
+
+const createSafeEmbed = (mime?: string, src?: string, width?: string, height?: string, sandboxIframes?: boolean): AstNode => {
+  let name: 'iframe' | 'img' | 'video' | 'audio';
+  if (Type.isUndefined(mime)) {
+    name = 'iframe';
+  } else if (isMimeType(mime, 'image')) {
+    name = 'img';
+  } else if (isMimeType(mime, 'video')) {
+    name = 'video';
+  } else if (isMimeType(mime, 'audio')) {
+    name = 'audio';
+  } else {
+    name = 'iframe';
+  }
+
+  const embed = new AstNode(name, 1);
+  embed.attr(name === 'audio' ? { src } : { src, width, height });
+
+  // TINY-10349: Show controls for audio and video so the replaced embed is visible in editor.
+  if (name === 'audio' || name === 'video') {
+    embed.attr('controls', '');
+  }
+
+  if (name === 'iframe' && sandboxIframes) {
+    embed.attr('sandbox', '');
+  }
+  return embed;
 };
 
 const register = (parser: DomParser, settings: DomParserSettings): void => {
@@ -153,6 +183,23 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
   }
 
   registerBase64ImageFilter(parser, settings);
+
+  if (settings.convert_unsafe_embeds) {
+    parser.addNodeFilter('object,embed', (nodes) => Arr.each(nodes, (node) => {
+      node.replace(
+        createSafeEmbed(
+          node.attr('type'),
+          node.name === 'object' ? node.attr('data') : node.attr('src'),
+          node.attr('width'),
+          node.attr('height'),
+          settings.sandbox_iframes
+        ));
+    }));
+  }
+
+  if (settings.sandbox_iframes) {
+    parser.addNodeFilter('iframe', (nodes) => Arr.each(nodes, (node) => node.attr('sandbox', '')));
+  }
 };
 
 export {

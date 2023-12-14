@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+- Creating native events using DragEvent or ClipboardEvent constructors using agar DataTransfer instances would fail on Firefox. #TINY-10386
+
+## 8.0.0 - 2023-11-22
+
 ### Added
 - Added `Clipboard.pPasteUrlItems` API to paste url files as clipboard items. #TINY-10275
 - Added `Files.getFileDataAsString` API to make it easier to get file data out for testing. #TINY-10275

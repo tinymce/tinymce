@@ -56,12 +56,12 @@ const clientInfo = (rect: NodeClientRect, clientX: number): FakeCaretInfo => {
 const horizontalDistance: DistanceFn = (rect, x, _y) =>
   x > rect.left && x < rect.right ? 0 : Math.min(Math.abs(rect.left - x), Math.abs(rect.right - x));
 
-const closestChildCaretCandidateNodeRect = (children: ChildNode[], clientX: number, clientY: number): Optional<NodeClientRect> => {
+const closestChildCaretCandidateNodeRect = (children: ChildNode[], clientX: number, clientY: number, findCloserTextNode: boolean) => {
   const caretCandidateRect = (rect: NodeClientRect) => {
     if (CaretCandidate.isCaretCandidate(rect.node)) {
       return Optional.some(rect);
     } else if (NodeType.isElement(rect.node)) {
-      return closestChildCaretCandidateNodeRect(Arr.from(rect.node.childNodes), clientX, clientY);
+      return closestChildCaretCandidateNodeRect(Arr.from(rect.node.childNodes), clientX, clientY, false);
     } else {
       return Optional.none();
     }
@@ -69,27 +69,23 @@ const closestChildCaretCandidateNodeRect = (children: ChildNode[], clientX: numb
 
   // If an element and a text node has nearly equal distance then favor the text node over the element to make it easier to select text
   // since setting the selection range will cancel any text select operation.
-  const getClosestTextNode = (rects: NodeClientRect[], distance: DistanceFn) => {
-    if (rects.length >= 2) {
-      const r1 = caretCandidateRect(rects[0]).getOr(rects[0]);
-      const r2 = caretCandidateRect(rects[1]).getOr(rects[1]);
-      const deltaDistance = Math.abs(distance(r1, clientX, clientY) - distance(r2, clientX, clientY));
-
-      if (deltaDistance < 2) {
-        if (NodeType.isText(r1.node)) {
-          return Optional.some(r1);
-        } else if (NodeType.isText(r2.node)) {
-          return Optional.some(r2);
-        }
-      }
-    }
-
-    return Optional.none();
+  const tryFindSecondBestTextNode = (closest: NodeClientRect, sndClosest: NodeClientRect, distance: DistanceFn) => {
+    return caretCandidateRect(sndClosest).filter((rect) => {
+      const deltaDistance = Math.abs(distance(closest, clientX, clientY) - distance(rect, clientX, clientY));
+      return deltaDistance < 2 && NodeType.isText(rect.node);
+    });
   };
 
   const findClosestCaretCandidateNodeRect = (rects: NodeClientRect[], distance: DistanceFn): Optional<NodeClientRect> => {
     const sortedRects = Arr.sort(rects, (r1, r2) => distance(r1, clientX, clientY) - distance(r2, clientX, clientY));
-    return getClosestTextNode(sortedRects, distance).orThunk(() => Arr.findMap(sortedRects, caretCandidateRect));
+    return Arr.findMap(sortedRects, caretCandidateRect).map((closest) => {
+      // If the closest rect is not a text node then lets try to see if the second rect has a text node that is close enough
+      if (findCloserTextNode && !NodeType.isText(closest.node) && sortedRects.length > 1) {
+        return tryFindSecondBestTextNode(closest, sortedRects[1], distance).getOr(closest);
+      } else {
+        return closest;
+      }
+    });
   };
 
   const [ horizontalRects, verticalRects ] = splitRectsPerAxis(getClientRects(children), clientY);
@@ -106,10 +102,10 @@ const traverseUp = (rootElm: SugarElement<Node>, scope: SugarElement<Element>, c
     const childNodesWithoutGhost = Arr.filter(scope.dom.childNodes, Fun.not(isDragGhostContainer));
 
     return prevScope.fold(
-      () => closestChildCaretCandidateNodeRect(childNodesWithoutGhost, clientX, clientY),
+      () => closestChildCaretCandidateNodeRect(childNodesWithoutGhost, clientX, clientY, true),
       (prevScope) => {
         const uncheckedChildren = Arr.filter(childNodesWithoutGhost, (node) => node !== prevScope.dom);
-        return closestChildCaretCandidateNodeRect(uncheckedChildren, clientX, clientY);
+        return closestChildCaretCandidateNodeRect(uncheckedChildren, clientX, clientY, true);
       }
     ).orThunk(() => {
       const parent = Compare.eq(scope, rootElm) ? Optional.none() : Traverse.parentElement(scope);

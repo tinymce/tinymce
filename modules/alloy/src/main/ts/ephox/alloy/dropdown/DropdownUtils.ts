@@ -230,6 +230,7 @@ const makeSandbox = (
 
   const onClose = (component: AlloyComponent, menu: AlloyComponent) => {
     ariaControls.unlink(hotspot.element);
+    lazySink().getOr(menu).element.dom.dispatchEvent(new window.FocusEvent('focusout'));
     if (extras !== undefined && extras.onClose !== undefined) {
       extras.onClose(component, menu);
     }

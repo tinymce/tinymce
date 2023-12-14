@@ -71,6 +71,11 @@ export interface SelectSpec {
   readonly dataset: SelectDataset;
 }
 
+export interface BespokeSelectTooltip {
+  tooltip: string;
+  hasPlaceholder: boolean;
+}
+
 interface BespokeSelectApi {
   readonly getComponent: () => AlloyComponent;
   readonly setTooltip: (tooltip: string) => void;
@@ -89,7 +94,7 @@ const enum IrrelevantStyleItemResponse {
   Disable
 }
 
-const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec) => {
+const generateSelectItems = (backstage: UiFactoryBackstage, spec: SelectSpec) => {
   const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, invalid: boolean, value: Optional<SelectedFormat>): Optional<Menu.NestedMenuItemContents> => {
     const translatedText = backstage.shared.providers.translate(rawItem.title);
     if (rawItem.type === 'separator') {
@@ -163,19 +168,19 @@ const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spe
   };
 };
 
-const createMenuItems = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec): BespokeMenuItems => {
+const createMenuItems = (backstage: UiFactoryBackstage, spec: SelectSpec): BespokeMenuItems => {
   const dataset = spec.dataset; // needs to be a var for tsc to understand the ternary
   const getStyleItems = dataset.type === 'basic' ?
     () => Arr.map(dataset.data, (d) => FormatRegister.processBasic(d, spec.isSelectedFor, spec.getPreviewFor)) :
     dataset.getData;
   return {
-    items: generateSelectItems(editor, backstage, spec),
+    items: generateSelectItems(backstage, spec),
     getStyleItems
   };
 };
 
-const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec, title: string, textUpdateEventName: string): SketchSpec => {
-  const { items, getStyleItems } = createMenuItems(editor, backstage, spec);
+const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec, tooltipWithPlaceholder: string, textUpdateEventName: string): SketchSpec => {
+  const { items, getStyleItems } = createMenuItems(backstage, spec);
 
   const getApi = (comp: AlloyComponent): BespokeSelectApi => ({
     getComponent: Fun.constant(comp),
@@ -188,7 +193,7 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
   // Set the initial text when the component is attached and then update on node changes
   const onSetup = (api: BespokeSelectApi) => {
     const handler = (e: EditorEvent<{ value: string }>) =>
-      api.setTooltip(Tooltip.getTooltipText(editor, title, e.value));
+      api.setTooltip(Tooltip.makeTooltipText(editor, tooltipWithPlaceholder, e.value));
     editor.on(textUpdateEventName, handler);
     return composeUnbinders(
       onSetupEvent(editor, 'NodeChange', (api: BespokeSelectApi) => {

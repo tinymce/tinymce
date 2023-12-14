@@ -1,6 +1,6 @@
 import { ApproxStructure, StructAssert, Waiter } from '@ephox/agar';
 import { before, context, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
+import { McEditor, TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
@@ -9,10 +9,14 @@ import Plugin from 'tinymce/plugins/media/Plugin';
 import * as Utils from '../module/test/Utils';
 
 describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
-  const hook = TinyHooks.bddSetupLight<Editor>({
+  const baseSettings = {
     plugins: [ 'media' ],
     toolbar: 'media',
-    extended_valid_elements: 'script[src|type]',
+    extended_valid_elements: 'script[src|type]'
+  };
+
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    ...baseSettings,
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ]);
 
@@ -34,24 +38,6 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
               attrs: {
                 src: str.is(Env.transparentSrc)
               }
-            })
-          ]
-        }),
-        s.theRest()
-      ]
-    });
-  });
-
-  const iframeStructure = ApproxStructure.build((s) => {
-    return s.element('body', {
-      children: [
-        s.element('p', {
-          children: [
-            s.element('span', {
-              children: [
-                s.element('iframe', {}),
-                s.element('span', {})
-              ]
             })
           ]
         }),
@@ -88,6 +74,28 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
   });
 
   context('media_live_embeds=true', () => {
+    const createIframeStructure = (sandbox: boolean) => ApproxStructure.build((s, str) => {
+      return s.element('body', {
+        children: [
+          s.element('p', {
+            children: [
+              s.element('span', {
+                children: [
+                  s.element('iframe', {
+                    attrs: {
+                      sandbox: sandbox ? str.is('') : str.none()
+                    }
+                  }),
+                  s.element('span', {})
+                ]
+              })
+            ]
+          }),
+          s.theRest()
+        ]
+      });
+    });
+
     before(() => {
       const editor = hook.editor();
       editor.options.set('media_live_embeds', true);
@@ -97,7 +105,33 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
       'https://www.youtube.com/watch?v=P_205ZY52pY',
       '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
       'height="314" allowfullscreen="allowfullscreen"></iframe></p>',
-      iframeStructure
+      createIframeStructure(false)
     ));
+
+    it('TINY-10348: Live iframe embed structure when sandbox_iframes: false', async () => {
+      const editor = await McEditor.pFromSettings<Editor>({
+        ...baseSettings,
+        sandbox_iframes: false
+      });
+      pTestPlaceholder(editor,
+        'https://www.youtube.com/watch?v=P_205ZY52pY',
+        '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
+        'height="314" allowfullscreen="allowfullscreen"></iframe></p>',
+        createIframeStructure(false)
+      );
+    });
+
+    it('TINY-10348: Live iframe embed structure when sandbox_iframes: true', async () => {
+      const editor = await McEditor.pFromSettings<Editor>({
+        ...baseSettings,
+        sandbox_iframes: true
+      });
+      pTestPlaceholder(editor,
+        'https://www.youtube.com/watch?v=P_205ZY52pY',
+        '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
+        'height="314" sandbox="" allowfullscreen="allowfullscreen"></iframe></p>',
+        createIframeStructure(true)
+      );
+    });
   });
 });
