@@ -57,7 +57,7 @@ describe('browser.tinymce.plugins.table.TableClassListTest', () => {
     TinyAssertions.assertContentPresence(editor, { 'table[class]': 0, 'table': 1 });
   });
 
-  it('TINY-6653: Selecting the "none" selection will remove all classes from a table that has an unrelated class', async () => {
+  it('TINY-6653: Selecting "none" will remove all classes from a table that has an unrelated class', async () => {
     const editor = hook.editor();
     editor.options.set('table_class_list', [
       { title: 'none', value: '' }, // Empty value, as in no class should be applied.
@@ -68,5 +68,20 @@ describe('browser.tinymce.plugins.table.TableClassListTest', () => {
 
     await TableTestUtils.selectClassViaPropsDialog(editor, 'mceTableProps', 'none');
     TinyAssertions.assertContentPresence(editor, { 'table[class]': 0, 'table': 1 });
+  });
+
+  it('TINY-6653: Selecting "Unchanged" on a table with a class will do nothing', async () => {
+    const editor = hook.editor();
+    editor.options.set('table_class_list', [
+      { title: 'none', value: '' }, // Empty value, as in no class should be applied.
+      { title: 'test', value: 'test' }
+    ]);
+    const content = '<table class="something"><tbody><tr><td>cell</td></tr></tbody></table';
+    editor.setContent(content);
+    TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1);
+
+    await TableTestUtils.selectClassViaPropsDialog(editor, 'mceTableProps', 'Unchanged');
+    TinyAssertions.assertContent(editor, content);
+    // TinyAssertions.assertContentPresence(editor, { 'table[class="something"]': 1 });
   });
 });
