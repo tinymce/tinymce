@@ -167,7 +167,7 @@ const open = (editor: Editor): void => {
       {
         title: 'General',
         name: 'general',
-        items: CellDialogGeneralTab.getItems(editor)
+        items: CellDialogGeneralTab.getItems(editor, data)
       },
       getAdvancedTab(editor, 'cell')
     ]
@@ -178,7 +178,7 @@ const open = (editor: Editor): void => {
       {
         type: 'grid',
         columns: 2,
-        items: CellDialogGeneralTab.getItems(editor)
+        items: CellDialogGeneralTab.getItems(editor, data)
       }
     ]
   };

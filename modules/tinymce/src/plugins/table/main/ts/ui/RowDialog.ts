@@ -118,7 +118,7 @@ const open = (editor: Editor): void => {
       {
         title: 'General',
         name: 'general',
-        items: RowDialogGeneralTab.getItems(editor)
+        items: RowDialogGeneralTab.getItems(editor, data)
       },
       getAdvancedTab(editor, 'row')
     ]
@@ -129,7 +129,7 @@ const open = (editor: Editor): void => {
       {
         type: 'grid',
         columns: 2,
-        items: RowDialogGeneralTab.getItems(editor)
+        items: RowDialogGeneralTab.getItems(editor, data)
       }
     ]
   };

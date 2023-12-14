@@ -66,6 +66,8 @@ export type CellData = {
   readonly backgroundcolor?: string;
 };
 
+export type UnionTableData = TableData | RowData | CellData;
+
 const rgbToHex = (value: string): string =>
   Strings.startsWith(value, 'rgb') ? Transformations.rgbaToHexString(value) : value;
 
