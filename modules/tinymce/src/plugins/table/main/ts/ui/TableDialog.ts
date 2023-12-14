@@ -186,7 +186,17 @@ const open = (editor: Editor, insertNewTable: boolean): void => {
     }
   }
 
-  const classes = UiUtils.buildListItems(Options.getTableClassList(editor));
+  const classes = Fun.apply(() => {
+    const tableClassList = Options.getTableClassList(editor);
+    const dataClass = data.class;
+    if (typeof dataClass === 'string' && tableClassList.every((klass) =>
+      'value' in klass && klass.value.length ? !dataClass.includes(klass.value) : true
+    )) {
+      // If the class assigned to the table is not in `table_class_list`, add it as the first option:
+      tableClassList.unshift({ text: 'Unchanged', value: dataClass });
+    }
+    return UiUtils.buildListItems(tableClassList);
+  });
 
   if (classes.length > 0) {
     if (data.class) {
