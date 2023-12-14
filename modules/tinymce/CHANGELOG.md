@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - New `label` component available in the `buttons` header of the `View` UI API, along with two size options (`normal` and `large`). #TINY-10339
+- New custom tooltip functionality, tooltip will be shown when hovering with a mouse or with keyboard focus. #TINY-9275
 
 ### Fixed
 - When deleting the last row in a table, the cursor would jump to the first cell (top left), instead of moving to the next adjacent cell in some cases. #TINY-6309
