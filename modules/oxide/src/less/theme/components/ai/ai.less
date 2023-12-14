@@ -1,33 +1,57 @@
 /* stylelint-disable */
 
+@request-background-color: contrast(@background-color, mix(@border-color, @color-tint, 85%), mix(@border-color, @color-tint, 85%));
+@placeholder-text-color: contrast(@background-color, darken(@border-color, 15%), lighten(@border-color, 15%));
+
 .tox {
   .tox-ai {
-    border: 1px solid @pop-border-color;
+    border: 1px solid @border-color;
     border-radius: 3px;
+    position: relative;
 
     .tox-history {
       display: flex;
       flex-direction: column-reverse;
-      height: 500px;
+      font-size: @font-size-sm;
+      height: 530px;
       overflow-y: auto;
 
       .tox-airequest {
-        background-color: contrast(@background-color, mix(darken(@background-color, 6%), @color-tint, 90%), mix(lighten(@background-color, 15%), @color-tint, 90%));
+        background-color: @request-background-color;
         border-radius: 3px;
+        display: inline-block;
+        font-weight: bolder;
         padding: 5px;
       }
 
       .tox-airesponse {
-        flex-direction: column;
         border-radius: 3px;
+        display: block;
+        flex-direction: column;
         padding: 5px;
+      }
+
+      .tox-newrequest {
+        color: @placeholder-text-color;
+        left: 50%;
+        position: absolute;
+        text-align: center;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .tox-button {
+        border-radius: 3px;
+        font-size: @font-size-xs;
+        font-weight: 500;
+        padding: @button-padding-y / 4 @button-padding-x / 2;
       }
 
       // Tabpanel dialogs move the nav above the body when they shrink enough in width.
       // That would push the bottom components out of view, but this shrinks the history in tandem.
       @media @breakpoint-sm {
         body:not(.tox-force-desktop) & {
-          height: 450px;
+          height: 429px;
         }
       }
     }
