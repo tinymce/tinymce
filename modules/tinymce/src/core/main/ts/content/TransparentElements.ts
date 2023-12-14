@@ -3,7 +3,7 @@ import { Compare, PredicateFilter, PredicateFind, Remove, SelectorFilter, SugarE
 
 import AstNode from '../api/html/Node';
 import Schema, { SchemaMap } from '../api/html/Schema';
-import * as Empty2 from '../dom/Empty2';
+import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
 import * as Namespace from '../html/Namespace';
 
@@ -45,7 +45,7 @@ const trimEdge = (schema: Schema, el: DocumentFragment, leftSide: boolean) => {
   const childPropertyName = leftSide ? 'lastChild' : 'firstChild';
 
   for (let child = el[childPropertyName]; child; child = child[childPropertyName]) {
-    if (Empty2.isEmptyNode(schema, child)) {
+    if (Empty.isEmptyNode(schema, child)) {
       child.parentNode?.removeChild(child);
       return;
     }
@@ -67,15 +67,15 @@ const split = (schema: Schema, parentElm: Element, splitElm: Node) => {
     const afterFragment = range.extractContents();
     trimEdge(schema, afterFragment, false);
 
-    if (!Empty2.isEmptyNode(schema, beforeFragment)) {
+    if (!Empty.isEmptyNode(schema, beforeFragment)) {
       parentNode.insertBefore(beforeFragment, parentElm);
     }
 
-    if (!Empty2.isEmptyNode(schema, splitElm)) {
+    if (!Empty.isEmptyNode(schema, splitElm)) {
       parentNode.insertBefore(splitElm, parentElm);
     }
 
-    if (!Empty2.isEmptyNode(schema, afterFragment)) {
+    if (!Empty.isEmptyNode(schema, afterFragment)) {
       parentNode.insertBefore(afterFragment, parentElm);
     }
 

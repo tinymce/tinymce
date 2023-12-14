@@ -6,7 +6,7 @@ import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as TransparentElements from '../content/TransparentElements';
 import * as ElementType from '../dom/ElementType';
-import * as Empty2 from '../dom/Empty2';
+import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
 import * as DeleteUtils from './DeleteUtils';
 
@@ -59,7 +59,7 @@ const hasValidBlocks = (blockBoundary: BlockBoundary): boolean => {
 };
 
 const skipLastBr = (schema: Schema, rootNode: HTMLElement, forward: boolean, blockPosition: BlockPosition): BlockPosition => {
-  if (NodeType.isBr(blockPosition.position.getNode()) && !Empty2.isEmpty(schema, blockPosition.block)) {
+  if (NodeType.isBr(blockPosition.position.getNode()) && !Empty.isEmpty(schema, blockPosition.block)) {
     return CaretFinder.positionIn(false, blockPosition.block.dom).bind((lastPositionInBlock) => {
       if (lastPositionInBlock.isEqual(blockPosition.position)) {
         return CaretFinder.fromPosition(forward, rootNode, lastPositionInBlock).bind((to) => getBlockPosition(rootNode, to));

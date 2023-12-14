@@ -6,7 +6,7 @@ import Schema from '../api/html/Schema';
 import * as CaretCandidate from '../caret/CaretCandidate';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
-import * as Empty2 from '../dom/Empty2';
+import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
 import * as FormatUtils from '../fmt/FormatUtils';
 import * as MergeText from './MergeText';
@@ -86,7 +86,7 @@ const isBlock = (editor: Editor, elm: SugarElement<Node>): boolean =>
   elm && Obj.has(editor.schema.getBlockElements(), SugarNode.name(elm));
 
 const paddEmptyBlock = (schema: Schema, elm: SugarElement<Node>, preserveEmptyCaret: boolean): Optional<CaretPosition> => {
-  if (Empty2.isEmpty(schema, elm)) {
+  if (Empty.isEmpty(schema, elm)) {
     const br = SugarElement.fromHtml('<br data-mce-bogus="1">');
     // Remove all bogus elements except caret
     if (preserveEmptyCaret) {

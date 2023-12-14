@@ -2,7 +2,7 @@ import { Arr, Fun, Obj, Optionals, Strings, Type } from '@ephox/katamari';
 import { Attribute, Class, ContentEditable, Css, Html, Insert, Remove, Selectors, SugarElement, SugarNode, Traverse, WindowVisualViewport } from '@ephox/sugar';
 
 import * as TransparentElements from '../../content/TransparentElements';
-import * as Empty2 from '../../dom/Empty2';
+import * as Empty from '../../dom/Empty';
 import * as NodeType from '../../dom/NodeType';
 import * as Position from '../../dom/Position';
 import * as StyleSheetLoaderRegistry from '../../dom/StyleSheetLoaderRegistry';
@@ -181,7 +181,7 @@ interface DOMUtils {
   findCommonAncestor: (a: Node, b: Node) => Node | null;
   run <R, T extends Node>(this: DOMUtils, elm: T | T[], func: (node: T) => R, scope?: any): typeof elm extends Array<any> ? R[] : R;
   run <R, T extends Node>(this: DOMUtils, elm: RunArguments<T>, func: (node: T) => R, scope?: any): RunResult<typeof elm, R>;
-  isEmpty: (node: Node, options?: Empty2.AdjustOptions) => boolean;
+  isEmpty: (node: Node, options?: Empty.AdjustOptions) => boolean;
   createRng: () => Range;
   nodeIndex: (node: Node, normalized?: boolean) => number;
   split: {
@@ -927,8 +927,8 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
   };
 
-  const isEmpty = (node: Node, options?: Empty2.AdjustOptions) => {
-    return Empty2.isEmptyNode(schema, node, options);
+  const isEmpty = (node: Node, options?: Empty.AdjustOptions) => {
+    return Empty.isEmptyNode(schema, node, options);
   };
 
   const createRng = () => doc.createRange();

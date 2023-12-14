@@ -8,7 +8,7 @@ import { EditorEvent } from '../api/util/EventDispatcher';
 import Tools from '../api/util/Tools';
 import VK from '../api/util/VK';
 import * as CaretContainer from '../caret/CaretContainer';
-import * as Empty2 from '../dom/Empty2';
+import * as Empty from '../dom/Empty';
 import * as Rtc from '../Rtc';
 
 /**
@@ -93,7 +93,7 @@ const Quirks = (editor: Editor): Quirks => {
         const body = editor.getBody();
 
         // Selection is collapsed but the editor isn't empty
-        if (isCollapsed && !Empty2.isEmptyNode(editor.schema, body)) {
+        if (isCollapsed && !Empty.isEmptyNode(editor.schema, body)) {
           return;
         }
 

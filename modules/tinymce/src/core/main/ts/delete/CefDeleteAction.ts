@@ -8,7 +8,7 @@ import CaretPosition from '../caret/CaretPosition';
 import { isAfterContentEditableFalse, isBeforeContentEditableFalse } from '../caret/CaretPositionPredicates';
 import * as CaretUtils from '../caret/CaretUtils';
 import * as ElementType from '../dom/ElementType';
-import * as Empty2 from '../dom/Empty2';
+import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
 import * as DeleteUtils from './DeleteUtils';
 
@@ -58,7 +58,7 @@ const deleteEmptyBlockOrMoveToCef = (schema: Schema, root: Node, forward: boolea
   // TODO: TINY-8865 - This may not be safe to cast as Node below and alternative solutions need to be looked into
   const toCefElm = to.getNode(!forward) as Node;
   return DeleteUtils.getParentBlock(SugarElement.fromDom(root), SugarElement.fromDom(from.getNode() as Node)).map((blockElm) =>
-    Empty2.isEmpty(schema, blockElm) ? DeleteAction.remove(blockElm.dom) : DeleteAction.moveToElement(toCefElm)
+    Empty.isEmpty(schema, blockElm) ? DeleteAction.remove(blockElm.dom) : DeleteAction.moveToElement(toCefElm)
   ).orThunk(() => Optional.some(DeleteAction.moveToElement(toCefElm)));
 };
 

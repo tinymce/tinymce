@@ -8,7 +8,7 @@ import { getTextRootBlockElements } from '../api/html/Schema';
 import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
-import * as Empty2 from '../dom/Empty2';
+import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
 import * as RangeNormalizer from '../selection/RangeNormalizer';
 import { RangeLikeObject } from '../selection/RangeTypes';
@@ -34,7 +34,7 @@ const canFormatBR = (editor: Editor, format: ApplyFormat, node: HTMLBRElement, p
     const validBRParentElements = getTextRootBlockElements(editor.schema);
     // If a caret node is present, the format should apply to that, not the br (applicable to collapsed selections)
     const hasCaretNodeSibling = PredicateExists.sibling(SugarElement.fromDom(node), (sibling) => isCaretNode(sibling.dom));
-    return Obj.hasNonNullableKey(validBRParentElements, parentName) && Empty2.isEmptyNode(editor.schema, node.parentNode, { skipBogus: false }) && !hasCaretNodeSibling;
+    return Obj.hasNonNullableKey(validBRParentElements, parentName) && Empty.isEmptyNode(editor.schema, node.parentNode, { skipBogus: false }) && !hasCaretNodeSibling;
   } else {
     return false;
   }
