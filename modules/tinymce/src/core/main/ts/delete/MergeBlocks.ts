@@ -5,7 +5,7 @@ import Schema from '../api/html/Schema';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';
-import * as Empty from '../dom/Empty';
+import * as Empty2 from '../dom/Empty2';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as Parents from '../dom/Parents';
 
@@ -23,13 +23,13 @@ const extractChildren = (block: SugarElement<Element>, schema: Schema): SugarEle
   return children;
 };
 
-const removeEmptyRoot = (rootNode: SugarElement<Node>, block: SugarElement<Element>) => {
+const removeEmptyRoot = (schema: Schema, rootNode: SugarElement<Node>, block: SugarElement<Element>) => {
   const parents = Parents.parentsAndSelf(block, rootNode);
-  return Arr.find(parents.reverse(), (element) => Empty.isEmpty(element)).each(Remove.remove);
+  return Arr.find(parents.reverse(), (element) => Empty2.isEmpty(schema, element)).each(Remove.remove);
 };
 
-const isEmptyBefore = (el: SugarElement<Node>): boolean =>
-  Arr.filter(Traverse.prevSiblings(el), (el) => !Empty.isEmpty(el)).length === 0;
+const isEmptyBefore = (schema: Schema, el: SugarElement<Node>): boolean =>
+  Arr.filter(Traverse.prevSiblings(el), (el) => !Empty2.isEmpty(schema, el)).length === 0;
 
 const nestedBlockMerge = (
   rootNode: SugarElement<Node>,
@@ -38,12 +38,12 @@ const nestedBlockMerge = (
   schema: Schema,
   insertionPoint: SugarElement<Node>
 ): Optional<CaretPosition> => {
-  if (Empty.isEmpty(toBlock)) {
+  if (Empty2.isEmpty(schema, toBlock)) {
     PaddingBr.fillWithPaddingBr(toBlock);
     return CaretFinder.firstPositionIn(toBlock.dom);
   }
 
-  if (isEmptyBefore(insertionPoint) && Empty.isEmpty(fromBlock)) {
+  if (isEmptyBefore(schema, insertionPoint) && Empty2.isEmpty(schema, fromBlock)) {
     Insert.before(insertionPoint, SugarElement.fromTag('br'));
   }
 
@@ -51,15 +51,15 @@ const nestedBlockMerge = (
   Arr.each(extractChildren(fromBlock, schema), (child) => {
     Insert.before(insertionPoint, child);
   });
-  removeEmptyRoot(rootNode, fromBlock);
+  removeEmptyRoot(schema, rootNode, fromBlock);
   return position;
 };
 
 const isInline = (schema: Schema, node: SugarElement<Node>): node is SugarElement<HTMLElement> => schema.isInline(SugarNode.name(node));
 
 const sidelongBlockMerge = (rootNode: SugarElement<Node>, fromBlock: SugarElement<Element>, toBlock: SugarElement<Element>, schema: Schema): Optional<CaretPosition> => {
-  if (Empty.isEmpty(toBlock)) {
-    if (Empty.isEmpty(fromBlock)) {
+  if (Empty2.isEmpty(schema, toBlock)) {
+    if (Empty2.isEmpty(schema, fromBlock)) {
       const getInlineToBlockDescendants = (el: SugarElement<Element>) => {
         const helper = (node: SugarElement<Element>, elements: SugarElement<Element>[]): SugarElement<Element>[] =>
           Traverse.firstChild(node).fold(
@@ -90,7 +90,7 @@ const sidelongBlockMerge = (rootNode: SugarElement<Node>, fromBlock: SugarElemen
   Arr.each(extractChildren(fromBlock, schema), (child) => {
     Insert.append(toBlock, child);
   });
-  removeEmptyRoot(rootNode, fromBlock);
+  removeEmptyRoot(schema, rootNode, fromBlock);
   return position;
 };
 

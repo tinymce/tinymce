@@ -6,7 +6,7 @@ import { EditorEvent } from '../api/util/EventDispatcher';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import { isListItem, isTextBlock } from '../dom/ElementType';
-import * as Empty from '../dom/Empty';
+import * as Empty2 from '../dom/Empty2';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as InlineUtils from '../keyboard/InlineUtils';
 
@@ -83,7 +83,7 @@ const deleteRangeContents = (editor: Editor, rng: Range, root: SugarElement<HTML
   // If the block is the editor body then we need to insert the root block as well
   if (lastBlock.dom === editor.getBody()) {
     paddEmptyBody(editor, moveSelection);
-  } else if (Empty.isEmpty(lastBlock)) {
+  } else if (Empty2.isEmpty(editor.schema, lastBlock)) {
     PaddingBr.fillWithPaddingBr(lastBlock);
     if (moveSelection) {
       editor.selection.setCursorLocation(lastBlock.dom, 0);
@@ -93,7 +93,7 @@ const deleteRangeContents = (editor: Editor, rng: Range, root: SugarElement<HTML
   if (!Compare.eq(root, lastBlock)) {
     const additionalCleanupNodes = Optionals.is(Traverse.parent(lastBlock), root) ? [] : Traverse.siblings(lastBlock);
     Arr.each(additionalCleanupNodes.concat(Traverse.children(root)), (node) => {
-      if (!Compare.eq(node, lastBlock) && !Compare.contains(node, lastBlock) && Empty.isEmpty(node)) {
+      if (!Compare.eq(node, lastBlock) && !Compare.contains(node, lastBlock) && Empty2.isEmpty(editor.schema, node)) {
         Remove.remove(node);
       }
     });

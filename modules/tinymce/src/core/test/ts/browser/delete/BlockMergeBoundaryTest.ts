@@ -4,6 +4,7 @@ import { Optional } from '@ephox/katamari';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
+import Schema from 'tinymce/core/api/html/Schema';
 import * as BlockMergeBoundary from 'tinymce/core/delete/BlockMergeBoundary';
 
 import * as ViewBlock from '../../module/test/ViewBlock';
@@ -20,7 +21,7 @@ describe('browser.tinymce.core.delete.BlockMergeBoundary', () => {
     const rng = document.createRange();
     rng.setStart(container.dom, cursorOffset);
     rng.setEnd(container.dom, cursorOffset);
-    return BlockMergeBoundary.read(viewBlock.get(), forward, rng);
+    return BlockMergeBoundary.read(Schema(), viewBlock.get(), forward, rng);
   };
 
   const assertBlockBoundaryPositions = (blockBoundaryOpt: Optional<BlockBoundary>, fromPath: number[], fromOffset: number, toPath: number[], toOffset: number) => {
