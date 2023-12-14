@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - New `ImmediateShowTooltipEvent` and `ImmediateHideTooltipEvent` events that will immediately show and hide tooltips. #TINY-9275
 
+## 14.0.1 - 2023-11-29
+
 ### Fixed
 - Slider could not be dragged as expected. TINY-10383
 

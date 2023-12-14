@@ -114,7 +114,7 @@ const createFontFamilyButton = (editor: Editor, backstage: UiFactoryBackstage): 
 
 // TODO: Test this!
 const createFontFamilyMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
-  const menuItems = createMenuItems(editor, backstage, getSpec(editor));
+  const menuItems = createMenuItems(backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('fontfamily', {
     text: backstage.shared.providers.translate(menuTitle),
     onSetup: onSetupEditableToggle(editor),
