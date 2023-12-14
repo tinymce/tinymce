@@ -10,7 +10,7 @@ const isSpan = (node: Node): node is HTMLSpanElement =>
   node.nodeName.toLowerCase() === 'span';
 
 const isInlineContent = (node: Node | null, root: Node, schema: Schema): boolean =>
-  Type.isNonNullable(node) && (Empty.isContent(schema, node, root) || schema.isInline(node.nodeName.toLowerCase()));
+  Type.isNonNullable(node) && (Empty.isContent(schema, node) || schema.isInline(node.nodeName.toLowerCase()));
 
 const surroundedByInlineContent = (node: Node, root: Node, schema: Schema): boolean => {
   const prev = new DomTreeWalker(node, root).prev(false);
@@ -64,7 +64,7 @@ const trimNode = <T extends Node>(dom: DOMUtils, node: T, schema: Schema, root?:
   }
 
   // Remove any empty nodes
-  if (!isDocument(node) && !Empty.isContent(schema, node, rootNode) && !isKeepElement(node) && !isKeepTextNode(node, rootNode, schema)) {
+  if (!isDocument(node) && !Empty.isContent(schema, node) && !isKeepElement(node) && !isKeepTextNode(node, rootNode, schema)) {
     dom.remove(node);
   }
 

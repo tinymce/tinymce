@@ -6,17 +6,19 @@ import Schema from '../api/html/Schema';
 import { isWhitespaceText, isZwsp } from '../text/Whitespace';
 import * as NodeType from './NodeType';
 
-interface AdjustOptions {
-  skipBogus?: boolean;
-  includeZwsp?: boolean;
-  check_root_as_content?: boolean;
-  isContent?: (node: Node) => boolean;
+interface IsEmptyOptions {
+  readonly skipBogus?: boolean;
+  readonly includeZwsp?: boolean;
+  readonly checkRootAsContent?: boolean;
+  readonly isContent?: (node: Node) => boolean;
 }
 
-const defaultOptionValues: AdjustOptions = {
+type IsContentOptions = Pick<IsEmptyOptions, 'includeZwsp' | 'isContent'>;
+
+const defaultOptionValues: IsEmptyOptions = {
   skipBogus: true,
   includeZwsp: false,
-  check_root_as_content: false,
+  checkRootAsContent: false,
 };
 
 const hasWhitespacePreserveParent = (node: Node, rootNode: Node, schema: Schema): boolean => {
@@ -44,13 +46,12 @@ const isWhitespace = (node: Text, rootNode: Node, schema: Schema): boolean =>
   isWhitespaceText(node.data)
   && !hasWhitespacePreserveParent(node, rootNode, schema);
 
-const isText = (node: Node, rootNode: Node, schema: Schema, options: AdjustOptions) =>
+const isText = (node: Node, rootNode: Node, schema: Schema, options: IsEmptyOptions) =>
   NodeType.isText(node)
   && !isWhitespace(node, rootNode, schema)
   && (!options.includeZwsp || !isZwsp(node.data));
 
-const isContent = (schema: Schema, node: Node, rootNode: Node, options?: AdjustOptions): boolean => {
-  options = { ...defaultOptionValues, ...options };
+const isContentNode = (schema: Schema, node: Node, rootNode: Node, options: IsContentOptions): boolean => {
   return Type.isFunction(options.isContent) && options.isContent(node)
   || isNonEmptyElement(node, schema)
   || isBookmark(node)
@@ -60,10 +61,10 @@ const isContent = (schema: Schema, node: Node, rootNode: Node, options?: AdjustO
   || NodeType.isContentEditableTrue(node) && hasNonEditableParent(node);
 };
 
-const isEmptyNode = (schema: Schema, targetNode: Node, options?: AdjustOptions): boolean => {
+const isEmptyNode = (schema: Schema, targetNode: Node, options?: IsEmptyOptions): boolean => {
   options = { ...defaultOptionValues, ...options };
-  if (options.check_root_as_content) {
-    if (isContent(schema, targetNode, targetNode, options)) {
+  if (options.checkRootAsContent) {
+    if (isContentNode(schema, targetNode, targetNode, options)) {
       return false;
     }
   }
@@ -92,7 +93,7 @@ const isEmptyNode = (schema: Schema, targetNode: Node, options?: AdjustOptions):
       continue;
     }
 
-    if (isContent(schema, node, targetNode, options)) {
+    if (isContentNode(schema, node, targetNode, options)) {
       return false;
     }
 
@@ -102,12 +103,16 @@ const isEmptyNode = (schema: Schema, targetNode: Node, options?: AdjustOptions):
   return brCount <= 1;
 };
 
-const isEmpty = (schema: Schema, elm: SugarElement<Node>, options?: AdjustOptions): boolean => {
-  return isEmptyNode(schema, elm.dom, { check_root_as_content: true, ...options });
+const isEmpty = (schema: Schema, elm: SugarElement<Node>, options?: IsEmptyOptions): boolean => {
+  return isEmptyNode(schema, elm.dom, { checkRootAsContent: true, ...options });
+};
+
+const isContent = (schema: Schema, node: Node, options?: IsContentOptions): boolean => {
+  return isContentNode(schema, node, node, { includeZwsp: defaultOptionValues.includeZwsp, ...options });
 };
 
 export {
-  AdjustOptions,
+  IsEmptyOptions,
   isEmpty,
   isEmptyNode,
   isContent

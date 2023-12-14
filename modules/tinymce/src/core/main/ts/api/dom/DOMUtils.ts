@@ -181,7 +181,7 @@ interface DOMUtils {
   findCommonAncestor: (a: Node, b: Node) => Node | null;
   run <R, T extends Node>(this: DOMUtils, elm: T | T[], func: (node: T) => R, scope?: any): typeof elm extends Array<any> ? R[] : R;
   run <R, T extends Node>(this: DOMUtils, elm: RunArguments<T>, func: (node: T) => R, scope?: any): RunResult<typeof elm, R>;
-  isEmpty: (node: Node, options?: Empty.AdjustOptions) => boolean;
+  isEmpty: (node: Node, options?: Empty.IsEmptyOptions) => boolean;
   createRng: () => Range;
   nodeIndex: (node: Node, normalized?: boolean) => number;
   split: {
@@ -927,7 +927,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
   };
 
-  const isEmpty = (node: Node, options?: Empty.AdjustOptions) => {
+  const isEmpty = (node: Node, options?: Empty.IsEmptyOptions) => {
     return Empty.isEmptyNode(schema, node, options);
   };
 

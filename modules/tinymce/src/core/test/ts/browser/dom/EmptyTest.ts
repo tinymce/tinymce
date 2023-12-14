@@ -11,7 +11,7 @@ describe('browser.tinymce.core.dom.EmptyTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [], true);
 
-  const testEmpty = (html: string, expected: boolean, options?: Empty.AdjustOptions) => {
+  const testEmpty = (html: string, expected: boolean, options?: Empty.IsEmptyOptions) => {
     const schema = hook.editor().schema;
     const elm = SugarElement.fromHtml(html);
     const expectedLabel = expected ? 'empty' : 'not empty';
@@ -34,7 +34,7 @@ describe('browser.tinymce.core.dom.EmptyTest', () => {
     testEmpty('<p><i><b></b></i><b><i data-mce-bogus="all"><img src="#"></i></b></p>', true);
     testEmpty('<a id="link" href="http://some.url/"></a>', true);
     testEmpty('<span>\uFEFF</span>', true, { includeZwsp: true });
-    testEmpty('<img src="#">', true, { check_root_as_content: false });
+    testEmpty('<img src="#">', true, { checkRootAsContent: false });
     testEmpty('<div><!-- comment --><em></em></div>', true);
   });
 
