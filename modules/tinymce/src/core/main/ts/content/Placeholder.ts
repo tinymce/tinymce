@@ -53,7 +53,7 @@ const isTypingKeyboardEvent = (e: EditorEvent<unknown>) =>
   isKeyboardEvent(e) && !(isDeleteEvent(e) || e.type === 'keyup' && e.keyCode === 229);
 
 const isVisuallyEmpty = (dom: DOMUtils, rootElm: Element, forcedRootBlock: string): boolean => {
-  if (dom.isEmpty(rootElm, { skipBogus: false, checkRootAsContent: true })) {
+  if (dom.isEmpty(rootElm, { skipBogus: false })) {
     // Ensure the node matches the forced_root_block setting, as the content could be an empty list, etc...
     // and also check that the content isn't indented
     const firstElement = rootElm.firstElementChild;
