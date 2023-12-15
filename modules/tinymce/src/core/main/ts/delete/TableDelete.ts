@@ -240,7 +240,7 @@ const deleteCaretInsideCaption = (
 const deleteCaretCells = (editor: Editor, forward: boolean, rootElm: SugarElement<Node>, startElm: SugarElement<Node>): Optional<() => void> => {
   const from = CaretPosition.fromRangeStart(editor.selection.getRng());
   return getParentCell(rootElm, startElm).bind(
-    (fromCell) => Empty.isEmpty(editor.schema, fromCell) ?
+    (fromCell) => Empty.isEmpty(editor.schema, fromCell, { checkRootAsContent: false }) ?
       emptyElement(editor, fromCell) :
       deleteBetweenCells(editor, rootElm, forward, fromCell, from)
   );

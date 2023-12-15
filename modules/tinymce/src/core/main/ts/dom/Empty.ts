@@ -77,9 +77,12 @@ const isEmptyNode = (schema: Schema, targetNode: Node, options?: IsEmptyOptions)
 
   const walker = new DomTreeWalker(node, targetNode);
   do {
-    if (options.skipBogus && NodeType.isBogusAll(node)) {
-      node = walker.next(true);
-      continue;
+    if (options.skipBogus && NodeType.isElement(node)) {
+      const bogusValue = node.getAttribute('data-mce-bogus');
+      if (bogusValue) {
+        node = walker.next(bogusValue === 'all');
+        continue;
+      }
     }
 
     if (NodeType.isComment(node) ) {

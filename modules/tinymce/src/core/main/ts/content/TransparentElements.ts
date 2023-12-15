@@ -45,7 +45,7 @@ const trimEdge = (schema: Schema, el: DocumentFragment, leftSide: boolean) => {
   const childPropertyName = leftSide ? 'lastChild' : 'firstChild';
 
   for (let child = el[childPropertyName]; child; child = child[childPropertyName]) {
-    if (Empty.isEmptyNode(schema, child)) {
+    if (Empty.isEmptyNode(schema, child, { checkRootAsContent: true })) {
       child.parentNode?.removeChild(child);
       return;
     }
@@ -67,15 +67,15 @@ const split = (schema: Schema, parentElm: Element, splitElm: Node) => {
     const afterFragment = range.extractContents();
     trimEdge(schema, afterFragment, false);
 
-    if (!Empty.isEmptyNode(schema, beforeFragment)) {
+    if (!Empty.isEmptyNode(schema, beforeFragment, { checkRootAsContent: true })) {
       parentNode.insertBefore(beforeFragment, parentElm);
     }
 
-    if (!Empty.isEmptyNode(schema, splitElm)) {
+    if (!Empty.isEmptyNode(schema, splitElm, { checkRootAsContent: true })) {
       parentNode.insertBefore(splitElm, parentElm);
     }
 
-    if (!Empty.isEmptyNode(schema, afterFragment)) {
+    if (!Empty.isEmptyNode(schema, afterFragment, { checkRootAsContent: true })) {
       parentNode.insertBefore(afterFragment, parentElm);
     }
 

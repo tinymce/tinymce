@@ -83,7 +83,7 @@ const deleteRangeContents = (editor: Editor, rng: Range, root: SugarElement<HTML
   // If the block is the editor body then we need to insert the root block as well
   if (lastBlock.dom === editor.getBody()) {
     paddEmptyBody(editor, moveSelection);
-  } else if (Empty.isEmpty(editor.schema, lastBlock)) {
+  } else if (Empty.isEmpty(editor.schema, lastBlock, { checkRootAsContent: false })) {
     PaddingBr.fillWithPaddingBr(lastBlock);
     if (moveSelection) {
       editor.selection.setCursorLocation(lastBlock.dom, 0);

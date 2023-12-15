@@ -32,6 +32,7 @@ describe('browser.tinymce.core.dom.EmptyTest', () => {
     testEmpty('<p><i><b></b></i><b><i></i></b></p>', true);
     testEmpty('<span></span>', true);
     testEmpty('<p><i><b></b></i><b><i data-mce-bogus="all"><img src="#"></i></b></p>', true);
+    testEmpty('<p><br data-mce-bogus="1"><br></p>', true);
     testEmpty('<a id="link" href="http://some.url/"></a>', true);
     testEmpty('<span>\uFEFF</span>', true, { includeZwsp: true });
     testEmpty('<img src="#">', true, { checkRootAsContent: false });
@@ -58,7 +59,6 @@ describe('browser.tinymce.core.dom.EmptyTest', () => {
     testEmpty('<span>\uFEFF</span>', false);
     testEmpty('<p><br data-mce-bogus="1"><br></p>', false, { skipBogus: false } );
     testEmpty('<span class="foo"></span>', false, { isContent: (node: Node) => Class.has(SugarElement.fromDom(node), 'foo') });
-    testEmpty('<p><br data-mce-bogus="1"><br></p>', false);
   });
 
   it('TINY-10010: table cell with empty CET should not be treated as empty', () => {
