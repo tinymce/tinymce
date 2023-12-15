@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Autocomplete would sometimes cause corrupt data when starting during text composition. Autocomplete no longer starts during composition. #TINY-10317
 - Heading formatting would be partially applied to the content within the `summary` element when the caret was positioned between words. #TINY-10312
 - Moving focus to the outside of the editor after having clicked a menu would not fire a `blur` event as expected. #TINY-10310
+- It was not possible to remove the class attribute from a table using the table properties dialog and while having an empty value to select from in `table_class_list`. It was also not possible to leave the class attribute unchanged when it wasn't one of the options in `table_class_list`. These changes are consistent across table/row/cell property dialogs. #TINY-6653
 
 ## 6.8.2 - 2023-12-11
 
