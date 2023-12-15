@@ -1,0 +1,81 @@
+//
+// Revision history
+//
+@revisionhistory-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
+@revisionhistory-border: 1px solid @border-color;
+@revisionhistory-sidebar-title-height: 60px;
+@revisionhistory-sidebar-minwidth: 192px;
+@revisionhistory-text-lineheight: 24px;
+
+.tox {
+  .tox-view__pane {
+    border-top: @revisionhistory-border;
+    margin-top: @pad-sm;
+    padding: 0 !important;
+  }
+
+  .tox-revisionhistory {
+    background-color: @revisionhistory-background-color;
+    display: flex;
+    height: 100%;
+    position: relative;
+    width: 100%;
+  }
+
+  .tox-revsionhistory__iframe {
+    flex: 1;
+  }
+
+  .tox-revisionhistory__sidebar {
+    border-left: @revisionhistory-border;
+    height: 100%;
+    max-width: 360px;
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    .tox-revisionhistory__sidebar-title {
+      border-bottom: @revisionhistory-border;
+      color: @text-color;
+      font-size: @font-size-lg;
+      font-weight: 400;
+      height: @revisionhistory-sidebar-title-height;
+      min-width: @revisionhistory-sidebar-minwidth;
+      padding: 16px;
+    }
+
+    .tox-revisionhistory__revisions {
+      flex-direction: column;
+      max-height: calc(100% - @revisionhistory-sidebar-title-height);
+      min-width: @revisionhistory-sidebar-minwidth;
+      overflow-y: auto;
+      padding: @pad-sm;
+
+      .tox-revisionhistory__card {
+        border: @revisionhistory-border;
+        border-radius: @control-border-radius;
+        color: @color-black;
+        cursor: pointer;
+        margin-bottom: @pad-sm;
+        padding: @pad-sm;
+
+        &:hover {
+          background-color: @button-hover-background-color;
+          color: @button-active-text-color;
+        }
+
+        &.tox-revisionhistory__card--selected {
+          background-color: @button-active-background-color;
+          color: @button-active-text-color;
+        }
+
+        > label {
+          color: inherit;
+          font-size: @font-size-sm;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          text-wrap: nowrap;
+        }
+      }
+    }
+  }
+}

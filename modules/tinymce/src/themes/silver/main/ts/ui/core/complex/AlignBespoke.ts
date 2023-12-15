@@ -63,7 +63,7 @@ const createAlignButton = (editor: Editor, backstage: UiFactoryBackstage): Sketc
   createSelectButton(editor, backstage, getSpec(editor), btnTooltip, 'AlignTextUpdate');
 
 const createAlignMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
-  const menuItems = createMenuItems(editor, backstage, getSpec(editor));
+  const menuItems = createMenuItems(backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('align', {
     text: backstage.shared.providers.translate(menuTitle),
     onSetup: onSetupEditableToggle(editor),
