@@ -917,7 +917,7 @@ module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt, {
     requireResolution: true,
     config: "../../package.json",
-    pattern: ['grunt-*', '@ephox/bedrock', '@ephox/swag']
+    pattern: ['grunt-*', '@ephox/bedrock-*', '@ephox/swag']
   });
   grunt.loadTasks('tools/tasks');
 
