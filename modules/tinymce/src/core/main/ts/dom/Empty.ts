@@ -61,8 +61,8 @@ const isContentNode = (schema: Schema, node: Node, rootNode: Node, options: IsCo
   || NodeType.isContentEditableTrue(node) && hasNonEditableParent(node);
 };
 
-const isEmptyNode = (schema: Schema, targetNode: Node, options?: IsEmptyOptions): boolean => {
-  options = { ...defaultOptionValues, ...options };
+const isEmptyNode = (schema: Schema, targetNode: Node, opts?: IsEmptyOptions): boolean => {
+  const options = { ...defaultOptionValues, ...opts };
   if (options.checkRootAsContent) {
     if (isContentNode(schema, targetNode, targetNode, options)) {
       return false;
