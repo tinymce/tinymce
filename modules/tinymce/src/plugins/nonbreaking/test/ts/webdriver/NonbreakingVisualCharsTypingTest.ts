@@ -8,6 +8,7 @@ import Editor from 'tinymce/core/api/Editor';
 import NonbreakingPlugin from 'tinymce/plugins/nonbreaking/Plugin';
 import VisualCharsPlugin from 'tinymce/plugins/visualchars/Plugin';
 
+// TODO TINY-10480: Investigate Flaky tests
 describe.skip('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest', () => {
   // Note: Uses RealKeys, so needs a browser. Headless won't work.
   const hook = TinyHooks.bddSetup<Editor>({

@@ -52,9 +52,9 @@ def runHeadlessTests(Boolean runAll) {
   runBedrockTest(bedrockCmd, runAll)
 }
 
-def runRemoteTests(String name, String browser, String provider, String os, String arn, String bucket, String buckets, Boolean runAll, int retry = 0, int timeout = 0) {
+def runRemoteTests(String name, String browser, String provider, String platform, String arn, String bucket, String buckets, Boolean runAll, int retry = 0, int timeout = 0) {
   def awsOpts = " --sishDomain=sish.osu.tiny.work --devicefarmArn=${arn}"
-  def platformName = os != null " --platformName='${os}'" : ""
+  def platformName = platform != null ? " --platformName='${platform}'" : ""
   def bedrockCommand =
   "yarn browser-test" +
     " --chunk=400" +
@@ -68,7 +68,7 @@ def runRemoteTests(String name, String browser, String provider, String os, Stri
     runBedrockTest(bedrockCommand, runAll, retry, timeout)
 }
 
-def runTestPod(String name, String browser, String provider, String os, String bucket, String buckets, Boolean runAll) {
+def runTestPod(String name, String browser, String provider, String platform, String bucket, String buckets, Boolean runAll) {
   return {
     tinyPods.node([
       resourceRequestCpu: '6',
@@ -92,7 +92,7 @@ def runTestPod(String name, String browser, String provider, String os, String b
         withRemoteCreds(provider) {
           int retry = provider == 'lambdatest' ? 3 : 0
           withCredentials([string(credentialsId: 'devicefarm-testgridarn', variable: 'DF_ARN')]) {
-            runRemoteTests(name, browser, provider, os, DF_ARN, bucket, buckets, runAll, retry, 180)
+            runRemoteTests(name, browser, provider, platform, DF_ARN, bucket, buckets, runAll, retry, 180)
           }
         }
       }
@@ -145,8 +145,9 @@ timestamps {
     [ browser: 'chrome', provider: 'aws', buckets: 3 ],
     [ browser: 'edge', provider: 'aws', buckets: 3 ],
     [ browser: 'firefox', provider: 'aws', buckets: 3 ],
-    [ browser: 'safari', provider: 'lambdatest', buckets: 2 ],
-    [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 2]
+    [ browser: 'safari', provider: 'lambdatest', buckets: 1 ],
+    [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1],
+    [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1]
   ];
 
   def processes = [:]
@@ -181,13 +182,6 @@ timestamps {
       stage('test') {
         grunt('list-changed-headless')
         runHeadlessTests(runAllTests)
-      }
-
-      if (env.BRANCH_NAME != props.primaryBranch) {
-        stage('Archive Build') {
-          sh 'yarn tinymce-grunt prodBuild symlink:js'
-          archiveArtifacts artifacts: 'js/**', onlyIfSuccessful: true
-        }
       }
     }
   }
