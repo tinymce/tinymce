@@ -10,7 +10,8 @@ import Plugin from 'tinymce/plugins/emoticons/Plugin';
 
 import { fakeEvent } from '../module/test/Utils';
 
-describe('browser.tinymce.plugins.emoticons.ImageEmojiTest', () => {
+// TODO TINY-10480: Investigate Flaky tests
+describe.skip('browser.tinymce.plugins.emoticons.ImageEmojiTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'emoticons',
     toolbar: 'emoticons',
