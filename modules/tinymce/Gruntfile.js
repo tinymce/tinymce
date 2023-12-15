@@ -849,7 +849,7 @@ module.exports = function (grunt) {
         testfiles: [
           'src/**/test/ts/atomic/**/*Test.ts',
           'src/**/test/ts/browser/**/*Test.ts',
-          'src/**/test/ts/phantom/**/*Test.ts'
+          'src/**/test/ts/headless/**/*Test.ts'
         ],
         customRoutes: 'src/core/test/json/routes.json'
       },
@@ -917,7 +917,7 @@ module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt, {
     requireResolution: true,
     config: "../../package.json",
-    pattern: ['grunt-*', '@ephox/bedrock-*', '@ephox/swag']
+    pattern: ['grunt-*', '@ephox/bedrock-server', '@ephox/swag']
   });
   grunt.loadTasks('tools/tasks');
 
@@ -963,4 +963,5 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', ['clean:dist', 'prod']);
   grunt.registerTask('test', ['bedrock-auto:standard']);
+  grunt.registerTask('test-manual', ['bedrock-manual']);
 };
