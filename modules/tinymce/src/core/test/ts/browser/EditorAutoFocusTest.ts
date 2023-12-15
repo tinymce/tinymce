@@ -8,6 +8,7 @@ import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 
+// TODO TINY-10480: Investigate Flaky tests
 describe.skip('browser.tinymce.core.EditorAutoFocusTest', () => {
   before(() => {
     Insert.append(SugarBody.body(), SugarElement.fromHtml(`<div id="abc">

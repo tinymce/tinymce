@@ -26,6 +26,7 @@ enum TriggerWaitDecision {
   Succeed
 }
 
+// TODO TINY-10480: Investigate Flaky tests
 describe.skip('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContainerTest', () => {
   const sharedSettings = {
     menubar: 'file',
