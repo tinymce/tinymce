@@ -63,7 +63,7 @@ describe('browser.tinymce.plugins.table.TableClassListTest', () => {
       { title: 'none', value: '' }, // Empty value, as in no class should be applied.
       { title: 'test', value: 'test' }
     ]);
-    editor.setContent('<table class="something"><tbody><tr><td>cell</td></tr></tbody></table');
+    editor.setContent('<table class="something"><tbody><tr><td>cell</td></tr></tbody></table>');
     TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1);
 
     await TableTestUtils.selectClassViaPropsDialog(editor, 'mceTableProps', 'none');
@@ -76,12 +76,10 @@ describe('browser.tinymce.plugins.table.TableClassListTest', () => {
       { title: 'none', value: '' }, // Empty value, as in no class should be applied.
       { title: 'test', value: 'test' }
     ]);
-    const content = '<table class="something"><tbody><tr><td>cell</td></tr></tbody></table';
-    editor.setContent(content);
+    editor.setContent('<table class="something"><tbody><tr><td>cell</td></tr></tbody></table>');
     TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1);
 
     await TableTestUtils.selectClassViaPropsDialog(editor, 'mceTableProps', 'Unchanged');
-    TinyAssertions.assertContent(editor, content);
-    // TinyAssertions.assertContentPresence(editor, { 'table[class="something"]': 1 });
+    TinyAssertions.assertContentPresence(editor, { 'table[class="something"]': 1 });
   });
 });

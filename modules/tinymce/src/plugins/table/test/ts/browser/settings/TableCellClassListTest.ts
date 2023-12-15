@@ -66,4 +66,17 @@ describe('browser.tinymce.plugins.table.TableCellClassListTest', () => {
     await TableTestUtils.selectClassViaPropsDialog(editor, 'mceTableCellProps', 'none');
     TinyAssertions.assertContentPresence(editor, { 'td[class]': 0, 'td': 1 });
   });
+
+  it('TINY-6653: Selecting "Unchanged" will do nothing', async () => {
+    const editor = hook.editor();
+    editor.options.set('table_cell_class_list', [
+      { title: 'none', value: '' },
+      { title: 'test', value: 'test' }
+    ]);
+    const content = '<table><tbody><tr><td class="something">x</td></tr></tbody></table>';
+    editor.setContent(content);
+    TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1);
+    await TableTestUtils.selectClassViaPropsDialog(editor, 'mceTableCellProps', 'Unchanged');
+    TinyAssertions.assertContentPresence(editor, { 'td[class="something"]': 1 });
+  });
 });
