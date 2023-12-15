@@ -27,7 +27,8 @@
     "test": "bedrock-auto -b chrome-headless -d src/test",
     "test-manual": "bedrock -d src/test",
     "lint": "eslint --config ../../.eslintrc.json src/**/*.ts",
-    "prepublishOnly": "tsc -b"
+    "prepublishOnly": "tsc -b",
+    "build": "tsc"
   },
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "MIT",
