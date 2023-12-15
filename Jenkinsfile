@@ -1,6 +1,8 @@
 #!groovy
 @Library('waluigi@release/7') _
 
+standardProperties()
+
 def withRemoteCreds(String provider, Closure body) {
   if (provider == 'aws') {
     withAwsCreds {
