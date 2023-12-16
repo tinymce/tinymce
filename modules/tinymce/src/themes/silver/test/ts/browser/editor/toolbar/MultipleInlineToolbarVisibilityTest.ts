@@ -4,7 +4,7 @@ import { McEditor, TinyDom } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-// TODO TINY-10480: Investigate Flaky tests
+// TODO TINY-10480: Investigate Flaky tests - aws only
 describe.skip('browser.tinymce.themes.silver.editor.toolbar.MultipleInlineToolbarVisibilityTest', () => {
 
   const settings = {
