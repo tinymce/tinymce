@@ -6,7 +6,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
-// TODO TINY-10480: Investigate Flaky tests
+// TODO TINY-10480: Investigate Flaky tests - aws only
 describe.skip('browser.tinymce.themes.silver.throbber.ThrobberFocusTest', () => {
   const pAssertFocus = (label: string, selector: string) =>
     FocusTools.pTryOnSelector(label, SugarDocument.getDocument(), selector);
