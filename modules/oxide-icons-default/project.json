@@ -1,0 +1,13 @@
+{
+  "name": "@tinymce/oxide-icons-default",
+  "targets": {
+    "build": {
+      "inputs": [
+        "{projectRoot}/src/svg/*.svg"
+      ],
+      "outputs": [
+        "{projectRoot}/dist"
+      ]
+    }
+  }
+}

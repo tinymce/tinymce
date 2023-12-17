@@ -25,7 +25,8 @@
     "test-manual": "bedrock --testdirs src/test/ts/atomic src/test/ts/browser src/test/ts/webdriver",
     "lint": "eslint --config ../../.eslintrc.json src/**/*.ts",
     "start": "grunt dev",
-    "prepublishOnly": "tsc -b"
+    "prepublishOnly": "tsc -b",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
