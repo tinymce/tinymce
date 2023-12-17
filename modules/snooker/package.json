@@ -25,6 +25,9 @@
     "@ephox/robin": "^10.4.0",
     "@ephox/sugar": "^9.3.0"
   },
+  "devDependencies": {
+    "@ephox/agar": "^8.0.0"
+  },
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "MIT",
   "main": "./lib/main/ts/ephox/snooker/api/Main.js",
@@ -32,6 +35,7 @@
   "types": "./lib/main/ts/ephox/snooker/api/Main.d.ts",
   "scripts": {
     "prepublishOnly": "tsc -b",
+    "build": "tsc",
     "test": "bedrock-auto -b chrome-headless -d src/test/ts",
     "test-manual": "bedrock -d src/test/ts",
     "lint": "eslint --config ../../.eslintrc.json src/**/*.ts"
