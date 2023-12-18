@@ -113,7 +113,7 @@ def props
 
 timestamps {
   tinyPods.node([
-    resourceRequestCpu: '6',
+    resourceRequestCpu: '2',
     resourceRequestMemory: '4Gi',
     resourceLimitCpu: '7.5',
     resourceLimitMemory: '4Gi'
@@ -141,7 +141,6 @@ timestamps {
       sh 'yarn tinymce-grunt shell:moxiedoc'
     }
   }
-  //
 
   def platforms = [
     [ browser: 'chrome', provider: 'aws', buckets: 3 ],
@@ -169,7 +168,7 @@ timestamps {
 
   processes['headless'] = {
     tinyPods.nodeBrowser([
-      resourceRequestCpu: '6',
+      resourceRequestCpu: '2',
       resourceRequestMemory: '4Gi',
       resourceLimitCpu: '7.5',
       resourceLimitMemory: '4Gi'
