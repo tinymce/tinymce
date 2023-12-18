@@ -72,23 +72,25 @@ const bedrockHeadless = (tests, browser, auto) => {
   }
 };
 
-const bedrockBrowser = (tests, browserName, osName, bucket, buckets, chunk, auto) => {
+const bedrockBrowser = (tests, browserName, osName, bucket, buckets, chunk, remote, auto, opts) => {
   if (tests.length === 0) {
     return {};
   } else {
     return {
       browser: {
         ...bedrockDefaults,
-        overallTimeout: 1200000,
+        overallTimeout: 3600000,
         name: `${browserName}-${osName}`,
         browser: browserName,
         testfiles: testFolders(tests, auto),
         bucket: bucket,
         buckets: buckets,
         chunk: chunk,
+        remote: remote,
 
         // we have a few tests that don't play nicely when combined together in the monorepo
-        retries: 3
+        retries: 3,
+        ...opts
       }
     };
   }
@@ -138,6 +140,19 @@ module.exports = function (grunt) {
   const activeBrowser = grunt.option('bedrock-browser') || 'chrome-headless';
   const headlessBrowser = activeBrowser.endsWith("-headless") ? activeBrowser : 'chrome-headless';
   const activeOs = grunt.option('bedrock-os') || 'tests';
+
+  const remote = grunt.option('remote');
+
+  const bedrockOpts = (grunt, availableOpts) => {
+    return availableOpts.reduce((opts, opt) => {
+      const current = grunt.option(opt);
+      if (current) opts[opt] = current;
+      return opts;
+    }, {});
+  };
+
+  const opts = bedrockOpts(grunt, ['username', 'accesskey', 'sishDomain', 'devicefarmArn', 'devicefarmRegion', 'platformName', 'browserVersion']);
+
   const gruntConfig = {
     shell: {
       tsc: { command: 'yarn -s tsc' },
@@ -147,7 +162,7 @@ module.exports = function (grunt) {
     },
     'bedrock-auto': {
       ...bedrockHeadless(headlessTests, headlessBrowser, true),
-      ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, chunk, true)
+      ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, chunk, remote, true, opts)
     },
     'bedrock-manual': {
       ...bedrockHeadless(headlessTests, headlessBrowser, false),

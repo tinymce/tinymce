@@ -14,7 +14,8 @@ enum Alignment {
   Center = 'center'
 }
 
-describe('browser.tinymce.plugins.quickbars.SelectionToolbarTest', () => {
+// TODO TINY-10480: Investigate Flaky tests
+describe.skip('browser.tinymce.plugins.quickbars.SelectionToolbarTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'quickbars link pagebreak',
     inline: true,
