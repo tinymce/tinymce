@@ -21,11 +21,6 @@ export const TooltipsBackstage = (
     delayForHide: Fun.constant(tooltipDelay),
     exclusive: true,
     lazySink: getSink,
-    /*
-      <div class="tox-tooltip tox-tooltip--down">
-  <div class="tox-tooltip__body">Are you hanging on the edge of your seat? </div>
-  <i class="tox-tooltip__arrow"></i>
-  </div>*/
     tooltipDom: {
       tag: 'div',
       classes: [ 'tox-tooltip', 'tox-tooltip--up' ]
@@ -40,13 +35,6 @@ export const TooltipsBackstage = (
           GuiFactory.text(spec.tooltipText)
         ]
       },
-      // Figma design does not include tooltip arrow
-      // {
-      //   dom: {
-      //     tag: 'i',
-      //     classes: [ 'tox-tooltip__arrow' ]
-      //   }
-      // }
     ],
     onShow: () => {
       numActiveTooltips++;

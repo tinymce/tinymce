@@ -1,5 +1,6 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
+import { Bubble } from 'ephox/alloy/api/Main';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
@@ -20,7 +21,8 @@ export default [
     layouts: {
       onLtr: Fun.constant([ Layout.south, Layout.north, Layout.southeast, Layout.northeast, Layout.southwest, Layout.northwest ]),
       onRtl: Fun.constant([ Layout.south, Layout.north, Layout.southeast, Layout.northeast, Layout.southwest, Layout.northwest ])
-    }
+    },
+    bubble: Bubble.nu(0, -2, {}),
   })),
   Fields.onHandler('onHide'),
   Fields.onHandler('onShow')
