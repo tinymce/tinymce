@@ -73,7 +73,7 @@ def runRemoteTests(String name, String browser, String provider, String platform
 def runTestPod(String name, String browser, String provider, String platform, String bucket, String buckets, Boolean runAll) {
   return {
     tinyPods.node([
-      resourceRequestCpu: '6',
+      resourceRequestCpu: '2',
       resourceRequestMemory: '4Gi',
       resourceLimitCpu: '7.5',
       resourceLimitMemory: '4Gi'
