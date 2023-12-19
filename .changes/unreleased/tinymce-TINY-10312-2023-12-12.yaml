@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: Heading formatting would be partially applied to the content within the `summary`
+  element when the caret was positioned between words.
+time: 2023-12-12T00:53:28.268745+11:00
+custom:
+  Issue: TINY-10312

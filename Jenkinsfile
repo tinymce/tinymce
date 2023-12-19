@@ -141,6 +141,11 @@ timestamps {
       cleanAndInstall()
     }
 
+    stage("Validate changelog") {
+      // we use a changelog to run changie
+      exec("yarn changie-merge")
+    }
+
     stage("Type check") {
       withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
         exec("yarn ci-all-seq")
