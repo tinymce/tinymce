@@ -17,7 +17,7 @@ UnitTest.test('VisibilityTest', () => {
   Css.set(c, 'display', 'none');
   Assert.eq('', false, Visibility.isVisible(c));
 
-  // TODO: Disabled since it is flaking on Chrome sometimes it's hidden sometimes its not
+  // TODO: Disabled since it is flaking on Chrome sometimes it's hidden sometimes its not. #TINY-10485
   // const s = SugarElement.fromTag('span');
   // Assert.eq('', false, Visibility.isVisible(s));
   //
