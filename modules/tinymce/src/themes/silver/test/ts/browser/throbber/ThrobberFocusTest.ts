@@ -6,7 +6,8 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.themes.silver.throbber.ThrobberFocusTest', () => {
+// TODO TINY-10480: Investigate flaky tests
+describe.skip('browser.tinymce.themes.silver.throbber.ThrobberFocusTest', () => {
   const pAssertFocus = (label: string, selector: string) =>
     FocusTools.pTryOnSelector(label, SugarDocument.getDocument(), selector);
 

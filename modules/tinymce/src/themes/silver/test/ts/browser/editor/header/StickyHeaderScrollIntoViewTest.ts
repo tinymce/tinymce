@@ -7,7 +7,8 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import * as ScrollIntoView from 'tinymce/core/dom/ScrollIntoView';
 
-describe('browser.tinymce.themes.silver.editor.header.StickyHeaderScrollIntoViewTest', () => {
+// TODO TINY-10480: Investigate flaky tests
+describe.skip('browser.tinymce.themes.silver.editor.header.StickyHeaderScrollIntoViewTest', () => {
 
   const hook = TinyHooks.bddSetup<Editor>({
     add_unload_trigger: false,

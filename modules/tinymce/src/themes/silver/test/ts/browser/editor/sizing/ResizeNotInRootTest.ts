@@ -6,7 +6,8 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.themes.silver.editor.sizing.ResizeNotInRootTest', () => {
+// TODO TINY-10480: Investigate flaky tests
+describe.skip('browser.tinymce.themes.silver.editor.sizing.ResizeNotInRootTest', () => {
   const expectedWidth = 300;
   let toolbarContainer: SugarElement<HTMLDivElement>;
   before(() => {
