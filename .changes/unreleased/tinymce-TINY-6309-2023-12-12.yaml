@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: When deleting the last row in a table, the cursor would jump to the first cell
+  (top left), instead of moving to the next adjacent cell in some cases.
+time: 2023-12-12T00:53:11.295659+11:00
+custom:
+  Issue: TINY-6309
