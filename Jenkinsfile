@@ -143,9 +143,9 @@ timestamps {
   }
 
   def platforms = [
-    [ browser: 'chrome', provider: 'aws', buckets: 3 ],
-    [ browser: 'edge', provider: 'aws', buckets: 3 ],
-    [ browser: 'firefox', provider: 'aws', buckets: 3 ],
+    [ browser: 'chrome', provider: 'aws', buckets: 2 ],
+    [ browser: 'edge', provider: 'aws', buckets: 2 ],
+    [ browser: 'firefox', provider: 'aws', buckets: 2 ],
     [ browser: 'safari', provider: 'lambdatest', buckets: 1 ],
     [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1],
     [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1]
