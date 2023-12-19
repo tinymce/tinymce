@@ -8,7 +8,7 @@ import Editor from 'tinymce/core/api/Editor';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 
-describe('browser.tinymce.themes.silver.editor.Tooltip', () => {
+describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     plugins: [ 'link', 'image' ],

@@ -9,6 +9,7 @@ export const TooltipsBackstage = (
   getSink: () => Result<AlloyComponent, any>
 ): TooltipsProvider => {
 
+  // TODO: TINY-10475: Update delay to find suitable duration on hover to show tooltip
   const tooltipDelay = 800;
   const intervalDelay = tooltipDelay * 0.2;   // Arbitrary value
 

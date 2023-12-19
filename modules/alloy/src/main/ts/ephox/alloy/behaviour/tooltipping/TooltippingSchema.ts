@@ -1,9 +1,9 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
-import { Bubble } from 'ephox/alloy/api/Main';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
+import * as Bubble from '../../positioning/layout/Bubble';
 import * as Layout from '../../positioning/layout/Layout';
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
 

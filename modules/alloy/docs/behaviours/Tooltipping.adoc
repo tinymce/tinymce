@@ -4,8 +4,8 @@ The `Tooltipping` behaviour allows:
 
 * the entire mothership to show just one tooltip at a time through `exclusive`. This works by broadcasting a message that all Tooltipping behaviours listen to.
 * have two different modes of tooltipping:
-  * normal: does stuff
-  * follow-highlight: does other stuff.
+  * normal: Tooltip appears when the element has keyboard focus (e.g., when a user tabs to the element) or when the mouse hovers over the element.
+  * follow-highlight: Tooltip appears when show when the focus is triggered by a highlight event (fake focus).
 * be anchored in a particular position. This will default to a hotspot anchor so works well for buttons etc.
 * listeners for onHide and onShow
 
