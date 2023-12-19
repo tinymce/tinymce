@@ -30,11 +30,11 @@ def withLtCreds(Closure body) {
   }
 }
 
-def runBedrockTest(String command, Boolean runAll, int retry = 0, int timeout = 0) {
+def runBedrockTest(String name, String command, Boolean runAll, int retry = 0, int timeout = 0) {
   def bedrockCmd = command + (runAll ? " --ignore-lerna-changed=true" : "")
   echo "Running Bedrock cmd: ${command}"
   def testStatus = sh(script: command, returnStatus: true)
-  junit allowEmptyResults: true, testResults: 'scratch/TEST-*.xml'
+  // junit allowEmptyResults: true, testResults: 'scratch/TEST-*.xml'
 
   if (testStatus == 4) {
     unstable("Test failed")
@@ -44,6 +44,7 @@ def runBedrockTest(String command, Boolean runAll, int retry = 0, int timeout = 
       sleep(timeout)
       runBedrockTest(command, runAll, retry - 1, timeout)
     } else {
+      archiveArtifacts artifacts: 'scratch/TEST-*.xml', onlyIfSuccessful: false
       error("Unexpected error")
     }
   }
@@ -51,7 +52,7 @@ def runBedrockTest(String command, Boolean runAll, int retry = 0, int timeout = 
 
 def runHeadlessTests(Boolean runAll) {
   def bedrockCmd = "yarn grunt headless-auto"
-  runBedrockTest(bedrockCmd, runAll)
+  runBedrockTest('headless', bedrockCmd, runAll)
 }
 
 def runRemoteTests(String name, String browser, String provider, String platform, String arn, String bucket, String buckets, Boolean runAll, int retry = 0, int timeout = 0) {
@@ -67,7 +68,7 @@ def runRemoteTests(String name, String browser, String provider, String platform
     " --name=" + name +
     "${provider == 'aws' ? awsOpts : ''}" +
     "${platformName}"
-    runBedrockTest(bedrockCommand, runAll, retry, timeout)
+    runBedrockTest(name, bedrockCommand, runAll, retry, timeout)
 }
 
 def runTestPod(String name, String browser, String provider, String platform, String bucket, String buckets, Boolean runAll) {
@@ -94,7 +95,7 @@ def runTestPod(String name, String browser, String provider, String platform, St
         sh 'yarn ci'
         grunt('list-changed-browser')
         withRemoteCreds(provider) {
-          int retry = provider == 'lambdatest' ? 3 : 0
+          int retry = provider == 'lambdatest' ? 1 : 0
           withCredentials([string(credentialsId: 'devicefarm-testgridarn', variable: 'DF_ARN')]) {
             runRemoteTests(name, browser, provider, platform, DF_ARN, bucket, buckets, runAll, retry, 180)
           }

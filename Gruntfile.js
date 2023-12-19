@@ -73,6 +73,7 @@ const bedrockHeadless = (tests, browser, auto) => {
 };
 
 const bedrockBrowser = (tests, browserName, osName, bucket, buckets, chunk, remote, auto, opts) => {
+  const name = opts.name ? opts.name : `${browserName}-${osName}`;
   if (tests.length === 0) {
     return {};
   } else {
@@ -80,7 +81,7 @@ const bedrockBrowser = (tests, browserName, osName, bucket, buckets, chunk, remo
       browser: {
         ...bedrockDefaults,
         overallTimeout: 3600000,
-        name: `${browserName}-${osName}`,
+        name: name,
         browser: browserName,
         testfiles: testFolders(tests, auto),
         bucket: bucket,
@@ -151,7 +152,7 @@ module.exports = function (grunt) {
     }, {});
   };
 
-  const opts = bedrockOpts(grunt, ['username', 'accesskey', 'sishDomain', 'devicefarmArn', 'devicefarmRegion', 'platformName', 'browserVersion']);
+  const opts = bedrockOpts(grunt, ['name', 'username', 'accesskey', 'sishDomain', 'devicefarmArn', 'devicefarmRegion', 'platformName', 'browserVersion']);
   const gruntConfig = {
     shell: {
       tsc: { command: 'yarn -s tsc' },
