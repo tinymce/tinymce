@@ -1,0 +1,7 @@
+project: snooker
+kind: Fixed
+body: '`TableOperations.opEraseRows` did not calculate the correct row index for colgroup
+  tables.'
+time: 2023-12-12T00:44:55.549531+11:00
+custom:
+  Issue: TINY-6309

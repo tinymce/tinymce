@@ -1,0 +1,7 @@
+project: agar
+kind: Fixed
+body: Creating native events using DragEvent or ClipboardEvent constructors using
+  agar DataTransfer instances would fail on Firefox.
+time: 2023-12-12T00:44:19.644755+11:00
+custom:
+  Issue: TINY-10386

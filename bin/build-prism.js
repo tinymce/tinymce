@@ -29,9 +29,11 @@ const oldprism = window.Prism;
 window.Prism = { manual: true };
 `;
 
+const prismjs_location = path.dirname(require.resolve('prismjs'));
+
 // Load in the core and any plugins/languages that should be used
 files.forEach((file) => {
-  content += fs.readFileSync(path.resolve(__dirname, '../node_modules/prismjs', file)).toString() + '\n';
+  content += fs.readFileSync(path.resolve(prismjs_location, file)).toString() + '\n';
 });
 
 // Restore the original reference and expose prism as an ES6 module
@@ -42,4 +44,4 @@ return Prism;
 export default prismjs;`
 
 // Write the new prism.js file
-fs.writeFileSync(path.resolve(__dirname, '../node_modules/prismjs/prism.js'), content);
+fs.writeFileSync(path.resolve(prismjs_location, 'prism.js'), content);

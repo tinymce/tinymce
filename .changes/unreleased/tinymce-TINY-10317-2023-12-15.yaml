@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: Autocomplete would sometimes cause corrupt data when starting during text composition.
+  Autocomplete no longer starts during composition.
+time: 2023-12-15T17:03:45.742331+11:00
+custom:
+  Issue: TINY-10317
