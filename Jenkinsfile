@@ -75,8 +75,10 @@ def runTestPod(String name, String browser, String provider, String platform, St
     tinyPods.node([
       resourceRequestCpu: '2',
       resourceRequestMemory: '4Gi',
+      resourceRequestEphemeralStorage: '16Gi',
       resourceLimitCpu: '7.5',
-      resourceLimitMemory: '4Gi'
+      resourceLimitMemory: '4Gi',
+      resourceLimitEphemeralStorage: '16Gi',
     ]) {
       if (provider == 'aws') {
         stage('Tunnel') {
@@ -170,8 +172,10 @@ timestamps {
     tinyPods.nodeBrowser([
       resourceRequestCpu: '2',
       resourceRequestMemory: '4Gi',
+      resourceRequestEphemeralStorage: '16Gi',
       resourceLimitCpu: '7.5',
-      resourceLimitMemory: '4Gi'
+      resourceLimitMemory: '4Gi',
+      resourceLimitEphemeralStorage: '16Gi',
     ]) {
       stage('Test-headless') {
         yarnInstall()
