@@ -64,7 +64,7 @@ const applyStructureData = (editor: Editor, data: RowData): void => {
 };
 
 const applyRowData = (editor: Editor, rows: HTMLTableRowElement[], oldData: RowData, data: RowData): void => {
-  const modifiedData = Obj.filter(data, (value, key) => oldData[key as keyof RowData] !== value);
+  const modifiedData = Obj.filter(data, (value, key) => oldData[key as keyof RowData] !== value && value !== 'mce-no-match');
 
   if (Obj.size(modifiedData) > 0) {
     const typeModified = Obj.has(modifiedData, 'type');
@@ -118,7 +118,7 @@ const open = (editor: Editor): void => {
       {
         title: 'General',
         name: 'general',
-        items: RowDialogGeneralTab.getItems(editor, data)
+        items: RowDialogGeneralTab.getItems(editor)
       },
       getAdvancedTab(editor, 'row')
     ]
@@ -129,7 +129,7 @@ const open = (editor: Editor): void => {
       {
         type: 'grid',
         columns: 2,
-        items: RowDialogGeneralTab.getItems(editor, data)
+        items: RowDialogGeneralTab.getItems(editor)
       }
     ]
   };

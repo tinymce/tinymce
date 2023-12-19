@@ -4,11 +4,10 @@ import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import * as Options from '../api/Options';
-import type * as Helpers from './Helpers';
 import * as UiUtils from './UiUtils';
 
-const getClassList = (editor: Editor, data: Helpers.UnionTableData): Optional<Dialog.ListBoxSpec> => {
-  const classes = UiUtils.buildClassList(Options.getRowClassList(editor), data);
+const getClassList = (editor: Editor): Optional<Dialog.ListBoxSpec> => {
+  const classes = UiUtils.buildClassList(Options.getRowClassList(editor));
   if (classes.length > 0) {
     return Optional.some({
       name: 'class',
@@ -49,8 +48,8 @@ const formChildren: Dialog.BodyComponentSpec[] = [
   }
 ];
 
-const getItems = (editor: Editor, data: Helpers.UnionTableData): Dialog.BodyComponentSpec[] =>
-  formChildren.concat(getClassList(editor, data).toArray());
+const getItems = (editor: Editor): Dialog.BodyComponentSpec[] =>
+  formChildren.concat(getClassList(editor).toArray());
 
 export {
   getItems

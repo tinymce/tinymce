@@ -6,7 +6,6 @@ import Editor from 'tinymce/core/api/Editor';
 import { Dialog, Menu } from 'tinymce/core/api/ui/Ui';
 
 import * as TableSelection from '../selection/TableSelection';
-import type * as Helpers from './Helpers';
 
 export interface UserListValue {
   readonly title?: string;
@@ -70,20 +69,12 @@ const buildListItems = (items: UserListItem[]): Dialog.ListBoxItemSpec[] =>
     }
   });
 
-const buildClassList = (classList: UserListItem[], data: Helpers.UnionTableData): Dialog.ListBoxItemSpec[] => {
+export const buildClassList = (classList: UserListItem[]): Dialog.ListBoxItemSpec[] => {
   if (!classList.length) {
     return [];
   }
 
-  const dataClass = data.class;
-  if (dataClass?.length && dataClass !== 'mce-item-table' && classList.every((klass) =>
-    'value' in klass && klass.value.length ? dataClass !== klass.value : true
-  )) {
-    // if there isn't a class in the list that matches the data class, add it as the first option:
-    return buildListItems([{ text: 'Unchanged', value: dataClass }, ...classList ]);
-  }
-
-  return buildListItems(classList);
+  return buildListItems([{ text: 'Select...', value: 'mce-no-match' }, ...classList ]);
 };
 
 const buildMenuItems = (
@@ -165,7 +156,6 @@ export {
   onSetupToggle,
   buildMenuItems,
   buildListItems,
-  buildClassList,
   buildColorMenu,
   generateMenuItemsCallback,
   filterNoneItem,

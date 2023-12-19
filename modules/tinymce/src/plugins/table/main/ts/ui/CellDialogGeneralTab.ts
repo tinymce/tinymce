@@ -5,11 +5,10 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import * as Options from '../api/Options';
 import { verticalAlignValues } from './CellAlignValues';
-import type * as Helpers from './Helpers';
 import * as UiUtils from './UiUtils';
 
-const getClassList = (editor: Editor, data: Helpers.UnionTableData): Optional<Dialog.ListBoxSpec> => {
-  const classes = UiUtils.buildClassList(Options.getCellClassList(editor), data);
+const getClassList = (editor: Editor): Optional<Dialog.ListBoxSpec> => {
+  const classes = UiUtils.buildClassList(Options.getCellClassList(editor));
   if (classes.length > 0) {
     return Optional.some({
       name: 'class',
@@ -72,8 +71,8 @@ const children: Dialog.BodyComponentSpec[] = [
   }
 ];
 
-const getItems = (editor: Editor, data: Helpers.UnionTableData): Dialog.BodyComponentSpec[] =>
-  children.concat(getClassList(editor, data).toArray());
+const getItems = (editor: Editor): Dialog.BodyComponentSpec[] =>
+  children.concat(getClassList(editor).toArray());
 
 export {
   getItems

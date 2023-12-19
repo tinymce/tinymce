@@ -49,7 +49,7 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
   const shouldStyleWithCss = Options.shouldStyleWithCss(editor);
   const hasAdvancedTableTab = Options.hasAdvancedTableTab(editor);
 
-  if (!Type.isUndefined(data.class)) {
+  if (!Type.isUndefined(data.class) && data.class !== 'mce-no-match') {
     attrs.class = data.class;
   }
 
@@ -186,7 +186,7 @@ const open = (editor: Editor, insertNewTable: boolean): void => {
     }
   }
 
-  const classes = UiUtils.buildClassList(Options.getTableClassList(editor), data);
+  const classes = UiUtils.buildClassList(Options.getTableClassList(editor));
 
   if (classes.length > 0) {
     if (data.class) {

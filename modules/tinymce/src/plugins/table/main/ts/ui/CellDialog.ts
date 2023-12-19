@@ -101,7 +101,7 @@ const applyStructureData = (editor: Editor, data: CellData): void => {
 };
 
 const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[], oldData: CellData, data: CellData): void => {
-  const modifiedData = Obj.filter(data, (value, key) => oldData[key as keyof CellData] !== value);
+  const modifiedData = Obj.filter(data, (value, key) => oldData[key as keyof CellData] !== value && value !== 'mce-no-match');
 
   if (Obj.size(modifiedData) > 0 && cells.length >= 1) {
     // Retrieve the table before the cells are modified as there is a case where cells
@@ -167,7 +167,7 @@ const open = (editor: Editor): void => {
       {
         title: 'General',
         name: 'general',
-        items: CellDialogGeneralTab.getItems(editor, data)
+        items: CellDialogGeneralTab.getItems(editor)
       },
       getAdvancedTab(editor, 'cell')
     ]
@@ -178,7 +178,7 @@ const open = (editor: Editor): void => {
       {
         type: 'grid',
         columns: 2,
-        items: CellDialogGeneralTab.getItems(editor, data)
+        items: CellDialogGeneralTab.getItems(editor)
       }
     ]
   };
