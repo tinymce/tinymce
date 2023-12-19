@@ -141,6 +141,7 @@ const renderButtonSpec = (
     tag: 'button',
     classes,
     attributes: {
+      // TINY-10453: Look into this, we might want to remove this title attribute since it has already contain a label
       title: translatedText
     }
   };
