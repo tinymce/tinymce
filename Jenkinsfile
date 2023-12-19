@@ -42,7 +42,7 @@ def runBedrockTest(String name, String command, Boolean runAll, int retry = 0, i
     if (retry > 0) {
       echo "Running retry [${retry}] after [${timeout}]"
       sleep(timeout)
-      runBedrockTest(command, runAll, retry - 1, timeout)
+      runBedrockTest(name, command, runAll, retry - 1, timeout)
     } else {
       archiveArtifacts artifacts: 'scratch/TEST-*.xml', onlyIfSuccessful: false
       error("Unexpected error")
