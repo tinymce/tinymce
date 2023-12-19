@@ -1,0 +1,7 @@
+project: alloy
+kind: Added
+body: New `ImmediateShowTooltipEvent` and `ImmediateHideTooltipEvent` events that
+  will immediately show and hide tooltips.
+time: 2023-12-19T18:12:32.013346+11:00
+custom:
+  Issue: TINY-9275

@@ -1,0 +1,7 @@
+project: tinymce
+kind: Added
+body: New custom tooltip functionality, tooltip will be shown when hovering with a
+  mouse or with keyboard focus.
+time: 2023-12-19T18:11:03.822362+11:00
+custom:
+  Issue: TINY-9275
