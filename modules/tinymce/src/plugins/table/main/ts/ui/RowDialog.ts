@@ -19,7 +19,7 @@ import * as RowDialogGeneralTab from './RowDialogGeneralTab';
 type RowData = Helpers.RowData;
 
 const updateSimpleProps = (modifier: DomModifier, data: RowData, shouldUpdate: (key: string) => boolean): void => {
-  if (shouldUpdate('class')) {
+  if (shouldUpdate('class') && data.class !== 'mce-no-match') {
     modifier.setAttrib('class', data.class);
   }
   if (shouldUpdate('height')) {
@@ -64,7 +64,7 @@ const applyStructureData = (editor: Editor, data: RowData): void => {
 };
 
 const applyRowData = (editor: Editor, rows: HTMLTableRowElement[], oldData: RowData, data: RowData): void => {
-  const modifiedData = Obj.filter(data, (value, key) => oldData[key as keyof RowData] !== value && value !== 'mce-no-match');
+  const modifiedData = Obj.filter(data, (value, key) => oldData[key as keyof RowData] !== value);
 
   if (Obj.size(modifiedData) > 0) {
     const typeModified = Obj.has(modifiedData, 'type');

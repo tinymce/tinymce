@@ -42,7 +42,7 @@ const updateSimpleProps = (modifier: DomModifier, colModifier: DomModifier, data
   if (shouldUpdate('scope')) {
     modifier.setAttrib('scope', data.scope);
   }
-  if (shouldUpdate('class')) {
+  if (shouldUpdate('class') && data.class !== 'mce-no-match') {
     modifier.setAttrib('class', data.class);
   }
   if (shouldUpdate('height')) {
@@ -101,7 +101,7 @@ const applyStructureData = (editor: Editor, data: CellData): void => {
 };
 
 const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[], oldData: CellData, data: CellData): void => {
-  const modifiedData = Obj.filter(data, (value, key) => oldData[key as keyof CellData] !== value && value !== 'mce-no-match');
+  const modifiedData = Obj.filter(data, (value, key) => oldData[key as keyof CellData] !== value);
 
   if (Obj.size(modifiedData) > 0 && cells.length >= 1) {
     // Retrieve the table before the cells are modified as there is a case where cells
