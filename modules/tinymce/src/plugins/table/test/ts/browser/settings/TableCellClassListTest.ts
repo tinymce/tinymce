@@ -72,7 +72,7 @@ describe('browser.tinymce.plugins.table.TableCellClassListTest', () => {
     TinyAssertions.assertContentPresence(editor, { 'td[class]': 0, 'td': 1 });
   });
 
-  it('TINY-6653: Selecting "Unchanged" will do nothing', async () => {
+  it('TINY-6653: Selecting "Select..." will do nothing', async () => {
     const editor = hook.editor();
     editor.options.set('table_cell_class_list', [
       { title: 'none', value: '' },
