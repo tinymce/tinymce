@@ -3,33 +3,6 @@
 
 standardProperties()
 
-def withRemoteCreds(String provider, Closure body) {
-  if (provider == 'aws') {
-    withAwsCreds {
-      body()
-    }
-  }
-  if (provider == 'lambdatest') {
-    withLtCreds {
-      body()
-    }
-  }
-}
-
-def withAwsCreds(Closure body) {
-  tinyAws.withAWSWebIdentityToken {
-    tinyAws.withAWSRoleARN('arn:aws:iam::103651136441:role/ci/build/tinymce_devicefarm') {
-      body()
-    }
-  }
-}
-
-def withLtCreds(Closure body) {
-  withCredentials([usernamePassword(credentialsId: 'lambda-engci', usernameVariable: 'LT_USERNAME', passwordVariable: 'LT_ACCESS_KEY')]) {
-    body()
-  }
-}
-
 def runBedrockTest(String name, String command, Boolean runAll, int retry = 0, int timeout = 0) {
   def bedrockCmd = command + (runAll ? " --ignore-lerna-changed=true" : "")
   echo "Running Bedrock cmd: ${command}"
@@ -37,7 +10,7 @@ def runBedrockTest(String name, String command, Boolean runAll, int retry = 0, i
   junit allowEmptyResults: true, testResults: 'scratch/TEST-*.xml'
 
   if (testStatus == 4) {
-    unstable("Test failed")
+    unstable("Tests failed for ${name}")
   } else if (testStatus != 0) {
     if (retry > 0) {
       echo "Running retry [${retry}] after [${timeout}]"
@@ -45,7 +18,7 @@ def runBedrockTest(String name, String command, Boolean runAll, int retry = 0, i
       runBedrockTest(name, command, runAll, retry - 1, timeout)
     } else {
       archiveArtifacts artifacts: 'scratch/TEST-*.xml', onlyIfSuccessful: false
-      error("Unexpected error")
+      error("Unexpected error in ${name} ")
     }
   }
 }
@@ -83,10 +56,7 @@ def runTestPod(String name, String browser, String provider, String platform, St
     ]) {
       if (provider == 'aws') {
         stage('Tunnel') {
-          echo 'Adding Tunnel'
-          withCredentials([string(credentialsId: 'sish-publickey', variable: 'SISH_KEY')]) {
-            sh 'echo "sish.osu.tiny.work ssh-ed25519 $SISH_KEY" >> ~/.ssh/known_hosts'
-          }
+          bedrockRemoteTools.tinyWorkSishTunnel()
         }
       }
 
@@ -94,7 +64,7 @@ def runTestPod(String name, String browser, String provider, String platform, St
         yarnInstall()
         sh 'yarn ci'
         grunt('list-changed-browser')
-        withRemoteCreds(provider) {
+        bedrockRemoteTools.withRemoteCreds(provider) {
           int retry = provider == 'lambdatest' ? 1 : 0
           withCredentials([string(credentialsId: 'devicefarm-testgridarn', variable: 'DF_ARN')]) {
             runRemoteTests(name, browser, provider, platform, DF_ARN, bucket, buckets, runAll, retry, 180)
