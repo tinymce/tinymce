@@ -239,7 +239,7 @@ const createRow = (cellContents: string[]): SugarElement<HTMLTableRowElement> =>
   return tr;
 };
 
-/** Opens the specified properties dialog, selects the class called `classTitle`, confirms changes and closes dialog. */
+/** Opens the specified properties dialog, selects the class called `classTitle`, confirms changes and submits dialog. */
 const selectClassViaPropsDialog = async (editor: Editor, dialogCommand: `mceTable${'' | 'Cell' | 'Row'}Props`, classTitle: string): Promise<void> => {
   editor.execCommand(dialogCommand);
   await TinyUiActions.pWaitForDialog(editor);
