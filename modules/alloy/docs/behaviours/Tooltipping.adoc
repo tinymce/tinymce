@@ -1,0 +1,82 @@
+== General Overview
+
+The `Tooltipping` behaviour allows:
+
+* the entire mothership to show just one tooltip at a time through `exclusive`. This works by broadcasting a message that all Tooltipping behaviours listen to.
+* have two different modes of tooltipping:
+  * normal: Tooltip appears when the element has keyboard focus (e.g., when a user tabs to the element) or when the mouse hovers over the element.
+  * follow-highlight: Tooltip appears when show when the focus is triggered by a highlight event (fake focus).
+* be anchored in a particular position. This will default to a hotspot anchor so works well for buttons etc.
+* listeners for onHide and onShow
+
+
+The APIs available are:
+
+* hideAllExclusive: this will broadcast on the exclusivity channel to hide *all* tooltips, including this one.
+* setComponents: this uses replacing on the tooltip itself to replace the contents of the tooltip.
+
+
+=== State
+
+There are two things that are stored in the tooltipping state
+
+* timer: the timer is used to delay when certain actions (...) take place. There is only ever one scheduled action, so scheduling another action cancels the current schedule.
+* popup: this is the alloy component that will have its components replaced by calls to the setComponents API.
+
+
+
+=== Active
+
+This is where the core of the logic resides. It depends on the mode, as to which events it will listen to:
+
+* showTooltip: shows the tooltip **on the configured delay**. It does not show it immediately.
+* hideTooltip: hides the tooltip **on the configured delay**. It does not hide it immediately.
+* receiving message:
+  if the channel is exclusivity, calls hide **immediately**
+* onDetached: hide the tooltip **immediately**
+
+Now, the rest of the events depend on the mode.
+
+==== Normal mode
+
+* `focusin`: this will trigger the showTooltip event. So it will show the tooltip after the **configured delay**.
+* `postBlur`: this will trigger the hideTooltip event. So it will hide the tooltip after the **configured delay**.
+* `mouseover`: also triggers showTooltip
+* `mousout`: also triggers hideTooltip
+
+==== Follow Highlight
+
+* `highlight`: this will trigger showTooltip (so shows after delay)
+* `dehighlight`: this will trigger hideTooltip (show hides after delay)
+
+
+The Tooltip state manages stuff and things.
+
+
+Channels:
+ * exclusivity
+
+Events:
+ * tooltip.show
+ * tooltip.hide
+
+=== Functionality
+
+==== hide
+
+With the tooltip container, it:
+ * detaches the container
+ * calls onHide
+ * clears the container reference
+It also clears the timer.
+
+==== show
+
+* it won't be doing anything if it is already showing. This doesn't mean "scheduled to be showing", this means "actually showing"
+* hides all exclusive things
+* gets the sink, and builds the popup based on tooltipDom and components in the sink.
+* mouseover or mouseout **on the tooltip itself** trigger the events that schedule the show/hide
+* set the state.
+* attach the popup to the sink
+* fire the onShow
+* position the popup.

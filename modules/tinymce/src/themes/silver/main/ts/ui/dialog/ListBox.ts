@@ -67,6 +67,7 @@ export const renderListBox = (spec: ListBoxSpec, backstage: UiFactoryBackstage, 
         uid: sketchSpec.uid,
         text: initialItem.map((item) => item.text),
         icon: Optional.none(),
+        // TINY-10453: Remove this tooltip, we don't want duplicate tooltips and until we figured a better way to test, it's here now so that tests would pass
         tooltip: spec.label,
         role: Optional.none(),
         fetch: (comp, callback) => {

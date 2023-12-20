@@ -29,11 +29,12 @@ const commonButtonDisplayEvent = Id.generate('common-button-display-events');
 
 const toolbarButtonEventOrder: Record<string, string[]> = {
   // TODO: use the constants provided by behaviours.
-  [SystemEvents.execute()]: [ 'disabling', 'alloy.base.behaviour', 'toggling', 'toolbar-button-events' ],
+  [SystemEvents.execute()]: [ 'disabling', 'alloy.base.behaviour', 'toggling', 'toolbar-button-events', 'tooltipping' ],
   [SystemEvents.attachedToDom()]: [
     'toolbar-button-events',
     commonButtonDisplayEvent
   ],
+  [SystemEvents.detachedFromDom()]: [ 'toolbar-button-events', 'dropdown-events', 'tooltipping' ],
   [NativeEvents.mousedown()]: [
     'focusing',
     'alloy.base.behaviour',
