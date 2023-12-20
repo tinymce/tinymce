@@ -155,21 +155,32 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
     // NOTE: In UiRefs, dialogUi and popupUi refer to the same thing if ui_mode: combined
     Attachment.attachSystem(uiContainer, uiRefs.dialogUi.mothership);
 
-    // Unlike menubar below which uses OuterContainer directly, this level of abstraction is
-    // required because of the different types of toolbars available (e.g. multiple vs single)
-    setToolbar(editor, uiRefs, rawUiConfig, backstage);
+    const setup = () => {
+      // Unlike menubar below which uses OuterContainer directly, this level of abstraction is
+      // required because of the different types of toolbars available (e.g. multiple vs single)
+      setToolbar(editor, uiRefs, rawUiConfig, backstage);
 
-    OuterContainer.setMenubar(
-      mainUi.outerContainer,
-      identifyMenus(editor, rawUiConfig)
-    );
+      OuterContainer.setMenubar(
+        mainUi.outerContainer,
+        identifyMenus(editor, rawUiConfig)
+      );
 
-    // Initialise the toolbar - set initial positioning then show
-    ui.show();
+      // Initialise the toolbar - set initial positioning then show
+      ui.show();
 
-    setupEvents(editor, targetElm, ui, toolbarPersist);
+      setupEvents(editor, targetElm, ui, toolbarPersist);
 
-    editor.nodeChanged();
+      editor.nodeChanged();
+    };
+
+    if (toolbarPersist) {
+      // TINY-10482: for `toolbar_persist: true` we need to wait for the skin to be loaded before showing the toolbar/menubar.
+      // Without this, there's the occasional chance that the toolbar/menubar could be set/shown before the skin has finished
+      // loading, which causes CSS issues.
+      editor.once('SkinLoaded', setup);
+    } else {
+      setup();
+    }
   };
 
   editor.on('show', render);

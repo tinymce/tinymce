@@ -3,6 +3,17 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
 <title>silver-theme Demo Page</title>
+<style>
+   .tox-tooltip {
+    z-index: 10000000000;
+    /* The pointer-events: none is designed to make mouse events bleed through the tooltip
+     * to the underlying items. For example, a mouse hovering over a tooltip that hovers over
+     * another item should trigger the hover of the item obscured by the tooltip, even though
+     * the tooltip is on top
+     */
+    pointer-events: none;
+   }
+</style>
 </head>
 <body style="">
 <h2>silver-theme Demo Page</h2>

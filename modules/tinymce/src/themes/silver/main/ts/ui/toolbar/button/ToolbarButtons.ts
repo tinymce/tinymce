@@ -2,6 +2,7 @@ import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button as AlloyButton, Disabling, FloatingToolbarButton, Focusing,
   GuiFactory,
   Keying, Memento, NativeEvents, Replacing, SketchSpec, SplitDropdown as AlloySplitDropdown, SystemEvents, TieredData, TieredMenuTypes, Toggling,
+  Tooltipping,
   Unselecting
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
@@ -84,6 +85,7 @@ const getToggleApi = (component: AlloyComponent): Toolbar.ToolbarToggleButtonIns
 
 const getTooltipAttributes = (tooltip: Optional<string>, providersBackstage: UiFactoryBackstageProviders) => tooltip.map<{}>((tooltip) => ({
   'aria-label': providersBackstage.translate(tooltip),
+  // TINY-10453: Remove this tooltip, we don't want duplicate tooltips and until we figured a better way to test, it's here now so that tests would pass
   'title': providersBackstage.translate(tooltip)
 })).getOr({});
 
@@ -184,6 +186,14 @@ const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage
   });
 };
 
+const generateTooltippingBehaviour = (text: Optional<string>, providersBackstage: UiFactoryBackstageProviders) => text.map(
+  (t) => Tooltipping.config(
+    providersBackstage.tooltips.getConfig({
+      tooltipText: providersBackstage.translate(t)
+    })
+  )
+).toArray();
+
 const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisation: Specialisation<T>, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   const editorOffCell = Cell(Fun.noop);
   const structure = renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.none(), providersBackstage);
@@ -203,6 +213,7 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
             onControlAttached(specialisation, editorOffCell),
             onControlDetached(specialisation, editorOffCell)
           ]),
+          ...generateTooltippingBehaviour(spec.tooltip, providersBackstage),
           // Enable toolbar buttons by default
           DisablingConfigs.toolbarButton(() => !spec.enabled || providersBackstage.isDisabled()),
           ReadOnly.receivingConfig()
@@ -348,11 +359,13 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         onControlAttached(specialisation, editorOffCell),
         onControlDetached(specialisation, editorOffCell)
       ]),
-      Unselecting.config({ })
+      Unselecting.config({ }),
+      ...generateTooltippingBehaviour(spec.tooltip, sharedBackstage.providers),
     ]),
 
     eventOrder: {
-      [SystemEvents.attachedToDom()]: [ 'alloy.base.behaviour', 'split-dropdown-events' ]
+      [SystemEvents.attachedToDom()]: [ 'alloy.base.behaviour', 'split-dropdown-events', 'tooltipping' ],
+      [SystemEvents.detachedFromDom()]: [ 'split-dropdown-events', 'tooltipping' ]
     },
 
     toggleClass: ToolbarButtonClasses.Ticked,

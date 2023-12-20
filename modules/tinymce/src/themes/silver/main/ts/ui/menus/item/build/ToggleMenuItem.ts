@@ -47,7 +47,7 @@ const renderToggleMenuItem = (
       onAction: spec.onAction,
       onSetup: spec.onSetup,
       triggersSubmenu: false,
-      itemBehaviours: [ ]
+      itemBehaviours: []
     }, structure, itemResponse, providersBackstage),
     {
       toggling: {

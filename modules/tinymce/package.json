@@ -20,6 +20,7 @@
   "scripts": {
     "build": "grunt",
     "test": "grunt test",
+    "test-manual": "grunt test-manual",
     "lint": "grunt eslint",
     "silver-test": "grunt bedrock-auto:silver",
     "silver-test-manual": "grunt bedrock-manual:silver"
