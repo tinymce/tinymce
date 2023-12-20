@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: Table classes couldn't be removed via setting an empty value in `table_class_list`.
+  Also fixed being forced to pick the first class option.
+time: 2023-12-20T14:29:48.785063733+11:00
+custom:
+  Issue: TINY-6653
