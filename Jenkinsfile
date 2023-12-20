@@ -34,7 +34,7 @@ def runBedrockTest(String name, String command, Boolean runAll, int retry = 0, i
   def bedrockCmd = command + (runAll ? " --ignore-lerna-changed=true" : "")
   echo "Running Bedrock cmd: ${command}"
   def testStatus = sh(script: command, returnStatus: true)
-  // junit allowEmptyResults: true, testResults: 'scratch/TEST-*.xml'
+  junit allowEmptyResults: true, testResults: 'scratch/TEST-*.xml'
 
   if (testStatus == 4) {
     unstable("Test failed")
