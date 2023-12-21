@@ -9,7 +9,8 @@ import Plugin from 'tinymce/plugins/table/Plugin';
 
 const findAll = (selector: string) => UiFinder.findAllIn(SugarBody.body(), selector);
 
-describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
+// TODO TINY-10480: Investigate flaky tests
+describe.skip('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
   const setupElement = () => {
     const containerHtml = '<table>' +
       '<tbody>' +

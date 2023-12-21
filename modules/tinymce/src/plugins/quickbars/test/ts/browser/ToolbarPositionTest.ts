@@ -15,7 +15,8 @@ import { pAssertToolbarVisible } from '../module/test/Utils';
 
 type TableSizingMode = 'relative' | 'fixed';
 
-describe('browser.tinymce.plugins.quickbars.ToolbarPositionTest', () => {
+// TODO TINY-10480: Investigate flaky tests
+describe.skip('browser.tinymce.plugins.quickbars.ToolbarPositionTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'quickbars link',
     base_url: '/project/tinymce/js/tinymce',

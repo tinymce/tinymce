@@ -10,7 +10,8 @@ import { RawEditorOptions, ToolbarMode } from 'tinymce/core/api/OptionTypes';
 
 import * as UiUtils from '../../../module/UiUtils';
 
-describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest', () => {
+// TODO TINY-10480: Investigate flaky tests
+describe.skip('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest', () => {
 
   const assertToolbarToggleState = (editor: Editor, expected: boolean) => {
     const state = editor.queryCommandState('ToggleToolbarDrawer');

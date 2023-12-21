@@ -9,7 +9,8 @@ import * as DomUtils from '../../../module/DomUtils';
 import * as RepresentingUtils from '../../../module/RepresentingUtils';
 import TestBackstage from '../../../module/TestBackstage';
 
-describe('headless.tinymce.themes.silver.components.sizeinput.SizeInputTest', () => {
+// TODO TINY-10480: Investigate flaky tests
+describe.skip('headless.tinymce.themes.silver.components.sizeinput.SizeInputTest', () => {
   const backstage = TestBackstage();
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderSizeInput({

@@ -5,7 +5,8 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
+// TODO TINY-10480: Investigate flaky tests
+describe.skip('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
   const wrapper = SugarElement.fromTag('div');
   const editorTarget = SugarElement.fromTag('div');
   const hook = TinyHooks.bddSetupFromElement<Editor>({

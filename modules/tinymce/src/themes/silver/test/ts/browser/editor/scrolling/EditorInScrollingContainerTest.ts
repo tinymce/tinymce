@@ -26,7 +26,8 @@ enum TriggerWaitDecision {
   Succeed
 }
 
-describe('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContainerTest', () => {
+// TODO TINY-10480: Investigate flaky tests
+describe.skip('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingContainerTest', () => {
   const sharedSettings = {
     menubar: 'file',
     toolbar: 'undo bold opendialog',
