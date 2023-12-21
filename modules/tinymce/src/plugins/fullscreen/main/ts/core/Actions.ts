@@ -1,5 +1,5 @@
 import { Cell, Fun, Optional, Singleton, Throttler } from '@ephox/katamari';
-import { Css, DomEvent, EventUnbinder, SugarElement, SugarShadowDom, Traverse, WindowVisualViewport } from '@ephox/sugar';
+import { Class, Css, DomEvent, EventUnbinder, SugarElement, SugarShadowDom, Traverse, WindowVisualViewport, Width, SugarNode } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -89,6 +89,9 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | nul
   const documentElement = document.documentElement;
   const editorContainer = editor.getContainer();
   const editorContainerS = SugarElement.fromDom(editorContainer);
+  const sinkContainerS = Traverse.nextSibling(editorContainerS)
+    .filter((elm): elm is SugarElement<HTMLElement> => SugarNode.isHTMLElement(elm) && Class.has(elm, 'tox-silver-sink'));
+
   const fullscreenRoot = getFullscreenRoot(editor);
 
   const fullscreenInfo: ScrollInfo | null = fullscreenState.get();
@@ -153,6 +156,9 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | nul
     editorContainerStyle.width = editorContainerStyle.height = '';
 
     handleClasses(DOM.addClass);
+    sinkContainerS.each((elm) => {
+      elm.dom.style.position = 'fixed';
+    });
 
     viewportUpdate.bind(editorContainerS);
 
@@ -175,6 +181,10 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | nul
     editorContainerStyle.height = fullscreenInfo.containerHeight;
     editorContainerStyle.top = fullscreenInfo.containerTop;
     editorContainerStyle.left = fullscreenInfo.containerLeft;
+
+    sinkContainerS.each((elm) => {
+      elm.dom.style.position = 'relative';
+    });
 
     cleanup();
     setScrollPos(fullscreenInfo.scrollPos);
