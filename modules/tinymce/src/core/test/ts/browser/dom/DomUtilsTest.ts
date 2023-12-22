@@ -750,9 +750,14 @@ describe('browser.tinymce.core.dom.DOMUtilsTest', () => {
     DOM.remove('test');
   });
 
+  it('isEmpty with list of elements considered non-empty', () => {
+    const elm = DOM.create('p', {}, '<img>');
+    assert.isFalse(DOM.isEmpty(elm, { img: true }));
+  });
+
   it('isEmpty with isContent optional predicate for custom non-empty elements', () => {
     const elm = DOM.create('p', {}, '<em><br></em>');
-    assert.isFalse(DOM.isEmpty(elm, {
+    assert.isFalse(DOM.isEmpty(elm, undefined, {
       isContent: (node) => node.nodeName === 'EM'
     }));
   });
@@ -762,11 +767,18 @@ describe('browser.tinymce.core.dom.DOMUtilsTest', () => {
     assert.isFalse(DOM.isEmpty(elm));
   });
 
+  it('isEmpty with list of elements considered non-empty without schema', () => {
+    const domWithoutSchema = DOMUtils(document, { keep_values: true });
+
+    const elm = domWithoutSchema.create('p', {}, '<img>');
+    assert.isFalse(domWithoutSchema.isEmpty(elm, { img: true }));
+  });
+
   it('isEmpty with isContent optional predicate without schema', () => {
     const domWithoutSchema = DOMUtils(document, { keep_values: true });
 
     const elm = domWithoutSchema.create('p', {}, '<a href="http://some.url/"></a>');
-    assert.isFalse(domWithoutSchema.isEmpty(elm, {
+    assert.isFalse(domWithoutSchema.isEmpty(elm, undefined, {
       isContent: (node) => node.nodeName === 'A'
     }));
   });

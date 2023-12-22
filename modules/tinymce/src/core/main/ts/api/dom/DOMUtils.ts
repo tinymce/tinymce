@@ -181,7 +181,7 @@ interface DOMUtils {
   findCommonAncestor: (a: Node, b: Node) => Node | null;
   run <R, T extends Node>(this: DOMUtils, elm: T | T[], func: (node: T) => R, scope?: any): typeof elm extends Array<any> ? R[] : R;
   run <R, T extends Node>(this: DOMUtils, elm: RunArguments<T>, func: (node: T) => R, scope?: any): RunResult<typeof elm, R>;
-  isEmpty: (node: Node, options?: Empty.IsEmptyOptions) => boolean;
+  isEmpty: (node: Node, elements?: Record<string, any>, options?: Empty.IsEmptyOptions) => boolean;
   createRng: () => Range;
   nodeIndex: (node: Node, normalized?: boolean) => number;
   split: {
@@ -927,8 +927,16 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
   };
 
-  const isEmpty = (node: Node, options?: Empty.IsEmptyOptions) => {
-    return Empty.isEmptyNode(schema, node, options);
+  const isEmpty = (node: Node, elements?: Record<string, boolean>, options?: Empty.IsEmptyOptions) => {
+    if (Type.isPlainObject(elements)) {
+      const isContent = (node: Node): boolean => {
+        const name = node.nodeName.toLowerCase();
+        return Boolean(elements[name]);
+      };
+      return Empty.isEmptyNode(schema, node, { ...options, isContent });
+    } else {
+      return Empty.isEmptyNode(schema, node, options);
+    }
   };
 
   const createRng = () => doc.createRange();
@@ -1672,18 +1680,11 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      * Returns true/false if the specified node is to be considered empty or not.
      *
      * @method isEmpty
-     * @param {Node} node The node to check if it's empty.
-     * @param {Object} options An optional object with additional options.
-     *
-     * The options object can have the following properties:
-     * - skipBogus: If true, the function will skip over bogus nodes during the check. Optional, default is true.
-     * - includeZwsp: If true, the function will include zero-width space characters in the check. Optional, default is false.
-     * - check_root_as_content: If true, the function will check if the target node (instead of its children) is considered "content". Optional, default is false.
-     * - isContent: An optional function that takes a node as a parameter and returns a boolean indicating whether the node is considered "content".
-     *
+     * @param {Node} node The target node to check if it's empty.
+     * @param {Object} elements Optional name/value object with elements that are automatically treated as non-empty elements.
      * @return {Boolean} true/false if the node is empty or not.
      * @example
-     * tinymce.DOM.isEmpty(node, { includeZwsp: true });
+     * tinymce.DOM.isEmpty(node, { img: true });
      */
     isEmpty,
 
