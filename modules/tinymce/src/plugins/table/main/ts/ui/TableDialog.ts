@@ -188,7 +188,7 @@ const open = (editor: Editor, insertNewTable: boolean): void => {
 
   const classes = UiUtils.buildClassList(Options.getTableClassList(editor));
 
-  if (classes.length > 0) {
+  if (classes.isSome()) {
     if (data.class) {
       data.class = data.class.replace(/\s*mce\-item\-table\s*/g, '');
     }
@@ -197,7 +197,7 @@ const open = (editor: Editor, insertNewTable: boolean): void => {
   const generalPanel: Dialog.GridSpec = {
     type: 'grid',
     columns: 2,
-    items: TableDialogGeneralTab.getItems(editor, classes, insertNewTable)
+    items: TableDialogGeneralTab.getItems(editor, classes.getOr([]), insertNewTable)
   };
 
   const nonAdvancedForm = (): Dialog.PanelSpec => ({

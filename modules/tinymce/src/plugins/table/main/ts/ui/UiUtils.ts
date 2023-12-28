@@ -1,5 +1,5 @@
 import { Transformations } from '@ephox/acid';
-import { Arr, Obj, Singleton, Strings } from '@ephox/katamari';
+import { Arr, Obj, Optional, Singleton, Strings } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -69,12 +69,12 @@ const buildListItems = (items: UserListItem[]): Dialog.ListBoxItemSpec[] =>
     }
   });
 
-export const buildClassList = (classList: UserListItem[]): Dialog.ListBoxItemSpec[] => {
+export const buildClassList = (classList: UserListItem[]): Optional<Dialog.ListBoxItemSpec[]> => {
   if (!classList.length) {
-    return [];
+    return Optional.none();
   }
 
-  return buildListItems([{ text: 'Select...', value: 'mce-no-match' }, ...classList ]);
+  return Optional.some(buildListItems([{ text: 'Select...', value: 'mce-no-match' }, ...classList ]));
 };
 
 const buildMenuItems = (
