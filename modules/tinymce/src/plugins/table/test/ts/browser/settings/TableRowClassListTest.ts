@@ -53,10 +53,14 @@ describe('browser.tinymce.plugins.table.TableRowClassListTest', () => {
     ]);
     editor.setContent(tableHtml);
     TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1);
-    await TableTestUtils.selectClassViaPropsDialog(editor, 'mceTableRowProps', 'test');
+    await TableTestUtils.openPropsDialog(editor, 'mceTableRowProps');
+    await TableTestUtils.selectListBoxValue(editor, 'Class', 'test');
+    await TableTestUtils.pClickDialogButton(editor, true);
     TinyAssertions.assertContentPresence(editor, { 'tr[class="test"]': 1 });
 
-    await TableTestUtils.selectClassViaPropsDialog(editor, 'mceTableRowProps', 'none');
+    await TableTestUtils.openPropsDialog(editor, 'mceTableRowProps');
+    await TableTestUtils.selectListBoxValue(editor, 'Class', 'none');
+    await TableTestUtils.pClickDialogButton(editor, true);
     TinyAssertions.assertContent(editor, tableHtml);
   });
 
@@ -68,7 +72,9 @@ describe('browser.tinymce.plugins.table.TableRowClassListTest', () => {
     ]);
     editor.setContent('<table><tbody><tr class="something"><td>x</td></tr></tbody></table>');
     TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1);
-    await TableTestUtils.selectClassViaPropsDialog(editor, 'mceTableRowProps', 'none');
+    await TableTestUtils.openPropsDialog(editor, 'mceTableRowProps');
+    await TableTestUtils.selectListBoxValue(editor, 'Class', 'none');
+    await TableTestUtils.pClickDialogButton(editor, true);
     TinyAssertions.assertContent(editor, tableHtml);
   });
 
@@ -81,7 +87,9 @@ describe('browser.tinymce.plugins.table.TableRowClassListTest', () => {
     const content = '<table>\n<tbody>\n<tr class="something">\n<td>x</td>\n</tr>\n</tbody>\n</table>';
     editor.setContent(content);
     TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1);
-    await TableTestUtils.selectClassViaPropsDialog(editor, 'mceTableRowProps', 'Select...');
+    await TableTestUtils.openPropsDialog(editor, 'mceTableRowProps');
+    await TableTestUtils.selectListBoxValue(editor, 'Class', 'Select...');
+    await TableTestUtils.pClickDialogButton(editor, true);
     TinyAssertions.assertContent(editor, content);
   });
 });

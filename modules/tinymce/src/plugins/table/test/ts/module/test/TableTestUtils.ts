@@ -241,14 +241,15 @@ const createRow = (cellContents: string[]): SugarElement<HTMLTableRowElement> =>
   return tr;
 };
 
-/** Opens the specified properties dialog, selects the class called `classTitle`, confirms changes and submits dialog. */
-const selectClassViaPropsDialog = async (editor: Editor, dialogCommand: `mceTable${'' | 'Cell' | 'Row'}Props`, classTitle: string): Promise<void> => {
+const openPropsDialog = async (editor: Editor, dialogCommand: `mceTable${'' | 'Cell' | 'Row'}Props`): Promise<void> => {
   editor.execCommand(dialogCommand);
   await TinyUiActions.pWaitForDialog(editor);
-  TinyUiActions.clickOnUi(editor, 'button[title="Class"].tox-listbox--select');
+};
+
+const selectListBoxValue = async (editor: Editor, section: string, title: string): Promise<void> => {
+  TinyUiActions.clickOnUi(editor, `button[title="${section}"].tox-listbox--select`);
   await TinyUiActions.pWaitForUi(editor, 'div[role="menu"].tox-menu.tox-collection--list');
-  TinyUiActions.clickOnUi(editor, `div[title="${classTitle}"].tox-collection__item`);
-  await pClickDialogButton(editor, true);
+  TinyUiActions.clickOnUi(editor, `div[title="${title}"].tox-collection__item`);
 };
 
 export {
@@ -267,5 +268,6 @@ export {
   assertElementStructure,
   assertApproxElementStructure,
   createRow,
-  selectClassViaPropsDialog
+  openPropsDialog,
+  selectListBoxValue
 };
