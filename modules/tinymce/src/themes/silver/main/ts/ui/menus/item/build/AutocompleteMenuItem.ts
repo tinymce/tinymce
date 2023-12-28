@@ -89,6 +89,7 @@ const renderAutocompleteItem = (
     onAction: (_api) => onItemValueHandler(spec.value, spec.meta),
     onSetup: Fun.constant(Fun.noop),
     triggersSubmenu: false,
+    // TINY-9638: Add tooltips to autocompleter
     itemBehaviours: tooltipBehaviour(spec.meta, sharedBackstage)
   }, structure, itemResponse, sharedBackstage.providers);
 };

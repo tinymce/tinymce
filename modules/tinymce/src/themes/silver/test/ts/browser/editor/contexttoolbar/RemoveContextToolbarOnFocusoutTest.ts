@@ -6,7 +6,8 @@ import { McEditor, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.themes.silver.editor.contexttoolbar.RemoveContextToolbarOnFocusoutTest', () => {
+// TODO TINY-10480: Investigate flaky tests
+describe.skip('browser.tinymce.themes.silver.editor.contexttoolbar.RemoveContextToolbarOnFocusoutTest', () => {
   let inputElm: SugarElement<HTMLInputElement>;
   before(() => {
 

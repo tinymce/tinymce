@@ -1,4 +1,4 @@
-import { AlloyComponent, HotspotAnchorSpec } from '@ephox/alloy';
+import { AlloyComponent, HotspotAnchorSpec, TooltippingTypes } from '@ephox/alloy';
 import { Cell, Fun, Future, Optional, Result } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 
@@ -18,7 +18,16 @@ export default (sink?: AlloyComponent): UiFactoryBackstage => {
 
   return {
     shared: {
-      providers: TestProviders,
+      providers: {
+        ...TestProviders,
+        tooltips: {
+          getConfig: (): TooltippingTypes.TooltippingConfigSpec => {
+            return {
+              lazySink: () => Result.value(sink),
+              tooltipDom: { tag: 'div' }
+            } as any;
+          }
+        }},
       interpreter: Fun.identity as any,
       anchors: {
         inlineDialog: hotspotAnchorFn,

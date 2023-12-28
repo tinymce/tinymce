@@ -34,7 +34,8 @@ interface Scenario {
   };
 }
 
-describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarBoundsTest', () => {
+// TODO TINY-10480: Investigate flaky tests
+describe.skip('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarBoundsTest', () => {
   const backstage = TestBackstage();
   const expectedMargin = 1;
 

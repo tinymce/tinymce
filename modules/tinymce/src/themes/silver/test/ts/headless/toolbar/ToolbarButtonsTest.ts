@@ -9,8 +9,8 @@ import { assert } from 'chai';
 import { renderMenuButton } from 'tinymce/themes/silver/ui/button/MenuButton';
 import { renderSplitButton, renderToolbarButton, renderToolbarToggleButton } from 'tinymce/themes/silver/ui/toolbar/button/ToolbarButtons';
 
+import TestBackstage from '../../module/TestBackstage';
 import * as TestExtras from '../../module/TestExtras';
-import TestProviders from '../../module/TestProviders';
 
 describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
   const shouldDisable = Cell(false);
@@ -42,7 +42,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
               store.adder('onAction.1')();
               api.setEnabled(!shouldDisable.get());
             }
-          }, TestProviders)
+          }, TestBackstage().shared.providers)
         ]
       },
 
@@ -68,7 +68,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
               api.setEnabled(!shouldDisable.get());
               api.setActive(shouldActivate.get());
             }
-          }, TestProviders)
+          }, TestBackstage().shared.providers)
         ]
       },
 

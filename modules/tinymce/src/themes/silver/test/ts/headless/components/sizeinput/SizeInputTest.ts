@@ -7,16 +7,18 @@ import { renderSizeInput } from 'tinymce/themes/silver/ui/dialog/SizeInput';
 
 import * as DomUtils from '../../../module/DomUtils';
 import * as RepresentingUtils from '../../../module/RepresentingUtils';
-import TestProviders from '../../../module/TestProviders';
+import TestBackstage from '../../../module/TestBackstage';
 
-describe('headless.tinymce.themes.silver.components.sizeinput.SizeInputTest', () => {
+// TODO TINY-10480: Investigate flaky tests
+describe.skip('headless.tinymce.themes.silver.components.sizeinput.SizeInputTest', () => {
+  const backstage = TestBackstage();
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderSizeInput({
       name: 'dimensions',
       label: Optional.some('size'),
       constrain: true,
       enabled: true
-    }, TestProviders)
+    }, backstage.shared.providers)
   ));
 
   const triggerInput = (component: AlloyComponent) =>

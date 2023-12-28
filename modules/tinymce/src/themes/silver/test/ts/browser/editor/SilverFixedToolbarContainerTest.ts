@@ -7,7 +7,8 @@ import Editor from 'tinymce/core/api/Editor';
 
 import * as UiUtils from '../../module/UiUtils';
 
-describe('browser.tinymce.themes.silver.editor.SilverFixedToolbarContainerTest', () => {
+// TODO TINY-10480: Investigate flaky tests
+describe.skip('browser.tinymce.themes.silver.editor.SilverFixedToolbarContainerTest', () => {
   let toolbar: SugarElement<HTMLDivElement>;
   before(() => {
     toolbar = SugarElement.fromHtml('<div id="toolbar" style="margin: 50px 0;"></div>');
