@@ -79,11 +79,13 @@ const pAssertDialogPresence = async (label: string, editor: Editor, expected: Re
   );
 };
 
-const pAssertListBoxValue = async (label: string, editor: Editor, section: string, expected: string): Promise<void> => {
+const pAssertListBox = async (label: string, editor: Editor, section: string, expected: { title: string; value: string }): Promise<void> => {
   const dialog = await TinyUiActions.pWaitForDialog(editor);
   const elem = UiFinder.findIn(dialog, 'label:contains("' + section + '") + .tox-listboxfield > .tox-listbox').getOrDie();
   const value = Attribute.get(elem, 'data-value');
-  assert.equal(value, expected, 'Checking listbox: ' + label);
+  assert.equal(value, expected.value, 'Checking listbox value: ' + label);
+  const text = TextContent.get(elem);
+  assert.equal(text, expected.title, 'Checking listbox text: ' + label);
 };
 
 const getInput = (selector: string) =>
@@ -251,7 +253,7 @@ const selectClassViaPropsDialog = async (editor: Editor, dialogCommand: `mceTabl
 
 export {
   pAssertDialogPresence,
-  pAssertListBoxValue,
+  pAssertListBox,
   openContextToolbarOn,
   assertTableStructure,
   createTableChildren,

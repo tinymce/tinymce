@@ -40,7 +40,7 @@ describe('browser.tinymce.plugins.table.TableRowClassListTest', () => {
     editor.setContent(tableHtml);
     TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1);
     editor.execCommand('mceTableRowProps');
-    await TableTestUtils.pAssertListBoxValue('Select class', editor, 'Class', 'mce-no-match');
+    await TableTestUtils.pAssertListBox('Select class', editor, 'Class', { title: 'Select...', value: 'mce-no-match' });
     await TableTestUtils.pClickDialogButton(editor, true);
     TinyAssertions.assertContent(editor, tableHtml);
   });
