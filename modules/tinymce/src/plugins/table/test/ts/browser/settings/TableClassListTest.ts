@@ -16,7 +16,7 @@ describe('browser.tinymce.plugins.table.TableClassListTest', () => {
 
   afterEach(() => {
     const editor = hook.editor();
-    editor.options.unset('table_row_class_list');
+    editor.options.unset('table_class_list');
   });
 
   it('TBA: no class input without setting', async () => {
