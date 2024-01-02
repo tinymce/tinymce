@@ -54,7 +54,8 @@ class NodeChange {
     // When the contextmenu event fires the selection is located at the right location
     editor.on('contextmenu', (e) => {
       const isImageOrFigureImage = (elm: Element | undefined) => Type.isNonNullable(elm) && (NodeType.isImg(elm) || editor.dom.is(elm, 'figure.image'));
-      if (platform.browser.isFirefox() && !isImageOrFigureImage(e.target) && ContentEditable.isEditable(SugarElement.fromDom(e.target), true)) {
+      const fake = false;
+      if (fake && platform.browser.isFirefox() && !isImageOrFigureImage(e.target) && ContentEditable.isEditable(SugarElement.fromDom(e.target), true)) {
         const optRng = WindowSelection.getAtPoint(editor.getWin(), e.clientX, e.clientY);
         optRng.each((rng) => editor.selection.setCursorLocation(rng.start.dom, rng.soffset));
       }
