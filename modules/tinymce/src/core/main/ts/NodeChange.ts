@@ -1,4 +1,6 @@
 import { Arr, Fun } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
+import { WindowSelection } from '@ephox/sugar';
 
 import Editor from './api/Editor';
 import * as Options from './api/Options';
@@ -22,6 +24,7 @@ class NodeChange {
     this.editor = editor;
     let lastRng: RangeLikeObject | undefined;
     const self = this;
+    const platform = PlatformDetection.detect();
 
     // Gecko doesn't support the "selectionchange" event
     if (!('onselectionchange' in editor.getDoc())) {
@@ -48,7 +51,12 @@ class NodeChange {
 
     // IE has a bug where it fires a selectionchange on right click that has a range at the start of the body
     // When the contextmenu event fires the selection is located at the right location
-    editor.on('contextmenu', () => {
+    editor.on('contextmenu', (e) => {
+      if (platform.browser.isFirefox()) {
+        const optRng = WindowSelection.getAtPoint(editor.getWin(), e.clientX, e.clientY);
+        optRng.each((rng) => editor.selection.setCursorLocation(rng.start.dom, rng.soffset));
+      }
+
       editor.dispatch('SelectionChange');
     });
 
