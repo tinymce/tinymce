@@ -58,6 +58,9 @@ const cClick = (): Chain<SugarElement<Element>, SugarElement<Element>> =>
 const pClickOn = (selector: string): Promise<{}> =>
   pActionOn(selector, 'click');
 
+const pRightClickOn = (selector: string): Promise<{}> =>
+  pActionOn(selector, 'rightClick');
+
 const pClick = async (elem: SugarElement<Element>): Promise<{}> => {
   const id = Id.generate('');
   Attribute.set(elem, BedrockIdAttribute, id);
@@ -88,6 +91,7 @@ export {
 
   pClickOn,
   pClick,
+  pRightClickOn,
   pUpOn,
   pDownOn,
   pMoveToOn
