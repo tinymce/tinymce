@@ -843,7 +843,14 @@ const register = (editor: Editor): void => {
 
   registerOption('sandbox_iframes_whitelist', {
     processor: 'string[]',
-    default: []
+    default: [
+      'youtube.com',
+      'youtu.be',
+      'vimeo.com',
+      'dailymotion.com',
+      'dai.ly',
+      'codepen.io'
+    ]
   });
 
   registerOption('convert_unsafe_embeds', {
