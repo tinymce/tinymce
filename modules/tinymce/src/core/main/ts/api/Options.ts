@@ -841,7 +841,7 @@ const register = (editor: Editor): void => {
     default: true
   });
 
-  registerOption('sandbox_iframes_whitelist', {
+  registerOption('sandbox_iframes_exclusions', {
     processor: 'string[]',
     default: [
       'youtube.com',
@@ -976,7 +976,7 @@ const getDetailsInitialState = option('details_initial_state');
 const getDetailsSerializedState = option('details_serialized_state');
 const shouldForceHexColor = option('force_hex_color');
 const shouldSandboxIframes = option('sandbox_iframes');
-const getSandboxIframesWhitelist = (editor: Editor): Record<string, {}> => Tools.makeMap(editor.options.get('sandbox_iframes_whitelist'));
+const getSandboxIframesExclusions = (editor: Editor): Record<string, {}> => Tools.makeMap(editor.options.get('sandbox_iframes_exclusions'));
 const shouldConvertUnsafeEmbeds = option('convert_unsafe_embeds');
 
 export {
@@ -1085,6 +1085,6 @@ export {
   shouldUseDocumentWrite,
   shouldForceHexColor,
   shouldSandboxIframes,
-  getSandboxIframesWhitelist,
+  getSandboxIframesExclusions,
   shouldConvertUnsafeEmbeds
 };

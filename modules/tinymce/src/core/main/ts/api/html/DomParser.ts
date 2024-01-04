@@ -71,7 +71,7 @@ export interface DomParserSettings {
   remove_trailing_brs?: boolean;
   root_name?: string;
   sandbox_iframes?: boolean;
-  sandbox_iframes_whitelist?: Record<string, {}>;
+  sandbox_iframes_exclusions?: Record<string, {}>;
   sanitize?: boolean;
   validate?: boolean;
 }

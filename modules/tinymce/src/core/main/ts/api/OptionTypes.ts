@@ -199,7 +199,7 @@ interface BaseEditorOptions {
   resize_img_proportional?: boolean;
   root_name?: string;
   sandbox_iframes?: boolean;
-  sandbox_iframes_whitelist?: string[];
+  sandbox_iframes_exclusions?: string[];
   schema?: SchemaType;
   selector?: string;
   setup?: SetupCallback;
@@ -341,7 +341,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   readonly: boolean;
   removed_menuitems: string;
   sandbox_iframes: boolean;
-  sandbox_iframes_whitelist: string[];
+  sandbox_iframes_exclusions: string[];
   toolbar: boolean | string | string[] | Array<ToolbarGroup>;
   toolbar_groups: Record<string, Toolbar.GroupToolbarButtonSpec>;
   toolbar_location: ToolbarLocation;

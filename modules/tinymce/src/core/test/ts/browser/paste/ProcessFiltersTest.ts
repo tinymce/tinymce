@@ -121,7 +121,7 @@ describe('browser.tinymce.core.paste.ProcessFiltersTest', () => {
   context('iframe sandboxing', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       ...baseSettings,
-      sandbox_iframes_whitelist: [ 'tiny.cloud' ]
+      sandbox_iframes_exclusions: [ 'tiny.cloud' ]
     }, []);
 
     it('TINY-10350: iframe should be sandboxed on preprocess/postprocess', () => {
@@ -130,10 +130,10 @@ describe('browser.tinymce.core.paste.ProcessFiltersTest', () => {
       assert.deepEqual(result, { content: '<iframe src="https://example.com" sandbox=""></iframe>', cancelled: false }, 'iframe should be sandboxed');
     });
 
-    it('TINY-10350: Whitelisted iframes should not be sandboxed on preprocess/postprocess', () => {
+    it('TINY-10350: Excluded iframes should not be sandboxed on preprocess/postprocess', () => {
       const editor = hook.editor();
       const result = processPrePost(editor, '<iframe src="https://tiny.cloud"></iframe>', true, Fun.noop, Fun.noop);
-      assert.deepEqual(result, { content: '<iframe src="https://tiny.cloud"></iframe>', cancelled: false }, 'Whitelisted iframe should not be sandboxed');
+      assert.deepEqual(result, { content: '<iframe src="https://tiny.cloud"></iframe>', cancelled: false }, 'Excluded iframe should not be sandboxed');
     });
   });
 });

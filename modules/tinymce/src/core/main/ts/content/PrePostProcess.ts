@@ -33,7 +33,7 @@ const withSerializedContent = <R extends EditorEvent<{ content: string }>>(conte
 const makeParserSettings = (editor: Editor): Partial<DomParserSettings> => ({
   sanitize: Options.shouldSanitizeXss(editor),
   sandbox_iframes: Options.shouldSandboxIframes(editor),
-  sandbox_iframes_whitelist: Options.getSandboxIframesWhitelist(editor)
+  sandbox_iframes_exclusions: Options.getSandboxIframesExclusions(editor)
 });
 
 const preProcessGetContent = <T extends GetContentArgs>(editor: Editor, args: T): Result<T, Content> => {

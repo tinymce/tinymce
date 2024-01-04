@@ -404,6 +404,27 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
               TinyAssertions.assertContent(editor, '<p><iframe src="about:blank" sandbox=""></iframe></p>');
             });
           });
+
+          context('sandbox_iframes_exclusions', () => {
+            const hook = TinyHooks.bddSetupLight<Editor>({
+              ...options,
+              base_url: '/project/tinymce/js/tinymce',
+              sandbox_iframes: true,
+              sandbox_iframes_exclusions: [ 'tiny.cloud' ]
+            }, []);
+
+            it('TINY-10350: Iframe should be sandboxed when sandbox_iframes: true and not excluded', () => {
+              const editor = hook.editor();
+              editor.setContent('<iframe src="https://example.com"></iframe>');
+              TinyAssertions.assertContent(editor, '<p><iframe src="https://example.com" sandbox=""></iframe></p>');
+            });
+
+            it('TINY-10350: Iframe should not be sandboxed when sandbox_iframes: true and excluded', () => {
+              const editor = hook.editor();
+              editor.setContent('<iframe src="https://tiny.cloud"></iframe>');
+              TinyAssertions.assertContent(editor, '<p><iframe src="https://tiny.cloud"></iframe></p>');
+            });
+          });
         });
 
         context('Convert unsafe embeds', () => {

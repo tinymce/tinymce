@@ -1548,19 +1548,19 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
             testSandboxIframe(true, '<iframe src="about:blank" sandbox=""></iframe>'));
         });
 
-        context('sandbox_iframes_whitelist', () => {
+        context('sandbox_iframes_exclusions', () => {
           const whitelist = Tools.makeMap([ 'tiny.cloud' ]);
 
           const testSandboxIframeWhitelist = (url: string, expected: string) => () => {
-            const parser = DomParser({ ...scenario.settings, sandbox_iframes: true, sandbox_iframes_whitelist: whitelist });
+            const parser = DomParser({ ...scenario.settings, sandbox_iframes: true, sandbox_iframes_exclusions: whitelist });
             const serialized = serializer.serialize(parser.parse(`<iframe src="${url}"></iframe>`));
             assert.equal(serialized, expected);
           };
 
-          it('TINY-10350: iframes should be sandboxed when sandbox_iframes: true and host is not whitelisted',
+          it('TINY-10350: iframes should be sandboxed when sandbox_iframes: true and host is not excluded',
             testSandboxIframeWhitelist('https://www.example.com', '<iframe src="https://www.example.com" sandbox=""></iframe>'));
 
-          it('TINY-10350: iframes should not be sandboxed when sandbox_iframes: true and host is whitelisted',
+          it('TINY-10350: iframes should not be sandboxed when sandbox_iframes: true and host is excluded',
             testSandboxIframeWhitelist('https://www.tiny.cloud', '<iframe src="https://www.tiny.cloud"></iframe>'));
         });
       });

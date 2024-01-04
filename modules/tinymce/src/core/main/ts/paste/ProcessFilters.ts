@@ -14,7 +14,7 @@ const preProcess = (editor: Editor, html: string): string => {
   const parser = DomParser({
     sanitize: Options.shouldSanitizeXss(editor),
     sandbox_iframes: Options.shouldSandboxIframes(editor),
-    sandbox_iframes_whitelist: Options.getSandboxIframesWhitelist(editor)
+    sandbox_iframes_exclusions: Options.getSandboxIframesExclusions(editor)
   }, editor.schema);
 
   // Strip meta elements
