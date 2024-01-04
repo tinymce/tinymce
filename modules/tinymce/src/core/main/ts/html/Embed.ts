@@ -10,15 +10,15 @@ interface EmbedAttrs {
   readonly height?: string;
 }
 
-const sandboxIframe = (iframeNode: AstNode, whitelist: Record<string, {}>): void => {
-  if (Optional.from(iframeNode.attr('src')).bind(PStrings.extractUrlHost).forall((host) => !Obj.has(whitelist, host))) {
+const sandboxIframe = (iframeNode: AstNode, exclusions: Record<string, {}>): void => {
+  if (Optional.from(iframeNode.attr('src')).bind(PStrings.extractUrlHost).forall((host) => !Obj.has(exclusions, host))) {
     iframeNode.attr('sandbox', '');
   }
 };
 
 const isMimeType = (mime: string, type: 'image' | 'video' | 'audio'): boolean => Strings.startsWith(mime, `${type}/`);
 
-const createSafeEmbed = ({ type, src, width, height }: EmbedAttrs = {}, sandboxIframes: boolean, sandboxIframesWhitelist: Record<string, {}>): AstNode => {
+const createSafeEmbed = ({ type, src, width, height }: EmbedAttrs = {}, sandboxIframes: boolean, sandboxIframesExclusions: Record<string, {}>): AstNode => {
   let name: 'iframe' | 'img' | 'video' | 'audio';
   if (Type.isUndefined(type)) {
     name = 'iframe';
@@ -41,7 +41,7 @@ const createSafeEmbed = ({ type, src, width, height }: EmbedAttrs = {}, sandboxI
   }
 
   if (name === 'iframe' && sandboxIframes) {
-    sandboxIframe(embed, sandboxIframesWhitelist);
+    sandboxIframe(embed, sandboxIframesExclusions);
   }
   return embed;
 };

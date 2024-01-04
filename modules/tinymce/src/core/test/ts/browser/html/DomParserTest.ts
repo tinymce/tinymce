@@ -1549,19 +1549,27 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         });
 
         context('sandbox_iframes_exclusions', () => {
-          const whitelist = Tools.makeMap([ 'tiny.cloud' ]);
+          const exclusions = Tools.makeMap([ 'tiny.cloud' ]);
+          const parser = DomParser({ ...scenario.settings, sandbox_iframes: true, sandbox_iframes_exclusions: exclusions });
 
-          const testSandboxIframeWhitelist = (url: string, expected: string) => () => {
-            const parser = DomParser({ ...scenario.settings, sandbox_iframes: true, sandbox_iframes_exclusions: whitelist });
-            const serialized = serializer.serialize(parser.parse(`<iframe src="${url}"></iframe>`));
+          const testSandboxIframeExclusions = (src: string, expected: string) => () => {
+            const serialized = serializer.serialize(parser.parse(`<iframe src="${src}"></iframe>`));
             assert.equal(serialized, expected);
           };
 
           it('TINY-10350: iframes should be sandboxed when sandbox_iframes: true and host is not excluded',
-            testSandboxIframeWhitelist('https://www.example.com', '<iframe src="https://www.example.com" sandbox=""></iframe>'));
+            testSandboxIframeExclusions('https://www.example.com', '<iframe src="https://www.example.com" sandbox=""></iframe>'));
 
           it('TINY-10350: iframes should not be sandboxed when sandbox_iframes: true and host is excluded',
-            testSandboxIframeWhitelist('https://www.tiny.cloud', '<iframe src="https://www.tiny.cloud"></iframe>'));
+            testSandboxIframeExclusions('https://www.tiny.cloud', '<iframe src="https://www.tiny.cloud"></iframe>'));
+
+          it('TINY-10350: iframes with non-URL src should be sandboxed when sandbox_iframes: true',
+            testSandboxIframeExclusions('abc', '<iframe src="abc" sandbox=""></iframe>'));
+
+          it('TINY-10350: iframes with no src should be sandboxed when sandbox_iframes: true', () => {
+            const serialized = serializer.serialize(parser.parse('<iframe></iframe>'));
+            assert.equal(serialized, '<iframe sandbox=""></iframe>');
+          });
         });
       });
 

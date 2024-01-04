@@ -156,7 +156,7 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
   registerBase64ImageFilter(parser, settings);
 
   const shouldSandboxIframes = settings.sandbox_iframes ?? false;
-  const sandboxIframesWhitelist = settings.sandbox_iframes_exclusions ?? {};
+  const sandboxIframesExclusions = settings.sandbox_iframes_exclusions ?? {};
   if (settings.convert_unsafe_embeds) {
     parser.addNodeFilter('object,embed', (nodes) => Arr.each(nodes, (node) => {
       node.replace(
@@ -167,12 +167,12 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
           height: node.attr('height'),
         },
         shouldSandboxIframes,
-        sandboxIframesWhitelist));
+        sandboxIframesExclusions));
     }));
   }
 
   if (shouldSandboxIframes) {
-    parser.addNodeFilter('iframe', (nodes) => Arr.each(nodes, (node) => Embed.sandboxIframe(node, sandboxIframesWhitelist)));
+    parser.addNodeFilter('iframe', (nodes) => Arr.each(nodes, (node) => Embed.sandboxIframe(node, sandboxIframesExclusions)));
   }
 };
 
