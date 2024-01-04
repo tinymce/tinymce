@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -12,10 +12,14 @@ type PreProcessHandler = (e: EditorEvent<PastePreProcessEvent>) => void;
 type PostProcessHandler = (e: EditorEvent<PastePostProcessEvent>) => void;
 
 describe('browser.tinymce.core.paste.ProcessFiltersTest', () => {
-  const hook = TinyHooks.bddSetupLight<Editor>({
+  const baseSettings = {
     add_unload_trigger: false,
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
+  };
+
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    ...baseSettings,
     extended_valid_elements: 'b[*]'
   }, []);
 
@@ -112,5 +116,24 @@ describe('browser.tinymce.core.paste.ProcessFiltersTest', () => {
     const editor = hook.editor();
     const result = processPrePost(editor, 'a<b>b</b>c', true, preProcessHandler(), preventHandler);
     assert.deepEqual(result, { content: 'a<b>b</b>cX', cancelled: true }, 'Should have a X added and be cancelled');
+  });
+
+  context('iframe sandboxing', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      ...baseSettings,
+      sandbox_iframes_whitelist: [ 'tiny.cloud' ]
+    }, []);
+
+    it('TINY-10350: iframe should be sandboxed on preprocess/postprocess', () => {
+      const editor = hook.editor();
+      const result = processPrePost(editor, '<iframe src="https://example.com"></iframe>', true, Fun.noop, Fun.noop);
+      assert.deepEqual(result, { content: '<iframe src="https://example.com" sandbox=""></iframe>', cancelled: false }, 'iframe should be sandboxed');
+    });
+
+    it('TINY-10350: Whitelisted iframes should not be sandboxed on preprocess/postprocess', () => {
+      const editor = hook.editor();
+      const result = processPrePost(editor, '<iframe src="https://tiny.cloud"></iframe>', true, Fun.noop, Fun.noop);
+      assert.deepEqual(result, { content: '<iframe src="https://tiny.cloud"></iframe>', cancelled: false }, 'Whitelisted iframe should not be sandboxed');
+    });
   });
 });

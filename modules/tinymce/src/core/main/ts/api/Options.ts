@@ -838,7 +838,12 @@ const register = (editor: Editor): void => {
 
   registerOption('sandbox_iframes', {
     processor: 'boolean',
-    default: false
+    default: true
+  });
+
+  registerOption('sandbox_iframes_whitelist', {
+    processor: 'string[]',
+    default: []
   });
 
   registerOption('convert_unsafe_embeds', {
@@ -964,6 +969,7 @@ const getDetailsInitialState = option('details_initial_state');
 const getDetailsSerializedState = option('details_serialized_state');
 const shouldForceHexColor = option('force_hex_color');
 const shouldSandboxIframes = option('sandbox_iframes');
+const getSandboxIframesWhitelist = (editor: Editor): Record<string, {}> => Tools.makeMap(editor.options.get('sandbox_iframes_whitelist'));
 const shouldConvertUnsafeEmbeds = option('convert_unsafe_embeds');
 
 export {
@@ -1072,5 +1078,6 @@ export {
   shouldUseDocumentWrite,
   shouldForceHexColor,
   shouldSandboxIframes,
+  getSandboxIframesWhitelist,
   shouldConvertUnsafeEmbeds
 };

@@ -41,7 +41,6 @@ const filterContent = (editor: Editor, content: string, internal: boolean): Proc
 
   // Filter the content to remove potentially dangerous content (eg scripts)
   const filteredContent = preProcess(editor, preProcessArgs.content);
-
   if (editor.hasEventListeners('PastePostProcess') && !preProcessArgs.isDefaultPrevented()) {
     return postProcessFilter(editor, filteredContent, internal);
   } else {
