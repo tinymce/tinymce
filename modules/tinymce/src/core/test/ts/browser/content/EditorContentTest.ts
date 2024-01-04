@@ -358,10 +358,10 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
               base_url: '/project/tinymce/js/tinymce'
             }, []);
 
-            it('TINY-10348: Iframe should not be sandboxed by default', () => {
+            it('TINY-10348: Iframe should be sandboxed by default', () => {
               const editor = hook.editor();
               editor.setContent('<iframe src="about:blank"></iframe>');
-              TinyAssertions.assertContent(editor, '<p><iframe src="about:blank"></iframe></p>');
+              TinyAssertions.assertContent(editor, '<p><iframe src="about:blank" sandbox=""></iframe></p>');
             });
           });
 
@@ -451,10 +451,10 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
             }, []);
 
             it('TINY-10349: Object elements should be converted to iframe',
-              testConversion(hook, '<object data="about:blank"></object>', '<iframe src="about:blank"></iframe>'));
+              testConversion(hook, '<object data="about:blank"></object>', '<iframe src="about:blank" sandbox=""></iframe>'));
 
             it('TINY-10349: Embed elements should be converted to iframe',
-              testConversion(hook, '<embed src="about:blank">', '<iframe src="about:blank"></iframe>'));
+              testConversion(hook, '<embed src="about:blank">', '<iframe src="about:blank" sandbox=""></iframe>'));
           });
 
           context('convert_unsafe_embeds: true, sandbox_iframes: true', () => {
@@ -557,8 +557,8 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
           assert.equal(content,
             // TINY-9624: Safari seems to encode the contents of iframes
             isSafari
-              ? '<p><iframe>&lt;p&gt;test&lt;/p&gt;</iframe></p>'
-              : '<p><iframe><p>test</p></iframe></p>',
+              ? '<p><iframe sandbox="">&lt;p&gt;test&lt;/p&gt;</iframe></p>'
+              : '<p><iframe sandbox=""><p>test</p></iframe></p>',
             'getContent should not error when there is iframes with child nodes in content');
         });
 
