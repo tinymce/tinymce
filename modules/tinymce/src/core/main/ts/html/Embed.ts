@@ -1,5 +1,5 @@
 import { Obj, Optional, Strings, Type } from '@ephox/katamari';
-import { Strings as PStrings } from '@ephox/polaris';
+import { Url } from '@ephox/polaris';
 
 import AstNode from '../api/html/Node';
 
@@ -11,7 +11,7 @@ interface EmbedAttrs {
 }
 
 const sandboxIframe = (iframeNode: AstNode, exclusions: Record<string, {}>): void => {
-  if (Optional.from(iframeNode.attr('src')).bind(PStrings.extractUrlHost).forall((host) => !Obj.has(exclusions, host))) {
+  if (Optional.from(iframeNode.attr('src')).bind(Url.extractHost).forall((host) => !Obj.has(exclusions, host))) {
     iframeNode.attr('sandbox', '');
   }
 };

@@ -1,26 +1,10 @@
 import { Assert, context, describe, it } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
 
-import * as Strings from 'ephox/polaris/api/Strings';
+import * as Url from 'ephox/polaris/api/Url';
 
-describe('atomic.polaris.api.StringsTest', () => {
-  context('splits', () => {
-    const check = (expected: string[], input: string, points: number[]) => {
-      const actual = Strings.splits(input, points);
-      Assert.eq('', expected, actual);
-    };
-
-    it('should chunk a string into substrings based on the given indices', () => {
-      check([ '' ], '', [ ]);
-      check([ 'a' ], 'a', [ ]);
-      check([ 'a' ], 'a', [ 0 ]);
-      check([ 'a' ], 'a', [ 1 ]);
-      check([ 'a', 'b', 'c' ], 'abc', [ 0, 1, 2, 3 ]);
-      check([ 'ab', 'cdef', 'ghi' ], 'abcdefghi', [ 2, 6 ]);
-    });
-  });
-
-  context('extractUrlHost', () => {
+describe('atomic.polaris.api.UrlTest', () => {
+  context('extractHost', () => {
     const hostMap: Record<string, string> = {
       'www.google.com.au': 'google.com.au',
       'www.google.com.au:80': 'google.com.au',
@@ -81,7 +65,7 @@ describe('atomic.polaris.api.StringsTest', () => {
 
     it('TINY-10350: Should correctly extract host name from urls', () => {
       Obj.each(hostMap, (v, k) => {
-        const host = Strings.extractUrlHost(k).getOrDie();
+        const host = Url.extractHost(k).getOrDie();
         Assert.eq(`expected host to be ${v} but was ${host}`, v, host);
       });
     });
