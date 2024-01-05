@@ -14,7 +14,8 @@ describe('browser.tinymce.plugins.media.core.SubmitTest', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       plugins: [ 'media' ],
       toolbar: 'media',
-      base_url: '/project/tinymce/js/tinymce'
+      base_url: '/project/tinymce/js/tinymce',
+      sandbox_iframes_exclusions: []
     }, [ Plugin ]);
 
     const mediaUrlResolver = (data: { url: string }, resolve: (data: { html: string }) => void) => {
@@ -129,6 +130,7 @@ describe('browser.tinymce.plugins.media.core.SubmitTest', () => {
       plugins: [ 'media' ],
       toolbar: 'media',
       base_url: '/project/tinymce/js/tinymce',
+      sandbox_iframes_exclusions: [],
       setup: (editor: Editor) => {
         editor.on('PreInit', () => {
           const converter = (nodes: AstNode[]): void => {

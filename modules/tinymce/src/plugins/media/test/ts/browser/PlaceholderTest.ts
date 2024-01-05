@@ -12,7 +12,8 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
   const baseSettings = {
     plugins: [ 'media' ],
     toolbar: 'media',
-    extended_valid_elements: 'script[src|type]'
+    extended_valid_elements: 'script[src|type]',
+    sandbox_iframes_exclusions: []
   };
 
   const hook = TinyHooks.bddSetupLight<Editor>({
