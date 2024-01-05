@@ -2,7 +2,6 @@ import { ApproxStructure, Assertions, Waiter } from '@ephox/agar';
 import { AlloyComponent, Composing, Container, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { describe, context, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
 
 import { renderIFrame } from 'tinymce/themes/silver/ui/dialog/IFrame';
@@ -51,11 +50,6 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
       ]
     })
   ));
-
-  const browser = PlatformDetection.detect().browser;
-  const isSafari = browser.isSafari();
-  const isFirefox = browser.isFirefox();
-  const isSafariOrFirefox = isSafari || isFirefox;
 
   const getFrameFromFrameNumber = (frameNumber: number) => {
     const frame = hook.component().components()[frameNumber];
@@ -126,23 +120,17 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
 
   const normalizeContent = (content: string, hasDoctype: boolean) => hasDoctype ? `<!DOCTYPE html><html><body>${content}</body></html>` : content;
 
-  let isIframeLoaded = false;
-  const setContentAndWaitForLoad = (frame: AlloyComponent, content: string, shouldContentHaveDoctype: boolean) => {
-    isIframeLoaded = false;
-    const iframe = frame.element.dom as HTMLIFrameElement;
-    iframe.onload = () => isIframeLoaded = true;
+  const setIframeContent = (frame: AlloyComponent, content: string, shouldContentHaveDoctype: boolean) =>
     Representing.setValue(frame, normalizeContent(content, shouldContentHaveDoctype));
-    return Waiter.pTryUntilPredicate('Wait for iframe to finish loading', () => isIframeLoaded).then(() => iframe.onload = Fun.noop);
-  };
 
   const getDoctypeLabel = (hasDoctype: boolean) => hasDoctype ? 'content has doctype' : 'content does not have doctype';
 
-  const testIterativeContentChange = (frameNumber: number, shouldContentHaveDoctype: boolean, assertFn: (iframe: HTMLIFrameElement, it: number) => void, maxIterations: number = 10) => async () => {
+  const testIterativeContentChange = (frameNumber: number, shouldContentHaveDoctype: boolean, assertFn: (iframe: HTMLIFrameElement, it: number) => void, maxIterations: number = 10) => () => {
     const frame = getFrameFromFrameNumber(frameNumber);
 
     for (let i = 0, content = ''; i < maxIterations; ++i) {
       content += testContent;
-      await setContentAndWaitForLoad(frame, content, shouldContentHaveDoctype);
+      setIframeContent(frame, content, shouldContentHaveDoctype);
       assertFn(frame.element.dom as HTMLIFrameElement, i);
     }
   };
@@ -204,19 +192,19 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
     const initialLongContent = '<p>1</p>'.repeat(50);
     const newLongContent = `${initialLongContent}${'<p>2</p>'.repeat(50)}`;
 
-    const testStreamScroll = (initialScrollPosition: ScrollPosition, shouldContentHaveDoctype: boolean) => async () => {
+    const testStreamScroll = (initialScrollPosition: ScrollPosition, shouldContentHaveDoctype: boolean) => () => {
       const frame = getFrameFromFrameNumber(streamFrameNumber);
       const iframe = frame.element.dom as HTMLIFrameElement;
 
-      await setContentAndWaitForLoad(frame, initialLongContent, shouldContentHaveDoctype);
+      setIframeContent(frame, initialLongContent, shouldContentHaveDoctype);
 
       const doc = iframe.contentDocument;
-      await Optional.from(iframe.contentWindow).fold(
+      Optional.from(iframe.contentWindow).fold(
         () => assert.fail('Could not find iframe window'),
         (win) =>
           Optional.from(shouldContentHaveDoctype ? doc?.documentElement : doc?.body).fold(
             () => assert.fail(`Could not find iframe ${shouldContentHaveDoctype ? 'documentElement' : 'body'}`),
-            async (el) => {
+            (el) => {
               let initialScroll: number;
               if (initialScrollPosition === ScrollPosition.Top) {
                 initialScroll = 0;
@@ -236,7 +224,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
                 assertScrollAtBottomOverflow(el, 'iframe should be scrolled to bottom initially');
               }
 
-              await setContentAndWaitForLoad(frame, newLongContent, shouldContentHaveDoctype);
+              setIframeContent(frame, newLongContent, shouldContentHaveDoctype);
 
               Optional.from(shouldContentHaveDoctype ? doc?.documentElement : doc?.body).fold(
                 () => assert.fail(`Could not find updated iframe ${shouldContentHaveDoctype ? 'documentElement' : 'body'}`),
@@ -278,7 +266,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
           Representing.setValue(frame, '');
           assert.equal(iframe.contentDocument?.body.innerHTML, '', 'iframe should be empty initially');
         });
-        await setContentAndWaitForLoad(frame, initialLongContent, shouldContentHaveDoctype);
+        setIframeContent(frame, initialLongContent, shouldContentHaveDoctype);
         await Waiter.pTryUntil('Waiting for iframe to be scrolled to bottom', () => {
           assertIframeScrollAtBottomOverflow(iframe, shouldContentHaveDoctype, 'iframe should be scrolled to bottom after setting value');
         });
@@ -323,18 +311,14 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
         let loadCount = 0;
         iframe.onload = () => loadCount++;
 
-        const interval = 100;
+        const interval = 4;
         const maxNumIntervals = 10;
         setValueInIntervals(frame, interval, maxNumIntervals, shouldContentHaveDoctype);
 
         await Waiter.pTryUntil('Wait for update intervals to finish', () => {
-          // TINY-10078, TINY-10097, TINY-10128: Artificial 500ms throttle on Safari, 200ms throttle on Firefox.
-          const expectedLoads = (isSafariOrFirefox ? interval * maxNumIntervals / (isSafari ? 500 : 200) : maxNumIntervals) + 1;
-          if (isFirefox) {
-            assert.approximately(loadCount, expectedLoads, 1, `iframe should have approximately ${expectedLoads} loads`);
-          } else {
-            assert.strictEqual(loadCount, expectedLoads, `iframe should have exactly ${expectedLoads} loads`);
-          }
+          // TINY-10106: Throttle to 10ms to avoid rapid update requests affecting performance.
+          const expectedLoads = interval * maxNumIntervals / 10 + 1;
+          assert.approximately(loadCount, expectedLoads, 1, `iframe should have approximately ${expectedLoads} loads`);
           assertIframeStateAfterIntervals(iframe, maxNumIntervals, shouldContentHaveDoctype);
         });
 
