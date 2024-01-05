@@ -8,7 +8,8 @@ import Env from 'tinymce/core/api/Env';
 
 describe('browser.tinymce.core.delete.MediaDeleteTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
-    base_url: '/project/tinymce/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce',
+    convert_unsafe_embeds: false
   }, [], true);
 
   const assertEmptyEditorStructure = (editor: Editor) => TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) =>
