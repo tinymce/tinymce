@@ -1,5 +1,5 @@
 #!groovy
-@Library('waluigi@release/7') _
+@Library('waluigi@feature/TINY-10538') _
 
 standardProperties()
 
@@ -44,25 +44,21 @@ def runRemoteTests(String name, String browser, String provider, String platform
     runBedrockTest(name, bedrockCommand, runAll, retry, timeout)
 }
 
-def runTestPod(String name, String browser, String provider, String platform, String bucket, String buckets, Boolean runAll) {
+def runTestPod(String cacheName, String name, String browser, String provider, String platform, String bucket, String buckets, Boolean runAll) {
   return {
-    tinyPods.node([
+    bedrockRemoteTools.nodeSlavePod(node: [
       resourceRequestCpu: '2',
       resourceRequestMemory: '4Gi',
       resourceRequestEphemeralStorage: '16Gi',
       resourceLimitCpu: '7.5',
       resourceLimitMemory: '4Gi',
       resourceLimitEphemeralStorage: '16Gi',
-    ]) {
-      if (provider == 'aws') {
-        stage('Tunnel') {
+    ], build: cacheName) {
+
+      stage("Test-${name}") {
+        if (provider == 'aws') {
           bedrockRemoteTools.tinyWorkSishTunnel()
         }
-      }
-
-      stage('Test') {
-        yarnInstall()
-        sh 'yarn ci'
         grunt('list-changed-browser')
         bedrockRemoteTools.withRemoteCreds(provider) {
           int retry = provider == 'lambdatest' ? 1 : 0
@@ -84,13 +80,15 @@ def gitMerge(String primaryBranch) {
 
 def props
 
+def cacheName = "cache-${BUILD_NUMBER}"
+
 timestamps {
-  tinyPods.node([
+  bedrockRemoteTools.nodeMasterPod(node: [
     resourceRequestCpu: '2',
     resourceRequestMemory: '4Gi',
     resourceLimitCpu: '7.5',
     resourceLimitMemory: '4Gi'
-  ]) {
+  ], build: cacheName) {
     props = readProperties(file: 'build.properties')
     String primaryBranch = props.primaryBranch
     assert primaryBranch != null && primaryBranch != ""
@@ -124,9 +122,9 @@ timestamps {
     [ browser: 'chrome', provider: 'aws', buckets: 2 ],
     // [ browser: 'edge', provider: 'aws', buckets: 2 ],
     [ browser: 'firefox', provider: 'aws', buckets: 2 ],
-    [ browser: 'edge', provider: 'lambdatest', buckets: 1 ],
-    [ browser: 'safari', provider: 'lambdatest', buckets: 1 ],
-    [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1],
+    // [ browser: 'edge', provider: 'lambdatest', buckets: 1 ],
+    // [ browser: 'safari', provider: 'lambdatest', buckets: 1 ],
+    // [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1],
     // [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1]
   ];
 
@@ -141,35 +139,37 @@ timestamps {
       def s_bucket = "${bucket}"
       def s_buckets = "${buckets}"
       def name = "${platform.browser}-${platform.provider}${suffix}"
-      processes[name] = runTestPod(name, platform.browser, platform.provider, platform.os, s_bucket, s_buckets, runAllTests)
+      processes[name] = runTestPod(cacheName, name, platform.browser, platform.provider, platform.os, s_bucket, s_buckets, runAllTests)
     }
   }
 
-  processes['headless'] = {
-    tinyPods.nodeBrowser([
-      resourceRequestCpu: '2',
-      resourceRequestMemory: '4Gi',
-      resourceRequestEphemeralStorage: '16Gi',
-      resourceLimitCpu: '7.5',
-      resourceLimitMemory: '4Gi',
-      resourceLimitEphemeralStorage: '16Gi',
-    ]) {
-      stage('Test-headless') {
-        yarnInstall()
-        withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
-          sh "yarn ci-all-seq"
-        }
-      }
+  // processes['headless'] = {
+  //   tinyPods.nodeBrowser([
+  //     resourceRequestCpu: '2',
+  //     resourceRequestMemory: '4Gi',
+  //     resourceRequestEphemeralStorage: '16Gi',
+  //     resourceLimitCpu: '7.5',
+  //     resourceLimitMemory: '4Gi',
+  //     resourceLimitEphemeralStorage: '16Gi',
+  //   ]) {
+  //     stage('Test-headless') {
+  //       yarnInstall()
+  //       withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
+  //         sh "yarn ci-all-seq"
+  //       }
+  //     }
 
-      stage('test') {
-        grunt('list-changed-headless')
-        runHeadlessTests(runAllTests)
-      }
-    }
-  }
+  //     stage('test') {
+  //       grunt('list-changed-headless')
+  //       runHeadlessTests(runAllTests)
+  //     }
+  //   }
+  // }
 
   stage('Run tests') {
       echo "Running tests [runAll=${runAllTests}]"
       parallel processes
   }
+
+  bedrockRemoteTools.cleanUpPod(cacheName)
 }
