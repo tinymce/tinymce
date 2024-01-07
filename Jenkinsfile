@@ -46,14 +46,18 @@ def runRemoteTests(String name, String browser, String provider, String platform
 
 def runTestPod(String cacheName, String name, String browser, String provider, String platform, String bucket, String buckets, Boolean runAll) {
   return {
-    bedrockRemoteTools.nodeSlavePod(node: [
-      resourceRequestCpu: '2',
-      resourceRequestMemory: '4Gi',
-      resourceRequestEphemeralStorage: '16Gi',
-      resourceLimitCpu: '7.5',
-      resourceLimitMemory: '4Gi',
-      resourceLimitEphemeralStorage: '16Gi',
-    ], build: cacheName) {
+    bedrockRemoteTools.nodeCachePod(
+      nodeOpts: [
+        resourceRequestCpu: '2',
+        resourceRequestMemory: '4Gi',
+        resourceRequestEphemeralStorage: '16Gi',
+        resourceLimitCpu: '7.5',
+        resourceLimitMemory: '4Gi',
+        resourceLimitEphemeralStorage: '16Gi',
+      ],
+      build: cacheName,
+      useContainers: ['node', 'aws-cli']
+    ) {
 
       stage("Test-${name}") {
         if (provider == 'aws') {
@@ -71,6 +75,24 @@ def runTestPod(String cacheName, String name, String browser, String provider, S
   }
 }
 
+def runHeadlessPod(String cacheName) {
+  return {
+    bedrockRemoteTools.nodeCachePod(
+      nodeOpts: [
+        resourceLimitCpu: '7',
+        resourceLimitMemory: '4Gi',
+        resourceLimitEphemeralStorage: '16Gi'
+      ],
+      build: cacheName
+    ) {
+      stage("Test-Headless") {
+        grunt('list-changed-headless')
+        runHeadlessTests(runAllTests)
+      }
+    }
+  }
+}
+
 def gitMerge(String primaryBranch) {
   if (env.BRANCH_NAME != primaryBranch) {
     echo "Merging ${primaryBranch} into this branch to run tests"
@@ -83,12 +105,15 @@ def props
 def cacheName = "cache-${BUILD_NUMBER}"
 
 timestamps {
-  bedrockRemoteTools.nodeMasterPod(node: [
-    resourceRequestCpu: '2',
-    resourceRequestMemory: '4Gi',
-    resourceLimitCpu: '7.5',
-    resourceLimitMemory: '4Gi'
-  ], build: cacheName) {
+  bedrockRemoteTools.nodeMasterPod(
+    nodeOpts: [
+      resourceRequestCpu: '2',
+      resourceRequestMemory: '4Gi',
+      resourceLimitCpu: '7.5',
+      resourceLimitMemory: '4Gi'
+    ],
+    build: cacheName
+  ) {
     props = readProperties(file: 'build.properties')
     String primaryBranch = props.primaryBranch
     assert primaryBranch != null && primaryBranch != ""
@@ -142,6 +167,8 @@ timestamps {
       processes[name] = runTestPod(cacheName, name, platform.browser, platform.provider, platform.os, s_bucket, s_buckets, runAllTests)
     }
   }
+
+  processes['headless'] = runHeadlessPod(cacheName)
 
   // processes['headless'] = {
   //   tinyPods.nodeBrowser([
