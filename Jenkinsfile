@@ -46,7 +46,7 @@ def runRemoteTests(String name, String browser, String provider, String platform
 
 def runTestPod(String cacheName, String name, String browser, String provider, String platform, String bucket, String buckets, Boolean runAll) {
   return {
-    bedrockRemoteTools.nodeCachePod(
+    bedrockRemoteTools.nodeCachedPod(
       nodeOpts: [
         resourceRequestCpu: '2',
         resourceRequestMemory: '4Gi',
@@ -77,7 +77,7 @@ def runTestPod(String cacheName, String name, String browser, String provider, S
 
 def runHeadlessPod(String cacheName) {
   return {
-    bedrockRemoteTools.nodeCachePod(
+    bedrockRemoteTools.nodeCachedPod(
       nodeOpts: [
         resourceLimitCpu: '7',
         resourceLimitMemory: '4Gi',
