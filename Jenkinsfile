@@ -75,7 +75,7 @@ def runTestPod(String cacheName, String name, String browser, String provider, S
   }
 }
 
-def runHeadlessPod(String cacheName) {
+def runHeadlessPod(String cacheName, Boolean runAll) {
   return {
     bedrockRemoteTools.nodeCachedPod(
       nodeOpts: [
@@ -87,7 +87,7 @@ def runHeadlessPod(String cacheName) {
     ) {
       stage("Test-Headless") {
         grunt('list-changed-headless')
-        runHeadlessTests(runAllTests)
+        runHeadlessTests(runAll)
       }
     }
   }
@@ -168,7 +168,7 @@ timestamps {
     }
   }
 
-  processes['headless'] = runHeadlessPod(cacheName)
+  processes['headless'] = runHeadlessPod(cacheName, runAllTests)
 
   // processes['headless'] = {
   //   tinyPods.nodeBrowser([
