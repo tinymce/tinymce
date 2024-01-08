@@ -59,7 +59,7 @@ describe('browser.tinymce.plugins.table.ui.TableColumnHeaderUiTest', () => {
     const editor = hook.editor();
     setEditorAndSelectionForOn(editor, 'td');
 
-    clickOnButton(editor, 'Column header');
+    clickOnButton(editor, 'tablecolheader');
     TinyAssertions.assertContent(editor, getStructure('th'));
   });
 
@@ -75,7 +75,7 @@ describe('browser.tinymce.plugins.table.ui.TableColumnHeaderUiTest', () => {
     const editor = hook.editor();
     setEditorAndSelectionForOn(editor, 'th');
 
-    clickOnButton(editor, 'Column header');
+    clickOnButton(editor, 'tablecolheader');
     TinyAssertions.assertContent(editor, getStructure('td'));
   });
 

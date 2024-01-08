@@ -498,7 +498,7 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       editor.execCommand('ToggleView', false, 'myview1');
       assertMainViewVisible();
 
-      const boldButton = await TinyUiActions.pWaitForUi(editor, '.tox-toolbar__primary [title="Bold"]');
+      const boldButton = await TinyUiActions.pWaitForUi(editor, '.tox-toolbar__primary [data-mce-btn="bold"]');
       assert.isDefined(boldButton, 'Bold button should be in `tox-toolbar__primary`');
     });
   });

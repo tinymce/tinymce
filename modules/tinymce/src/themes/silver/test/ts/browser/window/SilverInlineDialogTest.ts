@@ -234,7 +234,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
       await FocusTools.pTryOnSelector(
         'Focus should be on x close button',
         SugarDocument.getDocument(),
-        '.tox-button[title="Close"]'
+        '.tox-button[data-mce-btn="close"]'
       );
       DialogUtils.close(editor);
     });
