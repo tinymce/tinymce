@@ -101,8 +101,8 @@ const clickOnButton = (editor: Editor, title: string): void => {
 
 const pClickOnMenuItem = async (editor: Editor, title: string): Promise<void> => {
   TinyUiActions.clickOnMenu(editor, 'span:contains("Table")');
-  await TinyUiActions.pWaitForUi(editor, `div[title="${title}"]`);
-  TinyUiActions.clickOnUi(editor, `div[title="${title}"]`);
+  await TinyUiActions.pWaitForUi(editor, `div[aria-label="${title}"]`);
+  TinyUiActions.clickOnUi(editor, `div[aria-label="${title}"]`);
 };
 
 const pAssertMenuPresence = async (
@@ -128,7 +128,7 @@ const pAssertMenuPresence = async (
 const pAssertCheckmarkOn = async (editor: Editor, menuTitle: string, itemTitle: string, totalNumberOfEntries: number, sugarContainer: SugarElement<HTMLElement>, useMenuOrToolbar: 'toolbar' | 'menuitem') => {
   const expected = {
     '.tox-menu': useMenuOrToolbar === 'toolbar' ? 1 : 2,
-    [`.tox-collection__item[aria-checked="true"][title="${itemTitle}"]`]: 1,
+    [`.tox-collection__item[aria-checked="true"][aria-label="${itemTitle}"]`]: 1,
     '.tox-collection__item[aria-checked="false"]': (totalNumberOfEntries - 1),
     '.tox-collection__item[aria-checked="true"]': 1,
   };
@@ -142,8 +142,8 @@ const pClickOnSubMenu = async (editor: Editor, menuTitle: string, itemTitle: str
   } else {
     await pClickOnMenuItem(editor, title);
   }
-  await TinyUiActions.pWaitForUi(editor, `div[title="${itemTitle}"]`);
-  TinyUiActions.clickOnUi(editor, `div[title="${itemTitle}"]`);
+  await TinyUiActions.pWaitForUi(editor, `div[aria-label="${itemTitle}"]`);
+  TinyUiActions.clickOnUi(editor, `div[aria-label="${itemTitle}"]`);
   closeMenu(editor);
 };
 
