@@ -89,7 +89,6 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
       dom: {
         tag: 'button',
         attributes: {
-          'title': translatedTooltip,
           'aria-label': translatedTooltip
         },
         classes: classes.concat(title)

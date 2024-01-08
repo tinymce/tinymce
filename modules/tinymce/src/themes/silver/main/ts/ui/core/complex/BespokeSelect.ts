@@ -186,7 +186,8 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
     getComponent: Fun.constant(comp),
     setTooltip: (tooltip: string) => {
       const translatedTooltip = backstage.shared.providers.translate(tooltip);
-      Attribute.setAll(comp.element, { 'aria-label': translatedTooltip, 'title': translatedTooltip });
+      // Removed title attribute, will address dynamically update tooltip in TINY-10474
+      Attribute.setAll(comp.element, { 'aria-label': translatedTooltip });
     }
   });
 

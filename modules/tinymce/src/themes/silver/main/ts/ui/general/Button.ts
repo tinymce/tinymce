@@ -84,7 +84,6 @@ export const renderIconButtonSpec = (
 ): AlloyButtonSpec => {
   const tooltipAttributes = spec.tooltip.map<{}>((tooltip) => ({
     'aria-label': providersBackstage.translate(tooltip),
-    'title': providersBackstage.translate(tooltip)
   })).getOr({});
   const dom = {
     tag: 'button',
@@ -142,7 +141,6 @@ const renderButtonSpec = (
     tag: 'button',
     classes,
     attributes: {
-      // TINY-10453: Look into this, we might want to remove this title attribute since it has already contain a label
       title: translatedText
     }
   };

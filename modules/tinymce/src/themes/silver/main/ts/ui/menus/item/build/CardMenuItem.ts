@@ -60,7 +60,7 @@ export const renderCardMenuItem = (
   });
 
   const structure = {
-    dom: renderItemDomStructure(spec.label),
+    dom: renderItemDomStructure(spec.label, spec.label),
     optComponents: [
       Optional.some({
         dom: {

@@ -110,8 +110,6 @@ const renderCommonDropdown = <T>(
     (tooltip) => {
       const translatedTooltip = sharedBackstage.providers.translate(tooltip);
       return {
-        // TINY-10453: Remove this tooltip, we don't want duplicate tooltips and until we figured a better way to test, it's here now so that tests would pass
-        'title': translatedTooltip,
         'aria-label': translatedTooltip
       };
     }
