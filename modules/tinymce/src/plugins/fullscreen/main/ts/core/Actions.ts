@@ -183,7 +183,7 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | nul
     editorContainerStyle.left = fullscreenInfo.containerLeft;
 
     sinkContainerS.each((elm) => {
-      elm.dom.style.position = 'relative';
+      Css.set(elm, 'position', 'relative');
     });
 
     cleanup();
