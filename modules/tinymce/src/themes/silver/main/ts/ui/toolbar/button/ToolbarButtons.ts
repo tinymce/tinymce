@@ -242,7 +242,7 @@ const renderToolbarButtonWith = (spec: Toolbar.ToolbarButton, providersBackstage
     onSetup: spec.onSetup
   }, providersBackstage, btnName);
 
-const renderToolbarToggleButton = (spec: Toolbar.ToolbarToggleButton, providersBackstage: UiFactoryBackstageProviders, btnName: string): SketchSpec =>
+const renderToolbarToggleButton = (spec: Toolbar.ToolbarToggleButton, providersBackstage: UiFactoryBackstageProviders, btnName?: string): SketchSpec =>
   renderToolbarToggleButtonWith(spec, providersBackstage, [ ], btnName);
 
 const renderToolbarToggleButtonWith = (spec: Toolbar.ToolbarToggleButton, providersBackstage: UiFactoryBackstageProviders, bonusEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[], btnName?: string): SketchSpec =>
