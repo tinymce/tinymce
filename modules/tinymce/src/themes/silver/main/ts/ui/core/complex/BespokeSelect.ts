@@ -179,7 +179,7 @@ const createMenuItems = (backstage: UiFactoryBackstage, spec: SelectSpec): Bespo
   };
 };
 
-const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec, tooltipWithPlaceholder: string, textUpdateEventName: string): SketchSpec => {
+const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec, tooltipWithPlaceholder: string, textUpdateEventName: string, btnName?: string): SketchSpec => {
   const { items, getStyleItems } = createMenuItems(backstage, spec);
 
   const getApi = (comp: AlloyComponent): BespokeSelectApi => ({
@@ -220,7 +220,8 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
       dropdownBehaviours: []
     },
     ToolbarButtonClasses.Button,
-    backstage.shared
+    backstage.shared,
+    btnName
   );
 };
 

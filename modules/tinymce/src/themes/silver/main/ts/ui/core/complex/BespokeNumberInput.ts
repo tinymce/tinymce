@@ -1,5 +1,5 @@
 import { Keys } from '@ephox/agar';
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Disabling, Focusing, FocusInsideModes, Input, Keying, Memento, NativeEvents, Representing } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Disabling, Focusing, FocusInsideModes, Input, Keying, Memento, NativeEvents, Representing, SystemEvents, Tooltipping } from '@ephox/alloy';
 import { Arr, Cell, Fun, Id, Optional } from '@ephox/katamari';
 import { Focus, SugarElement, Traverse } from '@ephox/sugar';
 
@@ -99,6 +99,11 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
       ],
       buttonBehaviours: Behaviour.derive([
         Disabling.config({}),
+        Tooltipping.config(
+          backstage.shared.providers.tooltips.getConfig({
+            tooltipText: translatedTooltip
+          })
+        ),
         AddEventsBehaviour.config(altExecuting, [
           onControlAttached({ onSetup, getApi }, editorOffCellStepButton),
           onControlDetached({ getApi }, editorOffCellStepButton),
@@ -116,7 +121,9 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
       eventOrder: {
         [NativeEvents.keydown()]: [ altExecuting, 'keying' ],
         [NativeEvents.click()]: [ altExecuting, 'alloy.base.behaviour' ],
-        [NativeEvents.touchend()]: [ altExecuting, 'alloy.base.behaviour' ]
+        [NativeEvents.touchend()]: [ altExecuting, 'alloy.base.behaviour' ],
+        [SystemEvents.attachedToDom()]: [ 'alloy.base.behaviour', altExecuting, 'tooltipping' ],
+        [SystemEvents.detachedFromDom()]: [ altExecuting, 'tooltipping' ]
       }
     });
   };

@@ -129,7 +129,7 @@ const getSpec = (editor: Editor): SelectSpec => {
 };
 
 const createFontSizeButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
-  createSelectButton(editor, backstage, getSpec(editor), btnTooltip, 'FontSizeTextUpdate');
+  createSelectButton(editor, backstage, getSpec(editor), btnTooltip, 'FontSizeTextUpdate', 'fontsize');
 
 const getConfigFromUnit = (unit: string): Config => {
   const baseConfig = { step: 1 };

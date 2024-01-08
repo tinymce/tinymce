@@ -79,7 +79,8 @@ export const renderIconButtonSpec = (
   spec: IconButtonWrapper,
   action: Optional<(comp: AlloyComponent) => void>,
   providersBackstage: UiFactoryBackstageProviders,
-  extraBehaviours: Behaviours = []
+  extraBehaviours: Behaviours = [],
+  btnName: string
 ): AlloyButtonSpec => {
   const tooltipAttributes = spec.tooltip.map<{}>((tooltip) => ({
     'aria-label': providersBackstage.translate(tooltip),
@@ -88,7 +89,7 @@ export const renderIconButtonSpec = (
   const dom = {
     tag: 'button',
     classes: [ ToolbarButtonClasses.Button ],
-    attributes: tooltipAttributes
+    attributes: { ...tooltipAttributes, 'data-mce-btn': btnName }
   };
   const icon = spec.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons));
   const components = componentRenderPipeline([

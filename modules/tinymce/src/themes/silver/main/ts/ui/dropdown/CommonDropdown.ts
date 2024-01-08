@@ -3,7 +3,7 @@ import {
   Keying, MaxHeight, Memento, NativeEvents, Replacing, Representing, SimulatedEvent, SketchSpec, SystemEvents, TieredData, Tooltipping, Unselecting
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
-import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
+import { Arr, Cell, Fun, Future, Id, Merger, Optional, Type } from '@ephox/katamari';
 import { EventArgs, SugarElement } from '@ephox/sugar';
 
 import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button/ButtonEvents';
@@ -52,7 +52,8 @@ export interface CommonDropdownSpec<T> {
 const renderCommonDropdown = <T>(
   spec: CommonDropdownSpec<T>,
   prefix: string,
-  sharedBackstage: UiFactoryBackstageShared
+  sharedBackstage: UiFactoryBackstageShared,
+  btnName?: string
 ): SketchSpec => {
   const editorOffCell = Cell(Fun.noop);
 
@@ -133,7 +134,8 @@ const renderCommonDropdown = <T>(
         tag: 'button',
         classes: [ prefix, `${prefix}--select` ].concat(Arr.map(spec.classes, (c) => `${prefix}--${c}`)),
         attributes: {
-          ...tooltipAttributes
+          ...tooltipAttributes,
+          ...(Type.isNonNullable(btnName) ? { 'data-mce-btn': btnName } : {})
         }
       },
       components: componentRenderPipeline([
