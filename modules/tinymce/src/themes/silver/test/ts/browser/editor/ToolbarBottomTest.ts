@@ -47,11 +47,11 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
         toolbar: 'styles'
       },
       initial: [{
-        clickOn: 'button[title^="Format"]',
+        clickOn: 'button[data-mce-btn="styles"]',
         waitFor: 'div[role="menu"]'
       }],
       assertAbove: 'div[role="menu"]',
-      assertBelow: 'button[title^="Format"]'
+      assertBelow: 'button[data-mce-btn="styles"]'
     }));
 
     it('SplitButton menu should open above button', () => pTest({
@@ -107,12 +107,12 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
           clickOn: 'button[data-mce-btn="overflow-button"]',
           waitFor: '.tox-toolbar__overflow'
         }, {
-          clickOn: 'button[title^="Align"]',
+          clickOn: 'button[data-mce-btn="align"]',
           waitFor: 'div[role="menu"]'
         }
       ],
       assertAbove: 'div[role="menu"]',
-      assertBelow: 'button[title^="Align"]'
+      assertBelow: 'button[data-mce-btn="align"]'
     }));
 
     it('Menubar menu should open above button', () => pTest({
