@@ -37,6 +37,7 @@ const renderColorStructure = (item: ItemStructureSpec, providerBackstage: UiFact
   const attributes = item.ariaLabel.map(
     (al) => ({
       'aria-label': providerBackstage.translate(al),
+      'data-mce-btn': al
     })
   ).getOr({ });
 
@@ -89,7 +90,9 @@ const renderColorStructure = (item: ItemStructureSpec, providerBackstage: UiFact
 const renderItemDomStructure = (textContent: Optional<string>, ariaLabel: Optional<string>): RawDomSchema => {
   const domTitle = ariaLabel.map((label): { attributes?: { title?: string; id?: string; 'aria-label': string }} => ({
     attributes: {
-      ...(textContent.map((_) => ({ title: I18n.translate(label) })).getOr({})),
+      ...(textContent.map((_) => ({ title: I18n.translate(label) })).getOr({
+        'data-mce-btn': label
+      })),
       'id': Id.generate('menu-item'),
       'aria-label': I18n.translate(label)
     }

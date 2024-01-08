@@ -275,7 +275,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
       fetch: getFetch(menuButtonSpec.items, getButton, backstage)
     };
 
-    const memButton = Memento.record(renderMenuButton(fixedSpec, ToolbarButtonClasses.Button, backstage, Optional.none()));
+    const memButton = Memento.record(renderMenuButton(fixedSpec, ToolbarButtonClasses.Button, backstage, Optional.none(), true, spec.name));
 
     return memButton.asSpec();
   } else if (isNormalFooterButtonSpec(spec, buttonType)) {
