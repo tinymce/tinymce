@@ -1,5 +1,5 @@
 #!groovy
-@Library('waluigi@feature/TINY-10538') _
+@Library('waluigi@release/7') _
 
 standardProperties()
 
@@ -46,11 +46,9 @@ def runRemoteTests(String name, String browser, String provider, String platform
 
 def runTestPod(String cacheName, String name, String browser, String provider, String platform, String bucket, String buckets, Boolean runAll) {
   return {
-    bedrockRemoteTools.nodeCachedPod(
+    bedrockRemoteTools.nodeConsumerPod(
       nodeOpts: [
-        resourceRequestCpu: '2',
-        resourceRequestMemory: '4Gi',
-        resourceRequestEphemeralStorage: '16Gi',
+        resourceRequestCpu: '1',
         resourceLimitCpu: '7.5',
         resourceLimitMemory: '4Gi',
         resourceLimitEphemeralStorage: '16Gi',
@@ -59,10 +57,7 @@ def runTestPod(String cacheName, String name, String browser, String provider, S
       useContainers: ['node', 'aws-cli']
     ) {
 
-      stage("Test-${name}") {
-        if (provider == 'aws') {
-          bedrockRemoteTools.tinyWorkSishTunnel()
-        }
+      stage("${name}") {
         grunt('list-changed-browser')
         bedrockRemoteTools.withRemoteCreds(provider) {
           int retry = provider == 'lambdatest' ? 1 : 0
@@ -77,7 +72,7 @@ def runTestPod(String cacheName, String name, String browser, String provider, S
 
 def runHeadlessPod(String cacheName, Boolean runAll) {
   return {
-    bedrockRemoteTools.nodeCachedPod(
+    bedrockRemoteTools.nodeConsumerPod(
       nodeOpts: [
         resourceLimitCpu: '7',
         resourceLimitMemory: '4Gi',
@@ -85,7 +80,8 @@ def runHeadlessPod(String cacheName, Boolean runAll) {
       ],
       build: cacheName
     ) {
-      stage("Test-Headless") {
+      stage("Headless-chrome") {
+        yarnInstall()
         grunt('list-changed-headless')
         runHeadlessTests(runAll)
       }
@@ -102,10 +98,10 @@ def gitMerge(String primaryBranch) {
 
 def props
 
-def cacheName = "cache-${BUILD_NUMBER}"
+def cacheName = "cache_${BUILD_TAG}"
 
 timestamps {
-  bedrockRemoteTools.nodeMasterPod(
+  bedrockRemoteTools.nodeProducerPod(
     nodeOpts: [
       resourceRequestCpu: '2',
       resourceRequestMemory: '4Gi',
@@ -147,9 +143,9 @@ timestamps {
     [ browser: 'chrome', provider: 'aws', buckets: 2 ],
     // [ browser: 'edge', provider: 'aws', buckets: 2 ],
     [ browser: 'firefox', provider: 'aws', buckets: 2 ],
-    // [ browser: 'edge', provider: 'lambdatest', buckets: 1 ],
-    // [ browser: 'safari', provider: 'lambdatest', buckets: 1 ],
-    // [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1],
+    [ browser: 'edge', provider: 'lambdatest', buckets: 1 ],
+    [ browser: 'safari', provider: 'lambdatest', buckets: 1 ],
+    [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1],
     // [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1]
   ];
 
@@ -160,38 +156,16 @@ timestamps {
     def platform = platforms.get(i)
     def buckets = platform.buckets ?: 1
     for (int bucket = 1; bucket <= buckets; bucket ++) {
-      def suffix = buckets == 1 ? "" : "-" + bucket
+      def suffix = buckets == 1 ? "" : "-" + bucket + "-" + buckets
+      def os = String.valueOf(platform.os).startsWith('mac') ? 'Mac' : 'Win'
       def s_bucket = "${bucket}"
       def s_buckets = "${buckets}"
-      def name = "${platform.browser}-${platform.provider}${suffix}"
+      def name = "${os}-${platform.browser}-${platform.provider}${suffix}"
       processes[name] = runTestPod(cacheName, name, platform.browser, platform.provider, platform.os, s_bucket, s_buckets, runAllTests)
     }
   }
 
   processes['headless'] = runHeadlessPod(cacheName, runAllTests)
-
-  // processes['headless'] = {
-  //   tinyPods.nodeBrowser([
-  //     resourceRequestCpu: '2',
-  //     resourceRequestMemory: '4Gi',
-  //     resourceRequestEphemeralStorage: '16Gi',
-  //     resourceLimitCpu: '7.5',
-  //     resourceLimitMemory: '4Gi',
-  //     resourceLimitEphemeralStorage: '16Gi',
-  //   ]) {
-  //     stage('Test-headless') {
-  //       yarnInstall()
-  //       withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
-  //         sh "yarn ci-all-seq"
-  //       }
-  //     }
-
-  //     stage('test') {
-  //       grunt('list-changed-headless')
-  //       runHeadlessTests(runAllTests)
-  //     }
-  //   }
-  // }
 
   stage('Run tests') {
       echo "Running tests [runAll=${runAllTests}]"
