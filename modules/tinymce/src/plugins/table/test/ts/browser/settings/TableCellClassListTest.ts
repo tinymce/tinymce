@@ -92,4 +92,34 @@ describe('browser.tinymce.plugins.table.TableCellClassListTest', () => {
     await TableTestUtils.pClickDialogButton(editor, true);
     TinyAssertions.assertContent(editor, content);
   });
+
+  it('TINY-6653: Selecting multiple rows with different class values should show "Select..."', async () => {
+    const editor = hook.editor();
+    editor.options.set('table_cell_class_list', [
+      { title: 'none', value: '' },
+      { title: 'test', value: 'test' }
+    ]);
+    const content = '<table>\n<tbody>\n<tr>\n<td class="a">x</td>\n</tr>\n<tr>\n<td>x</td>\n</tr>\n</tbody>\n</table>';
+    editor.setContent(content);
+    TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 1, 0, 0 ], 1);
+    await TableTestUtils.openPropsDialog(editor, 'mceTableCellProps');
+    await TableTestUtils.pAssertListBox('Select class', editor, 'Class', { title: 'Select...', value: 'mce-no-match' });
+    await TableTestUtils.pClickDialogButton(editor, true);
+    TinyAssertions.assertContent(editor, content);
+  });
+
+  it('TINY-6653: Selecting multiple rows with the no class values should show "None"', async () => {
+    const editor = hook.editor();
+    editor.options.set('table_cell_class_list', [
+      { title: 'none', value: '' },
+      { title: 'test', value: 'test' }
+    ]);
+    const content = '<table>\n<tbody>\n<tr>\n<td>x</td>\n</tr>\n<tr>\n<td>x</td>\n</tr>\n</tbody>\n</table>';
+    editor.setContent(content);
+    TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 1, 0, 0 ], 1);
+    await TableTestUtils.openPropsDialog(editor, 'mceTableCellProps');
+    await TableTestUtils.pAssertListBox('Select class', editor, 'Class', { title: 'none', value: '' });
+    await TableTestUtils.pClickDialogButton(editor, true);
+    TinyAssertions.assertContent(editor, content);
+  });
 });
