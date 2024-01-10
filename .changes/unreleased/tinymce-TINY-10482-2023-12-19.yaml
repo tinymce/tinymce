@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: Inline mode with persisted toolbar would show regardless of the skin being loaded,
+  causing css issues
+time: 2023-12-19T16:29:47.514734338+11:00
+custom:
+  Issue: TINY-10482

@@ -4,7 +4,8 @@ import {
   AlloyComponent, AlloyEvents,
   FormField as AlloyFormField,
   AlloySpec, AlloyTriggers, Behaviour,
-  GuiFactory, Memento, RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, Tabstopping
+  GuiFactory, Memento,
+  RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, Tabstopping, Tooltipping
 } from '@ephox/alloy';
 import { Dialog, Toolbar } from '@ephox/bridge';
 import { Fun, Merger, Optional } from '@ephox/katamari';
@@ -38,6 +39,7 @@ export const renderCommonSpec = (
   extraBehaviours: Behaviours = [],
   dom: RawDomSchema,
   components: AlloySpec[],
+  tooltip: Optional<string>,
   providersBackstage: UiFactoryBackstageProviders
 ): AlloyButtonSpec => {
   const action = actionOpt.fold(() => ({}), (action) => ({
@@ -49,6 +51,13 @@ export const renderCommonSpec = (
       DisablingConfigs.button(() => !spec.enabled || providersBackstage.isDisabled()),
       ReadOnly.receivingConfig(),
       Tabstopping.config({}),
+      ...tooltip.map(
+        (t) => Tooltipping.config(
+          providersBackstage.tooltips.getConfig({
+            tooltipText: providersBackstage.translate(t)
+          })
+        )
+      ).toArray(),
       AddEventsBehaviour.config('button press', [
         AlloyEvents.preventDefault('click'),
         AlloyEvents.preventDefault('mousedown')
@@ -64,6 +73,8 @@ export const renderCommonSpec = (
   return Merger.deepMerge(domFinal, { components });
 };
 
+// An IconButton just seems to be a button that *cannot* have text, but
+// can have a tooltip. It's only used for the More Drawer button at the moment.
 export const renderIconButtonSpec = (
   spec: IconButtonWrapper,
   action: Optional<(comp: AlloyComponent) => void>,
@@ -83,17 +94,7 @@ export const renderIconButtonSpec = (
   const components = componentRenderPipeline([
     icon
   ]);
-  return renderCommonSpec(spec, action, extraBehaviours, dom, components, providersBackstage);
-};
-
-export const renderIconButton = (
-  spec: IconButtonWrapper,
-  action: (comp: AlloyComponent) => void,
-  providersBackstage: UiFactoryBackstageProviders,
-  extraBehaviours: Behaviours = []
-): SketchSpec => {
-  const iconButtonSpec = renderIconButtonSpec(spec, Optional.some(action), providersBackstage, extraBehaviours);
-  return AlloyButton.sketch(iconButtonSpec);
+  return renderCommonSpec(spec, action, extraBehaviours, dom, components, spec.tooltip, providersBackstage);
 };
 
 export const calculateClassesFromButtonType = (buttonType: 'primary' | 'secondary' | 'toolbar'): string[] => {
@@ -110,13 +111,15 @@ export const calculateClassesFromButtonType = (buttonType: 'primary' | 'secondar
 
 // Maybe the list of extraBehaviours is better than doing a Merger.deepMerge that
 // we do elsewhere? Not sure.
-export const renderButtonSpec = (
+const renderButtonSpec = (
   spec: ButtonSpec,
   action: Optional<(comp: AlloyComponent) => void>,
   providersBackstage: UiFactoryBackstageProviders,
   extraBehaviours: Behaviours = [],
   extraClasses: string[] = []
 ): AlloyButtonSpec => {
+  // It's a bit confusing that this is called text. It seems to be a tooltip. Although I can see
+  // that it's used if there is no icon
   const translatedText = providersBackstage.translate(spec.text);
 
   const icon = spec.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons));
@@ -138,12 +141,27 @@ export const renderButtonSpec = (
     tag: 'button',
     classes,
     attributes: {
-      title: translatedText // TODO: tooltips AP-213
+      // TINY-10453: Look into this, we might want to remove this title attribute since it has already contain a label
+      title: translatedText
     }
   };
-  return renderCommonSpec(spec, action, extraBehaviours, dom, components, providersBackstage);
+
+  // Only provide a tooltip if we are using an icon. This is because above, a button is only an icon
+  // or text, and not both.
+  const optTooltip = spec.icon.map(Fun.constant(translatedText));
+
+  return renderCommonSpec(
+    spec,
+    action,
+    extraBehaviours,
+    dom,
+    components,
+    optTooltip,
+    providersBackstage
+  );
 };
 
+// This actually seems to be a button on the dialog for UrlInput only (browse). Interesting.
 export const renderButton = (
   spec: ButtonSpec,
   action: (comp: AlloyComponent) => void,
@@ -236,7 +254,7 @@ const renderToggleButton = (spec: FooterToggleButtonSpec, providers: UiFactoryBa
     ...(spec.text.isSome() ? [ translatedTextComponed ] : [])
   ];
 
-  const iconButtonSpec = renderCommonSpec(buttonSpec, Optional.some(action), extraBehaviours, dom, components, providers);
+  const iconButtonSpec = renderCommonSpec(buttonSpec, Optional.some(action), extraBehaviours, dom, components, Optional.from(spec.tooltip), providers);
   return AlloyButton.sketch(iconButtonSpec);
 };
 

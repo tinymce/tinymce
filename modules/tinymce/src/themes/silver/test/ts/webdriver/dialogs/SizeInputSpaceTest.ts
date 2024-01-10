@@ -6,16 +6,17 @@ import { SugarElement } from '@ephox/sugar';
 
 import { renderSizeInput } from 'tinymce/themes/silver/ui/dialog/SizeInput';
 
-import TestProviders from '../../module/TestProviders';
+import * as TestExtras from '../../module/TestExtras';
 
 describe('webdriver.tinymce.themes.silver.dialogs.SizeInputSpaceTest', () => {
+  const extrasHook = TestExtras.bddSetup();
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderSizeInput({
       name: 'dimensions',
       label: Optional.some('size'),
       constrain: true,
       enabled: true
-    }, TestProviders)
+    }, extrasHook.access().extras.backstages.popup.shared.providers)
   ));
 
   const assertLockedStatus = (label: string, element: SugarElement<Node>, expected: boolean) => {

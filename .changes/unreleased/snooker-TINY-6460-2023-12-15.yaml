@@ -1,0 +1,7 @@
+project: snooker
+kind: Fixed
+body: '`TableOperations.opPasteColsAfter` & `TableOperations.opPasteRowsAfter` now
+  place the cursor in the newly pasted row/column to be consistent with the other pasting operations.'
+time: 2023-12-15T16:59:18.259495+11:00
+custom:
+  Issue: TINY-6460

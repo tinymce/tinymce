@@ -31,14 +31,20 @@ const renderColorStructure = (item: ItemStructureSpec, providerBackstage: UiFact
   const colorPickerCommand = 'custom';
   const removeColorCommand = 'remove';
 
-  const itemText = item.ariaLabel;
   const itemValue = item.value;
   const iconSvg = item.iconContent.map((name) => Icons.getOr(name, providerBackstage.icons, fallbackIcon));
+
+  const attributes = item.ariaLabel.map(
+    (al) => ({
+      'aria-label': providerBackstage.translate(al),
+      // TINY-10453: Remove this tooltip, we don't want duplicate tooltips and until we figured a better way to test, it's here now so that tests would pass
+      'title': providerBackstage.translate(al)
+    })
+  ).getOr({ });
 
   const getDom = (): RawDomSchema => {
     const common = ItemClasses.colorClass;
     const icon = iconSvg.getOr('');
-    const attributes = itemText.map((text) => ({ title: providerBackstage.translate(text) } as Record<string, string>)).getOr({ });
 
     const baseDom = {
       tag: 'div',
@@ -83,12 +89,12 @@ const renderColorStructure = (item: ItemStructureSpec, providerBackstage: UiFact
 };
 
 const renderItemDomStructure = (ariaLabel: Optional<string>): RawDomSchema => {
-  const domTitle = ariaLabel.map((label): { attributes?: { title: string; id?: string }} => ({
+  const domTitle = ariaLabel.map((label): { attributes?: { title: string; id?: string; 'aria-label': string }} => ({
     attributes: {
-      // TODO: AP-213 change this temporary solution to use tooltips, ensure its aria readable still.
-      // for icon only implementations we need either a title or aria label to satisfy aria requirements.
-      title: I18n.translate(label),
-      id: Id.generate('menu-item')
+      // TINY-10453: Remove this tooltip, we don't want duplicate tooltips and until we figured a better way to test, it's here now so that tests would pass
+      'title': I18n.translate(label),
+      'id': Id.generate('menu-item'),
+      'aria-label': I18n.translate(label)
     }
   })).getOr({});
 

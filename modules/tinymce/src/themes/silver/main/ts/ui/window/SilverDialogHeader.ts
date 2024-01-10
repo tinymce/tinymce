@@ -1,5 +1,5 @@
 import {
-  AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting, SketchSpec, Tabstopping
+  AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting, SketchSpec, Tabstopping, Tooltipping
 } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
@@ -23,18 +23,24 @@ const renderClose = (providersBackstage: UiFactoryBackstageProviders) => Button.
     attributes: {
       'type': 'button',
       'aria-label': providersBackstage.translate('Close'),
-      'title': providersBackstage.translate('Close') // TODO tooltips: AP-213
+      // TINY-10453: Remove this tooltip, we don't want duplicate tooltips and until we figured a better way to test, it's here now so that tests would pass
+      'title': providersBackstage.translate('Close')
     }
   },
   buttonBehaviours: Behaviour.derive([
-    Tabstopping.config({ })
+    Tabstopping.config({ }),
+    Tooltipping.config(
+      providersBackstage.tooltips.getConfig({
+        tooltipText: providersBackstage.translate('Close')
+      })
+    )
   ]),
   components: [
     Icons.render('close', { tag: 'span', classes: [ 'tox-icon' ] }, providersBackstage.icons)
   ],
   action: (comp) => {
     AlloyTriggers.emit(comp, formCancelEvent);
-  }
+  },
 });
 
 const renderTitle = (
