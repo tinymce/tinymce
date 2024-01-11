@@ -118,6 +118,7 @@ const renderButtonSpec = (
   extraBehaviours: Behaviours = [],
   extraClasses: string[] = []
 ): AlloyButtonSpec => {
+  console.log('render button spec', spec);
   // It's a bit confusing that this is called text. It seems to be a tooltip. Although I can see
   // that it's used if there is no icon
   const translatedText = providersBackstage.translate(spec.text);
@@ -141,7 +142,7 @@ const renderButtonSpec = (
     tag: 'button',
     classes,
     attributes: {
-      title: translatedText
+      'aria-label': translatedText
     }
   };
 
