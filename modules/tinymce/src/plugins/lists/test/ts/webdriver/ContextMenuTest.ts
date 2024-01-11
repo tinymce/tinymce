@@ -14,7 +14,7 @@ describe('webdriver.tinymce.plugins.lists.ContextMenuTest', () => {
     contextmenu: 'lists'
   }, [ Plugin ], true);
 
-  it('TINY-10490: open contextmenu direclty on a li of a ol should have `List properties...` enabled', async () => {
+  it('TINY-10490: open contextmenu directly on a li of a ol should have `List properties...` enabled', async () => {
     const editor = hook.editor();
     editor.setContent(`
       <ul>
