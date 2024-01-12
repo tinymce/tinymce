@@ -530,63 +530,6 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         );
       });
 
-      it('Remove redundant br elements', () => {
-        const schema = Schema();
-
-        const parser = DomParser({ remove_trailing_brs: true, ...scenario.settings }, schema);
-        const root = parser.parse(
-          '<p>a<br></p>' +
-          '<p>a<br>b<br></p>' +
-          '<p>a<br><br></p><p>a<br><span data-mce-type="bookmark"></span><br></p>' +
-          '<p>a<span data-mce-type="bookmark"></span><br></p>'
-        );
-        assert.equal(
-          serializer.serialize(root),
-          '<p>a</p><p>a<br>b</p><p>a<br><br></p><p>a<br><br></p><p>a</p>',
-          'Remove traling br elements.'
-        );
-      });
-
-      it('Replace br with nbsp when wrapped in two inline elements and one block', () => {
-        const schema = Schema();
-
-        const parser = DomParser({ remove_trailing_brs: true, ...scenario.settings }, schema);
-        const root = parser.parse('<p><strong><em><br /></em></strong></p>');
-        assert.equal(serializer.serialize(root), '<p><strong><em>\u00a0</em></strong></p>');
-      });
-
-      it('Replace br with nbsp when wrapped in an inline element and placed in the root', () => {
-        const schema = Schema();
-
-        const parser = DomParser({ remove_trailing_brs: true, ...scenario.settings }, schema);
-        const root = parser.parse('<strong><br /></strong>');
-        assert.equal(serializer.serialize(root), '<strong>\u00a0</strong>');
-      });
-
-      it(`Don't replace br inside root element when there is multiple brs`, () => {
-        const schema = Schema();
-
-        const parser = DomParser({ remove_trailing_brs: true, ...scenario.settings }, schema);
-        const root = parser.parse('<strong><br /><br /></strong>');
-        assert.equal(serializer.serialize(root), '<strong><br><br></strong>');
-      });
-
-      it(`Don't replace br inside root element when there is siblings`, () => {
-        const schema = Schema();
-
-        const parser = DomParser({ remove_trailing_brs: true, ...scenario.settings }, schema);
-        const root = parser.parse('<strong><br /></strong><em>x</em>');
-        assert.equal(serializer.serialize(root), '<strong><br></strong><em>x</em>');
-      });
-
-      it('Remove br in invalid parent bug', () => {
-        const schema = Schema({ valid_elements: 'br' });
-
-        const parser = DomParser({ remove_trailing_brs: true, ...scenario.settings }, schema);
-        const root = parser.parse('<br>');
-        assert.equal(serializer.serialize(root), '', 'Remove traling br elements.');
-      });
-
       it('Forced root blocks', () => {
         const schema = Schema();
 

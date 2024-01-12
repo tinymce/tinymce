@@ -193,7 +193,6 @@ interface BaseEditorOptions {
   referrer_policy?: ReferrerPolicy;
   relative_urls?: boolean;
   remove_script_host?: boolean;
-  remove_trailing_brs?: boolean;
   removed_menuitems?: string;
   resize?: boolean | 'both';
   resize_img_proportional?: boolean;
