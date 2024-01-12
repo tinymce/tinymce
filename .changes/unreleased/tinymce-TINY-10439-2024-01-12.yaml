@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: inserting a link via `quicklink` `link_default_target` wasn't considered
+time: 2024-01-12T15:12:04.121884844+01:00
+custom:
+  Issue: TINY-10439
