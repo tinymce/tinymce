@@ -116,7 +116,6 @@ const mkSerializerSettings = (editor: Editor): DomSerializerSettings => {
     ...mkSchemaSettings(editor),
     ...removeUndefined<DomSerializerSettings>({
       // SerializerSettings
-      remove_trailing_brs: getOption('remove_trailing_brs'),
       pad_empty_with_br: getOption('pad_empty_with_br'),
       url_converter: getOption('url_converter'),
       url_converter_scope: getOption('url_converter_scope'),

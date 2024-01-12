@@ -563,11 +563,6 @@ const register = (editor: Editor): void => {
     default: false
   });
 
-  registerOption('remove_trailing_brs', {
-    processor: 'boolean',
-    default: true
-  });
-
   registerOption('pad_empty_with_br', {
     processor: 'boolean',
     default: false,
