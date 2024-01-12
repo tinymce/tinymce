@@ -195,6 +195,15 @@ describe('browser.tinymce.plugins.link.QuickLinkTest', () => {
 
   it('TINY-10439: `link_default_target` should work inserting link via quicklink', async () => {
     const editor = hook.editor();
+
+    editor.setContent('<p>Word</p>');
+    // add link to word
+    TinySelections.setSelection(editor, [ 0, 0 ], ''.length, [ 0, 0 ], 'Word'.length);
+    await pOpenQuickLink(editor);
+    FocusTools.setActiveValue(doc, 'http://tiny.cloud/5');
+    TinyUiActions.keydown(editor, Keys.enter());
+    TinyAssertions.assertContent(editor, '<p><a href="http://tiny.cloud/5">Word</a></p>');
+
     editor.options.set('link_default_target', '_blank');
 
     editor.setContent('<p>Word</p>');
