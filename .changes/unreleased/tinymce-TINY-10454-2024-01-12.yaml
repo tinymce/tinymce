@@ -1,0 +1,6 @@
+project: tinymce
+kind: Removed
+body: remove deprecated `remove_trailing_brs` option
+time: 2024-01-12T12:28:44.905865055+01:00
+custom:
+  Issue: TINY-10454
