@@ -34,6 +34,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
       classes: [ 'tox-lock', 'tox-button', 'tox-button--naked', 'tox-button--icon' ],
       attributes: {
         'aria-label': translatedLabel,
+        'data-mce-btn': spec.label.getOr('Constrain proportions')
       }
     },
     components: [
