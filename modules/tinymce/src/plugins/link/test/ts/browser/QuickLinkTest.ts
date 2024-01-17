@@ -193,7 +193,7 @@ describe('browser.tinymce.plugins.link.QuickLinkTest', () => {
     TinyAssertions.assertContent(editor, '<p>Lorem <a href="http://tiny.cloud/2"><em><strong>ipsum</strong></em></a> dolor sit amet</p>');
   });
 
-  it('TINY-10439: `link_default_target` should work inserting link via quicklink', async () => {
+  it('TINY-10439: `link_default_target` should be used when inserting link via quicklink', async () => {
     const editor = hook.editor();
 
     editor.setContent('<p>Word</p>');
