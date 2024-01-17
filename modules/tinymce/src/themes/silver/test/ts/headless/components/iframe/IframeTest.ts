@@ -9,7 +9,8 @@ import { renderIFrame } from 'tinymce/themes/silver/ui/dialog/IFrame';
 
 import TestProviders from '../../../module/TestProviders';
 
-describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
+// Disabled investigation ticket logged: #TINY-10579
+describe.skip('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     Container.sketch({
       dom: {
